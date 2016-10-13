@@ -2,6 +2,117 @@
 
 All notable changes to this project will be documented in this file.
 
+## Unreleased - as of Sprint 48 end 2016-10-24
+
+### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+48+Ending+Oct+24%2C+2016%22+label%3Aenhancement)
+
+- Automate
+  - Reset domain priorities at startup and restore
+  - Set default entry points for non-generic catalog items
+  - Model: Schema change for Cloud Orchestration Retirement class
+  - Automation method that will choose VDC networks available in the given
+cloud provider
+  - Provisioning
+    - Show shared networks in the OpenStack provisioning dialog
+    - Reconnect orchestration stack with its template at post-provisioning
+  - Domain Import
+    - Rake task to import an Automate Model stored in a  Git Repository
+    - Allow for setting up self signed certificate in Import Screen
+    - REST API Git refresh and import
+    - Route the REST API import call to the correct server with the Git Owner Server role
+  - Added Automate $evm.create_notification method
+  - Retirement
+    - Allow VM's with unknown power state to retire.
+    - Allow archived/orphaned VM's to retire
+    - Added checks and logging for amazon retirement
+  - Service Model
+    - Added cinder backup/restore actions
+    - RBAC for service models
+  - Scheduling Automate Tasks via the rails console
+- Platform
+  - Configure kerberos to do dns_lookups for external authentication
+  - Add additional cloud objects to RBAC filter
+  - Chargeback
+    - Add Vm Guid to report fields for ChargebackVm reports
+    - Enable custom attributes for chargeback reports
+    - Add monthly/hourly/weekly in rates for 'per time' types
+    - Calculation changes taking into account averages and maximums per selected interval in report(monthly, weekly, daily)
+  - Logging: Add the ability to use a different disk for storing log files
+  - Tenancy: Introduce service for sharing resources across tenants
+- Providers
+  - Allow Vm to show floating and fixed ip addresses
+  - Containers
+    - Persist Container Templates
+    - UI: Add Container Templates
+  - Google Compute Engine: Support for parsing Google health checks during refresh
+  - OpenStack
+    - Cloud
+      - UI: Cloud volume backup
+      - CRUD for OpenStack Cloud tenants
+      - Enable Image Snapshots
+      - CRUD for OpenStack Host Aggregates
+    - Infra
+      - Enable node start and stop
+      - Node destroy deletes node from Ironic
+      - Add Ironic Controls
+      - Set boot image for registered hosts
+  - Storage: Cinder backup
+- REST API
+  - Service power operations
+  - Add custom attributes to provider
+  - Service Dialog Create
+  - Support for /api/requests creation and edits
+- SmartState: Add /etc/redhat-access-insights/machine-id to the sample VM analysis profile
+- User Interface
+  - Dashboard view for Infrastructure views
+  - Conversion of Middleware Provider form to Angular
+  - Add human name for Google & Azure load balancers
+  - Ability to get to details of Ansible jobs
+  - Add UI for generating authorization keys for remote regions
+  - Disable tenant edit from cloud tenant mapping
+  - Topology for Cloud Manager
+  - Topology for Infra provider
+
+### [Changed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+48+Ending+Oct+24%2C+2016%22+label%3Aenhancement)
+
+- Performance
+  - Speed up RBAC when no vm in tree in Virtual Machine Explorer
+  - Speed-up lookup for min/max storage_used metric
+  - Add option to hide VMs in trees
+- Platform: Set appliance "system" memory/swap information
+- Providers
+  - Google Cloud Platform: Use standard health states
+  - Microsoft SCVMM: Set  default security protocol to ssl
+  - Network: Use RESTful routes
+
+
+### [Fixed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+48+Ending+Oct+24%2C+2016%22+label%3bugs)
+
+Notable fixes include:
+
+- Automate
+  - Broken ordering ae_domains for a root tenant.
+  - Model: Added missing ServiceTemplateProvisionRequest_denied and ServiceTemplateProvisionRequest_pending instances so that Denied Service requests will properly generate emails.
+  - Validate user roles against domain edit before allowing copy/edit on any objects under it
+  - Provisioning: Stop appending the `_` character as part of the enforced VM naming.
+  - Fixed case where user can't add alerts.
+  - Fixed issue where alerts don't send SNMP v1 traps
+- Platform
+  - Chargeback: Fix Group by tag in chargeback report
+  - Replication
+    - Add repmgr tables to replication excludes
+    - Don't consider tables that are always excluded during the schema check
+    - Fixed bug in settings/access control where tenants from remote regions
+are displayed in the tenant list view and in the tenant selection when adding/editing a group
+- Providers
+  - Containers: Ability to add a container provider with a port other than 8443
+  - Azure: Show 'Memory (MB)' chart for azure instance
+- User Interface
+  - Enable Provision VMs button via relationships
+  - Missing reset button for Job Template Service Dialog
+  - Display the number of access control elements based on user permission
+
+
 ## Unreleased - as of Sprint 47 end 2016-10-03
 
 ### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+47+Ending+Oct+3%2C+2016%22+label%3Aenhancement)
