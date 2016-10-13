@@ -34,7 +34,7 @@
             :tables        => 'flavor',
             :controller    => 'ems_cloud')
         - if role_allows?(:feature => "security_group_show_list")
-          = li_link(:count => @record.security_groups && @record.number_of(:security_groups),
+          = li_link(:count => @record.number_of(:security_groups),
             :record        => @record,
             :display       => 'security_groups',
             :tables        => 'security_group',
