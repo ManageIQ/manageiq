@@ -26,11 +26,11 @@ function load_c3_chart(data, chart_id, height) {
   var generate_args = chartData(data.miqChart, data, { bindto: "#" + chart_id, size: {height: height}})
 
   generate_args.data.onclick = function (data, _i) {
-    var seriesIndex = _.isObject(data.id) ? data.id - 1 : _.findIndex(generate_args.data.columns, {0 : data.name})
-    var pointIndex = _.isObject(data.x) ? data.x.getHours() : _.findIndex(generate_args.data.columns, {0 : data.name})
+    var seriesIndex = _.findIndex(generate_args.data.columns, function(col) { return col[0] == data.id; }) - 1
+    var pointIndex = data.index;
     var value = data.value;
 
-    var parts = chart_id.split('_'); //miq_chart_candu_2
+    var parts = chart_id.split('_'); // miq_chart_candu_2
     var chart_set   = parts[2];
     var chart_index = parts[3];
 
