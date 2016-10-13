@@ -1,7 +1,11 @@
 module EmsRefresh::SaveInventory
   def save_ems_inventory(ems, hashes, target = nil)
+    if hashes && hashes[:_dto_collection]
+      hashes.delete(:_dto_collection)
+      ManagerRefresh::SaveInventory.save_inventory(ems, hashes)
+      return
+    end
     case ems
-    when ManageIQ::Providers::Amazon::NetworkManager        then ManagerRefresh::SaveInventory.save_inventory(ems, hashes)
     when EmsCloud                                           then save_ems_cloud_inventory(ems, hashes, target)
     when EmsInfra                                           then save_ems_infra_inventory(ems, hashes, target)
     when ManageIQ::Providers::ConfigurationManager          then save_configuration_manager_inventory(ems, hashes, target)
