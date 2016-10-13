@@ -2,7 +2,7 @@ describe Service do
   include_examples "miq ownership"
 
   context "service events" do
-    before(:each) do
+    before do
       @service = FactoryGirl.create(:service)
     end
 
@@ -50,7 +50,7 @@ describe Service do
   end
 
   context "VM associations" do
-    before(:each) do
+    before do
       @vm          = FactoryGirl.create(:vm_vmware)
       @vm_1        = FactoryGirl.create(:vm_vmware)
 
@@ -84,7 +84,7 @@ describe Service do
   end
 
   context "with a small env" do
-    before(:each) do
+    before do
       @zone1 = FactoryGirl.create(:small_environment)
       allow(MiqServer).to receive(:my_server).and_return(@zone1.miq_servers.first)
       @service = FactoryGirl.create(:service, :name => 'Service 1')
@@ -167,7 +167,7 @@ describe Service do
     end
 
     context "with VM resources" do
-      before(:each) do
+      before do
         Vm.all.each { |vm| @service.add_resource(vm) }
       end
 
