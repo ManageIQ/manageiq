@@ -176,10 +176,4 @@ describe 'routes for DashboardController' do
       expect(post("/dashboard/widget_zoom")).to route_to("dashboard#widget_zoom")
     end
   end
-
-  describe "#window_sizes" do
-    it "routes with POST" do
-      expect(post("/dashboard/window_sizes")).to route_to("dashboard#window_sizes")
-    end
-  end
 end

@@ -483,7 +483,6 @@ function miqResetSizeTimer() {
   var height = window.innerHeight;
   var offset = 427;
   var h = height - offset;
-  var url = "/dashboard/window_sizes";
 
   if (h < 200) {
     h = 200;
@@ -495,9 +494,6 @@ function miqResetSizeTimer() {
   } else if (miqDomElementExists('logview')) {
     $('#logview').css({height: h + 'px'});
   }
-
-  // Send the new values to the server
-  miqJqueryRequest(miqPassFields(url, { height: height }));
 }
 
 // Pass fields to server given a URL and fields in name/value pairs
