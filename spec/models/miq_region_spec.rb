@@ -218,7 +218,7 @@ describe MiqRegion do
     it "generates the token correctly" do
       user = "admin"
       server = FactoryGirl.create(:miq_server, :has_active_webservices => true)
-      expect(region).to receive(:authentication_token).and_return(File.read(RAILS_ROOT.join("certs/v2_key")))
+      expect(region).to receive(:authentication_token).and_return(File.read(Rails.root.join("certs/v2_key")))
 
       token = region.api_system_auth_token(user)
       token_hash = YAML.load(MiqPassword.decrypt(token))
