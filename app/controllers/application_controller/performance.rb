@@ -104,14 +104,11 @@ module ApplicationController::Performance
   # Generate a chart with the top CIs for a given timestamp
   def perf_top_chart
     return if perfmenu_click?
-
     @record = identify_tl_or_perf_record
     @perf_record = @record.kind_of?(MiqServer) ? @record.vm : @record # Use related server vm record
     if params[:menu_choice]
-      legend_idx = params[:menu_choice].split("_").last.split("-").first.to_i - 1
-      data_idx = params[:menu_choice].split("_").last.split("-")[-2].to_i - 1
-      chart_idx = params[:menu_choice].split("_").last.split("-").last.to_i
-      cmd, model, typ = params[:menu_choice].split("_").first.split("-")
+      legend_idx, data_idx, chart_idx, _cmd, model, typ = parse_chart_click(params[:menu_choice])
+
       report = @sb[:chart_reports].kind_of?(Array) ? report = @sb[:chart_reports][chart_idx] : @sb[:chart_reports]
       data_row = report.table.data[data_idx]
       if @perf_options[:cat]
@@ -234,18 +231,12 @@ module ApplicationController::Performance
   # Handle actions for performance chart context menu clicks
   def perf_menu_click
     # Parse the clicked item to get indexes and selection variables
-    click_parts = params[:menu_click].split("_").last.split("-")
-
-    legend_idx = click_parts.first.to_i
-    data_idx   = click_parts[-2].to_i
-    chart_idx  = click_parts.last.to_i
+    legend_idx, data_idx, chart_idx, cmd, model, typ = parse_chart_click(params[:menu_click])
 
     if Charting.backend == :ziya
       legend_idx -= 1
       data_idx   -= 1
     end
-
-    cmd, model, typ = params[:menu_click].split("_").first.split("-")
 
     # Swap in 'Instances' for 'VMs' in AZ breadcrumbs (poor man's cloud/infra split hack)
     bc_model = ['availability_zone', 'host_aggregate'].include?(request.parameters['controller']) && model == 'VMs' ? 'Instances' : model
@@ -1629,5 +1620,11 @@ module ApplicationController::Performance
         rpt.extras[:trend][trendcol + "|" + t.split(":").first]
       end.join("\r") unless trendcol.nil?
     end
+  end
+
+  # get JSON encoded in Base64
+  def parse_chart_click(click_params)
+    click_parts = JSON.parse(Base64.decode64(click_params))
+    [click_parts['row'].to_i, click_parts['column'].to_i, click_parts['chart_index'].to_i, click_parts['chart_name'].split("-")].flatten
   end
 end
