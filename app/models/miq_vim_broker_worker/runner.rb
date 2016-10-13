@@ -219,8 +219,8 @@ class MiqVimBrokerWorker::Runner < MiqWorker::Runner
   end
 
   def create_miq_vim_broker_server
-    require 'MiqVim'
-    require 'MiqVimBroker'
+    require 'VMwareWebService/MiqVim'
+    require 'VMwareWebService/MiqVimBroker'
 
     MiqVimBroker.preLoad      = true
     MiqVimBroker.debugUpdates = false

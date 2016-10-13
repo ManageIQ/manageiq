@@ -15,8 +15,6 @@ require 'miq-exception'
 require 'miq-system'
 require 'miq-xml'
 
-$LOAD_PATH << File.join(GEMS_PENDING_ROOT, "VMwareWebService")
-
 require 'vmdb_extensions'
 require 'active_record_query_parts'
 

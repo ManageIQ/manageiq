@@ -1,4 +1,3 @@
-$LOAD_PATH << File.join(GEMS_PENDING_ROOT, "VixDiskLib")
 require 'yaml'
 
 module MiqServer::ServerSmartProxy
@@ -171,7 +170,7 @@ module MiqServer::ServerSmartProxy
     begin
       # This is only available on Linux
       if Sys::Platform::IMPL == :linux
-        require 'VixDiskLib'
+        require 'VixDiskLib/VixDiskLib'
         caps[:vixDisk] = true
       end
     rescue Exception => err
