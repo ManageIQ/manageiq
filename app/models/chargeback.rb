@@ -264,7 +264,7 @@ class Chargeback < ActsAsArModel
       rpt.sortby = static_cols + ["start_date"]
     elsif edit[:new][:cb_groupby] == "tag"
       tag_col = report_tag_field
-      rpt.cols += tag_col
+      rpt.cols += [tag_col]
       rpt.col_order = [tag_col, "display_range"]
       rpt.sortby = [tag_col, "start_date"]
     elsif edit[:new][:cb_groupby] == "project"
