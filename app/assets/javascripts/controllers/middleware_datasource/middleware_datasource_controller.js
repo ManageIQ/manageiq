@@ -9,25 +9,29 @@ function MwAddDataSourceCtrl($scope, $rootScope, miqService, mwAddDataSourceServ
   $scope.dsModel = {};
   $scope.dsModel.step = 'CHOOSE_DS';
 
-  $scope.chooseDsModel = {};
-  $scope.chooseDsModel.selectedDatasource = undefined;
-  $scope.chooseDsModel.datasources = undefined;
+  $scope.chooseDsModel = {
+    selectedDatasource : undefined,
+    datasources : undefined
+  };
 
-  $scope.step1DsModel = {};
-  $scope.step1DsModel.datasourceName = '';
-  $scope.step1DsModel.jndiName = '';
+  $scope.step1DsModel = {
+    datasourceName : '',
+    jndiName : ''
+  };
 
-  $scope.step2DsModel = {};
-  $scope.step2DsModel.jdbcDriverName = '';
-  $scope.step2DsModel.jdbcModuleName = '';
-  $scope.step2DsModel.driverClass = '';
+  $scope.step2DsModel = {
+    jdbcDriverName : '',
+    jdbcModuleName : '',
+    driverClass : ''
+  };
 
-  $scope.step3DsModel = {};
-  $scope.step3DsModel.validationRegex = /^jdbc:\S+$/;
-  $scope.step3DsModel.connectionUrl = '';
-  $scope.step3DsModel.userName = '';
-  $scope.step3DsModel.password = '';
-  $scope.step3DsModel.securityDomain = '';
+  $scope.step3DsModel = {
+    validationRegex : /^jdbc:\S+$/,
+    connectionUrl : '',
+    userName : '',
+    password : '',
+    securityDomain : ''
+  };
 
   this.$onInit = function () {
     $scope.chooseDsModel.datasources = mwAddDataSourceService.getDatasources();
