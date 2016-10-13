@@ -7,6 +7,7 @@ module ManageIQ::Providers
         get_routes(inventory)
         get_builds(inventory)
         get_build_pods(inventory)
+        get_templates(inventory)
         EmsRefresh.log_inv_debug_trace(@data, "data:")
         @data
       end
@@ -36,6 +37,14 @@ module ManageIQ::Providers
 
         @data[:container_projects].each do |ns|
           @data_index.store_path(:container_projects, :by_name, ns[:name], ns)
+        end
+      end
+
+      def get_templates(inventory)
+        process_collection(inventory["template"], :container_templates) { |n| parse_template(n) }
+
+        @data[:container_templates].each do |ct|
+          @data_index.store_path(:container_templates, :by_namespace_and_name, ct[:namespace], ct[:name], ct)
         end
       end
 
@@ -107,6 +116,29 @@ module ManageIQ::Providers
         )
         new_result[:build_config] = @data_index.fetch_path(:container_builds, :by_name,
                                                            build_pod.status.config.try(:name))
+        new_result
+      end
+
+      def parse_template_parameters(parameters)
+        parameters.to_a.collect do |param|
+          {
+            :name         => param['name'],
+            :display_name => param['displayName'],
+            :description  => param['description'],
+            :value        => param['value'],
+            :generate     => param['generate'],
+            :from         => param['from'],
+            :required     => param['required']
+          }
+        end
+      end
+
+      def parse_template(template)
+        new_result = parse_base_item(template)
+        new_result[:container_template_parameters] = parse_template_parameters(template.parameters)
+        new_result[:labels] = parse_labels(template)
+        new_result[:objects] = template.objects.collect(&:to_h)
+        new_result[:container_project] = @data_index.fetch_path(:container_projects, :by_name, new_result[:namespace])
         new_result
       end
     end

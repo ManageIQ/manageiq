@@ -5,7 +5,7 @@ module EmsRefresh::SaveInventoryContainer
     child_keys = [:container_projects, :container_quotas, :container_limits, :container_nodes,
                   :container_builds, :container_build_pods, :persistent_volume_claims, :persistent_volumes,
                   :container_image_registries, :container_images, :container_replicators, :container_groups,
-                  :container_services, :container_routes, :container_component_statuses,
+                  :container_services, :container_routes, :container_component_statuses, :container_templates,
                  ]
 
     # Save and link other subsections
@@ -483,5 +483,31 @@ module EmsRefresh::SaveInventoryContainer
     save_inventory_multi(ems.container_build_pods, hashes, deletes, [:ems_ref], [:labels,],
                          [:build_config])
     store_ids_for_new_records(ems.container_build_pods, hashes, :ems_ref)
+  end
+
+  def save_container_templates_inventory(ems, hashes, target = nil)
+    return if hashes.nil?
+    target = ems if target.nil?
+
+    ems.container_templates.reset
+    deletes = target.kind_of?(ExtManagementSystem) ? :use_association : []
+
+    hashes.each do |h|
+      h[:container_project_id] = h.fetch_path(:container_project, :id)
+    end
+
+    save_inventory_multi(ems.container_templates, hashes, deletes, [:ems_ref],
+                         [:container_template_parameters, :labels], [:container_project, :namespace])
+    store_ids_for_new_records(ems.container_templates, hashes, :ems_ref)
+  end
+
+  def save_container_template_parameters_inventory(container_template, hashes, target = nil)
+    return if hashes.nil?
+
+    container_template.container_template_parameters.reset
+    deletes = target.kind_of?(ExtManagementSystem) ? :use_association : []
+
+    save_inventory_multi(container_template.container_template_parameters, hashes, deletes, [:name], [], [])
+    store_ids_for_new_records(container_template.container_template_parameters, hashes, :name)
   end
 end
