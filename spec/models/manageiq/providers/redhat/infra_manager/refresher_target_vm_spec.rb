@@ -20,6 +20,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
                              :ems_id  => @ems.id,
                              :uid_ems => "00000002-0002-0002-0002-0000000001e9_respool")
     @cluster.with_relationship_type("ems_metadata") { @cluster.add_child @rp }
+    allow(@ems).to receive(:supported_api_versions).and_return([3, 4])
   end
 
   it "should refresh a vm" do

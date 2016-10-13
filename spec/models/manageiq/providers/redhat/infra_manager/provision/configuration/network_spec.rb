@@ -31,6 +31,8 @@ describe ManageIQ::Providers::Redhat::InfraManager::Provision::Configuration::Ne
 
     allow(rhevm_vm).to receive_messages(:nics => [rhevm_nic1, rhevm_nic2])
     allow(Ovirt::Cluster).to receive_messages(:find_by_href => rhevm_cluster)
+    allow_any_instance_of(ManageIQ::Providers::Redhat::InfraManager).to receive(:supported_api_versions)
+      .and_return([3, 4])
   end
 
   context "#configure_network_adapters" do
