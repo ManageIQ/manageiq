@@ -940,7 +940,7 @@
       - :name: query
         :identifier: miq_request_show_list
       - :name: create
-        :identifier: vm_miq_request_new
+        :identifier: miq_request_show_list
       - :name: edit
         :identifier: miq_request_edit
     :resource_actions:

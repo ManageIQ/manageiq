@@ -7,7 +7,11 @@ module Api
       assert_id_not_specified(data, type)
 
       request_type = data.delete("request_type")
+
       validate_request_type(request_type)
+
+      # We must authorize the user based on the request_type
+      authorize_request_type(request_type)
 
       if data["src_id"].blank? && data["src_ids"].blank?
         raise BadRequestError, "Must specify a resource src_id or src_ids"
@@ -44,8 +48,15 @@ module Api
 
     def validate_request_type(request_type)
       raise BadRequestError, "Must specify a request_type" if request_type.blank?
-      unless MiqRequest::REQUEST_TYPES.stringify_keys.keys.include?(request_type)
+      unless MiqRequest::REQUEST_TYPE_ROLE_IDENTIFIER.keys.collect(&:to_s).include?(request_type)
         raise BadRequestError, "Invalid Request Type #{request_type} specified"
+      end
+    end
+
+    def authorize_request_type(request_type)
+      request_identifier = MiqRequest::REQUEST_TYPE_ROLE_IDENTIFIER[request_type.to_sym]
+      unless api_user_role_allows?(request_identifier)
+        raise ForbiddenError, "Use of the create action is forbidden for #{request_type} requests"
       end
     end
 
