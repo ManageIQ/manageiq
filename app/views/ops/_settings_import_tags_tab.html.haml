@@ -2,7 +2,7 @@
   #tab_div
     %h3
       = _("Messages")
-    = render(:partial => "layouts/flash_msg", :locals => {:click_remove => false})
+    = render(:partial => "layouts/flash_msg")
     %hr/
     %h3
       = _("Upload %{customer_name} Tag Assignments for VMs") % {:customer_name => session[:customer_name]}
