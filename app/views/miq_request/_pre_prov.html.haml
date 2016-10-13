@@ -3,6 +3,11 @@
   - typ = request.parameters[:controller] == "vm_cloud" ? ui_lookup(:table => "template_cloud") : ui_lookup(:table => "template_infra")
   %h3
     = _("Provision %{what} based on the selected %{type}") % {:what => ui_lookup(:tables => request.parameters[:controller]), :type => typ}
+  %label
+    - id = @edit[:req_id] || "new"
+    %input{:type => "checkbox",
+           :onclick => "miqAjax('" + url_for({:action => "vm_pre_prov", :id => id.to_s, :hide_deprecated_templates => !@edit[:hide_deprecated_templates]}) + "')",
+           :checked => @edit[:hide_deprecated_templates]} Hide deprecated
   %table.table.table-bordered.table-hover.table-striped.table-selectable
     %thead
       %tr
@@ -35,6 +40,8 @@
             = h(number_to_human_size(row.mem_cpu.to_i * 1024 * 1024))
           %td
             = h(number_to_human_size(row.allocated_disk_storage))
+          %td
+            = h(row.deprecated)
           %td
             - if row.ext_management_system
               = h(row.ext_management_system.name)
