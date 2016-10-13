@@ -85,7 +85,7 @@ class MiqAlert < ApplicationRecord
 
     alert_assignments[key] ||= begin
       profiles  = MiqAlertSet.assigned_to_target(target, :find_options => {:conditions => ["mode = ?", target.class.base_model.name], :select => "id"})
-      alert_ids = profiles.collect { |p| p.members(:select => "id").collect(&:id) }.flatten.uniq
+      alert_ids = profiles.collect { |p| p.members.pluck(:id) }.flatten.uniq
 
       if alert_ids.empty?
         []
