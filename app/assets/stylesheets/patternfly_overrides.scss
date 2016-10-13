@@ -224,6 +224,13 @@ table .narrow {
   white-space: nowrap;
 }
 
+table .narrow i { /* font icon styling in table view (equivalent to fa-lg) */
+  padding-left: 2px;
+  font-size: 1.33333333em;
+  line-height: 0.75em;
+  vertical-align: -15%;
+}
+
 /* disables hover and pointer on row */
 
 table.table-hover tbody tr:nth-child(odd).no-hover:hover td {

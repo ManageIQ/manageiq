@@ -15,9 +15,7 @@
         - @parent_reports.each do |r|
           %tr{:title => _("View this Report"), :onclick => "miqTreeActivateNode('#{x_active_tree}', 'xx-#{r[1]}');"}
             %td.narrow
-              %ul.icons.list-unstyled
-                %li
-                  %span.product.product-report
+              %i.product.product-report
             %td
               = r[0]
 
@@ -40,7 +38,7 @@
               - t = _("Click to view saved report")
               %td{:title => t, :onclick => remote_function(:loading => "miqSparkle(true);",
                 :complete => "miqSparkle(false);", :url => {:action => 'tree_select', :id => row_id})}
-                %i.fa.fa-2x.fa-clock-o{:title => _("Saved Report: %{report_name}") % {:report_name => row['name']}}
+                %i.fa.fa-clock-o{:title => _("Saved Report: %{report_name}") % {:report_name => row['name']}}
               %td{:title => t, :onclick => remote_function(:loading => "miqSparkle(true);",
                 :complete => "miqSparkle(false);", :url => {:action => 'tree_select', :id => row_id})}
                 = h(format_timezone(row['last_run_on'], Time.zone, "gtl"))

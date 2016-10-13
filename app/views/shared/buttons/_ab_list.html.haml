@@ -33,9 +33,7 @@
           - if obj.kind_of?(String)
             %tr{:title => _("Click to view details"), :onclick => "miqTreeActivateNode('ab_tree', '-ub-#{@nodetype[1]}')"}
               %td.narrow
-                %ul.icons.list-unstyled
-                  %li
-                    %span{:class => "pficon pficon-folder-close"}
+                %i{:class => "pficon pficon-folder-close"}
               %td
                 = obj
               %td
@@ -53,9 +51,7 @@
               - rec_type = "Group"
             %tr{:title => _("Click to view details"), :onclick => "miqTreeActivateNode('#{tree_box}', '#{tree_id}_#{typ}-#{to_cid(obj[:id])}')"}
               %td.narrow
-                %ul.icons.list-unstyled
-                  %li
-                    %span{:class => "product product-custom-#{img}"}
+                %i{:class => "product product-custom-#{img}"}
               %td
                 = obj[:name].split("|").first
               - if x_active_tree == :sandt_tree
@@ -108,9 +104,7 @@
           - id = @nodetype[0].split('-')[1] == "ub" ? "#{@nodetype[0]}_cb-#{to_cid(obj[:id])}" : "#{x_node}_cb-#{to_cid(obj[:id])}"
           %tr{:title => _("Click to view details"), :onclick => "miqTreeActivateNode('#{tree_box}', '#{id}')"}
             %td.narrow
-              %ul.icons.list-unstyled
-                %li
-                  %span{:class => "product product-custom-#{obj[:button_image]}"}
+              %i{:class => "product product-custom-#{obj[:button_image]}"}
             %td
               = obj[:name]
             %td

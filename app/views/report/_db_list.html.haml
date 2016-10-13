@@ -12,9 +12,7 @@
           %tr{:title => _("Click to view '%{title}'") % {:title => @db_nodes[node][:title]},
             :onclick => "miqTreeActivateNode('#{@sb[:active_tree]}', '#{@db_nodes[node][:id]}');"}
             %td.narrow{:nowrap => 1}
-              %ul.icons.list-unstyled
-                %li
-                  %span{:class => @db_nodes[node][:glyph]}
+              %i{:class => @db_nodes[node][:glyph]}
             %td
               = h(@db_nodes[node][:text])
   - elsif @sb[:nodes] && @sb[:nodes].last == "g" && !@in_a_form
@@ -31,9 +29,7 @@
           %tr{:onclick => remote_function(:loading => "miqSparkle(true);", :complete => "miqSparkle(false);",
               :url => {:action => 'tree_select', :id => "xx-g_g-#{to_cid(g.id)}"}), :title => _("Click to view %{group} ") % {:group => g.description}, :class => "icon"}
             %td.narrow
-              %ul.icons.list-unstyled
-                %li
-                  %span.product.product-group
+              %i.product.product-group
             %td
               = h(g.description)
   - elsif @sb[:nodes].length == 3 && @sb[:nodes][1] == "g_g" && !@in_a_form
@@ -52,7 +48,7 @@
             %tr{:onclick => remote_function(:loading => "miqSparkle(true);", :complete => "miqSparkle(false);", :url => {:action => 'tree_select',
                 :id => "xx-g_g-#{@sb[:nodes][2]}_-#{to_cid(ws.id)}"}), :title => _("Click to view '%{widgetset_description} (%{widgetset_name})'") % {:widgetset_description => ws.description, :widgetset_name => ws.name}, :class => "icon"}
               %td.narrow
-                %i.fa.fa-2x.fa-dashboard{:title => ws.description}
+                %i.fa.fa-dashboard{:title => ws.description}
               %td
                 = "#{h(ws.description)} (#{h(ws.name)})"
   - elsif ((@sb[:nodes].length == 4 && @sb[:nodes][1] == "g_g") || (@sb[:nodes].length == 2 && @sb[:nodes].first == "xx")) && !@in_a_form

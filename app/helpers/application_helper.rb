@@ -1769,12 +1769,8 @@ module ApplicationHelper
       glyphicon2 = listicon_glyphicon_tag_for_widget(row)
     end
 
-    content_tag(:ul, :class => 'icons list-unstyled') do
-      content_tag(:li) do
-        content_tag(:span, nil, :class => glyphicon) do
-          content_tag(:span, nil, :class => glyphicon2) if glyphicon2
-        end
-      end
+    content_tag(:i, nil, :class => glyphicon) do
+      content_tag(:i, nil, :class => glyphicon2) if glyphicon2
     end
   end
 

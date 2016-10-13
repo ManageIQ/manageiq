@@ -77,7 +77,7 @@
                 = cell[:text]
             - else
               - if cell[:icon]
-                %i.fa-lg{:class => cell[:icon], :title => cell[:title]}
+                %i{:class => cell[:icon], :title => cell[:title]}
               - elsif cell[:image]
                 = image_tag(image_path(cell[:image]), :alt => cell[:title], :title => cell[:title])
               = cell[:text]

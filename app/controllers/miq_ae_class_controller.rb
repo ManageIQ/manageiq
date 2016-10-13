@@ -425,7 +425,7 @@ class MiqAeClassController < ApplicationController
       end
       srow = root.add_element("row", "id" => "#{cls}-#{to_cid(kids.id)}", "style" => "border-bottom: 1px solid #CCCCCC;color:black; text-align: center")
       srow.add_element("cell").text = "0" # Checkbox column unchecked
-      srow.add_element("cell", "image" => "blank.png", "title" => cls.to_s, "style" => "border-bottom: 1px solid #CCCCCC;text-align: left;height:28px;").text = REXML::CData.new("<ul class='icons list-unstyled'><li><span class='#{glyphicon}' alt='#{cls}' title='#{cls}'></span></li></ul>")
+      srow.add_element("cell", "image" => "blank.png", "title" => cls.to_s, "style" => "border-bottom: 1px solid #CCCCCC;text-align: left;height:28px;").text = REXML::CData.new("<i class='#{glyphicon}' alt='#{cls}' title='#{cls}'></i>")
       srow.add_element("cell", "image" => "blank.png", "title" => rec_name.to_s, "style" => "border-bottom: 1px solid #CCCCCC;text-align: left;height:28px;").text = rec_name
     end
     xml.to_s

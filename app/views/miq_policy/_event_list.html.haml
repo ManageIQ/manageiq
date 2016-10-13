@@ -13,6 +13,6 @@
             %tr{:title => _("View this Event"),
               :onclick => "miqTreeActivateNode('event_tree', 'ev-#{to_cid(e.id)}');"}
               %td.narrow
-                %i.fa-lg{:class => e.decorate.try(:fonticon)}
+                %i{:class => e.decorate.try(:fonticon)}
               %td
                 = e.description
