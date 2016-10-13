@@ -1,4 +1,13 @@
 module ManageIQ::Providers::Azure::CloudManager::Vm::Operations::Power
+  extend ActiveSupport::Concern
+
+  included do
+    supports :reboot_guest do
+      unsupported_reason_add(:reboot_guest, unsupported_reason(:control)) unless supports_control?
+      unsupported_reason_add(:reboot_guest, _("The VM is not powered on")) unless current_state == "on"
+    end
+  end
+
   def raw_suspend
     provider_service.stop(name, resource_group)
     update_attributes!(:raw_power_state => "VM stopping")
