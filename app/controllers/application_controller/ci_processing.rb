@@ -1154,7 +1154,7 @@ module ApplicationController::CiProcessing
 
       table_name = "cim_base_storage_extents"
       model_name = table_name.classify.constantize
-      drop_breadcrumb(:name => _("%{name} (All ${tables})") % {:name   => @record.evm_display_name,
+      drop_breadcrumb(:name => _("%{name} (All %{tables})") % {:name   => @record.evm_display_name,
                                                                :tables => ui_lookup(:tables => @display.singularize)},
                       :url  => "/#{self.class.table_name}/show/#{@record.id}?display=#{@display}")
       @view, @pages = get_view(model_name, :parent => @record, :parent_method => :base_storage_extents)  # Get the records (into a view) and the paginator
