@@ -1148,23 +1148,6 @@ describe ApplicationHelper do
         end
       end
     end
-
-    context "#center_div_height" do
-      it "calculates height for center div" do
-        @winH = 800
-        max = 627
-        min = 200
-        height = @winH < max ? min : @winH - (max - min)
-        res = helper.center_div_height
-        expect(res).to eq(height)
-
-        max = 757
-        min = 400
-        height = @winH < max ? min : @winH - (max - min)
-        res = helper.center_div_height(false, 400)
-        expect(res).to eq(height)
-      end
-    end
   end
 
   describe '#pressed2model_action' do

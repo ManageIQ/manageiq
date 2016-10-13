@@ -1072,12 +1072,6 @@ module ApplicationHelper
     link_to(link_text, link_params, tag_args)
   end
 
-  def center_div_height(toolbar = true, min = 200)
-    max = toolbar ? 627 : 757
-    height = @winH < max ? min : @winH - (max - min)
-    height
-  end
-
   def primary_nav_class(nav_id)
     test_layout = @layout
     # FIXME: exception behavior to remove

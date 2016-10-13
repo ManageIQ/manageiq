@@ -6,9 +6,5 @@
   :zone  => @selected_server.my_zone}                                                |
 %h3= legend_text
 
-= text_area("logview", "data",                                |
-  :value    => @log,                                          |
-  :readonly => true,                                          |
-  :style    => "height: #{center_div_height}px; width: 100%") |
-
-= javascript_tag "$('#logview_data').scrollTop($('#logview_data').prop('scrollHeight') - $('#logview_data').prop('clientHeight'));"
+%pre
+  = @log

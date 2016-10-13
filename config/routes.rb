@@ -947,7 +947,6 @@ Vmdb::Application.routes.draw do
         widget_dd_done
         widget_toggle_minmax
         widget_zoom
-        window_sizes
       )
     },
 
