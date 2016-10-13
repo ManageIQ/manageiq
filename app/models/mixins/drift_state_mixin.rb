@@ -14,7 +14,7 @@ module DriftStateMixin
   end
 
   def drift_state_timestamps
-    drift_states.select(:timestamp).order(:timestamp).collect(&:timestamp)
+    drift_states.order(:timestamp).pluck(:timestamp)
   end
 
   def first_drift_state_timestamp
