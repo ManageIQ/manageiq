@@ -17,7 +17,7 @@
             = link_to("#{ui_lookup(:model => @record.ext_management_system.class.to_s)}: #{@record.ext_management_system.name}",
               {:controller => "provider_foreman", :action => 'explorer', :id => "at-#{to_cid(@record.ext_management_system.id)}"},
               :title => _("Show parent %s for this Job") % ui_lookup(:model => @record.ext_management_system.class.to_s))
-        - if role_allows?(:feature => "service_view") && @record.ext_management_system
+        - if role_allows?(:feature => "service_view") && @record.service
           %li
             = link_to("#{ui_lookup(:table => "service")}: #{@record.service.name}",
               {:controller => "service", :action => 'show', :id => to_cid(@record.service.id)},
