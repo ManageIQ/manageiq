@@ -2,9 +2,44 @@
   - @angular_form = true
 
   %form.form-horizontal#form_div{"name"          => "angularForm",
-                                 "ng-controller" => "pglogicalReplicationFormController",
+                                 "ng-controller" => "pglogicalReplicationFormController as $ctrl",
                                  "ng-show"       => "afterGet"}
     = render :partial => "layouts/flash_msg"
+    %script{:id => "authkeyModalForm.html", :type => "text/ng-template"}
+      :cdata
+        <div class="modal fade" id="authkeyModalForm" tabindex="-1" role="dialog" aria-hidden="true">
+          <div class="modal-header">
+            <h4 class="modal-header">SSH Information For An Appliance In the Region</h4>
+          </div>
+            <form class="form-horizontal" name="authkeyModalForm" ng-submit="$ctrl.submitForm()" novalidate>
+              <div class="modal-body">
+                <div class="form-group">
+                  <label class="col-sm-2 control-label">Host</label>
+                  <div class="col-sm-10">
+                    <input type="text" name="ssh_host" class="form-control" ng-model="$ctrl.ssh_params.ssh_host">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-sm-2 control-label">User</label>
+                  <div class="col-sm-10">
+                    <input type="text" name="ssh_user" class="form-control" ng-model="$ctrl.ssh_params.ssh_user" required>
+                    <p ng-show="authkeyModalForm.ssh_user.$invalid && !authkeyModalForm.ssh_user.$pristine" class="help-block">SSH user is required.</p>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label class="col-sm-2 control-label">Password</label>
+                  <div class="col-sm-10">
+                    <input type="password" name="ssh_password" class="form-control" ng-model="$ctrl.ssh_params.ssh_password" required>
+                    <p ng-show="authkeyModalForm.ssh_password.$invalid && !authkeyModalForm.ssh_password.$pristine" class="help-block">SSH password is required.</p>
+                  </div>
+                </div>
+              </div>
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-primary" ng-disabled="authkeyModalForm.$invalid">Submit</button>
+              <button class="btn btn-default" ng-click="$ctrl.cancelForm()">Cancel</button>
+            </div>
+          </form>
+        </div>
     .form-group{"ng-class" => "{'has-error': angularForm.subscriptions.$invalid}"}
       %label.col-md-2.control-label
         = _('Type')
@@ -36,6 +71,7 @@
           %th= _('Username')
           %th= _('Password')
           %th= _('Port')
+          %th= _('Central Admin Enabled')
           %th{:colspan => 2}=_('Actions')
         %tbody
           %tr{"ng-if" => "pglogicalReplicationModel.addEnabled"}
@@ -73,6 +109,7 @@
                                   "id"          => "port",
                                   "name"        => "port",
                                   "ng-model"    => "pglogicalReplicationModel.port"}
+            %td
             %td{:class => "action-cell"}
               %button.btn.btn-default.btn-block.btn-sm{:type => "button", "ng-disabled" => "!subscriptionValid()",  "ng-click" => "addSubscription()"}= _('Accept')
 
@@ -113,7 +150,6 @@
                                   "name"        => "host",
                                   "ng-model"    => "pglogicalReplicationModel.host",
                                   "miqrequired" => ""}
-
             %td{"ng-if" => "!pglogicalReplicationModel.updateEnabled || (pglogicalReplicationModel.updateEnabled && $index !== pglogicalReplicationModel.s_index)",
                 "ng-class"=>"{'active': showChanged($index, 'user')}"}
               {{subscription.user}}
@@ -143,6 +179,15 @@
                                   "name"        => "port",
                                   "ng-model"    => "pglogicalReplicationModel.port"}
 
+            %td.narrow
+              %input{"bs-switch" => "",
+                     :data         => {:on_text => 'Yes', :off_text => 'No', :size => 'mini'},
+                     "id"          => "auth_key_configured",
+                     "type"        => "checkbox",
+                     "name"        => "auth_key_configured",
+                     "ng-model"    => "subscription.auth_key_configured",
+                     "switch-readonly" => true}
+
             %td{:class => "action-cell", "ng-show" => "showCancelDelete($index)"}
               %button.btn.btn-default.btn-sm{:type => "button", "ng-click" => "cancelDelete($index)"}= _('Cancel Delete')
 
@@ -161,6 +206,16 @@
                     %li
                       %a{"ng-click" => "validateSubscription($index)"}
                         = _('Validate')
+                    %li
+                      %a{"ng-click" => "launchAuthKeyModal($index)", "ng-show" => "isCentralAdminEnabled($index)"}
+                        = _('Re-Enable Central Admin')
+                    %li
+                      %a{"ng-click" => "launchAuthKeyModal($index)", "ng-show" => "!isCentralAdminEnabled($index)"}
+                        = _('Enable Central Admin')
+                    %li
+                      %a{"ng-click" => "disableCentralAdmin($index)", "ng-show" => "isCentralAdminEnabled($index)"}
+                        = _('Disable Central Admin')
+
             %td{:class => "action-cell", "ng-show" => "!showCancelDelete($index) && pglogicalReplicationModel.updateEnabled && $index === pglogicalReplicationModel.s_index"}
               %button.btn.btn-default.btn-block.btn-sm{:type => "button", "ng-disabled" => "!subscriptionValid()", "ng-click" => "addSubscription($index)"}= _('Accept')
 
