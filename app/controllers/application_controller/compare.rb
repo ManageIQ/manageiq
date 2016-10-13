@@ -391,7 +391,7 @@ module ApplicationController::Compare
               next if r[0] == @compare.records[0]["id"] # Skip the base VM
               cols.push(r[1][section[:name]][:_match_].to_s + "%")  # Grab the % value for this attr for this VM
             else
-              if @compare.results[r][section[:name]][:_match_]  # Does it match?
+              if r[1][section[:name]][:_match_]  # Does it match?
                 cols.push("")                     # Yes, push a blank string
               else
                 cols.push("*")                    # No, mark it with an *
@@ -424,7 +424,7 @@ module ApplicationController::Compare
                     {:name => ui_lookup(:model => @sb[:compare_db])}
     else
       rpt.db = "<drift>"            # Set special db setting for report formatter
-      rpt.title = _("${name} '%{vm_name}' Drift Report") % {:name    => ui_lookup(:model => @sb[:compare_db]),
+      rpt.title = _("%{name} '%{vm_name}' Drift Report") % {:name    => ui_lookup(:model => @sb[:compare_db]),
                                                             :vm_name => @sb[:miq_vm_name]}
     end
 
