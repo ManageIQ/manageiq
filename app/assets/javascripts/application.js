@@ -56,6 +56,7 @@
 //= require bootstrap-select
 //= require bootstrap-hover-dropdown
 //= require bootstrap-switch
+//= require angular-ui-bootstrap
 //= require angular-bootstrap-switch
 //= require patternfly-bootstrap-treeview
 //= require jquery.observe_field

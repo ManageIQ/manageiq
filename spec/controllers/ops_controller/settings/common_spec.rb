@@ -200,5 +200,67 @@ describe OpsController do
         expect(assigns(:edit)[:new][:authentication][:ldap_role]).to eq(true)
       end
     end
+
+    context "#enable_disable_central_admin" do
+      let(:expected_attrs) do
+        [
+          {
+            "id"                   => "region_11_subscription",
+            "status"               => "replicating",
+            "dbname"               => "vmdb's_test",
+            "host"                 => "example.com",
+            "user"                 => "root",
+            "provider_region"      => 11,
+            "provider_region_name" => "The region"
+          },
+          {
+            "id"              => "region_12_subscription",
+            "status"          => "disabled",
+            "dbname"          => "vmdb_test2",
+            "host"            => "test.example.com",
+            "user"            => "postgres",
+            "port"            => 5432,
+            "provider_region" => 12
+          }
+        ]
+      end
+      render_views
+
+      before do
+        EvmSpecHelper.local_miq_server(:zone => Zone.seed)
+        FactoryGirl.create(:miq_region, :region => 11, :description => "The 11th region")
+        FactoryGirl.create(:miq_region, :region => 12, :description => "The 12th region")
+      end
+
+      it "enables central admin when selected" do
+        allow(PglogicalSubscription).to receive(:all).and_return(expected_attrs)
+        allow(MiqRegion).to receive(:replication_type).and_return(:global)
+        params = {:ssh_user => 'User1', :ssh_host => 'Host1', :ssh_password => 'pwd1', :provider_region => '11'}
+        controller.instance_variable_set(:@_params, params)
+        allow(controller).to receive(:javascript_flash)
+        controller.send(:enable_central_admin)
+        expect(assigns(:flash_array).first[:message]).to include("Enable Central Admin has been successfully initiated")
+      end
+
+      it "fails to enable central admin if the user is mising" do
+        allow(PglogicalSubscription).to receive(:all).and_return(expected_attrs)
+        allow(MiqRegion).to receive(:replication_type).and_return(:global)
+        params = {:ssh_host => 'Host1', :ssh_password => 'pwd1', :provider_region => '11'}
+        controller.instance_variable_set(:@_params, params)
+        allow(controller).to receive(:javascript_flash)
+        controller.send(:enable_central_admin)
+        expect(assigns(:flash_array).first[:message]).to include("Invalid data for enabling Central Admin")
+      end
+
+      it "disables central admin when selected for a region that has it configured" do
+        allow(PglogicalSubscription).to receive(:all).and_return(expected_attrs)
+        allow(MiqRegion).to receive(:replication_type).and_return(:global)
+        allow(controller).to receive(:javascript_flash)
+        params = {:provider_region => '12'}
+        controller.instance_variable_set(:@_params, params)
+        controller.send(:disable_central_admin)
+        expect(assigns(:flash_array).first[:message]).to include("Central Admin has been disabled")
+      end
+    end
   end
 end

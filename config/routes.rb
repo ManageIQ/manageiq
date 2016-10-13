@@ -2200,7 +2200,9 @@ Vmdb::Application.routes.draw do
         diagnostics_server_list
         diagnostics_tree_select
         diagnostics_worker_selected
+        disable_central_admin
         edit_rhn
+        enable_central_admin
         explorer
         fetch_build
         forest_accept

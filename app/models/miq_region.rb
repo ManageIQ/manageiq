@@ -272,6 +272,10 @@ class MiqRegion < ApplicationRecord
     auth.save!
   end
 
+  def remove_auth_key
+    authentication_delete(AUTHENTICATION_TYPE)
+  end
+
   def verify_credentials(_auth_type = nil, _options = nil)
     # TODO: verify the key against the remote api using the api client gem
     true

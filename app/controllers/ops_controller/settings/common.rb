@@ -173,6 +173,14 @@ module OpsController::Settings::Common
     replication_type = MiqRegion.replication_type
     subscriptions = replication_type == :global ? PglogicalSubscription.all : []
     subscriptions = get_subscriptions_array(subscriptions) unless subscriptions.empty?
+    if replication_type == :global
+      subscriptions.each do |h|
+        region = MiqRegion.find_by( :region => h['provider_region'])
+        remote_ws_address = region ? region.remote_ws_address : ''
+        h.merge!(:auth_key_configured => region && region.auth_key_configured? ? true : false, :remote_ws_address => remote_ws_address)
+      end
+    end
+
     render :json => {
       :replication_type => replication_type,
       :subscriptions    => subscriptions
@@ -222,6 +230,43 @@ module OpsController::Settings::Common
     else
       valid.each do |v|
         add_flash(v, :error)
+      end
+    end
+    javascript_flash
+  end
+
+
+  def enable_central_admin
+    replication_type = MiqRegion.replication_type
+
+    if replication_type != :global || !@_params[:provider_region] || !@_params[:ssh_user] || !@_params[:ssh_password]
+      add_flash(_("Invalid data for enabling Central Admin"), :error)
+    else
+      provider_region = @_params[:provider_region]
+      region = MiqRegion.find_by(:region => provider_region)
+      if region
+        region.generate_auth_key_queue(@_params[:ssh_user], @_params[:ssh_password], @_params[:ssh_host])
+        add_flash(_("Enable Central Admin has been successfully initiated"))
+      else
+        add_flash(_("Region Not found"), :error)
+      end
+    end
+    javascript_flash
+  end
+
+  def disable_central_admin
+    replication_type = MiqRegion.replication_type
+
+    if replication_type != :global || !@_params[:provider_region]
+      add_flash(_("Invalid data for disabling Central Admin"), :error)
+    else
+      provider_region = @_params[:provider_region]
+      region = MiqRegion.find_by( :region => provider_region)
+      if region
+        region.remove_auth_key
+        add_flash(_("Central Admin has been disabled"))
+      else
+        add_flash(_("Region Not found"), :error)
       end
     end
     javascript_flash
