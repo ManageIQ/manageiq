@@ -1390,7 +1390,7 @@ module VmCommon
     end
     h_tb = build_toolbar("x_history_tb") unless @in_a_form
 
-    unless x_active_tree == :vandt_tree
+    unless x_active_tree == :vandt_tree || x_active_tree == :instances_tree
       # Clicked on right cell record, open the tree enough to show the node, if not already showing
       if params[:action] == "x_show" &&
          @record && # Showing a record
