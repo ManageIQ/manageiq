@@ -21,7 +21,7 @@ class ApplicationHelper::Toolbar::CompareView < ApplicationHelper::Toolbar::Basi
       nil,
       :items => [
         button(
-          :compare_download_txt,
+          :compare_download_text,
           'fa fa-file-text-o fa-lg',
           N_('Download comparison report in text format'),
           N_('Download as Text'),
@@ -33,7 +33,7 @@ class ApplicationHelper::Toolbar::CompareView < ApplicationHelper::Toolbar::Basi
           N_('Download as CSV'),
           :url => "/compare_to_csv"),
         button(
-          :download_pdf,
+          :compare_download_pdf,
           'fa fa-file-pdf-o fa-lg',
           N_('Download comparison report in PDF format'),
           N_('Download as PDF'),
