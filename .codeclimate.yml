@@ -32,7 +32,7 @@ engines:
     # requires Gemfile.lock
     enabled: false
   csslint:
-    enabled: false
+    enabled: true
   duplication:
     enabled: true
     config:
@@ -47,8 +47,7 @@ engines:
     # let's enable later
     enabled: false
   markdownlint:
-    # let's enable later
-    enabled: false
+    enabled: true
   rubocop:
     enabled: true
     config: '.rubocop_cc.yml'
