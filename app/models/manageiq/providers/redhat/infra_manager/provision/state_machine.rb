@@ -40,8 +40,12 @@ module ManageIQ::Providers::Redhat::InfraManager::Provision::StateMachine
       _log.info("#{message} #{for_destination}")
       update_and_notify_parent(:message => message)
       configure_container
-      signal :poll_destination_powered_off_in_provider
+      signal :customize_guest
     end
+  end
+
+  def customize_guest
+    signal :poll_destination_powered_off_in_provide
   end
 
   def autostart_destination
