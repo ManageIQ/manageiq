@@ -202,4 +202,8 @@ module ActsAsTaggable
       return ""
     end
   end
+
+  def perf_tags
+    tag_list(:ns => '/managed').split.join("|")
+  end
 end
