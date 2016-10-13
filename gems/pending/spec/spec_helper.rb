@@ -6,10 +6,6 @@ if ENV["TRAVIS"]
   Coveralls.wear_merged! { add_filter("/spec/") }
 end
 
-# Push the gems/pending directory onto the load path
-GEMS_PENDING_ROOT ||= File.expand_path(File.join(__dir__, ".."))
-$LOAD_PATH << GEMS_PENDING_ROOT
-
 # Initialize the global logger that might be expected
 require 'logger'
 $log ||= Logger.new("/dev/null")
