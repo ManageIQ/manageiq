@@ -8,5 +8,5 @@ object:
     inherits: 
     description: 
   fields:
-  - common_meth1:
+  - meth1:
       value: start_retirement
