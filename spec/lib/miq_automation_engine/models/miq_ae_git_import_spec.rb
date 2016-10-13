@@ -17,11 +17,11 @@ describe MiqAeGitImport do
     end
     let(:repo) { FactoryGirl.create(:git_repository, :url => url) }
     let(:branch_hash) do
-      {'ref' => branch_name, 'ref_type' => MiqAeDomain::BRANCH}
+      {'ref' => branch_name, 'ref_type' => MiqAeGitImport::BRANCH}
     end
 
     let(:tag_hash) do
-      {'ref' => tag_name, 'ref_type' => MiqAeDomain::TAG}
+      {'ref' => tag_name, 'ref_type' => MiqAeGitImport::TAG}
     end
 
     let(:branch) { FactoryGirl.create(:git_branch, :name => branch_name) }
@@ -70,7 +70,7 @@ describe MiqAeGitImport do
             'git_repository_id' => repo.id,
             'tenant_id'         => @user.current_tenant.id,
             'ref'               => tag_name,
-            'ref_type'          => MiqAeDomain::TAG
+            'ref_type'          => MiqAeGitImport::TAG
           }
         end
 

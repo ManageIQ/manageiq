@@ -1,5 +1,9 @@
 class MiqAeGitImport
   AUTH_KEYS = %w(userid password).freeze
+  BRANCH = 'branch'.freeze
+  TAG    = 'tag'.freeze
+  DEFAULT_BRANCH = 'origin/master'.freeze
+
   def initialize(options)
     @options = options
     @preview = options['preview']
@@ -46,14 +50,14 @@ class MiqAeGitImport
   end
 
   def default_import_options
-    @options['ref'] ||= MiqAeDomain::DEFAULT_BRANCH
-    @options['ref_type'] ||= MiqAeDomain::BRANCH
+    @options['ref'] ||= DEFAULT_BRANCH
+    @options['ref_type'] ||= BRANCH
     @options['ref_type'] = @options['ref_type'].downcase
 
     case @options['ref_type']
-    when MiqAeDomain::BRANCH
+    when BRANCH
       @options['branch'] = @options['ref']
-    when MiqAeDomain::TAG
+    when TAG
       @options['tag'] = @options['ref']
     else
       raise ArgumentError, "Invalid reference type #{@options['ref_type']} should be branch or tag"
@@ -63,11 +67,11 @@ class MiqAeGitImport
   def validate_refs
     match = nil
     case @options['ref_type']
-    when MiqAeDomain::BRANCH
+    when BRANCH
       other_name = "origin/#{@options['ref']}"
       match = @git_repo.git_branches.detect { |branch| branch.name.casecmp(@options['ref']) == 0 }
       match ||= @git_repo.git_branches.detect { |branch| branch.name.casecmp(other_name) == 0 }
-    when MiqAeDomain::TAG
+    when TAG
       match = @git_repo.git_tags.detect { |tag| tag.name.casecmp(@options['ref']) == 0 }
     end
     unless match

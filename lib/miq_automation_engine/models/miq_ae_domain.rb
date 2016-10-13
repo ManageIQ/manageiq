@@ -20,10 +20,6 @@ class MiqAeDomain < MiqAeNamespace
   belongs_to :git_repository
   validates_inclusion_of :source, :in => VALID_SOURCES
 
-  BRANCH = 'branch'.freeze
-  TAG    = 'tag'.freeze
-  DEFAULT_BRANCH = 'origin/master'.freeze
-
   EXPORT_EXCLUDE_KEYS = [/^id$/, /^(?!tenant).*_id$/, /^created_on/, /^updated_on/,
                          /^updated_by/, /^reserved$/, /^commit_message/,
                          /^commit_time/, /^commit_sha/, /^ref$/, /^ref_type$/,
@@ -114,34 +110,11 @@ class MiqAeDomain < MiqAeNamespace
   end
 
   def self.import_git_url(options)
-    gr = GitRepository.find_or_create_by(:url => options['url'])
-    if options['userid'] && options['password']
-      auth = gr.authentications.detect { |item| item.authtype == 'default' }
-      if auth
-        auth.update_attributes(options.slice(*AUTH_KEYS))
-      else
-        gr.authentications.create(options.slice(*AUTH_KEYS).merge(:authtype => 'default'))
-      end
-    end
-
-    gr.refresh
-    gr.reload
-    options['git_repository_id'] = gr.id
-
-    validate_refs(gr, options)
-    import_git_repo(options)
+    MiqAeGitImport.new(options).import
   end
 
   def self.import_git_repo(options)
-    git_repo = GitRepository.find(options['git_repository_id'])
-    raise "Git repository with id #{options['git_repository_id']} not found" unless git_repo
-
-    MiqAeDomain.find_by(:name => options['domain']).try(:destroy) if options['domain']
-    import_options(git_repo, options)
-    domain = Array.wrap(MiqAeImport.new(options['domain'] || '*', options).import).first
-    raise MiqAeException::DomainNotFound, "Import of domain failed" unless domain
-    domain.update_git_info(git_repo, options['ref'], options['ref_type'])
-    domain
+    MiqAeGitImport.new(options).import
   end
 
   def update_git_info(git_repo, ref, ref_type)
@@ -168,9 +141,9 @@ class MiqAeDomain < MiqAeNamespace
     raise MiqAeException::InvalidDomain, "Not Git enabled" unless git_enabled?
     raise "No branch or tag selected for this domain" if ref.nil? && ref_type.nil?
     case ref_type
-    when BRANCH
+    when MiqAeGitImport::BRANCH
       git_repository.branch_info(ref)
-    when TAG
+    when MiqAeGitImport::TAG
       git_repository.tag_info(ref)
     end
   end
@@ -209,23 +182,6 @@ class MiqAeDomain < MiqAeNamespace
     File.join(MiqAeDatastore::DATASTORE_DIRECTORY, "#{about.fqname}#{CLASS_DIR_SUFFIX}", CLASS_YAML_FILENAME) if about
   end
 
-  def self.import_options(git_repo, options)
-    options['git_dir'] = git_repo.directory_name
-    options['preview'] ||= false
-    options['ref'] ||= DEFAULT_BRANCH
-    options['ref_type'] ||= BRANCH
-    options['ref_type'] = options['ref_type'].downcase
-
-    case options['ref_type'].downcase
-    when BRANCH
-      options['branch'] = options['ref']
-    when TAG
-      options['tag'] = options['ref']
-    end
-  end
-
-  private_class_method :import_options
-
   def self.reset_priority_of_system_domains
     domains = MiqAeDomain.where('source = ? AND name <> ?',
                                 SYSTEM_SOURCE,  MiqAeDatastore::MANAGEIQ_DOMAIN).order('name DESC')
@@ -242,21 +198,4 @@ class MiqAeDomain < MiqAeNamespace
   end
 
   private_class_method :reset_priority_of_non_system_domains
-
-  def self.validate_refs(repo, options)
-    match = nil
-    case options['ref_type'].downcase
-    when BRANCH
-      other_name = "origin/#{options['ref']}"
-      match = repo.git_branches.detect { |branch| branch.name.casecmp(options['ref']) == 0 }
-      match ||= repo.git_branches.detect { |branch| branch.name.casecmp(other_name) == 0 }
-    when TAG
-      match = repo.git_tags.detect { |tag| tag.name.casecmp(options['ref']) == 0 }
-    end
-    unless match
-      raise ArgumentError, "#{options['ref_type'].titleize} #{options['ref']} doesn't exist in repository"
-    end
-    options['ref'] = match.name
-  end
-  private_class_method :validate_refs
 end
