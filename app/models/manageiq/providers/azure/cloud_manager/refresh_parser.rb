@@ -27,6 +27,8 @@ module ManageIQ::Providers
         @data              = {}
         @data_index        = {}
         @resource_to_stack = {}
+        @template_uris     = {}
+        @template_refs     = {}
       end
 
       def ems_inv_to_hashes
@@ -37,6 +39,7 @@ module ManageIQ::Providers
         get_series
         get_availability_zones
         get_stacks
+        get_stack_templates
         get_instances
         get_images
         _log.info("#{log_header}...Complete")
@@ -142,8 +145,26 @@ module ManageIQ::Providers
                                                     end
       end
 
-      def get_stack_template(stack, content)
-        process_collection([stack], :orchestration_templates) { |the_stack| parse_stack_template(the_stack, content) }
+      def get_stack_templates
+        # download all template uris
+        @template_uris.each { |uri, template| template[:content] = download_template(uri) }
+
+        # load from existing stacks => templates
+        stacks = OrchestrationStack.where(:ems_ref => @template_refs.keys, :ext_management_system => @ems).index_by(&:ems_ref)
+        @template_refs.each do |stack_ref, template|
+          template[:content] = stacks[stack_ref].try(:orchestration_template).try(:content)
+        end
+
+        raw_templates = (@template_uris.values + @template_refs.values).select { |raw| raw[:content] }
+        process_collection(raw_templates, :orchestration_templates) do |template|
+          parse_stack_template(template)
+        end
+
+        # link stacks to templates, convert raw_template to template
+        @data_index[:orchestration_stacks].each do |_stack_uid, stack|
+          raw_template = stack[:orchestration_template]
+          stack[:orchestration_template] = @data_index.fetch_path(:orchestration_templates, raw_template[:uid])
+        end
       end
 
       def get_instances
@@ -329,27 +350,25 @@ module ManageIQ::Providers
           :parameters     => stack_parameters(deployment),
           :resource_group => deployment.resource_group,
 
-          :orchestration_template => stack_template(deployment)
+          :orchestration_template => stack_template_hash(deployment)
         }
         return uid, new_result
       end
 
-      def stack_template(deployment)
+      def stack_template_hash(deployment)
         uri = deployment.properties.try(:template_link).try(:uri)
+        template_hashes = uri ? @template_uris : @template_refs
+        key = uri ? uri : deployment.id
 
-        content = uri.nil? ? template_from_vmdb(deployment) : download_template(uri)
-        return unless content
+        template_hash = template_hashes[key]
+        unless template_hash
+          ver = deployment.properties.try(:template_link).try(:content_version)
+          template_hash = {:description => "contentVersion: #{ver}", :name => deployment.name, :uid => deployment.id}
+          template_hashes[key] = template_hash
+        end
 
-        get_stack_template(deployment, content)
-        @data_index.fetch_path(:orchestration_templates, deployment.id)
-      end
-
-      def template_from_vmdb(deployment)
-        find_by = {:name => deployment.name, :ems_ref => deployment.id, :ext_management_system => @ems}
-        # TODO(lsmola) this is generating a huge amount of sql queries? Do we need it? Why do we touch DB here?
-        # Can be at least written more effectively
-        stack = ManageIQ::Providers::Azure::CloudManager::OrchestrationStack.find_by(find_by)
-        stack.try(:orchestration_template).try(:content)
+        # This is a hash for the raw template. The template content is to be fetched
+        template_hash
       end
 
       def download_template(uri)
@@ -409,19 +428,15 @@ module ManageIQ::Providers
         return child_stacks, resources
       end
 
-      def parse_stack_template(deployment, content)
-        # Only need a temporary unique identifier for the template. Using the stack id is the cheapest way.
-        uid = deployment.id
-        ver = deployment.properties.try(:template_link).try(:content_version)
-
+      def parse_stack_template(template)
         new_result = {
           :type        => "OrchestrationTemplateAzure",
-          :name        => deployment.name,
-          :description => "contentVersion: #{ver}",
-          :content     => content,
+          :name        => template[:name],
+          :description => template[:description],
+          :content     => template[:content],
           :orderable   => false
         }
-        return uid, new_result
+        return template[:uid], new_result
       end
 
       def parse_stack_parameter(param_key, param_obj, stack_id)
