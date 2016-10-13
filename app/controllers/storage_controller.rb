@@ -414,6 +414,7 @@ class StorageController < ApplicationController
     end
 
     build_accordions_and_trees
+    @lastaction = "explorer" # restore the explorer layout, which was changed by process_show_list() to "show_list"
 
     render :layout => "application"
   end
