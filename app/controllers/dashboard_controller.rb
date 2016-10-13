@@ -206,6 +206,10 @@ class DashboardController < ApplicationController
       end
       @widgets_menu[:allow_reset] = can_reset
     end
+
+    # Make widget presenter forget chart data from previous HTTP request handled
+    # by this process.
+    WidgetPresenter.reset_data
   end
 
   # Destroy and recreate a user's dashboard from the default
