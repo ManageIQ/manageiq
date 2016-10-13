@@ -631,6 +631,7 @@ module ApplicationHelper
           ).include?(controller.action_name) ||
         %w(about
            chargeback
+           cloud_topology
            container_dashboard
            ems_infra_dashboard
            exception
@@ -1187,6 +1188,7 @@ module ApplicationHelper
                         cloud_object_store_object
                         cloud_subnet
                         cloud_tenant
+                        cloud_topology
                         cloud_volume
                         cloud_volume_backup
                         cloud_volume_snapshot
