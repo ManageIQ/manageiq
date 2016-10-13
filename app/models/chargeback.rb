@@ -47,6 +47,11 @@ class Chargeback < ActsAsArModel
           key, extra_fields = key_and_fields(perf, interval, tz)
           data[key] ||= extra_fields
 
+          if perf.chargeback_fields_present?
+            data[key]['fixed_compute_metric'] ||= 0
+            data[key]['fixed_compute_metric'] = data[key]['fixed_compute_metric'] + 1
+          end
+
           rates_to_apply = cb.get_rates(perf)
           chargeback_rates = data[key]["chargeback_rates"].split(', ') + rates_to_apply.collect(&:description)
           data[key]["chargeback_rates"] = chargeback_rates.uniq.join(', ')
@@ -111,14 +116,11 @@ class Chargeback < ActsAsArModel
       raise _("expected 'hourly' performance interval but got '%{interval}") % {:interval => perf.capture_interval_name}
     end
 
-    calc_fixed_compute = calc_fixed_compute?(perf)
-    h['fixed_compute_metric'] = (h['fixed_compute_metric'] || 0) + 1 if calc_fixed_compute
-
     rates.each do |rate|
       rate.chargeback_rate_details.each do |r|
         rec    = r.metric && perf.respond_to?(r.metric) ? perf : perf.resource
         metric = r.metric.nil? ? 0 : rec.send(r.metric) || 0
-        cost   = r.group == 'fixed' && !calc_fixed_compute ? 0 : r.cost(metric)
+        cost   = r.group == 'fixed' && !perf.chargeback_fields_present? ? 0 : r.cost(metric)
 
         reportable_metric_and_cost_fields(r.rate_name, r.group, metric, cost).each do |k, val|
           next unless attribute_names.include?(k)
@@ -145,18 +147,6 @@ class Chargeback < ActsAsArModel
     end
 
     col_hash
-  end
-
-  # check if at least one of these isnt empty\nil\zero
-  def self.calc_fixed_compute?(perf)
-    fixed_compute_fields = %w(
-      derived_vm_numvcpus cpu_usagemhz_rate_average
-      cpu_usage_rate_average disk_usage_rate_average
-      derived_memory_available derived_memory_used
-      net_usage_rate_average derived_vm_used_disk_storage
-      derived_vm_allocated_disk_storage
-    )
-    fixed_compute_fields.any? { |field| perf.send(field).present? && perf.send(field) != 0 }
   end
 
   def self.get_group_key_ts(perf, interval, tz)

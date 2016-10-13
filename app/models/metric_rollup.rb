@@ -2,6 +2,12 @@ class MetricRollup < ApplicationRecord
   include Metric::Common
   include Metric::ChargebackHelper
 
+  CHARGEBACK_METRIC_FIELDS = %w(derived_vm_numvcpus cpu_usagemhz_rate_average
+                                cpu_usage_rate_average disk_usage_rate_average
+                                derived_memory_available derived_memory_used
+                                net_usage_rate_average derived_vm_used_disk_storage
+                                derived_vm_allocated_disk_storage).freeze
+
   def self.with_interval_and_time_range(interval, timestamp)
     where(:capture_interval_name => interval, :timestamp => timestamp)
   end
@@ -49,5 +55,11 @@ class MetricRollup < ApplicationRecord
     metrics = metrics.where(:resource_id => resource_ids) if resource_ids
     metrics = metrics.order(:resource_id, :timestamp => :desc)
     metrics.select('DISTINCT ON (metric_rollups.resource_id) metric_rollups.*')
+  end
+
+  def chargeback_fields_present?
+    return @chargeback_fields_present if defined?(@chargeback_fields_present)
+
+    @chargeback_fields_present = CHARGEBACK_METRIC_FIELDS.any? { |field| send(field).present? && send(field).nonzero? }
   end
 end
