@@ -58,7 +58,7 @@ class EvmTestSetupReplication
   private
 
   def released_migrations
-    unless system("git fetch --depth=1 http://github.com/ManageIQ/manageiq.git refs/heads/darga:#{TEST_BRANCH}")
+    unless system(fetch_command)
       return []
     end
     files = `git ls-tree -r --name-only #{TEST_BRANCH} db/migrate/`
@@ -73,6 +73,10 @@ class EvmTestSetupReplication
     migrations.keep_if { |timestamp| timestamp =~ /\d+/ }
   ensure
     `git branch -D #{TEST_BRANCH}`
+  end
+
+  def fetch_command
+    "git fetch #{'--depth=1 ' if ENV['CI']}http://github.com/ManageIQ/manageiq.git refs/heads/darga:#{TEST_BRANCH}"
   end
 
   def prepare_slave_database
