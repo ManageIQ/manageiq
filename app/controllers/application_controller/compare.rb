@@ -417,7 +417,7 @@ module ApplicationController::Compare
                     {:name => ui_lookup(:model => @sb[:compare_db])}
     else
       rpt.db = "<drift>"            # Set special db setting for report formatter
-      rpt.title = _("${name} '%{vm_name}' Drift Report") % {:name    => ui_lookup(:model => @sb[:compare_db]),
+      rpt.title = _("%{name} '%{vm_name}' Drift Report") % {:name    => ui_lookup(:model => @sb[:compare_db]),
                                                             :vm_name => @sb[:miq_vm_name]}
     end
 
