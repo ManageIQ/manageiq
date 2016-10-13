@@ -33,7 +33,7 @@ module EmsRefresh::SaveInventoryHelper
     end
   end
 
-  def store_ids_for_new_dto_records(records, dto_collection, keys)
+  def store_ids_for_new_dto_records(records, dto_collection)
     records.each do |r|
       dto = dto_collection.find(dto_collection.object_index(r))
       next unless dto
@@ -60,7 +60,7 @@ module EmsRefresh::SaveInventoryHelper
 
     new_records = []
     dto_collection.each do |h|
-      h = h.is_a?(::ManagerRefresh::Dto) ? h.attributes : h
+      h = h.kind_of?(::ManagerRefresh::Dto) ? h.attributes : h
       save_inventory_with_findkey(association, h.except(*remove_keys), deletes, new_records, record_index)
     end
 

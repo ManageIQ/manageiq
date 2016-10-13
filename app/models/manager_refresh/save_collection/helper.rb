@@ -6,8 +6,7 @@ module ManagerRefresh::SaveCollection
                                :use_association,
                                dto_collection.manager_ref)
       store_ids_for_new_dto_records(dto_collection.parent.send(dto_collection.association),
-                                    dto_collection,
-                                    dto_collection.manager_ref)
+                                    dto_collection)
       dto_collection.saved = true
     end
 

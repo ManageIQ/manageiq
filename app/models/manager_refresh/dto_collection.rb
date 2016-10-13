@@ -22,9 +22,7 @@ module ManagerRefresh
     end
 
     def saveable?
-      dependencies.all? do |dep|
-        dep.saved?
-      end
+      dependencies.all?(&:saved?)
     end
 
     def <<(dto)
@@ -77,12 +75,13 @@ module ManagerRefresh
     end
 
     private
+
     def actualize_dependencies(dto)
       dto.data.values.each do |value|
-        if value.is_a? ::ManagerRefresh::DtoLazy
+        if value.kind_of? ::ManagerRefresh::DtoLazy
           dependencies << value.dto_collection
-        elsif value.kind_of?(Array) && value.any? { |x| x.is_a? ::ManagerRefresh::DtoLazy }
-          dependencies << value.detect { |x| x.is_a? ::ManagerRefresh::DtoLazy }.dto_collection
+        elsif value.kind_of?(Array) && value.any? { |x| x.kind_of? ::ManagerRefresh::DtoLazy }
+          dependencies << value.detect { |x| x.kind_of? ::ManagerRefresh::DtoLazy }.dto_collection
         end
       end
       dependencies.uniq!

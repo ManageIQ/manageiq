@@ -13,7 +13,7 @@ module ManagerRefresh
     end
 
     def inspect
-      "DtoLazy:('#{to_s}', #{dto_collection})"
+      "DtoLazy:('#{self}', #{dto_collection})"
     end
 
     def load
@@ -21,6 +21,7 @@ module ManagerRefresh
     end
 
     private
+
     def load_object_with_path
       dto_collection.find(to_s).data.fetch_path(*path)
     end
