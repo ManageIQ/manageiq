@@ -1,11 +1,24 @@
 module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
   extend ActiveSupport::Concern
 
+  require 'ovirtsdk4'
+
+  included do
+    process_api_features_support
+  end
+
+  def supported_features
+    @supported_features ||= supported_api_versions.collect { |version| self.class.api_features[version] }.flatten.uniq
+  end
+
   def connect(options = {})
     raise "no credentials defined" if self.missing_credentials?(options[:auth_type])
-
+    version = options[:version] || 3
+    unless options[:skip_supported_api_validation] || supports_the_api_version?(version)
+      raise "version #{version} of the api is not supported by the provider"
+    end
     # If there is API path stored in the endpoints table and use it:
-    path = default_endpoint.path
+    path = options[:path] || default_endpoint.path
     _log.info("Using stored API path '#{path}'.") unless path.blank?
 
     server   = options[:ip] || address
@@ -13,11 +26,10 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
     username = options[:user] || authentication_userid(options[:auth_type])
     password = options[:pass] || authentication_password(options[:auth_type])
     service  = options[:service] || "Service"
-    version  = options[:version] || 3
 
     # Create the underlying connection according to the version of the oVirt API requested by
     # the caller:
-    connect_method = version == 4 ? :raw_connect_v4 : :raw_connect_v3
+    connect_method = "raw_connect_v#{version}".to_sym
     connection = self.class.public_send(connect_method, server, port, path, username, password, service)
 
     # Copy the API path to the endpoints table:
@@ -28,6 +40,30 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
 
   def supports_port?
     true
+  end
+
+  def supported_api_versions
+    supported_api_versions_from_cache
+  end
+
+  def supported_api_versions_from_cache
+    Cacher.new(cache_key).fetch_fresh(last_refresh_date) { supported_api_verions_from_sdk }
+  end
+
+  def cache_key
+    "REDHAT_EMS_CACHE_KEY_#{id}"
+  end
+
+  def supported_api_verions_from_sdk
+    username = authentication_userid(:basic)
+    password = authentication_password(:basic)
+    probe_args = { :hostname => hostname, :port => port, :username => username, :password => password }
+    probe_results = OvirtSDK4::Probe.probe(probe_args)
+    probe_results.map(&:version) if probe_results
+  end
+
+  def supports_the_api_version?(version)
+    supported_api_versions.include?(version)
   end
 
   def supported_auth_types
@@ -142,9 +178,9 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
 
   def history_database_name
     @history_database_name ||= begin
-      version = version_3_0? ? '3_0' : '>3_0'
-      self.class.history_database_name_for(version)
-    end
+                                 version = version_3_0? ? '3_0' : '>3_0'
+                                 self.class.history_database_name_for(version)
+                               end
   end
 
   def version_3_0?
@@ -170,8 +206,31 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
   end
 
   class_methods do
+    def api3_supported_features
+      []
+    end
+
+    def api4_supported_features
+      [:snapshots]
+    end
+
+    def api_features
+      { 3 => api3_supported_features, 4 => api4_supported_features }
+    end
+
+    def process_api_features_support
+      all_features = api_features.values.flatten.uniq
+      all_features.each do |feature|
+        supports feature do
+          unless supported_features.include?(feature)
+            unsupported_reason_add(feature, _("This feature is not supported by the api version of the provider"))
+          end
+        end
+      end
+    end
+
     # Connect to the engine using version 4 of the API and the `ovirt-engine-sdk` gem.
-    def raw_connect_v4(server, port, path, username, password, service)
+    def raw_connect_v4(server, port, path, username, password, service, scheme = 'https')
       require 'ovirtsdk4'
 
       # Get the timeout from the configuration:
@@ -179,7 +238,7 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
 
       # Create the connection:
       OvirtSDK4::Connection.new(
-        :url      => "https://#{server}:#{port}#{path}",
+        :url      => "#{scheme}://#{server}:#{port}#{path}",
         :username => username,
         :password => password,
         :timeout  => timeout,
@@ -231,6 +290,32 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
 
     def extract_ems_ref_id(href)
       href && href.split("/").last
+    end
+  end
+
+  class Cacher
+    attr_reader :key
+
+    def initialize(key)
+      @key = key
+    end
+
+    def fetch_fresh(last_refresh_time)
+      force = stale_cache?(last_refresh_time)
+      res = Rails.cache.fetch(key, force: force) { build_entry { yield } }
+      res[:value]
+    end
+
+    private
+
+    def build_entry
+      {:created_at => Time.now.utc, :value => yield}
+    end
+
+    def stale_cache?(last_refresh_time)
+      current_val = Rails.cache.read(key)
+      return true unless current_val && current_val[:created_at] && last_refresh_time
+      last_refresh_time > current_val[:created_at]
     end
   end
 end
