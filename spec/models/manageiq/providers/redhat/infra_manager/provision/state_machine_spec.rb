@@ -35,6 +35,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Provision::StateMachine do
       :poll_clone_complete                      => {:signals => 1, :calls => 3},
       :poll_destination_in_vmdb                 => {:signals => 1, :calls => 3},
       :customize_destination                    => {:signals => 1, :calls => 3},
+      :customize_guest                          => {:signals => 1, :calls => 3},
       :poll_destination_powered_off_in_provider => {:signals => 1, :calls => 4},
       :poll_destination_powered_off_in_vmdb     => {:signals => 2, :calls => 2},
       :post_provision                           => {:signals => 1, :calls => 1},
