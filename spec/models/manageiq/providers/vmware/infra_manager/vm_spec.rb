@@ -47,11 +47,12 @@ describe ManageIQ::Providers::Vmware::InfraManager::Vm do
     end
   end
 
-  context "#cloneable?" do
-    let(:vm_vmware) { ManageIQ::Providers::Vmware::InfraManager::Vm.new }
+  context "supports_clone?" do
+    let(:ems)  { FactoryGirl.create(:ems_vmware) }
+    let(:vm)   { FactoryGirl.create(:vm_vmware, :ext_management_system => ems) }
 
     it "returns true" do
-      expect(vm_vmware.cloneable?).to eq(true)
+      expect(vm.supports?(:clone)).to eq(true)
     end
   end
 

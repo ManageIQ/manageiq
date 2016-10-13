@@ -1,4 +1,10 @@
 module MiqTemplate::Operations
+  extend ActiveSupport::Concern
+
+  included do
+    supports :clone
+  end
+
   def validate_collect_running_processes
     validate_invalid_for_template(_("VM Process collection"))
   end
@@ -21,10 +27,6 @@ module MiqTemplate::Operations
 
   def validate_reset
     validate_invalid_for_template(_("Reset Operation"))
-  end
-
-  def validate_clone
-    {:available => true, :message => nil}
   end
 
   private
