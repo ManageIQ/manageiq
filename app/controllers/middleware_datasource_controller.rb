@@ -9,7 +9,8 @@ class MiddlewareDatasourceController < ApplicationController
 
   OPERATIONS = {
     :middleware_datasource_remove => { :op   => :remove_middleware_datasource,
-                                       :hawk => N_('Not removed datasources'),
+                                       :skip => true,
+                                       :hawk => N_('removed datasources for'),
                                        :msg  => N_('The selected datasources were removed')
     }
   }.freeze

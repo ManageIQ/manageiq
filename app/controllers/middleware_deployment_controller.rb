@@ -9,19 +9,23 @@ class MiddlewareDeploymentController < ApplicationController
 
   OPERATIONS = {
     :middleware_deployment_restart  => {:op   => :restart_middleware_deployment,
-                                        :hawk => N_('Not restarting deployment'),
+                                        :skip => true,
+                                        :hawk => N_('restarting deployment for'),
                                         :msg  => N_('Restart initiated for selected deployment(s)')
     },
     :middleware_deployment_disable  => {:op   => :disable_middleware_deployment,
-                                        :hawk => N_('Not disabling deployment'),
+                                        :skip => true,
+                                        :hawk => N_('disabling deployment for'),
                                         :msg  => N_('Disable initiated for selected deployment(s)')
     },
     :middleware_deployment_enable   => {:op   => :enable_middleware_deployment,
-                                        :hawk => N_('Not enabling deployment'),
+                                        :skip => true,
+                                        :hawk => N_('enabling deployment for'),
                                         :msg  => N_('Enable initiated for selected deployment(s)')
     },
     :middleware_deployment_undeploy => {:op   => :undeploy_middleware_deployment,
-                                        :hawk => N_('Not undeploying deployment'),
+                                        :skip => true,
+                                        :hawk => N_('undeploying deployment for'),
                                         :msg  => N_('Undeployment initiated for selected deployment(s)')
     }
   }.freeze
