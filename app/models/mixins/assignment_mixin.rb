@@ -113,8 +113,7 @@ module AssignmentMixin
       if options[:parents]
         parents = options[:parents]
       else
-        model = kind_of?(Class) ? self : model
-        parents = model::ASSIGNMENT_PARENT_ASSOCIATIONS.flat_map do |rel|
+        parents = self::ASSIGNMENT_PARENT_ASSOCIATIONS.flat_map do |rel|
           (rel == :my_enterprise ? MiqEnterprise.my_enterprise : target.try(rel)) || []
         end
         parents << target
