@@ -13,9 +13,8 @@ module Api
         raise BadRequestError, "Must specify a resource src_id or src_ids"
       end
 
-      requester = Hash(data.delete("requester"))
-      user = fetch_requester_user(requester)
-      auto_approve = fetch_auto_approve(requester)
+      user = parse_requester_user(data.delete("requester"))
+      auto_approve = parse_auto_approve(data.delete("auto_approve"))
 
       request_type.constantize.create_request(data.symbolize_keys, user, auto_approve)
     end
@@ -24,7 +23,7 @@ module Api
       raise BadRequestError, "Must specify a id for editing a #{type} resource" unless id
       request_klass = collection_class(:requests)
       request = resource_search(id, type, request_klass)
-      user = fetch_requester_user(Hash(data.delete("requester")))
+      user = parse_requester_user(data.delete("requester"))
 
       request_klass.update_request(request, data, user)
       request
@@ -50,19 +49,18 @@ module Api
       end
     end
 
-    def fetch_requester_user(requester_hash)
-      user_name = requester_hash["user_name"]
+    def parse_requester_user(requester)
+      user_name = Hash(requester)["user_name"]
       return @auth_user_obj if user_name.blank?
       user = User.lookup_by_identity(user_name)
       raise BadRequestError, "Unknown requester user_name #{user_name} specified" unless user
       user
     end
 
-    def fetch_auto_approve(requester_hash)
-      auto_approve = requester_hash["auto_approve"]
+    def parse_auto_approve(auto_approve)
       case auto_approve
       when TrueClass, "true" then true
-      when FalseClass, "false" then false
+      when FalseClass, "false", nil then false
       else raise BadRequestError, "Invalid requester auto_approve value #{auto_approve} specified"
       end
     end
