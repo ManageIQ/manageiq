@@ -1,7 +1,6 @@
 module TreeBuilderArchived
-
-  def x_get_tree_custom_kids(object, count_only, _options)
-    klass = ManageIQ::Providers::InfraManager::VmOrTemplate
+  def x_get_tree_custom_kids(object, count_only, options)
+    klass = Object.const_get(options[:leaf])
     objects = if TreeBuilder.hide_vms
                 [] # hidden all VMs
               else
