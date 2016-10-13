@@ -33,7 +33,7 @@ class ApplicationHelper::Toolbar::DriftView < ApplicationHelper::Toolbar::Basic
           N_('Download as CSV'),
           :url => "/drift_to_csv"),
         button(
-          :drift_pdf,
+          :drift_download_pdf,
           'fa fa-file-pdf-o fa-lg',
           N_('Download comparison report in PDF format'),
           N_('Download as PDF'),
