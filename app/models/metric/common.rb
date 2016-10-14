@@ -19,7 +19,9 @@ module Metric::Common
     serialize :assoc_ids
     serialize :min_max   # TODO: Move this to MetricRollup
 
-    virtual_column :v_derived_storage_used, :type => :float
+    virtual_column :v_derived_storage_used, :type => :float, :arel => (lambda do |t|
+      t.grouping(t[:derived_storage_total] - t[:derived_storage_free])
+    end)
 
     [
       :cpu_ready_delta_summation,
@@ -55,15 +57,15 @@ module Metric::Common
                        .where('timestamp >= ? and timestamp < ?', # This picks only the first midnight
                               timestamp.to_date, (timestamp + 1.day).to_date)
                        .where.not(:derived_storage_total => nil, :derived_storage_free => nil)
-    recs.collect(&:v_derived_storage_used).sort.send(mode == :min ? :first : :last)
+    recs.send(mode, MetricRollup.arel_attribute(:v_derived_storage_used))
   end
 
   def min_v_derived_storage_used
-    @min_v_derived_storage_used ||= min_max_v_derived_storage_used(:min)
+    @min_v_derived_storage_used ||= min_max_v_derived_storage_used(:minimum)
   end
 
   def max_v_derived_storage_used
-    @max_v_derived_storage_used ||= min_max_v_derived_storage_used(:max)
+    @max_v_derived_storage_used ||= min_max_v_derived_storage_used(:maximum)
   end
 
   CHILD_ROLLUP_INTERVAL = {
