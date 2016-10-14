@@ -1,4 +1,4 @@
-class ManageIQ::Providers::Openstack::CloudManager::AuthKeyPairDecorator < Draper::Decorator
+class AuthPrivateKeyDecorator < Draper::Decorator
   delegate_all
 
   def fonticon
@@ -11,7 +11,6 @@ class ManageIQ::Providers::Openstack::CloudManager::AuthKeyPairDecorator < Drape
 
   private
 
-  # Determine the icon
   def item_image
     'auth_key_pair'
   end
