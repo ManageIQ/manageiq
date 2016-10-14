@@ -171,5 +171,99 @@ RSpec.describe "Requests API" do
 
       expect_bad_request(/Unknown requester user_name invalid_user specified/)
     end
+
+    it "succeed" do
+      api_basic_authorize collection_action_identifier(:requests, :create),
+                          MiqRequest::REQUEST_TYPE_ROLE_IDENTIFIER[:ServiceReconfigureRequest]
+
+      service = FactoryGirl.create(:service, :name => "service1")
+      run_post(requests_url, gen_request(:create,
+                                         :request_type => "ServiceReconfigureRequest",
+                                         :auto_approve => false,
+                                         :src_id       => service.id))
+
+      expected = {
+        "results" => [
+          a_hash_including(
+            "description"    => "Service Reconfigure for: #{service.name}",
+            "approval_state" => "pending_approval",
+            "type"           => "ServiceReconfigureRequest",
+            "requester_name" => api_config(:user_name),
+            "options"        => a_hash_including("src_id" => service.id)
+          )
+        ]
+      }
+      expect(response.parsed_body).to include(expected)
+      expect(response).to have_http_status(:ok)
+    end
+
+    it "succeed immediately with optional data and auto_approve set to true" do
+      api_basic_authorize collection_action_identifier(:requests, :create),
+                          MiqRequest::REQUEST_TYPE_ROLE_IDENTIFIER[:ServiceReconfigureRequest]
+
+      approver = FactoryGirl.create(:user_miq_request_approver)
+      service = FactoryGirl.create(:service, :name => "service1")
+      run_post(requests_url, gen_request(:create,
+                                         :request_type => "ServiceReconfigureRequest",
+                                         :requester    => { "user_name" => approver.userid },
+                                         :auto_approve => true,
+                                         :other_attr   => "other value",
+                                         :src_id       => service.id))
+
+      expected = {
+        "results" => [
+          a_hash_including(
+            "description"    => "Service Reconfigure for: #{service.name}",
+            "approval_state" => "approved",
+            "type"           => "ServiceReconfigureRequest",
+            "requester_name" => approver.name,
+            "options"        => a_hash_including("src_id" => service.id, "other_attr" => "other value")
+          )
+        ]
+      }
+      expect(response.parsed_body).to include(expected)
+      expect(response).to have_http_status(:ok)
+    end
+  end
+
+  context "request update" do
+    it "is forbidden for a user without appropriate role" do
+      api_basic_authorize
+
+      run_post(requests_url, gen_request(:edit))
+
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it "fails with an invalid request id" do
+      api_basic_authorize collection_action_identifier(:requests, :edit)
+
+      run_post(requests_url(999_999), gen_request(:edit, :some_option => "some_value"))
+
+      expected = {
+        "error" => a_hash_including(
+          "message" => /Couldn't find MiqRequest/
+        )
+      }
+      expect(response).to have_http_status(:not_found)
+      expect(response.parsed_body).to include(expected)
+    end
+
+    it "succeed" do
+      api_basic_authorize collection_action_identifier(:requests, :edit)
+
+      service = FactoryGirl.create(:service, :name => "service1")
+      request = ServiceReconfigureRequest.create_request({ :src_id => service.id }, @user, false)
+
+      run_post(requests_url(request.id), gen_request(:edit, :some_option => "some_value"))
+
+      expected = {
+        "id"      => request.id,
+        "options" => a_hash_including("some_option" => "some_value")
+      }
+
+      expect_single_resource_query(expected)
+      expect(response).to have_http_status(:ok)
+    end
   end
 end
