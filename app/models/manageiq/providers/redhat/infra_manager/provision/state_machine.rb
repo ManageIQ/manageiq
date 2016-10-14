@@ -45,7 +45,7 @@ module ManageIQ::Providers::Redhat::InfraManager::Provision::StateMachine
   end
 
   def customize_guest
-    signal :poll_destination_powered_off_in_provide
+    signal :poll_destination_powered_off_in_provider
   end
 
   def autostart_destination
