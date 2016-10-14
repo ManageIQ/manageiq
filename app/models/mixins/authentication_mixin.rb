@@ -10,7 +10,7 @@ module AuthenticationMixin
       zone = MiqServer.my_server.zone
       assoc = name.tableize
       assocs = zone.respond_to?(assoc) ? zone.send(assoc) : []
-      assocs.each(&:authentication_check_types_queue)
+      assocs.each { |a| a.authentication_check_types_queue(:attempt => 1) }
     end
   end
 
@@ -221,6 +221,7 @@ module AuthenticationMixin
       :instance_id => id,
       :method_name => 'authentication_check_types',
       :args        => [types.to_miq_a, method_options],
+      :deliver_on  => authentication_check_retry_deliver_on(method_options[:attempt])
     }
 
     options[:role] = role if role
@@ -242,7 +243,19 @@ module AuthenticationMixin
     # Let the individual classes determine what authentication(s) need to be checked
     types = authentications_to_validate if self.respond_to?(:authentications_to_validate) && types.nil?
     types = [nil] if types.blank?
-    types.to_miq_a.each { |t| authentication_check(t, options) }
+    types.to_miq_a.each do |t|
+      success = authentication_check(t, options).first
+      retry_scheduled_authentication_check(t, options) unless success
+    end
+  end
+
+  def retry_scheduled_authentication_check(auth_type, options)
+    return unless options[:attempt]
+    auth = authentication_best_fit(auth_type)
+    if auth.retryable_status?
+      options[:attempt] += 1
+      authentication_check_types_queue(auth_type, options)
+    end
   end
 
   # Returns [boolean check_result, string details]
