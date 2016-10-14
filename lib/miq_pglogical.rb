@@ -68,7 +68,7 @@ class MiqPglogical
   # Lists the tables configured to be excluded in the vmdb configuration
   # @return Array<String> the table list
   def configured_excludes
-    MiqServer.my_server.get_config.config.fetch_path(*SETTINGS_PATH, :exclude_tables) | %w(ar_internal_metadata schema_migrations)
+    MiqServer.my_server.get_config.config.fetch_path(*SETTINGS_PATH, :exclude_tables) | always_excluded_tables
   end
 
   # Creates the 'miq' replication set and refreshes the excluded tables
@@ -134,5 +134,9 @@ class MiqPglogical
   # tables that are currently excluded, but we want them included
   def newly_included_tables
     (@connection.tables - configured_excludes) - included_tables
+  end
+
+  def always_excluded_tables
+    %w(ar_internal_metadata schema_migrations repl_events repl_monitor repl_nodes)
   end
 end
