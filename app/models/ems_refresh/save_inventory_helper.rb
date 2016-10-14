@@ -33,6 +33,66 @@ module EmsRefresh::SaveInventoryHelper
     end
   end
 
+  def store_ids_for_new_dto_records(records, dto_collection)
+    records.each do |r|
+      dto = dto_collection.find(dto_collection.object_index(r))
+      next unless dto
+      dto[:id]      = r.id
+      r.send(:clear_association_cache)
+      dto[:_object] = r
+    end
+  end
+
+  def save_dto_inventory_multi(association, dto_collection, deletes, find_key, child_keys = [], extra_keys = [], disconnect = false)
+    association.reset
+
+    if deletes == :use_association
+      deletes = association
+    elsif deletes.respond_to?(:reload) && deletes.loaded?
+      deletes.reload
+    end
+    deletes = deletes.to_a
+
+    child_keys = Array.wrap(child_keys)
+    remove_keys = Array.wrap(extra_keys) + child_keys
+
+    record_index = TypedIndex.new(association, find_key)
+
+    new_records = []
+    dto_collection.each do |h|
+      h = h.kind_of?(::ManagerRefresh::Dto) ? h.attributes : h
+      save_inventory_with_findkey(association, h.except(*remove_keys), deletes, new_records, record_index)
+    end
+
+    # Delete the items no longer found
+    unless deletes.blank?
+      type = association.proxy_association.reflection.name
+      _log.info("[#{type}] Deleting #{log_format_deletes(deletes)}")
+      disconnect ? deletes.each(&:disconnect_inv) : delete_inventory_multi(dto_collection, association,  deletes)
+    end
+
+    # Add the new items
+    association_meta_info = dto_collection.parent.class.reflect_on_association(dto_collection.association)
+    if association_meta_info.options[:through].blank?
+      association.push(new_records)
+    else
+      dto_collection.model_class.transaction do
+        new_records.map(&:save)
+      end
+    end
+  end
+
+  def delete_inventory_multi(dto_collection, association, deletes)
+    association_meta_info = dto_collection.parent.class.reflect_on_association(dto_collection.association)
+    if association_meta_info.options[:through].blank?
+      association.delete(deletes)
+    else
+      dto_collection.model_class.transaction do
+        deletes.map(&:delete)
+      end
+    end
+  end
+
   def save_inventory_multi(association, hashes, deletes, find_key, child_keys = [], extra_keys = [], disconnect = false)
     association.reset
 
