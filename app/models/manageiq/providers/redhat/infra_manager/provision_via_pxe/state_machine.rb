@@ -3,6 +3,10 @@ module ManageIQ::Providers::Redhat::InfraManager::ProvisionViaPxe::StateMachine
     signal :create_pxe_configuration_file
   end
 
+  def customize_guest
+    signal :create_pxe_configuration_file
+  end
+
   def create_pxe_configuration_file
     message = "Generating PXE and Customization Files on PXE Server"
     _log.info("#{message} #{for_destination}")
