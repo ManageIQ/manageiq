@@ -132,6 +132,7 @@ class MiqRegion < ApplicationRecord
         conditions = sanitize_conditions(region_to_conditions(region, pk))
       else
         id_cols = connection.columns(t).select { |c| c.name.ends_with?("_id") }
+        next if id_cols.empty?
         conditions = id_cols.collect { |c| "(#{sanitize_conditions(region_to_conditions(region, c.name))})" }.join(" OR ")
       end
 
