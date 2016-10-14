@@ -11,7 +11,7 @@ module ApplianceConsole
 
     REGISTER_CMD    = 'repmgr standby register'.freeze
     PGPASS_FILE     = '/var/lib/pgsql/.pgpass'.freeze
-    REPMGRD_SERVICE = 'rh-repmgr95'.freeze
+    REPMGRD_SERVICE = 'rh-postgresql95-repmgr'.freeze
     REPMGRD_LOG     = '/var/log/repmgr/repmgrd.log'.freeze
 
     attr_accessor :standby_host, :run_repmgrd_configuration
