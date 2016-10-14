@@ -199,13 +199,13 @@ Monthly @ 5.0 + 2.5 per Megabytes from 5.0 to Infinity")
                             :chargeback_rate_detail_measure_id  => cbm.id,
                             :chargeback_rate_detail_currency_id => cbc.id
                            )
-    expect(cbd.show_rates(cbc.code)).to eq("EUR / Day")
+    expect(cbd.show_rates).to eq("EUR / Day")
 
     cbd = FactoryGirl.build(:chargeback_rate_detail_memory_allocated,
                             :chargeback_rate_detail_measure_id  => cbm.id,
                             :chargeback_rate_detail_currency_id => cbc.id
                            )
-    expect(cbd.show_rates(cbc.code)).to eq("EUR / Day / MB")
+    expect(cbd.show_rates).to eq("EUR / Day / MB")
   end
 
   context "tier set correctness" do

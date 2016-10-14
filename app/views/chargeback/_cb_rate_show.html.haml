@@ -27,7 +27,6 @@
         %th= _("Variable")
     %tbody
       /Currency code is the same for all the chargeback_rate_details
-      - code_currency = @record.chargeback_rate_details.first.detail_currency.code
       - @record.chargeback_rate_details.to_a.sort_by { |rd| [rd[:group].downcase, rd[:description].downcase] }.each_with_index do |detail, detail_index|
       - tiers = detail.chargeback_tiers.order(:start)
         - @cur_group = detail[:group] if @cur_group.nil?
@@ -51,7 +50,7 @@
           %td{:align => "right"}
             = tier.variable_rate ? tier.variable_rate : 0.0
           %td{:align => "right", :rowspan => num_tiers}
-            = detail.show_rates(code_currency)
+            = detail.show_rates
         - (1..num_tiers.to_i - 1).each do |tier_index|
           - tier = tiers.to_a[tier_index]
           %tr.rdetail{:id => "rate_detail_row_#{detail_index}"}
