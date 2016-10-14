@@ -77,7 +77,8 @@ module ManageIQ::Providers
       $log.info("Syncing CloudTenant with Tenants...")
 
       CloudTenant.with_ext_management_system(id).walk_tree do |cloud_tenant, _|
-        tenant_params = {:name => cloud_tenant.name, :description => cloud_tenant.name}
+        cloud_tenant_description = cloud_tenant.description.blank? ? cloud_tenant.name : cloud_tenant.description
+        tenant_params = {:name => cloud_tenant.name, :description => cloud_tenant_description}
 
         if cloud_tenant.source_tenant
           $log.info("CloudTenant #{cloud_tenant.name} has tenant #{cloud_tenant.source_tenant.name}")
