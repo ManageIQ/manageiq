@@ -358,7 +358,7 @@ class MiqExpression
 
   def self.proto?
     return @proto if defined?(@proto)
-    @proto = VMDB::Config.new("vmdb").config.fetch_path(:product, :proto)
+    @proto = ::Settings.product.proto
   end
 
   def self.to_human(exp)

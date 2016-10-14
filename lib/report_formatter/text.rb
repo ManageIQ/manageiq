@@ -96,11 +96,6 @@ module ReportFormatter
       save_val = nil
       counter = 0
 
-      cfg = VMDB::Config.new("vmdb").config[:reporting]       # Read in the reporting column precisions
-      default_precision = cfg[:precision][:default]           # Set the default
-      precision_by_column = cfg[:precision_by_column]         # get the column overrides
-      precisions = {}                                         # Hash to store columns we hit
-
       row_limit = mri.rpt_options && mri.rpt_options[:row_limit] ? mri.rpt_options[:row_limit] : 0
       use_table = mri.sub_table ? mri.sub_table : mri.table
       use_table.data.each_with_index do |r, d_idx|

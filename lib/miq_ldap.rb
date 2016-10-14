@@ -435,24 +435,24 @@ class MiqLdap
   end
 
   def self.default_bind_timeout
-    value = VMDB::Config.new("vmdb").config[:authentication][:bind_timeout] || DEFAULT_BIND_TIMEOUT
+    value = ::Settings.authentication.bind_timeout || DEFAULT_BIND_TIMEOUT
     value = value.to_i_with_method if value.respond_to?(:to_i_with_method)
     value
   end
 
   def self.default_search_timeout
-    value = VMDB::Config.new("vmdb").config[:authentication][:search_timeout] || DEFAULT_SEARCH_TIMEOUT
+    value = ::Settings.authentication.search_timeout || DEFAULT_SEARCH_TIMEOUT
     value = value.to_i_with_method if value.respond_to?(:to_i_with_method)
     value
   end
 
   def self.using_ldap?
-    VMDB::Config.new("vmdb").config[:authentication][:mode].include?('ldap')
+    ::Settings.authentication.mode.include?('ldap')
   end
 
   def self.resolve_ldap_host?
     if @resolve_ldap_host.nil?
-      @resolve_ldap_host = VMDB::Config.new("vmdb").config[:authentication][:resolve_ldap_host]
+      @resolve_ldap_host = ::Settings.authentication.resolve_ldap_host
       @resolve_ldap_host = false if @resolve_ldap_host.nil?
     end
 
