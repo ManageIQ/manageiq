@@ -21,6 +21,12 @@ describe ManageIQ::Providers::Redhat::InfraManager::Vm do
       include_examples "Vm operation is available when powered on"
     end
 
+    context("with :terminate") do
+      it "is supported" do
+        expect(vm.supports_terminate?).to be true
+      end
+    end
+
     context("with :pause") do
       let(:state) { :pause }
       include_examples "Vm operation is not available"
