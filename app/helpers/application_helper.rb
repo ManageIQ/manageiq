@@ -789,7 +789,7 @@ module ApplicationHelper
 
   def display_adv_search?
     %w(auth_key_pair_cloud availability_zone host_aggregate cloud_object_store_container
-       cloud_tenant cloud_volume container_group container_node container_service
+       cloud_tenant cloud_volume container_group container_node container_service container_template
        container_route container_project container_replicator container_image
        container_image_registry persistent_volume container_build
        ems_container vm miq_template offline retired templates
@@ -1107,7 +1107,7 @@ module ApplicationHelper
                         cim_base_storage_extent ems_storage cloud_object_store_container
                         cloud_object_store_object cloud_tenant cloud_volume cloud_volume_backup cloud_volume_snapshot
                         configuration_job condition container_group container_route container_project
-                        container_replicator container_image container_image_registry
+                        container_replicator container_image container_image_registry container_template
                         container_topology container_dashboard ems_infra_dashboard middleware_topology persistent_volume
                         container_build container_node container_service ems_cloud ems_cluster ems_container ems_infra
                         event ems_middleware middleware_server middleware_deployment middleware_datasource
@@ -1152,7 +1152,7 @@ module ApplicationHelper
   def render_listnav_filename
     if @lastaction == "show_list" && !session[:menu_click] &&
        %w(auth_key_pair_cloud availability_zone cloud_object_store_container cloud_object_store_object cloud_tenant
-          cloud_volume cloud_volume_backup cloud_volume_snapshot container_node container_service ems_container container_group
+          cloud_volume cloud_volume_backup cloud_volume_snapshot container_node container_service container_template ems_container container_group
           ems_cloud ems_cluster container_route container_project container_replicator container_image container_image_registry
           container_build ems_infra flavor host miq_template offline orchestration_stack persistent_volume
           ems_middleware middleware_server middleware_deployment middleware_datasource middleware_domain
@@ -1169,7 +1169,7 @@ module ApplicationHelper
     elsif %w(action auth_key_pair_cloud availability_zone host_aggregate cim_base_storage_extent cloud_object_store_container
              cloud_object_store_object cloud_tenant cloud_volume cloud_volume_backup cloud_volume_snapshot condition
              container_group container_route container_project container_replicator container_image container_image_registry
-             container_build container_node container_service persistent_volume ems_cloud ems_container ems_cluster ems_infra
+             container_build container_node container_service container_template persistent_volume ems_cloud ems_container ems_cluster ems_infra
              ems_middleware middleware_server middleware_deployment middleware_datasource middleware_domain
              middleware_messaging middleware_server_group flavor
              ems_network security_group floating_ip cloud_subnet network_router network_port cloud_network
@@ -1183,7 +1183,7 @@ module ApplicationHelper
 
   def show_adv_search?
     show_search = %w(auth_key_pair_cloud availability_zone cim_base_storage_extent cloud_object_store_container
-                     cloud_tenant cloud_volume cloud_volume_backup cloud_volume_snapshot container_group container_node container_service
+                     cloud_tenant cloud_volume cloud_volume_backup cloud_volume_snapshot container_group container_node container_service container_template
                      container_route container_project container_replicator container_image container_image_registry
                      persistent_volume container_build
                      ems_cloud ems_cluster ems_container ems_infra flavor host host_aggregate miq_template offline

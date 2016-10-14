@@ -1,4 +1,4 @@
-- if %w(container_routes container_services container_replicators container_groups container_nodes container_images).include?(@display)
+- if %w(container_routes container_services container_replicators container_groups container_nodes container_images container_templates).include?(@display)
   = render :partial => "layouts/gtl", :locals => {:action_url => "show/#{@record.id}"}
 - elsif @showtype == "timeline"
   = render(:partial => "layouts/tl_show")

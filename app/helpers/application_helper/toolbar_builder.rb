@@ -522,6 +522,9 @@ class ApplicationHelper::ToolbarBuilder
     return true if %w(container_build_edit container_build_delete container_build_new).include?(id) &&
                    (@record.kind_of?(ContainerBuild) || @record.nil?)
 
+    return true if %w(container_template_edit container_template_delete container_template_new).include?(id) &&
+                   (@record.kind_of?(ContainerTemplate) || @record.nil?)
+
     # hide compliance check and comparison buttons rendered for orchestration stack instances
     return true if @record.kind_of?(OrchestrationStack) && @display == "instances" &&
                    %w(instance_check_compliance instance_compare).include?(id)
