@@ -207,7 +207,8 @@ module AuthenticationMixin
   end
 
   def authentication_check_types_queue(*args)
-    options = args.extract_options!
+    method_options = args.extract_options!
+
     types = args.first
     role = authentication_check_role if self.respond_to?(:authentication_check_role)
     zone = my_zone if self.respond_to?(:my_zone)
@@ -219,7 +220,7 @@ module AuthenticationMixin
       :class_name  => self.class.base_class.name,
       :instance_id => id,
       :method_name => 'authentication_check_types',
-      :args        => [types.to_miq_a, options]
+      :args        => [types.to_miq_a, method_options],
     }
 
     options[:role] = role if role
