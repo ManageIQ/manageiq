@@ -258,7 +258,7 @@ class Chargeback < ActsAsArModel
       rpt.sortby = static_cols + ["start_date"]
     elsif edit[:new][:cb_groupby] == "tag"
       tag_col = report_tag_field
-      rpt.cols += tag_col
+      rpt.cols += [tag_col]
       rpt.col_order = [tag_col, "display_range"]
       rpt.sortby = [tag_col, "start_date"]
     elsif edit[:new][:cb_groupby] == "project"
@@ -270,7 +270,7 @@ class Chargeback < ActsAsArModel
     rpt.col_order.each do |c|
       if c == tag_col
         header = edit[:cb_cats][edit[:new][:cb_groupby_tag]]
-        rpt.headers.push(Dictionary.gettext(header, :type => :column, :notfound => :titleize))
+        rpt.headers.push(Dictionary.gettext(header, :type => :column, :notfound => :titleize)) if header
       else
         rpt.headers.push(Dictionary.gettext(c, :type => :column, :notfound => :titleize))
       end
