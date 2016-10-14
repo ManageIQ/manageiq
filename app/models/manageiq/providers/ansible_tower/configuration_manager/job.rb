@@ -77,4 +77,8 @@ class ManageIQ::Providers::AnsibleTower::ConfigurationManager::Job < ::Orchestra
     _log.error "Reading AnsibleTower Job #{name} with id(#{id}) stdout failed with error: #{err}"
     raise MiqException::MiqOrchestrationStatusError, err.to_s, err.backtrace
   end
+
+  def self.db_name
+    'ConfigurationJob'
+  end
 end
