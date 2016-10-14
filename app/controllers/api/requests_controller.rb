@@ -20,7 +20,11 @@ module Api
       user = parse_requester_user(data.delete("requester"))
       auto_approve = parse_auto_approve(data.delete("auto_approve"))
 
-      request_type.constantize.create_request(data.symbolize_keys, user, auto_approve)
+      begin
+        request_type.constantize.create_request(data.symbolize_keys, user, auto_approve)
+      rescue => err
+        raise BadRequestError, "Could not create the request - #{err}"
+      end
     end
 
     def edit_resource(type, id = nil, data = {})
@@ -29,7 +33,12 @@ module Api
       request = resource_search(id, type, request_klass)
       user = parse_requester_user(data.delete("requester"))
 
-      request_klass.update_request(request, data.symbolize_keys, user)
+      begin
+        request_klass.update_request(request, data.symbolize_keys, user)
+      rescue => err
+        raise BadRequestError, "Could not update the request - #{err}"
+      end
+
       request
     end
 
