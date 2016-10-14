@@ -41,9 +41,7 @@
                     - glyphicon = "pficon pficon-folder-close-blue"
                   - else
                     - glyphicon = "pficon pficon-folder-close"
-                  %ul.icons.list-unstyled
-                    %li
-                      %span{:class => "#{glyphicon}"}
+                  %i{:class => "#{glyphicon}"}
                 %td
                   -# removing :::#{@sb[:count]} that was added at the end of report name to make id's unique in the tree
                   -# custom reports will be shown in assigned folders and custom folder both
@@ -58,9 +56,7 @@
                     = _('Name')
               %tr{:title => _("Click to view details"), :onclick => "miqTreeActivateNode('reports_tree','xx-#{nodes[1].to_i}_xx-#{nodes[1].to_i}-#{i}');"}
                 %td.narrow
-                  %ul.icons.list-unstyled
-                    %li
-                      %span.pficon{:class => "pficon-folder-close#{@sb[:rpt_menu][nodes[1].to_i][0] == @sb[:grp_title] ? '-blue' : ''}"}
+                  %i.pficon{:class => "pficon-folder-close#{@sb[:rpt_menu][nodes[1].to_i][0] == @sb[:grp_title] ? '-blue' : ''}"}
                 %td
                   -# removing :::#{@sb[:count]} that was added at the end of report name to make id's unique in the tree
                   -# custom reports will be shown in assigned folders and custom folder both
@@ -89,9 +85,7 @@
               - if @sb[:rep_details][rep]
                 %tr{:title => _('Click to view details'), :onclick => "miqTreeActivateNode('reports_tree','xx-#{nodes[1].to_i}_xx-#{nodes[2].to_i}-#{nodes[3].to_i}_rep-#{to_cid(@sb[:rep_details][rep]["id"])}');"}
                   %td.narrow
-                    %ul.icons.list-unstyled
-                      %li
-                        %span.product.product-report
+                    %i.product.product-report
                   %td
                     -# removing :::#{@sb[:count]} that was added at the end of report name to make id's unique in the tree
                     -# custom reports will be shown in assigned folders and custom folder both

@@ -25,7 +25,7 @@
         - @rss_feeds.each do |feed|
           %tr{:title => _("Subscribe to this feed"), :onclick => "DoNav('#{feed.link}');"}
             %td.narrow
-              %i.pficon.fa.fa-2x.fa-rss
+              %i.fa.fa-rss
             %td
               = h(feed.title)
             %td

@@ -36,7 +36,7 @@
               - params = {}
             %tr{params}
               %td
-                %span.product.product-group
+                %i.product.product-group
                 = h(g.name)
   - all_subtenants = @tenant.all_subtenants
   - unless all_subtenants.blank?
@@ -50,9 +50,7 @@
             %tr{:onclick => "miqTreeActivateNode('rbac_tree', 'tn-#{to_cid(tenant.id)}');",
               :title => _("Click to view child Tenant")}
               %td.narrow
-                %ul.icons.list-unstyled
-                  %li
-                    %span.product.product-tenant
+                %i.product.product-tenant
               %td= tenant.name
   - all_subprojects = @tenant.all_subprojects
   - unless all_subprojects.blank?
@@ -66,9 +64,7 @@
             %tr{:onclick => "miqTreeActivateNode('rbac_tree', 'tn-#{to_cid(tenant.id)}');",
               :title => _("Click to view child TenantProject")}
               %td.narrow
-                %ul.icons.list-unstyled
-                  %li
-                    %span.product.product-project
+                %i.product.product-project
               %td= tenant.name
   .row
     .col-md-12.col-lg-10

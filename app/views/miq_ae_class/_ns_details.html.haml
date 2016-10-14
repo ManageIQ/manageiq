@@ -16,9 +16,7 @@
             %td.narrow.noclick
               %input{:type => 'checkbox', :value => cls_cid}
             %td.narrow
-              %ul.icons.list-unstyled
-                %li
-                  %span{:class => icon_class(record.class)}
+              %i{:class => icon_class(record.class)}
             %td
               = record_name(record)
     :javascript
