@@ -45,5 +45,13 @@ describe ChartsLayoutService do
       expect(chart.count { |x| x[:title] == "CPU (%)" }).to equal 0
       expect(chart.count { |x| x[:title] == "CPU (Mhz)" }).to equal 1
     end
+
+    it "includes Memory (MB) chart for azure instance" do
+      ems_azure = FactoryGirl.create(:ems_azure)
+      host = FactoryGirl.create(:host, :ext_management_system => ems_azure)
+      vm_azure =  FactoryGirl.create(:vm_azure, :ext_management_system => ems_azure, :host => host)
+      chart = ChartsLayoutService.layout(vm_azure,  UiConstants::CHARTS_LAYOUTS_FOLDER, 'daily_perf_charts', 'VmOrTemplate')
+      expect(chart.count { |x| x[:title] == "Memory (MB)" }).to equal 1
+    end
   end
 end
