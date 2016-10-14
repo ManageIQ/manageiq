@@ -22,7 +22,8 @@ class ApplicationHelper::Toolbar::TenantCenter < ApplicationHelper::Toolbar::Bas
           :rbac_tenant_edit,
           'pficon pficon-edit fa-lg',
           t = N_('Edit this item'),
-          t),
+          t,
+          :klass => ApplicationHelper::Button::TenantEdit),
         button(
           :rbac_tenant_manage_quotas,
           'pficon pficon-edit fa-lg',
