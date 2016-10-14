@@ -1,7 +1,7 @@
 class ManageIQ::Providers::Kubernetes::ContainerManagerDecorator < Draper::Decorator
   delegate_all
 
-  def fonticon
-    "pficon-kubernetes".freeze
+  def listicon_image
+    "svg/vendor-kubernetes.svg"
   end
 end
