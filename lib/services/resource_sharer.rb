@@ -1,12 +1,12 @@
 class ResourceSharer
   WHITELISTED_RESOURCE_TYPES = %w(
-    MiqTemplate
+    VmOrTemplate
     ServiceTemplate
   ).freeze
 
   include ActiveModel::Model
 
-  attr_accessor :user, :resource, :tenants, :features
+  attr_accessor :user, :resource, :tenants, :features, :allow_tenant_inheritance
 
   with_options :presence => true do
     validates :user
@@ -19,6 +19,14 @@ class ResourceSharer
   validate :rbac_visibility
   validate :valid_tenants
   validate :allowed_features
+
+  def self.valid_share?(share)
+    new(:user     => share.user,
+        :resource => share.resource,
+        :tenants  => [share.tenant],
+        :features => share.miq_product_features
+       ).valid?
+  end
 
   ##
   # Creates shares from the user with +features+ to +tenants+ with the given +resource+
@@ -33,6 +41,7 @@ class ResourceSharer
     if args[:user] && args[:features] == :all
       args[:features] = args[:user].miq_user_role.miq_product_features
     end
+    args[:allow_tenant_inheritance] = !!args[:allow_tenant_inheritance]
     super
   end
 
@@ -41,7 +50,11 @@ class ResourceSharer
 
     ActiveRecord::Base.transaction do
       tenants.map do |tenant|
-        Share.create!(:user => user, :resource => resource, :tenant => tenant, :miq_product_features => features)
+        Share.create!(:user                     => user,
+                      :resource                 => resource,
+                      :tenant                   => tenant,
+                      :miq_product_features     => features,
+                      :allow_tenant_inheritance => allow_tenant_inheritance)
       end
     end
   end
