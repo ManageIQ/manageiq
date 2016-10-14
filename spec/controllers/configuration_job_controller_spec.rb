@@ -23,6 +23,18 @@ describe ConfigurationJobController do
         expect(response.status).to eq(200)
         expect(response).to render_template(:partial => "layouts/listnav/_configuration_job")
       end
+
+      it "links to ConfigurationJobController" do  # instead of OrchestrationStackController
+        extend QuadiconHelper
+        extend ApplicationHelper
+        allow(self).to receive(:url_for) do |opt|
+          opt
+        end
+
+        url_for_options = url_for_db(quadicon_model_name(record), "show", record)
+
+        expect(url_for_options[:controller]).to eq("configuration_job")
+      end
     end
   end
 
