@@ -675,6 +675,7 @@ class ApplicationHelper::ToolbarBuilder
         return true if x_active_tree == :condition_tree || !role_allows?(:feature => "condition_delete")
       end
     when "MiqAeClass", "MiqAeDomain", "MiqAeField", "MiqAeInstance", "MiqAeMethod", "MiqAeNamespace"
+      return true unless role_allows?(:feature => "miq_ae_domain_edit")
       return false if MIQ_AE_COPY_ACTIONS.include?(id) && User.current_tenant.any_editable_domains? && MiqAeDomain.any_unlocked?
       case id
       when "miq_ae_domain_lock"
