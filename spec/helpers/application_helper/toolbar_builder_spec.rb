@@ -2184,7 +2184,15 @@ describe ApplicationHelper do
   context "#build_toolbar_hide_button" do
     before do
       Tenant.seed
-      user = FactoryGirl.create(:user_with_group)
+      feature_list = %w(
+        miq_ae_class_edit
+        miq_ae_domain_edit
+        miq_ae_class_copy
+        miq_ae_instance_copy
+        miq_ae_method_copy
+        miq_ae_namespace_edit
+      )
+      user = FactoryGirl.create(:user, :features => feature_list)
       login_as user
       @domain = FactoryGirl.create(:miq_ae_domain)
       @namespace = FactoryGirl.create(:miq_ae_namespace, :name => "test1", :parent => @domain)
@@ -2193,6 +2201,11 @@ describe ApplicationHelper do
 
     it "Enables buttons for Unlocked domain" do
       expect(build_toolbar_hide_button('miq_ae_class_edit')).to be_falsey
+    end
+
+    it "a user with view access should not be able to edit class" do
+      login_as FactoryGirl.create(:user, :features => 'miq_ae_domain_view')
+      expect(build_toolbar_hide_button('miq_ae_class_edit')).to be_truthy
     end
 
     it "Disables buttons for Locked domain" do
@@ -2256,10 +2269,6 @@ describe ApplicationHelper do
     it "Enables miq_ae_namespace_edit for Unlocked domain" do
       @record = @namespace
       expect(build_toolbar_hide_button('miq_ae_namespace_edit')).to be_falsey
-    end
-
-    def role_allows?(_)
-      true
     end
   end
 
