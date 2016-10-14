@@ -33,7 +33,7 @@ function MwAddDataSourceCtrl($scope, $rootScope, miqService, mwAddDataSourceServ
     securityDomain : ''
   };
 
-  this.$onInit = function () {
+  $scope.$onInit = function () {
     $scope.chooseDsModel.datasources = mwAddDataSourceService.getDatasources();
   };
 
