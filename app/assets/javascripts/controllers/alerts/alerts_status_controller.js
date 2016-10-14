@@ -1,52 +1,10 @@
 /* global miqHttpInject */
 
 angular.module('alertsCenter')
-  .controller('alertsStatusController', ['$scope', '$http', '$interval', '$timeout',
-    function($scope,  $http, $interval, $timeout) {
+  .controller('alertsStatusController', ['$scope', '$http', '$resource', '$interval',
+    function($scope,  $http, $resource, $interval) {
       var vm = this;
       vm.severityTitles = [__("Information"), __("Warning"), __("Error")];
-
-      vm.toggleGroupOpen = function(section) {
-        section.open = !section.open;
-      };
-
-      vm.filterChange = function() {
-        var totalCount = 0;
-
-        angular.forEach(vm.groups, function(group) {
-          group.itemsList = [];
-          angular.forEach(group.items, function (item) {
-            var doNotAdd = !matchesType(item) || _.find(vm.filterConfig.appliedFilters, function (filter) {
-                if (!matchesFilter(item, filter)) {
-                  return true;
-                }
-              });
-            if (!doNotAdd) {
-              group.itemsList.push(item);
-            }
-          });
-
-          totalCount += group.itemsList.length;
-        });
-
-        vm.toolbarConfig.filterConfig.resultsCount = totalCount;
-
-        /* Make sure sorting is maintained */
-        sortChange();
-      };
-
-      vm.refresh = function() {
-
-        // TODO: Replace mock data with real API call
-        $timeout(function () {
-
-          vm.alerts = getMockAlerts();
-
-          updateInfo();
-          vm.filterChange();
-          vm.loadingDone = true;
-        }, 3000);
-      };
 
       function setupInitialValues () {
         vm.loadingDone = false;
@@ -76,8 +34,8 @@ angular.module('alertsCenter')
         ];
 
         // TODO: Get these values from the backend
-        vm.typeFilters = [ "Providers", "Hosts"];
-        vm.typeFilter = "Providers";
+        vm.typeFilters = [ "providers", "hosts"];
+        vm.typeFilter = "providers";
 
         setupConfig();
 
@@ -158,50 +116,6 @@ angular.module('alertsCenter')
             actionsInclude: true
           }
         };
-
-      }
-
-      function updateInfo() {
-        // Reset the groups
-        vm.groups[0].items = [];
-        vm.groups[1].items = [];
-        vm.groups[2].items = [];
-
-        // Add any computed fields data and put each alert in the appropriate group
-        angular.forEach(vm.alerts, function(item) {
-          if (item.objectType === 'linux') {
-            item.objectTypeImg = '/assets/100/os-linux_generic.png';
-          } else if (item.objectType === 'windows') {
-            item.objectTypeImg = '/assets/100/os-windows_generic.png';
-          } else if (item.objectType === 'esx') {
-            item.objectTypeImg = '/assets/100/os-vmware-esx-server.png';
-          } else if (item.objectType === 'openshift') {
-            item.objectTypeImg = '/assets/100/vendor-openshift.png';
-          } else if (item.objectType === 'openstack') {
-            item.objectTypeImg = '/assets/100/vendor-openstack_storage.png';
-          } else if (item.objectType === 'kubernetes') {
-            item.objectTypeImg = '/assets/100/vendor-kubernetes.png';
-          } else {
-            item.objectTypeImg = '/assets/100/unknown.png';
-          }
-
-          if (vm.category === 'Environment') {
-            if (item.environment === 'production') {
-              vm.groups[0].items.push(item);
-            }
-            else if (item.environment === 'staging') {
-              vm.groups[1].items.push(item);
-            }
-            else if (item.environment === 'qa') {
-              vm.groups[2].items.push(item);
-            }
-          }
-        });
-      }
-
-      function matchesType(item) {
-        return (vm.typeFilter === "Hosts" && item.displayType === 'host') ||
-               (vm.typeFilter === "Providers" && item.displayType === 'provider');
       }
 
       function filterStringCompare(value1, value2) {
@@ -219,19 +133,28 @@ angular.module('alertsCenter')
 
         if (filter.id === 'severity') {
           if (filter.value === vm.severityTitles[0]) {
-            found = item.info > 0;
+            found = item.alerts_types.info.alerts.length > 0;
           }
           else if (filter.value === vm.severityTitles[1]) {
-            found = item.warnings > 0;
+            found = item.alerts_types.warning.alerts.length > 0;
           }
           if (filter.value === vm.severityTitles[2]) {
-            found = item.errors > 0;
+            found = item.alerts_types.danger.alerts.length > 0;
           }
         } else if (filter.id === 'name') {
           found = filterStringCompare(item.objectName, filter.value);
         }
 
         return found;
+      }
+
+      function filteredOut(item) {
+        var filter = _.find(vm.filterConfig.appliedFilters, function (filter) {
+          if (!matchesFilter(item, filter)) {
+            return true;
+          }
+        });
+        return filter != undefined;
       }
 
       function sortChange() {
@@ -245,19 +168,19 @@ angular.module('alertsCenter')
       function compareItems(item1, item2) {
         var compValue = 0;
         if (vm.toolbarConfig.sortConfig.currentField.id === 'errors') {
-          compValue = item1.errors - item2.errors;
+          compValue = item1.alerts_types.danger.alerts.length - item2.alerts_types.danger.alerts.length;
         } else if (vm.toolbarConfig.sortConfig.currentField.id === 'warnings') {
-          compValue = item1.warnings - item2.warnings;
+          compValue = item1.alerts_types.warning.alerts.length - item2.alerts_types.warning.alerts.length;
         } else if (vm.toolbarConfig.sortConfig.currentField.id === 'infos') {
-          compValue = item1.info - item2.info;
+          compValue = item1.alerts_types.info.alerts.length - item2.alerts_types.info.alerts.length;
         } else if (vm.toolbarConfig.sortConfig.currentField.id === 'object_name') {
-          compValue = item1.objectName.localeCompare(item2.objectName);
+          compValue = item1.name.localeCompare(item2.name);
         } else if (vm.toolbarConfig.sortConfig.currentField.id === 'object_type') {
-          compValue = item1.displayType - item2.displayType;
+          compValue = item1.type.localeCompare(item2.type);
         }
 
         if (compValue === 0) {
-          compValue = item1.objectName.localeCompare(item2.objectName);
+          compValue = item1.name.localeCompare(item2.name);
         }
 
         if (!vm.toolbarConfig.sortConfig.isAscending) {
@@ -266,6 +189,75 @@ angular.module('alertsCenter')
 
         return compValue;
       }
+
+      vm.toggleGroupOpen = function(section) {
+        section.open = !section.open;
+      };
+
+      vm.filterChange = function() {
+        var totalCount = 0;
+        var categoryField = vm.category.toLowerCase();
+
+        angular.forEach(vm.groups, function(group) {
+          group.itemsList = [];
+          if (angular.isArray(vm.alertData[vm.typeFilter])) {
+            var items = vm.alertData[vm.typeFilter];
+            angular.forEach(items, function (item) {
+              if (item[categoryField] === group.value && !filteredOut(item)) {
+                group.itemsList.push(item);
+              }
+            });
+          }
+          totalCount += group.itemsList.length;
+        });
+
+        vm.toolbarConfig.filterConfig.resultsCount = totalCount;
+
+        /* Make sure sorting is maintained */
+        sortChange();
+      };
+
+      function updateInfo() {
+        // Add any computed fields data and put each alert in the appropriate group
+        for (var key in vm.alertData) {
+          angular.forEach(vm.alertData[key], function(item) {
+            if (key === 'providers') {
+              item.objectTypeImg = '/assets/100/vendor-' + item.type + '.png';
+            } else {
+              item.objectTypeImg = '/assets/100/os-' + item.type + '.png';
+            }
+          });
+        }
+      }
+
+      vm.refresh = function() {
+
+        // TODO: Replace mock data with real API call
+        var alertResource = $resource('/assets/mock-data/alerts/alert-data');
+        alertResource.get(function(resource) {
+
+          var filterFound = false;
+
+          vm.alertData = resource.data[0];
+
+          vm.displayFilters = [];
+          for (var key in vm.alertData) {
+            vm.displayFilters.push(key);
+            if (vm.displayFilter === key) {
+              filterFound = true;
+            }
+          }
+
+          if (!filterFound) {
+            vm.displayFilter = vm.displayFilters[0];
+          }
+
+          updateInfo();
+          vm.filterChange();
+
+          vm.loadingDone = true;
+        });
+      };
 
       setupInitialValues();
       vm.refresh();
@@ -277,361 +269,3 @@ angular.module('alertsCenter')
     }
   ]
 );
-
-
-function getMockAlerts() {
-  return [
-    {
-      errors: 15,
-      warnings: 15,
-      info: 15,
-      environment: 'production',
-      displayType: "host",
-      objectName: "Host 1",
-      objectType: 'linux'
-    },
-    {
-      errors: 13,
-      warnings: 2,
-      info: 1,
-      environment: 'production',
-      displayType: "host",
-      objectName: "Host 2",
-      objectType: 'windows'
-    },
-    {
-      errors: 2,
-      warnings: 8,
-      info: 12,
-      environment: 'production',
-      displayType: "host",
-      objectName: "Host 3",
-      objectType: 'esx'
-    },
-    {
-      errors: 5,
-      warnings: 12,
-      info: 2,
-      environment: 'production',
-      displayType: "host",
-      objectName: "Host 4",
-      objectType: 'linux'
-    },
-    {
-      errors: 3,
-      warnings: 4,
-      info: 8,
-      environment: 'production',
-      displayType: "host",
-      objectName: "Host 5",
-      objectType: 'linux'
-    },
-    {
-      errors: 11,
-      warnings: 3,
-      info: 0,
-      environment: 'production',
-      displayType: "host",
-      objectName: "Host 6",
-      objectType: 'windows'
-    },
-    {
-      errors: 0,
-      warnings: 0,
-      info: 5,
-      environment: 'production',
-      displayType: "host",
-      objectName: "Host 7",
-      objectType: 'windows'
-    },
-    {
-      errors: 12,
-      warnings: 0,
-      info: 0,
-      environment: 'production',
-      displayType: "host",
-      objectName: "Host 8",
-      objectType: 'esx'
-    },
-    {
-      errors: 2,
-      warnings: 1,
-      info: 0,
-      environment: 'production',
-      displayType: "host",
-      objectName: "Host 9",
-      objectType: 'linux'
-    },
-    {
-      errors: 15,
-      warnings: 12,
-      info: 1,
-      environment: 'production',
-      displayType: "host",
-      objectName: "Host 10",
-      objectType: 'linux'
-    },
-    {
-      errors: 1,
-      warnings: 0,
-      info: 12,
-      environment: 'production',
-      displayType: "host",
-      objectName: "Host 11",
-      objectType: 'esx'
-    },
-    {
-      errors: 15,
-      warnings: 15,
-      info: 15,
-      environment: 'production',
-      displayType: "provider",
-      objectName: "Provider 1",
-      objectType: 'openshift'
-    },
-    {
-      errors: 13,
-      warnings: 2,
-      info: 1,
-      environment: 'production',
-      displayType: "provider",
-      objectName: "Provider 2",
-      objectType: 'openshift'
-    },
-    {
-      errors: 2,
-      warnings: 8,
-      info: 12,
-      environment: 'production',
-      displayType: "provider",
-      objectName: "Provider 3",
-      objectType: 'kubernetes'
-    },
-    {
-      errors: 5,
-      warnings: 12,
-      info: 2,
-      environment: 'production',
-      displayType: "provider",
-      objectName: "Provider 4",
-      objectType: 'openshift'
-    },
-    {
-      errors: 3,
-      warnings: 4,
-      info: 8,
-      environment: 'production',
-      displayType: "provider",
-      objectName: "Provider 5",
-      objectType: 'kubernetes'
-    },
-    {
-      errors: 11,
-      warnings: 3,
-      info: 0,
-      environment: 'production',
-      displayType: "provider",
-      objectName: "Provider 6",
-      objectType: 'openshift'
-    },
-    {
-      errors: 0,
-      warnings: 0,
-      info: 5,
-      environment: 'production',
-      displayType: "provider",
-      objectName: "Provider 7",
-      objectType: 'kubernetes'
-    },
-    {
-      errors: 12,
-      warnings: 0,
-      info: 0,
-      environment: 'production',
-      displayType: "provider",
-      objectName: "Provider 8",
-      objectType: 'openshift'
-    },
-    {
-      errors: 2,
-      warnings: 1,
-      info: 0,
-      environment: 'production',
-      displayType: "provider",
-      objectName: "Provider 9",
-      objectType: 'openshift'
-    },
-    {
-      errors: 15,
-      warnings: 12,
-      info: 1,
-      environment: 'production',
-      displayType: "provider",
-      objectName: "Provider 10",
-      objectType: 'openshift'
-    },
-    {
-      errors: 1,
-      warnings: 0,
-      info: 12,
-      environment: 'production',
-      displayType: "provider",
-      objectName: "Provider 11",
-      objectType: 'kubernetes'
-    },
-    {
-      errors: 3,
-      warnings: 4,
-      info: 8,
-      environment: 'staging',
-      displayType: "host",
-      objectName: "Host 15",
-      objectType: 'linux'
-    },
-    {
-      errors: 11,
-      warnings: 3,
-      info: 0,
-      environment: 'staging',
-      displayType: "host",
-      objectName: "Host 16",
-      objectType: 'windows'
-    },
-    {
-      errors: 2,
-      warnings: 1,
-      info: 0,
-      environment: 'staging',
-      displayType: "host",
-      objectName: "Host 19",
-      objectType: 'linux'
-    },
-    {
-      errors: 15,
-      warnings: 12,
-      info: 1,
-      environment: 'staging',
-      displayType: "host",
-      objectName: "Host 20",
-      objectType: 'esx'
-    },
-    {
-      errors: 1,
-      warnings: 0,
-      info: 12,
-      environment: 'staging',
-      displayType: "host",
-      objectName: "Host 21",
-      objectType: 'windows'
-    },
-    {
-      errors: 5,
-      warnings: 12,
-      info: 2,
-      environment: 'staging',
-      displayType: "provider",
-      objectName: "Provider 14",
-      objectType: 'kubernetes'
-    },
-    {
-      errors: 11,
-      warnings: 3,
-      info: 0,
-      environment: 'staging',
-      displayType: "provider",
-      objectName: "Provider 16",
-      objectType: 'openshift'
-    },
-    {
-      errors: 0,
-      warnings: 0,
-      info: 5,
-      environment: 'staging',
-      displayType: "provider",
-      objectName: "Provider 17",
-      objectType: 'kubernetes'
-    },
-    {
-      errors: 15,
-      warnings: 12,
-      info: 1,
-      environment: 'staging',
-      displayType: "provider",
-      objectName: "Provider 20",
-      objectType: 'openshift'
-    },
-    {
-      errors: 3,
-      warnings: 4,
-      info: 8,
-      environment: 'qa',
-      displayType: "host",
-      objectName: "Host 25",
-      objectType: 'linux'
-    },
-    {
-      errors: 11,
-      warnings: 3,
-      info: 0,
-      environment: 'qa',
-      displayType: "host",
-      objectName: "Host 26",
-      objectType: 'windows'
-    },
-    {
-      errors: 12,
-      warnings: 0,
-      info: 0,
-      environment: 'qa',
-      displayType: "host",
-      objectName: "Host 28",
-      objectType: 'esx'
-    },
-    {
-      errors: 1,
-      warnings: 0,
-      info: 12,
-      environment: 'qa',
-      displayType: "host",
-      objectName: "Host 31",
-      objectType: 'linux'
-    },
-    {
-      errors: 15,
-      warnings: 15,
-      info: 15,
-      environment: 'qa',
-      displayType: "provider",
-      objectName: "Provider 21",
-      objectType: 'openshift'
-    },
-    {
-      errors: 2,
-      warnings: 8,
-      info: 12,
-      environment: 'qa',
-      displayType: "provider",
-      objectName: "Provider 23",
-      objectType: 'kubernetes'
-    },
-    {
-      errors: 0,
-      warnings: 0,
-      info: 5,
-      environment: 'qa',
-      displayType: "provider",
-      objectName: "Provider 27",
-      objectType: 'openshift'
-    },
-    {
-      errors: 12,
-      warnings: 0,
-      info: 0,
-      environment: 'qa',
-      displayType: "provider",
-      objectName: "Provider 28",
-      objectType: 'kubernetes'
-    }
-  ];
-
-}

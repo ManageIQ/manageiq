@@ -1,0 +1,4495 @@
+{
+  "data":[
+    {
+      "providers":[
+        {
+          "name": "Provider 1",
+          "type": "openshift",
+          "environment" : "production",
+          "id": 4,
+          "alerts_types":{
+            "danger":{
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            },
+            "warning": {
+              "alerts": [
+              ]
+            },
+            "info": {
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Provider 2",
+          "type": "kubernetes",
+          "environment" : "staging",
+          "id": 4,
+          "alerts_types":{
+            "danger":{
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            },
+            "warning": {
+              "alerts": []
+            },
+            "info": {
+              "alerts": []
+            }
+          }
+        },
+        {
+          "name": "Provider 3",
+          "type": "kubernetes",
+          "environment" : "production",
+          "id": 4,
+          "alerts_types":{
+            "danger":{
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            },
+            "warning": {
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            },
+            "info": {
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Provider 4",
+          "type": "openshift",
+          "environment" : "production",
+          "id": 4,
+          "alerts_types":{
+            "danger":{
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            },
+            "warning": {
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            },
+            "info": {
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Provider 5",
+          "type": "openshift",
+          "environment" : "staging",
+          "id": 4,
+          "alerts_types":{
+            "danger":{
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            },
+            "warning": {
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            },
+            "info": {
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Provider 6",
+          "type": "kubernetes",
+          "environment" : "qa",
+          "id": 4,
+          "alerts_types":{
+            "danger":{
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            },
+            "warning": {
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            },
+            "info": {
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Provider 7",
+          "type": "kubernetes",
+          "environment" : "production",
+          "id": 4,
+          "alerts_types":{
+            "danger":{
+              "alerts": []
+            },
+            "warning": {
+              "alerts": []
+            },
+            "info": {
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Provider 8",
+          "type": "openshift",
+          "environment" : "production",
+          "id": 4,
+          "alerts_types":{
+            "danger":{
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            },
+            "warning": {
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            },
+            "info": {
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Provider 9",
+          "type": "kubernetes",
+          "environment" : "production",
+          "id": 4,
+          "alerts_types":{
+            "danger":{
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            },
+            "warning": {
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            },
+            "info": {
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Provider 10",
+          "type": "openshift",
+          "environment" : "staging",
+          "id": 4,
+          "alerts_types":{
+            "danger":{
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            },
+            "warning": {
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            },
+            "info": {
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Provider 11",
+          "type": "kubernetes",
+          "environment" : "production",
+          "id": 4,
+          "alerts_types":{
+            "danger":{
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            },
+            "warning": {
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            },
+            "info": {
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Provider 12",
+          "type": "openshift",
+          "environment" : "qa",
+          "id": 4,
+          "alerts_types":{
+            "danger":{
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            },
+            "warning": {
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            },
+            "info": {
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Provider 13",
+          "type": "kubernetes",
+          "environment" : "production",
+          "id": 4,
+          "alerts_types":{
+            "danger":{
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            },
+            "warning": {
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            },
+            "info": {
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Provider 14",
+          "type": "openshift",
+          "environment" : "qa",
+          "id": 4,
+          "alerts_types":{
+            "danger":{
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            },
+            "warning": {
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            },
+            "info": {
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Provider 15",
+          "type": "kubernetes",
+          "environment" : "production",
+          "id": 4,
+          "alerts_types":{
+            "danger":{
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            },
+            "warning": {
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            },
+            "info": {
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Provider 16",
+          "type": "kubernetes",
+          "environment" : "staging",
+          "id": 4,
+          "alerts_types":{
+            "danger":{
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            },
+            "warning": {
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            },
+            "info": {
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Provider 17",
+          "type": "openshift",
+          "environment" : "staging",
+          "id": 4,
+          "alerts_types":{
+            "danger":{
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            },
+            "warning": {
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            },
+            "info": {
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "hosts":[
+        {
+          "name": "Host 1",
+          "type": "windows_generic",
+          "environment" : "production",
+          "id": 4,
+          "alerts_types":{
+            "danger":{
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            },
+            "warning": {
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            },
+            "info": {
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Host 2",
+          "type": "linux_redhat",
+          "environment" : "production",
+          "id": 4,
+          "alerts_types":{
+            "danger":{
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            },
+            "warning": {
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            },
+            "info": {
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Host 3",
+          "type": "vmware-esx-server",
+          "environment" : "production",
+          "id": 4,
+          "alerts_types":{
+            "danger":{
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            },
+            "warning": {
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            },
+            "info": {
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Host 4",
+          "type": "windows_generic",
+          "environment" : "staging",
+          "id": 4,
+          "alerts_types":{
+            "danger":{
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            },
+            "warning": {
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            },
+            "info": {
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Host 5",
+          "type": "linux_redhat",
+          "environment" : "qa",
+          "id": 4,
+          "alerts_types":{
+            "danger":{
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            },
+            "warning": {
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            },
+            "info": {
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Host 6",
+          "type": "vmware-esx-server",
+          "environment" : "production",
+          "id": 4,
+          "alerts_types":{
+            "danger":{
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            },
+            "warning": {
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            },
+            "info": {
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Host 7",
+          "type": "windows_generic",
+          "environment" : "production",
+          "id": 4,
+          "alerts_types":{
+            "danger":{
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            },
+            "warning": {
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            },
+            "info": {
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Host 8",
+          "type": "linux_fedora",
+          "environment" : "production",
+          "id": 4,
+          "alerts_types":{
+            "danger":{
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            },
+            "warning": {
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            },
+            "info": {
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Host 9",
+          "type": "linux_redhat",
+          "environment" : "staging",
+          "id": 4,
+          "alerts_types":{
+            "danger":{
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            },
+            "warning": {
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            },
+            "info": {
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Host 10",
+          "type": "linux_redhat",
+          "environment" : "production",
+          "id": 4,
+          "alerts_types":{
+            "danger":{
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            },
+            "warning": {
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            },
+            "info": {
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Host 11",
+          "type": "windows_generic",
+          "environment" : "staging",
+          "id": 4,
+          "alerts_types":{
+            "danger":{
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            },
+            "warning": {
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            },
+            "info": {
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Host 12",
+          "type": "linux_fedora",
+          "environment" : "production",
+          "id": 4,
+          "alerts_types":{
+            "danger":{
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            },
+            "warning": {
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            },
+            "info": {
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Host 13",
+          "type": "linux_solaris",
+          "environment" : "production",
+          "id": 4,
+          "alerts_types":{
+            "danger":{
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            },
+            "warning": {
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            },
+            "info": {
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Host 14",
+          "type": "windows_generic",
+          "environment" : "production",
+          "id": 4,
+          "alerts_types":{
+            "danger":{
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            },
+            "warning": {
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            },
+            "info": {
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Host 15",
+          "type": "esx-server-3i",
+          "environment" : "qa",
+          "id": 4,
+          "alerts_types":{
+            "danger":{
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            },
+            "warning": {
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            },
+            "info": {
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Host 16",
+          "type": "linux_redhat",
+          "environment" : "staging",
+          "id": 4,
+          "alerts_types":{
+            "danger":{
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            },
+            "warning": {
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            },
+            "info": {
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Host 17",
+          "type": "windows_generic",
+          "environment" : "staging",
+          "id": 4,
+          "alerts_types":{
+            "danger":{
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            },
+            "warning": {
+              "alerts": [
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                },
+                {
+                  "evaluated_on": "1.1.2016",
+                  "asignee_id": 3,
+                  "asignee_name": "mooli",
+                  "asignee_ack_text": "I'm on it",
+                  "severity": "info",
+                  "link_text": "href",
+                  "node_hostname": "example.com",
+                  "description": "example alert"
+                }
+              ]
+            },
+            "info": {
+              "alerts": []
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

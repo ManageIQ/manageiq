@@ -1,8 +1,8 @@
 /* global miqHttpInject */
 
-miqHttpInject(angular.module('alertsCenter', ['ui.bootstrap', 'patternfly', 'miq.util']))
-  .controller('alertsListController', ['$scope', '$http', '$interval', '$timeout',
-    function($scope,  $http, $interval, $timeout) {
+angular.module('alertsCenter')
+  .controller('alertsListController', ['$scope', '$http', '$resource', '$interval', '$timeout',
+    function($scope,  $http, $resource, $interval, $timeout) {
       var vm = this;
       vm.alertsList = [];
 
@@ -38,80 +38,31 @@ miqHttpInject(angular.module('alertsCenter', ['ui.bootstrap', 'patternfly', 'miq
 
       vm.refresh = function() {
         // TODO: Replace mock data with real API call
-        var url = '/alerts';
-//      $http.get(url).success(function(response) {
-        $timeout(function() {
-          'use strict';
+        var alertResource = $resource('/assets/mock-data/alerts/alert-data');
+        alertResource.get(function(resource) {
+          vm.alerts = [];
+          vm.objectTypes.splice(0, vm.objectTypes.length);
+          var newTypes = [];
+          var alertData = resource.data[0];
 
-          vm.alerts = [
-            {
-              severity: 'error',
-              message: 'Error contacting host. Check IP Address and username/password settings.',
-              objectName: "Host 1",
-              objectType: "host",
-              timestamp: timeAgo(2),
-              assigned: true
-            },
-            {
-              severity: 'warning',
-              message: 'Connection time exceeds thresholds.',
-              objectName: "Host 2",
-              objectType: "host",
-              timestamp: timeAgo(0, 12, 3, 20),
-              assigned: false
+          for (var key in alertData) {
+            vm.objectTypes.push(key);
+            angular.forEach(alertData[key], function (item) {
+              if (newTypes.indexOf(item.type) == -1) {
+                newTypes.push(item.type);
+              }
+              addItemAlerts(item, key);
+            });
+          }
 
-            },
-            {
-              severity: 'info',
-              message: 'Username/passwords setting was changed for Host 1.',
-              objectName: "Host 1",
-              objectType: "host",
-              timestamp: timeAgo(2, 2, 10, 12),
-              assigned: false
-
-            },
-            {
-              severity: 'error',
-              message: 'There is a problem here',
-              objectName: "Provider 1",
-              objectType: "provider",
-              timestamp: timeAgo(0, 0, 2, 19),
-              assigned: false
-
-            },
-            {
-              severity: 'info',
-              message: 'System reset occurred.',
-              objectName: "Provider 2",
-              objectType: "provider",
-              timestamp: timeAgo(3, 1, 45, 23),
-              assigned: false
-
-            },
-            {
-              severity: 'warning',
-              message: 'Something looks strange here.',
-              objectName: "test11",
-              objectType: "openstack",
-              timestamp: timeAgo(0, 0, 2, 13),
-              assigned: true
-
-            },
-            {
-              severity: 'error',
-              message: 'Error writing data, no space left on device.',
-              objectName: "cfme-3.1",
-              objectType: "cloud_volume",
-              timestamp: timeAgo(0, 3, 16, 23),
-              assigned: false
-
-            }
-          ];
+          newTypes.sort();
+          angular.forEach(newTypes, function (type) {
+            vm.objectTypes.push(type);
+          });
 
           vm.loadingDone = true;
-          updateInfo();
           filterChange();
-        }, 2000);
+        });
       };
 
       function setupConfig () {
@@ -258,7 +209,7 @@ miqHttpInject(angular.module('alertsCenter', ['ui.bootstrap', 'patternfly', 'miq
         } else if (filter.id === 'message') {
           found = filterStringCompare(item.message, filter.value);
         } else if (filter.id === 'object_type') {
-          found = item.objectType === filter.value;
+          found = item.key === filter.value || item.objectType === filter.value;
         } else if (filter.id === 'object_name') {
           found = filterStringCompare(item.objectName, filter.value);
         }
@@ -281,7 +232,10 @@ miqHttpInject(angular.module('alertsCenter', ['ui.bootstrap', 'patternfly', 'miq
         } else if (vm.toolbarConfig.sortConfig.currentField.id === 'object_name') {
           compValue = item1.objectName.localeCompare(item2.objectName);
         } else if (vm.toolbarConfig.sortConfig.currentField.id === 'object_type') {
-          compValue = item1.objectType - item2.objectType;
+          compValue = item1.key.localeCompare(item2.key);
+          if (compValue === 0) {
+            compValue = item1.objectType.localeCompare(item2.objectType);
+          }
         }
 
         if (compValue === 0) {
@@ -295,47 +249,42 @@ miqHttpInject(angular.module('alertsCenter', ['ui.bootstrap', 'patternfly', 'miq
         return compValue;
       }
 
-      function timeAgo(days, hours, minutes, seconds) {
-        var now = new Date();
+      function convertAlert(key, item, alertData, severity, typeImage) {
+        var alert = {
+          message: alertData.description,
+          key: key,
+          objectName: item.name,
+          objectType: item.type,
+          objectTypeImg: typeImage,
+          timestamp: alertData.evaluated_on,
+          assigned: alertData.asignee_id !== 0,
+          severity: severity,
+          severityInfo: vm.severities.error
+        };
 
-        var timeStamp = now.getTime();
-
-        if (angular.isDefined(days)) {
-          timeStamp = timeStamp - (days * 24 * 60 * 60 * 1000);
-        }
-        if (angular.isDefined(hours)) {
-          timeStamp = timeStamp - (hours * 60 * 60 * 1000);
-        }
-        if (angular.isDefined(minutes)) {
-          timeStamp = timeStamp - (minutes * 60 * 1000);
-        }
-        if (angular.isDefined(seconds)) {
-          timeStamp = timeStamp - (seconds * 1000);
+        if (severity == 'danger') {
+          alert.severityInfo = vm.severities.error;
+        } else if (severity == 'warning') {
+          alert.severityInfo = vm.severities.warning;
+        } else {
+          alert.severityInfo = vm.severities.info;
         }
 
-        return timeStamp;
+        return alert;
       }
 
+      function addItemAlerts(item, key) {
+        var typeImage = '/assets/100/unknown.png';
+        if (key === 'providers') {
+          typeImage = '/assets/100/vendor-' + item.type + '.png';
+        } else {
+          typeImage = '/assets/100/os-' + item.type + '.png';
+        }
 
-      function updateInfo() {
-        _.forEach(vm.alerts, function(alert) {
-          if (alert.objectType === 'host') {
-            alert.objectTypeImg = '/assets/100/os-linux_generic.png';
-          } else if (alert.objectType === 'provider') {
-            alert.objectTypeImg = '/assets/100/vendor-rhevm.png';
-          } else if (alert.objectType === 'openstack') {
-            alert.objectTypeImg = '/assets/100/vendor-openstack_storage.png';
-          } else if (alert.objectType === 'cloud_volume') {
-            alert.objectTypeImg = '/assets/100/cloud_volume.png';
-          }
-
-          if ((alert.severity == 'error') || (alert.severity == 'danger')) {
-            alert.severityInfo = vm.severities.error;
-          } else if (alert.severity == 'warning') {
-            alert.severityInfo = vm.severities.warning;
-          } else {
-            alert.severityInfo = vm.severities.info;
-          }
+        angular.forEach(['danger', 'warning', 'info'], function (severity) {
+          angular.forEach(item.alerts_types.danger.alerts, function (alert) {
+            vm.alerts.push(convertAlert(key, item, alert, severity, typeImage));
+          });
         });
       }
 

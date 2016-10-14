@@ -17,24 +17,24 @@
               %a.miq-alert-group-title{"ng-class" => "{'collapsed': !group.open}", "ng-click" => "vm.toggleGroupOpen(group)"}
                 {{group.title}} ({{group.itemsList.length}})
               .card-view-pf{"ng-class" => "{'collapse': !group.open}"}
-                .card-pf.card-pf-aggregate-status{"ng-repeat" => "item in group.itemsList track by item.objectName"}
+                .card-pf.card-pf-aggregate-status{"ng-repeat" => "item in group.itemsList track by item.name"}
                   %span.h2.card-pf-title
                     %img.card-view-type-img{"ng-src" => "{{item.objectTypeImg}}", "ng-if" => "item.objectTypeImg"}
-                    {{item.objectName}}
+                    {{item.name}}
                   .card-pf-body
                     %p.card-pf-aggregate-status-notifications
-                      %span.card-pf-aggregate-status-notification{"ng-if" => "item.errors > 0"}
+                      %span.card-pf-aggregate-status-notification{"ng-if" => "item.alerts_types.danger.alerts.length > 0"}
                         %a{"href" => "#"}
                           %span.pficon.pficon-error-circle-o
-                          {{item.errors}}
-                      %span.card-pf-aggregate-status-notification{"ng-if" => "item.warnings > 0"}
+                          {{item.alerts_types.danger.alerts.length}}
+                      %span.card-pf-aggregate-status-notification{"ng-if" => "item.alerts_types.warning.alerts.length > 0"}
                         %a{"href" => "#"}
                           %span.pficon.pficon-warning-triangle-o
-                          {{item.warnings}}
-                      %span.card-pf-aggregate-status-notification{"ng-if" => "item.info > 0"}
+                          {{item.alerts_types.warning.alerts.length}}
+                      %span.card-pf-aggregate-status-notification{"ng-if" => "item.alerts_types.info.alerts.length > 0"}
                         %a{"href" => "#"}
                           %span.pficon.pficon-info
-                          {{item.info}}
+                          {{item.alerts_types.info.alerts.length}}
 
 :javascript
   miq_bootstrap('.miq-alerts-center', 'alertsCenter');
