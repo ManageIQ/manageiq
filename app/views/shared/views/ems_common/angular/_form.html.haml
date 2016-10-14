@@ -50,7 +50,6 @@
           = select_tag('provider_region',
                        options_for_select([["<#{_('Choose')}>", nil]] + regions, disabled: ["<#{_('Choose')}>", nil]),
                        "ng-model"                    => "emsCommonModel.provider_region",
-                       "ng-if"                       => "emsCommonModel.emstype == '#{name}'",
                        "ng-switch-when"              => name,
                        "required"                    => "",
                        "checkchange"                 => "",
