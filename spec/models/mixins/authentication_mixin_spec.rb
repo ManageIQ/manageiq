@@ -112,6 +112,15 @@ describe AuthenticationMixin do
     end
   end
 
+  it "#exponential_delay" do
+    expect(test_class_instance.exponential_delay(0)).to eq(0)
+    expect(test_class_instance.exponential_delay(1)).to eq(1)
+    expect(test_class_instance.exponential_delay(2)).to eq(2)
+    expect(test_class_instance.exponential_delay(3)).to eq(4)
+    expect(test_class_instance.exponential_delay(4)).to eq(8)
+    expect(test_class_instance.exponential_delay(5)).to eq(16)
+  end
+
   context "with server and zone" do
     before(:each) do
       @miq_server = EvmSpecHelper.local_miq_server

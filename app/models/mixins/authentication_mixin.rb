@@ -191,6 +191,12 @@ module AuthenticationMixin
     end
   end
 
+  def exponential_delay(attempt)
+    return 0 if attempt <= 0
+
+    2 ** (attempt - 1)
+  end
+
   def authentication_check_types_queue(*args)
     options = args.extract_options!
     types = args.first
