@@ -1,16 +1,10 @@
-$LOAD_PATH << File.join(GEMS_PENDING_ROOT, "util/xml")
-$LOAD_PATH << File.join(GEMS_PENDING_ROOT, "util/win32")
-$LOAD_PATH << File.join(GEMS_PENDING_ROOT, "metadata/linux")
-
 require 'ostruct'
 require 'MiqSockUtil'
-require 'xml_utils'
+require 'xml/xml_utils'
 require 'cgi'               # Used for URL encoding/decoding
-require 'LinuxUsers'
-require 'LinuxUtils'
-
-$LOAD_PATH << File.join(GEMS_PENDING_ROOT, "metadata/ScanProfile")
-require 'HostScanProfiles'
+require 'metadata/linux/LinuxUsers'
+require 'metadata/linux/LinuxUtils'
+require 'metadata/ScanProfile/HostScanProfiles'
 
 class Host < ApplicationRecord
   include NewWithTypeStiMixin

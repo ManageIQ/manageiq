@@ -1,8 +1,7 @@
 # TODO: Nothing appears to be using xml_utils in this file???
 # Perhaps, it's being required here because lower level code requires xml_utils to be loaded
 # but wrongly doesn't require it itself.
-$LOAD_PATH << File.join(GEMS_PENDING_ROOT, "util/xml")
-require 'xml_utils'
+require 'xml/xml_utils'
 require 'blackbox/VmBlackBox'
 
 module VmOrTemplate::Scanning

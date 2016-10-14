@@ -1,7 +1,6 @@
-
 require 'rubygems'
 require 'log4r'
-require 'MiqVim'
+require 'VMwareWebService/MiqVim'
 
 if ARGV.length != 1
   $stderr.puts "Usage: #{$0} ems_name"

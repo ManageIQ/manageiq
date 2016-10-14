@@ -1,8 +1,7 @@
 $LOAD_PATH << File.expand_path(__dir__)
 require 'util/postgres_admin'
 
-$LOAD_PATH << File.join(GEMS_PENDING_ROOT, "util/mount")
-require 'miq_generic_mount_session'
+require 'mount/miq_generic_mount_session'
 
 class EvmDatabaseOps
   include Vmdb::Logging

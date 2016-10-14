@@ -1,4 +1,4 @@
-require 'MiqVim'
+require 'VMwareWebService/MiqVim'
 require 'http-access2' # Required in case it is not already loaded
 
 module ManageIQ::Providers

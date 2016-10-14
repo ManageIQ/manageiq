@@ -42,12 +42,12 @@ class Snapshot < ApplicationRecord
 
   def self.find_all_evm_snapshots(zone = nil)
     zone ||= MiqServer.my_server.zone
-    require 'MiqVimVm'
+    require 'VMwareWebService/MiqVimVm'
     Snapshot.where(:vm_or_template_id => zone.vm_or_template_ids, :name => MiqVimVm::EVM_SNAPSHOT_NAME).includes(:vm_or_template).to_a
   end
 
   def is_a_type?(stype)
-    require 'MiqVimVm'
+    require 'VMwareWebService/MiqVimVm'
     value = case stype.to_sym
             when :evm_snapshot        then MiqVimVm.const_get("EVM_SNAPSHOT_NAME")
             when :consolidate_helper  then MiqVimVm.const_get("CH_SNAPSHOT_NAME")

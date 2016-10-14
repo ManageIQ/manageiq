@@ -1,5 +1,3 @@
-$LOAD_PATH << File.join(GEMS_PENDING_ROOT, "util/xml")
-
 module MiqAeDatastore
   class XmlImport
     include Vmdb::Logging
@@ -124,7 +122,7 @@ module MiqAeDatastore
       _, t = Benchmark.realtime_block(:total_load_xml_time) do
         classes = buttons = nil
         Benchmark.realtime_block(:xml_load_time) do
-          require 'xml_hash'
+          require 'xml/xml_hash'
           doc = XmlHash.load(f)
           version = doc.children[0].attributes[:version]
           _log.info("  with version '#{version}'")

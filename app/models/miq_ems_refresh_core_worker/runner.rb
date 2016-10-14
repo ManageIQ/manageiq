@@ -1,7 +1,5 @@
 require 'thread'
 
-$LOAD_PATH << File.join(GEMS_PENDING_ROOT, "VMwareWebService")
-
 class MiqEmsRefreshCoreWorker::Runner < MiqWorker::Runner
   self.wait_for_worker_monitor = false
 
@@ -58,7 +56,7 @@ class MiqEmsRefreshCoreWorker::Runner < MiqWorker::Runner
     end
 
     _log.info("#{log_prefix} Starting thread")
-    require 'MiqVimCoreUpdater'
+    require 'VMwareWebService/MiqVimCoreUpdater'
 
     tid = Thread.new do
       begin

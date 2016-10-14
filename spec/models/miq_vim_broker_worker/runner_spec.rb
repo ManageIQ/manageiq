@@ -1,5 +1,5 @@
-require 'MiqVim'
-require 'MiqVimBroker'
+require 'VMwareWebService/MiqVim'
+require 'VMwareWebService/MiqVimBroker'
 
 describe MiqVimBrokerWorker::Runner do
   before(:each) do

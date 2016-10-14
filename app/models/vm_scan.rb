@@ -418,7 +418,7 @@ class VmScan < Job
             $vim_broker_client ||= MiqVimBroker.new(:client, MiqVimBrokerWorker.drb_port)
             miqVim = $vim_broker_client.getMiqVim(miqVimHost[:address], miqVimHost[:username], password_decrypt)
           else
-            require 'MiqVim'
+            require 'VMwareWebService/MiqVim'
             miqVim = MiqVim.new(miqVimHost[:address], miqVimHost[:username], password_decrypt)
           end
 

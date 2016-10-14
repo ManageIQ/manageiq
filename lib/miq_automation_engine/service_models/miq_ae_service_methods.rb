@@ -1,6 +1,3 @@
-$LOAD_PATH << File.join(GEMS_PENDING_ROOT, "ServiceNowWebService")
-$LOAD_PATH << File.join(GEMS_PENDING_ROOT, "RcuWebService")
-
 #####################################################
 # This is for $evm.execute from an Automate method
 #####################################################
@@ -104,7 +101,7 @@ module MiqAeMethodService
     end
 
     def self.service_now_eccq_insert(server, username, password, agent, queue, topic, name, source, *params)
-      require 'SnEccqClientBase'
+      require 'ServiceNowWebService/SnEccqClientBase'
       service_now_drb_undumped
 
       payload = params.empty? ? {} : Hash[*params]
@@ -173,7 +170,7 @@ module MiqAeMethodService
     def self.service_now_task_service(service, server, username, password, *params)
       log_prefix = "[#{service.underscore}]"
       begin
-        require 'SnSctaskClientBase'
+        require 'ServiceNowWebService/SnSctaskClientBase'
         service_now_drb_undumped
 
         payload = params.empty? ? {} : Hash[*params]
