@@ -121,6 +121,16 @@ describe AuthenticationMixin do
     expect(test_class_instance.exponential_delay(5)).to eq(16)
   end
 
+  it "#authentication_check_retry_deliver_on" do
+    Timecop.freeze(Time.new(2015, 1, 2, 0, 0, 0, 0)) do
+      expect(test_class_instance.authentication_check_retry_deliver_on(nil)).to be_nil
+      expect(test_class_instance.authentication_check_retry_deliver_on(6)).to   be_nil
+
+      expect(test_class_instance.authentication_check_retry_deliver_on(0)).to eq(Time.now.utc)
+      expect(test_class_instance.authentication_check_retry_deliver_on(1)).to eq(Time.now.utc + 1.minutes)
+    end
+  end
+
   context "with server and zone" do
     before(:each) do
       @miq_server = EvmSpecHelper.local_miq_server

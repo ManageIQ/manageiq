@@ -191,6 +191,15 @@ module AuthenticationMixin
     end
   end
 
+  MAX_ATTEMPTS = 6
+  def authentication_check_retry_deliver_on(attempt)
+    # Existing callers who pass no attempt will have no delay.
+    attempt ||= MAX_ATTEMPTS
+    return if attempt >= MAX_ATTEMPTS
+
+    Time.now.utc + exponential_delay(attempt).minutes
+  end
+
   def exponential_delay(attempt)
     return 0 if attempt <= 0
 
