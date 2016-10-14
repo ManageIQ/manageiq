@@ -8,7 +8,7 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
   end
 
   def supported_features
-    @supported_features ||= supported_api_versions.collect { |version| self.class.api_features[version] }.flatten.uniq
+    @supported_features ||= supported_api_versions.collect { |version| self.class.api_features[version.to_s] }.flatten.uniq
   end
 
   def connect(options = {})
@@ -57,13 +57,13 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
   def supported_api_verions_from_sdk
     username = authentication_userid(:basic)
     password = authentication_password(:basic)
-    probe_args = { :hostname => hostname, :port => port, :username => username, :password => password }
+    probe_args = { :host => hostname, :port => port, :username => username, :password => password, :insecure => true }
     probe_results = OvirtSDK4::Probe.probe(probe_args)
     probe_results.map(&:version) if probe_results
   end
 
   def supports_the_api_version?(version)
-    supported_api_versions.include?(version)
+    supported_api_versions.map(&:to_s).include?(version.to_s)
   end
 
   def supported_auth_types
@@ -107,6 +107,7 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
   end
 
   def verify_credentials_for_rhevm(options = {})
+    require 'ovirt'
     with_provider_connection(options, &:api)
   rescue SocketError, Errno::EHOSTUNREACH, Errno::ENETUNREACH
     _log.warn($ERROR_INFO)
@@ -168,7 +169,6 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
 
   def verify_credentials(auth_type = nil, options = {})
     auth_type ||= 'default'
-
     case auth_type.to_s
     when 'default' then verify_credentials_for_rhevm(options)
     when 'metrics' then verify_credentials_for_rhevm_metrics(options)
@@ -215,7 +215,7 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
     end
 
     def api_features
-      { 3 => api3_supported_features, 4 => api4_supported_features }
+      { "3" => api3_supported_features, "4" => api4_supported_features }
     end
 
     def process_api_features_support
@@ -251,7 +251,6 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
     def raw_connect_v3(server, port, path, username, password, service)
       require 'ovirt'
       require 'ovirt_provider/inventory/ovirt_inventory'
-
       Ovirt.logger = $rhevm_log
 
       params = {

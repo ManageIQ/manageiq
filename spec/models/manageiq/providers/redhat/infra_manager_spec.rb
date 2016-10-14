@@ -158,7 +158,7 @@ describe ManageIQ::Providers::Redhat::InfraManager do
       before(:each) do
         allow(SupportsFeatureMixin).to receive(:guard_queryable_feature).and_return(true)
         allow(described_class).to receive(:api_features)
-          .and_return(3 => %w(feature1 feature3), 4 => %w(feature2 feature3))
+          .and_return('3' => %w(feature1 feature3), '4' => %w(feature2 feature3))
         described_class.process_api_features_support
         allow(ems).to receive(:supported_api_versions).and_return(supported_api_versions)
       end
