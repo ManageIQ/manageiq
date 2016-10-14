@@ -5,9 +5,6 @@ require 'sys/proctable'
 require 'util/runcmd'
 require 'util/win32/miq-wmi'
 require 'util/miq-system'
-if Sys::Platform::OS == :windows
-  require 'util/win32/miq-win32-process'
-end
 
 class MiqProcess
   def self.get_active_process_by_name(process_name)

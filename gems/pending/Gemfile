@@ -67,11 +67,6 @@ if RbConfig::CONFIG["host_os"].include?("linux")
   end
 end
 
-# Windows only. Do not put in Gemfile.lock on other platforms.
-if Gem.win_platform?
-  gem "win32-process", "~>0.8.0", :require => false, :platforms => [:mswin, :mingw]
-end
-
 ### Start of gems excluded from the appliances.
 # The gems listed below do not need to be packaged until we find it necessary or useful.
 # Only add gems here that we do not need on an appliance.
