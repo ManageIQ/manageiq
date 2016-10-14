@@ -87,6 +87,7 @@ module SupportsFeatureMixin
     :resize                     => 'Resizing',
     :retire                     => 'Retirement',
     :smartstate_analysis        => 'Smartstate Analaysis',
+    :snapshot_create            => 'Create Snapshot',
     :snapshots                  => 'Snapshots',
     :shutdown_guest             => 'Shutdown Guest Operation',
     :terminate                  => 'Terminate a VM',

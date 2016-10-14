@@ -16,15 +16,14 @@ class ManageIQ::Providers::Openstack::CloudManager::CloudVolumeSnapshot < ::Clou
   def self.create_snapshot_queue(userid, cloud_volume, options = {})
     ext_management_system = cloud_volume.try(:ext_management_system)
     task_opts = {
-      :action => "creating volume snapshot in #{ext_management_system.inspect}\
-      for #{cloud_volume.inspect} with #{options.inspect}",
+      :action => "creating volume snapshot in #{ext_management_system.inspect} for #{cloud_volume.inspect} with #{options.inspect}",
       :userid => userid
     }
 
     queue_opts = {
-      :class_name  => cloud_volume.class,
+      :class_name  => cloud_volume.class.name,
       :instance_id => cloud_volume.id,
-      :method_name => 'create_snapshot',
+      :method_name => 'create_volume_snapshot',
       :priority    => MiqQueue::HIGH_PRIORITY,
       :role        => 'ems_operations',
       :zone        => my_zone(ext_management_system),
