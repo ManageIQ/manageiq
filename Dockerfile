@@ -11,9 +11,11 @@ ENV APP_ROOT /var/www/miq/vmdb
 ENV APPLIANCE_ROOT /opt/manageiq/manageiq-appliance
 ENV SSUI_ROOT /opt/manageiq/manageiq-ui-self_service
 
-# Fetch pglogical repo
+# Fetch pglogical and manageiq repo
 RUN curl -sSLko /etc/yum.repos.d/ncarboni-pglogical-SCL-epel-7.repo \
       https://copr.fedorainfracloud.org/coprs/ncarboni/pglogical-SCL/repo/epel-7/ncarboni-pglogical-SCL-epel-7.repo
+RUN curl -sSLko /etc/yum.repos.d/manageiq-ManageIQ-epel-7.repo \
+      https://copr.fedorainfracloud.org/coprs/manageiq/ManageIQ/repo/epel-7/manageiq-ManageIQ-epel-7.repo
 
 ## Install EPEL repo, yum necessary packages for the build without docs, clean all caches
 RUN yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm && \
@@ -41,7 +43,7 @@ RUN yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.n
                    rh-postgresql95-postgresql-devel  \
                    rh-postgresql95-postgresql-pglogical-output \
                    rh-postgresql95-postgresql-pglogical \
-                   rh-repmgr95             \
+                   rh-postgresql95-repmgr  \
                    readline-devel          \
                    sqlite-devel            \
                    sysvinit-tools          \
