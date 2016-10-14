@@ -297,8 +297,8 @@ describe MiqAeDomain do
     let(:git_import) { instance_double('MiqAeYamlImportGitfs') }
     let(:info) { {'commit_time' => commit_time, 'commit_message' => commit_message, 'commit_sha' => commit_sha} }
     let(:new_info) { {'commit_time' => commit_time_new, 'commit_message' => "BB-8", 'commit_sha' => "def"} }
-    let(:commit_hash) do
-      {'commit_message' => commit_message, 'commit_time' => commit_time,
+    let(:expected_commit_hash) do
+      {'commit_message' => commit_message, 'commit_time' => be_same_time_as(commit_time),
        'commit_sha' => commit_sha, 'ref' => branch_name, 'ref_type' => MiqAeDomain::BRANCH}
     end
 
@@ -316,7 +316,7 @@ describe MiqAeDomain do
 
       dom1.update_git_info(repo, branch_name, MiqAeDomain::BRANCH)
       dom1.reload
-      expect(dom1.attributes).to have_attributes(commit_hash)
+      expect(dom1.attributes).to include(expected_commit_hash)
     end
 
     it "import a domain" do
@@ -328,7 +328,7 @@ describe MiqAeDomain do
                  'tenant_id' => @user.current_tenant.id, 'ref' => branch_name,
                  'ref_type' => 'BrancH'}
       dom1 = MiqAeDomain.import_git_repo(options)
-      expect(dom1.attributes).to have_attributes(commit_hash)
+      expect(dom1.attributes).to include(expected_commit_hash)
     end
 
     it "import domain embedded in git repository" do
@@ -341,7 +341,7 @@ describe MiqAeDomain do
                  'ref_type' => "BRANCH" }
       dom1 = MiqAeDomain.import_git_repo(options)
 
-      expect(dom1.attributes).to have_attributes(commit_hash)
+      expect(dom1.attributes).to include(expected_commit_hash)
     end
 
     it "import a domain fails" do
@@ -367,7 +367,7 @@ describe MiqAeDomain do
       dom1.update_attributes(:ref => branch_name, :git_repository => repo,
                              :ref_type => MiqAeDomain::BRANCH, :commit_sha => commit_sha)
       expect(dom1.git_repo_changed?).to be_truthy
-      expect(dom1.latest_ref_info).to have_attributes(new_info)
+      expect(dom1.latest_ref_info).to eq(new_info)
     end
 
     it "git repo tag changed" do
@@ -375,7 +375,7 @@ describe MiqAeDomain do
       dom1.update_attributes(:ref => tag_name, :ref_type => MiqAeDomain::TAG,
                              :git_repository => repo, :commit_sha => commit_sha)
       expect(dom1.git_repo_changed?).to be_truthy
-      expect(dom1.latest_ref_info).to have_attributes(new_info)
+      expect(dom1.latest_ref_info).to eq(new_info)
     end
 
     it "git repo tag changed with no branch or tag" do

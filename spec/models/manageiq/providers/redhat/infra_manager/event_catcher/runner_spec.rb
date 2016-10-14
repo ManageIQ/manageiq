@@ -10,12 +10,12 @@ describe ManageIQ::Providers::Redhat::InfraManager::EventCatcher::Runner do
 
     it "numeric port" do
       ems.update_attributes(:port => 123)
-      expect(catcher.event_monitor_options).to have_attributes(:port => 123)
+      expect(catcher.event_monitor_options).to include(:port => 123)
     end
 
     it "nil port" do
       ems.update_attributes(:port => nil)
-      expect(catcher.event_monitor_options).to have_attributes(:port => nil)
+      expect(catcher.event_monitor_options).to include(:port => nil)
     end
   end
 end

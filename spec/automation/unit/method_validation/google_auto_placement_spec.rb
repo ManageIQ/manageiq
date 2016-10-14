@@ -34,7 +34,7 @@ describe "GOOGLE best fit" do
     cloud_subnet
     ws.root
 
-    expect(miq_provision.reload.options).to have_attributes(
+    expect(miq_provision.reload.options).to include(
       :cloud_network               => [cloud_network.id, cloud_network.name],
       :placement_availability_zone => [availability_zone.id, availability_zone.name]
     )

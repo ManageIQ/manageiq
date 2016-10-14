@@ -178,7 +178,7 @@ describe Compliance do
     inputs = objects.extract_options!
     objects.each do |obj|
       expect(MiqQueue).to receive(:put) do |args|
-        expect(args).to have_attributes(
+        expect(args).to eq(
           :method_name => "check_compliance",
           :class_name  => "Compliance",
           :args        => [[obj.class.name, obj.id], inputs]
@@ -191,7 +191,7 @@ describe Compliance do
     inputs = objects.extract_options!
     objects.each do |obj|
       expect(MiqQueue).to receive(:put) do |args|
-        expect(args).to have_attributes(
+        expect(args).to include(
           :method_name => "scan_and_check_compliance",
           :class_name  => "Compliance",
           :task_id     => 'vc-refresher',

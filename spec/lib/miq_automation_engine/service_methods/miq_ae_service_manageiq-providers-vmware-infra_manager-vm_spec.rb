@@ -64,7 +64,7 @@ module MiqAeServiceVmVmwareSpec
     it "#create_snapshot without memory" do
       service_vm.create_snapshot('snap', 'crackle & pop')
 
-      expect(MiqQueue.first.args.first).to have_attributes(
+      expect(MiqQueue.first.args.first).to include(
         :task        => 'create_snapshot',
         :memory      => false,
         :name        => 'snap',
@@ -75,7 +75,7 @@ module MiqAeServiceVmVmwareSpec
     it "#create_snapshot with memory" do
       service_vm.create_snapshot('snap', 'crackle & pop', true)
 
-      expect(MiqQueue.first.args.first).to have_attributes(
+      expect(MiqQueue.first.args.first).to include(
         :task        => 'create_snapshot',
         :memory      => true,
         :name        => 'snap',

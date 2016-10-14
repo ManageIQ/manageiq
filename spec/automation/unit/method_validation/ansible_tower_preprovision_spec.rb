@@ -19,6 +19,6 @@ describe AnsibleTowerPreprovision do
     test = described_class.new(ae_service)
     test.send(:modify_job_options, test.service)
     service_ansible_tower.reload
-    expect(service_ansible_tower.job_options).to have_attributes(:limit => 'someHost', :extra_vars => {'flavor' => 'm1.small'})
+    expect(service_ansible_tower.job_options).to eq(:limit => 'someHost', :extra_vars => {'flavor' => 'm1.small'})
   end
 end

@@ -6,7 +6,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::EventParser do
       event = YAML.load_file(File.join(EPV_DATA_DIR, 'general_user_event.yml'))
       data = described_class.event_to_hash(event, 12345)
 
-      expect(data).to have_attributes(
+      expect(data).to eq(
         :event_type   => "GeneralUserEvent",
         :chain_id     => "5361104",
         :is_task      => false,
@@ -35,7 +35,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::EventParser do
         data = described_class.event_to_hash(event, 12345)
 
         assert_result_fields(data, event)
-        expect(data).to have_attributes(
+        expect(data).to include(
           :event_type => "vprob.vmfs.resource.corruptondisk",
           :message    => "event.vprob.vmfs.resource.corruptondisk.fullFormat (vprob.vmfs.resource.corruptondisk)"
         )
@@ -46,25 +46,21 @@ describe ManageIQ::Providers::Vmware::InfraManager::EventParser do
         data = described_class.event_to_hash(event, 12345)
 
         assert_result_fields(data, event)
-        expect(data).to have_attributes(
+        expect(data).to include(
           :event_type => "EventEx",
           :message    => ""
         )
       end
 
       def assert_result_fields(data, event)
-        expect(data).to have_attributes(
+        expect(data).to include(
           :chain_id     => "297179",
           :is_task      => false,
           :source       => "VC",
           :timestamp    => "2010-11-12T17:15:42.661128Z",
-          :full_data    => event,
+          :full_data    => an_object_eq_to(event), # RSpec gets confused by VimHash, https://github.com/ManageIQ/manageiq/issues/11507
           :ems_id       => 12345,
-          :username     => nil,
 
-          :vm_ems_ref   => nil,
-          :vm_name      => nil,
-          :vm_location  => nil,
           :host_ems_ref => "host-29",
           :host_name    => "vi4esx1.galaxy.local",
         )

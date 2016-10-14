@@ -16,7 +16,7 @@ describe ServiceOrchestration::OptionConverter do
 
   it '#stack_create_options' do
     converter = klass.get_converter(dialog_options, ManageIQ::Providers::Amazon::CloudManager)
-    expect(converter.stack_create_options).to have_attributes(
+    expect(converter.stack_create_options).to eq(
       :timeout_in_minutes => 100,
       :disable_rollback   => false,
       :parameters         => {'para1' => 'stack_param1', 'para2' => 'admin'}

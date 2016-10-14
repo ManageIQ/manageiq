@@ -6,7 +6,7 @@ describe ManageIQ::Providers::Azure::CloudManager::OrchestrationServiceOptionCon
       let(:dialog_options) { {'dialog_resource_group' => 'abc', 'dialog_new_resource_group' => 'xyz'} }
 
       it "prefers resource_group over new_resource_group" do
-        expect(subject.stack_create_options).to have_attributes(:resource_group => 'abc')
+        expect(subject.stack_create_options).to include(:resource_group => 'abc')
       end
     end
 
@@ -14,7 +14,7 @@ describe ManageIQ::Providers::Azure::CloudManager::OrchestrationServiceOptionCon
       let(:dialog_options) { {'dialog_resource_group' => '', 'dialog_new_resource_group' => 'xyz'} }
 
       it "takes new_resource_group" do
-        expect(subject.stack_create_options).to have_attributes(:resource_group => 'xyz')
+        expect(subject.stack_create_options).to include(:resource_group => 'xyz')
       end
     end
   end

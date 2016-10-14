@@ -38,7 +38,7 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::Refresher do
       :nativeid => nativeid
     )
     expect(datasource.properties).not_to be_nil
-    expect(datasource.properties).to have_attributes(
+    expect(datasource.properties).to include(
       'Driver Name' => 'h2',
       'JNDI Name'   => 'java:jboss/datasources/ExampleDS',
       'Enabled'     => 'true'
@@ -52,7 +52,7 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::Refresher do
       :nativeid => 'Local~/host=master',
     )
     expect(domain.properties).not_to be_nil
-    expect(domain.properties).to have_attributes(
+    expect(domain.properties).to include(
       'Running Mode'         => 'NORMAL',
       'Host State'           => 'running',
       'Is Domain Controller' => 'true',

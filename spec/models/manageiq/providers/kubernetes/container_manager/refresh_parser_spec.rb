@@ -309,7 +309,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
       parsed_volumes = parser.send(:parse_volumes, pod)
 
       example_volumes.zip(parsed_volumes).each do |example, parsed|
-        expect(parsed).to have_attributes(
+        expect(parsed).to include(
           :name                  => example[:name],
           :git_repository        => example[:git_repository],
           :empty_dir_medium_type => example[:empty_dir_medium_type],
@@ -365,7 +365,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
       it "tests '#{ex[:name]}'" do
         parsed_component_status = parser.send(:parse_component_status, ex[:component_status])
 
-        expect(parsed_component_status).to have_attributes(
+        expect(parsed_component_status).to eq(
           :name      => ex[:name],
           :condition => ex[:condition],
           :status    => ex[:status],

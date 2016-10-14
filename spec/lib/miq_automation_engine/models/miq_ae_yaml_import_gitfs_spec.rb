@@ -73,7 +73,7 @@ describe MiqAeYamlImportGitfs do
 
   it "#load_file" do
     @gitfs = MiqAeYamlImportGitfs.new(@domain, 'git_dir' => @repo_path)
-    expect(@gitfs.load_file(@domain_file)).to have_attributes(@default_hash.merge(:fname => @domain_file))
+    expect(@gitfs.load_file(@domain_file)).to eq(@default_hash.merge(:fname => @domain_file))
   end
 
   it "#load_file invalid" do
