@@ -8,6 +8,7 @@ class ChargebackVm < Chargeback
     :vm_name                  => :string,
     :tag_name                 => :string,
     :vm_uid                   => :string,
+    :vm_guid                  => :string,
     :owner_name               => :string,
     :provider_name            => :string,
     :provider_uid             => :string,
@@ -105,6 +106,7 @@ class ChargebackVm < Chargeback
     extra_fields = {
       "vm_name"       => perf.resource_name,
       "vm_uid"        => perf.resource.ems_ref,
+      "vm_guid"       => perf.resource.try(:guid),
       "owner_name"    => @vm_owners[perf.resource_id],
       "provider_name" => perf.parent_ems.try(:name),
       "provider_uid"  => perf.parent_ems.try(:guid)
@@ -123,7 +125,7 @@ class ChargebackVm < Chargeback
   end
 
   def self.report_static_cols
-    %w(vm_name)
+    %w(vm_name vm_guid)
   end
 
   def self.report_col_options
