@@ -5,6 +5,7 @@ describe SupportsFeatureMixin do
                  :publish => 'publish the post',
                  :archive => 'archive the post',
                  :fake    => 'fake it',
+                 :rm_root => 'remove with children',
                  :nuke    => 'nuke it'
                ))
 
@@ -30,6 +31,9 @@ describe SupportsFeatureMixin do
     stub_const('Post', Class.new do
       include SupportsFeatureMixin
       include Post::Operations
+      supports_class_conditional :rm_root do
+        unsupported_reason_add(:rm_root, 'Can do only on Root') if name != 'Post'
+      end
     end)
 
     stub_const('SpecialPost::Operations', Module.new do
@@ -127,6 +131,28 @@ describe SupportsFeatureMixin do
 
     it ".unsupported_reason(:feature) returns no reason" do
       expect(Post.unsupported_reason(:delete)).not_to be_blank
+    end
+  end
+
+  context "conditionally supported on a class" do
+    it "is supported on the base class" do
+      expect(Post.supports?(:rm_root)).to be true
+      expect(Post.new.supports?(:rm_root)).to be true
+    end
+
+    it "returns a reason on the unsupported subclass" do
+      expect(Post.unsupported_reason(:rm_root)).to be nil
+      expect(Post.new.unsupported_reason(:rm_root)).to be nil
+    end
+
+    it "is unsupported on subclass" do
+      expect(SpecialPost.supports?(:rm_root)).to be false
+      expect(SpecialPost.new.supports?(:rm_root)).to be false
+    end
+
+    it "returns a reason on the unsupported subclass" do
+      expect(SpecialPost.unsupported_reason(:rm_root)).to eq "Can do only on Root"
+      expect(SpecialPost.new.unsupported_reason(:rm_root)).to eq "Can do only on Root"
     end
   end
 

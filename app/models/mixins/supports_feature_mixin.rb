@@ -9,6 +9,9 @@ module SupportsFeatureMixin
   #     supports :archive do
   #       unsupported_reason_add(:archive, 'Its too good') if featured?
   #     end
+  #     supports_class_conditional :rm_root do
+  #       unsupported_reason_add(:rm_root) unless self == Post
+  #     end
   #   end
   #
   # To make a feature conditionally supported, pass a block to the +supports+ method.
@@ -19,6 +22,10 @@ module SupportsFeatureMixin
   #
   #   instance.unsupported_reason(:feature)
   #
+  # In order to make a feature conditionally supported on the class, the same block DSL
+  # exists via +supports_class_conditional+. The block will be evaluated at class context
+  # and setting a reason marks the feature unsupported.
+  #
   # The above allows you to call +supports_feature?+ or +supports?(feature) :methods
   # on the Class and Instance
   #
@@ -28,6 +35,8 @@ module SupportsFeatureMixin
   #   Post.supports_fake?                          # => false
   #   Post.supports_archive?                       # => true
   #   Post.new(featured: true).supports_archive?   # => false
+  #   Post.supports(:rm_root)                      # => true
+  #   SpecialPost.supports(:rm_root)               # => false
   #
   # To get a reason why a feature is unsupported use the +unsupported_reason+ method
   #
@@ -103,18 +112,30 @@ module SupportsFeatureMixin
   class UnknownFeatureError < StandardError; end
 
   class FeatureDefinition
-    def initialize(supported: false, block: nil, unsupported_reason: nil)
+    def initialize(supported: false, block: nil, class_supported_block: nil)
       @supported = supported
       @block = block
-      @unsupported_reason = unsupported_reason
+      @class_supported_block = class_supported_block
+      @reasons = Concurrent::Hash.new
     end
 
-    def supported?
-      @supported
+    def supported?(klass)
+      if @class_supported_block
+        @reasons.delete(klass)
+        klass.instance_eval(&@class_supported_block)
+        !@reasons.key?(klass)
+      else
+        @supported
+      end
     end
 
-    def unsupported_reason
-      SupportsFeatureMixin.reason_or_default(@unsupported_reason) unless supported?
+    def unsupported_reason(klass)
+      supported?(klass) unless @reasons.key(klass)
+      @reasons[klass]
+    end
+
+    def unsupported_reason_add(klass, reason)
+      @reasons[klass] = SupportsFeatureMixin.reason_or_default(reason)
     end
 
     def block
@@ -146,13 +167,13 @@ module SupportsFeatureMixin
 
     feature = feature.to_sym
     feature_definition = self.class.feature_definition_for(feature)
-    if feature_definition.supported?
+    if feature_definition.supported?(self.class)
       unsupported.delete(feature)
       if feature_definition.block
         instance_eval(&feature_definition.block)
       end
     else
-      unsupported_reason_add(feature, feature_definition.unsupported_reason)
+      unsupported_reason_add(feature, feature_definition.unsupported_reason(self.class))
     end
     !unsupported.key?(feature)
   end
@@ -183,23 +204,38 @@ module SupportsFeatureMixin
       supported_feature_definitions[feature.to_sym] = FeatureDefinition.new(supported: true, block: block)
     end
 
-    # supports_not does not take a block, because its never supported
-    # and not conditionally supported
+    # supports_not make a feature unsupported on the class
     def supports_not(feature, reason: nil)
       SupportsFeatureMixin.guard_queryable_feature(feature)
-      supported_feature_definitions[feature.to_sym] = FeatureDefinition.new(unsupported_reason: reason)
+      supports_class_conditional feature do
+        unsupported_reason_add(feature, reason)
+      end
+    end
+
+    # make feature conditonally supported on the class
+    # block is evaluated in class context
+    def supports_class_conditional(feature, &block)
+      SupportsFeatureMixin.guard_queryable_feature(feature)
+      supported_feature_definitions[feature.to_sym] = FeatureDefinition.new(class_supported_block: block)
     end
 
     # query the class if the feature is supported or not
     def supports?(feature)
       SupportsFeatureMixin.guard_queryable_feature(feature)
-      feature_definition_for(feature).supported?
+      feature_definition_for(feature).supported?(self)
     end
 
     # query the class for the reason why something is unsupported
     def unsupported_reason(feature)
       SupportsFeatureMixin.guard_queryable_feature(feature)
-      feature_definition_for(feature).unsupported_reason
+      feature_definition_for(feature).unsupported_reason(self)
+    end
+
+    # to be used inside +supports_class_conditional+ block to make feature conditionally unsupported on class
+    def unsupported_reason_add(feature, reason = nil)
+      SupportsFeatureMixin.guard_queryable_feature(feature)
+      feature = feature.to_sym
+      feature_definition_for(feature).unsupported_reason_add(self, reason)
     end
 
     # query the class if a feature is generally known
