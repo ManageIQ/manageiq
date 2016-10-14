@@ -1,8 +1,14 @@
 ---
 exclude_paths:
 - ".git/"
-- "**.yml"
+- "**.gif"
+- "**.html"
+- "**.json"
+- "**.png"
 - "**.svg"
+- "**.xml"
+- "**.yaml"
+- "**.yml"
 - "app/assets/javascripts/dhtmlx*/"
 - "config/dictionary_strings.rb"
 - "config/model_attributes.rb"
