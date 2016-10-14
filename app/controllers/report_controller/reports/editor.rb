@@ -1,7 +1,17 @@
 module ReportController::Reports::Editor
   extend ActiveSupport::Concern
 
-  CHARGEBACK_ALLOWED_FIELD_SUFFIXES = %w(_cost -owner_name _metric -provider_name -provider_uid -project_uid -archived -chargeback_rates).freeze
+  CHARGEBACK_ALLOWED_FIELD_SUFFIXES = %w(
+    _cost
+    -owner_name
+    _metric
+    -provider_name
+    -provider_uid
+    -project_uid
+    -archived
+    -chargeback_rates
+    -vm_guid
+  ).freeze
 
   def miq_report_new
     assert_privileges("miq_report_new")
