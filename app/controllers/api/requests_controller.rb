@@ -29,7 +29,7 @@ module Api
       request = resource_search(id, type, request_klass)
       user = parse_requester_user(data.delete("requester"))
 
-      request_klass.update_request(request, data, user)
+      request_klass.update_request(request, data.symbolize_keys, user)
       request
     end
 
