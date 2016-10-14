@@ -303,7 +303,7 @@
         %label.control-label.col-md-2
           = _("Categories")
         .col-md-8
-          %table
+          %table.table.table-borderless
             - @edit[:cats].each_slice(3) do |cats|
               %tr
                 - cats.each do |cat|
@@ -319,7 +319,7 @@
         %label.control-label.col-md-2
           = _("Categories")
         .col-md-8
-          %table
+          %table.table.table-borderless
             - @edit[:cats].each_slice(3) do |cats|
               %tr
                 - cats.each do |cat|
