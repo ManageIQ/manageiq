@@ -116,4 +116,60 @@ RSpec.describe "Requests API" do
       expect(response.parsed_body).to include(expected)
     end
   end
+
+  context "request creation" do
+    it "is forbidden for a user to create a request without appropriate role" do
+      api_basic_authorize
+
+      run_post(requests_url, gen_request(:create, :service_type => "ServiceReconfigureRequest"))
+
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it "is forbidden for a user to create a request without a different request role" do
+      api_basic_authorize collection_action_identifier(:requests, :create),
+                          MiqRequest::REQUEST_TYPE_ROLE_IDENTIFIER[:VmReconfigureRequest]
+
+      run_post(requests_url, gen_request(:create, :request_type => "ServiceReconfigureRequest"))
+
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it "fails if the request_type is missing" do
+      api_basic_authorize collection_action_identifier(:requests, :create)
+
+      run_post(requests_url, gen_request(:create, :src_id => 4))
+
+      expect_bad_request(/Must specify a request_type/)
+    end
+
+    it "fails if the request_type is unknown" do
+      api_basic_authorize collection_action_identifier(:requests, :create)
+
+      run_post(requests_url, gen_request(:create, :request_type => "InvalidRequest"))
+
+      expect_bad_request(/Invalid Request Type InvalidRequest specified/)
+    end
+
+    it "fails if the request is missing a src_id" do
+      api_basic_authorize collection_action_identifier(:requests, :create),
+                          MiqRequest::REQUEST_TYPE_ROLE_IDENTIFIER[:ServiceReconfigureRequest]
+
+      run_post(requests_url, gen_request(:create, :request_type => "ServiceReconfigureRequest"))
+
+      expect_bad_request(/Must specify a resource src_id or src_ids/)
+    end
+
+    it "fails if the requester is invalid" do
+      api_basic_authorize collection_action_identifier(:requests, :create),
+                          MiqRequest::REQUEST_TYPE_ROLE_IDENTIFIER[:ServiceReconfigureRequest]
+
+      run_post(requests_url, gen_request(:create,
+                                         :request_type => "ServiceReconfigureRequest",
+                                         :src_id       => 4,
+                                         :requester    => { "user_name" => "invalid_user"}))
+
+      expect_bad_request(/Unknown requester user_name invalid_user specified/)
+    end
+  end
 end
