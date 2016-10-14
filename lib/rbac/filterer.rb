@@ -421,20 +421,20 @@ module Rbac
 
       if apply_rbac_directly?(klass)
         filtered_ids = calc_filtered_ids(scope, rbac_filters, user, miq_group)
-        scope = scope_by_ids(scope, filtered_ids)
+        scope_by_ids(scope, filtered_ids)
       elsif apply_rbac_through_association?(klass)
         # if subclasses of MetricRollup or Metric, use the associated
         # model to derive permissions from
         associated_class = rbac_class(scope)
         filtered_ids = calc_filtered_ids(associated_class, rbac_filters, user, miq_group)
 
-        scope = scope_by_parent_ids(associated_class, scope, filtered_ids)
+        scope_by_parent_ids(associated_class, scope, filtered_ids)
       elsif klass == User && user.try!(:self_service?)
         # Self service users searching for users only see themselves
-        scope = scope.where(:id => user.id)
+        scope.where(:id => user.id)
       elsif klass == MiqGroup && miq_group.try!(:self_service?)
         # Self Service users searching for groups only see their group
-        scope = scope.where(:id => miq_group.id)
+        scope.where(:id => miq_group.id)
       else
         scope
       end
