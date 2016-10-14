@@ -264,6 +264,7 @@ describe MiqScheduleWorker::Runner do
 
             it "queues the right items" do
               scheduled_jobs = @schedule_worker.schedules_for_ldap_synchronization_role
+              expect(scheduled_jobs.size).to be(1)
 
               scheduled_jobs.each do |job|
                 case job.tags
@@ -320,6 +321,7 @@ describe MiqScheduleWorker::Runner do
 
             it "queues the right items" do
               scheduled_jobs = @schedule_worker.schedules_for_database_operations_role
+              expect(scheduled_jobs.size).to be(3)
 
               scheduled_jobs.each do |job|
                 expect(job).to be_a_kind_of(Rufus::Scheduler::CronJob)
@@ -360,6 +362,7 @@ describe MiqScheduleWorker::Runner do
 
             it "queues the right items" do
               scheduled_jobs = @schedule_worker.schedules_for_database_operations_role
+              expect(scheduled_jobs.size).to be(3)
 
               scheduled_jobs.each do |job|
                 expect(job).to be_kind_of(Rufus::Scheduler::CronJob)
@@ -469,6 +472,7 @@ describe MiqScheduleWorker::Runner do
 
           it "queues the right items" do
             scheduled_jobs = @schedule_worker.schedules_for_event_role
+            expect(scheduled_jobs.size).to be(2)
 
             scheduled_jobs.each do |job|
               expect(job).to be_kind_of(Rufus::Scheduler::EveryJob)
