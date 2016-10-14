@@ -295,9 +295,13 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
   end
 
   def assert_specific_flavor
-    @flavor = ManageIQ::Providers::Azure::CloudManager::Flavor.where(:name => "Basic_A0").first
+    @flavor_not_found = ManageIQ::Providers::Azure::CloudManager::Flavor.where(:name => "Basic_A0").first
+    expect(@flavor_not_found).to eq(nil)
+
+    @flavor = ManageIQ::Providers::Azure::CloudManager::Flavor.where(:name => "basic_a0").first
+
     expect(@flavor).to have_attributes(
-      :name                     => "Basic_A0",
+      :name                     => "basic_a0",
       :description              => nil,
       :enabled                  => true,
       :cpus                     => 1,
