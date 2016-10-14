@@ -326,9 +326,10 @@ describe MiqScheduleWorker::Runner do
               scheduled_jobs = @schedule_worker.schedules_for_database_operations_role
 
               scheduled_jobs.each do |job|
+                expect(job).to be_a_kind_of(Rufus::Scheduler::CronJob)
+
                 case job.tags
                 when %w(database_operations database_metrics_collection_schedule)
-                  expect(job).to be_kind_of(Rufus::Scheduler::CronJob)
                   expect(job.original).to eq(@metrics_collection[:collection_schedule])
                   job.call
                   @schedule_worker.do_work
@@ -340,7 +341,6 @@ describe MiqScheduleWorker::Runner do
 
                   MiqQueue.delete_all
                 when %w(database_operations database_metrics_daily_rollup_schedule)
-                  expect(job).to be_kind_of(Rufus::Scheduler::CronJob)
                   expect(job.original).to eq(@metrics_collection[:daily_rollup_schedule])
                   job.call
                   @schedule_worker.do_work
@@ -352,7 +352,6 @@ describe MiqScheduleWorker::Runner do
 
                   MiqQueue.delete_all
                 when %w(database_operations database_metrics_purge_schedule)
-                  expect(job).to be_kind_of(Rufus::Scheduler::CronJob)
                   expect(job.original).to eq(@metrics_history[:purge_schedule])
                   job.call
                   @schedule_worker.do_work
@@ -386,9 +385,10 @@ describe MiqScheduleWorker::Runner do
               scheduled_jobs = @schedule_worker.schedules_for_database_operations_role
 
               scheduled_jobs.each do |job|
+                expect(job).to be_kind_of(Rufus::Scheduler::CronJob)
+
                 case job.tags
                 when %w(database_operations database_metrics_collection_schedule)
-                  expect(job).to be_kind_of(Rufus::Scheduler::CronJob)
                   expect(job.original).to eq(@metrics_collection[:collection_schedule])
                   job.call
                   @schedule_worker.do_work
@@ -400,7 +400,6 @@ describe MiqScheduleWorker::Runner do
 
                   MiqQueue.delete_all
                 when %w(database_operations database_metrics_daily_rollup_schedule)
-                  expect(job).to be_kind_of(Rufus::Scheduler::CronJob)
                   expect(job.original).to eq(@metrics_collection[:daily_rollup_schedule])
                   job.call
                   @schedule_worker.do_work
@@ -412,7 +411,6 @@ describe MiqScheduleWorker::Runner do
 
                   MiqQueue.delete_all
                 when %w(database_operations database_metrics_purge_schedule)
-                  expect(job).to be_kind_of(Rufus::Scheduler::CronJob)
                   expect(job.original).to eq(@metrics_history[:purge_schedule])
                   job.call
                   @schedule_worker.do_work
