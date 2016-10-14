@@ -140,6 +140,41 @@ describe ContainerLabelTagMapping do
       expect(tags2).to eq(tags)
       expect(tags3).to eq(tags)
     end
+
+    # With multiple providers you'll have multiple refresh workers,
+    # each with independently cached mapping table.
+    context "2 workers with independent cache" do
+      it "handle known value simultaneously" do
+        cached1 = ContainerLabelTagMapping.cache
+        cached2 = ContainerLabelTagMapping.cache
+        tags1 = to_tags(ContainerLabelTagMapping.map_labels(cached1, 'ContainerNode', labels('name' => 'value-1')))
+        tags2 = to_tags(ContainerLabelTagMapping.map_labels(cached2, 'ContainerNode', labels('name' => 'value-1')))
+        expect(tags1).to contain_exactly(tag1, tag2)
+        expect(tags2).to contain_exactly(tag1, tag2)
+      end
+
+      it "handle new value encountered simultaneously" do
+        cached1 = ContainerLabelTagMapping.cache
+        cached2 = ContainerLabelTagMapping.cache
+        tags1 = to_tags(ContainerLabelTagMapping.map_labels(cached1, 'ContainerNode', labels('name' => 'value-2')))
+        tags2 = to_tags(ContainerLabelTagMapping.map_labels(cached2, 'ContainerNode', labels('name' => 'value-2')))
+        expect(tags1.size).to eq(1)
+        expect(tags1).to eq(tags2)
+      end
+    end
+  end
+
+  context "with 2 any-value mappings onto same category" do
+    before(:each) do
+      FactoryGirl.create(:container_label_tag_mapping, :label_name => 'name1', :tag => cat_tag)
+      FactoryGirl.create(:container_label_tag_mapping, :label_name => 'name2', :tag => cat_tag)
+    end
+
+    it "maps same new value in both into 1 new tag" do
+      tags = map_to_tags('ContainerNode', 'name1' => 'value', 'name2' => 'value')
+      expect(tags.size).to eq(1)
+      expect(ContainerLabelTagMapping.controls_tag?(tags[0])).to be true
+    end
   end
 
   context "given a label with empty value" do
