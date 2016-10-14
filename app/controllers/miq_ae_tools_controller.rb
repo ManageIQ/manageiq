@@ -198,7 +198,7 @@ Methods updated/added: %{method_stats}") % stat_options, :success)
   def retrieve_git_datastore
     redirect_options = {:action => :review_git_import}
     git_url = params[:git_url]
-    verify_ssl = params[:git_verify_ssl]  == "true" ? OpenSSL::SSL::VERIFY_PEER : OpenSSL::SSL::VERIFY_NONE 
+    verify_ssl = params[:git_verify_ssl] == "true" ? OpenSSL::SSL::VERIFY_PEER : OpenSSL::SSL::VERIFY_NONE 
 
     if git_url.blank?
       add_flash(_("Please provide a valid git URL"), :error)

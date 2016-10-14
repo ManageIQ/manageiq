@@ -321,6 +321,7 @@ Methods updated/added: 10
         end
 
         before do
+          allow(GitRepository).to receive(:create).with(:url => git_url, :verify_ssl => verify_ssl).and_return(git_repo)
           allow(git_repo).to receive(:update_authentication).with(:values => {:userid => "", :password => ""})
           allow(MiqTask).to receive(:generic_action_with_callback).with(task_options, queue_options).and_return(1234)
           allow(MiqTask).to receive(:wait_for_taskid).with(1234)
@@ -330,7 +331,6 @@ Methods updated/added: 10
 
         context "when the git repository exists with the given url" do
           before do
-            allow(GitRepository).to receive(:create).with(:url => git_url, :verify_ssl => verify_ssl).and_return(git_repo)
             allow(GitRepository).to receive(:exists?).with(:url => git_url).and_return(true)
           end
 
@@ -362,8 +362,8 @@ Methods updated/added: 10
         context "when the repository is using self signed certificates" do
           let (:verify_ssl) { OpenSSL::SSL::VERIFY_NONE }
           let (:git_verify_ssl) { "false" }
+
           before do
-            allow(GitRepository).to receive(:create).with(:url => git_url, :verify_ssl => verify_ssl).and_return(git_repo)
             allow(GitRepository).to receive(:exists?).with(:url => git_url).and_return(false)
           end
           it "queues the refresh action" do
@@ -374,7 +374,6 @@ Methods updated/added: 10
 
         context "when the git repository does not exist with the given url" do
           before do
-            allow(GitRepository).to receive(:create).with(:url => git_url, :verify_ssl => verify_ssl).and_return(git_repo)
             allow(GitRepository).to receive(:exists?).with(:url => git_url).and_return(false)
           end
 
