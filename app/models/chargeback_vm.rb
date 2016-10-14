@@ -44,7 +44,8 @@ class ChargebackVm < Chargeback
     :storage_used_metric      => :float,
     :storage_cost             => :float,
     :storage_metric           => :float,
-    :total_cost               => :float
+    :total_cost               => :float,
+    :entity                   => :binary
   )
 
   def self.build_results_for_report_ChargebackVm(options)
@@ -161,10 +162,6 @@ class ChargebackVm < Chargeback
       "storage_used_metric"      => {:grouping => [:total]},
       "total_cost"               => {:grouping => [:total]}
     }
-  end
-
-  def tags
-    Vm.includes(:tags).find_by_ems_ref(vm_uid).try(:tags).to_a
   end
 
   def get_rate_parents(perf)

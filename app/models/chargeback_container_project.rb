@@ -22,7 +22,8 @@ class ChargebackContainerProject < Chargeback
     :memory_used_metric    => :float,
     :net_io_used_cost      => :float,
     :net_io_used_metric    => :float,
-    :total_cost            => :float
+    :total_cost            => :float,
+    :entity                => :binary
   )
 
   def self.build_results_for_report_ChargebackContainerProject(options)
@@ -97,10 +98,6 @@ class ChargebackContainerProject < Chargeback
       "net_io_used_metric"    => {:grouping => [:total]},
       "total_cost"            => {:grouping => [:total]}
     }
-  end
-
-  def tags
-    ContainerProject.includes(:tags).find_by_ems_ref(project_uid).try(:tags).to_a
   end
 
   def get_rate_parents(perf)

@@ -1487,7 +1487,7 @@ module ReportController::Reports::Editor
       f_len = fields.length
       for f_idx in 1..f_len # Go thru fields in reverse
         f_key = fields[f_len - f_idx].last
-        next if f_key.ends_with?(*CHARGEBACK_ALLOWED_FIELD_SUFFIXES) || f_key.include?('managed')
+        next if f_key.ends_with?(*CHARGEBACK_ALLOWED_FIELD_SUFFIXES) || f_key.include?('managed') || f_key.include?(CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX)
         headers.delete(f_key)
         col_formats.delete(f_key)
         fields.delete_at(f_len - f_idx)
