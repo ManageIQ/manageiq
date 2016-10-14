@@ -30,4 +30,19 @@ describe Authentication do
       expect(auth.reload.password).to eq(pwd_plain)
     end
   end
+
+  context "#retryable_status?" do
+    it "works" do
+      expect(described_class.new(:status => 'valid').retryable_status?).to       be_falsy
+      expect(described_class.new(:status => 'none').retryable_status?).to        be_falsy
+      expect(described_class.new(:status => 'incomplete').retryable_status?).to  be_falsy
+      expect(described_class.new(:status => 'error').retryable_status?).to       be_truthy
+      expect(described_class.new(:status => 'unreachable').retryable_status?).to be_truthy
+      expect(described_class.new(:status => 'invalid').retryable_status?).to     be_falsy
+    end
+
+    it "is case insensitive" do
+      expect(described_class.new(:status => 'Error').retryable_status?).to be_truthy
+    end
+  end
 end
