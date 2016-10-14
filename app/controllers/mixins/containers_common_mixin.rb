@@ -110,6 +110,8 @@ module ContainersCommonMixin
       show_container_display(record, "persistent_volumes", PersistentVolume)
     elsif @display == "container_builds" || session[:display] == "container_builds" && params[:display].nil?
       show_container_display(record, "container_builds", ContainerBuild)
+    elsif @display == "container_templates" || session[:display] == "container_templates" && params[:display].nil?
+      show_container_display(record, "container_templates", ContainerTemplate)
     end
     # Came in from outside show_list partial
     if params[:ppsetting] || params[:searchtag] || params[:entry] || params[:sort_choice]

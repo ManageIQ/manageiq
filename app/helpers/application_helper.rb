@@ -831,6 +831,7 @@ module ApplicationHelper
        container_replicator
        container_route
        container_service
+       container_template
        ems_cloud
        ems_cluster
        ems_container
@@ -1201,6 +1202,7 @@ module ApplicationHelper
                         container_replicator
                         container_route
                         container_service
+                        container_template
                         container_topology
                         ems_cloud
                         ems_cluster
@@ -1301,6 +1303,7 @@ module ApplicationHelper
           container_replicator
           container_route
           container_service
+          container_template
           ems_cloud
           ems_cluster
           ems_container
@@ -1365,6 +1368,7 @@ module ApplicationHelper
              container_replicator
              container_route
              container_service
+             container_template
              ems_cloud
              ems_cluster
              ems_container
@@ -1427,6 +1431,7 @@ module ApplicationHelper
       container_replicator
       container_route
       container_service
+      container_template
       ems_cloud
       ems_cluster
       ems_container

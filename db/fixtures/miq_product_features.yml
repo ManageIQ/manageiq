@@ -4623,6 +4623,52 @@
       :feature_type: control
       :identifier: container_build_tag
 
+# ContainerTemplate
+- :name: Templates
+  :description: Everything under Container Template
+  :feature_type: node
+  :identifier: container_template
+  :children:
+  - :name: View
+    :description: View Container Template
+    :feature_type: node
+    :identifier: container_template_view
+    :children:
+    - :name: List
+      :description: Display Lists of Container Template
+      :feature_type: view
+      :identifier: container_template_show_list
+    - :name: Show
+      :description: Display Individual Container Template
+      :feature_type: view
+      :identifier: container_template_show
+  - :name: Modify
+    :description: Modify Container Template
+    :feature_type: admin
+    :identifier: container_template_admin
+    :children:
+    - :name: Remove
+      :description: Remove Container Template from the VMDB
+      :feature_type: admin
+      :identifier: container_template_delete
+    - :name: Edit
+      :description: Edit a Container Template
+      :feature_type: admin
+      :identifier: container_template_edit
+    - :name: Add
+      :description: Add a Container Template
+      :feature_type: admin
+      :identifier: container_template_new
+  - :name: Operate
+    :description: Perform Operations on Container Template
+    :feature_type: control
+    :identifier: container_template_control
+    :children:
+    - :name: Edit Tags
+      :description: Edit Tags of Container Template
+      :feature_type: control
+      :identifier: container_template_tag
+
 # ContainerService
 - :name: Services
   :description: Everything under Container Services

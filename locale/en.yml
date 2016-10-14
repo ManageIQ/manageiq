@@ -708,6 +708,7 @@ en:
       ContainerRoute:           Route
       ContainerReplicator:      Replicator
       ContainerService:         Container Service
+      ContainerTemplate:        Container Template
       EmsCluster:               Cluster / Deployment Role
       EmsClusterPerformance:    Performance - Cluster
       EmsEvent:                 Management Event
@@ -927,6 +928,8 @@ en:
       persistent_volumes:          Volumes
       container_build:             Build
       container_builds:            Builds
+      container_template:          Template
+      container_templates:         Templates
       custom_button:               Button
       custom_button_set:           Buttons Group
       ems_cloud:                   Cloud Provider

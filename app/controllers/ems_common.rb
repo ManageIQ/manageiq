@@ -88,6 +88,7 @@ module EmsCommon
       'container_builds'              => [ContainerBuild,         _('Container Builds')],
       'container_projects'            => [ContainerProject,       _('Container Projects')],
       'container_image_registries'    => [ContainerImageRegistry, _('Container Image Registries')],
+      'container_templates'           => [ContainerTemplate,      _('Container Templates')],
       'availability_zones'            => [AvailabilityZone,       _('Availability Zones')],
       'host_aggregates'               => [HostAggregate,          _('Host Aggregates')],
       'middleware_servers'            => [MiddlewareServer,       _('Middleware Servers')],

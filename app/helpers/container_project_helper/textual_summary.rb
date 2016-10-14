@@ -8,7 +8,8 @@ module ContainerProjectHelper::TextualSummary
   end
 
   def textual_group_relationships
-    %i(ems container_routes container_services container_replicators container_groups container_nodes container_images)
+    %i(ems container_routes container_services container_replicators container_groups container_nodes container_images
+       container_templates)
   end
 
   def textual_group_smart_management
