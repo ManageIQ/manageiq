@@ -74,6 +74,8 @@ module ApplicationHelper::PageLayouts
           %w(dashboard topology).include?(@showtype)
       # Dashboard tabs are located in taskbar because they are otherwise hidden behind the taskbar regardless of z-index
       return false
+    elsif @layout == "alerts_list" || @layout == "alerts_status"
+      return false
     end
     true
   end

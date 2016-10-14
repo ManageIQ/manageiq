@@ -633,6 +633,7 @@ module ApplicationHelper
           ).include?(controller.action_name) ||
         %w(about
            alerts_list
+           alerts_status
            chargeback
            cloud_topology
            container_dashboard
@@ -1185,6 +1186,7 @@ module ApplicationHelper
                         auth_key_pair_cloud
                         availability_zone
                         alerts_list
+                        alerts_status
                         cim_base_storage_extent
                         cloud_network
                         cloud_object_store_container

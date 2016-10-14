@@ -4,6 +4,9 @@ angular.module('alertsCenter')
   .controller('alertsStatusController', ['$scope', '$http', '$resource', '$interval',
     function($scope,  $http, $resource, $interval) {
       var vm = this;
+
+      angular.element(document.querySelector('#center_div')).addClass("miq-body");
+
       vm.severityTitles = [__("Information"), __("Warning"), __("Error")];
 
       function setupInitialValues () {
