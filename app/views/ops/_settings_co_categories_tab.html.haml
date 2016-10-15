@@ -32,11 +32,11 @@
           %td{:onclick => remote_function(:url => {:action => 'category_edit', :id => cat[:id]}), :title => t}
             = h(cat[:show])
           %td{:onclick => remote_function(:url => {:action => 'category_edit', :id => cat[:id]}), :title => t}
-            = h(cat[:single_value] ? true : false)
+            = h(!!cat[:single_value])
           %td{:onclick => remote_function(:url => {:action => 'category_edit', :id => cat[:id]}), :title => t}
-            = h(cat[:perf_by_tag] ? true : false)
+            = h(!!cat[:perf_by_tag])
           %td{:onclick => remote_function(:url => {:action => 'category_edit', :id => cat[:id]}), :title => t}
-            - default = cat[:default] ? true : false
+            - default = !!cat[:default]
             = h(default)
 
           - if cat[:default] == "t" || cat[:default].to_s == "1"

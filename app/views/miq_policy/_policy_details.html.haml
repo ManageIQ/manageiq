@@ -157,7 +157,7 @@
               %h3= h(k)
               - @edit[:allevents][k].sort_by(&:first).each do |e|
                 %div{:style => "width: 300px; height: 18px; float:left; padding: 0px 5px 0px 0px;"}
-                  = check_box_tag("event_#{e.last}", "1", @edit[:new][:events].include?(e.last) ? true : false,
+                  = check_box_tag("event_#{e.last}", "1", !!(@edit[:new][:events].include?(e.last)),
                     "data-miq_observe_checkbox" => {:url => url}.to_json)
                   = h(e.first)
       - else
