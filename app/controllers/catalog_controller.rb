@@ -159,7 +159,7 @@ class CatalogController < ApplicationController
       @edit[:new][:service_type] = "atomic"
       default_entry_point(@edit[:new][:st_prov_type],
                           @edit[:new][:service_type])
-      @edit[:rec_id] = @record ? @record.id : nil
+      @edit[:rec_id] = @record.try(:id)
       @tabactive = @edit[:new][:current_tab_key]
     end
     render :update do |page|
@@ -1300,7 +1300,7 @@ class CatalogController < ApplicationController
     @edit[:new][:long_description] = @record.long_description
     @edit[:new][:provision_cost] = @record.provision_cost
     @edit[:new][:display]  = @record.display ? @record.display : false
-    @edit[:new][:catalog_id] = @record.service_template_catalog ? @record.service_template_catalog.id : nil
+    @edit[:new][:catalog_id] = @record.service_template_catalog.try(:id)
     @edit[:new][:st_prov_type] ||= @record.prov_type
     @edit[:new][:generic_subtype] = @record.generic_subtype || "custom" if @edit[:new][:st_prov_type] == 'generic'
     @edit[:new][:available_catalogs] = Rbac.filtered(ServiceTemplateCatalog.all).collect do |stc|

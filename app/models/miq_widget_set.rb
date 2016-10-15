@@ -46,7 +46,7 @@ class MiqWidgetSet < ApplicationRecord
         h[col] = arr.collect do |d|
           w = MiqWidget.find_by_description(d)
           members << w if w
-          w ? w.id : nil
+          w.try(:id)
         end.compact
         h
       end

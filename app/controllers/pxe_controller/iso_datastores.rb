@@ -234,7 +234,7 @@ module PxeController::IsoDatastores
     @edit[:key] = "iso_img_edit__#{@img.id || "new"}"
     @edit[:rec_id] = @img.id || nil
     @edit[:pxe_image_types] = PxeImageType.all.sort_by(&:name).collect { |img| [img.name, img.id] }
-    @edit[:new][:img_type] = @img.pxe_image_type ? @img.pxe_image_type.id : nil
+    @edit[:new][:img_type] = @img.pxe_image_type.try(:id)
     @edit[:current] = copy_hash(@edit[:new])
     session[:edit] = @edit
   end
@@ -279,7 +279,7 @@ module PxeController::IsoDatastores
     @edit[:current] = {}
     @edit[:key] = "isd_edit__#{@isd.id || "new"}"
     @edit[:rec_id] = @isd.id || nil
-    @edit[:new][:ems_id] = @isd.ext_management_system ? @isd.ext_management_system.id : nil
+    @edit[:new][:ems_id] = @isd.ext_management_system.try(:id)
 
     @edit[:emses] = ManageIQ::Providers::Redhat::InfraManager
                     .without_iso_datastores

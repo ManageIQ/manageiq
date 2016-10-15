@@ -1376,7 +1376,7 @@ module VmCommon
       partial_locals[:action_url] = @lastaction if partial == 'layouts/x_gtl'
       presenter.update(:main_div, r[:partial => partial, :locals => partial_locals])
 
-      locals = {:action_url => action, :record_id => @record ? @record.id : nil}
+      locals = {:action_url => action, :record_id => @record.try(:id)}
       if %w(clone migrate miq_request_new pre_prov publish
             reconfigure resize live_migrate attach detach evacuate
             associate_floating_ip disassociate_floating_ip).include?(@sb[:action])
@@ -1500,7 +1500,7 @@ module VmCommon
 
     presenter.set_visibility(h_tb.present? || c_tb.present? || v_tb.present?, :toolbar)
 
-    presenter[:record_id] = @record ? @record.id : nil
+    presenter[:record_id] = @record.try(:id)
 
     # Hide/show searchbox depending on if a list is showing
     presenter.set_visibility(!(@record || @in_a_form), :adv_searchbox_div)

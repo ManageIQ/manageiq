@@ -873,7 +873,7 @@ class VmOrTemplate < ApplicationRecord
 
     proxy = nil
     proxy = MiqProxy.find_by_id(defaultsmartproxy.to_i) if defaultsmartproxy
-    proxy ? proxy.host : nil
+    proxy.try(:host)
   end
 
   def my_zone
@@ -1455,7 +1455,7 @@ class VmOrTemplate < ApplicationRecord
   end
 
   def miq_provision_template
-    miq_provision ? miq_provision.vm_template : nil
+    miq_provision.try(:vm_template)
   end
 
   def event_threshold?(options = {:time_threshold => 30.minutes, :event_types => ["MigrateVM_Task_Complete"], :freq_threshold => 2})

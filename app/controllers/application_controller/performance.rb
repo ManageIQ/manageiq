@@ -1184,7 +1184,7 @@ module ApplicationController::Performance
         end
       end
 
-      rpt.db_options[:options][:vm] = @sb[:planning][:options][:chosen_vm] ? @sb[:planning][:options][:chosen_vm].to_i : nil
+      rpt.db_options[:options][:vm] = @sb[:planning][:options][:chosen_vm].try(:to_i)
 
       rpt.db_options[:options][:range] = {
         :days     => @sb[:planning][:options][:days],
