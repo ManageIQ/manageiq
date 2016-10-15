@@ -60,7 +60,7 @@ class Snapshot < ApplicationRecord
     if value == :system_snapshot
       return self.is_a_type?(:evm_snapshot) || self.is_a_type?(:consolidate_helper) || self.is_a_type?(:vcb_snapshot)
     elsif value.kind_of?(Regexp)
-      return value =~ name ? true : false
+      return (value =~ name).to_boolean
     else
       return name == value
     end

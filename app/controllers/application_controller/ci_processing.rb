@@ -1810,8 +1810,8 @@ module ApplicationController::CiProcessing
       @reconfig_values[:disks] = vmdisks
     end
 
-    @reconfig_values[:cb_memory] = @req && @req.options[:vm_memory] ? true : false       # default for checkbox is false for new request
-    @reconfig_values[:cb_cpu] =  @req && ( @req.options[:number_of_sockets] || @req.options[:cores_per_socket]) ? true : false     # default for checkbox is false for new request
+    @reconfig_values[:cb_memory] = (@req && @req.options[:vm_memory]).to_boolean       # default for checkbox is false for new request
+    @reconfig_values[:cb_cpu] =  (@req && ( @req.options[:number_of_sockets] || @req.options[:cores_per_socket])).to_boolean     # default for checkbox is false for new request
     @reconfig_values
   end
 

@@ -94,7 +94,7 @@ module OpsController::OpsRbac
   def rbac_tenant_add
     assert_privileges("rbac_tenant_add")
     @_params[:typ] = "new"
-    @tenant_type = params[:tenant_type] == "tenant" ? true : false
+    @tenant_type = (params[:tenant_type] == "tenant").to_boolean
     rbac_tenant_edit
   end
   alias_method :rbac_project_add, :rbac_tenant_add

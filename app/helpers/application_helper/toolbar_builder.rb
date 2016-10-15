@@ -385,7 +385,7 @@ class ApplicationHelper::ToolbarBuilder
   def build_toolbar_hide_button_ops(id)
     case x_active_tree
     when :settings_tree
-      return ["schedule_run_now"].include?(id) ? true : false
+      return ["schedule_run_now"].include?(id)
     when :diagnostics_tree
       case @sb[:active_tab]
       when "diagnostics_audit_log"

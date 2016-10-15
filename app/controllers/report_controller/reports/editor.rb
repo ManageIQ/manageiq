@@ -88,7 +88,7 @@ module ReportController::Reports::Editor
           add_flash("#{field.to_s.capitalize} #{msg}", :error)
         end
         @in_a_form = true
-        session[:changed] = @changed ? true : false
+        session[:changed] = @changed.to_boolean
         @changed = true
         replace_right_cell
       end

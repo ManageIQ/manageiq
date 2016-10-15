@@ -47,7 +47,7 @@ class LdapDomain < ApplicationRecord
   end
 
   def connected?
-    @ldap ? true : false
+    @ldap.to_boolean
   end
 
   def domain_prefix

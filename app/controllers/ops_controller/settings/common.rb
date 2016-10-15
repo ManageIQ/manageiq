@@ -177,7 +177,7 @@ module OpsController::Settings::Common
       subscriptions.each do |h|
         region = MiqRegion.find_by( :region => h['provider_region'])
         remote_ws_address = region ? region.remote_ws_address : ''
-        h.merge!(:auth_key_configured => region && region.auth_key_configured? ? true : false, :remote_ws_address => remote_ws_address)
+        h.merge!(:auth_key_configured => (region && region.auth_key_configured?).to_boolean, :remote_ws_address => remote_ws_address)
       end
     end
 

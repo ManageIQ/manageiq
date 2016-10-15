@@ -455,10 +455,10 @@ class ReportController < ApplicationController
         r = MiqReport.find_by_name(rep)
         if r
           details                    = {}
-          details["display_filters"] = r.display_filter ? true : false
-          details["filters"]         = r.conditions ? true : false
-          details["charts"]          = r.graph ? true : false
-          details["sortby"]          = r.sortby ? true : false
+          details["display_filters"] = r.display_filter.to_boolean
+          details["filters"]         = r.conditions.to_boolean
+          details["charts"]          = r.graph.to_boolean
+          details["sortby"]          = r.sortby.to_boolean
           details["id"]              = r.id
           details["user"]            = r.user ? r.user.userid : ""
           details["group"]           = r.miq_group ? r.miq_group.description : ""

@@ -143,7 +143,7 @@ class ProviderForemanController < ApplicationController
       assert_privileges("configured_system_tag")
       tagging_edit('ConfiguredSystem', false)
     when :configuration_scripts
-      assert_privileges("configuration_script_tag") 
+      assert_privileges("configuration_script_tag")
       tagging_edit('ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfigurationScript', false)
     end
     render_tagging_form
@@ -1231,7 +1231,7 @@ class ProviderForemanController < ApplicationController
   def cs_edit_get_form_vars
     @edit[:new][:name] = params[:name] if params[:name]
     @edit[:new][:description] = params[:description] if params[:description]
-    @edit[:new][:draft] = params[:draft] == "true" ? true : false if params[:draft]
+    @edit[:new][:draft] = params[:draft].to_boolean if params[:draft]
     @edit[:new][:dialog_name] = params[:dialog_name] if params[:dialog_name]
   end
 end

@@ -435,7 +435,7 @@ module ManageIQ::Providers
         :executable_name            => service.binary,
         :hostname                   => service.host,
         :status                     => service.state,
-        :scheduling_disabled        => service.status == 'disabled' ? true : false,
+        :scheduling_disabled        => (service.status == 'disabled').to_boolean,
         :scheduling_disabled_reason => service.disabled_reason,
         :host                       => host,
         :system_service             => system_service,

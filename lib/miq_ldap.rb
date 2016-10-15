@@ -267,11 +267,11 @@ class MiqLdap
   end
 
   def is_dn?(str)
-    str =~ /^([a-z|0-9|A-Z]+ *=[^,]+[,| ]*)+$/ ? true : false
+    (str =~ /^([a-z|0-9|A-Z]+ *=[^,]+[,| ]*)+$/).to_boolean
   end
 
   def domain_username?(str)
-    str =~ /^([a-zA-Z][a-zA-Z0-9.-]+)\\.+$/ ? true : false
+    (str =~ /^([a-zA-Z][a-zA-Z0-9.-]+)\\.+$/).to_boolean
   end
 
   def fqusername(username)
