@@ -47,4 +47,39 @@ describe CloudVolumeSnapshotController do
       expect(assigns(:edit)).to be_nil
     end
   end
+
+  describe "#delete" do
+    before do
+      stub_user(:features => :all)
+      EvmSpecHelper.create_guid_miq_server_zone
+      @ems = FactoryGirl.create(:ems_openstack)
+      @snapshot = FactoryGirl.create(:cloud_volume_snapshot_openstack,
+                                     :ext_management_system => @ems)
+    end
+
+    context "#delete" do
+      let(:task_options) do
+        {
+          :action => "deleting volume snapshot #{@snapshot.inspect} in #{@ems.inspect}",
+          :userid => controller.current_user.userid
+        }
+      end
+      let(:queue_options) do
+        {
+          :class_name  => @snapshot.class.name,
+          :instance_id => @snapshot.id,
+          :method_name => 'delete_snapshot',
+          :priority    => MiqQueue::HIGH_PRIORITY,
+          :role        => 'ems_operations',
+          :zone        => @ems.my_zone,
+          :args        => []
+        }
+      end
+
+      it "queues the delete action" do
+        expect(MiqTask).to receive(:generic_action_with_callback).with(task_options, queue_options)
+        post :button, :params => { :id => @snapshot.id, :pressed => "cloud_volume_snapshot_delete", :format => :js }
+      end
+    end
+  end
 end
