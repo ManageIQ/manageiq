@@ -29,5 +29,28 @@
     "eslint-plugin-standard": "^2.0.1"
   },
   "dependencies": {
+    "angular": "~1.5.8",
+    "angular-animate": "~1.5.8",
+    "angular-bootstrap-switch": "~0.5.1",
+    "angular-mocks": "~1.5.8",
+    "angular-sanitize": "~1.5.8",
+    "angular.validators": "~4.4.2",
+    "array-includes": "~1.0.6",
+    "bootstrap-filestyle": "~1.2.1",
+    "bootstrap-hover-dropdown": "~2.2.1",
+    "bootstrap-switch": "~3.3.2",
+    "codemirror": "~5.19.0",
+    "es6-shim": "~0.35.1",
+    "fetch": "~1.0.1",
+    "jasmine-jquery": "~2.1.1",
+    "jquery": "~2.1.4",
+    "jquery-ujs": "~1.2.2",
+    "moment-strftime": "~0.2.0",
+    "moment-timezone": "~0.4.1",
+    "numeral": "~1.5.3",
+    "patternfly-bootstrap-treeview": "~2.1.1",
+    "phantomjs-polyfill": "0.0.2",
+    "spin.js": "~2.3.2",
+    "tota11y": "~0.1.6"
   }
 }
