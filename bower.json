@@ -55,8 +55,5 @@
     "xml_display": "~0.1.1"
   },
   "resolutions": {
-    "patternfly-bootstrap-treeview": "~2.1.1",
-    "moment": ">=2.10.5",
-    "d3": "~3.5.0"
   }
 }
