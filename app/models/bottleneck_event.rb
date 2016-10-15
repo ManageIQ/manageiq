@@ -5,7 +5,7 @@ class BottleneckEvent < ApplicationRecord
 
   def self.last_created_on(obj)
     event = where(:resource => obj).order("created_on DESC").first
-    event ? event.created_on : nil
+    event.try(:created_on)
   end
 
   def self.generate_future_events(obj)

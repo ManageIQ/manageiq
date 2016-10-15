@@ -307,7 +307,7 @@ module MiqAeMethodService
     def instance_get_display_name(path)
       _log.info "<< path=#{path.inspect}"
       aei = __find_instance_from_path(path)
-      aei ? aei.display_name : nil
+      aei.try(:display_name)
     end
 
     def instance_set_display_name(path, display_name)

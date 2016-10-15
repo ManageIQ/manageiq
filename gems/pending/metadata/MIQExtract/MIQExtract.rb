@@ -26,7 +26,7 @@ class MIQExtract
   def initialize(filename, ost = nil) # TODO: Always pass in MiqVm
     ost ||= OpenStruct.new
     @ost = ost
-    @dataDir = ost.config ? ost.config.dataDir : nil
+    @dataDir = ost.config.try(:dataDir)
     ost.scanData = {} if ost.scanData.nil?
     @xml_class = ost.xml_class.nil? ? XmlHash::Document : ost.xml_class
 

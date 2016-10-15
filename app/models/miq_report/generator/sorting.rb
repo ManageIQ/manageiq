@@ -78,11 +78,11 @@ module MiqReport::Generator::Sorting
         ts_str[14..18] = "00:00"
         Time.parse(ts_str)
       end
-    when :day           then value ? value.beginning_of_day : nil
-    when :week          then value ? value.beginning_of_week : nil
-    when :month         then value ? value.beginning_of_month : nil
-    when :quarter       then value ? value.beginning_of_quarter : nil
-    when :year          then value ? value.beginning_of_year : nil
+    when :day           then value.try(:beginning_of_day)
+    when :week          then value.try(:beginning_of_week)
+    when :month         then value.try(:beginning_of_month)
+    when :quarter       then value.try(:beginning_of_quarter)
+    when :year          then value.try(:beginning_of_year)
     when :hour_of_day   then value ? value.hour : 999
     when :day_of_week   then value ? value.wday : 999
     when :week_of_year  then value ? value.strftime("%W").to_i : 999

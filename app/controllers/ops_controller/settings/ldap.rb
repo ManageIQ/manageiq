@@ -366,7 +366,7 @@ module OpsController::Settings::Ldap
 
     @edit[:new][:name] = @ldap_region.name
     @edit[:new][:description] = @ldap_region.description
-    @edit[:new][:zone_id] = @ldap_region.zone ? @ldap_region.zone.id : nil
+    @edit[:new][:zone_id] = @ldap_region.zone.try(:id)
     @edit[:zones] = Zone.all.sort_by { |z| z.name.to_s }.collect { |z| [z.name, z.id] }
     @edit[:current] = copy_hash(@edit[:new])
     session[:edit] = @edit

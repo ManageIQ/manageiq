@@ -306,7 +306,7 @@ module EmsRefresh::SaveInventory
     vm.snapshots.each do |s|
       if s.parent_uid
         parent = vm.snapshots.detect { |s2| s2.uid == s.parent_uid }
-        s.update_attribute(:parent_id, parent ? parent.id : nil)
+        s.update_attribute(:parent_id, parent.try(:id))
       end
     end
   end
