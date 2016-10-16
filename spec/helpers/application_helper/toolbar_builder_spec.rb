@@ -891,21 +891,6 @@ describe ApplicationHelper do
           end
         end
       end
-
-      ["timeline_csv", "timeline_pdf", "timeline_txt"].each do |id|
-        context "and id = #{id}" do
-          before { @id = id }
-
-          it "and !@report" do
-            expect(subject).to be_truthy
-          end
-
-          it "and @report" do
-            @report = ''
-            expect(subject).to be_falsey
-          end
-        end
-      end
     end
 
     context "NilClass" do
