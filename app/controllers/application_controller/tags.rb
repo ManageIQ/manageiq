@@ -20,11 +20,14 @@ module ApplicationController::Tags
     tagging_edit('Service')
   end
 
+  def container_tag
+    tagging_edit('Container')
+  end
+
   alias_method :image_tag, :tagging_edit
   alias_method :instance_tag, :tagging_edit
   alias_method :vm_tag, :tagging_edit
   alias_method :miq_template_tag, :tagging_edit
-  alias_method :container_tag, :tagging_edit
   alias_method :storage_tag, :tagging_edit
   alias_method :infra_networking_tag, :tagging_edit
 
