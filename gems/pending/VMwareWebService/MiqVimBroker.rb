@@ -36,8 +36,8 @@ class MiqVimBroker
     if mode == :client
       require 'rubygems'
       require 'httpclient'  # needed for exception classes
-      require 'MiqVimDump'
-      require 'MiqVimVdlMod'
+      require 'VMwareWebService/MiqVimDump'
+      require 'VMwareWebService/MiqVimVdlMod'
       #
       # Modify the meta-class of DRb::DRbObject
       # so we can alias class methods
@@ -69,7 +69,7 @@ class MiqVimBroker
       @broker = DRbObject.new(nil, "druby://127.0.0.1:#{port}")
     elsif mode == :server
       require 'timeout'
-      require 'broker_timeout'
+      require 'VMwareWebService/broker_timeout'
 
       # Un-comment following 2 lines to enable Sync lock debugging.
       # require 'broker_sync_debug'
@@ -81,7 +81,7 @@ class MiqVimBroker
       end
       @@classModed = true
 
-      require 'MiqVimBrokerMods' # only needed by the server
+      require 'VMwareWebService/MiqVimBrokerMods' # only needed by the server
       @mode = :server
       @shuttingDown = false
 
