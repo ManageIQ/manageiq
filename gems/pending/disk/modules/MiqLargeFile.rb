@@ -2,9 +2,7 @@ require 'sys-uname'
 require 'util/miq-system'
 
 if Sys::Platform::IMPL == :linux
-  if MiqSystem.arch == :x86
-    require 'large_file_linux'
-  elsif MiqSystem.arch == :x86_64
+  if MiqSystem.arch == :x86_64
     require 'linux_block_device'
     require 'disk/modules/RawBlockIO'
   end
@@ -19,7 +17,6 @@ module MiqLargeFile
       return(MiqLargeFileWin32.new(file_name, flags))
     when :unix
       if Sys::Platform::IMPL == :linux
-        return(LargeFileLinux.new(file_name, flags)) if MiqSystem.arch == :x86
         return(RawBlockIO.new(file_name, flags)) if MiqLargeFileStat.new(file_name).blockdev?
       end
       return(MiqLargeFileOther.new(file_name, flags))

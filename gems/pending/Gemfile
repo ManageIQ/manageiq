@@ -61,10 +61,6 @@ end
 # Linux-only section
 if RbConfig::CONFIG["host_os"].include?("linux")
   gem "linux_block_device", ">=0.1.0", :require => false
-
-  if RbConfig::CONFIG["host_cpu"] == "x86"  # 32 bit Linux.
-    gem "large_file_linux", "~>0.1.0", :require => false
-  end
 end
 
 # Windows only. Do not put in Gemfile.lock on other platforms.
