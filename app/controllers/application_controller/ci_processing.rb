@@ -1632,7 +1632,7 @@ module ApplicationController::CiProcessing
     build_listnav_search_list(@view.db) if !["miq_task"].include?(@layout) && !session[:menu_click]
     # Came in from outside show_list partial
     unless params[:action] == "explorer"
-      if params[:action] != "button" && (params[:ppsetting] || params[:searchtag] || params[:entry] || params[:sort_choice])
+      if params[:action] != "button" && (params[:searchtag] || params[:entry])
         replace_gtl_main_div
       end
     end

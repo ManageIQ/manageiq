@@ -1238,7 +1238,7 @@ module VmCommon
   public :resolve_node_info
 
   # Get all info for the node about to be displayed
-  def get_node_info(treenodeid)
+  def get_node_info(treenodeid, show_list = true)
     # resetting action that was stored during edit to determine what is being edited
     @sb[:action] = nil
     @nodetype, id = if (treenodeid.split('-')[0] == 'v' || treenodeid.split('-')[0] == 't')  && hide_vms
@@ -1291,7 +1291,7 @@ module VmCommon
           klass = ManageIQ::Providers::InfraManager::VmOrTemplate
           options[:where_clause] = ["vms.type IN (?)", klass.vm_descendants.collect(&:name)]
         end
-        process_show_list(options)  # Get all VMs & Templates
+        process_show_list(options) if show_list  # Get all VMs & Templates
         # :model=>ui_lookup(:models=>"VmOrTemplate"))
         # TODO: Change ui_lookup/dictionary to handle VmOrTemplate, returning VMs And Templates
         @right_cell_text = if title
@@ -1307,7 +1307,7 @@ module VmCommon
           end
           if id == "orph"
             options[:where_clause] = MiqExpression.merge_where_clauses(options[:where_clause], VmOrTemplate::ORPHANED_CONDITIONS)
-            process_show_list(options)
+            process_show_list(options) if show_list
             @right_cell_text = if model
                                  _("Orphaned %{models}") % {:models => ui_lookup(:models => model)}
                                else
@@ -1315,7 +1315,7 @@ module VmCommon
                                end
           elsif id == "arch"
             options[:where_clause] = MiqExpression.merge_where_clauses(options[:where_clause], VmOrTemplate::ARCHIVED_CONDITIONS)
-            process_show_list(options)
+            process_show_list(options) if show_list
             @right_cell_text = if model
                                  _("Archived %{models}") % {:models => ui_lookup(:models => model)}
                                else
@@ -1323,7 +1323,7 @@ module VmCommon
                                end
           end
         elsif TreeBuilder.get_model_for_prefix(@nodetype) == "MiqSearch"
-          process_show_list(options)  # Get all VMs & Templates
+          process_show_list(options) if show_list # Get all VMs & Templates
           @right_cell_text = if model
                                _("All %{models}") % {:models => ui_lookup(:models => model)}
                              else
@@ -1335,7 +1335,7 @@ module VmCommon
           options[:where_clause] = MiqExpression.merge_where_clauses(
             options[:where_clause], VmOrTemplate::NOT_ARCHIVED_NOR_OPRHANED_CONDITIONS
           )
-          process_show_list(options)
+          process_show_list(options) if show_list
           model_name = @nodetype == "d" ? _("Datacenter") : ui_lookup(:model => rec.class.base_class.to_s)
           @right_cell_text = _("%{object_types} under %{datastore_or_provider} \"%{provider_or_datastore_name}\"") % {
             :object_types               => model ? ui_lookup(:models => model) : _("VMs & Templates"),

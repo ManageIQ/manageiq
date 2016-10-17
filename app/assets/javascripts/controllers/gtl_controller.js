@@ -57,13 +57,22 @@
   * @param MiQEndpointsService service for setting basic routes.
   * @param $filter angular filter Service.
   */
-  var GtlController = function(MiQDataTableService, MiQEndpointsService, $filter) {
+  var GtlController = function(MiQDataTableService, MiQEndpointsService, $filter, $scope) {
+    this.settings = {};
     this.MiQDataTableService = MiQDataTableService;
     this.MiQEndpointsService = MiQEndpointsService;
     this.$filter = $filter;
+    this.$scope = $scope;
     initEndpoints(this.MiQEndpointsService);
     subscribeToSubject.bind(this)();
     this.perPage = defaultPaging();
+  }
+
+  GtlController.prototype.setSort = function(headerId, isAscending) {
+    this.settings.sortBy = {
+      sortObject: this.gtlData.cols[headerId],
+      isAscending: isAscending
+    };
   }
 
   /**
@@ -73,11 +82,16 @@
   * @param isAscending true | false.
   */
   GtlController.prototype.onSort = function(headerId, isAscending) {
-    this.settings.sortBy = {
-      sortObject: this.gtlData.cols[headerId],
-      isAscending: isAscending
-    };
-    this.filterAndSort();
+    this.setSort(headerId, isAscending);
+    this.initController(this.initObject);
+  }
+
+  GtlController.prototype.setPaging = function(start, perPage) {
+    this.perPage.value = perPage;
+    this.perPage.text = perPage;
+    this.settings.perpage = perPage;
+    this.settings.startIndex = start;
+    this.settings.current = ( start / perPage) + 1;
   }
 
   /**
@@ -87,13 +101,8 @@
   * @param perPage Number of items per page.
   */
   GtlController.prototype.onLoadNext = function(start, perPage) {
-    this.perPage.value = perPage;
-    this.perPage.text = perPage;
-    this.settings.perpage = perPage;
-    this.settings.startIndex = start;
-    this.settings.current = ( start / perPage) + 1;
-    this.settings.total = Math.ceil(this.settings.items / this.settings.perpage);
-    this.filterAndSort();
+    this.setPaging(start, perPage);
+    this.initController(this.initObject);
   }
 
   /**
@@ -157,6 +166,7 @@
   GtlController.prototype.onItemSelect = function(item, isSelected) {
     selectedItem = _.find(this.gtlData.rows, {id: item.id});
     selectedItem.checked = isSelected;
+    selectedItem.selected = isSelected;
     sendDataWithRx({rowSelect: selectedItem});
     if (isSelected) {
       ManageIQ.gridChecks.push(item.id);
@@ -164,6 +174,15 @@
       var index = ManageIQ.gridChecks.indexOf(item.id);
       index !== -1 && ManageIQ.gridChecks.splice(index, 1);
     }
+  }
+
+  GtlController.prototype.initObjects = function(initObject) {
+    this.gtlData = { cols: [] ,rows: [] };
+    this.initObject = initObject;
+    this.gtlType = initObject.gtlType;
+    this.settings.isLoading = true;
+    ManageIQ.gridChecks = [];
+    sendDataWithRx({setCount: 0});
   }
 
   /**
@@ -182,21 +201,18 @@
   * ```
   */
   GtlController.prototype.initController = function(initObject) {
-    this.gtlData = { cols: [] ,rows: [] };
-    this.initObject = initObject;
-    this.gtlType = initObject.gtlType;
-    return this.getData(initObject.modelName, initObject.activeTree, initObject.currId)
+    this.initObjects(initObject)
+    return this.getData(initObject.modelName, initObject.activeTree, initObject.currId, this.settings)
       .then(function() {
         var start = (this.settings.current - 1) * this.settings.perpage;
-        this.onLoadNext(start, this.settings.perpage);
-        var sortId = _.findIndex(this.gtlData.cols, {col_idx: parseInt(initObject.sortColIdx, 10)});
+        this.setPaging(start, this.settings.perpage);
+        var sortId = _.findIndex(this.gtlData.cols, {col_idx: parseInt(this.settings.sort_col, 10)});
         if (sortId !== -1) {
-          this.onSort(sortId, initObject.sortDir === 'ASC');
-        } else {
-          this.filterAndSort();
+          this.setSort(sortId, this.settings.sort_dir === 'ASC');
         }
         this.settings.selectAllTitle = __('Select All');
         this.settings.sortedByTitle = __('Sorted By');
+        this.settings.isLoading = false;
       }.bind(this))
   }
 
@@ -205,9 +221,10 @@
   * @param modelName name of current model.
   * @param activeTree ID of active tree node.
   * @param currId current Id, if some nested items are displayed.
+  * @param settings settings object.
   */
-  GtlController.prototype.getData = function(modelName, activeTree, currId) {
-    return this.MiQDataTableService.retrieveRowsAndColumnsFromUrl(modelName, activeTree, currId)
+  GtlController.prototype.getData = function(modelName, activeTree, currId, settings) {
+    return this.MiQDataTableService.retrieveRowsAndColumnsFromUrl(modelName, activeTree, currId, settings)
       .then(function (gtlData) {
         this.gtlData = gtlData;
         this.perPage.text = gtlData.settings.perpage;
@@ -215,7 +232,7 @@
       }.bind(this));
   }
 
-  GtlController.$inject = ['MiQDataTableService', 'MiQEndpointsService', '$filter'];
+  GtlController.$inject = ['MiQDataTableService', 'MiQEndpointsService', '$filter', '$scope'];
   miqHttpInject(angular.module('ManageIQ.gtl'))
     .controller(COTNROLLER_NAME, GtlController);
 })();

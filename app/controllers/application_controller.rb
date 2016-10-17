@@ -246,17 +246,10 @@ class ApplicationController < ActionController::Base
   end
   private :initiate_wait_for_task
 
-  def generate_gtl
-    options = {:all_pages => true}
+  def process_params_options(params)
+    options = {}
     if params[:active_tree]
-      model_view = vm_model_from_active_tree(params[:active_tree].to_sym)
-      options.merge!(get_node_info(x_node))
-    elsif params[:model]
-      model_view = params[:model].singularize.classify.constantize
-    end
-
-    if model_view.nil?
-      model_view = controller_to_model
+      options.merge!(get_node_info(x_node, false))
     end
 
     if params[:model_id]
@@ -264,8 +257,34 @@ class ApplicationController < ActionController::Base
     end
 
     options[:parent] = options[:parent] || @parent
+    options
+  end
+  private :process_params_options
+
+  def process_params_model_view(params)
+    if params[:active_tree]
+      model_view = vm_model_from_active_tree(params[:active_tree].to_sym)
+    elsif params[:model]
+      model_view = params[:model].singularize.classify.constantize
+    end
+
+    if model_view.nil?
+      model_view = controller_to_model
+    end
+    model_view
+  end
+  private :process_params_model_view
+
+  #
+  #
+  #
+  def generate_gtl
+    model_view = process_params_model_view(params)
+    options = process_params_options(params)
     @edit = session[:edit]
     current_view, settings = get_view(model_view, options)
+    settings[:sort_dir] = @sortdir
+    settings[:sort_col] = @sortcol
     render :json => {
       :settings => settings,
       :data => view_to_hash(current_view)
@@ -1165,6 +1184,7 @@ class ApplicationController < ActionController::Base
       @sortcol = 0
       @sortdir = "ASC"
     end
+    @sortdir = params[:is_ascending] ? 'ASC' : 'DESC' if defined? params[:is_ascending]
     @sortcol
   end
 
@@ -1560,7 +1580,9 @@ class ApplicationController < ActionController::Base
     # Check for changed settings in params
     if params[:ppsetting]                             # User selected new per page value
       @settings[:perpage][perpage_key(dbname)] = params[:ppsetting].to_i
-    elsif params[:sortby]                             # New sort order (by = col click, choice = pull down)
+    end
+
+    if params[:sortby]                             # New sort order (by = col click, choice = pull down)
       params[:sortby]      = params[:sortby].to_i - 1
       params[:sort_choice] = view.headers[params[:sortby]]
     elsif params[:sort_choice]                        # If user chose new sortcol, set sortby parm
@@ -1582,7 +1604,6 @@ class ApplicationController < ActionController::Base
     @items_per_page = ONE_MILLION if 'vm' == db_sym.to_s && controller_name == 'service'
 
     @current_page = options[:page] || ((params[:page].to_i < 1) ? 1 : params[:page].to_i)
-
     view.conditions = options[:conditions] # Get passed in conditions (i.e. tasks date filters)
 
     # Save the paged_view_search_options for download buttons to use later

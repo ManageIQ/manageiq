@@ -20,6 +20,8 @@
          this.onUpdateToolbar(event.redrawToolbar);
       } else if (event.update) {
         this.onUpdateItem(event);
+      } else if (event.setCount !== undefined) {
+        this.onSetCount(event.setCount);
       }
     }.bind(this),
     function (err) {
@@ -93,6 +95,13 @@
         this.toolbarItems = toolbarItems.items;
         this.dataViews = toolbarItems.dataViews;
       }.bind(this));
+  }
+
+  ToolbarController.prototype.onSetCount = function(count) {
+    this.MiQToolbarSettingsService.setCount(count);
+    if(!this.$scope.$$phase) {
+      this.$scope.$digest();
+    }
   }
 
   /**
