@@ -3,7 +3,6 @@ module Vm::Operations::Guest
 
   included do
     api_relay_method :shutdown_guest
-    api_relay_method :standby_guest
     api_relay_method :reboot_guest
     api_relay_method :reset
   end
