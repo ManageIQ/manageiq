@@ -1,7 +1,6 @@
 describe DialogGroup do
   let(:dialog_group) { FactoryGirl.build(:dialog_group, :label => 'group') }
   context "#validate_children" do
-
     it "fails without element" do
       expect { dialog_group.save! }
         .to raise_error(ActiveRecord::RecordInvalid, /Box group must have at least one Element/)
@@ -22,44 +21,55 @@ describe DialogGroup do
     end
   end
 
-  context '#update_dialog_tabs' do
-    before(:each) do
-      @dialog_group = FactoryGirl.create(:dialog_group)
-      @dialog_fields = FactoryGirl.create_list(:dialog_field, 2)
-      @dialog_group.dialog_fields << @dialog_fields
+  describe '#update_dialog_fields' do
+    let(:dialog_fields) { FactoryGirl.create_list(:dialog_field, 2) }
+    let(:dialog_group) { FactoryGirl.create(:dialog_group, :dialog_fields => dialog_fields) }
+
+    context 'with an id' do
+      let(:updated_fields) do
+        [
+          { 'id' => dialog_fields.first.id, 'label' => 'updated_field_label' },
+          { 'id' => dialog_fields.last.id, 'label' => 'updated_field_label' }
+        ]
+      end
+
+      it 'updates a dialog_field' do
+        dialog_group.update_dialog_fields(updated_fields)
+
+        dialog_group.reload
+        expect(dialog_group.dialog_fields.first.label).to eq('updated_field_label')
+        expect(dialog_group.dialog_fields.last.label).to eq('updated_field_label')
+      end
     end
 
-    it 'deletes a dialog tab' do
-      fields = [
-        { 'id' => @dialog_fields.first.id }
-      ]
+    context 'with a dialog_field removed' do
+      let(:updated_fields) do
+        [
+          { 'id' => dialog_fields.first.id }
+        ]
+      end
 
-      expect do
-        @dialog_group.update_dialog_fields(fields)
-      end.to change(@dialog_group.reload.dialog_fields, :count).by(-1)
+      it 'deletes a dialog_field' do
+        expect do
+          dialog_group.update_dialog_fields(updated_fields)
+        end.to change(dialog_group.reload.dialog_fields, :count).by(-1)
+      end
     end
 
-    it 'adds a dialog tab' do
-      fields = [
-        { 'id' => @dialog_fields.first.id },
-        { 'id' => @dialog_fields.last.id },
-        { 'name' => 'new tab', 'label' => 'new label' }
-      ]
+    context 'without an id' do
+      let(:updated_fields) do
+        [
+          { 'id' => dialog_fields.first.id },
+          { 'id' => dialog_fields.last.id },
+          { 'name' => 'new field', 'label' => 'new field label' }
+        ]
+      end
 
-      expect do
-        @dialog_group.update_dialog_fields(fields)
-      end.to change(@dialog_group.reload.dialog_fields, :count).by(1)
-    end
-
-    it 'updates a dialog tab' do
-      fields = [
-        { 'id' => @dialog_fields.first.id, 'name' => 'updated name'},
-        { 'id' => @dialog_fields.first.id }
-      ]
-
-      expect do
-        @dialog_group.update_dialog_fields(fields)
-      end.to change(@dialog_fields.first.reload, :name)
+      it 'adds a new dialog_field' do
+        expect do
+          dialog_group.update_dialog_fields(updated_fields)
+        end.to change(dialog_group.reload.dialog_fields, :count).by(1)
+      end
     end
   end
 end

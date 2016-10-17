@@ -286,146 +286,78 @@ describe Dialog do
     end
   end
 
-  context '#update_content' do
-    before(:each) do
-      @dialog_field = FactoryGirl.create_list(:dialog_field, 1, :label => 'field')
-      @dialog_group = FactoryGirl.create_list(:dialog_group, 1, :label => 'group', :dialog_fields => @dialog_field)
-      @dialog_tab = FactoryGirl.create_list(:dialog_tab, 1, :label => 'tab', :dialog_groups => @dialog_group)
-      @dialog = FactoryGirl.create(:dialog, :label => 'dialog', :dialog_tabs => @dialog_tab)
+  describe '#update_tabs' do
+    let(:dialog_field) { FactoryGirl.create_list(:dialog_field, 1, :label => 'field') }
+    let(:dialog_group) { FactoryGirl.create_list(:dialog_group, 1, :label => 'group', :dialog_fields => dialog_field) }
+    let(:dialog_tab) { FactoryGirl.create_list(:dialog_tab, 1, :label => 'tab', :dialog_groups => dialog_group) }
+    let(:dialog) { FactoryGirl.create(:dialog, :label => 'dialog', :dialog_tabs => dialog_tab) }
 
-      @dialog.dialog_tabs << FactoryGirl.create(:dialog_tab)
-      @dialog.save
+    let(:updated_content) do
+      [
+        {
+          'id'            => dialog_tab.first.id,
+          'label'         => 'updated_label',
+          'dialog_groups' => [
+            { 'id'            => dialog_group.first.id,
+              'dialog_fields' =>
+                                 [{
+                                   'id' => dialog_field.first.id}] },
+            {
+              'label'         => 'group 2',
+              'dialog_fields' => [{
+                'name'  => 'dialog_field',
+                'label' => 'field_label'
+              }]
+            }
+          ]
+        },
+        {
+          'label'         => 'new tab',
+          'dialog_groups' => [
+            {
+              'label'         => 'a new group',
+              'dialog_fields' => [
+                {'name' => 'new field', 'label' => 'field'}
+              ]
+            }
+          ]
+        }
+      ]
     end
 
-    # todo: make this test 'updates contents of a dialog tab'
-    it 'updates a dialog field' do
-      updated_content = {
-        'dialog_tabs' => [
-          {
-            'id' => @dialog_tab.first.id,
-            'label' => 'updated label',
-            'dialog_groups' => [
-              {
-                'id' => @dialog_group.first.id,
-                'dialog_fields' => [
-                  { 'id' => @dialog_field.first.id }
-                ]
-              }
-            ]
-          }
-        ]
-      }
-
-      @dialog.update_content(updated_content)
-      expect(@dialog_tab.first.reload.label).to eq('updated label')
+    context 'dialog_tab with an id' do
+      it 'updates the dialog_tab' do
+        dialog.update_tabs(updated_content)
+        expect(dialog.reload.dialog_tabs.first.label).to eq('updated_label')
+      end
     end
 
-    it 'adds a new dialog tab' do
-      updated_content = {
-        'dialog_tabs' => [
-          {
-            'id' => @dialog_tab.first.id,
-            'label' => 'updated label',
-            'dialog_groups' => [
-              {
-                'id' => @dialog_group.first.id,
-                'dialog_fields' => [
-                  { 'id' => @dialog_field.first.id }
-                ]
-              }
-            ]
-          },
-          {
-            'label' => 'new tab',
-            'dialog_groups' => [
-              {
-                'label' => 'a new group',
-                'dialog_fields' => [
-                  { 'name' => 'new field', 'label' => 'field' }
-                ]
-              }
-            ]
-          }
-        ]
-      }
-
-      @dialog.update_content(updated_content)
-      expect(@dialog.reload.content.first['dialog_tabs'].count).to eq(2)
+    context 'dialog_tab without an id' do
+      it 'creates the dialog_tab' do
+        dialog.update_tabs(updated_content)
+        expect(dialog.reload.dialog_tabs.count).to eq(2)
+      end
     end
 
-    it 'adds a new dialog group to a tab' do
-      updated_content = {
-        'dialog_tabs' => [
-          {
-            'id' => @dialog_tab.first.id,
-            'label' => 'updated label',
-            'dialog_groups' => [
-              {
-                'id' => @dialog_group.first.id,
-                'dialog_fields' => [
-                  { 'id' => @dialog_field.first.id }
-                ]
-              },
-              {
-                'label' => 'new group',
-                'dialog_fields' => [
-                  { 'name' => 'new field', 'label' => 'field'}
-                ]
-              }
-            ]
-          }
+    context 'with a dialog_tab removed' do
+      let(:updated_content) do
+        [
+          'id'            => dialog_tab.first.id,
+          'dialog_groups' => [
+            { 'id' => dialog_group.first.id, 'dialog_fields' => [{ 'id' => dialog_field.first.id }] }
+          ]
         ]
-      }
+      end
 
-      @dialog.update_content(updated_content)
-      expect(@dialog.reload.content.first['dialog_tabs'].first['dialog_groups'].count).to eq(2)
-    end
+      before do
+        dialog.dialog_tabs << FactoryGirl.create(:dialog_tab)
+      end
 
-    it 'adds a new dialog field to a group' do
-      updated_content = {
-        'dialog_tabs' => [
-          {
-            'id' => @dialog_tab.first.id,
-            'label' => 'updated label',
-            'dialog_groups' => [
-              {
-                'id' => @dialog_group.first.id,
-                'dialog_fields' => [
-                  { 'id' => @dialog_field.first.id },
-                  { 'name' => 'new field', 'label' => 'field' }
-                ]
-              }
-            ]
-          }
-        ]
-      }
-
-      @dialog.update_content(updated_content)
-      expect(@dialog.reload.content.first['dialog_tabs'].first['dialog_groups'].first['dialog_fields'].count).to eq(2)
-    end
-
-    it 'removes a dialog tab from a dialog' do
-      @dialog.dialog_tabs << FactoryGirl.create(:dialog_tab)
-      @dialog.save
-
-      updated_content = {
-        'dialog_tabs' => [
-          {
-            'id' => @dialog_tab.first.id,
-            'dialog_groups' => [
-              {
-                'id' => @dialog_group.first.id,
-                'dialog_fields' => [
-                  { 'id' => @dialog_field.first.id }
-                ]
-              }
-            ]
-          }
-        ]
-      }
-
-      @dialog.update_content(updated_content)
-      expect(@dialog.reload.content.first['dialog_tabs'].count).to eq(1)
+      it 'removes a dialog tab' do
+        expect do
+          dialog.update_tabs(updated_content)
+        end.to change(dialog.reload.dialog_tabs, :count).by(-1)
+      end
     end
   end
 
