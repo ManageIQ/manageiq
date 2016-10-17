@@ -731,12 +731,6 @@ class ApplicationHelper::ToolbarBuilder
         return true if ["download_logs", "evm_logs", "audit_logs"].include?(@lastaction)
       when "refresh_logs"
         return true if ["audit_logs", "evm_logs", "workers"].include?(@lastaction)
-      when "timeline_csv"
-        return true unless @report
-      when "timeline_pdf"
-        return true unless @report
-      when "timeline_txt"
-        return true unless @report
       end
     end
     false  # No reason to hide, allow the button to show

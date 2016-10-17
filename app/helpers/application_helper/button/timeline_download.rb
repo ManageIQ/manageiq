@@ -4,6 +4,10 @@ class ApplicationHelper::Button::TimelineDownload < ApplicationHelper::Button::B
     self[:title] = N_("Choose a Timeline from the menus on the left.") if disabled?
   end
 
+  def visible?
+    @report
+  end
+
   def disabled?
     @record.nil?
   end
