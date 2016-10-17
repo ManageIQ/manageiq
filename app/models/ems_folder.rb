@@ -72,7 +72,7 @@ class EmsFolder < ApplicationRecord
   # Host relationship methods
   #   all_hosts and all_host_ids included from AggregationMixin
   def hosts
-    children(:of_type => 'Host').sort_by { |c| c.name.downcase }
+    children(:of_type => 'Host')
   end
 
   alias_method :add_host, :set_child

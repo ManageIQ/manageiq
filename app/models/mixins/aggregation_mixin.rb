@@ -77,7 +77,7 @@ module AggregationMixin
   end
 
   def all_hosts
-    descendants(:of_type => 'Host').sort_by { |v| v.name.downcase }
+    descendants(:of_type => 'Host')
   end
 
   def all_host_ids
