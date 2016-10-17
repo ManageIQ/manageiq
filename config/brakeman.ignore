@@ -79,10 +79,29 @@
     {
       "warning_type": "SQL Injection",
       "warning_code": 0,
+      "fingerprint": "972a9b434a5ec51ff10c13cd39b2b04d3bc977ee17c599a9206fb83ebe826d4b",
+      "message": "Possible SQL injection",
+      "file": "app/models/mixins/relationships_aggregation_mixin.rb",
+      "line": 86,
+      "link": "http://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "Hardware.where(\"#{from.to_s.singularize}_id\" => send(\"all_#{from.to_s.singularize}_ids\").collect(&:id))",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "RelationshipsAggregationMixin",
+        "method": "aggregate_hardware"
+      },
+      "user_input": "from.to_s.singularize",
+      "confidence": "Medium",
+      "note": ""
+    },
+    {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
       "fingerprint": "b7c5d0a1acf9b6e1d8241cc62f61ddde1dd9f6e1b871b9bd99982135465d1f24",
       "message": "Possible SQL injection",
       "file": "app/models/mixins/aggregation_mixin.rb",
-      "line": 98,
+      "line": 63,
       "link": "http://brakemanscanner.org/docs/warning_types/sql_injection/",
       "code": "Hardware.where(\"#{from.to_s.singularize}_id\" => send(\"all_#{from.to_s.singularize}_ids\").collect(&:id))",
       "render_path": null,
@@ -96,6 +115,6 @@
       "note": "Temporarily skipped, found in new brakeman version"
     }
   ],
-  "updated": "2016-10-11 14:14:13 +0200",
-  "brakeman_version": "3.4.0"
+  "updated": "2016-12-20 15:25:32 -0500",
+  "brakeman_version": "3.4.1"
 }

@@ -13,7 +13,7 @@ class ResourcePool < ApplicationRecord
   include RelationshipMixin
   self.default_relationship_type = "ems_metadata"
 
-  include AggregationMixin
+  include RelationshipsAggregationMixin
   aggregation_mixin_virtual_columns_use :all_relationships
 
   include MiqPolicyMixin
