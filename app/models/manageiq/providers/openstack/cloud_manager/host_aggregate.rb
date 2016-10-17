@@ -12,11 +12,29 @@ class ManageIQ::Providers::Openstack::CloudManager::HostAggregate < ::HostAggreg
     AvailabilityZone.find_by_ems_ref_and_ems_id(availability_zone, ems_id)
   end
 
-  def self.create_aggregate(ext_management_system, options)
-    raise ArgumentError, _("ext_management_system cannot be nil") if ext_management_system.nil?
+  def self.create_aggregate_queue(userid, ext_management_system, options = {})
+    task_opts = {
+      :action => "creating Host Aggregate for user #{userid}",
+      :userid => userid
+    }
+    queue_opts = {
+      :class_name  => "ManageIQ::Providers::Openstack::CloudManager::HostAggregate",
+      :method_name => 'create_aggregate',
+      :priority    => MiqQueue::HIGH_PRIORITY,
+      :role        => 'ems_operations',
+      :zone        => ext_management_system.my_zone,
+      :args        => [ext_management_system.id, options]
+    }
+    MiqTask.generic_action_with_callback(task_opts, queue_opts)
+  end
+
+  def self.create_aggregate(ems_id, options)
+    raise ArgumentError, _("ems cannot be nil") if ems_id.nil?
+    ext_management_system = ExtManagementSystem.find(ems_id)
+    raise ArgumentError, _("ems cannot be found") if ext_management_system.nil?
 
     create_args = {:name => options[:name]}
-    if options[:availability_zone]
+    unless options[:availability_zone].blank?
       create_args[:availability_zone] = options[:availability_zone]
     end
     aggregate = nil
@@ -45,12 +63,29 @@ class ManageIQ::Providers::Openstack::CloudManager::HostAggregate < ::HostAggreg
     end
   end
 
+  def update_aggregate_queue(userid, options = {})
+    task_opts = {
+      :action => "updating Host Aggregate for user #{userid}",
+      :userid => userid
+    }
+    queue_opts = {
+      :class_name  => self.class.name,
+      :method_name => 'update_aggregate',
+      :instance_id => id,
+      :priority    => MiqQueue::HIGH_PRIORITY,
+      :role        => 'ems_operations',
+      :zone        => ext_management_system.my_zone,
+      :args        => [options]
+    }
+    MiqTask.generic_action_with_callback(task_opts, queue_opts)
+  end
+
   def update_aggregate(options)
     unless options[:name].blank?
       rename_aggregate(options[:name])
     end
 
-    if options[:metadata]
+    unless options[:metadata].blank?
       update_aggregate_metadata(options[:metadata])
     end
   end
@@ -76,6 +111,23 @@ class ManageIQ::Providers::Openstack::CloudManager::HostAggregate < ::HostAggreg
   rescue => e
     _log.error "host_aggregate=[#{name}], error: #{e}"
     raise MiqException::MiqHostAggregateUpdateError, e.to_s, e.backtrace
+  end
+
+  def delete_aggregate_queue(userid)
+    task_opts = {
+      :action => "deleting Host Aggregate for user #{userid}",
+      :userid => userid
+    }
+    queue_opts = {
+      :class_name  => self.class.name,
+      :method_name => 'delete_aggregate',
+      :instance_id => id,
+      :priority    => MiqQueue::HIGH_PRIORITY,
+      :role        => 'ems_operations',
+      :zone        => ext_management_system.my_zone,
+      :args        => []
+    }
+    MiqTask.generic_action_with_callback(task_opts, queue_opts)
   end
 
   def delete_aggregate
