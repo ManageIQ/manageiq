@@ -148,13 +148,17 @@ module ApplicationHelper
     record.class.base_model.name.underscore
   end
 
+  def controller_to_model_params
+    {
+      "ManageIQ::Providers::CloudManager::Template" => VmOrTemplate,
+      "ManageIQ::Providers::CloudManager::Vm"       => VmOrTemplate,
+      "ManageIQ::Providers::InfraManager::Template" => VmOrTemplate,
+      "ManageIQ::Providers::InfraManager::Vm"       => VmOrTemplate
+    }
+  end
+
   def controller_to_model
-    case self.class.model.to_s
-    when "ManageIQ::Providers::CloudManager::Template", "ManageIQ::Providers::CloudManager::Vm", "ManageIQ::Providers::InfraManager::Template", "ManageIQ::Providers::InfraManager::Vm"
-      VmOrTemplate
-    else
-      self.class.model
-    end
+    controller_to_model_params[self.class.model.to_s] || self.class.model
   end
 
   def restful_routed?(record_or_model)
