@@ -1085,6 +1085,13 @@ describe Rbac::Filterer do
       result = described_class.filtered(Vm.limit(2).order(:location), :filter => filter)
       expect(result.size).to eq(2)
     end
+
+    it "supports order on scopes" do
+      FactoryGirl.create(:vm_vmware, :location => "a")
+      FactoryGirl.create(:vm_vmware, :location => "b")
+      FactoryGirl.create(:vm_vmware, :location => "a")
+      expect(described_class.filtered(Vm.all.order(:location)).map(&:location)).to eq(%w(a a b))
+    end
   end
 
   describe ".filtered_object" do
