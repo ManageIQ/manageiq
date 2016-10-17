@@ -4,6 +4,7 @@ module Vm::Operations::Power
   included do
     api_relay_method :start
     api_relay_method :stop
+    api_relay_method :suspend
   end
 
   def validate_start
