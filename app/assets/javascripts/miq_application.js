@@ -381,14 +381,13 @@ function miqUpdateAllCheckboxes(button_div) {
     var crows = miqGridGetCheckedRows();
 
     ManageIQ.gridChecks = crows;
-    miqSetButtons(crows.length, button_div);
   } else if ($("input.listcheckbox").length) {
     // No list_grid on the screen
     var cbs = $("input.listcheckbox")
       .prop('checked', state)
       .trigger('change');
 
-    miqUpdateButtons(cbs[0], button_div);
+    miqUpdateButtons(cbs[0]);
   } else if ($("input[id^='storage_cb']").length) {
     // to handle check/uncheck all for C&U collection
     $("input[id^='storage_cb']")
@@ -402,75 +401,9 @@ function miqUpdateAllCheckboxes(button_div) {
 }
 
 // Update buttons based on number of checkboxes that are checked
-// parms: obj=<checkbox element>, button_div=<id of div with buttons to update>
-function miqUpdateButtons(obj, button_div) {
-  var count = 0;
-
-  sendDataWithRx({rowSelect: obj});
-
-  if (typeof obj.id != "undefined") {
-    $("input[id^='check_']").each(function () {
-      if (this.checked && !this.disabled) {
-        count++;
-      }
-      if (count > 1) {
-        return false;
-      }
-    });
-  // Check for number object, as passed from snapshot tree
-  } else if (typeof obj == 'number') {
-    count = 1;
-  }
-  miqSetButtons(count, button_div);
-}
-
-// Set button enabled or disabled according to the number of selected items
-function miqButtonOnWhen(button, onwhen, count) {
-  if (typeof onwhen != "undefined") {
-    var toggle = true;
-    switch(onwhen) {
-      case 1:
-      case '1':
-        toggle = count == 1;
-        break;
-      case '1+':
-        toggle = count >= 1;
-        break;
-      case '2+':
-        toggle = count >= 2;
-        break;
-    }
-    button.toggleClass('disabled', !toggle);
-  }
-}
-
-// Set the buttons in a div based on the count of checked items passed in
-function miqSetButtons(count, button_div) {
-  if (!miqDomElementExists(button_div)) {
-    return
-  }
-
-  if (button_div.match("_tb$")) {
-    var toolbar = $('#' + button_div);
-
-    // Non-dropdown master buttons
-    toolbar.find('button:not(.dropdown-toggle)').each(function (_k, v) {
-      var button = $(v);
-      miqButtonOnWhen(button, button.data('onwhen'), count);
-    });
-
-    // Dropdown master buttons
-    toolbar.find('button.dropdown-toggle').each(function (_k, v) {
-      var button = $(v);
-      miqButtonOnWhen(button, button.data('onwhen'), count);
-    });
-
-    // Dropdown button items
-    toolbar.find('ul.dropdown-menu > li > a').each(function (_k, v) {
-      var button = $(v);
-      miqButtonOnWhen(button.parent(), button.data('onwhen'), count);
-    });
-  }
+// parms: obj=<checkbox element>
+function miqUpdateButtons(obj) {
+  sendDataWithRx({ rowSelect: obj });
 }
 
 // go to the specified URL when a table cell is clicked

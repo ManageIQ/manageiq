@@ -1,4 +1,4 @@
-/* global DoNav miqClearTreeState miqDomElementExists miqJqueryRequest miqSetButtons miqSparkle */
+/* global DoNav miqClearTreeState miqDomElementExists miqJqueryRequest miqSparkle */
 
 function miqTreeObject(tree) {
   return $('#' + tree + 'box').treeview(true);
@@ -248,8 +248,6 @@ function miqGetChecked(node, treename) {
   var selectedKeys = tree.getChecked().map(function (item) {
     return item.key;
   });
-  // Activate toolbar items according to the selection
-  miqSetButtons(selectedKeys.length, 'center_tb');
   // Inform the backend about the checkbox changes
   if (selectedKeys.length > 0) {
     miqJqueryRequest(ManageIQ.tree.checkUrl + '?all_checked=' + selectedKeys, {beforeSend: true, complete: true});
@@ -268,8 +266,6 @@ function miqCheckAll(cb, treename) {
   var selectedKeys = tree.getChecked().map(function (item) {
     return item.key;
   });
-  // Activate toolbar items according to the selection
-  miqSetButtons(selectedKeys.length, 'center_tb');
   // Inform the backend about the checkbox changes
   if (selectedKeys.length > 0) {
     miqJqueryRequest(ManageIQ.tree.checkUrl + '?check_all=' + cb.checked + '&all_checked=' + selectedKeys);

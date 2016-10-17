@@ -126,7 +126,6 @@ class HostAggregateController < ApplicationController
           if @refresh_div == "flash_msg_div"
             page.replace(@refresh_div, :partial => @refresh_partial)
           elsif ["images", "instances"].include?(@display) # If displaying vms, action_url s/b show
-            page << "miqSetButtons(0, 'center_tb');"
             page.replace_html("main_div", :partial => "layouts/gtl", :locals => {:action_url => "show/#{@host_aggregate.id}"})
           else
             page.replace_html(@refresh_div, :partial => @refresh_partial)

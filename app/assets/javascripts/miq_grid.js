@@ -1,4 +1,4 @@
-/* global miqJqueryRequest miqSetButtons miqSparkleOn */
+/* global miqJqueryRequest miqSparkleOn */
 
 (function($) {
   $.fn.miqGrid = function() {
@@ -25,7 +25,6 @@
 
         sendDataWithRx({rowSelect: e.delegateTarget});
         ManageIQ.gridChecks = checked;
-        miqSetButtons(checked.length, 'center_tb');
 
         // if all the checkboxes were checked, make checkall checked too,
         // if some aren't, make it unchecked => no trigger here
