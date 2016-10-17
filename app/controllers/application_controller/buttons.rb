@@ -276,7 +276,7 @@ module ApplicationController::Buttons
       options[:target_id] = obj.id
       options[:target_kls] = obj.class.name
       dialog_initialize(button.resource_action, options)
-    elsif button.options.key?(:open_url) && button.options[:open_url]
+    elsif button.options && button.options.key?(:open_url) && button.options[:open_url]
       task_id = button.invoke_async(obj)
       initiate_wait_for_task(:task_id => task_id, :action => :custom_button_done)
     else
