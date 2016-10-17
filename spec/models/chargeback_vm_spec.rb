@@ -372,6 +372,51 @@ describe ChargebackVm do
       expect(subject.storage_used_cost).to eq(@vm_used_disk_storage * @count_hourly_rate * hours_in_day)
       expect(subject.storage_cost).to eq(subject.storage_allocated_cost + subject.storage_used_cost)
     end
+
+    let(:hourly_fixed_rate) { 10.0 }
+
+    it "storage with only fixed rates" do
+      cbdm = FactoryGirl.create(:chargeback_rate_detail_measure_bytes)
+      cbrd = FactoryGirl.build(:chargeback_rate_detail_storage_used,
+                               :chargeback_rate_id                => @cbr.id,
+                               :per_time                          => "hourly",
+                               :chargeback_rate_detail_measure_id => cbdm.id)
+
+      cbt = FactoryGirl.create(:chargeback_tier,
+                               :chargeback_rate_detail_id => cbrd.id,
+                               :start                     => 0,
+                               :finish                    => Float::INFINITY,
+                               :fixed_rate                => hourly_fixed_rate,
+                               :variable_rate             => 0.0)
+
+      cbrd.chargeback_tiers = [cbt]
+      cbrd.save
+      cbrd = FactoryGirl.build(:chargeback_rate_detail_storage_allocated,
+                               :chargeback_rate_id                => @cbr.id,
+                               :per_time                          => "hourly",
+                               :chargeback_rate_detail_measure_id => cbdm.id)
+
+      cbt = FactoryGirl.create(:chargeback_tier,
+                               :chargeback_rate_detail_id => cbrd.id,
+                               :start                     => 0,
+                               :finish                    => Float::INFINITY,
+                               :fixed_rate                => hourly_fixed_rate,
+                               :variable_rate             => 0.0)
+
+      cbrd.chargeback_tiers = [cbt]
+      cbrd.save
+
+      expect(subject.storage_allocated_metric).to eq(@vm_allocated_disk_storage.gigabytes)
+      expect(subject.storage_used_metric).to eq(@vm_used_disk_storage.gigabytes)
+      expect(subject.storage_metric).to eq(subject.storage_allocated_metric + subject.storage_used_metric)
+
+      expected_value = hourly_fixed_rate * hours_in_day
+      expect(subject.storage_allocated_cost).to be_within(0.01).of(expected_value)
+
+      expected_value = hourly_fixed_rate * hours_in_day
+      expect(subject.storage_used_cost).to be_within(0.01).of(expected_value)
+      expect(subject.storage_cost).to eq(subject.storage_allocated_cost + subject.storage_used_cost)
+    end
   end
 
   context "Report a chargeback of a tenant" do
@@ -607,6 +652,51 @@ describe ChargebackVm do
 
       expect(subject.net_io_used_cost).to be_within(0.01).of(@net_usage_rate * @hourly_rate * @hours_in_month)
       expect(subject.net_io_cost).to eq(subject.net_io_used_cost)
+    end
+
+    let(:hourly_fixed_rate) { 10 }
+
+    it "storage with only fixed rates" do
+      cbdm = FactoryGirl.create(:chargeback_rate_detail_measure_bytes)
+      cbrd = FactoryGirl.build(:chargeback_rate_detail_storage_used,
+                               :chargeback_rate_id                => @cbr.id,
+                               :per_time                          => "hourly",
+                               :chargeback_rate_detail_measure_id => cbdm.id)
+
+      cbt = FactoryGirl.create(:chargeback_tier,
+                               :chargeback_rate_detail_id => cbrd.id,
+                               :start                     => 0,
+                               :finish                    => Float::INFINITY,
+                               :fixed_rate                => hourly_fixed_rate,
+                               :variable_rate             => 0.0)
+
+      cbrd.chargeback_tiers = [cbt]
+      cbrd.save
+      cbrd = FactoryGirl.build(:chargeback_rate_detail_storage_allocated,
+                               :chargeback_rate_id                => @cbr.id,
+                               :per_time                          => "hourly",
+                               :chargeback_rate_detail_measure_id => cbdm.id)
+
+      cbt = FactoryGirl.create(:chargeback_tier,
+                               :chargeback_rate_detail_id => cbrd.id,
+                               :start                     => 0,
+                               :finish                    => Float::INFINITY,
+                               :fixed_rate                => hourly_fixed_rate,
+                               :variable_rate             => 0.0)
+
+      cbrd.chargeback_tiers = [cbt]
+      cbrd.save
+
+      expect(subject.storage_allocated_metric).to eq(@vm_allocated_disk_storage.gigabytes)
+      expect(subject.storage_used_metric).to eq(@vm_used_disk_storage.gigabytes)
+      expect(subject.storage_metric).to eq(subject.storage_allocated_metric + subject.storage_used_metric)
+
+      expected_value = hourly_fixed_rate * @hours_in_month
+      expect(subject.storage_allocated_cost).to be_within(0.01).of(expected_value)
+
+      expected_value = hourly_fixed_rate * @hours_in_month
+      expect(subject.storage_used_cost).to be_within(0.01).of(expected_value)
+      expect(subject.storage_cost).to eq(subject.storage_allocated_cost + subject.storage_used_cost)
     end
 
     it "storage" do
