@@ -151,7 +151,7 @@ class MiqSnmp
   private_class_method :system_uptime
 
   def self.agent_address
-    VMDB::Config.new("vmdb").get(:server, :host)
+    Settings.server.host
   end
   private_class_method :agent_address
 end
