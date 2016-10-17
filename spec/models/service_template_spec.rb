@@ -1,5 +1,5 @@
 describe ServiceTemplate do
-  include_examples "miq ownership"
+  include_examples "OwnershipMixin"
 
   describe "#custom_actions" do
     let(:service_template) do

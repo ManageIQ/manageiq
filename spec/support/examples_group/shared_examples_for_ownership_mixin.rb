@@ -1,16 +1,21 @@
-shared_examples "miq ownership" do
-  # THIS TOP LEVEL CONTEXT IS REQUIRED because tests that include are database
-  # state dependent and require a clean DB.  When used with `include_examples`,
-  # the before(:context) and after(:context) in this are run on the same level
-  # as the `include_example`'s current context, so more likely than not, it
-  # will be included in other tests that aren't part of this example group.
-  context "includes mixin:  miq ownership" do
+shared_examples_for "OwnershipMixin" do
+  context "includes OwnershipMixin" do
     include Spec::Support::ArelHelper
 
     let(:user) { User.where(:userid => "ownership_user").first }
 
-    before(:context) do
-      build_ownership_users_and_groups
+    before do
+      user = FactoryGirl.create(:user,
+                                :userid     => "ownership_user",
+                                :miq_groups => FactoryGirl.create_list(:miq_group, 1))
+      user2 = FactoryGirl.create(:user)
+
+      factory = described_class.to_s.underscore.to_sym
+      FactoryGirl.create(factory, :name => "in_ldap",     :miq_group_id => user.current_group.id)
+      FactoryGirl.create(factory, :name => "not_in_ldap", :miq_group => FactoryGirl.create(:miq_group))
+      FactoryGirl.create(factory, :name => "no_group")
+      FactoryGirl.create(factory, :name => "user_owned",  :evm_owner => user)
+      FactoryGirl.create(factory, :name => "user_owned2", :evm_owner => user2)
     end
 
     describe ".owning_ldap_group" do
@@ -148,6 +153,7 @@ shared_examples "miq ownership" do
 
     describe ".owned_by_current_user" do
       before { User.current_user = user }
+
       it "usable as arel" do
         userid = user.userid.downcase
         sql        = <<-SQL.strip_heredoc.split("\n").join(' ')
@@ -246,30 +252,6 @@ shared_examples "miq ownership" do
           expect(owned_ids).to match_array [owned_by_user2.id]
         end
       end
-    end
-
-    after(:context) do
-      teardown_ownership_users_and_groups
-    end
-
-    def build_ownership_users_and_groups
-      user = FactoryGirl.create :user,
-                                :userid     => "ownership_user",
-                                :miq_groups => FactoryGirl.create_list(:miq_group, 1)
-      user2 = FactoryGirl.create :user
-
-      factory = described_class.to_s.underscore.to_sym
-      FactoryGirl.create factory, :name => "in_ldap",     :miq_group_id => user.current_group.id
-      FactoryGirl.create factory, :name => "not_in_ldap", :miq_group => FactoryGirl.create(:miq_group)
-      FactoryGirl.create factory, :name => "no_group"
-      FactoryGirl.create factory, :name => "user_owned",  :evm_owner => user
-      FactoryGirl.create factory, :name => "user_owned2", :evm_owner => user2
-    end
-
-    def teardown_ownership_users_and_groups
-      described_class.destroy_all
-      User.destroy_all
-      MiqGroup.destroy_all
     end
   end
 end
