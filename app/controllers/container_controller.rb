@@ -20,27 +20,12 @@ class ContainerController < ApplicationController
     return if ["custom_button"].include?(params[:pressed])
   end
 
-  def whitelisted_action(action)
-    raise ActionController::RoutingError.new('invalid button action') unless
-      CONTAINER_X_BUTTON_ALLOWED_ACTIONS.key?(action)
-
-    send_action = CONTAINER_X_BUTTON_ALLOWED_ACTIONS[action]
-    if [:container_tag].include?(send_action)
-      send(send_action, 'Container')
-    else
-      send(send_action)
-    end
-    send_action
-  end
-  private :whitelisted_action
-
   def x_button
     @explorer = true
 
     model, action = pressed2model_action(params[:pressed])
-    @sb[:action] = action
 
-    performed_action = whitelisted_action(params[:pressed])
+    performed_action = generic_x_button(CONTAINER_X_BUTTON_ALLOWED_ACTIONS)
     return if [:container_delete, :container_edit].include?(performed_action)
 
     if @refresh_partial

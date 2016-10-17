@@ -147,7 +147,9 @@ module ApplicationController::Explorer
       raise ActionController::RoutingError, _('invalid button action')
     end
 
-    send(whitelist[action])
+    send_action = whitelist[action]
+    send(send_action)
+    send_action
   end
 
   # Add an item to the tree history array

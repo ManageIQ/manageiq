@@ -83,10 +83,6 @@ class MiqPolicyController < ApplicationController
       refresh_log
       return
     end
-    if params[:pressed] == "collect_logs"
-      collect_logs
-      return
-    end
 
     unless @refresh_partial # if no button handler ran, show not implemented msg
       add_flash(_("Button not yet implemented"), :error)

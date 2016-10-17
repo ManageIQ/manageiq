@@ -19,22 +19,11 @@ class ServiceController < ApplicationController
     return if ["custom_button"].include?(params[:pressed])    # custom button screen, so return, let custom_buttons method handle everything
   end
 
-  def whitelisted_action(action)
-    raise ActionController::RoutingError.new('invalid button action') unless
-      SERVICE_X_BUTTON_ALLOWED_ACTIONS.key?(action)
-
-    send_action = SERVICE_X_BUTTON_ALLOWED_ACTIONS[action]
-    send(send_action)
-    send_action
-  end
-  private :whitelisted_action
-
   def x_button
     @explorer = true
     model, action = pressed2model_action(params[:pressed])
-    @sb[:action] = action
 
-    performed_action = whitelisted_action(params[:pressed])
+    performed_action = generic_x_button(SERVICE_X_BUTTON_ALLOWED_ACTIONS)
     return if [:service_delete, :service_edit, :service_reconfigure].include?(performed_action)
 
     if @refresh_partial

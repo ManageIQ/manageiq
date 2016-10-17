@@ -90,13 +90,7 @@ class OpsController < ApplicationController
 
   # handle buttons pressed on the center buttons toolbar
   def x_button
-    @sb[:action] = action = params[:pressed]
-
-    unless OPS_X_BUTTON_ALLOWED_ACTIONS.key?(action)
-      raise ActionController::RoutingError, _('invalid button action')
-    end
-
-    send(OPS_X_BUTTON_ALLOWED_ACTIONS[action])
+    generic_x_button(OPS_X_BUTTON_ALLOWED_ACTIONS)
   end
 
   def explorer
