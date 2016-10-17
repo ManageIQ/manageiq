@@ -43,11 +43,11 @@ class TreeBuilderDatacenter < TreeBuilder
     if @root.kind_of?(EmsCluster)
       hosts = count_only_or_objects(count_only, @root.hosts)
       resource_pools = count_only_or_objects(count_only, @root.resource_pools)
-      vms = count_only_or_objects(count_only, @root.vms)
+      vms = count_only_or_objects(count_only, @root.vms, "name")
       hosts + resource_pools + vms
     elsif @root.kind_of?(ResourcePool)
       resource_pools = count_only_or_objects(count_only, @root.resource_pools)
-      vms = count_only_or_objects(count_only, @root.vms)
+      vms = count_only_or_objects(count_only, @root.vms, "name")
       resource_pools + vms
     end
   end
@@ -79,7 +79,7 @@ class TreeBuilderDatacenter < TreeBuilder
       datacenters = count_only_or_objects(count_only, parent.datacenters_only)
       clusters = count_only_or_objects(count_only, parent.clusters)
       hosts = count_only_or_objects(count_only, parent.hosts)
-      vms = count_only_or_objects(count_only, parent.vms)
+      vms = count_only_or_objects(count_only, parent.vms, "name")
       objects = folders + datacenters + clusters + hosts + vms
     end
     objects
@@ -90,7 +90,7 @@ class TreeBuilderDatacenter < TreeBuilder
     if parent.authorized_for_user?(@user_id)
       objects += count_only_or_objects(count_only, parent.resource_pools)
       if parent.default_resource_pool
-        objects += count_only_or_objects(count_only, parent.default_resource_pool.vms)
+        objects += count_only_or_objects(count_only, parent.default_resource_pool.vms, "name")
       end
     end
     objects
@@ -99,13 +99,13 @@ class TreeBuilderDatacenter < TreeBuilder
   def x_get_tree_cluster_kids(parent, count_only = false)
     resource_pools = count_only_or_objects(count_only, parent.resource_pools)
     hosts = count_only_or_objects(count_only, parent.hosts)
-    vms = count_only_or_objects(count_only, parent.vms)
+    vms = count_only_or_objects(count_only, parent.vms, "name")
     resource_pools + hosts + vms
   end
 
   def x_get_resource_pool_kids(parent, count_only = false)
     resource_pools = count_only_or_objects(count_only, parent.resource_pools)
-    vms = count_only_or_objects(count_only, parent.vms)
+    vms = count_only_or_objects(count_only, parent.vms, "name")
     resource_pools + vms
   end
 end

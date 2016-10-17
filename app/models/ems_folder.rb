@@ -85,7 +85,7 @@ class EmsFolder < ApplicationRecord
   # Vm relationship methods
   #   all_vms and all_vm_ids included from AggregationMixin
   def vms_and_templates
-    children(:of_type => 'VmOrTemplate').sort_by { |c| c.name.downcase }
+    children(:of_type => 'VmOrTemplate')
   end
 
   def miq_templates

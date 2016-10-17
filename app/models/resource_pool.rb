@@ -60,7 +60,7 @@ class ResourcePool < ApplicationRecord
 
   # VM relationship methods
   def vms_and_templates
-    children(:of_type => 'VmOrTemplate').sort_by { |c| c.name.downcase }
+    children(:of_type => 'VmOrTemplate')
   end
   alias_method :direct_vms_and_templates, :vms_and_templates
 
