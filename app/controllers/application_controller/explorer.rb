@@ -165,7 +165,6 @@ module ApplicationController::Explorer
     @edit[:key] = "#{session[:tag_db]}_edit_tags__#{@object_ids[0]}"
     @edit[:object_ids] = @object_ids
     @edit[:tagging] = @tagging
-    session[:assigned_filters] = assigned_filters
     tag_edit_build_screen
     build_targets_hash(@tagitems)
 
