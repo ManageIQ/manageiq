@@ -37,7 +37,7 @@ describe ExtManagementSystem do
       "openstack"                   => "OpenStack",
       "openstack_infra"             => "OpenStack Platform Director",
       "openstack_network"           => "OpenStack Network",
-      "physical_infra_manager"      => "PhysicalInfraManager", # TODO: (julian) remove once we have a physical_infra_manager implementation
+      "lenovo_physical_infra_manager" => "Lenovo Physical Infra Manager",
       "nuage_network"               => "Nuage Network Manager",
       "rhevm"                       => "Red Hat Virtualization Manager",
       "scvmm"                       => "Microsoft System Center VMM",
