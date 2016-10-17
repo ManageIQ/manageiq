@@ -1,7 +1,7 @@
 class ManageIQ::Providers::OpenshiftEnterprise::ContainerManagerDecorator < Draper::Decorator
   delegate_all
 
-  def fonticon
-    "pficon pficon-openshift fa-lg".freeze
+  def listicon_image
+    "svg/vendor-openshift_enterprise.svg"
   end
 end
