@@ -29,7 +29,7 @@
                                                          :button => "saml_login"},
                         :id                   => "saml_login",
                         :class                => "btn btn-primary form-control",
-                        :alt                  => "Login",
+                        :alt                  => _("Login"),
                         :title                => _("Login to Corporate System"),
                         :remote               => true,
                         "data-method"         => :post,
@@ -96,14 +96,14 @@
             = link_to(_("Login"), '',
                       :id                   => "login",
                       :class                => "btn btn-primary",
-                      :alt                  => "Login",
+                      :alt                  => _("Login"),
                       :title                => _("Login"),
                       :onclick              => "miqAjaxAuth('#{j login_url}'); return false;")
 
             = link_to(_("SSO Login"), '',
                       :id                    => "sso_login",
                       :class                 => "btn btn-primary",
-                      :alt                   => "SSO Login",
+                      :alt                   => _("SSO Login"),
                       :title                 => _("SSO Login"),
                       :style                 => "display: none;",
                       :onclick              => "miqAjaxAuthSso('#{j sso_url}'); return false;")
