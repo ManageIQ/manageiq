@@ -17,6 +17,10 @@ ManageIQ.angular.app.directive('selectpickerForSelectTag', function() {
       scope.$watch('loaded.bs.select', function() {
         $('.bootstrap-select button').removeAttr('title');
       });
+
+      scope.$on('$destroy', function () {
+        elem.selectpicker('destroy');
+      });
     }
   }
 });
