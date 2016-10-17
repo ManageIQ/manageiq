@@ -10,7 +10,7 @@ describe ApplicationHelper::Button::ServerDemote do
         view_context = setup_view_context_with_sandbox({})
         button = described_class.new(view_context, {}, {'record' => @record}, {})
         button.instance_variable_set(:@sb, {:active_tab => "diagnostics_roles_servers"})
-        allow(button).to receive(:x_active_tree).and_return(:diagnostics_tree)
+        allow(view_context).to receive(:x_active_tree).and_return(:diagnostics_tree)
         expect(button.visible?).to be_truthy
 			end
     end
@@ -24,7 +24,7 @@ describe ApplicationHelper::Button::ServerDemote do
         view_context = setup_view_context_with_sandbox({})
         button = described_class.new(view_context, {}, {'record' => @record}, {})
         button.instance_variable_set(:@sb, {:active_tab => "diagnostics_roles_servers"})
-        allow(button).to receive(:x_active_tree).and_return(:diagnostics_tree)
+        allow(view_context).to receive(:x_active_tree).and_return(:diagnostics_tree)
         expect(button.visible?).to be_falsey
       end
     end
@@ -41,7 +41,7 @@ describe ApplicationHelper::Button::ServerDemote do
       it "disables the button and returns the error message" do
         view_context = setup_view_context_with_sandbox({})
         button = described_class.new(view_context, {}, {'record' => @record}, {})
-        allow(button).to receive(:x_node).and_return('z-1r23')
+        allow(view_context).to receive(:x_node).and_return('z-1r23')
         expect(button.disabled?).to be_truthy
         button.calculate_properties
         expect(button[:title]).to eq("This role can only be managed at the Region level")

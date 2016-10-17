@@ -12,7 +12,7 @@ class ApplicationHelper::Button::RoleStart < ApplicationHelper::Button::RolePowe
                          N_("This Role is already active on this Server")
                        elsif !@record.miq_server.started?
                          N_("Only available Roles on active Servers can be started")
-                       elsif x_node != "root" && @record.server_role.regional_role?
+                       elsif @view_context.x_node != "root" && @record.server_role.regional_role?
                          N_("This role can only be managed at the Region level")
                        end
                      end

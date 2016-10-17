@@ -7,7 +7,7 @@ class ApplicationHelper::Button::RoleSuspend < ApplicationHelper::Button::RolePo
   end
 
   def disabled?
-    @error_message = if x_node != "root" && @record.server_role.regional_role?
+    @error_message = if @view_context.x_node != "root" && @record.server_role.regional_role?
                        N_("This role can only be managed at the Region level")
                      else
                        if @record.active

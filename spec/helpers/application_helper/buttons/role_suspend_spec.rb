@@ -15,7 +15,7 @@ describe ApplicationHelper::Button::RoleSuspend do
       it "disables the button and returns the error message" do
         view_context = setup_view_context_with_sandbox({})
         button = described_class.new(view_context, {}, {'record' => @record}, {})
-        allow(button).to receive(:x_node).and_return('z-1r23')
+        allow(view_context).to receive(:x_node).and_return('z-1r23')
         expect(button.disabled?).to be_truthy
         button.calculate_properties
         expect(button[:title]).to eq("This role can only be managed at the Region level")
@@ -44,7 +44,7 @@ describe ApplicationHelper::Button::RoleSuspend do
       it "disables the button and returns the error message" do
         view_context = setup_view_context_with_sandbox({})
         button = described_class.new(view_context, {}, {'record' => @record}, {})
-        allow(button).to receive(:x_node).and_return('z-1r23')
+        allow(view_context).to receive(:x_node).and_return('z-1r23')
         expect(button.disabled?).to be_truthy
         button.calculate_properties
         expect(button[:title]).to match(/Activate the cyborg Role on another Server to suspend it on ratman \[\w+]/)
@@ -73,7 +73,7 @@ describe ApplicationHelper::Button::RoleSuspend do
       it "disables the button and returns the error message" do
         view_context = setup_view_context_with_sandbox({})
         button = described_class.new(view_context, {}, {'record' => @record}, {})
-        allow(button).to receive(:x_node).and_return('z-1r23')
+        allow(view_context).to receive(:x_node).and_return('z-1r23')
         expect(button.disabled?).to be_truthy
         button.calculate_properties
         expect(button[:title]).to eq("Only active Roles on active Servers can be suspended")
