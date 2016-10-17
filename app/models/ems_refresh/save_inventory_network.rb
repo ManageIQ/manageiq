@@ -272,7 +272,7 @@ module EmsRefresh::SaveInventoryNetwork
       end
     end
 
-    save_inventory_multi(network_port.cloud_subnet_network_ports, hashes, deletes, [:cloud_subnet_id])
+    save_inventory_multi(network_port.cloud_subnet_network_ports, hashes, deletes, [:cloud_subnet_id, :address])
   end
 
   def save_load_balancer_pool_members_inventory(ems, hashes, target = nil)
