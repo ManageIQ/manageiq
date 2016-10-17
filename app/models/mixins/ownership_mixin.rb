@@ -77,14 +77,24 @@ module OwnershipMixin
 
     def user_or_group_owned(user, miq_group)
       if user && miq_group
-        where("evm_owner_id" => user.id).or(where("miq_group_id" => miq_group.id))
+        user_owned(user).or(group_owned(miq_group))
       elsif user
-        where("evm_owner_id" => user.id)
+        user_owned(user)
       elsif miq_group
-        where("miq_group_id" => miq_group.id)
+        group_owned(miq_group)
       else
         none
       end
+    end
+
+    private
+
+    def user_owned(user)
+      where(arel_table.grouping(Arel::Nodes::NamedFunction.new("LOWER", [arel_attribute(:evm_owner_userid)]).eq(user.userid)))
+    end
+
+    def group_owned(miq_group)
+      where(:miq_group_id => miq_group.id)
     end
   end
 
