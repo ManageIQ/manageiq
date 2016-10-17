@@ -277,9 +277,7 @@ describe MiqScheduleWorker::Runner do
                     expect(message).not_to be_nil
                   end
                 else
-                  raise "Unexpected Job: tags=#{job.tags.inspect}, original=#{job.original.inspect}, "\
-                        "last_time=#{job.last_time.inspect}, id=#{job.job_id.inspect}, next=#{job.next_time.inspect}, "\
-                        "handler=#{job.handler.inspect}"
+                  raise_unexpected_job_error(job)
                 end
               end
             end
@@ -346,9 +344,7 @@ describe MiqScheduleWorker::Runner do
                       expect(message).to have_attributes(:role => "database_operations", :zone => nil)
                     end
                   else
-                    raise "Unexpected Job: tags=#{job.tags.inspect}, original=#{job.original.inspect}, "\
-                          "last_time=#{job.last_time.inspect}, id=#{job.job_id.inspect}, next=#{job.next_time.inspect}, "\
-                          "handler=#{job.handler.inspect}"
+                    raise_unexpected_job_error(job)
                   end
                 end
               end
@@ -388,9 +384,7 @@ describe MiqScheduleWorker::Runner do
                       expect(message).to have_attributes(:role => "database_operations", :zone => nil)
                     end
                   else
-                    raise "Unexpected Job: tags=#{job.tags.inspect}, original=#{job.original.inspect}, "\
-                          "last_time=#{job.last_time.inspect}, id=#{job.job_id.inspect}, next=#{job.next_time.inspect}, "\
-                          "handler=#{job.handler.inspect}"
+                    raise_unexpected_job_error(job)
                   end
                 end
               end
@@ -487,9 +481,7 @@ describe MiqScheduleWorker::Runner do
                   messages = MiqQueue.where(:class_name => "PolicyEvent", :method_name => "purge_timer")
                   expect(messages.count).to eq(1)
                 else
-                  raise "Unexpected Job: tags=#{job.tags.inspect}, original=#{job.original.inspect}, "\
-                        "last_time=#{job.last_time.inspect}, id=#{job.job_id.inspect}, next=#{job.next_time.inspect}, "\
-                        "handler=#{job.handler.inspect}"
+                  raise_unexpected_job_error(job)
                 end
               end
             end
@@ -578,6 +570,12 @@ describe MiqScheduleWorker::Runner do
     ensure
       MiqQueue.delete_all
       job.unschedule
+    end
+
+    def raise_unexpected_job_error(job)
+      raise "Unexpected Job: tags=#{job.tags.inspect}, original=#{job.original.inspect}, "\
+            "last_time=#{job.last_time.inspect}, id=#{job.job_id.inspect}, next=#{job.next_time.inspect}, "\
+            "handler=#{job.handler.inspect}"
     end
   end
 end
