@@ -69,7 +69,7 @@ class MiqVimBroker
       @broker = DRbObject.new(nil, "druby://127.0.0.1:#{port}")
     elsif mode == :server
       require 'timeout'
-      require 'broker_timeout'
+      require 'VMwareWebService/broker_timeout'
 
       # Un-comment following 2 lines to enable Sync lock debugging.
       # require 'broker_sync_debug'
