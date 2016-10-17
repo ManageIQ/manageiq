@@ -22,7 +22,7 @@ class UserValidationService
 
     unless user[:name]
       clear_current_user
-      return ValidateResult.new(:fail, @flash_msg ||= "Error: Authentication failed")
+      return ValidateResult.new(:fail, @flash_msg ||= _("Error: Authentication failed"))
     end
 
     if user[:new_password].present?
@@ -53,7 +53,7 @@ class UserValidationService
 
     startpage = start_url_for_user(start_url)
     unless startpage
-      return ValidateResult.new(:fail, "The user's role is not authorized for any access, please contact the administrator!")
+      return ValidateResult.new(:fail, _("The user's role is not authorized for any access, please contact the administrator!"))
     end
     ValidateResult.new(:pass, nil, startpage)
   end
@@ -130,15 +130,15 @@ class UserValidationService
 
   def validate_user_pre_auth_checks(user)
     # Pre_authenticate checks
-    return ValidateResult.new(:fail, "Error: Name is required") if user.blank? || user[:name].blank?
+    return ValidateResult.new(:fail, _("Error: Name is required")) if user.blank? || user[:name].blank?
 
-    return ValidateResult.new(:fail, "Error: New password and verify password must be the same") if
+    return ValidateResult.new(:fail, _("Error: New password and verify password must be the same")) if
       user[:new_password].present? && user[:new_password] != user[:verify_password]
 
-    return ValidateResult.new(:fail, "Error: New password can not be blank") if
+    return ValidateResult.new(:fail, _("Error: New password can not be blank")) if
       user[:new_password] && user[:new_password].blank?
 
-    return ValidateResult.new(:fail, "Error: New password is the same as existing password") if
+    return ValidateResult.new(:fail, _("Error: New password is the same as existing password")) if
       user[:new_password].present? && user[:password] == user[:new_password]
     nil
   end
