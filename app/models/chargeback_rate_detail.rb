@@ -72,7 +72,10 @@ class ChargebackRateDetail < ApplicationRecord
 
     (fixed_rate, variable_rate) = find_rate(value)
 
-    hourly(fixed_rate) +  hourly(variable_rate) * value
+    hourly_fixed_rate    = hourly(fixed_rate)
+    hourly_variable_rate = hourly(variable_rate)
+
+    hourly_fixed_rate + rate_adjustment(hourly_variable_rate) * value
   end
 
   def hourly(rate)
@@ -85,7 +88,7 @@ class ChargebackRateDetail < ApplicationRecord
                   else raise "rate time unit of '#{per_time}' not supported"
                   end
 
-    rate_adjustment(hourly_rate)
+    hourly_rate
   end
 
   # Scale the rate in the unit difine by user to the default unit of the metric
