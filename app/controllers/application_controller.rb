@@ -249,7 +249,8 @@ class ApplicationController < ActionController::Base
   def process_params_options(params)
     options = {}
     if params[:active_tree]
-      options.merge!(get_node_info(x_node, false))
+      node_info = (method(:get_node_info).arity == 1) ? get_node_info(x_node) : get_node_info(x_node, false)
+      options.merge!(node_info) if node_info != nil
     end
 
     if params[:model_id]
@@ -264,7 +265,8 @@ class ApplicationController < ActionController::Base
   def process_params_model_view(params)
     if params[:active_tree]
       model_view = vm_model_from_active_tree(params[:active_tree].to_sym)
-    elsif params[:model]
+    end
+    if model_view.nil? && params[:model]
       model_view = params[:model].singularize.classify.constantize
     end
 
