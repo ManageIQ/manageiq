@@ -78,7 +78,6 @@ class CustomButton < ApplicationRecord
     }
   end
 
-
   def invoke_async(target)
     task_opts = {
       :action => "Calling automate for user #{userid}",

@@ -276,21 +276,19 @@ module ApplicationController::Buttons
       options[:target_id] = obj.id
       options[:target_kls] = obj.class.name
       dialog_initialize(button.resource_action, options)
+    elsif button.options.key?(:open_url) && button.options[:open_url]
+      task_id = button.invoke_async(obj)
+      initiate_wait_for_task(:task_id => task_id, :action => :custom_button_done)
     else
-      if button.options.key?(:open_url) && button.options[:open_url]
-        task_id = button.invoke_async(obj)
-        initiate_wait_for_task(:task_id => task_id, :action => :custom_button_done)
+      begin
+        button.invoke(obj)
+      rescue StandardError => bang
+        add_flash(_("Error executing: \"%{task_description}\" %{error_message}") %
+          {:task_description => params[:desc], :error_message => bang.message}, :error)
       else
-        begin
-          button.invoke(obj)    # Run the task
-        rescue StandardError => bang
-          add_flash(_("Error executing: \"%{task_description}\" %{error_message}") %
-            {:task_description => params[:desc], :error_message => bang.message}, :error) # Push msg and error flag
-        else
-          add_flash(_("\"%{task_description}\" was executed") % {:task_description => params[:desc]})
-        end
-        javascript_flash
+        add_flash(_("\"%{task_description}\" was executed") % {:task_description => params[:desc]})
       end
+      javascript_flash
     end
   end
 
@@ -838,15 +836,18 @@ module ApplicationController::Buttons
     # AE_MAX_RESOLUTION_FIELDS.times{@edit[:new][:attrs].push(Array.new)} if @edit[:new][:attrs].empty?
     # num = AE_MAX_RESOLUTION_FIELDS - @edit[:new][:attrs].length
     (AE_MAX_RESOLUTION_FIELDS - @edit[:new][:attrs].length).times { @edit[:new][:attrs].push([]) }
-    @edit[:new][:target_class] = @resolve[:target_class]
     @edit[:new][:starting_object] ||= "SYSTEM/PROCESS"
-    @edit[:new][:name] = @custom_button.name
-    @edit[:new][:description] = @custom_button.description
-    @edit[:new][:button_image] = @custom_button.options && @custom_button.options[:button_image] ? @custom_button.options[:button_image] : ""
-    @edit[:new][:display] = @custom_button.options && @custom_button.options.key?(:display) ? @custom_button.options[:display] : true
-    @edit[:new][:open_url] = @custom_button.options && @custom_button.options.key?(:open_url) ? @custom_button.options[:open_url] : false
-    @edit[:new][:object_message] = @custom_button.uri_message || "create"
     @edit[:new][:instance_name] ||= "Request"
+
+    @edit[:new].update(
+      :target_class   => @resolve[:target_class],
+      :name           => @custom_button.name,
+      :description    => @custom_button.description,
+      :button_image   => @custom_button.options.try(:button_image).to_s,
+      :display        => @custom_button.options.try(:display) ? @custom_button.options[:display] : true,
+      :open_url       => @custom_button.options.try(:open_url) ? @custom_button.options[:open_url] : false,
+      :object_message => @custom_button.uri_message || "create",
+    )
     @edit[:current] = copy_hash(@edit[:new])
 
     @edit[:new][:button_images] = @edit[:current][:button_images] = build_button_image_options
