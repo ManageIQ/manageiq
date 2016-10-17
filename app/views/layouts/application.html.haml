@@ -2,7 +2,8 @@
 %html.layout-pf.layout-pf-fixed.transitions{:lang => I18n.locale.to_s.sub('-', '_')}
   - if @report_only
     %head
-      %title CloudForms Management Engine: #{@layout.titleize}
+      %title
+        = "%{product}: %{title}" % {:product => I18n.t('product.name'), :title => @layout.titleize}
       = favicon_link_tag
       = stylesheet_link_tag 'application'
       = javascript_include_tag 'application'
