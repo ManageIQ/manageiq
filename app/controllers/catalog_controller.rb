@@ -379,7 +379,7 @@ class CatalogController < ApplicationController
   def st_form_field_changed
     return unless load_edit("st_edit__#{params[:id]}", "replace_cell__explorer")
     @group_idx = false
-    default_entry_point("generic") if params[:display]
+    default_entry_point("generic", "composite") if params[:display]
     st_get_form_vars
     changed = (@edit[:new] != @edit[:current])
     build_ae_tree(:automate, :automate_tree) # Build Catalog Items tree
