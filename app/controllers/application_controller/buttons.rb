@@ -594,7 +594,6 @@ module ApplicationController::Buttons
     drop_breadcrumb(:name => title, :url => "/miq_ae_customization/button_new")
     @lastaction = "automate_button"
     @layout = "miq_ae_automate_button"
-    @custom_button = nil
     @sb[:buttons] = nil
     @sb[:button_groups] = nil
     replace_right_cell("button_edit")
