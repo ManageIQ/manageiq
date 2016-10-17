@@ -1,5 +1,5 @@
 class ApplicationHelper::Button::RoleStart < ApplicationHelper::Button::RolePowerOptions
-  needs :@record
+  needs :@record, :@sb
 
   def calculate_properties
     super

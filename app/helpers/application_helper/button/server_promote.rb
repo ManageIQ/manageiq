@@ -1,5 +1,5 @@
 class ApplicationHelper::Button::ServerPromote < ApplicationHelper::Button::ServerLevelOptions
-  needs :@record
+  needs :@record, :@sb
 
   def calculate_properties
     super
