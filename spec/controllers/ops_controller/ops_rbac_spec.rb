@@ -398,4 +398,28 @@ describe OpsController do
       expect(edit[:current][:ldap_groups].find { |lg| lg.group_type == 'user' }).not_to be(nil)
     end
   end
+
+  context "rbac_role_edit" do
+    before do
+      MiqUserRole.seed
+      MiqGroup.seed
+      MiqRegion.seed
+      stub_user(:features => :all)
+    end
+
+    it "creates a new user role successfully" do
+      allow(controller).to receive(:replace_right_cell)
+      controller.instance_variable_set(:@_params, :button => "add")
+      new = {:features => ["everything"], :name => "foo"}
+      edit = {:key     => "rbac_role_edit__new",
+              :new     => new,
+              :current => new
+      }
+      session[:edit] = edit
+      controller.send(:rbac_role_edit)
+      flash_messages = assigns(:flash_array)
+      expect(flash_messages.first[:message]).to include("Role \"foo\" was saved")
+      expect(controller.send(:flash_errors?)).to be_falsey
+    end
+  end
 end
