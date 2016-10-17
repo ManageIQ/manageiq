@@ -36,8 +36,8 @@ class MiqVimBroker
     if mode == :client
       require 'rubygems'
       require 'httpclient'  # needed for exception classes
-      require 'MiqVimDump'
-      require 'MiqVimVdlMod'
+      require 'VMwareWebService/MiqVimDump'
+      require 'VMwareWebService/MiqVimVdlMod'
       #
       # Modify the meta-class of DRb::DRbObject
       # so we can alias class methods
