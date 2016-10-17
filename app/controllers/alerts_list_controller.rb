@@ -2,7 +2,7 @@ class AlertsListController < ApplicationController
   extend ActiveSupport::Concern
 
   before_action :check_privileges
-  before_action :get_session_data
+  before_action :session_data
   after_action :cleanup_action
   after_action :set_session_data
 
@@ -17,16 +17,16 @@ class AlertsListController < ApplicationController
   end
 
   def data
-    render :json => {:data => collect_data()}
+    render :json => {:data => collect_data}
   end
 
   private
 
-  def get_session_data
+  def session_data
     @layout = "alerts_list"
   end
 
-  def collect_data()
+  def collect_data
     AlertsService.new(self).all_data
   end
 

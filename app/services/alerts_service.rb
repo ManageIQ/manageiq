@@ -15,5 +15,4 @@ class AlertsService
     result = {}
     result.values
   end
-
 end
