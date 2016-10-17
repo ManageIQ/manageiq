@@ -16,7 +16,7 @@ module Api
     def create_resource(_type, _id, data)
       DialogImportService.new.import(data)
     rescue => e
-      raise BadRequestError, "Failed to create a new dialog - #{e.message}"
+      raise BadRequestError, "Failed to create a new dialog - #{e}"
     end
 
     private
