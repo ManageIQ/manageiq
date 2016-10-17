@@ -48,7 +48,10 @@ class WebsocketProxy
   end
 
   def cleanup
-    @console.destroy unless @console.destroyed?
+    # FIXME:
+    # if @console.proxy_pid.present?
+    #   need to kill proxy process on the ems_operations appliance...
+    @console.destroy_or_mark unless @console.destroyed?
     @sock.close if @sock && !@sock.closed?
     @ws.close if @ws && !@ws.closed?
   end

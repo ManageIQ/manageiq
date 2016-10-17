@@ -1026,6 +1026,7 @@ class ProviderForemanController < ApplicationController
 
   def locals_for_service_dialog
     {:action_url => 'service_dialog',
+     :no_reset    => true,
      :record_id  => @sb[:rec_id] || @edit[:object_ids] && @edit[:object_ids][0]
     }
   end
@@ -1035,6 +1036,7 @@ class ProviderForemanController < ApplicationController
                                   :locals  => locals_for_service_dialog])
     locals = {:record_id  => @edit[:rec_id],
               :action_url => "configscript_service_dialog_submit",
+              :no_reset    => true,
               :serialize  => true}
     presenter.update(:form_buttons_div, r[:partial => 'layouts/x_edit_buttons',
                                           :locals  => locals])

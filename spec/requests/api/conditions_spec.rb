@@ -53,7 +53,7 @@ describe "Conditions API" do
       run_get conditions_url, :expand => "resources"
 
       expect_query_result(:conditions, 3, 3)
-      expect_result_resources_to_include_data("resources", "guid" => :condition_guid_list)
+      expect_result_resources_to_include_data("resources", "guid" => condition_guid_list)
     end
   end
 
@@ -78,7 +78,7 @@ describe "Conditions API" do
       run_get policy_conditions_url, :expand => "resources"
 
       expect_query_result(:conditions, 3, 3)
-      expect_result_resources_to_include_data("resources", "guid" => :condition_guid_list)
+      expect_result_resources_to_include_data("resources", "guid" => condition_guid_list)
     end
 
     it "query policy with expanded conditions" do
@@ -89,7 +89,7 @@ describe "Conditions API" do
       run_get policy_url, :expand => "conditions"
 
       expect_single_resource_query("name" => policy.name, "description" => policy.description, "guid" => policy.guid)
-      expect_result_resources_to_include_data("conditions", "guid" => :condition_guid_list)
+      expect_result_resources_to_include_data("conditions", "guid" => condition_guid_list)
     end
   end
 end

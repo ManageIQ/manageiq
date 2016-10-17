@@ -1,4 +1,16 @@
 describe MiqExpression do
+  context "virtual custom attributes" do
+    let(:virtual_custom_attribute) { "virtual_custom_attribute_attribute" }
+    let(:klass)                    { Vm }
+    let(:vm)                       { FactoryGirl.create(:vm) }
+
+    it "automatically loads virtual custom attributes from MiqExpression on class" do
+      expect do
+        MiqExpression.new("EQUAL" => {"field" => "#{klass}-#{virtual_custom_attribute}", "value" => "foo"})
+      end.to change { vm.respond_to?(virtual_custom_attribute) }.from(false).to(true)
+    end
+  end
+
   describe "#to_sql" do
     it "generates the SQL for an EQUAL expression" do
       sql, * = MiqExpression.new("EQUAL" => {"field" => "Vm-name", "value" => "foo"}).to_sql
@@ -1626,10 +1638,34 @@ describe MiqExpression do
 
   describe ".get_col_type" do
     subject { described_class.get_col_type(@field) }
+    let(:string_custom_attribute) do
+      FactoryGirl.create(:custom_attribute,
+                         :name          => "foo",
+                         :value         => "string",
+                         :resource_type => 'ExtManagementSystem')
+    end
+    let(:date_custom_attribute) do
+      FactoryGirl.create(:custom_attribute,
+                         :name          => "foo",
+                         :value         => DateTime.current,
+                         :resource_type => 'ExtManagementSystem')
+    end
 
     it "with model-field__with_pivot_table_suffix" do
       @field = "Vm-name__pv"
       expect(subject).to eq(described_class.get_col_type("Vm-name"))
+    end
+
+    it "with custom attribute without value_type" do
+      string_custom_attribute
+      @field = "ExtManagementSystem-#{CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX}foo"
+      expect(subject).to eq(:string)
+    end
+
+    it "with custom attribute with value_type" do
+      date_custom_attribute
+      @field = "ExtManagementSystem-#{CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX}foo"
+      expect(subject).to eq(:datetime)
     end
 
     it "with managed-field" do

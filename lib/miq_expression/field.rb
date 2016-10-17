@@ -82,7 +82,19 @@ class MiqExpression::Field
     )
   end
 
+  def column_type
+    if custom_attribute_column?
+      CustomAttribute.where(:name => custom_attribute_column_name, :resource_type => model.to_s).first.try(:value_type)
+    else
+      target.type_for_attribute(column).type
+    end
+  end
+
   private
+
+  def custom_attribute_column_name
+    column.gsub(CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX, "")
+  end
 
   class WhereExtractionVisitor < Arel::Visitors::PostgreSQL
     def visit_Arel_Nodes_SelectStatement(o, collector)
@@ -126,9 +138,5 @@ class MiqExpression::Field
 
   def arel_attribute
     target.arel_attribute(column)
-  end
-
-  def column_type
-    target.type_for_attribute(column).type
   end
 end

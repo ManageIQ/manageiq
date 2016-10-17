@@ -521,7 +521,7 @@ describe MiqScheduleWorker::Runner do
 
               case job.tags
               when %w(ems_event purge_schedule)
-                messages = MiqQueue.where(:class_name => "EmsEvent", :method_name => "purge_timer")
+                messages = MiqQueue.where(:class_name => "EventStream", :method_name => "purge_timer")
                 expect(messages.count).to eq(1)
               when %w(policy_event purge_schedule)
                 messages = MiqQueue.where(:class_name => "PolicyEvent", :method_name => "purge_timer")

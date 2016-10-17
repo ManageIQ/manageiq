@@ -4,6 +4,11 @@ module ManageIQ::Providers::Redhat::InfraManager::ProvisionViaIso::StateMachine
     signal :boot_from_cdrom
   end
 
+  def customize_guest
+    attach_floppy_payload
+    signal :boot_from_cdrom
+  end
+
   def boot_from_cdrom
     message = "Booting from CDROM"
     _log.info("#{message} #{for_destination}")

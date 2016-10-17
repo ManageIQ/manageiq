@@ -31,6 +31,9 @@ module UiServiceMixin
       :Amazon                  => {:type => "image", :icon => provider_icon(:Amazon)},
       :Azure                   => {:type => "image", :icon => provider_icon(:Azure)},
       :Google                  => {:type => "image", :icon => provider_icon(:Google)},
+      :Microsoft               => {:type => "image", :icon => provider_icon(:Microsoft)},
+      :Redhat                  => {:type => "image", :icon => provider_icon(:Redhat)},
+      :Vmware                  => {:type => "image", :icon => provider_icon(:Vmware)},
     }
   end
 

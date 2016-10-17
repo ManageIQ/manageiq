@@ -620,6 +620,23 @@
       :description: Edit Tags of Tenants
       :feature_type: control
       :identifier: cloud_tenant_tag
+  - :name: Modify
+    :description: Modify Tenants
+    :feature_type: admin
+    :identifier: cloud_tenant_admin
+    :children:
+    - :name: Add
+      :description: Add a Tenant
+      :feature_type: admin
+      :identifier: cloud_tenant_new
+    - :name: Edit
+      :description: Edit a Tenant
+      :feature_type: admin
+      :identifier: cloud_tenant_edit
+    - :name: Remove
+      :description: Remove Tenants
+      :feature_type: admin
+      :identifier: cloud_tenant_delete
 
 # CloudVolume
 - :name: Cloud Volumes
@@ -1100,6 +1117,18 @@
       :description: Register new Hosts / Nodes
       :feature_type: admin
       :identifier: host_register_nodes
+    - :name: Set Hosts / Nodes to Manageable State
+      :description: Set Hosts / Nodes to Manageable State
+      :feature_type: admin
+      :identifier: host_manageable
+    - :name: Introspect Hosts / Nodes
+      :description: Introspect Hosts / Nodes
+      :feature_type: admin
+      :identifier: host_introspect
+    - :name: Provide Hosts / Nodes
+      :description: Provide Hosts / Nodes
+      :feature_type: admin
+      :identifier: host_provide
 
 
 # Resource Pools
@@ -1524,6 +1553,22 @@
   :description: Everything under Timelines
   :feature_type: node
   :identifier: timeline
+  :children:
+  - :name: Download CSV Format
+    :description: Download Timeline Data in CSV Format
+    :feature_type: admin
+    :hidden: true
+    :identifier: timeline_csv
+  - :name: Download PDF Format
+    :description: Download Timeline Data in PDF Format
+    :feature_type: admin
+    :hidden: true
+    :identifier: timeline_pdf
+  - :name: Download Text Format
+    :description: Download Timeline Data in Text Format
+    :feature_type: admin
+    :hidden: true
+    :identifier: timeline_txt
 
 # RSS
 - :name: RSS
@@ -4049,6 +4094,24 @@
       :description: Edit Tags of Cloud Network
       :feature_type: control
       :identifier: cloud_network_tag
+  - :name: Modify
+    :description: Modify Networks
+    :feature_type: admin
+    :identifier: cloud_network_admin
+    :children:
+    - :name: Add
+      :description: Add a network
+      :feature_type: admin
+      :identifier: cloud_network_new
+    - :name: Edit
+      :description: Edit a network
+      :feature_type: admin
+      :identifier: cloud_network_edit
+    - :name: Remove
+      :description: Remove Networks
+      :feature_type: admin
+      :identifier: cloud_network_delete
+
 
 # Network Port
 - :name: Network Ports
@@ -4560,6 +4623,52 @@
       :feature_type: control
       :identifier: container_build_tag
 
+# ContainerTemplate
+- :name: Templates
+  :description: Everything under Container Template
+  :feature_type: node
+  :identifier: container_template
+  :children:
+  - :name: View
+    :description: View Container Template
+    :feature_type: node
+    :identifier: container_template_view
+    :children:
+    - :name: List
+      :description: Display Lists of Container Template
+      :feature_type: view
+      :identifier: container_template_show_list
+    - :name: Show
+      :description: Display Individual Container Template
+      :feature_type: view
+      :identifier: container_template_show
+  - :name: Modify
+    :description: Modify Container Template
+    :feature_type: admin
+    :identifier: container_template_admin
+    :children:
+    - :name: Remove
+      :description: Remove Container Template from the VMDB
+      :feature_type: admin
+      :identifier: container_template_delete
+    - :name: Edit
+      :description: Edit a Container Template
+      :feature_type: admin
+      :identifier: container_template_edit
+    - :name: Add
+      :description: Add a Container Template
+      :feature_type: admin
+      :identifier: container_template_new
+  - :name: Operate
+    :description: Perform Operations on Container Template
+    :feature_type: control
+    :identifier: container_template_control
+    :children:
+    - :name: Edit Tags
+      :description: Edit Tags of Container Template
+      :feature_type: control
+      :identifier: container_template_tag
+
 # ContainerService
 - :name: Services
   :description: Everything under Container Services
@@ -4762,6 +4871,17 @@
     :feature_type: view
     :identifier: container_dashboard_view
 
+# Infra Provider Dashboard
+- :name: Infra Providers Dashboard
+  :description: Infra Providers Dashboard
+  :feature_type: node
+  :identifier: ems_infra_dashboard
+  :children:
+  - :name: View
+    :description: View Infra Providers Dashboard
+    :feature_type: view
+    :identifier: ems_infra_dashboard_view
+
 # Foreman
 - :name: Configuration Management
   :description: Everything under Configuration Management
@@ -4945,6 +5065,22 @@
         :description: Display Instances Drift
         :feature_type: view
         :identifier: instance_drift
+        :children:
+        - :name: Download as CSV
+          :description: Download comparison report in CSV Format
+          :feature_type: admin
+          :hidden: true
+          :identifier: drift_download_csv
+        - :name: Download as PDF
+          :description: Download comparison report in PDF Format
+          :feature_type: admin
+          :hidden: true
+          :identifier: drift_download_pdf
+        - :name: Download as Text
+          :description: Download comparison report in Text Format
+          :feature_type: admin
+          :hidden: true
+          :identifier: drift_download_txt
       - :name: Utilization
         :description: Show Capacity & Utilization data of Instances
         :feature_type: view

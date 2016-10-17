@@ -179,10 +179,14 @@ class Service < ApplicationRecord
       :args        => [action, group_idx, direction]
     }
     nh[:deliver_on] = deliver_delay.seconds.from_now.utc if deliver_delay > 0
-    first_vm = vms.first
-    nh[:zone] = first_vm.ext_management_system.zone.name unless first_vm.nil?
+    nh[:zone] = my_zone if my_zone
     MiqQueue.put(nh)
     true
+  end
+
+  def my_zone
+    first_vm = vms.first
+    first_vm.ext_management_system.zone.name unless first_vm.nil?
   end
 
   def service_action(requested, service_resource)

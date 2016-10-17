@@ -1,9 +1,17 @@
 describe ServiceOrchestration do
   let(:manager_by_setter)  { FactoryGirl.create(:ems_amazon) }
-  let(:template_by_setter) { FactoryGirl.create(:orchestration_template) }
+  let(:template_by_setter) { FactoryGirl.create(:orchestration_template_cfn) }
   let(:manager_by_dialog)  { FactoryGirl.create(:ems_amazon) }
-  let(:template_by_dialog) { FactoryGirl.create(:orchestration_template) }
+  let(:template_by_dialog) { FactoryGirl.create(:orchestration_template_cfn) }
+  let(:manager_in_st)      { FactoryGirl.create(:ems_amazon) }
+  let(:template_in_st)     { FactoryGirl.create(:orchestration_template_cfn) }
   let(:deployed_stack)     { FactoryGirl.create(:orchestration_stack_amazon) }
+
+  let(:service_template) do
+    FactoryGirl.create(:service_template_orchestration,
+                       :orchestration_manager  => manager_in_st,
+                       :orchestration_template => template_in_st)
+  end
 
   let(:dialog_options) do
     {
@@ -19,8 +27,11 @@ describe ServiceOrchestration do
 
   let(:service) do
     FactoryGirl.create(:service_orchestration,
-      :evm_owner => FactoryGirl.create(:user),
-      :miq_group => FactoryGirl.create(:miq_group))
+                       :service_template       => service_template,
+                       :orchestration_manager  => manager_in_st,
+                       :orchestration_template => template_in_st,
+                       :evm_owner              => FactoryGirl.create(:user),
+                       :miq_group              => FactoryGirl.create(:miq_group))
   end
 
   let(:service_with_dialog_options) do
@@ -28,19 +39,12 @@ describe ServiceOrchestration do
     service
   end
 
-  let(:service_mix_dialog_setter) do
-    service.orchestration_template = template_by_setter
-    service.orchestration_manager = manager_by_setter
-    service.options = {:dialog => dialog_options}
+  let(:service_with_deployed_stack) do
+    service.add_resource(deployed_stack)
     service
   end
 
-  let(:service_with_deployed_stack) do
-    service_mix_dialog_setter.add_resource(deployed_stack)
-    service_mix_dialog_setter
-  end
-
-  context "#stack_name" do
+  describe "#stack_name" do
     it "gets stack name from dialog options" do
       expect(service_with_dialog_options.stack_name).to eq('test123')
     end
@@ -51,7 +55,7 @@ describe ServiceOrchestration do
     end
   end
 
-  context "#stack_options" do
+  describe "#stack_options" do
     before do
       allow_any_instance_of(ManageIQ::Providers::Amazon::CloudManager::OrchestrationServiceOptionConverter).to(
         receive(:stack_create_options).and_return(dialog_options))
@@ -90,41 +94,61 @@ describe ServiceOrchestration do
       expect(service_with_dialog_options.options[:create_options][:parameters]["my_password"]).to eq(MiqPassword.encrypt("secret"))
     end
 
-    it "prefers the orchestration template set by dialog" do
-      expect(service_mix_dialog_setter.orchestration_template).to eq(template_by_setter)
-      service_mix_dialog_setter.stack_options
-      expect(service_mix_dialog_setter.orchestration_template).to eq(template_by_dialog)
-    end
+    context "overwrite selections for orchestration manager and template" do
+      it "takes the orchestration template from service template by default" do
+        expect(service_with_dialog_options.orchestration_template).to eq(template_in_st)
+      end
 
-    it "prefers the orchestration manager set by dialog" do
-      expect(service_mix_dialog_setter.orchestration_manager).to eq(manager_by_setter)
-      service_mix_dialog_setter.stack_options
-      expect(service_mix_dialog_setter.orchestration_manager).to eq(manager_by_dialog)
+      it "takes the orchestration manager from service template by default" do
+        expect(service_with_dialog_options.orchestration_manager).to eq(manager_in_st)
+      end
+
+      it "prefers the orchestration template set by dialog" do
+        service_with_dialog_options.stack_options
+        expect(service_with_dialog_options.orchestration_template).to eq(template_by_dialog)
+      end
+
+      it "prefers the orchestration manager set by dialog" do
+        service_with_dialog_options.stack_options
+        expect(service_with_dialog_options.orchestration_manager).to eq(manager_by_dialog)
+      end
+
+      it "prefers the orchestration template set by setter" do
+        service.orchestration_template = template_by_setter
+        service_with_dialog_options.stack_options
+        expect(service_with_dialog_options.orchestration_template).to eq(template_by_setter)
+      end
+
+      it "prefers the orchestration manager set by setter" do
+        service.orchestration_manager = manager_by_setter
+        service_with_dialog_options.stack_options
+        expect(service_with_dialog_options.orchestration_manager).to eq(manager_by_setter)
+      end
     end
   end
 
-  context '#deploy_orchestration_stack' do
+  describe '#deploy_orchestration_stack' do
     it 'creates a stack through cloud manager' do
       allow(ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack).to receive(:raw_create_stack) do |manager, name, template, opts|
-        expect(manager).to eq(manager_by_setter)
+        expect(manager).to eq(manager_by_dialog)
         expect(name).to eq('test123')
         expect(template).to be_kind_of OrchestrationTemplate
         expect(opts).to be_kind_of Hash
       end
 
-      service_mix_dialog_setter.deploy_orchestration_stack
+      service_with_dialog_options.deploy_orchestration_stack
     end
 
     it 'always saves options even when the manager fails to create a stack' do
       provision_error = MiqException::MiqOrchestrationProvisionError
       allow_any_instance_of(ManageIQ::Providers::Amazon::CloudManager).to receive(:stack_create).and_raise(provision_error, 'test failure')
 
-      expect(service_mix_dialog_setter).to receive(:save_create_options)
-      expect { service_mix_dialog_setter.deploy_orchestration_stack }.to raise_error(provision_error)
+      expect(service_with_dialog_options).to receive(:save_create_options)
+      expect { service_with_dialog_options.deploy_orchestration_stack }.to raise_error(provision_error)
     end
   end
 
-  context '#update_orchestration_stack' do
+  describe '#update_orchestration_stack' do
     let(:reconfigurable_service) do
       stack = FactoryGirl.create(:orchestration_stack)
       service_template = FactoryGirl.create(:service_template_orchestration)
@@ -153,9 +177,9 @@ describe ServiceOrchestration do
     end
   end
 
-  context '#orchestration_stack_status' do
+  describe '#orchestration_stack_status' do
     it 'returns an error if stack has never been deployed' do
-      status, _message = service_mix_dialog_setter.orchestration_stack_status
+      status, _message = service.orchestration_stack_status
       expect(status).to eq('check_status_failed')
     end
 
@@ -177,7 +201,7 @@ describe ServiceOrchestration do
     end
   end
 
-  context '#all_vms' do
+  describe '#all_vms' do
     it 'returns all vms from a deployed stack' do
       vm1 = FactoryGirl.create(:vm_amazon)
       vm2 = FactoryGirl.create(:vm_amazon)
@@ -200,17 +224,37 @@ describe ServiceOrchestration do
     end
   end
 
-  context '#post_provision_configure' do
+  describe '#post_provision_configure' do
+    before do
+      allow(ManageIQ::Providers::Amazon::CloudManager::OrchestrationStack).to receive(
+        :raw_create_stack).and_return("ems_ref")
+      @resulting_stack = service.deploy_orchestration_stack
+    end
+
     it 'sets owners for all vms included in the stack' do
       vms = [FactoryGirl.create(:vm_amazon), FactoryGirl.create(:vm_amazon)]
-      deployed_stack.direct_vms.push(*vms)
+      @resulting_stack.direct_vms.push(*vms)
 
-      service_with_deployed_stack.post_provision_configure
+      service.post_provision_configure
       vms.each do |vm|
         vm.reload
-        expect(vm.evm_owner).to eq(service_with_deployed_stack.evm_owner)
-        expect(vm.miq_group).to eq(service_with_deployed_stack.miq_group)
+        expect(vm.evm_owner).to eq(service.evm_owner)
+        expect(vm.miq_group).to eq(service.miq_group)
       end
+    end
+
+    it 'adds the provisioned stack to service resources' do
+      service.post_provision_configure
+      expect(service.service_resources.find_by(:resource_type => 'OrchestrationStack').resource).to eq(@resulting_stack)
+    end
+
+    it 'reconnects cataloged stack with the orchestration template' do
+      # purposely disconnect the template
+      @resulting_stack.update_attributes!(:orchestration_template => nil)
+
+      service.post_provision_configure
+      @resulting_stack.reload
+      expect(@resulting_stack.orchestration_template).to eq(template_in_st)
     end
   end
 end

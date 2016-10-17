@@ -88,6 +88,7 @@ module EmsCommon
       'container_builds'              => [ContainerBuild,         _('Container Builds')],
       'container_projects'            => [ContainerProject,       _('Container Projects')],
       'container_image_registries'    => [ContainerImageRegistry, _('Container Image Registries')],
+      'container_templates'           => [ContainerTemplate,      _('Container Templates')],
       'availability_zones'            => [AvailabilityZone,       _('Availability Zones')],
       'host_aggregates'               => [HostAggregate,          _('Host Aggregates')],
       'middleware_servers'            => [MiddlewareServer,       _('Middleware Servers')],
@@ -429,6 +430,9 @@ module EmsCommon
       when "host_refresh"                     then refreshhosts
       when "host_scan"                        then scanhosts
       when "host_tag"                         then tag(Host)
+      when "host_manageable"                  then sethoststomanageable
+      when "host_introspect"                  then introspecthosts
+      when "host_provide"                     then providehosts
       # Storages
       when "storage_delete"                   then deletestorages
       when "storage_refresh"                  then refreshstorage

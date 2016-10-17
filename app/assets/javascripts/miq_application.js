@@ -483,7 +483,6 @@ function miqResetSizeTimer() {
   var height = window.innerHeight;
   var offset = 427;
   var h = height - offset;
-  var url = "/dashboard/window_sizes";
 
   if (h < 200) {
     h = 200;
@@ -495,9 +494,6 @@ function miqResetSizeTimer() {
   } else if (miqDomElementExists('logview')) {
     $('#logview').css({height: h + 'px'});
   }
-
-  // Send the new values to the server
-  miqJqueryRequest(miqPassFields(url, { height: height }));
 }
 
 // Pass fields to server given a URL and fields in name/value pairs
@@ -632,12 +628,14 @@ function miqBuildChartMenuEx(col, row, _value, category, series, chart_set, char
   chartmenu_el.empty();
 
   if (chart_data[chart_index].menu != null && chart_data[chart_index].menu.length) {
-    var rowcolchart_index = "_" + row + "-" + col + "-" + chart_index;
-
+    var row_col_chart_index = {
+      row: row,
+      column: col,
+      chart_index: chart_index,
+    };
     for (var i = 0; i < chart_data[chart_index].menu.length; i++) {
-      var menu_id = chart_data[chart_index].menu[i].split(":")[0] + rowcolchart_index;
-      var pid = menu_id.split("-")[0];
-
+      row_col_chart_index['chart_name'] = chart_data[chart_index].menu[i].split(":")[0];
+      var pid = row_col_chart_index['chart_name'].split("-")[0];
       if (chartmenu_el.find('#' + pid).length == 0) {
         chartmenu_el.append("<li class='dropdown-submenu'>" +
           "<a tabindex='-1' href='#'>" + pid + "</a>" +
@@ -647,8 +645,7 @@ function miqBuildChartMenuEx(col, row, _value, category, series, chart_set, char
       var menu_title = chart_data[chart_index].menu[i].split(":")[1];
       menu_title = menu_title.replace("<series>", series);
       menu_title = menu_title.replace("<category>", category);
-      $("#" + pid).append("<li><a id='" + menu_id +
-        "' href='#' onclick='miqChartMenuClick(this.id)'>" + menu_title + "</a></li>");
+      $("#" + pid).append("<li><a id='"+btoa(JSON.stringify(row_col_chart_index))+"' href='#' onclick='miqChartMenuClick(this.id)'>" + menu_title + "</a></li>");
     }
 
     chartmenu_el.css({'left': ManageIQ.mouse.x, 'top': ManageIQ.mouse.y});
@@ -693,7 +690,7 @@ function miqRESTAjaxButton(url, button, dataType, data) {
 
 // Handle an ajax form button press (i.e. Submit) by starting the spinning Q,
 // then waiting for .7 seconds for observers to finish
-function miqAjaxButton(url, serialize_fields) {
+function miqAjaxButton(url, serialize_fields, options) {
   if (typeof serialize_fields == "undefined") {
     serialize_fields = false;
   }
@@ -702,23 +699,23 @@ function miqAjaxButton(url, serialize_fields) {
   }
 
   setTimeout(function () {
-    miqAjaxButtonSend(url, serialize_fields);
+    miqAjaxButtonSend(url, serialize_fields, options);
   }, 700);
 }
 
 // Send ajax url after any outstanding ajax requests, wait longer if needed
-function miqAjaxButtonSend(url, serialize_fields) {
+function miqAjaxButtonSend(url, serialize_fields, options) {
   if ($.active) {
     setTimeout(function () {
-      miqAjaxButtonSend(url);
+      miqAjaxButtonSend(url, serialize_fields, options);
     }, 700);
   } else {
-    miqAjax(url, serialize_fields);
+    miqAjax(url, serialize_fields, options);
   }
 }
 
 // Function to generate an Ajax request
-function miqAjax(url, serialize_fields) {
+function miqAjax(url, serialize_fields, options) {
   var data = undefined;
 
   if (serialize_fields === true) {
@@ -727,7 +724,12 @@ function miqAjax(url, serialize_fields) {
     data = serialize_fields;
   }
 
-  miqJqueryRequest(url, {beforeSend: true, complete: true, data: data});
+  var defaultOptions = {
+    beforeSend: true,
+    complete: true,
+  };
+
+  miqJqueryRequest(url, _.extend(defaultOptions, options || {}, { data: data }));
 }
 
 // Function to generate an Ajax request for EVM async processing
@@ -1660,7 +1662,7 @@ function chartData(type, data, data2) {
       data.tooltip.format =  { title: function (x) { return tooltips[x]; }}
     }
   }
- var ret = _.defaultsDeep({}, data, config, data2);
+  var ret = _.defaultsDeep({}, data, config, data2);
   return ret;
 }
 

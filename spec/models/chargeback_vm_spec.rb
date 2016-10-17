@@ -198,6 +198,10 @@ describe ChargebackVm do
       expect(subject.cpu_cost).to eq(subject.cpu_allocated_cost + subject.cpu_used_cost)
     end
 
+    it "reports Vm Guid" do
+      expect(subject.vm_guid).to eq(@vm1.guid)
+    end
+
     it "cpu_vm_and_cpu_container_project" do
       cbrd = FactoryGirl.build(:chargeback_rate_detail_cpu_used,
                                :chargeback_rate_id => @cbr.id,
@@ -667,7 +671,7 @@ describe ChargebackVm do
 
       extra_fields = ChargebackVm.get_keys_and_extra_fields(metric_rollup, timestamp_key)
       expected_fields = {"vm_name" => @vm1.name, "owner_name" => @admin.name, "provider_name" => @ems.name,
-                         "provider_uid" => @ems.guid, "vm_uid" => "ems_ref"}
+                         "provider_uid" => @ems.guid, "vm_uid" => "ems_ref", "vm_guid" => @vm1.guid}
 
       expect("#{metric_rollup.resource_id}_#{timestamp_key}").to eq(extra_fields.first)
       expect(extra_fields.second).to eq(expected_fields)
@@ -685,7 +689,7 @@ describe ChargebackVm do
 
       extra_fields = ChargebackVm.get_keys_and_extra_fields(metric_rollup_without_ems, timestamp_key)
       expected_fields = {"vm_name" => @vm1.name, "owner_name" => @admin.name, "provider_name" => nil,
-                         "provider_uid" => nil, "vm_uid" => "ems_ref"}
+                         "provider_uid" => nil, "vm_uid" => "ems_ref", "vm_guid" => @vm1.guid}
 
       expect("#{metric_rollup.resource_id}_#{timestamp_key}").to eq(extra_fields.first)
       expect(extra_fields.second).to eq(expected_fields)

@@ -9,6 +9,7 @@ class MiqExpression
     BottleneckEvent
     ChargebackVm
     ChargebackContainerProject
+    ChargebackContainerImage
     CloudResourceQuota
     CloudTenant
     CloudVolume
@@ -238,6 +239,7 @@ class MiqExpression
     'ManageIQ::Providers::CloudManager'           => 'ext_management_system',
     'EmsCluster'                                  => 'ems_cluster',
     'ManageIQ::Providers::InfraManager'           => 'ext_management_system',
+    'ManageIQ::Providers::ContainerManager'       => 'ext_management_system',
     'ExtManagementSystem'                         => 'ext_management_system',
     'Host'                                        => 'host',
     'MiqGroup'                                    => 'miq_group',
@@ -340,6 +342,18 @@ class MiqExpression
   def initialize(exp, ctype = nil)
     @exp = exp
     @context_type = ctype
+
+    load_virtual_custom_attributes
+  end
+
+  def load_virtual_custom_attributes
+    return unless @exp
+
+    custom_attributes_group_by_model = custom_attribute_columns_and_models.compact.group_by { |x| x[:model] }
+
+    custom_attributes_group_by_model.each do |model, custom_attribute|
+      model.load_custom_attributes_for(custom_attribute.map { |x| x[:column] })
+    end
   end
 
   def self.proto?
@@ -1187,7 +1201,7 @@ class MiqExpression
       cb_model = Chargeback.report_cb_model(model)
       @reporting_available_fields[model.to_s] ||=
         MiqExpression.model_details(model, :include_model => false, :include_tags => true).select { |c| c.last.ends_with?(*ReportController::Reports::Editor::CHARGEBACK_ALLOWED_FIELD_SUFFIXES) } +
-        MiqExpression.tag_details(cb_model, model, {})
+        MiqExpression.tag_details(cb_model, model, {}) + _custom_details_for(cb_model, {})
     else
       @reporting_available_fields[model.to_s] ||= MiqExpression.model_details(model, :include_model => false, :include_tags => true)
     end
@@ -1308,6 +1322,7 @@ class MiqExpression
 
     model = determine_model(model, parts)
     return nil if model.nil?
+    return Field.parse(field).column_type if col.include?(CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX)
 
     col_type(model, col)
   end
@@ -1539,25 +1554,35 @@ class MiqExpression
     end
   end
 
-  def custom_attribute_columns(expression = nil)
-    return custom_attribute_columns(exp).uniq if expression.nil?
+  def custom_attribute_columns_and_models(expression = nil)
+    return custom_attribute_columns_and_models(exp).uniq if expression.nil?
 
     case expression
     when Array
-      expression.flat_map { |x| custom_attribute_columns(x) }
+      expression.flat_map { |x| custom_attribute_columns_and_models(x) }
     when Hash
       expression_values = expression.values
+      return [] unless expression.keys.first
 
       if expression.keys.first == "field"
-        field = Field.parse(expression_values.first)
-        field.custom_attribute_column? ? [field.column] : []
+        begin
+          field = Field.parse(expression_values.first)
+        rescue StandardError => err
+          _log.error("Cannot parse field #{field}" + err.message)
+          _log.log_backtrace(err)
+        end
+
+        return [] unless field
+
+        field.custom_attribute_column? ? [:model => field.model, :column => field.column] : []
       else
-        expression.keys.first.casecmp('find').zero? ? [] : custom_attribute_columns(expression_values)
+        expression.keys.first.casecmp('find').try(:zero?) ? [] : custom_attribute_columns_and_models(expression_values)
       end
     else
       []
     end
   end
+
 
   private
 

@@ -22,7 +22,8 @@ class ChargebackContainerProject < Chargeback
     :memory_used_metric    => :float,
     :net_io_used_cost      => :float,
     :net_io_used_metric    => :float,
-    :total_cost            => :float
+    :total_cost            => :float,
+    :entity                => :binary
   )
 
   def self.build_results_for_report_ChargebackContainerProject(options)
@@ -79,8 +80,8 @@ class ChargebackContainerProject < Chargeback
     records.where(:resource_type => ContainerProject.name, :resource_id => @projects.select(:id))
   end
 
-  def self.report_name_field
-    "project_name"
+  def self.report_static_cols
+    %w(project_name)
   end
 
   def self.report_col_options
@@ -99,7 +100,8 @@ class ChargebackContainerProject < Chargeback
     }
   end
 
-  def tags
-    ContainerProject.includes(:tags).find_by_ems_ref(project_uid).try(:tags).to_a
+  def get_rate_parents(perf)
+    # Get rate from assigned containers providers only
+    [perf.parent_ems]
   end
 end # class Chargeback

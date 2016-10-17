@@ -68,7 +68,7 @@ describe "Roles API" do
     expect(response.parsed_body).to have_key("name")
     expect(response.parsed_body["name"]).to eq(role.name)
     expect(response.parsed_body).to have_key("features")
-    expect(response.parsed_body["features"].size).to eq(fetch_value(role.miq_product_features.count))
+    expect(response.parsed_body["features"].size).to eq(role.miq_product_features.count)
 
     expect_result_resources_to_include_data("features", attr.to_s => klass.pluck(attr))
   end

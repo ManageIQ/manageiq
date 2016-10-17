@@ -55,4 +55,94 @@ describe ApplianceConsole::ExternalHttpdAuthentication do
       end
     end
   end
+
+  context "#enable_kerberos_dns_lookups" do
+    let(:all_false_kerberos_config) do
+      <<-EOT.strip_heredoc
+        [libdefaults]
+          default_realm = MY.REALM
+          dns_lookup_realm = false
+          dns_lookup_kdc = false
+          rdns = false
+          ticket_lifetime = 24h
+          forwardable = yes
+          udp_preference_limit = 0
+      EOT
+    end
+
+    let(:some_false_kerberos_config) do
+      <<-EOT.strip_heredoc
+        [libdefaults]
+          default_realm = MY.REALM
+          dns_lookup_realm = false
+          dns_lookup_kdc = true
+          rdns = false
+          ticket_lifetime = 24h
+          forwardable = yes
+          udp_preference_limit = 0
+      EOT
+    end
+
+    let(:expected_kerberos_config) do
+      <<-EOT.strip_heredoc
+        [libdefaults]
+          default_realm = MY.REALM
+          dns_lookup_realm = true
+          dns_lookup_kdc = true
+          rdns = false
+          ticket_lifetime = 24h
+          forwardable = yes
+          udp_preference_limit = 0
+      EOT
+    end
+
+    before do
+      @test_kerberos_config = Tempfile.new(subject.class.name.split("::").last.downcase)
+      stub_const("ApplianceConsole::ExternalHttpdAuthentication::ExternalHttpdConfiguration::KERBEROS_CONFIG_FILE",
+                 @test_kerberos_config.path)
+    end
+
+    after do
+      FileUtils.rm_f(@test_kerberos_config.path)
+    end
+
+    it "saves a backup copy of the kerberos config file" do
+      File.open(@test_kerberos_config, "a") do |f|
+        f.write(all_false_kerberos_config)
+      end
+
+      subject.enable_kerberos_dns_lookups
+      expect(File.read("#{@test_kerberos_config.path}.miqbkp")).to eq(all_false_kerberos_config)
+    end
+
+    it "updates dns_lookup flags from all false to all true" do
+      File.open(@test_kerberos_config, "a") do |f|
+        f.write(all_false_kerberos_config)
+      end
+
+      subject.enable_kerberos_dns_lookups
+      expect(File.read(@test_kerberos_config)).to eq(expected_kerberos_config)
+      expect(File.read("#{@test_kerberos_config.path}.miqbkp")).to eq(all_false_kerberos_config)
+    end
+
+    it "updates dns_lookup flags from some false to all true" do
+      File.open(@test_kerberos_config, "a") do |f|
+        f.write(some_false_kerberos_config)
+      end
+
+      subject.enable_kerberos_dns_lookups
+      expect(File.read(@test_kerberos_config)).to eq(expected_kerberos_config)
+      expect(File.read("#{@test_kerberos_config.path}.miqbkp")).to eq(some_false_kerberos_config)
+    end
+
+    it "leaves dns_lookup true flags unchanged" do
+      File.open(@test_kerberos_config, "a") do |f|
+        f.write(expected_kerberos_config)
+      end
+
+      subject.enable_kerberos_dns_lookups
+      expect(File.read(@test_kerberos_config)).to eq(expected_kerberos_config)
+      expect(File.read("#{@test_kerberos_config.path}.miqbkp")).to eq(expected_kerberos_config)
+    end
+  end
 end

@@ -52,9 +52,8 @@ module ManageIQ::Providers::Vmware::InfraManager::Provision::Cloning
   end
 
   def dest_resource_pool
-    respool_id = get_option(:placement_rp_name)
-    resource_pool = ResourcePool.find_by(:id => respool_id) unless respool_id.nil?
-    return resource_pool unless resource_pool.nil?
+    resource_pool = ResourcePool.find_by(:id => get_option(:placement_rp_name))
+    return resource_pool if resource_pool
 
     dest_cluster.try(:default_resource_pool) || dest_host.default_resource_pool
   end
@@ -69,8 +68,8 @@ module ManageIQ::Providers::Vmware::InfraManager::Provision::Cloning
   end
 
   def dest_folder
-    folder_id = get_option(:placement_folder_name)
-    return EmsFolder.find_by(:id => folder_id) if folder_id
+    ems_folder = EmsFolder.find_by(:id => get_option(:placement_folder_name))
+    return ems_folder if ems_folder
 
     dc = dest_cluster.try(:parent_datacenter) || dest_host.parent_datacenter
 

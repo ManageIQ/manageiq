@@ -110,6 +110,11 @@ module MiqException
   class MiqLoadBalancerDeleteError < Error; end
   class MiqLoadBalancerNotExistError < Error; end
 
+  class MiqNetworkValidationError < Error; end
+  class MiqNetworkCreateError < Error; end
+  class MiqNetworkUpdateError < Error; end
+  class MiqNetworkDeleteError < Error; end
+
   class MiqVolumeValidationError < Error; end
   class MiqVolumeCreateError < Error; end
   class MiqVolumeUpdateError < Error; end
@@ -119,6 +124,17 @@ module MiqException
   class MiqSubnetCreateError < Error; end
   class MiqSubnetUpdateError < Error; end
   class MiqSubnetDeleteError < Error; end
+
+  class MiqCloudTenantCreateError < Error; end
+  class MiqCloudTenantUpdateError < Error; end
+  class MiqCloudTenantDeleteError < Error; end
+
+  class MiqHostAggregateValidationError < Error; end
+  class MiqHostAggregateCreateError < Error; end
+  class MiqHostAggregateUpdateError < Error; end
+  class MiqHostAggregateDeleteError < Error; end
+  class MiqHostAggregateAddHostError < Error; end
+  class MiqHostAggregateRemoveHostError < Error; end
 
   class MiqOpenstackRequiredServiceMissing < Error; end
   class MiqOpenstackKeystoneServiceMissing < MiqOpenstackRequiredServiceMissing; end

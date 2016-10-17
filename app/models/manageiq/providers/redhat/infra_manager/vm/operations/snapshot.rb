@@ -33,6 +33,15 @@ module ManageIQ::Providers::Redhat::InfraManager::Vm::Operations::Snapshot
     {:available => false, :message => "Removing all snapshots is currently not supported"}
   end
 
+  def validate_revert_to_snapshot
+    {:available => allowed_to_revert?,
+     :message   => "Revert is allowed only when vm is down. Current state is #{current_state}"}
+  end
+
+  def allowed_to_revert?
+    current_state == 'off'
+  end
+
   private
 
   def with_snapshots_service(vm_uid_ems)

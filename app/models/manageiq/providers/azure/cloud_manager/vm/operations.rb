@@ -1,4 +1,5 @@
 module ManageIQ::Providers::Azure::CloudManager::Vm::Operations
+  extend ActiveSupport::Concern
   include_concern 'Power'
 
   def raw_destroy

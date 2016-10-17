@@ -45,10 +45,10 @@ describe PglogicalSubscription do
     ]
   end
 
-  let(:pglogical) { double }
+  let(:pglogical)      { double }
+  let!(:remote_region) { FactoryGirl.create(:miq_region, :region => 0, :description => "The region") }
 
   before do
-    FactoryGirl.create(:miq_region, :region => 0, :description => "The region")
     allow(described_class).to receive(:pglogical).and_return(pglogical)
   end
 
@@ -344,11 +344,14 @@ describe PglogicalSubscription do
   end
 
   describe "#delete" do
-    it "drops the node when this is the last subscription" do
+    before do
       allow(pglogical).to receive(:enabled?).and_return(true)
-      allow(pglogical).to receive(:subscriptions).and_return([subscriptions.first], [])
+    end
 
-      sub = described_class.find(:first)
+    let(:sub) { described_class.find(:first) }
+
+    it "drops the node when this is the last subscription" do
+      allow(pglogical).to receive(:subscriptions).and_return([subscriptions.first], [])
 
       expect(pglogical).to receive(:subscription_drop).with("region_0_subscription", true)
       expect(MiqRegion).to receive(:destroy_region)
@@ -357,6 +360,25 @@ describe PglogicalSubscription do
       expect(pglogical).to receive(:disable)
 
       sub.delete
+    end
+
+    it "removes the region authentication key if present" do
+      allow(pglogical).to receive(:subscriptions).and_return(subscriptions, [subscriptions.last])
+      expect(pglogical).to receive(:subscription_drop).with("region_0_subscription", true)
+
+      EvmSpecHelper.create_guid_miq_server_zone
+      FactoryGirl.create(
+        :api_auth_token,
+        :resource_id   => remote_region.id,
+        :resource_type => "MiqRegion",
+        :auth_key      => "this is the encryption key!"
+      )
+      expect(remote_region.auth_key_configured?).to be true
+
+      sub.delete
+      remote_region.reload
+
+      expect(remote_region.auth_key_configured?).to be false
     end
   end
 

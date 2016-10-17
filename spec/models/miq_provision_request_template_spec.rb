@@ -76,10 +76,10 @@ describe MiqProvisionRequestTemplate do
 
     it 'should create sequenced VM names' do
       task1 = provision_request_template.create_tasks_for_service(service_task, parent_svc).first
-      expect(task1.options[:vm_target_name]).to eq('miq_0001')
+      expect(task1.options[:vm_target_name]).to eq('miq0001')
 
       task2 = provision_request_template.create_tasks_for_service(service_task, parent_svc).first
-      expect(task2.options[:vm_target_name]).to eq('miq_0002')
+      expect(task2.options[:vm_target_name]).to eq('miq0002')
     end
 
     it 'assign task to a request' do

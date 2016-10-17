@@ -708,6 +708,7 @@ en:
       ContainerRoute:           Route
       ContainerReplicator:      Replicator
       ContainerService:         Container Service
+      ContainerTemplate:        Container Template
       EmsCluster:               Cluster / Deployment Role
       EmsClusterPerformance:    Performance - Cluster
       EmsEvent:                 Management Event
@@ -765,7 +766,7 @@ en:
       ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork:         Cloud Network (OpenStack)
       ManageIQ::Providers::Amazon::CloudManager:                            Cloud Provider (Amazon)
       ManageIQ::Providers::Azure::CloudManager:                             Cloud Provider (Microsoft Azure)
-      ManageIQ::Providers::Vmware::CloudManage:                             Cloud Provider (VMware vCloud)
+      ManageIQ::Providers::Vmware::CloudManager:                            Cloud Provider (VMware vCloud)
       ManageIQ::Providers::Azure::NetworkManager::CloudNetwork:             Cloud Network (Microsoft Azure)
       ManageIQ::Providers::Kubernetes::ContainerManager:                    Container Provider (Kubernetes)
       ManageIQ::Providers::Kubernetes::ContainerManager::ContainerGroup:    Pod (Kubernetes)
@@ -777,12 +778,14 @@ en:
       ManageIQ::Providers::Amazon::NetworkManager::SecurityGroup:           Security Group (Amazon)
       ManageIQ::Providers::Google::NetworkManager:                          Network Provider (Google)
       ManageIQ::Providers::Google::NetworkManager::SecurityGroup:           Security Group (Google)
+      ManageIQ::Providers::Google::NetworkManager::LoadBalancer:            Load Balancer (Google)
       ManageIQ::Providers::Google::NetworkManager::NetworkPort:             Network Port (Google)
       ManageIQ::Providers::Google::NetworkManager::FloatingIp:              Floating Ip (Google)
       ManageIQ::Providers::Google::NetworkManager::NetworkRouter:           Network Router (Google)
       ManageIQ::Providers::Google::NetworkManager::CloudSubnet:             Cloud Subnet (Google)
       ManageIQ::Providers::Google::NetworkManager::CloudNetwork:            Cloud Network (Google)
       ManageIQ::Providers::Openstack::NetworkManager::SecurityGroup:        Security Group (OpenStack)
+      ManageIQ::Providers::Azure::NetworkManager::LoadBalancer:             LoadBalancer (Microsoft Azure)
       ManageIQ::Providers::Azure::NetworkManager::CloudSubnet:              Cloud Subnet (Microsoft Azure)
       ManageIQ::Providers::Azure::CloudManager::SecurityGroup:              Security Group (Microsoft Azure)
       ManageIQ::Providers::Openstack::NetworkManager::FloatingIp:           Floating IP (OpenStack)
@@ -925,6 +928,8 @@ en:
       persistent_volumes:          Volumes
       container_build:             Build
       container_builds:            Builds
+      container_template:          Template
+      container_templates:         Templates
       custom_button:               Button
       custom_button_set:           Buttons Group
       ems_cloud:                   Cloud Provider

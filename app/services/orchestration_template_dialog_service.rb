@@ -201,9 +201,12 @@ class OrchestrationTemplateDialogService
   def add_parameter_field(parameter, group, position)
     if parameter.constraints
       dropdown = parameter.constraints.detect { |c| c.kind_of? OrchestrationTemplate::OrchestrationParameterAllowed }
+      checkbox = parameter.constraints.detect { |c| c.kind_of? OrchestrationTemplate::OrchestrationParameterBoolean } unless dropdown
     end
     if dropdown
       create_parameter_dropdown_list(parameter, group, position, dropdown)
+    elsif checkbox
+      create_parameter_checkbox(parameter, group, position)
     else
       create_parameter_textbox(parameter, group, position)
     end
@@ -242,6 +245,22 @@ class OrchestrationTemplateDialogService
       :options        => {:protected => parameter.hidden?},
       :validator_type => pattern ? 'regex' : nil,
       :validator_rule => pattern.try(:pattern),
+      :label          => parameter.label,
+      :description    => parameter.description,
+      :reconfigurable => true,
+      :position       => position,
+      :dialog_group   => group
+    )
+  end
+
+  def create_parameter_checkbox(parameter, group, position)
+    group.dialog_fields.build(
+      :type           => "DialogFieldCheckBox",
+      :name           => "param_#{parameter.name}",
+      :data_type      => "boolean",
+      :display        => "edit",
+      :default_value  => parameter.default_value,
+      :options        => {:protected => parameter.hidden?},
       :label          => parameter.label,
       :description    => parameter.description,
       :reconfigurable => true,

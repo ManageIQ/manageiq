@@ -631,6 +631,8 @@ describe EmsInfraController do
       allow(controller).to receive(:check_privileges).and_return(true)
       allow(controller).to receive(:assert_privileges).and_return(true)
       login_as FactoryGirl.create(:user, :features => "ems_infra_new")
+      allow_any_instance_of(ManageIQ::Providers::Redhat::InfraManager)
+        .to receive(:supported_api_versions).and_return([3, 4])
     end
 
     render_views

@@ -357,9 +357,11 @@ Vmdb::Application.routes.draw do
 
     :cloud_tenant             => {
       :get => %w(
+        cloud_tenant_form_fields
         download_data
         edit
         index
+        new
         protect
         show
         show_list
@@ -369,6 +371,7 @@ Vmdb::Application.routes.draw do
       :post => %w(
         button
         listnav_search_selected
+        create
         protect
         quick_search
         sections_field_changed
@@ -377,6 +380,7 @@ Vmdb::Application.routes.draw do
         tagging_edit
         tag_edit_form_field_changed
         update
+        wait_for_task
       ) +
                compare_post + adv_search_post + exp_post + save_post
     },
@@ -870,6 +874,33 @@ Vmdb::Application.routes.draw do
       ) + adv_search_post + exp_post + save_post
     },
 
+    :container_template          => {
+      :get  => %w(
+        download_data
+        edit
+        index
+        new
+        show
+        show_list
+        tagging_edit
+        tag_edit_form_field_changed
+      ),
+      :post => %w(
+        button
+        create
+        dynamic_checkbox_refresh
+        form_field_changed
+        listnav_search_selected
+        quick_search
+        sections_field_changed
+        show
+        show_list
+        update
+        tagging_edit
+        tag_edit_form_field_changed
+      ) + adv_search_post + exp_post + save_post
+    },
+
     :container_topology       => {
       :get => %w(
         show
@@ -943,7 +974,6 @@ Vmdb::Application.routes.draw do
         widget_dd_done
         widget_toggle_minmax
         widget_zoom
-        window_sizes
       )
     },
 
@@ -1036,6 +1066,7 @@ Vmdb::Application.routes.draw do
         download_data
         ems_infra_form_fields
         register_nodes
+        introspect_nodes
         protect
         show_list
         tagging_edit
@@ -1048,6 +1079,7 @@ Vmdb::Application.routes.draw do
         create
         form_field_changed
         register_nodes
+        introspect_nodes
         listnav_search_selected
         protect
         quick_search
@@ -1070,6 +1102,13 @@ Vmdb::Application.routes.draw do
                discover_get_post +
                exp_post +
                save_post
+    },
+
+    :ems_infra_dashboard      => {
+      :get => %w(
+        show
+        data
+      )
     },
 
     :ems_container            => {
@@ -1462,8 +1501,11 @@ Vmdb::Application.routes.draw do
 
     :cloud_network             => {
       :get  => %w(
+        cloud_network_form_fields
         download_data
+        edit
         index
+        new
         show
         show_list
         tagging_edit
@@ -1471,12 +1513,16 @@ Vmdb::Application.routes.draw do
         compare_get,
       :post => %w(
         button
+        create
+        dynamic_checkbox_refresh
+        form_field_changed
         quick_search
         listnav_search_selected
         show
         show_list
         tag_edit_form_field_changed
         tagging_edit
+        update
       ) +
         adv_search_post +
         compare_post +
@@ -2176,7 +2222,9 @@ Vmdb::Application.routes.draw do
         diagnostics_server_list
         diagnostics_tree_select
         diagnostics_worker_selected
+        disable_central_admin
         edit_rhn
+        enable_central_admin
         explorer
         fetch_build
         forest_accept
@@ -2452,6 +2500,12 @@ Vmdb::Application.routes.draw do
                compare_post +
                exp_post +
                save_post
+    },
+
+    :restful_redirect => {
+      :get => %w(
+        index
+      )
     },
 
     :service                  => {

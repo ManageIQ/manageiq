@@ -194,6 +194,12 @@ describe ManageIQ::Providers::Vmware::InfraManager::Provision do
           expect(@vm_prov.dest_resource_pool).to eq(resource_pool)
         end
 
+        it "returns a resource_pool if one is passed in" do
+          expect(ResourcePool).to receive(:find_by).and_return(:resource_pool)
+          expect(@vm_prov).to receive(:default_resource_pool).never
+          @vm_prov.dest_resource_pool
+        end
+
         it "uses the resource pool from the cluster" do
           @vm_prov.options[:dest_host]    = [dest_host_with_cluster.id, dest_host_with_cluster.name]
           @vm_prov.options[:dest_cluster] = [cluster.id, cluster.name]
@@ -307,6 +313,23 @@ describe ManageIQ::Providers::Vmware::InfraManager::Provision do
 
           result = @vm_prov.start_clone clone_opts
           expect(result).to eq(task_mor)
+        end
+      end
+
+      describe '#get_next_vm_name' do
+        before do
+          @vm_prov.update_attributes(:options => @options.merge(:miq_force_unique_name => true))
+          allow(MiqRegion).to receive_message_chain('my_region.next_naming_sequence').and_return(123)
+        end
+
+        it 'does not add "_" in name' do
+          allow(MiqAeEngine).to receive(:resolve_automation_object).and_return(double(:root => 'myvm'))
+          expect(@vm_prov.get_next_vm_name).to eq('myvm0123')
+        end
+
+        it 'keeps "_" in name' do
+          allow(MiqAeEngine).to receive(:resolve_automation_object).and_return(double(:root => 'myvm_'))
+          expect(@vm_prov.get_next_vm_name).to eq('myvm_0123')
         end
       end
     end

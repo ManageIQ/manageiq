@@ -16,7 +16,7 @@ module EmsContainerHelper::TextualSummary
     items.concat(%i(container_projects))
     items.concat(%i(container_routes)) if @ems.respond_to?(:container_routes)
     items.concat(%i(container_services container_replicators container_groups containers container_nodes
-                    container_image_registries container_images volumes container_builds))
+                    container_image_registries container_images volumes container_builds container_templates))
     items
   end
 
@@ -105,5 +105,11 @@ module EmsContainerHelper::TextualSummary
       :value => @ems.connection_configurations.hawkular.endpoint.hostname},
      {:label => _('Hawkular API Port'),
       :value => @ems.connection_configurations.hawkular.endpoint.port}]
+  end
+
+  def textual_miq_custom_attributes
+    attrs = @record.custom_attributes
+    return nil if attrs.blank?
+    attrs.collect { |a| {:label => a.name.tr("_", " "), :value => a.value} }
   end
 end

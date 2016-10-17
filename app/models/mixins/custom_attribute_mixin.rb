@@ -34,6 +34,8 @@ module CustomAttributeMixin
     end
 
     def self.add_custom_attribute(custom_attribute)
+      return if respond_to?(custom_attribute)
+
       virtual_column(custom_attribute.to_sym, :type => :string, :uses => :custom_attributes)
 
       define_method(custom_attribute.to_sym) do

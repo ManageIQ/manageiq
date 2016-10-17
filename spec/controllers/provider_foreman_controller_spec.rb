@@ -661,6 +661,13 @@ describe ProviderForemanController do
       expect(response.status).to eq(200)
     end
 
+    it "displays the new dialog form with no reset button" do
+      post :x_button, :params => {:pressed => 'configscript_service_dialog', :id => @cs.id}
+      expect(response.status).to eq(200)
+      expect(response.body).to include('Save Changes')
+      expect(response.body).not_to include('Reset')
+    end
+
     it "Service Dialog is created from an Ansible Tower Job Template" do
       controller.instance_variable_set(:@_params, :button => "save", :id => @cs.id)
       allow(controller).to receive(:replace_right_cell)

@@ -293,20 +293,6 @@ describe DashboardController do
     end
   end
 
-  context "#get_layout" do
-    it "sets layout same as session[:layout] when changing window size" do
-      request.parameters["action"] = "window_sizes"
-      session[:layout] = "host"
-      layout = controller.send(:get_layout)
-      expect(layout).to eq(session[:layout])
-    end
-
-    it "defaults layout to login on Login screen" do
-      layout = controller.send(:get_layout)
-      expect(layout).to eq("login")
-    end
-  end
-
   describe '#resize_layout' do
     before(:each) do
       controller.params[:sidebar] = sidebar
@@ -371,18 +357,15 @@ describe DashboardController do
 
   context "#session_reset" do
     it "verify certain keys are restored after session is cleared" do
-      winH               = '600'
       user_TZO           = '5'
       browser_info       = {:name => 'firefox', :version => '32'}
       session[:browser]  = browser_info
       session[:user_TZO] = user_TZO
-      session[:winH]     = winH
       session[:foo]      = 'foo_bar'
 
       controller.send(:session_reset)
 
       expect(session[:browser]).to eq(browser_info)
-      expect(session[:winH]).to eq(winH)
       expect(session[:user_TZO]).to eq(user_TZO)
       expect(session[:foo]).to eq(nil)
       expect(browser_info(:version)).to eq(browser_info[:version])

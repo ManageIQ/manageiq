@@ -41,7 +41,7 @@ class ApplicationHelper::ToolbarChooser
       'compare_view_tb'
     elsif @lastaction == "drift"
       'drift_view_tb'
-    elsif %w(ems_container).include?(@layout) && %w(main dashboard topology).include?(@display)
+    elsif %w(ems_container ems_infra).include?(@layout) && %w(main dashboard topology).include?(@display)
       'dashboard_summary_toggle_view_tb'
     elsif !%w(all_tasks all_ui_tasks timeline diagnostics my_tasks my_ui_tasks miq_server usage).include?(@layout) &&
           (!@layout.starts_with?("miq_request")) && !@treesize_buttons &&
@@ -478,7 +478,7 @@ class ApplicationHelper::ToolbarChooser
               container_image_registry ems_infra flavor host container_build infra_networking ems_storage
               ontap_file_share ontap_logical_disk container_topology middleware_topology middleware_server
               middleware_deployment middleware_datasource middleware_domain middleware_server_group middleware_messaging
-              ontap_storage_system orchestration_stack resource_pool storage_manager
+              ontap_storage_system orchestration_stack resource_pool storage_manager container_template
               timeline usage).include?(@layout)
           if ["show_list"].include?(@lastaction)
             return "#{@layout.pluralize}_center_tb"

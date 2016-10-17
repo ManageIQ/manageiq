@@ -54,12 +54,12 @@ class ApplicationController < ActionController::Base
   include_concern 'ReportDownloads'
 
   before_action :reset_toolbar
-  before_action :set_session_tenant, :except => [:window_sizes]
-  before_action :get_global_session_data, :except => [:resize_layout, :window_sizes, :authenticate]
-  before_action :set_user_time_zone, :except => [:window_sizes]
-  before_action :set_gettext_locale, :except => [:window_sizes]
+  before_action :set_session_tenant
+  before_action :get_global_session_data, :except => [:resize_layout, :authenticate]
+  before_action :set_user_time_zone
+  before_action :set_gettext_locale
   before_action :allow_websocket
-  after_action :set_global_session_data, :except => [:resize_layout, :window_sizes]
+  after_action :set_global_session_data, :except => [:resize_layout]
 
   def local_request?
     Rails.env.development? || Rails.env.test?
@@ -1490,7 +1490,7 @@ class ApplicationController < ActionController::Base
                "%#{stxt}%"
              end
 
-      if MiqServer.my_server.get_config("vmdb").config.fetch_path(:server, :case_sensitive_name_search)
+      if ::Settings.server.case_sensitive_name_search
         sub_filter = ["#{view.db_class.table_name}.#{view.col_order.first} like ? escape '`'", stxt]
       else
         # don't apply sub_filter when viewing sub-list view of a CI
@@ -1950,12 +1950,12 @@ class ApplicationController < ActionController::Base
       session[:tab_url][:svc] = inbound_url if ["show", "show_list", "explorer"].include?(action_name)
     when "availability_zone", "host_aggregate", "ems_cloud", "flavor", "vm_cloud", "orchestration_stack"
       session[:tab_url][:compute] = session[:tab_url][:clo] = inbound_url if ["show", "show_list", "explorer"].include?(action_name)
-    when "ems_cluster", "ems_infra", "host", "pxe", "resource_pool", "storage", "vm_infra"
+    when "ems_cluster", "ems_infra", "ems_infra_dashboard","host", "pxe", "resource_pool", "storage", "vm_infra"
       session[:tab_url][:compute] = session[:tab_url][:inf] = inbound_url if ["show", "show_list", "explorer"].include?(action_name)
     when "container", "container_group", "container_node", "container_service", "ems_container",
          "container_route", "container_project", "container_replicator", "persistent_volume",
          "container_image_registry", "container_image", "container_topology", "container_dashboard",
-         "container_build"
+         "container_build", "container_template"
       session[:tab_url][:compute] = session[:tab_url][:cnt] = inbound_url if %w(explorer show show_list).include?(action_name)
     when "ems_network", "cloud_network", "cloud_subnet", "network_router", "security_group", "floating_ip", "load_balancer"
       session[:tab_url][:net] = inbound_url if %w(show show_list).include?(action_name)
@@ -1991,9 +1991,6 @@ class ApplicationController < ActionController::Base
 
     # Get performance hash, if it is in the sandbox for the running controller
     @perf_options = @sb[:perf_options] ? copy_hash(@sb[:perf_options]) : {}
-
-    # Set window height for views to use
-    @winH = session[:winH] ? session[:winH].to_i : 805
 
     # Set @edit key default for the expression editor to use
     @expkey = session[:expkey] ? session[:expkey] : :expression
@@ -2423,9 +2420,7 @@ class ApplicationController < ActionController::Base
                                                       user_settings.key?(:display) &&
                                                       user_settings[:display].key?(:locale)
     if user_locale == 'default' || user_locale.nil?
-      unless MiqServer.my_server.nil?
-        server_locale = MiqServer.my_server.get_config("vmdb").config.fetch_path(:server, :locale)
-      end
+      server_locale = ::Settings.server.locale
       # user settings && server settings == 'default'
       # OR not defined
       # use HTTP_ACCEPT_LANGUAGE

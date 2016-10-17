@@ -269,6 +269,21 @@ describe MiqAeDomain do
     end
   end
 
+  context "reset priority" do
+    it "#reset_priorites" do
+      FactoryGirl.create(:miq_ae_system_domain, :name => 'ManageIQ', :tenant => @user.current_tenant, :priority => 0)
+      FactoryGirl.create(:miq_ae_system_domain, :name => 'B', :tenant => @user.current_tenant)
+      FactoryGirl.create(:miq_ae_system_domain, :name => 'A', :tenant => @user.current_tenant)
+      FactoryGirl.create(:miq_ae_system_domain, :name => 'Z', :tenant => @user.current_tenant)
+      FactoryGirl.create(:miq_ae_domain, :name => 'U1', :tenant => @user.current_tenant)
+      FactoryGirl.create(:miq_ae_domain, :name => 'U2', :tenant => @user.current_tenant)
+
+      ordered_names = %w(ManageIQ Z B A U1 U2)
+      MiqAeDomain.reset_priorities
+      expect(MiqAeDomain.all.order('priority').collect(&:name)).to eq(ordered_names)
+    end
+  end
+
   context "git enabled domains" do
     let(:commit_time) { Time.now.utc }
     let(:commit_time_new) { Time.now.utc + 1.hour }

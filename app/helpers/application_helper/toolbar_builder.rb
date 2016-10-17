@@ -237,7 +237,7 @@ class ApplicationHelper::ToolbarBuilder
       !name.starts_with?("miq_dialog") && !name.starts_with?("custom_button") &&
       !name.starts_with?("instance_") && !name.starts_with?("image_")) &&
        !%w(record_summary summary_main summary_download tree_main
-       x_edit_view_tb history_main ems_container_dashboard).include?(name)
+           x_edit_view_tb history_main ems_container_dashboard ems_infra_dashboard).include?(name)
   end
 
   def create_custom_button_hash(input, record, options = {})
@@ -522,6 +522,9 @@ class ApplicationHelper::ToolbarBuilder
     return true if %w(container_build_edit container_build_delete container_build_new).include?(id) &&
                    (@record.kind_of?(ContainerBuild) || @record.nil?)
 
+    return true if %w(container_template_edit container_template_delete container_template_new).include?(id) &&
+                   (@record.kind_of?(ContainerTemplate) || @record.nil?)
+
     # hide compliance check and comparison buttons rendered for orchestration stack instances
     return true if @record.kind_of?(OrchestrationStack) && @display == "instances" &&
                    %w(instance_check_compliance instance_compare).include?(id)
@@ -536,7 +539,7 @@ class ApplicationHelper::ToolbarBuilder
 
     # need to hide add buttons when on sub-list view screen of a CI.
     return true if id.ends_with?("_new", "_discover") &&
-                   @lastaction == "show" && @display != "main"
+                   @lastaction == "show" && !["main", "vms"].include?(@display)
 
     if id == "summary_reload"                             # Show reload button if
       return @explorer && # we are in explorer and
@@ -635,6 +638,16 @@ class ApplicationHelper::ToolbarBuilder
       return true unless get_vmdb_config[:product][:smis]
     when "host_register_nodes"
       return true if @record.class != ManageIQ::Providers::Openstack::InfraManager
+    when "host_introspect", "host_provide"
+      return true unless @record.class == ManageIQ::Providers::Openstack::InfraManager ||
+                         @record.class == ManageIQ::Providers::Openstack::InfraManager::Host
+      return true if @record.class == ManageIQ::Providers::Openstack::InfraManager::Host &&
+                     @record.hardware.provision_state != "manageable"
+    when "host_manageable"
+      return true unless @record.class == ManageIQ::Providers::Openstack::InfraManager ||
+                         @record.class == ManageIQ::Providers::Openstack::InfraManager::Host
+      return true if @record.class == ManageIQ::Providers::Openstack::InfraManager::Host &&
+                     @record.hardware.provision_state == "manageable"
     end
 
     # Scale is only supported by OpenStack Infrastructure Provider
@@ -662,6 +675,7 @@ class ApplicationHelper::ToolbarBuilder
         return true if x_active_tree == :condition_tree || !role_allows?(:feature => "condition_delete")
       end
     when "MiqAeClass", "MiqAeDomain", "MiqAeField", "MiqAeInstance", "MiqAeMethod", "MiqAeNamespace"
+      return true unless role_allows?(:feature => "miq_ae_domain_edit")
       return false if MIQ_AE_COPY_ACTIONS.include?(id) && User.current_tenant.any_editable_domains? && MiqAeDomain.any_unlocked?
       case id
       when "miq_ae_domain_lock"
@@ -1047,9 +1061,9 @@ class ApplicationHelper::ToolbarBuilder
     when "User"
       case id
       when "rbac_user_copy"
-        return N_("User [Administrator] can not be copied") if @record.userid == "admin"
+        return N_("User [Administrator] can not be copied") if @record.super_admin_user?
       when "rbac_user_delete"
-        return N_("User [Administrator] can not be deleted") if @record.userid == "admin"
+        return N_("User [Administrator] can not be deleted") if @record.super_admin_user?
       end
     when "UserRole"
       case id

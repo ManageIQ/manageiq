@@ -171,4 +171,31 @@ describe "Service Templates API" do
       expect(response).to have_http_status(:no_content)
     end
   end
+
+  describe "service requests subcollection" do
+    it "can list a service template's service requests" do
+      service_template = FactoryGirl.create(:service_template)
+      service_request = FactoryGirl.create(:service_template_provision_request,
+                                           :requester => @user,
+                                           :source    => service_template)
+      api_basic_authorize(action_identifier(:service_requests, :read, :subcollection_actions, :get))
+
+      run_get("#{service_templates_url(service_template.id)}/service_requests")
+
+      expected = {
+        "count"     => 1,
+        "subcount"  => 1,
+        "name"      => "service_requests",
+        "resources" => [
+          {
+            "href" => a_string_matching(
+              "#{service_templates_url(service_template.id)}/service_requests/#{service_request.id}"
+            )
+          }
+        ]
+      }
+      expect(response.parsed_body).to include(expected)
+      expect(response).to have_http_status(:ok)
+    end
+  end
 end

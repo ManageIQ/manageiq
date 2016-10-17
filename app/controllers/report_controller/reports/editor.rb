@@ -1,7 +1,17 @@
 module ReportController::Reports::Editor
   extend ActiveSupport::Concern
 
-  CHARGEBACK_ALLOWED_FIELD_SUFFIXES = %w(_cost -owner_name _metric -provider_name -provider_uid -project_uid -archived -chargeback_rates).freeze
+  CHARGEBACK_ALLOWED_FIELD_SUFFIXES = %w(
+    _cost
+    -owner_name
+    _metric
+    -provider_name
+    -provider_uid
+    -project_uid
+    -archived
+    -chargeback_rates
+    -vm_guid
+  ).freeze
 
   def miq_report_new
     assert_privileges("miq_report_new")
@@ -1007,8 +1017,10 @@ module ReportController::Reports::Editor
       elsif @edit[:new][:cb_show_typ] == "entity"
         options[:provider_id] = @edit[:new][:cb_provider_id]
         options[:entity_id] = @edit[:new][:cb_entity_id]
-        options[:groupby_tag] = @edit[:new][:cb_groupby_tag]
       end
+
+      options[:groupby] = @edit[:new][:cb_groupby]
+      options[:groupby_tag] = @edit[:new][:cb_groupby] == 'tag' ? @edit[:new][:cb_groupby_tag] : nil
 
       rpt.db_options[:options] = options
     end
@@ -1054,37 +1066,8 @@ module ReportController::Reports::Editor
     rpt.sortby = @edit[:new][:sortby1] == NOTHING_STRING ? nil : []  # Clear sortby if sortby1 not present, else set up array
 
     # Add in the chargeback static fields
-    if Chargeback.db_is_chargeback?(rpt.db) # For chargeback, add in static fields
-      rpt.cols = %w(start_date display_range)
-      name_col = @edit[:new][:model].constantize.report_name_field
-      tag_col = @edit[:new][:model].constantize.report_tag_field
-      if @edit[:new][:cb_groupby] == "date"
-        rpt.cols += [name_col]
-        rpt.col_order = ["display_range", name_col]
-        rpt.sortby = ["start_date", name_col]
-      elsif @edit[:new][:cb_groupby] == "vm"
-        rpt.cols += [name_col]
-        rpt.col_order = [name_col, "display_range"]
-        rpt.sortby = [name_col, "start_date"]
-      elsif @edit[:new][:cb_groupby] == "tag"
-        rpt.cols += [tag_col]
-        rpt.col_order = [tag_col, "display_range"]
-        rpt.sortby = [tag_col, "start_date"]
-      end
-      rpt.col_order.each do |c|
-        if c == tag_col
-          header = @edit[:cb_cats][@edit[:new][:cb_groupby_tag]]
-          rpt.headers.push(Dictionary.gettext(header, :type => :column, :notfound => :titleize))
-        else
-          rpt.headers.push(Dictionary.gettext(c, :type => :column, :notfound => :titleize))
-        end
-
-        rpt.col_formats.push(nil) # No formatting needed on the static cols
-      end
-      rpt.col_options = @edit[:new][:model].constantize.report_col_options
-      rpt.order = "Ascending"
-      rpt.group = "y"
-      rpt.tz = @edit[:new][:tz]
+    if Chargeback.db_is_chargeback?(rpt.db) # For chargeback, add in specific chargeback report options
+      rpt = @edit[:new][:model].constantize.set_chargeback_report_options(rpt, @edit)
     end
 
     # Remove when we support user sorting of trend reports
@@ -1310,20 +1293,14 @@ module ReportController::Reports::Editor
         @edit[:new][:cb_show_typ] = "entity"
         @edit[:new][:cb_entity_id] = options[:entity_id]
         @edit[:new][:cb_provider_id] = options[:provider_id]
-        @edit[:new][:cb_groupby_tag] = options[:groupby_tag]
       end
 
+      @edit[:new][:cb_groupby_tag] = options[:groupby_tag] if options.key?(:groupby_tag)
       @edit[:new][:cb_model] = Chargeback.report_cb_model(@rpt.db)
       @edit[:new][:cb_interval] = options[:interval]
       @edit[:new][:cb_interval_size] = options[:interval_size]
       @edit[:new][:cb_end_interval_offset] = options[:end_interval_offset]
-      @edit[:new][:cb_groupby] = if @rpt.sortby.nil? || @rpt.sortby.first == "start_date"
-                                   "date"
-                                 elsif @edit[:new][:cb_groupby_tag].present?
-                                   "tag"
-                                 else
-                                   "vm"
-                                 end
+      @edit[:new][:cb_groupby] = options[:groupby]
     end
 
     # Only show chargeback users choice if an admin
@@ -1547,7 +1524,7 @@ module ReportController::Reports::Editor
       f_len = fields.length
       for f_idx in 1..f_len # Go thru fields in reverse
         f_key = fields[f_len - f_idx].last
-        next if f_key.ends_with?(*CHARGEBACK_ALLOWED_FIELD_SUFFIXES) || f_key.include?('managed')
+        next if f_key.ends_with?(*CHARGEBACK_ALLOWED_FIELD_SUFFIXES) || f_key.include?('managed') || f_key.include?(CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX)
         headers.delete(f_key)
         col_formats.delete(f_key)
         fields.delete_at(f_len - f_idx)
@@ -1661,6 +1638,11 @@ module ReportController::Reports::Editor
                 _("A specific #{ui_lookup(:model => @edit[:new][:cb_model])} or all must be selected")
               end
             end
+
+      if @edit[:new][:cb_groupby] == "tag" && !@edit[:new][:cb_groupby_tag].present?
+        msg = _('A Group by Tag must be selected')
+      end
+
       if msg
         add_flash(msg, :error)
         active_tab = 'edit_3'
