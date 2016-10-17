@@ -43,6 +43,7 @@ class MiqAeGitImport
 
   def create_repo
     @git_repo = GitRepository.find_or_create_by(:url => @options['git_url'])
+    @git_repo.update_attributes(:verify_ssl => @options['verify_ssl'] || OpenSSL::SSL::VERIFY_PEER)
     if @options['userid'] && @options['password']
       @git_repo.update_authentication(:default => @options.slice(*AUTH_KEYS))
     end
