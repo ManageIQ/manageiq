@@ -147,7 +147,8 @@ class ApplicationHelper::Toolbar::VmInfrasCenter < ApplicationHelper::Toolbar::B
           'pficon pficon-add-circle-o fa-lg',
           N_('Request to Provision VMs'),
           N_('Provision VMs'),
-          :url_parms => "main_div"),
+          :url_parms => "main_div",
+          :klass     => ApplicationHelper::Button::VmMiqRequestNew),
         button(
           :vm_clone,
           'product product-clone fa-lg',

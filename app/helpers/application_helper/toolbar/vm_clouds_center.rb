@@ -131,7 +131,8 @@ class ApplicationHelper::Toolbar::VmCloudsCenter < ApplicationHelper::Toolbar::B
           'pficon pficon-add-circle-o fa-lg',
           N_('Request to Provision Instances'),
           N_('Provision Instances'),
-          :url_parms => "main_div"),
+          :url_parms => "main_div",
+          :klass     => ApplicationHelper::Button::InstanceMiqRequestNew),
         button(
           :instance_retire,
           'fa fa-clock-o fa-lg',
