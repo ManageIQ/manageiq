@@ -14,8 +14,7 @@
                                           "ng-maxlength" => "100",
                                           "ng-model"     => "step1DsModel.datasourceName"}
 
-      .col-sm-2
-      .col-sm-10
+      .col-sm-8.col-sm-offset-4
         %p.ng-error-messages{"ng-show" => "step1Form.ds_name_input.$error.required"}
           = _("Required")
         %p.ng-error-messages{"ng-show" => "step1Form.ds_name_input.$error.maxlength"}
@@ -32,19 +31,18 @@
                                             "ng-required"  => "true",
                                             "ng-model"     => "step1DsModel.jndiName"}
 
-      .col-sm-2
-      .col-sm-10
+      .col-sm-8.col-sm-offset-4
         %p.ng-error-messages{"ng-show" => "step1Form.jndi_name_input.$error.required"}
           = _("Required")
         %p.ng-error-messages{"ng-show" => "step1Form.jndi_name_input.$error.maxlength"}
           = _("Maximum length is 256")
 
     .modal-footer
-      %button.btn.btn-default.dialog-cancel-button{:type          => "button",
-                                                   "ng-click"     =>"reset()"}
+      %button.btn.btn-default.dialog-cancel-button{:type      => "button",
+                                                   "ng-click" => "reset()"}
         = _("Cancel")
-      %button.btn.btn-default{:type          => "button",
-                              "ng-click"     =>"addDatasourceStep1Back()"}
+      %button.btn.btn-default{:type      => "button",
+                              "ng-click" => "addDatasourceStep1Back()"}
         = _("Back")
       %button.btn.btn-primary{:type         => "button",
                               "ng-click"    => "addDatasourceStep1Next()",

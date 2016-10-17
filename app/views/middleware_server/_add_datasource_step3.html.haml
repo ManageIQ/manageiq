@@ -10,15 +10,14 @@
         %input.form-control#connection_url_input{:type          => "textarea",
                                                  "name"         => "connection_url_input",
                                                  "ng-required"  => "true",
-                                                 "ng-minlength" => "10",
+                                                 "ng-pattern"   => "step3DsModel.validationRegex",
                                                  "ng-model"     => "step3DsModel.connectionUrl"}
 
-      .col-sm-2
-      .col-sm-10
+      .col-sm-8.col-sm-offset-4
         %p.ng-error-messages{"ng-show" => "step3Form.connection_url_input.$error.required"}
           = _("Required")
-        %p.ng-error-messages{"ng-show" => "step3Form.connection_url_input.$error.minlength"}
-          = _("Minimum length is 10")
+        %p.ng-error-messages{"ng-show" => "step3Form.connection_url_input.$error.pattern"}
+          = _("Must start with 'jdbc:'")
 
     .form-group
       %label.col-md-4.control-label{:for => "user_name_input"}
@@ -30,8 +29,7 @@
                                             "placeholder"  => _("Enter Username"),
                                             "ng-model"     => "step3DsModel.userName"}
 
-      .col-sm-2
-      .col-sm-10
+      .col-sm-8.col-sm-offset-4
         %p.ng-error-messages{"ng-show" => "step3Form.user_name_input.$error.required"}
           = _("Required")
 
@@ -55,10 +53,10 @@
 
     .modal-footer
       %button.btn.btn-default.dialog-cancel-button{:type          => "button",
-                                                   "ng-click"     =>"reset()"}
+                                                   "ng-click"     => "reset()"}
         = _("Cancel")
       %button.btn.btn-default{:type      => "button",
-                              "ng-click" =>"finishAddDatasourceBack()"}
+                              "ng-click" => "finishAddDatasourceBack()"}
         = _("Back")
       %button.btn.btn-primary{:type         => "button",
                               "ng-click"    => "finishAddDatasource()",
