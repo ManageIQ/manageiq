@@ -81,7 +81,7 @@ class MiqVimBroker
       end
       @@classModed = true
 
-      require 'MiqVimBrokerMods' # only needed by the server
+      require 'VMwareWebService/MiqVimBrokerMods' # only needed by the server
       @mode = :server
       @shuttingDown = false
 
