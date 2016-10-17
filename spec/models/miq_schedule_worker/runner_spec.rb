@@ -329,17 +329,19 @@ describe MiqScheduleWorker::Runner do
                   when %w(database_operations database_metrics_collection_schedule)
                     expect(job.original).to eq(@metrics_collection[:collection_schedule])
                     expect(MiqQueue.count).to eq(1)
-                    message = MiqQueue.where(:class_name => "VmdbDatabase", :method_name => "capture_metrics_timer").first
+                    message = MiqQueue.where(:class_name  => "VmdbDatabase",
+                                             :method_name => "capture_metrics_timer").first
                     expect(message).to have_attributes(:role => "database_owner", :zone => nil)
                   when %w(database_operations database_metrics_daily_rollup_schedule)
                     expect(job.original).to eq(@metrics_collection[:daily_rollup_schedule])
                     expect(MiqQueue.count).to eq(1)
-                    message = MiqQueue.where(:class_name => "VmdbDatabase", :method_name => "rollup_metrics_timer").first
+                    message = MiqQueue.where(:class_name  => "VmdbDatabase",
+                                             :method_name => "rollup_metrics_timer").first
                     expect(message).to have_attributes(:role => "database_owner", :zone => nil)
                   when %w(database_operations database_metrics_purge_schedule)
                     expect(job.original).to eq(@metrics_history[:purge_schedule])
                     expect(MiqQueue.count).to eq(2)
-                    ["VmdbDatabaseMetric", "VmdbMetric"].each do |class_name|
+                    %w(VmdbDatabaseMetric VmdbMetric).each do |class_name|
                       message = MiqQueue.where(:class_name => class_name, :method_name => "purge_all_timer").first
                       expect(message).to have_attributes(:role => "database_operations", :zone => nil)
                     end
@@ -368,18 +370,20 @@ describe MiqScheduleWorker::Runner do
                   when %w(database_operations database_metrics_collection_schedule)
                     expect(job.original).to eq(@metrics_collection[:collection_schedule])
                     expect(MiqQueue.count).to eq(1)
-                    message = MiqQueue.where(:class_name => "VmdbDatabase", :method_name => "capture_metrics_timer").first
+                    message = MiqQueue.where(:class_name  => "VmdbDatabase",
+                                             :method_name => "capture_metrics_timer").first
                     expect(message).to have_attributes(:role => "database_operations", :zone => nil)
                   when %w(database_operations database_metrics_daily_rollup_schedule)
                     expect(job.original).to eq(@metrics_collection[:daily_rollup_schedule])
                     expect(MiqQueue.count).to eq(1)
-                    message = MiqQueue.where(:class_name => "VmdbDatabase", :method_name => "rollup_metrics_timer").first
+                    message = MiqQueue.where(:class_name  => "VmdbDatabase",
+                                             :method_name => "rollup_metrics_timer").first
                     expect(message).to have_attributes(:role => "database_operations", :zone => nil)
                   when %w(database_operations database_metrics_purge_schedule)
                     expect(job.original).to eq(@metrics_history[:purge_schedule])
                     expect(MiqQueue.count).to eq(2)
 
-                    ["VmdbDatabaseMetric", "VmdbMetric"].each do |class_name|
+                    %w(VmdbDatabaseMetric VmdbMetric).each do |class_name|
                       message = MiqQueue.where(:class_name => class_name, :method_name => "purge_all_timer").first
                       expect(message).to have_attributes(:role => "database_operations", :zone => nil)
                     end
