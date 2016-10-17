@@ -225,23 +225,28 @@ class MiqTaskController < ApplicationController
     end
   end
 
+  TASK_X_BUTTON_ALLOWED_ACTIONS =  {
+    "miq_task_delete"      => :deletejobs,
+    "miq_task_deleteall"   => :deletealljobs,
+    "miq_task_deleteolder" => :deleteolderjobs,
+    "miq_task_canceljob"   => :canceljobs,
+    "miq_task_reload"      => :reloadjobs,
+  }
+
   # handle buttons pressed on the button bar
   def button
-    @edit = session[:edit]                                  # Restore @edit for adv search box
-    deletejobs      if params[:pressed] == "miq_task_delete"
-    deletealljobs   if params[:pressed] == "miq_task_deleteall"
-    deleteolderjobs if params[:pressed] == "miq_task_deleteolder"
-    canceljobs      if params[:pressed] == "miq_task_canceljob"
-    reloadjobs      if params[:pressed] == "miq_task_reload"
+    @edit = session[:edit] # Restore @edit for adv search box
+
+    generic_x_button(TASK_X_BUTTON_ALLOWED_ACTIONS)
 
     render :update do |page|
       page << javascript_prologue
       unless @refresh_partial.nil?
         if @refresh_div == "flash_msg_div"
-          page << "miqSetButtons(0, 'center_tb');"                             # Reset the center toolbar
+          page << "miqSetButtons(0, 'center_tb');"
           page.replace(@refresh_div, :partial => @refresh_partial)
         else
-          page << "miqSetButtons(0, 'center_tb');"                             # Reset the center toolbar
+          page << "miqSetButtons(0, 'center_tb');"
           page.replace_html("main_div", :partial => @refresh_partial)
           page.replace_html("paging_div", :partial => 'layouts/pagingcontrols',
                                           :locals  => {:pages      => @pages,
