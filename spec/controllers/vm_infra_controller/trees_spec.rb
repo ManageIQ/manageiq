@@ -14,7 +14,7 @@ describe VmInfraController do
 
       post :tree_select, :params => { :id => 'xx-arch', :format => :js }
 
-      expect(response).to render_template('layouts/gtl/_list')
+      expect(response).to render_template('layouts/angular/_gtl')
       expect(response.status).to eq(200)
     end
   end
@@ -34,7 +34,7 @@ describe VmInfraController do
 
         post :tree_select, :params => { :id => 'root', :format => :js }
 
-        expect(response).to render_template('layouts/gtl/_list')
+        expect(response).to render_template('layouts/angular/_gtl')
         expect(response.status).to eq(200)
       end
     end
