@@ -470,6 +470,14 @@ function miqSetButtons(count, button_div) {
       var button = $(v);
       miqButtonOnWhen(button.parent(), button.data('onwhen'), count);
     });
+  } else if (button_div.match("_buttons$")) { // Handle buttons that are not part of miq toolbars
+    if (count === 0) {
+      $("#" + button_div + " button[id$=on_1]").prop('disabled', true);
+    } else if (count == 1) {
+      $("#" + button_div + " button[id$=on_1]").prop('disabled', false);
+    } else {
+      $("#" + button_div + " button[id$=on_1]").prop('disabled', false);
+    }
   }
 }
 
