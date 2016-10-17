@@ -194,7 +194,6 @@ describe "Service Dialogs API" do
   end
 
   context 'Creates service dialogs' do
-    let(:second_dialog) { FactoryGirl.create(:dialog) }
     let(:dialog_request) do
       {
         :description => 'Dialog',
