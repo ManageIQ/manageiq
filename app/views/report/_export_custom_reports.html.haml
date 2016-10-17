@@ -12,7 +12,7 @@
              :class     => "form-horizontal",
              :multipart => true,
              :method    => :post) do
-    - overwrite = @sb[:overwrite] ? true : false
+    - overwrite = !!@sb[:overwrite]
     .form-group
       .col-md-8
         = check_box_tag("overwrite", "1", overwrite)

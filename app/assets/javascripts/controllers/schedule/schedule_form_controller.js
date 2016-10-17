@@ -55,7 +55,7 @@ ManageIQ.angular.app.controller('scheduleFormController', ['$http', '$scope', 's
         $scope.scheduleModel.log_userid   = data.log_userid;
         $scope.scheduleModel.log_protocol = data.protocol;
         $scope.scheduleModel.description  = data.schedule_description;
-        $scope.scheduleModel.enabled      = data.schedule_enabled == "1" ? true : false;
+        $scope.scheduleModel.enabled      = !!(data.schedule_enabled == "1");
         $scope.scheduleModel.name         = data.schedule_name;
         $scope.scheduleModel.timer_typ    = data.schedule_timer_type;
         $scope.scheduleModel.timer_value  = data.schedule_timer_value;

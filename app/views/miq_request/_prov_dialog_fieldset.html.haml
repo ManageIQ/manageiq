@@ -5,6 +5,6 @@
     - prefix ||= "/miq_request/"
     - keys.each do |key|
       - locals = {:wf => workflow, :dialog => dialog, :field => key}
-      - locals[:disabled] = workflow.get_field(key, dialog)[:read_only] ? true : false
+      - locals[:disabled] = !!workflow.get_field(key, dialog)[:read_only]
       = render :partial => "#{prefix}prov_field", :locals => locals
   %hr

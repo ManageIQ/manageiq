@@ -1,7 +1,7 @@
 - url = url_for(:action => 'db_form_field_changed', :id => "#{@db.id || 'new'}")
 #form_div
   = render :partial => "layouts/flash_msg"
-  - read_only = @edit && @edit[:db_id] && @edit[:db_id] ? true : false
+  - read_only = !!(@edit && @edit[:db_id] && @edit[:db_id])
   %h3
     = _('Basic Information')
   .form-horizontal

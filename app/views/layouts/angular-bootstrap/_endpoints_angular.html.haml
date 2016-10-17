@@ -55,7 +55,7 @@
       %span.help-block{"ng-show" => "angularForm.#{prefix}_api_port.$error.detectedSpaces"}
         = _("Spaces are prohibited")
 
-%div{"ng-if" => defined?(database_name_show) ? true : false}
+%div{"ng-if" => !!defined?(database_name_show)}
   .form-group{"ng-class" => "{'has-error': angularForm.#{prefix}_database_name.$invalid}",
     "ng-if" => "emsCommonModel.emstype == 'rhevm'"} |
     %label.col-md-2.control-label{"for" => "#{prefix}_database_name"}
@@ -66,7 +66,7 @@
                           "name"          => "#{prefix}_database_name",
                           "ng-model"      => "#{ng_model}.#{prefix}_database_name",
                           "maxlength"     => 40,
-                          "required"      => defined?(database_name_required) ? true : false,
+                          "required"      => !!defined?(database_name_required),
                           "checkchange"   => "",
                           "ng-trim"       => false,
                           "detect-spaces" => ""}
