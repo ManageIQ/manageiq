@@ -1,5 +1,5 @@
 = render :partial => 'layouts/doctype'
-%html{:class => "layout-pf layout-pf-fixed transitions", :lang => I18n.locale.to_s.sub('-', '_')}
+%html.layout-pf.layout-pf-fixed.transitions{:lang => I18n.locale.to_s.sub('-', '_')}
   - if @report_only
     %head
       %title CloudForms Management Engine: #{@layout.titleize}
