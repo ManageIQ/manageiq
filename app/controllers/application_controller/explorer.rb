@@ -140,8 +140,8 @@ module ApplicationController::Explorer
 
   private ############################
 
-  def generic_x_button(whitelist, action = nil)
-    @sb[:action] = action = params[:pressed] unless action
+  def generic_x_button(whitelist)
+    @sb[:action] = action = params[:pressed]
 
     unless whitelist.key?(action)
       raise ActionController::RoutingError, _('invalid button action')
