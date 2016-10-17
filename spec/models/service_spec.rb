@@ -1,5 +1,5 @@
 describe Service do
-  include_examples "miq ownership"
+  include_examples "OwnershipMixin"
 
   context "service events" do
     before do

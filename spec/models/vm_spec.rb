@@ -1,5 +1,5 @@
 describe Vm do
-  include_examples "miq ownership"
+  include_examples "OwnershipMixin"
 
   it "#corresponding_model" do
     expect(Vm.corresponding_model).to eq(MiqTemplate)
