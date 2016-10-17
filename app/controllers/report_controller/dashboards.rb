@@ -350,7 +350,7 @@ module ReportController::Dashboards
     @timezone_abbr = get_timezone_abbr
     @edit = {}
     @edit[:db_id] = @db.id
-    @edit[:read_only] = @db.read_only.to_boolean
+    @edit[:read_only] = !!@db.read_only
 
     # Remember how this edit started
     @edit[:type] = params[:id] ? "db_edit" : "db_new"

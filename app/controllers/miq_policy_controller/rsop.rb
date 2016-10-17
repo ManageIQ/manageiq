@@ -81,7 +81,7 @@ module MiqPolicyController::Rsop
     @rsop_event_sets = MiqEventDefinitionSet.find(@sb[:rsop][:event]).miq_event_definitions.collect { |e| [e.description, e.id.to_s] }.sort unless @sb[:rsop][:event].nil?
     render :update do |page|
       page << javascript_prologue
-      session[:changed] = (@sb[:rsop][:filter_value] && @sb[:rsop][:event_value]).to_boolean
+      session[:changed] = !!(@sb[:rsop][:filter_value] && @sb[:rsop][:event_value])
       page.replace("rsop_form_div", :partial => "rsop_form")
       if session[:changed]
         page << javascript_hide("form_buttons_off")

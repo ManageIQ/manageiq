@@ -18,7 +18,7 @@ class LdapServer < ApplicationRecord
   end
 
   def connected?
-    @ldap.to_boolean
+    !!@ldap
   end
 
   def verify_credentials

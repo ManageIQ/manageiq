@@ -281,7 +281,7 @@ module MiqAeMethodService
 
     def instance_exists?(path)
       _log.info "<< path=#{path.inspect}"
-      __find_instance_from_path(path).to_boolean
+      !!(__find_instance_from_path(path))
     end
 
     def instance_create(path, values_hash = {})

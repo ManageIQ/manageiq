@@ -303,7 +303,7 @@ module ReportController::Widgets
     @timezone_abbr = get_timezone_abbr
     @edit = {}
     @edit[:widget_id] = @widget.id
-    @edit[:read_only] = @widget.read_only.to_boolean
+    @edit[:read_only] = !!@widget.read_only
 
     # Remember how this edit started
     @edit[:type] = @widget.id ? "widget_edit" : "widget_new"

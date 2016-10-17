@@ -91,7 +91,7 @@ class Condition < ApplicationRecord
   end
 
   def self.do_eval(expr)
-    eval(expr).to_boolean
+    !!eval(expr)
   end
 
   def self.subst(expr, rec)
@@ -249,7 +249,7 @@ class Condition < ApplicationRecord
       return ref.registry_items.where("name LIKE ? ESCAPE ''", name + "%").exists?
     elsif ohash[:value_exists]
       rec = ref.registry_items.find_by_name(name)
-      return rec.to_boolean
+      return !!rec
     else
       rec = ref.registry_items.find_by_name(name)
     end

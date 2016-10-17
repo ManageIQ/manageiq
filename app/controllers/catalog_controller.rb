@@ -778,7 +778,7 @@ class CatalogController < ApplicationController
     @edit[:new][:description] = params[:description] if params[:description]
     @edit[:new][:type] = params[:type] if params[:type]
     @edit[:new][:content] = params[:content] if params[:content]
-    @edit[:new][:draft] = params[:draft].to_boolean if params[:draft]
+    @edit[:new][:draft] = params[:draft] == "true" if params[:draft]
     @edit[:new][:manager_id] = params[:manager_id] if params[:manager_id]
     @edit[:new][:available_managers] = available_orchestration_managers_for_template_type(params[:type])
 
@@ -957,7 +957,7 @@ class CatalogController < ApplicationController
   def ot_edit_get_form_vars
     @edit[:new][:name] = params[:name] if params[:name]
     @edit[:new][:description] = params[:description] if params[:description]
-    @edit[:new][:draft] = params[:draft].to_boolean if params[:draft]
+    @edit[:new][:draft] = params[:draft] == "true" if params[:draft]
     @edit[:new][:dialog_name] = params[:dialog_name] if params[:dialog_name]
     @edit[:new][:manager_id] = params[:manager_id] if params[:manager_id]
   end

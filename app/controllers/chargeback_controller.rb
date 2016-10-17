@@ -164,7 +164,7 @@ class ChargebackController < ApplicationController
     when "reset", nil # displaying edit from for actions: new, edit or copy
       @in_a_form = true
       @_params[:id] ||= find_checked_items[0]
-      session[:changed] = (params[:typ] == "copy").to_boolean
+      session[:changed] = params[:typ] == "copy"
 
       @rate = params[:typ] == "new" ? ChargebackRate.new : ChargebackRate.find(params[:id])
       @record = @rate
