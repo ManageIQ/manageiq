@@ -205,17 +205,23 @@ module EmsRefresh::SaveInventory
     store_ids_for_new_records(hardware.guest_devices, hashes, [:device_type, :uid_ems])
   end
 
-  def save_disks_inventory(hardware, hashes)
+  def save_disks_inventory(parent, hashes)
     return if hashes.nil?
 
     # Update the associated ids
     hashes.each do |h|
-      h[:storage_id]         = h.fetch_path(:storage, :id)
+      if h[:storage_id].nil?
+        h[:storage_id] = h.fetch_path(:storage, :id)
+      end
       h[:backing_id]         = h.fetch_path(:backing, :id)
       h[:storage_profile_id] = h.fetch_path(:storage_profile, :id)
     end
 
-    save_inventory_multi(hardware.disks, hashes, :use_association, [:controller_type, :location], nil, [:storage, :backing, :storage_profile])
+    filenames = hashes.collect { |h| h[:filename] }
+
+    all_disks = Disk.where(:filename => filenames)
+    save_inventory_multi_child(:disks, all_disks, parent, hashes, [:controller_type, :location, :device_type],
+                               [:storage, :backing, :storage_profile])
   end
 
   def save_network_inventory(guest_device, hash)

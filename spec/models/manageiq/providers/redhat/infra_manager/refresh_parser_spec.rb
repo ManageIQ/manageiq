@@ -28,7 +28,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::RefreshParser do
         }
       ]}
 
-      result = ManageIQ::Providers::Redhat::InfraManager::RefreshParser.vm_inv_to_disk_hashes(disk_inv, {})
+      result = ManageIQ::Providers::Redhat::InfraManager::RefreshParser.storage_inv_to_disk_hashes(disk_inv, {})
       hashes = result.collect do |d|
         {:interface   => d[:controller_type],
          :location    => d[:location],
