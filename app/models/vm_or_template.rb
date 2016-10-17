@@ -8,8 +8,6 @@ class VmOrTemplate < ApplicationRecord
   include SupportsFeatureMixin
   include VirtualTotalMixin
 
-  extend InterRegionApiMethodRelay
-
   self.table_name = 'vms'
 
   include_concern 'Operations'
