@@ -10,7 +10,7 @@ describe ApplicationHelper::Button::MiqActionModify do
         view_context = setup_view_context_with_sandbox({})
         button = described_class.new(view_context, {}, {'record' => @record}, {})
         button.instance_variable_set(:@sb, {:active_tree => :event_tree})
-        allow(button).to receive(:x_active_tree).and_return(:event_tree)
+        allow(view_context).to receive(:x_active_tree).and_return(:event_tree)
         allow(button).to receive(:role_allows?).and_return(true)
         expect(button.visible?).to be_falsey
       end
@@ -19,7 +19,7 @@ describe ApplicationHelper::Button::MiqActionModify do
         view_context = setup_view_context_with_sandbox({})
         button = described_class.new(view_context, {}, {'record' => @record}, {})
         button.instance_variable_set(:@sb, {:active_tree => :policy_tree})
-        allow(button).to receive(:x_active_tree).and_return(:policy_tree)
+        allow(view_context).to receive(:x_active_tree).and_return(:policy_tree)
         allow(button).to receive(:role_allows?).and_return(true)
         expect(button.visible?).to be_truthy
       end

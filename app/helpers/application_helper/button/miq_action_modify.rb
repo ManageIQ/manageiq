@@ -18,6 +18,6 @@ class ApplicationHelper::Button::MiqActionModify < ApplicationHelper::Button::Ba
   end
 
   def visible?
-    x_active_tree != :event_tree && role_allows?(:feature => 'event_edit')
+    @view_context.x_active_tree != :event_tree && role_allows?(:feature => 'event_edit')
   end
 end
