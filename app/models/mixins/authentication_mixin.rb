@@ -227,12 +227,13 @@ module AuthenticationMixin
     options[:role] = role if role
     options[:zone] = zone if zone
 
-    MiqQueue.put_unless_exists(options) do |msg|
+    MiqQueue.put_unless_exists(options.except(:deliver_on)) do |msg|
       # TODO: Refactor the help in this and the ScheduleWorker#queue_work method into the merge method
       help = "Check for a running server"
       help << " in zone: [#{options[:zone]}]"   if options[:zone]
       help << " with role: [#{options[:role]}]" if options[:role]
       _log.warn("Previous authentication_check_types for [#{name}] [#{id}] with opts: [#{options[:args].inspect}] is still running, skipping...#{help}") unless msg.nil?
+      options
     end
   end
 

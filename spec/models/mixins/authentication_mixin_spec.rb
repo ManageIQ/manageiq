@@ -170,17 +170,34 @@ describe AuthenticationMixin do
         end
 
         it "retries" do
+          time = Time.new(2015, 1, 2, 0, 0, 0, 0)
+          Timecop.freeze(time) do
+            Host.authentication_check_schedule
+            allow_any_instance_of(Host).to receive(:verify_credentials).and_raise
+            msg = MiqQueue.find_by(:method_name => 'authentication_check_types', :class_name => 'Host')
+            msg.delivered(*msg.deliver)
+
+            msg = MiqQueue.find_by(:method_name => 'authentication_check_types', :class_name => 'Host')
+            expect(msg.args.last).to eq(:attempt => 2)
+            expect(msg.deliver_on).to be_within(0.1).of(time + 2.minutes)
+            msg.delivered(*msg.deliver)
+
+            msg = MiqQueue.find_by(:method_name => 'authentication_check_types', :class_name => 'Host')
+            expect(msg.args.last).to eq(:attempt => 3)
+            expect(msg.deliver_on).to be_within(0.1).of(time + 4.minutes)
+          end
+        end
+
+        it "skips if there is an existing attempt in the queue" do
           Host.authentication_check_schedule
-          allow_any_instance_of(Host).to receive(:verify_credentials).and_raise
-          msg = MiqQueue.find_by(:method_name => 'authentication_check_types', :class_name => 'Host')
-          msg.delivered(*msg.deliver)
+          messages = MiqQueue.where(:method_name => 'authentication_check_types', :class_name => 'Host')
+          expect(messages.count).to eq(1)
+          expect(messages.first.args.last).to eq(:attempt => 1)
 
-          msg = MiqQueue.find_by(:method_name => 'authentication_check_types', :class_name => 'Host')
-          expect(msg.args.last).to eq({:attempt => 2})
-          msg.delivered(*msg.deliver)
-
-          msg = MiqQueue.find_by(:method_name => 'authentication_check_types', :class_name => 'Host')
-          expect(msg.args.last).to eq({:attempt => 3})
+          Host.authentication_check_schedule
+          messages = MiqQueue.where(:method_name => 'authentication_check_types', :class_name => 'Host')
+          expect(messages.count).to eq(1)
+          expect(messages.first.args.last).to eq(:attempt => 1)
         end
       end
     end
