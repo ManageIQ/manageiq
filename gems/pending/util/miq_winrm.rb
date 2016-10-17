@@ -3,11 +3,12 @@ require 'winrm-elevated'
 
 class MiqWinRM
   WMI_RETRIES = 2
-  attr_reader :uri, :username, :password, :hostname, :port, :connection, :executor
+  attr_reader :uri, :username, :password, :hostname, :port, :connection
 
   def initialize
     @port            = 5985
-    @elevated_runner = @executor = nil
+    @shell           = nil
+    @elevated_runner = nil
     require 'uri'
   end
 
@@ -17,25 +18,30 @@ class MiqWinRM
 
   def connect(options = {})
     validate_options(options)
-    @uri        = build_uri
-    @connection = raw_connect(@username, @password, @uri)
+    options[:endpoint] = build_uri
+    @options           = options
+    @connection        = raw_connect(options)
+  end
+
+  def close
+    @shell.close if @shell
   end
 
   def execute
-    @executor = @connection.create_executor
+    @shell = @connection.shell(:powershell)
   end
 
   def elevate
-    execute if @executor.nil?
-    @elevated_runner = WinRM::Elevated::Runner.new(@executor)
+    @shell           = @connection.shell(:elevated)
+    @elevated_runner = true
   end
 
   def run_powershell_script(script)
     wmi_error_retries = 0
     begin
-      execute if @executor.nil?
+      execute if @shell.nil?
       $log.debug "Running powershell script on #{hostname} as #{username}:\n#{script}" if $log
-      @executor.run_powershell_script(script)
+      @shell.run(script)
     rescue WinRM::WinRMAuthorizationError
       $log.info "Error Logging In to #{hostname} using user \"#{username}\"" if $log
       raise
@@ -45,10 +51,10 @@ class MiqWinRM
       wmi_error_retries += 1
       if error.to_s.include? "This user is allowed a maximum number of "
         $log.debug "Re-opening connection and retrying" if $log
-        @executor.close
-        @executor        = nil
-        @connection      = raw_connect(@username, @password, @uri) if @elevated_runner
-        @elevated_runner = nil
+        @shell.close
+        @shell      = nil
+        @connection = raw_connect(@options)
+        execute
         retry
       else
         raise
@@ -61,7 +67,7 @@ class MiqWinRM
     begin
       elevate if @elevated_runner.nil?
       $log.debug "Running powershell script elevated on #{hostname} as #{username}:\n#{script}" if $log
-      @elevated_runner.powershell_elevated(script, @username, @password)
+      @shell.run(script)
     rescue WinRM::WinRMAuthorizationError
       $log.info "Error Logging In to #{hostname} using user \"#{username}\"" if $log
       raise
@@ -71,10 +77,9 @@ class MiqWinRM
       wmi_error_retries += 1
       if error.to_s.include? "This user is allowed a maximum number of "
         $log.debug "Re-opening connection and retrying" if $log
-        @connection      = raw_connect(@username, @password, @uri)
+        @shell.close
+        @connection      = raw_connect(@options)
         @elevated_runner = nil
-        @executor.close if @executor
-        @executor = nil
         retry
       else
         raise
@@ -104,15 +109,15 @@ class MiqWinRM
 
   def validate_options(options)
     raise "no Username defined" if options[:user].nil?
-    raise "no Password defined" if options[:pass].nil?
+    raise "no Password defined" if options[:password].nil?
     raise "no Hostname defined" if options[:hostname].nil?
     @username = options[:user]
-    @password = options[:pass]
+    @password = options[:password]
     @hostname = options[:hostname]
     @port     = options[:port] unless options[:port].nil?
   end
 
-  def raw_connect(user, pass, uri)
+  def raw_connect(opts)
     # HACK: WinRM depends on the gssapi gem for encryption purposes.
     # The gssapi code outputs the following warning:
     #   WARNING: Could not load IOV methods. Check your GSSAPI C library for an update
@@ -122,6 +127,6 @@ class MiqWinRM
     # above warning when rspec tests are run.
     # silence_warnings { require 'winrm' }
 
-    WinRM::WinRMWebService.new(uri, :ssl, :user => user, :pass => pass, :disable_sspi => true)
+    WinRM::Connection.new(opts)
   end
 end

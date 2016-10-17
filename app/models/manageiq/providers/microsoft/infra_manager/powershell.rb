@@ -9,15 +9,14 @@ class ManageIQ::Providers::Microsoft::InfraManager
 
       def run_powershell_script(connection, script)
         log_header = "MIQ(#{self.class.name}.#{__method__})"
-        File.open(script, "r") do |file|
-          begin
-            results = connection.create_executor { |exec| exec.run_powershell_script(file) }
-            log_dos_error_results(results)
-            results
-          rescue Errno::ECONNREFUSED => err
-            $scvmm_log.error "MIQ(#{log_header} Unable to connect to SCVMM. #{err.message})"
-            raise
-          end
+        script_string = IO.read(script)
+        begin
+          results = connection.shell(:powershell).run(script_string)
+          log_dos_error_results(results)
+          results
+        rescue Errno::ECONNREFUSED => err
+          $scvmm_log.error "MIQ(#{log_header} Unable to connect to SCVMM. #{err.message})"
+          raise
         end
       end
 
@@ -76,7 +75,7 @@ class ManageIQ::Providers::Microsoft::InfraManager
 
       _result, timings = Benchmark.realtime_block(:execution) do
         with_provider_connection do |connection|
-          results = connection.run_cmd(command)
+          results = connection.shell(:cmd).run(command)
           self.class.log_dos_error_results(results)
         end
       end
@@ -93,7 +92,8 @@ class ManageIQ::Providers::Microsoft::InfraManager
 
       _result, timings = Benchmark.realtime_block(:execution) do
         with_provider_connection do |connection|
-          results = connection.create_executor { |exec| exec.run_powershell_script(script) }
+          script_string = IO.read(script)
+          results = connection.shell(:powershell).run(script_string)
           self.class.log_dos_error_results(results)
         end
       end

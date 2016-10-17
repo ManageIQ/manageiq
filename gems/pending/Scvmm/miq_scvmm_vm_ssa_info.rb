@@ -12,11 +12,15 @@ class MiqScvmmVmSSAInfo
     @vhd_type    = nil
     @winrm       = MiqWinRM.new
     winrmport    = port.nil? ? 5985 : port
-    options      = {:port => winrmport, :user => user, :pass => pass, :hostname => provider}
+    options      = {:port => winrmport, :user => user, :password => pass, :hostname => provider}
     @elevated    = nil
 
     @winrm.connect(options)
     @parser = MiqScvmmParsePowershell.new
+  end
+
+  def close
+    @winrm.close
   end
 
   # Note the following method returns *all* hard disks and some common attributes from the Hyper-V host

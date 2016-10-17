@@ -21,7 +21,7 @@ class MiqHyperVDisk
     @hostname  = hyperv_host
     @winrm     = MiqWinRM.new
     port ||= 5985
-    @winrm.connect(:port => port, :user => user, :pass => pass, :hostname => @hostname)
+    @winrm.connect(:port => port, :user => user, :password => pass, :hostname => @hostname)
     @parser       = MiqScvmmParsePowershell.new
     @block_size   = 4096
     @file_size    = 0
@@ -35,10 +35,20 @@ class MiqHyperVDisk
   def open(vm_disk)
     @virtual_disk  = vm_disk
     @file_offset   = 0
+
+    unless @network
+      open_script = <<-OPEN_EOL
+$file_stream   = [System.IO.File]::Open("#{@virtual_disk}", "Open", "Read", "Read")
+$file_stream.seek(0, 0)
+OPEN_EOL
+      @winrm.run_powershell_script(open_script)
+    end
+
     stat_script = <<-STAT_EOL
-    (Get-Item "#{@virtual_disk}").length
+(Get-Item "#{@virtual_disk}").length
 STAT_EOL
     file_size, stderr = @parser.parse_single_powershell_value(run_correct_powershell(stat_script))
+
     if @network && stderr.include?("RegisterTaskDefinition")
       raise "Unable to obtain virtual disk size for #{vm_disk}. Check Hyper-V Host Domain Credentials"
     end
@@ -57,6 +67,13 @@ STAT_EOL
   def close
     hit_or_miss if DEBUG_CACHE_STATS
     @file_offset = 0
+    unless @network
+      close_script = <<-CLOSE_EOL
+$file_stream.Close()
+CLOSE_EOL
+      run_correct_powershell(close_script)
+    end
+    @winrm.close
     @winrm = nil
   end
 
@@ -155,22 +172,44 @@ STAT_EOL
     return nil if start_sector > @lba_end
     number_sectors = @size_in_blocks - start_sector if (start_sector + number_sectors) > @size_in_blocks
     expected_bytes = number_sectors * @block_size
-    read_script = <<-READ_EOL
+    read_script    = if @network
+
+                       <<-READ_NETWORK_EOL
 $file_stream   = [System.IO.File]::Open("#{@virtual_disk}", "Open", "Read", "Read")
 $bufsize       = #{number_sectors * @block_size}
 $buffer        = New-Object System.Byte[] $bufsize
 $encodedbuflen = $bufsize * 4 / 3
 if (($encodedbuflen % 4) -ne 0)
 {
-  $encodedbuflen += 4 - ($encodedbuflen % 4)
+$encodedbuflen += 4 - ($encodedbuflen % 4)
 }
 $encodedarray = New-Object Char[] $encodedbuflen
 $file_stream.seek(#{start_sector * @block_size}, 0)
 $file_stream.read($buffer, 0, #{expected_bytes})
+[System.Convert]::ToBase64CharArray($buffer, 0, $bufsize, $encodedarray, 0)
+[string]::join("", $encodedarray)
 $file_stream.Close()
+READ_NETWORK_EOL
+                     else
+
+                       <<-READ_EOL
+if ($bufsize -ne #{number_sectors * @block_size})
+{
+  $bufsize       = #{number_sectors * @block_size}
+  $buffer        = New-Object System.Byte[] $bufsize
+  $encodedbuflen = $bufsize * 4 / 3
+  if (($encodedbuflen % 4) -ne 0)
+  {
+    $encodedbuflen += 4 - ($encodedbuflen % 4)
+  }
+  $encodedarray = New-Object Char[] $encodedbuflen
+}
+$file_stream.seek(#{start_sector * @block_size}, 0)
+$file_stream.read($buffer, 0, #{expected_bytes})
 [System.Convert]::ToBase64CharArray($buffer, 0, $bufsize, $encodedarray, 0)
 [string]::join("", $encodedarray)
 READ_EOL
+                     end
 
     i = 0
     (0...BREAD_RETRIES).each do

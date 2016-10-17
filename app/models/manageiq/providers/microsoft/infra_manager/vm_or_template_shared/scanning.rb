@@ -89,6 +89,8 @@ module ManageIQ::Providers::Microsoft::InfraManager::VmOrTemplateShared::Scannin
         msg = "#{log_text} failed for VM:[#{vm_name}] with error [#{err}] after [#{Time.now.getlocal - st}] seconds"
         $log.error msg
         raise err, msg, err.backtrace
+      ensure
+        ost.miq_scvmm.close
       end
     end
   end
