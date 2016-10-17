@@ -42,6 +42,7 @@ module PostgresHaAdmin
 
       if execute_failover
         start_evmserverd
+        failover_successful
       else
         @logger.error("Failover failed")
       end
@@ -65,7 +66,22 @@ module PostgresHaAdmin
       servers.map! { |info| db_yml_params.merge(info) }
     end
 
+    def failover_successful
+      queue_failover_executed_event
+    end
+
     private
+
+    def queue_failover_executed_event
+      connection = pg_connection(@database_yml.pg_params_from_database_yml)
+      connection.exec(<<-SQL)
+        INSERT INTO
+          miq_queue(priority, method_name, state, queue_name, class_name)
+        VALUES
+          (100, 'raise_failover_executed_event', 'ready', 'generic', 'MiqServer')
+      SQL
+      connection.finish
+    end
 
     def initialize_settings(ha_admin_yml_file)
       begin

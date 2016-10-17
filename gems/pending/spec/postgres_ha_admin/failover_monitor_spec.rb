@@ -109,6 +109,7 @@ failover_attempts: 20
 
       it "updates 'database.yml' and 'failover_databases.yml' and restart evm server if new primary db available" do
         failover_executed
+        expect(failover_monitor).to receive(:failover_successful)
         expect(PostgresAdmin).to receive(:database_in_recovery?).and_return(false)
         expect(failover_db).to receive(:host_is_repmgr_primary?).and_return(true)
         failover_monitor.monitor
@@ -130,6 +131,45 @@ failover_attempts: 20
       expect(failover_db).to receive(:active_databases_conninfo_hash).and_return(active_servers_conninfo)
       expect(db_yml).to receive(:pg_params_from_database_yml).and_return(settings_from_db_yml)
       expect(failover_monitor.active_servers_conninfo).to match_array(expected_conninfo)
+    end
+  end
+
+  describe "#failover_successful" do
+    before do
+      begin
+        @connection = PG::Connection.open(:dbname => 'travis', :user => 'travis')
+      rescue PG::ConnectionBad
+        skip "travis database does not exist"
+      end
+      @connection.exec("START TRANSACTION")
+
+      @connection.exec(<<-SQL)
+        CREATE TABLE miq_queue (
+          priority integer,
+          method_name text,
+          state text,
+          queue_name text,
+          class_name text
+        )
+      SQL
+    end
+
+    after do
+      if @connection
+        @connection.exec("ROLLBACK")
+        @connection.finish
+      end
+    end
+
+    it "queue request to raise  'db_failover_executed' event" do
+      allow(PG::Connection).to receive(:open).and_return(@connection)
+      allow(@connection).to receive(:finish)
+      allow(db_yml).to receive(:pg_params_from_database_yml)
+      failover_monitor.failover_successful
+
+      record = @connection.exec("SELECT method_name, class_name FROM miq_queue")[0]
+      expect(record['method_name']).to eq "raise_failover_executed_event"
+      expect(record['class_name']).to eq "MiqServer"
     end
   end
 
