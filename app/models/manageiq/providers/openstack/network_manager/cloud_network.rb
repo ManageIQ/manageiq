@@ -71,6 +71,8 @@ class ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork < ::CloudNetw
     connection_options
   end
 
+  private
+
   def connection_options(cloud_tenant = nil)
     self.class.connection_options(cloud_tenant)
   end
