@@ -22,7 +22,7 @@
           :javascript
             $(":file").filestyle({icon: false, placeholder: "No file chosen"});
         .col-md-6
-          = submit_tag(_("Upload"), :id => "upload-datastore-import", :class => "upload btn btn-default")
+          = submit_tag(_("Upload"), :id => "upload-datastore-import", :class => "upload btn btn-default", :disabled => true)
 
   %hr
   %h3
@@ -149,6 +149,10 @@
 :javascript
   $(function() {
     miqInitSelectPicker();
+
+    $("#upload_file").on("change", function() {
+      ImportSetup.setUpUploadImportButton('#upload-datastore-import')
+    });
 
     $('#upload-datastore-import').click(function() {
       miqSparkleOn();
