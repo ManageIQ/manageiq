@@ -1912,10 +1912,13 @@ class MiqVimInventory < MiqVimClientBase
       @cacheLock.sync_lock(:EX) if (unlock = @cacheLock.sync_shared?)
 
       $vim_log.info "MiqVimInventory(#{@server}, #{@username}).inventoryHash_locked: calling retrieveProperties" if $vim_log
-      rv = retrievePropertiesCompat(@propCol, @spec)
-      $vim_log.info "MiqVimInventory(#{@server}, #{@username}).inventoryHash_locked: returned from retrieveProperties" if $vim_log
+
       @inventoryHash = {}
-      rv.each { |v| (@inventoryHash[v.obj.vimType] ||= []) << v.obj }
+      retrievePropertiesIter(@propCol, @spec) do |oc|
+        (@inventoryHash[oc.obj.vimType] ||= []) << oc.obj
+      end
+
+      $vim_log.info "MiqVimInventory(#{@server}, #{@username}).inventoryHash_locked: returned from retrieveProperties" if $vim_log
     ensure
       @cacheLock.sync_unlock if unlock
     end
@@ -2326,17 +2329,9 @@ class MiqVimInventory < MiqVimClientBase
       end
     end
 
-    begin
-      oca = retrievePropertiesCompat(@propCol, args)
-    rescue HTTPClient::ReceiveTimeoutError => rte
-      $vim_log.info "MiqVimInventory(#{@server}, #{@username}).getMoPropMulti: retrieveProperties timed out, reverting to getMoPropMultiIter" if $vim_log
-      return getMoPropMultiIter(moa, path)
-    end
+    oca = VimArray.new('ArrayOfObjectContent')
 
-    return [] unless oca
-
-    oca = VimArray.new { |va| va << oca } unless oca.kind_of?(Array)
-    oca.each do |oc|
+    retrievePropertiesIter(@propCol, args) do |oc|
       oc.MOR = oc.obj
       oc.delete('obj')
 
@@ -2360,6 +2355,8 @@ class MiqVimInventory < MiqVimClientBase
         end
       end # oc.propSet.each
       oc.delete('propSet')
+
+      oca << oc
     end
 
     oca
