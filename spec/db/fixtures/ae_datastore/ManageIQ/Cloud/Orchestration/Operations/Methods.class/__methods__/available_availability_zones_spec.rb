@@ -17,6 +17,7 @@ describe AvailableAvailabilityZones do
 
     it "provides only the no availability zones info" do
       described_class.new(ae_service).main
+
       expect(ae_service.object["values"]).to eq(nil => default_desc_none)
       expect(ae_service.object["default_value"]).to eq(nil)
     end
@@ -30,6 +31,7 @@ describe AvailableAvailabilityZones do
 
     it "provides only the no availability zones info" do
       described_class.new(ae_service).main
+
       expect(ae_service.object["values"]).to eq(nil => default_desc_none)
       expect(ae_service.object["default_value"]).to eq(nil)
     end
@@ -42,6 +44,7 @@ describe AvailableAvailabilityZones do
 
       it "finds the single availability zone and populates the list" do
         described_class.new(ae_service).main
+
         expect(ae_service.object["values"]).to eq(az1.ems_ref => az1.name)
         expect(ae_service.object["default_value"]).to eq(az1.ems_ref)
       end
@@ -54,6 +57,7 @@ describe AvailableAvailabilityZones do
 
       it "finds all the availability zones and populates the list" do
         described_class.new(ae_service).main
+
         expect(ae_service.object["values"]).to include(
           nil         => default_desc_multiple,
           az2.ems_ref => az2.name,
@@ -68,6 +72,7 @@ describe AvailableAvailabilityZones do
 
       it "provides only default value to the availability zones list" do
         described_class.new(ae_service).main
+
         expect(ae_service.object["values"]).to eq(nil => default_desc_none)
         expect(ae_service.object["default_value"]).to eq(nil)
       end

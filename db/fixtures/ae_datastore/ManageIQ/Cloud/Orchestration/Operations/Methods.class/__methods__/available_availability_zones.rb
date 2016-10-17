@@ -13,7 +13,10 @@ class AvailableAvailabilityZones
   def fetch_list_data
     service = @handle.root.attributes["service_template"] || @handle.root.attributes["service"]
     av_zones = service.try(:orchestration_manager).try(:availability_zones)
-    az_list = av_zones.each_with_object({}) { |az, hash| hash[az.ems_ref] = az.name } if av_zones
+
+    # avoid each_with_object method due to drb limitation
+    az_list = {}
+    av_zones.each { |az| az_list[az.ems_ref] = az.name } if av_zones
 
     return nil => "<none>" if az_list.blank?
 
