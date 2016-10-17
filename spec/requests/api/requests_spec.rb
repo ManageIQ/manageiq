@@ -67,7 +67,7 @@ RSpec.describe "Requests API" do
 
       expect(response).to have_http_status(:ok)
       expect(response.parsed_body).to include("id"   => service_request.id,
-                                       "href" => a_string_matching(service_requests_url(service_request.id)))
+                                              "href" => a_string_matching(service_requests_url(service_request.id)))
     end
 
     it "lists all the service requests if you are admin" do
@@ -121,66 +121,69 @@ RSpec.describe "Requests API" do
     it "is forbidden for a user to create a request without appropriate role" do
       api_basic_authorize
 
-      run_post(requests_url, gen_request(:create, :service_type => "ServiceReconfigureRequest"))
+      run_post(requests_url, gen_request(:create, :options => { :request_type => "service_reconfigure" }))
 
       expect(response).to have_http_status(:forbidden)
     end
 
-    it "is forbidden for a user to create a request without a different request role" do
-      api_basic_authorize collection_action_identifier(:requests, :create),
-                          MiqRequest::REQUEST_TYPE_ROLE_IDENTIFIER[:VmReconfigureRequest]
+    it "is forbidden for a user to create a request with a different request role" do
+      api_basic_authorize :vm_reconfigure
 
-      run_post(requests_url, gen_request(:create, :request_type => "ServiceReconfigureRequest"))
+      run_post(requests_url, gen_request(:create, :options => { :request_type => "service_reconfigure" }))
 
       expect(response).to have_http_status(:forbidden)
     end
 
     it "fails if the request_type is missing" do
-      api_basic_authorize collection_action_identifier(:requests, :create)
+      api_basic_authorize
 
-      run_post(requests_url, gen_request(:create, :src_id => 4))
+      run_post(requests_url, gen_request(:create, :options => { :src_id => 4 }))
 
-      expect_bad_request(/Must specify a request_type/)
+      expect_bad_request(/Invalid request - /)
     end
 
     it "fails if the request_type is unknown" do
-      api_basic_authorize collection_action_identifier(:requests, :create)
+      api_basic_authorize
 
-      run_post(requests_url, gen_request(:create, :request_type => "InvalidRequest"))
+      run_post(requests_url, gen_request(:create,
+                                         :options => {
+                                           :request_type => "invalid_request"
+                                         }))
 
-      expect_bad_request(/Invalid Request Type InvalidRequest specified/)
+      expect_bad_request(/Invalid request - /)
     end
 
     it "fails if the request is missing a src_id" do
-      api_basic_authorize collection_action_identifier(:requests, :create),
-                          MiqRequest::REQUEST_TYPE_ROLE_IDENTIFIER[:ServiceReconfigureRequest]
+      api_basic_authorize :service_reconfigure
 
-      run_post(requests_url, gen_request(:create, :request_type => "ServiceReconfigureRequest"))
+      run_post(requests_url, gen_request(:create, :options => { :request_type => "service_reconfigure" }))
 
-      expect_bad_request(/Must specify a resource src_id or src_ids/)
+      expect_bad_request(/Could not create the request - /)
     end
 
     it "fails if the requester is invalid" do
-      api_basic_authorize collection_action_identifier(:requests, :create),
-                          MiqRequest::REQUEST_TYPE_ROLE_IDENTIFIER[:ServiceReconfigureRequest]
+      api_basic_authorize :service_reconfigure
 
       run_post(requests_url, gen_request(:create,
-                                         :request_type => "ServiceReconfigureRequest",
-                                         :src_id       => 4,
-                                         :requester    => { "user_name" => "invalid_user"}))
+                                         :options   => {
+                                           :request_type => "service_reconfigure",
+                                           :src_id       => 4
+                                         },
+                                         :requester => { "user_name" => "invalid_user"}))
 
       expect_bad_request(/Unknown requester user_name invalid_user specified/)
     end
 
     it "succeed" do
-      api_basic_authorize collection_action_identifier(:requests, :create),
-                          MiqRequest::REQUEST_TYPE_ROLE_IDENTIFIER[:ServiceReconfigureRequest]
+      api_basic_authorize :service_reconfigure
 
       service = FactoryGirl.create(:service, :name => "service1")
       run_post(requests_url, gen_request(:create,
-                                         :request_type => "ServiceReconfigureRequest",
-                                         :auto_approve => false,
-                                         :src_id       => service.id))
+                                         :options      => {
+                                           :request_type => "service_reconfigure",
+                                           :src_id       => service.id
+                                         },
+                                         :auto_approve => false))
 
       expected = {
         "results" => [
@@ -198,17 +201,18 @@ RSpec.describe "Requests API" do
     end
 
     it "succeed immediately with optional data and auto_approve set to true" do
-      api_basic_authorize collection_action_identifier(:requests, :create),
-                          MiqRequest::REQUEST_TYPE_ROLE_IDENTIFIER[:ServiceReconfigureRequest]
+      api_basic_authorize :service_reconfigure
 
       approver = FactoryGirl.create(:user_miq_request_approver)
       service = FactoryGirl.create(:service, :name => "service1")
       run_post(requests_url, gen_request(:create,
-                                         :request_type => "ServiceReconfigureRequest",
+                                         :options      => {
+                                           :request_type => "service_reconfigure",
+                                           :src_id       => service.id,
+                                           :other_attr   => "other value"
+                                         },
                                          :requester    => { "user_name" => approver.userid },
-                                         :auto_approve => true,
-                                         :other_attr   => "other value",
-                                         :src_id       => service.id))
+                                         :auto_approve => true))
 
       expected = {
         "results" => [
@@ -238,7 +242,7 @@ RSpec.describe "Requests API" do
     it "fails with an invalid request id" do
       api_basic_authorize collection_action_identifier(:requests, :edit)
 
-      run_post(requests_url(999_999), gen_request(:edit, :some_option => "some_value"))
+      run_post(requests_url(999_999), gen_request(:edit, :options => { :some_option => "some_value" }))
 
       expected = {
         "error" => a_hash_including(
@@ -255,7 +259,7 @@ RSpec.describe "Requests API" do
       service = FactoryGirl.create(:service, :name => "service1")
       request = ServiceReconfigureRequest.create_request({ :src_id => service.id }, @user, false)
 
-      run_post(requests_url(request.id), gen_request(:edit, :some_option => "some_value"))
+      run_post(requests_url(request.id), gen_request(:edit, :options => { :some_option => "some_value" }))
 
       expected = {
         "id"      => request.id,

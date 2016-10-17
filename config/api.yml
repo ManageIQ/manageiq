@@ -940,7 +940,22 @@
       - :name: query
         :identifier: miq_request_show_list
       - :name: create
-        :identifier: miq_request_show_list
+        :identifiers:
+        - :klass: AutomationRequest
+        - :klass: MiqHostProvisionRequest
+          :identifier: host_miq_request_new
+        - :klass: MiqProvisionRequest
+          :identifier: vm_miq_request_new
+        - :klass: MiqProvisionConfiguredSystemRequest
+          :identifier: configured_system_provision
+        - :klass: VmReconfigureRequest
+          :identifier: vm_reconfigure
+        - :klass: VmMigrateRequest
+          :identifier: vm_migrate
+        - :klass: ServiceTemplateProvisionRequest
+          :identifier: svc_catalog_provision
+        - :klass: ServiceReconfigureRequest
+          :identifier: service_reconfigure
       - :name: edit
         :identifier: miq_request_edit
     :resource_actions:

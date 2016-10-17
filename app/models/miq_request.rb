@@ -74,16 +74,6 @@ class MiqRequest < ApplicationRecord
     }
   }
 
-  REQUEST_TYPE_ROLE_IDENTIFIER = {
-    :MiqProvisionRequest                 => "vm_miq_request_new",
-    :MiqProvisionConfiguredSystemRequest => "configured_system_provision",
-    :VmReconfigureRequest                => "vm_reconfigure",
-    :VmMigrateRequest                    => "vm_migrate",
-    :ServiceTemplateProvisionRequest     => "svc_catalog_provision",
-    :ServiceReconfigureRequest           => "service_reconfigure",
-    :MiqHostProvisionRequest             => "host_miq_request_new"
-  }.freeze
-
   REQUEST_TYPES_BACKEND_ONLY = {:MiqProvisionRequestTemplate => {:template => "VM Provision Template"}}
   REQUEST_TYPES = MODEL_REQUEST_TYPES.values.each_with_object(REQUEST_TYPES_BACKEND_ONLY) { |i, h| i.each { |k, v| h[k] = v } }
   REQUEST_TYPE_TO_MODEL = MODEL_REQUEST_TYPES.values.each_with_object({}) do |i, h|
