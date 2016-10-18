@@ -9,6 +9,8 @@ class ChargebackRateDetail < ApplicationRecord
   validates :group, :source, :chargeback_rate, :presence => true
   validate :contiguous_tiers?
 
+  delegate :rate_type, :to => :chargeback_rate, :allow_nil => true
+
   FORM_ATTRIBUTES = %i(description per_time per_unit metric group source metric).freeze
 
   # Set the rates according to the tiers
@@ -116,11 +118,6 @@ class ChargebackRateDetail < ApplicationRecord
 
   def per_unit_display
     detail_measure.nil? ? per_unit.to_s.capitalize : detail_measure.measures.key(per_unit)
-  end
-
-  def rate_type
-    # Return parent's rate type
-    chargeback_rate.rate_type unless chargeback_rate.nil?
   end
 
   # New method created in order to show the rates in a easier to understand way
