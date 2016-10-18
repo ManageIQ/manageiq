@@ -736,7 +736,7 @@ module OpsController::OpsRbac
     when :role  then
       rbac_role_validate?
       rbac_role_set_record_vars(
-        record = @edit[:user_id] ? User.find_by_id(@edit[:user_id]) : User.new)
+        record = @edit[:role_id] ? MiqUserRole.find_by_id(@edit[:role_id]) : MiqUserRole.new)
     end
 
     if record.valid? && !flash_errors? && record.save
