@@ -21,6 +21,10 @@ class MiqEventDefinition < ApplicationRecord
     where(:event_type => "Default")
   end
 
+  def self.all_control_events
+    all_events.where.not("name like ?", "%compliance_check").select { |e| e.etype }
+  end
+
   def miq_policies
     p_ids = MiqPolicyContent.where(:miq_event_definition_id => id).uniq.pluck(:miq_policy_id)
     MiqPolicy.where(:id => p_ids).to_a
@@ -63,9 +67,7 @@ class MiqEventDefinition < ApplicationRecord
   end
 
   def etype
-    set = memberof.first
-    raise "unexpected error, no type found for event #{name}" if set.nil?
-    set
+    memberof.first.tap { |set| _log.error("No type found for event #{name}") if set.nil? }
   end
 
   def self.etypes

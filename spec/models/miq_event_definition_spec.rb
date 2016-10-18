@@ -55,4 +55,48 @@ describe MiqEventDefinition do
       end
     end
   end
+
+  describe '#etype' do
+    it "returns event set type" do
+      set_type = 'set_testing'
+      set = MiqEventDefinitionSet.create(:name => set_type, :description => "Set testing")
+      event = FactoryGirl.create(:miq_event_definition, :name => "vm_start")
+      set.add_member(event)
+
+      expect(event.etype.name).to eq(set_type)
+    end
+
+    it "returns nil when not belong to any event set" do
+      event = FactoryGirl.create(:miq_event_definition, :name => "test_event")
+      expect(event.etype).to be_nil
+    end
+  end
+
+  describe '.all_control_events' do
+    subject { MiqEventDefinition.all_control_events }
+
+    before do
+      com_set = MiqEventDefinitionSet.create(:name => "compliance", :description => "Compliance Events")
+      FactoryGirl.create(:miq_event_definition,
+                         :name       => "host_compliance_check",
+                         :event_type => "Default").tap { |e| com_set.add_member(e) }
+    end
+
+    it 'has all default control policy events with set type' do
+      event = FactoryGirl.create(:miq_event_definition, :name => "some_event", :event_type => "Default")
+      set   = MiqEventDefinitionSet.create(:name => "evm_operations", :description => "EVM Events")
+      set.add_member(event)
+
+      expect(subject.include?(event)).to be true
+    end
+
+    it 'has not the events for compliance policy' do
+      expect(subject.any? { |e| e.name.ends_with?("compliance_check") }).to be false
+    end
+
+    it 'has not the events without a set type' do
+      event = FactoryGirl.create(:miq_event_definition, :name => "test_event", :event_type => "Default")
+      expect(subject.include?(event)).to be false
+    end
+  end
 end
