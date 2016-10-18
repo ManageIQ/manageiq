@@ -140,6 +140,10 @@ module VmCommon
     !User.current_user.settings.fetch_path(:display, :display_vms) # default value is false
   end
 
+  def vm_selected
+    @vm.present?
+  end
+
   def launch_html5_console
     proto = request.ssl? ? 'wss' : 'ws'
     override_content_security_policy_directives(
@@ -1102,7 +1106,7 @@ module VmCommon
     end
 
     unless @unauthorized
-      self.x_node = if @vm.present? && hide_vms
+      self.x_node = if vm_selected && hide_vms
                       parent_folder_id(@vm)
                     else
                       params[:id]
@@ -1219,19 +1223,20 @@ module VmCommon
     nodetype, id = id.split("-")
 
     if hide_vms && (nodetype == 'v' || nodetype == 't')
-      self.x_node = parent_folder_id(VmOrTemplate.find(id))
       @vm = VmOrTemplate.find(id)
+      self.x_node = parent_folder_id(@vm)
     else
       self.x_node = "#{nodetype}-#{to_cid(id)}"
     end
     get_node_info("#{nodetype}-#{to_cid(id)}")
   end
+  public :resolve_node_info
 
   # Get all info for the node about to be displayed
   def get_node_info(treenodeid)
     # resetting action that was stored during edit to determine what is being edited
     @sb[:action] = nil
-    @nodetype, id = if @vm.present? && hide_vms
+    @nodetype, id = if vm_selected && hide_vms
                       parse_nodetype_and_id(treenodeid)
                     else
                       parse_nodetype_and_id(valid_active_node(treenodeid))
@@ -1364,10 +1369,12 @@ module VmCommon
     end
 
     if !@in_a_form && !@sb[:action]
-      @vm.present? && hide_vms ? get_node_info(TreeBuilder.build_node_cid(@vm)) : get_node_info(x_node)
+      id = vm_selected && hide_vms ? TreeBuilder.build_node_cid(@vm) : x_node
+      get_node_info(id)
+      type, _id = parse_nodetype_and_id(id)
       # set @delete_node since we don't rebuild vm tree
       @delete_node = params[:id] if @replace_trees  # get_node_info might set this
-      type, _id = parse_nodetype_and_id(@vm.present? && hide_vms ? TreeBuilder.build_node_cid(@vm) : x_node)
+
 
       record_showing = type && ["Vm", "MiqTemplate"].include?(TreeBuilder.get_model_for_prefix(type))
       c_tb = build_toolbar(center_toolbar_filename) # Use vm or template tb

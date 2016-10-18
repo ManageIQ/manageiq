@@ -1,6 +1,6 @@
 module TreeBuilderArchived
   def x_get_tree_custom_kids(object, count_only, options)
-    klass = Object.const_get(options[:leaf])
+    klass = options[:leaf].safe_constantize
     objects = if TreeBuilder.hide_vms
                 [] # hidden all VMs
               else

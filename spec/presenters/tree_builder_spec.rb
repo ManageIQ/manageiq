@@ -195,13 +195,16 @@ describe TreeBuilder do
       @group = FactoryGirl.create(:miq_group, :miq_user_role => role, :description => "TreeBuilder")
       login_as FactoryGirl.create(:user, :userid => 'treebuilder_wilma', :miq_groups => [@group])
     end
+
     it "hide vms if User didn't set it" do
       expect(TreeBuilder.hide_vms).to eq(true)
     end
+
     it "show vms if User had set it so" do
       User.current_user.settings[:display] = {:display_vms => true}
       expect(TreeBuilder.hide_vms).to eq(false)
     end
+
     it "hide vms if User had set it so" do
       User.current_user.settings[:display] = {:display_vms => false}
       expect(TreeBuilder.hide_vms).to eq(true)
