@@ -29,7 +29,9 @@ class ManageIQ::Providers::CloudManager::Vm < ::Vm
 
   default_value_for :cloud, true
 
-  virtual_column :ipaddresses,   :type => :string_set, :uses => {:network_ports => :ipaddresses}
+  virtual_column :ipaddresses, :type => :string_set, :uses => {:network_ports => :ipaddresses}
+  virtual_column :floating_ip_addresses, :type => :string_set, :uses => {:network_ports => :floating_ip_addresses}
+  virtual_column :fixed_ip_addresses, :type => :string_set, :uses => {:network_ports => :fixed_ip_addresses}
   virtual_column :mac_addresses, :type => :string_set, :uses => :network_ports
   virtual_column :load_balancer_health_check_state,
                  :type => :string,
@@ -64,6 +66,14 @@ class ManageIQ::Providers::CloudManager::Vm < ::Vm
 
   def ipaddresses
     @ipaddresses ||= network_ports.collect(&:ipaddresses).flatten.compact.uniq
+  end
+
+  def floating_ip_addresses
+    @floating_ip_addresses ||= network_ports.collect(&:floating_ip_addresses).flatten.compact.uniq
+  end
+
+  def fixed_ip_addresses
+    @fixed_ip_addresses ||= network_ports.collect(&:fixed_ip_addresses).flatten.compact.uniq
   end
 
   def cloud_network
