@@ -112,7 +112,7 @@ class ChargebackController < ApplicationController
       session[:changed] =  false
       replace_right_cell
     when "save", "add"
-      id = params[:id] && params[:button] == "save" ? params[:id] : "new"
+      id = params[:button] == "save" ? params[:id] : "new"
       return unless load_edit("cbrate_edit__#{id}", "replace_cell__chargeback")
       @rate = params[:button] == "add" ? ChargebackRate.new : ChargebackRate.find(params[:id])
       if @edit[:new][:description].nil? || @edit[:new][:description] == ""
