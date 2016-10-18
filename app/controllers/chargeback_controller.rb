@@ -4,16 +4,20 @@ class ChargebackController < ApplicationController
   after_action :cleanup_action
   after_action :set_session_data
 
+  CB_X_BUTTON_ALLOWED_ACTIONS = {
+    'chargeback_rates_copy'   => :cb_rate_edit,
+    'chargeback_rates_delete' => :cb_rates_delete,
+    'chargeback_rates_edit'   => :cb_rate_edit,
+    'chargeback_rates_new'    => :cb_rate_edit
+  }.freeze
+
   # FIXME: -- is INDEX needed ?
   def index
     redirect_to :action => 'explorer'
   end
 
   def x_button
-    @sb[:action] = params[:pressed]
-    @_params[:typ] = params[:pressed].split('_').last
-    cb_rate_edit if %w(copy edit new).include?(params[:typ])
-    cb_rates_delete if params[:typ] == "delete"
+    generic_x_button(CB_X_BUTTON_ALLOWED_ACTIONS)
   end
 
   def x_show
