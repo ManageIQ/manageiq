@@ -489,6 +489,28 @@ describe "Rest API Collections" do
       test_collection_bulk_query(:vms, vms_url, Vm)
     end
 
+    it "doing a bulk query renders actions for which the user is authorized" do
+      vm = FactoryGirl.create(:vm_vmware)
+      api_basic_authorize(collection_action_identifier(:vms, :query), action_identifier(:vms, :start))
+
+      run_post(vms_url, gen_request(:query, [{"id" => vm.id, "href" => vms_url(vm.id)}]))
+
+      expected = {
+        "results" => [
+          a_hash_including(
+            "actions" => [
+              a_hash_including(
+                "name"   => "start",
+                "method" => "post",
+                "href"   => a_string_matching(vms_url(vm.id))
+              )
+            ]
+          )
+        ]
+      }
+      expect(response.parsed_body).to include(expected)
+    end
+
     it "bulk query Vms with invalid guid fails" do
       FactoryGirl.create(:vm_vmware)
       api_basic_authorize collection_action_identifier(:vms, :query)
