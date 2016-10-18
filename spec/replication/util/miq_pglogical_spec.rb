@@ -5,69 +5,105 @@ describe MiqPglogical do
   before do
     skip "pglogical must be installed" unless pglogical.installed?
     MiqServer.seed
-    subject.configure_provider
   end
 
   describe "#provider?" do
-    it "is true when a provider is configured" do
-      expect(subject.provider?).to be true
+    it "is false when a provider is not configured" do
+      expect(subject.provider?).to be false
     end
   end
 
   describe "#node?" do
-    it "is true when a provider is configured" do
-      expect(subject.node?).to be true
-    end
-  end
-
-  describe "#destroy_provider" do
-    it "removes the provider configuration" do
-      subject.destroy_provider
-      expect(subject.provider?).to be false
+    it "is false when a provider is not configured" do
       expect(subject.node?).to be false
-      expect(connection.extension_enabled?("pglogical")).to be false
     end
   end
 
-  describe "#create_replication_set" do
-    it "creates the correct initial set" do
-      expected_excludes = subject.configured_excludes
-      actual_excludes = connection.tables - subject.included_tables
-      expect(actual_excludes).to match_array(expected_excludes)
+  describe "#configure_provider" do
+    it "enables the extenstion and creates the replication set" do
+      subject.configure_provider
+      expect(pglogical.enabled?).to be true
+      expect(pglogical.replication_sets).to include(described_class::REPLICATION_SET_NAME)
+    end
+
+    it "does not enable the extension when an exception is raised" do
+      expect(subject).to receive(:create_replication_set).and_raise(PG::UniqueViolation)
+      expect { subject.configure_provider }.to raise_error(PG::UniqueViolation)
+      expect(pglogical.enabled?).to be false
     end
   end
 
-  describe "#refresh_excludes" do
-    it "adds a new non excluded table" do
-      connection.exec_query(<<-SQL)
-        CREATE TABLE test (id INTEGER PRIMARY KEY)
-      SQL
-      subject.refresh_excludes
-      expect(subject.included_tables).to include("test")
+  context "when configured as a provider" do
+    before do
+      subject.configure_provider
     end
 
-    it "removes a newly excluded table" do
-      table = subject.included_tables.first
-      new_excludes = subject.configured_excludes << table
-
-      c = MiqServer.my_server.get_config
-      c.config.store_path(*described_class::SETTINGS_PATH, :exclude_tables, new_excludes)
-      c.save
-
-      subject.refresh_excludes
-      expect(subject.included_tables).not_to include(table)
+    describe "#provider?" do
+      it "is true" do
+        expect(subject.provider?).to be true
+      end
     end
 
-    it "adds a newly included table" do
-      table = subject.configured_excludes.last
-      new_excludes = subject.configured_excludes - [table]
+    describe "#node?" do
+      it "is true" do
+        expect(subject.node?).to be true
+      end
+    end
 
-      c = MiqServer.my_server.get_config
-      c.config.store_path(*described_class::SETTINGS_PATH, :exclude_tables, new_excludes)
-      c.save
+    describe "#destroy_provider" do
+      it "removes the provider configuration" do
+        subject.destroy_provider
+        expect(subject.provider?).to be false
+        expect(subject.node?).to be false
+        expect(connection.extension_enabled?("pglogical")).to be false
+      end
+    end
 
-      subject.refresh_excludes
-      expect(subject.included_tables).to include(table)
+    describe "#create_replication_set" do
+      it "creates the correct initial set" do
+        expected_excludes = subject.configured_excludes
+        actual_excludes = connection.tables - subject.included_tables
+        expect(actual_excludes).to match_array(expected_excludes)
+      end
+    end
+
+    describe "#refresh_excludes" do
+      it "adds a new non excluded table" do
+        connection.exec_query(<<-SQL)
+          CREATE TABLE test (id INTEGER PRIMARY KEY)
+        SQL
+        subject.refresh_excludes
+        expect(subject.included_tables).to include("test")
+      end
+
+      it "removes a newly excluded table" do
+        table = subject.included_tables.first
+        new_excludes = subject.configured_excludes << table
+
+        c = MiqServer.my_server.get_config
+        c.config.store_path(*described_class::SETTINGS_PATH, :exclude_tables, new_excludes)
+        c.save
+
+        subject.refresh_excludes
+        expect(subject.included_tables).not_to include(table)
+      end
+
+      it "adds a newly included table" do
+        table = subject.configured_excludes.last
+        new_excludes = subject.configured_excludes - [table]
+
+        c = MiqServer.my_server.get_config
+        c.config.store_path(*described_class::SETTINGS_PATH, :exclude_tables, new_excludes)
+        c.save
+
+        subject.refresh_excludes
+        expect(subject.included_tables).to include(table)
+      end
+
+      it "continues if we attempt to add a table twice" do
+        expect(subject).to receive(:newly_included_tables).and_return([subject.included_tables.first])
+        expect { subject.refresh_excludes }.not_to raise_error
+      end
     end
   end
 
