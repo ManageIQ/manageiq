@@ -422,4 +422,50 @@ describe OpsController do
       expect(controller.send(:flash_errors?)).to be_falsey
     end
   end
+
+  render_views
+
+  context "::MiqRegion" do
+    before do
+      EvmSpecHelper.local_miq_server
+      root_tenant = Tenant.seed
+      MiqUserRole.seed
+      MiqGroup.seed
+      MiqRegion.seed
+      role = MiqUserRole.find_by_name("EvmRole-SuperAdministrator")
+      @t1 = FactoryGirl.create(:tenant, :name => "ten1", :parent => root_tenant)
+      @g1 = FactoryGirl.create(:miq_group, :description => 'group1', :tenant => @t1, :miq_user_role => role)
+      @u1 = FactoryGirl.create(:user, :miq_groups => [@g1])
+      @t2 = FactoryGirl.create(:tenant, :name => "ten2", :parent => root_tenant)
+      @g2a  = FactoryGirl.create(:miq_group, :description => 'gr2a', :tenant => @t2, :miq_user_role => role)
+      @g2b  = FactoryGirl.create(:miq_group, :description => 'gr2b1', :tenant => @t2, :miq_user_role => role)
+      @u2a = FactoryGirl.create(:user, :miq_groups => [@g2a])
+      @u2a2 = FactoryGirl.create(:user, :miq_groups => [@g2a])
+      @u2b = FactoryGirl.create(:user, :miq_groups => [@g2b])
+      @u2b2 = FactoryGirl.create(:user, :miq_groups => [@g2b])
+      @u2b3 = FactoryGirl.create(:user, :miq_groups => [@g2b])
+      session[:sandboxes] = {"ops" => {:active_tree => :rbac_tree}}
+      allow(controller).to receive(:replace_right_cell)
+    end
+
+    it "displays the access object count for the current tenant" do
+      login_as @u1
+      session[:sandboxes] = {"ops" => {:active_tree => :rbac_tree}}
+      allow(controller).to receive(:replace_right_cell)
+      post :tree_select, :params => { :id => 'root', :format => :js }
+      expect(controller.instance_variable_get(:@groups_count)).to eq(1)
+      expect(controller.instance_variable_get(:@tenants_count)).to eq(1)
+      expect(controller.instance_variable_get(:@users_count)).to eq(1)
+    end
+
+    it "displays the access object count for the current tenant" do
+      login_as @u2a
+      session[:sandboxes] = {"ops" => {:active_tree => :rbac_tree}}
+      allow(controller).to receive(:replace_right_cell)
+      post :tree_select, :params => { :id => 'root', :format => :js }
+      expect(controller.instance_variable_get(:@groups_count)).to eq(2)
+      expect(controller.instance_variable_get(:@tenants_count)).to eq(1)
+      expect(controller.instance_variable_get(:@users_count)).to eq(5)
+    end
+  end
 end
