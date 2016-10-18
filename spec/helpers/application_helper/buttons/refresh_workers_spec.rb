@@ -1,9 +1,8 @@
 describe ApplicationHelper::Button::RefreshWorkers do
   before :all do
     @record = FactoryGirl.create(
-        :assigned_server_role,
-        :miq_server => FactoryGirl.create(:miq_server)
-    )
+      :assigned_server_role,
+      :miq_server => FactoryGirl.create(:miq_server))
   end
 
   describe '#visible?' do

@@ -736,7 +736,7 @@ describe ApplicationHelper do
         stub_user(:features => :all)
       end
 
-      ["role_start", "role_suspend", "promote_server", "demote_server"].each do |id|
+      %w(role_start role_suspend promote_server demote_server).each do |id|
         it "and id = #{id}" do
           @id = id
           expect(subject).to be_truthy
