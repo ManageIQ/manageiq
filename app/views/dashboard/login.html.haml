@@ -124,7 +124,7 @@
             = (MiqServer.my_server.name)
         %p.message
           - if ::Settings.server.use_custom_login_text
-            = (::Settings.server.custom_login_text.to_s)
+            = ::Settings.server.custom_login_text.to_s
 
 :javascript
   miqGetTZO();
