@@ -6,6 +6,7 @@ class MiqPglogical
   REPLICATION_SET_NAME = 'miq'.freeze
   SETTINGS_PATH = [:replication].freeze
   NODE_PREFIX = "region_".freeze
+  ALWAYS_EXCLUDED_TABLES = %w(ar_internal_metadata schema_migrations repl_events repl_monitor repl_nodes).freeze
 
   def initialize
     @connection = ApplicationRecord.connection
@@ -68,7 +69,7 @@ class MiqPglogical
   # Lists the tables configured to be excluded in the vmdb configuration
   # @return Array<String> the table list
   def configured_excludes
-    MiqServer.my_server.get_config.config.fetch_path(*SETTINGS_PATH, :exclude_tables) | %w(ar_internal_metadata schema_migrations)
+    MiqServer.my_server.get_config.config.fetch_path(*SETTINGS_PATH, :exclude_tables) | ALWAYS_EXCLUDED_TABLES
   end
 
   # Creates the 'miq' replication set and refreshes the excluded tables

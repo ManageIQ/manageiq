@@ -125,7 +125,7 @@ class MiqRegion < ApplicationRecord
   end
 
   def self.destroy_region(conn, region, tables = nil)
-    tables ||= conn.tables.reject { |t| t =~ /^schema_migrations|^ar_internal_metadata|^rr/ }.sort
+    tables ||= (conn.tables - MiqPglogical::ALWAYS_EXCLUDED_TABLES).sort
     tables.each do |t|
       pk = conn.primary_key(t)
       if pk
