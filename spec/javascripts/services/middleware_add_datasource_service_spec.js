@@ -1,13 +1,13 @@
 'use strict';
 
-describe('middlewareAddDatasourceController', function () {
+describe('mwAddDatasourceController', function () {
 
-  var mwAddDataSourceService, $httpBackend;
+  var mwAddDatasourceService, $httpBackend;
 
   beforeEach(module('ManageIQ'));
 
   beforeEach(inject(function($injector) {
-    mwAddDataSourceService = $injector.get('mwAddDataSourceService');
+    mwAddDatasourceService = $injector.get('mwAddDatasourceService');
     $httpBackend = $injector.get('$httpBackend');
   }));
 
@@ -19,7 +19,7 @@ describe('middlewareAddDatasourceController', function () {
   describe('Test Add Datasource', function() {
 
     it('should supply a list of datasources', function () {
-      var dsList = mwAddDataSourceService.getDatasources();
+      var dsList = mwAddDatasourceService.getDatasources();
       expect(dsList).toBeDefined();
       expect(dsList.length).toBeGreaterThan(1);
     });
@@ -41,7 +41,7 @@ describe('middlewareAddDatasourceController', function () {
 
       $httpBackend.expectPOST('/middleware_server/add_datasource', dsPayload)
         .respond(200, addDatasourceSuccessResponse);
-      mwAddDataSourceService.sendAddDatasource(dsPayload);
+      mwAddDatasourceService.sendAddDatasource(dsPayload);
       $httpBackend.flush();
      });
   });

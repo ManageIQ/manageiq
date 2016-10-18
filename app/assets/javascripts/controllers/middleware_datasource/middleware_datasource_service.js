@@ -1,8 +1,8 @@
-ManageIQ.angular.app.service('mwAddDataSourceService', MwAddDataSourceService);
+ManageIQ.angular.app.service('mwAddDatasourceService', MwAddDatasourceService);
 
-MwAddDataSourceService.$inject = ['$http', '$q'];
+MwAddDatasourceService.$inject = ['$http', '$q'];
 
-function MwAddDataSourceService($http, $q) {
+function MwAddDatasourceService($http, $q) {
 
    var datasources = [
     {id: 'H2', label: 'H2', name: 'H2DS', jndiName: 'java:/H2DS',

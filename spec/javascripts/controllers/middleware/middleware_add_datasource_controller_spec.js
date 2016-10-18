@@ -12,7 +12,7 @@ describe('middlewareAddDatasourceController', function () {
     $scope = rootScope.$new();
     $httpBackend = _$httpBackend_;
 
-    $controller = _$controller_('mwAddDataSourceController', {
+    $controller = _$controller_('mwAddDatasourceController', {
       $scope: $scope,
       miqService: miqService
     });
@@ -32,7 +32,6 @@ describe('middlewareAddDatasourceController', function () {
     });
 
    it('should have datasources populated ', function () {
-      $scope.$onInit();
       expect($scope.chooseDsModel.datasources).toBeDefined();
       expect($scope.chooseDsModel.datasources.length).toBeGreaterThan(1);
     });

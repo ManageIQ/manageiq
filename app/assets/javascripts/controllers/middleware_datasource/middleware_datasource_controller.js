@@ -1,10 +1,10 @@
-ManageIQ.angular.app.controller('mwAddDataSourceController', MwAddDataSourceCtrl);
+ManageIQ.angular.app.controller('mwAddDatasourceController', MwAddDatasourceCtrl);
 
 DATASOURCE_EVENT = 'mwAddDatasourceEvent';
 
-MwAddDataSourceCtrl.$inject = ['$scope', '$rootScope', 'miqService', 'mwAddDataSourceService'];
+MwAddDatasourceCtrl.$inject = ['$scope', '$rootScope', 'miqService', 'mwAddDatasourceService'];
 
-function MwAddDataSourceCtrl($scope, $rootScope, miqService, mwAddDataSourceService) {
+function MwAddDatasourceCtrl($scope, $rootScope, miqService, mwAddDatasourceService) {
 
   $scope.dsModel = {};
   $scope.dsModel.step = 'CHOOSE_DS';
@@ -33,12 +33,10 @@ function MwAddDataSourceCtrl($scope, $rootScope, miqService, mwAddDataSourceServ
     securityDomain : ''
   };
 
-  $scope.$onInit = function () {
-    $scope.chooseDsModel.datasources = mwAddDataSourceService.getDatasources();
-  };
+  $scope.chooseDsModel.datasources = mwAddDatasourceService.getDatasources();
 
   $scope.$on(DATASOURCE_EVENT, function(event, payload) {
-    mwAddDataSourceService.sendAddDatasource(payload);
+    mwAddDatasourceService.sendAddDatasource(payload);
     angular.element("#modal_ds_div").modal('hide');
     miqService.sparkleOff();
   });
@@ -66,7 +64,7 @@ function MwAddDataSourceCtrl($scope, $rootScope, miqService, mwAddDataSourceServ
   $scope.addDatasourceStep2Next = function() {
     var dsSelection = $scope.chooseDsModel.selectedDatasource;
     $scope.dsModel.step = 'STEP3';
-    $scope.step3DsModel.connectionUrl = mwAddDataSourceService.determineConnectionUrl(dsSelection);
+    $scope.step3DsModel.connectionUrl = mwAddDatasourceService.determineConnectionUrl(dsSelection);
   };
 
   $scope.addDatasourceStep2Back = function() {
