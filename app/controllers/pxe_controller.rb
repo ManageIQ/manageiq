@@ -10,10 +10,6 @@ class PxeController < ApplicationController
   after_action :cleanup_action
   after_action :set_session_data
 
-  def index
-    redirect_to :action => 'explorer'
-  end
-
   PXE_X_BUTTON_ALLOWED_ACTIONS = {
     'pxe_image_edit'                => :pxe_image_edit,
     'pxe_image_type_new'            => :pxe_image_type_new,
