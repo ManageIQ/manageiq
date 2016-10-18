@@ -36,7 +36,7 @@
         - @selected_lr.ldap_domains.sort_by { |d| d.name.to_s }.each do |domain|
           %tr{:onclick => "miqTreeActivateNode('settings_tree', 'ld-#{to_cid(domain.id)}');", :title => _("Click to view details")}
             %td.narrow
-              %img{:src => image_path('100/ldap_domain.png')}
+              %i.product.product-domain
             %td
               = domain.name
             %td

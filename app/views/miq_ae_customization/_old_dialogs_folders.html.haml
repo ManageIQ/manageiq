@@ -6,7 +6,7 @@
         %tr{:title => (_("View %{name} Folder") % {:name => f[0]}),
           :onclick => "miqTreeActivateNode('old_dialogs_tree', 'xx-MiqDialog_#{f[1]}');"}
           %td.narrow
-            %img{:src => image_path('100/folder.png')}
+            %i.pficon.pficon-folder-close
           %td
             = h(f[0])
 

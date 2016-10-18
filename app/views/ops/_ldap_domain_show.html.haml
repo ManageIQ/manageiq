@@ -112,7 +112,7 @@
         - @selected_ld.ldap_servers.sort_by { |svr| svr.hostname.to_s }.each do |svr|
           %tr{:class => "no-hover #{cycle('row0', 'row1')}"}
             %td.narrow
-              %img{:src => image_path('100/ldap_server.png')}/
+              %i.pficon.pficon-server
             %td
               = svr.hostname
             %td

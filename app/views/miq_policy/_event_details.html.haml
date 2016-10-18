@@ -149,7 +149,7 @@
                   %tr{:title => _("View this Event Action"),
                     :onclick => (x_active_tree == :action_tree) ? t : f}
                     %td.narrow
-                      %img{:src => image_path('100/check.png')}
+                      %i.pficon.pficon-ok
                     %td
                       = a.description
                     %td
@@ -272,7 +272,7 @@
                   %tr{:title => _("View this Event Action"),
                      :onclick => (x_active_tree == :action_tree) ? t : f}
                     %td.narrow
-                      %img{:src => image_path('100/x.png')}
+                      %i.pficon.pficon-error-circle-o
                     %td
                       = a.description
                     %td
