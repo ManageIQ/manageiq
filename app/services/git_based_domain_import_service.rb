@@ -35,6 +35,7 @@ class GitBasedDomainImportService
     task = MiqTask.wait_for_taskid(task_id)
 
     domain = task.task_results
+    raise MiqException::Error, "Domain object not available from task results" unless domain.kind_of?(MiqAeDomain)
     domain.update_attribute(:enabled, true)
   end
 

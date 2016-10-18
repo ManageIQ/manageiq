@@ -1,6 +1,6 @@
 describe GitBasedDomainImportService do
   let(:git_repo) { double("GitRepository", :git_branches => git_branches, :id => 123) }
-  let(:domain) { double("MiqAeDomain") }
+  let(:domain) { FactoryGirl.create(:miq_ae_domain) }
   let(:user) { FactoryGirl.create(:user) }
   let(:task) { FactoryGirl.create(:miq_task) }
   let(:ref_name) { 'the_branch_name' }
@@ -28,7 +28,6 @@ describe GitBasedDomainImportService do
       allow(GitRepository).to receive(:find_by).with(:id => git_repo.id).and_return(git_repo)
       allow(domain).to receive(:update_attribute).with(:enabled, true)
       allow(MiqTask).to receive(:wait_for_taskid).with(task.id).and_return(task)
-      allow(task).to receive(:task_results).and_return(domain)
       User.current_user = user
     end
 
@@ -36,6 +35,7 @@ describe GitBasedDomainImportService do
       let(:git_branches) { [double("GitBranch", :name => ref_name)] }
 
       it "calls 'import' with the correct options" do
+        allow(task).to receive(:task_results).and_return(domain)
         expect(MiqTask).to receive(:generic_action_with_callback).with(task_options, queue_options).and_return(task.id)
         expect(domain).to receive(:update_attribute).with(:enabled, true)
 
@@ -49,10 +49,22 @@ describe GitBasedDomainImportService do
       let(:ref_type) { "tag" }
 
       it "calls 'import' with the correct options" do
+        allow(task).to receive(:task_results).and_return(domain)
         expect(MiqTask).to receive(:generic_action_with_callback).with(task_options, queue_options).and_return(task.id)
         expect(domain).to receive(:update_attribute).with(:enabled, true)
 
         subject.import(git_repo.id, ref_name, 321)
+      end
+    end
+
+    context "when import fails and the task result is nil" do
+      let(:git_branches) { [double("GitBranch", :name => ref_name)] }
+
+      it "raises exception" do
+        allow(task).to receive(:task_results).and_return(nil)
+        expect(MiqTask).to receive(:generic_action_with_callback).with(task_options, queue_options).and_return(task.id)
+
+        expect { subject.import(git_repo.id, ref_name, 321) }.to raise_exception(MiqException::Error)
       end
     end
   end
