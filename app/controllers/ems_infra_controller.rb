@@ -147,9 +147,9 @@ class EmsInfraController < ApplicationController
           return
         end
         begin
-          state, response = @infra.register_nodes(nodes_json)
+          state, response = @infra.register_and_configure_nodes(nodes_json)
         rescue => ex
-          log_and_flash_message(_("Error executing register nodes workflow: %{message}") %
+          log_and_flash_message(_("Error executing register and configure workflows: %{message}") %
                                     {:message => ex})
           return
         end
