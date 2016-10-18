@@ -120,6 +120,7 @@ module ManageIQ::Providers::Openstack::ManagerMixin
   end
 
   def translate_exception(err)
+    require 'excon'
     case err
     when Excon::Errors::Unauthorized
       MiqException::MiqInvalidCredentialsError.new "Login failed due to a bad username or password."
