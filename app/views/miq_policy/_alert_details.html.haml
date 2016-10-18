@@ -197,17 +197,16 @@
                 - @alert.options[:notifications][:snmp][:host].each do |host|
                   = h(host)
                   %br
+            - snmp_version = @alert.options[:notifications][:snmp][:snmp_version]
             .form-group
               %label.control-label.col-md-2
                 = _("Version")
               .col-md-8
-                = h(@alert.options[:notifications][:snmp][:snmp_version])
-            - opts = @alert.options[:notifications][:snmp][:snmp_version].nil? ? _("Trap Number") : _("Trap Object ID")
-            - trap_text = @alert.options[:notifications][:snmp][:snmp_version] == "v1" || opts
+                = h(snmp_version)
 
             .form-group
               %label.control-label.col-md-2
-                = trap_text
+                = snmp_version == "v1" || snmp_version.nil? ? _("Trap Number") : _("Trap Object ID")
               .col-md-8
                 = h(@alert.options[:notifications][:snmp][:trap_id])
           - if @alert.options[:notifications][:snmp].key?(:variables)
