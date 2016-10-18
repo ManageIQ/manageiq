@@ -317,6 +317,8 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
       }
     } else if ($scope.emsCommonModel.emstype === 'scvmm' && $scope.emsCommonModel.default_security_protocol === 'kerberos') {
       $scope.note = $scope.realmNote;
+    } else if ($scope.emsCommonModel.emstype === 'scvmm') {
+      $scope.emsCommonModel.default_security_protocol = 'ssl';
     } else if ($scope.emsCommonModel.emstype === 'rhevm') {
       $scope.emsCommonModel.metrics_api_port = "5432";
       $scope.emsCommonModel.default_api_port = $scope.getDefaultApiPort($scope.emsCommonModel.emstype);
