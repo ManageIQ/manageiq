@@ -101,26 +101,13 @@ class Chargeback < ActsAsArModel
 
   def get_rates(perf)
     @rates ||= {}
-    @enterprise ||= MiqEnterprise.my_enterprise
-
-    tags = perf.tag_names.split("|").reject { |n| n.starts_with?("folder_path_") }.sort.join("|")
-    keys = [tags, perf.parent_host_id, perf.parent_ems_cluster_id, perf.parent_storage_id, perf.parent_ems_id]
-    keys += [perf.resource.container_image, perf.timestamp] if perf.resource_type == Container.name
-    tenant_resource = perf.resource.try(:tenant)
-    keys.push(tenant_resource.id) unless tenant_resource.nil?
-    key = keys.join("_")
-    return @rates[key] if @rates.key?(key)
-
-    tag_list = perf.tag_names.split("|").inject([]) { |arr, t| arr << "#{Chargeback.report_cb_model(self.class.name).underscore}/tag/managed/#{t}" }
-
-    if perf.resource_type == Container.name
-      state = perf.resource.vim_performance_state_for_ts(perf.timestamp.to_s)
-      tag_list += state.image_tag_names.split("|").inject([]) { |arr, t| arr << "container_image/tag/managed/#{t}" } if state.present?
-    end
-
-    parents = get_rate_parents(perf).compact
-
-    @rates[key] = ChargebackRate.get_assigned_for_target(perf.resource, :tag_list => tag_list, :parents => parents)
+    @rates[perf.hash_features_affecting_rate] ||=
+      begin
+        prefix = Chargeback.report_cb_model(self.class.name).underscore
+        ChargebackRate.get_assigned_for_target(perf.resource,
+                                               :tag_list => perf.tag_list_reconstruct.map! { |t| prefix + t },
+                                               :parents  => get_rate_parents(perf).compact)
+      end
   end
 
   def self.calculate_costs(perf, h, rates)
