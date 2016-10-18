@@ -49,7 +49,7 @@ module InterRegionApiMethodRelay
   end
 
   def self.api_client_connection_for_region(region)
-    url = MiqRegion.find_by_region(region).remote_ws_url
+    url = MiqRegion.find_by(:region => region).remote_ws_url
     if url.nil?
       _log.error("The remote region [#{region}] does not have a web service address.")
       raise "Failed to establish API connection to region #{region}"
