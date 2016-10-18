@@ -70,7 +70,7 @@ module Menu
                                                '/vm_infra/explorer'),
                                 Menu::Item.new('resource_pool',    N_('Resource Pools'),   'resource_pool',    {:feature => 'resource_pool_show_list'}, '/resource_pool'),
                                 Menu::Item.new('storage',          deferred_ui_lookup(:tables => 'storages'),
-                                               'storage',       {:feature => 'storage_show_list'},       '/storage'),
+                                               'storage',       {:feature => 'storage_show_list'},       '/storage/explorer'),
                                 Menu::Item.new('pxe',              N_('PXE'),              'pxe',              {:feature => 'pxe', :any => true},           '/pxe/explorer'),
                                 Menu::Item.new('infra_networking', N_('Networking'),       'infra_networking', {:feature => 'infra_networking', :any => true}, '/infra_networking/explorer'),
                                 Menu::Item.new('miq_request_host', N_('Requests'),         nil,                {:feature => 'miq_request_show_list'},       '/miq_request?typ=host'),
