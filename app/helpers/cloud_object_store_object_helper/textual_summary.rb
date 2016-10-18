@@ -34,10 +34,6 @@ module CloudObjectStoreObjectHelper::TextualSummary
     @record.etag
   end
 
-  def textual_ems
-    textual_link(@record.ext_management_system)
-  end
-
   def textual_cloud_tenant
     cloud_tenant = @record.cloud_tenant if @record.respond_to?(:cloud_tenant)
     label = ui_lookup(:table => "cloud_tenant")
