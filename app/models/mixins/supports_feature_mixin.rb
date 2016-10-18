@@ -88,6 +88,7 @@ module SupportsFeatureMixin
     :snapshots                => 'Snapshots',
     :terminate                => 'Terminate a VM',
     :update_aggregate         => 'Host Aggregate Update',
+    :refresh_network_interfaces => 'Refresh Network Interfaces for a Host',
   }.freeze
 
   # Whenever this mixin is included we define all features as unsupported by default.

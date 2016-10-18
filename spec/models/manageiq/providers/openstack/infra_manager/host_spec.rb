@@ -76,6 +76,16 @@ openstack-keystone:                     active
       end
     end
 
+    context "supported features" do
+      before(:each) do
+        host.refresh_openstack_services(ssu)
+      end
+
+      it "supports refresh_network_interfaces" do
+        expect(host.supports_refresh_network_interfaces?).to be_truthy
+      end
+    end
+
     describe "host_service_group_openstacks names" do
       subject do
         host.refresh_openstack_services(ssu)
