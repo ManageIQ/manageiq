@@ -1,8 +1,9 @@
 = render :partial => 'layouts/doctype'
-- if @report_only
-  %html{:class => "layout-pf layout-pf-fixed transitions", :lang => I18n.locale.to_s.sub('-', '_')}
+%html.layout-pf.layout-pf-fixed.transitions{:lang => I18n.locale.to_s.sub('-', '_')}
+  - if @report_only
     %head
-      %title CloudForms Management Engine: #{@layout.titleize}
+      %title
+        = "%{product}: %{title}" % {:product => I18n.t('product.name'), :title => @layout.titleize}
       = favicon_link_tag
       = stylesheet_link_tag 'application'
       = javascript_include_tag 'application'
@@ -12,9 +13,7 @@
       = render :partial => 'layouts/i18n_js'
     %body{:style => "overflow: scroll; padding: 0 20px 0 20px !important"}
       = yield
-- else
-  <!--[if IE 9]><html class="ie9"><![endif]-->
-  %html{:class => "layout-pf layout-pf-fixed transitions", :lang => I18n.locale.to_s.sub('-', '_')}
+  - else
     %head
       %title= h(title_from_layout(@layout))
 
