@@ -41,9 +41,11 @@ class MiqPglogical
   #   node and creating the replication set
   def configure_provider
     return if provider?
-    pglogical.enable
-    create_node unless node?
-    create_replication_set
+    @connection.transaction(:requires_new => true) do
+      pglogical.enable
+      create_node unless node?
+      create_replication_set
+    end
   end
 
   # Removes the replication configuration and pglogical node from the
