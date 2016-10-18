@@ -325,21 +325,19 @@ describe Dialog do
       ]
     end
 
-    context 'dialog_tab with an id' do
-      it 'updates the dialog_tab' do
+    context 'a collection of dialog tabs containing one with an id and one without an id' do
+      it 'updates the dialog_tab with an id' do
         dialog.update_tabs(updated_content)
         expect(dialog.reload.dialog_tabs.first.label).to eq('updated_label')
       end
-    end
 
-    context 'dialog_tab without an id' do
-      it 'creates the dialog_tab' do
+      it 'creates the dialog tab from the dialog tabs without an id' do
         dialog.update_tabs(updated_content)
         expect(dialog.reload.dialog_tabs.count).to eq(2)
       end
     end
 
-    context 'with a dialog_tab removed' do
+    context 'with a dialog tab removed from the dialog tabs collection' do
       let(:updated_content) do
         [
           'id'            => dialog_tab.first.id,
@@ -353,7 +351,7 @@ describe Dialog do
         dialog.dialog_tabs << FactoryGirl.create(:dialog_tab)
       end
 
-      it 'removes a dialog tab' do
+      it 'deletes the removed dialog_tab' do
         expect do
           dialog.update_tabs(updated_content)
         end.to change(dialog.reload.dialog_tabs, :count).by(-1)

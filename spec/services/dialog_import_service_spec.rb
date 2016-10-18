@@ -351,6 +351,75 @@ describe DialogImportService do
         end
       end
     end
+
+    describe '#build_dialog_tabs' do
+      let(:dialog_tabs) do
+        {
+          'dialog_tabs' => [
+            {
+              'label'         => 'new dialog tab',
+              'dialog_groups' => [
+                {
+                  'label'         => 'group label',
+                  'dialog_fields' => [
+                    {
+                      'name'  => 'field name',
+                      'label' => 'field label'
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      end
+
+      it 'creates a new dialog_tab' do
+        expect do
+          DialogImportService.new.build_dialog_tabs(dialog_tabs)
+        end.to change(DialogTab, :count).by(1)
+      end
+    end
+
+    describe '#build_dialog_groups' do
+      let(:dialog_groups) do
+        {
+          'dialog_groups' => [
+            {
+              'label'         => 'new group',
+              'dialog_fields' => [
+                {
+                  'name'  => 'field name',
+                  'label' => 'field label'
+                }
+              ]
+            }
+          ]
+        }
+      end
+
+      it 'creates a new dialog_group' do
+        expect do
+          DialogImportService.new.build_dialog_groups(dialog_groups)
+        end.to change(DialogGroup, :count).by(1)
+      end
+    end
+
+    describe '#build_dialog_fields' do
+      let(:dialog_fields) do
+        {
+          'dialog_fields' => [
+            {'name' => 'field name', 'label' => 'field label'}
+          ]
+        }
+      end
+
+      it 'creates a new dialog_field' do
+        expect do
+          DialogImportService.new.build_dialog_fields(dialog_fields)
+        end.to change(DialogField, :count).by(1)
+      end
+    end
   end
 
   context '#import' do

@@ -35,19 +35,25 @@ describe DialogTab do
       dialog_groups.each_with_index { |group, index| group.dialog_fields << dialog_fields[index] }
     end
 
-    context 'with an id' do
+    context 'a collection of dialog groups containing two objects with ids and one without an id' do
       let(:updated_groups) do
         [
           { 'id'            => dialog_groups.first.id,
             'label'         => 'updated_label',
-            'dialog_fields' => [{ 'id' => dialog_fields.first.id}]},
+            'dialog_fields' => [{ 'id' => dialog_fields.first.id}]
+          },
           { 'id'            => dialog_groups.last.id,
             'label'         => 'updated_label',
-            'dialog_fields' => [{'id' => dialog_fields.last.id}] }
+            'dialog_fields' => [{'id' => dialog_fields.last.id}]
+          },
+          {
+            'label'         => 'a new label',
+            'dialog_fields' => [{'name' => 'field name', 'label' => 'field label'}]
+          }
         ]
       end
 
-      it 'updates a dialog_group' do
+      it 'updates the dialog groups with an id' do
         dialog_tab.update_dialog_groups(updated_groups)
 
         dialog_tab.reload
@@ -55,32 +61,22 @@ describe DialogTab do
         expect(dialog_tab.dialog_groups.first.label).to eq('updated_label')
         expect(dialog_tab.dialog_groups.last.label).to eq('updated_label')
       end
-    end
 
-    context 'without an id' do
-      let(:updated_groups) do
-        [
-          { 'id' => dialog_groups.first.id, 'dialog_fields' => [{'id' => dialog_fields.first.id}] },
-          { 'id' => dialog_groups.last.id, 'dialog_fields' => [{'id' => dialog_fields.last.id}] },
-          { 'label' => 'label', 'dialog_fields' => [{ 'name' => 'field name', 'label' => 'field name' }]}
-        ]
-      end
-
-      it 'creates a new group' do
+      it 'creates a new dialog group from the dialog group without an id' do
         expect do
           dialog_tab.update_dialog_groups(updated_groups)
         end.to change(dialog_tab.reload.dialog_groups, :count).by(1)
       end
     end
 
-    context 'with a dialog_group removed' do
+    context 'with a dialog group removed from the dialog groups' do
       let(:updated_groups) do
         [
           { 'id' => dialog_groups.first.id, 'dialog_fields' => []}
         ]
       end
 
-      it 'deletes a dialog_group' do
+      it 'deletes the removed dialog group' do
         expect do
           dialog_tab.update_dialog_groups(updated_groups)
         end.to change(dialog_tab.reload.dialog_groups, :count).by(-1)
