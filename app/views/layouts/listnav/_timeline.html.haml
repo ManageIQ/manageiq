@@ -4,7 +4,7 @@
       = miq_accordion_panel(h(rg),
         @panels["timelines_#{rg_idx}"].nil? || @panels["timelines_#{rg_idx}"] == false, "timelines_#{rg_idx}") do
         - tree_id = "timeline_treebox#{rg_idx}"
-        %div{:id => tree_id}
+        .treeview-pf-hover.treeview-pf-select{:id => tree_id}
         = render(:partial => "layouts/tree",
           :locals         => {:tree_id => tree_id,
             :tree_name                 => "#{tree_id}_#{rg_idx}",

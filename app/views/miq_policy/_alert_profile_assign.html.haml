@@ -35,7 +35,7 @@
     %h3
       = _('Selections')
     - if @assign[:obj_tree]
-      #obj_treebox{:style => "width: 100%; color: #000;"}
+      #obj_treebox.treeview-pf-hover.treeview-pf-select{:style => "width: 100%; color: #000;"}
       = render(:partial => "layouts/tree",
         :locals         => {:tree_id    => "obj_treebox",
           :tree_name                    => "obj_tree",
