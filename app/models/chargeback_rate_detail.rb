@@ -107,7 +107,7 @@ class ChargebackRateDetail < ApplicationRecord
       "#{fixed_rate + variable_rate} #{per_time.to_s.capitalize}"
     else
       s = ""
-      ChargebackTier.where(:chargeback_rate_detail_id => id).each do |tier|
+      chargeback_tiers.each do |tier|
         # Example: Daily @ .02 per MHz from 0.0 to Infinity
         s += "#{per_time.to_s.capitalize} @ #{tier.fixed_rate} + "\
              "#{tier.variable_rate} per #{per_unit_display} from #{tier.start} to #{tier.finish}\n"
