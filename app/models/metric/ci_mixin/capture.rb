@@ -224,8 +224,4 @@ module Metric::CiMixin::Capture
 
     perf_capture_queue('realtime', :priority => MiqQueue::HIGH_PRIORITY)
   end
-
-  def perf_tags
-    tag_list(:ns => '/managed').split.join("|")
-  end
 end
