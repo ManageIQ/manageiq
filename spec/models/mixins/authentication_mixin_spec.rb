@@ -169,35 +169,51 @@ describe AuthenticationMixin do
           expect(MiqQueue.where(:method_name => 'authentication_check_types', :class_name => 'ExtManagementSystem', :instance_id => @ems2.id).count).to eq(0)
         end
 
-        it "retries" do
-          time = Time.new(2015, 1, 2, 0, 0, 0, 0)
-          Timecop.freeze(time) do
-            Host.authentication_check_schedule
-            allow_any_instance_of(Host).to receive(:verify_credentials).and_raise
-            msg = MiqQueue.find_by(:method_name => 'authentication_check_types', :class_name => 'Host')
-            msg.delivered(*msg.deliver)
+        context "retry" do
+          let(:queue_conditions) { {:method_name => 'authentication_check_types', :class_name => 'Host'} }
 
-            msg = MiqQueue.find_by(:method_name => 'authentication_check_types', :class_name => 'Host')
-            expect(msg.args.last).to eq(:attempt => 2)
-            expect(msg.deliver_on).to be_within(0.1).of(time + 2.minutes)
-            msg.delivered(*msg.deliver)
+          it "works" do
+            time = Time.new(2015, 1, 2, 0, 0, 0, 0)
+            Timecop.freeze(time) do
+              Host.authentication_check_schedule
+              allow_any_instance_of(Host).to receive(:verify_credentials).and_raise
+              msg = MiqQueue.find_by(queue_conditions)
+              msg.delivered(*msg.deliver)
 
-            msg = MiqQueue.find_by(:method_name => 'authentication_check_types', :class_name => 'Host')
-            expect(msg.args.last).to eq(:attempt => 3)
-            expect(msg.deliver_on).to be_within(0.1).of(time + 4.minutes)
+              msg = MiqQueue.find_by(queue_conditions)
+              expect(msg.args.last).to eq(:attempt => 2)
+              expect(msg.deliver_on).to be_within(0.1).of(time + 2.minutes)
+              msg.delivered(*msg.deliver)
+
+              msg = MiqQueue.find_by(queue_conditions)
+              expect(msg.args.last).to eq(:attempt => 3)
+              expect(msg.deliver_on).to be_within(0.1).of(time + 4.minutes)
+            end
           end
-        end
 
-        it "skips if there is an existing attempt in the queue" do
-          Host.authentication_check_schedule
-          messages = MiqQueue.where(:method_name => 'authentication_check_types', :class_name => 'Host')
-          expect(messages.count).to eq(1)
-          expect(messages.first.args.last).to eq(:attempt => 1)
+          it "skips when existing attempt is in the queue" do
+            Host.authentication_check_schedule
+            messages = MiqQueue.where(queue_conditions)
+            expect(messages.count).to eq(1)
+            expect(messages.first.args.last).to eq(:attempt => 1)
 
-          Host.authentication_check_schedule
-          messages = MiqQueue.where(:method_name => 'authentication_check_types', :class_name => 'Host')
-          expect(messages.count).to eq(1)
-          expect(messages.first.args.last).to eq(:attempt => 1)
+            Host.authentication_check_schedule
+            messages = MiqQueue.where(queue_conditions)
+            expect(messages.count).to eq(1)
+            expect(messages.first.args.last).to eq(:attempt => 1)
+          end
+
+          it "skips when another attempt is in the queue" do
+            Host.authentication_check_schedule
+            msg = MiqQueue.where(queue_conditions).first
+            msg.args.last[:attempt] = 2
+            msg.save
+
+            Host.authentication_check_schedule
+            messages = MiqQueue.where(:method_name => 'authentication_check_types', :class_name => 'Host')
+            expect(messages.count).to eq(1)
+            expect(messages.first.args.last).to eq(:attempt => 2)
+          end
         end
       end
     end

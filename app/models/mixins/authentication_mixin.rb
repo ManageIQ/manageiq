@@ -209,9 +209,10 @@ module AuthenticationMixin
   def authentication_check_types_queue(*args)
     method_options = args.extract_options!
     types = args.first
+    force = method_options.delete(:force) { false }
 
     message_attributes = authentication_check_attributes(types, method_options)
-    put_authentication_check(message_attributes)
+    put_authentication_check(message_attributes, force)
   end
 
   def authentication_check_attributes(types, method_options)
@@ -234,16 +235,18 @@ module AuthenticationMixin
     options
   end
 
-  def put_authentication_check(options)
-    find_options = options.except(:deliver_on)
-
-    MiqQueue.put_unless_exists(find_options) do |msg|
-      # TODO: Refactor the help in this and the ScheduleWorker#queue_work method into the merge method
-      help = "Check for a running server"
-      help << " in zone: [#{options[:zone]}]"   if options[:zone]
-      help << " with role: [#{options[:role]}]" if options[:role]
-      _log.warn("Previous authentication_check_types for [#{name}] [#{id}] with opts: [#{options[:args].inspect}] is still running, skipping...#{help}") unless msg.nil?
-      options
+  def put_authentication_check(options, force)
+    if force
+      MiqQueue.put(options)
+    else
+      MiqQueue.put_unless_exists(options.except(:args, :deliver_on)) do |msg|
+        # TODO: Refactor the help in this and the ScheduleWorker#queue_work method into the merge method
+        help = "Check for a running server"
+        help << " in zone: [#{options[:zone]}]"   if options[:zone]
+        help << " with role: [#{options[:role]}]" if options[:role]
+        _log.warn("Previous authentication_check_types for [#{name}] [#{id}] with opts: [#{options[:args].inspect}] is still running, skipping...#{help}") unless msg.nil?
+        options
+      end
     end
   end
 
@@ -265,7 +268,9 @@ module AuthenticationMixin
     auth = authentication_best_fit(auth_type)
     if auth.retryable_status?
       options[:attempt] += 1
-      authentication_check_types_queue(auth_type, options)
+
+      # Force the authentication message to be queued
+      authentication_check_types_queue(auth_type, options.merge(:force => true))
     end
   end
 
