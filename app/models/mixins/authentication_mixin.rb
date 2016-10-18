@@ -208,8 +208,13 @@ module AuthenticationMixin
 
   def authentication_check_types_queue(*args)
     method_options = args.extract_options!
-
     types = args.first
+
+    message_attributes = authentication_check_attributes(types, method_options)
+    put_authentication_check(message_attributes)
+  end
+
+  def authentication_check_attributes(types, method_options)
     role = authentication_check_role if self.respond_to?(:authentication_check_role)
     zone = my_zone if self.respond_to?(:my_zone)
 
@@ -226,8 +231,13 @@ module AuthenticationMixin
 
     options[:role] = role if role
     options[:zone] = zone if zone
+    options
+  end
 
-    MiqQueue.put_unless_exists(options.except(:deliver_on)) do |msg|
+  def put_authentication_check(options)
+    find_options = options.except(:deliver_on)
+
+    MiqQueue.put_unless_exists(find_options) do |msg|
       # TODO: Refactor the help in this and the ScheduleWorker#queue_work method into the merge method
       help = "Check for a running server"
       help << " in zone: [#{options[:zone]}]"   if options[:zone]
