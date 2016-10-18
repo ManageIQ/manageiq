@@ -1,8 +1,8 @@
 /* global miqHttpInject */
 
 angular.module('alertsCenter')
-  .controller('alertsListController', ['$scope', '$http', '$resource', '$interval', '$timeout',
-    function($scope,  $http, $resource, $interval, $timeout) {
+  .controller('alertsListController', ['$scope', '$http', '$resource', '$interval', '$timeout', '$window',
+    function($scope,  $http, $resource, $interval, $timeout, $window) {
       var vm = this;
       vm.alertsList = [];
 
@@ -61,7 +61,7 @@ angular.module('alertsCenter')
           });
 
           vm.loadingDone = true;
-          filterChange();
+          filterChange(vm.currentFilters);
         });
       };
 
@@ -94,8 +94,8 @@ angular.module('alertsCenter')
           }
         ];
 
-        vm.objectTypes = [];
         vm.currentFilters = [];
+        vm.objectTypes = [];
 
         vm.filterConfig = {
           fields: [
@@ -107,13 +107,13 @@ angular.module('alertsCenter')
               filterValues: getSeverityTitles()
             },
             {
-              id: 'object_name',
+              id: 'name',
               title: __('Object Name'),
               placeholder: __('Filter by Object Name'),
               filterType: 'text'
             },
             {
-              id: 'object_type',
+              id: 'type',
               title: __('Object Type'),
               placeholder: __('Filter by Object Type'),
               filterType: 'select',
@@ -144,12 +144,12 @@ angular.module('alertsCenter')
               sortType: 'numeric'
             },
             {
-              id: 'object_name',
+              id: 'name',
               title: __('Object Name'),
               sortType: 'alpha'
             },
             {
-              id: 'object_type',
+              id: 'type',
               title: __('Object Type'),
               sortType: 'alpha'
             }
@@ -157,6 +157,33 @@ angular.module('alertsCenter')
           onSortChange: sortChange,
           isAscending: true
         };
+
+        if (angular.isString($window.location.search)) {
+          var filterString = $window.location.search.slice(1);
+          var filters = filterString.split('&');
+          _.forEach(filters, function(nextFilter) {
+            var filter = nextFilter.split('=');
+            var filterId = filter[0].replace(/\[\d*\]/, function(v) {
+              paramNum = v.slice(1,-1);
+              return '';
+            });
+
+            // set parameter value (use 'true' if empty)
+            var filterValue = angular.isUndefined(filter[1]) ? true : filter[1];
+            filterValue = decodeURIComponent(filterValue);
+
+            var filterField = _.find(vm.filterConfig.fields, function(field) {
+              return field.id === filterId;
+            });
+            if (angular.isDefined(filterField)) {
+              vm.currentFilters.push({
+                id: filterField.id,
+                value: filterValue,
+                title: filterField.title
+              });
+            }
+          });
+        }
 
         // Default sort descending by severity
         vm.sortConfig.currentField = vm.sortConfig.fields[1];
@@ -208,9 +235,9 @@ angular.module('alertsCenter')
           found = item.severityInfo.title === filter.value;
         } else if (filter.id === 'message') {
           found = filterStringCompare(item.message, filter.value);
-        } else if (filter.id === 'object_type') {
+        } else if (filter.id === 'type') {
           found = item.key === filter.value || item.objectType === filter.value;
-        } else if (filter.id === 'object_name') {
+        } else if (filter.id === 'name') {
           found = filterStringCompare(item.objectName, filter.value);
         }
 
@@ -229,9 +256,9 @@ angular.module('alertsCenter')
           compValue = item1.timestamp - item2.timestamp;
         } else if (vm.toolbarConfig.sortConfig.currentField.id === 'severity') {
           compValue = item1.severityInfo.value - item2.severityInfo.value;
-        } else if (vm.toolbarConfig.sortConfig.currentField.id === 'object_name') {
+        } else if (vm.toolbarConfig.sortConfig.currentField.id === 'name') {
           compValue = item1.objectName.localeCompare(item2.objectName);
-        } else if (vm.toolbarConfig.sortConfig.currentField.id === 'object_type') {
+        } else if (vm.toolbarConfig.sortConfig.currentField.id === 'type') {
           compValue = item1.key.localeCompare(item2.key);
           if (compValue === 0) {
             compValue = item1.objectType.localeCompare(item2.objectType);

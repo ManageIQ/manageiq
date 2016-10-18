@@ -1,8 +1,8 @@
 /* global miqHttpInject */
 
 angular.module('alertsCenter')
-  .controller('alertsStatusController', ['$scope', '$http', '$resource', '$interval',
-    function($scope,  $http, $resource, $interval) {
+  .controller('alertsStatusController', ['$scope', '$http', '$resource', '$interval', '$window',
+    function($scope,  $http, $resource, $interval, $window) {
       var vm = this;
 
       angular.element(document.querySelector('#center_div')).addClass("miq-body");
@@ -19,19 +19,19 @@ angular.module('alertsCenter')
           {
             title: __("Production"),
             value: 'production',
-            open: false,
+            open: true,
             items: []
           },
           {
             title: __("Staging"),
             value: 'staging',
-            open: false,
+            open: true,
             items: []
           },
           {
             title: __("QA"),
             value: 'qa',
-            open: false,
+            open: true,
             items: []
           }
         ];
@@ -195,6 +195,11 @@ angular.module('alertsCenter')
 
       vm.toggleGroupOpen = function(section) {
         section.open = !section.open;
+      };
+
+      vm.showGroupAlerts = function(item, status) {
+        var url = "/alerts_list/show?name=" + item.name + "&severity=" + status;
+        $window.location.href = url;
       };
 
       vm.filterChange = function() {

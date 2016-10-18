@@ -24,15 +24,15 @@
                 .card-pf-body
                   %p.card-pf-aggregate-status-notifications
                     %span.card-pf-aggregate-status-notification{"ng-if" => "item.alerts_types.danger.alerts.length > 0"}
-                      %a{"href" => "#"}
+                      %a{"href" => "#", "ng-click" => "vm.showGroupAlerts(item, 'Error')"}
                         %span.pficon.pficon-error-circle-o
                         {{item.alerts_types.danger.alerts.length}}
                     %span.card-pf-aggregate-status-notification{"ng-if" => "item.alerts_types.warning.alerts.length > 0"}
-                      %a{"href" => "#"}
+                      %a{"href" => "#", "ng-click" => "vm.showGroupAlerts(item, 'Warning')"}
                         %span.pficon.pficon-warning-triangle-o
                         {{item.alerts_types.warning.alerts.length}}
                     %span.card-pf-aggregate-status-notification{"ng-if" => "item.alerts_types.info.alerts.length > 0"}
-                      %a{"href" => "#"}
+                      %a{"href" => "#", "ng-click" => "vm.showGroupAlerts(item, 'Information')"}
                         %span.pficon.pficon-info
                         {{item.alerts_types.info.alerts.length}}
 
