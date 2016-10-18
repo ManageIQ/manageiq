@@ -174,7 +174,7 @@ module ManageIQ::Providers
       end
 
       def parse_series(s)
-        name = uid = s.name
+        name = uid = s.name.downcase
         new_result = {
           :type           => "ManageIQ::Providers::Azure::CloudManager::Flavor",
           :ems_ref        => uid,
@@ -204,7 +204,7 @@ module ManageIQ::Providers
                            instance.resource_group.downcase,
                            instance.type.downcase,
                            instance.name)
-        series_name = instance.properties.hardware_profile.vm_size
+        series_name = instance.properties.hardware_profile.vm_size.downcase
         series      = @data_index.fetch_path(:flavors, series_name)
 
         # TODO(lsmola) NetworkManager, storing IP addresses under hardware/network will go away, once all providers are
