@@ -25,6 +25,12 @@ describe MiqPglogical do
       expect(pglogical.enabled?).to be true
       expect(pglogical.replication_sets).to include(described_class::REPLICATION_SET_NAME)
     end
+
+    it "does not enable the extension when an exception is raised" do
+      expect(subject).to receive(:create_replication_set).and_raise(PG::UniqueViolation)
+      expect { subject.configure_provider }.to raise_error(PG::UniqueViolation)
+      expect(pglogical.enabled?).to be false
+    end
   end
 
   context "when configured as a provider" do
