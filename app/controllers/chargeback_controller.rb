@@ -243,9 +243,9 @@ class ChargebackController < ApplicationController
         render_flash(_("%{record} no longer exists") % {:record => ui_lookup(:model => "ChargebackRate")}, :error)
       else
         rates.push(params[:id])
+        self.x_node = "xx-#{cb_rate.rate_type}"
       end
       process_cb_rates(rates, "destroy")  unless rates.empty?
-      self.x_node = "xx-#{cb_rate.rate_type}"
       if flash_errors?
         javascript_flash
       else
