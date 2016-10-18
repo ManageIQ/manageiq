@@ -7,7 +7,8 @@ class TreeBuilderVandt < TreeBuilder
 
   def set_locals_for_render
     locals = super
-    locals.merge!(:autoload => true)
+    locals.merge!(:autoload => true,
+                  :allow_reselect => TreeBuilder.hide_vms)
   end
 
   def root_options

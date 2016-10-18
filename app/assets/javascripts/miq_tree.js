@@ -543,6 +543,7 @@ function miqInitTree(options, tree) {
     hierarchicalCheck:    options.hierarchical_check,
     highlightChanges:     options.highlight_changes,
     levels:               options.min_expand_level,
+    allowReselect:        options.allow_reselect,
     expandIcon:           'fa fa-fw fa-angle-right',
     collapseIcon:         'fa fa-fw fa-angle-down',
     loadingIcon:          'fa fa-fw fa-spinner fa-pulse',

@@ -14,7 +14,8 @@ class TreeBuilderImages < TreeBuilder
     locals.merge!(
       :tree_id   => "images_treebox",
       :tree_name => "images_tree",
-      :autoload  => true
+      :autoload  => true,
+      :allow_reselect => TreeBuilder.hide_vms
     )
   end
 

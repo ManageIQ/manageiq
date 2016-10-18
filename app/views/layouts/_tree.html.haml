@@ -9,6 +9,7 @@
 - onselect                    ||= false
 - oncheck                     ||= false
 - autoload                    ||= false
+- allow_reselect              ||= false
 - highlight_changes           ||= false
 - post_check                  ||= false
 - reselect_node               ||= @reselect_node
@@ -34,6 +35,7 @@
              :onselect           => onselect,
              :post_check         => post_check,
              :autoload           => autoload,
+             :allow_reselect     => allow_reselect,
              :controller         => j(request.parameters[:controller]),
              :silent_activate    => @explorer && tree_name == x_active_tree.to_s,
              :select_node        => select_node,

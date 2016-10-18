@@ -16,7 +16,8 @@ class TreeBuilderInstances < TreeBuilder
     locals.merge!(
       :tree_id   => "instances_treebox",
       :tree_name => "instances_tree",
-      :autoload  => true
+      :autoload  => true,
+      :allow_reselect => TreeBuilder.hide_vms
     )
   end
 
