@@ -103,6 +103,8 @@ class ManageIQ::Providers::Openstack::CloudManager::CloudVolume < ::CloudVolume
     connection_options
   end
 
+  # FIXME: The intention was to make this method private but tests or code called
+  # from the tests are expecting it to be public.
   def self.cinder_connection_options(cloud_tenant = nil)
     connection_options = {:service => "Volume"}
     connection_options.merge!(:tenant_name => cloud_tenant.name) if cloud_tenant

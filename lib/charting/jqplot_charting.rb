@@ -93,6 +93,8 @@ class JqplotCharting < Charting
     Jqplot.apply_theme(chart, report_theme)
   end
 
+  # FIXME: The intention was to make this method private but tests or code called
+  # from the tests are expecting it to be public.
   def self.available?
     true
   end

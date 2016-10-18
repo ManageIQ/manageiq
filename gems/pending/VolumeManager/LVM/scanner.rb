@@ -86,14 +86,13 @@ module Lvm2Scanner
     pvh
   end # def self.labelScan
 
-  private
-
   def self.readLabel(d, s)
     d.seek(s * SECTOR_SIZE, IO::SEEK_SET)
     lh = readStruct(d, LABEL_HEADER)
     return lh if lh.lvm_id == LVM_ID
     nil
   end # def self.readLabel
+  private_class_method :readLabel
 
   def self.readPvHeader(d, lh)
     pvho = (lh.sector_xl * SECTOR_SIZE) + lh.offset_xl
@@ -122,6 +121,7 @@ module Lvm2Scanner
 
     pvh
   end # def self.readPvHeader
+  private_class_method :readPvHeader
 
   def self.readMdah(d, dlh)
     d.seek(dlh.offset, IO::SEEK_SET)
@@ -141,6 +141,7 @@ module Lvm2Scanner
 
     mdah
   end # def self.readMdah
+  private_class_method :readMdah
 
   def self.readRaw(d, rlh)
     osp = d.seekPos
@@ -149,8 +150,10 @@ module Lvm2Scanner
     d.seek(osp, IO::SEEK_SET)
     da
   end # def self.readRaw
+  private_class_method :readRaw
 
   def self.readStruct(d, struct)
     OpenStruct.new(struct.decode(d.read(struct.size)))
   end # def self.readStruct
+  private_class_method :readStruct
 end # module Lvm2Scanner

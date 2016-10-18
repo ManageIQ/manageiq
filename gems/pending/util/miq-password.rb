@@ -174,8 +174,6 @@ EOS
     end
   end
 
-  protected
-
   def self.ez_load(filename, recent = true)
     return filename if filename.respond_to?(:decrypt64)
 
@@ -191,10 +189,12 @@ EOS
       CryptString.new(nil, params[:algorithm], params[:key], params[:iv])
     end
   end
+  private_class_method :ez_load
 
   def self.extract_erb_encrypted_value(value)
     return $1 if value =~ /\A<%= (?:MiqPassword|DB_PASSWORD)\.decrypt\(['"]([^'"]+)['"]\) %>\Z/
   end
+  private_class_method :extract_erb_encrypted_value
 end
 
 # Backward compatibility for the class that used to be used by Rails.

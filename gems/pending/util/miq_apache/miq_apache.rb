@@ -140,6 +140,8 @@ module MiqApache
 
     private
 
+    # FIXME: The intention was to make this method private but tests or code called
+    # from the tests are expecting it to be public.
     def self.run_apache_cmd(command)
       Dir.mkdir(File.dirname(APACHE_CONTROL_LOG)) unless File.exist?(File.dirname(APACHE_CONTROL_LOG))
       begin

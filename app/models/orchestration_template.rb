@@ -165,6 +165,8 @@ class OrchestrationTemplate < ApplicationRecord
     super
   end
 
+  # FIXME: The intention was to make this method private but tests or code called
+  # from the tests are expecting it to be public.
   def self.calc_md5(text)
     Digest::MD5.hexdigest(text) if text
   end
@@ -173,6 +175,8 @@ class OrchestrationTemplate < ApplicationRecord
     self.class.calc_md5(text)
   end
 
+  # FIXME: The intention was to make this method private but tests or code called
+  # from the tests are expecting it to be public.
   def self.with_universal_newline(text)
     # ensure universal new lines and content ending with a new line
     text.encode(:universal_newline => true).chomp.concat("\n")

@@ -379,6 +379,8 @@ module ManageIQ
         obj.body
       end
 
+      # FIXME: The intention was to make this method private but tests or code called
+      # from the tests are expecting it to be public.
       def self.miq_template_type
         "ManageIQ::Providers::Openstack::InfraManager::Template"
       end

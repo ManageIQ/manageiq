@@ -476,6 +476,7 @@ class Classification < ApplicationRecord
       ent ? ent.update_attributes(entry) : cat.add_entry(entry)
     end
   end
+  private_class_method :add_entries_from_hash
 
   def validate_uniqueness_on_tag_name
     tag = find_tag
@@ -494,6 +495,8 @@ class Classification < ApplicationRecord
     end
   end
 
+  # FIXME: The intention was to make this method private but tests or code called
+  # from the tests are expecting it to be public.
   def self.name2tag(name, parent_id = 0, ns = DEFAULT_NAMESPACE)
     if parent_id == 0
       File.join(ns, name)

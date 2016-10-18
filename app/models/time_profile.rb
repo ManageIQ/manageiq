@@ -162,14 +162,20 @@ class TimeProfile < ApplicationRecord
   end
 
   # TODO: use AR "or" here
+  # FIXME: The intention was to make this method private but tests or code called
+  # from the tests are expecting it to be public.
   def self.for_user(user_id)
     where("profile_type = ? or (profile_type = ? and profile_key = ?)", "global", "user", user_id)
   end
 
+  # FIXME: The intention was to make this method private but tests or code called
+  # from the tests are expecting it to be public.
   def self.ordered_by_desc
     order("lower(description) ASC")
   end
 
+  # FIXME: The intention was to make this method private but tests or code called
+  # from the tests are expecting it to be public.
   def self.profiles_for_user(user_id, region_id)
     in_region(region_id)
       .for_user(user_id)
@@ -177,10 +183,14 @@ class TimeProfile < ApplicationRecord
       .ordered_by_desc
   end
 
+  # FIXME: The intention was to make this method private but tests or code called
+  # from the tests are expecting it to be public.
   def self.profile_for_user_tz(user_id, user_tz)
     TimeProfile.rollup_daily_metrics.detect { |tp| tp.match_user_tz?(user_id, user_tz) }
   end
 
+  # FIXME: The intention was to make this method private but tests or code called
+  # from the tests are expecting it to be public.
   # @param tz [nil|TimeProfile|TimeZone] (default timezone "UTC")
   # @return [TimeProfile] time profile that uses this time zone
   def self.default_time_profile(tz = DEFAULT_TZ)
