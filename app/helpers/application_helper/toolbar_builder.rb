@@ -842,10 +842,6 @@ class ApplicationHelper::ToolbarBuilder
         return true unless @record.is_available?(:publish)
       when "vm_reconfigure"
         return true unless @record.reconfigurable?
-      when "vm_retire"
-        return true unless @record.supports_retire?
-      when "vm_retire_now"
-        return true unless @record.supports_retire?
       when "vm_stop", "instance_stop"
         return true unless @record.is_available?(:stop)
       when "vm_reset", "instance_reset"
@@ -1307,13 +1303,8 @@ class ApplicationHelper::ToolbarBuilder
       when "vm_suspend"
         return @record.is_available_now_error_message(:suspend) if @record.is_available_now_error_message(:suspend)
       when "instance_retire", "instance_retire_now",
-              "vm_retire", "vm_retire_now"
-        if @record.retired == true
-          if @record.kind_of?(ManageIQ::Providers::CloudManager::Vm)
-            return N_("Instance is already retired")
-          else
-            return N_("VM is already retired")
-          end
+        if @record.retired
+          return N_("Instance is already retired") if @record.kind_of?(ManageIQ::Providers::CloudManager::Vm)
         end
       when "vm_scan", "instance_scan"
         return @record.is_available_now_error_message(:smartstate_analysis) unless @record.is_available?(:smartstate_analysis)

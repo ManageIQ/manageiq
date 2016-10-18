@@ -118,13 +118,15 @@ class ApplicationHelper::Toolbar::XVmCenter < ApplicationHelper::Toolbar::Basic
           :vm_retire,
           'fa fa-clock-o fa-lg',
           N_('Set Retirement Dates for this VM'),
-          N_('Set Retirement Date')),
+          N_('Set Retirement Date'),
+          :klass => ApplicationHelper::Button::VmRetire),
         button(
           :vm_retire_now,
           'fa fa-clock-o fa-lg',
           t = N_('Retire this VM'),
           t,
-          :confirm => N_("Retire this VM?")),
+          :confirm => N_("Retire this VM?"),
+          :klass => ApplicationHelper::Button::VmRetireNow),
       ]
     ),
   ])
