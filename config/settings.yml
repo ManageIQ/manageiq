@@ -1067,6 +1067,9 @@
     - notifications
     - notification_recipients
     - notification_types
+    - repl_events
+    - repl_monitor
+    - repl_nodes
     - rss_feeds
     - scan_items
     - schema_migrations
