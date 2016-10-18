@@ -389,15 +389,15 @@ class ApplicationHelper::ToolbarBuilder
     when :diagnostics_tree
       case @sb[:active_tab]
       when "diagnostics_audit_log"
-        return ["fetch_audit_log", "refresh_audit_log"].include?(id) ? false : true
+        return !["fetch_audit_log", "refresh_audit_log"].include?(id)
       when "diagnostics_collect_logs"
-        return %(collect_current_logs collect_logs log_depot_edit
-                 zone_collect_current_logs zone_collect_logs
-                 zone_log_depot_edit).include?(id) ? false : true
+        return !%(collect_current_logs collect_logs log_depot_edit
+                  zone_collect_current_logs zone_collect_logs
+                  zone_log_depot_edit).include?(id)
       when "diagnostics_evm_log"
-        return ["fetch_log", "refresh_log"].include?(id) ? false : true
+        return !["fetch_log", "refresh_log"].include?(id)
       when "diagnostics_production_log"
-        return ["fetch_production_log", "refresh_production_log"].include?(id) ? false : true
+        return !["fetch_production_log", "refresh_production_log"].include?(id)
       when "diagnostics_roles_servers", "diagnostics_servers_roles"
         case id
         when "reload_server_tree"
@@ -411,9 +411,9 @@ class ApplicationHelper::ToolbarBuilder
         end
         return true
       when "diagnostics_summary"
-        return ["refresh_server_summary", "restart_server"].include?(id) ? false : true
+        return !["refresh_server_summary", "restart_server"].include?(id)
       when "diagnostics_workers"
-        return ["refresh_workers", "restart_workers"].include?(id) ? false : true
+        return !["refresh_workers", "restart_workers"].include?(id)
       else
         return true
       end
@@ -424,7 +424,7 @@ class ApplicationHelper::ToolbarBuilder
       return true if common_buttons.include?(id) && @record.project?
       return false
     when :vmdb_tree
-      return ["db_connections", "db_details", "db_indexes", "db_settings"].include?(@sb[:active_tab]) ? false : true
+      return !["db_connections", "db_details", "db_indexes", "db_settings"].include?(@sb[:active_tab])
     else
       return true
     end
@@ -473,7 +473,7 @@ class ApplicationHelper::ToolbarBuilder
         return @sb[:active_tab] == "saved_reports"
       when "view_graph", "view_hybrid", "view_tabular"
         return @ght_type && @report && @report.graph &&
-          (@zgraph || (@ght_type == "tabular" && @html)) ? false : true
+          !(@zgraph || (@ght_type == "tabular" && @html))
       end
     when :savedreports_tree
       if %w(saved_report_delete).include?(id)
@@ -484,7 +484,7 @@ class ApplicationHelper::ToolbarBuilder
         return x_node != "root"
       when "view_graph", "view_hybrid", "view_tabular"
         return @ght_type && @report && @report.graph &&
-          (@zgraph || (@ght_type == "tabular" && @html)) ? false : true
+          !(@zgraph || (@ght_type == "tabular" && @html))
       end
     else
       return false
