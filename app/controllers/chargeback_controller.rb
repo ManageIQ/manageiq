@@ -116,7 +116,7 @@ class ChargebackController < ApplicationController
       session[:changed] =  false
       replace_right_cell
     when "save", "add"
-      id = params[:id] && params[:button] == "save" ? params[:id] : "new"
+      id = params[:button] == "save" ? params[:id] : "new"
       return unless load_edit("cbrate_edit__#{id}", "replace_cell__chargeback")
       @rate = params[:button] == "add" ? ChargebackRate.new : ChargebackRate.find(params[:id])
       if @edit[:new][:description].nil? || @edit[:new][:description] == ""
@@ -233,31 +233,23 @@ class ChargebackController < ApplicationController
           {:records => ui_lookup(:models => "ChargebackRate")}, :error)
       end
       process_cb_rates(rates, "destroy")  unless rates.empty?
-      if flash_errors? && @flash_array.count == 1
-        javascript_flash
-      else
-        cb_rates_list
-        @right_cell_text = _("%{typ} %{model}") % {:typ => x_node.split('-').last,
-                           :model => ui_lookup(:models => "ChargebackRate")}
-        replace_right_cell([:cb_rates])
-      end
     else # showing 1 rate, delete it
-      if params[:id].nil? || ChargebackRate.find_by_id(params[:id]).nil?
+      cb_rate = ChargebackRate.find_by_id(params[:id])
+      if cb_rate.nil?
         render_flash(_("%{record} no longer exists") % {:record => ui_lookup(:model => "ChargebackRate")}, :error)
       else
         rates.push(params[:id])
+        self.x_node = "xx-#{cb_rate.rate_type}"
       end
-      cb_rate = ChargebackRate.find_by_id(params[:id])
-      process_cb_rates(rates, "destroy")  unless rates.empty?
-      self.x_node = "xx-#{cb_rate.rate_type}"
-      if flash_errors?
-        javascript_flash
-      else
-        cb_rates_list
-        @right_cell_text = _("%{typ} %{model}") % {:typ => x_node.split('-').last,
-                           :model => ui_lookup(:models => "ChargebackRate")}
-        replace_right_cell([:cb_rates])
-      end
+    end
+    process_cb_rates(rates, 'destroy') unless rates.empty?
+    if flash_errors?
+      javascript_flash
+    else
+      cb_rates_list
+      @right_cell_text = _("%{typ} %{model}") % {:typ   => x_node.split('-').last,
+                                                 :model => ui_lookup(:models => 'ChargebackRate')}
+      replace_right_cell([:cb_rates])
     end
   end
 
