@@ -2270,7 +2270,7 @@ class ApplicationController < ActionController::Base
     if session.class != Hash
       session_hash = session.respond_to?(:to_hash) ? session.to_hash : session.data
       get_data_size(session_hash)
-      dump_session_data(session_hash) if get_vmdb_config[:product][:dump_session]
+      dump_session_data(session_hash) if ::Settings.product.dump_session
     end
   end
 
