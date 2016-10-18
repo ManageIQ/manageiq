@@ -1,4 +1,3 @@
-<!--[if IE 9]><html class="ie9 login-pf"><![endif]-->
 %html.login-pf{:class => get_vmdb_config[:server][:custom_login_logo] ? '' : 'rcue-login', :lang => I18n.locale.to_s.sub('-', '_')}
   %head
     = favicon_link_tag
