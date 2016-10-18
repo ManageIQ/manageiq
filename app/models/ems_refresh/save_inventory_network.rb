@@ -272,7 +272,7 @@ module EmsRefresh::SaveInventoryNetwork
       end
     end
 
-    save_inventory_multi(network_port.cloud_subnet_network_ports, hashes, deletes, [:cloud_subnet_id, :address])
+    save_inventory_multi(network_port.cloud_subnet_network_ports, hashes, deletes, [:cloud_subnet, :address])
   end
 
   def save_load_balancer_pool_members_inventory(ems, hashes, target = nil)
@@ -326,7 +326,7 @@ module EmsRefresh::SaveInventoryNetwork
     end
 
     save_inventory_multi(load_balancer_pool.load_balancer_pool_member_pools, hashes, deletes,
-                         [:load_balancer_pool_member_id])
+                         [:load_balancer_pool_member])
   end
 
   def save_load_balancer_listeners_inventory(ems, hashes, target = nil)
@@ -362,7 +362,7 @@ module EmsRefresh::SaveInventoryNetwork
       end
     end
 
-    save_inventory_multi(load_balancer_listener.load_balancer_listener_pools, hashes, deletes, [:load_balancer_pool_id])
+    save_inventory_multi(load_balancer_listener.load_balancer_listener_pools, hashes, deletes, [:load_balancer_pool])
   end
 
   def save_load_balancer_health_checks_inventory(ems, hashes, target = nil)
@@ -399,7 +399,7 @@ module EmsRefresh::SaveInventoryNetwork
     end
 
     save_inventory_multi(load_balancer_health_check.load_balancer_health_check_members, hashes, deletes,
-                         [:load_balancer_pool_member_id])
+                         [:load_balancer_pool_member])
   end
 
   def link_cloud_subnets_to_network_routers(hashes)
