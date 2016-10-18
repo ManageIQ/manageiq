@@ -238,12 +238,12 @@ class ChargebackController < ApplicationController
         replace_right_cell([:cb_rates])
       end
     else # showing 1 rate, delete it
-      if ChargebackRate.find_by_id(params[:id]).nil?
+      cb_rate = ChargebackRate.find_by_id(params[:id])
+      if cb_rate.nil?
         render_flash(_("%{record} no longer exists") % {:record => ui_lookup(:model => "ChargebackRate")}, :error)
       else
         rates.push(params[:id])
       end
-      cb_rate = ChargebackRate.find_by_id(params[:id])
       process_cb_rates(rates, "destroy")  unless rates.empty?
       self.x_node = "xx-#{cb_rate.rate_type}"
       if flash_errors?
