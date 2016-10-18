@@ -1,31 +1,96 @@
 describe "remove_from_provider Method Validation" do
-  before(:each) do
-    @zone       = FactoryGirl.create(:zone)
-    @user       = FactoryGirl.create(:user_with_group)
-    @ems        = FactoryGirl.create(:ems_vmware, :zone => @zone)
-    @host       = FactoryGirl.create(:host)
-    @vm         = FactoryGirl.create(:vm_vmware, :host => @host,
-                 :ems_id => @ems.id, :name => "testVM", :raw_power_state => "poweredOn",
-                 :registered => true)
-    @vm.tag_with("retire_full", :ns => "/managed", :cat => "lifecycle")
-    @ins  = "/Infrastructure/VM/Retirement/StateMachines/Methods/RemoveFromProvider"
+  let(:user) { FactoryGirl.create(:user_with_group) }
+  let(:zone) { FactoryGirl.create(:zone) }
+
+  context "Infrastructure" do
+    let(:ems) { FactoryGirl.create(:ems_vmware, :zone => zone) }
+    let(:vm) { FactoryGirl.create(:vm_vmware, :ems_id => ems.id) }
+    let(:ws) do
+      MiqAeEngine.instantiate("/Infrastructure/VM/Retirement/StateMachines/Methods/RemoveFromProvider?" \
+                              "Vm::vm=#{vm.id}", user)
+    end
+
+    it "vm without tags" do
+      ws
+      expect(
+        MiqQueue.exists?(:method_name => 'vm_destroy',
+                         :instance_id => vm.id,
+                         :role        => 'ems_operations')
+      ).to be_falsey
+    end
+
+    it "nil vm " do
+      ws
+      expect(
+        MiqQueue.exists?(:method_name => 'vm_destroy',
+                         :role        => 'ems_operations')
+      ).to be_falsey
+    end
+
+    it "vm without an ems" do
+      vm.update_attributes(:ext_management_system => nil)
+      ws
+      expect(
+        MiqQueue.exists?(:method_name => 'vm_destroy',
+                         :instance_id => vm.id,
+                         :role        => 'ems_operations')
+      ).to be_falsey
+    end
+
+    it "removes a vm" do
+      vm.tag_with("retire_full", :ns => "/managed", :cat => "lifecycle")
+      ws
+      expect(
+        MiqQueue.exists?(:method_name => 'vm_destroy',
+                         :instance_id => vm.id,
+                         :role        => 'ems_operations')
+      ).to be_truthy
+    end
   end
 
-  let(:ws) { MiqAeEngine.instantiate("#{@ins}?Vm::vm=#{@vm_id}", @user) }
+  context "Cloud" do
+    let(:ems) { FactoryGirl.create(:ems_google, :zone => zone) }
+    let(:vm) { FactoryGirl.create(:vm_google, :ems_id => ems.id) }
+    let(:ws) do
+      MiqAeEngine.instantiate("/Cloud/VM/Retirement/StateMachines/Methods/RemoveFromProvider?" \
+                              "Vm::vm=#{vm.id}", user)
+    end
 
-  it "removes a vm" do
-    @vm_id = @vm.id
+    it "vm without tags" do
+      ws
+      expect(
+        MiqQueue.exists?(:method_name => 'vm_destroy',
+                         :instance_id => vm.id,
+                         :role        => 'ems_operations')
+      ).to be_falsey
+    end
 
-    ws
-    expect(
-      MiqQueue.exists?(:method_name => 'vm_destroy',
-                       :instance_id => @vm.id,
-                       :role        => 'ems_operations')
-    ).to be_truthy
-  end
+    it "nil vm " do
+      ws
+      expect(
+        MiqQueue.exists?(:method_name => 'vm_destroy',
+                         :role        => 'ems_operations')
+      ).to be_falsey
+    end
 
-  it "errors for a vm equal to nil" do
-    @vm_id = nil
-    expect { ws }.to raise_error(MiqAeException::UnknownMethodRc)
+    it "vm without an ems" do
+      vm.update_attributes(:ext_management_system => nil)
+      ws
+      expect(
+        MiqQueue.exists?(:method_name => 'vm_destroy',
+                         :instance_id => vm.id,
+                         :role        => 'ems_operations')
+      ).to be_falsey
+    end
+
+    it "removes a vm" do
+      vm.tag_with("retire_full", :ns => "/managed", :cat => "lifecycle")
+      ws
+      expect(
+        MiqQueue.exists?(:method_name => 'vm_destroy',
+                         :instance_id => vm.id,
+                         :role        => 'ems_operations')
+      ).to be_truthy
+    end
   end
 end
