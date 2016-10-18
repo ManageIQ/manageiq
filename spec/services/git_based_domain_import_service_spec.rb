@@ -1,34 +1,38 @@
 describe GitBasedDomainImportService do
-  let(:git_repo) { double("GitRepository", :git_branches => git_branches, :id => 123) }
-  let(:domain) { FactoryGirl.create(:miq_ae_domain) }
-  let(:user) { FactoryGirl.create(:user) }
-  let(:task) { FactoryGirl.create(:miq_task) }
-  let(:ref_name) { 'the_branch_name' }
-  let(:ref_type) { 'branch' }
-  let(:task_options) { {:action => "Import git repository", :userid => user.userid} }
-  let(:queue_options) do
-    {
-      :class_name  => "MiqAeDomain",
-      :method_name => "import_git_repo",
-      :role        => "git_owner",
-      :args        => [import_options]
-    }
-  end
-  let(:import_options) do
-    {
-      "git_repository_id" => git_repo.id,
-      "ref"               => ref_name,
-      "ref_type"          => ref_type,
-      "tenant_id"         => 321
-    }
+  shared_context "import setup" do
+    let(:git_repo) { double("GitRepository", :git_branches => git_branches, :id => 123) }
+    let(:user) { double("User", :userid => userid, :id => 123) }
+    let(:domain) { FactoryGirl.build(:miq_ae_domain) }
+    let(:userid) { "fred" }
+    let(:task) { double("MiqTask", :id => 123) }
+    let(:ref_name) { 'the_branch_name' }
+    let(:ref_type) { 'branch' }
+    let(:task_options) { {:action => "Import git repository", :userid => userid} }
+    let(:queue_options) do
+      {
+        :class_name  => "MiqAeDomain",
+        :method_name => "import_git_repo",
+        :role        => "git_owner",
+        :args        => [import_options]
+      }
+    end
+    let(:import_options) do
+      {
+        "git_repository_id" => git_repo.id,
+        "ref"               => ref_name,
+        "ref_type"          => ref_type,
+        "tenant_id"         => 321
+      }
+    end
   end
 
   describe "#import" do
+    include_context "import setup"
     before do
       allow(GitRepository).to receive(:find_by).with(:id => git_repo.id).and_return(git_repo)
       allow(domain).to receive(:update_attribute).with(:enabled, true)
       allow(MiqTask).to receive(:wait_for_taskid).with(task.id).and_return(task)
-      User.current_user = user
+      allow(User).to receive(:current_user).and_return(user)
     end
 
     context "when git branches that match the given name exist" do
@@ -70,9 +74,10 @@ describe GitBasedDomainImportService do
   end
 
   describe "#queue_import" do
+    include_context "import setup"
     before do
       allow(GitRepository).to receive(:find_by).with(:id => git_repo.id).and_return(git_repo)
-      User.current_user = user
+      allow(User).to receive(:current_user).and_return(user)
     end
 
     context "when git branches that match the given name exist" do

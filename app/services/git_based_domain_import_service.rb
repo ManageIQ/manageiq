@@ -21,10 +21,10 @@ class GitBasedDomainImportService
     }
 
     queue_options = {
-        :class_name  => "MiqAeDomain",
-        :method_name => "import_git_repo",
-        :role        => "git_owner",
-        :args        => [import_options]
+      :class_name  => "MiqAeDomain",
+      :method_name => "import_git_repo",
+      :role        => "git_owner",
+      :args        => [import_options]
     }
 
     MiqTask.generic_action_with_callback(task_options, queue_options)
