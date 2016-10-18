@@ -1,5 +1,6 @@
 class MetricRollup < ApplicationRecord
   include Metric::Common
+  include Metric::ChargebackHelper
 
   def self.with_interval_and_time_range(interval, timestamp)
     where(:capture_interval_name => interval, :timestamp => timestamp)
