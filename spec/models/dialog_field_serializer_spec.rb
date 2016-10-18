@@ -42,7 +42,8 @@ describe DialogFieldSerializer do
     end
 
     before do
-      allow(resource_action_serializer).to receive(:serialize).with(resource_action).and_return("serialized resource action")
+      allow(resource_action_serializer)
+        .to receive(:serialize).with(resource_action).and_return("serialized resource action")
     end
 
     context "when the dialog_field is dynamic" do
@@ -53,10 +54,11 @@ describe DialogFieldSerializer do
       end
 
       it "serializes the dialog_field with the correct values" do
-        expect(dialog_field_serializer.serialize(dialog_field)).to eq(expected_serialized_values.merge(
-                                                                        "resource_action" => "serialized resource action",
-                                                                        "values"          => "dynamic values"
-        ))
+        expect(dialog_field_serializer.serialize(dialog_field))
+          .to eq(expected_serialized_values.merge(
+                   "resource_action" => "serialized resource action",
+                   "values"          => "dynamic values"
+          ))
       end
 
       it 'returns all attributes of a dialog field' do
@@ -73,9 +75,10 @@ describe DialogFieldSerializer do
       let(:dynamic) { false }
 
       it "serializes the dialog_field" do
-        expect(dialog_field_serializer.serialize(dialog_field)).to eq(expected_serialized_values.merge(
-                                                                        "resource_action" => "serialized resource action"
-        ))
+        expect(dialog_field_serializer.serialize(dialog_field))
+          .to eq(expected_serialized_values.merge(
+                   "resource_action" => "serialized resource action"
+          ))
       end
 
       it 'returns all attributes of a dialog field' do
@@ -103,14 +106,15 @@ describe DialogFieldSerializer do
       end
 
       it "serializes the category name and description" do
-        expect(dialog_field_serializer.serialize(dialog_field)).to eq(expected_serialized_values.merge(
-                                                                        "resource_action" => "serialized resource action",
-                                                                        "options"         => {
-                                                                          :category_id          => "123",
-                                                                          :category_name        => "best category ever",
-                                                                          :category_description => "best category ever"
-                                                                        }
-        ))
+        expect(dialog_field_serializer.serialize(dialog_field))
+          .to eq(expected_serialized_values.merge(
+                   "resource_action" => "serialized resource action",
+                   "options"         => {
+                     :category_id          => "123",
+                     :category_name        => "best category ever",
+                     :category_description => "best category ever"
+                   }
+          ))
       end
     end
   end

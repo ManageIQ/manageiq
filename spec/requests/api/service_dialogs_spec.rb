@@ -132,7 +132,7 @@ describe "Service Dialogs API" do
     end
 
     it "queries service dialogs content with the template and related resource action specified" do
-      expect_any_instance_of(Dialog).to receive(:content).with(template, ra1)
+      expect_any_instance_of(Dialog).to receive(:content).with(template, ra1, true)
 
       run_get "#{service_templates_url(template.id)}/service_dialogs/#{dialog1.id}", :attributes => "content"
 

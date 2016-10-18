@@ -28,7 +28,8 @@ describe DialogGroupSerializer do
     end
 
     before do
-      allow(dialog_field_serializer).to receive(:serialize).with(dialog_field, boolean).and_return("serialized_dialog_fields")
+      allow(dialog_field_serializer)
+        .to receive(:serialize).with(dialog_field, boolean).and_return("serialized_dialog_fields")
     end
 
     it "serializes the dialog_group" do

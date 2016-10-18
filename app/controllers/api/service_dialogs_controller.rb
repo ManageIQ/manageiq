@@ -1,13 +1,6 @@
 module Api
   class ServiceDialogsController < BaseController
-    def show
-      if params[:c_id]
-        resource = Dialog.find(params[:c_id])
-        render :json => single_resource(resource, params).target!
-      else
-        render :json => dialog_collection(params)
-      end
-    end
+    before_action :set_additional_attributes, :only => [:show]
 
     def refresh_dialog_fields_resource(type, id = nil, data = nil)
       raise BadRequestError, "Must specify an id for Reconfiguring a #{type} resource" unless id
@@ -20,6 +13,10 @@ module Api
       end
     end
 
+    def fetch_service_dialogs_content(resource)
+      resource.content(nil, nil, true)
+    end
+
     def create_resource(_type, _id, data)
       DialogImportService.new.import(data)
     rescue => e
@@ -28,26 +25,8 @@ module Api
 
     private
 
-    def single_resource(resource, params, type = :service_dialogs, reftype = :service_dialogs)
-      json = resource_to_jbuilder(type, reftype, resource)
-      expand_dialog_content(json, resource) unless params.key?(:attributes)
-      json
-    end
-
-    def dialog_collection(params = {})
-      dialogs = Dialog.all
-      {
-        'name'      => 'service_dialogs',
-        'count'     => dialogs.count,
-        'subcount'  => dialogs.count,
-        'resources' => dialogs.collect do |dialog|
-          if params['expand'] == 'resources'
-            single_resource(dialog, params).attributes!
-          else
-            { 'href' => normalize_href(:service_dialogs, dialog.id) }
-          end
-        end
-      }
+    def set_additional_attributes
+      @additional_attributes = %w(content) if attribute_selection == "all"
     end
 
     def refresh_dialog_fields_service_dialog(service_dialog, data)
@@ -70,13 +49,6 @@ module Api
         raise BadRequestError, "Dialog field #{key} specified does not exist in #{ident}" if dialog_field.nil?
         dialog_field.value = value
       end
-    end
-
-    def expand_dialog_content(json, resource)
-      content = {
-        'content' => resource.content(nil, nil, true)
-      }
-      add_hash json, content
     end
 
     def service_dialog_ident(service_dialog)
