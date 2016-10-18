@@ -1852,4 +1852,8 @@ class Host < ApplicationRecord
     return power_state unless power_state.nil?
     "unknown"
   end
+
+  def validate_destroy
+    {:available => true, :message => nil}
+  end
 end

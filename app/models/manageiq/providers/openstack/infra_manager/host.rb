@@ -419,4 +419,79 @@ class ManageIQ::Providers::Openstack::InfraManager::Host < ::Host
     task.update_status("Finished", task_status, "Provide Complete with #{workflow_state}") if task
     $log.info("Provide #{log_target}...Complete - Timings: #{t.inspect}")
   end
+
+  def validate_destroy
+    if hardware.provision_state == "active"
+      {:available => false, :message => "Cannot remove #{name} because it is in #{hardware.provision_state} state."}
+    else
+      {:available => true, :message => nil}
+    end
+  end
+
+  def destroy_queue
+    destroy_ironic_queue
+  end
+
+  def destroy_ironic_queue(userid = "system")
+    log_target = "#{self.class.name} name: [#{name}], id: [#{id}]"
+
+    task = MiqTask.create(:name => "Deleting Ironic node '#{name}'", :userid => userid)
+
+    _log.info("Requesting Ironic delete of #{log_target}")
+    begin
+      MiqEvent.raise_evm_job_event(self, :type => "destroy_ironic", :prefix => "request")
+    rescue => err
+      $log.warn("Error raising request delete for #{log_target}: #{err.message}")
+      return
+    end
+
+    _log.info("Queuing destroy_ironic of #{log_target}")
+    timeout = (VMDB::Config.new("vmdb").config.fetch_path(:host_delete, :queue_timeout) || 20.minutes).to_i_with_method
+    cb = {:class_name  => task.class.name,
+          :instance_id => task.id,
+          :method_name => :queue_callback_on_exceptions,
+          :args        => ['Finished']}
+    MiqQueue.put(
+      :class_name   => self.class.name,
+      :instance_id  => id,
+      :args         => [task.id],
+      :method_name  => "destroy_ironic",
+      :miq_callback => cb,
+      :msg_timeout  => timeout,
+      :zone         => my_zone
+    )
+  end
+
+  def destroy_ironic(taskid = nil)
+    unless taskid.nil?
+      task = MiqTask.find_by_id(taskid)
+      task.state_active if task
+    end
+
+    log_target = "#{self.class.name} name: [#{name}], id: [#{id}]"
+
+    _log.info("Deleting Ironic node #{log_target}...")
+
+    task.update_status("Active", "Ok", "Deleting Ironic Node") if task
+
+    status = "Fail"
+    task_status = "Ok"
+    _dummy, t = Benchmark.realtime_block(:total_time) do
+      begin
+        connection = ext_management_system.openstack_handle.detect_baremetal_service
+        response = connection.delete_node(name)
+
+        if response.status == 204
+          Host.destroy_queue(id)
+          status = "Success"
+        end
+      rescue => err
+        task_status = "Error"
+        status = err
+      end
+    end
+
+    task.update_status("Finished", task_status, "Delete Ironic node #{log_target} finished with #{status}") if task
+    _log.info("Delete Ironic node #{log_target}...Complete - Timings: #{t.inspect}")
+  end
 end
