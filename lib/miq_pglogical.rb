@@ -1,6 +1,8 @@
 require 'pg'
 
 class MiqPglogical
+  include Vmdb::Logging
+
   REPLICATION_SET_NAME = 'miq'.freeze
   SETTINGS_PATH = [:replication].freeze
   NODE_PREFIX = "region_".freeze
@@ -41,9 +43,11 @@ class MiqPglogical
   #   node and creating the replication set
   def configure_provider
     return if provider?
-    pglogical.enable
-    create_node unless node?
-    create_replication_set
+    @connection.transaction(:requires_new => true) do
+      pglogical.enable
+      create_node unless node?
+      create_replication_set
+    end
   end
 
   # Removes the replication configuration and pglogical node from the
@@ -82,7 +86,11 @@ class MiqPglogical
 
     # add tables to the set which are no longer excluded (or new)
     newly_included_tables.each do |table|
-      pglogical.replication_set_add_table(REPLICATION_SET_NAME, table, true)
+      begin
+        pglogical.replication_set_add_table(REPLICATION_SET_NAME, table, true)
+      rescue PG::UniqueViolation => e
+        _log.warn("Caught unique constraint error while adding #{table} to the replication set: #{e.message}")
+      end
     end
   end
 
