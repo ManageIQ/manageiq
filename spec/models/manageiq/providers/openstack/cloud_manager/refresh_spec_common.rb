@@ -752,6 +752,9 @@ module Openstack
         expect(vm.public_networks.count).to be > 0
         expect(vm.public_networks.first).to be_kind_of(ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork::Public)
 
+        expect(vm.fixed_ip_addresses.count).to    be > 0
+        expect(vm.floating_ip_addresses.count).to be > 0
+
         expect(vm.private_networks.map(&:name)).to match_array vm_expected[:__network_names]
         expect(vm.public_networks.first.floating_ips).to include vm.floating_ips.first
         vm.network_ports.each do |network_port|

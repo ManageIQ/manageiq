@@ -420,6 +420,11 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
       :name => "miq-azure-test1").first
     cloud_subnet  = cloud_network.cloud_subnets.first
     expect(v.floating_ip).to eql(floating_ip)
+    expect(v.floating_ips.first).to eql(floating_ip)
+    expect(v.floating_ip_addresses.first).to eql(floating_ip.address)
+    expect(v.fixed_ip_addresses).to match_array(v.ipaddresses - [floating_ip.address])
+    expect(v.fixed_ip_addresses.count).to be > 0
+
     expect(v.cloud_network).to eql(cloud_network)
     expect(v.cloud_subnet).to eql(cloud_subnet)
 
