@@ -477,4 +477,127 @@ describe Host do
       expect(host.supports_refresh_network_interfaces?).to be_falsey
     end
   end
+
+  describe "#authentication_check_role" do
+    it "returns smartstate" do
+      host = FactoryGirl.build(:host)
+      expect(host.authentication_check_role).to eq('smartstate')
+    end
+  end
+
+  describe "#validate_power_state" do
+    let(:host) do
+      FactoryGirl.create(:host_vmware_esx,
+                         :ext_management_system => FactoryGirl.create(:ems_vmware),
+                         :vmm_vendor            => 'vmware')
+    end
+
+    context "when host power state equal to pstate" do
+      it "returns nil" do
+        expect(host.validate_power_state('on')).to be_nil
+        expect(host.validate_power_state(['on'])).to be_nil
+      end
+    end
+
+    context "when host power state does not equal to pstate" do
+      it "returns available false" do
+        expect(host.validate_power_state('off')).to eq(:available => false,
+                                                       :message   => "The Host is not powered 'off'")
+        expect(host.validate_power_state(['off'])).to eq(:available => false,
+                                                         :message   => "The Host is not powered [\"off\"]")
+      end
+    end
+  end
+
+  context "vmotion validation methods" do
+    let(:host) do
+      FactoryGirl.create(:host_vmware_esx,
+                         :ext_management_system => FactoryGirl.create(:ems_vmware),
+                         :vmm_vendor            => 'vmware')
+    end
+
+    describe "#validate_enable_vmotion" do
+      it "returns available true" do
+        expect(host.validate_enable_vmotion).to eq(:available => true, :message => nil)
+      end
+    end
+
+    describe "#validate_disable_vmotion" do
+      it "returns available true" do
+        expect(host.validate_disable_vmotion).to eq(:available => true, :message => nil)
+      end
+    end
+
+    describe "#validate_vmotion_enabled?" do
+      it "returns available true" do
+        expect(host.validate_vmotion_enabled?).to eq(:available => true, :message => nil)
+      end
+    end
+  end
+
+  describe "#validate_ipmi" do
+    subject { host.validate_ipmi }
+
+    context "host does not have ipmi address" do
+      let(:host) { FactoryGirl.create(:host) }
+
+      it "returns available false" do
+        expect(subject).to eq(:available => false, :message => "The Host is not configured for IPMI")
+      end
+    end
+
+    context "host has ipmi address" do
+      let(:host) { FactoryGirl.create(:host, :ipmi_address => "127.0.0.1") }
+      before do
+        EvmSpecHelper.local_miq_server
+      end
+
+      context "host does not have ipmi credentials" do
+        it "returns available false" do
+          expect(subject).to eq(:available => false, :message => "The Host has no IPMI credentials")
+        end
+      end
+
+      context "host has incorrect ipmi credentials" do
+        it "returns available false" do
+          host.update_authentication(:ipmi => {:password => "a"})
+          expect(subject).to eq(:available => false, :message => "The Host has invalid IPMI credentials")
+        end
+      end
+
+      context "host has correct ipmi credentials" do
+        it "returns available true" do
+          host.update_authentication(:ipmi => {:userid => "a", :password => "a"})
+          expect(subject).to eq(:available => true, :message => nil)
+        end
+      end
+    end
+  end
+
+  context "ipmi validation methods" do
+    let(:host_with_ipmi) { FactoryGirl.create(:host_with_ipmi) }
+    before do
+      EvmSpecHelper.local_miq_server
+    end
+
+    describe "#validate_start" do
+      let(:host_off) { FactoryGirl.create(:host_with_ipmi, :power_state => 'off') }
+
+      it "returns available true" do
+        expect(host_off.validate_start).to eq(:available => true, :message => nil)
+      end
+    end
+
+    describe "#validate_stop" do
+      it "returns available true" do
+        expect(host_with_ipmi.validate_stop).to eq(:available => true, :message => nil)
+      end
+    end
+
+    describe "#validate_reset" do
+      it "returns available true" do
+        expect(host_with_ipmi.validate_reset).to eq(:available => true, :message => nil)
+      end
+    end
+  end
 end
