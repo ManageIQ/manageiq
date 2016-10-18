@@ -164,12 +164,12 @@ class ChargebackController < ApplicationController
     when "reset", nil # displaying edit from for actions: new, edit or copy
       @in_a_form = true
       @_params[:id] ||= find_checked_items[0]
-      session[:changed] = params[:typ] == "copy"
+      session[:changed] = params[:pressed] == 'chargeback_rates_copy'
 
-      @rate = params[:typ] == "new" ? ChargebackRate.new : ChargebackRate.find(params[:id])
+      @rate = params[:id] == 'new' ? ChargebackRate.new : ChargebackRate.find(params[:id])
       @record = @rate
 
-      if params[:typ] == "edit" && @rate.default?
+      if params[:pressed] == 'chargeback_rates_edit' && @rate.default?
         render_flash(_("Default Chargeback Rate \"%{name}\" cannot be edited.") % {:name => @rate.description}, :error)
         return
       end
@@ -528,7 +528,7 @@ class ChargebackController < ApplicationController
 
     tiers = []
     rate_details = @rate.chargeback_rate_details
-    rate_details = ChargebackRateDetail.default_rate_details_for(@edit[:new][:rate_type]) if params[:typ] == "new"
+    rate_details = ChargebackRateDetail.default_rate_details_for(@edit[:new][:rate_type]) if params[:id] == 'new'
 
     # Select the currency of the first chargeback_rate_detail. All the chargeback_rate_details have the same currency
     @edit[:new][:currency] = rate_details[0].detail_currency.id
@@ -547,14 +547,14 @@ class ChargebackController < ApplicationController
         temp[:chargeback_rate_detail_measure_id] = detail.detail_measure.id
       end
 
-      temp[:id] = params[:typ] == "copy" ? nil : detail.id
+      temp[:id] = params[:pressed] == 'chargeback_rates_copy' ? nil : detail.id
 
       tiers[detail_index] ||= []
 
       detail.chargeback_tiers.each do |tier|
         new_tier = tier.slice(*ChargebackTier::FORM_ATTRIBUTES)
-        new_tier[:id] = params[:typ] == "copy" ? nil : tier.id
-        new_tier[:chargeback_rate_detail_id] = params[:typ] == "copy" ? nil : detail.id
+        new_tier[:id] = params[:pressed] == 'chargeback_rates_copy' ? nil : tier.id
+        new_tier[:chargeback_rate_detail_id] = params[:pressed] == 'chargeback_rates_copy' ? nil : detail.id
         new_tier[:start] = new_tier[:start].to_f
         new_tier[:finish] = ChargebackTier.to_float(new_tier[:finish])
         tiers[detail_index].push(new_tier)
@@ -567,7 +567,7 @@ class ChargebackController < ApplicationController
 
     @edit[:new][:per_time_types] = {"hourly" => _("Hourly")}
 
-    if params[:typ] == "copy"
+    if params[:pressed] == 'chargeback_rates_copy'
       @rate.id = nil
       @edit[:new][:description] = "copy of #{@rate.description}"
     end
