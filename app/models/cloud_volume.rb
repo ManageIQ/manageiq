@@ -20,8 +20,7 @@ class CloudVolume < ApplicationRecord
   acts_as_miq_taggable
 
   def self.available
-    joins("LEFT OUTER JOIN disks ON disks.backing_id = cloud_volumes.id")
-      .where("disks.backing_id" => nil)
+    left_outer_joins(:attachments).where("disks.backing_id" => nil)
   end
 
   def self.class_by_ems(ext_management_system)
