@@ -72,7 +72,8 @@ module Api
         opts = {
           :name             => type.to_s,
           :is_subcollection => false,
-          :expand_resources => true
+          :expand_resources => true,
+          :expand_actions   => true
         }
         resource_to_jbuilder(type, type, resource, opts).attributes!
       end
