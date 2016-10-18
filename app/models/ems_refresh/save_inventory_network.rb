@@ -237,12 +237,12 @@ module EmsRefresh::SaveInventoryNetwork
     store_ids_for_new_records(ems.load_balancers, hashes, :ems_ref)
   end
 
-  def save_network_ports_inventory(ems, hashes, target = nil)
+  def save_network_ports_inventory(ems, hashes, target = nil, mode = :refresh)
     target = ems if target.nil?
 
     ems.network_ports.reset
     deletes = if target == ems
-                :use_association
+                ems.network_ports.where(:source => mode).dup
               else
                 []
               end
@@ -256,6 +256,7 @@ module EmsRefresh::SaveInventoryNetwork
       end
 
       h[:security_groups] = (h.fetch_path(:security_groups) || []).map { |x| x.try(:[], :_object) }.compact.uniq
+      h[:source] = mode
     end
 
     save_inventory_multi(ems.network_ports, hashes, deletes, [:ems_ref], :cloud_subnet_network_ports)
