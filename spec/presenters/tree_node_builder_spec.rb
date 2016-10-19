@@ -481,52 +481,6 @@ describe TreeNodeBuilder do
       )
     end
 
-    context "Vm node" do
-      {
-        :vm              => "Base",
-        :vm_cloud        => "ManageIQ::Providers::CloudManager::Vm",
-        :vm_infra        => "ManageIQ::Providers::InfraManager::Vm",
-        :vm_amazon       => "ManageIQ::Providers::Amazon::CloudManager::Vm",
-        :vm_azure        => "ManageIQ::Providers::Azure::CloudManager::Vm",
-        :vm_google       => "ManageIQ::Providers::Google::CloudManager::Vm",
-        :vm_openstack    => "ManageIQ::Providers::Openstack::CloudManager::Vm",
-        :vm_vmware_cloud => "ManageIQ::Providers::Vmware::CloudManager::Vm",
-        :vm_microsoft    => "ManageIQ::Providers::Microsoft::InfraManager::Vm",
-        :vm_redhat       => "ManageIQ::Providers::Redhat::InfraManager::Vm",
-        :vm_vmware       => "ManageIQ::Providers::Vmware::InfraManager::Vm",
-      }.each do |factory, vm_type|
-        it vm_type do
-          vm = FactoryGirl.build(factory)
-          node = TreeNodeBuilder.build(vm, nil, {})
-          expect(node).to eq(
-            :key     => "-#{vm.name}",
-            :title   => vm.name,
-            :icon    => "100/currentstate-archived.png",
-            :tooltip => "VM: #{vm.name} (Click to view)",
-            :expand  => false
-          )
-        end
-      end
-
-      it "Vm node with /" do
-        vm = FactoryGirl.create(:vm_amazon, :name => "foo / bar")
-        node = TreeNodeBuilder.build(vm, "foo", {})
-        expect(node[:title]).to eq("foo / bar")
-      end
-
-      it "Vm node with %2f" do
-        vm = FactoryGirl.create(:vm_amazon, :name => "foo %2f bar")
-        node = TreeNodeBuilder.build(vm, nil, {})
-        expect(node[:title]).to eq("foo / bar")
-      end
-
-      it "Vm node with tooltip" do
-        vm = FactoryGirl.create(:vm_amazon, :name => "name")
-        node = TreeNodeBuilder.build(vm, nil, {})
-        expect(node[:tooltip]).to eq(_("VM: %{name} (Click to view)") % {:name => vm.name})
-      end
-    end
-
     it "Lan node" do
       lan = FactoryGirl.build(:lan)
       node = TreeNodeBuilder.build(lan, nil, {})
@@ -1070,6 +1024,7 @@ describe TreeNodeBuilder do
     end
 
     context "VmOrTemplate node" do
+      # Template classes
       {
         :miq_template          => "Base",
         :template_cloud        => "ManageIQ::Providers::CloudManager::Template",
@@ -1094,6 +1049,53 @@ describe TreeNodeBuilder do
             :expand => false
           )
         end
+      end
+
+      # Vm classes
+      {
+        :vm              => "Base",
+        :vm_cloud        => "ManageIQ::Providers::CloudManager::Vm",
+        :vm_infra        => "ManageIQ::Providers::InfraManager::Vm",
+        :vm_server       => "VmServer",
+        :vm_amazon       => "ManageIQ::Providers::Amazon::CloudManager::Vm",
+        :vm_azure        => "ManageIQ::Providers::Azure::CloudManager::Vm",
+        :vm_google       => "ManageIQ::Providers::Google::CloudManager::Vm",
+        :vm_openstack    => "ManageIQ::Providers::Openstack::CloudManager::Vm",
+        :vm_vmware_cloud => "ManageIQ::Providers::Vmware::CloudManager::Vm",
+        :vm_microsoft    => "ManageIQ::Providers::Microsoft::InfraManager::Vm",
+        :vm_redhat       => "ManageIQ::Providers::Redhat::InfraManager::Vm",
+        :vm_vmware       => "ManageIQ::Providers::Vmware::InfraManager::Vm",
+        :vm_xen          => "VmXen",
+      }.each do |factory, vm_type|
+        it vm_type do
+          vm = FactoryGirl.build(factory)
+          node = TreeNodeBuilder.build(vm, nil, {})
+          expect(node).to eq(
+            :key     => "-#{vm.name}",
+            :title   => vm.name,
+            :icon    => "100/currentstate-archived.png",
+            :tooltip => "VM: #{vm.name} (Click to view)",
+            :expand  => false
+          )
+        end
+      end
+
+      it "Vm node with /" do
+        vm = FactoryGirl.create(:vm_amazon, :name => "foo / bar")
+        node = TreeNodeBuilder.build(vm, "foo", {})
+        expect(node[:title]).to eq("foo / bar")
+      end
+
+      it "Vm node with %2f" do
+        vm = FactoryGirl.create(:vm_amazon, :name => "foo %2f bar")
+        node = TreeNodeBuilder.build(vm, nil, {})
+        expect(node[:title]).to eq("foo / bar")
+      end
+
+      it "Vm node with tooltip" do
+        vm = FactoryGirl.create(:vm_amazon, :name => "name")
+        node = TreeNodeBuilder.build(vm, nil, {})
+        expect(node[:tooltip]).to eq(_("VM: %{name} (Click to view)") % {:name => vm.name})
       end
     end
 

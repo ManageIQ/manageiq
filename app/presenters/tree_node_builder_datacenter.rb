@@ -33,9 +33,9 @@ class TreeNodeBuilderDatacenter < TreeNodeBuilder
 
   def vm_node(object)
     image = "currentstate-#{object.normalized_state.downcase}.png"
-    if object.template?
-      image = object.host ? "template.png" : "template-no-host.png"
+    unless object.template?
+      tip = _("VM: %{name}") % {:name => object.name}
     end
-    generic_node(object.name, image, _("VM: %{name}") % {:name => object.name})
+    generic_node(object.name, image, tip)
   end
 end

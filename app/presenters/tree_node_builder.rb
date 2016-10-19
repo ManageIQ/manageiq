@@ -101,7 +101,6 @@ class TreeNodeBuilder
     "IsoImage"                   => -> { generic_node(object.name, "isoimage.png") },
     "ResourcePool"               => -> { generic_node(object.name, object.vapp ? "vapp.png" : "resource_pool.png") },
 
-    "Vm"                         => -> { vm_node(object) },
     "Lan"                        => -> { generic_node(object.name,
                                                 "lan.png",
                                                 _("Port Group: %{name}") % {:name => object.name}) },
@@ -163,7 +162,7 @@ class TreeNodeBuilder
     "Tenant"                     => -> { generic_node(object.name, "#{object.tenant? ? "tenant" : "project"}.png") },
     "VmdbTableEvm"               => -> { generic_node(object.name, "vmdbtableevm.png") },
     "VmdbIndex"                  => -> { generic_node(object.name, "vmdbindex.png") },
-    "VmOrTemplate"               => -> { generic_node(object.name, "currentstate-#{object.normalized_state.downcase}.png") },
+    "VmOrTemplate"               => -> { vm_node(object) },
     "Zone"                       => -> { zone_node },
     "Hash"                       => -> { hash_node },
   }.freeze
@@ -315,10 +314,10 @@ class TreeNodeBuilder
 
   def vm_node(object)
     image = "currentstate-#{object.normalized_state.downcase}.png"
-    if object.template?
-      image = object.host ? "template.png" : "template-no-host.png"
+    unless object.template?
+      tip = _("VM: %{name} (Click to view)") % {:name => object.name}
     end
-    generic_node(object.name, image, _("VM: %{name} (Click to view)") % {:name => object.name})
+    generic_node(object.name, image, tip)
   end
 
   def image_for_node(object, image)
