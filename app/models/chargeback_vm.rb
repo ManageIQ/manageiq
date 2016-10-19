@@ -93,7 +93,6 @@ class ChargebackVm < Chargeback
     end
     return [[]] if vms.empty?
 
-    @options = options
     @vm_owners = vms.inject({}) { |h, v| h[v.id] = v.evm_owner_name; h }
 
     build_results_for_report_chargeback(options)
