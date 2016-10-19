@@ -35,8 +35,8 @@ describe ManageIQ::Providers::AnsibleTower::ConfigurationManager::Refresher do
   def assert_counts
     expect(Provider.count).to                                    eq(1)
     expect(configuration_manager).to                             have_attributes(:api_version => "2.4.2")
-    expect(configuration_manager.configured_systems.count).to    eq(68)
-    expect(configuration_manager.configuration_scripts.count).to eq(11)
+    expect(configuration_manager.configured_systems.count).to    eq(98)
+    expect(configuration_manager.configuration_scripts.count).to eq(13)
     expect(configuration_manager.inventory_groups.count).to      eq(7)
   end
 
