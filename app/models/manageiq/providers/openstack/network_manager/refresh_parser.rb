@@ -104,7 +104,6 @@ module ManageIQ::Providers
 
     def get_subnets
       return unless @network_service.name == :neutron
-      @data[:cloud_subnets] = []
 
       networks.each do |n|
         new_net = @data_index.fetch_path(:cloud_networks, n.id)
@@ -113,7 +112,6 @@ module ManageIQ::Providers
         # Lets store also subnets into indexed data, so we can reference them elsewhere
         new_net[:cloud_subnets].each do |x|
           @data_index.store_path(:cloud_subnets, x[:ems_ref], x)
-          @data[:cloud_subnets] << x
         end
       end
     end

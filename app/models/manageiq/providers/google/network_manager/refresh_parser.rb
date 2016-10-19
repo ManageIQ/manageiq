@@ -240,7 +240,7 @@ module ManageIQ::Providers
       end
 
       def get_cloud_subnets(subnets)
-        process_collection(subnets, :cloud_subnets) { |s| parse_cloud_subnet(s) }
+        process_collection(subnets, :cloud_subnets, false) { |s| parse_cloud_subnet(s) }
       end
 
       def get_security_groups

@@ -36,7 +36,7 @@ module ManageIQ::Providers
       @inv[:networks] += get_vapp_networks
 
       process_collection(@inv[:networks], :cloud_networks) { |n| parse_network(n) }
-      process_collection(@inv[:networks], :cloud_subnets) { |n| parse_network_subnet(n) }
+      process_collection(@inv[:networks], :cloud_subnets, false) { |n| parse_network_subnet(n) }
     end
 
     def get_network_ports

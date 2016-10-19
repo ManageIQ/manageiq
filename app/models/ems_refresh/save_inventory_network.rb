@@ -53,7 +53,7 @@ module EmsRefresh::SaveInventoryNetwork
     # Save and link other subsections
     save_child_inventory(ems, hashes, child_keys, target)
 
-    link_cloud_subnets_to_network_routers(hashes[:cloud_subnets]) if hashes.key?(:cloud_subnets)
+    link_cloud_subnets_to_network_routers(hashes[:cloud_networks].collect { |x| x[:cloud_subnets] }.flatten) if hashes.key?(:network_routers)
 
     ems.save!
     hashes[:id] = ems.id
@@ -404,6 +404,8 @@ module EmsRefresh::SaveInventoryNetwork
   end
 
   def link_cloud_subnets_to_network_routers(hashes)
+    return if hashes.blank?
+
     hashes.each do |hash|
       network_router = hash.fetch_path(:network_router, :_object)
       hash[:_object].update_attributes(:network_router => network_router)

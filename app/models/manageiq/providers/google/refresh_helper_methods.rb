@@ -1,8 +1,8 @@
 module ManageIQ::Providers::Google::RefreshHelperMethods
   extend ActiveSupport::Concern
 
-  def process_collection(collection, key)
-    @data[key]       ||= []
+  def process_collection(collection, key, store_in_data = true)
+    @data[key]       ||= [] if store_in_data
     @data_index[key] ||= {}
 
     collection.each do |item|
@@ -14,15 +14,15 @@ module ManageIQ::Providers::Google::RefreshHelperMethods
       if result.first.kind_of?(Array)
         result.each { |x| process_item(key, x.first, x.second) }
       else
-        process_item(key, result.first, result.second)
+        process_item(key, result.first, result.second, store_in_data)
       end
     end
   end
 
-  def process_item(key, uid, result)
+  def process_item(key, uid, result, store_in_data = true)
     return if uid.nil?
 
-    @data[key] << result
+    @data[key] << result if store_in_data
     @data_index.store_path(key, uid, result)
   end
 

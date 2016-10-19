@@ -79,7 +79,7 @@ class ManageIQ::Providers::Azure::NetworkManager::RefreshParser
 
   def get_cloud_subnets(cloud_network)
     subnets = cloud_network.properties.subnets
-    process_collection(subnets, :cloud_subnets) { |subnet| parse_cloud_subnet(subnet) }
+    process_collection(subnets, :cloud_subnets, false) { |subnet| parse_cloud_subnet(subnet) }
   end
 
   def get_security_groups
