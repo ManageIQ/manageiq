@@ -203,7 +203,7 @@
   */
   GtlController.prototype.initController = function(initObject) {
     this.initObjects(initObject)
-    return this.getData(initObject.modelName, initObject.activeTree, initObject.currId, this.settings)
+    return this.getData(initObject.modelName, initObject.activeTree, initObject.currId, initObject.isExplorer, this.settings)
       .then(function() {
         var start = (this.settings.current - 1) * this.settings.perpage;
         this.setPaging(start, this.settings.perpage);
@@ -224,8 +224,8 @@
   * @param currId current Id, if some nested items are displayed.
   * @param settings settings object.
   */
-  GtlController.prototype.getData = function(modelName, activeTree, currId, settings) {
-    return this.MiQDataTableService.retrieveRowsAndColumnsFromUrl(modelName, activeTree, currId, settings)
+  GtlController.prototype.getData = function(modelName, activeTree, currId, isExplorer, settings) {
+    return this.MiQDataTableService.retrieveRowsAndColumnsFromUrl(modelName, activeTree, currId, isExplorer, settings)
       .then(function (gtlData) {
         this.gtlData = gtlData;
         this.perPage.text = gtlData.settings.perpage;

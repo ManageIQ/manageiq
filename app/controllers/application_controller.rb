@@ -248,9 +248,13 @@ class ApplicationController < ActionController::Base
 
   def process_params_options(params)
     options = {}
+    if params[:explorer]
+      @explorer = params[:explorer] == "true"
+    end
+
     if params[:active_tree]
       node_info = (method(:get_node_info).arity == 1) ? get_node_info(x_node) : get_node_info(x_node, false)
-      options.merge!(node_info) if node_info != nil
+      options.merge!(node_info) if !node_info.nil?
     end
 
     if params[:model_id]
@@ -266,7 +270,7 @@ class ApplicationController < ActionController::Base
     if params[:active_tree]
       model_view = vm_model_from_active_tree(params[:active_tree].to_sym)
     end
-    if (model_view.nil? && controller_to_model_params[self.class.model.to_s].nil? && params[:model])
+    if model_view.nil? && controller_to_model_params[self.class.model.to_s].nil? && params[:model]
       model_view = params[:model].singularize.classify.constantize
     end
 
@@ -289,7 +293,7 @@ class ApplicationController < ActionController::Base
     settings[:sort_col] = @sortcol
     render :json => {
       :settings => settings,
-      :data => view_to_hash(current_view)
+      :data     => view_to_hash(current_view)
     }
   end
 
@@ -909,10 +913,11 @@ class ApplicationController < ActionController::Base
 
     # Add table elements
     table = view.sub_table ? view.sub_table : view.table
+    view_context.instance_variable_set(:@explorer, @explorer)
     table.data.each do |row|
       new_row = {
-        :id => list_row_id(row),
-        :cells => [],
+        :id       => list_row_id(row),
+        :cells    => [],
         :quadicon => view_context.render_quadicon(@targets_hash[row.id])
       }
       root[:rows] << new_row
@@ -925,7 +930,7 @@ class ApplicationController < ActionController::Base
       if has_listicon
         item = listicon_item(view, row['id'])
         image = listicon_image(item, view)
-        new_row[:img_url] = ActionController::Base.helpers.image_path("#{listicon_image(item, view)}")
+        new_row[:img_url] = ActionController::Base.helpers.image_path(listicon_image(item, view).to_s)
         new_row[:cells] << {:title => _('View this item'),
                             :image => image,
                             :icon  => listicon_icon(item)}
@@ -1584,7 +1589,7 @@ class ApplicationController < ActionController::Base
       @settings[:perpage][perpage_key(dbname)] = params[:ppsetting].to_i
     end
 
-    if params[:sortby]                             # New sort order (by = col click, choice = pull down)
+    if params[:sortby] # New sort order (by = col click, choice = pull down)
       params[:sortby]      = params[:sortby].to_i - 1
       params[:sort_choice] = view.headers[params[:sortby]]
     elsif params[:sort_choice]                        # If user chose new sortcol, set sortby parm

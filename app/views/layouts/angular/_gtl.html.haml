@@ -23,13 +23,13 @@
   sendDataWithRx({initController: {
     name: 'miqGtlContoller',
     data: {
-      modelName: '#{@display.nil? ? controller.class.model.to_s.tableize : @display}',
+      modelName: '#{j_str(@display.nil? && !controller.class.model.nil? ? controller.class.model.to_s.tableize : @display)}',
       activeTree: '#{x_active_tree}',
-      gtlType: #{@gtl_type.to_json.html_safe},
-      currId: #{params[:id].to_json.html_safe},
+      gtlType: '#{j_str(@gtl_type)}',
+      currId: '#{j_str(params[:id])}',
       sortColIdx: '#{@sortcol}',
       sortDir: '#{@sortdir}',
       isExplorer: '#{@explorer}' === 'true' ? true : false,
-      showUrl: '#{url_for_db(@view.db)}'
+      showUrl: '#{view_to_url(@view)}'
     }
   }});
