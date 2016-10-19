@@ -111,6 +111,15 @@ class ManageIQ::Providers::Openstack::CloudManager::CloudVolume < ::CloudVolume
     MiqTask.generic_action_with_callback(task_opts, queue_opts)
   end
 
+  def create_volume_snapshot(options)
+    ManageIQ::Providers::Openstack::CloudManager::CloudVolumeSnapshot.create_volume_snapshot(self, options)
+  end
+
+  def create_volume_snapshot_queue(userid, options)
+    ManageIQ::Providers::Openstack::CloudManager::CloudVolumeSnapshot
+      .create_volume_snapshot_queue(userid, self, options)
+  end
+
   def provider_object(connection)
     connection.volumes.get(ems_ref)
   end
