@@ -1671,6 +1671,7 @@ function chartData(type, data, data2) {
     }
   }
   var ret = _.defaultsDeep({}, data, config, data2);
+  ret.size = {};
   return ret;
 }
 
