@@ -1118,8 +1118,7 @@ class Host < ApplicationRecord
           _log.log_backtrace(err)
         end
       end
-    rescue => err
-      # _log.log_backtrace(err)
+    rescue
     end
 
     Patch.refresh_patches(self, patches)
@@ -1663,7 +1662,7 @@ class Host < ApplicationRecord
     cores = total_vcpus
     return 0 if cores == 0
 
-    total_vm_vcpus = vms.inject(0) { |t, vm| t += (vm.num_cpu || 0) }
+    total_vm_vcpus = vms.inject(0) { |t, vm| t + (vm.num_cpu || 0) }
     (total_vm_vcpus / cores)
   end
 
