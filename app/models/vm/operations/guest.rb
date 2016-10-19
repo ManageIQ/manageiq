@@ -1,4 +1,12 @@
 module Vm::Operations::Guest
+  extend ActiveSupport::Concern
+
+  included do
+    api_relay_method :shutdown_guest
+    api_relay_method :reboot_guest
+    api_relay_method :reset
+  end
+
   def validate_shutdown_guest
     validate_unsupported("Shutdown Guest Operation")
   end

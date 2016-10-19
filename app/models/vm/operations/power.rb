@@ -1,4 +1,12 @@
 module Vm::Operations::Power
+  extend ActiveSupport::Concern
+
+  included do
+    api_relay_method :start
+    api_relay_method :stop
+    api_relay_method :suspend
+  end
+
   def validate_start
     validate_vm_control_not_powered_on
   end
