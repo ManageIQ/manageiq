@@ -123,7 +123,7 @@ module ReportFormatter
         #     end
         ####
 
-        add_series(slice_legend(head), series)
+        add_series(head, series)
       end
     end
 
@@ -140,7 +140,7 @@ module ReportFormatter
       cat_cnt = 0
       cat_total = mri.table.size
       mri.table.data.each do |r|
-        cat = cat_cnt > 6 ? '<Other(1)>' : slice_legend(r["resource_name"])
+        cat = cat_cnt > 6 ? '<Other(1)>' : r["resource_name"]
         val = rounded_value(r[col]) / divider
         next if val == 0
         if cat.starts_with?("<Other(") && categories[-1].starts_with?("<Other(") # Are we past the top 10?
@@ -329,7 +329,6 @@ module ReportFormatter
           a.push(:value   => hash1[val2[0]],
                  :tooltip => "#{key1} / #{val2[0]}: #{hash1[val2[0]]}")
         end
-        val2[0] = slice_legend(val2[0]) if val2[0].kind_of?(String)
         val2[0] = val2[0].to_s.gsub(/\\/, ' \ ')
         add_series(val2[0].to_s, series)
       end
@@ -406,8 +405,6 @@ module ReportFormatter
       end
 
       # Pie charts put categories in legend, else in axis labels
-      limit = pie_type? ? LEGEND_LENGTH : LABEL_LENGTH
-      categories.collect! { |c| slice_legend(c[0], limit) }
       add_axis_category_text(categories)
 
       add_series(mri.headers[0], series)
@@ -439,8 +436,6 @@ module ReportFormatter
       end
 
       # Pie charts put categories in legend, else in axis labels
-      limit = pie_type? ? LEGEND_LENGTH : LABEL_LENGTH
-      categories.collect! { |c| slice_legend(c[0], limit) }
       add_axis_category_text(categories)
 
       add_series(mri.headers[0], series)
@@ -471,7 +466,6 @@ module ReportFormatter
       selected_groups = sorted_sums.reverse.take(keep)
 
       cathegory_texts = selected_groups.collect do |key, _|
-        label = slice_legend(key, LABEL_LENGTH)
         label = _('no value') if label.blank?
         label
       end
@@ -500,7 +494,6 @@ module ReportFormatter
         series.push(:value   => other[val2],
                     :tooltip => "Other / #{val2}: #{other[val2]}") if show_other
 
-        label = slice_legend(val2) if val2.kind_of?(String)
         label = label.to_s.gsub(/\\/, ' \ ')
         label = _('no value') if label.blank?
         add_series(label, series)
@@ -543,8 +536,6 @@ module ReportFormatter
       end
 
       # Pie charts put categories in legend, else in axis labels
-      limit = pie_type? ? LEGEND_LENGTH : LABEL_LENGTH
-      categories.collect! { |c| slice_legend(c[0], limit) }
       add_axis_category_text(categories)
       add_series(mri.headers[0], series)
     end
@@ -566,6 +557,7 @@ module ReportFormatter
     end
 
     def build_reporting_chart_numeric(_maxcols, _divider)
+      mri.chart[:miq][:reporting_chart] = true
       return no_records_found_chart(_('Invalid chart definition')) unless mri.graph[:column].present?
       if mri.group.nil?
         build_numeric_chart_simple
@@ -575,6 +567,7 @@ module ReportFormatter
     end
 
     def build_reporting_chart(_maxcols, _divider)
+      mri.chart[:miq][:reporting_chart] = true
       mri.dims == 2 ? build_reporting_chart_dim2 : build_reporting_chart_other
     end
   end
