@@ -20,17 +20,17 @@ class Host < ApplicationRecord
     "openstack_infra" => "OpenStack Infrastructure",
     "unknown"         => "Unknown",
     nil               => "Unknown",
-  }
+  }.freeze
 
   HOST_DISCOVERY_TYPES = {
     'vmware' => 'esx',
     'ipmi'   => 'ipmi'
-  }
+  }.freeze
 
   HOST_CREATE_OS_TYPES = {
     'VMware ESX' => 'linux_generic',
     # 'Microsoft Hyper-V' => 'windows_generic'
-  }
+  }.freeze
 
   validates_presence_of     :name
   validates_uniqueness_of   :name
