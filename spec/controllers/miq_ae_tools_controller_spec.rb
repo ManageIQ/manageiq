@@ -259,11 +259,12 @@ Methods updated/added: 10
     include_context "valid session"
 
     let(:params) do
-      {:git_url => git_url, :git_username => nil, :git_password => nil}
+      {:git_url => git_url, :git_username => nil, :git_password => nil, :git_verify_ssl => git_verify_ssl}
     end
 
     context "when the git url is blank" do
       let(:git_url) { "" }
+      let(:git_verify_ssl) { "true" }
 
       it "redirects with a flash error" do
         post :retrieve_git_datastore, :params => params
@@ -279,6 +280,7 @@ Methods updated/added: 10
 
     context "when the git url is not blank" do
       let(:git_url) { "git_url" }
+      let(:git_verify_ssl) { "true" }
       let(:my_region) { double("MiqRegion") }
 
       before do
@@ -302,6 +304,7 @@ Methods updated/added: 10
       end
 
       context "when the MiqRegion has an active git_owner role" do
+        let(:verify_ssl) { OpenSSL::SSL::VERIFY_PEER }
         let(:git_owner_active) { true }
         let(:git_repo) { double("GitRepository", :id => 321) }
         let(:git_branches) { [double("GitBranch", :name => "git_branch1")] }
@@ -318,7 +321,7 @@ Methods updated/added: 10
         end
 
         before do
-          allow(GitRepository).to receive(:create).with(:url => git_url).and_return(git_repo)
+          allow(GitRepository).to receive(:create).with(:url => git_url, :verify_ssl => verify_ssl).and_return(git_repo)
           allow(git_repo).to receive(:update_authentication).with(:values => {:userid => "", :password => ""})
           allow(MiqTask).to receive(:generic_action_with_callback).with(task_options, queue_options).and_return(1234)
           allow(MiqTask).to receive(:wait_for_taskid).with(1234)
@@ -353,6 +356,19 @@ Methods updated/added: 10
                 :level   => :warning
               }.to_json
             )
+          end
+        end
+
+        context "when the repository is using self signed certificates" do
+          let (:verify_ssl) { OpenSSL::SSL::VERIFY_NONE }
+          let (:git_verify_ssl) { "false" }
+
+          before do
+            allow(GitRepository).to receive(:exists?).with(:url => git_url).and_return(false)
+          end
+          it "queues the refresh action" do
+            expect(MiqTask).to receive(:generic_action_with_callback).with(task_options, queue_options)
+            post :retrieve_git_datastore, :params => params
           end
         end
 

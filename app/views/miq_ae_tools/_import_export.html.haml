@@ -47,6 +47,11 @@
         .col-md-8
           = password_field_tag(:git_password, nil)
       .form-group
+        %label.col-md-2.control-label
+          = _("Verify Peer Certificate")
+        .col-md-8
+          = check_box_tag(:git_verify_ssl, true, true)
+      .form-group
         .col-sm-2
         .col-md-8
           = submit_tag(_("Submit"),
