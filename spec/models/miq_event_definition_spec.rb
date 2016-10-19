@@ -99,4 +99,50 @@ describe MiqEventDefinition do
       expect(subject.include?(event)).to be false
     end
   end
+
+  describe ".import_from_hash" do
+    it "won't create an event with a definition (keyed as a string)" do
+      attributes = {
+        "name"        => "foo",
+        "description" => "bar",
+        "definition"  => {:event => {:message => "`rm -rf /super/secret/file`"}}
+      }
+
+      event, = described_class.import_from_hash(attributes)
+
+      expect(event.definition).to be_nil
+    end
+
+    it "won't create an event with a definition (keyed as a symbol)" do
+      attributes = {
+        "name"        => "foo",
+        "description" => "bar",
+        :definition   => {:event => {:message => "`rm -rf /super/secret/file`"}},
+      }
+
+      event, = described_class.import_from_hash(attributes)
+
+      expect(event.definition).to be_nil
+    end
+
+    it "won't update an event with a definition (keyed as a string)" do
+      described_class.seed_default_events
+      name = described_class.first.name
+      attributes = {"name" => name, "definition" => {:event => {:message => "`rm -rf /super/secret/file`"}}}
+
+      event, = described_class.import_from_hash(attributes)
+
+      expect(event.definition).to be_nil
+    end
+
+    it "won't update an event with a definition (keyed as a symbol)" do
+      described_class.seed_default_events
+      name = described_class.first.name
+      attributes = {"name" => name, :definition => {:event => {:message => "`rm -rf /super/secret/file`"}}}
+
+      event, = described_class.import_from_hash(attributes)
+
+      expect(event.definition).to be_nil
+    end
+  end
 end
