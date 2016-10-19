@@ -416,6 +416,8 @@ Vmdb::Application.routes.draw do
         download_data
         attach
         detach
+        backup_new
+        backup_select
         edit
         cloud_volume_form_fields
         cloud_volume_tenants
@@ -429,6 +431,8 @@ Vmdb::Application.routes.draw do
       :post => %w(
         attach_volume
         detach_volume
+        backup_create
+        backup_restore
         button
         create
         dynamic_checkbox_refresh
@@ -440,6 +444,7 @@ Vmdb::Application.routes.draw do
         tagging_edit
         tag_edit_form_field_changed
         update
+        wait_for_task
       ) + compare_post + adv_search_post + exp_post + save_post
     },
 
