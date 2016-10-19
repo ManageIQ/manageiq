@@ -138,7 +138,7 @@ class Chargeback < ActsAsArModel
           cost = r.cost(metric_value) * hours_in_interval
         end
 
-        self.class.reportable_metric_and_cost_fields(r.rate_name, r.group, metric_value, cost).each do |k, val|
+        reportable_metric_and_cost_fields(r.rate_name, r.group, metric_value, cost).each do |k, val|
           next unless self.class.attribute_names.include?(k)
           self[k] ||= 0
           self[k] += val
@@ -147,7 +147,7 @@ class Chargeback < ActsAsArModel
     end
   end
 
-  def self.reportable_metric_and_cost_fields(rate_name, rate_group, metric, cost)
+  def reportable_metric_and_cost_fields(rate_name, rate_group, metric, cost)
     cost_key         = "#{rate_name}_cost"    # metric cost value (e.g. Storage [Used|Allocated|Fixed] Cost)
     metric_key       = "#{rate_name}_metric"  # metric value (e.g. Storage [Used|Allocated|Fixed])
     cost_group_key   = "#{rate_group}_cost"   # for total of metric's costs (e.g. Storage Total Cost)
@@ -155,7 +155,7 @@ class Chargeback < ActsAsArModel
 
     col_hash = {}
 
-    defined_column_for_report = (report_col_options.keys & [metric_key, cost_key]).present?
+    defined_column_for_report = (self.class.report_col_options.keys & [metric_key, cost_key]).present?
 
     if defined_column_for_report
       [metric_key, metric_group_key].each             { |col| col_hash[col] = metric }
@@ -164,6 +164,7 @@ class Chargeback < ActsAsArModel
 
     col_hash
   end
+  private :reportable_metric_and_cost_fields
 
   def self.report_cb_model(model)
     model.gsub(/^Chargeback/, "")
