@@ -2,12 +2,20 @@ class DialogImportValidator
   class ImportNonYamlError < StandardError; end
   class InvalidDialogFieldTypeError < StandardError; end
   class ParsedNonDialogYamlError < StandardError; end
+  class ParsedNonDialogError < StandardError; end
 
   def determine_validity(import_file_upload)
     potential_dialogs = YAML.load(import_file_upload.uploaded_content)
     check_dialogs_for_validity(potential_dialogs)
   rescue Psych::SyntaxError
     raise ImportNonYamlError
+  end
+
+  def determine_dialog_validity(dialog)
+    raise ParsedNonDialogError unless dialog['dialog_tabs']
+    check_dialog_tabs_for_validity(dialog['dialog_tabs'])
+  rescue ParsedNonDialogYamlError
+    raise ParsedNonDialogError, 'Not a valid dialog'
   end
 
   private

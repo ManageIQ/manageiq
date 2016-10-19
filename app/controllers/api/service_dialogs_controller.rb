@@ -13,6 +13,12 @@ module Api
       end
     end
 
+    def create_resource(_type, _id, data)
+      DialogImportService.new.import(data)
+    rescue => e
+      raise BadRequestError, "Failed to create a new dialog - #{e}"
+    end
+
     private
 
     def set_additional_attributes

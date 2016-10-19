@@ -62,6 +62,13 @@ class DialogImportService
     queue_deletion(import_file_upload.id)
   end
 
+  def import(dialog)
+    @dialog_import_validator.determine_dialog_validity(dialog)
+    new_dialog = Dialog.create(dialog.except('dialog_tabs'))
+    new_dialog.update!(dialog.merge('dialog_tabs' => build_dialog_tabs(dialog)))
+    new_dialog
+  end
+
   private
 
   def create_import_file_upload(file_contents)
@@ -72,7 +79,6 @@ class DialogImportService
 
   def import_from_dialogs(dialogs)
     raise ParsedNonDialogYamlError if dialogs.empty?
-
     dialogs.each do |dialog|
       new_or_existing_dialog = Dialog.where(:label => dialog["label"]).first_or_create
       new_or_existing_dialog.update_attributes(dialog.merge("dialog_tabs" => build_dialog_tabs(dialog)))

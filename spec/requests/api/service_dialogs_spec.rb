@@ -192,4 +192,155 @@ describe "Service Dialogs API" do
       )
     end
   end
+
+  context 'Creates service dialogs' do
+    let(:dialog_request) do
+      {
+        :description => 'Dialog',
+        :label       => 'dialog_label',
+        :dialog_tabs => [
+          {
+            :description   => 'Dialog tab',
+            :position      => 0,
+            :label         => 'dialog_tab_label',
+            :dialog_groups => [
+              {
+                :description   => 'Dialog group',
+                :label         => 'group_label',
+                :dialog_fields => [
+                  {
+                    :name  => 'A dialog field',
+                    :label => 'dialog_field_label'
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    end
+
+    it 'rejects service dialog creation without appropriate role' do
+      api_basic_authorize
+
+      run_post(service_dialogs_url, dialog_request)
+
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it 'rejects service dialog creation with an href specified' do
+      api_basic_authorize collection_action_identifier(:service_dialogs, :create)
+
+      run_post(service_dialogs_url, dialog_request.merge!("href" => service_dialogs_url(123)))
+      expected = {
+        "error" => a_hash_including(
+          "kind"    => "bad_request",
+          "message" => a_string_matching(/id or href should not be specified/)
+        )
+      }
+      expect(response.parsed_body).to include(expected)
+      expect(response).to have_http_status(:bad_request)
+    end
+
+    it 'rejects service dialog creation with an id specified' do
+      api_basic_authorize collection_action_identifier(:service_dialogs, :create)
+
+      run_post(service_dialogs_url, dialog_request.merge!("id" => 123))
+      expected = {
+        "error" => a_hash_including(
+          "kind"    => "bad_request",
+          "message" => a_string_matching(/id or href should not be specified/)
+        )
+      }
+      expect(response.parsed_body).to include(expected)
+      expect(response).to have_http_status(:bad_request)
+    end
+
+    it 'supports single service dialog creation' do
+      api_basic_authorize collection_action_identifier(:service_dialogs, :create)
+
+      expected = {
+        "results" => [
+          a_hash_including(
+            "description" => "Dialog",
+            "label"       => "dialog_label"
+          )
+        ]
+      }
+
+      expect do
+        run_post(service_dialogs_url, dialog_request)
+      end.to change(Dialog, :count).by(1)
+      expect(response.parsed_body).to include(expected)
+      expect(response).to have_http_status(:ok)
+    end
+
+    it 'supports multiple service dialog creation' do
+      api_basic_authorize collection_action_identifier(:service_dialogs, :create)
+      dialog_request_2 = {
+        :description => 'Dialog 2',
+        :label       => 'dialog_2_label',
+        :dialog_tabs => [
+          {
+            :description   => 'Dialog 2 tab',
+            :position      => 0,
+            :label         => 'dialog_2_label',
+            :dialog_groups => [
+              {
+                :description   => 'a new dialog group',
+                :label         => 'dialog_2_group_label',
+                :dialog_fields => [
+                  {
+                    :name  => 'a new dialog field',
+                    :label => 'dialog_field_label'
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+
+      expected = {
+        "results" => [
+          a_hash_including(
+            "description" => "Dialog",
+            "label"       => "dialog_label"
+          ),
+          a_hash_including(
+            "description" => "Dialog 2",
+            "label"       => "dialog_2_label"
+          )
+        ]
+      }
+
+      expect do
+        run_post(service_dialogs_url, gen_request(:create, [dialog_request, dialog_request_2]))
+      end.to change(Dialog, :count).by(2)
+      expect(response.parsed_body).to include(expected)
+      expect(response).to have_http_status(:ok)
+    end
+
+    it 'returns dialog import service errors' do
+      api_basic_authorize collection_action_identifier(:service_dialogs, :create)
+      invalid_request = {
+        'description' => 'Dialog',
+        'label'       => 'a_dialog'
+      }
+
+      expected = {
+        'error' => a_hash_including(
+          'kind'    => 'bad_request',
+          'message' => a_string_including('Failed to create a new dialog'),
+          'klass'   => 'Api::BadRequestError'
+        )
+      }
+
+      expect do
+        run_post(service_dialogs_url, invalid_request)
+      end.to change(Dialog, :count).by(0)
+      expect(response.parsed_body).to include(expected)
+      expect(response).to have_http_status(:bad_request)
+    end
+  end
 end

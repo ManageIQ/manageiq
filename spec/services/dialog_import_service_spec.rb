@@ -352,4 +352,25 @@ describe DialogImportService do
       end
     end
   end
+
+  context '#import' do
+    include_context "DialogImportService dialog setup"
+    before do
+      allow(dialog_import_validator).to receive(:determine_dialog_validity).with(dialogs.first).and_return(true)
+    end
+
+    it 'creates a new dialog with valid input' do
+      expect do
+        dialog_import_service.import(dialogs.first)
+      end.to change(Dialog, :count).by(1)
+    end
+
+    it 'will raise record invalid for invalid dialog' do
+      dialog_import_service.import(dialogs.first)
+
+      expect do
+        dialog_import_service.import(dialogs.first)
+      end.to raise_error(ActiveRecord::RecordInvalid, 'Validation failed: Label has already been taken')
+    end
+  end
 end
