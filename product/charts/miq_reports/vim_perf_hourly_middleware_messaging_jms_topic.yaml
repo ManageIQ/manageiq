@@ -51,12 +51,12 @@ headers:
 - Date/Time
 - Delivering Message Count
 - Durable Message Count
-- Durable Suscription Count
+- Durable Subscription Count
 - Messages Count
 - Messages Added
 - Non Durable Messages Dount
-- Non Durable Suscription Count
-- Suscription Count
+- Non Durable Subscription Count
+- Subscription Count
 
 # Condition expression for search filtering
 conditions:
