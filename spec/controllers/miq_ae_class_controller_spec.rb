@@ -431,30 +431,61 @@ describe MiqAeClassController do
       expect(controller).to receive(:render)
       controller.instance_variable_set(:@sb, :trees       => {:ae_tree => {:active_node => "aec-#{@cls.id}"}},
                                              :active_tree => :ae_tree)
-    end
-
-    after(:each) do
-      expect(controller.send(:flash_errors?)).to be_truthy
-      expect(assigns(:flash_array).first[:message]).to include("Name has already been taken")
-      expect(assigns(:edit)).not_to be_nil
-      expect(response.status).to eq(200)
-    end
-
-    it "Should not allow to create two schema fields with identical name" do
-      field = {"aetype"   => "attribute",
-               "datatype" => "string",
-               "name"     => "name01"}
       session[:edit] = {
         :key         => "aefields_edit__#{@cls.id}",
         :ae_class_id => @cls.id,
         :new         => {
           :datatypes => [],
           :aetypes   => [],
-          :fields    => [field, field]
+          :fields    => []
         }
       }
+    end
+
+    after(:each) do
+      expect(controller.send(:flash_errors?)).to be_truthy
+      expect(assigns(:edit)).not_to be_nil
+      expect(response.status).to eq(200)
+    end
+
+    it "Should not allow to accept schema field without name" do
+      field = {:aetype   => "attribute"}
+      controller.instance_variable_set(:@edit, session[:edit])
+      session[:field_data] = field
+      controller.instance_variable_set(:@_params, :button => "accept", :id => @cls.id)
+      controller.send(:field_accept)
+
+      expect(assigns(:flash_array).first[:message]).to include("Name is required")
+    end
+
+    it "Should not allow to accept schema field without type" do
+      field = {:name   => "name"}
+      controller.instance_variable_set(:@edit, session[:edit])
+      session[:field_data] = field
+      controller.instance_variable_set(:@_params, :button => "accept", :id => @cls.id)
+      controller.send(:field_accept)
+
+      expect(assigns(:flash_array).first[:message]).to include("Type is required")
+    end
+
+    it "Should not allow to accept schema field without name and type" do
+      field = {}
+      controller.instance_variable_set(:@edit, session[:edit])
+      session[:field_data] = field
+      controller.instance_variable_set(:@_params, :button => "accept", :id => @cls.id)
+      controller.send(:field_accept)
+
+      expect(assigns(:flash_array).first[:message]).to include("Name and Type is required")
+    end
+
+    it "Should not allow to create two schema fields with identical name" do
+      field = {"aetype"   => "attribute",
+               "datatype" => "string",
+               "name"     => "name01"}
+      session[:edit][:new][:fields] = [field, field]
       controller.instance_variable_set(:@_params, :button => "save", :id => @cls.id)
       controller.send(:update_fields)
+      expect(assigns(:flash_array).first[:message]).to include("Name has already been taken")
     end
 
     it "Should not allow to add two parameters with identical name to a method" do
@@ -473,6 +504,7 @@ describe MiqAeClassController do
       }
       controller.instance_variable_set(:@_params, :button => "save", :id => @method.id)
       controller.send(:update_method)
+      expect(assigns(:flash_array).first[:message]).to include("Name has already been taken")
     end
 
     it "Should not allow to add two parameters with identical name to a newly created method" do
@@ -494,6 +526,7 @@ describe MiqAeClassController do
       }
       controller.instance_variable_set(:@_params, :button => "add")
       controller.send(:create_method)
+      expect(assigns(:flash_array).first[:message]).to include("Name has already been taken")
     end
   end
 

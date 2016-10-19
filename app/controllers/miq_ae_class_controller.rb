@@ -873,10 +873,14 @@ class MiqAeClassController < ApplicationController
           page << javascript_hide("field_default_value")
           page << javascript_show("field_password_value")
           page << "$('#field_password_value').val('');"
+          session[:field_data][:default_value] =
+            @edit[:new_field][:default_value] = ''
         elsif params[:field_datatype]
           page << javascript_hide("field_password_value")
           page << javascript_show("field_default_value")
           page << "$('#field_default_value').val('');"
+          session[:field_data][:default_value] =
+            @edit[:new_field][:default_value] = ''
         end
         params.keys.each do |field|
           if field.to_s.starts_with?("fields_datatype")
@@ -2045,14 +2049,15 @@ class MiqAeClassController < ApplicationController
 
       field_attributes.each do |field|
         field_name = "field_#{field}".to_sym
+        field_sym = field.to_sym
         if field == "substitute"
-          field_data[field] = new_field[field] = params[field_name] == "1" if params[field_name]
-        else
-          field_data[field] = new_field[field] = params[field_name] if params[field_name]
+          field_data[field_sym] = new_field[field_sym] = params[field_name] == "1" if params[field_name]
+        elsif params[field_name]
+          field_data[field_sym] = new_field[field_sym] = params[field_name]
         end
       end
 
-      field_data['default_value'] = new_field[:default_value] =
+      field_data[:default_value] = new_field[:default_value] =
           params[:field_password_value] if params[:field_password_value]
       new_field[:priority] = 1
       @edit[:new][:fields].each_with_index do |flds, i|
@@ -2069,22 +2074,25 @@ class MiqAeClassController < ApplicationController
       @edit[:new][:fields].each_with_index do |fld, i|
         field_attributes.each do |field|
           field_name = "fields_#{field}_#{i}".to_sym
+          field_sym = field.to_sym
           if field == "substitute"
-            fld[field] = params[field_name].to_i == 1 if params[field_name]
+            fld[field_sym] = params[field_name].to_i == 1 if params[field_name]
           elsif %w(aetype datatype).include?(field)
             var_name = "fields_#{field}#{i}"
-            fld[field] = params[var_name.to_sym] if params[var_name.to_sym]
+            fld[field_sym] = params[var_name.to_sym] if params[var_name.to_sym]
           elsif field == "default_value"
-            fld[field] = params[field_name] if params[field_name]
-            fld[field] = params["fields_password_value_#{i}".to_sym] if params["fields_password_value_#{i}".to_sym]
+            fld[field_sym] = params[field_name] if params[field_name]
+            fld[field_sym] = params["fields_password_value_#{i}".to_sym] if params["fields_password_value_#{i}".to_sym]
           else
             fld[field] = params[field_name] if params[field_name]
           end
         end
       end
     elsif params[:button] == "accept"
-      if session[:field_data]['name'].blank?
-        add_flash(_("Name is required"), :error)
+      if session[:field_data][:name].blank? || session[:field_data][:aetype].blank?
+        field = session[:field_data][:name].blank? ? "Name" : "Type"
+        field += " and Type" if field == "Name" && session[:field_data][:aetype].blank?
+        add_flash(_(field + " is required"), :error)
         return
       end
       new_fields = {}
