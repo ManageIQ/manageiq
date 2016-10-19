@@ -107,10 +107,6 @@
               - 13.times do
                 %td
           - else
-            - @prty = 1
-            - @edit[:new][:fields].sort_by { |a| [a['priority'].to_i] }.each_with_index do |field, i|
-              - @prty = (field['priority'].to_i + 1) if i == (@edit[:new][:fields].length - 1)
-
             %tr
               %td
                 = link_to(image_tag(image_path("16/na.png"), :alt => (t = _("Add this entry"))),
@@ -128,7 +124,7 @@
                     - combo_url  = "/miq_ae_class/fields_form_field_changed/#{@ae_class.id || 'new'}"
                     #form-group
                       = select_tag(combo_name,
-                          options_for_select(combo_options, session[:field_data][fname]),
+                          options_for_select(combo_options, session[:field_data][fname.to_sym]),
                           "title" => "Choose",
                           :class  => "selectpicker")
                     :javascript
@@ -149,4 +145,3 @@
                       "data-miq_observe" => obs)
 :javascript
   miqInitSelectPicker();
-
