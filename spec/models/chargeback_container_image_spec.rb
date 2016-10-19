@@ -42,6 +42,8 @@ describe ChargebackContainerImage do
   end
 
   context "Daily" do
+    let(:hours_in_day) { 24 }
+
     before do
       @options[:interval] = "daily"
       @options[:entity_id] = @project.id
@@ -64,7 +66,6 @@ describe ChargebackContainerImage do
                                                                 :timestamp => t,
                                                                 :image_tag_names => "environment/prod")
       end
-      @metric_size = @container.metric_rollups.size
     end
 
     subject { ChargebackContainerImage.build_results_for_report_ChargebackContainerImage(@options).first.first }
@@ -83,7 +84,7 @@ describe ChargebackContainerImage do
                          :chargeback_tiers   => [cbt])
     }
     it "fixed_compute" do
-      expect(subject.fixed_compute_1_cost).to eq(@hourly_rate * @metric_size)
+      expect(subject.fixed_compute_1_cost).to eq(@hourly_rate * hours_in_day)
     end
   end
 
@@ -97,6 +98,8 @@ describe ChargebackContainerImage do
       ts = Time.now.in_time_zone(tz)
       time     = ts.beginning_of_month.utc
       end_time = ts.end_of_month.utc
+
+      @hours_in_month = Time.days_in_month(time.month, time.year) * 24
 
       while time < end_time
         @container.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr,
@@ -135,7 +138,7 @@ describe ChargebackContainerImage do
     }
     it "fixed_compute" do
       # .to be_within(0.01) is used since theres a float error here
-      expect(subject.fixed_compute_1_cost).to be_within(0.01).of(@hourly_rate * @metric_size)
+      expect(subject.fixed_compute_1_cost).to be_within(0.01).of(@hourly_rate * @hours_in_month)
     end
   end
 end
