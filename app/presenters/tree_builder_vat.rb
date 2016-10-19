@@ -43,7 +43,7 @@ class TreeBuilderVat < TreeBuilderDatacenter
       unless @vat
         folders = count_only_or_objects(count_only, parent.folders_only)
         clusters = count_only_or_objects(count_only, parent.clusters)
-        hosts = count_only_or_objects(count_only, parent.hosts)
+        hosts = count_only_or_objects(count_only, parent.hosts, "name")
         objects = folders + clusters + hosts
       end
     elsif parent.name == "datastore" && parent.parent.kind_of?(Datacenter)
@@ -51,15 +51,15 @@ class TreeBuilderVat < TreeBuilderDatacenter
     elsif parent.name == "vm" && parent.parent.kind_of?(Datacenter)
       if @vat
         folders = count_only_or_objects(count_only, parent.folders_only)
-        vms = count_only_or_objects(count_only, parent.vms)
+        vms = count_only_or_objects(count_only, parent.vms, "name")
         objects = folders + vms
       end
     else
       folders = count_only_or_objects(count_only, parent.folders_only)
       datacenters = count_only_or_objects(count_only, parent.datacenters_only)
       clusters = count_only_or_objects(count_only, parent.clusters)
-      hosts = count_only_or_objects(count_only, parent.hosts)
-      vms = count_only_or_objects(count_only, parent.vms)
+      hosts = count_only_or_objects(count_only, parent.hosts, "name")
+      vms = count_only_or_objects(count_only, parent.vms, "name")
       objects = folders + datacenters + clusters + hosts + vms
     end
     objects

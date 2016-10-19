@@ -48,7 +48,7 @@ class TreeBuilderNetwork < TreeBuilder
   def x_get_tree_lan_kids(parent, count_only)
     kids = count_only ? 0 : []
     if parent.respond_to?("vms_and_templates") && parent.vms_and_templates.present?
-      kids = count_only_or_objects(count_only, parent.vms_and_templates.sort_by { |l| l.name.downcase })
+      kids = count_only_or_objects(count_only, parent.vms_and_templates, "name")
     end
     @tree_vms.concat(kids) unless count_only
     kids
