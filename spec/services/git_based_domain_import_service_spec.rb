@@ -1,17 +1,23 @@
 describe GitBasedDomainImportService do
   shared_context "import setup" do
-    let(:git_repo) { double("GitRepository", :git_branches => git_branches, :id => 123) }
+    let(:git_repo) do
+      double("GitRepository", :git_branches => git_branches,
+                              :id           => 123,
+                              :url          => 'http://www.example.com')
+    end
     let(:user) { double("User", :userid => userid, :id => 123) }
     let(:domain) { FactoryGirl.build(:miq_ae_domain) }
     let(:userid) { "fred" }
     let(:task) { double("MiqTask", :id => 123) }
     let(:ref_name) { 'the_branch_name' }
     let(:ref_type) { 'branch' }
-    let(:task_options) { {:action => "Import git repository", :userid => userid} }
+    let(:method_name) { 'import_git_repo' }
+    let(:action) { 'Import git repository' }
+    let(:task_options) { {:action => action, :userid => userid} }
     let(:queue_options) do
       {
         :class_name  => "MiqAeDomain",
-        :method_name => "import_git_repo",
+        :method_name => method_name,
         :role        => "git_owner",
         :args        => [import_options]
       }
@@ -99,6 +105,35 @@ describe GitBasedDomainImportService do
         expect(MiqTask).to receive(:generic_action_with_callback).with(task_options, queue_options).and_return(task.id)
 
         expect(subject.queue_import(git_repo.id, ref_name, 321)).to eq(task.id)
+      end
+    end
+  end
+
+  describe "#queue_refresh_and_import" do
+    include_context "import setup"
+    before do
+      allow(User).to receive(:current_user).and_return(user)
+    end
+
+    context "when git branches that match the given name do not exist" do
+      let(:git_branches) { [] }
+      let(:ref_name) { "the_tag_name" }
+      let(:ref_type) { "tag" }
+      let(:method_name) { 'import_git_url' }
+      let(:action) { 'Refresh and import git repository' }
+      let(:import_options) do
+        {
+          "git_url"   => git_repo.url,
+          "ref"       => ref_name,
+          "ref_type"  => ref_type,
+          "tenant_id" => 321
+        }
+      end
+
+      it "calls 'queue_import' with the correct options" do
+        expect(MiqTask).to receive(:generic_action_with_callback).with(task_options, queue_options).and_return(task.id)
+
+        expect(subject.queue_refresh_and_import(git_repo.url, ref_name, ref_type, 321)).to eq(task.id)
       end
     end
   end

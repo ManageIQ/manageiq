@@ -30,6 +30,29 @@ class GitBasedDomainImportService
     MiqTask.generic_action_with_callback(task_options, queue_options)
   end
 
+  def queue_refresh_and_import(git_url, ref, ref_type, tenant_id)
+    import_options = {
+      "git_url"   => git_url,
+      "ref"       => ref,
+      "ref_type"  => ref_type,
+      "tenant_id" => tenant_id
+    }
+
+    task_options = {
+      :action => "Refresh and import git repository",
+      :userid => User.current_user.userid
+    }
+
+    queue_options = {
+      :class_name  => "MiqAeDomain",
+      :method_name => "import_git_url",
+      :role        => "git_owner",
+      :args        => [import_options]
+    }
+
+    MiqTask.generic_action_with_callback(task_options, queue_options)
+  end
+
   def import(git_repo_id, branch_or_tag, tenant_id)
     task_id = queue_import(git_repo_id, branch_or_tag, tenant_id)
     task = MiqTask.wait_for_taskid(task_id)
