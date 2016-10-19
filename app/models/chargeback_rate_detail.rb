@@ -11,6 +11,8 @@ class ChargebackRateDetail < ApplicationRecord
 
   FORM_ATTRIBUTES = %i(description per_time per_unit metric group source metric).freeze
 
+  attr_accessor :hours_in_interval
+
   def max_of_metric_from(metric_rollup_records)
     metric_rollup_records.map(&metric.to_sym).max
   end
@@ -83,7 +85,7 @@ class ChargebackRateDetail < ApplicationRecord
                   when "hourly"  then rate
                   when "daily"   then rate / 24
                   when "weekly"  then rate / 24 / 7
-                  when "monthly" then rate / 24 / 30
+                  when "monthly" then rate / @hours_in_interval
                   when "yearly"  then rate / 24 / 365
                   else raise "rate time unit of '#{per_time}' not supported"
                   end

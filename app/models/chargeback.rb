@@ -171,6 +171,7 @@ class Chargeback < ActsAsArModel
           cost = 0
         else
           metric_value = r.metric_value_by(metric_rollup_records)
+          r.hours_in_interval = hours_in_interval
           cost = r.cost(metric_value) * hours_in_interval
         end
 
