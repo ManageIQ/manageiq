@@ -8,25 +8,33 @@ class MiddlewareDeploymentController < ApplicationController
   after_action :set_session_data
 
   OPERATIONS = {
-    :middleware_deployment_restart  => {:op   => :restart_middleware_deployment,
-                                        :skip => true,
-                                        :hawk => N_('restarting deployment for'),
-                                        :msg  => N_('Restart initiated for selected deployment(s)')
+    :middleware_deployment_restart  => {
+      :op       => :restart_middleware_deployment,
+      :skip     => true,
+      :hawk     => N_('restarting deployment'),
+      :skip_msg => N_('Not %{operation_name} for %{record_name} on the provider itself'),
+      :msg      => N_('Restart initiated for selected deployment(s)')
     },
-    :middleware_deployment_disable  => {:op   => :disable_middleware_deployment,
-                                        :skip => true,
-                                        :hawk => N_('disabling deployment for'),
-                                        :msg  => N_('Disable initiated for selected deployment(s)')
+    :middleware_deployment_disable  => {
+      :op       => :disable_middleware_deployment,
+      :skip     => true,
+      :hawk     => N_('disabling deployment'),
+      :skip_msg => N_('Not %{operation_name} for %{record_name} on the provider itself'),
+      :msg      => N_('Disable initiated for selected deployment(s)')
     },
-    :middleware_deployment_enable   => {:op   => :enable_middleware_deployment,
-                                        :skip => true,
-                                        :hawk => N_('enabling deployment for'),
-                                        :msg  => N_('Enable initiated for selected deployment(s)')
+    :middleware_deployment_enable   => {
+      :op       => :enable_middleware_deployment,
+      :skip     => true,
+      :hawk     => N_('enabling deployment'),
+      :skip_msg => N_('Not %{operation_name} for %{record_name} on the provider itself'),
+      :msg      => N_('Enable initiated for selected deployment(s)')
     },
-    :middleware_deployment_undeploy => {:op   => :undeploy_middleware_deployment,
-                                        :skip => true,
-                                        :hawk => N_('undeploying deployment for'),
-                                        :msg  => N_('Undeployment initiated for selected deployment(s)')
+    :middleware_deployment_undeploy => {
+      :op       => :undeploy_middleware_deployment,
+      :skip     => true,
+      :hawk     => N_('undeploying deployment'),
+      :skip_msg => N_('Not %{operation_name} for %{record_name} on the provider itself'),
+      :msg      => N_('Undeployment initiated for selected deployment(s)')
     }
   }.freeze
 
