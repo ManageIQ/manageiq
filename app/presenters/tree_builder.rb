@@ -80,9 +80,15 @@ class TreeBuilder
     "#{prefix}-#{record.id}"
   end
 
-  def self.build_node_cid(record)
-    prefix = get_prefix_for_model(record.class.base_model)
-    "#{prefix}-#{to_cid(record.id)}"
+  def self.build_node_cid(record_or_id, type = nil)
+    if record_or_id.kind_of?(Integer)
+      prefix = get_prefix_for_model(type)
+      id = record_or_id
+    else
+      prefix = get_prefix_for_model(record_or_id.class.base_model)
+      id = record_or_id.id
+    end
+    "#{prefix}-#{to_cid(id)}"
   end
 
   def self.hide_vms
