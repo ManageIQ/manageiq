@@ -11,6 +11,12 @@ module Vm::Operations::Lifecycle
         unsupported_reason_add(:migrate, "Migrate operation in not supported.")
       end
     end
+
+    api_relay_method :retire do |options|
+      options
+    end
+
+    api_relay_method :retire_now, :retire
   end
 
   def validate_clone

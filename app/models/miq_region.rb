@@ -246,7 +246,7 @@ class MiqRegion < ApplicationRecord
 
   def remote_ws_url
     hostname = remote_ws_address
-    hostname.nil? ? nil : "https://#{hostname}"
+    hostname && URI::HTTPS.build(:host => hostname).to_s
   end
 
   def generate_auth_key_queue(ssh_user, ssh_password, ssh_host = nil)
