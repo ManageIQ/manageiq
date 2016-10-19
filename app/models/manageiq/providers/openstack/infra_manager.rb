@@ -151,4 +151,13 @@ class ManageIQ::Providers::Openstack::InfraManager < ::EmsInfra
 
     [state, response.body.to_s]
   end
+
+  # unsupported Host operations, validate is called in hosts_center view
+  def validate_shutdown
+    {:available => false,   :message => nil}
+  end
+
+  def validate_reset
+    {:available => false,   :message => nil}
+  end
 end

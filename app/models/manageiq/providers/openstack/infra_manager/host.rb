@@ -1,6 +1,8 @@
 require 'openstack/openstack_configuration_parser'
 
 class ManageIQ::Providers::Openstack::InfraManager::Host < ::Host
+  include HostOperationsMixin
+
   belongs_to :availability_zone
 
   has_many :host_service_group_openstacks, :foreign_key => :host_id, :dependent => :destroy,
@@ -210,15 +212,15 @@ class ManageIQ::Providers::Openstack::InfraManager::Host < ::Host
 
     task = MiqTask.create(:name => "Setting node '#{name}' to manageable", :userid => userid)
 
-    $log.info("Requesting manageable of #{log_target}")
+    _log.info("Requesting manageable of #{log_target}")
     begin
       MiqEvent.raise_evm_job_event(self, :type => "manageable", :prefix => "request")
     rescue => err
-      $log.warn("Error raising request manageable for #{log_target}: #{err.message}")
+      _log.warn("Error raising request manageable for #{log_target}: #{err.message}")
       return
     end
 
-    $log.info("Queuing provide of #{log_target}")
+    _log.info("Queuing provide of #{log_target}")
     timeout = (VMDB::Config.new("vmdb").config.fetch_path(:host_manageable, :queue_timeout) || 20.minutes).to_i_with_method
     cb = {:class_name => task.class.name, :instance_id => task.id, :method_name => :queue_callback_on_exceptions, :args => ['Finished']}
     MiqQueue.put(
@@ -240,7 +242,7 @@ class ManageIQ::Providers::Openstack::InfraManager::Host < ::Host
 
     log_target = "#{self.class.name} name: [#{name}], id: [#{id}]"
 
-    $log.info("Setting to manageable #{log_target}...")
+    _log.info("Setting to manageable #{log_target}...")
 
     task.update_status("Active", "Ok", "Setting to manageable") if task
 
@@ -263,12 +265,12 @@ class ManageIQ::Providers::Openstack::InfraManager::Host < ::Host
       begin
         MiqEvent.raise_evm_job_event(self, :type => "manageable", :suffix => "complete")
       rescue => err
-        $log.warn("Error raising complete manageable event for #{log_target}: #{err.message}")
+        _log.warn("Error raising complete manageable event for #{log_target}: #{err.message}")
       end
     end
 
     task.update_status("Finished", task_status, "Setting to Manageable Complete with #{status}") if task
-    $log.info("Setting to Manageable #{log_target}...Complete - Timings: #{t.inspect}")
+    _log.info("Setting to Manageable #{log_target}...Complete - Timings: #{t.inspect}")
   end
 
   def introspect_queue(userid = "system", _options = {})
@@ -276,15 +278,15 @@ class ManageIQ::Providers::Openstack::InfraManager::Host < ::Host
 
     task = MiqTask.create(:name => "Hardware Introspection for '#{name}' ", :userid => userid)
 
-    $log.info("Requesting Hardware Introspection of #{log_target}")
+    _log.info("Requesting Hardware Introspection of #{log_target}")
     begin
       MiqEvent.raise_evm_job_event(self, :type => "introspect", :prefix => "request")
     rescue => err
-      $log.warn("Error raising request introspection for #{log_target}: #{err.message}")
+      _log.warn("Error raising request introspection for #{log_target}: #{err.message}")
       return
     end
 
-    $log.info("Queuing introspection of #{log_target}")
+    _log.info("Queuing introspection of #{log_target}")
     timeout = (VMDB::Config.new("vmdb").config.fetch_path(:host_introspect, :queue_timeout) || 20.minutes).to_i_with_method
     cb = {:class_name => task.class.name, :instance_id => task.id, :method_name => :queue_callback_on_exceptions, :args => ['Finished']}
     MiqQueue.put(
@@ -306,7 +308,7 @@ class ManageIQ::Providers::Openstack::InfraManager::Host < ::Host
 
     log_target = "#{self.class.name} name: [#{name}], id: [#{id}]"
 
-    $log.info("Introspecting #{log_target}...")
+    _log.info("Introspecting #{log_target}...")
 
     task.update_status("Active", "Ok", "Introspecting") if task
 
@@ -338,12 +340,12 @@ class ManageIQ::Providers::Openstack::InfraManager::Host < ::Host
       begin
         MiqEvent.raise_evm_job_event(self, :type => "introspect", :suffix => "complete")
       rescue => err
-        $log.warn("Error raising complete introspect event for #{log_target}: #{err.message}")
+        _log.warn("Error raising complete introspect event for #{log_target}: #{err.message}")
       end
     end
 
     task.update_status("Finished", task_status, "Introspecting Complete with #{workflow_state}") if task
-    $log.info("Introspecting #{log_target}...Complete - Timings: #{t.inspect}")
+    _log.info("Introspecting #{log_target}...Complete - Timings: #{t.inspect}")
   end
 
   def provide_queue(userid = "system", _options = {})
@@ -351,15 +353,15 @@ class ManageIQ::Providers::Openstack::InfraManager::Host < ::Host
 
     task = MiqTask.create(:name => "Providing node '#{name}' ", :userid => userid)
 
-    $log.info("Requesting Provide of #{log_target}")
+    _log.info("Requesting Provide of #{log_target}")
     begin
       MiqEvent.raise_evm_job_event(self, :type => "provide", :prefix => "request")
     rescue => err
-      $log.warn("Error raising request provide for #{log_target}: #{err.message}")
+      _log.warn("Error raising request provide for #{log_target}: #{err.message}")
       return
     end
 
-    $log.info("Queuing provide of #{log_target}")
+    _log.info("Queuing provide of #{log_target}")
     timeout = (VMDB::Config.new("vmdb").config.fetch_path(:host_provide, :queue_timeout) || 20.minutes).to_i_with_method
     cb = {:class_name => task.class.name, :instance_id => task.id, :method_name => :queue_callback_on_exceptions, :args => ['Finished']}
     MiqQueue.put(
@@ -381,7 +383,7 @@ class ManageIQ::Providers::Openstack::InfraManager::Host < ::Host
 
     log_target = "#{self.class.name} name: [#{name}], id: [#{id}]"
 
-    $log.info("Provide #{log_target}...")
+    _log.info("Provide #{log_target}...")
 
     task.update_status("Active", "Ok", "Provide") if task
 
@@ -413,12 +415,36 @@ class ManageIQ::Providers::Openstack::InfraManager::Host < ::Host
       begin
         MiqEvent.raise_evm_job_event(self, :type => "provide", :suffix => "complete")
       rescue => err
-        $log.warn("Error raising complete provide event for #{log_target}: #{err.message}")
+        _log.warn("Error raising complete provide event for #{log_target}: #{err.message}")
       end
     end
 
     task.update_status("Finished", task_status, "Provide Complete with #{workflow_state}") if task
-    $log.info("Provide #{log_target}...Complete - Timings: #{t.inspect}")
+    _log.info("Provide #{log_target}...Complete - Timings: #{t.inspect}")
+  end
+
+  def validate_start
+    if state.casecmp("off") == 0
+      {:available => true,   :message => nil}
+    else
+      {:available => false,  :message => _("Cannot start. Already on.")}
+    end
+  end
+
+  def start(userid = "system")
+    ironic_set_power_state_queue(userid, "power on", "Starting", "start", :host_start)
+  end
+
+  def validate_stop
+    if state.casecmp("on") == 0
+      {:available => true,   :message => nil}
+    else
+      {:available => false,  :message => _("Cannot stop. Already off.")}
+    end
+  end
+
+  def stop(userid = "system")
+    ironic_set_power_state_queue(userid, "power off", "Stopping", "stop", :host_stop)
   end
 
   def validate_destroy

@@ -501,14 +501,17 @@ openstack-keystone:                     active
     end
 
     it "check task executes and queues refresh if success" do
-      allow_any_instance_of(ManageIQ::Providers::Openstack::InfraManager).to receive(:openstack_handle).and_return([])
-      allow_any_instance_of(Array).to receive(:detect_workflow_service).and_return([])
-      allow_any_instance_of(Array).to receive(:detect_baremetal_service).and_return([])
-
-      allow_any_instance_of(Array).to receive(:create_execution).and_return([])
-      allow_any_instance_of(Array).to receive(:set_node_provision_state).and_return([])
-      body = {"state" => "SUCCESS", "id" => '1'}
-      allow_any_instance_of(Array).to receive(:body).and_return(body)
+      response = double("response")
+      expect(response).to receive(:body).at_least(1).times { {"state" => "SUCCESS", "id" => 1} }
+      expect(response).to receive(:status).and_return(202)
+      workflow_service = double("workflow_service")
+      expect(workflow_service).to receive(:create_execution).at_least(1).times { response }
+      baremetal_service = double("baremetal_service")
+      expect(baremetal_service).to receive(:set_node_provision_state) { response }
+      openstack_handle = double("openstack handle")
+      expect(openstack_handle).to receive(:detect_workflow_service).at_least(1).times { workflow_service }
+      expect(openstack_handle).to receive(:detect_baremetal_service) { baremetal_service }
+      allow(ext_management_system).to receive(:openstack_handle).and_return(openstack_handle)
       expect(MiqQueue.where(:method_name => "refresh").count).to eq(0)
 
       task = FactoryGirl.create(:miq_task)
@@ -521,7 +524,6 @@ openstack-keystone:                     active
       host.provide(task.id)
       expect(MiqQueue.where(:method_name => "refresh").count).to eq(1)
 
-      allow_any_instance_of(Array).to receive(:status).and_return(202)
       MiqQueue.all.map(&:delete)
       expect(MiqQueue.where(:method_name => "refresh").count).to eq(0)
       task = FactoryGirl.create(:miq_task)
@@ -540,6 +542,24 @@ openstack-keystone:                     active
 
       host.destroy_ironic
       expect(MiqQueue.where(:method_name => "destroy").count).to eq(1)
+    end
+
+    it "check ironic_set_power_state is queued" do
+      expect(MiqQueue.where(:method_name => "ironic_set_power_state").count).to eq(0)
+      host.ironic_set_power_state_queue
+      expect(MiqQueue.where(:method_name => "ironic_set_power_state").count).to eq(1)
+    end
+
+    it "check ironic_set_power_state executes and queues refresh if success" do
+      baremetal_service = double("baremetal_service")
+      expect(baremetal_service).to receive(:set_node_power_state) { double(:status => 202) }
+      openstack_handle = double("openstack handle")
+      expect(openstack_handle).to receive(:detect_baremetal_service) { baremetal_service }
+      allow(ext_management_system).to receive(:openstack_handle).and_return(openstack_handle)
+      expect(MiqQueue.where(:method_name => "refresh").count).to eq(0)
+
+      host.ironic_set_power_state
+      expect(MiqQueue.where(:method_name => "refresh").count).to eq(1)
     end
   end
 end
