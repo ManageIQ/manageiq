@@ -40,7 +40,6 @@ class ChargebackContainerProject < Chargeback
     #   :entity_id => 1/2/3.../all rails id of entity
 
     # Find ContainerProjects according to any of these:
-    @options = options
     provider_id = options[:provider_id]
     project_id = options[:entity_id]
     filter_tag = options[:tag]

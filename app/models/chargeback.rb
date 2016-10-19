@@ -8,6 +8,7 @@ class Chargeback < ActsAsArModel
 
   def self.build_results_for_report_chargeback(options)
     _log.info("Calculating chargeback costs...")
+    @options = options
 
     tz = Metric::Helper.get_time_zone(options[:ext_options])
     # TODO: Support time profiles via options[:ext_options][:time_profile]

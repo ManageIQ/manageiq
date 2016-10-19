@@ -41,7 +41,6 @@ class ChargebackContainerImage < Chargeback
     #   :entity_id => 1/2/3.../all rails id of entity
 
     # Find Project by id or get all projects
-    @options = options
     provider_id = options[:provider_id]
     id = options[:entity_id]
     raise "must provide option :entity_id and provider_id" if id.nil? && provider_id.nil?
