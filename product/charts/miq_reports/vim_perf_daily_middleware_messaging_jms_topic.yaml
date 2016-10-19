@@ -24,12 +24,12 @@ cols:
 - timestamp
 - mw_ms_topic_delivering_count
 - mw_ms_topic_durable_message_count
-- mw_ms_topic_durable_suscription_count
+- mw_ms_topic_durable_subscription_count
 - mw_ms_topic_message_count
 - mw_ms_topic_message_added
 - mw_ms_topic_non_durable_message_count
-- mw_ms_topic_non_durable_suscription_count
-- mw_ms_topic_suscription_count
+- mw_ms_topic_non_durable_subscription_count
+- mw_ms_topic_subscription_count
 
 # Included tables (joined, has_one, has_many) and columns
 include:
@@ -39,12 +39,12 @@ col_order:
 - timestamp
 - mw_ms_topic_delivering_count
 - mw_ms_topic_durable_message_count
-- mw_ms_topic_durable_suscription_count
+- mw_ms_topic_durable_subscription_count
 - mw_ms_topic_message_count
 - mw_ms_topic_message_added
 - mw_ms_topic_non_durable_message_count
-- mw_ms_topic_non_durable_suscription_count
-- mw_ms_topic_suscription_count
+- mw_ms_topic_non_durable_subscription_count
+- mw_ms_topic_subscription_count
 
 # Column titles, in order
 headers:
@@ -86,12 +86,12 @@ graph:
   :columns:
     - mw_ms_topic_delivering_count
     - mw_ms_topic_durable_message_count
-    - mw_ms_topic_durable_suscription_count
+    - mw_ms_topic_durable_subscription_count
     - mw_ms_topic_message_count
     - mw_ms_topic_message_added
     - mw_ms_topic_non_durable_message_count
-    - mw_ms_topic_non_durable_suscription_count
-    - mw_ms_topic_suscription_count
+    - mw_ms_topic_non_durable_subscription_count
+    - mw_ms_topic_subscription_count
 # Dimensions of graph (1 or 2)
 #   Note: specifying 2 for a single dimension graph may not return expected results
 dims:
