@@ -156,7 +156,7 @@ class TreeNodeBuilder
     "MiqWidget"              => -> { generic_node(object.title, "#{object.content_type}_widget.png", object.title) },
     "MiqWidgetSet"           => -> { generic_node(object.name, "dashboard.png", object.name) },
     "Tenant"                 => -> { generic_node(object.name, "#{object.tenant? ? "tenant" : "project"}.png") },
-    "VmdbTableEvm"           => -> { generic_node(object.name, "vmdbtableevm.png") },
+    "VmdbTable"              => -> { generic_node(object.name, "vmdbtableevm.png") },
     "VmdbIndex"              => -> { generic_node(object.name, "vmdbindex.png") },
     "VmOrTemplate"           => -> { vm_node(object) },
     "Zone"                   => -> { zone_node },
