@@ -65,9 +65,9 @@ module XFS
       @directory_entry = SHORT_FORM_DIRECTORY_ENTRY.decode(data[0..siz])
       @name_length     = @directory_entry['name_length']
       unless @name_length == 0
+        @name = data[siz, @name_length]
         @name_length += 1 if sb.version_has_crc?
-        @name   = data[siz, @name_length]
-        start   = siz + @name_length
+        start = siz + @name_length
         if short_inode
           ino_size = SIZEOF_SHORT_FORM_SHORT_INO
           inode    = SHORT_FORM_SHORT_INO.decode(data[start..(start + ino_size)])
