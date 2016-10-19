@@ -138,11 +138,7 @@ class Chargeback < ActsAsArModel
           cost = r.cost(metric_value) * hours_in_interval
         end
 
-        reportable_metric_and_cost_fields(r.rate_name, r.group, metric_value, cost).each do |k, val|
-          next unless self.class.attribute_names.include?(k)
-          self[k] ||= 0
-          self[k] += val
-        end
+        reportable_metric_and_cost_fields(r.rate_name, r.group, metric_value, cost)
       end
     end
   end
@@ -162,7 +158,11 @@ class Chargeback < ActsAsArModel
       [cost_key,   cost_group_key, 'total_cost'].each { |col| col_hash[col] = cost }
     end
 
-    col_hash
+    col_hash.each do |k, val|
+      next unless self.class.attribute_names.include?(k)
+      self[k] ||= 0
+      self[k] += val
+    end
   end
   private :reportable_metric_and_cost_fields
 
