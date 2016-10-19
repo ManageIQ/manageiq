@@ -24,6 +24,8 @@ Metrics/ParameterLists:
   Severity: refactor
 Metrics/PerceivedComplexity:
   Severity: refactor
+Performance/Casecmp:
+  Enabled: false
 Rails/FindEach:
   Enabled: false
 Rails/ReadWriteAttribute:
