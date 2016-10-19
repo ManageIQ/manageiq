@@ -7,10 +7,6 @@ module Vm::Operations::Guest
     api_relay_method :reset
   end
 
-  def validate_shutdown_guest
-    validate_unsupported("Shutdown Guest Operation")
-  end
-
   def validate_standby_guest
     validate_unsupported("Standby Guest Operation")
   end

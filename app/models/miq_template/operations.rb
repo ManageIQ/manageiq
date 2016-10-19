@@ -19,10 +19,6 @@ module MiqTemplate::Operations
     validate_invalid_for_template(_("Pause Operation"))
   end
 
-  def validate_shutdown_guest
-    validate_invalid_for_template(_("Shutdown Guest Operation"))
-  end
-
   def validate_standby_guest
     validate_invalid_for_template(_("Standby Guest Operation"))
   end

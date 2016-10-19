@@ -1,6 +1,11 @@
 module ManageIQ::Providers::Redhat::InfraManager::Vm::Operations::Guest
-  def validate_shutdown_guest
-    validate_vm_control_powered_on
+  extend ActiveSupport::Concern
+
+  included do
+    supports :shutdown_guest do
+      unsupported_reason_add(:shutdown_guest, unsupported_reason(:control)) unless supports_control?
+      unsupported_reason_add(:shutdown_guest, _("The VM is not powered on")) unless current_state == "on"
+    end
   end
 
   def raw_shutdown_guest

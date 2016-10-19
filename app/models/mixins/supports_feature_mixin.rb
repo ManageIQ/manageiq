@@ -95,6 +95,7 @@ module SupportsFeatureMixin
     :smartstate_analysis        => 'Smartstate Analaysis',
     :snapshot_create            => 'Create Snapshot',
     :snapshots                  => 'Snapshots',
+    :shutdown_guest             => 'Shutdown Guest Operation',
     :terminate                  => 'Terminate a VM',
     :update                     => 'Update',
     :update_aggregate           => 'Host Aggregate Update',
