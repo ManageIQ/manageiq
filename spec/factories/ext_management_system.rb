@@ -196,6 +196,27 @@ FactoryGirl.define do
     end
   end
 
+  factory :ems_azure,
+          :aliases => ["manageiq/providers/azure/cloud_manager"],
+          :class   => "ManageIQ::Providers::Azure::CloudManager",
+          :parent  => :ems_cloud do
+  end
+
+  factory :ems_azure_network,
+          :aliases => ["manageiq/providers/azure/network_manager"],
+          :class   => "ManageIQ::Providers::Azure::NetworkManager",
+          :parent  => :ems_network do
+  end
+
+  factory :ems_azure_with_authentication,
+          :parent => :ems_azure do
+    azure_tenant_id "ABCDEFGHIJABCDEFGHIJ0123456789AB"
+    subscription "0123456789ABCDEFGHIJABCDEFGHIJKL"
+    after :create do |x|
+      x.authentications << FactoryGirl.create(:authentication)
+    end
+  end
+
   factory :ems_openstack,
           :aliases => ["manageiq/providers/openstack/cloud_manager"],
           :class   => "ManageIQ::Providers::Openstack::CloudManager",
@@ -311,21 +332,6 @@ FactoryGirl.define do
 
   factory :provisioning_manager_foreman_with_authentication,
           :parent => :provisioning_manager_foreman do
-    after :create do |x|
-      x.authentications << FactoryGirl.create(:authentication)
-    end
-  end
-
-  factory :ems_azure,
-          :aliases => ["manageiq/providers/azure/cloud_manager"],
-          :class   => "ManageIQ::Providers::Azure::CloudManager",
-          :parent  => :ems_cloud do
-  end
-
-  factory :ems_azure_with_authentication,
-          :parent => :ems_azure do
-    azure_tenant_id "ABCDEFGHIJABCDEFGHIJ0123456789AB"
-    subscription "0123456789ABCDEFGHIJABCDEFGHIJKL"
     after :create do |x|
       x.authentications << FactoryGirl.create(:authentication)
     end
