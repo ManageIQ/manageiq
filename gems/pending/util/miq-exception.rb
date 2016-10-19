@@ -125,6 +125,10 @@ module MiqException
   class MiqCloudSubnetUpdateError < Error; end
   class MiqCloudSubnetDeleteError < Error; end
 
+  class MiqVolumeSnapshotCreateError < Error; end
+  class MiqVolumeSnapshotUpdateError < Error; end
+  class MiqVolumeSnapshotDeleteError < Error; end
+
   class MiqCloudTenantCreateError < Error; end
   class MiqCloudTenantUpdateError < Error; end
   class MiqCloudTenantDeleteError < Error; end
