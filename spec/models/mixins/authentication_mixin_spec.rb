@@ -113,21 +113,22 @@ describe AuthenticationMixin do
   end
 
   it "#exponential_delay" do
-    expect(test_class_instance.exponential_delay(0)).to eq(0)
-    expect(test_class_instance.exponential_delay(1)).to eq(1)
-    expect(test_class_instance.exponential_delay(2)).to eq(2)
-    expect(test_class_instance.exponential_delay(3)).to eq(4)
-    expect(test_class_instance.exponential_delay(4)).to eq(8)
-    expect(test_class_instance.exponential_delay(5)).to eq(16)
+    expect(test_class_instance.exponential_delay(0)).to eq(1)
+    expect(test_class_instance.exponential_delay(1)).to eq(2)
+    expect(test_class_instance.exponential_delay(2)).to eq(4)
+    expect(test_class_instance.exponential_delay(3)).to eq(8)
+    expect(test_class_instance.exponential_delay(4)).to eq(16)
+    expect(test_class_instance.exponential_delay(5)).to eq(32)
   end
 
   it "#authentication_check_retry_deliver_on" do
     Timecop.freeze(Time.new(2015, 1, 2, 0, 0, 0, 0)) do
       expect(test_class_instance.authentication_check_retry_deliver_on(nil)).to be_nil
+      expect(test_class_instance.authentication_check_retry_deliver_on(0)).to   be_nil
       expect(test_class_instance.authentication_check_retry_deliver_on(6)).to   be_nil
 
-      expect(test_class_instance.authentication_check_retry_deliver_on(0)).to eq(Time.now.utc)
-      expect(test_class_instance.authentication_check_retry_deliver_on(1)).to eq(Time.now.utc + 1.minutes)
+      expect(test_class_instance.authentication_check_retry_deliver_on(1)).to eq(Time.now.utc + 1.minute)
+      expect(test_class_instance.authentication_check_retry_deliver_on(5)).to eq(Time.now.utc + 16.minutes)
     end
   end
 
