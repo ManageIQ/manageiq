@@ -2,7 +2,7 @@
   %li.dropdown
     %a{:href => "#", :class => "dropdown-toggle nav-item-iconic", :id => "dropdownMenu2", "data-toggle" => "dropdown", "aria-haspopup" => "true"}
       %span.fa.pficon-user
-      %p.navbar__user-name
+      %p.navbar__user-name{"data-userid" => current_user.userid, :id => "username_display"}
         = "#{current_user.name} | #{appliance_name}"
       %span.caret
     %ul.dropdown-menu
