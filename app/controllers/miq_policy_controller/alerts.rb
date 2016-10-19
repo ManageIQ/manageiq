@@ -455,44 +455,62 @@ module MiqPolicyController::Alerts
 
     # :time_thresholds
     @sb[:alert][:time_thresholds] ||= {
-      5.minutes.to_i => _("5 Minutes"), 10.minutes.to_i => _("10 Minutes"), 15.minutes.to_i => "15 Minutes", 30.minutes.to_i => "30 Minutes",
-      1.hour.to_i => "1 Hour", 2.hours.to_i => "2 Hours", 3.hours.to_i => "3 Hours", 4.hours.to_i => "4 Hours", 6.hours.to_i => "6 Hours", 12.hours.to_i => "12 Hours",
-      1.day.to_i => "1 Day"
-      # Stopping this at 1 day for now - Sprint 53
-      #     , 2.days.to_i=>"2 Days", 3.days.to_i=>"3 Days", 4.days.to_i=>"4 Days", 5.days.to_i=>"5 Days", 6.days.to_i=>"6 Days",
-      #     1.week.to_i=>"1 Week", 2.weeks.to_i=>"2 Weeks", 3.weeks.to_i=>"3 Weeks",
-      #     1.month.to_i=>"1 Month", 2.months.to_i=>"2 Months", 3.months.to_i=>"3 Months", 6.months.to_i=>"6 Months",
-      #     1.year.to_i=>"1 Year"
+      5.minutes.to_i  => _("5 Minutes"),
+      10.minutes.to_i => _("10 Minutes"),
+      15.minutes.to_i => _("15 Minutes"),
+      30.minutes.to_i => _("30 Minutes"),
+      1.hour.to_i     => _("1 Hour"),
+      2.hours.to_i    => _("2 Hours"),
+      3.hours.to_i    => _("3 Hours"),
+      4.hours.to_i    => _("4 Hours"),
+      6.hours.to_i    => _("6 Hours"),
+      12.hours.to_i   => _("12 Hours"),
+      1.day.to_i      => _("1 Day")
+    # Stopping this at 1 day for now - Sprint 53
+    #     , 2.days.to_i=>"2 Days", 3.days.to_i=>"3 Days", 4.days.to_i=>"4 Days", 5.days.to_i=>"5 Days", 6.days.to_i=>"6 Days",
+    #     1.week.to_i=>"1 Week", 2.weeks.to_i=>"2 Weeks", 3.weeks.to_i=>"3 Weeks",
+    #     1.month.to_i=>"1 Month", 2.months.to_i=>"2 Months", 3.months.to_i=>"3 Months", 6.months.to_i=>"6 Months",
+    #     1.year.to_i=>"1 Year"
     }
 
     # :hourly_time_thresholds
     @sb[:alert][:hourly_time_thresholds] ||= {
-      1.hour.to_i => "1 Hour", 2.hours.to_i => "2 Hours", 3.hours.to_i => "3 Hours", 4.hours.to_i => "4 Hours", 6.hours.to_i => "6 Hours", 12.hours.to_i => "12 Hours",
-      1.day.to_i => "1 Day"
+      1.hour.to_i => _("1 Hour"), 2.hours.to_i => _("2 Hours"), 3.hours.to_i => _("3 Hours"),
+      4.hours.to_i => _("4 Hours"), 6.hours.to_i => _("6 Hours"), 12.hours.to_i => _("12 Hours"),
+      1.day.to_i => _("1 Day")
     }
 
     # :rt_time_thresholds
     @sb[:alert][:rt_time_thresholds] ||= {
-      1.minutes.to_i => "1 Minute", 2.minutes.to_i => "2 Minutes", 3.minutes.to_i => "3 Minutes", 4.minutes.to_i => "4 Minutes",
-      5.minutes.to_i => "5 Minutes", 10.minutes.to_i => "10 Minutes", 15.minutes.to_i => "15 Minutes", 30.minutes.to_i => "30 Minutes",
-      1.hour.to_i => "1 Hour", 2.hours.to_i => "2 Hours"
-      # Stopping this at 2 hours now - Sprint 65
-      #     , 3.hours.to_i=>"3 Hours", 4.hours.to_i=>"4 Hours", 6.hours.to_i=>"6 Hours", 12.hours.to_i=>"12 Hours",
-      #     1.day.to_i=>"1 Day"
+      1.minutes.to_i  => _("1 Minute"),
+      2.minutes.to_i  => _("2 Minutes"),
+      3.minutes.to_i  => _("3 Minutes"),
+      4.minutes.to_i  => _("4 Minutes"),
+      5.minutes.to_i  => _("5 Minutes"),
+      10.minutes.to_i => _("10 Minutes"),
+      15.minutes.to_i => _("15 Minutes"),
+      30.minutes.to_i => _("30 Minutes"),
+      1.hour.to_i     => _("1 Hour"),
+      2.hours.to_i    => _("2 Hours")
+    # Stopping this at 2 hours now - Sprint 65
+    #     , 3.hours.to_i=>"3 Hours", 4.hours.to_i=>"4 Hours", 6.hours.to_i=>"6 Hours", 12.hours.to_i=>"12 Hours",
+    #     1.day.to_i=>"1 Day"
     }
 
     # hourly_performance repeat times for Notify Every pull down
     @sb[:alert][:hourly_repeat_times] ||= {
-      1.hour.to_i => "1 Hour", 2.hours.to_i => "2 Hours", 3.hours.to_i => "3 Hours", 4.hours.to_i => "4 Hours", 6.hours.to_i => "6 Hours", 12.hours.to_i => "12 Hours",
-      1.day.to_i => "1 Day"
+      1.hour.to_i => _("1 Hour"), 2.hours.to_i => _("2 Hours"), 3.hours.to_i => _("3 Hours"),
+      4.hours.to_i => _("4 Hours"), 6.hours.to_i => _("6 Hours"), 12.hours.to_i => _("12 Hours"),
+      1.day.to_i => _("1 Day")
     }
 
     # repeat times for Notify Every pull down
     @sb[:alert][:repeat_times] ||= {
-      1.minutes.to_i => "1 Minute", 2.minutes.to_i => "2 Minutes", 3.minutes.to_i => "3 Minutes", 4.minutes.to_i => "4 Minutes",
-      5.minutes.to_i => "5 Minutes", 10.minutes.to_i => "10 Minutes", 15.minutes.to_i => "15 Minutes", 30.minutes.to_i => "30 Minutes",
-      1.hour.to_i => "1 Hour", 2.hours.to_i => "2 Hours", 3.hours.to_i => "3 Hours", 4.hours.to_i => "4 Hours", 6.hours.to_i => "6 Hours", 12.hours.to_i => "12 Hours",
-      1.day.to_i => "1 Day"
+      1.minutes.to_i => _("1 Minute"), 2.minutes.to_i => _("2 Minutes"), 3.minutes.to_i => _("3 Minutes"),
+      4.minutes.to_i => _("4 Minutes"), 5.minutes.to_i => _("5 Minutes"), 10.minutes.to_i => _("10 Minutes"),
+      15.minutes.to_i => _("15 Minutes"), 30.minutes.to_i => _("30 Minutes"), 1.hour.to_i => _("1 Hour"),
+      2.hours.to_i => _("2 Hours"), 3.hours.to_i => _("3 Hours"), 4.hours.to_i => _("4 Hours"),
+      6.hours.to_i => _("6 Hours"), 12.hours.to_i => _("12 Hours"), 1.day.to_i => _("1 Day")
     }
   end
 
