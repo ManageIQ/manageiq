@@ -56,7 +56,7 @@ class Chargeback < ActsAsArModel
         # extra_fields there some extra field like resource name and
         # some of them are related to specific chargeback (ChargebackVm, ChargebackContainer,...)
         key, extra_fields = key_and_fields(metric_rollup_record)
-        data[key] ||= extra_fields
+        data[key] ||= new(extra_fields)
 
         chargeback_rates = data[key]["chargeback_rates"].split(', ') + rates_to_apply.collect(&:description)
         data[key]["chargeback_rates"] = chargeback_rates.uniq.join(', ')
@@ -68,7 +68,7 @@ class Chargeback < ActsAsArModel
 
     _log.info("Calculating chargeback costs...Complete")
 
-    [data.map { |_perf_key, data_hash| new(data_hash) }]
+    [data.values]
   end
 
   def self.hours_in_interval(query_start_time, query_end_time, interval)
