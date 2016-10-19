@@ -57,7 +57,6 @@ class ChargebackVm < Chargeback
     #   :interval_size
     #   :owner => <userid>
     #   :tag => /managed/environment/prod (Mutually exclusive with :user)
-    #   :chargeback_type => detail | summary
 
     @report_user = User.find_by(:userid => options[:userid])
 
