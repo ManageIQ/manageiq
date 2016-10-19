@@ -5,8 +5,7 @@
 
     = miq_accordion_panel(_("Properties"), false, "ems_middleware_prop") do
       %ul.nav.nav-pills.nav-stacked
-        = li_link(:if => true,
-           :text => _('Summary'),
+        = li_link(:text => _('Summary'),
            :record => @record,
            :display => 'main',
            :title => _("Show Summary"))
