@@ -2,12 +2,12 @@
 - content_for :search do
   = render(:partial => "layouts/x_adv_searchbox")
   = render(:partial => 'layouts/quick_search')
-- if x_active_tree == :storage_pod_tree
+- if @storage_pod
   #main_div
     = render(:partial => 'storage/storage_pod_list')
-- elsif @record
+- elsif @storage
   #main_div
-    = render(:partial => 'storage/main', :locals => {:controller => "storage"})
+    = render(:partial => 'storage/storage_list', :locals => {:controller => "storage"})
 - else
   #main_div
     = render(:partial => 'layouts/x_gtl')
