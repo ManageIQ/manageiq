@@ -12,7 +12,6 @@ module MiqAeEngine
       setup if num_methods == 0
       self.num_methods += 1
 
-      svc = MiqAeMethodService::MiqAeService.new(@workspace)
       svc = MiqAeMethodService::MiqAeService.new(@workspace, inputs, body)
       svc.inputs     = inputs
       svc.preamble   = method_preamble(drb_uri, svc.object_id, api_token)
