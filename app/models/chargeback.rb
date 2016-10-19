@@ -68,7 +68,7 @@ class Chargeback < ActsAsArModel
 
     _log.info("Calculating chargeback costs...Complete")
 
-    [data.map { |r| new(r.last) }]
+    [data.map { |_perf_key, data_hash| new(data_hash) }]
   end
 
   def self.hours_in_interval(query_start_time, query_end_time, interval)
