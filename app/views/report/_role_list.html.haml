@@ -32,8 +32,3 @@
                   = pp[0]
     - else
       = render :partial => 'layouts/info_msg', :locals => {:message => _("Choose a Role to edit from the left.")}
-
--# clear selection in menu tree in right cell
-- if @sb[:trees][:roles_tree][:active_node] != "root" && params[:action] != "menu_editor"
-  :javascript
-    miqTreeActivateNodeSilently("menu_roles_tree", "b__#{_('Report Menus for')} #{session[:role_choice]}")
