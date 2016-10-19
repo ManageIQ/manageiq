@@ -245,39 +245,6 @@ describe ApplicationHelper do
       expect(subject).to be_truthy
     end
 
-    context "when with button_add" do
-      before { @id = "button_add" }
-      it "and no record_id" do
-        @edit = {:rec_id => nil}
-        expect(subject).to be_falsey
-      end
-
-      it "and record_id" do
-        @edit = {:rec_id => "record id"}
-        expect(subject).to be_truthy
-      end
-    end
-
-    ["button_save", "button_reset"].each do |id|
-      context "when with #{id}" do
-        before { @id = id }
-        it "and record_id" do
-          @edit = {:rec_id => "record id"}
-          expect(subject).to be_falsey
-        end
-
-        it "and no record_id" do
-          @edit = {:rec_id => nil}
-          expect(subject).to be_truthy
-        end
-      end
-    end
-
-    it "when with button_cancel" do
-      @id = "button_cancel"
-      expect(subject).to be_falsey
-    end
-
     ["miq_task_", "compare_", "drift_", "comparemode_", "driftmode_", "custom_"].each do |i|
       it "when id likes #{i}*" do
         @id = "#{i}some_thing"
@@ -1014,13 +981,6 @@ describe ApplicationHelper do
       it "when with view_#{g}" do
         @gtl_type = g
         expect(build_toolbar_disable_button("view_#{g}")).to be_truthy
-      end
-    end
-
-    ['button_add', 'button_save', 'button_reset'].each do |b|
-      it "when with #{b} and not changed" do
-        @changed = false
-        expect(build_toolbar_disable_button(b)).to be_truthy
       end
     end
 
