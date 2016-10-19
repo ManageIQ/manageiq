@@ -1,9 +1,6 @@
 class ManageIQ::Providers::CloudManager::OrchestrationStackDecorator < Draper::Decorator
-  def fonticon
-    nil
-  end
 
-  def listicon_image
-    "100/orchestration_stack.png"
+  def fonticon
+    'product product-orchestration_stack'.freeze
   end
 end

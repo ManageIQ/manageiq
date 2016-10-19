@@ -2,7 +2,7 @@ class ManageIQ::Providers::AnsibleTower::ConfigurationManager::JobDecorator < Dr
   delegate_all
 
   def fonticon
-    nil
+    'product product-orchestration_stack'.freeze
   end
 
   def listicon_image

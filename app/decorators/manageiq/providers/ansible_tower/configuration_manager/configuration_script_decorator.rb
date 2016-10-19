@@ -2,7 +2,7 @@ class ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfigurationScri
   delegate_all
 
   def fonticon
-    nil
+    'product product-template'.freeze
   end
 
   def listicon_image

@@ -2,10 +2,6 @@ class ManageIQ::Providers::ConfigurationManager::InventoryGroupDecorator < Drape
   delegate_all
 
   def fonticon
-    nil
-  end
-
-  def listicon_image
-    '100/inventory_group.png'
+    'pficon pficon-folder-close'.freeze
   end
 end

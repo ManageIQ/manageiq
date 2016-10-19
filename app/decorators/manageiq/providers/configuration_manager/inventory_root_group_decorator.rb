@@ -2,7 +2,7 @@ class ManageIQ::Providers::ConfigurationManager::InventoryRootGroupDecorator < D
   delegate_all
 
   def fonticon
-    nil
+    'pficon pficon-folder-close'.freeze
   end
 
   def listicon_image
