@@ -169,9 +169,9 @@ class TreeNodeBuilder
     # to lookup based on that.
     obj = object.kind_of?(Draper::Decorator) ? object.object : object
 
-    # Find the proc for the class either based on it's non-namespaced class
-    # name, or it's `base_class` (the top level of the inheritence tree)
-    node_lambda =   BUILD_NODE_HASH[obj.class.to_s.split("::").last]
+    # Find the proc for the class either based on it's class name, or it's
+    # `base_class` (the top level of the inheritence tree)
+    node_lambda =   BUILD_NODE_HASH[obj.class.name]
     node_lambda ||= BUILD_NODE_HASH[obj.class.base_class.to_s]
 
     # Execute the proc from the BUILD_NODE_HASH in the context of the instance
