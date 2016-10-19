@@ -237,12 +237,12 @@ module EmsRefresh::SaveInventoryNetwork
     store_ids_for_new_records(ems.load_balancers, hashes, :ems_ref)
   end
 
-  def save_network_ports_inventory(ems, hashes, target = nil)
+  def save_network_ports_inventory(ems, hashes, target = nil, mode = :refresh)
     target = ems if target.nil?
 
     ems.network_ports.reset
     deletes = if target == ems
-                :use_association
+                ems.network_ports.where(:source => mode).dup
               else
                 []
               end
@@ -256,6 +256,7 @@ module EmsRefresh::SaveInventoryNetwork
       end
 
       h[:security_groups] = (h.fetch_path(:security_groups) || []).map { |x| x.try(:[], :_object) }.compact.uniq
+      h[:source] = mode
     end
 
     save_inventory_multi(ems.network_ports, hashes, deletes, [:ems_ref], :cloud_subnet_network_ports)
@@ -272,7 +273,7 @@ module EmsRefresh::SaveInventoryNetwork
       end
     end
 
-    save_inventory_multi(network_port.cloud_subnet_network_ports, hashes, deletes, [:cloud_subnet_id])
+    save_inventory_multi(network_port.cloud_subnet_network_ports, hashes, deletes, [:cloud_subnet, :address])
   end
 
   def save_load_balancer_pool_members_inventory(ems, hashes, target = nil)
@@ -326,7 +327,7 @@ module EmsRefresh::SaveInventoryNetwork
     end
 
     save_inventory_multi(load_balancer_pool.load_balancer_pool_member_pools, hashes, deletes,
-                         [:load_balancer_pool_member_id])
+                         [:load_balancer_pool_member])
   end
 
   def save_load_balancer_listeners_inventory(ems, hashes, target = nil)
@@ -362,7 +363,7 @@ module EmsRefresh::SaveInventoryNetwork
       end
     end
 
-    save_inventory_multi(load_balancer_listener.load_balancer_listener_pools, hashes, deletes, [:load_balancer_pool_id])
+    save_inventory_multi(load_balancer_listener.load_balancer_listener_pools, hashes, deletes, [:load_balancer_pool])
   end
 
   def save_load_balancer_health_checks_inventory(ems, hashes, target = nil)
@@ -399,7 +400,7 @@ module EmsRefresh::SaveInventoryNetwork
     end
 
     save_inventory_multi(load_balancer_health_check.load_balancer_health_check_members, hashes, deletes,
-                         [:load_balancer_pool_member_id])
+                         [:load_balancer_pool_member])
   end
 
   def link_cloud_subnets_to_network_routers(hashes)

@@ -6,7 +6,7 @@ module Api
       #
       def render_collection_type(type, id, is_subcollection = false)
         klass = collection_class(type)
-        opts  = {:name => type.to_s, :is_subcollection => is_subcollection}
+        opts  = {:name => type.to_s, :is_subcollection => is_subcollection, :expand_actions => true}
         if id
           render_resource type, resource_search(id, type, klass), opts
         else
@@ -83,7 +83,7 @@ module Api
           expand_subcollections(json, type, resource)
         end
 
-        expand_actions(resource, json, type, opts)
+        expand_actions(resource, json, type, opts) if opts[:expand_actions]
         expand_resource_custom_actions(resource, json, type)
         json
       end

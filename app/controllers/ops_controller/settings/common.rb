@@ -175,9 +175,11 @@ module OpsController::Settings::Common
     subscriptions = get_subscriptions_array(subscriptions) unless subscriptions.empty?
     if replication_type == :global
       subscriptions.each do |h|
-        region = MiqRegion.find_by( :region => h['provider_region'])
-        remote_ws_address = region ? region.remote_ws_address : ''
-        h.merge!(:auth_key_configured => region && region.auth_key_configured? ? true : false, :remote_ws_address => remote_ws_address)
+        region = MiqRegion.find_by(:region => h[:provider_region])
+        h.merge!(
+          :auth_key_configured => !!region.try(:auth_key_configured?),
+          :remote_ws_address   => region.try(:remote_ws_address).to_s
+        )
       end
     end
 
@@ -296,15 +298,17 @@ module OpsController::Settings::Common
   end
 
   def get_subscriptions_array(subscriptions)
-    subscriptions.collect { |sub|
-      {:dbname => sub.dbname,
-       :host     => sub.host,
-       :id       => sub.id,
-       :user     => sub.user,
-       :password => '●●●●●●●●',
-       :port     => sub.port
+    subscriptions.collect do |sub|
+      {
+        :dbname          => sub.dbname,
+        :host            => sub.host,
+        :id              => sub.id,
+        :user            => sub.user,
+        :password        => '●●●●●●●●',
+        :port            => sub.port,
+        :provider_region => sub.provider_region
       }
-    }
+    end
   end
 
   def valid_replication_type

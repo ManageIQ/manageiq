@@ -1444,6 +1444,12 @@ class Host < ApplicationRecord
             task.update_status("Active", "Ok", "Refreshing FS Files") if task
             Benchmark.realtime_block(:refresh_fs_files) { refresh_fs_files(ssu) }
 
+            if supports?(:refresh_network_interfaces)
+              _log.info("Refreshing network interfaces for #{log_target}")
+              task.update_status("Active", "Ok", "Refreshing network interfaces") if task
+              Benchmark.realtime_block(:refresh_network_interfaces) { refresh_network_interfaces(ssu) }
+            end
+
             # refresh_openstack_services should run after refresh_services and refresh_fs_files
             if respond_to?(:refresh_openstack_services)
               _log.info("Refreshing OpenStack Services for #{log_target}")
@@ -1857,5 +1863,9 @@ class Host < ApplicationRecord
     return 'archived' if archived?
     return power_state unless power_state.nil?
     "unknown"
+  end
+
+  def validate_destroy
+    {:available => true, :message => nil}
   end
 end

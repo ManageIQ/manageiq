@@ -257,6 +257,7 @@ module Spec
         expected["href"] = a_string_matching(options[:href]) if options[:href]
         expected.merge!(expected_task_response) if options[:task]
         expect(response.parsed_body).to include(expected)
+        expect(response.parsed_body).not_to include("actions")
       end
 
       def expect_multiple_action_result(count, options = {})

@@ -1,9 +1,12 @@
 require 'pg'
 
 class MiqPglogical
+  include Vmdb::Logging
+
   REPLICATION_SET_NAME = 'miq'.freeze
   SETTINGS_PATH = [:replication].freeze
   NODE_PREFIX = "region_".freeze
+  ALWAYS_EXCLUDED_TABLES = %w(ar_internal_metadata schema_migrations repl_events repl_monitor repl_nodes).freeze
 
   def initialize
     @connection = ApplicationRecord.connection
@@ -41,9 +44,11 @@ class MiqPglogical
   #   node and creating the replication set
   def configure_provider
     return if provider?
-    pglogical.enable
-    create_node unless node?
-    create_replication_set
+    @connection.transaction(:requires_new => true) do
+      pglogical.enable
+      create_node unless node?
+      create_replication_set
+    end
   end
 
   # Removes the replication configuration and pglogical node from the
@@ -64,7 +69,7 @@ class MiqPglogical
   # Lists the tables configured to be excluded in the vmdb configuration
   # @return Array<String> the table list
   def configured_excludes
-    MiqServer.my_server.get_config.config.fetch_path(*SETTINGS_PATH, :exclude_tables) | %w(ar_internal_metadata schema_migrations)
+    MiqServer.my_server.get_config.config.fetch_path(*SETTINGS_PATH, :exclude_tables) | ALWAYS_EXCLUDED_TABLES
   end
 
   # Creates the 'miq' replication set and refreshes the excluded tables
@@ -82,7 +87,11 @@ class MiqPglogical
 
     # add tables to the set which are no longer excluded (or new)
     newly_included_tables.each do |table|
-      pglogical.replication_set_add_table(REPLICATION_SET_NAME, table, true)
+      begin
+        pglogical.replication_set_add_table(REPLICATION_SET_NAME, table, true)
+      rescue PG::UniqueViolation => e
+        _log.warn("Caught unique constraint error while adding #{table} to the replication set: #{e.message}")
+      end
     end
   end
 

@@ -50,7 +50,7 @@ class MiqSnmp
 
     # A list of additional varbinds to send with the trap.
     object_list = inputs[:object_list] || inputs['object_list'] || []
-    vars = MiqSnmp.create_var_bind_list(object_list)
+    vars = create_var_bind_list(object_list)
 
     hosts = host.kind_of?(Array) ? host : [host]
     hosts.each do |host|
@@ -72,11 +72,11 @@ class MiqSnmp
     # trap_oid: An ObjectId or String with the OID identifier for this trap.
     trap_oid = inputs[:trap_oid] || inputs['trap_oid']
     raise MiqException::Error, _("MiqSnmp.trap_v2: Ensure that a trap object id is provided") if trap_oid.nil?
-    trap_oid = MiqSnmp.subst_oid(trap_oid)
+    trap_oid = subst_oid(trap_oid)
 
     # A list of additional varbinds to send with the trap.
     object_list = inputs[:object_list] || inputs['object_list'] || []
-    vars = MiqSnmp.create_var_bind_list(object_list, trap_oid)
+    vars = create_var_bind_list(object_list, trap_oid)
 
     hosts = host.kind_of?(Array) ? host : [host]
     hosts.each do |host|
@@ -103,7 +103,7 @@ class MiqSnmp
   def self.create_var_bind_list(object_list, base = nil)
     vars = []
     object_list.each do |tuple|
-      oid      = MiqSnmp.subst_oid(tuple[:oid], base)
+      oid      = subst_oid(tuple[:oid], base)
       value    = tuple[:value]
       type     = tuple[:type] || tuple[:var_type]
       snmpType = AVAILABLE_TYPES_HASH[type]
@@ -118,16 +118,16 @@ class MiqSnmp
     oid = oid.strip
 
     # Set base to our enterprise oid, if uninitialize
-    base = MiqSnmp.enterprise_oid_string if base.nil?
+    base = enterprise_oid_string if base.nil?
 
     # If it begins with a dot, append it to the base
     return "#{base}#{oid}" if oid[0, 1] == "."
 
     # Need to move these to ManageIQ MIB
     oid = case oid.downcase
-          when "info"                         then "#{MiqSnmp.enterprise_oid_string}.1"
-          when "warn", "warning"              then "#{MiqSnmp.enterprise_oid_string}.2"
-          when "crit", "critical", "error"    then "#{MiqSnmp.enterprise_oid_string}.3"
+          when "info"                         then "#{enterprise_oid_string}.1"
+          when "warn", "warning"              then "#{enterprise_oid_string}.2"
+          when "crit", "critical", "error"    then "#{enterprise_oid_string}.3"
           when "description"                  then "#{base}.1"
           when "category"                     then "#{base}.2"
           when "message"                      then "#{base}.3"
@@ -151,7 +151,7 @@ class MiqSnmp
   private_class_method :system_uptime
 
   def self.agent_address
-    VMDB::Config.new("vmdb").get(:server, :host)
+    Settings.server.host
   end
   private_class_method :agent_address
 end

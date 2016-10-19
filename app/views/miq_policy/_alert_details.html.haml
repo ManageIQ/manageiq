@@ -30,7 +30,8 @@
               = check_box_tag("enabled_cb", "1", @edit[:new][:enabled], "data-miq_observe_checkbox" => observe)
           - else
             .col-md-8
-              = @alert.enabled ? _("Yes") : _("No")
+              %p.form-control-static
+                = @alert.enabled ? _("Yes") : _("No")
         -# Based on (model)
         .form-group
           %label.control-label.col-md-2
@@ -50,7 +51,8 @@
                 = _('* Cannot be changed while this Alert belongs to an Alert Profile.')
           - else
             .col-md-8
-              = h(ui_lookup(:model => @alert.db))
+              %p.form-control-static
+                = h(ui_lookup(:model => @alert.db))
         -# Eval Method
         .form-group
           %label.control-label.col-md-2
@@ -69,11 +71,12 @@
                   miqSelectPickerEvent('exp_name', '#{url}', {beforeSend: true, complete: true})
           - else
             .col-md-8
-              - if @alert.expression.kind_of?(MiqExpression)
-                -# Expression is an MiqExpression
-                = _('Expression')
-              - else
-                = h(MiqAlert.expression_types(@alert.db)[@alert.expression[:eval_method]])
+              %p.form-control-static
+                - if @alert.expression.kind_of?(MiqExpression)
+                  -# Expression is an MiqExpression
+                  = _('Expression')
+                - else
+                  = h(MiqAlert.expression_types(@alert.db)[@alert.expression[:eval_method]])
 
         -# Expression driving event
         - if @edit
@@ -95,7 +98,8 @@
               %label.control-label.col-md-2
                 = _("Driving Event")
               .col-md-8
-                = h(@event)
+                %p.form-control-static
+                  = h(@event)
         -# Repeat Time
         .form-group
           %label.control-label.col-md-2
@@ -114,10 +118,11 @@
                 miqSelectPickerEvent('repeat_time', '#{url}', {beforeSend: true, complete: true})
           - else
             .col-md-8
-              - if @alert.options[:notifications][:delay_next_evaluation].blank?
-                = _('10 Minutes')
-              - else
-                = h(@sb[:alert][:repeat_times][@alert.options[:notifications][:delay_next_evaluation]])
+              %p.form-control-static
+                - if @alert.options[:notifications][:delay_next_evaluation].blank?
+                  = _('10 Minutes')
+                - else
+                  = h(@sb[:alert][:repeat_times][@alert.options[:notifications][:delay_next_evaluation]])
       %hr
       -# Expression
       - if @edit
@@ -175,16 +180,18 @@
               %label.control-label.col-md-2
                 = _("From")
               .col-md-8
-                - if @alert.options[:notifications][:email][:from].blank?
-                  = _("(Default: %{email_from})") % {:email_from => h(get_vmdb_config[:smtp][:from])}
-                - else
-                  = h(@alert.options[:notifications][:email][:from])
+                %p.form-control-static
+                  - if @alert.options[:notifications][:email][:from].blank?
+                    = _("(Default: %{email_from})") % {:email_from => h(get_vmdb_config[:smtp][:from])}
+                  - else
+                    = h(@alert.options[:notifications][:email][:from])
             .form-group
               %label.control-label.col-md-2
                 = _("To")
               .col-md-8
                 - unless @email_to.blank?
-                  = h(@email_to.join(';'))
+                  %p.form-control-static
+                    = h(@email_to.join(';'))
           %hr
         - if @alert.options && @alert.options[:notifications] && !@alert.options[:notifications][:snmp].blank?
           %h3
@@ -195,21 +202,23 @@
                 = title_for_host
               .col-md-8
                 - @alert.options[:notifications][:snmp][:host].each do |host|
-                  = h(host)
-                  %br
+                  %p.form-control-static
+                    = h(host)
+                    %br
+            - snmp_version = @alert.options[:notifications][:snmp][:snmp_version]
             .form-group
               %label.control-label.col-md-2
                 = _("Version")
               .col-md-8
-                = h(@alert.options[:notifications][:snmp][:snmp_version])
-            - opts = @alert.options[:notifications][:snmp][:snmp_version].nil? ? _("Trap Number") : _("Trap Object ID")
-            - trap_text = @alert.options[:notifications][:snmp][:snmp_version] == "v1" || opts
+                %p.form-control-static
+                  = h(snmp_version)
 
             .form-group
               %label.control-label.col-md-2
-                = trap_text
+                = snmp_version == "v1" || snmp_version.nil? ? _("Trap Number") : _("Trap Object ID")
               .col-md-8
-                = h(@alert.options[:notifications][:snmp][:trap_id])
+                %p.form-control-static
+                  = h(@alert.options[:notifications][:snmp][:trap_id])
           - if @alert.options[:notifications][:snmp].key?(:variables)
             %br
             %table.table.table-striped.table-bordered.table-hover
@@ -237,7 +246,8 @@
               %label.control-label.col-md-2
                 = _("Show on Timeline")
               .col-md-8
-                = _('True')
+                %p.form-control-static
+                  = _('True')
           %hr
         - if @alert.options && @alert.options[:notifications] && !@alert.options[:notifications][:automate].blank?
           %h3
@@ -247,7 +257,8 @@
               %label.control-label.col-md-2
                 = _("Event Name")
               .col-md-8
-                = h(@alert.options[:notifications][:automate][:event_name])
+                %p.form-control-static
+                  = h(@alert.options[:notifications][:automate][:event_name])
           %hr
       -# Alert Profiles alert is assigned to
       - unless @edit

@@ -7,17 +7,16 @@
       %label.col-md-4.control-label{:for => "jdbc_driver_name_input"}
         = _("Name")
       .col-md-8
-        %input.form-control#jdbc_driver_name_input{:type          => "text",
-                                                   "name"         => "jdbc_driver_name_input",
-                                                   "ng-required"  => "true",
-                                                   "ng-maxlength" => "100",
-                                                   "placeholder"  => _("Enter JDBC Driver name"),
-                                                   "ng-model"     => "step2DsModel.jdbcDriverName"}
-      .col-sm-2
-      .col-sm-10
-        %p.ng-error-messages{"ng-show" => "step2Form.jdbc_driver_name_input.$error.required"}
+        %input.form-control#jdbc_ds_driver_name_input{:type          => "text",
+                                                      "name"         => "jdbc_ds_driver_name_input",
+                                                      "ng-required"  => "true",
+                                                      "ng-maxlength" => "100",
+                                                      "placeholder"  => _("Enter JDBC Driver name"),
+                                                      "ng-model"     => "step2DsModel.jdbcDriverName"}
+      .col-sm-8.col-sm-offset-4
+        %p.ng-error-messages{"ng-show" => "step2Form.jdbc_ds_driver_name_input.$error.required"}
           = _("Required")
-        %p.ng-error-messages{"ng-show" => "step2Form.jdbc_driver_name_input.$error.maxlength"}
+        %p.ng-error-messages{"ng-show" => "step2Form.jdbc_ds_driver_name_input.$error.maxlength"}
           = _("Maximum length is 100")
 
 
@@ -32,8 +31,7 @@
                                                     "placeholder"  => _("Enter JDBC Module name"),
                                                     "ng-model"     => "step2DsModel.jdbcModuleName"}
 
-      .col-sm-2
-      .col-sm-10
+      .col-sm-8.col-sm-offset-4
         %p.ng-error-messages{"ng-show" => "step2Form.jdbc_modoule_name_input.$error.required"}
           = _("Required")
         %p.ng-error-messages{"ng-show" => "step2Form.jdbc_modoule_name_input.$error.maxlength"}
@@ -45,14 +43,13 @@
         = _("Driver Class")
       .col-md-8
         %input.form-control#jdbc_ds_driver_input{:type          => "text",
-                                                    "name"         => "jdbc_ds_driver_input",
-                                                    "ng-required"  => "true",
-                                                    "ng-maxlength" => "256",
-                                                    "placeholder"  => _("Enter JDBC Driver Class"),
-                                                    "ng-model"     => "step2DsModel.driverClass"}
+                                                 "name"         => "jdbc_ds_driver_input",
+                                                 "ng-required"  => "true",
+                                                 "ng-maxlength" => "256",
+                                                 "placeholder"  => _("Enter JDBC Driver Class"),
+                                                 "ng-model"     => "step2DsModel.driverClass"}
 
-      .col-sm-2
-      .col-sm-10
+      .col-sm-8.col-sm-offset-4
         %p.ng-error-messages{"ng-show" => "step2Form.jdbc_ds_driver_input.$error.required"}
           = _("Required")
         %p.ng-error-messages{"ng-show" => "step2Form.jdbc_ds_driver_input.$error.maxlength"}
@@ -60,11 +57,11 @@
 
 
     .modal-footer
-      %button.btn.btn-default.dialog-cancel-button{:type          => "button",
-                                                   "ng-click"     =>"reset()"}
+      %button.btn.btn-default.dialog-cancel-button{:type      => "button",
+                                                   "ng-click" => "reset()"}
         = _("Cancel")
-      %button.btn.btn-default{:type          => "button",
-                              "ng-click"     =>"addDatasourceStep2Back()"}
+      %button.btn.btn-default{:type      => "button",
+                              "ng-click" => "addDatasourceStep2Back()"}
         = _("Back")
       %button.btn.btn-primary{:type         => "button",
                               "ng-click"    => "addDatasourceStep2Next()",

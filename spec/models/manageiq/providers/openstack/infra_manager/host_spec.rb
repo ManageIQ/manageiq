@@ -76,6 +76,16 @@ openstack-keystone:                     active
       end
     end
 
+    context "supported features" do
+      before(:each) do
+        host.refresh_openstack_services(ssu)
+      end
+
+      it "supports refresh_network_interfaces" do
+        expect(host.supports_refresh_network_interfaces?).to be_truthy
+      end
+    end
+
     describe "host_service_group_openstacks names" do
       subject do
         host.refresh_openstack_services(ssu)
@@ -484,6 +494,10 @@ openstack-keystone:                     active
       expect(MiqQueue.where(:method_name => "manageable").count).to eq(0)
       host.manageable_queue
       expect(MiqQueue.where(:method_name => "manageable").count).to eq(1)
+
+      expect(MiqQueue.where(:method_name => "destroy_ironic").count).to eq(0)
+      host.destroy_ironic_queue
+      expect(MiqQueue.where(:method_name => "destroy_ironic").count).to eq(1)
     end
 
     it "check task executes and queues refresh if success" do
@@ -514,6 +528,18 @@ openstack-keystone:                     active
       host.manageable(task.id)
       expect(task.status).to eq("Ok")
       expect(MiqQueue.where(:method_name => "refresh").count).to eq(1)
+    end
+
+    it "check task executes and queues destroy_queue if success" do
+      baremetal_service = double("baremetal_service")
+      expect(baremetal_service).to receive(:delete_node) { double(:status => 204) }
+      openstack_handle = double("openstack handle")
+      expect(openstack_handle).to receive(:detect_baremetal_service) { baremetal_service }
+      allow(ext_management_system).to receive(:openstack_handle).and_return(openstack_handle)
+      expect(MiqQueue.where(:method_name => "destroy").count).to eq(0)
+
+      host.destroy_ironic
+      expect(MiqQueue.where(:method_name => "destroy").count).to eq(1)
     end
   end
 end

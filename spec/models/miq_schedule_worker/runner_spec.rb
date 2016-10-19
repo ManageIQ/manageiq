@@ -173,23 +173,6 @@ describe MiqScheduleWorker::Runner do
           end
         end
 
-        context "#system_schedule_every" do
-          it "catches an error on nil first arg" do
-            expect($log).to receive(:error).once
-            @schedule_worker.system_schedule_every(nil) {}
-          end
-
-          it "catches an error on 0 first arg" do
-            expect($log).to receive(:error).once
-            @schedule_worker.system_schedule_every(0) {}
-          end
-
-          it "works on nil :first_in" do
-            expect($log).to receive(:error).never
-            @schedule_worker.system_schedule_every(1, :first_in => nil) {}
-          end
-        end
-
         context "calling check_roles_changed" do
           before(:each) do
             # MiqScheduleWorker::Runner.any_instance.stub(:schedules_for_scheduler_role)
@@ -264,26 +247,21 @@ describe MiqScheduleWorker::Runner do
 
             it "queues the right items" do
               scheduled_jobs = @schedule_worker.schedules_for_ldap_synchronization_role
+              expect(scheduled_jobs.size).to be(1)
 
               scheduled_jobs.each do |job|
                 case job.tags
                 when %w(ldap_synchronization ldap_synchronization_schedule)
                   expect(job).to be_kind_of(Rufus::Scheduler::CronJob)
                   expect(job.original).to eq(@ldap_synchronization_collection[:ldap_synchronization_schedule])
-                  job.call
-                  @schedule_worker.do_work
-                  expect(MiqQueue.count).to eq(1)
-                  message = MiqQueue.where(:class_name => "LdapServer", :method_name => "sync_data_from_timer").first
-                  expect(message).not_to be_nil
-
-                  MiqQueue.delete_all
+                  while_calling_job(job) do
+                    expect(MiqQueue.count).to eq(1)
+                    message = MiqQueue.where(:class_name => "LdapServer", :method_name => "sync_data_from_timer").first
+                    expect(message).not_to be_nil
+                  end
                 else
-                  raise "Unexpected Job: tags=#{job.tags.inspect}, original=#{job.original.inspect}, "\
-                        "last_time=#{job.last_time.inspect}, id=#{job.job_id.inspect}, next=#{job.next_time.inspect}, "\
-                        "handler=#{job.handler.inspect}"
+                  raise_unexpected_job_error(job)
                 end
-
-                job.unschedule
               end
             end
           end
@@ -324,55 +302,36 @@ describe MiqScheduleWorker::Runner do
 
             it "queues the right items" do
               scheduled_jobs = @schedule_worker.schedules_for_database_operations_role
+              expect(scheduled_jobs.size).to be(3)
 
               scheduled_jobs.each do |job|
-                case job.tags
-                when %w(database_operations database_metrics_collection_schedule)
-                  expect(job).to be_kind_of(Rufus::Scheduler::CronJob)
-                  expect(job.original).to eq(@metrics_collection[:collection_schedule])
-                  job.call
-                  @schedule_worker.do_work
-                  expect(MiqQueue.count).to eq(1)
-                  message = MiqQueue.where(:class_name => "VmdbDatabase", :method_name => "capture_metrics_timer").first
-                  expect(message).not_to be_nil
-                  expect(message.role).to eq("database_owner")
-                  expect(message.zone).to be_nil
+                expect(job).to be_a_kind_of(Rufus::Scheduler::CronJob)
 
-                  MiqQueue.delete_all
-                when %w(database_operations database_metrics_daily_rollup_schedule)
-                  expect(job).to be_kind_of(Rufus::Scheduler::CronJob)
-                  expect(job.original).to eq(@metrics_collection[:daily_rollup_schedule])
-                  job.call
-                  @schedule_worker.do_work
-                  expect(MiqQueue.count).to eq(1)
-                  message = MiqQueue.where(:class_name => "VmdbDatabase", :method_name => "rollup_metrics_timer").first
-                  expect(message).not_to be_nil
-                  expect(message.role).to eq("database_owner")
-                  expect(message.zone).to be_nil
-
-                  MiqQueue.delete_all
-                when %w(database_operations database_metrics_purge_schedule)
-                  expect(job).to be_kind_of(Rufus::Scheduler::CronJob)
-                  expect(job.original).to eq(@metrics_history[:purge_schedule])
-                  job.call
-                  @schedule_worker.do_work
-                  expect(MiqQueue.count).to eq(2)
-
-                  ["VmdbDatabaseMetric", "VmdbMetric"].each do |class_name|
-                    message = MiqQueue.where(:class_name => class_name, :method_name => "purge_all_timer").first
-                    expect(message).not_to be_nil
-                    expect(message.role).to eq("database_operations")
-                    expect(message.zone).to be_nil
+                while_calling_job(job) do
+                  case job.tags
+                  when %w(database_operations database_metrics_collection_schedule)
+                    expect(job.original).to eq(@metrics_collection[:collection_schedule])
+                    expect(MiqQueue.count).to eq(1)
+                    message = MiqQueue.where(:class_name  => "VmdbDatabase",
+                                             :method_name => "capture_metrics_timer").first
+                    expect(message).to have_attributes(:role => "database_owner", :zone => nil)
+                  when %w(database_operations database_metrics_daily_rollup_schedule)
+                    expect(job.original).to eq(@metrics_collection[:daily_rollup_schedule])
+                    expect(MiqQueue.count).to eq(1)
+                    message = MiqQueue.where(:class_name  => "VmdbDatabase",
+                                             :method_name => "rollup_metrics_timer").first
+                    expect(message).to have_attributes(:role => "database_owner", :zone => nil)
+                  when %w(database_operations database_metrics_purge_schedule)
+                    expect(job.original).to eq(@metrics_history[:purge_schedule])
+                    expect(MiqQueue.count).to eq(2)
+                    %w(VmdbDatabaseMetric VmdbMetric).each do |class_name|
+                      message = MiqQueue.where(:class_name => class_name, :method_name => "purge_all_timer").first
+                      expect(message).to have_attributes(:role => "database_operations", :zone => nil)
+                    end
+                  else
+                    raise_unexpected_job_error(job)
                   end
-
-                  MiqQueue.delete_all
-                else
-                  raise "Unexpected Job: tags=#{job.tags.inspect}, original=#{job.original.inspect}, "\
-                        "last_time=#{job.last_time.inspect}, id=#{job.job_id.inspect}, next=#{job.next_time.inspect}, "\
-                        "handler=#{job.handler.inspect}"
                 end
-
-                job.unschedule
               end
             end
           end
@@ -384,55 +343,37 @@ describe MiqScheduleWorker::Runner do
 
             it "queues the right items" do
               scheduled_jobs = @schedule_worker.schedules_for_database_operations_role
+              expect(scheduled_jobs.size).to be(3)
 
               scheduled_jobs.each do |job|
-                case job.tags
-                when %w(database_operations database_metrics_collection_schedule)
-                  expect(job).to be_kind_of(Rufus::Scheduler::CronJob)
-                  expect(job.original).to eq(@metrics_collection[:collection_schedule])
-                  job.call
-                  @schedule_worker.do_work
-                  expect(MiqQueue.count).to eq(1)
-                  message = MiqQueue.where(:class_name => "VmdbDatabase", :method_name => "capture_metrics_timer").first
-                  expect(message).not_to be_nil
-                  expect(message.role).to eq("database_operations")
-                  expect(message.zone).to be_nil
+                expect(job).to be_kind_of(Rufus::Scheduler::CronJob)
 
-                  MiqQueue.delete_all
-                when %w(database_operations database_metrics_daily_rollup_schedule)
-                  expect(job).to be_kind_of(Rufus::Scheduler::CronJob)
-                  expect(job.original).to eq(@metrics_collection[:daily_rollup_schedule])
-                  job.call
-                  @schedule_worker.do_work
-                  expect(MiqQueue.count).to eq(1)
-                  message = MiqQueue.where(:class_name => "VmdbDatabase", :method_name => "rollup_metrics_timer").first
-                  expect(message).not_to be_nil
-                  expect(message.role).to eq("database_operations")
-                  expect(message.zone).to be_nil
+                while_calling_job(job) do
+                  case job.tags
+                  when %w(database_operations database_metrics_collection_schedule)
+                    expect(job.original).to eq(@metrics_collection[:collection_schedule])
+                    expect(MiqQueue.count).to eq(1)
+                    message = MiqQueue.where(:class_name  => "VmdbDatabase",
+                                             :method_name => "capture_metrics_timer").first
+                    expect(message).to have_attributes(:role => "database_operations", :zone => nil)
+                  when %w(database_operations database_metrics_daily_rollup_schedule)
+                    expect(job.original).to eq(@metrics_collection[:daily_rollup_schedule])
+                    expect(MiqQueue.count).to eq(1)
+                    message = MiqQueue.where(:class_name  => "VmdbDatabase",
+                                             :method_name => "rollup_metrics_timer").first
+                    expect(message).to have_attributes(:role => "database_operations", :zone => nil)
+                  when %w(database_operations database_metrics_purge_schedule)
+                    expect(job.original).to eq(@metrics_history[:purge_schedule])
+                    expect(MiqQueue.count).to eq(2)
 
-                  MiqQueue.delete_all
-                when %w(database_operations database_metrics_purge_schedule)
-                  expect(job).to be_kind_of(Rufus::Scheduler::CronJob)
-                  expect(job.original).to eq(@metrics_history[:purge_schedule])
-                  job.call
-                  @schedule_worker.do_work
-                  expect(MiqQueue.count).to eq(2)
-
-                  ["VmdbDatabaseMetric", "VmdbMetric"].each do |class_name|
-                    message = MiqQueue.where(:class_name => class_name, :method_name => "purge_all_timer").first
-                    expect(message).not_to be_nil
-                    expect(message.role).to eq("database_operations")
-                    expect(message.zone).to be_nil
+                    %w(VmdbDatabaseMetric VmdbMetric).each do |class_name|
+                      message = MiqQueue.where(:class_name => class_name, :method_name => "purge_all_timer").first
+                      expect(message).to have_attributes(:role => "database_operations", :zone => nil)
+                    end
+                  else
+                    raise_unexpected_job_error(job)
                   end
-
-                  MiqQueue.delete_all
-                else
-                  raise "Unexpected Job: tags=#{job.tags.inspect}, original=#{job.original.inspect}, "\
-                        "last_time=#{job.last_time.inspect}, id=#{job.job_id.inspect}, next=#{job.next_time.inspect}, "\
-                        "handler=#{job.handler.inspect}"
                 end
-
-                job.unschedule
               end
             end
           end
@@ -512,27 +453,24 @@ describe MiqScheduleWorker::Runner do
 
           it "queues the right items" do
             scheduled_jobs = @schedule_worker.schedules_for_event_role
+            expect(scheduled_jobs.size).to be(2)
 
             scheduled_jobs.each do |job|
               expect(job).to be_kind_of(Rufus::Scheduler::EveryJob)
               expect(job.original).to eq(1.day)
-              job.call
-              @schedule_worker.do_work
 
-              case job.tags
-              when %w(ems_event purge_schedule)
-                messages = MiqQueue.where(:class_name => "EventStream", :method_name => "purge_timer")
-                expect(messages.count).to eq(1)
-              when %w(policy_event purge_schedule)
-                messages = MiqQueue.where(:class_name => "PolicyEvent", :method_name => "purge_timer")
-                expect(messages.count).to eq(1)
-              else
-                raise "Unexpected Job: tags=#{job.tags.inspect}, original=#{job.original.inspect}, "\
-                      "last_time=#{job.last_time.inspect}, id=#{job.job_id.inspect}, next=#{job.next_time.inspect}, "\
-                      "handler=#{job.handler.inspect}"
+              while_calling_job(job) do
+                case job.tags
+                when %w(ems_event purge_schedule)
+                  messages = MiqQueue.where(:class_name => "EventStream", :method_name => "purge_timer")
+                  expect(messages.count).to eq(1)
+                when %w(policy_event purge_schedule)
+                  messages = MiqQueue.where(:class_name => "PolicyEvent", :method_name => "purge_timer")
+                  expect(messages.count).to eq(1)
+                else
+                  raise_unexpected_job_error(job)
+                end
               end
-
-              job.unschedule
             end
           end
         end
@@ -610,6 +548,21 @@ describe MiqScheduleWorker::Runner do
 
       expect(settings[ManageIQ::Providers::Vmware::InfraManager]).to    eq(86_400) # Uses default
       expect(settings[ManageIQ::Providers::Microsoft::InfraManager]).to eq(900)    # Uses override
+    end
+
+    def while_calling_job(job)
+      job.call
+      @schedule_worker.do_work
+      yield
+    ensure
+      MiqQueue.delete_all
+      job.unschedule
+    end
+
+    def raise_unexpected_job_error(job)
+      raise "Unexpected Job: tags=#{job.tags.inspect}, original=#{job.original.inspect}, "\
+            "last_time=#{job.last_time.inspect}, id=#{job.job_id.inspect}, next=#{job.next_time.inspect}, "\
+            "handler=#{job.handler.inspect}"
     end
   end
 end

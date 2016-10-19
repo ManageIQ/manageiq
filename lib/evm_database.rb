@@ -152,8 +152,8 @@ class EvmDatabase
     end
 
     def check_schema_tables(connection)
-      current_tables  = current_schema(connection).keys
-      expected_tables = expected_schema.keys
+      current_tables  = current_schema(connection).keys - MiqPglogical::ALWAYS_EXCLUDED_TABLES
+      expected_tables = expected_schema.keys - MiqPglogical::ALWAYS_EXCLUDED_TABLES
 
       return if current_tables == expected_tables
 

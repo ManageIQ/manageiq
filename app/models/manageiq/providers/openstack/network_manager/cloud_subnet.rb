@@ -10,7 +10,7 @@ class ManageIQ::Providers::Openstack::NetworkManager::CloudSubnet < ::CloudSubne
     {:ems_ref => subnet.id, :name => options[:name]}
   rescue => e
     _log.error "subnet=[#{options[:name]}], error: #{e}"
-    raise MiqException::MiqSubnetCreateError, e.to_s, e.backtrace
+    raise MiqException::MiqCloudSubnetCreateError, e.to_s, e.backtrace
   end
 
   def self.validate_create_subnet(ext_management_system)
@@ -26,7 +26,7 @@ class ManageIQ::Providers::Openstack::NetworkManager::CloudSubnet < ::CloudSubne
     destroy!
   rescue => e
     _log.error "subnet=[#{name}], error: #{e}"
-    raise MiqException::MiqSubnetDeleteError, e.to_s, e.backtrace
+    raise MiqException::MiqCloudSubnetDeleteError, e.to_s, e.backtrace
   end
 
   def raw_update_subnet(options)
@@ -36,7 +36,7 @@ class ManageIQ::Providers::Openstack::NetworkManager::CloudSubnet < ::CloudSubne
     end
   rescue => e
     _log.error "subnet=[#{name}], error: #{e}"
-    raise MiqException::MiqSubnetUpdateError, e.to_s, e.backtrace
+    raise MiqException::MiqCloudSubnetUpdateError, e.to_s, e.backtrace
   end
 
   def validate_delete_subnet
@@ -60,10 +60,10 @@ class ManageIQ::Providers::Openstack::NetworkManager::CloudSubnet < ::CloudSubne
     connection_options[:tenant_name] = cloud_tenant.name if cloud_tenant
     connection_options
   end
-  private_class_method :connection_options
+
+  private
 
   def connection_options(cloud_tenant = nil)
     self.class.connection_options(cloud_tenant)
   end
-  private :connection_options
 end

@@ -277,8 +277,7 @@ module MiqPolicyController::Alerts
 
     # Build hash of arrays of all events by event type
     @edit[:events] = {}
-    MiqEventDefinition.all_events.each do |e|
-      next if e.name.ends_with?("compliance_check")
+    MiqEventDefinition.all_control_events.each do |e|
       @edit[:events][e.id] = (e.etype.description + ": " + e.description)
     end
 

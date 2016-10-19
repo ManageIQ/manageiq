@@ -32,6 +32,10 @@ class ManageIQ::Providers::Azure::CloudManager::Vm < ManageIQ::Providers::CloudM
     false
   end
 
+  def memory_mb_available?
+    true
+  end
+
   def self.calculate_power_state(raw_power_state)
     case raw_power_state.downcase
     when /running/, /starting/
