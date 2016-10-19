@@ -411,11 +411,4 @@ describe MiqServer do
       expect(described_class.new(:status => "stopped").active?).to be_falsey
     end
   end
-
-  describe ".raise_failover_executed_event" do
-    it "raises ''db_failover_executed'' event" do
-      expect(MiqEvent).to receive(:raise_evm_event).with(MiqServer.my_server, 'db_failover_executed')
-      described_class.raise_failover_executed_event
-    end
-  end
 end

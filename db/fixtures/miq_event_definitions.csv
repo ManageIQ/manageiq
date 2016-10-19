@@ -147,7 +147,7 @@ vm_remote_console_connected,VM Remote Console Connected,Default,vm_operational
 #
 request_storage_scan,Datastore Analysis Request,Default,storage_operational
 storage_scan_complete,Datastore Analysis Complete,Default,storage_operational
-db_failover_executed,Datastore Failover Executed,Default,storage_operational
+db_failover_executed,Database Failover Executed,Default,storage_operational
 
 #
 # Service lifecycle

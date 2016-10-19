@@ -555,10 +555,6 @@ class MiqServer < ApplicationRecord
     my_server(force_reload).licensed_roles
   end
 
-  def self.raise_failover_executed_event
-    MiqEvent.raise_evm_event(MiqServer.my_server, 'db_failover_executed')
-  end
-
   def my_zone
     zone.name
   end
