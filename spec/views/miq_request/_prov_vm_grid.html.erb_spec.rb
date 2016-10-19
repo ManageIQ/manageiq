@@ -28,16 +28,16 @@ describe 'miq_request/_prov_vm_grid.html.haml' do
     let(:cloud_tenant) { FactoryGirl.create(:cloud_tenant, :name => 'cloud_tenant_name') }
 
     before do
-      @vm = [FactoryGirl.create(:template_openstack, :tenant => Tenant.root_tenant)]
-      allow(@vm).to receive(:name).and_return('name')
-      allow(@vm).to receive(:operating_system).and_return('linux')
-      allow(@vm).to receive(:platform).and_return('platform')
-      allow(@vm).to receive(:cpu_total_cores).and_return('1024')
-      allow(@vm).to receive(:mem_cpu).and_return('2048')
-      allow(@vm).to receive(:allocated_disk_storage).and_return('4096')
-      allow(@vm).to receive(:v_total_snapshots).and_return('128')
-      allow(@vm).to receive(:ext_management_system)
-      allow(@vm).to receive(:cloud_tenant).and_return(cloud_tenant)
+      @source = [FactoryGirl.create(:template_openstack, :tenant => Tenant.root_tenant)]
+      allow(@source).to receive(:name).and_return('name')
+      allow(@source).to receive(:operating_system).and_return('linux')
+      allow(@source).to receive(:platform).and_return('platform')
+      allow(@source).to receive(:cpu_total_cores).and_return('1024')
+      allow(@source).to receive(:mem_cpu).and_return('2048')
+      allow(@source).to receive(:allocated_disk_storage).and_return('4096')
+      allow(@source).to receive(:v_total_snapshots).and_return('128')
+      allow(@source).to receive(:ext_management_system)
+      allow(@source).to receive(:cloud_tenant).and_return(cloud_tenant)
 
       edit = {:req_id     => 'foo',
               :new        => {},
@@ -49,7 +49,7 @@ describe 'miq_request/_prov_vm_grid.html.haml' do
                               'cloud_tenant' => true}
       }
       view.instance_variable_set(:@edit, edit)
-      view.instance_variable_set(:@vm, @vm)
+      view.instance_variable_set(:@source, @source)
       view.instance_variable_set(:@_param, :tab_id => 'service')
     end
 
