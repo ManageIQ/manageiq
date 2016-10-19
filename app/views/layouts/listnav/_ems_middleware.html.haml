@@ -5,8 +5,11 @@
 
     = miq_accordion_panel(_("Properties"), false, "ems_middleware_prop") do
       %ul.nav.nav-pills.nav-stacked
-        %li
-          = link_to(_('Summary'), {:action => 'show', :id => @record, :display => 'main'}, :title => _("Show Summary"))
+        = li_link(:if => true,
+           :text => _('Summary'),
+           :record => @record,
+           :display => 'main',
+           :title => _("Show Summary"))
     = miq_accordion_panel(_("Relationships"), false, "ems_middleware_rel") do
       %ul.nav.nav-pills.nav-stacked
         - %w(middleware_domain middleware_server middleware_deployment middleware_datasource middleware_messaging).each do |ent|
