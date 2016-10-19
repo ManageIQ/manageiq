@@ -110,7 +110,7 @@ object:
       on_exit: 
       on_error: cleanup
       max_retries: 
-      max_time:
+      max_time: 
   - field:
       aetype: state
       name: master_pre_deployment
