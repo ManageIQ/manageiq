@@ -124,7 +124,6 @@ class TreeNodeBuilder
                                                 _("LUN: %{name}") % {:name => object.canonical_name}) },
     "MiqScsiTarget"              => -> { miq_scsi_target(object.iscsi_name, object.target) },
     "MiqServer"                  => -> { miq_server_node },
-    "MiqTemplate"                => -> { generic_node(object.name, "currentstate-#{object.normalized_state.downcase}.png") },
     "MiqAlert"                   => -> { generic_node(object.description, "miq_alert.png") },
     "MiqAction"                  => -> { miq_action_node },
     "MiqEventDefinition"         => -> { generic_node(object.description, "event-#{object.name}.png") },
@@ -164,6 +163,7 @@ class TreeNodeBuilder
     "Tenant"                     => -> { generic_node(object.name, "#{object.tenant? ? "tenant" : "project"}.png") },
     "VmdbTableEvm"               => -> { generic_node(object.name, "vmdbtableevm.png") },
     "VmdbIndex"                  => -> { generic_node(object.name, "vmdbindex.png") },
+    "VmOrTemplate"               => -> { generic_node(object.name, "currentstate-#{object.normalized_state.downcase}.png") },
     "Zone"                       => -> { zone_node },
     "Hash"                       => -> { hash_node },
   }.freeze
