@@ -12,8 +12,7 @@ var ImportSetup = {
   setUpUploadImportButton: function(button_id) {
     if ($("#upload_file").val()){
       $(button_id).prop('disabled', false);
-    }
-    else {
+    } else {
       $(button_id).prop('disabled', true);
     }
   },
