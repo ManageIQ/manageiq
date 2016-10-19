@@ -1,4 +1,6 @@
 module MiqProvision::OptionsHelper
+  include MiqProvisionSource
+
   def dest_name
     get_option(:vm_target_name)
   end
@@ -25,12 +27,13 @@ module MiqProvision::OptionsHelper
 
   def get_source
     source_id = get_option(:src_vm_id)
-    source = VmOrTemplate.find_by_id(source_id)
+    source_type = get_option(:src_type)
+    source = get_provisioning_request_source(source_id, source_type)
     if source.nil?
       raise MiqException::MiqProvisionError,
             _("Unable to find source Template/Vm with id [%{number}]") % {:number => source_id}
     end
-    ems = source.ext_management_system
+    ems = source.ext_management_system.try(:parent_manager) || source.ext_management_system
     if ems.nil?
       raise MiqException::MiqProvisionError,
             _("%{class_name} [%{name}] is not attached to a Management System") % {:class_name => source.class.name,
@@ -56,7 +59,7 @@ module MiqProvision::OptionsHelper
   end
 
   def get_hostname(dest_vm_name)
-    name_key = (source.platform == 'windows') ? :sysprep_computer_name : :linux_host_name
+    name_key = (source.try(:platform) == 'windows') ? :sysprep_computer_name : :linux_host_name
     computer_name = (get_option(:number_of_vms) > 1) ? nil : get_option(name_key).to_s.strip
     computer_name = dest_vm_name if computer_name.blank?
     hostname_cleanup(computer_name)

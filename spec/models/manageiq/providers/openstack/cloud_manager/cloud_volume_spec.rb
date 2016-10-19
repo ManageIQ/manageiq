@@ -23,8 +23,7 @@ describe ManageIQ::Providers::Openstack::CloudManager::CloudVolume do
       handle = double
       allow(handle).to receive(:volumes).and_return(volumes)
       allow(ExtManagementSystem).to receive(:find).with(ems.id).and_return(ems)
-      allow(ems).to receive(:connect).with(hash_including(:service     => 'Volume',
-                                                          :tenant_name => tenant.name)).and_return(handle)
+      allow(ems).to receive(:connect).and_return(handle)
       allow(volumes).to receive(:get).with(cloud_volume.ems_ref).and_return(the_raw_volume)
     end
   end

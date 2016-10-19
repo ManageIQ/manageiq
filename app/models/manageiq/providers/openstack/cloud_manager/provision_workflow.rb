@@ -5,8 +5,16 @@ class ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow < ::MiqPro
     source                  = load_ar_obj(get_source_vm)
     flavors                 = get_targets_for_ems(source, :cloud_filter, Flavor, 'flavors')
     return {} if flavors.blank?
-    minimum_disk_required   = [source.hardware.size_on_disk.to_i, source.hardware.disk_size_minimum.to_i].max
-    minimum_memory_required = source.hardware.memory_mb_minimum.to_i * 1.megabyte
+    minimum_disk_required = if (source.class <= CloudVolume) || (source.class <= CloudVolumeSnapshot)
+                              0
+                            else
+                              [source.hardware.size_on_disk.to_i, source.hardware.disk_size_minimum.to_i].max
+                            end
+    minimum_memory_required = if (source.class <= CloudVolume) || (source.class <= CloudVolumeSnapshot)
+                                0
+                              else
+                                source.hardware.memory_mb_minimum.to_i * 1.megabyte
+                              end
     flavors.each_with_object({}) do |flavor, h|
       next if flavor.root_disk_size <= minimum_disk_required
       next if flavor.memory         <= minimum_memory_required
@@ -54,7 +62,8 @@ class ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow < ::MiqPro
     # We want only non external networks to be connectable directly to the Vm
     return {} unless (src_obj = provider_or_tenant_object)
 
-    src_obj.all_private_networks.each_with_object({}) do |cn, hash|
+    networks = src_obj.try(:all_private_networks) || src_obj.try(:parent_manager).try(:all_private_networks)
+    networks.each_with_object({}) do |cn, hash|
       hash[cn.id] = cn.cidr.blank? ? cn.name : "#{cn.name} (#{cn.cidr})"
     end
   end

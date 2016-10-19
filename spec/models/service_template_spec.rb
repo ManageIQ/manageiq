@@ -359,7 +359,7 @@ describe ServiceTemplate do
       it 'not existing template' do
         @ptr.update_attributes(:src_vm_id => 999)
         expect(@st1.template_valid?).to be_falsey
-        expect(@st1.template_valid_error_message).to include("Unable to find VM with Id [999]")
+        expect(@st1.template_valid_error_message).to include("Unable to find vm with Id [999]")
       end
 
       it 'generic' do
@@ -404,7 +404,7 @@ describe ServiceTemplate do
       it 'not existing template' do
         @ptr.update_attributes(:src_vm_id => 999)
         expect(@st2.template_valid?).to be_falsey
-        expect(@st2.template_valid_error_message).to include("Unable to find VM with Id [999]")
+        expect(@st2.template_valid_error_message).to include("Unable to find vm with Id [999]")
       end
     end
   end

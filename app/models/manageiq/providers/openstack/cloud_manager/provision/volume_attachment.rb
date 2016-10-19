@@ -30,7 +30,7 @@ module ManageIQ::Providers::Openstack::CloudManager::Provision::VolumeAttachment
   end
 
   def default_volume_attributes
-    {
+    attrs = {
       :name                  => "root",
       :size                  => instance_type.root_disk_size / 1.gigabyte,
       :source_type           => "image",
@@ -39,5 +39,15 @@ module ManageIQ::Providers::Openstack::CloudManager::Provision::VolumeAttachment
       :delete_on_termination => true,
       :uuid                  => source.ems_ref
     }
+    if source.class <= CloudVolume
+      attrs[:destination_type] = "volume"
+      attrs[:source_type] = "volume"
+      attrs[:delete_on_termination] = false
+    elsif source.class <= CloudVolumeSnapshot
+      attrs[:destination_type] = "volume"
+      attrs[:source_type] = "snapshot"
+      attrs[:size] = [instance_type.root_disk_size, source.size].max / 1.gigabyte
+    end
+    attrs
   end
 end

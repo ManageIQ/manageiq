@@ -12,13 +12,17 @@ class ManageIQ::Providers::Openstack::CloudManager::CloudVolume < ::CloudVolume
     validate_volume(ext_management_system)
   end
 
+  def self.eligible_for_provisioning
+    super.where(:type => %w(ManageIQ::Providers::Openstack::CloudManager::CloudVolume), :bootable => true)
+  end
+
   def self.raw_create_volume(ext_management_system, options)
     cloud_tenant = options.delete(:cloud_tenant)
     volume = nil
 
     # provide display_name for Cinder V1
     options[:display_name] |= options[:name]
-    ext_management_system.with_provider_connection(cinder_connection_options(cloud_tenant)) do |service|
+    ext_management_system.with_provider_connection do |service|
       volume = service.volumes.new(options)
       volume.save
     end

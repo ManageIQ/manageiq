@@ -34,6 +34,9 @@ class ManageIQ::Providers::CloudManager::ProvisionWorkflow < ::MiqProvisionVirtW
   def allowed_guest_access_key_pairs(_options = {})
     source = load_ar_obj(get_source_vm)
     ems = source.try(:ext_management_system)
+    # if the source is related directly to a sub-manager like networkmanager
+    # or storagemanager, we might need to get the parent manager
+    ems = ems.try(:parent_manager) || ems
 
     return {} if ems.nil?
     ems.key_pairs.each_with_object({}) { |kp, h| h[kp.id] = kp.name }
@@ -42,7 +45,8 @@ class ManageIQ::Providers::CloudManager::ProvisionWorkflow < ::MiqProvisionVirtW
   def allowed_security_groups(_options = {})
     return {} unless (src = provider_or_tenant_object)
 
-    src_obj = get_targets_for_source(src, :cloud_filter, SecurityGroup, 'security_groups')
+    parent_source = src.try(:parent_manager) || src
+    src_obj = get_targets_for_source(parent_source, :cloud_filter, SecurityGroup, 'security_groups')
 
     src_obj.each_with_object({}) do |sg, h|
       h[sg.id] = display_name_for_name_description(sg)
@@ -51,8 +55,8 @@ class ManageIQ::Providers::CloudManager::ProvisionWorkflow < ::MiqProvisionVirtW
 
   def allowed_floating_ip_addresses(_options = {})
     return {} unless (src_obj = provider_or_tenant_object)
-
-    src_obj.floating_ips.available.each_with_object({}) do |ip, h|
+    parent_source = src_obj.try(:parent_manager) || src_obj
+    parent_source.floating_ips.available.each_with_object({}) do |ip, h|
       h[ip.id] = ip.address
     end
   end
@@ -110,6 +114,9 @@ class ManageIQ::Providers::CloudManager::ProvisionWorkflow < ::MiqProvisionVirtW
 
   def get_targets_for_ems(src, filter_name, klass, relats)
     ems = src.try(:ext_management_system)
+    # if the source is related directly to a sub-manager like networkmanager
+    # or storagemanager, we might need to get the parent manager
+    ems = ems.try(:parent_manager) || ems
 
     return {} if ems.nil?
     process_filter(filter_name, klass, ems.deep_send(relats))
