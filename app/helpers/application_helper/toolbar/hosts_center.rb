@@ -178,7 +178,9 @@ class ApplicationHelper::Toolbar::HostsCenter < ApplicationHelper::Toolbar::Basi
           :confirm   => N_("Shutdown the selected items to Standy Mode?"),
           :url_parms => "main_div",
           :enabled   => false,
-          :onwhen    => "1+"),
+          :onwhen    => "1+",
+          :klass     => ApplicationHelper::Button::HostFeatureButton,
+          :options   => {:feature => :standby}),
         button(
           :host_shutdown,
           nil,
@@ -188,7 +190,9 @@ class ApplicationHelper::Toolbar::HostsCenter < ApplicationHelper::Toolbar::Basi
           :url_parms => "main_div",
           :confirm   => N_("Shutdown the selected items?"),
           :enabled   => false,
-          :onwhen    => "1+"),
+          :onwhen    => "1+",
+          :klass     => ApplicationHelper::Button::HostFeatureButtonWithDisable,
+          :options   => {:feature => :shutdown}),
         button(
           :host_reboot,
           nil,
@@ -198,7 +202,9 @@ class ApplicationHelper::Toolbar::HostsCenter < ApplicationHelper::Toolbar::Basi
           :url_parms => "main_div",
           :confirm   => N_("Restart the selected items?"),
           :enabled   => false,
-          :onwhen    => "1+"),
+          :onwhen    => "1+",
+          :klass     => ApplicationHelper::Button::HostFeatureButton,
+          :options   => {:feature => :reboot}),
         separator,
         button(
           :host_start,
@@ -207,7 +213,9 @@ class ApplicationHelper::Toolbar::HostsCenter < ApplicationHelper::Toolbar::Basi
           N_('Power On'),
           :image     => "power_on",
           :url_parms => "main_div",
-          :confirm   => N_("Power On the selected items?")),
+          :confirm   => N_("Power On the selected items?"),
+          :klass     => ApplicationHelper::Button::HostFeatureButton,
+          :options   => {:feature => :start}),
         button(
           :host_stop,
           nil,
@@ -215,7 +223,9 @@ class ApplicationHelper::Toolbar::HostsCenter < ApplicationHelper::Toolbar::Basi
           N_('Power Off'),
           :image     => "power_off",
           :url_parms => "main_div",
-          :confirm   => N_("Power Off the selected items?")),
+          :confirm   => N_("Power Off the selected items?"),
+          :klass     => ApplicationHelper::Button::HostFeatureButton,
+          :options   => {:feature => :stop}),
         button(
           :host_reset,
           nil,
@@ -223,7 +233,9 @@ class ApplicationHelper::Toolbar::HostsCenter < ApplicationHelper::Toolbar::Basi
           N_('Reset'),
           :image     => "power_reset",
           :url_parms => "main_div",
-          :confirm   => N_("Reset the selected items?")),
+          :confirm   => N_("Reset the selected items?"),
+          :klass     => ApplicationHelper::Button::HostFeatureButtonWithDisable,
+          :options   => {:feature => :reset}),
       ]
     ),
   ])
