@@ -194,6 +194,7 @@ Methods updated/added: %{method_stats}") % stat_options, :success)
   def retrieve_git_datastore
     redirect_options = {:action => :review_git_import}
     git_url = params[:git_url]
+    verify_ssl = params[:git_verify_ssl] == "true" ? OpenSSL::SSL::VERIFY_PEER : OpenSSL::SSL::VERIFY_NONE 
 
     if git_url.blank?
       add_flash(_("Please provide a valid git URL"), :error)
@@ -211,7 +212,7 @@ FLASH
         status = :success
       end
 
-      git_repo = GitRepository.create(:url => git_url)
+      git_repo = GitRepository.create(:url => git_url, :verify_ssl => verify_ssl)
       git_repo.update_authentication(:values => {:userid => params[:git_username], :password => params[:git_password]})
       task_options = {
         :action => "Retrieve git repository",
