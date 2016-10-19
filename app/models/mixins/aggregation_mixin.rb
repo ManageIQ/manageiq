@@ -8,18 +8,6 @@ module AggregationMixin
     virtual_column :aggregate_vm_cpus,         :type => :integer, :uses => :vms_and_templates
     virtual_column :aggregate_vm_memory,       :type => :integer, :uses => :vms_and_templates
     virtual_column :aggregate_disk_capacity,   :type => :integer, :uses => :hosts
-
-    def self.aggregation_mixin_virtual_columns_use(hosts, vms = nil)
-      vms ||= hosts
-      define_virtual_include "aggregate_cpu_speed",       hosts
-      define_virtual_include "aggregate_cpu_total_cores", hosts
-      define_virtual_include "aggregate_physical_cpus",   hosts
-      define_virtual_include "aggregate_memory",          hosts
-      define_virtual_include "aggregate_disk_capacity",   hosts
-
-      define_virtual_include "aggregate_vm_cpus",   vms
-      define_virtual_include "aggregate_vm_memory", vms
-    end
   end
 
   def aggregate_cpu_speed(targets = nil)

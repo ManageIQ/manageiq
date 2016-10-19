@@ -1,25 +1,13 @@
 module RelationshipsAggregationMixin
   extend ActiveSupport::Concern
   included do
-    virtual_column :aggregate_cpu_speed,       :type => :integer, :uses => :hosts
-    virtual_column :aggregate_cpu_total_cores, :type => :integer, :uses => :hosts
-    virtual_column :aggregate_physical_cpus,   :type => :integer, :uses => :hosts
-    virtual_column :aggregate_memory,          :type => :integer, :uses => :hosts
-    virtual_column :aggregate_vm_cpus,         :type => :integer, :uses => :vms_and_templates
-    virtual_column :aggregate_vm_memory,       :type => :integer, :uses => :vms_and_templates
-    virtual_column :aggregate_disk_capacity,   :type => :integer, :uses => :hosts
-
-    def self.aggregation_mixin_virtual_columns_use(hosts, vms = nil)
-      vms ||= hosts
-      define_virtual_include "aggregate_cpu_speed",       hosts
-      define_virtual_include "aggregate_cpu_total_cores", hosts
-      define_virtual_include "aggregate_physical_cpus",   hosts
-      define_virtual_include "aggregate_memory",          hosts
-      define_virtual_include "aggregate_disk_capacity",   hosts
-
-      define_virtual_include "aggregate_vm_cpus",   vms
-      define_virtual_include "aggregate_vm_memory", vms
-    end
+    virtual_column :aggregate_cpu_speed,       :type => :integer, :uses => :all_relationships
+    virtual_column :aggregate_cpu_total_cores, :type => :integer, :uses => :all_relationships
+    virtual_column :aggregate_physical_cpus,   :type => :integer, :uses => :all_relationships
+    virtual_column :aggregate_memory,          :type => :integer, :uses => :all_relationships
+    virtual_column :aggregate_vm_cpus,         :type => :integer, :uses => :all_relationships
+    virtual_column :aggregate_vm_memory,       :type => :integer, :uses => :all_relationships
+    virtual_column :aggregate_disk_capacity,   :type => :integer, :uses => :all_relationships
   end
 
   def aggregate_cpu_speed(targets = nil)

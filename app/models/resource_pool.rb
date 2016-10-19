@@ -14,8 +14,6 @@ class ResourcePool < ApplicationRecord
   self.default_relationship_type = "ems_metadata"
 
   include RelationshipsAggregationMixin
-  aggregation_mixin_virtual_columns_use :all_relationships
-
   include MiqPolicyMixin
   include AsyncDeleteMixin
 

@@ -47,24 +47,45 @@ describe ResourcePool do
       expect(@rp1.v_direct_vms).to eq(5)
       expect(@rp1.v_total_vms).to eq(15)
       expect(@rp1.total_vms).to eq(15)
+      expect(@rp1.vms.size).to eq(5)
+      expect(@rp1.vms_and_templates.size).to eq(5)
+      expect(@rp1.miq_templates.size).to eq(0)
 
       expect(@rp2.v_direct_vms).to eq(10)
       expect(@rp2.v_total_vms).to eq(10)
+      expect(@rp2.vms.size).to eq(10)
+      expect(@rp2.vms_and_templates.size).to eq(10)
+      expect(@rp2.miq_templates.size).to eq(0)
 
       expect(@rp3.v_direct_vms).to eq(15)
       expect(@rp3.v_total_vms).to eq(15)
+      expect(@rp3.vms.size).to eq(15)
+      expect(@rp3.vms_and_templates.size).to eq(15)
+      expect(@rp3.miq_templates.size).to eq(0)
 
       expect(@rp4.v_direct_vms).to eq(1)
       expect(@rp4.v_total_vms).to eq(3)
+      expect(@rp4.vms.size).to eq(1)
+      expect(@rp4.vms_and_templates.size).to eq(1)
+      expect(@rp4.miq_templates.size).to eq(0)
 
       expect(@rp5.v_direct_vms).to eq(0)
       expect(@rp5.v_total_vms).to eq(2)
+      expect(@rp5.vms.size).to eq(0)
+      expect(@rp5.vms_and_templates.size).to eq(0)
+      expect(@rp5.miq_templates.size).to eq(0)
 
       expect(@rp6.v_direct_vms).to eq(2)
       expect(@rp6.v_total_vms).to eq(2)
+      expect(@rp6.vms.size).to eq(2)
+      expect(@rp6.vms_and_templates.size).to eq(2)
+      expect(@rp6.miq_templates.size).to eq(0)
 
       expect(@rp7.v_direct_vms).to eq(0)
       expect(@rp7.v_total_vms).to eq(0)
+      expect(@rp7.vms.size).to eq(0)
+      expect(@rp7.vms_and_templates.size).to eq(0)
+      expect(@rp7.miq_templates.size).to eq(0)
     end
   end
 
