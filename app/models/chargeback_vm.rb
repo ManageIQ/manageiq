@@ -50,13 +50,7 @@ class ChargebackVm < Chargeback
   )
 
   def self.build_results_for_report_ChargebackVm(options)
-    # Options:
-    #   :rpt_type => chargeback
-    #   :interval => daily | weekly | monthly
-    #   :end_interval_offset
-    #   :interval_size
-    #   :owner => <userid>
-    #   :tag => /managed/environment/prod (Mutually exclusive with :user)
+    # Options: a hash transformable to Chargeback::ReportOptions
 
     @report_user = User.find_by(:userid => options[:userid])
 
