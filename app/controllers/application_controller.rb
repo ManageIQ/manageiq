@@ -266,8 +266,12 @@ class ApplicationController < ActionController::Base
   end
   private :process_params_options
 
-  def process_params_model_view(params)
-    if params[:active_tree]
+  def process_params_model_view(params, options)
+    if options[:model]
+      model_view = options[:model].constantize
+    end
+
+    if model_view.nil? && params[:active_tree]
       model_view = vm_model_from_active_tree(params[:active_tree].to_sym)
     end
     if model_view.nil? && controller_to_model_params[self.class.model.to_s].nil? && params[:model]
@@ -285,8 +289,8 @@ class ApplicationController < ActionController::Base
   #
   #
   def generate_gtl
-    model_view = process_params_model_view(params)
     options = process_params_options(params)
+    model_view = process_params_model_view(params, options)
     @edit = session[:edit]
     current_view, settings = get_view(model_view, options)
     settings[:sort_dir] = @sortdir
