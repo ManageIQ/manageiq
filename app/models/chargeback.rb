@@ -227,12 +227,9 @@ class Chargeback < ActsAsArModel
     end
   end
 
-  # @option options :start_time [DateTime] used with :end_time to create time range
-  # @option options :end_time [DateTime]
   # @option options :interval_size [Fixednum] Used with :end_interval_offset to generate time range
   # @option options :end_interval_offset
   def self.get_report_time_range(options, interval, tz)
-    return options[:start_time]..options[:end_time] if options[:start_time]
     raise _("Option 'interval_size' is required") if options[:interval_size].nil?
 
     end_interval_offset = options[:end_interval_offset] || 0

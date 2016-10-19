@@ -31,8 +31,6 @@ class ChargebackContainerImage < Chargeback
     # Options:
     #   :rpt_type => chargeback
     #   :interval => daily | weekly | monthly
-    #   :start_time
-    #   :end_time
     #   :end_interval_offset
     #   :interval_size
     #   :owner => <userid>
