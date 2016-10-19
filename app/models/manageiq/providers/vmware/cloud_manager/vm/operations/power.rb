@@ -1,6 +1,8 @@
 module ManageIQ::Providers::Vmware::CloudManager::Vm::Operations::Power
-  def validate_pause
-    validate_unsupported("Pause operation")
+  extend ActiveSupport::Concern
+
+  included do
+    supports_not(:pause)
   end
 
   def raw_start

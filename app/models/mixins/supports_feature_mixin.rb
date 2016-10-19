@@ -81,6 +81,7 @@ module SupportsFeatureMixin
     :launch_cockpit             => 'Launch Cockpit UI',
     :live_migrate               => 'Live Migration',
     :migrate                    => 'Migration',
+    :pause                      => 'Pausing',
     :provisioning               => 'Provisioning',
     :reboot_guest               => 'Reboot Guest Operation',
     :reconfigure                => 'Reconfiguration',
