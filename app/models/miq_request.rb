@@ -76,10 +76,20 @@ class MiqRequest < ApplicationRecord
 
   REQUEST_TYPES_BACKEND_ONLY = {:MiqProvisionRequestTemplate => {:template => "VM Provision Template"}}
   REQUEST_TYPES = MODEL_REQUEST_TYPES.values.each_with_object(REQUEST_TYPES_BACKEND_ONLY) { |i, h| i.each { |k, v| h[k] = v } }
+  REQUEST_TYPE_TO_MODEL = MODEL_REQUEST_TYPES.values.each_with_object({}) do |i, h|
+    i.each { |k, v| v.keys.each { |vk| h[vk] = k } }
+  end
+
 
   delegate :deny, :reason, :stamped_on, :to => :first_approval
   delegate :userid, :to => :requester, :prefix => true
   delegate :request_task_class, :request_types, :task_description, :to => :class
+
+  def self.class_from_request_data(data)
+    request_type = data[:request_type].try(:to_sym)
+    model_symbol = REQUEST_TYPE_TO_MODEL[request_type] || raise(ArgumentError, "Invalid request_type")
+    model_symbol.to_s.constantize
+  end
 
   # Supports old-style requests where specific request was a seperate table connected as a resource
   def resource
