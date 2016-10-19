@@ -25,10 +25,15 @@ module ReportFormatter
 
       if chart_is_2d?
         mri.chart[:data][:columns] << [series_id, *data.map { |a| a[:value] }]
-        mri.chart[:data][:names][series_id] = label
+        mri.chart[:data][:names][series_id] = slice_legend(label)
+        mri.chart[:miq][:name_table][series_id] = label
       else
-        mri.chart[:data][:columns] = data.collect { |a| [a[:tooltip], a[:value]] }
-        data.each{ |a| mri.chart[:data][:names][a[:tooltip]] = slice_legend(a[:tooltip]) }
+        data.each_with_index do |a, index|
+          id = index.to_s
+          mri.chart[:data][:columns].push([id, a[:value]])
+          mri.chart[:data][:names][id] = slice_legend(a[:tooltip])
+          mri.chart[:miq][:name_table][id] = a[:tooltip]
+        end
       end
 
       if chart_is_stacked?
@@ -38,7 +43,10 @@ module ReportFormatter
 
     def add_axis_category_text(categories)
       if chart_is_2d?
-        mri.chart[:axis][:x][:categories] = categories
+        category_labels = categories.collect { |c| c.kind_of?(Array) ? c.first : c }
+        limit = pie_type? ? LEGEND_LENGTH : LABEL_LENGTH
+        mri.chart[:axis][:x][:categories] = category_labels.collect { |c| slice_legend(c, limit) }
+        mri.chart[:miq][:category_table] = category_labels
       end
     end
 
@@ -50,8 +58,8 @@ module ReportFormatter
         :miqChart => type,
         :data     => {:columns => [], :names => {}},
         :axis     => {:x => {:tick => {}}, :y => {:tick => {}}},
-        :tooltip  => {},
-        :miq      => {}
+        :tooltip  => {:format => {}},
+        :miq      => {:name_table => {}, :category_table => {}}
       }
 
       if chart_is_2d?
@@ -93,7 +101,7 @@ module ReportFormatter
     end
 
     def chart_is_2d?
-      ['Bar', 'Column', 'StackedBar', 'StackedColumn', 'Line', 'Area', 'StackedArea'].include?(mri.graph[:type])
+      ['Bar', 'Column', 'StackedBar', 'StackedColumn', 'Line', 'Area', 'StackedArea'].include?(c3_convert_type(mri.graph[:type]))
     end
 
     def chart_is_stacked?
@@ -111,8 +119,8 @@ module ReportFormatter
         :miqChart => 'Line',
         :data     => {:columns => [], :names => {}},
         :axis     => {:x => {:tick => {}}, :y => {:tick => {}}},
-        :tooltip  => {},
-        :miq      => {}
+        :tooltip  => {:format => {}},
+        :miq      => {:name_table => {}}
       }
     end
 
