@@ -359,4 +359,18 @@ describe MiqRequest do
       expect(request.request_state).to eq('active')
     end
   end
+
+  context ".class_from_request_data" do
+    it "with a valid request_type" do
+      expect(described_class.class_from_request_data(:request_type => "template")).to eq(MiqProvisionRequest)
+    end
+
+    it "with a invalid request_type" do
+      expect { described_class.class_from_request_data(:request_type => "abc") }.to raise_error("Invalid request_type")
+    end
+
+    it "without a request_type" do
+      expect { described_class.class_from_request_data({}) }.to raise_error("Invalid request_type")
+    end
+  end
 end
