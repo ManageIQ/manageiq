@@ -34,7 +34,6 @@ class ChargebackContainerProject < Chargeback
     #   :interval_size
     #   :owner => <userid>
     #   :tag => /managed/environment/prod (Mutually exclusive with :user)
-    #   :chargeback_type => detail | summary
     #   :entity_id => 1/2/3.../all rails id of entity
 
     # Find ContainerProjects according to any of these:
