@@ -53,7 +53,7 @@ module AggregationMixin
   # Default implementations which can be overridden with something more optimized
 
   def all_vms_and_templates
-    descendants(:of_type => 'VmOrTemplate').sort_by { |v| v.name.downcase }
+    descendants(:of_type => 'VmOrTemplate')
   end
 
   def all_vms
@@ -77,7 +77,7 @@ module AggregationMixin
   end
 
   def all_hosts
-    descendants(:of_type => 'Host').sort_by { |v| v.name.downcase }
+    descendants(:of_type => 'Host')
   end
 
   def all_host_ids

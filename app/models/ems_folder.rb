@@ -72,7 +72,7 @@ class EmsFolder < ApplicationRecord
   # Host relationship methods
   #   all_hosts and all_host_ids included from AggregationMixin
   def hosts
-    children(:of_type => 'Host').sort_by { |c| c.name.downcase }
+    children(:of_type => 'Host')
   end
 
   alias_method :add_host, :set_child
@@ -85,7 +85,7 @@ class EmsFolder < ApplicationRecord
   # Vm relationship methods
   #   all_vms and all_vm_ids included from AggregationMixin
   def vms_and_templates
-    children(:of_type => 'VmOrTemplate').sort_by { |c| c.name.downcase }
+    children(:of_type => 'VmOrTemplate')
   end
 
   def miq_templates
@@ -104,7 +104,7 @@ class EmsFolder < ApplicationRecord
   end
 
   def storages
-    children(:of_type => 'Storage').sort_by { |c| c.name.downcase }
+    children(:of_type => 'Storage')
   end
 
   alias add_storage set_child

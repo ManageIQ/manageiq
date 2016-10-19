@@ -31,7 +31,7 @@ class TreeBuilderDatastores < TreeBuilder
     nodes = @root.map do |node|
       children = []
       if @data[node[:id]].hosts.present?
-        children = @data[node[:id]].hosts.map do |kid|
+        children = @data[node[:id]].hosts.sort_by { |host| host.name.try(:downcase) }.map do |kid|
           {:name => kid.name}
         end
       end
