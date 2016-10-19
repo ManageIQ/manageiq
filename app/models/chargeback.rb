@@ -138,12 +138,12 @@ class Chargeback < ActsAsArModel
           cost = r.cost(metric_value) * hours_in_interval
         end
 
-        reportable_metric_and_cost_fields(r.rate_name, r.group, metric_value, cost)
+        accumulate_metrics_and_costs_per_rate(r.rate_name, r.group, metric_value, cost)
       end
     end
   end
 
-  def reportable_metric_and_cost_fields(rate_name, rate_group, metric, cost)
+  def accumulate_metrics_and_costs_per_rate(rate_name, rate_group, metric, cost)
     cost_key         = "#{rate_name}_cost"    # metric cost value (e.g. Storage [Used|Allocated|Fixed] Cost)
     metric_key       = "#{rate_name}_metric"  # metric value (e.g. Storage [Used|Allocated|Fixed])
     cost_group_key   = "#{rate_group}_cost"   # for total of metric's costs (e.g. Storage Total Cost)
@@ -164,7 +164,7 @@ class Chargeback < ActsAsArModel
       self[k] += val
     end
   end
-  private :reportable_metric_and_cost_fields
+  private :accumulate_metrics_and_costs_per_rate
 
   def self.report_cb_model(model)
     model.gsub(/^Chargeback/, "")
