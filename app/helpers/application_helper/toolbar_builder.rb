@@ -425,8 +425,10 @@ class ApplicationHelper::ToolbarBuilder
           return false
         when "delete_server", "zone_delete_server"
           return @record.class != MiqServer
+        when "zone_collect_current_logs", "zone_collect_logs", "zone_log_depot_edit"
+          return true
         end
-        return true
+        return false
       when "diagnostics_summary"
         return !["refresh_server_summary", "restart_server"].include?(id)
       when "diagnostics_workers"
