@@ -27,7 +27,8 @@ module ManagerRefresh
     end
 
     def load_object
-      dto_collection.find(to_s).try!(:object)
+      dto_collection_member = dto_collection.find(to_s)
+      dto_collection_member.respond_to?(:object) ? dto_collection_member.object : dto_collection_member
     end
   end
 end
