@@ -129,8 +129,6 @@ Metrics/PerceivedComplexity:
   Enabled: false
 Performance/CaseWhenSplat:
   Enabled: true
-Performance/Casecmp:
-  Enabled: true
 Performance/Count:
   Enabled: true
 Performance/Detect:
