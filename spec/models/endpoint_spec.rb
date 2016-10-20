@@ -45,4 +45,16 @@ describe Endpoint do
       end
     end
   end
+
+  context "Uniqueness validation on :url" do
+    it "is not required" do
+      expect(Endpoint.create!).to be_truthy
+      expect(Endpoint.create!).to be_truthy
+    end
+
+    it "raises when provided and already exists" do
+      Endpoint.create!(:url => "abc")
+      expect { Endpoint.create!(:url => "abc") }.to raise_error("Validation failed: Url has already been taken")
+    end
+  end
 end
