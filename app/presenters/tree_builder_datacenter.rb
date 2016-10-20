@@ -41,46 +41,30 @@ class TreeBuilderDatacenter < TreeBuilder
 
   def x_get_tree_roots(count_only = false, _options)
     if @root.kind_of?(EmsCluster)
-      hosts = count_only_or_objects(count_only, @root.hosts, "name")
-      resource_pools = count_only_or_objects(count_only, @root.resource_pools, "name")
-      vms = count_only_or_objects(count_only, @root.vms, "name")
-      hosts + resource_pools + vms
+      count_only_or_many_objects(count_only, @root.hosts, @root.resource_pools, @root.vms, "name")
     elsif @root.kind_of?(ResourcePool)
-      resource_pools = count_only_or_objects(count_only, @root.resource_pools, "name")
-      vms = count_only_or_objects(count_only, @root.vms, "name")
-      resource_pools + vms
+      count_only_or_many_objects(count_only, @root.resource_pools, @root.vms, "name")
     end
   end
 
   def x_get_tree_datacenter_kids(parent, count_only = false, _type)
-    folders = count_only_or_objects(count_only, parent.folders, "name")
-    clusters = count_only_or_objects(count_only, parent.clusters, "name")
-    folders + clusters
+    count_only_or_many_objects(count_only, parent.folders, parent.clusters, "name")
   end
 
   def x_get_tree_folder_kids(parent, count_only, _type)
     objects = count_only ? 0 : []
 
     if parent.name == "Datacenters"
-      folders = count_only_or_objects(count_only, parent.folders_only, "name")
-      datacenters = count_only_or_objects(count_only, parent.datacenters_only, "name")
-      objects = folders + datacenters
+      count_only_or_many_objects(count_only, parent.folders_only, parent.datacenters_only, "name")
     elsif parent.name == "host" && parent.parent.kind_of?(Datacenter)
-      folders = count_only_or_objects(count_only, parent.folders_only, "name")
-      clusters = count_only_or_objects(count_only, parent.clusters, "name")
-      hosts = count_only_or_objects(count_only, parent.hosts, "name")
-      objects = folders + clusters + hosts
+      count_only_or_many_objects(count_only, parent.folders_only, parent.clusters, parent.hosts, "name")
     elsif parent.name == "datastore" && parent.parent.kind_of?(Datacenter)
       # Skip showing the datastore folder and sub-folders
     elsif parent.name == "vm" && parent.parent.kind_of?(Datacenter)
       #
     else
-      folders = count_only_or_objects(count_only, parent.folders_only, "name")
-      datacenters = count_only_or_objects(count_only, parent.datacenters_only, "name")
-      clusters = count_only_or_objects(count_only, parent.clusters, "name")
-      hosts = count_only_or_objects(count_only, parent.hosts, "name")
-      vms = count_only_or_objects(count_only, parent.vms, "name")
-      objects = folders + datacenters + clusters + hosts + vms
+      count_only_or_many_objects(count_only, parent.folders_only, parent.datacenters_only, parent.clusters,
+                                 parent.hosts, parent.vms, "name")
     end
     objects
   end
@@ -97,15 +81,10 @@ class TreeBuilderDatacenter < TreeBuilder
   end
 
   def x_get_tree_cluster_kids(parent, count_only = false)
-    resource_pools = count_only_or_objects(count_only, parent.resource_pools, "name")
-    hosts = count_only_or_objects(count_only, parent.hosts, "name")
-    vms = count_only_or_objects(count_only, parent.vms, "name")
-    resource_pools + hosts + vms
+    count_only_or_many_objects(count_only, parent.resource_pools, parent.hosts, parent.vms, "name")
   end
 
   def x_get_resource_pool_kids(parent, count_only = false)
-    resource_pools = count_only_or_objects(count_only, parent.resource_pools, "name")
-    vms = count_only_or_objects(count_only, parent.vms, "name")
-    resource_pools + vms
+    count_only_or_many_objects(count_only, parent.resource_pools, parent.vms, "name")
   end
 end

@@ -295,6 +295,23 @@ class TreeBuilder
     count_only ? 0 : []
   end
 
+  # count_only_or_objects but for many sets of objects
+  # count_only will short circuit the sizes
+  # the last parameter is a required sort_by (which is typically 'name')
+  #
+  # Passing a lambda around a collection will delay loading the collection.
+  # Especially useful when the collection downloads a lot of data.
+  def count_only_or_many_objects(count_only, *collections)
+    sort_by = collections.pop
+
+    if count_only
+      collections.detect { |objects| resolve_object_lambdas(count_only, objects).size > 0 } ? 1 : 0
+    else
+      collections.map! { |objects| resolve_object_lambdas(count_only, objects) }
+      collections.flat_map { |objects| count_only_or_objects(count_only, objects, sort_by) }
+    end
+  end
+
   def count_only_or_objects(count_only, objects, sort_by = nil)
     if count_only
       objects.size
@@ -319,6 +336,16 @@ class TreeBuilder
     open_nodes = @tree_state.x_tree(@name)[:open_nodes]
     open_nodes.push(id) unless open_nodes.include?(id)
   end
+
+  def resolve_object_lambdas(count_only, objects)
+    if objects.respond_to?(:call)
+      # works with a no-param lambda OR a lambda that requests the count_only
+      (objects.arity == 1) ? objects.call(count_only) : objects.call
+    else
+      objects
+    end
+  end
+  private :resolve_object_lambdas
 
   X_TREE_NODE_CLASSES = {
     # Catalog explorer trees

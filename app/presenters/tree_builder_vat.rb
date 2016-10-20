@@ -17,9 +17,8 @@ class TreeBuilderVat < TreeBuilderDatacenter
   end
 
   def x_get_tree_roots(count_only = false, _options)
-    folders = count_only_or_objects(count_only, @root.children.first.folders_only, "name")
-    datacenters = count_only_or_objects(count_only, @root.children.first.datacenters_only, "name")
-    folders + datacenters
+    root_child = @root.children.first
+    count_only_or_many_objects(count_only, root_child.folders_only, root_child.datacenters_only, "name")
   end
 
   def x_get_tree_datacenter_kids(parent, count_only = false, type)
@@ -36,31 +35,20 @@ class TreeBuilderVat < TreeBuilderDatacenter
     objects = count_only ? 0 : []
 
     if parent.name == "Datacenters"
-      folders = count_only_or_objects(count_only, parent.folders_only, "name")
-      datacenters = count_only_or_objects(count_only, parent.datacenters_only, "name")
-      objects = folders + datacenters
+      objects = count_only_or_many_objects(count_only, parent.folders_only, parent.datacenters_only, "name")
     elsif parent.name == "host" && parent.parent.kind_of?(Datacenter)
       unless @vat
-        folders = count_only_or_objects(count_only, parent.folders_only, "name")
-        clusters = count_only_or_objects(count_only, parent.clusters, "name")
-        hosts = count_only_or_objects(count_only, parent.hosts, "name")
-        objects = folders + clusters + hosts
+        objects = count_only_or_many_objects(count_only, parent.folders_only, parent.clusters, parent.hosts, "name")
       end
     elsif parent.name == "datastore" && parent.parent.kind_of?(Datacenter)
       # Skip showing the datastore folder and sub-folders
     elsif parent.name == "vm" && parent.parent.kind_of?(Datacenter)
       if @vat
-        folders = count_only_or_objects(count_only, parent.folders_only, "name")
-        vms = count_only_or_objects(count_only, parent.vms, "name")
-        objects = folders + vms
+        objects = count_only_or_many_objects(count_only, parent.folders_only, parent.vms, "name")
       end
     else
-      folders = count_only_or_objects(count_only, parent.folders_only, "name")
-      datacenters = count_only_or_objects(count_only, parent.datacenters_only, "name")
-      clusters = count_only_or_objects(count_only, parent.clusters, "name")
-      hosts = count_only_or_objects(count_only, parent.hosts, "name")
-      vms = count_only_or_objects(count_only, parent.vms, "name")
-      objects = folders + datacenters + clusters + hosts + vms
+      objects = count_only_or_many_objects(count_only, parent.folders_only, parent.datacenters_only,
+                                           parent.clusters, parent.hosts, parent.vms, "name")
     end
     objects
   end
