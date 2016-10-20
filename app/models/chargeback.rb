@@ -95,7 +95,7 @@ class Chargeback < ActsAsArModel
   end
 
   def self.date_fields(metric_rollup_record)
-    start_ts, end_ts, display_range = get_time_range(metric_rollup_record)
+    start_ts, end_ts, display_range = @options.report_step_range(metric_rollup_record.timestamp)
 
     {
       'start_date'       => start_ts,
@@ -172,24 +172,6 @@ class Chargeback < ActsAsArModel
     end
 
     col_hash
-  end
-
-  def self.get_time_range(perf)
-    ts = perf.timestamp.in_time_zone(@options.tz)
-    case @options.interval
-    when "daily"
-      [ts.beginning_of_day, ts.end_of_day, ts.strftime("%m/%d/%Y")]
-    when "weekly"
-      s_ts = ts.beginning_of_week
-      e_ts = ts.end_of_week
-      [s_ts, e_ts, "Week of #{s_ts.strftime("%m/%d/%Y")}"]
-    when "monthly"
-      s_ts = ts.beginning_of_month
-      e_ts = ts.end_of_month
-      [s_ts, e_ts, s_ts.strftime("%b %Y")]
-    else
-      raise _("interval '%{interval}' is not supported") % {:interval => interval}
-    end
   end
 
   def self.report_cb_model(model)
