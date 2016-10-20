@@ -1,5 +1,6 @@
 class TreeBuilder
   include CompressedIds
+  extend CompressedIds
   include TreeKids
 
   attr_reader :name, :type, :tree_nodes
@@ -77,6 +78,21 @@ class TreeBuilder
   def self.build_node_id(record)
     prefix = get_prefix_for_model(record.class.base_model)
     "#{prefix}-#{record.id}"
+  end
+
+  def self.build_node_cid(record_or_id, type = nil)
+    if record_or_id.kind_of?(Integer)
+      prefix = get_prefix_for_model(type)
+      id = record_or_id
+    else
+      prefix = get_prefix_for_model(record_or_id.class.base_model)
+      id = record_or_id.id
+    end
+    "#{prefix}-#{to_cid(id)}"
+  end
+
+  def self.hide_vms
+    !User.current_user.settings.fetch_path(:display, :display_vms) # default value is false
   end
 
   # return this nodes model and record id

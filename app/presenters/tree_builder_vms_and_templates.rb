@@ -15,15 +15,11 @@ class TreeBuilderVmsAndTemplates < FullTreeBuilder
     #   so taking them from the relationship records can cut down on the huge
     #   VM query.
 
-    # TODO: Zita: please change next 2 lines
-    display_vms = User.current_user.settings.fetch_path(:display, :display_vms)
-    display_vms = true if display_vms.nil?
-
-    tree = root.subtree_arranged(display_vms ? {} : {:except_type => VmOrTemplate})
+    tree = root.subtree_arranged(TreeBuilder.hide_vms ? {:except_type => VmOrTemplate} : {})
 
     prune_non_vandt_folders(tree)
     reparent_hidden_folders(tree)
-    prune_rbac(tree, display_vms)
+    prune_rbac(tree)
     sort_tree(tree)
 
     tree
@@ -54,11 +50,8 @@ class TreeBuilderVmsAndTemplates < FullTreeBuilder
     end
   end
 
-  def prune_rbac(tree, display_vms)
-    if display_vms
-      allowed_vm_ids = Set.new(Rbac.filtered(@root_ems.vms).pluck(:id))
-      prune_folders_via_vms(tree, allowed_vm_ids)
-    else
+  def prune_rbac(tree)
+    if TreeBuilder.hide_vms
       allowed_vms = Rbac.filtered(@root_ems.vms) # this is a sub-query
       vm_relations = Relationship.where(:resource     => allowed_vms,
                                         :relationship => "ems_metadata")
@@ -66,6 +59,9 @@ class TreeBuilderVmsAndTemplates < FullTreeBuilder
                                  .map(&:parent_id)
       allowed_folder_ids = Relationship.where(:id => vm_relations).pluck(:resource_id)
       prune_folders_via_folders(tree, allowed_folder_ids)
+    else
+      allowed_vm_ids = Set.new(Rbac.filtered(@root_ems.vms).pluck(:id))
+      prune_folders_via_vms(tree, allowed_vm_ids)
     end
   end
 

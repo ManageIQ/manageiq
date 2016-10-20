@@ -2,12 +2,13 @@ class TreeBuilderVandt < TreeBuilder
   include TreeBuilderArchived
 
   def tree_init_options(_tree_name)
-    {:leaf => 'VmOrTemplate'}
+    {:leaf => 'ManageIQ::Providers::InfraManager::VmOrTemplate'}
   end
 
   def set_locals_for_render
     locals = super
-    locals.merge!(:autoload => true)
+    locals.merge!(:autoload => true,
+                  :allow_reselect => TreeBuilder.hide_vms)
   end
 
   def root_options
@@ -20,16 +21,6 @@ class TreeBuilderVandt < TreeBuilder
     root_nodes = count_only_or_objects(count_only, x_get_tree_arch_orph_nodes("VMs and Templates"))
 
     objects + root_nodes
-  end
-
-  # Handle custom tree nodes (object is a Hash)
-  def x_get_tree_custom_kids(object, count_only, _options)
-    klass = ManageIQ::Providers::InfraManager::VmOrTemplate
-    objects = case object[:id]
-              when "orph" then klass.all_orphaned
-              when "arch" then klass.all_archived
-              end
-    count_only_or_objects_filtered(count_only, objects, "name")
   end
 
   def x_get_child_nodes(id)
