@@ -686,19 +686,11 @@ class Host < ApplicationRecord
   end
 
   def resource_pools
-    # Look for only the resource_pools at the second depth (default depth + 1)
-    rels = descendant_rels(:of_type => 'ResourcePool')
-    min_depth = rels.collect(&:depth).min
-    rels = rels.select { |r| r.depth == min_depth + 1 }
-    Relationship.resources(rels).sort_by { |r| r.name.downcase }
+    Relationship.resources(grandchild_rels(:of_type => 'ResourcePool'))
   end
 
   def resource_pools_with_default
-    # Look for only the resource_pools up to the second depth (default depth + 1)
-    rels = descendant_rels(:of_type => 'ResourcePool')
-    min_depth = rels.collect(&:depth).min
-    rels = rels.select { |r| r.depth <= min_depth + 1 }
-    Relationship.resources(rels).sort_by { |r| r.name.downcase }
+    Relationship.resources(child_and_grandchild_rels(:of_type => 'ResourcePool'))
   end
 
   # All RPs under this Host and all child RPs
