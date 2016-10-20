@@ -23,6 +23,7 @@ class Chargeback
       super
       self.interval ||= 'daily'
       self.end_interval_offset ||= 0
+      self.ext_options ||= {}
     end
 
     def tz
