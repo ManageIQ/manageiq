@@ -70,14 +70,13 @@ class TreeBuilderDatacenter < TreeBuilder
   end
 
   def x_get_tree_host_kids(parent, count_only)
-    objects = count_only ? 0 : []
     if parent.authorized_for_user?(@user_id)
-      objects += count_only_or_objects(count_only, parent.resource_pools, "name")
-      if parent.default_resource_pool
-        objects += count_only_or_objects(count_only, parent.default_resource_pool.vms, "name")
-      end
+      count_only_or_many_objects(count_only,
+                                 parent.resource_pools,
+                                 -> { parent.default_resource_pool.try!(:vms) || [] }, "name")
+    else
+      count_only ? 0 : []
     end
-    objects
   end
 
   def x_get_tree_cluster_kids(parent, count_only = false)
