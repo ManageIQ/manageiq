@@ -2,20 +2,23 @@ shared_examples_for "OwnershipMixin" do
   context "includes OwnershipMixin" do
     include Spec::Support::ArelHelper
 
-    let(:user) { User.where(:userid => "ownership_user").first }
+    let(:user) do
+      FactoryGirl.create(:user,
+                         :userid     => "ownership_user",
+                         :miq_groups => FactoryGirl.create_list(:miq_group, 1))
+    end
 
-    before do
-      user = FactoryGirl.create(:user,
-                                :userid     => "ownership_user",
-                                :miq_groups => FactoryGirl.create_list(:miq_group, 1))
-      user2 = FactoryGirl.create(:user)
+    let(:user2)  { FactoryGirl.create(:user) }
+    let(:group)  { user.current_group }
+    let(:group2) { FactoryGirl.create(:miq_group) }
 
-      factory = described_class.to_s.underscore.to_sym
-      FactoryGirl.create(factory, :name => "in_ldap",     :miq_group_id => user.current_group.id)
-      FactoryGirl.create(factory, :name => "not_in_ldap", :miq_group => FactoryGirl.create(:miq_group))
-      FactoryGirl.create(factory, :name => "no_group")
-      FactoryGirl.create(factory, :name => "user_owned",  :evm_owner => user)
-      FactoryGirl.create(factory, :name => "user_owned2", :evm_owner => user2)
+    let(:factory) { described_class.to_s.underscore.to_sym }
+
+    let!(:in_ldap)     { FactoryGirl.create(factory, :name => "in_ldap",     :miq_group => group) }
+    let!(:not_in_ldap) { FactoryGirl.create(factory, :name => "not_in_ldap", :miq_group => group2) }
+    let!(:no_group)    { FactoryGirl.create(factory, :name => "no_group") }
+    let!(:user_owned)  { FactoryGirl.create(factory, :name => "user_owned",  :evm_owner => user) }
+    let!(:user_owned2) { FactoryGirl.create(factory, :name => "user_owned2", :evm_owner => user2) }
     end
 
     describe "#owning_ldap_group" do
