@@ -46,6 +46,27 @@ class MiqOpenStackInstance
     @temp_image_file.unlink
   end
 
+  def create_snapshot(options = {})
+    log_prefix = "MIQ(#{self.class.name}##{__method__}) instance_id=[#{@instance_id}]"
+
+    $log.debug "#{log_prefix}: Snapshotting instance: #{instance.name}..."
+
+    snapshot = compute_service.create_image(instance.id, options[:name], :description => options[:desc])
+
+    $log.debug "#{log_prefix}: #{snapshot.status}"
+    $log.debug "#{log_prefix}: snapshot creation complete"
+
+    return snapshot.body["image"]
+  rescue => err
+    $log.error "#{log_prefix}, error: #{err}"
+    $log.debug err.backtrace.join("\n") if $log.debug?
+    raise
+  end
+
+  def delete_snapshot(image_id)
+    delete_evm_snapshot(image_id)
+  end
+
   def create_evm_snapshot(options = {})
     log_prefix = "MIQ(#{self.class.name}##{__method__}) instance_id=[#{@instance_id}]"
 
