@@ -32,8 +32,8 @@ describe "layouts/listnav/_ems_network.html.haml" do
       it "relationships links uses restful path in #{t.camelize}" do
         @record = @provider.network_manager
         render
-        expect(response).to include("href=\"/ems_network/show/#{@record.id}?display=main\">Summary")
-        expect(response).to include("href=\"/ems_network/show/#{@record.id}?display=security_groups\">Security Groups (1)")
+        expect(response).to include("href=\"/ems_network/#{@record.id}?display=main\">Summary")
+        expect(response).to include("href=\"/ems_network/#{@record.id}?display=security_groups\">Security Groups (1)")
       end
     end
   end

@@ -230,6 +230,9 @@ module ApplicationHelper
       if controller == "ems_middleware" && action == "show"
         return ems_middlewares_path
       end
+      if controller == "ems_network" && action == "show"
+        return ems_networks_path
+      end
       if parent && parent.class.base_model.to_s == "MiqCimInstance" && ["CimBaseStorageExtent", "SniaLocalFileSystem"].include?(view.db)
         return url_for(:controller => controller, :action => action, :id => parent.id) + "?show="
       else

@@ -1390,12 +1390,9 @@ Vmdb::Application.routes.draw do
       :get  => %w(
         dialog_load
         download_data
-        edit
         ems_network_form_fields
         index
-        new
         protect
-        show
         show_list
         tagging_edit
         tag_edit_form_field_changed
@@ -1414,7 +1411,6 @@ Vmdb::Application.routes.draw do
         provider_type_field_changed
         quick_search
         sections_field_changed
-        show
         show_list
         tag_edit_form_field_changed
         tagging_edit
@@ -3050,7 +3046,7 @@ Vmdb::Application.routes.draw do
 
   controller_routes.each do |controller_name, controller_actions|
     # Default route with no action to controller's index action
-    unless [:ems_cloud, :ems_infra, :ems_container, :ems_middleware].include?(controller_name)
+    unless [:ems_cloud, :ems_infra, :ems_container, :ems_middleware, :ems_network].include?(controller_name)
       match controller_name.to_s, :controller => controller_name, :action => :index, :via => :get
     end
 
@@ -3084,6 +3080,7 @@ Vmdb::Application.routes.draw do
   resources :ems_infra, :as => :ems_infras
   resources :ems_container, :as => :ems_containers
   resources :ems_middleware, :as => :ems_middlewares
+  resources :ems_network, :as => :ems_networks
 
   match "/auth/:provider/callback" => "sessions#create", :via => :get
 
