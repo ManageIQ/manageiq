@@ -511,6 +511,31 @@ describe MiqSchedule do
       end
     end
 
+    context "valid action_automation_request" do
+      let(:admin) { FactoryGirl.create(:user_miq_request_approver) }
+      let(:automate_sched) do
+        MiqSchedule.create(:name          => "test_method", :towhat => "AutomationRequest",
+                           :userid        => admin.userid, :enabled => true,
+                           :run_at        => {:interval   => {:value => "1", :unit => "daily"},
+                                              :start_time => 2.hours.from_now.utc.to_i},
+                           :sched_action  => {:method => "automation_request"},
+                           :filter        => {:uri_parts  => {:namespace => 'ss',
+                                                              :instance  => 'vv',
+                                                              :message   => 'mm'},
+                                              :parameters => {"param" => "8"}})
+      end
+
+      it "should create a request from a scheduled task" do
+        expect(AutomationRequest).to receive(:create_from_scheduled_task).once
+        automate_sched.run_automation_request
+      end
+
+      it "should create 1 automation request" do
+        automate_sched.action_automation_request(AutomationRequest, '')
+        expect(AutomationRequest.where(:description => "Automation Task", :userid => admin.userid).count).to eq(1)
+      end
+    end
+
     context "valid schedules for db_backup" do
       let(:file_depot) { FactoryGirl.create(:file_depot_ftp_with_authentication) }
       before do

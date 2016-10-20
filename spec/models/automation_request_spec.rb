@@ -88,6 +88,61 @@ describe AutomationRequest do
     end
   end
 
+  context ".create_from_scheduled_task" do
+    let(:admin) { FactoryGirl.create(:user_miq_request_approver) }
+
+    it "with prescheduled task" do
+      ar = described_class.create_from_scheduled_task(admin, @uri_parts, @parameters)
+      expect(ar).to be_kind_of(AutomationRequest)
+      expect(ar).to eq(AutomationRequest.first)
+      expect(ar).to have_attributes(
+        "request_state"  => "pending",
+        "status"         => "Ok",
+        "approval_state" => "approved",
+        "userid"         => admin.userid.to_s,
+      )
+      expect(ar.options).to have_attributes(
+        :namespace  => "SYSTEM",
+        :class_name => "PROCESS",
+        :user_id    => admin.id
+      )
+    end
+
+    it "allows /System/Process to be passed in" do
+      uri_parts = @uri_parts.merge(:namespace => "/System", :class_name => "Process")
+      ar = AutomationRequest.create_from_scheduled_task(admin, uri_parts, @parameters)
+      expect(ar.options).to have_attributes(
+        :namespace  => "SYSTEM",
+        :class_name => "PROCESS"
+      )
+    end
+
+    it "locks scheduled tasks to /System/Process when other namespaces and class_names are passed in" do
+      uri_parts = @uri_parts.merge(:namespace => "/Test", :class_name => "TestClass")
+      ar = AutomationRequest.create_from_scheduled_task(admin, uri_parts, @parameters)
+      expect(ar.options).to have_attributes(
+        :namespace  => "SYSTEM",
+        :class_name => "PROCESS"
+      )
+    end
+
+    it "locks class_name to Process when something else is passed in" do
+      uri_parts = @uri_parts.merge(:class_name => "TestClass")
+      ar = AutomationRequest.create_from_scheduled_task(admin, uri_parts, @parameters)
+      expect(ar.options).to have_attributes(
+        :class_name => "PROCESS"
+      )
+    end
+
+    it "locks namespace to System when something else is passed in" do
+      uri_parts = @uri_parts.merge(:namespace => "/Test")
+      ar = AutomationRequest.create_from_scheduled_task(admin, uri_parts, @parameters)
+      expect(ar.options).to have_attributes(
+        :namespace  => "SYSTEM"
+      )
+    end
+  end
+
   context "#approve" do
     context "an unapproved request with a single approver" do
       before(:each) do

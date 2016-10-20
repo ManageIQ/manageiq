@@ -29,7 +29,7 @@ class MiqSchedule < ApplicationRecord
 
   SYSTEM_SCHEDULE_CLASSES = %w(MiqReport MiqAlert MiqWidget).freeze
   VALID_INTERVAL_UNITS = %w(minutely hourly daily weekly monthly once).freeze
-  ALLOWED_CLASS_METHOD_ACTIONS = %w(db_backup db_gc).freeze
+  ALLOWED_CLASS_METHOD_ACTIONS = %w(db_backup db_gc automation_request).freeze
 
   default_value_for :userid,  "system"
   default_value_for :enabled, true
@@ -217,6 +217,12 @@ class MiqSchedule < ApplicationRecord
     _log.info("Action [#{name}] has been run for target type: [#{obj.class}] with name: [#{obj.name}]")
   end
 
+  def action_automation_request(_klass, _at)
+    parameters = filter[:parameters]
+    user = User.find_by_userid(userid)
+    AutomationRequest.create_from_scheduled_task(user, filter[:uri_parts], parameters)
+  end
+
   def action_db_backup(klass, _at)
     self.sched_action ||= {}
     self.sched_action[:options] ||= {}
@@ -237,6 +243,10 @@ class MiqSchedule < ApplicationRecord
     queue_opts = {:class_name => klass.name, :method_name => "gc", :args => [opts], :role => "database_operations"}
     task_opts  = {:action => "Database GC", :userid => self.sched_action[:options][:userid]}
     MiqTask.generic_action_with_callback(task_opts, queue_opts)
+  end
+
+  def run_automation_request
+    action_automation_request(AutomationRequest, nil)
   end
 
   def run_adhoc_db_backup
