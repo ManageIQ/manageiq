@@ -940,6 +940,8 @@
   :level_rails: info
   :level_aws: info
   :level_aws_in_evm: error
+  :level_lenovo: info
+  :level_lenovo_in_evm: error
   :level_azure: warn
   :level_azure_in_evm: error
   :level_mw: info
