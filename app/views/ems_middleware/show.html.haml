@@ -1,2 +1,9 @@
 -# needed by render :action => "show" in application controller
 = render :partial => "shared/views/ems_common/show"
+%ng-form#mw_server_form{"name"          => "mw_server_form",
+                        "ng-controller" => "mwServerController",
+                        "novalidate"    => "true"}
+  = render :partial => 'middleware_server/add_jdbc_driver'
+  = render :partial => 'middleware_server/add_datasource'
+:javascript
+  miq_bootstrap('#mw_server_form');

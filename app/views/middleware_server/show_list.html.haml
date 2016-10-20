@@ -1,2 +1,9 @@
 #main_div
   = render :partial => 'layouts/gtl'
+%ng-form#mw_server_form{"name"          => "mw_server_form",
+                        "ng-controller" => "mwServerController",
+                        "novalidate"    => "true"}
+  = render :partial => 'add_jdbc_driver'
+  = render :partial => 'add_datasource'
+:javascript
+  miq_bootstrap('#mw_server_form');

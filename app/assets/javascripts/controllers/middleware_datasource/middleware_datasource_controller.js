@@ -6,7 +6,7 @@ MwAddDatasourceCtrl.$inject = ['$scope', '$rootScope', 'miqService', 'mwAddDatas
 
 function MwAddDatasourceCtrl($scope, $rootScope, miqService, mwAddDatasourceService) {
   var getPayload = function() {
-    return {
+      var payload = {
       'id': angular.element('#server_id').val(),
       'xaDatasource': false,
       'datasourceName': $scope.step1DsModel.datasourceName,
@@ -18,6 +18,12 @@ function MwAddDatasourceCtrl($scope, $rootScope, miqService, mwAddDatasourceServ
       'password': $scope.step3DsModel.password,
       'securityDomain': $scope.step3DsModel.securityDomain,
     };
+    if(angular.element('#server_id').val()){
+        payload['id'] = angular.element('#server_id').val()
+    }else{
+        payload['miq_grid_checks'] = ManageIQ.gridChecks.join(',')
+    }
+    return payload;
   };
 
   $scope.dsModel = {};

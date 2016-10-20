@@ -9,10 +9,9 @@ function MwAddJdbcDriverController($scope, $http, miqService) {
   });
 
   $scope.$on('mwAddJdbcDriverEvent', function(event, data) {
-
     var fd = new FormData();
     fd.append('file', data.filePath);
-    fd.append('id', data.serverId);
+    fd.append(data.serverIdKey, data.serverId);
     fd.append('driverJarName', data.driverJarName);
     fd.append('driverName', data.driverName);
     fd.append('moduleName', data.moduleName);
