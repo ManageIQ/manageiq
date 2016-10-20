@@ -192,6 +192,11 @@ module AuthenticationMixin
   end
 
   MAX_ATTEMPTS = 6
+  # The default for the schedule is every 1.hour now.
+  #   6 will gives us:
+  #   A failure now and retries in 2, 4, 8, and 16 minutes, for a total of 30 minutes.
+  #   We'll wait another 30 minutes, minus the time it takes to queue and perform the checks
+  #   before the schedule fires again.
   def authentication_check_retry_deliver_on(attempt)
     # Existing callers who pass no attempt will have no delay.
     case attempt
