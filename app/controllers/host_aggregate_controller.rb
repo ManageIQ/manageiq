@@ -139,6 +139,12 @@ class HostAggregateController < ApplicationController
       delete_host_aggregates
       render_flash
       return
+    elsif params[:pressed] == "host_aggregate_add_host"
+      javascript_redirect :action => "add_host_select", :id => get_checked_host_aggregate_id(params)
+      return
+    elsif params[:pressed] == "host_aggregate_remove_host"
+      javascript_redirect :action => "remove_host_select", :id => get_checked_host_aggregate_id(params)
+      return
     elsif params[:pressed].ends_with?("_edit") || ["#{pfx}_miq_request_new", "#{pfx}_clone",
                                                    "#{pfx}_migrate", "#{pfx}_publish"].include?(params[:pressed])
       render_or_redirect_partial(pfx)
@@ -363,6 +369,215 @@ class HostAggregateController < ApplicationController
     end
   end
 
+  def add_host_select
+    assert_privileges("host_aggregate_add_host")
+    @host_aggregate = find_by_id_filtered(HostAggregate, params[:id])
+    @in_a_form = true
+    @host_choices = {}
+    ems_clusters = @host_aggregate.ext_management_system.provider.try(:infra_ems).try(:ems_clusters)
+
+    unless ems_clusters.blank?
+      ems_clusters.select(&:compute?).each do |ems_cluster|
+        (ems_cluster.hosts - @host_aggregate.hosts).each do |host|
+          @host_choices["#{host.name}: #{host.hostname}"] = host.id
+        end
+      end
+    end
+    if @host_choices.empty?
+      add_flash(_("No hosts available to add to %{model} \"%{name}\"") % {
+        :model => ui_lookup(:table => 'host_aggregate'),
+        :name  => @host_aggregate.name
+      }, :error)
+      session[:flash_msgs] = @flash_array
+      @in_a_form = false
+      if @lastaction == "show_list"
+        redirect_to(:action => "show_list")
+      else
+        redirect_to(:action => "show", :id => params[:id])
+      end
+    else
+      drop_breadcrumb(
+        :name => _("Add Host to %{model} \"%{name}\"") % {:model => ui_lookup(:table => 'host_aggregate'),
+                                                          :name  => @host_aggregate.name},
+        :url  => "/host_aggregate/add_host/#{@host_aggregate.id}"
+      )
+    end
+  end
+
+  def add_host
+    assert_privileges("host_aggregate_add_host")
+    @host_aggregate = find_by_id_filtered(HostAggregate, params[:id])
+
+    case params[:button]
+    when "cancel"
+      cancel_action(_("Add Host to %{model} \"%{name}\" was cancelled by the user") % {
+        :model => ui_lookup(:table => 'host_aggregate'),
+        :name  => @host_aggregate.name
+      })
+
+    when "addHost"
+      options = form_params(params)
+      host = find_by_id_filtered(Host, options[:host_id])
+
+      if @host_aggregate.supports?(:add_host)
+        task_id = @host_aggregate.add_host_queue(session[:userid], host)
+
+        unless task_id.kind_of?(Fixnum)
+          add_flash(_("Add Host to %{model} \"%{name}\" failed: Task start failed: ID [%{id}]") % {
+            :model => ui_lookup(:table => 'host_aggregate'),
+            :name  => @host_aggregate.name,
+            :id    => task_id.inspect
+          }, :error)
+        end
+
+        if @flash_array
+          javascript_flash(:spinner_off => true)
+        else
+          initiate_wait_for_task(:task_id => task_id, :action => "add_host_finished")
+        end
+      else
+        @in_a_form = true
+        add_flash(_("Add Host not supported by %{model} \"%{name}\"") % {
+          :model => ui_lookup(:table => 'host_aggregate'),
+          :name  => @host_aggregate.name
+        }, :error)
+        @breadcrumbs.pop if @breadcrumbs
+        javascript_flash
+      end
+    end
+  end
+
+  def add_host_finished
+    task_id = session[:async][:params][:task_id]
+    host_aggregate_id = session[:async][:params][:id]
+    host_aggregate_name = session[:async][:params][:name]
+    host_id = session[:async][:params][:host_id]
+
+    task = MiqTask.find(task_id)
+    host = Host.find(host_id)
+    if MiqTask.status_ok?(task.status)
+      add_flash(_("Host \"%{hostname}\" added to %{model} \"%{name}\"") % {
+        :hostname => host.name,
+        :model    => ui_lookup(:table => 'host_aggregate'),
+        :name     => host_aggregate_name
+      })
+    else
+      add_flash(_("Unable to update %{model} \"%{name}\": %{details}") % {
+        :model   => ui_lookup(:table => 'host_aggregate'),
+        :name    => host_aggregate_name,
+        :details => task.message
+      }, :error)
+    end
+
+    @breadcrumbs.pop if @breadcrumbs
+    session[:edit] = nil
+    session[:flash_msgs] = @flash_array.dup if @flash_array
+
+    javascript_redirect :action => "show", :id => host_aggregate_id
+  end
+
+  def remove_host_select
+    assert_privileges("host_aggregate_remove_host")
+    @host_aggregate = find_by_id_filtered(HostAggregate, params[:id])
+    @in_a_form = true
+    @host_choices = {}
+    @host_aggregate.hosts.each do |host|
+      @host_choices["#{host.name}: #{host.hostname}"] = host.id
+    end
+
+    if @host_choices.empty?
+      add_flash(_("No hosts to remove from %{model} \"%{name}\"") % {
+        :model => ui_lookup(:table => 'host_aggregate'),
+        :name  => @host_aggregate.name
+      }, :error)
+      session[:flash_msgs] = @flash_array
+      @in_a_form = false
+      if @lastaction == "show_list"
+        redirect_to(:action => "show_list")
+      else
+        redirect_to(:action => "show", :id => params[:id])
+      end
+    else
+      drop_breadcrumb(
+        :name => _("Remove Host from %{model} \"%{name}\"") % {:model => ui_lookup(:table => 'host_aggregate'),
+                                                               :name  => @host_aggregate.name},
+        :url  => "/host_aggregate/remove_host/#{@host_aggregate.id}"
+      )
+    end
+  end
+
+  def remove_host
+    assert_privileges("host_aggregate_remove_host")
+    @host_aggregate = find_by_id_filtered(HostAggregate, params[:id])
+
+    case params[:button]
+    when "cancel"
+      cancel_action(_("Remove Host from %{model} \"%{name}\" was cancelled by the user") % {
+        :model => ui_lookup(:table => 'host_aggregate'),
+        :name  => @host_aggregate.name
+      })
+
+    when "removeHost"
+      options = form_params(params)
+      host = find_by_id_filtered(Host, options[:host_id])
+
+      if @host_aggregate.supports?(:remove_host)
+        task_id = @host_aggregate.remove_host_queue(session[:userid], host)
+
+        unless task_id.kind_of?(Fixnum)
+          add_flash(_("Remove Host to %{model} \"%{name}\" failed: Task start failed: ID [%{id}]") % {
+            :model => ui_lookup(:table => 'host_aggregate'),
+            :name  => @host_aggregate.name,
+            :id    => task_id.inspect
+          }, :error)
+        end
+
+        if @flash_array
+          javascript_flash(:spinner_off => true)
+        else
+          initiate_wait_for_task(:task_id => task_id, :action => "remove_host_finished")
+        end
+      else
+        @in_a_form = true
+        add_flash(_("Remove Host not supported by %{model} \"%{name}\"") % {
+          :model => ui_lookup(:table => 'host_aggregate'),
+          :name  => @host_aggregate.name
+        }, :error)
+        @breadcrumbs.pop if @breadcrumbs
+        javascript_flash
+      end
+    end
+  end
+
+  def remove_host_finished
+    task_id = session[:async][:params][:task_id]
+    host_aggregate_id = session[:async][:params][:id]
+    host_aggregate_name = session[:async][:params][:name]
+    host_id = session[:async][:params][:host_id]
+
+    task = MiqTask.find(task_id)
+    host = Host.find(host_id)
+    if MiqTask.status_ok?(task.status)
+      add_flash(_("Host \"%{hostname}\" removed from %{model} \"%{name}\"") % {
+        :hostname => host.name,
+        :model    => ui_lookup(:table => 'host_aggregate'),
+        :name     => host_aggregate_name
+      })
+    else
+      add_flash(_("Unable to update %{model} \"%{name}\": %{details}") % {
+        :model   => ui_lookup(:table => 'host_aggregate'),
+        :name    => host_aggregate_name,
+        :details => task.message
+      }, :error)
+    end
+
+    @breadcrumbs.pop if @breadcrumbs
+    session[:edit] = nil
+    session[:flash_msgs] = @flash_array.dup if @flash_array
+
+    javascript_redirect :action => "show", :id => host_aggregate_id
+  end
+
   def cancel_action(message)
     session[:edit] = nil
     @breadcrumbs.pop if @breadcrumbs
@@ -376,10 +591,9 @@ class HostAggregateController < ApplicationController
 
   def form_params(in_params)
     options = {}
-    options[:name] = in_params[:name] if in_params[:name]
-    options[:availability_zone] = in_params[:availability_zone] if in_params[:availability_zone]
-    options[:ems_id] = in_params[:ems_id] if in_params[:ems_id]
-    options[:metadata] = in_params[:metadata] if in_params[:metadata]
+    [:name, :availability_zone, :ems_id, :host_id, :metadata].each do |param|
+      options[param] = in_params[param] if in_params[param]
+    end
     options
   end
 

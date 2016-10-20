@@ -4,6 +4,7 @@ ManageIQ.angular.app.controller('hostAggregateFormController', ['$http', '$scope
     ems_id: '',
     availability_zone: '',
     metadata: '',
+    host_id: '',
   };
   $scope.formId = hostAggregateFormId;
   $scope.afterGet = false;
@@ -17,6 +18,7 @@ ManageIQ.angular.app.controller('hostAggregateFormController', ['$http', '$scope
     $scope.hostAggregateModel.ems_id = "";
     $scope.hostAggregateModel.availability_zone = "";
     $scope.hostAggregateModel.metadata = "";
+    $scope.hostAggregateModel.host_id = "";
   } else {
     miqService.sparkleOn();
 
@@ -24,6 +26,7 @@ ManageIQ.angular.app.controller('hostAggregateFormController', ['$http', '$scope
       $scope.afterGet = true;
       $scope.hostAggregateModel.name = data.name;
       $scope.hostAggregateModel.ems_id = data.ems_id;
+      $scope.hostAggregateModel.host_id = "";
 
       $scope.modelCopy = angular.copy( $scope.hostAggregateModel );
       miqService.sparkleOff();
