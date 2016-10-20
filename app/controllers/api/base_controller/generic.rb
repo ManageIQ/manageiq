@@ -6,19 +6,11 @@ module Api
       #
 
       def show
-        if @req.subcollection?
-          render_collection_type @req.subject.to_sym, @req.subject_id
-        else
-          render_collection_type @req.subject.to_sym, @req.subject_id
-        end
+        render_collection_type @req.subject.to_sym, @req.subject_id
       end
 
       def update
-        if @req.subcollection?
-          render_normal_update @req.collection.to_sym, update_collection(@req.subject.to_sym, @req.subject_id)
-        else
-          render_normal_update @req.collection.to_sym, update_collection(@req.subject.to_sym, @req.subject_id)
-        end
+        render_normal_update @req.collection.to_sym, update_collection(@req.subject.to_sym, @req.subject_id)
       end
 
       def destroy
