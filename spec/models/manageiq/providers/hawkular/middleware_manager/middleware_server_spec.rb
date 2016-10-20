@@ -56,6 +56,21 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareServer do
     }.freeze
   end
 
+  it "#collect_stats_metrics" do
+    start_time = test_start_time
+    end_time = test_end_time
+    interval = 3600
+    VCR.use_cassette(described_class.name.underscore.to_s,
+                     :allow_unused_http_interactions => true,
+                     :match_requests_on              => [:method, :uri, :body],
+                     :decode_compressed_response     => true) do # , :record => :new_episodes) do
+      metrics_available = eap.metrics_available
+      metrics_ids_map, raw_stats = eap.collect_stats_metrics(metrics_available, start_time, end_time, interval)
+      expect(metrics_ids_map.keys.size).to be > 0
+      expect(raw_stats.keys.size).to be > 0
+    end
+  end
+
   it "#collect_live_metrics for all metrics available" do
     start_time = test_start_time
     end_time = test_end_time
