@@ -68,9 +68,19 @@ module ServiceMixin
   end
 
   def delay_for_action(grp_idx, action)
-    delay_type = :start_delay if action == :start
-    delay_type = :stop_delay if action == :stop
-    max_group_delay(grp_idx, delay_type)
+    max_group_delay(grp_idx, delay_type(action))
+  end
+
+  def combined_group_delay(action)
+    group_idxs = service_resources.map(&:group_idx).uniq
+    [].tap do |results|
+      group_idxs.each { |idx| results << max_group_delay(idx, delay_type(action)) }
+    end.sum
+  end
+
+  def delay_type(action)
+    return :start_delay if action == :start
+    return :stop_delay if action == :stop
   end
 
   def each_group_resource(grp_idx = nil)
