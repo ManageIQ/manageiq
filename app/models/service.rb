@@ -3,6 +3,7 @@ require 'ancestry'
 class Service < ApplicationRecord
   DEFAULT_PROCESS_DELAY_BETWEEN_GROUPS = 120
   DEFAULT_POWER_STATE_DELAY = 60
+  DEFAULT_POWER_STATE_RETRIES = 3
 
   ACTION_RESPONSE = {
     "Power On"   => :start,
@@ -12,13 +13,11 @@ class Service < ApplicationRecord
     "Do Nothing" => nil
   }.freeze
 
-  POWER_STATE = {
-    "on"         => :on,
-    "off"        => :off,
-    "on_partial" => :on_partial,
-    "suspended"  => :on_partial,
-    "starting"   => :starting,
-    "stopping"   => :stopping
+  POWER_STATE_MAP = {
+    :start          => "on",
+    :stop           => "off",
+    :suspend        => "off",
+    :shutdown_guest => "off"
   }.freeze
 
   include VirtualTotalMixin
@@ -67,6 +66,7 @@ class Service < ApplicationRecord
 
   virtual_column :has_parent,                               :type => :boolean
   virtual_column :power_state,                              :type => :string
+  virtual_column :power_status,                             :type => :string
 
   validates_presence_of :name
 
@@ -91,6 +91,10 @@ class Service < ApplicationRecord
 
   def power_state
     options[:power_state]
+  end
+
+  def power_status
+    options[:power_status]
   end
 
   def service_id
@@ -146,17 +150,16 @@ class Service < ApplicationRecord
 
   def start
     raise_request_start_event
-    persist_power_state(["starting"])
     queue_group_action(:start, 0, 1, delay_for_action(0, :start))
   end
 
   def stop
     raise_request_stop_event
-    persist_power_state(["stopping"])
     queue_group_action(:stop, last_index, -1, delay_for_action(last_index, :stop))
   end
 
   def suspend
+    update_progress(:power_status => 'suspending')
     queue_group_action(:suspend, last_index, -1, delay_for_action(last_index, :stop))
   end
 
@@ -164,8 +167,41 @@ class Service < ApplicationRecord
     queue_group_action(:shutdown_guest, last_index, -1, delay_for_action(last_index, :stop))
   end
 
-  def calculate_power_state
-    persist_power_state(vm_power_states)
+  def calculate_power_state(action)
+    if power_states_match?(action)
+      status = { :power_state  => POWER_STATE_MAP[action],
+                 :power_status => action.to_s + '_complete' }
+      update_progress(status) { |x| modify_power_state_delay(x) }
+    else
+      update_progress(:increment => true) { |x| modify_power_state_delay(x) } unless timed_out?
+      delay = combined_group_delay(action) + DEFAULT_POWER_STATE_DELAY
+      queue_power_calculation(delay, action) unless timed_out?
+      update_progress(:power_state => "timeout") { |x| modify_power_state_delay(x) } if timed_out?
+    end
+  end
+
+  def timed_out?
+    options[:delayed].to_i >= DEFAULT_POWER_STATE_RETRIES
+  end
+
+  def modify_power_state_delay(opts)
+    cloned_options = options.dup
+    case opts.keys.first
+    when :reset
+      cloned_options[:delayed] = nil
+    when :increment
+      cloned_options[:delayed] = (cloned_options[:delayed].to_i + opts[:increment])
+    end
+    update_attributes(:options => cloned_options)
+  end
+
+  def power_states_match?(action)
+    vm_power_states.uniq == map_power_states(action)
+  end
+
+  def map_power_states(action)
+    action_name = "#{action}_action"
+    service_resources.map(&action_name.to_sym).uniq.map { |x| Service::ACTION_RESPONSE[x] }.map { |x| Service::POWER_STATE_MAP[x] }
   end
 
   def vm_power_states
@@ -174,10 +210,18 @@ class Service < ApplicationRecord
     end
   end
 
-  def persist_power_state(list)
-    power = list.uniq
-    options[:power_state] = (power.size == 1) ? POWER_STATE[power.first].to_s : POWER_STATE["on_partial"].to_s
-    update_attributes(:options => options)
+  def update_progress(hash = {})
+    increment = hash.keys.include?(:increment) ?  hash.delete(:increment) : nil
+    hash.keys.each do |attribute|
+      options[attribute] = hash[attribute]
+      update_attributes(:options => options)
+    end
+    if block_given?
+      complete = hash[:power_status] && hash[:power_status].match("_complete")
+      timed_out = hash[:power_state] && hash[:power_state].match("timeout")
+      yield(:reset => true) if complete || timed_out
+      yield(:increment => 1) if increment
+    end
   end
 
   def process_group_action(action, group_idx, direction)
@@ -202,7 +246,7 @@ class Service < ApplicationRecord
     # Setup processing for the next group
     next_grp_idx = next_group_index(group_idx, direction)
     if next_grp_idx.nil?
-      queue_power_calculation(delay_for_action(group_idx, action))
+      queue_power_calculation(combined_group_delay(action), action)
       raise_final_process_event(action)
     else
       queue_group_action(action, next_grp_idx, direction, delay_for_action(next_grp_idx, action))
@@ -224,14 +268,16 @@ class Service < ApplicationRecord
     true
   end
 
-  def queue_power_calculation(extend_delay = 0)
+  def queue_power_calculation(delay, action)
+    return if parent_service
     calculate_power = {
       :class_name  => self.class.name,
       :instance_id => id,
       :method_name => "calculate_power_state",
       :role        => "ems_operations",
       :task_id     => "#{self.class.name.underscore}_#{id}",
-      :deliver_on  => (extend_delay.seconds + DEFAULT_POWER_STATE_DELAY.seconds).from_now.utc
+      :deliver_on  => delay.seconds.from_now.utc,
+      :args        => [action]
     }
 
     MiqQueue.put(calculate_power)
@@ -267,6 +313,7 @@ class Service < ApplicationRecord
   end
 
   def raise_request_start_event
+    update_progress(:power_status => 'starting')
     MiqEvent.raise_evm_event(self, :request_service_start)
   end
 
@@ -275,6 +322,7 @@ class Service < ApplicationRecord
   end
 
   def raise_request_stop_event
+    update_progress(:power_status => 'stopping')
     MiqEvent.raise_evm_event(self, :request_service_stop)
   end
 
