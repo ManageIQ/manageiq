@@ -87,7 +87,7 @@ class Chargeback < ActsAsArModel
   end
 
   def self.key_and_fields(metric_rollup_record)
-    ts_key = get_group_key_ts(metric_rollup_record)
+    ts_key = @options.start_of_report_step(metric_rollup_record.timestamp)
 
     key, extra_fields = if @options[:groupby_tag].present?
                           get_tag_keys_and_fields(metric_rollup_record, ts_key)
@@ -176,22 +176,6 @@ class Chargeback < ActsAsArModel
     end
 
     col_hash
-  end
-
-  def self.get_group_key_ts(perf)
-    ts = perf.timestamp.in_time_zone(@options.tz)
-    case @options.interval
-    when "daily"
-      ts = ts.beginning_of_day
-    when "weekly"
-      ts = ts.beginning_of_week
-    when "monthly"
-      ts = ts.beginning_of_month
-    else
-      raise _("interval '%{interval}' is not supported") % {:interval => interval}
-    end
-
-    ts
   end
 
   def self.get_time_range(perf)
