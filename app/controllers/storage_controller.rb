@@ -30,8 +30,7 @@ class StorageController < ApplicationController
   def show(record = nil)
     return if perfmenu_click?
     @display = params[:display] || "main" unless control_selected?
-    @record = @storage = find_record( Storage, record || params[:id])
-    # @storage = @record = identify_record(params[:id])
+    @record = @storage = find_record(Storage, record || params[:id])
     return if record_no_longer_exists?(@storage)
 
     if !@explorer && @display == "main"
@@ -59,7 +58,6 @@ class StorageController < ApplicationController
     end
 
     @gtl_url = "/show"
-    #   drop_breadcrumb({:name=>ui_lookup(:tables=>"storages"), :url=>"/storage/show_list?page=#{@current_page}&refresh=y"}, true)
 
     case @display
     when "all_miq_templates", "all_vms"
@@ -406,7 +404,8 @@ class StorageController < ApplicationController
       nodetype, id = params[:id].split("-")
       # treebuilder initializes x_node to root first time in locals_for_render,
       # need to set this here to force & activate node when link is clicked outside of explorer.
-      @reselect_node = self.x_node = "#{nodetype}-#{to_cid(id)}"
+      self.x_active_tree = :storage_tree
+      self.x_node = @reselect_node = "#{nodetype}-#{to_cid(id)}"
     end
 
     build_accordions_and_trees
