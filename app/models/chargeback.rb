@@ -12,8 +12,6 @@ class Chargeback < ActsAsArModel
 
     cb = new
 
-    options[:ext_options] ||= {}
-
     base_rollup = MetricRollup.includes(
       :resource           => [:hardware, :tenant, :tags, :vim_performance_states, :custom_attributes],
       :parent_host        => :tags,
