@@ -37,6 +37,7 @@ module EmsRefresh::SaveInventoryNetwork
 
     child_keys = [
       :cloud_networks,
+      :cloud_subnets,
       :network_groups,
       :security_groups,
       :network_routers,
@@ -52,7 +53,7 @@ module EmsRefresh::SaveInventoryNetwork
     # Save and link other subsections
     save_child_inventory(ems, hashes, child_keys, target)
 
-    link_cloud_subnets_to_network_routers(hashes[:cloud_subnets]) if hashes.key?(:cloud_subnets)
+    link_cloud_subnets_to_network_routers(hashes[:cloud_networks].collect { |x| x[:cloud_subnets] }.flatten) if hashes.key?(:network_routers)
 
     ems.save!
     hashes[:id] = ems.id
@@ -109,18 +110,18 @@ module EmsRefresh::SaveInventoryNetwork
     store_ids_for_new_records(ems.network_groups, hashes, :ems_ref)
   end
 
-  def save_cloud_subnets_inventory(network, hashes)
+  def save_cloud_subnets_inventory(network, hashes, _target = nil)
     hashes.each do |h|
-      %i(availability_zone parent_cloud_subnet).each do |relation|
+      %i(availability_zone parent_cloud_subnet cloud_network).each do |relation|
         h[relation] = h.fetch_path(relation, :_object) if h.fetch_path(relation, :_object)
       end
 
-      h[:ems_id] = network.ems_id
+      h[:ems_id] = network.ems_id if network.respond_to?(:ems_id)
     end
 
     save_inventory_multi(network.cloud_subnets, hashes, :use_association, [:ems_ref], nil, [:network_router])
 
-    network.save!
+    network.save! unless network.kind_of?(ManageIQ::Providers::NetworkManager)
     store_ids_for_new_records(network.cloud_subnets, hashes, :ems_ref)
   end
 
@@ -404,6 +405,8 @@ module EmsRefresh::SaveInventoryNetwork
   end
 
   def link_cloud_subnets_to_network_routers(hashes)
+    return if hashes.blank?
+
     hashes.each do |hash|
       network_router = hash.fetch_path(:network_router, :_object)
       hash[:_object].update_attributes(:network_router => network_router)

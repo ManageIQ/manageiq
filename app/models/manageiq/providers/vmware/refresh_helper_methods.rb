@@ -1,14 +1,14 @@
 module ManageIQ::Providers::Vmware::RefreshHelperMethods
   extend ActiveSupport::Concern
 
-  def process_collection(collection, key)
-    @data[key] ||= []
+  def process_collection(collection, key, store_in_data = true)
+    @data[key] ||= [] if store_in_data
 
     collection.each do |item|
       uid, new_result = yield(item)
       next if uid.nil?
 
-      @data[key] << new_result
+      @data[key] << new_result if store_in_data
       @data_index.store_path(key, uid, new_result)
     end
   end
