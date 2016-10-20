@@ -918,26 +918,6 @@ describe ApplicationHelper do
       end
     end
 
-    context "when id == event_edit" do
-      before(:each) do
-        @record = FactoryGirl.create(:miq_event_definition)
-        @layout = "miq_policy"
-        stub_user(:features => :all)
-      end
-
-      it "hides toolbar in policy event tree" do
-        @sb = {:active_tree => :event_tree}
-        result = build_toolbar_hide_button('event_edit')
-        expect(result).to be(true)
-      end
-
-      it "shows toolbar in policy tree" do
-        @sb = {:active_tree => :policy_tree}
-        result = build_toolbar_hide_button('event_edit')
-        expect(result).to be(false)
-      end
-    end
-
     context "when record class = ExtManagementSystem" do
       before do
         @record = FactoryGirl.create(:ems_amazon)

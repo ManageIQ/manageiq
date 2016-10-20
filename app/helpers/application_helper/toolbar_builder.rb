@@ -684,11 +684,6 @@ class ApplicationHelper::ToolbarBuilder
       else
         return true unless editable_domain?(@record)
       end
-    when "MiqEventDefinition"
-      case id
-      when "event_edit"
-        return true if x_active_tree == :event_tree || !role_allows?(:feature => "event_edit")
-      end
     when "MiqServer", "MiqRegion"
       case id
       when "role_start", "role_suspend", "promote_server", "demote_server"
