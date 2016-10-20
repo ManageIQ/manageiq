@@ -157,17 +157,13 @@ describe ProviderForemanController do
     end
   end
 
-  context "#save_provider_foreman" do
-    it "will not save with a duplicate name" do
-      ManageIQ::Providers::Foreman::Provider.create(:name => "test2Foreman",
-                                                    :url => "10.8.96.103", :zone => @zone)
-      provider2 = ManageIQ::Providers::Foreman::Provider.new(:name => "test2Foreman",
-                                                             :url => "10.8.96.103", :zone => @zone)
-      controller.instance_variable_set(:@provider_cfgmgmt, provider2)
-      allow(controller).to receive(:render_flash)
-      controller.save_provider_foreman
-      expect(assigns(:flash_array).first[:message]).to include("Configuration_manager.name has already been taken")
-    end
+  it "#save_provider_foreman will not save with a duplicate name" do
+    ManageIQ::Providers::Foreman::Provider.create(:name => "test2Foreman", :url => "server1", :zone => @zone)
+    provider2 = ManageIQ::Providers::Foreman::Provider.new(:name => "test2Foreman", :url => "server2", :zone => @zone)
+    controller.instance_variable_set(:@provider_cfgmgmt, provider2)
+    allow(controller).to receive(:render_flash)
+    controller.save_provider_foreman
+    expect(assigns(:flash_array).first[:message]).to include("Configuration_manager.name has already been taken")
   end
 
   context "#edit" do
