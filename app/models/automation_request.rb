@@ -37,6 +37,13 @@ class AutomationRequest < MiqRequest
     create_request(options, user, auto_approve)
   end
 
+  def self.create_from_scheduled_task(user, uri_parts, parameters)
+    [:namespace, :class_name].each { |key| uri_parts.delete(key) if uri_parts.key?(key) }
+    approval = {'auto_approve' => true}
+    uri_parts.stringify_keys!
+    create_from_ws("1.1", user, uri_parts, parameters, approval)
+  end
+
   def self.zone(options)
     zone_name = options[:attrs][:miq_zone]
     return nil if zone_name.blank?
