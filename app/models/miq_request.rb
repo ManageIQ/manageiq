@@ -1,4 +1,6 @@
 class MiqRequest < ApplicationRecord
+  extend InterRegionApiMethodRelay
+
   ACTIVE_STATES = %w(active queued)
 
   belongs_to :source,            :polymorphic => true
@@ -456,6 +458,23 @@ class MiqRequest < ApplicationRecord
 
     request.post_create(auto_approve)
   end
+  api_relay_class_method(:create_request, :create) do |values, requester, auto_approve|
+    [
+      find_source_id_from_values(values),
+      {
+        :options      => values,
+        :requester    => {"user_name" => requester.userid},
+        :auto_approve => auto_approve
+      }
+    ]
+  end
+
+  def self.find_source_id_from_values(values)
+    MiqRequestMixin.get_option(:src_vm_id, nil, values) ||
+      MiqRequestMixin.get_option(:src_id, nil, values) ||
+      MiqRequestMixin.get_option(:src_ids, nil, values).try(:first)
+  end
+  private_class_method :find_source_id_from_values
 
   def post_create(auto_approve)
     set_description
@@ -481,6 +500,15 @@ class MiqRequest < ApplicationRecord
 
     request.call_automate_event_queue("request_updated")
     request
+  end
+  api_relay_class_method(:update_request, :update) do |request, values, requester|
+    [
+      (request.kind_of?(MiqRequest) ? request.id : request),
+      {
+        :options   => values,
+        :requester => {"user_name" => requester.userid}
+      }
+    ]
   end
 
   def log_request_success(requester_id, mode)
