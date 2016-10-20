@@ -2,7 +2,7 @@ describe "amazon_check_pre_retirement Method Validation" do
   before(:each) do
     @zone = FactoryGirl.create(:zone)
     @user = FactoryGirl.create(:user_with_group)
-    @ems  = FactoryGirl.create(:ems_vmware, :zone => @zone)
+    @ems  = FactoryGirl.create(:ems_amazon, :zone => @zone)
     @ebs_hardware = FactoryGirl.create(:hardware, :bitness             => 64,
                                                   :virtualization_type => 'paravirtual',
                                                   :root_device_type    => 'ebs')
@@ -36,5 +36,13 @@ describe "amazon_check_pre_retirement Method Validation" do
     ws = MiqAeEngine.instantiate("#{@ins}?Vm::vm=#{@vm.id}#amazon", @user)
     expect(ws.root['ae_result']).to eq('ok')
     expect(ws.root['vm'].power_state).to eq('off')
+  end
+
+  it "returns 'ok' for ebs instance with unknown power state" do
+    @vm.hardware = @ebs_hardware
+    @vm.update_attributes(:raw_power_state => "unknown")
+    ws = MiqAeEngine.instantiate("#{@ins}?Vm::vm=#{@vm.id}#amazon", @user)
+    expect(ws.root['ae_result']).to eq('ok')
+    expect(ws.root['vm'].power_state).to eq('terminated')
   end
 end
