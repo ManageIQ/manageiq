@@ -58,7 +58,7 @@ gem "ruby-dbus" # For external auth
 gem "ruby-progressbar",               "~>1.7.0",       :require => false
 gem "ruby_parser",                    "~>3.8",         :require => false
 gem "rufus-scheduler",                "~>3.1.3",       :require => false
-gem "rugged",                         "~>0.23.0",      :require => false
+gem "rugged",                         "=0.25.0b10",    :require => false
 gem "secure_headers",                 "~>3.0.0"
 gem "simple-rss",                     "~>1.3.1",       :require => false
 gem "snmp",                           "~>1.2.0",       :require => false
