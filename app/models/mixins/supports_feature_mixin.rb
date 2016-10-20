@@ -66,9 +66,11 @@ module SupportsFeatureMixin
     :backup_restore           => 'CloudVolume backup restore',
     :cinder_service           => 'Cinder storage service',
     :create_host_aggregate    => 'Host Aggregate Creation',
+    :create_network_router    => 'Network Router Creation',
     :swift_service            => 'Swift storage service',
     :delete                   => 'Deletion',
     :delete_aggregate         => 'Host Aggregate Deletion',
+    :delete_network_router    => 'Network Router Deletion',
     :disassociate_floating_ip => 'Disassociate a Floating IP',
     :discovery                => 'Discovery of Managers for a Provider',
     :evacuate                 => 'Evacuation',
@@ -88,6 +90,7 @@ module SupportsFeatureMixin
     :snapshots                => 'Snapshots',
     :terminate                => 'Terminate a VM',
     :update_aggregate         => 'Host Aggregate Update',
+    :update_network_router    => 'Network Router Update',
     :refresh_network_interfaces => 'Refresh Network Interfaces for a Host',
   }.freeze
 

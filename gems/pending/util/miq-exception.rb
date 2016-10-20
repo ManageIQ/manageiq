@@ -115,6 +115,11 @@ module MiqException
   class MiqNetworkUpdateError < Error; end
   class MiqNetworkDeleteError < Error; end
 
+  class MiqNetworkRouterValidationError < Error; end
+  class MiqNetworkRouterCreateError < Error; end
+  class MiqNetworkRouterUpdateError < Error; end
+  class MiqNetworkRouterDeleteError < Error; end
+
   class MiqVolumeValidationError < Error; end
   class MiqVolumeCreateError < Error; end
   class MiqVolumeUpdateError < Error; end
