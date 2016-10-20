@@ -269,7 +269,6 @@ Vmdb::Application.routes.draw do
     :chargeback               => {
       :get  => %w(
         explorer
-        index
         render_csv
         render_pdf
         render_txt
@@ -1718,7 +1717,6 @@ Vmdb::Application.routes.draw do
         download_data
         explorer
         hosts
-        index
         show
         show_list
         tagging
@@ -1907,7 +1905,6 @@ Vmdb::Application.routes.draw do
         fetch_yaml
         get_json
         import
-        index
         log
         rsop
       ),
@@ -2563,7 +2560,6 @@ Vmdb::Application.routes.draw do
         download_data
         explorer
         files
-        index
         perf_chart_chooser
         protect
         show

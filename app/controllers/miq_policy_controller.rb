@@ -15,10 +15,6 @@ class MiqPolicyController < ApplicationController
 
   UI_FOLDERS = [Host, Vm, ContainerReplicator, ContainerGroup, ContainerNode, ContainerImage].freeze
 
-  def index
-    redirect_to :action => 'explorer'
-  end
-
   def export
     @breadcrumbs = []
     @layout = "miq_policy_export"

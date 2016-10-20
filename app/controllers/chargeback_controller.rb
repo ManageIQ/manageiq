@@ -11,11 +11,6 @@ class ChargebackController < ApplicationController
     'chargeback_rates_new'    => :cb_rate_edit
   }.freeze
 
-  # FIXME: -- is INDEX needed ?
-  def index
-    redirect_to :action => 'explorer'
-  end
-
   def x_button
     generic_x_button(CB_X_BUTTON_ALLOWED_ACTIONS)
   end

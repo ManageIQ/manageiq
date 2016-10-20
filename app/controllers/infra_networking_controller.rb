@@ -17,10 +17,6 @@ class InfraNetworkingController < ApplicationController
     redirect_to :action => 'explorer', :flash_msg => @flash_array ? @flash_array[0][:message] : nil
   end
 
-  def index
-    redirect_to :action => 'explorer'
-  end
-
   def show(id = nil)
     @explorer = true
     @display = params[:display] || "main" unless control_selected?
