@@ -10,7 +10,6 @@ class Chargeback < ActsAsArModel
     _log.info("Calculating chargeback costs...")
     @options = options = ReportOptions.new_from_h(options)
 
-    interval = options[:interval] || "daily"
     cb = new
 
     options[:ext_options] ||= {}
@@ -34,10 +33,10 @@ class Chargeback < ActsAsArModel
     rate_cols.map! { |x| VIRTUAL_COL_USES.include?(x) ? VIRTUAL_COL_USES[x] : x }.flatten!
     base_rollup = base_rollup.select(*rate_cols)
 
-    timerange = get_report_time_range(options, interval)
+    timerange = get_report_time_range(options, options.interval)
     data = {}
 
-    interval_duration = interval_to_duration(interval)
+    interval_duration = interval_to_duration(options.interval)
 
     timerange.step_value(interval_duration).each_cons(2) do |query_start_time, query_end_time|
       records = base_rollup.where(:timestamp => query_start_time...query_end_time, :capture_interval_name => "hourly")
@@ -46,7 +45,7 @@ class Chargeback < ActsAsArModel
       next if records.empty?
       _log.info("Found #{records.length} records for time range #{[query_start_time, query_end_time].inspect}")
 
-      hours_in_interval = hours_in_interval(query_start_time, query_end_time, interval)
+      hours_in_interval = hours_in_interval(query_start_time, query_end_time, options.interval)
 
       # we are building hash with grouped calculated values
       # values are grouped by resource_id and timestamp (query_start_time...query_end_time)
@@ -62,7 +61,7 @@ class Chargeback < ActsAsArModel
         # key contains resource_id and timestamp (query_start_time...query_end_time)
         # extra_fields there some extra field like resource name and
         # some of them are related to specific chargeback (ChargebackVm, ChargebackContainer,...)
-        key, extra_fields = key_and_fields(metric_rollup_record, interval)
+        key, extra_fields = key_and_fields(metric_rollup_record, options.interval)
         data[key] ||= extra_fields
 
         chargeback_rates = data[key]["chargeback_rates"].split(', ') + rates_to_apply.collect(&:description)
