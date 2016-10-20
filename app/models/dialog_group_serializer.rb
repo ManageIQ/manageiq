@@ -7,8 +7,7 @@ class DialogGroupSerializer < Serializer
 
   def serialize(dialog_group, all_attributes = false)
     serialized_dialog_fields = serialize_dialog_fields(dialog_group.dialog_fields, all_attributes)
-    return dialog_group.attributes.merge('dialog_fields' => serialized_dialog_fields) if all_attributes
-    included_attributes(dialog_group.attributes).merge("dialog_fields" => serialized_dialog_fields)
+    included_attributes(dialog_group.attributes, all_attributes).merge("dialog_fields" => serialized_dialog_fields)
   end
 
   private

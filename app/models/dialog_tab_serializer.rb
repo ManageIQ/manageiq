@@ -7,8 +7,8 @@ class DialogTabSerializer < Serializer
 
   def serialize(dialog_tab, all_attributes = false)
     serialized_dialog_groups = serialize_dialog_groups(dialog_tab.dialog_groups, all_attributes)
-    return dialog_tab.attributes.merge('dialog_groups' => serialized_dialog_groups) if all_attributes
-    included_attributes(dialog_tab.attributes).merge("dialog_groups" => serialized_dialog_groups)
+
+    included_attributes(dialog_tab.attributes, all_attributes).merge("dialog_groups" => serialized_dialog_groups)
   end
 
   def serialize_dialog_groups(dialog_groups, all_attributes)

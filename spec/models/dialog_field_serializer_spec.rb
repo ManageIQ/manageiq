@@ -53,40 +53,56 @@ describe DialogFieldSerializer do
         allow(dialog_field).to receive(:trigger_automate_value_updates).and_return("dynamic values")
       end
 
-      it "serializes the dialog_field with the correct values" do
-        expect(dialog_field_serializer.serialize(dialog_field))
-          .to eq(expected_serialized_values.merge(
-                   "resource_action" => "serialized resource action",
-                   "values"          => "dynamic values"
-          ))
+      context 'when wanting the excluded set of attributes' do
+        let(:all_attributes) { false }
+
+        it 'serializes the dialog_field with the correct attributes' do
+          expect(dialog_field_serializer.serialize(dialog_field, all_attributes))
+            .to eq(expected_serialized_values.merge(
+                     "resource_action" => "serialized resource action",
+                     "values"          => "dynamic values"
+            ))
+        end
       end
 
-      it 'returns all attributes of a dialog field' do
-        expect(dialog_field_serializer.serialize(dialog_field, true))
-          .to include(expected_serialized_values.merge(
-                        'id'              => dialog_field.id,
-                        'resource_action' => 'serialized resource action',
-                        'values'          => 'dynamic values'
-          ))
+      context 'when wanting all attributes' do
+        let(:all_attributes) { true }
+
+        it 'serializes the dialog_field with all attributes' do
+          expect(dialog_field_serializer.serialize(dialog_field, all_attributes))
+            .to include(expected_serialized_values.merge(
+                          'id'              => dialog_field.id,
+                          'resource_action' => 'serialized resource action',
+                          'values'          => 'dynamic values'
+            ))
+        end
       end
     end
 
     context "when the dialog_field is not dynamic" do
       let(:dynamic) { false }
 
-      it "serializes the dialog_field" do
-        expect(dialog_field_serializer.serialize(dialog_field))
-          .to eq(expected_serialized_values.merge(
-                   "resource_action" => "serialized resource action"
-          ))
+      context 'when wanting the excluded set of attributes' do
+        let(:all_attributes) { false }
+
+        it "serializes the dialog_field with the correct values" do
+          expect(dialog_field_serializer.serialize(dialog_field, all_attributes))
+            .to eq(expected_serialized_values.merge(
+                     "resource_action" => "serialized resource action"
+            ))
+        end
       end
 
-      it 'returns all attributes of a dialog field' do
-        expect(dialog_field_serializer.serialize(dialog_field, true))
-          .to include(expected_serialized_values.merge(
-                        'id'              => dialog_field.id,
-                        'resource_action' => 'serialized resource action',
-          ))
+      context 'when wanting all attributes' do
+        let(:all_attributes) { true }
+
+        it 'serializes the dialog_field with all attributes' do
+          expect(dialog_field_serializer.serialize(dialog_field, all_attributes))
+            .to include(expected_serialized_values.merge(
+                          'id'              => dialog_field.id,
+                          'resource_action' => 'serialized resource action',
+            ))
+        end
       end
     end
 
