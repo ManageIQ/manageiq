@@ -68,9 +68,11 @@ module SupportsFeatureMixin
     :backup_restore             => 'CloudVolume backup restore',
     :cinder_service             => 'Cinder storage service',
     :create_host_aggregate      => 'Host Aggregate Creation',
+    :create_network_router      => 'Network Router Creation',
     :swift_service              => 'Swift storage service',
     :delete                     => 'Deletion',
     :delete_aggregate           => 'Host Aggregate Deletion',
+    :delete_network_router      => 'Network Router Deletion',
     :disassociate_floating_ip   => 'Disassociate a Floating IP',
     :discovery                  => 'Discovery of Managers for a Provider',
     :evacuate                   => 'Evacuation',
@@ -93,6 +95,7 @@ module SupportsFeatureMixin
     :update_aggregate           => 'Host Aggregate Update',
     :refresh_network_interfaces => 'Refresh Network Interfaces for a Host',
     :update                     => 'Update',
+    :update_network_router      => 'Network Router Update',
   }.freeze
 
   # Whenever this mixin is included we define all features as unsupported by default.
