@@ -205,6 +205,19 @@ describe StorageController do
         flash_messages = assigns(:flash_array)
         expect(flash_messages.first[:message]).to_not include("Datastores no longer exists")
       end
+
+      it 'can render datastore details' do
+        tree_node_id = TreeBuilder.build_node_id(storage)
+        session[:sandboxes] = {} # no prior data in @sb
+        session[:exp_parms] = {:controller => 'storage',
+                               :action     => 'show',
+                               :id         => tree_node_id}
+
+        get :explorer
+        expect(response.status).to eq(200)
+        expect(response.body).to_not be_empty
+        expect(response).to render_template('shared/summary/_textual')
+      end
     end
 
     context "#tree_select" do
