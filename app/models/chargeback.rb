@@ -36,7 +36,7 @@ class Chargeback < ActsAsArModel
     timerange = options.report_time_range
     data = {}
 
-    interval_duration = interval_to_duration(options.interval)
+    interval_duration = options.duration_of_report_step
 
     timerange.step_value(interval_duration).each_cons(2) do |query_start_time, query_end_time|
       records = base_rollup.where(:timestamp => query_start_time...query_end_time, :capture_interval_name => "hourly")
@@ -84,17 +84,6 @@ class Chargeback < ActsAsArModel
     return HOURS_IN_WEEK if interval == "weekly"
 
     (query_end_time - query_start_time) / 1.hour
-  end
-
-  def self.interval_to_duration(interval)
-    case interval
-    when "daily"
-      1.day
-    when "weekly"
-      1.week
-    when "monthly"
-      1.month
-    end
   end
 
   def self.key_and_fields(metric_rollup_record, interval)

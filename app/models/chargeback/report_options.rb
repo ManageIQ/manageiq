@@ -52,5 +52,13 @@ class Chargeback
 
       start_time..end_time
     end
+
+    def duration_of_report_step
+      case interval
+      when 'daily'   then 1.day
+      when 'weekly'  then 1.week
+      when 'monthly' then 1.month
+      end
+    end
   end
 end
