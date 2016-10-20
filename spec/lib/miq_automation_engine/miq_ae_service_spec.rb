@@ -172,7 +172,6 @@ module MiqAeServiceSpec
       let(:vm) { FactoryGirl.create(:vm) }
 
       context "#create_notification!" do
-
         before do
           allow(workspace).to receive(:persist_state_hash).and_return({})
           allow(workspace).to receive(:ae_user).and_return(user)
