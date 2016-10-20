@@ -257,7 +257,7 @@ module AuthenticationMixin
     # Let the individual classes determine what authentication(s) need to be checked
     types = authentications_to_validate if self.respond_to?(:authentications_to_validate) && types.nil?
     types = [nil] if types.blank?
-    types.to_miq_a.each do |t|
+    Array(types).each do |t|
       success = authentication_check(t, options).first
       retry_scheduled_authentication_check(t, options) unless success
     end
