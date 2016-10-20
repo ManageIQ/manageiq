@@ -556,6 +556,32 @@ describe ProviderForemanController do
     end
   end
 
+  context "ansible tower job template accordion " do
+    before do
+      login_as user_with_feature(%w(providers_accord configured_systems_filter_accord configuration_scripts_accord))
+      controller.instance_variable_set(:@right_cell_text, nil)
+    end
+    render_views
+
+    it 'can render details for a job template' do
+      @record = FactoryGirl.create(:ansible_configuration_script,
+                                   :name        => "ConfigScript1",
+                                   :survey_spec => {'spec' => [{'index' => 0, 'question_description' => 'Survey',
+                                                                'min' => nil, 'default' => nil, 'max' => nil,
+                                                                'question_name' => 'Survey', 'required' => false,
+                                                                'variable' => 'test', 'choices' => nil,
+                                                                'type' => 'text'}]})
+      tree_node_id = "cf -" + ApplicationRecord.compress_id(@record.id)
+      allow(controller).to receive(:x_active_tree).and_return(:configuration_scripts_tree)
+      allow(controller).to receive(:x_active_accord).and_return(:configuration_scripts)
+      allow(controller).to receive(:x_node).and_return(tree_node_id)
+      get :explorer
+      expect(response.status).to eq(200)
+      expect(response.body).to include("Question Name")
+      expect(response.body).to include("Question Description")
+    end
+  end
+
   context "fetches the list setting:Grid/Tile/List from settings" do
     before do
       login_as user_with_feature(%w(providers_accord configured_systems_filter_accord))
