@@ -6,6 +6,6 @@ module MiqAeSetUserInfoMixin
 
   def set_user_info
     self.updated_by         = User.current_userid || 'system'
-    self.updated_by_user_id = User.current_user ? User.current_user.id : nil
+    self.updated_by_user_id = User.current_user.try(:id)
   end
 end

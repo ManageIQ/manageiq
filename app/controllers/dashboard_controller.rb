@@ -554,7 +554,7 @@ class DashboardController < ApplicationController
 
       page.replace("tl_div", :partial => "dashboard/tl_detail")
       page << "miqSparkle(false);"
-      session[:last_rpt_id] = @report ? @report.id : nil  # Remember rpt record id to turn off later
+      session[:last_rpt_id] = @report.try(:id)  # Remember rpt record id to turn off later
     end
   end
 

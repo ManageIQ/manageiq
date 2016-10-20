@@ -5,7 +5,7 @@ module MiqReport::Notification
 
     user = User.find_by_userid(userid)
     from = options[:email] && !options[:email][:from].blank? ? options[:email][:from] : VMDB::Config.new("vmdb").config[:smtp][:from]
-    to   = options[:email] ? options[:email][:to] : (user ? user.email : nil)
+    to   = options[:email] ? options[:email][:to] : user.try(:email)
 
     msg = nil
     msg = "The system is not configured with a 'from' email address." if from.blank?

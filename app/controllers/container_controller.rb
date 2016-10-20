@@ -301,7 +301,7 @@ class ContainerController < ApplicationController
 
     presenter.set_visibility(h_tb.present? || c_tb.present? || v_tb.present?, :toolbar)
 
-    presenter[:record_id] = @record ? @record.id : nil
+    presenter[:record_id] = @record.try(:id)
 
     # Hide/show searchbox depending on if a list is showing
     presenter.set_visibility(!(@record || @in_a_form), :adv_searchbox_div)

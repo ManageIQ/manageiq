@@ -532,7 +532,7 @@ class MiqServer < ApplicationRecord
   end
 
   def zone_description
-    zone ? zone.description : nil
+    zone.try(:description)
   end
 
   def self.my_roles(force_reload = false)

@@ -57,7 +57,7 @@ module MiqAeMethodService
     def ems_custom_get(key)
       ar_method do
         c1 = @object.ems_custom_attributes.find_by(:name => key.to_s)
-        c1 ? c1.value : nil
+        c1.try(:value)
       end
     end
 

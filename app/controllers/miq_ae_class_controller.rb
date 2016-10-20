@@ -2260,7 +2260,7 @@ class MiqAeClassController < ApplicationController
     @edit[:new] = {}
     @edit[:current] = {}
     @ae_class = MiqAeClass.find_by_id(from_cid(id))
-    @edit[:rec_id] = @ae_class ? @ae_class.id : nil
+    @edit[:rec_id] = @ae_class.try(:id)
     @edit[:ae_class_id] = @ae_class.id
     @edit[:new][:fields] = @ae_class.ae_fields.to_a.deep_clone
     @edit[:new][:fields_list] = @edit[:new][:fields]

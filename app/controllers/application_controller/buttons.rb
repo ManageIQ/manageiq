@@ -612,7 +612,7 @@ module ApplicationController::Buttons
     @edit[:current] = {}
     @edit[:key] = "bg_edit__#{@custom_button_set.id || "new"}"
     @edit[:custom_button_set_id] = @custom_button_set.id
-    @edit[:rec_id] = @custom_button_set ? @custom_button_set.id : nil
+    @edit[:rec_id] = @custom_button_set.try(:id)
     @edit[:new][:name] = @custom_button_set[:name].split("|").first unless @custom_button_set[:name].blank?
     @edit[:new][:applies_to_class] = @custom_button_set[:set_data] && @custom_button_set[:set_data][:applies_to_class] ? @custom_button_set[:set_data][:applies_to_class] : @sb[:applies_to_class]
     @edit[:new][:description] = @custom_button_set.description
@@ -802,7 +802,7 @@ module ApplicationController::Buttons
     @edit[:new] = {}
     @edit[:current] = {}
     @edit[:new][:attrs] ||= []
-    @edit[:rec_id] = @custom_button ? @custom_button.id : nil
+    @edit[:rec_id] = @custom_button.try(:id)
     if @custom_button.uri_attributes
       instance_name = @custom_button.uri_object_name
       if @edit[:instance_names].include?(instance_name)

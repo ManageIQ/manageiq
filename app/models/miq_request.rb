@@ -268,7 +268,7 @@ class MiqRequest < ApplicationRecord
   end
 
   def stamped_by
-    first_approval.stamper ? first_approval.stamper.userid : nil
+    first_approval.stamper.try(:userid)
   end
 
   def approver

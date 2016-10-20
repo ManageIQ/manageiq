@@ -709,7 +709,7 @@ class InfraNetworkingController < ApplicationController
 
     presenter.set_visibility(h_tb.present? || c_tb.present? || v_tb.present?, :toolbar)
 
-    presenter[:record_id] = @record ? @record.id : nil
+    presenter[:record_id] = @record.try(:id)
 
     # Hide/show searchbox depending on if a list is showing
     presenter.set_visibility(display_adv_searchbox, :adv_searchbox_div)

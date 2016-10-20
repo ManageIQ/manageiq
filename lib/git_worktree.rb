@@ -203,7 +203,7 @@ class GitWorktree
       result = differences_with_master(commit)
       raise GitWorktreeException::GitConflicts, result
     end
-    commit = rebase(commit, merge_index, master_branch ? master_branch.target : nil) if rebase
+    commit = rebase(commit, merge_index, master_branch.try(:target)) if rebase
     @repo.reset(commit, :soft)
   end
 

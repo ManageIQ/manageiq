@@ -22,7 +22,7 @@ module MiqAeMethodService
 
     # To explicitly override Object#id method, which is spewing deprecation warnings to use Object#object_id
     def id
-      @object ? @object.id : nil
+      @object.try(:id)
     end
 
     def decrypt(attr)
