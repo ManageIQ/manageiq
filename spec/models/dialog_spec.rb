@@ -286,6 +286,79 @@ describe Dialog do
     end
   end
 
+  describe '#update_tabs' do
+    let(:dialog_field) { FactoryGirl.create_list(:dialog_field, 1, :label => 'field') }
+    let(:dialog_group) { FactoryGirl.create_list(:dialog_group, 1, :label => 'group', :dialog_fields => dialog_field) }
+    let(:dialog_tab) { FactoryGirl.create_list(:dialog_tab, 1, :label => 'tab', :dialog_groups => dialog_group) }
+    let(:dialog) { FactoryGirl.create(:dialog, :label => 'dialog', :dialog_tabs => dialog_tab) }
+
+    let(:updated_content) do
+      [
+        {
+          'id'            => dialog_tab.first.id,
+          'label'         => 'updated_label',
+          'dialog_groups' => [
+            { 'id'            => dialog_group.first.id,
+              'dialog_fields' =>
+                                 [{
+                                   'id' => dialog_field.first.id}] },
+            {
+              'label'         => 'group 2',
+              'dialog_fields' => [{
+                'name'  => 'dialog_field',
+                'label' => 'field_label'
+              }]
+            }
+          ]
+        },
+        {
+          'label'         => 'new tab',
+          'dialog_groups' => [
+            {
+              'label'         => 'a new group',
+              'dialog_fields' => [
+                {'name' => 'new field', 'label' => 'field'}
+              ]
+            }
+          ]
+        }
+      ]
+    end
+
+    context 'a collection of dialog tabs containing one with an id and one without an id' do
+      it 'updates the dialog_tab with an id' do
+        dialog.update_tabs(updated_content)
+        expect(dialog.reload.dialog_tabs.first.label).to eq('updated_label')
+      end
+
+      it 'creates the dialog tab from the dialog tabs without an id' do
+        dialog.update_tabs(updated_content)
+        expect(dialog.reload.dialog_tabs.count).to eq(2)
+      end
+    end
+
+    context 'with a dialog tab removed from the dialog tabs collection' do
+      let(:updated_content) do
+        [
+          'id'            => dialog_tab.first.id,
+          'dialog_groups' => [
+            { 'id' => dialog_group.first.id, 'dialog_fields' => [{ 'id' => dialog_field.first.id }] }
+          ]
+        ]
+      end
+
+      before do
+        dialog.dialog_tabs << FactoryGirl.create(:dialog_tab)
+      end
+
+      it 'deletes the removed dialog_tab' do
+        expect do
+          dialog.update_tabs(updated_content)
+        end.to change(dialog.reload.dialog_tabs, :count).by(-1)
+      end
+    end
+  end
+
   context "#dialog_fields" do
     before(:each) do
       @dialog        = FactoryGirl.create(:dialog, :label => 'dialog')

@@ -62,6 +62,24 @@ class DialogImportService
     queue_deletion(import_file_upload.id)
   end
 
+  def build_dialog_tabs(dialog)
+    dialog["dialog_tabs"].collect do |dialog_tab|
+      DialogTab.create(dialog_tab.merge("dialog_groups" => build_dialog_groups(dialog_tab)))
+    end
+  end
+
+  def build_dialog_groups(dialog_tab)
+    dialog_tab["dialog_groups"].collect do |dialog_group|
+      DialogGroup.create(dialog_group.merge("dialog_fields" => build_dialog_fields(dialog_group)))
+    end
+  end
+
+  def build_dialog_fields(dialog_group)
+    dialog_group["dialog_fields"].collect do |dialog_field|
+      @dialog_field_importer.import_field(dialog_field)
+    end
+  end
+
   def import(dialog)
     @dialog_import_validator.determine_dialog_validity(dialog)
     new_dialog = Dialog.create(dialog.except('dialog_tabs'))
@@ -85,24 +103,6 @@ class DialogImportService
     end
   rescue DialogFieldImporter::InvalidDialogFieldTypeError
     raise
-  end
-
-  def build_dialog_tabs(dialog)
-    dialog["dialog_tabs"].collect do |dialog_tab|
-      DialogTab.create(dialog_tab.merge("dialog_groups" => build_dialog_groups(dialog_tab)))
-    end
-  end
-
-  def build_dialog_groups(dialog_tab)
-    dialog_tab["dialog_groups"].collect do |dialog_group|
-      DialogGroup.create(dialog_group.merge("dialog_fields" => build_dialog_fields(dialog_group)))
-    end
-  end
-
-  def build_dialog_fields(dialog_group)
-    dialog_group["dialog_fields"].collect do |dialog_field|
-      @dialog_field_importer.import_field(dialog_field)
-    end
   end
 
   def dialog_with_label?(label)

@@ -104,6 +104,26 @@ class Dialog < ApplicationRecord
     DialogSerializer.new.serialize(Array[workflow.dialog])
   end
 
+  # Allows you to pass dialog tabs as a hash
+  # Will update any item passed with an ID,
+  # Creates a new item without an ID,
+  # Removes any items not passed in the content.
+  def update_tabs(tabs)
+    updated_tabs = []
+    tabs.each do |dialog_tab|
+      if dialog_tab.key?('id')
+        DialogTab.find(dialog_tab['id']).tap do |tab|
+          tab.update_attributes(dialog_tab.except('dialog_groups'))
+          tab.update_dialog_groups(dialog_tab['dialog_groups'])
+          updated_tabs << tab
+        end
+      else
+        updated_tabs << DialogImportService.new.build_dialog_tabs('dialog_tabs' => [dialog_tab]).first
+      end
+    end
+    self.dialog_tabs = updated_tabs
+  end
+
   def deep_copy(new_attributes = {})
     new_dialog = dup
     new_dialog.dialog_tabs = dialog_tabs.collect(&:deep_copy)
