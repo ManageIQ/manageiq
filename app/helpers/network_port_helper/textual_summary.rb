@@ -11,7 +11,7 @@ module NetworkPortHelper::TextualSummary
   end
 
   def textual_group_relationships
-    %i(parent_ems_cloud ems_network cloud_tenant instance cloud_subnets floating_ips)
+    %i(parent_ems_cloud ems_network cloud_tenant instance cloud_subnets floating_ips host)
   end
 
   #
@@ -64,5 +64,12 @@ module NetworkPortHelper::TextualSummary
 
   def textual_floating_ips
     @record.floating_ips
+  end
+
+  def textual_host
+    return nil unless @record.device_type == "Host"
+    {:image => "host", :value => @record.device, :link => url_for(:controller => "host",
+                                                                  :action     => "show",
+                                                                  :id         => @record.device.id)}
   end
 end
