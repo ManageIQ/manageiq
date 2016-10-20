@@ -266,7 +266,8 @@ module AuthenticationMixin
   def retry_scheduled_authentication_check(auth_type, options)
     return unless options[:attempt]
     auth = authentication_best_fit(auth_type)
-    if auth.retryable_status?
+
+    if auth.try(:retryable_status?)
       options[:attempt] += 1
 
       # Force the authentication message to be queued

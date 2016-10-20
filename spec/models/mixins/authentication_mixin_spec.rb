@@ -132,6 +132,32 @@ describe AuthenticationMixin do
     end
   end
 
+  context "#retry_scheduled_authentication_check" do
+    let(:host) do
+      EvmSpecHelper.local_miq_server
+      FactoryGirl.create(:host_with_authentication).tap { MiqQueue.destroy_all }
+    end
+
+    it "works" do
+      host.authentications.first.update(:status => "Error")
+      host.reload.retry_scheduled_authentication_check(:default, :attempt => 1)
+      q = MiqQueue.find_by(:method_name => 'authentication_check_types', :instance_id => host.id)
+      expect(q.args.last).to eq(:attempt => 2)
+    end
+
+    it "doesn't queue on Invalid credentials" do
+      host.authentications.first.update(:status => "Invalid")
+      host.retry_scheduled_authentication_check(:default, :attempt => 1)
+      expect(MiqQueue.exists?(:method_name => 'authentication_check_types', :instance_id => host.id)).to be_falsey
+    end
+
+    it "doesn't queue without an authentication" do
+      host.authentications.destroy_all
+      host.retry_scheduled_authentication_check(:default, :attempt => 1)
+      expect(MiqQueue.exists?(:method_name => 'authentication_check_types', :instance_id => host.id)).to be_falsey
+    end
+  end
+
   context "with server and zone" do
     before(:each) do
       @miq_server = EvmSpecHelper.local_miq_server
