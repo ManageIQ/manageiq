@@ -6,11 +6,18 @@ describe ApplicationHelper::Button::RefreshWorkers do
   end
 
   describe '#visible?' do
+    it 'should be visible when active_tab == diagnostics_workers in :diagnostics_tree' do
+      view_context = setup_view_context_with_sandbox({})
+      button = described_class.new(view_context, {}, {'record' => @record}, {})
+      button.instance_variable_set(:@sb, {:active_tab => 'diagnostics_workers'})
+      expect(button.visible?).to be_truthy
+    end
+
     %w(download_logs evm_logs audit_logs).each do |lastaction|
       context "action #{lastaction} being taken as last" do
         it 'will be skipped for this record' do
           view_context = setup_view_context_with_sandbox({})
-          button = described_class.new(view_context, {}, {'record' => @record, 'lastaction' => lastaction}, {})
+          button = described_class.new(view_context, {}, {'record' => nil, 'lastaction' => lastaction}, {})
           expect(button.visible?).to be_falsey
         end
       end
@@ -19,7 +26,7 @@ describe ApplicationHelper::Button::RefreshWorkers do
     context 'other action being taken as last' do
       it 'will not be skipped for this record' do
         view_context = setup_view_context_with_sandbox({})
-        button = described_class.new(view_context, {}, {'record' => @record, 'lastaction' => 'worker_logs'}, {})
+        button = described_class.new(view_context, {}, {'record' => nil, 'lastaction' => 'worker_logs'}, {})
         expect(button.visible?).to be_truthy
       end
     end
