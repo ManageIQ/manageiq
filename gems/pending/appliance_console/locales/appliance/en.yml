@@ -14,6 +14,7 @@ en:
     - db_config
     - db_replication
     - db_maintenance
+    - log_config
     - failover_monitor
     - httpdauth
     - extauth_opts
@@ -34,6 +35,7 @@ en:
     db_config: Configure Database
     db_replication: Configure Database Replication
     db_maintenance: Configure Database Maintenance
+    log_config: Logfile Configuration
     failover_monitor: Configure Application Database Failover Monitor
     httpdauth: Configure External Authentication (httpd)
     extauth_opts: Update External Authentication Options

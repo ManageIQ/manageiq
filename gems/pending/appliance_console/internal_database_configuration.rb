@@ -1,4 +1,5 @@
 require "appliance_console/database_configuration"
+require "appliance_console/logical_volume_management"
 require "pathname"
 require "util/postgres_admin"
 require "pg"
@@ -58,14 +59,12 @@ module ApplianceConsole
 
     def initialize_postgresql_disk
       log_and_feedback(__method__) do
-        @partition       = create_partition_to_fill_disk
-        @physical_volume = create_physical_volume
-        @volume_group    = create_volume_group
-        @logical_volume  = create_logical_volume_to_fill_volume_group
-
-        format_logical_volume
-        mount_database_disk
-        update_fstab
+        LogicalVolumeManagement.new(:disk                => disk,
+                                    :mount_point         => mount_point,
+                                    :name                => "pg",
+                                    :volume_group_name   => PostgresAdmin.volume_group_name,
+                                    :filesystem_type     => PostgresAdmin.database_disk_filesystem,
+                                    :logical_volume_path => PostgresAdmin.logical_volume_path).setup
       end
     end
 
@@ -107,58 +106,6 @@ module ApplianceConsole
       else
         FileUtils.cp full_src, dest_dir
       end
-    end
-
-    def create_partition_to_fill_disk
-      # FIXME: when LinuxAdmin has this feature
-      @disk.create_partition_table # LinuxAdmin::Disk.create_partition has this already...
-      AwesomeSpawn.run!("parted -s #{@disk.path} mkpart primary 0% 100%")
-
-      # FIXME: Refetch the disk after creating the partition
-      @disk = LinuxAdmin::Disk.local.find { |d| d.path == @disk.path }
-      @disk.partitions.first
-    end
-
-    def create_physical_volume
-      LinuxAdmin::PhysicalVolume.create(@partition)
-    end
-
-    def create_volume_group
-      LinuxAdmin::VolumeGroup.create(PostgresAdmin.volume_group_name, @physical_volume)
-    end
-
-    def create_logical_volume_to_fill_volume_group
-      LinuxAdmin::LogicalVolume.create(PostgresAdmin.logical_volume_path, @volume_group, 100)
-    end
-
-    def format_logical_volume
-      # LogicalVolume#format_to(:ext4) should be a thing
-      # LogicalVolume#fs_type => :ext4 should be a thing
-      AwesomeSpawn.run!("mkfs.#{PostgresAdmin.database_disk_filesystem} #{@logical_volume.path}")
-    end
-
-    def mount_database_disk
-      # TODO: should this be moved into LinuxAdmin?
-      FileUtils.rm_rf(PostgresAdmin.data_directory)
-      FileUtils.mkdir_p(PostgresAdmin.data_directory)
-      AwesomeSpawn.run!("mount", :params => {"-t" => PostgresAdmin.database_disk_filesystem, nil => [@logical_volume.path, mount_point]})
-    end
-
-    def update_fstab
-      fstab = LinuxAdmin::FSTab.instance
-      return if fstab.entries.find { |e| e.mount_point == mount_point }
-
-      entry = LinuxAdmin::FSTabEntry.new(
-        :device        => @logical_volume.path,
-        :mount_point   => mount_point,
-        :fs_type       => PostgresAdmin.database_disk_filesystem,
-        :mount_options => "rw,noatime",
-        :dumpable      => 0,
-        :fsck_order    => 0
-      )
-
-      fstab.entries << entry
-      fstab.write!  # Test this more, whitespace is removed
     end
 
     def run_initdb
