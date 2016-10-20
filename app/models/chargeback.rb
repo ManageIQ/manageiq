@@ -62,9 +62,7 @@ class Chargeback < ActsAsArModel
         data[key]["chargeback_rates"] = chargeback_rates.uniq.join(', ')
 
         # we are getting hash with metrics and costs for metrics defined for chargeback
-        metrics_and_costs = calculate_costs(metric_rollup_records, rates_to_apply, hours_in_interval)
-
-        data[key].merge!(metrics_and_costs)
+        calculate_costs(data[key], metric_rollup_records, rates_to_apply, hours_in_interval)
       end
     end
 
@@ -126,9 +124,7 @@ class Chargeback < ActsAsArModel
       end
   end
 
-  def self.calculate_costs(metric_rollup_records, rates, hours_in_interval)
-    calculated_costs = {}
-
+  def self.calculate_costs(calculated_costs, metric_rollup_records, rates, hours_in_interval)
     chargeback_fields_present                = metric_rollup_records.count(&:chargeback_fields_present?)
     calculated_costs['fixed_compute_metric'] = chargeback_fields_present if chargeback_fields_present
 
@@ -150,8 +146,6 @@ class Chargeback < ActsAsArModel
         end
       end
     end
-
-    calculated_costs
   end
 
   def self.reportable_metric_and_cost_fields(rate_name, rate_group, metric, cost)
