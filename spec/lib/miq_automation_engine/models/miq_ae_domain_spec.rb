@@ -291,16 +291,24 @@ describe MiqAeDomain do
     let(:commit_sha) { "abcd" }
     let(:branch_name) { "b1" }
     let(:tag_name) { "t1" }
-    let(:dom1) { FactoryGirl.create(:miq_ae_git_domain, :tenant => @user.current_tenant) }
+    let(:domain_name) { "BB8" }
+    let(:url) { "http://www.example.com/x/y" }
+    let(:dom1) do
+      FactoryGirl.create(:miq_ae_git_domain,
+                         :tenant => @user.current_tenant,
+                         :name   => domain_name)
+    end
     let(:dom2) { FactoryGirl.create(:miq_ae_domain) }
-    let(:repo) { FactoryGirl.create(:git_repository, :url => "http://www.example.com/x/y") }
+    let(:repo) { FactoryGirl.create(:git_repository, :url => url) }
     let(:git_import) { instance_double('MiqAeYamlImportGitfs') }
     let(:info) { {'commit_time' => commit_time, 'commit_message' => commit_message, 'commit_sha' => commit_sha} }
     let(:new_info) { {'commit_time' => commit_time_new, 'commit_message' => "BB-8", 'commit_sha' => "def"} }
     let(:commit_hash) do
       {'commit_message' => commit_message, 'commit_time' => commit_time,
-       'commit_sha' => commit_sha, 'ref' => branch_name, 'ref_type' => MiqAeDomain::BRANCH}
+       'commit_sha' => commit_sha, 'ref' => branch_name, 'ref_type' => MiqAeGitImport::BRANCH}
     end
+    let(:branch) { FactoryGirl.create(:git_branch, :name => branch_name) }
+    let(:tag) { FactoryGirl.create(:git_tag, :name => tag_name) }
 
     it "check if a git domain is locked" do
       expect(dom1.editable?(@user)).to be_falsey
@@ -314,48 +322,9 @@ describe MiqAeDomain do
     it "git info" do
       expect(repo).to receive(:branch_info).with(branch_name).and_return(info)
 
-      dom1.update_git_info(repo, branch_name, MiqAeDomain::BRANCH)
+      dom1.update_git_info(repo, branch_name, MiqAeGitImport::BRANCH)
       dom1.reload
       expect(dom1.attributes).to have_attributes(commit_hash)
-    end
-
-    it "import a domain" do
-      domain_name = dom1.name
-      expect(MiqAeImport).to receive(:new).with(any_args).and_return(git_import)
-      expect_any_instance_of(GitRepository).to receive(:branch_info).with(branch_name).and_return(info)
-      allow(git_import).to receive(:import) { MiqAeDomain.create(:name => domain_name) }
-      options = {'domain' => domain_name, 'git_repository_id' => repo.id,
-                 'tenant_id' => @user.current_tenant.id, 'ref' => branch_name,
-                 'ref_type' => 'BrancH'}
-      dom1 = MiqAeDomain.import_git_repo(options)
-      expect(dom1.attributes).to have_attributes(commit_hash)
-    end
-
-    it "import domain embedded in git repository" do
-      domain_name = "ASTERIX"
-      expect(MiqAeImport).to receive(:new).with(any_args).and_return(git_import)
-      expect_any_instance_of(GitRepository).to receive(:branch_info).with(branch_name).and_return(info)
-      allow(git_import).to receive(:import) { [MiqAeDomain.create(:name => domain_name)] }
-      options = {'git_repository_id' => repo.id,
-                 'tenant_id' => @user.current_tenant.id, 'ref' => branch_name,
-                 'ref_type' => "BRANCH" }
-      dom1 = MiqAeDomain.import_git_repo(options)
-
-      expect(dom1.attributes).to have_attributes(commit_hash)
-    end
-
-    it "import a domain fails" do
-      expect(MiqAeImport).to receive(:new).with(any_args).and_return(git_import)
-      allow(git_import).to receive(:import) { nil }
-      expect do
-        options = {'git_repository_id' => repo.id,
-                   'tenant_id' => @user.current_tenant.id, 'ref' => branch_name}
-        MiqAeDomain.import_git_repo(options)
-      end.to raise_error(MiqAeException::DomainNotFound)
-    end
-
-    it "import without git_repository_id" do
-      expect { MiqAeDomain.import_git_repo({}) }.to raise_error(ActiveRecord::RecordNotFound)
     end
 
     it "git repo changed for non git domain" do
@@ -365,14 +334,14 @@ describe MiqAeDomain do
     it "git repo branch changed" do
       expect_any_instance_of(GitRepository).to receive(:branch_info).with(branch_name).twice.and_return(new_info)
       dom1.update_attributes(:ref => branch_name, :git_repository => repo,
-                             :ref_type => MiqAeDomain::BRANCH, :commit_sha => commit_sha)
+                             :ref_type => MiqAeGitImport::BRANCH, :commit_sha => commit_sha)
       expect(dom1.git_repo_changed?).to be_truthy
       expect(dom1.latest_ref_info).to have_attributes(new_info)
     end
 
     it "git repo tag changed" do
       expect(repo).to receive(:tag_info).with(tag_name).twice.and_return(new_info)
-      dom1.update_attributes(:ref => tag_name, :ref_type => MiqAeDomain::TAG,
+      dom1.update_attributes(:ref => tag_name, :ref_type => MiqAeGitImport::TAG,
                              :git_repository => repo, :commit_sha => commit_sha)
       expect(dom1.git_repo_changed?).to be_truthy
       expect(dom1.latest_ref_info).to have_attributes(new_info)
