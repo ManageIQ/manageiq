@@ -14,10 +14,6 @@ class Chargeback < ActsAsArModel
 
     options[:ext_options] ||= {}
 
-    if @options[:groupby_tag]
-      @tag_hash = Classification.hash_all_by_type_and_name[@options[:groupby_tag]][:entry]
-    end
-
     base_rollup = MetricRollup.includes(
       :resource           => [:hardware, :tenant, :tags, :vim_performance_states, :custom_attributes],
       :parent_host        => :tags,
@@ -114,7 +110,7 @@ class Chargeback < ActsAsArModel
   def self.get_tag_keys_and_fields(perf, ts_key)
     tag = perf.tag_names.split("|").select { |x| x.starts_with?(@options[:groupby_tag]) }.first # 'department/*'
     tag = tag.split('/').second unless tag.blank? # 'department/finance' -> 'finance'
-    classification = @tag_hash[tag]
+    classification = @options.tag_hash[tag]
     classification_id = classification.present? ? classification.id : 'none'
     key = "#{classification_id}_#{ts_key}"
     extra_fields = { "tag_name" => classification.present? ? classification.description : _('<Empty>') }

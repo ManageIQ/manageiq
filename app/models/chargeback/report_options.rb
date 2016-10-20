@@ -74,5 +74,11 @@ class Chargeback
       when 'monthly' then 1.month
       end
     end
+
+    def tag_hash
+      if groupby_tag
+        @tag_hash ||= Classification.hash_all_by_type_and_name[groupby_tag][:entry]
+      end
+    end
   end
 end
