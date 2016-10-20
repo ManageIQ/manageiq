@@ -17,11 +17,11 @@ class GitWorktree
     @commit_sha    = options[:commit_sha]
     @password      = options[:password]
     @fast_forward_merge = options[:ff] || true
-    @ssl_no_verify = options[:ssl_no_verify] || false
     @remote_name   = 'origin'
     @cred          = Rugged::Credentials::UserPassword.new(:username => @username,
                                                            :password => @password)
     @base_name = File.basename(@path)
+    @certificate_check_cb = options[:certificate_check]
     process_repo(options)
   end
 
@@ -176,10 +176,8 @@ class GitWorktree
   end
 
   def fetch
-    options = {:credentials => @cred}
-    ssl_no_verify_options(options) do
-      @repo.fetch(@remote_name, options)
-    end
+    options = {:credentials => @cred, :certificate_check => @certificate_check_cb}
+    @repo.fetch(@remote_name, options)
   end
 
   def pull
@@ -245,10 +243,8 @@ class GitWorktree
   end
 
   def clone(url)
-    options = {:credentials => @cred, :bare => true, :remote => @remote_name}
-    ssl_no_verify_options(options) do
-      @repo = Rugged::Repository.clone_at(url, @path, options)
-    end
+    options = {:credentials => @cred, :bare => true, :remote => @remote_name, :certificate_check => @certificate_check_cb}
+    @repo = Rugged::Repository.clone_at(url, @path, options)
   end
 
   def fetch_entry(path)
@@ -349,16 +345,5 @@ class GitWorktree
       differences[delta.old_file[:path]] = {:status => delta.status, :diffs => result}
     end
     differences
-  end
-
-  def ssl_no_verify_options(options)
-    return yield unless @ssl_no_verify
-    begin
-      options[:ignore_cert_errors] = true
-      ENV['GIT_SSL_NO_VERIFY'] = 'false'
-      yield
-    ensure
-      ENV.delete('GIT_SSL_NO_VERIFY')
-    end
   end
 end
