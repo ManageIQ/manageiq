@@ -11,7 +11,7 @@ module ManagerRefresh
     end
 
     def manager_uuid
-      manager_ref.map { |attribute| data[attribute].to_s }.join("__")
+      manager_ref.map { |attribute| data[attribute].try(:id) || data[attribute].to_s }.join("__")
     end
 
     def id
@@ -43,7 +43,7 @@ module ManagerRefresh
     end
 
     def to_s
-      "Dto:('#{id}', #{dto_collection})"
+      "Dto:('#{manager_uuid}', #{dto_collection})"
     end
 
     def inspect

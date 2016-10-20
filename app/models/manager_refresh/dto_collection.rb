@@ -35,7 +35,7 @@ module ManagerRefresh
     end
 
     def object_index(object)
-      manager_ref.map { |attribute| object.public_send(attribute).to_s }.join("__")
+      manager_ref.map { |attribute| object.public_send(attribute).try(:id) || object.public_send(attribute).to_s }.join("__")
     end
 
     def find(manager_uuid)
