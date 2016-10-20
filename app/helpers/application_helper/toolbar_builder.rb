@@ -666,25 +666,6 @@ class ApplicationHelper::ToolbarBuilder
 
     # Now check model/record specific rules
     case get_record_cls(@record)
-    when "MiqAeClass", "MiqAeDomain", "MiqAeField", "MiqAeInstance", "MiqAeMethod", "MiqAeNamespace"
-      return true unless role_allows?(:feature => "miq_ae_domain_edit")
-      return false if MIQ_AE_COPY_ACTIONS.include?(id) && User.current_tenant.any_editable_domains? && MiqAeDomain.any_unlocked?
-      case id
-      when "miq_ae_domain_lock"
-        return true unless @record.lockable?
-      when "miq_ae_domain_unlock"
-        return true unless @record.unlockable?
-      when "miq_ae_domain_delete", "miq_ae_domain_edit"
-        return true unless @record.editable_properties?
-      when "miq_ae_namespace_edit"
-        return true unless editable_domain?(@record)
-      when "miq_ae_instance_copy", "miq_ae_method_copy"
-        return false unless editable_domain?(@record)
-      when "miq_ae_git_refresh"
-        return true unless git_enabled?(@record) && GitBasedDomainImportService.available?
-      else
-        return true unless editable_domain?(@record)
-      end
     when "ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem", "ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem"
       case id
       when "configured_system_provision"
@@ -835,24 +816,6 @@ class ApplicationHelper::ToolbarBuilder
       when "action_delete"
         return N_("Default actions can not be deleted.") if @record.action_type == "default"
         return N_("Actions assigned to Policies can not be deleted") unless @record.miq_policies.empty?
-      end
-    when "MiqAeDomain"
-      editable_domain = @record.editable_properties?
-      case id
-      when "miq_ae_domain_delete"
-        return N_("Read Only Domain cannot be deleted.") unless editable_domain
-      when "miq_ae_domain_edit"
-        return N_("Read Only Domain cannot be edited") unless editable_domain
-      when "miq_ae_domain_lock", "miq_ae_namespace_edit"
-        return N_("Domain is Locked.") unless editable_domain
-      when "miq_ae_domain_unlock"
-        return N_("Domain is Unlocked.") if editable_domain
-      end
-    when "MiqAeNamespace", "MiqAeClass", "MiqAeInstance", "MiqAeMethod"
-      if %w(miq_ae_namespace_copy miq_ae_instance_copy miq_ae_class_copy miq_ae_method_copy).include?(id) &&
-        !editable_domain?(@record) && !domains_available_for_copy?
-
-        return N_("At least one domain should be enabled & unlocked")
       end
     when "MiqAlert"
       case id
