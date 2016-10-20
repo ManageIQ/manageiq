@@ -18,5 +18,10 @@ class Chargeback
     def self.new_from_h(hash)
       new(*hash.values_at(*members))
     end
+
+    def tz
+      # TODO: Support time profiles via options[:ext_options][:time_profile]
+      @tz ||= Metric::Helper.get_time_zone(ext_options)
+    end
   end
 end

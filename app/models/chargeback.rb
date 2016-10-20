@@ -10,9 +10,6 @@ class Chargeback < ActsAsArModel
     _log.info("Calculating chargeback costs...")
     @options = options = ReportOptions.new_from_h(options)
 
-    tz = Metric::Helper.get_time_zone(options[:ext_options])
-    # TODO: Support time profiles via options[:ext_options][:time_profile]
-
     interval = options[:interval] || "daily"
     cb = new
 
@@ -37,7 +34,7 @@ class Chargeback < ActsAsArModel
     rate_cols.map! { |x| VIRTUAL_COL_USES.include?(x) ? VIRTUAL_COL_USES[x] : x }.flatten!
     base_rollup = base_rollup.select(*rate_cols)
 
-    timerange = get_report_time_range(options, interval, tz)
+    timerange = get_report_time_range(options, interval)
     data = {}
 
     interval_duration = interval_to_duration(interval)
@@ -65,7 +62,7 @@ class Chargeback < ActsAsArModel
         # key contains resource_id and timestamp (query_start_time...query_end_time)
         # extra_fields there some extra field like resource name and
         # some of them are related to specific chargeback (ChargebackVm, ChargebackContainer,...)
-        key, extra_fields = key_and_fields(metric_rollup_record, interval, tz)
+        key, extra_fields = key_and_fields(metric_rollup_record, interval)
         data[key] ||= extra_fields
 
         chargeback_rates = data[key]["chargeback_rates"].split(', ') + rates_to_apply.collect(&:description)
@@ -101,8 +98,8 @@ class Chargeback < ActsAsArModel
     end
   end
 
-  def self.key_and_fields(metric_rollup_record, interval, tz)
-    ts_key = get_group_key_ts(metric_rollup_record, interval, tz)
+  def self.key_and_fields(metric_rollup_record, interval)
+    ts_key = get_group_key_ts(metric_rollup_record, interval)
 
     key, extra_fields = if @options[:groupby_tag].present?
                           get_tag_keys_and_fields(metric_rollup_record, ts_key)
@@ -110,11 +107,11 @@ class Chargeback < ActsAsArModel
                           get_keys_and_extra_fields(metric_rollup_record, ts_key)
                         end
 
-    [key, date_fields(metric_rollup_record, interval, tz).merge(extra_fields)]
+    [key, date_fields(metric_rollup_record, interval).merge(extra_fields)]
   end
 
-  def self.date_fields(metric_rollup_record, interval, tz)
-    start_ts, end_ts, display_range = get_time_range(metric_rollup_record, interval, tz)
+  def self.date_fields(metric_rollup_record, interval)
+    start_ts, end_ts, display_range = get_time_range(metric_rollup_record, interval)
 
     {
       'start_date'       => start_ts,
@@ -193,8 +190,8 @@ class Chargeback < ActsAsArModel
     col_hash
   end
 
-  def self.get_group_key_ts(perf, interval, tz)
-    ts = perf.timestamp.in_time_zone(tz)
+  def self.get_group_key_ts(perf, interval)
+    ts = perf.timestamp.in_time_zone(@options.tz)
     case interval
     when "daily"
       ts = ts.beginning_of_day
@@ -209,8 +206,8 @@ class Chargeback < ActsAsArModel
     ts
   end
 
-  def self.get_time_range(perf, interval, tz)
-    ts = perf.timestamp.in_time_zone(tz)
+  def self.get_time_range(perf, interval)
+    ts = perf.timestamp.in_time_zone(@options.tz)
     case interval
     when "daily"
       [ts.beginning_of_day, ts.end_of_day, ts.strftime("%m/%d/%Y")]
@@ -229,13 +226,13 @@ class Chargeback < ActsAsArModel
 
   # @option options :interval_size [Fixednum] Used with :end_interval_offset to generate time range
   # @option options :end_interval_offset
-  def self.get_report_time_range(options, interval, tz)
+  def self.get_report_time_range(options, interval)
     raise _("Option 'interval_size' is required") if options[:interval_size].nil?
 
     end_interval_offset = options[:end_interval_offset] || 0
     start_interval_offset = (end_interval_offset + options[:interval_size] - 1)
 
-    ts = Time.now.in_time_zone(tz)
+    ts = Time.now.in_time_zone(options.tz)
     case interval
     when "daily"
       start_time = (ts - start_interval_offset.days).beginning_of_day.utc
