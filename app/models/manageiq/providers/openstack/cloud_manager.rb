@@ -202,6 +202,57 @@ class ManageIQ::Providers::Openstack::CloudManager < ManageIQ::Providers::CloudM
     _log.error "vm=[#{vm.name}], error: #{err}"
   end
 
+  def vm_create_snapshot(vm, options = {})
+    log_prefix = "vm=[#{vm.name}]"
+
+    miq_openstack_instance = MiqOpenStackInstance.new(vm.ems_ref, openstack_handle)
+    snapshot = miq_openstack_instance.create_snapshot(options)
+    snapshot_id = snapshot["id"]
+
+    # Add new snapshot to the snapshots table.
+    vm.snapshots.create!(
+      :name        => options[:name],
+      :description => options[:desc],
+      :uid         => snapshot_id,
+      :uid_ems     => snapshot_id,
+      :ems_ref     => snapshot_id,
+      :create_time => snapshot["created"]
+    )
+
+    return snapshot_id
+  rescue => err
+    _log.error "#{log_prefix}, error: #{err}"
+    _log.debug { err.backtrace.join("\n") }
+    raise
+  end
+
+  def vm_remove_snapshot(vm, options = {})
+    snapshot_uid = options[:snMor]
+
+    log_prefix = "snapshot=[#{snapshot_uid}]"
+
+    miq_openstack_instance = MiqOpenStackInstance.new(vm.ems_ref, openstack_handle)
+    miq_openstack_instance.delete_evm_snapshot(snapshot_uid)
+
+    # Remove from the snapshots table.
+    ar_snapshot = vm.snapshots.find_by(:ems_ref  => snapshot_uid)
+    _log.debug "#{log_prefix}: ar_snapshot = #{ar_snapshot.class.name}"
+    ar_snapshot.destroy if ar_snapshot
+
+    # Remove from the vms table.
+    ar_template = miq_templates.find_by(:ems_ref  => snapshot_uid)
+    _log.debug "#{log_prefix}: ar_template = #{ar_template.class.name}"
+    ar_template.destroy if ar_template
+  rescue => err
+    _log.error "#{log_prefix}, error: #{err}"
+    _log.debug { err.backtrace.join("\n") }
+    raise
+  end
+
+  def vm_remove_all_snapshots(vm, options = {})
+    vm.snapshots.each { |snapshot| vm_remove_snapshot(vm, :snMor => snapshot.uid) }
+  end
+
   # TODO: Should this be in a VM-specific subclass or mixin?
   #       This is a general EMS question.
   def vm_create_evm_snapshot(vm, options = {})

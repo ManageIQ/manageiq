@@ -292,7 +292,8 @@ class ApplicationHelper::Toolbar::XVmCenter < ApplicationHelper::Toolbar::Basic
       N_('Revert to selected snapshot'),
       nil,
       :confirm => N_("This VM will revert to selected snapshot. Are you sure you want to revert to the selected snapshot?"),
-      :onwhen  => "1"),
+      :onwhen  => "1",
+      :klass   => ApplicationHelper::Button::VmSnapshotRevert),
   ])
   button_group('vmtree_tasks', [
     button(

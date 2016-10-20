@@ -18,7 +18,9 @@ module VmCloudHelper::TextualSummary
   #
 
   def textual_group_properties
-    %i(name region server description ipaddress mac_address custom_1 container preemptible tools_status load_balancer_health_check_state osinfo architecture advanced_settings resources guid virtualization_type root_device_type ems_ref)
+    %i(name region server description ipaddress mac_address custom_1 container preemptible tools_status
+       load_balancer_health_check_state osinfo architecture snapshots advanced_settings resources guid
+       virtualization_type root_device_type ems_ref)
   end
 
   def textual_group_security
@@ -91,6 +93,17 @@ module VmCloudHelper::TextualSummary
     bitness = @record.hardware.try!(:bitness)
     return nil if bitness.blank?
     {:label => _("Architecture"), :value => "#{bitness} bit"}
+  end
+
+  def textual_snapshots
+    num = @record.number_of(:snapshots)
+    h = {:label => _("Snapshots"), :image => "snapshot", :value => (num == 0 ? _("None") : num)}
+    if role_allows?(:feature => "vm_snapshot_show_list") && @record.supports_snapshots?
+      h[:title] = _("Show the snapshot info for this VM")
+      h[:explorer] = true
+      h[:link] = url_for(:action => 'show', :id => @record, :display => 'snapshot_info')
+    end
+    h
   end
 
   def textual_resources

@@ -2788,6 +2788,7 @@ Vmdb::Application.routes.draw do
                exp_post +
                policy_post +
                pre_prov_post +
+               snap_post +
                x_post
     },
 
