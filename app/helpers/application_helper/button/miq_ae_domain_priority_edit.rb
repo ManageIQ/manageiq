@@ -1,4 +1,4 @@
-class ApplicationHelper::Button::MiqAeDomainPriorityEdit < ApplicationHelper::Button::Basic
+class ApplicationHelper::Button::MiqAeDomainPriorityEdit < ApplicationHelper::Button::MiqAeDefaultNoRecord
   def disabled?
     (User.current_tenant.visible_domains.length < 2)
   end
