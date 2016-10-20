@@ -18,6 +18,10 @@ describe MiqAeEngine::MiqAeMethod do
 
         def disable_rbac
         end
+
+        def ae_user
+          @ae_user ||= FactoryGirl.create(:user_with_group)
+        end
       end.new
 
       logger_klass = Class.new do
