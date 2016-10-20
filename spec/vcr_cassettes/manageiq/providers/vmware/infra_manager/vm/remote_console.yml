@@ -7,47 +7,6 @@ http_interactions:
       encoding: UTF-8
       string: ! "<?xml version='1.0' ?>\n<env:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"
         xmlns:env=\"http://schemas.xmlsoap.org/soap/envelope/\">\n  <env:Header />\n
-        \ <env:Body>\n    <n1:RetrieveServiceContent xmlns:n1=\"urn:vim2\">\n      <n1:_this
-        type=\"ServiceInstance\">ServiceInstance</n1:_this>\n    </n1:RetrieveServiceContent>\n
-        \ </env:Body>\n</env:Envelope>"
-    headers:
-      Content-Type:
-      - text/xml;charset=UTF-8
-      Soapaction:
-      - RetrieveServiceContent
-  response:
-    status:
-      code: 500
-      message: Internal Server Error
-    headers:
-      Date:
-      - Fri, 12 Oct 2012 17:49:14 GMT
-      Set-Cookie:
-      - vmware_soap_session="1C5C02A8-25B3-4588-AF84-E316B26CA532"; Path=/;
-      Cache-Control:
-      - no-cache
-      Connection:
-      - Keep-Alive
-      Content-Type:
-      - text/xml; charset=utf-8
-      Content-Length:
-      - '476'
-    body:
-      encoding: US-ASCII
-      string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<soapenv:Envelope xmlns:soapenc=\"http://schemas.xmlsoap.org/soap/encoding/\"\n
-        xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\"\n xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"\n
-        xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n<soapenv:Body>\n<soapenv:Fault>\n
-        \ <faultcode>ClientFaultCode</faultcode>\n  <faultstring>Unsupported version
-        URI RetrieveServiceContent</faultstring>\n</soapenv:Fault>\n</soapenv:Body>\n</soapenv:Envelope>"
-    http_version: 
-  recorded_at: Fri, 12 Oct 2012 17:49:14 GMT
-- request:
-    method: post
-    uri: https://192.168.252.14/sdk
-    body:
-      encoding: UTF-8
-      string: ! "<?xml version='1.0' ?>\n<env:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"
-        xmlns:env=\"http://schemas.xmlsoap.org/soap/envelope/\">\n  <env:Header />\n
         \ <env:Body>\n    <n1:RetrieveServiceContent xmlns:n1=\"urn:vim25\">\n      <n1:_this
         type=\"ServiceInstance\">ServiceInstance</n1:_this>\n    </n1:RetrieveServiceContent>\n
         \ </env:Body>\n</env:Envelope>"
