@@ -67,6 +67,24 @@ class Chargeback
       end
     end
 
+    def report_step_range(timestamp)
+      ts = timestamp.in_time_zone(tz)
+      case interval
+      when 'daily'
+        [ts.beginning_of_day, ts.end_of_day, ts.strftime('%m/%d/%Y')]
+      when 'weekly'
+        s_ts = ts.beginning_of_week
+        e_ts = ts.end_of_week
+        [s_ts, e_ts, "Week of #{s_ts.strftime('%m/%d/%Y')}"]
+      when 'monthly'
+        s_ts = ts.beginning_of_month
+        e_ts = ts.end_of_month
+        [s_ts, e_ts, s_ts.strftime('%b %Y')]
+      else
+        raise _("interval '%{interval}' is not supported") % {:interval => interval}
+      end
+    end
+
     def duration_of_report_step
       case interval
       when 'daily'   then 1.day
