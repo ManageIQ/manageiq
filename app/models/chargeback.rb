@@ -33,7 +33,7 @@ class Chargeback < ActsAsArModel
     rate_cols.map! { |x| VIRTUAL_COL_USES.include?(x) ? VIRTUAL_COL_USES[x] : x }.flatten!
     base_rollup = base_rollup.select(*rate_cols)
 
-    timerange = get_report_time_range(options, options.interval)
+    timerange = options.report_time_range
     data = {}
 
     interval_duration = interval_to_duration(options.interval)
@@ -221,32 +221,6 @@ class Chargeback < ActsAsArModel
     else
       raise _("interval '%{interval}' is not supported") % {:interval => interval}
     end
-  end
-
-  # @option options :interval_size [Fixednum] Used with :end_interval_offset to generate time range
-  # @option options :end_interval_offset
-  def self.get_report_time_range(options, interval)
-    raise _("Option 'interval_size' is required") if options[:interval_size].nil?
-
-    end_interval_offset = options[:end_interval_offset] || 0
-    start_interval_offset = (end_interval_offset + options[:interval_size] - 1)
-
-    ts = Time.now.in_time_zone(options.tz)
-    case interval
-    when "daily"
-      start_time = (ts - start_interval_offset.days).beginning_of_day.utc
-      end_time   = (ts - end_interval_offset.days).end_of_day.utc
-    when "weekly"
-      start_time = (ts - start_interval_offset.weeks).beginning_of_week.utc
-      end_time   = (ts - end_interval_offset.weeks).end_of_week.utc
-    when "monthly"
-      start_time = (ts - start_interval_offset.months).beginning_of_month.utc
-      end_time   = (ts - end_interval_offset.months).end_of_month.utc
-    else
-      raise _("interval '%{interval}' is not supported") % {:interval => interval}
-    end
-
-    start_time..end_time
   end
 
   def self.report_cb_model(model)
