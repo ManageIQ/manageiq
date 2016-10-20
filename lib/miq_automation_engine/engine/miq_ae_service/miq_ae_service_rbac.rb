@@ -31,7 +31,7 @@ module MiqAeMethodService
         elsif objs.kind_of?(Array) || objs.kind_of?(ActiveRecord::Relation)
           rbac_enabled? ? Rbac.filtered(objs, :user => workspace.ae_user) : objs
         else
-          rbac_enabled? ? Rbac.filtered([objs], :user => workspace.ae_user).first : objs
+          rbac_enabled? ? Rbac.filtered_object(objs, :user => workspace.ae_user) : objs
         end
       end
 
