@@ -9,6 +9,7 @@
 - onselect                    ||= false
 - oncheck                     ||= false
 - autoload                    ||= false
+- allow_reselect              ||= false
 - highlight_changes           ||= false
 - post_check                  ||= false
 - reselect_node               ||= @reselect_node
@@ -16,6 +17,8 @@
 - min_expand_level            ||= 1
 - tree_id                     ||= "tree_div"
 - tree_name                   ||= "tree"
+- add_node_key                = Hash.new(@add_nodes).fetch(x_active_tree, {}).fetch(:key, nil)
+- children                    = Hash.new(@add_nodes).fetch(x_active_tree, {}).fetch(:children, nil)
 
 - options = {:tree_id            => tree_id,
              :tree_name          => tree_name,
@@ -32,16 +35,17 @@
              :onselect           => onselect,
              :post_check         => post_check,
              :autoload           => autoload,
+             :allow_reselect     => allow_reselect,
              :controller         => j(request.parameters[:controller]),
              :silent_activate    => @explorer && tree_name == x_active_tree.to_s,
              :select_node        => select_node,
              :reselect_node      => reselect_node,
              :highlight_changes  => highlight_changes,
              :expand_parent_nodes=> @expand_parent_nodes,
-             :add_nodes          => @add_nodes && @add_nodes[x_active_tree] && tree_name == x_active_tree.to_s,
+             :add_nodes          => add_node_key && children && tree_name == x_active_tree.to_s,
              :active_tree        => x_active_tree,
-             :add_node_key       => Hash.new(@add_nodes).fetch(x_active_tree, {}).fetch(:key, nil),
-             :children           => Hash.new(@add_nodes).fetch(x_active_tree, {}).fetch(:children, nil)}
+             :add_node_key       => add_node_key,
+             :children           => children}
 
 :javascript
   miqInitTree(#{options.to_json.html_safe}, #{bs_tree.html_safe})

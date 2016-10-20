@@ -58,9 +58,8 @@ class VmInfraController < ApplicationController
       end
       return true
     end
-    nodetype, id = params[:id].split("-")
-    self.x_node = "#{nodetype}-#{to_cid(id)}"
-    get_node_info(x_node)
+
+    resolve_node_info(params[:id])
   end
 
   def tagging_explorer_controller?

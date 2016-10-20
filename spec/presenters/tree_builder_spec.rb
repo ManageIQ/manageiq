@@ -181,4 +181,33 @@ describe TreeBuilder do
       expect(sb[:trees][:cb_rates_tree][:open_nodes].length).to eq(1)
     end
   end
+
+  context "#build_node_cid" do
+    it "returns correct cid for VM" do
+      vm = FactoryGirl.create(:vm)
+      expect(TreeBuilder.build_node_cid(vm)).to eq("v-#{ApplicationRecord.compress_id(vm.id)}")
+    end
+  end
+
+  context "#hide_vms" do
+    before(:each) do
+      role = MiqUserRole.find_by_name("EvmRole-operator")
+      @group = FactoryGirl.create(:miq_group, :miq_user_role => role, :description => "TreeBuilder")
+      login_as FactoryGirl.create(:user, :userid => 'treebuilder_wilma', :miq_groups => [@group])
+    end
+
+    it "hide vms if User didn't set it" do
+      expect(TreeBuilder.hide_vms).to eq(true)
+    end
+
+    it "show vms if User had set it so" do
+      User.current_user.settings[:display] = {:display_vms => true}
+      expect(TreeBuilder.hide_vms).to eq(false)
+    end
+
+    it "hide vms if User had set it so" do
+      User.current_user.settings[:display] = {:display_vms => false}
+      expect(TreeBuilder.hide_vms).to eq(true)
+    end
+  end
 end
