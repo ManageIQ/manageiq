@@ -14,23 +14,9 @@
   */
   function subscribeToSubject() {
     ManageIQ.angular.rxSubject.subscribe(function(event) {
-      if (event.eventType === 'sendCountSelectedAndUpdateToolbar') {
-        this.MiQToolbarSettingsService.countSelected = event.countSelected;
-        var items = this.MiQToolbarSettingsService.items;
-        var _this = this;
-        _.chain(items)
-          .flatten()
-          .each(function(item) {
-            _this.MiQToolbarSettingsService.enableToolbarItemByCountSelected(item);
-          })
-          .map('items')
-          .flatten()
-          .each(function(item) {
-            _this.MiQToolbarSettingsService.enableToolbarItemByCountSelected(item);
-          })
-          .value();
-      }
-      if (event.rowSelect) {
+      if (event.eventType === 'updateToolbarCount') {
+        this.MiQToolbarSettingsService.setCount(event.countSelected);
+      } else if (event.rowSelect) {
         this.onRowSelect(event.rowSelect);
       } else if (event.redrawToolbar) {
          this.onUpdateToolbar(event.redrawToolbar);

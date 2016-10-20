@@ -203,6 +203,11 @@ describe('genericObjectDefinitionFormController', function() {
       $scope.listObjectClicked('name');
       expect(window.sendDataWithRx).toHaveBeenCalledWith({eventType: 'singleItemSelected', response: 'name'});
     });
+
+    it('sends more data', function() {
+      $scope.listObjectClicked('name');
+      expect(window.sendDataWithRx).toHaveBeenCalledWith({eventType: 'updateToolbarCount', countSelected: 1});
+    });
   });
 
   describe('#addClicked', function() {
@@ -235,7 +240,7 @@ describe('genericObjectDefinitionFormController', function() {
     });
 
     it('makes a save http request', function() {
-      $httpBackend.expectPOST('save', {id: 123, name: 'new name', description: 'description'}).respond(200, '');
+      $httpBackend.expectPOST('save', {name: 'new name', description: 'description'}).respond(200, '');
       $scope.saveClicked();
       $httpBackend.flush();
     });
@@ -273,6 +278,10 @@ describe('genericObjectDefinitionFormController', function() {
 
     it('sends data', function() {
       expect(window.sendDataWithRx).toHaveBeenCalledWith({eventType: 'cancelClicked'});
+    });
+
+    it('sends more data', function() {
+      expect(window.sendDataWithRx).toHaveBeenCalledWith({eventType: 'updateToolbarCount', countSelected: 0});
     });
 
     it('sets the form to pristine', function() {

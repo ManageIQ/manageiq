@@ -61,7 +61,7 @@ ManageIQ.angular.app.controller('genericObjectDefinitionFormController', ['$http
 
   $scope.listObjectClicked = function(name) {
     sendDataWithRx({eventType: 'singleItemSelected', response: name});
-    sendDataWithRx({eventType: 'sendCountSelectedAndUpdateToolbar', countSelected: 1});
+    sendDataWithRx({eventType: 'updateToolbarCount', countSelected: 1});
   };
 
   $scope.addClicked = function() {
@@ -79,7 +79,7 @@ ManageIQ.angular.app.controller('genericObjectDefinitionFormController', ['$http
   $scope.cancelClicked = function() {
     hideAndClearForm();
     sendDataWithRx({eventType: 'cancelClicked'});
-    sendDataWithRx({eventType: 'sendCountSelectedAndUpdateToolbar', countSelected: 0});
+    sendDataWithRx({eventType: 'updateToolbarCount', countSelected: 0});
     $scope.angularForm.$setPristine(true);
   };
 
