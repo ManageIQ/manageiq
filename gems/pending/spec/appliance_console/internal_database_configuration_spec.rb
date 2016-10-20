@@ -34,17 +34,6 @@ describe ApplianceConsole::InternalDatabaseConfiguration do
     @config.choose_disk
   end
 
-  it "#create_partition_to_fill_disk (private)" do
-    disk_double = double(:path => "/dev/vdb")
-    expect(disk_double).to receive(:create_partition_table)
-    expect(disk_double).to receive(:partitions).and_return(["fake partition"])
-    expect(AwesomeSpawn).to receive(:run!).with("parted -s /dev/vdb mkpart primary 0% 100%")
-    expect(LinuxAdmin::Disk).to receive(:local).and_return([disk_double])
-
-    @config.instance_variable_set(:@disk, disk_double)
-    expect(@config.send(:create_partition_to_fill_disk)).to eq("fake partition")
-  end
-
   it ".postgresql_template" do
     allow(PostgresAdmin).to receive_messages(:data_directory     => Pathname.new("/var/lib/pgsql/data"))
     allow(PostgresAdmin).to receive_messages(:template_directory => Pathname.new("/opt/manageiq/manageiq-appliance/TEMPLATE"))
@@ -62,38 +51,6 @@ describe ApplianceConsole::InternalDatabaseConfiguration do
       @config.run_as_evm_server = true
       expect(@config).to receive(:start_evm)
       @config.post_activation
-    end
-  end
-
-  context "#update_fstab (private)" do
-    let(:pg_mount_point) { "/var/lib/pgsql" }
-
-    before do
-      allow(ENV).to receive(:fetch).with("APPLIANCE_PG_MOUNT_POINT").and_return(pg_mount_point)
-    end
-
-    it "adds database disk entry" do
-      fstab = double
-      allow(fstab).to receive_messages(:entries => [])
-      expect(fstab).to receive(:write!)
-      allow(LinuxAdmin::FSTab).to receive_messages(:instance => fstab)
-      @config.instance_variable_set(:@logical_volume, double(:path => "/dev/vg/lv"))
-      expect(fstab.entries.count).to eq(0)
-
-      @config.send(:update_fstab)
-      expect(fstab.entries.count).to eq(1)
-      expect(fstab.entries.first.device).to eq("/dev/vg/lv")
-    end
-
-    it "skips update if mount point is in fstab" do
-      fstab = double
-      allow(fstab).to receive_messages(:entries => [double(:mount_point => Pathname.new(pg_mount_point))])
-      expect(fstab).to receive(:write!).never
-      allow(LinuxAdmin::FSTab).to receive_messages(:instance => fstab)
-      expect(fstab.entries.count).to eq(1)
-
-      @config.send(:update_fstab)
-      expect(fstab.entries.count).to eq(1)
     end
   end
 end

@@ -67,6 +67,7 @@ require 'appliance_console/internal_database_configuration'
 require 'appliance_console/external_database_configuration'
 require 'appliance_console/external_httpd_authentication'
 require 'appliance_console/external_auth_options'
+require 'appliance_console/logfile_configuration'
 require 'appliance_console/temp_storage_configuration'
 require 'appliance_console/key_configuration'
 require 'appliance_console/scap'
@@ -535,6 +536,19 @@ Static Network Configuration
           press_any_key
         else
           say("Database maintenance configuration unchanged")
+          press_any_key
+          raise MiqSignalError
+        end
+
+      when I18n.t("advanced_settings.log_config")
+        say("#{selection}\n\n")
+        log_config = ApplianceConsole::LogfileConfiguration.new
+        if log_config.ask_questions && log_config.activate
+          say("Log file configuration updated.")
+          say("The appliance may take a few minutes to fully restart.")
+          press_any_key
+        else
+          say("Log file configuration unchanged")
           press_any_key
           raise MiqSignalError
         end
