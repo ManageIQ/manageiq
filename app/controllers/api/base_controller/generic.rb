@@ -7,17 +7,17 @@ module Api
 
       def show
         if @req.subcollection?
-          render_collection_type @req.subcollection.to_sym, @req.s_id
+          render_collection_type @req.subject.to_sym, @req.subject_id
         else
-          render_collection_type @req.collection.to_sym, @req.c_id
+          render_collection_type @req.subject.to_sym, @req.subject_id
         end
       end
 
       def update
         if @req.subcollection?
-          render_normal_update @req.collection.to_sym, update_collection(@req.subcollection.to_sym, @req.s_id)
+          render_normal_update @req.collection.to_sym, update_collection(@req.subject.to_sym, @req.subject_id)
         else
-          render_normal_update @req.collection.to_sym, update_collection(@req.collection.to_sym, @req.c_id)
+          render_normal_update @req.collection.to_sym, update_collection(@req.subject.to_sym, @req.subject_id)
         end
       end
 
