@@ -20,17 +20,17 @@ class Host < ApplicationRecord
     "openstack_infra" => "OpenStack Infrastructure",
     "unknown"         => "Unknown",
     nil               => "Unknown",
-  }
+  }.freeze
 
   HOST_DISCOVERY_TYPES = {
     'vmware' => 'esx',
     'ipmi'   => 'ipmi'
-  }
+  }.freeze
 
   HOST_CREATE_OS_TYPES = {
     'VMware ESX' => 'linux_generic',
     # 'Microsoft Hyper-V' => 'windows_generic'
-  }
+  }.freeze
 
   validates_presence_of     :name
   validates_uniqueness_of   :name
@@ -90,7 +90,6 @@ class Host < ApplicationRecord
                             :inverse_of => :host
   has_many                  :host_aggregate_hosts, :dependent => :destroy
   has_many                  :host_aggregates, :through => :host_aggregate_hosts
-
 
   serialize :settings, Hash
 
@@ -730,7 +729,7 @@ class Host < ApplicationRecord
 
   def self.save_metadata(id, dataArray)
     _log.info "for host [#{id}]"
-    host = Host.find_by_id(id)
+    host = Host.find_by(:id => id)
     data, data_type = dataArray
     if data_type.include?('yaml')
       data.replace(MIQEncode.decode(data)) if data_type.include?('b64,zlib')
@@ -848,7 +847,7 @@ class Host < ApplicationRecord
     host_start.upto(host_end) do|h|
       ipaddr = network_id + "." + h.to_s
 
-      unless Host.find_by_ipaddress(ipaddr).nil? # skip discover for existing hosts
+      unless Host.find_by(:ipaddress => ipaddr).nil? # skip discover for existing hosts
         _log.info "ipaddress '#{ipaddr}' exists, skipping discovery"
         next
       end
@@ -861,7 +860,7 @@ class Host < ApplicationRecord
       }
 
       # Add Windows domain credentials for HyperV WMI checks
-      default_zone = Zone.find_by_name('default')
+      default_zone = Zone.find_by(:name => 'default')
       if !default_zone.nil? && default_zone.has_authentication_type?(:windows_domain)
         discover_options[:windows_domain] = [default_zone.authentication_userid(:windows_domain), default_zone.authentication_password_encrypted(:windows_domain)]
       end
@@ -1119,8 +1118,7 @@ class Host < ApplicationRecord
           _log.log_backtrace(err)
         end
       end
-    rescue => err
-      # _log.log_backtrace(err)
+    rescue
     end
 
     Patch.refresh_patches(self, patches)
@@ -1368,8 +1366,8 @@ class Host < ApplicationRecord
 
   def scan_from_queue(taskid = nil)
     unless taskid.nil?
-      task = MiqTask.find_by_id(taskid)
-      task.state_active  if task
+      task = MiqTask.find_by(:id => taskid)
+      task.state_active if task
     end
 
     log_target = "#{self.class.name} name: [#{name}], id: [#{id}]"
@@ -1664,7 +1662,7 @@ class Host < ApplicationRecord
     cores = total_vcpus
     return 0 if cores == 0
 
-    total_vm_vcpus = vms.inject(0) { |t, vm| t += (vm.num_cpu || 0) }
+    total_vm_vcpus = vms.inject(0) { |t, vm| t + (vm.num_cpu || 0) }
     (total_vm_vcpus / cores)
   end
 
