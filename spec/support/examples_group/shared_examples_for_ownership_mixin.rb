@@ -18,7 +18,7 @@ shared_examples_for "OwnershipMixin" do
       FactoryGirl.create(factory, :name => "user_owned2", :evm_owner => user2)
     end
 
-    describe ".owning_ldap_group" do
+    describe "#owning_ldap_group" do
       before { User.current_user = user }
 
       context "when miq_group is in the ldap group" do
@@ -38,7 +38,7 @@ shared_examples_for "OwnershipMixin" do
       end
     end
 
-    describe ".owned_by_current_ldap_group" do
+    describe "#owned_by_current_ldap_group" do
       before { User.current_user = user }
 
       it "usable as arel" do
@@ -91,7 +91,7 @@ shared_examples_for "OwnershipMixin" do
       end
     end
 
-    describe ".evm_owner_name" do
+    describe "#evm_owner_name" do
       before { User.current_user = user }
 
       context "when has a user" do
@@ -111,7 +111,7 @@ shared_examples_for "OwnershipMixin" do
       end
     end
 
-    describe ".evm_owner_userid" do
+    describe "#evm_owner_userid" do
       before { User.current_user = user }
 
       context "when has a user" do
@@ -131,7 +131,7 @@ shared_examples_for "OwnershipMixin" do
       end
     end
 
-    describe ".evm_owner_email" do
+    describe "#evm_owner_email" do
       before { User.current_user = user }
 
       context "when has a user" do
@@ -205,7 +205,7 @@ shared_examples_for "OwnershipMixin" do
       end
     end
 
-    describe ".owned_by_current_user" do
+    describe "#owned_by_current_user" do
       before { User.current_user = user }
 
       it "usable as arel" do
