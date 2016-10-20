@@ -28,4 +28,9 @@ class EmsNetworkController < ApplicationController
   def ems_network_form_fields
     ems_form_fields
   end
+
+  def restful?
+    true
+  end
+  public :restful?
 end
