@@ -27,24 +27,12 @@ class MiqProvisionRequest < MiqRequest
   include MiqProvisionMixin
   include MiqProvisionQuotaMixin
 
-  def self.get_provisioning_request_source(src_id, src_type_string)
-    kls = case src_type_string
-          when "CloudVolumeSnapshot"
-            CloudVolumeSnapshot
-          when "CloudVolume"
-            CloudVolume
-          else
-            VmOrTemplate
-          end
-    kls.find_by_id(src_id)
-  end
-
   def self.request_task_class_from(attribs)
     source_id = MiqRequestMixin.get_option(:source_id, nil, attribs['options'])
     source_type = MiqRequestMixin.get_option(:source_type, nil, attribs['options'])
     source_id ||= MiqRequestMixin.get_option(:src_vm_id, nil, attribs['options'])
     source_type ||= MiqRequestMixin.get_option(:src_type, nil, attribs['options'])
-    provisioning_source = get_provisioning_request_source(source_id, source_type)
+    provisioning_source = MiqProvisionSource.get_provisioning_request_source(source_id, source_type)
     raise MiqException::MiqProvisionError, "Unable to find source #{source_type} with id [#{source_id}]" if provisioning_source.nil?
 
     via = MiqRequestMixin.get_option(:provision_type, nil, attribs['options'])

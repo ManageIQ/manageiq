@@ -1,6 +1,4 @@
 module MiqProvision::OptionsHelper
-  include MiqProvisionSource
-
   def dest_name
     get_option(:vm_target_name)
   end
@@ -28,7 +26,7 @@ module MiqProvision::OptionsHelper
   def get_source
     source_id = get_option(:src_vm_id)
     source_type = get_option(:src_type)
-    source = get_provisioning_request_source(source_id, source_type)
+    source = MiqProvisionSource.get_provisioning_request_source(source_id, source_type)
     if source.nil?
       raise MiqException::MiqProvisionError,
             _("Unable to find source Template/Vm with id [%{number}]") % {:number => source_id}

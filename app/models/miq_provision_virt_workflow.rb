@@ -1,6 +1,5 @@
 class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
   include_concern "DialogFieldValidation"
-  include MiqProvisionSource
 
   def auto_placement_enabled?
     get_value(@values[:placement_auto])
@@ -16,8 +15,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
       src_vm_id = get_value(@values[:src_vm_id])
       src_type = get_value(@values[:src_type])
       unless src_vm_id.blank?
-        src = get_provisioning_request_source(src_vm_id, src_type)
-        # vm = VmOrTemplate.find_by_id(src_vm_id)
+        src = MiqProvisionSource.get_provisioning_request_source(src_vm_id, src_type)
         @values[:src_vm_id] = [src.id, src.name] unless src.blank?
       end
     end
@@ -286,7 +284,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     # Return pre-selected VM if we are called for cloning
     if [:clone_to_vm, :clone_to_template].include?(request_type)
       # vm_or_template = VmOrTemplate.find_by_id(get_value(@values[:src_vm_id]))
-      source = get_provisioning_request_source(@values[:src_vm_id], @values[:src_type])
+      source = MiqProvisionSource.get_provisioning_request_source(@values[:src_vm_id], @values[:src_type])
       return [create_hash_struct_from_source(source, options)].compact
     end
 
@@ -296,7 +294,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     end
 
     rails_logger('allowed_templates', 0)
-    vms = get_provisioning_request_source_class(@values[:src_type]).all
+    vms = MiqProvisionSource.get_provisioning_request_source_class(@values[:src_type]).all
 
     condition = case @values[:src_type]
                 when "CloudVolume"
@@ -365,7 +363,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
 
   def source_vm_rbac_filter(vms, condition = nil)
     MiqSearch.filtered(get_value(@values[:vm_filter]).to_i,
-                       get_provisioning_request_source_class(@values[:src_type]),
+                       MiqProvisionSource.get_provisioning_request_source_class(@values[:src_type]),
                        vms,
                        :user => @requester, :conditions => condition)
   end
@@ -402,8 +400,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     vm_id = get_value(@values[:src_vm_id])
     vm_type = get_value(@values[:src_type])
     rails_logger('get_source_and_targets', 0)
-    # svm = VmOrTemplate.find_by(:id => vm_id)
-    svm = get_provisioning_request_source(vm_id, vm_type)
+    svm = MiqProvisionSource.get_provisioning_request_source(vm_id, vm_type)
 
     if svm.nil?
       @vm_snapshot_count = 0
