@@ -61,7 +61,7 @@ class Chargeback < ActsAsArModel
         # key contains resource_id and timestamp (query_start_time...query_end_time)
         # extra_fields there some extra field like resource name and
         # some of them are related to specific chargeback (ChargebackVm, ChargebackContainer,...)
-        key, extra_fields = key_and_fields(metric_rollup_record, options.interval)
+        key, extra_fields = key_and_fields(metric_rollup_record)
         data[key] ||= extra_fields
 
         chargeback_rates = data[key]["chargeback_rates"].split(', ') + rates_to_apply.collect(&:description)
@@ -86,8 +86,8 @@ class Chargeback < ActsAsArModel
     (query_end_time - query_start_time) / 1.hour
   end
 
-  def self.key_and_fields(metric_rollup_record, interval)
-    ts_key = get_group_key_ts(metric_rollup_record, interval)
+  def self.key_and_fields(metric_rollup_record)
+    ts_key = get_group_key_ts(metric_rollup_record)
 
     key, extra_fields = if @options[:groupby_tag].present?
                           get_tag_keys_and_fields(metric_rollup_record, ts_key)
@@ -95,17 +95,17 @@ class Chargeback < ActsAsArModel
                           get_keys_and_extra_fields(metric_rollup_record, ts_key)
                         end
 
-    [key, date_fields(metric_rollup_record, interval).merge(extra_fields)]
+    [key, date_fields(metric_rollup_record).merge(extra_fields)]
   end
 
-  def self.date_fields(metric_rollup_record, interval)
-    start_ts, end_ts, display_range = get_time_range(metric_rollup_record, interval)
+  def self.date_fields(metric_rollup_record)
+    start_ts, end_ts, display_range = get_time_range(metric_rollup_record)
 
     {
       'start_date'       => start_ts,
       'end_date'         => end_ts,
       'display_range'    => display_range,
-      'interval_name'    => interval,
+      'interval_name'    => @options.interval,
       'chargeback_rates' => '',
       'entity'           => metric_rollup_record.resource
     }
@@ -178,9 +178,9 @@ class Chargeback < ActsAsArModel
     col_hash
   end
 
-  def self.get_group_key_ts(perf, interval)
+  def self.get_group_key_ts(perf)
     ts = perf.timestamp.in_time_zone(@options.tz)
-    case interval
+    case @options.interval
     when "daily"
       ts = ts.beginning_of_day
     when "weekly"
@@ -194,9 +194,9 @@ class Chargeback < ActsAsArModel
     ts
   end
 
-  def self.get_time_range(perf, interval)
+  def self.get_time_range(perf)
     ts = perf.timestamp.in_time_zone(@options.tz)
-    case interval
+    case @options.interval
     when "daily"
       [ts.beginning_of_day, ts.end_of_day, ts.strftime("%m/%d/%Y")]
     when "weekly"
