@@ -25,6 +25,8 @@ class DialogImportValidator
       raise ParsedNonDialogYamlError unless dialog["dialog_tabs"]
       check_dialog_tabs_for_validity(dialog["dialog_tabs"])
     end
+  rescue TypeError
+    raise ParsedNonDialogYamlError
   end
 
   def check_dialog_tabs_for_validity(dialog_tabs)
