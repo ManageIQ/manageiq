@@ -28,10 +28,10 @@ class MiqSnmp
     raise MiqException::Error, _("MiqSnmp.trap_v1: Ensure that enterprise OID is provided") if enterprise.nil?
 
     # The IP address of the SNMP agent as a String or IpAddress.
-    agent_address = inputs[:agent_address] || inputs['agent_address'] || self.agent_address
-    if agent_address.nil?
+    address = inputs[:agent_address] || inputs['agent_address'] || agent_address
+    if address.nil?
       raise MiqException::Error,
-            _("MiqSnmp.trap_v1: Ensure that server.host is configured properly in your vmdb.yml file")
+            _("MiqSnmp.trap_v1: Ensure that server.host is configured properly in your settings.yml file")
     end
 
     # An integer respresenting the number of hundredths of a second that this system has been up.
