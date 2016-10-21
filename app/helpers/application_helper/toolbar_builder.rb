@@ -413,7 +413,7 @@ class ApplicationHelper::ToolbarBuilder
       when "diagnostics_summary"
         return !["refresh_server_summary", "restart_server"].include?(id)
       when "diagnostics_workers"
-        return !["restart_workers"].include?(id)
+        return !["restart_workers", "refresh_workers"].include?(id)
       else
         return true
       end
