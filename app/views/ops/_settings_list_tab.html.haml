@@ -10,7 +10,7 @@
           - @zones.sort_by(&:description).each do |z|
             %tr{:onclick => "miqTreeActivateNode('settings_tree', 'z-#{to_cid(z.id)}');", :title => _("View this Zone's settings")}
               %td.narrow
-                %img{:src => image_path('100/zone.png')}/
+                %i.pficon.pficon-zone
               %td
                 - if my_zone_name == z.name
                   %b

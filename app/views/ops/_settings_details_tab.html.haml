@@ -30,32 +30,32 @@
         - unless @edit
           %tr
             %td.narrow{:onclick => remote_function(:url => {:action => 'region_edit', :id => region.id}), :title => _("Edit this Region")}
-              %img{:src => image_path('100/miq_region.png')}/
+              %i.pficon.pficon-regions
             %td{:onclick => remote_function(:url => {:action => 'region_edit', :id => region.id}), :title => _("Edit this Region")}
               = h(region.description)
               [#{h(region.region)}]
         %tr
           %td.narrow{:onclick => "miqTreeActivateNode('settings_tree', 'xx-sis');", :title => _("View Analysis Profiles")}
-            %img{:src => image_path('100/scan_item_set.png')}>/
+            %i.fa.fa-search
           %td{:onclick => "miqTreeActivateNode('settings_tree', 'xx-sis');", :title => _("View Analysis Profiles")}
             = _("Analysis Profiles")
             (#{h(@scan_items.size)})
         %tr
           %td.narrow{:onclick => "miqTreeActivateNode('settings_tree', 'xx-z');", :title => _("View Zones")}
-            %img{:src => image_path('100/zone.png')}>/
+            %i.pficon.pficon-zone
           %td{:onclick => "miqTreeActivateNode('settings_tree', 'xx-z');", :title => _("View Zones")}
             = _("Zones")
             (#{h(@zones.size)})
         %tr
           %td.narrow{:onclick => "miqTreeActivateNode('settings_tree', 'xx-msc');", :title => _("View Schedules")}
-            %img{:src => image_path('100/miq_schedule.png')}>/
+            %i.fa.fa-clock-o
           %td{:onclick => "miqTreeActivateNode('settings_tree', 'xx-msc');", :title => _("View Schedules")}
             = _("Schedules")
             (#{h(@miq_schedules.size)})
         - if get_vmdb_config[:product][:new_ldap]
           %tr
             %td.narrow{:onclick => "miqTreeActivateNode('settings_tree', 'xx-l');", :title => _("View LDAP Regions")}
-              %img{:src => image_path('100/ldap_region.png')}>/
+              %i.pficon.pficon-regions
             %td{:onclick => "miqTreeActivateNode('settings_tree', 'xx-l');", :title => _("View LDAP Regions")}
               = _("LDAP Regions")
               (#{h(@ldap_regions.size)})

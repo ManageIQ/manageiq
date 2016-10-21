@@ -71,7 +71,7 @@
           - @servers.sort_by(&:id).each do |s|
             %tr{:onclick => "miqTreeActivateNode('settings_tree', 'svr-#{to_cid(s.id)}');", :title => _("View this MiqServer")}
               %td.narrow
-                %img{:src => image_path('100/miq_server.png')}/
+                %i.pficon.pficon-server
               %td
                 - if my_server_id == s.id
                   %b
