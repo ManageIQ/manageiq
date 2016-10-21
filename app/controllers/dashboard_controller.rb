@@ -652,7 +652,7 @@ class DashboardController < ApplicationController
     @css.merge!(@settings[:display])
     @css.merge!(THEME_CSS_SETTINGS[@settings[:display][:theme]])
 
-    session[:user_TZO] = params[:user_TZO] ? params[:user_TZO].to_i : nil     # Grab the timezone (future use)
+    session[:user_TZO] = params[:user_TZO].try(:to_i)    # Grab the timezone (future use)
     session[:browser] ||= Hash.new("Unknown")
     if params[:browser_name]
       session[:browser][:name] = params[:browser_name].to_s.downcase

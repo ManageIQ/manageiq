@@ -125,7 +125,7 @@ module MiqAeCustomizationController::Dialogs
     dialog_set_form_vars
     @edit[:new][:label] = _("Copy of %{label}") % {:label => @record.label}
     @edit[:dialog] = @record = Dialog.new
-    @edit[:rec_id] = @record.id ? @record.id : nil
+    @edit[:rec_id] = @record.try(:id)
     @edit[:key] = "dialog_edit__#{@record.id || "new"}"
     session[:changed] = @in_a_form = true
     @sb[:node_typ] = nil

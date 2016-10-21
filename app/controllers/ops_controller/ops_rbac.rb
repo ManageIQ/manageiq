@@ -962,7 +962,7 @@ module OpsController::OpsRbac
     @edit[:new].merge!({
       :name => @user.userid,
       :email => @user.email,
-      :group => @user.current_group ? @user.current_group.id : nil,
+      :group => @user.current_group.try(:id),
     })
     unless copy
       @edit[:new].merge!({
