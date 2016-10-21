@@ -601,27 +601,13 @@ module OpsController::OpsRbac
     end
 
     @gtl_type = "list"  # No quad icons for user/group list views
-    rbac_tags_set_form_vars
+    x_tags_set_form_vars
     @in_a_form = true
     session[:changed] = false
     add_flash(_("All changes have been reset"), :warning)  if params[:button] == "reset"
     @sb[:pre_edit_node] = x_node  unless params[:button]  # Save active tree node before edit
     @right_cell_text = _("Editing %{model} for \"%{name}\"") % {:name => ui_lookup(:models => @tagging), :model => "#{current_tenant.name} Tags"}
     replace_right_cell("root")
-  end
-
-  # Set form vars for tag editor
-  def rbac_tags_set_form_vars
-    @edit = {}
-    @edit[:new] = {}
-    @edit[:key] = "#{session[:tag_db]}_edit_tags__#{@object_ids[0]}"
-    @edit[:object_ids] = @object_ids
-    @edit[:tagging] = @tagging
-
-    tag_edit_build_screen
-    build_targets_hash(@tagitems)
-
-    @edit[:current] = copy_hash(@edit[:new])
   end
 
   def rbac_edit_tags_cancel

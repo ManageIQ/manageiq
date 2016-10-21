@@ -2034,4 +2034,28 @@ class CatalogController < ApplicationController
     return unless @edit[:new][:display] && (@edit[:new][:dialog_id].nil? || @edit[:new][:dialog_id].to_i == 0)
     add_flash(_("Dialog has to be set if Display in Catalog is chosen"), :error)
   end
+
+  def x_edit_tags_reset(db)
+    @tagging = session[:tag_db] = db
+    @object_ids = find_checked_items
+    if params[:button] == 'reset'
+      id = params[:id] if params[:id]
+      return unless load_edit("#{session[:tag_db]}_edit_tags__#{id}", 'replace_cell__explorer')
+      @object_ids = @edit[:object_ids]
+      session[:tag_db] = @tagging = @edit[:tagging]
+    else
+      @object_ids[0] = params[:id] if @object_ids.blank? && params[:id]
+      session[:tag_db] = @tagging = params[:tagging] if params[:tagging]
+    end
+
+    @gtl_type = 'list' # No quad icons for user/group list views
+    session[:assigned_filters] = assigned_filters
+    x_tags_set_form_vars
+    @in_a_form = true
+    session[:changed] = false
+    add_flash(_('All changes have been reset'), :warning) if params[:button] == "reset"
+    @right_cell_text = _("Editing %{model} Tags for \"%{name}\"") % {:name  => ui_lookup(:models => @tagging),
+                                                                     :model => current_tenant.name}
+    replace_right_cell(@sb[:action])
+  end
 end

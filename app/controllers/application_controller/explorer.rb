@@ -160,29 +160,6 @@ module ApplicationController::Explorer
     x_tree_history.unshift(options).slice!(11..-1)
   end
 
-  def x_edit_tags_reset(db)
-    @tagging = session[:tag_db] = db
-    @object_ids = find_checked_items
-    if params[:button] == "reset"
-      id = params[:id] if params[:id]
-      return unless load_edit("#{session[:tag_db]}_edit_tags__#{id}", "replace_cell__explorer")
-      @object_ids = @edit[:object_ids]
-      session[:tag_db] = @tagging = @edit[:tagging]
-    else
-      @object_ids[0] = params[:id] if @object_ids.blank? && params[:id]
-      session[:tag_db] = @tagging = params[:tagging] if params[:tagging]
-    end
-
-    @gtl_type = "list"  # No quad icons for user/group list views
-    x_tags_set_form_vars
-    @in_a_form = true
-    session[:changed] = false
-    add_flash(_("All changes have been reset"), :warning)  if params[:button] == "reset"
-    @right_cell_text = _("Editing %{model} Tags for \"%{name}\"") % {:name  => ui_lookup(:models => @tagging),
-                                                                     :model => current_tenant.name}
-    replace_right_cell(@sb[:action])
-  end
-
   # Set form vars for tag editor
   def x_tags_set_form_vars
     @edit = {}
@@ -190,7 +167,6 @@ module ApplicationController::Explorer
     @edit[:key] = "#{session[:tag_db]}_edit_tags__#{@object_ids[0]}"
     @edit[:object_ids] = @object_ids
     @edit[:tagging] = @tagging
-    session[:assigned_filters] = assigned_filters
     tag_edit_build_screen
     build_targets_hash(@tagitems)
 
