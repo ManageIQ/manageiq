@@ -1513,7 +1513,11 @@ Vmdb::Application.routes.draw do
     :floating_ip              => {
       :get  => %w(
         download_data
+        edit
+        floating_ip_form_fields
         index
+        networks_by_ems
+        new
         show
         show_list
         tagging_edit
@@ -1521,12 +1525,15 @@ Vmdb::Application.routes.draw do
         compare_get,
       :post => %w(
         button
-        quick_search
+        create
+        form_field_changed
         listnav_search_selected
+        quick_search
         show
         show_list
         tag_edit_form_field_changed
         tagging_edit
+        update
       ) +
         adv_search_post +
         compare_post +
@@ -1611,12 +1618,17 @@ Vmdb::Application.routes.draw do
         compare_get,
       :post => %w(
         button
+        create
+        form_field_changed
         quick_search
         listnav_search_selected
+        sections_field_changed
         show
         show_list
         tag_edit_form_field_changed
         tagging_edit
+        update
+        wait_for_task
       ) +
         adv_search_post +
         compare_post +
