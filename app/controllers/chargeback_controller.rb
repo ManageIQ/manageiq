@@ -210,7 +210,6 @@ class ChargebackController < ApplicationController
 
   def cb_rate_show
     @display = "main"
-    @record.chargeback_rate_details
     if @record.nil?
       redirect_to :action => "cb_rates_list", :flash_msg => _("Error: Record no longer exists in the database"), :flash_error => true
       return
