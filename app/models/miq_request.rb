@@ -88,7 +88,7 @@ class MiqRequest < ApplicationRecord
   delegate :request_task_class, :request_types, :task_description, :to => :class
 
   def self.class_from_request_data(data)
-    request_type = data[:request_type].try(:to_sym)
+    request_type = (data[:__request_type__] || data[:request_type]).try(:to_sym)
     model_symbol = REQUEST_TYPE_TO_MODEL[request_type] || raise(ArgumentError, "Invalid request_type")
     model_symbol.to_s.constantize
   end
