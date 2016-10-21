@@ -9,4 +9,4 @@ object:
     description: 
   fields:
   - rel4:
-      value: "/System/event_handlers/event_action_refresh?target=src_vm"
+      value: "/System/event_handlers/event_action_refresh_new_target?target=src_vm"
