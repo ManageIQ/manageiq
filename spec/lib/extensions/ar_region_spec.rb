@@ -15,6 +15,12 @@ describe "AR Regions extension" do
     expect(base_class.id_to_region(25)).to eq(2)
   end
 
+  it ".id_in_region" do
+    expect(base_class.id_in_region(5, 0)).to eq(5)
+    expect(base_class.id_in_region(5, 1)).to eq(15)
+    expect(base_class.id_in_region(5, 2)).to eq(25)
+  end
+
   it ".region_to_range" do
     expect(base_class.region_to_range(0)).to eq(0..9)
     expect(base_class.region_to_range(1)).to eq(10..19)

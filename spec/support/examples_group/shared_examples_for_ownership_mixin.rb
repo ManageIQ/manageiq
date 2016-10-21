@@ -2,23 +2,60 @@ shared_examples_for "OwnershipMixin" do
   context "includes OwnershipMixin" do
     include Spec::Support::ArelHelper
 
-    let(:user) { User.where(:userid => "ownership_user").first }
-
-    before do
-      user = FactoryGirl.create(:user,
-                                :userid     => "ownership_user",
-                                :miq_groups => FactoryGirl.create_list(:miq_group, 1))
-      user2 = FactoryGirl.create(:user)
-
-      factory = described_class.to_s.underscore.to_sym
-      FactoryGirl.create(factory, :name => "in_ldap",     :miq_group_id => user.current_group.id)
-      FactoryGirl.create(factory, :name => "not_in_ldap", :miq_group => FactoryGirl.create(:miq_group))
-      FactoryGirl.create(factory, :name => "no_group")
-      FactoryGirl.create(factory, :name => "user_owned",  :evm_owner => user)
-      FactoryGirl.create(factory, :name => "user_owned2", :evm_owner => user2)
+    let(:user) do
+      FactoryGirl.create(:user,
+                         :userid     => "ownership_user",
+                         :miq_groups => FactoryGirl.create_list(:miq_group, 1))
     end
 
-    describe ".owning_ldap_group" do
+    let(:user2)  { FactoryGirl.create(:user) }
+    let(:group)  { user.current_group }
+    let(:group2) { FactoryGirl.create(:miq_group) }
+
+    let(:factory) { described_class.to_s.underscore.to_sym }
+
+    let!(:in_ldap)     { FactoryGirl.create(factory, :name => "in_ldap",     :miq_group => group) }
+    let!(:not_in_ldap) { FactoryGirl.create(factory, :name => "not_in_ldap", :miq_group => group2) }
+    let!(:no_group)    { FactoryGirl.create(factory, :name => "no_group") }
+    let!(:user_owned)  { FactoryGirl.create(factory, :name => "user_owned",  :evm_owner => user) }
+    let!(:user_owned2) { FactoryGirl.create(factory, :name => "user_owned2", :evm_owner => user2) }
+
+    describe ".user_or_group_owned" do
+      let(:user_other_region) do
+        other_region_id = ApplicationRecord.id_in_region(1, MiqRegion.my_region_number + 1)
+        FactoryGirl.create(:user, :id => other_region_id).tap do |u|
+          u.update_column(:userid, user.userid) # Bypass validation for test purposes
+        end
+      end
+
+      context "only with a user" do
+        it "in this region" do
+          expect(described_class.user_or_group_owned(user, nil)).to eq([user_owned])
+        end
+
+        it "with same userid as another region" do
+          user_owned.update!(:evm_owner => user_other_region)
+          expect(described_class.user_or_group_owned(user, nil)).to eq([user_owned])
+        end
+      end
+
+      it "only with a group" do
+        expect(described_class.user_or_group_owned(nil, group)).to eq([in_ldap])
+      end
+
+      context "with a user and a group" do
+        it "in this region" do
+          expect(described_class.user_or_group_owned(user, group)).to match_array([in_ldap, user_owned])
+        end
+
+        it "with same userid as another region" do
+          user_owned.update!(:evm_owner => user_other_region)
+          expect(described_class.user_or_group_owned(user, group)).to match_array([in_ldap, user_owned])
+        end
+      end
+    end
+
+    describe "#owning_ldap_group" do
       before { User.current_user = user }
 
       context "when miq_group is in the ldap group" do
@@ -38,7 +75,7 @@ shared_examples_for "OwnershipMixin" do
       end
     end
 
-    describe ".owned_by_current_ldap_group" do
+    describe "#owned_by_current_ldap_group" do
       before { User.current_user = user }
 
       it "usable as arel" do
@@ -91,7 +128,7 @@ shared_examples_for "OwnershipMixin" do
       end
     end
 
-    describe ".evm_owner_name" do
+    describe "#evm_owner_name" do
       before { User.current_user = user }
 
       context "when has a user" do
@@ -111,7 +148,7 @@ shared_examples_for "OwnershipMixin" do
       end
     end
 
-    describe ".evm_owner_userid" do
+    describe "#evm_owner_userid" do
       before { User.current_user = user }
 
       context "when has a user" do
@@ -131,7 +168,7 @@ shared_examples_for "OwnershipMixin" do
       end
     end
 
-    describe ".evm_owner_email" do
+    describe "#evm_owner_email" do
       before { User.current_user = user }
 
       context "when has a user" do
@@ -151,61 +188,7 @@ shared_examples_for "OwnershipMixin" do
       end
     end
 
-    describe ".user_or_group_owned" do
-      let(:factory) { described_class.name == "Vm" ? :vm_vmware : described_class.table_name.singularize }
-      let(:owned_resource) { FactoryGirl.create(factory) }
-      let(:owning_user) {
-        FactoryGirl.create :user, :userid => "user_owner", :miq_groups => FactoryGirl.create_list(:miq_group, 1)
-      }
-
-      context "by user in this region" do
-        it "returns resource owned by user" do
-          owned_resource.evm_owner = owning_user
-          owned_resource.save!
-
-          expect(described_class.user_or_group_owned(owning_user, nil)).to eq([owned_resource])
-        end
-
-        it "returns resource owned by user or group" do
-          owned_resource.evm_owner = owning_user
-          owned_resource.save!
-
-          expect(described_class.user_or_group_owned(owning_user, owning_user.current_group)).to eq([owned_resource])
-        end
-      end
-
-      context "by user in a remote region" do
-        let(:remote_owning_user) { FactoryGirl.create :user, :id => remote_id, :userid => "user_owner" }
-        let(:remote_id) do
-          my_region_number =  ApplicationRecord.my_region_number
-          remote_region_number = my_region_number + 1
-          ApplicationRecord.region_to_range(remote_region_number).first
-        end
-
-        it "returns resource owned by user" do
-          owned_resource.id = remote_id
-          owned_resource.evm_owner = remote_owning_user
-          owned_resource.save!
-
-          expect(owned_resource.evm_owner_id).not_to eq(owning_user.id)
-          expect(described_class.user_or_group_owned(owning_user, nil)).to eq([owned_resource])
-        end
-
-        it "returns resource owned by user or group" do
-          remote_owning_user.current_group = remote_owning_user.miq_groups.first
-          remote_owning_user.save!
-
-          owned_resource.id = remote_id
-          owned_resource.evm_owner = remote_owning_user
-          owned_resource.save!
-
-          expect(owned_resource.evm_owner_id).not_to eq(owning_user.id)
-          expect(described_class.user_or_group_owned(owning_user, owning_user.current_group)).to eq([owned_resource])
-        end
-      end
-    end
-
-    describe ".owned_by_current_user" do
+    describe "#owned_by_current_user" do
       before { User.current_user = user }
 
       it "usable as arel" do
