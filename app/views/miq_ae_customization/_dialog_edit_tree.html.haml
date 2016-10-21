@@ -8,7 +8,7 @@
       .panel-body
         -# Div to hold the actual tree
         #dialog_edit_tree_div{:style => "width: 100%; height: 100%"}
-          #dialog_edit_treebox{:style => "width: 100%; height: 100%; color: #000; overflow: hidden;"}
+          #dialog_edit_treebox.treeview-pf-hover.treeview-pf-select{:style => "width: 100%; height: 100%; color: #000; overflow: hidden;"}
           = render(:partial => "layouts/tree",
             :locals         => {:tree_id  => "dialog_edit_treebox",
               :tree_name                  => "dialog_edit_tree",
