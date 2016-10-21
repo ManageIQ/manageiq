@@ -1,6 +1,7 @@
 module UiServiceMixin
   def icons
     {
+      :AvailabilityZone        => {:type => "glyph", :icon => "\uE911", :fontfamily => "PatternFlyIcons-webfont"}, # pficon-zone
       :ContainerReplicator     => {:type => "glyph", :icon => "\uE624", :fontfamily => "PatternFlyIcons-webfont"}, # pficon-replicator
       :ContainerGroup          => {:type => "glyph", :icon => "\uF1B3", :fontfamily => "FontAwesome"},             # fa-cubes
       :ContainerNode           => {:type => "glyph", :icon => "\uE621", :fontfamily => "PatternFlyIcons-webfont"}, # pficon-container-node

@@ -12,6 +12,7 @@ module ApplicationHelper::PageLayouts
       ems_infra_dashboard
       middleware_topology
       network_topology
+      cloud_topology
       diagnostics
       exception
       miq_ae_automate_button

@@ -452,6 +452,17 @@
       :feature_type: admin
       :identifier: arbitration_profile_delete
 
+# Cloud Topology
+- :name: Cloud Topology
+  :description: Cloud Topology
+  :feature_type: node
+  :identifier: cloud_topology
+  :children:
+    - :name: View
+      :description: View Cloud Topology
+      :feature_type: view
+      :identifier: cloud_topology_view
+
 # AvailabilityZone
 - :name: Availability Zones
   :description: Everything under Availability Zones

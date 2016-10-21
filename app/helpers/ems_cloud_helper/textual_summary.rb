@@ -26,6 +26,8 @@ module EmsCloudHelper::TextualSummary
   end
 
   def textual_group_topology
+    items = %w(topology)
+    items.collect { |m| send("textual_#{m}") }.flatten.compact
   end
 
   #
@@ -158,5 +160,12 @@ module EmsCloudHelper::TextualSummary
 
   def textual_zone
     {:label => _("Managed by Zone"), :image => "zone", :value => @ems.zone.name}
+  end
+
+  def textual_topology
+    {:label => _('Topology'),
+     :image => 'topology',
+     :link  => url_for(:controller => 'cloud_topology', :action => 'show', :id => @ems.id),
+     :title => _("Show topology")}
   end
 end
