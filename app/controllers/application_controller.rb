@@ -1919,6 +1919,31 @@ class ApplicationController < ActionController::Base
     prov_redirect("publish")
   end
 
+  def remember_tab
+    # Capture current top tab bar URLs as they come in
+    if action_name == "explorer" # For explorers, don't capture any parms, nil out id
+      inbound_url = {
+        :controller => controller_name,
+        :action     => action_name,
+        :id         => nil}
+    else
+      inbound_url = {
+        :controller  => controller_name,
+        :action      => action_name,
+        :id          => request.parameters["id"],
+        :display     => request.parameters["display"],
+        :role        => request.parameters["role"],
+        :config_tab  => request.parameters["config_tab"],
+        :support_tab => request.parameters["support_tab"],
+        :rpt_group   => request.parameters["rpt_group"],
+        :rpt_index   => request.parameters["rpt_index"],
+        :typ         => request.parameters["typ"]
+      }
+    end
+
+    remember_tab_url(inbound_url)
+  end
+
   def remember_tab_url(inbound_url)
     # Customize URLs for controllers that don't use breadcrumbs
     case controller_name
@@ -1992,30 +2017,7 @@ class ApplicationController < ActionController::Base
     session[:host_url] = request.host_with_port
     session[:tab_url] ||= {}
 
-    unless request.xml_http_request?  # Don't capture ajax URLs
-      # Capture current top tab bar URLs as they come in
-      if action_name == "explorer" # For explorers, don't capture any parms, nil out id
-        inbound_url = {
-          :controller => controller_name,
-          :action     => action_name,
-          :id         => nil}
-      else
-        inbound_url = {
-          :controller  => controller_name,
-          :action      => action_name,
-          :id          => request.parameters["id"],
-          :display     => request.parameters["display"],
-          :role        => request.parameters["role"],
-          :config_tab  => request.parameters["config_tab"],
-          :support_tab => request.parameters["support_tab"],
-          :rpt_group   => request.parameters["rpt_group"],
-          :rpt_index   => request.parameters["rpt_index"],
-          :typ         => request.parameters["typ"]
-        }
-      end
-
-      remember_tab_url(inbound_url)
-    end
+    remember_tab unless request.xml_http_request?
 
     # Get all of the global variables used by most of the controllers
     @pp_choices = PPCHOICES
