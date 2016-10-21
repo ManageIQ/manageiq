@@ -37,6 +37,8 @@ function MwAddDatasourceCtrl($scope, $rootScope, miqService, mwAddDatasourceServ
     jdbcDriverName: '',
     jdbcModuleName: '',
     driverClass: '',
+    selectedJdbcDriver: undefined,
+    existingJdbcDrivers: undefined,
   };
 
   $scope.step3DsModel = {
@@ -48,6 +50,7 @@ function MwAddDatasourceCtrl($scope, $rootScope, miqService, mwAddDatasourceServ
   };
 
   $scope.chooseDsModel.datasources = mwAddDatasourceService.getDatasources();
+  $scope.step2DsModel.existingJdbcDrivers = mwAddDatasourceService.getExistingJdbcDrivers();
 
   $scope.$on(DATASOURCE_EVENT, function(event, payload) {
     mwAddDatasourceService.sendAddDatasource(payload).then(
