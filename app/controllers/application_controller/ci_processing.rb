@@ -6,14 +6,13 @@ module ApplicationController::CiProcessing
   end
 
   def ownership_form_fields
-    @ownership_items = params[:id].split(/\s*,\s*/)
-    render :json => build_ownership_hash
+    render :json => build_ownership_hash(params[:id].split(/\s*,\s*/))
   end
 
   # Set Ownership selected db records
   def set_ownership
     assert_privileges(params[:pressed])
-
+    ownership_items = []
     # check to see if coming from show_list or drilled into vms from another CI
     controller = if request.parameters[:controller] == "vm" || ["all_vms", "vms", "instances", "images"].include?(params[:display])
                    "vm"
@@ -38,15 +37,16 @@ module ApplicationController::CiProcessing
       @refresh_partial = "layouts/flash_msg"
       return
     else
-      @ownership_items = recs.collect(&:to_i)
+      ownership_items = recs.collect(&:to_i)
     end
 
     if @explorer
       @sb[:explorer] = true
-      ownership
+      ownership(ownership_items)
     else
       if role_allows?(:feature => "vm_ownership")
-        javascript_redirect :controller => controller, :action => 'ownership', :recs => @ownership_items # redirect to build the ownership screen
+        drop_breadcrumb(:name => _("Set Ownership"), :url => "/vm_common/ownership")
+        javascript_redirect :controller => controller, :action => 'ownership', :rec_ids => ownership_items, :escape => false # redirect to build the ownership screen
       else
         head :ok
       end
@@ -70,10 +70,12 @@ module ApplicationController::CiProcessing
   end
 
   # Assign/unassign ownership to a set of objects
-  def ownership
-    build_ownership_info
-    drop_breadcrumb(:name => _("Set Ownership"), :url => "/vm_common/ownership")
+  def ownership(ownership_items = [])
+    @sb[:explorer] = true if @explorer
     @in_a_form = @ownershipedit = true
+    drop_breadcrumb(:name => _("Set Ownership"), :url => "/vm_common/ownership")
+    ownership_items = params[:rec_ids] if params[:rec_ids]
+    build_ownership_info(ownership_items)
     build_targets_hash(@ownershipitems)
     if @sb[:explorer]
       @refresh_partial = "shared/views/ownership"
@@ -84,41 +86,41 @@ module ApplicationController::CiProcessing
 
   DONT_CHANGE_OWNER = "0"
 
-  def build_ownership_info
+  def build_ownership_info(ownership_items)
     @users = {}   # Users array for first chooser
     klass = get_class_from_controller_param(params[:controller])
     Rbac.filtered(User).each { |u| @users[u.name] = u.id.to_s }
-    record = klass.find(@ownership_items[0])
-    user = record.evm_owner if @ownership_items.length == 1
+    record = klass.find(ownership_items[0])
+    user = record.evm_owner if ownership_items.length == 1
     @user = user ? user.id.to_s : nil
 
     @groups = {} # Create new entries hash (2nd pulldown)
     # need to do this only if 1 vm is selected and miq_group has been set for it
-    group = record.miq_group if @ownership_items.length == 1
+    group = record.miq_group if ownership_items.length == 1
     @group = group ? group.id.to_s : nil
     Rbac.filtered(MiqGroup.non_tenant_groups).each { |g| @groups[g.description] = g.id.to_s }
 
-    @user = @group = DONT_CHANGE_OWNER if @ownership_items.length > 1
+    @user = @group = DONT_CHANGE_OWNER if ownership_items.length > 1
 
-    @ownershipitems = klass.find(@ownership_items).sort_by(&:name)
+    @ownershipitems = klass.find(ownership_items).sort_by(&:name)
     @view = get_db_view(klass == VmOrTemplate ? Vm : klass) # Instantiate the MIQ Report view object
     @view.table = MiqFilter.records2table(@ownershipitems, @view.cols + ['id'])
   end
 
   # Build the ownership assignment screen
-  def build_ownership_hash
+  def build_ownership_hash(ownership_items)
     @users = {} # Users array for first chooser
     Rbac.filtered(User).each { |u| @users[u.name] = u.id.to_s }
     klass = get_class_from_controller_param(params[:controller])
-    record = klass.find(@ownership_items[0])
-    user = record.evm_owner if @ownership_items.length == 1
+    record = klass.find(ownership_items[0])
+    user = record.evm_owner if ownership_items.length == 1
     @user = user ? user.id.to_s : ''
     @groups = {}
-    group = record.miq_group if @ownership_items.length == 1
+    group = record.miq_group if ownership_items.length == 1
     @group = group ? group.id.to_s : nil
     Rbac.filtered(MiqGroup).each { |g| @groups[g.description] = g.id.to_s }
-    @user = @group = DONT_CHANGE_OWNER if @ownership_items.length > 1
-    @ownershipitems = klass.find(@ownership_items).sort_by(&:name)
+    @user = @group = DONT_CHANGE_OWNER if ownership_items.length > 1
+    @ownershipitems = klass.find(ownership_items).sort_by(&:name)
     {:user  => @user,
      :group => @group}
   end
