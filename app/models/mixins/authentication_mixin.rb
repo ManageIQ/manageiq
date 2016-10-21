@@ -191,16 +191,10 @@ module AuthenticationMixin
     end
   end
 
-  MAX_ATTEMPTS = 6
-  # The default for the schedule is every 1.hour now.
-  #   6 will gives us:
-  #   A failure now and retries in 2, 4, 8, and 16 minutes, for a total of 30 minutes.
-  #   We'll wait another 30 minutes, minus the time it takes to queue and perform the checks
-  #   before the schedule fires again.
   def authentication_check_retry_deliver_on(attempt)
     # Existing callers who pass no attempt will have no delay.
     case attempt
-    when nil, 0, ->(a) { a >= MAX_ATTEMPTS }
+    when nil, 0
       nil
     else
       Time.now.utc + exponential_delay(attempt - 1).minutes
@@ -211,13 +205,21 @@ module AuthenticationMixin
     2**attempt
   end
 
+  MAX_ATTEMPTS = 6
+  # The default for the schedule is every 1.hour now.
+  #   6 will gives us:
+  #   A failure now and retries in 2, 4, 8, and 16 minutes, for a total of 30 minutes.
+  #   We'll wait another 30 minutes, minus the time it takes to queue and perform the checks
+  #   before the schedule fires again.
   def authentication_check_types_queue(*args)
     method_options = args.extract_options!
     types = args.first
-    force = method_options.delete(:force) { false }
 
-    message_attributes = authentication_check_attributes(types, method_options)
-    put_authentication_check(message_attributes, force)
+    if method_options.fetch(:attempt, 0) < MAX_ATTEMPTS
+      force = method_options.delete(:force) { false }
+      message_attributes = authentication_check_attributes(types, method_options)
+      put_authentication_check(message_attributes, force)
+    end
   end
 
   def authentication_check_attributes(types, method_options)

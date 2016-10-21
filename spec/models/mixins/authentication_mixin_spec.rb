@@ -125,10 +125,12 @@ describe AuthenticationMixin do
     Timecop.freeze(Time.new(2015, 1, 2, 0, 0, 0, 0)) do
       expect(test_class_instance.authentication_check_retry_deliver_on(nil)).to be_nil
       expect(test_class_instance.authentication_check_retry_deliver_on(0)).to   be_nil
-      expect(test_class_instance.authentication_check_retry_deliver_on(6)).to   be_nil
 
       expect(test_class_instance.authentication_check_retry_deliver_on(1)).to eq(Time.now.utc + 1.minute)
       expect(test_class_instance.authentication_check_retry_deliver_on(5)).to eq(Time.now.utc + 16.minutes)
+
+      # 6 is >= MAX_ATTEMPTS and shouldn't be called
+      expect(test_class_instance.authentication_check_retry_deliver_on(6)).to eq(Time.now.utc + 32.minutes)
     end
   end
 
@@ -207,14 +209,19 @@ describe AuthenticationMixin do
               msg = MiqQueue.find_by(queue_conditions)
               msg.delivered(*msg.deliver)
 
-              msg = MiqQueue.find_by(queue_conditions)
-              expect(msg.args.last).to eq(:attempt => 2)
-              expect(msg.deliver_on).to be_within(0.1).of(time + 2.minutes)
-              msg.delivered(*msg.deliver)
+              # attempt 2, 3, 4, 5 should requeue, 6 should NOT
+              2.upto(6) do |counter|
+                if counter < 6
+                  minutes = (2**(counter - 1)).minutes
+                  msg = MiqQueue.find_by(queue_conditions)
+                  expect(msg.args.last).to eq(:attempt => counter)
+                  expect(msg.deliver_on).to be_within(0.01).of(time + minutes)
 
-              msg = MiqQueue.find_by(queue_conditions)
-              expect(msg.args.last).to eq(:attempt => 3)
-              expect(msg.deliver_on).to be_within(0.1).of(time + 4.minutes)
+                  msg.delivered(*msg.deliver)
+                else
+                  expect(MiqQueue).not_to exist(queue_conditions)
+                end
+              end
             end
           end
 
