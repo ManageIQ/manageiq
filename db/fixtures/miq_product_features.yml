@@ -2343,6 +2343,10 @@
       :description: Generic Object Definition Edit
       :feature_type: node
       :identifier: generic_object_definition_edit
+    - :name: Generic Object Definition Delete
+      :description: Generic Object Definition Delete
+      :feature_type: node
+      :identifier: generic_object_definition_delete
 
 # Automate Import/Export
 - :name: Import/Export
