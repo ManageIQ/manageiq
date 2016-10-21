@@ -117,7 +117,15 @@ module MiddlewareCommonMixin
     items.split(/,/).each do |item|
       item_record = identify_record item
       if skip_operation?(item_record, operation_info)
-        add_flash(_("Not %{hawkular_info} the provider itself") % {:hawkular_info => operation_info.fetch(:hawk)})
+        message = if operation_info.key?(:skip_msg)
+                    operation_info.fetch(:skip_msg)
+                  else
+                    "Not %{operation_name} the provider itself"
+                  end
+        add_flash(_(message) % {
+          :operation_name => operation_info.fetch(:hawk),
+          :record_name    => item_record.name
+        }, :warning)
       else
         run_operation_on_record(operation_info, item_record)
         operation_triggered = true
