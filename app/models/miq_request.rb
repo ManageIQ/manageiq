@@ -1,4 +1,6 @@
 class MiqRequest < ApplicationRecord
+  extend InterRegionApiMethodRelay
+
   ACTIVE_STATES = %w(active queued)
 
   belongs_to :source,            :polymorphic => true
@@ -86,7 +88,7 @@ class MiqRequest < ApplicationRecord
   delegate :request_task_class, :request_types, :task_description, :to => :class
 
   def self.class_from_request_data(data)
-    request_type = data[:request_type].try(:to_sym)
+    request_type = (data[:__request_type__] || data[:request_type]).try(:to_sym)
     model_symbol = REQUEST_TYPE_TO_MODEL[request_type] || raise(ArgumentError, "Invalid request_type")
     model_symbol.to_s.constantize
   end
@@ -456,6 +458,23 @@ class MiqRequest < ApplicationRecord
 
     request.post_create(auto_approve)
   end
+  api_relay_class_method(:create_request, :create) do |values, requester, auto_approve|
+    [
+      find_source_id_from_values(values),
+      {
+        :options      => values,
+        :requester    => {"user_name" => requester.userid},
+        :auto_approve => auto_approve
+      }
+    ]
+  end
+
+  def self.find_source_id_from_values(values)
+    MiqRequestMixin.get_option(:src_vm_id, nil, values) ||
+      MiqRequestMixin.get_option(:src_id, nil, values) ||
+      MiqRequestMixin.get_option(:src_ids, nil, values).try(:first)
+  end
+  private_class_method :find_source_id_from_values
 
   def post_create(auto_approve)
     set_description
@@ -474,13 +493,23 @@ class MiqRequest < ApplicationRecord
   # Helper method when not using workflow
   def self.update_request(request, values, requester)
     request = request.kind_of?(MiqRequest) ? request : MiqRequest.find(request)
-    request.update_attribute(:options, request.options.merge(values))
-    request.set_description(true)
+    request.update_request(values, requester)
+  end
 
-    request.log_request_success(requester, :updated)
+  def update_request(values, requester)
+    update_attribute(:options, options.merge(values))
+    set_description(true)
 
-    request.call_automate_event_queue("request_updated")
-    request
+    log_request_success(requester, :updated)
+
+    call_automate_event_queue("request_updated")
+    self
+  end
+  api_relay_method(:update_request, :edit) do |values, requester|
+    {
+      :options   => values,
+      :requester => {"user_name" => requester.userid}
+    }
   end
 
   def log_request_success(requester_id, mode)
