@@ -715,6 +715,10 @@
       :description: Restore from a Volume Backup
       :feature_type: admin
       :identifier: cloud_volume_backup_restore
+    - :name: Create a Snapshot
+      :description: Create a Volume Snapshot
+      :feature_type: admin
+      :identifier: cloud_volume_snapshot_create
     - :name: Attach
       :description: Attach a Volume
       :feature_type: admin
@@ -798,6 +802,10 @@
       :description: Edit Tags of Snapshots
       :feature_type: control
       :identifier: cloud_volume_snapshot_tag
+    - :name: Remove
+      :description: Remove Snapshot
+      :feature_type: admin
+      :identifier: cloud_volume_snapshot_delete
 
 # CloudVolumeBackup
 - :name: Cloud Volume Backups

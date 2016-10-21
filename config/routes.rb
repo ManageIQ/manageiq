@@ -424,6 +424,7 @@ Vmdb::Application.routes.draw do
         detach
         backup_new
         backup_select
+        snapshot_new
         edit
         cloud_volume_form_fields
         cloud_volume_tenants
@@ -439,6 +440,7 @@ Vmdb::Application.routes.draw do
         detach_volume
         backup_create
         backup_restore
+        snapshot_create
         button
         create
         dynamic_checkbox_refresh
