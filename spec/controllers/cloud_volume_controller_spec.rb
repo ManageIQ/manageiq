@@ -133,4 +133,47 @@ describe CloudVolumeController do
       end
     end
   end
+
+  describe "#create_snapshot" do
+    before do
+      stub_user(:features => :all)
+      EvmSpecHelper.create_guid_miq_server_zone
+      @ems = FactoryGirl.create(:ems_openstack)
+      @volume = FactoryGirl.create(:cloud_volume_openstack,
+                                   :name                  => "cloud-volume-01",
+                                   :ext_management_system => @ems)
+      @snapshot = FactoryGirl.create(:cloud_volume_snapshot)
+    end
+
+    context "#create_snapshot" do
+      let(:task_options) do
+        {
+          :action => "creating volume snapshot in #{@ems.inspect} for #{@volume.inspect} with #{{:name => "snapshot_name"}.inspect}",
+          :userid => controller.current_user.userid
+        }
+      end
+      let(:queue_options) do
+        {
+          :class_name  => @volume.class.name,
+          :instance_id => @volume.id,
+          :method_name => 'create_volume_snapshot',
+          :priority    => MiqQueue::HIGH_PRIORITY,
+          :role        => 'ems_operations',
+          :zone        => @ems.my_zone,
+          :args        => [{:name => "snapshot_name"}]
+        }
+      end
+
+      it "builds create snapshot screen" do
+        post :button, :params => { :pressed => "cloud_volume_snapshot_create", :format => :js, :id => @volume.id }
+        expect(assigns(:flash_array)).to be_nil
+      end
+
+      it "queues the create cloud snapshot action" do
+        expect(MiqTask).to receive(:generic_action_with_callback).with(task_options, queue_options)
+        post :snapshot_create, :params => { :button => "create",
+          :format => :js, :id => @volume.id, :snapshot_name => 'snapshot_name' }
+      end
+    end
+  end
 end

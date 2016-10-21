@@ -60,6 +60,9 @@ class CloudVolumeController < ApplicationController
     elsif params[:pressed] == "cloud_volume_edit"
       checked_volume_id = get_checked_volume_id(params)
       javascript_redirect :action => "edit", :id => checked_volume_id
+    elsif params[:pressed] == "cloud_volume_snapshot_create"
+      checked_volume_id = get_checked_volume_id(params)
+      javascript_redirect :action => "snapshot_new", :id => checked_volume_id
     elsif params[:pressed] == "cloud_volume_new"
       javascript_redirect :action => "new"
     elsif params[:pressed] == "cloud_volume_backup_create"
@@ -468,12 +471,17 @@ class CloudVolumeController < ApplicationController
       task_id = @volume.backup_create_queue(session[:userid], options)
 
       add_flash(_("Cloud volume backup creation failed: Task start failed: ID [%{id}]") %
-                {:id => task_id.inspect}, :error) unless task_id.kind_of?(Fixnum)
+                {:id => task_id.inspect}, :error)
 
-      if @flash_array
-        javascript_flash(:spinner_off => true)
-      else
+      if task_id.kind_of?(Integer)
         initiate_wait_for_task(:task_id => task_id, :action => "backup_create_finished")
+      else
+        javascript_flash(
+          :text        => _("Cloud volume backup creation failed: Task start failed: ID [%{id}]") %
+            {:id => task_id.inspect},
+          :severity    => :error,
+          :spinner_off => true
+        )
       end
     end
   end
@@ -535,7 +543,7 @@ class CloudVolumeController < ApplicationController
       task_id = @volume.backup_restore_queue(session[:userid], @backup.ems_ref)
 
       add_flash(_("Cloud volume restore failed: Task start failed: ID [%{id}]") %
-                {:id => task_id.inspect}, :error) unless task_id.kind_of?(Fixnum)
+                {:id => task_id.inspect}, :error) unless task_id.kind_of?(Integer)
 
       if @flash_array
         javascript_flash(:spinner_off => true)
@@ -563,6 +571,61 @@ class CloudVolumeController < ApplicationController
       }, :error)
     end
 
+    @breadcrumbs.pop if @breadcrumbs
+    session[:edit] = nil
+    session[:flash_msgs] = @flash_array.dup if @flash_array
+    javascript_redirect :action => "show", :id => @volume.id
+  end
+
+  def snapshot_new
+    assert_privileges("cloud_volume_snapshot_create")
+    @volume = find_by_id_filtered(CloudVolume, params[:id])
+    @in_a_form = true
+    drop_breadcrumb(
+      :name => _("Create Snapshot for Cloud Volume \"%{name}\"") % {
+        :name => @volume.name
+      },
+      :url  => "/cloud_volume/snapshot_new/#{@volume.id}"
+    )
+  end
+
+  def snapshot_create
+    assert_privileges("cloud_volume_snapshot_create")
+    @volume = find_by_id_filtered(CloudVolume, params[:id])
+    case params[:button]
+    when "cancel"
+      cancel_action(_("Snapshot of Cloud Volume \"%{name}\" was cancelled by the user") % {
+        :name => @volume.name
+      })
+    when "create"
+      options = {}
+      options[:name] = params[:snapshot_name] if params[:snapshot_name]
+      task_id = @volume.create_volume_snapshot_queue(session[:userid], options)
+      add_flash(_("Cloud volume snapshot creation failed: Task start failed: ID [%{id}]") %
+                {:id => task_id.inspect}, :error) unless task_id.kind_of?(Integer)
+      if @flash_array
+        javascript_flash(:spinner_off => true)
+      else
+        initiate_wait_for_task(:task_id => task_id, :action => "snapshot_create_finished")
+      end
+    end
+  end
+
+  def snapshot_create_finished
+    task_id = session[:async][:params][:task_id]
+    volume_id = session[:async][:params][:id]
+    task = MiqTask.find(task_id)
+    @volume = find_by_id_filtered(CloudVolume, volume_id)
+    if task.results_ready?
+      add_flash(_("Snapshot for Cloud Volume \"%{name}\" created") % {
+        :name => @volume.name
+      })
+    else
+      add_flash(_("Unable to create snapshot for Cloud Volume \"%{name}\": %{details}") % {
+        :name    => @volume.name,
+        :details => task.message
+      }, :error)
+    end
     @breadcrumbs.pop if @breadcrumbs
     session[:edit] = nil
     session[:flash_msgs] = @flash_array.dup if @flash_array

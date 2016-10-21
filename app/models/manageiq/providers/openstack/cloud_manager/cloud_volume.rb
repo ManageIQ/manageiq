@@ -5,6 +5,7 @@ class ManageIQ::Providers::Openstack::CloudManager::CloudVolume < ::CloudVolume
 
   supports :backup_create
   supports :backup_restore
+  supports :snapshot_create
 
   def self.validate_create_volume(ext_management_system)
     validate_volume(ext_management_system)
@@ -112,12 +113,12 @@ class ManageIQ::Providers::Openstack::CloudManager::CloudVolume < ::CloudVolume
   end
 
   def create_volume_snapshot(options)
-    ManageIQ::Providers::Openstack::CloudManager::CloudVolumeSnapshot.create_volume_snapshot(self, options)
+    ManageIQ::Providers::Openstack::CloudManager::CloudVolumeSnapshot.create_snapshot(self, options)
   end
 
   def create_volume_snapshot_queue(userid, options)
     ManageIQ::Providers::Openstack::CloudManager::CloudVolumeSnapshot
-      .create_volume_snapshot_queue(userid, self, options)
+      .create_snapshot_queue(userid, self, options)
   end
 
   def provider_object(connection)
