@@ -28,6 +28,13 @@ shared_examples_for "OwnershipMixin" do
         end
       end
 
+      let(:group_other_region) do
+        other_region_id = ApplicationRecord.id_in_region(1, MiqRegion.my_region_number + 1)
+        FactoryGirl.create(:miq_group, :id => other_region_id).tap do |g|
+          g.update_column(:description, group.description) # Bypass validation for test purposes
+        end
+      end
+
       context "only with a user" do
         it "in this region" do
           expect(described_class.user_or_group_owned(user, nil)).to eq([user_owned])
@@ -39,8 +46,15 @@ shared_examples_for "OwnershipMixin" do
         end
       end
 
-      it "only with a group" do
-        expect(described_class.user_or_group_owned(nil, group)).to eq([in_ldap])
+      context "only with a group" do
+        it "in this region" do
+          expect(described_class.user_or_group_owned(nil, group)).to eq([in_ldap])
+        end
+
+        it "with same group description as another region" do
+          in_ldap.update!(:miq_group => group_other_region)
+          expect(described_class.user_or_group_owned(nil, group)).to eq([in_ldap])
+        end
       end
 
       context "with a user and a group" do
@@ -50,6 +64,11 @@ shared_examples_for "OwnershipMixin" do
 
         it "with same userid as another region" do
           user_owned.update!(:evm_owner => user_other_region)
+          expect(described_class.user_or_group_owned(user, group)).to match_array([in_ldap, user_owned])
+        end
+
+        it "with same group description as another region" do
+          user_owned.update!(:miq_group => group_other_region)
           expect(described_class.user_or_group_owned(user, group)).to match_array([in_ldap, user_owned])
         end
       end
