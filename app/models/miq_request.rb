@@ -493,22 +493,23 @@ class MiqRequest < ApplicationRecord
   # Helper method when not using workflow
   def self.update_request(request, values, requester)
     request = request.kind_of?(MiqRequest) ? request : MiqRequest.find(request)
-    request.update_attribute(:options, request.options.merge(values))
-    request.set_description(true)
-
-    request.log_request_success(requester, :updated)
-
-    request.call_automate_event_queue("request_updated")
-    request
+    request.update_request(values, requester)
   end
-  api_relay_class_method(:update_request, :update) do |request, values, requester|
-    [
-      (request.kind_of?(MiqRequest) ? request.id : request),
-      {
-        :options   => values,
-        :requester => {"user_name" => requester.userid}
-      }
-    ]
+
+  def update_request(values, requester)
+    update_attribute(:options, options.merge(values))
+    set_description(true)
+
+    log_request_success(requester, :updated)
+
+    call_automate_event_queue("request_updated")
+    self
+  end
+  api_relay_method(:update_request, :edit) do |values, requester|
+    {
+      :options   => values,
+      :requester => {"user_name" => requester.userid}
+    }
   end
 
   def log_request_success(requester_id, mode)
