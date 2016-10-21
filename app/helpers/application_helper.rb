@@ -629,7 +629,7 @@ module ApplicationHelper
         %w(about chargeback ems_infra_dashboard exception miq_ae_automate_button miq_ae_class miq_ae_export
            miq_ae_tools miq_capacity_bottlenecks miq_capacity_planning miq_capacity_utilization
            miq_capacity_waste miq_policy miq_policy_export miq_policy_rsop ops pxe report rss
-           server_build middleware_topology network_topology container_dashboard).include?(@layout) ||
+           server_build middleware_topology network_topology container_dashboard cloud_topology).include?(@layout) ||
         (@layout == "configuration" && @tabform != "ui_4")) && !controller.action_name.end_with?("tagging_edit")
         unless @explorer
           @show_taskbar = true
@@ -1105,7 +1105,7 @@ module ApplicationHelper
 
   GTL_VIEW_LAYOUTS = %w(action availability_zone host_aggregate auth_key_pair_cloud
                         cim_base_storage_extent ems_storage cloud_object_store_container
-                        cloud_object_store_object cloud_tenant cloud_volume cloud_volume_backup cloud_volume_snapshot
+                        cloud_object_store_object cloud_tenant cloud_topology cloud_volume cloud_volume_backup cloud_volume_snapshot
                         configuration_job condition container_group container_route container_project
                         container_replicator container_image container_image_registry container_template
                         container_topology container_dashboard ems_infra_dashboard middleware_topology persistent_volume

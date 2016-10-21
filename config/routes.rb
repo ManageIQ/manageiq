@@ -941,6 +941,13 @@ Vmdb::Application.routes.draw do
       )
     },
 
+    :cloud_topology         => {
+      :get => %w(
+        show
+        data
+      )
+    },
+
     :container_dashboard      => {
       :get => %w(
         show
