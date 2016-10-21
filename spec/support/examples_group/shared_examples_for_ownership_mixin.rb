@@ -240,11 +240,6 @@ shared_examples_for "OwnershipMixin" do
       let(:exp) { { "="=> { "field" => "#{described_class}-owned_by_current_ldap_group", "value" => exp_value } } }
       let(:report) { MiqReport.new.tap { |r| r.db = described_class.to_s } }
       let(:search_opts) { { :filter => MiqExpression.new(exp), :per_page => 20 } }
-      let(:owned_by_group_1)  { described_class.where(:name => 'in_ldap').first }
-      let(:owned_by_group_2)  { described_class.where(:name => 'not_in_ldap').first }
-      let(:owned_by_group_3)  { described_class.where(:name => 'no_group').first }
-      let(:owned_by_user)     { described_class.where(:name => 'user_owned').first }
-      let(:owned_by_user2)    { described_class.where(:name => 'user_owned2').first }
 
       before do
         expect(User).to receive(:server_timezone).and_return("UTC")
@@ -257,7 +252,7 @@ shared_examples_for "OwnershipMixin" do
       context "searching by records in current ldap group" do
         it "returns results only part of the miq_group" do
           owned_ids = report.paged_view_search(search_opts).first.map(&:id)
-          expect(owned_ids).to match_array [owned_by_group_1.id]
+          expect(owned_ids).to match_array [in_ldap.id]
         end
       end
 
@@ -266,7 +261,7 @@ shared_examples_for "OwnershipMixin" do
 
         it "returns results not part of the miq_group" do
           owned_ids = report.paged_view_search(search_opts).first.map(&:id)
-          expect(owned_ids).to match_array [owned_by_group_2.id]
+          expect(owned_ids).to match_array [not_in_ldap.id]
         end
       end
 
@@ -276,7 +271,7 @@ shared_examples_for "OwnershipMixin" do
 
         it "returns results owned by the user" do
           owned_ids = report.paged_view_search(search_opts).first.map(&:id)
-          expect(owned_ids).to match_array [owned_by_user.id]
+          expect(owned_ids).to match_array [user_owned.id]
         end
       end
 
@@ -286,7 +281,7 @@ shared_examples_for "OwnershipMixin" do
 
         it "returns results not owned by the user, but have an owner" do
           owned_ids = report.paged_view_search(search_opts).first.map(&:id)
-          expect(owned_ids).to match_array [owned_by_user2.id]
+          expect(owned_ids).to match_array [user_owned2.id]
         end
       end
     end
