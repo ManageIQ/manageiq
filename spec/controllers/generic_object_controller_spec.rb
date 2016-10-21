@@ -46,6 +46,25 @@ describe GenericObjectController do
     end
   end
 
+  describe "#delete" do
+    let(:params) { {:id => generic_object_definition.id} }
+    let(:generic_object_definition) { GenericObjectDefinition.create!(:name => "name", :description => "description") }
+
+    before do
+      post :delete, params
+    end
+
+    it "deletes the generic object" do
+      expect(GenericObjectDefinition.count).to eq(0)
+    end
+
+    it "renders a json message" do
+      expect(response.body).to eq({
+        :message => "Generic Object Definition deleted"
+      }.to_json)
+    end
+  end
+
   describe "#explorer" do
     let(:tree_builder_generic_object) { double("TreeBuilderGenericObject") }
 

@@ -18,6 +18,14 @@ class GenericObjectController < ApplicationController
     render :json => {:message => _("Generic Object Definition saved successfully")}
   end
 
+  def delete
+    generic_object_definition = GenericObjectDefinition.find(params[:id])
+
+    generic_object_definition.delete
+
+    render :json => {:message => _("Generic Object Definition deleted")}
+  end
+
   def explorer
     @layout = "generic_object"
 
