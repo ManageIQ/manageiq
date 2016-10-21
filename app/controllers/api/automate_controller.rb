@@ -3,12 +3,15 @@ module Api
     def show
       ae_browser = MiqAeBrowser.new(@auth_user_obj)
       begin
-        resources = ae_browser.search(@req.c_suffix, ae_search_options)
+        resources = ae_browser.search(search_start(@req.c_suffix), ae_search_options)
       rescue => err
         raise BadRequestError, err.to_s
       end
+      automate_klass = collection_class(:automate).name
       attributes = params['attributes'] ? %w(fqname) | params['attributes'].to_s.split(',') : nil
-      resources = resources.collect { |resource| resource.slice(*attributes) } if attributes.present?
+      resources = resources.collect do |resource|
+        post_process_resource(:automate, automate_klass, resource, attributes)
+      end
       render_resource :automate, :name => "automate", :subcount => resources.count, :resources => resources
     end
 
@@ -45,6 +48,12 @@ module Api
       "Automate Domain id:#{domain.id} name:'#{domain.name}'"
     end
 
+    def search_start(c_suffix)
+      start = c_suffix
+      start = resource_search(start, :automate, collection_class(:automate)).name if cid?(start)
+      start
+    end
+
     def resource_search(id, type, klass)
       if cid?(id)
         super
@@ -69,6 +78,19 @@ module Api
       search_options = {:depth => depth, :serialize => true}
       search_options[:state_machines] = true if search_option?(:state_machines)
       search_options
+    end
+
+    def post_process_resource(type, automate_klass, resource, attributes)
+      resource_klass = resource["klass"]
+      resource = resource.slice(*attributes) if attributes.present?
+      if attributes.blank? || attributes.include?("actions")
+        if resource_klass == automate_klass
+          href = "#{@req.api_prefix}/#{type}/#{resource['id']}"
+          aspecs = gen_action_spec_for_resources(collection_config[type], false, href, resource)
+          resource["actions"] = aspecs
+        end
+      end
+      resource
     end
 
     def current_tenant
