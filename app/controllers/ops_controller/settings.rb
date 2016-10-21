@@ -7,6 +7,7 @@ module OpsController::Settings
   include_concern 'Common'
   include_concern 'Ldap'
   include_concern 'Schedules'
+  include_concern 'AutomateSchedules'
   include_concern 'Tags'
   include_concern 'Upload'
   include_concern 'Zones'
