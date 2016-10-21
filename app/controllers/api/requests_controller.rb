@@ -36,7 +36,7 @@ module Api
       user = parse_requester_user(data["requester"])
 
       begin
-        request_klass.update_request(request, request_options, user)
+        request.update_request(request_options, user)
       rescue => err
         raise BadRequestError, "Could not update the request - #{err}"
       end
