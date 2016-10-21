@@ -198,7 +198,7 @@
       - elsif [:ldap_ous].include?(field)
         -# tree control for tags fields
         .col-md-8
-          %div{:id => "ldap_ous_treebox", :style => "color:#000; overflow: hidden;"}
+          #ldap_ous_treebox.treeview-pf-hover.treeview-pf-select{:style => "color:#000; overflow: hidden;"}
           - if @edit && @edit[:req_id]
             - click = @edit[:req_id]
           - elsif @miq_request
@@ -307,7 +307,7 @@
       - elsif [:tag_ids, :vm_tags].include?(field)
         -# tree control for tags fields
         .col-md-8
-          %div{:id => "all_tags_treebox", :style => "color:#000; overflow: hidden;"}
+          #all_tags_treebox.treeview-pf-hover.treeview-pf-select{:style => "color:#000; overflow: hidden;"}
           - if @edit && @edit[:req_id]
             - check = @edit[:req_id]
           - elsif @miq_request

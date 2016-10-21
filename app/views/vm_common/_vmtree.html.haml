@@ -4,7 +4,7 @@
   = _("(Check All)")
   %p
 
-  #genealogy_treebox{:style => "width:100%"}
+  #genealogy_treebox.treeview-pf-hover.treeview-pf-select{:style => "width:100%"}
   = render(:partial => "layouts/tree",
     :locals         => {:tree_id => "genealogy_treebox",
       :tree_name                 => @tree_name,

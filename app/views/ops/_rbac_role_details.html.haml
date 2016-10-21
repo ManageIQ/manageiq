@@ -60,7 +60,7 @@
       - else
         = _("Product Features (Read Only)")
       %h3
-      #features_treebox{:style => "width:100%;height:100%;color:#000"}
+      #features_treebox.treeview-pf-hover.treeview-pf-select{:style => "width:100%;height:100%;color:#000"}
       = render(:partial => "layouts/tree",
                :locals  => {:tree_id        => "features_treebox",
                             :tree_name      => "features_tree",

@@ -1,3 +1,3 @@
 %div{:id => "#{name}_div"}
-  %div{:id => "#{name}box", :style => "overflow: hidden"}
+  .treeview-pf-hover.treeview-pf-select{:id => "#{name}box", :style => "overflow: hidden"}
     = render :partial  => "layouts/tree", :locals => tree.locals_for_render

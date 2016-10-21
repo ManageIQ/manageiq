@@ -186,7 +186,7 @@
         = _("This user is limited to the selected items and their children.")
         %br/
         %br/
-        #hac_treebox{:style => "color:#000"}
+        #hac_treebox.treeview-pf-hover.treeview-pf-select{:style => "color:#000"}
         = render(:partial => "layouts/tree",
                  :locals  => {:tree_id           => "hac_treebox",
                               :tree_name         => "hac_tree",
@@ -200,7 +200,7 @@
         = _("This user is limited to the selected folders and their children.")
         %br/
         %br/
-        #vat_treebox{:style => "color:#000"}
+        #vat_treebox.treeview-pf-hover.treeview-pf-select{:style => "color:#000"}
         = render(:partial => "layouts/tree",
                  :locals  => {:tree_id           => "vat_treebox",
                               :tree_name         => "vat_tree",
