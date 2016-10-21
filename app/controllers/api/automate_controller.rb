@@ -1,15 +1,14 @@
 module Api
   class AutomateController < BaseController
     def show
-      ae_browser = MiqAeBrowser.new(@auth_user_obj)
-      begin
-        resources = ae_browser.search(@req.c_suffix, ae_search_options)
-      rescue => err
-        raise BadRequestError, err.to_s
+      if browser_requested?
+        resources = collection_search
+        attributes = params['attributes'] ? %w(fqname) | params['attributes'].to_s.split(',') : nil
+        resources = resources.collect { |resource| resource.slice(*attributes) } if attributes.present?
+        render_resource :automate, :name => "automate", :subcount => resources.count, :resources => resources
+      else
+        super
       end
-      attributes = params['attributes'] ? %w(fqname) | params['attributes'].to_s.split(',') : nil
-      resources = resources.collect { |resource| resource.slice(*attributes) } if attributes.present?
-      render_resource :automate, :name => "automate", :subcount => resources.count, :resources => resources
     end
 
     def refresh_from_source_resource(type, id = nil, data = nil)
@@ -28,6 +27,29 @@ module Api
     end
 
     private
+
+    def browser_requested?
+      @req.c_suffix !~ /^#{CID_OR_ID_MATCHER}$/
+    end
+
+    def resource_search(id, type, klass)
+      if browser_requested?
+        domains = collection_search
+        raise "Ambiguous #{@req.c_suffix} domain specification, please use id" if domains.count != 1
+        super(domains.first["id"], type, klass)
+      else
+        super
+      end
+    end
+
+    def collection_search
+      ae_browser = MiqAeBrowser.new(@auth_user_obj)
+      begin
+        ae_browser.search(@req.c_suffix, ae_search_options)
+      rescue => err
+        raise BadRequestError, err.to_s
+      end
+    end
 
     def ae_search_options
       # For /api/automate (discovering domains, scope is 1 if unspecified)
