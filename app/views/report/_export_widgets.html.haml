@@ -47,16 +47,9 @@
       .col-md-6
         = submit_tag(_("Upload"), :class => "btn btn-default", :id => "upload_widget", :disabled => true)
         :javascript
-          $("#upload_file").on("change",
-             function(){
-               if ($(this).val()){
-                 $('#upload_widget').prop('disabled', false);
-               }
-               else {
-                 $('#upload_widget').prop('disabled', true);
-               }
-             }
-           );
+          $("#upload_file").on("change", function() {
+            ImportSetup.setUpUploadImportButton('#upload_widget')
+          });
   %hr
 
   %h3

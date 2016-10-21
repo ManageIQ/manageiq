@@ -183,6 +183,33 @@ describe('import.js', function() {
         });
       });
     });
+
+    describe('SettingUpImportButton', function() {
+      beforeEach(function() {
+        var html = '';
+        html += '<div class="col-md-6">'
+        html += ' <input id="upload_button" />';
+        html += '</div>';
+        html += '<div>';
+        html += ' <input id="upload_file" />';
+        html += '</div>';
+
+        setFixtures(html);
+      });
+
+      it('make upload button to not be disabled', function(){
+        $('#upload_button').prop('disabled', true);
+        $('#upload_file').prop('value', 'test_value');
+        ImportSetup.setUpUploadImportButton('#upload_button');
+        expect($('#upload_button').prop('disabled')).toEqual(false);
+      });
+
+      it('make upload button to be disabled', function(){
+        $('#upload_button').prop('disabled', false);
+        ImportSetup.setUpUploadImportButton('#upload_button');
+        expect($('#upload_button').prop('disabled')).toEqual(true);
+      });
+    });
   });
 
   describe('#clearMessages', function() {
