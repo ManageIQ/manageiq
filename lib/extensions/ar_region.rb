@@ -52,6 +52,10 @@ module ArRegion
       id.to_i / rails_sequence_factor
     end
 
+    def id_in_region(id, region_number)
+      region_number * rails_sequence_factor + id
+    end
+
     def region_to_range(region_number)
       (region_number * rails_sequence_factor)..(region_number * rails_sequence_factor + rails_sequence_factor - 1)
     end
