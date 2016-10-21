@@ -32,8 +32,9 @@ class ApplicationHelper::Toolbar::MiqAeDomainsCenter < ApplicationHelper::Toolba
         button(
           :miq_ae_domain_priority_edit,
           'pficon pficon-edit fa-lg',
-          N_('Edit Priority Order  of Domains'),
-          N_('Edit Priority Order of Domains')),
+          t = N_('Edit Priority Order of Domains'),
+          t,
+          :klass => ApplicationHelper::Button::MiqAeDomainPriorityEdit),
       ]
     ),
   ])
