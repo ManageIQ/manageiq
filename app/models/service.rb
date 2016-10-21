@@ -35,6 +35,7 @@ class Service < ApplicationRecord
   virtual_has_one    :custom_action_buttons
   virtual_has_one    :provision_dialog
   virtual_has_one    :user
+  virtual_has_one    :chargeback_report
 
   before_validation :set_tenant_from_group
 
@@ -240,6 +241,15 @@ class Service < ApplicationRecord
     user = evm_owner
     user = User.super_admin.tap { |u| u.current_group = miq_group } if user.nil? || !user.miq_group_ids.include?(miq_group_id)
     user
+  end
+
+  def chargeback_report
+    report_result = MiqReportResult.find_by(:name => chargeback_report_name)
+    if report_result.nil?
+      {:results => []}
+    else
+      {:results => report_result.result_set}
+    end
   end
 
   def self.queue_chargeback_reports(options = {})

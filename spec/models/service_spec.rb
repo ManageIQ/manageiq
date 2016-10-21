@@ -267,19 +267,19 @@ describe Service do
     before do
       @vm = FactoryGirl.create(:vm_vmware)
       @vm_1 = FactoryGirl.create(:vm_vmware)
-
       @service = FactoryGirl.create(:service)
       @service.name = "Test_Service_1"
-      @service_c1 = FactoryGirl.create(:service, :service => @service)
-      @service_c1.name = "Test_Service_2"
       @service << @vm
-      @service_c1 << @vm_1
       @service.save
-      @service_c1.save
     end
 
     describe ".queue_chargeback_reports" do
       it "queue request to generate chargeback report for each service" do
+        @service_c1 = FactoryGirl.create(:service, :service => @service)
+        @service_c1.name = "Test_Service_2"
+        @service_c1 << @vm_1
+        @service_c1.save
+
         expect(MiqQueue).to receive(:put).twice
         described_class.queue_chargeback_reports
       end
@@ -288,7 +288,6 @@ describe Service do
     describe "#chargeback_report_name" do
       it "creates chargeback report's name" do
         expect(@service.chargeback_report_name).to eq "Chargeback-Vm-Monthly-Test_Service_1"
-        expect(@service_c1.chargeback_report_name).to eq "Chargeback-Vm-Monthly-Test_Service_2"
       end
     end
 
@@ -335,6 +334,14 @@ describe Service do
         cols_from_data = report.table.column_names.to_set
         cols_from_yaml = report_yaml['col_order'].to_set
         expect(cols_from_yaml).to be_subset(cols_from_data)
+      end
+    end
+
+    describe "#chargeback_report" do
+      it "returns chargeback report" do
+        EvmSpecHelper.local_miq_server
+        @service.generate_chargeback_report
+        expect(@service.chargeback_report).to have_key(:results)
       end
     end
   end
