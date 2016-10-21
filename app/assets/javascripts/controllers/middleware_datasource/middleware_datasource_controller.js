@@ -5,39 +5,53 @@ DATASOURCE_EVENT = 'mwAddDatasourceEvent';
 MwAddDatasourceCtrl.$inject = ['$scope', '$rootScope', 'miqService', 'mwAddDatasourceService'];
 
 function MwAddDatasourceCtrl($scope, $rootScope, miqService, mwAddDatasourceService) {
+  var getPayload = function() {
+    return {
+      'id': angular.element('#server_id').val(),
+      'xaDatasource': false,
+      'datasourceName': $scope.step1DsModel.datasourceName,
+      'jndiName': $scope.step1DsModel.jndiName,
+      'driverName': $scope.step2DsModel.jdbcDriverName,
+      'driverClass': $scope.step2DsModel.driverClass,
+      'connectionUrl': $scope.step3DsModel.connectionUrl,
+      'userName': $scope.step3DsModel.userName,
+      'password': $scope.step3DsModel.password,
+      'securityDomain': $scope.step3DsModel.securityDomain,
+    };
+  };
 
   $scope.dsModel = {};
   $scope.dsModel.step = 'CHOOSE_DS';
 
   $scope.chooseDsModel = {
-    selectedDatasource : undefined,
-    datasources : undefined
+    selectedDatasource: undefined,
+    datasources: undefined,
   };
 
   $scope.step1DsModel = {
-    datasourceName : '',
-    jndiName : ''
+    datasourceName: '',
+    jndiName: '',
   };
 
   $scope.step2DsModel = {
-    jdbcDriverName : '',
-    jdbcModuleName : '',
-    driverClass : ''
+    jdbcDriverName: '',
+    jdbcModuleName: '',
+    driverClass: '',
   };
 
   $scope.step3DsModel = {
-    validationRegex : /^jdbc:\S+$/,
-    connectionUrl : '',
-    userName : '',
-    password : '',
-    securityDomain : ''
+    validationRegex: /^jdbc:\S+$/,
+    connectionUrl: '',
+    userName: '',
+    password: '',
+    securityDomain: '',
   };
 
   $scope.chooseDsModel.datasources = mwAddDatasourceService.getDatasources();
 
   $scope.$on(DATASOURCE_EVENT, function(event, payload) {
     mwAddDatasourceService.sendAddDatasource(payload);
-    angular.element("#modal_ds_div").modal('hide');
+    angular.element('#modal_ds_div').modal('hide');
     miqService.sparkleOff();
   });
 
@@ -71,17 +85,17 @@ function MwAddDatasourceCtrl($scope, $rootScope, miqService, mwAddDatasourceServ
     $scope.dsModel.step = 'STEP1';
   };
 
-  $scope.finishAddDatasource = function () {
-    var payload = Object.assign({},getPayload());
+  $scope.finishAddDatasource = function() {
+    var payload = Object.assign({}, getPayload());
     $rootScope.$broadcast(DATASOURCE_EVENT, payload);
   };
 
-  $scope.finishAddDatasourceBack = function () {
+  $scope.finishAddDatasourceBack = function() {
     $scope.dsModel.step = 'STEP2';
   };
 
   $scope.reset = function() {
-    angular.element("#modal_ds_div").modal('hide');
+    angular.element('#modal_ds_div').modal('hide');
     $scope.dsAddForm.$setPristine();
 
     $scope.dsModel.step = 'CHOOSE_DS';
@@ -99,19 +113,5 @@ function MwAddDatasourceCtrl($scope, $rootScope, miqService, mwAddDatasourceServ
     $scope.step3DsModel.password = '';
     $scope.step3DsModel.securityDomain = '';
   };
-
-  var getPayload = function () {
-    return {
-      'id': angular.element('#server_id').val(),
-      'xaDatasource': false,
-      'datasourceName': $scope.step1DsModel.datasourceName,
-      'jndiName': $scope.step1DsModel.jndiName,
-      'driverName': $scope.step2DsModel.jdbcDriverName,
-      'driverClass': $scope.step2DsModel.driverClass,
-      'connectionUrl': $scope.step3DsModel.connectionUrl,
-      'userName': $scope.step3DsModel.userName,
-      'password': $scope.step3DsModel.password,
-      'securityDomain': $scope.step3DsModel.securityDomain
-    };
-  };
 }
+

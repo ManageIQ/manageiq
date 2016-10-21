@@ -1,8 +1,8 @@
 'use strict';
 
-describe('mwAddDatasourceController', function () {
-
-  var mwAddDatasourceService, $httpBackend;
+describe('mwAddDatasourceController', function() {
+  var mwAddDatasourceService;
+  var $httpBackend;
 
   beforeEach(module('ManageIQ'));
 
@@ -17,14 +17,13 @@ describe('mwAddDatasourceController', function () {
   });
 
   describe('Test Add Datasource', function() {
-
-    it('should supply a list of datasources', function () {
+    it('should supply a list of datasources', function() {
       var dsList = mwAddDatasourceService.getDatasources();
       expect(dsList).toBeDefined();
       expect(dsList.length).toBeGreaterThan(1);
     });
 
-    it('should submit add_datasource via json/POST', function () {
+    it('should submit add_datasource via json/POST', function() {
       var dsPayload = {
         'id': 1,
         'xaDatasource': false,
@@ -35,15 +34,15 @@ describe('mwAddDatasourceController', function () {
         'connectionUrl': 'jdbc:h2:mem:test;DB_CLOSE_DELAY=-1',
         'userName': 'jdoe',
         'password': 'password',
-        'securityDomain': ''
+        'securityDomain': '',
       };
-      var addDatasourceSuccessResponse = {'status':'success' };
+      var addDatasourceSuccessResponse = {'status': 'success' };
 
       $httpBackend.expectPOST('/middleware_server/add_datasource', dsPayload)
         .respond(200, addDatasourceSuccessResponse);
       mwAddDatasourceService.sendAddDatasource(dsPayload);
       $httpBackend.flush();
-     });
+    });
   });
-
-});
+}
+);

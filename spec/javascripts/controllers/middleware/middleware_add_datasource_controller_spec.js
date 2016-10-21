@@ -1,8 +1,11 @@
 'use strict';
 
-describe('middlewareAddDatasourceController', function () {
-
-  var rootScope, $scope, $controller, $httpBackend, miqService;
+describe('middlewareAddDatasourceController', function() {
+  var rootScope;
+  var $scope;
+  var $controller;
+  var $httpBackend;
+  var miqService;
 
   beforeEach(module('ManageIQ'));
 
@@ -14,7 +17,7 @@ describe('middlewareAddDatasourceController', function () {
 
     $controller = _$controller_('mwAddDatasourceController', {
       $scope: $scope,
-      miqService: miqService
+      miqService: miqService,
     });
 
     spyOn(rootScope, '$broadcast');
@@ -26,21 +29,21 @@ describe('middlewareAddDatasourceController', function () {
   });
 
   describe('Test Add Datasource Controller', function() {
-    it('should have first wizard step defined ', function () {
+    it('should have first wizard step defined ', function() {
       expect($scope.dsModel.step).toBeDefined();
       expect($scope.dsModel.step).toBe('CHOOSE_DS');
     });
 
-   it('should have datasources populated ', function () {
+    it('should have datasources populated ', function() {
       expect($scope.chooseDsModel.datasources).toBeDefined();
       expect($scope.chooseDsModel.datasources.length).toBeGreaterThan(1);
     });
 
-    it('should submit fire mwAddDatasourceEvent on finishAddDatasource step', function () {
+    it('should submit fire mwAddDatasourceEvent on finishAddDatasource step', function() {
       $scope.finishAddDatasource();
 
       expect(rootScope.$broadcast).toHaveBeenCalled();
     });
   });
-
-});
+}
+);
