@@ -1955,6 +1955,19 @@ describe ApplicationHelper do
             'function-data' => '{"eventType": "showEditForm"}'
           }
         )
+        expect(items[2]).to include(
+          :id      => "generic_object_definition_choice__generic_object_definition_delete",
+          :type    => :button,
+          :icon    => "pficon pficon-delete fa-lg",
+          :title   => "Delete this Generic Object Definition",
+          :text    => "Delete this Generic Object Definition",
+          :onwhen  => "1",
+          :enabled => false,
+          :data    => {
+            'function'      => 'sendDataWithRx',
+            'function-data' => '{"eventType": "deleteGenericObject"}'
+          }
+        )
       end
     end
   end
