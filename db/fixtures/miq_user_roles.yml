@@ -11,6 +11,7 @@
   - about
   - all_vm_rules
   - availability_zone
+  - host_aggregate
   - compute
   - flavor
   - floating_ip
@@ -939,6 +940,7 @@
   :miq_product_feature_identifiers:
   - about
   - availability_zone
+  - host_aggregate
   - all_vm_rules
   - compute
   - flavor
@@ -1002,6 +1004,7 @@
   :miq_product_feature_identifiers:
   - about
   - availability_zone
+  - host_aggregate
   - all_vm_rules
   - flavor
   - bottlenecks

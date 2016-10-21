@@ -11,5 +11,21 @@ module MiqAeServiceHostAggregateOpenstackSpec
     it "#used" do
       expect(described_class.instance_methods).to include(:availability_zone_obj)
     end
+
+    it "#update_aggregate" do
+      expect(described_class.instance_methods).to include(:update_aggregate)
+    end
+
+    it "#delete_aggregate" do
+      expect(described_class.instance_methods).to include(:delete_aggregate)
+    end
+
+    it "#add_host" do
+      expect(described_class.instance_methods).to include(:add_host)
+    end
+
+    it "#remove_host" do
+      expect(described_class.instance_methods).to include(:remove_host)
+    end
   end
 end

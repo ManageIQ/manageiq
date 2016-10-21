@@ -181,7 +181,10 @@ Vmdb::Application.routes.draw do
     :host_aggregate           => {
       :get  => %w(
         download_data
+        edit
+        host_aggregate_form_fields
         index
+        new
         perf_top_chart
         show
         show_list
@@ -189,14 +192,18 @@ Vmdb::Application.routes.draw do
       ) +
                compare_get,
       :post => %w(
+        add_host
         button
+        create
         quick_search
+        remove_host
         sections_field_changed
         show
         show_list
         tagging_edit
         tag_edit_form_field_changed
         tl_chooser
+        update
         wait_for_task
       ) + adv_search_post + compare_post + exp_post + perf_post
     },
