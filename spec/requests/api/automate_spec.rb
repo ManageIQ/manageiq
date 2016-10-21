@@ -102,7 +102,7 @@ describe "Automate API" do
 
       run_post(automate_url(git_domain.id), gen_request(:refresh_from_source))
       expect_single_action_result(:success => false,
-                                  :message => 'Please enable the git owner role in order to import git repositories')
+                                  :message => 'Git owner role is not enabled to be able to import git repositories')
     end
 
     context 'with proper git_owner role' do
@@ -115,20 +115,34 @@ describe "Automate API" do
         api_basic_authorize action_identifier(:automate, :refresh_from_source)
 
         run_post(automate_url(non_git_domain.id), gen_request(:refresh_from_source))
-        expect_single_action_result(:success => false,
-                                    :message => "Domain [id=#{non_git_domain.id}] did not originate from git repository"
-                                   )
+        expect_single_action_result(
+          :success => false,
+          :message => a_string_matching(/Automate Domain .* did not originate from git repository/)
+        )
       end
 
       it 'refreshes domain from git_repository' do
         api_basic_authorize action_identifier(:automate, :refresh_from_source)
 
-        expect_any_instance_of(GitBasedDomainImportService).to receive(:import)
+        expect_any_instance_of(GitBasedDomainImportService).to receive(:queue_refresh_and_import)
         run_post(automate_url(git_domain.id), gen_request(:refresh_from_source))
-        expect_single_action_result(:success => true,
-                                    :message => 'Domain refreshed from git repository',
-                                    :href    => automate_url(git_domain.id)
-                                   )
+        expect_single_action_result(
+          :success => true,
+          :message => a_string_matching(/Refreshing Automate Domain .* from git repository/),
+          :href    => automate_url(git_domain.id)
+        )
+      end
+
+      it 'refreshes domain from git_repository by domain name' do
+        api_basic_authorize action_identifier(:automate, :refresh_from_source)
+
+        expect_any_instance_of(GitBasedDomainImportService).to receive(:queue_refresh_and_import)
+        run_post(automate_url(git_domain.name), gen_request(:refresh_from_source))
+        expect_single_action_result(
+          :success => true,
+          :message => a_string_matching(/Refreshing Automate Domain .* from git repository/),
+          :href    => automate_url(git_domain.name)
+        )
       end
     end
   end
