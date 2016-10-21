@@ -10,8 +10,10 @@ class MiqTask < ApplicationRecord
   STATUS_ERROR      = 'Error'.freeze
   STATUS_TIMEOUT    = 'Timeout'.freeze
   STATUS_EXPIRED    = 'Expired'.freeze
-  validates_inclusion_of :state,  :in => [STATE_INITIALIZED, STATE_QUEUED, STATE_ACTIVE, STATE_FINISHED]
-  validates_inclusion_of :status, :in => [STATUS_OK, STATUS_WARNING, STATUS_ERROR, STATUS_TIMEOUT]
+  validates :state,
+            :inclusion => { :in => [STATE_INITIALIZED, STATE_QUEUED, STATE_ACTIVE, STATE_FINISHED] }
+  validates :status,
+            :inclusion => { :in => [STATUS_OK, STATUS_WARNING, STATUS_ERROR, STATUS_TIMEOUT] }
 
   DEFAULT_MESSAGE   = 'Initialized'.freeze
   DEFAULT_USERID    = 'system'.freeze
