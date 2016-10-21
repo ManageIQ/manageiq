@@ -42,7 +42,8 @@ describe DialogFieldSerializer do
     end
 
     before do
-      allow(resource_action_serializer).to receive(:serialize).with(resource_action).and_return("serialized resource action")
+      allow(resource_action_serializer)
+        .to receive(:serialize).with(resource_action).and_return("serialized resource action")
     end
 
     context "when the dialog_field is dynamic" do
@@ -52,21 +53,56 @@ describe DialogFieldSerializer do
         allow(dialog_field).to receive(:trigger_automate_value_updates).and_return("dynamic values")
       end
 
-      it "serializes the dialog_field with the correct values" do
-        expect(dialog_field_serializer.serialize(dialog_field)).to eq(expected_serialized_values.merge(
-          "resource_action" => "serialized resource action",
-          "values"          => "dynamic values"
-        ))
+      context 'when wanting the excluded set of attributes' do
+        let(:all_attributes) { false }
+
+        it 'serializes the dialog_field with the correct attributes' do
+          expect(dialog_field_serializer.serialize(dialog_field, all_attributes))
+            .to eq(expected_serialized_values.merge(
+                     "resource_action" => "serialized resource action",
+                     "values"          => "dynamic values"
+            ))
+        end
+      end
+
+      context 'when wanting all attributes' do
+        let(:all_attributes) { true }
+
+        it 'serializes the dialog_field with all attributes' do
+          expect(dialog_field_serializer.serialize(dialog_field, all_attributes))
+            .to include(expected_serialized_values.merge(
+                          'id'              => dialog_field.id,
+                          'resource_action' => 'serialized resource action',
+                          'values'          => 'dynamic values'
+            ))
+        end
       end
     end
 
     context "when the dialog_field is not dynamic" do
       let(:dynamic) { false }
 
-      it "serializes the dialog_field" do
-        expect(dialog_field_serializer.serialize(dialog_field)).to eq(expected_serialized_values.merge(
-          "resource_action" => "serialized resource action"
-        ))
+      context 'when wanting the excluded set of attributes' do
+        let(:all_attributes) { false }
+
+        it "serializes the dialog_field with the correct values" do
+          expect(dialog_field_serializer.serialize(dialog_field, all_attributes))
+            .to eq(expected_serialized_values.merge(
+                     "resource_action" => "serialized resource action"
+            ))
+        end
+      end
+
+      context 'when wanting all attributes' do
+        let(:all_attributes) { true }
+
+        it 'serializes the dialog_field with all attributes' do
+          expect(dialog_field_serializer.serialize(dialog_field, all_attributes))
+            .to include(expected_serialized_values.merge(
+                          'id'              => dialog_field.id,
+                          'resource_action' => 'serialized resource action',
+            ))
+        end
       end
     end
 
@@ -86,14 +122,15 @@ describe DialogFieldSerializer do
       end
 
       it "serializes the category name and description" do
-        expect(dialog_field_serializer.serialize(dialog_field)).to eq(expected_serialized_values.merge(
-          "resource_action" => "serialized resource action",
-          "options"         => {
-            :category_id          => "123",
-            :category_name        => "best category ever",
-            :category_description => "best category ever"
-          }
-        ))
+        expect(dialog_field_serializer.serialize(dialog_field))
+          .to eq(expected_serialized_values.merge(
+                   "resource_action" => "serialized resource action",
+                   "options"         => {
+                     :category_id          => "123",
+                     :category_name        => "best category ever",
+                     :category_description => "best category ever"
+                   }
+          ))
       end
     end
   end

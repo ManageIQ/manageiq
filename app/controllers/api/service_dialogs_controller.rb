@@ -13,6 +13,10 @@ module Api
       end
     end
 
+    def fetch_service_dialogs_content(resource)
+      resource.content(nil, nil, true)
+    end
+
     def create_resource(_type, _id, data)
       DialogImportService.new.import(data)
     rescue => e
