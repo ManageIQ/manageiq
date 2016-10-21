@@ -180,7 +180,7 @@ class MiqTask < ApplicationRecord
     return miq_report_result.report_results unless miq_report_result.nil?
     unless binary_blob.nil?
       serializer_name = binary_blob.data_type
-      serializer_name = "Marshal" unless serializer_name == "YAML"  # YAML or Marshal, for now
+      serializer_name = "Marshal" unless serializer_name == "YAML" # YAML or Marshal, for now
       serializer = serializer_name.constantize
       return serializer.load(binary_blob.binary)
     end
@@ -188,7 +188,7 @@ class MiqTask < ApplicationRecord
   end
 
   def task_results=(value)
-    self.binary_blob        = BinaryBlob.new(:name => "task_results", :data_type => "YAML")
+    self.binary_blob   = BinaryBlob.new(:name => "task_results", :data_type => "YAML")
     binary_blob.binary = YAML.dump(value)
   end
 
