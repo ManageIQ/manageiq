@@ -32,6 +32,16 @@ describe('genericObjectSubscriptionService', function() {
     });
   });
 
+  describe('#subscribeToDeleteGenericObject', function() {
+    beforeEach(function() {
+      testService.subscribeToDeleteGenericObject(callback);
+    });
+
+    it('subscribes', function() {
+      expect(subscriptionService.subscribeToEventType).toHaveBeenCalledWith('deleteGenericObject', callback);
+    });
+  });
+
   describe('#subscribeToTreeClicks', function() {
     beforeEach(function() {
       testService.subscribeToTreeClicks(callback);

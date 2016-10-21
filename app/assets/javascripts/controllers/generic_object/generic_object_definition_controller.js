@@ -7,6 +7,7 @@ ManageIQ.angular.app.controller('genericObjectDefinitionFormController', ['$http
 
     genericObjectSubscriptionService.subscribeToShowAddForm(showAddForm);
     genericObjectSubscriptionService.subscribeToShowEditForm(showEditForm);
+    genericObjectSubscriptionService.subscribeToDeleteGenericObject(deleteGenericObject);
     genericObjectSubscriptionService.subscribeToTreeClicks(showSelectedItem);
     genericObjectSubscriptionService.subscribeToRootTreeclicks(showAllItems);
   };
@@ -23,6 +24,12 @@ ManageIQ.angular.app.controller('genericObjectDefinitionFormController', ['$http
     $scope.newRecord = false;
     $scope.showForm = true;
     sendDataWithRx({eventType: 'updateToolbarCount', countSelected: 0});
+  };
+
+  var deleteGenericObject = function(_response) {
+    var data = {id: $scope.genericObjectDefinitionModel.id};
+
+    $http.post('delete', data).then(addedOrUpdatedGenericObject);
   };
 
   var showAllItems = function(response) {

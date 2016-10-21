@@ -7,6 +7,10 @@ ManageIQ.angular.app.service('genericObjectSubscriptionService', ['subscriptionS
     subscriptionService.subscribeToEventType('showEditForm', callback);
   };
 
+  this.subscribeToDeleteGenericObject = function(callback) {
+    subscriptionService.subscribeToEventType('deleteGenericObject', callback);
+  };
+
   this.subscribeToTreeClicks = function(callback) {
     subscriptionService.subscribeToEventType('treeClicked', callback);
   };
