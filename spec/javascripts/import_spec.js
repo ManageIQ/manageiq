@@ -80,6 +80,109 @@ describe('import.js', function() {
         });
       });
     });
+
+    describe('#listenForGitPostMessages', function() {
+      var gitPostMessageCallback;
+
+      beforeEach(function() {
+        spyOn(window, 'addEventListener').and.callFake(
+          function(_, callback) {
+            gitPostMessageCallback = callback;
+          }
+        );
+      });
+
+      it('sets up an event listener', function() {
+        ImportSetup.listenForGitPostMessages();
+        expect(window.addEventListener).toHaveBeenCalledWith('message', gitPostMessageCallback);
+      });
+
+      describe('post message callback', function() {
+        var event = {};
+
+        beforeEach(function() {
+          spyOn(window, 'miqSparkleOff');
+        });
+
+        context('when the message data level is an error', function() {
+          beforeEach(function() {
+            spyOn(window, 'showErrorMessage');
+            spyOn($.fn, 'prop');
+            event.data = {
+              message: '{&quot;level&quot;: &quot;error&quot;, &quot;message&quot;: &quot;test&quot;}'
+            };
+            gitPostMessageCallback(event);
+          });
+
+          it('shows the error message', function() {
+            expect(window.showErrorMessage).toHaveBeenCalledWith('test');
+          });
+
+          it('disables the git-url-import', function() {
+            expect($.fn.prop).toHaveBeenCalledWith('disabled', null);
+            expect($.fn.prop.calls.mostRecent().object.selector).toEqual('#git-url-import');
+          });
+
+          it('turns the spinner off', function() {
+            expect(window.miqSparkleOff).toHaveBeenCalled();
+          });
+        });
+
+        context('when the message data level is not error', function() {
+          beforeEach(function() {
+            spyOn(Automate, 'renderGitImport');
+            event.data = {
+              message: '{&quot;level&quot;: &quot;success&quot;, &quot;message&quot;: &quot;test&quot;}',
+              git_repo_id: 123
+            };
+          });
+
+          context('when the data has branches', function() {
+            beforeEach(function() {
+              event.data.git_branches = 'branches';
+              gitPostMessageCallback(event);
+            });
+
+            it('calls renderGitImport with the branches, tags, repo_id, and message', function() {
+              expect(Automate.renderGitImport).toHaveBeenCalledWith('branches', undefined, 123, event.data.message);
+            });
+
+            it('turns the spinner off', function() {
+              expect(window.miqSparkleOff).toHaveBeenCalled();
+            });
+          });
+
+          context('when the data has tags with no branches', function() {
+            beforeEach(function() {
+              event.data.git_tags = 'tags';
+              gitPostMessageCallback(event);
+            });
+
+            it('calls renderGitImport with the branches, tags, repo_id, and message', function() {
+              expect(Automate.renderGitImport).toHaveBeenCalledWith(undefined, 'tags', 123, event.data.message);
+            });
+
+            it('turns the spinner off', function() {
+              expect(window.miqSparkleOff).toHaveBeenCalled();
+            });
+          });
+
+          context('when the data has neither tags nor branches', function() {
+            beforeEach(function() {
+              gitPostMessageCallback(event);
+            });
+
+            it('does not call renderGitImport', function() {
+              expect(Automate.renderGitImport).not.toHaveBeenCalled();
+            });
+
+            it('turns the spinner off', function() {
+              expect(window.miqSparkleOff).toHaveBeenCalled();
+            });
+          });
+        });
+      });
+    });
   });
 
   describe('#clearMessages', function() {

@@ -17,9 +17,7 @@ var ImportSetup = {
       if (messageData.level === 'error') {
         showErrorMessage(messageData.message);
         $('#git-url-import').prop('disabled', null);
-      }
-
-      if (event.data.git_branches || event.data.git_tags) {
+      } else if (event.data.git_branches || event.data.git_tags) {
         Automate.renderGitImport(
           event.data.git_branches,
           event.data.git_tags,
@@ -27,6 +25,8 @@ var ImportSetup = {
           event.data.message
         );
       }
+
+      miqSparkleOff();
     });
   },
 
