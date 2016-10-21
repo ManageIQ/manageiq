@@ -56,26 +56,26 @@ shared_examples_for "OwnershipMixin" do
     end
 
     describe "#owning_ldap_group" do
+      let(:column) { :owning_ldap_group }
       before { User.current_user = user }
 
       context "when miq_group is in the ldap group" do
         it "returns description" do
-          column = "owning_ldap_group"
-          query  = described_class.where(:name => 'in_ldap')
+          query = described_class.where(:name => 'in_ldap')
           expect(virtual_column_sql_value(query, column)).to eq(user.current_group.description)
         end
       end
 
       context "when miq_group is not in the ldap group" do
         it "returns no description" do
-          column = "owning_ldap_group"
-          query  = described_class.where(:name => 'no_group')
+          query = described_class.where(:name => 'no_group')
           expect(virtual_column_sql_value(query, column)).to be_nil
         end
       end
     end
 
     describe "#owned_by_current_ldap_group" do
+      let(:column) { :owned_by_current_ldap_group }
       before { User.current_user = user }
 
       it "usable as arel" do
@@ -91,16 +91,14 @@ shared_examples_for "OwnershipMixin" do
 
       context "when miq_group is in the ldap group" do
         it "returns true" do
-          column = "owned_by_current_ldap_group"
-          query  = described_class.where(:name => 'in_ldap')
+          query = described_class.where(:name => 'in_ldap')
           expect(virtual_column_sql_value(query, column)).to eq(true)
         end
       end
 
       context "when miq_group is not in the ldap group" do
         it "returns false" do
-          column = "owned_by_current_ldap_group"
-          query  = described_class.where(:name => 'not_in_ldap')
+          query = described_class.where(:name => 'not_in_ldap')
           expect(virtual_column_sql_value(query, column)).to eq(false)
         end
       end
@@ -113,82 +111,76 @@ shared_examples_for "OwnershipMixin" do
       # virtual_attribute) will return no records.
       context "when miq_group is in no ldap group" do
         it "returns nil" do
-          column = "owned_by_current_ldap_group"
-          query  = described_class.where(:name => 'no_group')
-
+          query = described_class.where(:name => 'no_group')
           expect(virtual_column_sql_value(query, column)).to eq(nil)
         end
 
         it "returns no results when searching by name and owned_by_current_ldap_group" do
-          column = "owned_by_current_ldap_group"
-          query  = described_class.where :name  => 'no_group',
-                                         column => false
+          query = described_class.where(:name => 'no_group', column => false)
           expect(query.to_a.size).to eq(0)
         end
       end
     end
 
     describe "#evm_owner_name" do
+      let(:column) { :evm_owner_name }
       before { User.current_user = user }
 
       context "when has a user" do
         it "returns userid" do
-          column = "evm_owner_name"
-          query  = described_class.where(:name => 'user_owned')
+          query = described_class.where(:name => 'user_owned')
           expect(virtual_column_sql_value(query, column)).to eq(user.name)
         end
       end
 
       context "when has no user" do
         it "returns no description" do
-          column = "evm_owner_name"
-          query  = described_class.where(:name => 'no_group')
+          query = described_class.where(:name => 'no_group')
           expect(virtual_column_sql_value(query, column)).to be_nil
         end
       end
     end
 
     describe "#evm_owner_userid" do
+      let(:column) { :evm_owner_userid }
       before { User.current_user = user }
 
       context "when has a user" do
         it "returns userid" do
-          column = "evm_owner_userid"
-          query  = described_class.where(:name => 'user_owned')
+          query = described_class.where(:name => 'user_owned')
           expect(virtual_column_sql_value(query, column)).to eq(user.userid)
         end
       end
 
       context "when has no user" do
         it "returns no description" do
-          column = "evm_owner_userid"
-          query  = described_class.where(:name => 'no_group')
+          query = described_class.where(:name => 'no_group')
           expect(virtual_column_sql_value(query, column)).to be_nil
         end
       end
     end
 
     describe "#evm_owner_email" do
+      let(:column) { :evm_owner_email }
       before { User.current_user = user }
 
       context "when has a user" do
         it "returns userid" do
-          column = "evm_owner_email"
-          query  = described_class.where(:name => 'user_owned')
+          query = described_class.where(:name => 'user_owned')
           expect(virtual_column_sql_value(query, column)).to eq(user.email)
         end
       end
 
       context "when has no user" do
         it "returns no description" do
-          column = "evm_owner_email"
-          query  = described_class.where(:name => 'no_group')
+          query = described_class.where(:name => 'no_group')
           expect(virtual_column_sql_value(query, column)).to be_nil
         end
       end
     end
 
     describe "#owned_by_current_user" do
+      let(:column) { :owned_by_current_user }
       before { User.current_user = user }
 
       it "usable as arel" do
@@ -204,32 +196,26 @@ shared_examples_for "OwnershipMixin" do
 
       context "when owned by the current user" do
         it "returns true" do
-          column = "owned_by_current_user"
-          query  = described_class.where(:name => 'user_owned')
+          query = described_class.where(:name => 'user_owned')
           expect(virtual_column_sql_value(query, column)).to eq(true)
         end
       end
 
       context "when owned by a different user" do
         it "returns false" do
-          column = "owned_by_current_user"
-          query  = described_class.where(:name => 'user_owned2')
+          query = described_class.where(:name => 'user_owned2')
           expect(virtual_column_sql_value(query, column)).to eq(false)
         end
       end
 
       context "when no user" do
         it "returns nil" do
-          column = "owned_by_current_user"
-          query  = described_class.where(:name => 'no_group')
-
+          query = described_class.where(:name => 'no_group')
           expect(virtual_column_sql_value(query, column)).to eq(nil)
         end
 
         it "returns no results when searching by name and owned_by_current_user" do
-          column = "owned_by_current_user"
-          query  = described_class.where :name  => 'no_group',
-                                         column => false
+          query = described_class.where(:name => 'no_group', column => false)
           expect(query.to_a.size).to eq(0)
         end
       end
@@ -267,7 +253,7 @@ shared_examples_for "OwnershipMixin" do
 
       context "searching on owned by the current user" do
         let(:search_opts) { { :filter => MiqExpression.new(exp), :per_page => 20 } }
-        let(:exp) { { "="=> { "field" => "#{described_class}-owned_by_current_user", "value" => "true" } } }
+        let(:exp) { { "=" => { "field" => "#{described_class}-owned_by_current_user", "value" => "true" } } }
 
         it "returns results owned by the user" do
           owned_ids = report.paged_view_search(search_opts).first.map(&:id)
@@ -277,7 +263,7 @@ shared_examples_for "OwnershipMixin" do
 
       context "searching on not owned by the current user" do
         let(:search_opts) { { :filter => MiqExpression.new(exp), :per_page => 20 } }
-        let(:exp) { { "="=> { "field" => "#{described_class}-owned_by_current_user", "value" => "false" } } }
+        let(:exp) { { "=" => { "field" => "#{described_class}-owned_by_current_user", "value" => "false" } } }
 
         it "returns results not owned by the user, but have an owner" do
           owned_ids = report.paged_view_search(search_opts).first.map(&:id)
