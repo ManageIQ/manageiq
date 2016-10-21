@@ -130,6 +130,17 @@ describe InterRegionApiMethodRelay do
         end
       end
 
+      context "when the subject is nil" do
+        let(:expected) { "[nil, {:do=>\"these things\"}]" }
+        it "calls the original" do
+          expect(test_class.test_class_method([nil, post_args])).to eq(expected)
+        end
+
+        it "calls the original with a block" do
+          expect { |b| test_class.test_class_method([nil, post_args], &b) }.to yield_with_args(expected)
+        end
+      end
+
       context "when the subject is not in my region" do
         let(:region) { 0 }
 

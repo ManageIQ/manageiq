@@ -39,7 +39,7 @@ module InterRegionApiMethodRelay
       define_method(method) do |*meth_args, &meth_block|
         record_id, api_args = yield(*meth_args)
 
-        if id_in_current_region?(record_id)
+        if record_id.nil? || id_in_current_region?(record_id)
           super(*meth_args, &meth_block)
         else
           InterRegionApiMethodRelay.exec_api_call(id_to_region(record_id), collection_name, action, api_args)
