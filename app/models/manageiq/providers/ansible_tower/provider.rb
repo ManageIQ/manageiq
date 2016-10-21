@@ -40,7 +40,7 @@ class ManageIQ::Providers::AnsibleTower::Provider < ::Provider
   def verify_credentials(auth_type = nil, options = {})
     require 'ansible_tower_client'
     begin
-      with_provider_connection(options.merge(:auth_type => auth_type), &:verify_credentials) ||
+      with_provider_connection(options.merge(:auth_type => auth_type)) { |c| c.api.verify_credentials } ||
         raise(MiqException::MiqInvalidCredentialsError, _("Username or password is not valid"))
     rescue Faraday::ConnectionFailed, Faraday::SSLError => err
       raise MiqException::MiqUnreachableError, err.message, err.backtrace
