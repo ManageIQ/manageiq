@@ -9,7 +9,7 @@ describe ApplicationHelper::Button::RefreshWorkers do
     it 'should be visible when active_tab == diagnostics_workers in :diagnostics_tree' do
       view_context = setup_view_context_with_sandbox({})
       button = described_class.new(view_context, {}, {'record' => @record}, {})
-      button.instance_variable_set(:@sb, {:active_tab => 'diagnostics_workers'})
+      button.instance_variable_set(:@sb, :active_tab => 'diagnostics_workers')
       expect(button.visible?).to be_truthy
     end
 
