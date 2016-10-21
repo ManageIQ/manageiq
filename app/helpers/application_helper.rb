@@ -820,10 +820,8 @@ module ApplicationHelper
        cim_base_storage_extent
        cloud_network
        cloud_object_store_container
-       cloud_object_store_container
        cloud_subnet
        cloud_tenant
-       cloud_volume
        cloud_volume
        configuration_job
        container_build
