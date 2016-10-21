@@ -28,10 +28,6 @@ class GenericObjectDefinition < ApplicationRecord
 
   before_destroy    :check_not_in_use
 
-  def create_object(options)
-    GenericObject.create!({:generic_object_definition => self}.merge(options))
-  end
-
   FEATURES.each do |feature|
     define_method("property_#{feature}s") do
       return errors[:properties] if properties_changed? && !valid?
@@ -47,6 +43,31 @@ class GenericObjectDefinition < ApplicationRecord
 
   def property_defined?(attr)
     property_attribute_defined?(attr) || property_association_defined?(attr) || property_method_defined?(attr)
+  end
+
+  def create_object(options)
+    GenericObject.create!({:generic_object_definition => self}.merge(options))
+  end
+
+  # To query based on GenericObject AR attributes and property attributes
+  #   find_objects(:name => "TestLoadBalancer", :uid => '0001', :prop_attr_1 => 10, :prop_attr_2 => true)
+  #
+  # To query based on property associations. The array can be a partial list, but must contain only AR ids.
+  #   find_objects(:vms => [23, 26])
+  #
+  def find_objects(options)
+    dup = options.stringify_keys
+    ar_options   = dup.extract!(*(GenericObject.column_names - ["properties"]))
+    json_options = dup.extract!(*(property_attributes.keys + property_associations.keys))
+
+    unless dup.empty?
+      err_msg = _("[%{attrs}]: not searchable for Generic Object of %{name}") % {:attrs => dup.keys.join(", "),
+                                                                                 :name  => name}
+      _log.error(err_msg)
+      raise err_msg
+    end
+
+    generic_objects.where(ar_options).where("properties @> ?", json_options.to_json)
   end
 
   def property_getter(attr, val)

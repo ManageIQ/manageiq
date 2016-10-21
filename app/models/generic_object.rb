@@ -131,13 +131,17 @@ class GenericObject < ApplicationRecord
     self.properties = properties.merge(name => val)
   end
 
-  # the method parameters are passed into automate as a hash: {:param_1 => param_1, :param_2 => param_2}
+  # the method parameters are passed into automate as a hash:
+  # {:param_1 => 12, :param_1_type => "Vm", :param_2 => 14, :param_2_type => "Fixnum"}
   # the return value from automate is in $evm.root['method_result']
   def call_automate(method_name, *args)
     raise "A user is required to send [#{method_name}] to automate." unless @user
 
     attrs = { :method_name => method_name }
-    args.each_with_index { |item, idx| attrs["param_#{idx + 1}".to_sym] = item }
+    args.each_with_index do |item, idx|
+      attrs["param_#{idx + 1}".to_sym] = item
+      attrs["param_#{idx + 1}_type".to_sym] = item.class.name
+    end
 
     options = {
       :object_type   => self.class.name,
