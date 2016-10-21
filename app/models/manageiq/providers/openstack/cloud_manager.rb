@@ -326,6 +326,10 @@ class ManageIQ::Providers::Openstack::CloudManager < ManageIQ::Providers::CloudM
     ManageIQ::Providers::Openstack::CloudManager::HostAggregate.create_aggregate(self, options)
   end
 
+  def create_host_aggregate_queue(userid, options)
+    ManageIQ::Providers::Openstack::CloudManager::HostAggregate.create_aggregate_queue(userid, self, options)
+  end
+
   def self.event_monitor_class
     ManageIQ::Providers::Openstack::CloudManager::EventCatcher
   end

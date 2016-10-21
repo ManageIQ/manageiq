@@ -20,5 +20,9 @@ module MiqAeServiceEmsOpenstackSpec
       availability_zone = @ems_openstack.availability_zones.first
       expect(availability_zone).to be_kind_of(MiqAeMethodService::MiqAeServiceManageIQ_Providers_Openstack_CloudManager_AvailabilityZone)
     end
+
+    it "#create_host_aggregate" do
+      expect(described_class.instance_methods).to include(:create_host_aggregate)
+    end
   end
 end
