@@ -128,6 +128,10 @@ describe('genericObjectDefinitionFormController', function() {
       it('sets the showForm to true', function() {
         expect($scope.showForm).toEqual(true);
       });
+
+      it('sends an updateToolbarCount event', function() {
+        expect(window.sendDataWithRx).toHaveBeenCalledWith({eventType: 'updateToolbarCount', countSelected: 0});
+      });
     });
 
     describe('initialization treeClickCallback', function() {
@@ -157,6 +161,10 @@ describe('genericObjectDefinitionFormController', function() {
         expect($scope.showSingleItem).toEqual(true);
       });
 
+      it('sends an updateToolbarCount event', function() {
+        expect(window.sendDataWithRx).toHaveBeenCalledWith({eventType: 'updateToolbarCount', countSelected: 1});
+      });
+
       it('turns the sparkle off', function() {
         expect(miqService.sparkleOff).toHaveBeenCalled();
       });
@@ -179,6 +187,10 @@ describe('genericObjectDefinitionFormController', function() {
 
       it('sets showForm to false', function() {
         expect($scope.showForm).toEqual(false);
+      });
+
+      it('sends an updateToolbarCount event', function() {
+        expect(window.sendDataWithRx).toHaveBeenCalledWith({eventType: 'updateToolbarCount', countSelected: 0});
       });
     });
   });

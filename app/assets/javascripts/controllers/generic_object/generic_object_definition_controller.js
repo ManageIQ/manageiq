@@ -22,12 +22,14 @@ ManageIQ.angular.app.controller('genericObjectDefinitionFormController', ['$http
     $scope.backupGenericObjectDefinitionModel = angular.copy($scope.genericObjectDefinitionModel);
     $scope.newRecord = false;
     $scope.showForm = true;
+    sendDataWithRx({eventType: 'updateToolbarCount', countSelected: 0});
   };
 
   var showAllItems = function(response) {
     $scope.genericObjectList = response;
     $scope.showSingleItem = false;
     $scope.showForm = false;
+    sendDataWithRx({eventType: 'updateToolbarCount', countSelected: 0});
   };
 
   var addedOrUpdatedGenericObject = function(_data) {
@@ -49,6 +51,7 @@ ManageIQ.angular.app.controller('genericObjectDefinitionFormController', ['$http
     $scope.genericObjectDefinitionModel.description = response.description;
     $scope.showForm = false;
     $scope.showSingleItem = true;
+    sendDataWithRx({eventType: 'updateToolbarCount', countSelected: 1});
     miqService.sparkleOff();
   };
 
