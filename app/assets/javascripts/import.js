@@ -9,6 +9,14 @@ var ImportSetup = {
     });
   },
 
+  setUpUploadImportButton: function(button_id) {
+    if ($("#upload_file").val()){
+      $(button_id).prop('disabled', false);
+    } else {
+      $(button_id).prop('disabled', true);
+    }
+  },
+
   listenForGitPostMessages: function() {
     window.addEventListener('message', function(event) {
       var unencodedMessage = event.data.message.replace(/&quot;/g, '"');
