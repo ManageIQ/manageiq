@@ -26,12 +26,12 @@ class GenericObject < ApplicationRecord
         raise ActiveModel::UnknownAttributeError.new(self, k)
       end
     end
-    options.each { |k, v| property_setter(k, v) }
+    options.each { |k, v| _property_setter(k, v) }
   end
 
   def property_attributes
     properties.select { |k, _| property_attribute_defined?(k) }.each_with_object({}) do |(k, _), h|
-      h[k] = property_getter(k)
+      h[k] = _property_getter(k)
     end
   end
 
@@ -99,10 +99,10 @@ class GenericObject < ApplicationRecord
   def method_missing(method_name, *args)
     m = method_name.to_s.chomp("=")
 
-    return call_automate(m, *args) if property_method_defined?(m)
+    return _call_automate(m, *args) if property_method_defined?(m)
 
     if property_attribute_defined?(m) || property_association_defined?(m)
-      return method_name.to_s.end_with?('=') ? property_setter(m, args.first) : property_getter(m)
+      return method_name.to_s.end_with?('=') ? _property_setter(m, args.first) : _property_getter(m)
     end
 
     super
@@ -113,11 +113,11 @@ class GenericObject < ApplicationRecord
     super
   end
 
-  def property_getter(name)
+  def _property_getter(name)
     generic_object_definition.property_getter(name, properties[name])
   end
 
-  def property_setter(name, value)
+  def _property_setter(name, value)
     name = name.to_s
     val =
       if property_attribute_defined?(name)
@@ -134,7 +134,7 @@ class GenericObject < ApplicationRecord
   # the method parameters are passed into automate as a hash:
   # {:param_1 => 12, :param_1_type => "Vm", :param_2 => 14, :param_2_type => "Fixnum"}
   # the return value from automate is in $evm.root['method_result']
-  def call_automate(method_name, *args)
+  def _call_automate(method_name, *args)
     raise "A user is required to send [#{method_name}] to automate." unless @user
 
     attrs = { :method_name => method_name }
