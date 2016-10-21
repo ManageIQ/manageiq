@@ -190,7 +190,10 @@ describe GenericObject do
       let(:attrs) { {:method_name => 'my_host'} }
 
       it 'multiple parameters' do
-        options = {:attrs => attrs.merge(:param_1 => 'param1', :param_2 => 'param2')}
+        options = {:attrs => attrs.merge(:param_1      => 'param1',
+                                         :param_1_type => "String",
+                                         :param_2      => 'param2',
+                                         :param_2_type => "String")}
         expect(MiqAeEngine).to receive(:deliver).with(hash_including(options)).and_return(ws)
         go.my_host('param1', 'param2')
       end
@@ -201,13 +204,13 @@ describe GenericObject do
       end
 
       it 'one array parameter' do
-        options = {:attrs => attrs.merge(:param_1 => %w(p1 p2))}
+        options = {:attrs => attrs.merge(:param_1 => %w(p1 p2), :param_1_type=>"Array")}
         expect(MiqAeEngine).to receive(:deliver).with(hash_including(options)).and_return(ws)
         go.my_host(%w(p1 p2))
       end
 
       it 'one hash parameter' do
-        options = {:attrs => attrs.merge(:param_1 => {:p1 => 1, :p2 => 2})}
+        options = {:attrs => attrs.merge(:param_1 => {:p1 => 1, :p2 => 2}, :param_1_type=>"Hash")}
         expect(MiqAeEngine).to receive(:deliver).with(hash_including(options)).and_return(ws)
         go.my_host(:p1 => 1, :p2 => 2)
       end
