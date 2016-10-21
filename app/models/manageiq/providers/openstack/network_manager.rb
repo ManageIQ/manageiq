@@ -18,7 +18,6 @@ class ManageIQ::Providers::Openstack::NetworkManager < ManageIQ::Providers::Netw
 
   supports :create
   supports :create_floating_ip
-  supports :create_security_group
   supports :create_network_router
 
   has_many :public_networks,  :foreign_key => :ems_id, :dependent => :destroy,
@@ -168,7 +167,7 @@ class ManageIQ::Providers::Openstack::NetworkManager < ManageIQ::Providers::Netw
     }
     queue_opts = {
       :class_name  => self.class.name,
-      :method_name => 'create_floating_ip',
+      :method_name => 'create_security_group',
       :instance_id => id,
       :priority    => MiqQueue::HIGH_PRIORITY,
       :role        => 'ems_operations',
