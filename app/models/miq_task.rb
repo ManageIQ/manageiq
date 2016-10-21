@@ -45,7 +45,7 @@ class MiqTask < ApplicationRecord
   end
 
   def self.update_status(taskid, state, status, message)
-    task = MiqTask.find_by_id(taskid)
+    task = find_by(:id => taskid)
     task.update_status(state, status, message) unless task.nil?
   end
 
@@ -56,7 +56,7 @@ class MiqTask < ApplicationRecord
   end
 
   def self.update_message(taskid, message)
-    task = MiqTask.find_by_id(taskid)
+    task = find_by(:id => taskid)
     task.update_message(message) unless task.nil?
   end
 
@@ -81,7 +81,7 @@ class MiqTask < ApplicationRecord
   end
 
   def self.info(taskid, message, pct_complete)
-    task = MiqTask.find_by_id(taskid)
+    task = find_by(:id => taskid)
     task.info(message, pct_complete) unless task.nil?
   end
 
@@ -94,7 +94,7 @@ class MiqTask < ApplicationRecord
   end
 
   def self.warn(taskid, message)
-    task = MiqTask.find_by_id(taskid)
+    task = find_by(:id => taskid)
     task.warn(message) unless task.nil?
   end
 
@@ -103,12 +103,12 @@ class MiqTask < ApplicationRecord
   end
 
   def self.error(taskid, message)
-    task = MiqTask.find_by_id(taskid)
+    task = find_by(:id => taskid)
     task.error(message) unless task.nil?
   end
 
   def self.state_initialized(taskid)
-    task = MiqTask.find_by_id(taskid)
+    task = find_by(:id => taskid)
     task.state_initialized unless task.nil?
   end
 
@@ -117,7 +117,7 @@ class MiqTask < ApplicationRecord
   end
 
   def self.state_queued(taskid)
-    task = MiqTask.find_by_id(taskid)
+    task = find_by(:id => taskid)
     task.state_queued unless task.nil?
   end
 
@@ -126,7 +126,7 @@ class MiqTask < ApplicationRecord
   end
 
   def self.state_active(taskid)
-    task = MiqTask.find_by_id(taskid)
+    task = find_by(:id => taskid)
     task.state_active unless task.nil?
   end
 
@@ -135,7 +135,7 @@ class MiqTask < ApplicationRecord
   end
 
   def self.state_finished(taskid)
-    task = MiqTask.find_by_id(taskid)
+    task = find_by(:id => taskid)
     task.state_finished unless task.nil?
   end
 
