@@ -57,6 +57,7 @@ ManageIQ.angular.app.controller('genericObjectDefinitionFormController', ['$http
 
   $scope.clearForm = function() {
     $scope.genericObjectDefinitionModel = {
+      id: '',
       name: '',
       description: ''
     };
