@@ -77,10 +77,10 @@
 
   function number_to_human_size(val, options) {
     var fmt = "0.0";
-    if (options.precision < 2) {
+    if (options.precision < 1) {
       fmt = "0";
     } else {
-      var p = options.precision - 2;
+      var p = options.precision - 1;
       while (p > 0) {
         fmt += '0';
       }
@@ -131,7 +131,7 @@
 
     bytes_to_human_size: function(val, options) {
       options = options || {};
-      var av_options = { precision: options.precision || 0 };  // Precision of 0 returns the significant digits
+      var av_options = { precision: options.precision || 1 };  // Precision of 0 returns the significant digits
       val = number_to_human_size(val, av_options);
       return apply_prefix_and_suffix(val, options);
     },
