@@ -9,7 +9,7 @@ class LiveMetric < ActsAsArModel
     processed = process_conditions(raw_query[:conditions])
     resource = fetch_resource(processed[:resource_type], processed[:resource_id])
     filtered_cols = raw_query[:select] || raw_query[:include].keys.map(&:to_s)
-    if resource.nil?
+    if resource.nil? || (processed[:interval_name] == 'daily' && processed[:start_time] > processed[:end_time])
       []
     else
       filter_and_fetch_metrics(resource, filtered_cols, processed[:start_time],
