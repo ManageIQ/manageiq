@@ -269,6 +269,9 @@ span[class^="product-"], span[class*=" product-"], // i & span tags prevent conf
 .product-template:before {
   content: "\e640";
 }
+.product-orchestration_stack:before {
+  content: "\e641";
+}
 
 /* define  colors */
 .product-custom-1:before {
