@@ -958,6 +958,10 @@
           :identifier: service_reconfigure
       - :name: edit
         :identifier: miq_request_edit
+      - :name: approve
+        :identifier: miq_request_approval
+      - :name: deny
+        :identifier: miq_request_approval
     :resource_actions:
       :get:
       - :name: read
@@ -965,6 +969,10 @@
       :post:
       - :name: edit
         :identifier: miq_request_edit
+      - :name: approve
+        :identifier: miq_request_approval
+      - :name: deny
+        :identifier: miq_request_approval
   :resource_actions:
     :description: Resource Actions
     :options:

@@ -270,4 +270,98 @@ RSpec.describe "Requests API" do
       expect(response).to have_http_status(:ok)
     end
   end
+
+  context "Requests approval" do
+    let(:service1)      { FactoryGirl.create(:service, :name => "service1") }
+    let(:request1)      { ServiceReconfigureRequest.create_request({ :src_id => service1.id }, @user, false) }
+    let(:request1_url)  { requests_url(request1.id) }
+
+    let(:service2)      { FactoryGirl.create(:service, :name => "service2") }
+    let(:request2)      { ServiceReconfigureRequest.create_request({ :src_id => service2.id }, @user, false) }
+    let(:request2_url)  { requests_url(request2.id) }
+
+    it "supports approving a request" do
+      api_basic_authorize collection_action_identifier(:requests, :approve)
+
+      run_post(request1_url, gen_request(:approve, :reason => "approval reason"))
+
+      expected_msg = "Request #{request1.id} approved"
+      expect_single_action_result(:success => true, :message => expected_msg, :href => request1_url)
+    end
+
+    it "fails approving a request if the reason is missing" do
+      api_basic_authorize collection_action_identifier(:requests, :approve)
+
+      run_post(request1_url, gen_request(:approve))
+
+      expected_msg = /Must specify a reason for approving a request/
+      expect_single_action_result(:success => false, :message => expected_msg)
+    end
+
+    it "supports denying a request" do
+      api_basic_authorize collection_action_identifier(:requests, :deny)
+
+      run_post(request1_url, gen_request(:deny, :reason => "denial reason"))
+
+      expected_msg = "Request #{request1.id} denied"
+      expect_single_action_result(:success => true, :message => expected_msg, :href => request1_url)
+    end
+
+    it "fails denying a request if the reason is missing" do
+      api_basic_authorize collection_action_identifier(:requests, :deny)
+
+      run_post(request1_url, gen_request(:deny))
+
+      expected_msg = /Must specify a reason for denying a request/
+      expect_single_action_result(:success => false, :message => expected_msg)
+    end
+
+    it "supports approving multiple requests" do
+      api_basic_authorize collection_action_identifier(:requests, :approve)
+
+      run_post(requests_url, gen_request(:approve, [{:href => request1_url, :reason => "approval reason"},
+                                                    {:href => request2_url, :reason => "approval reason"}]))
+
+      expected = {
+        "results" => a_collection_containing_exactly(
+          {
+            "message" => a_string_matching(/Request #{request1.id} approved/i),
+            "success" => true,
+            "href"    => a_string_matching(request1_url)
+          },
+          {
+            "message" => a_string_matching(/Request #{request2.id} approved/i),
+            "success" => true,
+            "href"    => a_string_matching(request2_url)
+          }
+        )
+      }
+      expect(response.parsed_body).to include(expected)
+      expect(response).to have_http_status(:ok)
+    end
+
+    it "supports denying multiple requests" do
+      api_basic_authorize collection_action_identifier(:requests, :approve)
+
+      run_post(requests_url, gen_request(:deny, [{:href => request1_url, :reason => "denial reason"},
+                                                 {:href => request2_url, :reason => "denial reason"}]))
+
+      expected = {
+        "results" => a_collection_containing_exactly(
+          {
+            "message" => a_string_matching(/Request #{request1.id} denied/i),
+            "success" => true,
+            "href"    => a_string_matching(request1_url)
+          },
+          {
+            "message" => a_string_matching(/Request #{request2.id} denied/i),
+            "success" => true,
+            "href"    => a_string_matching(request2_url)
+          }
+        )
+      }
+      expect(response.parsed_body).to include(expected)
+      expect(response).to have_http_status(:ok)
+    end
+  end
 end
