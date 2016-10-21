@@ -5,7 +5,12 @@ module Menu
       self.items ||= []
       self.placement ||= :default
       self.type ||= :default
+
+      @parent = nil
+      items.each { |el| el.parent = self }
     end
+
+    attr_accessor :parent
 
     def features
       Array(items).collect { |el| el.try(:feature) }.compact
@@ -64,6 +69,11 @@ module Menu
           el.preprocess_sections(section_hash)
         end
       end
+    end
+
+    def section_path(acc = [])
+      acc << id
+      @parent.present? ? @parent.parent_path(acc) : acc
     end
   end
 end

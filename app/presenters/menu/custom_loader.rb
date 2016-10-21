@@ -26,10 +26,6 @@ module Menu
       end
     end
 
-    class CustomItem < Item
-      attr_accessor :parent
-    end
-
     def create_custom_menu_item(properties)
       rbac = properties['rbac'].each_with_object({}) { |(k, v), h| h[k.to_sym] = v }
       item_type = properties.key?('item_type') ? properties['item_type'].to_sym : :default
@@ -37,7 +33,7 @@ module Menu
         raise Menu::Manager::InvalidMenuDefinition,
               "incomplete definition -- missing #{property}" if properties[property].blank?
       end
-      item = CustomItem.new(properties['id'],
+      item = Item.new(properties['id'],
                             properties['name'],
                             properties['feature'],
                             rbac,
