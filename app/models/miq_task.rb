@@ -18,8 +18,8 @@ class MiqTask < ApplicationRecord
   DEFAULT_MESSAGE   = 'Initialized'.freeze
   DEFAULT_USERID    = 'system'.freeze
 
-  MESSAGE_TASK_COMPLETED_SUCCESSFULLY   = 'Task completed successfully'
-  MESSAGE_TASK_COMPLETED_UNSUCCESSFULLY = 'Task did not complete successfully'
+  MESSAGE_TASK_COMPLETED_SUCCESSFULLY   = 'Task completed successfully'.freeze
+  MESSAGE_TASK_COMPLETED_UNSUCCESSFULLY = 'Task did not complete successfully'.freeze
 
   has_one :log_file, :dependent => :destroy
   has_one :binary_blob, :as => :resource, :dependent => :destroy
