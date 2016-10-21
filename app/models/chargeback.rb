@@ -1,4 +1,7 @@
 class Chargeback < ActsAsArModel
+  HOURS_IN_DAY = 24
+  HOURS_IN_WEEK = 168
+
   VIRTUAL_COL_USES = {
     "v_derived_cpu_total_cores_used" => "cpu_usage_rate_average"
   }
@@ -25,32 +28,69 @@ class Chargeback < ActsAsArModel
     rate_cols = ChargebackRate.where(:default => true).flat_map do |rate|
       rate.chargeback_rate_details.map(&:metric).select { |metric| perf_cols.include?(metric.to_s) }
     end
+
     rate_cols.map! { |x| VIRTUAL_COL_USES.include?(x) ? VIRTUAL_COL_USES[x] : x }.flatten!
     base_rollup = base_rollup.select(*rate_cols)
 
     timerange = get_report_time_range(options, interval, tz)
     data = {}
 
-    timerange.step_value(1.day).each_cons(2) do |query_start_time, query_end_time|
-      recs = base_rollup.where(:timestamp => query_start_time...query_end_time, :capture_interval_name => "hourly")
-      recs = where_clause(recs, options)
-      recs = Metric::Helper.remove_duplicate_timestamps(recs)
-      _log.info("Found #{recs.length} records for time range #{[query_start_time, query_end_time].inspect}")
+    interval_duration = interval_to_duration(interval)
 
-      unless recs.empty?
-        recs.each do |perf|
-          next if perf.resource.nil?
-          key, extra_fields = key_and_fields(perf, interval, tz)
-          data[key] ||= extra_fields
+    timerange.step_value(interval_duration).each_cons(2) do |query_start_time, query_end_time|
+      records = base_rollup.where(:timestamp => query_start_time...query_end_time, :capture_interval_name => "hourly")
+      records = where_clause(records, options)
+      records = Metric::Helper.remove_duplicate_timestamps(records)
+      next if records.empty?
+      _log.info("Found #{records.length} records for time range #{[query_start_time, query_end_time].inspect}")
 
-          rates_to_apply = cb.get_rates(perf)
-          calculate_costs(perf, data[key], rates_to_apply)
-        end
+      hours_in_interval = hours_in_interval(query_start_time, query_end_time, interval)
+
+      # we are building hash with grouped calculated values
+      # values are grouped by resource_id and timestamp (query_start_time...query_end_time)
+      records.group_by(&:resource_id).each do |_, metric_rollup_records|
+        metric_rollup_records = metric_rollup_records.select { |x| x.resource.present? }
+        next if metric_rollup_records.empty?
+
+        # we need to select ChargebackRates for groups of MetricRollups records
+        # and rates are selected by first MetricRollup record
+        metric_rollup_record = metric_rollup_records.first
+        rates_to_apply = cb.get_rates(metric_rollup_record)
+
+        # key contains resource_id and timestamp (query_start_time...query_end_time)
+        # extra_fields there some extra field like resource name and
+        # some of them are related to specific chargeback (ChargebackVm, ChargebackContainer,...)
+        key, extra_fields = key_and_fields(metric_rollup_record, interval, tz)
+        data[key] ||= extra_fields
+
+        # we are getting hash with metrics and costs for metrics defined for chargeback
+        metrics_and_costs = calculate_costs(metric_rollup_records, rates_to_apply, hours_in_interval)
+
+        data[key].merge!(metrics_and_costs)
       end
     end
+
     _log.info("Calculating chargeback costs...Complete")
 
     [data.map { |r| new(r.last) }]
+  end
+
+  def self.hours_in_interval(query_start_time, query_end_time, interval)
+    return HOURS_IN_DAY if interval == "daily"
+    return HOURS_IN_WEEK if interval == "weekly"
+
+    (query_end_time - query_start_time) / 1.hour
+  end
+
+  def self.interval_to_duration(interval)
+    case interval
+    when "daily"
+      1.day
+    when "weekly"
+      1.week
+    when "monthly"
+      1.month
+    end
   end
 
   def self.key_and_fields(metric_rollup_record, interval, tz)
@@ -91,25 +131,25 @@ class Chargeback < ActsAsArModel
     @rates[key] = ChargebackRate.get_assigned_for_target(perf.resource, :tag_list => tag_list, :parents => parents)
   end
 
-  def self.calculate_costs(perf, h, rates)
-    # This expects perf interval to be hourly. That will be the most granular interval available for chargeback.
-    unless perf.capture_interval_name == "hourly"
-      raise _("expected 'hourly' performance interval but got '%{interval}") % {:interval => perf.capture_interval_name}
-    end
+  def self.calculate_costs(metric_rollup_records, rates, hours_in_interval)
+    calculated_costs = {}
 
     rates.each do |rate|
       rate.chargeback_rate_details.each do |r|
-        rec    = r.metric && perf.respond_to?(r.metric) ? perf : perf.resource
-        metric = r.metric.nil? ? 0 : rec.send(r.metric) || 0
-        cost   = r.cost(metric)
+        metric_value = r.metric_value_by(metric_rollup_records)
+        r.hours_in_interval = hours_in_interval
+        cost = r.cost(metric_value) * hours_in_interval
 
-        reportable_metric_and_cost_fields(r.rate_name, r.group, metric, cost).each do |k, val|
+        # add values to hash and sum
+        reportable_metric_and_cost_fields(r.rate_name, r.group, metric_value, cost).each do |k, val|
           next unless attribute_names.include?(k)
-          h[k] ||= 0
-          h[k] += val
+          calculated_costs[k] ||= 0
+          calculated_costs[k] += val
         end
       end
     end
+
+    calculated_costs
   end
 
   def self.reportable_metric_and_cost_fields(rate_name, rate_group, metric, cost)

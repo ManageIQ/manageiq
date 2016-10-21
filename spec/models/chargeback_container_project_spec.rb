@@ -38,6 +38,8 @@ describe ChargebackContainerProject do
   end
 
   context "Daily" do
+    let(:hours_in_day) { 24 }
+
     before do
       @options[:interval] = "daily"
       @options[:entity_id] = @project.id
@@ -72,8 +74,9 @@ describe ChargebackContainerProject do
                                :variable_rate             => @hourly_rate.to_s)
       cbrd.chargeback_tiers = [cbt]
       cbrd.save
-      expect(subject.cpu_cores_used_metric).to eq(@cpu_usage_rate * @metric_size)
-      expect(subject.cpu_cores_used_cost).to eq(@cpu_usage_rate * @hourly_rate * @metric_size)
+
+      expect(subject.cpu_cores_used_metric).to eq(@cpu_usage_rate)
+      expect(subject.cpu_cores_used_cost).to be_within(0.01).of(@cpu_usage_rate * @hourly_rate * hours_in_day)
     end
 
     it "memory" do
@@ -89,8 +92,8 @@ describe ChargebackContainerProject do
       cbrd.chargeback_tiers = [cbt]
       cbrd.save
 
-      expect(subject.memory_used_metric).to eq(@memory_used * @metric_size)
-      expect(subject.memory_used_cost).to eq(@memory_used * @hourly_rate * @metric_size)
+      expect(subject.memory_used_metric).to eq(@memory_used)
+      expect(subject.memory_used_cost).to be_within(0.01).of(@memory_used * @hourly_rate * hours_in_day)
     end
 
     it "net io" do
@@ -106,8 +109,8 @@ describe ChargebackContainerProject do
       cbrd.chargeback_tiers = [cbt]
       cbrd.save
 
-      expect(subject.net_io_used_metric).to eq(@net_usage_rate * @metric_size)
-      expect(subject.net_io_used_cost).to eq(@net_usage_rate * @hourly_rate * @metric_size)
+      expect(subject.net_io_used_metric).to eq(@net_usage_rate)
+      expect(subject.net_io_used_cost).to be_within(0.01).of(@net_usage_rate * @hourly_rate * hours_in_day)
     end
   end
 
@@ -122,6 +125,8 @@ describe ChargebackContainerProject do
       time     = ts.beginning_of_month.utc
       end_time = ts.end_of_month.utc
 
+      @hours_in_month = Time.days_in_month(time.month, time.year) * 24
+
       while time < end_time
         @project.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr,
                                                          :timestamp                => time,
@@ -153,8 +158,9 @@ describe ChargebackContainerProject do
                                :variable_rate             => @hourly_rate.to_s)
       cbrd.chargeback_tiers = [cbt]
       cbrd.save
-      expect(subject.cpu_cores_used_metric).to eq(@cpu_usage_rate * @metric_size)
-      expect(subject.cpu_cores_used_cost).to eq(@cpu_usage_rate * @hourly_rate * @metric_size)
+
+      expect(subject.cpu_cores_used_metric).to eq(@cpu_usage_rate)
+      expect(subject.cpu_cores_used_cost).to be_within(0.01).of(@cpu_usage_rate * @hourly_rate * @hours_in_month)
     end
 
     it "memory" do
@@ -169,8 +175,9 @@ describe ChargebackContainerProject do
                                :variable_rate             => @hourly_rate.to_s)
       cbrd.chargeback_tiers = [cbt]
       cbrd.save
-      expect(subject.memory_used_metric).to eq(@memory_used * @metric_size)
-      expect(subject.memory_used_cost).to eq(@memory_used * @hourly_rate * @metric_size)
+
+      expect(subject.memory_used_metric).to eq(@memory_used)
+      expect(subject.memory_used_cost).to be_within(0.01).of(@memory_used * @hourly_rate * @hours_in_month)
     end
 
     it "net io" do
@@ -185,8 +192,9 @@ describe ChargebackContainerProject do
                                :variable_rate             => @hourly_rate.to_s)
       cbrd.chargeback_tiers = [cbt]
       cbrd.save
-      expect(subject.net_io_used_metric).to eq(@net_usage_rate * @metric_size)
-      expect(subject.net_io_used_cost).to eq(@net_usage_rate * @hourly_rate * @metric_size)
+
+      expect(subject.net_io_used_metric).to eq(@net_usage_rate)
+      expect(subject.net_io_used_cost).to be_within(0.01).of(@net_usage_rate * @hourly_rate * @hours_in_month)
     end
   end
 
@@ -201,6 +209,8 @@ describe ChargebackContainerProject do
       time     = ts.beginning_of_month.utc
       end_time = ts.end_of_month.utc
 
+      @hours_in_month = Time.days_in_month(time.month, time.year) * 24
+
       while time < end_time
         @project.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr,
                                                          :timestamp                => time,
@@ -214,7 +224,6 @@ describe ChargebackContainerProject do
                                                          :resource_name            => @project.name)
         time += 12.hours
       end
-      @metric_size = @project.metric_rollups.size
     end
 
     subject { ChargebackContainerProject.build_results_for_report_ChargebackContainerProject(@options).first.first }
@@ -231,8 +240,9 @@ describe ChargebackContainerProject do
                                :variable_rate             => @hourly_rate.to_s)
       cbrd.chargeback_tiers = [cbt]
       cbrd.save
-      expect(subject.cpu_cores_used_metric).to eq(@cpu_usage_rate * @metric_size)
-      expect(subject.cpu_cores_used_cost).to eq(@cpu_usage_rate * @hourly_rate * @metric_size)
+
+      expect(subject.cpu_cores_used_metric).to eq(@cpu_usage_rate)
+      expect(subject.cpu_cores_used_cost).to be_within(0.01).of(@cpu_usage_rate * @hourly_rate * @hours_in_month)
     end
   end
 
@@ -248,6 +258,8 @@ describe ChargebackContainerProject do
       time     = ts.beginning_of_month.utc
       end_time = ts.end_of_month.utc
 
+      @hours_in_month = Time.days_in_month(time.month, time.year) * 24
+
       while time < end_time
         @project.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr,
                                                       :timestamp                => time,
@@ -262,7 +274,6 @@ describe ChargebackContainerProject do
 
         time += 12.hours
       end
-      @metric_size = @project.metric_rollups.size
     end
 
     subject { ChargebackContainerProject.build_results_for_report_ChargebackContainerProject(@options).first.first }
@@ -279,8 +290,9 @@ describe ChargebackContainerProject do
                                :variable_rate             => @hourly_rate.to_s)
       cbrd.chargeback_tiers = [cbt]
       cbrd.save
-      expect(subject.cpu_cores_used_metric).to eq(@cpu_usage_rate * @metric_size)
-      expect(subject.cpu_cores_used_cost).to eq(@cpu_usage_rate * @hourly_rate * @metric_size)
+
+      expect(subject.cpu_cores_used_metric).to eq(@cpu_usage_rate)
+      expect(subject.cpu_cores_used_cost).to be_within(0.01).of(@cpu_usage_rate * @hourly_rate * @hours_in_month)
       expect(subject.tag_name).to eq('Production')
     end
   end
