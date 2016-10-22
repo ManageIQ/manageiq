@@ -10,9 +10,18 @@ def system!(*args)
   system(*args) || abort("\n== Command #{args} failed ==")
 end
 
+def dev_warn_and_exit_if_missing(file, sample)
+  if ENV.fetch('RAILS_ENV', 'development') == 'development' && !File.exist?(file)
+    warn "Your #{file} is missing, please run 'cp #{sample} #{file}' and try again."
+    exit 1
+  end
+end
+
 chdir APP_ROOT do
   # This script is a way to update your development environment automatically.
   # Add necessary update steps to this file.
+  dev_warn_and_exit_if_missing('config/cable.yml', 'config/cable.yml.sample')
+  dev_warn_and_exit_if_missing('config/database.yml', 'config/database.pg.yml')
 
   puts '== Installing dependencies =='
   # Run bower in a thread and continue to do the non-js stuff
