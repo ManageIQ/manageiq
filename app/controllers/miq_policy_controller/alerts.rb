@@ -551,6 +551,9 @@ module MiqPolicyController::Alerts
           add_flash(_("Trend Steepness must be an integer"), :error)
         end
       end
+      unless @edit.fetch_path(:new, :expression, :options, :rt_time_threshold)
+        add_flash(_("Time threshold for the field criteria must be selected"), :error)
+      end
     end
     unless alert.options[:notifications][:email] ||
            alert.options[:notifications][:snmp] ||
