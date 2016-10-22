@@ -76,19 +76,4 @@ class ManageIQ::Providers::Vmware::CloudManager < ManageIQ::Providers::CloudMana
   rescue => err
     _log.error "vm=[#{vm.name}], error: #{err}"
   end
-
-  def translate_exception(err)
-    case err
-    when Fog::Compute::VcloudDirector::Unauthorized
-      MiqException::MiqInvalidCredentialsError.new "Login failed due to a bad username or password."
-    when Excon::Errors::Timeout
-      MiqException::MiqUnreachableError.new "Login attempt timed out"
-    when Excon::Errors::SocketError
-      MiqException::MiqHostError.new "Socket error: #{err.message}"
-    when MiqException::MiqInvalidCredentialsError, MiqException::MiqHostError
-      err
-    else
-      MiqException::MiqHostError.new "Unexpected response returned from system: #{err.message}"
-    end
-  end
 end
