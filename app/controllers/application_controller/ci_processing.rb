@@ -909,7 +909,7 @@ module ApplicationController::CiProcessing
         javascript_redirect previous_breadcrumb_url
       end
     when "submit"
-      options = {:src_ids => params[:objectIds]}
+      options = {:request_type => :vm_reconfigure}
       if params[:cb_memory] == 'true'
         options[:vm_memory] = params[:memory_type] == "MB" ? params[:memory] : (params[:memory].to_i.zero? ? params[:memory] : params[:memory].to_i * 1024)
       end
@@ -954,18 +954,20 @@ module ApplicationController::CiProcessing
       if(params[:id] && params[:id] != 'new')
         @request_id = params[:id]
       end
-      if VmReconfigureRequest.make_request(@request_id, options, current_user)
-        flash = _("VM Reconfigure Request was saved")
-        if role_allows?(:feature => "miq_request_show_list", :any => true)
-          javascript_redirect :controller => 'miq_request', :action => 'show_list', :flash_msg => flash
-        else
-          url = previous_breadcrumb_url.split('/')
-          javascript_redirect :controller => url[1], :action => url[2], :flash_msg => flash
-        end
-      else
-        # TODO - is request ever nil? ??
-        add_flash(_("Error adding VM Reconfigure Request"))
+
+      ApplicationRecord.group_ids_by_region(params[:objectIds]).each do |region, ids|
+        task_args = options.merge(:src_ids => ids)
+        VmReconfigureRequest.make_request(@request_id, task_args, current_user)
       end
+      flash = _("VM Reconfigure Request was saved")
+
+      if role_allows?(:feature => "miq_request_show_list", :any => true)
+        javascript_redirect :controller => 'miq_request', :action => 'show_list', :flash_msg => flash
+      else
+        url = previous_breadcrumb_url.split('/')
+        javascript_redirect :controller => url[1], :action => url[2], :flash_msg => flash
+      end
+
       if @flash_array
         javascript_flash
         return
