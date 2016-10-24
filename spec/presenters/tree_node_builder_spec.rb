@@ -83,7 +83,6 @@ describe TreeNodeBuilder do
         :configuration_manager_ansible_tower => "AnsibleTower ConfigurationManager",
         :configuration_manager_foreman       => "Foreman ConfigurationManager",
         :provisioning_manager_foreman        => "Foreman ProvisioningManager",
-        :ems_physical_infra                  => "PhysicalInfraManager",
         :ems_openshift_enterprise            => "Openshift Enterprise ContainerManager",
         :ems_hawkular                        => "Hawkular MiddlewareManager",
         :ems_azure_network                   => "Azure NetworkManager",
