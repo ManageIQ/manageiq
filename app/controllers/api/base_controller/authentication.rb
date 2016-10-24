@@ -7,10 +7,10 @@ module Api
       def require_api_user_or_token
         log_request_initiated
         @auth_token = @auth_user = nil
-        if request.headers['X-MIQ-Token']
-          authenticate_with_system_token(request.headers['X-MIQ-Token'])
-        elsif request.headers['X-Auth-Token']
-          authenticate_with_user_token(request.headers['X-Auth-Token'])
+        if request.headers[HttpHeaders::MIQ_TOKEN]
+          authenticate_with_system_token(request.headers[HttpHeaders::MIQ_TOKEN])
+        elsif request.headers[HttpHeaders::AUTH_TOKEN]
+          authenticate_with_user_token(request.headers[HttpHeaders::AUTH_TOKEN])
         else
           authenticate_options = {
             :require_user => true,
@@ -65,7 +65,7 @@ module Api
       end
 
       def authorize_user_group(user_obj)
-        group_name = request.headers['X-MIQ-Group']
+        group_name = request.headers[HttpHeaders::MIQ_GROUP]
         if group_name.present?
           group_obj = user_obj.miq_groups.find_by_description(group_name)
           raise AuthenticationError, "Invalid Authorization Group #{group_name} specified" if group_obj.nil?

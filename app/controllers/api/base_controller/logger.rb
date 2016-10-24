@@ -14,13 +14,13 @@ module Api
         return unless api_log_info?
         if @miq_token_hash
           auth_type = "system"
-          log_request("System Auth", {:x_miq_token => request.headers['X-MIQ-Token']}.merge(@miq_token_hash))
+          log_request("System Auth", {:x_miq_token => request.headers[HttpHeaders::MIQ_TOKEN]}.merge(@miq_token_hash))
         else
           auth_type = @auth_token.blank? ? "basic" : "token"
         end
         log_request("Authentication", :type        => auth_type,
                                       :token       => @auth_token,
-                                      :x_miq_group => request.headers['X-MIQ-Group'],
+                                      :x_miq_group => request.headers[HttpHeaders::MIQ_GROUP],
                                       :user        => @auth_user)
         if @auth_user_obj
           group = @auth_user_obj.current_group
