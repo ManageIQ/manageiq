@@ -67,8 +67,8 @@ describe MiqAeGitImport do
 
         shared_examples_for "#import that has a valid branch" do
           it "runs successfully" do
-            expect(MiqAeYamlImportGitfs).to receive(:new).with(domain_name, import_options).
-              and_return(miq_ae_yaml_import_gitfs)
+            expect(MiqAeYamlImportGitfs).to receive(:new).with(domain_name, import_options)
+              .and_return(miq_ae_yaml_import_gitfs)
             allow(miq_ae_yaml_import_gitfs).to receive(:import).and_return(domain)
             dom = miq_ae_git_import.import
             expect(dom.attributes).to have_attributes(branch_hash)
@@ -93,8 +93,8 @@ describe MiqAeGitImport do
         end
 
         it "import fails with domain not found" do
-          expect(MiqAeYamlImportGitfs).to receive(:new).with(domain_name, import_options).
-            and_return(miq_ae_yaml_import_gitfs)
+          expect(MiqAeYamlImportGitfs).to receive(:new).with(domain_name, import_options)
+            .and_return(miq_ae_yaml_import_gitfs)
           allow(miq_ae_yaml_import_gitfs).to receive(:import).and_return(nil)
           expect { miq_ae_git_import.import }.to raise_error(MiqAeException::DomainNotFound)
         end
@@ -117,8 +117,8 @@ describe MiqAeGitImport do
 
         shared_examples_for "#import that has a valid tag" do
           it "imports correctly" do
-            expect(MiqAeYamlImportGitfs).to receive(:new).with(domain_name, import_options).
-              and_return(miq_ae_yaml_import_gitfs)
+            expect(MiqAeYamlImportGitfs).to receive(:new).with(domain_name, import_options)
+              .and_return(miq_ae_yaml_import_gitfs)
             allow(miq_ae_yaml_import_gitfs).to receive(:import).and_return(domain)
             dom = miq_ae_git_import.import
             expect(dom.attributes).to have_attributes(tag_hash)
@@ -160,8 +160,8 @@ describe MiqAeGitImport do
         end
 
         it "imports correctly" do
-          expect(MiqAeYamlImportGitfs).to receive(:new).with(domain_name, import_options).
-            and_return(miq_ae_yaml_import_gitfs)
+          expect(MiqAeYamlImportGitfs).to receive(:new).with(domain_name, import_options)
+            .and_return(miq_ae_yaml_import_gitfs)
           allow(miq_ae_yaml_import_gitfs).to receive(:import).and_return(domain)
           dom = miq_ae_git_import.import
           expect(dom.attributes).to have_attributes(branch_hash)
