@@ -94,7 +94,7 @@ module OwnershipMixin
     end
 
     def group_owned(miq_group)
-      where(:miq_group_id => miq_group.id)
+      where(arel_table.grouping(Arel::Nodes::NamedFunction.new("LOWER", [arel_attribute(:owning_ldap_group)]).eq(miq_group.description.downcase)))
     end
   end
 
