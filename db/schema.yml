@@ -6743,6 +6743,11 @@ vms:
 - resource_group_id
 - deprecated
 - storage_profile_id
+- cpu_hot_add_enabled
+- cpu_hot_remove_enabled
+- memory_hot_add_enabled
+- memory_hot_add_limit
+- memory_hot_add_increment
 volumes:
 - id
 - name
