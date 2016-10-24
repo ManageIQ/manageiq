@@ -499,6 +499,36 @@ describe ProviderForemanController do
       expect(view.table.data[0].name).to eq("ConfigScript1")
       expect(view.table.data[1].name).to eq("ConfigScript3")
     end
+
+    it "calls get_view with the associated dbname for the Configuration Management Providers accordion" do
+      stub_user(:features => :all)
+      allow(controller).to receive(:x_active_tree).and_return(:configuration_manager_providers_tree)
+      allow(controller).to receive(:x_active_accord).and_return(:configuration_manager_providers)
+      allow(controller).to receive(:build_listnav_search_list)
+      controller.instance_variable_set(:@_params, :id => "configuration_manager_providers_accord")
+      expect(controller).to receive(:get_view).with("ManageIQ::Providers::ConfigurationManager", :dbname => :cm_providers).and_call_original
+      controller.send(:accordion_select)
+    end
+
+    it "calls get_view with the associated dbname for the Configured Systems accordion" do
+      stub_user(:features => :all)
+      allow(controller).to receive(:x_active_tree).and_return(:cs_filter_tree)
+      allow(controller).to receive(:x_active_accord).and_return(:cs_filter)
+      allow(controller).to receive(:build_listnav_search_list)
+      controller.instance_variable_set(:@_params, :id => "cs_filter_accord")
+      expect(controller).to receive(:get_view).with("ConfiguredSystem", :dbname => :cm_configured_systems).and_call_original
+      allow(controller).to receive(:build_listnav_search_list)
+      controller.send(:accordion_select)
+    end
+
+    it "calls get_view with the associated dbname for the Configuration Scripts accordion" do
+      stub_user(:features => :all)
+      allow(controller).to receive(:x_active_tree).and_return(:configuration_scripts_tree)
+      allow(controller).to receive(:x_active_accord).and_return(:configuration_scripts)
+      controller.instance_variable_set(:@_params, :id => "configuration_scripts")
+      expect(controller).to receive(:get_view).with("ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfigurationScript", :dbname => :configuration_scripts).and_call_original
+      controller.send(:accordion_select)
+    end
   end
 
   it "singularizes breadcrumb name" do
