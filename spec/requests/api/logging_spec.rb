@@ -74,7 +74,7 @@ describe "Logging" do
 
       expect_log_requests(log_request_expectations)
 
-      run_get entrypoint_url, :headers => {"miq_token" => miq_token}
+      run_get entrypoint_url, :headers => {Api::HttpHeaders::MIQ_TOKEN => miq_token}
     end
   end
 end
