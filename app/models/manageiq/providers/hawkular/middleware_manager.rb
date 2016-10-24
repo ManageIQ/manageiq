@@ -374,8 +374,8 @@ module ManageIQ::Providers
       )
     end
 
-    def build_metric_id(type, resource, metric_id)
-      "#{type}I~R~[#{resource[:middleware_server][:feed]}/#{resource[:nativeid]}]~#{type}T~#{metric_id}"
+    def build_availability_metric_id(feed_id, resource_id, metric_id)
+      "AI~R~[#{feed_id}/#{resource_id}]~AT~#{metric_id}"
     end
 
     def self.update_alert(*args)

@@ -152,8 +152,16 @@ module ManageIQ::Providers
       def fetch_availability
         resources_by_metric_id = {}
         @data[:middleware_deployments].each do |deployment|
-          metric_id = @ems.build_metric_id('A', deployment, 'Deployment Status~Deployment Status')
-          resources_by_metric_id[metric_id] = deployment
+          path = ::Hawkular::Inventory::CanonicalPath.parse(deployment[:ems_ref])
+          # for subdeployments use it's parent deployment availability.
+          path = path.up if path.resource_ids.last.include? CGI.escape('/subdeployment=')
+          metric_id = @ems.build_availability_metric_id(
+            URI.unescape(path.feed_id),
+            URI.unescape(path.resource_ids.last),
+            'Deployment Status~Deployment Status'
+          )
+          resources_by_metric_id[metric_id] = [] unless resources_by_metric_id.key? metric_id
+          resources_by_metric_id[metric_id] << deployment
         end
         unless resources_by_metric_id.empty?
           availabilities = @ems.metrics_client.avail.raw_data(resources_by_metric_id.keys,
@@ -182,7 +190,7 @@ module ManageIQ::Providers
         end
       end
 
-      def process_availability(availability)
+      def process_availability(availability = nil)
         case
         when availability.blank?, availability['value'].casecmp('unknown').zero?
           'Unknown'
@@ -197,11 +205,17 @@ module ManageIQ::Providers
 
       def parse_availability(availabilities, resources_by_metric_id)
         processed_availabilities_ids = availabilities.map do |availability|
-          resources_by_metric_id[availability['id']][:status] = process_availability(availability['data'].first)
+          availability_status = process_availability(availability['data'].first)
+          resources_by_metric_id[availability['id']].each do |resource|
+            resource[:status] = availability_status
+          end
           availability['id']
         end
         (resources_by_metric_id.keys - processed_availabilities_ids).each do |metric_id|
-          resources_by_metric_id[metric_id][:status] = process_availability nil
+          availability_status = process_availability
+          resources_by_metric_id[metric_id].each do |resource|
+            resource[:status] = availability_status
+          end
         end
         resources_by_metric_id
       end
