@@ -1,5 +1,4 @@
 module ApplicationHelper
-  include_concern 'Chargeback'
   include_concern 'Dialogs'
   include_concern 'Discover'
   include_concern 'PageLayouts'
