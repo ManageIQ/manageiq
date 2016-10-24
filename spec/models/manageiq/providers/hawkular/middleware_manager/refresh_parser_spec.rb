@@ -91,10 +91,10 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::RefreshParser do
   describe 'parse_availability' do
     it 'handles simple data' do
       resources_by_metric_id = {
-        'resource_id_1' => {},
-        'resource_id_2' => {},
-        'resource_id_3' => {},
-        'resource_id_4' => {},
+        'resource_id_1' => [{}],
+        'resource_id_2' => [{}, {}],
+        'resource_id_3' => [{}],
+        'resource_id_4' => [{}]
       }
       availabilities = [
         {
@@ -116,18 +116,23 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::RefreshParser do
       ]
 
       parsed_resources_with_availability = {
-        'resource_id_1' => {
+        'resource_id_1' => [{
           :status => 'Enabled'
-        },
-        'resource_id_2' => {
+        }],
+        'resource_id_2' => [
+          {
           :status => 'Disabled'
-        },
-        'resource_id_3' => {
+          },
+          {
+            :status => 'Disabled'
+          }
+        ],
+        'resource_id_3' => [{
           :status => 'Unknown'
-        },
-        'resource_id_4' => {
+        }],
+        'resource_id_4' => [{
           :status => 'Unknown'
-        }
+        }]
       }
       expect(parser.send(:parse_availability,
                          availabilities,
@@ -135,10 +140,10 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::RefreshParser do
     end
     it 'handles missing metrics' do
       resources_by_metric_id = {
-        'resource_id_1' => {},
-        'resource_id_2' => {},
-        'resource_id_3' => {},
-        'resource_id_4' => {},
+        'resource_id_1' => [{}],
+        'resource_id_2' => [{}],
+        'resource_id_3' => [{}],
+        'resource_id_4' => [{}],
       }
       availabilities = [
         {
@@ -148,18 +153,18 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::RefreshParser do
       ]
 
       parsed_resources_with_availability = {
-        'resource_id_1' => {
+        'resource_id_1' => [{
           :status => 'Enabled'
-        },
-        'resource_id_2' => {
+        }],
+        'resource_id_2' => [{
           :status => 'Unknown'
-        },
-        'resource_id_3' => {
+        }],
+        'resource_id_3' => [{
           :status => 'Unknown'
-        },
-        'resource_id_4' => {
+        }],
+        'resource_id_4' => [{
           :status => 'Unknown'
-        }
+        }]
       }
       expect(parser.send(:parse_availability,
                          availabilities,
