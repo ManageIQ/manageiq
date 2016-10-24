@@ -258,14 +258,11 @@ class Service < ApplicationRecord
       :class_name  => self.class.name,
       :instance_id => id,
       :method_name => "process_group_action",
-      :role        => "ems_operations",
-      :task_id     => "#{self.class.name.underscore}_#{id}",
       :args        => [action, group_idx, direction]
     }
     nh[:deliver_on] = deliver_delay.seconds.from_now.utc if deliver_delay > 0
     nh[:zone] = my_zone if my_zone
     MiqQueue.put(nh)
-    true
   end
 
   def queue_power_calculation(delay, action)
