@@ -164,19 +164,6 @@ describe MiqServer do
         include_examples "post_[type_of_log]_logs", "Zone", :current
       end
     end
-    def post_logs(options)
-      taskid = options[:taskid]
-      task = MiqTask.find(taskid)
-      context_log_depot = log_depot(options[:context])
-
-      # the current queue item and task must be errored out on exceptions so re-raise any caught errors
-      raise "Log depot settings not configured" unless context_log_depot
-      context_log_depot.update_attributes(:support_case => options[:support_case].presence)
-
-      post_historical_logs(taskid, context_log_depot) unless options[:only_current]
-      post_current_logs(taskid, context_log_depot)
-      task.update_status("Finished", "Ok", "Log files were successfully collected")
-    end
 
     describe "#post_logs" do
       context "Zone collection log requested, Zone depot is defined, MiqServer is defined" do
