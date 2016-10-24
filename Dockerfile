@@ -64,6 +64,16 @@ RUN yum -y install https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.n
 # Add persistent data volume for postgres
 VOLUME [ "/var/opt/rh/rh-postgresql94/lib/pgsql/data" ]
 
+## Systemd cleanup base image
+RUN (cd /lib/systemd/system/sysinit.target.wants && for i in *; do [ $i == systemd-tmpfiles-setup.service ] || rm -vf $i; done) && \
+    rm -vf /lib/systemd/system/multi-user.target.wants/* && \
+    rm -vf /etc/systemd/system/*.wants/* && \
+    rm -vf /lib/systemd/system/local-fs.target.wants/* && \
+    rm -vf /lib/systemd/system/sockets.target.wants/*udev* && \
+    rm -vf /lib/systemd/system/sockets.target.wants/*initctl* && \
+    rm -vf /lib/systemd/system/basic.target.wants/* && \
+    rm -vf /lib/systemd/system/anaconda.target.wants/*
+
 # Download chruby and chruby-install, install, setup environment, clean all
 RUN curl -sL https://github.com/postmodern/chruby/archive/v0.3.9.tar.gz | tar xz && \
     cd chruby-0.3.9 && \
