@@ -21,6 +21,8 @@ module EmsInfraHelper::TextualSummary
   end
 
   def textual_group_topology
+    items = %w(topology)
+    items.collect { |m| send("textual_#{m}") }.flatten.compact
   end
 
   #
@@ -174,5 +176,12 @@ module EmsInfraHelper::TextualSummary
     return nil if @ems.host_default_vnc_port_start.blank?
     value = "#{@ems.host_default_vnc_port_start} - #{@ems.host_default_vnc_port_end}"
     {:label => _("%{title} Default VNC Port Range") % {:title => title_for_host}, :value => value}
+  end
+
+  def textual_topology
+    {:label => _('Topology'),
+     :image => 'topology',
+     :link  => url_for(:controller => '/infra_topology', :action => 'show', :id => @ems.id),
+     :title => _("Show topology")}
   end
 end

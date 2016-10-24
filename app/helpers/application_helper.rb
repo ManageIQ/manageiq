@@ -626,7 +626,7 @@ module ApplicationHelper
     if @show_taskbar.nil?
       @show_taskbar = false
       if ! (@layout == "" && %w(auth_error change_tab show).include?(controller.action_name) ||
-        %w(about chargeback ems_infra_dashboard exception miq_ae_automate_button miq_ae_class miq_ae_export
+        %w(about chargeback ems_infra_dashboard exception infra_topology miq_ae_automate_button miq_ae_class miq_ae_export
            miq_ae_tools miq_capacity_bottlenecks miq_capacity_planning miq_capacity_utilization
            miq_capacity_waste miq_policy miq_policy_export miq_policy_rsop ops pxe report rss
            server_build middleware_topology network_topology container_dashboard cloud_topology).include?(@layout) ||
@@ -1112,7 +1112,7 @@ module ApplicationHelper
                         container_build container_node container_service ems_cloud ems_cluster ems_container ems_infra
                         event ems_middleware middleware_server middleware_deployment middleware_datasource
                         middleware_domain middleware_server_group middleware_messaging
-                        ems_network security_group floating_ip cloud_subnet network_router network_topology network_port cloud_network
+                        infra_topology ems_network security_group floating_ip cloud_subnet network_router network_topology network_port cloud_network
                         load_balancer
                         flavor host miq_schedule miq_template offline ontap_file_share
                         ontap_logical_disk ontap_storage_system ontap_storage_volume orchestration_stack
