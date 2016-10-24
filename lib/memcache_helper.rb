@@ -14,7 +14,7 @@ module MemcacheHelper
         :urlencode => false,
       }
 
-      memcache_server = VMDB::Config.new("vmdb").config[:session][:memcache_server]
+      memcache_server = ::Settings.session.memcache_server
       memcache_server ||= "127.0.0.1:11211"
       CACHE = MemCache.new(memcache_server, memcache_options)
     EOL
