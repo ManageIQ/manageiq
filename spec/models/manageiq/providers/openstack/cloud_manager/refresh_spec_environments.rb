@@ -1,6 +1,6 @@
 module Openstack
   module RefreshSpecEnvironments
-    def allowed_enviroments
+    def allowed_environments
       [:grizzly, :havana, :icehouse, :juno, :kilo, :kilo_keystone_v3, :liberty, :liberty_keystone_v3]
     end
 
