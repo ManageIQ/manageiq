@@ -6,12 +6,18 @@ class ApplicationHelper::ToolbarBuilder
     build_toolbar(toolbar_name)
   end
 
-  def build_by_class(toolbar_class)
+  # Loads the toolbar sent in parameter `toolbar_name`, and builds the buttons
+  # in the toolbar, unless the group of buttons is meant to be skipped.
+  #
+  # Returns built toolbar loaded in instance variable `@toolbar`, or `nil`, if
+  # no buttons should be in the toolbar.
+  def build_toolbar(toolbar_name)
     @toolbar = []
     @groups_added = []
     @sep_needed = false
     @sep_added = false
 
+    toolbar_class = toolbar_class(toolbar_name)
     toolbar_class.definition.each_with_index do |(name, group), group_index|
       next if group_skipped?(name)
 
@@ -36,7 +42,6 @@ class ApplicationHelper::ToolbarBuilder
   private
 
   delegate :request, :current_user, :to => :@view_context
-
   delegate :get_vmdb_config, :role_allows?, :model_for_vm, :rbac_common_feature_for_buttons, :to => :@view_context
   delegate :x_tree_history, :x_node, :x_active_tree, :to => :@view_context
   delegate :is_browser?, :is_browser_os?, :to => :@view_context
@@ -59,17 +64,23 @@ class ApplicationHelper::ToolbarBuilder
     code.to_s =~ /\#{/ ? eval("\"#{code}\"") : code
   end
 
-  ###
-  def generic_toolbar(tb_name)
+  # Parses the generic toolbars name and returns his class
+  def predefined_toolbar_class(tb_name)
     class_name = 'ApplicationHelper::Toolbar::' + ActiveSupport::Inflector.camelize(tb_name.sub(/_tb$/, ''))
     Kernel.const_get(class_name)
   end
 
-  def build_toolbar(tb_name)
-    toolbar_class = tb_name == "custom_buttons_tb" ? build_custom_buttons_toolbar(@record) : generic_toolbar(tb_name)
-    build_by_class(toolbar_class)
+  # According to toolbar name in parameter `toolbar_name` either returns class
+  # for generic toolbar, or starts building custom toolbar
+  def toolbar_class(toolbar_name)
+    if toolbar_name == "custom_buttons_tb"
+      custom_toolbar_class(@record)
+    else
+      predefined_toolbar_class(toolbar_name)
+    end
   end
 
+  # Creates a button and sets it's properties
   def toolbar_button(inputs, props)
     button_class = inputs[:klass] || ApplicationHelper::Button::Basic
     props[:options] = inputs[:options] if inputs[:options]
@@ -77,6 +88,7 @@ class ApplicationHelper::ToolbarBuilder
     apply_common_props(button, inputs)
   end
 
+  # Build select button and its child buttons
   def build_select_button(bgi, index)
     bs_children = false
     props = toolbar_button(
@@ -94,7 +106,7 @@ class ApplicationHelper::ToolbarBuilder
       if bsi.key?(:separator)
         props = ApplicationHelper::Button::Separator.new(:id => "sep_#{index}_#{bsi_idx}", :hidden => !any_visible)
       else
-        next if build_toolbar_hide_button(bsi[:pressed] || bsi[:id]) # Use pressed, else button id
+        next if hide_button?(bsi[:pressed] || bsi[:id]) # Use pressed, else button id
         bs_children = true
         props = toolbar_button(
           bsi,
@@ -106,7 +118,7 @@ class ApplicationHelper::ToolbarBuilder
           :imgdis   => img,
         )
       end
-      build_toolbar_save_button(bsi, props) unless bsi.key?(:separator)
+      update_common_props(bsi, props) unless bsi.key?(:separator)
       current_item[:items] << props unless props.skipped?
 
       any_visible ||= !props[:hidden] && props[:type] != :separator
@@ -124,6 +136,7 @@ class ApplicationHelper::ToolbarBuilder
     current_item
   end
 
+  # Set properties for button
   def apply_common_props(button, input)
     button.update(
       :icon    => input[:icon],
@@ -151,7 +164,7 @@ class ApplicationHelper::ToolbarBuilder
       button[:url_parms] = "?show=#{request.parameters[:show]}"
     end
 
-    dis_title = build_toolbar_disable_button(button[:child_id] || button[:id])
+    dis_title = disable_button(button[:child_id] || button[:id])
     if dis_title
       button[:enabled] = false
       if dis_title.kind_of? String
@@ -161,8 +174,9 @@ class ApplicationHelper::ToolbarBuilder
     button
   end
 
+  # Build single button
   def build_normal_button(bgi, index)
-    button_hide = build_toolbar_hide_button(bgi[:id])
+    button_hide = hide_button?(bgi[:id])
     if button_hide
       # These buttons need to be present even if hidden as we show/hide them dynamically
       return nil unless %w(timeline_txt timeline_csv timeline_pdf).include?(bgi[:id])
@@ -200,8 +214,9 @@ class ApplicationHelper::ToolbarBuilder
     "#{button[:image] || button[:id]}.png"
   end
 
+  # Build button with more states
   def build_twostate_button(bgi, index)
-    return nil if build_toolbar_hide_button(bgi[:id])
+    return nil if hide_button?(bgi[:id])
 
     props = toolbar_button(
       bgi,
@@ -211,12 +226,13 @@ class ApplicationHelper::ToolbarBuilder
       :imgdis => img,
     )
 
-    props[:selected] = true if build_toolbar_select_button(bgi[:id])
+    props[:selected] = twostate_button_selected(bgi[:id])
 
     _add_separator(index)
     props
   end
 
+  # According to button type in toolbar definition calls appropriate method
   def build_button(bgi, index)
     props = case bgi[:type]
             when :buttonSelect   then build_select_button(bgi, index)
@@ -225,7 +241,7 @@ class ApplicationHelper::ToolbarBuilder
             end
 
     unless props.nil?
-      @toolbar << build_toolbar_save_button(bgi, props) unless props.skipped?
+      @toolbar << update_common_props(bgi, props) unless props.skipped?
     end
   end
 
@@ -286,7 +302,7 @@ class ApplicationHelper::ToolbarBuilder
     end
   end
 
-  def build_custom_buttons_toolbar(record)
+  def custom_toolbar_class(record)
     # each custom toolbar is an anonymous subclass of this class
     toolbar = Class.new(ApplicationHelper::Toolbar::Basic)
     custom_buttons_hash(record).each do |button_group|
@@ -359,14 +375,14 @@ class ApplicationHelper::ToolbarBuilder
     img
   end
 
-  def build_toolbar_hide_button_rsop(id)
+  def hide_button_rsop(id)
     case id
     when 'toggle_collapse' then !@sb[:rsop][:open]
     when 'toggle_expand'   then @sb[:rsop][:open]
     end
   end
 
-  def build_toolbar_hide_button_cb(id)
+  def hide_button_cb(id)
     case x_active_tree
     when :cb_reports_tree
       if role_allows?(:feature => "chargeback_reports") && ["chargeback_download_csv", "chargeback_download_pdf",
@@ -382,7 +398,7 @@ class ApplicationHelper::ToolbarBuilder
     true
   end
 
-  def build_toolbar_hide_button_ops(id)
+  def hide_button_ops(id)
     case x_active_tree
     when :settings_tree
       return ["schedule_run_now"].include?(id)
@@ -430,7 +446,7 @@ class ApplicationHelper::ToolbarBuilder
     end
   end
 
-  def build_toolbar_hide_button_pxe(id)
+  def hide_button_pxe(id)
     case x_active_tree
     when :customization_templates_tree
       return true unless role_allows?(:feature => id)
@@ -447,7 +463,7 @@ class ApplicationHelper::ToolbarBuilder
     end
   end
 
-  def build_toolbar_hide_button_report(id)
+  def hide_button_report(id)
     if %w(miq_report_copy miq_report_delete miq_report_edit
           miq_report_new miq_report_run miq_report_schedule_add).include?(id) ||
        x_active_tree == :schedules_tree
@@ -492,7 +508,7 @@ class ApplicationHelper::ToolbarBuilder
   end
 
   # Determine if a button should be hidden
-  def build_toolbar_hide_button(id)
+  def hide_button?(id)
     return false if id.start_with?('history_')
     return true if id == "blank_button" # Always hide the blank button placeholder
 
@@ -566,26 +582,26 @@ class ApplicationHelper::ToolbarBuilder
                     (@lastaction == "show_list" || @showtype == "miq_provisions")
 
     if @layout == "miq_policy_rsop"
-      return build_toolbar_hide_button_rsop(id)
+      return hide_button_rsop(id)
     end
 
     if id.starts_with?("chargeback_")
-      res = build_toolbar_hide_button_cb(id)
+      res = hide_button_cb(id)
       return res
     end
 
     if @layout == "ops"
-      res = build_toolbar_hide_button_ops(id)
+      res = hide_button_ops(id)
       return res
     end
 
     if @layout == "pxe" || id.starts_with?("pxe_", "customization_template_")
-      res = build_toolbar_hide_button_pxe(id)
+      res = hide_button_pxe(id)
       return res
     end
 
     if @layout == "report"
-      res = build_toolbar_hide_button_report(id)
+      res = hide_button_report(id)
       return res
     end
 
@@ -730,8 +746,9 @@ class ApplicationHelper::ToolbarBuilder
     false  # No reason to hide, allow the button to show
   end
 
-  # Determine if a button should be disabled
-  def build_toolbar_disable_button(id)
+  # Determine if a button should be disabled. Returns either boolean or
+  # string message with explanation of reason for disabling
+  def disable_button(id)
     return true if id.starts_with?("view_") && id.ends_with?("textual")  # Summary view buttons
     return true if @gtl_type && id.starts_with?("view_") && id.ends_with?(@gtl_type)  # GTL view buttons
     return true if id == "history_1" && x_tree_history.length < 2 # Need 1 child button to show parent
@@ -1198,7 +1215,7 @@ class ApplicationHelper::ToolbarBuilder
   end
 
   # Determine if a button should be selected for buttonTwoState
-  def build_toolbar_select_button(id)
+  def twostate_button_selected(id)
     return true if id.starts_with?("view_") && id.ends_with?("textual")  # Summary view buttons
     return true if @gtl_type && id.starts_with?("view_") && id.ends_with?(@gtl_type)  # GTL view buttons
     return true if @ght_type && id.starts_with?("view_") && id.ends_with?(@ght_type)  # GHT view buttons on report show
@@ -1226,7 +1243,7 @@ class ApplicationHelper::ToolbarBuilder
     url
   end
 
-  def build_toolbar_save_button(item, props)
+  def update_common_props(item, props)
     props[:url] = url_for_button(props[:id], item[:url], controller_restful?) if item[:url]
     props[:explorer] = true if @explorer && !item[:url] # Add explorer = true if ajax button
     props
