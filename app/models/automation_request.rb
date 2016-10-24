@@ -41,6 +41,7 @@ class AutomationRequest < MiqRequest
     [:namespace, :class_name].each { |key| uri_parts.delete(key) if uri_parts.key?(key) }
     approval = {'auto_approve' => true}
     uri_parts.stringify_keys!
+    parameters.stringify_keys!
     create_from_ws("1.1", user, uri_parts, parameters, approval)
   end
 
