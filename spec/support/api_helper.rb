@@ -2,8 +2,6 @@
 # For testing REST API via Rspec requests
 #
 
-require 'json'
-
 module Spec
   module Support
     module ApiHelper
