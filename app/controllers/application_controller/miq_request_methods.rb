@@ -125,13 +125,7 @@ module ApplicationController::MiqRequestMethods
         @edit[:vm_sortdir] = "ASC"
       end
       @edit[:vm_sortcol] = params[:sort_choice]
-      templates = Rbac.filtered(@edit[:template_kls].eligible_for_provisioning).sort_by { |a| a.name.downcase }
-      build_vm_grid(templates, @edit[:vm_sortdir], @edit[:vm_sortcol])
-      render :update do |page|
-        page << javascript_prologue
-        page.replace("pre_prov_div", :partial => "miq_request/pre_prov")
-        page << "miqSparkle(false);"
-      end
+      render_updated_templates
     elsif params[:sel_id]
       @edit = session[:edit]
       render :update do |page|
@@ -142,12 +136,26 @@ module ApplicationController::MiqRequestMethods
         page << javascript_for_miq_button_visibility(session[:changed])
         @edit[:src_vm_id] = params[:sel_id].to_i
       end
+    elsif params[:hide_deprecated_templates]
+      @edit = session[:edit]
+      @edit[:hide_deprecated_templates] = params[:hide_deprecated_templates] == "true"
+      render_updated_templates
     else                                                        # First time in, build pre-provision screen
       set_pre_prov_vars
     end
   end
   alias_method :instance_pre_prov, :pre_prov
   alias_method :vm_pre_prov, :pre_prov
+
+  def render_updated_templates
+    templates = Rbac.filtered(@edit[:template_kls].eligible_for_provisioning).sort_by { |a| a.name.downcase }
+    build_vm_grid(templates, @edit[:vm_sortdir], @edit[:vm_sortcol], build_template_filter)
+    render :update do |page|
+      page << javascript_prologue
+      page.replace("pre_prov_div", :partial => "miq_request/pre_prov")
+      page << "miqSparkle(false);"
+    end
+  end
 
   def set_pre_prov_vars
     @layout = "miq_request_vm"
@@ -156,10 +164,11 @@ module ApplicationController::MiqRequestMethods
     @edit[:vm_sortdir] ||= "ASC"
     @edit[:vm_sortcol] ||= "name"
     @edit[:prov_type] = "VM Provision"
+    @edit[:hide_deprecated_templates] = true
     unless %w(image_miq_request_new miq_template_miq_request_new).include?(params[:pressed])
       @edit[:template_kls] = get_template_kls
       templates = Rbac.filtered(@edit[:template_kls].eligible_for_provisioning).sort_by { |a| a.name.downcase }
-      build_vm_grid(templates, @edit[:vm_sortdir], @edit[:vm_sortcol])
+      build_vm_grid(templates, @edit[:vm_sortdir], @edit[:vm_sortcol], build_template_filter)
     end
     session[:changed] = false # Turn off the submit button
     @edit[:explorer] = true if @explorer
@@ -388,9 +397,10 @@ module ApplicationController::MiqRequestMethods
     @templates = _build_whatever_grid('template', templates, headers, sort_order, sort_by, integer_fields)
   end
 
-  def build_vm_grid(vms, sort_order = nil, sort_by = nil)
+  def build_vm_grid(vms, sort_order = nil, sort_by = nil, filter_by = nil)
     sort_by ||= "name"
     sort_order ||= "ASC"
+    filter_by ||= ->(_) { true }
 
     headers = {
       "name"                          => _("Name"),
@@ -399,6 +409,7 @@ module ApplicationController::MiqRequestMethods
       "logical_cpus"                  => _("CPUs"),
       "mem_cpu"                       => _("Memory"),
       "allocated_disk_storage"        => _("Disk Size"),
+      "deprecated"                    => _("Deprecated"),
       "ext_management_system.name"    => ui_lookup(:model => 'ExtManagementSystem'),
       "v_total_snapshots"             => _("Snapshots"),
     }
@@ -408,7 +419,9 @@ module ApplicationController::MiqRequestMethods
 
     integer_fields = %w(allocated_disk_storage mem_cpu logical_cpus v_total_snapshots)
 
-    @vms = _build_whatever_grid('vm', vms, headers, sort_order, sort_by, integer_fields)
+    filtered_vms = vms.select { |x| filter_by.call(x) }
+
+    @vms = _build_whatever_grid('vm', filtered_vms, headers, sort_order, sort_by, integer_fields)
   end
 
   def build_host_grid(hosts, sort_order = nil, sort_by = nil)
@@ -447,7 +460,7 @@ module ApplicationController::MiqRequestMethods
     when MiqProvisionVirtWorkflow
       if @edit[:new][:current_tab_key] == :service
         if @edit[:new][:st_prov_type]
-          build_vm_grid(@edit[:wf].get_field(:src_vm_id, :service)[:values], @edit[:vm_sortdir], @edit[:vm_sortcol])
+          build_vm_grid(@edit[:wf].get_field(:src_vm_id, :service)[:values], @edit[:vm_sortdir], @edit[:vm_sortcol], build_template_filter)
         else
           @vm = VmOrTemplate.find_by_id(@edit[:new][:src_vm_id] && @edit[:new][:src_vm_id][0])
         end
@@ -847,7 +860,7 @@ module ApplicationController::MiqRequestMethods
           @edit[:vc_sortcol] ||= "name"
           @edit[:template_sortdir] ||= "ASC"
           @edit[:template_sortcol] ||= "name"
-          build_vm_grid(@edit[:wf].send("allowed_templates"), @edit[:vm_sortdir], @edit[:vm_sortcol])
+          build_vm_grid(@edit[:wf].send("allowed_templates"), @edit[:vm_sortdir], @edit[:vm_sortcol], build_template_filter)
           build_tags_tree(@edit[:wf], @edit[:new][:vm_tags], true)
           build_ous_tree(@edit[:wf], @edit[:new][:ldap_ous])
           if @edit[:wf].supports_pxe?
@@ -1098,5 +1111,11 @@ module ApplicationController::MiqRequestMethods
     @all_tags_tree = TreeBuilder.convert_bs_tree(all_tags).to_json # Add ci node array to root of tree
     session[:tree] = "all_tags"
     session[:tree_name] = "all_tags_tree"
+  end
+
+  def build_template_filter
+    return ->(x) { !x.deprecated } if @edit[:hide_deprecated_templates]
+
+    ->(_) { true } # do not apply a filter
   end
 end
