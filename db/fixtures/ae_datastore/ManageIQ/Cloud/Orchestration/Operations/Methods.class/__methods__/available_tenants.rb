@@ -12,10 +12,10 @@ class AvailableTenants
 
   def fetch_list_data
     service = @handle.root.attributes["service_template"] || @handle.root.attributes["service"]
-    av_tenants = service.try(:orchestration_manager).try(:available_tenants)
+    av_tenants = service.try(:orchestration_manager).try(:cloud_tenants)
 
     tenant_list = { nil => "<default>" }
-    av_tenants.each { |tenant| tenant_list[tenant.ems_ref] = tenant.name } if av_tenants
+    av_tenants.each { |tenant| tenant_list[tenant.name] = tenant.name } if av_tenants
 
     tenant_list
   end
