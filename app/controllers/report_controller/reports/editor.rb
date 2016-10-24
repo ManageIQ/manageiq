@@ -1041,7 +1041,9 @@ module ReportController::Reports::Editor
 
     # Add in the chargeback static fields
     if Chargeback.db_is_chargeback?(rpt.db) # For chargeback, add in specific chargeback report options
-      rpt = @edit[:new][:model].constantize.set_chargeback_report_options(rpt, @edit)
+      header = @edit[:cb_cats].try(:[], @edit[:new][:cb_groupby_tag])
+      chargeback_model = @edit[:new][:model].constantize
+      rpt = chargeback_model.set_chargeback_report_options(rpt, @edit[:new][:cb_groupby], header, @edit[:new][:tz])
     end
 
     # Remove when we support user sorting of trend reports

@@ -271,24 +271,24 @@ class Chargeback < ActsAsArModel
     raise "Chargeback: get_rate_parents must be implemented in child class."
   end
 
-  def self.set_chargeback_report_options(rpt, edit)
+  def self.set_chargeback_report_options(rpt, group_by, header, tz)
     rpt.cols = %w(start_date display_range)
 
     static_cols = report_static_cols
-    if edit[:new][:cb_groupby] == "date"
+    if group_by == "date"
       rpt.cols += static_cols
       rpt.col_order = ["display_range"] + static_cols
       rpt.sortby = ["start_date"] + static_cols
-    elsif edit[:new][:cb_groupby] == "vm"
+    elsif group_by == "vm"
       rpt.cols += static_cols
       rpt.col_order = static_cols + ["display_range"]
       rpt.sortby = static_cols + ["start_date"]
-    elsif edit[:new][:cb_groupby] == "tag"
+    elsif group_by == "tag"
       tag_col = report_tag_field
       rpt.cols += [tag_col]
       rpt.col_order = [tag_col, "display_range"]
       rpt.sortby = [tag_col, "start_date"]
-    elsif edit[:new][:cb_groupby] == "project"
+    elsif group_by == "project"
       static_cols -= ["image_name"]
       rpt.cols += static_cols
       rpt.col_order = static_cols + ["display_range"]
@@ -296,7 +296,6 @@ class Chargeback < ActsAsArModel
     end
     rpt.col_order.each do |c|
       if c == tag_col
-        header = edit[:cb_cats][edit[:new][:cb_groupby_tag]]
         rpt.headers.push(Dictionary.gettext(header, :type => :column, :notfound => :titleize)) if header
       else
         rpt.headers.push(Dictionary.gettext(c, :type => :column, :notfound => :titleize))
@@ -308,7 +307,7 @@ class Chargeback < ActsAsArModel
     rpt.col_options = report_col_options
     rpt.order = "Ascending"
     rpt.group = "y"
-    rpt.tz = edit[:new][:tz]
+    rpt.tz = tz
     rpt
   end
 
