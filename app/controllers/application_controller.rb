@@ -246,21 +246,32 @@ class ApplicationController < ActionController::Base
   end
   private :initiate_wait_for_task
 
+  def init_report_data(controller_name)
+    {
+      :controller_name => controller_name,
+      :data            => {
+        :modelName  => @display.nil? && !self.class.model.nil? ? self.class.model.to_s.tableize : @display,
+        :activeTree => x_active_tree.to_s,
+        :gtlType    => @gtl_type,
+        :currId     => params[:id],
+        :sortColIdx => @sortcol,
+        :sortDir    => @sortdir,
+        :isExplorer => @explorer,
+        :showUrl    => view_to_url(@view)
+      }
+    }
+  end
+
   def process_params_options(params)
     options = {}
-    if params[:explorer]
-      @explorer = params[:explorer] == "true"
-    end
+    @explorer = params[:explorer] == "true" if params[:explorer]
 
     if params[:active_tree]
       node_info = (method(:get_node_info).arity == 1) ? get_node_info(x_node) : get_node_info(x_node, false)
       options.merge!(node_info) if !node_info.nil?
     end
 
-    if params[:model_id]
-      options[:parent] = identify_record(params[:model_id])
-    end
-
+    options[:parent] = identify_record(params[:model_id]) if params[:model_id] && options[:parent].nil?
     options[:parent] = options[:parent] || @parent
     options
   end

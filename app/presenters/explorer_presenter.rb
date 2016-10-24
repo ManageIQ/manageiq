@@ -157,6 +157,10 @@ class ExplorerPresenter
     self
   end
 
+  def update_report_data(report_data)
+    @options[:report_data] = report_data
+  end
+
   def self.open_window(url)
     new(:mode => 'window', :open_url => url)
   end
@@ -281,6 +285,7 @@ class ExplorerPresenter
     data[:clearSearch] = @options[:clear_search_toggle] if @options[:clear_search_toggle]
     data[:hideModal] if @options[:hide_modal]
     data[:initAccords] if @options[:init_accords]
+    data[:reportData] = @options[:report_data] if @options[:report_data]
 
     data
   end

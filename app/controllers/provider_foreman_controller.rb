@@ -804,7 +804,7 @@ class ProviderForemanController < ApplicationController
     presenter, r = rendering_objects
     replace_explorer_trees(replace_trees, presenter, r)
 
-    presenter.update(:main_div, r[:partial => 'layouts/x_gtl'])
+    presenter.update_report_data(init_report_data('miqGtlContoller'))
     rebuild_toolbars(false, presenter)
     handle_bottom_cell(presenter, r)
 
@@ -938,7 +938,7 @@ class ProviderForemanController < ApplicationController
       presenter.update(:main_div, r[:partial => "configuration_script",
                                     :locals  => {:controller => 'provider_foreman'}])
     else
-      presenter.update(:main_div, r[:partial => 'layouts/x_gtl'])
+      presenter.update_report_data(init_report_data('miqGtlContoller'))
     end
   end
 

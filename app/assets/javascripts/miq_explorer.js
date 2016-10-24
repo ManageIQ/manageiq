@@ -220,6 +220,14 @@ ManageIQ.explorer.processReplaceRightCell = function(data) {
       .html(data.rightCellText);
   }
 
+  if (data.reportData && _.isObject(data.reportData)) {
+    console.log(data.reportData);
+    sendDataWithRx({initController: {
+      name: data.reportData.controller_name,
+      data: data.reportData.data
+    }});
+  }
+
   if (_.isArray(data.reloadToolbars) && data.reloadToolbars.length) {
     ManageIQ.angular.rxSubject.onNext({
       redrawToolbar: data.reloadToolbars

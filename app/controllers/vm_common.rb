@@ -1291,7 +1291,7 @@ module VmCommon
           klass = ManageIQ::Providers::InfraManager::VmOrTemplate
           options[:where_clause] = ["vms.type IN (?)", klass.vm_descendants.collect(&:name)]
         end
-        process_show_list(options) if show_list # Get all VMs & Templates
+        process_show_list(options) if show_list  # Get all VMs & Templates
         # :model=>ui_lookup(:models=>"VmOrTemplate"))
         # TODO: Change ui_lookup/dictionary to handle VmOrTemplate, returning VMs And Templates
         @right_cell_text = if title
@@ -1495,7 +1495,7 @@ module VmCommon
       add_ajax = true
       presenter[:build_calendar] = true
     else
-      presenter.update(:main_div, r[:partial => 'layouts/x_gtl'])
+      presenter.update_report_data(init_report_data('miqGtlContoller'))
     end
 
     presenter[:ajax_action] = {
@@ -1571,7 +1571,6 @@ module VmCommon
     presenter.hide(:blocker_div) unless @edit && @edit[:adv_search_open]
     presenter[:hide_modal] = true
     presenter.lock_tree(x_active_tree, @in_a_form && @edit)
-
     render :json => presenter.for_render
   end
 
