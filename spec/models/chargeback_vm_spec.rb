@@ -50,6 +50,12 @@ describe ChargebackVm do
     Timecop.return
   end
 
+  let(:report_static_fields) { %w(vm_name) }
+
+  it "uses static fields" do
+    expect(described_class.report_static_cols).to match_array(report_static_fields)
+  end
+
   it "succeeds without a userid" do
     @options.delete(:userid)
     expect { ChargebackVm.build_results_for_report_ChargebackVm(@options) }.not_to raise_error

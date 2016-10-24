@@ -125,7 +125,7 @@ class ChargebackVm < Chargeback
   end
 
   def self.report_static_cols
-    %w(vm_name vm_guid)
+    %w(vm_name)
   end
 
   def self.report_col_options
