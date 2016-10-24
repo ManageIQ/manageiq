@@ -141,6 +141,12 @@ describe AutomationRequest do
         :namespace  => "SYSTEM"
       )
     end
+
+    it "only allow parameters that are stringified" do
+      parameters_sym = {:var1 => @ae_var1.to_s, :var2 => @ae_var2.to_s, :var3 => @ae_var3.to_s}
+      expect(AutomationRequest).to receive(:create_from_ws).with(anything, anything, anything, @parameters, anything)
+      AutomationRequest.create_from_scheduled_task(admin, @uri_parts, parameters_sym)
+    end
   end
 
   context "#approve" do
