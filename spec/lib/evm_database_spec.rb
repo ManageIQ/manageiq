@@ -170,10 +170,10 @@ describe EvmDatabase do
       end
     end
 
-    describe ".raise_failover_executed_event" do
-      it "adds to queue request to raise 'evm_evrequest'" do
+    describe ".raise_server_event" do
+      it "adds to queue request to raise 'evm_event'" do
         EvmSpecHelper.create_guid_miq_server_zone
-        described_class.raise_failover_executed_event
+        described_class.raise_server_event("db_failover_executed")
         record = MiqQueue.last
         expect(record.class_name). to eq "MiqEvent"
         expect(record.method_name).to eq "raise_evm_event"

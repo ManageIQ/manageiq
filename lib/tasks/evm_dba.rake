@@ -137,11 +137,6 @@ namespace :evm do
       ActiveRecord::Base.establish_connection(ActiveRecord::Base.configurations[Rails.env])
     end
 
-    desc 'Raises db_failover_executed event'
-    task :raise_failover_executed_event => :environment do
-      EvmDatabase.raise_failover_executed_event
-    end
-
     desc "Resets the ManageIQ EVM Database (VMDB) of all tables, views and indices"
     task :reset => [:destroy, 'db:migrate']
 

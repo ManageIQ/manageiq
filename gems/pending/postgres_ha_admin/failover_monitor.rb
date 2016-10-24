@@ -6,6 +6,11 @@ require 'pg'
 require 'linux_admin'
 
 module PostgresHaAdmin
+  RAILS_ROOT = [
+    Pathname.new("/var/www/miq/vmdb"),
+    Pathname.new(File.expand_path(File.join(__dir__, "../..")))
+  ].detect { |f| File.exist?(f) }
+
   class FailoverMonitor
     FAILOVER_ATTEMPTS = 10
     DB_CHECK_FREQUENCY = 300
@@ -68,7 +73,9 @@ module PostgresHaAdmin
 
     def raise_failover_event
       require "awesome_spawn"
-      AwesomeSpawn.run("rake evm:db:raise_failover_executed_event")
+      AwesomeSpawn.run("rake evm:raise_server_event",
+                       :chdir  => RAILS_ROOT,
+                       :params => ["--", {:event  => "db_failover_executed"}])
     end
 
     private

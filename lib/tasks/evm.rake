@@ -67,4 +67,15 @@ namespace :evm do
       DescendantLoader.instance.class_inheritance_relationships
     end
   end
+
+  # Example usage:
+  #  bin/rake evm:raise_server_event -- --event db_failover_executed
+  desc 'Raise evm event'
+  task :raise_server_event => :environment do
+    require 'trollop'
+    opts = Trollop.options(EvmDba.extract_command_options) do
+      opt :event, "Server Event", :type => :string, :required => true
+    end
+    EvmDatabase.raise_server_event(opts[:event])
+  end
 end

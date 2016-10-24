@@ -116,9 +116,9 @@ class EvmDatabase
     File.write(SCHEMA_FILE, current_schema(connection).to_yaml)
   end
 
-  def self.raise_failover_executed_event
-    msg = "Server_IP: #{MiqServer.my_server.ipaddress}, Server Host Name: #{MiqServer.my_server.hostname}"
-    MiqEvent.raise_evm_event_queue(MiqServer.my_server, 'db_failover_executed', :event_details => msg)
+  def self.raise_server_event(event)
+    msg = "Server IP: #{MiqServer.my_server.ipaddress}, Server Host Name: #{MiqServer.my_server.hostname}"
+    MiqEvent.raise_evm_event_queue(MiqServer.my_server, event, :event_details => msg)
   end
 
   class << self
