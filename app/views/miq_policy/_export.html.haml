@@ -48,8 +48,12 @@
                          "data-buttonName"  => "btn-default")
             :javascript
               $(":file").filestyle({icon: false, placeholder: "No file chosen"});
+              $("#upload_file").on("change", function() {
+                ImportSetup.setUpUploadImportButton('#upload_tags')
+              });
+
           .col-md-6
-            = submit_tag(_("Upload"), :id => "upload_tags", :class => "btn btn-default")
+            = submit_tag(_("Upload"), :id => "upload_tags", :class => "btn btn-default", :disabled => true)
 
   - if @sb[:hide] == false
     %hr
