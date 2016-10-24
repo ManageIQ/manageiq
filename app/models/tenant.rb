@@ -281,7 +281,7 @@ class Tenant < ApplicationRecord
   #     [["tenant/tenant2/project4", 4]]
   #   ]
   def self.tenant_and_project_names
-    tenants_and_projects = Tenant.select(:id, :ancestry, :divisible, :use_config_for_attributes, :name)
+    tenants_and_projects = Tenant.in_my_region.select(:id, :ancestry, :divisible, :use_config_for_attributes, :name)
                            .to_a.sort_by { |t| [t.ancestry || "", t.name] }
     tenants_by_id = tenants_and_projects.index_by(&:id)
 
