@@ -108,9 +108,7 @@
                      {:multipart => true,
                       :method    => :post}) do
             .col-md-4
-              = file_field("upload", "image", :class => "filestyle", "data-buttonName" => "btn-default")
-              :javascript
-                $(":file").filestyle({icon: false, placeholder: "No file chosen"});
+              = render :partial => "shared/file_chooser", :locals => {:object_name => "upload", :method => "image"}
             .col-md-6
               = submit_tag(_("Upload"), :id => "upload", :class => "upload btn btn-default")
               = _('* Requires image file in .png or .jpg format')

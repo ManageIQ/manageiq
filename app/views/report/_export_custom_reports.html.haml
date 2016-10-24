@@ -19,11 +19,7 @@
         = _('Overwrite existing reports?')
     .form-group
       .col-md-4
-        = file_field("upload", "file",
-                     :class             => "lifestyle",
-                     "data-buttonName"  => "btn-default")
-        :javascript
-          $(":file").filestyle({icon: false, placeholder: "No file chosen"});
+        = render :partial => "shared/file_chooser", :locals => {:object_name => "upload", :method => "file"}
       .col-md-6
         = submit_tag(_("Upload"), :class => "btn btn-default", :id => "upload_atags", :disabled => true)
         :javascript

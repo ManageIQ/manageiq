@@ -43,11 +43,8 @@
                  :method    => :post) do
         .form-group
           .col-md-4
-            = file_field("upload", "file",
-                         :class             => "lifestyle",
-                         "data-buttonName"  => "btn-default")
+            = render :partial => "shared/file_chooser", :locals => {:object_name => "upload", :method => "file"}
             :javascript
-              $(":file").filestyle({icon: false, placeholder: "No file chosen"});
               $("#upload_file").on("change", function() {
                 ImportSetup.setUpUploadImportButton('#upload_tags')
               });

@@ -12,13 +12,7 @@
              :method    => :post) do
     .form-group
       .col-md-4
-        = file_field("upload", "logo",
-                     :class             => "filestyle",
-                     "data-buttonName"  => "btn-default",
-                     )
-        :javascript
-          $(":file").filestyle({icon: false,placeholder: "No file chosen"});
-
+        = render :partial => "shared/file_chooser", :locals => {:object_name => "upload", :method => "logo"}
       .col-md-6
         = submit_tag(_("Upload"),
                     :id    => "upload",
@@ -53,12 +47,7 @@
              :method    => :post) do
     .form-group
       .col-md-4
-        = file_field("login", "logo",
-                     :class             => "filestyle",
-                     "data-buttonName"  => "btn-default",
-                     )
-        :javascript
-          $(":file").filestyle({icon: false,placeholder: "No file chosen"});
+        = render :partial => "shared/file_chooser", :locals => {:object_name => "login", :method => "logo"}
       .col-md-6
         = submit_tag(_("Upload"),
                     :id    => "login_logo",

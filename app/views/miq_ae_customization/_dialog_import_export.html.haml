@@ -36,12 +36,7 @@
     .form-group
       .row
         .col-md-4
-          = file_field("upload", "file", :class => "lifestyle", "data-buttonName" => "btn-default")
-          :javascript
-            $(":file").filestyle({
-              icon: false,
-              placeholder: "No file chosen"
-            });
+          = render :partial => "shared/file_chooser", :locals => {:object_name => "upload", :method => "file"}
         .col-md-6
           = button_tag(_("Upload"), :id => "upload_service_dialog_import", :class => "btn btn-default", :action => "submit")
 

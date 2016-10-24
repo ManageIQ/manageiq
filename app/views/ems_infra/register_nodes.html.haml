@@ -6,9 +6,7 @@
   = hidden_field_tag('id', @infra.id)
   .form-group
     .col-md-4
-      = file_field("nodes_json", "file", :class => "filestyle", "data-buttonName"  => "btn-default")
-      :javascript
-        $(":file").filestyle({icon: false,placeholder: "No file chosen"});
+      = render :partial => "shared/file_chooser", :locals => {:object_name => "nodes_json", :method => "file"}
 
     .col-md-6
       = submit_tag(_("Register"),
