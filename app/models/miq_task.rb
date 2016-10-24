@@ -10,14 +10,16 @@ class MiqTask < ApplicationRecord
   STATUS_ERROR      = 'Error'.freeze
   STATUS_TIMEOUT    = 'Timeout'.freeze
   STATUS_EXPIRED    = 'Expired'.freeze
-  validates_inclusion_of :state,  :in => [STATE_INITIALIZED, STATE_QUEUED, STATE_ACTIVE, STATE_FINISHED]
-  validates_inclusion_of :status, :in => [STATUS_OK, STATUS_WARNING, STATUS_ERROR, STATUS_TIMEOUT]
+  validates :state,
+            :inclusion => { :in => [STATE_INITIALIZED, STATE_QUEUED, STATE_ACTIVE, STATE_FINISHED] }
+  validates :status,
+            :inclusion => { :in => [STATUS_OK, STATUS_WARNING, STATUS_ERROR, STATUS_TIMEOUT] }
 
   DEFAULT_MESSAGE   = 'Initialized'.freeze
   DEFAULT_USERID    = 'system'.freeze
 
-  MESSAGE_TASK_COMPLETED_SUCCESSFULLY   = 'Task completed successfully'
-  MESSAGE_TASK_COMPLETED_UNSUCCESSFULLY = 'Task did not complete successfully'
+  MESSAGE_TASK_COMPLETED_SUCCESSFULLY   = 'Task completed successfully'.freeze
+  MESSAGE_TASK_COMPLETED_UNSUCCESSFULLY = 'Task did not complete successfully'.freeze
 
   has_one :log_file, :dependent => :destroy
   has_one :binary_blob, :as => :resource, :dependent => :destroy
@@ -43,28 +45,28 @@ class MiqTask < ApplicationRecord
   end
 
   def self.update_status(taskid, state, status, message)
-    task = MiqTask.find_by_id(taskid)
+    task = find_by(:id => taskid)
     task.update_status(state, status, message) unless task.nil?
   end
 
   def update_status(state, status, message)
     status = STATUS_ERROR if status == STATUS_EXPIRED
     _log.info("Task: [#{id}] [#{state}] [#{status}] [#{message}]")
-    self.update_attributes!(:state => state, :status => status, :message => self.class.trim_message(message))
+    update_attributes!(:state => state, :status => status, :message => self.class.trim_message(message))
   end
 
   def self.update_message(taskid, message)
-    task = MiqTask.find_by_id(taskid)
+    task = find_by(:id => taskid)
     task.update_message(message) unless task.nil?
   end
 
   def update_message(message)
     _log.info("Task: [#{id}] [#{message}]")
-    self.update_attributes!(:message => self.class.trim_message(message))
+    update_attributes!(:message => self.class.trim_message(message))
   end
 
   def update_context(context)
-    self.update_attributes!(:context_data => context)
+    update_attributes!(:context_data => context)
   end
 
   def self.trim_message(message)
@@ -79,7 +81,7 @@ class MiqTask < ApplicationRecord
   end
 
   def self.info(taskid, message, pct_complete)
-    task = MiqTask.find_by_id(taskid)
+    task = find_by(:id => taskid)
     task.info(message, pct_complete) unless task.nil?
   end
 
@@ -92,7 +94,7 @@ class MiqTask < ApplicationRecord
   end
 
   def self.warn(taskid, message)
-    task = MiqTask.find_by_id(taskid)
+    task = find_by(:id => taskid)
     task.warn(message) unless task.nil?
   end
 
@@ -101,12 +103,12 @@ class MiqTask < ApplicationRecord
   end
 
   def self.error(taskid, message)
-    task = MiqTask.find_by_id(taskid)
+    task = find_by(:id => taskid)
     task.error(message) unless task.nil?
   end
 
   def self.state_initialized(taskid)
-    task = MiqTask.find_by_id(taskid)
+    task = find_by(:id => taskid)
     task.state_initialized unless task.nil?
   end
 
@@ -115,7 +117,7 @@ class MiqTask < ApplicationRecord
   end
 
   def self.state_queued(taskid)
-    task = MiqTask.find_by_id(taskid)
+    task = find_by(:id => taskid)
     task.state_queued unless task.nil?
   end
 
@@ -124,7 +126,7 @@ class MiqTask < ApplicationRecord
   end
 
   def self.state_active(taskid)
-    task = MiqTask.find_by_id(taskid)
+    task = find_by(:id => taskid)
     task.state_active unless task.nil?
   end
 
@@ -133,7 +135,7 @@ class MiqTask < ApplicationRecord
   end
 
   def self.state_finished(taskid)
-    task = MiqTask.find_by_id(taskid)
+    task = find_by(:id => taskid)
     task.state_finished unless task.nil?
   end
 
@@ -178,7 +180,7 @@ class MiqTask < ApplicationRecord
     return miq_report_result.report_results unless miq_report_result.nil?
     unless binary_blob.nil?
       serializer_name = binary_blob.data_type
-      serializer_name = "Marshal" unless serializer_name == "YAML"  # YAML or Marshal, for now
+      serializer_name = "Marshal" unless serializer_name == "YAML" # YAML or Marshal, for now
       serializer = serializer_name.constantize
       return serializer.load(binary_blob.binary)
     end
@@ -186,7 +188,7 @@ class MiqTask < ApplicationRecord
   end
 
   def task_results=(value)
-    self.binary_blob        = BinaryBlob.new(:name => "task_results", :data_type => "YAML")
+    self.binary_blob   = BinaryBlob.new(:name => "task_results", :data_type => "YAML")
     binary_blob.binary = YAML.dump(value)
   end
 
