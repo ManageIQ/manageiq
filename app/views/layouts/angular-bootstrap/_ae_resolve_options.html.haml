@@ -55,8 +55,8 @@
         %select#target_id{"ng-model"    => "scheduleModel.target_id",
                           "name"        => "target_id",
                           "ng-options"  => "target[1] as target[0] for target in scheduleModel.targets",
+                          "ng-required" => "scheduleModel.target_class",
                           "checkchange" => "",
-                          "miqrequired" => "",
                           "pf-select"   => true}
           %option{"disabled" => "", "value" => ""} &lt;Choose&gt;
         %span.help-block{"ng-show" => "angularForm.target_id.$error.miqrequired"}
