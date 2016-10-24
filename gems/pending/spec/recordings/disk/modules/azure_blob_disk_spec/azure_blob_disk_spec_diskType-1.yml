@@ -37,27 +37,27 @@ http_interactions:
       X-Content-Type-Options:
       - nosniff
       Client-Request-Id:
-      - ee614582-9707-44c4-8c1e-748ae68f4d6c
+      - d725295d-c0e8-483f-891a-ab01937d9da3
       X-Ms-Request-Id:
-      - e39ea08d-ebfa-4603-ab49-489f6c812d11
+      - 25b7f61f-8dd3-417f-aeba-106bec5c922f
       P3p:
       - CP="DSP CUR OTPi IND OTRi ONL FIN"
       Set-Cookie:
-      - esctx=AQABAAAAAADRNYRQ3dhRSrm-4K-adpCJqsbeE0fgPsDh2nX9pKl5Cv3TGpr7sgVJYjSXSBMrEPdBfM__oTAsYMXfJfNplbteeABJSPUXvf4f4xjIqFgcvFGdljHqMg6xFk4rB919zkV2k2GpHjs54uLazv1QrVPofiCoqYi9JoKjKMUlfzpGULK_uIBWNb8Yd2Jp627gFOsgAA;
+      - esctx=AQABAAAAAADRNYRQ3dhRSrm-4K-adpCJei5CPFidvCpN0PuyhrmnGAqX33qPvdkNJ6yCkLEsi5iIKEjpCSkEC0o6RON_QCUpMrBQMUvB_hfI5do7BQ6lr3na1tCP0c5xP9a4KaIb-zJxSFAOJ8SctKT4y-0mq4MYg3nsPqzUWff8s0ldFi-hCIkvoQ2HBTq1Xn7uKNPqBWcgAA;
         domain=.login.windows.net; path=/; secure; HttpOnly
       - stsservicecookie=ests; path=/; secure; HttpOnly
       - x-ms-gateway-slice=productiona; path=/; secure; HttpOnly
       X-Powered-By:
       - ASP.NET
       Date:
-      - Mon, 24 Oct 2016 19:00:07 GMT
+      - Mon, 24 Oct 2016 19:18:58 GMT
       Content-Length:
       - '1409'
     body:
       encoding: UTF-8
-      string: '{"token_type":"Bearer","expires_in":"3599","ext_expires_in":"0","expires_on":"1477339205","not_before":"1477335305","resource":"https://management.azure.com/","access_token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Ikk2b0J3NFZ6QkhPcWxlR3JWMkFKZEE1RW1YYyIsImtpZCI6Ikk2b0J3NFZ6QkhPcWxlR3JWMkFKZEE1RW1YYyJ9.eyJhdWQiOiJodHRwczovL21hbmFnZW1lbnQuYXp1cmUuY29tLyIsImlzcyI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJpYXQiOjE0NzczMzUzMDUsIm5iZiI6MTQ3NzMzNTMwNSwiZXhwIjoxNDc3MzM5MjA1LCJhcHBpZCI6ImZjMWMyMjI1LTA2NWYtNGJhOC04M2Q5LWQ4NjY2MmY1NzhhZiIsImFwcGlkYWNyIjoiMSIsImdyb3VwcyI6WyI0MDczODk4Ni0zYzgyLTRjZjEtOTlmYy0xMzQ1N2UzMzMyZmMiLCIwZDAxNDNlYS0zMzllLTQyZTAtYTI0ZS1iNWE4ZmM2OWZmMTQiLCJkNjVmMmU1ZC1mYmZiLTQxNTMtODZiMi01OTc5YjRlNmI1OTIiXSwiaWRwIjoiaHR0cHM6Ly9zdHMud2luZG93cy5uZXQvNzdlY2VmYjYtY2ZmMC00ZThkLWE0NDYtNzU3YTY5Y2I5NDg1LyIsIm9pZCI6IjMwNmViNDJhLTM1ODUtNGEzNy05NWI3LTM4YmMwZTk4MjhkMiIsInN1YiI6IjMwNmViNDJhLTM1ODUtNGEzNy05NWI3LTM4YmMwZTk4MjhkMiIsInRpZCI6Ijc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NSIsInZlciI6IjEuMCJ9.jjrMlsGJgNYsuI5EZIGNQqtdk-zqVfeQVty2krBtGb2VtxsfLIo08nE5hEdwRf6zK7hBU-hy9tHKcTy2J1GgvbGQFYyvi4E-jitg3h0UZLTlCseKy5iceWLC88J9Jbh1d3ELxMFIFZMG68mkXL4fLkYecSw9pH1WQeBuL75jS3Tq1yOuBvCu8ImAT3eKMbhoQmfiP9_OQawcj-d-tgl8lktDOW3fPKAte7BToDMz-qrvItzH2k9FkU5qPoiv2lsgbo-VAx3TYpPBQ71aAr-R-mVs1yL9SeSPQN3q53BoDn-2JfUUwh5WtlVL2qcwdDzhGlP3CPmX5tHyMohhLdHUPw"}'
+      string: '{"token_type":"Bearer","expires_in":"3599","ext_expires_in":"0","expires_on":"1477340338","not_before":"1477336438","resource":"https://management.azure.com/","access_token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Ikk2b0J3NFZ6QkhPcWxlR3JWMkFKZEE1RW1YYyIsImtpZCI6Ikk2b0J3NFZ6QkhPcWxlR3JWMkFKZEE1RW1YYyJ9.eyJhdWQiOiJodHRwczovL21hbmFnZW1lbnQuYXp1cmUuY29tLyIsImlzcyI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJpYXQiOjE0NzczMzY0MzgsIm5iZiI6MTQ3NzMzNjQzOCwiZXhwIjoxNDc3MzQwMzM4LCJhcHBpZCI6ImZjMWMyMjI1LTA2NWYtNGJhOC04M2Q5LWQ4NjY2MmY1NzhhZiIsImFwcGlkYWNyIjoiMSIsImdyb3VwcyI6WyI0MDczODk4Ni0zYzgyLTRjZjEtOTlmYy0xMzQ1N2UzMzMyZmMiLCIwZDAxNDNlYS0zMzllLTQyZTAtYTI0ZS1iNWE4ZmM2OWZmMTQiLCJkNjVmMmU1ZC1mYmZiLTQxNTMtODZiMi01OTc5YjRlNmI1OTIiXSwiaWRwIjoiaHR0cHM6Ly9zdHMud2luZG93cy5uZXQvNzdlY2VmYjYtY2ZmMC00ZThkLWE0NDYtNzU3YTY5Y2I5NDg1LyIsIm9pZCI6IjMwNmViNDJhLTM1ODUtNGEzNy05NWI3LTM4YmMwZTk4MjhkMiIsInN1YiI6IjMwNmViNDJhLTM1ODUtNGEzNy05NWI3LTM4YmMwZTk4MjhkMiIsInRpZCI6Ijc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NSIsInZlciI6IjEuMCJ9.CPO7zcR8ijM-FZtvAUQvzDFv-VyMnmNl9JpqjSwciAB0APbdasLZJQa8GEBMiX0Cv74AOGrBeAuI3NFm270ytLGz3iIqw8ugkZ9DfjX2Q1VBJW-Opxg4uvcwI0vG42jj_bnrr2BQe39CPkDMSP3MYulICKxvr0Nq6sumaprLprY2WsFQl4O0Dsyv_qLJ0mp1zBzKnTJBDMLRKu2VicHsACnKWnhvXiSDIEs6fH4AsRmQrT9j4zIAZiRdefiu2USfounBhri4ThWI5cPz34YRVBQ7xZxibErfO5uqX2exfI7YfFoZqi_whhXMP3HY0GS-qgLlYJiL3EAOmAsWgHUQng"}'
     http_version: 
-  recorded_at: Mon, 24 Oct 2016 19:00:06 GMT
+  recorded_at: Mon, 24 Oct 2016 19:18:59 GMT
 - request:
     method: get
     uri: https://management.azure.com/subscriptions?api-version=2015-01-01
@@ -74,7 +74,7 @@ http_interactions:
       Content-Type:
       - application/json
       Authorization:
-      - Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Ikk2b0J3NFZ6QkhPcWxlR3JWMkFKZEE1RW1YYyIsImtpZCI6Ikk2b0J3NFZ6QkhPcWxlR3JWMkFKZEE1RW1YYyJ9.eyJhdWQiOiJodHRwczovL21hbmFnZW1lbnQuYXp1cmUuY29tLyIsImlzcyI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJpYXQiOjE0NzczMzUzMDUsIm5iZiI6MTQ3NzMzNTMwNSwiZXhwIjoxNDc3MzM5MjA1LCJhcHBpZCI6ImZjMWMyMjI1LTA2NWYtNGJhOC04M2Q5LWQ4NjY2MmY1NzhhZiIsImFwcGlkYWNyIjoiMSIsImdyb3VwcyI6WyI0MDczODk4Ni0zYzgyLTRjZjEtOTlmYy0xMzQ1N2UzMzMyZmMiLCIwZDAxNDNlYS0zMzllLTQyZTAtYTI0ZS1iNWE4ZmM2OWZmMTQiLCJkNjVmMmU1ZC1mYmZiLTQxNTMtODZiMi01OTc5YjRlNmI1OTIiXSwiaWRwIjoiaHR0cHM6Ly9zdHMud2luZG93cy5uZXQvNzdlY2VmYjYtY2ZmMC00ZThkLWE0NDYtNzU3YTY5Y2I5NDg1LyIsIm9pZCI6IjMwNmViNDJhLTM1ODUtNGEzNy05NWI3LTM4YmMwZTk4MjhkMiIsInN1YiI6IjMwNmViNDJhLTM1ODUtNGEzNy05NWI3LTM4YmMwZTk4MjhkMiIsInRpZCI6Ijc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NSIsInZlciI6IjEuMCJ9.jjrMlsGJgNYsuI5EZIGNQqtdk-zqVfeQVty2krBtGb2VtxsfLIo08nE5hEdwRf6zK7hBU-hy9tHKcTy2J1GgvbGQFYyvi4E-jitg3h0UZLTlCseKy5iceWLC88J9Jbh1d3ELxMFIFZMG68mkXL4fLkYecSw9pH1WQeBuL75jS3Tq1yOuBvCu8ImAT3eKMbhoQmfiP9_OQawcj-d-tgl8lktDOW3fPKAte7BToDMz-qrvItzH2k9FkU5qPoiv2lsgbo-VAx3TYpPBQ71aAr-R-mVs1yL9SeSPQN3q53BoDn-2JfUUwh5WtlVL2qcwdDzhGlP3CPmX5tHyMohhLdHUPw
+      - Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Ikk2b0J3NFZ6QkhPcWxlR3JWMkFKZEE1RW1YYyIsImtpZCI6Ikk2b0J3NFZ6QkhPcWxlR3JWMkFKZEE1RW1YYyJ9.eyJhdWQiOiJodHRwczovL21hbmFnZW1lbnQuYXp1cmUuY29tLyIsImlzcyI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJpYXQiOjE0NzczMzY0MzgsIm5iZiI6MTQ3NzMzNjQzOCwiZXhwIjoxNDc3MzQwMzM4LCJhcHBpZCI6ImZjMWMyMjI1LTA2NWYtNGJhOC04M2Q5LWQ4NjY2MmY1NzhhZiIsImFwcGlkYWNyIjoiMSIsImdyb3VwcyI6WyI0MDczODk4Ni0zYzgyLTRjZjEtOTlmYy0xMzQ1N2UzMzMyZmMiLCIwZDAxNDNlYS0zMzllLTQyZTAtYTI0ZS1iNWE4ZmM2OWZmMTQiLCJkNjVmMmU1ZC1mYmZiLTQxNTMtODZiMi01OTc5YjRlNmI1OTIiXSwiaWRwIjoiaHR0cHM6Ly9zdHMud2luZG93cy5uZXQvNzdlY2VmYjYtY2ZmMC00ZThkLWE0NDYtNzU3YTY5Y2I5NDg1LyIsIm9pZCI6IjMwNmViNDJhLTM1ODUtNGEzNy05NWI3LTM4YmMwZTk4MjhkMiIsInN1YiI6IjMwNmViNDJhLTM1ODUtNGEzNy05NWI3LTM4YmMwZTk4MjhkMiIsInRpZCI6Ijc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NSIsInZlciI6IjEuMCJ9.CPO7zcR8ijM-FZtvAUQvzDFv-VyMnmNl9JpqjSwciAB0APbdasLZJQa8GEBMiX0Cv74AOGrBeAuI3NFm270ytLGz3iIqw8ugkZ9DfjX2Q1VBJW-Opxg4uvcwI0vG42jj_bnrr2BQe39CPkDMSP3MYulICKxvr0Nq6sumaprLprY2WsFQl4O0Dsyv_qLJ0mp1zBzKnTJBDMLRKu2VicHsACnKWnhvXiSDIEs6fH4AsRmQrT9j4zIAZiRdefiu2USfounBhri4ThWI5cPz34YRVBQ7xZxibErfO5uqX2exfI7YfFoZqi_whhXMP3HY0GS-qgLlYJiL3EAOmAsWgHUQng
   response:
     status:
       code: 200
@@ -93,23 +93,23 @@ http_interactions:
       Vary:
       - Accept-Encoding
       X-Ms-Ratelimit-Remaining-Tenant-Reads:
-      - '14999'
+      - '14993'
       X-Ms-Request-Id:
-      - 082df966-fb67-40de-b469-5a589aba3460
+      - db1b1797-aa75-4003-8386-772718adcc32
       X-Ms-Correlation-Request-Id:
-      - 082df966-fb67-40de-b469-5a589aba3460
+      - db1b1797-aa75-4003-8386-772718adcc32
       X-Ms-Routing-Request-Id:
-      - CENTRALUS:20161024T190006Z:082df966-fb67-40de-b469-5a589aba3460
+      - CENTRALUS:20161024T191859Z:db1b1797-aa75-4003-8386-772718adcc32
       Strict-Transport-Security:
       - max-age=31536000; includeSubDomains
       Date:
-      - Mon, 24 Oct 2016 19:00:05 GMT
+      - Mon, 24 Oct 2016 19:18:59 GMT
     body:
       encoding: ASCII-8BIT
       string: '{"value":[{"id":"/subscriptions/azure_subscription_id","subscriptionId":"azure_subscription_id","displayName":"Microsoft
         Azure Sponsorship","state":"Enabled","subscriptionPolicies":{"locationPlacementId":"Public_2014-09-01","quotaId":"Default_2014-09-01","spendingLimit":"Off"}}]}'
     http_version: 
-  recorded_at: Mon, 24 Oct 2016 19:00:06 GMT
+  recorded_at: Mon, 24 Oct 2016 19:18:59 GMT
 - request:
     method: get
     uri: https://management.azure.com/subscriptions/azure_subscription_id/providers?api-version=2015-01-01
@@ -126,7 +126,7 @@ http_interactions:
       Content-Type:
       - application/json
       Authorization:
-      - Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Ikk2b0J3NFZ6QkhPcWxlR3JWMkFKZEE1RW1YYyIsImtpZCI6Ikk2b0J3NFZ6QkhPcWxlR3JWMkFKZEE1RW1YYyJ9.eyJhdWQiOiJodHRwczovL21hbmFnZW1lbnQuYXp1cmUuY29tLyIsImlzcyI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJpYXQiOjE0NzczMzUzMDUsIm5iZiI6MTQ3NzMzNTMwNSwiZXhwIjoxNDc3MzM5MjA1LCJhcHBpZCI6ImZjMWMyMjI1LTA2NWYtNGJhOC04M2Q5LWQ4NjY2MmY1NzhhZiIsImFwcGlkYWNyIjoiMSIsImdyb3VwcyI6WyI0MDczODk4Ni0zYzgyLTRjZjEtOTlmYy0xMzQ1N2UzMzMyZmMiLCIwZDAxNDNlYS0zMzllLTQyZTAtYTI0ZS1iNWE4ZmM2OWZmMTQiLCJkNjVmMmU1ZC1mYmZiLTQxNTMtODZiMi01OTc5YjRlNmI1OTIiXSwiaWRwIjoiaHR0cHM6Ly9zdHMud2luZG93cy5uZXQvNzdlY2VmYjYtY2ZmMC00ZThkLWE0NDYtNzU3YTY5Y2I5NDg1LyIsIm9pZCI6IjMwNmViNDJhLTM1ODUtNGEzNy05NWI3LTM4YmMwZTk4MjhkMiIsInN1YiI6IjMwNmViNDJhLTM1ODUtNGEzNy05NWI3LTM4YmMwZTk4MjhkMiIsInRpZCI6Ijc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NSIsInZlciI6IjEuMCJ9.jjrMlsGJgNYsuI5EZIGNQqtdk-zqVfeQVty2krBtGb2VtxsfLIo08nE5hEdwRf6zK7hBU-hy9tHKcTy2J1GgvbGQFYyvi4E-jitg3h0UZLTlCseKy5iceWLC88J9Jbh1d3ELxMFIFZMG68mkXL4fLkYecSw9pH1WQeBuL75jS3Tq1yOuBvCu8ImAT3eKMbhoQmfiP9_OQawcj-d-tgl8lktDOW3fPKAte7BToDMz-qrvItzH2k9FkU5qPoiv2lsgbo-VAx3TYpPBQ71aAr-R-mVs1yL9SeSPQN3q53BoDn-2JfUUwh5WtlVL2qcwdDzhGlP3CPmX5tHyMohhLdHUPw
+      - Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Ikk2b0J3NFZ6QkhPcWxlR3JWMkFKZEE1RW1YYyIsImtpZCI6Ikk2b0J3NFZ6QkhPcWxlR3JWMkFKZEE1RW1YYyJ9.eyJhdWQiOiJodHRwczovL21hbmFnZW1lbnQuYXp1cmUuY29tLyIsImlzcyI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJpYXQiOjE0NzczMzY0MzgsIm5iZiI6MTQ3NzMzNjQzOCwiZXhwIjoxNDc3MzQwMzM4LCJhcHBpZCI6ImZjMWMyMjI1LTA2NWYtNGJhOC04M2Q5LWQ4NjY2MmY1NzhhZiIsImFwcGlkYWNyIjoiMSIsImdyb3VwcyI6WyI0MDczODk4Ni0zYzgyLTRjZjEtOTlmYy0xMzQ1N2UzMzMyZmMiLCIwZDAxNDNlYS0zMzllLTQyZTAtYTI0ZS1iNWE4ZmM2OWZmMTQiLCJkNjVmMmU1ZC1mYmZiLTQxNTMtODZiMi01OTc5YjRlNmI1OTIiXSwiaWRwIjoiaHR0cHM6Ly9zdHMud2luZG93cy5uZXQvNzdlY2VmYjYtY2ZmMC00ZThkLWE0NDYtNzU3YTY5Y2I5NDg1LyIsIm9pZCI6IjMwNmViNDJhLTM1ODUtNGEzNy05NWI3LTM4YmMwZTk4MjhkMiIsInN1YiI6IjMwNmViNDJhLTM1ODUtNGEzNy05NWI3LTM4YmMwZTk4MjhkMiIsInRpZCI6Ijc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NSIsInZlciI6IjEuMCJ9.CPO7zcR8ijM-FZtvAUQvzDFv-VyMnmNl9JpqjSwciAB0APbdasLZJQa8GEBMiX0Cv74AOGrBeAuI3NFm270ytLGz3iIqw8ugkZ9DfjX2Q1VBJW-Opxg4uvcwI0vG42jj_bnrr2BQe39CPkDMSP3MYulICKxvr0Nq6sumaprLprY2WsFQl4O0Dsyv_qLJ0mp1zBzKnTJBDMLRKu2VicHsACnKWnhvXiSDIEs6fH4AsRmQrT9j4zIAZiRdefiu2USfounBhri4ThWI5cPz34YRVBQ7xZxibErfO5uqX2exfI7YfFoZqi_whhXMP3HY0GS-qgLlYJiL3EAOmAsWgHUQng
   response:
     status:
       code: 200
@@ -143,17 +143,17 @@ http_interactions:
       Vary:
       - Accept-Encoding
       X-Ms-Ratelimit-Remaining-Subscription-Reads:
-      - '14782'
+      - '14906'
       X-Ms-Request-Id:
-      - 648c2111-f69b-4236-a7fa-1cde930392c1
+      - 678210b6-4f09-43df-850e-41bccbe00bc4
       X-Ms-Correlation-Request-Id:
-      - 648c2111-f69b-4236-a7fa-1cde930392c1
+      - 678210b6-4f09-43df-850e-41bccbe00bc4
       X-Ms-Routing-Request-Id:
-      - CENTRALUS:20161024T190007Z:648c2111-f69b-4236-a7fa-1cde930392c1
+      - CENTRALUS:20161024T191900Z:678210b6-4f09-43df-850e-41bccbe00bc4
       Strict-Transport-Security:
       - max-age=31536000; includeSubDomains
       Date:
-      - Mon, 24 Oct 2016 19:00:06 GMT
+      - Mon, 24 Oct 2016 19:19:00 GMT
       Content-Length:
       - '151753'
     body:
@@ -1111,7 +1111,7 @@ http_interactions:
         US"],"apiVersions":["2015-06-15"]},{"resourceType":"operations","locations":[],"apiVersions":["2015-06-15"]},{"resourceType":"listCommunicationPreference","locations":[],"apiVersions":["2015-06-15"]},{"resourceType":"updateCommunicationPreference","locations":[],"apiVersions":["2015-06-15"]}],"registrationState":"NotRegistered"},{"id":"/subscriptions/azure_subscription_id/providers/U2uconsult.TheIdentityHub","namespace":"U2uconsult.TheIdentityHub","resourceTypes":[{"resourceType":"services","locations":["West
         Europe"],"apiVersions":["2015-06-15"]},{"resourceType":"operations","locations":[],"apiVersions":["2015-06-15"]},{"resourceType":"listCommunicationPreference","locations":[],"apiVersions":["2015-06-15"]},{"resourceType":"updateCommunicationPreference","locations":[],"apiVersions":["2015-06-15"]}],"registrationState":"NotRegistered"}]}'
     http_version: 
-  recorded_at: Mon, 24 Oct 2016 19:00:07 GMT
+  recorded_at: Mon, 24 Oct 2016 19:19:01 GMT
 - request:
     method: get
     uri: https://management.azure.com/subscriptions/azure_subscription_id/providers/Microsoft.Storage/storageAccounts?api-version=2016-05-01
@@ -1128,7 +1128,7 @@ http_interactions:
       Content-Type:
       - application/json
       Authorization:
-      - Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Ikk2b0J3NFZ6QkhPcWxlR3JWMkFKZEE1RW1YYyIsImtpZCI6Ikk2b0J3NFZ6QkhPcWxlR3JWMkFKZEE1RW1YYyJ9.eyJhdWQiOiJodHRwczovL21hbmFnZW1lbnQuYXp1cmUuY29tLyIsImlzcyI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJpYXQiOjE0NzczMzUzMDUsIm5iZiI6MTQ3NzMzNTMwNSwiZXhwIjoxNDc3MzM5MjA1LCJhcHBpZCI6ImZjMWMyMjI1LTA2NWYtNGJhOC04M2Q5LWQ4NjY2MmY1NzhhZiIsImFwcGlkYWNyIjoiMSIsImdyb3VwcyI6WyI0MDczODk4Ni0zYzgyLTRjZjEtOTlmYy0xMzQ1N2UzMzMyZmMiLCIwZDAxNDNlYS0zMzllLTQyZTAtYTI0ZS1iNWE4ZmM2OWZmMTQiLCJkNjVmMmU1ZC1mYmZiLTQxNTMtODZiMi01OTc5YjRlNmI1OTIiXSwiaWRwIjoiaHR0cHM6Ly9zdHMud2luZG93cy5uZXQvNzdlY2VmYjYtY2ZmMC00ZThkLWE0NDYtNzU3YTY5Y2I5NDg1LyIsIm9pZCI6IjMwNmViNDJhLTM1ODUtNGEzNy05NWI3LTM4YmMwZTk4MjhkMiIsInN1YiI6IjMwNmViNDJhLTM1ODUtNGEzNy05NWI3LTM4YmMwZTk4MjhkMiIsInRpZCI6Ijc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NSIsInZlciI6IjEuMCJ9.jjrMlsGJgNYsuI5EZIGNQqtdk-zqVfeQVty2krBtGb2VtxsfLIo08nE5hEdwRf6zK7hBU-hy9tHKcTy2J1GgvbGQFYyvi4E-jitg3h0UZLTlCseKy5iceWLC88J9Jbh1d3ELxMFIFZMG68mkXL4fLkYecSw9pH1WQeBuL75jS3Tq1yOuBvCu8ImAT3eKMbhoQmfiP9_OQawcj-d-tgl8lktDOW3fPKAte7BToDMz-qrvItzH2k9FkU5qPoiv2lsgbo-VAx3TYpPBQ71aAr-R-mVs1yL9SeSPQN3q53BoDn-2JfUUwh5WtlVL2qcwdDzhGlP3CPmX5tHyMohhLdHUPw
+      - Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Ikk2b0J3NFZ6QkhPcWxlR3JWMkFKZEE1RW1YYyIsImtpZCI6Ikk2b0J3NFZ6QkhPcWxlR3JWMkFKZEE1RW1YYyJ9.eyJhdWQiOiJodHRwczovL21hbmFnZW1lbnQuYXp1cmUuY29tLyIsImlzcyI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJpYXQiOjE0NzczMzY0MzgsIm5iZiI6MTQ3NzMzNjQzOCwiZXhwIjoxNDc3MzQwMzM4LCJhcHBpZCI6ImZjMWMyMjI1LTA2NWYtNGJhOC04M2Q5LWQ4NjY2MmY1NzhhZiIsImFwcGlkYWNyIjoiMSIsImdyb3VwcyI6WyI0MDczODk4Ni0zYzgyLTRjZjEtOTlmYy0xMzQ1N2UzMzMyZmMiLCIwZDAxNDNlYS0zMzllLTQyZTAtYTI0ZS1iNWE4ZmM2OWZmMTQiLCJkNjVmMmU1ZC1mYmZiLTQxNTMtODZiMi01OTc5YjRlNmI1OTIiXSwiaWRwIjoiaHR0cHM6Ly9zdHMud2luZG93cy5uZXQvNzdlY2VmYjYtY2ZmMC00ZThkLWE0NDYtNzU3YTY5Y2I5NDg1LyIsIm9pZCI6IjMwNmViNDJhLTM1ODUtNGEzNy05NWI3LTM4YmMwZTk4MjhkMiIsInN1YiI6IjMwNmViNDJhLTM1ODUtNGEzNy05NWI3LTM4YmMwZTk4MjhkMiIsInRpZCI6Ijc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NSIsInZlciI6IjEuMCJ9.CPO7zcR8ijM-FZtvAUQvzDFv-VyMnmNl9JpqjSwciAB0APbdasLZJQa8GEBMiX0Cv74AOGrBeAuI3NFm270ytLGz3iIqw8ugkZ9DfjX2Q1VBJW-Opxg4uvcwI0vG42jj_bnrr2BQe39CPkDMSP3MYulICKxvr0Nq6sumaprLprY2WsFQl4O0Dsyv_qLJ0mp1zBzKnTJBDMLRKu2VicHsACnKWnhvXiSDIEs6fH4AsRmQrT9j4zIAZiRdefiu2USfounBhri4ThWI5cPz34YRVBQ7xZxibErfO5uqX2exfI7YfFoZqi_whhXMP3HY0GS-qgLlYJiL3EAOmAsWgHUQng
   response:
     status:
       code: 200
@@ -1145,22 +1145,22 @@ http_interactions:
       Vary:
       - Accept-Encoding
       X-Ms-Request-Id:
-      - f8461dfd-00df-4f70-a718-295dcf1d83bb
+      - 96efb5f4-e35a-4e5f-800f-9e91c1e32e6a
       X-Ms-Correlation-Request-Id:
-      - f8461dfd-00df-4f70-a718-295dcf1d83bb
+      - 96efb5f4-e35a-4e5f-800f-9e91c1e32e6a
       X-Ms-Routing-Request-Id:
-      - CENTRALUS:20161024T190008Z:f8461dfd-00df-4f70-a718-295dcf1d83bb
+      - CENTRALUS:20161024T191901Z:96efb5f4-e35a-4e5f-800f-9e91c1e32e6a
       Strict-Transport-Security:
       - max-age=31536000; includeSubDomains
       Date:
-      - Mon, 24 Oct 2016 19:00:07 GMT
+      - Mon, 24 Oct 2016 19:19:01 GMT
       Content-Length:
       - '7356'
     body:
       encoding: ASCII-8BIT
       string: '{"value":[{"id":"/subscriptions/azure_subscription_id/resourceGroups/miq-azure-test3/providers/Microsoft.Storage/storageAccounts/cli374271593924959008","kind":"Storage","location":"westus","name":"cli374271593924959008","properties":{"creationTime":"2016-05-12T15:39:54.4351309Z","primaryEndpoints":{"blob":"https://cli374271593924959008.blob.core.windows.net/","file":"https://cli374271593924959008.file.core.windows.net/","queue":"https://cli374271593924959008.queue.core.windows.net/","table":"https://cli374271593924959008.table.core.windows.net/"},"primaryLocation":"westus","provisioningState":"Succeeded","statusOfPrimary":"available"},"sku":{"name":"Standard_LRS","tier":"Standard"},"tags":{},"type":"Microsoft.Storage/storageAccounts"},{"id":"/subscriptions/azure_subscription_id/resourceGroups/miq-azure-test2/providers/Microsoft.Storage/storageAccounts/my-azure-storage-account1","kind":"Storage","location":"centralus","name":"my-azure-storage-account1","properties":{"creationTime":"2016-03-18T20:42:52.4980850Z","primaryEndpoints":{"blob":"https://my-azure-storage-account1.blob.core.windows.net/","file":"https://my-azure-storage-account1.file.core.windows.net/","queue":"https://my-azure-storage-account1.queue.core.windows.net/","table":"https://my-azure-storage-account1.table.core.windows.net/"},"primaryLocation":"centralus","provisioningState":"Succeeded","secondaryEndpoints":{"blob":"https://my-azure-storage-account1-secondary.blob.core.windows.net/","queue":"https://my-azure-storage-account1-secondary.queue.core.windows.net/","table":"https://my-azure-storage-account1-secondary.table.core.windows.net/"},"secondaryLocation":"eastus2","statusOfPrimary":"available","statusOfSecondary":"available"},"sku":{"name":"Standard_RAGRS","tier":"Standard"},"tags":{},"type":"Microsoft.Storage/storageAccounts"},{"id":"/subscriptions/azure_subscription_id/resourceGroups/miq-azure-test1/providers/Microsoft.Storage/storageAccounts/my-azure-storage-account2","kind":"Storage","location":"eastus","name":"my-azure-storage-account2","properties":{"creationTime":"2016-03-18T17:30:25.7028008Z","primaryEndpoints":{"blob":"https://my-azure-storage-account2.blob.core.windows.net/","file":"https://my-azure-storage-account2.file.core.windows.net/","queue":"https://my-azure-storage-account2.queue.core.windows.net/","table":"https://my-azure-storage-account2.table.core.windows.net/"},"primaryLocation":"eastus","provisioningState":"Succeeded","statusOfPrimary":"available"},"sku":{"name":"Standard_LRS","tier":"Standard"},"tags":{},"type":"Microsoft.Storage/storageAccounts"},{"id":"/subscriptions/azure_subscription_id/resourceGroups/miq-azure-test1/providers/Microsoft.Storage/storageAccounts/my-azure-storage-account3","kind":"Storage","location":"eastus","name":"my-azure-storage-account3","properties":{"creationTime":"2016-03-18T17:26:55.3231669Z","primaryEndpoints":{"blob":"https://my-azure-storage-account3.blob.core.windows.net/","file":"https://my-azure-storage-account3.file.core.windows.net/","queue":"https://my-azure-storage-account3.queue.core.windows.net/","table":"https://my-azure-storage-account3.table.core.windows.net/"},"primaryLocation":"eastus","provisioningState":"Succeeded","statusOfPrimary":"available"},"sku":{"name":"Standard_LRS","tier":"Standard"},"tags":{},"type":"Microsoft.Storage/storageAccounts"},{"id":"/subscriptions/azure_subscription_id/resourceGroups/miq-azure-test1/providers/Microsoft.Storage/storageAccounts/miqazuretest18686","kind":"Storage","location":"eastus","name":"miqazuretest18686","properties":{"creationTime":"2016-03-18T17:22:54.7808677Z","primaryEndpoints":{"blob":"https://miqazuretest18686.blob.core.windows.net/","file":"https://miqazuretest18686.file.core.windows.net/","queue":"https://miqazuretest18686.queue.core.windows.net/","table":"https://miqazuretest18686.table.core.windows.net/"},"primaryLocation":"eastus","provisioningState":"Succeeded","statusOfPrimary":"available"},"sku":{"name":"Standard_LRS","tier":"Standard"},"tags":{},"type":"Microsoft.Storage/storageAccounts"},{"id":"/subscriptions/azure_subscription_id/resourceGroups/miq-azure-test2/providers/Microsoft.Storage/storageAccounts/miqazuretest26611","kind":"Storage","location":"eastus","name":"miqazuretest26611","properties":{"creationTime":"2016-05-02T18:01:29.2743021Z","primaryEndpoints":{"blob":"https://miqazuretest26611.blob.core.windows.net/","file":"https://miqazuretest26611.file.core.windows.net/","queue":"https://miqazuretest26611.queue.core.windows.net/","table":"https://miqazuretest26611.table.core.windows.net/"},"primaryLocation":"eastus","provisioningState":"Succeeded","statusOfPrimary":"available"},"sku":{"name":"Standard_LRS","tier":"Standard"},"tags":{},"type":"Microsoft.Storage/storageAccounts"},{"id":"/subscriptions/azure_subscription_id/resourceGroups/miq-azure-test3/providers/Microsoft.Storage/storageAccounts/my-azure-storage-account5","kind":"Storage","location":"westus","name":"my-azure-storage-account5","properties":{"creationTime":"2016-03-18T21:18:37.0793411Z","primaryEndpoints":{"blob":"https://my-azure-storage-account5.blob.core.windows.net/","file":"https://my-azure-storage-account5.file.core.windows.net/","queue":"https://my-azure-storage-account5.queue.core.windows.net/","table":"https://my-azure-storage-account5.table.core.windows.net/"},"primaryLocation":"westus","provisioningState":"Succeeded","statusOfPrimary":"available"},"sku":{"name":"Standard_LRS","tier":"Standard"},"tags":{},"type":"Microsoft.Storage/storageAccounts"},{"id":"/subscriptions/azure_subscription_id/resourceGroups/miq-azure-test3/providers/Microsoft.Storage/storageAccounts/miqazuretest39555","kind":"Storage","location":"eastus","name":"miqazuretest39555","properties":{"creationTime":"2016-04-21T17:46:50.8278568Z","primaryEndpoints":{"blob":"https://miqazuretest39555.blob.core.windows.net/","file":"https://miqazuretest39555.file.core.windows.net/","queue":"https://miqazuretest39555.queue.core.windows.net/","table":"https://miqazuretest39555.table.core.windows.net/"},"primaryLocation":"eastus","provisioningState":"Succeeded","statusOfPrimary":"available"},"sku":{"name":"Standard_LRS","tier":"Standard"},"tags":{},"type":"Microsoft.Storage/storageAccounts"},{"id":"/subscriptions/azure_subscription_id/resourceGroups/miq-azure-test1/providers/Microsoft.Storage/storageAccounts/rspeclb","kind":"Storage","location":"eastus","name":"rspeclb","properties":{"creationTime":"2016-09-02T16:29:11.6823797Z","primaryEndpoints":{"blob":"https://rspeclb.blob.core.windows.net/"},"primaryLocation":"eastus","provisioningState":"Succeeded","statusOfPrimary":"available"},"sku":{"name":"Premium_LRS","tier":"Premium"},"tags":{},"type":"Microsoft.Storage/storageAccounts"},{"id":"/subscriptions/azure_subscription_id/resourceGroups/miq-azure-test1/providers/Microsoft.Storage/storageAccounts/spec0deply1stor","kind":"Storage","location":"eastus","name":"spec0deply1stor","properties":{"creationTime":"2016-04-04T23:05:07.8274794Z","primaryEndpoints":{"blob":"https://spec0deply1stor.blob.core.windows.net/","file":"https://spec0deply1stor.file.core.windows.net/","queue":"https://spec0deply1stor.queue.core.windows.net/","table":"https://spec0deply1stor.table.core.windows.net/"},"primaryLocation":"eastus","provisioningState":"Succeeded","statusOfPrimary":"available"},"sku":{"name":"Standard_LRS","tier":"Standard"},"tags":{},"type":"Microsoft.Storage/storageAccounts"}]}'
     http_version: 
-  recorded_at: Mon, 24 Oct 2016 19:00:08 GMT
+  recorded_at: Mon, 24 Oct 2016 19:19:02 GMT
 - request:
     method: post
     uri: https://management.azure.com/subscriptions/azure_subscription_id/resourceGroups/miq-azure-test2/providers/Microsoft.Storage/storageAccounts/my-azure-storage-account1/listKeys?api-version=2016-05-01
@@ -1177,7 +1177,7 @@ http_interactions:
       Content-Type:
       - application/json
       Authorization:
-      - Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Ikk2b0J3NFZ6QkhPcWxlR3JWMkFKZEE1RW1YYyIsImtpZCI6Ikk2b0J3NFZ6QkhPcWxlR3JWMkFKZEE1RW1YYyJ9.eyJhdWQiOiJodHRwczovL21hbmFnZW1lbnQuYXp1cmUuY29tLyIsImlzcyI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJpYXQiOjE0NzczMzUzMDUsIm5iZiI6MTQ3NzMzNTMwNSwiZXhwIjoxNDc3MzM5MjA1LCJhcHBpZCI6ImZjMWMyMjI1LTA2NWYtNGJhOC04M2Q5LWQ4NjY2MmY1NzhhZiIsImFwcGlkYWNyIjoiMSIsImdyb3VwcyI6WyI0MDczODk4Ni0zYzgyLTRjZjEtOTlmYy0xMzQ1N2UzMzMyZmMiLCIwZDAxNDNlYS0zMzllLTQyZTAtYTI0ZS1iNWE4ZmM2OWZmMTQiLCJkNjVmMmU1ZC1mYmZiLTQxNTMtODZiMi01OTc5YjRlNmI1OTIiXSwiaWRwIjoiaHR0cHM6Ly9zdHMud2luZG93cy5uZXQvNzdlY2VmYjYtY2ZmMC00ZThkLWE0NDYtNzU3YTY5Y2I5NDg1LyIsIm9pZCI6IjMwNmViNDJhLTM1ODUtNGEzNy05NWI3LTM4YmMwZTk4MjhkMiIsInN1YiI6IjMwNmViNDJhLTM1ODUtNGEzNy05NWI3LTM4YmMwZTk4MjhkMiIsInRpZCI6Ijc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NSIsInZlciI6IjEuMCJ9.jjrMlsGJgNYsuI5EZIGNQqtdk-zqVfeQVty2krBtGb2VtxsfLIo08nE5hEdwRf6zK7hBU-hy9tHKcTy2J1GgvbGQFYyvi4E-jitg3h0UZLTlCseKy5iceWLC88J9Jbh1d3ELxMFIFZMG68mkXL4fLkYecSw9pH1WQeBuL75jS3Tq1yOuBvCu8ImAT3eKMbhoQmfiP9_OQawcj-d-tgl8lktDOW3fPKAte7BToDMz-qrvItzH2k9FkU5qPoiv2lsgbo-VAx3TYpPBQ71aAr-R-mVs1yL9SeSPQN3q53BoDn-2JfUUwh5WtlVL2qcwdDzhGlP3CPmX5tHyMohhLdHUPw
+      - Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsIng1dCI6Ikk2b0J3NFZ6QkhPcWxlR3JWMkFKZEE1RW1YYyIsImtpZCI6Ikk2b0J3NFZ6QkhPcWxlR3JWMkFKZEE1RW1YYyJ9.eyJhdWQiOiJodHRwczovL21hbmFnZW1lbnQuYXp1cmUuY29tLyIsImlzcyI6Imh0dHBzOi8vc3RzLndpbmRvd3MubmV0Lzc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NS8iLCJpYXQiOjE0NzczMzY0MzgsIm5iZiI6MTQ3NzMzNjQzOCwiZXhwIjoxNDc3MzQwMzM4LCJhcHBpZCI6ImZjMWMyMjI1LTA2NWYtNGJhOC04M2Q5LWQ4NjY2MmY1NzhhZiIsImFwcGlkYWNyIjoiMSIsImdyb3VwcyI6WyI0MDczODk4Ni0zYzgyLTRjZjEtOTlmYy0xMzQ1N2UzMzMyZmMiLCIwZDAxNDNlYS0zMzllLTQyZTAtYTI0ZS1iNWE4ZmM2OWZmMTQiLCJkNjVmMmU1ZC1mYmZiLTQxNTMtODZiMi01OTc5YjRlNmI1OTIiXSwiaWRwIjoiaHR0cHM6Ly9zdHMud2luZG93cy5uZXQvNzdlY2VmYjYtY2ZmMC00ZThkLWE0NDYtNzU3YTY5Y2I5NDg1LyIsIm9pZCI6IjMwNmViNDJhLTM1ODUtNGEzNy05NWI3LTM4YmMwZTk4MjhkMiIsInN1YiI6IjMwNmViNDJhLTM1ODUtNGEzNy05NWI3LTM4YmMwZTk4MjhkMiIsInRpZCI6Ijc3ZWNlZmI2LWNmZjAtNGU4ZC1hNDQ2LTc1N2E2OWNiOTQ4NSIsInZlciI6IjEuMCJ9.CPO7zcR8ijM-FZtvAUQvzDFv-VyMnmNl9JpqjSwciAB0APbdasLZJQa8GEBMiX0Cv74AOGrBeAuI3NFm270ytLGz3iIqw8ugkZ9DfjX2Q1VBJW-Opxg4uvcwI0vG42jj_bnrr2BQe39CPkDMSP3MYulICKxvr0Nq6sumaprLprY2WsFQl4O0Dsyv_qLJ0mp1zBzKnTJBDMLRKu2VicHsACnKWnhvXiSDIEs6fH4AsRmQrT9j4zIAZiRdefiu2USfounBhri4ThWI5cPz34YRVBQ7xZxibErfO5uqX2exfI7YfFoZqi_whhXMP3HY0GS-qgLlYJiL3EAOmAsWgHUQng
       Content-Length:
       - '0'
   response:
@@ -1198,27 +1198,27 @@ http_interactions:
       Vary:
       - Accept-Encoding
       X-Ms-Request-Id:
-      - 2a935bf9-f9e0-47b3-8bfd-ae37a48adfd7
+      - c9565591-e59f-4448-a5dc-bc41a1569fed
       Server:
       - Microsoft-Azure-Storage-Resource-Provider/1.0
       - Microsoft-HTTPAPI/2.0
       X-Ms-Ratelimit-Remaining-Subscription-Writes:
-      - '1195'
+      - '1192'
       X-Ms-Correlation-Request-Id:
-      - 2a935bf9-f9e0-47b3-8bfd-ae37a48adfd7
+      - c9565591-e59f-4448-a5dc-bc41a1569fed
       X-Ms-Routing-Request-Id:
-      - CENTRALUS:20161024T190008Z:2a935bf9-f9e0-47b3-8bfd-ae37a48adfd7
+      - CENTRALUS:20161024T191902Z:c9565591-e59f-4448-a5dc-bc41a1569fed
       Strict-Transport-Security:
       - max-age=31536000; includeSubDomains
       Date:
-      - Mon, 24 Oct 2016 19:00:08 GMT
+      - Mon, 24 Oct 2016 19:19:02 GMT
     body:
       encoding: ASCII-8BIT
       string: '{"keys":[{"keyName":"key1","permissions":"Full","value":"agI8AIS8gNrAtp/iNSDxP6n3SDApVpIGANclTsMmwpE3TZWYl3rai9Ox1lPAruhnWQwtSgPE8b3SRKVhe1dx+g=="},{"keyName":"key2","permissions":"Full","value":"bgxejBQ5SEAw7IpNuJIyp4wsDPcqK07eqequKR8sWMaqJ0i34oAsJDCc3yf6CJWVG6lyQ6Uf22t774rQLX8UOA=="}]}
 
 '
     http_version: 
-  recorded_at: Mon, 24 Oct 2016 19:00:09 GMT
+  recorded_at: Mon, 24 Oct 2016 19:19:02 GMT
 - request:
     method: head
     uri: https://my-azure-storage-account1.blob.core.windows.net/vhds/miqazure-oraclelinux1201621814595.vhd
@@ -1235,7 +1235,7 @@ http_interactions:
       Content-Type:
       - ''
       X-Ms-Date:
-      - Mon, 24 Oct 2016 19:00:09 GMT
+      - Mon, 24 Oct 2016 19:19:02 GMT
       X-Ms-Version:
       - '2015-12-11'
       Auth-String:
@@ -1243,7 +1243,7 @@ http_interactions:
       Verb:
       - HEAD
       Authorization:
-      - SharedKey my-azure-storage-account1:BBfKprYR0EqnqFTMFBdReRbB73iw5319nPRY+nk0z/Y=
+      - SharedKey my-azure-storage-account1:1CUicIceDrZL/r21mL4WNOjDZiqrzVSMDerMctCRdhc=
   response:
     status:
       code: 200
@@ -1264,7 +1264,7 @@ http_interactions:
       Server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       X-Ms-Request-Id:
-      - 5e3225b5-0001-0072-6828-2e1ac2000000
+      - 542292ba-0001-0053-312b-2e77f3000000
       X-Ms-Version:
       - '2015-12-11'
       X-Ms-Meta-Microsoftazurecompute-Resourcegroupname:
@@ -1300,12 +1300,12 @@ http_interactions:
       X-Ms-Server-Encrypted:
       - 'false'
       Date:
-      - Mon, 24 Oct 2016 19:00:08 GMT
+      - Mon, 24 Oct 2016 19:19:02 GMT
     body:
       encoding: UTF-8
       string: ''
     http_version: 
-  recorded_at: Mon, 24 Oct 2016 19:00:09 GMT
+  recorded_at: Mon, 24 Oct 2016 19:19:03 GMT
 - request:
     method: get
     uri: https://my-azure-storage-account1.blob.core.windows.net/vhds/miqazure-oraclelinux1201621814595.vhd
@@ -1322,7 +1322,7 @@ http_interactions:
       Content-Type:
       - ''
       X-Ms-Date:
-      - Mon, 24 Oct 2016 19:00:09 GMT
+      - Mon, 24 Oct 2016 19:19:03 GMT
       X-Ms-Version:
       - '2015-12-11'
       Auth-String:
@@ -1330,7 +1330,7 @@ http_interactions:
       X-Ms-Range:
       - bytes=440-443
       Authorization:
-      - SharedKey my-azure-storage-account1:3l9nXZqTsLaC5KrVxwK67ABdOEJwS7qeYd/up6Rp9Ss=
+      - SharedKey my-azure-storage-account1:jgylUWomylJmPY5VQzXs6YZKCVKeUxwZJgkry1Cl4dU=
   response:
     status:
       code: 206
@@ -1351,7 +1351,7 @@ http_interactions:
       Server:
       - Windows-Azure-Blob/1.0 Microsoft-HTTPAPI/2.0
       X-Ms-Request-Id:
-      - d5670fac-0001-004b-7d28-2e5a66000000
+      - cdf57523-0001-0054-402b-2e8176000000
       X-Ms-Version:
       - '2015-12-11'
       X-Ms-Meta-Microsoftazurecompute-Resourcegroupname:
@@ -1387,11 +1387,11 @@ http_interactions:
       X-Ms-Server-Encrypted:
       - 'false'
       Date:
-      - Mon, 24 Oct 2016 19:00:09 GMT
+      - Mon, 24 Oct 2016 19:19:03 GMT
     body:
       encoding: ASCII-8BIT
       string: !binary |-
         ilMNAA==
     http_version: 
-  recorded_at: Mon, 24 Oct 2016 19:00:09 GMT
+  recorded_at: Mon, 24 Oct 2016 19:19:03 GMT
 recorded_with: VCR 3.0.3
