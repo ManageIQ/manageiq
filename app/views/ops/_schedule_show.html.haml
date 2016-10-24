@@ -90,10 +90,11 @@
           .form-group
             %label.control-label.col-md-2
               = (i + 1).to_s
-            .col-md-2
-              = h(attr[0])
-            .col-md-2
-              = h(attr[1])
+            - if attr
+              .col-md-2
+                = h(attr[0])
+              .col-md-2
+                = h(attr[1])
 
     - if @selected_schedule.sched_action[:method] != 'db_backup'
       %div

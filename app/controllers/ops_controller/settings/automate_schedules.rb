@@ -2,7 +2,7 @@ module OpsController::Settings::AutomateSchedules
   extend ActiveSupport::Concern
 
   def automate_schedules_set_vars
-    schedule = params[:id] == "new" ? MiqSchedule.new : MiqSchedule.find_by_id(params[:id])
+    schedule = params[:id] == "new" ? MiqSchedule.new : MiqSchedule.find_by(:id => params[:id])
     automate_request = fetch_automate_request_vars(schedule)
 
     render :json => {
@@ -37,7 +37,8 @@ module OpsController::Settings::AutomateSchedules
     # incase changing type of schedule
     filter = schedule.filter && schedule.filter.kind_of?(Hash) ? schedule.filter : {:uri_parts => {}, :parameters => {}}
     automate_request[:starting_object] = filter[:uri_parts][:namespace] || "SYSTEM/PROCESS"
-    matching_instances = MiqAeClass.find_distinct_instances_across_domains(current_user, automate_request[:starting_object])
+    matching_instances = MiqAeClass.find_distinct_instances_across_domains(current_user,
+                                                                           automate_request[:starting_object])
 
     automate_request[:instance_names] = matching_instances.collect(&:name).sort_by(&:downcase)
     automate_request[:instance_name]  = filter[:parameters][:instance_name] || "Request"
@@ -49,7 +50,7 @@ module OpsController::Settings::AutomateSchedules
     automate_request[:target_classes] = Array(automate_request[:target_classes].invert).sort
     if automate_request[:target_class]
       targets = Rbac.filtered(automate_request[:target_class]).select(:id, :name)
-      automate_request[:targets]      = targets.sort_by { |t| t.name.downcase }.collect { |t| [t.name, t.id.to_s] }
+      automate_request[:targets] = targets.sort_by { |t| t.name.downcase }.collect { |t| [t.name, t.id.to_s] }
     end
     automate_request[:target_id]      = filter[:parameters][:target_id] || ""
     automate_request[:readonly]       = filter[:parameters][:readonly] || true
@@ -59,7 +60,8 @@ module OpsController::Settings::AutomateSchedules
       AE_MAX_RESOLUTION_FIELDS.times { automate_request[:attrs].push([]) }
     else
       # add empty array if @resolve[:new][:attrs] length is less than AE_MAX_RESOLUTION_FIELDS
-      AE_MAX_RESOLUTION_FIELDS.times { automate_request[:attrs].push([]) if automate_request[:attrs].length < AE_MAX_RESOLUTION_FIELDS }
+      len = automate_request[:attrs].length
+      AE_MAX_RESOLUTION_FIELDS.times { automate_request[:attrs].push([]) if len < AE_MAX_RESOLUTION_FIELDS }
     end
     automate_request
   end

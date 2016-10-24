@@ -25,7 +25,7 @@ module OpsController::Settings::Schedules
     if @selected_schedule.sched_action[:method] == 'automation_request'
       params = @selected_schedule.filter[:parameters]
       @object_class = ui_lookup(:model => params[:target_class])
-      @object_name = params[:target_class].constantize.find_by_id(params[:target_id]).name
+      @object_name = params[:target_class].constantize.find_by(:id => params[:target_id]).name if params[:target_class]
     end
 
     if @selected_schedule.filter.kind_of?(MiqExpression)
@@ -370,8 +370,12 @@ module OpsController::Settings::Schedules
     filtered_item_list
   end
 
+  def schedule_db_backup_or_automate(schedule)
+    %w(db_backup automation_request).include?(schedule.sched_action[:method])
+  end
+
   def determine_filter_type_and_value(schedule)
-    if schedule.sched_action && schedule.sched_action[:method] &&
+    if schedule.sched_action && schedule.sched_action[:method] && !schedule_db_backup_or_automate(schedule)
       !%w(db_backup automation_request).include?(schedule.sched_action[:method])
       if schedule.miq_search                         # See if a search filter is attached
         filter_type = schedule.miq_search.search_type == "user" ? "my" : "global"
@@ -498,9 +502,10 @@ module OpsController::Settings::Schedules
     elsif params[:action_typ] == "automation_request"
       attrs = []
       AE_MAX_RESOLUTION_FIELDS.times do |i|
+        next unless params[:attrs] && params[:attrs][i.to_s]
         attrs[i] = []
-        attrs[i][0] = params[:attrs][i.to_s][0] if params[:attrs] && params[:attrs][i.to_s]
-        attrs[i][1] = params[:attrs][i.to_s][1] if params[:attrs] && params[:attrs][i.to_s]
+        attrs[i][0] = params[:attrs][i.to_s][0]
+        attrs[i][1] = params[:attrs][i.to_s][1]
       end
       schedule.filter = {
         :uri_parts  => {
@@ -514,7 +519,7 @@ module OpsController::Settings::Schedules
           :object_message => params[:object_message],
           :attrs          => attrs,
           :readonly       => params[:readonly] == "true" ? true : false,
-          :target_class   => params[:target_class],
+          :target_class   => params[:target_class] == "" ? nil : params[:target_class],
           :target_id      => params[:target_id]
         }
       }
