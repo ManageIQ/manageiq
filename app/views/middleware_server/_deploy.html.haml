@@ -26,11 +26,8 @@
             %label.col-md-4.control-label{:for => "enable_deployment_cb"}
               = _("Select the file to deploy")
             .col-md-8
-              = file_field("upload", "file",
-                           :class             => "lifestyle",
-                           "data-buttonName"  => "btn-default",
-                           "ng-model"         => "deployAddModel.filePath",
-                           "require-file"     => "handle")
+              = render :partial => "shared/file_chooser",
+                       :locals => {:object_name => "upload", :method => "file", :custom_options => {"ng-model" => "deployAddModel.filePath", "require-file" => "handle"}}
           .form-group
             %label.col-md-4.control-label{:for => "enable_deployment_cb"}
               = _("Enable Deployment")
@@ -50,8 +47,6 @@
                                                      "placeholder" => _("No file chosen"),
                                                      "ng-model"    => "deployAddModel.runtimeName",
                                                      "ng-disabled" => "!deployAddModel.filePath"}
-          :javascript
-            $(":file").filestyle({icon: false, placeholder: _("No file chosen")});
         .modal-footer
           %button.btn.btn-default{:type          => "button",
                                   :alt           => (t = _("Cancel")),
