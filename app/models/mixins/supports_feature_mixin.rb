@@ -83,6 +83,7 @@ module SupportsFeatureMixin
     :provisioning               => 'Provisioning',
     :reboot_guest               => 'Reboot Guest Operation',
     :reconfigure                => 'Reconfiguration',
+    :refresh_network_interfaces => 'Refresh Network Interfaces for a Host',
     :refresh_new_target         => 'Refresh non-existing record',
     :regions                    => 'Regions of a Provider',
     :remove_host                => 'Remove Host',
@@ -93,8 +94,8 @@ module SupportsFeatureMixin
     :snapshots                  => 'Snapshots',
     :shutdown_guest             => 'Shutdown Guest Operation',
     :terminate                  => 'Terminate a VM',
+    :timeline                   => 'Query for events',
     :update_aggregate           => 'Host Aggregate Update',
-    :refresh_network_interfaces => 'Refresh Network Interfaces for a Host',
     :update                     => 'Update',
     :update_network_router      => 'Network Router Update',
   }.freeze

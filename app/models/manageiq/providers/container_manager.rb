@@ -44,10 +44,6 @@ module ManageIQ::Providers
       "ManageIQ_Providers_ContainerManager"
     end
 
-    def validate_timeline
-      {:available => true, :message => nil}
-    end
-
     def validate_performance
       {:available => true, :message => nil}
     end

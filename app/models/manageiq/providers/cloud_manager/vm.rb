@@ -119,10 +119,6 @@ class ManageIQ::Providers::CloudManager::Vm < ::Vm
     raw_resize_revert
   end
 
-  def validate_timeline
-    {:available => true, :message => nil}
-  end
-
   def disconnect_ems(e = nil)
     self.availability_zone = nil if e.nil? || ext_management_system == e
     super

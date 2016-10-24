@@ -48,10 +48,6 @@ module ManageIQ::Providers
       MiqSystem.open_browser(browser_url)
     end
 
-    def validate_timeline
-      {:available => true, :message => nil}
-    end
-
     def validate_authentication_status
       {:available => true, :message => nil}
     end

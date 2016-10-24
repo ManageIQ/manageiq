@@ -1,4 +1,5 @@
 class ContainerGroup < ApplicationRecord
+  include SupportsFeatureMixin
   include ComplianceMixin
   include CustomAttributeMixin
   include MiqPolicyMixin
