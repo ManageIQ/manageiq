@@ -12,7 +12,9 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
     @subscription_id = Rails.application.secrets.azure.try(:[], 'subscription_id') || 'AZURE_SUBSCRIPTION_ID'
 
     @resource_group = 'miq-azure-test1'
-    @device_name = 'miq-test-rhel1'
+    @device_name    = 'miq-test-rhel1' # Make sure this is running if generating a new cassette.
+    @ip_address     = '40.117.184.27'  # This will change if you had to restart the @device_name.
+    @mismatch_ip    = '40.117.189.73'  # This will change if you had to restart the 'miqmismatch' VM.
     @template = nil
     @avail_zone = nil
 
@@ -415,9 +417,9 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
     expect(v.hardware.guest_devices.size).to eql(0)
     expect(v.hardware.nics.size).to eql(0)
     floating_ip   = ManageIQ::Providers::Azure::NetworkManager::FloatingIp.where(
-      :address => "40.117.236.43").first
+      :address => @ip_address).first
     cloud_network = ManageIQ::Providers::Azure::NetworkManager::CloudNetwork.where(
-      :name => "miq-azure-test1").first
+      :name => @resource_group).first
     cloud_subnet  = cloud_network.cloud_subnets.first
     expect(v.floating_ip).to eql(floating_ip)
     expect(v.cloud_network).to eql(cloud_network)
@@ -431,7 +433,7 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
     network = v.hardware.networks.where(:description => "public").first
     expect(network).to have_attributes(
       :description => "public",
-      :ipaddress   => "40.117.236.43",
+      :ipaddress   => @ip_address,
       :hostname    => "ipconfig1"
     )
     network = v.hardware.networks.where(:description => "private").first
@@ -675,7 +677,6 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
   def assert_specific_nic_and_ip
     nic_group  = 'miq-azure-test1' # EastUS
     ip_group   = 'miq-azure-test4' # Also EastUS
-    ip_address = '40.76.50.201'
 
     nic_name = "/subscriptions/#{@subscription_id}/resourceGroups"\
                "/#{nic_group}/providers/Microsoft.Network"\
@@ -696,7 +697,7 @@ describe ManageIQ::Providers::Azure::CloudManager::Refresher do
 
     expect(@floating_ip).to have_attributes(
       :status  => 'Succeeded',
-      :address => ip_address,
+      :address => @mismatch_ip,
       :ems_ref => ems_ref,
     )
 
