@@ -25,9 +25,7 @@
         %label.col-md-2.control-label
           = _("File")
         .col-md-4
-          = file_field("upload", "file", :class => "filestyle", "data-buttonName" => "btn-default")
-          :javascript
-            $(":file").filestyle({icon: false, placeholder: "No file chosen"});
+          = render :partial => "shared/file_chooser", :locals => {:object_name => "upload", :method => "file"}
         .col-md-6
           = submit_tag(_("Upload"), :id => "upload_atags", :class => "btn btn-default")
           = _("* Requirements: CSV formatted file.")
