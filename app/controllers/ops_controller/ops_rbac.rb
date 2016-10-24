@@ -785,7 +785,7 @@ module OpsController::OpsRbac
                     when "role"
                       get_view(MiqUserRole)
                     when "tenant"
-                      get_view(Tenant)
+                      get_view(Tenant, :named_scope => :in_my_region)
                     end
 
     @current_page = @pages[:current] unless @pages.nil? # save the current page number
