@@ -44,6 +44,11 @@ describe "Rest API Collections" do
   end
 
   context "Collections" do
+    it "query Automate Domains" do
+      FactoryGirl.create(:miq_ae_domain)
+      test_collection_query(:automate_domains, automate_domains_url, MiqAeDomain)
+    end
+
     it "query Automation Requests" do
       FactoryGirl.create(:automation_request)
       test_collection_query(:automation_requests, automation_requests_url, AutomationRequest)
@@ -287,6 +292,11 @@ describe "Rest API Collections" do
   end
 
   context "Collections Bulk Queries" do
+    it 'bulk query MiqAeDomain' do
+      FactoryGirl.create(:miq_ae_domain)
+      test_collection_bulk_query(:automate_domains, automate_domains_url, MiqAeDomain)
+    end
+
     it 'bulk query ArbitrationProfiles' do
       ems = FactoryGirl.create(:ext_management_system)
       FactoryGirl.create(:arbitration_profile, :ems_id => ems.id)

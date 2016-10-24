@@ -52,12 +52,31 @@
     :options:
     - :arbitrary_resource_path
     - :collection
+    :verbs: *g
+    :klass: MiqAeDomain
+    :collection_actions:
+      :get:
+      - :name: read
+        :identifier: miq_ae_domain_view
+    :resource_actions:
+      :get:
+      - :name: read
+        :identifier: miq_ae_domain_view
+  :automate_domains:
+    :description: Automate Domains
+    :options:
+    - :collection
     :verbs: *gp
     :klass: MiqAeDomain
     :collection_actions:
       :get:
       - :name: read
         :identifier: miq_ae_domain_view
+      :post:
+      - :name: query
+        :identifier: miq_ae_domain_view
+      - :name: refresh_from_source
+        :identifier: miq_ae_git_refresh
     :resource_actions:
       :get:
       - :name: read
