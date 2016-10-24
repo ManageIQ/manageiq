@@ -7,7 +7,6 @@ include ActionView::Helpers::NumberHelper
 
 require 'report_formatter/report_renderer'
 require 'report_formatter/jqplot'
-require 'report_formatter/zgraph'
 require 'report_formatter/c3'
 require 'report_formatter/html'
 require 'report_formatter/text'

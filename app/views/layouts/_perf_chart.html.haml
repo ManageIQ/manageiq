@@ -1,8 +1,4 @@
 - width ||= @perf_options[:index] ? 1000 : 350
 - height ||= @perf_options[:index] ? 700 : 250
 
-- if Charting.backend == :ziya
-  = render :partial => 'layouts/perf_chart_flash', :locals => {:width => width, :height => height, :charts => charts, :chart_set => chart_set, :chart_index => chart_index, :chart_data => chart_data}
-- else
-  = render :partial => 'layouts/perf_chart_js', :locals => {:width => width, :height => height, :charts => charts, :chart_set => chart_set, :chart_index => chart_index, :chart_data => chart_data}
-
+= render :partial => 'layouts/perf_chart_js', :locals => {:width => width, :height => height, :charts => charts, :chart_set => chart_set, :chart_index => chart_index, :chart_data => chart_data}
