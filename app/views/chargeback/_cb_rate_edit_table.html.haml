@@ -42,22 +42,7 @@
           /if the rate detail have a metric associated, display an options field with per_unit selected
           %td{:rowspan => num_tiers}
             = select_tag("per_unit_#{detail_index}", options_for_select(measure[:measures], detail[:per_unit]), "data-miq_observe" => {:url => url}.to_json)
-        %td
-          - tier_val = (@edit[:new][:tiers][detail_index][0][:start].to_s.eql? "Infinity") ? "" : @edit[:new][:tiers][detail_index][0][:start]
-          = text_field_tag("start_#{detail_index}_0", tier_val,
-            :maxlength => MAX_NAME_LEN,
-            :placeholder => _("Infinity"),
-            "data-miq_observe" => {:interval => '.5', :url => url}.to_json, :disabled => "disabled")
-        %td
-          - tier_val = (@edit[:new][:tiers][detail_index][0][:finish].to_s.eql? "Infinity") ? "" : @edit[:new][:tiers][detail_index][0][:finish]
-          = text_field_tag("finish_#{detail_index}_0", tier_val,
-            :maxlength => MAX_NAME_LEN, :placeholder => _("Infinity"), "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
-        %td{:align => 'right'}
-          = text_field_tag("fixed_rate_#{detail_index}_0", @edit[:new][:tiers][detail_index][0][:fixed_rate],
-            :maxlength => MAX_NAME_LEN, "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
-        %td{:align => 'right'}
-          = text_field_tag("variable_rate_#{detail_index}_0", @edit[:new][:tiers][detail_index][0][:variable_rate],
-            :maxlength => MAX_NAME_LEN, "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+        = render :partial => 'cb_tier_edit_values', :locals => {:detail_index => detail_index, :url => url, :row_within_rate => 0}
         %td.action
           = button_tag(_("Add"), :class => "btn btn-default", :alt => t = _("Add a new tier"), :title => t,
                                  :onclick => "miqAjaxButton('#{url_for(:action => "cb_tier_add",
@@ -69,20 +54,7 @@
       - (1..num_tiers.to_i - 1).each do |tier_index|
         - tier = @edit[:new][:tiers][detail_index][tier_index]
         %tr.rdetail{:id => "rate_detail_row_#{detail_index}_#{tier_index}"}
-          %td
-            - tier_val = (tier[:start].to_s.eql? "Infinity") ? "" : tier[:start]
-            = text_field_tag("start_#{detail_index}_#{tier_index}", tier_val,
-              :maxlength => MAX_NAME_LEN, :placeholder => _("Infinity"), "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
-          %td
-            - tier_val = (tier[:finish].to_s.eql? "Infinity") ? "" : tier[:finish]
-            = text_field_tag("finish_#{detail_index}_#{tier_index}", tier_val,
-              :maxlength => MAX_NAME_LEN, :placeholder => _("Infinity"), "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
-          %td{:align => "right"}
-            = text_field_tag("fixed_rate_#{detail_index}_#{tier_index}", tier[:fixed_rate],
-              :maxlength => MAX_NAME_LEN, "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
-          %td{:align => "right"}
-            = text_field_tag("variable_rate_#{detail_index}_#{tier_index}", tier[:variable_rate],
-              :maxlength => MAX_NAME_LEN, "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+          = render :partial => 'cb_tier_edit_values', :locals => {:detail_index => detail_index, :url => url, :row_within_rate => tier_index}
           %td.action
             = button_tag(_("Delete"), :class => "btn btn-default", :alt => t = _("Remove the tier"), :title => t,
                                       :onclick => "miqAjaxButton('#{url_for(:action => "cb_tier_remove",

@@ -1,0 +1,14 @@
+%td
+  - tier_val = (@edit[:new][:tiers][detail_index][row_within_rate][:start].to_s.eql? 'Infinity') ? '' : @edit[:new][:tiers][detail_index][row_within_rate][:start]
+  = text_field_tag("start_#{detail_index}_#{row_within_rate}", tier_val,
+    :maxlength => MAX_NAME_LEN, :placeholder => _('Infinity'), "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+%td
+  - tier_val = (@edit[:new][:tiers][detail_index][row_within_rate][:finish].to_s.eql? 'Infinity') ? '' : @edit[:new][:tiers][detail_index][row_within_rate][:finish]
+  = text_field_tag("finish_#{detail_index}_#{row_within_rate}", tier_val,
+    :maxlength => MAX_NAME_LEN, :placeholder => _('Infinity'), "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+%td{:align => 'right'}
+  = text_field_tag("fixed_rate_#{detail_index}_#{row_within_rate}", @edit[:new][:tiers][detail_index][row_within_rate][:fixed_rate],
+    :maxlength => MAX_NAME_LEN, 'data-miq_observe' => {:interval => '.5', :url => url}.to_json)
+%td{:align => 'right'}
+  = text_field_tag("variable_rate_#{detail_index}_#{row_within_rate}", @edit[:new][:tiers][detail_index][row_within_rate][:variable_rate],
+    :maxlength => MAX_NAME_LEN, 'data-miq_observe' => {:interval => '.5', :url => url}.to_json)
