@@ -1155,7 +1155,7 @@ class ProviderForemanController < ApplicationController
   def process_show_list(options = {})
     options[:dbname] = case x_active_accord
                        when :configuration_manager_providers
-                         :cm_providers
+                         options[:model] && options[:model] == 'ConfiguredSystem' ? :cm_configured_systems : :cm_providers
                        when :cs_filter
                          :cm_configured_systems
                        when :configuration_scripts
