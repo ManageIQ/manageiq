@@ -66,12 +66,12 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareMessaging d
           {
             "JMS Topic Metrics~Delivering Count"               => "mw_ms_topic_delivering_count",
             "JMS Topic Metrics~Durable Message Count"          => "mw_ms_topic_durable_message_count",
-            "JMS Topic Metrics~Durable Subscription Count"     => "mw_ms_topic_durable_suscription_count",
+            "JMS Topic Metrics~Durable Subscription Count"     => "mw_ms_topic_durable_subscription_count",
             "JMS Topic Metrics~Message Count"                  => "mw_ms_topic_message_count",
             "JMS Topic Metrics~Messages Added"                 => "mw_ms_topic_message_added",
             "JMS Topic Metrics~Non-Durable Message Count"      => "mw_ms_topic_non_durable_message_count",
-            "JMS Topic Metrics~Non-Durable Subscription Count" => "mw_ms_topic_non_durable_suscription_count",
-            "JMS Topic Metrics~Subscription Count"             => "mw_ms_topic_suscription_count"
+            "JMS Topic Metrics~Non-Durable Subscription Count" => "mw_ms_topic_non_durable_subscription_count",
+            "JMS Topic Metrics~Subscription Count"             => "mw_ms_topic_subscription_count"
           }.freeze
         end
       end

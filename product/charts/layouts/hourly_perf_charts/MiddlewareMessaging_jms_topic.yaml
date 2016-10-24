@@ -1,4 +1,4 @@
-# Middleware Messaging daily performance chart layouts
+# Middleware Messaging hourly performance chart layouts
 ---
 - :title: Messages
   :type: Line
@@ -9,9 +9,9 @@
   - mw_ms_topic_message_added
   - mw_ms_topic_non_durable_message_count
 
-- :title: Suscriptors
+- :title: Subscribers
   :type: Line
   :columns:
-  - mw_ms_topic_durable_suscription_count
-  - mw_ms_topic_non_durable_suscription_count
-  - mw_ms_topic_suscription_count
+  - mw_ms_topic_durable_subscription_count
+  - mw_ms_topic_non_durable_subscription_count
+  - mw_ms_topic_subscription_count
