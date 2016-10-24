@@ -105,6 +105,82 @@ describe "Service Dialogs API" do
         expect(response).to have_http_status(:ok)
       end
     end
+
+    context 'Edit Service Dialogs' do
+      let(:dialog) { FactoryGirl.create(:dialog_with_tab_and_group_and_field) }
+
+      it 'POST /api/service_dialogs/:id rejects a request without appropriate role' do
+        api_basic_authorize
+
+        run_post(service_dialogs_url(dialog.id), gen_request(:edit, :label => 'updated label'))
+
+        expect(response).to have_http_status(:forbidden)
+      end
+
+      it 'POST /api/service_dialogs/:id updates a service dialog' do
+        api_basic_authorize collection_action_identifier(:service_dialogs, :edit)
+        dialog_tab = dialog.dialog_tabs.first
+        dialog_group = dialog_tab.dialog_groups.first
+        dialog_field = dialog_group.dialog_fields.first
+
+        updated_dialog = {
+          'label'   => 'updated label',
+          'content' => {
+            'dialog_tabs' => [
+              'id'            => dialog_tab.id,
+              'label'         => 'updated tab label',
+              'dialog_groups' => [
+                {
+                  'id'            => dialog_group.id,
+                  'dialog_fields' => [
+                    { 'id' => dialog_field.id }
+                  ]
+                }
+              ]
+            ]
+          }
+        }
+
+        expected = {
+          'href'  => a_string_including(service_dialogs_url(dialog.id)),
+          'id'    => dialog.id,
+          'label' => 'updated label'
+        }
+
+        expect do
+          run_post(service_dialogs_url(dialog.id), gen_request(:edit, updated_dialog))
+          dialog.reload
+        end.to change(dialog, :content)
+        expect(response).to have_http_status(:ok)
+        expect(response.parsed_body).to include(expected)
+      end
+
+      it 'POST /api/service_dialogs updates multiple service dialog' do
+        dialog2 = FactoryGirl.create(:dialog_with_tab_and_group_and_field)
+
+        api_basic_authorize collection_action_identifier(:service_dialogs, :edit)
+
+        run_post(service_dialogs_url, :action => 'edit', :resources => [{:id => dialog.id, 'label' => 'foo bar'},
+                                                                        {:id => dialog2.id, :label => 'bar'}
+        ])
+
+        expected = {
+          'results' => a_collection_containing_exactly(
+            a_hash_including(
+              'id'    => dialog.id,
+              'label' => 'foo bar'
+            ),
+            a_hash_including(
+              'id'    => dialog2.id,
+              'label' => 'bar'
+            )
+          )
+        }
+
+        expect(response.parsed_body).to include(expected)
+        expect(response).to have_http_status(:ok)
+      end
+    end
   end
 
   context "Service Dialogs subcollection" do

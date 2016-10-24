@@ -1169,6 +1169,8 @@
         :identifier: dialog_delete
       - :name: create
         :identifier: dialog_new
+      - :name: edit
+        :identifier: dialog_edit
     :resource_actions:
       :get:
       - :name: read
@@ -1178,6 +1180,8 @@
         :identifier: svc_catalog_provision
       - :name: delete
         :identifier: dialog_delete
+      - :name: edit
+        :identifier: dialog_edit
       :delete:
       - :name: delete
         :identifier: dialog_delete
