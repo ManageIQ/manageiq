@@ -48,7 +48,12 @@ class MiqVimInventory < MiqVimClientBase
 
       deleteProperty(:Datastore, "summary.uncommitted")
 
+      deleteProperty(:VirtualMachine, "config.cpuHotAddEnabled")
+      deleteProperty(:VirtualMachine, "config.cpuHotRemoveEnabled")
       deleteProperty(:VirtualMachine, "config.hardware.numCoresPerSocket")
+      deleteProperty(:VirtualMachine, "config.hotPlugMemoryIncrementSize")
+      deleteProperty(:VirtualMachine, "config.hotPlugMemoryLimit")
+      deleteProperty(:VirtualMachine, "config.memoryHotAddEnabled")
       deleteProperty(:VirtualMachine, "summary.config.ftInfo.instanceUuids")
       deleteProperty(:VirtualMachine, "summary.storage.unshared")
       deleteProperty(:VirtualMachine, "summary.storage.committed")
