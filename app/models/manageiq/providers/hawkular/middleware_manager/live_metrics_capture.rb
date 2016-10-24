@@ -36,7 +36,7 @@ module ManageIQ::Providers
       {:id => metric.id, :name => @supported_metrics[metric.type_id], :type => metric.type, :unit => metric.unit}
     end
 
-    def collect_live_metrics(metrics, start_time, end_time, interval)
+    def parse_metrics_ids(metrics)
       gauge_ids = []
       counter_ids = []
       avail_ids = []
@@ -50,6 +50,11 @@ module ManageIQ::Providers
         end
         metrics_ids_map[metric_id] = metric[:name]
       end
+      [gauge_ids, counter_ids, avail_ids, metrics_ids_map]
+    end
+
+    def collect_stats_metrics(metrics, start_time, end_time, interval)
+      gauge_ids, counter_ids, avail_ids, metrics_ids_map = parse_metrics_ids(metrics)
       starts = (start_time - interval).to_i.in_milliseconds
       ends = end_time.to_i.in_milliseconds + 1
       bucket_duration = "#{interval}s"
@@ -60,6 +65,11 @@ module ManageIQ::Providers
                                               :starts          => starts,
                                               :ends            => ends,
                                               :bucket_duration => bucket_duration)
+      [metrics_ids_map, raw_stats]
+    end
+
+    def collect_live_metrics(metrics, start_time, end_time, interval)
+      metrics_ids_map, raw_stats = collect_stats_metrics(metrics, start_time, end_time, interval)
       process_stats(metrics_ids_map, raw_stats)
     end
 

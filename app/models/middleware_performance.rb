@@ -58,14 +58,21 @@ class MiddlewarePerformance < ActsAsArModel
 
   def self.fetch_raw_stats(middleware_model, start_time, end_time, interval)
     raw_stats = {}
-    middleware_model.metrics_available.each do |metric|
-      middleware_model.collect_stats_metric(metric, start_time, end_time, interval).each do |stat|
-        timestamp = stat['start']
-        raw_stats[timestamp] = {} if raw_stats[timestamp].nil?
-        %w(min avg median max samples).each do |w|
-          raw_stats[timestamp]["#{metric[:name]}_#{w}"] = stat[w]
+    metrics = middleware_model.metrics_available
+    metrics_ids_map, all_stats = middleware_model.collect_stats_metrics(metrics, start_time, end_time, interval)
+    %w(gauge counter_rate).each do |type|
+      next unless all_stats.key?(type)
+      stat_data = all_stats[type]
+      stat_data.each do |metric_id, buckets|
+        metric_name = metrics_ids_map[metric_id]
+        buckets.each do |bucket|
+          timestamp = bucket['start']
+          raw_stats[timestamp] = {} if raw_stats[timestamp].nil?
+          %w(min avg median max samples).each do |w|
+            raw_stats[timestamp]["#{metric_name}_#{w}"] = bucket[w]
+          end
         end
-      end unless metric[:type] == "AVAILABILITY"
+      end
     end
     raw_stats
   end
