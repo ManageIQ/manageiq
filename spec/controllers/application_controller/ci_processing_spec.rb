@@ -208,31 +208,28 @@ describe ApplicationController do
 
     it "lists all non-tenant groups when (admin user is logged)" do
       login_as(admin_user)
-      controller.instance_variable_set(:@ownership_items, @ownership_items)
       controller.instance_variable_set(:@_params, @params)
       controller.instance_variable_set(:@user, @user)
 
-      controller.build_ownership_info
+      controller.build_ownership_info(@ownership_items)
       groups = controller.instance_variable_get(:@groups)
       expect(groups.count).to eq(MiqGroup.non_tenant_groups.count)
     end
 
     it "lists all users when (admin user is logged)" do
       login_as(admin_user)
-      controller.instance_variable_set(:@ownership_items, @ownership_items)
       controller.instance_variable_set(:@_params, @params)
       controller.instance_variable_set(:@user, @user)
-      controller.build_ownership_info
+      controller.build_ownership_info(@ownership_items)
       users = controller.instance_variable_get(:@users)
       expect(users.count).to eq(User.all.count)
     end
 
     it "lists users in the tenant that the user belongs to and the users in the tenants below" do
       login_as(grand_child_user)
-      controller.instance_variable_set(:@ownership_items, @ownership_items)
       controller.instance_variable_set(:@_params, @params)
       controller.instance_variable_set(:@user, @user)
-      controller.build_ownership_info
+      controller.build_ownership_info(@ownership_items)
       users = controller.instance_variable_get(:@users)
       expected_ids = [great_grand_child_tenant.user_ids, grand_child_tenant.user_ids].flatten
       expect(expected_ids).to match_array(users.values(&:id).map(&:to_i))
