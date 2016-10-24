@@ -27,20 +27,9 @@ class ChargebackContainerProject < Chargeback
   )
 
   def self.build_results_for_report_ChargebackContainerProject(options)
-    # Options:
-    #   :rpt_type => chargeback
-    #   :interval => daily | weekly | monthly
-    #   :start_time
-    #   :end_time
-    #   :end_interval_offset
-    #   :interval_size
-    #   :owner => <userid>
-    #   :tag => /managed/environment/prod (Mutually exclusive with :user)
-    #   :chargeback_type => detail | summary
-    #   :entity_id => 1/2/3.../all rails id of entity
+    # Options: a hash transformable to Chargeback::ReportOptions
 
     # Find ContainerProjects according to any of these:
-    @options = options
     provider_id = options[:provider_id]
     project_id = options[:entity_id]
     filter_tag = options[:tag]

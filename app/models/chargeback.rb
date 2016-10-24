@@ -8,18 +8,9 @@ class Chargeback < ActsAsArModel
 
   def self.build_results_for_report_chargeback(options)
     _log.info("Calculating chargeback costs...")
+    @options = options = ReportOptions.new_from_h(options)
 
-    tz = Metric::Helper.get_time_zone(options[:ext_options])
-    # TODO: Support time profiles via options[:ext_options][:time_profile]
-
-    interval = options[:interval] || "daily"
     cb = new
-
-    options[:ext_options] ||= {}
-
-    if @options[:groupby_tag]
-      @tag_hash = Classification.hash_all_by_type_and_name[@options[:groupby_tag]][:entry]
-    end
 
     base_rollup = MetricRollup.includes(
       :resource           => [:hardware, :tenant, :tags, :vim_performance_states, :custom_attributes],
@@ -36,10 +27,10 @@ class Chargeback < ActsAsArModel
     rate_cols.map! { |x| VIRTUAL_COL_USES.include?(x) ? VIRTUAL_COL_USES[x] : x }.flatten!
     base_rollup = base_rollup.select(*rate_cols)
 
-    timerange = get_report_time_range(options, interval, tz)
+    timerange = options.report_time_range
     data = {}
 
-    interval_duration = interval_to_duration(interval)
+    interval_duration = options.duration_of_report_step
 
     timerange.step_value(interval_duration).each_cons(2) do |query_start_time, query_end_time|
       records = base_rollup.where(:timestamp => query_start_time...query_end_time, :capture_interval_name => "hourly")
@@ -48,7 +39,7 @@ class Chargeback < ActsAsArModel
       next if records.empty?
       _log.info("Found #{records.length} records for time range #{[query_start_time, query_end_time].inspect}")
 
-      hours_in_interval = hours_in_interval(query_start_time, query_end_time, interval)
+      hours_in_interval = hours_in_interval(query_start_time, query_end_time, options.interval)
 
       # we are building hash with grouped calculated values
       # values are grouped by resource_id and timestamp (query_start_time...query_end_time)
@@ -64,7 +55,7 @@ class Chargeback < ActsAsArModel
         # key contains resource_id and timestamp (query_start_time...query_end_time)
         # extra_fields there some extra field like resource name and
         # some of them are related to specific chargeback (ChargebackVm, ChargebackContainer,...)
-        key, extra_fields = key_and_fields(metric_rollup_record, interval, tz)
+        key, extra_fields = key_and_fields(metric_rollup_record)
         data[key] ||= extra_fields
 
         chargeback_rates = data[key]["chargeback_rates"].split(', ') + rates_to_apply.collect(&:description)
@@ -89,19 +80,8 @@ class Chargeback < ActsAsArModel
     (query_end_time - query_start_time) / 1.hour
   end
 
-  def self.interval_to_duration(interval)
-    case interval
-    when "daily"
-      1.day
-    when "weekly"
-      1.week
-    when "monthly"
-      1.month
-    end
-  end
-
-  def self.key_and_fields(metric_rollup_record, interval, tz)
-    ts_key = get_group_key_ts(metric_rollup_record, interval, tz)
+  def self.key_and_fields(metric_rollup_record)
+    ts_key = @options.start_of_report_step(metric_rollup_record.timestamp)
 
     key, extra_fields = if @options[:groupby_tag].present?
                           get_tag_keys_and_fields(metric_rollup_record, ts_key)
@@ -109,17 +89,17 @@ class Chargeback < ActsAsArModel
                           get_keys_and_extra_fields(metric_rollup_record, ts_key)
                         end
 
-    [key, date_fields(metric_rollup_record, interval, tz).merge(extra_fields)]
+    [key, date_fields(metric_rollup_record).merge(extra_fields)]
   end
 
-  def self.date_fields(metric_rollup_record, interval, tz)
-    start_ts, end_ts, display_range = get_time_range(metric_rollup_record, interval, tz)
+  def self.date_fields(metric_rollup_record)
+    start_ts, end_ts, display_range = @options.report_step_range(metric_rollup_record.timestamp)
 
     {
       'start_date'       => start_ts,
       'end_date'         => end_ts,
       'display_range'    => display_range,
-      'interval_name'    => interval,
+      'interval_name'    => @options.interval,
       'chargeback_rates' => '',
       'entity'           => metric_rollup_record.resource
     }
@@ -128,7 +108,7 @@ class Chargeback < ActsAsArModel
   def self.get_tag_keys_and_fields(perf, ts_key)
     tag = perf.tag_names.split("|").select { |x| x.starts_with?(@options[:groupby_tag]) }.first # 'department/*'
     tag = tag.split('/').second unless tag.blank? # 'department/finance' -> 'finance'
-    classification = @tag_hash[tag]
+    classification = @options.tag_hash[tag]
     classification_id = classification.present? ? classification.id : 'none'
     key = "#{classification_id}_#{ts_key}"
     extra_fields = { "tag_name" => classification.present? ? classification.description : _('<Empty>') }
@@ -190,69 +170,6 @@ class Chargeback < ActsAsArModel
     end
 
     col_hash
-  end
-
-  def self.get_group_key_ts(perf, interval, tz)
-    ts = perf.timestamp.in_time_zone(tz)
-    case interval
-    when "daily"
-      ts = ts.beginning_of_day
-    when "weekly"
-      ts = ts.beginning_of_week
-    when "monthly"
-      ts = ts.beginning_of_month
-    else
-      raise _("interval '%{interval}' is not supported") % {:interval => interval}
-    end
-
-    ts
-  end
-
-  def self.get_time_range(perf, interval, tz)
-    ts = perf.timestamp.in_time_zone(tz)
-    case interval
-    when "daily"
-      [ts.beginning_of_day, ts.end_of_day, ts.strftime("%m/%d/%Y")]
-    when "weekly"
-      s_ts = ts.beginning_of_week
-      e_ts = ts.end_of_week
-      [s_ts, e_ts, "Week of #{s_ts.strftime("%m/%d/%Y")}"]
-    when "monthly"
-      s_ts = ts.beginning_of_month
-      e_ts = ts.end_of_month
-      [s_ts, e_ts, s_ts.strftime("%b %Y")]
-    else
-      raise _("interval '%{interval}' is not supported") % {:interval => interval}
-    end
-  end
-
-  # @option options :start_time [DateTime] used with :end_time to create time range
-  # @option options :end_time [DateTime]
-  # @option options :interval_size [Fixednum] Used with :end_interval_offset to generate time range
-  # @option options :end_interval_offset
-  def self.get_report_time_range(options, interval, tz)
-    return options[:start_time]..options[:end_time] if options[:start_time]
-    raise _("Option 'interval_size' is required") if options[:interval_size].nil?
-
-    end_interval_offset = options[:end_interval_offset] || 0
-    start_interval_offset = (end_interval_offset + options[:interval_size] - 1)
-
-    ts = Time.now.in_time_zone(tz)
-    case interval
-    when "daily"
-      start_time = (ts - start_interval_offset.days).beginning_of_day.utc
-      end_time   = (ts - end_interval_offset.days).end_of_day.utc
-    when "weekly"
-      start_time = (ts - start_interval_offset.weeks).beginning_of_week.utc
-      end_time   = (ts - end_interval_offset.weeks).end_of_week.utc
-    when "monthly"
-      start_time = (ts - start_interval_offset.months).beginning_of_month.utc
-      end_time   = (ts - end_interval_offset.months).end_of_month.utc
-    else
-      raise _("interval '%{interval}' is not supported") % {:interval => interval}
-    end
-
-    start_time..end_time
   end
 
   def self.report_cb_model(model)

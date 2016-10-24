@@ -50,16 +50,7 @@ class ChargebackVm < Chargeback
   )
 
   def self.build_results_for_report_ChargebackVm(options)
-    # Options:
-    #   :rpt_type => chargeback
-    #   :interval => daily | weekly | monthly
-    #   :start_time
-    #   :end_time
-    #   :end_interval_offset
-    #   :interval_size
-    #   :owner => <userid>
-    #   :tag => /managed/environment/prod (Mutually exclusive with :user)
-    #   :chargeback_type => detail | summary
+    # Options: a hash transformable to Chargeback::ReportOptions
 
     @report_user = User.find_by(:userid => options[:userid])
 
@@ -93,7 +84,6 @@ class ChargebackVm < Chargeback
     end
     return [[]] if vms.empty?
 
-    @options = options
     @vm_owners = vms.inject({}) { |h, v| h[v.id] = v.evm_owner_name; h }
 
     build_results_for_report_chargeback(options)

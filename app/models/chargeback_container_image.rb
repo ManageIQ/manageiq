@@ -28,20 +28,9 @@ class ChargebackContainerImage < Chargeback
   )
 
   def self.build_results_for_report_ChargebackContainerImage(options)
-    # Options:
-    #   :rpt_type => chargeback
-    #   :interval => daily | weekly | monthly
-    #   :start_time
-    #   :end_time
-    #   :end_interval_offset
-    #   :interval_size
-    #   :owner => <userid>
-    #   :tag => /managed/environment/prod (Mutually exclusive with :user)
-    #   :chargeback_type => detail | summary
-    #   :entity_id => 1/2/3.../all rails id of entity
+    # Options: a hash transformable to Chargeback::ReportOptions
 
     # Find Project by id or get all projects
-    @options = options
     provider_id = options[:provider_id]
     id = options[:entity_id]
     raise "must provide option :entity_id and provider_id" if id.nil? && provider_id.nil?
