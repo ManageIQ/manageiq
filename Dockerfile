@@ -171,5 +171,11 @@ LABEL name="manageiq" \
       STOP='docker stop ${NAME}_run && echo "Container ${NAME}_run has been stopped"' \
       UNINSTALL='docker rm -v ${NAME}_volume ${NAME}_run && echo "Uninstallation complete"'
 
+## OpenShift Labels
+LABEL io.k8s.description="ManageIQ is a management and automation platform for virtual, private, and hybrid cloud infrastructures." \
+      io.k8s.display-name="ManageIQ" \
+      io.openshift.expose-services="443:https" \
+      io.openshift.tags="ManageIQ,miq,manageiq"
+
 ## Call systemd to bring up system
 CMD [ "/usr/sbin/init" ]
