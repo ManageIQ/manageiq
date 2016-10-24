@@ -949,6 +949,13 @@ Vmdb::Application.routes.draw do
       )
     },
 
+    :infra_topology         => {
+      :get => %w(
+        show
+        data
+      )
+    },
+
     :container_dashboard      => {
       :get => %w(
         show

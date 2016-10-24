@@ -119,6 +119,17 @@
       :feature_type: control
       :identifier: infra_networking_tag
 
+# Infrastructure Topology
+- :name: Infra Topology
+  :description: Infra Topology
+  :feature_type: node
+  :identifier: infra_topology
+  :children:
+    - :name: View
+      :description: View Infra Topology
+      :feature_type: view
+      :identifier: infra_topology_view
+
 # MiqRequest
 - :name: Requests
   :description: Everything under Requests

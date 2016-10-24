@@ -8,6 +8,7 @@ module UiServiceMixin
       :ContainerService        => {:type => "glyph", :icon => "\uE61E", :fontfamily => "PatternFlyIcons-webfont"}, # pficon-service
       :ContainerRoute          => {:type => "glyph", :icon => "\uE625", :fontfamily => "PatternFlyIcons-webfont"}, # pficon-route
       :Container               => {:type => "glyph", :icon => "\uF1B2", :fontfamily => "FontAwesome"},             # fa-cube
+      :EmsCluster              => {:type => "glyph", :icon => "\uE620", :fontfamily => "PatternFlyIcons-webfont"}, # pficon-cluster
       :Host                    => {:type => "glyph", :icon => "\uE600", :fontfamily => "PatternFlyIcons-webfont"}, # pficon-screen
       :Vm                      => {:type => "glyph", :icon => "\uE90f", :fontfamily => "PatternFlyIcons-webfont"}, # pficon-virtual-machine
       :MiddlewareDatasource    => {:type => "glyph", :icon => "\uF1C0", :fontfamily => "FontAwesome"},             # fa-database

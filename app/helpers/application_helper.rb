@@ -638,6 +638,7 @@ module ApplicationHelper
            container_dashboard
            ems_infra_dashboard
            exception
+           infra_topology
            middleware_topology
            miq_ae_automate_button
            miq_ae_class
@@ -1215,6 +1216,7 @@ module ApplicationHelper
                         ems_middleware
                         ems_network
                         ems_storage
+                        infra_topology
                         event
                         flavor
                         floating_ip

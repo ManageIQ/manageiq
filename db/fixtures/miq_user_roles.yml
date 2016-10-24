@@ -54,6 +54,7 @@
   - middleware_datasource
   - middleware_topology
   - cloud_topology
+  - infra_topology
   - host
   - infra_networking
   - job_all_smartproxy
