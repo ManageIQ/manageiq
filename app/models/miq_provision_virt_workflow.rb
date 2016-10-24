@@ -61,6 +61,10 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     if request
       request = request.kind_of?(MiqRequest) ? request : MiqRequest.find(request)
       request.src_vm_id = get_value(values[:src_vm_id])
+      new_src_type = get_value(values[:src_type])
+      unless new_src_type.nil?
+        request.src_type = new_src_type
+      end
     end
 
     super

@@ -320,4 +320,48 @@ describe MiqProvisionVirtWorkflow do
       expect(request.source_id).to eq(template.id)
     end
   end
+
+  context '#make_request (update) with cloud volume' do
+    let(:volume) do
+      FactoryGirl.create(
+        :cloud_volume_openstack,
+        :name                  => "volume1",
+        :ext_management_system => FactoryGirl.create(:ems_cinder, :parent_manager => FactoryGirl.create(:ems_openstack))
+      )
+    end
+    let(:values)  { {:src_vm_id => [volume.id, volume.name], :src_type => 'CloudVolume'} }
+    let(:request) { workflow.make_request(nil, :src_vm_id => [999, 'old_template']) }
+    before { workflow.make_request(request, values) }
+
+    it 'updates options' do
+      expect(request.options).to include(values)
+    end
+
+    it 'updates source_id and source_type' do
+      expect(request.source_id).to eq(volume.id)
+      expect(request.source_type).to eq("cloudvolume")
+    end
+  end
+
+  context '#make_request (update) with cloud volume snapshot' do
+    let(:snapshot) do
+      FactoryGirl.create(
+        :cloud_volume_snapshot_openstack,
+        :name                  => "snapshot1",
+        :ext_management_system => FactoryGirl.create(:ems_cinder, :parent_manager => FactoryGirl.create(:ems_openstack))
+      )
+    end
+    let(:values)  { {:src_vm_id => [snapshot.id, snapshot.name], :src_type => 'CloudVolumeSnapshot'} }
+    let(:request) { workflow.make_request(nil, :src_vm_id => [999, 'old_template']) }
+    before { workflow.make_request(request, values) }
+
+    it 'updates options' do
+      expect(request.options).to include(values)
+    end
+
+    it 'updates source_id and source_type' do
+      expect(request.source_id).to eq(snapshot.id)
+      expect(request.source_type).to eq("cloudvolumesnapshot")
+    end
+  end
 end
