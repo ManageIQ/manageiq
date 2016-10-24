@@ -125,13 +125,7 @@ module ApplicationController::MiqRequestMethods
         @edit[:vm_sortdir] = "ASC"
       end
       @edit[:vm_sortcol] = params[:sort_choice]
-      templates = Rbac.filtered(@edit[:template_kls].eligible_for_provisioning).sort_by { |a| a.name.downcase }
-      build_vm_grid(templates, @edit[:vm_sortdir], @edit[:vm_sortcol], build_template_filter)
-      render :update do |page|
-        page << javascript_prologue
-        page.replace("pre_prov_div", :partial => "miq_request/pre_prov")
-        page << "miqSparkle(false);"
-      end
+      render_updated_templates
     elsif params[:sel_id]
       @edit = session[:edit]
       render :update do |page|
@@ -145,19 +139,23 @@ module ApplicationController::MiqRequestMethods
     elsif params[:hide_deprecated_templates]
       @edit = session[:edit]
       @edit[:hide_deprecated_templates] = params[:hide_deprecated_templates] == "true"
-      templates = Rbac.filtered(@edit[:template_kls].eligible_for_provisioning).sort_by { |a| a.name.downcase }
-      build_vm_grid(templates, @edit[:vm_sortdir], @edit[:vm_sortcol], build_template_filter)
-      render :update do |page|
-        page << javascript_prologue
-        page.replace("pre_prov_div", :partial => "miq_request/pre_prov")
-        page << "miqSparkle(false);"
-      end
+      render_updated_templates
     else                                                        # First time in, build pre-provision screen
       set_pre_prov_vars
     end
   end
   alias_method :instance_pre_prov, :pre_prov
   alias_method :vm_pre_prov, :pre_prov
+
+  def render_updated_templates
+    templates = Rbac.filtered(@edit[:template_kls].eligible_for_provisioning).sort_by { |a| a.name.downcase }
+    build_vm_grid(templates, @edit[:vm_sortdir], @edit[:vm_sortcol], build_template_filter)
+    render :update do |page|
+      page << javascript_prologue
+      page.replace("pre_prov_div", :partial => "miq_request/pre_prov")
+      page << "miqSparkle(false);"
+    end
+  end
 
   def set_pre_prov_vars
     @layout = "miq_request_vm"
