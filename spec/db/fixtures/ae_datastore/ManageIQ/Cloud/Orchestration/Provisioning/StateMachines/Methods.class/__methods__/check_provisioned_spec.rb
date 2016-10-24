@@ -114,12 +114,10 @@ describe ManageIQ::Automate::Cloud::Orchestration::Provisioning::StateMachines::
 
     it "completes check_provisioned step when refresh is done" do
       ae_service.set_state_var('provider_last_refresh', true)
-      ae_service.set_state_var('deploy_result', deploy_result)
-      ae_service.set_state_var('deploy_reason', deploy_reason)
       amazon_stack.status = "success"
       amazon_stack.save
       described_class.new(ae_service).main
-      expect(ae_service.root['ae_result']).to eq(deploy_result)
+      expect(ae_service.root['ae_result']).to eq('ok')
     end
   end
 

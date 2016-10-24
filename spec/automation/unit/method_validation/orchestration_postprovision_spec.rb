@@ -3,10 +3,16 @@ describe "Orchestration postprovision Method Validation" do
   let(:request)               { FactoryGirl.create(:service_template_provision_request, :requester => user) }
   let(:service_orchestration) { FactoryGirl.create(:service_orchestration) }
   let(:user)                  { FactoryGirl.create(:user_with_group) }
-  let(:ws)                    { MiqAeEngine.instantiate("/Cloud/Orchestration/Provisioning/StateMachines/Methods/PostProvision?MiqRequestTask::service_template_provision_task=#{miq_request_task.id}", user) }
+  let(:deploy_result)         { 'deploy_error' }
+  let(:ws_url)                { "/Cloud/Orchestration/Provisioning/StateMachines/Methods/PostProvision?MiqRequestTask::service_template_provision_task=#{miq_request_task.id}" }
+  let(:ws)                    { MiqAeEngine.instantiate("#{ws_url}&ae_state_data=#{URI.escape(YAML.dump('deploy_result' => deploy_result))}", user) }
 
-  it "updates the owners of the resulting vm" do
+  it "notifies the service to do post-provisioning configuration" do
     expect_any_instance_of(ServiceOrchestration).to receive(:post_provision_configure)
     ws
+  end
+
+  it "sets ae_result from provisioning state" do
+    expect(ws.root['ae_result']).to eq(deploy_result)
   end
 end

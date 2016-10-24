@@ -102,8 +102,7 @@ module ManageIQ
                 @handle.log("info", "Check refresh status of stack (#{service.stack_name})")
 
                 if refresh_may_have_completed?(service)
-                  @handle.root['ae_result'] = @handle.get_state_var('deploy_result')
-                  @handle.root['ae_reason'] = @handle.get_state_var('deploy_reason')
+                  @handle.root['ae_result'] = 'ok' # 'ok' here, error will be handled at the postprovision state.
                   @handle.log("info", "Refresh completed.")
                 else
                   @handle.root['ae_result']         = 'retry'
