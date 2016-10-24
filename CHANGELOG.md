@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-# Euwe Beta
+# Euwe Release Candidate
 
 ## Added
 
@@ -11,20 +11,18 @@ All notable changes to this project will be documented in this file.
 - New methods
   - `extend_retires_on` method: Used by Automate methods to set a retirement date to specified number of days from today, or from a future date.
   - `taggable?` to programmatically determine if a Service Model class or instance is taggable.
-- Service model updates
-  - MiqAeServiceHardware
-  - MiqAeServicePartition
-  - MiqAeServiceVolume
-- Generic Objects: Model updates
-  - Associations
-  - Tagging
+  - Added $evm.create_notification
+- Generic Objects
+  - Model updates
+    - Associations
+    - Tagging
   - Service Methods: `add_to_service / remove_from_service`
   - Service models created for GenericObject and GenericObjectDefinition
   - Process Generic Object method call via automate
   - Methods content stored in Automate
-  - Generic Object Definition model contains the method name only (Parameters defined in automate)
-  - Methods can return data to caller
-  - Methods can be overridden by domain ordering
+    - Generic Object Definition model contains the method name only (Parameters defined in automate)
+    - Methods can return data to caller
+    - Methods can be overridden by domain ordering
 - Git Automate support
   - Branch/Tag support
   - Contents are locked and can be copied to other domains for editing
@@ -33,7 +31,7 @@ All notable changes to this project will be documented in this file.
     - Priority
     - Removal of Domain
     - Dedicated Server Role to store the repository
--  Import Rake task `OVERWRITE` argument: Setting  `OVERWRITE=true` removes the target domain prior to import
+- Import Rake task `OVERWRITE` argument: Setting  `OVERWRITE=true` removes the target domain prior to import
 - Added /System/Process/MiqEvent instance
 - Added Provider refresh call to Amazon retire state machine in Pre-Retirement state
 - Class Schema allows for EMS, Host, Policy, Provision, Request, Server, Storage, and VM(or Template) datatypes
@@ -48,20 +46,25 @@ All notable changes to this project will be documented in this file.
 - Service Dialogs
   - Added ‘Visible’ flag to all dialog fields
   - Support for “visible” flag for dynamic fields
-- Expose Compliance and ComplianceDetail models
-- New associations on VmOrTemplate and Host models:
+- New associations on VmOrTemplate and Host models
   - `expose :compliances`
   - `expose :last_compliance`
-- New Service Models
+- Service Models - New
   - Compliance: `expose :compliance_details`
   - ComplianceDetail: `expose :compliance`, `expose :miq_policy`
-  - Service Model: Expose provision_priority value
-- Engine: Allow arguments in method calls during substitution
-   operation
+  - MiqAeServicePartition
+  - MiqAeServiceVolume
+  - GenericObject
+  - GenericObjectDefinition
+- Service Models - Updates
+    - MiqAeServiceServiceTemplateProvisionTask updated to expose provision_priority value
+    - MiqAeServiceHardware updated to expose a relationship to partitions.
+    - Added cinder backup/restore actions
 - Retirement
   - Restored retirement logic to verify that VM was provisioned or contains Lifecycle tag before processing
   - Built-in policy to prevent retired VM from starting on a resume power
-- Added lifecycle tag as a default tag
+  - Added lifecycle tag as a default tag
+  - Schema change for Cloud Orchestration Retirement class
 - Provisioning
   - Service Provisioning: Exposed number_of_vms when building the provision request for a service
   - Filter networks and floating_ips for OpenStack provisioning
@@ -69,6 +72,7 @@ All notable changes to this project will be documented in this file.
   - Enabled support for vApp provisioning service
   - Backend support to enable VMware provisioning through selection of a DRS-enabled cluster instead of a host
   - Set VM storage profile in provisioning
+  - Show shared networks in the OpenStack provisioning dialog
   - Enhanced messaging for provisioning: Displayed elements
     - ManageIQ Server name
     - Name of VM/Service being provisioned
@@ -84,6 +88,7 @@ All notable changes to this project will be documented in this file.
     - Service Bundles: Honor bundle resource configuration for start/stop actions
     - Created service_connections table to support connecting services together along with metadata
 - Added top_level_namespace to miq_ae_namespace model to support filtering for pluggable providers
+- Set default entry points for non-generic catalog items
 
 ### Platform
 
@@ -148,13 +153,14 @@ All notable changes to this project will be documented in this file.
   - Default reasons for supported features
   - Known features are discoverable
   - Every known feature is unsupported by default
-  - `supports :reboot_guest`
-- Generate a csv of features supported across all models
+  - Allow Vm to show floating and fixed ip addresses
+  - Generate a csv of features supported across all models
 - Amazon: Public Images Filter
 - Ansible Tower
   - Collect Job parameters during Provider Refresh
   - Log Ansible Tower Job output when deployment fails
 - Containers
+  - Persist Container Templates
   - Reports: Pods for images per project, Pods per node
   - Deployment wizard
   - Models for container deployments
@@ -163,6 +169,7 @@ All notable changes to this project will be documented in this file.
   - Chargeback rates based on container image tags
   - Keep pod-container relationship after disconnection
 - Google Compute Engine
+  - Use standard health states
   - Provision Preemptible VMs
   - Preemptible Instances
   - Retirement support
@@ -219,21 +226,24 @@ All notable changes to this project will be documented in this file.
     - Load balancer service type actions for reconfigure, retirement, provisioning
   - UI for creating subnets
 - OpenStack
-  - Collect inventory for cloud volume backups
-  - Show topology for undercloud
-  - Associate/Disassociate Floating IPs
-  - Host Aggregates
-  - Region Support
-  - Cleanup of Nova services after scale down
-  - Prevent retired instances from starting
-  - Add hardware state for Hosts
-  - Map Flavors to Cloud Tenants during Openstack Cloud refresh
-  - Cinder backup/restore actions added to model
-  - UI to register Ironic nodes through Mistral
-  - Post refresh hook on OpenStack provider
-  - Create provider base tenant under a root tenant
-  - Cloud Tenant tree generated under provider base tenant
-  - Create / Update / Delete
+  - Cloud
+    - Collect inventory for cloud volume backups
+    - UI: Cloud volume backup
+    - UI: CRUD for Host Aggregates
+    - UI: CRUD for OpenStack Cloud tenants
+    - Enable image snapshot
+    - Map Flavors to Cloud Tenants during Openstack Cloud refresh
+    - Associate/Disassociate Floating IPs
+    - Region Support
+    - Create provider base tenant under a root tenant
+    - Topology
+  - Infrastructure
+    - Set boot image for registered hosts
+    - Node destroy deletes node from Ironic
+    - Enable node start and stop
+    - Ironic Controls
+    - UI to register Ironic nodes through Mistral
+    - Topology
 - Red Hat Enterprise Virtualization
   - Get Host OS version and type
   - Disk Management in VM Reconfigure
@@ -256,6 +266,7 @@ All notable changes to this project will be documented in this file.
 
 ### REST API
 
+- Adding support for /api/requests creation and edits
 - Token manager supports for web sockets
 - Added ability to query virtual machines for cockpit support
 - Added support for Bulk queries
@@ -304,6 +315,7 @@ All notable changes to this project will be documented in this file.
 
 ### SmartState
 
+- Add /etc/redhat-access-insights/machine-id to the sample VM analysis
 - Deployed new MiqDiskCache module for use with Microsoft Azure
   - Scan time reduced from >20 minutes to <5 minutes
   - Microsoft Azure backed read requests reduced from >7000 requests to <1000
@@ -344,6 +356,10 @@ All notable changes to this project will be documented in this file.
 - vSphere Distributed Switches tagging
 - Patternfly Labels for OpenSCAP Results
 - Operations UI Notifications
+- Conversion of Middleware Provider form to Angular
+- Add UI for generating authorization keys for remote regions
+- Topology for Cloud Managers
+- Topology for Infrastructure Providers
 
 ## Changed
 
@@ -381,6 +397,7 @@ All notable changes to this project will be documented in this file.
   - Puma is still the default
   - Planning on adding additional servers
 - Expression refactoring and cleanup with relative dates and times
+- Set appliance "system" memory/swap information
 - PostgreSQL upgraded to 9.5 needed for HA feature
 - Performance: Lazy load message catalogs for faster startup and reduced memory
 - Replication: Added "deprecated" in replication worker screen (Rubyrep replication removed in Euwe release)
@@ -401,6 +418,7 @@ All notable changes to this project will be documented in this file.
   - Add re-checking authentication status functionality/button
   - Refactor infrastructure for easier configuration
   - Optimization and enhancement of event fetching
+- Microsoft SCVMM: Set default security protocol to ssl
 - vSphere Host storage device inventory collection improvements
 
 ### REST API
@@ -434,18 +452,25 @@ Notable fixes include:
 
 ### Automate
 
+- Fixed case where user can't add alerts
+- Fixed issue where alerts don't send SNMP v1 traps
 - Fixed problem with request_pending email method
 - Set User.current_user in Automation Engine to fix issue where provisioning resources were not being assigned to the correct tenant
 - Provisioning: VMware Infrastructure: sysprep_product_id field is no longer required
+- Fixed ordering ae_domains for a root tenant
 
 ### Platform
 
 - Use correct adjustment in chargeback reports
-- Replication: Fix typo prevention full error message
+- Replication
+  - Add repmgr tables to replication excludes
+  - Don't consider tables that are always excluded during the schema check
+  - Fix typo prevention full error message
 - Tenancy: User friendly tenant names
 
 ### Providers
 
+- Containers: Ability to add a container provider with a port other than 8443
 - Microsoft Azure: Fix proxy for template lookups
 - VMware vSphere: Block duplicate events
 - VMware: Fix for adding multiple disks
@@ -473,6 +498,8 @@ Notable fixes include:
 - Inconsistent menus in Middleware Views
 - Save Authentication status on a Save
 - RBAC:List only those VMs that the user has access to in planning
+- Enable Provision VMs button via relationships
+- Missing reset button for Job Template Service Dialog
 
 # Darga
 
