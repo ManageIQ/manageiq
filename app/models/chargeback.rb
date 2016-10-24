@@ -275,11 +275,7 @@ class Chargeback < ActsAsArModel
     rpt.cols = %w(start_date display_range)
 
     static_cols = report_static_cols
-    if group_by == "date"
-      rpt.cols += static_cols
-      rpt.col_order = ["display_range"] + static_cols
-      rpt.sortby = ["start_date"] + static_cols
-    elsif group_by == "vm"
+    if group_by == "date" || group_by == "vm"
       rpt.cols += static_cols
       rpt.col_order = static_cols + ["display_range"]
       rpt.sortby = static_cols + ["start_date"]
