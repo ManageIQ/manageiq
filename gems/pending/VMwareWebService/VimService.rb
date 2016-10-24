@@ -9,16 +9,12 @@ class VimService < Handsoap::Service
   def initialize(ep)
     super
 
-    setNameSpace('urn:vim2')
+    setNameSpace('urn:vim25')
 
     @serviceInstanceMor = VimString.new("ServiceInstance", "ServiceInstance")
+    @session_cookie     = nil
 
-    begin
-      @sic = retrieveServiceContent
-    rescue Handsoap::Fault
-      setNameSpace('urn:vim25')
-      @sic = retrieveServiceContent
-    end
+    @sic = retrieveServiceContent
 
     @about           = @sic.about
     @apiVersion      = @about.apiVersion
@@ -26,9 +22,6 @@ class VimService < Handsoap::Service
     @v2              = @apiVersion =~ /2\..*/
     @v4              = @apiVersion =~ /4\..*/
     @isVirtualCenter = @about.apiType == "VirtualCenter"
-    @session_cookie  = nil
-
-    setNameSpace('urn:vim25') unless @v20
   end
 
   def acquireCloneTicket(sm)
@@ -453,7 +446,7 @@ class VimService < Handsoap::Service
       message.add "n1:userName", username
       message.add "n1:password", password
     end
-    @session_cookie = response.cookie
+    @session_cookie ||= response.cookie
     (parse_response(response, 'LoginResponse')['returnval'])
   end
 
@@ -938,6 +931,7 @@ class VimService < Handsoap::Service
         i.set_attr "type", @serviceInstanceMor.vimType
       end
     end
+    @session_cookie ||= response.cookie
     (parse_response(response, 'RetrieveServiceContentResponse')['returnval'])
   end
 
