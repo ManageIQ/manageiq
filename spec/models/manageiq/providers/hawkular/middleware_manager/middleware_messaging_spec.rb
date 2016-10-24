@@ -76,6 +76,21 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareMessaging d
         end
       end
 
+      it "#collect_stats_metrics for #{ms_model}" do
+        start_time = test_start_time
+        end_time = test_end_time
+        interval = 3600
+        VCR.use_cassette(vcr_cassete_name,
+                         :allow_unused_http_interactions => true,
+                         :match_requests_on              => [:method, :uri, :body],
+                         :decode_compressed_response     => true) do # , :record => :new_episodes) do
+          metrics_available = ms.metrics_available
+          metrics_ids_map, raw_stats = ms.collect_stats_metrics(metrics_available, start_time, end_time, interval)
+          expect(metrics_ids_map.keys.size).to be > 0
+          expect(raw_stats.keys.size).to be > 0
+        end
+      end
+
       it "#collect_live_metrics for all metrics available for #{ms_model}" do
         start_time = test_start_time
         end_time = test_end_time
