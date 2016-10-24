@@ -17,9 +17,10 @@ module ApplicationController::DialogRunner
       add_flash(flash)
       replace_right_cell
     else
+      this_page = redirect_url(flash)
       render :update do |page|
         page << javascript_prologue
-        page.redirect_to redirect_url(flash)
+        page.redirect_to this_page
       end
     end
   end
@@ -64,9 +65,10 @@ module ApplicationController::DialogRunner
                                  :flash_msg  => flash
               end
             else
+              this_page = redirect_url(flash)
               render :update do |page|
                 page << javascript_prologue
-                page.redirect_to redirect_url(flash)
+                page.redirect_to this_page
               end
             end
           else
