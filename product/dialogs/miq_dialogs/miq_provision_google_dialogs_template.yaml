@@ -270,7 +270,7 @@
       :description: Properties
       :fields:
         :boot_disk_size:
-          :description: Boot Disk Size (GB)
+          :description: Boot Disk Size
           :values:
             10.GB: 10 GB
             50.GB: 50 GB
