@@ -1,5 +1,5 @@
 describe 'API configuration (config/api.yml)' do
-  let(:api_settings) { Api::Settings }
+  let(:api_settings) { Api::ApiConfig }
 
   describe 'collections' do
     let(:collection_settings) { api_settings.collections }

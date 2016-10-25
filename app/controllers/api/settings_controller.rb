@@ -16,7 +16,7 @@ module Api
     private
 
     def exposed_settings
-      Settings.collections[:settings][:categories]
+      ApiConfig.collections[:settings][:categories]
     end
   end
 end

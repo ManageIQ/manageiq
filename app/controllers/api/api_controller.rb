@@ -6,9 +6,9 @@ module Api
 
     def index
       res = {
-        :name         => Settings.base.name,
-        :description  => Settings.base.description,
-        :version      => Settings.base.version,
+        :name         => ApiConfig.base.name,
+        :description  => ApiConfig.base.description,
+        :version      => ApiConfig.base.version,
         :versions     => entrypoint_versions,
         :settings     => user_settings,
         :identity     => auth_identity,
@@ -23,7 +23,7 @@ module Api
     private
 
     def entrypoint_versions
-      Settings.version.definitions.select(&:ident).collect do |version_specification|
+      ApiConfig.version.definitions.select(&:ident).collect do |version_specification|
         {
           :name => version_specification[:name],
           :href => "#{@req.api_prefix}/#{version_specification[:ident]}"

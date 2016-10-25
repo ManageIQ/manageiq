@@ -91,7 +91,7 @@ module Api
           @version ||= if version_override?
                          @params[:version][1..-1] # Switching API Version
                        else
-                         Settings.base[:version] # Default API Version
+                         ApiConfig.base[:version] # Default API Version
                        end
         end
 
@@ -102,7 +102,7 @@ module Api
         end
 
         def version_override?
-          @params[:version] && @params[:version].match(Settings.version[:regex]) # v#.# version signature
+          @params[:version] && @params[:version].match(ApiConfig.version[:regex]) # v#.# version signature
         end
 
         def fullpath

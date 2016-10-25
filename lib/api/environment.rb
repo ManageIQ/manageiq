@@ -5,7 +5,7 @@ module Api
     end
 
     def self.user_token_service
-      @user_token_service ||= UserTokenService.new(Settings, :log_init => true)
+      @user_token_service ||= UserTokenService.new(ApiConfig, :log_init => true)
     end
 
     def self.fetch_encrypted_attribute_names(klass)
