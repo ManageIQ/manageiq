@@ -1611,13 +1611,13 @@ module ApplicationHelper
                              ontap_storage_system_show_list
                              ontap_storage_volume_show_list
                              storage_manager_show_list)
-    return false if storage_start_pages.include?(start_page) && !get_vmdb_config[:product][:storage]
+    return false if storage_start_pages.include?(start_page) && !::Settings.product.storage
     containers_start_pages = %w(ems_container_show_list
                                 container_node_show_list
                                 container_group_show_list
                                 container_service_show_list
                                 container_view)
-    return false if containers_start_pages.include?(start_page) && !get_vmdb_config[:product][:containers]
+    return false if containers_start_pages.include?(start_page) && !::Settings.product.containers
     role_allows?(:feature => start_page, :any => true)
   end
 
@@ -1842,7 +1842,7 @@ module ApplicationHelper
   end
 
   def auth_mode_name
-    case get_vmdb_config.fetch_path(:authentication, :mode).downcase
+    case ::Settings.authentication.mode.downcase
     when "ldap"
       _("LDAP")
     when "ldaps"
@@ -1857,9 +1857,8 @@ module ApplicationHelper
   end
 
   def ext_auth?(auth_option = nil)
-    auth_config = get_vmdb_config[:authentication]
-    return false unless auth_config[:mode] == "httpd"
-    auth_option ? auth_config[auth_option] : true
+    return false unless ::Settings.authentication.mode == "httpd"
+    auth_option ? ::Settings.authentication[auth_option] : true
   end
   public :ext_auth?
 end
