@@ -13,14 +13,14 @@ module Api
     # Initializing REST API environment, called once @ startup
     #
     def init_env
-      $api_log.info("Initializing Environment for #{Settings.base[:name]}")
+      $api_log.info("Initializing Environment for #{ApiConfig.base[:name]}")
       log_config
     end
 
     def log_config
       $api_log.info("")
       $api_log.info("Static Configuration")
-      Settings.base.each { |key, val| log_kv(key, val) }
+      ApiConfig.base.each { |key, val| log_kv(key, val) }
 
       $api_log.info("")
       $api_log.info("Dynamic Configuration")
@@ -40,7 +40,7 @@ module Api
     # Let's dynamically get the :date and :datetime attributes from the Classes we care about.
     #
     def gen_time_attr_type_hash
-      Settings.collections.each do |_, cspec|
+      ApiConfig.collections.each do |_, cspec|
         next if cspec[:klass].blank?
         klass = cspec[:klass].constantize
         klass.columns_hash.collect do |name, typeobj|

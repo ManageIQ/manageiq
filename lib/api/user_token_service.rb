@@ -4,7 +4,7 @@ module Api
     # Additional Requester type token ttl's for authentication
     TYPE_TO_TTL_OVERRIDE = {'ui' => ::Settings.session.timeout}.freeze
 
-    def initialize(config = Settings, args = {})
+    def initialize(config = ApiConfig, args = {})
       @config = config
       @svc_options = args
     end

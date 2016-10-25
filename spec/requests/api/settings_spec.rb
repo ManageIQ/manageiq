@@ -2,7 +2,7 @@
 # REST API Request Tests - /api/settings
 #
 describe "Settings API" do
-  let(:api_settings) { Api::Settings.collections[:settings][:categories] }
+  let(:api_settings) { Api::ApiConfig.collections[:settings][:categories] }
 
   context "Settings Queries" do
     it "tests queries of all exposed settings" do

@@ -13,7 +13,7 @@ module Api
         # API Version Validation
         if @req.version
           vname = @req.version
-          unless Settings.version.definitions.collect { |vent| vent[:name] }.include?(vname)
+          unless ApiConfig.version.definitions.collect { |vent| vent[:name] }.include?(vname)
             raise BadRequestError, "Unsupported API Version #{vname} specified"
           end
         end
@@ -81,7 +81,7 @@ module Api
 
       def href_collection_id(path)
         path_array = path.split('/')
-        cidx = path_array[2] && path_array[2].match(Settings.version.regex) ? 3 : 2
+        cidx = path_array[2] && path_array[2].match(ApiConfig.version.regex) ? 3 : 2
 
         collection, c_id    = path_array[cidx..cidx + 1]
         subcollection, s_id = path_array[cidx + 2..cidx + 3]

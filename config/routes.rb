@@ -3045,7 +3045,7 @@ Vmdb::Application.routes.draw do
       }.freeze
     end
 
-    Api::Settings.collections.each do |collection_name, collection|
+    Api::ApiConfig.collections.each do |collection_name, collection|
       # OPTIONS action for each collection
       match collection_name.to_s, :controller => collection_name, :action => :options, :via => :options
 
@@ -3063,7 +3063,7 @@ Vmdb::Application.routes.draw do
         end
 
         Array(collection.subcollections).each do |subcollection_name|
-          Api::Settings.collections[subcollection_name].verbs.each do |verb|
+          Api::ApiConfig.collections[subcollection_name].verbs.each do |verb|
             match("/:c_id/#{subcollection_name}(/:s_id)", :action => API_ACTIONS[verb], :via => verb)
           end
         end
