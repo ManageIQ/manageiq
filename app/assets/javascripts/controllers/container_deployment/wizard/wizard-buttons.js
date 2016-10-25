@@ -1,5 +1,5 @@
 
-function wizardButtonDirective(action) {
+function miqWizardButtonDirective(action) {
   angular.module('miq.wizard')
     .directive(action, function() {
       return {
@@ -22,8 +22,8 @@ function wizardButtonDirective(action) {
     });
 }
 
-wizardButtonDirective('miqWizNext');
-wizardButtonDirective('miqWizPrevious');
-wizardButtonDirective('miqWizFinish');
-wizardButtonDirective('miqWizCancel');
-wizardButtonDirective('miqWizReset');
+miqWizardButtonDirective('miqWizNext');
+miqWizardButtonDirective('miqWizPrevious');
+miqWizardButtonDirective('miqWizFinish');
+miqWizardButtonDirective('miqWizCancel');
+miqWizardButtonDirective('miqWizReset');
