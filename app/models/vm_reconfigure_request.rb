@@ -80,6 +80,8 @@ class VmReconfigureRequest < MiqRequest
   end
 
   def self.make_request(request, values, requester, auto_approve = false)
+    values[:request_type] = :vm_reconfigure
+
     requests = ApplicationRecord.group_ids_by_region(values[:src_ids]).collect do |_region, ids|
       super(request, values.merge(:src_ids => ids), requester, auto_approve)
     end

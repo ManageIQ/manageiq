@@ -909,7 +909,7 @@ module ApplicationController::CiProcessing
         javascript_redirect previous_breadcrumb_url
       end
     when "submit"
-      options = {:request_type => :vm_reconfigure, :src_ids => params[:objectIds]}
+      options = {:src_ids => params[:objectIds]}
       if params[:cb_memory] == 'true'
         options[:vm_memory] = params[:memory_type] == "MB" ? params[:memory] : (params[:memory].to_i.zero? ? params[:memory] : params[:memory].to_i * 1024)
       end
