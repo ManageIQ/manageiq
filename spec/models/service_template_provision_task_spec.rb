@@ -89,12 +89,13 @@ describe ServiceTemplateProvisionTask do
           :tenant_id        => @admin.current_tenant.id,
         }
         allow(@request).to receive(:approved?).and_return(true)
+        allow(@task_0.source).to receive(:my_zone).and_return("special")
         expect(MiqQueue).to receive(:put).with(
           :class_name  => 'MiqAeEngine',
           :method_name => 'deliver',
           :args        => [automate_args],
           :role        => 'automate',
-          :zone        => nil,
+          :zone        => 'special',
           :task_id     => "service_template_provision_task_#{@task_0.id}")
         @task_0.deliver_to_automate
       end
@@ -114,13 +115,13 @@ describe ServiceTemplateProvisionTask do
           :method_name => :execute_callback
         }
         allow(@request).to receive(:approved?).and_return(true)
-        allow(MiqServer).to receive(:my_zone).and_return(nil)
+        allow(MiqServer).to receive(:my_zone).and_return('a_zone')
         expect(MiqQueue).to receive(:put).with(
           :class_name   => 'ServiceTemplateProvisionTask',
           :instance_id  => @task_0.id,
           :method_name  => 'execute',
           :role         => 'ems_operations',
-          :zone         => nil,
+          :zone         => 'a_zone',
           :task_id      => "service_template_provision_task_#{@task_0.id}",
           :deliver_on   => nil,
           :miq_callback => miq_callback)
