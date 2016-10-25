@@ -2239,6 +2239,7 @@ Vmdb::Application.routes.draw do
         ap_form_field_changed
         ap_set_active_tab
         aps_list
+        automate_schedules_set_vars
         category_delete
         category_edit
         category_field_changed
@@ -2264,6 +2265,7 @@ Vmdb::Application.routes.draw do
         enable_central_admin
         explorer
         fetch_build
+        fetch_target_ids
         forest_accept
         forest_delete
         forest_form_field_changed

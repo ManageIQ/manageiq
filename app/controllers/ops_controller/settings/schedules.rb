@@ -22,6 +22,12 @@ module OpsController::Settings::Schedules
     @timezone = @selected_schedule.run_at && @selected_schedule.run_at[:tz] ?
                   @selected_schedule.run_at[:tz] : session[:user_tz]
 
+    if @selected_schedule.sched_action[:method] == 'automation_request'
+      params = @selected_schedule.filter[:parameters]
+      @object_class = ui_lookup(:model => params[:target_class])
+      @object_name = params[:target_class].constantize.find_by(:id => params[:target_id]).name if params[:target_class]
+    end
+
     if @selected_schedule.filter.kind_of?(MiqExpression)
       @exp_table = exp_build_table(@selected_schedule.filter.exp)
     end
@@ -122,6 +128,9 @@ module OpsController::Settings::Schedules
       protocol        = DatabaseBackup.supported_depots[uri_prefix]
       depot_name      = depot.try(:name)
       log_userid      = depot.try(:authentication_userid)
+    elsif schedule_automation_request?(schedule)
+      action_type = schedule.sched_action[:method]
+      automate_request = fetch_automate_request_vars(schedule)
     else
       if schedule.towhat.nil?
         action_type = "vm"
@@ -134,7 +143,7 @@ module OpsController::Settings::Schedules
     filtered_item_list = build_filtered_item_list(action_type, filter_type)
     run_at = schedule.run_at[:start_time].in_time_zone(schedule.run_at[:tz])
 
-    render :json => {
+    schedule_hash = {
       :action_type          => action_type,
       :depot_name           => depot_name,
       :filter_type          => filter_type,
@@ -154,6 +163,24 @@ module OpsController::Settings::Schedules
       :uri                  => uri,
       :uri_prefix           => uri_prefix
     }
+
+    if schedule.sched_action[:method] == "automation_request"
+      schedule_hash.merge!(
+        :starting_object => automate_request[:starting_object],
+        :instance_names  => automate_request[:instance_names],
+        :instance_name   => automate_request[:instance_name],
+        :object_message  => automate_request[:object_message],
+        :object_request  => automate_request[:object_request],
+        :target_class    => automate_request[:target_class],
+        :target_classes  => automate_request[:target_classes],
+        :targets         => automate_request[:targets],
+        :target_id       => automate_request[:target_id],
+        :attrs           => automate_request[:attrs],
+        :readonly        => automate_request[:readonly],
+        :filter_type     => nil
+      )
+    end
+    render :json => schedule_hash
   end
 
   def schedule_form_filter_type_field_changed
@@ -276,11 +303,16 @@ module OpsController::Settings::Schedules
     schedule.sched_action && schedule.sched_action[:method] && schedule.sched_action[:method] == "db_backup"
   end
 
+  def schedule_automation_request?(schedule)
+    schedule.sched_action && schedule.sched_action[:method] && schedule.sched_action[:method] == "automation_request"
+  end
+
   def schedule_towhat_from_params_action
     case params[:action_typ]
     when "db_backup"          then "DatabaseBackup"
     when /check_compliance\z/ then params[:action_typ].split("_").first.capitalize
     when "emscluster"         then "EmsCluster"
+    when "automation_request" then "AutomationRequest"
     else                           params[:action_typ].camelcase
     end
   end
@@ -290,6 +322,7 @@ module OpsController::Settings::Schedules
     when "vm", "miq_template" then "vm_scan"  # Default to vm_scan method for now
     when /check_compliance\z/ then "check_compliance"
     when "db_backup"          then "db_backup"
+    when "automation_request" then "automation_request"
     else                           "scan"
     end
   end
@@ -337,8 +370,13 @@ module OpsController::Settings::Schedules
     filtered_item_list
   end
 
+  def schedule_db_backup_or_automate(schedule)
+    %w(db_backup automation_request).include?(schedule.sched_action[:method])
+  end
+
   def determine_filter_type_and_value(schedule)
-    if schedule.sched_action && schedule.sched_action[:method] && schedule.sched_action[:method] != "db_backup"
+    if schedule.sched_action && schedule.sched_action[:method] && !schedule_db_backup_or_automate(schedule)
+      !%w(db_backup automation_request).include?(schedule.sched_action[:method])
       if schedule.miq_search                         # See if a search filter is attached
         filter_type = schedule.miq_search.search_type == "user" ? "my" : "global"
         filter_value = schedule.miq_search.id
@@ -404,7 +442,7 @@ module OpsController::Settings::Schedules
 
   def schedule_validate?(sched)
     valid = true
-    if params[:action_typ] != "db_backup"
+    unless %w(db_backup automation_request).include?(params[:action_typ])
       if %w(global my).include?(params[:filter_typ])
         if params[:filter_value].blank?  # Check for search filter chosen
           add_flash(_("Filter must be selected"), :error)
@@ -461,6 +499,30 @@ module OpsController::Settings::Schedules
       uri_settings[:name] = params[:depot_name]
       uri_settings[:save] = true
       schedule.verify_file_depot(uri_settings)
+    elsif params[:action_typ] == "automation_request"
+      attrs = []
+      AE_MAX_RESOLUTION_FIELDS.times do |i|
+        next unless params[:attrs] && params[:attrs][i.to_s]
+        attrs[i] = []
+        attrs[i][0] = params[:attrs][i.to_s][0]
+        attrs[i][1] = params[:attrs][i.to_s][1]
+      end
+      schedule.filter = {
+        :uri_parts  => {
+          :namespace => params[:starting_object],
+          :instance  => params[:instance_name],
+          :message   => params[:object_message]
+        },
+        :parameters => {
+          :object_request => params[:object_request],
+          :instance_name  => params[:instance_name],
+          :object_message => params[:object_message],
+          :attrs          => attrs,
+          :readonly       => params[:readonly] == "true" ? true : false,
+          :target_class   => params[:target_class] == "" ? nil : params[:target_class],
+          :target_id      => params[:target_id]
+        }
+      }
     elsif %w(global my).include?(params[:filter_typ])  # Search filter chosen, set up relationship
       schedule.filter     = nil  # Clear out existing filter expression
       schedule.miq_search = params[:filter_value] ? MiqSearch.find(params[:filter_value]) : nil # Set up the search relationship
@@ -567,6 +629,10 @@ module OpsController::Settings::Schedules
       @action_type_options_for_select.push([_("Container Image Compliance Check"), "container_image_check_compliance"])
     end
     @action_type_options_for_select.push([_("Database Backup"), "db_backup"])
+
+    if role_allows?(:feature => "miq_ae_class_simulation")
+      @action_type_options_for_select.push([_("Automate Tasks"), "automation_request"])
+    end
 
     @vm_options_for_select = [
       [_("All VMs"), "all"],

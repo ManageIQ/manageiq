@@ -416,6 +416,16 @@ describe('scheduleFormController', function() {
         expect($scope.buildLegend()).toEqual('Database Backup Selection');
       });
     });
+
+    describe('when the action type is a automation_request type', function() {
+      beforeEach(function() {
+        $scope.scheduleModel.action_typ = 'automation_request';
+      });
+
+      it('returns Auotmate Request Selection', function() {
+        expect($scope.buildLegend()).toEqual('Automate Tasks Selection');
+      });
+    });
   });
 
   describe('#determineActionType', function() {
