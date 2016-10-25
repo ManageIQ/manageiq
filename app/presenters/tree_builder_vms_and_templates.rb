@@ -17,9 +17,9 @@ class TreeBuilderVmsAndTemplates < FullTreeBuilder
 
     tree = root.subtree_arranged(TreeBuilder.hide_vms ? {:except_type => VmOrTemplate} : {})
 
+    prune_rbac(tree)
     prune_non_vandt_folders(tree)
     reparent_hidden_folders(tree)
-    prune_rbac(tree)
     sort_tree(tree)
 
     tree
