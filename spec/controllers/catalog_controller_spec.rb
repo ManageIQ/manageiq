@@ -646,4 +646,17 @@ describe CatalogController do
       expect(@st.service_template_catalog).to match(@catalog)
     end
   end
+
+  context "#st_set_form_vars" do
+    before do
+      bundle = FactoryGirl.create(:service_template)
+      controller.instance_variable_set(:@record, bundle)
+    end
+
+    it "sets default entry points for Catalog Bundle" do
+      controller.send(:st_set_form_vars)
+      expect(assigns(:edit)[:new][:fqname]).to include("CatalogBundleInitialization")
+      expect(assigns(:edit)[:new][:retire_fqname]).to include("Default")
+    end
+  end
 end
