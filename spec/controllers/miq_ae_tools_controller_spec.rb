@@ -328,7 +328,8 @@ Methods updated/added: 10
         before do
           allow(GitRepository).to receive(:create!).with(:url => git_url).and_return(git_repo)
           allow(git_repo).to receive(:update_authentication).with(:values => {:userid => "", :password => ""})
-          allow(MiqTask).to receive(:generic_action_with_callback).with(task_options, queue_options).and_return(miq_task.id)
+          allow(MiqTask).to receive(:generic_action_with_callback)
+            .with(task_options, queue_options).and_return(miq_task.id)
           allow(MiqTask).to receive(:wait_for_taskid).with(miq_task.id)
           allow(MiqTask).to receive(:find).with(miq_task.id).and_return(miq_task)
           allow(git_repo).to receive(:git_branches).and_return(git_branches)
@@ -346,8 +347,8 @@ Methods updated/added: 10
                 :level   => :error
               }.to_json
             )
-          end 
-        end 
+          end
+        end
 
         context "when the git repository exists with the given url" do
           before do
@@ -363,7 +364,7 @@ Methods updated/added: 10
             expect(MiqTask).to receive(:wait_for_taskid).with(miq_task.id)
             post :retrieve_git_datastore, :params => params
           end
-          
+
           context "task failure" do
             let(:task_message) { "Disaster happened" }
             let(:task_status) { "Failed" }
