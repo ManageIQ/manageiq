@@ -90,14 +90,14 @@
               - if role_allows?(:feature => feature)
                 .form-group
                   %label.col-md-3.control-label
-                    #{view_name}
+                    = view_name
                   .col-md-8
                     %ul.list-inline= render_view_buttons(resource, @edit[:new][:views][resource])
         - if has_any_role?(%w(ems_cloud_show_list availability_zone_show_list host_aggregate_show_list cloud_tenant_show_list flavor_show_list instances_accord instances_filter_accord images_filter_accord orchestration_stack_show_list cloud_volume_show_list cloud_volume_snapshot_show_list cloud_object_store_container_show_list))
           %fieldset
             %h3
               = _('Clouds')
-            - {:manegeiq_providers_cloudmanager => ["ems_cloud_show_list",                    _('Cloud Providers')],
+            - {:manageiq_providers_cloudmanager => ["ems_cloud_show_list",                    _('Cloud Providers')],
                :availabilityzone                => ["availability_zone_show_list",            _('Availability Zones')],
                :hostaggregate                   => ["host_aggregate_show_list",               _('Host Aggregates')],
                :cloudtenant                     => ["cloud_tenant_show_list",                 _('Tenants')],
