@@ -781,7 +781,7 @@ module OpsController::OpsRbac
                     when "user"
                       get_view(User, :named_scope => :in_my_region)
                     when "group"
-                      get_view(MiqGroup, :named_scope => :non_tenant_groups)
+                      get_view(MiqGroup, :named_scope => :non_tenant_groups_in_my_region)
                     when "role"
                       get_view(MiqUserRole)
                     when "tenant"
@@ -972,7 +972,7 @@ module OpsController::OpsRbac
       })
     end
     # load all user groups
-    @edit[:groups] = MiqGroup.non_tenant_groups.sort_by { |g| g.description.downcase }.collect { |g| [g.description, g.id] }
+    @edit[:groups] = MiqGroup.non_tenant_groups_in_my_region.sort_by { |g| g.description.downcase }.collect { |g| [g.description, g.id] }
     # store current state of the new users information
     @edit[:current] = copy_hash(@edit[:new])
   end
