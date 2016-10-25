@@ -191,6 +191,7 @@ module ManageIQ::Providers
           :environment_variables => parse_env_variables(
             docker_metadata[:Config][:Env]),
           :size                  => docker_metadata[:Size],
+          :labels                => parse_labels(openshift_image),
         )
         new_result
       end
