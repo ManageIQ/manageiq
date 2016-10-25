@@ -48,7 +48,7 @@ module ManageIQ::Providers::Vmware::InfraManager::Vm::RemoteConsole
   # VMRC
   #
 
-  def remote_console_vmrc_acquire_ticket(_userid = nil)
+  def remote_console_vmrc_acquire_ticket(_userid = nil, _originating_server = nil)
     validate_remote_console_acquire_ticket("vmrc")
     ext_management_system.remote_console_vmrc_acquire_ticket
   end
