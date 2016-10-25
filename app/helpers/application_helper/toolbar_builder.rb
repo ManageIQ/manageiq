@@ -85,7 +85,11 @@ class ApplicationHelper::ToolbarBuilder
     button_class = inputs[:klass] || ApplicationHelper::Button::Basic
     props[:options] = inputs[:options] if inputs[:options]
     button = button_class.new(@view_context, @view_binding, @instance_data, props)
-    apply_common_props(button, inputs)
+    if button.skipped?
+      nil
+    else
+      apply_common_props(button, inputs)
+    end
   end
 
   # Build select button and its child buttons
@@ -98,6 +102,7 @@ class ApplicationHelper::ToolbarBuilder
       :img    => img = img_value(bgi),
       :imgdis => img,
     )
+    return nil if props.nil?
 
     current_item = props
     current_item[:items] ||= []
@@ -117,9 +122,10 @@ class ApplicationHelper::ToolbarBuilder
           :img_url  => ActionController::Base.helpers.image_path("toolbars/#{img}"),
           :imgdis   => img,
         )
+        next if props.nil?
       end
       update_common_props(bsi, props) unless bsi.key?(:separator)
-      current_item[:items] << props unless props.skipped?
+      current_item[:items] << props
 
       any_visible ||= !props[:hidden] && props[:type] != :separator
     end
@@ -192,6 +198,7 @@ class ApplicationHelper::ToolbarBuilder
       :img_url => ActionController::Base.helpers.image_path("toolbars/#{img}"),
       :imgdis  => "#{bgi[:image] || bgi[:id]}.png",
     )
+    return nil if props.nil?
 
     # set pdf button to be hidden if graphical summary screen is set by default
     props[:hidden] = %w(download_view vm_download_pdf).include?(bgi[:id]) && button_hide
@@ -226,6 +233,7 @@ class ApplicationHelper::ToolbarBuilder
       :img    => img = img_value(bgi),
       :imgdis => img,
     )
+    return nil if props.nil?
 
     props[:selected] = twostate_button_selected(bgi[:id])
 
@@ -242,7 +250,7 @@ class ApplicationHelper::ToolbarBuilder
             end
 
     unless props.nil?
-      @toolbar << update_common_props(bgi, props) unless props.skipped?
+      @toolbar << update_common_props(bgi, props)
     end
   end
 
