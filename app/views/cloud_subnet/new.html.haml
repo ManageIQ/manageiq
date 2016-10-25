@@ -16,18 +16,8 @@
                       "selectpicker-for-select-tag" => "")
 
   %h3
-    = _('Basic Information')
+    = _('Cloud Subnet details')
   .form-horizontal
-    .form-group
-      %label.col-md-2.control-label
-        = _('Subnet Name')
-      .col-md-8
-        %input.form-control{:type          => "text",
-                            :name          => "name",
-                            'ng-model'     => "cloudSubnetModel.name",
-                            'ng-maxlength' => 128,
-                            :miqrequired   => true,
-                            :checkchange   => true}
     .form-group{"ng-class" => "{'has-error': angularForm.network_id.$invalid}"}
       %label.col-md-2.control-label
         = _('Network')
@@ -40,26 +30,8 @@
                       :checkchange                  => true,
                       "selectpicker-for-select-tag" => "")
 
-    .form-group
-      %label.col-md-2.control-label
-        = _('Subnet CIDR')
-      .col-md-8
-        %input.form-control{:type          => "text",
-                            :name          => "cidr",
-                            'ng-model'     => "cloudSubnetModel.cidr",
-                            'ng-maxlength' => 20,
-                            :miqrequired   => false,
-                            :checkchange   => true}
-    .form-group
-      %label.col-md-2.control-label
-        = _('Subnet Gateway')
-      .col-md-8
-        %input.form-control{:type          => "text",
-                            :name          => "gateway",
-                            'ng-model'     => "cloudSubnetModel.gateway",
-                            'ng-maxlength' => 20,
-                            :miqrequired   => false,
-                            :checkchange   => true}
+    = render :partial => "common_new_edit"
+
     .form-group
       %label.col-md-2.control-label
         = _('IP Version')
@@ -71,6 +43,17 @@
                       :miqrequired                  => true,
                       :checkchange                  => true,
                       "selectpicker-for-select-tag" => "")
+    .form-group
+      %label.col-md-2.control-label
+        = _('Subnet CIDR')
+      .col-md-8
+        %input.form-control{:type          => "text",
+                            :name          => "cidr",
+                            'ng-model'     => "cloudSubnetModel.cidr",
+                            'ng-maxlength' => 20,
+                            :miqrequired   => false,
+                            :checkchange   => true}
+
   %h3
     = _('Placement')
   .form-horizontal
