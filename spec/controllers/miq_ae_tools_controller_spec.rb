@@ -279,7 +279,7 @@ Methods updated/added: 10
     end
 
     context "when the git url is not blank" do
-      let(:git_url) { "git_url" }
+      let(:git_url) { "http://www.example.com" }
       let(:git_verify_ssl) { "true" }
       let(:my_region) { double("MiqRegion") }
 
@@ -305,8 +305,13 @@ Methods updated/added: 10
 
       context "when the MiqRegion has an active git_owner role" do
         let(:verify_ssl) { OpenSSL::SSL::VERIFY_PEER }
+        let(:task_message) { "Success" }
+        let(:task_status) { "Ok" }
         let(:git_owner_active) { true }
         let(:git_repo) { double("GitRepository", :id => 321) }
+        let(:miq_task) do
+          double("MiqTask", :id => 3211, :status => task_status, :message => task_message)
+        end
         let(:git_branches) { [double("GitBranch", :name => "git_branch1")] }
         let(:git_tags) { [double("GitTag", :name => "git_tag1")] }
         let(:task_options) { {:action => "Retrieve git repository", :userid => controller.current_user.userid} }
@@ -314,24 +319,39 @@ Methods updated/added: 10
           {
             :class_name  => "GitRepository",
             :method_name => "refresh",
-            :instance_id => 321,
+            :instance_id => git_repo.id,
             :role        => "git_owner",
             :args        => []
           }
         end
 
         before do
-          allow(GitRepository).to receive(:create).with(:url => git_url, :verify_ssl => verify_ssl).and_return(git_repo)
+          allow(GitRepository).to receive(:create!).with(:url => git_url).and_return(git_repo)
           allow(git_repo).to receive(:update_authentication).with(:values => {:userid => "", :password => ""})
-          allow(MiqTask).to receive(:generic_action_with_callback).with(task_options, queue_options).and_return(1234)
-          allow(MiqTask).to receive(:wait_for_taskid).with(1234)
+          allow(MiqTask).to receive(:generic_action_with_callback).with(task_options, queue_options).and_return(miq_task.id)
+          allow(MiqTask).to receive(:wait_for_taskid).with(miq_task.id)
+          allow(MiqTask).to receive(:find).with(miq_task.id).and_return(miq_task)
           allow(git_repo).to receive(:git_branches).and_return(git_branches)
           allow(git_repo).to receive(:git_tags).and_return(git_tags)
+          allow(git_repo).to receive(:update_attributes).and_return(nil)
         end
+
+        shared_examples_for "task failure" do
+          it "check error message" do
+            post :retrieve_git_datastore, :params => params
+            expect(response).to redirect_to(
+              :action       => :review_git_import,
+              :message      => {
+                :message => "Error during repository fetch: #{task_message}",
+                :level   => :error
+              }.to_json
+            )
+          end 
+        end 
 
         context "when the git repository exists with the given url" do
           before do
-            allow(GitRepository).to receive(:exists?).with(:url => git_url).and_return(true)
+            allow(GitRepository).to receive(:find_by).with(:url => git_url).and_return(git_repo)
           end
 
           it "queues the refresh action" do
@@ -340,22 +360,14 @@ Methods updated/added: 10
           end
 
           it "waits for the refresh action" do
-            expect(MiqTask).to receive(:wait_for_taskid).with(1234)
+            expect(MiqTask).to receive(:wait_for_taskid).with(miq_task.id)
             post :retrieve_git_datastore, :params => params
           end
-
-          it "adds a warning flash message with the other redirect options" do
-            post :retrieve_git_datastore, :params => params
-            expect(response).to redirect_to(
-              :action       => :review_git_import,
-              :git_branches => ["git_branch1"].to_json,
-              :git_tags     => ["git_tag1"].to_json,
-              :git_repo_id  => 321,
-              :message      => {
-                :message => "This repository has been used previously for imports; If you use the same domain it will get deleted and recreated",
-                :level   => :warning
-              }.to_json
-            )
+          
+          context "task failure" do
+            let(:task_message) { "Disaster happened" }
+            let(:task_status) { "Failed" }
+            it_behaves_like "task failure"
           end
         end
 
@@ -374,7 +386,7 @@ Methods updated/added: 10
 
         context "when the git repository does not exist with the given url" do
           before do
-            allow(GitRepository).to receive(:exists?).with(:url => git_url).and_return(false)
+            allow(GitRepository).to receive(:find_by).with(:url => git_url).and_return(nil)
           end
 
           it "queues the refresh action" do
@@ -383,8 +395,18 @@ Methods updated/added: 10
           end
 
           it "waits for the refresh action" do
-            expect(MiqTask).to receive(:wait_for_taskid).with(1234)
+            expect(MiqTask).to receive(:wait_for_taskid).with(miq_task.id)
             post :retrieve_git_datastore, :params => params
+          end
+
+          context "task failure" do
+            before do
+              allow(git_repo).to receive(:destroy).with(no_args)
+            end
+
+            let(:task_message) { "Disaster happened" }
+            let(:task_status) { "Failed" }
+            it_behaves_like "task failure"
           end
 
           it "adds a success flash message with the other redirect options" do
