@@ -10,7 +10,7 @@ module AuthenticationMixin
       zone = MiqServer.my_server.zone
       assoc = name.tableize
       assocs = zone.respond_to?(assoc) ? zone.send(assoc) : []
-      assocs.each(&:authentication_check_types_queue)
+      assocs.each { |a| a.authentication_check_types_queue(:attempt => 1) }
     end
   end
 
@@ -191,9 +191,38 @@ module AuthenticationMixin
     end
   end
 
+  def authentication_check_retry_deliver_on(attempt)
+    # Existing callers who pass no attempt will have no delay.
+    case attempt
+    when nil, 0
+      nil
+    else
+      Time.now.utc + exponential_delay(attempt - 1).minutes
+    end
+  end
+
+  def exponential_delay(attempt)
+    2**attempt
+  end
+
+  MAX_ATTEMPTS = 6
+  # The default for the schedule is every 1.hour now.
+  #   6 will gives us:
+  #   A failure now and retries in 2, 4, 8, and 16 minutes, for a total of 30 minutes.
+  #   We'll wait another 30 minutes, minus the time it takes to queue and perform the checks
+  #   before the schedule fires again.
   def authentication_check_types_queue(*args)
-    options = args.extract_options!
+    method_options = args.extract_options!
     types = args.first
+
+    if method_options.fetch(:attempt, 0) < MAX_ATTEMPTS
+      force = method_options.delete(:force) { false }
+      message_attributes = authentication_check_attributes(types, method_options)
+      put_authentication_check(message_attributes, force)
+    end
+  end
+
+  def authentication_check_attributes(types, method_options)
     role = authentication_check_role if self.respond_to?(:authentication_check_role)
     zone = my_zone if self.respond_to?(:my_zone)
 
@@ -204,18 +233,27 @@ module AuthenticationMixin
       :class_name  => self.class.base_class.name,
       :instance_id => id,
       :method_name => 'authentication_check_types',
-      :args        => [types.to_miq_a, options]
+      :args        => [types.to_miq_a, method_options],
+      :deliver_on  => authentication_check_retry_deliver_on(method_options[:attempt])
     }
 
     options[:role] = role if role
     options[:zone] = zone if zone
+    options
+  end
 
-    MiqQueue.put_unless_exists(options) do |msg|
-      # TODO: Refactor the help in this and the ScheduleWorker#queue_work method into the merge method
-      help = "Check for a running server"
-      help << " in zone: [#{options[:zone]}]"   if options[:zone]
-      help << " with role: [#{options[:role]}]" if options[:role]
-      _log.warn("Previous authentication_check_types for [#{name}] [#{id}] with opts: [#{options[:args].inspect}] is still running, skipping...#{help}") unless msg.nil?
+  def put_authentication_check(options, force)
+    if force
+      MiqQueue.put(options)
+    else
+      MiqQueue.put_unless_exists(options.except(:args, :deliver_on)) do |msg|
+        # TODO: Refactor the help in this and the ScheduleWorker#queue_work method into the merge method
+        help = "Check for a running server"
+        help << " in zone: [#{options[:zone]}]"   if options[:zone]
+        help << " with role: [#{options[:role]}]" if options[:role]
+        _log.warn("Previous authentication_check_types for [#{name}] [#{id}] with opts: [#{options[:args].inspect}] is still running, skipping...#{help}") unless msg.nil?
+        options
+      end
     end
   end
 
@@ -226,7 +264,22 @@ module AuthenticationMixin
     # Let the individual classes determine what authentication(s) need to be checked
     types = authentications_to_validate if self.respond_to?(:authentications_to_validate) && types.nil?
     types = [nil] if types.blank?
-    types.to_miq_a.each { |t| authentication_check(t, options) }
+    Array(types).each do |t|
+      success = authentication_check(t, options).first
+      retry_scheduled_authentication_check(t, options) unless success
+    end
+  end
+
+  def retry_scheduled_authentication_check(auth_type, options)
+    return unless options[:attempt]
+    auth = authentication_best_fit(auth_type)
+
+    if auth.try(:retryable_status?)
+      options[:attempt] += 1
+
+      # Force the authentication message to be queued
+      authentication_check_types_queue(auth_type, options.merge(:force => true))
+    end
   end
 
   # Returns [boolean check_result, string details]

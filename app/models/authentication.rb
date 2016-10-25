@@ -34,6 +34,8 @@ class Authentication < ApplicationRecord
     "invalid"     => 3,
   ).freeze
 
+  RETRYABLE_STATUS = %w(error unreachable).freeze
+
   # FIXME: To address problem with url resolution when displayed as a quadicon,
   # but it's not *really* the db_name. Might be more proper to override `to_partial_path`
   def self.db_name
@@ -42,6 +44,10 @@ class Authentication < ApplicationRecord
 
   def status_severity
     STATUS_SEVERITY[status.to_s.downcase]
+  end
+
+  def retryable_status?
+    RETRYABLE_STATUS.include?(status.to_s.downcase)
   end
 
   def authentication_type
