@@ -48,7 +48,7 @@
           %td{:align => "right"}
             = tier.fixed_rate ? tier.fixed_rate : 0.0
           %td{:align => "right"}
-            = tier.variable_rate ? tier.variable_rate : 0.0
+            = detail[:group] == 'fixed' && tier.variable_rate.zero? ? '-' : tier.variable_rate
           %td{:align => "right", :rowspan => num_tiers}
             = detail.show_rates
         - (1..num_tiers.to_i - 1).each do |tier_index|
@@ -61,7 +61,7 @@
             %td{:align => "right"}
               = tier.fixed_rate
             %td{:align => "right"}
-              = tier.variable_rate
+              = (detail[:group] == 'fixed' && tier.variable_rate.zero?) ? '-' : tier.variable_rate
         %tr
           %td{:colspan => "9"}
 
