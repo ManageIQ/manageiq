@@ -6,12 +6,11 @@ require 'pg'
 require 'linux_admin'
 
 module PostgresHaAdmin
-  RAILS_ROOT = [
-    Pathname.new("/var/www/miq/vmdb"),
-    Pathname.new(File.expand_path(File.join(__dir__, "../..")))
-  ].detect { |f| File.exist?(f) }
-
   class FailoverMonitor
+    RAILS_ROOT = [
+      Pathname.new("/var/www/miq/vmdb"),
+      Pathname.new(File.expand_path(File.join(__dir__, "../..")))
+    ].detect { |f| File.exist?(f) }
     FAILOVER_ATTEMPTS = 10
     DB_CHECK_FREQUENCY = 300
     FAILOVER_CHECK_FREQUENCY = 60

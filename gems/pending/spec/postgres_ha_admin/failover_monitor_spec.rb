@@ -138,7 +138,7 @@ failover_attempts: 20
     it "invoke 'evm:raise_server_event' rake task" do
       expect(AwesomeSpawn).to receive(:run).with(
         "rake evm:raise_server_event",
-        :chdir  => RAILS_ROOT,
+        :chdir  => described_class::RAILS_ROOT,
         :params => ["--", {:event  => "db_failover_executed"}])
       failover_monitor.raise_failover_event
     end
