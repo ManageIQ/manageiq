@@ -255,26 +255,23 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
 
     sched = cfg.fetch_path(:database, :metrics_collection, :collection_schedule)
     _log.info("database_metrics_collection_schedule: #{sched}")
-    scheduler.cron(
+    scheduler.schedule_cron(
       sched,
       :tags => [:database_operations, :database_metrics_collection_schedule],
-      :job  => true
     ) { enqueue :vmdb_database_capture_metrics_timer }
 
     sched = cfg.fetch_path(:database, :metrics_collection, :daily_rollup_schedule)
     _log.info("database_metrics_daily_rollup_schedule: #{sched}")
-    scheduler.cron(
+    scheduler.schedule_cron(
       sched,
       :tags => [:database_operations, :database_metrics_daily_rollup_schedule],
-      :job  => true
     ) { enqueue :vmdb_database_rollup_metrics_timer }
 
     sched = cfg.fetch_path(:database, :metrics_history, :purge_schedule)
     _log.info("database_metrics_purge_schedule: #{sched}")
-    scheduler.cron(
+    scheduler.schedule_cron(
       sched,
       :tags => [:database_operations, :database_metrics_purge_schedule],
-      :job  => true
     ) { enqueue :metric_purge_all_timer }
 
     @schedules[:database_operations]
@@ -290,10 +287,9 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
     sched = VMDB::Config.new("vmdb").config.fetch_path(ldap_synchronization_schedule) || ldap_synchronization_schedule_default
     _log.info("ldap_synchronization_schedule: #{sched}")
 
-    scheduler.cron(
+    scheduler.schedule_cron(
       sched,
       :tags => [:ldap_synchronization, :ldap_synchronization_schedule],
-      :job  => true
     ) { enqueue :ldap_server_sync_data_from_timer }
 
     @schedules[:ldap_synchronization]
@@ -363,14 +359,14 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
     # Schedule - Storage metrics collection
     sched = cfg.fetch_path(:storage, :metrics_collection, :collection_schedule)
     _log.info("storage_metrics_collection_schedule: #{sched}")
-    scheduler.cron(sched, :job => true) do
+    scheduler.schedule_cron(sched) do
       enqueue :storage_refresh_metrics
     end
 
     # Schedule - Storage metrics hourly rollup
     sched = cfg.fetch_path(:storage, :metrics_collection, :hourly_rollup_schedule)
     _log.info("storage_metrics_hourly_rollup_schedule: #{sched}")
-    scheduler.cron(sched, :job => true) do
+    scheduler.schedule_cron(sched) do
       enqueue :storage_metrics_rollup_hourly
     end
 
@@ -380,7 +376,7 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
       tz = ActiveSupport::TimeZone::MAPPING[tp.tz]
       sched = "#{base_sched} #{tz}"
       _log.info("storage_metrics_daily_rollup_schedule: #{sched}")
-      scheduler.cron(sched, :job => true) do
+      scheduler.schedule_cron(sched) do
         enqueue [:storage_metrics_rollup_daily, tp.id]
       end
     end
@@ -388,14 +384,14 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
     # Schedule - Storage metrics purge
     sched = cfg.fetch_path(:storage, :metrics_history, :purge_schedule)
     _log.info("storage_metrics_purge_schedule: #{sched}")
-    scheduler.cron(sched, :job => true) do
+    scheduler.schedule_cron(sched) do
       enqueue :miq_storage_metric_purge_all_timer
     end
 
     # Schedule - Storage inventory collection
     sched = cfg.fetch_path(:storage, :inventory, :full_refresh_schedule)
     _log.info("storage_inventory_full_refresh_schedule: #{sched}")
-    scheduler.cron(sched, :job => true) do
+    scheduler.schedule_cron(sched) do
       enqueue :storage_refresh_inventory
     end
 
