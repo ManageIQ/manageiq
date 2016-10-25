@@ -45,7 +45,7 @@ module Spec
       end
 
       def api_config(param)
-        @api_config = {
+        @api_config ||= {
           :user       => "api_user_id",
           :password   => "api_user_password",
           :user_name  => "API User",
