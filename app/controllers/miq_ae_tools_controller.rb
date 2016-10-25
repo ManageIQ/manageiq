@@ -209,8 +209,10 @@ Methods updated/added: %{method_stats}") % stat_options, :success)
           new_git_repo = git_repo
         end
         git_repo.update_attributes(:verify_ssl => verify_ssl)
-        git_repo.update_authentication(:values => {:userid   => params[:git_username],
-                                                   :password => params[:git_password]})
+        if params[:git_username] && params[:git_password]
+          git_repo.update_authentication(:values => {:userid   => params[:git_username],
+                                                     :password => params[:git_password]})
+        end
 
         task_options = {
           :action => "Retrieve git repository",
