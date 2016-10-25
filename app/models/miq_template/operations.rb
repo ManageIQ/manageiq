@@ -11,10 +11,6 @@ module MiqTemplate::Operations
     validate_invalid_for_template(_("Stop Operation"))
   end
 
-  def validate_suspend
-    validate_invalid_for_template(_("Suspend Operation"))
-  end
-
   def validate_pause
     validate_invalid_for_template(_("Pause Operation"))
   end

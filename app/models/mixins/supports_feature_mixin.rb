@@ -93,6 +93,7 @@ module SupportsFeatureMixin
     :snapshot_create            => 'Create Snapshot',
     :snapshots                  => 'Snapshots',
     :shutdown_guest             => 'Shutdown Guest Operation',
+    :suspend                    => 'Suspending',
     :terminate                  => 'Terminate a VM',
     :timeline                   => 'Query for events',
     :update_aggregate           => 'Host Aggregate Update',
