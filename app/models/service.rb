@@ -211,7 +211,7 @@ class Service < ApplicationRecord
   end
 
   def update_progress(hash = {})
-    increment = hash.keys.include?(:increment) ?  hash.delete(:increment) : nil
+    increment = hash.keys.include?(:increment) ? hash.delete(:increment) : nil
     hash.keys.each do |attribute|
       options[attribute] = hash[attribute]
       update_attributes(:options => options)
@@ -263,6 +263,7 @@ class Service < ApplicationRecord
     nh[:deliver_on] = deliver_delay.seconds.from_now.utc if deliver_delay > 0
     nh[:zone] = my_zone if my_zone
     MiqQueue.put(nh)
+    true
   end
 
   def queue_power_calculation(delay, action)
@@ -278,7 +279,6 @@ class Service < ApplicationRecord
     }
 
     MiqQueue.put(calculate_power)
-    true
   end
 
   def my_zone
