@@ -16,6 +16,11 @@ describe TreeBuilderOpsRbac do
       assert_tree_nodes(["Groups"])
     end
 
+    it "has :open_all set to false" do
+      tree  = TreeBuilderOpsRbac.new("rbac_tree", "rbac", {})
+      expect(tree.send(:tree_init_options, :open_all)[:open_all]).to be_falsey
+    end
+
     it "with user with rbac_role_view role" do
       login_as FactoryGirl.create(:user, :features => 'rbac_role_view')
       assert_tree_nodes(["Roles"])
