@@ -359,16 +359,12 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
     # Schedule - Storage metrics collection
     sched = cfg.fetch_path(:storage, :metrics_collection, :collection_schedule)
     _log.info("storage_metrics_collection_schedule: #{sched}")
-    scheduler.schedule_cron(sched) do
-      enqueue :storage_refresh_metrics
-    end
+    scheduler.schedule_cron(sched) { enqueue :storage_refresh_metrics }
 
     # Schedule - Storage metrics hourly rollup
     sched = cfg.fetch_path(:storage, :metrics_collection, :hourly_rollup_schedule)
     _log.info("storage_metrics_hourly_rollup_schedule: #{sched}")
-    scheduler.schedule_cron(sched) do
-      enqueue :storage_metrics_rollup_hourly
-    end
+    scheduler.schedule_cron(sched) { enqueue :storage_metrics_rollup_hourly }
 
     # Schedule - Storage metrics daily rollup
     base_sched = cfg.fetch_path(:storage, :metrics_collection, :daily_rollup_schedule)
@@ -376,24 +372,18 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
       tz = ActiveSupport::TimeZone::MAPPING[tp.tz]
       sched = "#{base_sched} #{tz}"
       _log.info("storage_metrics_daily_rollup_schedule: #{sched}")
-      scheduler.schedule_cron(sched) do
-        enqueue [:storage_metrics_rollup_daily, tp.id]
-      end
+      scheduler.schedule_cron(sched) { enqueue [:storage_metrics_rollup_daily, tp.id] }
     end
 
     # Schedule - Storage metrics purge
     sched = cfg.fetch_path(:storage, :metrics_history, :purge_schedule)
     _log.info("storage_metrics_purge_schedule: #{sched}")
-    scheduler.schedule_cron(sched) do
-      enqueue :miq_storage_metric_purge_all_timer
-    end
+    scheduler.schedule_cron(sched) { enqueue :miq_storage_metric_purge_all_timer }
 
     # Schedule - Storage inventory collection
     sched = cfg.fetch_path(:storage, :inventory, :full_refresh_schedule)
     _log.info("storage_inventory_full_refresh_schedule: #{sched}")
-    scheduler.schedule_cron(sched) do
-      enqueue :storage_refresh_inventory
-    end
+    scheduler.schedule_cron(sched) { enqueue :storage_refresh_inventory }
 
     @schedules[:storage_metrics_coordinator]
   end
