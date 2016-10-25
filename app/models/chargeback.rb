@@ -56,21 +56,19 @@ class Chargeback < ActsAsArModel
         # extra_fields there some extra field like resource name and
         # some of them are related to specific chargeback (ChargebackVm, ChargebackContainer,...)
         key, extra_fields = key_and_fields(metric_rollup_record)
-        data[key] ||= extra_fields
+        data[key] ||= new(extra_fields)
 
         chargeback_rates = data[key]["chargeback_rates"].split(', ') + rates_to_apply.collect(&:description)
         data[key]["chargeback_rates"] = chargeback_rates.uniq.join(', ')
 
         # we are getting hash with metrics and costs for metrics defined for chargeback
-        metrics_and_costs = calculate_costs(metric_rollup_records, rates_to_apply, hours_in_interval)
-
-        data[key].merge!(metrics_and_costs)
+        data[key].calculate_costs(metric_rollup_records, rates_to_apply, hours_in_interval)
       end
     end
 
     _log.info("Calculating chargeback costs...Complete")
 
-    [data.map { |r| new(r.last) }]
+    [data.values]
   end
 
   def self.hours_in_interval(query_start_time, query_end_time, interval)
@@ -126,11 +124,9 @@ class Chargeback < ActsAsArModel
       end
   end
 
-  def self.calculate_costs(metric_rollup_records, rates, hours_in_interval)
-    calculated_costs = {}
-
-    chargeback_fields_present                = metric_rollup_records.count(&:chargeback_fields_present?)
-    calculated_costs['fixed_compute_metric'] = chargeback_fields_present if chargeback_fields_present
+  def calculate_costs(metric_rollup_records, rates, hours_in_interval)
+    chargeback_fields_present = metric_rollup_records.count(&:chargeback_fields_present?)
+    self.fixed_compute_metric = chargeback_fields_present if chargeback_fields_present
 
     rates.each do |rate|
       rate.chargeback_rate_details.each do |r|
@@ -142,19 +138,12 @@ class Chargeback < ActsAsArModel
           cost = r.cost(metric_value) * hours_in_interval
         end
 
-        # add values to hash and sum
-        reportable_metric_and_cost_fields(r.rate_name, r.group, metric_value, cost).each do |k, val|
-          next unless attribute_names.include?(k)
-          calculated_costs[k] ||= 0
-          calculated_costs[k] += val
-        end
+        accumulate_metrics_and_costs_per_rate(r.rate_name, r.group, metric_value, cost)
       end
     end
-
-    calculated_costs
   end
 
-  def self.reportable_metric_and_cost_fields(rate_name, rate_group, metric, cost)
+  def accumulate_metrics_and_costs_per_rate(rate_name, rate_group, metric, cost)
     cost_key         = "#{rate_name}_cost"    # metric cost value (e.g. Storage [Used|Allocated|Fixed] Cost)
     metric_key       = "#{rate_name}_metric"  # metric value (e.g. Storage [Used|Allocated|Fixed])
     cost_group_key   = "#{rate_group}_cost"   # for total of metric's costs (e.g. Storage Total Cost)
@@ -162,15 +151,20 @@ class Chargeback < ActsAsArModel
 
     col_hash = {}
 
-    defined_column_for_report = (report_col_options.keys & [metric_key, cost_key]).present?
+    defined_column_for_report = (self.class.report_col_options.keys & [metric_key, cost_key]).present?
 
     if defined_column_for_report
       [metric_key, metric_group_key].each             { |col| col_hash[col] = metric }
       [cost_key,   cost_group_key, 'total_cost'].each { |col| col_hash[col] = cost }
     end
 
-    col_hash
+    col_hash.each do |k, val|
+      next unless self.class.attribute_names.include?(k)
+      self[k] ||= 0
+      self[k] += val
+    end
   end
+  private :accumulate_metrics_and_costs_per_rate
 
   def self.report_cb_model(model)
     model.gsub(/^Chargeback/, "")
