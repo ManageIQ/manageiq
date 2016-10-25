@@ -58,7 +58,7 @@
           = _('Subtype')
         .col-md-4
           %p.form-control-static
-            - if @record.id
+            - if @record.try(:id)
               = h(ServiceTemplate::GENERIC_ITEM_SUBTYPES[@edit[:new][:generic_subtype]])
             - else
               - available_subtypes = ServiceTemplate::GENERIC_ITEM_SUBTYPES.invert.to_a.sort_by { |a| a.first.downcase }
