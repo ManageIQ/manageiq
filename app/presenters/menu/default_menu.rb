@@ -168,7 +168,7 @@ module Menu
       end
 
       def storage_menu_section
-        netapp_enabled = VMDB::Config.new("vmdb").config[:product][:storage]
+        netapp_enabled = ::Settings.product.storage
         Menu::Section.new(:sto, N_("Storage"), 'fa fa-database fa-2x', [
                             Menu::Item.new('ems_storage',
                                            N_('Storage Providers'),
@@ -213,7 +213,7 @@ module Menu
       end
 
       def automate_menu_section
-        generic_object_item = if VMDB::Config.new("vmdb").config[:product][:generic_object] == true
+        generic_object_item = if ::Settings.product.generic_object == true
           Menu::Item.new('generic_object',       N_('Generic Objects'), 'generic_object_explorer',       {:feature => 'generic_object_explorer'},       '/generic_object/explorer')
         else
           nil
