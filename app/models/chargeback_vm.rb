@@ -1,12 +1,6 @@
 class ChargebackVm < Chargeback
   set_columns_hash(
-    :start_date               => :datetime,
-    :end_date                 => :datetime,
-    :interval_name            => :string,
-    :display_range            => :string,
-    :chargeback_rates         => :string,
     :vm_name                  => :string,
-    :tag_name                 => :string,
     :vm_uid                   => :string,
     :vm_guid                  => :string,
     :owner_name               => :string,
@@ -22,7 +16,6 @@ class ChargebackVm < Chargeback
     :disk_io_used_metric      => :float,
     :disk_io_cost             => :float,
     :disk_io_metric           => :float,
-    :fixed_compute_metric     => :integer,
     :fixed_compute_1_cost     => :float,
     :fixed_compute_2_cost     => :float,
     :fixed_storage_1_cost     => :float,
@@ -46,7 +39,6 @@ class ChargebackVm < Chargeback
     :storage_cost             => :float,
     :storage_metric           => :float,
     :total_cost               => :float,
-    :entity                   => :binary
   )
 
   def self.build_results_for_report_ChargebackVm(options)
