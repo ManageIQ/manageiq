@@ -8,7 +8,7 @@ describe Service do
 
     it "raise_request_start_event" do
       expect(MiqEvent).to receive(:raise_evm_event).with(@service, :request_service_start)
-      expect(@service).to receive(:update_progress).with({:power_status=>"starting"})
+      expect(@service).to receive(:update_progress).with(:power_status=>"starting")
 
       @service.raise_request_start_event
     end
@@ -21,7 +21,7 @@ describe Service do
 
     it "raise_request_stop_event" do
       expect(MiqEvent).to receive(:raise_evm_event).with(@service, :request_service_stop)
-      expect(@service).to receive(:update_progress).with({:power_status=>"stopping"})
+      expect(@service).to receive(:update_progress).with(:power_status=>"stopping")
 
       @service.raise_request_stop_event
     end
@@ -94,16 +94,15 @@ describe Service do
 
     it "#update_progress" do
       expect(@service.power_state).to be_nil
-      @service.update_progress(:power_state => "on" )
+      @service.update_progress(:power_state => "on")
       expect(@service.power_state).to eq "on"
       @service.update_progress(:power_state => "off")
       expect(@service.power_state).to eq "off"
       @service.update_progress(:power_status => "stopping")
       expect(@service.power_status).to eq "stopping"
-      expect{ |b| @service.update_progress(:power_state => "timeout", &b) }.to yield_with_args(:reset => true)
-      expect{ |b| @service.update_progress(:increment => true, &b) }.to yield_with_args(:increment => 1)
+      expect { |b| @service.update_progress(:power_state => "timeout", &b) }.to yield_with_args(:reset => true)
+      expect { |b| @service.update_progress(:increment => true, &b) }.to yield_with_args(:increment => 1)
     end
-
 
     it "#timed_out?" do
       @service.options[:delayed] = 3
@@ -113,7 +112,6 @@ describe Service do
     end
 
     context "#calculate_power_state" do
-
       it "delays if power states don't match" do
         @service.calculate_power_state(:start)
         expect(@service.options[:delayed]).to eq 1
@@ -125,11 +123,9 @@ describe Service do
         expect(@service.power_state).to eq "on"
         expect(@service.power_status).to eq "start_complete"
       end
-
     end
 
     context "#power_states_match?" do
-
       it "returns the uniq value for the 'on' power state" do
         expect(@service).to receive(:map_power_states).with(:start).and_return(["on"])
         expect(@service.power_states_match?(:start)).to be_truthy
@@ -140,11 +136,9 @@ describe Service do
         expect(@service).to receive(:vm_power_states).and_return(["off"])
         expect(@service.power_states_match?(:stop)).to be_truthy
       end
-
     end
 
     context "#modify_power_state_delay" do
-
       it "sets delayed to nil on a reset request" do
         options = {:reset => true}
         @service.options[:delayed] = 3
@@ -160,7 +154,6 @@ describe Service do
         @service.modify_power_state_delay(options)
         expect(@service.options[:delayed]).to eq 1
       end
-
     end
 
     it "#direct_vms" do
