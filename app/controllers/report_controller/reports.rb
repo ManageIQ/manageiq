@@ -214,7 +214,7 @@ module ReportController::Reports
   end
 
   def menu_repname_update(old_name, new_name)
-    all_roles = MiqGroup.non_tenant_groups
+    all_roles = MiqGroup.non_tenant_groups_in_my_region
     all_roles.each do |role|
       rec = MiqGroup.find_by_description(role.name)
       menu = rec.settings[:report_menus] if rec.settings
