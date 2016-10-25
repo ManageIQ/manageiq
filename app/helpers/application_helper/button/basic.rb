@@ -58,8 +58,7 @@ class ApplicationHelper::Button::Basic < Hash
   def skipped?
     return true unless role_allows_feature?
     return true unless all_instance_variables_set
-    calculate_properties
-    !visible?
+    return !visible?
   end
 
   # Tells whether the button should displayed in the toolbar or not

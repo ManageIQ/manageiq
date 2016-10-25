@@ -171,6 +171,7 @@ class ApplicationHelper::ToolbarBuilder
         button[:title] = button.localized(:title, dis_title)
       end
     end
+    button.calculate_properties
     button
   end
 
