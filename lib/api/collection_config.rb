@@ -1,7 +1,7 @@
 module Api
   class CollectionConfig
     def initialize
-      @cfg = Settings.collections
+      @cfg = Api::Settings.collections
     end
 
     def [](collection_name)
