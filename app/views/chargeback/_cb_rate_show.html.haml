@@ -35,7 +35,7 @@
           %tr
             %td.active{:colspan => "9", :style => "background-color: #f5f5f5;"} &nbsp;
         - num_tiers = detail.chargeback_tiers.to_a.blank? ? "1" : tiers.to_a.length.to_s
-        %tr.rdetail{:id => "rate_detail_row_#{detail_index}"}
+        %tr.rdetail
           %td{:rowspan => num_tiers}
             = h(rate_detail_group(detail[:group]))
           %td{:rowspan => num_tiers}
@@ -53,7 +53,7 @@
             = detail.show_rates
         - (1..num_tiers.to_i - 1).each do |tier_index|
           - tier = tiers.to_a[tier_index]
-          %tr.rdetail{:id => "rate_detail_row_#{detail_index}"}
+          %tr.rdetail
             %td
               = tier.start
             %td
