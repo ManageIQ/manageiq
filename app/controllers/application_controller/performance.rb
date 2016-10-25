@@ -238,11 +238,6 @@ module ApplicationController::Performance
     # Parse the clicked item to get indexes and selection variables
     legend_idx, data_idx, chart_idx, cmd, model, typ = parse_chart_click(params[:menu_click])
 
-    if Charting.backend == :ziya
-      legend_idx -= 1
-      data_idx   -= 1
-    end
-
     # Swap in 'Instances' for 'VMs' in AZ breadcrumbs (poor man's cloud/infra split hack)
     bc_model = ['availability_zone', 'host_aggregate'].include?(request.parameters['controller']) && model == 'VMs' ? 'Instances' : model
 
@@ -1466,10 +1461,6 @@ module ApplicationController::Performance
                   :id        => @perf_record.id,
                   :chart_idx => idx) +
           "')"
-    if Charting.backend == :ziya
-      url = "javascript:#{url}"
-      url.gsub!(/'/, '\\\\\&') # escape single quotes for ziya xml rendering
-    end
     url
   end
 

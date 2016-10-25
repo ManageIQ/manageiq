@@ -141,7 +141,7 @@ module ReportController::Reports
     session[:edit][:tl_xml] = nil
   end
 
-  # Send ZiYa graph XML stream to the client
+  # generate preview chart when editing report
   def preview_chart
     render Charting.render_format => session[:edit][:zgraph_xml]
     session[:edit][:zgraph_xml] = nil
