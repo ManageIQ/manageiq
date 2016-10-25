@@ -5,24 +5,12 @@
 module Spec
   module Support
     module ApiHelper
-      HEADER_ALIASES = {
-        "auth_token" => "HTTP_X_AUTH_TOKEN",
-        "miq_token"  => "HTTP_X_MIQ_TOKEN",
-        "miq_group"  => "HTTP_X_MIQ_GROUP"
-      }
-
       DEF_HEADERS = {
         "Content-Type" => "application/json",
         "Accept"       => "application/json"
       }
 
       def update_headers(headers)
-        HEADER_ALIASES.keys.each do |k|
-          if headers.key?(k)
-            headers[HEADER_ALIASES[k]] = headers[k]
-            headers.delete(k)
-          end
-        end
         headers.merge!("HTTP_AUTHORIZATION" => @http_authorization) if @http_authorization
         headers.merge(DEF_HEADERS)
       end
