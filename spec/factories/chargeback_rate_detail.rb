@@ -31,8 +31,20 @@ FactoryGirl.define do
     source "used"
   end
 
+  trait :fixed do
+    group "fixed"
+  end
+
   trait :allocated do
     source "allocated"
+  end
+
+  trait :cpu do
+    group "cpu"
+  end
+
+  trait :storage_group do
+    group "storage"
   end
 
   trait :memory do
@@ -43,12 +55,40 @@ FactoryGirl.define do
     per_unit "megabytes"
   end
 
+  trait :kbps do
+    per_unit "kbps"
+  end
+
+  trait :gigabytes do
+    per_unit "gigabytes"
+  end
+
   trait :daily do
     per_time "daily"
   end
 
   trait :hourly do
     per_time "hourly"
+  end
+
+  factory :chargeback_rate_detail_cpu_used, :traits => [:used, :cpu], :parent => :chargeback_rate_detail do
+    description "Used CPU in MHz"
+    metric      "cpu_usagemhz_rate_average"
+    per_unit    "megahertz"
+  end
+
+  factory :chargeback_rate_detail_cpu_cores_used, :traits => [:used], :parent => :chargeback_rate_detail do
+    description "Used CPU in Cores"
+    metric      "cpu_usage_rate_average"
+    group       "cpu_cores"
+    per_unit    "cores"
+  end
+
+  factory :chargeback_rate_detail_cpu_allocated, :traits => [:allocated, :cpu, :daily],
+                                                 :parent => :chargeback_rate_detail do
+    description "Allocated CPU Count"
+    metric      "derived_vm_numvcpus"
+    per_unit    "cpu"
   end
 
   factory :chargeback_rate_detail_memory_allocated, :traits => [:allocated, :memory, :megabytes, :daily],
@@ -61,5 +101,39 @@ FactoryGirl.define do
                                                :parent => :chargeback_rate_detail do
     description "Used Memory in MB"
     metric      "derived_memory_used"
+  end
+
+  factory :chargeback_rate_detail_disk_io_used, :traits => [:used, :kbps], :parent => :chargeback_rate_detail do
+    description "Used Disk I/O in KBps"
+    group       "disk_io"
+    metric      "disk_usage_rate_average"
+  end
+
+  factory :chargeback_rate_detail_net_io_used, :traits => [:used, :kbps], :parent => :chargeback_rate_detail do
+    description "Used Network I/O in KBps"
+    group       "net_io"
+    metric      "net_usage_rate_average"
+  end
+
+  factory :chargeback_rate_detail_storage_used, :traits => [:used, :storage_group, :gigabytes],
+                                                :parent => :chargeback_rate_detail do
+    description "Used Disk Storage in Bytes"
+    metric      "derived_vm_used_disk_storage"
+  end
+
+  factory :chargeback_rate_detail_storage_allocated, :traits => [:allocated, :storage_group, :gigabytes],
+                                                     :parent => :chargeback_rate_detail do
+    description "Allocated Disk Storage in Bytes"
+    metric      "derived_vm_allocated_disk_storage"
+  end
+
+  factory :chargeback_rate_detail_fixed_compute_cost, :traits => [:fixed, :daily], :parent => :chargeback_rate_detail do
+    sequence(:description) { |n| "Fixed Compute Cost #{n}" }
+    sequence(:source)      { |n| "compute_#{n}" }
+  end
+
+  factory :chargeback_rate_detail_fixed_storage_cost, :traits => [:fixed, :daily], :parent => :chargeback_rate_detail do
+    sequence(:description) { |n| "Fixed Storage Cost #{n}" }
+    sequence(:source)      { |n| "storage_#{n}" }
   end
 end
