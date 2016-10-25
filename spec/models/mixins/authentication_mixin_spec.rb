@@ -112,6 +112,54 @@ describe AuthenticationMixin do
     end
   end
 
+  it "#exponential_delay" do
+    expect(test_class_instance.exponential_delay(0)).to eq(1)
+    expect(test_class_instance.exponential_delay(1)).to eq(2)
+    expect(test_class_instance.exponential_delay(2)).to eq(4)
+    expect(test_class_instance.exponential_delay(3)).to eq(8)
+    expect(test_class_instance.exponential_delay(4)).to eq(16)
+    expect(test_class_instance.exponential_delay(5)).to eq(32)
+  end
+
+  it "#authentication_check_retry_deliver_on" do
+    Timecop.freeze(Time.new(2015, 1, 2, 0, 0, 0, 0)) do
+      expect(test_class_instance.authentication_check_retry_deliver_on(nil)).to be_nil
+      expect(test_class_instance.authentication_check_retry_deliver_on(0)).to   be_nil
+
+      expect(test_class_instance.authentication_check_retry_deliver_on(1)).to eq(Time.now.utc + 1.minute)
+      expect(test_class_instance.authentication_check_retry_deliver_on(5)).to eq(Time.now.utc + 16.minutes)
+
+      # 6 is >= MAX_ATTEMPTS and shouldn't be called
+      expect(test_class_instance.authentication_check_retry_deliver_on(6)).to eq(Time.now.utc + 32.minutes)
+    end
+  end
+
+  context "#retry_scheduled_authentication_check" do
+    let(:host) do
+      EvmSpecHelper.local_miq_server
+      FactoryGirl.create(:host_with_authentication).tap { MiqQueue.destroy_all }
+    end
+
+    it "works" do
+      host.authentications.first.update(:status => "Error")
+      host.reload.retry_scheduled_authentication_check(:default, :attempt => 1)
+      q = MiqQueue.find_by(:method_name => 'authentication_check_types', :instance_id => host.id)
+      expect(q.args.last).to eq(:attempt => 2)
+    end
+
+    it "doesn't queue on Invalid credentials" do
+      host.authentications.first.update(:status => "Invalid")
+      host.retry_scheduled_authentication_check(:default, :attempt => 1)
+      expect(MiqQueue.exists?(:method_name => 'authentication_check_types', :instance_id => host.id)).to be_falsey
+    end
+
+    it "doesn't queue without an authentication" do
+      host.authentications.destroy_all
+      host.retry_scheduled_authentication_check(:default, :attempt => 1)
+      expect(MiqQueue.exists?(:method_name => 'authentication_check_types', :instance_id => host.id)).to be_falsey
+    end
+  end
+
   context "with server and zone" do
     before(:each) do
       @miq_server = EvmSpecHelper.local_miq_server
@@ -131,28 +179,76 @@ describe AuthenticationMixin do
         MiqQueue.destroy_all
       end
 
-      it "Host.authentication_check_schedule will enqueue for current zone" do
-        Host.authentication_check_schedule
-        expect(MiqQueue.exists?(:method_name => 'authentication_check_types', :class_name => 'Host', :instance_id => @host1.id, :zone => @host1.my_zone)).to be_truthy
-        expect(MiqQueue.where(:method_name => 'authentication_check_types', :class_name => 'Host', :instance_id => @host2.id).count).to eq(0)
-      end
+      context ".authentication_check_schedule" do
+        it "will specify attempt in queue message" do
+          Host.authentication_check_schedule
+          msg = MiqQueue.find_by(:method_name => 'authentication_check_types', :class_name => 'Host')
+          expect(msg.args.last).to eq(:attempt => 1)
+        end
 
-      it "Ems.authentication_check_schedule will enqueue for current zone" do
-        ExtManagementSystem.authentication_check_schedule
-        expect(MiqQueue.exists?(:method_name => 'authentication_check_types', :class_name => 'ExtManagementSystem', :instance_id => @ems1.id, :zone => @ems1.my_zone)).to be_truthy
-        expect(MiqQueue.where(:method_name => 'authentication_check_types', :class_name => 'ExtManagementSystem', :instance_id => @ems2.id).count).to eq(0)
-      end
+        it "will enqueue for Ems's for current zone" do
+          ExtManagementSystem.authentication_check_schedule
+          expect(MiqQueue.exists?(:method_name => 'authentication_check_types', :class_name => 'ExtManagementSystem', :instance_id => @ems1.id, :zone => @ems1.my_zone)).to be_truthy
+          expect(MiqQueue.where(:method_name => 'authentication_check_types', :class_name => 'ExtManagementSystem', :instance_id => @ems2.id).count).to eq(0)
+        end
 
-      it "Host.authentication_check_schedule will enqueue for role 'smartstate' for current zone" do
-        Host.authentication_check_schedule
-        expect(MiqQueue.exists?(:method_name => 'authentication_check_types', :class_name => 'Host', :instance_id => @host1.id, :zone => @host1.my_zone, :role => @host1.authentication_check_role)).to be_truthy
-        expect(MiqQueue.where(:method_name => 'authentication_check_types', :class_name => 'Host', :instance_id => @host2.id).count).to eq(0)
-      end
+        it "will enqueue for role 'ems_operations' for current zone" do
+          ExtManagementSystem.authentication_check_schedule
+          expect(MiqQueue.exists?(:method_name => 'authentication_check_types', :class_name => 'ExtManagementSystem', :instance_id => @ems1.id, :role => @ems1.authentication_check_role)).to be_truthy
+          expect(MiqQueue.where(:method_name => 'authentication_check_types', :class_name => 'ExtManagementSystem', :instance_id => @ems2.id).count).to eq(0)
+        end
 
-      it "Ems.authentication_check_schedule will enqueue for role 'ems_operations' for current zone" do
-        ExtManagementSystem.authentication_check_schedule
-        expect(MiqQueue.exists?(:method_name => 'authentication_check_types', :class_name => 'ExtManagementSystem', :instance_id => @ems1.id, :role => @ems1.authentication_check_role)).to be_truthy
-        expect(MiqQueue.where(:method_name => 'authentication_check_types', :class_name => 'ExtManagementSystem', :instance_id => @ems2.id).count).to eq(0)
+        context "retry" do
+          let(:queue_conditions) { {:method_name => 'authentication_check_types', :class_name => 'Host'} }
+
+          it "works" do
+            time = Time.new(2015, 1, 2, 0, 0, 0, 0)
+            Timecop.freeze(time) do
+              Host.authentication_check_schedule
+              allow_any_instance_of(Host).to receive(:verify_credentials).and_raise
+              msg = MiqQueue.find_by(queue_conditions)
+              msg.delivered(*msg.deliver)
+
+              # attempt 2, 3, 4, 5 should requeue, 6 should NOT
+              2.upto(6) do |counter|
+                if counter < 6
+                  minutes = (2**(counter - 1)).minutes
+                  msg = MiqQueue.find_by(queue_conditions)
+                  expect(msg.args.last).to eq(:attempt => counter)
+                  expect(msg.deliver_on).to be_within(0.01).of(time + minutes)
+
+                  msg.delivered(*msg.deliver)
+                else
+                  expect(MiqQueue).not_to exist(queue_conditions)
+                end
+              end
+            end
+          end
+
+          it "skips when existing attempt is in the queue" do
+            Host.authentication_check_schedule
+            messages = MiqQueue.where(queue_conditions)
+            expect(messages.count).to eq(1)
+            expect(messages.first.args.last).to eq(:attempt => 1)
+
+            Host.authentication_check_schedule
+            messages = MiqQueue.where(queue_conditions)
+            expect(messages.count).to eq(1)
+            expect(messages.first.args.last).to eq(:attempt => 1)
+          end
+
+          it "skips when another attempt is in the queue" do
+            Host.authentication_check_schedule
+            msg = MiqQueue.where(queue_conditions).first
+            msg.args.last[:attempt] = 2
+            msg.save
+
+            Host.authentication_check_schedule
+            messages = MiqQueue.where(:method_name => 'authentication_check_types', :class_name => 'Host')
+            expect(messages.count).to eq(1)
+            expect(messages.first.args.last).to eq(:attempt => 2)
+          end
+        end
       end
     end
 
@@ -316,24 +412,13 @@ describe AuthenticationMixin do
       end
 
       it "Host#authentication_check_types_queue with [:ssh, :default], :remember_host => true is passed down to verify_credentials" do
-        @host.authentication_check_types_queue([:ssh, :default], :remember_host => true)
+        types   = %i(ssh default)
+        options = {:remember_host => true}
+        @host.authentication_check_types_queue(types, options)
         conditions = {:class_name => @host.class.base_class.name, :instance_id => @host.id, :method_name => 'authentication_check_types', :role => @host.authentication_check_role}
-        queued_auth_checks = MiqQueue.where(conditions)
-        expect(queued_auth_checks.length).to eq(1)
-        expect_any_instance_of(Host).to receive(:verify_credentials).with(:default, :remember_host => true)
-        expect_any_instance_of(Host).to receive(:verify_credentials).with(:ssh, :remember_host => true)
-        queued_auth_checks.first.deliver
-      end
-
-      it "Ems#authentication_check_types_queue with :default, :test => true will not pass :remember_host => true to verify_credentials call" do
-        @ems.authentication_check_types_queue(:default, :remember_host => true)
-        conditions = {:class_name => @ems.class.base_class.name, :instance_id => @ems.id, :method_name => 'authentication_check_types', :role => @ems.authentication_check_role}
-        queued_auth_checks = MiqQueue.where(conditions)
-        expect(queued_auth_checks.length).to eq(1)
-        expect_any_instance_of(ManageIQ::Providers::Vmware::InfraManager).to(
-          receive(:verify_credentials).with(:default, :remember_host => true)
-        )
-        queued_auth_checks.first.deliver
+        queued_auth_check = MiqQueue.where(conditions).first
+        expect(queued_auth_check.args.first).to  eq(types)
+        expect(queued_auth_check.args.second).to eq(options)
       end
 
       context "#authentication_check" do
@@ -490,11 +575,6 @@ describe AuthenticationMixin do
           @ems.authentication_check_types_queue(:default)
           @ems.authentication_check_types_queue(:default)
           expect(MiqQueue.where(@conditions).count).to eq(1)
-        end
-
-        it "should call authentication_check when processing the validation check" do
-          expect_any_instance_of(ManageIQ::Providers::Vmware::InfraManager).to receive(:authentication_check)
-          @queued_auth_checks.first.deliver
         end
       end
 
