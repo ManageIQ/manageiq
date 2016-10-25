@@ -210,6 +210,8 @@ class ChargebackRateDetail < ApplicationRecord
     !error
   end
 
+  private
+
   def first_tier?(tier,tiers)
     tier == tiers.first
   end
