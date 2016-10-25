@@ -74,7 +74,7 @@ class ChargebackRateDetail < ApplicationRecord
     :yearly  => "Year"
   }
 
-  def cost(value)
+  def hourly_cost(value)
     return 0.0 unless self.enabled?
 
     value = 1.0 if fixed?

@@ -26,7 +26,7 @@ describe ChargebackRateDetail do
 
   let(:hours_in_month) { 720 }
 
-  it "#cost" do
+  it '#hourly_cost' do
     cvalue   = 42.0
     fixed_rate = 5.0
     variable_rate = 8.26
@@ -46,13 +46,13 @@ describe ChargebackRateDetail do
                              :fixed_rate                => fixed_rate,
                              :variable_rate             => variable_rate)
     cbd.update(:chargeback_tiers => [cbt])
-    expect(cbd.cost(cvalue)).to eq(cvalue * cbd.hourly(variable_rate) + cbd.hourly(fixed_rate))
+    expect(cbd.hourly_cost(cvalue)).to eq(cvalue * cbd.hourly(variable_rate) + cbd.hourly(fixed_rate))
 
     cbd.group = 'fixed'
-    expect(cbd.cost(cvalue)).to eq(cbd.hourly(variable_rate) + cbd.hourly(fixed_rate))
+    expect(cbd.hourly_cost(cvalue)).to eq(cbd.hourly(variable_rate) + cbd.hourly(fixed_rate))
 
     cbd.enabled = false
-    expect(cbd.cost(cvalue)).to eq(0.0)
+    expect(cbd.hourly_cost(cvalue)).to eq(0.0)
   end
 
   it "#hourly" do
@@ -195,7 +195,7 @@ Monthly @ 5.0 + 2.5 per Megabytes from 5.0 to Infinity")
                                       :per_time                          => 'monthly',
                                       :chargeback_rate_detail_measure_id => cbdm.id,
                                       :hours_in_interval                 => hours_in_month)
-    expect(cbd_bytes.cost(100)).to eq(cbd_gigabytes.cost(100))
+    expect(cbd_bytes.hourly_cost(100)).to eq(cbd_gigabytes.hourly_cost(100))
   end
 
   it "#show_rates" do
