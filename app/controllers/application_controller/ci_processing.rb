@@ -909,7 +909,7 @@ module ApplicationController::CiProcessing
         javascript_redirect previous_breadcrumb_url
       end
     when "submit"
-      options = {:request_type => :vm_reconfigure}
+      options = {:request_type => :vm_reconfigure, :src_ids => params[:objectIds]}
       if params[:cb_memory] == 'true'
         options[:vm_memory] = params[:memory_type] == "MB" ? params[:memory] : (params[:memory].to_i.zero? ? params[:memory] : params[:memory].to_i * 1024)
       end
@@ -955,10 +955,7 @@ module ApplicationController::CiProcessing
         @request_id = params[:id]
       end
 
-      ApplicationRecord.group_ids_by_region(params[:objectIds]).each do |region, ids|
-        task_args = options.merge(:src_ids => ids)
-        VmReconfigureRequest.make_request(@request_id, task_args, current_user)
-      end
+      VmReconfigureRequest.make_request(@request_id, options, current_user)
       flash = _("VM Reconfigure Request was saved")
 
       if role_allows?(:feature => "miq_request_show_list", :any => true)

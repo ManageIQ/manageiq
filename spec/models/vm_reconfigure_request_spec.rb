@@ -64,6 +64,24 @@ describe VmReconfigureRequest do
       )
       described_class.make_request(request, values, alt_user)
     end
+
+    it "splits into multiple requests if src_ids span regions" do
+      other_region_id = ApplicationRecord.id_in_region(1, ApplicationRecord.my_region_number + 1)
+      values = {:src_ids => [vm_vmware.id, other_region_id]}
+
+      request_local = double(:local_region_request)
+      request_remote = double(:remote_region_request)
+
+      expect(MiqRequest).to receive(:make_request) do |_req, vals, _requester, _auto_approve|
+        expect(vals).to eq(:src_ids => [vm_vmware.id])
+      end.and_return(request_local)
+
+      expect(MiqRequest).to receive(:make_request) do |_req, vals, _requester, _auto_approve|
+        expect(vals).to eq(:src_ids => [other_region_id])
+      end.and_return(request_remote)
+
+      expect(described_class.make_request(nil, values, admin)).to match_array([request_local, request_remote])
+    end
   end
 
   context ".request_limits" do
