@@ -1632,11 +1632,6 @@ class ApplicationController < ActionController::Base
       data_idx      = click_last[-2].to_i
       chart_idx     = click_last.last.to_i
 
-      if Charting.backend == :ziya
-        legend_idx -= 1
-        data_idx   -= 1
-      end
-
       _, model, typ = click_parts.first.split('-')
       report        = chart_reports.kind_of?(Array) ? chart_reports[chart_idx] : chart_reports
       data_row      = report.table.data[data_idx]
