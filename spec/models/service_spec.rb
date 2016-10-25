@@ -8,6 +8,7 @@ describe Service do
 
     it "raise_request_start_event" do
       expect(MiqEvent).to receive(:raise_evm_event).with(@service, :request_service_start)
+      expect(@service).to receive(:update_progress).with(:power_status=>"starting")
 
       @service.raise_request_start_event
     end
@@ -20,6 +21,7 @@ describe Service do
 
     it "raise_request_stop_event" do
       expect(MiqEvent).to receive(:raise_evm_event).with(@service, :request_service_stop)
+      expect(@service).to receive(:update_progress).with(:power_status=>"stopping")
 
       @service.raise_request_stop_event
     end
@@ -47,10 +49,34 @@ describe Service do
 
       @service.raise_final_process_event('stop')
     end
+
+    it "queues a power calculation if the next_group_index is nil" do
+      expect(@service).to receive(:next_group_index).and_return(nil)
+      expect(@service).to receive(:queue_power_calculation).once
+      expect(MiqEvent).to receive(:raise_evm_event).with(@service, :service_started)
+
+      @service.process_group_action(:start, 0, 1)
+    end
+
+    it "does not queue a power calculation if the next_group_index is not nil" do
+      expect(@service).to receive(:next_group_index).and_return(1)
+      expect(@service).to receive(:queue_power_calculation).never
+      expect(@service).to receive(:queue_group_action).once
+      expect(MiqEvent).to receive(:raise_evm_event).with(@service, :service_started).never
+
+      @service.process_group_action(:start, 0, 1)
+    end
+
+    it "places a calculate_power_state job on the queue" do
+      expect(MiqQueue).to receive(:put).once
+      @service.queue_power_calculation(30, :start)
+    end
   end
 
   context "VM associations" do
     before(:each) do
+      @zone1 = FactoryGirl.create(:small_environment)
+      allow(MiqServer).to receive(:my_server).and_return(@zone1.miq_servers.first)
       @vm          = FactoryGirl.create(:vm_vmware)
       @vm_1        = FactoryGirl.create(:vm_vmware)
 
@@ -60,6 +86,74 @@ describe Service do
       @service_c1 << @vm_1
       @service.save
       @service_c1.save
+    end
+
+    it "#vm_power_states" do
+      expect(@service.vm_power_states).to eq %w(on on)
+    end
+
+    it "#update_progress" do
+      expect(@service.power_state).to be_nil
+      @service.update_progress(:power_state => "on")
+      expect(@service.power_state).to eq "on"
+      @service.update_progress(:power_state => "off")
+      expect(@service.power_state).to eq "off"
+      @service.update_progress(:power_status => "stopping")
+      expect(@service.power_status).to eq "stopping"
+      expect { |b| @service.update_progress(:power_state => "timeout", &b) }.to yield_with_args(:reset => true)
+      expect { |b| @service.update_progress(:increment => true, &b) }.to yield_with_args(:increment => 1)
+    end
+
+    it "#timed_out?" do
+      @service.options[:delayed] = 3
+      expect(@service.timed_out?).to be_truthy
+      @service.options[:delayed] = 2
+      expect(@service.timed_out?).to be_falsey
+    end
+
+    context "#calculate_power_state" do
+      it "delays if power states don't match" do
+        @service.calculate_power_state(:start)
+        expect(@service.options[:delayed]).to eq 1
+      end
+
+      it "returns a power_state of 'on' and a power_status of 'start_complete' if power_states_match" do
+        expect(@service).to receive(:power_states_match?).and_return(true)
+        @service.calculate_power_state(:start)
+        expect(@service.power_state).to eq "on"
+        expect(@service.power_status).to eq "start_complete"
+      end
+    end
+
+    context "#power_states_match?" do
+      it "returns the uniq value for the 'on' power state" do
+        expect(@service).to receive(:map_power_states).with(:start).and_return(["on"])
+        expect(@service.power_states_match?(:start)).to be_truthy
+      end
+
+      it "returns the uniq value for the 'off' power state" do
+        expect(@service).to receive(:map_power_states).with(:stop).and_return(["off"])
+        expect(@service).to receive(:vm_power_states).and_return(["off"])
+        expect(@service.power_states_match?(:stop)).to be_truthy
+      end
+    end
+
+    context "#modify_power_state_delay" do
+      it "sets delayed to nil on a reset request" do
+        options = {:reset => true}
+        @service.options[:delayed] = 3
+        @service.save
+        expect(@service.options[:delayed]).to eq 3
+        @service.modify_power_state_delay(options)
+        expect(@service.options[:delayed]).to be_nil
+      end
+
+      it "increments delayed by one when increment is passed in" do
+        options = {:increment => 1}
+        expect(@service.options[:delayed]).to be_nil
+        @service.modify_power_state_delay(options)
+        expect(@service.options[:delayed]).to eq 1
+      end
     end
 
     it "#direct_vms" do
@@ -154,6 +248,7 @@ describe Service do
 
     it "suspend" do
       @service.add_resource(Vm.first, :group_idx => 1, :stop_delay => 60)
+      expect(@service).to receive(:update_progress).with(:power_status=>"suspending")
       expect(@service).to receive(:queue_group_action).with(:suspend, 1, -1, 60)
 
       @service.suspend
