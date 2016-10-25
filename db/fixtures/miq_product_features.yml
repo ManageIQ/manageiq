@@ -924,6 +924,10 @@
       :description: Re-check Authentication Status of Infrastructure Providers
       :feature_type: control
       :identifier: ems_infra_recheck_auth_status
+    - :name: Import VM
+      :description: Import Virtual Machine from other Infrastructure Provider
+      :feature_type: admin
+      :identifier: ems_infra_import_vm
   - :name: Modify
     :description: Modify Infrastructure Providers
     :feature_type: admin

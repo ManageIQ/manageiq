@@ -14,6 +14,7 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
   require_nested  :Template
   require_nested  :Vm
   include_concern :ApiIntegration
+  include_concern :VmImport
 
   supports :provisioning
   supports :refresh_new_target

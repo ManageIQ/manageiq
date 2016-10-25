@@ -61,6 +61,27 @@ module Api
       super(object, type, id, formatted_data)
     end
 
+    def import_vm_resource(type, id = nil, data = {})
+      raise BadRequestError, "Must specify an id for import of VM to a #{type} resource" unless id
+
+      api_action(type, id) do |klass|
+        provider = resource_search(id, type, klass)
+
+        vm_id = parse_id(data['source'], :vms)
+        # check if user can access the VM
+        resource_search(vm_id, :vms, Vm)
+
+        api_log_info("Importing VM to #{provider_ident(provider)}")
+        target_params = {
+          :name       => data.fetch_path('target', 'name'),
+          :cluster_id => parse_id(data.fetch_path('target', 'cluster'), :clusters),
+          :storage_id => parse_id(data.fetch_path('target', 'data_store'), :data_stores),
+          :sparse     => data.fetch_path('target', 'sparse')
+        }
+        import_vm_to_provider(provider, vm_id, target_params)
+      end
+    end
+
     private
 
     def format_provider_custom_attributes(attribute)
@@ -122,6 +143,16 @@ module Api
     def destroy_provider(provider)
       desc = "#{provider_ident(provider)} deleting"
       task_id = queue_object_action(provider, desc, :method_name => "destroy")
+      action_result(true, desc, :task_id => task_id)
+    rescue => err
+      action_result(false, err.to_s)
+    end
+
+    def import_vm_to_provider(provider, source_vm_id, target_params)
+      desc = "#{provider_ident(provider)} importing vm"
+      task_id = queue_object_action(provider, desc,
+                                    :method_name => 'import_vm',
+                                    :args        => [source_vm_id, target_params])
       action_result(true, desc, :task_id => task_id)
     rescue => err
       action_result(false, err.to_s)

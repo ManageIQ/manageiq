@@ -792,6 +792,10 @@
         :identifier: ems_infra_refresh
       - :name: delete
         :identifier: ems_infra_delete
+      - :name: import_vm
+        :identifier: ems_infra_import_vm
+        :options:
+        - :validate_action
       :delete:
       - :name: delete
         :identifier: ems_infra_delete
