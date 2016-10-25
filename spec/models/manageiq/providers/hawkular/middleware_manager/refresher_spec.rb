@@ -28,6 +28,7 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::Refresher do
     assert_specific_datasource('Local~/subsystem=datasources/data-source=ExampleDS')
     assert_specific_datasource('Local~/host=master/server=server-one/subsystem=datasources/data-source=ExampleDS')
     assert_specific_server_group(domain)
+    assert_specific_domain_server
     assert_specific_domain
   end
 
@@ -67,5 +68,16 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::Refresher do
       :profile  => 'full',
     )
     expect(server_group.properties).not_to be_nil
+  end
+
+  def assert_specific_domain_server
+    server = @ems_hawkular.middleware_servers.find_by_name('server-three')
+    expect(server).to have_attributes(
+      :name     => 'server-three',
+      :nativeid => 'Local~/host=master/server=server-three',
+      :product  => 'not yet available',
+      :hostname => 'not yet available',
+    )
+    expect(server.properties).not_to be_nil
   end
 end
