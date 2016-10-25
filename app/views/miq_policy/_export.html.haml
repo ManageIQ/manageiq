@@ -1,5 +1,4 @@
 - url = url_for(:action => 'export_field_changed')
-- observe = {:url => url}.to_json
 #profile_export_div
   = render :partial => "layouts/flash_msg"
   %h3
@@ -83,10 +82,10 @@
           %div{:style => "overflow: auto; width: 400px; border: 1px solid #999999;"}
             = select_tag('choices_chosen[]',
               options_for_select(@sb[:new][:choices].sort),
+              :class => "selected-policies",
               :size              => 15,
               :style             => "width: 400px",
-              :multiple          => true,
-              "data-miq_observe" => observe)
+              :multiple          => true)
     %table{:width => "100%"}
       %tr
         %td{:align => "right"}
@@ -94,7 +93,7 @@
             - t = _("Export Selected %{title}") % {:title => title}
             = link_to(_('Export'),
               {:action => "export", :button => "export"},
-              :class                 => "btn btn-primary",
+              :class                 => "btn btn-primary export-policies disabled",
               :alt                   => t,
               "data-miq_sparkle_on"  => true,
               "data-miq_sparkle_off" => true,
@@ -102,3 +101,11 @@
               :remote                => true,
               "data-method"          => :post,
               :title                 => t)
+:javascript
+  $('.selected-policies').change(function() {
+    if($(this).val()) {
+      $('.export-policies').removeClass('disabled');
+    } else {
+      $('.export-policies').addClass('disabled');
+    }
+  });
