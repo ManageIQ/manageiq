@@ -1,0 +1,19 @@
+---
+object_type: instance
+version: 1.0
+object:
+  attributes:
+    display_name: 
+    name: CloudVmRetireExtend
+    inherits: 
+    description: 
+  fields:
+  - to:
+      value: "${/#owner.email} || ${/#miq_request.get_option(:owner_email)} || ${/#miq_request.requester.email}"
+  - subject:
+      value: Virtual Machine Retirement extended for <${/#vm.name}>.
+  - body:
+      value: 'Hello,<br><br>Your Virtual Machine: <${/#vm.name}> will now be retired
+        on <${/#vm.retires_on}>. <br><br>If you need to use this Virtual Machine past
+        this date please request an <br><br>extension by contacting Support. <br><br>
+        Thank you,<br> ${#signature}'

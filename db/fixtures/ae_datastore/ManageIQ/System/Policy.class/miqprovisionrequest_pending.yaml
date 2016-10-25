@@ -9,4 +9,6 @@ object:
     description: 
   fields:
   - rel5:
-      value: "/${/#ae_provider_category}/VM/Provisioning/Email/MiqProvisionRequest_pending"
+      value: "/System/Notification/Email/${/#ae_provider_category}MiqProvisionRequestRequesterPending"
+  - rel6:
+      value: "/System/Notification/Email/${/#ae_provider_category}MiqProvisionRequestApproverPending"

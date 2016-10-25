@@ -1,0 +1,12 @@
+---
+object_type: instance
+version: 1.0
+object:
+  attributes:
+    display_name: 
+    name: EMSClusterAlert
+    inherits: 
+    description: 
+  fields:
+  - customize:
+      value: ems_cluster_alert

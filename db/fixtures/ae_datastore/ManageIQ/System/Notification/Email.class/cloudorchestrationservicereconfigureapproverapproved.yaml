@@ -1,0 +1,18 @@
+---
+object_type: instance
+version: 1.0
+object:
+  attributes:
+    display_name: 
+    name: CloudOrchestrationServiceReconfigureApproverApproved
+    inherits: 
+    description: 
+  fields:
+  - subject:
+      value: Request ID ${/#miq_request.id} - Service Reconfigure Request from <${/#miq_request.requester.email}>
+        was Approved.
+  - body:
+      value: 'Approver,<br><br>A Service Reconfigure Request received from ${/#miq_request.requester.email}
+        was Approved.<br><br>Approvers reason: ${/#miq_request.reason}<br><br>To view
+        this Request go to: <a href=''http://${/#miq_server.ipaddress}:3000/miq_request/show/${/#miq_request.id}''>http://${/#miq_server.ipaddress}:3000/miq_request/show/${/#miq_request.id}</a><br><br>
+        Thank you,<br> ${#signature}'

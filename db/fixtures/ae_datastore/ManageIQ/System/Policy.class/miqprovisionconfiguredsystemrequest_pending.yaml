@@ -9,4 +9,6 @@ object:
     description: 
   fields:
   - rel5:
-      value: "/Infrastructure/${/#miq_request.resource.ci_type}/Provisioning/Email/Request_pending"
+      value: InfrastructureConfiguredSystemMiqProvisionRequestRequesterPending
+  - rel6:
+      value: InfrastructureConfiguredSystemMiqProvisionRequestApproverPending

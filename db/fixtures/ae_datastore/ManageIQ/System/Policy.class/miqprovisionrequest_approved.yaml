@@ -4,9 +4,11 @@ version: 1.0
 object:
   attributes:
     display_name: 
-    name: MiqProvisionRequest_Approved
+    name: MiqProvisionRequest_approved
     inherits: 
     description: 
   fields:
   - rel5:
-      value: "/${/#ae_provider_category}/VM/Provisioning/Email/MiqProvisionRequest_Approved"
+      value: "/System/Notification/Email/${/#ae_provider_category}MiqProvisionRequestApproverApproved"
+  - rel6:
+      value: "/System/Notification/Email/${/#ae_provider_category}MiqProvisionRequestRequesterApproved"

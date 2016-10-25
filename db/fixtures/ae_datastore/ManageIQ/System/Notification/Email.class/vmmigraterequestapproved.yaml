@@ -1,0 +1,20 @@
+---
+object_type: instance
+version: 1.0
+object:
+  attributes:
+    display_name: 
+    name: VmMigrateRequestApproved
+    inherits: 
+    description: 
+  fields:
+  - to:
+      value: "${/#owner.email} || ${/#miq_request.get_option(:owner_email)} || ${/#miq_request.requester.email}"
+  - subject:
+      value: Request ID ${/#miq_request.id} - Your Virtual Machine Migration Request
+        has been Approved.
+  - body:
+      value: 'Hello,<br><br>Your Virtual Machine Request was Approved. You will be
+        notified via email when the VM(s) have been migrated.<br><br>To view this
+        Request go to: <a href=''https://${/#miq_server.ipaddress}:3000/miq_request/show/${/#miq_request.id}''>https://${/#miq_server.ipaddress}:3000/miq_request/show/${/#miq_request.id}</a><br><br>
+        Thank you,<br> ${#signature}'

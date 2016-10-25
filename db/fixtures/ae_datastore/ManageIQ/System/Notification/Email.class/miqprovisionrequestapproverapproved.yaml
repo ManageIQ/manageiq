@@ -1,0 +1,18 @@
+---
+object_type: instance
+version: 1.0
+object:
+  attributes:
+    display_name: 
+    name: MiqProvisionRequestApproverApproved
+    inherits: 
+    description: 
+  fields:
+  - subject:
+      value: Request ID ${/#miq_request.id} - Virtual Machine Configuration was Approved,
+        pending Quota Validation <${/#miq_request.requester.email}>.
+  - body:
+      value: 'Approver, <br>A Virtual Machine Provision Request received from ${/#miq_request.requester.email}
+        was Approved.<br><br>Approvers reason: ${/#miq_request.reason}<br><br>To view
+        this Request go to: <a href=''http://${/#miq_server.ipaddress}:3000/miq_request/show/${/#miq_request.id}''>http://${/#miq_server.ipaddress}:3000/miq_request/show/${/#miq_request.id}</a><br><br>
+        Thank you,<br> ${#signature}'

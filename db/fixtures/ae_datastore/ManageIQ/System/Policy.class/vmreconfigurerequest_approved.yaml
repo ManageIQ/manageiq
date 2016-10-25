@@ -9,4 +9,4 @@ object:
     description: 
   fields:
   - rel5:
-      value: "/Infrastructure/VM/Reconfigure/Email/VmReconfigureRequestApproved"
+      value: "/System/Notification/Email/VmReconfigureRequestApproved"

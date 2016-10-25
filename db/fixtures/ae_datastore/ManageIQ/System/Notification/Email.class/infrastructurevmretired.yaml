@@ -1,0 +1,17 @@
+---
+object_type: instance
+version: 1.0
+object:
+  attributes:
+    display_name: 
+    name: InfrastructureVmRetired
+    inherits: 
+    description: 
+  fields:
+  - to:
+      value: "${/#owner.email} || ${/#miq_request.get_option(:owner_email)} || ${/#miq_request.requester.email}"
+  - subject:
+      value: Your Virtual Machine <${/#vm.name}> has been retired.
+  - body:
+      value: Hello,<br><br>Your Virtual Machine named <${/#vm.name}> has been retired.<br><br>
+        Thank you<br> ${#signature}
