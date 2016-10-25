@@ -83,7 +83,7 @@ module CloudVolumeHelper::TextualSummary
   end
 
   def textual_cloud_volume_backups
-    label = ui_lookup(:tables => "cloud_volume_backups")
+    label = ui_lookup(:tables => "cloud_volume_backup")
     num   = @record.number_of(:cloud_volume_backups)
     h     = {:label => label, :image => "cloud_volume_backup", :value => num}
     if num > 0 && role_allows?(:feature => "cloud_volume_backup_show_list")

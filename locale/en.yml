@@ -901,6 +901,7 @@ en:
       cloud_tenants:               Cloud Tenants
       cloud_volume:                Cloud Volume
       cloud_volumes:               Cloud Volumes
+      cloud_volume_backup:         Cloud Volume Backup
       cloud_volume_snapshot:       Cloud Volume Snapshot
       cloud_volume_snapshots:      Cloud Volume Snapshots
       compliance_details:          Details
