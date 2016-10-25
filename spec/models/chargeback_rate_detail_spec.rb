@@ -118,13 +118,14 @@ describe ChargebackRateDetail do
     cbd.update(:chargeback_tiers => [cbt])
     expect(cbd.friendly_rate).to eq("3.0 Monthly")
 
-    cbd = FactoryGirl.build(:chargeback_rate_detail, :per_unit => 'cpu', :per_time => 'monthly')
+    cbd = FactoryGirl.build(:chargeback_rate_detail, :per_unit => 'cpu', :per_time => 'monthly', :detail_measure => nil)
     cbt = FactoryGirl.create(:chargeback_tier, :start => 0, :chargeback_rate_detail_id => cbd.id,
                              :finish => Float::INFINITY, :fixed_rate => 1.0, :variable_rate => 2.0)
     cbd.update(:chargeback_tiers => [cbt])
     expect(cbd.friendly_rate).to eq("Monthly @ 1.0 + 2.0 per Cpu from 0.0 to Infinity")
 
-    cbd = FactoryGirl.build(:chargeback_rate_detail, :per_unit => 'megabytes', :per_time => 'monthly')
+    cbd = FactoryGirl.build(:chargeback_rate_detail, :per_unit => 'megabytes', :per_time => 'monthly',
+                            :detail_measure => nil)
     cbt1 = FactoryGirl.create(:chargeback_tier, :start => 0.0, :chargeback_rate_detail_id => cbd.id,
                              :finish => 5.0, :fixed_rate => 1.0, :variable_rate => 2.0)
     cbt2 = FactoryGirl.create(:chargeback_tier, :start => 5.0, :chargeback_rate_detail_id => cbd.id,
@@ -139,7 +140,7 @@ Monthly @ 5.0 + 2.5 per Megabytes from 5.0 to Infinity")
       'cpu',       'Cpu',
       'ohms',      'Ohms'
     ].each_slice(2) do |per_unit, per_unit_display|
-      cbd = FactoryGirl.build(:chargeback_rate_detail, :per_unit => per_unit)
+      cbd = FactoryGirl.build(:chargeback_rate_detail, :per_unit => per_unit, :detail_measure => nil)
       expect(cbd.per_unit_display).to eq(per_unit_display)
     end
   end
@@ -201,7 +202,7 @@ Monthly @ 5.0 + 2.5 per Megabytes from 5.0 to Infinity")
     cbm = FactoryGirl.create(:chargeback_rate_detail_measure_bytes)
     cbc = FactoryGirl.create(:chargeback_rate_detail_currency_EUR)
 
-    cbd = FactoryGirl.build(:chargeback_rate_detail_fixed_compute_cost_1,
+    cbd = FactoryGirl.build(:chargeback_rate_detail_fixed_compute_cost,
                             :chargeback_rate_detail_measure_id  => cbm.id,
                             :chargeback_rate_detail_currency_id => cbc.id
                            )
