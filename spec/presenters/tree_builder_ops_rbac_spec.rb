@@ -17,7 +17,7 @@ describe TreeBuilderOpsRbac do
     end
 
     it "has :open_all set to false" do
-      tree  = TreeBuilderOpsRbac.new("rbac_tree", "rbac", {})
+      tree = TreeBuilderOpsRbac.new("rbac_tree", "rbac", {})
       expect(tree.send(:tree_init_options, :open_all)[:open_all]).to be_falsey
     end
 
