@@ -188,5 +188,13 @@ describe GitRepository do
       repo.refresh
       expect(repo.git_tags.collect(&:name)).to match_array(tag_list)
     end
+
+    it "#destroy" do
+      dir = repo.directory_name
+      FileUtils.mkdir_p dir
+      expect(Dir.exist?(dir)).to be_truthy
+      repo.destroy
+      expect(Dir.exist?(dir)).to be_falsey
+    end
   end
 end
