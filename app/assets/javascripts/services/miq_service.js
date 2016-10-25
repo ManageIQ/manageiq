@@ -112,4 +112,16 @@ ManageIQ.angular.app.service('miqService', ['$timeout', '$document', function($t
 
     return serializedObj;
   };
+
+  this.serializeModelWithIgnoredFields = function(model, ignoredFields) {
+    var serializedObj = angular.copy(model);
+
+    for (var k in serializedObj) {
+      if ((ignoredFields.indexOf(k) >= 0) || (serializedObj.hasOwnProperty(k) && !serializedObj[k])) {
+        delete serializedObj[k];
+      }
+    }
+
+    return serializedObj;
+  };
 }]);

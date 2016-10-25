@@ -4,9 +4,9 @@
       -# %h4 {{buildLegend()}}
       %div{"ng-switch" => "", "on" => "scheduleModel.action_typ"}
         .form-group
-          %label.col-md-2.control-label{"for" => "filter_typ", "ng-hide" => "dbBackup()"}
+          %label.col-md-2.control-label{"for" => "filter_typ", "ng-hide" => "dbBackup() || automateRequest()"}
             = _("Filter")
-          %label.col-md-2.control-label{"for" => "filter_typ", "ng-show" => "dbBackup()"}
+          %label.col-md-2.control-label{"for" => "filter_typ", "ng-show" => "dbBackup() && !automateRequest()"}
             = _("Type")
           .col-md-10
             = select_tag('filter_typ', options_for_select(@vm_options_for_select),
@@ -76,13 +76,16 @@
                                  "name"                       => "filter_value",
                                  "ng-change"                  => "filterValueChanged()",
                                  "ng-model"                   => "scheduleModel.filter_value",
+                                 "ng-show"                    => "!automateRequest()",
                                  "ng-options"                 => "filteredItem.value as filteredItem.text for filteredItem in filterList track by filteredItem.value",
                                  "filter-hide"                => "filterValuesEmpty",
-                                 "ng-required"                => "filterValueRequired(scheduleModel.filter_value)",
+                                 "ng-required"                => "!automateRequest() && filterValueRequired(scheduleModel.filter_value)",
                                  "checkchange"                => ""}
               %option{"disabled" => "", "value" => ""} &lt;Choose&gt;
             %input{"type" => "hidden", "name" => "filter_value", "value" => "{{scheduleModel.filter_value}}"}
 
+        = render :partial => "layouts/angular-bootstrap/ae_resolve_options",
+                 :locals  => {:ng_show => "automateRequest()"}
         = render :partial => "layouts/angular-bootstrap/edit_log_depot_settings_angular_bootstrap",
                  :locals  => {:ng_show             => "dbBackup()",
                               :ng_reqd_depot_name  => "dbRequired(scheduleModel.depot_name)",
