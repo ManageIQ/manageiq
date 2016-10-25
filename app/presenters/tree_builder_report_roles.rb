@@ -1,7 +1,7 @@
 class TreeBuilderReportRoles < TreeBuilder
   private
 
-  def tree_init_options(tree_name)
+  def tree_init_options(_tree_name)
     {
       :leaf     => 'Roles',
       :full_ids => true
@@ -15,11 +15,11 @@ class TreeBuilderReportRoles < TreeBuilder
 
   def root_options
     user = User.current_user
-    if user.super_admin_user?
-      title = _("All %{models}") % {:models => ui_lookup(:models => "MiqGroup")}
-    else
-      title = _("My %{models}") % {:models => ui_lookup(:models => "MiqGroup")}
-    end
+    title = if user.super_admin_user?
+              _("All %{models}") % {:models => ui_lookup(:models => "MiqGroup")}
+            else
+              _("My %{models}") % {:models => ui_lookup(:models => "MiqGroup")}
+            end
     [title, title, :miq_group]
   end
 
