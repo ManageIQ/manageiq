@@ -43,7 +43,8 @@ module ManageIQ::Providers::Kubernetes::ContainerManagerMixin
   PERF_ROLLUP_CHILDREN = :container_nodes
 
   def verify_hawkular_credentials
-    ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCapture::HawkularClient.new(self).hawkular_try_connect
+    client = ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCapture::HawkularClient.new(self)
+    client.hawkular_try_connect
   end
 
   # UI methods for determining availability of fields

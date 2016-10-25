@@ -3596,6 +3596,10 @@
       :description: Show Capacity & Utilization data of Providers
       :feature_type: view
       :identifier: ems_container_perf
+    - :name: Ad hoc Metrics
+      :description: Show Ad hoc Metrics of Providers
+      :feature_type: view
+      :identifier: ems_container_ad_hoc_metrics
     - :name: Timeline
       :description: Display Timelines for Containers Providers
       :feature_type: view

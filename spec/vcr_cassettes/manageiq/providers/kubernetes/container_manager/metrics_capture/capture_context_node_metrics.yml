@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://yzamir-centos7-1.example.com/hawkular/metrics/status
+    uri: https://capture.context.com/hawkular/metrics/status
     body:
       encoding: US-ASCII
       string: ''
@@ -12,11 +12,11 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.1p112
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.4p230
       Hawkular-Tenant:
       - _system
       Authorization:
-      - Bearer TheToken
+      - Bearer theToken
       Content-Type:
       - application/json
   response:
@@ -31,193 +31,325 @@ http_interactions:
       Content-Type:
       - application/json
       Content-Length:
-      - '136'
+      - '133'
       Date:
-      - Wed, 27 Jul 2016 16:34:53 GMT
+      - Tue, 22 Nov 2016 16:27:57 GMT
       Set-Cookie:
-      - OPENSHIFT_REENCRYPT_openshift-infra_hawkular-metrics_SERVERID=33cc0c3faeb21e60f21e6c0b4677d13c;
-        path=/; HttpOnly; Secure
+      - f5489604a2df0d7b0e8c7b7b0a17e360=fae6b852e584aed1966a9104cdee8d12; path=/;
+        HttpOnly; Secure
       Cache-Control:
       - private
     body:
       encoding: UTF-8
-      string: '{"MetricsService":"STARTED","Implementation-Version":"0.18.0-SNAPSHOT","Built-From-Git-SHA1":"65404bcc24e76f005a438ce0022fc2cfd7c90267"}'
-    http_version:
-  recorded_at: Wed, 27 Jul 2016 16:34:53 GMT
-- request:
-    method: get
-    uri: https://yzamir-centos7-1.example.com/hawkular/metrics/counters/machine%2Fyzamir-centos7-1.example.com%2Fcpu%2Fusage/stats/?bucketDuration=20s&start=1468235823000
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.1p112
-      Hawkular-Tenant:
-      - _system
-      Authorization:
-      - Bearer TheToken
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      X-Powered-By:
-      - Undertow/1
-      Server:
-      - WildFly/10
-      Transfer-Encoding:
-      - chunked
-      Content-Type:
-      - application/json
-      Date:
-      - Wed, 27 Jul 2016 16:34:55 GMT
-      Set-Cookie:
-      - OPENSHIFT_REENCRYPT_openshift-infra_hawkular-metrics_SERVERID=33cc0c3faeb21e60f21e6c0b4677d13c;
-        path=/; HttpOnly; Secure
-      Cache-Control:
-      - private
-    body:
-      encoding: UTF-8
-      string: '[{"start":1469637003000,"end":1469637023000,"min":7.566109238028E13,"avg":7.5663879475791E13,"median":7.566109238028E13,"max":7.5666666571302E13,"sum":1.51327758951582E14,"samples":2,"empty":false},{"start":1469637023000,"end":1469637043000,"min":7.567244631006E13,"avg":7.567244631006E13,"median":7.567244631006E13,"max":7.567244631006E13,"sum":7.567244631006E13,"samples":1,"empty":false},{"start":1469637043000,"end":1469637063000,"min":7.5679831520698E13,"avg":7.56819901314895E13,"median":7.5679831520698E13,"max":7.5684148742281E13,"sum":1.51363980262979E14,"samples":2,"empty":false},{"start":1469637063000,"end":1469637083000,"min":7.5692087326324E13,"avg":7.5692087326324E13,"median":7.5692087326324E13,"max":7.5692087326324E13,"sum":7.5692087326324E13,"samples":1,"empty":false},{"start":1469637083000,"end":1469637103000,"min":7.5698142713493E13,"avg":7.5698142713493E13,"median":7.5698142713493E13,"max":7.5698142713493E13,"sum":7.5698142713493E13,"samples":1,"empty":false},{"start":1469637103000,"end":1469637123000,"min":7.5704641432507E13,"avg":7.5707249058153E13,"median":7.5704641432507E13,"max":7.5709856683799E13,"sum":1.51414498116306E14,"samples":2,"empty":false},{"start":1469637123000,"end":1469637143000,"min":7.5717810584103E13,"avg":7.5717810584103E13,"median":7.5717810584103E13,"max":7.5717810584103E13,"sum":7.5717810584103E13,"samples":1,"empty":false},{"start":1469637143000,"end":1469637163000,"min":7.5726021303263E13,"avg":7.5726021303263E13,"median":7.5726021303263E13,"max":7.5726021303263E13,"sum":7.5726021303263E13,"samples":1,"empty":false},{"start":1469637163000,"end":1469637183000,"min":7.5731118181177E13,"avg":7.5731118181177E13,"median":7.5731118181177E13,"max":7.5731118181177E13,"sum":7.5731118181177E13,"samples":1,"empty":false},{"start":1469637183000,"end":1469637203000,"min":7.5737931013637E13,"avg":7.5740131377462E13,"median":7.5737931013637E13,"max":7.5742331741287E13,"sum":1.51480262754924E14,"samples":2,"empty":false},{"start":1469637203000,"end":1469637223000,"min":7.5747728587274E13,"avg":7.5747728587274E13,"median":7.5747728587274E13,"max":7.5747728587274E13,"sum":7.5747728587274E13,"samples":1,"empty":false},{"start":1469637223000,"end":1469637243000,"min":7.5754412062079E13,"avg":7.5754412062079E13,"median":7.5754412062079E13,"max":7.5754412062079E13,"sum":7.5754412062079E13,"samples":1,"empty":false},{"start":1469637243000,"end":1469637263000,"min":7.5761089268273E13,"avg":7.5764934186918E13,"median":7.5761089268273E13,"max":7.5768779105563E13,"sum":1.51529868373836E14,"samples":2,"empty":false},{"start":1469637263000,"end":1469637283000,"min":7.5776651224605E13,"avg":7.5776651224605E13,"median":7.5776651224605E13,"max":7.5776651224605E13,"sum":7.5776651224605E13,"samples":1,"empty":false},{"start":1469637283000,"end":1469637303000,"min":7.5781336520259E13,"avg":7.5781336520259E13,"median":7.5781336520259E13,"max":7.5781336520259E13,"sum":7.5781336520259E13,"samples":1,"empty":false}]'
-    http_version:
-  recorded_at: Wed, 27 Jul 2016 16:34:59 GMT
-- request:
-    method: get
-    uri: https://yzamir-centos7-1.example.com/hawkular/metrics/gauges/machine%2Fyzamir-centos7-1.example.com%2Fmemory%2Fusage/stats/?bucketDuration=20s&start=1468235843000
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.1p112
-      Hawkular-Tenant:
-      - _system
-      Authorization:
-      - Bearer TheToken
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      X-Powered-By:
-      - Undertow/1
-      Server:
-      - WildFly/10
-      Transfer-Encoding:
-      - chunked
-      Content-Type:
-      - application/json
-      Date:
-      - Wed, 27 Jul 2016 16:35:01 GMT
-      Set-Cookie:
-      - OPENSHIFT_REENCRYPT_openshift-infra_hawkular-metrics_SERVERID=33cc0c3faeb21e60f21e6c0b4677d13c;
-        path=/; HttpOnly; Secure
-      Cache-Control:
-      - private
-    body:
-      encoding: UTF-8
-      string: '[{"start":1469636963000,"end":1469636983000,"min":2.900656128E9,"avg":2.900656128E9,"median":2.900656128E9,"max":2.900656128E9,"sum":2.900656128E9,"samples":1,"empty":false},{"start":1469636983000,"end":1469637003000,"min":2.95917568E9,"avg":2.95917568E9,"median":2.95917568E9,"max":2.95917568E9,"sum":2.95917568E9,"samples":1,"empty":false},{"start":1469637003000,"end":1469637023000,"min":2.896519168E9,"avg":2.924668928E9,"median":2.896519168E9,"max":2.952818688E9,"sum":5.849337856E9,"samples":2,"empty":false},{"start":1469637023000,"end":1469637043000,"min":2.897174528E9,"avg":2.897174528E9,"median":2.897174528E9,"max":2.897174528E9,"sum":2.897174528E9,"samples":1,"empty":false},{"start":1469637043000,"end":1469637063000,"min":2.897215488E9,"avg":2.897256448E9,"median":2.897215488E9,"max":2.897297408E9,"sum":5.794512896E9,"samples":2,"empty":false},{"start":1469637063000,"end":1469637083000,"min":2.957246464E9,"avg":2.957246464E9,"median":2.957246464E9,"max":2.957246464E9,"sum":2.957246464E9,"samples":1,"empty":false},{"start":1469637083000,"end":1469637103000,"min":2.897268736E9,"avg":2.897268736E9,"median":2.897268736E9,"max":2.897268736E9,"sum":2.897268736E9,"samples":1,"empty":false},{"start":1469637103000,"end":1469637123000,"min":2.900205568E9,"avg":2.92571136E9,"median":2.900205568E9,"max":2.951217152E9,"sum":5.85142272E9,"samples":2,"empty":false},{"start":1469637123000,"end":1469637143000,"min":2.902700032E9,"avg":2.902700032E9,"median":2.902700032E9,"max":2.902700032E9,"sum":2.902700032E9,"samples":1,"empty":false},{"start":1469637143000,"end":1469637163000,"min":2.90299904E9,"avg":2.90299904E9,"median":2.90299904E9,"max":2.90299904E9,"sum":2.90299904E9,"samples":1,"empty":false},{"start":1469637163000,"end":1469637183000,"min":2.9032448E9,"avg":2.9032448E9,"median":2.9032448E9,"max":2.9032448E9,"sum":2.9032448E9,"samples":1,"empty":false},{"start":1469637183000,"end":1469637203000,"min":2.903236608E9,"avg":2.90381824E9,"median":2.903236608E9,"max":2.904399872E9,"sum":5.80763648E9,"samples":2,"empty":false},{"start":1469637203000,"end":1469637223000,"min":2.904035328E9,"avg":2.904035328E9,"median":2.904035328E9,"max":2.904035328E9,"sum":2.904035328E9,"samples":1,"empty":false},{"start":1469637223000,"end":1469637243000,"min":2.904236032E9,"avg":2.904236032E9,"median":2.904236032E9,"max":2.904236032E9,"sum":2.904236032E9,"samples":1,"empty":false},{"start":1469637243000,"end":1469637263000,"min":2.910367744E9,"avg":2.927675392E9,"median":2.910367744E9,"max":2.94498304E9,"sum":5.855350784E9,"samples":2,"empty":false},{"start":1469637263000,"end":1469637283000,"min":2.911268864E9,"avg":2.911268864E9,"median":2.911268864E9,"max":2.911268864E9,"sum":2.911268864E9,"samples":1,"empty":false},{"start":1469637283000,"end":1469637303000,"min":2.91227648E9,"avg":2.91227648E9,"median":2.91227648E9,"max":2.91227648E9,"sum":2.91227648E9,"samples":1,"empty":false}]'
-    http_version:
-  recorded_at: Wed, 27 Jul 2016 16:35:05 GMT
-- request:
-    method: get
-    uri: https://yzamir-centos7-1.example.com/hawkular/metrics/counters/machine%2Fyzamir-centos7-1.example.com%2Fnetwork%2Ftx/stats/?bucketDuration=20s&start=1468235823000
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.1p112
-      Hawkular-Tenant:
-      - _system
-      Authorization:
-      - Bearer TheToken
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      X-Powered-By:
-      - Undertow/1
-      Server:
-      - WildFly/10
-      Transfer-Encoding:
-      - chunked
-      Content-Type:
-      - application/json
-      Date:
-      - Wed, 27 Jul 2016 16:35:06 GMT
-      Set-Cookie:
-      - OPENSHIFT_REENCRYPT_openshift-infra_hawkular-metrics_SERVERID=33cc0c3faeb21e60f21e6c0b4677d13c;
-        path=/; HttpOnly; Secure
-      Cache-Control:
-      - private
-    body:
-      encoding: UTF-8
-      string: '[{"start":1469637003000,"end":1469637023000,"min":5.258328455E9,"avg":5.2584765015E9,"median":5.258328455E9,"max":5.258624548E9,"sum":1.0516953003E10,"samples":2,"empty":false},{"start":1469637023000,"end":1469637043000,"min":5.25936222E9,"avg":5.25936222E9,"median":5.25936222E9,"max":5.25936222E9,"sum":5.25936222E9,"samples":1,"empty":false},{"start":1469637043000,"end":1469637063000,"min":5.259693954E9,"avg":5.2598468315E9,"median":5.259693954E9,"max":5.259999709E9,"sum":1.0519693663E10,"samples":2,"empty":false},{"start":1469637063000,"end":1469637083000,"min":5.260723386E9,"avg":5.260723386E9,"median":5.260723386E9,"max":5.260723386E9,"sum":5.260723386E9,"samples":1,"empty":false},{"start":1469637083000,"end":1469637103000,"min":5.261377216E9,"avg":5.261377216E9,"median":5.261377216E9,"max":5.261377216E9,"sum":5.261377216E9,"samples":1,"empty":false},{"start":1469637103000,"end":1469637123000,"min":5.261746782E9,"avg":5.262079711E9,"median":5.261746782E9,"max":5.26241264E9,"sum":1.0524159422E10,"samples":2,"empty":false},{"start":1469637123000,"end":1469637143000,"min":5.262760229E9,"avg":5.262760229E9,"median":5.262760229E9,"max":5.262760229E9,"sum":5.262760229E9,"samples":1,"empty":false},{"start":1469637143000,"end":1469637163000,"min":5.263425427E9,"avg":5.263425427E9,"median":5.263425427E9,"max":5.263425427E9,"sum":5.263425427E9,"samples":1,"empty":false},{"start":1469637163000,"end":1469637183000,"min":5.264036619E9,"avg":5.264036619E9,"median":5.264036619E9,"max":5.264036619E9,"sum":5.264036619E9,"samples":1,"empty":false},{"start":1469637183000,"end":1469637203000,"min":5.264416182E9,"avg":5.264581314E9,"median":5.264416182E9,"max":5.264746446E9,"sum":1.0529162628E10,"samples":2,"empty":false},{"start":1469637203000,"end":1469637223000,"min":5.265460701E9,"avg":5.265460701E9,"median":5.265460701E9,"max":5.265460701E9,"sum":5.265460701E9,"samples":1,"empty":false},{"start":1469637223000,"end":1469637243000,"min":5.265821597E9,"avg":5.265821597E9,"median":5.265821597E9,"max":5.265821597E9,"sum":5.265821597E9,"samples":1,"empty":false},{"start":1469637243000,"end":1469637263000,"min":5.266470684E9,"avg":5.266761681E9,"median":5.266470684E9,"max":5.267052678E9,"sum":1.0533523362E10,"samples":2,"empty":false},{"start":1469637263000,"end":1469637283000,"min":5.267719679E9,"avg":5.267719679E9,"median":5.267719679E9,"max":5.267719679E9,"sum":5.267719679E9,"samples":1,"empty":false},{"start":1469637283000,"end":1469637303000,"min":5.268084008E9,"avg":5.268084008E9,"median":5.268084008E9,"max":5.268084008E9,"sum":5.268084008E9,"samples":1,"empty":false},{"start":1469637303000,"end":1469637323000,"empty":true}]'
-    http_version:
-  recorded_at: Wed, 27 Jul 2016 16:35:10 GMT
-- request:
-    method: get
-    uri: https://yzamir-centos7-1.example.com/hawkular/metrics/counters/machine%2Fyzamir-centos7-1.example.com%2Fnetwork%2Frx/stats/?bucketDuration=20s&start=1468235823000
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.1p112
-      Hawkular-Tenant:
-      - _system
-      Authorization:
-      - Bearer TheToken
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      X-Powered-By:
-      - Undertow/1
-      Server:
-      - WildFly/10
-      Transfer-Encoding:
-      - chunked
-      Content-Type:
-      - application/json
-      Date:
-      - Wed, 27 Jul 2016 16:35:12 GMT
-      Set-Cookie:
-      - OPENSHIFT_REENCRYPT_openshift-infra_hawkular-metrics_SERVERID=33cc0c3faeb21e60f21e6c0b4677d13c;
-        path=/; HttpOnly; Secure
-      Cache-Control:
-      - private
-    body:
-      encoding: UTF-8
-      string: '[{"start":1469637003000,"end":1469637023000,"min":2.071918433E9,"avg":2.07196725E9,"median":2.071918433E9,"max":2.072016067E9,"sum":4.1439345E9,"samples":2,"empty":false},{"start":1469637023000,"end":1469637043000,"min":2.072319741E9,"avg":2.072319741E9,"median":2.072319741E9,"max":2.072319741E9,"sum":2.072319741E9,"samples":1,"empty":false},{"start":1469637043000,"end":1469637063000,"min":2.072448801E9,"avg":2.0725032555E9,"median":2.072448801E9,"max":2.07255771E9,"sum":4.145006511E9,"samples":2,"empty":false},{"start":1469637063000,"end":1469637083000,"min":2.072855448E9,"avg":2.072855448E9,"median":2.072855448E9,"max":2.072855448E9,"sum":2.072855448E9,"samples":1,"empty":false},{"start":1469637083000,"end":1469637103000,"min":2.07310454E9,"avg":2.07310454E9,"median":2.07310454E9,"max":2.07310454E9,"sum":2.07310454E9,"samples":1,"empty":false},{"start":1469637103000,"end":1469637123000,"min":2.073250909E9,"avg":2.0733786855E9,"median":2.073250909E9,"max":2.073506462E9,"sum":4.146757371E9,"samples":2,"empty":false},{"start":1469637123000,"end":1469637143000,"min":2.073643141E9,"avg":2.073643141E9,"median":2.073643141E9,"max":2.073643141E9,"sum":2.073643141E9,"samples":1,"empty":false},{"start":1469637143000,"end":1469637163000,"min":2.07389596E9,"avg":2.07389596E9,"median":2.07389596E9,"max":2.07389596E9,"sum":2.07389596E9,"samples":1,"empty":false},{"start":1469637163000,"end":1469637183000,"min":2.074120034E9,"avg":2.074120034E9,"median":2.074120034E9,"max":2.074120034E9,"sum":2.074120034E9,"samples":1,"empty":false},{"start":1469637183000,"end":1469637203000,"min":2.074281383E9,"avg":2.074345328E9,"median":2.074281383E9,"max":2.074409273E9,"sum":4.148690656E9,"samples":2,"empty":false},{"start":1469637203000,"end":1469637223000,"min":2.074684306E9,"avg":2.074684306E9,"median":2.074684306E9,"max":2.074684306E9,"sum":2.074684306E9,"samples":1,"empty":false},{"start":1469637223000,"end":1469637243000,"min":2.074831288E9,"avg":2.074831288E9,"median":2.074831288E9,"max":2.074831288E9,"sum":2.074831288E9,"samples":1,"empty":false},{"start":1469637243000,"end":1469637263000,"min":2.075062277E9,"avg":2.0751579715E9,"median":2.075062277E9,"max":2.075253666E9,"sum":4.150315943E9,"samples":2,"empty":false},{"start":1469637263000,"end":1469637283000,"min":2.075517141E9,"avg":2.075517141E9,"median":2.075517141E9,"max":2.075517141E9,"sum":2.075517141E9,"samples":1,"empty":false},{"start":1469637283000,"end":1469637303000,"min":2.075643956E9,"avg":2.075643956E9,"median":2.075643956E9,"max":2.075643956E9,"sum":2.075643956E9,"samples":1,"empty":false},{"start":1469637303000,"end":1469637323000,"empty":true}]'
+      string: '{"MetricsService":"STARTED","Implementation-Version":"0.21.5.Final","Built-From-Git-SHA1":"e779588593f13224225356a94f1d8642fbccb30f"}'
     http_version: 
-  recorded_at: Wed, 27 Jul 2016 16:35:16 GMT
+  recorded_at: Tue, 22 Nov 2016 16:27:57 GMT
+- request:
+    method: get
+    uri: https://capture.context.com/hawkular/metrics/counters/machine%2Fcapture.context.com%2Fcpu%2Fusage/stats/?bucketDuration=20s&start=1468235823000
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.4p230
+      Hawkular-Tenant:
+      - _system
+      Authorization:
+      - Bearer theToken
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Transfer-Encoding:
+      - chunked
+      Content-Type:
+      - application/json
+      Date:
+      - Tue, 22 Nov 2016 16:27:58 GMT
+      Set-Cookie:
+      - f5489604a2df0d7b0e8c7b7b0a17e360=fae6b852e584aed1966a9104cdee8d12; path=/;
+        HttpOnly; Secure
+      Cache-Control:
+      - private
+    body:
+      encoding: UTF-8
+      string: '[{"start":1468235823000,"end":1468235843000,"empty":true},{"start":1479832063000,"end":1479832083000,"min":4.837839594638E12,"avg":4.837839594638E12,"median":4.837839594638E12,"max":4.837839594638E12,"sum":4.837839594638E12,"samples":1,"empty":false}]'
+    http_version: 
+  recorded_at: Tue, 22 Nov 2016 16:28:00 GMT
+- request:
+    method: get
+    uri: https://capture.context.com/hawkular/metrics/status
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.4p230
+      Hawkular-Tenant:
+      - _system
+      Authorization:
+      - Bearer theToken
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '133'
+      Date:
+      - Tue, 22 Nov 2016 16:28:03 GMT
+      Set-Cookie:
+      - f5489604a2df0d7b0e8c7b7b0a17e360=fae6b852e584aed1966a9104cdee8d12; path=/;
+        HttpOnly; Secure
+      Cache-Control:
+      - private
+    body:
+      encoding: UTF-8
+      string: '{"MetricsService":"STARTED","Implementation-Version":"0.21.5.Final","Built-From-Git-SHA1":"e779588593f13224225356a94f1d8642fbccb30f"}'
+    http_version: 
+  recorded_at: Tue, 22 Nov 2016 16:28:03 GMT
+- request:
+    method: get
+    uri: https://capture.context.com/hawkular/metrics/gauges/machine%2Fcapture.context.com%2Fmemory%2Fusage/stats/?bucketDuration=20s&start=1468235843000
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.4p230
+      Hawkular-Tenant:
+      - _system
+      Authorization:
+      - Bearer theToken
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Transfer-Encoding:
+      - chunked
+      Content-Type:
+      - application/json
+      Date:
+      - Tue, 22 Nov 2016 16:28:03 GMT
+      Set-Cookie:
+      - f5489604a2df0d7b0e8c7b7b0a17e360=fae6b852e584aed1966a9104cdee8d12; path=/;
+        HttpOnly; Secure
+      Cache-Control:
+      - private
+    body:
+      encoding: UTF-8
+      string: '[{"start":1468235843000,"end":1468235863000,"empty":true},{"start":1479832083000,"end":1479832103000,"empty":true}]'
+    http_version: 
+  recorded_at: Tue, 22 Nov 2016 16:28:05 GMT
+- request:
+    method: get
+    uri: https://capture.context.com/hawkular/metrics/status
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.4p230
+      Hawkular-Tenant:
+      - _system
+      Authorization:
+      - Bearer theToken
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '133'
+      Date:
+      - Tue, 22 Nov 2016 16:28:08 GMT
+      Set-Cookie:
+      - f5489604a2df0d7b0e8c7b7b0a17e360=fae6b852e584aed1966a9104cdee8d12; path=/;
+        HttpOnly; Secure
+      Cache-Control:
+      - private
+    body:
+      encoding: UTF-8
+      string: '{"MetricsService":"STARTED","Implementation-Version":"0.21.5.Final","Built-From-Git-SHA1":"e779588593f13224225356a94f1d8642fbccb30f"}'
+    http_version: 
+  recorded_at: Tue, 22 Nov 2016 16:28:08 GMT
+- request:
+    method: get
+    uri: https://capture.context.com/hawkular/metrics/counters/machine%2Fcapture.context.com%2Fnetwork%2Ftx/stats/?bucketDuration=20s&start=1468235823000
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.4p230
+      Hawkular-Tenant:
+      - _system
+      Authorization:
+      - Bearer theToken
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Transfer-Encoding:
+      - chunked
+      Content-Type:
+      - application/json
+      Date:
+      - Tue, 22 Nov 2016 16:28:08 GMT
+      Set-Cookie:
+      - f5489604a2df0d7b0e8c7b7b0a17e360=fae6b852e584aed1966a9104cdee8d12; path=/;
+        HttpOnly; Secure
+      Cache-Control:
+      - private
+    body:
+      encoding: UTF-8
+      string: '[{"start":1468235823000,"end":1468235843000,"empty":true},{"start":1479832083000,"end":1479832103000,"empty":true}]'
+    http_version: 
+  recorded_at: Tue, 22 Nov 2016 16:28:10 GMT
+- request:
+    method: get
+    uri: https://capture.context.com/hawkular/metrics/status
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.4p230
+      Hawkular-Tenant:
+      - _system
+      Authorization:
+      - Bearer theToken
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '133'
+      Date:
+      - Tue, 22 Nov 2016 16:28:12 GMT
+      Set-Cookie:
+      - f5489604a2df0d7b0e8c7b7b0a17e360=fae6b852e584aed1966a9104cdee8d12; path=/;
+        HttpOnly; Secure
+      Cache-Control:
+      - private
+    body:
+      encoding: UTF-8
+      string: '{"MetricsService":"STARTED","Implementation-Version":"0.21.5.Final","Built-From-Git-SHA1":"e779588593f13224225356a94f1d8642fbccb30f"}'
+    http_version: 
+  recorded_at: Tue, 22 Nov 2016 16:28:12 GMT
+- request:
+    method: get
+    uri: https://capture.context.com/hawkular/metrics/counters/machine%2Fcapture.context.com%2Fnetwork%2Frx/stats/?bucketDuration=20s&start=1468235823000
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.4p230
+      Hawkular-Tenant:
+      - _system
+      Authorization:
+      - Bearer theToken
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Transfer-Encoding:
+      - chunked
+      Content-Type:
+      - application/json
+      Date:
+      - Tue, 22 Nov 2016 16:28:13 GMT
+      Set-Cookie:
+      - f5489604a2df0d7b0e8c7b7b0a17e360=fae6b852e584aed1966a9104cdee8d12; path=/;
+        HttpOnly; Secure
+      Cache-Control:
+      - private
+    body:
+      encoding: UTF-8
+      string: '[{"start":1468235823000,"end":1468235843000,"empty":true},{"start":1479832083000,"end":1479832103000,"empty":true}]'
+    http_version: 
+  recorded_at: Tue, 22 Nov 2016 16:28:15 GMT
 recorded_with: VCR 3.0.3

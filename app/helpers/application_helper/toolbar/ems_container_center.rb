@@ -56,6 +56,14 @@ class ApplicationHelper::Toolbar::EmsContainerCenter < ApplicationHelper::Toolba
           :klass     => ApplicationHelper::Button::GenericFeatureButton,
           :options   => {:feature => :performance},
           :url_parms => "?display=performance"),
+        button(
+          :ems_container_ad_hoc_metrics,
+          'fa fa-tachometer fa-1xplus',
+          N_('Show Ad hoc Metrics for this Provider'),
+          N_('Ad hoc Metrics'),
+          :klass     => ApplicationHelper::Button::GenericFeatureButton,
+          :options   => {:feature => :ad_hoc_metrics},
+          :url_parms => "?display=ad_hoc_metrics"),
       ]
     ),
   ])

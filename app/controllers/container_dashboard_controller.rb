@@ -17,7 +17,12 @@ class ContainerDashboardController < ApplicationController
   end
 
   def data
+    return data_live if params[:live] == 'true'
     render :json => {:data => collect_data(params[:id])}
+  end
+
+  def data_live
+    render :json => collect_live_data(params[:id], params[:query])
   end
 
   private
@@ -28,6 +33,10 @@ class ContainerDashboardController < ApplicationController
 
   def collect_data(provider_id)
     ContainerDashboardService.new(provider_id, self).all_data
+  end
+
+  def collect_live_data(provider_id, query)
+    HawkularProxyService.new(provider_id, self).data(query)
   end
 
   def set_session_data

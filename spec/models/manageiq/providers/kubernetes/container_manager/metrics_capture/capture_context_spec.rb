@@ -3,10 +3,10 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCapture::Capt
 
   before(:each) do
     allow(MiqServer).to receive(:my_zone).and_return("default")
-    hostname = 'yzamir-centos7-1.example.com'
-    token = 'TheToken'
+    hostname = 'capture.context.com'
+    token = 'theToken'
     @start_time = 1_468_235_843
-    @end_time   = 1_568_235_843
+    @end_time   = 1_468_235_843
     @interval   = 20
 
     @ems = FactoryGirl.create(
@@ -44,8 +44,8 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCapture::Capt
       )
 
       metrics = {"MetricsService"         => "STARTED",
-                 "Implementation-Version" => "0.18.0-SNAPSHOT",
-                 "Built-From-Git-SHA1"    => "65404bcc24e76f005a438ce0022fc2cfd7c90267"}
+                 "Implementation-Version" => "0.21.5.Final",
+                 "Built-From-Git-SHA1"    => "e779588593f13224225356a94f1d8642fbccb30f"}
 
       data = context.hawkular_client.http_get('/status')
 
@@ -63,8 +63,6 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCapture::Capt
         data = context.collect_metrics
 
         expect(data).to be_a_kind_of(Array)
-        expect(data.length).to be > 10
-        expect(data[1]['start']).to be
       end
     end
   end

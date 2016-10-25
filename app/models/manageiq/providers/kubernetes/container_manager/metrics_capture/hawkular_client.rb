@@ -1,10 +1,10 @@
 class ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCapture::HawkularClient
   include ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCapture::HawkularClientMixin
 
-  def initialize(ext_management_system)
+  def initialize(ext_management_system, tenant = '_system')
     @ext_management_system = ext_management_system
-    @tenant = '_system'
-
-    hawkular_client
+    @tenant = tenant
   end
+
+  delegate :gauges, :to => :hawkular_client
 end

@@ -1,0 +1,44 @@
+= # render :partial => "shared/views/show_ad_hoc_containers_metrics"
+= render :partial => "layouts/flash_msg"
+
+.containers-live-dashboard.row.miq-dashboard-view{"ng-controller" => "containerLiveDashboardController"}
+  .col-md-12
+    %div{"pf-toolbar" => "", "id" => "exampleToolbar", "config" => "toolbarConfig"}
+      %actions
+        %span.dropdown.primary-action{"dropdown" => ""}
+          %button.btn.btn-default.dropdown-toggle{"dropdown-toggle" => "", "type" => "button"}
+            Menu Action
+            %span.caret
+
+    .col-md-12
+      %br
+      .col-md-12.list-view-container{"ng-if" => "viewType == 'listView'"}
+        %div{"pf-list-view" => "", "config" => "listConfig", "items" => "items"}
+          .list-view-pf-description
+            .list-group-item-heading
+              {{item.definition.tags.group_id}}
+            .list-group-item-text
+              {{item.definition.id}}
+          .list-view-pf-additional-info
+            .list-view-pf-additional-info-item
+              Last value : {{item.last_value || "-"}}
+          %list-expanded-content
+            .row
+              .col-md-12
+                %div Tags: {{$parent.item.definition.tags}}
+
+      .col-md-12.card-view-container{"ng-if" => "viewType == 'cardView'"}
+        .row.row-tile-pf
+          .col-xs-12.col-sm-12.col-md-12
+            %div{"pf-card" => ""}
+              %h4 {{liveTitle}}
+              .spinner.spinner-lg.loading{"ng-if" => "!liveTitle"}
+              %div{"chart-data" => "liveData",
+                   "config" => "liveConfig",
+                   "ng-if" => "loadingDone",
+                   "show-x-axis" => true,
+                   "show-y-axis" => true,
+                   "pf-line-chart" => ""}
+
+:javascript
+  miq_bootstrap('.containers-live-dashboard', 'containerLiveDashboard');
