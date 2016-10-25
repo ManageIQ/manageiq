@@ -95,10 +95,11 @@ class Vm < VmOrTemplate
   def set_remote_console_url(params)
     SystemConsole.where(:vm_id => id).each(&:destroy)
     console = SystemConsole.create!(
-      :vm_id    => id,
-      :user     => User.find_by(:userid => params[:userid]),
-      :protocol => 'url',
-      :url      => params[:url]
+      :vm_id      => id,
+      :user       => User.find_by(:userid => params[:userid]),
+      :protocol   => 'url',
+      :url        => params[:url],
+      :url_secret => SecureRandom.hex
     )
     console.id
   end
