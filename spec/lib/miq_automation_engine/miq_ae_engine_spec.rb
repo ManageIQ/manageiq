@@ -281,7 +281,7 @@ describe MiqAeEngine do
 
     it "will process an empty array" do
       attrs      = {"Array::my_hosts" => ""}
-      result_str = "Array%3A%3Amy_hosts="""
+      result_str = "Array%3A%3Amy_hosts="
       extras = "MiqServer%3A%3Amiq_server=#{@miq_server_id}"
       uri = "/System/Process/AUTOMATION?#{result_str}&#{extras}&object_name=AUTOMATION"
       expect(MiqAeEngine.create_automation_object("AUTOMATION", attrs)).to eq(uri)
