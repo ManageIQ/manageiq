@@ -245,7 +245,7 @@ class VimPerformanceState < ApplicationRecord
     if resource.respond_to?(:hardware)
       resource.hardware
     elsif resource.respond_to?(:container_node)
-      resource.container_node.hardware
+      resource.container_node.try(:hardware)
     end
   end
 end
