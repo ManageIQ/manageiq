@@ -19,10 +19,6 @@ module Vm::Operations::Lifecycle
     api_relay_method :retire_now, :retire
   end
 
-  def validate_clone
-    {:available => self.cloneable? && !(self.blank? || self.orphaned? || self.archived?), :message => nil}
-  end
-
   def validate_publish
     {:available => !(self.blank? || self.orphaned? || self.archived?), :message   => nil}
   end

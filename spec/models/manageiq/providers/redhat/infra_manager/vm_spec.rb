@@ -47,11 +47,11 @@ describe ManageIQ::Providers::Redhat::InfraManager::Vm do
     end
   end
 
-  context "#cloneable?" do
+  context "supports_clone?" do
     let(:vm_redhat) { ManageIQ::Providers::Redhat::InfraManager::Vm.new }
 
-    it "returns true" do
-      expect(vm_redhat.cloneable?).to eq(true)
+    it "returns false" do
+      expect(vm_redhat.supports?(:clone)).to eq(false)
     end
   end
 

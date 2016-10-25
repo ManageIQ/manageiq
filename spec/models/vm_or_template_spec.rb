@@ -335,30 +335,6 @@ describe VmOrTemplate do
     end
   end
 
-  describe ".cloneable?" do
-    context "when the vm_or_template does not exist" do
-      it "returns false" do
-        expect(VmOrTemplate.cloneable?(111)).to eq(false)
-      end
-    end
-
-    context "when the vm_or_template does exist but is not cloneable" do
-      let(:vm_or_template) { VmOrTemplate.create(:type => "ManageIQ::Providers::Redhat::InfraManager::Template", :name => "aaa", :location => "bbb", :vendor => "redhat") }
-
-      it "returns false" do
-        expect(VmOrTemplate.cloneable?(vm_or_template.id)).to eq(false)
-      end
-    end
-
-    context "when the vm_or_template exists and is cloneable" do
-      let(:vm_or_template) { ManageIQ::Providers::Redhat::InfraManager::Vm.create(:type => "ManageIQ::Providers::Redhat::InfraManager::Vm", :name => "aaa", :location => "bbb", :vendor   => "redhat") }
-
-      it "returns true" do
-        expect(VmOrTemplate.cloneable?(vm_or_template.id)).to eq(true)
-      end
-    end
-  end
-
   context "#scan_profile_categories" do
     before do
       @vm = FactoryGirl.create(:vm_vmware)

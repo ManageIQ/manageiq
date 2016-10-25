@@ -60,6 +60,7 @@ module SupportsFeatureMixin
   QUERYABLE_FEATURES = {
     :add_host                   => 'Add Host',
     :associate_floating_ip      => 'Associate a Floating IP',
+    :clone                      => 'Clone',
     # FIXME: this is just a internal helper and should be refactored
     :control                    => 'Basic control operations',
     :cloud_tenant_mapping       => 'CloudTenant mapping',

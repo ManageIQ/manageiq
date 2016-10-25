@@ -5,6 +5,10 @@ class ManageIQ::Providers::Vmware::InfraManager::Vm < ManageIQ::Providers::Infra
   include_concern 'RemoteConsole'
   include_concern 'Reconfigure'
 
+  supports :clone do
+    unsupported_reason_add(:clone, _('Clone operation is not supported')) if blank? || orphaned? || archived?
+  end
+
   def add_miq_alarm
     raise "VM has no EMS, unable to add alarm" unless ext_management_system
     ext_management_system.vm_add_miq_alarm(self)
@@ -17,10 +21,6 @@ class ManageIQ::Providers::Vmware::InfraManager::Vm < ManageIQ::Providers::Infra
 
   # Show certain non-generic charts
   def cpu_ready_available?
-    true
-  end
-
-  def cloneable?
     true
   end
 

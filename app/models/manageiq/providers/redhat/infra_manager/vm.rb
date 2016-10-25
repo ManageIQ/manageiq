@@ -36,19 +36,11 @@ class ManageIQ::Providers::Redhat::InfraManager::Vm < ManageIQ::Providers::Infra
     true
   end
 
-  def cloneable?
-    true
-  end
-
   def self.calculate_power_state(raw_power_state)
     POWER_STATES[raw_power_state] || super
   end
 
   def validate_publish
     validate_unsupported("Publish VM")
-  end
-
-  def validate_clone
-    validate_unsupported("Clone")
   end
 end
