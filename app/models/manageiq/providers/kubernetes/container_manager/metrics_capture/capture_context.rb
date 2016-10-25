@@ -15,7 +15,7 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCapture
       if @target.respond_to?(:hardware)
         hardware = @target.hardware
       else
-        hardware = @target.container_node.hardware
+        hardware = @target.try(:container_node).try(:hardware)
       end
 
       @node_cores = hardware.try(:cpu_total_cores)
