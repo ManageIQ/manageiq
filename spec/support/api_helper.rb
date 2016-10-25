@@ -2,9 +2,6 @@
 # For testing REST API via Rspec requests
 #
 
-require 'bcrypt'
-require 'json'
-
 module Spec
   module Support
     module ApiHelper
