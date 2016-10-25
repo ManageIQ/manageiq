@@ -155,5 +155,15 @@ module ReportFormatter
         mri.chart[:axis][:x][:tick][:format] = '%H:%M'
       end
     end
+
+    def build_reporting_chart(_maxcols, _divider)
+      mri.chart[:miq][:reporting_chart] = true
+      super
+    end
+
+    def build_reporting_chart_numeric(_maxcols, _divider)
+      mri.chart[:miq][:reporting_chart] = true
+      super
+    end
   end
 end
