@@ -5,7 +5,7 @@ class UserValidationService
 
   extend Forwardable
   delegate [:session, :url_for, :initiate_wait_for_task, :session_init, :clear_current_user,
-            :session_reset, :get_vmdb_config, :start_url_for_user] => :@controller
+            :session_reset, :start_url_for_user] => :@controller
 
   ValidateResult = Struct.new(:result, :flash_msg, :url)
 
@@ -48,8 +48,8 @@ class UserValidationService
 
     # Start super admin at the main db if the main db has no records yet
     return validate_user_handle_no_records if db_user.super_admin_user? &&
-                                              get_vmdb_config[:product][:maindb] &&
-                                              !get_vmdb_config[:product][:maindb].constantize.first
+                                              ::Settings.product.maindb &&
+                                              !::Settings.product.maindb.constantize.first
 
     startpage = start_url_for_user(start_url)
     unless startpage

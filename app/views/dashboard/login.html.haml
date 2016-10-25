@@ -1,4 +1,4 @@
-- auth_mode = get_vmdb_config[:authentication][:mode]
+- auth_mode = ::Settings.authentication.mode
 
 %span#badge
   %img{:src => "#{current_tenant.logo? ? '/upload/custom_logo.png' : image_path("login-screen-logo.png")}"}
@@ -109,7 +109,7 @@
                       :onclick              => "miqAjaxAuthSso('#{j sso_url}'); return false;")
 
     .col-md-6.col-lg-7.details
-      - if get_vmdb_config[:session][:show_login_info]
+      - if ::Settings.session.show_login_info
         %p
           = _('Region:')
           %span
@@ -123,8 +123,8 @@
           %span
             = (MiqServer.my_server.name)
         %p.message
-          - if get_vmdb_config[:server][:use_custom_login_text]
-            = (get_vmdb_config[:server][:custom_login_text].to_s)
+          - if ::Settings.server.use_custom_login_text
+            = ::Settings.server.custom_login_text.to_s
 
 :javascript
   miqGetTZO();
