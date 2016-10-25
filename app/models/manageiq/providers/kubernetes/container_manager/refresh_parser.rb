@@ -625,11 +625,11 @@ module ManageIQ::Providers::Kubernetes
       }
       state_attributes = parse_container_state container.lastState
       state_attributes.each { |key, val| h[key.to_s.prepend('last_').to_sym] = val } if state_attributes
-      h.merge! parse_container_state container.state
+      h.merge!(parse_container_state(container.state))
     end
 
     def parse_container_state(state_hash)
-      return if state_hash.to_h.empty?
+      return {} if state_hash.to_h.empty?
       res = {}
       # state_hash key is the state and value are attributes e.g 'running': {...}
       (state, state_info), = state_hash.to_h.to_a

@@ -139,6 +139,13 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
     end
   end
 
+  describe "parse_container_state" do
+    # check https://bugzilla.redhat.com/show_bug.cgi?id=1383498
+    it "handles nil input" do
+      expect(parser.send(:parse_container_state, nil)).to eq({})
+    end
+  end
+
   describe "parse_volumes" do
     example_volumes = [
       {
