@@ -4,20 +4,7 @@
 - n = params[:tier_row] if params[:tier_row]
 
 %tr.rdetail.new_tier{:id => "rate_detail_row_#{i}_#{n - 1}"}
-  %td
-    - tier_val = (@edit[:new][:tiers][i.to_i][n - 1][:start].to_s.eql? "Infinity") ? "" : @edit[:new][:tiers][i.to_i][n - 1][:start]
-    = text_field_tag("start_#{i}_#{n - 1}", tier_val,
-      :maxlength => MAX_NAME_LEN, :placeholder => _("Infinity"), "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
-  %td
-    - tier_val = (@edit[:new][:tiers][i.to_i][n - 1][:finish].to_s.eql? "Infinity") ? "" : @edit[:new][:tiers][i.to_i][n - 1][:finish]
-    = text_field_tag("finish_#{i}_#{n - 1}", tier_val,
-      :maxlength => MAX_NAME_LEN, :placeholder => _("Infinity"), "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
-  %td{:align => 'right'}
-    = text_field_tag("fixed_rate_#{i}_#{n - 1}", @edit[:new][:tiers][i.to_i][n - 1][:fixed_rate],
-      :maxlength => MAX_NAME_LEN, "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
-  %td{:align => 'right'}
-    = text_field_tag("variable_rate_#{i}_#{n - 1}", @edit[:new][:tiers][i.to_i][n - 1][:variable_rate],
-      :maxlength => MAX_NAME_LEN, "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+  = render :partial => 'cb_tier_edit_values', :locals => {:detail_index => i.to_i, :url => url, :row_within_rate => n - 1}
   %td.action
     = button_tag(_("Delete"),
                  :class   => "btn btn-default",

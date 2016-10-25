@@ -21,20 +21,7 @@
     /if the rate detail have a metric associated, display an options field with per_unit selected
     %td{:rowspan => n.to_s}
       = select_tag("per_unit_#{i}", options_for_select(measure[:measures], r[:per_unit]), "data-miq_observe" => {:url => url}.to_json)
-  %td
-    - tier_val = (@edit[:new][:tiers][i.to_i][0][:start].to_s.eql? "Infinity") ? "" : @edit[:new][:tiers][i.to_i][0][:start]
-    = text_field_tag("start_#{i}_0", tier_val,
-      :maxlength => MAX_NAME_LEN, :placeholder => _("Infinity"), "data-miq_observe" => {:interval => '.5', :url => url}.to_json, :disabled => "disabled")
-  %td
-    - tier_val = (@edit[:new][:tiers][i.to_i][0][:finish].to_s.eql? "Infinity") ? "" : @edit[:new][:tiers][i.to_i][0][:finish]
-    = text_field_tag("finish_#{i}_0", tier_val,
-      :maxlength => MAX_NAME_LEN, :placeholder => _("Infinity"), "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
-  %td{:align => 'right'}
-    = text_field_tag("fixed_rate_#{i}_0", @edit[:new][:tiers][i.to_i][0][:fixed_rate],
-      :maxlength => MAX_NAME_LEN, "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
-  %td{:align => 'right'}
-    = text_field_tag("variable_rate_#{i}_0", @edit[:new][:tiers][i.to_i][0][:variable_rate],
-      :maxlength => MAX_NAME_LEN, "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
+  = render :partial => 'cb_tier_edit_values', :locals => {:detail_index => i.to_i, :url => url, :row_within_rate => 0}
   %td.action
     = button_tag(_("Add"),
                  :class   => "btn btn-default",
