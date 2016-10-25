@@ -1,4 +1,15 @@
 class Chargeback < ActsAsArModel
+  set_columns_hash( # Fields common to any chargeback type
+    :start_date           => :datetime,
+    :end_date             => :datetime,
+    :interval_name        => :string,
+    :display_range        => :string,
+    :chargeback_rates     => :string,
+    :entity               => :binary,
+    :tag_name             => :string,
+    :fixed_compute_metric => :integer,
+  )
+
   HOURS_IN_DAY = 24
   HOURS_IN_WEEK = 168
 

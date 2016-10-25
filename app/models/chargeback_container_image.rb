@@ -1,20 +1,13 @@
 class ChargebackContainerImage < Chargeback
   set_columns_hash(
-    :start_date            => :datetime,
-    :end_date              => :datetime,
-    :interval_name         => :string,
-    :display_range         => :string,
-    :chargeback_rates      => :string,
     :project_name          => :string,
     :image_name            => :string,
-    :tag_name              => :string,
     :project_uid           => :string,
     :provider_name         => :string,
     :provider_uid          => :string,
     :archived              => :string,
     :cpu_cores_used_cost   => :float,
     :cpu_cores_used_metric => :float,
-    :fixed_compute_metric  => :integer,
     :fixed_compute_1_cost  => :float,
     :fixed_compute_2_cost  => :float,
     :fixed_2_cost          => :float,
@@ -24,7 +17,6 @@ class ChargebackContainerImage < Chargeback
     :net_io_used_cost      => :float,
     :net_io_used_metric    => :float,
     :total_cost            => :float,
-    :entity                => :binary
   )
 
   def self.build_results_for_report_ChargebackContainerImage(options)
