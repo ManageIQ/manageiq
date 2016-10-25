@@ -315,7 +315,7 @@ module EmsRefresh::SaveInventoryContainer
       h[:container_image_registry_id] = h[:container_image_registry][:id] unless h[:container_image_registry].nil?
     end
 
-    save_inventory_multi(ems.container_images, hashes, deletes, [:image_ref, :container_image_registry_id], [],
+    save_inventory_multi(ems.container_images, hashes, deletes, [:image_ref, :container_image_registry_id], [:labels],
                          :container_image_registry)
     store_ids_for_new_records(ems.container_images, hashes,
                               [:image_ref, :container_image_registry_id])
