@@ -140,12 +140,13 @@ class ServiceTemplateProvisionTask < MiqRequestTask
       args[:miq_group_id] = get_user.current_group.id
       args[:tenant_id]    = get_user.current_tenant.id
 
+      zone ||= source.respond_to?(:my_zone) ? source.my_zone : MiqServer.my_zone
       MiqQueue.put(
         :class_name  => 'MiqAeEngine',
         :method_name => 'deliver',
         :args        => [args],
         :role        => 'automate',
-        :zone        => nil,
+        :zone        => options.fetch(:miq_zone, zone),
         :task_id     => "#{self.class.name.underscore}_#{id}"
       )
       update_and_notify_parent(:state => "pending", :status => "Ok",  :message => "Automation Starting")
