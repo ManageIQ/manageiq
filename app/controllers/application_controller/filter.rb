@@ -769,6 +769,8 @@ module ApplicationController::Filter
           builder = TreeBuilder.class_for_type(tree_type)
           tree = builder.new(x_active_tree, tree_type, @sb)
         end
+      elsif %w(ems_cloud ems_infra).include?(@layout)
+        build_listnav_search_list(@view.db)
       else
         build_listnav_search_list(@edit[@expkey][:exp_model])
       end
