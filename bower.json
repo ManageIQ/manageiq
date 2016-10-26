@@ -39,7 +39,7 @@
     "jquery.observe_field": "himdel/jquery.observe_field#~0.1.0",
     "kubernetes-topology-graph": "~0.0.23",
     "manageiq-ui-components": "~0.0.8",
-    "moment-strftime": "himdel/moment-strftime#~0.1.7",
+    "moment-strftime": "~0.2.0",
     "moment-timezone": "~0.4.1",
     "numeral": "~1.5.3",
     "patternfly-bootstrap-treeview": "~2.1.1",
