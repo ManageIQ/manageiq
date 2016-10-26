@@ -339,10 +339,21 @@
       :post:
       - :name: query
         :identifier: condition
+      - :name: create
+        :identifier: condition_new
+      - :name: edit
+        :identifier: condition_edit
+      - :name: delete
+        :identifier: condition_delete
     :resource_actions:
       :get:
       - :name: read
         :identifier: condition
+      :post:
+      - :name: edit
+        :identifier: condition_edit
+      - :name: delete
+        :identifier: condition_delete
   :data_stores:
     :description: Datastores
     :identifier: storage
