@@ -8,15 +8,17 @@ describe ContainerLabelTagMapping do
     FactoryGirl.create(:kubernetes_label, :resource => node, :name => name, :value => value)
   end
 
-  let(:tag1) { FactoryGirl.create(:tag, :name => '/ns1/category1/tag1') }
-  let(:tag2) { FactoryGirl.create(:tag, :name => '/ns2/category2/tag2') }
-  let(:cat_tag_without_classification) { FactoryGirl.create(:tag, :name => '/ns3/category3') }
-
-  let(:cat_classification) { FactoryGirl.create(:classification) }
+  let(:cat_classification) { FactoryGirl.create(:classification, :read_only => true) }
   let(:cat_tag) { cat_classification.tag }
-  let(:tag_under_cat) { cat_classification.add_entry(:name => 'value_1', :description => 'value-1').tag }
+  let(:tag1) { cat_classification.add_entry(:name => 'value_1', :description => 'value-1').tag }
+  let(:tag2) { cat_classification.add_entry(:name => 'something_else', :description => 'Another tag').tag }
+  let(:tag3) { cat_classification.add_entry(:name => 'yet_another', :description => 'Yet another tag').tag }
   let(:empty_tag_under_cat) do
     cat_classification.add_entry(:name => 'my_empty', :description => 'Custom description for empty value').tag
+  end
+  let(:tag_in_another_cat) do
+    cat = FactoryGirl.create(:classification, :read_only => true)
+    cat.add_entry(:name => 'unrelated', :description => 'Unrelated tag').tag
   end
 
   # Each test here may populate the table differently.
@@ -31,8 +33,9 @@ describe ContainerLabelTagMapping do
 
   context "with empty mapping" do
     it "does nothing" do
-      expect(ContainerLabelTagMapping.tags_for_entity(node)).to be_empty
-      expect(ContainerLabelTagMapping.mappable_tags).to be_empty
+      expect {
+        expect(ContainerLabelTagMapping.tags_for_entity(node)).to be_empty
+      }.not_to change { Tag.count }
     end
   end
 
@@ -59,18 +62,20 @@ describe ContainerLabelTagMapping do
     before do
       FactoryGirl.create(:container_label_tag_mapping, :tag => cat_tag)
       FactoryGirl.create(:container_label_tag_mapping, :label_value => 'value-1', :tag => tag1)
-      FactoryGirl.create(:container_label_tag_mapping, :label_value => 'value-1', :tag => tag_under_cat)
-      # Force a tag to exist that we don't map to (for testing .mappable_tags).
-      tag2
+      FactoryGirl.create(:container_label_tag_mapping, :label_value => 'value-1', :tag => tag2)
+      # Force a tag to exist that we don't map to (for testing .controls_tag?).
+      tag_in_another_cat
     end
 
     it "prefers specific-value" do
       label(node, 'name', 'value-1')
-      expect(ContainerLabelTagMapping.tags_for_entity(node)).to contain_exactly(tag1, tag_under_cat)
+      expect(ContainerLabelTagMapping.tags_for_entity(node)).to contain_exactly(tag1, tag2)
     end
 
     it "creates tag for new value" do
-      expect(ContainerLabelTagMapping.mappable_tags).to contain_exactly(tag1, tag_under_cat)
+      expect(ContainerLabelTagMapping.controls_tag?(tag1)).to be true
+      expect(ContainerLabelTagMapping.controls_tag?(tag2)).to be true
+      expect(ContainerLabelTagMapping.controls_tag?(tag_in_another_cat)).to be false
 
       label(node, 'name', 'value-2')
       tags = ContainerLabelTagMapping.tags_for_entity(node)
@@ -78,13 +83,17 @@ describe ContainerLabelTagMapping do
       expect(tags[0].name).to eq(cat_tag.name + '/value_2')
       expect(tags[0].classification.description).to eq('value-2')
 
-      expect(ContainerLabelTagMapping.mappable_tags).to contain_exactly(tag1, tag_under_cat, tags[0])
+      expect(ContainerLabelTagMapping.controls_tag?(tag1)).to be true
+      expect(ContainerLabelTagMapping.controls_tag?(tag2)).to be true
+      expect(ContainerLabelTagMapping.controls_tag?(tags[0])).to be true
 
       # But nothing changes when called again, the previously created tag is re-used.
 
       expect(ContainerLabelTagMapping.tags_for_entity(node)).to contain_exactly(tags[0])
 
-      expect(ContainerLabelTagMapping.mappable_tags).to contain_exactly(tag1, tag_under_cat, tags[0])
+      expect(ContainerLabelTagMapping.controls_tag?(tag1)).to be true
+      expect(ContainerLabelTagMapping.controls_tag?(tag2)).to be true
+      expect(ContainerLabelTagMapping.controls_tag?(tags[0])).to be true
     end
 
     it "handles names that differ only by case" do
@@ -103,24 +112,30 @@ describe ContainerLabelTagMapping do
       # /managed/kubernetes:name vs /managed/kubernetes:naME.
     end
 
-    pending "handles values that differ only by case / punctuation" do
+    it "handles values that differ only by case / punctuation" do
       label(node, 'name', 'value-case.punct')
       label(node2, 'name', 'VaLuE-CASE.punct')
       label(node3, 'name', 'value-case/punct')
       tags = ContainerLabelTagMapping.tags_for_entity(node)
       tags2 = ContainerLabelTagMapping.tags_for_entity(node2)
       tags3 = ContainerLabelTagMapping.tags_for_entity(node3)
-      # TODO: do we want them to get same tag or 2 tags?
-      # What do we want the description to be?
+      # TODO: They get mapped to the same tag, is this desired?
+      # TODO: What do we want the description to be?
+      expect(tags2).to eq(tags)
+      expect(tags3).to eq(tags)
     end
 
-    pending "handles values that differ only past 50th character" do
+    it "handles values that differ only past 50th character" do
       label(node, 'name', 'x' * 50)
       label(node2, 'name', 'x' * 50 + 'y')
       label(node3, 'name', 'x' * 50 + 'z')
       tags = ContainerLabelTagMapping.tags_for_entity(node)
       tags2 = ContainerLabelTagMapping.tags_for_entity(node2)
       tags3 = ContainerLabelTagMapping.tags_for_entity(node3)
+      # TODO: They get mapped to the same tag, is this desired?
+      # TODO: What do we want the description to be?
+      expect(tags2).to eq(tags)
+      expect(tags3).to eq(tags)
     end
   end
 
@@ -142,20 +157,6 @@ describe ContainerLabelTagMapping do
       # same with both any-value and specific-value mappings
       FactoryGirl.create(:container_label_tag_mapping, :tag => cat_tag)
       expect(ContainerLabelTagMapping.tags_for_entity(node)).to contain_exactly(empty_tag_under_cat)
-    end
-  end
-
-  context "with any-value mapping whose tag has no classification" do
-    before do
-      FactoryGirl.create(:container_label_tag_mapping, :tag => cat_tag_without_classification)
-    end
-
-    it "creates specific-value tag and the 2 needed classifications" do
-      label(node, 'name', 'value-3')
-      tags = ContainerLabelTagMapping.tags_for_entity(node)
-      expect(tags.size).to eq(1)
-      expect(tags[0].category.description).to eq("Kubernetes label 'name'")
-      expect(tags[0].classification.description).to eq('value-3')
     end
   end
 

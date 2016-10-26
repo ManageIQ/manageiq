@@ -9,7 +9,8 @@ class ContainerLabelTagMapping < ApplicationRecord
   # - When `label_value` is NULL, we map this name with any value to per-value tags.
   #   In this case, `tag` specifies the category under which to create
   #   the value-specific tag (and classification) on demand.
-  #   We then also add a specific `label_value`->specific `tag` mapping here.
+  #
+  # All involved tags must also have a Classification.
 
   belongs_to :tag
 
@@ -34,15 +35,7 @@ class ContainerLabelTagMapping < ApplicationRecord
   end
   private_class_method :load_mapping_into_hash
 
-  # All specific-value tags that can be assigned by this mapping.
-  def self.mappable_tags
-    hash_all_by_name_type_value.collect_concat do |(_name, _type, value), tags|
-      value ? tags : []
-    end
-  end
-
-  # Main entry point.
-  def self.tags_for_entity(entity)
+  def self.tags_for_entity(entity, labels = entity.labels)
     entity.labels.collect_concat { |label| tags_for_label(label) }
   end
 
@@ -59,7 +52,7 @@ class ContainerLabelTagMapping < ApplicationRecord
       specific_value
     else
       any_value.map do |category_tag|
-        create_specific_value_mapping(name, type, value, category_tag).tag
+        specific_value_tag(name, value, category_tag)
       end
     end
   end
@@ -67,23 +60,11 @@ class ContainerLabelTagMapping < ApplicationRecord
 
   # If this is an open ended any-value mapping, finds or creates a
   # specific-value mapping to a specific tag.
-  def self.create_specific_value_mapping(name, type, value, category_tag)
-    new_tag = create_tag(name, value, category_tag)
-    new_mapping = create!(:labeled_resource_type => type, :label_name => name, :label_value => value,
-                          :tag => new_tag)
-    load_mapping_into_hash(new_mapping)
-    new_mapping
-  end
-  private_class_method :create_specific_value_mapping
-
-  def self.create_tag(name, value, category_tag)
+  def self.specific_value_tag(name, value, category_tag)
     category = category_tag.classification
-    unless category
-      category = Classification.create_category!(:description => "Kubernetes label '#{name}'",
-                                                 :read_only   => true,
-                                                 :tag         => category_tag)
-    end
 
+    # Note: the names chosen here should remain stable,
+    # or we won't be able to find previously created tags.
     if value.empty?
       entry_name = ':empty:' # ':' character won't occur in kubernetes values.
       description = '<empty value>'
@@ -91,9 +72,27 @@ class ContainerLabelTagMapping < ApplicationRecord
       entry_name = Classification.sanitize_name(value)
       description = value
     end
-    entry = category.add_entry(:name => entry_name, :description => description)
-    entry.save!
+
+    entry = category.find_entry_by_name(entry_name)
+    unless entry
+      entry = category.add_entry(:name => entry_name, :description => description)
+      entry.save!  # TODO can this error?
+    end
     entry.tag
   end
-  private_class_method :create_tag
+  private_class_method :specific_value_tag
+
+  def self.controls_tag?(tag)
+    return false unless tag.classification.try(:read_only) # never touch user-assignable tags.
+    tag_ids = [tag.id, tag.category.tag_id].uniq
+    where(:tag_id => tag_ids).any?
+  end
+
+  # Assign/unassign mapping-controlled tags, preserving user-assigned tags.
+  def self.retag_entity(entity, labels = entity.labels)
+    mapped_tags = tags_for_entity(entity, labels)
+    existing_tags = entity.tags
+    tags_to_unassign = (existing_tags - mapped_tags).select { |t| controls_tag?(t) }
+    entity.tags = (existing_tags | mapped_tags) - tags_to_unassign
+  end
 end

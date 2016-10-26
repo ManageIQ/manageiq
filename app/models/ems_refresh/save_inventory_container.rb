@@ -422,9 +422,7 @@ module EmsRefresh::SaveInventoryContainer
     end
 
     begin
-      current_tags = labels.collect_concat { |label| ContainerLabelTagMapping.tags_for_label(label) }
-      mappable_tags = ContainerLabelTagMapping.mappable_tags
-      entity.tags = entity.tags - mappable_tags + current_tags
+      ContainerLabelTagMapping.retag_entity(entity, labels)
     rescue => err
       raise if EmsRefresh.debug_failures
       _log.error("Auto-tagging failed on #{entity.class} [#{entity.name}] with error [#{err}].")
