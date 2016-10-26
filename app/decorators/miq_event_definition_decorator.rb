@@ -45,6 +45,7 @@ class MiqEventDefinitionDecorator < Draper::Decorator
       "containerreplicator_compliance_passed"       => "pficon pficon-replicator",
       "containerreplicator_failedcreate"            => "pficon pficon-replicator",
       "containerreplicator_successfulcreate"        => "pficon pficon-replicator",
+      "db_failover_executed"                        => "fa fa-database",
       "ems_auth_changed"                            => "pficon pficon-server",
       "ems_auth_error"                              => "pficon pficon-server",
       "ems_auth_incomplete"                         => "pficon pficon-server",

@@ -7,6 +7,10 @@ require 'linux_admin'
 
 module PostgresHaAdmin
   class FailoverMonitor
+    RAILS_ROOT = [
+      Pathname.new("/var/www/miq/vmdb"),
+      Pathname.new(File.expand_path(File.join(__dir__, "../..")))
+    ].detect { |f| File.exist?(f) }
     FAILOVER_ATTEMPTS = 10
     DB_CHECK_FREQUENCY = 300
     FAILOVER_CHECK_FREQUENCY = 60
@@ -42,6 +46,7 @@ module PostgresHaAdmin
 
       if execute_failover
         start_evmserverd
+        raise_failover_event
       else
         @logger.error("Failover failed")
       end
@@ -63,6 +68,13 @@ module PostgresHaAdmin
       servers = @failover_db.active_databases_conninfo_hash
       db_yml_params = @database_yml.pg_params_from_database_yml
       servers.map! { |info| db_yml_params.merge(info) }
+    end
+
+    def raise_failover_event
+      require "awesome_spawn"
+      AwesomeSpawn.run("rake evm:raise_server_event",
+                       :chdir  => RAILS_ROOT,
+                       :params => ["--", {:event  => "db_failover_executed"}])
     end
 
     private
