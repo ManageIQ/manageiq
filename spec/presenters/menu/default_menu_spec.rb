@@ -78,16 +78,10 @@ describe Menu::DefaultMenu do
 
   describe "#storage_menu_section" do
     let(:menu) { Menu::DefaultMenu }
-    let(:configuration) { double(:config => {:product => {:storage => product_setting}}) }
-
-    before do
-      allow(VMDB::Config).to receive(:new).with("vmdb").and_return(configuration)
-    end
 
     context "when the configuration storage product setting is set to true" do
-      let(:product_setting) { true }
-
       it "contains the generic objects item" do
+        stub_settings(:product => {:storage => true})
         expect(menu.storage_menu_section.items.map(&:name)).to include(
           "Storage Providers",
           "Volumes",
@@ -98,9 +92,8 @@ describe Menu::DefaultMenu do
     end
 
     context "when the configuration storage product setting is not true" do
-      let(:product_setting) { "juliet" }
-
       it "does not contain the NetApp item" do
+        stub_settings(:product => {:storage => "juliet" })
         expect(menu.storage_menu_section.items.map(&:name)).to include(
           "Storage Providers",
           "Volumes",
@@ -112,16 +105,10 @@ describe Menu::DefaultMenu do
 
   describe "#automate_menu_section" do
     let(:menu) { Menu::DefaultMenu }
-    let(:configuration) { double(:config => {:product => {:generic_object => product_setting}}) }
-
-    before do
-      allow(VMDB::Config).to receive(:new).with("vmdb").and_return(configuration)
-    end
 
     context "when the configuration generic object product setting is set to true" do
-      let(:product_setting) { true }
-
       it "contains the generic objects item" do
+        stub_settings(:product => {:generic_object => true})
         expect(menu.automate_menu_section.items.map(&:name)).to include(
           "Explorer",
           "Simulation",
@@ -135,9 +122,8 @@ describe Menu::DefaultMenu do
     end
 
     context "when the configuration generic object product setting is not true" do
-      let(:product_setting) { "potato" }
-
       it "does not contain the generic objects item" do
+        stub_settings(:product => {:generic_object => "potato"})
         expect(menu.automate_menu_section.items.map(&:name)).to include(
           "Explorer",
           "Simulation",
