@@ -292,4 +292,34 @@ describe SupportsFeatureMixin do
       expect(SomePost.supports_create?).to eq(true)
     end
   end
+
+  context 'used in a module WITHOUT using `included` hook' do
+    before do
+      stub_const('MyModule', Module.new do
+        include SupportsFeatureMixin
+        supports_not :create     # supported in base class Post
+        supports :discovery do   # unsupported in base class Post
+          unsupported_reason_add(:discovery, "Your Post is bad!")
+        end
+      end)
+
+      stub_const('SomePost', Class.new(Post) do
+        include MyModule
+      end)
+    end
+
+    it "does not affect undefined features" do
+      expect(SomePost.new.supports_delete?).to be false
+      expect(SomePost.supports_delete?).to be false
+    end
+
+    it "overrides features defined on the class with those in the module" do
+      expect(SomePost.new.supports_create?).to be false
+      expect(SomePost.supports_create?).to be false
+
+      expect(SomePost.supports_discovery?).to be true
+      expect(SomePost.new.supports_discovery?).to be false
+      expect(SomePost.new.unsupported_reason(:discovery)).to eq('Your Post is bad!')
+    end
+  end
 end
