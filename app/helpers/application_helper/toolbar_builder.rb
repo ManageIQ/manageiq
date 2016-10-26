@@ -1143,12 +1143,6 @@ class ApplicationHelper::ToolbarBuilder
     Rack::Utils.parse_query URI("?#{encoded_url}").query
   end
 
-  def domains_available_for_copy?
-    User.current_tenant.any_editable_domains? &&
-    MiqAeDomain.any_unlocked? &&
-    MiqAeDomain.any_enabled?
-  end
-
   def disable_new_iso_datastore?(item_id)
     @layout == "pxe" &&
       item_id == "iso_datastore_new" &&
