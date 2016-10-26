@@ -1,4 +1,7 @@
 describe MiqAeClass do
+  before do
+    allow_any_instance_of(Object).to receive(:trolol).and_return("yolo")
+  end
   include Spec::Support::AutomationHelper
 
   describe "name attribute validation" do
