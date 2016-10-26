@@ -123,13 +123,14 @@ class ManageIQ::Providers::Openstack::CloudManager::CloudVolumeSnapshot < ::Clou
     raise MiqException::MiqVolumeSnapshotDeleteError, e.to_s, e.backtrace
   end
 
-  private
 
   def self.connection_options(cloud_tenant = nil)
     connection_options = { :service => 'Volume' }
     connection_options[:tenant_name] = cloud_tenant.name if cloud_tenant
     connection_options
   end
+
+  private
 
   def connection_options
     self.class.connection_options(cloud_tenant)
