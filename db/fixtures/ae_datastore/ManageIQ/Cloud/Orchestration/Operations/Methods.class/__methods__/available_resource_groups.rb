@@ -1,49 +1,61 @@
 #
 # Description: provide the dynamic list content from available resource groups
 #
-class AvailableResoureceGroups
-  def initialize(handle = $evm)
-    @handle = handle
-  end
+module ManageIQ
+  module Automate
+    module Cloud
+      module Orchestration
+        module Operations
+          class AvailableResoureceGroups
+            def initialize(handle = $evm)
+              @handle = handle
+            end
 
-  def main
-    fill_dialog_field(fetch_list_data)
-  end
+            def main
+              fill_dialog_field(fetch_list_data)
+            end
 
-  def fetch_list_data
-    service = @handle.root.attributes["service_template"] || @handle.root.attributes["service"]
-    rs_groups = service.try(:orchestration_manager).try(:resource_groups)
+            private
 
-    rs_list = {}
-    rs_groups.each { |rs| rs_list[rs.name] = rs.name } if rs_groups
+            def fetch_list_data
+              service = @handle.root.attributes["service_template"] || @handle.root.attributes["service"]
+              rs_groups = service.try(:orchestration_manager).try(:resource_groups)
 
-    return nil => "<none>" if rs_list.blank?
+              rs_list = {}
+              rs_groups.each { |rs| rs_list[rs.name] = rs.name } if rs_groups
 
-    rs_list[nil] = "<select>" if rs_list.length > 1
-    rs_list
-  end
+              return nil => "<none>" if rs_list.blank?
 
-  def fill_dialog_field(list)
-    dialog_field = @handle.object
+              rs_list[nil] = "<select>" if rs_list.length > 1
+              rs_list
+            end
 
-    # sort_by: value / description / none
-    dialog_field["sort_by"] = "description"
+            def fill_dialog_field(list)
+              dialog_field = @handle.object
 
-    # sort_order: ascending / descending
-    dialog_field["sort_order"] = "ascending"
+              # sort_by: value / description / none
+              dialog_field["sort_by"] = "description"
 
-    # data_type: string / integer
-    dialog_field["data_type"] = "string"
+              # sort_order: ascending / descending
+              dialog_field["sort_order"] = "ascending"
 
-    # required: true / false
-    dialog_field["required"] = "false"
+              # data_type: string / integer
+              dialog_field["data_type"] = "string"
 
-    dialog_field["values"] = list
+              # required: true / false
+              dialog_field["required"] = "false"
 
-    dialog_field["default_value"] = list.length == 1 ? list.keys.first : nil
+              dialog_field["values"] = list
+
+              dialog_field["default_value"] = list.length == 1 ? list.keys.first : nil
+            end
+          end
+        end
+      end
+    end
   end
 end
 
 if __FILE__ == $PROGRAM_NAME
-  AvailableResoureceGroups.new.main
+  ManageIQ::Automate::Cloud::Orchestration::Operations::AvailableResoureceGroups.new.main
 end
