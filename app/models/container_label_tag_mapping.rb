@@ -90,9 +90,15 @@ class ContainerLabelTagMapping < ApplicationRecord
   # Assign/unassign mapping-controlled tags, preserving user-assigned tags.
   def self.retag_entity(entity, tag_hashes)
     mapped_tags = tag_hashes.map { |tag_hash| find_or_create_tag(tag_hash) }
-
     existing_tags = entity.tags
-    tags_to_unassign = (existing_tags - mapped_tags).select { |t| controls_tag?(t) }
-    entity.tags = (existing_tags | mapped_tags) - tags_to_unassign
+    Tagging.transaction do
+      (mapped_tags - existing_tags).each do |tag|
+        Tagging.create!(:taggable => entity, :tag => tag)
+      end
+      (existing_tags - mapped_tags).select { |tag| controls_tag?(tag) }.tap do |tags|
+        Tagging.where(:taggable => entity, :tag => tags.collect(&:id)).destroy_all
+      end
+    end
+    entity.tags.reset
   end
 end
