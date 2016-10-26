@@ -35,22 +35,22 @@
   :level: :warning
   :audience: tenant
 - :name: automate_user_success
-  :message: Automate user success
+  :message: '%{message}'
   :expires_in: 24.hours
   :level: :success
   :audience: user
 - :name: automate_user_error
-  :message: Automate user error
+  :message: '%{message}'
   :expires_in: 24.hours
   :level: :error
   :audience: user
 - :name: automate_user_info
-  :message: Automate user info
+  :message: '%{message}'
   :expires_in: 24.hours
   :level: :info
   :audience: user
 - :name: automate_user_warning
-  :message: Automate user warning
+  :message: '%{message}'
   :expires_in: 24.hours
   :level: :warning
   :audience: user
