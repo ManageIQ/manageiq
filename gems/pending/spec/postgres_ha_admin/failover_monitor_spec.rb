@@ -109,6 +109,7 @@ failover_attempts: 20
 
       it "updates 'database.yml' and 'failover_databases.yml' and restart evm server if new primary db available" do
         failover_executed
+        expect(failover_monitor).to receive(:raise_failover_event)
         expect(PostgresAdmin).to receive(:database_in_recovery?).and_return(false)
         expect(failover_db).to receive(:host_is_repmgr_primary?).and_return(true)
         failover_monitor.monitor
@@ -130,6 +131,16 @@ failover_attempts: 20
       expect(failover_db).to receive(:active_databases_conninfo_hash).and_return(active_servers_conninfo)
       expect(db_yml).to receive(:pg_params_from_database_yml).and_return(settings_from_db_yml)
       expect(failover_monitor.active_servers_conninfo).to match_array(expected_conninfo)
+    end
+  end
+
+  describe "#raise_failover_event" do
+    it "invoke 'evm:raise_server_event' rake task" do
+      expect(AwesomeSpawn).to receive(:run).with(
+        "rake evm:raise_server_event",
+        :chdir  => described_class::RAILS_ROOT,
+        :params => ["--", {:event  => "db_failover_executed"}])
+      failover_monitor.raise_failover_event
     end
   end
 
