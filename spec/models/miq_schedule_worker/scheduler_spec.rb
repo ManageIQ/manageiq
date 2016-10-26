@@ -67,10 +67,10 @@ describe MiqScheduleWorker::Scheduler do
     end
   end
 
-  describe "#cron" do
+  describe "#schedule_cron" do
     it "returns the job" do
       work = lambda {}
-      scheduler.cron("0 0 * * *", :tags => [:a, :b], &work)
+      scheduler.schedule_cron("0 0 * * *", :tags => [:a, :b], &work)
       job = rufus_scheduler.jobs.first
 
       expect(job.frequency).to eq(1.day)
@@ -79,14 +79,14 @@ describe MiqScheduleWorker::Scheduler do
     end
 
     it "adds to the list of scheduled jobs" do
-      scheduler.cron("0 0 * * *", :job => true) {}
+      scheduler.schedule_cron("0 0 * * *") {}
       job = rufus_scheduler.jobs.first
 
       expect(schedules).to eq([job])
     end
 
     it "adds a job to rufus's collection of all jobs" do
-      scheduler.cron("0 0 * * *") {}
+      scheduler.schedule_cron("0 0 * * *") {}
       job = rufus_scheduler.jobs.first
 
       expect(rufus_scheduler.jobs).to eq([job])
