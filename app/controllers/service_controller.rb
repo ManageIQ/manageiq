@@ -234,7 +234,6 @@ class ServiceController < ApplicationController
 
   # set partial name and cell header for edit screens
   def set_right_cell_vars(action)
-    name = @record ? @record.name.to_s.gsub(/'/, "\\\\'") : "" # If record, get escaped name
     case action
     when "dialog_provision"
       partial = "shared/dialogs/dialog_provision"

@@ -555,8 +555,8 @@ class MiqPolicyController < ApplicationController
         if @profile && @profile.id.blank?
           _("Adding a new %{record}") % {:record => ui_lookup(:model => 'MiqPolicySet')}
         else
-          @edit ? _("Editing %{model} \"%{name}\"") % {:name => @profile.description.gsub(/'/, "\\'"), :model => ui_lookup(:model => "MiqPolicySet")} :
-                  _("%{model} \"%{name}\"") % {:model => ui_lookup(:model => "MiqPolicySet"), :name => @profile.description.gsub(/'/, "\\'")}
+          @edit ? _("Editing %{model} \"%{name}\"") % {:name => @profile.description, :model => ui_lookup(:model => "MiqPolicySet")} :
+                  _("%{model} \"%{name}\"") % {:model => ui_lookup(:model => "MiqPolicySet"), :name => @profile.description}
         end
     when 'xx'
       presenter.update(:main_div,
@@ -595,7 +595,7 @@ class MiqPolicyController < ApplicationController
                           end
       else
         options = {:model => "#{model_name} #{@sb[:mode] ? @sb[:mode].capitalize : ""} Policy",
-                   :name  => @policy.description.gsub(/'/, "\\'")}
+                   :name  => @policy.description}
         right_cell_text = @edit ? _("Editing %{model} \"%{name}\"") % options : _("%{model} \"%{name}\"") % options
         if @edit && @edit[:typ] == 'conditions'
           right_cell_text += _(" %{model} Assignments") % {:model => ui_lookup(:model => 'Condition')}
@@ -630,7 +630,7 @@ class MiqPolicyController < ApplicationController
                         end
     when 'ev'
       presenter.update(:main_div, r[:partial => 'event_details', :locals => {:read_only => true}])
-      options = {:name => @event.description.gsub(/'/, "\\\\'"), :model => ui_lookup(:table => 'miq_event_definition')}
+      options = {:name => @event.description, :model => ui_lookup(:table => 'miq_event_definition')}
       right_cell_text = @edit ? _("Editing %{model} \"%{name}\"") % options : _("%{model} \"%{name}\"") % options
     when 'a', 'ta', 'fa'
       presenter.update(:main_div, r[:partial => 'action_details', :locals => {:read_only => true}])
@@ -639,11 +639,11 @@ class MiqPolicyController < ApplicationController
                         else
                           if @edit
                             _("Editing %{model} \"%{name}\"") %
-                            {:name  => @action.description.gsub(/'/, "\\\\'"),
+                            {:name  => @action.description,
                              :model => ui_lookup(:model => 'MiqAction')}
                           else
                             _("%{model} \"%{name}\"") %
-                            {:name  => @action.description.gsub(/'/, "\\\\'"),
+                            {:name  => @action.description,
                              :model => ui_lookup(:model => 'MiqAction')}
                           end
                         end
@@ -652,8 +652,8 @@ class MiqPolicyController < ApplicationController
       right_cell_text = if @alert_profile.id.blank?
                           _("Adding a new %{record}") % {:record => ui_lookup(:model => 'MiqAlertSet')}
                         else
-                          @edit ? _("Editing %{model} \"%{name}\"") % {:name => @alert_profile.description.gsub(/'/, "\\'"), :model => "#{ui_lookup(:model => @edit[:new][:mode])} #{ui_lookup(:model => 'MiqAlertSet')}"} :
-                                  _("%{model} \"%{name}\"") % {:name => @alert_profile.description.gsub(/'/, "\\'"), :model => ui_lookup(:model => 'MiqAlertSet')}
+                          @edit ? _("Editing %{model} \"%{name}\"") % {:name => @alert_profile.description, :model => "#{ui_lookup(:model => @edit[:new][:mode])} #{ui_lookup(:model => 'MiqAlertSet')}"} :
+                                  _("%{model} \"%{name}\"") % {:name => @alert_profile.description, :model => ui_lookup(:model => 'MiqAlertSet')}
                         end
     when 'al'
       presenter.update(:main_div, r[:partial => 'alert_details', :locals => {:read_only => true}])
@@ -662,7 +662,7 @@ class MiqPolicyController < ApplicationController
                         else
                           pfx = @assign ? ' assignments for ' : ''
                           msg = @edit ? _("Editing %{model} \"%{name}\"") : _("%{model} \"%{name}\"")
-                          msg % {:name => @alert.description.gsub(/'/, "\\\\'"), :model => "#{pfx} #{ui_lookup(:model => "MiqAlert")}"}
+                          msg % {:name => @alert.description, :model => "#{pfx} #{ui_lookup(:model => "MiqAlert")}"}
                         end
     end
     presenter[:right_cell_text] = right_cell_text

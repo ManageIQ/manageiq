@@ -509,7 +509,7 @@ class InfraNetworkingController < ApplicationController
   # set partial name and cell header for edit screens
   def set_right_cell_vars
     @sb[:action] = params[:action]
-    name = @record ? @record.name.to_s.gsub(/'/, "\\\\'") : "" # If record, get escaped name
+    name = @record.try(:name).to_s
     table = 'switch'
     partial = if ["details"].include?(@showtype)
                 "layouts/x_gtl"

@@ -454,7 +454,7 @@ class MiqAeCustomizationController < ApplicationController
                 else
                   ""
                 end
-        @right_cell_text = _("Editing %{model} \"%{name}\"") % {:name => @dialog.description.gsub(/'/, "\\'"), :model => "#{title} #{ui_lookup(:model => "MiqDialog")}"}
+        @right_cell_text = _("Editing %{model} \"%{name}\"") % {:name => @dialog.description, :model => "#{title} #{ui_lookup(:model => "MiqDialog")}"}
       end
 
       presenter.reset_one_trans
