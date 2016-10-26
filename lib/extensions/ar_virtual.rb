@@ -608,6 +608,23 @@ module ActiveRecord
         recs
       end
 
+      # From ActiveRecord::QueryMethods
+      def select(*fields)
+        return super if block_given? || fields.empty?
+        # support virtual attributes by adding an alias to the sql phrase for the column
+        # this code is based upon _select()
+        fields.flatten!
+        fields.map! do |field|
+          if virtual_attribute?(field) && (arel = klass.arel_attribute(field))
+            arel.as(field.to_s)
+          else
+            field
+          end
+        end
+        # end support virtual attributes
+        super
+      end
+
       # From ActiveRecord::Calculations
       def calculate(operation, attribute_name)
         real = without_virtual_includes
