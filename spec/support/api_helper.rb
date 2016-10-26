@@ -21,15 +21,15 @@ module Spec
       end
 
       def run_post(url, body = {}, headers = {})
-        post url, :headers => update_headers(headers).merge('RAW_POST_DATA' => body.to_json)
+        post url, :params => body.to_json, :headers => update_headers(headers)
       end
 
       def run_put(url, body = {}, headers = {})
-        put url, :headers => update_headers(headers).merge('RAW_POST_DATA' => body.to_json)
+        put url, :params => body.to_json, :headers => update_headers(headers)
       end
 
       def run_patch(url, body = {}, headers = {})
-        patch url, :headers => update_headers(headers).merge('RAW_POST_DATA' => body.to_json)
+        patch url, :params => body.to_json, :headers => update_headers(headers)
       end
 
       def run_delete(url, headers = {})
