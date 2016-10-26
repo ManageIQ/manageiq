@@ -1802,6 +1802,14 @@
       :hidden: true
       :identifier: action_admin
       :children:
+      - :name: List
+        :description: Display All MiqActions
+        :feature_type: view
+        :identifier: action_show_list
+      - :name: Show
+        :description: Show MiqAction
+        :feature_type: view
+        :identifier: action_show
       - :name: Add
         :description: Add a Policy Action
         :feature_type: admin

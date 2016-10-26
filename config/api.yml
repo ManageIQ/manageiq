@@ -636,6 +636,35 @@
       :post:
       - :name: create
         :identifier: picture_new
+  :actions:
+      :description: Actions
+      :identifier: action
+      :options:
+      - :collection
+      :verbs: *gpd
+      :klass: MiqAction
+      :collection_actions:
+        :get:
+        - :name: read
+          :identifier: action_show_list
+        :post:
+        - :name: query
+          :identifier: action_show_list
+        - :name: create
+          :identifier: action_new
+        - :name: edit
+          :identifier: action_edit
+        - :name: delete
+          :identifier: action_delete
+      :resource_actions:
+        :get:
+        - :name: read
+          :identifier: action_show
+        :post:
+        - :name: edit
+          :identifier: action_edit
+        - :name: delete
+          :identifier: action_delete
   :policies:
     :description: Policies
     :identifier: policy

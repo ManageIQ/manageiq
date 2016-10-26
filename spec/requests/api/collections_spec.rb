@@ -89,6 +89,11 @@ describe "Rest API Collections" do
       test_collection_query(:conditions, conditions_url, Condition)
     end
 
+    it "query Actions" do
+      FactoryGirl.create(:miq_action)
+      test_collection_query(:actions, actions_url, MiqAction)
+    end
+
     it "query Data Stores" do
       FactoryGirl.create(:storage)
       test_collection_query(:data_stores, data_stores_url, Storage)
@@ -346,6 +351,11 @@ describe "Rest API Collections" do
     it "bulk query Conditions" do
       FactoryGirl.create(:condition)
       test_collection_bulk_query(:conditions, conditions_url, Condition)
+    end
+
+    it "bulk query Actions" do
+      FactoryGirl.create(:miq_action)
+      test_collection_bulk_query(:actions, actions_url, MiqAction)
     end
 
     it "bulk query ContainerDeployments" do
