@@ -1,35 +1,54 @@
 #
 # Description: provide the dynamic list content from available images
 #
-image_list = {}
-service = $evm.root.attributes["service_template"] || $evm.root.attributes["service"]
-if service.respond_to?(:orchestration_manager) && service.orchestration_manager
-  service.orchestration_manager.miq_templates.each do |img|
-    os = img.hardware.try(:guest_os) || "unknown"
-    image_list[img.uid_ems] = "#{os} | #{img.name}"
+
+class AvailableImages
+  def initialize(handle = $evm)
+    @handle = handle
+  end
+
+  def main
+    fill_dialog_field(fetch_list_data)
+  end
+
+  def fetch_list_data
+    service = @handle.root.attributes["service_template"] || @handle.root.attributes["service"]
+    miq_templates = service.try(:orchestration_manager).try(:miq_templates)
+
+    image_list = {}
+    if miq_templates
+      miq_templates.each do |img|
+        os = img.hardware.try(:guest_os) || "unknown"
+        image_list[img.uid_ems] = "#{os} | #{img.name}"
+      end
+    end
+
+    return nil => "<none>" if image_list.blank?
+
+    image_list[nil] = "<select>" if image_list.length > 1
+    image_list
+  end
+
+  def fill_dialog_field(list)
+    dialog_field = @handle.object
+
+    # sort_by: value / description / none
+    dialog_field["sort_by"] = "description"
+
+    # sort_order: ascending / descending
+    dialog_field["sort_order"] = "ascending"
+
+    # data_type: string / integer
+    dialog_field["data_type"] = "string"
+
+    # required: true / false
+    dialog_field["required"] = "true"
+
+    dialog_field["values"] = list
+    dialog_field["default_value"] = list.length == 1 ? list.keys.first : nil
   end
 end
-if image_list.empty?
-  image_list[nil] = "<None>"
-elsif image_list.size > 1
-  image_list[nil] = "<Choose>"
-else
-  default_value = image_list.first.first
+
+if __FILE__ == $PROGRAM_NAME
+  AvailableImages.new.main
 end
-
-dialog_field = $evm.object
-
-# sort_by: value / description / none
-dialog_field["sort_by"] = "description"
-
-# sort_order: ascending / descending
-dialog_field["sort_order"] = "ascending"
-
-# data_type: string / integer
-dialog_field["data_type"] = "string"
-
-# required: true / false
-dialog_field["required"] = "true"
-
-dialog_field["values"] = image_list
-dialog_field["default_value"] = default_value
