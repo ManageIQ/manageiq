@@ -1,10 +1,5 @@
 .treeview > .list-group {
   .list-group-item {
-    // these 3 lines will be pushed into patternfly
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-
     &.striketrough {
       text-decoration: line-through;
     }
