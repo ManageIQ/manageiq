@@ -25,7 +25,7 @@ class ApplicationHelper::Toolbar::MiqAeMethodsCenter < ApplicationHelper::Toolba
           t,
           :url_parms => "&refresh=y",
           :confirm   => N_("Are you sure you want to remove this Class?"),
-          :klass => ApplicationHelper::Button::MiqAeDefault),
+          :klass     => ApplicationHelper::Button::MiqAeDefault),
         separator,
         button(
           :miq_ae_method_new,

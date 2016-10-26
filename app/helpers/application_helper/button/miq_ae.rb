@@ -25,13 +25,13 @@ class ApplicationHelper::Button::MiqAe < ApplicationHelper::Button::Basic
 
   def edit_possible?
     MIQ_AE_COPY_ACTIONS.include?(self[:child_id]) &&
-        User.current_tenant.any_editable_domains? &&
-        MiqAeDomain.any_unlocked?
+      User.current_tenant.any_editable_domains? &&
+      MiqAeDomain.any_unlocked?
   end
 
   def domains_available_for_copy?
     User.current_tenant.any_editable_domains? &&
-        MiqAeDomain.any_unlocked? &&
-        MiqAeDomain.any_enabled?
+      MiqAeDomain.any_unlocked? &&
+      MiqAeDomain.any_enabled?
   end
 end

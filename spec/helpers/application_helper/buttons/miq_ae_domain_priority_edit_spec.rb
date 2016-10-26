@@ -9,7 +9,8 @@ describe ApplicationHelper::Button::MiqAeDomainPriorityEdit do
   describe '#disabled?' do
     context 'when number of visible domains < 2' do
       it 'will be disabled' do
-        button = described_class.new(view_context, {}, {'record' => @record}, :child_id => 'miq_ae_domain_priority_edit')
+        button = described_class.new(view_context, {}, {'record' => @record},
+                                     {:child_id => 'miq_ae_domain_priority_edit'})
         allow(User).to receive(:current_tenant).and_return(Tenant.first)
         allow(User.current_tenant).to receive(:visible_domains).and_return([@record])
         expect(button.disabled?).to be_truthy
@@ -17,7 +18,8 @@ describe ApplicationHelper::Button::MiqAeDomainPriorityEdit do
     end
     context 'when number of visible domains >= 2' do
       it 'will not be disabled' do
-        button = described_class.new(view_context, {}, {'record' => @record}, :child_id => 'miq_ae_domain_priority_edit')
+        button = described_class.new(view_context, {}, {'record' => @record},
+                                     {:child_id => 'miq_ae_domain_priority_edit'})
         allow(User).to receive(:current_tenant).and_return(Tenant.first)
         allow(User.current_tenant).to receive(:visible_domains).and_return([@record, @record])
         expect(button.disabled?).to be_falsey

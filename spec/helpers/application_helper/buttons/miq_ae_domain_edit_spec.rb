@@ -5,7 +5,7 @@ describe ApplicationHelper::Button::MiqAeDomainEdit do
     context 'when domain locked' do
       it 'will not be skipped' do
         @record = FactoryGirl.create(:miq_ae_domain_disabled)
-        button = described_class.new(view_context, {}, {'record' => @record}, :child_id => 'miq_ae_domain_edit')
+        button = described_class.new(view_context, {}, {'record' => @record}, {:child_id => 'miq_ae_domain_edit'})
         expect(button.visible?).to be_truthy
       end
     end

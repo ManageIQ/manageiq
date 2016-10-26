@@ -5,13 +5,13 @@ describe ApplicationHelper::Button::MiqAeDefault do
   before do
     Tenant.seed
     feature_list = %w(
-        miq_ae_class_edit
-        miq_ae_domain_edit
-        miq_ae_class_copy
-        miq_ae_instance_copy
-        miq_ae_method_copy
-        miq_ae_namespace_edit
-      )
+      miq_ae_class_edit
+      miq_ae_domain_edit
+      miq_ae_class_copy
+      miq_ae_instance_copy
+      miq_ae_method_copy
+      miq_ae_namespace_edit
+    )
     user = FactoryGirl.create(:user, :features => feature_list)
     login_as user
   end
@@ -27,20 +27,20 @@ describe ApplicationHelper::Button::MiqAeDefault do
       it 'will be skipped' do
         @domain.lock_contents!
         @domain.reload
-        button = described_class.new(view_context, {}, {'record' => @record}, :child_id => 'miq_ae_class_edit')
+        button = described_class.new(view_context, {}, {'record' => @record}, {:child_id => 'miq_ae_class_edit'})
         expect(button.visible?).to be_falsey
       end
     end
     context 'when button does not copy but domains are editable' do
       it 'will not be skipped' do
-        button = described_class.new(view_context, {}, {'record' => @record}, :child_id => 'miq_ae_class_edit')
+        button = described_class.new(view_context, {}, {'record' => @record}, {:child_id => 'miq_ae_class_edit'})
         expect(button.visible?).to be_truthy
       end
     end
     context 'when user has view access only' do
       it 'will be skipped' do
         login_as FactoryGirl.create(:user, :features => 'miq_ae_domain_view')
-        button = described_class.new(view_context, {}, {'record' => @record}, :child_id => 'miq_ae_class_edit')
+        button = described_class.new(view_context, {}, {'record' => @record}, {:child_id => 'miq_ae_class_edit'})
         expect(button.skipped?).to be_truthy
       end
     end
@@ -51,7 +51,7 @@ describe ApplicationHelper::Button::MiqAeDefault do
       it 'will not be disabled' do
         @domain.lock_contents!
         @domain.reload
-        button = described_class.new(view_context, {}, {'record' => @record}, :child_id => 'miq_ae_class_edit')
+        button = described_class.new(view_context, {}, {'record' => @record}, {:child_id => 'miq_ae_class_edit'})
         expect(button.disabled?).to be_falsey
       end
     end
