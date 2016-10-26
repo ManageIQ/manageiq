@@ -10,5 +10,5 @@
             :onclick => "miqSparkle(false);$('#lightbox-panel').fadeOut(300);"}
           %i.fa.fa-close.pull-right
     .card-pf-body
-      = chart_remote('dashboard', :id => 'my_chart', :width => 664, :height => 450, :bgcolor => "#f2f2f2")
+      = chart_remote('dashboard', :id => 'my_chart',:bgcolor => "#f2f2f2")
     = render :partial => 'widget_footer', :locals => {:widget => widget}
