@@ -11,10 +11,12 @@ module Menu
 
       def configuration_menu_section
         Menu::Section.new(:conf, N_("Configuration"), 'fa fa-cog  fa-2x', [
-          Menu::Item.new('provider_foreman', N_('Configuration Management'), 'provider_foreman_explorer',
-                         {:feature => 'provider_foreman_explorer', :any => true}, '/provider_foreman/explorer'),
-          Menu::Item.new('configuration_job', N_('Jobs'), 'configuration_job', {:feature => 'configuration_job_show_list'}, '/configuration_job'),
-        ])
+                            Menu::Item.new('provider_foreman', N_('Management'), 'provider_foreman_explorer',
+                                           {:feature => 'provider_foreman_explorer',
+                                            :any     => true}, '/provider_foreman/explorer'),
+                            Menu::Item.new('configuration_job', N_('Jobs'), 'configuration_job',
+                                           {:feature => 'configuration_job_show_list'}, '/configuration_job'),
+                          ])
       end
 
       def cloud_inteligence_menu_section
