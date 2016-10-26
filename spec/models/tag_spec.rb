@@ -114,6 +114,20 @@ describe Tag do
     end
   end
 
+  describe "#==" do
+    it "equals only itself" do
+      tag1 = FactoryGirl.build(:tag)
+      tag2 = FactoryGirl.build(:tag)
+      expect(tag1).to eq tag1
+      expect(tag1).not_to eq tag2
+    end
+
+    it "equals its name" do
+      tag1 = FactoryGirl.build(:tag, :name => '/a/b/c')
+      expect(tag1).to eq '/a/b/c'
+    end
+  end
+
   describe "#destroy" do
     let(:miq_group)       { FactoryGirl.create(:miq_group, :entitlement => Entitlement.create!) }
     let(:other_miq_group) { FactoryGirl.create(:miq_group, :entitlement => Entitlement.create!) }
