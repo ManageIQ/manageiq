@@ -1,13 +1,4 @@
 describe ContainerLabelTagMapping do
-  let(:node)  { FactoryGirl.create(:container_node, :name => 'node') }
-  let(:node2) { FactoryGirl.create(:container_node, :name => 'node2') }
-  let(:node3) { FactoryGirl.create(:container_node, :name => 'node3') }
-  let(:project) { FactoryGirl.create(:container_project, :name => 'project') }
-
-  def label(node, name, value)
-    FactoryGirl.create(:kubernetes_label, :resource => node, :name => name, :value => value)
-  end
-
   let(:cat_classification) { FactoryGirl.create(:classification, :read_only => true) }
   let(:cat_tag) { cat_classification.tag }
   let(:tag1) { cat_classification.add_entry(:name => 'value_1', :description => 'value-1').tag }
@@ -21,45 +12,54 @@ describe ContainerLabelTagMapping do
     cat.add_entry(:name => 'unrelated', :description => 'Unrelated tag').tag
   end
 
-  # Each test here may populate the table differently.
-  after :each do
-    ContainerLabelTagMapping.drop_cache
+  def labels(kv)
+    kv.map do |name, value|
+      {:section => 'labels', :source => 'kubernetes',
+       :name => name, :value => value}
+    end
   end
-  # If the mapping was called from *elsewhere* there might already be a stale cache.
-  # TODO: This assumes all other tests only use an empty mapping.
-  before :all do
-    ContainerLabelTagMapping.drop_cache
+
+  def map_labels(model_name, labels_kv)
+    ContainerLabelTagMapping.map_labels(ContainerLabelTagMapping.cache,
+                                        model_name,
+                                        labels(labels_kv))
+  end
+
+  def to_tags(tag_hashes)
+    tag_hashes.map { |h| ContainerLabelTagMapping.find_or_create_tag(h) }
+  end
+
+  # All-in-one
+  def map_to_tags(model_name, labels_kv)
+    to_tags(map_labels(model_name, labels_kv))
   end
 
   context "with empty mapping" do
     it "does nothing" do
-      expect {
-        expect(ContainerLabelTagMapping.tags_for_entity(node)).to be_empty
-      }.not_to change { Tag.count }
+      expect(ContainerLabelTagMapping.cache).to be_empty
+      expect(map_labels('ContainerNode',
+                        'foo'  => 'bar',
+                        'quux' => 'whatever')).to be_empty
     end
   end
 
   context "with 2 mappings for same label" do
-    before do
+    before(:each) do
       FactoryGirl.create(:container_label_tag_mapping, :only_nodes, :label_value => 'value-1', :tag => tag1)
       FactoryGirl.create(:container_label_tag_mapping, :only_nodes, :label_value => 'value-1', :tag => tag2)
     end
 
-    it "tags_for_entity returns 2 tags" do
-      label(node, 'name', 'value-1')
-      expect(ContainerLabelTagMapping.tags_for_entity(node)).to contain_exactly(tag1, tag2)
-    end
-
-    it "tags_for_label returns same tags" do
-      label_obj = OpenStruct.new(:resource_type => 'ContainerNode',
-                                 :name          => 'name',
-                                 :value         => 'value-1')
-      expect(ContainerLabelTagMapping.tags_for_label(label_obj)).to contain_exactly(tag1, tag2)
+    it "map_labels returns 2 tags" do
+      expect(map_labels('ContainerNode', 'name' => 'value-1')).to contain_exactly(
+        {:tag_id => tag1.id},
+        {:tag_id => tag2.id}
+      )
+      expect(map_to_tags('ContainerNode', 'name' => 'value-1')).to contain_exactly(tag1, tag2)
     end
   end
 
   context "with any-value and specific-value mappings" do
-    before do
+    before(:each) do
       FactoryGirl.create(:container_label_tag_mapping, :tag => cat_tag)
       FactoryGirl.create(:container_label_tag_mapping, :label_value => 'value-1', :tag => tag1)
       FactoryGirl.create(:container_label_tag_mapping, :label_value => 'value-1', :tag => tag2)
@@ -68,8 +68,7 @@ describe ContainerLabelTagMapping do
     end
 
     it "prefers specific-value" do
-      label(node, 'name', 'value-1')
-      expect(ContainerLabelTagMapping.tags_for_entity(node)).to contain_exactly(tag1, tag2)
+      expect(map_to_tags('ContainerNode', 'name' => 'value-1')).to contain_exactly(tag1, tag2)
     end
 
     it "creates tag for new value" do
@@ -77,8 +76,8 @@ describe ContainerLabelTagMapping do
       expect(ContainerLabelTagMapping.controls_tag?(tag2)).to be true
       expect(ContainerLabelTagMapping.controls_tag?(tag_in_another_cat)).to be false
 
-      label(node, 'name', 'value-2')
-      tags = ContainerLabelTagMapping.tags_for_entity(node)
+      cached1 = ContainerLabelTagMapping.cache
+      tags = to_tags(ContainerLabelTagMapping.map_labels(cached1, 'ContainerNode', labels('name' => 'value-2')))
       expect(tags.size).to eq(1)
       expect(tags[0].name).to eq(cat_tag.name + '/value_2')
       expect(tags[0].classification.description).to eq('value-2')
@@ -89,7 +88,19 @@ describe ContainerLabelTagMapping do
 
       # But nothing changes when called again, the previously created tag is re-used.
 
-      expect(ContainerLabelTagMapping.tags_for_entity(node)).to contain_exactly(tags[0])
+      tags2 = to_tags(ContainerLabelTagMapping.map_labels(cached1, 'ContainerNode', labels('name' => 'value-2')))
+      expect(tags2).to contain_exactly(tags[0])
+
+      expect(ContainerLabelTagMapping.controls_tag?(tag1)).to be true
+      expect(ContainerLabelTagMapping.controls_tag?(tag2)).to be true
+      expect(ContainerLabelTagMapping.controls_tag?(tags[0])).to be true
+
+      # And nothing changes when we re-load the mappings table.
+
+      cached2 = ContainerLabelTagMapping.cache
+
+      tags2 = to_tags(ContainerLabelTagMapping.map_labels(cached2, 'ContainerNode', labels('name' => 'value-2')))
+      expect(tags2).to contain_exactly(tags[0])
 
       expect(ContainerLabelTagMapping.controls_tag?(tag1)).to be true
       expect(ContainerLabelTagMapping.controls_tag?(tag2)).to be true
@@ -99,12 +110,10 @@ describe ContainerLabelTagMapping do
     it "handles names that differ only by case" do
       # Kubernetes names are case-sensitive
       # (but the optional domain prefix must be lowercase).
-      FactoryGirl.create(:container_label_tag_mapping, :label_name => 'Name_Case', :label_value => 'value', :tag => tag2)
-      label(node, 'name_case', 'value')
-      label(node2, 'Name_Case', 'value')
-      label(node2, 'naME_caSE', 'value')
-      tags = ContainerLabelTagMapping.tags_for_entity(node)
-      tags2 = ContainerLabelTagMapping.tags_for_entity(node2)
+      FactoryGirl.create(:container_label_tag_mapping,
+                         :label_name => 'Name_Case', :label_value => 'value', :tag => tag2)
+      tags = map_to_tags('ContainerNode', 'name_case' => 'value')
+      tags2 = map_to_tags('ContainerNode', 'Name_Case' => 'value', 'naME_caSE' => 'value')
       expect(tags).to be_empty
       expect(tags2).to contain_exactly(tag2)
 
@@ -113,12 +122,9 @@ describe ContainerLabelTagMapping do
     end
 
     it "handles values that differ only by case / punctuation" do
-      label(node, 'name', 'value-case.punct')
-      label(node2, 'name', 'VaLuE-CASE.punct')
-      label(node3, 'name', 'value-case/punct')
-      tags = ContainerLabelTagMapping.tags_for_entity(node)
-      tags2 = ContainerLabelTagMapping.tags_for_entity(node2)
-      tags3 = ContainerLabelTagMapping.tags_for_entity(node3)
+      tags = map_to_tags('ContainerNode', 'name' => 'value-case.punct')
+      tags2 = map_to_tags('ContainerNode', 'name' => 'VaLuE-CASE.punct')
+      tags3 = map_to_tags('ContainerNode', 'name' => 'value-case/punct')
       # TODO: They get mapped to the same tag, is this desired?
       # TODO: What do we want the description to be?
       expect(tags2).to eq(tags)
@@ -126,12 +132,9 @@ describe ContainerLabelTagMapping do
     end
 
     it "handles values that differ only past 50th character" do
-      label(node, 'name', 'x' * 50)
-      label(node2, 'name', 'x' * 50 + 'y')
-      label(node3, 'name', 'x' * 50 + 'z')
-      tags = ContainerLabelTagMapping.tags_for_entity(node)
-      tags2 = ContainerLabelTagMapping.tags_for_entity(node2)
-      tags3 = ContainerLabelTagMapping.tags_for_entity(node3)
+      tags = map_to_tags('ContainerNode', 'name' => 'x' * 50)
+      tags2 = map_to_tags('ContainerNode', 'name' => 'x' * 50 + 'y')
+      tags3 = map_to_tags('ContainerNode', 'name' => 'x' * 50 + 'z')
       # TODO: They get mapped to the same tag, is this desired?
       # TODO: What do we want the description to be?
       expect(tags2).to eq(tags)
@@ -139,24 +142,20 @@ describe ContainerLabelTagMapping do
     end
   end
 
-  context "given an empty label value" do
-    before do
-      label(node, 'name', '')
-    end
-
+  context "given a label with empty value" do
     it "any-value mapping generates a tag" do
       FactoryGirl.create(:container_label_tag_mapping, :tag => cat_tag)
-      tags = ContainerLabelTagMapping.tags_for_entity(node)
+      tags = map_to_tags('ContainerNode', 'name' => '')
       expect(tags.size).to eq(1)
       expect(tags[0].classification.description).to eq('<empty value>')
     end
 
     it "honors specific mapping for the empty value" do
       FactoryGirl.create(:container_label_tag_mapping, :label_value => '', :tag => empty_tag_under_cat)
-      expect(ContainerLabelTagMapping.tags_for_entity(node)).to contain_exactly(empty_tag_under_cat)
+      expect(map_to_tags('ContainerNode', 'name' => '')).to contain_exactly(empty_tag_under_cat)
       # same with both any-value and specific-value mappings
       FactoryGirl.create(:container_label_tag_mapping, :tag => cat_tag)
-      expect(ContainerLabelTagMapping.tags_for_entity(node)).to contain_exactly(empty_tag_under_cat)
+      expect(map_to_tags('ContainerNode', 'name' => '')).to contain_exactly(empty_tag_under_cat)
     end
   end
 
@@ -165,33 +164,63 @@ describe ContainerLabelTagMapping do
   # seemed the simplest well-defined behavior...
 
   context "with any-type and specific-type mappings" do
-    before do
+    before(:each) do
       FactoryGirl.create(:container_label_tag_mapping, :only_nodes, :label_value => 'value', :tag => tag1)
       FactoryGirl.create(:container_label_tag_mapping, :label_value => 'value', :tag => tag2)
     end
 
     it "applies both independently" do
-      label(node, 'name', 'value')
-      expect(ContainerLabelTagMapping.tags_for_entity(node)).to contain_exactly(tag1, tag2)
+      expect(map_to_tags('ContainerNode', 'name' => 'value')).to contain_exactly(tag1, tag2)
     end
 
     it "skips specific-type when type doesn't match" do
-      label(project, 'name', 'value')
-      expect(ContainerLabelTagMapping.tags_for_entity(project)).to contain_exactly(tag2)
+      expect(map_to_tags('ContainerProject', 'name' => 'value')).to contain_exactly(tag2)
     end
   end
 
   context "any-type specific-value vs specific-type any-value" do
-    before do
+    before(:each) do
       FactoryGirl.create(:container_label_tag_mapping, :only_nodes, :tag => cat_tag)
       FactoryGirl.create(:container_label_tag_mapping, :label_value => 'value', :tag => tag2)
     end
 
     it "resolves them independently" do
-      label(node, 'name', 'value')
-      tags = ContainerLabelTagMapping.tags_for_entity(node)
+      tags = map_to_tags('ContainerNode', 'name' => 'value')
       expect(tags.size).to eq(2)
       expect(tags).to include(tag2)
+    end
+  end
+
+  describe ".retag_entity" do
+    let(:node) { FactoryGirl.create(:container_node) }
+    before(:each) do
+      # For tag1, tag2 etc. to be considered controlled by the mapping
+      FactoryGirl.create(:container_label_tag_mapping, :tag => cat_tag)
+    end
+
+    it "assigns new tags, idempotently" do
+      expect(node.tags).to be_empty
+      ContainerLabelTagMapping.retag_entity(node, [{:tag_id => tag1.id}])
+      expect(node.tags).to contain_exactly(tag1)
+      ContainerLabelTagMapping.retag_entity(node, [{:tag_id => tag1.id}])
+      expect(node.tags).to contain_exactly(tag1)
+    end
+
+    it "unassigns obsolete mapping-controlled tags" do
+      node.tags = [tag1]
+      ContainerLabelTagMapping.retag_entity(node, [])
+      expect(node.tags).to be_empty
+    end
+
+    it "preserves user tags" do
+      user_tag = FactoryGirl.create(:tag, :name => '/managed/mycat/mytag')
+      expect(ContainerLabelTagMapping.controls_tag?(user_tag)).to be false
+      expect(ContainerLabelTagMapping.controls_tag?(tag1)).to be true
+      expect(ContainerLabelTagMapping.controls_tag?(tag2)).to be true
+      expect(ContainerLabelTagMapping.controls_tag?(tag3)).to be true
+      node.tags = [tag1, user_tag, tag2]
+      ContainerLabelTagMapping.retag_entity(node, [{:tag_id => tag1.id}, {:tag_id => tag3.id}])
+      expect(node.tags).to contain_exactly(user_tag, tag1, tag3)
     end
   end
 end

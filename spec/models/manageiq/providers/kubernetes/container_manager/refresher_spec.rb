@@ -26,10 +26,6 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
       :container_label_tag_mapping,
       :label_name => 'name', :tag => @name_category.tag
     )
-    ContainerLabelTagMapping.drop_cache # ensure just created mappings are loaded
-  end
-  after :each do
-    ContainerLabelTagMapping.drop_cache # don't affect other tests
   end
 
   it "will perform a full refresh on k8s" do
