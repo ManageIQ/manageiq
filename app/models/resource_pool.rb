@@ -43,7 +43,7 @@ class ResourcePool < ApplicationRecord
 
   # Resource Pool relationship methods
   def resource_pools
-    children(:of_type => 'ResourcePool').sort_by { |c| c.name.downcase }
+    children(:of_type => 'ResourcePool')
   end
 
   alias_method :add_resource_pool, :set_child
@@ -115,7 +115,7 @@ class ResourcePool < ApplicationRecord
 
   # All RPs under this RP and all child RPs
   def all_resource_pools
-    descendants(:of_type => 'ResourcePool').sort_by { |r| r.name.downcase }
+    descendants(:of_type => 'ResourcePool')
   end
 
   # Parent relationship methods

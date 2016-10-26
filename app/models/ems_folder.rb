@@ -39,7 +39,7 @@ class EmsFolder < ApplicationRecord
 
   # Folder relationship methods
   def folders
-    children(:of_type => 'EmsFolder').sort_by { |c| c.name.downcase }
+    children(:of_type => 'EmsFolder')
   end
 
   alias_method :add_folder, :set_child
@@ -59,7 +59,7 @@ class EmsFolder < ApplicationRecord
 
   # Cluster relationship methods
   def clusters
-    children(:of_type => 'EmsCluster').sort_by { |c| c.name.downcase }
+    children(:of_type => 'EmsCluster')
   end
 
   alias_method :add_cluster, :set_child
