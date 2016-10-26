@@ -44,7 +44,7 @@ describe VmReconfigureRequest do
       # the dialogs populate this
       values = {:src_ids => [vm_vmware.id]}
 
-      request = described_class.make_request(nil, values, admin)
+      request = described_class.make_request(nil, values, admin).first
 
       expect(request).to                be_valid
       expect(request).to                be_a_kind_of(described_class)
