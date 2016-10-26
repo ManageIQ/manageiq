@@ -14,7 +14,7 @@
 //= require angular-sanitize
 //= require angular.validators
 //= require moment
-//= require moment-strftime/build/moment-strftime.min
+//= require moment-strftime/lib/moment-strftime
 //= require moment-timezone
 //= require sprintf
 //= require numeral
