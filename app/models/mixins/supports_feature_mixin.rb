@@ -102,12 +102,8 @@ module SupportsFeatureMixin
     :update_network_router      => 'Network Router Update',
   }.freeze
 
-  # Whenever this mixin is included we define all features as unsupported by default.
-  # This way we can query for every feature
-  included do
-    QUERYABLE_FEATURES.keys.each do |feature|
-      supports_not(feature)
-    end
+  QUERYABLE_FEATURES.keys.each do |feature|
+    define_method("supports_#{feature}?") { false }
   end
 
   class UnknownFeatureError < StandardError; end
