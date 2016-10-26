@@ -4,7 +4,7 @@ module Api
       def policies_query_resource(object)
         return {} unless object
         policy_profile_klass = collection_class(:policy_profiles)
-        (object.kind_of?(policy_profile_klass)) ? object.members : object_policies(object)
+        object.kind_of?(policy_profile_klass) ? object.members : object_policies(object)
       end
 
       def policies_assign_resource(object, _type, id = nil, data = nil)
@@ -43,7 +43,7 @@ module Api
         return klass.find_by_guid(guid) if guid.present?
 
         href = data["href"]
-        href.match(%r{^.*/#{collection}/#{CID_OR_ID_MATCHER}$}) ? klass.find(from_cid(href.split('/').last)) : {}
+        href =~ %r{^.*/#{collection}/#{CID_OR_ID_MATCHER}$} ? klass.find(from_cid(href.split('/').last)) : {}
       end
 
       def policy_subcollection_action(ctype, policy)
