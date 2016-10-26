@@ -395,7 +395,6 @@ module ApplicationHelper
       :gtl_buttons           => @gtl_buttons,
       :gtl_type              => @gtl_type,
       :html                  => @html,
-      :is_redhat             => @is_redhat,
       :lastaction            => @lastaction,
       :layout                => @layout,
       :miq_request           => @miq_request,

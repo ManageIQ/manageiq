@@ -86,6 +86,7 @@ module SupportsFeatureMixin
     :live_migrate               => 'Live Migration',
     :migrate                    => 'Migration',
     :provisioning               => 'Provisioning',
+    :publish                    => 'Publishing',
     :quick_stats                => 'Quick Stats',
     :reboot_guest               => 'Reboot Guest Operation',
     :reconfigure                => 'Reconfiguration',
