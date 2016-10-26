@@ -740,6 +740,23 @@ describe VirtualFields do
         expect(tc.parent_col1).to eq("def")
       end
     end
+
+    describe "#sum" do
+      it "supports virtual attributes" do
+        class TestClass
+          virtual_attribute :col2, :integer, :arel => (-> (t) { t.grouping(arel_attribute(:col1)) })
+          def col2
+            col1
+          end
+        end
+
+        TestClass.create(:id => 1, :col1 => nil)
+        TestClass.create(:id => 2, :col1 => 20)
+        TestClass.create(:id => 3, :col1 => 30)
+
+        expect(TestClass.sum(:col2)).to eq(50)
+      end
+    end
   end
 
   describe "#follow_associations" do

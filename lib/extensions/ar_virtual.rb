@@ -760,6 +760,14 @@ module ActiveRecord
 
       # From ActiveRecord::Calculations
       def calculate(operation, attribute_name)
+        # work around 1 until https://github.com/rails/rails/pull/25304 gets merged
+        # This allows attribute_name to be a virtual_attribute
+        if (arel = klass.arel_attribute(attribute_name)) && virtual_attribute?(attribute_name)
+          attribute_name = arel
+        end
+        # end work around 1
+
+        # allow calculate to work when including a virtual attribute
         real = without_virtual_includes
         return super if real.equal?(self)
 
