@@ -7,16 +7,17 @@ module ManageIQ::Providers::Vmware::CloudManager::ManagerEventsMixin
         :ems          => self,
         :virtual_host => "/",
       }
-      amqp = connection_configuration_by_role("amqp")
-      if (endpoint = amqp.try(:endpoint))
-        opts[:hostname]          = endpoint.hostname
-        opts[:port]              = endpoint.port
-        opts[:security_protocol] = endpoint.security_protocol
-      end
+      if (amqp = connection_configuration_by_role("amqp"))
+        if (endpoint = amqp.try(:endpoint))
+          opts[:hostname]          = endpoint.hostname
+          opts[:port]              = endpoint.port
+          opts[:security_protocol] = endpoint.security_protocol
+        end
 
-      if (authentication = amqp.try(:authentication))
-        opts[:username] = authentication.userid
-        opts[:password] = authentication.password
+        if (authentication = amqp.try(:authentication))
+          opts[:username] = authentication.userid
+          opts[:password] = authentication.password
+        end
       end
       opts
     end
@@ -24,7 +25,5 @@ module ManageIQ::Providers::Vmware::CloudManager::ManagerEventsMixin
 
   def verify_amqp_credentials(_options = {})
     ManageIQ::Providers::Vmware::CloudManager::EventCatcher::Stream.test_amqp_connection(event_monitor_options)
-  rescue => err
-    raise translate_exception(err)
   end
 end
