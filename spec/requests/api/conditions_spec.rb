@@ -124,7 +124,7 @@ describe "Conditions API" do
 
       expect(response.parsed_body["results"].count).to eq(2)
 
-      expect(Condition.pluck(:description)).to eq(%w(change change2))
+      expect(Condition.pluck(:description)).to match_array(%w(change change2))
     end
   end
 
