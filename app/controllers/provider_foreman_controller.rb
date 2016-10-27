@@ -135,6 +135,7 @@ class ProviderForemanController < ApplicationController
   end
 
   def tagging
+    @explorer = true
     case x_active_accord
     when :configuration_manager_providers
       assert_privileges("provider_foreman_configured_system_tag")
