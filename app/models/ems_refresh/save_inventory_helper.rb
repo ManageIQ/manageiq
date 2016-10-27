@@ -33,22 +33,14 @@ module EmsRefresh::SaveInventoryHelper
     end
   end
 
-  def store_ids_for_new_dto_records(records, dto_collection)
-    records.each do |r|
-      dto = dto_collection.find(dto_collection.object_index(r))
-      next unless dto
-      dto[:id]      = r.id
-      r.send(:clear_association_cache)
-      dto[:_object] = r
-    end
-  end
-
-  def save_dto_inventory_with_findkey(association, hash, deletes, new_records, record_index)
+  def save_dto_inventory_with_findkey(dto, association, deletes, new_records, record_index, method = nil)
+    hash = dto.kind_of?(::ManagerRefresh::Dto) ? dto.attributes : dto
     # Find the record, and update if found, else create it
-    found = record_index.fetch(hash)
+    method ||= :build
+    found  = record_index.fetch(hash)
     if found.nil?
-      found = association.build(hash.except(:id))
-      new_records << found
+      dto.build_object(association.public_send(method, hash.except(:id)))
+      new_records << dto
     else
       found.update_attributes!(hash.except(:id, :type))
       deletes.delete(found) unless deletes.blank?
@@ -56,7 +48,7 @@ module EmsRefresh::SaveInventoryHelper
     found
   end
 
-  def save_dto_inventory_multi_batch(association, dto_collection, deletes, find_key, child_keys = [], extra_keys = [], disconnect = false)
+  def save_dto_inventory_multi_batch(association, dto_collection, deletes, find_key)
     association.reset
 
     if deletes == :use_association
@@ -66,81 +58,42 @@ module EmsRefresh::SaveInventoryHelper
     end
 
     deletes_index = deletes.each_with_object({}) { |x, obj| obj[x] = x }
-
-    child_keys = Array.wrap(child_keys)
-    remove_keys = Array.wrap(extra_keys) + child_keys
-
     record_index = TypedIndex.new(association, find_key)
 
     new_records = []
+    _log.info("PROCESSING #{dto_collection}")
     ActiveRecord::Base.transaction do
-      dto_collection.each do |h|
-        h = h.kind_of?(::ManagerRefresh::Dto) ? h.attributes : h
-        save_dto_inventory_with_findkey(association, h.except(*remove_keys), deletes_index, new_records, record_index)
+      dto_collection.each do |dto|
+        association_meta_info = dto_collection.parent.class.reflect_on_association(dto_collection.association)
+
+        if association_meta_info.options[:through].blank?
+          entity_builder = association
+          method         = :build
+        else
+          entity_builder = dto_collection.model_class
+          method         = :new
+        end
+
+        save_dto_inventory_with_findkey(dto, entity_builder, deletes_index, new_records, record_index, method)
       end
     end
+    _log.info("PROCESSED #{dto_collection}")
 
     # Delete the items no longer found
     unless deletes_index.blank?
       deletes = deletes_index.values
       type = association.proxy_association.reflection.name
       _log.info("[#{type}] Deleting #{log_format_deletes(deletes)}")
-      disconnect ? deletes.each(&:disconnect_inv) : delete_inventory_multi(dto_collection, association, deletes)
+      # TODO(lsmola) If first element has :disconnect_inv, we should be save to call it, unless some STI subclass
+      # overwrite this. Check if this can happen
+      deletes.first.respond_to?(:disconnect_inv) ? deletes.each(&:disconnect_inv) : delete_inventory_multi(dto_collection, association, deletes)
     end
 
-    # Add the new items
-    association_meta_info = dto_collection.parent.class.reflect_on_association(dto_collection.association)
-    if association_meta_info.options[:through].blank?
-      ActiveRecord::Base.transaction do
-        association.push(new_records)
-      end
-    else
-      ActiveRecord::Base.transaction do
-        new_records.map(&:save)
-      end
+    _log.info("SAVING #{dto_collection}")
+    ActiveRecord::Base.transaction do
+      new_records.map(&:save)
     end
-  end
-
-  def save_dto_inventory_multi(association, dto_collection, deletes, find_key, child_keys = [], extra_keys = [], disconnect = false)
-    association.reset
-
-    if deletes == :use_association
-      deletes = association
-    elsif deletes.respond_to?(:reload) && deletes.loaded?
-      deletes.reload
-    end
-    deletes_index = deletes.each_with_object({}) { |x, obj| obj[x] = x }
-
-    child_keys = Array.wrap(child_keys)
-    remove_keys = Array.wrap(extra_keys) + child_keys
-
-    record_index = TypedIndex.new(association, find_key)
-
-    new_records = []
-    dto_collection.each do |h|
-      h = h.kind_of?(::ManagerRefresh::Dto) ? h.attributes : h
-      save_dto_inventory_with_findkey(association, h.except(*remove_keys), deletes_index, new_records, record_index)
-    end
-
-    # Delete the items no longer found
-    unless deletes_index.blank?
-      deletes = deletes_index.values
-      type = association.proxy_association.reflection.name
-      _log.info("[#{type}] Deleting #{log_format_deletes(deletes)}")
-      disconnect ? deletes.each(&:disconnect_inv) : delete_inventory_multi(dto_collection, association,  deletes)
-    end
-
-    # Add the new items
-    association_meta_info = dto_collection.parent.class.reflect_on_association(dto_collection.association)
-    if association_meta_info.options[:through].blank?
-      dto_collection.model_class.transaction do
-        association.push(new_records)
-      end
-    else
-      dto_collection.model_class.transaction do
-        new_records.map(&:save)
-      end
-    end
+    _log.info("SAVING #{dto_collection}")
   end
 
   def delete_inventory_multi(dto_collection, association, deletes)
