@@ -8,6 +8,31 @@ module ManagerRefresh
       end
 
       def build_directed_acyclic_graph!
+        ################################################################################################################
+        ## Description of an algorithm for building DAG
+        ################################################################################################################
+        # Terms:
+        ##############
+        # Fixed Edges - Are edges that cannot be removed from Graph, in our case these are edges caused by attributes
+        #               that has to be present before saving the record. These are attributes that are part of the
+        #               record identity (unique index of the DB record) and attributes validated for presence.
+        # Feedback Edge Set - Is a set of edges that are causing a cycle in the graph
+        # DAG - Directed Acyclic Graph
+        #
+        # Alghoritm:
+        ##############
+        # Building a Feedback Edge Set:
+        # We will be building DAG from a Graph containing cycles, the algorithm is building a Feedback Edge Set by
+        # adding edges to a DAG made from Fixed Edges, while checking if by adding a new edge we haven't created
+        # a cycle in the graph.
+        # Converting original graph to DAG:
+        # Using the Feedback Edge Set, we remove the attributes causing cycles from the original graph. This way, we
+        # get a DAG, but the DAG is missing attributes.
+        # Using the Feedback Edge Set we create new Nodes, containing only removed attributes in a step before. These
+        # nodes will be attached to Graph according to their dependencies. By saving these nodes, we will add the
+        # missing relations.
+        ################################################################################################################
+
         # Obtain edges and fixed edges using dependencies of DtoCollections
         edges, fixed_edges = build_edges(nodes)
 
