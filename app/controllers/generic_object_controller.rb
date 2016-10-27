@@ -1,5 +1,4 @@
 class GenericObjectController < ApplicationController
-  include GenericObjectHelper
   before_action :check_privileges
 
   def create
