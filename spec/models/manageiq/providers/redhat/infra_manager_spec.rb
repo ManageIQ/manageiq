@@ -156,9 +156,8 @@ describe ManageIQ::Providers::Redhat::InfraManager do
     let(:supported_api_versions) { [3, 4] }
     context "#process_api_features_support" do
       before(:each) do
-        allow(SupportsFeatureMixin).to receive(:guard_queryable_feature).and_return(true)
         allow(described_class).to receive(:api_features)
-          .and_return('3' => %w(feature1 feature3), '4' => %w(feature2 feature3))
+          .and_return('3' => %w(delete suspend), '4' => %w(create suspend))
         described_class.process_api_features_support
         allow(ems).to receive(:supported_api_versions).and_return(supported_api_versions)
       end
@@ -166,36 +165,36 @@ describe ManageIQ::Providers::Redhat::InfraManager do
       context "no versions supported" do
         let(:supported_api_versions) { [] }
         it 'supports the right features' do
-          expect(ems.supports_feature1?).to be_falsey
-          expect(ems.supports_feature2?).to be_falsey
-          expect(ems.supports_feature3?).to be_falsey
+          expect(ems.supports_delete?).to be_falsey
+          expect(ems.supports_create?).to be_falsey
+          expect(ems.supports_suspend?).to be_falsey
         end
       end
 
       context "version 3 supported" do
         let(:supported_api_versions) { [3] }
         it 'supports the right features' do
-          expect(ems.supports_feature1?).to be_truthy
-          expect(ems.supports_feature2?).to be_falsey
-          expect(ems.supports_feature3?).to be_truthy
+          expect(ems.supports_delete?).to be_truthy
+          expect(ems.supports_create?).to be_falsey
+          expect(ems.supports_suspend?).to be_truthy
         end
       end
 
       context "version 4 supported" do
         let(:supported_api_versions) { [4] }
         it 'supports the right features' do
-          expect(ems.supports_feature1?).to be_falsey
-          expect(ems.supports_feature2?).to be_truthy
-          expect(ems.supports_feature3?).to be_truthy
+          expect(ems.supports_delete?).to be_falsey
+          expect(ems.supports_create?).to be_truthy
+          expect(ems.supports_suspend?).to be_truthy
         end
       end
 
       context "all versions supported" do
         let(:supported_api_versions) { [3, 4] }
         it 'supports the right features' do
-          expect(ems.supports_feature1?).to be_truthy
-          expect(ems.supports_feature2?).to be_truthy
-          expect(ems.supports_feature3?).to be_truthy
+          expect(ems.supports_delete?).to be_truthy
+          expect(ems.supports_create?).to be_truthy
+          expect(ems.supports_suspend?).to be_truthy
         end
       end
     end
