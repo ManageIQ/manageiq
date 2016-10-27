@@ -37,9 +37,11 @@
   * For success functuon @see ToolbarController#onRowSelect()
   */
   function subscribeToSubject() {
-    ManageIQ.angular.rxSubject.subscribe(function(event) {
+    this.subscription = ManageIQ.angular.rxSubject.subscribe(function(event) {
       if (event.initController && event.initController.name === COTNROLLER_NAME) {
-        this.initController(event.initController.data)
+        this.initController(event.initController.data);
+      } else if (event.unsubscribe && event.unsubscribe === COTNROLLER_NAME) {
+        this.onUnsubscribe();
       }
     }.bind(this),
     function (err) {
@@ -73,6 +75,10 @@
       sortObject: this.gtlData.cols[headerId],
       isAscending: isAscending
     };
+  }
+
+  GtlController.prototype.onUnsubscribe = function() {
+    this.subscription.dispose();
   }
 
   /**

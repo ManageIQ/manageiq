@@ -1496,7 +1496,6 @@ module VmCommon
       presenter[:build_calendar] = true
     else
       presenter.update(:main_div, r[:partial => 'layouts/x_gtl'])
-      presenter.update_report_data(init_report_data('miqGtlContoller'))
     end
 
     presenter[:ajax_action] = {

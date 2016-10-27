@@ -432,7 +432,6 @@ class InfraNetworkingController < ApplicationController
     replace_explorer_trees(replace_trees, presenter, r)
 
     presenter.update(:main_div, r[:partial => 'layouts/x_gtl'])
-    presenter.update_report_data(init_report_data('miqGtlContoller'))
     rebuild_toolbars(false, presenter)
     handle_bottom_cell(presenter, r)
 
@@ -486,7 +485,6 @@ class InfraNetworkingController < ApplicationController
       presenter.update(:main_div, r[:partial => partial, :locals => partial_locals])
     else
       presenter.update(:main_div, r[:partial => 'layouts/x_gtl'])
-      presenter.update_report_data(init_report_data('miqGtlContoller'))
     end
 
     replace_search_box(presenter, r)
@@ -577,7 +575,6 @@ class InfraNetworkingController < ApplicationController
                                     :locals  => {:controller => 'infra_networking'}])
     else
       presenter.update(:main_div, r[:partial => 'layouts/x_gtl'])
-      presenter.update_report_data(init_report_data('miqGtlContoller'))
     end
   end
 
