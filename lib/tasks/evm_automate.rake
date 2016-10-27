@@ -159,7 +159,7 @@ namespace :evm do
           import_options['password'] = ENV['PASSWORD']
           import_options['ref'] = ENV['REF'] || MiqAeGitImport::DEFAULT_BRANCH
           import_options['ref_type'] = ENV['REF_TYPE'] || MiqAeGitImport::BRANCH
-          import_options['verify_ssl'] = ENV['verify_ssl'] || OpenSSL::SSL::VERIFY_PEER
+          import_options['verify_ssl'] = ENV['VERIFY_SSL'] || OpenSSL::SSL::VERIFY_PEER
         end
         %w(SYSTEM ENABLED).each do |name|
           if ENV[name].present?
