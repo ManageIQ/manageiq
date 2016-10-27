@@ -150,6 +150,7 @@ class ChargebackVm < Chargeback
 
   def get_rate_parents(perf)
     @enterprise ||= MiqEnterprise.my_enterprise
-    [perf.parent_host, perf.parent_ems_cluster, perf.parent_storage, perf.parent_ems, @enterprise, perf.resource.try(:tenant)]
+    parents = perf.resource_parents + [@enterprise]
+    parents.compact
   end
 end # class Chargeback
