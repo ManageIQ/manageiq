@@ -806,7 +806,8 @@ describe ChargebackVm do
 
       extra_fields = ChargebackVm.get_keys_and_extra_fields(metric_rollup, timestamp_key)
       expected_fields = {"vm_name" => @vm1.name, "owner_name" => @admin.name, "provider_name" => @ems.name,
-                         "provider_uid" => @ems.guid, "vm_uid" => "ems_ref", "vm_guid" => @vm1.guid}
+                         "provider_uid" => @ems.guid, "vm_uid" => "ems_ref", "vm_guid" => @vm1.guid,
+                         "vm_id" => @vm1.id}
 
       expect("#{metric_rollup.resource_id}_#{timestamp_key}").to eq(extra_fields.first)
       expect(extra_fields.second).to eq(expected_fields)
@@ -824,7 +825,8 @@ describe ChargebackVm do
 
       extra_fields = ChargebackVm.get_keys_and_extra_fields(metric_rollup_without_ems, timestamp_key)
       expected_fields = {"vm_name" => @vm1.name, "owner_name" => @admin.name, "provider_name" => nil,
-                         "provider_uid" => nil, "vm_uid" => "ems_ref", "vm_guid" => @vm1.guid}
+                         "provider_uid" => nil, "vm_uid" => "ems_ref", "vm_guid" => @vm1.guid,
+                         "vm_id" => @vm1.id}
 
       expect("#{metric_rollup.resource_id}_#{timestamp_key}").to eq(extra_fields.first)
       expect(extra_fields.second).to eq(expected_fields)

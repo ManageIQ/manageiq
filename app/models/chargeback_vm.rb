@@ -1,5 +1,6 @@
 class ChargebackVm < Chargeback
   set_columns_hash(
+    :vm_id                    => :integer,
     :vm_name                  => :string,
     :vm_uid                   => :string,
     :vm_guid                  => :string,
@@ -86,6 +87,7 @@ class ChargebackVm < Chargeback
     @vm_owners[perf.resource_id] ||= perf.resource.evm_owner_name
 
     extra_fields = {
+      "vm_id"         => perf.resource_id,
       "vm_name"       => perf.resource_name,
       "vm_uid"        => perf.resource.ems_ref,
       "vm_guid"       => perf.resource.try(:guid),
