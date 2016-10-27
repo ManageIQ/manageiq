@@ -118,8 +118,7 @@
       var prefix = '/' + ManageIQ.controller;
       $.post(prefix + '/x_show/' + item.id);
     } else {
-      var indexOfShow = this.initObject.showUrl.indexOf('/show');
-      var prefix = this.initObject.currId !== "" ? this.initObject.showUrl : this.initObject.showUrl.substr(0, indexOfShow);
+      var prefix = this.initObject.showUrl;
       DoNav(prefix + '/' + item.id);
     }
     return false;
