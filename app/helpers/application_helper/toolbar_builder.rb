@@ -570,9 +570,6 @@ class ApplicationHelper::ToolbarBuilder
     # user can see the buttons if they can get to Policy RSOP/Automate Simulate screen
     return false if ["miq_ae_tools"].include?(@layout)
 
-    # hide this button when in custom buttons tree on ci node, this button is added in toolbar to show on Buttons folder node in CatalogItems tree
-    return true if id == "ab_button_new" && x_active_tree == :ab_tree && x_node.split('_').length == 2 && x_node.split('_')[0] == "xx-ab"
-
     # buttons on compare/drift screen are allowed if user has access to compare/drift
     return false if id.starts_with?("compare_", "drift_", "comparemode_", "driftmode_")
 
@@ -1009,21 +1006,6 @@ class ApplicationHelper::ToolbarBuilder
       end
     when nil, "NilClass"
       case id
-      when "ab_group_edit"
-        return N_("Selected Custom Button Group cannot be edited") if x_node.split('-')[1] == "ub"
-      when "ab_group_delete"
-        return N_("Selected Custom Button Group cannot be deleted") if x_node.split('-')[1] == "ub"
-      when "ab_group_reorder"
-        if x_active_tree == :ab_tree
-          if CustomButtonSet.find_all_by_class_name(x_node.split('_').last).count <= 1
-            return N_("Only more than 1 Custom Button Groups can be reordered")
-          end
-        else
-          rec_id = x_node.split('_').last.split('-').last
-          st = ServiceTemplate.find_by_id(rec_id)
-          count = st.custom_button_sets.count + st.custom_buttons.count
-          return N_("Only more than 1 Custom Button Groups can be reordered") if count <= 1
-        end
       when "ae_copy_simulate"
         if @resolve[:button_class].blank?
           return N_("Object attribute must be specified to copy object details for use in a Button")
