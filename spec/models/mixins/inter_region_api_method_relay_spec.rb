@@ -201,30 +201,48 @@ describe InterRegionApiMethodRelay do
     end
 
     describe ".exec_api_call" do
-      let(:region)         { 0 }
-      let(:action)         { :the_action }
-      let(:api_connection) { double("ManageIQ::API::Client Connection") }
-      let(:api_collection) { double("ManageIQ::API::Client Collection") }
+      let(:region)             { 0 }
+      let(:action)             { :the_action }
+      let(:api_connection)     { double("ManageIQ::API::Client Connection") }
+      let(:api_collection)     { double("ManageIQ::API::Client Collection", :name => collection_name) }
+      let(:api_success_result) { ManageIQ::API::Client::ActionResult.new("success" => true, "message" => "success!") }
+      let(:api_failure_result) { ManageIQ::API::Client::ActionResult.new("success" => false, "message" => "failure!") }
+      let(:api_resource)       { ManageIQ::API::Client::Resource.subclass("test_resource").new(api_collection, {}) }
 
       before do
         expect(described_class).to receive(:api_client_connection_for_region).with(region).and_return(api_connection)
         expect(api_connection).to receive(collection_name).and_return(api_collection)
       end
 
+      it "finds the instance when the api returns a resource" do
+        instance = double("ActiveRecord instance")
+        expect(api_collection).to receive(action).and_return(api_resource)
+        expect(described_class).to receive(:instance_for_resource).with(api_resource).and_return(instance)
+
+        expect(described_class.exec_api_call(region, collection_name, action)).to eq(instance)
+      end
+
+      it "raises when the api result is a failure" do
+        expect(api_collection).to receive(action).and_return(api_failure_result)
+        expect {
+          described_class.exec_api_call(region, collection_name, action)
+        }.to raise_error(described_class::InterRegionApiMethodRelayError)
+      end
+
       context "when no block is passed" do
         it "calls the given action with the given args" do
           args = {:my => "args", :here => 123}
-          expect(api_collection).to receive(action).with(args)
+          expect(api_collection).to receive(action).with(args).and_return(api_success_result)
           described_class.exec_api_call(region, collection_name, action, args)
         end
 
         it "defaults the args to an empty hash" do
-          expect(api_collection).to receive(action).with({})
+          expect(api_collection).to receive(action).with({}).and_return(api_success_result)
           described_class.exec_api_call(region, collection_name, action)
         end
 
         it "defaults the args to an empty hash when nil is explicitly passed as args" do
-          expect(api_collection).to receive(action).with({})
+          expect(api_collection).to receive(action).with({}).and_return(api_success_result)
           described_class.exec_api_call(region, collection_name, action, nil)
         end
       end
@@ -237,7 +255,8 @@ describe InterRegionApiMethodRelay do
           expect(api_collection).to receive(action) do |args, &block|
             expect(args).to eq(expected_args)
             expect(block.call).to eq("some stuff")
-          end
+          end.and_return(api_success_result)
+
           described_class.exec_api_call(region, collection_name, action, expected_args, &resource_proc)
         end
 
@@ -245,7 +264,8 @@ describe InterRegionApiMethodRelay do
           expect(api_collection).to receive(action) do |args, &block|
             expect(args).to eq({})
             expect(block.call).to eq("some stuff")
-          end
+          end.and_return(api_success_result)
+
           described_class.exec_api_call(region, collection_name, action, &resource_proc)
         end
 
@@ -253,10 +273,47 @@ describe InterRegionApiMethodRelay do
           expect(api_collection).to receive(action) do |args, &block|
             expect(args).to eq({})
             expect(block.call).to eq("some stuff")
-          end
+          end.and_return(api_success_result)
+
           described_class.exec_api_call(region, collection_name, action, nil, &resource_proc)
         end
       end
+    end
+  end
+
+  describe ".instance_for_resource" do
+    let(:collection) { double("ManageIQ::API::Client::Collection", :name => collection_name) }
+    let(:resource)   { double("ManageIQ::API::Client::Resource", :collection => collection, :id => 10) }
+    let(:klass)      { double("MyTestClass") }
+    let(:instance)   { double("MyTestClass instance") }
+
+    before do
+      allow(Api::CollectionConfig).to receive(:new).and_return(api_config)
+      stub_const("InterRegionApiMethodRelay::INITIAL_INSTANCE_WAIT", 0.01)
+      stub_const("InterRegionApiMethodRelay::MAX_INSTANCE_WAIT", 0.03)
+    end
+
+    it "finds the instance with the returned id" do
+      expect(api_config).to receive(:klass).with(collection_name).and_return(klass)
+      expect(klass).to receive(:find_by).with(:id => 10).and_return(instance)
+
+      expect(described_class.instance_for_resource(resource)).to eq(instance)
+    end
+
+    it "retries if it can't find the instance" do
+      expect(api_config).to receive(:klass).with(collection_name).and_return(klass)
+      expect(klass).to receive(:find_by).twice.with(:id => 10).and_return(nil, instance)
+
+      expect(described_class.instance_for_resource(resource)).to eq(instance)
+    end
+
+    it "raises if it can't find the instance within the timeout" do
+      expect(api_config).to receive(:klass).with(collection_name).and_return(klass)
+      expect(klass).to receive(:find_by).twice.with(:id => 10).and_return(nil, nil)
+
+      expect {
+        described_class.instance_for_resource(resource)
+      }.to raise_error(InterRegionApiMethodRelay::InterRegionApiMethodRelayError)
     end
   end
 

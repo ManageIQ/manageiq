@@ -1,4 +1,11 @@
+require 'manageiq-api-client'
+
 module InterRegionApiMethodRelay
+  class InterRegionApiMethodRelayError < RuntimeError; end
+
+  INITIAL_INSTANCE_WAIT = 1.second
+  MAX_INSTANCE_WAIT     = 1.minute
+
   def self.extended(klass)
     unless klass.const_defined?("InstanceMethodRelay")
       instance_relay = klass.const_set("InstanceMethodRelay", Module.new)
@@ -55,8 +62,6 @@ module InterRegionApiMethodRelay
       raise "Failed to establish API connection to region #{region}"
     end
 
-    require 'manageiq-api-client'
-
     ManageIQ::API::Client.new(
       :url      => url,
       :miqtoken => MiqRegion.api_system_auth_token_for_region(region, User.current_userid),
@@ -67,11 +72,33 @@ module InterRegionApiMethodRelay
   def self.exec_api_call(region, collection_name, action, api_args = nil, &resource_block)
     api_args ||= {}
     collection = api_client_connection_for_region(region).public_send(collection_name)
-    if resource_block
-      collection.public_send(action, api_args, &resource_block)
+    result = if resource_block
+               collection.public_send(action, api_args, &resource_block)
+             else
+               collection.public_send(action, api_args)
+             end
+    case result
+    when ManageIQ::API::Client::ActionResult
+      raise InterRegionApiMethodRelayError, result.message if result.failed?
+    when ManageIQ::API::Client::Resource
+      instance_for_resource(result)
     else
-      collection.public_send(action, api_args)
+      raise InterRegionApiMethodRelayError, "Got unexpected API result object #{result.class}"
     end
+  end
+
+  def self.instance_for_resource(resource)
+    klass = Api::CollectionConfig.new.klass(resource.collection.name)
+    wait = INITIAL_INSTANCE_WAIT
+
+    while wait < MAX_INSTANCE_WAIT
+      instance = klass.find_by(:id => resource.id)
+      return instance if instance
+      sleep(wait)
+      wait *= 2
+    end
+
+    raise InterRegionApiMethodRelayError, "Failed to retrieve #{klass} instance with id #{resource.id}"
   end
 
   private
