@@ -79,6 +79,7 @@ describe ChargebackContainerImage do
     }
     let!(:cbrd) {
       FactoryGirl.create(:chargeback_rate_detail_fixed_compute_cost,
+                         :source             => "compute_1",
                          :chargeback_rate_id => @cbr.id,
                          :per_time           => "hourly",
                          :chargeback_tiers   => [cbt])
@@ -134,6 +135,7 @@ describe ChargebackContainerImage do
       FactoryGirl.create(:chargeback_rate_detail_fixed_compute_cost,
                          :chargeback_rate_id => @cbr.id,
                          :per_time           => "hourly",
+                         :source             => "compute_1",
                          :chargeback_tiers   => [cbt])
     }
     it "fixed_compute" do
