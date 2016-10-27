@@ -70,6 +70,14 @@
             %text{:y => "9"} &#xF02b;
         %label
           = _("Tags")
+      %kubernetes-topology-icon{tooltipOptions, :kind => "LoadBalancer"}
+        %svg.kube-topology
+          %g.EntityLegend.Network.LoadBalancer
+            %circle{:r => "17"}
+            -# pficon-network
+            %text{:y => "8"} &#xE909;
+        %label
+          = _("Load Balancer")
 
   .alert.alert-info.alert-dismissable
     %button.close{"aria-hidden" => "true", "data-dismiss" => "alert", :type => "button"}
