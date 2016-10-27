@@ -78,14 +78,15 @@
 
 %div{"ng-if" => defined?(security_protocol_hide) ? false : true}
   .form-group{"ng-class" => "{'has-error': angularForm.#{prefix}_security_protocol.$invalid}",
-              "ng-if"    => "emsCommonModel.emstype == 'openstack' || " +       |
-                            "emsCommonModel.emstype == 'openstack_infra' || " + |
-                            "emsCommonModel.emstype == 'nuage_network' || " +   |
-                            "emsCommonModel.emstype == 'scvmm'"}                |
+              "ng-if"    => "emsCommonModel.emstype == 'openstack' || " +                              |
+                            "emsCommonModel.emstype == 'openstack_infra' || " +                        |
+                            "emsCommonModel.emstype == 'nuage_network' || " +                          |
+                            "(emsCommonModel.emstype == 'vmware_cloud' && '#{prefix}' === 'amqp') || " |
+                            "emsCommonModel.emstype == 'scvmm'"}                                       |
     %label.col-md-2.control-label{"for" => "#{prefix}_security_protocol"}
       = _('Security Protocol')
-    .col-md-8{"ng-if" => "emsCommonModel.emstype == 'openstack' || emsCommonModel.emstype == 'openstack_infra'"}
-      - prefix == "amqp" ? security_protocols = @openstack_amqp_security_protocols : security_protocols = @openstack_security_protocols
+    .col-md-8{"ng-if" => "emsCommonModel.emstype == 'openstack' || emsCommonModel.emstype == 'openstack_infra' || emsCommonModel.emstype == 'vmware_cloud'"}
+      - prefix == "amqp" ? security_protocols = @amqp_security_protocols : security_protocols = @openstack_security_protocols
       = select_tag("#{prefix}_security_protocol",
                        options_for_select([["<#{_('Choose')}>", nil]] + security_protocols, disabled: ["<#{_('Choose')}>", nil]),
                        "ng-model"                    => "#{ng_model}.#{prefix}_security_protocol",

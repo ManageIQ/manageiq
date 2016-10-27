@@ -329,6 +329,8 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
       $scope.emsCommonModel.default_api_port = "8443";
     } else if ($scope.emsCommonModel.emstype === 'vmware_cloud') {
       $scope.emsCommonModel.default_api_port = "443";
+      $scope.emsCommonModel.event_stream_selection = "none";
+      $scope.emsCommonModel.amqp_security_protocol = 'non-ssl';
     }
   };
 
@@ -482,7 +484,8 @@ ManageIQ.angular.app.controller('emsCommonFormController', ['$http', '$scope', '
   };
 
   $scope.radioSelectionChanged = function() {
-    if ($scope.emsCommonModel.event_stream_selection === "ceilometer") {
+    if ($scope.emsCommonModel.event_stream_selection === "ceilometer" ||
+        $scope.emsCommonModel.event_stream_selection === "none") {
       if (angular.isDefined($scope.postValidationModel)) {
         $scope.emsCommonModel.amqp_hostname = $scope.postValidationModel.amqp.amqp_hostname;
         $scope.emsCommonModel.amqp_api_port = $scope.postValidationModel.amqp.amqp_api_port;

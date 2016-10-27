@@ -810,7 +810,7 @@ module EmsCommon
     @provider_regions = retrieve_provider_regions
     @openstack_infra_providers = retrieve_openstack_infra_providers
     @openstack_security_protocols = retrieve_openstack_security_protocols
-    @openstack_amqp_security_protocols = retrieve_openstack_amqp_security_protocols
+    @amqp_security_protocols = retrieve_amqp_security_protocols
     @nuage_security_protocols = retrieve_nuage_security_protocols
     @scvmm_security_protocols = [[_('Basic (SSL)'), 'ssl'], ['Kerberos', 'kerberos']]
     @openstack_api_versions = retrieve_openstack_api_versions
@@ -858,7 +858,7 @@ module EmsCommon
     retrieve_security_protocols
   end
 
-  def retrieve_openstack_amqp_security_protocols
+  def retrieve_amqp_security_protocols
     # OSP8 doesn't support SSL for AMQP
     [[_('Non-SSL'), 'non-ssl']]
   end

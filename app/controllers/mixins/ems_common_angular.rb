@@ -383,6 +383,9 @@ module Mixins
 
       if ems.kind_of?(ManageIQ::Providers::Vmware::CloudManager)
         default_endpoint = {:role => :default, :hostname => hostname, :port => port}
+        if params[:event_stream_selection] == "amqp"
+          amqp_endpoint = {:role => :amqp, :hostname => amqp_hostname, :port => amqp_port, :security_protocol => amqp_security_protocol}
+        end
       end
 
       if ems.kind_of?(ManageIQ::Providers::Azure::CloudManager)
