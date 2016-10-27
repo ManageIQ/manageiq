@@ -14,10 +14,12 @@ class ContainerLabelTagMapping < ApplicationRecord
 
   belongs_to :tag
 
-  # Returns {[name, type, value] => [tag_id, ...]}}} hash.  Pass it to map_* methods.
+  # Pass the data this returns to map_* methods.
   def self.cache
-    find_each.group_by { |m| [m.label_name, m.labeled_resource_type, m.label_value].freeze }
-             .transform_values { |mappings| mappings.collect(&:tag_id) }
+    # {[name, type, value] => [tag_id, ...]}
+    in_my_region.find_each
+                .group_by { |m| [m.label_name, m.labeled_resource_type, m.label_value].freeze }
+                .transform_values { |mappings| mappings.collect(&:tag_id) }
   end
 
   # We expect labels to be {:name, :value} hashes
