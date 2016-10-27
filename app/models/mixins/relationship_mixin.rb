@@ -390,6 +390,22 @@ module RelationshipMixin
     Relationship.arranged_rels_to_resources(subtree_rels_arranged(*args))
   end
 
+  def grandchild_rels(*args)
+    options = args.extract_options!
+    rels = relationships.inject(Relationship.none) do |stmt, r|
+      stmt.or(Relationship.where(r.grandchild_conditions))
+    end
+    Relationship.filter_by_resource_type(rels, options)
+  end
+
+  def child_and_grandchild_rels(*args)
+    options = args.extract_options!
+    rels = relationships.inject(Relationship.none) do |stmt, r|
+      stmt.or(Relationship.where(r.child_and_grandchild_conditions))
+    end
+    Relationship.filter_by_resource_type(rels, options)
+  end
+
   # Return the depth of the node, root nodes are at depth 0
   def depth(*_args)
     rel = relationship(:raise_on_multiple => true) # TODO: Handle multiple nodes with a way to detect which node you want

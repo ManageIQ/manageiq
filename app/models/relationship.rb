@@ -168,4 +168,33 @@ class Relationship < ApplicationRecord
     end
     fields.join(options[:record_delimiter])
   end
+
+  # ancestry methods
+
+  # depth = depth + 2 ()
+  #
+  # ancestry:
+  #   my children:              ancestry == me.child_ancestry
+  #   my grand children:        ancestry == "#{me.child_ancestry}/[0-9]*"
+  #   my great grand children:  ancestry == "#{me.child_ancestry}/[0-9]*/[0-9]*"
+  #
+  # regexp was simpler but 10x slower. so used like
+  #
+  # algorithm:
+  #
+  #       (relationship LIKE "child_ancestry/%"             -- grand child or lower
+  #       AND NOT relationship LIKE "child_ancestry/%/%")   -- NOT great grand child or lower
+  #
+  # reminders:
+  # - matches("a%", nil, true) is case sensitive matching (i.e.: "like 'a%'") vs default (i.e.: "ilike 'a%'")
+  #
+  def grandchild_conditions
+    t = self.class.arel_table
+    t.grouping(t[:ancestry].matches("#{child_ancestry}/%", nil, true).and(
+                 t[:ancestry].does_not_match("#{child_ancestry}/%", nil, true)))
+  end
+
+  def child_and_grandchild_conditions
+    grandchild_conditions.or(child_conditions)
+  end
 end
