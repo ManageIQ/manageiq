@@ -17,6 +17,11 @@ module Metric::ChargebackHelper
   end
 
   def resource_parents
-    [parent_host, parent_ems_cluster, parent_storage, parent_ems, resource.try(:tenant)].compact
+    [parent_host || resource.try(:host),
+     parent_ems_cluster || resource.try(:ems_cluster),
+     parent_storage || resource.try(:storage),
+     parent_ems || resource.try(:ext_management_system),
+     resource.try(:tenant)
+    ].compact
   end
 end
