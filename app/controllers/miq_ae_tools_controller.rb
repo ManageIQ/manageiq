@@ -202,13 +202,10 @@ Methods updated/added: %{method_stats}") % stat_options, :success)
       add_flash(_("Please enable the git owner role in order to import git repositories"), :error)
     else
       if GitRepository.exists?(:url => git_url)
-        flash_message = <<FLASH
-This repository has been used previously for imports; If you use the same domain it will get deleted and recreated
-FLASH
-        flash_message.chomp!
+        flash_message = _("This repository has been used previously for imports; If you use the same domain it will get deleted and recreated")
         status = :warning
       else
-        flash_message = "Successfully found git repository, please choose a branch or tag"
+        flash_message = _("Successfully found git repository, please choose a branch or tag")
         status = :success
       end
 
@@ -229,7 +226,7 @@ FLASH
       task_id = MiqTask.generic_action_with_callback(task_options, queue_options)
       MiqTask.wait_for_taskid(task_id)
 
-      add_flash(_(flash_message), status)
+      add_flash(flash_message, status)
       branch_names = git_repo.git_branches.collect(&:name)
       tag_names = git_repo.git_tags.collect(&:name)
       redirect_options[:git_branches] = branch_names.to_json
