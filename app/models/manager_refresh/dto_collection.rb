@@ -61,8 +61,8 @@ module ManagerRefresh
       data_index[manager_uuid]
     end
 
-    def lazy_find(manager_uuid, path: nil)
-      ::ManagerRefresh::DtoLazy.new(self, manager_uuid, :path => path)
+    def lazy_find(manager_uuid, path: nil, default: nil)
+      ::ManagerRefresh::DtoLazy.new(self, manager_uuid, :path => path, :default => default)
     end
 
     def new_dto(hash)
@@ -137,7 +137,7 @@ module ManagerRefresh
     end
 
     def is_dependency?(value)
-      value.kind_of?(::ManagerRefresh::DtoLazy) || value.kind_of?(::ManagerRefresh::Dto)
+      (value.kind_of?(::ManagerRefresh::DtoLazy) && value.dependency?) || value.kind_of?(::ManagerRefresh::Dto)
     end
   end
 end
