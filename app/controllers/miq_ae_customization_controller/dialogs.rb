@@ -895,6 +895,9 @@ module MiqAeCustomizationController::Dialogs
     # set default value - element type was added/changed
     if params[:field_typ]
 
+      # default values for all element types
+      @edit[:field_visible] = key[:visible] = true
+
       # added TagControl - initialize values
       if params[:field_typ].include?("Tag")
         @edit[:field_category]     = key[:category]     = nil
