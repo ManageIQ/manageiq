@@ -175,14 +175,11 @@ module ReportController::Schedules
       if params[:filter_typ]
         @edit[:new][:subfilter] = nil
         @edit[:new][:repfilter] = @reps = nil
-        page.replace("form_filter_div", :partial => "schedule_form_filter")
       elsif params[:subfilter_typ]
         @edit[:new][:repfilter] = nil
-        page.replace("form_filter_div", :partial => "schedule_form_filter")
       end
-
+      page.replace("form_filter_div", :partial => "schedule_form_filter")
       javascript_for_timer_type(params[:timer_typ]).each { |js| page << js }
-
       if params[:time_zone]
         page << "ManageIQ.calendar.calDateFrom = new Date(#{(Time.zone.now - 1.month).in_time_zone(@edit[:tz]).strftime("%Y,%m,%d")});"
         page << "miqBuildCalendar();"
