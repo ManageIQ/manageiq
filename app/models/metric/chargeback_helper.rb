@@ -1,10 +1,8 @@
 module Metric::ChargebackHelper
   def hash_features_affecting_rate
     tags = tag_names.split('|').reject { |n| n.starts_with?('folder_path_') }.sort.join('|')
-    keys = [tags, parent_host_id, parent_ems_cluster_id, parent_storage_id, parent_ems_id]
+    keys = [tags] + resource_parents.map(&:id)
     keys += [resource.container_image, timestamp] if resource_type == Container.name
-    tenant_resource = resource.try(:tenant)
-    keys.push(tenant_resource.id) unless tenant_resource.nil?
     keys.join('_')
   end
 
@@ -16,5 +14,9 @@ module Metric::ChargebackHelper
       tag_list += state.image_tag_names.split("|").inject([]) { |arr, t| arr << "/tag/managed/#{t}" } if state.present?
     end
     tag_list
+  end
+
+  def resource_parents
+    [parent_host, parent_ems_cluster, parent_storage, parent_ems, resource.try(:tenant)].compact
   end
 end
