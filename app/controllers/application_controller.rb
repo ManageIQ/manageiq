@@ -26,7 +26,6 @@ class ApplicationController < ActionController::Base
   include ActionView::Helpers::TextHelper
   include ActionView::Helpers::DateHelper
   include ApplicationHelper
-  include JsHelper
   include Mixins::TimeHelper
   helper ToolbarHelper
   helper JsHelper
