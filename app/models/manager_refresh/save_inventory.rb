@@ -3,7 +3,14 @@ module ManagerRefresh
     class << self
       def save_inventory(ems, dto_collections)
         _log.info("#{log_header(ems)} Saving EMS Inventory...Start")
-        ManagerRefresh::SaveCollection::Recursive.save_collections(ems, dto_collections)
+
+        dto_saving_strategy = Settings.ems_refresh[ems.class.ems_type].try(:[], :dto_saving_strategy)
+        if dto_saving_strategy == :recursive
+          ManagerRefresh::SaveCollection::Recursive.save_collections(ems, dto_collections)
+        else
+          ManagerRefresh::SaveCollection::TopologicalSort.save_collections(ems, dto_collections)
+        end
+
         _log.info("#{log_header(ems)} Saving EMS Inventory...Complete")
         ems
       end
