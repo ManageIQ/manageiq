@@ -4,3 +4,18 @@
 - @ajax_paging_buttons = true
 #gtl_div
   = render :partial => "layouts/angular/gtl"
+:javascript
+  miq_bootstrap('#miq-gtl-view', 'ManageIQ.gtl');
+  sendDataWithRx({initController: {
+    name: 'miqGtlContoller',
+    data: {
+      modelName: '#{j_str(@display.nil? && !controller.class.model.nil? ? controller.class.model.to_s.tableize : @display)}',
+      activeTree: '#{x_active_tree}',
+      gtlType: '#{j_str(@gtl_type)}',
+      currId: '#{j_str(params[:id])}',
+      sortColIdx: '#{@sortcol}',
+      sortDir: '#{@sortdir}',
+      isExplorer: '#{@explorer}' === 'true' ? true : false,
+      showUrl: '#{view_to_url(@view) if !@view.nil?}'
+    }
+  }});

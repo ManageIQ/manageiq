@@ -247,6 +247,7 @@ class ApplicationController < ActionController::Base
   private :initiate_wait_for_task
 
   def init_report_data(controller_name)
+    view_url = view_to_url(@view) if !@view.nil?
     {
       :controller_name => controller_name,
       :data            => {
@@ -257,7 +258,7 @@ class ApplicationController < ActionController::Base
         :sortColIdx => @sortcol,
         :sortDir    => @sortdir,
         :isExplorer => @explorer,
-        :showUrl    => view_to_url(@view)
+        :showUrl    => view_url
       }
     }
   end
@@ -930,10 +931,11 @@ class ApplicationController < ActionController::Base
     table = view.sub_table ? view.sub_table : view.table
     view_context.instance_variable_set(:@explorer, @explorer)
     table.data.each do |row|
+      quadicon = view_context.render_quadicon(@targets_hash[row.id]) if !row['id'].nil?
       new_row = {
         :id       => list_row_id(row),
         :cells    => [],
-        :quadicon => view_context.render_quadicon(@targets_hash[row.id])
+        :quadicon => quadicon
       }
       root[:rows] << new_row
 
@@ -1551,9 +1553,10 @@ class ApplicationController < ActionController::Base
 
   # Create view and paginator for a DB records with/without tags
   def get_view(db, options = {})
-    db     = db.to_s
-    dbname = options[:dbname] || db.gsub('::', '_').downcase # Get db name as text
-    db_sym = (options[:gtl_dbname] || dbname).to_sym # Get db name as symbol
+    object_ids   = @edit[:object_ids] if !@edit.nil? && !@edit[:object_ids].nil?
+    db           = db.to_s
+    dbname       = options[:dbname] || db.gsub('::', '_').downcase # Get db name as text
+    db_sym       = (options[:gtl_dbname] || dbname).to_sym # Get db name as symbol
     refresh_view = false
 
     # Determine if the view should be refreshed or use the existing view
@@ -1630,8 +1633,7 @@ class ApplicationController < ActionController::Base
 
     # Save the paged_view_search_options for download buttons to use later
     session[:paged_view_search_options] = {
-      # Make a copy of parent object (to avoid saving related objects)
-      :parent                    => parent ? minify_ar_object(parent) : nil,
+      :parent                    => parent ? minify_ar_object(parent) : nil, # Make a copy of parent object (to avoid saving related objects)
       :parent_method             => options[:parent_method],
       :targets_hash              => true,
       :association               => association,
@@ -1644,6 +1646,7 @@ class ApplicationController < ActionController::Base
       :named_scope               => options[:named_scope],
       :display_filter_hash       => options[:display_filter_hash],
       :userid                    => session[:userid],
+      :selected_ids              => object_ids,
       :match_via_descendants     => options[:match_via_descendants]
     }
     # Call paged_view_search to fetch records and build the view.table and additional attrs
