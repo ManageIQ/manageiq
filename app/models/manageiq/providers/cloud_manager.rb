@@ -31,6 +31,7 @@ module ManageIQ::Providers
     has_many :host_aggregates,               :foreign_key => :ems_id, :dependent => :destroy
     has_many :cloud_networks,                :through     => :network_manager
     has_many :security_groups,               :through     => :network_manager
+    has_many :miq_alert_statuses, :through => :vms
 
     has_one  :source_tenant, :as => :source, :class_name => 'Tenant'
 

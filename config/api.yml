@@ -673,6 +673,34 @@
           :identifier: action_edit
         - :name: delete
           :identifier: action_delete
+  :alerts_statuses:
+    :description: Alerts Statuses
+    :identifier: alerts_statuses
+    :options:
+    - :collection
+    - :subcollection
+    :subcollections:
+        - :alert_status_states
+    :verbs: *gpd
+    :klass: MiqAlertStatus
+    :collection_actions:
+      :get:
+      - :name: read
+        :identifier: alert_status_show_list
+      :post:
+      - :name: query
+        :identifier: alert_status_show_list
+      - :name: providers_alerts
+        :identifier: providers_alerts_statuses_show
+    :resource_actions:
+      :get:
+      - :name: read
+        :identifier: alert_status_show
+      :post:
+      - :name: edit
+        :identifier: alert_status_edit
+      - :name: delete
+        :identifier: alert_status_delete
   :policies:
     :description: Policies
     :identifier: policy
@@ -1513,6 +1541,21 @@
     - :subcollection
     :verbs: *gpd
     :klass: CustomAttribute
+    :subcollection_actions:
+      :post:
+      - :name: add
+      - :name: edit
+      - :name: delete
+    :subresource_actions:
+      :post:
+      - :name: edit
+      - :name: delete
+  :alert_status_states:
+    :description: alert status state
+    :options:
+    - :subcollection
+    :verbs: *gpd
+    :klass: MiqAlertStatusState
     :subcollection_actions:
       :post:
       - :name: add

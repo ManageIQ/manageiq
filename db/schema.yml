@@ -4797,6 +4797,15 @@ miq_ae_workspaces:
 - setters
 - created_on
 - updated_on
+miq_alert_status_states:
+- id
+- action
+- comment
+- user_id
+- assignee_id
+- miq_alert_status_id
+- created_at
+- updated_at
 miq_alert_statuses:
 - id
 - miq_alert_id
@@ -4816,6 +4825,8 @@ miq_alerts:
 - responds_to_events
 - enabled
 - read_only
+- link_text
+- severity
 miq_approvals:
 - id
 - description
