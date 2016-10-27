@@ -45,7 +45,7 @@ module Api
     end
 
     def approve_resource(type, id, data)
-      raise "Must specify a reason for approving a request" unless data["reason"].present?
+      raise "Must specify a reason for approving a request" if data["reason"].blank?
       api_action(type, id) do |klass|
         request = resource_search(id, type, klass)
         request.approve(@auth_user, data["reason"])
@@ -56,7 +56,7 @@ module Api
     end
 
     def deny_resource(type, id, data)
-      raise "Must specify a reason for denying a request" unless data["reason"].present?
+      raise "Must specify a reason for denying a request" if data["reason"].blank?
       api_action(type, id) do |klass|
         request = resource_search(id, type, klass)
         request.deny(@auth_user, data["reason"])
