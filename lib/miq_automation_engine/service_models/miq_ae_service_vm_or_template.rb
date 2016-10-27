@@ -34,6 +34,7 @@ module MiqAeMethodService
     expose :accounts,              :association => true
     expose :users,                 :association => true
     expose :groups,                :association => true
+    expose :ems_events,            :association => true
 
 
     METHODS_WITH_NO_ARGS = %w(start stop suspend unregister collect_running_processes shutdown_guest standby_guest reboot_guest)
