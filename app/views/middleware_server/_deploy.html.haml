@@ -34,8 +34,8 @@
             .col-md-8
               %input#enable_deployment_cb{:type             => "checkbox",
                                           "bs-switch"       => "",
-                                          "switch-on-text"  => "Yes",
-                                          "switch-off-text" => "No",
+                                          "switch-on-text"  => _("Yes"),
+                                          "switch-off-text" => _("No"),
                                           "switch-active"   => "{{!!deployAddModel.filePath}}",
                                           "ng-model"        => "deployAddModel.enableDeployment",
                                           "ng-disabled"     => "!deployAddModel.filePath"}
@@ -47,6 +47,17 @@
                                                      "placeholder" => _("No file chosen"),
                                                      "ng-model"    => "deployAddModel.runtimeName",
                                                      "ng-disabled" => "!deployAddModel.filePath"}
+          .form-group
+            %label.col-md-4.control-label{:for => "force_deployment_cb"}
+              = _("Overwrite (if exists)")
+            .col-md-8
+              %input#force_deployment_cb{:type             => "checkbox",
+                                         "bs-switch"       => "",
+                                         "switch-on-text"  => _("Yes"),
+                                         "switch-off-text" => _("No"),
+                                         "switch-active"   => "{{!!deployAddModel.filePath}}",
+                                         "ng-model"        => "deployAddModel.forceDeploy",
+                                         "ng-disabled"     => "!deployAddModel.filePath"}
         .modal-footer
           %button.btn.btn-default{:type          => "button",
                                   :alt           => (t = _("Cancel")),
