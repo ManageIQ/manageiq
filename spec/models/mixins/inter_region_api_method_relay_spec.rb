@@ -165,38 +165,52 @@ describe InterRegionApiMethodRelay do
 
     describe ".api_client_connection_for_region" do
       let!(:server)           { EvmSpecHelper.local_miq_server(:has_active_webservices => true) }
+      let!(:region)           { FactoryGirl.create(:miq_region, :region => region_number) }
+      let(:region_number)     { ApplicationRecord.my_region_number }
       let(:region_seq_start)  { ApplicationRecord.rails_sequence_start }
       let(:request_user)      { "test_user" }
       let(:api_connection)    { double("ManageIQ::API::Client connection") }
       let(:region_auth_token) { double("MiqRegion API auth token") }
 
       before do
-        FactoryGirl.create(:miq_region, :region => ApplicationRecord.my_region_number)
+        expect(MiqRegion).to receive(:find_by).with(:region => region_number).and_return(region)
       end
 
-      it "opens an api connection to that address when the server has an ip address" do
-        require "manageiq-api-client"
+      context "with authentication configured" do
+        before do
+          expect(region).to receive(:auth_key_configured?).and_return true
+        end
 
-        server.ipaddress = "192.0.2.1"
-        server.save!
+        it "opens an api connection to that address when the server has an ip address" do
+          require "manageiq-api-client"
 
-        expect(User).to receive(:current_userid).and_return(request_user)
-        expect(MiqRegion).to receive(:api_system_auth_token_for_region)
-          .with(ApplicationRecord.my_region_number, request_user).and_return(region_auth_token)
+          server.ipaddress = "192.0.2.1"
+          server.save!
 
-        client_connection_hash = {
-          :url      => "https://#{server.ipaddress}",
-          :miqtoken => region_auth_token,
-          :ssl      => {:verify => false}
-        }
-        expect(ManageIQ::API::Client).to receive(:new).with(client_connection_hash).and_return(api_connection)
-        described_class.api_client_connection_for_region(ApplicationRecord.my_region_number)
+          expect(User).to receive(:current_userid).and_return(request_user)
+          expect(region).to receive(:api_system_auth_token).with(request_user).and_return(region_auth_token)
+
+          client_connection_hash = {
+            :url      => "https://#{server.ipaddress}",
+            :miqtoken => region_auth_token,
+            :ssl      => {:verify => false}
+          }
+          expect(ManageIQ::API::Client).to receive(:new).with(client_connection_hash).and_return(api_connection)
+          described_class.api_client_connection_for_region(region_number)
+        end
+
+        it "raises if the server doesn't have an ip address" do
+          expect {
+            described_class.api_client_connection_for_region(region_number)
+          }.to raise_error("Failed to establish API connection to region #{region_number}")
+        end
       end
 
-      it "raises if the server doesn't have an ip address" do
+      it "raises without authentication configured" do
+        expect(region).to receive(:auth_key_configured?).and_return false
         expect {
-          described_class.api_client_connection_for_region(ApplicationRecord.my_region_number)
-        }.to raise_error(RuntimeError)
+          described_class.api_client_connection_for_region(region_number)
+        }.to raise_error("Region #{region_number} is not configured for central administration")
       end
     end
 
