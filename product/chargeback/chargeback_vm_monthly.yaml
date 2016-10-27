@@ -7,6 +7,7 @@ db: ChargebackVm
 cols:
 - start_date
 - display_range
+- vm_id
 - vm_name
 - cpu_allocated_cost
 - cpu_used_metric
@@ -68,7 +69,7 @@ db_options:
   :rpt_type: ChargebackVm
   :options:
     :interval: monthly
-    :interval_size: 1
+    :interval_size: 6
     :end_interval_offset: 0
 col_formats:
 - 
