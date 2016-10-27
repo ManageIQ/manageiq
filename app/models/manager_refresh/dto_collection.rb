@@ -29,7 +29,7 @@ module ManagerRefresh
 
     def process_strategy_local_db_cache_all
       self.saved = true
-      selected = [:id] + manager_ref
+      selected   = [:id] + manager_ref
       selected << :type if model_class.new.respond_to? :type
       parent.send(association).select(selected).find_each do |record|
         self.data_index[object_index(record)] = record
@@ -89,8 +89,8 @@ module ManagerRefresh
       presence_validators = model_class.validators.detect { |x| x.kind_of? ActiveRecord::Validations::PresenceValidator }
       # Attributes that has to be always on the entity, so attributes making unique indec of the record + attributes
       # that have presence validation
-      fixed_attributes = manager_ref
-      fixed_attributes += presence_validators.attributes unless presence_validators.blank?
+      fixed_attributes    = manager_ref
+      fixed_attributes    += presence_validators.attributes unless presence_validators.blank?
 
       fixed_dependencies = Set.new
       dependency_attributes.each do |key, value|
@@ -113,7 +113,7 @@ module ManagerRefresh
 
     def blacklist_attributes!(attributes)
       @attributes_blacklist += attributes
-      dependency_attributes.delete_if {|key, _value| attributes.include?(key) }
+      dependency_attributes.delete_if { |key, _value| attributes.include?(key) }
     end
 
     def to_s
@@ -128,12 +128,16 @@ module ManagerRefresh
 
     def actualize_dependencies(dto)
       dto.data.each do |key, value|
-        if value.kind_of? ::ManagerRefresh::DtoLazy
+        if is_dependency?(value)
           (dependency_attributes[key] ||= Set.new) << value.dto_collection
-        elsif value.kind_of?(Array) && value.any? { |x| x.kind_of? ::ManagerRefresh::DtoLazy }
-          (dependency_attributes[key] ||= Set.new) <<  value.detect { |x| x.kind_of? ::ManagerRefresh::DtoLazy }.dto_collection
+        elsif value.kind_of?(Array) && value.any? { |x| is_dependency?(x) }
+          (dependency_attributes[key] ||= Set.new) << value.detect { |x| is_dependency?(x) }.dto_collection
         end
       end
+    end
+
+    def is_dependency?(value)
+      value.kind_of?(::ManagerRefresh::DtoLazy) || value.kind_of?(::ManagerRefresh::Dto)
     end
   end
 end
