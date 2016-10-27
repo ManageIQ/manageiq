@@ -1,13 +1,14 @@
+# rubocop:disable ClassLength
 module Api
   class ProvidersController < BaseController
-    TYPE_ATTR         = "type"
-    ZONE_ATTR         = "zone"
-    CREDENTIALS_ATTR  = "credentials"
-    AUTH_TYPE_ATTR    = "auth_type"
-    DEFAULT_AUTH_TYPE = "default"
+    TYPE_ATTR         = "type".freeze
+    ZONE_ATTR         = "zone".freeze
+    CREDENTIALS_ATTR  = "credentials".freeze
+    AUTH_TYPE_ATTR    = "auth_type".freeze
+    DEFAULT_AUTH_TYPE = "default".freeze
     CONNECTION_ATTRS  = %w(connection_configurations).freeze
     ENDPOINT_ATTRS    = %w(hostname url ipaddress port security_protocol).freeze
-    RESTRICTED_ATTRS  = [TYPE_ATTR, CREDENTIALS_ATTR, ZONE_ATTR, "zone_id"]
+    RESTRICTED_ATTRS  = [TYPE_ATTR, CREDENTIALS_ATTR, ZONE_ATTR, "zone_id"].freeze
 
     include Subcollections::Policies
     include Subcollections::PolicyProfiles
@@ -173,8 +174,8 @@ module Api
       auth_type  = creds.delete(AUTH_TYPE_ATTR) || DEFAULT_AUTH_TYPE
       auth_types = provider.respond_to?(:supported_auth_types) ? provider.supported_auth_types : [DEFAULT_AUTH_TYPE]
       unless auth_types.include?(auth_type)
-        raise BadRequestError, format("Unsupported authentication type %s specified, %s supports: %s",
-                                      auth_type, provider.class.name, auth_types.join(", "))
+        raise BadRequestError, "Unsupported authentication type %s specified, %s supports: %s" %
+                               [auth_type, provider.class.name, auth_types.join(", ")]
       end
       [auth_type, creds]
     end
@@ -183,8 +184,8 @@ module Api
       auth_attrs    = provider.supported_auth_attributes
       invalid_attrs = creds.keys - auth_attrs
       return if invalid_attrs.blank?
-      raise BadRequestError, format("Unsupported credential attributes %s specified, %s supports: %s",
-                                    invalid_attrs.join(', '), provider.class.name, auth_attrs.join(", "))
+      raise BadRequestError, "Unsupported credential attributes %s specified, %s supports: %s" %
+                             [invalid_attrs.join(', '), provider.class.name, auth_attrs.join(", ")]
     end
 
     def fetch_provider_data(provider_klass, data, options = {})
