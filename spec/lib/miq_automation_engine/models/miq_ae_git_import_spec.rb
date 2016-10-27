@@ -106,6 +106,8 @@ describe MiqAeGitImport do
           allow(miq_ae_yaml_import_gitfs).to receive(:import).and_return(domain)
           dom = miq_ae_git_import.import
           expect(dom.attributes).to have_attributes(branch_hash)
+          expect(repo.authentications.first.userid).to eq('fred')
+          expect(repo.authentications.first.password).to eq('secret')
         end
       end
     end
