@@ -3769,6 +3769,10 @@
       :description: Trigger reload operation for Middleware Server
       :feature_type: admin
       :identifier: middleware_server_reload
+    - :name: Start middleware server
+      :description: Start Middleware Server
+      :feature_type: admin
+      :identifier: middleware_server_start
     - :name: Stop middleware server
       :description: Stop Middleware Server
       :feature_type: admin

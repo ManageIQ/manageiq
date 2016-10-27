@@ -163,6 +163,10 @@ module ManageIQ::Providers
       with_provider_connection(&:alerts)
     end
 
+    def start_middleware_server(ems_ref)
+      run_generic_operation(:Start, ems_ref)
+    end
+
     def reload_middleware_server(ems_ref)
       run_generic_operation(:Reload, ems_ref)
     end
