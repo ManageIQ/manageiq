@@ -1,13 +1,13 @@
 module ManagerRefresh
   class Dto
-    attr_reader :dto_collection, :data
+    attr_reader :dto_collection, :data, :object
 
     delegate :manager_ref, :to => :dto_collection
 
     def initialize(dto_collection, data)
       @dto_collection = dto_collection
-      # TODO(lsmola) filter the data according to attributes and throw exception using non recognized attr
       @data           = data
+      @built_data     = nil
     end
 
     def manager_uuid
@@ -15,7 +15,7 @@ module ManagerRefresh
     end
 
     def id
-      data[:id]
+      object.id
     end
 
     def [](key)
@@ -26,15 +26,29 @@ module ManagerRefresh
       data[key] = value
     end
 
-    def object
-      data[:_object]
+    def load
+      object
+    end
+
+    def build_object(built_object)
+      self.object = built_object
+    end
+
+    def save
+      ret = object.save
+      object.send(:clear_association_cache)
+      ret
     end
 
     def attributes
+      unless dto_collection.attributes_blacklist.blank?
+        data.delete_if { |key, _value| dto_collection.attributes_blacklist.include?(key) }
+      end
+
       data.transform_values! do |value|
-        if value.kind_of? ::ManagerRefresh::DtoLazy
+        if loadable?(value)
           value.load
-        elsif value.kind_of?(Array) && value.any? { |x| x.kind_of? ::ManagerRefresh::DtoLazy }
+        elsif value.kind_of?(Array) && value.any? { |x| loadable?(x) }
           value.compact.map(&:load).compact
         else
           value
@@ -48,6 +62,16 @@ module ManagerRefresh
 
     def inspect
       to_s
+    end
+
+    private
+
+    def object=(built_object)
+      @object = built_object
+    end
+
+    def loadable?(value)
+      value.kind_of?(::ManagerRefresh::DtoLazy) || value.kind_of?(::ManagerRefresh::Dto)
     end
   end
 end
