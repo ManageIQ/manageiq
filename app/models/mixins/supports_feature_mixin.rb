@@ -100,6 +100,7 @@ module SupportsFeatureMixin
     :update_aggregate           => 'Host Aggregate Update',
     :update                     => 'Update',
     :update_network_router      => 'Network Router Update',
+    :ems_network_new            => 'New EMS Network Provider',
   }.freeze
 
   # Whenever this mixin is included we define all features as unsupported by default.

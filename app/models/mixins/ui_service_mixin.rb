@@ -36,6 +36,7 @@ module UiServiceMixin
       :Microsoft               => {:type => "image", :icon => provider_icon(:Microsoft)},
       :Redhat                  => {:type => "image", :icon => provider_icon(:Redhat)},
       :Vmware                  => {:type => "image", :icon => provider_icon(:Vmware)},
+      :Nuage                   => {:type => "image", :icon => provider_icon(:Nuage_Network)},
     }
   end
 
