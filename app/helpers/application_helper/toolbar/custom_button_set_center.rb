@@ -15,7 +15,8 @@ class ApplicationHelper::Toolbar::CustomButtonSetCenter < ApplicationHelper::Too
           :ab_button_new,
           'pficon pficon-add-circle-o fa-lg',
           t = N_('Add a new Button'),
-          t),
+          t,
+          :klass => ApplicationHelper::Button::AbButtonNew),
         button(
           :ab_group_reorder,
           'pficon pficon-edit fa-lg',
@@ -26,7 +27,8 @@ class ApplicationHelper::Toolbar::CustomButtonSetCenter < ApplicationHelper::Too
               _('Reorder Buttons and Groups')
             end
           end,
-          N_('Reorder')),
+          N_('Reorder'),
+          :klass     => ApplicationHelper::Button::AbGroupReorder),
       ]
     ),
   ])
