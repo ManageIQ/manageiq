@@ -377,10 +377,13 @@ describe ChargebackContainerProject do
                                    :finish                    => Float::INFINITY,
                                    :fixed_rate                => 0.0,
                                    :variable_rate             => @hourly_rate.to_s) }
-    let!(:cbrd) {FactoryGirl.create(:chargeback_rate_detail_fixed_compute_cost,
-                                    :chargeback_rate_id => @cbr.id,
-                                    :per_time           => "hourly",
-                                    :chargeback_tiers   => [cbt]) }
+    let!(:cbrd) do
+      FactoryGirl.create(:chargeback_rate_detail_fixed_compute_cost,
+                         :chargeback_rate_id => @cbr.id,
+                         :per_time           => "hourly",
+                         :chargeback_tiers   => [cbt],
+                         :source             => "compute_1")
+    end
 
     it "fixed_compute" do
       # .to be_within(0.01) is used since theres a float error here
