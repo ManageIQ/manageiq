@@ -389,7 +389,8 @@ describe ChargebackContainerProject do
       FactoryGirl.create(:chargeback_rate_detail_fixed_compute_cost,
                          :chargeback_rate_id => @cbr.id,
                          :per_time           => "hourly",
-                         :chargeback_tiers   => [cbt])
+                         :chargeback_tiers   => [cbt],
+                         :source             => "compute_1")
     end
 
     it "fixed_compute" do
