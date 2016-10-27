@@ -16,8 +16,10 @@ module EvmTestHelper
 
   def self.run_rake_via_shell(rake_command, env = {})
     cmd = "bundle exec rake #{rake_command}"
-    cmd << " --trace" if Rake.application.options.trace
-    _pid, status = Process.wait2(Kernel.spawn(env, cmd, :chdir => Rails.root))
+    cmd << " --trace"
+    system(env, cmd, :chdir => Rails.root)
+    _pid, status = Process.wait2(Kernel.spawn(env, cmd, :chdir => Rails.root, :err=>:out))
+
     exit(status.exitstatus) if status.exitstatus != 0
   end
 
