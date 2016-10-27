@@ -35,7 +35,7 @@ module Api
         @parameter_filter ||= ActionDispatch::Http::ParameterFilter.new(Rails.application.config.filter_parameters)
         return unless api_log_info?
         log_request("Request", @req.to_hash)
-        log_request("Parameters", @parameter_filter.filter(params))
+        log_request("Parameters", @parameter_filter.filter(params.to_unsafe_h))
         log_request_body
       end
 
