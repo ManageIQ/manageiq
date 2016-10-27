@@ -165,7 +165,7 @@ class ChargebackController < ApplicationController
       @_params[:id] ||= find_checked_items[0]
       session[:changed] = params[:pressed] == 'chargeback_rates_copy'
 
-      @rate = params[:id] == 'new' ? ChargebackRate.new : ChargebackRate.find(params[:id])
+      @rate = new_rate_edit? ? ChargebackRate.new : ChargebackRate.find(params[:id])
       @record = @rate
 
       if params[:pressed] == 'chargeback_rates_edit' && @rate.default?
@@ -518,7 +518,7 @@ class ChargebackController < ApplicationController
 
     tiers = []
     rate_details = @rate.chargeback_rate_details
-    rate_details = ChargebackRateDetail.default_rate_details_for(@edit[:new][:rate_type]) if params[:id] == 'new'
+    rate_details = ChargebackRateDetail.default_rate_details_for(@edit[:new][:rate_type]) if new_rate_edit?
 
     # Select the currency of the first chargeback_rate_detail. All the chargeback_rate_details have the same currency
     @edit[:new][:currency] = rate_details[0].detail_currency.id
@@ -707,6 +707,10 @@ class ChargebackController < ApplicationController
     @edit[:current] = copy_hash(@edit[:new])
     session[:edit] = @edit
     @in_a_form = true
+  end
+
+  def new_rate_edit?
+    params[:id] == 'new' || params[:pressed] == 'chargeback_rates_new'
   end
 
   def get_categories_all

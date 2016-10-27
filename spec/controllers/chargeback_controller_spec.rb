@@ -378,7 +378,7 @@ describe ChargebackController do
 
       count_of_chargeback_rates = ChargebackRate.count
 
-      post :x_button, :params => {:id => "new", :pressed => "chargeback_rates_new"}
+      post :x_button, :params => {:pressed => "chargeback_rates_new"}
       post :cb_rate_form_field_changed, :params => {:id => "new", :description => "chargeback rate 1"}
       post :cb_rate_edit, :params => {:button => "add"}
 
@@ -396,7 +396,7 @@ describe ChargebackController do
 
       ChargebackRate.seed
 
-      post :x_button, :params => {:id => "new", :pressed => "chargeback_rates_new"}
+      post :x_button, :params => {:pressed => "chargeback_rates_new"}
       post :cb_rate_form_field_changed, :params => {:id => "new", :description => "chargeback rate 1"}
 
       post :cb_tier_add, :params => {:button => "add", :detail_index => index_to_rate_type}
@@ -429,7 +429,7 @@ describe ChargebackController do
 
       ChargebackRate.seed
 
-      post :x_button, :params => {:id => "new", :pressed => "chargeback_rates_new"}
+      post :x_button, :params => {:pressed => "chargeback_rates_new"}
       post :cb_rate_form_field_changed, :params => {:id => "new", :description => "chargeback rate 1"}
 
       post :cb_tier_add, :params => {:button => "add", :detail_index => index_to_rate_type}
