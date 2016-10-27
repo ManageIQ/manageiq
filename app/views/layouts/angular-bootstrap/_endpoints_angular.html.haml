@@ -1,4 +1,4 @@
-- return unless %w(ems_cloud ems_infra ems_container ems_middleware).include?(controller_name)
+- return unless %w(ems_cloud ems_infra ems_container ems_middleware ems_network).include?(controller_name)
 - prefix ||= "default"
 - ng_reqd_hostname ||= true
 - ng_reqd_api_port ||= true
@@ -28,6 +28,7 @@
   .form-group{"ng-class" => "{'has-error': angularForm.#{prefix}_api_port.$invalid}",
               "ng-if" => "emsCommonModel.emstype == 'openstack' || " +       |
                          "emsCommonModel.emstype == 'openstack_infra' || " + |
+                         "emsCommonModel.emstype == 'nuage_network' || " +   |
                          "emsCommonModel.emstype == 'rhevm' || " +           |
                          "emsCommonModel.emstype == 'vmware_cloud' || " +    |
                          "emsCommonModel.emstype == 'hawkular' || " +        |
@@ -77,7 +78,10 @@
 
 %div{"ng-if" => defined?(security_protocol_hide) ? false : true}
   .form-group{"ng-class" => "{'has-error': angularForm.#{prefix}_security_protocol.$invalid}",
-              "ng-if"    => "emsCommonModel.emstype == 'openstack' || emsCommonModel.emstype == 'openstack_infra' || emsCommonModel.emstype == 'scvmm'"}
+              "ng-if"    => "emsCommonModel.emstype == 'openstack' || " +       |
+                            "emsCommonModel.emstype == 'openstack_infra' || " + |
+                            "emsCommonModel.emstype == 'nuage_network' || " +   |
+                            "emsCommonModel.emstype == 'scvmm'"}                |
     %label.col-md-2.control-label{"for" => "#{prefix}_security_protocol"}
       = _('Security Protocol')
     .col-md-8{"ng-if" => "emsCommonModel.emstype == 'openstack' || emsCommonModel.emstype == 'openstack_infra'"}
@@ -91,6 +95,13 @@
                        "selectpicker-for-select-tag" => "",
                        "prefix"                      => "#{prefix}",
                        "reset-validation-status"     => "#{prefix}_auth_status")
+    .col-md-8{"ng-if" => "emsCommonModel.emstype == 'nuage_network'"}
+      = select_tag("#{prefix}_security_protocol",
+                       options_for_select([["<#{_('Choose')}>", nil]] + @nuage_security_protocols, disabled: ["<#{_('Choose')}>", nil]),
+                       "ng-model"                    => "#{ng_model}.#{prefix}_security_protocol",
+                       "checkchange"                 => "",
+                       "required"                    => defined?(security_protocol_not_required) ? false : true,
+                       "selectpicker-for-select-tag" => "")
     .col-md-8{"ng-if" => "emsCommonModel.emstype == 'scvmm'"}
       = select_tag("#{prefix}_security_protocol",
                        options_for_select([["<#{_('Choose')}>", nil]] + @scvmm_security_protocols, disabled: ["<#{_('Choose')}>", nil]),
