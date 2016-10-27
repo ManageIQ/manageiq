@@ -5,7 +5,7 @@ module ManagerRefresh
 
     attr_reader :model_class
 
-    def initialize(model_class, manager_ref: nil, attributes: nil, association: nil, parent: nil)
+    def initialize(model_class, manager_ref: nil, attributes: nil, association: nil, parent: nil, strategy: nil)
       @model_class  = model_class
       @manager_ref  = manager_ref || [:ems_ref]
       @attributes   = attributes || []
@@ -15,6 +15,23 @@ module ManagerRefresh
       @data         = []
       @data_index   = {}
       @saved        = false
+      @strategy     = process_strategy(strategy)
+    end
+
+    def process_strategy(strategy_name)
+      if strategy_name == :local_db_cache_all
+        process_strategy_local_db_cache_all
+      end
+      strategy_name
+    end
+
+    def process_strategy_local_db_cache_all
+      self.saved = true
+      selected = [:id] + manager_ref
+      selected << :type if model_class.new.respond_to? :type
+      parent.send(association).select(selected).find_each do |record|
+        self.data_index[object_index(record)] = record
+      end
     end
 
     def saved?
