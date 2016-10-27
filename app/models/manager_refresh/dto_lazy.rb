@@ -2,12 +2,13 @@ module ManagerRefresh
   class DtoLazy
     include Vmdb::Logging
 
-    attr_reader :ems_ref, :dto_collection, :path
+    attr_reader :ems_ref, :dto_collection, :path, :default
 
-    def initialize(dto_collection, ems_ref, path: nil)
+    def initialize(dto_collection, ems_ref, path: nil, default: nil)
       @ems_ref        = ems_ref
       @dto_collection = dto_collection
       @path           = path
+      @default        = default
     end
 
     def to_s
@@ -22,13 +23,14 @@ module ManagerRefresh
       path ? load_object_with_path : load_object
     end
 
+    def dependency?
+      !path || dto_collection.dependency_attributes.keys.include?(path.first)
+    end
+
     private
 
     def load_object_with_path
-      dto_collection.find(to_s).data.fetch_path(*path)
-    rescue => e
-      _log.error("Trying to find non existent path #{path} on #{dto_collection}")
-      raise e
+      (dto_collection.find(to_s).try(:data) || {}).fetch_path(*path) || default
     end
 
     def load_object
