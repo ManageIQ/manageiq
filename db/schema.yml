@@ -4804,6 +4804,8 @@ miq_alert_statuses:
 - resource_type
 - evaluated_on
 - result
+- user_id
+- asignee_ack_text
 miq_alerts:
 - id
 - guid
@@ -4816,6 +4818,8 @@ miq_alerts:
 - responds_to_events
 - enabled
 - read_only
+- link_text
+- severity
 miq_approvals:
 - id
 - description
