@@ -1,5 +1,5 @@
 class TreeNodeBuilderBelongsToHac < TreeNodeBuilder
-  def ext_management_system
+  def ext_management_system_node
     super
     @node[:select] = options[:selected].include?("#{object.class.name}_#{object[:id]}")
   end
@@ -16,7 +16,11 @@ class TreeNodeBuilderBelongsToHac < TreeNodeBuilder
 
   def ems_folder_node
     super
-    @node[:select] = options[:selected].include?("Datacenter_#{object[:id]}")
+    if object.kind_of?(Datacenter)
+      @node[:select] = options[:selected].include?("Datacenter_#{object[:id]}")
+    else
+      @node[:select] = options[:selected].include?("EmsFolder_#{object[:id]}")
+    end
   end
 
   def resource_pool_node

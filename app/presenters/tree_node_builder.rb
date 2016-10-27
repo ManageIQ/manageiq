@@ -57,17 +57,7 @@ class TreeNodeBuilder
     "ConfigurationScript"    => -> { generic_node(object.name,
                                                   "configuration_script.png",
                                                   _("Ansible Tower Job Template: %{name}") % {:name => object.name}) },
-
-    "ExtManagementSystem"    => -> {
-      # TODO: This should really leverage .base_model on an EMS
-      prefix_model =
-        case object
-        when EmsCloud then "EmsCloud"
-        when EmsInfra then "EmsInfra"
-        else               "ExtManagementSystem"
-        end
-
-      generic_node(object.name, "vendor-#{object.image_name}.png", "#{ui_lookup(:model => prefix_model)}: #{object.name}") },
+    "ExtManagementSystem"    => -> { ext_management_system_node },
     "ChargebackRate"         => -> { generic_node(object.description, "chargeback_rate.png") },
     "Classification"         => -> { classification_node },
     "Compliance"             => -> {
@@ -98,8 +88,7 @@ class TreeNodeBuilder
     "Host"                   => -> { host_node(object) },
     "IsoDatastore"           => -> { generic_node(object.name, "isodatastore.png") },
     "IsoImage"               => -> { generic_node(object.name, "isoimage.png") },
-    "ResourcePool"           => -> { generic_node(object.name, object.vapp ? "vapp.png" : "resource_pool.png") },
-
+    "ResourcePool"           => -> { resource_pool_node },
     "Lan"                    => -> { generic_node(object.name,
                                                   "lan.png",
                                                   _("Port Group: %{name}") % {:name => object.name}) },
@@ -562,7 +551,7 @@ class TreeNodeBuilder
     @node
   end
 
-  def ext_management_system
+  def ext_management_system_node
     # TODO: This should really leverage .base_model on an EMS
     prefix_model =
         case object
