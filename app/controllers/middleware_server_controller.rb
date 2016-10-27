@@ -63,7 +63,10 @@ class MiddlewareServerController < ApplicationController
     selected_server = identify_selected_entities
     deployment_name = params["runtimeName"]
 
-    existing_deployment = MiddlewareDeployment.find_by(:name => deployment_name, :server_id => selected_server)
+    existing_deployment = false
+    if params["forceDeploy"] == 'false'
+      existing_deployment = MiddlewareDeployment.find_by(:name => deployment_name, :server_id => selected_server)
+    end
 
     if existing_deployment
       render :json => {
