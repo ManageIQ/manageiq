@@ -13,7 +13,7 @@ gem "activerecord-session_store",     "~>1.0.0"
 gem "actioncable",                    "~>5.0.0"
 gem "acts_as_list",                   "~>0.7.2"
 gem "acts_as_tree",                   "~>2.1.0" # acts_as_tree needs to be required so that it loads before ancestry
-gem "ancestry",                       "~>2.1.0",       :require => false
+gem "ancestry",                       "~>2.2.1",       :require => false
 gem "ansible_tower_client",           "~>0.4.0",       :require => false
 gem "aws-sdk",                        "~>2.2.19",      :require => false
 gem "color",                          "~>1.8"
