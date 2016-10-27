@@ -210,6 +210,12 @@ class ChargebackRateDetail < ApplicationRecord
     !error
   end
 
+  def metric_and_cost_by(metric_rollup_records, hours_in_interval)
+    @hours_in_interval = hours_in_interval
+    metric_value = metric_value_by(metric_rollup_records)
+    [metric_value, hourly_cost(metric_value) * hours_in_interval]
+  end
+
   private
 
   def first_tier?(tier,tiers)

@@ -144,9 +144,7 @@ class Chargeback < ActsAsArModel
         if !chargeback_fields_present && r.fixed?
           cost = 0
         else
-          r.hours_in_interval = hours_in_interval
-          metric_value = r.metric_value_by(metric_rollup_records)
-          cost = r.hourly_cost(metric_value) * hours_in_interval
+          metric_value, cost = r.metric_and_cost_by(metric_rollup_records, hours_in_interval)
         end
 
         accumulate_metrics_and_costs_per_rate(r.rate_name, r.group, metric_value, cost)
