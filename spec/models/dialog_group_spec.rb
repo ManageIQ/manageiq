@@ -33,19 +33,10 @@ describe DialogGroup do
           { 'name' => 'new field', 'label' => 'new field label' }
         ]
       end
-
-      it 'updates a the dialog fields with an id' do
+      it 'creates or updates the dialog fields' do
         dialog_group.update_dialog_fields(updated_fields)
-
         dialog_group.reload
-        expect(dialog_group.dialog_fields.first.label).to eq('updated_field_label')
-        expect(dialog_group.dialog_fields.last.label).to eq('updated_field_label')
-      end
-
-      it 'creates a new dialog field from the dialog fields without an id' do
-        expect do
-          dialog_group.update_dialog_fields(updated_fields)
-        end.to change(dialog_group.reload.dialog_fields, :count).by(1)
+        expect(dialog_group.dialog_fields.collect(&:label)).to match_array(['updated_field_label', 'updated_field_label', 'new field label'])
       end
     end
 
