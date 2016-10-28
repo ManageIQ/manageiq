@@ -38,7 +38,7 @@ class MiqAeYamlImportGitfs < MiqAeYamlImport
   end
 
   def domain_files(domain)
-    glob_str = if (domain == '*' || domain == '.') 
+    glob_str = if domain == '*' || domain == '.'
                  File.join('**', DOMAIN_YAML_FILENAME)
                else
                  File.join('**', domain, DOMAIN_YAML_FILENAME)
