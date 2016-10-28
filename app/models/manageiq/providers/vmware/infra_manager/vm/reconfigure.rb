@@ -50,7 +50,31 @@ module ManageIQ::Providers::Vmware::InfraManager::Vm::Reconfigure
     end
   end
 
+  def validate_config_spec(options)
+    # Check hot-plug settings if the VM is on
+    if power_state == "on"
+      if options[:number_of_cpus]
+        number_of_cpus   = options[:number_of_cpus].to_i
+        cores_per_socket = options[:cores_per_socket].to_i
+
+        raise MiqException::MiqVmError, "CPU Hot-Add not enabled"                            if number_of_cpus > cpu_total_cores && !cpu_hot_add_enabled
+        raise MiqException::MiqVmError, "Cannot remove CPUs from a running VM"               if number_of_cpus < cpu_total_cores && !cpu_hot_remove_enabled
+        raise MiqException::MiqVmError, "Cannot change CPU cores per socket on a running VM" if cores_per_socket != cpu_cores_per_socket
+      end
+
+      if options[:vm_memory]
+        vm_memory = options[:vm_memory].to_i
+
+        raise MiqException::MiqVmError, "Memory Hot-Add not enabled"                                if vm_memory > ram_size && !memory_hot_add_enabled
+        raise MiqException::MiqVmError, "Cannot remove memory from a running VM"                    if vm_memory < ram_size
+        raise MiqException::MiqVmError, "Cannot add more than #{memory_hot_add_limit}MB to this VM" if vm_memory > memory_hot_add_limit
+      end
+    end
+  end
+
   def build_config_spec(options)
+    validate_config_spec(options)
+
     VimHash.new("VirtualMachineConfigSpec") do |vmcs|
       case hardware.virtual_hw_version
       when "07"
