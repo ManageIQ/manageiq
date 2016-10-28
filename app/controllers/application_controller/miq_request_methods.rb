@@ -597,7 +597,15 @@ module ApplicationController::MiqRequestMethods
     id = session[:edit][:req_id] || "new"
     return unless load_edit("prov_edit__#{id}", "show_list")
     @edit[:new][:schedule_time] = @edit[:new][:schedule_time].in_time_zone("Etc/UTC") if @edit[:new][:schedule_time]
-    if @edit[:wf].make_request(@edit[:req_id], @edit[:new])
+
+    begin
+      request = @edit[:wf].make_request(@edit[:req_id], @edit[:new])
+    rescue => bang
+      request = false
+      add_flash(bang.message, :error)
+    end
+
+    if request
       @breadcrumbs.pop if @breadcrumbs
       typ = @edit[:org_controller]
       case typ
