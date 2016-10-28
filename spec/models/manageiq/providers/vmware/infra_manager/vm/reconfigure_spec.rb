@@ -2,9 +2,10 @@ describe ManageIQ::Providers::Vmware::InfraManager::Vm::Reconfigure do
   let(:vm) do
     FactoryGirl.create(
       :vm_vmware,
-      :name     => 'test_vm',
-      :storage  => FactoryGirl.create(:storage, :name => 'storage'),
-      :hardware => FactoryGirl.create(:hardware, :virtual_hw_version => "07")
+      :name            => 'test_vm',
+      :raw_power_state => 'poweredOff',
+      :storage         => FactoryGirl.create(:storage, :name => 'storage'),
+      :hardware        => FactoryGirl.create(:hardware, :virtual_hw_version => "07")
     )
   end
 
