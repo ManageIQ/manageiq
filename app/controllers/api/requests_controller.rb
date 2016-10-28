@@ -44,6 +44,28 @@ module Api
       request
     end
 
+    def approve_resource(type, id, data)
+      raise "Must specify a reason for approving a request" if data["reason"].blank?
+      api_action(type, id) do |klass|
+        request = resource_search(id, type, klass)
+        request.approve(@auth_user, data["reason"])
+        action_result(true, "Request #{id} approved")
+      end
+    rescue => err
+      action_result(false, err.to_s)
+    end
+
+    def deny_resource(type, id, data)
+      raise "Must specify a reason for denying a request" if data["reason"].blank?
+      api_action(type, id) do |klass|
+        request = resource_search(id, type, klass)
+        request.deny(@auth_user, data["reason"])
+        action_result(true, "Request #{id} denied")
+      end
+    rescue => err
+      action_result(false, err.to_s)
+    end
+
     def find_requests(id)
       klass = collection_class(:requests)
       return klass.find(id) if @auth_user_obj.admin?
