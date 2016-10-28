@@ -24,14 +24,15 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
                                  :name             => "proj2",
                                  :ems_created_on   => "2016-03-28T15:04:13Z",
                                  :resource_version => "150569",
-                                 :labels_and_tags  => [
+                                 :labels           => [
                                    {
                                      :section => "labels",
                                      :name    => "department",
                                      :value   => "Warp-drive",
                                      :source  => "kubernetes"
                                    }
-                                 ])
+                                 ],
+                                 :tags             => [])
     end
   end
 
@@ -734,7 +735,8 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
         :identity_system            => 'uuid',
         :kubernetes_kubelet_version => nil,
         :kubernetes_proxy_version   => nil,
-        :labels_and_tags            => [],
+        :labels                     => [],
+        :tags                       => [],
         :lives_on_id                => nil,
         :lives_on_type              => nil,
         :max_container_groups       => nil,
@@ -786,7 +788,8 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
         :identity_system            => 'uuid',
         :kubernetes_kubelet_version => nil,
         :kubernetes_proxy_version   => nil,
-        :labels_and_tags            => [],
+        :labels                     => [],
+        :tags                       => [],
         :lives_on_id                => nil,
         :lives_on_type              => nil,
         :max_container_groups       => nil,
@@ -830,7 +833,8 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
           :ems_created_on       => '2016-01-01T11:10:21Z',
           :container_conditions => [],
           :identity_infra       => 'aws:///zone/aws-id',
-          :labels_and_tags      => [],
+          :labels               => [],
+          :tags                 => [],
           :lives_on_id          => nil,
           :lives_on_type        => nil,
           :max_container_groups => nil,

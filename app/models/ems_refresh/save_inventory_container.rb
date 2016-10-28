@@ -28,7 +28,7 @@ module EmsRefresh::SaveInventoryContainer
               end
 
     save_inventory_multi(ems.container_projects, hashes, deletes, [:ems_ref],
-                         [:labels_and_tags], [], true)
+                         [:labels, :tags], [], true)
     store_ids_for_new_records(ems.container_projects, hashes, :ems_ref)
   end
 
@@ -146,7 +146,7 @@ module EmsRefresh::SaveInventoryContainer
     end
 
     save_inventory_multi(ems.container_routes, hashes, deletes, [:ems_ref],
-                         [:labels_and_tags], [:container_service, :project, :namespace])
+                         [:labels, :tags], [:container_service, :project, :namespace])
     store_ids_for_new_records(ems.container_routes, hashes, :ems_ref)
   end
 
@@ -162,7 +162,7 @@ module EmsRefresh::SaveInventoryContainer
               end
 
     save_inventory_multi(ems.container_nodes, hashes, deletes, [:ems_ref],
-                         [:labels_and_tags, :computer_system, :container_conditions], [:namespace])
+                         [:labels, :tags, :computer_system, :container_conditions], [:namespace])
     store_ids_for_new_records(ems.container_nodes, hashes, :ems_ref)
   end
 
@@ -186,7 +186,7 @@ module EmsRefresh::SaveInventoryContainer
     end
 
     save_inventory_multi(ems.container_replicators, hashes, deletes, [:ems_ref],
-                         [:labels_and_tags, :selector_parts], [:project, :namespace])
+                         [:labels, :tags, :selector_parts], [:project, :namespace])
     store_ids_for_new_records(ems.container_replicators, hashes, :ems_ref)
   end
 
@@ -208,7 +208,7 @@ module EmsRefresh::SaveInventoryContainer
     end
 
     save_inventory_multi(ems.container_services, hashes, deletes, [:ems_ref],
-                         [:labels_and_tags, :selector_parts, :container_service_port_configs],
+                         [:labels, :tags, :selector_parts, :container_service_port_configs],
                          [:container_groups, :project, :container_image_registry, :namespace])
 
     store_ids_for_new_records(ems.container_services, hashes, :ems_ref)
@@ -234,7 +234,7 @@ module EmsRefresh::SaveInventoryContainer
     end
 
     save_inventory_multi(ems.container_groups, hashes, deletes, [:ems_ref],
-                         [:container_definitions, :containers, :labels_and_tags,
+                         [:container_definitions, :containers, :labels, :tags,
                           :node_selector_parts, :container_conditions, :container_volumes],
                          [:container_node, :container_replicator, :project, :namespace, :build_pod_name],
                          true)
@@ -409,21 +409,14 @@ module EmsRefresh::SaveInventoryContainer
     store_ids_for_new_records(entity.labels, hashes, [:section, :name])
   end
 
-  def save_labels_and_tags_inventory(entity, hashes, target = nil)
-    save_labels_inventory(entity, hashes, target)
-    save_tags_generated_from_labels(entity, hashes, target)
-  end
+  def save_tags_inventory(entity, hashes, _target = nil)
+    return if hashes.nil?
 
-  def save_tags_generated_from_labels(entity, hashes, _target = nil)
-    labels = hashes.collect do |label_hash|
-      OpenStruct.new(:resource_type => entity.class.base_class.name,
-                     :name          => label_hash[:name],
-                     :value         => label_hash[:value])
-    end
-    current_tags = labels.collect_concat { |label| ContainerLabelTagMapping.tags_for_label(label) }
-    mappable_tags = ContainerLabelTagMapping.mappable_tags
-
-    entity.tags = entity.tags - mappable_tags + current_tags
+    ContainerLabelTagMapping.retag_entity(entity, hashes) # Keeps user-assigned tags.
+  rescue => err
+    raise if EmsRefresh.debug_failures
+    _log.error("Auto-tagging failed on #{entity.class} [#{entity.name}] with error [#{err}].")
+    _log.log_backtrace(err)
   end
 
   def save_selector_parts_inventory(entity, hashes, target = nil)
@@ -464,7 +457,7 @@ module EmsRefresh::SaveInventoryContainer
     hashes.each do |h|
       h[:container_project_id] = h.fetch_path(:project, :id)
     end
-    save_inventory_multi(ems.container_builds, hashes, deletes, [:ems_ref], [:labels_and_tags],
+    save_inventory_multi(ems.container_builds, hashes, deletes, [:ems_ref], [:labels, :tags],
                          [:project, :resources])
     store_ids_for_new_records(ems.container_builds, hashes, :ems_ref)
   end

@@ -52,11 +52,13 @@ module ManageIQ::Providers
       def parse_route(route)
         new_result = parse_base_item(route)
 
+        labels = parse_labels(route)
         new_result.merge!(
           # TODO: persist tls
-          :host_name       => route.spec.try(:host),
-          :labels_and_tags => parse_labels(route),
-          :path            => route.path
+          :host_name => route.spec.try(:host),
+          :labels    => labels,
+          :tags      => map_labels('ContainerRoute', labels),
+          :path      => route.path
         )
 
         new_result[:project] = @data_index.fetch_path(:container_projects, :by_name,
@@ -80,8 +82,10 @@ module ManageIQ::Providers
       def parse_build(build)
         new_result = parse_base_item(build)
         new_result.merge! parse_build_source(build.spec.source)
+        labels = parse_labels(build)
         new_result.merge!(
-          :labels_and_tags             => parse_labels(build),
+          :labels                      => labels,
+          :tags                        => map_labels('ContainerBuild', labels),
           :service_account             => build.spec.serviceAccount,
           :completion_deadline_seconds => build.spec.try(:completionDeadlineSeconds),
           :output_name                 => build.spec.try(:output).try(:to).try(:name)

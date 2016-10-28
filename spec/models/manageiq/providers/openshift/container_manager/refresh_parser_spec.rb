@@ -49,7 +49,8 @@ describe ManageIQ::Providers::Openshift::ContainerManager::RefreshParser do
                                  :output_name                 => 'spec_output_to_name',
 
                                  :completion_deadline_seconds => '11',
-                                 :labels_and_tags             => []
+                                 :labels                      => [],
+                                 :tags                        => []
                                 )
     end
   end

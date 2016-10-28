@@ -9,91 +9,93 @@ class ContainerLabelTagMapping < ApplicationRecord
   # - When `label_value` is NULL, we map this name with any value to per-value tags.
   #   In this case, `tag` specifies the category under which to create
   #   the value-specific tag (and classification) on demand.
-  #   We then also add a specific `label_value`->specific `tag` mapping here.
+  #
+  # All involved tags must also have a Classification.
 
   belongs_to :tag
 
-  def self.drop_cache
-    @hash_all_by_name_type_value = nil
+  # Pass the data this returns to map_* methods.
+  def self.cache
+    # {[name, type, value] => [tag_id, ...]}
+    in_my_region.find_each
+                .group_by { |m| [m.label_name, m.labeled_resource_type, m.label_value].freeze }
+                .transform_values { |mappings| mappings.collect(&:tag_id) }
   end
 
-  # Returns {[name, type, value] => [tag, ...]}}} hash.
-  def self.hash_all_by_name_type_value
-    unless @hash_all_by_name_type_value
-      @hash_all_by_name_type_value = {}
-      includes(:tag).find_each { |m| load_mapping_into_hash(m) }
-    end
-    @hash_all_by_name_type_value
+  # We expect labels to be {:name, :value} hashes
+  # and return {:tag_id} or {:category_tag_id, :entry_name, :entry_description} hashes.
+
+  def self.map_labels(cache, type, labels)
+    labels.collect_concat { |label| map_label(cache, type, label) }.uniq
   end
 
-  def self.load_mapping_into_hash(mapping)
-    return unless @hash_all_by_name_type_value
-    key = [mapping.label_name, mapping.labeled_resource_type, mapping.label_value].freeze
-    @hash_all_by_name_type_value[key] ||= []
-    @hash_all_by_name_type_value[key] << mapping.tag
-  end
-  private_class_method :load_mapping_into_hash
-
-  # All specific-value tags that can be assigned by this mapping.
-  def self.mappable_tags
-    hash_all_by_name_type_value.collect_concat do |(_name, _type, value), tags|
-      value ? tags : []
-    end
-  end
-
-  # Main entry point.
-  def self.tags_for_entity(entity)
-    entity.labels.collect_concat { |label| tags_for_label(label) }
-  end
-
-  def self.tags_for_label(label)
+  def self.map_label(cache, type, label)
     # Apply both specific-type and any-type, independently.
-    (tags_for_name_type_value(label.name, label.resource_type, label.value) +
-     tags_for_name_type_value(label.name, nil,                 label.value))
+    (map_name_type_value(cache, label[:name], type, label[:value]) +
+     map_name_type_value(cache, label[:name], nil,  label[:value]))
   end
 
-  def self.tags_for_name_type_value(name, type, value)
-    specific_value = hash_all_by_name_type_value[[name, type, value]] || []
-    any_value      = hash_all_by_name_type_value[[name, type, nil]]   || []
+  def self.map_name_type_value(cache, name, type, value)
+    specific_value = cache[[name, type, value]] || []
+    any_value      = cache[[name, type, nil]]   || []
     if !specific_value.empty?
-      specific_value
+      specific_value.map { |tag_id| {:tag_id => tag_id} }
     else
-      any_value.map do |category_tag|
-        create_specific_value_mapping(name, type, value, category_tag).tag
+      if value.empty?
+        [] # Don't map empty value to any tag.
+      else
+        # Note: if the way we compute `entry_name` changes,
+        # consider what will happen to previously created tags.
+        any_value.map do |tag_id|
+          {:category_tag_id   => tag_id,
+           :entry_name        => Classification.sanitize_name(value),
+           :entry_description => value}
+        end
       end
     end
   end
-  private_class_method :tags_for_name_type_value
+  private_class_method :map_name_type_value
 
-  # If this is an open ended any-value mapping, finds or creates a
-  # specific-value mapping to a specific tag.
-  def self.create_specific_value_mapping(name, type, value, category_tag)
-    new_tag = create_tag(name, value, category_tag)
-    new_mapping = create!(:labeled_resource_type => type, :label_name => name, :label_value => value,
-                          :tag => new_tag)
-    load_mapping_into_hash(new_mapping)
-    new_mapping
-  end
-  private_class_method :create_specific_value_mapping
-
-  def self.create_tag(name, value, category_tag)
-    category = category_tag.classification
-    unless category
-      category = Classification.create_category!(:description => "Kubernetes label '#{name}'",
-                                                 :read_only   => true,
-                                                 :tag         => category_tag)
-    end
-
-    if value.empty?
-      entry_name = ':empty:' # ':' character won't occur in kubernetes values.
-      description = '<empty value>'
+  # Given a hash built by `map_*` methods, returns a Tag (creating if needed).
+  def self.find_or_create_tag(tag_hash)
+    if tag_hash[:tag_id]
+      Tag.find(tag_hash[:tag_id])
     else
-      entry_name = Classification.sanitize_name(value)
-      description = value
+      category = Tag.find(tag_hash[:category_tag_id]).classification
+      entry = category.find_entry_by_name(tag_hash[:entry_name])
+      unless entry
+        category.lock :exclusive do
+          begin
+            entry = category.add_entry(:name        => tag_hash[:entry_name],
+                                       :description => tag_hash[:entry_description])
+            entry.save!
+          rescue ActiveRecord::RecordInvalid
+            entry = category.find_entry_by_name(tag_hash[:entry_name])
+          end
+        end
+      end
+      entry.tag
     end
-    entry = category.add_entry(:name => entry_name, :description => description)
-    entry.save!
-    entry.tag
   end
-  private_class_method :create_tag
+
+  def self.controls_tag?(tag)
+    return false unless tag.classification.try(:read_only) # never touch user-assignable tags.
+    tag_ids = [tag.id, tag.category.tag_id].uniq
+    where(:tag_id => tag_ids).any?
+  end
+
+  # Assign/unassign mapping-controlled tags, preserving user-assigned tags.
+  def self.retag_entity(entity, tag_hashes)
+    mapped_tags = tag_hashes.map { |tag_hash| find_or_create_tag(tag_hash) }
+    existing_tags = entity.tags
+    Tagging.transaction do
+      (mapped_tags - existing_tags).each do |tag|
+        Tagging.create!(:taggable => entity, :tag => tag)
+      end
+      (existing_tags - mapped_tags).select { |tag| controls_tag?(tag) }.tap do |tags|
+        Tagging.where(:taggable => entity, :tag => tags.collect(&:id)).destroy_all
+      end
+    end
+    entity.tags.reset
+  end
 end
