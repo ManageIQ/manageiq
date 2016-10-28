@@ -52,6 +52,10 @@ module Api
       end
     end
 
+    def options
+      render_options(:providers, providers_metadata)
+    end
+
     def custom_attributes_edit_resource(object, type, id, data = nil)
       formatted_data = format_provider_custom_attributes(data)
       super(object, type, id, formatted_data)
@@ -172,7 +176,7 @@ module Api
 
     def validate_auth_type(provider, creds)
       auth_type  = creds.delete(AUTH_TYPE_ATTR) || DEFAULT_AUTH_TYPE
-      auth_types = provider.respond_to?(:supported_auth_types) ? provider.supported_auth_types : [DEFAULT_AUTH_TYPE]
+      auth_types = provider_auth_types(provider)
       unless auth_types.include?(auth_type)
         raise BadRequestError, "Unsupported authentication type %s specified, %s supports: %s" %
                                [auth_type, provider.class.name, auth_types.join(", ")]
@@ -211,6 +215,25 @@ module Api
       zone_id = parse_id(data[ZONE_ATTR], :zone)
       raise BadRequestError, "Missing zone href or id" if zone_id.nil?
       resource_search(zone_id, :zone, Zone) # Only support Rbac allowed zone
+    end
+
+    def providers_metadata
+      {
+        "provider_types" => collection_class(:providers)
+          .supported_subclasses
+          .sort_by(&:name)
+          .each_with_object({}) do |provider_klass, hash|
+            provider = provider_klass.new
+            hash[provider_klass.name] = {
+              "auth_types"      => provider_auth_types(provider).sort,
+              "auth_attributes" => provider.supported_auth_attributes
+            }
+          end
+      }
+    end
+
+    def provider_auth_types(provider)
+      provider.respond_to?(:supported_auth_types) ? provider.supported_auth_types : [DEFAULT_AUTH_TYPE]
     end
   end
 end
