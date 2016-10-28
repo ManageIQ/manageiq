@@ -37,7 +37,7 @@ gem "parallel",                "~>1.9",             :require => false # For Ovir
 gem "pg",                      "~>0.18.2",          :require => false
 gem "pg-dsn_parser",           "~>0.1.0",           :require => false
 gem "psych",                   "~>2.0.12"
-gem "rake",                    "~>10.1"
+gem "rake",                    ">=11.0"
 gem "rbvmomi",                 "~>1.9.4",           :require => false
 gem "rest-client",             "~>2.0.0",           :require => false
 gem "rubyzip",                 "~>1.2.0",           :require => false

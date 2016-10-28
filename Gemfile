@@ -102,7 +102,7 @@ end
 #
 unless ENV["APPLIANCE"]
   group :development do
-    gem "haml_lint",        "~>0.16.1", :require => false
+    gem "haml_lint",        "~>0.18.0", :require => false
     gem "rubocop",          "~>0.37.2", :require => false
     gem "scss_lint",        "~>0.48.0", :require => false
   end
