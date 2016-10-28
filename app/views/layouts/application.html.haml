@@ -31,12 +31,6 @@
         = stylesheet_link_tag 'miq_debug'
       = csrf_meta_tag
       = render :partial => 'layouts/i18n_js'
-      - if @timeline
-        = javascript_include_tag '/javascripts/timeline/api/timeline-api.js'
-        - if @timeline_filter
-          = javascript_include_tag '/javascripts/timeline/api/scripts/miq_filters.js'
-          = javascript_include_tag '/javascripts/timeline/api/scripts/miq_layouts.js'
-          = javascript_include_tag '/javascripts/timeline/api/scripts/miq_painters.js'
 
       :javascript
         ManageIQ.charts.provider = "#{Charting.backend}";
