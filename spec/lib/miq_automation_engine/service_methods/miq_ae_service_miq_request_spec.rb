@@ -23,7 +23,8 @@ module MiqAeServiceMiqRequestSpec
       reason   = "Why Not?"
       method   = "$evm.root['#{@ae_result_key}'] = $evm.root['miq_request'].approve('#{approver}', '#{reason}')"
       @ae_method.update_attributes(:data => method)
-      expect_any_instance_of(MiqRequest).to receive(:approve).with(approver, reason).once
+      expect(MiqRequest).to receive(:find).with(@miq_request.id.to_s).and_return(@miq_request)
+      expect(@miq_request).to receive(:approve).with(approver, reason).once
       expect(invoke_ae.root(@ae_result_key)).to  be_truthy
     end
 
@@ -32,7 +33,8 @@ module MiqAeServiceMiqRequestSpec
       reason   = "Why Not?"
       method   = "$evm.root['#{@ae_result_key}'] = $evm.root['miq_request'].deny('#{approver}', '#{reason}')"
       @ae_method.update_attributes(:data => method)
-      expect_any_instance_of(MiqRequest).to receive(:deny).with(approver, reason).once
+      expect(MiqRequest).to receive(:find).with(@miq_request.id.to_s).and_return(@miq_request)
+      expect(@miq_request).to receive(:deny).with(approver, reason).once
       expect(invoke_ae.root(@ae_result_key)).to  be_truthy
     end
 
