@@ -82,11 +82,13 @@ class MiqPglogical
   def refresh_excludes
     # remove newly excluded tables from replication set
     newly_excluded_tables.each do |table|
+      _log.info("Removing #{table} from #{REPLICATION_SET_NAME} replication set")
       pglogical.replication_set_remove_table(REPLICATION_SET_NAME, table)
     end
 
     # add tables to the set which are no longer excluded (or new)
     newly_included_tables.each do |table|
+      _log.info("Adding #{table} to #{REPLICATION_SET_NAME} replication set")
       begin
         pglogical.replication_set_add_table(REPLICATION_SET_NAME, table, true)
       rescue PG::UniqueViolation => e
