@@ -7,7 +7,13 @@ class ManageIQ::Providers::Openstack::NetworkManager::CloudSubnet < ::CloudSubne
       subnet = service.subnets.new(options)
       subnet.save
     end
-    {:ems_ref => subnet.id, :name => options[:name]}
+
+    create(
+      :name                  => subnet.name,
+      :ems_ref               => subnet.id,
+      :cloud_tenant          => cloud_tenant,
+      :ext_management_system => ext_management_system
+    )
   rescue => e
     _log.error "subnet=[#{options[:name]}], error: #{e}"
     raise MiqException::MiqCloudSubnetCreateError, e.to_s, e.backtrace

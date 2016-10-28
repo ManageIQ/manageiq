@@ -13,9 +13,15 @@ class ManageIQ::Providers::Openstack::NetworkManager::NetworkRouter < ::NetworkR
     router = nil
 
     ext_management_system.with_provider_connection(connection_options(cloud_tenant)) do |service|
-      router = service.create_router(name, options).body
+      router = service.create_router(name, options).body['router']
     end
-    {:ems_ref => router['id'], :name => options[:name]}
+
+    create(
+      :name                  => router['name'],
+      :ems_ref               => router['id'],
+      :cloud_tenant          => cloud_tenant,
+      :ext_management_system => ext_management_system
+    )
   rescue => e
     _log.error "router=[#{options[:name]}], error: #{e}"
     raise MiqException::MiqNetworkRouterCreateError, e.to_s, e.backtrace

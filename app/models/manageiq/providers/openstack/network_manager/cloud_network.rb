@@ -17,7 +17,13 @@ class ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork < ::CloudNetw
       network = service.networks.new(raw_options)
       network.save
     end
-    {:ems_ref => network.id, :name => options[:name]}
+
+    create(
+      :name                  => network.name,
+      :ems_ref               => network.id,
+      :cloud_tenant          => cloud_tenant,
+      :ext_management_system => ext_management_system
+    )
   rescue => e
     _log.error "network=[#{options[:name]}], error: #{e}"
     raise MiqException::MiqNetworkCreateError, e.to_s, e.backtrace
