@@ -14,8 +14,7 @@ module OpsController::Settings::AutomateSchedules
       :target_class    => automate_request[:target_class],
       :target_classes  => automate_request[:target_classes],
       :target_id       => automate_request[:target_id],
-      :attrs           => automate_request[:attrs],
-      :readonly        => automate_request[:readonly]
+      :attrs           => automate_request[:attrs]
     }
   end
 
@@ -53,7 +52,6 @@ module OpsController::Settings::AutomateSchedules
       automate_request[:targets] = targets.sort_by { |t| t.name.downcase }.collect { |t| [t.name, t.id.to_s] }
     end
     automate_request[:target_id]      = filter[:parameters][:target_id] || ""
-    automate_request[:readonly]       = filter[:parameters][:readonly] || true
     automate_request[:attrs]          = filter[:parameters][:attrs] || []
 
     if automate_request[:attrs].empty?
