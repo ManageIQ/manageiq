@@ -19,6 +19,15 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
     expect(described_class.ems_type).to eq(:kubernetes)
   end
 
+  # Smoke test the use of ContainerLabelTagMapping during refresh.
+  before :each do
+    @name_category = FactoryGirl.create(:classification, :name => 'name', :description => 'Name')
+    @label_tag_mapping = FactoryGirl.create(
+      :container_label_tag_mapping,
+      :label_name => 'name', :tag => @name_category.tag
+    )
+  end
+
   it "will perform a full refresh on k8s" do
     2.times do # Run twice to verify that a second run with existing data does not change anything
       VCR.use_cassette(described_class.name.underscore) do # , :record => :new_episodes) do
@@ -138,7 +147,12 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
       :dns_policy     => "ClusterFirst",
       :phase          => "Running",
     )
-    expect(@containergroup.labels.count).to eq(1)
+    expect(@containergroup.labels).to contain_exactly(
+      label_with_name_value("name", "heapster")
+    )
+    expect(@containergroup.tags).to contain_exactly(
+      tag_in_category_with_description(@name_category, "heapster")
+    )
 
     # Check the relation to container node
     expect(@containergroup.container_node).not_to be_nil
@@ -159,6 +173,9 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
     # Check relations to replicator, labels and provider
     expect(@containergroup.container_replicator).to eq(
       ContainerReplicator.find_by(:name => "monitoring-heapster-controller")
+    )
+    expect(@containergroup.container_replicator.labels).to contain_exactly(
+      label_with_name_value("name", "heapster")
     )
     expect(@containergroup.ext_management_system).to eq(@ems)
 
@@ -189,7 +206,9 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
       :status => "True"
     )
 
-    expect(@containernode.labels.count).to eq(1)
+    expect(@containernode.labels).to contain_exactly(
+      label_with_name_value("kubernetes.io/hostname", "10.35.0.169")
+    )
 
     expect(@containernode.computer_system.operating_system).to have_attributes(
       :distribution   => "Fedora 20 (Heisenbug)",
@@ -226,7 +245,10 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
       :session_affinity => "None",
       :portal_ip        => "10.0.0.1",
     )
-    expect(@containersrv.labels.count).to eq(2)
+    expect(@containersrv.labels).to contain_exactly(
+      label_with_name_value("provider", "kubernetes"),
+      label_with_name_value("component", "apiserver")
+    )
     expect(@containersrv.selector_parts.count).to eq(0)
 
     @confs = @containersrv.container_service_port_configs
@@ -262,7 +284,12 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
       :replicas         => 1,
       :current_replicas => 1
     )
-    expect(@replicator.labels.count).to eq(1)
+    expect(@replicator.labels).to contain_exactly(
+      label_with_name_value("name", "influxGrafana")
+    )
+    expect(@replicator.tags).to contain_exactly(
+      tag_in_category_with_description(@name_category, "influxGrafana")
+    )
     expect(@replicator.selector_parts.count).to eq(1)
 
     @group = ContainerGroup.where(:name => "monitoring-influx-grafana-controller-22icy").first
@@ -344,5 +371,16 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
       :condition => "Healthy",
       :status    => "True"
     )
+  end
+
+  def label_with_name_value(name, value)
+    an_object_having_attributes(
+      :section => 'labels', :source => 'kubernetes',
+      :name => name, :value => value
+    )
+  end
+
+  def tag_in_category_with_description(category, description)
+    satisfy { |tag| tag.category == category && tag.classification.description == description }
   end
 end
