@@ -743,6 +743,16 @@ describe ProviderForemanController do
     end
   end
 
+  context "when a configured system belonging to an unassigned configuration profile is selected in the list" do
+    it "calls tree_select to select the unassigned configuration profile node in the tree" do
+      allow(controller).to receive(:check_privileges)
+      allow(controller).to receive(:build_listnav_search_list)
+      allow(controller).to receive(:x_node).and_return("-1000000000013-unassigned")
+      post :x_show, :params => {:id => "1r1", :format => :js}
+      expect(response.status).to eq(200)
+    end
+  end
+
   def user_with_feature(features)
     features = EvmSpecHelper.specific_product_features(*features)
     FactoryGirl.create(:user, :features => features)
