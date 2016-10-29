@@ -362,7 +362,7 @@ module Openstack
       # standard openstack AZs have their ems_ref set to their name ("nova" in the test case)...
       # the "null" openstack AZ has a unique ems_ref and name
       expect(@nova_az).to have_attributes(
-        :ems_ref => "compute-#{@nova_az.name}"
+        :ems_ref => @nova_az.name
       )
     end
 
