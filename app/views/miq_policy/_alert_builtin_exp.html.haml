@@ -166,7 +166,7 @@
           :class => "selectpicker")
         :javascript
           miqInitSelectPicker();
-          miqSelectPickerEvent('select_event_log_message_filter_type', '#{url}', {beforeSend: true, complete: true})
+          miqSelectPickerEvent('select_hdw_attr', '#{url}', {beforeSend: true, complete: true})
         = select_tag('select_operator',
           options_for_select(@edit[:operators], @edit[:new][:expression][:options][:operator]),
           :class => "selectpicker")
