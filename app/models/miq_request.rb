@@ -268,6 +268,8 @@ class MiqRequest < ApplicationRecord
   def approve(userid, reason)
     first_approval.approve(userid, reason) unless self.approved?
   end
+  api_relay_method(:approve) { |_userid, reason| {:reason => reason} }
+  api_relay_method(:deny)    { |_userid, reason| {:reason => reason} }
 
   def stamped_by
     first_approval.stamper.try(:userid)
