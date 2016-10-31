@@ -3,9 +3,10 @@ module ManagerRefresh
     attr_accessor :saved, :data, :data_index, :dependency_attributes,
                   :manager_ref, :attributes, :association, :parent
 
-    attr_reader :model_class, :attributes_blacklist
+    attr_reader :model_class, :attributes_blacklist, :custom_save_block
 
-    def initialize(model_class, manager_ref: nil, attributes: nil, association: nil, parent: nil, strategy: nil)
+    def initialize(model_class, manager_ref: nil, attributes: nil, association: nil, parent: nil, strategy: nil,
+                   custom_save_block: nil)
       @model_class           = model_class
       @manager_ref           = manager_ref || [:ems_ref]
       @attributes            = attributes || []
@@ -18,6 +19,7 @@ module ManagerRefresh
       @strategy              = process_strategy(strategy)
       @attributes_blacklist  = Set.new
       @attributes_whitelist  = Set.new
+      @custom_save_block     = custom_save_block
     end
 
     def process_strategy(strategy_name)
