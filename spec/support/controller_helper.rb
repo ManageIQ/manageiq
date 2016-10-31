@@ -60,11 +60,10 @@ module Spec
 
         # The table renders all children objects
         children.each do |child_object|
-          expect(response.body).to include("modelName: '#{relation}'");
-          expect(response.body).to include("activeTree: ''");
-          expect(response.body).to include("gtlType: \"#{gtl_types.first}\"");
-          expect(response.body).to include("currId: \"#{parent.id}\"");
-          expect(response.body).to include("showUrl: '/#{child_route}'");
+          expect(response.body).to include("modelName: '#{relation}'")
+          expect(response.body).to include("activeTree: ''")
+          expect(response.body).to include("currId: \"#{parent.id}\"")
+          expect(response.body).to include("showUrl: '/#{child_route}'")
         end
 
         # display needs to be saved to session for GTL pagination and such

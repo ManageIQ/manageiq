@@ -95,13 +95,21 @@ describe VmOrTemplateController do
         seed_session_trees('vm_or_template', :templates_images_filter_tree, 'root')
 
         get :explorer
-        expect(response.body).to match(%r({"text":\s*"template_vmware Name"}))
+        expect(response.body).to include("modelName: 'vms_and_templates'")
+        expect(response.body).to include("activeTree: 'templates_images_filter_tree'")
+        expect(response.body).to include("gtlType: 'list'")
+        expect(response.body).to include("isExplorer: 'true' === 'true' ? true : false")
+        expect(response.body).to include("showUrl: '/vm_or_template/x_show/'")
       end
 
       it 'show a vm in the vms instances list' do
         vm_vmware
         get :explorer
-        expect(response.body).to match(%r({"text":\s*"vm_vmware Name"}))
+        expect(response.body).to include("modelName: 'vms_and_templates'")
+        expect(response.body).to include("activeTree: 'vms_instances_filter_tree'")
+        expect(response.body).to include("gtlType: 'list'")
+        expect(response.body).to include("isExplorer: 'true' === 'true' ? true : false")
+        expect(response.body).to include("showUrl: '/vm_or_template/x_show/'")
       end
     end
 
