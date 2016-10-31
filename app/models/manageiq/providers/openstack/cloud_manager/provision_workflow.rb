@@ -82,13 +82,13 @@ class ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow < ::MiqPro
     validate_placement(field, values, dlg, fld, value)
   end
 
+  def self.provider_model
+    ManageIQ::Providers::Openstack::CloudManager
+  end
+
   private
 
   def dialog_name_from_automate(message = 'get_dialog_name')
     super(message, {'platform' => 'openstack'})
-  end
-
-  def self.provider_model
-    ManageIQ::Providers::Openstack::CloudManager
   end
 end

@@ -468,6 +468,21 @@ class Classification < ApplicationRecord
     name.downcase.tr('^a-z0-9_:', '_')[0, NAME_MAX_LENGTH]
   end
 
+  def self.tag2human(tag)
+    c, e = tag.split("/")[2..-1]
+
+    cat = find_by_name(c)
+    cname = cat.nil? ? c.titleize : cat.description
+
+    ename = e.titleize
+    unless cat.nil?
+      ent = cat.find_entry_by_name(e)
+      ename = ent.description unless ent.nil?
+    end
+
+    "#{cname}: #{ename}"
+  end
+
   private
 
   def self.add_entries_from_hash(cat, entries)
@@ -505,21 +520,6 @@ class Classification < ApplicationRecord
 
   def tag2name(tag)
     File.split(tag).last unless tag.nil?
-  end
-
-  def self.tag2human(tag)
-    c, e = tag.split("/")[2..-1]
-
-    cat = find_by_name(c)
-    cname = cat.nil? ? c.titleize : cat.description
-
-    ename = e.titleize
-    unless cat.nil?
-      ent = cat.find_entry_by_name(e)
-      ename = ent.description unless ent.nil?
-    end
-
-    "#{cname}: #{ename}"
   end
 
   def find_tag
