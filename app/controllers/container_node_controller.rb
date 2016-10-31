@@ -10,7 +10,7 @@ class ContainerNodeController < ApplicationController
     node = identify_record(params[:id], ContainerNode)
 
     if node.ipaddress
-      javascript_open_window(node.cockpit_url)
+      javascript_open_window(node.cockpit_url.to_s)
     else
       javascript_flash(:text => node.unsupported_reason(:launch_cockpit), :severity => :error, :spinner_off => true)
     end
