@@ -3,6 +3,7 @@ module MiqAeMethodService
     expose :current_group,  :association => true
     expose :current_tenant, :association => true
     expose :vms,            :association => true
+    expose :miq_groups,     :association => true
     expose :miq_requests,   :association => true
     expose :name
     expose :email
