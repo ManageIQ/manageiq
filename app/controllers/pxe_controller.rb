@@ -35,17 +35,11 @@ class PxeController < ApplicationController
   end
 
   def accordion_select
-    self.x_active_accord = params[:id].sub(/_accord$/, '')
-    self.x_active_tree   = "#{x_active_accord}_tree"
-    get_node_info(x_node)
-    replace_right_cell(x_node)
+    super(true)
   end
 
   def tree_select
-    self.x_active_tree = params[:tree] if params[:tree]
-    self.x_node        = params[:id]
-    get_node_info(x_node)
-    replace_right_cell(x_node)
+    super(true)
   end
 
   def explorer

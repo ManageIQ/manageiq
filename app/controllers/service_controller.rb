@@ -95,23 +95,6 @@ class ServiceController < ApplicationController
     end
   end
 
-  # Tree node selected in explorer
-  def tree_select
-    @explorer = true
-    @lastaction = "explorer"
-    self.x_node = params[:id]
-    replace_right_cell
-  end
-
-  # Accordion selected in explorer
-  def accordion_select
-    @layout     = "explorer"
-    @lastaction = "explorer"
-    self.x_active_accord = params[:id].sub(/_accord$/, '')
-    self.x_active_tree   = "#{self.x_active_accord}_tree"
-    replace_right_cell
-  end
-
   def service_edit
     assert_privileges("service_edit")
     case params[:button]

@@ -138,6 +138,26 @@ module ApplicationController::Explorer
     tree_select
   end
 
+  # Tree node selected in explorer
+  def tree_select(node_info = false)
+    @explorer = true
+    @lastaction = "explorer"
+    self.x_active_tree = params[:tree] if params[:tree]
+    self.x_node = params[:id]
+    get_node_info if node_info
+    replace_right_cell
+  end
+
+  # Accordion selected in explorer
+  def accordion_select(node_info = false)
+    @layout     = "explorer"
+    @lastaction = "explorer"
+    self.x_active_accord = params[:id].sub(/_accord$/, '')
+    self.x_active_tree   = "#{self.x_active_accord}_tree"
+    get_node_info if node_info
+    replace_right_cell
+  end
+
   private ############################
 
   def generic_x_button(whitelist)

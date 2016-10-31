@@ -1120,15 +1120,6 @@ module VmCommon
     end
   end
 
-  # Accordion selected in explorer
-  def accordion_select
-    @lastaction = "explorer"
-    self.x_active_accord = params[:id].sub(/_accord$/, '')
-    self.x_active_tree   = "#{x_active_accord}_tree"
-    @sb[:action] = nil
-    replace_right_cell
-  end
-
   private
 
   # First time thru, kick off the acquire ticket task
