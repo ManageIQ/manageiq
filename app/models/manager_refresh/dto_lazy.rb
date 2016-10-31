@@ -24,6 +24,8 @@ module ManagerRefresh
     end
 
     def dependency?
+      # If path is not set, DtoLazy is a dependency, cause it points to the record itself. Otherwise DtoLazy is a
+      # dependency only if it points to an attribute which is a dependency.
       !path || dto_collection.dependency_attributes.keys.include?(path.first)
     end
 
