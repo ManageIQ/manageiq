@@ -209,4 +209,6 @@ class VmCloudController < ApplicationController
   def skip_breadcrumb?
     breadcrumb_prohibited_for_action?
   end
+
+  menu_section :clo
 end

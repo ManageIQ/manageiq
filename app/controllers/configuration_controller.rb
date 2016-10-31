@@ -659,4 +659,6 @@ class ConfigurationController < ApplicationController
 
     s
   end
+
+  menu_section :set
 end

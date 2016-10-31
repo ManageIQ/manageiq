@@ -234,4 +234,8 @@ module ContainersCommonMixin
       end
     end
   end
+
+  included do
+    menu_section :cnt
+  end
 end

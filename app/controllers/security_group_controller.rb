@@ -12,4 +12,6 @@ class SecurityGroupController < ApplicationController
   def self.display_methods
     %w(instances network_ports)
   end
+
+  menu_section :net
 end

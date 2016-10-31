@@ -54,4 +54,6 @@ class MiddlewareDeploymentController < ApplicationController
     op = mw_manager.public_method operation
     op.call(mw_deployment.ems_ref, mw_deployment.name)
   end
+
+  menu_section :mdl
 end

@@ -14,4 +14,6 @@ class PersistentVolumeController < ApplicationController
   def display_name
     _("Volumes")
   end
+
+  menu_section :cnt
 end

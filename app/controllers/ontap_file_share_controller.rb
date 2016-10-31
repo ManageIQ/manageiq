@@ -109,4 +109,6 @@ class OntapFileShareController < CimInstanceController
     add_flash(_("Host is required"), :error) if @edit[:new][:host_id].blank?
     @flash_array.nil?
   end
+
+  menu_section :nap
 end

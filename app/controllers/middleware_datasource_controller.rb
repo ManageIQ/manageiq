@@ -27,4 +27,6 @@ class MiddlewareDatasourceController < ApplicationController
       super
     end
   end
+
+  menu_section :mdl
 end

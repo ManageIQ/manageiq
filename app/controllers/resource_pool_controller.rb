@@ -191,4 +191,6 @@ class ResourcePoolController < ApplicationController
     session[:resource_pool_search_text]  = @search_text
     session[:rp_lastaction]              = @lastaction
   end
+
+  menu_section :inf
 end

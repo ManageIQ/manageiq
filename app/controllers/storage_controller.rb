@@ -673,4 +673,6 @@ class StorageController < ApplicationController
     session[:storage_catinfo]    = @catinfo
     session[:storage_showtype]   = @showtype
   end
+
+  menu_section :inf
 end

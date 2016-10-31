@@ -15,4 +15,6 @@ class ContainerGroupController < ApplicationController
   def display_name
     "Pods"
   end
+
+  menu_section :cnt
 end

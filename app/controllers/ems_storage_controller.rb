@@ -28,4 +28,6 @@ class EmsStorageController < ApplicationController
   def ems_storage_form_fields
     ems_form_fields
   end
+
+  menu_section :sto
 end

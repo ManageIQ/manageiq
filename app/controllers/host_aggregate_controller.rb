@@ -420,4 +420,6 @@ class HostAggregateController < ApplicationController
     session[:host_aggregate_filters]    = @filters
     session[:host_aggregate_catinfo]    = @catinfo
   end
+
+  menu_section :clo
 end

@@ -295,4 +295,6 @@ class CloudNetworkController < ApplicationController
                    networks.length) % {:number => networks.length})
     end
   end
+
+  menu_section :net
 end

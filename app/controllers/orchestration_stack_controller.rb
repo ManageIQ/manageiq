@@ -284,4 +284,6 @@ class OrchestrationStackController < ApplicationController
     session[:orchestration_stack_lastaction] = @lastaction
     session[:orchestration_stack_display]    = @display unless @display.nil?
   end
+
+  menu_section :clo
 end

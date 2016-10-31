@@ -267,4 +267,6 @@ class PxeController < ApplicationController
     session[:pxe_current_page] = @current_page
     session[:pxe_display]      = @display unless @display.nil?
   end
+
+  menu_section :inf
 end

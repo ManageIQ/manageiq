@@ -1234,4 +1234,6 @@ class ProviderForemanController < ApplicationController
     @edit[:new][:draft] = params[:draft] == "true" if params[:draft]
     @edit[:new][:dialog_name] = params[:dialog_name] if params[:dialog_name]
   end
+
+  menu_section :conf
 end

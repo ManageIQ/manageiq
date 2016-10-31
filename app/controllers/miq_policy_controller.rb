@@ -1103,4 +1103,6 @@ class MiqPolicyController < ApplicationController
       ApplicationController::Feature.new_with_hash(hsh)
     end
   end
+
+  menu_section :con
 end

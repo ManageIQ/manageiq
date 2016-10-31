@@ -2059,4 +2059,6 @@ class CatalogController < ApplicationController
                                                                      :model => current_tenant.name}
     replace_right_cell(@sb[:action])
   end
+
+  menu_section :svc
 end

@@ -44,4 +44,6 @@ class EmsMiddlewareController < ApplicationController
   end
 
   public :restful?
+
+  menu_section :mdl
 end

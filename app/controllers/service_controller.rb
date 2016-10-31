@@ -388,4 +388,6 @@ class ServiceController < ApplicationController
     session[:svc_lastaction] = @lastaction
     session[:prov_options]   = @options if @options
   end
+
+  menu_section :svc
 end

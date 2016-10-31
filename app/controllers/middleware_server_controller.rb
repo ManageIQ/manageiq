@@ -249,4 +249,6 @@ class MiddlewareServerController < ApplicationController
       op.call mw_server.ems_ref
     end
   end
+
+  menu_section :mdl
 end

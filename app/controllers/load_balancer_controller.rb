@@ -12,4 +12,6 @@ class LoadBalancerController < ApplicationController
   def self.display_methods
     %w(instances)
   end
+
+  menu_section :net
 end

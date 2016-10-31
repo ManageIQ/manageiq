@@ -44,4 +44,6 @@ class EmsContainerController < ApplicationController
     true
   end
   public :restful?
+
+  menu_section :cnt
 end

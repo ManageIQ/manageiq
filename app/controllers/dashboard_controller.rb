@@ -1,4 +1,6 @@
 class DashboardController < ApplicationController
+  menu_section :vi
+
   @@items_per_page = 8
 
   before_action :check_privileges, :except => [:csp_report, :authenticate, :kerberos_authenticate,

@@ -37,4 +37,6 @@ class EmsCloudController < ApplicationController
     true
   end
   public :restful?
+
+  menu_section :clo
 end

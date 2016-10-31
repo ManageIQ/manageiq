@@ -53,4 +53,6 @@ class VmOrTemplateController < ApplicationController
   def skip_breadcrumb?
     breadcrumb_prohibited_for_action?
   end
+
+  menu_section :svc
 end

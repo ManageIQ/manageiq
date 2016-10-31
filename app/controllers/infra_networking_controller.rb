@@ -789,4 +789,6 @@ class InfraNetworkingController < ApplicationController
 
   def set_session_data
   end
+
+  menu_section :inf
 end

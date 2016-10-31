@@ -279,4 +279,6 @@ class EmsClusterController < ApplicationController
     session[:ems_cluster_filters]    = @filters
     session[:ems_cluster_catinfo]    = @catinfo
   end
+
+  menu_section :inf
 end
