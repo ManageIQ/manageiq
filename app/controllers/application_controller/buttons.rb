@@ -252,7 +252,7 @@ module ApplicationController::Buttons
   end
 
   def custom_button_done
-    url = SystemConsole.where(:vm => params[:id]).first.try(:url)
+    url = SystemConsole.find_by(:vm => params[:id]).try(:url)
 
     if url.present?
       javascript_open_window(url)

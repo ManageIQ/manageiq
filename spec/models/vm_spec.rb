@@ -223,7 +223,7 @@ describe Vm do
     vm = FactoryGirl.create(:vm_vmware)
     vm.set_remote_console_url(:url => url = 'http://www.redhat.com', :userid => 0)
 
-    console = SystemConsole.where(:vm_id => vm.id).first
+    console = SystemConsole.find_by(:vm_id => vm.id)
     expect(console.url).to eq(url)
     expect(console.url_secret).to be
   end
