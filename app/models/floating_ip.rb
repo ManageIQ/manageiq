@@ -16,7 +16,7 @@ class FloatingIp < ApplicationRecord
   belongs_to :network_router
 
   def self.available
-    where(:vm_id => nil)
+    where(:vm_id => nil, :network_port_id => nil)
   end
 
   def name
