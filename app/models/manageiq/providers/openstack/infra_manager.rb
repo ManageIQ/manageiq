@@ -156,8 +156,4 @@ class ManageIQ::Providers::Openstack::InfraManager < ::EmsInfra
   def validate_shutdown
     {:available => false,   :message => nil}
   end
-
-  def validate_reset
-    {:available => false,   :message => nil}
-  end
 end

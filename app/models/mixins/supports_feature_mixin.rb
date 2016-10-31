@@ -88,6 +88,7 @@ module SupportsFeatureMixin
     :refresh_new_target         => 'Refresh non-existing record',
     :regions                    => 'Regions of a Provider',
     :remove_host                => 'Remove Host',
+    :reset                      => 'Reset',
     :resize                     => 'Resizing',
     :retire                     => 'Retirement',
     :smartstate_analysis        => 'Smartstate Analaysis',
