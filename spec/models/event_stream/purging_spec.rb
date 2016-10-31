@@ -21,14 +21,14 @@ describe EventStream do
 
     context ".purge_date" do
       it "using '3.month' syntax" do
-        allow(described_class).to receive_messages(:keep_ems_events => "3.months")
+        allow(described_class).to receive_messages(:keep_events => "3.months")
 
         # Exposes 3.months.seconds.ago.utc != 3.months.ago.utc
         expect(described_class.purge_date).to be_within(2.days).of(3.months.ago.utc)
       end
 
       it "defaults to 6 months" do
-        allow(described_class).to receive_messages(:keep_ems_events => nil)
+        allow(described_class).to receive_messages(:keep_events => nil)
         expect(described_class.purge_date).to be_within(1.day).of(6.months.ago.utc)
       end
     end

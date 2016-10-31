@@ -3,18 +3,18 @@ class EventStream < ApplicationRecord
     extend ActiveSupport::Concern
 
     module ClassMethods
-      def keep_ems_events
-        VMDB::Config.new("vmdb").config.fetch_path(:ems_events, :history, :keep_ems_events)
+      def keep_events
+        ::Settings.event_streams.history.keep_events
       end
 
       def purge_date
-        keep = keep_ems_events.to_i_with_method.seconds
+        keep = keep_events.to_i_with_method.seconds
         keep = 6.months if keep == 0
         keep.ago.utc
       end
 
       def purge_window_size
-        VMDB::Config.new("vmdb").config.fetch_path(:ems_events, :history, :purge_window_size) || 1000
+        ::Settings.event_streams.history.purge_window_size || 1000
       end
 
       def purge_timer
