@@ -734,16 +734,8 @@ class InfraNetworkingController < ApplicationController
     ui_lookup(:model => 'Switch').to_s
   end
 
-  def list_row_id(row)
-    to_cid(row['id'])
-  end
-
   def valid_switch_record?(switch_record)
     switch_record.try(:id)
-  end
-
-  def process_show_list(options = {})
-    super
   end
 
   def find_record(model, id)
