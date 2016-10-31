@@ -1,6 +1,8 @@
 module MiqAeMethodService
   class MiqAeServiceVm < MiqAeServiceVmOrTemplate
-    expose :set_remote_console_url
+    def set_remote_console_url(url)
+      object_send(:set_remote_console_url, url, DRb.front.workspace.ae_user.id)
+    end
 
     def add_to_service(service)
       raise ArgumentError, "service must be a MiqAeServiceService" unless service.kind_of?(MiqAeMethodService::MiqAeServiceService)
