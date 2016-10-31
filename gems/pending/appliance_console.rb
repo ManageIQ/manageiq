@@ -240,7 +240,7 @@ Static Network Configuration
           system_hosts.parsed_file.each { |line| line[:hosts].to_a.delete(host) } unless host =~ /^localhost.*/
 
           system_hosts.hostname = new_host
-          system_hosts.set_canonical_hostname("127.0.0.1", new_host)
+          system_hosts.set_loopback_hostname(new_host)
           system_hosts.save
           LinuxAdmin::Service.new("network").restart
           press_any_key

@@ -131,10 +131,9 @@ module ApplianceConsole
       Trollop.educate unless set_host? || key? || database? || tmp_disk? ||
                              uninstall_ipa? || install_ipa? || certs? || extauth_opts?
       if set_host?
-        ip = LinuxAdmin::NetworkInterface.new("eth0").address
         system_hosts = LinuxAdmin::Hosts.new
         system_hosts.hostname = options[:host]
-        system_hosts.update_entry(ip, options[:host])
+        system_hosts.set_loopback_hostname(options[:host])
         system_hosts.save
         LinuxAdmin::Service.new("network").restart
       end
