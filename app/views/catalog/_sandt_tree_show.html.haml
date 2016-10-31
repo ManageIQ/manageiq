@@ -72,8 +72,6 @@
           .form-group
             %label.col-md-2.control-label{:title => _("%{entry_point} Entry Point (NameSpace/Class/Instance)") % {:entry_point => entry_points_op[0]}}
               #{entry_points_op[0]} #{_('Entry Point')}
-              %br
-              = _('State Machine (NS/Cls/Inst)')
             .col-md-8
               = h(@sb[entry_points_op[1]])
       %hr
