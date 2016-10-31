@@ -753,7 +753,7 @@ class ApplicationController < ActionController::Base
     user = current_user
     @sb[:grp_title] = reports_group_title
     @data = []
-    if (!group.settings || !group.settings[:report_menus] || group.settings[:report_menus].blank?) || mode == "default"
+    if !group.settings || group.settings[:report_menus].blank? || mode == "default"
       # array of all reports if menu not configured
       @rep = MiqReport.all.sort_by { |r| [r.rpt_type, r.filename.to_s, r.name] }
       if tree_type == "timeline"
