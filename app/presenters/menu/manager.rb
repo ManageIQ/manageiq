@@ -21,9 +21,12 @@ module Menu
 
     def item(item_id)
       @menu.each do |menu_section|
-        the_item = menu_section.items.detect { |item| item.id == item_id }
-        return the_item if the_item.present?
+        menu_section.items.each do |el|
+          the_item = el.item(item_id)
+          return the_item if the_item.present?
+        end
       end
+      nil
     end
 
     def section(section_id)

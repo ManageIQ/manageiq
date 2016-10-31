@@ -49,6 +49,15 @@ module Menu
       end.present?
     end
 
+    def item(item_id)
+      return self if item_id == id
+      items.each do |el|
+        child_match = el.item(item_id)
+        return child_match if child_match.present?
+      end
+      nil
+    end
+
     def default_redirect_url
       items.each do |item|
         next unless item.visible?
@@ -71,7 +80,7 @@ module Menu
       end
     end
 
-    def section_path(acc = [])
+    def parent_path(acc = [])
       acc << id
       @parent.present? ? @parent.parent_path(acc) : acc
     end

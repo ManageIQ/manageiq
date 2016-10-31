@@ -28,7 +28,11 @@ module Menu
     end
 
     def parent_path
-      @parent.section_path
+      @parent.parent_path
+    end
+
+    def item(item_id)
+      item_id == id ? self : nil
     end
   end
 end
