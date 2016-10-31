@@ -2458,6 +2458,10 @@ class ApplicationController < ActionController::Base
     get_node_info(x_node)
   end
 
+  def clear_flash_msg
+    @flash_array = nil if params[:button] != "reset"
+  end
+
   def build_accordions_and_trees
     # Build the Explorer screen from scratch
     allowed_features = ApplicationController::Feature.allowed_features(features)

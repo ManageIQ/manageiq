@@ -726,10 +726,6 @@ class InfraNetworkingController < ApplicationController
     !(@infra_networking_record || @in_a_form)
   end
 
-  def clear_flash_msg
-    @flash_array = nil if params[:button] != "reset"
-  end
-
   def breadcrumb_name(_model)
     ui_lookup(:model => 'Switch').to_s
   end

@@ -1042,10 +1042,6 @@ class ProviderForemanController < ApplicationController
                                           :locals  => locals])
   end
 
-  def clear_flash_msg
-    @flash_array = nil if params[:button] != "reset"
-  end
-
   def breadcrumb_name(_model)
     "#{ui_lookup(:ui_title => 'foreman')} #{ui_lookup(:model => 'ExtManagementSystem')}"
   end
