@@ -37,7 +37,7 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
     expect(ExtManagementSystem.count).to eq(2)
     expect(Flavor.count).to eq(56)
     expect(AvailabilityZone.count).to eq(3)
-    expect(FloatingIp.count).to eq(1)
+    expect(FloatingIp.count).to eq(3)
     expect(AuthPrivateKey.count).to eq(2)
     expect(SecurityGroup.count).to eq(2)
     expect(FirewallRule.count).to eq(4)
@@ -66,7 +66,7 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
 
     expect(@ems.flavors.size).to eq(56)
     expect(@ems.availability_zones.size).to eq(3)
-    expect(@ems.floating_ips.size).to eq(1)
+    expect(@ems.floating_ips.size).to eq(3)
     expect(@ems.key_pairs.size).to eq(2)
     expect(@ems.security_groups.size).to eq(2)
     expect(@ems.vms_and_templates.size).to eq(3)
@@ -104,6 +104,14 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
     expect(ip).to have_attributes(
       :address            => "54.215.0.230",
       :ems_ref            => "54.215.0.230",
+      :cloud_network_only => false
+    )
+
+    @ip = ManageIQ::Providers::Amazon::NetworkManager::FloatingIp.where(:address => "204.236.137.154").first
+    expect(@ip).to have_attributes(
+      :address            => "204.236.137.154",
+      :ems_ref            => "204.236.137.154",
+      :fixed_ip_address   => "10.191.129.95",
       :cloud_network_only => false
     )
   end
@@ -213,7 +221,7 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
 
     expect(v.ext_management_system).to eq(@ems)
     expect(v.availability_zone).to eq(@az)
-    expect(v.floating_ip).to be_nil
+    expect(v.floating_ip).to eq(@ip)
     expect(v.flavor).to eq(@flavor)
     expect(v.cloud_network).to          be_nil
     expect(v.cloud_subnet).to           be_nil
