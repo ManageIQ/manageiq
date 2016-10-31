@@ -128,10 +128,6 @@ module MiqReport::Search
 
   def filter_results(results, supports_filter)
     return results if supports_filter.nil?
-    filtered_results = []
-    results.each do |result|
-      filtered_results << result if result.send(supports_filter.to_sym)
-    end
-    filtered_results
+    results.select { |result| result.send(supports_filter) }
   end
 end
