@@ -112,19 +112,7 @@ class ContainerController < ApplicationController
   def x_show
     get_tagdata(Container.find_by_id(from_cid(params[:id])))
     identify_container(from_cid(params[:id]))
-    respond_to do |format|
-      format.js do                  # AJAX, select the node
-        @explorer = true
-        params[:id] = x_build_node_id(@record, x_tree(:containers_tree))  # Get the tree node id
-        tree_select
-      end
-      format.html do                # HTML, redirect to explorer
-        tree_node_id = TreeBuilder.build_node_id(@record)
-        session[:exp_parms] = {:id => tree_node_id}
-        redirect_to :action => "explorer"
-      end
-      format.any { head :not_found }
-    end
+    generic_x_show(x_tree(:containers_tree))
   end
 
   # Tree node selected in explorer
