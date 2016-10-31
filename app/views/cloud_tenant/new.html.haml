@@ -3,7 +3,7 @@
   %h3
     = _('Basic Information')
   .form-horizontal
-    .form-group
+    .form-group{"ng-class" => "{'has-error': angularForm.ems_id.$invalid}"}
       %label.col-md-2.control-label
         = _('Cloud Provider')
       .col-md-8
