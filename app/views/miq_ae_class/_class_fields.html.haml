@@ -98,7 +98,7 @@
                     - else
                       = text_field_tag("fields_#{fname}_#{i}", field[fname],
                         "data-miq_observe" => obs)
-          - if !params[:add] && params[:add] != "new" && (session[:field_data].blank? || session[:field_data].empty?)
+          - if !params[:add] && params[:add] != "new" && session[:field_data].blank?
             %tr{:onclick => remote_function(:url => {:action => 'field_select', :add => 'new', :item => "field"})}
               %td
                 = image_tag(image_path("16/equal-green.png"))
