@@ -100,11 +100,6 @@ describe MiqPglogical do
         subject.refresh_excludes
         expect(subject.included_tables).to include(table)
       end
-
-      it "continues if we attempt to add a table twice" do
-        expect(subject).to receive(:newly_included_tables).and_return([subject.included_tables.first])
-        expect { subject.refresh_excludes }.not_to raise_error
-      end
     end
   end
 
