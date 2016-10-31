@@ -1178,11 +1178,6 @@ class ProviderForemanController < ApplicationController
     record
   end
 
-  def set_root_node
-    self.x_node = "root"
-    get_node_info(x_node)
-  end
-
   def get_session_data
     @title  = _("Providers")
     @layout = controller_name

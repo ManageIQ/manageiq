@@ -752,11 +752,6 @@ class InfraNetworkingController < ApplicationController
     record
   end
 
-  def set_root_node
-    self.x_node = "root"
-    get_node_info(x_node)
-  end
-
   def render_tagging_form
     return if %w(cancel save).include?(params[:button])
     @in_a_form = true
