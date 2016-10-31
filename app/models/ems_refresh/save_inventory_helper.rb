@@ -38,10 +38,14 @@ module EmsRefresh::SaveInventoryHelper
     # Find the record, and update if found, else create it
     method ||= :build
     found  = record_index.fetch(hash)
+    # TODO(lsmola) probably move all this under dto, so it can create or save right here?
     if found.nil?
       dto.build_object(association.public_send(method, hash.except(:id)))
       new_records << dto
     else
+      # TODO(lsmola) Build object, that is really bad name. it should either really build the object or it could be just
+      # the object setter
+      dto.build_object(found)
       found.update_attributes!(hash.except(:id, :type))
       deletes.delete(found) unless deletes.blank?
     end
