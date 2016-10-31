@@ -71,6 +71,32 @@ module Spec
         report
       end
 
+      def numeric_chart_simple_with_long_strings
+        report = MiqReport.new(
+          :db          => "Host",
+          :cols        => %w(name ram_size),
+          :col_order   => %w(name ram_size),
+          :headers     => [long_header, "RAM Size (MB)"],
+          :order       => "Ascending",
+          :sortby      => %w(name),
+          :group       => nil,
+          :graph       => {:type => "Bar", :mode => "values", :column => "Host-ram_size", :count => 10, :other => false},
+          :dims        => 1,
+          :col_options => {},
+          :extras      => {},
+        )
+
+        report.table = Ruport::Data::Table.new(
+          :column_names => %w(name ram_size id),
+          :data         => [
+            [long_category,  512, 1],
+            ['ladas', 1024, 2],
+            ['joker', 2024, 3],
+          ]
+        )
+        report
+      end
+
       def null_data_chart
         report = MiqReport.new(
           :db          => "Vm",
@@ -185,6 +211,16 @@ module Spec
           ]
         )
         report
+      end
+
+      def long_category
+        'Daenerys Targaryen, the First of Her Name, Queen of Meereen, Queen of the Andals and the Rhoynar and the First Men,\
+         Lord of the Seven Kingdoms, Protector of the Realm, Khaleesi of the Great Grass Sea, called Daenerys Stormborn, the Unburnt,\
+          Mother of Dragons.'
+      end
+
+      def long_header
+        "Here is header loooooong as hell"
       end
     end
   end
