@@ -57,9 +57,8 @@ describe DialogTab do
         dialog_tab.update_dialog_groups(updated_groups)
 
         dialog_tab.reload
-
-        expect(dialog_tab.dialog_groups.first.label).to eq('updated_label')
-        expect(dialog_tab.dialog_groups.last.label).to eq('updated_label')
+        expect(dialog_tab.dialog_groups.collect(&:label))
+          .to match_array(['updated_label', 'updated_label', 'a new label'])
       end
 
       it 'creates a new dialog group from the dialog group without an id' do
