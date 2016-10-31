@@ -1,6 +1,6 @@
 module Api
   class TenantsController < BaseController
-    INVALID_TENANT_ATTRS = %w(id href ancestry)
+    INVALID_TENANT_ATTRS = %w(id href ancestry).freeze
 
     include Subcollections::Tags
     include Subcollections::Quotas
