@@ -36,6 +36,7 @@ class ManageIQ::Providers::Openstack::CloudManager < EmsCloud
 
   def self.default_blacklisted_event_names
     %w(
+      identity.authenticate
       scheduler.run_instance.start
       scheduler.run_instance.scheduled
       scheduler.run_instance.end
