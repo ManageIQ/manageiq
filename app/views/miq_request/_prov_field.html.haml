@@ -340,7 +340,12 @@
             -# Allow editing of this pulldown field
             - if field == :src_vm_id
               -# grid for src_vm_id
-              = render :partial => "miq_request/prov_vm_grid", :locals => {:field_id => field_id}
+              - if @edit[:new][:src_type] == "CloudVolume"
+                = render :partial => "miq_request/prov_volume_grid", :locals => {:field_id => field_id}
+              - elsif @edit[:new][:src_type] == "CloudVolumeSnapshot"
+                = render :partial => "miq_request/prov_volume_snapshot_grid", :locals => {:field_id => field_id}
+              - else
+                = render :partial => "miq_request/prov_vm_grid", :locals => {:field_id => field_id}
             - elsif field == :placement_host_name
               -# grid for hosts
               = render :partial => "miq_request/prov_host_grid", :locals => {:field_id => field_id}

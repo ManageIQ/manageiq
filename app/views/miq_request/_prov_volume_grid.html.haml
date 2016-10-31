@@ -1,23 +1,23 @@
 #prov_vm_div
-  - if @vms
+  - if @volumes
     %table.table.table-bordered.table-striped.table-hover.table-selectable
       %thead
         %tr
           - id = @edit[:req_id] || "new"
-          - @edit[:vm_columns].each_with_index do |h, i|
+          - @edit[:volume_columns].each_with_index do |h, i|
             %th
               - if [:clone_to_template, :clone_to_vm].include?(@edit[:wf].request_type)
-                = h(@edit[:vm_headers][h])
+                = h(@edit[:volume_headers][h])
               - else
                 -# Replaced to exclude non-view table fields from sorting
-                = link_to(h(@edit[:vm_headers][h]),
-                  {:action => "sort_vm_grid", :sort_choice => h, :field_id => field_id, :id => id.to_s},
+                = link_to(h(@edit[:volume_headers][h]),
+                  {:action => "sort_volume_grid", :sort_choice => h, :field_id => field_id, :id => id.to_s},
                   "data-miq_sparkle_on"  => true,
                   "data-miq_sparkle_off" => true,
                   "data-method"          => :post,
                   :remote                => true)
-                - if @edit[:vm_columns][i] == @edit[:vm_sortcol]
-                  %img{:src => image_path("16/sort_#{@edit[:vm_sortdir] == 'ASC' ? 'up' : 'down'}.png")}
+                - if @edit[:volume_columns][i] == @edit[:volume_sortcol]
+                  %img{:src => image_path("16/sort_#{@edit[:volume_sortdir] == 'ASC' ? 'up' : 'down'}.png")}
       %tbody
         - unless [:clone_to_template, :clone_to_vm].include?(@edit[:wf].request_type)
           - cls = @edit[:new][:src_vm_id] && @edit[:new][:src_vm_id][0].nil? ? "selected" : ""
@@ -31,10 +31,10 @@
             %td
             %td
             %td
-            - if @edit[:vm_headers].key? 'cloud_tenant'
+            - if @edit[:volume_headers].key? 'cloud_tenant'
               %td
 
-        - @vms.each do |row|
+        - @volumes.each do |row|
           - @id = row.id
           - cls = @edit[:new][:src_vm_id] && @edit[:new][:src_vm_id][0] == @id ? "selected" : ""
           - clk = "miqAjax('/miq_request/prov_field_changed/?#{field_id}=#{@id}&id=#{id}');"
@@ -42,54 +42,43 @@
             %td
               = h(row.name)
             %td
-              = h(row.operating_system.try(:product_name))
+              = h(row.description)
             %td
-              = h(row.platform)
+              = h(number_to_human_size(row.size))
             %td
-              = h(row.cpu_total_cores)
-            %td
-              = h(number_to_human_size(row.mem_cpu.to_i * 1024 * 1024))
-            %td
-              = h(number_to_human_size(row.allocated_disk_storage))
+              = h(row.bootable)
             %td
               - if row.ext_management_system
                 = h(row.ext_management_system.name)
             %td
-              = h(row.v_total_snapshots)
-            - if @edit[:vm_headers].key? 'cloud_tenant'
-              %td
-                = h(row.cloud_tenant ? row.cloud_tenant.name : _('None'))
+              - if row.respond_to?(:cloud_tenant)
+                = h(row.cloud_tenant.try(:name))
   - elsif @source
     -# grid with only one record for Redhat provisioning
     %table.table.table-striped.table-bordered.table-selectable
       %thead
         %tr
           - id = @edit[:req_id] || "new"
-          - @edit[:vm_columns].each do |h|
+          - @edit[:volume_columns].each do |h|
             %th
-              = h(@edit[:vm_headers][h])
+              = h(@edit[:volume_headers][h])
       %tbody
         %tr.selected
           %td
             = h(@source.name)
           %td
-            = h(@source.operating_system.try(:product_name))
+            = h(@source.description)
           %td
-            = h(@source.platform)
+            = h(number_to_human_size(@source.size))
           %td
-            = h(@source.cpu_total_cores)
-          %td
-            = h(number_to_human_size(@source.mem_cpu.to_i * 1024 * 1024))
-          %td
-            = h(number_to_human_size(@source.allocated_disk_storage))
+            = h(@source.bootable)
           %td
             - if @source.ext_management_system
               = h(@source.ext_management_system.name)
           %td
-            = h(@source.v_total_snapshots)
-          - if @edit[:vm_headers].key? 'cloud_tenant'
-            %td
-              = h(@source.cloud_tenant.name)
+            - if @source.respond_to?(:cloud_tenant)
+              = h(@source.cloud_tenant.try(:name))
+
 
 :javascript
   miqScrollToSelected('prov_vm_div')
