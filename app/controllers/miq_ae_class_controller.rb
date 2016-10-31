@@ -136,12 +136,6 @@ class MiqAeClassController < ApplicationController
     end
   end
 
-  # reset node to root node when previously viewed item no longer exists
-  def set_root_node
-    self.x_node = "root"
-    get_node_info(x_node)
-  end
-
   def get_node_info(node)
     id = valid_active_node(node).split('-')
     @sb[:row_selected] = nil if params[:action] == "tree_select"

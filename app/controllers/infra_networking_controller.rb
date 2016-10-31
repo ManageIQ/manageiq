@@ -726,24 +726,12 @@ class InfraNetworkingController < ApplicationController
     !(@infra_networking_record || @in_a_form)
   end
 
-  def clear_flash_msg
-    @flash_array = nil if params[:button] != "reset"
-  end
-
   def breadcrumb_name(_model)
     ui_lookup(:model => 'Switch').to_s
   end
 
-  def list_row_id(row)
-    to_cid(row['id'])
-  end
-
   def valid_switch_record?(switch_record)
     switch_record.try(:id)
-  end
-
-  def process_show_list(options = {})
-    super
   end
 
   def find_record(model, id)
@@ -758,11 +746,6 @@ class InfraNetworkingController < ApplicationController
       end
     end
     record
-  end
-
-  def set_root_node
-    self.x_node = "root"
-    get_node_info(x_node)
   end
 
   def render_tagging_form
