@@ -1275,33 +1275,3 @@
           value: analysis_success
     search_type: default
     db: ManageIQ::Providers::InfraManager::Vm
-- attributes:
-    name: default_Type / Container
-    description: Type / Container
-    filter: !ruby/object:MiqExpression
-      exp:
-        ">":
-          field: Container-restart_count
-          value: "1"
-    search_type: default
-    db: Container
-- attributes:
-    name: default_Project / Pod
-    description: Default Project / Pods
-    filter: !ruby/object:MiqExpression
-      exp:
-        "=":
-          field: ContainerGroup.container_project-name
-          value: default
-    search_type: default
-    db: ContainerGroup
-- attributes:
-    name: default_Project / ContainerService
-    description: Default Project / Container Services
-    filter: !ruby/object:MiqExpression
-      exp:
-        "=":
-          field: ContainerService.container_project-name
-          value: default
-    search_type: default
-    db: ContainerService
