@@ -46,11 +46,11 @@ class OrchestrationStack < ApplicationRecord
   end
 
   def direct_service
-    direct_services.first
+    direct_services.first || (root.direct_services.first if root != self)
   end
 
   def service
-    direct_service.try(:root_service)
+    direct_service.try(:root_service) || (root.direct_service.try(:root_service) if root != self)
   end
 
   def indirect_vms
