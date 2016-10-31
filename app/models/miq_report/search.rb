@@ -124,6 +124,8 @@ module MiqReport::Search
     return table, attrs
   end
 
+  private
+
   def filter_results(results, supports_filter)
     return results if supports_filter.nil?
     filtered_results = []
