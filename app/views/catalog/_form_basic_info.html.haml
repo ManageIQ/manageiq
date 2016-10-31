@@ -119,8 +119,6 @@
     .form-group
       %label.col-md-2.control-label{:title => _("Provisioning Entry Point (NameSpace/Class/Instance)")}
         = _('Provisioning Entry Point')
-        %br
-        = _('State Machine (NS/Cls/Inst)')
       .col-md-8{:title => @edit[:new][:fqname]}
         .input-group
           = text_field_tag("fqname",
@@ -143,8 +141,6 @@
     .form-group
       %label.col-md-2.control-label{:title => _("Reconfigure Entry Point (NameSpace/Class/Instance)")}
         = _('Reconfigure Entry Point')
-        %br
-        = _('State Machine (NS/Cls/Inst)')
       .col-md-8{:title => @edit[:new][:reconfigure_fqname]}
         .input-group
           = text_field_tag("reconfigure_fqname",
@@ -169,8 +165,6 @@
     .form-group
       %label.col-md-2.control-label{:title => _("Retirement Entry Point (NameSpace/Class/Instance)")}
         = _('Retirement Entry Point')
-        %br
-        = _('State Machine (NS/Cls/Inst)')
       .col-md-8{:title => @edit[:new][:retire_fqname]}
         .input-group
           = text_field_tag("retire_fqname",
