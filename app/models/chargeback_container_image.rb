@@ -93,6 +93,7 @@ class ChargebackContainerImage < Chargeback
     self.project_uid   = self.class.project(perf).ems_ref
     self.provider_name = perf.parent_ems.try(:name)
     self.provider_uid  = perf.parent_ems.try(:name)
-    self.archived      = self.class.project(perf).archived? ? _('Yes') : _('No')
+    self.archived      = self.class.project(perf).archived? ? _('Yes') : _('No'),
+    self.entity        = self.class.image(perf)
   end
 end # class ChargebackContainerImage
