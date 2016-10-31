@@ -22,10 +22,10 @@ class ApplicationHelper::Toolbar::ServicetemplatecatalogsCenter < ApplicationHel
         button(
           :st_catalog_delete,
           'pficon pficon-delete fa-lg',
-          N_('Remove selected Catalog Items'),
-          N_('Remove Catalog Items'),
+          N_('Remove selected Catalogs'),
+          N_('Remove Catalogs'),
           :url_parms => "main_div",
-          :confirm   => N_("Warning: The selected Items will be permanently removed!"),
+          :confirm   => N_("Warning: The selected Catalogs will be permanently removed!"),
           :enabled   => false,
           :onwhen    => "1+"),
       ]
