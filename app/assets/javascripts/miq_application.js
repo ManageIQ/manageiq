@@ -1620,7 +1620,7 @@ function add_expanding_icon(element) {
 }
 
 function chartData(type, data, data2) {
-  if (type == undefined) {
+  if (type === undefined) {
     return;
   }
 
@@ -1637,22 +1637,29 @@ function chartData(type, data, data2) {
       data.axis.y.tick.values = [0, max];
     }
 
-    if(data.miq.reporting_chart) {
-      data.tooltip.format.name =  function (name, ratio, id, index) { return data.miq.name_table[id]; }
-      data.tooltip.format.title =  function (x) { console.log(data.miq.category_table[x]); return data.miq.category_table[x]; }
+    if (data.miq.reporting_chart) {
+      data.tooltip.format.name = function (_name, _ratio, id, _index) {
+        return data.miq.name_table[id];
+      };
+
+      data.tooltip.format.title = function (x) {
+        return data.miq.category_table[x];
+      };
     }
   }
 
   // set formating function for tooltip and y tick labels
-  if (_.isObject(data.axis) && _.isObject(data.axis.y) && _.isObject(data.axis.y.tick) && _.isObject(data.axis.y.tick.format) && data.axis.y.tick.format.function) {
+  if (_.isObject(data.axis) &&
+      _.isObject(data.axis.y) &&
+      _.isObject(data.axis.y.tick) &&
+      _.isObject(data.axis.y.tick.format) &&
+      data.axis.y.tick.format.function) {
     var o = data.axis.y.tick.format;
     data.axis.y.tick.format = ManageIQ.charts.formatters[o.function].c3(o.options);
-    //data.tooltip = {format: {value: ManageIQ.charts.formatters[o.function].c3(o.options)}};
     data.tooltip.format.value = ManageIQ.charts.formatters[o.function].c3(o.options);
   }
 
   var config = _.cloneDeep(ManageIQ.charts.c3config[type]);
-
   // some PatternFly default configs define contents function, but it breaks formatting
   if (_.isObject(config.tooltip)) {
     config.tooltip.contents = undefined;
