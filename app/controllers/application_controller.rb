@@ -1924,8 +1924,12 @@ class ApplicationController < ActionController::Base
     section_id = menu_section_id(params)
     return if section_id.nil?
 
+    section = Menu::Manager.section(section_id)
+    return if section.nil?
+
     url = URI.parse(request.url).path
-    Menu::Manager.section(section_id).parent_path.each do |sid|
+
+    section.parent_path.each do |sid|
       session[:tab_url][sid] = url
     end
   end
