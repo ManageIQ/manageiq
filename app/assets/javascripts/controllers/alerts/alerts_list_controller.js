@@ -1,8 +1,8 @@
 /* global miqHttpInject */
 
 angular.module('alertsCenter')
-  .controller('alertsListController', ['$scope', '$http', '$resource', '$interval', '$timeout', '$window',
-    function($scope,  $http, $resource, $interval, $timeout, $window) {
+  .controller('alertsListController', ['$scope', '$http', '$resource', '$interval', '$timeout', '$window', 'API',
+    function($scope,  $http, $resource, $interval, $timeout, $window, API) {
       var vm = this;
       vm.alertsList = [];
 
@@ -38,12 +38,16 @@ angular.module('alertsCenter')
 
       vm.refresh = function() {
         // TODO: Replace mock data with real API call
+//        var url = '/api/alerts_statuses';
+//        API.post(url, {"action" : "providers_alerts"}).then(function (response) {
+//        var alertData = response;
         var alertResource = $resource('/assets/mock-data/alerts/alert-data');
         alertResource.get(function(resource) {
+          var alertData = resource.data[0];
+
           vm.alerts = [];
           vm.objectTypes.splice(0, vm.objectTypes.length);
           var newTypes = [];
-          var alertData = resource.data[0];
 
           for (var key in alertData) {
             vm.objectTypes.push(key);
