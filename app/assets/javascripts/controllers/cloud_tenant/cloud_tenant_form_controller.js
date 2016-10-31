@@ -1,5 +1,5 @@
 ManageIQ.angular.app.controller('cloudTenantFormController', ['$http', '$scope', 'cloudTenantFormId', 'miqService', function($http, $scope, cloudTenantFormId, miqService) {
-  $scope.cloudTenantModel = { name: '' };
+  $scope.cloudTenantModel = { name: '', ems_id: '' };
   $scope.formId = cloudTenantFormId;
   $scope.afterGet = false;
   $scope.modelCopy = angular.copy( $scope.cloudTenantModel );
