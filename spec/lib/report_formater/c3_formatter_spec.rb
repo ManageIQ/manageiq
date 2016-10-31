@@ -20,6 +20,7 @@ describe ReportFormatter::C3Formatter do
 
   context '#build_numeric_chart_simple' do
     let(:report) { numeric_chart_simple }
+    let(:long_report) { numeric_chart_simple_with_long_strings }
 
     it "report chart have right data in ascending order" do
       report.col_formats = [nil, :general_number_precision_0]
@@ -33,6 +34,13 @@ describe ReportFormatter::C3Formatter do
 
       expect_any_instance_of(described_class).to receive(:build_numeric_chart_simple).once.and_call_original
       render_report(report)
+    end
+
+    it "handle long strings" do
+      render_report(long_report)
+
+      expect(long_report.chart[:miq][:category_table][2]).to eq(long_category)
+      expect(long_report.chart[:miq][:name_table]['1']).to eq(long_header)
     end
   end
 
