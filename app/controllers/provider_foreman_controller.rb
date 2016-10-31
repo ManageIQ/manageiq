@@ -320,6 +320,12 @@ class ProviderForemanController < ApplicationController
 
   def x_show
     tree_record unless unassigned_configuration_profile?(params[:id])
+
+    if request.format.js? && !@record
+      check_for_unassigned_configuration_profile
+      return
+    end
+
     generic_x_show
   end
 
