@@ -1583,6 +1583,7 @@ class ApplicationController < ActionController::Base
       :association           => association,
       :filter                => get_view_filter(options[:filter]),
       :sub_filter            => get_view_process_search_text(view),
+      :supports_filter       => options[:supports_filter],
       :page                  => options[:all_pages] ? 1 : @current_page,
       :per_page              => options[:all_pages] ? ONE_MILLION : @items_per_page,
       :where_clause          => get_view_where_clause(options[:where_clause]),

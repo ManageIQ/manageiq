@@ -99,7 +99,9 @@ module MiqReport::Search
     else
       targets = db_class
     end
+    supports_filter       = search_options.delete(:supports_filter) if search_options[:supports_filter]
     search_results, attrs = Rbac.search(search_options.merge(:targets => targets))
+    filtered_results      = filter_results(search_results, supports_filter)
 
     if order.nil?
       options[:limit]   = limit
@@ -108,17 +110,26 @@ module MiqReport::Search
       options[:no_sort] = true
       self.extras[:target_ids_for_paging] = attrs.delete(:target_ids_for_paging)
     end
-    build_table(search_results, db, options)
+    build_table(filtered_results, db, options)
 
     # build a hash of target objects for UI since we already have them
     if options[:targets_hash]
       attrs[:targets_hash] = {}
-      search_results.each { |obj| attrs[:targets_hash][obj.id] = obj }
+      filtered_results.each { |obj| attrs[:targets_hash][obj.id] = obj }
     end
     attrs[:apply_sortby_in_search] = !!order
     self.extras[:attrs_for_paging] = attrs.merge(:targets_hash => nil) unless self.extras[:target_ids_for_paging].nil?
 
     _log.debug("Attrs: #{attrs.merge(:targets_hash => "...").inspect}")
     return table, attrs
+  end
+  
+  def filter_results(results, supports_filter)
+    return results if supports_filter.nil?
+    filtered_results = []
+    results.each do |result|
+      filtered_results << result if result.send("#{supports_filter}".to_sym)
+    end
+    filtered_results
   end
 end
