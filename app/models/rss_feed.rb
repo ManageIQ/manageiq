@@ -50,7 +50,7 @@ class RssFeed < ApplicationRecord
       output << '<td>'
       output << i.title
       output << '<br/>'
-      pubDate = (i.pubDate.blank? || i.pubDate == "") ? "" : format_timezone(i.pubDate, options[:tz], "raw")
+      pubDate = i.pubDate.blank? ? "" : format_timezone(i.pubDate, options[:tz], "raw")
       output << "Date : #{pubDate}"
       output << '</td>'
       output << '</tr>'
