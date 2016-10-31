@@ -348,7 +348,7 @@ describe DashboardController do
       ems_cloud_amz = FactoryGirl.create(:ems_amazon)
       breadcrumbs = [{:name => "Name", :url => "/controller/action"}]
       session[:breadcrumbs] = breadcrumbs
-      session[:tab_url] = {:clo => {:controller => "ems_cloud", :action => "show", :id => ems_cloud_amz.id}}
+      session[:tab_url] = {:clo => "/ems_cloud/#{ems_cloud_amz.id}"}
       post :maintab, :params => { :tab => "clo" }
       expect(response.header['Location']).to include(ems_cloud_path(ems_cloud_amz))
       expect(controller.instance_variable_get(:@breadcrumbs)).to eq([])
