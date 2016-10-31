@@ -72,14 +72,41 @@ class ManageIQ::Providers::Amazon::NetworkManager::RefreshParser
 
   def get_floating_ips
     ips = @aws_ec2.client.describe_addresses.addresses
+    # Take only floating ips that are not already in stored by ec2 flaoting_ips
+    ips = ips.select do |floating_ip|
+      floating_ip_id = floating_ip.allocation_id.blank? ? floating_ip.public_ip : floating_ip.allocation_id
+      @data_index.fetch_path(:floating_ips, floating_ip_id).nil?
+    end
     process_collection(ips, :floating_ips) { |ip| parse_floating_ip(ip) }
+  end
+
+  def get_public_ips(network_ports)
+    public_ips = []
+    network_ports.each do |network_port|
+      network_port.private_ip_addresses.each do |private_address|
+        if private_address.association && !(public_ip = private_address.association.public_ip).blank? &&
+           private_address.association.allocation_id.blank?
+
+          unless @data_index.fetch_path(:floating_ips, public_ip)
+            public_ips << {
+              :network_port_id    => network_port.network_interface_id,
+              :private_ip_address => private_address.private_ip_address,
+              :public_ip_address  => public_ip
+            }
+          end
+        end
+      end
+    end
+    process_collection(public_ips, :floating_ips) { |public_ip| parse_public_ip(public_ip) }
   end
 
   def get_network_ports
     network_ports = @aws_ec2.client.describe_network_interfaces.network_interfaces
-    instances     = @aws_ec2.instances
+    instances     = @aws_ec2.instances.select { |instance| instance.network_interfaces.blank? }
     process_collection(network_ports, :network_ports) { |n| parse_network_port(n) }
     process_collection(instances, :network_ports) { |x| parse_network_port_inferred_from_instance(x) }
+    process_collection(instances, :floating_ips) { |instance| parse_floating_ip_inferred_from_instance(instance) }
+    get_public_ips(network_ports)
   end
 
   def parse_cloud_network(vpc)
@@ -168,16 +195,49 @@ class ManageIQ::Providers::Amazon::NetworkManager::RefreshParser
   end
 
   def parse_floating_ip(ip)
-    address = uid = ip.public_ip
+    cloud_network_only = ip.domain == "vpc" ? true : false
+    address            = ip.public_ip
+    uid                = cloud_network_only ? ip.allocation_id : ip.public_ip
 
     new_result = {
       :type               => self.class.floating_ip_type,
       :ems_ref            => uid,
       :address            => address,
       :fixed_ip_address   => ip.private_ip_address,
-      :cloud_network_only => ip.domain["vpc"] ? true : false,
+      :cloud_network_only => cloud_network_only,
       :network_port       => @data_index.fetch_path(:network_ports, ip.network_interface_id),
       :vm                 => parent_manager_fetch_path(:vms, ip.instance_id)
+    }
+
+    return uid, new_result
+  end
+
+  def parse_floating_ip_inferred_from_instance(instance)
+    address = uid = instance.public_ip_address
+
+    new_result = {
+      :type               => self.class.floating_ip_type,
+      :ems_ref            => uid,
+      :address            => address,
+      :fixed_ip_address   => instance.private_ip_address,
+      :cloud_network_only => false,
+      :network_port       => @data_index.fetch_path(:network_ports, instance.id),
+      :vm                 => parent_manager_fetch_path(:vms, instance.id)
+    }
+
+    return uid, new_result
+  end
+
+  def parse_public_ip(public_ip)
+    address = uid = public_ip[:public_ip_address]
+    new_result = {
+      :type               => self.class.floating_ip_type,
+      :ems_ref            => uid,
+      :address            => address,
+      :fixed_ip_address   => public_ip[:private_ip_address],
+      :cloud_network_only => true,
+      :network_port       => @data_index.fetch_path(:network_ports, public_ip[:network_port_id]),
+      :vm                 => @data_index.fetch_path(:network_ports, public_ip[:network_port_id], :device)
     }
 
     return uid, new_result
@@ -220,8 +280,7 @@ class ManageIQ::Providers::Amazon::NetworkManager::RefreshParser
 
   def parse_network_port_inferred_from_instance(instance)
     # Create network_port placeholder for old EC2 instances, those do not have interface nor subnet nor VPC
-    # require 'byebug'; byebug
-    return nil, nil unless instance.network_interfaces.blank?
+    cloud_subnet_network_ports = [parse_cloud_subnet_network_port(instance, nil)]
 
     uid    = instance.id
     name   = get_from_tags(instance, :name)
@@ -230,15 +289,16 @@ class ManageIQ::Providers::Amazon::NetworkManager::RefreshParser
     device = parent_manager_fetch_path(:vms, uid)
 
     new_result = {
-      :type            => self.class.network_port_type,
-      :name            => name,
-      :ems_ref         => uid,
-      :status          => nil,
-      :mac_address     => nil,
-      :device_owner    => nil,
-      :device_ref      => nil,
-      :device          => device,
-      :security_groups => instance.security_groups.to_a.collect do |sg|
+      :type                       => self.class.network_port_type,
+      :name                       => name,
+      :ems_ref                    => uid,
+      :status                     => nil,
+      :mac_address                => nil,
+      :device_owner               => nil,
+      :device_ref                 => nil,
+      :device                     => device,
+      :cloud_subnet_network_ports => cloud_subnet_network_ports,
+      :security_groups            => instance.security_groups.to_a.collect do |sg|
         @data_index.fetch_path(:security_groups, sg.group_id)
       end.compact,
     }
