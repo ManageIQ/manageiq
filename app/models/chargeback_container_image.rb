@@ -78,7 +78,8 @@ class ChargebackContainerImage < Chargeback
       "project_uid"   => project.ems_ref,
       "provider_name" => perf.parent_ems.try(:name),
       "provider_uid"  => perf.parent_ems.try(:name),
-      "archived"      => project.archived? ? _("Yes") : _("No")
+      "archived"      => project.archived? ? _("Yes") : _("No"),
+      "entity"        => image
     }
 
     [key, extra_fields]
