@@ -328,7 +328,7 @@ describe Dialog do
     context 'a collection of dialog tabs containing one with an id and one without an id' do
       it 'updates the dialog_tab with an id' do
         dialog.update_tabs(updated_content)
-        expect(dialog.reload.dialog_tabs.first.label).to eq('updated_label')
+        expect(dialog.reload.dialog_tabs.collect(&:label)).to match_array(['updated_label', 'new tab'])
       end
 
       it 'creates the dialog tab from the dialog tabs without an id' do
