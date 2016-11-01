@@ -66,18 +66,6 @@ class MiqReport < ApplicationRecord
     end
   }
 
-  def self.filter_with_report_results_by(miq_group_ids)
-    miq_group_condition = {:miq_report_results => {:miq_group_id => miq_group_ids}}
-
-    if miq_group_ids.nil?
-      miq_group_relation = where.not(miq_group_condition)
-    else
-      miq_group_relation = where(miq_group_condition)
-    end
-
-    miq_group_relation.joins(:miq_report_results).distinct
-  end
-
   # Scope on reports that have report results.
   #
   # Valid options are:
@@ -88,8 +76,7 @@ class MiqReport < ApplicationRecord
     miq_group_ids = options[:miq_groups].collect(&:id) unless options[:miq_groups].nil?
 
     miq_group_ids ||= options[:miq_group_ids]
-
-    q = filter_with_report_results_by(miq_group_ids)
+    q = joins(:miq_report_results).merge(MiqReportResult.for_groups(miq_group_ids)).distinct
 
     if options[:select]
       cols = options[:select].to_miq_a
