@@ -28,8 +28,8 @@ module ReportController::Menus
 
     if params[:node_id]
       session[:node_selected] = params[:node_id]
-    else
-      session[:node_selected] = "b__Report Menus for #{session[:role_choice]}" if session[:node_selected].blank? || session[:node_selected] == ""
+    elsif session[:node_selected].blank?
+      session[:node_selected] = "b__Report Menus for #{session[:role_choice]}"
     end
     @sb[:node_clicked] = (params[:node_clicked] == "1")
 

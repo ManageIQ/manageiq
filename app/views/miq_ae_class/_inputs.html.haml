@@ -39,7 +39,7 @@
               = select_tag("#{prefix}fields_datatype_#{i}",
                 options_for_select(@edit[:new][:available_datatypes], flds["datatype"]),
                 "data-miq_observe" => {:url => url}.to_json)
-      - if !params[:add] && params[:add] != "new" && (session[:field_data].blank? || session[:field_data].empty?)
+      - if !params[:add] && params[:add] != "new" && session[:field_data].blank?
         %tr{:title => _("Click to add a new parameter"),
           :onclick => remote_function(:url => {:action => 'field_method_select', :add => 'new', :item => "field"})}
           %td

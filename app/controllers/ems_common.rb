@@ -1162,7 +1162,7 @@ module EmsCommon
   # true, if any of the given fields are either missing from or blank in hash
   def any_blank_fields?(hash, fields)
     fields = [fields] unless fields.kind_of? Array
-    fields.any? { |f| !hash.key?(f) || hash[f].blank? }
+    fields.any? { |f| hash[f].blank? }
   end
 
   def get_session_data

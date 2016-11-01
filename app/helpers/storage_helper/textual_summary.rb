@@ -57,7 +57,7 @@ module StorageHelper::TextualSummary
 
   def textual_uncommitted_space
     return nil if @record["total_space"].nil?
-    space = if @record["uncommitted"].blank? || @record["uncommitted"] == ""
+    space = if @record["uncommitted"].blank?
               _("None")
             else
               number_to_human_size(@record["uncommitted"], :precision => 2)
