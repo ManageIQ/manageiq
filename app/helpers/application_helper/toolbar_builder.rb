@@ -85,11 +85,7 @@ class ApplicationHelper::ToolbarBuilder
     button_class = inputs[:klass] || ApplicationHelper::Button::Basic
     props[:options] = inputs[:options] if inputs[:options]
     button = button_class.new(@view_context, @view_binding, @instance_data, props)
-    if button.skipped?
-      nil
-    else
-      apply_common_props(button, inputs)
-    end
+    button.skipped? ? nil : apply_common_props(button, inputs)
   end
 
   # Build select button and its child buttons
