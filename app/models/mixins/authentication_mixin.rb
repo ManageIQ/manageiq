@@ -259,11 +259,11 @@ module AuthenticationMixin
 
   def authentication_check_types(*args)
     options = args.extract_options!
-    types = args.first
 
     # Let the individual classes determine what authentication(s) need to be checked
-    types = authentications_to_validate if self.respond_to?(:authentications_to_validate) && types.nil?
-    types = [nil] if types.blank?
+    types = authentications_to_validate if respond_to?(:authentications_to_validate)
+    types = args.first                  if types.blank?
+    types = [nil]                       if types.blank?
     Array(types).each do |t|
       success = authentication_check(t, options).first
       retry_scheduled_authentication_check(t, options) unless success
