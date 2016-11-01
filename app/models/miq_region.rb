@@ -230,8 +230,7 @@ class MiqRegion < ApplicationRecord
   end
 
   def remote_ws_address
-    contact_with = VMDB::Config.new("vmdb").config.fetch_path(:webservices, :contactwith)
-    contact_with == 'hostname' ? remote_ws_hostname : remote_ws_ipaddress
+    ::Settings.webservices.contactwith == 'hostname' ? remote_ws_hostname : remote_ws_ipaddress
   end
 
   def remote_ws_ipaddress
