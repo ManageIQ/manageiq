@@ -1,12 +1,11 @@
-require 'spec_helper'
-include AutomationSpecHelper
 module MiqAeExpressionMethodSpec
   include MiqAeEngine
   describe MiqAeExpressionMethod do
+    include Spec::Support::AutomationHelper
     let(:user) { FactoryGirl.create(:user_with_group) }
-    let(:vm1) { FactoryGirl.create(:vm, :name => 'cfme_2.1', :cpu_shares => 400) }
-    let(:vm2) { FactoryGirl.create(:vm, :name => 'cfme_3.1', :cpu_shares => 400) }
-    let(:vm3) { FactoryGirl.create(:vm, :name => 'cfme_4.2', :cpu_shares => 11) }
+    let(:vm1) { FactoryGirl.create(:vm, :name => 'test_2.1', :cpu_shares => 400) }
+    let(:vm2) { FactoryGirl.create(:vm, :name => 'test_3.1', :cpu_shares => 400) }
+    let(:vm3) { FactoryGirl.create(:vm, :name => 'test_4.2', :cpu_shares => 11) }
     let(:complex_qs_exp) do
       {"and" => [{"STARTS WITH" => {"field" => "Vm-name", "value" => :user_input}},
                  {"ENDS WITH"   => {"field" => "Vm-name", "value" => :user_input}}]
@@ -14,7 +13,7 @@ module MiqAeExpressionMethodSpec
     end
 
     let(:m_params) do
-      {'arg1'       => {'datatype' => 'string', 'default_value' => 'cfme'},
+      {'arg1'       => {'datatype' => 'string', 'default_value' => 'test'},
        'arg2'       => {'datatype' => 'string', 'default_value' => '1'},
        'attributes' => {'datatype' => 'array',  'default_value' => 'name'}
       }
@@ -24,6 +23,11 @@ module MiqAeExpressionMethodSpec
       {:db => 'Vm',
        :expression => complex_qs_exp}.to_yaml
     end
+
+    before do
+      allow(User).to receive(:server_timezone).and_return("UTC")
+    end
+
 
     it "expression_method" do
       vm1
@@ -37,7 +41,7 @@ module MiqAeExpressionMethodSpec
                                   :method_script => vm_search)
       ws = MiqAeEngine.instantiate('/GAULS/ASTERIX/DOGMATIX', user)
 
-      expect(ws.root.attributes['values']).to match_array(%w(cfme_2.1 cfme_3.1))
+      expect(ws.root.attributes['values']).to match_array(%w(test_2.1 test_3.1))
     end
 
     it "expression_method dialog_hash" do
@@ -101,7 +105,7 @@ module MiqAeExpressionMethodSpec
                                   :method_script => vm_search)
       ws = MiqAeEngine.instantiate('/GAULS/ASTERIX/DOGMATIX', user)
 
-      expect(ws.root.attributes['vitalstatistix']).to match_array(%w(cfme_2.1 cfme_3.1))
+      expect(ws.root.attributes['vitalstatistix']).to match_array(%w(test_2.1 test_3.1))
     end
 
     it "expression_method distinct" do
