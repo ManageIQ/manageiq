@@ -53,6 +53,19 @@ class MiqReport < ApplicationRecord
   GROUPINGS = [[:min, "Minimum"], [:avg, "Average"], [:max, "Maximum"], [:total, "Total"]]
   PIVOTS    = [[:min, "Minimum"], [:avg, "Average"], [:max, "Maximum"], [:total, "Total"]]
 
+  scope :for_user, lambda { |user|
+    if user.admin_user?
+      all
+    else
+      where(
+        arel_table[:rpt_type].eq('Custom').and(arel_table[:miq_group_id].eq(user.current_group_id))
+        .or(
+          arel_table[:rpt_type].eq('Default')
+        )
+      )
+    end
+  }
+
   def self.filter_with_report_results_by(miq_group_ids)
     miq_group_condition = {:miq_report_results => {:miq_group_id => miq_group_ids}}
 
