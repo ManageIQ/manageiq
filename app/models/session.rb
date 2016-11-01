@@ -5,10 +5,7 @@ class Session < ApplicationRecord
 
   def self.check_session_timeout
     $log.debug "Checking session data"
-    ttl = timeout
-    cfg = VMDB::Config.new("vmdb").config[:session]
-    ttl = cfg[:timeout] if cfg[:timeout].to_int != ttl
-    purge(ttl)
+    purge(::Settings.session.timeout)
   end
 
   def self.purge(ttl, batch_size = 100)
