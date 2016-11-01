@@ -444,7 +444,7 @@ class ReportController < ApplicationController
   def saved_reports_get_node_info
     nodes = x_node.split('-')
     get_all_reps(nodes[1])
-    miq_report = MiqReport.find(@sb[:miq_report_id])
+    miq_report = MiqReport.for_user(current_user).find(@sb[:miq_report_id])
     @sb[:sel_saved_rep_id] = nodes.last
     @right_cell_div        = "savedreports_list"
     @right_cell_text = _("Saved Report \"%{name}\"") % {:name  => miq_report.name}

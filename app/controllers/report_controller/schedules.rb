@@ -390,7 +390,7 @@ module ReportController::Schedules
     @edit[:new][:filter] = params[:filter_typ] if params[:filter_typ]
     @edit[:new][:subfilter] = params[:subfilter_typ] if params[:subfilter_typ]
     if params[:repfilter_typ] && params[:repfilter_typ] != "<Choose>"
-      rep = MiqReport.find(params[:repfilter_typ].to_i)
+      rep = MiqReport.for_user(current_user).find(params[:repfilter_typ].to_i)
       @edit[:new][:repfilter] = rep.id
     elsif params[:repfilter_typ] && params[:repfilter_typ] == "<Choose>"
       @edit[:new][:repfilter] = nil

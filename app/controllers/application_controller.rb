@@ -176,7 +176,7 @@ class ApplicationController < ActionController::Base
   # Send chart data to the client
   def render_chart
     if params[:report]
-      rpt = MiqReport.find_by_name(params[:report])
+      rpt = MiqReport.for_user(current_user).find_by_name(params[:report])
       rpt.generate_table(:userid => session[:userid])
     else
       rpt = if controller_name == "dashboard" && @sb[:report_result_id] # Check for dashboard results
@@ -771,7 +771,7 @@ class ApplicationController < ActionController::Base
     @data = []
     if (!group.settings || !group.settings[:report_menus] || group.settings[:report_menus].blank?) || mode == "default"
       # array of all reports if menu not configured
-      @rep = MiqReport.all.sort_by { |r| [r.rpt_type, r.filename.to_s, r.name] }
+      @rep = MiqReport.for_user(current_user).sort_by { |r| [r.rpt_type, r.filename.to_s, r.name] }
       if tree_type == "timeline"
         @data = @rep.reject { |r| r.timeline.nil? }
       else
@@ -800,17 +800,7 @@ class ApplicationController < ActionController::Base
             @temp_title1 = title[1]
           end
           rptmenu.push([title[0], folders]) unless rptmenu.include?([title[0], folders])
-          if user.admin_user?
-            # for admin user show all the reports
-            reports.push(r.name) unless reports.include?(r.name)
-          else
-            # for non admin users, only show custom reports for their group
-            if title[1] == "Custom"
-              reports.push(r.name) if !reports.include?(r.name) && (r.miq_group && user.current_group.id == r.miq_group.id)
-            else
-              reports.push(r.name) unless reports.include?(r.name)
-            end
-          end
+          reports.push(r.name) unless reports.include?(r.name)
           folders.push([title[1], reports]) unless folders.include?([title[1], reports])
         end
       end
@@ -821,7 +811,7 @@ class ApplicationController < ActionController::Base
       @custom_folder = [@sb[:grp_title]]
       @custom_folder.push([subfolder]) unless @custom_folder.include?([subfolder])
 
-      custom = MiqReport.all.sort_by { |r| [r.rpt_type, r.filename.to_s, r.name] }
+      custom = MiqReport.for_user(current_user).sort_by { |r| [r.rpt_type, r.filename.to_s, r.name] }
       rep = custom.select do |r|
         r.rpt_type == "Custom" && (user.admin_user? || r.miq_group_id.to_i == current_group.try(:id))
       end.map(&:name).uniq

@@ -716,12 +716,12 @@ class DashboardController < ApplicationController
   end
 
   def build_timeline
-    @record = MiqReport.find_by_id(from_cid(params[:id]))
+    @record = MiqReport.for_user(current_user).find_by_id(from_cid(params[:id]))
     @ajax_action = "tl_generate"
   end
 
   def tl_gen_timeline_data
-    @report = MiqReport.find(from_cid(params[:id]))
+    @report = MiqReport.for_user(current_user).find(from_cid(params[:id]))
     @title  = @report.title
     @timeline = true unless @report # need to set this incase @report is not there, when switching between Management/Policy events
     return unless @report

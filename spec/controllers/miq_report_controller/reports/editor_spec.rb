@@ -89,7 +89,8 @@ describe ReportController do
     end
 
     context "#miq_report_edit" do
-      before { stub_user(:features => :all) }
+      let(:user) { stub_user(:features => :all) }
+      before { user.save! }
 
       it "should build tabs with correct tab id after reset button is pressed to prevent error when changing tabs" do
         ApplicationController.handle_exceptions = true
@@ -97,6 +98,7 @@ describe ReportController do
         rep = FactoryGirl.create(
           :miq_report,
           :rpt_type   => "Custom",
+          :miq_group  => user.current_group,
           :db         => "Host",
           :name       => 'name',
           :title      => 'title',

@@ -7,7 +7,7 @@ module ReportController::Reports
     assert_privileges("miq_report_run")
     self.x_active_tree = :reports_tree
     @sb[:active_tab] = "saved_reports"
-    rep = MiqReport.find(params[:id])
+    rep = MiqReport.for_user(current_user).find(params[:id])
     rep.queue_generate_table(:userid => session[:userid])
     title = rep.name
     nodes = x_node.split('-')
@@ -81,7 +81,7 @@ module ReportController::Reports
 
   def miq_report_delete
     assert_privileges("miq_report_delete")
-    rpt = MiqReport.find(params[:id])
+    rpt = MiqReport.for_user(current_user).find(params[:id])
 
     if rpt.miq_widgets.exists?
       add_flash(_("Report cannot be deleted if it's being used by one or more Widgets"), :error)
@@ -161,7 +161,7 @@ module ReportController::Reports
         x_node.split('-').last :
         x_node.split('-').last.split('_')[0] if nodeid.nil?
     @sb[:miq_report_id] = from_cid(nodeid)
-    @record = @miq_report = MiqReport.find(@sb[:miq_report_id])
+    @record = @miq_report = MiqReport.for_user(current_user).find(@sb[:miq_report_id])
     if @sb[:active_tab] == "saved_reports" || x_active_tree == :savedreports_tree
       @force_no_grid_xml   = true
       @gtl_type            = "list"
