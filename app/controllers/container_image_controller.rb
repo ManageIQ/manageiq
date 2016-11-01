@@ -20,4 +20,6 @@ class ContainerImageController < ApplicationController
 
     send_data(@record.openscap_result.html, :filename => "openscap_result.html")
   end
+
+  menu_section :cnt
 end

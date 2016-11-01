@@ -85,4 +85,6 @@ class CloudObjectStoreContainerController < ApplicationController
     session[:cloud_object_store_container_catinfo]    = @catinfo
     session[:cloud_object_store_container_showtype]   = @showtype
   end
+
+  menu_section :sto
 end

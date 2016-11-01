@@ -322,4 +322,6 @@ class CloudTenantController < ApplicationController
     session[:cloud_tenant_filters]    = @filters
     session[:cloud_tenant_catinfo]    = @catinfo
   end
+
+  menu_section :clo
 end

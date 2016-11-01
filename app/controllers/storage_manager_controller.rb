@@ -499,4 +499,6 @@ class StorageManagerController < ApplicationController
     session[:sm_filters]    = @filters
     session[:sm_catinfo]    = @catinfo
   end
+
+  menu_section :nap
 end

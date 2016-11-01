@@ -33,4 +33,6 @@ class ContainerDashboardController < ApplicationController
   def set_session_data
     session[:layout] = @layout
   end
+
+  menu_section :cnt
 end

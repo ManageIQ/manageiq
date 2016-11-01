@@ -100,4 +100,6 @@ class ConfigurationJobController < ApplicationController
     session[:configuration_job_lastaction] = @lastaction
     session[:configuration_job_display]    = @display unless @display.nil?
   end
+
+  menu_section :conf
 end

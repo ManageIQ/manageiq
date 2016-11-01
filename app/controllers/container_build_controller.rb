@@ -15,4 +15,6 @@ class ContainerBuildController < ApplicationController
   def display_name
     "Builds"
   end
+
+  menu_section :cnt
 end

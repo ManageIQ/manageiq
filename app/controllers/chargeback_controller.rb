@@ -907,4 +907,6 @@ class ChargebackController < ApplicationController
       page << javascript_for_miq_button_visibility(true)
     end
   end
+
+  menu_section :vi
 end

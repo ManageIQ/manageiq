@@ -160,4 +160,6 @@ class AvailabilityZoneController < ApplicationController
     session[:availability_zone_filters]    = @filters
     session[:availability_zone_catinfo]    = @catinfo
   end
+
+  menu_section :clo
 end

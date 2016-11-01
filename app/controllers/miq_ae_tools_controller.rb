@@ -429,4 +429,6 @@ Methods updated/added: %{method_stats}") % stat_options)
   def set_session_data
     session[:resolve_tools] = @resolve if @resolve
   end
+
+  menu_section :aut
 end

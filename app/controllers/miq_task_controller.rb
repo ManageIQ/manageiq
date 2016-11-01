@@ -452,4 +452,6 @@ class MiqTaskController < ApplicationController
     session[:jobs_lastaction]     = @lastaction
     session[:tasks_options]       = @tasks_options unless @tasks_options.nil?
   end
+
+  menu_section :set
 end

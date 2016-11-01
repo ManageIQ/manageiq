@@ -487,4 +487,6 @@ class MiqAeCustomizationController < ApplicationController
 
     super(typ)
   end
+
+  menu_section :aut
 end

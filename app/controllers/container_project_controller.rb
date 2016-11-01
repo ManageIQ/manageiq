@@ -9,4 +9,6 @@ class ContainerProjectController < ApplicationController
   def show_list
     process_show_list(:where_clause => 'container_projects.deleted_on IS NULL')
   end
+
+  menu_section :cnt
 end

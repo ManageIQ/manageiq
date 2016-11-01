@@ -1,4 +1,6 @@
 class DashboardController < ApplicationController
+  menu_section :vi
+
   @@items_per_page = 8
 
   before_action :check_privileges, :except => [:csp_report, :authenticate, :kerberos_authenticate,
@@ -51,15 +53,7 @@ class DashboardController < ApplicationController
   # Redirect to remembered last item clicked under this menu section.
   def redirect_to_remembered(section_id)
     return false unless session[:tab_url].key?(section_id)
-
-    if restful_routed_action?(session[:tab_url][section_id][:controller],
-                              session[:tab_url][section_id][:action])
-      session[:tab_url][section_id].delete(:action)
-      redirect_to(polymorphic_path(session[:tab_url][section_id][:controller],
-                                   session[:tab_url][section_id]))
-    else
-      redirect_to(session[:tab_url][section_id].merge(:only_path => true))
-    end
+    redirect_to(session[:tab_url][section_id])
     true
   end
 

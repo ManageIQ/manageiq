@@ -2563,4 +2563,6 @@ class MiqAeClassController < ApplicationController
       add_flash("#{field.to_s.capitalize} #{msg}", :error)
     end
   end
+
+  menu_section :aut
 end

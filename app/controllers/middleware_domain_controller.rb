@@ -14,4 +14,6 @@ class MiddlewareDomainController < ApplicationController
     else show_middleware
     end
   end
+
+  menu_section :cnt
 end

@@ -12,4 +12,6 @@ class FloatingIpController < ApplicationController
   def self.display_methods
     %w()
   end
+
+  menu_section :net
 end

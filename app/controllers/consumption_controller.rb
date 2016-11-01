@@ -3,4 +3,6 @@ class ConsumptionController < ApplicationController
     @layout     = "consumption"
     @showtype   = "consumption"
   end
+
+  menu_section :cons
 end

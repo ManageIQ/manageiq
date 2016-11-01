@@ -71,4 +71,6 @@ class AlertController < ApplicationController
   def set_session_data
     session[:alert_lastaction] = @lastaction
   end
+
+  menu_section :vi
 end

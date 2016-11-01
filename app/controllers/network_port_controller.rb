@@ -12,4 +12,6 @@ class NetworkPortController < ApplicationController
   def self.display_methods
     %w(cloud_subnets floating_ips)
   end
+
+  menu_section :net
 end

@@ -110,4 +110,6 @@ class FlavorController < ApplicationController
     session[:flavor_filters]    = @filters
     session[:flavor_catinfo]    = @catinfo
   end
+
+  menu_section :clo
 end

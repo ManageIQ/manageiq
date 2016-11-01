@@ -121,4 +121,6 @@ class OntapStorageSystemController < CimInstanceController
     end
     @flash_array.nil?
   end
+
+  menu_section :nap
 end

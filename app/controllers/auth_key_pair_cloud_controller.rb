@@ -267,4 +267,6 @@ class AuthKeyPairCloudController < ApplicationController
     session[:auth_key_pair_cloud_filters]    = @filters
     session[:auth_key_pair_cloud_catinfo]    = @catinfo
   end
+
+  menu_section :clo
 end

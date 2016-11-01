@@ -5,7 +5,12 @@ module Menu
       self.items ||= []
       self.placement ||= :default
       self.type ||= :default
+
+      @parent = nil
+      items.each { |el| el.parent = self }
     end
+
+    attr_accessor :parent
 
     def features
       Array(items).collect { |el| el.try(:feature) }.compact
@@ -44,6 +49,15 @@ module Menu
       end.present?
     end
 
+    def item(item_id)
+      return self if item_id == id
+      items.each do |el|
+        child_match = el.item(item_id)
+        return child_match if child_match.present?
+      end
+      nil
+    end
+
     def default_redirect_url
       items.each do |item|
         next unless item.visible?
@@ -64,6 +78,11 @@ module Menu
           el.preprocess_sections(section_hash)
         end
       end
+    end
+
+    def parent_path(acc = [])
+      acc << id
+      @parent.present? ? @parent.parent_path(acc) : acc
     end
   end
 end

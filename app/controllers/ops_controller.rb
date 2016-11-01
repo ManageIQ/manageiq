@@ -785,4 +785,6 @@ class OpsController < ApplicationController
   def set_session_data
     session[:tasks_options] = @tasks_options unless @tasks_options.nil?
   end
+
+  menu_section :set
 end

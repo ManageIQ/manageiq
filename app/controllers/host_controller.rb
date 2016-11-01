@@ -705,4 +705,6 @@ class HostController < ApplicationController
     session[:miq_exists_mode] = @exists_mode unless @exists_mode.nil?
     session[:vm_compare_base] = @base
   end
+
+  menu_section :inf
 end

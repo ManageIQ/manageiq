@@ -265,4 +265,6 @@ class EmsInfraController < ApplicationController
   def parse_json(uploaded_file)
     JSON.parse(uploaded_file.read)["nodes"]
   end
+
+  menu_section :inf
 end

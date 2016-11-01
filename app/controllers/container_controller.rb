@@ -320,4 +320,6 @@ class ContainerController < ApplicationController
   def tagging_explorer_controller?
     @explorer
   end
+
+  menu_section :cnt
 end

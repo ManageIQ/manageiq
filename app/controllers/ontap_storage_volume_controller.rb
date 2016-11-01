@@ -19,4 +19,6 @@ class OntapStorageVolumeController < CimInstanceController
   def show_list
     process_show_list
   end
+
+  menu_section :nap
 end

@@ -804,4 +804,6 @@ class MiqCapacityController < ApplicationController
     session[:miq_capacity_current_page] = @current_page
     session[:miq_capacity_display]      = @display unless @display.nil?
   end
+
+  menu_section :opt
 end

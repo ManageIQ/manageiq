@@ -50,4 +50,6 @@ class GenericObjectController < ApplicationController
                                                   :accord_name => "generic_object_definition_accordion",
                                                   :title       => _("Generic Objects"))]
   end
+
+  menu_section :aut
 end

@@ -2,8 +2,11 @@ module Menu
   Item = Struct.new(:id, :name, :feature, :rbac_feature, :href, :type) do
     def initialize(an_id, a_name, features, rbac_feature, href, type = :default)
       super
+      @parent = nil
       @name = a_name.kind_of?(Proc) ? a_name : -> { a_name }
     end
+
+    attr_accessor :parent
 
     def name
       @name.call
@@ -22,6 +25,14 @@ module Menu
 
     def leaf?
       true
+    end
+
+    def parent_path
+      @parent.parent_path
+    end
+
+    def item(item_id)
+      item_id == id ? self : nil
     end
   end
 end

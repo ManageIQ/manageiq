@@ -33,4 +33,6 @@ class EmsNetworkController < ApplicationController
     true
   end
   public :restful?
+
+  menu_section :net
 end

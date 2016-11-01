@@ -15,4 +15,6 @@ class ContainerNodeController < ApplicationController
       javascript_flash(:text => node.unsupported_reason(:launch_cockpit), :severity => :error, :spinner_off => true)
     end
   end
+
+  menu_section :cnt
 end

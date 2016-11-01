@@ -609,4 +609,12 @@ class MiqRequestController < ApplicationController
     session[:request_current_page] = @current_page
     session[:prov_options]         = @options if @options
   end
+
+  def menu_section(parms)
+    case parms[:typ]
+    when 'at'   then :aut
+    when 'vm'   then :svc
+    when 'host' then :inf
+    end
+  end
 end

@@ -267,4 +267,6 @@ class NetworkRouterController < ApplicationController
                    routers.length) % {:number => routers.length})
     end
   end
+
+  menu_section :net
 end

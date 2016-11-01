@@ -11,12 +11,9 @@ module Menu
 
       def configuration_menu_section
         Menu::Section.new(:conf, N_("Configuration"), 'fa fa-cog  fa-2x', [
-                            Menu::Item.new('provider_foreman', N_('Management'), 'provider_foreman_explorer',
-                                           {:feature => 'provider_foreman_explorer',
-                                            :any     => true}, '/provider_foreman/explorer'),
-                            Menu::Item.new('configuration_job', N_('Jobs'), 'configuration_job',
-                                           {:feature => 'configuration_job_show_list'}, '/configuration_job'),
-                          ])
+          Menu::Item.new('provider_foreman',  N_('Management'), 'provider_foreman_explorer', {:feature => 'provider_foreman_explorer', :any => true}, '/provider_foreman/explorer'),
+          Menu::Item.new('configuration_job', N_('Jobs'),       'configuration_job',         {:feature => 'configuration_job_show_list'},             '/configuration_job'),
+        ])
       end
 
       def cloud_inteligence_menu_section
@@ -39,24 +36,24 @@ module Menu
 
       def services_menu_section
         Menu::Section.new(:svc, N_("Services"), 'fa pficon-service fa-2x', [
-          Menu::Item.new('services',       N_('My Services'), 'service',             {:feature => 'service', :any => true},             '/service/explorer'),
-          Menu::Item.new('catalogs',       N_('Catalogs'),    'catalog',             {:feature => 'catalog', :any => true},             '/catalog/explorer'),
-          Menu::Item.new('vm_or_template', N_('Workloads'),   'vm_explorer',         {:feature => 'vm_explorer', :any => true},         '/vm_or_template/explorer'),
-          Menu::Item.new('miq_request_vm', N_('Requests'),    'miq_request',         {:feature => 'miq_request_show_list'},             '/miq_request?typ=vm')
+          Menu::Item.new('services',       N_('My Services'), 'service',     {:feature => 'service', :any => true},     '/service/explorer'),
+          Menu::Item.new('catalogs',       N_('Catalogs'),    'catalog',     {:feature => 'catalog', :any => true},     '/catalog/explorer'),
+          Menu::Item.new('vm_or_template', N_('Workloads'),   'vm_explorer', {:feature => 'vm_explorer', :any => true}, '/vm_or_template/explorer'),
+          Menu::Item.new('miq_request_vm', N_('Requests'),    'miq_request', {:feature => 'miq_request_show_list'},     '/miq_request?typ=vm')
         ])
       end
 
       def clouds_menu_section
         Menu::Section.new(:clo, N_("Clouds"), 'fa fa-plus fa-2x', [
-          Menu::Item.new('ems_cloud',           N_('Providers'),           'ems_cloud',                 {:feature => 'ems_cloud_show_list'},                     '/ems_cloud'),
-          Menu::Item.new('availability_zone',   N_('Availability Zones'),  'availability_zone',         {:feature => 'availability_zone_show_list'},             '/availability_zone'),
-          Menu::Item.new('host_aggregate',      N_('Host Aggregates'),     'host_aggregate',            {:feature => 'host_aggregate_show_list'},                '/host_aggregate'),
-          Menu::Item.new('cloud_tenant',        N_('Tenants'),             'cloud_tenant',              {:feature => 'cloud_tenant_show_list'},                  '/cloud_tenant'),
-          Menu::Item.new('flavor',              N_('Flavors'),             'flavor',                    {:feature => 'flavor_show_list'},                        '/flavor'),
-          Menu::Item.new('vm_cloud',            N_('Instances'),           'vm_cloud_explorer',         {:feature => 'vm_cloud_explorer', :any => true}, '/vm_cloud/explorer'),
-          Menu::Item.new('orchestration_stack', N_('Stacks'),              'orchestration_stack',       {:feature => 'orchestration_stack_show_list'},           '/orchestration_stack'),
-          Menu::Item.new('auth_key_pair_cloud', N_('Key Pairs'),           'auth_key_pair_cloud',       {:feature => 'auth_key_pair_cloud_show_list'},           '/auth_key_pair_cloud'),
-          Menu::Item.new('cloud_topology',      N_('Topology'),            'cloud_topology',            {:feature => 'cloud_topology'},                          '/cloud_topology'),
+          Menu::Item.new('ems_cloud',           N_('Providers'),          'ems_cloud',           {:feature => 'ems_cloud_show_list'},             '/ems_cloud'),
+          Menu::Item.new('availability_zone',   N_('Availability Zones'), 'availability_zone',   {:feature => 'availability_zone_show_list'},     '/availability_zone'),
+          Menu::Item.new('host_aggregate',      N_('Host Aggregates'),    'host_aggregate',      {:feature => 'host_aggregate_show_list'},        '/host_aggregate'),
+          Menu::Item.new('cloud_tenant',        N_('Tenants'),            'cloud_tenant',        {:feature => 'cloud_tenant_show_list'},          '/cloud_tenant'),
+          Menu::Item.new('flavor',              N_('Flavors'),            'flavor',              {:feature => 'flavor_show_list'},                '/flavor'),
+          Menu::Item.new('vm_cloud',            N_('Instances'),          'vm_cloud_explorer',   {:feature => 'vm_cloud_explorer', :any => true}, '/vm_cloud/explorer'),
+          Menu::Item.new('orchestration_stack', N_('Stacks'),             'orchestration_stack', {:feature => 'orchestration_stack_show_list'},   '/orchestration_stack'),
+          Menu::Item.new('auth_key_pair_cloud', N_('Key Pairs'),          'auth_key_pair_cloud', {:feature => 'auth_key_pair_cloud_show_list'},   '/auth_key_pair_cloud'),
+          Menu::Item.new('cloud_topology',      N_('Topology'),           'cloud_topology',      {:feature => 'cloud_topology'},                  '/cloud_topology'),
         ])
       end
 
@@ -65,20 +62,17 @@ module Menu
         clusters_name = hybrid_name(EmsCluster, N_("Clusters"), N_("Deployment Roles"), N_("Clusters / Deployment Roles"))
 
         Menu::Section.new(:inf, N_("Infrastructure"), 'fa fa-plus fa-2x', [
-                                Menu::Item.new('ems_infra',        N_('Providers'),        'ems_infra',        {:feature => 'ems_infra_show_list'},     '/ems_infra'),
-                                Menu::Item.new('ems_cluster',      clusters_name,          'ems_cluster',      {:feature => 'ems_cluster_show_list'},   '/ems_cluster'),
-                                Menu::Item.new('host',             hosts_name,             'host',             {:feature => 'host_show_list'},          '/host'),
-                                Menu::Item.new('vm_infra',         N_('Virtual Machines'), 'vm_infra_explorer',
-                                               {:feature => 'vm_infra_explorer', :any => true},
-                                               '/vm_infra/explorer'),
-                                Menu::Item.new('resource_pool',    N_('Resource Pools'),   'resource_pool',    {:feature => 'resource_pool_show_list'}, '/resource_pool'),
-                                Menu::Item.new('storage',          deferred_ui_lookup(:tables => 'storages'),
-                                               'storage',       {:feature => 'storage_show_list'},       '/storage/explorer'),
-                                Menu::Item.new('pxe',              N_('PXE'),              'pxe',              {:feature => 'pxe', :any => true},           '/pxe/explorer'),
-                                Menu::Item.new('infra_networking', N_('Networking'),       'infra_networking', {:feature => 'infra_networking', :any => true}, '/infra_networking/explorer'),
-                                Menu::Item.new('miq_request_host', N_('Requests'),         nil,                {:feature => 'miq_request_show_list'},       '/miq_request?typ=host'),
-                                Menu::Item.new('infra_topology', N_('Topology'), 'infra_topology', {:feature => 'infra_topology', :any => true}, '/infra_topology')
-                              ])
+          Menu::Item.new('ems_infra',        N_('Providers'),        'ems_infra',                  {:feature => 'ems_infra_show_list'},             '/ems_infra'),
+          Menu::Item.new('ems_cluster',      clusters_name,          'ems_cluster',                {:feature => 'ems_cluster_show_list'},           '/ems_cluster'),
+          Menu::Item.new('host',             hosts_name,             'host',                       {:feature => 'host_show_list'},                  '/host'),
+          Menu::Item.new('vm_infra',         N_('Virtual Machines'), 'vm_infra_explorer',          {:feature => 'vm_infra_explorer', :any => true}, '/vm_infra/explorer'),
+          Menu::Item.new('resource_pool',    N_('Resource Pools'),   'resource_pool',              {:feature => 'resource_pool_show_list'},         '/resource_pool'),
+          Menu::Item.new('storage',          deferred_ui_lookup(:tables => 'storages'), 'storage', {:feature => 'storage_show_list'},               '/storage/explorer'),
+          Menu::Item.new('pxe',              N_('PXE'),              'pxe',                        {:feature => 'pxe', :any => true},               '/pxe/explorer'),
+          Menu::Item.new('infra_networking', N_('Networking'),       'infra_networking',           {:feature => 'infra_networking', :any => true},  '/infra_networking/explorer'),
+          Menu::Item.new('miq_request_host', N_('Requests'),         nil,                          {:feature => 'miq_request_show_list'},           '/miq_request?typ=host'),
+          Menu::Item.new('infra_topology',   N_('Topology'), 'infra_topology',                     {:feature => 'infra_topology', :any => true},    '/infra_topology')
+        ])
       end
 
       def hybrid_name(klass, name1, name2, name3)
@@ -99,58 +93,33 @@ module Menu
 
       def container_menu_section
         Menu::Section.new(:cnt, N_("Containers"), 'fa fa-plus fa-2x', [
-          Menu::Item.new('container_dashboard', N_('Overview'), 'container_dashboard',  {:feature => 'container_dashboard'}, '/container_dashboard'),
-          Menu::Item.new('ems_container',     N_('Providers'),     'ems_container',     {:feature => 'ems_container_show_list'},     '/ems_container'),
-          Menu::Item.new('container_project', deferred_ui_lookup(:tables => 'container_project'), 'container_project', {:feature => 'container_project_show_list'}, '/container_project'),
-          Menu::Item.new('container_route',   deferred_ui_lookup(:tables => 'container_route'),   'container_route',   {:feature => 'container_route_show_list'},   '/container_route'),
-          Menu::Item.new('container_service', N_('Container Services'), 'container_service', {:feature => 'container_service_show_list'}, '/container_service'),
-          Menu::Item.new('container_replicator',
-                         deferred_ui_lookup(:tables => 'container_replicator'),
-                         'container_replicator',
-                         {:feature => 'container_replicator_show_list'},
-                         '/container_replicator'),
-          Menu::Item.new('container_group', deferred_ui_lookup(:tables => 'container_group'), 'container_group', {:feature => 'container_group_show_list'}, '/container_group'),
-          Menu::Item.new('container',
-                         deferred_ui_lookup(:tables => 'container'),
-                         'containers',
-                         {:feature => 'containers', :any => true},
-                         '/container/explorer'),
-          Menu::Item.new('container_node', N_('Container Nodes'), 'container_node', {:feature => 'container_node_show_list'}, '/container_node'),
-          Menu::Item.new('persistent_volume', N_('Volumes'), 'persistent_volume',
-                         {:feature => 'persistent_volume_show_list', :any => true}, '/persistent_volume'),
-          Menu::Item.new('container_build', N_('Container Builds'), 'container_build',
-                         {:feature => 'container_build_show_list'}, '/container_build'),
-          Menu::Item.new('container_image_registry',
-                         deferred_ui_lookup(:tables => 'container_image_registry'),
-                         'container_image_registry',
-                         {:feature => 'container_image_registry_show_list'},
-                         '/container_image_registry'),
-          Menu::Item.new('container_image',
-                         N_('Container Images'),
-                         'container_image',
-                         {:feature => 'container_image_show_list'},
-                         '/container_image'),
-          Menu::Item.new('container_template', N_('Container Templates'), 'container_template',
-                         {:feature => 'container_template_show_list'}, '/container_template'),
-          Menu::Item.new('container_topology', N_('Topology'), 'container_topology',
-                         {:feature => 'container_topology', :any => true}, '/container_topology')
+          Menu::Item.new('container_dashboard',      N_('Overview'),                                            'container_dashboard',      {:feature => 'container_dashboard'},                       '/container_dashboard'),
+          Menu::Item.new('ems_container',            N_('Providers'),                                           'ems_container',            {:feature => 'ems_container_show_list'},                   '/ems_container'),
+          Menu::Item.new('container_project',        deferred_ui_lookup(:tables => 'container_project'),        'container_project',        {:feature => 'container_project_show_list'},               '/container_project'),
+          Menu::Item.new('container_route',          deferred_ui_lookup(:tables => 'container_route'),          'container_route',          {:feature => 'container_route_show_list'},                 '/container_route'),
+          Menu::Item.new('container_service',        N_('Container Services'),                                  'container_service',        {:feature => 'container_service_show_list'},               '/container_service'),
+          Menu::Item.new('container_replicator',     deferred_ui_lookup(:tables => 'container_replicator'),     'container_replicator',     {:feature => 'container_replicator_show_list'},            '/container_replicator'),
+          Menu::Item.new('container_group',          deferred_ui_lookup(:tables => 'container_group'),          'container_group',          {:feature => 'container_group_show_list'},                 '/container_group'),
+          Menu::Item.new('container',                deferred_ui_lookup(:tables => 'container'),                'containers',               {:feature => 'containers', :any => true},                  '/container/explorer'),
+          Menu::Item.new('container_node',           N_('Container Nodes'),                                     'container_node',           {:feature => 'container_node_show_list'},                  '/container_node'),
+          Menu::Item.new('persistent_volume',        N_('Volumes'),                                             'persistent_volume',        {:feature => 'persistent_volume_show_list', :any => true}, '/persistent_volume'),
+          Menu::Item.new('container_build',          N_('Container Builds'),                                    'container_build',          {:feature => 'container_build_show_list'},                 '/container_build'),
+          Menu::Item.new('container_image_registry', deferred_ui_lookup(:tables => 'container_image_registry'), 'container_image_registry', {:feature => 'container_image_registry_show_list'},        '/container_image_registry'),
+          Menu::Item.new('container_image',          N_('Container Images'),                                    'container_image',          {:feature => 'container_image_show_list'},                 '/container_image'),
+          Menu::Item.new('container_template',       N_('Container Templates'),                                 'container_template',       {:feature => 'container_template_show_list'},              '/container_template'),
+          Menu::Item.new('container_topology',       N_('Topology'),                                            'container_topology',       {:feature => 'container_topology', :any => true},          '/container_topology')
         ])
       end
 
       def middleware_menu_section
         Menu::Section.new(:mdl, N_("Middleware"), 'fa product-middleware fa-2x', [
-          Menu::Item.new('ems_middleware', N_('Providers'), 'ems_middleware', {:feature => 'ems_middleware_show_list'}, '/ems_middleware'),
-          Menu::Item.new('middleware_domain', N_('Domains'), 'middleware_domain',
-                         {:feature => 'middleware_domain_show_list'}, '/middleware_domain'),
-          Menu::Item.new('middleware_server', N_('Servers'), 'middleware_server',
-                         {:feature => 'middleware_server_show_list'}, '/middleware_server'),
-          Menu::Item.new('middleware_deployment', N_('Deployments'), 'middleware_deployment',
-                         {:feature => 'middleware_deployment_show_list'}, '/middleware_deployment'),
-          Menu::Item.new('middleware_datasource', N_('Datasources'), 'middleware_datasource',
-                         {:feature => 'middleware_datasource_show_list'}, '/middleware_datasource'),
-          Menu::Item.new('middleware_messaging', N_('Messagings'), 'middleware_messaging',
-                         {:feature => 'middleware_messaging_show_list'}, '/middleware_messaging'),
-          Menu::Item.new('middleware_topology', N_('Topology'), 'middleware_topology', {:feature => 'middleware_topology', :any => true}, '/middleware_topology')
+          Menu::Item.new('ems_middleware',        N_('Providers'),   'ems_middleware',        {:feature => 'ems_middleware_show_list'},          '/ems_middleware'),
+          Menu::Item.new('middleware_domain',     N_('Domains'),     'middleware_domain',     {:feature => 'middleware_domain_show_list'},       '/middleware_domain'),
+          Menu::Item.new('middleware_server',     N_('Servers'),     'middleware_server',     {:feature => 'middleware_server_show_list'},       '/middleware_server'),
+          Menu::Item.new('middleware_deployment', N_('Deployments'), 'middleware_deployment', {:feature => 'middleware_deployment_show_list'},   '/middleware_deployment'),
+          Menu::Item.new('middleware_datasource', N_('Datasources'), 'middleware_datasource', {:feature => 'middleware_datasource_show_list'},   '/middleware_datasource'),
+          Menu::Item.new('middleware_messaging',  N_('Messagings'),  'middleware_messaging',  {:feature => 'middleware_messaging_show_list'},    '/middleware_messaging'),
+          Menu::Item.new('middleware_topology',   N_('Topology'),    'middleware_topology',   {:feature => 'middleware_topology', :any => true}, '/middleware_topology')
 
         ])
       end
@@ -172,23 +141,11 @@ module Menu
       def storage_menu_section
         netapp_enabled = ::Settings.product.storage
         Menu::Section.new(:sto, N_("Storage"), 'fa fa-database fa-2x', [
-                            Menu::Item.new('ems_storage',
-                                           N_('Storage Providers'),
-                                           'ems_storage',
-                                           {:feature => 'ems_storage_show_list'},
-                                           '/ems_storage'),
-                            Menu::Item.new('cloud_volume',
-                                           N_('Volumes'),
-                                           'cloud_volume',
-                                           {:feature => 'cloud_volume_show_list'},
-                                           '/cloud_volume'),
-                            Menu::Item.new('cloud_object_store_container',
-                                           N_('Object Stores'),
-                                           'cloud_object_store_container',
-                                           {:feature => 'cloud_object_store_container_show_list'},
-                                           '/cloud_object_store_container'),
-                            netapp_enabled ? netapp_storage_menu_section : empty_menu_section
-                          ])
+          Menu::Item.new('ems_storage',                  N_('Storage Providers'), 'ems_storage',                  {:feature => 'ems_storage_show_list'},                  '/ems_storage'),
+          Menu::Item.new('cloud_volume',                 N_('Volumes'),           'cloud_volume',                 {:feature => 'cloud_volume_show_list'},                 '/cloud_volume'),
+          Menu::Item.new('cloud_object_store_container', N_('Object Stores'),     'cloud_object_store_container', {:feature => 'cloud_object_store_container_show_list'}, '/cloud_object_store_container'),
+          netapp_enabled ? netapp_storage_menu_section : empty_menu_section
+        ])
       end
 
       def empty_menu_section
@@ -201,7 +158,7 @@ module Menu
           Menu::Item.new('ontap_logical_disk',   deferred_ui_lookup(:tables => 'ontap_logical_disk'),   'ontap_logical_disk',   {:feature => 'ontap_logical_disk_show_list'},   '/ontap_logical_disk'),
           Menu::Item.new('ontap_storage_volume', deferred_ui_lookup(:tables => 'ontap_storage_volume'), 'ontap_storage_volume', {:feature => 'ontap_storage_volume_show_list'}, '/ontap_storage_volume'),
           Menu::Item.new('ontap_file_share',     deferred_ui_lookup(:tables => 'ontap_file_share'),     'ontap_file_share',     {:feature => 'ontap_file_share_show_list'},     '/ontap_file_share'),
-          Menu::Item.new('storage_manager',      N_('Storage Managers'),                       'storage_manager',      {:feature => 'storage_manager_show_list'}, '/storage_manager')
+          Menu::Item.new('storage_manager',      N_('Storage Managers'),                                'storage_manager',      {:feature => 'storage_manager_show_list'},      '/storage_manager')
         ])
       end
 

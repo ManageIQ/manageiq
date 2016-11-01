@@ -683,4 +683,6 @@ class CloudVolumeController < ApplicationController
     session[:cloud_volume_catinfo]    = @catinfo
     session[:cloud_volume_showtype]   = @showtype
   end
+
+  menu_section :sto
 end

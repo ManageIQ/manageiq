@@ -261,4 +261,6 @@ class CloudSubnetController < ApplicationController
                    subnets.length) % {:number => subnets.length})
     end
   end
+
+  menu_section :net
 end

@@ -917,4 +917,6 @@ class ReportController < ApplicationController
   def widget_import_service
     @widget_import_service ||= WidgetImportService.new
   end
+
+  menu_section :vi
 end
