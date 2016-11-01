@@ -16,7 +16,9 @@ module ManagerRefresh
     end
 
     def inspect
-      "DtoLazy:('#{self}', #{dto_collection})"
+      suffix = ""
+      suffix += ", path: #{path}" if path.present?
+      "DtoLazy:('#{self}', #{dto_collection})#{suffix}"
     end
 
     def load
@@ -32,6 +34,7 @@ module ManagerRefresh
     private
 
     def load_object_with_path
+      # TODO(lsmola) Log error if we are accessing path that is present in blacklist or not present in whitelist
       (dto_collection.find(to_s).try(:data) || {}).fetch_path(*path) || default
     end
 
