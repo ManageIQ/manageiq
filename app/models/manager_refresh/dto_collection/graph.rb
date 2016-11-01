@@ -33,9 +33,6 @@ module ManagerRefresh
         # missing relations.
         ################################################################################################################
 
-        # Obtain edges and fixed edges using dependencies of DtoCollections
-        edges, fixed_edges = build_edges(nodes)
-
         # Assert that Fixed edges do not have a cycle, we cannot move with fixed edges, so exception is thrown here
         assert_graph!(fixed_edges)
 
@@ -47,7 +44,7 @@ module ManagerRefresh
         convert_to_dag!(nodes, feedback_edge_set)
 
         # And assert again we really built a DAG
-        assert_graph!(self.edges)
+        assert_graph!(edges)
 
         self
       end
@@ -85,11 +82,7 @@ module ManagerRefresh
         end
 
         # Add the new DtoCollections to the list of nodes our our graph
-        self.nodes  = nodes + new_nodes
-        # Now rebuild the graph into DAG, storing right nodes and edges
-        self.edges, = build_edges(self.nodes)
-
-        self
+        self.construct_graph!(nodes + new_nodes)
       end
 
       def build_edges(dto_collections)

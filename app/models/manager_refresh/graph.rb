@@ -1,15 +1,25 @@
 module ManagerRefresh
   class Graph
-    attr_reader :nodes, :edges
+
+    attr_reader :nodes, :edges, :fixed_edges
 
     def initialize(nodes)
-      @nodes = nodes
-      @edges = []
+      @nodes       = nodes
+      @edges       = []
+      @fixed_edges = []
+
+      construct_graph!(@nodes)
     end
 
     protected
 
-    attr_writer :nodes, :edges
+    attr_writer :nodes, :edges, :fixed_edges
+
+    def construct_graph!(nodes)
+      self.nodes = nodes
+      self.edges, self.fixed_edges = build_edges(nodes)
+      self
+    end
 
     def assert_graph!(fixed_edges)
       fixed_edges.each do |edge|
