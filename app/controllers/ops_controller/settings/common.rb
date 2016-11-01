@@ -1150,6 +1150,8 @@ module OpsController::Settings::Common
         @sb[:good] = nil unless @sb[:show_button]
         add_flash(_("Choose the type of custom variables to be imported"))
         @in_a_form = true
+      when "settings_label_tag_mapping"
+        label_tag_mapping_get_all
       when "settings_rhn"
         @edit = session[:edit] || {}
         @edit[:new] ||= {}

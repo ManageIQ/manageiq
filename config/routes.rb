@@ -2272,6 +2272,10 @@ Vmdb::Application.routes.draw do
         forest_delete
         forest_form_field_changed
         forest_select
+        label_tag_mapping_delete
+        label_tag_mapping_edit
+        label_tag_mapping_update
+        label_tag_mapping_field_changed
         log_depot_edit
         log_depot_field_changed
         log_depot_validate
