@@ -46,9 +46,6 @@ module ManagerRefresh
         # edges are transferred to newly created nodes.
         convert_to_dag!(nodes, feedback_edge_set)
 
-        # Now rebuild the graph into DAG, storing right nodes and edges
-        self.edges, _ = build_edges(nodes)
-
         # And assert again we really built a DAG
         assert_graph!(self.edges)
 
@@ -66,15 +63,33 @@ module ManagerRefresh
       end
 
       def convert_to_dag!(nodes, feedback_edge_set)
+        new_nodes = []
         nodes.each do |dto_collection|
           feedback_dependencies = feedback_edge_set.select { |e| e.second == dto_collection }.map(&:first)
           attrs                 = dto_collection.dependency_attributes_for(feedback_dependencies)
 
-          # Todo first dup the dto_collection, then blacklist it in original and whitelist it in the second one
           unless attrs.blank?
+            new_dto_collection                                                    = dto_collection.clone
+            # Add dto_collection as a dependency of the new_dto_collection, so we make sure it runs after
+            # TODO(lsmola) add a nice dependency_attributes setter? It's used also in actualize_dendencies method
+            new_dto_collection.dependency_attributes[:__feedback_edge_set_parent] = Set.new([dto_collection])
+            new_nodes << new_dto_collection
+
+            # TODO(lsmola) If we remove an attribute that was a dependency of another node, we need to move also the
+            # dependency. So e.g. floating_ip depends on network_port's attribute vm, but we move that attribute to new
+            # network_port dto_collection. We will need to move also the dependency to the new dto_collection.
+
             dto_collection.blacklist_attributes!(attrs)
+            new_dto_collection.whitelist_attributes!(attrs)
           end
         end
+
+        # Add the new DtoCollections to the list of nodes our our graph
+        self.nodes  = nodes + new_nodes
+        # Now rebuild the graph into DAG, storing right nodes and edges
+        self.edges, = build_edges(self.nodes)
+
+        self
       end
 
       def build_edges(dto_collections)
