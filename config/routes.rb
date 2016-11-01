@@ -638,6 +638,7 @@ Vmdb::Application.routes.draw do
         protect
         squash_toggle
         launch_cockpit
+        launch_common_logging
       ) +
                adv_search_post +
                exp_post +
