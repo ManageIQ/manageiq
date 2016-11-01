@@ -911,7 +911,7 @@ module QuadiconHelper
       c.explorer    = quadicon_in_explorer_view?
       c.lastaction  = @lastaction
       c.listicon    = @listicon
-      c.listnav     = @listnav
+      c.listnav     = @listnav # TODO: set from options
       c.parent      = @parent
       c.policies    = session[:policies]
       c.policy_sim  = quadicon_policy_sim?
