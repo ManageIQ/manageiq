@@ -59,6 +59,10 @@ class ManageIQ::Providers::Foreman::Provider < ::Provider
     raise MiqException::MiqInvalidCredentialsError, err.message, err.backtrace
   end
 
+  def self.refresh_ems(provider_ids)
+    EmsRefresh.queue_refresh(Array.wrap(provider_ids).collect { |id| [base_class, id] })
+  end
+
   private
 
   def ensure_managers
@@ -69,9 +73,5 @@ class ManageIQ::Providers::Foreman::Provider < ::Provider
     build_configuration_manager unless configuration_manager
     configuration_manager.name    = "#{name} Configuration Manager"
     configuration_manager.zone_id = zone_id
-  end
-
-  def self.refresh_ems(provider_ids)
-    EmsRefresh.queue_refresh(Array.wrap(provider_ids).collect { |id| [base_class, id] })
   end
 end
