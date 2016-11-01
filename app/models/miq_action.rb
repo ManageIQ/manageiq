@@ -281,9 +281,7 @@ class MiqAction < ApplicationRecord
   end
 
   def action_email(action, rec, inputs)
-    smtp = VMDB::Config.new("vmdb").config[:smtp]
-
-    action.options[:from] = smtp[:from] if action.options[:from].blank?
+    action.options[:from] = ::Settings.smtp.from if action.options[:from].blank?
 
     email_options = {
       :to   => action.options[:to],
