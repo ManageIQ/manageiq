@@ -7,6 +7,10 @@ module Api
 
     before_action :set_additional_attributes, :only => [:index, :show]
 
+    def reports_search_conditions
+      MiqReport.for_user(@auth_user_obj).where_clause.ast unless @auth_user_obj.admin?
+    end
+
     def run_resource(_type, id, _data)
       report = MiqReport.find(id)
       report_result = MiqReportResult.find(report.queue_generate_table)
