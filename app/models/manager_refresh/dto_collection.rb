@@ -3,7 +3,8 @@ module ManagerRefresh
     attr_accessor :saved, :data, :data_index, :dependency_attributes,
                   :manager_ref, :attributes, :association, :parent
 
-    attr_reader :model_class, :attributes_blacklist, :custom_save_block
+    attr_reader :model_class, :strategy, :attributes_blacklist, :attributes_whitelist, :custom_save_block,
+                :internal_attributes
 
     def initialize(model_class, manager_ref: nil, attributes: nil, association: nil, parent: nil, strategy: nil,
                    custom_save_block: nil)
@@ -20,6 +21,7 @@ module ManagerRefresh
       @attributes_blacklist  = Set.new
       @attributes_whitelist  = Set.new
       @custom_save_block     = custom_save_block
+      @internal_attributes   = [:__feedback_edge_set_parent]
     end
 
     def process_strategy(strategy_name)
@@ -89,7 +91,7 @@ module ManagerRefresh
 
     def fixed_dependencies
       presence_validators = model_class.validators.detect { |x| x.kind_of? ActiveRecord::Validations::PresenceValidator }
-      # Attributes that has to be always on the entity, so attributes making unique indec of the record + attributes
+      # Attributes that has to be always on the entity, so attributes making unique index of the record + attributes
       # that have presence validation
       fixed_attributes    = manager_ref
       fixed_attributes    += presence_validators.attributes unless presence_validators.blank?
@@ -114,12 +116,43 @@ module ManagerRefresh
     end
 
     def blacklist_attributes!(attributes)
-      @attributes_blacklist += attributes
-      dependency_attributes.delete_if { |key, _value| attributes.include?(key) }
+      # The manager_ref attributes cannot be blacklisted, otherwise we will not be able to identify the dto object. We
+      # do not automatically remove attributes causing fixed dependencies, so beware that without them, you won't be
+      # able to create the record.
+      self.attributes_blacklist += attributes - (manager_ref + internal_attributes)
+      dependency_attributes.delete_if { |key, _value| attributes_blacklist.include?(key) }
+    end
+
+    def whitelist_attributes!(attributes)
+      # The manager_ref attributes always needs to be in the white list, otherwise we will not be able to identify the
+      # dto object. We do not automatically add attributes causing fixed dependencies, so beware that without them, you
+      # won't be able to create the record.
+      self.attributes_whitelist += attributes + (manager_ref + internal_attributes)
+      dependency_attributes.delete_if { |key, _value| !attributes_whitelist.include?(key) }
+    end
+
+    def clone
+      # A shallow copy of DtoCollection, the copy will share @data of the original collection, otherwise we would be
+      # copying a lot of records in memory.
+      new_dto_collection = self.class.new(self.model_class,
+                                          manager_ref:       self.manager_ref,
+                                          association:       self.association,
+                                          parent:            self.parent,
+                                          strategy:          self.strategy,
+                                          custom_save_block: self.custom_save_block)
+
+      new_dto_collection.data                  = self.data
+      new_dto_collection.data_index            = self.data_index
+      # Dependency attributes need to be a hard copy, since those will differ for each DtoCollection
+      new_dto_collection.dependency_attributes = self.dependency_attributes.clone
+      new_dto_collection
     end
 
     def to_s
-      "DtoCollection:<#{@model_class}>"
+      whitelist = ", whitelist: [#{attributes_whitelist.to_a.join(", ")}]" unless attributes_whitelist.blank?
+      blacklist = ", blacklist: [#{attributes_blacklist.to_a.join(", ")}]" unless attributes_blacklist.blank?
+
+      "DtoCollection:<#{@model_class}>#{whitelist}#{blacklist}"
     end
 
     def inspect
@@ -127,6 +160,8 @@ module ManagerRefresh
     end
 
     private
+
+    attr_writer :attributes_blacklist, :attributes_whitelist
 
     def actualize_dependencies(dto)
       dto.data.each do |key, value|
