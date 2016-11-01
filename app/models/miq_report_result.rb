@@ -184,7 +184,7 @@ class MiqReportResult < ApplicationRecord
     task = MiqTask.new(:name => "Generate Report result [#{result_type}]: '#{report.name}'", :userid => options[:userid])
     task.update_status("Queued", "Ok", "Task has been queued")
 
-    sync = VMDB::Config.new("vmdb").config[:product][:report_sync]
+    sync = ::Settings.product.report_sync
 
     MiqQueue.put(
       :queue_name  => "generic",
