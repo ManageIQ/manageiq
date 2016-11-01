@@ -174,6 +174,47 @@ describe ReportController do
         end
       end
     end
+
+    def non_empty_category(attrs = {})
+      cat = FactoryGirl.create(:classification, :name => "non_empty", :description => "Has entries", **attrs)
+      cat.add_entry(:name => "foo", :description => "Foo")
+      cat.add_entry(:name => "bar", :description => "Bar")
+      cat
+    end
+
+    def empty_category(attrs = {})
+      FactoryGirl.create(:classification, :name => "empty", :description => "Zero entries", **attrs)
+    end
+
+    describe "#categories_hash" do
+      it "returns non-empty categories" do
+        non_empty_category
+        empty_category
+        expect(controller.send(:categories_hash)).to eq("non_empty" => "Has entries")
+      end
+
+      it "omits show: false categories" do
+        non_empty_category(:show => false)
+        expect(controller.send(:categories_hash)).to eq({})
+      end
+
+      it "includes read_only categories" do
+        non_empty_category(:read_only => true)
+        expect(controller.send(:categories_hash)).to eq("non_empty" => "Has entries")
+      end
+    end
+
+    describe "#entries_hash" do
+      it "returns entries" do
+        non_empty_category
+        expect(controller.send(:entries_hash, "non_empty")).to eq("foo" => "Foo",
+                                                                  "bar" => "Bar")
+      end
+
+      it "returns {} given invalid category name" do
+        expect(controller.send(:entries_hash, "no_such_name")).to eq({})
+      end
+    end
   end
 
   describe '#verify is_valid? flash messages' do
