@@ -62,7 +62,7 @@
     .form-group
       %label.control-label.col-md-2
         = _('Zone')
-      .col-md-8
+      .col-md-2
         - if @edit[:server_zones].length <= 1
           = text_field_tag("server_zone", @edit[:new][:zone],
                             :maxlength         => 15,
