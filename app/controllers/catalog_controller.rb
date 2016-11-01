@@ -265,24 +265,6 @@ class CatalogController < ApplicationController
     tree_select
   end
 
-  # Tree node selected in explorer
-  def tree_select
-    @explorer   = true
-    @lastaction = "explorer"
-    self.x_active_tree = params[:tree] if params[:tree]
-    self.x_node        = params[:id]
-    replace_right_cell
-  end
-
-  # Accordion selected in explorer
-  def accordion_select
-    @layout     = "explorer"
-    @lastaction = "explorer"
-    self.x_active_accord = params[:id].sub(/_accord$/, '')
-    self.x_active_tree   = "#{x_active_accord}_tree"
-    replace_right_cell
-  end
-
   def st_delete
     assert_privileges("catalogitem_delete")
     elements = []
