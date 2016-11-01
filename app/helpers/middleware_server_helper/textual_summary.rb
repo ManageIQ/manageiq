@@ -16,7 +16,11 @@ module MiddlewareServerHelper::TextualSummary
   # Items
   #
   def textual_hostname
-    @record.hostname
+    if not_yet_started?(@record) && @record.hostname.nil?
+      _('not yet available')
+    else
+      @record.hostname
+    end
   end
 
   def textual_feed
@@ -24,8 +28,13 @@ module MiddlewareServerHelper::TextualSummary
   end
 
   def textual_bind_addr
+    address = if not_yet_started?(@record) && @record.properties['Bound Address'].nil?
+                _('not yet available')
+              else
+                @record.properties['Bound Address']
+              end
     {:label => _('Bind Address'),
-     :value => @record.properties['Bound Address']}
+     :value => address}
   end
 
   def textual_server_state
@@ -34,7 +43,11 @@ module MiddlewareServerHelper::TextualSummary
   end
 
   def textual_product
-    @record.product
+    if not_yet_started?(@record) && @record.product.nil?
+      _('not yet available')
+    else
+      @record.product
+    end
   end
 
   def textual_version
@@ -55,5 +68,10 @@ module MiddlewareServerHelper::TextualSummary
            :id         => @record.lives_on.id
           )
      }
+  end
+
+  def not_yet_started?(server)
+    # domain server case when it hasn't been started yet (it has auto-start flag set to false)
+    !server.middleware_server_group.nil? && server.properties['Server State'] == 'STOPPED'
   end
 end

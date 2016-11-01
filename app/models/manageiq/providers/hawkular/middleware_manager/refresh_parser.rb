@@ -81,7 +81,7 @@ module ManageIQ::Providers
           child.properties.merge! server_config['value'] unless server_config['value'].nil?
 
           server_name = parse_domain_server_name(child.id)
-          server = parse_middleware_server(child, server_name)
+          server = parse_middleware_server(child, true, server_name)
 
           # Add the association to server group. The information about what server is in which server group is under
           # the server-config resource's configuration
@@ -268,12 +268,18 @@ module ManageIQ::Providers
         parse_base_item(group).merge(specific)
       end
 
-      def parse_middleware_server(eap, name = nil)
+      def parse_middleware_server(eap, domain = false, name = nil)
+        not_started = domain && eap.properties['Server State'] == 'STOPPED'
+
+        hostname, product = ['Hostname', 'Product Name'].map do |x|
+          not_started && eap.properties[x].nil? ? _('not yet available') : eap.properties[x]
+        end
+
         specific = {
           :name      => name || parse_standalone_server_name(eap.id),
           :type_path => eap.type_path,
-          :hostname  => eap.properties['Hostname'],
-          :product   => eap.properties['Product Name'],
+          :hostname  => hostname,
+          :product   => product,
         }
         parse_base_item(eap).merge(specific)
       end
