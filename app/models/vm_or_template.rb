@@ -383,8 +383,7 @@ class VmOrTemplate < ApplicationRecord
       task.error("#{vm.name}: There is no owning Host for this VM, '#{options[:task]}' is not allowed")
       return false
     end
-    current = VMDB::Config.new("vmdb")      # Get the vmdb configuration settings
-    spid = current.config[:repository_scanning][:defaultsmartproxy]
+    spid = ::Settings.repository_scanning.defaultsmartproxy
     if spid.nil?                          # No repo scanning SmartProxy configured
       task.error("#{vm.name}: No Default Repository SmartProxy is configured, contact your EVM administrator")
       return false
@@ -432,7 +431,7 @@ class VmOrTemplate < ApplicationRecord
   end
 
   def self.powerops_expiration
-    (VMDB::Config.new('vmdb').config.fetch_path(:management_system, :power_operation_expiration) || 10.minutes).to_i_with_method.seconds.from_now.utc
+    ::Settings.management_system.power_operation_expiration.to_i_with_method.seconds.from_now.utc
   end
 
   # override
@@ -854,11 +853,8 @@ class VmOrTemplate < ApplicationRecord
     self.class.proxy_host_for_repository_scans
   end
 
-  DEFAULT_SCAN_VIA_HOST = true
   cache_with_timeout(:scan_via_host?, 30.seconds) do
-    via_host = VMDB::Config.new("vmdb").config.fetch_path(:coresident_miqproxy, :scan_via_host)
-    via_host = DEFAULT_SCAN_VIA_HOST unless (via_host.class == TrueClass) || (via_host.class == FalseClass)
-    via_host
+    ::Settings.coresident_miqproxy.scan_via_host
   end
 
   def self.scan_via_ems?
@@ -869,7 +865,7 @@ class VmOrTemplate < ApplicationRecord
 
   # Cache the proxy host for repository scans because the JobProxyDispatch calls this for each Vm scan job in a loop
   cache_with_timeout(:proxy_host_for_repository_scans, 30.seconds) do
-    defaultsmartproxy = VMDB::Config.new("vmdb").config.fetch_path(:repository_scanning, :defaultsmartproxy)
+    defaultsmartproxy = ::Settings.repository_scanning.defaultsmartproxy
 
     proxy = nil
     proxy = MiqProxy.find_by_id(defaultsmartproxy.to_i) if defaultsmartproxy
@@ -1139,7 +1135,7 @@ class VmOrTemplate < ApplicationRecord
         added_vm_ids << v.id
       end
 
-      assign_ems_created_on_queue(added_vm_ids) if VMDB::Config.new("vmdb").config.fetch_path(:ems_refresh, :capture_vm_created_on_date)
+      assign_ems_created_on_queue(added_vm_ids) if ::Settings.ems_refresh.capture_vm_created_on_date
     end
 
     # Collect the updated folder relationships to determine which vms need updated path information
