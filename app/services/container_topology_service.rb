@@ -61,14 +61,15 @@ class ContainerTopologyService < TopologyService
     if entity.kind_of?(Host) || entity.kind_of?(Vm)
       status = entity.power_state.capitalize
     elsif entity.kind_of?(ContainerNode)
-      status = 'Unknown'
-      entity.container_conditions.each do |condition|
-        if condition.try(:name) == 'Ready' && condition.try(:status) == 'True'
-          status = condition.name
-        else
-          status = 'NotReady'
-        end
-      end
+      node_ready_status = entity.container_conditions.find_by_name('Ready').try(:status)
+      status = case node_ready_status
+               when 'True'
+                 'Ready'
+               when 'False'
+                 'NotReady'
+               else
+                 'Unknown'
+               end
     elsif entity.kind_of?(ContainerGroup)
       status = entity.phase
     elsif entity.kind_of?(Container)
