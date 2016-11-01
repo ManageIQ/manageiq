@@ -5,9 +5,10 @@ module ManagerRefresh
     delegate :manager_ref, :to => :dto_collection
 
     def initialize(dto_collection, data)
-      @dto_collection = dto_collection
-      @data           = data
-      @built_data     = nil
+      @dto_collection           = dto_collection
+      @data                     = data
+      @object                   = nil
+      @allowed_attributes_index = nil
     end
 
     def manager_uuid
@@ -40,20 +41,26 @@ module ManagerRefresh
       ret
     end
 
-    def attributes
-      unless dto_collection.attributes_blacklist.blank?
-        data.delete_if { |key, _value| dto_collection.attributes_blacklist.include?(key) }
-      end
+    def attributes(dto_collection_scope = nil)
+      # We should explicitly pass a scope, since the dto can be mapped to more DtoCollections with different blacklist
+      # and whitelist. The generic code always passes a scope.
+      dto_collection_scope ||= dto_collection
 
-      data.transform_values! do |value|
-        if loadable?(value)
-          value.load
+      # First transform the values
+      data.each do |key, value|
+        if !allowed?(dto_collection_scope, key)
+          next
+        elsif loadable?(value)
+          data[key] = value.load
         elsif value.kind_of?(Array) && value.any? { |x| loadable?(x) }
-          value.compact.map(&:load).compact
+          data[key] = value.compact.map(&:load).compact
         else
-          value
+          next
         end
       end
+
+      # Then return a new hash containing only the values according to the whitelist and the blacklist
+      data.select { |key, _value| allowed?(dto_collection_scope, key) }
     end
 
     def to_s
@@ -65,6 +72,14 @@ module ManagerRefresh
     end
 
     private
+
+    def allowed?(dto_collection_scope, key)
+      # TODO(lsmola) can we make this O(1)? This check will be performed for each record in the DB
+
+      return false if dto_collection_scope.attributes_blacklist.present? && dto_collection_scope.attributes_blacklist.include?(key)
+      return false if dto_collection_scope.attributes_whitelist.present? && !dto_collection_scope.attributes_whitelist.include?(key)
+      true
+    end
 
     def object=(built_object)
       @object = built_object

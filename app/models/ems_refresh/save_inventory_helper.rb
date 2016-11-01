@@ -33,8 +33,8 @@ module EmsRefresh::SaveInventoryHelper
     end
   end
 
-  def save_dto_inventory_with_findkey(dto, association, deletes, new_records, record_index, method = nil)
-    hash = dto.kind_of?(::ManagerRefresh::Dto) ? dto.attributes : dto
+  def save_dto_inventory_with_findkey(dto_collection, dto, association, deletes, new_records, record_index, method = nil)
+    hash = dto.kind_of?(::ManagerRefresh::Dto) ? dto.attributes(dto_collection) : dto
     # Find the record, and update if found, else create it
     method ||= :build
     found  = record_index.fetch(hash)
@@ -78,7 +78,7 @@ module EmsRefresh::SaveInventoryHelper
           method         = :new
         end
 
-        save_dto_inventory_with_findkey(dto, entity_builder, deletes_index, new_records, record_index, method)
+        save_dto_inventory_with_findkey(dto_collection, dto, entity_builder, deletes_index, new_records, record_index, method)
       end
     end
     _log.info("PROCESSED #{dto_collection}")
@@ -93,11 +93,11 @@ module EmsRefresh::SaveInventoryHelper
       deletes.first.respond_to?(:disconnect_inv) ? deletes.each(&:disconnect_inv) : delete_inventory_multi(dto_collection, association, deletes)
     end
 
-    _log.info("SAVING #{dto_collection}")
+    _log.info("CREATING #{dto_collection} of size #{new_records.size}")
     ActiveRecord::Base.transaction do
       new_records.map(&:save)
     end
-    _log.info("SAVING #{dto_collection}")
+    _log.info("CREATED #{dto_collection}")
   end
 
   def delete_inventory_multi(dto_collection, association, deletes)
