@@ -54,3 +54,43 @@
   :expires_in: 24.hours
   :level: :warning
   :audience: user
+- :name: automate_tenant_success
+  :message: '%{message}'
+  :expires_in: 24.hours
+  :level: :success
+  :audience: tenant
+- :name: automate_tenant_error
+  :message: '%{message}'
+  :expires_in: 24.hours
+  :level: :error
+  :audience: tenant
+- :name: automate_tenant_info
+  :message: '%{message}'
+  :expires_in: 24.hours
+  :level: :info
+  :audience: tenant
+- :name: automate_tenant_warning
+  :message: '%{message}'
+  :expires_in: 24.hours
+  :level: :warning
+  :audience: tenant
+- :name: automate_global_success
+  :message: '%{message}'
+  :expires_in: 24.hours
+  :level: :success
+  :audience: global
+- :name: automate_global_error
+  :message: '%{message}'
+  :expires_in: 24.hours
+  :level: :error
+  :audience: global
+- :name: automate_global_info
+  :message: '%{message}'
+  :expires_in: 24.hours
+  :level: :info
+  :audience: global
+- :name: automate_global_warning
+  :message: '%{message}'
+  :expires_in: 24.hours
+  :level: :warning
+  :audience: global
