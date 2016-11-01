@@ -84,7 +84,6 @@ describe MiqExpression do
       expect(sql).to eq("\"vms\".\"name\" != \"vms\".\"name\"")
     end
 
-
     it "generates the SQL for a LIKE expression" do
       sql, * = MiqExpression.new("LIKE" => {"field" => "Vm-name", "value" => "foo"}).to_sql
       expect(sql).to eq("\"vms\".\"name\" LIKE '%foo%'")
@@ -405,15 +404,16 @@ describe MiqExpression do
           expect(result).to eq([vm2])
         end
 
-        # it "finds the correct instances for an gt expression with a custom attribute dynamic integer field" do
-        #   custom_attribute =  FactoryGirl.create(:custom_attribute, :name => "example", :value => 1)
-        #   _vm1 = FactoryGirl.create(:vm, :memory_reserve => 1)
-        #   _vm1.custom_attributes << custom_attribute
-        #   vm2 = FactoryGirl.create(:vm, :memory_reserve => 2)
-        #   filter = MiqExpression.new(">" => {"field" => "Vm-memory_reserve", "value" => "Vm-#{CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX}example"})
-        #   result = Vm.where(filter.to_sql.first)
-        #   expect(result).to eq([vm2])
-        # end
+        it "finds the correct instances for an gt expression with a custom attribute dynamic integer field" do
+          custom_attribute =  FactoryGirl.create(:custom_attribute, :name => "example", :value => 1)
+          vm1 = FactoryGirl.create(:vm, :memory_reserve => 2)
+          vm1.custom_attributes << custom_attribute
+          _vm2 = FactoryGirl.create(:vm, :memory_reserve => 0)
+          filter = MiqExpression.new(">" => {"field" => "VmOrTemplate-memory_reserve", "value" => "VmOrTemplate-#{CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX}example"})
+          result = Rbac.search(:targets => Vm, :filter => filter).first.first
+          expect(filter.to_sql.last).to eq(:supported_by_sql => false)
+          expect(result).to eq(vm1)
+        end
 
         it "finds the correct instances for an AFTER expression with a datetime field" do
           _vm1 = FactoryGirl.create(:vm_vmware, :last_scan_on => "2011-01-11 9:00")

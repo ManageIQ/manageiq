@@ -26,7 +26,7 @@ class MiqExpression::Field
   end
 
   def self.valid_field?(field)
-    FIELD_REGEX.match(field).present? if field.is_a?(String)
+    FIELD_REGEX.match(field).present? if field.kind_of?(String)
   end
 
   def datetime?
@@ -35,6 +35,10 @@ class MiqExpression::Field
 
   def string?
     column_type == :string
+  end
+
+  def attribute_supported_by_sql?
+    !custom_attribute_column? && model.attribute_supported_by_sql?(column)
   end
 
   def plural?

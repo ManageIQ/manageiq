@@ -2,8 +2,6 @@ class MiqExpression
   require_nested :Tag
   include Vmdb::Logging
   attr_accessor :exp, :context_type, :preprocess_options
-  ALLOWED_OPERATORS_EXPRESSION_AS_VALUE = %w(= > >= < <= !=)
-
 
   BASE_TABLES = %w(
     AuditEvent
@@ -627,8 +625,12 @@ class MiqExpression
       # => TODO: support count of child relationship
       return false if exp[operator].key?("count")
 
-      return field_in_sql?(exp[operator]["field"])
+      return field_in_sql?(exp[operator]["field"]) && value_in_sql?(exp[operator]["value"])
     end
+  end
+
+  def value_in_sql?(value)
+    !Field.valid_field?(value) || Field.parse(value).attribute_supported_by_sql?
   end
 
   def field_in_sql?(field)
@@ -647,6 +649,7 @@ class MiqExpression
   end
 
   def attribute_supported_by_sql?(field)
+    return false unless col_details[field]
     col_details[field][:sql_support]
   end
 
@@ -1614,41 +1617,38 @@ class MiqExpression
   def to_arel(exp, tz)
     operator = exp.keys.first
     field = Field.parse(exp[operator]["field"]) if exp[operator].kind_of?(Hash) && exp[operator]["field"]
-    if ALLOWED_OPERATORS_EXPRESSION_AS_VALUE.include?(operator) && Field.valid_field?(exp[operator]["value"])
-      value_field = Field.parse(exp[operator]["value"]).arel_attribute if exp[operator].kind_of?(Hash) && exp[operator]["value"]
-    elsif ALLOWED_OPERATORS_EXPRESSION_AS_VALUE.include?(operator)
-      value_field = exp[operator]["value"]
+    if(exp[operator].kind_of?(Hash) && exp[operator]["value"] && Field.valid_field?(exp[operator]["value"]))
+      parsed_value = Field.parse(exp[operator]["value"]).arel_attribute
+    elsif exp[operator].kind_of?(Hash)
+      parsed_value = exp[operator]["value"]
     end
-
     case operator.downcase
-    when "equal"
-      field.eq(exp[operator]["value"])
-    when "="
-      field.eq(value_field)
+    when "equal", "="
+      field.eq(parsed_value)
     when ">"
-      field.gt(value_field)
+      field.gt(parsed_value)
     when "after"
-      value = RelativeDatetime.normalize(exp[operator]["value"], tz, "end", field.date?)
+      value = RelativeDatetime.normalize(parsed_value, tz, "end", field.date?)
       field.gt(value)
     when ">="
-      field.gteq(value_field)
+      field.gteq(parsed_value)
     when "<"
-      field.lt(value_field)
+      field.lt(parsed_value)
     when "before"
-      value = RelativeDatetime.normalize(exp[operator]["value"], tz, "beginning", field.date?)
+      value = RelativeDatetime.normalize(parsed_value, tz, "beginning", field.date?)
       field.lt(value)
     when "<="
-      field.lteq(value_field)
+      field.lteq(parsed_value)
     when "!="
-      field.not_eq(value_field)
+      field.not_eq(parsed_value)
     when "like", "includes"
-      field.matches("%#{exp[operator]["value"]}%")
+      field.matches("%#{parsed_value}%")
     when "starts with"
-      field.matches("#{exp[operator]["value"]}%")
+      field.matches("#{parsed_value}%")
     when "ends with"
-      field.matches("%#{exp[operator]["value"]}")
+      field.matches("%#{parsed_value}")
     when "not like"
-      field.does_not_match("%#{exp[operator]["value"]}%")
+      field.does_not_match("%#{parsed_value}%")
     when "and"
       operands = exp[operator].each_with_object([]) do |operand, result|
         next if operand.blank?
@@ -1684,12 +1684,12 @@ class MiqExpression
       # Only support for tags of the main model
       if exp[operator].key?("tag")
         tag = Tag.parse(exp[operator]["tag"])
-        tag.contains(exp[operator]["value"])
+        tag.contains(parsed_value)
       else
-        field.contains(exp[operator]["value"])
+        field.contains(parsed_value)
       end
     when "is"
-      value = exp[operator]["value"]
+      value = parsed_value
       start_val = RelativeDatetime.normalize(value, tz, "beginning", field.date?)
       end_val = RelativeDatetime.normalize(value, tz, "end", field.date?)
 
@@ -1699,7 +1699,7 @@ class MiqExpression
         field.eq(start_val)
       end
     when "from"
-      start_val, end_val = exp[operator]["value"]
+      start_val, end_val = parsed_value
       start_val = RelativeDatetime.normalize(start_val, tz, "beginning", field.date?)
       end_val   = RelativeDatetime.normalize(end_val, tz, "end", field.date?)
       field.between(start_val..end_val)
