@@ -1281,15 +1281,17 @@ module ReportController::Reports::Editor
       @edit[:cb_owner_name] = current_user.name
     end
 
-    @edit[:cb_providers] = {}
-    @edit[:cb_providers][:container_project] = {}
-    @edit[:cb_providers][:vm] = {} # Fill this in if entity show type it ever becomes relevent for VMs
-    @edit[:cb_entities_by_provider_id] = {}
-    ManageIQ::Providers::ContainerManager.all.each do |provider|
+    @edit[:cb_providers] = { :container_project => {}, :container_image => {} }
+    @edit[:cb_entities_by_provider_id] = { :container_project => {}, :container_image => {} }
+    ManageIQ::Providers::ContainerManager.includes(:container_projects, :container_images).all.each do |provider|
       @edit[:cb_providers][:container_project][provider.name] = provider.id
-      @edit[:cb_entities_by_provider_id][provider.id] = {}
+      @edit[:cb_providers][:container_image][provider.name] = provider.id
+      @edit[:cb_entities_by_provider_id][provider.id] = {:container_project => {}, :container_image => {}}
       provider.container_projects.all.each do |project|
-        @edit[:cb_entities_by_provider_id][provider.id][project.id] = project.name
+        @edit[:cb_entities_by_provider_id][provider.id][:container_project][project.id] = project.name
+      end
+      provider.container_images.all.each do |image|
+        @edit[:cb_entities_by_provider_id][provider.id][:container_image][image.id] = image.name
       end
     end
 
