@@ -1391,8 +1391,7 @@ class MiqRequestWorkflow
     if data[:owner_email].present? && MiqLdap.using_ldap?
       email = data[:owner_email]
       unless email.include?('@')
-        suffix = VMDB::Config.new("vmdb").config[:authentication].fetch_path(:user_suffix)
-        email = "#{email}@#{suffix}"
+        email = "#{email}@#{::Settings.authentication.user_suffix}"
       end
       values[:owner_email] = email
       retrieve_ldap rescue nil
