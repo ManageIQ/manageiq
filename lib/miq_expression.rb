@@ -9,7 +9,6 @@ class MiqExpression
     BottleneckEvent
     ChargebackVm
     ChargebackContainerProject
-    ChargebackContainerImage
     CloudResourceQuota
     CloudTenant
     CloudVolume
