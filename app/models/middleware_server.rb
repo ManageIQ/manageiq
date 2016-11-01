@@ -31,4 +31,8 @@ class MiddlewareServer < ApplicationRecord
     end
     false
   end
+
+  def in_domain?
+    !middleware_server_group.nil?
+  end
 end

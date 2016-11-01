@@ -738,6 +738,10 @@ class ApplicationHelper::ToolbarBuilder
         return true unless @record.provisionable?
       end
     when 'MiddlewareServer', 'MiddlewareDeployment', 'MiddlewareDatasource'
+      if %w(middleware_deployment_add middleware_jdbc_driver_add middleware_datasource_add).include?(id) &&
+         @record.try(:in_domain?)
+        return true
+      end
       return true if %w(middleware_server_shutdown middleware_server_restart middleware_server_stop
                         middleware_server_suspend middleware_server_resume middleware_server_reload
                         middleware_deployment_restart middleware_deployment_disable middleware_deployment_enable
