@@ -1,19 +1,17 @@
 module ManageIQ::Providers::Google::CloudManager::Vm::Operations::Power
   extend ActiveSupport::Concern
+
   included do
     supports_not :suspend
+    supports_not :pause
   end
 
-  def validate_pause
-    validate_unsupported(_("Pause Operation"))
+  def validate_suspend
+    validate_unsupported(_("Suspend Operation"))
   end
 
   def raw_suspend
     validate_unsupported(_("Suspend Operation"))
-  end
-
-  def raw_pause
-    validate_unsupported(_("Pause Operation"))
   end
 
   def raw_shelve

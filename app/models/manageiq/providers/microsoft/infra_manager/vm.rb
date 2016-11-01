@@ -2,6 +2,7 @@ class ManageIQ::Providers::Microsoft::InfraManager::Vm < ManageIQ::Providers::In
   include_concern 'ManageIQ::Providers::Microsoft::InfraManager::VmOrTemplateShared'
 
   supports_not :migrate, :reason => _("Migrate operation is not supported.")
+  supports_not :pause
 
   POWER_STATES = {
     "Running"  => "on",

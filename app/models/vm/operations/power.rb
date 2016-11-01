@@ -7,10 +7,27 @@ module Vm::Operations::Power
     api_relay_method :suspend
 
     supports :suspend do
-      msg = unsupported_reason(:control) unless supports_control?
-      msg ||= _('The VM is not powered on') unless vm_powered_on?
+      msg = supports_control_powered_on
       unsupported_reason_add(:suspend, msg) if msg
     end
+
+    supports :pause do
+      msg = supports_control_powered_on
+      unsupported_reason_add(:pause, msg) if msg
+    end
+  end
+
+  def supports_control_powered_on
+    msg = supports_control_message
+    msg || powered_on_message
+  end
+
+  def supports_control_message
+    unsupported_reason(:control) unless supports_control?
+  end
+
+  def powered_on_message
+    _('The VM is not powered on') unless vm_powered_on?
   end
 
   def vm_powered_on?
@@ -22,10 +39,6 @@ module Vm::Operations::Power
   end
 
   def validate_stop
-    validate_vm_control_powered_on
-  end
-
-  def validate_pause
     validate_vm_control_powered_on
   end
 
