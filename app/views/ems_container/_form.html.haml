@@ -6,7 +6,7 @@
     .form-group{"ng-class" => "{'has-error': angularForm.name.$invalid}"}
       %label.col-md-2.control-label{"for" => "ems_name"}
         = _('Name')
-      .col-md-8
+      .col-md-4
         %input.form-control{"type"           => "text",
                             "id"             => "ems_name",
                             "name"           => "name",
@@ -44,7 +44,7 @@
     .form-group{"ng-class" => "{'has-error': angularForm.zone.$invalid}"}
       %label.col-md-2.control-label{"for" => "ems_zone"}
         = _("Zone")
-      .col-md-8
+      .col-md-4
         - if @server_zones.length <= 1
           %input.form-control{"type"      => "text",
                               "id"        => "ems_zone",
