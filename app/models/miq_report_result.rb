@@ -17,6 +17,15 @@ class MiqReportResult < ApplicationRecord
 
   virtual_has_one :result_set,           :class_name => "Hash"
 
+  scope :for_groups, lambda { |group_ids|
+    condition = {:miq_group_id => group_ids}
+    if group_ids.nil?
+      where.not(condition)
+    else
+      where(condition)
+    end
+  }
+
   before_save do
     user_info = userid.to_s.split("|")
     if user_info.length == 1
