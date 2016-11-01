@@ -86,8 +86,8 @@ class Snapshot < ApplicationRecord
   end
 
   def recently_created?
-    @recent_threshold ||= (VMDB::Config.new("vmdb").config.fetch_path(:ems_refresh, :raise_vm_snapshot_complete_if_created_within).to_i_with_method || 15.minutes)
-    create_time >= @recent_threshold.seconds.ago.utc
+    create_time >= ::Settings.ems_refresh.raise_vm_snapshot_complete_if_created_within.to_i_with_method
+                   .seconds.ago.utc
   end
 
   def not_recently_created?
