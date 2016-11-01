@@ -148,7 +148,7 @@ class User < ApplicationRecord
   end
 
   def self.authenticator(username = nil)
-    Authenticator.for(VMDB::Config.new("vmdb").config[:authentication], username)
+    Authenticator.for(::Settings.authentication.to_hash, username)
   end
 
   def self.authenticate(username, password, request = nil, options = {})
