@@ -131,7 +131,7 @@ class Chargeback < ActsAsArModel
         prefix = Chargeback.report_cb_model(self.class.name).underscore
         ChargebackRate.get_assigned_for_target(perf.resource,
                                                :tag_list => perf.tag_list_reconstruct.map! { |t| prefix + t },
-                                               :parents  => get_rate_parents(perf).compact)
+                                               :parents  => get_rate_parents(perf))
       end
   end
 

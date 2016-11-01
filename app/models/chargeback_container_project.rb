@@ -83,6 +83,6 @@ class ChargebackContainerProject < Chargeback
 
   def get_rate_parents(perf)
     # Get rate from assigned containers providers only
-    [perf.parent_ems]
+    [perf.parent_ems].compact
   end
 end # class Chargeback
