@@ -241,12 +241,18 @@ class MiddlewareServerController < ApplicationController
 
   def trigger_mw_operation(operation, mw_server, params = nil)
     mw_manager = mw_server.ext_management_system
+    path = mw_server.ems_ref
+
+    # in domain mode case we want to run the operation on the server-config DMR resource
+    if mw_server.in_domain?
+      path = path.sub(/%2Fserver%3D/, '%2Fserver-config%3D')
+    end
 
     op = mw_manager.public_method operation
     if params
-      op.call(mw_server.ems_ref, params)
+      op.call(path, params)
     else
-      op.call mw_server.ems_ref
+      op.call(path)
     end
   end
 
