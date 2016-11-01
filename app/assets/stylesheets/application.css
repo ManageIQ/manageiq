@@ -18,7 +18,6 @@
  *= require codemirror/theme/eclipse
  *= require jqplot
  *= require kubernetes-topology-graph/dist/topology-graph
- *= require jquery-ui-miq-theme/jquery-ui-1.9.2.custom
  *= require container_providers_dashboard
  *= require wizard
  *= require template
