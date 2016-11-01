@@ -230,7 +230,7 @@ class MiqWidget < ApplicationRecord
       return
     end
 
-    if VMDB::Config.new("vmdb").config[:product][:report_sync]
+    if ::Settings.product.report_sync
       group_hash.each do |g, u|
         options = generate_content_options(g, u)
         generate_content(*options)
@@ -372,7 +372,7 @@ class MiqWidget < ApplicationRecord
     group ||= user.current_group
 
     options = generate_content_options(group, [user])
-    if VMDB::Config.new("vmdb").config[:product][:report_sync]
+    if ::Settings.product.report_sync
       generate_content(*options)
     else
       timeout_stalled_task
