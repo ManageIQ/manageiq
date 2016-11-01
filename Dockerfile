@@ -9,7 +9,7 @@ ENV TERM xterm
 ENV RUBY_GEMS_ROOT /opt/rubies/ruby-2.3.1/lib/ruby/gems/2.3.0
 ENV APP_ROOT /var/www/miq/vmdb
 ENV APPLIANCE_ROOT /opt/manageiq/manageiq-appliance
-ENV SSUI_ROOT /opt/manageiq/manageiq-ui-self_service
+ENV SSUI_ROOT /opt/manageiq/manageiq-ui-service
 
 # Fetch pglogical and manageiq repo
 RUN curl -sSLko /etc/yum.repos.d/ncarboni-pglogical-SCL-epel-7.repo \
@@ -99,7 +99,7 @@ RUN mkdir -p ${APP_ROOT} && \
     mkdir -p ${SSUI_ROOT} && \
     ln -vs ${APP_ROOT} /opt/manageiq/manageiq && \
     curl -L https://github.com/ManageIQ/manageiq-appliance/tarball/${REF} | tar vxz -C ${APPLIANCE_ROOT} --strip 1 && \
-    curl -L https://github.com/ManageIQ/manageiq-ui-self_service/tarball/${REF} | tar vxz -C ${SSUI_ROOT} --strip 1
+    curl -L https://github.com/ManageIQ/manageiq-ui-service/tarball/${REF} | tar vxz -C ${SSUI_ROOT} --strip 1
 
 ## Add ManageIQ source from local directory (dockerfile development) or from Github (official build)
 ADD . ${APP_ROOT}
