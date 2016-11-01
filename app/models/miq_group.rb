@@ -94,9 +94,6 @@ class MiqGroup < ApplicationRecord
   end
 
   def self.get_ldap_groups_by_user(user, bind_dn, bind_pwd)
-    auth = VMDB::Config.new("vmdb").config[:authentication]
-    auth[:group_memberships_max_depth] ||= User::DEFAULT_GROUP_MEMBERSHIPS_MAX_DEPTH
-
     username = user.kind_of?(self) ? user.userid : user
     ldap = MiqLdap.new
 
@@ -106,7 +103,7 @@ class MiqGroup < ApplicationRecord
     user_obj = ldap.get_user_object(ldap.normalize(ldap.fqusername(username)))
     raise _("Unable to find user %{user_name} in directory") % {:user_name => username} if user_obj.nil?
 
-    ldap.get_memberships(user_obj, auth[:group_memberships_max_depth])
+    ldap.get_memberships(user_obj, ::Settings.authentication.group_memberships_max_depth)
   end
 
   def self.get_httpd_groups_by_user(user)
