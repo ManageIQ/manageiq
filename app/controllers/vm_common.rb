@@ -164,26 +164,9 @@ module VmCommon
     end
   end
 
-  # VM clicked on in the explorer right cell
   def x_show
-    @explorer = true
     @vm = @record = identify_record(params[:id], VmOrTemplate)
-    respond_to do |format|
-      format.js do                  # AJAX, select the node
-        unless @record
-          redirect_to :action => "explorer"
-          return
-        end
-        params[:id] = x_build_node_id(@record)  # Get the tree node id
-        tree_select
-      end
-      format.html do                # HTML, redirect to explorer
-        tree_node_id = TreeBuilder.build_node_id(@record)
-        session[:exp_parms] = {:id => tree_node_id}
-        redirect_to :action => "explorer"
-      end
-      format.any { head :not_found }  # Anything else, just send 404
-    end
+    generic_x_show
   end
 
   def show(id = nil)

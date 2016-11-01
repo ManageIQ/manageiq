@@ -80,19 +80,7 @@ class ServiceController < ApplicationController
   # ST clicked on in the explorer right cell
   def x_show
     identify_service(from_cid(params[:id]))
-    respond_to do |format|
-      format.js do                  # AJAX, select the node
-        @explorer = true
-        params[:id] = x_build_node_id(@record, x_tree(:svcs_tree))  # Get the tree node id
-        tree_select
-      end
-      format.html do                # HTML, redirect to explorer
-        tree_node_id = TreeBuilder.build_node_id(@record)
-        session[:exp_parms] = {:id => tree_node_id}
-        redirect_to :action => "explorer"
-      end
-      format.any { head :not_found }
-    end
+    generic_x_show(x_tree(:svcs_tree))
   end
 
   # Tree node selected in explorer

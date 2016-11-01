@@ -152,6 +152,26 @@ module ApplicationController::Explorer
     send_action
   end
 
+  def generic_x_show(x_node_build_options = {})
+    @explorer = true
+    respond_to do |format|
+      format.js do # AJAX, select the node
+        unless @record
+          redirect_to :action => "explorer"
+          return
+        end
+        params[:id] = x_build_node_id(@record, x_node_build_options)
+        tree_select
+      end
+      format.html do # HTML, redirect to explorer
+        tree_node_id = TreeBuilder.build_node_id(@record)
+        session[:exp_parms] = {:id => tree_node_id}
+        redirect_to :action => "explorer"
+      end
+      format.any { head :not_found } # Anything else, just send 404
+    end
+  end
+
   # Add an item to the tree history array
   def x_history_add_item(options)
     x_tree_history.delete_if do |item|
