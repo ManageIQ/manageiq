@@ -102,7 +102,7 @@ module ManageIQ::Providers
     end
 
     def availability_zones
-      @availability_zones ||= availability_zones_compute + availability_zones_volume
+      @availability_zones ||= (availability_zones_compute + availability_zones_volume).uniq(&:zoneName)
     end
 
     def volumes
@@ -112,11 +112,9 @@ module ManageIQ::Providers
     end
 
     def get_availability_zones
-      compute_azs = availability_zones_compute
-      volume_azs = availability_zones_volume
-      compute_azs << nil # force the null availability zone for openstack
-      process_collection(compute_azs, :availability_zones) { |az| parse_availability_zone(az, :compute) }
-      process_collection(volume_azs, :availability_zones) { |az| parse_availability_zone(az, :volume) }
+      azs = availability_zones
+      azs << nil # force the null availability zone for openstack
+      process_collection(azs, :availability_zones) { |az| parse_availability_zone(az) }
     end
 
     def get_host_aggregates
@@ -181,7 +179,7 @@ module ManageIQ::Providers
       end if @data[:cloud_volumes]
     end
 
-    def parse_availability_zone(az, service_name)
+    def parse_availability_zone(az)
       if az.nil?
         uid        = "null_az"
         new_result = {
@@ -189,8 +187,7 @@ module ManageIQ::Providers
           :ems_ref => uid
         }
       else
-        name = az.zoneName
-        uid = "#{service_name}-#{name}"
+        name = uid = az.zoneName
         new_result = {
           :type    => "ManageIQ::Providers::Openstack::CloudManager::AvailabilityZone",
           :ems_ref => uid,
@@ -335,7 +332,9 @@ module ManageIQ::Providers
         :host                => parent_host,
         :ems_cluster         => parent_cluster,
         :flavor              => flavor,
-        :availability_zone   => @data_index.fetch_path(:availability_zones, server.availability_zone.blank? ? "null_az" : "compute-" + server.availability_zone),
+        :availability_zone   => @data_index.fetch_path(
+          :availability_zones, server.availability_zone.blank? ? "null_az" : server.availability_zone
+        ),
         :key_pairs           => [@data_index.fetch_path(:key_pairs, server.key_name)].compact,
         :cloud_tenant        => @data_index.fetch_path(:cloud_tenants, server.tenant_id),
         :orchestration_stack => @data_index.fetch_path(:orchestration_stacks, @resource_to_stack[uid])
@@ -427,7 +426,7 @@ module ManageIQ::Providers
       host = hosts.try(:find) { |h| h.hypervisor_hostname == service.host.split('.').first }
       system_services = host.try(:system_services)
       system_service = system_services.try(:find) { |ss| ss.name =~ /#{service.binary}/ }
-      availability_zone = @ems.availability_zones.find { |zone| zone.ems_ref == "compute-" + service.zone }
+      availability_zone = @ems.availability_zones.find { |zone| zone.ems_ref == service.zone }
 
       new_result = {
         :ems_ref                    => uid,

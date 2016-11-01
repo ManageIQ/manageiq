@@ -229,7 +229,7 @@ module Openstack
     end
 
     def availability_zones_count
-      3 # This is affected by conf files only, so needs to be hardcoded value
+      2 # This is affected by conf files only, so needs to be hardcoded value
     end
 
     def assert_table_counts
@@ -362,7 +362,7 @@ module Openstack
       # standard openstack AZs have their ems_ref set to their name ("nova" in the test case)...
       # the "null" openstack AZ has a unique ems_ref and name
       expect(@nova_az).to have_attributes(
-        :ems_ref => "compute-#{@nova_az.name}"
+        :ems_ref => @nova_az.name
       )
     end
 
