@@ -36,6 +36,9 @@ class ExtManagementSystem < ApplicationRecord
            :class_name => "VmOrTemplate", :inverse_of => :ext_management_system
   has_many :miq_templates,     :foreign_key => :ems_id, :inverse_of => :ext_management_system
   has_many :vms,               :foreign_key => :ems_id, :inverse_of => :ext_management_system
+  has_many :hardwares,         :through => :vms_and_templates
+  has_many :networks,          :through => :hardwares
+  has_many :disks,             :through => :hardwares
 
   has_many :storages,       -> { distinct },          :through => :hosts
   has_many :ems_events,     -> { order "timestamp" }, :class_name => "EmsEvent",    :foreign_key => "ems_id",
