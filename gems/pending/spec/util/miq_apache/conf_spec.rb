@@ -40,7 +40,7 @@ describe MiqApache::Conf do
     it "sets root balancer correctly" do
       default_options = {:cluster => 'evmcluster_ui', :redirects => %w(/)}
       output = MiqApache::Conf.create_redirects_config(default_options).lines.to_a
-      expect(output).to include("RewriteRule ^/self_service(?!/(assets|images|img|styles|js|fonts|bower_components|gettext)) /self_service/index.html [L]\n")
+      expect(output).to include("RewriteRule ^/ui/service(?!/(assets|images|img|styles|js|fonts|vendor|gettext)) /ui/service/index.html [L]\n")
       expect(output).to include("RewriteCond \%{REQUEST_URI} !^/proxy_pages\n")
       expect(output).to include("RewriteCond \%{REQUEST_URI} !^/saml2\n")
       expect(output).to include("RewriteCond \%{DOCUMENT_ROOT}/\%{REQUEST_FILENAME} !-f\n")
