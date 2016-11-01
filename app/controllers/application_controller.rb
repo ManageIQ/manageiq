@@ -1577,20 +1577,20 @@ class ApplicationController < ActionController::Base
 
     # Save the paged_view_search_options for download buttons to use later
     session[:paged_view_search_options] = {
-      :parent                => parent ? minify_ar_object(parent) : nil, # Make a copy of parent object (to avoid saving related objects)
-      :parent_method         => options[:parent_method],
-      :targets_hash          => true,
-      :association           => association,
-      :filter                => get_view_filter(options[:filter]),
-      :sub_filter            => get_view_process_search_text(view),
-      :supports_filter       => options[:supports_filter],
-      :page                  => options[:all_pages] ? 1 : @current_page,
-      :per_page              => options[:all_pages] ? ONE_MILLION : @items_per_page,
-      :where_clause          => get_view_where_clause(options[:where_clause]),
-      :named_scope           => options[:named_scope],
-      :display_filter_hash   => options[:display_filter_hash],
-      :userid                => session[:userid],
-      :match_via_descendants => options[:match_via_descendants]
+      :parent                    => parent ? minify_ar_object(parent) : nil, # Make a copy of parent object (to avoid saving related objects)
+      :parent_method             => options[:parent_method],
+      :targets_hash              => true,
+      :association               => association,
+      :filter                    => get_view_filter(options[:filter]),
+      :sub_filter                => get_view_process_search_text(view),
+      :supported_features_filter => options[:supported_features_filter],
+      :page                      => options[:all_pages] ? 1 : @current_page,
+      :per_page                  => options[:all_pages] ? ONE_MILLION : @items_per_page,
+      :where_clause              => get_view_where_clause(options[:where_clause]),
+      :named_scope               => options[:named_scope],
+      :display_filter_hash       => options[:display_filter_hash],
+      :userid                    => session[:userid],
+      :match_via_descendants     => options[:match_via_descendants]
     }
     # Call paged_view_search to fetch records and build the view.table and additional attrs
     view.table, attrs = view.paged_view_search(session[:paged_view_search_options])
