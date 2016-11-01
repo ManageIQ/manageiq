@@ -11,8 +11,12 @@ module Api
       MiqReport.for_user(@auth_user_obj).where_clause.ast unless @auth_user_obj.admin?
     end
 
-    def run_resource(_type, id, _data)
-      report = MiqReport.find(id)
+    def find_reports(id)
+      MiqReport.for_user(@auth_user_obj).find(id)
+    end
+
+    def run_resource(type, id, _data)
+      report = resource_search(id, type, MiqReport)
       report_result = MiqReportResult.find(report.queue_generate_table)
       run_report_result(true,
                         "running report #{report.id}",
