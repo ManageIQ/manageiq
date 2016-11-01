@@ -110,6 +110,6 @@ class GitRepository < ApplicationRecord
   end
 
   def delete_repo_dir
-    FileUtils.rm_rf(directory_name) if Dir.exists?(directory_name)
+    FileUtils.rm_rf(directory_name) if Dir.exist?(directory_name)
   end
 end
