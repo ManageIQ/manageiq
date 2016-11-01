@@ -4707,23 +4707,6 @@
       :description: Display Individual Container Template
       :feature_type: view
       :identifier: container_template_show
-  - :name: Modify
-    :description: Modify Container Template
-    :feature_type: admin
-    :identifier: container_template_admin
-    :children:
-    - :name: Remove
-      :description: Remove Container Template from the VMDB
-      :feature_type: admin
-      :identifier: container_template_delete
-    - :name: Edit
-      :description: Edit a Container Template
-      :feature_type: admin
-      :identifier: container_template_edit
-    - :name: Add
-      :description: Add a Container Template
-      :feature_type: admin
-      :identifier: container_template_new
   - :name: Operate
     :description: Perform Operations on Container Template
     :feature_type: control
