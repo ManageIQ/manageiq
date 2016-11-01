@@ -206,7 +206,7 @@ describe MiqPolicyController do
       allow(controller).to receive(:render).and_return(nil)
       presenter = ExplorerPresenter.new(:active_tree => :policy_tree)
 
-      controller.send(:replace_right_cell, 'root', [:policy], presenter)
+      controller.send(:replace_right_cell, {:nodetype => 'root', :replace_trees => [:policy], :presenter => presenter})
       expect(presenter[:replace_partials]).to have_key('policy_tree_div')
     end
 
@@ -217,7 +217,7 @@ describe MiqPolicyController do
       allow(controller).to receive(:render).and_return(nil)
       presenter = ExplorerPresenter.new(:active_tree => :action_tree)
 
-      controller.send(:replace_right_cell, 'root', [:action], presenter)
+      controller.send(:replace_right_cell, {:nodetype => 'root', :replace_trees => [:action], :presenter => presenter})
       expect(presenter[:set_visible_elements][:toolbar]).to be_truthy
     end
 
@@ -228,7 +228,7 @@ describe MiqPolicyController do
       presenter = ExplorerPresenter.new(:active_tree => :alert_profile_tree)
       controller.send(:get_node_info, 'ap_xx-Storage')
       presenter[:right_cell_text] = 'foo'
-      controller.send(:replace_right_cell, 'xx', [:alert_profile], presenter)
+      controller.send(:replace_right_cell, {:nodetype => 'xx', :replace_trees => [:alert_profile], :presenter => presenter})
 
       expect(presenter[:right_cell_text]).not_to equal('foo')
       expect(presenter[:right_cell_text]).to_not be_nil

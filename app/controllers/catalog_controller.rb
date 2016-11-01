@@ -123,7 +123,7 @@ class CatalogController < ApplicationController
       @tabactive = @edit[:new][:current_tab_key]
       @in_a_form = true
       session[:changed] = false
-      replace_right_cell("at_st_new")
+      replace_right_cell(:action => "at_st_new")
     end
   end
 
@@ -286,7 +286,7 @@ class CatalogController < ApplicationController
                    elements.length) % {:number => elements.length}) unless flash_errors?
     end
     params[:id] = nil
-    replace_right_cell(nil, trees_to_replace([:sandt, :svccat]))
+    replace_right_cell(:replace_trees => trees_to_replace([:sandt, :svccat]))
   end
 
   def st_edit
@@ -334,7 +334,7 @@ class CatalogController < ApplicationController
           @changed = session[:changed] = false
           @in_a_form = false
           @edit = session[:edit] = @record = nil
-          replace_right_cell(nil, trees_to_replace([:sandt, :svccat, :stcat]))
+          replace_right_cell(:replace_trees => trees_to_replace([:sandt, :svccat, :stcat]))
         else
           @st.errors.each do |field, msg|
             add_flash("#{field.to_s.capitalize} #{msg}", :error)
@@ -352,7 +352,7 @@ class CatalogController < ApplicationController
         add_flash(_("All changes have been reset"), :warning)
       end
       @changed = session[:changed] = false
-      replace_right_cell("st_new")
+      replace_right_cell(:action => "st_new")
       return
     end
   end
@@ -590,14 +590,14 @@ class CatalogController < ApplicationController
       @changed = session[:changed] = false
       @in_a_form = false
       @edit = session[:edit] = nil
-      replace_right_cell(nil, trees_to_replace([:sandt, :svccat, :stcat]))
+      replace_right_cell(:replace_trees => trees_to_replace([:sandt, :svccat, :stcat]))
     when "reset", nil  # Reset or first time in
       st_catalog_set_form_vars
       if params[:button] == "reset"
         add_flash(_("All changes have been reset"), :warning)
       end
       @changed = session[:changed] = false
-      replace_right_cell("st_catalog_edit")
+      replace_right_cell(:action => "st_catalog_edit")
       return
     end
   end
@@ -657,18 +657,18 @@ class CatalogController < ApplicationController
       add_flash(_("Orchestration template \"%{name}\" is read-only and cannot be edited.") %
         {:name => @record.name}, :error)
       get_node_info(x_node)
-      replace_right_cell(x_node)
+      replace_right_cell(:action => x_node)
       return
     end
     ot_edit_set_form_vars(_("Editing %{record_name}"))
-    replace_right_cell("ot_edit")
+    replace_right_cell(:action => "ot_edit")
   end
 
   def ot_copy
     assert_privileges("orchestration_template_copy")
     ot_edit_set_form_vars(_("Copying %{record_name}"))
     @edit[:new][:name] = @edit[:current][:name] = _("Copy of %{name}") % {:name => @edit[:new][:name]}
-    replace_right_cell("ot_copy")
+    replace_right_cell(:action => "ot_copy")
   end
 
   def ot_edit_submit
@@ -730,7 +730,7 @@ class CatalogController < ApplicationController
     else
       self.x_node = "xx-#{template_to_node_name(elements[0])}"
     end
-    replace_right_cell(nil, trees_to_replace([:ot]))
+    replace_right_cell(:replace_trees => trees_to_replace([:ot]))
   end
 
   def ot_add
@@ -747,7 +747,7 @@ class CatalogController < ApplicationController
     @edit[:key] = "ot_add__new"
     @right_cell_text = _("Adding a new Orchestration Template")
     @in_a_form = true
-    replace_right_cell("ot_add")
+    replace_right_cell(:action => "ot_add")
   end
 
   def ot_add_submit
@@ -786,7 +786,7 @@ class CatalogController < ApplicationController
              :key    => "ot_edit__#{ot.id}",
              :rec_id => ot.id}
     @in_a_form = true
-    replace_right_cell("service_dialog_from_ot")
+    replace_right_cell(:action => "service_dialog_from_ot")
   end
 
   def service_dialog_from_ot_submit
@@ -915,7 +915,7 @@ class CatalogController < ApplicationController
       @changed = session[:changed] = false
       @in_a_form = false
       @edit = session[:edit] = @record = nil
-      replace_right_cell(nil, trees_to_replace([:sandt, :svccat, :stcat]))
+      replace_right_cell(:replace_trees => trees_to_replace([:sandt, :svccat, :stcat]))
     else
       st.errors.each do |field, msg|
         add_flash("#{field.to_s.capitalize} #{msg}", :error)
@@ -1004,7 +1004,7 @@ class CatalogController < ApplicationController
         @changed = session[:changed] = false
         @in_a_form = false
         @edit = session[:edit] = nil
-        replace_right_cell(nil, trees_to_replace([:ot]))
+        replace_right_cell(:replace_trees => trees_to_replace([:ot]))
       end
     end
   end
@@ -1013,7 +1013,7 @@ class CatalogController < ApplicationController
     add_flash(_("All changes have been reset"), :warning)
     ot_edit_set_form_vars(_("Editing %{record_name}"))
     @changed = session[:changed] = false
-    replace_right_cell("ot_edit")
+    replace_right_cell(:action => "ot_edit")
   end
 
   def ot_copy_submit_cancel
@@ -1063,7 +1063,7 @@ class CatalogController < ApplicationController
         @changed = session[:changed] = false
         @in_a_form = false
         @edit = session[:edit] = nil
-        replace_right_cell(nil, trees_to_replace([:ot]))
+        replace_right_cell(:replace_trees => trees_to_replace([:ot]))
       end
     end
   end
@@ -1109,7 +1109,7 @@ class CatalogController < ApplicationController
         @changed = session[:changed] = false
         @in_a_form = false
         @edit = session[:edit] = nil
-        replace_right_cell(nil, trees_to_replace([:ot]))
+        replace_right_cell(:replace_trees => trees_to_replace([:ot]))
       end
     end
   end
@@ -1198,7 +1198,7 @@ class CatalogController < ApplicationController
       process_elements(elements, ServiceTemplateCatalog, "destroy") unless elements.empty?
     end
     params[:id] = nil
-    replace_right_cell(nil, trees_to_replace([:sandt, :svccat, :stcat]))
+    replace_right_cell(:replace_trees => trees_to_replace([:sandt, :svccat, :stcat]))
   end
 
   def trees_to_replace(trees)
@@ -1792,7 +1792,8 @@ class CatalogController < ApplicationController
   end
 
   # Replace the right cell of the explorer
-  def replace_right_cell(action = nil, replace_trees = [])
+  def replace_right_cell(options = {})
+    action, replace_trees = options.values_at(:action, :replace_trees)
     @explorer = true
 
     # FIXME: make this functional
@@ -2044,7 +2045,7 @@ class CatalogController < ApplicationController
     add_flash(_('All changes have been reset'), :warning) if params[:button] == "reset"
     @right_cell_text = _("Editing %{model} Tags for \"%{name}\"") % {:name  => ui_lookup(:models => @tagging),
                                                                      :model => current_tenant.name}
-    replace_right_cell(@sb[:action])
+    replace_right_cell(:action => @sb[:action])
   end
 
   menu_section :svc

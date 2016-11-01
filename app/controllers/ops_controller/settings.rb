@@ -141,7 +141,7 @@ module OpsController::Settings
     case params[:button]
     when "cancel"
       session[:edit] = @edit = nil
-      replace_right_cell("root")
+      replace_right_cell(:nodetype => "root")
     when "save"
       return unless load_edit("region_edit__#{params[:id]}", "replace_cell__explorer")
       if @edit[:new][:description].nil? || @edit[:new][:description] == ""
@@ -165,14 +165,14 @@ module OpsController::Settings
         add_flash(_("%{model} \"%{name}\" was saved") % {:model => ui_lookup(:model => "MiqRegion"), :name => @edit[:region].description})
         AuditEvent.success(build_saved_audit(@edit[:region], params[:button] == "edit"))
         @edit = session[:edit] = nil  # clean out the saved info
-        replace_right_cell("root", [:settings])
+        replace_right_cell(:nodetype => "root", :replace_trees => [:settings])
       end
     when "reset", nil # Reset or first time in
       region_set_form_vars
       if params[:button] == "reset"
         add_flash(_("All changes have been reset"), :warning)
       end
-      replace_right_cell("root")
+      replace_right_cell(:nodetype => "root")
     end
   end
 

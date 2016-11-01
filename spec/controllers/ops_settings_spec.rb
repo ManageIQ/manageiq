@@ -188,7 +188,7 @@ describe OpsController do
       expect(controller).to receive(:handle_bottom_cell)
       expect(controller).to receive(:extra_js_commands)
       expect(controller).to receive(:render)
-      controller.send(:replace_right_cell, 'svr', [:settings])
+      controller.send(:replace_right_cell, {:nodetype => 'svr', :replace_trees => [:settings]})
       expect(response.status).to eq(200)
     end
   end

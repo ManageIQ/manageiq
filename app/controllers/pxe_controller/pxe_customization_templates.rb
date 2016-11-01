@@ -60,7 +60,7 @@ module PxeController::PxeCustomizationTemplates
     @ct = CustomizationTemplate.new
     template_set_form_vars
     @in_a_form = true
-    replace_right_cell("ct-")
+    replace_right_cell(:nodetype => "ct-")
   end
 
   def customization_template_copy
@@ -89,7 +89,7 @@ module PxeController::PxeCustomizationTemplates
     template_set_form_vars
     @in_a_form = true
     session[:changed] = false
-    replace_right_cell("ct-#{params[:id]}")
+    replace_right_cell(:nodetype => "ct-#{params[:id]}")
   end
 
   def template_create_update
@@ -103,7 +103,7 @@ module PxeController::PxeCustomizationTemplates
               add_flash(_("Add of new %{model} was cancelled by the user") %
                          {:model => ui_lookup(:model => "PxeCustomizationTemplate")})
       get_node_info(x_node)
-      replace_right_cell(x_node)
+      replace_right_cell(:nodetype => x_node)
     elsif ["add", "save"].include?(params[:button])
       if params[:id]
         ct = find_by_id_filtered(CustomizationTemplate, params[:id])
@@ -131,7 +131,7 @@ module PxeController::PxeCustomizationTemplates
         @edit = session[:edit] = nil # clean out the saved info
         self.x_node = "xx-xx-#{to_cid(ct.pxe_image_type.id)}"
         get_node_info(x_node)
-        replace_right_cell(x_node, [:customization_templates])
+        replace_right_cell(:nodetype => x_node, :replace_trees => [:customization_templates])
       else
         @in_a_form = true
         ct.errors.each do |field, msg|
@@ -218,7 +218,7 @@ module PxeController::PxeCustomizationTemplates
       end
 
       get_node_info(x_node)
-      replace_right_cell(x_node, [:customization_templates])
+      replace_right_cell(:nodetype => x_node, :replace_trees => [:customization_templates])
     else # showing 1 vm
       if params[:id].nil? || CustomizationTemplate.find_by_id(params[:id]).nil?
         add_flash(_("%{model} no longer exists") % {:model => ui_lookup(:model => "PxeCustomizationTemplate")},
@@ -235,7 +235,7 @@ module PxeController::PxeCustomizationTemplates
           self.x_node = "xx-xx-#{to_cid(ct.pxe_image_type_id)}"
         end
         get_node_info(x_node)
-        replace_right_cell(x_node, [:customization_templates])
+        replace_right_cell(:nodetype => x_node, :replace_trees => [:customization_templates])
       end
     end
     templates.count

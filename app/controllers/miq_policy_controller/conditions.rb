@@ -15,7 +15,7 @@ module MiqPolicyController::Conditions
       end
       @edit = nil
       get_node_info(x_node)
-      replace_right_cell(@nodetype)
+      replace_right_cell(:nodetype => @nodetype)
       return
     when "reset", nil # Reset or first time in
       condition_build_edit_screen
@@ -24,7 +24,7 @@ module MiqPolicyController::Conditions
       if params[:button] == "reset"
         add_flash(_("All changes have been reset"), :warning)
       end
-      replace_right_cell("co")
+      replace_right_cell(:nodetype => "co")
       return
     end
 
@@ -67,32 +67,32 @@ module MiqPolicyController::Conditions
           case x_active_tree
           when :condition_tree
             @new_condition_node = "xx-#{condition.towhat.downcase}_co-#{to_cid(condition.id)}"
-            replace_right_cell("co", [:condition])
+            replace_right_cell(:nodetype => "co", :replace_trees => [:condition])
           when :policy_tree
             node_ids = @sb[:node_ids][x_active_tree]  # Get the selected node ids
             @new_policy_node = "xx-#{policy.mode.downcase}_xx-#{policy.mode.downcase}-#{policy.towhat.downcase}_p-#{node_ids["p"]}_co-#{to_cid(condition.id)}"
-            replace_right_cell("co", [:policy_profile, :policy, :condition])
+            replace_right_cell(:nodetype => "co", :replace_trees => [:policy_profile, :policy, :condition])
           when :policy_profile_tree
             node_ids = @sb[:node_ids][x_active_tree]  # Get the selected node ids
             @new_profile_node = "pp-#{node_ids["pp"]}_p-#{node_ids["p"]}_co-#{to_cid(condition.id)}"
-            replace_right_cell("co", [:policy_profile, :policy, :condition])
+            replace_right_cell(:nodetype => "co", :replace_trees => [:policy_profile, :policy, :condition])
           end
         else
           condition_get_info(Condition.find(condition.id))
-          replace_right_cell("co", [:policy_profile, :policy, :condition])
+          replace_right_cell(:nodetype => "co", :replace_trees => [:policy_profile, :policy, :condition])
         end
       else
         condition.errors.each do |field, msg|
           add_flash("#{field.to_s.capitalize} #{msg}", :error)
         end
-        replace_right_cell("co")
+        replace_right_cell(:nodetype => "co")
       end
     when "expression", "applies_to_exp"
       session[:changed] = (@edit[:new] != @edit[:current])
       @expkey = params[:button].to_sym
       @edit[:expression_table] = @edit[:new][:expression] == {"???" => "???"} ? nil : exp_build_table(@edit[:new][:expression])
       @edit[:scope_table] = @edit[:new][:applies_to_exp] == {"???" => "???"} ? nil : exp_build_table(@edit[:new][:applies_to_exp])
-      replace_right_cell("co")
+      replace_right_cell(:nodetype => "co")
     end
   end
 
@@ -115,7 +115,7 @@ module MiqPolicyController::Conditions
     nodes = x_node.split("_")
     nodes.pop
     @new_policy_node = self.x_node = nodes.join("_")
-    replace_right_cell("p", [:policy_profile, :policy])
+    replace_right_cell(:nodetype => "p", :replace_trees => [:policy_profile, :policy])
   end
 
   def condition_delete
@@ -132,7 +132,7 @@ module MiqPolicyController::Conditions
     end
     process_conditions(conditions, "destroy") unless conditions.empty?
     get_node_info(@new_condition_node)
-    replace_right_cell("xx", [:condition])
+    replace_right_cell(:nodetype => "xx", :replace_trees => [:condition])
   end
 
   def condition_field_changed

@@ -112,7 +112,7 @@ module OpsController::OpsRbac
                     {:model => tenant_type_title_string(params[:divisible] == "true"), :name => @tenant.name})
       end
       get_node_info(x_node)
-      replace_right_cell(x_node)
+      replace_right_cell(:nodetype => x_node)
     when "save", "add"
       tenant = params[:id] != "new" ? Tenant.find_by_id(params[:id]) : Tenant.new
 
@@ -137,7 +137,7 @@ module OpsController::OpsRbac
         else
           get_node_info(x_node)
         end
-        replace_right_cell("root", [:rbac])
+        replace_right_cell(:nodetype => "root", :replace_trees => [:rbac])
       end
     when "reset", nil # Reset or first time in
       obj = find_checked_items
@@ -154,7 +154,7 @@ module OpsController::OpsRbac
       if params[:button] == "reset"
         add_flash(_("All changes have been reset"), :warning)
       end
-      replace_right_cell("tenant_edit")
+      replace_right_cell(:nodetype => "tenant_edit")
     end
   end
 
@@ -189,7 +189,7 @@ module OpsController::OpsRbac
       add_flash(_("Manage quotas for %{model}\ \"%{name}\" was cancelled by the user") %
                     {:model => tenant_type_title_string(@tenant.divisible), :name => @tenant.name})
       get_node_info(x_node)
-      replace_right_cell(x_node)
+      replace_right_cell(:nodetype => x_node)
     when "save", "add"
       tenant = Tenant.find_by_id(params[:id])
       begin
@@ -206,7 +206,7 @@ module OpsController::OpsRbac
         add_flash(_("Quotas for %{model} \"%{name}\" were saved") %
                       {:model => tenant_type_title_string(tenant.divisible), :name => tenant.name})
         get_node_info(x_node)
-        replace_right_cell("root", [:rbac])
+        replace_right_cell(:nodetype => "root", :replace_trees => [:rbac])
       end
     when "reset", nil # Reset or first time in
       obj = find_checked_items
@@ -219,7 +219,7 @@ module OpsController::OpsRbac
       if params[:button] == "reset"
         add_flash(_("All changes have been reset"), :warning)
       end
-      replace_right_cell("tenant_manage_quotas")
+      replace_right_cell(:nodetype => "tenant_manage_quotas")
     end
   end
 
@@ -300,7 +300,7 @@ module OpsController::OpsRbac
       self.x_node  = "xx-u"  # reset node to show list
     end
     get_node_info(x_node)
-    replace_right_cell(x_node, [:rbac])
+    replace_right_cell(:nodetype => x_node, :replace_trees => [:rbac])
   end
 
   def rbac_role_delete
@@ -320,7 +320,7 @@ module OpsController::OpsRbac
       self.x_node  = "xx-ur" if MiqUserRole.find_by_id(params[:id]).nil? # reset node to show list
     end
     get_node_info(x_node)
-    replace_right_cell(x_node, [:rbac])
+    replace_right_cell(:nodetype => x_node, :replace_trees => [:rbac])
   end
 
   # Show the main Users/Groups/Roles list view
@@ -361,7 +361,7 @@ module OpsController::OpsRbac
 
     process_tenants(tenants, "destroy") unless tenants.empty?
     get_node_info(x_node)
-    replace_right_cell(x_node, [:rbac])
+    replace_right_cell(:nodetype => x_node, :replace_trees => [:rbac])
   end
 
   def rbac_group_delete
@@ -382,7 +382,7 @@ module OpsController::OpsRbac
       self.x_node  = "xx-g" if MiqGroup.find_by_id(params[:id]).nil? # reset node to show list
     end
     get_node_info(x_node)
-    replace_right_cell(x_node, [:rbac])
+    replace_right_cell(:nodetype => x_node, :replace_trees => [:rbac])
   end
 
   def rbac_group_seq_edit
@@ -392,7 +392,7 @@ module OpsController::OpsRbac
       @edit = nil
       add_flash(_("Edit Sequence of User Groups was cancelled by the user"))
       get_node_info(x_node)
-      replace_right_cell(x_node)
+      replace_right_cell(:nodetype => x_node)
     when "save"
       return unless load_edit("rbac_group_edit__seq", "replace_cell__explorer")
       err = false
@@ -413,11 +413,11 @@ module OpsController::OpsRbac
         @_in_a_form = false
         @edit = session[:edit] = nil  # clean out the saved info
         get_node_info(x_node)
-        replace_right_cell(x_node)
+        replace_right_cell(:nodetype => x_node)
       else
         drop_breadcrumb(:name => _("Edit User Group Sequence"), :url => "/configuration/ldap_seq_edit")
         @in_a_form = true
-        replace_right_cell("group_seq")
+        replace_right_cell(:nodetype => "group_seq")
       end
     when "reset", nil # Reset or first time in
       rbac_group_seq_edit_screen
@@ -425,7 +425,7 @@ module OpsController::OpsRbac
       if params[:button] == "reset"
         add_flash(_("All changes have been reset"), :warning)
       end
-      replace_right_cell("group_seq")
+      replace_right_cell(:nodetype => "group_seq")
     end
   end
 
@@ -607,7 +607,7 @@ module OpsController::OpsRbac
     add_flash(_("All changes have been reset"), :warning)  if params[:button] == "reset"
     @sb[:pre_edit_node] = x_node  unless params[:button]  # Save active tree node before edit
     @right_cell_text = _("Editing %{model} for \"%{name}\"") % {:name => ui_lookup(:models => @tagging), :model => "#{current_tenant.name} Tags"}
-    replace_right_cell("root")
+    replace_right_cell(:nodetype => "root")
   end
 
   def rbac_edit_tags_cancel
@@ -617,7 +617,7 @@ module OpsController::OpsRbac
     self.x_node  = @sb[:pre_edit_node]
     get_node_info(x_node)
     @edit = nil # clean out the saved info
-    replace_right_cell(@nodetype)
+    replace_right_cell(:nodetype => @nodetype)
   end
 
   def rbac_edit_tags_save
@@ -646,7 +646,7 @@ module OpsController::OpsRbac
     self.x_node  = @sb[:pre_edit_node]
     get_node_info(x_node)
     @edit = nil # clean out the saved info
-    replace_right_cell(@nodetype)
+    replace_right_cell(:nodetype => @nodetype)
   end
 
   def rbac_edit_reset(operation, what, klass)
@@ -700,7 +700,7 @@ module OpsController::OpsRbac
     else
       @right_cell_text = _("Adding a new %{name}") % {:name => what.titleize}
     end
-    replace_right_cell(x_node)
+    replace_right_cell(:nodetype => x_node)
   end
 
   def rbac_edit_save_or_add(what, rbac_suffix = what)
@@ -742,7 +742,7 @@ module OpsController::OpsRbac
       end
       # Get selected Node
       get_node_info(x_node)
-      replace_right_cell(x_node, [:rbac])
+      replace_right_cell(:nodetype => x_node, :replace_trees => [:rbac])
     else
       @changed = session[:changed] = (@edit[:new] != @edit[:current])
       record.errors.each { |field, msg| add_flash("#{field.to_s.capitalize} #{msg}", :error) }

@@ -231,7 +231,7 @@ module OpsController::Settings::AnalysisProfiles
         #       @scan = @edit[:scan] = nil
         @scan = nil
         #       @edit = session[:edit] = nil  # clean out the saved info
-        replace_right_cell(@nodetype)
+        replace_right_cell(:nodetype => @nodetype)
       when "save", "add"
         id = params[:button] == "add" ? "new" : params[:id]
         return unless load_edit("ap_edit__#{id}", "replace_cell__explorer")
@@ -246,8 +246,6 @@ module OpsController::Settings::AnalysisProfiles
           @edit[:new] = ap_sort_array(@edit[:new])
           @edit[:current] = ap_sort_array(@edit[:current])
           @changed = session[:changed] = (@edit[:new] != @edit[:current])
-          # ap_build_edit_screen
-          # replace_right_cell("root",[:settings])
           javascript_flash
         else
           scanitemset = params[:button] == "add" ? ScanItemSet.new : ScanItemSet.find_by_id(@edit[:scan_id])    # get the current record
@@ -276,7 +274,7 @@ module OpsController::Settings::AnalysisProfiles
             @edit = session[:edit] = nil  # clean out the saved info
             self.x_node = "xx-sis" if params[:button] == "add"
             get_node_info(x_node)
-            replace_right_cell(x_node, [:settings])
+            replace_right_cell(:nodetype => x_node, :replace_trees => [:settings])
           else
             scanitemset.errors.each do |field, msg|
               add_flash("#{field.to_s.capitalize} #{msg}", :error)
@@ -298,7 +296,7 @@ module OpsController::Settings::AnalysisProfiles
             if @scan.read_only
               add_flash(_("Sample %{model} \"%{name}\" can not be edited") % {:model => ui_lookup(:model => "ScanItemSet"), :name => @scan.name}, :error)
               get_node_info(x_node)
-              replace_right_cell(@nodetype)
+              replace_right_cell(:nodetype => @nodetype)
               return
             end
           else
@@ -342,7 +340,7 @@ module OpsController::Settings::AnalysisProfiles
         @edit[:new] = ap_sort_array(@edit[:new])
         @edit[:current] = ap_sort_array(@edit[:current])
         @changed = session[:changed] = (@edit[:new] != @edit[:current])
-        replace_right_cell("sie")
+        replace_right_cell(:nodetype => "sie")
       end
     end
   end
@@ -422,7 +420,7 @@ module OpsController::Settings::AnalysisProfiles
     end
     self.x_node = "xx-sis"
     get_node_info(x_node)
-    replace_right_cell(x_node, [:settings])
+    replace_right_cell(:nodetype => x_node, :replace_trees => [:settings])
   end
 
   private

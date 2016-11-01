@@ -255,8 +255,9 @@ class MiqAeClassController < ApplicationController
     existing_node
   end
 
-  def replace_right_cell(replace_trees = [])
+  def replace_right_cell(options = {})
     @explorer = true
+    replace_trees = options[:replace_trees]
 
     # FIXME: is the following line needed?
     # replace_trees = @replace_trees if @replace_trees  #get_node_info might set this
@@ -596,7 +597,7 @@ class MiqAeClassController < ApplicationController
         session[:edit] = nil  # clean out the saved info
         @in_a_form = false
         add_flash(_("%{model} \"%{name}\" was saved") % {:model => ui_lookup(:model => "MiqAeInstance"), :name => @ae_inst.name})
-        replace_right_cell([:ae])
+        replace_right_cell(:replace_trees => [:ae])
         return
       end
     when "reset"
@@ -642,7 +643,7 @@ class MiqAeClassController < ApplicationController
         AuditEvent.success(build_created_audit(add_aeinst, @edit))
         add_flash(_("%{model} \"%{name}\" was added") % {:model => ui_lookup(:model => "MiqAeInstance"), :name => add_aeinst.name})
         @in_a_form = false
-        replace_right_cell([:ae])
+        replace_right_cell(:replace_trees => [:ae])
         return
       end
     end
@@ -992,7 +993,7 @@ class MiqAeClassController < ApplicationController
         AuditEvent.success(build_saved_audit(ae_class, @edit))
         session[:edit] = nil  # clean out the saved info
         @in_a_form = false
-        replace_right_cell([:ae])
+        replace_right_cell(:replace_trees => [:ae])
         return
       end
     when "reset"
@@ -1003,7 +1004,7 @@ class MiqAeClassController < ApplicationController
       replace_right_cell
     else
       @changed = session[:changed] = (@edit[:new] != @edit[:current])
-      replace_right_cell([:ae])
+      replace_right_cell(:replace_trees => [:ae])
     end
   end
 
@@ -1035,7 +1036,7 @@ class MiqAeClassController < ApplicationController
         AuditEvent.success(build_saved_audit(ae_class, @edit))
         session[:edit] = nil  # clean out the saved info
         @in_a_form = false
-        replace_right_cell([:ae])
+        replace_right_cell(:replace_trees => [:ae])
         return
       end
     when "reset"
@@ -1047,7 +1048,7 @@ class MiqAeClassController < ApplicationController
       replace_right_cell
     else
       @changed = session[:changed] = (@edit[:new] != @edit[:current])
-      replace_right_cell([:ae])
+      replace_right_cell(:replace_trees => [:ae])
     end
   end
 
@@ -1077,7 +1078,7 @@ class MiqAeClassController < ApplicationController
         AuditEvent.success(build_saved_audit(ae_ns, @edit))
         session[:edit] = nil  # clean out the saved info
         @in_a_form = false
-        replace_right_cell([:ae])
+        replace_right_cell(:replace_trees => [:ae])
       end
     when "reset"
       ns_set_form_vars
@@ -1087,7 +1088,7 @@ class MiqAeClassController < ApplicationController
       replace_right_cell
     else
       @changed = session[:changed] = (@edit[:new] != @edit[:current])
-      replace_right_cell([:ae])
+      replace_right_cell(:replace_trees => [:ae])
     end
   end
 
@@ -1124,7 +1125,7 @@ class MiqAeClassController < ApplicationController
         session[:edit] = nil  # clean out the saved info
         @sb[:form_vars_set] = false
         @in_a_form = false
-        replace_right_cell([:ae])
+        replace_right_cell(:replace_trees => [:ae])
         return
       end
     when "reset"
@@ -1173,7 +1174,7 @@ class MiqAeClassController < ApplicationController
     when "cancel"
       add_flash(_("Add of new %{record} was cancelled by the user") % {:record => ui_lookup(:model => "MiqAeClass")})
       @in_a_form = false
-      replace_right_cell([:ae])
+      replace_right_cell(:replace_trees => [:ae])
     when "add"
       add_aeclass = MiqAeClass.new
       set_record_vars(add_aeclass)                        # Set the record variables, but don't save
@@ -1191,11 +1192,11 @@ class MiqAeClassController < ApplicationController
       else
         add_flash(_("%{model} \"%{name}\" was added") % {:model => ui_lookup(:model => "MiqAeClass"), :name => add_aeclass.fqname})
         @in_a_form = false
-        replace_right_cell([:ae])
+        replace_right_cell(:replace_trees => [:ae])
       end
     else
       @changed = session[:changed] = (@edit[:new] != @edit[:current])
-      replace_right_cell([:ae])
+      replace_right_cell(:replace_trees => [:ae])
     end
   end
 
@@ -1227,12 +1228,12 @@ class MiqAeClassController < ApplicationController
         add_flash(_("%{model} \"%{name}\" was added") % {:model => ui_lookup(:model => "MiqAeMethod"), :name => add_aemethod.name})
         @sb[:form_vars_set] = false
         @in_a_form = false
-        replace_right_cell([:ae])
+        replace_right_cell(:replace_trees => [:ae])
       end
     else
       @changed = session[:changed] = (@edit[:new] != @edit[:current])
       @sb[:form_vars_set] = false
-      replace_right_cell([:ae])
+      replace_right_cell(:replace_trees => [:ae])
     end
   end
 
@@ -1255,7 +1256,7 @@ class MiqAeClassController < ApplicationController
       if add_ae_ns.valid? && !flash_errors? && add_ae_ns.save
         add_flash(_("%{model} \"%{name}\" was added") % {:model => ui_lookup(:model => add_ae_ns.class.name), :name  => add_ae_ns.name})
         @in_a_form = false
-        replace_right_cell([:ae])
+        replace_right_cell(:replace_trees => [:ae])
       else
         add_ae_ns.errors.each do |field, msg|
           add_flash("#{field.to_s.capitalize} #{msg}", :error)
@@ -1485,7 +1486,7 @@ class MiqAeClassController < ApplicationController
       current_tenant.reset_domain_priority_by_ordered_ids(domains)
       add_flash(_("Priority Order was saved"))
       @sb[:action] = @in_a_form = @edit = session[:edit] = nil  # clean out the saved info
-      replace_right_cell([:ae])
+      replace_right_cell(:replace_trees => [:ae])
     when "reset", nil # Reset or first time in
       priority_edit_screen
       add_flash(_("All changes have been reset"), :warning) if params[:button] == "reset"
@@ -1588,7 +1589,7 @@ class MiqAeClassController < ApplicationController
 
     session[:edit] = nil
     @in_a_form = false
-    replace_right_cell([:ae])
+    replace_right_cell(:replace_trees => [:ae])
   end
 
   private
@@ -1807,7 +1808,7 @@ class MiqAeClassController < ApplicationController
     end
 
     process_aeinstances(aeinstances, "destroy") unless aeinstances.empty?
-    replace_right_cell([:ae])
+    replace_right_cell(:replace_trees => [:ae])
   end
 
   # Common aeclasses button handler routines
@@ -1833,7 +1834,7 @@ class MiqAeClassController < ApplicationController
     end
 
     process_aemethods(aemethods, "destroy") unless aemethods.empty?
-    replace_right_cell([:ae])
+    replace_right_cell(:replace_trees => [:ae])
   end
 
   # Common aeclasses button handler routines
@@ -1866,7 +1867,7 @@ class MiqAeClassController < ApplicationController
     git_domains.each do |domain|
       process_element_destroy_via_queue(domain, domain.class, domain.name)
     end
-    replace_right_cell([:ae])
+    replace_right_cell(:replace_trees => [:ae])
   end
 
   # Delete all selected or single displayed aeclasses(s)
@@ -1893,7 +1894,7 @@ class MiqAeClassController < ApplicationController
     end
     process_ae_ns(ae_ns, "destroy")     unless ae_ns.empty?
     process_aeclasses(ae_cs, "destroy") unless ae_cs.empty?
-    replace_right_cell([:ae])
+    replace_right_cell(:replace_trees => [:ae])
   end
 
   def items_to_delete(selected)
@@ -2435,7 +2436,7 @@ class MiqAeClassController < ApplicationController
     domain_toggle_lock(params[:id], locked)
     add_flash(_("The selected %{model} were marked as %{action}") % {:model  => ui_lookup(:model => "MiqAeDomain"), :action => action},
               :info, true) unless flash_errors?
-    replace_right_cell([:ae])
+    replace_right_cell(:replace_trees => [:ae])
   end
 
   def domain_lock

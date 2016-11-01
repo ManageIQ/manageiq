@@ -143,7 +143,7 @@ class ChargebackController < ApplicationController
         @edit = session[:edit] = nil  # clean out the saved info
         session[:changed] =  @changed = false
         get_node_info(x_node)
-        replace_right_cell([:cb_rates])
+        replace_right_cell(:replace_trees => [:cb_rates])
       else
         @rate.errors.each do |field, msg|
           add_flash("#{field.to_s.capitalize} #{msg}", :error)
@@ -243,7 +243,7 @@ class ChargebackController < ApplicationController
       cb_rates_list
       @right_cell_text = _("%{typ} %{model}") % {:typ   => x_node.split('-').last,
                                                  :model => ui_lookup(:models => 'ChargebackRate')}
-      replace_right_cell([:cb_rates])
+      replace_right_cell(:replace_trees => [:cb_rates])
     end
   end
 
@@ -783,7 +783,8 @@ class ChargebackController < ApplicationController
     cb_assign_params_to_edit(:tags)
   end
 
-  def replace_right_cell(replace_trees = [])
+  def replace_right_cell(options = {})
+    replace_trees = Array(options[:replace_trees])
     replace_trees = @replace_trees if @replace_trees  # get_node_info might set this
     @explorer = true
     c_tb = build_toolbar(center_toolbar_filename)

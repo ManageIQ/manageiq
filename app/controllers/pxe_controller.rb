@@ -93,7 +93,8 @@ class PxeController < ApplicationController
     x_history_add_item(:id => node, :text => @right_cell_text)
   end
 
-  def replace_right_cell(nodetype, replace_trees = [])
+  def replace_right_cell(options = {})
+    nodetype, replace_trees = options.values_at(:nodetype, :replace_trees)
     replace_trees = @replace_trees if @replace_trees  # get_node_info might set this
     # FIXME
 

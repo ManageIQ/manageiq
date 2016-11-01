@@ -231,7 +231,7 @@ class ReportController < ApplicationController
       end
     end
 
-    replace_right_cell :partial => 'export_widgets'
+    replace_right_cell(:partial => 'export_widgets')
   end
 
   def import_widgets
@@ -249,7 +249,7 @@ class ReportController < ApplicationController
       add_flash(_("Widget import cancelled"), :info)
     end
 
-    replace_right_cell :partial => 'export_widgets'
+    replace_right_cell(:partial => 'export_widgets')
   end
 
   private ###########################

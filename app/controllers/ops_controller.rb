@@ -139,7 +139,7 @@ class OpsController < ApplicationController
     session[:changed] = false
     set_active_tab(x_node)
     get_node_info(x_node)
-    replace_right_cell(@nodetype)
+    replace_right_cell(:nodetype => @nodetype)
   end
 
   def tree_select
@@ -150,7 +150,7 @@ class OpsController < ApplicationController
     session[:changed] = false
     self.x_node = params[:id] # if x_active_tree == :vmdb_tree #params[:action] == "x_show"
     get_node_info(params[:id])
-    replace_right_cell(@nodetype)
+    replace_right_cell(:nodetype => @nodetype)
   end
 
   def change_tab(new_tab_id = nil)
@@ -176,10 +176,10 @@ class OpsController < ApplicationController
       @flash_array = nil if MiqServer.my_server(true).logon_status == :ready  # don't reset if flash array
       if x_active_tree == :settings_tree
         settings_get_info
-        replace_right_cell("root")
+        replace_right_cell(:nodetype => "root")
       elsif x_active_tree == :vmdb_tree
         db_get_info
-        replace_right_cell("root")
+        replace_right_cell(:nodetype => "root")
       elsif x_active_tree == :diagnostics_tree
         case @sb[:active_tab]
         when "diagnostics_roles_servers"
@@ -190,7 +190,7 @@ class OpsController < ApplicationController
           @sb[:diag_selected_id] = nil
         end
         diagnostics_set_form_vars
-        replace_right_cell("root")
+        replace_right_cell(:nodetype => "root")
       end
     end
   end
@@ -469,7 +469,8 @@ class OpsController < ApplicationController
     end
   end
 
-  def replace_right_cell(nodetype, replace_trees = []) # replace_trees can be an array of tree symbols to be replaced
+  def replace_right_cell(options = {}) # replace_trees can be an array of tree symbols to be replaced
+    nodetype, replace_trees = options.values_at(:nodetype, :replace_trees)
     # get_node_info might set this
     replace_trees = @replace_trees if @replace_trees
     @explorer = true

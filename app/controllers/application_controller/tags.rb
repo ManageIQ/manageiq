@@ -164,7 +164,7 @@ module ApplicationController::Tags
     add_flash(_("All changes have been reset"), :warning) if params[:button] == "reset"
     if tagging_explorer_controller?
       @refresh_partial = "layouts/tagging"
-      replace_right_cell(@sb[:action]) if params[:button]
+      replace_right_cell(:action => @sb[:action]) if params[:button]
     else
       render "shared/views/tagging_edit"
     end
@@ -224,7 +224,7 @@ module ApplicationController::Tags
 
     get_node_info(x_node)
     @edit = nil
-    replace_right_cell(@nodetype)
+    replace_right_cell(:nodetype => @nodetype)
   end
 
   # Add/remove tags in a single transaction

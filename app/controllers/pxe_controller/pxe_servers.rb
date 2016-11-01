@@ -19,7 +19,7 @@ module PxeController::PxeServers
     @ps = PxeServer.new
     pxe_server_set_form_vars
     @in_a_form = true
-    replace_right_cell("ps")
+    replace_right_cell(:nodetype => "ps")
   end
 
   def pxe_server_edit
@@ -32,7 +32,7 @@ module PxeController::PxeServers
     pxe_server_set_form_vars
     @in_a_form = true
     session[:changed] = false
-    replace_right_cell("ps")
+    replace_right_cell(:nodetype => "ps")
   end
 
   def pxe_server_create_update
@@ -48,7 +48,7 @@ module PxeController::PxeServers
         add_flash(_("Add of new %{model} was cancelled by the user") % {:model => ui_lookup(:model => "PxeServer")})
       end
       get_node_info(x_node)
-      replace_right_cell(x_node)
+      replace_right_cell(:nodetype => x_node)
     elsif ["add", "save"].include?(params[:button])
       pxe = params[:id] ? find_by_id_filtered(PxeServer, params[:id]) : PxeServer.new
       pxe_server_validate_fields
@@ -71,7 +71,7 @@ module PxeController::PxeServers
         @edit = session[:edit] = nil # clean out the saved info
 
         get_node_info(x_node)
-        replace_right_cell(x_node, [:pxe_servers])
+        replace_right_cell(:nodetype => x_node, :replace_trees => [:pxe_servers])
       else
         @in_a_form = true
         pxe.errors.each do |field, msg|
@@ -128,7 +128,7 @@ module PxeController::PxeServers
       end
 
       get_node_info(x_node)
-      replace_right_cell(x_node, [:pxe_servers])
+      replace_right_cell(:nodetype => x_node, :replace_trees => [:pxe_servers])
     else # showing 1 vm
       if params[:id].nil? || PxeServer.find_by_id(params[:id]).nil?
         add_flash(_("%{model} no longer exists") % {:model => ui_lookup(:model => "PxeServer")},
@@ -145,7 +145,7 @@ module PxeController::PxeServers
           @single_delete = true unless flash_errors?
         end
         get_node_info(x_node)
-        replace_right_cell(x_node, [:pxe_servers])
+        replace_right_cell(:nodetype => x_node, :replace_trees => [:pxe_servers])
       end
     end
     pxes.count
@@ -191,7 +191,7 @@ module PxeController::PxeServers
       add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model => ui_lookup(:model => "PxeImage"), :name => session[:edit][:img].name})
       @edit = session[:edit] = nil  # clean out the saved info
       get_node_info(x_node)
-      replace_right_cell(x_node)
+      replace_right_cell(:nodetype => x_node)
     when "save"
       return unless load_edit("pxe_img_edit__#{params[:id]}", "replace_cell__explorer")
       update_img = find_by_id_filtered(PxeImage, params[:id])
@@ -202,7 +202,7 @@ module PxeController::PxeServers
         refresh_trees = @edit[:new][:default_for_windows] == @edit[:current][:default_for_windows] ? [] : [:pxe_server]
         @edit = session[:edit] = nil  # clean out the saved info
         get_node_info(x_node)
-        replace_right_cell(x_node, refresh_trees)
+        replace_right_cell(:nodetype => x_node, :replace_trees => refresh_trees)
       else
         update_img.errors.each do |field, msg|
           add_flash("#{field.to_s.capitalize} #{msg}", :error)
@@ -220,7 +220,7 @@ module PxeController::PxeServers
       if params[:button] == "reset"
         add_flash(_("All changes have been reset"), :warning)
       end
-      replace_right_cell("pi")
+      replace_right_cell(:nodetype => "pi")
     end
   end
 
@@ -242,7 +242,7 @@ module PxeController::PxeServers
       add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model => ui_lookup(:model => "WindowsImage"), :name => session[:edit][:wimg].name})
       @edit = session[:edit] = nil  # clean out the saved info
       get_node_info(x_node)
-      replace_right_cell(x_node)
+      replace_right_cell(:nodetype => x_node)
     when "save"
       return unless load_edit("pxe_wimg_edit__#{params[:id]}", "replace_cell__explorer")
       update_wimg = find_by_id_filtered(WindowsImage, params[:id])
@@ -252,7 +252,7 @@ module PxeController::PxeServers
         AuditEvent.success(build_saved_audit(update_wimg, @edit))
         @edit = session[:edit] = nil  # clean out the saved info
         get_node_info(x_node)
-        replace_right_cell(x_node)
+        replace_right_cell(:nodetype => x_node)
       else
         update_wimg.errors.each do |field, msg|
           add_flash("#{field.to_s.capitalize} #{msg}", :error)
@@ -270,7 +270,7 @@ module PxeController::PxeServers
       if params[:button] == "reset"
         add_flash(_("All changes have been reset"), :warning)
       end
-      replace_right_cell("wi")
+      replace_right_cell(:nodetype => "wi")
     end
   end
 

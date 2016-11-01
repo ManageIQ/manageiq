@@ -29,7 +29,7 @@ class ContainerController < ApplicationController
     return if [:container_delete, :container_edit].include?(performed_action)
 
     if @refresh_partial
-      replace_right_cell(action)
+      replace_right_cell(:action => action)
     else
       unless @flash_array
         add_flash(_("Button not yet implemented %{model}: %{action}") % {:model => model, :action => action}, :error)
@@ -208,7 +208,8 @@ class ContainerController < ApplicationController
   end
 
   # Replace the right cell of the explorer
-  def replace_right_cell(action = nil, replace_trees = [])
+  def replace_right_cell(options = {})
+    action, replace_trees = options.values_at(:action, :replace_trees)
     @explorer = true
     # Set partial name, action and cell header
     partial, action_url, @right_cell_text = set_right_cell_vars(action) if action

@@ -27,7 +27,7 @@ class ServiceController < ApplicationController
     return if [:service_delete, :service_edit, :service_reconfigure].include?(performed_action)
 
     if @refresh_partial
-      replace_right_cell(action)
+      replace_right_cell(:action => action)
     else
       add_flash(_("Button not yet implemented %{model_name}:%{action_name}") %
         {:model_name => model, :action_name => action}, :error) unless @flash_array
@@ -101,13 +101,13 @@ class ServiceController < ApplicationController
       else
         add_flash(_("Service \"%{name}\" was saved") % {:name => service.name})
       end
-      replace_right_cell(nil, [:svcs])
+      replace_right_cell(:replace_trees => [:svcs])
     when "reset", nil # Reset or first time in
       checked = find_checked_items
       checked[0] = params[:id] if checked.blank? && params[:id]
       @service = find_by_id_filtered(Service, checked[0])
       @in_a_form = true
-      replace_right_cell("service_edit")
+      replace_right_cell(:action => "service_edit")
       return
     end
   end
@@ -169,7 +169,7 @@ class ServiceController < ApplicationController
       process_elements(elements, Service, 'destroy') unless elements.empty?
     end
     params[:id] = nil
-    replace_right_cell(nil, [:svcs])
+    replace_right_cell(:replace_trees => [:svcs])
   end
 
   def get_record_display_name(record)
@@ -233,7 +233,8 @@ class ServiceController < ApplicationController
   end
 
   # Replace the right cell of the explorer
-  def replace_right_cell(action = nil, replace_trees = [])
+  def replace_right_cell(options = {})
+    action, replace_trees = options.values_at(:action, :replace_trees)
     @explorer = true
     partial, action_url, @right_cell_text = set_right_cell_vars(action) if action # Set partial name, action and cell header
     get_node_info(x_node) if !@edit && !@in_a_form && !params[:display]

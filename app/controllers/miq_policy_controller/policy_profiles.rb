@@ -13,7 +13,7 @@ module MiqPolicyController::PolicyProfiles
         add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model => ui_lookup(:model => "MiqPolicySet"), :name => @profile.description})
       end
       get_node_info(x_node)
-      replace_right_cell(@nodetype)
+      replace_right_cell(:nodetype => @nodetype)
       return
     when "reset", nil # Reset or first time in
       profile_build_edit_screen
@@ -21,7 +21,7 @@ module MiqPolicyController::PolicyProfiles
       if params[:button] == "reset"
         add_flash(_("All changes have been reset"), :warning)
       end
-      replace_right_cell("pp")
+      replace_right_cell(:nodetype => "pp")
       return
     end
 
@@ -57,17 +57,17 @@ module MiqPolicyController::PolicyProfiles
         @edit = nil
         @nodetype = "pp"
         @new_profile_node = "pp-#{to_cid(profile.id)}"
-        replace_right_cell("pp", [:policy_profile])
+        replace_right_cell(:nodetype => "pp", :replace_trees => [:policy_profile])
       else
         profile.errors.each do |field, msg|
           add_flash("#{field.to_s.capitalize} #{msg}", :error)
         end
-        replace_right_cell("pp")
+        replace_right_cell(:nodetype => "pp")
       end
     when "move_right", "move_left", "move_allleft"
       handle_selection_buttons(:policies)
       session[:changed] = (@edit[:new] != @edit[:current])
-      replace_right_cell("pp")
+      replace_right_cell(:nodetype => "pp")
     end
   end
 
@@ -86,7 +86,7 @@ module MiqPolicyController::PolicyProfiles
       {:models => ui_lookup(:models => "MiqPolicySet")}) if @flash_array.nil?
     self.x_node = @new_profile_node = 'root'
     get_node_info('root')
-    replace_right_cell('root', [:policy_profile])
+    replace_right_cell(:nodetype => 'root', :replace_trees => [:policy_profile])
   end
 
   def profile_field_changed

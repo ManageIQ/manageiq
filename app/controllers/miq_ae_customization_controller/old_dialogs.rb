@@ -77,7 +77,7 @@ module MiqAeCustomizationController::OldDialogs
       end
 
       get_node_info
-      replace_right_cell(x_node, [:old_dialogs])
+      replace_right_cell(:nodetype => x_node, :replace_trees => [:old_dialogs])
     else # showing 1 vm
       if params[:id].nil? || MiqDialog.find_by_id(params[:id]).nil?
         add_flash(_("%{record} no longer exists") % {:record => ui_lookup(:model => "MiqDialog")}, :error)
@@ -95,7 +95,7 @@ module MiqAeCustomizationController::OldDialogs
 
         self.x_node = "xx-MiqDialog_#{dialog.dialog_type}" if method == 'destroy' && !flash_errors?
         get_node_info
-        replace_right_cell(x_node, [:old_dialogs])
+        replace_right_cell(:nodetype => x_node, :replace_trees => [:old_dialogs])
       end
     end
     dialogs.count
@@ -182,7 +182,7 @@ module MiqAeCustomizationController::OldDialogs
     @dialog = MiqDialog.new
     old_dialogs_set_form_vars
     @in_a_form = true
-    replace_right_cell("odg-")
+    replace_right_cell(:nodetype => "odg-")
   end
 
   def old_dialogs_copy
@@ -215,12 +215,12 @@ module MiqAeCustomizationController::OldDialogs
     if @dialog.default == true
       add_flash(_("Default %{model} \"%{name}\" can not be edited") % {:model => ui_lookup(:model => "MiqDialog"), :name => @dialog.name}, :error)
       get_node_info
-      replace_right_cell(x_node)
+      replace_right_cell(:nodetype => x_node)
       return
     end
     old_dialogs_set_form_vars
     @in_a_form = true
-    replace_right_cell("odg-#{params[:id]}")
+    replace_right_cell(:nodetype => "odg-#{params[:id]}")
   end
 
   def old_dialogs_create
@@ -247,7 +247,7 @@ module MiqAeCustomizationController::OldDialogs
         add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model => ui_lookup(:model => "MiqDialog"), :name => @dialog.name})
       end
       get_node_info
-      replace_right_cell(x_node)
+      replace_right_cell(:nodetype => x_node)
     when "add", "save"
       # dialog = find_by_id_filtered(MiqDialog, params[:id])
       dialog = @dialog.id.blank? ? MiqDialog.new : MiqDialog.find(@dialog.id) # Get new or existing record
@@ -296,7 +296,7 @@ module MiqAeCustomizationController::OldDialogs
           end
         end
         get_node_info
-        replace_right_cell(x_node, [:old_dialogs])
+        replace_right_cell(:nodetype => x_node, :replace_trees => [:old_dialogs])
       end
     when "reset", nil # Reset or first time in
       add_flash(_("All changes have been reset"), :warning)

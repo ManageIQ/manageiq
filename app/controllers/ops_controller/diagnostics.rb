@@ -64,7 +64,7 @@ module OpsController::Diagnostics
     end
     @refresh_partial = "layouts/gtl"
     pm_get_workers
-    replace_right_cell(x_node)
+    replace_right_cell(:nodetype => x_node)
   end
   alias_method :restart_workers, :pm_restart_workers
 
@@ -73,7 +73,7 @@ module OpsController::Diagnostics
     @lastaction = "refresh_workers"
     @refresh_partial = "layouts/gtl"
     pm_get_workers
-    replace_right_cell(x_node)
+    replace_right_cell(:nodetype => x_node)
   end
   alias_method :refresh_workers, :pm_refresh_workers
 
@@ -88,7 +88,7 @@ module OpsController::Diagnostics
       add_flash(_("Edit Log Depot settings was cancelled by the user"))
       @record = nil
       diagnostics_set_form_vars
-      replace_right_cell(x_node)
+      replace_right_cell(:nodetype => x_node)
     when "save"
       pfx = @sb[:active_tab] == "diagnostics_collect_logs" ? "logdepot" : "dbbackup"
       id = params[:id] ? params[:id] : "new"
@@ -122,7 +122,7 @@ module OpsController::Diagnostics
         @edit = nil
         @record = nil
         diagnostics_set_form_vars
-        replace_right_cell(x_node)
+        replace_right_cell(:nodetype => x_node)
       end
     when "validate"
       id = params[:id] ? params[:id] : "new"
@@ -144,7 +144,7 @@ module OpsController::Diagnostics
       javascript_flash(:spinner_off => true)
     when nil # Reset or first time in
       @in_a_form = true
-      replace_right_cell("log_depot_edit")
+      replace_right_cell(:nodetype => "log_depot_edit")
     end
   end
 
@@ -619,14 +619,14 @@ module OpsController::Diagnostics
       end
     end
     get_node_info(x_node)
-    replace_right_cell(x_node)
+    replace_right_cell(:nodetype => x_node)
   end
 
   # Reload the selected node and redraw the screen via ajax
   def refresh_server_summary
     assert_privileges("refresh_server_summary")
     get_node_info(x_node)
-    replace_right_cell(x_node)
+    replace_right_cell(:nodetype => x_node)
   end
 
   def pm_get_workers

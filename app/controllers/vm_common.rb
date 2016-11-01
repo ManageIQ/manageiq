@@ -1354,7 +1354,9 @@ module VmCommon
   end
 
   # Replace the right cell of the explorer
-  def replace_right_cell(action = nil, presenter = nil)
+  def replace_right_cell(options = {})
+    action, presenter = options.values_at(:action, :presenter)
+
     @explorer = true
     @sb[:action] = action unless action.nil?
     if @sb[:action] || params[:display]

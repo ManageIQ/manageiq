@@ -16,7 +16,7 @@ shared_examples "logs_collect" do |type|
   it "not running" do
     allow_any_instance_of(MiqServer).to receive(:status).and_return("stopped")
 
-    expect(controller).to receive(:replace_right_cell).with(active_node)
+    expect(controller).to receive(:replace_right_cell).with(:nodetype => active_node)
 
     controller.send(:logs_collect)
 
@@ -25,7 +25,7 @@ shared_examples "logs_collect" do |type|
 
   it "collection already in progress" do
     expect_any_instance_of(klass).to receive(:log_collection_active_recently?).and_return(true)
-    expect(controller).to receive(:replace_right_cell).with(active_node)
+    expect(controller).to receive(:replace_right_cell).with(:nodetype => active_node)
 
     controller.send(:logs_collect)
 
@@ -36,7 +36,7 @@ shared_examples "logs_collect" do |type|
     it "succeeds" do
       expect_any_instance_of(klass).to receive(:log_collection_active_recently?).and_return(false)
       expect_any_instance_of(klass).to receive(:synchronize_logs).with(user.userid, :context => klass.name)
-      expect(controller).to receive(:replace_right_cell).with(active_node)
+      expect(controller).to receive(:replace_right_cell).with(:nodetype => active_node)
 
       controller.send(:logs_collect)
 
@@ -46,7 +46,7 @@ shared_examples "logs_collect" do |type|
     it "collection raises and error" do
       expect_any_instance_of(klass).to receive(:log_collection_active_recently?).and_return(false)
       expect_any_instance_of(klass).to receive(:synchronize_logs).and_raise(StandardError)
-      expect(controller).to receive(:replace_right_cell).with(active_node)
+      expect(controller).to receive(:replace_right_cell).with(:nodetype => active_node)
 
       controller.send(:logs_collect)
 

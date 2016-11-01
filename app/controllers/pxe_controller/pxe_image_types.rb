@@ -17,7 +17,7 @@ module PxeController::PxeImageTypes
     @pxe_image_type = PxeImageType.new
     pxe_image_type_set_form_vars
     @in_a_form = true
-    replace_right_cell("pit")
+    replace_right_cell(:nodetype => "pit")
   end
 
   def pxe_image_type_edit
@@ -32,7 +32,7 @@ module PxeController::PxeImageTypes
       end
       @edit = session[:edit] = nil # clean out the saved info
       get_node_info(x_node)
-      replace_right_cell(x_node)
+      replace_right_cell(:nodetype => x_node)
     elsif ["add", "save"].include?(params[:button])
       id = params[:id] || "new"
       return unless load_edit("pxe_image_type_edit__#{id}", "replace_cell__explorer")
@@ -51,7 +51,7 @@ module PxeController::PxeImageTypes
         @edit = session[:edit] = nil # clean out the saved info
         add_flash(_("%{model} \"%{name}\" was added") % {:model => ui_lookup(:model => "PxeImageType"), :name => add_pxe.name})
         get_node_info(x_node)
-        replace_right_cell(x_node, [:pxe_image_types, :customization_templates])
+        replace_right_cell(:nodetype => x_node, :replace_trees => [:pxe_image_types, :customization_templates])
       else
         @in_a_form = true
         add_pxe.errors.each do |field, msg|
@@ -70,7 +70,7 @@ module PxeController::PxeImageTypes
       pxe_image_type_set_form_vars
       @in_a_form = true
       session[:changed] = false
-      replace_right_cell("pit")
+      replace_right_cell(:nodetype => "pit")
     end
   end
 
@@ -101,7 +101,7 @@ module PxeController::PxeImageTypes
       end
 
       get_node_info(x_node)
-      replace_right_cell("root", [:pxe_image_types, :customization_templates])
+      replace_right_cell(:nodetype => "root", :replace_trees => [:pxe_image_types, :customization_templates])
     else # showing 1 vm
       if params[:id].nil? || PxeImageType.find_by_id(params[:id]).nil?
         add_flash(_("%{model} no longer exists") % {:model => ui_lookup(:model => "PxeImageType")},
@@ -118,7 +118,7 @@ module PxeController::PxeImageTypes
           @single_delete = true unless flash_errors?
         end
         get_node_info(x_node)
-        replace_right_cell(x_node, [:pxe_image_types, :customization_templates])
+        replace_right_cell(:nodetype => x_node, :replace_trees => [:pxe_image_types, :customization_templates])
       end
     end
     pxes.count

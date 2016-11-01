@@ -124,7 +124,7 @@ class InfraNetworkingController < ApplicationController
     @search_text = @sb[:infra_networking_search_text]["#{x_active_accord}_search_text"]
 
     load_or_clear_adv_search
-    replace_right_cell(x_node)
+    replace_right_cell(:action => x_node)
   end
 
   def load_or_clear_adv_search
@@ -433,7 +433,8 @@ class InfraNetworkingController < ApplicationController
     render :json => presenter.for_render
   end
 
-  def replace_right_cell(action = nil, presenter = nil)
+  def replace_right_cell(options = {})
+    action, presenter = options.values_at(:action, :presenter)
     @explorer = true
     @sb[:action] = action unless action.nil?
     if @sb[:action] || params[:display]
