@@ -749,7 +749,9 @@ class ChargebackController < ApplicationController
 
   def get_categories_all
     @edit[:cb_assign][:cats] = {}
-    Classification.categories.collect { |c| c if !c.read_only? && c.show && c.entries.size > 0 }.compact.each { |c| @edit[:cb_assign][:cats][c.id.to_s] = c.description }
+    Classification.categories.select { |c| c.show && !c.entries.empty? }.each do |c|
+      @edit[:cb_assign][:cats][c.id.to_s] = c.description
+    end
   end
 
   def get_tags_all(category)

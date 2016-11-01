@@ -625,8 +625,7 @@ module ReportController::Reports::Editor
         @edit[:new][:cb_tag_value] = nil
       else
         @edit[:new][:cb_tag_cat] = params[:cb_tag_cat]
-        @edit[:cb_tags] = {}
-        Classification.find_by_name(params[:cb_tag_cat]).entries.each { |e| @edit[:cb_tags][e.name] = e.description }
+        @edit[:cb_tags] = entries_hash(params[:cb_tag_cat])
       end
     elsif params.key?(:cb_owner_id)
       @edit[:new][:cb_owner_id] = params[:cb_owner_id].blank? ? nil : params[:cb_owner_id]
@@ -1469,6 +1468,8 @@ module ReportController::Reports::Editor
     @edit[:new][:cb_interval_size] = nil
     @edit[:new][:cb_end_interval_offset] = nil
 
+    @edit[:cb_cats] = categories_hash
+
     if [:performance, :trend].include?(model_report_type(@rpt.db))
       @edit[:new][:perf_interval] = @rpt.db_options[:interval]
       @edit[:new][:perf_avgs] = @rpt.db_options[:calc_avgs_by]
@@ -1499,9 +1500,7 @@ module ReportController::Reports::Editor
         @edit[:new][:cb_show_typ] = "tag"
         @edit[:new][:cb_tag_cat] = options[:tag].split("/")[-2]
         @edit[:new][:cb_tag_value] = options[:tag].split("/")[-1]
-        @edit[:cb_tags] = {}
-        cat = Classification.find_by_name(@edit[:new][:cb_tag_cat])
-        cat.entries.each { |e| @edit[:cb_tags][e.name] = e.description } if cat  # Collect the tags, if category is valid
+        @edit[:cb_tags] = entries_hash(@edit[:new][:cb_tag_cat])
       elsif options.key?(:entity_id)
         @edit[:new][:cb_show_typ] = "entity"
         @edit[:new][:cb_entity_id] = options[:entity_id]
@@ -1696,6 +1695,18 @@ module ReportController::Reports::Editor
        end.first.include?("(%)")
       @edit[:percent_col] = true
     end
+  end
+
+  def categories_hash
+    # Omit categories for which entries dropdown would be empty.
+    cats = Classification.categories.select { |c| c.show && !c.entries.empty? }
+    cats.each_with_object({}) { |c, h| h[c.name] = c.description }
+  end
+
+  def entries_hash(category_name)
+    cat = Classification.find_by_name(category_name)
+    return {} unless cat
+    cat.entries.each_with_object({}) { |e, h| h[e.name] = e.description }
   end
 
   # Build the :fields array and :headers hash from the rpt record cols and includes hashes
