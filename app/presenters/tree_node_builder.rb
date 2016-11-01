@@ -564,7 +564,7 @@ class TreeNodeBuilder
     @node = {
       :key    => build_object_id,
       :title  => _("Role: %{description} (%{status})") % {:description => object.description, :status => status},
-      :icon   => ActionController::Base.helpers.image_path("100/role-#{object.name}.png"),
+      :icon   => ActionController::Base.helpers.image_path("100/role.png"),
       :expand => true
     }
     tooltip(_("Role: %{description} (%{status})") % {:description => object.description, :status => status})
