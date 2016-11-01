@@ -65,7 +65,21 @@ describe LaunchAnsibleJob do
     ext_vars['y'] = 'Y'
     root_object['vm'] = svc_vm
     current_object = Spec::Support::MiqAeMockObject.new(:job_template_name => job_template.name)
-    current_object['ansible_provider_name'] = manager.name
+    current_object['ansible_tower_provider_name'] = manager.name
+    current_object.parent = root_object
+    service.object = current_object
+    job_args[:limit] = vm.name
+    expect(job_class).to receive(:create_job).with(anything, job_args).and_return(svc_job)
+    LaunchAnsibleJob.new(service).main
+    expect(service.get_state_var(:ansible_job_id)).to eq(job.id)
+  end
+
+  it "run a job using job template name and dialog provider name" do
+    ext_vars['x'] = 'X'
+    ext_vars['y'] = 'Y'
+    root_object['vm'] = svc_vm
+    current_object = Spec::Support::MiqAeMockObject.new(:job_template_name => job_template.name)
+    current_object['dialog_ansible_tower_provider_name'] = manager.name
     current_object.parent = root_object
     service.object = current_object
     job_args[:limit] = vm.name

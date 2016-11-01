@@ -92,7 +92,8 @@ class LaunchAnsibleJob
   end
 
   def job_template_by_provider
-    provider_name = var_search(@handle.object, 'ansible_provider_name')
+    provider_name = var_search(@handle.object, 'ansible_tower_provider_name') ||
+                    var_search(@handle.object, 'dialog_ansible_tower_provider_name')
     provider = @handle.vmdb(MANAGER_CLASS).where('lower(name) = ?', provider_name.downcase).first if provider_name
     provider.configuration_scripts.detect { |s| s.name.casecmp(job_template_name) == 0 } if provider && job_template_name
   end
