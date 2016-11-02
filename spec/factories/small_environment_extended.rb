@@ -35,18 +35,4 @@ FactoryGirl.define do
       res_pool_1.add_vm(ems.vms.first)
     end
   end
-
-  factory :small_environment_cluster_with_default_resource_pool, :parent => :small_environment_with_storages do
-    after(:create) do |x|
-      ems = x.ext_management_systems.first
-
-      cluster = FactoryGirl.create(:ems_cluster, :name => "cluster 1", :ext_management_system => ems, :hosts => [ems.hosts.first], :vms => ems.vms)
-      default_res_pool = FactoryGirl.create(:resource_pool, :name => "Default for Cluster #{cluster.name}", :is_default => true, :ext_management_system => ems)
-      cluster.add_resource_pool(default_res_pool)
-
-      ems.vms.each do |vm|
-        default_res_pool.add_vm(vm)
-      end
-    end
-  end
 end
