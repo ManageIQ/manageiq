@@ -24,7 +24,6 @@ class ServiceTemplateProvisionRequest < MiqRequest
   end
 
   def my_zone
-    nil
   end
 
   def picture
