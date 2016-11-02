@@ -299,7 +299,7 @@ class ManageIQ::Providers::Vmware::InfraManager
       ems_metadata = []
       parent_mor = vm_mor
 
-      # Traverse the path from the vm's parent folder to the datacenter
+      # Traverse the path from the vm's parent folder to the root folder
       #   collecting information along the way
       until parent_mor.nil?
         # Find the parent
@@ -309,7 +309,7 @@ class ManageIQ::Providers::Vmware::InfraManager
           parent_type, parent = ems_metadata_target_by_mor(parent_mor, data_source)
         end
 
-        break if parent.nil? || parent_type == :dc
+        break if parent.nil?
         ems_metadata << [parent_type, parent_mor, parent]
 
         # Find the next parent
