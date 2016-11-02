@@ -1,4 +1,18 @@
 module ManageIQ::Providers::Redhat::InfraManager::Vm::Operations::Snapshot
+  extend ActiveSupport::Concern
+
+  included do
+    supports :snapshots do
+      if supports_control?
+        unless ext_management_system.supports_snapshots?
+          unsupported_reason_add(:snapshots, ext_management_system.unsupported_reason(:snapshots))
+        end
+      else
+        unsupported_reason_add(:snapshots, unsupported_reason(:control))
+      end
+    end
+  end
+
   def raw_create_snapshot(_name, desc, memory)
     with_snapshots_service(uid_ems) do |snapshots_service|
       snapshots_service.add(:description => desc, :persist_memorystate => memory)
@@ -19,10 +33,6 @@ module ManageIQ::Providers::Redhat::InfraManager::Vm::Operations::Snapshot
     with_snapshots_service(uid_ems) do |snapshots_service|
       snapshots_service.snapshot_service(snapshot.uid_ems).restore
     end
-  end
-
-  def supports_snapshots?
-    true
   end
 
   def snapshot_name_optional?
