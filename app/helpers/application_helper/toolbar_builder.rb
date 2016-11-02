@@ -673,17 +673,6 @@ class ApplicationHelper::ToolbarBuilder
       when "delete_server"
         return true
       end
-    when "Condition"
-      case id
-      when "condition_copy"
-        return true if x_active_tree != :condition_tree || !role_allows?(:feature => "condition_new")
-      when "condition_delete"
-        return true if x_active_tree != :condition_tree || !role_allows?(:feature => "condition_delete")
-      when "condition_policy_copy"
-        return true if x_active_tree == :condition_tree || !role_allows?(:feature => "condition_new")
-      when "condition_remove"
-        return true if x_active_tree == :condition_tree || !role_allows?(:feature => "condition_delete")
-      end
     when "MiqAeClass", "MiqAeDomain", "MiqAeField", "MiqAeInstance", "MiqAeMethod", "MiqAeNamespace"
       return true unless role_allows?(:feature => "miq_ae_domain_edit")
       return false if MIQ_AE_COPY_ACTIONS.include?(id) && User.current_tenant.any_editable_domains? && MiqAeDomain.any_unlocked?
@@ -769,11 +758,6 @@ class ApplicationHelper::ToolbarBuilder
       case id
       when "cim_base_storage_extent_statistics"
         return N_("No Statistics Collected") unless @record.latest_derived_metrics
-      end
-    when "Condition"
-      case id
-      when "condition_delete"
-        return N_("Conditions assigned to Policies can not be deleted") unless @condition.miq_policies.empty?
       end
     when "OntapStorageVolume"
       case id
