@@ -83,6 +83,7 @@ module SupportsFeatureMixin
     :live_migrate               => 'Live Migration',
     :migrate                    => 'Migration',
     :provisioning               => 'Provisioning',
+    :quick_stats                => 'Quick Stats',
     :reboot_guest               => 'Reboot Guest Operation',
     :reconfigure                => 'Reconfiguration',
     :refresh_new_target         => 'Refresh non-existing record',
