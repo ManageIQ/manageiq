@@ -31,7 +31,7 @@ module MiqAeEngine
           raise MiqAeException::MethodExpressionInvalid, "Invalid expression #{data}"
         end
       rescue
-          raise MiqAeException::MethodExpressionInvalid, "Invalid expression #{data}"
+        raise MiqAeException::MethodExpressionInvalid, "Invalid expression #{data}"
       end
     end
 

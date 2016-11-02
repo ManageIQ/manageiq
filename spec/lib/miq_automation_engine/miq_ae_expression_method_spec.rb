@@ -20,14 +20,13 @@ module MiqAeExpressionMethodSpec
     end
 
     let(:vm_search) do
-      {:db => 'Vm',
+      {:db         => 'Vm',
        :expression => complex_qs_exp}.to_yaml
     end
 
     before do
       allow(User).to receive(:server_timezone).and_return("UTC")
     end
-
 
     it "expression_method" do
       vm1

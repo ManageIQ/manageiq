@@ -920,7 +920,7 @@ class MiqAeClassController < ApplicationController
       @edit[:default_verify_status] = @edit[:new][:location] == "inline" && @edit[:new][:data] && @edit[:new][:data] != ""
       render :update do |page|
         page << javascript_prologue
-        page.replace_html('form_div', :partial => 'method_form', :locals => {:prefix => ""})  if @edit[:new][:location] == 'expression'
+        page.replace_html('form_div', :partial => 'method_form', :locals => {:prefix => ""}) if @edit[:new][:location] == 'expression'
         page.replace_html(@refresh_div, :partial => @refresh_partial)  if @refresh_div && @prev_location != @edit[:new][:location]
         # page.replace_html("hider_1", :partial=>"method_data", :locals=>{:field_name=>@field_name})  if @prev_location != @edit[:new][:location]
         if params[:cls_field_datatype]
@@ -2565,11 +2565,7 @@ class MiqAeClassController < ApplicationController
       @sb[:active_tab] = "methods"
       if @record.location == 'expression'
         hash = YAML.load(@record.data)
-        if hash[:expression]
-          @expression = MiqExpression.new(hash[:expression]).to_human
-        else
-          @expression = ""
-        end
+        @expression = hash[:expression] ? MiqExpression.new(hash[:expression]).to_human : ""
       end
       domain_overrides
       set_right_cell_text(x_node, @record)
