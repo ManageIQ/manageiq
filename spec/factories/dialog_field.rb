@@ -20,7 +20,4 @@ FactoryGirl.define do
 
   factory :dialog_field_date_control, :parent => :dialog_field, :class => "DialogFieldDateControl" do
   end
-
-  factory :dialog_field_date_time_control, :parent => :dialog_field_date_control, :class => "DialogFieldDateTimeControl" do
-  end
 end
