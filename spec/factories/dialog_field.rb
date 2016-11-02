@@ -12,9 +12,6 @@ FactoryGirl.define do
   factory :dialog_field_button, :parent => :dialog_field, :class => "DialogFieldButton" do
   end
 
-  factory :dialog_field_check_box, :parent => :dialog_field, :class => "DialogFieldCheckBox" do
-  end
-
   factory :dialog_field_sorted_item, :parent => :dialog_field, :class => "DialogFieldSortedItem" do
   end
 
