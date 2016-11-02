@@ -1,8 +1,9 @@
 module VmOrTemplate::Operations::Snapshot
   def validate_create_snapshot
     return {:available => false, :message => "Create Snapshot operation not supported for #{self.class.model_suffix} VM"} unless self.supports_snapshots?
-    msg = validate_vm_control
-    return {:available => msg[0], :message => msg[1]} unless msg.nil?
+    unless supports_control?
+      return {:available => false, :message => unsupported_reason(:control)}
+    end
     msg = {:available => true, :message => nil}
     msg[:message] = 'At least one snapshot has to be active to create a new snapshot for this VM' if !snapshots.blank? && snapshots.first.get_current_snapshot.nil?
     msg
@@ -11,8 +12,9 @@ module VmOrTemplate::Operations::Snapshot
   def validate_remove_snapshot(task = 'Remove')
     return {:available => false, :message => "#{task} Snapshot operation not supported for #{self.class.model_suffix} VM"} unless self.supports_snapshots?
     return {:available => false, :message => "There are no snapshots available for this VM"} if snapshots.size <= 0
-    msg = validate_vm_control
-    return {:available => msg[0], :message => msg[1]} unless msg.nil?
+    unless supports_control?
+      return {:available => false, :message => unsupported_reason(:control)}
+    end
     {:available => true, :message => nil}
   end
 

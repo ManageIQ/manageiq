@@ -1545,7 +1545,7 @@ describe ApplicationHelper do
           end
           context "when with snapshots" do
             before { allow(@record).to receive_message_chain(:snapshots, :size).and_return(2) }
-            it_behaves_like 'default case'
+            it_behaves_like 'record with error message', 'remove_snapshot'
           end
         end
 
@@ -1561,7 +1561,7 @@ describe ApplicationHelper do
           end
           context "when with snapshots" do
             before { allow(@record).to receive_message_chain(:snapshots, :size).and_return(2) }
-            it_behaves_like 'default case'
+            it_behaves_like 'record with error message', 'remove_all_snapshots'
           end
         end
 
@@ -1577,7 +1577,7 @@ describe ApplicationHelper do
           end
           context "when with snapshots" do
             before { allow(@record).to receive_message_chain(:snapshots, :size).and_return(2) }
-            it_behaves_like 'default case'
+            it_behaves_like 'record with error message', 'revert_to_snapshot'
           end
         end
       end
@@ -1627,7 +1627,7 @@ describe ApplicationHelper do
           end
           context "when with snapshots" do
             before { allow(@record).to receive_message_chain(:snapshots, :size).and_return(2) }
-            it_behaves_like 'default case'
+            it_behaves_like 'record with error message', 'remove_snapshot'
           end
         end
 
