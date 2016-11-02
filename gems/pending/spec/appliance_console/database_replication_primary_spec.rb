@@ -66,28 +66,8 @@ describe ApplianceConsole::DatabaseReplicationPrimary do
       expect(subject).to receive(:generate_cluster_name).and_return(true)
       expect(subject).to receive(:create_config_file).and_return(true)
       expect(subject).to receive(:initialize_primary_server).and_return(true)
+      expect(subject).to receive(:write_pgpass_file).and_return(true)
       expect(subject.activate).to be true
-    end
-
-    it "returns false when create_config_file fails" do
-      expect(subject).to receive(:generate_cluster_name).and_return(true)
-      expect(subject).to receive(:create_config_file).and_return(false)
-      expect(subject).to_not receive(:initialize_primary_server)
-      expect(subject.activate).to be false
-    end
-
-    it "returns false when generate_cluster_name fails" do
-      expect(subject).to receive(:generate_cluster_name).and_return(false)
-      expect(subject).to_not receive(:create_config_file)
-      expect(subject).to_not receive(:initialize_primary_server)
-      expect(subject.activate).to be false
-    end
-
-    it "returns false when initialize_primary_server fails" do
-      expect(subject).to receive(:generate_cluster_name).and_return(true)
-      expect(subject).to receive(:create_config_file).and_return(true)
-      expect(subject).to receive(:initialize_primary_server).and_return(false)
-      expect(subject.activate).to be false
     end
   end
 

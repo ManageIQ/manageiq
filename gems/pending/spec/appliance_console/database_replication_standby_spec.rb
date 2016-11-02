@@ -58,81 +58,29 @@ describe ApplianceConsole::DatabaseReplicationStandby do
   end
 
   context "#activate" do
-    it "returns true when configure succeed" do
+    it "returns true when configure succeeds" do
+      subject.run_repmgrd_configuration = false
       expect(subject).to receive(:data_dir_empty?).and_return(true)
       expect(subject).to receive(:generate_cluster_name).and_return(true)
       expect(subject).to receive(:create_config_file).and_return(true)
       expect(subject).to receive(:clone_standby_server).and_return(true)
       expect(subject).to receive(:start_postgres).and_return(true)
       expect(subject).to receive(:register_standby_server).and_return(true)
-      expect(subject).to receive(:configure_repmgrd).and_return(true)
+      expect(subject).to receive(:write_pgpass_file).and_return(true)
       expect(subject.activate).to be true
     end
 
-    it "returns false when data_dir_empty? fails" do
-      expect(subject).to receive(:data_dir_empty?).and_return(false)
-      expect(subject).to_not receive(:generate_cluster_name)
-      expect(subject).to_not receive(:create_config_file)
-      expect(subject).to_not receive(:clone_standby_server)
-      expect(subject).to_not receive(:start_postgres)
-      expect(subject).to_not receive(:register_standby_server)
-      expect(subject).to_not receive(:configure_repmgrd)
-      expect(subject.activate).to be false
-    end
-
-    it "returns false when generate_cluster_name fails" do
-      expect(subject).to receive(:data_dir_empty?).and_return(true)
-      expect(subject).to receive(:generate_cluster_name).and_return(false)
-      expect(subject).to_not receive(:create_config_file)
-      expect(subject).to_not receive(:clone_standby_server)
-      expect(subject).to_not receive(:start_postgres)
-      expect(subject).to_not receive(:register_standby_server)
-      expect(subject).to_not receive(:configure_repmgrd)
-      expect(subject.activate).to be false
-    end
-
-    it "returns false when create_config_file fails" do
-      expect(subject).to receive(:data_dir_empty?).and_return(true)
-      expect(subject).to receive(:generate_cluster_name).and_return(true)
-      expect(subject).to receive(:create_config_file).and_return(false)
-      expect(subject).to_not receive(:clone_standby_server)
-      expect(subject).to_not receive(:start_postgres)
-      expect(subject).to_not receive(:register_standby_server)
-      expect(subject).to_not receive(:configure_repmgrd)
-      expect(subject.activate).to be false
-    end
-
-    it "returns false when clone_standby_server fails" do
-      expect(subject).to receive(:data_dir_empty?).and_return(true)
-      expect(subject).to receive(:generate_cluster_name).and_return(true)
-      expect(subject).to receive(:create_config_file).and_return(true)
-      expect(subject).to receive(:clone_standby_server).and_return(false)
-      expect(subject).to_not receive(:start_postgres)
-      expect(subject).to_not receive(:register_standby_server)
-      expect(subject).to_not receive(:configure_repmgrd)
-      expect(subject.activate).to be false
-    end
-
-    it "returns false when start_postgres fails" do
-      expect(subject).to receive(:data_dir_empty?).and_return(true)
-      expect(subject).to receive(:generate_cluster_name).and_return(true)
-      expect(subject).to receive(:create_config_file).and_return(true)
-      expect(subject).to receive(:clone_standby_server).and_return(true)
-      expect(subject).to receive(:start_postgres).and_return(false)
-      expect(subject).to_not receive(:register_standby_server)
-      expect(subject).to_not receive(:configure_repmgrd)
-      expect(subject.activate).to be false
-    end
-
-    it "returns false when register_standby_server fails" do
+    it "runs #start_repmgrd when run_repmgrd_configuration is set" do
+      subject.run_repmgrd_configuration = true
       expect(subject).to receive(:data_dir_empty?).and_return(true)
       expect(subject).to receive(:generate_cluster_name).and_return(true)
       expect(subject).to receive(:create_config_file).and_return(true)
       expect(subject).to receive(:clone_standby_server).and_return(true)
       expect(subject).to receive(:start_postgres).and_return(true)
-      expect(subject).to receive(:register_standby_server).and_return(false)
-      expect(subject).to_not receive(:configure_repmgrd)
-      expect(subject.activate).to be false
+      expect(subject).to receive(:register_standby_server).and_return(true)
+      expect(subject).to receive(:write_pgpass_file).and_return(true)
+      expect(subject).to receive(:start_repmgrd).and_return(true)
+      expect(subject.activate).to be true
     end
   end
 
@@ -213,13 +161,6 @@ describe ApplianceConsole::DatabaseReplicationStandby do
       expect(service).to receive(:enable).and_return(service)
       expect(service).to receive(:start).and_return(service)
       expect(subject.start_postgres).to be_truthy
-    end
-  end
-
-  context "#configure_repmgrd" do
-    it "returns true if not setup to do the configuration" do
-      subject.run_repmgrd_configuration = false
-      expect(subject.configure_repmgrd).to be true
     end
   end
 
