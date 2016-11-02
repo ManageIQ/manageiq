@@ -28,7 +28,7 @@ RSpec.shared_examples :no_link_for_listnav do
   end
 
   it 'has no link when type is listnav' do
-    expect(subject.render).not_to have_selector("a")
+    expect(subject).not_to have_selector("a")
   end
 end
 

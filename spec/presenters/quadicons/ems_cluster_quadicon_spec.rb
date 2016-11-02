@@ -7,7 +7,7 @@ describe "Quadicon for EmsCluster", :type => :helper do
   describe "setup" do
     subject(:quadicon) { instance }
 
-    it 'renders a type_icon quadrant' do
+    it 'includes a type_icon quadrant' do
       expect(quadicon.quadrant_list).to include(:type_icon)
     end
   end

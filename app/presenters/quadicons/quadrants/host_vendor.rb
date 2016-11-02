@@ -8,7 +8,8 @@ module Quadicons
       end
 
       def vendor
-        h(record.try(:vendor).try(:downcase))
+        v = record.try(:vendor).try(:downcase) || "unknown"
+        h(v)
       end
     end
   end

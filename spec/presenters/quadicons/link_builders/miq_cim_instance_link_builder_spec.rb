@@ -1,6 +1,6 @@
 require 'wbem'
 
-describe Quadicons::LinkBuilders::StorageLinkBuilder, :type => :helper do
+describe Quadicons::LinkBuilders::MiqCimInstanceLinkBuilder, :type => :helper do
   let(:record) do
     obj = WBEM::CIMInstance.new("ONTAP_StorageSystem")
     obj["Name"] = "FooBar"
@@ -11,13 +11,13 @@ describe Quadicons::LinkBuilders::StorageLinkBuilder, :type => :helper do
   let(:kontext) { Quadicons::Context.new(helper) }
   let(:instance) { Quadicons::LinkBuilders::MiqCimInstanceLinkBuilder.new(record, kontext) }
 
-  describe "finding the url" do
-    before do
-      allow(controller).to receive(:default_url_options) do
-        {:controller => "provider_foreman"}
-      end
+  before do
+    allow(controller).to receive(:default_url_options) do
+      {:controller => "provider_foreman"}
     end
+  end
 
+  describe "finding the url" do
     subject(:url) { instance.url }
 
     context "when not embedded" do
@@ -38,6 +38,7 @@ describe Quadicons::LinkBuilders::StorageLinkBuilder, :type => :helper do
         end
 
         it 'links to the record' do
+          pending "Determine if and when links for MiqCimInstances are generated outside of an explorer"
           cid = ApplicationRecord.compress_id(record.id)
           expect(url).to have_selector("a[href*='#{cid}']")
         end
