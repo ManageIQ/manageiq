@@ -4,11 +4,11 @@ def the_feed_id
 end
 
 def test_start_time
-  Time.new(2016, 9, 15, 19, 00, 0, "+00:00").freeze
+  Time.new(2016, 10, 19, 8, 00, 0, "+00:00").freeze
 end
 
 def test_end_time
-  Time.new(2016, 9, 15, 22, 00, 0, "+00:00").freeze
+  Time.new(2016, 10, 19, 10, 00, 0, "+00:00").freeze
 end
 
 def test_hostname
