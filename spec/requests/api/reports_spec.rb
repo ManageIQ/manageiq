@@ -33,23 +33,6 @@ RSpec.describe "reports API" do
     expect(response).to have_http_status(:ok)
   end
 
-  it "can fetch a report's result" do
-    report = FactoryGirl.create(:miq_report_with_results)
-    report_result = report.miq_report_results.first
-    table = Ruport::Data::Table.new(
-      :column_names => %w(foo),
-      :data         => [%w(bar), %w(baz)]
-    )
-    allow(report).to receive(:table).and_return(table)
-    allow_any_instance_of(MiqReportResult).to receive(:report_results).and_return(report)
-
-    api_basic_authorize
-    run_get "#{reports_url(report.id)}/results/#{report_result.to_param}"
-
-    expect_result_to_match_hash(response.parsed_body, "result_set" => [{"foo" => "bar"}, {"foo" => "baz"}])
-    expect(response).to have_http_status(:ok)
-  end
-
   context 'authorized to see its own report results' do
     let(:group) { FactoryGirl.create(:miq_group) }
     let(:user) do
@@ -71,6 +54,22 @@ RSpec.describe "reports API" do
         ]
       )
       expect(response.parsed_body["resources"]).not_to be_any { |resource| resource.key?("result_set") }
+      expect(response).to have_http_status(:ok)
+    end
+
+    it "can fetch a report's result" do
+      report_result = report.miq_report_results.first
+      table = Ruport::Data::Table.new(
+        :column_names => %w(foo),
+        :data         => [%w(bar), %w(baz)]
+      )
+      allow(report).to receive(:table).and_return(table)
+      allow_any_instance_of(MiqReportResult).to receive(:report_results).and_return(report)
+
+      api_basic_authorize
+      run_get "#{reports_url(report.id)}/results/#{report_result.to_param}"
+
+      expect_result_to_match_hash(response.parsed_body, "result_set" => [{"foo" => "bar"}, {"foo" => "baz"}])
       expect(response).to have_http_status(:ok)
     end
 
@@ -102,6 +101,16 @@ RSpec.describe "reports API" do
       run_get results_url(report_result.id)
 
       expect_result_to_match_hash(response.parsed_body, "result_set" => [{"foo" => "bar"}, {"foo" => "baz"}])
+      expect(response).to have_http_status(:ok)
+    end
+
+    it "returns an empty result set if none has been run" do
+      report_result = report.miq_report_results.first
+
+      api_basic_authorize
+      run_get "#{reports_url(report.id)}/results/#{report_result.id}"
+
+      expect_result_to_match_hash(response.parsed_body, "result_set" => [])
       expect(response).to have_http_status(:ok)
     end
   end
