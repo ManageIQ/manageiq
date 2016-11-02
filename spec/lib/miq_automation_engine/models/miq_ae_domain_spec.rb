@@ -406,19 +406,15 @@ describe MiqAeDomain do
         described_class.new(
           :name           => "Domain name",
           :git_repository => git_repository,
-          :ref            => "not nil",
+          :ref            => "branch1",
           :ref_type       => "branch"
         )
       end
 
       let(:git_repository) { GitRepository.new }
 
-      before do
-        allow(git_repository).to receive(:branch_info).with("not nil").and_return("name" => "branch_name")
-      end
-
-      it "returns the domain name with the latest ref name info" do
-        expect(domain.display_name).to eq("Domain name (branch_name)")
+      it "returns the domain name with the current ref name" do
+        expect(domain.display_name).to eq("Domain name (branch1)")
       end
     end
 
