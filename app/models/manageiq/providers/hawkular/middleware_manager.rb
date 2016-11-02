@@ -123,11 +123,14 @@ module ManageIQ::Providers
       with_provider_connection do |connection|
         path = ::Hawkular::Inventory::CanonicalPath.new(:feed_id          => hawk_escape_id(feed),
                                                         :resource_type_id => hawk_escape_id('Domain Host'))
-        connection.inventory.list_resources_for_type(path.to_s, :fetch_properties => true)
+        host_controllers = connection.inventory.list_resources_for_type(path.to_s, :fetch_properties => true)
+
+        # filter only the domain controllers
+        host_controllers.select { |host_controller| host_controller.properties['Is Domain Controller'] == 'true' }
       end
     end
 
-    def server_groups(feed, _domain)
+    def server_groups(feed)
       with_provider_connection do |connection|
         path = ::Hawkular::Inventory::CanonicalPath.new(:feed_id          => hawk_escape_id(feed),
                                                         :resource_type_id => hawk_escape_id('Domain Server Group'))

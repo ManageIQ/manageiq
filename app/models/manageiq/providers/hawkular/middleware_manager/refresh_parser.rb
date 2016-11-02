@@ -51,7 +51,7 @@ module ManageIQ::Providers
         @ems.feeds.each do |feed|
           @ems.domains(feed).each do |domain|
             parsed_domain = parse_middleware_domain(domain)
-            fetch_server_groups(feed, domain)
+            fetch_server_groups(feed)
 
             # add the server groups to the domain
             parsed_domain[:middleware_server_groups] = @data[:middleware_server_groups]
@@ -59,33 +59,31 @@ module ManageIQ::Providers
             @data_index.store_path(:middleware_domains, :by_ems_ref, parsed_domain[:ems_ref], parsed_domain)
 
             # now it's safe to fetch the domain servers (it assumes the server groups to be already fetched)
-            fetch_domain_servers(domain)
+            fetch_domain_servers(feed)
           end
         end
       end
 
-      def fetch_server_groups(feed, domain)
-        @ems.server_groups(feed, domain).each do |group|
+      def fetch_server_groups(feed)
+        @ems.server_groups(feed).each do |group|
           parsed_group = parse_middleware_server_group(group)
           @data[:middleware_server_groups] << parsed_group
           @data_index.store_path(:middleware_server_groups, :by_name, parsed_group[:name], parsed_group)
         end
       end
 
-      def fetch_domain_servers(domain)
-        @ems.child_resources(domain.path).each do |child|
-          next unless child.type_path.end_with?(hawk_escape_id('Domain WildFly Server'))
-          @eaps << child
-
-          server_config = @ems.inventory_client.get_config_data_for_resource child.path
-          child.properties.merge! server_config['value'] unless server_config['value'].nil?
-
-          server_name = parse_domain_server_name(child.id)
-          server = parse_middleware_server(child, true, server_name)
+      def fetch_domain_servers(feed)
+        path = ::Hawkular::Inventory::CanonicalPath.new(:feed_id          => hawk_escape_id(feed),
+                                                        :resource_type_id => hawk_escape_id('Domain WildFly Server'))
+        domain_servers = @ems.inventory_client.list_resources_for_type(path.to_s, :fetch_properties => true)
+        domain_servers.each do |domain_server|
+          @eaps << domain_server
+          server_name = parse_domain_server_name(domain_server.id)
+          server = parse_middleware_server(domain_server, true, server_name)
 
           # Add the association to server group. The information about what server is in which server group is under
           # the server-config resource's configuration
-          config_path = child.path.to_s.sub(/%2Fserver%3D/, '%2Fserver-config%3D')
+          config_path = domain_server.path.to_s.sub(/%2Fserver%3D/, '%2Fserver-config%3D')
           config = @ems.inventory_client.get_config_data_for_resource(config_path)
           server_group_name = config['value']['Server Group']
           server_group = @data_index.fetch_path(:middleware_server_groups, :by_name, server_group_name)
