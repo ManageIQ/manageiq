@@ -202,6 +202,8 @@ class TreeNodeBuilder
   def node_icon(icon)
     if icon.start_with?("/")
       icon
+    elsif icon.start_with?("100/")
+      ActionController::Base.helpers.image_path(icon)
     else
       ActionController::Base.helpers.image_path("100/#{icon}")
     end
