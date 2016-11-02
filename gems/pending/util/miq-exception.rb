@@ -103,6 +103,11 @@ module MiqException
   class MiqOrchestrationDeleteError < Error; end
   class MiqOrchestrationStackNotExistError < Error; end
 
+  class MiqFloatingIpValidationError < Error; end
+  class MiqFloatingIpCreateError < Error; end
+  class MiqFloatingIpUpdateError < Error; end
+  class MiqFloatingIpDeleteError < Error; end
+
   class MiqLoadBalancerProvisionError < Error; end
   class MiqLoadBalancerStatusError < Error; end
   class MiqLoadBalancerValidationError < Error; end
