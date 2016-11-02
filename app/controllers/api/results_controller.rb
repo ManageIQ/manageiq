@@ -6,6 +6,10 @@ module Api
       MiqReportResult.for_user(@auth_user_obj).where_clause.ast
     end
 
+    def find_results(id)
+      MiqReportResult.for_user(@auth_user_obj).find(id)
+    end
+
     private
 
     def set_additional_attributes

@@ -89,23 +89,22 @@ RSpec.describe "reports API" do
       )
       expect(response).to have_http_status(:ok)
     end
-  end
 
-  it "can fetch a specific result as a primary collection" do
-    report = FactoryGirl.create(:miq_report_with_results)
-    report_result = report.miq_report_results.first
-    table = Ruport::Data::Table.new(
-      :column_names => %w(foo),
-      :data         => [%w(bar), %w(baz)]
-    )
-    allow(report).to receive(:table).and_return(table)
-    allow_any_instance_of(MiqReportResult).to receive(:report_results).and_return(report)
+    it "can fetch a specific result as a primary collection" do
+      report_result = report.miq_report_results.first
+      table = Ruport::Data::Table.new(
+        :column_names => %w(foo),
+        :data         => [%w(bar), %w(baz)]
+      )
+      allow(report).to receive(:table).and_return(table)
+      allow_any_instance_of(MiqReportResult).to receive(:report_results).and_return(report)
 
-    api_basic_authorize action_identifier(:results, :read, :resource_actions, :get)
-    run_get results_url(report_result.id)
+      api_basic_authorize action_identifier(:results, :read, :resource_actions, :get)
+      run_get results_url(report_result.id)
 
-    expect_result_to_match_hash(response.parsed_body, "result_set" => [{"foo" => "bar"}, {"foo" => "baz"}])
-    expect(response).to have_http_status(:ok)
+      expect_result_to_match_hash(response.parsed_body, "result_set" => [{"foo" => "bar"}, {"foo" => "baz"}])
+      expect(response).to have_http_status(:ok)
+    end
   end
 
   it "can fetch all the schedule" do
