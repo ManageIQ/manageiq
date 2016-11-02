@@ -21,7 +21,7 @@ FactoryGirl.define do
   end
 
   factory :miq_report_with_results, :parent => :miq_report do
-    miq_report_results { [FactoryGirl.create(:miq_report_result)] }
+    miq_report_results { [FactoryGirl.create(:miq_report_result, :miq_group => miq_group)] }
   end
 
   factory :miq_report_chargeback, :parent => :miq_report do
