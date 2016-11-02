@@ -77,24 +77,18 @@
             %p.form-control-static
               = h(@object_name)
 
-      %div
-        = _("Simulation Parameters")
-        .form-group
-          %label.col-md-2.control-label= _("Execute Methods")
-          .col-md-10
-            %p.form-control-static
-              = h(@selected_schedule.filter[:parameters][:readonly].to_s.titleize)
-      %div
-        = _("Attribute/Value Pairs")
-        - @selected_schedule.filter[:parameters][:attrs].each_with_index do |attr, i|
-          .form-group
-            %label.control-label.col-md-2
-              = (i + 1).to_s
-            - if attr
-              .col-md-2
-                = h(attr[0])
-              .col-md-2
-                = h(attr[1])
+      - if @selected_schedule.filter[:parameters][:attrs].present?
+        %div
+          = _("Attribute/Value Pairs")
+          - @selected_schedule.filter[:parameters][:attrs].each_with_index do |attr, i|
+            .form-group
+              %label.control-label.col-md-2
+                = (i + 1).to_s
+              - if attr
+                .col-md-2
+                  = h(attr[0])
+                .col-md-2
+                  = h(attr[1])
 
     - if @selected_schedule.sched_action[:method] != 'db_backup'
       %div

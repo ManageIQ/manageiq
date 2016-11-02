@@ -74,7 +74,6 @@ ManageIQ.angular.app.controller('scheduleFormController', ['$http', '$scope', 's
         $scope.scheduleModel.object_request  = data.object_request;
         $scope.scheduleModel.target_class    = data.target_class;
         $scope.scheduleModel.target_id       = data.target_id;
-        $scope.scheduleModel.readonly        = data.readonly;
         $scope.scheduleModel.attrs           = data.attrs;
 
         $scope.setTimerType();
@@ -216,7 +215,6 @@ ManageIQ.angular.app.controller('scheduleFormController', ['$http', '$scope', 's
         $scope.scheduleModel.object_request  = data.object_request;
         $scope.scheduleModel.target_class    = data.tagert_class;
         $scope.scheduleModel.target_id       = data.target_id;
-        $scope.scheduleModel.readonly        = data.readonly;
         $scope.scheduleModel.targets         = [];
         $scope.scheduleModel.filter_typ      = null;
         $scope.scheduleModel.attrs           = data.attrs;
