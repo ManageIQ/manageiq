@@ -323,13 +323,6 @@ FactoryGirl.define do
           :parent  => :provisioning_manager do
   end
 
-  factory :provisioning_manager_foreman_with_authentication,
-          :parent => :provisioning_manager_foreman do
-    after :create do |x|
-      x.authentications << FactoryGirl.create(:authentication)
-    end
-  end
-
   # Leaf classes for middleware_manager
 
   factory :ems_hawkular,
