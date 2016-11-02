@@ -18,9 +18,7 @@ class ServiceTemplateProvisionRequest < MiqRequest
 
   delegate :picture, :to => :service_template, :allow_nil => true
 
-  def user
-    get_user
-  end
+  alias_method :user, :get_user
 
   def my_role
     'ems_operations'
