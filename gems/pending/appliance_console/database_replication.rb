@@ -9,6 +9,7 @@ module ApplianceConsole
 
     REPMGR_CONFIG = '/etc/repmgr.conf'.freeze
     REPMGR_LOG    = '/var/log/repmgr/repmgrd.log'.freeze
+    PGPASS_FILE   = '/var/lib/pgsql/.pgpass'.freeze
 
     attr_accessor :cluster_name, :node_number, :database_name, :database_user,
                   :database_password, :primary_host
@@ -73,6 +74,16 @@ Replication Server Configuration
         return false
       end
       true
+    end
+
+    def write_pgpass_file
+      File.open(PGPASS_FILE, "w") do |f|
+        f.write("*:*:#{database_name}:#{database_user}:#{database_password}\n")
+        f.write("*:*:replication:#{database_user}:#{database_password}\n")
+      end
+
+      FileUtils.chmod(0600, PGPASS_FILE)
+      FileUtils.chown("postgres", "postgres", PGPASS_FILE)
     end
 
     private
