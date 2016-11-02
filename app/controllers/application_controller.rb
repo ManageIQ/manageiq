@@ -180,11 +180,11 @@ class ApplicationController < ActionController::Base
       rpt.generate_table(:userid => session[:userid])
     else
       rpt = if controller_name == "dashboard" && @sb[:report_result_id] # Check for dashboard results
-              MiqReportResult.find(@sb[:report_result_id]).report_results
+              MiqReportResult.for_user(current_user).find(@sb[:report_result_id]).report_results
             elsif session[:rpt_task_id].present?
               MiqTask.find(session[:rpt_task_id]).task_results
             elsif session[:report_result_id]
-              MiqReportResult.find(session[:report_result_id]).report_results
+              MiqReportResult.for_user(current_user).find(session[:report_result_id]).report_results
             else
               @report
             end
@@ -320,7 +320,7 @@ class ApplicationController < ActionController::Base
     end
     # Dashboard widget will send in report result id else, find report result in the sandbox
     search_id = params[:rr_id] ? params[:rr_id].to_i : @sb[:pages][:rr_id]
-    rr = MiqReportResult.find(search_id)
+    rr = MiqReportResult.for_user(current_user).find(search_id)
 
     session[:report_result_id] = rr.id  # Save report result id for render_zgraph
     session[:rpt_task_id]      = nil    # Clear out report task id, using a saved report
@@ -1398,7 +1398,7 @@ class ApplicationController < ActionController::Base
   def process_saved_reports(saved_reports, task)
     success_count = 0
     failure_count = 0
-    MiqReportResult.where(:id => saved_reports).order("lower(name)").each do |rep|
+    MiqReportResult.for_user(current_user).where(:id => saved_reports).order("lower(name)").each do |rep|
       begin
         rep.public_send(task) if rep.respond_to?(task) # Run the task
       rescue

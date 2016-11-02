@@ -22,7 +22,7 @@ module ReportController::Reports
   end
 
   def miq_report_save
-    rr               = MiqReportResult.find(@sb[:pages][:rr_id])
+    rr               = MiqReportResult.for_user(current_user).find(@sb[:pages][:rr_id])
     rr.save_for_user(session[:userid])                # Save the current report results for this user
     @_params[:sortby] = "last_run_on"
     view, _page = get_view(MiqReportResult, :named_scope => [:with_current_user_groups_and_report, @sb[:miq_report_id]])

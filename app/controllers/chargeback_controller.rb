@@ -370,7 +370,7 @@ class ChargebackController < ApplicationController
   end
 
   def cb_rpts_fetch_saved_report(id)
-    rr = MiqReportResult.find_by_id(from_cid(id.split('-').last))
+    rr = MiqReportResult.for_user(current_user).find_by_id(from_cid(id.split('-').last))
     if rr.nil?  # Saved report no longer exists
       @report = nil
       return
@@ -458,7 +458,8 @@ class ChargebackController < ApplicationController
         # On a saved report node
         cb_rpts_show_saved_report
         if @report
-          s = MiqReportResult.find_by_id(from_cid(nodes.last.split('-').last))
+          s = MiqReportResult.for_user(current_user).find_by_id(from_cid(nodes.last.split('-').last))
+
           @right_cell_div = "reports_list_div"
           @right_cell_text = _("Saved Chargeback Report \"%{last_run_on}\"") % {:last_run_on => format_timezone(s.last_run_on, Time.zone, "gtl")}
         else

@@ -15,7 +15,7 @@ module ReportController::SavedReports
   end
 
   def fetch_saved_report(id)
-    rr = MiqReportResult.find_by_id(from_cid(id.split('-').last))
+    rr = MiqReportResult.for_user(current_user).find_by_id(from_cid(id.split('-').last))
     if rr.nil?  # Saved report no longer exists
       @report = nil
       return
@@ -91,13 +91,13 @@ module ReportController::SavedReports
   def saved_report_delete
     assert_privileges("saved_report_delete")
     savedreports = find_checked_items
-    if savedreports.empty? && params[:id].present? && !MiqReportResult.exists?(params[:id].to_i)
+    if savedreports.empty? && params[:id].present? && !MiqReportResult.for_user(current_user).exists?(params[:id].to_i)
       # saved report is being viewed in report accordion
       add_flash(_("Saved Report no longer exists"), :error)
     else
       savedreports.push(params[:id]) if savedreports.blank?
       @report = nil
-      r = MiqReportResult.find(savedreports[0])
+      r = MiqReportResult.for_user(current_user).find(savedreports[0])
       @sb[:miq_report_id] = r.miq_report_id
       process_saved_reports(savedreports, "destroy")  unless savedreports.empty?
       add_flash(_("The selected Saved Report was deleted")) if @flash_array.nil?

@@ -422,7 +422,7 @@ class ReportController < ApplicationController
   def determine_rr_node_info
     nodes = x_node.split('-')
     show_saved_report
-    @record = MiqReportResult.find_by_id(from_cid(nodes.last))
+    @record = MiqReportResult.for_user(current_user).find_by_id(from_cid(nodes.last))
     @right_cell_text = _("Saved Report \"%{name} - %{timestamp}\"") % {
       :name      => @record.name,
       :timestamp => format_timezone(@record.created_on, Time.zone, "gt")}

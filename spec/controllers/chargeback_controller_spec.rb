@@ -45,7 +45,7 @@ describe ChargebackController do
 
   context "Saved chargeback rendering" do
     it "Saved chargeback reports renders paginagion buttons correctly" do
-      report = FactoryGirl.create(:miq_report_with_results)
+      report = FactoryGirl.create(:miq_report_with_results, :miq_group => User.current_user.current_group)
       report.extras = {:total_html_rows => 100}
       rp_id = report.id
       rr_id = report.miq_report_results[0].id
