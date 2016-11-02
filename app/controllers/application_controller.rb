@@ -80,7 +80,7 @@ class ApplicationController < ActionController::Base
   #   CimStorageExtentController => CimStorageExtent
   #   OntapFileShareController   => OntapFileShare
   def self.model
-    @model ||= name[0..-11].constantize 
+    @model ||= name[0..-11].constantize
   end
 
   def self.permission_prefix
@@ -247,7 +247,7 @@ class ApplicationController < ActionController::Base
   private :initiate_wait_for_task
 
   def init_report_data(controller_name)
-    view_url = view_to_url(@view) if !@view.nil?
+    view_url = view_to_url(@view) unless @view.nil?
     {
       :controller_name => controller_name,
       :data            => {
@@ -269,7 +269,7 @@ class ApplicationController < ActionController::Base
 
     if params[:active_tree]
       node_info = (method(:get_node_info).arity == 1) ? get_node_info(x_node) : get_node_info(x_node, false)
-      options.merge!(node_info) if !node_info.nil?
+      options.merge!(node_info) unless node_info.nil?
     end
 
     options[:parent] = identify_record(params[:model_id]) if params[:model_id] && options[:parent].nil?
@@ -931,7 +931,7 @@ class ApplicationController < ActionController::Base
     table = view.sub_table ? view.sub_table : view.table
     view_context.instance_variable_set(:@explorer, @explorer)
     table.data.each do |row|
-      target = @targets_hash[row.id] if !row['id'].nil?
+      target = @targets_hash[row.id] unless row['id'].nil?
       quadicon = view_context.render_quadicon(target) if !target.nil? && type_has_quadicon(target.class.name)
       new_row = {
         :id       => list_row_id(row),

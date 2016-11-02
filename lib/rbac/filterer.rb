@@ -163,7 +163,7 @@ module Rbac
       sub_filter        = options[:sub_filter]
       include_for_find  = options[:include_for_find]
       search_filter     = options[:filter]
-      selected_ids      = options[:selected_ids] #Array of selected Ids
+      selected_ids      = options[:selected_ids] # Array of selected Ids
 
       limit             = options[:limit]  || targets.try(:limit_value)
       offset            = options[:offset] || targets.try(:offset_value)
@@ -218,7 +218,7 @@ module Rbac
 
       scope = include_references(scope, klass, include_for_find, exp_includes)
       scope = scope.limit(limit).offset(offset) if attrs[:apply_limit_in_sql]
-      scope = scope.where(:id => selected_ids) if !selected_ids.nil?
+      scope = scope.where(:id => selected_ids) unless selected_ids.nil?
       targets = scope
 
       unless options[:skip_counts]

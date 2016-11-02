@@ -619,9 +619,9 @@ class ProviderForemanController < ApplicationController
 
   def cs_provider_node(provider)
     options = {
-      :model => "ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfigurationScript",
+      :model                 => "ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfigurationScript",
       :match_via_descendants => ConfigurationScript,
-      :where_clause => ["manager_id IN (?)", provider.id]
+      :where_clause          => ["manager_id IN (?)", provider.id]
     }
     process_show_list(options) if @show_list
     options.merge!(update_options) if !@show_list
@@ -635,7 +635,7 @@ class ProviderForemanController < ApplicationController
       options = {:model => model.to_s}
       @right_cell_text = _("All %{title} Providers") % {:title => model_to_name(model)}
       process_show_list(options) if @show_list
-      options.merge!(update_options) if !@show_list
+      options.merge!(update_options) unless @show_list
     end
     options
   end
@@ -709,7 +709,7 @@ class ProviderForemanController < ApplicationController
   def miq_search_node
     options = {:model => "ConfiguredSystem"}
     process_show_list(options) if @show_list
-    options.merge!(update_options) if !@show_list
+    options.merge!(update_options) unless @show_list
     @right_cell_text = _("All %{title} Configured Systems") % {:title => ui_lookup(:ui_title => "foreman")}
     options
   end
@@ -746,7 +746,7 @@ class ProviderForemanController < ApplicationController
     elsif x_active_tree == :configuration_scripts_tree
       options = {:model => "ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfigurationScript"}
       process_show_list(options) if @show_list
-      options.merge!(update_options) if !@show_list
+      options.merge!(update_options) unless @show_list
       @right_cell_text = _("All Ansible Tower Job Templates")
     end
     options

@@ -118,11 +118,11 @@ describe StorageController do
         session_storage = session[:sandboxes]["storage"]
         expect(response.body).to include("modelName: '#{session_storage[:active_accord].to_s.pluralize}'")
         expect(response.body).to include("activeTree: '#{session_storage[:active_tree].to_s}'")
-        expect(response.body).to include("gtlType: \"list\"")
-        expect(response.body).to include("currId: null")
+        expect(response.body).to include("gtlType: 'list'")
+        expect(response.body).to include("currId: ''")
         expect(response.body).to include("sortColIdx: '0'")
         expect(response.body).to include("isExplorer: 'true' === 'true' ? true : false")
-        expect(response.body).to include("showUrl: '/#{session_storage[:active_accord].to_s}/x_show'")
+        expect(response.body).to include("showUrl: '/#{session_storage[:active_accord].to_s}/x_show/'")
       end
 
       it 'show a datastore cluster in the datastore clusters list' do
@@ -168,7 +168,7 @@ describe StorageController do
         expect(main_content).to include("<h3>\n1 Datastore Being Tagged\n<\/h3>")
         expect(main_content).to include("modelName: 'storages'")
         expect(main_content).to include("isExplorer: 'true' === 'true' ? true : false")
-        expect(main_content).to include("showUrl: '/storage/x_show'")
+        expect(main_content).to include("showUrl: '/storage/x_show/'")
       end
 
       it 'can Perform a datastore Smart State Analysis from the datastore summary page' do
