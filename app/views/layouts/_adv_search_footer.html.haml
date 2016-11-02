@@ -10,66 +10,47 @@
                    :class => "btn btn-primary disabled pull-left",
                    :alt   => t = _("No saved filters or report filters are available to load"),
                    :title => t)
-
     - else
-      = link_to(_("Load..."),
-                {:action       => "adv_search_button",
-                 :button       => 'load'},
-                 :alt          => t = _("Load a filter"),
-                 :class        => "btn btn-primary pull-left",
-                 :remote       => true,
-                 "data-method" => :post,
-                 :title        => t)
-
+      = button_tag(_('Load...'),
+                   :class   => "btn btn-primary pull-left",
+                   :alt     => t = _("Load a filter"),
+                   :title   => t,
+                   :onclick => "miqAjaxButton('#{url_for(:action => 'adv_search_button', :button => "load")}');")
     - if @edit[@expkey][:exp_table].flatten.first == "???"
       = button_tag(_("Apply"), :class => "btn btn-primary disabled")
     - else
-      = link_to(_("Apply"),
-                {:action => "adv_search_button",
-                 :button => "apply"},
-                "data-miq_sparkle_on"  => true,
-                "data-miq_sparkle_off" => true,
-                :class                 => "btn btn-primary",
-                :alt                   => t = _("Apply the current filter"),
-                :remote                => true,
-                "data-method"          => :post,
-                :title                 => t)
+      = button_tag(_('Apply'),
+                   :class   => "btn btn-primary",
+                   :alt     => t = _("Apply the current filter"),
+                   :title   => t,
+                   :onclick => "miqAjaxButton('#{url_for(:action => 'adv_search_button', :button => "apply")}');")
     - if @edit[@expkey][:selected] && @edit[@expkey][:selected][:typ] != "default" && @edit[@expkey][:selected][:id] != 0
       - if admin_user? || @edit[@expkey][:selected][:typ] == "user"
         - confirm_msg = _("Delete the %{model} filter named %{filter}?") % {:model  => ui_lookup(:model => @edit[@expkey][:exp_mode]),
                                                                             :filter => @edit[:adv_search_name]}
 
-        = link_to(_("Delete"),
-                  {:action => "adv_search_button",
-                   :button => "delete"},
-                  'data-confirm' => confirm_msg,
-                  :class         => "btn btn-danger",
-                  :alt           => t = _("Delete the filter named %{filter_name}") % {:filter_name => @edit[@expkey][:selected][:description]},
-                  :remote        => true,
-                  "data-method"  => :post,
-                  :title         => t)
+        = button_tag(_('Delete'),
+                   :class   => "btn btn-danger",
+                   'data-confirm' => confirm_msg,
+                   :alt     => t = _("Delete the filter named %{filter_name}") % {:filter_name => @edit[@expkey][:selected][:description]},
+                   :title   => t,
+                   :onclick => "miqAjaxButton('#{url_for(:action => 'adv_search_button', :button => "delete")}');")
     - if @edit[@expkey][:exp_table].flatten.first == "???"
       = button_tag(_("Save..."), :class => "btn btn-primary disabled")
     - else
-      = link_to(_("Save..."),
-                {:action => "adv_search_button",
-                 :button => "save"},
-                :class        => "btn btn-primary",
-                :alt          => t = _("Save the current filter"),
-                :remote       => true,
-                "data-method" => :post,
-                :title        => t)
+      = button_tag(_('Save...'),
+                   :class   => "btn btn-primary",
+                   :alt     => t = _("Save the current filter"),
+                   :title   => t,
+                   :onclick => "miqAjaxButton('#{url_for(:action => 'adv_search_button', :button => "save")}');")
     - if @edit[@expkey][:exp_table].flatten.first == "???"
       = button_tag(_("Reset"), :class => "btn btn-default disabled")
     - else
-      = link_to(_("Reset"),
-                {:action => "adv_search_button",
-                 :button => "reset"},
-                :class        => "btn btn-default",
-                :alt          => t = _("Reset the filter"),
-                :remote       => true,
-                "data-method" => :post,
-                :title        => t)
+      = button_tag(_('Reset'),
+                   :class   => "btn btn-default",
+                   :alt     => t = _("Reset the filter"),
+                   :title   => t,
+                   :onclick => "miqAjaxButton('#{url_for(:action => 'adv_search_button', :button => "reset")}');")
   - elsif mode == "load"
     - if @edit[@expkey][:exp_chosen_report].nil? && @edit[@expkey][:exp_chosen_search].nil?
       = button_tag(_("Load"),
@@ -77,36 +58,24 @@
                    :alt   => t = _("Choose a saved filter or report filter to load"),
                    :title => t)
     - else
-      = link_to(_("Load"),
-                {:action => "adv_search_button",
-                 :button => "loadit"},
-                :class        => "btn btn-primary pull-left",
-                :alt          => t = _("Load the filter shown above"),
-                :remote       => true,
-                "data-method" => :post,
-                :title        => t)
-    = link_to(_("Cancel"),
-              {:action => "adv_search_button",
-               :button => "cancel"},
-              :class        => "btn btn-primary",
-              :alt          => t = _("Cancel the load"),
-              :remote       => true,
-              "data-method" => :post,
-              :title        => t)
+      = button_tag(_('Load'),
+                   :class   => "btn btn-primary pull-left",
+                   :alt     => t = _("Load the filter shown above"),
+                   :title   => t,
+                   :onclick => "miqAjaxButton('#{url_for(:action => 'adv_search_button', :button => "loadit")}');")
+    = button_tag(_('Cancel'),
+                   :class   => "btn btn-primary",
+                   :alt     => t = _("Cancel the load"),
+                   :title   => t,
+                   :onclick => "miqAjaxButton('#{url_for(:action => 'adv_search_button', :button => "cancel")}');")
   - elsif mode == "save"
-    = link_to(_("Save"),
-                {:action => "adv_search_button",
-                 :button => "saveit"},
-                :class        => "btn btn-primary",
-                :alt          => t = _("Save the current search"),
-                :remote       => true,
-                "data-method" => :post,
-                :title        => t)
-    = link_to(_("Cancel"),
-              {:action => "adv_search_button",
-               :button => "cancel"},
-              :class        => "btn btn-default",
-              :alt          => t = _("Cancel the save"),
-              :remote       => true,
-              "data-method" => :post,
-              :title        => t)
+    = button_tag(_('Save'),
+                   :class   => "btn btn-primary",
+                   :alt     => t = _("Save the current search"),
+                   :title   => t,
+                   :onclick => "miqAjaxButton('#{url_for(:action => 'adv_search_button', :button => "saveit")}');")
+    = button_tag(_('Cancel'),
+                   :class   => "btn btn-default",
+                   :alt     => t = _("Cancel the save"),
+                   :title   => t,
+                   :onclick => "miqAjaxButton('#{url_for(:action => 'adv_search_button', :button => "cancel")}');")
