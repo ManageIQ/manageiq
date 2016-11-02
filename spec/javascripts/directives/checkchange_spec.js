@@ -28,5 +28,27 @@ describe('checkchange initialization', function() {
       expect(form.repo_path.$pristine).toBe(true);
       expect(form.$pristine).toBe(true);
     });
+
+    it('should set the value and form to a non-pristine state when a date is changed from undefined to current date', function() {
+      $scope.repoModel = {repo_path : undefined};
+      $scope.modelCopy = {repo_path : undefined};
+
+      $scope.$digest();
+      var newDate = new Date();
+      form.repo_path.$setViewValue(moment.utc([newDate.getFullYear(), newDate.getMonth(), newDate.getDay()]));
+      expect(form.repo_path.$pristine).toBe(false);
+      expect(form.$pristine).toBe(false);
+    });
+
+    it('should set the value and form to a pristine state when a date is unchanged', function() {
+      var newDate = new Date();
+      $scope.repoModel = {repo_path : undefined};
+      $scope.modelCopy = {repo_path : moment.utc([newDate.getFullYear(), newDate.getMonth(), newDate.getDay()]).toDate()};
+
+      $scope.$digest();
+      form.repo_path.$setViewValue(moment.utc([newDate.getFullYear(), newDate.getMonth(), newDate.getDay()]).toDate());
+      expect(form.repo_path.$pristine).toBe(true);
+      expect(form.$pristine).toBe(true);
+    });
   });
 });
