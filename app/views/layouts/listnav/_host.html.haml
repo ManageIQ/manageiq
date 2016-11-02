@@ -62,7 +62,7 @@
           :display    => 'timeline',
           :record_id  => @record.id,
           :title      => _("Show Timelines"))
-        - if get_vmdb_config[:product][:proto]
+        - if ::Settings.product.proto
           = li_link(:count => @record.event_logs.count,
             :text          => _("ESX Logs"),
             :id            => @record.id,
@@ -118,7 +118,7 @@
             :record_id     => @record.id,
             :title         => _("Show %{host} drift history") % {:host => host_title})
 
-    - if get_vmdb_config[:product][:storage]
+    - if ::Settings.product.storage
       = miq_accordion_panel(_("Storage Relationships"), false, "host_inf_rel") do
         %ul.nav.nav-pills.nav-stacked
           - if role_allows?(:feature => "ontap_storage_system_show_list")

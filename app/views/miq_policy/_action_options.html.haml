@@ -19,7 +19,7 @@
             :maxlength         => MAX_DESC_LEN,
             :class             => "form-control",
             "data-miq_observe" => observe_with_interval)
-          = _("(Default: %{email_from})") % {:email_from => h(get_vmdb_config[:smtp][:from])}
+          = _("(Default: %{email_from})") % {:email_from => h(::Settings.smtp.from)}
       .form-group
         %label.control-label.col-md-2
           = _('To E-mail Address')

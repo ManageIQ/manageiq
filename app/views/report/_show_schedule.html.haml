@@ -21,7 +21,7 @@
       .col-md-10
         %p.form-control-static
           - if @schedule.sched_action[:options][:email][:from].blank?
-            = _("(Default: %{email_from})") % {:email_from => h(get_vmdb_config[:smtp][:from])}
+            = _("(Default: %{email_from})") % {:email_from => h(::Settings.smtp.from)}
           - else
             = h(@schedule.sched_action[:options][:email][:from])
   .form-group

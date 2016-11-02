@@ -2,7 +2,7 @@
 .row
   .col-md-12.col-lg-6
     = render :partial => "shared/summary/textual", :locals => {:title => _("Relationships"), :items => textual_group_relationships}
-    - if get_vmdb_config[:product][:storage]
+    - if ::Settings.product.storage
       = render :partial => "shared/summary/textual", :locals => {:title => _("Storage Relationships"), :items => textual_group_storage_relationships}
   .col-md-12.col-lg-6
     = render :partial => "shared/summary/textual", :locals => {:title => _("Totals for %{hosts}") % {:hosts => title_for_hosts}, :items => textual_group_host_totals}

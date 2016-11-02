@@ -46,7 +46,7 @@
                            :class => "form-control",
                            "data-miq_observe" => observe_url_json)
     - if @edit
-      - db_mode = get_vmdb_config[:authentication][:mode]
+      - db_mode = ::Settings.authentication.mode
       - if db_mode == "database" || (db_mode != "database" && disabled)
         .form-group
           %label.col-md-2.control-label

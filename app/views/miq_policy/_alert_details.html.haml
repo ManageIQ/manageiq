@@ -182,7 +182,7 @@
               .col-md-8
                 %p.form-control-static
                   - if @alert.options[:notifications][:email][:from].blank?
-                    = _("(Default: %{email_from})") % {:email_from => h(get_vmdb_config[:smtp][:from])}
+                    = _("(Default: %{email_from})") % {:email_from => h(::Settings.smtp.from)}
                   - else
                     = h(@alert.options[:notifications][:email][:from])
             .form-group

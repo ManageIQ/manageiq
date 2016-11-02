@@ -139,7 +139,7 @@
                     = view_name
                   .col-md-8
                     %ul.list-inline= render_view_buttons(resource, @edit[:new][:views][resource])
-        - if get_vmdb_config[:product][:storage]
+        - if ::Settings.product.storage
           %fieldset
             %h3
               = _('Storage')

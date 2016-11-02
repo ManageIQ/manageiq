@@ -74,7 +74,7 @@
             :display      => nil,
             :title        => _("Show %{cluster_title} drift history") % {:cluster_title => cluster_title})
 
-    - if get_vmdb_config[:product][:storage]
+    - if ::Settings.product.storage
       = miq_accordion_panel(_("Storage Relationships"), false, "host_inf_rel") do
         %ul.nav.nav-pills.nav-stacked
           - if role_allows?(:feature => "ontap_storage_system_show_list")
