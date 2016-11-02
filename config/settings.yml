@@ -188,6 +188,9 @@
       - VmCreatedEvent
       - VmDeployedEvent
       - VmRegisteredEvent
+      - aggregate.create.end
+      - aggregate.updateprop.end
+      - aggregate.updatemetadata.end
       - image.update
       - image.create
       - image.upload
@@ -318,6 +321,7 @@
       - GceOperationDone_compute.instances.delete
       - VmDisconnectedEvent
       - VmRemovedEvent
+      - aggregate.delete.end
       - image.delete
       - orchestration.stack.delete.end
       - orchestration.stack.delete.error
@@ -589,10 +593,19 @@
       - NETWORK_UPDATE_TEMPLATE_INTERFACE_FAILED
       - NETWORK_UPDATE_VM_INTERFACE
       - NETWORK_UPDATE_VM_INTERFACE_FAILED
+      - network.create.end
+      - network.delete.end
       - network.floating_ip.allocate
       - network.floating_ip.deallocate
       - network.floating_ip.associate
       - network.floating_ip.disassociate
+      - network.update.end
+      - router.create.end
+      - router.delete.end
+      - router.update.end
+      - subnet.create.end
+      - subnet.delete.end
+      - subnet.update.end
       - POD_HOSTPORTCONFLICT
       :detail: []
       :name: Network
@@ -829,6 +842,14 @@
       - USER_UPDATE_STORAGE_DOMAIN_FAILED
       - USER_UPDATE_STORAGE_POOL
       - USER_UPDATE_STORAGE_POOL_FAILED
+      - backup.create.start
+      - backup.create.end
+      - backup.restore.start
+      - backup.restore.end
+      - snapshot.create.start
+      - snapshot.create.end
+      - snapshot.delete.end
+      - snapshot.update.end
       - volume.create.end
       - volume.delete.end
       - POD_OUTOFDISK
