@@ -21,7 +21,7 @@ describe ApplicationHelper do
     shared_examples "no custom buttons" do
       it("#get_custom_buttons")           { expect(get_custom_buttons(subject)).to be_blank }
       it("#custom_buttons_hash")          { expect(custom_buttons_hash(subject)).to be_blank }
-      it("#build_custom_buttons_toolbar") { expect(build_custom_buttons_toolbar(subject).definition).to be_blank }
+      it("#custom_toolbar_class") { expect(custom_toolbar_class(subject).definition).to be_blank }
       it("#record_to_service_buttons")    { expect(record_to_service_buttons(subject)).to be_blank }
     end
 
@@ -87,7 +87,7 @@ describe ApplicationHelper do
         expect(custom_buttons_hash(subject)).to eq([:name => name, :items => items])
       end
 
-      it "#build_custom_buttons_toolbar" do
+      it "#custom_toolbar_class" do
         escaped_button1_text = CGI.escapeHTML(@button1.name.to_s)
         button1 = {
           :id        => "custom__custom_#{@button1.id}",
@@ -111,7 +111,7 @@ describe ApplicationHelper do
           :items        => button_set_item1_items
         }
         group_name = "custom_buttons_#{@button_set.name}"
-        expect(build_custom_buttons_toolbar(subject).definition[group_name].buttons).to eq([button_set_item1])
+        expect(custom_toolbar_class(subject).definition[group_name].buttons).to eq([button_set_item1])
       end
     end
 
@@ -170,9 +170,9 @@ describe ApplicationHelper do
     end
   end # get_image
 
-  describe "#build_toolbar_hide_button" do
+  describe "#hide_button?" do
     let(:user) { FactoryGirl.create(:user) }
-    subject { build_toolbar_hide_button(@id) }
+    subject { hide_button?(@id) }
     before do
       @record = double("record")
       login_as user
@@ -932,10 +932,10 @@ describe ApplicationHelper do
         end
       end
     end
-  end # end of build_toolbar_hide_button
+  end # end of hide_button?
 
-  describe "#build_toolbar_disable_button" do
-    subject { build_toolbar_disable_button(@id) }
+  describe "#disable_button" do
+    subject { disable_button(@id) }
     before do
       @gtl_type = 'list'
       @settings = {
@@ -960,7 +960,7 @@ describe ApplicationHelper do
     ['list', 'tile', 'grid'].each do |g|
       it "when with view_#{g}" do
         @gtl_type = g
-        expect(build_toolbar_disable_button("view_#{g}")).to be_truthy
+        expect(disable_button("view_#{g}")).to be_truthy
       end
     end
 
@@ -1254,7 +1254,7 @@ describe ApplicationHelper do
       it "'collecting' log_file with started server and disables button" do
         @record.status = "not responding"
         error_msg = "Cannot collect current logs unless the Server is started"
-        expect(build_toolbar_disable_button("collect_logs")).to eq(error_msg)
+        expect(disable_button("collect_logs")).to eq(error_msg)
       end
 
       it "log collecting is in progress and disables button" do
@@ -1264,7 +1264,7 @@ describe ApplicationHelper do
         @record.status = "started"
         @record.log_files << log_file
         error_msg = "Log collection is already in progress for this Server"
-        expect(build_toolbar_disable_button("collect_logs")).to eq(error_msg)
+        expect(disable_button("collect_logs")).to eq(error_msg)
       end
 
       it "log collection in progress with unfinished task and disables button" do
@@ -1273,27 +1273,27 @@ describe ApplicationHelper do
         miq_task.miq_server_id = @record.id
         miq_task.save
         error_msg = "Log collection is already in progress for this Server"
-        expect(build_toolbar_disable_button("collect_logs")).to eq(error_msg)
+        expect(disable_button("collect_logs")).to eq(error_msg)
       end
 
       it "'collecting' with undefined depot and disables button" do
         @record.status = "started"
         @record.log_file_depot = nil
         error_msg = "Log collection requires the Log Depot settings to be configured"
-        expect(build_toolbar_disable_button("collect_logs")).to eq(error_msg)
+        expect(disable_button("collect_logs")).to eq(error_msg)
       end
 
       it "'collecting' with undefined depot and disables button" do
         @record.status = "started"
         @record.log_file_depot = nil
         error_msg = "Log collection requires the Log Depot settings to be configured"
-        expect(build_toolbar_disable_button("collect_logs")).to eq(error_msg)
+        expect(disable_button("collect_logs")).to eq(error_msg)
       end
 
       it "'collecting' with defined depot and enables button" do
         @record.status = "started"
         @record.log_file_depot = file_depot
-        expect(build_toolbar_disable_button("collect_logs")).to eq(false)
+        expect(disable_button("collect_logs")).to eq(false)
       end
     end
 
@@ -1311,7 +1311,7 @@ describe ApplicationHelper do
         miq_server.status = "not responding"
         @record.miq_servers << miq_server
         error_msg = "Cannot collect current logs unless there are started Servers in the Zone"
-        expect(build_toolbar_disable_button("zone_collect_logs")).to eq(error_msg)
+        expect(disable_button("zone_collect_logs")).to eq(error_msg)
       end
 
       it "log collecting is in progress and disables button" do
@@ -1323,7 +1323,7 @@ describe ApplicationHelper do
         @record.miq_servers << miq_server
         @record.log_file_depot = file_depot
         error_msg = "Log collection is already in progress for one or more Servers in this Zone"
-        expect(build_toolbar_disable_button("zone_collect_logs")).to eq(error_msg)
+        expect(disable_button("zone_collect_logs")).to eq(error_msg)
       end
 
       it "log collection in progress with unfinished task and disables button" do
@@ -1334,7 +1334,7 @@ describe ApplicationHelper do
         miq_task.miq_server_id = miq_server.id
         miq_task.save
         error_msg = "Log collection is already in progress for one or more Servers in this Zone"
-        expect(build_toolbar_disable_button("zone_collect_logs")).to eq(error_msg)
+        expect(disable_button("zone_collect_logs")).to eq(error_msg)
       end
 
       it "'collecting' with undefined depot and disables button" do
@@ -1342,14 +1342,14 @@ describe ApplicationHelper do
         @record.miq_servers << miq_server
         @record.log_file_depot = nil
         error_msg = "This Zone do not have Log Depot settings configured, collection not allowed"
-        expect(build_toolbar_disable_button("zone_collect_logs")).to eq(error_msg)
+        expect(disable_button("zone_collect_logs")).to eq(error_msg)
       end
 
       it "'collecting' with defined depot and enables button" do
         miq_server.status = "started"
         @record.miq_servers << miq_server
         @record.log_file_depot = file_depot
-        expect(build_toolbar_disable_button("zone_collect_logs")).to eq(false)
+        expect(disable_button("zone_collect_logs")).to eq(false)
       end
     end
 
@@ -1672,7 +1672,7 @@ describe ApplicationHelper do
     context "Disable Retire button for already retired VMs and Instances" do
       it "button instance_retire_now" do
         @record = FactoryGirl.create(:vm_amazon, :retired => true)
-        res = build_toolbar_disable_button("instance_retire_now")
+        res = disable_button("instance_retire_now")
         expect(res).to be_truthy
         expect(res).to include("already retired")
       end
@@ -1692,7 +1692,7 @@ describe ApplicationHelper do
 
       it "and requester.name != @record.requester_name" do
         allow(@record).to receive_messages(:requester_name => 'admin')
-        expect(build_toolbar_disable_button("miq_request_delete")).to be_falsey
+        expect(disable_button("miq_request_delete")).to be_falsey
       end
 
       it "and approval_state = approved" do
@@ -1706,7 +1706,7 @@ describe ApplicationHelper do
 
       it "and requester.name != @record.requester_name" do
         login_as FactoryGirl.create(:user, :role => "test")
-        expect(build_toolbar_disable_button("miq_request_delete")).to include("Users are only allowed to delete their own requests")
+        expect(disable_button("miq_request_delete")).to include("Users are only allowed to delete their own requests")
       end
     end
 
@@ -1726,36 +1726,36 @@ describe ApplicationHelper do
 
       it 'disables the configure button for MiqAeNamespace' do
         @record = FactoryGirl.build(:miq_ae_system_domain)
-        result = builder.send(:build_toolbar_disable_button, 'miq_ae_namespace_edit')
+        result = builder.send(:disable_button, 'miq_ae_namespace_edit')
 
         expect(result).to include("Domain is Locked.")
       end
 
       it 'disables the configure button for MiqAeClass' do
         @record = FactoryGirl.build(:miq_ae_class)
-        result = builder.send(:build_toolbar_disable_button, 'miq_ae_class_copy')
+        result = builder.send(:disable_button, 'miq_ae_class_copy')
 
         expect(result).to include(tooltip)
       end
 
       it 'disables the configure button for MiqAeInstance' do
         @record = FactoryGirl.build(:miq_ae_instance)
-        result = builder.send(:build_toolbar_disable_button, 'miq_ae_instance_copy')
+        result = builder.send(:disable_button, 'miq_ae_instance_copy')
 
         expect(result).to include(tooltip)
       end
 
       it 'disables the configure button for MiqAeMethod' do
         @record = FactoryGirl.build(:miq_ae_method)
-        result = builder.send(:build_toolbar_disable_button, 'miq_ae_method_copy')
+        result = builder.send(:disable_button, 'miq_ae_method_copy')
 
         expect(result).to include(tooltip)
       end
     end
   end # end of disable button
 
-  describe "#build_toolbar_hide_button_ops" do
-    subject { build_toolbar_hide_button_ops(@id) }
+  describe "#hide_button_ops" do
+    subject { hide_button_ops(@id) }
     before do
       @record = FactoryGirl.create(:tenant, :parent => Tenant.seed)
       feature = EvmSpecHelper.specific_product_features(%w(ops_rbac rbac_group_add rbac_tenant_add rbac_tenant_delete))
@@ -1782,8 +1782,8 @@ describe ApplicationHelper do
     end
   end
 
-  describe "#build_toolbar_hide_button_report saved_report admin" do
-    subject { build_toolbar_hide_button_report(@id) }
+  describe "#hide_button_report saved_report admin" do
+    subject { hide_button_report(@id) }
     before do
       @record = FactoryGirl.create(:miq_report_result)
       feature = EvmSpecHelper.specific_product_features(%w(saved_report_delete))
@@ -1801,8 +1801,8 @@ describe ApplicationHelper do
     end
   end
 
-  describe "#build_toolbar_hide_button_report with saved_report view only" do
-    subject { build_toolbar_hide_button_report(@id) }
+  describe "#hide_button_report with saved_report view only" do
+    subject { hide_button_report(@id) }
     before do
       @record = FactoryGirl.create(:miq_report_result)
       feature = EvmSpecHelper.specific_product_features(%w(miq_report_saved_reports_view))
@@ -1852,7 +1852,7 @@ describe ApplicationHelper do
     end
   end
 
-  describe "#build_toolbar_select_button" do
+  describe "#twostate_button_selected" do
     before do
       @gtl_type = 'list'
       @settings = {
@@ -1865,23 +1865,23 @@ describe ApplicationHelper do
         }
       }
     end
-    subject { build_toolbar_select_button(id) }
+    subject { twostate_button_selected(id) }
 
     ['list', 'tile', 'grid'].each do |g|
       it "when with view_#{g}" do
         @gtl_type = g
-        expect(build_toolbar_select_button("view_#{g}")).to be_truthy
+        expect(twostate_button_selected("view_#{g}")).to be_truthy
       end
     end
 
     it "when with tree_large" do
       @settings[:views][:treesize] = 32
-      expect(build_toolbar_select_button("tree_large")).to be_truthy
+      expect(twostate_button_selected("tree_large")).to be_truthy
     end
 
     it "when with tree_small" do
       @settings[:views][:treesize] = 16
-      expect(build_toolbar_select_button("tree_small")).to be_truthy
+      expect(twostate_button_selected("tree_small")).to be_truthy
     end
 
     context  "when with 'compare_compressed'" do
@@ -1996,7 +1996,7 @@ describe ApplicationHelper do
     end
   end
 
-  describe "#build_toolbar_save_button" do
+  describe "#update_common_props" do
     before do
       @record = double(:id => 'record_id_xxx_001', :class => 'record_xxx_class')
       btn_num = "x_button_id_001"
@@ -2013,7 +2013,7 @@ describe ApplicationHelper do
 
     context "when item[:url] exists" do
       subject do
-        build_toolbar_save_button(@item, @item_out)
+        update_common_props(@item, @item_out)
       end
 
       it "saves the value as it is otherwise" do
@@ -2023,7 +2023,7 @@ describe ApplicationHelper do
       it "calls url_for_button" do
         b = _toolbar_builder
         expect(b).to receive(:url_for_button).and_call_original
-        b.send(:build_toolbar_save_button, @item, @item_out)
+        b.send(:update_common_props, @item, @item_out)
       end
     end
   end
@@ -2106,7 +2106,7 @@ describe ApplicationHelper do
     end
   end
 
-  context "#build_toolbar_hide_button" do
+  context "#hide_button?" do
     before do
       Tenant.seed
       feature_list = %w(
@@ -2125,28 +2125,28 @@ describe ApplicationHelper do
     end
 
     it "Enables buttons for Unlocked domain" do
-      expect(build_toolbar_hide_button('miq_ae_class_edit')).to be_falsey
+      expect(hide_button?('miq_ae_class_edit')).to be_falsey
     end
 
     it "a user with view access should not be able to edit class" do
       login_as FactoryGirl.create(:user, :features => 'miq_ae_domain_view')
-      expect(build_toolbar_hide_button('miq_ae_class_edit')).to be_truthy
+      expect(hide_button?('miq_ae_class_edit')).to be_truthy
     end
 
     it "Disables buttons for Locked domain" do
       @domain.lock_contents!
       @domain.reload
-      expect(build_toolbar_hide_button('miq_ae_class_edit')).to be_truthy
+      expect(hide_button?('miq_ae_class_edit')).to be_truthy
     end
 
     it "Enables copy button when there are Editable domains available" do
-      expect(build_toolbar_hide_button('miq_ae_class_copy')).to be_falsey
+      expect(hide_button?('miq_ae_class_copy')).to be_falsey
     end
 
     it "Disables copy button when there are no Editable domains available" do
       @domain.lock_contents!
       @domain.reload
-      expect(build_toolbar_hide_button('miq_ae_class_copy')).to be_truthy
+      expect(hide_button?('miq_ae_class_copy')).to be_truthy
     end
 
     it "Shows the button for domains even if locked" do
@@ -2154,14 +2154,14 @@ describe ApplicationHelper do
       @domain.reload
       @record = @domain
 
-      expect(build_toolbar_hide_button('miq_ae_domain_edit')).to be_falsey
+      expect(hide_button?('miq_ae_domain_edit')).to be_falsey
     end
 
     it 'Shows the button for classes when locked' do
       @domain.lock_contents!
       @domain.reload
 
-      expect(build_toolbar_hide_button('miq_ae_instance_copy')).to be_falsey
+      expect(hide_button?('miq_ae_instance_copy')).to be_falsey
     end
 
     it 'Shows the button for instances when locked' do
@@ -2173,7 +2173,7 @@ describe ApplicationHelper do
         :ae_class => miq_class
       )
 
-      expect(build_toolbar_hide_button('miq_ae_instance_copy')).to be_falsey
+      expect(hide_button?('miq_ae_instance_copy')).to be_falsey
     end
 
     it 'Shows the button for methods when locked' do
@@ -2188,16 +2188,16 @@ describe ApplicationHelper do
         :ae_class => miq_class
       )
 
-      expect(build_toolbar_hide_button('miq_ae_method_copy')).to be_falsey
+      expect(hide_button?('miq_ae_method_copy')).to be_falsey
     end
 
     it "Enables miq_ae_namespace_edit for Unlocked domain" do
       @record = @namespace
-      expect(build_toolbar_hide_button('miq_ae_namespace_edit')).to be_falsey
+      expect(hide_button?('miq_ae_namespace_edit')).to be_falsey
     end
   end
 
-  context "build_toolbar" do
+  context "loolbar_class" do
     before do
       controller.instance_variable_set(:@sb, :active_tree => :foo_tree)
       @pdf_button = {:id        => "download_choice__download_pdf",
@@ -2253,24 +2253,24 @@ describe ApplicationHelper do
     end
   end
 
-  describe "#build_by_class" do
+  describe "#build_toolbar" do
     context "when the toolbar to be built is a blank view" do
-      let(:toolbar_to_build) { ApplicationHelper::Toolbar::BlankView }
+      let(:toolbar_to_build) { 'blank_view_tb' }
 
       it "returns nil" do
-        expect(_toolbar_builder.build_by_class(toolbar_to_build)).to be_nil
+        expect(_toolbar_builder.build_toolbar(toolbar_to_build)).to be_nil
       end
     end
 
     context "when the toolbar to be built is a generic object toolbar" do
-      let(:toolbar_to_build) { ApplicationHelper::Toolbar::GenericObjectDefinition }
+      let(:toolbar_to_build) { 'generic_object_definition_tb' }
 
       before do
         allow(Rbac).to receive(:role_allows?).and_return(true)
       end
 
       it "includes the button group" do
-        expect(_toolbar_builder.build_by_class(toolbar_to_build).first).to include(
+        expect(_toolbar_builder.build_toolbar(toolbar_to_build).first).to include(
           :id    => "generic_object_definition_choice",
           :type  => :buttonSelect,
           :icon  => "fa fa-cog fa-lg",
@@ -2280,7 +2280,7 @@ describe ApplicationHelper do
       end
 
       it "includes the correct button items" do
-        expect(_toolbar_builder.build_by_class(toolbar_to_build).first[:items].first).to include(
+        expect(_toolbar_builder.build_toolbar(toolbar_to_build).first[:items].first).to include(
           :id    => "generic_object_definition_choice__generic_object_definition_create",
           :type  => :button,
           :icon  => "pficon pficon-add-circle-o fa-lg",
