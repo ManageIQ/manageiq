@@ -1242,6 +1242,8 @@
         :identifier: dialog_new
       - :name: edit
         :identifier: dialog_edit
+      - :name: copy
+        :identifier: dialog_copy
     :resource_actions:
       :get:
       - :name: read
@@ -1253,6 +1255,8 @@
         :identifier: dialog_delete
       - :name: edit
         :identifier: dialog_edit
+      - :name: copy
+        :identifier: dialog_copy
       :delete:
       - :name: delete
         :identifier: dialog_delete

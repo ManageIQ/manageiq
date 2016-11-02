@@ -34,6 +34,15 @@ module Api
       service_dialog
     end
 
+    def copy_resource(type, id, data)
+      service_dialog = resource_search(id, type, Dialog)
+      attributes = data.dup
+      attributes['label'] = "Copy of #{service_dialog.label}" unless attributes.key?('label')
+      service_dialog.deep_copy(attributes).tap(&:save!)
+    rescue => err
+      raise BadRequestError, "Failed to copy service dialog - #{err}"
+    end
+
     private
 
     def set_additional_attributes
