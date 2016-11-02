@@ -12,7 +12,12 @@ class ChargebackRateDetail < ApplicationRecord
   delegate :rate_type, :to => :chargeback_rate, :allow_nil => true
 
   FORM_ATTRIBUTES = %i(description per_time per_unit metric group source metric).freeze
-  PER_TIME_TYPES = {"hourly" => _("Hourly"), "weekly" => _("Weekly"), "monthly" => _("Monthly")}.freeze
+  PER_TIME_TYPES = {
+    "hourly"  => _("Hourly"),
+    "daily"   => _("Daily"),
+    "weekly"  => _("Weekly"),
+    "monthly" => _("Monthly")
+  }.freeze
 
   attr_accessor :hours_in_interval
 
