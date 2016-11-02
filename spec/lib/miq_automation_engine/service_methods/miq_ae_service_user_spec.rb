@@ -3,6 +3,10 @@ module MiqAeServiceUserSpec
     let(:user)         { FactoryGirl.create(:user_admin) }
     let(:service_user) { MiqAeMethodService::MiqAeServiceUser.find(user.id) }
 
+    it "#miq_groups" do
+      expect(described_class.instance_methods).to include(:miq_groups)
+    end
+
     ["current_group", "miq_group"].each do |group|
       it "##{group}" do
         user # create before setting expectation
