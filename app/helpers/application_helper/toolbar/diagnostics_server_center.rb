@@ -9,7 +9,8 @@ class ApplicationHelper::Toolbar::DiagnosticsServerCenter < ApplicationHelper::T
       :refresh_workers,
       'fa fa-repeat fa-lg',
       N_('Reload current workers display'),
-      nil),
+      nil,
+      :klass => ApplicationHelper::Button::RefreshWorkers),
     button(
       :refresh_audit_log,
       'fa fa-repeat fa-lg',

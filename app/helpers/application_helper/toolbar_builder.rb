@@ -434,7 +434,7 @@ class ApplicationHelper::ToolbarBuilder
       when "diagnostics_summary"
         return !["refresh_server_summary", "restart_server"].include?(id)
       when "diagnostics_workers"
-        return !["refresh_workers", "restart_workers"].include?(id)
+        return !%w(restart_workers refresh_workers).include?(id)
       else
         return true
       end
@@ -709,8 +709,6 @@ class ApplicationHelper::ToolbarBuilder
       case id
       when "role_start", "role_suspend", "promote_server", "demote_server"
         return true
-      when "log_download", "refresh_logs", "log_collect", "log_reload", "logdepot_edit", "processmanager_restart", "refresh_workers"
-        return true
       end
     when "ServerRole"
       case id
@@ -734,23 +732,6 @@ class ApplicationHelper::ToolbarBuilder
                         middleware_datasource_remove middleware_datasource_add).include?(id) &&
                      (@record.try(:product) == 'Hawkular' ||
                       @record.try(:middleware_server).try(:product) == 'Hawkular')
-    when "NilClass"
-      case id
-      when "log_download"
-        return true if ["workers", "download_logs"].include?(@lastaction)
-      when "log_collect"
-        return true if ["workers", "evm_logs", "audit_logs"].include?(@lastaction)
-      when "log_reload"
-        return true if ["workers", "download_logs"].include?(@lastaction)
-      when "logdepot_edit"
-        return true if ["workers", "evm_logs", "audit_logs"].include?(@lastaction)
-      when "processmanager_restart"
-        return true if ["download_logs", "evm_logs", "audit_logs"].include?(@lastaction)
-      when "refresh_workers"
-        return true if ["download_logs", "evm_logs", "audit_logs"].include?(@lastaction)
-      when "refresh_logs"
-        return true if ["audit_logs", "evm_logs", "workers"].include?(@lastaction)
-      end
     end
     false  # No reason to hide, allow the button to show
   end
