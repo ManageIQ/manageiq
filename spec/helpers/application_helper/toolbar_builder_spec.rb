@@ -1438,7 +1438,7 @@ describe ApplicationHelper do
             it "when no available message but active" do
               allow(@record).to receive(:is_available?).with(:create_snapshot).and_return(false)
               @active = true
-              expect(subject).to eq("The VM is not connected to an active Cloud/Infrastructure Providers")
+              expect(subject).to eq("Create Snapshot operation not supported for Redhat VM")
             end
           end
           it_behaves_like 'default true_case'
@@ -1451,7 +1451,6 @@ describe ApplicationHelper do
           end
           context "when without snapshots" do
             before { allow(@record).to receive_message_chain(:snapshots, :size).and_return(0) }
-            it_behaves_like 'record with error message', 'remove_snapshot'
           end
           context "when with snapshots" do
             before { allow(@record).to receive_message_chain(:snapshots, :size).and_return(2) }
