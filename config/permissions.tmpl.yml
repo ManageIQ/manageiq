@@ -36,7 +36,7 @@
 - ems-type:openstack_infra
 - ems-type:openstack_network
 - ems-type:physical_infra_manager
-- ems-type:lenovo_ph_infra
+- ems-type:lenovo_xclarity
 - ems-type:rhevm
 - ems-type:scvmm
 - ems-type:swift
