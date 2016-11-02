@@ -141,6 +141,24 @@ class MiddlewareServerController < ApplicationController
     }
   end
 
+  def jdbc_drivers
+    # @todo: replace with real API: middleware_manager.jdbc_drivers(feeds)
+    jdbc_drivers = [
+      {:id => 'H2', :label => 'H2'},
+      {:id => 'POSTGRES', :label => 'Postgres'}
+    ]
+
+    if jdbc_drivers.nil?
+      render :json => {
+        :status => :success, :msg => _("No JDBC Drivers installed")
+      }
+    end
+
+    render :json => {
+      :status => :success, :data => jdbc_drivers
+    }
+  end
+
   def add_datasource
     datasource_name = params["datasourceName"]
     selected_server = identify_selected_entities

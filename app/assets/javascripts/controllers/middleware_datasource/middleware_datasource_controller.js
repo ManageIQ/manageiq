@@ -1,6 +1,6 @@
 ManageIQ.angular.app.controller('mwAddDatasourceController', MwAddDatasourceCtrl);
 
-DATASOURCE_EVENT = 'mwAddDatasourceEvent';
+var ADD_DATASOURCE_EVENT = 'mwAddDatasourceEvent';
 
 MwAddDatasourceCtrl.$inject = ['$scope', '$rootScope', 'miqService', 'mwAddDatasourceService'];
 
@@ -50,9 +50,9 @@ function MwAddDatasourceCtrl($scope, $rootScope, miqService, mwAddDatasourceServ
   };
 
   $scope.chooseDsModel.datasources = mwAddDatasourceService.getDatasources();
-  $scope.step2DsModel.existingJdbcDrivers = mwAddDatasourceService.getExistingJdbcDrivers();
+  $scope.step2DsModel.existingJdbcDrivers;
 
-  $scope.$on(DATASOURCE_EVENT, function(event, payload) {
+  $scope.$on(ADD_DATASOURCE_EVENT, function(event, payload) {
     mwAddDatasourceService.sendAddDatasource(payload).then(
       function(result) { // success
         miqService.miqFlash(result.data.status, result.data.msg);
@@ -78,6 +78,12 @@ function MwAddDatasourceCtrl($scope, $rootScope, miqService, mwAddDatasourceServ
     $scope.step2DsModel.jdbcDriverName = dsSelection.driverName;
     $scope.step2DsModel.jdbcModuleName = dsSelection.driverModuleName;
     $scope.step2DsModel.driverClass = dsSelection.driverClass;
+
+    mwAddDatasourceService.getExistingJdbcDrivers().then(function(result) {
+      $scope.step2DsModel.existingJdbcDrivers = result.data;
+    }).catch(function(errorMsg) {
+      miqService.miqFlash(errorMsg.data.status, errorMsg.data.msg);
+    });
   };
 
   $scope.addDatasourceStep1Back = function() {
@@ -96,7 +102,7 @@ function MwAddDatasourceCtrl($scope, $rootScope, miqService, mwAddDatasourceServ
 
   $scope.finishAddDatasource = function() {
     var payload = Object.assign({}, getPayload());
-    $rootScope.$broadcast(DATASOURCE_EVENT, payload);
+    $rootScope.$broadcast(ADD_DATASOURCE_EVENT, payload);
     $scope.reset();
   };
 
