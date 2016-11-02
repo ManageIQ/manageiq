@@ -75,7 +75,7 @@ describe "Rest API Collections" do
     end
 
     it "query Measures" do
-      FactoryGirl.create(:chargeback_rate_detail_measure_bytes)
+      FactoryGirl.create(:chargeback_rate_detail_measure)
       test_collection_query(:measures, "/api/measures", ChargebackRateDetailMeasure)
     end
 

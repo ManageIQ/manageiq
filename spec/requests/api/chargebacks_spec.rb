@@ -98,7 +98,7 @@ RSpec.describe "chargebacks API" do
   end
 
   it "can list of all measures" do
-    measure = FactoryGirl.create(:chargeback_rate_detail_measure_bytes)
+    measure = FactoryGirl.create(:chargeback_rate_detail_measure)
 
     api_basic_authorize
     run_get '/api/measures'
@@ -111,7 +111,7 @@ RSpec.describe "chargebacks API" do
   end
 
   it "can show an individual measure" do
-    measure = FactoryGirl.create(:chargeback_rate_detail_measure_bytes)
+    measure = FactoryGirl.create(:chargeback_rate_detail_measure)
 
     api_basic_authorize
     run_get "/api/measures/#{measure.id}"

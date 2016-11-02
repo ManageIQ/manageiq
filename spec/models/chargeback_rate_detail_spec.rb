@@ -65,7 +65,7 @@ describe ChargebackRateDetail do
 
       expect(cbd.hourly(rate)).to eq(0.0)
     end
-    cbdm = FactoryGirl.create(:chargeback_rate_detail_measure_bytes)
+    cbdm = FactoryGirl.create(:chargeback_rate_detail_measure)
     rate = 8.26
     [
       'hourly',   'megabytes',  rate,
@@ -89,7 +89,9 @@ describe ChargebackRateDetail do
 
   it "#rate_adjustment" do
     value = 10.gigabytes
-    cbdm = FactoryGirl.create(:chargeback_rate_detail_measure_bytes)
+    cbdm = FactoryGirl.create(:chargeback_rate_detail_measure,
+                              :units_display => %w(B KB MB GB TB),
+                              :units         => %w(bytes kilobytes megabytes gigabytes terabytes))
     [
       'megabytes', value,
       'gigabytes', value / 1024,
@@ -146,7 +148,10 @@ Monthly @ 5.0 + 2.5 per Megabytes from 5.0 to Infinity")
   end
 
   it "#per_unit_display_with_measurements" do
-    cbdm = FactoryGirl.create(:chargeback_rate_detail_measure_bytes)
+    cbdm = FactoryGirl.create(:chargeback_rate_detail_measure,
+                              :units_display => %w(B KB MB GB TB),
+                              :units         => %w(bytes kilobytes megabytes gigabytes terabytes))
+
     cbd  = FactoryGirl.build(:chargeback_rate_detail,
                              :per_unit                          => 'megabytes',
                              :chargeback_rate_detail_measure_id => cbdm.id)
@@ -181,7 +186,10 @@ Monthly @ 5.0 + 2.5 per Megabytes from 5.0 to Infinity")
   end
 
   it "diferents_per_units_rates_should_have_the_same_cost" do
-    cbdm = FactoryGirl.create(:chargeback_rate_detail_measure_bytes)
+    cbdm = FactoryGirl.create(:chargeback_rate_detail_measure,
+                              :units_display => %w(B KB MB GB TB),
+                              :units         => %w(bytes kilobytes megabytes gigabytes terabytes))
+
     # should be the same cost. bytes to megabytes and gigabytes to megabytes
     cbd_bytes = FactoryGirl.build(:chargeback_rate_detail,
                                   :per_unit                          => 'bytes',
@@ -199,7 +207,10 @@ Monthly @ 5.0 + 2.5 per Megabytes from 5.0 to Infinity")
   end
 
   it "#show_rates" do
-    cbm = FactoryGirl.create(:chargeback_rate_detail_measure_bytes)
+    cbm = FactoryGirl.create(:chargeback_rate_detail_measure,
+                             :units_display => %w(B KB MB GB TB),
+                             :units         => %w(bytes kilobytes megabytes gigabytes terabytes))
+
     cbc = FactoryGirl.create(:chargeback_rate_detail_currency, :code => "EUR")
 
     cbd = FactoryGirl.build(:chargeback_rate_detail_fixed_compute_cost,
