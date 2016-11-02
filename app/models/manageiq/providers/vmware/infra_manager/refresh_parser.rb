@@ -939,6 +939,12 @@ module ManageIQ::Providers
             :hardware              => hardware,
             :custom_attributes     => vm_inv_to_custom_attribute_hashes(vm_inv),
             :snapshots             => vm_inv_to_snapshot_hashes(vm_inv),
+
+            :cpu_hot_add_enabled      => config['cpuHotAddEnabled'],
+            :cpu_hot_remove_enabled   => config['cpuHotRemoveEnabled'],
+            :memory_hot_add_enabled   => config['memoryHotAddEnabled'],
+            :memory_hot_add_limit     => config['hotPlugMemoryLimit'],
+            :memory_hot_add_increment => config['hotPlugMemoryIncrementSize'],
           }
 
           result << new_result
