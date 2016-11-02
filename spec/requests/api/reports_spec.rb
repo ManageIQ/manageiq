@@ -33,23 +33,6 @@ RSpec.describe "reports API" do
     expect(response).to have_http_status(:ok)
   end
 
-  it "can fetch a report's results" do
-    report = FactoryGirl.create(:miq_report_with_results)
-    report_result = report.miq_report_results.first
-
-    api_basic_authorize
-    run_get "#{reports_url(report.id)}/results"
-
-    expect_result_resources_to_include_hrefs(
-      "resources",
-      [
-        "#{reports_url(report.id)}/results/#{report_result.to_param}"
-      ]
-    )
-    expect(response.parsed_body["resources"]).not_to be_any { |resource| resource.key?("result_set") }
-    expect(response).to have_http_status(:ok)
-  end
-
   it "can fetch a report's result" do
     report = FactoryGirl.create(:miq_report_with_results)
     report_result = report.miq_report_results.first
@@ -74,6 +57,22 @@ RSpec.describe "reports API" do
       @user
     end
     let(:report) { FactoryGirl.create(:miq_report_with_results, :miq_group => user.current_group) }
+
+    it "can fetch a report's results" do
+      report_result = report.miq_report_results.first
+
+      api_basic_authorize
+      run_get "#{reports_url(report.id)}/results"
+
+      expect_result_resources_to_include_hrefs(
+        "resources",
+        [
+          "#{reports_url(report.id)}/results/#{report_result.to_param}"
+        ]
+      )
+      expect(response.parsed_body["resources"]).not_to be_any { |resource| resource.key?("result_set") }
+      expect(response).to have_http_status(:ok)
+    end
 
     it "can fetch all the results" do
       result = report.miq_report_results.first
