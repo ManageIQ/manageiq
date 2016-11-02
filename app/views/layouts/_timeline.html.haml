@@ -6,7 +6,7 @@
     if (!ManageIQ.calendar.calDateFrom || !ManageIQ.calendar.calDateTo) {
     // set timeline to start one week ago and end today
     end = new Date();
-    start = end - 24 * 60 * 60 * 1000 * 7;
+    start = new Date(end - 24 * 60 * 60 * 1000 * 7);
     } else {
     start = new Date(ManageIQ.calendar.calDateFrom);
     end = new Date(ManageIQ.calendar.calDateTo);
