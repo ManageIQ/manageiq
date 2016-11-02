@@ -23,6 +23,9 @@ class MiqReportResult < ApplicationRecord
       where(condition)
     end
   }
+  scope :for_user, lambda { |user|
+    for_groups(user.admin_user? ? nil : user.miq_group_ids)
+  }
 
   before_save do
     user_info = userid.to_s.split("|")
