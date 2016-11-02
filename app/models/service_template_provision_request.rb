@@ -7,7 +7,6 @@ class ServiceTemplateProvisionRequest < MiqRequest
   validate               :must_have_user
 
   alias_attribute :service_template, :source
-
   virtual_has_one :picture
   virtual_has_one :service_template
   virtual_has_one :provision_dialog
@@ -16,6 +15,8 @@ class ServiceTemplateProvisionRequest < MiqRequest
   default_value_for(:source_id)    { |r| r.get_option(:src_id) }
   default_value_for :source_type,  SOURCE_CLASS_NAME
   default_value_for :process,      false
+
+  delegate :picture, :to => :service_template, :allow_nil => true
 
   def user
     get_user
@@ -26,11 +27,6 @@ class ServiceTemplateProvisionRequest < MiqRequest
   end
 
   def my_zone
-  end
-
-  def picture
-    st = service_template
-    st.picture if st.present?
   end
 
   def provision_dialog
