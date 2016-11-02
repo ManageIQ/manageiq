@@ -15,6 +15,9 @@ describe MiqAeEngine::MiqAeMethod do
 
         def persist_state_hash
         end
+
+        def disable_rbac
+        end
       end.new
 
       logger_klass = Class.new do

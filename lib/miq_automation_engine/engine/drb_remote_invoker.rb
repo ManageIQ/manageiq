@@ -21,6 +21,17 @@ module MiqAeEngine
       teardown if num_methods == 0
     end
 
+    # This method is called by the client thread that runs for each request
+    # coming into the server.
+    # See https://github.com/ruby/ruby/blob/trunk/lib/drb/drb.rb#L1658
+    # Previously we had used DRb.front but that gets compromised when multiple
+    # DRb servers are running in the same process.
+    def self.workspace
+      if Thread.current['DRb'] && Thread.current['DRb']['server']
+        Thread.current['DRb']['server'].front.workspace
+      end
+    end
+
     private
 
     # invocation

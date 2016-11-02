@@ -41,24 +41,29 @@ module MiqAeServiceSpec
 
   describe MiqAeService do
     context "#service_model" do
-      let(:miq_ae_service) { MiqAeService.new(double('ws', :persist_state_hash => {})) }
+      let(:workspace) { double('ws', :persist_state_hash => {}) }
+      let(:miq_ae_service) { MiqAeService.new(workspace) }
       let(:prefix) { "MiqAeMethodService::MiqAeService" }
 
       it "loads base model" do
+        allow(workspace).to receive(:disable_rbac)
         expect(miq_ae_service.service_model(:VmOrTemplate)).to   be(MiqAeMethodService::MiqAeServiceVmOrTemplate)
         expect(miq_ae_service.service_model(:vm_or_template)).to be(MiqAeMethodService::MiqAeServiceVmOrTemplate)
       end
 
       it "loads sub-classed model" do
+        allow(workspace).to receive(:disable_rbac)
         expect(miq_ae_service.service_model(:Vm)).to be(MiqAeMethodService::MiqAeServiceVm)
         expect(miq_ae_service.service_model(:vm)).to be(MiqAeMethodService::MiqAeServiceVm)
       end
 
       it "loads model with mapped name" do
+        allow(workspace).to receive(:disable_rbac)
         expect(miq_ae_service.service_model(:ems)).to be(MiqAeMethodService::MiqAeServiceExtManagementSystem)
       end
 
       it "loads name-spaced model by mapped name" do
+        allow(workspace).to receive(:disable_rbac)
         MiqAeMethodService::Deprecation.silence do
           expect(miq_ae_service.service_model(:ems_openstack)).to be(
             MiqAeMethodService::MiqAeServiceManageIQ_Providers_Openstack_CloudManager)
@@ -68,6 +73,7 @@ module MiqAeServiceSpec
       end
 
       it "loads name-spaced model by fully-qualified name" do
+        allow(workspace).to receive(:disable_rbac)
         expect(miq_ae_service.service_model(:ManageIQ_Providers_Openstack_CloudManager)).to    be(
           MiqAeMethodService::MiqAeServiceManageIQ_Providers_Openstack_CloudManager)
         expect(miq_ae_service.service_model(:ManageIQ_Providers_Openstack_CloudManager_Vm)).to be(
@@ -75,16 +81,19 @@ module MiqAeServiceSpec
       end
 
       it "raises error on invalid service_model name" do
+        allow(workspace).to receive(:disable_rbac)
         expect { miq_ae_service.service_model(:invalid_model) }.to raise_error(NameError)
       end
 
       it "loads all mapped models" do
+        allow(workspace).to receive(:disable_rbac)
         MiqAeMethodService::MiqAeService::LEGACY_MODEL_NAMES.values.each do |model_name|
           expect { "MiqAeMethodService::MiqAeService#{model_name}".constantize }.to_not raise_error
         end
       end
 
       it "loads cloud networks" do
+        allow(workspace).to receive(:disable_rbac)
         items = %w(
           ManageIQ_Providers_Openstack_NetworkManager_CloudNetwork
           ManageIQ_Providers_Openstack_NetworkManager_CloudNetwork_Private
@@ -146,6 +155,7 @@ module MiqAeServiceSpec
       let(:ns) { "fred" }
 
       it "set namespace" do
+        allow(workspace).to receive(:disable_rbac)
         allow(workspace).to receive(:persist_state_hash).and_return({})
         expect(workspace).to receive(:prepend_namespace=).with(ns)
 
@@ -171,32 +181,38 @@ module MiqAeServiceSpec
 
       context "#create_notification!" do
         it "invalid type" do
+          allow(workspace).to receive(:disable_rbac)
           expect { miq_ae_service.create_notification!(:type => :invalid_type, :subject => vm) }
             .to raise_error(ArgumentError, "Invalid notification type specified")
         end
 
         it "invalid subject" do
+          allow(workspace).to receive(:disable_rbac)
           expect { miq_ae_service.create_notification!(:type => :vm_retired, :subject => 'fred') }
             .to raise_error(ArgumentError, "Subject must be a valid Active Record object")
         end
 
         it "default type of automate_user_info" do
+          allow(workspace).to receive(:disable_rbac)
           result = miq_ae_service.create_notification!(:message => msg_text)
           expect(result).to be_kind_of(MiqAeMethodService::MiqAeServiceNotification)
         end
 
         it "type of automate_user_info" do
+          allow(workspace).to receive(:disable_rbac)
           result = miq_ae_service.create_notification!(:level => 'success', :audience => 'user', :message => 'test')
           expect(result).to be_kind_of(MiqAeMethodService::MiqAeServiceNotification)
         end
 
         it "type of automate_tenant_info" do
+          allow(workspace).to receive(:disable_rbac)
           expect(user).to receive(:tenant).and_return(Tenant.root_tenant)
           result = miq_ae_service.create_notification!(:level => 'success', :audience => 'tenant', :message => 'test')
           expect(result).to be_kind_of(MiqAeMethodService::MiqAeServiceNotification)
         end
 
         it "type of automate_global_info" do
+          allow(workspace).to receive(:disable_rbac)
           result = miq_ae_service.create_notification!(:level => 'success', :audience => 'global', :message => 'test')
           expect(result).to be_kind_of(MiqAeMethodService::MiqAeServiceNotification)
         end
@@ -204,16 +220,19 @@ module MiqAeServiceSpec
 
       context "#create_notification" do
         it "invalid type" do
+          allow(workspace).to receive(:disable_rbac)
           expect { miq_ae_service.create_notification(:type => :invalid_type, :subject => vm) }
             .not_to raise_error
         end
 
         it "invalid subject" do
+          allow(workspace).to receive(:disable_rbac)
           expect { miq_ae_service.create_notification(:type => :vm_retired, :subject => 'fred') }
             .not_to raise_error
         end
 
         it "default type of automate_user_info" do
+          allow(workspace).to receive(:disable_rbac)
           result = miq_ae_service.create_notification(:message => msg_text)
           expect(result).to be_kind_of(MiqAeMethodService::MiqAeServiceNotification)
           ui_representation = result.object_send(:to_h)
@@ -222,17 +241,20 @@ module MiqAeServiceSpec
         end
 
         it "type of automate_user_info" do
+          allow(workspace).to receive(:disable_rbac)
           result = miq_ae_service.create_notification(:level => 'success', :audience => 'user', :message => 'test')
           expect(result).to be_kind_of(MiqAeMethodService::MiqAeServiceNotification)
         end
 
         it "type of automate_tenant_info" do
+          allow(workspace).to receive(:disable_rbac)
           expect(user).to receive(:tenant).and_return(Tenant.root_tenant)
           result = miq_ae_service.create_notification(:level => 'success', :audience => 'tenant', :message => 'test')
           expect(result).to be_kind_of(MiqAeMethodService::MiqAeServiceNotification)
         end
 
         it "type of automate_global_info" do
+          allow(workspace).to receive(:disable_rbac)
           result = miq_ae_service.create_notification(:level => 'success', :audience => 'global', :message => 'test')
           expect(result).to be_kind_of(MiqAeMethodService::MiqAeServiceNotification)
         end
