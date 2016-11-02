@@ -12,7 +12,6 @@ module ApplianceConsole
     REGISTER_CMD    = 'repmgr standby register'.freeze
     PGPASS_FILE     = '/var/lib/pgsql/.pgpass'.freeze
     REPMGRD_SERVICE = 'rh-postgresql95-repmgr'.freeze
-    REPMGRD_LOG     = '/var/log/repmgr/repmgrd.log'.freeze
 
     attr_accessor :standby_host, :run_repmgrd_configuration
 
@@ -97,18 +96,8 @@ module ApplianceConsole
 
     def configure_repmgrd
       return true unless run_repmgrd_configuration
-      write_repmgrd_config
       write_pgpass_file
       start_repmgrd
-    end
-
-    def write_repmgrd_config
-      File.open(REPMGR_CONFIG, "a") do |f|
-        f.write("failover=automatic\n")
-        f.write("promote_command='repmgr standby promote'\n")
-        f.write("follow_command='repmgr standby follow'\n")
-        f.write("logfile=#{REPMGRD_LOG}\n")
-      end
     end
 
     def write_pgpass_file

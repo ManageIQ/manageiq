@@ -223,32 +223,6 @@ describe ApplianceConsole::DatabaseReplicationStandby do
     end
   end
 
-  context "#write_repmgrd_config" do
-    let(:config_path) { Tempfile.new("repmgr_config").path }
-
-    before do
-      stub_const("ApplianceConsole::DatabaseReplication::REPMGR_CONFIG", config_path)
-    end
-
-    after do
-      FileUtils.rm_f(config_path)
-    end
-
-    it "appends the correct data to the config file" do
-      File.write(config_path, "some other stuff here\n")
-
-      subject.write_repmgrd_config
-
-      expect(File.read(config_path)).to eq(<<-EOS.strip_heredoc)
-        some other stuff here
-        failover=automatic
-        promote_command='repmgr standby promote'
-        follow_command='repmgr standby follow'
-        logfile=/var/log/repmgr/repmgrd.log
-      EOS
-    end
-  end
-
   context "#write_pgpass_file" do
     let(:pgpass_path) { Tempfile.new("pgpass").path }
 
