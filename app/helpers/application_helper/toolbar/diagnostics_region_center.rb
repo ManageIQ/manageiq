@@ -40,7 +40,9 @@ class ApplicationHelper::Toolbar::DiagnosticsRegionCenter < ApplicationHelper::T
                           :server_role_description => @record.server_role.description,
                           :server_name             => @record.miq_server.name,
                           :server_id               => @record.miq_server.id}
-                      end),
+                      end,
+          :klass => ApplicationHelper::Button::RoleStart
+        ),
         button(
           :role_suspend,
           'fa fa-pause-circle-o fa-lg',
@@ -56,7 +58,8 @@ class ApplicationHelper::Toolbar::DiagnosticsRegionCenter < ApplicationHelper::T
                           :server_role_description => @record.server_role.description,
                           :server_name             => @record.miq_server.name,
                           :server_id               => @record.miq_server.id}
-                      end
+                      end,
+          :klass => ApplicationHelper::Button::RoleSuspend
         ),
         button(
           :demote_server,
@@ -68,7 +71,8 @@ class ApplicationHelper::Toolbar::DiagnosticsRegionCenter < ApplicationHelper::T
               :server_id               => @record.miq_server.id}
           end,
           N_('Demote Server'),
-          :confirm => N_("Do you want to demote this Server to secondary?  This will leave no primary Server for this Role.")),
+          :confirm => N_("Do you want to demote this Server to secondary?  This will leave no primary Server for this Role."),
+          :klass => ApplicationHelper::Button::ServerDemote),
         button(
           :promote_server,
           'product product-migrate fa-lg',
@@ -79,7 +83,8 @@ class ApplicationHelper::Toolbar::DiagnosticsRegionCenter < ApplicationHelper::T
               :server_id               => @record.miq_server.id}
           end,
           N_('Promote Server'),
-          :confirm => N_("Do you want to promote this Server to primary?  This will replace any existing primary Server for this Role.")),
+          :confirm => N_("Do you want to promote this Server to primary?  This will replace any existing primary Server for this Role."),
+          :klass => ApplicationHelper::Button::ServerPromote),
       ]
     ),
   ])

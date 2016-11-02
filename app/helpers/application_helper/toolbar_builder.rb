@@ -425,12 +425,10 @@ class ApplicationHelper::ToolbarBuilder
           return false
         when "delete_server", "zone_delete_server"
           return @record.class != MiqServer
-        when "role_start", "role_suspend", "zone_role_start", "zone_role_suspend"
-          return !(@record.class == AssignedServerRole && @record.miq_server.started?)
-        when "demote_server", "promote_server", "zone_demote_server", "zone_promote_server"
-          return !(@record.class == AssignedServerRole && @record.master_supported?)
+        when "zone_collect_current_logs", "zone_collect_logs", "zone_log_depot_edit"
+          return true
         end
-        return true
+        return false
       when "diagnostics_summary"
         return !["refresh_server_summary", "restart_server"].include?(id)
       when "diagnostics_workers"
@@ -705,16 +703,6 @@ class ApplicationHelper::ToolbarBuilder
       else
         return true unless editable_domain?(@record)
       end
-    when "MiqServer", "MiqRegion"
-      case id
-      when "role_start", "role_suspend", "promote_server", "demote_server"
-        return true
-      end
-    when "ServerRole"
-      case id
-      when "server_delete", "role_start", "role_suspend", "promote_server", "demote_server"
-        return true
-      end
     when "ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem", "ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem"
       case id
       when "configured_system_provision"
@@ -752,48 +740,6 @@ class ApplicationHelper::ToolbarBuilder
     end
 
     case get_record_cls(@record)
-    when "AssignedServerRole"
-      case id
-      when "role_start"
-        if x_node != "root" && @record.server_role.regional_role?
-          return N_("This role can only be managed at the Region level")
-        elsif @record.active
-          return N_("This Role is already active on this Server")
-        elsif !@record.miq_server.started? && !@record.active
-          return N_("Only available Roles on active Servers can be started")
-        end
-      when "role_suspend"
-        if x_node != "root" && @record.server_role.regional_role?
-          return N_("This role can only be managed at the Region level")
-        else
-          if @record.active
-            unless @record.server_role.max_concurrent != 1
-              return N_("Activate the %{server_role_description} Role on another Server to suspend it on %{server_name} [%{server_id}]") %
-                {:server_role_description => @record.server_role.description,
-                 :server_name             => @record.miq_server.name,
-                 :server_id               => @record.miq_server.id}
-            end
-          else
-            return N_("Only active Roles on active Servers can be suspended")
-          end
-        end
-      when "demote_server"
-        if @record.master_supported?
-          if @record.priority == 1 || @record.priority == 2
-            if x_node != "root" && @record.server_role.regional_role?
-              return N_("This role can only be managed at the Region level")
-            end
-          end
-        end
-      when "promote_server"
-        if @record.master_supported?
-          if (@record.priority != 1 && @record.priority != 2) || @record.priority == 2
-            if x_node != "root" && @record.server_role.regional_role?
-              return N_("This role can only be managed at the Region level")
-            end
-          end
-        end
-      end
     when "AvailabilityZone"
       case id
       when "availability_zone_perf"
