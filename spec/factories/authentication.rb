@@ -95,14 +95,6 @@ FactoryGirl.define do
     certificate_authority "certificate_authority"
   end
 
-  factory :authentication_rhsm, :parent => :authentication do
-    type "AuthenticationRhsm"
-    authtype "rhsm"
-    rhsm_sku "rhsm_sku"
-    rhsm_pool_id "rhsm_pool_id"
-    rhsm_server "rhsm_server"
-  end
-
   factory :authentication_redhat_metric, :parent => :authentication do
     authtype "metrics"
   end
