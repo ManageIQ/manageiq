@@ -2025,7 +2025,7 @@ describe ApplicationHelper do
     end
   end
 
-  context "loolbar_class" do
+  context "toolbar_class" do
     before do
       controller.instance_variable_set(:@sb, :active_tree => :foo_tree)
       @pdf_button = {:id        => "download_choice__download_pdf",
