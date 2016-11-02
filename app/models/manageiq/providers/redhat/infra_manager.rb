@@ -50,6 +50,19 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
     self::EventCatcher
   end
 
+  def host_quick_stats(host)
+    qs = {}
+    with_provider_connection(:version => 4) do |connection|
+      stats_list = connection.system_service.hosts_service.host_service(host.uid_ems)
+                             .statistics_service.list
+      qs["overallMemoryUsage"] = stats_list.detect { |x| x.name == "memory.used" }
+                                           .values.first.datum
+      qs["overallCpuUsage"] = stats_list.detect { |x| x.name == "cpu.load.avg.5m" }
+                                        .values.first.datum
+    end
+    qs
+  end
+
   def self.provision_class(via)
     case via
     when "iso" then self::ProvisionViaIso

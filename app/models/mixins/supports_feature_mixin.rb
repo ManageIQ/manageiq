@@ -86,6 +86,7 @@ module SupportsFeatureMixin
     :live_migrate               => 'Live Migration',
     :migrate                    => 'Migration',
     :provisioning               => 'Provisioning',
+    :quick_stats                => 'Quick Stats',
     :reboot_guest               => 'Reboot Guest Operation',
     :reconfigure                => 'Reconfiguration',
     :refresh_network_interfaces => 'Refresh Network Interfaces for a Host',
