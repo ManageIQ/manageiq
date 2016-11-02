@@ -6,9 +6,6 @@ FactoryGirl.define do
   factory :dialog_field_text_box, :parent => :dialog_field, :class => "DialogFieldTextBox" do
   end
 
-  factory :dialog_field_text_area_box, :parent => :dialog_field_text_box, :class => "DialogFieldTextAreaBox" do
-  end
-
   factory :dialog_field_tag_control, :parent => :dialog_field, :class => "DialogFieldTagControl" do
   end
 
