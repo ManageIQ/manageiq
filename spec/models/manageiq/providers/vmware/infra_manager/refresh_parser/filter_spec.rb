@@ -2,7 +2,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::RefreshParser::Filter do
   context "filter_vc_data" do
     let(:ems) { FactoryGirl.create(:ems_vmware) }
 
-    before(:each) do
+    before do
       @refresher = ems.refresher.new([ems])
       @refresher.instance_variable_set(:@vc_data, vc_data)
     end
