@@ -727,20 +727,6 @@ describe ApplicationHelper do
       end
     end
 
-    context "NilClass" do
-      before do
-        @record = nil
-        @sb = {:active_tree => :sandt_tree}
-      end
-
-      %w(ab_button_new ab_group_new ab_group_reorder).each do |id|
-        it "hides #{id} action from toolbar when user has view permission only" do
-          @id = id
-          expect(subject).to be_truthy
-        end
-      end
-    end
-
     context "when id = ems_infra_scale" do
       before do
         @id = "ems_infra_scale"
