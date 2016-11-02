@@ -114,6 +114,8 @@ module ManageIQ::Providers::Vmware::InfraManager::Provision::Configuration::Cont
         set_spec_option(rai, :limit,       :memory_limit,   nil, :to_i)
         set_spec_option(rai, :reservation, :memory_reserve, nil, :to_i)
       end
+
+      vmcs.memoryReservationLockedToMax = false if source.ext_management_system.api_version >= '5.0'
     end
 
     _log.info("Calling VM reconfiguration")
