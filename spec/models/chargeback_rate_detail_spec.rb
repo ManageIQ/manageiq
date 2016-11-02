@@ -200,7 +200,7 @@ Monthly @ 5.0 + 2.5 per Megabytes from 5.0 to Infinity")
 
   it "#show_rates" do
     cbm = FactoryGirl.create(:chargeback_rate_detail_measure_bytes)
-    cbc = FactoryGirl.create(:chargeback_rate_detail_currency_EUR)
+    cbc = FactoryGirl.create(:chargeback_rate_detail_currency, :code => "EUR")
 
     cbd = FactoryGirl.build(:chargeback_rate_detail_fixed_compute_cost,
                             :chargeback_rate_detail_measure_id  => cbm.id,

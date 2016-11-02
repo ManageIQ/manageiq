@@ -70,7 +70,7 @@ RSpec.describe "chargebacks API" do
   end
 
   it "can list of all currencies" do
-    currency = FactoryGirl.create(:chargeback_rate_detail_currency_EUR)
+    currency = FactoryGirl.create(:chargeback_rate_detail_currency)
 
     api_basic_authorize
     run_get '/api/currencies'
@@ -83,7 +83,7 @@ RSpec.describe "chargebacks API" do
   end
 
   it "can show an individual currency" do
-    currency = FactoryGirl.create(:chargeback_rate_detail_currency_EUR)
+    currency = FactoryGirl.create(:chargeback_rate_detail_currency)
 
     api_basic_authorize
     run_get "/api/currencies/#{currency.id}"

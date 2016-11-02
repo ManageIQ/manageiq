@@ -70,7 +70,7 @@ describe "Rest API Collections" do
     end
 
     it "query Currencies" do
-      FactoryGirl.create(:chargeback_rate_detail_currency_EUR)
+      FactoryGirl.create(:chargeback_rate_detail_currency)
       test_collection_query(:currencies, "/api/currencies", ChargebackRateDetailCurrency)
     end
 
