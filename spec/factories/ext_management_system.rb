@@ -315,13 +315,6 @@ FactoryGirl.define do
     end
   end
 
-  factory :configuration_manager_foreman_with_authentication,
-          :parent => :configuration_manager_foreman do
-    after :create do |x|
-      x.authentications << FactoryGirl.create(:authentication)
-    end
-  end
-
   # Leaf classes for provisioning_manager
 
   factory :provisioning_manager_foreman,
