@@ -34,7 +34,17 @@ module OwnershipMixin
       t.grouping(user_table.project(group_sel).where(where_cond))
     end)
 
-    virtual_column :owning_ldap_group,                    :type => :string,     :uses => :miq_group
+    # This is a backported version of the virtual_delegate form of this
+    # (changed in https://github.com/ManageIQ/manageiq/pull/11243 ) which is to
+    # help support the bug fix from
+    # https://github.com/ManageIQ/manageiq/pull/12114
+    virtual_column :owning_ldap_group, :type => :string, :uses => :miq_group, :arel => (lambda do |t|
+      group_tbl = MiqGroup.arel_table
+      t.grouping(
+        group_tbl.project(group_tbl[:description])
+                 .where(group_tbl[:id].eq(t[:miq_group_id]))
+      )
+    end)
 
     # Determine whether to return objects owned by the current user's miq_group
     # or not.
@@ -106,7 +116,7 @@ module OwnershipMixin
     end
 
     def group_owned(miq_group)
-      where(:miq_group_id => miq_group.id)
+      where(arel_table.grouping(Arel::Nodes::NamedFunction.new("LOWER", [arel_attribute(:owning_ldap_group)]).eq(miq_group.description.downcase)))
     end
   end
 

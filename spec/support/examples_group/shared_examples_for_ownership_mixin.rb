@@ -21,6 +21,13 @@ shared_examples "miq ownership" do
       end
       let(:group) { owning_user.current_group }
 
+      let(:group_other_region) do
+        other_region_id = (MiqRegion.my_region_number + 1) * ApplicationRecord.rails_sequence_factor + 1
+        FactoryGirl.create(:miq_group, :id => other_region_id).tap do |g|
+          g.update_column(:description, group.description) # Bypass validation for test purposes
+        end
+      end
+
       context "by user in this region" do
         it "returns resource owned by user" do
           owned_resource.evm_owner = owning_user
@@ -34,6 +41,19 @@ shared_examples "miq ownership" do
           owned_resource.save!
 
           expect(described_class.user_or_group_owned(owning_user, owning_user.current_group)).to eq([owned_resource])
+        end
+      end
+
+      context "only with a group" do
+        it "in this region" do
+          owned_resource.update!(:miq_group => group)
+
+          expect(described_class.user_or_group_owned(nil, group)).to eq([owned_resource])
+        end
+
+        it "with same group description as another region" do
+          owned_resource.update!(:miq_group => group_other_region)
+          expect(described_class.user_or_group_owned(nil, group)).to eq([owned_resource])
         end
       end
 
