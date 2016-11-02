@@ -181,10 +181,6 @@ module ManageIQ::Providers
       invoke_vim_ws(:suspend, vm, options[:user_event])
     end
 
-    def vm_pause(vm, options = {})
-      invoke_vim_ws(:pause, vm, options[:user_event])
-    end
-
     def vm_shutdown_guest(vm, options = {})
       invoke_vim_ws(:shutdownGuest, vm, options[:user_event])
     end

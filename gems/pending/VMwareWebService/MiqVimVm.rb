@@ -114,8 +114,7 @@ class MiqVimVm
     $vim_log.info "MiqVimVm(#{@invObj.server}, #{@invObj.username}).suspend: returned from suspendVM_Task" if $vim_log
     return taskMor unless wait
     waitForTask(taskMor)
-  end # def pause
-  alias_method :pause, :suspend
+  end # def suspend
 
   def reset(wait = true)
     $vim_log.info "MiqVimVm(#{@invObj.server}, #{@invObj.username}).reset: calling resetVM_Task" if $vim_log

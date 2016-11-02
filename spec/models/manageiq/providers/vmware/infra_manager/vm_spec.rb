@@ -21,11 +21,6 @@ describe ManageIQ::Providers::Vmware::InfraManager::Vm do
       include_examples "Vm operation is available when powered on"
     end
 
-    context("with :pause") do
-      let(:state) { :pause }
-      include_examples "Vm operation is available when powered on"
-    end
-
     context("with :shutdown_guest") do
       let(:state) { :shutdown_guest }
       include_examples "Vm operation is available when powered on"
