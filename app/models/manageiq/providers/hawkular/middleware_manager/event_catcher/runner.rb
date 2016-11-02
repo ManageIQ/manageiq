@@ -87,6 +87,13 @@ class ManageIQ::Providers::Hawkular::MiddlewareManager::EventCatcher::Runner <
       event.middleware_ref = event.context['resource_path'] # optional context for linking to resource
     end
     event.message ||= event.text
+    # at time of writing the timeline can not handle newlines or double quotes in the message. Because the
+    # timeline popup is not meant to show huge messages, like stack traces, just truncate after the first line.
+    # And replace double quotes with single quotes.
+    unless event.message.nil?
+      event.message = event.message.lines.first.strip
+      event.message.tr!('"', "'")
+    end
     event.middleware_type = event.tags[TAG_RESOURCE_TYPE] # optional tag for linking to resource
     {
       :ems_id          => ems_id,
