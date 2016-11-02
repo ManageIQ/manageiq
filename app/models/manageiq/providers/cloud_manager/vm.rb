@@ -79,6 +79,14 @@ class ManageIQ::Providers::CloudManager::Vm < ::Vm
     super
   end
 
+  def service
+    super || orchestration_stack.try(:service)
+  end
+
+  def direct_service
+    super || orchestration_stack.try(:direct_service)
+  end
+
   private
 
   def raise_created_event
