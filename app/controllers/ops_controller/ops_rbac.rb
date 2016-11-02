@@ -789,7 +789,7 @@ module OpsController::OpsRbac
                     when "user"
                       get_view(User, :named_scope => :in_my_region)
                     when "group"
-                      get_view(MiqGroup, :named_scope => :non_tenant_groups)
+                      get_view(MiqGroup, :named_scope => :non_tenant_groups_in_my_region)
                     when "role"
                       get_view(MiqUserRole)
                     when "tenant"
@@ -971,7 +971,9 @@ module OpsController::OpsRbac
     @edit[:new][:password] = @user.password unless @sb[:typ] == "copy"
     @edit[:new][:verify] = @user.password unless @sb[:typ] == "copy"
 
-    @edit[:groups] = MiqGroup.non_tenant_groups.sort_by { |g| g.description.downcase }.collect { |g| [g.description, g.id] }
+    @edit[:groups] = MiqGroup.non_tenant_groups_in_my_region
+                             .sort_by { |g| g.description.downcase }
+                             .collect { |g| [g.description, g.id] }
     @edit[:new][:group] = @user.current_group ? @user.current_group.id : nil
 
     @edit[:current] = copy_hash(@edit[:new])

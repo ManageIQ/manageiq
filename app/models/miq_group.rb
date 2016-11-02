@@ -20,7 +20,7 @@ class MiqGroup < ApplicationRecord
 
   delegate :self_service?, :limited_self_service?, :to => :miq_user_role, :allow_nil => true
 
-  validates :description, :presence => true, :uniqueness => true
+  validates :description, :presence => true, :uniqueness => {:conditions => -> { in_my_region } }
   validate :validate_default_tenant, :on => :update, :if => :tenant_id_changed?
   before_destroy :ensure_can_be_destroyed
 
@@ -190,6 +190,10 @@ class MiqGroup < ApplicationRecord
   # @return true if this is a default tenant group
   def tenant_group?
     group_type == TENANT_GROUP
+  end
+
+  def self.non_tenant_groups_in_my_region
+    in_my_region.non_tenant_groups
   end
 
   # Asks about the tenant's default_miq_group

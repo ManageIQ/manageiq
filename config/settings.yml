@@ -1327,7 +1327,6 @@
         - miq_enterprises
         - miq_event_definitions
         - miq_globals
-        - miq_groups
         - miq_policies
         - miq_policy_contents
         - miq_product_features
