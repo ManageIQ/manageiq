@@ -7,29 +7,21 @@ describe ApplicationHelper::Button::MiqAeGitRefresh do
   end
 
   describe '#visible?' do
-    context 'git not enabled' do
-      it 'will be skipped' do
-        button = described_class.new(view_context, {}, {'record' => @record}, {:child_id => 'miq_ae_git_refresh'})
-        allow(@record).to receive(:git_enabled?).and_return(false)
-        allow(MiqRegion.my_region).to receive(:role_active?).with('git_owner').and_return(true)
-        expect(button.visible?).to be_falsey
-      end
+    it 'will be skipped when git not enabled' do
+      button = described_class.new(view_context, {}, {'record' => @record}, {:child_id => 'miq_ae_git_refresh'})
+      allow(@record).to receive(:git_enabled?).and_return(false)
+      allow(MiqRegion.my_region).to receive(:role_active?).with('git_owner').and_return(true)
+      expect(button.visible?).to be_falsey
     end
-    context 'GitBasedDomainImportService not available' do
-      it 'will be skipped' do
-        @record = FactoryGirl.create(:miq_ae_git_domain)
-        button = described_class.new(view_context, {}, {'record' => @record}, {:child_id => 'miq_ae_git_refresh'})
-        allow(MiqRegion.my_region).to receive(:role_active?).with('git_owner').and_return(false)
-        expect(button.visible?).to be_falsey
-      end
+    it 'will be skipped when GitBasedDomainImportService not available' do
+      button = described_class.new(view_context, {}, {'record' => @record}, {:child_id => 'miq_ae_git_refresh'})
+      allow(MiqRegion.my_region).to receive(:role_active?).with('git_owner').and_return(false)
+      expect(button.visible?).to be_falsey
     end
-    context 'git enabled and GitBasedDomainImportService available' do
-      it 'will not be skipped' do
-        @record = FactoryGirl.create(:miq_ae_git_domain)
-        button = described_class.new(view_context, {}, {'record' => @record}, {:child_id => 'miq_ae_git_refresh'})
-        allow(MiqRegion.my_region).to receive(:role_active?).with('git_owner').and_return(true)
-        expect(button.visible?).to be_truthy
-      end
+    it 'will not be skipped when git enabled and GitBasedDomainImportService available' do
+      button = described_class.new(view_context, {}, {'record' => @record}, {:child_id => 'miq_ae_git_refresh'})
+      allow(MiqRegion.my_region).to receive(:role_active?).with('git_owner').and_return(true)
+      expect(button.visible?).to be_truthy
     end
   end
 end

@@ -18,9 +18,20 @@ FactoryGirl.define do
       if e.miq_groups.blank? && (e.role || e.features)
         u.miq_groups = [
           (e.role && MiqGroup.find_by_description("EvmGroup-#{e.role}")) ||
-          FactoryGirl.create(:miq_group, :features => e.features, :role => e.role, :tenant => e.tenant)
+            FactoryGirl.create(:miq_group, :features => e.features, :role => e.role, :tenant => e.tenant)
         ]
       end
+    end
+
+    trait :with_miq_edit_features do
+      features %w(
+        miq_ae_class_edit
+        miq_ae_domain_edit
+        miq_ae_class_copy
+        miq_ae_instance_copy
+        miq_ae_method_copy
+        miq_ae_namespace_edit
+      )
     end
   end
 
@@ -37,7 +48,7 @@ FactoryGirl.define do
   end
 
   factory :user_admin, :parent => :user do
-    role            "super_administrator"
+    role "super_administrator"
   end
 
   factory :user_miq_request_approver, :parent => :user do
