@@ -73,16 +73,14 @@ module ManagerRefresh
 
     private
 
+    attr_writer :object
+
     def allowed?(dto_collection_scope, key)
       # TODO(lsmola) can we make this O(1)? This check will be performed for each record in the DB
 
       return false if dto_collection_scope.attributes_blacklist.present? && dto_collection_scope.attributes_blacklist.include?(key)
       return false if dto_collection_scope.attributes_whitelist.present? && !dto_collection_scope.attributes_whitelist.include?(key)
       true
-    end
-
-    def object=(built_object)
-      @object = built_object
     end
 
     def loadable?(value)
