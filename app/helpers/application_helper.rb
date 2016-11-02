@@ -157,6 +157,10 @@ module ApplicationHelper
     }
   end
 
+  def type_has_quadicon(type)
+    !["ManageIQ::Providers::Foreman::ConfigurationManager::ConfigurationProfile", "ServiceTemplate"].include? type
+  end
+
   def controller_to_model
     controller_to_model_params[self.class.model.to_s] || self.class.model
   end

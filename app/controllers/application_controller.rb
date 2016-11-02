@@ -80,7 +80,7 @@ class ApplicationController < ActionController::Base
   #   CimStorageExtentController => CimStorageExtent
   #   OntapFileShareController   => OntapFileShare
   def self.model
-    @model ||= name[0..-11].constantize
+    @model ||= name[0..-11].constantize 
   end
 
   def self.permission_prefix
@@ -931,7 +931,8 @@ class ApplicationController < ActionController::Base
     table = view.sub_table ? view.sub_table : view.table
     view_context.instance_variable_set(:@explorer, @explorer)
     table.data.each do |row|
-      quadicon = view_context.render_quadicon(@targets_hash[row.id]) if !row['id'].nil?
+      target = @targets_hash[row.id] if !row['id'].nil?
+      quadicon = view_context.render_quadicon(target) if !target.nil? && type_has_quadicon(target.class.name)
       new_row = {
         :id       => list_row_id(row),
         :cells    => [],

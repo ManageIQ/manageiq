@@ -1,3 +1,5 @@
+- if Object.const_defined?(controller.class.name[0..-11])
+  - current_model = controller.class.model if controller.class.respond_to?("model") && !controller.class.model.nil?
 #miq-gtl-view{"ng-controller" => "miqGtlContoller as gtlCtrl"}
   %miq-tile-view{"ng-if"            => "gtlCtrl.gtlType === 'grid' || gtlCtrl.gtlType === 'tile'",
                  "settings"         => "gtlCtrl.settings",
@@ -24,13 +26,13 @@
   sendDataWithRx({initController: {
     name: 'miqGtlContoller',
     data: {
-      modelName: '#{j_str(@display.nil? && !controller.class.model.nil? ? controller.class.model.to_s.tableize : @display)}',
+      modelName: '#{j_str(@display.nil? && current_model ? controller.class.model.to_s.tableize : @display)}',
       activeTree: '#{x_active_tree}',
       gtlType: '#{j_str(@gtl_type)}',
       currId: '#{j_str(params[:id])}',
       sortColIdx: '#{@sortcol}',
       sortDir: '#{@sortdir}',
       isExplorer: '#{@explorer}' === 'true' ? true : false,
-      showUrl: '#{view_to_url(@view) if !@view.nil?}'
+      showUrl: '#{view_to_url(@view) if !@view.nil? && !@view.db.nil?}'
     }
   }});
