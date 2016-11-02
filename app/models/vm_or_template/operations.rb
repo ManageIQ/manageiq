@@ -71,28 +71,19 @@ module VmOrTemplate::Operations
   #
 
   def validate_vm_control_shelve_action
-    msg = validate_vm_control
-    return {:available => msg[0], :message => msg[1]} unless msg.nil?
+    unless supports_control?
+      return {:available => false, :message => unsupported_reason(:control)}
+    end
     return {:available => true,   :message => nil}  if %w(on off suspended paused).include?(current_state)
     {:available => false,  :message => "The VM can't be shelved, current state has to be powered on, off, suspended or paused"}
   end
 
   def validate_vm_control_shelve_offload_action
-    msg = validate_vm_control
-    return {:available => msg[0], :message => msg[1]} unless msg.nil?
+    unless supports_control?
+      return {:available => false, :message => unsupported_reason(:control)}
+    end
     return {:available => true,   :message => nil}  if %w(shelved).include?(current_state)
     {:available => false,  :message => "The VM can't be shelved offload, current state has to be shelved"}
-  end
-
-  def validate_vm_control
-    # Check the basic require to interact with a VM.
-    return [false, 'The VM is retired'] if self.retired?
-    return [false, 'The VM is a template'] if self.template?
-    return [false, 'The VM is terminated'] if self.terminated?
-    return [true,  'The VM is not connected to a Host'] unless self.has_required_host?
-    return [true,  'The VM does not have a valid connection state'] if !connection_state.nil? && !self.connected_to_ems?
-    return [true,  "The VM is not connected to an active #{ui_lookup(:table => "ext_management_systems")}"] unless self.has_active_ems?
-    nil
   end
 
   included do
@@ -128,8 +119,9 @@ module VmOrTemplate::Operations
   end
 
   def validate_vm_control_power_state(check_powered_on)
-    msg = validate_vm_control
-    return {:available => msg[0], :message => msg[1]} unless msg.nil?
+    unless supports_control?
+      return {:available => false, :message => unsupported_reason(:control)}
+    end
     return {:available => true,   :message => nil}  if current_state.send(check_powered_on ? "==" : "!=", "on")
     {:available => false,  :message => "The VM is#{" not" if check_powered_on} powered on"}
   end
