@@ -162,10 +162,14 @@ class PglogicalSubscription < ActsAsArModel
 
   private
 
-  def new_subscription_name
+  def remote_region_number
     MiqRegionRemote.with_remote_connection(host, port || 5432, user, decrypted_password, dbname, "postgresql") do |_conn|
-      "region_#{MiqRegionRemote.region_number_from_sequence}_subscription"
+      return MiqRegionRemote.region_number_from_sequence
     end
+  end
+
+  def new_subscription_name
+    "region_#{remote_region_number}_subscription"
   end
 
   def ensure_node_created
@@ -201,6 +205,7 @@ class PglogicalSubscription < ActsAsArModel
 
   def create_subscription
     ensure_node_created
+    MiqRegion.destroy_region(connection, remote_region_number)
     pglogical.subscription_create(new_subscription_name, dsn, [MiqPglogical::REPLICATION_SET_NAME],
                                   false).check
     self
