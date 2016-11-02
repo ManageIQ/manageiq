@@ -18,9 +18,6 @@ FactoryGirl.define do
   factory :dialog_field_drop_down_list, :parent => :dialog_field_sorted_item, :class => "DialogFieldDropDownList" do
   end
 
-  factory :dialog_field_radio_button, :parent => :dialog_field_sorted_item, :class => "DialogFieldDropDownList" do
-  end
-
   factory :dialog_field_date_control, :parent => :dialog_field, :class => "DialogFieldDateControl" do
   end
 
