@@ -50,7 +50,7 @@ module ManageIQ::Providers
         @data[:middleware_server_groups] = []
         @ems.feeds.each do |feed|
           @ems.domains(feed).each do |domain|
-            parsed_domain = parse_middleware_domain(domain)
+            parsed_domain = parse_middleware_domain(feed, domain)
             fetch_server_groups(feed)
 
             # add the server groups to the domain
@@ -249,9 +249,9 @@ module ManageIQ::Providers
         parse_base_item(datasource).merge(specific)
       end
 
-      def parse_middleware_domain(domain)
+      def parse_middleware_domain(feed, domain)
         specific = {
-          :name      => domain.properties['Name'],
+          :name      => parse_domain_name(feed),
           :type_path => domain.type_path,
         }
         parse_base_item(domain).merge(specific)
@@ -307,6 +307,10 @@ module ManageIQ::Providers
 
       def parse_domain_server_name(name)
         name.sub(%r{^.*\/server=}, '')
+      end
+
+      def parse_domain_name(name)
+        name.sub(/^[^\.]+\./, '')
       end
 
       def parse_standalone_server_name(name)
