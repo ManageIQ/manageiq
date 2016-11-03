@@ -130,7 +130,9 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
 
   def remove_disks(disks, vm)
     with_disk_attachments_service(vm) do |service|
-      disks.each { |disk_id| service.attachment_service(disk_id).remove }
+      disks.each do |disk|
+        service.attachment_service(disk["disk_name"]).remove(:detach_only => !disk["delete_backing"])
+      end
     end
   end
 

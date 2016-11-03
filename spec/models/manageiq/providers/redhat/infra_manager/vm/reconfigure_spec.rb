@@ -65,7 +65,8 @@ describe ManageIQ::Providers::Redhat::InfraManager::Vm::Reconfigure do
 
     it "disksRemove" do
       expect(subject["disksRemove"].size).to eq(1)
-      expect(subject["disksRemove"][0]).to eq("2520b46a-799b-472d-89ce-d47f5b65ee5e")
+      expect(subject["disksRemove"][0]["disk_name"]).to eq("2520b46a-799b-472d-89ce-d47f5b65ee5e")
+      expect(subject["disksRemove"][0]["delete_backing"]).to be_falsey
     end
   end
 
