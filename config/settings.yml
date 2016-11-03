@@ -188,7 +188,9 @@
       - VmCreatedEvent
       - VmDeployedEvent
       - VmRegisteredEvent
+      - aggregate.addhost.end
       - aggregate.create.end
+      - aggregate.removehost.end
       - aggregate.updateprop.end
       - aggregate.updatemetadata.end
       - image.update
