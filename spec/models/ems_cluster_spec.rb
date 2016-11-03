@@ -54,6 +54,9 @@ describe EmsCluster do
 
     it('ResourcePool#v_direct_miq_templates') { expect(@rp1.v_direct_vms).to eq(1) }
     it('ResourcePool#v_total_miq_templates')  { expect(@rp1.v_total_vms).to eq(2) }
+    it('#hosts') { expect(@cluster.hosts).to match_array [@host1, @host2] }
+    it('#all_hosts') { expect(@cluster.all_hosts).to match_array [@host1, @host2] }
+    it('#total_hosts') { expect(@cluster.total_hosts).to eq(2) }
   end
 
   context("RedHat") do
@@ -106,6 +109,9 @@ describe EmsCluster do
     it('#all_miq_templates')    { expect(@cluster.all_miq_templates).to    match_array [@template1, @template2] }
     it('#all_miq_template_ids') { expect(@cluster.all_miq_template_ids).to match_array [@template1.id, @template2.id] }
     it('#total_miq_templates')  { expect(@cluster.total_miq_templates).to eq(2) }
+    it('#hosts')                { expect(@cluster.hosts).to match_array [@host1, @host2] }
+    it('#all_hosts')            { expect(@cluster.all_hosts).to match_array [@host1, @host2] }
+    it('#total_hosts')          { expect(@cluster.total_hosts).to eq(2) }
   end
 
   it "#save_drift_state" do
