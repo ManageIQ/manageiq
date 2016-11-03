@@ -3,8 +3,4 @@ FactoryGirl.define do
     location { |x| "#{x.name}.us-west-1.compute.amazonaws.com" }
     vendor   "amazon"
   end
-
-  factory :vm_perf_amazon, :parent => :vm_amazon do
-    ems_ref "amazon-perf-vm"
-  end
 end

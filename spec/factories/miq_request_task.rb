@@ -20,10 +20,6 @@ FactoryGirl.define do
     end
   end
   factory :miq_provision_vmware_via_pxe, :parent => :miq_provision_vmware, :class => "ManageIQ::Providers::Vmware::InfraManager::ProvisionViaPxe"
-  factory :vm_reconfigure_task,          :parent => :miq_request_task,     :class => "VmReconfigureTask" do
-    state "active"
-    request_type "vm_reconfigure"
-  end
 
   # Cloud
   factory :miq_provision_cloud,     :parent => :miq_provision,       :class => "ManageIQ::Providers::CloudManager::Provision"
