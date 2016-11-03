@@ -4,6 +4,9 @@ describe VmMigrateWorkflow do
   let(:ems) { FactoryGirl.create(:ems_vmware) }
   let(:vm) { FactoryGirl.create(:vm_vmware, :name => 'My VM', :ext_management_system => ems) }
 
+  let(:redhat_ems) { FactoryGirl.create(:ems_redhat) }
+  let(:redhat_vm) { FactoryGirl.create(:vm_redhat, :name => 'My RHV VM', :ext_management_system => redhat_ems) }
+
   context "With a Valid Template," do
     context "#allowed_hosts" do
       let(:workflow) { VmMigrateWorkflow.new({:src_ids => [vm.id]}, admin) }
@@ -22,6 +25,33 @@ describe VmMigrateWorkflow do
 
           expect(workflow.allowed_hosts).to eq([workflow.ci_to_hash_struct(host)])
         end
+      end
+    end
+  end
+
+  describe "Configuring targets" do
+    context "redhat VM" do
+      let(:workflow) { VmMigrateWorkflow.new({:src_ids => [redhat_vm.id]}, admin) }
+
+      it "excludes some properties in" do
+        stub_dialog
+        workflow.get_source_and_targets
+        target_resource = workflow.instance_variable_get(:@target_resource)
+        expect(target_resource).not_to include(:storage_id, :respool_id, :folder_id,
+                                               :datacenter_id)
+        expect(target_resource).to include(:host_id, :cluster_id)
+      end
+    end
+
+    context "vmware VM" do
+      let(:workflow) { VmMigrateWorkflow.new({:src_ids => [vm.id]}, admin) }
+
+      it "includes all properties in" do
+        stub_dialog
+        workflow.get_source_and_targets
+        target_resource = workflow.instance_variable_get(:@target_resource)
+        expect(target_resource).to include(:host_id, :cluster_id, :storage_id, :respool_id,
+                                           :folder_id, :datacenter_id)
       end
     end
   end
