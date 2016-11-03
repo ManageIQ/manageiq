@@ -375,8 +375,6 @@ describe ApplicationHelper do
      "vm_stop",
      "vm_suspend",
      "vm_reset",
-     "vm_retire",
-     "vm_retire_now",
      "vm_snapshot_add",
      "vm_snapshot_delete",
      "vm_snapshot_delete_all",
@@ -2452,17 +2450,6 @@ describe ApplicationHelper do
         it_behaves_like 'default case'
       end
 
-      ["vm_retire", "vm_retire_now"].each do |button_id|
-        context "and id = #{button_id}" do
-          before { @id = button_id }
-          it "when VM is already retired" do
-            allow(@record).to receive_messages(:retired => true)
-            expect(subject).to eq("VM is already retired")
-          end
-          it_behaves_like 'default case'
-        end
-      end
-
       context "and id = vm_scan" do
         before do
           @id = "vm_scan"
@@ -2618,13 +2605,6 @@ describe ApplicationHelper do
     end
 
     context "Disable Retire button for already retired VMs and Instances" do
-      it "button vm_retire_now" do
-        @record = FactoryGirl.create(:vm_redhat, :retired => true)
-        res = build_toolbar_disable_button("vm_retire_now")
-        expect(res).to be_truthy
-        expect(res).to include("already retired")
-      end
-
       it "button instance_retire_now" do
         @record = FactoryGirl.create(:vm_amazon, :retired => true)
         res = build_toolbar_disable_button("instance_retire_now")
