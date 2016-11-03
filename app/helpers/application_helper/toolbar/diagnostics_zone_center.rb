@@ -25,7 +25,8 @@ class ApplicationHelper::Toolbar::DiagnosticsZoneCenter < ApplicationHelper::Too
                           :server_name => @record.name,
                           :server_id   => @record.id
                         }
-                      end
+                      end,
+          :klass => ApplicationHelper::Button::ZoneDeleteServer
         ),
         button(
           :zone_role_start,

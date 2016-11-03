@@ -658,23 +658,6 @@ describe ApplicationHelper do
       end
     end
 
-    context "when with AssignedServerRole" do
-      before do
-        @record = AssignedServerRole.new
-        stub_user(:features => :all)
-      end
-
-      it "and id = delete_server" do
-        @id = "delete_server"
-        expect(subject).to be_truthy
-      end
-
-      it "and id != server_delete" do
-        @id = "server_add"
-        expect(subject).to be_falsey
-      end
-    end
-
     context "CustomButtonSet" do
       before do
         @record = CustomButtonSet.new
@@ -1065,18 +1048,6 @@ describe ApplicationHelper do
 
       before do
         @record = MiqServer.new('name' => 'Server1', 'id' => 'Server ID')
-      end
-
-      context "and id = delete_server" do
-        before do
-          @id = "delete_server"
-        end
-        it "is deleteable?" do
-          allow(@record).to receive(:is_deleteable?).and_return(false)
-          expect(subject).to include('Server ')
-          expect(subject).to include('can only be deleted if it is stopped or has not responded for a while')
-        end
-        it_behaves_like 'default case'
       end
 
       it "'collecting' log_file with started server and disables button" do

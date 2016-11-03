@@ -23,7 +23,8 @@ class ApplicationHelper::Toolbar::DiagnosticsRegionCenter < ApplicationHelper::T
           :confirm => proc do
                         _("Do you want to delete Server %{server_name} [%{server_id}]?") %
                           {:server_name => @record.name, :server_id => @record.id}
-                      end
+                      end,
+          :klass => ApplicationHelper::Button::DeleteServer
         ),
         button(
           :role_start,

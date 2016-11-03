@@ -423,8 +423,6 @@ class ApplicationHelper::ToolbarBuilder
         case id
         when "reload_server_tree"
           return false
-        when "delete_server", "zone_delete_server"
-          return @record.class != MiqServer
         when "zone_collect_current_logs", "zone_collect_logs", "zone_log_depot_edit"
           return true
         end
@@ -668,11 +666,6 @@ class ApplicationHelper::ToolbarBuilder
 
     # Now check model/record specific rules
     case get_record_cls(@record)
-    when "AssignedServerRole"
-      case id
-      when "delete_server"
-        return true
-      end
     when "MiqAeClass", "MiqAeDomain", "MiqAeField", "MiqAeInstance", "MiqAeMethod", "MiqAeNamespace"
       return true unless role_allows?(:feature => "miq_ae_domain_edit")
       return false if MIQ_AE_COPY_ACTIONS.include?(id) && User.current_tenant.any_editable_domains? && MiqAeDomain.any_unlocked?
@@ -896,11 +889,6 @@ class ApplicationHelper::ToolbarBuilder
         end
         unless @record.log_file_depot
           return N_("Log collection requires the Log Depot settings to be configured")
-        end
-      when "delete_server"
-        unless @record.is_deleteable?
-          return N_("Server %{server_name} [%{server_id}] can only be deleted if it is stopped or has not responded for a while") %
-            {:server_name => @record.name, :server_id => @record.id}
         end
       when "restart_workers"
         return N_("Select a worker to restart") if @sb[:selected_worker_id].nil?
