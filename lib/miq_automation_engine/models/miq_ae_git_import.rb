@@ -26,6 +26,7 @@ class MiqAeGitImport
     create_repo unless @git_repo
     default_import_options
     validate_refs
+    branch_or_tag
   end
 
   def post_import(domain)
@@ -54,7 +55,9 @@ class MiqAeGitImport
     @options['ref'] ||= DEFAULT_BRANCH
     @options['ref_type'] ||= BRANCH
     @options['ref_type'] = @options['ref_type'].downcase
+  end
 
+  def branch_or_tag
     case @options['ref_type']
     when BRANCH
       @options['branch'] = @options['ref']
