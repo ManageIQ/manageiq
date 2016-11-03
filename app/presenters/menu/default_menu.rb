@@ -152,8 +152,8 @@ module Menu
       def storage_menu_section
         netapp_enabled = ::Settings.product.storage
         Menu::Section.new(:sto, N_("Storage"), 'fa fa-database fa-2x', [
-                          block_storage_menu_section,
-                          object_storage_menu_section,
+                            block_storage_menu_section,
+                            object_storage_menu_section,
                           ])
       end
 

@@ -32,7 +32,7 @@ class EmsBlockStorageController < ApplicationController
   # Show the main MS list view
   def show_list
     opts = {:supported_features_filter => "supports_block_storage?",
-            :model           => model}
+            :model                     => model}
     process_show_list(opts)
   end
 end

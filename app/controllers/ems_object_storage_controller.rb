@@ -23,7 +23,7 @@ class EmsObjectStorageController < ApplicationController
 
   def show_list
     opts = {:supported_features_filter => "supports_object_storage?",
-            :model  => model}
+            :model                     => model}
     process_show_list(opts)
   end
 

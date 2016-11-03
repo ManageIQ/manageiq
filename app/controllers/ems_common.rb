@@ -79,7 +79,7 @@ module EmsCommon
       "block_storage_managers"        => [ManageIQ::Providers::StorageManager,
                                           _("Block Storage Managers"),
                                           :block_storage_managers],
-      "object_storage_managers"        => [ManageIQ::Providers::StorageManager,
+      "object_storage_managers"       => [ManageIQ::Providers::StorageManager,
                                           _("Object Storage Managers"),
                                           :object_storage_managers],
       "storage_managers"              => [ManageIQ::Providers::StorageManager,
