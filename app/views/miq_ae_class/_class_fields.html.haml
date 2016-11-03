@@ -63,7 +63,7 @@
               %tr
                 %td
                   = link_to(image_tag(image_path("16/notequal-red.png"), :alt => (t = _("Click to delete this field from schema"))),
-                    {:action => "field_delete", :id => field['id'].to_s, :arr_id => i},
+                    {:action => "field_delete", :id => field[:id].to_s, :arr_id => i},
                     "data-miq_sparkle_on"  => true,
                     "data-miq_sparkle_off" => true,
                     :remote                => true,
@@ -72,9 +72,10 @@
                     :title                 => t)
                 - %w(name aetype datatype default_value display_name description substitute collect message on_entry on_exit on_error max_retries max_time).each do |fname|
                   %td
-                    - if %w(aetype datatype).include?(fname)
+                    - fname = fname.to_sym
+                    - if %w(aetype datatype).include?(fname.to_s)
                       - combo_name = "fields_#{fname}#{i}"
-                      - combo_options  = (fname == 'aetype' ? @combo_xml : @dtype_combo_xml)
+                      - combo_options  = (fname == :aetype ? @combo_xml : @dtype_combo_xml)
                       - combo_url  = "/miq_ae_class/fields_form_field_changed/#{@ae_class.id || 'new'}"
                       #form-group
                         = select_tag(combo_name,
@@ -83,11 +84,11 @@
                           :class  => "selectpicker")
                       :javascript
                         miqSelectPickerEvent("#{combo_name}", "#{combo_url}")
-                    - elsif fname == 'substitute'
-                      = check_box_tag("fields_#{fname}_#{i}", "1", field['substitute'],
+                    - elsif fname == :substitute
+                      = check_box_tag("fields_#{fname}_#{i}", "1", field[:substitute],
                         "data-miq_observe_checkbox" => {:url => url}.to_json)
-                    - elsif fname == 'default_value'
-                      - default_value = field['default_value']
+                    - elsif fname == :default_value
+                      - default_value = field[:default_value]
                       = text_field_tag("fields_default_value_#{i}", default_value,
                         :style             => field['datatype'] == "password" ? "display:none" : "",
                         "data-miq_observe" => obs)
@@ -118,21 +119,22 @@
                   :title                 => t)
               - %w(name aetype datatype default_value display_name description substitute collect message on_entry on_exit on_error max_retries max_time).each do |fname|
                 %td
-                  - if %w(aetype datatype).include?(fname)
+                  - fname = fname.to_sym
+                  - if %w(aetype datatype).include?(fname.to_s)
                     - combo_name = "field_#{fname}"
                     - combo_options  = @edit[:new]["#{fname}s".to_sym]
                     - combo_url  = "/miq_ae_class/fields_form_field_changed/#{@ae_class.id || 'new'}"
                     #form-group
                       = select_tag(combo_name,
-                          options_for_select(combo_options, session[:field_data][fname.to_sym]),
+                          options_for_select(combo_options, session[:field_data][fname]),
                           "title" => "Choose",
                           :class  => "selectpicker")
                     :javascript
                       miqSelectPickerEvent("#{combo_name}", "#{combo_url}")
-                  - elsif fname == 'substitute'
+                  - elsif fname == :substitute
                     - checked = !session[:field_data].blank? && session[:field_data][:substitute]
                     = check_box_tag("field_#{fname}", "1", checked, "data-miq_observe_checkbox" => {:url => url}.to_json)
-                  - elsif fname == 'default_value'
+                  - elsif fname == :default_value
                     = text_field_tag("field_default_value", session[:field_data][:default_value],
                       :style             => session[:field_data][:datatype] == "password" ? "display:none" : "",
                       "data-miq_observe" => obs)

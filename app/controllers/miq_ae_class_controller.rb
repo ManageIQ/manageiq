@@ -697,7 +697,7 @@ class MiqAeClassController < ApplicationController
 
     @edit[:new][:fields] = @ae_class.ae_fields.sort_by { |a| [a.priority.to_i] }.collect do |fld|
       field_attributes.each_with_object({}) do |column, hash|
-        hash[column] = fld.send(column)
+        hash[column.to_sym] = fld.send(column)
       end
     end
 
@@ -1965,7 +1965,7 @@ class MiqAeClassController < ApplicationController
       field_attributes.each do |field|
         field_name = "field_#{field}".to_sym
         field_sym = field.to_sym
-        if field == "substitute"
+        if field == :substitute
           field_data[field_sym] = new_field[field_sym] = params[field_name] == "1" if params[field_name]
         elsif params[field_name]
           field_data[field_sym] = new_field[field_sym] = params[field_name]
@@ -1988,10 +1988,10 @@ class MiqAeClassController < ApplicationController
 
       @edit[:new][:fields].each_with_index do |fld, i|
         field_attributes.each do |field|
-          field_name = "fields_#{field}_#{i}".to_sym
+          field_name = "fields_#{field}_#{i}"
           field_sym = field.to_sym
           if field == "substitute"
-            fld[field_sym] = params[field_name].to_i == 1 if params[field_name]
+            fld[field_sym] = params[field_name] == "1" if params[field_name]
           elsif %w(aetype datatype).include?(field)
             var_name = "fields_#{field}#{i}"
             fld[field_sym] = params[var_name.to_sym] if params[var_name.to_sym]
@@ -1999,7 +1999,7 @@ class MiqAeClassController < ApplicationController
             fld[field_sym] = params[field_name] if params[field_name]
             fld[field_sym] = params["fields_password_value_#{i}".to_sym] if params["fields_password_value_#{i}".to_sym]
           else
-            fld[field] = params[field_name] if params[field_name]
+            fld[field_sym] = params[field_name] if params[field_name]
           end
         end
       end
@@ -2011,8 +2011,8 @@ class MiqAeClassController < ApplicationController
         return
       end
       new_fields = {}
-      field_attributes.each_with_object({}) { |field| new_fields[field] =
-        @edit[:new_field][field] || @edit[:new_field][field.to_sym]}
+      field_attributes.each_with_object({}) { |field| field = field.to_sym
+      new_fields[field] = @edit[:new_field][field]}
       @edit[:new][:fields].push(new_fields)
       @edit[:new_field] = session[:field_data] = {}
     end
@@ -2178,7 +2178,7 @@ class MiqAeClassController < ApplicationController
     fields = parent_fields(parent)
     highest_priority = fields.count
     @edit[:new][:fields].each_with_index do |fld, i|
-      if fld['id'].nil?
+      if fld[:id].nil?
         new_field = MiqAeField.new
         highest_priority += 1
         new_field.priority  = highest_priority
@@ -2188,11 +2188,12 @@ class MiqAeClassController < ApplicationController
           new_field.class_id = @ae_class.id
         end
       else
-        new_field = parent.nil? ? MiqAeField.find_by_id(fld['id']) : fields.detect { |f| f.id == fld['id'] }
+        new_field = parent.nil? ? MiqAeField.find_by_id(fld[:id]) : fields.detect { |f| f.id == fld[:id] }
       end
 
       field_attributes.each do |attr|
-        if attr == "substitute"
+        attr = attr.to_sym
+        if attr == :substitute
           new_field.send("#{attr}=", @edit[:new][:fields][i][attr])
         else
           new_field.send("#{attr}=", @edit[:new][:fields][i][attr]) if @edit[:new][:fields][i][attr]
