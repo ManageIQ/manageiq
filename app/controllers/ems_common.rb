@@ -1011,12 +1011,6 @@ module EmsCommon
       model.where(:id => emss).order("lower(name)").each do |ems|
         id = ems.id
         ems_name = ems.name
-        if task == "destroy"
-          audit = {:event     => "ems_record_delete",
-                   :message   => _("[%{name}] Record deleted") % {:name => ems_name},
-                   :target_id => id, :target_class => model.to_s,
-                   :userid    => session[:userid]}
-        end
         begin
           ems.send(task.to_sym) if ems.respond_to?(task)    # Run the task
         rescue => bang
@@ -1027,18 +1021,10 @@ module EmsCommon
                           {:name => ems_name, :task => task, :message => bang.message},
             :target_class => model.to_s, :target_id => id)
         else
-          if task == "destroy"
-            AuditEvent.success(audit)
-            add_flash(_("%{model} \"%{name}\": Delete successful") % {:model => ui_lookup(:model => model.to_s), :name => ems_name})
-            AuditEvent.success(:userid => session[:userid], :event => "#{@table_name}_#{task}",
-              :message      => _("%{name}: Delete successful") % {:name => ems_name},
-              :target_class => model.to_s, :target_id => id)
-          else
-            add_flash(_("%{model} \"%{name}\": %{task} successfully initiated") % {:model => model.to_s, :name => ems_name, :task => task})
-            AuditEvent.success(:userid => session[:userid], :event => "#{@table_name}_#{task}",
-              :message      => _("%{name}: '%{task}' successfully initiated") % {:name => ems_name, :task => task},
-              :target_class => model.to_s, :target_id => id)
-          end
+          add_flash(_("%{model} \"%{name}\": %{task} successfully initiated") % {:model => model.to_s, :name => ems_name, :task => task})
+          AuditEvent.success(:userid => session[:userid], :event => "#{@table_name}_#{task}",
+                             :message      => _("%{name}: '%{task}' successfully initiated") % {:name => ems_name, :task => task},
+                             :target_class => model.to_s, :target_id => id)
         end
       end
     end
