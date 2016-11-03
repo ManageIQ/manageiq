@@ -178,7 +178,7 @@ describe MiqRegion do
 
     it "returns true if a key is configured" do
       FactoryGirl.create(
-        :api_auth_token,
+        :auth_token,
         :resource_id   => remote_region.id,
         :resource_type => "MiqRegion",
         :auth_key      => remote_key
@@ -200,10 +200,11 @@ describe MiqRegion do
 
     it "removes a key if configured" do
       FactoryGirl.create(
-        :api_auth_token,
+        :auth_token,
         :resource_id   => remote_region.id,
         :resource_type => "MiqRegion",
-        :auth_key      => remote_key
+        :auth_key      => remote_key,
+        :authtype      => "system_api"
       )
       expect(remote_region.auth_key_configured?).to be true
       remote_region.remove_auth_key
