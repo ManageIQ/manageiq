@@ -105,7 +105,7 @@
                                 "auto-focus"     => ""}
             %span{"style" => "color:red", "ng-show" => "angularForm.total_cpus.$invalid"}
               = _(" Total processors value larger than the maximum allowed")
-  - if @reconfigitems.length == 1 && @reconfigitems.first.vendor  && (@reconfigitems.first.vendor == 'vmware' || @reconfigitems.first.vendor == 'redhat')
+  - if supports_reconfigure_disks?
     %hr
     %div
       %h3

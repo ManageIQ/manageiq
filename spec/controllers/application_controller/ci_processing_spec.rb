@@ -90,6 +90,38 @@ describe ApplicationController do
     end
   end
 
+  describe "#supports_reconfigure_disks?" do
+    let(:vm) { FactoryGirl.create(:vm_redhat) }
+
+    context "when a single is vm selected" do
+      let(:supports_reconfigure_disks) { true }
+      before(:each) do
+        allow(vm).to receive(:supports_reconfigure_disks?).and_return(supports_reconfigure_disks)
+        controller.instance_variable_set(:@reconfigitems, [vm])
+      end
+
+      context "when vm supports reconfiguring disks" do
+        it "enables reconfigure disks" do
+          expect(controller.send(:supports_reconfigure_disks?)).to be_truthy
+        end
+      end
+      context "when vm does not supports reconfiguring disks" do
+        let(:supports_reconfigure_disks) { false }
+        it "disables reconfigure disks" do
+          expect(controller.send(:supports_reconfigure_disks?)).to be_falsey
+        end
+      end
+    end
+
+    context "when multiple vms selected" do
+      let(:vm1) { FactoryGirl.create(:vm_redhat) }
+      it "disables reconfigure disks" do
+        controller.instance_variable_set(:@reconfigitems, [vm, vm1])
+        expect(controller.send(:supports_reconfigure_disks?)).to be_falsey
+      end
+    end
+  end
+
   context "#discover" do
     it "checks that keys in @to remain set if there is an error after submit is pressed" do
       from_first = "1"

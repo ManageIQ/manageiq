@@ -86,6 +86,7 @@ module SupportsFeatureMixin
     :quick_stats                => 'Quick Stats',
     :reboot_guest               => 'Reboot Guest Operation',
     :reconfigure                => 'Reconfiguration',
+    :reconfigure_disks          => 'Reconfigure Virtual Machines Disks',
     :refresh_new_target         => 'Refresh non-existing record',
     :regions                    => 'Regions of a Provider',
     :remove_host                => 'Remove Host',

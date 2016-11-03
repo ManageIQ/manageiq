@@ -5,6 +5,8 @@ class ManageIQ::Providers::Vmware::InfraManager::Vm < ManageIQ::Providers::Infra
   include_concern 'RemoteConsole'
   include_concern 'Reconfigure'
 
+  supports :reconfigure_disks
+
   def add_miq_alarm
     raise "VM has no EMS, unable to add alarm" unless ext_management_system
     ext_management_system.vm_add_miq_alarm(self)

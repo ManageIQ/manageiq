@@ -3,6 +3,7 @@ module ApplicationController::CiProcessing
 
   included do
     private(:process_elements)
+    helper_method :supports_reconfigure_disks?
   end
 
   def ownership_form_fields
@@ -1711,6 +1712,7 @@ module ApplicationController::CiProcessing
     cores_per_socket = @reconfigureitems.first.cpu_cores_per_socket
     cores_per_socket = '' unless @reconfigureitems.all? { |vm| vm.cpu_cores_per_socket == cores_per_socket }
     memory, memory_type = reconfigure_calculations(memory)
+
     # if only one vm that supports disk reconfiguration is selected, get the disks information
     vmdisks = []
     @reconfigureitems.first.hardware.disks.each do |disk|
@@ -1731,6 +1733,10 @@ module ApplicationController::CiProcessing
      :socket_count           => socket_count.to_s,
      :cores_per_socket_count => cores_per_socket.to_s,
      :disks                  => vmdisks}
+  end
+
+  def supports_reconfigure_disks?
+    @reconfigitems && @reconfigitems.size == 1 && @reconfigitems.first.supports_reconfigure_disks?
   end
 
   def get_reconfig_limits
