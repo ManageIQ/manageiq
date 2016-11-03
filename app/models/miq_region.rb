@@ -13,9 +13,9 @@ class MiqRegion < ApplicationRecord
   virtual_has_many :miq_servers,            :class_name => "MiqServer"
   virtual_has_many :active_miq_servers,     :class_name => "MiqServer"
 
-  virtual_has_many :vms_and_templates,      :uses => :all_relationships
-  virtual_has_many :miq_templates,          :uses => :all_relationships
-  virtual_has_many :vms,                    :uses => :all_relationships
+  virtual_has_many :vms_and_templates
+  virtual_has_many :miq_templates
+  virtual_has_many :vms
 
   after_save :clear_my_region_cache
 
