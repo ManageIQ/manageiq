@@ -8,7 +8,7 @@ class GitRepository < ApplicationRecord
 
   has_many :git_branches, :dependent => :destroy
   has_many :git_tags, :dependent => :destroy
-  before_destroy :delete_repo_dir
+  after_destroy :delete_repo_dir
 
   INFO_KEYS = %w(commit_sha commit_message commit_time name).freeze
 
