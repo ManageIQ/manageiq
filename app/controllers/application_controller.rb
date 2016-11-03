@@ -95,10 +95,7 @@ class ApplicationController < ActionController::Base
   end
 
   def self.session_key_prefix
-    @session_key_prefix ||= begin
-      parts = table_name.split('_')
-      "#{parts[0]}_#{parts[1..-1].join('_')}"
-    end
+    table_name
   end
 
   # This will rescue any un-handled exceptions
