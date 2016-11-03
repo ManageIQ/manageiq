@@ -77,8 +77,8 @@ class ApplicationController < ActionController::Base
 
   # Convert Controller Name to Actual Model
   # Examples:
-  #   CimBaseStorageExtentController => CimBaseStorageExtent
-  #   OntapFileShareController        => OntapFileShare
+  #   CimStorageExtentController => CimStorageExtent
+  #   OntapFileShareController   => OntapFileShare
   def self.model
     @model ||= name[0..-11].constantize
   end
@@ -88,8 +88,8 @@ class ApplicationController < ActionController::Base
   end
 
   # Examples:
-  #   CimBaseStorageExtentController => cim_base_storage_extent
-  #   OntapFileShareController        => ontap_file_share
+  #   CimStorageExtentController => cim_storage_extent
+  #   OntapFileShareController   => ontap_file_share
   def self.table_name
     @table_name ||= model.name.underscore
   end
