@@ -1,32 +1,20 @@
 describe Storage do
   it "#scan_watchdog_interval" do
-    stub_settings(:storage => {})
-    expect(Storage.scan_watchdog_interval).to eq(Storage::DEFAULT_WATCHDOG_INTERVAL)
-
     stub_settings(:storage => {'watchdog_interval' => '5.minutes'})
     expect(Storage.scan_watchdog_interval).to eq(5.minutes)
   end
 
   it "#max_parallel_storage_scans_per_host" do
-    stub_settings(:storage => {})
-    expect(Storage.max_parallel_storage_scans_per_host).to eq(Storage::DEFAULT_MAX_PARALLEL_SCANS_PER_HOST)
-
     stub_settings(:storage => {'max_parallel_scans_per_host' => 3})
     expect(Storage.max_parallel_storage_scans_per_host).to eq(3)
   end
 
   it "#max_qitems_per_scan_request" do
-    stub_settings(:storage => {})
-    expect(Storage.max_qitems_per_scan_request).to eq(Storage::DEFAULT_MAX_QITEMS_PER_SCAN_REQUEST)
-
     stub_settings(:storage => {'max_qitems_per_scan_request' => 3})
     expect(Storage.max_qitems_per_scan_request).to eq(3)
   end
 
   it "#scan_collection_timeout" do
-    stub_settings(:storage => {})
-    expect(Storage.scan_collection_timeout).to be_nil
-
     stub_settings(:storage => {:collection => {:timeout => 3}})
     expect(Storage.scan_collection_timeout).to eq(3)
   end
