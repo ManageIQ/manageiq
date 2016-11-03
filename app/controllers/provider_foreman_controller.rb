@@ -599,7 +599,7 @@ class ProviderForemanController < ApplicationController
       when "ManageIQ::Providers::Foreman::ConfigurationManager"
         options = {:model => "ConfigurationProfile", :match_via_descendants => ConfiguredSystem, :where_clause => ["manager_id IN (?)", provider.id]}
         process_show_list(options) if @show_list
-        options.merge!(update_options) if !@show_list
+        options.merge!(update_options) unless @show_list
         add_unassigned_configuration_profile_record(provider.id)
         record_model = ui_lookup(:model => model_to_name(model || TreeBuilder.get_model_for_prefix(@nodetype)))
         @right_cell_text = _("%{model} \"%{name}\"") %
@@ -608,7 +608,7 @@ class ProviderForemanController < ApplicationController
       when "ManageIQ::Providers::AnsibleTower::ConfigurationManager"
         options = {:model => "ManageIQ::Providers::ConfigurationManager::InventoryGroup", :match_via_descendants => ConfiguredSystem, :where_clause => ["ems_id IN (?)", provider.id]}
         process_show_list(options) if @show_list
-        options.merge!(update_options) if !@show_list
+        options.merge!(update_options) unless @show_list
         record_model = ui_lookup(:model => model_to_name(model || TreeBuilder.get_model_for_prefix(@nodetype)))
         @right_cell_text = _("%{model} \"%{name}\"") %
           {:name => provider.name, :model => "#{ui_lookup(:tables => "inventory_group")} under #{record_model} Provider"}
@@ -624,7 +624,7 @@ class ProviderForemanController < ApplicationController
       :where_clause          => ["manager_id IN (?)", provider.id]
     }
     process_show_list(options) if @show_list
-    options.merge!(update_options) if !@show_list
+    options.merge!(update_options) unless @show_list
     @right_cell_text = _("%{model} \"%{name}\"") %
       {:name => provider.name, :model => "#{ui_lookup(:tables => "job_templates")} under "}
   end
@@ -653,7 +653,7 @@ class ProviderForemanController < ApplicationController
         options[:where_clause] = ["configuration_profile_id IN (?)", @configuration_profile_record.id]
       end
       process_show_list(options) if @show_list
-      options.merge!(update_options) if !@show_list
+      options.merge!(update_options) unless @show_list
       record_model = ui_lookup(:model => model || TreeBuilder.get_model_for_prefix(@nodetype))
       if @sb[:active_tab] == 'configured_systems'
         configuration_profile_right_cell_text(model)
@@ -677,7 +677,7 @@ class ProviderForemanController < ApplicationController
       options = {:model => "ConfiguredSystem", :match_via_descendants => ConfiguredSystem}
       options[:where_clause] = ["inventory_root_group_id IN (?)", from_cid(@inventory_group_record.id)]
       process_show_list(options) if @show_list
-      options.merge!(update_options) if !@show_list
+      options.merge!(update_options) unless @show_list
       record_model = ui_lookup(:model => model || TreeBuilder.get_model_for_prefix(@nodetype))
       if @sb[:active_tab] == 'configured_systems'
         inventory_group_right_cell_text(model)
@@ -696,7 +696,7 @@ class ProviderForemanController < ApplicationController
       options = {:model => model.to_s}
       @right_cell_text = _("All %{title} Configured Systems") % {:title => model_to_name(model)}
       process_show_list(options) if @show_list
-      options.merge!(update_options) if !@show_list
+      options.merge!(update_options) unless @show_list
     end
     options
   end
@@ -721,7 +721,7 @@ class ProviderForemanController < ApplicationController
       options = {:model => model.to_s}
       @right_cell_text = _("All Ansible Tower Job Templates")
       process_show_list(options) if @show_list
-      options.merge!(update_options) if !@show_list
+      options.merge!(update_options) unless @show_list
     end
     options
   end
@@ -736,12 +736,12 @@ class ProviderForemanController < ApplicationController
     if x_active_tree == :configuration_manager_providers_tree
       options = {:model => "ManageIQ::Providers::ConfigurationManager"}
       process_show_list(options) if @show_list
-      options.merge!(update_options) if !@show_list
+      options.merge!(update_options) unless @show_list
       @right_cell_text = _("All Configuration Management Providers")
     elsif x_active_tree == :cs_filter_tree
       options = {:model => "ConfiguredSystem"}
       process_show_list(options) if @show_list
-      options.merge!(update_options) if !@show_list
+      options.merge!(update_options) unless @show_list
       @right_cell_text = _("All Configured Systems")
     elsif x_active_tree == :configuration_scripts_tree
       options = {:model => "ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfigurationScript"}

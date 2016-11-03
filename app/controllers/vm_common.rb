@@ -1291,7 +1291,7 @@ module VmCommon
           klass = ManageIQ::Providers::InfraManager::VmOrTemplate
           options[:where_clause] = ["vms.type IN (?)", klass.vm_descendants.collect(&:name)]
         end
-        process_show_list(options) if show_list  # Get all VMs & Templates
+        process_show_list(options) if show_list # Get all VMs & Templates
         # :model=>ui_lookup(:models=>"VmOrTemplate"))
         # TODO: Change ui_lookup/dictionary to handle VmOrTemplate, returning VMs And Templates
         @right_cell_text = if title

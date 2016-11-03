@@ -578,14 +578,13 @@ module QuadiconHelper
     output << flobj_img_simple(size, img_path, "e#{size}")
 
     unless options[:typ] == :listnav
-      name = ''
-      if item.kind_of?(MiqCimInstance)
-        name = item.evm_display_name
-      elsif item.kind_of?(MiqProvisionRequest)
-        name = item.message
-      else
-        name = item.name
-      end
+      name = if item.kind_of?(MiqCimInstance)
+               item.evm_display_name
+             elsif item.kind_of?(MiqProvisionRequest)
+               item.message
+             else
+               item.name
+             end
 
       img_opts = {
         :size  => size,

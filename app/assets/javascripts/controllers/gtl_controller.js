@@ -207,7 +207,8 @@
   * ```
   */
   GtlController.prototype.initController = function(initObject) {
-    this.initObjects(initObject)
+    this.initObjects(initObject);
+    this.setSandPaperClass(initObject.gtlType);
     return this.getData(initObject.modelName, initObject.activeTree, initObject.currId, initObject.isExplorer, this.settings)
       .then(function() {
         var start = (this.settings.current - 1) * this.settings.perpage;
@@ -220,6 +221,19 @@
         this.settings.sortedByTitle = __('Sorted By');
         this.settings.isLoading = false;
       }.bind(this))
+  }
+
+  GtlController.prototype.setSandPaperClass = function(viewType) {
+    var mainContent = document.getElementById('main-content');
+    var mainConentClasses = mainContent.className.split(' ');
+    var sandPaperIndex = mainConentClasses.indexOf('miq-sand-paper');
+    if (sandPaperIndex != -1) {
+      mainConentClasses.splice(sandPaperIndex, 1);
+      mainContent.className = mainConentClasses.join(' ');
+    }
+    if (viewType === 'grid' || viewType === 'tile') {
+      mainContent.className += ' miq-sand-paper';
+    }
   }
 
   /**
