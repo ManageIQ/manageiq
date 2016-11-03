@@ -4,7 +4,6 @@ module OpsController::Settings::AutomateSchedules
   def automate_schedules_set_vars
     schedule = params[:id] == "new" ? MiqSchedule.new : MiqSchedule.find_by(:id => params[:id])
     automate_request = fetch_automate_request_vars(schedule)
-
     render :json => {
       :starting_object => automate_request[:starting_object],
       :instance_names  => automate_request[:instance_names],
@@ -39,7 +38,6 @@ module OpsController::Settings::AutomateSchedules
     automate_request[:starting_object] = filter[:uri_parts][:namespace] || "SYSTEM/PROCESS"
     matching_instances = MiqAeClass.find_distinct_instances_across_domains(current_user,
                                                                            automate_request[:starting_object])
-
     automate_request[:instance_names] = matching_instances.collect(&:name).sort_by(&:downcase)
     automate_request[:instance_name]  = filter[:parameters][:instance_name] || "Request"
     automate_request[:object_message] = filter[:parameters][:object_message] || "create"
