@@ -6,6 +6,7 @@ class ServiceTemplateProvisionRequest < MiqRequest
   validates_inclusion_of :request_state,  :in => %w( pending finished ) + ACTIVE_STATES, :message => "should be pending, #{ACTIVE_STATES.join(", ")} or finished"
   validate               :must_have_user
 
+  alias_attribute :service_template, :source
   virtual_has_one :picture
   virtual_has_one :service_template
   virtual_has_one :provision_dialog
@@ -15,25 +16,15 @@ class ServiceTemplateProvisionRequest < MiqRequest
   default_value_for :source_type,  SOURCE_CLASS_NAME
   default_value_for :process,      false
 
-  def user
-    get_user
-  end
+  delegate :picture, :to => :service_template, :allow_nil => true
+
+  alias_method :user, :get_user
 
   def my_role
     'ems_operations'
   end
 
   def my_zone
-    nil
-  end
-
-  def picture
-    st = service_template
-    st.picture if st.present?
-  end
-
-  def service_template
-    ServiceTemplate.find_by_id(source_id)
   end
 
   def provision_dialog
