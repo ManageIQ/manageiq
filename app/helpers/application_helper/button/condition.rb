@@ -12,7 +12,7 @@ class ApplicationHelper::Button::Condition < ApplicationHelper::Button::ReadOnly
 
   def disabled?
     if !@condition.miq_policies.empty? && self[:child_id].include?("delete")
-      @error_message = N_("Conditions assigned to Policies can not be deleted")
+      @error_message = _("Conditions assigned to Policies can not be deleted")
     end
     @error_message.present?
   end

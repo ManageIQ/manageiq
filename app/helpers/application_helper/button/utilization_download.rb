@@ -15,6 +15,6 @@ class ApplicationHelper::Button::UtilizationDownload < ApplicationHelper::Button
 
   def calculate_properties
     super
-    self[:title] = N_("No records found for this report") if disabled?
+    self[:title] = _("No records found for this report") if disabled?
   end
 end

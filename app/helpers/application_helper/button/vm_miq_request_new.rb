@@ -7,7 +7,7 @@ class ApplicationHelper::Button::VmMiqRequestNew < ApplicationHelper::Button::Ba
     super
 
     if disabled?
-      self[:title] = N_('No Infrastructure Provider that supports VM provisioning added')
+      self[:title] = _('No Infrastructure Provider that supports VM provisioning added')
     end
   end
 

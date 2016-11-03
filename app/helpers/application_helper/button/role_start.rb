@@ -9,11 +9,11 @@ class ApplicationHelper::Button::RoleStart < ApplicationHelper::Button::RolePowe
   def disabled?
     @error_message = if @record.class == AssignedServerRole
                        if @record.active
-                         N_("This Role is already active on this Server")
+                         _("This Role is already active on this Server")
                        elsif !@record.miq_server.started?
-                         N_("Only available Roles on active Servers can be started")
+                         _("Only available Roles on active Servers can be started")
                        elsif @view_context.x_node != "root" && @record.server_role.regional_role?
-                         N_("This role can only be managed at the Region level")
+                         _("This role can only be managed at the Region level")
                        end
                      end
     @error_message.present?

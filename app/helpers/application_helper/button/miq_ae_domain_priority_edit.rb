@@ -5,6 +5,6 @@ class ApplicationHelper::Button::MiqAeDomainPriorityEdit < ApplicationHelper::Bu
 
   def calculate_properties
     super
-    self[:title] = N_("You need two or more domains to edit domain priorities") if disabled?
+    self[:title] = _("You need two or more domains to edit domain priorities") if disabled?
   end
 end

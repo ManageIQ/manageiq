@@ -10,7 +10,7 @@ class ApplicationHelper::Button::ServerPromote < ApplicationHelper::Button::Serv
     @error_message = if @record.master_supported?
                        if (@record.priority != 1 && @record.priority != 2) || @record.priority == 2
                          if @view_context.x_node != "root" && @record.server_role.regional_role?
-                           N_("This role can only be managed at the Region level")
+                           _("This role can only be managed at the Region level")
                          end
                        end
                      end
