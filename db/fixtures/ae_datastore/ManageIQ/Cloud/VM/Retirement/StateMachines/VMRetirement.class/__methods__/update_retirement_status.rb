@@ -1,31 +1,46 @@
 #
-# Description: This method updates retirement status
+# Description: This method updates the vm retirement status.
+# Required inputs: status
 #
 
 # Get variables from Server object
 server = $evm.root['miq_server']
 
 # Get State Machine
-state  = $evm.current_object.class_name
-status = $evm.inputs['status']
+state = $evm.current_object.class_name
 
 # Get current step
-step = $evm.current_object.current_field_name
+step = $evm.root['ae_state']
+
+# Get status from input field status
+status = $evm.inputs['status']
 
 # Get status_state ['on_entry', 'on_exit', 'on_error']
 status_state = $evm.root['ae_status_state']
 
-$evm.log("info", "Server:<#{server.name}> Ae_Result:<#{$evm.root['ae_result']}> State:<#{state}>")
-$evm.log("info", "Step:<#{step}> Status_State:<#{status_state}> Status:<#{status}>")
-
 vm = $evm.root['vm']
+
+$evm.log("info", "Server:<#{server.name}> Ae_Result:<#{$evm.root['ae_result']}> State:<#{state}> Step:<#{step}>")
+$evm.log("info", "Status_State:<#{status_state}> Status:<#{status}>")
+
+# Update Status Message
+updated_message  = "Server [#{server.name}] "
+updated_message += "VM [#{vm.name}] " if vm
+updated_message += "Step [#{step}] "
+updated_message += "Status [#{status}] "
+updated_message += "Current Retry Number [#{$evm.root['ae_state_retries']}]" if $evm.root['ae_result'] == 'retry'
 
 # Update Status for on_error for all states other than the first state which is startretirement
 # in the retirement state machine.
 if $evm.root['ae_result'] == 'error'
   if step.downcase == 'startretirement'
-    $evm.log("info", "Cannot continue because VM is already retired or is being retired.")
+    msg = "Cannot continue because Instance is "
+    msg += vm ? "#{vm.retirement_state}." : "nil."
+    $evm.log("info", msg)
+    updated_message += msg
+    $evm.create_notification(:level => "warning", :message => "Instance Retirement Warning: #{updated_message}")
   else
+    $evm.create_notification(:level => "error", :message => "Instance Retirement Error: #{updated_message}")
     vm.retirement_state = 'error' if vm
   end
 end
