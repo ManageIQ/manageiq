@@ -100,6 +100,26 @@ describe Menu::DefaultMenu do
     end
   end
 
+  context "block_storage_menu_section" do
+    let(:menu) { Menu::DefaultMenu }
+
+    it "shows correct content for Block Storage submenu" do
+      menu = Menu::DefaultMenu.block_storage_menu_section.items.map(&:name)
+      result = ["Managers", "Volumes", "Volume Snapshots", "Volume Backups"]
+      expect(menu).to eq(result)
+    end
+  end
+
+  context "object_storage_menu_section" do
+    let(:menu) { Menu::DefaultMenu }
+
+    it "shows correct content for Object Storage submenu" do
+      menu = Menu::DefaultMenu.object_storage_menu_section.items.map(&:name)
+      result = ["Managers", "Object Store Containers", "Object Store Objects"]
+      expect(menu).to eq(result)
+    end
+  end
+
   describe "#automate_menu_section" do
     let(:menu) { Menu::DefaultMenu }
 
