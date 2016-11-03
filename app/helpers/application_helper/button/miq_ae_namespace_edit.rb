@@ -2,11 +2,18 @@ class ApplicationHelper::Button::MiqAeNamespaceEdit < ApplicationHelper::Button:
   needs :@record
 
   def disabled?
-    @error_message = N_('Domain is Locked.') if super
+    @error_message = N_('Domain is Locked.') unless editable?
     @error_message.present?
   end
 
   def visible?
     super || editable_domain?(@record)
+  end
+
+  private
+
+  def editable?
+    return @record.editable? if @record.instance_of?(MiqAeNamespace)
+    super
   end
 end

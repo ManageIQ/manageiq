@@ -14,11 +14,11 @@ describe ApplicationHelper::Button::MiqAeDomainUnlock do
   end
 
   describe '#disabled?' do
-    context 'when it is a system domain' do
+    context 'when record is a system domain' do
       let(:record) { FactoryGirl.create(:miq_ae_system_domain) }
       it { expect(subject.disabled?).to be_truthy }
     end
-    context 'when it is a user locked domain' do
+    context 'when record is a user locked domain' do
       let(:record) { FactoryGirl.create(:miq_ae_domain_user_locked) }
       it { expect(subject.disabled?).to be_falsey }
     end

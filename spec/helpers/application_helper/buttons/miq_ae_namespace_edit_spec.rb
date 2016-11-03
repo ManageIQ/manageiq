@@ -21,8 +21,16 @@ describe ApplicationHelper::Button::MiqAeNamespaceEdit do
   end
 
   describe '#disabled?' do
-    context 'when it is a system domain' do
-      let(:record) { FactoryGirl.build(:miq_ae_system_domain) }
+    context 'when record is a system domain' do
+      let(:record) { FactoryGirl.create(:miq_ae_system_domain) }
+      it { expect(subject.disabled?).to be_truthy }
+    end
+    context 'when record is a namespace domain of an editable domain' do
+      let(:record) { FactoryGirl.create(:miq_ae_namespace, :parent => FactoryGirl.create(:miq_ae_domain)) }
+      it { expect(subject.disabled?).to be_falsey }
+    end
+    context 'when record is a namespace domain of an uneditable domain' do
+      let(:record) { FactoryGirl.create(:miq_ae_namespace, :parent => FactoryGirl.create(:miq_ae_system_domain)) }
       it { expect(subject.disabled?).to be_truthy }
     end
   end
