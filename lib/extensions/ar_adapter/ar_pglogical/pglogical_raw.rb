@@ -302,6 +302,18 @@ class PgLogicalRaw
     SQL
   end
 
+  def with_replication_set_lock(set_name)
+    connection.transaction(:requires_new => true) do
+      typed_exec(<<-SQL, set_name)
+        SELECT *
+        FROM pglogical.replication_set
+        WHERE set_name = $1
+        FOR UPDATE
+      SQL
+      yield
+    end
+  end
+
   private
 
   def typed_exec(sql, *params)
