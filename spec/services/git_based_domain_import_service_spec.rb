@@ -196,7 +196,7 @@ describe GitBasedDomainImportService do
       it "calls 'refresh' with the correct options and fails" do
         expect(MiqTask).to receive(:generic_action_with_callback).with(task_options, queue_options).and_return(task.id)
 
-        expect{ subject.refresh(git_repo.id) }.to raise_exception(MiqException::Error, message)
+        expect { subject.refresh(git_repo.id) }.to raise_exception(MiqException::Error, message)
       end
     end
   end
