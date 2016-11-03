@@ -27,7 +27,24 @@ describe GitBasedDomainImportService do
         "git_repository_id" => git_repo.id,
         "ref"               => ref_name,
         "ref_type"          => ref_type,
-        "tenant_id"         => 321
+        "tenant_id"         => 321,
+        "overwrite"         => true
+      }
+    end
+    let(:status) { "Ok" }
+    let(:message) { "Success" }
+  end
+
+  shared_context "refresh setup" do
+    let(:action) { 'Refresh git repository' }
+    let(:git_branches) { [] }
+    let(:queue_options) do
+      {
+        :class_name  => "GitRepository",
+        :instance_id => git_repo.id,
+        :method_name => "refresh",
+        :role        => "git_owner",
+        :args        => []
       }
     end
   end
@@ -126,7 +143,8 @@ describe GitBasedDomainImportService do
           "git_url"   => git_repo.url,
           "ref"       => ref_name,
           "ref_type"  => ref_type,
-          "tenant_id" => 321
+          "tenant_id" => 321,
+          "overwrite" => true
         }
       end
 
@@ -134,6 +152,51 @@ describe GitBasedDomainImportService do
         expect(MiqTask).to receive(:generic_action_with_callback).with(task_options, queue_options).and_return(task.id)
 
         expect(subject.queue_refresh_and_import(git_repo.url, ref_name, ref_type, 321)).to eq(task.id)
+      end
+    end
+  end
+
+  describe "#queue_refresh" do
+    include_context "import setup"
+    include_context "refresh setup"
+    before do
+      allow(User).to receive(:current_user).and_return(user)
+    end
+
+    it "calls 'queue_refresh' with the correct options" do
+      expect(MiqTask).to receive(:generic_action_with_callback).with(task_options, queue_options).and_return(task.id)
+
+      expect(subject.queue_refresh(git_repo.id)).to eq(task.id)
+    end
+  end
+
+  describe "#refresh" do
+    include_context "import setup"
+    include_context "refresh setup"
+    let(:task) { double("MiqTask", :id => 123, :status => status, :message => message) }
+
+    before do
+      allow(MiqTask).to receive(:wait_for_taskid).with(task.id).and_return(task)
+      allow(MiqTask).to receive(:find).with(task.id).and_return(task)
+      allow(User).to receive(:current_user).and_return(user)
+    end
+
+    context "success" do
+      it "calls 'refresh' with the correct options and succeeds" do
+        allow(task).to receive(:task_results).and_return(true)
+        expect(MiqTask).to receive(:generic_action_with_callback).with(task_options, queue_options).and_return(task.id)
+
+        expect(subject.refresh(git_repo.id)).to be_truthy
+      end
+    end
+
+    context "failure" do
+      let(:status) { "Failed" }
+      let(:message) { "My Error Message" }
+      it "calls 'refresh' with the correct options and fails" do
+        expect(MiqTask).to receive(:generic_action_with_callback).with(task_options, queue_options).and_return(task.id)
+
+        expect{ subject.refresh(git_repo.id) }.to raise_exception(MiqException::Error, message)
       end
     end
   end

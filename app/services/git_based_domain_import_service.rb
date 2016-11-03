@@ -12,7 +12,8 @@ class GitBasedDomainImportService
       "git_repository_id" => git_repo.id,
       "ref"               => branch_or_tag,
       "ref_type"          => ref_type,
-      "tenant_id"         => tenant_id
+      "tenant_id"         => tenant_id,
+      "overwrite"         => true
     }
 
     task_options = {
@@ -30,12 +31,30 @@ class GitBasedDomainImportService
     MiqTask.generic_action_with_callback(task_options, queue_options)
   end
 
+  def queue_refresh(git_repo_id)
+    task_options = {
+      :action => "Refresh git repository",
+      :userid => User.current_user.userid
+    }
+
+    queue_options = {
+      :class_name  => "GitRepository",
+      :method_name => "refresh",
+      :instance_id => git_repo_id,
+      :role        => "git_owner",
+      :args        => []
+    }
+
+    MiqTask.generic_action_with_callback(task_options, queue_options)
+  end
+
   def queue_refresh_and_import(git_url, ref, ref_type, tenant_id)
     import_options = {
       "git_url"   => git_url,
       "ref"       => ref,
       "ref_type"  => ref_type,
-      "tenant_id" => tenant_id
+      "tenant_id" => tenant_id,
+      "overwrite" => true
     }
 
     task_options = {
@@ -60,6 +79,16 @@ class GitBasedDomainImportService
     domain = task.task_results
     raise MiqException::Error, "Domain object not available from task results" unless domain.kind_of?(MiqAeDomain)
     domain.update_attribute(:enabled, true)
+  end
+
+  def refresh(git_repo_id)
+    task_id = queue_refresh(git_repo_id)
+    MiqTask.wait_for_taskid(task_id)
+
+    task = MiqTask.find(task_id)
+    raise MiqException::Error, task.message unless task.status == "Ok"
+
+    task.task_results
   end
 
   def self.available?
