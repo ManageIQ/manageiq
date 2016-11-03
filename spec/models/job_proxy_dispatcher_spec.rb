@@ -138,9 +138,7 @@ describe JobProxyDispatcher do
             @repo_proxy.save
             @repo_proxy.host.name = "repo_host"
             @repo_proxy.host.save
-            cfg = VMDB::Config.new("vmdb")
-            cfg.config.store_path(:repository_scanning, :defaultsmartproxy, @repo_proxy.id)
-            allow(VMDB::Config).to receive(:new).and_return(cfg)
+            stub_settings(:repository_scanning => {:defaultsmartproxy => @repo_proxy.id})
           end
           @jobs = (@vms + @repo_vms).collect(&:scan)
         end
