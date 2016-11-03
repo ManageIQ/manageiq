@@ -600,4 +600,26 @@ describe Host do
       end
     end
   end
+
+  describe ".clustered" do
+    let(:host_with_cluster) { FactoryGirl.create(:host, :ems_cluster => FactoryGirl.create(:ems_cluster)) }
+    let(:host) { FactoryGirl.create(:host) }
+
+    it "detects clustered hosts" do
+      host_with_cluster ; host
+
+      expect(Host.clustered).to eq([host_with_cluster])
+    end
+  end
+
+  describe ".non_clustered" do
+    let(:host_with_cluster) { FactoryGirl.create(:host, :ems_cluster => FactoryGirl.create(:ems_cluster)) }
+    let(:host) { FactoryGirl.create(:host) }
+
+    it "detects non_clustered hosts" do
+      host_with_cluster ; host
+
+      expect(Host.non_clustered).to eq([host])
+    end
+  end
 end

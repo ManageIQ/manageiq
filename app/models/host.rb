@@ -191,6 +191,14 @@ class Host < ApplicationRecord
     true
   end
 
+  def self.non_clustered
+    where(:ems_cluster_id => nil)
+  end
+
+  def self.clustered
+    where.not(:ems_cluster_id => nil)
+  end
+
   def authentication_check_role
     'smartstate'
   end

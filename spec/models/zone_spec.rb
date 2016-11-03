@@ -62,6 +62,34 @@ describe Zone do
     end
   end
 
+  describe "#clustered_hosts" do
+    let(:zone) { FactoryGirl.create(:zone) }
+    let(:ems) { FactoryGirl.create(:ems_vmware, :zone => zone) }
+    let(:cluster) { FactoryGirl.create(:ems_cluster, :ext_management_system => ems)}
+    let(:host_with_cluster) { FactoryGirl.create(:host, :ext_management_system => ems, :ems_cluster => cluster) }
+    let(:host) { FactoryGirl.create(:host, :ext_management_system => ems) }
+
+    it "returns clustered hosts" do
+      host ; host_with_cluster
+
+      expect(zone.clustered_hosts).to eq([host_with_cluster])
+    end
+  end
+
+  describe "#non_clustered_hosts" do
+    let(:zone) { FactoryGirl.create(:zone) }
+    let(:ems) { FactoryGirl.create(:ems_vmware, :zone => zone) }
+    let(:cluster) { FactoryGirl.create(:ems_cluster, :ext_management_system => ems)}
+    let(:host_with_cluster) { FactoryGirl.create(:host, :ext_management_system => ems, :ems_cluster => cluster) }
+    let(:host) { FactoryGirl.create(:host, :ext_management_system => ems) }
+
+    it "returns clustered hosts" do
+      host ; host_with_cluster
+
+      expect(zone.non_clustered_hosts).to eq([host])
+    end
+  end
+
   context ".determine_queue_zone" do
     subject           { described_class }
 

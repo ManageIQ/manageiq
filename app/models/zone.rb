@@ -15,7 +15,9 @@ class Zone < ApplicationRecord
   has_many :ldap_regions
   has_many :providers
 
-  virtual_has_many :hosts,              :uses => {:ext_management_systems => :hosts}
+  has_many :hosts,               :through => :ext_management_systems
+  has_many :clustered_hosts,     :through => :ext_management_systems
+  has_many :non_clustered_hosts, :through => :ext_management_systems
   virtual_has_many :active_miq_servers, :class_name => "MiqServer"
   virtual_has_many :vms_and_templates,  :uses => {:ext_management_systems => :vms_and_templates}
 
@@ -120,16 +122,6 @@ class Zone < ApplicationRecord
 
   def self.hosts_without_a_zone
     Host.where(:ems_id => nil).to_a
-  end
-
-  def non_clustered_hosts
-    MiqPreloader.preload(self, :ext_management_systems => :hosts)
-    ext_management_systems.flat_map(&:non_clustered_hosts)
-  end
-
-  def clustered_hosts
-    MiqPreloader.preload(self, :ext_management_systems => :hosts)
-    ext_management_systems.flat_map(&:clustered_hosts)
   end
 
   def ems_clusters
