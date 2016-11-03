@@ -130,20 +130,16 @@ module EmsRefresh::SaveInventory
     end
 
     # Handle genealogy link ups
-    vm_ids = hashes.collect { |h| !h[:invalid] && h.has_key_path?(:parent_vm, :id) ? [h[:id], h.fetch_path(:parent_vm, :id)] : nil }.flatten.compact.uniq
+    # TODO: can we use _object
+    vm_ids = hashes.flat_map { |h| !h[:invalid] && h.has_key_path?(:parent_vm, :id) ? [h[:id], h.fetch_path(:parent_vm, :id)] : [] }.uniq
     unless vm_ids.empty?
       _log.info("#{log_header} Updating genealogy connections.")
-      vms = VmOrTemplate.where(:id => vm_ids)
+      vms = VmOrTemplate.where(:id => vm_ids).index_by(&:id)
       hashes.each do |h|
-        child_id = h[:id]
-        parent_id = h.fetch_path(:parent_vm, :id)
-        next if child_id.blank? || parent_id.blank?
+        parent = vms[h.fetch_path(:parent_vm, :id)]
+        child = vms[h[:id]]
 
-        parent = vms.detect { |v| v.id == parent_id }
-        child = vms.detect { |v| v.id == child_id }
-        next if parent.blank? || child.blank?
-
-        parent.with_relationship_type('genealogy') { parent.set_child(child) }
+        parent.with_relationship_type('genealogy') { parent.set_child(child) } if parent && child
       end
     end
 
