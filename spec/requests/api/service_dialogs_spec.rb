@@ -181,6 +181,71 @@ describe "Service Dialogs API" do
         expect(response).to have_http_status(:ok)
       end
     end
+
+    context 'Service Dialogs Copy' do
+      it 'forbids blueprint copy without an appropriate role' do
+        dialog = FactoryGirl.create(:dialog_with_tab_and_group_and_field)
+        api_basic_authorize
+
+        run_post(service_dialogs_url(dialog.id), :action => 'copy')
+
+        expect(response).to have_http_status(:forbidden)
+      end
+
+      it 'Can copy multiple service dialogs' do
+        dialog1 = FactoryGirl.create(:dialog_with_tab_and_group_and_field, :label => 'foo')
+        dialog2 = FactoryGirl.create(:dialog_with_tab_and_group_and_field, :label => 'bar')
+        api_basic_authorize collection_action_identifier(:service_dialogs, :copy)
+
+        expected = {
+          'results' => a_collection_containing_exactly(
+            a_hash_including(
+              'label' => "Copy of foo"
+            ),
+            a_hash_including(
+              'label' => "Copy of bar"
+            )
+          )
+        }
+
+        expect do
+          run_post(service_dialogs_url, :action => 'copy', :resources => [{:id => dialog1.id},
+                                                                          {:id => dialog2.id}])
+        end.to change(Dialog, :count).by(2)
+        expect(response.parsed_body).to include(expected)
+        expect(response).to have_http_status(:ok)
+      end
+
+      it 'Can copy a single service dialog' do
+        dialog = FactoryGirl.create(:dialog_with_tab_and_group_and_field, :label => 'foo')
+        api_basic_authorize collection_action_identifier(:service_dialogs, :copy)
+
+        expected = {
+          'label' => "Copy of foo"
+        }
+
+        expect do
+          run_post(service_dialogs_url(dialog.id), :action => 'copy')
+        end.to change(Dialog, :count).by(1)
+        expect(response.parsed_body).to include(expected)
+        expect(response).to have_http_status(:ok)
+      end
+
+      it 'Can copy a service dialog with a new label' do
+        dialog = FactoryGirl.create(:dialog_with_tab_and_group_and_field, :label => 'bar')
+        api_basic_authorize collection_action_identifier(:service_dialogs, :copy)
+
+        expected = {
+          'label' => 'foo'
+        }
+
+        expect do
+          run_post(service_dialogs_url(dialog.id), :action => 'copy', 'label' => 'foo')
+        end.to change(Dialog, :count).by(1)
+        expect(response.parsed_body).to include(expected)
+        expect(response).to have_http_status(:ok)
+      end
+    end
   end
 
   context "Service Dialogs subcollection" do
