@@ -115,7 +115,12 @@ module ManageIQ::Providers::Vmware::InfraManager::Provision::Configuration::Cont
         set_spec_option(rai, :reservation, :memory_reserve, nil, :to_i)
       end
 
-      vmcs.memoryReservationLockedToMax = false if source.ext_management_system.api_version >= '5.0'
+      # Only explicitly disable #MemoryReservationLockedToMax if the memory reserve
+      # is less than the total vm memory
+      if get_option(:memory_reserve).to_i < get_option(:vm_memory).to_i
+        # memoryReservationLockedToMax was added in vSphere 5.0
+        vmcs.memoryReservationLockedToMax = false if source.ext_management_system.api_version >= '5.0'
+      end
     end
 
     _log.info("Calling VM reconfiguration")
