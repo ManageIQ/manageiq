@@ -316,6 +316,13 @@ module Api
           raise BadRequestError, "Resource id or href should not be specified for creating a new #{type}"
         end
       end
+
+      def assert_all_required_fields_exists(data, type, required_fields)
+        missing_fields = required_fields - data.keys
+        unless missing_fields.empty?
+          raise BadRequestError, "Resource #{missing_fields.join(", ")} needs be specified for creating a new #{type}"
+        end
+      end
     end
   end
 end

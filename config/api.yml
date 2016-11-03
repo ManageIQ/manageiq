@@ -695,15 +695,12 @@
       :post:
       - :name: query
         :identifier: policy_view
-      - :name: add
+      - :name: create
         :identifier: policy_new
-        :disabled: true
       - :name: edit
         :identifier: policy_edit
-        :disabled: true
       - :name: delete
         :identifier: policy_delete
-        :disabled: true
     :resource_actions:
       :get:
       - :name: read
@@ -711,11 +708,11 @@
       :post:
       - :name: edit
         :identifier: policy_edit
-        :disabled: true
+      - :name: delete
+        :identifier: policy_delete
       :delete:
       - :name: delete
         :identifier: policy_delete
-        :disabled: true
     :subcollection_actions:
       :post:
       - :name: assign

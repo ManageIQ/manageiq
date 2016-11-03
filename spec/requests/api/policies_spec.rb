@@ -352,4 +352,65 @@ describe "Policies API" do
       test_policy_profile_query(template, template_policy_profiles_url)
     end
   end
+
+  context "Policy CRUD actions" do
+    let(:action) { FactoryGirl.create(:miq_action) }
+    let(:conditions) { FactoryGirl.create_list(:condition, 2) }
+    let(:event) { FactoryGirl.create(:miq_event_definition) }
+    let(:miq_policy) { FactoryGirl.create(:miq_policy) }
+    let(:miq_policy_contents) do
+      {"policy_contents" => [{'event_id' => event.id,
+                              "actions"  => [{"action_id" => action.id, "opts" => { :qualifier => "failure" }}] }]}
+    end
+    let(:sample_policy) do
+      {
+        "description"    => "sample policy",
+        "name"           => "sample policy",
+        "towhat"         => "ManageIQ::Providers::Redhat::InfraManager",
+        "conditions_ids" => [conditions.first.id, conditions.second.id],
+      }
+    end
+
+    it "creates new policy" do
+      api_basic_authorize collection_action_identifier(:policies, :create)
+      run_post(policies_url, sample_policy.merge!(miq_policy_contents))
+      policy = MiqPolicy.find(response.parsed_body["results"].first["id"])
+      expect(response.parsed_body["results"].first["name"]).to eq("sample policy")
+      expect(response.parsed_body["results"].first["towhat"]).to eq("ManageIQ::Providers::Redhat::InfraManager")
+      expect(policy).to be_truthy
+      expect(policy.conditions.count).to eq(2)
+      expect(policy.actions.count).to eq(1)
+      expect(policy.events.count).to eq(1)
+      expect(response).to have_http_status(:ok)
+    end
+
+    it "shouldn't creates new policy with missing params" do
+      api_basic_authorize collection_action_identifier(:policies, :create)
+      run_post(policies_url, sample_policy)
+      expect(response).to have_http_status(:bad_request)
+      expect(response.parsed_body["error"]["message"]).to include(miq_policy_contents.keys.join(", "))
+    end
+
+    it "deletes policy" do
+      api_basic_authorize collection_action_identifier(:policies, :delete)
+      run_post(policies_url, gen_request(:delete, "href" => policies_url(miq_policy.id)))
+      policy_id = response.parsed_body["results"].first["id"]
+      expect(MiqPolicy.exists?(policy_id)).to be_falsey
+      expect(response).to have_http_status(:ok)
+    end
+
+    it "edits policy actions events and conditions" do
+      api_basic_authorize collection_action_identifier(:policies, :edit)
+      miq_policy.conditions << conditions
+      expect(miq_policy.conditions.count).to eq(2)
+      expect(miq_policy.actions.count).to eq(0)
+      expect(miq_policy.events.count).to eq(0)
+      run_post(policies_url(miq_policy.id), gen_request(:edit, miq_policy_contents.merge('conditions_ids' => [])))
+      policy = MiqPolicy.find(response.parsed_body["id"])
+      expect(response).to have_http_status(:ok)
+      expect(policy.actions.count).to eq(1)
+      expect(policy.events.count).to eq(1)
+      expect(miq_policy.conditions.count).to eq(0)
+    end
+  end
 end
