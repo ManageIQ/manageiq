@@ -19,48 +19,48 @@
         = _('Basic Information')
       .form-horizontal.static
         .form-group
-          %label.col-md-2.control-label
+          %label.col-md-3.control-label
             = _('Name / Description')
           .col-md-8
             #{@record.name} / #{@record.description}
         .form-group
-          %label.col-md-2.control-label
+          %label.col-md-3.control-label
             = _('Display in Catalog')
           .col-md-8
             &nbsp;
             = check_box_tag("display", true, @record.display, :disabled => true)
         - if @record.display
           .form-group
-            %label.col-md-2.control-label
+            %label.col-md-3.control-label
               = _('Catalog')
             .col-md-8
               = h(@record.service_template_catalog ? @record.service_template_catalog.name : "<#{_('Unassigned')}>")
         .form-group
-          %label.col-md-2.control-label
+          %label.col-md-3.control-label
             = _('Dialog')
           .col-md-8
             = h(@sb[:dialog_label])
         - if @record.prov_type == "generic"
           .form-group
-            %label.col-md-2.control-label
+            %label.col-md-3.control-label
               = _('Subtype')
             .col-md-8
               = h(ServiceTemplate::GENERIC_ITEM_SUBTYPES[@record[:generic_subtype]])
         - if @record.prov_type == "generic_orchestration"
           .form-group
-            %label.col-md-2.control-label
+            %label.col-md-3.control-label
               = _('Orchestration Template')
             .col-md-8
               = h(@record.try(:orchestration_template).try(:name))
           - if @record.orchestration_manager
             .form-group
-              %label.col-md-2.control-label
+              %label.col-md-3.control-label
                 = _('Provider')
               .col-md-8
                 = h(@record.orchestration_manager.name)
         - elsif @record.prov_type == "generic_ansible_tower"
           .form-group
-            %label.col-md-2.control-label
+            %label.col-md-3.control-label
               = _('Ansible Tower Job Template')
             .col-md-8
               = h(@record.try(:job_template).try(:name))
@@ -70,7 +70,7 @@
              [_("Retirement"),   :retire_fqname])
         - entry_points.each do |entry_points_op|
           .form-group
-            %label.col-md-2.control-label{:title => _("%{entry_point} Entry Point (NameSpace/Class/Instance)") % {:entry_point => entry_points_op[0]}}
+            %label.col-md-3.control-label{:title => _("%{entry_point} Entry Point (NameSpace/Class/Instance)") % {:entry_point => entry_points_op[0]}}
               #{entry_points_op[0]} #{_('Entry Point')}
             .col-md-8
               = h(@sb[entry_points_op[1]])
@@ -116,7 +116,7 @@
           = _('Basic Information')
         .form-horizontal.static
           .form-group
-            %label.col-md-2.control-label
+            %label.col-md-3.control-label
               = _('Long Description')
             .col-md-8
               = @record.long_description.to_s.html_safe
