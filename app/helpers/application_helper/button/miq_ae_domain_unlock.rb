@@ -2,7 +2,7 @@ class ApplicationHelper::Button::MiqAeDomainUnlock < ApplicationHelper::Button::
   needs :@record
 
   def disabled?
-    @error_message = N_('Domain is Unlocked.') unless super
+    @error_message = N_('Domain is Unlocked.') if super
     @error_message.present?
   end
 
