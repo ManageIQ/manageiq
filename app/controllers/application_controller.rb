@@ -94,9 +94,6 @@ class ApplicationController < ActionController::Base
     @table_name ||= model.name.underscore
   end
 
-  # Examples:
-  #   CimBaseStorageExtentController => cim_bse
-  #   OntapFileShareController        => snia_fs
   def self.session_key_prefix
     @session_key_prefix ||= begin
       parts = table_name.split('_')
