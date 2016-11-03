@@ -24,6 +24,7 @@ class ManageIQ::Providers::StorageManager::SwiftManager < ManageIQ::Providers::S
            :to        => :parent_manager,
            :allow_nil => true
 
+  supports :object_storage
   supports :swift_service do
     if parent_manager
       unsupported_reason_add(:swift_service, parent_manager.unsupported_reason(:swift_service)) unless

@@ -31,6 +31,7 @@ class ManageIQ::Providers::StorageManager::CinderManager < ManageIQ::Providers::
            :to        => :parent_manager,
            :allow_nil => true
 
+  supports :block_storage
   supports :cinder_service do
     if parent_manager
       unsupported_reason_add(:cinder_service, parent_manager.unsupported_reason(:cinder_service)) unless

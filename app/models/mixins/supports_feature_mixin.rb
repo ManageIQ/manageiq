@@ -110,6 +110,8 @@ module SupportsFeatureMixin
     :update_network_router      => 'Network Router Update',
     :ems_network_new            => 'New EMS Network Provider',
     :update_security_group      => 'Security Group Update',
+    :block_storage              => 'Block Storage',
+    :object_storage             => 'Object Storage',
   }.freeze
 
   # Whenever this mixin is included we define all features as unsupported by default.

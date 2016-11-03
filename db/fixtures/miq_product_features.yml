@@ -5983,3 +5983,51 @@
       :description: Add a Storage Provider
       :feature_type: admin
       :identifier: ems_storage_new
+
+# EmsBlockStorage
+- :name: Block Storage Managers
+  :description: Everything under Block Storage Managers
+  :feature_type: node
+  :identifier: ems_block_storage
+  :children:
+  - :name: View
+    :description: View Block Storage Managers
+    :feature_type: view
+    :identifier: ems_block_storage_view
+    :children:
+    - :name: List
+      :description: Display Lists of Block Storage Managers
+      :feature_type: view
+      :identifier: ems_block_storage_show_list
+    - :name: Show
+      :description: Display Individual Block Storage Managers
+      :feature_type: view
+      :identifier: ems_block_storage_show
+    - :name: Timeline
+      :description: Display Timelines for Block Storage Managers
+      :feature_type: view
+      :identifier: ems_block_storage_timeline
+
+# EmsObjectStorage
+- :name: Object Storage Managers
+  :description: Everything under Object Storage Managers
+  :feature_type: node
+  :identifier: ems_object_storage
+  :children:
+  - :name: View
+    :description: View Object Storage Managers
+    :feature_type: view
+    :identifier: ems_object_storage_view
+    :children:
+    - :name: List
+      :description: Display Lists of Object Storage Managers
+      :feature_type: view
+      :identifier: ems_object_storage_show_list
+    - :name: Show
+      :description: Display Individual Object Storage Managers
+      :feature_type: view
+      :identifier: ems_object_storage_show
+    - :name: Timeline
+      :description: Display Timelines for Object Storage Managers
+      :feature_type: view
+      :identifier: ems_object_storage_timeline

@@ -100,8 +100,8 @@ module MiqReport::Search
       targets = db_class
     end
     supported_features_filter = search_options.delete(:supported_features_filter) if search_options[:supported_features_filter]
-    search_results, attrs = Rbac.search(search_options.merge(:targets => targets))
-    filtered_results      = filter_results(search_results, supported_features_filter)
+    search_results, attrs     = Rbac.search(search_options.merge(:targets => targets))
+    filtered_results          = filter_results(search_results, supported_features_filter)
 
     if order.nil?
       options[:limit]   = limit

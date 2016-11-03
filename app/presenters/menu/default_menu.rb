@@ -152,10 +152,54 @@ module Menu
       def storage_menu_section
         netapp_enabled = ::Settings.product.storage
         Menu::Section.new(:sto, N_("Storage"), 'fa fa-database fa-2x', [
-          Menu::Item.new('ems_storage',                  N_('Storage Providers'), 'ems_storage',                  {:feature => 'ems_storage_show_list'},                  '/ems_storage'),
-          Menu::Item.new('cloud_volume',                 N_('Volumes'),           'cloud_volume',                 {:feature => 'cloud_volume_show_list'},                 '/cloud_volume'),
-          Menu::Item.new('cloud_object_store_container', N_('Object Stores'),     'cloud_object_store_container', {:feature => 'cloud_object_store_container_show_list'}, '/cloud_object_store_container'),
-        ])
+                          block_storage_menu_section,
+                          object_storage_menu_section,
+                          ])
+      end
+
+      def block_storage_menu_section
+        Menu::Section.new(:bst, N_("Block Storage"), 'fa fa-database fa-2x', [
+                            Menu::Item.new('ems_storage',
+                                           N_('Managers'),
+                                           'ems_block_storage',
+                                           {:feature => 'ems_block_storage_show_list'},
+                                           '/ems_block_storage'),
+                            Menu::Item.new('cloud_volume',
+                                           N_('Volumes'),
+                                           'cloud_volume',
+                                           {:feature => 'cloud_volume_show_list'},
+                                           '/cloud_volume'),
+                            Menu::Item.new('cloud_volume_snapshot',
+                                           N_('Volume Snapshots'),
+                                           'cloud_volume_snapshot',
+                                           {:feature => 'cloud_volume_snapshot_show_list'},
+                                           '/cloud_volume_snapshot'),
+                            Menu::Item.new('cloud_volume_backup',
+                                           N_('Volume Backups'),
+                                           'cloud_volume_backup',
+                                           {:feature => 'cloud_volume_backup_show_list'},
+                                           '/cloud_volume_backup'),
+                          ])
+      end
+
+      def object_storage_menu_section
+        Menu::Section.new(:ost, N_("Object Storage"), 'fa fa-database fa-2x', [
+                            Menu::Item.new('ems_storage',
+                                           N_('Managers'),
+                                           'ems_object_storage',
+                                           {:feature => 'ems_object_storage_show_list'},
+                                           '/ems_object_storage'),
+                            Menu::Item.new('cloud_object_store_container',
+                                           N_('Object Store Containers'),
+                                           'cloud_object_store_container',
+                                           {:feature => 'cloud_object_store_container_show_list'},
+                                           '/cloud_object_store_container'),
+                            Menu::Item.new('cloud_object_store_object',
+                                           N_('Object Store Objects'),
+                                           'cloud_object_store_object',
+                                           {:feature => 'cloud_object_store_object_show_list'},
+                                           '/cloud_object_store_object'),
+                          ])
       end
 
       def empty_menu_section
