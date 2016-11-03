@@ -1760,6 +1760,7 @@ Vmdb::Application.routes.draw do
         listnav_search_selected
         panel_control
         quick_search
+        reload
         show
         show_list
         tag_edit_form_field_changed
