@@ -199,6 +199,10 @@ class Host < ApplicationRecord
     where.not(:ems_cluster_id => nil)
   end
 
+  def self.failover
+    where(:failover => true)
+  end
+
   def authentication_check_role
     'smartstate'
   end
