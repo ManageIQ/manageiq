@@ -9,6 +9,8 @@ class ManageIQ::Providers::Vmware::InfraManager::Vm < ManageIQ::Providers::Infra
     unsupported_reason_add(:clone, _('Clone operation is not supported')) if blank? || orphaned? || archived?
   end
 
+  supports :reconfigure_disks
+
   def add_miq_alarm
     raise "VM has no EMS, unable to add alarm" unless ext_management_system
     ext_management_system.vm_add_miq_alarm(self)
