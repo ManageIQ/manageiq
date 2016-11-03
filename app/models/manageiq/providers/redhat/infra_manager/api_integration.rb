@@ -198,8 +198,15 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
 
   # Adding disks is supported only by API version 4.0
   def with_disk_attachments_service(vm)
+    with_version4_vm_service(vm) do |service|
+      disk_service = service.disk_attachments_service
+      yield disk_service
+    end
+  end
+
+  def with_version4_vm_service(vm)
     connection = connect(:version => 4)
-    service = connection.system_service.vms_service.vm_service(vm.uid_ems).disk_attachments_service
+    service = connection.system_service.vms_service.vm_service(vm.uid_ems)
     yield service
   ensure
     connection.close
@@ -211,7 +218,7 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
     end
 
     def api4_supported_features
-      [:quick_stats, :snapshots]
+      [:quick_stats, :snapshots, :migrate]
     end
 
     def api_features

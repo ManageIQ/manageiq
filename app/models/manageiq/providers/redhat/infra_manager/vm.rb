@@ -4,7 +4,11 @@ class ManageIQ::Providers::Redhat::InfraManager::Vm < ManageIQ::Providers::Infra
   include_concern 'Reconfigure'
   include_concern 'ManageIQ::Providers::Redhat::InfraManager::VmOrTemplateShared'
 
-  supports_not :migrate, :reason => _("Migrate operation is not supported.")
+  supports :migrate do
+    unless ext_management_system.supports_migrate?
+      unsupported_reason_add(:migrate, 'RHV API version does not support migrate')
+    end
+  end
 
   POWER_STATES = {
     'up'        => 'on',

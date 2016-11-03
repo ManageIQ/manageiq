@@ -133,4 +133,22 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
       disks.each { |disk_id| service.attachment_service(disk_id).remove }
     end
   end
+
+  def vm_migrate(vm, options = {})
+    host_id = URI(options[:host]).path.split('/').last
+
+    migration_options = {
+      :host => {
+        :id => host_id
+      }
+    }
+
+    with_version4_vm_service(vm) do |service|
+      service.migrate(migration_options)
+    end
+  end
+
+  def unsupported_migration_options
+    [:storage, :respool, :folder, :datacenter, :host_filter]
+  end
 end

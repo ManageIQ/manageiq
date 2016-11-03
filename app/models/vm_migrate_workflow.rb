@@ -22,6 +22,8 @@ class VmMigrateWorkflow < MiqRequestWorkflow
     return @target_resource = {} if ems.length != 1
 
     result = {:ems => ci_to_hash_struct(ems.first)}
+    @manager = ems.first
+
     add_target(:placement_host_name,    :host,    Host,         result)
     add_target(:placement_ds_name,      :storage, Storage,      result)
     add_target(:placement_cluster_name, :cluster, EmsCluster,   result)
@@ -36,6 +38,15 @@ class VmMigrateWorkflow < MiqRequestWorkflow
     end
     rails_logger('get_source_and_targets', 1)
     @target_resource = result
+  end
+
+  def add_target(dialog_key, key, klass, result)
+    super if field_supported(key)
+  end
+
+  def field_supported(key)
+    !(@manager.respond_to?(:unsupported_migration_options) &&
+      @manager.unsupported_migration_options.include?(key))
   end
 
   private
