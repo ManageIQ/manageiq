@@ -5,6 +5,7 @@ class ApplicationHelper::Toolbar::CompareCenter < ApplicationHelper::Toolbar::Ba
       'product product-compare_all fa-lg',
       N_('All attributes'),
       nil,
+      :klass     => ApplicationHelper::Button::ButtonWithoutRbacCheck,
       :url       => "compare_miq_all",
       :url_parms => "?id=\#{$vms_comp}&compare_task=all"),
     twostate(
@@ -12,6 +13,7 @@ class ApplicationHelper::Toolbar::CompareCenter < ApplicationHelper::Toolbar::Ba
       'product product-compare_diff fa-lg',
       N_('Attributes with different values'),
       nil,
+      :klass     => ApplicationHelper::Button::ButtonWithoutRbacCheck,
       :url       => "compare_miq_differences",
       :url_parms => "?id=\#{$vms_comp}&compare_task=different"),
     twostate(
@@ -19,6 +21,7 @@ class ApplicationHelper::Toolbar::CompareCenter < ApplicationHelper::Toolbar::Ba
       'product product-compare_same fa-lg',
       N_('Attributes with same values'),
       nil,
+      :klass     => ApplicationHelper::Button::ButtonWithoutRbacCheck,
       :url       => "compare_miq_same",
       :url_parms => "?id=\#{$vms_comp}&compare_task=same"),
   ])
@@ -28,12 +31,14 @@ class ApplicationHelper::Toolbar::CompareCenter < ApplicationHelper::Toolbar::Ba
       'fa fa-bars fa-lg',
       N_('Details Mode'),
       nil,
+      :klass     => ApplicationHelper::Button::ButtonWithoutRbacCheck,
       :url => "compare_mode"),
     twostate(
       :comparemode_exists,
       'product product-exists fa-lg',
       N_('Exists Mode'),
       nil,
+      :klass     => ApplicationHelper::Button::ButtonWithoutRbacCheck,
       :url => "compare_mode"),
   ])
 end
