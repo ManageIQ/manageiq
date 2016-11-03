@@ -1,3 +1,6 @@
+- content_for :search do
+  = render(:partial => "layouts/x_adv_searchbox")
+  = render(:partial => 'layouts/quick_search')
 #main_div
   - if @showtype == "timeline"
     = render(:partial => "layouts/tl_show")
