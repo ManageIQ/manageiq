@@ -843,7 +843,7 @@ describe ChargebackVm do
 
   describe "#get_rates" do
     let(:chargeback_rate)         { FactoryGirl.create(:chargeback_rate, :rate_type => "Compute") }
-    let(:chargeback_vm)           { FactoryGirl.build(:chargeback_vm) }
+    let(:chargeback_vm)           { ChargebackVm.new }
     let(:rate_assignment_options) { {:cb_rate => @cbr, :object => Tenant.root_tenant} }
     let(:metric_rollup) do
       FactoryGirl.create(:metric_rollup_vm_hr, :timestamp => "2012-08-31T07:00:00Z", :tag_names => "environment/prod",
