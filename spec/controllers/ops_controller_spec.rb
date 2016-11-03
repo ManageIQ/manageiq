@@ -247,7 +247,6 @@ describe OpsController do
     MiqRegion.seed
     EvmSpecHelper.local_miq_server
     login_as FactoryGirl.create(:user, :features => "ops_rbac")
-    allow(controller).to receive(:get_vmdb_config).and_return(:product => {})
   end
 
   context "#explorer" do
