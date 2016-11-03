@@ -157,7 +157,6 @@ describe DashboardController do
     it "returns flash message when user does not have access to any features" do
       user = FactoryGirl.create(:user, :role => "test")
       allow(User).to receive(:authenticate).and_return(user)
-      allow(controller).to receive(:get_vmdb_config).and_return(:product => {})
       validation = controller.send(:validate_user, user)
       expect(validation.flash_msg).to include("The user's role is not authorized for any access")
     end
@@ -177,7 +176,6 @@ describe DashboardController do
     it "returns url for the user and sets user's group/role id in session" do
       user = FactoryGirl.create(:user, :role => "test")
       allow(User).to receive(:authenticate).and_return(user)
-      allow(controller).to receive(:get_vmdb_config).and_return(:product => {})
       skip_data_checks('some_url')
       validation = controller.send(:validate_user, user)
       expect(controller.current_group_id).to eq(user.current_group_id)
