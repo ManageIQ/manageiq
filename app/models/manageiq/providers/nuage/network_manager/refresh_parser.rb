@@ -74,7 +74,7 @@ module ManageIQ::Providers
     end
 
     def to_cidr(netmask)
-      '/' + netmask.split(".").map { |e| e.to_i.to_s(2).rjust(8, "0") }.join.count("1").to_s
+      '/' + netmask.to_s.split(".").map { |e| e.to_i.to_s(2).rjust(8, "0") }.join.count("1").to_s
     end
 
     def parse_network_group(network_group)
@@ -97,7 +97,7 @@ module ManageIQ::Providers
         :type             => self.class.cloud_subnet_type,
         :name             => subnet['name'],
         :ems_ref          => uid,
-        :cidr             => subnet['address'] + to_cidr(subnet['netmask']),
+        :cidr             => subnet['address'].to_s + to_cidr(subnet['netmask']),
         :network_protocol => subnet['IPType'].downcase!,
         :gateway          => subnet['gateway'],
         :dhcp_enabled     => false,
