@@ -35,6 +35,7 @@ module OpsController::Settings::AutomateSchedules
     automate_request = {}
     # incase changing type of schedule
     filter = schedule.filter && schedule.filter.kind_of?(Hash) ? schedule.filter : {:uri_parts => {}, :parameters => {}}
+    filter[:parameters].symbolize_keys!
     automate_request[:starting_object] = filter[:uri_parts][:namespace] || "SYSTEM/PROCESS"
     matching_instances = MiqAeClass.find_distinct_instances_across_domains(current_user,
                                                                            automate_request[:starting_object])
@@ -42,7 +43,7 @@ module OpsController::Settings::AutomateSchedules
     automate_request[:instance_names] = matching_instances.collect(&:name).sort_by(&:downcase)
     automate_request[:instance_name]  = filter[:parameters][:instance_name] || "Request"
     automate_request[:object_message] = filter[:parameters][:object_message] || "create"
-    automate_request[:object_request] = filter[:parameters][:object_request] || ""
+    automate_request[:object_request] = filter[:parameters][:request] || ""
     automate_request[:target_class]   = filter[:parameters][:target_class] || nil
     automate_request[:target_classes] = {}
     CustomButton.button_classes.each { |db| automate_request[:target_classes][db] = ui_lookup(:model => db) }

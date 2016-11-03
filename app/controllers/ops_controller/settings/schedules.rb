@@ -514,7 +514,7 @@ module OpsController::Settings::Schedules
           :message   => params[:object_message]
         },
         :parameters => {
-          :object_request => params[:object_request],
+          :request        => params[:object_request],
           :instance_name  => params[:instance_name],
           :object_message => params[:object_message],
           :attrs          => attrs,
