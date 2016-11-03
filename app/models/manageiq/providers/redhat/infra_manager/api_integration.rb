@@ -218,7 +218,7 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
     end
 
     def api4_supported_features
-      [:quick_stats, :snapshots]
+      [:quick_stats, :snapshots, :migrate]
     end
 
     def api_features
