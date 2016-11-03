@@ -518,11 +518,10 @@ module OpsController::OpsRbac
 
   def rbac_group_user_lookup
     rbac_group_user_lookup_field_changed
-    auth = get_vmdb_config[:authentication]
     if @edit[:new][:user].nil? || @edit[:new][:user] == ""
       add_flash(_("User must be entered to perform LDAP Group Look Up"), :error)
     end
-    if auth[:mode] != "httpd"
+    if ::Settings.authentication.mode != "httpd"
       if @edit[:new][:user_id].nil? || @edit[:new][:user_id] == ""
         add_flash(_("Username must be entered to perform LDAP Group Look Up"), :error)
       end
@@ -536,7 +535,7 @@ module OpsController::OpsRbac
       @record = MiqGroup.find_by_id(@edit[:group_id])
       @sb[:roles] = @edit[:roles]
       begin
-        if auth[:mode] == "httpd"
+        if ::Settings.authentication.mode == "httpd"
           @edit[:ldap_groups_by_user] = MiqGroup.get_httpd_groups_by_user(@edit[:new][:user])
         else
           @edit[:ldap_groups_by_user] = MiqGroup.get_ldap_groups_by_user(@edit[:new][:user],
