@@ -41,8 +41,7 @@ class ServiceTemplateProvisionRequest < MiqRequest
   end
 
   def requested_task_idx
-    requested_count = 1
-    (0..requested_count - 1).to_a
+    [0]
   end
 
   def customize_request_task_attributes(req_task_attrs, idx)
