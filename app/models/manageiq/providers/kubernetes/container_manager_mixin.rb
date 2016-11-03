@@ -71,7 +71,7 @@ module ManageIQ::Providers::Kubernetes::ContainerManagerMixin
 
   def verify_credentials(auth_type = nil, options = {})
     options = options.merge(:auth_type => auth_type)
-    if options[:auth_type] == "hawkular"
+    if options[:auth_type].to_s == "hawkular"
       verify_hawkular_credentials
     else
       with_provider_connection(options, &:api_valid?)
