@@ -186,6 +186,7 @@ class VmOrTemplate < ApplicationRecord
   delegate :connect_lans, :disconnect_lans, :to => :hardware, :allow_nil => true
 
   before_validation :set_tenant_from_group
+  after_save :save_genealogy_information
 
   alias_method :datastores, :storages    # Used by web-services to return datastores as the property name
 
@@ -486,6 +487,16 @@ class VmOrTemplate < ApplicationRecord
 
   def genealogy_parent
     with_relationship_type("genealogy") { parent }
+  end
+
+  def genealogy_parent=(parent)
+    @genealogy_parent_object = parent
+  end
+
+  def save_genealogy_information
+    if defined?(@genealogy_parent_object) && @genealogy_parent_object
+      @genealogy_parent_object.with_relationship_type('genealogy') { @genealogy_parent_object.set_child(self) }
+    end
   end
 
   def os_image_name
