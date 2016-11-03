@@ -7,7 +7,7 @@ class ApplicationHelper::Button::AbGroupEdit < ApplicationHelper::Button::Basic
   end
 
   def disabled?
-    @error_message = ERROR_MSG[self[:child_id]] if unassigned_button_group?
+    @error_message = ERROR_MSG[self[:child_id].to_sym] if unassigned_button_group?
     @error_message.present?
   end
 
