@@ -518,7 +518,6 @@ module OpsController::Settings::Schedules
           :instance_name  => params[:instance_name],
           :object_message => params[:object_message],
           :attrs          => attrs,
-          :readonly       => params[:readonly] == "true" ? true : false,
           :target_class   => params[:target_class] == "" ? nil : params[:target_class],
           :target_id      => params[:target_id]
         }
