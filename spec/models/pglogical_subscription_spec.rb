@@ -368,10 +368,11 @@ describe PglogicalSubscription do
 
       EvmSpecHelper.create_guid_miq_server_zone
       FactoryGirl.create(
-        :api_auth_token,
+        :auth_token,
         :resource_id   => remote_region.id,
         :resource_type => "MiqRegion",
-        :auth_key      => "this is the encryption key!"
+        :auth_key      => "this is the encryption key!",
+        :authtype      => "system_api"
       )
       expect(remote_region.auth_key_configured?).to be true
 
