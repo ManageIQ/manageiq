@@ -33,8 +33,9 @@ module EmsRefresh::SaveInventoryHelper
     end
   end
 
-  def save_dto_inventory_with_findkey(dto_collection, dto, association, deletes, new_records, record_index, method = nil)
-    hash = dto.kind_of?(::ManagerRefresh::Dto) ? dto.attributes(dto_collection) : dto
+  def save_dto_inventory_with_findkey(dto_collection, dto, association, deletes, new_records, record_index,
+                                      method = nil)
+    hash   = dto.kind_of?(::ManagerRefresh::Dto) ? dto.attributes(dto_collection) : dto
     # Find the record, and update if found, else create it
     method ||= :build
     found  = record_index.fetch(hash)

@@ -134,17 +134,17 @@ module ManagerRefresh
     def clone
       # A shallow copy of DtoCollection, the copy will share @data of the original collection, otherwise we would be
       # copying a lot of records in memory.
-      new_dto_collection = self.class.new(self.model_class,
-                                          manager_ref:       self.manager_ref,
-                                          association:       self.association,
-                                          parent:            self.parent,
-                                          strategy:          self.strategy,
-                                          custom_save_block: self.custom_save_block)
+      new_dto_collection = self.class.new(model_class,
+                                          :manager_ref       => manager_ref,
+                                          :association       => association,
+                                          :parent            => parent,
+                                          :strategy          => strategy,
+                                          :custom_save_block => custom_save_block)
 
-      new_dto_collection.data                  = self.data
-      new_dto_collection.data_index            = self.data_index
+      new_dto_collection.data                  = data
+      new_dto_collection.data_index            = data_index
       # Dependency attributes need to be a hard copy, since those will differ for each DtoCollection
-      new_dto_collection.dependency_attributes = self.dependency_attributes.clone
+      new_dto_collection.dependency_attributes = dependency_attributes.clone
       new_dto_collection
     end
 
@@ -165,15 +165,15 @@ module ManagerRefresh
 
     def actualize_dependencies(dto)
       dto.data.each do |key, value|
-        if is_dependency?(value)
+        if dependency?(value)
           (dependency_attributes[key] ||= Set.new) << value.dto_collection
-        elsif value.kind_of?(Array) && value.any? { |x| is_dependency?(x) }
-          (dependency_attributes[key] ||= Set.new) << value.detect { |x| is_dependency?(x) }.dto_collection
+        elsif value.kind_of?(Array) && value.any? { |x| dependency?(x) }
+          (dependency_attributes[key] ||= Set.new) << value.detect { |x| dependency?(x) }.dto_collection
         end
       end
     end
 
-    def is_dependency?(value)
+    def dependency?(value)
       (value.kind_of?(::ManagerRefresh::DtoLazy) && value.dependency?) || value.kind_of?(::ManagerRefresh::Dto)
     end
   end

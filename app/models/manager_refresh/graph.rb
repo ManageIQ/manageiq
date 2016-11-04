@@ -1,6 +1,5 @@
 module ManagerRefresh
   class Graph
-
     attr_reader :nodes, :edges, :fixed_edges
 
     def initialize(nodes)
@@ -41,7 +40,7 @@ module ManagerRefresh
         end
       end
 
-      return feedback_edge_set
+      feedback_edge_set
     end
 
     def detect_cycle(edge, acyclic_edges, escalation = nil)

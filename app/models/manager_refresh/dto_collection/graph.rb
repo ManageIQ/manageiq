@@ -53,7 +53,7 @@ module ManagerRefresh
 
       def assert_dto_collections(dto_collections)
         dto_collections.each do |dto_collection|
-          unless dto_collection.is_a? ::ManagerRefresh::DtoCollection
+          unless dto_collection.kind_of? ::ManagerRefresh::DtoCollection
             raise "A ManagerRefresh::SaveInventory needs a DtoCollection object, it got: #{dto_collection.inspect}"
           end
         end
@@ -65,24 +65,25 @@ module ManagerRefresh
           feedback_dependencies = feedback_edge_set.select { |e| e.second == dto_collection }.map(&:first)
           attrs                 = dto_collection.dependency_attributes_for(feedback_dependencies)
 
-          unless attrs.blank?
-            new_dto_collection                                                    = dto_collection.clone
-            # Add dto_collection as a dependency of the new_dto_collection, so we make sure it runs after
-            # TODO(lsmola) add a nice dependency_attributes setter? It's used also in actualize_dendencies method
-            new_dto_collection.dependency_attributes[:__feedback_edge_set_parent] = Set.new([dto_collection])
-            new_nodes << new_dto_collection
+          next if attrs.blank?
 
-            # TODO(lsmola) If we remove an attribute that was a dependency of another node, we need to move also the
-            # dependency. So e.g. floating_ip depends on network_port's attribute vm, but we move that attribute to new
-            # network_port dto_collection. We will need to move also the dependency to the new dto_collection.
+          new_dto_collection = dto_collection.clone
 
-            dto_collection.blacklist_attributes!(attrs)
-            new_dto_collection.whitelist_attributes!(attrs)
-          end
+          # Add dto_collection as a dependency of the new_dto_collection, so we make sure it runs after
+          # TODO(lsmola) add a nice dependency_attributes setter? It's used also in actualize_dendencies method
+          new_dto_collection.dependency_attributes[:__feedback_edge_set_parent] = Set.new([dto_collection])
+          new_nodes << new_dto_collection
+
+          # TODO(lsmola) If we remove an attribute that was a dependency of another node, we need to move also the
+          # dependency. So e.g. floating_ip depends on network_port's attribute vm, but we move that attribute to new
+          # network_port dto_collection. We will need to move also the dependency to the new dto_collection.
+
+          dto_collection.blacklist_attributes!(attrs)
+          new_dto_collection.whitelist_attributes!(attrs)
         end
 
         # Add the new DtoCollections to the list of nodes our our graph
-        self.construct_graph!(nodes + new_nodes)
+        construct_graph!(nodes + new_nodes)
       end
 
       def build_edges(dto_collections)
