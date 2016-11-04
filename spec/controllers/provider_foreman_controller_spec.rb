@@ -503,7 +503,7 @@ describe ProviderForemanController do
     end
 
     it "calls get_view with the associated dbname for the Configuration Management Providers accordion" do
-      stub_user(:features => :all)
+      set_user_privileges
       allow(controller).to receive(:x_active_tree).and_return(:configuration_manager_providers_tree)
       allow(controller).to receive(:x_active_accord).and_return(:configuration_manager_providers)
       allow(controller).to receive(:build_listnav_search_list)
@@ -513,7 +513,7 @@ describe ProviderForemanController do
     end
 
     it "calls get_view with the associated dbname for the Configured Systems accordion" do
-      stub_user(:features => :all)
+      set_user_privileges
       allow(controller).to receive(:x_active_tree).and_return(:cs_filter_tree)
       allow(controller).to receive(:x_active_accord).and_return(:cs_filter)
       allow(controller).to receive(:build_listnav_search_list)
@@ -524,7 +524,7 @@ describe ProviderForemanController do
     end
 
     it "calls get_view with the associated dbname for the Configuration Scripts accordion" do
-      stub_user(:features => :all)
+      set_user_privileges
       allow(controller).to receive(:x_active_tree).and_return(:configuration_scripts_tree)
       allow(controller).to receive(:x_active_accord).and_return(:configuration_scripts)
       controller.instance_variable_set(:@_params, :id => "configuration_scripts")
