@@ -4,9 +4,9 @@ module ManagerRefresh::SaveCollection
       _log.info("Synchronizing #{ems.name} collection #{dto_collection.size} of size #{dto_collection} to database")
 
       if dto_collection.custom_save_block.present?
+        _log.info("Synchronizing #{ems.name} collection #{dto_collection.size} using a custom save block")
         dto_collection.custom_save_block.call(ems, dto_collection)
       else
-        _log.info("Synchronizing #{ems.name} collection #{dto_collection.size} using a custom save block")
         save_dto_inventory_multi_batch(dto_collection.parent.send(dto_collection.association),
                                        dto_collection,
                                        :use_association,
