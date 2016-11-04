@@ -45,7 +45,7 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
     expect(ExtManagementSystem.count).to eq(2)
     expect(Flavor.count).to eq(56)
     expect(AvailabilityZone.count).to eq(5)
-    expect(FloatingIp.count).to eq(5)
+    expect(FloatingIp.count).to eq(9)
     expect(AuthPrivateKey.count).to eq(12)
     expect(CloudNetwork.count).to eq(5)
     expect(CloudSubnet.count).to eq(10)
@@ -81,7 +81,7 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
 
     expect(@ems.flavors.size).to eq(56)
     expect(@ems.availability_zones.size).to eq(5)
-    expect(@ems.floating_ips.size).to eq(5)
+    expect(@ems.floating_ips.size).to eq(9)
     expect(@ems.key_pairs.size).to eq(12)
     expect(@ems.cloud_networks.size).to eq(5)
     expect(@ems.security_groups.size).to eq(36)
@@ -131,10 +131,19 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
   end
 
   def assert_specific_floating_ip_for_cloud_network
-    ip = ManageIQ::Providers::Amazon::NetworkManager::FloatingIp.where(:address => "54.208.119.197").first
-    expect(ip).to have_attributes(
+    @ip2 = ManageIQ::Providers::Amazon::NetworkManager::FloatingIp.where(:address => "54.208.119.197").first
+    expect(@ip2).to have_attributes(
       :address            => "54.208.119.197",
-      :ems_ref            => "54.208.119.197",
+      :ems_ref            => "eipalloc-ce53d7a0",
+      :cloud_network_only => true,
+      :network_port_id    => nil,
+      :vm_id              => nil
+    )
+
+    @ip1 = ManageIQ::Providers::Amazon::NetworkManager::FloatingIp.where(:address => "52.20.255.156").first
+    expect(@ip1).to have_attributes(
+      :address            => "52.20.255.156",
+      :ems_ref            => "eipalloc-00db5764",
       :cloud_network_only => true
     )
   end
@@ -309,6 +318,12 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
     expect(v.ext_management_system).to eq(@ems)
     expect(v.availability_zone).to eq(@az)
     expect(v.floating_ip).to eq(@ip)
+    expect(v.network_ports.first.floating_ips.count).to eq(1)
+    expect(v.network_ports.first.floating_ips).to eq([@ip])
+    expect(v.network_ports.first.floating_ip_addresses).to eq([@ip.address])
+    expect(v.network_ports.first.fixed_ip_addresses).to eq([@ip.fixed_ip_address])
+    expect(v.network_ports.first.ipaddresses).to eq([@ip.fixed_ip_address, @ip.address])
+    expect(v.ipaddresses).to eq([@ip.fixed_ip_address, @ip.address])
     expect(v.flavor).to eq(@flavor)
     expect(v.key_pairs).to eq([@kp])
     expect(v.cloud_network).to     be_nil
@@ -469,6 +484,14 @@ describe ManageIQ::Providers::Amazon::CloudManager::Refresher do
     expect(v.cloud_networks.first).to eq(@cn)
     expect(v.cloud_subnets.first).to eq(@subnet)
     expect(v.security_groups).to eq([@sg_on_cn])
+    expect(v.floating_ip).to eq(@ip1)
+    expect(v.floating_ips).to eq([@ip1])
+    expect(v.network_ports.first.floating_ips.count).to eq(1)
+    expect(v.network_ports.first.floating_ips).to eq([@ip1])
+    expect(v.network_ports.first.floating_ip_addresses).to eq([@ip1.address])
+    expect(v.network_ports.first.fixed_ip_addresses).to eq([@ip1.fixed_ip_address])
+    expect(v.network_ports.first.ipaddresses).to eq([@ip1.fixed_ip_address, @ip1.address])
+    expect(v.ipaddresses).to eq([@ip1.fixed_ip_address, @ip1.address])
   end
 
   def assert_specific_orchestration_template
