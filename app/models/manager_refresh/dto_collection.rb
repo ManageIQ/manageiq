@@ -6,6 +6,8 @@ module ManagerRefresh
     attr_reader :model_class, :strategy, :attributes_blacklist, :attributes_whitelist, :custom_save_block,
                 :internal_attributes, :delete_method
 
+    delegate :each, :size, :to => :to_a
+
     def initialize(model_class, manager_ref: nil, attributes: nil, association: nil, parent: nil, strategy: nil,
                    custom_save_block: nil, delete_method: nil)
       @model_class           = model_class
@@ -23,6 +25,14 @@ module ManagerRefresh
       @attributes_whitelist  = Set.new
       @custom_save_block     = custom_save_block
       @internal_attributes   = [:__feedback_edge_set_parent]
+    end
+
+    def to_a
+      data
+    end
+
+    def to_hash
+      data_index
     end
 
     def process_strategy(strategy_name)
@@ -88,22 +98,6 @@ module ManagerRefresh
 
     def new_dto(hash)
       ::ManagerRefresh::Dto.new(self, hash)
-    end
-
-    def each(*args, &block)
-      data.each(*args, &block)
-    end
-
-    def to_a
-      data
-    end
-
-    def size
-      to_a.size
-    end
-
-    def to_hash
-      data_index
     end
 
     def fixed_dependencies
