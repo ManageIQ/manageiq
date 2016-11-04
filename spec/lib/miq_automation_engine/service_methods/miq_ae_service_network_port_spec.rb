@@ -8,8 +8,8 @@ module MiqAeServiceCloudNetworkSpec
       expect(described_class.instance_methods).to include(:cloud_tenant)
     end
 
-    it "#cloud_subnet" do
-      expect(described_class.instance_methods).to include(:cloud_subnet)
+    it "#cloud_subnets" do
+      expect(described_class.instance_methods).to include(:cloud_subnets)
     end
 
     it "#device" do
