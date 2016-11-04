@@ -91,7 +91,7 @@ module VirtualTotal
     end
 
     def virtual_aggregate_arel(reflection, method_name, column)
-      return unless reflection && reflection.macro == :has_many && !reflection.options[:through]
+      return unless reflection && reflection.macro == :has_many && !reflection.options[:through] ## fix
       lambda do |t|
         query = if reflection.scope
                   reflection.klass.instance_exec(nil, &reflection.scope)
