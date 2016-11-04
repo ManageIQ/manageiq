@@ -3,6 +3,7 @@ module MiqAeMethodService
     expose :users,  :association => true
     expose :vms,    :association => true
     expose :tenant, :association => true
+    expose :filters, :method => :get_filters
 
     def custom_keys
       object_send(:miq_custom_keys)
