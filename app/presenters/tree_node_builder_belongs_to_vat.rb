@@ -11,7 +11,7 @@ class TreeNodeBuilderBelongsToVat < TreeNodeBuilder
   end
 
   def normal_folder_node
-    generic_node(object.name, "blue_folder" , _("Folder: %{folder_name}") % {:folder_name => object.name})
+    generic_node(object.name, "blue_folder.png" , _("Folder: %{folder_name}") % {:folder_name => object.name})
   end
 
   def cluster_node
@@ -22,6 +22,6 @@ class TreeNodeBuilderBelongsToVat < TreeNodeBuilder
   def generic_node(text, image, tip = nil)
     super
     @node[:cfmeNoClick]  = true
-    @node[:checkable] = options[:checkable] if options.key?('checkable')
+    @node[:checkable] = options[:checkable] if options.key?(:checkable)
   end
 end
