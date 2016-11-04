@@ -3,19 +3,6 @@ describe Quadicons::SingleQuadicon, :type => :helper do
   let(:kontext) { Quadicons::Context.new(helper) }
   let(:instance) { Quadicons::SingleQuadicon.new(record, kontext) }
 
-  before do
-    kontext.embedded = false
-    kontext.explorer = true
-
-    allow(controller).to receive(:list_row_id).with(record) do
-      ApplicationRecord.compress_id(record.id)
-    end
-
-    allow(controller).to receive(:default_url_options) do
-      {:controller => "provider_foreman"}
-    end
-  end
-
   describe "Setup" do
     subject(:quadicon) { instance }
 
@@ -27,14 +14,32 @@ describe Quadicons::SingleQuadicon, :type => :helper do
   describe "Rendering" do
     subject(:rendered) { instance.render }
 
-    context "when not listicon" do
+    before do
+      kontext.embedded = false
+      kontext.explorer = true
+
+      allow(controller).to receive(:list_row_id).with(record) do
+        ApplicationRecord.compress_id(record.id)
+      end
+
+
+    end
+
+    context "when @listicon is nil" do
       before do
-        kontext.listicon = false
+        kontext.listicon = nil
       end
 
       context "when record is decorated" do
         context "when item is a config manager foreman" do
+          before do
+            allow(controller).to receive(:default_url_options) do
+              {:controller => "provider_foreman"}
+            end
+          end
+
           it 'includes a vendor listicon img' do
+            pending "Make inferred urls work"
             expect(rendered).to have_selector("img[src*='vendor-#{item.image_name}']")
           end
         end
@@ -43,6 +48,7 @@ describe Quadicons::SingleQuadicon, :type => :helper do
           let(:record) { FactoryGirl.create(:middleware_deployment) }
 
           it 'includes a vendor listicon img' do
+            pending "Make inferred urls work"
             expect(rendered).to have_selector("img[src*='middleware_deployment']")
           end
         end
