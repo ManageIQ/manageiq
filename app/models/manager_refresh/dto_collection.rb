@@ -4,10 +4,10 @@ module ManagerRefresh
                   :manager_ref, :attributes, :association, :parent
 
     attr_reader :model_class, :strategy, :attributes_blacklist, :attributes_whitelist, :custom_save_block,
-                :internal_attributes
+                :internal_attributes, :delete_method
 
     def initialize(model_class, manager_ref: nil, attributes: nil, association: nil, parent: nil, strategy: nil,
-                   custom_save_block: nil)
+                   custom_save_block: nil, delete_method: nil)
       @model_class           = model_class
       @manager_ref           = manager_ref || [:ems_ref]
       @attributes            = attributes || []
@@ -18,6 +18,7 @@ module ManagerRefresh
       @data_index            = {}
       @saved                 = false
       @strategy              = process_strategy(strategy)
+      @delete_method         = delete_method || :destroy
       @attributes_blacklist  = Set.new
       @attributes_whitelist  = Set.new
       @custom_save_block     = custom_save_block
