@@ -1,24 +1,23 @@
 module ManagerRefresh
   class DtoCollection
-    attr_accessor :saved, :data, :data_index, :dependency_attributes,
-                  :manager_ref, :attributes, :association, :parent
+    attr_accessor :saved
 
-    attr_reader :model_class, :strategy, :attributes_blacklist, :attributes_whitelist, :custom_save_block,
-                :internal_attributes, :delete_method
+    attr_reader :model_class, :strategy, :attributes_blacklist, :attributes_whitelist, :custom_save_block, :parent,
+                :internal_attributes, :delete_method, :data, :data_index, :dependency_attributes, :manager_ref,
+                :association
 
     delegate :each, :size, :to => :to_a
 
-    def initialize(model_class, manager_ref: nil, attributes: nil, association: nil, parent: nil, strategy: nil,
-                   custom_save_block: nil, delete_method: nil)
+    def initialize(model_class, manager_ref: nil, association: nil, parent: nil, strategy: nil, saved: nil,
+                   custom_save_block: nil, delete_method: nil, data_index: nil, data: nil, dependency_attributes: nil)
       @model_class           = model_class
       @manager_ref           = manager_ref || [:ems_ref]
-      @attributes            = attributes || []
       @association           = association || []
       @parent                = parent || []
-      @dependency_attributes = {}
-      @data                  = []
-      @data_index            = {}
-      @saved                 = false
+      @dependency_attributes = dependency_attributes || {}
+      @data                  = data || []
+      @data_index            = data_index || {}
+      @saved                 = saved || false
       @strategy              = process_strategy(strategy)
       @delete_method         = delete_method || :destroy
       @attributes_blacklist  = Set.new
@@ -145,18 +144,16 @@ module ManagerRefresh
     def clone
       # A shallow copy of DtoCollection, the copy will share @data of the original collection, otherwise we would be
       # copying a lot of records in memory.
-      new_dto_collection = self.class.new(model_class,
-                                          :manager_ref       => manager_ref,
-                                          :association       => association,
-                                          :parent            => parent,
-                                          :strategy          => strategy,
-                                          :custom_save_block => custom_save_block)
-
-      new_dto_collection.data                  = data
-      new_dto_collection.data_index            = data_index
-      # Dependency attributes need to be a hard copy, since those will differ for each DtoCollection
-      new_dto_collection.dependency_attributes = dependency_attributes.clone
-      new_dto_collection
+      self.class.new(model_class,
+                     :manager_ref           => manager_ref,
+                     :association           => association,
+                     :parent                => parent,
+                     :strategy              => strategy,
+                     :custom_save_block     => custom_save_block,
+                     :data                  => data,
+                     :data_index            => data_index,
+                     # Dependency attributes need to be a hard copy, since those will differ for each DtoCollection
+                     :dependency_attributes => dependency_attributes.clone)
     end
 
     def to_s
