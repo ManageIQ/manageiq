@@ -70,5 +70,10 @@ if (typeof(ManageIQ) === 'undefined') {
       processing: false, // is a request currently being processed?
       queue: [], // a queue of pending requests
     },
-  }
-};
+    qe: {
+      autofocus: 0, // counter of pending autofocus fields
+      debounced: {}, // running debounces
+      debounce_counter: 1,
+    },
+  };
+}
