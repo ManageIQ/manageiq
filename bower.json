@@ -42,6 +42,6 @@
     "es6-shim": "^0.35.0",
     "phantomjs-polyfill": "^0.0.2",
     "fetch": "^1.0.0",
-    "codemirror": "~5.19.0",
+    "codemirror": "~5.19.0"
   }
 }
