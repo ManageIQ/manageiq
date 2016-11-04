@@ -15,6 +15,7 @@ class ManageIQ::Providers::Openstack::CloudManager < ManageIQ::Providers::CloudM
   require_nested :MetricsCollectorWorker
   require_nested :OrchestrationServiceOptionConverter
   require_nested :OrchestrationStack
+  require_nested :OrchestrationTemplateHotDialogService
   require_nested :Provision
   require_nested :ProvisionWorkflow
   require_nested :Refresher
@@ -49,6 +50,10 @@ class ManageIQ::Providers::Openstack::CloudManager < ManageIQ::Providers::CloudM
   before_validation :ensure_managers,
                     :ensure_cinder_managers,
                     :ensure_swift_managers
+
+  # OrchestrationTemplateCfnDialogService is just an alias of OrchestrationTemplateHotDialogService
+  # so that it can create dialogs for Cloudformation templates used by OpenStack
+  OrchestrationTemplateCfnDialogService = OrchestrationTemplateHotDialogService
 
   def ensure_network_manager
     build_network_manager(:type => 'ManageIQ::Providers::Openstack::NetworkManager') unless network_manager
