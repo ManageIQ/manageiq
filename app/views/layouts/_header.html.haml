@@ -11,13 +11,13 @@
       %img.navbar-brand-name{:src => image_path("brand.svg"), :alt => "ManageIQ"}
   %nav.collapse.navbar-collapse
     %ul.nav.navbar-nav.navbar-right.navbar-iconic
+      %li{:class => "dropdown brand-white-label #{current_tenant.logo? ? "whitelabeled" : ""}"}
       %li{:class => "drawer-pf-trigger dropdown"}
         %a{:class => "nav-item-iconic drawer-pf-trigger-icon", :title => "{{vm.notificationsIndicatorTooltip}}", "ng-click" => "vm.toggleNotificationsList()"}
           %span.fa{"ng-class" => "{'fa-bell': vm.newNotifications, 'fa-bell-o': !vm.newNotifications}"}
           %span.badge.info{"ng-show" => "vm.newNotifications"}
             -# Small circle
             &#8226
-      %li{:class => "dropdown brand-white-label #{current_tenant.logo? ? "whitelabeled" : ""}"}
       %li.dropdown
         %a{:class => "dropdown-toggle nav-item-iconic", :id => "dropdownMenu1",  "data-toggle" => "dropdown", "aria-haspopup" => "true", "aria-expanded" => "true"}
           %span.fa.pficon-help
