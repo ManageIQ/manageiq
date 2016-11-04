@@ -144,8 +144,12 @@ module ApplicationController::Explorer
     @lastaction = "explorer"
     self.x_active_tree = params[:tree] if params[:tree]
     self.x_node = params[:id]
-    get_node_info if node_info
-    replace_right_cell
+    if node_info
+      get_node_info(x_node)
+      replace_right_cell(x_node)
+    else
+      replace_right_cell
+    end
   end
 
   # Accordion selected in explorer
@@ -154,8 +158,12 @@ module ApplicationController::Explorer
     @lastaction = "explorer"
     self.x_active_accord = params[:id].sub(/_accord$/, '')
     self.x_active_tree   = "#{self.x_active_accord}_tree"
-    get_node_info if node_info
-    replace_right_cell
+    if node_info
+      get_node_info(x_node)
+      replace_right_cell(x_node)
+    else
+      replace_right_cell
+    end
   end
 
   private ############################

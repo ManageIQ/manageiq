@@ -3,6 +3,25 @@ describe PxeController do
     stub_user(:features => :all)
   end
 
+  describe '#tree_select ' do
+    it 'calls methods with x_node as param' do
+      controller.instance_variable_set(:@_params, :id => 'root', :tree => :pxe_servers_tree)
+      expect(controller).to receive(:get_node_info).with("root")
+      expect(controller).to receive(:replace_right_cell).with("root")
+      controller.tree_select
+    end
+  end
+
+  describe '#accordion_select ' do
+    it 'calls methods with x_node as param' do
+      controller.instance_variable_set(:@_params, :id => 'pxe_servers_accord', :tree => :pxe_servers_tree)
+      allow(controller).to receive(:x_node).and_return('root')
+      expect(controller).to receive(:get_node_info).with("root")
+      expect(controller).to receive(:replace_right_cell).with("root")
+      controller.accordion_select
+    end
+  end
+
   describe 'x_button' do
     before do
       ApplicationController.handle_exceptions = true
