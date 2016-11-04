@@ -19,12 +19,11 @@ module ManageIQ::Providers
     has_many :container_build_pods, :foreign_key => :ems_id, :dependent => :destroy
     has_many :container_templates, :foreign_key => :ems_id, :dependent => :destroy
     has_one :container_deployment, :foreign_key => :deployed_ems_id, :inverse_of => :deployed_ems
+    has_many :computer_systems, :through => :container_nodes
 
     # required by aggregate_hardware
-    def all_computer_system_ids
-      MiqPreloader.preload(container_nodes, :computer_system)
-      container_nodes.collect { |n| n.computer_system.id }
-    end
+    alias :all_computer_systems :computer_systems
+    alias :all_computer_system_ids :computer_system_ids
 
     def aggregate_cpu_total_cores(targets = nil)
       aggregate_hardware(:computer_systems, :cpu_total_cores, targets)
