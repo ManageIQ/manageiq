@@ -46,18 +46,7 @@ class ResourceActionWorkflow < MiqRequestWorkflow
   end
 
   def generate_request(state, values)
-    make_request(nil, values).tap do |request|
-      process_service_order(request, state) if request
-    end
-  end
-
-  def process_service_order(request, state)
-    case state
-    when ServiceOrder::STATE_ORDERED
-      ServiceOrder.order_immediately(request, @requester)
-    when ServiceOrder::STATE_CART
-      ServiceOrder.add_to_cart(request, @requester)
-    end
+    make_request(nil, values.merge(:cart_state => state))
   end
 
   def validate_dialog
