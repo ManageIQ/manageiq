@@ -4,7 +4,7 @@ describe MiqHostProvisionRequest do
   end
 
   it "validates a requester is specified" do
-    expect { FactoryGirl.create(:miq_host_provision_request) }.to raise_error(ActiveRecord::RecordInvalid)
+    expect { FactoryGirl.create(:miq_host_provision_request, :requester => nil) }.to raise_error(ActiveRecord::RecordInvalid)
   end
 
   context "with a valid userid and host," do
