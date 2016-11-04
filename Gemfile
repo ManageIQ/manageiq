@@ -7,6 +7,9 @@ raise "Ruby versions less than 2.2.2 are unsupported!" if RUBY_VERSION < "2.2.2"
 unless dependencies.detect { |d| d.name == "manageiq-providers-amazon" }
   gem "manageiq-providers-amazon", :git => "https://github.com/ManageIQ/manageiq-providers-amazon", :branch => "master"
 end
+unless dependencies.detect { |d| d.name == "manageiq-providers-azure" }
+  gem "manageiq-providers-azure", :git => "https://github.com/ManageIQ/manageiq-providers-azure", :branch => "master"
+end
 
 # Unmodified gems
 gem "activerecord-session_store",     "~>1.0.0"
