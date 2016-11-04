@@ -1,6 +1,5 @@
 module ManagerRefresh::SaveCollection
   class Recursive
-    extend EmsRefresh::SaveInventoryHelper
     extend ManagerRefresh::SaveCollection::Helper
 
     class << self

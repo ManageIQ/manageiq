@@ -13,6 +13,54 @@ module ManagerRefresh::SaveCollection
       dto_collection.saved = true
     end
 
+    def save_dto_inventory_multi_batch(dto_collection)
+      dto_collection.parent.reload
+      association = dto_collection.parent.send(dto_collection.association)
+
+      record_index      = {}
+      unique_index_keys = dto_collection.manager_ref_to_cols
+
+      association.find_each do |record|
+        # TODO(lsmola) the old code was able to deal with duplicate records, should we do that? The old data still can
+        # have duplicate methods, so we should clean them up. It will slow up the indexing though.
+        record_index[dto_collection.object_index_with_keys(unique_index_keys, record)] = record
+      end
+
+      association_meta_info = dto_collection.parent.class.reflect_on_association(dto_collection.association)
+      entity_builder        = association_meta_info.options[:through].blank? ? association : dto_collection.model_class
+
+      dto_collection_size = dto_collection.size
+      created_counter     = 0
+      _log.info("*************** PROCESSING #{dto_collection} of size #{dto_collection_size} ***************")
+      ActiveRecord::Base.transaction do
+        dto_collection.each do |dto|
+          hash       = dto.attributes(dto_collection)
+          dto.object = record_index.delete(dto.manager_uuid)
+          if dto.object.nil?
+            dto.object      = entity_builder.create!(hash.except(:id))
+            created_counter += 1
+          else
+            dto.object.update_attributes!(hash.except(:id, :type))
+          end
+          dto.object.send(:clear_association_cache)
+        end
+      end
+      _log.info("*************** PROCESSED #{dto_collection}, created=#{created_counter}, "\
+              "updated=#{dto_collection_size - created_counter} ***************")
+
+      # Delete the items no longer found
+      unless record_index.blank?
+        deletes = record_index.values
+        _log.info("*************** DELETING #{dto_collection} of size #{deletes.size} ***************")
+        type = association.proxy_association.reflection.name
+        _log.info("[#{type}] Deleting with method '#{dto_collection.delete_method}' #{log_format_deletes(deletes)}")
+        ActiveRecord::Base.transaction do
+          deletes.map(&dto_collection.delete_method)
+        end
+        _log.info("*************** DELETED #{dto_collection} ***************")
+      end
+    end
+
     def log_format_deletes(deletes)
       ret = deletes.collect do |d|
         s = "id: [#{d.id}]"
