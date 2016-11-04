@@ -88,10 +88,10 @@ module EmsRefresh::SaveInventoryHelper
     unless deletes_index.blank?
       deletes = deletes_index.values
       type = association.proxy_association.reflection.name
-      _log.info("[#{type}] Deleting #{log_format_deletes(deletes)}")
-      # TODO(lsmola) If first element has :disconnect_inv, we should be save to call it, unless some STI subclass
-      # overwrite this. Check if this can happen
-      deletes.first.respond_to?(:disconnect_inv) ? deletes.each(&:disconnect_inv) : delete_inventory_multi(dto_collection, association, deletes)
+      _log.info("[#{type}] Deleting with method '#{dto_collection.delete_method}' #{log_format_deletes(deletes)}")
+      ActiveRecord::Base.transaction do
+        deletes.map(&dto_collection.delete_method)
+      end
     end
 
     _log.info("CREATING #{dto_collection} of size #{new_records.size}")
@@ -99,17 +99,6 @@ module EmsRefresh::SaveInventoryHelper
       new_records.map(&:save)
     end
     _log.info("CREATED #{dto_collection}")
-  end
-
-  def delete_inventory_multi(dto_collection, association, deletes)
-    association_meta_info = dto_collection.parent.class.reflect_on_association(dto_collection.association)
-    if association_meta_info.options[:through].blank?
-      association.delete(deletes)
-    else
-      dto_collection.model_class.transaction do
-        deletes.map(&:delete)
-      end
-    end
   end
 
   def save_inventory_multi(association, hashes, deletes, find_key, child_keys = [], extra_keys = [], disconnect = false)
