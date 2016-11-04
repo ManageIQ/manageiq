@@ -33,13 +33,13 @@ module EmsRefresh::SaveInventoryHelper
     end
   end
 
-  def save_dto_inventory_with_findkey(dto_collection, dto, association, deletes, new_records, record_index,
+  def save_dto_inventory_with_findkey(dto_collection, dto, association, new_records, record_index,
                                       method = nil)
     hash   = dto.kind_of?(::ManagerRefresh::Dto) ? dto.attributes(dto_collection) : dto
     # Find the record, and update if found, else create it
     method ||= :build
-    found  = record_index.fetch(hash)
     # TODO(lsmola) probably move all this under dto, so it can create or save right here?
+    found = record_index.delete(dto.manager_uuid)
     if found.nil?
       dto.build_object(association.public_send(method, hash.except(:id)))
       new_records << dto
@@ -48,22 +48,22 @@ module EmsRefresh::SaveInventoryHelper
       # the object setter
       dto.build_object(found)
       found.update_attributes!(hash.except(:id, :type))
-      deletes.delete(found) unless deletes.blank?
     end
     found
   end
 
-  def save_dto_inventory_multi_batch(association, dto_collection, deletes, find_key)
-    association.reset
+  def save_dto_inventory_multi_batch(dto_collection)
+    dto_collection.parent.reload
+    association = dto_collection.parent.send(dto_collection.association)
 
-    if deletes == :use_association
-      deletes = association
-    elsif deletes.respond_to?(:reload) && deletes.loaded?
-      deletes.reload
+    record_index = {}
+    unique_index_keys = dto_collection.manager_ref_to_cols
+
+    association.find_each do |record|
+      # TODO(lsmola) the old code was able to deal with duplicate records, should we do that? The old data still can
+      # have duplicate methods, so we should clean them up. It will slow up the indexing though.
+      record_index[dto_collection.object_index_with_keys(unique_index_keys, record)] = record
     end
-
-    deletes_index = deletes.each_with_object({}) { |x, obj| obj[x] = x }
-    record_index = TypedIndex.new(association, find_key)
 
     new_records = []
     _log.info("PROCESSING #{dto_collection}")
@@ -79,14 +79,14 @@ module EmsRefresh::SaveInventoryHelper
           method         = :new
         end
 
-        save_dto_inventory_with_findkey(dto_collection, dto, entity_builder, deletes_index, new_records, record_index, method)
+        save_dto_inventory_with_findkey(dto_collection, dto, entity_builder, new_records, record_index, method)
       end
     end
     _log.info("PROCESSED #{dto_collection}")
 
     # Delete the items no longer found
-    unless deletes_index.blank?
-      deletes = deletes_index.values
+    unless record_index.blank?
+      deletes = record_index.values
       type = association.proxy_association.reflection.name
       _log.info("[#{type}] Deleting with method '#{dto_collection.delete_method}' #{log_format_deletes(deletes)}")
       ActiveRecord::Base.transaction do

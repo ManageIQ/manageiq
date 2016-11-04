@@ -7,10 +7,7 @@ module ManagerRefresh::SaveCollection
         _log.info("Synchronizing #{ems.name} collection #{dto_collection.size} using a custom save block")
         dto_collection.custom_save_block.call(ems, dto_collection)
       else
-        save_dto_inventory_multi_batch(dto_collection.parent.send(dto_collection.association),
-                                       dto_collection,
-                                       :use_association,
-                                       dto_collection.manager_ref)
+        save_dto_inventory_multi_batch(dto_collection)
       end
       _log.info("Synchronized #{ems.name} collection #{dto_collection}")
       dto_collection.saved = true

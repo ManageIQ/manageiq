@@ -62,6 +62,22 @@ module ManagerRefresh
       manager_ref.map { |attribute| object.public_send(attribute).try(:id) || object.public_send(attribute).to_s }.join("__")
     end
 
+    def manager_ref_to_cols
+      # Convert attributes from uniqe key to actual db cols
+      required_relations = dependency_attributes_for(fixed_dependencies).to_a
+      manager_ref.map do |ref|
+        if required_relations.include?(ref)
+          model_class.reflect_on_association(ref).foreign_key
+        else
+          ref
+        end
+      end
+    end
+
+    def object_index_with_keys(keys, object)
+      keys.map { |attribute| object.public_send(attribute).to_s }.join("__")
+    end
+
     def find(manager_uuid)
       data_index[manager_uuid]
     end
