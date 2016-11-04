@@ -387,22 +387,6 @@ class ApplicationHelper::ToolbarBuilder
     end
   end
 
-  def hide_button_cb(id)
-    case x_active_tree
-    when :cb_reports_tree
-      if role_allows?(:feature => "chargeback_reports") && ["chargeback_download_csv", "chargeback_download_pdf",
-                                                           "chargeback_download_text", "chargeback_report_only"].include?(id)
-        return false
-      end
-    when :cb_rates_tree
-      if role_allows?(:feature => "chargeback_rates") && ["chargeback_rates_copy", "chargeback_rates_delete",
-                                                         "chargeback_rates_edit", "chargeback_rates_new"].include?(id)
-        return false
-      end
-    end
-    true
-  end
-
   def hide_button_ops(id)
     case x_active_tree
     when :settings_tree
@@ -584,11 +568,6 @@ class ApplicationHelper::ToolbarBuilder
 
     if @layout == "miq_policy_rsop"
       return hide_button_rsop(id)
-    end
-
-    if id.starts_with?("chargeback_")
-      res = hide_button_cb(id)
-      return res
     end
 
     if @layout == "ops"
