@@ -7,17 +7,43 @@ module ManagerRefresh::SaveCollection
         _log.info("Synchronizing #{ems.name} collection #{dto_collection.size} using a custom save block")
         dto_collection.custom_save_block.call(ems, dto_collection)
       else
-        save_dto_inventory_multi_batch(dto_collection)
+        save_inventory(dto_collection)
       end
       _log.info("Synchronized #{ems.name} collection #{dto_collection}")
       dto_collection.saved = true
     end
 
-    def save_dto_inventory_multi_batch(dto_collection)
-      dto_collection.parent.reload
-      association = dto_collection.parent.send(dto_collection.association)
+    def log_format_deletes(deletes)
+      ret = deletes.collect do |d|
+        s = "id: [#{d.id}]"
 
-      record_index      = {}
+        [:name, :product_name, :device_name].each do |k|
+          next unless d.respond_to?(k)
+          v = d.send(k)
+          next if v.nil?
+          s << " #{k}: [#{v}]"
+          break
+        end
+
+        s
+      end
+
+      ret.join(", ")
+    end
+
+    private
+
+    def save_inventory(dto_collection)
+      dto_collection.parent.reload
+      association  = dto_collection.parent.send(dto_collection.association)
+      record_index = {}
+
+      create_or_update_inventory!(dto_collection, record_index, association)
+      # TODO(lsmola) delete only if DtoCollection is complete?
+      delete_inventory!(dto_collection, record_index, association)
+    end
+
+    def create_or_update_inventory!(dto_collection, record_index, association)
       unique_index_keys = dto_collection.manager_ref_to_cols
 
       association.find_each do |record|
@@ -46,8 +72,10 @@ module ManagerRefresh::SaveCollection
         end
       end
       _log.info("*************** PROCESSED #{dto_collection}, created=#{created_counter}, "\
-              "updated=#{dto_collection_size - created_counter} ***************")
+                "updated=#{dto_collection_size - created_counter} ***************")
+    end
 
+    def delete_inventory!(dto_collection, record_index, association)
       # Delete the items no longer found
       unless record_index.blank?
         deletes = record_index.values
@@ -59,24 +87,6 @@ module ManagerRefresh::SaveCollection
         end
         _log.info("*************** DELETED #{dto_collection} ***************")
       end
-    end
-
-    def log_format_deletes(deletes)
-      ret = deletes.collect do |d|
-        s = "id: [#{d.id}]"
-
-        [:name, :product_name, :device_name].each do |k|
-          next unless d.respond_to?(k)
-          v = d.send(k)
-          next if v.nil?
-          s << " #{k}: [#{v}]"
-          break
-        end
-
-        s
-      end
-
-      ret.join(", ")
     end
   end
 end
