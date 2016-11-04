@@ -33,25 +33,6 @@ module EmsRefresh::SaveInventoryHelper
     end
   end
 
-  def save_dto_inventory_with_findkey(dto_collection, dto, association, new_records, record_index,
-                                      method = nil)
-    hash   = dto.kind_of?(::ManagerRefresh::Dto) ? dto.attributes(dto_collection) : dto
-    # Find the record, and update if found, else create it
-    method ||= :build
-    # TODO(lsmola) probably move all this under dto, so it can create or save right here?
-    found = record_index.delete(dto.manager_uuid)
-    if found.nil?
-      dto.build_object(association.public_send(method, hash.except(:id)))
-      new_records << dto
-    else
-      # TODO(lsmola) Build object, that is really bad name. it should either really build the object or it could be just
-      # the object setter
-      dto.build_object(found)
-      found.update_attributes!(hash.except(:id, :type))
-    end
-    found
-  end
-
   def save_dto_inventory_multi_batch(dto_collection)
     dto_collection.parent.reload
     association = dto_collection.parent.send(dto_collection.association)
@@ -65,40 +46,42 @@ module EmsRefresh::SaveInventoryHelper
       record_index[dto_collection.object_index_with_keys(unique_index_keys, record)] = record
     end
 
-    new_records = []
-    _log.info("PROCESSING #{dto_collection}")
+    association_meta_info = dto_collection.parent.class.reflect_on_association(dto_collection.association)
+    entity_builder        = association_meta_info.options[:through].blank? ? association : dto_collection.model_class
+
+    dto_collection_size = dto_collection.size
+    created_counter     = 0
+    _log.info("*************** PROCESSING #{dto_collection} of size #{dto_collection_size} ***************")
     ActiveRecord::Base.transaction do
       dto_collection.each do |dto|
-        association_meta_info = dto_collection.parent.class.reflect_on_association(dto_collection.association)
-
-        if association_meta_info.options[:through].blank?
-          entity_builder = association
-          method         = :build
+        hash  = dto.attributes(dto_collection)
+        # TODO(lsmola) probably move all this under dto, so it can create or save right here?
+        found = record_index.delete(dto.manager_uuid)
+        if found.nil?
+          dto.build_object(entity_builder.create!(hash.except(:id)))
+          dto_collection_size += 1
         else
-          entity_builder = dto_collection.model_class
-          method         = :new
+          # TODO(lsmola) Build object, that is really bad name. it should either really build the object or it could be just
+          # the object setter
+          dto.build_object(found)
+          found.update_attributes!(hash.except(:id, :type))
         end
-
-        save_dto_inventory_with_findkey(dto_collection, dto, entity_builder, new_records, record_index, method)
       end
     end
-    _log.info("PROCESSED #{dto_collection}")
+    _log.info("*************** PROCESSED #{dto_collection}, created=#{created_counter}, "\
+              "updated=#{dto_collection_size - created_counter} ***************")
 
     # Delete the items no longer found
     unless record_index.blank?
       deletes = record_index.values
+      _log.info("*************** DELETING #{dto_collection} of size #{deletes.size} ***************")
       type = association.proxy_association.reflection.name
       _log.info("[#{type}] Deleting with method '#{dto_collection.delete_method}' #{log_format_deletes(deletes)}")
       ActiveRecord::Base.transaction do
         deletes.map(&dto_collection.delete_method)
       end
+      _log.info("*************** DELETED #{dto_collection} ***************")
     end
-
-    _log.info("CREATING #{dto_collection} of size #{new_records.size}")
-    ActiveRecord::Base.transaction do
-      new_records.map(&:save)
-    end
-    _log.info("CREATED #{dto_collection}")
   end
 
   def save_inventory_multi(association, hashes, deletes, find_key, child_keys = [], extra_keys = [], disconnect = false)
