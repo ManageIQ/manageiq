@@ -2317,6 +2317,11 @@ class ApplicationController < ActionController::Base
           _("The user is not authorized for this task or item.") unless role_allows?(:feature => feature)
   end
 
+  def assert_rbac(user, klass, ids)
+    filtered, _ = Rbac.search(:targets => ids.map(&:to_i), :user => user, :class => klass, :results_format => :ids)
+    raise _("Unauthorized object or action") unless ids.length == filtered.length
+  end
+
   def previous_breadcrumb_url
     @breadcrumbs[-2][:url]
   end
