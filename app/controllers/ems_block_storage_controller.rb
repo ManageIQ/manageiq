@@ -13,7 +13,11 @@ class EmsBlockStorageController < ApplicationController
   end
 
   def self.table_name
-    @table_name ||= "ems_storage"
+    @table_name ||= "ems_block_storage"
+  end
+
+  def breadcrumb_name(_model)
+    ui_lookup(:tables => table_name.pluralize)
   end
 
   def ems_path(*args)
@@ -32,6 +36,7 @@ class EmsBlockStorageController < ApplicationController
   # Show the main MS list view
   def show_list
     opts = {:supported_features_filter => "supports_block_storage?",
+            :layout                    => "ems_storage",
             :model                     => model}
     process_show_list(opts)
   end

@@ -13,7 +13,11 @@ class EmsObjectStorageController < ApplicationController
   end
 
   def self.table_name
-    @table_name ||= "ems_storage"
+    @table_name ||= "ems_object_storage"
+  end
+
+  def breadcrumb_name(_model)
+    ui_lookup(:tables => table_name.pluralize)
   end
 
   def ems_path(*args)
@@ -23,6 +27,7 @@ class EmsObjectStorageController < ApplicationController
 
   def show_list
     opts = {:supported_features_filter => "supports_object_storage?",
+            :layout                    => "ems_storage",
             :model                     => model}
     process_show_list(opts)
   end

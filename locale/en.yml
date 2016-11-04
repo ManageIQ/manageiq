@@ -937,6 +937,7 @@ en:
       custom_button:               Button
       custom_button_set:           Buttons Group
       ems_block_storage:           Block Storage Manager
+      ems_block_storages:          Block Storage Managers
       ems_cloud:                   Cloud Provider
       ems_clouds:                  Cloud Providers
       ems_cluster:                 Cluster / Deployment Role
@@ -955,6 +956,7 @@ en:
       ems_middleware:              Middleware Provider
       ems_middlewares:             Middleware Providers
       ems_object_storage:          Object Storage Manager
+      ems_object_storages:         Object Storage Managers
       evm_server:                  EVM Server
       ems_network:                 Network Provider
       ems_storage:                 Storage Manager
