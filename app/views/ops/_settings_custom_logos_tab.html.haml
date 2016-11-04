@@ -25,8 +25,7 @@
         %label.col-md-2.control-label
           = _("Use Custom Logo Image")
         .col-md-8
-          = check_box_tag("server_uselogo", "1", @edit[:new][:server][:custom_logo],
-                          "data-miq_observe_checkbox" => {:url => url}.to_json)
+          = check_box_tag("server_uselogo", true, @edit[:new][:server][:custom_logo], :data => {:on_text => 'Yes', :off_text => 'No'})
   %hr/
   %h3= _("Custom Login Background Image")
   - if File.exist?(@login_logo_file)
@@ -60,9 +59,8 @@
       .form-group
         %label.col-md-2.control-label
           = _("Use Custom Login Background Image")
-        .form-group
-          = check_box_tag("server_useloginlogo", "1", @edit[:new][:server][:custom_login_logo],
-                          "data-miq_observe_checkbox" => {:url => url}.to_json)
+        .col-md-8
+          = check_box_tag("server_useloginlogo", true, @edit[:new][:server][:custom_login_logo], :data => {:on_text => 'Yes', :off_text => 'No'})
   %hr/
   %h3
     = _("Custom Login Panel Text (")
@@ -84,4 +82,6 @@
       .col-md-8
         = check_box_tag("server_uselogintext", true, @edit[:new][:server][:use_custom_login_text], :data => {:on_text => 'Yes', :off_text => 'No'})
       :javascript
-        miqInitBootstrapSwitch('server_uselogintext', "#{url}")
+        miqInitBootstrapSwitch('server_uselogintext', "#{url}");
+        miqInitBootstrapSwitch('server_uselogo', "#{url}");
+        miqInitBootstrapSwitch('server_useloginlogo', "#{url}");
