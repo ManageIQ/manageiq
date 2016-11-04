@@ -67,7 +67,7 @@ class ApplicationHelper::ToolbarBuilder
   # Parses the generic toolbars name and returns his class
   def predefined_toolbar_class(tb_name)
     class_name = 'ApplicationHelper::Toolbar::' + ActiveSupport::Inflector.camelize(tb_name.sub(/_tb$/, ''))
-    Kernel.const_get(class_name)
+    class_name.constantize
   end
 
   # According to toolbar name in parameter `toolbar_name` either returns class
