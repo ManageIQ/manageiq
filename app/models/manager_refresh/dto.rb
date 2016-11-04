@@ -4,6 +4,8 @@ module ManagerRefresh
     attr_reader :dto_collection, :data
 
     delegate :manager_ref, :to => :dto_collection
+    delegate :id, :to => :object
+    delegate :[], :[]=, :to => :data
 
     def initialize(dto_collection, data)
       @dto_collection           = dto_collection
@@ -14,18 +16,6 @@ module ManagerRefresh
 
     def manager_uuid
       manager_ref.map { |attribute| data[attribute].try(:id) || data[attribute].to_s }.join("__")
-    end
-
-    def id
-      object.id
-    end
-
-    def [](key)
-      data[key]
-    end
-
-    def []=(key, value)
-      data[key] = value
     end
 
     def load
