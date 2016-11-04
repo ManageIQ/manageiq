@@ -1970,7 +1970,7 @@ class ApplicationController < ActionController::Base
     session[:host_url] = request.host_with_port
     session[:tab_url] ||= {}
 
-    remember_tab if !request.xml_http_request? && request.get? && request.format == Mime::HTML
+    remember_tab if !request.xml_http_request? && request.get? && request.format == Mime[:html]
 
     # Get all of the global variables used by most of the controllers
     @pp_choices = PPCHOICES
