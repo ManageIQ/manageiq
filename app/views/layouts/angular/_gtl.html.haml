@@ -1,7 +1,5 @@
-- begin
-  current_model = controller.class.model if controller.class.respond_to?("model") && !controller.class.model.nil?
-- rescue ActionView::Template::Error
-  current_model = nil
+- current_model = controller.class.model if controller.class.respond_to?("model") && !controller.class.model.nil?
+- gtl_type_string = j_str(@gtl_type)
 #miq-gtl-view{"ng-controller" => "miqGtlContoller as gtlCtrl"}
   %miq-tile-view{"ng-if"            => "gtlCtrl.gtlType === 'grid' || gtlCtrl.gtlType === 'tile'",
                  "settings"         => "gtlCtrl.settings",
@@ -22,16 +20,19 @@
                   "load-more-items"  => "gtlCtrl.onLoadNext(start, perPage)",
                   "on-item-selected" => "gtlCtrl.onItemSelect(item, isSelected)",
                   "columns"          => "gtlCtrl.gtlData.cols"}
+  .no-record{"ng-show" => "!gtlCtrl.settings.isLoading && gtlCtrl.gtlData.rows.length === 0"}
+    = render(:partial => "layouts/info_msg",
+               :locals => {:message => _("No Records Found.")})
 :javascript
   sendDataWithRx({unsubscribe: 'miqGtlContoller'});
   miq_bootstrap('#miq-gtl-view', 'ManageIQ.gtl');
   sendDataWithRx({initController: {
     name: 'miqGtlContoller',
     data: {
-      modelName: '#{j_str(@display.nil? && defined?(current_model) && current_model ? controller.class.model.to_s.tableize : @display)}',
+      modelName: '#{CGI::escape(j_str(@display.nil? && current_model ? controller.class.model.to_s.tableize : @display))}',
       activeTree: '#{x_active_tree}',
-      gtlType: '#{j_str(@gtl_type)}',
-      currId: '#{j_str(params[:id])}',
+      gtlType: '#{CGI::escape(gtl_type_string)}',
+      currId: '#{CGI::escape(j_str(params[:id]))}',
       sortColIdx: '#{@sortcol}',
       sortDir: '#{@sortdir}',
       isExplorer: '#{@explorer}' === 'true' ? true : false,

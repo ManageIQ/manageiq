@@ -81,6 +81,8 @@ class ApplicationController < ActionController::Base
   #   OntapFileShareController   => OntapFileShare
   def self.model
     @model ||= name[0..-11].constantize
+  rescue
+    @model = nil
   end
 
   def self.permission_prefix
