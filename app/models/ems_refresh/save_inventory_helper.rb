@@ -37,7 +37,7 @@ module EmsRefresh::SaveInventoryHelper
     dto_collection.parent.reload
     association = dto_collection.parent.send(dto_collection.association)
 
-    record_index = {}
+    record_index      = {}
     unique_index_keys = dto_collection.manager_ref_to_cols
 
     association.find_each do |record|
@@ -54,18 +54,15 @@ module EmsRefresh::SaveInventoryHelper
     _log.info("*************** PROCESSING #{dto_collection} of size #{dto_collection_size} ***************")
     ActiveRecord::Base.transaction do
       dto_collection.each do |dto|
-        hash  = dto.attributes(dto_collection)
-        # TODO(lsmola) probably move all this under dto, so it can create or save right here?
-        found = record_index.delete(dto.manager_uuid)
-        if found.nil?
-          dto.build_object(entity_builder.create!(hash.except(:id)))
-          dto_collection_size += 1
+        hash       = dto.attributes(dto_collection)
+        dto.object = record_index.delete(dto.manager_uuid)
+        if dto.object.nil?
+          dto.object      = entity_builder.create!(hash.except(:id))
+          created_counter += 1
         else
-          # TODO(lsmola) Build object, that is really bad name. it should either really build the object or it could be just
-          # the object setter
-          dto.build_object(found)
-          found.update_attributes!(hash.except(:id, :type))
+          dto.object.update_attributes!(hash.except(:id, :type))
         end
+        dto.object.send(:clear_association_cache)
       end
     end
     _log.info("*************** PROCESSED #{dto_collection}, created=#{created_counter}, "\
