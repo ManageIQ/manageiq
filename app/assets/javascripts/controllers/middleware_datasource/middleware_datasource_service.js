@@ -30,10 +30,12 @@ function MwAddDatasourceService($http) {
       driverName: 'mysql', driverModuleName: 'com.mysql', driverClass: 'com.mysql.jdbc.Driver',
       connectionUrl: '://localhost:3306/db_name'}
   ];
-  this.getExistingJdbcDrivers = function() {
+  this.getExistingJdbcDrivers = function(serverId) {
     var deferred = $q.defer();
+    var BASE_URL = '/middleware_server/jdbc_drivers';
+    var parameterizedUrl = BASE_URL + '?server_id=' + serverId;
 
-    $http.get('/middleware_server/jdbc_drivers').then(function(data) {
+    $http.get(parameterizedUrl).then(function(data) {
       deferred.resolve(data.data);
     }).catch(function(errorMsg) {
       deferred.reject(errorMsg);

@@ -142,20 +142,12 @@ class MiddlewareServerController < ApplicationController
   end
 
   def jdbc_drivers
-    # @todo: replace with real API: middleware_manager.jdbc_drivers(feeds)
-    jdbc_drivers = [
-      {:id => 'H2', :label => 'H2'},
-      {:id => 'POSTGRES', :label => 'Postgres'}
-    ]
-
-    if jdbc_drivers.nil?
-      render :json => {
-        :status => :success, :msg => _("No JDBC Drivers installed")
-      }
-    end
-
+    mw_server = MiddlewareServer.find(params[:server_id])
+    mw_manager = mw_server.ext_management_system
+    feed = mw_manager.feeds.first
+    jdbc_driver = mw_manager.jdbc_drivers(feed)
     render :json => {
-      :status => :success, :data => jdbc_drivers
+      :status => :success, :data => jdbc_driver
     }
   end
 

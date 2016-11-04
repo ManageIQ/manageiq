@@ -73,13 +73,14 @@ function MwAddDatasourceCtrl($scope, $rootScope, miqService, mwAddDatasourceServ
 
   $scope.addDatasourceStep1Next = function() {
     var dsSelection = $scope.chooseDsModel.selectedDatasource;
+    var server_id = angular.element('#server_id').val();
     $scope.dsModel.step = 'STEP2';
 
     $scope.step2DsModel.jdbcDriverName = dsSelection.driverName;
     $scope.step2DsModel.jdbcModuleName = dsSelection.driverModuleName;
     $scope.step2DsModel.driverClass = dsSelection.driverClass;
 
-    mwAddDatasourceService.getExistingJdbcDrivers().then(function(result) {
+    mwAddDatasourceService.getExistingJdbcDrivers(server_id).then(function(result) {
       $scope.step2DsModel.existingJdbcDrivers = result.data;
     }).catch(function(errorMsg) {
       miqService.miqFlash(errorMsg.data.status, errorMsg.data.msg);
