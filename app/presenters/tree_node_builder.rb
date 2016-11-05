@@ -52,302 +52,302 @@ class TreeNodeBuilder
   BUILD_NODE_HASH = {
     "AssignedServerRole"     => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
-      generic_node(new_node_obj.title, new_node_obj.image, new_node_obj.tooltip)
+      generic_node(new_node_obj)
       @node[:addClass] = new_node_obj.klass
     },
     "AvailabilityZone"       => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
-      generic_node(new_node_obj.title, new_node_obj.image, new_node_obj.tooltip)
+      generic_node(new_node_obj)
     },
     "ConfigurationScript"    => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
-      generic_node(new_node_obj.title, new_node_obj.image, new_node_obj.tooltip)
+      generic_node(new_node_obj)
     },
     "ExtManagementSystem"    => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
-      generic_node(new_node_obj.title, new_node_obj.image, new_node_obj.tooltip)
+      generic_node(new_node_obj)
     },
     "ChargebackRate"         => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
-      generic_node(new_node_obj.title, new_node_obj.image, new_node_obj.tooltip)
+      generic_node(new_node_obj)
     },
     "Classification"         => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
-      generic_node(new_node_obj.title, new_node_obj.image, new_node_obj.tooltip)
+      generic_node(new_node_obj)
       @node[:cfmeNoClick] = !new_node_obj.click
       @node[:hideCheckbox] = !new_node_obj.checkbox
     },
     "Compliance"             => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
-      generic_node(new_node_obj.title, new_node_obj.image, new_node_obj.tooltip)
+      generic_node(new_node_obj)
     },
     "ComplianceDetail"       => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
-      generic_node(new_node_obj.title, new_node_obj.image, new_node_obj.tooltip)
+      generic_node(new_node_obj)
     },
     "Condition"              => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
-      generic_node(new_node_obj.title, new_node_obj.image, new_node_obj.tooltip)
+      generic_node(new_node_obj)
     },
     "ConfigurationProfile"   => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
-      generic_node(new_node_obj.title, new_node_obj.image, new_node_obj.tooltip)
+      generic_node(new_node_obj)
     },
     "ConfiguredSystem"       => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
-      generic_node(new_node_obj.title, new_node_obj.image, new_node_obj.tooltip)
+      generic_node(new_node_obj)
     },
     "Container"              => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
-      generic_node(new_node_obj.title, new_node_obj.image, new_node_obj.tooltip)
+      generic_node(new_node_obj)
     },
     "CustomButton"           => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
-      generic_node(new_node_obj.title, new_node_obj.image, new_node_obj.tooltip)
+      generic_node(new_node_obj)
     },
     "CustomButtonSet"        => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
-      generic_node(new_node_obj.title, new_node_obj.image, new_node_obj.tooltip)
+      generic_node(new_node_obj)
     },
     "CustomizationTemplate"  => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
-      generic_node(new_node_obj.title, new_node_obj.image, new_node_obj.tooltip)
+      generic_node(new_node_obj)
     },
     "Dialog"                 => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
-      generic_node(new_node_obj.title, new_node_obj.image, new_node_obj.tooltip)
+      generic_node(new_node_obj)
     },
     "DialogTab"              => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
-      generic_node(new_node_obj.title, new_node_obj.image, new_node_obj.tooltip)
+      generic_node(new_node_obj)
     },
     "DialogGroup"            => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
-      generic_node(new_node_obj.title, new_node_obj.image, new_node_obj.tooltip)
+      generic_node(new_node_obj)
     },
     "DialogField"            => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
-      generic_node(new_node_obj.title, new_node_obj.image, new_node_obj.tooltip)
+      generic_node(new_node_obj)
     },
     "EmsFolder"              => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
-      generic_node(new_node_obj.title, new_node_obj.image, new_node_obj.tooltip)
+      generic_node(new_node_obj)
     },
     "EmsCluster"             => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
-      generic_node(new_node_obj.title, new_node_obj.image, new_node_obj.tooltip)
+      generic_node(new_node_obj)
     },
     "GuestDevice"            => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
-      generic_node(new_node_obj.title, new_node_obj.image, new_node_obj.tooltip)
+      generic_node(new_node_obj)
     },
     "Host"                   => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
-      generic_node(new_node_obj.title, new_node_obj.image, new_node_obj.tooltip)
+      generic_node(new_node_obj)
     },
     "IsoDatastore"           => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
-      generic_node(new_node_obj.title, new_node_obj.image, new_node_obj.tooltip)
+      generic_node(new_node_obj)
     },
     "IsoImage"               => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
-      generic_node(new_node_obj.title, new_node_obj.image, new_node_obj.tooltip)
+      generic_node(new_node_obj)
     },
     "ResourcePool"           => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
-      generic_node(new_node_obj.title, new_node_obj.image, new_node_obj.tooltip)
+      generic_node(new_node_obj)
     },
     "Lan"                    => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
-      generic_node(new_node_obj.title, new_node_obj.image, new_node_obj.tooltip)
+      generic_node(new_node_obj)
     },
     "LdapDomain"             => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
-      generic_node(new_node_obj.title, new_node_obj.image, new_node_obj.tooltip)
+      generic_node(new_node_obj)
     },
     "LdapRegion"             => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
-      generic_node(new_node_obj.title, new_node_obj.image, new_node_obj.tooltip)
+      generic_node(new_node_obj)
     },
     "MiqAeClass"             => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
-      generic_node(new_node_obj.title, new_node_obj.image, new_node_obj.tooltip)
+      generic_node(new_node_obj)
     },
     "MiqAeInstance"          => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
-      generic_node(new_node_obj.title, new_node_obj.image, new_node_obj.tooltip)
+      generic_node(new_node_obj)
     },
     "MiqAeMethod"            => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
-      generic_node(new_node_obj.title, new_node_obj.image, new_node_obj.tooltip)
+      generic_node(new_node_obj)
     },
     "MiqAeNamespace"         => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
-      generic_node(new_node_obj.title, new_node_obj.image, new_node_obj.tooltip)
+      generic_node(new_node_obj)
       @node[:addClass] = new_node_obj.klass
     },
     "MiqAlertSet"            => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
-      generic_node(new_node_obj.title, new_node_obj.image, new_node_obj.tooltip)
+      generic_node(new_node_obj)
     },
     "MiqReport"              => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
-      generic_node(new_node_obj.title, new_node_obj.image, new_node_obj.tooltip)
+      generic_node(new_node_obj)
     },
     "MiqReportResult"        => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
-      generic_node(new_node_obj.title, new_node_obj.image, new_node_obj.tooltip)
+      generic_node(new_node_obj)
       @node[:expand] ||= new_node_obj.expand
     },
     "MiqSchedule"            => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
-      generic_node(new_node_obj.title, new_node_obj.image, new_node_obj.tooltip)
+      generic_node(new_node_obj)
     },
     "MiqScsiLun"             => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
-      generic_node(new_node_obj.title, new_node_obj.image, new_node_obj.tooltip)
+      generic_node(new_node_obj)
     },
     "MiqScsiTarget"          => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
-      generic_node(new_node_obj.title, new_node_obj.image, new_node_obj.tooltip)
+      generic_node(new_node_obj)
     },
     "MiqServer"              => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
-      generic_node(new_node_obj.title, new_node_obj.image, new_node_obj.tooltip)
+      generic_node(new_node_obj)
       @node[:expand] ||= new_node_obj.expand
     },
     "MiqAlert"               => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
-      generic_node(new_node_obj.title, new_node_obj.image, new_node_obj.tooltip)
+      generic_node(new_node_obj)
     },
     "MiqAction"              => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
-      generic_node(new_node_obj.title, new_node_obj.image, new_node_obj.tooltip)
+      generic_node(new_node_obj)
     },
     "MiqEventDefinition"     => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
-      generic_node(new_node_obj.title, new_node_obj.image, new_node_obj.tooltip)
+      generic_node(new_node_obj)
     },
     "MiqGroup"               => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
-      generic_node(new_node_obj.title, new_node_obj.image, new_node_obj.tooltip)
+      generic_node(new_node_obj)
     },
     "MiqPolicy"              => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
-      generic_node(new_node_obj.title, new_node_obj.image, new_node_obj.tooltip)
+      generic_node(new_node_obj)
     },
     "MiqPolicySet"           => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
-      generic_node(new_node_obj.title, new_node_obj.image, new_node_obj.tooltip)
+      generic_node(new_node_obj)
     },
     "MiqUserRole"            => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
-      generic_node(new_node_obj.title, new_node_obj.image, new_node_obj.tooltip)
+      generic_node(new_node_obj)
     },
     "OrchestrationTemplate"  => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
-      generic_node(new_node_obj.title, new_node_obj.image, new_node_obj.tooltip)
+      generic_node(new_node_obj)
     },
     "PxeImage"               => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
-      generic_node(new_node_obj.title, new_node_obj.image, new_node_obj.tooltip)
+      generic_node(new_node_obj)
     },
     "WindowsImage"           => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
-      generic_node(new_node_obj.title, new_node_obj.image, new_node_obj.tooltip)
+      generic_node(new_node_obj)
     },
     "PxeImageType"           => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
-      generic_node(new_node_obj.title, new_node_obj.image, new_node_obj.tooltip)
+      generic_node(new_node_obj)
     },
     "PxeServer"              => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
-      generic_node(new_node_obj.title, new_node_obj.image, new_node_obj.tooltip)
+      generic_node(new_node_obj)
     },
     "ScanItemSet"            => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
-      generic_node(new_node_obj.title, new_node_obj.image, new_node_obj.tooltip)
+      generic_node(new_node_obj)
     },
     "Service"                => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
-      generic_node(new_node_obj.title, new_node_obj.image, new_node_obj.tooltip)
+      generic_node(new_node_obj)
     },
     "ServiceResource"        => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
-      generic_node(new_node_obj.title, new_node_obj.image, new_node_obj.tooltip)
+      generic_node(new_node_obj)
     },
     "ServerRole"             => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
-      generic_node(new_node_obj.title, new_node_obj.image, new_node_obj.tooltip)
+      generic_node(new_node_obj)
       @node[:expand] ||= new_node_obj.expand
     },
     "ServiceTemplate"        => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
-      generic_node(new_node_obj.title, new_node_obj.image, new_node_obj.tooltip)
+      generic_node(new_node_obj)
     },
     "ServiceTemplateCatalog" => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
-      generic_node(new_node_obj.title, new_node_obj.image, new_node_obj.tooltip)
+      generic_node(new_node_obj)
     },
     "Snapshot"               => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
-      generic_node(new_node_obj.title, new_node_obj.image, new_node_obj.tooltip)
+      generic_node(new_node_obj)
       if (options[:selected_node].present? && @node[:key] == options[:selected_node]) || object.children.empty?
         @node[:highlighted] = true
       end
     },
     "Storage"                => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
-      generic_node(new_node_obj.title, new_node_obj.image, new_node_obj.tooltip)
+      generic_node(new_node_obj)
     },
     "Switch"                 => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
-      generic_node(new_node_obj.title, new_node_obj.image, new_node_obj.tooltip)
+      generic_node(new_node_obj)
     },
     "User"                   => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
-      generic_node(new_node_obj.title, new_node_obj.image, new_node_obj.tooltip)
+      generic_node(new_node_obj)
     },
     "MiqSearch"              => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
-      generic_node(new_node_obj.title, new_node_obj.image, new_node_obj.tooltip)
+      generic_node(new_node_obj)
     },
     "MiqDialog"              => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
-      generic_node(new_node_obj.title, new_node_obj.image, new_node_obj.tooltip)
+      generic_node(new_node_obj)
     },
     "MiqRegion"              => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
-      generic_node(new_node_obj.title, new_node_obj.image, new_node_obj.tooltip)
+      generic_node(new_node_obj)
       @node[:expand] ||= new_node_obj.expand
     },
     "MiqWidget"              => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
-      generic_node(new_node_obj.title, new_node_obj.image, new_node_obj.tooltip)
+      generic_node(new_node_obj)
     },
     "MiqWidgetSet"           => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
-      generic_node(new_node_obj.title, new_node_obj.image, new_node_obj.tooltip)
+      generic_node(new_node_obj)
     },
     "Tenant"                 => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
-      generic_node(new_node_obj.title, new_node_obj.image, new_node_obj.tooltip)
+      generic_node(new_node_obj)
     },
     "VmdbTable"              => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
-      generic_node(new_node_obj.title, new_node_obj.image, new_node_obj.tooltip)
+      generic_node(new_node_obj)
     },
     "VmdbIndex"              => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
-      generic_node(new_node_obj.title, new_node_obj.image, new_node_obj.tooltip)
+      generic_node(new_node_obj)
     },
     "VmOrTemplate"           => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
-      generic_node(new_node_obj.title, new_node_obj.image, new_node_obj.tooltip)
+      generic_node(new_node_obj)
     },
     "Zone"                   => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
-      generic_node(new_node_obj.title, new_node_obj.image, new_node_obj.tooltip)
+      generic_node(new_node_obj)
     },
     "Hash"                   => -> {
       hash_node
@@ -390,17 +390,17 @@ class TreeNodeBuilder
     end
   end
 
-  def generic_node(text, image, tip = nil)
-    text = ERB::Util.html_escape(text ? URI.unescape(text) : text) unless text.html_safe?
+  def generic_node(node)
+    text = ERB::Util.html_escape(node.title ? URI.unescape(node.title) : node.title) unless node.title.html_safe?
     @node = {
       :key   => build_object_id,
-      :title => text,
-      :icon  => node_icon(image)
+      :title => text ? text : node.title,
+      :icon  => node_icon(node.image)
     }
     # Start with all nodes open unless expand is explicitly set to false
     @node[:expand] = options[:open_all].present? && options[:open_all] && options[:expand] != false
     @node[:hideCheckbox] = options[:hideCheckbox] if options[:hideCheckbox].present?
-    tooltip(tip)
+    tooltip(node.tooltip)
   end
 
   def hash_node

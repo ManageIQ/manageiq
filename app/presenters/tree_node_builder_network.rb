@@ -1,7 +1,7 @@
 class TreeNodeBuilderNetwork < TreeNodeBuilder
-  def generic_node(text, image, tip = nil)
-    ret = super(text, image, tip)
-    @node[:cfmeNoClick] = true unless image.start_with?('currentstate')
+  def generic_node(node)
+    ret = super(node)
+    @node[:cfmeNoClick] = true unless node.image.start_with?('100/currentstate-')
     ret
   end
 end
