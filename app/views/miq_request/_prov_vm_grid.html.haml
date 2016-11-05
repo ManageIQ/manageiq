@@ -31,6 +31,7 @@
             %td
             %td
             %td
+            %td
             - if @edit[:vm_headers].key? 'cloud_tenant'
               %td
 
@@ -51,6 +52,8 @@
               = h(number_to_human_size(row.mem_cpu.to_i * 1024 * 1024))
             %td
               = h(number_to_human_size(row.allocated_disk_storage))
+            %td
+              = h(row.deprecated)
             %td
               - if row.ext_management_system
                 = h(row.ext_management_system.name)
