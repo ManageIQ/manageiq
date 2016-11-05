@@ -197,7 +197,6 @@ class TreeNodeBuilder
     "MiqReportResult"        => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
       generic_node(new_node_obj)
-      @node[:expand] ||= new_node_obj.expand
     },
     "MiqSchedule"            => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
@@ -214,7 +213,6 @@ class TreeNodeBuilder
     "MiqServer"              => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
       generic_node(new_node_obj)
-      @node[:expand] ||= new_node_obj.expand
     },
     "MiqAlert"               => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
@@ -279,7 +277,6 @@ class TreeNodeBuilder
     "ServerRole"             => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
       generic_node(new_node_obj)
-      @node[:expand] ||= new_node_obj.expand
     },
     "ServiceTemplate"        => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
@@ -319,7 +316,6 @@ class TreeNodeBuilder
     "MiqRegion"              => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
       generic_node(new_node_obj)
-      @node[:expand] ||= new_node_obj.expand
     },
     "MiqWidget"              => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
@@ -393,12 +389,12 @@ class TreeNodeBuilder
   def generic_node(node)
     text = ERB::Util.html_escape(node.title ? URI.unescape(node.title) : node.title) unless node.title.html_safe?
     @node = {
-      :key   => build_object_id,
-      :title => text ? text : node.title,
-      :icon  => node_icon(node.image)
+      :key    => build_object_id,
+      :title  => text ? text : node.title,
+      :icon   => node_icon(node.image),
+      :expand => node.expand
     }
     # Start with all nodes open unless expand is explicitly set to false
-    @node[:expand] = options[:open_all].present? && options[:open_all] && options[:expand] != false
     @node[:hideCheckbox] = options[:hideCheckbox] if options[:hideCheckbox].present?
     tooltip(node.tooltip)
   end
