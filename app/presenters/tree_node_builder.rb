@@ -75,7 +75,6 @@ class TreeNodeBuilder
       new_node_obj = TreeNode.new(object, parent_id, options)
       generic_node(new_node_obj)
       @node[:cfmeNoClick] = !new_node_obj.click
-      @node[:hideCheckbox] = !new_node_obj.checkbox
     },
     "Compliance"             => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
@@ -389,13 +388,12 @@ class TreeNodeBuilder
   def generic_node(node)
     text = ERB::Util.html_escape(node.title ? URI.unescape(node.title) : node.title) unless node.title.html_safe?
     @node = {
-      :key    => build_object_id,
-      :title  => text ? text : node.title,
-      :icon   => node_icon(node.image),
-      :expand => node.expand
+      :key          => build_object_id,
+      :title        => text ? text : node.title,
+      :icon         => node_icon(node.image),
+      :expand       => node.expand,
+      :hideCheckbox => node.hide_checkbox
     }
-    # Start with all nodes open unless expand is explicitly set to false
-    @node[:hideCheckbox] = options[:hideCheckbox] if options[:hideCheckbox].present?
     tooltip(node.tooltip)
   end
 
