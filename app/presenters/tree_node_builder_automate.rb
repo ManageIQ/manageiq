@@ -1,12 +1,6 @@
 class TreeNodeBuilderAutomate < TreeNodeBuilder
   include CompressedIds
 
-  def miq_ae_node(enabled, text, image, tip)
-    ret = super(enabled, text, image, tip)
-    @node[:cfmeNoClick] = noclick_node?(@node[:key])
-    ret
-  end
-
   def generic_node(text, image, tip = nil)
     ret = super(text, image, tip)
     @node[:cfmeNoClick] = noclick_node?(@node[:key])

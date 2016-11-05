@@ -1,6 +1,6 @@
 class TreeNodeBuilderSmartproxyAffinity < TreeNodeBuilder
-  def miq_server_node
-    ret = super
+  def generic_node(text, image, tip = nil)
+    ret = super(text, image, tip)
     @node[:cfmeNoClick] = true
     ret
   end
