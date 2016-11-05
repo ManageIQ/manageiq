@@ -41,6 +41,14 @@ module ManageIQ::Providers::Azure::ManagerMixin
         :subscription_id => subscription,
         :proxy           => proxy_uri
       )
+
+      if Rails.env == 'development'
+        if ::Azure::Armrest::ArmrestService.respond_to?(:log)
+          ::Azure::Armrest::ArmrestService.log = $azure_log
+        else
+          ::Azure::Armrest::Configuration.log = $azure_log
+        end
+      end
     end
 
     # Discovery
