@@ -1,9 +1,13 @@
 module TreeNode
   class AssignedServerRole < Node
     set_attributes(:title, :image, :klass) do
-      title = @options[:tree] == :servers_by_role_tree ?
-          "<strong>#{_('Server')}: #{ERB::Util.html_escape(@object.name)} [#{@object.id}]</strong>" :
-          "<strong>Role: #{ERB::Util.html_escape(@object.server_role.description)}</strong>"
+      title = content_tag(:strong) do
+        if @options[:tree] == :servers_by_role_tree
+          "#{_('Server')}: #{ERB::Util.html_escape(@object.name)} [#{@object.id}]"
+        else
+          "Role: #{ERB::Util.html_escape(@object.server_role.description)}"
+        end
+      end
 
       if @object.master_supported?
         priority = case @object.priority
@@ -32,7 +36,7 @@ module TreeNode
         klass = "opacity"
       end
 
-      [title.html_safe, image, klass]
+      [title, image, klass]
     end
   end
 end

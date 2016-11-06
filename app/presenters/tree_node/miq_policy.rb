@@ -3,11 +3,10 @@ module TreeNode
     set_attribute(:image) { "100/miq_policy_#{@object.towhat.downcase}#{@object.active ? '' : '_inactive'}.png" }
     set_attribute(:title) do
       if @options[:tree] == :policy_profile_tree
-        "<strong>%{towhat} %{mode}:</strong> %{description}".html_safe % {
-          :towhat      => ui_lookup(:model => @object.towhat),
-          :mode        => @object.mode.titleize,
-          :description => ERB::Util.html_escape(@object.description)
-        }
+        capture do
+          concat content_tag(:strong, "#{ui_lookup(:model => @object.towhat)} #{@object.mode.titleize}: ")
+          concat ERB::Util.html_escape(@object.description)
+        end
       else
         @object.description
       end

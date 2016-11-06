@@ -8,7 +8,7 @@ module TreeNode
         tooltip  = _("%{server}: %{server_name} [%{server_id}] (current)") %
                    {:server => ui_lookup(:model => @object.class.to_s), :server_name => @object.name, :server_id => @object.id}
         tooltip += " (#{@object.status})" if @options[:tree] == :roles_by_server_tree
-        title = "<strong>#{ERB::Util.html_escape(tooltip)}</strong>".html_safe
+        title = content_tag(:strong, ERB::Util.html_escape(tooltip))
       else
         tooltip  = "#{ui_lookup(:model => @object.class.to_s)}: #{@object.name} [#{@object.id}]"
         tooltip += " (#{@object.status})" if @options[:tree] == :roles_by_server_tree
