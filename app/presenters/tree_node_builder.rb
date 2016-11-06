@@ -53,7 +53,6 @@ class TreeNodeBuilder
     "AssignedServerRole"     => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
       generic_node(new_node_obj)
-      @node[:addClass] = new_node_obj.klass
     },
     "AvailabilityZone"       => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
@@ -183,7 +182,6 @@ class TreeNodeBuilder
     "MiqAeNamespace"         => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
       generic_node(new_node_obj)
-      @node[:addClass] = new_node_obj.klass
     },
     "MiqAlertSet"            => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
@@ -392,7 +390,8 @@ class TreeNodeBuilder
       :title        => text ? text : node.title,
       :icon         => node_icon(node.image),
       :expand       => node.expand,
-      :hideCheckbox => node.hide_checkbox
+      :hideCheckbox => node.hide_checkbox,
+      :addClass     => node.klass
     }
     tooltip(node.tooltip)
   end

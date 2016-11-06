@@ -128,7 +128,7 @@ class TreeBuilder
       node[:state][:selected] = node.delete(:highlighted) if node.key?(:highlighted)
       node[:selectable] = !node.delete(:cfmeNoClick) if node.key?(:cfmeNoClick)
       node[:class] = ''
-      node[:class] = node.delete(:addClass) if node.key?(:addClass)
+      node[:class] = node.delete(:addClass) if node.key?(:addClass) && !node[:addClass].nil?
       node[:class] = node[:class].split(' ').push('no-cursor').join(' ') if node[:selectable] == false
     end
     nodes
