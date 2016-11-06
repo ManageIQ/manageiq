@@ -73,7 +73,6 @@ class TreeNodeBuilder
     "Classification"         => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
       generic_node(new_node_obj)
-      @node[:cfmeNoClick] = !new_node_obj.click
     },
     "Compliance"             => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
@@ -391,7 +390,8 @@ class TreeNodeBuilder
       :icon         => node_icon(node.image),
       :expand       => node.expand,
       :hideCheckbox => node.hide_checkbox,
-      :addClass     => node.klass
+      :addClass     => node.klass,
+      :cfmeNoClick  => node.no_click
     }
     tooltip(node.tooltip)
   end
