@@ -148,14 +148,11 @@ module ApplicationController::Tags
     get_tag_items if @explorer
     @object_ids = session[:tag_items]
     @sb[:rec_id] = params[:id] ? params[:id] : session[:tag_items][0]
+    @tagging = session[:tag_db].to_s
     if params[:button] == "reset"
-      @tagging = session[:tag_db].to_s
       id = params[:id] if params[:id]
       return unless load_edit("#{session[:tag_db]}_edit_tags__#{id}")
       @object_ids = @edit[:object_ids]
-    else
-      # @object_ids[0] = params[:id] if @object_ids.blank? && params[:id]
-      @tagging = session[:tag_db].to_s
     end
     tagging_tags_set_form_vars
     @display   = nil
