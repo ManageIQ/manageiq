@@ -83,11 +83,9 @@ class GitBasedDomainImportService
 
   def refresh(git_repo_id)
     task_id = queue_refresh(git_repo_id)
-    MiqTask.wait_for_taskid(task_id)
+    task = MiqTask.wait_for_taskid(task_id)
 
-    task = MiqTask.find(task_id)
     raise MiqException::Error, task.message unless task.status == "Ok"
-
     task.task_results
   end
 
