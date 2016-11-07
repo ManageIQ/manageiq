@@ -449,7 +449,7 @@ class MiqRequestController < ApplicationController
   end
 
   def request_types_for_model
-    MiqRequest::MODEL_REQUEST_TYPES[model_request_type_from_layout]
+    MiqRequest::MODEL_REQUEST_TYPES[model_request_type_from_layout].map { |k, v| [k, v.map { |x, y| [x, _(y)] }.to_h] }.to_h
   end
 
   def model_request_type_from_layout
