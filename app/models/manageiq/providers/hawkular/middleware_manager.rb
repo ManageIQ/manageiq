@@ -166,6 +166,10 @@ module ManageIQ::Providers
       with_provider_connection(&:alerts)
     end
 
+    def start_middleware_server(ems_ref)
+      run_generic_operation(:Start, ems_ref)
+    end
+
     def reload_middleware_server(ems_ref)
       run_generic_operation(:Reload, ems_ref)
     end
@@ -426,6 +430,11 @@ module ManageIQ::Providers
     # this method execute an operation through ExecuteOperation request command.
     #
     def run_generic_operation(operation_name, ems_ref, parameters = {})
+      resource = inventory_client.get_resource(ems_ref, false)
+      # Use server-config when running operations on a Domain Wildlfy Server.
+      if resource.type_path.end_with?(hawk_escape_id('Domain WildFly Server'))
+        ems_ref = resource.path.to_s.sub(/%2Fserver%3D/, '%2Fserver-config%3D')
+      end
       the_operation = {
         :operationName => operation_name,
         :resourcePath  => ems_ref.to_s,

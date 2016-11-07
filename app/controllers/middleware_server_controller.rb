@@ -13,6 +13,11 @@ class MiddlewareServerController < ApplicationController
                                     :hawk => N_('reloading'),
                                     :msg  => N_('Reload')
   },
+    :middleware_server_start    => {:op   => :start_middleware_server,
+                                    :skip => true,
+                                    :hawk => N_('starting'),
+                                    :msg  => N_('Starting')
+    },
     :middleware_server_stop     => {:op   => :stop_middleware_server,
                                     :skip => true,
                                     :hawk => N_('stopping'),

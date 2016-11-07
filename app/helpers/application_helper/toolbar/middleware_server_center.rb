@@ -41,6 +41,13 @@ class ApplicationHelper::Toolbar::MiddlewareServerCenter < ApplicationHelper::To
       t,
       :items => [
         button(
+          :middleware_server_start,
+          nil,
+          N_('Start this server'),
+          N_('Start Server'),
+          :image   => 'start',
+          :confirm => N_('Do you want to start this server?')),
+        button(
           :middleware_server_shutdown,
           nil,
           N_('Gracefully shut this server down'),
