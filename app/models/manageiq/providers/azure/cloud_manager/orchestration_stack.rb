@@ -1,5 +1,6 @@
 class ManageIQ::Providers::Azure::CloudManager::OrchestrationStack < ManageIQ::Providers::CloudManager::OrchestrationStack
   require_dependency 'manageiq/providers/azure/cloud_manager/orchestration_stack/status'
+  include_concern 'ManageIQ::Providers::Azure::CloudManager::Deployment'
 
   def self.raw_create_stack(orchestration_manager, stack_name, template, options = {})
     resource_group, create_options = make_create_options(template, options)
@@ -52,8 +53,12 @@ class ManageIQ::Providers::Azure::CloudManager::OrchestrationStack < ManageIQ::P
 
   def raw_status
     ext_management_system.with_provider_connection do |configure|
-      raw_stack = ::Azure::Armrest::TemplateDeploymentService.new(configure).get(name, resource_group)
-      Status.new(raw_stack.properties.provisioning_state, nil)
+      tds = ::Azure::Armrest::TemplateDeploymentService.new(configure)
+      deployment = tds.get(name, resource_group)
+      if deployment_failed?(deployment)
+        fail_reason = deployment_failure_reason(tds.list_deployment_operations(name, resource_group))
+      end
+      Status.new(deployment.properties.provisioning_state, fail_reason)
     end
   rescue => err
     if err.to_s =~ /[D|d]eployment.+ could not be found/
