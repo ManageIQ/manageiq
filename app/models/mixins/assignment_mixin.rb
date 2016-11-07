@@ -122,19 +122,16 @@ module AssignmentMixin
       tlist =  parents.collect { |p| "#{p.class.base_model.name.underscore}/id/#{p.id}" } # Assigned directly to parents
       tlist += options[:tag_list] if options[:tag_list]                        # Assigned to target (passed in)
 
-      individually_assigned_resources = tlist.flat_map { |t| assignments_cached[t] }.uniq
-
       # look for alert_set running off of tags (not individual tags)
       # TODO: we may need to change taggings-related code to use base_model too
-      tlist = Tagging.where("tags.name like '/managed/%'")
-                     .where(:taggable => parents)
-                     .references(:tag).includes(:tag).map do |t|
+      tlist += Tagging.where("tags.name like '/managed/%'")
+                      .where(:taggable => parents)
+                      .references(:tag).includes(:tag).map do |t|
         klass = t.taggable_type
         lower_klass = klass == "VmOrTemplate" ? "vm" : klass.underscore
         "#{lower_klass}/tag#{t.tag.name}"
       end
-      tagged_resources = tlist.flat_map { |t| assignments_cached[t] }.uniq
-      (individually_assigned_resources + tagged_resources).uniq
+      tlist.flat_map { |t| assignments_cached[t] }.uniq
     end
 
     def namespace
