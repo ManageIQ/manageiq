@@ -1620,10 +1620,9 @@ function add_expanding_icon(element) {
 }
 
 function chartData(type, data, data2) {
-  if (type == undefined) {
+  if (type === undefined) {
     return;
   }
-
 
   if (_.isObject(data.miq)) {
     // set maximum count of x axis tick labels for C&U charts
@@ -1637,40 +1636,36 @@ function chartData(type, data, data2) {
       var max = _.max(_.flatten(_.tail(data.data.columns).map(_.tail)));
       data.axis.y.tick.values = [0, max];
     }
+
+    if (data.miq.reporting_chart) {
+      data.tooltip.format.name = function (_name, _ratio, id, _index) {
+        return data.miq.name_table[id];
+      };
+
+      data.tooltip.format.title = function (x) {
+        return data.miq.category_table[x];
+      };
+    }
   }
 
   // set formating function for tooltip and y tick labels
-  if (_.isObject(data.axis) && _.isObject(data.axis.y) && _.isObject(data.axis.y.tick) && _.isObject(data.axis.y.tick.format) && data.axis.y.tick.format.function) {
+  if (_.isObject(data.axis) &&
+      _.isObject(data.axis.y) &&
+      _.isObject(data.axis.y.tick) &&
+      _.isObject(data.axis.y.tick.format) &&
+      data.axis.y.tick.format.function) {
     var o = data.axis.y.tick.format;
     data.axis.y.tick.format = ManageIQ.charts.formatters[o.function].c3(o.options);
-    data.tooltip = {format: {value: ManageIQ.charts.formatters[o.function].c3(o.options)}};
-    if (type == 'Donut' || type == 'Pie') {
-      data.tooltip = {format: {value: ManageIQ.charts.formatters[o.function].c3(o.options)}};
-    }
+    data.tooltip.format.value = ManageIQ.charts.formatters[o.function].c3(o.options);
   }
-  var config = _.cloneDeep(ManageIQ.charts.c3config[type]);
 
+  var config = _.cloneDeep(ManageIQ.charts.c3config[type]);
   // some PatternFly default configs define contents function, but it breaks formatting
   if (_.isObject(config.tooltip)) {
     config.tooltip.contents = undefined;
   }
-
-  // tooltips have full name even if labels are shortened
-  if (_.isObject(data.axis) &&_.isObject(data.axis.x) && _.isObject(data.axis.x.categories)) {
-    var tooltips = []
-    for (var i = 0; i <  data.axis.x.categories.length; i++ ) {
-        tooltips.push(data.axis.x.categories[i]);
-        data.axis.x.categories[i] = ManageIQ.charts.formatters.string_truncate(data.axis.x.categories[i], {length:7});
-    }
-
-    if(_.isObject(data.tooltip.format)){
-      data.tooltip.format.title =  function (x) { return tooltips[x]; }
-    }
-    else {
-      data.tooltip.format =  { title: function (x) { return tooltips[x]; }}
-    }
-  }
   var ret = _.defaultsDeep({}, data, config, data2);
+  // some PatternFly default configs define size of chart
   ret.size = {};
   return ret;
 }
