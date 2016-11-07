@@ -128,7 +128,7 @@
           %th= _('Size')
           %th.narrow
           %th.narrow{"ng-if" => @reconfigitems.first.vendor == 'vmware'}= _('Dependent')
-          %th.narrow{"ng-if" => @reconfigitems.first.vendor == 'vmware'}= _('Delete Backing')
+          %th.narrow= _('Delete Backing')
           %th.narrow{"ng-if" => @reconfigitems.first.vendor == 'redhat'}= _('Bootable')
           %th= _('Actions')
         %tbody
@@ -178,13 +178,13 @@
                      "type"      => "checkbox",
                      "name"      => "cb_dependent",
                      "ng-model"  => "reconfigureModel.cb_dependent"}
+            %td.narrow
             %td.narrow{"ng-if" => @reconfigitems.first.vendor == 'redhat'}
               %input{"bs-switch" => "",
                      :data           => {:on_text => 'Yes', :off_text => 'No', :size => 'mini'},
                      "type"          => "checkbox",
                      "name"          => "cb_bootable",
                      "ng-model"      => "reconfigureModel.cb_bootable"}
-            %td.narrow
             %td.action-cell
               %button.btn.btn-default.btn-block.btn-sm{:type => "button", "ng-click" => "addDisk()", "ng-disabled" => "rowForm.dvcSize.$invalid"}= _(' Add ')
           %tr{"ng-repeat" => "disk in reconfigureModel.vmdisks", "ng-class" => "{'danger': disk.add_remove == 'remove', 'active': disk.add_remove == 'add'}"}
@@ -207,7 +207,7 @@
                      "switch-active" => "{{disk.add_remove!='add'}}",
                      "ng-readonly"   => "disk.add_remove=='add'",
                      "ng-if"         => "disk.add_remove=='add'"}
-            %td.narrow{"ng-if" => @reconfigitems.first.vendor == 'vmware'}
+            %td.narrow
               %input{"bs-switch"     => "",
                      :data           => {:on_text => 'Yes', :off_text => 'No', :size => 'mini'},
                      "type"          => "checkbox",

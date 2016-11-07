@@ -28,13 +28,9 @@ module ManageIQ::Providers::Redhat::InfraManager::Vm::Reconfigure
       "numCoresPerSocket" => (task_options[:cores_per_socket].to_i if task_options[:cores_per_socket]),
       "memoryMB"          => (task_options[:vm_memory].to_i if task_options[:vm_memory]),
       "numCPUs"           => (task_options[:number_of_cpus].to_i if task_options[:number_of_cpus]),
-      "disksRemove"       => (spec_for_removed_disks(task_options[:disk_remove]) if task_options[:disk_remove]),
+      "disksRemove"       => task_options[:disk_remove],
       "disksAdd"          => (spec_for_added_disks(task_options[:disk_add]) if task_options[:disk_add])
     }
-  end
-
-  def spec_for_removed_disks(disks)
-    disks.map { |disk| disk["disk_name"] }
   end
 
   def spec_for_added_disks(disks)
