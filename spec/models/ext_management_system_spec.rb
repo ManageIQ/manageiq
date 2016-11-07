@@ -37,7 +37,7 @@ describe ExtManagementSystem do
       "openstack_network"           => "OpenStack Network",
       "physical_infra_manager"      => "PhysicalInfraManager", # TODO: (julian) remove once we have a physical_infra_manager implementation
       "nuage_network"               => "Nuage Network Manager",
-      "rhevm"                       => "Red Hat Enterprise Virtualization Manager",
+      "rhevm"                       => "Red Hat Virtualization Manager",
       "scvmm"                       => "Microsoft System Center VMM",
       "vmwarews"                    => "VMware vCenter",
       "vmware_cloud"                => "VMware vCloud",

@@ -9,7 +9,7 @@ module ApplicationHelper
         "ipmi"            => _("IPMI"),
         "kvm"             => _("KVM"),
         "msvirtualserver" => _("MS vCenter"),
-        "rhevm"           => _("Red Hat Enterprise Virtualization Manager"),
+        "rhevm"           => _("Red Hat Virtualization Manager"),
         "scvmm"           => _("Microsoft System Center VMM"),
         "virtualcenter"   => _("VMware vCenter"),
         "vmwareserver"    => _("VMware Server"),
