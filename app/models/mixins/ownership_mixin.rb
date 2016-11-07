@@ -7,7 +7,18 @@ module OwnershipMixin
 
     virtual_column :evm_owner_email,                      :type => :string,     :uses => :evm_owner
     virtual_column :evm_owner_name,                       :type => :string,     :uses => :evm_owner
-    virtual_column :evm_owner_userid,                     :type => :string,     :uses => :evm_owner
+
+    # This is a backported version of the virtual_delegate form of this
+    # (changed in https://github.com/ManageIQ/manageiq/pull/11243 ) which is to
+    # help support the bug fix from
+    # https://github.com/ManageIQ/manageiq/pull/11992
+    virtual_column :evm_owner_userid, :type => :string, :uses => :evm_owner, :arel => (lambda do |t|
+      user_table = User.arel_table
+      t.grouping(
+        user_table.project(user_table[:userid])
+                  .where(user_table[:id].eq(t[:evm_owner_id]))
+      )
+    end)
 
     # Determine whether the selected object is owned by the current user
     # Resulting SQL:
@@ -23,7 +34,17 @@ module OwnershipMixin
       t.grouping(user_table.project(group_sel).where(where_cond))
     end)
 
-    virtual_column :owning_ldap_group,                    :type => :string,     :uses => :miq_group
+    # This is a backported version of the virtual_delegate form of this
+    # (changed in https://github.com/ManageIQ/manageiq/pull/11243 ) which is to
+    # help support the bug fix from
+    # https://github.com/ManageIQ/manageiq/pull/12114
+    virtual_column :owning_ldap_group, :type => :string, :uses => :miq_group, :arel => (lambda do |t|
+      group_tbl = MiqGroup.arel_table
+      t.grouping(
+        group_tbl.project(group_tbl[:description])
+                 .where(group_tbl[:id].eq(t[:miq_group_id]))
+      )
+    end)
 
     # Determine whether to return objects owned by the current user's miq_group
     # or not.
@@ -78,14 +99,24 @@ module OwnershipMixin
 
     def user_or_group_owned(user, miq_group)
       if user && miq_group
-        where("evm_owner_id" => user.id).or(where("miq_group_id" => miq_group.id))
+        user_owned(user).or(group_owned(miq_group))
       elsif user
-        where("evm_owner_id" => user.id)
+        user_owned(user)
       elsif miq_group
-        where("miq_group_id" => miq_group.id)
+        group_owned(miq_group)
       else
         none
       end
+    end
+
+    private
+
+    def user_owned(user)
+      where(arel_table.grouping(Arel::Nodes::NamedFunction.new("LOWER", [arel_attribute(:evm_owner_userid)]).eq(user.userid)))
+    end
+
+    def group_owned(miq_group)
+      where(arel_table.grouping(Arel::Nodes::NamedFunction.new("LOWER", [arel_attribute(:owning_ldap_group)]).eq(miq_group.description.downcase)))
     end
   end
 
