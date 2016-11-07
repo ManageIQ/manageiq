@@ -15,7 +15,7 @@ class ManageIQ::Providers::Openstack::InfraManager::Host < ::Host
   has_many :cloud_subnets, :through    => :network_ports
   has_many :public_networks, :through => :cloud_subnets
 
-  has_many :floating_ips
+  has_many :floating_ips, :through => :network_ports
 
   include_concern 'Operations'
 
