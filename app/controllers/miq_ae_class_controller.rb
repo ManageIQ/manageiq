@@ -2454,6 +2454,10 @@ class MiqAeClassController < ApplicationController
     session[:changed] = true
 
     git_repo = MiqAeDomain.find(params[:id]).git_repository
+
+    git_based_domain_import_service.refresh(git_repo.id)
+
+    git_repo.reload
     @branch_names = git_repo.git_branches.collect(&:name)
     @tag_names = git_repo.git_tags.collect(&:name)
     @git_repo_id = git_repo.id
