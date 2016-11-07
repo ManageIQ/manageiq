@@ -195,7 +195,7 @@ Methods updated/added: %{method_stats}") % stat_options, :success)
     redirect_options = {:action => :review_git_import}
     git_url = params[:git_url]
     verify_ssl = params[:git_verify_ssl] == "true" ? OpenSSL::SSL::VERIFY_PEER : OpenSSL::SSL::VERIFY_NONE
-    new_git_repo = nil
+    new_git_repo = false
 
     if git_url.blank?
       add_flash(_("Please provide a valid git URL"), :error)
@@ -203,11 +203,7 @@ Methods updated/added: %{method_stats}") % stat_options, :success)
       add_flash(_("Please enable the git owner role in order to import git repositories"), :error)
     else
       begin
-        git_repo = GitRepository.find_by(:url => git_url)
-        unless git_repo
-          git_repo = GitRepository.create!(:url => git_url)
-          new_git_repo = git_repo
-        end
+        git_repo = GitRepository.find_or_create_by!(:url => git_url) { new_git_repo = true }
         git_repo.update_attributes(:verify_ssl => verify_ssl)
         if params[:git_username] && params[:git_password]
           git_repo.update_authentication(:values => {:userid   => params[:git_username],
@@ -227,9 +223,8 @@ Methods updated/added: %{method_stats}") % stat_options, :success)
         }
 
         task_id = MiqTask.generic_action_with_callback(task_options, queue_options)
-        MiqTask.wait_for_taskid(task_id)
+        task = MiqTask.wait_for_taskid(task_id)
 
-        task = MiqTask.find(task_id)
         raise task.message unless task.status == "Ok"
 
         branch_names = git_repo.git_branches.collect(&:name)
@@ -240,7 +235,7 @@ Methods updated/added: %{method_stats}") % stat_options, :success)
         flash_message = "Successfully found git repository, please choose a branch or tag"
         add_flash(_(flash_message), :success)
       rescue => err
-        new_git_repo.destroy if new_git_repo
+        git_repo.destroy if new_git_repo
         add_flash(_("Error during repository fetch: #{err.message}"), :error)
       end
     end

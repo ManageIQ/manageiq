@@ -330,8 +330,7 @@ Methods updated/added: 10
           allow(git_repo).to receive(:update_authentication).with(:values => {:userid => "", :password => ""})
           allow(MiqTask).to receive(:generic_action_with_callback)
             .with(task_options, queue_options).and_return(miq_task.id)
-          allow(MiqTask).to receive(:wait_for_taskid).with(miq_task.id)
-          allow(MiqTask).to receive(:find).with(miq_task.id).and_return(miq_task)
+          allow(MiqTask).to receive(:wait_for_taskid).with(miq_task.id).and_return(miq_task)
           allow(git_repo).to receive(:git_branches).and_return(git_branches)
           allow(git_repo).to receive(:git_tags).and_return(git_tags)
           allow(git_repo).to receive(:update_attributes).and_return(nil)
@@ -352,7 +351,7 @@ Methods updated/added: 10
 
         context "when the git repository exists with the given url" do
           before do
-            allow(GitRepository).to receive(:find_by).with(:url => git_url).and_return(git_repo)
+            allow(GitRepository).to receive(:find_or_create_by!).with(:url => git_url).and_return(git_repo)
           end
 
           it "queues the refresh action" do
@@ -387,7 +386,7 @@ Methods updated/added: 10
 
         context "when the git repository does not exist with the given url" do
           before do
-            allow(GitRepository).to receive(:find_by).with(:url => git_url).and_return(nil)
+            allow(GitRepository).to receive(:find_or_create_by!).with(:url => git_url).and_return(git_repo)
           end
 
           it "queues the refresh action" do
@@ -396,7 +395,7 @@ Methods updated/added: 10
           end
 
           it "waits for the refresh action" do
-            expect(MiqTask).to receive(:wait_for_taskid).with(miq_task.id)
+            expect(MiqTask).to receive(:wait_for_taskid).with(miq_task.id).and_return(miq_task)
             post :retrieve_git_datastore, :params => params
           end
 
