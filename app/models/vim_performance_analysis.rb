@@ -273,7 +273,7 @@ module VimPerformanceAnalysis
       options = @options
 
       if VimPerformanceAnalysis.needs_perf_data?(options[:vm_options])
-        perf_cols = [:cpu, :vcpus, :memory, :storage].collect { |t| options.fetch(:vm_options, t, :metric) }.compact
+        perf_cols = [:cpu, :vcpus, :memory, :storage].collect { |t| options.fetch_path(:vm_options, t, :metric) }.compact
       end
 
       vm_perf = VimPerformanceAnalysis.get_daily_perf(@vm, options[:range], options[:ext_options], perf_cols)
