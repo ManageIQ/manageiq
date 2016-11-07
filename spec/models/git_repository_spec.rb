@@ -191,29 +191,22 @@ describe GitRepository do
 
     context do
       let(:dir_name) { repo.directory_name }
-      before do
-        FileUtils.mkdir_p dir_name
-      end
 
       it "#destroy" do
-        expect(Dir.exist?(dir_name)).to be_truthy
+        allow(Dir).to receive(:exist?).with(dir_name).and_return(true)
+        expect(FileUtils).to receive(:rm_rf).with(dir_name)
 
         repo.destroy
-        expect(Dir.exist?(dir_name)).to be_falsey
       end
 
       it "#destroy with failure" do
         repo_id = repo.id
-        expect(Dir.exist?(dir_name)).to be_truthy
         allow(repo).to receive(:delete_repo_dir).and_raise(MiqException::Error, "wham")
 
         expect { repo.destroy }.to raise_exception(MiqException::Error, "wham")
         expect(GitRepository.find(repo_id)).not_to be_nil
       end
 
-      after do
-        FileUtils.rm_rf(dir_name) if Dir.exist?(dir_name)
-      end
     end
   end
 end
