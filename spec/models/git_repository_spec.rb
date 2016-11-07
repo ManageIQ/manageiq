@@ -206,7 +206,6 @@ describe GitRepository do
         expect { repo.destroy }.to raise_exception(MiqException::Error, "wham")
         expect(GitRepository.find(repo_id)).not_to be_nil
       end
-
     end
   end
 end
