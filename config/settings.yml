@@ -1232,7 +1232,7 @@
       :gc_interval: 15.minutes
       :heartbeat_freq: 10.seconds
       :heartbeat_timeout: 2.minutes
-      :memory_threshold: 200.megabytes
+      :memory_threshold: 400.megabytes
       :nice_delta: 10
       :parent_time_threshold: 3.minutes
       :poll: 3.seconds
@@ -1242,7 +1242,6 @@
       :starting_timeout: 10.minutes
     :ems_refresh_core_worker:
       :poll: 1.seconds
-      :memory_threshold: 400.megabytes
       :nice_delta: 1
       :thread_shutdown_timeout: 10.seconds
     :event_catcher:
@@ -1331,7 +1330,7 @@
       :defaults:
         :cpu_usage_threshold: 100.percent
         :dequeue_method: :drb
-        :memory_threshold: 400.megabytes
+        :memory_threshold: 500.megabytes
         :poll_method: :normal
         :queue_timeout: 10.minutes
       :ems_metrics_collector_worker:
@@ -1354,7 +1353,7 @@
         :ems_metrics_collector_worker_vmware: {}
       :ems_metrics_processor_worker:
         :count: 2
-        :memory_threshold: 400.megabytes
+        :memory_threshold: 600.megabytes
         :nice_delta: 7
         :poll_method: :escalate
       :ems_refresh_worker:
@@ -1401,6 +1400,7 @@
         :poll_method: :normal
         :queue_timeout: 60.minutes
       :priority_worker:
+        :memory_threshold: 600.megabytes
         :count: 2
         :nice_delta: 1
         :poll: 1.seconds
@@ -1434,7 +1434,7 @@
       :job_timeout_interval: 60.seconds
       :log_active_configuration_interval: 1.days
       :log_database_statistics_interval: 1.days
-      :memory_threshold: 300.megabytes
+      :memory_threshold: 500.megabytes
       :nice_delta: 3
       :orchestration_stack_retired_interval: 10.minutes
       :load_balancer_retired_interval: 10.minutes
