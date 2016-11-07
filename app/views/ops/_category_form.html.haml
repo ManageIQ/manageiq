@@ -36,7 +36,7 @@
           - checked = !!@edit[:new][:single_value]
           - disabled = true
           = check_box_tag("single_value", 'true', checked,
-                          :disabled                   => disabled, :data => {:on_text => 'Yes', :off_text => 'No'})
+                          :disabled                   => disabled, :data => {:on_text => _('Yes'), :off_text => _('No')})
         :javascript
           miqInitBootstrapSwitch('single_value', "#{url}")
       .form-group
@@ -44,7 +44,7 @@
           = _("Capture C & U Data by Tag")
         .col-md-8
           - checked = !!@edit[:new][:perf_by_tag]
-          = check_box_tag("perf_by_tag", true, checked, :data => {:on_text => 'Yes', :off_text => 'No'})
+          = check_box_tag("perf_by_tag", true, checked, :data => {:on_text => _('Yes'), :off_text => _('No')})
         :javascript
           miqInitBootstrapSwitch('perf_by_tag', "#{url}")
       .form-group
@@ -89,7 +89,7 @@
           = _("Show in Console")
         .col-md-8
           - checked = !!@edit[:new][:show]
-          = check_box_tag("show", true, checked, :data => {:on_text => 'Yes', :off_text => 'No'})
+          = check_box_tag("show", true, checked, :data => {:on_text => _('Yes'), :off_text => _('No')})
         :javascript
           miqInitBootstrapSwitch('show', "#{url}")
       .form-group
@@ -98,7 +98,7 @@
         .col-md-8
           - checked = !!@edit[:new][:single_value]
           = check_box_tag("single_value", true, checked,
-                          :disabled                   => disabled, :data => {:on_text => 'Yes', :off_text => 'No'})
+                          :disabled                   => disabled, :data => {:on_text => _('Yes'), :off_text => _('No')})
         :javascript
           miqInitBootstrapSwitch('single_value', "#{url}")
       .form-group
@@ -106,7 +106,7 @@
           = _("Capture C & U Data by Tag")
         .col-md-8
           - checked = !!@edit[:new][:perf_by_tag]
-          = check_box_tag("perf_by_tag", true, checked, :data => {:on_text => 'Yes', :off_text => 'No'})
+          = check_box_tag("perf_by_tag", true, checked, :data => {:on_text => _('Yes'), :off_text => _('No')})
         :javascript
           miqInitBootstrapSwitch('perf_by_tag', "#{url}")
 
