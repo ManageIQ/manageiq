@@ -342,7 +342,8 @@ class TreeNodeBuilder
       generic_node(new_node_obj)
     },
     "Hash"                   => -> {
-      hash_node
+      new_node_obj = TreeNode.new(object, parent_id, options)
+      hash_node(new_node_obj)
     },
   }.freeze
   # rubocop:enable all
@@ -396,29 +397,19 @@ class TreeNodeBuilder
     tooltip(node.tooltip)
   end
 
-  def hash_node
-    text = object[:text]
-    text = text.kind_of?(Proc) ? text.call : _(text)
-
-    # FIXME: expansion
+  def hash_node(node)
     @node = {
-      :key   => build_hash_id,
-      :title => ERB::Util.html_escape(text)
+      :key          => build_hash_id,
+      :title        => ERB::Util.html_escape(node.title),
+      :expand       => node.expand,
+      :icon         => node_icon(node.image),
+      :cfmeNoClick  => node.no_click,
+      :hideCheckbox => node.hide_checkbox,
+      :select       => node.selected,
+      :addClass     => node.klass,
+      :checkable    => node.checkable
     }
-    @node[:icon] = node_icon("#{object[:image] || text}.png") if object[:image]
-    # Start with all nodes open unless expand is explicitly set to false
-    @node[:expand] = true if options[:open_all] && options[:expand] != false
-    @node[:cfmeNoClick] = object[:cfmeNoClick] if object.key?(:cfmeNoClick)
-    @node[:hideCheckbox] = true if object.key?(:hideCheckbox)
-    @node[:select] = object[:select] if object.key?(:select)
-    @node[:addClass] = object[:addClass] if object.key?(:addClass)
-    @node[:checkable] = object[:checkable] if object.key?(:checkable)
-
-    # FIXME: check the following
-    # TODO: With dynatree, unless folders are open, we can't jump to a child node until it has been visible once
-    # node[:expand] = false
-
-    tooltip(object[:tip])
+    tooltip(node.tooltip)
   end
 
   def format_parent_id

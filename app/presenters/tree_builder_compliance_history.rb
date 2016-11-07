@@ -52,7 +52,7 @@ class TreeBuilderComplianceHistory < TreeBuilder
 
   def get_policy_elm(parent, node)
     {:id          => "#{parent.id}-p_#{node.miq_policy_id}",
-     :text        => "<b>" + _("Condition: ") + "</b>" + node.condition_desc,
+     :text        => ("<b>" + _("Condition: ") + "</b>" + node.condition_desc).html_safe,
      :image       => node.condition_result ? "check" : "x",
      :tip         => nil,
      :cfmeNoClick => true}
