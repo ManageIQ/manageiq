@@ -48,6 +48,21 @@ module MigrationHelper
   end
   private :estimate_batch_complete
 
+  # When we fork with the parallel gem, the children inherit the parent's file
+  # descriptors, so we need to close any inherited raw pg sockets in the child.
+  def close_pg_sockets_inherited_from_parent
+    owner_to_pool = ActiveRecord::Base.connection_handler.instance_variable_get(:@owner_to_pool)
+    owner_to_pool[Process.ppid].values.compact.each do |pool|
+      pool.connections.each do |conn|
+        IO.for_fd(conn.raw_connection.socket).close rescue nil
+      end
+    end
+  end
+
+  def reset_db_connections_after_parallel_forking
+    ActiveRecord::Base.connection_pool.disconnect!
+  end
+
   #
   # Triggers
   #
