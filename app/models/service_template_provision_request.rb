@@ -6,7 +6,10 @@ class ServiceTemplateProvisionRequest < MiqRequest
   validates_inclusion_of :request_state,  :in => %w( pending finished ) + ACTIVE_STATES, :message => "should be pending, #{ACTIVE_STATES.join(", ")} or finished"
   validate               :must_have_user
 
+  after_create :process_service_order
+
   alias_attribute :service_template, :source
+
   virtual_has_one :picture
   virtual_has_one :service_template
   virtual_has_one :provision_dialog
@@ -19,6 +22,15 @@ class ServiceTemplateProvisionRequest < MiqRequest
   delegate :picture, :to => :service_template, :allow_nil => true
 
   alias_method :user, :get_user
+
+  def process_service_order
+    case options[:cart_state]
+    when ServiceOrder::STATE_ORDERED
+      ServiceOrder.order_immediately(self, requester)
+    when ServiceOrder::STATE_CART
+      ServiceOrder.add_to_cart(self, requester)
+    end
+  end
 
   def my_role
     'ems_operations'
