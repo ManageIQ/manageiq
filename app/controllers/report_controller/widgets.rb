@@ -144,7 +144,7 @@ module ReportController::Widgets
       end
 
       if params[:visibility_typ]
-        page.replace("form_role_visibility", :partial => "layouts/role_visibility", :locals => {:rec_id => (@widget.id.to_s || "new"), :action => "widget_form_field_changed"})
+        page.replace("form_role_visibility", :partial => "layouts/role_visibility", :locals => {:rec_id => (@widget.id || "new").to_s, :action => "widget_form_field_changed"})
       end
 
       javascript_for_timer_type(params[:timer_typ]).each { |js| page << js }
