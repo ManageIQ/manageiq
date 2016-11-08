@@ -5,6 +5,7 @@ class VimPerformanceState < ApplicationRecord
 
   ASSOCIATIONS = [:vms, :hosts, :ems_clusters, :ext_management_systems, :storages, :container_nodes, :container_groups,
                   :all_container_groups]
+  UNCLASSIFIED_TYPE = 'unclassified'.freeze
 
   # Define accessors for state_data information
   [
@@ -151,7 +152,7 @@ class VimPerformanceState < ApplicationRecord
   def capture_disk_types
     if hardware
       self.allocated_disk_types = hardware.disks.each_with_object({}) do |disk, res|
-        type = disk.backing.try(:volume_type) || 'unclassified'
+        type = disk.backing.try(:volume_type) || UNCLASSIFIED_TYPE
         res[type] = (res[type] || 0) + disk.size
       end
     end
