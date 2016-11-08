@@ -21,6 +21,7 @@ describe "Server Role Management" do
         user_interface,User Interface,0,false,region
         websocket,Websocket,0,false,region
         web_services,Web Services,0,false,region
+        cockpit_ws,Cockpit,1,false,region
       CSV
       allow(ServerRole).to receive(:seed_data).and_return(@csv)
       MiqRegion.seed
@@ -36,6 +37,11 @@ describe "Server Role Management" do
         expect(@miq_server.apache_needed?).to be_falsey
       end
 
+      it "true with only cockpit_ws active" do
+        allow(@miq_server).to receive_messages(:active_role_names => ["cockpit_ws"])
+        expect(@miq_server.apache_needed?).to be_truthy
+      end
+
       it "true with web_services active" do
         allow(@miq_server).to receive_messages(:active_role_names => ["web_services"])
         expect(@miq_server.apache_needed?).to be_truthy
@@ -43,6 +49,12 @@ describe "Server Role Management" do
 
       it "true with both web_services and user_interface active" do
         allow(@miq_server).to receive_messages(:active_role_names => ["web_services", "user_interface"])
+        expect(@miq_server.apache_needed?).to be_truthy
+      end
+
+      it "true with all three active" do
+        roles = %w("web_services user_interface cockpit_ws")
+        allow(@miq_server).to receive_messages(:active_role_names => roles)
         expect(@miq_server.apache_needed?).to be_truthy
       end
     end

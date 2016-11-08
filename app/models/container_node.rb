@@ -81,6 +81,14 @@ class ContainerNode < ApplicationRecord
 
   def cockpit_url
     URI::HTTP.build(:host => kubernetes_hostname, :port => 9090)
+    address = kubernetes_hostname || name
+    miq_server = ext_management_system.nil? ? nil : ext_management_system.zone.remote_cockpit_ws_miq_server
+    if miq_server
+
+    end
+    MiqCockpit::WS.url(miq_server,
+                       MiqCockpitWsWorker.fetch_worker_settings_from_server(miq_server),
+                       address)
   end
 
   def evaluate_alert(_alert_id, _event)

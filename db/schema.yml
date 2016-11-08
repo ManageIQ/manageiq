@@ -5270,6 +5270,7 @@ miq_servers:
 - system_memory_used
 - system_swap_free
 - system_swap_used
+- has_active_cockpit_ws
 miq_sets:
 - id
 - name
