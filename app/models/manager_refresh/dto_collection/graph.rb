@@ -77,6 +77,12 @@ module ManagerRefresh
           # TODO(lsmola) If we remove an attribute that was a dependency of another node, we need to move also the
           # dependency. So e.g. floating_ip depends on network_port's attribute vm, but we move that attribute to new
           # network_port dto_collection. We will need to move also the dependency to the new dto_collection.
+          # So we have to go through all dependencies that loads a key, which is the moved attribute, I don't think we
+          # even store that now.
+          # So apart from dependency_attributes, we would store a dependency_attributes_keys, then if we find a
+          # blacklisted_attribute in any dto_collection dependency_attribute_keys that depend on this dto collection,
+          # we will also need to move this dependency. And if the result cause a cycle, we should repeat the build_dag
+          # method, with a max depth 10. We should throw a warning maybe asking for simplifying the interconnections.
 
           dto_collection.blacklist_attributes!(attrs)
           new_dto_collection.whitelist_attributes!(attrs)
