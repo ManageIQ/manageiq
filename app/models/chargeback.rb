@@ -120,7 +120,7 @@ class Chargeback < ActsAsArModel
         prefix = Chargeback.report_cb_model(self.class.name).underscore
         ChargebackRate.get_assigned_for_target(perf.resource,
                                                :tag_list => perf.tag_list_reconstruct.map! { |t| prefix + t },
-                                               :parents  => get_rate_parents(perf))
+                                               :parents  => perf.parents_determining_rate)
       end
     if perf.resource_type == Container.name && @rates[perf.hash_features_affecting_rate].empty?
       @rates[perf.hash_features_affecting_rate] = [ChargebackRate.find_by(:description => "Default Container Image Rate", :rate_type => "Compute")]
@@ -152,10 +152,6 @@ class Chargeback < ActsAsArModel
 
   def self.report_tag_field
     "tag_name"
-  end
-
-  def self.get_rate_parents
-    raise "Chargeback: get_rate_parents must be implemented in child class."
   end
 
   def self.set_chargeback_report_options(rpt, edit)
