@@ -861,6 +861,7 @@ module ApplicationHelper
        ontap_storage_volume
        orchestration_stack
        persistent_volume
+       provider_foreman
        resource_pool
        retired
        security_group
@@ -1464,6 +1465,7 @@ module ApplicationHelper
       ontap_storage_volume
       orchestration_stack
       persistent_volume
+      provider_foreman
       resource_pool
       retired
       security_group
