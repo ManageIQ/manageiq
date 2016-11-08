@@ -17,16 +17,19 @@ function MwAddDatasourceService($http, $q) {
       connectionUrl: '://localhost:1433;DatabaseName=MyDatabase'},
     {id: 'ORACLE', label: 'Oracle', name: 'OracleDS', jndiName: 'java:/OracleDS',
       driverName: 'oracle', driverModuleName: 'com.oracle', driverClass: 'oracle.jdbc.driver.OracleDriver',
-      connectionUrl: ':thin:@localhost:1521:orcalesid'},
+      connectionUrl: ':thin:@localhost:1521:oraclesid'},
     {id: 'DB2', label: 'IBM DB2', name: 'DB2DS', jndiName: 'java:/DB2DS',
       driverName: 'ibmdb2', driverModuleName: 'com.ibm', driverClass: 'COM.ibm.db2.jdbc.app.DB2Driver',
       connectionUrl: '://db2'},
     {id: 'SYBASE', label: 'Sybase', name: 'SybaseDS', jndiName: 'java:/SybaseDB',
       driverName: 'sybase', driverModuleName: 'com.sybase', driverClass: 'com.sybase.jdbc.SybDriver',
       connectionUrl: ':Tds:localhost:5000/mydatabase?JCONNECT_VERSION=6'},
+     {id: 'MARIADB', label: 'MariaDB', name: 'MariaDBDS', jndiName: 'java:/MariaDBDS',
+       driverName: 'mariadb', driverModuleName: 'org.mariadb', driverClass: 'org.mariadb.jdbc.Driver',
+       connectionUrl: '://localhost:3306/db_name'},
     {id: 'MYSQL', label: 'MySql', name: 'MySqlDS', jndiName: 'java:/MySqlDS',
       driverName: 'mysql', driverModuleName: 'com.mysql', driverClass: 'com.mysql.jdbc.Driver',
-      connectionUrl: '://localhost:3306/mysqldb'}
+      connectionUrl: '://localhost:3306/db_name'}
   ];
 
   this.getDatasources = function() {
