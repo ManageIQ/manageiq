@@ -115,14 +115,21 @@ module VmCommon
                   :mks_classid => get_vmdb_config[:server][:mks_classid]
                 )
               when "vmrc"
+                host = @record.ext_management_system.ipaddress || @record.ext_management_system.hostname
+                vmid = @record.ems_ref
                 {
-                  :host        => @record.ext_management_system.ipaddress ||
-                                  @record.ext_management_system.hostname,
+                  :host        => host,
                   :vmid        => @record.ems_ref,
                   :ticket      => j(params[:ticket]),
                   :api_version => @record.ext_management_system.api_version.to_s,
                   :os          => browser_info(:os),
-                  :name        => @record.name
+                  :name        => @record.name,
+                  :vmrc_uri    => URI::Generic.build(:scheme   => "vmrc",
+                                                     :userinfo => "clone:#{params[:ticket]}",
+                                                     :host     => host,
+                                                     :port     => 443,
+                                                     :path     => "/",
+                                                     :query    => "moid=#{vmid}")
                 }
               end
     render :template => "vm_common/console_#{console_type}",
