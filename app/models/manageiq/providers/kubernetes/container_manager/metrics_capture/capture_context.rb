@@ -60,6 +60,7 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCapture
 
       mem_resid = "machine/#{@target.name}/memory/usage"
       process_mem_gauges_data(fetch_gauges_data(mem_resid))
+      process_strings_data(fetch_strings_keys)
 
       net_resid = "machine/#{@target.name}/network"
       net_counters = [fetch_counters_rate("#{net_resid}/tx"),
@@ -76,6 +77,33 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCapture
 
       mem_resid = "#{@target.name}/#{group_id}/memory/usage"
       process_mem_gauges_data(fetch_gauges_data(mem_resid))
+    end
+
+    def fetch_strings_keys
+      hawkular_client.strings.query(:miq_metric => true).map { |key| key.json["id"] if key.json["id"].include?(@target.name) }.compact
+    end
+
+    def process_strings_data(keys)
+      keys.each do |resource|
+        begin
+          save_date_as_custom_attribute(resource.split("/").last,
+                                        hawkular_client.strings.get_data(resource,
+                                                                         :starts => (@start_time - @interval).to_i.in_milliseconds,
+                                                                         :order  => "DESC").first)
+        rescue SystemCallError, SocketError, OpenSSL::SSL::SSLError => e
+          raise CollectionFailure, e.message
+        end
+      end
+    end
+
+    def save_date_as_custom_attribute(name, hawk_retrun)
+      custom_attr = @target.custom_attributes.find_by(:name => name)
+      if custom_attr && custom_attr.value != hawk_retrun["value"]
+        custom_attr.value = hawk_retrun["value"]
+        custom_attr.save!
+      elsif custom_attr.nil?
+        @target.custom_attributes << CustomAttribute.create(:name => name, :value => hawk_retrun["value"])
+      end
     end
 
     def collect_group_metrics
