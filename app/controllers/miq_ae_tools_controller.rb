@@ -194,44 +194,50 @@ Methods updated/added: %{method_stats}") % stat_options, :success)
   def retrieve_git_datastore
     redirect_options = {:action => :review_git_import}
     git_url = params[:git_url]
-    verify_ssl = params[:git_verify_ssl] == "true" ? OpenSSL::SSL::VERIFY_PEER : OpenSSL::SSL::VERIFY_NONE 
+    verify_ssl = params[:git_verify_ssl] == "true" ? OpenSSL::SSL::VERIFY_PEER : OpenSSL::SSL::VERIFY_NONE
+    new_git_repo = false
 
     if git_url.blank?
       add_flash(_("Please provide a valid git URL"), :error)
     elsif !GitBasedDomainImportService.available?
       add_flash(_("Please enable the git owner role in order to import git repositories"), :error)
     else
-      if GitRepository.exists?(:url => git_url)
-        flash_message = _("This repository has been used previously for imports; If you use the same domain it will get deleted and recreated")
-        status = :warning
-      else
-        flash_message = _("Successfully found git repository, please choose a branch or tag")
-        status = :success
+      begin
+        git_repo = GitRepository.find_or_create_by!(:url => git_url) { new_git_repo = true }
+        git_repo.update_attributes(:verify_ssl => verify_ssl)
+        if params[:git_username] && params[:git_password]
+          git_repo.update_authentication(:values => {:userid   => params[:git_username],
+                                                     :password => params[:git_password]})
+        end
+
+        task_options = {
+          :action => "Retrieve git repository",
+          :userid => current_user.userid
+        }
+        queue_options = {
+          :class_name  => "GitRepository",
+          :method_name => "refresh",
+          :instance_id => git_repo.id,
+          :role        => "git_owner",
+          :args        => []
+        }
+
+        task_id = MiqTask.generic_action_with_callback(task_options, queue_options)
+        task = MiqTask.wait_for_taskid(task_id)
+
+        raise task.message unless task.status == "Ok"
+
+        branch_names = git_repo.git_branches.collect(&:name)
+        tag_names = git_repo.git_tags.collect(&:name)
+        redirect_options[:git_branches] = branch_names.to_json
+        redirect_options[:git_tags] = tag_names.to_json
+        redirect_options[:git_repo_id] = git_repo.id
+        flash_message = "Successfully found git repository, please choose a branch or tag"
+        add_flash(_(flash_message), :success)
+      rescue => err
+        git_repo.destroy if new_git_repo
+        add_flash(_("Error during repository fetch: #{err.message}"), :error)
       end
-
-      git_repo = GitRepository.create(:url => git_url, :verify_ssl => verify_ssl)
-      git_repo.update_authentication(:values => {:userid => params[:git_username], :password => params[:git_password]})
-      task_options = {
-        :action => "Retrieve git repository",
-        :userid => current_user.userid
-      }
-      queue_options = {
-        :class_name  => "GitRepository",
-        :method_name => "refresh",
-        :instance_id => git_repo.id,
-        :role        => "git_owner",
-        :args        => []
-      }
-
-      task_id = MiqTask.generic_action_with_callback(task_options, queue_options)
-      MiqTask.wait_for_taskid(task_id)
-
-      add_flash(flash_message, status)
-      branch_names = git_repo.git_branches.collect(&:name)
-      tag_names = git_repo.git_tags.collect(&:name)
-      redirect_options[:git_branches] = branch_names.to_json
-      redirect_options[:git_tags] = tag_names.to_json
-      redirect_options[:git_repo_id] = git_repo.id
     end
 
     redirect_options[:message] = @flash_array.first.to_json
