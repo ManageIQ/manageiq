@@ -41,7 +41,7 @@ namespace :locale do
   end
 
   desc "Extract strings from various yaml files and store them in a ruby file for gettext:find"
-  task :extract_yaml_strings do
+  task :extract_yaml_strings => :environment do
     def update_output(string, file, output)
       return if string.nil? || string.empty?
       if output.key?(string)
@@ -74,6 +74,7 @@ namespace :locale do
       "db/fixtures/miq_product_features.*" => %w(name description),
       "db/fixtures/miq_report_formats.*"   => %w(description),
       "db/fixtures/notification_types.*"   => %w(message),
+      "product/reports/*/*.*"              => %w(headers menu_name title),
       "product/timelines/miq_reports/*.*"  => %w(title name headers),
       "product/views/*.*"                  => %w(title name headers)
     }
