@@ -62,6 +62,16 @@ module VmCommon
     end
   end
 
+  # to reload currently displayed summary screen in explorer
+  def reload
+    @_params[:id] = if hide_vms && x_node.split('-')[1] != to_cid(params[:id]) && params[:id].present?
+                      'v-' + to_cid(params[:id])
+                    else
+                      x_node
+                    end
+    tree_select
+  end
+
   def show_timeline
     db = get_rec_cls
     @display = "timeline"
