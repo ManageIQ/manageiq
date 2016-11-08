@@ -88,9 +88,4 @@ class ChargebackContainerImage < Chargeback
       "total_cost"            => {:grouping => [:total]}
     }
   end
-
-  def get_rate_parents(_perf)
-    # get rates from image tags only
-    []
-  end
 end # class ChargebackContainerImage

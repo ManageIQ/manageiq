@@ -149,10 +149,4 @@ class ChargebackVm < Chargeback
       "total_cost"               => {:grouping => [:total]}
     }
   end
-
-  def get_rate_parents(perf)
-    @enterprise ||= MiqEnterprise.my_enterprise
-    parents = perf.resource_parents + [@enterprise]
-    parents.compact
-  end
 end # class Chargeback
