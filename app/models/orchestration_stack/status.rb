@@ -50,8 +50,10 @@ class OrchestrationStack
         ['create_canceled', reason || 'Stack creation was canceled']
       elsif updated?
         ['update_complete', reason || 'OK']
-      else
+      elsif reason == 'Service_Template_Provisioning failed'
         ['failed', reason || 'Stack creation failed']
+      else
+        ['failed', reason]
       end
     end
   end
