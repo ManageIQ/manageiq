@@ -241,13 +241,13 @@ angular.module('alertsCenter')
       vm.refresh = function() {
 
         // TODO: Replace mock data with real API call
-//        var url = '/api/alerts_statuses';
-//        API.post(url, {"action" : "providers_alerts"}).then(function (response) {
-//        var alertData = response;
+        var url = '/api/alerts_statuses';
+        API.post(url, {"action" : "providers_alerts"}).then(function (response) {
+            vm.alertData = response;
 
-        var alertResource = $resource('/assets/mock-data/alerts/alert-data');
-        alertResource.get(function(resource) {
-          vm.alertData = resource.data[0];
+        //var alertResource = $resource('/assets/mock-data/alerts/alert-data');
+        //alertResource.get(function(resource) {
+        //  vm.alertData = resource.data[0];
 
           var filterFound = false;
 

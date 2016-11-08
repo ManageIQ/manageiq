@@ -12,6 +12,7 @@ module Api
       payload = {"providers" => []}
       ExtManagementSystem.all.each do |provider|
         payload["providers"] << {"name" => provider.name,
+                                 "environment"   => "production",
                                  "type" => provider.class.to_s,
                                  "id"   => provider.id}.merge!(add_providers_alerts(provider))
       end
@@ -36,7 +37,7 @@ module Api
           "evaluated_on"  => alert_status.evaluated_on,
           "link_text"     => alert_status.miq_alert.link_text,
           "node_hostname" => alert_status.resource.name,
-          "description"   => alert_status.miq_alert.description
+          "description"   => alert_status.miq_alert.description,
         }
         if alert_status.user
           alert["asignee_id"] = alert_status.user.id

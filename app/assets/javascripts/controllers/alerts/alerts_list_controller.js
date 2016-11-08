@@ -38,12 +38,11 @@ angular.module('alertsCenter')
 
       vm.refresh = function() {
         // TODO: Replace mock data with real API call
-//        var url = '/api/alerts_statuses';
-//        API.post(url, {"action" : "providers_alerts"}).then(function (response) {
-//        var alertData = response;
-        var alertResource = $resource('/assets/mock-data/alerts/alert-data');
-        alertResource.get(function(resource) {
-          var alertData = resource.data[0];
+        var url = '/api/alerts_statuses';
+        API.post(url, {"action" : "providers_alerts"}).then(function (response) {
+            var alertData = response;
+        //var alertResource = $resource('/assets/mock-data/alerts/alert-data');
+        //alertResource.get(function(resource) {
 
           vm.alerts = [];
           vm.objectTypes.splice(0, vm.objectTypes.length);
@@ -311,9 +310,8 @@ angular.module('alertsCenter')
         } else {
           typeImage = '/assets/100/os-' + item.type + '.png';
         }
-
         angular.forEach(['danger', 'warning', 'info'], function (severity) {
-          angular.forEach(item.alerts_types.danger.alerts, function (alert) {
+          angular.forEach(item.alerts_types[severity].alerts, function (alert) {
             vm.alerts.push(convertAlert(key, item, alert, severity, typeImage));
           });
         });
