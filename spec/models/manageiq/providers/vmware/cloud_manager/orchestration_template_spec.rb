@@ -7,7 +7,7 @@ describe ManageIQ::Providers::Vmware::CloudManager::OrchestrationTemplate do
     end
   end
 
-  let(:valid_template) { FactoryGirl.create(:orchestration_template_vmware_cloud) }
+  let(:valid_template) { FactoryGirl.create(:orchestration_template_vmware_cloud_with_content) }
 
   describe '#validate_format' do
     it 'passes validation if no content' do

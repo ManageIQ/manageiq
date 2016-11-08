@@ -39,7 +39,7 @@ FactoryGirl.define do
     content File.read(Rails.root.join('spec/fixtures/orchestration_templates/azure_parameters.json'))
   end
 
-  factory :orchestration_template_vmware_cloud,
+  factory :orchestration_template_vmware_cloud_with_content,
           :parent => :orchestration_template,
           :class  => "ManageIQ::Providers::Vmware::CloudManager::OrchestrationTemplate" do
     content File.read(Rails.root.join('spec/fixtures/orchestration_templates/vmware_parameters_ovf.xml'))
