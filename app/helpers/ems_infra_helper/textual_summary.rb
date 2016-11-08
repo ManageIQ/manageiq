@@ -38,7 +38,7 @@ module EmsInfraHelper::TextualSummary
   end
 
   def textual_type
-    @ems.emstype_description
+    {:label => _("Type"), :value => @ems.emstype_description}
   end
 
   def textual_port
@@ -146,11 +146,11 @@ module EmsInfraHelper::TextualSummary
   def textual_vms
     return nil if @record.kind_of?(ManageIQ::Providers::Openstack::InfraManager)
 
-    textual_link(@ems.vms)
+    textual_link(@ems.vms, :label => _("Virtual Machines"))
   end
 
   def textual_templates
-    @ems.miq_templates
+    textual_link(@ems.miq_templates, :label => _("Templates"))
   end
 
   def textual_orchestration_stacks_status
