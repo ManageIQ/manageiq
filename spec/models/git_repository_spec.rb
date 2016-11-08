@@ -193,7 +193,6 @@ describe GitRepository do
       let(:dir_name) { repo.directory_name }
 
       it "#destroy" do
-        allow(Dir).to receive(:exist?).with(dir_name).and_return(true)
         expect(FileUtils).to receive(:rm_rf).with(dir_name)
 
         repo.destroy
