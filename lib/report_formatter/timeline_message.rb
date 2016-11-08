@@ -105,6 +105,7 @@ module ReportFormatter
       if @row[@column].kind_of?(Time) || TIMELINE_TIME_COLUMNS.include?(@column)
         format_timezone(Time.parse(@row[@column].to_s).utc, @flags[:time_zone], "gtl")
       else
+        @row[@column].to_s.tr!('"', "'")
         @row[@column].to_s.gsub('/', "\\\\/")
         @row[@column].to_s.gsub('\\', "\\\\\\")
       end
