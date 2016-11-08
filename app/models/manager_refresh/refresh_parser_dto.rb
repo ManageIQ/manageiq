@@ -8,7 +8,7 @@ module ManagerRefresh
 
     def process_dto_collection(collection, key)
       collection.each do |item|
-        _uid, new_result = yield(item)
+        new_result = yield(item)
         next if new_result.blank?
 
         dto = @data[key].new_dto(new_result)

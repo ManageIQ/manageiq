@@ -5,7 +5,10 @@ module ManagerRefresh::SaveCollection
 
     class << self
       def save_collections(ems, dto_collections)
-        dto_collections.each do |_key, dto_collection|
+        graph = ManagerRefresh::DtoCollection::Graph.new(dto_collections.values)
+        graph.build_directed_acyclic_graph!
+
+        graph.nodes.each do |dto_collection|
           save_collection(ems, dto_collection, [])
         end
       end
@@ -30,6 +33,7 @@ module ManagerRefresh::SaveCollection
           end
         end
 
+        _log.info("Saving #{dto_collection} of size #{dto_collection.size}")
         save_dto_inventory(ems, dto_collection)
       end
     end
