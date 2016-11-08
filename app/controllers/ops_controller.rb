@@ -167,12 +167,12 @@ class OpsController < ApplicationController
       @scan = @edit[:scan]
       case params[:tab].split("_")[0]
       when "new"
-        redirect_to(:action => "ap_new", :tab => params[:tab], :id => (@scan.id.to_s || "new"))
+        redirect_to(:action => "ap_new", :tab => params[:tab], :id => (@scan.id || "new").to_s)
       when "edit"
-        redirect_to(:action => "ap_edit", :tab => params[:tab], :id => (@scan.id.to_s || "new"))
+        redirect_to(:action => "ap_edit", :tab => params[:tab], :id => (@scan.id || "new").to_s)
       else
         @sb[:miq_tab] = "new#{params[:tab]}"
-        redirect_to(:action => "ap_edit", :tab => "edit#{params[:tab]}", :id => (@scan.id.to_s || "new"))
+        redirect_to(:action => "ap_edit", :tab => "edit#{params[:tab]}", :id => (@scan.id || "new").to_s)
       end
     else
       @sb[:active_tab] = params[:tab_id] || new_tab_id
