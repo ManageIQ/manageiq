@@ -82,18 +82,19 @@ module ManageIQ::Providers
     end
 
     def machine_id(feed)
-      os_resource_for(feed).properties['Machine Id']
+      os_resource_for(feed).try(:properties).try { |prop| prop['Machine Id'] }
     end
 
     def os_resource_for(feed)
       with_provider_connection do |connection|
         os = os_for(feed)
-        os_resources = connection.inventory.list_resources_for_type(os.path, true)
-        unless os_resources.nil? || os_resources.empty?
-          return os_resources.first
+        unless os.nil?
+          os_resources = connection.inventory.list_resources_for_type(os.path, true)
+          unless os_resources.nil? || os_resources.empty?
+            return os_resources.first
+          end
+          $mw_log.warn "Found no OS resources for resource type #{os.path}"
         end
-
-        $mw_log.warn "Found no OS resources for resource type #{os.path}"
         nil
       end
     end
