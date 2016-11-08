@@ -801,7 +801,7 @@ describe ChargebackVm do
 
     before do
       ChargebackRate.set_assignments(:compute, [rate_assignment_options])
-      @rate = chargeback_vm.get_rates(metric_rollup).first
+      @rate = Chargeback::RatesCache.new.get(metric_rollup).first
       @assigned_rate = ChargebackRate.get_assignments("Compute").first
     end
 

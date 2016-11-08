@@ -10,7 +10,7 @@ class Chargeback < ActsAsArModel
     _log.info("Calculating chargeback costs...")
     @options = options = ReportOptions.new_from_h(options)
 
-    cb = new
+    rates = RatesCache.new
 
     base_rollup = MetricRollup.includes(
       :resource           => [:hardware, :tenant, :tags, :vim_performance_states, :custom_attributes, {:container_image => :custom_attributes}],
@@ -50,7 +50,7 @@ class Chargeback < ActsAsArModel
         # we need to select ChargebackRates for groups of MetricRollups records
         # and rates are selected by first MetricRollup record
         metric_rollup_record = metric_rollup_records.first
-        rates_to_apply = cb.get_rates(metric_rollup_record)
+        rates_to_apply = rates.get(metric_rollup_record)
 
         # key contains resource_id and timestamp (query_start_time...query_end_time)
         # extra_fields there some extra field like resource name and
@@ -111,21 +111,6 @@ class Chargeback < ActsAsArModel
     key = "#{classification_id}_#{ts_key}"
     extra_fields = { "tag_name" => classification.present? ? classification.description : _('<Empty>') }
     [key, extra_fields]
-  end
-
-  def get_rates(perf)
-    @rates ||= {}
-    @rates[perf.hash_features_affecting_rate] ||=
-      begin
-        prefix = Chargeback.report_cb_model(self.class.name).underscore
-        ChargebackRate.get_assigned_for_target(perf.resource,
-                                               :tag_list => perf.tag_list_reconstruct.map! { |t| prefix + t },
-                                               :parents  => perf.parents_determining_rate)
-      end
-    if perf.resource_type == Container.name && @rates[perf.hash_features_affecting_rate].empty?
-      @rates[perf.hash_features_affecting_rate] = [ChargebackRate.find_by(:description => "Default Container Image Rate", :rate_type => "Compute")]
-    end
-    @rates[perf.hash_features_affecting_rate]
   end
 
   def calculate_costs(metric_rollup_records, rates, hours_in_interval)
