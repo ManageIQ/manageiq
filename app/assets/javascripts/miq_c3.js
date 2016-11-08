@@ -8,7 +8,6 @@ function load_c3_charts() {
       if (data != null) {
         load_c3_chart(data.xml, chart_id);
 
-
         chart_id += "_2";
         if (typeof (data.xml2) !== "undefined") {
           data.xml2.miq.flat_chart = true;

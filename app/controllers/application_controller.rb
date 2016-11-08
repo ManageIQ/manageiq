@@ -1619,17 +1619,11 @@ class ApplicationController < ActionController::Base
   def get_view_where_clause(default_where_clause)
     # If doing charts, limit the records to ones showing in the chart
     if session[:menu_click] && session[:sandboxes][params[:sb_controller]][:chart_reports]
-      click_parts = session[:menu_click].split('_')
-      click_last  = click_parts.last.split('-')
-
+      click_parts = session[:menu_click]
       chart_reports = session[:sandboxes][params[:sb_controller]][:chart_reports]
-      legend_idx    = click_last.first.to_i
-      data_idx      = click_last[-2].to_i
-      chart_idx     = click_last.last.to_i
-
-      _, model, typ = click_parts.first.split('-')
-      report        = chart_reports.kind_of?(Array) ? chart_reports[chart_idx] : chart_reports
-      data_row      = report.table.data[data_idx]
+      legend_idx, data_idx, chart_idx, _cmd, model, typ = parse_chart_click(Array(click_parts).first)
+      report = chart_reports.kind_of?(Array) ? chart_reports[chart_idx] : chart_reports
+      data_row = report.table.data[data_idx]
 
       if typ == "bytag"
         ["\"#{model.downcase.pluralize}\".id IN (?)",
