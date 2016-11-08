@@ -590,6 +590,27 @@ describe Rbac::Filterer do
         end
       end
 
+      context "when applying a filter to the provider" do
+        let(:ems_cloud) { FactoryGirl.create(:ems_cloud) }
+
+        let!(:vm_1) do
+          FactoryGirl.create(:vm, :ext_management_system => ems_cloud)
+        end
+
+        let!(:vm_2) do
+          FactoryGirl.create(:vm, :ext_management_system => ems_cloud)
+        end
+
+        it "returns all host's VMs and templates when host filter is set up" do
+          group.entitlement = Entitlement.new
+          group.entitlement.set_managed_filters([])
+          group.entitlement.set_belongsto_filters(["/belongsto/ExtManagementSystem|#{ems_cloud.name}"])
+          group.save!
+
+          expect(described_class.search(:class => Vm, :user => user).first).to match_array([vm_1, vm_2])
+        end
+      end
+
       context "when applying a filter to the host and it's cluster (FB17114)" do
         before(:each) do
           @ems = FactoryGirl.create(:ems_vmware, :name => 'ems')
