@@ -189,21 +189,28 @@ describe GitRepository do
       expect(repo.git_tags.collect(&:name)).to match_array(tag_list)
     end
 
-    context do
+    context "#destroy" do
       let(:dir_name) { repo.directory_name }
 
-      it "#destroy" do
-        expect(FileUtils).to receive(:rm_rf).with(dir_name)
+      context "when repo deletion has no errors" do
+        it "deletes the repo and the directory" do
+          expect(FileUtils).to receive(:rm_rf).with(dir_name)
 
-        repo.destroy
+          repo.destroy
+        end
       end
 
-      it "#destroy with failure" do
-        repo_id = repo.id
-        allow(repo).to receive(:delete_repo_dir).and_raise(MiqException::Error, "wham")
+      context "when repo deletion has errors" do
+        before do
+          allow(repo).to receive(:delete_repo_dir).and_raise(MiqException::Error, "wham")
+        end
 
-        expect { repo.destroy }.to raise_exception(MiqException::Error, "wham")
-        expect(GitRepository.find(repo_id)).not_to be_nil
+        it "does not delete the repo and the directory" do
+          repo_id = repo.id
+
+          expect { repo.destroy }.to raise_exception(MiqException::Error, "wham")
+          expect(GitRepository.find(repo_id)).not_to be_nil
+        end
       end
     end
   end
