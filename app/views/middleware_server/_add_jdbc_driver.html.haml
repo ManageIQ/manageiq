@@ -98,9 +98,13 @@
 
         .modal-footer
           %button.btn.btn-default.dialog-cancel-button{:type => "button",
+                                                       "alt"      => (t = _("Cancel")),
+                                                       "title"    => t,
                                                        "data-dismiss" => "modal"}
-            = _("Cancel")
+            = t
           %button.btn.btn-primary{"ng-disabled" => "!jdbcDriverModel.filePath || jdbcAddForm.$invalid",
+                                  "alt"      => (t = _("Deploy")),
+                                  "title"    => t,
                                   "ng-click"    => "addJdbcDriver()",
                                   :type         => "button"}
-            = _("Deploy")
+            = t
