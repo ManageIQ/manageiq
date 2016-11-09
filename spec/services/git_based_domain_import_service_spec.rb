@@ -87,11 +87,13 @@ describe GitBasedDomainImportService do
     context "when import fails and the task result is nil" do
       let(:git_branches) { [double("GitBranch", :name => ref_name)] }
 
-      it "raises exception" do
+      it "raises an exception with a message" do
         allow(task).to receive(:task_results).and_return(nil)
         expect(MiqTask).to receive(:generic_action_with_callback).with(task_options, queue_options).and_return(task.id)
 
-        expect { subject.import(git_repo.id, ref_name, 321) }.to raise_exception(MiqException::Error)
+        expect { subject.import(git_repo.id, ref_name, 321) }.to raise_exception(
+          MiqException::Error, "Selected branch or tag does not contain a valid domain"
+        )
       end
     end
   end

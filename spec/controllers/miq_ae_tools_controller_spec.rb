@@ -490,10 +490,32 @@ Methods updated/added: 10
       allow(GitBasedDomainImportService).to receive(:new).and_return(git_based_domain_import_service)
     end
 
-    it "delegates to the git based domain import service" do
-      tenant_id = controller.current_tenant.id
-      expect(git_based_domain_import_service).to receive(:import).with("123", "branch_or_tag", tenant_id)
-      post :import_via_git, :params => params, :xhr => true
+    context "when there are no errors while importing" do
+      before do
+        tenant_id = controller.current_tenant.id
+        allow(git_based_domain_import_service).to receive(:import).with("123", "branch_or_tag", tenant_id)
+      end
+
+      it "responds with a success message" do
+        post :import_via_git, :params => params, :xhr => true
+        expect(response.body).to eq([{:message => "Imported from git", :level => :info}].to_json)
+      end
+    end
+
+    context "when there are errors while importing" do
+      before do
+        tenant_id = controller.current_tenant.id
+        allow(git_based_domain_import_service).to receive(:import).with("123", "branch_or_tag", tenant_id).and_raise(
+          MiqException::Error, "kaboom"
+        )
+      end
+
+      it "responds with an error message" do
+        post :import_via_git, :params => params, :xhr => true
+        expect(response.body).to eq(
+          [{:message => "Error: import failed: kaboom", :level => :error}].to_json
+        )
+      end
     end
   end
 end
