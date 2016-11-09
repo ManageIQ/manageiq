@@ -164,6 +164,17 @@ class ChargebackRate < ApplicationRecord
     get_assigned_tos != {:objects => [], :tags => [], :labels => []}
   end
 
+  def assigned_tags
+    get_assigned_tos[:tags].map do |x|
+      classification_entry_object = x.first
+      classification_entry_object.tag.send(:name_path)
+    end
+  end
+
+  def assigned_tags?
+    get_assigned_tos[:tags].present?
+  end
+
   ###########################################################
 
   private
