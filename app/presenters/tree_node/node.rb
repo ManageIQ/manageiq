@@ -9,6 +9,8 @@ module TreeNode
     set_attribute(:tooltip, nil)
     set_attribute(:klass, nil)
     set_attribute(:no_click, nil)
+    set_attribute(:selected, nil)
+    set_attribute(:checkable, true)
     set_attribute(:expand) do
       @options[:open_all].present? && @options[:open_all] && @options[:expand] != false
     end

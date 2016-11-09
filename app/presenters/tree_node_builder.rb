@@ -344,7 +344,7 @@ class TreeNodeBuilder
     },
     "Hash"                   => -> {
       new_node_obj = TreeNode.new(object, parent_id, options)
-      hash_node(new_node_obj)
+      generic_node(new_node_obj)
     },
   }.freeze
   # rubocop:enable all
@@ -393,21 +393,8 @@ class TreeNodeBuilder
       :expand       => node.expand,
       :hideCheckbox => node.hide_checkbox,
       :addClass     => node.klass,
-      :cfmeNoClick  => node.no_click
-    }
-    tooltip(node.tooltip)
-  end
-
-  def hash_node(node)
-    @node = {
-      :key          => node.key,
-      :title        => ERB::Util.html_escape(node.title),
-      :expand       => node.expand,
-      :icon         => node_icon(node.image),
       :cfmeNoClick  => node.no_click,
-      :hideCheckbox => node.hide_checkbox,
       :select       => node.selected,
-      :addClass     => node.klass,
       :checkable    => node.checkable
     }
     tooltip(node.tooltip)
