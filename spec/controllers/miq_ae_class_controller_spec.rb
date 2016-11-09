@@ -401,18 +401,23 @@ describe MiqAeClassController do
   end
 
   context "#delete_domain" do
-    it "Should only delete editable domains" do
-      stub_user(:features => :all)
-      domain1 = FactoryGirl.create(:miq_ae_system_domain_enabled)
+    let(:domain1) { FactoryGirl.create(:miq_ae_system_domain_enabled) }
+    let(:domain2) { FactoryGirl.create(:miq_ae_domain_enabled) }
+    let(:domain3) { FactoryGirl.create(:miq_ae_git_domain) }
+    let(:ids) { "aen-#{domain1.id}, aen-#{domain2.id}, aen-#{domain3.id}, aen-someid" }
+    let(:git_service) { double("GitBasedDomainImportService") }
 
-      domain2 = FactoryGirl.create(:miq_ae_domain_enabled)
-      domain3 = FactoryGirl.create(:miq_ae_git_domain)
-      controller.instance_variable_set(:@_params,
-                                       :miq_grid_checks => "aen-#{domain1.id}, aen-#{domain2.id}, aen-#{domain3.id}, aen-someid"
-                                      )
+    before do
+      allow(GitBasedDomainImportService).to receive(:new).and_return(git_service)
+      stub_user(:features => :all)
+      controller.instance_variable_set(:@_params, :miq_grid_checks => ids)
       allow(controller).to receive(:replace_right_cell)
-      expect_any_instance_of(GitBasedDomainImportService).to receive(:destroy_repository).with(domain3.git_repository.id)
+    end
+
+    it "Should only delete editable domains" do
+      expect(git_service).to receive(:destroy_repository).with(domain3.git_repository.id)
       controller.send(:delete_domain)
+
       flash_messages = assigns(:flash_array)
       expect(flash_messages.first[:message]).to include("cannot be deleted")
       expect(flash_messages.first[:level]).to eq(:error)
