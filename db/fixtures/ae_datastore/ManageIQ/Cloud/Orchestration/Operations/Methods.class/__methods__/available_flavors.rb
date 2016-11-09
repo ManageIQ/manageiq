@@ -12,27 +12,21 @@ module ManageIQ
             end
 
             def main
-              fill_dialog_field(fetch_selected_os)
+              fill_dialog_field(fetch_list_data)
             end
 
-            def fetch_selected_os
-              flavor_list = {}
-              service = $evm.root.attributes["service_template"] || $evm.root.attributes["service"]
-              if service.respond_to?(:orchestration_manager) && service.orchestration_manager
-                service.orchestration_manager.flavors.each { |f| flavor_list[f.name] = f.name }
-              end
-              flavor_list[nil] = flavor_list.empty? ? "<None>" : "<Choose>"
+            private
 
-
+            def fetch_list_data
               service = @handle.root.attributes["service_template"] || @handle.root.attributes["service"]
               flavors = service.try(:orchestration_manager).try(:flavors)
 
               flavor_list = {}
-              flavor_list.each { |f| flavor_list[f.name] = f.name } if flavors
+              flavors.each { |f| flavor_list[f.name] = f.name } if flavors
 
-              return nil => "<None>" if flavor_list.blank?
+              return nil => "<none>" if flavor_list.blank?
 
-              flavor_list[nil] = "<Choose>" if flavor_list.length > 1
+              flavor_list[nil] = "<select>" if flavor_list.length > 1
               flavor_list
             end
 
