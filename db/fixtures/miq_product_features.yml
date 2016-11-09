@@ -564,6 +564,14 @@
       :description: Remove Host Aggregates
       :feature_type: admin
       :identifier: host_aggregate_delete
+    - :name: Add Host
+      :description: Add Host to Host Aggregate
+      :feature_type: admin
+      :identifier: host_aggregate_add_host
+    - :name: Remove Host
+      :description: Remove Host from Host Aggregate
+      :feature_type: admin
+      :identifier: host_aggregate_remove_host
 
 # CloudObjectStoreContainer
 - :name: Cloud Object Stores
