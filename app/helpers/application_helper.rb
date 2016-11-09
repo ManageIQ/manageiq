@@ -1822,6 +1822,8 @@ module ApplicationHelper
     case pressed
     when "rbac_project_add", "rbac_tenant_add"
       "rbac_tenant_add"
+    else
+      pressed
     end
   end
 
