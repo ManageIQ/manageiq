@@ -1,25 +1,52 @@
 describe ManageIQ::Providers::Openstack::CloudManager::Vm do
-  describe "vm actions" do
-    let(:ems) { FactoryGirl.create(:ems_openstack) }
-    let(:tenant) { FactoryGirl.create(:cloud_tenant_openstack, :ext_management_system => ems) }
-    let(:vm) do
+  let(:ems) { FactoryGirl.create(:ems_openstack) }
+  let(:tenant) { FactoryGirl.create(:cloud_tenant_openstack, :ext_management_system => ems) }
+  let(:vm) do
+    FactoryGirl.create(:vm_openstack,
+                       :ext_management_system => ems,
+                       :name                  => 'test',
+                       :ems_ref               => 'one_id',
+                       :cloud_tenant          => tenant)
+  end
+
+  let(:handle) do
+    double.tap do |handle|
+      allow(ems).to receive(:connect).with(:service => 'Compute', :tenant_name => tenant.name).and_return(handle)
+    end
+  end
+
+  before do
+    handle
+  end
+
+  describe "with more tenants" do
+    let(:other_tenant) { FactoryGirl.create(:cloud_tenant_openstack, :ext_management_system => ems) }
+    let(:other_vm) do
       FactoryGirl.create(:vm_openstack,
                          :ext_management_system => ems,
-                         :name                  => 'test',
-                         :ems_ref               => 'one_id',
-                         :cloud_tenant          => tenant)
+                         :name                  => 'other_test',
+                         :ems_ref               => 'other_id',
+                         :cloud_tenant          => other_tenant)
     end
-
-    let(:handle) do
-      double.tap do |handle|
-        allow(ems).to receive(:connect).with({}).and_return(handle)
+    let(:other_handle) do
+      double.tap do |other_handle|
+        allow(ems).to receive(:connect).with(:service => 'Compute', :tenant_name => other_tenant.name).and_return(other_handle)
       end
     end
 
     before do
-      handle
+      other_handle
     end
 
+    it "uses proper tenant for connection" do
+      expect(handle).to receive(:pause_server)
+      expect(other_handle).to receive(:pause_server)
+      vm.raw_pause
+      other_vm.raw_pause
+    end
+  end
+
+  describe "vm actions" do
     context "#live_migrate" do
       it "live migrates with default options" do
         expect(handle).to receive(:live_migrate_server).with(vm.ems_ref, nil, false, false)
