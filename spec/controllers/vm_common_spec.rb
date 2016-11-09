@@ -38,6 +38,31 @@ describe VmOrTemplateController do
     end
   end
 
+  context '#reload ' do
+    before do
+      login_as FactoryGirl.create(:user_with_group, :role => "operator")
+      allow(controller).to receive(:tree_select).and_return(nil)
+      @folder = FactoryGirl.create(:ems_folder)
+      @vm = FactoryGirl.create(:vm_cloud)
+    end
+
+    it 'sets params[:id] to hidden vm if its summary is displayed' do
+      User.current_user.settings[:display] = {:display_vms => false}
+      allow(controller).to receive(:x_node).and_return('f-' + @folder.id.to_s)
+      controller.instance_variable_set(:@_params, :id => @vm.id.to_s)
+      controller.reload
+      expect(controller.params[:id]).to eq('v-' + TreeBuilder.to_cid(@vm.id))
+    end
+
+    it 'sets params[:id] to x_node if vms are displayed in a tree' do
+      User.current_user.settings[:display] = {:display_vms => true}
+      allow(controller).to receive(:x_node).and_return('f-' + @folder.id.to_s)
+      controller.instance_variable_set(:@_params, :id => @folder.id.to_s)
+      controller.reload
+      expect(controller.params[:id]).to eq(controller.x_node)
+    end
+  end
+
   context "#show" do
     before :each do
       allow(User).to receive(:server_timezone).and_return("UTC")
