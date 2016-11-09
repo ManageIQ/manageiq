@@ -265,8 +265,8 @@ class MiqAeClassController < ApplicationController
 
     @in_a_form = @in_a_form_fields = @in_a_form_props = false if params[:button] == "cancel" ||
                                                                  (["save", "add"].include?(params[:button]) && replace_trees)
-    add_nodes = open_parent_nodes(@record) if params[:button] == "copy" ||
-                                              params[:action] == "x_show"
+    open_parent_nodes(@record) if params[:action] == "x_show" || params[:button] == "copy"
+
     get_node_info(x_node) if !@in_a_form && @button != "reset"
 
     c_tb = build_toolbar(center_toolbar_filename) unless @in_a_form
@@ -275,8 +275,6 @@ class MiqAeClassController < ApplicationController
     presenter = ExplorerPresenter.new(
       :active_tree     => x_active_tree,
       :right_cell_text => @right_cell_text,
-      :remove_nodes    => add_nodes, # remove any existing nodes before adding child nodes to avoid duplication
-      :add_nodes       => add_nodes,
     )
     r = proc { |opts| render_to_string(opts) }
 
@@ -1671,7 +1669,7 @@ class MiqAeClassController < ApplicationController
       self.x_node = "#{TreeBuilder.get_prefix_for_model(@edit[:typ])}-#{to_cid(@record.id)}"
       @in_a_form = @changed = session[:changed] = false
       @sb[:action] = @edit = session[:edit] = nil
-      replace_right_cell
+      replace_right_cell([:ae])
     end
   end
 
