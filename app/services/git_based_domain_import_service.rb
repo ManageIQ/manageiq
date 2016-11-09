@@ -77,7 +77,8 @@ class GitBasedDomainImportService
     task = MiqTask.wait_for_taskid(task_id)
 
     domain = task.task_results
-    raise MiqException::Error, "Domain object not available from task results" unless domain.kind_of?(MiqAeDomain)
+    error_message = _("Selected branch or tag does not contain a valid domain")
+    raise MiqException::Error, error_message unless domain.kind_of?(MiqAeDomain)
     domain.update_attribute(:enabled, true)
   end
 

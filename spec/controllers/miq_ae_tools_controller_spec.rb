@@ -484,14 +484,14 @@ Methods updated/added: 10
       before do
         tenant_id = controller.current_tenant.id
         allow(git_based_domain_import_service).to receive(:import).with("123", "branch_or_tag", tenant_id).and_raise(
-          MiqException::Error
+          MiqException::Error, "kaboom"
         )
       end
 
       it "responds with an error message" do
         post :import_via_git, :params => params, :xhr => true
         expect(response.body).to eq(
-          [{:message => "The selected branch or tag does not have valid domain object data", :level => :error}].to_json
+          [{:message => "Error: import failed: kaboom", :level => :error}].to_json
         )
       end
     end

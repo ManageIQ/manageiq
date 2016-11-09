@@ -131,8 +131,8 @@ class MiqAeToolsController < ApplicationController
       git_based_domain_import_service.import(params[:git_repo_id], params[:git_branch_or_tag], current_tenant.id)
 
       add_flash(_("Imported from git"), :info)
-    rescue MiqException::Error
-      add_flash(_("The selected branch or tag does not have valid domain object data"), :error)
+    rescue => error
+      add_flash(_("Error: import failed: %{message}") % {:message => error.message}, :error)
     end
 
     respond_to do |format|
