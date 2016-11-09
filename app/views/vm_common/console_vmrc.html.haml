@@ -367,35 +367,41 @@
         // Start up VMRC
         vmrc = document.getElementById("vmrc");
 
-        vmNameTooltip = $("#vmNameTooltip");
-        var vmTitle = $("#vmTitle");
+        if (typeof vmrc.isReadyToStart === 'undefined') {
+          window.location.href = "#{j(vmrc_uri.to_s)}";
+          setTimeout(function () { window.close(); }, 8000);
+        } else {
+          vmNameTooltip = $("#vmNameTooltip");
+          var vmTitle = $("#vmTitle");
 
-        // set the title strings on the page
-        document.title = title;
-        vmTitle.text(title);
-        vmNameTooltip.text(title);
+          // set the title strings on the page
+          document.title = title;
+          vmTitle.text(title);
+          vmNameTooltip.text(title);
 
-        // Attach event listeners
-        $(window).resize(onWindowResized);
-        registerButton("fullScreenButton", fullScreen);
-        registerButton("cadButton", sendCAD);
+          // Attach event listeners
+          $(window).resize(onWindowResized);
+          registerButton("fullScreenButton", fullScreen);
+          registerButton("cadButton", sendCAD);
 
-        // Register tool tip
-        $("#vmName").hover(showTooltip, hideTooltip);
-        $("#vmNameTooltip").hover(showTooltip, hideTooltip);
+          // Register tool tip
+          $("#vmName").hover(showTooltip, hideTooltip);
+          $("#vmNameTooltip").hover(showTooltip, hideTooltip);
 
-        // Adjust CSS geometry
-        $("#buttonBar").height( $("#container").offset().top );
+          // Adjust CSS geometry
+          $("#buttonBar").height( $("#container").offset().top );
 
-        // This fixes IE7's inability to assign correct widths
-        justifyButtonWidths();
+          // This fixes IE7's inability to assign correct widths
+          justifyButtonWidths();
 
-        initVmrc();
+          initVmrc();
 
-        if (#{os == 'linux'}) {
-          $(vmrc).height( $(window).height() - ($("#container").offset().top + 10) );
-          $(vmrc).width( $(window).width() );
+          if (#{os == 'linux'}) {
+            $(vmrc).height( $(window).height() - ($("#container").offset().top + 10) );
+            $(vmrc).width( $(window).width() );
+          }
         }
+
 
       } catch (error) {
         hideSpinner();
