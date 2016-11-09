@@ -41,6 +41,25 @@ class ManageIQ::Providers::Openstack::CloudManager::Vm < ManageIQ::Providers::Cl
     connection.servers.get(ems_ref)
   end
 
+  def with_provider_object
+    super(connection_options)
+  end
+
+  def with_provider_connection
+    super(connection_options)
+  end
+
+  def self.connection_options(cloud_tenant = nil)
+    connection_options = { :service => 'Compute' }
+    connection_options[:tenant_name] = cloud_tenant.name if cloud_tenant
+    connection_options
+  end
+
+  def connection_options
+    self.class.connection_options(cloud_tenant)
+  end
+  private :connection_options
+
   def self.calculate_power_state(raw_power_state)
     POWER_STATES[raw_power_state] || "unknown"
   end
