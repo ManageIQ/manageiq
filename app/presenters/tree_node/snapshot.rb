@@ -9,5 +9,10 @@ module TreeNode
         @object.name
       end
     end
+
+    # FIXME: put this into an override
+    # if (options[:selected_node].present? && @node[:key] == options[:selected_node]) || object.children.empty?
+    #   @node[:highlighted] = true
+    # end
   end
 end
