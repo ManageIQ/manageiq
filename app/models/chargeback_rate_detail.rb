@@ -210,6 +210,17 @@ class ChargebackRateDetail < ApplicationRecord
     !error
   end
 
+  def metric_keys
+    ["#{rate_name}_metric", # metric value (e.g. Storage [Used|Allocated|Fixed])
+     "#{group}_metric"]     # total of metric's group (e.g. Storage Total)
+  end
+
+  def cost_keys
+    ["#{rate_name}_cost",   # cost associated with metric (e.g. Storage [Used|Allocated|Fixed] Cost)
+     "#{group}_cost",       # cost associated with metric's group (e.g. Storage Total Cost)
+     'total_cost']
+  end
+
   def metric_and_cost_by(metric_rollup_records, hours_in_interval)
     @hours_in_interval = hours_in_interval
     metric_value = metric_value_by(metric_rollup_records)

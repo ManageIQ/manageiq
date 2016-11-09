@@ -147,24 +147,19 @@ class Chargeback < ActsAsArModel
           metric_value, cost = r.metric_and_cost_by(metric_rollup_records, hours_in_interval)
         end
 
-        accumulate_metrics_and_costs_per_rate(r.rate_name, r.group, metric_value, cost)
+        accumulate_metrics_and_costs_per_rate(r, metric_value, cost)
       end
     end
   end
 
-  def accumulate_metrics_and_costs_per_rate(rate_name, rate_group, metric, cost)
-    cost_key         = "#{rate_name}_cost"    # metric cost value (e.g. Storage [Used|Allocated|Fixed] Cost)
-    metric_key       = "#{rate_name}_metric"  # metric value (e.g. Storage [Used|Allocated|Fixed])
-    cost_group_key   = "#{rate_group}_cost"   # for total of metric's costs (e.g. Storage Total Cost)
-    metric_group_key = "#{rate_group}_metric" # for total of metrics (e.g. Storage Total)
-
+  def accumulate_metrics_and_costs_per_rate(rate, metric, cost)
     col_hash = {}
 
-    defined_column_for_report = (self.class.report_col_options.keys & [metric_key, cost_key]).present?
+    defined_column_for_report = (self.class.report_col_options.keys & [rate.metric_keys[0], rate.cost_keys[0]]).present?
 
     if defined_column_for_report
-      [metric_key, metric_group_key].each             { |col| col_hash[col] = metric }
-      [cost_key,   cost_group_key, 'total_cost'].each { |col| col_hash[col] = cost }
+      rate.metric_keys.each { |col| col_hash[col] = metric }
+      rate.cost_keys.each   { |col| col_hash[col] = cost }
     end
 
     col_hash.each do |k, val|
