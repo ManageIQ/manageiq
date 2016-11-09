@@ -10,9 +10,7 @@ module ApplianceConsole
     include ApplianceConsole::Logging
 
     REGISTER_CMD    = 'repmgr standby register'.freeze
-    PGPASS_FILE     = '/var/lib/pgsql/.pgpass'.freeze
     REPMGRD_SERVICE = 'rh-postgresql95-repmgr'.freeze
-    REPMGRD_LOG     = '/var/log/repmgr/repmgrd.log'.freeze
 
     attr_accessor :standby_host, :run_repmgrd_configuration
 
@@ -62,7 +60,8 @@ module ApplianceConsole
         clone_standby_server &&
         start_postgres &&
         register_standby_server &&
-        configure_repmgrd
+        write_pgpass_file &&
+        (run_repmgrd_configuration ? start_repmgrd : true)
     end
 
     def data_dir_empty?
@@ -93,32 +92,6 @@ module ApplianceConsole
 
     def register_standby_server
       run_repmgr_command(REGISTER_CMD)
-    end
-
-    def configure_repmgrd
-      return true unless run_repmgrd_configuration
-      write_repmgrd_config
-      write_pgpass_file
-      start_repmgrd
-    end
-
-    def write_repmgrd_config
-      File.open(REPMGR_CONFIG, "a") do |f|
-        f.write("failover=automatic\n")
-        f.write("promote_command='repmgr standby promote'\n")
-        f.write("follow_command='repmgr standby follow'\n")
-        f.write("logfile=#{REPMGRD_LOG}\n")
-      end
-    end
-
-    def write_pgpass_file
-      File.open(PGPASS_FILE, "w") do |f|
-        f.write("*:*:#{database_name}:#{database_user}:#{database_password}\n")
-        f.write("*:*:replication:#{database_user}:#{database_password}\n")
-      end
-
-      FileUtils.chmod(0600, PGPASS_FILE)
-      FileUtils.chown("postgres", "postgres", PGPASS_FILE)
     end
 
     def start_repmgrd

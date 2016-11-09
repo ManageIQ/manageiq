@@ -36,7 +36,8 @@ module ApplianceConsole
       say("Configuring Primary Replication Server...")
       generate_cluster_name &&
         create_config_file(primary_host) &&
-        initialize_primary_server
+        initialize_primary_server &&
+        write_pgpass_file
     end
 
     def initialize_primary_server
