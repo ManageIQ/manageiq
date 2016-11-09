@@ -41,7 +41,8 @@ class TreeNodeBuilder
   attr_reader :object, :parent_id, :options
 
   def build_id
-    object.kind_of?(Hash) ? build_hash_id : build_object_id
+    new_node_obj = TreeNode.new(object, parent_id, options)
+    new_node_obj.key
   end
 
   # FIXME: This is a rubocop disaster... fixed the alignment with the params,
@@ -386,7 +387,7 @@ class TreeNodeBuilder
   def generic_node(node)
     text = ERB::Util.html_escape(node.title ? URI.unescape(node.title) : node.title) unless node.title.html_safe?
     @node = {
-      :key          => build_object_id,
+      :key          => node.key,
       :title        => text ? text : node.title,
       :icon         => node_icon(node.image),
       :expand       => node.expand,
@@ -399,7 +400,7 @@ class TreeNodeBuilder
 
   def hash_node(node)
     @node = {
-      :key          => build_hash_id,
+      :key          => node.key,
       :title        => ERB::Util.html_escape(node.title),
       :expand       => node.expand,
       :icon         => node_icon(node.image),
@@ -410,34 +411,5 @@ class TreeNodeBuilder
       :checkable    => node.checkable
     }
     tooltip(node.tooltip)
-  end
-
-  def format_parent_id
-    (options[:full_ids] && !parent_id.blank?) ? "#{parent_id}_" : ''
-  end
-
-  def build_hash_id
-    if object[:id] == "-Unassigned"
-      "-Unassigned"
-    else
-      prefix = TreeBuilder.get_prefix_for_model("Hash")
-      "#{format_parent_id}#{prefix}-#{object[:id]}"
-    end
-  end
-
-  def build_object_id
-    if object.id.nil?
-      # FIXME: this makes problems in tests
-      # to handle "Unassigned groups" node in automate buttons tree
-      "-#{object.name.split('|').last}"
-    else
-      base_class = object.class.base_model.name           # i.e. Vm or MiqTemplate
-      base_class = "Datacenter" if base_class == "EmsFolder" && object.kind_of?(Datacenter)
-      base_class = "ManageIQ::Providers::Foreman::ConfigurationManager" if object.kind_of?(ManageIQ::Providers::Foreman::ConfigurationManager)
-      base_class = "ManageIQ::Providers::AnsibleTower::ConfigurationManager" if object.kind_of?(ManageIQ::Providers::AnsibleTower::ConfigurationManager)
-      prefix = TreeBuilder.get_prefix_for_model(base_class)
-      cid = ApplicationRecord.compress_id(object.id)
-      "#{format_parent_id}#{prefix}-#{cid}"
-    end
   end
 end

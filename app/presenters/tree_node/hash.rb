@@ -15,5 +15,14 @@ module TreeNode
     set_attribute(:checkable) { @object[:checkable] != false }
 
     set_attribute(:tooltip) { @object[:tip] }
+
+    set_attribute(:key) do
+      if @object[:id] == "-Unassigned"
+        "-Unassigned"
+      else
+        prefix = TreeBuilder.get_prefix_for_model("Hash")
+        "#{@options[:full_ids] && !@parent_id.blank? ? "#{@parent_id}_" : ''}#{prefix}-#{@object[:id]}"
+      end
+    end
   end
 end
