@@ -197,4 +197,8 @@ module Sandbox
   def x_node_set(node, tree)
     sandbox.store_path(:trees, tree, :active_node, node)
   end
+
+  def edit_typ
+    sandbox[:edit_typ]
+  end
 end
