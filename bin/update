@@ -43,8 +43,10 @@ chdir APP_ROOT do
   puts "\n== Seeding database =="
   system! "bin/rails db:seed GOOD_MIGRATIONS=skip"
 
-  puts "\n== Resetting tests =="
-  system! "bin/rails test:vmdb:setup"
+  unless ENV["SKIP_TEST_RESET"]
+    puts "\n== Resetting tests =="
+    system! "bin/rails test:vmdb:setup"
+  end
 
   unless ENV["SKIP_AUTOMATE_RESET"]
     puts "\n== Resetting Automate Domains =="
