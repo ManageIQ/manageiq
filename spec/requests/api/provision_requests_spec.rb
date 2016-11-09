@@ -97,7 +97,7 @@ describe "Provision Requests API" do
 
   context "Provision requests approval" do
     let(:user)          { FactoryGirl.create(:user) }
-    let(:template)      { FactoryGirl.create(:template_amazon) }
+    let(:template)      { FactoryGirl.create(:template_cloud) }
     let(:provreqbody)   { {:requester => user, :source_type => 'VmOrTemplate', :source_id => template.id} }
     let(:provreq1)      { FactoryGirl.create(:miq_provision_request, provreqbody) }
     let(:provreq2)      { FactoryGirl.create(:miq_provision_request, provreqbody) }
