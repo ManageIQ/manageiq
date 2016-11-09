@@ -18,7 +18,7 @@ class CloudNetworkController < ApplicationController
   }.freeze
 
   def self.display_methods
-    %w(instances cloud_networks network_routers)
+    %w(instances cloud_networks network_routers cloud_subnets)
   end
 
   def button
