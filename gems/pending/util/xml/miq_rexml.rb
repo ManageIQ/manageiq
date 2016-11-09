@@ -64,8 +64,6 @@ class MIQRexml
     array.each { |v| addObjToXML(parentEle, eleName, v) }
   end
 
-  private
-
   def self.findRegElementInt(paths, ele)
     if paths.length > 0
       searchStr = paths[0].downcase

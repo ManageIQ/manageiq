@@ -201,29 +201,6 @@ class LogFile < ApplicationRecord
     time.respond_to?(:strftime) ? time.strftime("%Y%m%d_%H%M%S") : "unknown"
   end
 
-  private
-
-  def get_post_method(uri)
-    return nil if uri.nil?
-
-    # Convert all backslashes in the URI to forward slashes
-    uri.tr!('\\', '/')
-
-    # Strip any leading and trailing whitespace
-    uri.strip!
-
-    URI.split(URI.encode(uri))[0]
-  end
-
-  def legacy_depot_hash
-    # TODO: Delete this and make FileDepotSmb and FileDepotNfs implement all of their upload/delete/etc. logic
-    {
-      :uri      => file_depot.uri,
-      :username => file_depot.authentication_userid,
-      :password => file_depot.authentication_password,
-    }
-  end
-
   def self._request_logs(options)
     taskid = options[:taskid]
     klass  = options.delete(:klass).to_s
@@ -266,5 +243,28 @@ class LogFile < ApplicationRecord
     msg = "Requested logs from: [#{resource}]"
     _log.info("#{log_header} #{msg}")
     task.update_status("Queued", "Ok", msg)
+  end
+
+  private
+
+  def get_post_method(uri)
+    return nil if uri.nil?
+
+    # Convert all backslashes in the URI to forward slashes
+    uri.tr!('\\', '/')
+
+    # Strip any leading and trailing whitespace
+    uri.strip!
+
+    URI.split(URI.encode(uri))[0]
+  end
+
+  def legacy_depot_hash
+    # TODO: Delete this and make FileDepotSmb and FileDepotNfs implement all of their upload/delete/etc. logic
+    {
+      :uri      => file_depot.uri,
+      :username => file_depot.authentication_userid,
+      :password => file_depot.authentication_password,
+    }
   end
 end

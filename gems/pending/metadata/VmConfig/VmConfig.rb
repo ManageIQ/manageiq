@@ -254,6 +254,27 @@ class VmConfig
     file_list.detect { |f| f[:path] == filename }
   end
 
+  def self.to_h(filename)
+    dataHash = {}
+    data = filename
+    data = File.read(filename) unless filename.include?("\n")
+    data.each_line do |l|
+      l.strip!
+      next if l[0..0] == '.' || l[0..0] == '#' || l.empty?
+
+      parent = l.split('=')[0].split('.').inject(:current_level => dataHash, :hash => nil, :key => nil) do |h, k|
+        a1 = h[:current_level][k.strip.to_sym] ||= {}
+        a1 = h[:current_level][k.strip.to_sym] = {:_default => a1} unless a1.kind_of?(Hash)
+        {:current_level => a1, :hash => h, :key => k.strip.to_sym}
+      end
+      uh, key = parent[:hash][:current_level], parent[:key]
+      kkey = key.to_s.strip.to_sym
+      value = eval_config(l.split('=')[1], kkey)
+      uh[key] = value
+    end
+    dataHash
+  end
+
   private
 
   def diskKey?(key)
@@ -828,27 +849,6 @@ class VmConfig
     key = File.join(dir, basename)
     key = "[#{ds}] " + key unless ds.nil?
     key
-  end
-
-  def self.to_h(filename)
-    dataHash = {}
-    data = filename
-    data = File.read(filename) unless filename.include?("\n")
-    data.each_line do |l|
-      l.strip!
-      next if l[0..0] == '.' || l[0..0] == '#' || l.empty?
-
-      parent = l.split('=')[0].split('.').inject(:current_level => dataHash, :hash => nil, :key => nil) do |h, k|
-        a1 = h[:current_level][k.strip.to_sym] ||= {}
-        a1 = h[:current_level][k.strip.to_sym] = {:_default => a1} unless a1.kind_of?(Hash)
-        {:current_level => a1, :hash => h, :key => k.strip.to_sym}
-      end
-      uh, key = parent[:hash][:current_level], parent[:key]
-      kkey = key.to_s.strip.to_sym
-      value = eval_config(l.split('=')[1], kkey)
-      uh[key] = value
-    end
-    dataHash
   end
 
   def self.eval_config(value, _key)
