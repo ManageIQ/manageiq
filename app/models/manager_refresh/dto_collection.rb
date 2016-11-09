@@ -91,8 +91,8 @@ module ManagerRefresh
       data_index[manager_uuid]
     end
 
-    def lazy_find(manager_uuid, path: nil, default: nil)
-      ::ManagerRefresh::DtoLazy.new(self, manager_uuid, :path => path, :default => default)
+    def lazy_find(manager_uuid, key: nil, default: nil)
+      ::ManagerRefresh::DtoLazy.new(self, manager_uuid, :key => key, :default => default)
     end
 
     def new_dto(hash)
