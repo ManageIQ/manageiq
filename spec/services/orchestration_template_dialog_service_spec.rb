@@ -3,7 +3,7 @@ describe OrchestrationTemplateDialogService do
   let(:template_hot)   { FactoryGirl.create(:orchestration_template_hot_with_content) }
   let(:template_azure) { FactoryGirl.create(:orchestration_template_azure_with_content) }
   let(:empty_template) { FactoryGirl.create(:orchestration_template_cfn) }
-  let(:template_vapp)  { FactoryGirl.create(:orchestration_template_vmware_cloud) }
+  let(:template_vapp)  { FactoryGirl.create(:orchestration_template_vmware_cloud_with_content) }
 
   describe "#create_dialog" do
     it "creates a dialog from hot template with stack basic info and parameters" do

@@ -1,6 +1,6 @@
 describe ManageIQ::Providers::Vmware::CloudManager::OrchestrationStack do
   let(:ems) { FactoryGirl.create(:ems_vmware_cloud) }
-  let(:template) { FactoryGirl.create(:orchestration_template_vmware_cloud) }
+  let(:template) { FactoryGirl.create(:orchestration_template_vmware_cloud_with_content) }
   let(:orchestration_stack) do
     FactoryGirl.create(:orchestration_stack_vmware_cloud,
                        :ext_management_system => ems,

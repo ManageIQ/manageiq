@@ -32,4 +32,13 @@ class ManageIQ::Providers::Vmware::CloudManager::OrchestrationTemplate < Orchest
   def self.eligible_manager_types
     [ManageIQ::Providers::Vmware::CloudManager]
   end
+
+  def validate_format
+    if content
+      ovf_doc = MiqXml.load(content)
+      !ovf_doc.root.nil? && nil
+    end
+  rescue REXML::ParseException => err
+    err.message
+  end
 end
