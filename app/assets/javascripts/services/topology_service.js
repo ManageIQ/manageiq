@@ -49,6 +49,7 @@ ManageIQ.angular.app.service('topologyService', function() {
         entity_url = "ems_network";
         break;
       case "MiddlewareManager":
+        action = '/' + d.item.miq_id;
         entity_url = "ems_middleware";
         break;
       default : // for non provider entities, use the show action
