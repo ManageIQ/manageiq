@@ -100,7 +100,7 @@
         - session[:server_roles].sort_by { |_name, desc| desc }.each do |name, desc|
           - checked = !session[:selected_roles].nil? && session[:selected_roles].include?(name)
           = check_box_tag("server_roles_#{name}", "1", checked,
-                           :data => {:on_text => 'On', :off_text => 'Off', :size => 'mini'})
+                           :data => {:on_text => _('On'), :off_text => _('Off'), :size => 'mini'})
           :javascript
             miqInitBootstrapSwitch("server_roles_#{name}", "#{url}")
           = h(desc)
@@ -228,7 +228,7 @@
       .col-md-8
         = check_box_tag("smtp_enable_starttls_auto",
                         GenericMailer.default_for_enable_starttls_auto,
-                        @edit[:new][:smtp][:enable_starttls_auto], :data => {:on_text => 'Yes', :off_text => 'No'})
+                        @edit[:new][:smtp][:enable_starttls_auto], :data => {:on_text => _('Yes'), :off_text => _('No')})
       :javascript
         miqInitBootstrapSwitch('smtp_enable_starttls_auto', "#{url}")
 
