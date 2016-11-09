@@ -21,6 +21,22 @@ class ApplicationHelper::Toolbar::HostAggregatesCenter < ApplicationHelper::Tool
           :enabled   => false,
           :onwhen    => "1"),
         button(
+          :host_aggregate_add_host,
+          'pficon pficon-screen fa-lg',
+          N_('Select a single Host Aggregate to Add Host'),
+          N_('Add Host to Selected Host Aggregate'),
+          :url_parms => "main_div",
+          :enabled   => false,
+          :onwhen    => "1"),
+        button(
+          :host_aggregate_remove_host,
+          'pficon pficon-screen fa-lg',
+          N_('Select a single Host Aggregate to Remove Host'),
+          N_('Remove Host from Selected Host Aggregate'),
+          :url_parms => "main_div",
+          :enabled   => false,
+          :onwhen    => "1"),
+        button(
           :host_aggregate_delete,
           'pficon pficon-delete fa-lg',
           N_('Delete selected Host Aggregates'),
