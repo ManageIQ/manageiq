@@ -490,6 +490,7 @@ class MiqQueue < ApplicationRecord
       :zone       => Zone.determine_queue_zone(options)
     )
   end
+  private_class_method :default_get_options
 
   # when searching miq_queue, we often want to see if a key is nil, or a particular value
   # given a set of keys, modify the params to have those values
@@ -505,6 +506,7 @@ class MiqQueue < ApplicationRecord
     end
     options
   end
+  private_class_method :optional_values
 
   def destroy_potentially_stale_record
     destroy

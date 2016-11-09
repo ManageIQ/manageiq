@@ -269,10 +269,14 @@ module ManageIQ::Providers
       return uid, quota
     end
 
+    # FIXME: The intention was to make this method private but tests or code called
+    # from the tests are expecting it to be public.
     def self.key_pair_type
       'ManageIQ::Providers::Openstack::CloudManager::AuthKeyPair'
     end
 
+    # FIXME: The intention was to make this method private but tests or code called
+    # from the tests are expecting it to be public.
     def self.miq_template_type
       "ManageIQ::Providers::Openstack::CloudManager::Template"
     end

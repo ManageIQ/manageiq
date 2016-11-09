@@ -1602,6 +1602,7 @@ class MiqExpression
       op2 ? "#{val_with_cast} #{op2} #{quote(val2, col_type)}" : nil,
     ].compact.join(" && ")
   end
+  private_class_method :ruby_for_date_compare
 
   def to_arel(exp, tz)
     operator = exp.keys.first
@@ -1705,7 +1706,10 @@ class MiqExpression
 
     model
   end
+  private_class_method :determine_model
 
+  # FIXME: The intention was to make this method private but tests or code called
+  # from the tests are expecting it to be public.
   def self.determine_relat_path(ref)
     last_path = ref.name.to_s
     class_from_association_name = model_class(last_path)

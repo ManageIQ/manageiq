@@ -164,10 +164,14 @@ class MiqAeDomain < MiqAeNamespace
     MiqAeDomain.enabled.count > 0
   end
 
+  # FIXME: The intention was to make this method private but tests or code called
+  # from the tests are expecting it to be public.
   def self.any_unlocked?
     MiqAeDomain.where(:source => USER_SOURCE).count > 0
   end
 
+  # FIXME: The intention was to make this method private but tests or code called
+  # from the tests are expecting it to be public.
   def self.all_unlocked
     MiqAeDomain.where(:source => USER_SOURCE).order('priority DESC')
   end

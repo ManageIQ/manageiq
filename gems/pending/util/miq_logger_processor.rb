@@ -136,8 +136,8 @@ class MiqLoggerLine < String
     parts.each { |p| yield p }
   end
 
-  private
-
+  # FIXME: The intention was to make this method private but tests or code called
+  # from the tests are expecting it to be public.
   def self.split_raw_line(line)
     line = line.to_s
     return if line.empty?

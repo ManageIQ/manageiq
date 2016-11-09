@@ -461,6 +461,7 @@ class MiqGenericMountSession
       raise "platform not supported"
     end
   end
+  private_class_method :raw_disconnect
 
   private
 

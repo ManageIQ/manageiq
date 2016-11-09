@@ -76,6 +76,8 @@ class RssFeed < ApplicationRecord
 
   private
 
+  # FIXME: The intention was to make this method private but tests or code called
+  # from the tests are expecting it to be public.
   def self.eval_item_attr(script, rec)
     _ = rec # used by eval
     if script.starts_with?("<script>", "<SCRIPT>")
@@ -112,6 +114,8 @@ class RssFeed < ApplicationRecord
     end
   end
 
+  # FIXME: The intention was to make this method private but tests or code called
+  # from the tests are expecting it to be public.
   def self.sync_from_yml_file(name)
     file = RssFeed.yml_file_name(name)
     yml = YAML.load(File.read(file)).symbolize_keys
@@ -138,10 +142,14 @@ class RssFeed < ApplicationRecord
     rec.tag_add(yml[:roles], :ns => "/managed", :cat => "roles") unless yml[:roles].nil?
   end
 
+  # FIXME: The intention was to make this method private but tests or code called
+  # from the tests are expecting it to be public.
   def self.yml_file_name(name)
     File.join(YML_DIR, name + ".yml")
   end
 
+  # FIXME: The intention was to make this method private but tests or code called
+  # from the tests are expecting it to be public.
   def self.sync_from_yml_dir
     # Add missing feeds to model
     Dir.glob(File.join(YML_DIR, "*.yml")).each do |f|
@@ -156,6 +164,8 @@ class RssFeed < ApplicationRecord
     _log.log_backtrace(err)
   end
 
+  # FIXME: The intention was to make this method private but tests or code called
+  # from the tests are expecting it to be public.
   def self.seed
     sync_from_yml_dir
   end

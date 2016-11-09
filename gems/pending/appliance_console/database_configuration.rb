@@ -239,6 +239,7 @@ FRIENDLY
       new_settings["production"]["password"] = yield(pass) if pass
       new_settings
     end
+    private_class_method :encrypt_decrypt_password
 
     def self.load_current
       require 'yaml'
@@ -248,6 +249,7 @@ FRIENDLY
       end
       YAML.load_file(DB_YML)
     end
+    private_class_method :load_current
 
     def do_save(settings)
       require 'yaml'

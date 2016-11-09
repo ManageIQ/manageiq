@@ -37,8 +37,6 @@ module Vmdb
       apply_config_value(config, $lenovo_log, :level_lenovo, :level_lenovo_in_evm)
     end
 
-    private
-
     def self.create_loggers
       # Intentionally setting false to enable logging so we can
       # diagnose an Automate method failure
@@ -70,6 +68,7 @@ module Vmdb
 
       configure_external_loggers
     end
+    private_class_method :create_loggers
 
     def self.configure_external_loggers
       require 'awesome_spawn'
@@ -83,6 +82,7 @@ module Vmdb
       apply_config_value_logged(config, logger, :level, key)
       apply_config_value_logged(config, logger, :mirror_level, mirror_key) if mirror_key
     end
+    private_class_method :apply_config_value
 
     def self.apply_config_value_logged(config, logger, level_method, key)
       old_level      = logger.send(level_method)
@@ -93,5 +93,6 @@ module Vmdb
         logger.send("#{level_method}=", new_level)
       end
     end
+    private_class_method :apply_config_value_logged
   end
 end

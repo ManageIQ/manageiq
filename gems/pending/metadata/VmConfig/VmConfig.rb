@@ -859,6 +859,7 @@ class VmConfig
     return nil if value.blank?
     value
   end
+  private_class_method :eval_config
 
   def normalize_file_paths(config_file = @configFile)
     @cfgHash.each_pair do |k, v|

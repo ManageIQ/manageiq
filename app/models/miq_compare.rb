@@ -164,6 +164,7 @@ class MiqCompare
       end
     end
   end
+  private_class_method :build_sections
 
   # Add an include section to the final collected all_sections hash provided
   def self.build_section(all_sections, name, key = nil, group = nil)
@@ -172,6 +173,7 @@ class MiqCompare
     all_sections[name][:key] = key.empty? ? key : key.to_sym unless key.nil?
     all_sections[name][:group] = group unless group.blank?
   end
+  private_class_method :build_section
 
   def section_header_text(model)
     case model

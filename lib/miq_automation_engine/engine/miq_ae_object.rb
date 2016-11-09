@@ -511,7 +511,10 @@ module MiqAeEngine
       return false  if value.to_s.downcase == 'false' || value == '0'
       value
     end
+    private_class_method :convert_boolean_value
 
+    # FIXME: The intention was to make this method private but tests or code called
+    # from the tests are expecting it to be public.
     def self.convert_value_based_on_datatype(value, datatype)
       return value if value.blank?
 

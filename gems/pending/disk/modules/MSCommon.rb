@@ -235,6 +235,7 @@ module MSCommon
     end
     header
   end
+  private_class_method :getHeader
 
   def self.verifyFooterCopy(footer)
     hdrLoc = getHiLo(footer, "data_offset")
@@ -242,12 +243,14 @@ module MSCommon
     footer_copy = FOOTER.decode(@file.read(FOOTER_LENGTH))
     puts "Footer copy does not match header." if footer_copy != @footer
   end
+  private_class_method :verifyFooterCopy
 
   def self.blockPos(pos)
     rawSectorNumber, byteOffset = pos.divmod(@blockSize)
     blockNumber, secInBlock = rawSectorNumber.divmod(@secPerBlock)
     return blockNumber, secInBlock, byteOffset
   end
+  private_class_method :blockPos
 
   def self.process_bae
     @file.seek(@batBase, IO::SEEK_SET)
@@ -256,20 +259,24 @@ module MSCommon
       @bae << @file.read(BAE_SIZE).unpack('N')[0]
     end
   end
+  private_class_method :process_bae
 
   def self.getBAE(blockNumber)
     @bae[blockNumber]
   end
+  private_class_method :getBAE
 
   def self.putBAE(blockNum, bae)
     seekBAE(blockNum)
     @file.write([bae].pack('N'), BAE_SIZE)
   end
+  private_class_method :putBAE
 
   def self.seekBAE(blockNum)
     batOffset = blockNum * BAE_SIZE + @batBase
     @file.seek(batOffset, IO::SEEK_SET)
   end
+  private_class_method :seekBAE
 
   def self.getAllocStatus(blockNum, sectorNum)
     sectorMask = seekAllocStatus(blockNum, sectorNum)
@@ -277,6 +284,7 @@ module MSCommon
     sectorBitmap = @file.read(1).unpack('C')[0]
     sectorBitmap & sectorMask == sectorMask
   end
+  private_class_method :getAllocStatus
 
   def self.setAllocStatus(blockNum, sectorNum)
     sectorMask = seekAllocStatus(blockNum, sectorNum)
@@ -285,6 +293,7 @@ module MSCommon
     @file.seek(-1, IO::SEEK_CUR)
     @file.write([sectorBitmap].pack('C'), 1)
   end
+  private_class_method :setAllocStatus
 
   def self.seekAllocStatus(blockNum, sectorNum)
     sectorByte, bitOffset = sectorNum.divmod(8)
@@ -293,10 +302,12 @@ module MSCommon
     @file.seek(bae * @blockSize + sectorByte, IO::SEEK_SET)
     0x80 >> bitOffset
   end
+  private_class_method :seekAllocStatus
 
   def self.getAbsSectorLoc(blockNum, sectorNum)
     getBAE(blockNum) * @blockSize + sectorNum * @blockSize + @blockSectorBitmapByteCount
   end
+  private_class_method :getAbsSectorLoc
 
   def self.allocSector(blockNum, sectorNum, pos, parent)
     allocBlock(blockNum) if getBAE(blockNum) == BLOCK_NOT_ALLOCATED
@@ -310,6 +321,7 @@ module MSCommon
     @file.seek(getAbsSectorLoc(blockNum, sectorNum), IO::SEEK_SET)
     @file.write(buf, buf.size)
   end
+  private_class_method :allocSector
 
   def self.allocBlock(blockNum)
     # Alloc block.
@@ -325,6 +337,7 @@ module MSCommon
     @file.seek(pos, IO::SEEK_SET)
     @file.write(@footerBuf, @footerBuf.size)
   end
+  private_class_method :allocBlock
 
   def self.findFreeSector
     # Find a free disk sector with which to start a new block.
@@ -339,6 +352,7 @@ module MSCommon
     raise "Disk full." if @freeSector > d_size_common / @blockSize
     @freeSector
   end
+  private_class_method :findFreeSector
 
   def self.checksum(buf, skip_offset)
     csum = 0
@@ -349,4 +363,5 @@ module MSCommon
     # GRRRRR - convert to actual 32-bits.
     [~csum].pack('L').unpack('L')[0]
   end
+  private_class_method :checksum
 end # module

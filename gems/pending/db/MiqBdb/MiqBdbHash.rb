@@ -130,6 +130,8 @@ module MiqBerkeleyDB
       bucket + @header['spares'][MiqBdbHashDatabase.log2(bucket + 1)]
     end
 
+    # FIXME: The intention was to make this method private but tests or code called
+    # from the tests are expecting it to be public.
     def self.log2(num)
       limit = 1
       i = 0
