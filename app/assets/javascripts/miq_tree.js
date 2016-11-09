@@ -41,7 +41,11 @@ function miqTreeResetState(treename) {
 
 function miqRemoveNodeChildren(treename, key) {
   var node = miqTreeFindNodeByKey(treename, key);
-  miqTreeObject(treename).removeNode(node);
+  if (node.nodes) {
+    node.nodes.forEach(function (child) {
+      miqTreeObject(treename).removeNode(child);
+    });
+  }
 }
 
 function miqMenuEditor(id) {
