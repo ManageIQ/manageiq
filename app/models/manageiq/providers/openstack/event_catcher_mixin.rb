@@ -48,28 +48,28 @@ module ManageIQ::Providers::Openstack::EventCatcherMixin
     reset_event_monitor_handle
   end
 
-  def process_event(event)
-    if filtered_events.include?(event.payload["event_type"])
-      _log.debug "#{log_prefix} Skipping caught event [#{event.payload["event_type"]}]"
-    else
-      _log.info "#{log_prefix} Caught event [#{event.payload["event_type"]}]"
+  def queue_event(event)
+    _log.info "#{log_prefix} Caught event [#{event.payload["event_type"]}]"
 
-      event_hash = {}
-      # copy content
-      content = event.payload
-      event_hash[:content] = content.reject { |k, _v| k.start_with? "_context_" }
+    event_hash = {}
+    # copy content
+    content = event.payload
+    event_hash[:content] = content.reject { |k, _v| k.start_with? "_context_" }
 
-      # copy context
-      event_hash[:context] = {}
-      content.select { |k, _v| k.start_with? "_context_" }.each_pair do |k, v|
-        event_hash[:context][k] = v
-      end
-
-      # copy attributes
-      event_hash[:user_id]      = event.metadata[:user_id]
-      event_hash[:priority]     = event.metadata[:priority]
-      event_hash[:content_type] = event.metadata[:content_type]
-      add_openstack_queue(event_hash)
+    # copy context
+    event_hash[:context] = {}
+    content.select { |k, _v| k.start_with? "_context_" }.each_pair do |k, v|
+      event_hash[:context][k] = v
     end
+
+    # copy attributes
+    event_hash[:user_id]      = event.metadata[:user_id]
+    event_hash[:priority]     = event.metadata[:priority]
+    event_hash[:content_type] = event.metadata[:content_type]
+    add_openstack_queue(event_hash)
+  end
+
+  def filtered?(event)
+    filtered_events.include?(event.payload["event_type"])
   end
 end

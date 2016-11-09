@@ -52,13 +52,13 @@ module ManageIQ::Providers::Vmware::CloudManager::EventCatcherMixin
     reset_event_monitor_handle
   end
 
-  def process_event(event)
-    if filtered_events.include?(event.type)
-      _log.info "Skipping caught event [#{event.type}]"
-    else
-      _log.info "Caught event [#{event.type}]"
-      add_to_worker_queue(event)
-    end
+  def queue_event(event)
+    _log.info "Caught event [#{event.type}]"
+    add_to_worker_queue(event)
+  end
+
+  def filtered?(event)
+    filtered_events.include?(event.type)
   end
 
   def add_to_worker_queue(event)
