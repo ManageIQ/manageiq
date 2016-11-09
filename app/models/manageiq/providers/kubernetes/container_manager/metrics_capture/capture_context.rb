@@ -61,6 +61,8 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCapture
       mem_resid = "machine/#{@target.name}/memory/usage"
       process_mem_gauges_data(fetch_gauges_data(mem_resid))
 
+      process_strings_data(fetch_strings_data)
+
       net_resid = "machine/#{@target.name}/network"
       net_counters = [fetch_counters_rate("#{net_resid}/tx"),
                       fetch_counters_rate("#{net_resid}/rx")]
@@ -76,6 +78,24 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCapture
 
       mem_resid = "#{@target.name}/#{group_id}/memory/usage"
       process_mem_gauges_data(fetch_gauges_data(mem_resid))
+    end
+
+    def fetch_strings_data
+      client.metrics.strings
+    end
+
+    def process_strings_data(keys)
+      keys.each do |resource|
+        begin
+        sort_and_normalize(
+          hawkular_client.counters.get_data(
+            resource,
+            :starts         => (@start_time - @interval).to_i.in_milliseconds,
+            :bucketDuration => "#{@interval}s"))
+        rescue SystemCallError, SocketError, OpenSSL::SSL::SSLError => e
+           raise CollectionFailure, e.message
+        end
+      end
     end
 
     def collect_group_metrics

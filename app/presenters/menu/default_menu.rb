@@ -196,6 +196,27 @@ module Menu
         ])
       end
 
+      def alerts_menu_section
+        Menu::Section.new(
+          :alc,
+          N_("Alerts Center"),
+          'fa fa-bullhorn fa-2x',
+          [
+            Menu::Item.new(
+              'alerts',
+              N_('Alerts'),
+              'alert',
+              {:feature => 'alerts_center', :any => true},
+              '/alerts_list'),
+            Menu::Item.new(
+              'alerts_status',
+              N_('Group By Status'),
+              'alert_status',
+              {:feature => 'alerts_center', :any => true},
+              '/alerts_status')
+          ])
+      end
+
       def settings_menu_section
         Menu::Section.new(:set, N_("Settings"), 'pficon pficon-settings fa-2x', [
           Menu::Item.new('configuration', N_('My Settings'),   'my_settings',  {:feature => 'my_settings', :any => true},  '/configuration/index?config_tab=ui'),
@@ -205,9 +226,10 @@ module Menu
       end
 
       def default_menu
-        [cloud_inteligence_menu_section, services_menu_section, compute_menu_section, configuration_menu_section,
-         network_menu_section, middleware_menu_section, storage_menu_section,
-         control_menu_section, automate_menu_section, optimize_menu_section, settings_menu_section].compact
+        [cloud_inteligence_menu_section, services_menu_section, compute_menu_section,
+         configuration_menu_section, network_menu_section, middleware_menu_section,
+         storage_menu_section, control_menu_section, automate_menu_section, optimize_menu_section,
+         alerts_menu_section, settings_menu_section].compact
       end
     end
   end

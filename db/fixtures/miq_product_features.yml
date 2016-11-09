@@ -1891,7 +1891,46 @@
         :feature_type: admin
         :hidden: true
         :identifier: alert_delete
-
+  - :name: Alerts Statuses
+    :description: Everything under Alerts Statuses
+    :protected: true
+    :feature_type: node
+    :hidden: true
+    :identifier: alerts_statuses
+    :children:
+    - :name: View
+      :description: View Alerts Statuses
+      :feature_type: view
+      :identifier: alert_status_view
+      :children:
+      - :name: List
+        :description: Display Lists of Alert Statuses
+        :feature_type: view
+        :identifier: alert_status_show_list
+      - :name: Show
+        :description: Display Individual Alert Status
+        :feature_type: view
+        :identifier: alert_status_show
+      - :name: ProvidersAlerts
+        :description: Display Alerts Statuses for provider
+        :feature_type: view
+        :identifier: providers_alerts_statuses_show
+    - :name: Modify
+      :description: Modify Alerts Statuses
+      :feature_type: admin
+      :hidden: true
+      :identifier: alert_status_admin
+      :children:
+      - :name: Edit
+        :description: Edit an Alert Status
+        :feature_type: admin
+        :hidden: true
+        :identifier: alert_status_edit
+      - :name: Delete
+        :description: Delete an Alert Status
+        :feature_type: admin
+        :hidden: true
+        :identifier: alert_status_delete
 # Policy Simulation
 - :name: Simulation
   :description: Policy Simulation
@@ -5906,3 +5945,26 @@
       :description: Add a Storage Provider
       :feature_type: admin
       :identifier: ems_storage_new
+
+# Alerts Center
+- :name: Alerts Center
+  :description: All Alerts
+  :feature_type: node
+  :identifier: alerts_center
+  :children:
+  - :name: List
+    :description: List Alerts
+    :feature_type: view
+    :identifier: alert_list
+  - :name: Group
+    :description: Show Alerts by Status
+    :feature_type: view
+    :identifier: alert_status
+  - :name: Recent
+    :description: Show Recent Alerts
+    :feature_type: view
+    :identifier: alert_recent
+  - :name: Triggers
+    :description: Top Alert Triggers
+    :feature_type: view
+    :identifier: alert_triggers

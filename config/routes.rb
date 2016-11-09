@@ -963,6 +963,20 @@ Vmdb::Application.routes.draw do
       )
     },
 
+    :alerts_list      => {
+      :get => %w(
+        show
+        data
+      )
+    },
+
+    :alerts_status      => {
+      :get => %w(
+        show
+        data
+      )
+    },
+
     :dashboard                => {
       :get  => %w(
         auth_error

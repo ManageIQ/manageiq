@@ -1,0 +1,40 @@
+.container-fluid.container-tiles-pf.containers-dashboard.miq-dashboard-view.miq-alerts-center{"ng-controller" => "alertsStatusController as vm"}
+  .row
+    .col-md-12
+    %div{"pf-toolbar" => "", "config" => "vm.toolbarConfig"}
+      %actions.group-toolbar-actions
+        %span
+          Group By
+        %select{"pf-select" => "true", "ng-model" => "vm.category", "ng-options" => "o as o for o in vm.categories"}
+        %span
+          Display
+        %select{"pf-select" => "true", "ng-model" => "vm.typeFilter", "ng-options" => "o as o for o in vm.typeFilters", "ng-change" => "vm.filterChange()"}
+  .row.row-tile-pf
+    .col-md-12
+      .row.row-tile-pf
+        %ul.list-group{"ng-if" => "vm.loadingDone"}
+          %li.list-group-item.alerts-group-item{"ng-repeat" => "group in vm.groups track by $index"}
+            %a.miq-alert-group-title{"ng-class" => "{'collapsed': !group.open}", "ng-click" => "vm.toggleGroupOpen(group)"}
+              {{group.title}} ({{group.itemsList.length}})
+            .card-view-pf{"ng-class" => "{'collapse': !group.open}"}
+              .card-pf.card-pf-aggregate-status{"ng-repeat" => "item in group.itemsList track by item.name"}
+                %span.h2.card-pf-title
+                  %img.card-view-type-img{"ng-src" => "{{item.objectTypeImg}}", "ng-if" => "item.objectTypeImg"}
+                  {{item.name}}
+                .card-pf-body
+                  %p.card-pf-aggregate-status-notifications
+                    %span.card-pf-aggregate-status-notification{"ng-if" => "item.alerts_types.danger.alerts.length > 0"}
+                      %a{"href" => "#", "ng-click" => "vm.showGroupAlerts(item, 'Error')"}
+                        %span.pficon.pficon-error-circle-o
+                        {{item.alerts_types.danger.alerts.length}}
+                    %span.card-pf-aggregate-status-notification{"ng-if" => "item.alerts_types.warning.alerts.length > 0"}
+                      %a{"href" => "#", "ng-click" => "vm.showGroupAlerts(item, 'Warning')"}
+                        %span.pficon.pficon-warning-triangle-o
+                        {{item.alerts_types.warning.alerts.length}}
+                    %span.card-pf-aggregate-status-notification{"ng-if" => "item.alerts_types.info.alerts.length > 0"}
+                      %a{"href" => "#", "ng-click" => "vm.showGroupAlerts(item, 'Information')"}
+                        %span.pficon.pficon-info
+                        {{item.alerts_types.info.alerts.length}}
+
+:javascript
+  miq_bootstrap('.miq-alerts-center', 'alertsCenter');

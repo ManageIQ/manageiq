@@ -22,6 +22,7 @@
     "angular-bootstrap-switch": "~0.5.1",
     "angular-mocks": "~1.5.8",
     "angular-patternfly-sass": "~3.12.0",
+    "angular-resource": "^1.5.8",
     "angular-sanitize": "~1.5.8",
     "angular.validators": "~4.4.2",
     "array-includes": "~1.0.0",

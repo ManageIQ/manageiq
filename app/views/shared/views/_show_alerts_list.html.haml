@@ -1,0 +1,43 @@
+.row.miq-alerts-center
+  .container-fluid{"ng-controller" => "alertsListController as vm"}
+    .row
+      .col-md-12
+      %div{"pf-toolbar" => "", "config" => "vm.toolbarConfig"}
+      .col-md-12.list-view-container
+        .list-view-pf.row
+          .list-group-item.alert{"ng-repeat" => "item in vm.alertsList track by $index", :class => "{{item.severityInfo.severityClass}}"}
+            .list-view-pf-actions
+              .dropdown.pull-right.dropdown-kebab-pf
+                %button.btn.btn-link.dropdown-toggle{"type" => "button", "data-toggle" => "dropdown", "aria-haspopup" => "true", "aria-expanded" => "true"}
+                  %span.fa.fa-ellipsis-v
+                %ul.dropdown-menu.dropdown-menu-right{"aria-labelledby" => "dropdownKebabRight_6"}
+                  %li{"role" => "menuitem", "ng-if" => "item.acknowledged !== true"}
+                    %a{"ng-click" => "handleAcknowledge(item)"}
+                      Acknowledge
+                  %li{"role" => "menuitem", "ng-if" => "item.assigned === false"}
+                    %a{"ng-click" => "handleAssign(item)"}
+                      Assign
+                  %li{"role" => "menuitem", "ng-if" => "item.assigned === true"}
+                    %a{"ng-click" => "handleUnassign(item)"}
+                      Un-Assign
+                  %li{"role" => "menuitem"}
+                    %a{"ng-click" => "handleComment(item)"}
+                      Comment
+            .list-view-pf-left
+              %span{:class=> "list-view-severity {{item.severityInfo.severityIconClass}}"}
+            .list-view-pf-body
+              .row
+                .col-md-2.col-sm-3.col-xs-6
+                  %span.no-wrap
+                    %img.list-view-type-img{"ng-src" => "{{item.objectTypeImg}}", "ng-if" => "item.objectTypeImg"}
+                    %span{"tooltip" => "{{item.objectName}}", "tooltip-placement" => "bottom"}
+                      {{item.objectName}}
+                .col-md-7.col-sm-6.col-xs-6
+                  %span.no-wrap{"tooltip" => "{{item.message}}", "tooltip-placement" => "bottom"}
+                    {{item.message}}
+                .col-md-3.col-sm-3.col-sm-offset-0.col-xs-6.col-xs-offset-6
+                  %span.no-wrap{"tooltip" => "{{item.timestamp| date:'yyyy-mm-dd hh:mm:ss'}}", "tooltip-placement" => "bottom"}
+                    {{item.timestamp| date:'yyyy-MM-dd hh:mm:ss'}}
+
+:javascript
+  miq_bootstrap('.miq-alerts-center', 'alertsCenter');
