@@ -70,7 +70,7 @@
                 = check_box_tag("display_vms",
                                  '1',
                                  @edit[:new][:display][:display_vms],
-                                 :data => {:on_text => 'Yes', :off_text => 'No'})
+                                 :data => {:on_text => _('Yes'), :off_text => _('No')})
                 .note
                   = _("Warning: Enabling this option may cause performance issues in large environments (i.e. thousands of VMs)")
                 :javascript

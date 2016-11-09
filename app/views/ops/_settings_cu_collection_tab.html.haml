@@ -16,7 +16,7 @@
               = _("Collect for All %{clusters}") % {:clusters => clusters_title}
             .col-md-8
               = check_box_tag("all_clusters", true, @edit[:new][:all_clusters],
-                              "data-miq_sparkle_on" => true, "data-miq_sparkle_off" => true, :data => {:on_text => 'Yes', :off_text => 'No'})
+                              "data-miq_sparkle_on" => true, "data-miq_sparkle_off" => true, :data => {:on_text => _('Yes'), :off_text => _('No')})
             :javascript
               miqInitBootstrapSwitch('all_clusters', "#{url}")
           .note
@@ -44,7 +44,7 @@
               = _("Collect for All Datastores")
             .col-md-8
               = check_box_tag("all_storages", true, @edit[:new][:all_storages],
-                "data-miq_sparkle_on" => true, "data-miq_sparkle_off" => true, :data => {:on_text => 'Yes', :off_text => 'No'})
+                "data-miq_sparkle_on" => true, "data-miq_sparkle_off" => true, :data => {:on_text => _('Yes'), :off_text => _('No')})
             :javascript
               miqInitBootstrapSwitch('all_storages', "#{url}")
           #storages_div{:style => "display:#{@edit[:new][:all_storages] ? "none" : ""}"}
