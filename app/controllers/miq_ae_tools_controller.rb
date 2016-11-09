@@ -127,9 +127,13 @@ class MiqAeToolsController < ApplicationController
   end
 
   def import_via_git
-    git_based_domain_import_service.import(params[:git_repo_id], params[:git_branch_or_tag], current_tenant.id)
+    begin
+      git_based_domain_import_service.import(params[:git_repo_id], params[:git_branch_or_tag], current_tenant.id)
 
-    add_flash(_("Imported from git"), :info)
+      add_flash(_("Imported from git"), :info)
+    rescue MiqException::Error
+      add_flash(_("The selected branch or tag does not have valid domain object data"), :error)
+    end
 
     respond_to do |format|
       format.js { render :json => @flash_array.to_json, :status => 200 }
