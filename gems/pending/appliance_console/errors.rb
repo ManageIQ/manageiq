@@ -1,1 +1,0 @@
-class MiqSignalError < RuntimeError; end

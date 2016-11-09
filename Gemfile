@@ -1,7 +1,15 @@
 raise "Ruby versions less than 2.2.2 are unsupported!" if RUBY_VERSION < "2.2.2"
+
+source 'https://rubygems.org'
+
 #
 # VMDB specific gems
 #
+
+gem "manageiq-gems-pending", ">0", :require => 'manageiq-gems-pending', :git => "https://github.com/ManageIQ/manageiq-gems-pending.git", :branch => "master"
+# Modified gems for gems-pending.  Setting sources here since they are git references
+gem "handsoap", "~>0.2.5", :require => false, :git => "https://github.com/ManageIQ/handsoap.git", :tag => "v0.2.5-5"
+gem "rubywbem",            :require => false, :git => "https://github.com/ManageIQ/rubywbem.git", :branch => "rubywbem_0_1_0"
 
 # when using this Gemfile inside a providers Gemfile, the dependency for the provider is already declared
 unless dependencies.detect { |d| d.name == "manageiq-providers-amazon" }
@@ -113,9 +121,13 @@ unless ENV["APPLIANCE"]
   group :test do
     gem "brakeman",         "~>3.3",    :require => false
     gem "capybara",         "~>2.5.0",  :require => false
+    gem "coveralls",                    :require => false
     gem "factory_girl",     "~>4.5.0",  :require => false
     gem "jasmine",                      :require => false
     gem "sqlite3",                      :require => false
+    gem "timecop",          "~>0.7.3",  :require => false
+    gem "vcr",              "~>3.0.0",  :require => false
+    gem "webmock",          "~>1.12",   :require => false
   end
 
   group :development, :test do
@@ -138,5 +150,4 @@ dev_gemfile = File.expand_path("Gemfile.dev.rb", __dir__)
 eval_gemfile(dev_gemfile) if File.exist?(dev_gemfile)
 
 # Load other additional Gemfiles
-eval_gemfile(File.expand_path("gems/pending/Gemfile", __dir__))
 Dir.glob("bundler.d/*.rb").each { |f| eval_gemfile(File.expand_path(f, __dir__)) }
