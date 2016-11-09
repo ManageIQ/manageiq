@@ -42,6 +42,15 @@ class ManageIQ::Providers::Redhat::InfraManager::Vm < ManageIQ::Providers::Infra
   alias_method :owning_cluster, :parent_cluster
   alias_method :ems_cluster, :parent_cluster
 
+  def disconnect_storage(s = nil)
+    ([storage] + storages).compact.uniq.each do |storage|
+      unless storage.disks.any? { |disk| disks.include?(disk) }
+        super
+        break
+      end
+    end
+  end
+
   #
   # UI Button Validation Methods
   #

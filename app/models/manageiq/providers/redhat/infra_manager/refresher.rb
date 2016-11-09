@@ -39,10 +39,12 @@ class ManageIQ::Providers::Redhat::InfraManager
               :storage     => target.storages.empty? ? {:storagedomains => "storage_domain"} : target.storages.map(&:ems_ref)
             },
             :secondary => {
-              :vm         => [:disks, :snapshots, :nics],
-              :template   => [:disks]
+              :vm       => [:disks, :snapshots, :nics],
+              :template => [:disks],
+              :storage  => [:disks]
             }
           }
+
           data,  = Benchmark.realtime_block(:fetch_vm_data) { inventory.targeted_refresh(methods) }
 
         else

@@ -1077,14 +1077,14 @@ module ManageIQ::Providers
                             end
 
           storage_mor = backing['datastore']
-
+          location = "#{controller['busNumber']}:#{device['unitNumber']}"
           new_result = {
             :device_name     => device.fetch_path('deviceInfo', 'label'),
             :device_type     => device_type,
             :controller_type => controller_type,
             :present         => true,
             :filename        => backing['fileName'] || backing['deviceName'],
-            :location        => "#{controller['busNumber']}:#{device['unitNumber']}",
+            :location        => %w(floppy cdrom-raw cdrom-image).include?(device_type) ? vm_mor : location,
           }
 
           if device_type == 'disk'

@@ -59,11 +59,48 @@ module ManageIQ::Providers::Redhat::InfraManager::RefreshParser
         :master              => storage_inv[:master]
       }
 
+      new_result[:disks] = storage_inv_to_disk_hashes(storage_inv, new_result)
+
       result << new_result
       result_uids[mor] = new_result
       result_uids[:storage_id][storage_inv[:id]] = new_result
     end
     return result, result_uids
+  end
+
+  def self.storage_inv_to_disk_hashes(inv, storage)
+    inv = inv[:disks]
+    result = []
+    return result if inv.nil?
+
+    sort_disk_by_bootable(inv).each do |interface, devices|
+      devices.each_with_index do |device, index|
+        new_result = {
+          :device_name     => device[:name],
+          :device_type     => 'disk',
+          :controller_type => interface,
+          :present         => true,
+          :filename        => device[:id],
+          :location        => index.to_s,
+          :size            => (device[:provisioned_size] || device[:size]).to_i,
+          :size_on_disk    => device[:actual_size] ? device[:actual_size].to_i : 0,
+          :disk_type       => device[:sparse] == true ? 'thin' : 'thick',
+          :mode            => 'persistent',
+          :bootable        => device[:bootable],
+          :storage         => storage
+        }
+        result << new_result
+      end
+    end
+
+    result
+  end
+
+  def self.sort_disk_by_bootable(inv)
+    inv.to_miq_a.sort_by do |disk|
+      match = disk[:name].match(/disk[^\d]*(?<index>\d+)/i)
+      [disk[:bootable] ? 0 : 1, match ? match[:index].to_i : Float::INFINITY, disk[:name]]
+    end.group_by { |d| d[:interface] }
   end
 
   def self.host_inv_to_hashes(inv, ems_inv, cluster_uids, _storage_uids)
@@ -517,38 +554,13 @@ module ManageIQ::Providers::Redhat::InfraManager::RefreshParser
     result = []
     return result if inv.nil?
 
-    # RHEV initially orders disks by bootable status then by name. Attempt
-    # to use the disk number in the name, if available, as an ordering hint
-    # to support the case where a disk is added after initial VM creation.
-    inv = inv.to_miq_a.sort_by do |disk|
-      match = disk[:name].match(/disk[^\d]*(?<index>\d+)/i)
-      [disk[:bootable] ? 0 : 1, match ? match[:index].to_i : Float::INFINITY, disk[:name]]
-    end.group_by { |d| d[:interface] }
+    inv.each do |disk_inv|
+      storage_domain = disk_inv[:storage_domains].first
+      next if storage_domain.nil?
+      sid = storage_domain[:id]
+      next if sid.nil?
 
-    inv.each do |interface, devices|
-      devices.each_with_index do |device, index|
-        device_type = 'disk'
-
-        storage_domain = device[:storage_domains].first
-        storage_mor = storage_domain && storage_domain[:id]
-
-        new_result = {
-          :device_name     => device[:name],
-          :device_type     => device_type,
-          :controller_type => interface,
-          :present         => true,
-          :filename        => device[:id],
-          :location        => index.to_s,
-          :size            => (device[:provisioned_size] || device[:size]).to_i,
-          :size_on_disk    => device[:actual_size] ? device[:actual_size].to_i : 0,
-          :disk_type       => device[:sparse] == true ? 'thin' : 'thick',
-          :mode            => 'persistent',
-          :bootable        => device[:bootable]
-        }
-
-        new_result[:storage] = storage_uids[storage_mor] unless storage_mor.nil?
-        result << new_result
-      end
+      result += storage_uids[sid][:disks].map { |disk| disk if disk[:filename] == disk_inv[:id] }.compact
     end
 
     result

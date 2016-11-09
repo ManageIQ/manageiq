@@ -101,6 +101,8 @@ module EmsRefresh::SaveInventoryInfra
                 names.detect { |s| s.name == h[:name] }
               end
 
+      key_backup = backup_keys(h, [:disks])
+
       if found.nil?
         _log.info("#{log_header} Creating Storage [#{h[:name]}] location: [#{h[:location]}]")
         found = Storage.create(h)
@@ -110,6 +112,8 @@ module EmsRefresh::SaveInventoryInfra
       end
 
       h[:id] = found.id
+
+      save_child_inventory(found, key_backup, [:disks])
     end
   end
 

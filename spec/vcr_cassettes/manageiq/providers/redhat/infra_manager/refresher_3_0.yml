@@ -367,6 +367,7 @@ http_interactions:
         \   </storage_domain>\n    <storage_domain id=\"65ca9577-0d95-4909-8532-4c45201fbfe4\"
         href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4\">\n        <name>HostNFS</name>\n
         \       <link rel=\"permissions\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/permissions\"/>\n
+        \       <link rel=\"disks\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks\"/>\n
         \       <type>data</type>\n        <master>true</master>\n        <storage>\n
         \           <type>nfs</type>\n            <address>192.168.252.119</address>\n
         \           <path>/srv/nfs</path>\n        </storage>\n        <available>69793218560</available>\n
@@ -382,6 +383,7 @@ http_interactions:
         \   </storage_domain>\n    <storage_domain id=\"6efaa0f3-d832-4e8f-846f-aacdc974e6d0\"
         href=\"/api/storagedomains/6efaa0f3-d832-4e8f-846f-aacdc974e6d0\">\n        <name>StarM1RHEV-1</name>\n
         \       <link rel=\"permissions\" href=\"/api/storagedomains/6efaa0f3-d832-4e8f-846f-aacdc974e6d0/permissions\"/>\n
+        \       <link rel=\"disks\" href=\"/api/storagedomains/6efaa0f3-d832-4e8f-846f-aacdc974e6d0/disks\"/>\n
         \       <type>data</type>\n        <master>true</master>\n        <storage>\n
         \           <type>iscsi</type>\n            <volume_group id=\"ETu16x-1cnn-Z1Xi-k9Bj-GMzq-ke5s-gsou2g\">\n
         \               <logical_unit id=\"2403027f93d7780fa\">\n                    <address>10.1.1.202</address>\n
@@ -396,6 +398,7 @@ http_interactions:
         \   </storage_domain>\n    <storage_domain id=\"40f45969-31e9-4db6-9c9c-9a683c3755aa\"
         href=\"/api/storagedomains/40f45969-31e9-4db6-9c9c-9a683c3755aa\">\n        <name>StarM1-RHEVM1</name>\n
         \       <link rel=\"permissions\" href=\"/api/storagedomains/40f45969-31e9-4db6-9c9c-9a683c3755aa/permissions\"/>\n
+        \       <link rel=\"disks\" href=\"/api/storagedomains/40f45969-31e9-4db6-9c9c-9a683c3755aa/disks\"/>\n
         \       <type>data</type>\n        <master>true</master>\n        <storage>\n
         \           <type>iscsi</type>\n            <volume_group id=\"9Al9cf-ML4f-Ch0m-mI0x-Kz8n-bUYL-uycuBn\">\n
         \               <logical_unit id=\"298b42b5b7976b220\">\n                    <address>10.1.1.202</address>\n
@@ -1777,6 +1780,7 @@ http_interactions:
         \       <name>StarM1RHEV-1</name>\n        <actions>\n            <link rel=\"activate\"
         href=\"/api/datacenters/cb50d90a-f585-4d17-a524-a577a97da928/storagedomains/6efaa0f3-d832-4e8f-846f-aacdc974e6d0/activate\"/>\n
         \           <link rel=\"deactivate\" href=\"/api/datacenters/cb50d90a-f585-4d17-a524-a577a97da928/storagedomains/6efaa0f3-d832-4e8f-846f-aacdc974e6d0/deactivate\"/>\n
+        \           <link rel=\"disks\" href=\"/api/datacenters/cb50d90a-f585-4d17-a524-a577a97da928/storagedomains/6efaa0f3-d832-4e8f-846f-aacdc974e6d0/disks\"/>\n
         \       </actions>\n        <data_center id=\"cb50d90a-f585-4d17-a524-a577a97da928\"
         href=\"/api/datacenters/cb50d90a-f585-4d17-a524-a577a97da928\"/>\n        <type>data</type>\n
         \       <status>\n            <state>inactive</state>\n        </status>\n
@@ -1837,6 +1841,7 @@ http_interactions:
         \       <name>StarM1-RHEVM1</name>\n        <actions>\n            <link rel=\"activate\"
         href=\"/api/datacenters/199560d0-9b83-4212-b2a1-077e1b4371af/storagedomains/40f45969-31e9-4db6-9c9c-9a683c3755aa/activate\"/>\n
         \           <link rel=\"deactivate\" href=\"/api/datacenters/199560d0-9b83-4212-b2a1-077e1b4371af/storagedomains/40f45969-31e9-4db6-9c9c-9a683c3755aa/deactivate\"/>\n
+        \           <link rel=\"disks\" href=\"/api/datacenters/199560d0-9b83-4212-b2a1-077e1b4371af/storagedomains/40f45969-31e9-4db6-9c9c-9a683c3755aa/disks\"/>\n
         \       </actions>\n        <data_center id=\"199560d0-9b83-4212-b2a1-077e1b4371af\"
         href=\"/api/datacenters/199560d0-9b83-4212-b2a1-077e1b4371af\"/>\n        <type>data</type>\n
         \       <status>\n            <state>unknown</state>\n        </status>\n
@@ -1897,6 +1902,7 @@ http_interactions:
         \       <name>HostNFS</name>\n        <actions>\n            <link rel=\"activate\"
         href=\"/api/datacenters/eb5592d2-ce76-11e0-a703-005056af0085/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/activate\"/>\n
         \           <link rel=\"deactivate\" href=\"/api/datacenters/eb5592d2-ce76-11e0-a703-005056af0085/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/deactivate\"/>\n
+        \           <link rel=\"disks\" href=\"/api/datacenters/eb5592d2-ce76-11e0-a703-005056af0085/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks\"/>\n
         \       </actions>\n        <data_center id=\"eb5592d2-ce76-11e0-a703-005056af0085\"
         href=\"/api/datacenters/eb5592d2-ce76-11e0-a703-005056af0085\"/>\n        <type>data</type>\n
         \       <status>\n            <state>unknown</state>\n        </status>\n
@@ -6772,6 +6778,1120 @@ http_interactions:
         \   </disk>\n</disks>\n"
     http_version: 
   recorded_at: Tue, 07 Oct 2014 17:58:53 GMT
+- request:
+    method: get
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/storagedomains/40f45969-31e9-4db6-9c9c-9a683c3755aa/disks
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=KdWoTY3kozT77nGifJGnmk13I2daGwnv-UHe_9qd.f18
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/xml
+      Content-Length:
+      - '31007'
+      Jsessionid:
+      - KdWoTY3kozT77nGifJGnmk13I2daGwnv-UHe_9qd
+      Date:
+      - Mon, 24 Oct 2016 15:39:29 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<disks>\n
+        \   <disk id=\"2c364312-e3d0-4399-92ed-2975181d88b2\" href=\"/api/storagedomains/40f45969-31e9-4db6-9c9c-9a683c3755aa/disks/2c364312-e3d0-4399-92ed-2975181d88b2\">\n
+        \       <name>Disk 3</name>\n        <link rel=\"statistics\" href=\"/api/storagedomains/40f45969-31e9-4db6-9c9c-9a683c3755aa/disks/2c364312-e3d0-4399-92ed-2975181d88b2/statistics\"/>\n
+        \       <vm id=\"f84706ea-a68a-4206-a6cf-a06e11da70c0\" href=\"/api/vms/f84706ea-a68a-4206-a6cf-a06e11da70c0\"/>\n
+        \       <storage_domains>\n            <storage_domain id=\"40f45969-31e9-4db6-9c9c-9a683c3755aa\"/>\n
+        \       </storage_domains>\n        <size>5368709120</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>cow</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"59edb695-2044-4010-aa8e-c4de5d6683cb\" href=\"/api/storagedomains/40f45969-31e9-4db6-9c9c-9a683c3755aa/disks/59edb695-2044-4010-aa8e-c4de5d6683cb\">\n
+        \       <name>Disk 2</name>\n        <link rel=\"statistics\" href=\"/api/storagedomains/40f45969-31e9-4db6-9c9c-9a683c3755aa/disks/59edb695-2044-4010-aa8e-c4de5d6683cb/statistics\"/>\n
+        \       <vm id=\"f84706ea-a68a-4206-a6cf-a06e11da70c0\" href=\"/api/vms/f84706ea-a68a-4206-a6cf-a06e11da70c0\"/>\n
+        \       <storage_domains>\n            <storage_domain id=\"40f45969-31e9-4db6-9c9c-9a683c3755aa\"/>\n
+        \       </storage_domains>\n        <size>3221225472</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>cow</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"6dc2af11-9ed5-4831-9080-a34315779e8d\" href=\"/api/storagedomains/40f45969-31e9-4db6-9c9c-9a683c3755aa/disks/6dc2af11-9ed5-4831-9080-a34315779e8d\">\n
+        \       <name>Disk 1</name>\n        <link rel=\"statistics\" href=\"/api/storagedomains/40f45969-31e9-4db6-9c9c-9a683c3755aa/disks/6dc2af11-9ed5-4831-9080-a34315779e8d/statistics\"/>\n
+        \       <vm id=\"f84706ea-a68a-4206-a6cf-a06e11da70c0\" href=\"/api/vms/f84706ea-a68a-4206-a6cf-a06e11da70c0\"/>\n
+        \       <storage_domains>\n            <storage_domain id=\"40f45969-31e9-4db6-9c9c-9a683c3755aa\"/>\n
+        \       </storage_domains>\n        <size>7516192768</size>\n        <type>system</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>ide</interface>\n
+        \       <format>cow</format>\n        <sparse>true</sparse>\n        <bootable>true</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"048ccac3-214b-49ea-b31e-51f647f39c0a\" href=\"/api/storagedomains/40f45969-31e9-4db6-9c9c-9a683c3755aa/disks/048ccac3-214b-49ea-b31e-51f647f39c0a\">\n
+        \       <name>Disk 5</name>\n        <link rel=\"statistics\" href=\"/api/storagedomains/40f45969-31e9-4db6-9c9c-9a683c3755aa/disks/048ccac3-214b-49ea-b31e-51f647f39c0a/statistics\"/>\n
+        \       <vm id=\"f84706ea-a68a-4206-a6cf-a06e11da70c0\" href=\"/api/vms/f84706ea-a68a-4206-a6cf-a06e11da70c0\"/>\n
+        \       <storage_domains>\n            <storage_domain id=\"40f45969-31e9-4db6-9c9c-9a683c3755aa\"/>\n
+        \       </storage_domains>\n        <size>21474836480</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>cow</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"2c372aeb-25e4-4caa-a867-1889395867d6\" href=\"/api/storagedomains/40f45969-31e9-4db6-9c9c-9a683c3755aa/disks/2c372aeb-25e4-4caa-a867-1889395867d6\">\n
+        \       <name>Disk 4</name>\n        <link rel=\"statistics\" href=\"/api/storagedomains/40f45969-31e9-4db6-9c9c-9a683c3755aa/disks/2c372aeb-25e4-4caa-a867-1889395867d6/statistics\"/>\n
+        \       <vm id=\"f84706ea-a68a-4206-a6cf-a06e11da70c0\" href=\"/api/vms/f84706ea-a68a-4206-a6cf-a06e11da70c0\"/>\n
+        \       <storage_domains>\n            <storage_domain id=\"40f45969-31e9-4db6-9c9c-9a683c3755aa\"/>\n
+        \       </storage_domains>\n        <size>8589934592</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>cow</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"8ea1916d-d09c-4bfe-a81a-54179b355b0c\" href=\"/api/storagedomains/40f45969-31e9-4db6-9c9c-9a683c3755aa/disks/8ea1916d-d09c-4bfe-a81a-54179b355b0c\">\n
+        \       <name>Disk 5</name>\n        <link rel=\"statistics\" href=\"/api/storagedomains/40f45969-31e9-4db6-9c9c-9a683c3755aa/disks/8ea1916d-d09c-4bfe-a81a-54179b355b0c/statistics\"/>\n
+        \       <vm id=\"209666c9-e9d6-4e55-89f9-cc7fdf023ba3\" href=\"/api/vms/209666c9-e9d6-4e55-89f9-cc7fdf023ba3\"/>\n
+        \       <storage_domains>\n            <storage_domain id=\"40f45969-31e9-4db6-9c9c-9a683c3755aa\"/>\n
+        \       </storage_domains>\n        <size>21474836480</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>cow</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"ccbc5b89-b2fc-451f-aec1-a5a82899a258\" href=\"/api/storagedomains/40f45969-31e9-4db6-9c9c-9a683c3755aa/disks/ccbc5b89-b2fc-451f-aec1-a5a82899a258\">\n
+        \       <name>Disk 2</name>\n        <link rel=\"statistics\" href=\"/api/storagedomains/40f45969-31e9-4db6-9c9c-9a683c3755aa/disks/ccbc5b89-b2fc-451f-aec1-a5a82899a258/statistics\"/>\n
+        \       <vm id=\"209666c9-e9d6-4e55-89f9-cc7fdf023ba3\" href=\"/api/vms/209666c9-e9d6-4e55-89f9-cc7fdf023ba3\"/>\n
+        \       <storage_domains>\n            <storage_domain id=\"40f45969-31e9-4db6-9c9c-9a683c3755aa\"/>\n
+        \       </storage_domains>\n        <size>3221225472</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>cow</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"4e1a7b97-5f8d-4491-8be6-e70255c9beda\" href=\"/api/storagedomains/40f45969-31e9-4db6-9c9c-9a683c3755aa/disks/4e1a7b97-5f8d-4491-8be6-e70255c9beda\">\n
+        \       <name>Disk 1</name>\n        <link rel=\"statistics\" href=\"/api/storagedomains/40f45969-31e9-4db6-9c9c-9a683c3755aa/disks/4e1a7b97-5f8d-4491-8be6-e70255c9beda/statistics\"/>\n
+        \       <vm id=\"209666c9-e9d6-4e55-89f9-cc7fdf023ba3\" href=\"/api/vms/209666c9-e9d6-4e55-89f9-cc7fdf023ba3\"/>\n
+        \       <storage_domains>\n            <storage_domain id=\"40f45969-31e9-4db6-9c9c-9a683c3755aa\"/>\n
+        \       </storage_domains>\n        <size>7516192768</size>\n        <type>system</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>ide</interface>\n
+        \       <format>cow</format>\n        <sparse>true</sparse>\n        <bootable>true</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"e8c7fe62-1d08-4626-bef1-c9193a1f18a4\" href=\"/api/storagedomains/40f45969-31e9-4db6-9c9c-9a683c3755aa/disks/e8c7fe62-1d08-4626-bef1-c9193a1f18a4\">\n
+        \       <name>Disk 3</name>\n        <link rel=\"statistics\" href=\"/api/storagedomains/40f45969-31e9-4db6-9c9c-9a683c3755aa/disks/e8c7fe62-1d08-4626-bef1-c9193a1f18a4/statistics\"/>\n
+        \       <vm id=\"209666c9-e9d6-4e55-89f9-cc7fdf023ba3\" href=\"/api/vms/209666c9-e9d6-4e55-89f9-cc7fdf023ba3\"/>\n
+        \       <storage_domains>\n            <storage_domain id=\"40f45969-31e9-4db6-9c9c-9a683c3755aa\"/>\n
+        \       </storage_domains>\n        <size>5368709120</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>cow</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"7dad5e69-f405-422f-aa0d-662a582126b9\" href=\"/api/storagedomains/40f45969-31e9-4db6-9c9c-9a683c3755aa/disks/7dad5e69-f405-422f-aa0d-662a582126b9\">\n
+        \       <name>Disk 4</name>\n        <link rel=\"statistics\" href=\"/api/storagedomains/40f45969-31e9-4db6-9c9c-9a683c3755aa/disks/7dad5e69-f405-422f-aa0d-662a582126b9/statistics\"/>\n
+        \       <vm id=\"209666c9-e9d6-4e55-89f9-cc7fdf023ba3\" href=\"/api/vms/209666c9-e9d6-4e55-89f9-cc7fdf023ba3\"/>\n
+        \       <storage_domains>\n            <storage_domain id=\"40f45969-31e9-4db6-9c9c-9a683c3755aa\"/>\n
+        \       </storage_domains>\n        <size>8589934592</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>cow</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"4611586d-e56e-47e9-8316-17ff7f462816\" href=\"/api/storagedomains/40f45969-31e9-4db6-9c9c-9a683c3755aa/disks/4611586d-e56e-47e9-8316-17ff7f462816\">\n
+        \       <name>Disk 3</name>\n        <link rel=\"statistics\" href=\"/api/storagedomains/40f45969-31e9-4db6-9c9c-9a683c3755aa/disks/4611586d-e56e-47e9-8316-17ff7f462816/statistics\"/>\n
+        \       <vm id=\"4655202c-c752-461d-89bd-db42ff76b69f\" href=\"/api/vms/4655202c-c752-461d-89bd-db42ff76b69f\"/>\n
+        \       <storage_domains>\n            <storage_domain id=\"40f45969-31e9-4db6-9c9c-9a683c3755aa\"/>\n
+        \       </storage_domains>\n        <size>5368709120</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>cow</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"933eaa97-bbff-4291-b39d-b0e1a8be46c8\" href=\"/api/storagedomains/40f45969-31e9-4db6-9c9c-9a683c3755aa/disks/933eaa97-bbff-4291-b39d-b0e1a8be46c8\">\n
+        \       <name>Disk 2</name>\n        <link rel=\"statistics\" href=\"/api/storagedomains/40f45969-31e9-4db6-9c9c-9a683c3755aa/disks/933eaa97-bbff-4291-b39d-b0e1a8be46c8/statistics\"/>\n
+        \       <vm id=\"4655202c-c752-461d-89bd-db42ff76b69f\" href=\"/api/vms/4655202c-c752-461d-89bd-db42ff76b69f\"/>\n
+        \       <storage_domains>\n            <storage_domain id=\"40f45969-31e9-4db6-9c9c-9a683c3755aa\"/>\n
+        \       </storage_domains>\n        <size>3221225472</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>cow</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"0cc57bfb-8990-4527-a614-6378e08d9799\" href=\"/api/storagedomains/40f45969-31e9-4db6-9c9c-9a683c3755aa/disks/0cc57bfb-8990-4527-a614-6378e08d9799\">\n
+        \       <name>Disk 1</name>\n        <link rel=\"statistics\" href=\"/api/storagedomains/40f45969-31e9-4db6-9c9c-9a683c3755aa/disks/0cc57bfb-8990-4527-a614-6378e08d9799/statistics\"/>\n
+        \       <vm id=\"4655202c-c752-461d-89bd-db42ff76b69f\" href=\"/api/vms/4655202c-c752-461d-89bd-db42ff76b69f\"/>\n
+        \       <storage_domains>\n            <storage_domain id=\"40f45969-31e9-4db6-9c9c-9a683c3755aa\"/>\n
+        \       </storage_domains>\n        <size>7516192768</size>\n        <type>system</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>ide</interface>\n
+        \       <format>cow</format>\n        <sparse>true</sparse>\n        <bootable>true</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"e11d43ca-8823-4b3b-b519-a8ff877a2006\" href=\"/api/storagedomains/40f45969-31e9-4db6-9c9c-9a683c3755aa/disks/e11d43ca-8823-4b3b-b519-a8ff877a2006\">\n
+        \       <name>Disk 5</name>\n        <link rel=\"statistics\" href=\"/api/storagedomains/40f45969-31e9-4db6-9c9c-9a683c3755aa/disks/e11d43ca-8823-4b3b-b519-a8ff877a2006/statistics\"/>\n
+        \       <vm id=\"4655202c-c752-461d-89bd-db42ff76b69f\" href=\"/api/vms/4655202c-c752-461d-89bd-db42ff76b69f\"/>\n
+        \       <storage_domains>\n            <storage_domain id=\"40f45969-31e9-4db6-9c9c-9a683c3755aa\"/>\n
+        \       </storage_domains>\n        <size>21474836480</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>cow</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"b5e8bfec-aae4-4474-bbc3-d863bf5d041d\" href=\"/api/storagedomains/40f45969-31e9-4db6-9c9c-9a683c3755aa/disks/b5e8bfec-aae4-4474-bbc3-d863bf5d041d\">\n
+        \       <name>Disk 4</name>\n        <link rel=\"statistics\" href=\"/api/storagedomains/40f45969-31e9-4db6-9c9c-9a683c3755aa/disks/b5e8bfec-aae4-4474-bbc3-d863bf5d041d/statistics\"/>\n
+        \       <vm id=\"4655202c-c752-461d-89bd-db42ff76b69f\" href=\"/api/vms/4655202c-c752-461d-89bd-db42ff76b69f\"/>\n
+        \       <storage_domains>\n            <storage_domain id=\"40f45969-31e9-4db6-9c9c-9a683c3755aa\"/>\n
+        \       </storage_domains>\n        <size>8589934592</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>cow</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"08761baa-bbcb-4d25-919c-420652520e43\" href=\"/api/storagedomains/40f45969-31e9-4db6-9c9c-9a683c3755aa/disks/08761baa-bbcb-4d25-919c-420652520e43\">\n
+        \       <name>Disk 4</name>\n        <link rel=\"statistics\" href=\"/api/storagedomains/40f45969-31e9-4db6-9c9c-9a683c3755aa/disks/08761baa-bbcb-4d25-919c-420652520e43/statistics\"/>\n
+        \       <vm id=\"dba8a234-08b8-4639-a047-1dd072ff6e5b\" href=\"/api/vms/dba8a234-08b8-4639-a047-1dd072ff6e5b\"/>\n
+        \       <storage_domains>\n            <storage_domain id=\"40f45969-31e9-4db6-9c9c-9a683c3755aa\"/>\n
+        \       </storage_domains>\n        <size>8589934592</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>cow</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"d64cfbb4-60c3-475d-a62d-b26110ac98c4\" href=\"/api/storagedomains/40f45969-31e9-4db6-9c9c-9a683c3755aa/disks/d64cfbb4-60c3-475d-a62d-b26110ac98c4\">\n
+        \       <name>Disk 5</name>\n        <link rel=\"statistics\" href=\"/api/storagedomains/40f45969-31e9-4db6-9c9c-9a683c3755aa/disks/d64cfbb4-60c3-475d-a62d-b26110ac98c4/statistics\"/>\n
+        \       <vm id=\"dba8a234-08b8-4639-a047-1dd072ff6e5b\" href=\"/api/vms/dba8a234-08b8-4639-a047-1dd072ff6e5b\"/>\n
+        \       <storage_domains>\n            <storage_domain id=\"40f45969-31e9-4db6-9c9c-9a683c3755aa\"/>\n
+        \       </storage_domains>\n        <size>21474836480</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>cow</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"2006c5b7-6165-494f-9bc6-97c8cbf6dbb4\" href=\"/api/storagedomains/40f45969-31e9-4db6-9c9c-9a683c3755aa/disks/2006c5b7-6165-494f-9bc6-97c8cbf6dbb4\">\n
+        \       <name>Disk 1</name>\n        <link rel=\"statistics\" href=\"/api/storagedomains/40f45969-31e9-4db6-9c9c-9a683c3755aa/disks/2006c5b7-6165-494f-9bc6-97c8cbf6dbb4/statistics\"/>\n
+        \       <vm id=\"dba8a234-08b8-4639-a047-1dd072ff6e5b\" href=\"/api/vms/dba8a234-08b8-4639-a047-1dd072ff6e5b\"/>\n
+        \       <storage_domains>\n            <storage_domain id=\"40f45969-31e9-4db6-9c9c-9a683c3755aa\"/>\n
+        \       </storage_domains>\n        <size>7516192768</size>\n        <type>system</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>ide</interface>\n
+        \       <format>cow</format>\n        <sparse>true</sparse>\n        <bootable>true</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"589dd0fe-9d5f-4f7f-9661-31ac1b1c7a3f\" href=\"/api/storagedomains/40f45969-31e9-4db6-9c9c-9a683c3755aa/disks/589dd0fe-9d5f-4f7f-9661-31ac1b1c7a3f\">\n
+        \       <name>Disk 3</name>\n        <link rel=\"statistics\" href=\"/api/storagedomains/40f45969-31e9-4db6-9c9c-9a683c3755aa/disks/589dd0fe-9d5f-4f7f-9661-31ac1b1c7a3f/statistics\"/>\n
+        \       <vm id=\"dba8a234-08b8-4639-a047-1dd072ff6e5b\" href=\"/api/vms/dba8a234-08b8-4639-a047-1dd072ff6e5b\"/>\n
+        \       <storage_domains>\n            <storage_domain id=\"40f45969-31e9-4db6-9c9c-9a683c3755aa\"/>\n
+        \       </storage_domains>\n        <size>5368709120</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>cow</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"efc1be6d-3847-4c2b-a997-72ffe970abd9\" href=\"/api/storagedomains/40f45969-31e9-4db6-9c9c-9a683c3755aa/disks/efc1be6d-3847-4c2b-a997-72ffe970abd9\">\n
+        \       <name>Disk 2</name>\n        <link rel=\"statistics\" href=\"/api/storagedomains/40f45969-31e9-4db6-9c9c-9a683c3755aa/disks/efc1be6d-3847-4c2b-a997-72ffe970abd9/statistics\"/>\n
+        \       <vm id=\"dba8a234-08b8-4639-a047-1dd072ff6e5b\" href=\"/api/vms/dba8a234-08b8-4639-a047-1dd072ff6e5b\"/>\n
+        \       <storage_domains>\n            <storage_domain id=\"40f45969-31e9-4db6-9c9c-9a683c3755aa\"/>\n
+        \       </storage_domains>\n        <size>3221225472</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>cow</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"cab97df4-7e8f-423d-beb6-3782f5196347\" href=\"/api/storagedomains/40f45969-31e9-4db6-9c9c-9a683c3755aa/disks/cab97df4-7e8f-423d-beb6-3782f5196347\">\n
+        \       <name>Disk 1</name>\n        <vm id=\"276fcf44-afeb-4591-b3a6-82544124f898\"
+        href=\"/api/vms/276fcf44-afeb-4591-b3a6-82544124f898\"/>\n        <storage_domains>\n
+        \           <storage_domain id=\"40f45969-31e9-4db6-9c9c-9a683c3755aa\"/>\n
+        \       </storage_domains>\n        <size>7516192768</size>\n        <type>system</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>ide</interface>\n
+        \       <format>cow</format>\n        <sparse>true</sparse>\n        <bootable>true</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"6127913a-d300-4bd7-8695-1ebdc09491ef\" href=\"/api/storagedomains/40f45969-31e9-4db6-9c9c-9a683c3755aa/disks/6127913a-d300-4bd7-8695-1ebdc09491ef\">\n
+        \       <name>Disk 3</name>\n        <vm id=\"276fcf44-afeb-4591-b3a6-82544124f898\"
+        href=\"/api/vms/276fcf44-afeb-4591-b3a6-82544124f898\"/>\n        <storage_domains>\n
+        \           <storage_domain id=\"40f45969-31e9-4db6-9c9c-9a683c3755aa\"/>\n
+        \       </storage_domains>\n        <size>5368709120</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>cow</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"f59f3076-28e8-4cac-8920-65cd09484e14\" href=\"/api/storagedomains/40f45969-31e9-4db6-9c9c-9a683c3755aa/disks/f59f3076-28e8-4cac-8920-65cd09484e14\">\n
+        \       <name>Disk 2</name>\n        <vm id=\"276fcf44-afeb-4591-b3a6-82544124f898\"
+        href=\"/api/vms/276fcf44-afeb-4591-b3a6-82544124f898\"/>\n        <storage_domains>\n
+        \           <storage_domain id=\"40f45969-31e9-4db6-9c9c-9a683c3755aa\"/>\n
+        \       </storage_domains>\n        <size>3221225472</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>cow</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"5a53adbb-c4f5-42d8-b463-3e8e53514882\" href=\"/api/storagedomains/40f45969-31e9-4db6-9c9c-9a683c3755aa/disks/5a53adbb-c4f5-42d8-b463-3e8e53514882\">\n
+        \       <name>Disk 4</name>\n        <vm id=\"276fcf44-afeb-4591-b3a6-82544124f898\"
+        href=\"/api/vms/276fcf44-afeb-4591-b3a6-82544124f898\"/>\n        <storage_domains>\n
+        \           <storage_domain id=\"40f45969-31e9-4db6-9c9c-9a683c3755aa\"/>\n
+        \       </storage_domains>\n        <size>8589934592</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>cow</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"be0f5c8a-62a7-45c4-9230-ae6ff4382eea\" href=\"/api/storagedomains/40f45969-31e9-4db6-9c9c-9a683c3755aa/disks/be0f5c8a-62a7-45c4-9230-ae6ff4382eea\">\n
+        \       <name>Disk 5</name>\n        <vm id=\"276fcf44-afeb-4591-b3a6-82544124f898\"
+        href=\"/api/vms/276fcf44-afeb-4591-b3a6-82544124f898\"/>\n        <storage_domains>\n
+        \           <storage_domain id=\"40f45969-31e9-4db6-9c9c-9a683c3755aa\"/>\n
+        \       </storage_domains>\n        <size>21474836480</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>cow</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n</disks>\n"
+    http_version:
+  recorded_at: Mon, 24 Oct 2016 15:39:28 GMT
+- request:
+    method: get
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=KdWoTY3kozT77nGifJGnmk13I2daGwnv-UHe_9qd.f18
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/xml
+      Content-Length:
+      - '31007'
+      Jsessionid:
+      - KdWoTY3kozT77nGifJGnmk13I2daGwnv-UHe_9qd
+      Date:
+      - Mon, 24 Oct 2016 15:39:29 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<disks>\n
+        \   <disk id=\"a9a57d05-aca5-4117-868e-beb31f0523a5\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/a9a57d05-aca5-4117-868e-beb31f0523a5\">\n
+        \       <name>Disk 2</name>\n        <link rel=\"statistics\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/a9a57d05-aca5-4117-868e-beb31f0523a5/statistics\"/>\n
+        \       <vm id=\"26a050fb-62c3-4645-9088-be6efec860e1\" href=\"/api/vms/26a050fb-62c3-4645-9088-be6efec860e1\"/>\n
+        \       <storage_domains>\n            <storage_domain id=\"65ca9577-0d95-4909-8532-4c45201fbfe4\"/>\n
+        \       </storage_domains>\n        <size>1073741824</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>ide</interface>\n
+        \       <format>cow</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"190fa724-91e7-49ba-8dcc-5dda4d0186d8\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/190fa724-91e7-49ba-8dcc-5dda4d0186d8\">\n
+        \       <name>Disk 1</name>\n        <link rel=\"statistics\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/190fa724-91e7-49ba-8dcc-5dda4d0186d8/statistics\"/>\n
+        \       <vm id=\"26a050fb-62c3-4645-9088-be6efec860e1\" href=\"/api/vms/26a050fb-62c3-4645-9088-be6efec860e1\"/>\n
+        \       <storage_domains>\n            <storage_domain id=\"65ca9577-0d95-4909-8532-4c45201fbfe4\"/>\n
+        \       </storage_domains>\n        <size>1073741824</size>\n        <type>system</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>cow</format>\n        <sparse>true</sparse>\n        <bootable>true</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"2b427acc-9182-493e-a8d9-783ccb12afd5\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/2b427acc-9182-493e-a8d9-783ccb12afd5\">\n
+        \       <name>Disk 2</name>\n        <link rel=\"statistics\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/2b427acc-9182-493e-a8d9-783ccb12afd5/statistics\"/>\n
+        \       <vm id=\"fe052832-2350-48ce-8e56-c24b4cd91876\" href=\"/api/vms/fe052832-2350-48ce-8e56-c24b4cd91876\"/>\n
+        \       <storage_domains>\n            <storage_domain id=\"65ca9577-0d95-4909-8532-4c45201fbfe4\"/>\n
+        \       </storage_domains>\n        <size>1073741824</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>ide</interface>\n
+        \       <format>raw</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"061baae8-69bc-410c-a950-7d78be535c8c\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/061baae8-69bc-410c-a950-7d78be535c8c\">\n
+        \       <name>Disk 1</name>\n        <link rel=\"statistics\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/061baae8-69bc-410c-a950-7d78be535c8c/statistics\"/>\n
+        \       <vm id=\"fe052832-2350-48ce-8e56-c24b4cd91876\" href=\"/api/vms/fe052832-2350-48ce-8e56-c24b4cd91876\"/>\n
+        \       <storage_domains>\n            <storage_domain id=\"65ca9577-0d95-4909-8532-4c45201fbfe4\"/>\n
+        \       </storage_domains>\n        <size>5368709120</size>\n        <type>system</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>raw</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"4b92f601-1781-4584-a798-58b13a9f6e49\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/4b92f601-1781-4584-a798-58b13a9f6e49\">\n
+        \       <name>Disk 3</name>\n        <link rel=\"statistics\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/4b92f601-1781-4584-a798-58b13a9f6e49/statistics\"/>\n
+        \       <vm id=\"7427031c-c3d1-4e06-99b4-19fd893606de\" href=\"/api/vms/7427031c-c3d1-4e06-99b4-19fd893606de\"/>\n
+        \       <storage_domains>\n            <storage_domain id=\"65ca9577-0d95-4909-8532-4c45201fbfe4\"/>\n
+        \       </storage_domains>\n        <size>5368709120</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>raw</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"df80c03f-baea-4a19-808f-ac4a51aa3e46\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/df80c03f-baea-4a19-808f-ac4a51aa3e46\">\n
+        \       <name>Disk 2</name>\n        <link rel=\"statistics\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/df80c03f-baea-4a19-808f-ac4a51aa3e46/statistics\"/>\n
+        \       <vm id=\"7427031c-c3d1-4e06-99b4-19fd893606de\" href=\"/api/vms/7427031c-c3d1-4e06-99b4-19fd893606de\"/>\n
+        \       <storage_domains>\n            <storage_domain id=\"65ca9577-0d95-4909-8532-4c45201fbfe4\"/>\n
+        \       </storage_domains>\n        <size>4294967296</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>raw</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"69cadec7-2670-4bb8-8bbe-2c74391b23f9\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/69cadec7-2670-4bb8-8bbe-2c74391b23f9\">\n
+        \       <name>Disk 1</name>\n        <link rel=\"statistics\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/69cadec7-2670-4bb8-8bbe-2c74391b23f9/statistics\"/>\n
+        \       <vm id=\"7427031c-c3d1-4e06-99b4-19fd893606de\" href=\"/api/vms/7427031c-c3d1-4e06-99b4-19fd893606de\"/>\n
+        \       <storage_domains>\n            <storage_domain id=\"65ca9577-0d95-4909-8532-4c45201fbfe4\"/>\n
+        \       </storage_domains>\n        <size>7516192768</size>\n        <type>system</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>ide</interface>\n
+        \       <format>raw</format>\n        <sparse>true</sparse>\n        <bootable>true</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"840a68fd-c467-4d32-b7f4-2ccceedc976b\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/840a68fd-c467-4d32-b7f4-2ccceedc976b\">\n
+        \       <name>Disk 4</name>\n        <link rel=\"statistics\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/840a68fd-c467-4d32-b7f4-2ccceedc976b/statistics\"/>\n
+        \       <vm id=\"7427031c-c3d1-4e06-99b4-19fd893606de\" href=\"/api/vms/7427031c-c3d1-4e06-99b4-19fd893606de\"/>\n
+        \       <storage_domains>\n            <storage_domain id=\"65ca9577-0d95-4909-8532-4c45201fbfe4\"/>\n
+        \       </storage_domains>\n        <size>8589934592</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>raw</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"a4f7b574-2754-458d-a784-65586212440b\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/a4f7b574-2754-458d-a784-65586212440b\">\n
+        \       <name>Disk 5</name>\n        <link rel=\"statistics\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/a4f7b574-2754-458d-a784-65586212440b/statistics\"/>\n
+        \       <vm id=\"7427031c-c3d1-4e06-99b4-19fd893606de\" href=\"/api/vms/7427031c-c3d1-4e06-99b4-19fd893606de\"/>\n
+        \       <storage_domains>\n            <storage_domain id=\"65ca9577-0d95-4909-8532-4c45201fbfe4\"/>\n
+        \       </storage_domains>\n        <size>21474836480</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>raw</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"ff633058-57b3-479e-a00e-c0f43091c151\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/ff633058-57b3-479e-a00e-c0f43091c151\">\n
+        \       <name>Disk 5</name>\n        <link rel=\"statistics\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/ff633058-57b3-479e-a00e-c0f43091c151/statistics\"/>\n
+        \       <vm id=\"a42314f4-4381-468f-ba9c-93b4276f155a\" href=\"/api/vms/a42314f4-4381-468f-ba9c-93b4276f155a\"/>\n
+        \       <storage_domains>\n            <storage_domain id=\"65ca9577-0d95-4909-8532-4c45201fbfe4\"/>\n
+        \       </storage_domains>\n        <size>21474836480</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>raw</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"9cf3799f-44c4-441f-a079-2754507f8b19\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/9cf3799f-44c4-441f-a079-2754507f8b19\">\n
+        \       <name>Disk 4</name>\n        <link rel=\"statistics\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/9cf3799f-44c4-441f-a079-2754507f8b19/statistics\"/>\n
+        \       <vm id=\"a42314f4-4381-468f-ba9c-93b4276f155a\" href=\"/api/vms/a42314f4-4381-468f-ba9c-93b4276f155a\"/>\n
+        \       <storage_domains>\n            <storage_domain id=\"65ca9577-0d95-4909-8532-4c45201fbfe4\"/>\n
+        \       </storage_domains>\n        <size>8589934592</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>raw</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"eea14dda-d67c-4a4a-b428-567e7a0cf076\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/eea14dda-d67c-4a4a-b428-567e7a0cf076\">\n
+        \       <name>Disk 1</name>\n        <link rel=\"statistics\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/eea14dda-d67c-4a4a-b428-567e7a0cf076/statistics\"/>\n
+        \       <vm id=\"a42314f4-4381-468f-ba9c-93b4276f155a\" href=\"/api/vms/a42314f4-4381-468f-ba9c-93b4276f155a\"/>\n
+        \       <storage_domains>\n            <storage_domain id=\"65ca9577-0d95-4909-8532-4c45201fbfe4\"/>\n
+        \       </storage_domains>\n        <size>7516192768</size>\n        <type>system</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>ide</interface>\n
+        \       <format>raw</format>\n        <sparse>true</sparse>\n        <bootable>true</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"dffa083d-7603-4869-9fd4-f54458529960\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/dffa083d-7603-4869-9fd4-f54458529960\">\n
+        \       <name>Disk 2</name>\n        <link rel=\"statistics\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/dffa083d-7603-4869-9fd4-f54458529960/statistics\"/>\n
+        \       <vm id=\"a42314f4-4381-468f-ba9c-93b4276f155a\" href=\"/api/vms/a42314f4-4381-468f-ba9c-93b4276f155a\"/>\n
+        \       <storage_domains>\n            <storage_domain id=\"65ca9577-0d95-4909-8532-4c45201fbfe4\"/>\n
+        \       </storage_domains>\n        <size>4294967296</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>raw</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"475055f8-d5e4-4ebd-b164-2b2cfe156864\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/475055f8-d5e4-4ebd-b164-2b2cfe156864\">\n
+        \       <name>Disk 3</name>\n        <link rel=\"statistics\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/475055f8-d5e4-4ebd-b164-2b2cfe156864/statistics\"/>\n
+        \       <vm id=\"a42314f4-4381-468f-ba9c-93b4276f155a\" href=\"/api/vms/a42314f4-4381-468f-ba9c-93b4276f155a\"/>\n
+        \       <storage_domains>\n            <storage_domain id=\"65ca9577-0d95-4909-8532-4c45201fbfe4\"/>\n
+        \       </storage_domains>\n        <size>5368709120</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>raw</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"852765a3-7c12-4366-b10d-6e97954958b6\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/852765a3-7c12-4366-b10d-6e97954958b6\">\n
+        \       <name>Disk 3</name>\n        <link rel=\"statistics\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/852765a3-7c12-4366-b10d-6e97954958b6/statistics\"/>\n
+        \       <vm id=\"bb8e1c05-0722-405e-967d-00b142cae630\" href=\"/api/vms/bb8e1c05-0722-405e-967d-00b142cae630\"/>\n
+        \       <storage_domains>\n            <storage_domain id=\"65ca9577-0d95-4909-8532-4c45201fbfe4\"/>\n
+        \       </storage_domains>\n        <size>5368709120</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>raw</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"583aa89b-e3ae-4016-801e-7209b87c99f5\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/583aa89b-e3ae-4016-801e-7209b87c99f5\">\n
+        \       <name>Disk 2</name>\n        <link rel=\"statistics\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/583aa89b-e3ae-4016-801e-7209b87c99f5/statistics\"/>\n
+        \       <vm id=\"bb8e1c05-0722-405e-967d-00b142cae630\" href=\"/api/vms/bb8e1c05-0722-405e-967d-00b142cae630\"/>\n
+        \       <storage_domains>\n            <storage_domain id=\"65ca9577-0d95-4909-8532-4c45201fbfe4\"/>\n
+        \       </storage_domains>\n        <size>4294967296</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>raw</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"cf5d49b8-8d7e-44d3-abfe-473ebc8ecee7\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/cf5d49b8-8d7e-44d3-abfe-473ebc8ecee7\">\n
+        \       <name>Disk 1</name>\n        <link rel=\"statistics\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/cf5d49b8-8d7e-44d3-abfe-473ebc8ecee7/statistics\"/>\n
+        \       <vm id=\"bb8e1c05-0722-405e-967d-00b142cae630\" href=\"/api/vms/bb8e1c05-0722-405e-967d-00b142cae630\"/>\n
+        \       <storage_domains>\n            <storage_domain id=\"65ca9577-0d95-4909-8532-4c45201fbfe4\"/>\n
+        \       </storage_domains>\n        <size>7516192768</size>\n        <type>system</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>ide</interface>\n
+        \       <format>raw</format>\n        <sparse>true</sparse>\n        <bootable>true</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"bb12cdb1-a0eb-4abc-bc04-11339bbddeb2\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/bb12cdb1-a0eb-4abc-bc04-11339bbddeb2\">\n
+        \       <name>Disk 4</name>\n        <link rel=\"statistics\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/bb12cdb1-a0eb-4abc-bc04-11339bbddeb2/statistics\"/>\n
+        \       <vm id=\"bb8e1c05-0722-405e-967d-00b142cae630\" href=\"/api/vms/bb8e1c05-0722-405e-967d-00b142cae630\"/>\n
+        \       <storage_domains>\n            <storage_domain id=\"65ca9577-0d95-4909-8532-4c45201fbfe4\"/>\n
+        \       </storage_domains>\n        <size>8589934592</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>raw</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"94d47557-be19-4d46-bd8f-3288dd81de96\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/94d47557-be19-4d46-bd8f-3288dd81de96\">\n
+        \       <name>Disk 5</name>\n        <link rel=\"statistics\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/94d47557-be19-4d46-bd8f-3288dd81de96/statistics\"/>\n
+        \       <vm id=\"bb8e1c05-0722-405e-967d-00b142cae630\" href=\"/api/vms/bb8e1c05-0722-405e-967d-00b142cae630\"/>\n
+        \       <storage_domains>\n            <storage_domain id=\"65ca9577-0d95-4909-8532-4c45201fbfe4\"/>\n
+        \       </storage_domains>\n        <size>21474836480</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>raw</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"3685c850-948b-47be-ac9a-cf93f1f0c6f8\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/3685c850-948b-47be-ac9a-cf93f1f0c6f8\">\n
+        \       <name>Disk 1</name>\n        <link rel=\"statistics\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/3685c850-948b-47be-ac9a-cf93f1f0c6f8/statistics\"/>\n
+        \       <vm id=\"935a9856-b8e7-43c3-ad93-e10df0a29226\" href=\"/api/vms/935a9856-b8e7-43c3-ad93-e10df0a29226\"/>\n
+        \       <storage_domains>\n            <storage_domain id=\"65ca9577-0d95-4909-8532-4c45201fbfe4\"/>\n
+        \       </storage_domains>\n        <size>21474836480</size>\n        <type>system</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>cow</format>\n        <sparse>true</sparse>\n        <bootable>true</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"dcbeb4f8-831c-4e34-a45a-8242a5b06ca1\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/dcbeb4f8-831c-4e34-a45a-8242a5b06ca1\">\n
+        \       <name>Disk 2</name>\n        <link rel=\"statistics\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/dcbeb4f8-831c-4e34-a45a-8242a5b06ca1/statistics\"/>\n
+        \       <vm id=\"935a9856-b8e7-43c3-ad93-e10df0a29226\" href=\"/api/vms/935a9856-b8e7-43c3-ad93-e10df0a29226\"/>\n
+        \       <storage_domains>\n            <storage_domain id=\"65ca9577-0d95-4909-8532-4c45201fbfe4\"/>\n
+        \       </storage_domains>\n        <size>1073741824</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>cow</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"33ce0787-a83d-4dcc-a224-6b4766ce643a\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/33ce0787-a83d-4dcc-a224-6b4766ce643a\">\n
+        \       <name>Disk 1</name>\n        <link rel=\"statistics\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/33ce0787-a83d-4dcc-a224-6b4766ce643a/statistics\"/>\n
+        \       <vm id=\"980bb541-261d-4d11-8782-86848f35cf33\" href=\"/api/vms/980bb541-261d-4d11-8782-86848f35cf33\"/>\n
+        \       <storage_domains>\n            <storage_domain id=\"65ca9577-0d95-4909-8532-4c45201fbfe4\"/>\n
+        \       </storage_domains>\n        <size>21474836480</size>\n        <type>system</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>raw</format>\n        <sparse>true</sparse>\n        <bootable>true</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"2e93dff9-d9fd-4372-9bed-d6bfba5d700d\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/2e93dff9-d9fd-4372-9bed-d6bfba5d700d\">\n
+        \       <name>Disk 1</name>\n        <link rel=\"statistics\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/2e93dff9-d9fd-4372-9bed-d6bfba5d700d/statistics\"/>\n
+        \       <vm id=\"fff83bf7-9dcb-4845-b85b-ff855b9fb141\" href=\"/api/vms/fff83bf7-9dcb-4845-b85b-ff855b9fb141\"/>\n
+        \       <storage_domains>\n            <storage_domain id=\"65ca9577-0d95-4909-8532-4c45201fbfe4\"/>\n
+        \       </storage_domains>\n        <size>6442450944</size>\n        <type>system</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>raw</format>\n        <sparse>true</sparse>\n        <bootable>true</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"cb92669c-6081-4303-9c4f-ae7d43a79dd8\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/cb92669c-6081-4303-9c4f-ae7d43a79dd8\">\n
+        \       <name>Disk 2</name>\n        <link rel=\"statistics\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/cb92669c-6081-4303-9c4f-ae7d43a79dd8/statistics\"/>\n
+        \       <vm id=\"fff83bf7-9dcb-4845-b85b-ff855b9fb141\" href=\"/api/vms/fff83bf7-9dcb-4845-b85b-ff855b9fb141\"/>\n
+        \       <storage_domains>\n            <storage_domain id=\"65ca9577-0d95-4909-8532-4c45201fbfe4\"/>\n
+        \       </storage_domains>\n        <size>21474836480</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>raw</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"cebcd82e-e4f2-4c0b-ad8b-0051d7a1f4a1\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/cebcd82e-e4f2-4c0b-ad8b-0051d7a1f4a1\">\n
+        \       <name>Disk 1</name>\n        <link rel=\"statistics\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/cebcd82e-e4f2-4c0b-ad8b-0051d7a1f4a1/statistics\"/>\n
+        \       <vm id=\"ee3670c0-152b-4106-89b2-4eda71bea8d0\" href=\"/api/vms/ee3670c0-152b-4106-89b2-4eda71bea8d0\"/>\n
+        \       <storage_domains>\n            <storage_domain id=\"65ca9577-0d95-4909-8532-4c45201fbfe4\"/>\n
+        \       </storage_domains>\n        <size>10737418240</size>\n        <type>system</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>raw</format>\n        <sparse>true</sparse>\n        <bootable>true</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"43adfc13-f1a4-4f7a-9388-6e5049be6323\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/43adfc13-f1a4-4f7a-9388-6e5049be6323\">\n
+        \       <name>Disk 3</name>\n        <link rel=\"statistics\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/43adfc13-f1a4-4f7a-9388-6e5049be6323/statistics\"/>\n
+        \       <vm id=\"554c9e02-0f7f-4f79-8fcd-5d5049e437a0\" href=\"/api/vms/554c9e02-0f7f-4f79-8fcd-5d5049e437a0\"/>\n
+        \       <storage_domains>\n            <storage_domain id=\"65ca9577-0d95-4909-8532-4c45201fbfe4\"/>\n
+        \       </storage_domains>\n        <size>5368709120</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>raw</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"cda71de2-657c-4818-8c03-411471f5fcad\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/cda71de2-657c-4818-8c03-411471f5fcad\">\n
+        \       <name>Disk 2</name>\n        <link rel=\"statistics\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/cda71de2-657c-4818-8c03-411471f5fcad/statistics\"/>\n
+        \       <vm id=\"554c9e02-0f7f-4f79-8fcd-5d5049e437a0\" href=\"/api/vms/554c9e02-0f7f-4f79-8fcd-5d5049e437a0\"/>\n
+        \       <storage_domains>\n            <storage_domain id=\"65ca9577-0d95-4909-8532-4c45201fbfe4\"/>\n
+        \       </storage_domains>\n        <size>4294967296</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>raw</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"f17aabfa-4a1b-41ae-ae97-5bf43cb2106d\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/f17aabfa-4a1b-41ae-ae97-5bf43cb2106d\">\n
+        \       <name>Disk 1</name>\n        <link rel=\"statistics\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/f17aabfa-4a1b-41ae-ae97-5bf43cb2106d/statistics\"/>\n
+        \       <vm id=\"554c9e02-0f7f-4f79-8fcd-5d5049e437a0\" href=\"/api/vms/554c9e02-0f7f-4f79-8fcd-5d5049e437a0\"/>\n
+        \       <storage_domains>\n            <storage_domain id=\"65ca9577-0d95-4909-8532-4c45201fbfe4\"/>\n
+        \       </storage_domains>\n        <size>7516192768</size>\n        <type>system</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>ide</interface>\n
+        \       <format>raw</format>\n        <sparse>true</sparse>\n        <bootable>true</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"2e942bec-13c4-4f80-87e5-ed605ddaed0c\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/2e942bec-13c4-4f80-87e5-ed605ddaed0c\">\n
+        \       <name>Disk 4</name>\n        <link rel=\"statistics\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/2e942bec-13c4-4f80-87e5-ed605ddaed0c/statistics\"/>\n
+        \       <vm id=\"554c9e02-0f7f-4f79-8fcd-5d5049e437a0\" href=\"/api/vms/554c9e02-0f7f-4f79-8fcd-5d5049e437a0\"/>\n
+        \       <storage_domains>\n            <storage_domain id=\"65ca9577-0d95-4909-8532-4c45201fbfe4\"/>\n
+        \       </storage_domains>\n        <size>8589934592</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>raw</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"b409b29f-d403-47ac-ba65-9893ac6c369b\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/b409b29f-d403-47ac-ba65-9893ac6c369b\">\n
+        \       <name>Disk 5</name>\n        <link rel=\"statistics\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/b409b29f-d403-47ac-ba65-9893ac6c369b/statistics\"/>\n
+        \       <vm id=\"554c9e02-0f7f-4f79-8fcd-5d5049e437a0\" href=\"/api/vms/554c9e02-0f7f-4f79-8fcd-5d5049e437a0\"/>\n
+        \       <storage_domains>\n            <storage_domain id=\"65ca9577-0d95-4909-8532-4c45201fbfe4\"/>\n
+        \       </storage_domains>\n        <size>21474836480</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>raw</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"d07c8761-9934-4db8-9197-7f95f845688a\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/d07c8761-9934-4db8-9197-7f95f845688a\">\n
+        \       <name>Disk 3</name>\n        <link rel=\"statistics\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/d07c8761-9934-4db8-9197-7f95f845688a/statistics\"/>\n
+        \       <vm id=\"9a5bec68-7d96-4c40-b918-9f137b95fc3e\" href=\"/api/vms/9a5bec68-7d96-4c40-b918-9f137b95fc3e\"/>\n
+        \       <storage_domains>\n            <storage_domain id=\"65ca9577-0d95-4909-8532-4c45201fbfe4\"/>\n
+        \       </storage_domains>\n        <size>5368709120</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>cow</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"633d813d-e28e-4b3a-bd9a-3c31a11f58c8\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/633d813d-e28e-4b3a-bd9a-3c31a11f58c8\">\n
+        \       <name>Disk 2</name>\n        <link rel=\"statistics\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/633d813d-e28e-4b3a-bd9a-3c31a11f58c8/statistics\"/>\n
+        \       <vm id=\"9a5bec68-7d96-4c40-b918-9f137b95fc3e\" href=\"/api/vms/9a5bec68-7d96-4c40-b918-9f137b95fc3e\"/>\n
+        \       <storage_domains>\n            <storage_domain id=\"65ca9577-0d95-4909-8532-4c45201fbfe4\"/>\n
+        \       </storage_domains>\n        <size>4294967296</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>cow</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"ff51f773-3c52-4840-ad93-38697e1f69da\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/ff51f773-3c52-4840-ad93-38697e1f69da\">\n
+        \       <name>Disk 1</name>\n        <link rel=\"statistics\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/ff51f773-3c52-4840-ad93-38697e1f69da/statistics\"/>\n
+        \       <vm id=\"9a5bec68-7d96-4c40-b918-9f137b95fc3e\" href=\"/api/vms/9a5bec68-7d96-4c40-b918-9f137b95fc3e\"/>\n
+        \       <storage_domains>\n            <storage_domain id=\"65ca9577-0d95-4909-8532-4c45201fbfe4\"/>\n
+        \       </storage_domains>\n        <size>7516192768</size>\n        <type>system</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>ide</interface>\n
+        \       <format>cow</format>\n        <sparse>true</sparse>\n        <bootable>true</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"097fc432-acbe-48c3-b874-05a91b0310af\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/097fc432-acbe-48c3-b874-05a91b0310af\">\n
+        \       <name>Disk 5</name>\n        <link rel=\"statistics\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/097fc432-acbe-48c3-b874-05a91b0310af/statistics\"/>\n
+        \       <vm id=\"9a5bec68-7d96-4c40-b918-9f137b95fc3e\" href=\"/api/vms/9a5bec68-7d96-4c40-b918-9f137b95fc3e\"/>\n
+        \       <storage_domains>\n            <storage_domain id=\"65ca9577-0d95-4909-8532-4c45201fbfe4\"/>\n
+        \       </storage_domains>\n        <size>21474836480</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>cow</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"4ccca278-306c-44e4-8220-5cf3c7c92e67\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/4ccca278-306c-44e4-8220-5cf3c7c92e67\">\n
+        \       <name>Disk 4</name>\n        <link rel=\"statistics\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/4ccca278-306c-44e4-8220-5cf3c7c92e67/statistics\"/>\n
+        \       <vm id=\"9a5bec68-7d96-4c40-b918-9f137b95fc3e\" href=\"/api/vms/9a5bec68-7d96-4c40-b918-9f137b95fc3e\"/>\n
+        \       <storage_domains>\n            <storage_domain id=\"65ca9577-0d95-4909-8532-4c45201fbfe4\"/>\n
+        \       </storage_domains>\n        <size>8589934592</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>cow</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"2ed230e0-c2cc-4027-8ae1-f41cf2283674\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/2ed230e0-c2cc-4027-8ae1-f41cf2283674\">\n
+        \       <name>Disk 1</name>\n        <vm id=\"e3af998a-7104-4a10-a7c0-bc90c4250bf5\"
+        href=\"/api/vms/e3af998a-7104-4a10-a7c0-bc90c4250bf5\"/>\n        <storage_domains>\n
+        \           <storage_domain id=\"65ca9577-0d95-4909-8532-4c45201fbfe4\"/>\n
+        \       </storage_domains>\n        <size>1073741824</size>\n        <type>system</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>raw</format>\n        <sparse>false</sparse>\n        <bootable>true</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"6b7e9778-e92a-4e08-b4f4-3887e81a226b\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/6b7e9778-e92a-4e08-b4f4-3887e81a226b\">\n
+        \       <name>Disk 1</name>\n        <vm id=\"7a6db798-9df9-40ca-8cc3-3baab32e7613\"
+        href=\"/api/vms/7a6db798-9df9-40ca-8cc3-3baab32e7613\"/>\n        <storage_domains>\n
+        \           <storage_domain id=\"65ca9577-0d95-4909-8532-4c45201fbfe4\"/>\n
+        \       </storage_domains>\n        <size>1073741824</size>\n        <type>system</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>raw</format>\n        <sparse>true</sparse>\n        <bootable>true</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"1e736810-0dff-42f2-aede-bc68ce8625d0\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/1e736810-0dff-42f2-aede-bc68ce8625d0\">\n
+        \       <name>Disk 2</name>\n        <vm id=\"7a6db798-9df9-40ca-8cc3-3baab32e7613\"
+        href=\"/api/vms/7a6db798-9df9-40ca-8cc3-3baab32e7613\"/>\n        <storage_domains>\n
+        \           <storage_domain id=\"65ca9577-0d95-4909-8532-4c45201fbfe4\"/>\n
+        \       </storage_domains>\n        <size>1073741824</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>ide</interface>\n
+        \       <format>raw</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"26d1e590-553f-4ca4-b781-b2c2891983c8\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/26d1e590-553f-4ca4-b781-b2c2891983c8\">\n
+        \       <name>Disk 4</name>\n        <vm id=\"ce9b44cb-8253-4153-ad4b-c53039dd9356\"
+        href=\"/api/vms/ce9b44cb-8253-4153-ad4b-c53039dd9356\"/>\n        <storage_domains>\n
+        \           <storage_domain id=\"65ca9577-0d95-4909-8532-4c45201fbfe4\"/>\n
+        \       </storage_domains>\n        <size>8589934592</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>raw</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"9de151de-a95e-4327-8eec-19a17a6dfe08\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/9de151de-a95e-4327-8eec-19a17a6dfe08\">\n
+        \       <name>Disk 3</name>\n        <vm id=\"ce9b44cb-8253-4153-ad4b-c53039dd9356\"
+        href=\"/api/vms/ce9b44cb-8253-4153-ad4b-c53039dd9356\"/>\n        <storage_domains>\n
+        \           <storage_domain id=\"65ca9577-0d95-4909-8532-4c45201fbfe4\"/>\n
+        \       </storage_domains>\n        <size>5368709120</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>raw</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"9ea47ed1-9789-4fe7-a9ad-bdf309d48415\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/9ea47ed1-9789-4fe7-a9ad-bdf309d48415\">\n
+        \       <name>Disk 2</name>\n        <vm id=\"ce9b44cb-8253-4153-ad4b-c53039dd9356\"
+        href=\"/api/vms/ce9b44cb-8253-4153-ad4b-c53039dd9356\"/>\n        <storage_domains>\n
+        \           <storage_domain id=\"65ca9577-0d95-4909-8532-4c45201fbfe4\"/>\n
+        \       </storage_domains>\n        <size>3221225472</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>raw</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"957819b6-3600-417d-9dc2-eb3ef3820c0a\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/957819b6-3600-417d-9dc2-eb3ef3820c0a\">\n
+        \       <name>Disk 5</name>\n        <vm id=\"ce9b44cb-8253-4153-ad4b-c53039dd9356\"
+        href=\"/api/vms/ce9b44cb-8253-4153-ad4b-c53039dd9356\"/>\n        <storage_domains>\n
+        \           <storage_domain id=\"65ca9577-0d95-4909-8532-4c45201fbfe4\"/>\n
+        \       </storage_domains>\n        <size>21474836480</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>raw</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"fa3bee60-356b-4004-8f7d-f3f38844131a\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/fa3bee60-356b-4004-8f7d-f3f38844131a\">\n
+        \       <name>Disk 1</name>\n        <vm id=\"ce9b44cb-8253-4153-ad4b-c53039dd9356\"
+        href=\"/api/vms/ce9b44cb-8253-4153-ad4b-c53039dd9356\"/>\n        <storage_domains>\n
+        \           <storage_domain id=\"65ca9577-0d95-4909-8532-4c45201fbfe4\"/>\n
+        \       </storage_domains>\n        <size>7516192768</size>\n        <type>system</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>ide</interface>\n
+        \       <format>raw</format>\n        <sparse>true</sparse>\n        <bootable>true</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"a6797a06-894c-475f-bb0c-6b43cdfaeb06\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/a6797a06-894c-475f-bb0c-6b43cdfaeb06\">\n
+        \       <name>Disk 1</name>\n        <vm id=\"7120b19a-1b39-4bd4-afa8-6393fc4cd3dc\"
+        href=\"/api/vms/7120b19a-1b39-4bd4-afa8-6393fc4cd3dc\"/>\n        <storage_domains>\n
+        \           <storage_domain id=\"65ca9577-0d95-4909-8532-4c45201fbfe4\"/>\n
+        \       </storage_domains>\n        <size>7516192768</size>\n        <type>system</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>ide</interface>\n
+        \       <format>raw</format>\n        <sparse>true</sparse>\n        <bootable>true</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"e0039e10-30be-4ee9-9804-98931eed1e74\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/e0039e10-30be-4ee9-9804-98931eed1e74\">\n
+        \       <name>Disk 4</name>\n        <vm id=\"7120b19a-1b39-4bd4-afa8-6393fc4cd3dc\"
+        href=\"/api/vms/7120b19a-1b39-4bd4-afa8-6393fc4cd3dc\"/>\n        <storage_domains>\n
+        \           <storage_domain id=\"65ca9577-0d95-4909-8532-4c45201fbfe4\"/>\n
+        \       </storage_domains>\n        <size>8589934592</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>raw</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"8614b994-952a-4a3a-91a2-28c771b3c167\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/8614b994-952a-4a3a-91a2-28c771b3c167\">\n
+        \       <name>Disk 3</name>\n        <vm id=\"7120b19a-1b39-4bd4-afa8-6393fc4cd3dc\"
+        href=\"/api/vms/7120b19a-1b39-4bd4-afa8-6393fc4cd3dc\"/>\n        <storage_domains>\n
+        \           <storage_domain id=\"65ca9577-0d95-4909-8532-4c45201fbfe4\"/>\n
+        \       </storage_domains>\n        <size>5368709120</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>raw</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"994c2ed5-bb4e-4e02-ae8b-1906113e7c20\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/994c2ed5-bb4e-4e02-ae8b-1906113e7c20\">\n
+        \       <name>Disk 5</name>\n        <vm id=\"7120b19a-1b39-4bd4-afa8-6393fc4cd3dc\"
+        href=\"/api/vms/7120b19a-1b39-4bd4-afa8-6393fc4cd3dc\"/>\n        <storage_domains>\n
+        \           <storage_domain id=\"65ca9577-0d95-4909-8532-4c45201fbfe4\"/>\n
+        \       </storage_domains>\n        <size>21474836480</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>raw</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"4a52caf8-afbd-47f3-b984-fb09a6c7f71a\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/4a52caf8-afbd-47f3-b984-fb09a6c7f71a\">\n
+        \       <name>Disk 2</name>\n        <vm id=\"7120b19a-1b39-4bd4-afa8-6393fc4cd3dc\"
+        href=\"/api/vms/7120b19a-1b39-4bd4-afa8-6393fc4cd3dc\"/>\n        <storage_domains>\n
+        \           <storage_domain id=\"65ca9577-0d95-4909-8532-4c45201fbfe4\"/>\n
+        \       </storage_domains>\n        <size>4294967296</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>raw</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"74f7da39-9f1d-497a-b9c5-24b29f582ca6\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/74f7da39-9f1d-497a-b9c5-24b29f582ca6\">\n
+        \       <name>Disk 3</name>\n        <vm id=\"a9ac3d74-eb66-437b-85c8-e83099edf9ff\"
+        href=\"/api/vms/a9ac3d74-eb66-437b-85c8-e83099edf9ff\"/>\n        <storage_domains>\n
+        \           <storage_domain id=\"65ca9577-0d95-4909-8532-4c45201fbfe4\"/>\n
+        \       </storage_domains>\n        <size>5368709120</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>cow</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"1f08780f-70e2-4cde-8773-62bbdaea3488\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/1f08780f-70e2-4cde-8773-62bbdaea3488\">\n
+        \       <name>Disk 2</name>\n        <vm id=\"a9ac3d74-eb66-437b-85c8-e83099edf9ff\"
+        href=\"/api/vms/a9ac3d74-eb66-437b-85c8-e83099edf9ff\"/>\n        <storage_domains>\n
+        \           <storage_domain id=\"65ca9577-0d95-4909-8532-4c45201fbfe4\"/>\n
+        \       </storage_domains>\n        <size>4294967296</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>cow</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"458a2b3e-ffa0-474f-b1aa-f2aaf15a6043\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/458a2b3e-ffa0-474f-b1aa-f2aaf15a6043\">\n
+        \       <name>Disk 1</name>\n        <vm id=\"a9ac3d74-eb66-437b-85c8-e83099edf9ff\"
+        href=\"/api/vms/a9ac3d74-eb66-437b-85c8-e83099edf9ff\"/>\n        <storage_domains>\n
+        \           <storage_domain id=\"65ca9577-0d95-4909-8532-4c45201fbfe4\"/>\n
+        \       </storage_domains>\n        <size>7516192768</size>\n        <type>system</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>ide</interface>\n
+        \       <format>cow</format>\n        <sparse>true</sparse>\n        <bootable>true</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"3eafdb4e-60dc-4427-a81a-9fbacd6b4010\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/3eafdb4e-60dc-4427-a81a-9fbacd6b4010\">\n
+        \       <name>Disk 5</name>\n        <vm id=\"a9ac3d74-eb66-437b-85c8-e83099edf9ff\"
+        href=\"/api/vms/a9ac3d74-eb66-437b-85c8-e83099edf9ff\"/>\n        <storage_domains>\n
+        \           <storage_domain id=\"65ca9577-0d95-4909-8532-4c45201fbfe4\"/>\n
+        \       </storage_domains>\n        <size>21474836480</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>cow</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"79c492f0-008a-4e8f-93e3-7ea20aff6fd0\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/79c492f0-008a-4e8f-93e3-7ea20aff6fd0\">\n
+        \       <name>Disk 4</name>\n        <vm id=\"a9ac3d74-eb66-437b-85c8-e83099edf9ff\"
+        href=\"/api/vms/a9ac3d74-eb66-437b-85c8-e83099edf9ff\"/>\n        <storage_domains>\n
+        \           <storage_domain id=\"65ca9577-0d95-4909-8532-4c45201fbfe4\"/>\n
+        \       </storage_domains>\n        <size>8589934592</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>cow</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"5521b6bf-184e-4a84-b82d-921fa4ef901d\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/5521b6bf-184e-4a84-b82d-921fa4ef901d\">\n
+        \       <name>Disk 3</name>\n        <vm id=\"6bd4eec5-0135-4cd0-ae16-71905ba76676\"
+        href=\"/api/vms/6bd4eec5-0135-4cd0-ae16-71905ba76676\"/>\n        <storage_domains>\n
+        \           <storage_domain id=\"65ca9577-0d95-4909-8532-4c45201fbfe4\"/>\n
+        \       </storage_domains>\n        <size>5368709120</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>raw</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"75812179-eeb8-4d8c-a733-7e0bf0e137ad\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/75812179-eeb8-4d8c-a733-7e0bf0e137ad\">\n
+        \       <name>Disk 5</name>\n        <vm id=\"6bd4eec5-0135-4cd0-ae16-71905ba76676\"
+        href=\"/api/vms/6bd4eec5-0135-4cd0-ae16-71905ba76676\"/>\n        <storage_domains>\n
+        \           <storage_domain id=\"65ca9577-0d95-4909-8532-4c45201fbfe4\"/>\n
+        \       </storage_domains>\n        <size>21474836480</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>raw</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"b9294516-4341-4008-aea9-63d8ed85e36b\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/b9294516-4341-4008-aea9-63d8ed85e36b\">\n
+        \       <name>Disk 2</name>\n        <vm id=\"6bd4eec5-0135-4cd0-ae16-71905ba76676\"
+        href=\"/api/vms/6bd4eec5-0135-4cd0-ae16-71905ba76676\"/>\n        <storage_domains>\n
+        \           <storage_domain id=\"65ca9577-0d95-4909-8532-4c45201fbfe4\"/>\n
+        \       </storage_domains>\n        <size>4294967296</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>raw</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"b7cedfa8-ac5a-4c3c-977c-76899e45291d\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/b7cedfa8-ac5a-4c3c-977c-76899e45291d\">\n
+        \       <name>Disk 1</name>\n        <vm id=\"6bd4eec5-0135-4cd0-ae16-71905ba76676\"
+        href=\"/api/vms/6bd4eec5-0135-4cd0-ae16-71905ba76676\"/>\n        <storage_domains>\n
+        \           <storage_domain id=\"65ca9577-0d95-4909-8532-4c45201fbfe4\"/>\n
+        \       </storage_domains>\n        <size>7516192768</size>\n        <type>system</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>ide</interface>\n
+        \       <format>raw</format>\n        <sparse>true</sparse>\n        <bootable>true</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"91eadb54-02d1-49ec-a3df-f901180f616e\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/91eadb54-02d1-49ec-a3df-f901180f616e\">\n
+        \       <name>Disk 4</name>\n        <vm id=\"6bd4eec5-0135-4cd0-ae16-71905ba76676\"
+        href=\"/api/vms/6bd4eec5-0135-4cd0-ae16-71905ba76676\"/>\n        <storage_domains>\n
+        \           <storage_domain id=\"65ca9577-0d95-4909-8532-4c45201fbfe4\"/>\n
+        \       </storage_domains>\n        <size>8589934592</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>raw</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n
+        \   <disk id=\"478efffc-9f97-4a1f-95d7-9dc57f3ee672\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/478efffc-9f97-4a1f-95d7-9dc57f3ee672\">\n
+        \       <name>Disk 4</name>\n        <vm id=\"c9ee91ff-41af-48f5-8734-953f865c83b9\"
+        href=\"/api/vms/c9ee91ff-41af-48f5-8734-953f865c83b9\"/>\n        <storage_domains>\n
+        \           <storage_domain id=\"65ca9577-0d95-4909-8532-4c45201fbfe4\"/>\n
+        \       </storage_domains>\n        <size>8589934592</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>raw</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"12b4f490-3629-4bdf-9100-7d46b615edd5\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/12b4f490-3629-4bdf-9100-7d46b615edd5\">\n
+        \       <name>Disk 1</name>\n        <vm id=\"c9ee91ff-41af-48f5-8734-953f865c83b9\"
+        href=\"/api/vms/c9ee91ff-41af-48f5-8734-953f865c83b9\"/>\n        <storage_domains>\n
+        \           <storage_domain id=\"65ca9577-0d95-4909-8532-4c45201fbfe4\"/>\n
+        \       </storage_domains>\n        <size>7516192768</size>\n        <type>system</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>ide</interface>\n
+        \       <format>raw</format>\n        <sparse>true</sparse>\n        <bootable>true</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"eacf2ac9-275b-4d4f-a467-92fdef1f7d9f\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/eacf2ac9-275b-4d4f-a467-92fdef1f7d9f\">\n
+        \       <name>Disk 2</name>\n        <vm id=\"c9ee91ff-41af-48f5-8734-953f865c83b9\"
+        href=\"/api/vms/c9ee91ff-41af-48f5-8734-953f865c83b9\"/>\n        <storage_domains>\n
+        \           <storage_domain id=\"65ca9577-0d95-4909-8532-4c45201fbfe4\"/>\n
+        \       </storage_domains>\n        <size>4294967296</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>raw</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"20b8bbb8-3f71-4c18-bc94-d4cc92deac3c\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/20b8bbb8-3f71-4c18-bc94-d4cc92deac3c\">\n
+        \       <name>Disk 3</name>\n        <vm id=\"c9ee91ff-41af-48f5-8734-953f865c83b9\"
+        href=\"/api/vms/c9ee91ff-41af-48f5-8734-953f865c83b9\"/>\n        <storage_domains>\n
+        \           <storage_domain id=\"65ca9577-0d95-4909-8532-4c45201fbfe4\"/>\n
+        \       </storage_domains>\n        <size>5368709120</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>raw</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"9dea8701-bb58-49b5-b634-8f6df3c98187\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/9dea8701-bb58-49b5-b634-8f6df3c98187\">\n
+        \       <name>Disk 5</name>\n        <vm id=\"c9ee91ff-41af-48f5-8734-953f865c83b9\"
+        href=\"/api/vms/c9ee91ff-41af-48f5-8734-953f865c83b9\"/>\n        <storage_domains>\n
+        \           <storage_domain id=\"65ca9577-0d95-4909-8532-4c45201fbfe4\"/>\n
+        \       </storage_domains>\n        <size>21474836480</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>raw</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"e98f57e0-5f1c-4e2c-a435-fcf365211227\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/e98f57e0-5f1c-4e2c-a435-fcf365211227\">\n
+        \       <name>Disk 1</name>\n        <vm id=\"57eb8fef-58ea-4f40-a308-f88b05d18f5d\"
+        href=\"/api/vms/57eb8fef-58ea-4f40-a308-f88b05d18f5d\"/>\n        <storage_domains>\n
+        \           <storage_domain id=\"65ca9577-0d95-4909-8532-4c45201fbfe4\"/>\n
+        \       </storage_domains>\n        <size>10737418240</size>\n        <type>system</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>raw</format>\n        <sparse>true</sparse>\n        <bootable>true</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n
+        \   <disk id=\"3571b143-56e5-4c6f-94c7-95a7912ac89b\" href=\"/api/storagedomains/65ca9577-0d95-4909-8532-4c45201fbfe4/disks/3571b143-56e5-4c6f-94c7-95a7912ac89b\">\n
+        \       <name>Disk 1</name>\n        <vm id=\"bb3289d7-6dce-4cfc-9973-c01f3abfe13f\"
+        href=\"/api/vms/bb3289d7-6dce-4cfc-9973-c01f3abfe13f\"/>\n        <storage_domains>\n
+        \           <storage_domain id=\"65ca9577-0d95-4909-8532-4c45201fbfe4\"/>\n
+        \       </storage_domains>\n        <size>10737418240</size>\n        <type>system</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>raw</format>\n        <sparse>true</sparse>\n        <bootable>true</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n</disks>\n"
+    http_version:
+  recorded_at: Mon, 24 Oct 2016 15:39:28 GMT
+- request:
+    method: get
+    uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api/storagedomains/6efaa0f3-d832-4e8f-846f-aacdc974e6d0/disks
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=KdWoTY3kozT77nGifJGnmk13I2daGwnv-UHe_9qd.f18
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/xml
+      Content-Length:
+      - '31007'
+      Jsessionid:
+      - KdWoTY3kozT77nGifJGnmk13I2daGwnv-UHe_9qd
+      Date:
+      - Mon, 24 Oct 2016 15:39:29 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: ! "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n<disks>\n
+        \   <disk id=\"cd5ec8e5-79c2-45a1-866f-8b26dd67faea\" href=\"/api/storagedomains/6efaa0f3-d832-4e8f-846f-aacdc974e6d0/disks/cd5ec8e5-79c2-45a1-866f-8b26dd67faea\">\n
+        \       <name>Disk 1</name>\n        <link rel=\"statistics\" href=\"/api/storagedomains/6efaa0f3-d832-4e8f-846f-aacdc974e6d0/disks/cd5ec8e5-79c2-45a1-866f-8b26dd67faea/statistics\"/>\n
+        \       <vm id=\"9a9e4a4b-fdac-4370-b429-a8df3c96f11f\" href=\"/api/vms/9a9e4a4b-fdac-4370-b429-a8df3c96f11f\"/>\n
+        \       <storage_domains>\n            <storage_domain id=\"6efaa0f3-d832-4e8f-846f-aacdc974e6d0\"/>\n
+        \       </storage_domains>\n        <size>6442450944</size>\n        <type>system</type>\n
+        \       <status>\n            <state>locked</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>cow</format>\n        <sparse>true</sparse>\n        <bootable>true</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"2c98ac9f-a311-4acd-91ec-493a9bc6d041\" href=\"/api/storagedomains/6efaa0f3-d832-4e8f-846f-aacdc974e6d0/disks/2c98ac9f-a311-4acd-91ec-493a9bc6d041\">\n
+        \       <name>Disk 5</name>\n        <link rel=\"statistics\" href=\"/api/storagedomains/6efaa0f3-d832-4e8f-846f-aacdc974e6d0/disks/2c98ac9f-a311-4acd-91ec-493a9bc6d041/statistics\"/>\n
+        \       <vm id=\"9a9e4a4b-fdac-4370-b429-a8df3c96f11f\" href=\"/api/vms/9a9e4a4b-fdac-4370-b429-a8df3c96f11f\"/>\n
+        \       <storage_domains>\n            <storage_domain id=\"6efaa0f3-d832-4e8f-846f-aacdc974e6d0\"/>\n
+        \       </storage_domains>\n        <size>21474836480</size>\n        <type>data</type>\n
+        \       <status>\n            <state>locked</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>cow</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"eb193027-4aab-4ddf-90a5-a7c2cefdf7f8\" href=\"/api/storagedomains/6efaa0f3-d832-4e8f-846f-aacdc974e6d0/disks/eb193027-4aab-4ddf-90a5-a7c2cefdf7f8\">\n
+        \       <name>Disk 3</name>\n        <link rel=\"statistics\" href=\"/api/storagedomains/6efaa0f3-d832-4e8f-846f-aacdc974e6d0/disks/eb193027-4aab-4ddf-90a5-a7c2cefdf7f8/statistics\"/>\n
+        \       <vm id=\"9a9e4a4b-fdac-4370-b429-a8df3c96f11f\" href=\"/api/vms/9a9e4a4b-fdac-4370-b429-a8df3c96f11f\"/>\n
+        \       <storage_domains>\n            <storage_domain id=\"6efaa0f3-d832-4e8f-846f-aacdc974e6d0\"/>\n
+        \       </storage_domains>\n        <size>5368709120</size>\n        <type>data</type>\n
+        \       <status>\n            <state>locked</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>cow</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"9821b4a4-4c2b-49b8-b221-ad794c926266\" href=\"/api/storagedomains/6efaa0f3-d832-4e8f-846f-aacdc974e6d0/disks/9821b4a4-4c2b-49b8-b221-ad794c926266\">\n
+        \       <name>Disk 2</name>\n        <link rel=\"statistics\" href=\"/api/storagedomains/6efaa0f3-d832-4e8f-846f-aacdc974e6d0/disks/9821b4a4-4c2b-49b8-b221-ad794c926266/statistics\"/>\n
+        \       <vm id=\"9a9e4a4b-fdac-4370-b429-a8df3c96f11f\" href=\"/api/vms/9a9e4a4b-fdac-4370-b429-a8df3c96f11f\"/>\n
+        \       <storage_domains>\n            <storage_domain id=\"6efaa0f3-d832-4e8f-846f-aacdc974e6d0\"/>\n
+        \       </storage_domains>\n        <size>3221225472</size>\n        <type>data</type>\n
+        \       <status>\n            <state>locked</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>cow</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"eaa3042a-ed09-49c4-87ac-c162c36ff17b\" href=\"/api/storagedomains/6efaa0f3-d832-4e8f-846f-aacdc974e6d0/disks/eaa3042a-ed09-49c4-87ac-c162c36ff17b\">\n
+        \       <name>Disk 4</name>\n        <link rel=\"statistics\" href=\"/api/storagedomains/6efaa0f3-d832-4e8f-846f-aacdc974e6d0/disks/eaa3042a-ed09-49c4-87ac-c162c36ff17b/statistics\"/>\n
+        \       <vm id=\"9a9e4a4b-fdac-4370-b429-a8df3c96f11f\" href=\"/api/vms/9a9e4a4b-fdac-4370-b429-a8df3c96f11f\"/>\n
+        \       <storage_domains>\n            <storage_domain id=\"6efaa0f3-d832-4e8f-846f-aacdc974e6d0\"/>\n
+        \       </storage_domains>\n        <size>8589934592</size>\n        <type>data</type>\n
+        \       <status>\n            <state>locked</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>cow</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"0a5c89b3-e8ad-490a-bae7-922ffef313f9\" href=\"/api/storagedomains/6efaa0f3-d832-4e8f-846f-aacdc974e6d0/disks/0a5c89b3-e8ad-490a-bae7-922ffef313f9\">\n
+        \       <name>Disk 5</name>\n        <link rel=\"statistics\" href=\"/api/storagedomains/6efaa0f3-d832-4e8f-846f-aacdc974e6d0/disks/0a5c89b3-e8ad-490a-bae7-922ffef313f9/statistics\"/>\n
+        \       <vm id=\"70c4e710-846c-453e-bfc8-f02113f34045\" href=\"/api/vms/70c4e710-846c-453e-bfc8-f02113f34045\"/>\n
+        \       <storage_domains>\n            <storage_domain id=\"6efaa0f3-d832-4e8f-846f-aacdc974e6d0\"/>\n
+        \       </storage_domains>\n        <size>21474836480</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>cow</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"4b6e64b5-a124-44db-b54e-490d98ca7723\" href=\"/api/storagedomains/6efaa0f3-d832-4e8f-846f-aacdc974e6d0/disks/4b6e64b5-a124-44db-b54e-490d98ca7723\">\n
+        \       <name>Disk 2</name>\n        <link rel=\"statistics\" href=\"/api/storagedomains/6efaa0f3-d832-4e8f-846f-aacdc974e6d0/disks/4b6e64b5-a124-44db-b54e-490d98ca7723/statistics\"/>\n
+        \       <vm id=\"70c4e710-846c-453e-bfc8-f02113f34045\" href=\"/api/vms/70c4e710-846c-453e-bfc8-f02113f34045\"/>\n
+        \       <storage_domains>\n            <storage_domain id=\"6efaa0f3-d832-4e8f-846f-aacdc974e6d0\"/>\n
+        \       </storage_domains>\n        <size>3221225472</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>cow</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"48055c92-478c-4171-9b8a-30028b923d5a\" href=\"/api/storagedomains/6efaa0f3-d832-4e8f-846f-aacdc974e6d0/disks/48055c92-478c-4171-9b8a-30028b923d5a\">\n
+        \       <name>Disk 4</name>\n        <link rel=\"statistics\" href=\"/api/storagedomains/6efaa0f3-d832-4e8f-846f-aacdc974e6d0/disks/48055c92-478c-4171-9b8a-30028b923d5a/statistics\"/>\n
+        \       <vm id=\"70c4e710-846c-453e-bfc8-f02113f34045\" href=\"/api/vms/70c4e710-846c-453e-bfc8-f02113f34045\"/>\n
+        \       <storage_domains>\n            <storage_domain id=\"6efaa0f3-d832-4e8f-846f-aacdc974e6d0\"/>\n
+        \       </storage_domains>\n        <size>8589934592</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>cow</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"99015666-6fe2-46e6-b007-090f0c4ba178\" href=\"/api/storagedomains/6efaa0f3-d832-4e8f-846f-aacdc974e6d0/disks/99015666-6fe2-46e6-b007-090f0c4ba178\">\n
+        \       <name>Disk 1</name>\n        <link rel=\"statistics\" href=\"/api/storagedomains/6efaa0f3-d832-4e8f-846f-aacdc974e6d0/disks/99015666-6fe2-46e6-b007-090f0c4ba178/statistics\"/>\n
+        \       <vm id=\"70c4e710-846c-453e-bfc8-f02113f34045\" href=\"/api/vms/70c4e710-846c-453e-bfc8-f02113f34045\"/>\n
+        \       <storage_domains>\n            <storage_domain id=\"6efaa0f3-d832-4e8f-846f-aacdc974e6d0\"/>\n
+        \       </storage_domains>\n        <size>7516192768</size>\n        <type>system</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>ide</interface>\n
+        \       <format>cow</format>\n        <sparse>true</sparse>\n        <bootable>true</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"5a75d3ee-54ec-4740-b3d6-689c4d9dd682\" href=\"/api/storagedomains/6efaa0f3-d832-4e8f-846f-aacdc974e6d0/disks/5a75d3ee-54ec-4740-b3d6-689c4d9dd682\">\n
+        \       <name>Disk 3</name>\n        <link rel=\"statistics\" href=\"/api/storagedomains/6efaa0f3-d832-4e8f-846f-aacdc974e6d0/disks/5a75d3ee-54ec-4740-b3d6-689c4d9dd682/statistics\"/>\n
+        \       <vm id=\"70c4e710-846c-453e-bfc8-f02113f34045\" href=\"/api/vms/70c4e710-846c-453e-bfc8-f02113f34045\"/>\n
+        \       <storage_domains>\n            <storage_domain id=\"6efaa0f3-d832-4e8f-846f-aacdc974e6d0\"/>\n
+        \       </storage_domains>\n        <size>5368709120</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>cow</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"78cd3f01-35c9-4500-be65-f60532a360a3\" href=\"/api/storagedomains/6efaa0f3-d832-4e8f-846f-aacdc974e6d0/disks/78cd3f01-35c9-4500-be65-f60532a360a3\">\n
+        \       <name>Disk 1</name>\n        <link rel=\"statistics\" href=\"/api/storagedomains/6efaa0f3-d832-4e8f-846f-aacdc974e6d0/disks/78cd3f01-35c9-4500-be65-f60532a360a3/statistics\"/>\n
+        \       <vm id=\"2ada2b89-9345-42fb-a179-fbed002fff67\" href=\"/api/vms/2ada2b89-9345-42fb-a179-fbed002fff67\"/>\n
+        \       <storage_domains>\n            <storage_domain id=\"6efaa0f3-d832-4e8f-846f-aacdc974e6d0\"/>\n
+        \       </storage_domains>\n        <size>1073741824</size>\n        <type>system</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>cow</format>\n        <sparse>true</sparse>\n        <bootable>true</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"9ab199b4-d43d-4091-ba39-1d70b13c4a4a\" href=\"/api/storagedomains/6efaa0f3-d832-4e8f-846f-aacdc974e6d0/disks/9ab199b4-d43d-4091-ba39-1d70b13c4a4a\">\n
+        \       <name>Disk 1</name>\n        <link rel=\"statistics\" href=\"/api/storagedomains/6efaa0f3-d832-4e8f-846f-aacdc974e6d0/disks/9ab199b4-d43d-4091-ba39-1d70b13c4a4a/statistics\"/>\n
+        \       <vm id=\"31d7505f-e739-4024-84da-2d8df1db9b39\" href=\"/api/vms/31d7505f-e739-4024-84da-2d8df1db9b39\"/>\n
+        \       <storage_domains>\n            <storage_domain id=\"6efaa0f3-d832-4e8f-846f-aacdc974e6d0\"/>\n
+        \       </storage_domains>\n        <size>10737418240</size>\n        <type>system</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>cow</format>\n        <sparse>true</sparse>\n        <bootable>true</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"5052e0f4-130f-4048-99a2-63c5fd1646ef\" href=\"/api/storagedomains/6efaa0f3-d832-4e8f-846f-aacdc974e6d0/disks/5052e0f4-130f-4048-99a2-63c5fd1646ef\">\n
+        \       <name>Disk 1</name>\n        <link rel=\"statistics\" href=\"/api/storagedomains/6efaa0f3-d832-4e8f-846f-aacdc974e6d0/disks/5052e0f4-130f-4048-99a2-63c5fd1646ef/statistics\"/>\n
+        \       <vm id=\"22e1a0b0-06af-4e84-8789-07e6a7f6cc49\" href=\"/api/vms/22e1a0b0-06af-4e84-8789-07e6a7f6cc49\"/>\n
+        \       <storage_domains>\n            <storage_domain id=\"6efaa0f3-d832-4e8f-846f-aacdc974e6d0\"/>\n
+        \       </storage_domains>\n        <size>10737418240</size>\n        <type>system</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>cow</format>\n        <sparse>true</sparse>\n        <bootable>true</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"ddde3a31-fe96-41a4-91e7-8d76c9ff3270\" href=\"/api/storagedomains/6efaa0f3-d832-4e8f-846f-aacdc974e6d0/disks/ddde3a31-fe96-41a4-91e7-8d76c9ff3270\">\n
+        \       <name>Disk 4</name>\n        <link rel=\"statistics\" href=\"/api/storagedomains/6efaa0f3-d832-4e8f-846f-aacdc974e6d0/disks/ddde3a31-fe96-41a4-91e7-8d76c9ff3270/statistics\"/>\n
+        \       <vm id=\"aee6bd5e-9f12-4384-8fe5-4b0b8e15268f\" href=\"/api/vms/aee6bd5e-9f12-4384-8fe5-4b0b8e15268f\"/>\n
+        \       <storage_domains>\n            <storage_domain id=\"6efaa0f3-d832-4e8f-846f-aacdc974e6d0\"/>\n
+        \       </storage_domains>\n        <size>8589934592</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>cow</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"e9ab8df1-b510-44c5-8ef1-ad117a64ecbc\" href=\"/api/storagedomains/6efaa0f3-d832-4e8f-846f-aacdc974e6d0/disks/e9ab8df1-b510-44c5-8ef1-ad117a64ecbc\">\n
+        \       <name>Disk 3</name>\n        <link rel=\"statistics\" href=\"/api/storagedomains/6efaa0f3-d832-4e8f-846f-aacdc974e6d0/disks/e9ab8df1-b510-44c5-8ef1-ad117a64ecbc/statistics\"/>\n
+        \       <vm id=\"aee6bd5e-9f12-4384-8fe5-4b0b8e15268f\" href=\"/api/vms/aee6bd5e-9f12-4384-8fe5-4b0b8e15268f\"/>\n
+        \       <storage_domains>\n            <storage_domain id=\"6efaa0f3-d832-4e8f-846f-aacdc974e6d0\"/>\n
+        \       </storage_domains>\n        <size>5368709120</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>cow</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"7cfdf2cd-c372-4c66-8f4c-b70c748efa6a\" href=\"/api/storagedomains/6efaa0f3-d832-4e8f-846f-aacdc974e6d0/disks/7cfdf2cd-c372-4c66-8f4c-b70c748efa6a\">\n
+        \       <name>Disk 2</name>\n        <link rel=\"statistics\" href=\"/api/storagedomains/6efaa0f3-d832-4e8f-846f-aacdc974e6d0/disks/7cfdf2cd-c372-4c66-8f4c-b70c748efa6a/statistics\"/>\n
+        \       <vm id=\"aee6bd5e-9f12-4384-8fe5-4b0b8e15268f\" href=\"/api/vms/aee6bd5e-9f12-4384-8fe5-4b0b8e15268f\"/>\n
+        \       <storage_domains>\n            <storage_domain id=\"6efaa0f3-d832-4e8f-846f-aacdc974e6d0\"/>\n
+        \       </storage_domains>\n        <size>3221225472</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>cow</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"aa55779c-d5e5-4a73-b85e-30522676e610\" href=\"/api/storagedomains/6efaa0f3-d832-4e8f-846f-aacdc974e6d0/disks/aa55779c-d5e5-4a73-b85e-30522676e610\">\n
+        \       <name>Disk 1</name>\n        <link rel=\"statistics\" href=\"/api/storagedomains/6efaa0f3-d832-4e8f-846f-aacdc974e6d0/disks/aa55779c-d5e5-4a73-b85e-30522676e610/statistics\"/>\n
+        \       <vm id=\"aee6bd5e-9f12-4384-8fe5-4b0b8e15268f\" href=\"/api/vms/aee6bd5e-9f12-4384-8fe5-4b0b8e15268f\"/>\n
+        \       <storage_domains>\n            <storage_domain id=\"6efaa0f3-d832-4e8f-846f-aacdc974e6d0\"/>\n
+        \       </storage_domains>\n        <size>7516192768</size>\n        <type>system</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>ide</interface>\n
+        \       <format>cow</format>\n        <sparse>true</sparse>\n        <bootable>true</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"20b17a6c-1e98-498c-8373-c666a39fe262\" href=\"/api/storagedomains/6efaa0f3-d832-4e8f-846f-aacdc974e6d0/disks/20b17a6c-1e98-498c-8373-c666a39fe262\">\n
+        \       <name>Disk 5</name>\n        <link rel=\"statistics\" href=\"/api/storagedomains/6efaa0f3-d832-4e8f-846f-aacdc974e6d0/disks/20b17a6c-1e98-498c-8373-c666a39fe262/statistics\"/>\n
+        \       <vm id=\"aee6bd5e-9f12-4384-8fe5-4b0b8e15268f\" href=\"/api/vms/aee6bd5e-9f12-4384-8fe5-4b0b8e15268f\"/>\n
+        \       <storage_domains>\n            <storage_domain id=\"6efaa0f3-d832-4e8f-846f-aacdc974e6d0\"/>\n
+        \       </storage_domains>\n        <size>21474836480</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>cow</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"85f2eaaa-cb9b-4bf4-a175-30c357adde0b\" href=\"/api/storagedomains/6efaa0f3-d832-4e8f-846f-aacdc974e6d0/disks/85f2eaaa-cb9b-4bf4-a175-30c357adde0b\">\n
+        \       <name>Disk 2</name>\n        <vm id=\"d473fb6b-96a5-4667-a2d4-60b195603bbf\"
+        href=\"/api/vms/d473fb6b-96a5-4667-a2d4-60b195603bbf\"/>\n        <storage_domains>\n
+        \           <storage_domain id=\"6efaa0f3-d832-4e8f-846f-aacdc974e6d0\"/>\n
+        \       </storage_domains>\n        <size>3221225472</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>cow</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"afe8bdee-7adb-4dbd-93ea-29436ca3f2ae\" href=\"/api/storagedomains/6efaa0f3-d832-4e8f-846f-aacdc974e6d0/disks/afe8bdee-7adb-4dbd-93ea-29436ca3f2ae\">\n
+        \       <name>Disk 3</name>\n        <vm id=\"d473fb6b-96a5-4667-a2d4-60b195603bbf\"
+        href=\"/api/vms/d473fb6b-96a5-4667-a2d4-60b195603bbf\"/>\n        <storage_domains>\n
+        \           <storage_domain id=\"6efaa0f3-d832-4e8f-846f-aacdc974e6d0\"/>\n
+        \       </storage_domains>\n        <size>5368709120</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>cow</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"e6fe617d-b7c6-4249-b7bb-5e8f4a37f5c3\" href=\"/api/storagedomains/6efaa0f3-d832-4e8f-846f-aacdc974e6d0/disks/e6fe617d-b7c6-4249-b7bb-5e8f4a37f5c3\">\n
+        \       <name>Disk 4</name>\n        <vm id=\"d473fb6b-96a5-4667-a2d4-60b195603bbf\"
+        href=\"/api/vms/d473fb6b-96a5-4667-a2d4-60b195603bbf\"/>\n        <storage_domains>\n
+        \           <storage_domain id=\"6efaa0f3-d832-4e8f-846f-aacdc974e6d0\"/>\n
+        \       </storage_domains>\n        <size>8589934592</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>cow</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"0b017018-3871-4d24-82d3-8eb9ded85f1c\" href=\"/api/storagedomains/6efaa0f3-d832-4e8f-846f-aacdc974e6d0/disks/0b017018-3871-4d24-82d3-8eb9ded85f1c\">\n
+        \       <name>Disk 5</name>\n        <vm id=\"d473fb6b-96a5-4667-a2d4-60b195603bbf\"
+        href=\"/api/vms/d473fb6b-96a5-4667-a2d4-60b195603bbf\"/>\n        <storage_domains>\n
+        \           <storage_domain id=\"6efaa0f3-d832-4e8f-846f-aacdc974e6d0\"/>\n
+        \       </storage_domains>\n        <size>21474836480</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>cow</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"0001e0a0-ab3b-4efa-98f3-175b5b9030de\" href=\"/api/storagedomains/6efaa0f3-d832-4e8f-846f-aacdc974e6d0/disks/0001e0a0-ab3b-4efa-98f3-175b5b9030de\">\n
+        \       <name>Disk 1</name>\n        <vm id=\"d473fb6b-96a5-4667-a2d4-60b195603bbf\"
+        href=\"/api/vms/d473fb6b-96a5-4667-a2d4-60b195603bbf\"/>\n        <storage_domains>\n
+        \           <storage_domain id=\"6efaa0f3-d832-4e8f-846f-aacdc974e6d0\"/>\n
+        \       </storage_domains>\n        <size>7516192768</size>\n        <type>system</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>ide</interface>\n
+        \       <format>cow</format>\n        <sparse>true</sparse>\n        <bootable>true</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"aef0323d-7d43-4c45-85ed-078f1a3e1a5a\" href=\"/api/storagedomains/6efaa0f3-d832-4e8f-846f-aacdc974e6d0/disks/aef0323d-7d43-4c45-85ed-078f1a3e1a5a\">\n
+        \       <name>Disk 3</name>\n        <vm id=\"1845ad70-c097-42f8-acb6-c3ac8c410572\"
+        href=\"/api/vms/1845ad70-c097-42f8-acb6-c3ac8c410572\"/>\n        <storage_domains>\n
+        \           <storage_domain id=\"6efaa0f3-d832-4e8f-846f-aacdc974e6d0\"/>\n
+        \       </storage_domains>\n        <size>5368709120</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>cow</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"7ab7455c-ac32-4aaa-a64f-d0a908a81146\" href=\"/api/storagedomains/6efaa0f3-d832-4e8f-846f-aacdc974e6d0/disks/7ab7455c-ac32-4aaa-a64f-d0a908a81146\">\n
+        \       <name>Disk 2</name>\n        <vm id=\"1845ad70-c097-42f8-acb6-c3ac8c410572\"
+        href=\"/api/vms/1845ad70-c097-42f8-acb6-c3ac8c410572\"/>\n        <storage_domains>\n
+        \           <storage_domain id=\"6efaa0f3-d832-4e8f-846f-aacdc974e6d0\"/>\n
+        \       </storage_domains>\n        <size>3221225472</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>cow</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"77a51c98-09cd-4ded-be22-94c187b5d2dd\" href=\"/api/storagedomains/6efaa0f3-d832-4e8f-846f-aacdc974e6d0/disks/77a51c98-09cd-4ded-be22-94c187b5d2dd\">\n
+        \       <name>Disk 1</name>\n        <vm id=\"1845ad70-c097-42f8-acb6-c3ac8c410572\"
+        href=\"/api/vms/1845ad70-c097-42f8-acb6-c3ac8c410572\"/>\n        <storage_domains>\n
+        \           <storage_domain id=\"6efaa0f3-d832-4e8f-846f-aacdc974e6d0\"/>\n
+        \       </storage_domains>\n        <size>7516192768</size>\n        <type>system</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>ide</interface>\n
+        \       <format>cow</format>\n        <sparse>true</sparse>\n        <bootable>true</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"343e89fe-d495-4dcd-851f-b6c858c15076\" href=\"/api/storagedomains/6efaa0f3-d832-4e8f-846f-aacdc974e6d0/disks/343e89fe-d495-4dcd-851f-b6c858c15076\">\n
+        \       <name>Disk 5</name>\n        <vm id=\"1845ad70-c097-42f8-acb6-c3ac8c410572\"
+        href=\"/api/vms/1845ad70-c097-42f8-acb6-c3ac8c410572\"/>\n        <storage_domains>\n
+        \           <storage_domain id=\"6efaa0f3-d832-4e8f-846f-aacdc974e6d0\"/>\n
+        \       </storage_domains>\n        <size>21474836480</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>cow</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"b0090927-0112-4713-abd7-ff1e7adbb6fa\" href=\"/api/storagedomains/6efaa0f3-d832-4e8f-846f-aacdc974e6d0/disks/b0090927-0112-4713-abd7-ff1e7adbb6fa\">\n
+        \       <name>Disk 4</name>\n        <vm id=\"1845ad70-c097-42f8-acb6-c3ac8c410572\"
+        href=\"/api/vms/1845ad70-c097-42f8-acb6-c3ac8c410572\"/>\n        <storage_domains>\n
+        \           <storage_domain id=\"6efaa0f3-d832-4e8f-846f-aacdc974e6d0\"/>\n
+        \       </storage_domains>\n        <size>8589934592</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>cow</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"813bd258-a5a8-4e64-a47b-01c0edeb7592\" href=\"/api/storagedomains/6efaa0f3-d832-4e8f-846f-aacdc974e6d0/disks/813bd258-a5a8-4e64-a47b-01c0edeb7592\">\n
+        \       <name>Disk 2</name>\n        <vm id=\"1d92768f-bbbb-4eb4-90f5-a3ae6c205ec8\"
+        href=\"/api/vms/1d92768f-bbbb-4eb4-90f5-a3ae6c205ec8\"/>\n        <storage_domains>\n
+        \           <storage_domain id=\"6efaa0f3-d832-4e8f-846f-aacdc974e6d0\"/>\n
+        \       </storage_domains>\n        <size>3221225472</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>cow</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"a7958e65-121b-4231-ab05-abd7f9957c6a\" href=\"/api/storagedomains/6efaa0f3-d832-4e8f-846f-aacdc974e6d0/disks/a7958e65-121b-4231-ab05-abd7f9957c6a\">\n
+        \       <name>Disk 3</name>\n        <vm id=\"1d92768f-bbbb-4eb4-90f5-a3ae6c205ec8\"
+        href=\"/api/vms/1d92768f-bbbb-4eb4-90f5-a3ae6c205ec8\"/>\n        <storage_domains>\n
+        \           <storage_domain id=\"6efaa0f3-d832-4e8f-846f-aacdc974e6d0\"/>\n
+        \       </storage_domains>\n        <size>5368709120</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>cow</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"6888ab61-14f5-4031-a823-915ec37b16bc\" href=\"/api/storagedomains/6efaa0f3-d832-4e8f-846f-aacdc974e6d0/disks/6888ab61-14f5-4031-a823-915ec37b16bc\">\n
+        \       <name>Disk 4</name>\n        <vm id=\"1d92768f-bbbb-4eb4-90f5-a3ae6c205ec8\"
+        href=\"/api/vms/1d92768f-bbbb-4eb4-90f5-a3ae6c205ec8\"/>\n        <storage_domains>\n
+        \           <storage_domain id=\"6efaa0f3-d832-4e8f-846f-aacdc974e6d0\"/>\n
+        \       </storage_domains>\n        <size>8589934592</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>cow</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"840c335a-a205-4f69-801e-d4e5d826a28b\" href=\"/api/storagedomains/6efaa0f3-d832-4e8f-846f-aacdc974e6d0/disks/840c335a-a205-4f69-801e-d4e5d826a28b\">\n
+        \       <name>Disk 5</name>\n        <vm id=\"1d92768f-bbbb-4eb4-90f5-a3ae6c205ec8\"
+        href=\"/api/vms/1d92768f-bbbb-4eb4-90f5-a3ae6c205ec8\"/>\n        <storage_domains>\n
+        \           <storage_domain id=\"6efaa0f3-d832-4e8f-846f-aacdc974e6d0\"/>\n
+        \       </storage_domains>\n        <size>21474836480</size>\n        <type>data</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>cow</format>\n        <sparse>true</sparse>\n        <bootable>false</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"ca987bb6-6932-4784-93fa-952c7caa8305\" href=\"/api/storagedomains/6efaa0f3-d832-4e8f-846f-aacdc974e6d0/disks/ca987bb6-6932-4784-93fa-952c7caa8305\">\n
+        \       <name>Disk 1</name>\n        <vm id=\"1d92768f-bbbb-4eb4-90f5-a3ae6c205ec8\"
+        href=\"/api/vms/1d92768f-bbbb-4eb4-90f5-a3ae6c205ec8\"/>\n        <storage_domains>\n
+        \           <storage_domain id=\"6efaa0f3-d832-4e8f-846f-aacdc974e6d0\"/>\n
+        \       </storage_domains>\n        <size>7516192768</size>\n        <type>system</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>ide</interface>\n
+        \       <format>cow</format>\n        <sparse>true</sparse>\n        <bootable>true</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n    <disk id=\"7e253a67-9666-4e3b-b3b4-1c07eadde0bc\" href=\"/api/storagedomains/6efaa0f3-d832-4e8f-846f-aacdc974e6d0/disks/7e253a67-9666-4e3b-b3b4-1c07eadde0bc\">\n
+        \       <name>Disk 1</name>\n        <vm id=\"83f76598-4797-40ff-b0ec-433eb74db8be\"
+        href=\"/api/vms/83f76598-4797-40ff-b0ec-433eb74db8be\"/>\n        <storage_domains>\n
+        \           <storage_domain id=\"6efaa0f3-d832-4e8f-846f-aacdc974e6d0\"/>\n
+        \       </storage_domains>\n        <size>21474836480</size>\n        <type>system</type>\n
+        \       <status>\n            <state>ok</state>\n        </status>\n        <interface>virtio</interface>\n
+        \       <format>cow</format>\n        <sparse>true</sparse>\n        <bootable>true</bootable>\n
+        \       <wipe_after_delete>false</wipe_after_delete>\n        <propagate_errors>false</propagate_errors>\n
+        \   </disk>\n</disks>\n"
+    http_version:
+  recorded_at: Mon, 24 Oct 2016 15:39:28 GMT
 - request:
     method: get
     uri: https://evm%40manageiq.com:password@192.168.252.231:8443/api

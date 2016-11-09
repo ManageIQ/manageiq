@@ -131,7 +131,8 @@ class OvirtInventory
     :datacenter => [:storagedomains],
     :host       => [:statistics, :host_nics], # :cdroms, tags
     :vm         => [:disks, :snapshots, :nics],
-    :template   => [:disks]
+    :template   => [:disks],
+    :storage    => [:disks]
   }
 
   def primary_item_jobs

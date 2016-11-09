@@ -144,6 +144,56 @@ module EmsRefresh::SaveInventoryHelper
     association.push(new_records)
   end
 
+  def save_inventory_multi_child(rel_type, association, parent, hashes, find_key, child_keys = [], extra_keys = [],
+                                 disconnect = false)
+    association.reset
+    deletes = parent.send(rel_type).to_a
+    child_keys = Array.wrap(child_keys)
+    remove_keys = Array.wrap(extra_keys) + child_keys
+    record_index = TypedIndex.new(association, find_key)
+
+    new_records = []
+    hashes.each do |h|
+      found = save_inventory_with_multi_findkey(rel_type, association, parent, h.except!(*remove_keys), record_index,
+                                                new_records, deletes)
+      save_child_inventory(found, h, child_keys)
+    end
+
+    unless deletes.blank?
+      _log.info("[#{rel_type[0...-1].titleize}] Deleting #{log_format_deletes(deletes)}")
+      delete_multi(rel_type, deletes, parent, disconnect)
+    end
+
+    parent.send(rel_type) << new_records
+    parent.save!
+  end
+
+  def save_inventory_with_multi_findkey(rel_type, association, parent, h, record_index, new_records, deletes)
+    found = record_index.fetch(h)
+
+    if found.nil?
+      found = association.build(h.except(:id))
+      new_records << found
+    else
+      found.update_attributes!(h.except(:id, :type))
+      deletes.delete(found) unless deletes.blank?
+      unless parent.send(rel_type).include?(found)
+        new_records << found
+      end
+    end
+
+    found
+  end
+
+  def delete_multi(rel_type, deletes, parent, disconnect)
+    if disconnect
+      deletes.each(&:disconnect_inv)
+    else
+      parent.send(rel_type).delete(deletes)
+      parent.save!
+    end
+  end
+
   def save_inventory_single(type, parent, hash, child_keys = [], extra_keys = [], disconnect = false)
     child = parent.send(type)
     if hash.blank?

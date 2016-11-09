@@ -352,11 +352,11 @@ module ManageIQ::Providers
       if (sz = flavor[:root_disk_size]) == 0
         sz = 1.gigabytes
       end
-      add_instance_disk(disks, sz, dev.dup,       "Root disk")
+      add_instance_disk(disks, sz, dev.dup, "Root disk", server.name)
       sz = flavor[:ephemeral_disk_size]
-      add_instance_disk(disks, sz, dev.succ!.dup, "Ephemeral disk") unless sz.zero?
+      add_instance_disk(disks, sz, dev.succ!.dup, "Ephemeral disk", server.name) unless sz.zero?
       sz = flavor[:swap_disk_size]
-      add_instance_disk(disks, sz, dev.succ!.dup, "Swap disk")      unless sz.zero?
+      add_instance_disk(disks, sz, dev.succ!.dup, "Swap disk", server.name) unless sz.zero?
 
       return uid, new_result
     end
@@ -406,8 +406,8 @@ module ManageIQ::Providers
       end
     end
 
-    def add_instance_disk(disks, size, location, name)
-      super(disks, size, location, name, "openstack")
+    def add_instance_disk(disks, size, location, name, controller_type)
+      super(disks, size, location, name, controller_type)
     end
 
     def get_cloud_services
