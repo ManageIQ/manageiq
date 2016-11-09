@@ -35,14 +35,13 @@ describe GitBasedDomainImportService do
     let(:message) { "Success" }
   end
 
-  shared_context "refresh setup" do
-    let(:action) { 'Refresh git repository' }
+  shared_context "repository setup" do
     let(:git_branches) { [] }
     let(:queue_options) do
       {
         :class_name  => "GitRepository",
         :instance_id => git_repo.id,
-        :method_name => "refresh",
+        :method_name => method_name,
         :role        => "git_owner",
         :args        => []
       }
@@ -160,7 +159,9 @@ describe GitBasedDomainImportService do
 
   describe "#queue_refresh" do
     include_context "import setup"
-    include_context "refresh setup"
+    include_context "repository setup"
+    let(:action) { 'Refresh git repository' }
+    let(:method_name) { 'refresh' }
     before do
       allow(User).to receive(:current_user).and_return(user)
     end
@@ -174,7 +175,9 @@ describe GitBasedDomainImportService do
 
   describe "#refresh" do
     include_context "import setup"
-    include_context "refresh setup"
+    include_context "repository setup"
+    let(:action) { 'Refresh git repository' }
+    let(:method_name) { 'refresh' }
     let(:task) { double("MiqTask", :id => 123, :status => status, :message => message) }
 
     before do
@@ -200,6 +203,32 @@ describe GitBasedDomainImportService do
 
         expect { subject.refresh(git_repo.id) }.to raise_exception(MiqException::Error, message)
       end
+    end
+  end
+
+  describe "destroy git repository" do
+    include_context "import setup"
+    include_context "repository setup"
+    let(:action) { 'Destroy git repository' }
+    let(:method_name) { 'destroy' }
+    let(:task) { double("MiqTask", :id => 123, :status => status, :message => message) }
+
+    before do
+      allow(MiqTask).to receive(:wait_for_taskid).with(task.id).and_return(task)
+      allow(User).to receive(:current_user).and_return(user)
+      allow(task).to receive(:task_results).and_return(true)
+    end
+
+    it "#destroy_repository" do
+      expect(MiqTask).to receive(:generic_action_with_callback).with(task_options, queue_options).and_return(task.id)
+
+      expect(subject.destroy_repository(git_repo.id)).to be_truthy
+    end
+
+    it "#queue_destroy_repository" do
+      expect(MiqTask).to receive(:generic_action_with_callback).with(task_options, queue_options).and_return(task.id)
+
+      expect(subject.queue_destroy_repository(git_repo.id)).to eq(task.id)
     end
   end
 end

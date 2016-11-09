@@ -406,14 +406,18 @@ describe MiqAeClassController do
       domain1 = FactoryGirl.create(:miq_ae_system_domain_enabled)
 
       domain2 = FactoryGirl.create(:miq_ae_domain_enabled)
+      domain3 = FactoryGirl.create(:miq_ae_git_domain)
       controller.instance_variable_set(:@_params,
-                                       :miq_grid_checks => "aen-#{domain1.id}, aen-#{domain2.id}, aen-someid"
+                                       :miq_grid_checks => "aen-#{domain1.id}, aen-#{domain2.id}, aen-#{domain3.id}, aen-someid"
                                       )
       allow(controller).to receive(:replace_right_cell)
+      expect_any_instance_of(GitBasedDomainImportService).to receive(:destroy_repository).with(domain3.git_repository.id)
       controller.send(:delete_domain)
       flash_messages = assigns(:flash_array)
       expect(flash_messages.first[:message]).to include("cannot be deleted")
       expect(flash_messages.first[:level]).to eq(:error)
+      expect(flash_messages.second[:message]).to include("Delete successful")
+      expect(flash_messages.second[:level]).to eq(:success)
       expect(flash_messages.last[:message]).to include("Delete successful")
       expect(flash_messages.last[:level]).to eq(:success)
     end

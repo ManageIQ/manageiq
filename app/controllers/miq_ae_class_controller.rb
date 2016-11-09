@@ -1842,6 +1842,7 @@ class MiqAeClassController < ApplicationController
   def delete_domain
     assert_privileges("miq_ae_domain_delete")
     aedomains = []
+    repositories = []
     if params[:id]
       aedomains.push(params[:id])
       self.x_node = "root"
@@ -1853,6 +1854,7 @@ class MiqAeClassController < ApplicationController
         next unless domain
         if domain.editable_properties?
           aedomains.push(domain.id)
+          repositories.push(domain.git_repository.id) if (domain.git_enabled?)
         else
           add_flash(_("Read Only %{model} \"%{name}\" cannot be deleted") %
             {:model => ui_lookup(:model => "MiqAeDomain"), :name => domain.name}, :error)
@@ -1860,6 +1862,7 @@ class MiqAeClassController < ApplicationController
       end
     end
     process_elements(aedomains, MiqAeDomain, 'destroy') unless aedomains.empty?
+    repositories.each { |id| git_based_domain_import_service.destroy_repository(id) }
     replace_right_cell([:ae])
   end
 

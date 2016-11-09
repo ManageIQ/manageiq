@@ -72,6 +72,23 @@ class GitBasedDomainImportService
     MiqTask.generic_action_with_callback(task_options, queue_options)
   end
 
+  def queue_destroy_repository(git_repo_id)
+    task_options = {
+      :action => "Destroy git repository",
+      :userid => User.current_user.userid
+    }
+
+    queue_options = {
+      :class_name  => "GitRepository",
+      :method_name => "destroy",
+      :instance_id => git_repo_id,
+      :role        => "git_owner",
+      :args        => []
+    }
+
+    MiqTask.generic_action_with_callback(task_options, queue_options)
+  end
+
   def import(git_repo_id, branch_or_tag, tenant_id)
     task_id = queue_import(git_repo_id, branch_or_tag, tenant_id)
     task = MiqTask.wait_for_taskid(task_id)
@@ -89,6 +106,15 @@ class GitBasedDomainImportService
     raise MiqException::Error, task.message unless task.status == "Ok"
     task.task_results
   end
+
+  def destroy_repository(git_repo_id)
+    task_id = queue_destroy_repository(git_repo_id)
+    task = MiqTask.wait_for_taskid(task_id)
+
+    raise MiqException::Error, task.message unless task.status == "Ok"
+    task.task_results
+  end
+
 
   def self.available?
     MiqRegion.my_region.role_active?("git_owner")
