@@ -70,7 +70,6 @@ describe ManageIQ::Providers::Redhat::InfraManager::Provision::StateMachine do
     @test_poll_clone_complete_setup ||= begin
       expect(task).to receive(:clone_complete?).and_return(false, false, true)
       expect(task).to receive(:requeue_phase).twice { requeue_phase }
-      expect(EmsRefresh).to receive(:queue_refresh).once
     end
 
     call_method
