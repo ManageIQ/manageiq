@@ -620,16 +620,6 @@ class ApplicationHelper::ToolbarBuilder
 
     # Check buttons with other restriction logic
     case id
-    when "dialog_add_box", "dialog_add_element", "dialog_add_tab", "dialog_res_discard", "dialog_resource_remove"
-      return true unless @edit
-      return true if id == "dialog_res_discard" && @sb[:edit_typ] != "add"
-      return true if id == "dialog_resource_remove" && (@sb[:edit_typ] == "add" || x_node == "root")
-      nodes = x_node.split('_')
-      return true if id == "dialog_add_tab" && (nodes.length > 2)
-      return true if id == "dialog_add_box" && (nodes.length < 2 || nodes.length > 3)
-      return true if id == "dialog_add_element" && (nodes.length < 3 || nodes.length > 4)
-    when "dialog_copy", "dialog_delete", "dialog_edit", "dialog_new"
-      return true if @edit && @edit[:current]
     when "miq_task_canceljob"
       return true unless ["all_tasks", "all_ui_tasks"].include?(@layout)
     when "vm_console"
