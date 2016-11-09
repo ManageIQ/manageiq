@@ -9,7 +9,7 @@
       .col-md-8
         %select.form-control#chooose_datasource_input{"name"        => "choose_datasource_input",
                                                       "ng-model"    => "chooseDsModel.selectedDatasource",
-                                                      "ng-options"  => "c.label for c in chooseDsModel.datasources",
+                                                      "ng-options"  => "c.label for c in chooseDsModel.datasources track by c.id",
                                                       "ng-required" => "true"}
       .col-sm-2
       .col-sm-10
