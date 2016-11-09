@@ -775,7 +775,7 @@ describe TreeNodeBuilder do
     end
 
     it "ManageIQ::Providers::Vmware::CloudManager::OrchestrationTemplate node" do
-      template = FactoryGirl.build(:orchestration_template_vmware_cloud)
+      template = FactoryGirl.build(:orchestration_template_vmware_cloud_with_content)
       node = TreeNodeBuilder.build(template, nil, {})
       expect(node).to eq(
         :key    => "-#{template.name}",
