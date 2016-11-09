@@ -1664,9 +1664,9 @@ function chartData(type, data, data2) {
   if (_.isObject(config.tooltip)) {
     config.tooltip.contents = undefined;
   }
-  var ret = _.defaultsDeep({}, data, config, data2);
   // some PatternFly default configs define size of chart
-  ret.size = {};
+  config.size = {};
+  var ret = _.defaultsDeep({}, data, config, data2);
   return ret;
 }
 
