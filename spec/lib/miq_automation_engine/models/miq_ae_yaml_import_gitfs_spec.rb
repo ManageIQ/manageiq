@@ -4,12 +4,20 @@ describe MiqAeYamlImportGitfs do
     @ae_db_dir = Dir.mktmpdir
     @default_hash = {:a => "one", :b => "two", :c => "three"}
     @dirnames = %w(A B c)
-    @domain = "ManageIQ"
-    @domain_file = "#{@domain}/#{MiqAeYamlImportExportMixin::DOMAIN_YAML_FILENAME}"
     @namespaces = %w(NS1 NS2)
     @classes    = %w(CLASS1 CLASS2)
     @instances  = %w(INSTANCE1 INSTANCE2)
     @methods    = %w(METHOD1 METHOD2 METHOD3)
+  end
+
+  def build_git_repository(domain_name, domain_dir)
+    @domain = domain_name
+    @domain_dir = domain_dir
+    @domain_file = if domain_dir
+                     "#{domain_dir}/#{MiqAeYamlImportExportMixin::DOMAIN_YAML_FILENAME}"
+                   else
+                     MiqAeYamlImportExportMixin::DOMAIN_YAML_FILENAME
+                   end
     @repo_path = File.join(@ae_db_dir, @git_db)
     @repo_options = {:path     => @repo_path,
                      :username => "user1",
@@ -36,11 +44,19 @@ describe MiqAeYamlImportGitfs do
   end
 
   def namespace_file(ns)
-    "#{@domain}/#{ns}/#{MiqAeYamlImportExportMixin::NAMESPACE_YAML_FILENAME}"
+    if @domain_dir
+      "#{@domain_dir}/#{ns}/#{MiqAeYamlImportExportMixin::NAMESPACE_YAML_FILENAME}"
+    else
+      "#{ns}/#{MiqAeYamlImportExportMixin::NAMESPACE_YAML_FILENAME}"
+    end
   end
 
   def class_dir(ns, klass)
-    "#{@domain}/#{ns}/#{klass}#{MiqAeYamlImportExportMixin::CLASS_DIR_SUFFIX}"
+    if @domain_dir
+      "#{@domain_dir}/#{ns}/#{klass}#{MiqAeYamlImportExportMixin::CLASS_DIR_SUFFIX}"
+    else
+      "#{ns}/#{klass}#{MiqAeYamlImportExportMixin::CLASS_DIR_SUFFIX}"
+    end
   end
 
   def class_file(ns, klass)
@@ -65,77 +81,95 @@ describe MiqAeYamlImportGitfs do
     add_file("#{method_dir}/#{method}.rb")
   end
 
-  it "#load_repo missing directory" do
-    expect do
-      MiqAeYamlImportGitfs.new(@domain, 'git_dir' => '/blah/blah/nada')
-    end.to raise_error(MiqAeException::DirectoryNotFound)
+  shared_examples_for "gitfs import" do
+    it "#load_repo missing directory" do
+      expect do
+        MiqAeYamlImportGitfs.new(@domain, 'git_dir' => '/blah/blah/nada')
+      end.to raise_error(MiqAeException::DirectoryNotFound)
+    end
+
+    it "#load_file" do
+      @gitfs = MiqAeYamlImportGitfs.new(@domain, 'git_dir' => @repo_path)
+      expect(@gitfs.load_file(@domain_file)).to have_attributes(@default_hash.merge(:fname => @domain_file))
+    end
+
+    it "#load_file invalid" do
+      @gitfs = MiqAeYamlImportGitfs.new(@domain, 'git_dir' => @repo_path)
+      expect { @gitfs.load_file("no_such_thing") }.to raise_error(GitWorktreeException::GitEntryMissing)
+    end
+
+    it "#domain_entry" do
+      @gitfs = MiqAeYamlImportGitfs.new(@domain, 'git_dir' => @repo_path)
+      expect(@gitfs.domain_entry(@domain_dir ? @domain : '.')).to eq(@domain_file)
+    end
+
+    it "#domain_entry invalid" do
+      @gitfs = MiqAeYamlImportGitfs.new(@domain, 'git_dir' => @repo_path)
+      expect { @gitfs.domain_entry("no such thing") }.to raise_error(MiqAeException::NamespaceNotFound)
+    end
+
+    it "#namespace_files" do
+      @gitfs = MiqAeYamlImportGitfs.new(@domain, 'git_dir' => @repo_path)
+      ns_files = @namespaces.collect { |ns| namespace_file(ns) }
+      expect(@gitfs.namespace_files(@domain_dir ? @domain : '.')).to match_array(ns_files)
+    end
+
+    it "#namespace_files invalid" do
+      @gitfs = MiqAeYamlImportGitfs.new(@domain, 'git_dir' => @repo_path)
+      expect(@gitfs.namespace_files("no such thing")).to be_empty
+    end
+
+    it "#class_files invalid" do
+      @gitfs = MiqAeYamlImportGitfs.new(@domain, 'git_dir' => @repo_path)
+      expect(@gitfs.class_files("no_such_thing")).to be_empty
+    end
+
+    it "#class_files" do
+      @gitfs = MiqAeYamlImportGitfs.new(@domain, 'git_dir' => @repo_path)
+      ns_files = @namespaces.collect { |ns| namespace_file(ns) }
+      ns_dir   = File.dirname(ns_files[0])
+      ns = ns_dir.split('/').last
+      class_files = @classes.collect { |klass| class_file(ns, klass) }
+      expect(@gitfs.class_files(ns_dir)).to match_array(class_files)
+    end
+
+    it "#get_instance_files" do
+      @gitfs = MiqAeYamlImportGitfs.new(@domain, 'git_dir' => @repo_path)
+      ns_files = @namespaces.collect { |ns| namespace_file(ns) }
+      ns_dir   = File.dirname(ns_files[0])
+      ns = ns_dir.split('/').last
+      class_files = @classes.collect { |klass| class_file(ns, klass) }
+      class_dir = File.dirname(class_files[0])
+      instance_files = @instances.collect { |instance| "#{class_dir}/#{instance}.yaml" }
+      expect(@gitfs.get_instance_files(class_dir)).to match_array(instance_files)
+    end
+
+    it "#get_method_files" do
+      @gitfs = MiqAeYamlImportGitfs.new(@domain, 'git_dir' => @repo_path)
+      ns_files = @namespaces.collect { |ns| namespace_file(ns) }
+      ns_dir   = File.dirname(ns_files[0])
+      ns = ns_dir.split('/').last
+      class_files = @classes.collect { |klass| class_file(ns, klass) }
+      class_dir = File.dirname(class_files[0])
+      method_dir = "#{class_dir}/#{MiqAeYamlImportExportMixin::METHOD_FOLDER_NAME}"
+      method_files = @methods.collect { |method| "#{method_dir}/#{method}.yaml" }
+      expect(@gitfs.get_method_files(class_dir)).to match_array(method_files)
+    end
   end
 
-  it "#load_file" do
-    @gitfs = MiqAeYamlImportGitfs.new(@domain, 'git_dir' => @repo_path)
-    expect(@gitfs.load_file(@domain_file)).to have_attributes(@default_hash.merge(:fname => @domain_file))
+  context "without top level directory" do
+    before do
+      build_git_repository("ManageIQ", nil)
+    end
+
+    it_should_behave_like "gitfs import"
   end
 
-  it "#load_file invalid" do
-    @gitfs = MiqAeYamlImportGitfs.new(@domain, 'git_dir' => @repo_path)
-    expect { @gitfs.load_file("no_such_thing") }.to raise_error(GitWorktreeException::GitEntryMissing)
-  end
+  context "with top level directory" do
+    before do
+      build_git_repository("ManageIQ", "ManageIQ")
+    end
 
-  it "#domain_entry" do
-    @gitfs = MiqAeYamlImportGitfs.new(@domain, 'git_dir' => @repo_path)
-    expect(@gitfs.domain_entry(@domain)).to eq(@domain_file)
-  end
-
-  it "#domain_entry invalid" do
-    @gitfs = MiqAeYamlImportGitfs.new(@domain, 'git_dir' => @repo_path)
-    expect { @gitfs.domain_entry("no such thing") }.to raise_error(MiqAeException::NamespaceNotFound)
-  end
-
-  it "#namespace_files" do
-    @gitfs = MiqAeYamlImportGitfs.new(@domain, 'git_dir' => @repo_path)
-    ns_files = @namespaces.collect { |ns| namespace_file(ns) }
-    expect(@gitfs.namespace_files(@domain)).to match_array(ns_files)
-  end
-
-  it "#namespace_files invalid" do
-    @gitfs = MiqAeYamlImportGitfs.new(@domain, 'git_dir' => @repo_path)
-    expect(@gitfs.namespace_files("no such thing")).to be_empty
-  end
-
-  it "#class_files invalid" do
-    @gitfs = MiqAeYamlImportGitfs.new(@domain, 'git_dir' => @repo_path)
-    expect(@gitfs.class_files("no_such_thing")).to be_empty
-  end
-
-  it "#class_files" do
-    @gitfs = MiqAeYamlImportGitfs.new(@domain, 'git_dir' => @repo_path)
-    ns_files = @namespaces.collect { |ns| namespace_file(ns) }
-    ns_dir   = File.dirname(ns_files[0])
-    ns = ns_dir.split('/').last
-    class_files = @classes.collect { |klass| class_file(ns, klass) }
-    expect(@gitfs.class_files(ns_dir)).to match_array(class_files)
-  end
-
-  it "#get_instance_files" do
-    @gitfs = MiqAeYamlImportGitfs.new(@domain, 'git_dir' => @repo_path)
-    ns_files = @namespaces.collect { |ns| namespace_file(ns) }
-    ns_dir   = File.dirname(ns_files[0])
-    ns = ns_dir.split('/').last
-    class_files = @classes.collect { |klass| class_file(ns, klass) }
-    class_dir = File.dirname(class_files[0])
-    instance_files = @instances.collect { |instance| "#{class_dir}/#{instance}.yaml" }
-    expect(@gitfs.get_instance_files(class_dir)).to match_array(instance_files)
-  end
-
-  it "#get_method_files" do
-    @gitfs = MiqAeYamlImportGitfs.new(@domain, 'git_dir' => @repo_path)
-    ns_files = @namespaces.collect { |ns| namespace_file(ns) }
-    ns_dir   = File.dirname(ns_files[0])
-    ns = ns_dir.split('/').last
-    class_files = @classes.collect { |klass| class_file(ns, klass) }
-    class_dir = File.dirname(class_files[0])
-    method_dir = "#{class_dir}/#{MiqAeYamlImportExportMixin::METHOD_FOLDER_NAME}"
-    method_files = @methods.collect { |method| "#{method_dir}/#{method}.yaml" }
-    expect(@gitfs.get_method_files(class_dir)).to match_array(method_files)
+    it_should_behave_like "gitfs import"
   end
 end
