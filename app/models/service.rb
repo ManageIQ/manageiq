@@ -364,6 +364,7 @@ class Service < ApplicationRecord
     _log.info "Generation of chargeback report for service #{name} started..."
     MiqReportResult.where(:name => chargeback_report_name).destroy_all
     report = MiqReport.new(chargeback_yaml)
+    options[:report_sync] = true
     report.queue_generate_table(options)
     _log.info "Report #{chargeback_report_name} generated"
   end

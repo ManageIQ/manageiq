@@ -124,7 +124,7 @@ module MiqReport::Generator
     options[:mode] ||= "async"
     options[:report_source] ||= "Requested by user"
 
-    sync = VMDB::Config.new("vmdb").config[:product][:report_sync]
+    sync = options.delete(:report_sync) || VMDB::Config.new("vmdb").config[:product][:report_sync]
 
     task = MiqTask.create(:name => "Generate Report: '#{name}'")
 

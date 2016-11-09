@@ -412,6 +412,7 @@ describe Service do
 
       it "loads report template and initiate generation" do
         EvmSpecHelper.local_miq_server
+        allow(Chargeback).to receive(:build_results_for_report_chargeback)
         @service.generate_chargeback_report
         expect(MiqReportResult.count).to eq 1
         expect(MiqReportResult.first.name).to eq @service.chargeback_report_name
@@ -435,6 +436,7 @@ describe Service do
     describe "#chargeback_report" do
       it "returns chargeback report" do
         EvmSpecHelper.local_miq_server
+        allow(Chargeback).to receive(:build_results_for_report_chargeback)
         @service.generate_chargeback_report
         expect(@service.chargeback_report).to have_key(:results)
       end
