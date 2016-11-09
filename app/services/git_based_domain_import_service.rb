@@ -115,7 +115,6 @@ class GitBasedDomainImportService
     task.task_results
   end
 
-
   def self.available?
     MiqRegion.my_region.role_active?("git_owner")
   end

@@ -1854,7 +1854,7 @@ class MiqAeClassController < ApplicationController
         next unless domain
         if domain.editable_properties?
           aedomains.push(domain.id)
-          repositories.push(domain.git_repository.id) if (domain.git_enabled?)
+          repositories.push(domain.git_repository.id) if domain.git_enabled?
         else
           add_flash(_("Read Only %{model} \"%{name}\" cannot be deleted") %
             {:model => ui_lookup(:model => "MiqAeDomain"), :name => domain.name}, :error)
