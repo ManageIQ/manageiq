@@ -474,7 +474,7 @@ class MiqRequest < ApplicationRecord
   def self.find_source_id_from_values(values)
     MiqRequestMixin.get_option(:src_vm_id, nil, values) ||
       MiqRequestMixin.get_option(:src_id, nil, values) ||
-      MiqRequestMixin.get_option(:src_ids, nil, values).try(:first)
+      MiqRequestMixin.get_option(:src_ids, nil, values)
   end
   private_class_method :find_source_id_from_values
 
