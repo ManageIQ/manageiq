@@ -77,14 +77,14 @@ module ManageIQ::Providers::Redhat::InfraManager::Vm::Operations::Snapshot
   end
 
   class CloseableService < SimpleDelegator
-    attr_reader :closing_block
-    def initialize(service, &closing_block)
-      @closing_block = closing_block
-      super service
-    end
+      attr_reader :closing_block
+      def initialize(service, &closing_block)
+        @closing_block = closing_block
+        super service
+      end
 
-    def close
-      closing_block.call
+      def close
+        closing_block.call
+      end
     end
   end
-end

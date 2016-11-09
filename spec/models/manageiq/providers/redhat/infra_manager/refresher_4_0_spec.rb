@@ -1,8 +1,7 @@
 describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
   before(:each) do
     guid, server, zone = EvmSpecHelper.create_guid_miq_server_zone
-    @ems = FactoryGirl.create(:ems_redhat, :zone => zone, :hostname => "localhost", :ipaddress => "localhost",
-                              :port => 8443)
+    @ems = FactoryGirl.create(:ems_redhat, :zone => zone, :hostname => "localhost", :ipaddress => "localhost", :port => 8443)
     @ems.update_authentication(:default => {:userid => "admin@internal", :password => "123456"})
     allow(@ems).to receive(:supported_api_versions).and_return([3, 4])
   end
@@ -11,8 +10,8 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
     expect(described_class.ems_type).to eq(:rhevm)
   end
 
-  it "will perform a full refresh on v4.1" do
-    VCR.use_cassette("#{described_class.name.underscore}_4_1", :allow_unused_http_interactions => true) do
+  it "will perform a full refresh on v4.0" do
+    VCR.use_cassette("manageiq/providers/redhat/infra_manager/refresher_4_1", :allow_unused_http_interactions => true) do
       EmsRefresh.refresh(@ems)
     end
     @ems.reload
@@ -20,12 +19,12 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
     assert_table_counts
     assert_ems
     assert_specific_cluster
-    assert_specific_storage
-    # assert_specific_host
-    # assert_specific_vm_powered_on
-    # assert_specific_vm_powered_off
-    # assert_specific_template
-    # assert_relationship_tree
+    #assert_specific_storage
+    #assert_specific_host
+    #assert_specific_vm_powered_on
+    #assert_specific_vm_powered_off
+    #assert_specific_template
+    #assert_relationship_tree
   end
 
   def assert_table_counts
@@ -76,7 +75,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
   end
 
   def assert_specific_cluster
-    @cluster = EmsCluster.find_by(:name => 'cc1')
+    @cluster = EmsCluster.find_by_name('cc1')
     expect(@cluster).to have_attributes(
       :ems_ref                 => "/api/clusters/504ae500-3476-450e-8243-f6df0f7f7acf",
       :ems_ref_obj             => "/api/clusters/504ae500-3476-450e-8243-f6df0f7f7acf",
@@ -113,32 +112,49 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
   end
 
   def assert_specific_storage
-    @storage = Storage.find_by(:name => "data1")
+    @storage = Storage.find_by_name("NetApp01Lun2")
     expect(@storage).to have_attributes(
-      :ems_ref                       => "/api/storagedomains/27a3bcce-c4d0-4bce-afe9-1d669d5a9d02",
-      :ems_ref_obj                   => "/api/storagedomains/27a3bcce-c4d0-4bce-afe9-1d669d5a9d02",
-      :name                          => "data1",
-      :store_type                    => "NFS",
-      :total_space                   => 53687091200,
-      :free_space                    => 49392123904,
+      :ems_ref                       => "/api/storagedomains/6284e934-9f11-486a-b9d8-aaacfa4f226f",
+      :ems_ref_obj                   => "/api/storagedomains/6284e934-9f11-486a-b9d8-aaacfa4f226f",
+      :name                          => "NetApp01Lun2",
+      :store_type                    => "ISCSI",
+      :total_space                   => 106300440576,
+      :free_space                    => 57982058496,
       :uncommitted                   => 36507222016,
       :multiplehostaccess            => 1, # TODO: Should this be a boolean column?
-      :location                      => "spider.eng.lab.tlv.redhat.com:/vol/vol_bodnopoz/data1",
+      :location                      => "360a980005034442f525a716549583947",
       :directory_hierarchy_supported => nil,
       :thin_provisioning_supported   => nil,
       :raw_disk_mappings_supported   => nil
     )
-    @storage2 = Storage.find_by(:name => "data2")
+
+    @storage2 = Storage.find_by_name("RHEVM31-1")
     expect(@storage2).to have_attributes(
-      :ems_ref                       => "/api/storagedomains/4672fe17-c260-4ecc-aab0-b535f4d0dbeb",
-      :ems_ref_obj                   => "/api/storagedomains/4672fe17-c260-4ecc-aab0-b535f4d0dbeb",
-      :name                          => "data2",
-      :store_type                    => "NFS",
-      :total_space                   => 53687091200,
-      :free_space                    => 49392123904,
-      :uncommitted                   => 49392123904,
+      :ems_ref                       => "/api/storagedomains/d0a7d751-46bc-495a-a312-e5d010059f96",
+      :ems_ref_obj                   => "/api/storagedomains/d0a7d751-46bc-495a-a312-e5d010059f96",
+      :name                          => "RHEVM31-1",
+      :store_type                    => "ISCSI",
+      :total_space                   => 273804165120,
+      :free_space                    => 137438953472,
+      :uncommitted                   => 45097156608,
       :multiplehostaccess            => 1, # TODO: Should this be a boolean column?
-      :location                      => "spider.eng.lab.tlv.redhat.com:/vol/vol_bodnopoz/data2",
+      :location                      => nil,
+      :directory_hierarchy_supported => nil,
+      :thin_provisioning_supported   => nil,
+      :raw_disk_mappings_supported   => nil
+    )
+
+    @storage3 = Storage.find_by_name("RHEVM31-gluster")
+    expect(@storage3).to have_attributes(
+      :ems_ref                       => "/api/storagedomains/efbe372b-7634-49f0-901e-0c05d526181f",
+      :ems_ref_obj                   => "/api/storagedomains/efbe372b-7634-49f0-901e-0c05d526181f",
+      :name                          => "RHEVM31-gluster",
+      :store_type                    => "GLUSTERFS",
+      :total_space                   => 20_401_094_656,
+      :free_space                    => 16_106_127_360,
+      :uncommitted                   => 19_327_352_832,
+      :multiplehostaccess            => 1, # TODO: Should this be a boolean column?
+      :location                      => "example.gluster.server.com:/gv0",
       :directory_hierarchy_supported => nil,
       :thin_provisioning_supported   => nil,
       :raw_disk_mappings_supported   => nil
@@ -146,7 +162,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
   end
 
   def assert_specific_host
-    @host = ManageIQ::Providers::Redhat::InfraManager::Host.find_by(:name => "per410-rh1")
+    @host = ManageIQ::Providers::Redhat::InfraManager::Host.find_by_name("per410-rh1")
     expect(@host).to have_attributes(
       :ems_ref          => "/api/hosts/2f1d11cc-e269-11e2-839c-005056a217db",
       :ems_ref_obj      => "/api/hosts/2f1d11cc-e269-11e2-839c-005056a217db",
@@ -177,7 +193,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
     expect(@host.system_services.size).to eq(0)
 
     expect(@host.switches.size).to eq(3)
-    switch = @host.switches.find_by(:name => "rhevm")
+    switch = @host.switches.find_by_name("rhevm")
     expect(switch).to have_attributes(
       :uid_ems           => "00000000-0000-0000-0000-000000000009",
       :name              => "rhevm",
@@ -188,7 +204,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
     )
 
     expect(switch.lans.size).to eq(1)
-    @lan = switch.lans.find_by(:name => "rhevm")
+    @lan = switch.lans.find_by_name("rhevm")
     expect(@lan).to have_attributes(
       :uid_ems                    => "00000000-0000-0000-0000-000000000009",
       :name                       => "rhevm",
@@ -220,7 +236,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
     )
 
     expect(@host.hardware.networks.size).to eq(3)
-    network = @host.hardware.networks.find_by(:description => "em1")
+    network = @host.hardware.networks.find_by_description("em1")
     expect(network).to have_attributes(
       :description  => "em1",
       :dhcp_enabled => nil,
@@ -228,7 +244,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
       :subnet_mask  => "255.255.254.0"
     )
 
-    nic_without_ip = @host.hardware.networks.find_by(:description => "em3")
+    nic_without_ip = @host.hardware.networks.find_by_description("em3")
     expect(nic_without_ip).to have_attributes(
       :description  => "em3",
       :dhcp_enabled => nil,
@@ -256,7 +272,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
   end
 
   def assert_specific_vm_powered_on
-    v = ManageIQ::Providers::Redhat::InfraManager::Vm.find_by(:name => "EmsRefreshSpec-PoweredOn")
+    v = ManageIQ::Providers::Redhat::InfraManager::Vm.find_by_name("EmsRefreshSpec-PoweredOn")
     expect(v).to have_attributes(
       :template              => false,
       :ems_ref               => "/api/vms/fe052832-2350-48ce-8e56-c24b4cd91876",
@@ -410,7 +426,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
   end
 
   def assert_specific_vm_powered_off
-    v = ManageIQ::Providers::Redhat::InfraManager::Vm.find_by(:name => "EmsRefreshSpec-PoweredOff")
+    v = ManageIQ::Providers::Redhat::InfraManager::Vm.find_by_name("EmsRefreshSpec-PoweredOff")
     expect(v).to have_attributes(
       :template              => false,
       :ems_ref               => "/api/vms/26a050fb-62c3-4645-9088-be6efec860e1",
@@ -556,7 +572,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
   end
 
   def assert_specific_template
-    v = ManageIQ::Providers::Redhat::InfraManager::Template.find_by(:name => "EmsRefreshSpec-Template")
+    v = ManageIQ::Providers::Redhat::InfraManager::Template.find_by_name("EmsRefreshSpec-Template")
     expect(v).to have_attributes(
       :template              => true,
       :ems_ref               => "/api/templates/7a6db798-9df9-40ca-8cc3-3baab32e7613",
