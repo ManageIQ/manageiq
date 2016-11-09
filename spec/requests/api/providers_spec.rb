@@ -742,4 +742,15 @@ describe "Providers API" do
       expect(queue_jobs).to contain_exactly(an_object_having_attributes(:args => expected_args))
     end
   end
+
+  describe 'query Providers' do
+    describe 'query custom_attributes' do
+      let!(:generic_provider) { FactoryGirl.create(:provider) }
+      it 'does not blow-up on provider without custom_attributes' do
+        api_basic_authorize collection_action_identifier(:providers, :read, :get)
+        run_get(providers_url, :expand => 'resources,custom_attributes', :provider_class => 'provider')
+        expect_query_result(:providers, 1, 1)
+      end
+    end
+  end
 end

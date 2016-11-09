@@ -2,7 +2,7 @@ module Api
   module Subcollections
     module CustomAttributes
       def custom_attributes_query_resource(object)
-        object.custom_attributes
+        object.respond_to?(:custom_attributes) ? object.custom_attributes : []
       end
 
       def custom_attributes_add_resource(object, _type, _id, data = nil)
