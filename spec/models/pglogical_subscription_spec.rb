@@ -367,7 +367,7 @@ describe PglogicalSubscription do
       expect(pglogical).to receive(:subscription_drop).with("region_0_subscription", true)
 
       EvmSpecHelper.create_guid_miq_server_zone
-      FactoryGirl.create(
+      auth = FactoryGirl.create(
         :auth_token,
         :resource_id   => remote_region.id,
         :resource_type => "MiqRegion",
@@ -377,9 +377,7 @@ describe PglogicalSubscription do
       expect(remote_region.auth_key_configured?).to be true
 
       sub.delete
-      remote_region.reload
-
-      expect(remote_region.auth_key_configured?).to be false
+      expect(AuthToken.find_by_id(auth.id)).to be_nil
     end
   end
 
