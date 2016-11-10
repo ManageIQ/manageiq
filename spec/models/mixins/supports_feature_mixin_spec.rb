@@ -5,6 +5,7 @@ describe SupportsFeatureMixin do
                  :publish => 'publish the post',
                  :archive => 'archive the post',
                  :fake    => 'fake it',
+                 :rm_root => 'remove with children',
                  :nuke    => 'nuke it'
                ))
 
@@ -30,6 +31,9 @@ describe SupportsFeatureMixin do
     stub_const('Post', Class.new do
       include SupportsFeatureMixin
       include Post::Operations
+      supports_class_conditional :rm_root do
+        unsupported_reason_add(:rm_root, 'Can do only on Root') if name != 'Post'
+      end
     end)
 
     stub_const('SpecialPost::Operations', Module.new do
@@ -127,6 +131,28 @@ describe SupportsFeatureMixin do
 
     it ".unsupported_reason(:feature) returns no reason" do
       expect(Post.unsupported_reason(:delete)).not_to be_blank
+    end
+  end
+
+  context "conditionally supported on a class" do
+    it "is supported on the base class" do
+      expect(Post.supports?(:rm_root)).to be true
+      expect(Post.new.supports?(:rm_root)).to be true
+    end
+
+    it "returns a reason on the unsupported subclass" do
+      expect(Post.unsupported_reason(:rm_root)).to be nil
+      expect(Post.new.unsupported_reason(:rm_root)).to be nil
+    end
+
+    it "is unsupported on subclass" do
+      expect(SpecialPost.supports?(:rm_root)).to be false
+      expect(SpecialPost.new.supports?(:rm_root)).to be false
+    end
+
+    it "returns a reason on the unsupported subclass" do
+      expect(SpecialPost.unsupported_reason(:rm_root)).to eq "Can do only on Root"
+      expect(SpecialPost.new.unsupported_reason(:rm_root)).to eq "Can do only on Root"
     end
   end
 
@@ -262,8 +288,12 @@ describe SupportsFeatureMixin do
   end
 
   context "feature that is implicitly unsupported" do
-    it "class responds to supports_feature?" do
+    it "is unsupported by a class" do
       expect(Post.supports_nuke?).to be false
+    end
+
+    it "is unsupported by an instance of the class" do
+      expect(Post.new.supports_nuke?).to be false
     end
 
     it "can be supported by the class" do
@@ -274,6 +304,35 @@ describe SupportsFeatureMixin do
       end)
       expect(NukeablePost.new(:bribe => true).supports_nuke?).to be false
       expect(NukeablePost.new(:bribe => false).supports_nuke?).to be true
+    end
+  end
+
+  context 'included in a module' do
+    before do
+      stub_const('MyModule', Module.new do
+        include SupportsFeatureMixin
+        supports_not :publish  # supported in base class Post
+        supports :fake do      # unsupported in base class Post
+          unsupported_reason_add(:fake, "We never fake")
+        end
+      end)
+      stub_const('SomePost', Class.new(Post) do
+        include MyModule
+      end)
+    end
+
+    it "does not affect undefined features" do
+      expect(SomePost.new.supports_delete?).to be false
+      expect(SomePost.supports_delete?).to be false
+    end
+
+    it "overrides features defined on the class with those in the module" do
+      expect(SomePost.new.supports_publish?).to be false
+      expect(SomePost.supports_publish?).to be false
+
+      expect(SomePost.supports_fake?).to be true
+      expect(SomePost.new.supports_fake?).to be false
+      expect(SomePost.new.unsupported_reason(:fake)).to eq('We never fake')
     end
   end
 end
