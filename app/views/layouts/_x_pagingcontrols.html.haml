@@ -1,33 +1,42 @@
 .col-md-12
-  .toolbar-pf-actions
-    - if @pages && @items_per_page != ONE_MILLION && @pages[:items] > 0
-      - button_div ||= "center_tb"
-      - action_url ||= "explorer"
-      - pages = @pages
-      - if action_url.include?("/")
-        - action_method = action_url.split("/").first
-        - action_id = action_url.split("/").last
-      - url = action_id ? url_for(:action => action_method, :id => action_id) : url_for(:action => action_url)
-      - @pc_occ ||= 0
-      - @pc_occ += 1
-      %div{:id => "pc_div_#{@pc_occ}"}
-        - if @pc_occ == 1
-          .form-group
-            - if ! @no_checkall && ! @no_checkboxes
-              = render :partial => 'shared/master_toggle',
-                       :locals  => {:button_div => button_div,
-                                    :label      => _("Check All")}
-          .form-group{:style => "border-right: 0"}
-            = _('Sorted by: ')
-            - sort_text = "#{@view.headers[@sortcol]} (#{@sortdir == "ASC" ? _("Asc.") : _("Desc.")})"
-            - if @gtl_type != "list" && @view
-              = select_tag("sort_choice",
-                          options_for_select([sort_text] + @view.headers),
-                          :class => "selectpicker dropup")
-              :javascript
-                miqSelectPickerEvent("sort_choice", "#{url}", {beforeSend: true, complete: true})
-            - elsif @gtl_type == "list" && @view
-              = h(sort_text)
+  - if @pages && @items_per_page != ONE_MILLION && @pages[:items] > 0
+    - button_div ||= "center_tb"
+    - action_url ||= "explorer"
+    - pages = @pages
+    - if action_url.include?("/")
+      - action_method = action_url.split("/").first
+      - action_id = action_url.split("/").last
+    - url = action_id ? url_for(:action => action_method, :id => action_id) : url_for(:action => action_url)
+    - @pc_occ ||= 0
+    - @pc_occ += 1
+
+    .clearfix{:id => "pc_div_#{@pc_occ}"}
+      - if @pc_occ == 1
+        .pull-left.text-nowrap
+          - if ! @no_checkall && ! @no_checkboxes
+            = render :partial => 'shared/master_toggle',
+                     :locals  => {:button_div => button_div,
+                                  :label      => _("Check All")}
+      .pull-right
+        .form-group.text-nowrap
+          - if @gtl_type != "list" && @view
+            - sort_text = "#{@view.headers[@sortcol]} (#{@sortdir == "ASC" ? _("Asc") : _("Desc")})"
+            = select_tag("sort_choice",
+                        options_for_select([sort_text] + @view.headers),
+                        :class => "selectpicker dropup btn-group", "data-width" => "auto")
+            :javascript
+              miqSelectPickerEvent("sort_choice", "#{url}", {beforeSend: true, complete: true})
+          -else
+            = @view.headers[@sortcol]
+            - font_icon = @sortdir == "ASC" ? "asc" :"desc"
+            %span.fa{:class => "fa-sort-alpha-#{font_icon}"}
+        .form-group
+          = select_tag("ppsetting",
+                      options_for_select(@pp_choices, pages[:perpage]),
+                      "data-width" => "auto",
+                      :class       => "selectpicker dropup")
+          :javascript
+            miqSelectPickerEvent("ppsetting", "#{url}", {beforeSend: true, complete: true})
         .form-group.pull-right{:style => "border-right: 0"}
           %ul.pagination
             %li.first
@@ -59,12 +68,12 @@
                   - start_number = (pages[:perpage] * pages[:current]) - pages[:perpage] + 1
                   - end_number = pages[:perpage] * pages[:current]
                   - if start_number == pages[:items]
-                    = _("Showing %{start_number} of %{total_items} items") % {:start_number => start_number, :total_items => pages[:items]}
+                    = _("%{start_number} of %{total_items}") % {:start_number => start_number, :total_items => pages[:items]}
                   - else
                     - if end_number > pages[:items]
-                      = _("Showing %{start_number}-%{end_number} of %{total_items} items") % {:start_number => start_number, :end_number => pages[:items], :total_items => pages[:items]}
+                      = _("%{start_number}-%{end_number} of %{total_items}") % {:start_number => start_number, :end_number => pages[:items], :total_items => pages[:items]}
                     - else
-                      = _("Showing %{start_number}-%{end_number} of %{total_items} items") % {:start_number => start_number, :end_number => end_number, :total_items => pages[:items]}
+                      = _("%{start_number}-%{end_number} of %{total_items}") % {:start_number => start_number, :end_number => end_number, :total_items => pages[:items]}
                   %input{:name => "limitstart", :type => "hidden", :value => "0"}/
 
               - if pages[:current] < pages[:total]
@@ -90,15 +99,6 @@
                 %li.last.disabled
                   %span{:class => "i fa fa-angle-double-right"}
 
-        .form-group.pull-right
-          = _('Items per page:')
-          = select_tag("ppsetting",
-                      options_for_select(@pp_choices, pages[:perpage]),
-                      "data-width" => "auto",
-                      :class       => "selectpicker dropup")
-          :javascript
-            miqSelectPickerEvent("ppsetting", "#{url}", {beforeSend: true, complete: true})
-
-    = render(:partial => '/layouts/x_form_buttons')
-    :javascript
-      miqInitSelectPicker();
+  = render(:partial => '/layouts/x_form_buttons')
+  :javascript
+    miqInitSelectPicker();
