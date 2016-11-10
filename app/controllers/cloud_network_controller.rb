@@ -265,8 +265,8 @@ class CloudNetworkController < ApplicationController
     options[:name] = params[:name] if params[:name]
     options[:ems_id] = params[:ems_id] if params[:ems_id]
     options[:admin_state_up] = switch_to_bol(params[:enabled])
-    options[:shared] = true if params[:shared]
-    options[:external_facing] = true if params[:external_facing]
+    options[:shared] = switch_to_bol(params[:shared])
+    options[:external_facing] = switch_to_bol(params[:external_facing])
     options[:port_security_enabled] = params[:port_security_enabled] if params[:port_security_enabled]
     options[:qos_policy_id] = params[:qos_policy_id] if params[:qos_policy_id]
     options[:provider_network_type] = params[:provider_network_type] if params[:provider_network_type]
