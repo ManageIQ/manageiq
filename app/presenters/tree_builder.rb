@@ -280,7 +280,9 @@ class TreeBuilder
   end
 
   def x_build_single_node(object, pid, options)
-    node_builder.build(object, pid, options)
+    node = node_builder.build(object, pid, options)
+    override(node, object, pid, options) if self.class.method_defined?(:override) || self.class.private_method_defined?(:override)
+    node
   end
 
   # Called with object, tree node parent id, tree options
