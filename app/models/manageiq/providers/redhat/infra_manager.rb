@@ -106,6 +106,7 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
     {
       :bootable  => disk_spec["bootable"],
       :interface => "VIRTIO",
+      :active    => true,
       :disk      => {
         :provisioned_size => disk_spec["disk_size_in_mb"].to_i * 1024 * 1024,
         :sparse           => disk_spec["thin_provisioned"],
