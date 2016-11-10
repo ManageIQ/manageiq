@@ -5,12 +5,14 @@ class ApplicationHelper::Toolbar::CompareView < ApplicationHelper::Toolbar::Basi
       'product product-view_expanded fa-lg',
       N_('Expanded View'),
       nil,
+      :klass     => ApplicationHelper::Button::ButtonWithoutRbacCheck,
       :url => "compare_compress"),
     twostate(
       :compare_compressed,
       'fa fa-bars fa-rotate-90 fa-lg',
       N_('Compressed View'),
       nil,
+      :klass     => ApplicationHelper::Button::ButtonWithoutRbacCheck,
       :url => "compare_compress"),
   ])
   button_group('compare_downloading', [
