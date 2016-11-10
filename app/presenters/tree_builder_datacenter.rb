@@ -5,8 +5,20 @@ class TreeBuilderDatacenter < TreeBuilder
   has_kids_for EmsCluster, [:x_get_tree_cluster_kids]
   has_kids_for ResourcePool, [:x_get_resource_pool_kids]
 
-  def node_builder
-    TreeNodeBuilderDatacenter
+  def override(node, object, pid, options)
+    t = case object
+        when Host         then _('Host')
+        when EmsCluster   then _('Cluster')
+        when ResourcePool then _('Resource Pool')
+        when Datacenter   then _('Datacenter')
+        when Vm           then _('VM')
+        when Switch       then _('Switch')
+        else                   ''
+        end
+    prefix = "#{t}: "
+    suffix = _(" (Click to view)")
+    node[:tooltip].prepend(prefix) if t.present? && !node[:tooltip].starts_with?(prefix)
+    node[:tooltip].concat(suffix) unless node[:tooltip].ends_with?(suffix)
   end
 
   def initialize(name, type, sandbox, build = true, root = nil)
