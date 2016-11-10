@@ -7,7 +7,8 @@
     - id = @edit[:req_id] || "new"
     %input{:type => "checkbox",
            :onclick => "miqAjax('" + url_for({:action => "vm_pre_prov", :id => id.to_s, :hide_deprecated_templates => !@edit[:hide_deprecated_templates]}) + "')",
-           :checked => @edit[:hide_deprecated_templates]} Hide deprecated
+           :checked => @edit[:hide_deprecated_templates]}
+      = _('Hide deprecated')
   %table.table.table-bordered.table-hover.table-striped.table-selectable
     %thead
       %tr
