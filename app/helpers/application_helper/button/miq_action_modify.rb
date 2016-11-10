@@ -11,8 +11,8 @@ class ApplicationHelper::Button::MiqActionModify < ApplicationHelper::Button::Ba
 
     if disabled?
       self[:title] = case @view_context.x_node.split("_").last.split('-')[0]
-                     when 'a'  then N_("This Action belongs to a read only Policy and cannot be modified")
-                     when 'ev' then N_("This Event belongs to a read only Policy and cannot be modified")
+                     when 'a'  then _("This Action belongs to a read only Policy and cannot be modified")
+                     when 'ev' then _("This Event belongs to a read only Policy and cannot be modified")
                      end
     end
   end

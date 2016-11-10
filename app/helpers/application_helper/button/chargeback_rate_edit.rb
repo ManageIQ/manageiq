@@ -3,7 +3,7 @@ class ApplicationHelper::Button::ChargebackRateEdit < ApplicationHelper::Button:
     super
     if @record.default?
       self[:enabled] = false
-      self[:title] = N_("Default Chargeback Rate cannot be edited.")
+      self[:title] = _("Default Chargeback Rate cannot be edited.")
     end
   end
 end

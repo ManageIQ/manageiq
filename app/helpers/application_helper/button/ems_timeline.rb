@@ -10,6 +10,6 @@ class ApplicationHelper::Button::EmsTimeline < ApplicationHelper::Button::Basic
   def calculate_properties
     super
     self[:hidden] = true unless visible?
-    self[:title] = N_("No Timeline data has been collected for this Provider") if disabled?
+    self[:title] = _("No Timeline data has been collected for this Provider") if disabled?
   end
 end
