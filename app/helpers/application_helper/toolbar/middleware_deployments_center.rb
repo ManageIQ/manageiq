@@ -38,7 +38,7 @@ class ApplicationHelper::Toolbar::MiddlewareDeploymentsCenter < ApplicationHelpe
           :enabled   => false,
           :onwhen    => "1+",
           :confirm   => N_("Do you want to restart these deployments ?"),
-          :klass     => ApplicationHelper::Button::MiddlewareInstanceAdd),
+          :klass     => ApplicationHelper::Button::MiddlewareStandaloneServerAction),
         button(
           :middleware_deployment_disable,
           'fa fa-stop-circle-o fa-lg',
@@ -48,7 +48,7 @@ class ApplicationHelper::Toolbar::MiddlewareDeploymentsCenter < ApplicationHelpe
           :enabled   => false,
           :onwhen    => "1+",
           :confirm   => N_("Do you want to disable these deployments ?"),
-          :klass     => ApplicationHelper::Button::MiddlewareInstanceAdd),
+          :klass     => ApplicationHelper::Button::MiddlewareStandaloneServerAction),
         button(
           :middleware_deployment_enable,
           'fa fa-play-circle-o fa-lg',
@@ -58,7 +58,7 @@ class ApplicationHelper::Toolbar::MiddlewareDeploymentsCenter < ApplicationHelpe
           :enabled   => false,
           :onwhen    => "1+",
           :confirm   => N_("Do you want to enable these deployments ?"),
-          :klass     => ApplicationHelper::Button::MiddlewareInstanceAdd),
+          :klass     => ApplicationHelper::Button::MiddlewareStandaloneServerAction),
         button(
           :middleware_deployment_undeploy,
           'fa fa-eject fa-lg',
@@ -68,7 +68,7 @@ class ApplicationHelper::Toolbar::MiddlewareDeploymentsCenter < ApplicationHelpe
           :enabled   => false,
           :onwhen    => "1+",
           :confirm   => N_("Do you want to undeploy these deployments ?"),
-          :klass     => ApplicationHelper::Button::MiddlewareInstanceAdd)
+          :klass     => ApplicationHelper::Button::MiddlewareStandaloneServerAction)
       ]
     ),
   ])

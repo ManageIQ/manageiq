@@ -1,4 +1,4 @@
-class ApplicationHelper::Button::MiddlewareAction < ApplicationHelper::Button::Basic
+class ApplicationHelper::Button::MiddlewareServerAction < ApplicationHelper::Button::Basic
   needs :@record
 
   def visible?

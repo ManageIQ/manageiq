@@ -50,7 +50,7 @@ class ApplicationHelper::Toolbar::MiddlewareServerCenter < ApplicationHelper::To
                      'target'        => '#modal_param_div',
                      'function'      => 'sendDataWithRx',
                      'function-data' => '{"type": "mwServerOps", "operation": "shutdown", "timeout": 0}'},
-          :klass => ApplicationHelper::Button::MiddlewareAction),
+          :klass => ApplicationHelper::Button::MiddlewareServerAction),
         button(
           :middleware_server_restart,
           nil,
@@ -58,7 +58,7 @@ class ApplicationHelper::Toolbar::MiddlewareServerCenter < ApplicationHelper::To
           N_('Restart Server'),
           :image   => 'restart',
           :confirm => N_("Do you want to restart this server?"),
-          :klass   => ApplicationHelper::Button::MiddlewareAction),
+          :klass   => ApplicationHelper::Button::MiddlewareServerAction),
         separator,
         button(
           :middleware_server_stop,
@@ -67,7 +67,7 @@ class ApplicationHelper::Toolbar::MiddlewareServerCenter < ApplicationHelper::To
           N_('Stop Server'),
           :image   => "power_off",
           :confirm => N_("Do you want to stop this server?"),
-          :klass   => ApplicationHelper::Button::MiddlewareAction),
+          :klass   => ApplicationHelper::Button::MiddlewareServerAction),
         button(
           :middleware_server_suspend,
           nil,
@@ -78,7 +78,7 @@ class ApplicationHelper::Toolbar::MiddlewareServerCenter < ApplicationHelper::To
                      'target'        => '#modal_param_div',
                      'function'      => 'sendDataWithRx',
                      'function-data' => '{"type": "mwServerOps", "operation": "suspend", "timeout": 10}'},
-          :klass => ApplicationHelper::Button::MiddlewareAction),
+          :klass => ApplicationHelper::Button::MiddlewareServerAction),
         button(
           :middleware_server_resume,
           nil,
@@ -86,14 +86,14 @@ class ApplicationHelper::Toolbar::MiddlewareServerCenter < ApplicationHelper::To
           N_('Resume Server'),
           :image   => "resume",
           :confirm => N_("Do you want to resume this server?"),
-          :klass   => ApplicationHelper::Button::MiddlewareAction),
+          :klass   => ApplicationHelper::Button::MiddlewareServerAction),
         button(
           :middleware_server_reload,
           'pficon pficon-restart fa-lg',
           N_('Reload this server'),
           N_('Reload Server'),
           :confirm => N_("Do you want to trigger a reload of this server?"),
-          :klass   => ApplicationHelper::Button::MiddlewareAction)
+          :klass   => ApplicationHelper::Button::MiddlewareServerAction)
       ]
     ),
   ])
@@ -113,7 +113,7 @@ class ApplicationHelper::Toolbar::MiddlewareServerCenter < ApplicationHelper::To
                     'target'        => '#modal_d_div',
                     'function'      => 'miqCallAngular',
                     'function-data' => '{"name": "showDeployListener", "args": []}'},
-          :klass => ApplicationHelper::Button::MiddlewareInstanceAdd)
+          :klass => ApplicationHelper::Button::MiddlewareStandaloneServerAction)
       ]
     ),
   ])
@@ -133,7 +133,7 @@ class ApplicationHelper::Toolbar::MiddlewareServerCenter < ApplicationHelper::To
                     'target'        => '#modal_jdbc_div',
                     'function'      => 'miqCallAngular',
                     'function-data' => '{"name": "showJdbcDriverListener", "args": []}'},
-          :klass => ApplicationHelper::Button::MiddlewareInstanceAdd)
+          :klass => ApplicationHelper::Button::MiddlewareStandaloneServerAction)
       ]
     ),
   ])
@@ -153,7 +153,7 @@ class ApplicationHelper::Toolbar::MiddlewareServerCenter < ApplicationHelper::To
                     'target'        => '#modal_ds_div',
                     'function'      => 'miqCallAngular',
                     'function-data' => '{"name": "showDatasourceListener", "args": []}'},
-          :klass => ApplicationHelper::Button::MiddlewareInstanceAdd)
+          :klass => ApplicationHelper::Button::MiddlewareStandaloneServerAction)
       ]
     ),
   ])

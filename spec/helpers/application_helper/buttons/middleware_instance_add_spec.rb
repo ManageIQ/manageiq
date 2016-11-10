@@ -1,4 +1,4 @@
-describe ApplicationHelper::Button::MiddlewareInstanceAdd do
+describe ApplicationHelper::Button::MiddlewareStandaloneServerAction do
   let(:server) { FactoryGirl.create(:middleware_server, :middleware_server_group => group) }
   subject { described_class.new(setup_view_context_with_sandbox({}), {}, {'record' => record}, {}) }
 

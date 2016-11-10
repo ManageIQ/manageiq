@@ -1,4 +1,4 @@
-describe ApplicationHelper::Button::MiddlewareAction do
+describe ApplicationHelper::Button::MiddlewareServerAction do
   subject { described_class.new(setup_view_context_with_sandbox({}), {}, {'record' => record}, {}) }
 
   describe '#visible?' do

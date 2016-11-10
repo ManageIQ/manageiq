@@ -1,4 +1,4 @@
-class ApplicationHelper::Button::MiddlewareInstanceAdd < ApplicationHelper::Button::MiddlewareAction
+class ApplicationHelper::Button::MiddlewareStandaloneServerAction < ApplicationHelper::Button::MiddlewareServerAction
   needs :@record
 
   def visible?
