@@ -82,7 +82,7 @@
                   = render :partial => "/layouts/tabs"
                 = render :partial => "layouts/angular/toolbar"
         .row.max-height
-          .col-sm-9.col-md-10.col-sm-push-3.col-md-push-2.max-height
+          .col-sm-10.col-md-9.col-sm-push-2.col-md-push-3.max-height
             #main-content.row
               .col-md-12
                 .row
@@ -106,7 +106,7 @@
                                         :headers    => @view.try(:headers),
                                         :button_div => 'center_tb'})
 
-          .col-sm-3.col-md-2.col-sm-pull-9.col-md-pull-10.sidebar-pf.sidebar-pf-left.max-height
+          .col-sm-2.col-md-3.col-sm-pull-10.col-md-pull-9.sidebar-pf.sidebar-pf-left.max-height
             = render :partial => "layouts/listnav"
 
     - elsif dashboard_no_listnav?
