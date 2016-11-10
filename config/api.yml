@@ -1976,10 +1976,10 @@
     :collection_actions:
       :get:
       - :name: read
-        :identifier: arbitration_profile_show
+        :identifier: arbitration_profile_show_list
       :post:
       - :name: query
-        :identifier: arbitration_profile_show
+        :identifier: arbitration_profile_show_list
       - :name: create
         :identifier: arbitration_profile_new
       - :name: edit
@@ -1987,6 +1987,9 @@
       - :name: delete
         :identifier: arbitration_profile_delete
     :resource_actions:
+      :get:
+      - :name: read
+        :identifier: arbitration_profile_show
       :post:
       - :name: edit
         :identifier: arbitration_profile_edit
