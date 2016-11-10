@@ -127,12 +127,15 @@ describe OpsController do
       filter_params = {
         :starting_object => "SYSTEM/PROCESS",
         :instance_name   => "test",
-        :object_request  => "test_request"
+        :object_request  => "test_request",
+        :attrs           => {"0"=>%w(key1 value1)},
+        :target_class    => "test_target",
+        :target_id       => "0100"
       }
       params.merge!(filter_params)
       allow(controller).to receive(:params).and_return(params)
       set_vars = controller.send(:schedule_set_record_vars, schedule)
-      expect(set_vars[:parameters]).to include(:request => filter_params[:object_request])
+      expect(set_vars[:parameters]).to include(:request => filter_params[:object_request], 'key1' => 'value1', :object_class => 'test_target', :object_id => '0100')
       expect(set_vars[:uri_parts]).to include(:namespace => filter_params[:starting_object])
     end
   end

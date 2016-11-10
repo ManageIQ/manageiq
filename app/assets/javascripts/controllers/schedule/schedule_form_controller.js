@@ -213,8 +213,8 @@ ManageIQ.angular.app.controller('scheduleFormController', ['$http', '$scope', 's
         $scope.scheduleModel.instance_name   = data.instance_name;
         $scope.scheduleModel.object_message  = data.object_message;
         $scope.scheduleModel.object_request  = data.request;
-        $scope.scheduleModel.target_class    = data.target_class;
-        $scope.scheduleModel.target_id       = data.target_id;
+        $scope.scheduleModel.target_class    = data.object_class;
+        $scope.scheduleModel.target_id       = data.object_id;
         $scope.scheduleModel.targets         = [];
         $scope.scheduleModel.filter_typ      = null;
         $scope.scheduleModel.attrs           = data.attrs;

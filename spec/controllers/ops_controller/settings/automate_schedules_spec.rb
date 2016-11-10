@@ -31,6 +31,7 @@ describe OpsController do
 
         json = JSON.parse(response.body)
         expect(schedule.filter[:parameters]['request']).to eq "test_request"
+        expect(schedule.filter[:parameters]['key1']).to eq 'value1'
         expect(json["object_request"]).to eq "test_request"
       end
     end

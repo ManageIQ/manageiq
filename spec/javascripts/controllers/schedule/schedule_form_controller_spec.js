@@ -599,8 +599,10 @@ describe('scheduleFormController', function() {
         action_type: 'automation_request',
         starting_object: 'SYSTEM/PROCESS',
         request: 'test_request',
-        instance_name: 'Request',
+        instance_name: 'TestRequest',
         object_message: 'create',
+        object_class: 'test',
+        object_id:    '10',
         uri: 'uri',
         uri_prefix: 'uriPrefix'
       };
@@ -617,6 +619,8 @@ describe('scheduleFormController', function() {
         expect($scope.scheduleModel.instance_name).toEqual(data.instance_name);
         expect($scope.scheduleModel.object_message).toEqual(data.object_message);
         expect($scope.scheduleModel.object_request).toEqual(data.request);
+        expect($scope.scheduleModel.target_class).toEqual(data.object_class);
+        expect($scope.scheduleModel.target_id).toEqual(data.object_id);
       });
     });
 

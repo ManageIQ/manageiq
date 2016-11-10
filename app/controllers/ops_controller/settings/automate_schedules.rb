@@ -10,9 +10,9 @@ module OpsController::Settings::AutomateSchedules
       :instance_name   => automate_request[:instance_name],
       :object_message  => automate_request[:object_message],
       :object_request  => automate_request[:object_request],
-      :target_class    => automate_request[:target_class],
+      :target_class    => automate_request[:object_class],
       :target_classes  => automate_request[:target_classes],
-      :target_id       => automate_request[:target_id],
+      :target_id       => automate_request[:object_id],
       :attrs           => automate_request[:attrs]
     }
   end
@@ -42,7 +42,7 @@ module OpsController::Settings::AutomateSchedules
     automate_request[:instance_name]  = filter[:parameters][:instance_name] || "Request"
     automate_request[:object_message] = filter[:parameters][:object_message] || "create"
     automate_request[:object_request] = filter[:parameters][:request] || ""
-    automate_request[:target_class]   = filter[:parameters][:target_class] || nil
+    automate_request[:target_class]   = filter[:parameters][:object_class] || nil
     automate_request[:target_classes] = {}
     CustomButton.button_classes.each { |db| automate_request[:target_classes][db] = ui_lookup(:model => db) }
     automate_request[:target_classes] = Array(automate_request[:target_classes].invert).sort
@@ -50,7 +50,7 @@ module OpsController::Settings::AutomateSchedules
       targets = Rbac.filtered(automate_request[:target_class]).select(:id, :name)
       automate_request[:targets] = targets.sort_by { |t| t.name.downcase }.collect { |t| [t.name, t.id.to_s] }
     end
-    automate_request[:target_id]      = filter[:parameters][:target_id] || ""
+    automate_request[:target_id]      = filter[:parameters][:object_id] || ""
     automate_request[:attrs]          = filter[:parameters][:attrs] || []
 
     if automate_request[:attrs].empty?
