@@ -16,8 +16,7 @@ export BUNDLE_GEMFILE=${PWD}/Gemfile
 
 # suites that need bower assets to work: javascript, vmdb
 if [[ "$TEST_SUITE" = "javascript" ]] || [[ "$TEST_SUITE" = "vmdb" ]]; then
-  which bower || npm install -g bower
-  bower install --allow-root -F --config.analytics=false
+  source $TRAVIS_BUILD_DIR/tools/ci/setup_js_env.sh
 fi
 
 set +v
