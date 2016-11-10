@@ -90,12 +90,9 @@ describe MiqPglogical do
       end
 
       it "adds a newly included table" do
-        table = subject.configured_excludes.last
-        new_excludes = subject.configured_excludes - [table]
-
-        c = MiqServer.my_server.get_config
-        c.config.store_path(*described_class::SETTINGS_PATH, :exclude_tables, new_excludes)
-        c.save
+        current_excludes = subject.configured_excludes
+        table = current_excludes.pop
+        subject.configured_excludes = current_excludes
 
         subject.refresh_excludes
         expect(subject.included_tables).to include(table)

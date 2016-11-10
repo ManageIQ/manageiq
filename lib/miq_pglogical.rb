@@ -8,8 +8,22 @@ class MiqPglogical
   NODE_PREFIX = "region_".freeze
   ALWAYS_EXCLUDED_TABLES = %w(ar_internal_metadata schema_migrations repl_events repl_monitor repl_nodes).freeze
 
+  attr_reader :configured_excludes
+
   def initialize
     @connection = ApplicationRecord.connection
+    self.configured_excludes = self.class.default_excludes
+  end
+
+  # Sets the tables that should be used to create the replication set using refresh_excludes
+  def configured_excludes=(new_excludes)
+    @configured_excludes = new_excludes | ALWAYS_EXCLUDED_TABLES
+  end
+
+  # Returns the excluded tables that are currently being used by pglogical
+  # @return Array<String> the table list
+  def active_excludes
+    @connection.tables - included_tables
   end
 
   # Returns whether or not this server is configured as a provider node
@@ -66,12 +80,6 @@ class MiqPglogical
     pglogical.tables_in_replication_set(REPLICATION_SET_NAME)
   end
 
-  # Lists the tables configured to be excluded in the vmdb configuration
-  # @return Array<String> the table list
-  def configured_excludes
-    MiqServer.my_server.get_config.config.fetch_path(*SETTINGS_PATH, :exclude_tables) | ALWAYS_EXCLUDED_TABLES
-  end
-
   # Creates the 'miq' replication set and refreshes the excluded tables
   def create_replication_set
     pglogical.replication_set_create(REPLICATION_SET_NAME)
@@ -113,6 +121,10 @@ class MiqPglogical
 
   def self.node_name_to_region(name)
     name.sub(NODE_PREFIX, "").to_i
+  end
+
+  def self.default_excludes
+    YAML.load_file(Rails.root.join("config/default_replication_exclude_tables.yml"))[:exclude_tables] | ALWAYS_EXCLUDED_TABLES
   end
 
   private
