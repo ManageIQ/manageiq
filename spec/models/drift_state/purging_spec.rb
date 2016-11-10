@@ -72,11 +72,6 @@ describe DriftState do
       end
     end
 
-    it "#purge_counts_for_remaining (used by tools - expensive, avoid)" do
-      expect(described_class.send(:purge_counts_for_remaining, 1))
-        .to eq(["VmOrTemplate", 1] => 1, ["VmOrTemplate", 2] => 2)
-    end
-
     context "#purge_count" do
       it "by remaining" do
         expect(described_class.purge_count(:remaining, 1)).to eq(3)

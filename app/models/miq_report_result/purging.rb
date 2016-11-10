@@ -46,43 +46,9 @@ module MiqReportResult::Purging
     # By Remaining
     #
 
-    def purge_remaining_conditions(report_id, id)
-      where(:miq_report_id => report_id).where(arel_table[:id].lt(id))
-    end
-
-    def purge_count_by_remaining(remaining)
-      purge_counts_for_remaining(remaining).values.sum
-    end
-
-    def purge_by_remaining(remaining, window = nil, &block)
-      _log.info("Purging report results older than last #{remaining} results...")
-
-      window ||= purge_window_size
-      total = 0
-      purge_ids_for_remaining(remaining).each do |report_id, id|
-        scope = purge_remaining_conditions(report_id, id)
-        total += purge_in_batches(scope, window, total, &block)
-      end
-
-      _log.info("Purging report results older than last #{remaining} results...Complete - Deleted #{total} records")
-      total
-    end
-
-    def purge_counts_for_remaining(remaining)
-      purge_ids_for_remaining(remaining).each_with_object({}) do |(report_id, id), h|
-        h[report_id] = purge_remaining_conditions(report_id, id).count
-      end
-    end
-
-    # @param remaining [Numeric] the number of reports to keep per report_id
-    # for each report_id, keep a fixed number of reports
-    # @return [Hash<Numeric,Array<Numeric>>] hash with report_ids and the report_result_ids to be deleted
-    def purge_ids_for_remaining(remaining)
-      # TODO: in sql, use PARTITION BY and ROW_NUMBER()
-      distinct.pluck(:miq_report_id).compact.sort.each_with_object({}) do |report_id, h|
-        results      = where(:miq_report_id => report_id).order("id DESC").limit(remaining + 1).pluck(:id)
-        h[report_id] = results[-2] if results.length == remaining + 1
-      end
+    # @return [Symbol, Array<Symbol>] resource that is referenced by this table.
+    def purge_remaining_foreign_key
+      :miq_report_id
     end
 
     #
