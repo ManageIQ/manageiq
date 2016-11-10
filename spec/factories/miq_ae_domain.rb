@@ -1,4 +1,8 @@
 FactoryGirl.define do
+  factory :miq_ae_domain_user_locked, :parent => :miq_ae_domain_disabled do
+    source { MiqAeDomain::USER_LOCKED_SOURCE }
+  end
+
   factory :miq_ae_domain_enabled, :parent => :miq_ae_domain do
     enabled true
   end

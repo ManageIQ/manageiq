@@ -10,7 +10,8 @@ class ApplicationHelper::Toolbar::MiqAeDomainsCenter < ApplicationHelper::Toolba
           :miq_ae_domain_new,
           'pficon pficon-add-circle-o fa-lg',
           t = N_('Add a New Domain'),
-          t),
+          t,
+          :klass => ApplicationHelper::Button::MiqAeDefaultNoRecord),
         button(
           :miq_ae_domain_edit,
           'pficon pficon-edit fa-lg',
@@ -18,7 +19,8 @@ class ApplicationHelper::Toolbar::MiqAeDomainsCenter < ApplicationHelper::Toolba
           N_('Edit Selected Domains'),
           :url_parms => "main_div",
           :enabled   => false,
-          :onwhen    => "1"),
+          :onwhen    => "1",
+          :klass     => ApplicationHelper::Button::MiqAeDefaultNoRecord),
         button(
           :miq_ae_domain_delete,
           'pficon pficon-delete fa-lg',
@@ -27,7 +29,8 @@ class ApplicationHelper::Toolbar::MiqAeDomainsCenter < ApplicationHelper::Toolba
           :url_parms => "main_div",
           :confirm   => N_("Are you sure you want to remove the selected Domains?"),
           :enabled   => false,
-          :onwhen    => "1+"),
+          :onwhen    => "1+",
+          :klass     => ApplicationHelper::Button::MiqAeDefaultNoRecord),
         separator,
         button(
           :miq_ae_domain_priority_edit,
