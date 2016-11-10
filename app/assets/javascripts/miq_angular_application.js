@@ -11,6 +11,7 @@ ManageIQ.angular.rxSubject = new Rx.Subject();
 
 function miqHttpInject(angular_app) {
   angular_app.config(['$httpProvider', function($httpProvider) {
+    $httpProvider.defaults.headers.common['X-Angular-Request'] = true;
     $httpProvider.defaults.headers.common['X-CSRF-Token'] = function() {
       return $('meta[name=csrf-token]').attr('content');
     };
