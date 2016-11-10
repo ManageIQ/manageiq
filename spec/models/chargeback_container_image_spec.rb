@@ -15,7 +15,7 @@ describe ChargebackContainerImage do
     @container = FactoryGirl.create(:kubernetes_container, :container_group => @group, :container_image => @image)
     cat = FactoryGirl.create(:classification, :description => "Environment", :name => "environment", :single_value => true, :show => true)
     c = FactoryGirl.create(:classification, :name => "prod", :description => "Production", :parent_id => cat.id)
-    @cbr = FactoryGirl.create(:chargeback_rate, :rate_type => "compute")
+    @cbr = FactoryGirl.create(:chargeback_rate, :rate_type => "Compute")
     ChargebackRate.set_assignments(:compute, [{ :cb_rate => @cbr, :tag => [c, "container_image"] }])
 
     @tag = c.tag
