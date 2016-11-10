@@ -325,12 +325,13 @@ class ApplicationController < ActionController::Base
   # From these options and model we get view (for fetching data) and settings (will hold info about paging).
   # Then this method will return JSON object with settings and data.
   def report_data
+    settings = {}
     options = process_params_options(params)
     model_view = process_params_model_view(params, options)
     @edit = session[:edit]
     current_view, settings = get_view(model_view, options)
-    settings[:sort_dir] = @sortdir
-    settings[:sort_col] = @sortcol
+    settings[:sort_dir] = @sortdir unless settings.nil?
+    settings[:sort_col] = @sortcol unless settings.nil?
     render :json => {
       :settings => settings,
       :data     => view_to_hash(current_view)
