@@ -1,4 +1,4 @@
-class ApplicationHelper::Toolbar::ConfiguredSystemsForemanCenter < ApplicationHelper::Toolbar::Basic
+class ApplicationHelper::Toolbar::UnassignedProfilesGroupCenter < ApplicationHelper::Toolbar::Basic
   include ApplicationHelper::Toolbar::ConfiguredSystem::LifecycleMixin
   include ApplicationHelper::Toolbar::ConfiguredSystem::PolicyMixin
 end
