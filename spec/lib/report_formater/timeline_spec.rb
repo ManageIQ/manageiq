@@ -105,4 +105,49 @@ describe ReportFormatter::TimelineMessage do
       end
     end
   end
+
+  describe '#events count for different categories' do
+    def stub_ems_event(event_type)
+      ems = FactoryGirl.create(:ems_redhat)
+      ems_event = EventStream.create!(:event_type => event_type, :ems_id => ems.id)
+      ems_event
+    end
+
+    it 'shows correct count of timeline events' do
+      report = FactoryGirl.create(:miq_report,
+                                  :db        => "EventStream",
+                                  :col_order => %w(id name event_type timestamp),
+                                  :headers   => %w(id name event_type timestamp),
+                                  :timeline  => {:field => "EmsEvent-timestamp", :position => "Last"})
+      report.rpt_options = {:categories => {:power    => {:display_name => "Power Activity",
+                                                          :event_groups => %w(VmPoweredOffEvent VmPoweredOnEvent)},
+                                            :snapshot => {:display_name => "Snapshot Activity",
+                                                          :event_groups => %w(AlarmCreatedEvent AlarmRemovedEvent)}}
+      }
+
+      data = []
+      30.times do
+        data.push(Ruport::Data::Record.new("id"         => stub_ems_event("VmPoweredOffEvent").id,
+                                           "name"       => "Baz",
+                                           "event_type" => "VmPoweredOffEvent",
+                                           "timestamp"  => Time.zone.now))
+      end
+
+      15.times do
+        data.push(Ruport::Data::Record.new("id"         => stub_ems_event("AlarmCreatedEvent").id,
+                                           "name"       => "Baz",
+                                           "event_type" => "AlarmCreatedEvent",
+                                           "timestamp"  => Time.zone.now))
+      end
+
+      report.table = Ruport::Data::Table.new(
+        :column_names => %w(id name event_type timestamp),
+        :data         => data
+      )
+      allow_any_instance_of(Ruport::Controller::Options).to receive(:mri).and_return(report)
+      events = ReportFormatter::ReportTimeline.new.build_document_body
+      expect(JSON.parse(events)[0]["data"][0].length).to eq(30)
+      expect(JSON.parse(events)[1]["data"][0].length).to eq(15)
+    end
+  end
 end

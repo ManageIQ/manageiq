@@ -30,25 +30,16 @@ module ReportFormatter
       else
         col = tlfield.last                             # Not a subtable, just grab the field name
       end
-      new_event_type = current_event_type = ""
 
       if mri.db == "EventStream" || mri.db == "PolicyEvent"
-        mri.table.data.sort_by(&:event_type).each_with_index do |row, _d_idx|
-          mri.rpt_options[:categories].each do |_, options|
-            current_event_type = options[:display_name] if options[:event_groups].include?(row.event_type)
-            @events.push(:name => options[:display_name],
-                         :data => []) if @events.blank? ||
-                                         @events.select { |i| i[:name] == options[:display_name] }.blank?
-          end
-
-          tl_event(row, col)   # Add this row to the tl event xml
-
-          next if new_event_type == current_event_type
-
-          event = @events.select { |i| i[:name] == current_event_type }
-          event[0][:data].push(@events_data).flatten
-          new_event_type = current_event_type
+        mri.rpt_options[:categories].each do |_, options|
           @events_data = []
+          all_events = mri.table.data.select { |e| options[:event_groups].include?(e.event_type) }
+          all_events.each do |row|
+            tl_event(row, col) # Add this row to the tl event xml
+          end
+          @events.push(:name => options[:display_name],
+                       :data => [@events_data])
         end
       else
         mri.table.data.each_with_index do |row, _d_idx|
