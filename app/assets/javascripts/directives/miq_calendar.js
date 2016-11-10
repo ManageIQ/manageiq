@@ -26,8 +26,9 @@ ManageIQ.angular.app.directive('miqCalendar', function() {
         }
       });
 
-      scope.$watch(attr.ngModel, function(_value) {
-        elem.datepicker('update');
+      scope.$watch(attr.ngModel, function(value) {
+        if(value)
+          elem.datepicker('update');
       });
 
       if (attr.miqCalDateFrom) {

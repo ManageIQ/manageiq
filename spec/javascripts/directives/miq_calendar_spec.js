@@ -37,10 +37,17 @@ describe('miq-calendar test', function() {
       expect($.fn.datepicker).toHaveBeenCalledWith('update');
     });
 
+    it('do not call update datepicker when the date is cleared', function() {
+      scope.testModel.test_date = null;
+      scope.$digest();
+      expect($.fn.datepicker).not.toHaveBeenCalled();
+    });
+
     it('should update datepicker when the start date in model changes', function() {
       var d = new Date(Date.UTC(2010, 8, 30));
       scope.testModel.start_date = d;
       scope.$digest();
+
       expect($.fn.datepicker).toHaveBeenCalledWith('setStartDate', d);
     });
 
