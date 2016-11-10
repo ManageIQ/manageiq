@@ -13,7 +13,7 @@ class ApplicationHelper::Button::MiqAe < ApplicationHelper::Button::Basic
 
   def disabled?
     disabled = !editable_domain?(@record) && !domains_available_for_copy?
-    @error_message = N_('At least one domain should be enabled & unlocked') if disabled
+    @error_message = _('At least one domain should be enabled and unlocked') if disabled
     @error_message.present?
   end
 
