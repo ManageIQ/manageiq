@@ -1298,7 +1298,7 @@
     :options:
     - :collection
     - :subcollection
-    :verbs: *gp
+    :verbs: *gpd
     :klass: ServiceTemplateProvisionRequest
     :subcollections:
     - :request_tasks
@@ -1314,6 +1314,8 @@
         :identifier: miq_request_approval
       - :name: deny
         :identifier: miq_request_approval
+      - :name: delete
+        :identifier: miq_request_delete
     :resource_actions:
       :get:
       - :name: read
@@ -1323,6 +1325,11 @@
         :identifier: miq_request_approval
       - :name: deny
         :identifier: miq_request_approval
+      - :name: delete
+        :identifier: miq_request_delete
+      :delete:
+      - :name: delete
+        :identifier: miq_request_delete
     :subcollection_actions:
       :get:
       - :name: read
