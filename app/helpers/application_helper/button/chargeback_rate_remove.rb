@@ -1,9 +1,15 @@
-class ApplicationHelper::Button::ChargebackRateRemove < ApplicationHelper::Button::Basic
+class ApplicationHelper::Button::ChargebackRateRemove < ApplicationHelper::Button::ChargebackRates
+  needs :@record
+
+  def disabled?
+    if @record.default?
+      @error_message = _("Default Chargeback Rate cannot be removed.")
+    end
+    @error_message.present?
+  end
+
   def calculate_properties
     super
-    if @record.default?
-      self[:enabled] = false
-      self[:title] = N_("Default Chargeback Rate cannot be removed.")
-    end
+    self[:title] = @error_message if disabled?
   end
 end
