@@ -7,21 +7,30 @@ class MiddlewareServerController < ApplicationController
   after_action :cleanup_action
   after_action :set_session_data
 
-  OPERATIONS = {
-    :middleware_server_reload   => {:op   => :reload_middleware_server,
-                                    :skip => true,
-                                    :hawk => N_('reloading'),
-                                    :msg  => N_('Reload')
-  },
+  COMMON_OPERATIONS = {
+    :middleware_server_reload  => {:op   => :reload_middleware_server,
+                                   :skip => true,
+                                   :hawk => N_('reloading'),
+                                   :msg  => N_('Reload')
+    },
+    :middleware_server_suspend => {:op    => :suspend_middleware_server,
+                                   :skip  => true,
+                                   :hawk  => N_('suspending'),
+                                   :msg   => N_('Suspend'),
+                                   :param => :timeout
+    },
+    :middleware_server_resume  => {:op   => :resume_middleware_server,
+                                   :skip => true,
+                                   :hawk => N_('resuming'),
+                                   :msg  => N_('Resume')
+    },
+  }.freeze
+
+  STANDALONE_ONLY = {
     :middleware_server_stop     => {:op   => :stop_middleware_server,
                                     :skip => true,
                                     :hawk => N_('stopping'),
                                     :msg  => N_('Stop')
-    },
-    :middleware_server_restart  => {:op   => :restart_middleware_server,
-                                    :skip => true,
-                                    :hawk => N_('restarting'),
-                                    :msg  => N_('Restart')
     },
     :middleware_server_shutdown => {:op    => :shutdown_middleware_server,
                                     :skip  => true,
@@ -29,16 +38,10 @@ class MiddlewareServerController < ApplicationController
                                     :msg   => N_('Shutdown'),
                                     :param => :timeout
     },
-    :middleware_server_suspend  => {:op    => :suspend_middleware_server,
-                                    :skip  => true,
-                                    :hawk  => N_('suspending'),
-                                    :msg   => N_('Suspend'),
-                                    :param => :timeout
-    },
-    :middleware_server_resume   => {:op   => :resume_middleware_server,
+    :middleware_server_restart  => {:op   => :restart_middleware_server,
                                     :skip => true,
-                                    :hawk => N_('resuming'),
-                                    :msg  => N_('Resume')
+                                    :hawk => N_('restarting'),
+                                    :msg  => N_('Restart')
     },
     :middleware_add_deployment  => {:op    => :add_middleware_deployment,
                                     :skip  => false,
@@ -58,6 +61,33 @@ class MiddlewareServerController < ApplicationController
                                     :param => :datasource
     }
   }.freeze
+
+  DOMAIN_ONLY = {
+    :middleware_domain_server_start   => {:op   => :start_middleware_domain_server,
+                                          :skip => true,
+                                          :hawk => N_('starting'),
+                                          :msg  => N_('Start')
+    },
+    :middleware_domain_server_stop    => {:op   => :stop_middleware_domain_server,
+                                          :skip => true,
+                                          :hawk => N_('stopping'),
+                                          :msg  => N_('Stop')
+    },
+    :middleware_domain_server_restart => {:op   => :restart_middleware_domain_server,
+                                          :skip => true,
+                                          :hawk => N_('restarting'),
+                                          :msg  => N_('Restart')
+    },
+    :middleware_domain_server_kill    => {:op   => :kill_middleware_domain_server,
+                                          :skip => true,
+                                          :hawk => N_('killing'),
+                                          :msg  => N_('Kill')
+    },
+  }.freeze
+
+  STANDALONE_SERVER_OPERATIONS = COMMON_OPERATIONS.merge(STANDALONE_ONLY)
+  DOMAIN_SERVER_OPERATIONS = COMMON_OPERATIONS.merge(DOMAIN_ONLY)
+  ALL_OPERATIONS = STANDALONE_SERVER_OPERATIONS.merge(DOMAIN_SERVER_OPERATIONS)
 
   def add_deployment
     selected_server = identify_selected_entities
@@ -79,7 +109,7 @@ class MiddlewareServerController < ApplicationController
         :force_deploy => params["forceDeploy"],
         :runtime_name => params["runtimeName"]
       }
-      run_server_operation(OPERATIONS.fetch(:middleware_add_deployment), selected_server)
+      run_server_operation(STANDALONE_SERVER_OPERATIONS.fetch(:middleware_add_deployment), selected_server)
       render :json => {
         :status => :success, :msg => _("Deployment \"%s\" has been initiated on this server.") % deployment_name
       }
@@ -99,7 +129,7 @@ class MiddlewareServerController < ApplicationController
       :driver_minor_version => params["minorVersion"]
     }
 
-    run_server_operation(OPERATIONS.fetch(:middleware_add_jdbc_driver), selected_server)
+    run_server_operation(STANDALONE_SERVER_OPERATIONS.fetch(:middleware_add_jdbc_driver), selected_server)
     render :json => {
       :status => :success, :msg => _("JDBC Driver \"%s\" has been installed on this server.") % params["driverName"]
     }
@@ -124,7 +154,7 @@ class MiddlewareServerController < ApplicationController
         :connectionUrl  => params["connectionUrl"]
       }
 
-      run_server_operation(OPERATIONS.fetch(:middleware_add_datasource), selected_server)
+      run_server_operation(STANDALONE_SERVER_OPERATIONS.fetch(:middleware_add_datasource), selected_server)
       render :json => {
         :status => :success, :msg => _("Datasource \"%s\" has been installed on this server.") % params["datasource"]
       }
@@ -144,10 +174,10 @@ class MiddlewareServerController < ApplicationController
   def button
     selected_operation = params[:pressed].to_sym
 
-    if OPERATIONS.key?(selected_operation)
+    if ALL_OPERATIONS.key?(selected_operation)
       selected_servers = identify_selected_entities
 
-      run_server_operation(OPERATIONS.fetch(selected_operation), selected_servers)
+      run_server_operation(ALL_OPERATIONS.fetch(selected_operation), selected_servers)
 
       javascript_flash
     else
@@ -163,8 +193,8 @@ class MiddlewareServerController < ApplicationController
     end
 
     operation = ('middleware_server_' + params["operation"]).to_sym
-    if OPERATIONS.key?(operation)
-      operation_info = OPERATIONS.fetch(operation)
+    if ALL_OPERATIONS.key?(operation)
+      operation_info = ALL_OPERATIONS.fetch(operation)
       run_server_param_operation(operation_info, selected_servers)
     else
       msg = _("Unknown server operation: ") + operation
@@ -191,6 +221,9 @@ class MiddlewareServerController < ApplicationController
 
       if mw_server.product == 'Hawkular' && operation_info.fetch(:skip)
         skip_message = _("Not #{operation_info.fetch(:hawk)} the provider")
+        render :json => {:status => :ok, :msg => skip_message}
+      elsif mw_server.in_domain? && !DOMAIN_SERVER_OPERATIONS.value?(operation_info)
+        skip_message = _("Not #{operation_info.fetch(:hawk)} the domain server")
         render :json => {:status => :ok, :msg => skip_message}
       else
         operation_triggered = trigger_param_operation(operation_info, mw_server, :param)
