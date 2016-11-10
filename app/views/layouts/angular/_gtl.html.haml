@@ -1,33 +1,33 @@
 - current_model = controller.class.model if controller.class.respond_to?("model") && !controller.class.model.nil?
 - gtl_type_string = j_str(@gtl_type)
-#miq-gtl-view{"ng-controller" => "miqGtlContoller as gtlCtrl"}
-  %miq-tile-view{"ng-if"            => "gtlCtrl.gtlType === 'grid' || gtlCtrl.gtlType === 'tile'",
-                 "settings"         => "gtlCtrl.settings",
-                 "per-page"         => "gtlCtrl.perPage",
-                 "rows"             => "gtlCtrl.gtlData.rows",
-                 "on-row-click"     => "gtlCtrl.onItemClicked(item, event)",
-                 "on-sort"          => "gtlCtrl.onSort(headerId, isAscending)",
-                 "on-item-selected" => "gtlCtrl.onItemSelect(item, isSelected)",
-                 "load-more-items"  => "gtlCtrl.onLoadNext(start, perPage)",
-                 "columns"          => "gtlCtrl.gtlData.cols",
-                 "type"             => "gtlCtrl.gtlType === 'grid' ? 'small' : 'big'"}
-  %miq-data-table{"ng-if"            =>"gtlCtrl.gtlType === 'list'",
-                  "settings"         => "gtlCtrl.settings",
-                  "per-page"         => "gtlCtrl.perPage",
-                  "rows"             => "gtlCtrl.gtlData.rows",
-                  "on-row-click"     => "gtlCtrl.onItemClicked(item, event)",
-                  "on-sort"          => "gtlCtrl.onSort(headerId, isAscending)",
-                  "load-more-items"  => "gtlCtrl.onLoadNext(start, perPage)",
-                  "on-item-selected" => "gtlCtrl.onItemSelect(item, isSelected)",
-                  "columns"          => "gtlCtrl.gtlData.cols"}
-  .no-record{"ng-show" => "!gtlCtrl.settings.isLoading && gtlCtrl.gtlData.rows.length === 0"}
+#miq-gtl-view{"ng-controller" => "reportDataController as dataCtrl"}
+  %miq-tile-view{"ng-if"            => "dataCtrl.gtlType === 'grid' || dataCtrl.gtlType === 'tile'",
+                 "settings"         => "dataCtrl.settings",
+                 "per-page"         => "dataCtrl.perPage",
+                 "rows"             => "dataCtrl.gtlData.rows",
+                 "on-row-click"     => "dataCtrl.onItemClicked(item, event)",
+                 "on-sort"          => "dataCtrl.onSort(headerId, isAscending)",
+                 "on-item-selected" => "dataCtrl.onItemSelect(item, isSelected)",
+                 "load-more-items"  => "dataCtrl.onLoadNext(start, perPage)",
+                 "columns"          => "dataCtrl.gtlData.cols",
+                 "type"             => "dataCtrl.gtlType === 'grid' ? 'small' : 'big'"}
+  %miq-data-table{"ng-if"            =>"dataCtrl.gtlType === 'list'",
+                  "settings"         => "dataCtrl.settings",
+                  "per-page"         => "dataCtrl.perPage",
+                  "rows"             => "dataCtrl.gtlData.rows",
+                  "on-row-click"     => "dataCtrl.onItemClicked(item, event)",
+                  "on-sort"          => "dataCtrl.onSort(headerId, isAscending)",
+                  "load-more-items"  => "dataCtrl.onLoadNext(start, perPage)",
+                  "on-item-selected" => "dataCtrl.onItemSelect(item, isSelected)",
+                  "columns"          => "dataCtrl.gtlData.cols"}
+  .no-record{"ng-show" => "!dataCtrl.settings.isLoading && dataCtrl.gtlData.rows.length === 0"}
     = render(:partial => "layouts/info_msg",
                :locals => {:message => _("No Records Found.")})
 :javascript
-  sendDataWithRx({unsubscribe: 'miqGtlContoller'});
+  sendDataWithRx({unsubscribe: 'reportDataController'});
   miq_bootstrap('#miq-gtl-view', 'ManageIQ.gtl');
   sendDataWithRx({initController: {
-    name: 'miqGtlContoller',
+    name: 'reportDataController',
     data: {
       modelName: '#{CGI::escape(j_str(@display.nil? && current_model ? controller.class.model.to_s.tableize : @display))}',
       activeTree: '#{x_active_tree}',

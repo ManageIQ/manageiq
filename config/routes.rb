@@ -3,7 +3,7 @@ Vmdb::Application.routes.draw do
   # rubocop:disable MultilineOperationIndentation
   # default routes for each controller
   default_routes = %w(
-    generate_gtl
+    report_data
   )
 
   # grouped routes

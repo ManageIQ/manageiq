@@ -248,6 +248,9 @@ class ApplicationController < ActionController::Base
   end
   private :initiate_wait_for_task
 
+  # Method for creating object with data for report.
+  # Report is either grid/table or list.
+  # @param controller_name name of JS controller. Typically `reportDataController`.
   def init_report_data(controller_name)
     view_url = view_to_url(@view) unless @view.nil?
     {
@@ -265,6 +268,15 @@ class ApplicationController < ActionController::Base
     }
   end
 
+  # Private method for processing params.
+  # params can contain these oprions:
+  # @param params parameters object.
+  # @option params :explorer [String]
+  #     String value of boolean if we are fetching data for explorer or not. "true" | "false"
+  # @option params :active_tree [String]
+  #     String value of active tree node.
+  # @option params :model_id [String]
+  #     String value of model's ID to be filtered with.
   def process_params_options(params)
     options = {}
     @explorer = params[:explorer] == "true" if params[:explorer]
@@ -280,6 +292,15 @@ class ApplicationController < ActionController::Base
   end
   private :process_params_options
 
+  # Method for processing params and finding correct model for current params.
+  # @param params parameters object.
+  # @option params :active_tree [String]
+  #     String value of active tree node.
+  # @option params :model [String]
+  #     String value of model to be selected.
+  # @param options options Object.
+  # @option options :model [Object]
+  #     If model was chosen somehow before calling this method use this model instead of finding it.
   def process_params_model_view(params, options)
     if options[:model]
       model_view = options[:model].constantize
@@ -299,10 +320,11 @@ class ApplicationController < ActionController::Base
   end
   private :process_params_model_view
 
-  #
-  #
-  #
-  def generate_gtl
+  # Method for fetching report data. These data can be displayed in Grid/Tile/List.
+  # This method will first process params for options and then for current model.
+  # From these options and model we get view (for fetching data) and settings (will hold info about paging).
+  # Then this method will return JSON object with settings and data.
+  def report_data
     options = process_params_options(params)
     model_view = process_params_model_view(params, options)
     @edit = session[:edit]

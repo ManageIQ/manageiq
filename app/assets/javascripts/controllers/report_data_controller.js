@@ -1,5 +1,5 @@
 (function(){
-  var COTNROLLER_NAME = 'miqGtlContoller';
+  var COTNROLLER_NAME = 'reportDataController';
 
   /**
   * Private method for setting rootPoint of MiQEndpointsService.
@@ -59,7 +59,7 @@
   * @param MiQEndpointsService service for setting basic routes.
   * @param $filter angular filter Service.
   */
-  var GtlController = function(MiQDataTableService, MiQEndpointsService, $filter, $scope) {
+  var ReportDataController = function(MiQDataTableService, MiQEndpointsService, $filter, $scope) {
     this.settings = {};
     this.MiQDataTableService = MiQDataTableService;
     this.MiQEndpointsService = MiQEndpointsService;
@@ -70,14 +70,16 @@
     this.perPage = defaultPaging();
   }
 
-  GtlController.prototype.setSort = function(headerId, isAscending) {
-    this.settings.sortBy = {
-      sortObject: this.gtlData.cols[headerId],
-      isAscending: isAscending
-    };
+  ReportDataController.prototype.setSort = function(headerId, isAscending) {
+    if (this.gtlData.cols[headerId]) {
+      this.settings.sortBy = {
+        sortObject: this.gtlData.cols[headerId],
+        isAscending: isAscending
+      };
+    }
   }
 
-  GtlController.prototype.onUnsubscribe = function() {
+  ReportDataController.prototype.onUnsubscribe = function() {
     this.subscription.dispose();
   }
 
@@ -87,12 +89,12 @@
   * @param headerId ID of column which is sorted by.
   * @param isAscending true | false.
   */
-  GtlController.prototype.onSort = function(headerId, isAscending) {
+  ReportDataController.prototype.onSort = function(headerId, isAscending) {
     this.setSort(headerId, isAscending);
     this.initController(this.initObject);
   }
 
-  GtlController.prototype.setPaging = function(start, perPage) {
+  ReportDataController.prototype.setPaging = function(start, perPage) {
     this.perPage.value = perPage;
     this.perPage.text = perPage;
     this.settings.perpage = perPage;
@@ -106,7 +108,7 @@
   * @param start index of item, which will be taken as start item.
   * @param perPage Number of items per page.
   */
-  GtlController.prototype.onLoadNext = function(start, perPage) {
+  ReportDataController.prototype.onLoadNext = function(start, perPage) {
     this.setPaging(start, perPage);
     this.initController(this.initObject);
   }
@@ -117,7 +119,7 @@
   * @param item which item was clicked.
   * @param event jQuery event.
   */
-  GtlController.prototype.onItemClicked = function(item, event) {
+  ReportDataController.prototype.onItemClicked = function(item, event) {
     event.stopPropagation();
     event.preventDefault();
     if (this.initObject.isExplorer) {
@@ -131,45 +133,11 @@
   }
 
   /**
-  * Method for filtering and sorting items. This method will call sort items if it sort item was specified and will call
-  * limitTo method for filtering number of items.
-  */
-  GtlController.prototype.filterAndSort = function() {
-    this.filteredRows = this.gtlData.rows;
-    if (this.settings.sortBy) {
-      this.sortItems();
-    }
-    this.limitTo();
-  }
-
-  /**
-  * Method for filtering number of active items. Filter called `limitTo` is used.
-  * @return array of filtered items.
-  */
-  GtlController.prototype.limitTo = function() {
-    this.filteredRows = this.$filter('limitTo')(this.filteredRows, this.settings.perpage, this.settings.startIndex);
-    return this.filteredRows;
-  }
-
-  /**
-  * Method for sorting items. This method uses lodash's sortBy function.
-  * @return array of sorted items.
-  */
-  GtlController.prototype.sortItems = function() {
-    this.filteredRows = _.sortBy(this.filteredRows, [function(row) {
-      var indexOfColumn = this.gtlData.cols.indexOf(this.settings.sortBy.sortObject);
-      return row.cells[indexOfColumn].text;
-    }.bind(this)]);
-    this.filteredRows = this.settings.sortBy.isAscending ? this.filteredRows : this.filteredRows.reverse();
-    return this.filteredRows;
-  }
-
-  /**
   * Method which will be fired when item was selected (either trough select box or by clicking on tile).
   * @param item which item was selected.
   * @param isSelected true | false.
   */
-  GtlController.prototype.onItemSelect = function(item, isSelected) {
+  ReportDataController.prototype.onItemSelect = function(item, isSelected) {
     selectedItem = _.find(this.gtlData.rows, {id: item.id});
     selectedItem.checked = isSelected;
     selectedItem.selected = isSelected;
@@ -182,7 +150,7 @@
     }
   }
 
-  GtlController.prototype.initObjects = function(initObject) {
+  ReportDataController.prototype.initObjects = function(initObject) {
     this.gtlData = { cols: [] ,rows: [] };
     this.initObject = initObject;
     this.gtlType = initObject.gtlType;
@@ -206,11 +174,12 @@
   *   }
   * ```
   */
-  GtlController.prototype.initController = function(initObject) {
+  ReportDataController.prototype.initController = function(initObject) {
+    initObject.modelName = decodeURIComponent(initObject.modelName);
     this.initObjects(initObject);
     this.setSandPaperClass(initObject.gtlType);
     return this.getData(initObject.modelName, initObject.activeTree, initObject.currId, initObject.isExplorer, this.settings)
-      .then(function() {
+      .then(function(data) {
         var start = (this.settings.current - 1) * this.settings.perpage;
         this.setPaging(start, this.settings.perpage);
         var sortId = _.findIndex(this.gtlData.cols, {col_idx: parseInt(this.settings.sort_col, 10)});
@@ -220,19 +189,22 @@
         this.settings.selectAllTitle = __('Select All');
         this.settings.sortedByTitle = __('Sorted By');
         this.settings.isLoading = false;
-      }.bind(this))
+        return data;
+      }.bind(this));
   }
 
-  GtlController.prototype.setSandPaperClass = function(viewType) {
+  ReportDataController.prototype.setSandPaperClass = function(viewType) {
     var mainContent = document.getElementById('main-content');
-    var mainConentClasses = mainContent.className.split(' ');
-    var sandPaperIndex = mainConentClasses.indexOf('miq-sand-paper');
-    if (sandPaperIndex != -1) {
-      mainConentClasses.splice(sandPaperIndex, 1);
-      mainContent.className = mainConentClasses.join(' ');
-    }
-    if (viewType === 'grid' || viewType === 'tile') {
-      mainContent.className += ' miq-sand-paper';
+    if (mainContent) {
+      var mainConentClasses = mainContent.className.split(' ');
+      var sandPaperIndex = mainConentClasses.indexOf('miq-sand-paper');
+      if (sandPaperIndex != -1) {
+        mainConentClasses.splice(sandPaperIndex, 1);
+        mainContent.className = mainConentClasses.join(' ');
+      }
+      if (viewType === 'grid' || viewType === 'tile') {
+        mainContent.className += ' miq-sand-paper';
+      }
     }
   }
 
@@ -241,18 +213,21 @@
   * @param modelName name of current model.
   * @param activeTree ID of active tree node.
   * @param currId current Id, if some nested items are displayed.
+  * @param isExplorer true | false if we are in explorer part of application.
   * @param settings settings object.
   */
-  GtlController.prototype.getData = function(modelName, activeTree, currId, isExplorer, settings) {
+  ReportDataController.prototype.getData = function(modelName, activeTree, currId, isExplorer, settings) {
     return this.MiQDataTableService.retrieveRowsAndColumnsFromUrl(modelName, activeTree, currId, isExplorer, settings)
       .then(function (gtlData) {
         this.gtlData = gtlData;
         this.perPage.text = gtlData.settings.perpage;
+        this.perPage.value = gtlData.settings.perpage;
         this.settings = gtlData.settings;
+        return gtlData;
       }.bind(this));
   }
 
-  GtlController.$inject = ['MiQDataTableService', 'MiQEndpointsService', '$filter', '$scope'];
+  ReportDataController.$inject = ['MiQDataTableService', 'MiQEndpointsService', '$filter', '$scope'];
   miqHttpInject(angular.module('ManageIQ.gtl'))
-    .controller(COTNROLLER_NAME, GtlController);
+    .controller(COTNROLLER_NAME, ReportDataController);
 })();

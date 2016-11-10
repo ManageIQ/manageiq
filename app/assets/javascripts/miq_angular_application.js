@@ -11,7 +11,7 @@ miqHttpInject(ManageIQ.angular.app);
 ManageIQ.angular.rxSubject = new Rx.Subject();
 
 ManageIQ.constants = {
-  gtlList: 'generate_gtl'
+  gtlList: 'report_data'
 };
 
 function miqHttpInject(angular_app) {

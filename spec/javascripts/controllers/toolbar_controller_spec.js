@@ -75,7 +75,7 @@ describe('toolbarController', function () {
        expect(middleware_toolbar_list !== $controller.toolbarItems).toBeTruthy();
      });
    });
-   
+
    describe('event data toolbar', function() {
      beforeEach(function() {
        spyOn($controller, 'onUpdateItem');
