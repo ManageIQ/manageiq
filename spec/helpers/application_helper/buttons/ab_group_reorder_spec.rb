@@ -1,5 +1,5 @@
 describe ApplicationHelper::Button::AbGroupReorder do
-  subject { described_class.new(view_context, {}, {}, {}) }
+  subject { described_class.new(view_context, {}, {}, {:options => {:action => 'edited'}}) }
 
   describe '#disabled?' do
     context 'when :active_tree == :ab_tree' do

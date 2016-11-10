@@ -12,7 +12,8 @@ class ApplicationHelper::Toolbar::CustomButtonsCenter < ApplicationHelper::Toolb
           t = N_('Edit this Button Group'),
           t,
           :url_parms => "main_div",
-          :klass     => ApplicationHelper::Button::AbGroupEdit),
+          :klass     => ApplicationHelper::Button::AbGroupEdit,
+          :options   => {:action => 'edited'}),
         button(
           :ab_button_new,
           'pficon pficon-add-circle-o fa-lg',
@@ -26,7 +27,8 @@ class ApplicationHelper::Toolbar::CustomButtonsCenter < ApplicationHelper::Toolb
           t,
           :url_parms => "main_div",
           :confirm   => N_("Warning: The selected Button Group will be permanently removed!"),
-          :klass     => ApplicationHelper::Button::AbGroupEdit),
+          :klass     => ApplicationHelper::Button::AbGroupEdit,
+          :options   => {:action => 'deleted'}),
       ]
     ),
   ])

@@ -1,6 +1,13 @@
 describe ApplicationHelper::Button::AbGroupEdit do
   let(:view_context) { setup_view_context_with_sandbox({}) }
-  subject { described_class.new(view_context, {}, {}, {:child_id => 'ab_group_edit'}) }
+  subject do
+    described_class.new(
+      view_context,
+      {},
+      {},
+      {:child_id => 'ab_group_edit', :options => {:action => 'edited'}}
+    )
+  end
 
   before { allow(view_context).to receive(:x_node).and_return(x_node) }
 
