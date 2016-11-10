@@ -1911,6 +1911,10 @@
       :post:
       - :name: query
         :identifier: virtual_template_show
+    :resource_actions:
+      :get:
+      - :name: read
+        :identifier: virtual_template_show
   :arbitration_profiles:
     :description: Arbitration Profiles
     :identifier: ems_cloud_admin

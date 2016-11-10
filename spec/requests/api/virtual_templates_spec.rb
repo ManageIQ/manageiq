@@ -35,4 +35,27 @@ RSpec.describe 'Virtual Template API' do
       expect_query_result(:virtual_templates, 1, 1)
     end
   end
+
+  context 'virtual templates get' do
+    it "rejects resource get requests without appropriate role" do
+      api_basic_authorize
+
+      vt = FactoryGirl.create(:virtual_template, :ems_id => ems.id)
+
+      run_get(virtual_templates_url(vt.id))
+
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it "accepts resource get requests with appropriate role" do
+      api_basic_authorize action_identifier(:virtual_templates, :read, :resource_actions, :get)
+
+      vt = FactoryGirl.create(:virtual_template, :ems_id => ems.id)
+
+      run_get(virtual_templates_url(vt.id))
+
+      expect(response).to have_http_status(:ok)
+      expect_result_to_have_keys(%w(id href))
+    end
+  end
 end
