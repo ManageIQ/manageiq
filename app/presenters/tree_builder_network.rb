@@ -2,8 +2,8 @@ class TreeBuilderNetwork < TreeBuilder
   has_kids_for Lan, [:x_get_tree_lan_kids]
   has_kids_for Switch, [:x_get_tree_switch_kids]
 
-  def node_builder
-    TreeNodeBuilderNetwork
+  def override(node, object, pid, options)
+    node[:cfmeNoClick] = true unless node[:icon].include?('100/currentstate-')
   end
 
   def initialize(name, type, sandbox, build = true, root = nil, vm_kids = [])

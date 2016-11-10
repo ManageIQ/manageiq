@@ -2,8 +2,8 @@ class TreeBuilderComplianceHistory < TreeBuilder
   has_kids_for Compliance, [:x_get_compliance_kids]
   has_kids_for ComplianceDetail, [:x_get_compliance_detail_kids, :parents]
 
-  def node_builder
-    TreeNodeBuilderComplianceHistory
+  def override(node, object, pid, options)
+    node[:cfmeNoClick] = true
   end
 
   def initialize(name, type, sandbox, build = true, root = nil)
