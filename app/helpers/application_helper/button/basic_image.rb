@@ -1,7 +1,6 @@
 class ApplicationHelper::Button::BasicImage < ApplicationHelper::Button::Basic
   def visible?
-    @sb.fetch_path(:trees, :vandt_tree, :active_node).blank? ||
-      (@sb[:trees][:vandt_tree][:active_node] != "xx-arch" &&
-       @sb[:trees][:vandt_tree][:active_node] != "xx-orph")
+    active_node = @view_context.x_node
+    active_node.blank? || (active_node != "xx-arch" && active_node != "xx-orph")
   end
 end
