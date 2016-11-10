@@ -4,14 +4,14 @@ module MiqReportResult::Purging
 
   module ClassMethods
     def purge_mode_and_value
-      value = VMDB::Config.new("vmdb").config.fetch_path(:reporting, :history, :keep_reports)
-      mode  = (value.nil? || value.number_with_method?) ? :date : :remaining
-      value = (value || 6.months).to_i_with_method.seconds.ago.utc if mode == :date
+      value = ::Settings.reporting.history.keep_reports
+      mode  = value.number_with_method? ? :date : :remaining
+      value = value.to_i_with_method.seconds.ago.utc if mode == :date
       return mode, value
     end
 
     def purge_window_size
-      VMDB::Config.new("vmdb").config.fetch_path(:reporting, :history, :purge_window_size) || 100
+      ::Settings.reporting.history.purge_window_size
     end
 
     def purge_timer

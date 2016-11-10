@@ -29,14 +29,6 @@ describe MiqReportResult do
     end
 
     context "#purge_mode_and_value" do
-      it "with missing config value" do
-        settings.delete_path(:reporting, :history, :keep_reports)
-        stub_settings(settings)
-        Timecop.freeze(Time.now) do
-          expect(described_class.purge_mode_and_value).to eq([:date, 6.months.to_i.seconds.ago.utc])
-        end
-      end
-
       it "with date" do
         settings.store_path(:reporting, :history, :keep_reports, "1.day")
         stub_settings(settings)
@@ -53,14 +45,6 @@ describe MiqReportResult do
     end
 
     context "#purge_window_size" do
-      it "with missing config value" do
-        settings.delete_path(:reporting, :history, :purge_window_size)
-        stub_settings(settings)
-        Timecop.freeze(Time.now) do
-          expect(described_class.purge_window_size).to eq(100)
-        end
-      end
-
       it "with value" do
         settings.store_path(:reporting, :history, :purge_window_size, 1000)
         stub_settings(settings)

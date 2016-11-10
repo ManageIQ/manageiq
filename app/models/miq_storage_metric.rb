@@ -146,9 +146,9 @@ class MiqStorageMetric < ApplicationRecord
   private_class_method :metrics_count_by_date
 
   def self.purge_all_timer
-    purge_derived_metrics_by_date(purge_date(:keep_realtime_metrics) || 4.hours.ago.utc)
-    purge_hourly_metrics_rollups_by_date(purge_date(:keep_hourly_metrics) || 6.months.ago.utc)
-    purge_daily_metrics_rollups_by_date(purge_date(:keep_daily_metrics) || 6.months.ago.utc)
+    purge_derived_metrics_by_date(purge_date(:keep_realtime_metrics))
+    purge_hourly_metrics_rollups_by_date(purge_date(:keep_hourly_metrics))
+    purge_daily_metrics_rollups_by_date(purge_date(:keep_daily_metrics))
   end
 
   def self.purge_derived_metrics_by_date(older_than, window = nil)
