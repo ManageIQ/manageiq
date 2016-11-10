@@ -94,14 +94,8 @@ class ApplicationController < ActionController::Base
     @table_name ||= model.name.underscore
   end
 
-  # Examples:
-  #   CimBaseStorageExtentController => cim_bse
-  #   OntapFileShareController        => snia_fs
   def self.session_key_prefix
-    @session_key_prefix ||= begin
-      parts = table_name.split('_')
-      "#{parts[0]}_#{parts[1..-1].join('_')}"
-    end
+    table_name
   end
 
   # This will rescue any un-handled exceptions
