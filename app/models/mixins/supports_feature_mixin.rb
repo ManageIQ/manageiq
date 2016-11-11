@@ -68,6 +68,7 @@ module SupportsFeatureMixin
     :backup_create              => 'CloudVolume backup creation',
     :backup_restore             => 'CloudVolume backup restore',
     :cinder_service             => 'Cinder storage service',
+    :create_volume              => 'Cloud Volume Creation',
     :create_floating_ip         => 'Floating IP Creation',
     :create_host_aggregate      => 'Host Aggregate Creation',
     :create_network_router      => 'Network Router Creation',
