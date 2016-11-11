@@ -44,11 +44,6 @@ module VMDB
       def server(data)
         MiqServer.my_server.config_activated(data) unless MiqServer.my_server.nil? rescue nil
       end
-
-      def workers(_data)
-        pgl = MiqPglogical.new
-        pgl.refresh_excludes if pgl.provider?
-      end
     end
   end
 end
