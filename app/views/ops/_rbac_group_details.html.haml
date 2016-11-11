@@ -212,7 +212,7 @@
 :javascript
   miq_tabs_init('#rbac_group_tabs');
 %script{:type => "text/javascript"}
-  - if get_vmdb_config[:authentication][:mode] == "httpd"
+  - if ::Settings.authentication.mode == "httpd"
     $('#user_id_ext_auth_form_group').show();
     $('#user_id_form_group').hide();
     $('#user_name_form_group').hide();

@@ -52,7 +52,7 @@
           %td{:onclick => "miqTreeActivateNode('settings_tree', 'xx-msc');", :title => _("View Schedules")}
             = _("Schedules")
             (#{h(@miq_schedules.size)})
-        - if get_vmdb_config[:product][:new_ldap]
+        - if ::Settings.product.new_ldap
           %tr
             %td.narrow{:onclick => "miqTreeActivateNode('settings_tree', 'xx-l');", :title => _("View LDAP Regions")}
               %i.pficon.pficon-regions

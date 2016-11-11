@@ -2,8 +2,8 @@
   #tab_div
     = render :partial => "layouts/flash_msg"
     .row
-      - desc = get_vmdb_config[:server][:custom_support_url_description]
-      - url  = get_vmdb_config[:server][:custom_support_url]
+      - desc = ::Settings.server.custom_support_url_description
+      - url  = ::Settings.server.custom_support_url
       - cond_url      = desc.present? && url.present?
       - if admin_user? || (!admin_user? && cond_url)
         .col-md-12

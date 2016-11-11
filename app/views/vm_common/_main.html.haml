@@ -4,7 +4,7 @@
     = render :partial => "shared/summary/textual", :locals => {:title => _("Properties"), :items => textual_group_properties}
     = render :partial => "shared/summary/textual", :locals => {:title => _("Lifecycle"), :items => textual_group_lifecycle}
     = render :partial => "shared/summary/textual", :locals => {:title => _("Relationships"), :items => textual_group_relationships}
-    - if get_vmdb_config[:product][:storage]
+    - if ::Settings.product.storage
       = render :partial => "shared/summary/textual", :locals => {:title => _("Storage Relationships"), :items => textual_group_storage_relationships}
     = render :partial => "shared/summary/textual", :locals => {:title => _("VMsafe"), :items => textual_group_vmsafe}
     = render :partial => "shared/summary/textual_normal_operating_ranges", :locals => {:title => _("Normal Operating Ranges (over 30 days)"), :items => textual_group_normal_operating_ranges}
