@@ -196,18 +196,12 @@ class Service < ApplicationRecord
   end
 
   def power_states_match?(action)
-    vm_power_states.uniq == map_power_states(action)
+    power_states.uniq == map_power_states(action)
   end
 
   def map_power_states(action)
     action_name = "#{action}_action"
     service_resources.map(&action_name.to_sym).uniq.map { |x| Service::ACTION_RESPONSE[x] }.map { |x| Service::POWER_STATE_MAP[x] }
-  end
-
-  def vm_power_states
-    [].tap do |power_state|
-      power_states.each { |state| power_state << state }
-    end
   end
 
   def update_progress(hash = {})

@@ -88,8 +88,8 @@ describe Service do
       @service_c1.save
     end
 
-    it "#vm_power_states" do
-      expect(@service.vm_power_states).to eq %w(on on)
+    it "#power_states" do
+      expect(@service.power_states).to eq %w(on on)
     end
 
     it "#update_progress" do
@@ -133,7 +133,7 @@ describe Service do
 
       it "returns the uniq value for the 'off' power state" do
         expect(@service).to receive(:map_power_states).with(:stop).and_return(["off"])
-        expect(@service).to receive(:vm_power_states).and_return(["off"])
+        expect(@service).to receive(:power_states).and_return(["off"])
         expect(@service.power_states_match?(:stop)).to be_truthy
       end
     end
