@@ -1233,6 +1233,7 @@ class VmOrTemplate < ApplicationRecord
     when "VMFS"  then "[#{storage.name}] #{location}"
     when "VSAN"  then "[#{storage.name}] #{location}"
     when "NFS"   then "[#{storage.name}] #{location}"
+    when "NFS41" then "[#{storage.name}] #{location}"
     when "NTFS"  then "[#{storage.name}] #{location}"
     when "CSVFS" then "[#{storage.name}] #{location}"
     when "NAS"   then File.join(storage.name, location)

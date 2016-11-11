@@ -363,7 +363,7 @@ class JobProxyDispatcher
         queue_signal(job, {:args => [:abort, msg, "error"]})
         return []
       else
-        unless %w(VSAN VMFS NAS NFS ISCSI DIR FCP CSVFS NTFS GLUSTERFS).include?(@vm.storage.store_type)
+        unless %w(VSAN VMFS NAS NFS NFS41 ISCSI DIR FCP CSVFS NTFS GLUSTERFS).include?(@vm.storage.store_type)
           msg = "Vm storage type [#{@vm.storage.store_type}] unsupported [#{job.target_id}], aborting job [#{job.guid}]."
           queue_signal(job, {:args => [:abort, msg, "error"]})
           return []
