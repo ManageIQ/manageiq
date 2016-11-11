@@ -1,4 +1,4 @@
-class TreeNodeBuilderAeClassCatalog < TreeNodeBuilderAeClass
+class TreeNodeBuilderAutomateCatalog < TreeNodeBuilderAutomate
   private
 
   def noclick_node?(key)
