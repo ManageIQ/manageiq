@@ -4,7 +4,6 @@ class MiqPglogical
   include Vmdb::Logging
 
   REPLICATION_SET_NAME = 'miq'.freeze
-  SETTINGS_PATH = [:replication].freeze
   NODE_PREFIX = "region_".freeze
   ALWAYS_EXCLUDED_TABLES = %w(ar_internal_metadata schema_migrations repl_events repl_monitor repl_nodes).freeze
 
