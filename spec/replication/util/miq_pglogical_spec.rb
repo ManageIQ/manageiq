@@ -92,11 +92,7 @@ describe MiqPglogical do
 
       it "removes a newly excluded table" do
         table = subject.included_tables.first
-        new_excludes = subject.configured_excludes << table
-
-        c = MiqServer.my_server.get_config
-        c.config.store_path(*described_class::SETTINGS_PATH, :exclude_tables, new_excludes)
-        c.save
+        subject.configured_excludes += [table]
 
         subject.refresh_excludes
         expect(subject.included_tables).not_to include(table)
