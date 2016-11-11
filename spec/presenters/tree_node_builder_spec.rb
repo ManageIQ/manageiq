@@ -127,7 +127,7 @@ describe TreeNodeBuilder do
         expect(node).to eq(
           :key          => "-#{classification.name}",
           :title        => classification.description,
-          :icon         => "100/folder", # is this a bug?
+          :icon         => "100/folder.png",
           :tooltip      => "Category: #{classification.description}",
           :expand       => false,
           :cfmeNoClick  => true,
@@ -141,7 +141,7 @@ describe TreeNodeBuilder do
         expect(node).to eq(
           :key          => "-#{category.name}",
           :title        => category.description,
-          :icon         => "100/folder", # is this a bug?
+          :icon         => "100/folder.png",
           :tooltip      => "Category: #{category.description}",
           :expand       => false,
           :cfmeNoClick  => true,
