@@ -36,14 +36,14 @@ class ApplicationHelper::Toolbar::DiagnosticsServerCenter < ApplicationHelper::T
       :refresh_production_log,
       'fa fa-repeat fa-lg',
       proc do
-        _('Reload the %{log_type} Log Display') % {:log_type => @sb[:rails_log]}
+        _('Reload the %{log_type} Log Display') % {:log_type => _(@sb[:rails_log])}
       end,
       nil),
     button(
       :fetch_production_log,
       'fa fa-download fa-lg',
       proc do
-        _('Download the Entire %{log_type} Log File') % {:log_type => @sb[:rails_log]}
+        _('Download the Entire %{log_type} Log File') % {:log_type => _(@sb[:rails_log])}
       end,
       nil,
       :url => "/fetch_production_log"),
