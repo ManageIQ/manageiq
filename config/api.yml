@@ -1691,6 +1691,8 @@
         :identifier: catalogitem_edit
       - :name: delete
         :identifier: catalogitem_delete
+      - :name: create
+        :identifier: catalogitem_new
     :subcollection_actions:
       :post:
       - :name: edit
@@ -1712,6 +1714,8 @@
       :post:
       - :name: edit
         :identifier: catalogitem_edit
+      - :name: create
+        :identifier: catalogitem_new
       :delete:
       - :name: delete
         :identifier: catalogitem_delete

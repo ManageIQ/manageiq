@@ -210,4 +210,55 @@ describe "Service Templates API" do
       expect(response).to have_http_status(:ok)
     end
   end
+
+  describe "Service Templates create" do
+    it 'rejects requests without appropriate role' do
+      api_basic_authorize
+
+      run_post(service_templates_url, :name => 'foobar')
+
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it 'can create a single service template' do
+      api_basic_authorize action_identifier(:service_templates, :create)
+
+      run_post(service_templates_url, :name => 'foobar')
+
+      expected = {
+        'results' => [
+          a_hash_including(
+            'name' => 'foobar'
+          )
+        ]
+      }
+      expect do
+        run_post(service_templates_url, :name => 'foobar')
+      end.to change(ServiceTemplate, :count).by(1)
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
+    end
+
+    it 'can create multiple service templates' do
+      api_basic_authorize action_identifier(:service_templates, :create)
+
+      expected = {
+        'results' => a_collection_including(
+          a_hash_including(
+            'name' => 'foo'
+          ),
+          a_hash_including(
+            'name' => 'bar'
+          )
+        )
+      }
+      expect do
+        run_post(service_templates_url, :action => 'create', :resources => [
+                   { :name => 'foo' }, { :name => 'bar'}
+                 ])
+      end.to change(ServiceTemplate, :count).by(2)
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
+    end
+  end
 end
