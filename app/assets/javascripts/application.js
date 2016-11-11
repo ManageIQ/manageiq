@@ -16,11 +16,11 @@
 //= require moment
 //= require moment-strftime/lib/moment-strftime
 //= require moment-timezone
-//= require sprintf
+//= require sprintf-js
 //= require numeral
 //= require cable
 //= require miq_api
-//= require rxjs/dist/rx.all
+//= require rx/dist/rx.all
 //= require miq_angular_application
 //= require_tree ./angular_modules/
 //= require_tree ./controllers/
@@ -82,7 +82,7 @@
 //= require xml_display
 //= require miq_c3
 //= require miq_explorer
-//= require qs
+//= require qs-parser
 //= require miq_timeline
 // Bower packages
 //= require manageiq-ui-components/dist/js/ui-components

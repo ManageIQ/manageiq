@@ -23,10 +23,7 @@
     "kubernetes-topology-graph": "~0.0.23",
     "manageiq-ui-components": "~0.0.9",
     "patternfly-timeline": "~1.0.2",
-    "qs": "~0.3.10",
-    "rxjs": "~4.1.0",
     "spice-html5-bower": "himdel/spice-html5-bower#~0.1.6",
-    "sprintf": "~1.0.3",
     "xml_display": "~0.1.1"
   },
   "resolutions": {
