@@ -415,7 +415,7 @@ describe MiqAeClassController do
     end
 
     it "Should only delete editable domains" do
-      expect(git_service).to receive(:destroy_repository).with(domain3.git_repository.id)
+      expect(git_service).to receive(:destroy_domain).with(domain3.id)
       controller.send(:delete_domain)
 
       flash_messages = assigns(:flash_array)

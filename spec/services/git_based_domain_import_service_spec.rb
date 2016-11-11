@@ -6,7 +6,7 @@ describe GitBasedDomainImportService do
                               :url          => 'http://www.example.com')
     end
     let(:user) { double("User", :userid => userid, :id => 123) }
-    let(:domain) { FactoryGirl.build(:miq_ae_domain) }
+    let(:domain) { FactoryGirl.build(:miq_ae_git_domain, :id => 999) }
     let(:userid) { "fred" }
     let(:task) { double("MiqTask", :id => 123) }
     let(:ref_name) { 'the_branch_name' }
@@ -41,6 +41,19 @@ describe GitBasedDomainImportService do
       {
         :class_name  => "GitRepository",
         :instance_id => git_repo.id,
+        :method_name => method_name,
+        :role        => "git_owner",
+        :args        => []
+      }
+    end
+  end
+
+  shared_context "domain setup" do
+    let(:git_branches) { [] }
+    let(:queue_options) do
+      {
+        :class_name  => "MiqAeDomain",
+        :instance_id => domain.id,
         :method_name => method_name,
         :role        => "git_owner",
         :args        => []
@@ -206,10 +219,10 @@ describe GitBasedDomainImportService do
     end
   end
 
-  describe "destroy git repository" do
+  describe "destroy domain" do
     include_context "import setup"
-    include_context "repository setup"
-    let(:action) { 'Destroy git repository' }
+    include_context "domain setup"
+    let(:action) { 'Destroy domain' }
     let(:method_name) { 'destroy' }
     let(:task) { double("MiqTask", :id => 123, :status => status, :message => message) }
 
@@ -219,16 +232,16 @@ describe GitBasedDomainImportService do
       allow(task).to receive(:task_results).and_return(true)
     end
 
-    it "#destroy_repository" do
+    it "#destroy_domain" do
       expect(MiqTask).to receive(:generic_action_with_callback).with(task_options, queue_options).and_return(task.id)
 
-      expect(subject.destroy_repository(git_repo.id)).to be_truthy
+      expect(subject.destroy_domain(domain.id)).to be_truthy
     end
 
-    it "#queue_destroy_repository" do
+    it "#queue_destroy_domain" do
       expect(MiqTask).to receive(:generic_action_with_callback).with(task_options, queue_options).and_return(task.id)
 
-      expect(subject.queue_destroy_repository(git_repo.id)).to eq(task.id)
+      expect(subject.queue_destroy_domain(domain.id)).to eq(task.id)
     end
   end
 end

@@ -13,6 +13,7 @@ class MiqAeDomain < MiqAeNamespace
 
   validates_presence_of :tenant, :message => "object is needed to own the domain"
   after_destroy :squeeze_priorities
+  before_destroy :destroy_repository
   default_value_for :source,  USER_SOURCE
   default_value_for :enabled, false
   before_save :default_priority
@@ -158,6 +159,10 @@ class MiqAeDomain < MiqAeNamespace
   def squeeze_priorities
     ids = MiqAeDomain.where('priority > 0', :tenant => tenant).order('priority ASC').collect(&:id)
     MiqAeDomain.reset_priority_by_ordered_ids(ids)
+  end
+
+  def destroy_repository
+    git_repository.destroy if git_repository
   end
 
   def self.any_enabled?

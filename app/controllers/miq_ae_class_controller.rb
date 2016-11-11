@@ -1842,7 +1842,7 @@ class MiqAeClassController < ApplicationController
   def delete_domain
     assert_privileges("miq_ae_domain_delete")
     aedomains = []
-    repositories = []
+    git_domains = []
     if params[:id]
       aedomains.push(params[:id])
       self.x_node = "root"
@@ -1853,8 +1853,7 @@ class MiqAeClassController < ApplicationController
         domain = MiqAeDomain.find_by_id(from_cid(item[1]))
         next unless domain
         if domain.editable_properties?
-          aedomains.push(domain.id)
-          repositories.push(domain.git_repository.id) if domain.git_enabled?
+          domain.git_enabled? ? git_domains.push(domain) : aedomains.push(domain.id)
         else
           add_flash(_("Read Only %{model} \"%{name}\" cannot be deleted") %
             {:model => ui_lookup(:model => "MiqAeDomain"), :name => domain.name}, :error)
@@ -1862,7 +1861,9 @@ class MiqAeClassController < ApplicationController
       end
     end
     process_elements(aedomains, MiqAeDomain, 'destroy') unless aedomains.empty?
-    repositories.each { |id| git_based_domain_import_service.destroy_repository(id) }
+    git_domains.each do |domain|
+      process_element_destroy_via_queue(domain, domain.class, domain.name)
+    end
     replace_right_cell([:ae])
   end
 
@@ -2571,4 +2572,26 @@ class MiqAeClassController < ApplicationController
   end
 
   menu_section :aut
+
+  def process_element_destroy_via_queue(element, klass, name)
+    return unless element.respond_to?(:destroy)
+
+    audit = {:event        => "#{klass.name.downcase}_record_delete",
+             :message      => "[#{name}] Record deleted",
+             :target_id    => element.id,
+             :target_class => klass.base_class.name,
+             :userid       => session[:userid]}
+
+    model_name  = ui_lookup(:model => klass.name) # Lookup friendly model name in dictionary
+    record_name = get_record_display_name(element)
+
+    begin
+      git_based_domain_import_service.destroy_domain(element.id)
+      AuditEvent.success(audit)
+      add_flash(_("%{model} \"%{name}\": Delete successful") % {:model => model_name, :name => record_name})
+    rescue => bang
+      add_flash(_("%{model} \"%{name}\": Error during delete: %{error_msg}") %
+               {:model => model_name, :name => record_name, :error_msg => bang.message}, :error)
+    end
+  end
 end

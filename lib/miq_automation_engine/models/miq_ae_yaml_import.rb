@@ -79,8 +79,7 @@ class MiqAeYamlImport
     domain_obj = MiqAeDomain.find_by_fqname(domain_name, false)
     track_stats('domain', domain_obj)
     if domain_obj && !@preview && @options['overwrite']
-      domain_obj.destroy
-      domain_obj = nil
+      domain_obj.ae_namespaces.destroy_all
     end
     domain_obj ||= add_domain(domain_yaml, @tenant) unless @preview
     if @options['namespace']
