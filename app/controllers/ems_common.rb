@@ -233,7 +233,7 @@ module EmsCommon
     set_form_vars
     @in_a_form = true
     session[:changed] = false
-    drop_breadcrumb(:name => "Edit #{ui_lookup(:tables => @table_name)} '#{@ems.name}'",
+    drop_breadcrumb(:name => _("Edit %{object_type} '%{object_name}'") % {:object_type => ui_lookup(:tables => @table_name), :object_name => @ems.name},
                     :url  => "/#{@table_name}/#{@ems.id}/edit")
   end
 
