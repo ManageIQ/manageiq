@@ -11,12 +11,16 @@ class ApplicationHelper::Toolbar::TenantCenter < ApplicationHelper::Toolbar::Bas
           'pficon pficon-add-circle-o fa-lg',
           t = N_('Add child Tenant to this Tenant'),
           t,
+          :klass     => ApplicationHelper::Button::TenantAdd,
+          :options   => {:feature => 'rbac_tenant_add'},
           :url_parms => "?tenant_type=tenant"),
         button(
           :rbac_project_add,
           'pficon pficon-add-circle-o fa-lg',
           t = N_('Add Project to this Tenant'),
           t,
+          :klass     => ApplicationHelper::Button::TenantAdd,
+          :options   => {:feature => 'rbac_project_add'},
           :url_parms => "?tenant_type=project"),
         button(
           :rbac_tenant_edit,

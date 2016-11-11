@@ -1,7 +1,7 @@
 class ApplicationHelper::Button::Basic < Hash
   include ActionView::Helpers::TextHelper
 
-  delegate :role_allows?, :rbac_common_feature_for_buttons, :to => :@view_context
+  delegate :role_allows?, :to => :@view_context
 
   def initialize(view_context, view_binding, instance_data, props)
     @view_context  = view_context
@@ -19,7 +19,7 @@ class ApplicationHelper::Button::Basic < Hash
     return true if self[:type] == :buttonSelect
     # for each button in select checks RBAC, self[:child_id] represents the
     # button id for buttons inside select
-    return role_allows?(:feature => rbac_common_feature_for_buttons(self[:child_id])) unless self[:child_id].nil?
+    return role_allows?(:feature => self[:child_id]) unless self[:child_id].nil?
     # check RBAC on separate button
     role_allows?(:feature => self[:id])
   end
