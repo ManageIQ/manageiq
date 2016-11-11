@@ -11,7 +11,7 @@ class ApplicationHelper::Button::CloudVolumeNew < ApplicationHelper::Button::Bas
     # if any connected provider supports this action,
     # we can enable the button.
     ems_clouds.each do |ems|
-      return false if CloudVolume.class_by_ems(ems).supports_create_volume?
+      return false if CloudVolume.class_by_ems(ems).supports_create?
     end
     true
   end

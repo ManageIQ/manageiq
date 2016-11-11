@@ -3,6 +3,7 @@ class ManageIQ::Providers::Openstack::CloudManager::CloudVolume < ::CloudVolume
 
   include SupportsFeatureMixin
 
+  supports :create
   supports :backup_create
   supports :backup_restore
   supports :snapshot_create
