@@ -1,8 +1,11 @@
 module ManagerRefresh
   class Dto
-    attr_reader :dto_collection, :data, :object
+    attr_accessor :object
+    attr_reader :dto_collection, :data
 
     delegate :manager_ref, :to => :dto_collection
+    delegate :id, :to => :object
+    delegate :[], :[]=, :to => :data
 
     def initialize(dto_collection, data)
       @dto_collection           = dto_collection
@@ -15,30 +18,8 @@ module ManagerRefresh
       manager_ref.map { |attribute| data[attribute].try(:id) || data[attribute].to_s }.join("__")
     end
 
-    def id
-      object.id
-    end
-
-    def [](key)
-      data[key]
-    end
-
-    def []=(key, value)
-      data[key] = value
-    end
-
     def load
       object
-    end
-
-    def build_object(built_object)
-      self.object = built_object
-    end
-
-    def save
-      ret = object.save
-      object.send(:clear_association_cache)
-      ret
     end
 
     def attributes(dto_collection_scope = nil)
@@ -72,8 +53,6 @@ module ManagerRefresh
     end
 
     private
-
-    attr_writer :object
 
     def allowed?(dto_collection_scope, key)
       # TODO(lsmola) can we make this O(1)? This check will be performed for each record in the DB

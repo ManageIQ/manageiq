@@ -1,6 +1,5 @@
 module ManagerRefresh::SaveCollection
   class TopologicalSort
-    extend EmsRefresh::SaveInventoryHelper
     extend ManagerRefresh::SaveCollection::Helper
 
     class << self

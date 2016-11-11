@@ -2,12 +2,12 @@ module ManagerRefresh
   class DtoLazy
     include Vmdb::Logging
 
-    attr_reader :ems_ref, :dto_collection, :path, :default
+    attr_reader :ems_ref, :dto_collection, :key, :default
 
-    def initialize(dto_collection, ems_ref, path: nil, default: nil)
+    def initialize(dto_collection, ems_ref, key: nil, default: nil)
       @ems_ref        = ems_ref
       @dto_collection = dto_collection
-      @path           = path
+      @key            = key
       @default        = default
     end
 
@@ -17,25 +17,25 @@ module ManagerRefresh
 
     def inspect
       suffix = ""
-      suffix += ", path: #{path}" if path.present?
+      suffix += ", key: #{key}" if key.present?
       "DtoLazy:('#{self}', #{dto_collection})#{suffix}"
     end
 
     def load
-      path ? load_object_with_path : load_object
+      key ? load_object_with_key : load_object
     end
 
     def dependency?
-      # If path is not set, DtoLazy is a dependency, cause it points to the record itself. Otherwise DtoLazy is a
+      # If key is not set, DtoLazy is a dependency, cause it points to the record itself. Otherwise DtoLazy is a
       # dependency only if it points to an attribute which is a dependency.
-      !path || dto_collection.dependency_attributes.keys.include?(path.first)
+      !key || dto_collection.dependency_attributes.keys.include?(key)
     end
 
     private
 
-    def load_object_with_path
+    def load_object_with_key
       # TODO(lsmola) Log error if we are accessing path that is present in blacklist or not present in whitelist
-      (dto_collection.find(to_s).try(:data) || {}).fetch_path(*path) || default
+      (dto_collection.find(to_s).try(:data) || {})[key] || default
     end
 
     def load_object
