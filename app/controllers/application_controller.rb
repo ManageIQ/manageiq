@@ -480,10 +480,12 @@ class ApplicationController < ActionController::Base
       end
     end
 
-    tree_klass = name == :ae_tree ? TreeBuilderAeClass : TreeBuilderAutomate
-    tree = tree_klass.new(name, type, @sb)
-    @automate_tree = tree if name == :automate_tree
-    tree
+    if name == :ae_tree
+      TreeBuilderAeClass.new(name, type, @sb)
+    else
+      node_builder = TreeBuilderAutomate.select_node_builder(controller_name)
+      @automate_tree = TreeBuilderAutomate.new(name, type, @sb, true, :node_builder => node_builder)
+    end
   end
 
   # moved this method here so it can be accessed from pxe_server controller as well

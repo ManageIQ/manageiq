@@ -1,4 +1,4 @@
-class TreeNodeBuilderAeClass < TreeNodeBuilder
+class TreeNodeBuilderAutomate < TreeNodeBuilder
   include CompressedIds
 
   def miq_ae_node(enabled, text, image, tip)
