@@ -427,17 +427,4 @@ describe MiqAeDomain do
       end
     end
   end
-
-  describe "destroy_repository callback" do
-    let(:git_domain) { described_class.new(:git_repository => git_repository) }
-    let(:git_repository) { GitRepository.new }
-
-    context "callback gets called" do
-      it "#destroy" do
-        expect(git_repository).to receive(:destroy)
-
-        expect(git_domain.destroy).to eq(git_domain)
-      end
-    end
-  end
 end
