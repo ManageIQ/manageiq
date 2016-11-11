@@ -11,7 +11,7 @@ class MiqPglogical
 
   def initialize
     @connection = ApplicationRecord.connection
-    self.configured_excludes = self.class.default_excludes
+    self.configured_excludes = provider? ? active_excludes : self.class.default_excludes
   end
 
   # Sets the tables that should be used to create the replication set using refresh_excludes
@@ -22,6 +22,7 @@ class MiqPglogical
   # Returns the excluded tables that are currently being used by pglogical
   # @return Array<String> the table list
   def active_excludes
+    return [] unless provider?
     @connection.tables - included_tables
   end
 
