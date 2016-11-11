@@ -20,19 +20,19 @@
       .pull-right
         .form-group.text-nowrap
           - if @gtl_type != "list" && @view
-            - sort_text = "#{@view.headers[@sortcol]} (#{@sortdir == "ASC" ? _("Asc") : _("Desc")})"
+            - sort_text = "#{_(@view.headers[@sortcol])} (#{@sortdir == "ASC" ? _("Asc") : _("Desc")})"
             = select_tag("sort_choice",
-                        options_for_select([sort_text] + @view.headers),
+                        options_for_select([sort_text] + @view.headers.map {|x| [_(x), x]}),
                         :class => "selectpicker dropup btn-group", "data-width" => "auto")
             :javascript
               miqSelectPickerEvent("sort_choice", "#{url}", {beforeSend: true, complete: true})
           -else
-            = @view.headers[@sortcol]
+            = _(@view.headers[@sortcol])
             - font_icon = @sortdir == "ASC" ? "asc" :"desc"
             %span.fa{:class => "fa-sort-alpha-#{font_icon}"}
         .form-group
           = select_tag("ppsetting",
-                      options_for_select(@pp_choices, pages[:perpage]),
+                      options_for_select(@pp_choices.map {|x, y| [_(x), y]}, pages[:perpage]),
                       "data-width" => "auto",
                       :class       => "selectpicker dropup")
           :javascript
