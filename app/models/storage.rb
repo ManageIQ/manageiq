@@ -67,7 +67,7 @@ class Storage < ApplicationRecord
   virtual_column :total_unmanaged_vms,            :type => :integer  # uses is handled via class method that aggregates
   virtual_column :count_of_vmdk_disk_files,       :type => :integer
 
-  SUPPORTED_STORAGE_TYPES = %w( VMFS NFS FCP ISCSI GLUSTERFS )
+  SUPPORTED_STORAGE_TYPES = %w( VMFS NFS NFS41 FCP ISCSI GLUSTERFS )
 
   def to_s
     name
