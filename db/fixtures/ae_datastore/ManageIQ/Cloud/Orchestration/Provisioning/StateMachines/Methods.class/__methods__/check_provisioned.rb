@@ -14,14 +14,18 @@ module ManageIQ
               end
 
               def main
-                method1()
-              end
-
-              private
-
-              def method1
                 task = @handle.root["service_template_provision_task"]
                 service = task.try(:destination)
+
+                unless service
+                  @handle.log(:error, 'Service is nil')
+                  raise 'Service is nil'
+                end
+
+                unless service.instance_of?(MiqAeMethodService::MiqAeServiceServiceOrchestration)
+                  @handle.log(:error, 'Service has a different type from MiqAeServiceServiceOrchestration')
+                  raise 'Service has a different type from MiqAeServiceServiceOrchestration'
+                end
 
                 if @handle.state_var_exist?('provider_last_refresh')
                   check_refreshed(service)
@@ -29,9 +33,22 @@ module ManageIQ
                   check_deployed(service)
                 end
 
-                task.miq_request.user_message = @handle.root['ae_reason'].truncate(255) unless @handle.root['ae_reason'].blank?
+                unless @handle.root['ae_reason'].blank?
+                  task.miq_request.user_message = @handle.root['ae_reason'].truncate(255)
+                end
               end
 
+              private
+
+              def prepare_and_call_refresh_provider(service)
+                @handle.set_state_var('deploy_result', @handle.root['ae_result'])
+                @handle.set_state_var('deploy_reason', @handle.root['ae_reason'])
+
+                refresh_provider(service)
+
+                @handle.root['ae_result']         = 'retry'
+                @handle.root['ae_retry_interval'] = '30.seconds'
+              end
 
               def refresh_provider(service)
                 provider = service.orchestration_manager
@@ -43,12 +60,27 @@ module ManageIQ
 
               def refresh_may_have_completed?(service)
                 stack = service.orchestration_stack
-                refreshed_stack = @handle.vmdb(:orchestration_stack).find_by(:name => stack.name, :ems_ref => stack.ems_ref)
+                refreshed_stack = @handle.vmdb(:orchestration_stack).find_by(:name    => stack.name,
+                                                                             :ems_ref => stack.ems_ref)
                 refreshed_stack && refreshed_stack.status != 'CREATE_IN_PROGRESS'
               end
 
               def check_deployed(service)
                 @handle.log("info", "Check orchestration deployed")
+
+                return unless deployment_completed?(service)
+                @handle.log("info", "Stack deployment finished. Status: " \
+                                    "#{@handle.root['ae_result']}, reason: #{@handle.root['ae_reason']}")
+
+                if @handle.root['ae_result'] == 'error'
+                  @handle.log("info", "Please examine stack resources for more details")
+                end
+
+                return unless service.orchestration_stack
+                prepare_and_call_refresh_provider(service)
+              end
+
+              def deployment_completed?(service)
                 # check whether the stack deployment completed
                 status, reason = service.orchestration_stack_status
                 case status.downcase
@@ -61,20 +93,9 @@ module ManageIQ
                   # deployment not done yet in provider
                   @handle.root['ae_result']         = 'retry'
                   @handle.root['ae_retry_interval'] = '1.minute'
-                  return
+                  return false
                 end
-
-                @handle.log("info", "Stack deployment finished. Status: #{@handle.root['ae_result']}, reason: #{@handle.root['ae_reason']}")
-                @handle.log("info", "Please examine stack resources for more details") if @handle.root['ae_result'] == 'error'
-
-                return unless service.orchestration_stack
-                @handle.set_state_var('deploy_result', @handle.root['ae_result'])
-                @handle.set_state_var('deploy_reason', @handle.root['ae_reason'])
-
-                refresh_provider(service)
-
-                @handle.root['ae_result']         = 'retry'
-                @handle.root['ae_retry_interval'] = '30.seconds'
+                true
               end
 
               def check_refreshed(service)
@@ -98,5 +119,5 @@ module ManageIQ
 end
 
 if __FILE__ == $PROGRAM_NAME
-    ManageIQ::Automate::Cloud::Orchestration::Provisioning::StateMachines::CheckProvisioned.new.main
+  ManageIQ::Automate::Cloud::Orchestration::Provisioning::StateMachines::CheckProvisioned.new.main
 end
