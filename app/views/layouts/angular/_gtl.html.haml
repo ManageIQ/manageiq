@@ -32,7 +32,7 @@
       modelName: '#{CGI::escape(j_str(@display.nil? && current_model ? controller.class.model.to_s.tableize : @display))}',
       activeTree: '#{x_active_tree}',
       gtlType: '#{CGI::escape(gtl_type_string)}',
-      currId: '#{CGI::escape(j_str(params[:id]))}',
+      currId: '#{CGI::escape(j_str(params[:id])) unless @display.nil?}',
       sortColIdx: '#{@sortcol}',
       sortDir: '#{@sortdir}',
       isExplorer: '#{@explorer}' === 'true' ? true : false,

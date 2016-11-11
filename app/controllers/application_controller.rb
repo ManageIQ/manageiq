@@ -310,7 +310,7 @@ class ApplicationController < ActionController::Base
       model_view = vm_model_from_active_tree(params[:active_tree].to_sym)
     end
     if model_view.nil? && controller_to_model_params[self.class.model.to_s].nil? && params[:model]
-      model_view = params[:model].singularize.classify.constantize
+      model_view = model_string_to_constant(params[:model])
     end
 
     if model_view.nil?
@@ -325,7 +325,6 @@ class ApplicationController < ActionController::Base
   # From these options and model we get view (for fetching data) and settings (will hold info about paging).
   # Then this method will return JSON object with settings and data.
   def report_data
-    settings = {}
     options = process_params_options(params)
     model_view = process_params_model_view(params, options)
     @edit = session[:edit]

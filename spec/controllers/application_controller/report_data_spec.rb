@@ -1,5 +1,7 @@
-describe ApplicationController  do
-  let(:basic_settings) { {"perpage"=>10, "current"=>1, "items"=>0, "total"=>0, "sort_dir"=>"DESC", "sort_col"=>0} }
+describe ApplicationController do
+  let(:basic_settings) {
+    { "perpage" => 10, "current" => 1, "items" => 0, "total" => 0, "sort_dir" => "DESC", "sort_col" => 0 }
+  }
   before do
     stub_user(:features => :all)
   end
@@ -14,11 +16,11 @@ describe ApplicationController  do
       report_data = JSON.parse(controller.report_data)
       expect(report_data["settings"]).to eql(basic_settings)
       headder = report_data["data"]["head"]
-      expect(headder[0]).to eql({"is_narrow"=>true})
-      expect(headder[1]).to eql({"is_narrow"=>true})
-      expect(headder[2]).to eql({"text"=>"Name", "sort"=>"str", "col_idx"=>0, "align"=>"left"})
-      expect(headder[3]).to eql({"text"=>"Provider", "sort"=>"str", "col_idx"=>1, "align"=>"left"})
-      expect(headder[4]).to eql({"text"=>"Cluster", "sort"=>"str", "col_idx"=>2, "align"=>"left"})
+      expect(headder[0]).to eql("is_narrow" => true)
+      expect(headder[1]).to eql("is_narrow"=>true)
+      expect(headder[2]).to eql("text" => "Name", "sort" => "str", "col_idx" => 0, "align" => "left")
+      expect(headder[3]).to eql("text" => "Provider", "sort" => "str", "col_idx" => 1, "align" => "left")
+      expect(headder[4]).to eql("text" => "Cluster", "sort" => "str", "col_idx" => 2, "align" => "left")
     end
 
     it "should call specific functions" do
@@ -61,12 +63,11 @@ describe ApplicationController  do
   context "#process_params_options" do
     it "should call get node info" do
       allow(controller).to receive(:get_node_info)
-      options = controller.send(
+      controller.send(
         :process_params_options,
-        {:explorer => "true", :active_tree => "vandt_tree", :model_id => "e-2", :controller => "vm_infra"}
+        { :explorer => "true", :active_tree => "vandt_tree", :model_id => "e-2", :controller => "vm_infra" }
       )
       expect(controller).to have_received(:get_node_info)
     end
   end
-
 end

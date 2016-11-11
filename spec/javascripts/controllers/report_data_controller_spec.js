@@ -1,4 +1,4 @@
-describe('toolbarController', function () {
+describe('reportDataController', function () {
   beforeEach(module('ManageIQ.gtl'));
 
   var $controller, $httpBackend, $scope;
@@ -78,6 +78,9 @@ describe('toolbarController', function () {
       $controller.MiQEndpointsService.rootPoint = '/mock_root';
       $httpBackend
         .whenGET("/mock_root/report_data?active_tree=vandt_tree&model=manageiq%2Fproviders%2Finfra_manager%2Fvms")
+        .respond(report_data);
+      $httpBackend
+        .whenGET("/mock_root/report_data?active_tree=vandt_tree&explorer=true&model=manageiq%2Fproviders%2Finfra_manager%2Fvms")
         .respond(report_data);
       $controller.initController(initObject).then(function() {
         done();
@@ -160,30 +163,30 @@ describe('toolbarController', function () {
       var itemId = "10";
       var clickEvent = $.Event('click');
       initObject.isExplorer = true;
-      spyOn(event, 'stopPropagation');
-      spyOn(event, 'preventDefault');
+      spyOn(clickEvent, 'stopPropagation');
+      spyOn(clickEvent, 'preventDefault');
       selectedItem = $controller.gtlData.rows.filter(function(item) {
         return item.id === itemId;
       });
-      $controller.onItemClicked(selectedItem[0], event);
-      expect(event.stopPropagation).toHaveBeenCalled();
-      expect(event.preventDefault).toHaveBeenCalled();
+      $controller.onItemClicked(selectedItem[0], clickEvent);
+      expect(clickEvent.stopPropagation).toHaveBeenCalled();
+      expect(clickEvent.preventDefault).toHaveBeenCalled();
     });
 
     it('should create redirect for non explorer click on item', function() {
       var itemId = "10";
       var clickEvent = $.Event('click');
       initObject.isExplorer = false;
-      spyOn(event, 'stopPropagation');
-      spyOn(event, 'preventDefault');
+      spyOn(clickEvent, 'stopPropagation');
+      spyOn(clickEvent, 'preventDefault');
       spyOn(window, 'DoNav');
       selectedItem = $controller.gtlData.rows.filter(function(item) {
         return item.id === itemId;
       });
-      $controller.onItemClicked(selectedItem[0], event);
+      $controller.onItemClicked(selectedItem[0], clickEvent);
       expect(window.DoNav).toHaveBeenCalledWith(initObject.showUrl + '/' + selectedItem[0].id);
-      expect(event.stopPropagation).toHaveBeenCalled();
-      expect(event.preventDefault).toHaveBeenCalled();
+      expect(clickEvent.stopPropagation).toHaveBeenCalled();
+      expect(clickEvent.preventDefault).toHaveBeenCalled();
     });
   });
 });

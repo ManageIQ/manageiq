@@ -156,6 +156,14 @@ module ApplicationHelper
       "ManageIQ::Providers::InfraManager::Vm"       => VmOrTemplate
     }
   end
+  private :controller_to_model_params
+
+  def model_string_to_constant_params
+    {
+      "all_vms" => VmOrTemplate
+    }
+  end
+  private :model_string_to_constant_params
 
   def type_has_quadicon(type)
     !["ManageIQ::Providers::Foreman::ConfigurationManager::ConfigurationProfile", "ServiceTemplate"].include? type
@@ -163,6 +171,10 @@ module ApplicationHelper
 
   def controller_to_model
     controller_to_model_params[self.class.model.to_s] || self.class.model
+  end
+
+  def model_string_to_constant(model_string)
+    model_string_to_constant_params[model_string] || model_string.singularize.classify.constantize
   end
 
   def restful_routed?(record_or_model)
