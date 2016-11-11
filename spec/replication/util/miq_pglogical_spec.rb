@@ -68,6 +68,19 @@ describe MiqPglogical do
       end
     end
 
+    describe ".refresh_excludes" do
+      it "sets the configured excludes and calls refresh on an instance" do
+        pgl = described_class.new
+        expect(described_class).to receive(:new).and_return(pgl)
+        expect(pgl).to receive(:refresh_excludes)
+
+        new_excludes = %w(my new exclude tables)
+        described_class.refresh_excludes(new_excludes)
+
+        expect(pgl.configured_excludes).to match_array(new_excludes | described_class::ALWAYS_EXCLUDED_TABLES)
+      end
+    end
+
     describe "#refresh_excludes" do
       it "adds a new non excluded table" do
         connection.exec_query(<<-SQL)

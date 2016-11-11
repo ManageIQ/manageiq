@@ -86,6 +86,20 @@ class MiqPglogical
     refresh_excludes
   end
 
+  def self.refresh_excludes_queue(new_excludes)
+    MiqQueue.put(
+      :class_name  => "MiqPglogical",
+      :method_name => "refresh_excludes",
+      :args        => [new_excludes]
+    )
+  end
+
+  def self.refresh_excludes(new_excludes)
+    pgl = new
+    pgl.configured_excludes = new_excludes
+    pgl.refresh_excludes
+  end
+
   # Aligns the contents of the 'miq' replication set with the currently configured vmdb excludes
   def refresh_excludes
     pglogical.with_replication_set_lock(REPLICATION_SET_NAME) do
