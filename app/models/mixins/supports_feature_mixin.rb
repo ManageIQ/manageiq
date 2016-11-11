@@ -221,7 +221,12 @@ module SupportsFeatureMixin
       define_method(method_name) do
         unsupported.delete(feature)
         if block_given?
-          instance_eval(&block)
+          begin
+            instance_eval(&block)
+          rescue => e
+            _log.log_backtrace(e)
+            unsupported_reason_add(feature, "Internal Error: #{e.message}")
+          end
         else
           unsupported_reason_add(feature, reason) unless is_supported
         end
