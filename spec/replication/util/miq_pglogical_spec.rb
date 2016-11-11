@@ -7,6 +7,12 @@ describe MiqPglogical do
     MiqServer.seed
   end
 
+  describe "#active_excludes" do
+    it "returns an empty array if a provider is not configured" do
+      expect(subject.active_excludes).to eq([])
+    end
+  end
+
   describe "#provider?" do
     it "is false when a provider is not configured" do
       expect(subject.provider?).to be false
@@ -36,6 +42,12 @@ describe MiqPglogical do
   context "when configured as a provider" do
     before do
       subject.configure_provider
+    end
+
+    describe "#active_excludes" do
+      it "returns the initial set of excluded tables" do
+        expect(subject.active_excludes).to eq(connection.tables - subject.included_tables)
+      end
     end
 
     describe "#provider?" do
@@ -94,7 +106,12 @@ describe MiqPglogical do
         table = subject.included_tables.first
         subject.configured_excludes += [table]
 
+        expect(subject.active_excludes).not_to include(table)
+        expect(subject.included_tables).to include(table)
+
         subject.refresh_excludes
+
+        expect(subject.active_excludes).to include(table)
         expect(subject.included_tables).not_to include(table)
       end
 
@@ -103,7 +120,12 @@ describe MiqPglogical do
         table = current_excludes.pop
         subject.configured_excludes = current_excludes
 
+        expect(subject.active_excludes).to include(table)
+        expect(subject.included_tables).not_to include(table)
+
         subject.refresh_excludes
+
+        expect(subject.active_excludes).not_to include(table)
         expect(subject.included_tables).to include(table)
       end
     end
