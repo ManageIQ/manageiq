@@ -30,11 +30,11 @@ class AutomateImportService
     reject_unrelated_namespaces(ae_import, domain_name_to_import_from, namespace_list)
     reject_unrelated_classes(ae_import, domain_name_to_import_from, class_list)
 
-    ae_import.import
+    result = ae_import.import
 
     File.delete("automate_temporary_zip.zip")
 
-    ae_import.import_stats
+    result.nil? ? nil : ae_import.import_stats
   end
 
   def store_for_import(file_contents)

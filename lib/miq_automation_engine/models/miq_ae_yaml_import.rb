@@ -78,17 +78,19 @@ class MiqAeYamlImport
     domain_name = domain_yaml.fetch_path('object', 'attributes', 'name')
     domain_obj = MiqAeDomain.find_by_fqname(domain_name, false)
     track_stats('domain', domain_obj)
-    if domain_obj && !@preview && @options['overwrite']
-      domain_obj.ae_namespaces.destroy_all
+    MiqAeDomain.transaction do
+      if domain_obj && !@preview && @options['overwrite']
+        domain_obj.ae_namespaces.destroy_all
+      end
+      domain_obj ||= add_domain(domain_yaml, @tenant) unless @preview
+      if @options['namespace']
+        import_namespace(File.join(domain_folder, @options['namespace']), domain_obj, domain_name)
+      else
+        import_all_namespaces(domain_folder, domain_obj, domain_name)
+      end
+      update_attributes(domain_obj) if domain_obj
+      domain_obj
     end
-    domain_obj ||= add_domain(domain_yaml, @tenant) unless @preview
-    if @options['namespace']
-      import_namespace(File.join(domain_folder, @options['namespace']), domain_obj, domain_name)
-    else
-      import_all_namespaces(domain_folder, domain_obj, domain_name)
-    end
-    update_attributes(domain_obj) if domain_obj
-    domain_obj
   end
 
   def domain_properties(domain_folder, name)
