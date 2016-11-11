@@ -7,6 +7,10 @@ describe GitRepository do
     expect { FactoryGirl.create(:git_repository, :url => "abc") }.to raise_error(ActiveRecord::RecordInvalid)
   end
 
+  it "invalid url, no path" do
+    expect { FactoryGirl.create(:git_repository, :url => "http://example.com") }.to raise_error(ActiveRecord::RecordInvalid)
+  end
+
   it "default dirname" do
     repo = FactoryGirl.create(:git_repository,
                               :url => "http://www.example.com/repos/manageiq")
