@@ -37,6 +37,10 @@ describe ChargebackContainerProject do
     Timecop.return
   end
 
+  def used_average_for(metric, hours_in_interval)
+    @project.metric_rollups.sum(&metric) / hours_in_interval
+  end
+
   context "Daily" do
     let(:hours_in_day) { 24 }
 
@@ -76,8 +80,9 @@ describe ChargebackContainerProject do
       cbrd.chargeback_tiers = [cbt]
       cbrd.save
 
-      expect(subject.cpu_cores_used_metric).to eq(@cpu_usage_rate)
-      expect(subject.cpu_cores_used_cost).to be_within(0.01).of(@cpu_usage_rate * @hourly_rate * hours_in_day)
+      metric_used = used_average_for(:cpu_usage_rate_average, hours_in_day)
+      expect(subject.cpu_cores_used_metric).to eq(metric_used)
+      expect(subject.cpu_cores_used_cost).to be_within(0.01).of(metric_used * @hourly_rate * hours_in_day)
     end
 
     it "memory" do
@@ -93,8 +98,9 @@ describe ChargebackContainerProject do
       cbrd.chargeback_tiers = [cbt]
       cbrd.save
 
-      expect(subject.memory_used_metric).to eq(@memory_used)
-      expect(subject.memory_used_cost).to be_within(0.01).of(@memory_used * @hourly_rate * hours_in_day)
+      metric_used = used_average_for(:derived_memory_used, hours_in_day)
+      expect(subject.memory_used_metric).to eq(metric_used)
+      expect(subject.memory_used_cost).to be_within(0.01).of(metric_used * @hourly_rate * hours_in_day)
     end
 
     it "net io" do
@@ -110,8 +116,9 @@ describe ChargebackContainerProject do
       cbrd.chargeback_tiers = [cbt]
       cbrd.save
 
-      expect(subject.net_io_used_metric).to eq(@net_usage_rate)
-      expect(subject.net_io_used_cost).to be_within(0.01).of(@net_usage_rate * @hourly_rate * hours_in_day)
+      metric_used = used_average_for(:net_usage_rate_average, hours_in_day)
+      expect(subject.net_io_used_metric).to eq(metric_used)
+      expect(subject.net_io_used_cost).to be_within(0.01).of(metric_used * @hourly_rate * hours_in_day)
     end
 
     let(:cbt) { FactoryGirl.create(:chargeback_tier,
@@ -179,8 +186,9 @@ describe ChargebackContainerProject do
       cbrd.chargeback_tiers = [cbt]
       cbrd.save
 
-      expect(subject.cpu_cores_used_metric).to eq(@cpu_usage_rate)
-      expect(subject.cpu_cores_used_cost).to be_within(0.01).of(@cpu_usage_rate * @hourly_rate * @hours_in_month)
+      metric_used = used_average_for(:cpu_usage_rate_average, @hours_in_month)
+      expect(subject.cpu_cores_used_metric).to be_within(0.01).of(metric_used)
+      expect(subject.cpu_cores_used_cost).to be_within(0.01).of(metric_used * @hourly_rate * @hours_in_month)
     end
 
     it "memory" do
@@ -196,8 +204,9 @@ describe ChargebackContainerProject do
       cbrd.chargeback_tiers = [cbt]
       cbrd.save
 
-      expect(subject.memory_used_metric).to eq(@memory_used)
-      expect(subject.memory_used_cost).to be_within(0.01).of(@memory_used * @hourly_rate * @hours_in_month)
+      metric_used = used_average_for(:derived_memory_used, @hours_in_month)
+      expect(subject.memory_used_metric).to be_within(0.01).of(metric_used)
+      expect(subject.memory_used_cost).to be_within(0.01).of(metric_used * @hourly_rate * @hours_in_month)
     end
 
     it "net io" do
@@ -213,8 +222,9 @@ describe ChargebackContainerProject do
       cbrd.chargeback_tiers = [cbt]
       cbrd.save
 
-      expect(subject.net_io_used_metric).to eq(@net_usage_rate)
-      expect(subject.net_io_used_cost).to be_within(0.01).of(@net_usage_rate * @hourly_rate * @hours_in_month)
+      metric_used = used_average_for(:net_usage_rate_average, @hours_in_month)
+      expect(subject.net_io_used_metric).to be_within(0.01).of(metric_used)
+      expect(subject.net_io_used_cost).to be_within(0.01).of(metric_used * @hourly_rate * @hours_in_month)
     end
 
     let(:cbt) { FactoryGirl.create(:chargeback_tier,
@@ -280,8 +290,9 @@ describe ChargebackContainerProject do
       cbrd.chargeback_tiers = [cbt]
       cbrd.save
 
-      expect(subject.cpu_cores_used_metric).to eq(@cpu_usage_rate)
-      expect(subject.cpu_cores_used_cost).to be_within(0.01).of(@cpu_usage_rate * @hourly_rate * @hours_in_month)
+      metric_used = used_average_for(:cpu_usage_rate_average, @hours_in_month)
+      expect(subject.cpu_cores_used_metric).to be_within(0.01).of(metric_used)
+      expect(subject.cpu_cores_used_cost).to be_within(0.01).of(metric_used * @hourly_rate * @hours_in_month)
     end
   end
 
@@ -330,8 +341,9 @@ describe ChargebackContainerProject do
       cbrd.chargeback_tiers = [cbt]
       cbrd.save
 
-      expect(subject.cpu_cores_used_metric).to eq(@cpu_usage_rate)
-      expect(subject.cpu_cores_used_cost).to be_within(0.01).of(@cpu_usage_rate * @hourly_rate * @hours_in_month)
+      metric_used = used_average_for(:cpu_usage_rate_average, @hours_in_month)
+      expect(subject.cpu_cores_used_metric).to be_within(0.01).of(metric_used)
+      expect(subject.cpu_cores_used_cost).to be_within(0.01).of(metric_used * @hourly_rate * @hours_in_month)
       expect(subject.tag_name).to eq('Production')
     end
   end
