@@ -10,6 +10,8 @@ class ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork < ::CloudNetw
   end
 
   def self.raw_create_network(ext_management_system, options)
+    # TODO: remove this log line once this uses the task queue, as the task queue has its own logging
+    _log.info "Command: #{self.class.name}##{__method__}, Args: #{options.inspect}"
     cloud_tenant = options.delete(:cloud_tenant)
     network = nil
     raw_options = remapping(options)
@@ -32,6 +34,8 @@ class ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork < ::CloudNetw
   end
 
   def raw_delete_network
+    # TODO: remove this log line once this uses the task queue, as the task queue has its own logging
+    _log.info "Command: #{self.class.name}##{__method__}, ID: #{id}"
     with_provider_object(&:destroy)
     destroy!
   rescue => e
@@ -40,6 +44,8 @@ class ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork < ::CloudNetw
   end
 
   def raw_update_network(options)
+    # TODO: remove this log line once this uses the task queue, as the task queue has its own logging
+    _log.info "Command: #{self.class.name}##{__method__}, ID: #{id}, Args: #{options.inspect}"
     with_provider_object do |network|
       network.attributes.merge!(options)
       network.save
