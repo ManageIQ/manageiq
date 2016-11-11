@@ -8,6 +8,7 @@ class GitRepository < ApplicationRecord
 
   has_many :git_branches, :dependent => :destroy
   has_many :git_tags, :dependent => :destroy
+  after_destroy :delete_repo_dir
 
   INFO_KEYS = %w(commit_sha commit_message commit_time name).freeze
 
@@ -106,5 +107,9 @@ class GitRepository < ApplicationRecord
       params[:password] = authentications.first.password
     end
     params
+  end
+
+  def delete_repo_dir
+    FileUtils.rm_rf(directory_name)
   end
 end

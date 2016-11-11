@@ -56,14 +56,14 @@ module UiConstants
 
   # Per page choices and default
   PPCHOICES = [
-    [5, 5],
-    [10, 10],
-    [20, 20],
-    [50, 50],
-    [100, 100],
-    [200, 200],
-    [500, 500],
-    [1000, 1000]
+    ["5 items", 5],
+    ["10 items", 10],
+    ["20 items", 20],
+    ["50 items", 50],
+    ["100 items", 100],
+    ["200 items", 200],
+    ["500 items", 500],
+    ["1000 items", 1000]
   ]
 
   # Per page choices for task/jobs

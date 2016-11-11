@@ -37,7 +37,10 @@ class ApplicationHelper::Toolbar::MiddlewareDatasourcesCenter < ApplicationHelpe
             :url_parms => "main_div",
             :enabled   => false,
             :onwhen    => "1+",
-            :confirm   => N_('Do you want to remove these datasources ?'))
+            :confirm   => N_('Do you want to remove these Datasources? Some Applications could be using these '\
+                             'Datasources and may malfunction if they are deleted.'),
+            :klass     => ApplicationHelper::Button::MiddlewareStandaloneServerAction
+          )
         ]
       ),
     ])

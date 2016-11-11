@@ -897,6 +897,7 @@ en:
       cloud_object_store_container: Cloud Object Store
       cloud_object_store_object:   Cloud Object
       cloud_network:               Cloud Network
+      cloud_subnet:                Cloud Subnet
       cloud_tenant:                Cloud Tenant
       cloud_tenants:               Cloud Tenants
       cloud_volume:                Cloud Volume
@@ -952,6 +953,7 @@ en:
       evm_server:                  EVM Server
       ems_network:                 Network Provider
       ems_storage:                 Storage Provider
+      load_balancer:               Load Balancer
       middleware_server:           Middleware Server
       middleware_servers:          Middleware Servers
       middleware_datasource:       Middleware Datasource
@@ -964,6 +966,8 @@ en:
       middleware_deployments:      Middleware Deployments
       middleware_server_group:     Middleware Server Group
       middleware_server_groups:    Middleware Server Groups
+      network_port:                Network Port
+      network_router:              Network Router
       evm_owner:                   EVM Owner
       ext_management_system:       Cloud/Infrastructure Provider
       ext_management_systems:      Cloud/Infrastructure Providers
@@ -971,6 +975,7 @@ en:
       filesystems:                 Files
       flavor:                      Flavor
       flavors:                     Flavors
+      floating_ip:                 Floating IP
       floppies:                    Floppy Drives
       guest_devices:               Devices
       host:                        Host / Node

@@ -27,7 +27,7 @@
                 .col-md-8
                   = check_box_tag("quadicons_#{icons_checkbox[2]}",
                                   true,
-                                  @edit[:new][:quadicons][icons_checkbox[2].to_sym], :data => {:on_text => 'Yes', :off_text => 'No'})
+                                  @edit[:new][:quadicons][icons_checkbox[2].to_sym], :data => {:on_text => _('Yes'), :off_text => _('No')})
                 :javascript
                   miqInitBootstrapSwitch("quadicons_#{icons_checkbox[2]}", "#{url}")
           .form-group

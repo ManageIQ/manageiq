@@ -253,7 +253,7 @@ module MiqAeMethodService
     def notification_type(values_hash)
       type = values_hash[:type].present? ? values_hash[:type].to_sym : default_notification_type(values_hash)
       type.tap do |t|
-        _log.info("Validating Notification type: #{t}")
+        $miq_ae_logger.info("Validating Notification type: #{t}")
         valid_type = NotificationType.find_by_name(t)
         raise ArgumentError, "Invalid notification type specified" unless valid_type
       end
@@ -272,7 +272,7 @@ module MiqAeMethodService
       options[:message] = values_hash[:message] if values_hash[:message].present?
       User.current_user = @workspace.ae_user
 
-      _log.info("Calling Create Notification with type: #{type} subject: #{subject} options: #{options.inspect}")
+      $miq_ae_logger.info("Calling Create Notification type: #{type} subject type: #{subject.class.base_class.name} id: #{subject.id} options: #{options.inspect}")
       MiqAeServiceModelBase.wrap_results(Notification.create!(:type      => type,
                                                               :subject   => subject,
                                                               :options   => options,
@@ -412,7 +412,6 @@ module MiqAeMethodService
     def default_notification_type(values_hash)
       level = values_hash[:level] || "info"
       audience = values_hash[:audience] || "user"
-      _log.info("Generic notification type level: #{level} audience: #{audience}")
       "automate_#{audience}_#{level}".downcase.to_sym
     end
   end

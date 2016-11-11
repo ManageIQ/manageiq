@@ -93,7 +93,7 @@ module Vmdb
       # table headings
       unless report.headers.nil?
         report.headers.each do |h|
-          html << "<th>" << CGI.escapeHTML(h.to_s) << "</th>"
+          html << "<th>" << CGI.escapeHTML(_(h.to_s)) << "</th>"
         end
         html << "</tr>"
         html << "</thead>"

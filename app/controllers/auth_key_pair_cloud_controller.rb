@@ -182,7 +182,7 @@ class AuthKeyPairCloudController < ApplicationController
   end
 
   def show_list
-    process_show_list
+    process_show_list(:dbname => :authkeypaircloud)
   end
 
   # delete selected auth key pairs

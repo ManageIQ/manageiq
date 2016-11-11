@@ -212,7 +212,7 @@ module VmHelper::TextualSummary
   end
 
   def textual_group
-    @record.miq_group.try(:description)
+    {:label => _("Group"), :value => @record.miq_group.try(:description)}
   end
 
   def textual_cluster

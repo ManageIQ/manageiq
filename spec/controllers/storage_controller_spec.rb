@@ -137,7 +137,7 @@ describe StorageController do
         allow(controller).to receive(:current_page).and_return(2)
         get :explorer, :params => {:page => '2'}
         expect(response.status).to eq(200)
-        expect(response.body).to include("<li>\n<span>\nShowing 6-7 of 7 items\n<input name='limitstart' type='hidden' value='0'>\n</span>\n</li>")
+        expect(response.body).to include("<li>\n<span>\n6-7 of 7\n<input name='limitstart' type='hidden' value='0'>\n</span>\n</li>")
       end
 
       it "it handles x_button tagging" do

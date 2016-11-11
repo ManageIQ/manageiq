@@ -387,22 +387,6 @@ class ApplicationHelper::ToolbarBuilder
     end
   end
 
-  def hide_button_cb(id)
-    case x_active_tree
-    when :cb_reports_tree
-      if role_allows?(:feature => "chargeback_reports") && ["chargeback_download_csv", "chargeback_download_pdf",
-                                                           "chargeback_download_text", "chargeback_report_only"].include?(id)
-        return false
-      end
-    when :cb_rates_tree
-      if role_allows?(:feature => "chargeback_rates") && ["chargeback_rates_copy", "chargeback_rates_delete",
-                                                         "chargeback_rates_edit", "chargeback_rates_new"].include?(id)
-        return false
-      end
-    end
-    true
-  end
-
   def hide_button_ops(id)
     case x_active_tree
     when :settings_tree
@@ -570,9 +554,6 @@ class ApplicationHelper::ToolbarBuilder
     # user can see the buttons if they can get to Policy RSOP/Automate Simulate screen
     return false if ["miq_ae_tools"].include?(@layout)
 
-    # hide this button when in custom buttons tree on ci node, this button is added in toolbar to show on Buttons folder node in CatalogItems tree
-    return true if id == "ab_button_new" && x_active_tree == :ab_tree && x_node.split('_').length == 2 && x_node.split('_')[0] == "xx-ab"
-
     # buttons on compare/drift screen are allowed if user has access to compare/drift
     return false if id.starts_with?("compare_", "drift_", "comparemode_", "driftmode_")
 
@@ -584,11 +565,6 @@ class ApplicationHelper::ToolbarBuilder
 
     if @layout == "miq_policy_rsop"
       return hide_button_rsop(id)
-    end
-
-    if id.starts_with?("chargeback_")
-      res = hide_button_cb(id)
-      return res
     end
 
     if @layout == "ops"
@@ -666,42 +642,11 @@ class ApplicationHelper::ToolbarBuilder
 
     # Now check model/record specific rules
     case get_record_cls(@record)
-    when "MiqAeClass", "MiqAeDomain", "MiqAeField", "MiqAeInstance", "MiqAeMethod", "MiqAeNamespace"
-      return true unless role_allows?(:feature => "miq_ae_domain_edit")
-      return false if MIQ_AE_COPY_ACTIONS.include?(id) && User.current_tenant.any_editable_domains? && MiqAeDomain.any_unlocked?
-      case id
-      when "miq_ae_domain_lock"
-        return true unless @record.lockable?
-      when "miq_ae_domain_unlock"
-        return true unless @record.unlockable?
-      when "miq_ae_domain_delete", "miq_ae_domain_edit"
-        return true unless @record.editable_properties?
-      when "miq_ae_namespace_edit"
-        return true unless editable_domain?(@record)
-      when "miq_ae_instance_copy", "miq_ae_method_copy"
-        return false unless editable_domain?(@record)
-      when "miq_ae_git_refresh"
-        return true unless git_enabled?(@record) && GitBasedDomainImportService.available?
-      else
-        return true unless editable_domain?(@record)
-      end
     when "ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem", "ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem"
       case id
       when "configured_system_provision"
         return true unless @record.provisionable?
       end
-    when 'MiddlewareServer', 'MiddlewareDeployment', 'MiddlewareDatasource'
-      if %w(middleware_deployment_add middleware_jdbc_driver_add middleware_datasource_add).include?(id) &&
-         @record.try(:in_domain?)
-        return true
-      end
-      return true if %w(middleware_server_shutdown middleware_server_restart middleware_server_stop
-                        middleware_server_suspend middleware_server_resume middleware_server_reload
-                        middleware_deployment_restart middleware_deployment_disable middleware_deployment_enable
-                        middleware_deployment_undeploy middleware_deployment_add middleware_jdbc_driver_add
-                        middleware_datasource_remove middleware_datasource_add).include?(id) &&
-                     (@record.try(:product) == 'Hawkular' ||
-                      @record.try(:middleware_server).try(:product) == 'Hawkular')
     end
     false  # No reason to hide, allow the button to show
   end
@@ -833,24 +778,6 @@ class ApplicationHelper::ToolbarBuilder
       when "action_delete"
         return N_("Default actions can not be deleted.") if @record.action_type == "default"
         return N_("Actions assigned to Policies can not be deleted") unless @record.miq_policies.empty?
-      end
-    when "MiqAeDomain"
-      editable_domain = @record.editable_properties?
-      case id
-      when "miq_ae_domain_delete"
-        return N_("Read Only Domain cannot be deleted.") unless editable_domain
-      when "miq_ae_domain_edit"
-        return N_("Read Only Domain cannot be edited") unless editable_domain
-      when "miq_ae_domain_lock", "miq_ae_namespace_edit"
-        return N_("Domain is Locked.") unless editable_domain
-      when "miq_ae_domain_unlock"
-        return N_("Domain is Unlocked.") if editable_domain
-      end
-    when "MiqAeNamespace", "MiqAeClass", "MiqAeInstance", "MiqAeMethod"
-      if %w(miq_ae_namespace_copy miq_ae_instance_copy miq_ae_class_copy miq_ae_method_copy).include?(id) &&
-        !editable_domain?(@record) && !domains_available_for_copy?
-
-        return N_("At least one domain should be enabled & unlocked")
       end
     when "MiqAlert"
       case id
@@ -1058,21 +985,6 @@ class ApplicationHelper::ToolbarBuilder
       end
     when nil, "NilClass"
       case id
-      when "ab_group_edit"
-        return N_("Selected Custom Button Group cannot be edited") if x_node.split('-')[1] == "ub"
-      when "ab_group_delete"
-        return N_("Selected Custom Button Group cannot be deleted") if x_node.split('-')[1] == "ub"
-      when "ab_group_reorder"
-        if x_active_tree == :ab_tree
-          if CustomButtonSet.find_all_by_class_name(x_node.split('_').last).count <= 1
-            return N_("Only more than 1 Custom Button Groups can be reordered")
-          end
-        else
-          rec_id = x_node.split('_').last.split('-').last
-          st = ServiceTemplate.find_by_id(rec_id)
-          count = st.custom_button_sets.count + st.custom_buttons.count
-          return N_("Only more than 1 Custom Button Groups can be reordered") if count <= 1
-        end
       when "ae_copy_simulate"
         if @resolve[:button_class].blank?
           return N_("Object attribute must be specified to copy object details for use in a Button")
@@ -1176,12 +1088,6 @@ class ApplicationHelper::ToolbarBuilder
     url_parm = parse_ampersand.post_match if parse_ampersand.present?
     encoded_url = URI.encode(url_parm)
     Rack::Utils.parse_query URI("?#{encoded_url}").query
-  end
-
-  def domains_available_for_copy?
-    User.current_tenant.any_editable_domains? &&
-    MiqAeDomain.any_unlocked? &&
-    MiqAeDomain.any_enabled?
   end
 
   def disable_new_iso_datastore?(item_id)

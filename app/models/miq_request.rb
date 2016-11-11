@@ -44,34 +44,34 @@ class MiqRequest < ApplicationRecord
   MODEL_REQUEST_TYPES = {
     :Service        => {
       :MiqProvisionRequest                 => {
-        :template          => "VM Provision",
-        :clone_to_vm       => "VM Clone",
-        :clone_to_template => "VM Publish",
+        :template          => N_("VM Provision"),
+        :clone_to_vm       => N_("VM Clone"),
+        :clone_to_template => N_("VM Publish"),
       },
       :MiqProvisionConfiguredSystemRequest => {
-        :provision_via_foreman => "#{ui_lookup(:ui_title => 'foreman')} Provision"
+        :provision_via_foreman => N_("%{config_mgr_type} Provision") % {:config_mgr_type => ui_lookup(:ui_title => 'foreman')}
       },
       :VmReconfigureRequest                => {
-        :vm_reconfigure => "VM Reconfigure"
+        :vm_reconfigure => N_("VM Reconfigure")
       },
       :VmMigrateRequest                    => {
-        :vm_migrate => "VM Migrate"
+        :vm_migrate => N_("VM Migrate")
       },
       :ServiceTemplateProvisionRequest     => {
-        :clone_to_service => "Service Provision"
+        :clone_to_service => N_("Service Provision")
       },
       :ServiceReconfigureRequest           => {
-        :service_reconfigure => "Service Reconfigure"
+        :service_reconfigure => N_("Service Reconfigure")
       }
     },
     :Infrastructure => {
       :MiqHostProvisionRequest => {
-        :host_pxe_install => "Host Provision"
+        :host_pxe_install => N_("Host Provision")
       },
     },
     :Automate       => {
       :AutomationRequest => {
-        :automation => "Automation"
+        :automation => N_("Automation")
       }
     }
   }
@@ -474,7 +474,7 @@ class MiqRequest < ApplicationRecord
   def self.find_source_id_from_values(values)
     MiqRequestMixin.get_option(:src_vm_id, nil, values) ||
       MiqRequestMixin.get_option(:src_id, nil, values) ||
-      MiqRequestMixin.get_option(:src_ids, nil, values).try(:first)
+      MiqRequestMixin.get_option(:src_ids, nil, values)
   end
   private_class_method :find_source_id_from_values
 

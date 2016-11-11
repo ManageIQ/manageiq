@@ -549,6 +549,12 @@ module EmsCommon
 
     if !@flash_array.nil? && params[:pressed] == "#{@table_name}_delete" && @single_delete
       javascript_redirect :action => 'show_list', :flash_msg => @flash_array[0][:message] # redirect to build the retire screen
+    elsif params[:pressed] == "host_aggregate_edit"
+      javascript_redirect :controller => "host_aggregate", :action => "edit", :id => find_checked_items[0]
+    elsif params[:pressed] == "cloud_tenant_edit"
+      javascript_redirect :controller => "cloud_tenant", :action => "edit", :id => find_checked_items[0]
+    elsif params[:pressed] == "cloud_volume_edit"
+      javascript_redirect :controller => "cloud_volume", :action => "edit", :id => find_checked_items[0]
     elsif params[:pressed].ends_with?("_edit") || ["arbitration_profile_new", "#{pfx}_miq_request_new", "#{pfx}_clone",
                                                    "#{pfx}_migrate", "#{pfx}_publish"].include?(params[:pressed])
       render_or_redirect_partial(pfx)

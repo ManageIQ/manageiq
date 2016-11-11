@@ -147,7 +147,11 @@ class MiqAeYamlImport
   end
 
   def process_namespace(domain_obj, namespace_folder, _namespace_yaml, domain_name)
-    fqname = "#{domain_name}#{namespace_folder.sub(domain_folder(@domain_name), '')}"
+    fqname = if @domain_name == '.'
+               "#{domain_name}/#{namespace_folder}"
+             else
+               "#{domain_name}#{namespace_folder.sub(domain_folder(@domain_name), '')}"
+             end
     _log.info("Importing namespace: <#{fqname}>")
     namespace_obj = MiqAeNamespace.find_by_fqname(fqname, false)
     track_stats('namespace', namespace_obj)

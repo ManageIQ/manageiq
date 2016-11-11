@@ -640,12 +640,12 @@ module ApplicationController::Compare
   # AJAX driven routine to check for changes in ANY field on the form
   def sections_field_changed
     @keep_compare = true
-    set_checked_sections
     if params[:check] == "drift"
       drift_checked
     elsif params[:check] == "compare_miq"
       compare_checked
     else
+      set_checked_sections
       render :update do |page|
         page << javascript_prologue
         page << "miqSparkle(false);"
@@ -655,10 +655,9 @@ module ApplicationController::Compare
   end
 
   def set_checked_sections
-    if params[:check] != "drift" && params[:check] != "compare_miq" && params[:all_checked]
-      arr = params[:all_checked].split(',')
+    if params[:all_checked]
       session[:selected_sections] = []
-      arr.each do |a|
+      params[:all_checked].each do |a|
         s = a.split(':')
         if s.length > 1
           session[:selected_sections].push(s[1])

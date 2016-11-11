@@ -279,4 +279,68 @@ describe "Service Requests API" do
       expect(response.parsed_body).to include(expected)
     end
   end
+
+  context 'Service requests deletion' do
+    it 'forbids deletion without an appropriate role' do
+      api_basic_authorize
+
+      run_post(service_requests_url(service_request.id), :action => 'delete')
+
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it 'can delete a single service request resource' do
+      api_basic_authorize collection_action_identifier(:service_requests, :delete)
+
+      run_post(service_requests_url(service_request.id), :action => 'delete')
+
+      expected = {
+        'success' => true,
+        'message' => "service_requests id: #{service_request.id} deleting"
+      }
+
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
+    end
+
+    it 'can delete multiple service requests' do
+      service_request_2 = FactoryGirl.create(:service_template_provision_request,
+                                             :requester   => @user,
+                                             :source_id   => template.id,
+                                             :source_type => template.class.name)
+      api_basic_authorize collection_action_identifier(:service_requests, :delete)
+
+      run_post(service_requests_url, :action => 'delete', :resources => [
+                 { :id => service_request.id }, { :id => service_request_2.id }
+               ])
+
+      expected = {
+        'results' => a_collection_including(
+          a_hash_including('success' => true,
+                           'message' => "service_requests id: #{service_request.id} deleting"),
+          a_hash_including('success' => true,
+                           'message' => "service_requests id: #{service_request_2.id} deleting")
+        )
+      }
+
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
+    end
+
+    it 'can delete a service request via DELETE' do
+      api_basic_authorize collection_action_identifier(:service_requests, :delete)
+
+      run_delete(service_requests_url(service_request.id))
+
+      expect(response).to have_http_status(:no_content)
+    end
+
+    it 'forbids service request DELETE without an appropriate role' do
+      api_basic_authorize
+
+      run_delete(service_requests_url(service_request.id))
+
+      expect(response).to have_http_status(:forbidden)
+    end
+  end
 end

@@ -861,6 +861,7 @@ module ApplicationHelper
        ontap_storage_volume
        orchestration_stack
        persistent_volume
+       provider_foreman
        resource_pool
        retired
        security_group
@@ -1017,8 +1018,9 @@ module ApplicationHelper
       check_changes = args[:check_changes] || args[:check_changes].nil?
       tag_attrs[:onclick] = 'return miqCheckForChanges()' if check_changes
       content_tag(:li) do
+        link_args = {:display => args[:display], :vat => args[:vat]}.compact
         if args[:record] && restful_routed?(args[:record])
-          link_to(link_text, polymorphic_path(args[:record], :display => args[:display]), tag_attrs)
+          link_to(link_text, polymorphic_path(args[:record], link_args), tag_attrs)
         else
           link_to(link_text, link_params, tag_attrs)
         end
@@ -1463,6 +1465,7 @@ module ApplicationHelper
       ontap_storage_volume
       orchestration_stack
       persistent_volume
+      provider_foreman
       resource_pool
       retired
       security_group

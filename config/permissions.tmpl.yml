@@ -16,6 +16,7 @@
 - ems-type:ansible_tower_configuration
 - ems-type:azure
 - ems-type:azure_network
+- ems-type:cinder
 - ems-type:ec2
 - ems-type:ec2_network
 - ems-type:foreman_configuration
@@ -24,6 +25,7 @@
 - ems-type:gce_network
 - ems-type:hawkular
 - ems-type:kubernetes
+- ems-type:nuage_network
 - ems-type:openshift
 - ems-type:openshift_enterprise
 - ems-type:openstack
@@ -32,9 +34,7 @@
 - ems-type:physical_infra_manager
 - ems-type:rhevm
 - ems-type:scvmm
-- ems-type:vmwarews
+- ems-type:swift
 - ems-type:vmware_cloud
 - ems-type:vmware_cloud_network
-- ems-type:nuage_network
-- ems-type:cinder
-- ems-type:swift
+- ems-type:vmwarews

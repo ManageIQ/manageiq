@@ -1363,14 +1363,9 @@ module ApplicationController::CiProcessing
 
         i = 0
         while i < @discover_type.length
-          if @discover_type.length == 1
+          if @discover_type.length == 1 || params["discover_type_#{@discover_type[i]}"]
             discover_type.push(@discover_type[i].to_sym)
             @discover_type_checked.push(@discover_type[i])
-          else
-            if params["discover_type_#{@discover_type[i]}"]
-              discover_type.push(@discover_type[i].to_sym)
-              @discover_type_checked.push(@discover_type[i])
-            end
           end
           i += 1
         end
