@@ -1428,6 +1428,6 @@
       :memory_threshold: 1.gigabytes
       :nice_delta: 1
     :websocket_worker:
-       :connection_pool_size: 14
+       :connection_pool_size: 11
        :memory_threshold: 1.gigabytes
        :nice_delta: 1
