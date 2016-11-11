@@ -229,7 +229,13 @@ module EmsCommon
   def edit
     @doc_url = provider_documentation_url
     assert_privileges("#{permission_prefix}_edit")
-    @ems = find_by_id_filtered(model, params[:id])
+    begin
+      @ems = find_by_id_filtered(model, params[:id])
+    rescue => err
+      return redirect_to(:action      => @lastaction || "show_list",
+                         :flash_msg   => err.message,
+                         :flash_error => true)
+    end
     set_form_vars
     @in_a_form = true
     session[:changed] = false
