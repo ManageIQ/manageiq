@@ -7,15 +7,6 @@ class TreeBuilderAeClass < TreeBuilder
     super(name, type, sandbox, build)
   end
 
-  def self.select_node_builder(controller, action)
-    case controller
-    when 'catalog'
-      TreeNodeBuilderAeClassCatalog
-    when 'miq_ae_class'
-      TreeNodeBuilderAeClass if action == 'miq_ae_class_copy'
-    end
-  end
-
   def node_builder
     @node_builder ? @node_builder : super
   end

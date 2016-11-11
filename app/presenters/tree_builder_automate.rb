@@ -12,4 +12,13 @@ class TreeBuilderAutomate < TreeBuilderAeClass
                   :base_id      => "root",
                   :highlighting => true)
   end
+
+  def self.select_node_builder(controller)
+    case controller
+    when 'catalog'
+      TreeNodeBuilderAutomateCatalog
+    when 'miq_ae_class'
+      TreeNodeBuilderAutomate
+    end
+  end
 end
