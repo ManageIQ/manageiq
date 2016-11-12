@@ -6,6 +6,7 @@ module ApplicationController::Timelines
     @record = identify_tl_or_perf_record
     @tl_record = @record.kind_of?(MiqServer) ? @record.vm : @record # Use related server vm record
     @tl_options.tl_show = params[:tl_show] ? params[:tl_show] : "timeline"
+    tl_build_timeline
     @tl_options.date.update_from_params(params)
 
     if @tl_options.management_events?
@@ -14,13 +15,7 @@ module ApplicationController::Timelines
       @tl_options.policy.update_from_params(params)
     end
 
-    if @tl_options.management_events? && @tl_options.mngt.categories.blank?
-      # add_flash(_("At least one filter must be selected"), :warning)
-    elsif @tl_options.policy_events?
-      if @tl_options.policy.categories.blank?
-        tl_build_timeline('n')
-      end
-    else
+    if (@tl_options.management_events? && !@tl_options.mngt.categories.blank?) || (@tl_options.policy_events? && !@tl_options.policy.categories.blank?)
       tl_gen_timeline_data(refresh = "n")
       return unless @timeline
     end
