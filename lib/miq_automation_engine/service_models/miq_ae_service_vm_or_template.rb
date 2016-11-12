@@ -6,6 +6,8 @@ module MiqAeMethodService
     include MiqAeServiceRetirementMixin
     require_relative "mixins/miq_ae_service_inflector_mixin"
     include MiqAeServiceInflectorMixin
+    require_relative "mixins/miq_ae_service_custom_attribute_mixin"
+    include MiqAeServiceCustomAttributeMixin
 
     expose :ext_management_system, :association => true
     expose :storage,               :association => true
@@ -132,23 +134,6 @@ module MiqAeMethodService
         :args        => [attribute, value]
       )
       true
-    end
-
-    def custom_keys
-      object_send(:miq_custom_keys)
-    end
-
-    def custom_get(key)
-      object_send(:miq_custom_get, key)
-    end
-
-    def custom_set(key, value)
-      _log.info "Setting EVM Custom Key on #{@object.class.name} id:<#{@object.id}>, name:<#{@object.name}> with key=#{key.inspect} to #{value.inspect}"
-      ar_method do
-        @object.miq_custom_set(key, value)
-        @object.save
-      end
-      value
     end
 
     def owner=(owner)

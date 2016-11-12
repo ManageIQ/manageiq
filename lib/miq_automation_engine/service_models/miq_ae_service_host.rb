@@ -1,5 +1,8 @@
 module MiqAeMethodService
   class MiqAeServiceHost < MiqAeServiceModelBase
+    require_relative "mixins/miq_ae_service_custom_attribute_mixin"
+    include MiqAeServiceCustomAttributeMixin
+
     expose :storages,              :association => true
     expose :read_only_storages
     expose :writable_storages
@@ -71,22 +74,6 @@ module MiqAeMethodService
         :args        => [attribute, value]
       ) if @object.is_vmware?
       true
-    end
-
-    def custom_keys
-      object_send(:miq_custom_keys)
-    end
-
-    def custom_get(key)
-      object_send(:miq_custom_get, key)
-    end
-
-    def custom_set(key, value)
-      ar_method do
-        @object.miq_custom_set(key, value)
-        @object.save
-      end
-      value
     end
 
     def ssh_exec(script)
