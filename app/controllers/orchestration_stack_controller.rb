@@ -4,10 +4,6 @@ class OrchestrationStackController < ApplicationController
   after_action :cleanup_action
   after_action :set_session_data
 
-  def self.model
-    ManageIQ::Providers::CloudManager::OrchestrationStack
-  end
-
   def self.table_name
     @table_name ||= "orchestration_stack"
   end
@@ -66,7 +62,9 @@ class OrchestrationStackController < ApplicationController
   end
 
   def show_list
-    process_show_list
+    process_show_list(
+      :where_clause => "orchestration_stacks.type != 'ManageIQ::Providers::AnsibleTower::ConfigurationManager::Job'"
+    )
   end
 
   def cloud_networks

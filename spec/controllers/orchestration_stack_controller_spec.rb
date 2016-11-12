@@ -29,6 +29,26 @@ describe OrchestrationStackController do
       end
     end
 
+    context "infra" do
+      let(:record) { FactoryGirl.create(:orchestration_stack_openstack_infra) }
+
+      before do
+        session[:settings] = {
+          :views => {:manageiq_providers_cloudmanager_vm => "grid"}
+        }
+        get :show, :params => {:id => record.id}
+      end
+
+      it 'infra does not show deleted error' do
+        expect(assigns(:flash_array)).to be_nil
+      end
+
+      it "renders the listnav" do
+        expect(response.status).to eq(200)
+        expect(response).to render_template(:partial => "layouts/listnav/_orchestration_stack")
+      end
+    end
+
     context "orchestration templates" do
       let(:record) { FactoryGirl.create(:orchestration_stack_cloud_with_template) }
 
@@ -60,6 +80,22 @@ describe OrchestrationStackController do
       it "correctly constructs breadcrumb url" do
         expect(session[:breadcrumbs]).not_to be_empty
         expect(session[:breadcrumbs].first[:url]).to eq("/orchestration_stack/show_list")
+      end
+    end
+
+    context "orchestration stack listing hides ansible jobs" do
+      before do
+        @os_cloud  = FactoryGirl.create(:orchestration_stack_cloud, :name => "cloudstack1")
+        @os_infra  = FactoryGirl.create(:orchestration_stack_openstack_infra, :name => "infrastack1")
+        @tower_job = FactoryGirl.create(:ansible_tower_job, :name => "towerjob1")
+
+        get :show_list
+      end
+
+      it "hides ansible jobs" do
+        expect(response.body).to include(@os_cloud.name)
+        expect(response.body).to include(@os_infra.name)
+        expect(response.body).not_to include(@tower_job.name)
       end
     end
   end
