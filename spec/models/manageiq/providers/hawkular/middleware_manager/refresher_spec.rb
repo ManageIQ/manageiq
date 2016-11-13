@@ -45,7 +45,7 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::Refresher do
   end
 
   def assert_specific_datasource(ems, nativeid)
-    datasource = ems.middleware_datasources.find_by_nativeid(nativeid)
+    datasource = ems.middleware_datasources.find_by(:nativeid => nativeid)
     expect(datasource).to have_attributes(
       :name     => 'Datasource [ExampleDS]',
       :nativeid => nativeid
@@ -59,9 +59,9 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::Refresher do
   end
 
   def assert_specific_domain
-    domain = @ems_hawkular.middleware_domains.find_by_name('master')
+    domain = @ems_hawkular.middleware_domains.find_by(:feed => 'master.Unnamed%20Domain')
     expect(domain).to have_attributes(
-      :name     => 'master',
+      :name     => 'Unnamed Domain',
       :nativeid => 'Local~/host=master',
     )
     expect(domain.properties).not_to be_nil
@@ -73,7 +73,7 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::Refresher do
   end
 
   def assert_specific_server_group(domain)
-    server_group = domain.middleware_server_groups.find_by_name('main-server-group')
+    server_group = domain.middleware_server_groups.find_by(:name => 'main-server-group')
     expect(server_group).to have_attributes(
       :name     => 'main-server-group',
       :nativeid => 'Local~/server-group=main-server-group',
@@ -83,7 +83,7 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::Refresher do
   end
 
   def assert_specific_domain_server
-    server = @ems_hawkular.middleware_servers.find_by_name('server-three')
+    server = @ems_hawkular.middleware_servers.find_by(:name => 'server-three')
     expect(server).to have_attributes(
       :name     => 'server-three',
       :nativeid => 'Local~/host=master/server=server-three',
