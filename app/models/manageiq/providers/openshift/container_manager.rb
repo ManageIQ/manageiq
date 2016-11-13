@@ -29,7 +29,7 @@ class ManageIQ::Providers::Openshift::ContainerManager < ManageIQ::Providers::Co
   end
 
   def common_logging_path
-    '/'
+    '/#/dashboard/Operations-Logs-Overivew'
   end
 
   def supported_auth_attributes
