@@ -77,14 +77,14 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::RefreshParser do
                               :properties => properties,
                               :type_path  => type_path)
       parsed_domain = {
-        :name       => 'master',
+        :name       => 'Unnamed Domain',
         :feed       => feed,
         :type_path  => type_path,
         :nativeid   => id,
         :ems_ref    => path,
         :properties => properties,
       }
-      expect(parser.send(:parse_middleware_domain, domain)).to eq(parsed_domain)
+      expect(parser.send(:parse_middleware_domain, 'master.Unnamed Domain', domain)).to eq(parsed_domain)
     end
   end
 
