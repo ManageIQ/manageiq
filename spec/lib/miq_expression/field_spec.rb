@@ -148,4 +148,14 @@ RSpec.describe MiqExpression::Field do
       expect(field).to be_plural
     end
   end
+
+  describe "sql detection" do
+    it "detects if column is supported by sql with custom_attribute" do
+      expect(MiqExpression::Field.parse("Vm-virtual_custom_attribute_example").attribute_supported_by_sql?).to be_falsey
+    end
+
+    it "detects if column is supported by sql with regular column" do
+      expect(MiqExpression::Field.parse("Vm-name").attribute_supported_by_sql?).to be_truthy
+    end
+  end
 end

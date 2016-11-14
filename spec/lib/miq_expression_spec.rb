@@ -29,9 +29,19 @@ describe MiqExpression do
       expect(sql).to eq("\"vms\".\"name\" = 'foo'")
     end
 
+    it "generates the SQL for a = expression with expression as a value" do
+      sql, * = MiqExpression.new("=" => {"field" => "Vm-name", "value" => "Vm-name"}).to_sql
+      expect(sql).to eq("\"vms\".\"name\" = \"vms\".\"name\"")
+    end
+
     it "generates the SQL for a < expression" do
       sql, * = described_class.new("<" => {"field" => "Vm.hardware-cpu_sockets", "value" => "2"}).to_sql
       expect(sql).to eq("\"hardwares\".\"cpu_sockets\" < 2")
+    end
+
+    it "generates the SQL for a < expression with expression as a value" do
+      sql, * = described_class.new("<" => {"field" => "Vm.hardware-cpu_sockets", "value" => "Vm.hardware-cpu_sockets"}).to_sql
+      expect(sql).to eq("\"hardwares\".\"cpu_sockets\" < \"hardwares\".\"cpu_sockets\"")
     end
 
     it "generates the SQL for a <= expression" do
@@ -39,9 +49,19 @@ describe MiqExpression do
       expect(sql).to eq("\"hardwares\".\"cpu_sockets\" <= 2")
     end
 
+    it "generates the SQL for a <= expression with expression as a value" do
+      sql, * = described_class.new("<=" => {"field" => "Vm.hardware-cpu_sockets", "value" => "Vm.hardware-cpu_sockets"}).to_sql
+      expect(sql).to eq("\"hardwares\".\"cpu_sockets\" <= \"hardwares\".\"cpu_sockets\"")
+    end
+
     it "generates the SQL for a > expression" do
       sql, * = described_class.new(">" => {"field" => "Vm.hardware-cpu_sockets", "value" => "2"}).to_sql
       expect(sql).to eq("\"hardwares\".\"cpu_sockets\" > 2")
+    end
+
+    it "generates the SQL for a > expression with expression as a value" do
+      sql, * = described_class.new(">" => {"field" => "Vm.hardware-cpu_sockets", "value" => "Vm.hardware-cpu_sockets"}).to_sql
+      expect(sql).to eq("\"hardwares\".\"cpu_sockets\" > \"hardwares\".\"cpu_sockets\"")
     end
 
     it "generates the SQL for a >= expression" do
@@ -49,9 +69,19 @@ describe MiqExpression do
       expect(sql).to eq("\"hardwares\".\"cpu_sockets\" >= 2")
     end
 
+    it "generates the SQL for a >= expression with expression as a value" do
+      sql, * = described_class.new(">=" => {"field" => "Vm.hardware-cpu_sockets", "value" => "Vm.hardware-cpu_sockets"}).to_sql
+      expect(sql).to eq("\"hardwares\".\"cpu_sockets\" >= \"hardwares\".\"cpu_sockets\"")
+    end
+
     it "generates the SQL for a != expression" do
       sql, * = described_class.new("!=" => {"field" => "Vm-name", "value" => "foo"}).to_sql
       expect(sql).to eq("\"vms\".\"name\" != 'foo'")
+    end
+
+    it "generates the SQL for a != expression with expression as a value" do
+      sql, * = described_class.new("!=" => {"field" => "Vm-name", "value" => "Vm-name"}).to_sql
+      expect(sql).to eq("\"vms\".\"name\" != \"vms\".\"name\"")
     end
 
     it "generates the SQL for a LIKE expression" do
@@ -366,6 +396,25 @@ describe MiqExpression do
 
     describe "integration" do
       context "date/time support" do
+        it "finds the correct instances for an gt expression with a dynamic integer field" do
+          _vm1 = FactoryGirl.create(:vm_vmware, :memory_reserve => 1, :cpu_reserve => 2)
+          vm2 = FactoryGirl.create(:vm_vmware, :memory_reserve => 2, :cpu_reserve => 1)
+          filter = MiqExpression.new(">" => {"field" => "Vm-memory_reserve", "value" => "Vm-cpu_reserve"})
+          result = Vm.where(filter.to_sql.first)
+          expect(result).to eq([vm2])
+        end
+
+        it "finds the correct instances for an gt expression with a custom attribute dynamic integer field" do
+          custom_attribute =  FactoryGirl.create(:custom_attribute, :name => "example", :value => 1)
+          vm1 = FactoryGirl.create(:vm, :memory_reserve => 2)
+          vm1.custom_attributes << custom_attribute
+          _vm2 = FactoryGirl.create(:vm, :memory_reserve => 0)
+          filter = MiqExpression.new(">" => {"field" => "VmOrTemplate-memory_reserve", "value" => "VmOrTemplate-#{CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX}example"})
+          result = Rbac.search(:targets => Vm, :filter => filter).first.first
+          expect(filter.to_sql.last).to eq(:supported_by_sql => false)
+          expect(result).to eq(vm1)
+        end
+
         it "finds the correct instances for an AFTER expression with a datetime field" do
           _vm1 = FactoryGirl.create(:vm_vmware, :last_scan_on => "2011-01-11 9:00")
           vm2 = FactoryGirl.create(:vm_vmware, :last_scan_on => "2011-01-11 9:00:00.000001")
@@ -633,15 +682,33 @@ describe MiqExpression do
       expect(actual).to eq(expected)
     end
 
+    it "generates the SQL for a < expression with dynamic value" do
+      actual = described_class.new("<" => {"field" => "Vm.hardware-cpu_sockets", "value" => "Vm.hardware-cpu_sockets"}).to_ruby
+      expected = "<value ref=vm, type=integer>/virtual/hardware/cpu_sockets</value> < <value ref=vm, type=integer>/virtual/hardware/cpu_sockets</value>"
+      expect(actual).to eq(expected)
+    end
+
     it "generates the SQL for a <= expression" do
       actual = described_class.new("<=" => {"field" => "Vm.hardware-cpu_sockets", "value" => "2"}).to_ruby
       expected = "<value ref=vm, type=integer>/virtual/hardware/cpu_sockets</value> <= 2"
       expect(actual).to eq(expected)
     end
 
+    it "generates the SQL for a <= expression with dynamic value" do
+      actual = described_class.new("<=" => {"field" => "Vm.hardware-cpu_sockets", "value" => "Vm.hardware-cpu_sockets"}).to_ruby
+      expected = "<value ref=vm, type=integer>/virtual/hardware/cpu_sockets</value> <= <value ref=vm, type=integer>/virtual/hardware/cpu_sockets</value>"
+      expect(actual).to eq(expected)
+    end
+
     it "generates the SQL for a != expression" do
       actual = described_class.new("!=" => {"field" => "Vm-name", "value" => "foo"}).to_ruby
       expected = "<value ref=vm, type=string>/virtual/name</value> != \"foo\""
+      expect(actual).to eq(expected)
+    end
+
+    it "generates the SQL for a != expression with dynamic value" do
+      actual = described_class.new("!=" => {"field" => "Vm.hardware-cpu_sockets", "value" => "Vm.hardware-cpu_sockets"}).to_ruby
+      expected = "<value ref=vm, type=integer>/virtual/hardware/cpu_sockets</value> != <value ref=vm, type=integer>/virtual/hardware/cpu_sockets</value>"
       expect(actual).to eq(expected)
     end
 

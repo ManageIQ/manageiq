@@ -25,12 +25,20 @@ class MiqExpression::Field
     column_type == :date
   end
 
+  def self.valid_field?(field)
+    FIELD_REGEX.match(field).present? if field.kind_of?(String)
+  end
+
   def datetime?
     column_type == :datetime
   end
 
   def string?
     column_type == :string
+  end
+
+  def attribute_supported_by_sql?
+    !custom_attribute_column? && model.attribute_supported_by_sql?(column)
   end
 
   def plural?
@@ -90,6 +98,10 @@ class MiqExpression::Field
     end
   end
 
+  def arel_attribute
+    target.arel_attribute(column)
+  end
+
   private
 
   def custom_attribute_column_name
@@ -134,9 +146,5 @@ class MiqExpression::Field
       collect = visitor.accept(arel.ast, Arel::Collectors::Bind.new)
       collect.substitute_binds(binds).join
     end
-  end
-
-  def arel_attribute
-    target.arel_attribute(column)
   end
 end
