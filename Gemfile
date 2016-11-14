@@ -45,6 +45,7 @@ gem "high_voltage",                   "~>2.4.0"
 gem "htauth",                         "2.0.0",         :require => false
 gem "inifile",                        "~>3.0",         :require => false
 gem "jbuilder",                       "~>2.5.0" # For the REST API
+gem "manageiq-api-client",            "~>0.1.0",       :require => false
 gem "mime-types",                     "~>2.6.1",       :require => "mime/types/columnar"
 gem "nakayoshi_fork",                 "~>0.0.3"  # provides a more CoW friendly fork (GC a few times before fork)
 gem "net-ldap",                       "~>0.14.0",      :require => false
@@ -60,6 +61,7 @@ gem "ovirt-engine-sdk",               "~>4.0.6",       :require => false # Requi
 gem "ovirt_metrics",                  "~>1.3.1",       :require => false
 gem "paperclip",                      "~>4.3.0"
 gem "puma",                           "~>3.3.0"
+gem "query_relation",                 "~>0.1.0",       :require => false
 gem "rails",                          "~>5.0.0", ">= 5.0.0.1"
 gem "rails-controller-testing",                        :require => false
 gem "rails-i18n",                     "~>5.x"
@@ -80,8 +82,6 @@ gem "websocket-driver",               "~>0.6.3"
 
 # Modified gems (forked on Github)
 gem "foreman_api_client",             ">=0.1.0",   :require => false, :git => "https://github.com/ManageIQ/foreman_api_client.git", :branch => "master"
-gem "manageiq-api-client",                         :require => false, :git => "https://github.com/ManageIQ/manageiq-api-client.git", :branch => "master"
-gem "query_relation",                              :require => false, :git => "https://github.com/ManageIQ/query_relation.git", :branch => "master"
 gem "ruport",                         "=1.7.0",                       :git => "https://github.com/ManageIQ/ruport.git", :tag => "v1.7.0-3"
 
 # In 1.9.3: Time.parse uses british version dd/mm/yyyy instead of american version mm/dd/yyyy
