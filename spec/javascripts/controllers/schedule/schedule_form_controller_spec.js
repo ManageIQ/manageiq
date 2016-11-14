@@ -594,6 +594,36 @@ describe('scheduleFormController', function() {
       });
     });
 
+    describe('when the action type is automation_request', function() {
+      var data = {
+        action_type: 'automation_request',
+        starting_object: 'SYSTEM/PROCESS',
+        request: 'test_request',
+        instance_name: 'TestRequest',
+        object_message: 'create',
+        object_class: 'test',
+        object_id:    '10',
+        uri: 'uri',
+        uri_prefix: 'uriPrefix'
+      };
+      beforeEach(function() {
+        $httpBackend.whenPOST('/ops/automate_schedules_set_vars/new').respond(200, data);
+        $scope.scheduleModel.action_typ = 'automation_request';
+        $scope.actionTypeChanged();
+        $httpBackend.flush();
+      });
+
+      it('sets the scheduleModel with the Automation params', function() {
+        expect($scope.scheduleModel.instance_names).toEqual(data.instance_names);
+        expect($scope.scheduleModel.starting_object).toEqual(data.starting_object);
+        expect($scope.scheduleModel.instance_name).toEqual(data.instance_name);
+        expect($scope.scheduleModel.object_message).toEqual(data.object_message);
+        expect($scope.scheduleModel.object_request).toEqual(data.request);
+        expect($scope.scheduleModel.target_class).toEqual(data.object_class);
+        expect($scope.scheduleModel.target_id).toEqual(data.object_id);
+      });
+    });
+
     describe('when the action type is not db_backup', function() {
       beforeEach(function() {
         $scope.scheduleModel.action_typ = 'not_db_backup';
