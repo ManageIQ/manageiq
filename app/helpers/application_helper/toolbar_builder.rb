@@ -412,10 +412,8 @@ class ApplicationHelper::ToolbarBuilder
         return true
       end
     when :rbac_tree
-      common_buttons = %w(rbac_project_add rbac_tenant_add)
-      feature = common_buttons.include?(id) ? rbac_common_feature_for_buttons(id) : id
-      return true unless role_allows?(:feature => feature)
-      return true if common_buttons.include?(id) && @record.project?
+      return true unless role_allows?(:feature => rbac_common_feature_for_buttons(id))
+      return true if %w(rbac_project_add rbac_tenant_add).include?(id) && @record.project?
       return false
     when :vmdb_tree
       return !["db_connections", "db_details", "db_indexes", "db_settings"].include?(@sb[:active_tab])
