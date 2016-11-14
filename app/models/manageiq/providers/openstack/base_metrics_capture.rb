@@ -26,7 +26,12 @@ class ManageIQ::Providers::Openstack::BaseMetricsCapture < ManageIQ::Providers::
     raise "No EMS defined" if target.ext_management_system.nil?
 
     metering_service, = Benchmark.realtime_block(:connect) do
-      target.ext_management_system.connect(:service => "Metering")
+      begin
+        target.ext_management_system.connect(:service => "Metric")
+      rescue Exception => ex
+        $log.debug "#{_log.prefix} Gnocchi service connection failed on #{ex}, falling back to Ceilometer.."
+        target.ext_management_system.connect(:service => "Metering")
+      end
     end
     metering_service
   end
