@@ -7,6 +7,12 @@ describe MiqPglogical do
     MiqServer.seed
   end
 
+  describe "#active_excludes" do
+    it "returns an empty array if a provider is not configured" do
+      expect(subject.active_excludes).to eq([])
+    end
+  end
+
   describe "#provider?" do
     it "is false when a provider is not configured" do
       expect(subject.provider?).to be false
@@ -36,6 +42,12 @@ describe MiqPglogical do
   context "when configured as a provider" do
     before do
       subject.configure_provider
+    end
+
+    describe "#active_excludes" do
+      it "returns the initial set of excluded tables" do
+        expect(subject.active_excludes).to eq(connection.tables - subject.included_tables)
+      end
     end
 
     describe "#provider?" do
@@ -68,6 +80,19 @@ describe MiqPglogical do
       end
     end
 
+    describe ".refresh_excludes" do
+      it "sets the configured excludes and calls refresh on an instance" do
+        pgl = described_class.new
+        expect(described_class).to receive(:new).and_return(pgl)
+        expect(pgl).to receive(:refresh_excludes)
+
+        new_excludes = %w(my new exclude tables)
+        described_class.refresh_excludes(new_excludes)
+
+        expect(pgl.configured_excludes).to match_array(new_excludes | described_class::ALWAYS_EXCLUDED_TABLES)
+      end
+    end
+
     describe "#refresh_excludes" do
       it "adds a new non excluded table" do
         connection.exec_query(<<-SQL)
@@ -79,25 +104,28 @@ describe MiqPglogical do
 
       it "removes a newly excluded table" do
         table = subject.included_tables.first
-        new_excludes = subject.configured_excludes << table
+        subject.configured_excludes += [table]
 
-        c = MiqServer.my_server.get_config
-        c.config.store_path(*described_class::SETTINGS_PATH, :exclude_tables, new_excludes)
-        c.save
+        expect(subject.active_excludes).not_to include(table)
+        expect(subject.included_tables).to include(table)
 
         subject.refresh_excludes
+
+        expect(subject.active_excludes).to include(table)
         expect(subject.included_tables).not_to include(table)
       end
 
       it "adds a newly included table" do
-        table = subject.configured_excludes.last
-        new_excludes = subject.configured_excludes - [table]
+        current_excludes = subject.configured_excludes
+        table = current_excludes.pop
+        subject.configured_excludes = current_excludes
 
-        c = MiqServer.my_server.get_config
-        c.config.store_path(*described_class::SETTINGS_PATH, :exclude_tables, new_excludes)
-        c.save
+        expect(subject.active_excludes).to include(table)
+        expect(subject.included_tables).not_to include(table)
 
         subject.refresh_excludes
+
+        expect(subject.active_excludes).not_to include(table)
         expect(subject.included_tables).to include(table)
       end
     end
