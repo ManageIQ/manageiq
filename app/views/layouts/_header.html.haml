@@ -12,7 +12,7 @@
   %nav.collapse.navbar-collapse
     %ul.nav.navbar-nav.navbar-right.navbar-iconic
       %li{:class => "dropdown brand-white-label #{current_tenant.logo? ? "whitelabeled" : ""}"}
-      %li{:class => "drawer-pf-trigger dropdown"}
+      %li
         %a{:class => "nav-item-iconic drawer-pf-trigger-icon", :title => "{{vm.notificationsIndicatorTooltip}}", "ng-click" => "vm.toggleNotificationsList()"}
           %span.fa{"ng-class" => "{'fa-bell': vm.newNotifications, 'fa-bell-o': !vm.newNotifications}"}
           %span.badge.info{"ng-show" => "vm.newNotifications"}
