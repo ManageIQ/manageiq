@@ -22,14 +22,13 @@ class ChargebackRateDetail < ApplicationRecord
   attr_accessor :hours_in_interval
 
   def charge(relevant_fields, chargeback_fields_present, metric_rollup_records, hours_in_interval)
-    if !chargeback_fields_present && fixed?
-      cost = 0
-    else
-      metric_value, cost = metric_and_cost_by(metric_rollup_records, hours_in_interval)
-    end
-
     result = {}
     if (relevant_fields & [metric_keys[0], cost_keys[0]]).present?
+      if !chargeback_fields_present && fixed?
+        cost = 0
+      else
+        metric_value, cost = metric_and_cost_by(metric_rollup_records, hours_in_interval)
+      end
       metric_keys.each { |field| result[field] = metric_value }
       cost_keys.each   { |field| result[field] = cost }
     end
