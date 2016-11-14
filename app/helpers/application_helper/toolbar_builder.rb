@@ -380,13 +380,6 @@ class ApplicationHelper::ToolbarBuilder
     img
   end
 
-  def hide_button_rsop(id)
-    case id
-    when 'toggle_collapse' then !@sb[:rsop][:open]
-    when 'toggle_expand'   then @sb[:rsop][:open]
-    end
-  end
-
   def hide_button_ops(id)
     case x_active_tree
     when :settings_tree
@@ -562,10 +555,6 @@ class ApplicationHelper::ToolbarBuilder
 
     return false if id == "miq_request_reload" && # Show the request reload button
                     (@lastaction == "show_list" || @showtype == "miq_provisions")
-
-    if @layout == "miq_policy_rsop"
-      return hide_button_rsop(id)
-    end
 
     if @layout == "ops"
       res = hide_button_ops(id)
