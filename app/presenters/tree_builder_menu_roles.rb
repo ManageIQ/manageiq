@@ -1,13 +1,13 @@
 class TreeBuilderMenuRoles < TreeBuilder
-  has_kids_for Hash, [:x_build_kids]
+  has_kids_for Hash, [:x_get_tree_hash_kids]
 
   attr_reader :rpt_menu, :role_choice
 
-  def initialize(name, type, sandbox, role_choice, rpt_menu = nil)
+  def initialize(name, type, sandbox, build, role_choice:, rpt_menu: nil)
     @rpt_menu    = rpt_menu || sandbox[:rpt_menu]
     @role_choice = role_choice
 
-    super(name, type, sandbox, true)
+    super(name, type, sandbox, build)
   end
 
   # Used for testing convenience and to satisfy need for
@@ -20,39 +20,24 @@ class TreeBuilderMenuRoles < TreeBuilder
   private
 
   def set_locals_for_render
-    {
-      :tree_id       => "#{@name}box",
-      :tree_name     => @name.to_s,
-      :bs_tree       => @bs_tree,
-      :click_url     => "/report/menu_editor/",
-      :onclick       => "miqMenuEditor",
-      :cookie_prefix => "edit_",
-      :tree_state    => true,
-      :checkboxes    => false
-    }
+    super.merge!({
+      :click_url => "/report/menu_editor/",
+      :onclick   => "miqMenuEditor"
+    })
   end
 
-  # Set add_root to false, otherwise we need a root_options method
-  #
   def tree_init_options(_tree_name)
-    { :lazy => false, :add_root => false }
+    { :lazy => false, :add_root => true }
   end
 
-  # TreeBuilder Overrides
-
-  # Override this method to add our custom root.
-  # Our root (Top Level) needs a specific id to make the form work.
-  #
-  def x_build_tree(options)
-    # Tell super method to always give us child_nodes only.
-    options[:add_root] = false
-    nodes = super(options)
-
-    [x_build_actual_root_node(nodes)]
+  def root_options
+    ["Top Level", "Top Level", "folder", {:key => "xx-b__Report Menus for #{role_choice}"}]
   end
 
-  # This is really more like branches, we set the root above.
-  # TreeBuilder required method
+  # Typically another method will populate the children of a root object.
+  # Since our data is an array of Strings or Arrays, we don't have ids to tie
+  # parents to children. Therefore we include the children with the parent.
+  # The :data key was chosen to avoid future conflicts with the :children key.
   #
   def x_get_tree_roots(count_only = false, _options)
     branches = menus.map do |i|
@@ -63,7 +48,7 @@ class TreeBuilderMenuRoles < TreeBuilder
         :image    => "folder",
         :text     => i.first,
         :tooltip  => i.first,
-        :children => grandkids
+        :data     => grandkids
       }
     end
 
@@ -72,8 +57,8 @@ class TreeBuilderMenuRoles < TreeBuilder
 
   # Referenced by has_kids_for, builds nodes from branch kids and grandkids
   #
-  def x_build_kids(parent, count_only = false)
-    items = parent[:children].map do |child|
+  def x_get_tree_hash_kids(parent, count_only = false)
+    items = parent[:data].map do |child|
       if child.last.kind_of?(Array)
         build_middle_child(parent[:text], child)
       else
@@ -90,7 +75,7 @@ class TreeBuilderMenuRoles < TreeBuilder
       :image    => "folder",
       :text     => item.first,
       :tooltip  => item.first,
-      :children => item.last
+      :data     => item.last
     }
   end
 
@@ -101,26 +86,8 @@ class TreeBuilderMenuRoles < TreeBuilder
       :text        => child,
       :tooltip     => child,
       :cfmeNoClick => true,
-      :children    => []
+      :data        => []
     }
-  end
-
-  # Build a custom root node, :key is essential for form to work,
-  # otherwise we may have been able to use TreeBuilder methods
-  #
-  def x_build_actual_root_node(children)
-    {
-      :key         => "xx-b__Report Menus for #{role_choice}",
-      :title       => "Top Level",
-      :icon        => tree_icon,
-      :expand      => true,
-      :cfmeNoClick => false,
-      :children    => children
-    }
-  end
-
-  def tree_icon
-    ActionController::Base.helpers.image_path("100/folder.png")
   end
 
   # Translated code from old controller method

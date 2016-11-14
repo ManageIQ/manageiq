@@ -1,4 +1,5 @@
 # Describes TreeBuilderMenuRoles presenter
+# Currently requires unique keys for nodes
 # Example tree:
 
 # {
@@ -57,71 +58,72 @@ describe TreeBuilderMenuRoles do
     { :rpt_menu => rpt_menu }
   end
 
-  let(:instance) { TreeBuilderMenuRoles.new("menu_roles_tree", "menu_roles", sandbox, "cloud-execs") }
+  let(:instance) { TreeBuilderMenuRoles.new("menu_roles_tree", "menu_roles", sandbox, true, role_choice: "cloud-execs") }
+  let(:tree_hash) { JSON.parse(instance.tree_nodes) }
 
   describe "root node" do
-    subject { instance.hash_tree.first }
+    subject { tree_hash.first }
 
     it 'has the correct key' do
-      expect(subject[:key]).not_to be_nil
-      expect(subject[:key]).to eq "xx-b__Report Menus for cloud-execs"
+      expect(subject["key"]).not_to be_nil
+      expect(subject["key"]).to eq "xx-b__Report Menus for cloud-execs"
     end
 
     it 'has the correct title' do
-      expect(subject[:title]).to eq "Top Level"
+      expect(subject["text"]).to eq "Top Level"
     end
 
     it 'has children' do
-      expect(subject[:children]).not_to be_empty
+      expect(subject["nodes"]).not_to be_empty
     end
   end
 
   describe "1st level folder" do
-    subject { instance.hash_tree.first[:children].first }
+    subject { tree_hash.first["nodes"].first }
 
     it 'has the correct key' do
-      expect(subject[:key]).not_to be_nil
-      expect(subject[:key]).to eq "xx-p__Configuration Management"
+      expect(subject["key"]).not_to be_nil
+      expect(subject["key"]).to eq "xx-p__Configuration Management"
     end
 
     it 'has children' do
-      expect(subject[:children]).not_to be_empty
+      expect(subject["nodes"]).not_to be_empty
     end
   end
 
   describe "2nd level folder" do
-    subject { instance.hash_tree.first[:children].first[:children].first }
+    subject { tree_hash.first["nodes"].first["nodes"].first }
 
     it 'has the correct key' do
-      expect(subject[:key]).not_to be_nil
-      expect(subject[:key]).to eq "xx-s__Configuration Management:Virtual Machines"
+      expect(subject["key"]).not_to be_nil
+      expect(subject["key"]).to eq "xx-s__Configuration Management:Virtual Machines"
     end
 
     it 'has a key with parent name and colon' do
-      expect(subject[:key]).to match(/Configuration\sManagement:/)
+      expect(subject["key"]).to match(/Configuration\sManagement:/)
     end
 
     it 'has children' do
-      expect(subject[:children]).not_to be_empty
+      expect(subject["nodes"]).not_to be_empty
     end
   end
 
   describe "report leaf node" do
     subject do
-      instance.hash_tree.first[:children].first[:children].first[:children].first
+      tree_hash.first["nodes"].first["nodes"].first["nodes"].first
     end
 
     it 'has the correct key' do
-      expect(subject[:key]).not_to be_nil
-      expect(subject[:key]).to eq "xx-VMs with Free Space > 50% by Department"
+      expect(subject["key"]).not_to be_nil
+      expect(subject["key"]).to eq "xx-VMs with Free Space > 50% by Department"
     end
 
     it 'is not clickable' do
-      expect(subject[:cfmeNoClick]).to eq true
+      expect(subject["selectable"]).to eq false
     end
 
     it 'has no children' do
-      expect(subject[:children]).to be_nil
+      expect(subject["nodes"]).to be_nil
     end
   end
 

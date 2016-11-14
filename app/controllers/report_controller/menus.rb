@@ -10,7 +10,9 @@ module ReportController::Menus
       @rpt_menu = copy_array(@edit[:new])
     elsif @menu_lastaction == "default"
     else
-      build_report_listnav("reports", "menu")
+      populate_reports_menu("reports", "menu")
+      tree = build_menu_roles_tree
+      @rpt_menu = tree.rpt_menu
     end
     @menu_lastaction     = "menu_editor" if @menu_lastaction != "commit" && @menu_lastaction != "discard_changes" && params[:action] == "get_tree_data"
     menu_editor
@@ -20,10 +22,10 @@ module ReportController::Menus
     menu_set_form_vars if ["explorer", "tree_select", "x_history"].include?(params[:action])
     @in_a_form = true
     if @menu_lastaction != "menu_editor"
-      @menu_roles_tree = TreeBuilderMenuRoles.new("menu_roles_tree", "menu_roles", @sb, session[:role_choice], @edit[:new])
+      @menu_roles_tree = build_menu_roles_tree(@edit[:new])
     else
       # changing rpt_menu if changes have been commited to show updated tree with changes
-      @menu_roles_tree = TreeBuilderMenuRoles.new("menu_roles_tree", "menu_roles", @sb, session[:role_choice])
+      @menu_roles_tree = build_menu_roles_tree
     end
     @sb[:role_list_flag] = true if params[:id]
 
@@ -209,9 +211,10 @@ module ReportController::Menus
       get_tree_data
       replace_right_cell(:menu_edit_action => "menu_reset")
     elsif params[:button] == "default"
-      @menu_roles_tree = TreeBuilder.convert_bs_tree(build_report_listnav("reports", "menu", "default")).to_json
-      @edit[:new]               = copy_array(@rpt_menu)
-      @menu_lastaction          = "default"
+      populate_reports_menu("reports", "default")
+      @menu_roles_tree = build_menu_roles_tree
+      @edit[:new]      = copy_array(@sb[:rpt_menu])
+      @menu_lastaction = "default"
       add_flash(_("Report Menu set to default"), :warning)
       get_tree_data
       # set menu_default flag to true
@@ -337,16 +340,17 @@ module ReportController::Menus
     end
   end
 
-  # Builds menu for left column of right cell
-  # This has been largely replaced by TreeBuilderMenuRoles class,
-  # but is still called from ApplicationController.
+  # Convenience for TreeBuilderMenuRoles
   #
-  def build_menu_tree(rpt_menu, _tree_type = "reports")
-    # rpt_menu is already part of @sb, and passed to TreeBuilderMenuRoles through it.
-    tree = TreeBuilderMenuRoles.new("menu_roles_tree", "menu_roles", @sb, session[:role_choice])
-    @rpt_menu = tree.rpt_menu
-
-    tree.hash_tree
+  def build_menu_roles_tree(rpt_menu = nil)
+    TreeBuilderMenuRoles.new(
+      "menu_roles_tree",  # name
+      "menu_roles",       # type
+      @sb,                # sandbox
+      true,               # build
+      role_choice: session[:role_choice],
+      rpt_menu: rpt_menu
+    )
   end
 
   def move_menu_cols_left
@@ -612,7 +616,10 @@ module ReportController::Menus
   end
 
   def edit_folder
-    session[:node_selected] = "xx-b__Report Menus for #{session[:role_choice]}" if params[:button] == "reset" || params[:button] == "default"  # resetting node in case reset button is pressed
+    if params[:button] == "reset" || params[:button] == "default"  # resetting node in case reset button is pressed
+      session[:node_selected] = "xx-b__Report Menus for #{session[:role_choice]}"
+    end
+
     @selected = session[:node_selected].split('__')
     @folders = []
     @edit[:folders] = []

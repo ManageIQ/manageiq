@@ -1127,7 +1127,6 @@ describe ReportController do
       allow(controller).to receive(:x_build_dyna_tree)
       last_build_time = Time.now.utc
       controller.instance_variable_set(:@sb, :rep_tree_build_time => last_build_time)
-      expect(controller).not_to receive(:build_report_listnav)
       expect(controller).not_to receive(:build_savedreports_tree)
       expect(controller).not_to receive(:build_db_tree)
       expect(controller).not_to receive(:build_widgets_tree)

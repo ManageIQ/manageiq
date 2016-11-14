@@ -181,7 +181,9 @@ class TreeBuilder
     root = nodes.first
     root[:title], root[:tooltip], icon, options = root_options
     root[:icon] = ActionController::Base.helpers.image_path("100/#{icon || 'folder'}.png")
-    root[:cfmeNoClick] = options[:cfmeNoClick] if options.present? && options.key?(:cfmeNoClick)
+    if options.present?
+      root.merge!(options)
+    end
   end
 
   def set_locals_for_render

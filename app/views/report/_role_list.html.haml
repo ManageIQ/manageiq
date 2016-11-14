@@ -5,8 +5,7 @@
       .col-sm-5
         %h3
           = _("Reports")
-        #menu_roles_treebox.treeview-pf-hover.treeview-pf-select{:style => "overflow-y: hidden !important;"}
-      = render(:partial => "layouts/tree", :locals => @menu_roles_tree.locals_for_render)
+        = render(:partial => "shared/tree", :locals => {:tree => @menu_roles_tree, :name => @menu_roles_tree.name})
 
       = render :partial => "report/menu_form1", :locals => {:folders => @grid_folders}
       = render :partial => "report/menu_form2"
