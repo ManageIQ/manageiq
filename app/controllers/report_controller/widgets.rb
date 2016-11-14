@@ -73,7 +73,7 @@ module ReportController::Widgets
         replace_right_cell(:replace_trees => [:widgets])
       else
         @widget.errors.each do |field, msg|
-          add_flash("#{field.to_s.capitalize} #{msg}", :error)
+          add_flash("#{_(field.to_s.capitalize)} #{msg}", :error)
         end
         @changed = session[:changed] = (@edit[:new] != @edit[:current])
         javascript_flash
