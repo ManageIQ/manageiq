@@ -141,34 +141,13 @@ class Chargeback < ActsAsArModel
 
     rates.each do |rate|
       rate.chargeback_rate_details.each do |r|
-        if !chargeback_fields_present && r.fixed?
-          cost = 0
-        else
-          metric_value, cost = r.metric_and_cost_by(metric_rollup_records, hours_in_interval)
+        r.charge(relevant_fields, chargeback_fields_present, metric_rollup_records, hours_in_interval).each do |field, value|
+          next unless self.class.attribute_names.include?(field)
+          self[field] = (self[field] || 0) + value
         end
-
-        accumulate_metrics_and_costs_per_rate(r, metric_value, cost)
       end
     end
   end
-
-  def accumulate_metrics_and_costs_per_rate(rate, metric, cost)
-    col_hash = {}
-
-    defined_column_for_report = (relevant_fields & [rate.metric_keys[0], rate.cost_keys[0]]).present?
-
-    if defined_column_for_report
-      rate.metric_keys.each { |col| col_hash[col] = metric }
-      rate.cost_keys.each   { |col| col_hash[col] = cost }
-    end
-
-    col_hash.each do |k, val|
-      next unless self.class.attribute_names.include?(k)
-      self[k] ||= 0
-      self[k] += val
-    end
-  end
-  private :accumulate_metrics_and_costs_per_rate
 
   def self.report_cb_model(model)
     model.gsub(/^Chargeback/, "")
