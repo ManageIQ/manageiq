@@ -46,6 +46,10 @@ describe('pglogicalReplicationFormController', function() {
     it('sets the subscriptions value returned with http request', function() {
       expect($scope.pglogicalReplicationModel.subscriptions).toEqual([]);
     });
+
+    it('sets the exclusion list to the value returned by the http request', function() {
+      expect($scope.pglogicalReplicationModel.exclusion_list).toEqual("");
+    });
   });
 
   describe('#resetClicked', function() {
