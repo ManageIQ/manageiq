@@ -172,8 +172,24 @@ module ManageIQ::Providers
       run_generic_operation(:Shutdown, ems_ref)
     end
 
+    def start_middleware_domain_server(ems_ref)
+      run_generic_operation(:Start, ems_ref)
+    end
+
+    def stop_middleware_domain_server(ems_ref)
+      run_generic_operation(:Stop, ems_ref)
+    end
+
     def restart_middleware_server(ems_ref)
       run_generic_operation(:Shutdown, ems_ref, :restart => true)
+    end
+
+    def restart_middleware_domain_server(ems_ref)
+      run_generic_operation(:Restart, ems_ref)
+    end
+
+    def kill_middleware_domain_server(ems_ref)
+      run_generic_operation(:Kill, ems_ref)
     end
 
     def shutdown_middleware_server(ems_ref, params)

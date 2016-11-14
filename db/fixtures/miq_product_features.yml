@@ -3769,6 +3769,18 @@
       :description: Stop Middleware Server
       :feature_type: admin
       :identifier: middleware_server_stop
+    - :name: Stop middleware server in domain
+      :description: Stop Middleware Server in Domain
+      :feature_type: admin
+      :identifier: middleware_domain_server_stop
+    - :name: Start middleware server in domain
+      :description: Start Middleware Server in Domain
+      :feature_type: admin
+      :identifier: middleware_domain_server_start
+    - :name: Kill middleware server in domain
+      :description: Kill Middleware Server in Domain
+      :feature_type: admin
+      :identifier: middleware_domain_server_kill
     - :name: Shut down middleware server
       :description: Shut Middleware Server down
       :feature_type: admin
@@ -3785,6 +3797,10 @@
       :description: Restart a Middleware Server
       :feature_type: admin
       :identifier: middleware_server_restart
+    - :name: Restart middleware server in domain
+      :description: Restart a Middleware Server in Domain
+      :feature_type: admin
+      :identifier: middleware_domain_server_restart
     - :name: Add middleware deployment
       :description: Add middleware deployment
       :feature_type: admin

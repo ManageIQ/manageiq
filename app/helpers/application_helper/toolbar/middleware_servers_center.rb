@@ -31,23 +31,14 @@ class ApplicationHelper::Toolbar::MiddlewareServersCenter < ApplicationHelper::T
       :items   => [
         button(
           :middleware_server_reload,
-          'pficon pficon-restart fa-lg',
+          nil,
           N_('Reload these Middleware Servers'),
           N_('Reload Server'),
-          :url_parms => "main_div",
-          :confirm   => N_("Do you want to reload selected servers?"),
+          :image     => 'guest_restart',
+          :url_parms => 'main_div',
+          :confirm   => N_('Do you want to reload selected servers?'),
           :enabled   => false,
-          :onwhen    => "1+"),
-        button(
-          :middleware_server_stop,
-          nil,
-          N_('Stop these Middleware Servers'),
-          N_('Stop Server'),
-          :url_parms => "main_div",
-          :image     => "guest_shutdown",
-          :confirm   => N_("Do you want to stop selected servers?"),
-          :enabled   => false,
-          :onwhen    => "1+"),
+          :onwhen    => '1+'),
       ]
     ),
   ])
