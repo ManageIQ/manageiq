@@ -49,12 +49,12 @@ col_order:
 # Column titles, in order
 headers:
 - Date/Time
-- Delivering Message Count
-- Durable Message Count
+- Delivering Messages Count
+- Durable Messages Count
 - Durable Subscription Count
 - Messages Count
 - Messages Added
-- Non Durable Messages Dount
+- Non Durable Messages Count
 - Non Durable Subscription Count
 - Subscription Count
 
