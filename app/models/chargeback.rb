@@ -155,7 +155,7 @@ class Chargeback < ActsAsArModel
   def accumulate_metrics_and_costs_per_rate(rate, metric, cost)
     col_hash = {}
 
-    defined_column_for_report = (self.class.report_col_options.keys & [rate.metric_keys[0], rate.cost_keys[0]]).present?
+    defined_column_for_report = (relevant_fields & [rate.metric_keys[0], rate.cost_keys[0]]).present?
 
     if defined_column_for_report
       rate.metric_keys.each { |col| col_hash[col] = metric }
@@ -228,5 +228,11 @@ class Chargeback < ActsAsArModel
     define_method(custom_attribute.to_sym) do
       entity.send(custom_attribute)
     end
+  end
+
+  private
+
+  def relevant_fields
+    @relevant_fields ||= self.class.report_col_options.keys.to_set
   end
 end # class Chargeback
