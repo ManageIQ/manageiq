@@ -19,9 +19,8 @@ class ChargebackRateDetail < ApplicationRecord
   end
 
   def avg_of_metric_from(metric_rollup_records)
-    record_count = metric_rollup_records.count
     metric_sum = metric_rollup_records.sum(&metric.to_sym)
-    metric_sum / record_count
+    metric_sum / @hours_in_interval
   end
 
   def metric_value_by(metric_rollup_records)
