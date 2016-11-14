@@ -6,13 +6,13 @@
     = miq_accordion_panel(_("Properties"), false, "ems_prop") do
       %ul.nav.nav-pills.nav-stacked
         = li_link(:if => true,
-          :text       =>_('Summary'),
+          :text       => _('Summary'),
           :record_id  => @record.id,
           :display    => 'main',
           :title      => _("Show Summary"))
         = li_link(:if => (@record.has_events? || @record.has_events?(:policy_events)),
           :text       => _('Timelines'),
-          :record_i   => @record.id,
+          :record_id  => @record.id,
           :display    => 'timeline',
           :title      => _("Show Timelines"))
 
