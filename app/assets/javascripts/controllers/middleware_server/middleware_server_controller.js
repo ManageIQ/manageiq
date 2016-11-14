@@ -117,7 +117,6 @@ function MwServerController($scope, miqService) {
         $scope.jdbcDriverModel.serverIdKey = 'miq_grid_checks';
     }
 
-    $scope.jdbcDriverModel.serverId = angular.element('#server_id').val();
     angular.element('#jdbc_add_div :file#jdbc_driver_file').val('');
     angular.element('#jdbc_add_div input[type="text"]:disabled').val('');
     $scope.$broadcast('mwAddJdbcDriverReset');

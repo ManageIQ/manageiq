@@ -52,13 +52,14 @@ class MiddlewareServerController < ApplicationController
                                     :param => :file
     },
     :middleware_add_jdbc_driver => {:op    => :add_middleware_jdbc_driver,
-                                    :skip  => false,
+                                    :skip  => true,
                                     :msg   => N_('JDBC Driver installation'),
+                                    :hawk  => N_('adding new jdbc driver to Hawkular server'),
                                     :param => :driver
     },
     :middleware_add_datasource  => {:op    => :add_middleware_datasource,
-                                    :skip  => false,
-                                    :hawk  => N_('Not adding new datasource to Hawkular server'),
+                                    :skip  => true,
+                                    :hawk  => N_('adding new datasource to Hawkular server'),
                                     :msg   => N_('New datasource initiated for selected server(s)'),
                                     :param => :datasource
     }
@@ -135,10 +136,15 @@ class MiddlewareServerController < ApplicationController
       :driver_minor_version => params["minorVersion"]
     }
 
-    run_server_operation(STANDALONE_SERVER_OPERATIONS.fetch(:middleware_add_jdbc_driver), selected_server)
-    render :json => {
-      :status => :success, :msg => _("JDBC Driver \"%s\" has been installed on this server.") % params["driverName"]
-    }
+    op_trigger = run_server_operation(STANDALONE_SERVER_OPERATIONS.fetch(:middleware_add_jdbc_driver), selected_server)
+    if op_trigger
+      if params[:id].nil?
+        add_flash(_("JDBC Driver \"%s\" has been installed on selected servers.") % params["driverName"], :success)
+      else
+        add_flash(_("JDBC Driver \"%s\" has been installed on this server.") % params["driverName"], :success)
+      end
+    end
+    javascript_flash
   end
 
   def add_datasource
@@ -160,10 +166,15 @@ class MiddlewareServerController < ApplicationController
         :connectionUrl  => params["connectionUrl"]
       }
 
-      run_server_operation(STANDALONE_SERVER_OPERATIONS.fetch(:middleware_add_datasource), selected_server)
-      render :json => {
-        :status => :success, :msg => _("Datasource \"%s\" installation has started on this server.") % datasource_name
-      }
+      op_trigger = run_server_operation(STANDALONE_SERVER_OPERATIONS.fetch(:middleware_add_datasource), selected_server)
+      if op_trigger
+        if params[:id].nil?
+          add_flash(_("Datasource \"%s\" installation has started on selected servers.") % datasource_name, :success)
+        else
+          add_flash(_("Datasource \"%s\" installation has started on this server.") % datasource_name, :success)
+        end
+      end
+      javascript_flash
     end
   end
 
@@ -262,8 +273,16 @@ class MiddlewareServerController < ApplicationController
     operation_triggered = false
     items.split(/,/).each do |item|
       mw_server = identify_record item
-      if mw_server.product == 'Hawkular' && operation_info.fetch(:skip)
-        add_flash(_("Not %{hawkular_info} the provider") % {:hawkular_info => operation_info.fetch(:hawk)})
+      if skip_operation?(mw_server, operation_info)
+        message = if operation_info.key?(:skip_msg)
+                    operation_info.fetch(:skip_msg)
+                  else
+                    "Not %{operation_name} the provider itself"
+                  end
+        add_flash(_(message) % {
+          :operation_name => operation_info.fetch(:hawk),
+          :record_name    => mw_server.name
+        }, :warning)
       else
         if operation_info.key? :param
           # Fetch param from UI - > see #9462/#8079
@@ -276,7 +295,7 @@ class MiddlewareServerController < ApplicationController
         operation_triggered = true
       end
     end
-    add_flash(_("%{operation} initiated for selected server(s)") % {:operation => operation_info.fetch(:msg)}) if operation_triggered
+    operation_triggered
   end
 
   def trigger_mw_operation(operation, mw_server, params = nil)

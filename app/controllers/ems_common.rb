@@ -1,10 +1,10 @@
 module EmsCommon
   extend ActiveSupport::Concern
-  
+
   def view_file_path
     'shared/views/ems_common/show'
   end
-  
+
   def show_props
     drop_breadcrumb(:name => @ems.name + _(" (Properties)"), :url => show_link(@ems, :display  =>  "props"))
   end
@@ -124,7 +124,6 @@ module EmsCommon
     @ems = @record
 
     drop_breadcrumb({:name => ui_lookup(:tables => @table_name), :url => "/#{@table_name}/show_list?page=#{@current_page}&refresh=y"}, true)
-    byebug
     case params[:display]
     when 'main'                          then show_main
     when 'download_pdf', 'summary_only'  then show_download

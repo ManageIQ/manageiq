@@ -58,7 +58,7 @@ function MwAddDatasourceCtrl($scope, $rootScope, miqService, mwAddDatasourceServ
   $scope.$on(DATASOURCE_EVENT, function(event, payload) {
     mwAddDatasourceService.sendAddDatasource(payload).then(
       function(result) { // success
-        miqService.miqFlash(result.data.status, result.data.msg);
+      	miqService.replacePartials(result.data)
       },
       function(_error) { // error
         miqService.miqFlash('error', __('Unable to install the Datasource on this server.'));
