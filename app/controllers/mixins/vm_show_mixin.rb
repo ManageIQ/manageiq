@@ -75,7 +75,7 @@ module VmShowMixin
       self.x_active_tree ||= feature.tree_list_name
       self.x_active_accord ||= feature.accord_name
     end
-    get_node_info(x_node)
+    get_node_info(@sb[@sb[:active_accord]].present? ? @sb[@sb[:active_accord]] : x_node)
   end
 
   def set_active_elements_authorized_user(tree_name, accord_name, add_nodes, klass, id)

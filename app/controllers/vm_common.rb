@@ -57,6 +57,16 @@ module VmCommon
     end
   end
 
+  # to reload currently displayed summary screen in explorer
+  def reload
+    @_params[:id] = if hide_vms && x_node.split('-')[1] != to_cid(params[:id]) && params[:id].present?
+                      'v-' + to_cid(params[:id])
+                    else
+                      x_node
+                    end
+    tree_select
+  end
+
   def show_timeline
     db = get_rec_cls
     @display = "timeline"
@@ -1238,9 +1248,11 @@ module VmCommon
   def get_node_info(treenodeid)
     # resetting action that was stored during edit to determine what is being edited
     @sb[:action] = nil
-    @nodetype, id = if vm_selected && hide_vms
+    @nodetype, id = if (treenodeid.split('-')[0] == 'v' || treenodeid.split('-')[0] == 't')  && hide_vms
+                      @sb[@sb[:active_accord]] = treenodeid
                       parse_nodetype_and_id(treenodeid)
                     else
+                      @sb[@sb[:active_accord]] = nil
                       parse_nodetype_and_id(valid_active_node(treenodeid))
                     end
     model, title =  case x_active_tree.to_s
@@ -1372,6 +1384,7 @@ module VmCommon
 
     if !@in_a_form && !@sb[:action]
       id = vm_selected && hide_vms ? TreeBuilder.build_node_cid(@vm) : x_node
+      id = @sb[@sb[:active_accord]] if @sb[@sb[:active_accord]].present? && params[:action] != 'tree_select'
       get_node_info(id)
       type, _id = parse_nodetype_and_id(id)
       # set @delete_node since we don't rebuild vm tree
