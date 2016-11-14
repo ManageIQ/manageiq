@@ -39,17 +39,16 @@ ManageIQ.angular.app.service('topologyService', function() {
 
   this.geturl = function(d) {
     var entity_url = "";
-    var action = '/' + d.item.miq_id;
+    var action = '/';
+
     switch (d.item.kind) {
       case "ContainerManager":
-        action = '/' + d.item.miq_id;
         entity_url = "ems_container";
         break;
       case "NetworkManager":
         entity_url = "ems_network";
         break;
       case "MiddlewareManager":
-        action = '/' + d.item.miq_id;
         entity_url = "ems_middleware";
         break;
       case "InfraManager":
@@ -59,10 +58,10 @@ ManageIQ.angular.app.service('topologyService', function() {
         entity_url = "ems_cloud";
         break;
       default : // for non provider entities, use the show action
+        action = '/show/';
         entity_url = _.snakeCase(d.item.kind);
       }
-
-      return '/' + entity_url + action;
+      return '/' + entity_url + action + d.item.miq_id;
   };
 
   this.getSVG = function(d3) {
