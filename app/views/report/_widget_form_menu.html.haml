@@ -2,7 +2,7 @@
 %h3
   = _('Menu Shortcuts')
 = select_tag("add_shortcut",
-  options_for_select([["Add a Shortcut", nil]] + @edit[:avail_shortcuts], nil),
+  options_for_select([[_("Add a Shortcut"), nil]] + @edit[:avail_shortcuts], nil),
   :disabled => @edit[:read_only],
   :class    => "selectpicker")
 :javascript
