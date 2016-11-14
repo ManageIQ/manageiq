@@ -57,7 +57,7 @@ module MiddlewareCommonMixin
   end
 
   def show_middleware_entities(klass)
-    @showtype = @display = klass.name.underscore.pluralize
+    @showtype = @display = params[:display] unless params[:display].nil?
     breadcrumb_title = _("%{name} (All %{title})") % {:name  => @record.name,
                                                       :title => display_name(@display)}
     drop_breadcrumb(:name => breadcrumb_title, :url => show_link(@record, :display => @display))
