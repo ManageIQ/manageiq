@@ -15,9 +15,13 @@
 
   function eventClick(el) {
     var table = '<table class="table table-striped table-bordered">';
+    // clear all popovers on new click
+    $('[data-toggle="popover"]').popover('hide');
+
     $(d3.event.target).popover('toggle');
-    $(d3.event.target).on('shown.bs.popover', function () {
-      $(document).on('click', hidePopover);
+
+    $(d3.event.target).on('shown.bs.popover', { target: d3.event.target }, function (event) {
+      $(document).on('click', { target: event.data.target }, hidePopover);
     });
 
     if (el.hasOwnProperty("events")) {
@@ -40,8 +44,9 @@
     $('#legend').html(table);
   }
 
-  function hidePopover() {
-    $('[data-toggle="popover"]').popover('hide');
+  function hidePopover(event) {
+    $(event.data.target).popover('hide');
+    $(event.data.target).off('shown.bs.popover');
     $(document).off('click', hidePopover);
   }
 
