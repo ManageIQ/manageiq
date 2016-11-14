@@ -133,7 +133,8 @@ class MiddlewareServerController < ApplicationController
 
   def show
     return unless init_show
-    case params[:display]
+    @display = params[:display] unless params[:display].nil?
+    case @display
     when 'middleware_datasources' then show_middleware_entities(MiddlewareDatasource)
     when 'middleware_deployments' then show_middleware_entities(MiddlewareDeployment)
     when 'middleware_messagings' then show_middleware_entities(MiddlewareMessaging)
