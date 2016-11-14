@@ -51,6 +51,23 @@ describe EmsCloud do
         "#{ManageIQ::Providers::Openstack::CloudManager.description} Cloud Provider #{ems_cloud.name}"
       end
 
+      context "provider is not created under root tenant" do
+        let(:tenant) { FactoryGirl.build(:tenant, :parent => default_tenant) }
+        let(:ems_cloud_without_root_tenant) do
+          FactoryGirl.create(:ems_openstack, :tenant => tenant, :tenant_mapping_enabled => true)
+        end
+
+        it "creates provider's tenant under tenant of provider" do
+          ems_cloud_without_root_tenant.sync_cloud_tenants_with_tenants
+
+          ems_cloud_without_root_tenant.reload
+
+          expect(ems_cloud_without_root_tenant.source_tenant.parent).not_to be_nil
+          expect(ems_cloud_without_root_tenant.source_tenant.parent).not_to eq(default_tenant)
+          expect(ems_cloud_without_root_tenant.source_tenant.parent).to eq(tenant)
+        end
+      end
+
       it "creates tenant related to provider" do
         ems_cloud.sync_cloud_tenants_with_tenants
 
