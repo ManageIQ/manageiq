@@ -1,21 +1,23 @@
 describe PglogicalSubscription do
+  let(:remote_region1) { ApplicationRecord.my_region_number + 1 }
+  let(:remote_region2) { ApplicationRecord.my_region_number + 2 }
   let(:subscriptions) do
     [
       {
-        "subscription_name" => "region_0_subscription",
+        "subscription_name" => "region_#{remote_region1}_subscription",
         "status"            => "replicating",
-        "provider_node"     => "region_0",
+        "provider_node"     => "region_#{remote_region1}",
         "provider_dsn"      => "dbname = 'vmdb\\'s_test' host='example.com' user='root' port='' password='p=as\\' s\\''",
-        "slot_name"         => "pgl_vmdb_test_region_0_subscripdb71d61",
+        "slot_name"         => "pgl_vmdb_test_region_#{remote_region1}_subscripdb71d61",
         "replication_sets"  => ["miq"],
         "forward_origins"   => ["all"]
       },
       {
-        "subscription_name" => "region_1_subscription",
+        "subscription_name" => "region_#{remote_region2}_subscription",
         "status"            => "disabled",
-        "provider_node"     => "region_1",
+        "provider_node"     => "region_#{remote_region2}",
         "provider_dsn"      => "dbname = vmdb_test2 host=test.example.com user = postgres port=5432 fallback_application_name='bin/rails'",
-        "slot_name"         => "pgl_vmdb_test_region_1_subscripdb71d61",
+        "slot_name"         => "pgl_vmdb_test_region_#{remote_region2}_subscripdb71d61",
         "replication_sets"  => ["miq"],
         "forward_origins"   => ["all"]
       }
@@ -25,28 +27,35 @@ describe PglogicalSubscription do
   let(:expected_attrs) do
     [
       {
-        "id"                   => "region_0_subscription",
+        "id"                   => "region_#{remote_region1}_subscription",
         "status"               => "replicating",
         "dbname"               => "vmdb's_test",
         "host"                 => "example.com",
         "user"                 => "root",
-        "provider_region"      => 0,
+        "provider_region"      => remote_region1,
         "provider_region_name" => "The region"
       },
       {
-        "id"              => "region_1_subscription",
+        "id"              => "region_#{remote_region2}_subscription",
         "status"          => "disabled",
         "dbname"          => "vmdb_test2",
         "host"            => "test.example.com",
         "user"            => "postgres",
         "port"            => 5432,
-        "provider_region" => 1
+        "provider_region" => remote_region2
       }
     ]
   end
 
   let(:pglogical)      { double }
-  let!(:remote_region) { FactoryGirl.create(:miq_region, :region => 0, :description => "The region") }
+  let!(:remote_region) do
+    FactoryGirl.create(
+      :miq_region,
+      :id          => ApplicationRecord.id_in_region(remote_region1, 1),
+      :region      => remote_region1,
+      :description => "The region"
+    )
+  end
 
   before do
     allow(described_class).to receive(:pglogical).and_return(pglogical)
@@ -243,7 +252,7 @@ describe PglogicalSubscription do
       expect(pglogical).to receive(:subscription_disable).with(sub.id)
         .and_return(double(:check => nil))
       expect(pglogical).to receive(:node_dsn_update) do |provider_node_name, new_dsn|
-        expect(provider_node_name).to eq("region_0")
+        expect(provider_node_name).to eq("region_#{remote_region1}")
         expect(new_dsn).to include("host='other-host.example.com'")
         expect(new_dsn).to include("dbname='vmdb\\'s_test'")
         expect(new_dsn).to include("user='root'")
@@ -353,9 +362,9 @@ describe PglogicalSubscription do
     it "drops the node when this is the last subscription" do
       allow(pglogical).to receive(:subscriptions).and_return([subscriptions.first], [])
 
-      expect(pglogical).to receive(:subscription_drop).with("region_0_subscription", true)
+      expect(pglogical).to receive(:subscription_drop).with("region_#{remote_region1}_subscription", true)
       expect(MiqRegion).to receive(:destroy_region)
-        .with(instance_of(ActiveRecord::ConnectionAdapters::PostgreSQLAdapter), 0)
+        .with(instance_of(ActiveRecord::ConnectionAdapters::PostgreSQLAdapter), remote_region1)
       expect(pglogical).to receive(:node_drop).with("region_#{MiqRegion.my_region_number}", true)
       expect(pglogical).to receive(:disable)
 
@@ -364,22 +373,19 @@ describe PglogicalSubscription do
 
     it "removes the region authentication key if present" do
       allow(pglogical).to receive(:subscriptions).and_return(subscriptions, [subscriptions.last])
-      expect(pglogical).to receive(:subscription_drop).with("region_0_subscription", true)
+      expect(pglogical).to receive(:subscription_drop).with("region_#{remote_region1}_subscription", true)
 
       EvmSpecHelper.create_guid_miq_server_zone
-      FactoryGirl.create(
+      auth = FactoryGirl.create(
         :auth_token,
         :resource_id   => remote_region.id,
         :resource_type => "MiqRegion",
         :auth_key      => "this is the encryption key!",
         :authtype      => "system_api"
       )
-      expect(remote_region.auth_key_configured?).to be true
 
       sub.delete
-      remote_region.reload
-
-      expect(remote_region.auth_key_configured?).to be false
+      expect(AuthToken.find_by_id(auth.id)).to be_nil
     end
   end
 
