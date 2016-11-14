@@ -52,10 +52,15 @@ module EmsRefresh::SaveInventory
     # Query for all of the Vms once across all EMSes, to handle any moving VMs
     vms_uids = hashes.collect { |h| h[:uid_ems] }.compact
     vms = VmOrTemplate.where(:uid_ems => vms_uids).to_a
+    disconnects_index = disconnects.each_with_object({}) { |vm, obj| obj[vm] = vm }
+    indexed_vms = vms.each_with_object({}) do |vm, obj|
+      (obj[vm.uid_ems] ||= []) << vm
+    end
     dup_vms_uids = (vms_uids.duplicates + vms.collect(&:uid_ems).duplicates).uniq.sort
     _log.info "#{log_header} Duplicate unique values found: #{dup_vms_uids.inspect}" unless dup_vms_uids.empty?
 
     invalids_found = false
+
     hashes.each do |h|
       # Backup keys that cannot be written directly to the database
       key_backup = backup_keys(h, remove_keys)
@@ -77,7 +82,8 @@ module EmsRefresh::SaveInventory
 
         # Find the Vm in the database with the current uid_ems.  In the event
         #   of duplicates, try to determine which one is correct.
-        found = vms.select { |v| v.uid_ems == h[:uid_ems] }
+        found = indexed_vms[h[:uid_ems]] || []
+
         if found.length > 1 || (found.length == 1 && found.first.ems_id)
           found_dups = found
           found = found_dups.select { |v| v.ems_id == h[:ems_id] && (v.ems_ref.nil? || v.ems_ref == h[:ems_ref]) }
@@ -98,13 +104,11 @@ module EmsRefresh::SaveInventory
           # build a type-specific vm or template
           found = ems.vms_and_templates.build(h)
         else
-          vms.delete(found)
-
           h.delete(:type)
 
           _log.info("#{log_header} Updating Vm [#{found.name}] id: [#{found.id}] location: [#{found.location}] storage id: [#{found.storage_id}] uid_ems: [#{found.uid_ems}] ems_ref: [#{h[:ems_ref]}]")
           found.update_attributes!(h)
-          disconnects.delete(found)
+          disconnects_index.delete(found)
         end
 
         # Set the raw power state
@@ -147,6 +151,8 @@ module EmsRefresh::SaveInventory
         parent.with_relationship_type('genealogy') { parent.set_child(child) } if parent && child
       end
     end
+
+    disconnects = disconnects_index.values
 
     unless disconnects.empty?
       if invalids_found
