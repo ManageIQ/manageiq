@@ -110,6 +110,36 @@ describe OpsController do
     end
   end
 
+  context "#schedule_set_record_vars" do
+    let(:zone) { double("Zone", :name => "foo") }
+    let(:server) { double("MiqServer", :logon_status => :ready, :id => 1, :my_zone => zone) }
+    let(:user) { stub_user(:features => :all) }
+    let(:schedule) { FactoryGirl.create(:miq_automate_schedule) }
+
+    before do
+      allow(MiqServer).to receive(:my_server).and_return(server)
+      allow(server).to receive(:zone_id).and_return(1)
+      stub_user(:features => :all)
+    end
+
+    it "returns automate parameters for an automation_request" do
+      params[:action_typ] = "automation_request"
+      filter_params = {
+        :starting_object => "SYSTEM/PROCESS",
+        :instance_name   => "test",
+        :object_request  => "test_request",
+        :attrs           => {"0"=>%w(key1 value1)},
+        :target_class    => "test_target",
+        :target_id       => "0100"
+      }
+      params.merge!(filter_params)
+      allow(controller).to receive(:params).and_return(params)
+      set_vars = controller.send(:schedule_set_record_vars, schedule)
+      expect(set_vars[:parameters]).to include(:request => filter_params[:object_request], 'key1' => 'value1', :object_class => 'test_target', :object_id => '0100')
+      expect(set_vars[:uri_parts]).to include(:namespace => filter_params[:starting_object])
+    end
+  end
+
   context "#build_filtered_item_list" do
     settings = {}
     it "returns a filtered item list for MiqTemplate" do

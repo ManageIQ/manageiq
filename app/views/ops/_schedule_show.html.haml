@@ -63,7 +63,7 @@
           .col-md-10
             %p.form-control-static
               - unless @selected_schedule.next_run_on.blank?
-                = h(@selected_schedule.filter[:parameters][:object_request])
+                = h(@selected_schedule.filter[:parameters][:request])
       %div
         = _("Object Attribute")
         .form-group

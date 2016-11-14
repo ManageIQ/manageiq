@@ -24,8 +24,8 @@ module OpsController::Settings::Schedules
 
     if @selected_schedule.sched_action[:method] == 'automation_request'
       params = @selected_schedule.filter[:parameters]
-      @object_class = ui_lookup(:model => params[:target_class])
-      @object_name = params[:target_class].constantize.find_by(:id => params[:target_id]).name if params[:target_class]
+      @object_class = ui_lookup(:model => params[:object_class])
+      @object_name = params[:object_class].constantize.find_by(:id => params[:object_id]).name if params[:object_class]
     end
 
     if @selected_schedule.filter.kind_of?(MiqExpression)
@@ -514,14 +514,13 @@ module OpsController::Settings::Schedules
           :message   => params[:object_message]
         },
         :parameters => {
-          :object_request => params[:object_request],
+          :request        => params[:object_request],
           :instance_name  => params[:instance_name],
           :object_message => params[:object_message],
           :attrs          => attrs,
-          :readonly       => params[:readonly] == "true" ? true : false,
-          :target_class   => params[:target_class] == "" ? nil : params[:target_class],
-          :target_id      => params[:target_id]
-        }
+          :object_class   => params[:target_class] == "" ? nil : params[:target_class],
+          :object_id      => params[:target_id]
+        }.merge!(attrs.to_h)
       }
     elsif %w(global my).include?(params[:filter_typ])  # Search filter chosen, set up relationship
       schedule.filter     = nil  # Clear out existing filter expression
