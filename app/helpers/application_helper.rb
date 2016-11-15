@@ -178,7 +178,9 @@ module ApplicationHelper
 
   def url_for_record(record, action = "show") # Default action is show
     @id = to_cid(record.id)
-    db  = if record.kind_of?(VmOrTemplate)
+    db  = if controller.kind_of?(VmOrTemplateController)
+            "vm_or_template"
+          elsif record.kind_of?(VmOrTemplate)
             controller_for_vm(model_for_vm(record))
           elsif record.class.respond_to?(:db_name)
             record.class.db_name
