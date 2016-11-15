@@ -1,6 +1,18 @@
 module StartUrl
   extend ActiveSupport::Concern
 
+  STORAGE_START_PAGES = %w(cim_storage_extent_show_list
+                           ontap_file_share_show_list
+                           ontap_logical_disk_show_list
+                           ontap_storage_system_show_list
+                           ontap_storage_volume_show_list
+                           storage_manager_show_list).to_set.freeze
+  CONTAINERS_START_PAGES = %w(ems_container_show_list
+                              container_node_show_list
+                              container_group_show_list
+                              container_service_show_list
+                              container_view).to_set.freeze
+
   def start_url_for_user(start_url)
     return url_for(start_url) unless start_url.nil?
     return url_for(:controller => 'dashboard', :action => 'show') unless helpers.settings(:display, :startpage)
@@ -23,19 +35,8 @@ module StartUrl
   private
 
   def start_page_allowed?(start_page)
-    storage_start_pages = %w(cim_storage_extent_show_list
-                             ontap_file_share_show_list
-                             ontap_logical_disk_show_list
-                             ontap_storage_system_show_list
-                             ontap_storage_volume_show_list
-                             storage_manager_show_list)
-    return false if storage_start_pages.include?(start_page) && !::Settings.product.storage
-    containers_start_pages = %w(ems_container_show_list
-                                container_node_show_list
-                                container_group_show_list
-                                container_service_show_list
-                                container_view)
-    return false if containers_start_pages.include?(start_page) && !::Settings.product.containers
+    return false if STORAGE_START_PAGES.include?(start_page) && !::Settings.product.storage
+    return false if CONTAINERS_START_PAGES.include?(start_page) && !::Settings.product.containers
     role_allows?(:feature => start_page, :any => true)
   end
 end
