@@ -5,10 +5,12 @@
     - if ["instances"].include?(@display) && @showtype != "compare"
       = render :partial => "layouts/gtl", :locals => {:action_url => "show/#{@flavor.id}"}
     - elsif @showtype == "compare"
+      = raise 'compare partial called through "show"'
       = render :partial => "layouts/compare"
     - elsif @showtype == "drift_history"
       = render :partial => "layouts/drift_history"
     - elsif @showtype == "drift"
+      = raise 'drift partial called through "show"'
       = render :partial => "layouts/compare"
     - elsif @showtype == "item"
       = render :partial => "layouts/item"

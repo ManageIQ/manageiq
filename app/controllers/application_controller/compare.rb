@@ -69,7 +69,7 @@ module ApplicationController::Compare
         @refresh_partial = "layouts/compare"
       else
         @showtype = "compare"
-        render :action => "show"
+        render :template => 'compare'
       end
     end
   end
@@ -571,7 +571,7 @@ module ApplicationController::Compare
       if @explorer
         @refresh_partial = "layouts/compare"
       else
-        render :action => "show", :id => @drift_obj.id
+        render :template => "compare"
       end
     end
   end

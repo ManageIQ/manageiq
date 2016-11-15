@@ -4,6 +4,7 @@
   - if @showtype == "item"
     = render :partial => "layouts/item"
   - elsif @showtype == "compare"
+    = raise 'compare partial called through "show"'
     = render :partial => "layouts/compare"
   - elsif @showtype == 'main'
     = render :partial => 'main'

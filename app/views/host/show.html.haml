@@ -6,6 +6,7 @@
     - when "details"
       = render(:partial => "layouts/gtl", :locals => {:action_url => @lastaction})
     - when "compare", "drift"
+      = raise 'compare or drift partial called through "show"'
       = render(:partial => "layouts/compare")
     - when "drift_history", "item"
       = render(:partial => "layouts/#{@showtype}")

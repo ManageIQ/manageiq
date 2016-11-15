@@ -8,6 +8,7 @@
     - when "details"
       = render(:partial => "layouts/x_gtl", :locals => {:action_url => @lastaction})
     - when "compare", "item"
+      = raise 'compare partial called through "show"' if @showtype == 'compare'
       = render(:partial => "layouts/#{@showtype}")
     - when "performance"
       = render(:partial => "layouts/performance")

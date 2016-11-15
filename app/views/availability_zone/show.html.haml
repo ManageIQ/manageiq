@@ -9,6 +9,7 @@
     - if %w(instances cloud_volumes).include?(@display) && @showtype != "compare"
       = render :partial => "layouts/gtl", :locals => {:action_url => "show/#{@availability_zone.id}"}
     - elsif @showtype == "compare" || @showtype == "drift_history" || @showtype == "drift" || @showtype == "item"
+      = raise 'compare or drift partial called through "show"' if %w(compare drift).include?(@showtype)
       = render :partial => "layouts/#{@showtype}"
     - elsif @showtype == "timeline"
       = render :partial => "layouts/tl_show"

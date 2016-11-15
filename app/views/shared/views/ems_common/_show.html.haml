@@ -13,6 +13,7 @@
   - elsif @showtype ==  "item"
     = render(:partial => "layouts/item")
   - elsif @showtype == "compare"
+    = raise 'compare partial called through "show"'
     = render :partial => "layouts/compare"
   - elsif @showtype == "timeline"
     = render :partial => "layouts/tl_show"

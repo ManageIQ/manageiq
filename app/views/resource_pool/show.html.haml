@@ -8,6 +8,7 @@
     - when "download_pdf"
       = render :partial => "layouts/show_pdf"
     - when "compare"
+      = raise 'compare partial called through "show"'
       = render :partial => "layouts/#{@showtype}"
     - else
       = render :partial => @showtype
