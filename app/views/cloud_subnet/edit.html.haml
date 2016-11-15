@@ -22,6 +22,7 @@
                             'ng-model'     => "cloudSubnetModel.cidr",
                             'ng-maxlength' => 20,
                             :miqrequired   => false,
+                            :disabled      => true,
                             :checkchange   => true}
     .form-group
       %label.col-md-2.control-label
@@ -42,6 +43,7 @@
                             'ng-model'     => "cloudSubnetModel.ip_version",
                             'ng-maxlength' => 2,
                             :miqrequired   => true,
+                            :disabled      => true,
                             :checkchange   => true}
 
 
