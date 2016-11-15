@@ -36,6 +36,7 @@ describe 'miq_request/_prov_vm_grid.html.haml' do
       allow(@vm).to receive(:mem_cpu).and_return('2048')
       allow(@vm).to receive(:allocated_disk_storage).and_return('4096')
       allow(@vm).to receive(:v_total_snapshots).and_return('128')
+      allow(@vm).to receive(:deprecated).and_return(true)
       allow(@vm).to receive(:ext_management_system)
       allow(@vm).to receive(:cloud_tenant).and_return(cloud_tenant)
 
