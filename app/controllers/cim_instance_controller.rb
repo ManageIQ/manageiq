@@ -15,10 +15,6 @@ class CimInstanceController < ApplicationController
     "#{self.class.table_name}_#{suffix}"
   end
 
-  def process_index
-    redirect_to :action => 'show_list'
-  end
-
   def process_button
     @edit = session[:edit]                          # Restore @edit for adv search box
     params[:display] = @display if ["host", "vms", "storages"].include?(@display) # Were we displaying vms/storages
