@@ -28,6 +28,12 @@ FactoryGirl.define do
           :parent  => :ext_management_system do
   end
 
+  factory :ems_datawarehouse,
+          :aliases => ["manageiq/providers/datawarehouse_manager"],
+          :class   => "ManageIQ::Providers::DatawarehouseManager",
+          :parent  => :ext_management_system do
+  end
+
   factory :ems_network,
           :aliases => ["manageiq/providers/network_manager"],
           :class   => "ManageIQ::Providers::NetworkManager",
@@ -330,5 +336,13 @@ FactoryGirl.define do
           :aliases => ["manageiq/providers/hawkular/middleware_manager"],
           :class   => "ManageIQ::Providers::Hawkular::MiddlewareManager",
           :parent  => :ems_middleware do
+  end
+
+  # Leaf classes for datawarehouse_manager
+
+  factory :ems_hawkular_datawarehouse,
+          :aliases => ["manageiq/providers/hawkular/datawarehouse_manager"],
+          :class   => "ManageIQ::Providers::Hawkular::DatawarehouseManager",
+          :parent  => :ems_datawarehouse do
   end
 end

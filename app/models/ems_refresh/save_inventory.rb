@@ -14,6 +14,7 @@ module EmsRefresh::SaveInventory
     when ManageIQ::Providers::StorageManager::CinderManager then save_ems_cinder_inventory(ems, hashes, target)
     when ManageIQ::Providers::StorageManager::SwiftManager  then save_ems_swift_inventory(ems, hashes, target)
     when ManageIQ::Providers::MiddlewareManager             then save_ems_middleware_inventory(ems, hashes, target)
+    when ManageIQ::Providers::DatawarehouseManager          then save_ems_datawarehouse_inventory(ems, hashes, target)
     end
   end
 
