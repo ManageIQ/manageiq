@@ -20,6 +20,8 @@ module ManageIQ::Providers
     has_many :container_templates, :foreign_key => :ems_id, :dependent => :destroy
     has_one :container_deployment, :foreign_key => :deployed_ems_id, :inverse_of => :deployed_ems
 
+    virtual_column :port_show, :type => :string
+
     # required by aggregate_hardware
     def all_computer_system_ids
       MiqPreloader.preload(container_nodes, :computer_system)
