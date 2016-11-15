@@ -4,6 +4,6 @@ class ApplicationHelper::Button::ChargebackDownload < ApplicationHelper::Button:
     end
 
     def visible?
-      @view_context.x_active_tree == :cb_rates_tree
+      @view_context.x_active_tree == :cb_reports_tree
     end
 end
