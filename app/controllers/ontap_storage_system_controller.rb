@@ -1,6 +1,4 @@
 class OntapStorageSystemController < CimInstanceController
-  include Mixins::GenericListMixin
-
   def button
     process_button
   end
