@@ -501,6 +501,24 @@ RSpec.describe Host do
     end
   end
 
+  describe "#clustered" do
+    it "works" do
+      FactoryBot.create(:host)
+      h = FactoryBot.create(:host, :ems_cluster => FactoryBot.create(:ems_cluster))
+
+      expect(Host.clustered).to eq([h])
+    end
+  end
+
+  describe "#non_clustered" do
+    it "works" do
+      h = FactoryBot.create(:host)
+      FactoryBot.create(:host, :ems_cluster => FactoryBot.create(:ems_cluster))
+
+      expect(Host.non_clustered).to eq([h])
+    end
+  end
+
   context "supported features" do
     it "does not support refresh_network_interfaces" do
       host = FactoryBot.build(:host)
