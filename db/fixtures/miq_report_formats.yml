@@ -127,8 +127,8 @@
     :size_on_disk: :bytes
     :snapshot_size: :bytes
     :storage_allocated_metric: :bytes
-    :storage_metric: :bytes
-    :storage_used_metric: :bytes
+    :storage_metric: :bytes_precision_2
+    :storage_used_metric: :bytes_precision_2
     :total_space: :bytes
     :total_size: :bytes
     :v_derived_storage_used: :bytes
@@ -182,9 +182,9 @@
     :max_derived_memory_available: :megabytes
     :max_derived_memory_reserved: :megabytes
     :max_derived_memory_used: :megabytes
-    :memory_allocated_metric: :megabytes
-    :memory_metric: :megabytes
-    :memory_used_metric: :megabytes
+    :memory_allocated_metric: :megabytes_precision_2
+    :memory_metric: :megabytes_precision_2
+    :memory_used_metric: :megabytes_precision_2
     :memory_mb: :megabytes
     :mem_cpu: :megabytes
     :min_derived_memory_used: :megabytes
@@ -196,15 +196,15 @@
     :abs_max_net_usage_rate_average_value: :kbps
     :abs_min_disk_usage_rate_average_value: :kbps
     :abs_min_net_usage_rate_average_value: :kbps
-    :disk_io_metric: :kbps
-    :disk_io_used_metric: :kbps
+    :disk_io_metric: :kbps_precision_2
+    :disk_io_used_metric: :kbps_precision_2
     :disk_usage_rate_average: :kbps
     :max_disk_usage_rate_average: :kbps
     :max_net_usage_rate_average: :kbps
     :min_disk_usage_rate_average: :kbps
     :min_net_usage_rate_average: :kbps
-    :net_io_metric: :kbps
-    :net_io_used_metric: :kbps
+    :net_io_metric: :kbps_precision_2
+    :net_io_used_metric: :kbps_precision_2
     :net_usage_rate_average: :kbps
     :trend_max_disk_usage_rate_average: :kbps
     :trend_max_net_usage_rate_average: :kbps
@@ -303,6 +303,9 @@
     :gigabytes: :gigabytes_human
     :kbps:      :kbps
     :mhz:       :mhz_precision_2
+    :bytes_precision_2: :bytes_human_precision_2
+    :kbps_precision_2: :kbps_precision_2
+    :megabytes_precision_2: :megabytes_human_precision_2
     :mhz_avg:   :mhz_avg
     :percent: :percent_precision_1
     :elapsed_time: :elapsed_time_human
@@ -317,6 +320,15 @@
     :function:
       :name: bytes_to_human_size
     :precision: 1
+
+  :bytes_human_precision_2:
+    :description: Suffixed Bytes (B, KB, MB, GB)
+    :columns:
+    :sub_types:
+      - :bytes
+    :function:
+      :name: bytes_to_human_size
+    :precision: 2
 
   :kilobytes_human:
     :description: Suffixed Kilobytes (KB, MB, GB)
@@ -337,6 +349,15 @@
       :name: mbytes_to_human_size
     :precision: 1
 
+  :megabytes_human_precision_2:
+    :description: Suffixed Megabytes (MB, GB)
+    :columns:
+    :sub_types:
+      - :megabytes
+    :function:
+      :name: mbytes_to_human_size
+    :precision: 2
+
   :gigabytes_human:
     :description: Suffixed Gigabytes (GB)
     :columns:
@@ -345,6 +366,15 @@
     :function:
       :name: gbytes_to_human_size
     :precision: 1
+
+  :gigabytes_human_precision_2:
+    :description: Suffixed Gigabytes (GB)
+    :columns:
+    :sub_types:
+      - :gigabytes
+    :function:
+      :name: gbytes_to_human_size
+    :precision: 2
 
   :general_number_precision_0:
     :description: Number (1,234)
@@ -394,6 +424,17 @@
       :delimiter: ","
       :suffix: " KBps"
     :precision: 0
+
+  :kbps_precision_2:
+    :description: Kilobytes per Second (12,34 KBps)
+    :columns:
+    :sub_types:
+      - :kbps
+    :function:
+      :name: number_with_delimiter
+      :delimiter: ","
+      :suffix: " KBps"
+    :precision: 2
 
   :cores:
     :description: Cores
