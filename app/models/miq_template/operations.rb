@@ -9,10 +9,6 @@ module MiqTemplate::Operations
     validate_invalid_for_template(_("VM Process collection"))
   end
 
-  def validate_start
-    validate_invalid_for_template(_("Start Operation"))
-  end
-
   def validate_stop
     validate_invalid_for_template(_("Stop Operation"))
   end
