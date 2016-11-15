@@ -1,13 +1,10 @@
 class EmsClusterController < ApplicationController
   before_action :check_privileges
   before_action :get_session_data
-
   after_action :cleanup_action
   after_action :set_session_data
 
-  def index
-    redirect_to :action => 'show_list'
-  end
+  include Mixins::GenericListMixin
 
   def drift_history
     @display = "drift_history"
@@ -130,10 +127,6 @@ class EmsClusterController < ApplicationController
     if params[:ppsetting] || params[:searchtag] || params[:entry] || params[:sort_choice]
       replace_gtl_main_div
     end
-  end
-
-  def show_list
-    process_show_list
   end
 
   # handle buttons pressed on the button bar

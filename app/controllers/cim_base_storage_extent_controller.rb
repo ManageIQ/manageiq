@@ -1,8 +1,4 @@
 class CimBaseStorageExtentController < CimInstanceController
-  def index
-    process_index
-  end
-
   def button
     process_button
   end
@@ -17,9 +13,5 @@ class CimBaseStorageExtentController < CimInstanceController
       'hosts'                   => :hosts,
       'storages'                => :storages
     )
-  end
-
-  def show_list
-    process_show_list
   end
 end

@@ -1,19 +1,17 @@
 require "rexml/document"
 class MiqTemplateController < ApplicationController
-  include VmCommon        # common methods for vm controllers
+  include VmCommon
+  include Mixins::GenericListMixin
 
   before_action :check_privileges
   before_action :get_session_data
   after_action :cleanup_action
   after_action :set_session_data
 
+  # Override method from Mixins::GenericListMixin
   def index
     session[:miq_template_type] = nil             # Reset VM type if coming in from All tab
     redirect_to :action => 'show_list'
-  end
-
-  def show_list
-    process_show_list
   end
 
   private

@@ -4,9 +4,7 @@ class AvailabilityZoneController < ApplicationController
   after_action :cleanup_action
   after_action :set_session_data
 
-  def index
-    redirect_to :action => 'show_list'
-  end
+  include Mixins::GenericListMixin
 
   def show
     return if perfmenu_click?
@@ -73,10 +71,6 @@ class AvailabilityZoneController < ApplicationController
     if params[:ppsetting] || params[:searchtag] || params[:entry] || params[:sort_choice]
       replace_gtl_main_div
     end
-  end
-
-  def show_list
-    process_show_list
   end
 
   # handle buttons pressed on the button bar

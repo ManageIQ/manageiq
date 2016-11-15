@@ -4,9 +4,7 @@ class HostAggregateController < ApplicationController
   after_action :cleanup_action
   after_action :set_session_data
 
-  def index
-    redirect_to :action => 'show_list'
-  end
+  include Mixins::GenericListMixin
 
   def show
     return if perfmenu_click?
@@ -72,10 +70,6 @@ class HostAggregateController < ApplicationController
     if params[:ppsetting] || params[:searchtag] || params[:entry] || params[:sort_choice]
       replace_gtl_main_div
     end
-  end
-
-  def show_list
-    process_show_list
   end
 
   def get_checked_host_aggregate_id(params)

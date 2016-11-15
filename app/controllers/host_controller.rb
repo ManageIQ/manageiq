@@ -1,13 +1,10 @@
 class HostController < ApplicationController
   before_action :check_privileges
   before_action :get_session_data
-
   after_action :cleanup_action
   after_action :set_session_data
 
-  def index
-    redirect_to :action => 'show_list'
-  end
+  include Mixins::GenericListMixin
 
   def show_association(action, display_name, listicon, method, klass, association = nil, conditions = nil)
     set_config(identify_record(params[:id]))
@@ -244,7 +241,7 @@ class HostController < ApplicationController
     show_association('guest_applications', _('Packages'), 'guest_application', :guest_applications, GuestApplication)
   end
 
-  # Show the main Host list view
+  # Show the main Host list view overriding method from Mixins::GenericListMixin
   def show_list
     session[:host_items] = nil
     process_show_list

@@ -1,7 +1,5 @@
 class OntapStorageSystemController < CimInstanceController
-  def index
-    process_index
-  end
+  include Mixins::GenericListMixin
 
   def button
     process_button
@@ -18,10 +16,6 @@ class OntapStorageSystemController < CimInstanceController
       'hosts'                    => :hosts,
       'storages'                 => :storages
     )
-  end
-
-  def show_list
-    process_show_list
   end
 
   # Create a datastore on a storage system

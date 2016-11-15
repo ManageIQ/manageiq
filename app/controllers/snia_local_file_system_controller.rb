@@ -1,8 +1,4 @@
 class SniaLocalFileSystemController < CimInstanceController
-  def index
-    process_index
-  end
-
   def button
     process_button
   end

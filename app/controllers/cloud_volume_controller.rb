@@ -4,9 +4,7 @@ class CloudVolumeController < ApplicationController
   after_action :cleanup_action
   after_action :set_session_data
 
-  def index
-    redirect_to :action => 'show_list'
-  end
+  include Mixins::GenericListMixin
 
   def get_checked_volume_id(params)
     if params[:id]
@@ -136,11 +134,6 @@ class CloudVolumeController < ApplicationController
     if params[:ppsetting] || params[:searchtag] || params[:entry] || params[:sort_choice]
       replace_gtl_main_div
     end
-  end
-
-  # Show the main Cloud Volume list view
-  def show_list
-    process_show_list
   end
 
   def cloud_volume_form_fields

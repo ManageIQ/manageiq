@@ -4,9 +4,7 @@ class CloudVolumeBackupController < ApplicationController
   after_action :cleanup_action
   after_action :set_session_data
 
-  def index
-    redirect_to :action => 'show_list'
-  end
+  include Mixins::GenericListMixin
 
   # handle buttons pressed on the button bar
   def button
@@ -51,11 +49,6 @@ class CloudVolumeBackupController < ApplicationController
     if params[:ppsetting] || params[:searchtag] || params[:entry] || params[:sort_choice]
       replace_gtl_main_div
     end
-  end
-
-  # Show the main Cloud Volume Backup list view
-  def show_list
-    process_show_list
   end
 
   private

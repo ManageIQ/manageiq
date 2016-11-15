@@ -5,9 +5,7 @@ class CloudTenantController < ApplicationController
   after_action :cleanup_action
   after_action :set_session_data
 
-  def index
-    redirect_to :action => 'show_list'
-  end
+  include Mixins::GenericListMixin
 
   # handle buttons pressed on the button bar
   def button
@@ -55,10 +53,6 @@ class CloudTenantController < ApplicationController
   def self.display_methods
     %w(instances images security_groups cloud_volumes cloud_volume_snapshots cloud_object_store_containers floating_ips
        network_ports cloud_networks cloud_subnets network_routers)
-  end
-
-  def show_list
-    process_show_list
   end
 
   def get_checked_cloud_tenant_id(params)

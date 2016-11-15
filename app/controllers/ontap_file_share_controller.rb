@@ -1,8 +1,4 @@
 class OntapFileShareController < CimInstanceController
-  def index
-    process_index
-  end
-
   def button
     process_button
   end
@@ -14,10 +10,6 @@ class OntapFileShareController < CimInstanceController
       'hosts'                    => :hosts,
       'storages'                 => :storages
     )
-  end
-
-  def show_list
-    process_show_list
   end
 
   # Create a datastore on a storage system
