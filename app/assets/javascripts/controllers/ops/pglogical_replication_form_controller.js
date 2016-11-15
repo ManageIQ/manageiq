@@ -88,14 +88,17 @@ ManageIQ.angular.app.controller('pglogicalReplicationFormController', ['$http', 
     else if (original_value == "global" && new_value == 'remote')
       miqService.miqFlash("warn", __("Changing to remote replication role will remove all current subscriptions"));
 
-    if (new_value != "global")
+    if (new_value != "global") {
       $scope.pglogicalReplicationModel.subscriptions = [];
+    };
 
-    if (new_value != "remote")
+    if (new_value != "remote") {
       $scope.pglogicalReplicationModel.exclusion_list = angular.copy($scope.modelCopy.exclusion_list);
+    };
 
-    if (new_value == "global" && original_value == "global")
+    if (new_value == "global" && original_value == "global") {
       $scope.pglogicalReplicationModel.subscriptions = angular.copy($scope.modelCopy.subscriptions);
+    };
   };
 
   // add new subscription button pressed
@@ -206,20 +209,25 @@ ManageIQ.angular.app.controller('pglogicalReplicationFormController', ['$http', 
 
       if ((saveable || !subscriptions_changed) &&
         $scope.pglogicalReplicationModel.replication_type === "global" &&
-        $scope.pglogicalReplicationModel.subscriptions.length >= 1)
+        $scope.pglogicalReplicationModel.subscriptions.length >= 1) {
         return true;
+      }
       else if (saveable &&
         $scope.pglogicalReplicationModel.replication_type !== "global" &&
-        $scope.pglogicalReplicationModel.subscriptions.length == 0)
+        $scope.pglogicalReplicationModel.subscriptions.length == 0) {
         return true;
-      else
+      }
+      else {
         return false;
+      }
     } else {
       saveable = form.$dirty && form.$valid;
-      if (saveable && (($scope.modelCopy.replication_type !== "remote") || !angular.equals($scope.pglogicalReplicationModel.exclusion_list, $scope.modelCopy.exclusion_list)))
+      if (saveable && (($scope.modelCopy.replication_type !== "remote") || !angular.equals($scope.pglogicalReplicationModel.exclusion_list, $scope.modelCopy.exclusion_list))) {
         return true;
-      else
+      }
+      else {
         return false
+      }
     }
   }
 
