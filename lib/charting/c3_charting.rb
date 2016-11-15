@@ -33,7 +33,7 @@ class C3Charting < Charting
 
   def data_ok?(data)
     obj = YAML.load(data)
-    !!obj && !obj[:options]
+    !!obj && obj.kind_of?(Hash) && !obj[:options]
   rescue Psych::SyntaxError
     false
   end
