@@ -427,11 +427,12 @@ describe MiqExpression do
         end
 
         it "finds the correct instances for an gt expression with a custom attribute dynamic integer field" do
-          custom_attribute =  FactoryGirl.create(:custom_attribute, :name => "example", :value => 1)
+          custom_attribute =  FactoryGirl.create(:custom_attribute, :name => "example", :value => 10)
           vm1 = FactoryGirl.create(:vm, :memory_reserve => 2)
           vm1.custom_attributes << custom_attribute
           _vm2 = FactoryGirl.create(:vm, :memory_reserve => 0)
-          filter = MiqExpression.new(">" => {"field" => "VmOrTemplate-memory_reserve", "value" => "VmOrTemplate-#{CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX}example"})
+          name_of_attribute = "VmOrTemplate-#{CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX}example"
+          filter = MiqExpression.new("<" => {"field" => "VmOrTemplate-memory_reserve", "value" => name_of_attribute})
           result = Rbac.search(:targets => Vm, :filter => filter).first.first
           expect(filter.to_sql.last).to eq(:supported_by_sql => false)
           expect(result).to eq(vm1)
