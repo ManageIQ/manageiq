@@ -535,11 +535,6 @@ class ConfigurationController < ApplicationController
         new_tz = 'UTC' if new_tz.blank?
         @edit.store_path(:current, :display, :timezone, new_tz)
       end
-
-      # Build the start pages pulldown list
-      session[:start_pages] = MiqShortcut.start_pages.each_with_object([]) do |page, pages|
-        pages.push([page[1], page[0]]) if start_page_allowed?(page[2])
-      end
     when 'ui_2'
       @edit = {
         :current => init_settings,

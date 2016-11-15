@@ -13,6 +13,10 @@ module StartUrl
                               container_service_show_list
                               container_view).to_set.freeze
 
+  included do
+    helper_method :start_page_options
+  end
+
   def start_url_for_user(start_url)
     return url_for(start_url) unless start_url.nil?
     return url_for(:controller => 'dashboard', :action => 'show') unless helpers.settings(:display, :startpage)
@@ -30,6 +34,12 @@ module StartUrl
     # user first_allowed_url in start_pages to be default page, if default startpage is not allowed
     @settings.store_path(:display, :startpage, first_allowed_url) unless startpage_already_set
     @settings[:display][:startpage]
+  end
+
+  def start_page_options
+    MiqShortcut.start_pages.each_with_object([]) do |(url, description, rbac_feature_name), result|
+      result.push([description, url]) if start_page_allowed?(rbac_feature_name)
+    end
   end
 
   private
