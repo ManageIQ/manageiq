@@ -2098,7 +2098,7 @@ class MiqAeClassController < ApplicationController
 
   # Get variables from edit form
   def get_ns_form_vars
-    @ae_ns = MiqAeNamespace.find_by_id(from_cid(@edit[:ae_ns_id]))
+    @ae_ns = @edit[:typ].constantize.find_by_id(from_cid(@edit[:ae_ns_id]))
     [:ns_name, :ns_description, :enabled].each do |field|
       if field == :enabled
         @edit[:new][field] = params[:ns_enabled] == "1" if params[:ns_enabled]
