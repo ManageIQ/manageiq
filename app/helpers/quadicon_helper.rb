@@ -257,6 +257,7 @@ module QuadiconHelper
         attrs.merge!(quadicon_vm_attributes(item))
       end
     else
+      attrs[:controller] = controller_name
       attrs[:action]  = 'x_show'
       attrs[:id]      = to_cid(row['id'])
     end
