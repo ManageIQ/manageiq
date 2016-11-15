@@ -1471,20 +1471,6 @@ describe ApplicationHelper do
     end
   end
 
-  context '#skip_days_from_time_profile' do
-    it 'should return empty array for whole week' do
-      expect(helper.skip_days_from_time_profile((0..6).to_a)).to eq([])
-    end
-
-    it 'should return whole week for empty array' do
-      expect(helper.skip_days_from_time_profile([])).to eq((1..7).to_a)
-    end
-
-    it 'should handle Sundays' do
-      expect(helper.skip_days_from_time_profile((1..6).to_a)).to eq([7])
-    end
-  end
-
   it 'output of remote_function should not be html_safe' do
     expect(helper.remote_function(:url => {:controller => 'vm_infra', :action => 'explorer'}).html_safe?).to be_falsey
   end

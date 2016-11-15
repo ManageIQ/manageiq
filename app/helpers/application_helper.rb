@@ -1641,13 +1641,6 @@ module ApplicationHelper
     end
   end
 
-  def skip_days_from_time_profile(time_profile_days)
-    (1..7).to_a.delete_if do |d|
-      # time_profile_days has 0 for sunday, skip_days needs 7 for sunday
-      time_profile_days.include?(d % 7)
-    end
-  end
-
   def tree_with_advanced_search?
     %i(containers
        containers_filter

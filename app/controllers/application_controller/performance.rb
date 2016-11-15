@@ -233,6 +233,13 @@ module ApplicationController::Performance
     end
   end
 
+  def skip_days_from_time_profile(time_profile_days)
+    (1..7).to_a.delete_if do |d|
+      # time_profile_days has 0 for sunday, skip_days needs 7 for sunday
+      time_profile_days.include?(d % 7)
+    end
+  end
+
   # Handle actions for performance chart context menu clicks
   def perf_menu_click
     # Parse the clicked item to get indexes and selection variables
