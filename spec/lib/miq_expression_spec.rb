@@ -25,11 +25,15 @@ describe MiqExpression do
       exp2 = {"ENDS WITH" => {"field" => "#{klass}-name", "value" => "#{klass}-#{virtual_custom_attribute_3}"}}
       exp3 = {"ENDS WITH" => {"field" => "#{klass}-#{virtual_custom_attribute_4}", "value" => "any_value"}}
 
-      expectation = expect { MiqExpression.new("AND" => [exp1, {"AND" => [exp2, exp3]}]) }
-
-      expectation.to change { vm.respond_to?(virtual_custom_attribute_2) }.from(false).to(true)
-      expectation.to change { vm.respond_to?(virtual_custom_attribute_3) }.from(false).to(true)
-      expectation.to change { vm.respond_to?(virtual_custom_attribute_4) }.from(false).to(true)
+      expect do
+        MiqExpression.new("AND" => [exp1, {"AND" => [exp2, exp3]}])
+      end.to change {
+        [
+          vm.respond_to?(virtual_custom_attribute_2),
+          vm.respond_to?(virtual_custom_attribute_3),
+          vm.respond_to?(virtual_custom_attribute_4)
+        ]
+      }.from([false, false, false]).to([true, true, true])
     end
   end
 

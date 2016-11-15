@@ -1,5 +1,26 @@
 describe Condition do
   describe ".subst" do
+    context "evaluation of virtual custom attributes from left and right side" do
+      let(:custom_attribute_1)         { FactoryGirl.create(:custom_attribute, :name => "attr_1", :value => 20) }
+      let(:custom_attribute_2)         { FactoryGirl.create(:custom_attribute, :name => "attr_2", :value => 30) }
+      let(:name_of_custom_attribute_1) { "VmOrTemplate-#{CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX}attr_1" }
+      let(:name_of_custom_attribute_2) { "VmOrTemplate-#{CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX}attr_2" }
+      let(:vm)                         { FactoryGirl.create(:vm, :memory_reserve => 10) }
+
+      before do
+        @filter = MiqExpression.new(">" => {"field" => name_of_custom_attribute_1,
+                                            "value" => name_of_custom_attribute_2})
+        vm.custom_attributes << custom_attribute_1
+        vm.custom_attributes << custom_attribute_2
+        vm.save
+      end
+
+      it "evaluates custom attributes" do
+        condition_to_evaluate = Condition.subst(@filter.to_ruby(nil), vm)
+        expect(condition_to_evaluate).to eq('20 > 30')
+      end
+    end
+
     context "expression with <find>" do
       before do
         @cluster = FactoryGirl.create(:ems_cluster)
