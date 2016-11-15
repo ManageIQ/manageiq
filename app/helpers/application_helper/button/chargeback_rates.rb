@@ -4,6 +4,6 @@ class ApplicationHelper::Button::ChargebackRates < ApplicationHelper::Button::Ba
     end
 
     def visible?
-      @view_context.x_active_tree == :cb_reports_tree
+      @view_context.x_active_tree == :cb_rates_tree
     end
 end
