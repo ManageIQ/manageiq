@@ -23,6 +23,21 @@ describe ApplicationController, "#Timelines" do
         expect(options.date[:start]).to eq(nil)
         expect(options.date[:end]).to eq(nil)
       end
+
+      it "sets categories for policy timelines correctly" do
+        ems = FactoryGirl.create(:ems_openstack_infra)
+        controller.instance_variable_set(:@tl_options,
+                                         ApplicationController::Timelines::Options.new)
+
+        controller.instance_variable_set(:@_params,
+                                         :id            => ems.id,
+                                         :tl_show       => "policy_timeline",
+                                         :tl_categories => ["VM Operation"])
+        expect(controller).to receive(:render)
+        controller.send(:tl_chooser)
+        options = assigns(:tl_options)
+        expect(options.policy[:categories]).to include('VM Operation')
+      end
     end
   end
 end

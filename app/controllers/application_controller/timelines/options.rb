@@ -83,25 +83,18 @@ module ApplicationController::Timelines
     :result
   ) do
     def update_from_params(params)
-      self.result = if params[:showSuccessfulEvents] == "true" && params[:showFailedEvents] == "true"
-                      "both"
-                    elsif params[:showSuccessfulEvents] == "true"
-                      "success"
-                    elsif params[:showFailedEvents] == "true"
-                      "failure"
-                    end
-
+      self.result = params[:tl_result] || "success"
       self.categories = {}
       if params[:tl_categories]
         params[:tl_categories].each do |category|
-          categories[events[category]] = {:display_name => category}
+          categories[category] = {:display_name => category, :event_groups => events[category]}
         end
       end
     end
 
     def events
       @events ||= MiqEventDefinitionSet.all.each_with_object({}) do |event, hash|
-        hash[event.description] = event.members.collect(&:id)
+        hash[event.description] = event.members.collect(&:name)
       end
     end
 
@@ -115,7 +108,7 @@ module ApplicationController::Timelines
     end
 
     def event_set
-      applied_filters.blank? ? [] : applied_filters.collect { |e| events[e] }
+      categories.blank? ? [] : categories.collect { |_, e| e[:event_groups] }
     end
 
     private
