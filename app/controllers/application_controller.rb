@@ -2439,5 +2439,4 @@ class ApplicationController < ActionController::Base
     @settings.store_path(:display, :startpage, first_allowed_url) unless startpage_already_set
     @settings[:display][:startpage]
   end
-  helper_method :start_url_for_user
 end
