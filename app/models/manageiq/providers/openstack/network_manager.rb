@@ -125,7 +125,7 @@ class ManageIQ::Providers::Openstack::NetworkManager < ManageIQ::Providers::Netw
     }
     queue_opts = {
       :class_name  => self.class.name,
-      :method_name => 'create_security_group',
+      :method_name => 'create_floating_ip',
       :instance_id => id,
       :priority    => MiqQueue::HIGH_PRIORITY,
       :role        => 'ems_operations',
@@ -146,7 +146,7 @@ class ManageIQ::Providers::Openstack::NetworkManager < ManageIQ::Providers::Netw
     }
     queue_opts = {
       :class_name  => self.class.name,
-      :method_name => 'create_floating_ip',
+      :method_name => 'create_security_group',
       :instance_id => id,
       :priority    => MiqQueue::HIGH_PRIORITY,
       :role        => 'ems_operations',
