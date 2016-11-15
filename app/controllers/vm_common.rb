@@ -1723,9 +1723,11 @@ module VmCommon
       action = "evm_relationship_update"
     when "miq_request_new"
       partial = "miq_request/pre_prov"
-      typ = request.parameters[:controller] == "vm_cloud" ? "an #{ui_lookup(:table => "template_cloud")}" : "a #{ui_lookup(:table => "template_infra")}"
-      header = _("Provision %{vm_or_template} - Select %{typ}") %
-        {:vm_or_template => ui_lookup(:tables => table), :typ => typ}
+      header = if request.parameters[:controller] == "vm_cloud"
+                 _("Provision Instances - Select an Image")
+               else
+                 _("Provision Virtual Machines - Select a Template")
+               end
       action = "pre_prov"
     when "pre_prov"
       partial = "miq_request/prov_edit"
