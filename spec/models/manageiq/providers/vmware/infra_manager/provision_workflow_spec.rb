@@ -88,6 +88,43 @@ describe ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow do
       workflow.instance_variable_set(:@target_resource, nil)
     end
 
+    context 'on storage_profile selection' do
+      context 'when template has no storage_profile' do
+        let(:template) do
+          FactoryGirl.create(:vm_vmware, :host => @host1, :ems_id => @ems.id)
+        end
+
+        it 'set storage_profile value to [nil, nil] if not set yet' do
+          @src_vm = FactoryGirl.create(:vm_vmware, :host => @host1, :ems_id => @ems.id)
+          workflow.instance_variable_set(:@values, :src_vm_id => @src_vm.id)
+          workflow.allowed_storage_profiles
+          values = workflow.instance_variable_get(:@values)
+          expect(values[:placement_storage_profile]).to eq([nil, nil])
+        end
+      end
+
+      context 'when template has storage_profile' do
+        let(:storage_profile) { FactoryGirl.create(:storage_profile, :name => 'Gold') }
+        let(:template) do
+          FactoryGirl.create(:vm_vmware, :host => @host1, :ems_id => @ems.id, :storage_profile => storage_profile)
+        end
+
+        it 'set storage_profile selection value (to that of template) if not set yet' do
+          workflow.instance_variable_set(:@values, :src_vm_id => template.id)
+          workflow.allowed_storage_profiles
+          values = workflow.instance_variable_get(:@values)
+          expect(values[:placement_storage_profile]).to eq([storage_profile.id, storage_profile.name])
+        end
+
+        it 'will not touch storage_profile selection value if already set' do
+          workflow.instance_variable_set(:@values, :src_vm_id => template.id, :placement_storage_profile => [])
+          workflow.allowed_storage_profiles
+          values = workflow.instance_variable_get(:@values)
+          expect(values[:placement_storage_profile]).to eq([])
+        end
+      end
+    end
+
     context '#set_on_vm_id_changed' do
       it 'clears StorageProfile filter' do
         workflow.instance_variable_set(:@filters, :Host => {21 => "ESX 6.0"}, :StorageProfile => {1 => "Tag 1"})
