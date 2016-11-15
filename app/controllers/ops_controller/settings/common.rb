@@ -183,11 +183,7 @@ module OpsController::Settings::Common
       end
     end
 
-    exclusion_list = if replication_type == :remote
-                       MiqPglogical.new.active_excludes
-                     else
-                       MiqPglogical.default_excludes
-                     end
+    exclusion_list = replication_type == :remote ? MiqPglogical.new.active_excludes : MiqPglogical.default_excludes
 
     render :json => {
       :replication_type => replication_type,
