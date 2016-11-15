@@ -237,7 +237,7 @@ class TreeNodeBuilder
   end
 
   def classification_node
-    generic_node(object.description, 'folder', _("Category: %{description}") % {:description => object.description})
+    generic_node(object.description, 'folder.png', _("Category: %{description}") % {:description => object.description})
     @node[:cfmeNoClick] = true
     @node[:hideCheckbox] = true
   end
