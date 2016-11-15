@@ -2,6 +2,87 @@
 
 All notable changes to this project will be documented in this file.
 
+## Unreleased - as of Sprint 49 end 2016-11-14
+
+### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+49+Ending+Nov+14%2C+2016%22+label%3Aenhancement)
+
+- Automate
+  - Git Support: Support automate model git repositories without domain directory
+  - Notification: Add global and tenant notification audiences
+  - Service Model
+    - Expose ems_events to Vm service model
+    - Expose a group's filters.
+    - Expose authentication_key in EMS service model
+  - Provisioning
+    - Set zone when deliver a service template provision task
+    - Create a request per region for VM reconfigure
+  - Services
+    - Expose service power state
+- Platform
+  - High Availabilty: Raise event when failover successful
+  - Chargeback: Add daily to chargeback rate for 'per time' types
+  - Replication: Add logging when the replication set is altered
+  - Logging: Add configurable number of saved logfile rotations
+- Providers
+  - Containers UI: Label based Auto-Tagging UI
+  - Middleware (Hawkular)
+    - Add support to overwrite an existing deployment
+  - Networks
+    - Nuage: UI for Network elements
+    - Add Network Topology button for the Load Balancer class
+  - Red Hat Enterprise Virtualization Manager
+      - Enable VM reconfigure disks for supported rhevm version
+      - Migrate support
+  - VMware vCloud: Event monitoring
+- REST API
+  - Add IDs to Dialog Content
+  - Actions support
+  - Conditions support
+  - Support for /api/requests approve and deny actions
+  - Service Dialogs Copy API
+  - MiqPolicies support
+  - Service Request Delete
+- SmartState: Support analysis of VMs residing on NFS41 datastores
+
+### [Changed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+49+Ending+Nov+14%2C+2016%22+label%3Aenhancement)
+
+- Performance
+  - For resource_pools only bring back usable Resource Pools
+  - Prune VM Tree folders first, so nodes can be properly prune and tree nodes can then be collapsed
+  - Remove full refresh from provisioning flow
+- Platform
+ - Chargeback: Simplify Chargeback rates editor to only show relevant parameters
+- Providers
+ - RHEVM: Make C&U Metrics Database a mandatory field for Validation
+
+### [Fixed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+49+Ending+Nov+14%2C+2016%22+label%3bugs)
+
+Notable fixes include:
+
+- Automate
+  - Services: Set default value of param visible to true for all field types
+  - Git Domains for Automate: Ensure a response when git repository does not contain domains
+- Platform
+  - Increase worker memory thresholds to avoid frequent restarts.
+  - Perform RBAC user filter check on requested ids before allowing request
+- Providers
+  - Fix targeted refresh of a VM without its host clearing all folder relationships
+  - OpenStack Cloud
+    - Add logs for network and subnet CRUD
+    - UI: Add missing toolbar options for cloud tenants and host aggregates
+    - UI: Add missing add/remove hosts actions to host aggregate UI
+  - RHVM: Pass storage domains collection in disks RHV api request
+- User Interface
+  - Internationalization: i18n support in pdf reports
+  - Fix custom logo issue in header
+  - Routing Error for reload on infrastructure networking
+  - Add Advanced Search to Containers explorer
+  - Fall-"back" to VMRC desktop client if no NPAPI plugin is available
+  - Displays a more informative message on datasource deletion.
+  - Display Advanced Search in Configuration management
+  - Allow the retirement date to be cleared
+  - Default Filters can be saved or reset
+
 ## Unreleased - as of Sprint 48 end 2016-10-24
 
 ### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+48+Ending+Oct+24%2C+2016%22+label%3Aenhancement)
@@ -107,10 +188,12 @@ are displayed in the tenant list view and in the tenant selection when adding/ed
 - Providers
   - Containers: Ability to add a container provider with a port other than 8443
   - Azure: Show 'Memory (MB)' chart for azure instance
+  - Hawkular UI: Domain mode server has different operations than normal standalone server
 - User Interface
   - Enable Provision VMs button via relationships
   - Missing reset button for Job Template Service Dialog
   - Display the number of access control elements based on user permission
+  - Rebuild timeline options when Apply button is pressed
 
 
 ## Unreleased - as of Sprint 47 end 2016-10-03
