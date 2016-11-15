@@ -1,4 +1,4 @@
-class ApplicationHelper::Toolbar::ConfigurationProfileForemanCenter < ApplicationHelper::Toolbar::Basic
+class ApplicationHelper::Toolbar::ConfigurationManagerProviderCenter < ApplicationHelper::Toolbar::Basic
   button_group('provider_vmdb', [
     select(
       :provider_vmdb_choice,
