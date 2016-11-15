@@ -1,5 +1,8 @@
 module MiqAeMethodService
   class MiqAeServiceUser < MiqAeServiceModelBase
+    require_relative "mixins/miq_ae_service_custom_attribute_mixin"
+    include MiqAeServiceCustomAttributeMixin
+
     expose :current_group,  :association => true
     expose :current_tenant, :association => true
     expose :vms,            :association => true
@@ -26,22 +29,6 @@ module MiqAeMethodService
         value     = MiqLdap.get_attr(ldap_user, name.to_sym)
         value.nil? ? nil : value.dup
       end
-    end
-
-    def custom_keys
-      object_send(:miq_custom_keys)
-    end
-
-    def custom_get(key)
-      object_send(:miq_custom_get, key)
-    end
-
-    def custom_set(key, value)
-      ar_method do
-        @object.miq_custom_set(key, value)
-        @object.save
-      end
-      value
     end
 
     def miq_group

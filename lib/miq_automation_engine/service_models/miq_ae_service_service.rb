@@ -2,6 +2,8 @@ module MiqAeMethodService
   class MiqAeServiceService < MiqAeServiceModelBase
     require_relative "mixins/miq_ae_service_retirement_mixin"
     include MiqAeServiceRetirementMixin
+    require_relative "mixins/miq_ae_service_custom_attribute_mixin"
+    include MiqAeServiceCustomAttributeMixin
 
     expose :retire_service_resources
     expose :automate_retirement_entrypoint
@@ -20,9 +22,6 @@ module MiqAeMethodService
     expose :indirect_service_children, :association => true
     expose :parent_service,            :association => true
     expose :tenant,                    :association => true
-    expose :custom_keys,               :method => :miq_custom_keys
-    expose :custom_get,                :method => :miq_custom_get
-    expose :custom_set,                :method => :miq_custom_set, :override_return => true
 
     CREATE_ATTRIBUTES = [:name, :description, :service_template]
 
