@@ -1648,10 +1648,6 @@ module ApplicationHelper
     end
   end
 
-  def breadcrumb_prohibited_for_action?
-    !%w(accordion_select explorer tree_select).include?(action_name)
-  end
-
   def tree_with_advanced_search?
     %i(containers
        containers_filter
