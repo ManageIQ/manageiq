@@ -61,8 +61,6 @@ class ManageIQ::Providers::Openstack::NetworkManager::CloudSubnet < ::CloudSubne
     super(connection_options)
   end
 
-  private
-
   def self.connection_options(cloud_tenant = nil)
     connection_options = {:service => "Network"}
     connection_options[:tenant_name] = cloud_tenant.name if cloud_tenant
