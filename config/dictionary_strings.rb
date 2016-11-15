@@ -6,6 +6,8 @@ _("Full Name")
 _("Username")
 # TRANSLATORS: en.yml key: dictionary.column.availability_zone.total_vms
 _("Total Instances")
+# TRANSLATORS: en.yml key: dictionary.column.host_aggregate.total_vms
+_("Total Instances")
 # TRANSLATORS: en.yml key: dictionary.column.ems_cloud.total_miq_templates
 _("Total Images")
 # TRANSLATORS: en.yml key: dictionary.column.ems_cloud.total_vms
@@ -1260,6 +1262,10 @@ _("EVM Audit Events")
 _("Availability Zone")
 # TRANSLATORS: en.yml key: dictionary.model.AvailabilityZone (plural form)
 _("Availability Zones")
+# TRANSLATORS: en.yml key: dictionary.model.HostAggregate
+_("Host Aggregate")
+# TRANSLATORS: en.yml key: dictionary.model.HostAggregate (plural form)
+_("Host Aggregates")
 # TRANSLATORS: en.yml key: dictionary.model.ChargebackVm
 _("Chargeback for Vms")
 # TRANSLATORS: en.yml key: dictionary.model.ChargebackContainerProject
@@ -1352,6 +1358,10 @@ _("Replicators")
 _("Container Service")
 # TRANSLATORS: en.yml key: dictionary.model.ContainerService (plural form)
 _("Container Services")
+# TRANSLATORS: en.yml key: dictionary.model.ContainerTemplate
+_("Container Template")
+# TRANSLATORS: en.yml key: dictionary.model.ContainerTemplate (plural form)
+_("Container Templates")
 # TRANSLATORS: en.yml key: dictionary.model.EmsCluster
 _("Cluster / Deployment Role")
 # TRANSLATORS: en.yml key: dictionary.model.EmsCluster (plural form)
@@ -1578,9 +1588,9 @@ _("Cloud Providers (Amazon)")
 _("Cloud Provider (Microsoft Azure)")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Azure::CloudManager (plural form)
 _("Cloud Providers (Microsoft Azure)")
-# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Vmware::CloudManage
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Vmware::CloudManager
 _("Cloud Provider (VMware vCloud)")
-# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Vmware::CloudManage (plural form)
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Vmware::CloudManager (plural form)
 _("Cloud Providers (VMware vCloud)")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Azure::NetworkManager::CloudNetwork
 _("Cloud Network (Microsoft Azure)")
@@ -1626,6 +1636,10 @@ _("Network Providers (Google)")
 _("Security Group (Google)")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Google::NetworkManager::SecurityGroup (plural form)
 _("Security Groups (Google)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Google::NetworkManager::LoadBalancer
+_("Load Balancer (Google)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Google::NetworkManager::LoadBalancer (plural form)
+_("Load Balancers (Google)")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Google::NetworkManager::NetworkPort
 _("Network Port (Google)")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Google::NetworkManager::NetworkPort (plural form)
@@ -1650,6 +1664,10 @@ _("Cloud Networks (Google)")
 _("Security Group (OpenStack)")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openstack::NetworkManager::SecurityGroup (plural form)
 _("Security Groups (OpenStack)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Azure::NetworkManager::LoadBalancer
+_("LoadBalancer (Microsoft Azure)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Azure::NetworkManager::LoadBalancer (plural form)
+_("LoadBalancers (Microsoft Azure)")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Azure::NetworkManager::CloudSubnet
 _("Cloud Subnet (Microsoft Azure)")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Azure::NetworkManager::CloudSubnet (plural form)
@@ -2050,6 +2068,10 @@ _("Key Pairs")
 _("Availability Zone")
 # TRANSLATORS: en.yml key: dictionary.table.availability_zone (plural form)
 _("Availability Zones")
+# TRANSLATORS: en.yml key: dictionary.table.host_aggregate
+_("Host Aggregate")
+# TRANSLATORS: en.yml key: dictionary.table.host_aggregate (plural form)
+_("Host Aggregates")
 # TRANSLATORS: en.yml key: dictionary.table.base_snapshot
 _("Base Snapshot")
 # TRANSLATORS: en.yml key: dictionary.table.base_snapshot (plural form)
@@ -2086,6 +2108,10 @@ _("Cloud Volume")
 _("Cloud Volumes")
 # TRANSLATORS: en.yml key: dictionary.table.cloud_volumes
 _("Cloud Volumes")
+# TRANSLATORS: en.yml key: dictionary.table.cloud_volume_backup
+_("Cloud Volume Backup")
+# TRANSLATORS: en.yml key: dictionary.table.cloud_volume_backup (plural form)
+_("Cloud Volume Backups")
 # TRANSLATORS: en.yml key: dictionary.table.cloud_volume_snapshot
 _("Cloud Volume Snapshot")
 # TRANSLATORS: en.yml key: dictionary.table.cloud_volume_snapshot (plural form)
@@ -2168,6 +2194,12 @@ _("Build")
 _("Builds")
 # TRANSLATORS: en.yml key: dictionary.table.container_builds
 _("Builds")
+# TRANSLATORS: en.yml key: dictionary.table.container_template
+_("Template")
+# TRANSLATORS: en.yml key: dictionary.table.container_template (plural form)
+_("Templates")
+# TRANSLATORS: en.yml key: dictionary.table.container_templates
+_("Templates")
 # TRANSLATORS: en.yml key: dictionary.table.custom_button
 _("Button")
 # TRANSLATORS: en.yml key: dictionary.table.custom_button (plural form)
