@@ -136,7 +136,20 @@ describe('ManageIQ.charts.formatters', function() {
       };
       var fn = ManageIQ.charts.formatters[options.name];
 
-      expect(fn(1234, options)).toEqual('1.2 KB');
+      expect(fn(123, options)).toEqual('123 B');
+    });
+  });
+
+  describe('.bytes_to_human_size', function() {
+    it('Suffixed Bytes (B, KB, MB, GB)', function() {
+      var options = {
+        description: 'Suffixed Bytes (B, KB, MB, GB)',
+        name: 'bytes_to_human_size',
+        precision: 2,
+      };
+      var fn = ManageIQ.charts.formatters[options.name];
+
+      expect(fn(1234, options)).toEqual('1.21 KiB');
     });
   });
 
@@ -149,7 +162,20 @@ describe('ManageIQ.charts.formatters', function() {
       };
       var fn = ManageIQ.charts.formatters[options.name];
 
-      expect(fn(234, options)).toEqual('234 KB');
+      expect(fn(234, options)).toEqual('234 KiB');
+    });
+  });
+
+  describe('.kbytes_to_human_size', function() {
+    it('Suffixed Kilobytes (KB, MB, GB)', function() {
+      var options = {
+        description: 'Suffixed Kilobytes (KB, MB, GB)',
+        name: 'kbytes_to_human_size',
+        precision: 1,
+      };
+      var fn = ManageIQ.charts.formatters[options.name];
+
+      expect(fn(234.09, options)).toEqual('234.1 KiB');
     });
   });
 
@@ -162,7 +188,33 @@ describe('ManageIQ.charts.formatters', function() {
       };
       var fn = ManageIQ.charts.formatters[options.name];
 
-      expect(fn(2, options)).toEqual('2 MB');
+      expect(fn(2, options)).toEqual('2 MiB');
+    });
+  });
+
+  describe('.mbytes_to_human_size', function() {
+    it('Suffixed Megabytes (MB, GB)', function() {
+      var options = {
+        description: 'Suffixed Megabytes (MB, GB)',
+        name: 'mbytes_to_human_size',
+        precision: 2,
+      };
+      var fn = ManageIQ.charts.formatters[options.name];
+
+      expect(fn(2, options)).toEqual('2 MiB');
+    });
+  });
+
+  describe('.mbytes_to_human_size', function() {
+    it('Suffixed Megabytes (MB, GB)', function() {
+      var options = {
+        description: 'Suffixed Megabytes (MB, GB)',
+        name: 'mbytes_to_human_size',
+        precision: 2,
+      };
+      var fn = ManageIQ.charts.formatters[options.name];
+
+      expect(fn(2.12, options)).toEqual('2.12 MiB');
     });
   });
 
@@ -175,7 +227,20 @@ describe('ManageIQ.charts.formatters', function() {
       };
       var fn = ManageIQ.charts.formatters[options.name];
 
-      expect(fn(0.1, options)).toEqual('102 MB');
+      expect(fn(0.1, options)).toEqual('102.4 MiB');
+    });
+  });
+
+  describe('.gbytes_to_human_size', function() {
+    it('Suffixed Gigabytes (GB)', function() {
+      var options = {
+        description: 'Suffixed Gigabytes (GB)',
+        name: 'gbytes_to_human_size',
+        precision: 1,
+      };
+      var fn = ManageIQ.charts.formatters[options.name];
+
+      expect(fn(1.19, options)).toEqual('1.2 GiB');
     });
   });
 
