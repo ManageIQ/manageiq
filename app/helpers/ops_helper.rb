@@ -1,5 +1,6 @@
 module OpsHelper
   include_concern 'TextualSummary'
+  include_concern 'MyServer'
 
   def hide_button(button, opt)
     if opt == "on"

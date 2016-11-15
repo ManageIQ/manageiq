@@ -4,6 +4,7 @@ class OpsController < ApplicationController
   include_concern 'Diagnostics'
   include_concern 'OpsRbac'
   include_concern 'Settings'
+  include OpsHelper::MyServer
 
   before_action :check_privileges
   before_action :get_session_data

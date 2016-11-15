@@ -1652,16 +1652,6 @@ module ApplicationHelper
     !%w(accordion_select explorer tree_select).include?(action_name)
   end
 
-  delegate :id, :to => :my_server, :prefix => true
-
-  def my_zone_name
-    my_server.my_zone
-  end
-
-  def my_server
-    @my_server ||= MiqServer.my_server(true)
-  end
-
   def tree_with_advanced_search?
     %i(containers
        containers_filter
