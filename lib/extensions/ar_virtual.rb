@@ -39,9 +39,14 @@ module VirtualArel
       end
     end
 
+    # supported by sql if
+    # - it is an attribute alias
+    # - it is an attribute that is non virtual
+    # - it is an attribute that is virtual and has arel defined
     def attribute_supported_by_sql?(name)
       load_schema
-      !virtual_attribute?(name) || !!_virtual_arel[name.to_s]
+      attribute_alias?(name) ||
+        (has_attribute?(name) && (!virtual_attribute?(name) || !!_virtual_arel[name.to_s]))
     end
     private
 

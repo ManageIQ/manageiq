@@ -497,6 +497,10 @@ describe VirtualFields do
 
         expect(TestClass.attribute_supported_by_sql?(:parent_col1)).to be_truthy
       end
+
+      it "does not support bogus columns" do
+        expect(TestClass.attribute_supported_by_sql?(:bogus_junk)).to be_falsey
+      end
     end
 
     describe ".virtual_delegate" do
