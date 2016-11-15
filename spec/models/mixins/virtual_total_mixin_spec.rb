@@ -44,7 +44,7 @@ describe VirtualTotalMixin do
     end
 
     it "is not defined in sql" do
-      expect(base_model.attribute_supported_by_sql?(:total_vms)).to be(true)
+      expect(base_model.attribute_supported_by_sql?(:total_vms)).to be(false)
     end
 
     def model_with_children(count)
