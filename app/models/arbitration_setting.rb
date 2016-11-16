@@ -4,17 +4,7 @@ class ArbitrationSetting < ApplicationRecord
 
   def self.seed
     seed_data.each do |setting_attrs|
-      setting = find_by_name(setting_attrs[:name])
-      if setting.nil?
-        create!(setting_attrs)
-        _log.info("Created arbitration setting with parameters #{setting_attrs} ")
-      else
-        setting.attributes = setting_attrs
-        if setting.changed?
-          _log.info("Updating setting #{setting_attrs[:name]}")
-          setting.save!
-        end
-      end
+      find_or_initialize_by(:name => setting_attrs[:name]).update_attributes!(setting_attrs)
     end
   end
 
