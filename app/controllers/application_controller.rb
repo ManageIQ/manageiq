@@ -2348,10 +2348,15 @@ class ApplicationController < ActionController::Base
     to_cid(row['id'])
   end
 
-  def render_flash_not_applicable_to_model(type, model_type = "items")
-    add_flash(_("%{task} does not apply to at least one of the selected %{model}") %
-                {:model => model_type,
-                 :task  => type.split.map(&:capitalize).join(' ')}, :error)
+  def render_flash_not_applicable_to_model(type, model_type = nil)
+    if model_type
+      add_flash(_("%{task} does not apply to at least one of the selected %{model}") %
+                  {:model => model_type,
+                   :task  => type.split.map(&:capitalize).join(' ')}, :error)
+    else
+      add_flash(_("%{task} does not apply to at least one of the selected items") %
+                  {:task => type.split.map(&:capitalize).join(' ')}, :error)
+    end
     javascript_flash(:scroll_top => true) if @explorer
   end
 
