@@ -2,19 +2,20 @@ describe VmOrTemplateController do
   context "#snap_pressed" do
     before :each do
       stub_user(:features => :all)
-      vm = FactoryGirl.create(:vm_vmware)
-      @snapshot = FactoryGirl.create(:snapshot, :vm_or_template_id => vm.id,
+      @vm = FactoryGirl.create(:vm_vmware)
+      @snapshot = FactoryGirl.create(:snapshot, :vm_or_template_id => @vm.id,
                                                 :name              => 'EvmSnapshot',
                                                 :description       => "Some Description"
                                     )
-      vm.snapshots = [@snapshot]
+      @vm.snapshots = [@snapshot]
       tree_hash = {
         :trees       => {
           :vandt_tree => {
-            :active_node => "v-#{vm.id}"
+            :active_node => "v-#{@vm.id}"
           }
         },
-        :active_tree => :vandt_tree
+        :active_tree   => :vandt_tree,
+        :active_accord => :vandt
       }
 
       session[:sandboxes] = {"vm_or_template" => tree_hash}
@@ -29,6 +30,14 @@ describe VmOrTemplateController do
       post :snap_pressed, :params => { :id => @snapshot.id }
       expect(response.body).to include("sendDataWithRx({redrawToolbar:")
       expect(assigns(:flash_array)).to be_blank
+    end
+
+    it "when snapshot is selected parent vm record remains the same" do
+      sb = session[:sandboxes]["vm_or_template"]
+      sb[sb[:active_accord]] = "v-#{@vm.id}"
+      sb[:trees][:vandt_tree][:active_node] = "f-1"
+      post :snap_pressed, :params => { :id => @snapshot.id }
+      expect(assigns(:record).id).to eq(@vm.id)
     end
 
     it "deleted node pressed in snapshot tree" do
