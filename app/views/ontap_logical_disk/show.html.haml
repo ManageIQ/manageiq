@@ -8,6 +8,7 @@
     :javascript
       ManageIQ.afterOnload = "miqAsyncAjax('#{url_for(:action => @ajax_action, :id => @record)}');"
   - elsif @display == "show_statistics"
+    = raise 'show_statistics partial called through "show"'
     = render(:partial => "layouts/show_statistics")
   - elsif @showtype == "download_pdf"
     = render(:partial => "layouts/show_pdf")

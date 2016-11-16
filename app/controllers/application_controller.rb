@@ -337,14 +337,7 @@ class ApplicationController < ActionController::Base
     # Need to use paged_view_search code, once the relationship is working. Following is workaround for the demo
     @stats = @record.derived_metrics
     drop_breadcrumb(:name => _("Utilization"), :url => "/#{db}/show_statistics/#{@record.id}?refresh=n")
-    render :action => "show"
-
-    #   generate the grid/tile/list url to come back here when gtl buttons are pressed
-    #   @gtl_url = "/#{controller_name}/show_statistics/" + @record.id.to_s + "?"#
-    #    @showtype = "details"#
-    #   @view, @pages = get_view(db, :parent=>@record, :parent_method => :miq_cim_derived_stats)  # Get the records (into a view) and the paginator
-    #   @no_checkboxes = true
-    #   @showlinks = false
+    render :template => "show_statistics"
   end
 
   # moved this method here so it can be accessed from pxe_server controller as well
