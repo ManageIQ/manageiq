@@ -211,7 +211,33 @@ describe "Service Templates API" do
     end
   end
 
-  describe "Service Templates create" do
+  describe "Atomic Service Templates create" do
+    let(:ems) { FactoryGirl.create(:ems_amazon) }
+    let(:vm) { FactoryGirl.create(:vm_amazon, :ems_id => ems.id) }
+    let(:flavor) { FactoryGirl.create(:flavor_amazon) }
+    let(:dialog) { FactoryGirl.create(:miq_dialog_provision) }
+    let(:template_parameters) do
+      {
+        :name         => 'Atomic Service Template',
+        :type         => 'ServiceTemplate',
+        :service_type => 'atomic',
+        :prov_type    => 'amazon',
+        :display      => 'false',
+        :request_info => {
+          :miq_request_dialog_name => dialog.name,
+          :placement_auto          => [true, 1],
+          :number_of_vms           => [1, '1'],
+          :src_vm_id               => [vm.id, vm.name],
+          :vm_name                 => 'AtomicVMName',
+          :schedule_type           => ["immediately", "Immediately on Approval"],
+          :instance_type           => [flavor.id, flavor.name],
+          :retire_fqname           => ra2.fqname,
+          :fqname                  => ra1.fqname,
+          :src_ems_id              => [ems.id, ems.name]
+        }
+      }
+    end
+
     it 'rejects requests without appropriate role' do
       api_basic_authorize
 
@@ -223,17 +249,19 @@ describe "Service Templates API" do
     it 'can create a single service template' do
       api_basic_authorize action_identifier(:service_templates, :create)
 
-      run_post(service_templates_url, :name => 'foobar')
-
       expected = {
-        'results' => [
+        'results' => a_collection_including(
           a_hash_including(
-            'name' => 'foobar'
+            'name'         => 'Atomic Service Template',
+            'display'      => false,
+            'service_type' => 'atomic',
+            'prov_type'    => 'amazon'
           )
-        ]
+        )
       }
+
       expect do
-        run_post(service_templates_url, :name => 'foobar')
+        run_post(service_templates_url, template_parameters)
       end.to change(ServiceTemplate, :count).by(1)
       expect(response).to have_http_status(:ok)
       expect(response.parsed_body).to include(expected)
@@ -242,20 +270,24 @@ describe "Service Templates API" do
     it 'can create multiple service templates' do
       api_basic_authorize action_identifier(:service_templates, :create)
 
+      template_hash = {
+        'name'         => 'Atomic Service Template',
+        'display'      => false,
+        'service_type' => 'atomic',
+        'prov_type'    => 'amazon'
+      }
       expected = {
         'results' => a_collection_including(
           a_hash_including(
-            'name' => 'foo'
+            template_hash
           ),
           a_hash_including(
-            'name' => 'bar'
+            template_hash
           )
         )
       }
       expect do
-        run_post(service_templates_url, :action => 'create', :resources => [
-                   { :name => 'foo' }, { :name => 'bar'}
-                 ])
+        run_post(service_templates_url, :action => 'create', :resources => [template_parameters, template_parameters])
       end.to change(ServiceTemplate, :count).by(2)
       expect(response).to have_http_status(:ok)
       expect(response.parsed_body).to include(expected)
