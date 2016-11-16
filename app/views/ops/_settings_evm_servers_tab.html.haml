@@ -73,7 +73,7 @@
               %td.narrow
                 %i.pficon.pficon-server
               %td
-                - if my_server_id == s.id
+                - if my_server.id == s.id
                   %b
                     = h(ui_lookup(:model => s.class.to_s))
                     \: #{h(s.name)} [#{h(s.id)}] (current)

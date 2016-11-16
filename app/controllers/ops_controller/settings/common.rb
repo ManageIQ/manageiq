@@ -938,7 +938,7 @@ module OpsController::Settings::Common
         _("Settings %{model} \"%{name}\"") % {:name  => @selected_zone.description,
                                               :model => ui_lookup(:model => @selected_zone.class.to_s)}
     else
-      @right_cell_text = my_server_id == @sb[:selected_server_id] ?
+      @right_cell_text = my_server.id == @sb[:selected_server_id] ?
         _("Settings %{model} \"%{name}\" (current)") % {:name  => "#{@selected_server.name} [#{@selected_server.id}]",
                                                         :model => ui_lookup(:model => @selected_server.class.to_s)} :
         _("Settings %{model} \"%{name}\"") % {:name  => "#{@selected_server.name} [#{@selected_server.id}]",

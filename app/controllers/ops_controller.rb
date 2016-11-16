@@ -239,7 +239,7 @@ class OpsController < ApplicationController
     end
 
     if x_active_tree == :diagnostics_tree
-      x_node_set("svr-#{to_cid(my_server_id)}", :diagnostics_tree) unless x_node(:diagnostics_tree)
+      x_node_set("svr-#{to_cid(my_server.id)}", :diagnostics_tree) unless x_node(:diagnostics_tree)
       @sb[:active_tab] ||= "diagnostics_summary"
     end
 
@@ -343,7 +343,7 @@ class OpsController < ApplicationController
         record_id = @record && @record.id ? @record.id : "new"
       else
         action_url = "old_dialogs_update"
-        record_id = my_server_id
+        record_id = my_server.id
       end
     elsif x_active_tree == :settings_tree
       if %w(settings_import settings_import_tags).include?(@sb[:active_tab])
@@ -617,11 +617,11 @@ class OpsController < ApplicationController
       end
       active_id = from_cid(x_node.split("-").last)
       # server node
-      if x_node.split("-").first == "svr" && my_server_id == active_id.to_i
+      if x_node.split("-").first == "svr" && my_server.id == active_id.to_i
         # show all the tabs if on current server node
         @selected_server ||= MiqServer.find(@sb[:selected_server_id])  # Reread the server record
         presenter.one_trans_ie if %w(save reset).include?(params[:button]) && is_browser_ie?
-      elsif x_node.split("-").first == "svr" && my_server_id != active_id.to_i
+      elsif x_node.split("-").first == "svr" && my_server.id != active_id.to_i
         # show only 4 tabs if not on current server node
         @selected_server ||= MiqServer.find(@sb[:selected_server_id])  # Reread the server record
       end

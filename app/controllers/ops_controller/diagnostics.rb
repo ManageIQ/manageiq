@@ -858,7 +858,7 @@ module OpsController::Diagnostics
                           :model => ui_lookup(:model => "MiqRegion")}
     elsif active_node && active_node.split('-').first == "svr"
       @selected_server ||= MiqServer.find(@sb[:selected_server_id])  # Reread the server record
-      if @sb[:selected_server_id] == my_server_id
+      if @sb[:selected_server_id] == my_server.id
         if @sb[:active_tab] == "diagnostics_evm_log"
           @log = $log.contents(120, 1000)
           add_flash(_("Logs for this %{product} Server are not available for viewing") % {:product => I18n.t('product.name')}, :warning) if @log.blank?
@@ -891,7 +891,7 @@ module OpsController::Diagnostics
           @sb[:selected_server_id] = @selected_server.id
           @sb[:selected_typ] = "miq_server"
         end
-      elsif @sb[:selected_server_id] == my_server_id || @selected_server.started?
+      elsif @sb[:selected_server_id] == my_server.id || @selected_server.started?
         if @sb[:active_tab] == "diagnostics_workers"
           pm_get_workers
           @record = @selected_server
@@ -916,7 +916,7 @@ module OpsController::Diagnostics
           @sb[:selected_typ] = "miq_server"
         end
       end
-      @right_cell_text = if my_server_id == @sb[:selected_server_id]
+      @right_cell_text = if my_server.id == @sb[:selected_server_id]
                            _("Diagnostics %{model} \"%{name}\" (current)") %
                            {:name  => "#{@selected_server.name} [#{@selected_server.id}]",
                             :model => ui_lookup(:model => @selected_server.class.to_s)}
