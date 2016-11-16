@@ -52,10 +52,8 @@ module EmsRefresh::SaveInventory
     # Query for all of the Vms once across all EMSes, to handle any moving VMs
     vms_uids = hashes.collect { |h| h[:uid_ems] }.compact
     vms = VmOrTemplate.where(:uid_ems => vms_uids).to_a
-    disconnects_index = disconnects.each_with_object({}) { |vm, obj| obj[vm] = vm }
-    indexed_vms = vms.each_with_object({}) do |vm, obj|
-      (obj[vm.uid_ems] ||= []) << vm
-    end
+    disconnects_index = disconnects.index_by { |vm| vm }
+    vms_by_uid_ems = vms.group_by(&:uid_ems)
     dup_vms_uids = (vms_uids.duplicates + vms.collect(&:uid_ems).duplicates).uniq.sort
     _log.info "#{log_header} Duplicate unique values found: #{dup_vms_uids.inspect}" unless dup_vms_uids.empty?
 
@@ -83,7 +81,7 @@ module EmsRefresh::SaveInventory
 
           # Find the Vm in the database with the current uid_ems.  In the event
           #   of duplicates, try to determine which one is correct.
-          found = indexed_vms[h[:uid_ems]] || []
+          found = vms_by_uid_ems[h[:uid_ems]] || []
 
           if found.length > 1 || (found.length == 1 && found.first.ems_id)
             found_dups = found
@@ -105,6 +103,7 @@ module EmsRefresh::SaveInventory
             # build a type-specific vm or template
             found = ems.vms_and_templates.build(h)
           else
+            vms_by_uid_ems[h[:uid_ems]].delete(found)
             h.delete(:type)
 
             _log.info("#{log_header} Updating Vm [#{found.name}] id: [#{found.id}] location: [#{found.location}] storage id: [#{found.storage_id}] uid_ems: [#{found.uid_ems}] ems_ref: [#{h[:ems_ref]}]")
