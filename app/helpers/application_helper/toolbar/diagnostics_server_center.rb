@@ -26,12 +26,14 @@ class ApplicationHelper::Toolbar::DiagnosticsServerCenter < ApplicationHelper::T
       :refresh_log,
       'fa fa-repeat fa-lg',
       N_('Reload the EVM Log Display'),
-      nil),
+      nil,
+      :klass => ApplicationHelper::Button::EvmLog),
     button(
       :fetch_log,
       'fa fa-download fa-lg',
       N_('Download the Entire EVM Log File'),
       nil,
+      :klass => ApplicationHelper::Button::EvmLog,
       :url => "/fetch_log"),
     button(
       :refresh_production_log,

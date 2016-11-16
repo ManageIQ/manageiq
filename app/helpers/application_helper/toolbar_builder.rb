@@ -390,8 +390,6 @@ class ApplicationHelper::ToolbarBuilder
         return !%(collect_current_logs collect_logs log_depot_edit
                   zone_collect_current_logs zone_collect_logs
                   zone_log_depot_edit).include?(id)
-      when "diagnostics_evm_log"
-        return !["fetch_log", "refresh_log"].include?(id)
       when "diagnostics_production_log"
         return !["fetch_production_log", "refresh_production_log"].include?(id)
       when "diagnostics_roles_servers", "diagnostics_servers_roles"
@@ -407,7 +405,7 @@ class ApplicationHelper::ToolbarBuilder
       when "diagnostics_workers"
         return !%w(restart_workers refresh_workers).include?(id)
       else
-        return true
+        return false
       end
     when :rbac_tree
       return true unless role_allows?(:feature => rbac_common_feature_for_buttons(id))
