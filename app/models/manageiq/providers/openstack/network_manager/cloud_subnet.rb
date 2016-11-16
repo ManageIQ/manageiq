@@ -1,4 +1,20 @@
 class ManageIQ::Providers::Openstack::NetworkManager::CloudSubnet < ::CloudSubnet
+  supports :create_subnet
+  supports :delete_subnet do
+    if ext_management_system.nil?
+      unsupported_reason_add(:delete_subnet, _("The subnet is not connected to an active %{table}") % {
+        :table => ui_lookup(:table => "ext_management_systems")
+      })
+    end
+  end
+  supports :update_subnet do
+    if ext_management_system.nil?
+      unsupported_reason_add(:update_subnet, _("The subnet is not connected to an active %{table}") % {
+        :table => ui_lookup(:table => "ext_management_systems")
+      })
+    end
+  end
+
   def self.raw_create_subnet(ext_management_system, options)
     # TODO: remove this log line once this uses the task queue, as the task queue has its own logging
     _log.info "Command: #{self.class.name}##{__method__}, Args: #{options.inspect}"
@@ -13,10 +29,6 @@ class ManageIQ::Providers::Openstack::NetworkManager::CloudSubnet < ::CloudSubne
   rescue => e
     _log.error "subnet=[#{options[:name]}], error: #{e}"
     raise MiqException::MiqCloudSubnetCreateError, e.to_s, e.backtrace
-  end
-
-  def self.validate_create_subnet(ext_management_system)
-    validate_subnet(ext_management_system)
   end
 
   def provider_object(connection)
@@ -43,18 +55,6 @@ class ManageIQ::Providers::Openstack::NetworkManager::CloudSubnet < ::CloudSubne
   rescue => e
     _log.error "subnet=[#{name}], error: #{e}"
     raise MiqException::MiqCloudSubnetUpdateError, e.to_s, e.backtrace
-  end
-
-  def validate_delete_subnet
-    msg = validate_subnet
-    return {:available => msg[:available], :message => msg[:message]} unless msg[:available]
-    # TODO: Test if subnet
-    {:available => true, :message => nil}
-  end
-
-  def validate_update_subnet
-    validate_subnet
-    {:available => true, :message => nil}
   end
 
   def with_provider_object
