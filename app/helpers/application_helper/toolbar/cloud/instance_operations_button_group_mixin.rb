@@ -104,8 +104,7 @@ module ApplicationHelper::Toolbar::Cloud::InstanceOperationsButtonGroupMixin
         'fa fa-html5 fa-lg',
         N_('Open a web-based VNC or SPICE console for this VM'),
         nil,
-        :url     => "html5_console",
-        :confirm => N_("Opening a web-based VM VNC or SPICE console requires that the Provider is pre-configured to allow VNC connections.  Are you sure?")),
+        :url => "html5_console"),
     ])
   end
 end
