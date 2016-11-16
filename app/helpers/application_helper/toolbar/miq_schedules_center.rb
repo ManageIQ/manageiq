@@ -52,7 +52,8 @@ class ApplicationHelper::Toolbar::MiqSchedulesCenter < ApplicationHelper::Toolba
           t,
           :url_parms => "main_div",
           :enabled   => false,
-          :onwhen    => "1+"),
+          :onwhen    => "1+",
+          :klass     => ApplicationHelper::Button::ScheduleRun),
       ]
     ),
   ])

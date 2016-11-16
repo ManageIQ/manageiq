@@ -382,8 +382,6 @@ class ApplicationHelper::ToolbarBuilder
 
   def hide_button_ops(id)
     case x_active_tree
-    when :settings_tree
-      return ["schedule_run_now"].include?(id)
     when :diagnostics_tree
       case @sb[:active_tab]
       when "diagnostics_audit_log"
@@ -418,7 +416,7 @@ class ApplicationHelper::ToolbarBuilder
     when :vmdb_tree
       return !["db_connections", "db_details", "db_indexes", "db_settings"].include?(@sb[:active_tab])
     else
-      return true
+      return false
     end
   end
 
