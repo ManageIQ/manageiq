@@ -89,49 +89,45 @@ describe ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow do
     end
 
     context 'on storage_profile selection' do
-      context 'when template has no storage_profile' do
-        let(:template) do
-          FactoryGirl.create(:vm_vmware, :host => @host1, :ems_id => @ems.id)
-        end
+      it 'when storage_profile selection is set, will not touch storage_profile selection value' do
+        selected = []
+        workflow.instance_variable_set(:@values, :src_vm_id => template.id, :placement_storage_profile => selected)
+        workflow.allowed_storage_profiles
+        values = workflow.instance_variable_get(:@values)
+        expect(values[:placement_storage_profile]).to eq(selected)
+      end
 
-        it 'set storage_profile value to [nil, nil] if not set yet' do
-          @src_vm = FactoryGirl.create(:vm_vmware, :host => @host1, :ems_id => @ems.id)
-          workflow.instance_variable_set(:@values, :src_vm_id => @src_vm.id)
+      context 'when storage_profile selection is not set' do
+        let(:profile) { FactoryGirl.create(:storage_profile, :name => 'Gold') }
+
+        it 'set storage_profile selection to [nil, nil] if template has no storage_profile' do
+          template = FactoryGirl.create(:vm_vmware, :host => @host1, :ems_id => @ems.id)
+          workflow.instance_variable_set(:@values, :src_vm_id => template.id, :placement_storage_profile => nil)
           workflow.allowed_storage_profiles
           values = workflow.instance_variable_get(:@values)
           expect(values[:placement_storage_profile]).to eq([nil, nil])
         end
-      end
 
-      context 'when template has storage_profile' do
-        let(:storage_profile) { FactoryGirl.create(:storage_profile, :name => 'Gold') }
-        let(:template) do
-          FactoryGirl.create(:vm_vmware, :host => @host1, :ems_id => @ems.id, :storage_profile => storage_profile)
-        end
-
-        it 'set storage_profile selection value (to that of template) if not set yet' do
-          workflow.instance_variable_set(:@values, :src_vm_id => template.id)
+        it 'set storage_profile selection to that of template if template has one' do
+          template = FactoryGirl.create(:vm_vmware, :host => @host1, :ems_id => @ems.id, :storage_profile => profile)
+          workflow.instance_variable_set(:@values, :src_vm_id => template.id, :placement_storage_profile => nil)
           workflow.allowed_storage_profiles
           values = workflow.instance_variable_get(:@values)
-          expect(values[:placement_storage_profile]).to eq([storage_profile.id, storage_profile.name])
-        end
-
-        it 'will not touch storage_profile selection value if already set' do
-          workflow.instance_variable_set(:@values, :src_vm_id => template.id, :placement_storage_profile => [])
-          workflow.allowed_storage_profiles
-          values = workflow.instance_variable_get(:@values)
-          expect(values[:placement_storage_profile]).to eq([])
+          expect(values[:placement_storage_profile]).to eq([profile.id, profile.name])
         end
       end
     end
 
     context '#set_on_vm_id_changed' do
-      it 'clears StorageProfile filter' do
+      it 'clears StorageProfile filter and placement value' do
         workflow.instance_variable_set(:@filters, :Host => {21 => "ESX 6.0"}, :StorageProfile => {1 => "Tag 1"})
+        workflow.instance_variable_set(:@values, :src_vm_id => @src_vm.id, :placement_storage_profile => [])
         allow(workflow).to receive(:set_or_default_hardware_field_values).with(@src_vm)
         workflow.set_on_vm_id_changed
         filters = workflow.instance_variable_get(:@filters)
         expect(filters).to eq(:Host => {21=>"ESX 6.0"}, :StorageProfile => nil)
+        values = workflow.instance_variable_get(:@values)
+        expect(values[:placement_storage_profile]).to be_nil
       end
     end
 
