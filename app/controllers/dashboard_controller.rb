@@ -5,10 +5,12 @@ class DashboardController < ApplicationController
 
   @@items_per_page = 8
 
-  before_action :check_privileges, :except => [:csp_report, :authenticate, :kerberos_authenticate,
+  before_action :check_privileges, :except => [:csp_report, :authenticate,
+                                               :external_authenticate, :kerberos_authenticate,
                                                :logout, :login, :login_retry, :wait_for_task,
                                                :saml_login, :initiate_saml_login]
-  before_action :get_session_data, :except => [:csp_report, :authenticate, :kerberos_authenticate, :saml_login]
+  before_action :get_session_data, :except => [:csp_report, :authenticate,
+                                               :external_authenticate, :kerberos_authenticate, :saml_login]
   after_action :cleanup_action,    :except => [:csp_report]
   after_action :set_session_data,  :except => [:csp_report]
 
@@ -398,13 +400,14 @@ class DashboardController < ApplicationController
     end
   end
 
+  # Handle external-auth signon from login screen
+  def external_authenticate
+    authenticate_external_user_generate_api_token
+  end
+
   # Handle single-signon from login screen
   def kerberos_authenticate
-    if @user_name.blank? && request.headers["X-Remote-User"].present?
-      @user_name = params[:user_name] = request.headers["X-Remote-User"].split("@").first
-    end
-
-    authenticate(true)
+    authenticate_external_user_generate_api_token
   end
 
   # Handle user credentials from login screen
@@ -593,6 +596,15 @@ class DashboardController < ApplicationController
   end
 
   private
+
+  # Authenticate external user and generate API token
+  def authenticate_external_user_generate_api_token
+    if @user_name.blank? && request.headers["X-Remote-User"].present?
+      @user_name = params[:user_name] = request.headers["X-Remote-User"].split("@").first
+    end
+
+    authenticate(true)
+  end
 
   def tl_toggle_button_enablement(button_id, enablement, typ)
     if enablement == :enabled
