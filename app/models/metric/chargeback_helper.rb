@@ -19,13 +19,14 @@ module Metric::ChargebackHelper
   end
 
   def tag_list_reconstruct
-    tag_list = tag_names.split("|").map { |tag| "#{tag_prefix}#{tag}" }
+    tag_list = tag_names
 
     if resource_type == Container.name
       state = resource.vim_performance_state_for_ts(timestamp.to_s)
-      tag_list += state.image_tag_names.split("|").map { |tag| "#{tag_prefix}#{tag}" } if state.present?
+      tag_list += state.image_tag_names if state.present?
     end
-    tag_list
+    
+    tag_list.split("|").map { |tag| "#{tag_prefix}#{tag}" }
   end
 
   def resource_parents
