@@ -5,17 +5,17 @@ module ApplicationController::Timelines
   def tl_chooser
     @record = identify_tl_or_perf_record
     @tl_record = @record.kind_of?(MiqServer) ? @record.vm : @record # Use related server vm record
-    @tl_options.tl_show = params[:tl_show] ? params[:tl_show] : "timeline"
     tl_build_timeline
     @tl_options.date.update_from_params(params)
 
     if @tl_options.management_events?
-      @tl_options.mngt.update_from_params(params)
+      @tl_options.management.update_from_params(params)
     else
       @tl_options.policy.update_from_params(params)
     end
 
-    if (@tl_options.management_events? && !@tl_options.mngt.categories.blank?) || (@tl_options.policy_events? && !@tl_options.policy.categories.blank?)
+    if (@tl_options.management_events? && !@tl_options.management.categories.blank?) ||
+       (@tl_options.policy_events? && !@tl_options.policy.categories.blank?)
       tl_gen_timeline_data(refresh = "n")
       return unless @timeline
     end
@@ -121,9 +121,9 @@ module ApplicationController::Timelines
       @tl_options.date.typ = 'Daily'
       @tl_options.date.days = '7'
       @tl_options[:model] = @tl_record.class.base_class.to_s
-      @tl_options[:tl_show] = "timeline"
       @tl_options.policy.categories = []
     end
+    @tl_options.tl_show = params[:tl_show] || "timeline"
     sdate, edate = @tl_record.first_and_last_event(@tl_options.evt_type)
     @tl_options.date.update_start_end(sdate, edate)
 
@@ -140,11 +140,8 @@ module ApplicationController::Timelines
           end
         end
       end
-    else
-      @tl_options.mngt.level = "critical" if @tl_options.mngt.level.nil?
-      # if @tl_options.mngt.filter1.nil?
-      #   @tl_options.mngt.filter1 = "Power Activity"
-      # end
+    elsif @tl_options.management.level.nil?
+      @tl_options.management.level = "critical"
     end
   end
 
@@ -184,15 +181,13 @@ module ApplicationController::Timelines
       event_set = @tl_options.event_set
       if !event_set.empty?
         if @tl_options.policy_events? && @tl_options.policy.result != "both"
-          ftype = @tl_options.management_events? ? "event_type" : "miq_event_definition_id"
-          where_clause = [") and (timestamp >= ? and timestamp <= ?) and (#{ftype} in (?)) and (result = ?)",
+          where_clause = [") and (timestamp >= ? and timestamp <= ?) and (event_type in (?)) and (result = ?)",
                           from_dt,
                           to_dt,
                           event_set.flatten,
                           @tl_options.policy.result]
         else
-          ftype = @tl_options.management_events? ? "event_type" : "miq_event_definition_id"
-          where_clause = [") and (timestamp >= ? and timestamp <= ?) and (#{ftype} in (?))",
+          where_clause = [") and (timestamp >= ? and timestamp <= ?) and (event_type in (?))",
                           from_dt,
                           to_dt,
                           event_set.flatten]
@@ -208,7 +203,8 @@ module ApplicationController::Timelines
       params = params.concat(params2)
       @report.where_clause = [cond, *params]
       @report.rpt_options ||= {}
-      @report.rpt_options[:categories] = @tl_options.mngt.categories
+      @report.rpt_options[:categories] =
+        @tl_options.management_events? ? @tl_options.management.categories : @tl_options.policy.categories
       @title = @report.title
     end
   end
