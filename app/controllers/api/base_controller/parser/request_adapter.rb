@@ -72,6 +72,11 @@ module Api
           expand_requested.include?(what.to_s)
         end
 
+        def hide?(thing)
+          @hide ||= @params["hide"].to_s.split(",")
+          @hide.include?(thing)
+        end
+
         def json_body
           @json_body ||= begin
                            body = @request.body.read if @request.body
