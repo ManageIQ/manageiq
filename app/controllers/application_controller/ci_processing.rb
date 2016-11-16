@@ -1560,6 +1560,10 @@ module ApplicationController::CiProcessing
 
   private ############################
 
+  def explorer_controller?
+    %w(vm_cloud vm_infra vm_or_template infra_networking).include?(controller_name)
+  end
+
   def process_element_destroy(element, klass, name)
     return unless element.respond_to?(:destroy)
 

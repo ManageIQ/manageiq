@@ -1516,10 +1516,6 @@ module ApplicationHelper
     @record.nil? && @explorer && !no_gtl_view_buttons.include?(@layout)
   end
 
-  def explorer_controller?
-    %w(vm_cloud vm_infra vm_or_template infra_networking).include?(controller_name)
-  end
-
   def title_for_hosts
     title_for_host(true)
   end
