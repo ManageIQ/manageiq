@@ -480,6 +480,11 @@ class CatalogController < ApplicationController
   end
   private :get_ae_tree_edit_key
 
+  def need_prov_dialogs?(type)
+    !type.starts_with?('generic')
+  end
+  helper_method :need_prov_dialogs?
+
   def ae_tree_select_toggle
     @edit = session[:edit]
     self.x_active_tree = :sandt_tree
