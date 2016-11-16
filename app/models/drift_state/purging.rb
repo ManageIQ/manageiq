@@ -40,37 +40,9 @@ module DriftState::Purging
     # By Remaining
     #
 
-    def purge_count_by_remaining(remaining)
-      purge_counts_for_remaining(remaining).values.sum
-    end
-
-    def purge_by_remaining(remaining, window = nil, &block)
-      _log.info("Purging drift states older than last #{remaining} results...")
-
-      window ||= purge_window_size
-      total = 0
-      purge_ids_for_remaining(remaining).each do |resource, id|
-        resource_type, resource_id = *resource
-        scope = where(:resource_type => resource_type, :resource_id => resource_id).where(arel_table[:id].lt(id))
-        total += purge_in_batches(scope, window, total, &block)
-      end
-
-      _log.info("Purging drift states older than last #{remaining} results...Complete - Deleted #{total} records")
-    end
-
-    def purge_counts_for_remaining(remaining)
-      purge_ids_for_remaining(remaining).each_with_object({}) do |(resource, id), h|
-        resource_type, resource_id = *resource
-        h[resource] = where(:resource_type => resource_type, :resource_id => resource_id).where(arel_table[:id].lt(id)).count
-      end
-    end
-
-    def purge_ids_for_remaining(remaining)
-      # TODO: This can probably be done in a single query using group-bys or subqueries
-      select("DISTINCT resource_type, resource_id").each_with_object({}) do |s, h|
-        results = select(:id).where(:resource_type => s.resource_type, :resource_id => s.resource_id).order("id DESC").limit(remaining + 1)
-        h[[s.resource_type, s.resource_id]] = results[-2].id if results.length == remaining + 1
-      end
+    # @return [Symbol, Array<Symbol>] resource that is referenced by this table.
+    def purge_remaining_foreign_key
+      [:resource_type, :resource_id]
     end
 
     #
