@@ -5,6 +5,6 @@ class ApplicationHelper::Button::HostToggleMaintenance < ApplicationHelper::Butt
 
   def calculate_properties
     super
-    self[:title] = N_("Maintenance mode is not supported for this host") if disabled?
+    self[:title] = _("Maintenance mode is not supported for this host") if disabled?
   end
 end

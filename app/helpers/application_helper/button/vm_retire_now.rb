@@ -3,7 +3,7 @@ class ApplicationHelper::Button::VmRetireNow < ApplicationHelper::Button::Basic
 
   def calculate_properties
     super
-    self[:title] = N_("VM is already retired") if disabled?
+    self[:title] = _("VM is already retired") if disabled?
   end
 
   def visible?

@@ -6,6 +6,6 @@ class ApplicationHelper::Button::PolicyDelete < ApplicationHelper::Button::Polic
 
   def calculate_properties
     super
-    self[:title] = N_("Policies that belong to Profiles can not be deleted") if disabled?
+    self[:title] = _("Policies that belong to Profiles can not be deleted") if disabled?
   end
 end

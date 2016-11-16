@@ -7,7 +7,7 @@ class ApplicationHelper::Button::InstanceMiqRequestNew < ApplicationHelper::Butt
     super
 
     if disabled?
-      self[:title] = N_('No Cloud Provider that supports instance provisioning added')
+      self[:title] = _('No Cloud Provider that supports instance provisioning added')
     end
   end
 
