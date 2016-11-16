@@ -6,7 +6,7 @@ var ADD_DATASOURCE_EVENT = 'mwAddDatasourceEvent';
 MwAddDatasourceCtrl.$inject = ['$scope', '$rootScope', 'miqService', 'mwAddDatasourceService'];
 
 function MwAddDatasourceCtrl($scope, $rootScope, miqService, mwAddDatasourceService) {
-  var getPayload = function() {
+  var makePayload = function() {
     return {
       'id': angular.element('#server_id').val(),
       'xaDatasource': false,
@@ -38,9 +38,9 @@ function MwAddDatasourceCtrl($scope, $rootScope, miqService, mwAddDatasourceServ
     jdbcDriverName: '',
     jdbcModuleName: '',
     driverClass: '',
+    xaDsClass: '',
     selectedJdbcDriver: '',
     existingJdbcDrivers: [],
-    useExistingDriver: false,
   };
 
   $scope.step3DsModel = {
@@ -54,6 +54,12 @@ function MwAddDatasourceCtrl($scope, $rootScope, miqService, mwAddDatasourceServ
   $scope.chooseDsModel.datasources = mwAddDatasourceService.getDatasources();
 
   $scope.$on(ADD_DATASOURCE_EVENT, function(event, payload) {
+    if (mwAddDatasourceService.isXaDriver($scope.step2DsModel.selectedJdbcDriver)) {
+      angular.extend(payload, {xaDatasource: true,
+        xaDatasourceClass: $scope.step2DsModel.xaDsClass,
+        driverClass: ''});
+    }
+
     mwAddDatasourceService.sendAddDatasource(payload).then(
       function(result) { // success
         miqService.miqFlash(result.data.status, result.data.msg);
@@ -65,11 +71,17 @@ function MwAddDatasourceCtrl($scope, $rootScope, miqService, mwAddDatasourceServ
     miqService.sparkleOff();
   });
 
-  // $scope.$watch('step2DsModel.existingJdbcDrivers', function(value) {
-  //   console.log('step2DsModel.existingJdbcDrivers is: ' + value);
-  //   console.dir(value);
-  //   $scope.step2DsModel.useExistingDriver = value;
-  // });
+  $scope.$watch('step2DsModel.selectedJdbcDriver', function(driverSelection) {
+    var dsSelection = mwAddDatasourceService.findDatasourceById(driverSelection.id);
+    $scope.step1DsModel.datasourceName = dsSelection.name;
+    $scope.step1DsModel.jndiName = dsSelection.jndiName;
+    $scope.step2DsModel.jdbcDriverName = dsSelection.driverName;
+    if (mwAddDatasourceService.isXaDriver(driverSelection)) {
+      $scope.step2DsModel.xaDsClass = driverSelection.xaDsClass;
+    } else {
+      $scope.step2DsModel.driverClass = driverSelection.driverClass;
+    }
+  });
 
   $scope.addDatasourceChooseNext = function() {
     var dsSelection = $scope.chooseDsModel.selectedDatasource;
@@ -100,8 +112,9 @@ function MwAddDatasourceCtrl($scope, $rootScope, miqService, mwAddDatasourceServ
   };
 
   $scope.addDatasourceStep2Next = function() {
+    var useExistingDriver = $scope.step2DsModel.selectedJdbcDriver !== '';
     $scope.dsModel.step = 'STEP3';
-    if ($scope.step2DsModel.useExistingDriver) {
+    if (useExistingDriver) {
       $scope.step3DsModel.connectionUrl = mwAddDatasourceService.determineConnectionUrlFromExisting($scope.step2DsModel.selectedJdbcDriver);
     } else {
       $scope.step3DsModel.connectionUrl = mwAddDatasourceService.determineConnectionUrl($scope.chooseDsModel.selectedDatasource);
@@ -113,7 +126,7 @@ function MwAddDatasourceCtrl($scope, $rootScope, miqService, mwAddDatasourceServ
   };
 
   $scope.finishAddDatasource = function() {
-    var payload = Object.assign({}, getPayload());
+    var payload = Object.assign({}, makePayload());
     $rootScope.$broadcast(ADD_DATASOURCE_EVENT, payload);
     $scope.reset();
   };
@@ -136,7 +149,7 @@ function MwAddDatasourceCtrl($scope, $rootScope, miqService, mwAddDatasourceServ
     $scope.step2DsModel.jdbcDriverName = '';
     $scope.step2DsModel.jdbcModuleName = '';
     $scope.step2DsModel.driverClass = '';
-    $scope.step2DsModel.useExistingDriver = false;
+    $scope.step2DsModel.xaDsClass = '';
     $scope.step2DsModel.selectedJdbcDriver = '';
 
     $scope.step3DsModel.connectionUrl = '';

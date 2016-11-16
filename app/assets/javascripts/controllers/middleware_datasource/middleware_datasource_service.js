@@ -12,7 +12,7 @@ function MwAddDatasourceService($http, $q) {
       connectionUrl: ':mem:test;DB_CLOSE_DELAY=-1'},
     {id: 'POSTGRES', label: 'Postgres', name: 'PostgresDS', jndiName: 'java:jboss/datasources/PostgresDS',
       driverName: 'postresql', driverModuleName: 'org.postgresql', driverClass: 'org.postgresql.Driver',
-      connectionUrl: '://localhost:5432/postgresdb'},
+      connectionUrl: '://localhost:5432/postgresdb', alias: 'POSTGRESQL'},
     {id: 'MSSQL', label: 'Microsoft SQL Server', name: 'MSSQLDS', jndiName: 'java:jboss/datasources/MSSQLDS',
       driverName: 'sqlserver', driverModuleName: 'com.microsoft',
       driverClass: 'com.microsoft.sqlserver.jdbc.SQLServerDriver',
@@ -42,7 +42,9 @@ function MwAddDatasourceService($http, $q) {
     $http.get(parameterizedUrl).then(function(driverData) {
       var transformedData = _.map(driverData.data.data, function(driver) {
         return {'id': driver.properties['Driver Name'].toUpperCase(),
-                'label': driver.properties['Driver Name']};
+                'label': driver.properties['Driver Name'],
+                'xaDsClass': driver.properties['XA DS Class'],
+                'driverClass': driver.properties['Driver Class']};
       });
       deferred.resolve(transformedData);
     }).catch(function(errorMsg) {
@@ -55,19 +57,30 @@ function MwAddDatasourceService($http, $q) {
     return Object.freeze(datasources);
   };
 
+  this.isXaDriver = function(driver) {
+    return driver.hasOwnProperty('xaDsClass') && driver.xaDsClass !== '';
+  };
+
   this.determineConnectionUrl = function(dsSelection) {
     var driverName = dsSelection.driverName;
     return JDBC_PREFIX + driverName + dsSelection.connectionUrl;
   };
 
-  this.determineConnectionUrlFromExisting = function(id) {
-    console.warn('id: ' + id);
-    console.dir(datasources);
-    var dsSelection = _.find(datasources, function(datasource) {
-      return datasource.driverName.toUpperCase() === id;
+  this.findDatasourceById = function(id) {
+    return _.find(datasources, function(datasource) {
+      // handle special case when JDBC Driver Name doesn't match naming of Datasource
+      // For instance, 'POSTGRES' vs 'POSTGRESQL'
+      // in this case an 'alias' in the datasource configuration is used
+      if (datasource.hasOwnProperty('alias')) {
+        return datasource.alias === id;
+      } else {
+        return datasource.driverName.toUpperCase() === id;
+      }
     });
-    console.dir(dsSelection);
+  };
 
+  this.determineConnectionUrlFromExisting = function(driverSelection) {
+    var dsSelection = this.findDatasourceById(driverSelection.id);
     return JDBC_PREFIX + dsSelection.driverName + dsSelection.connectionUrl;
   };
 
