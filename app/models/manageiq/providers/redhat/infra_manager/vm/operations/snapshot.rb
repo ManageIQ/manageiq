@@ -40,12 +40,12 @@ module ManageIQ::Providers::Redhat::InfraManager::Vm::Operations::Snapshot
   end
 
   def validate_remove_all_snapshots
-    {:available => false, :message => "Removing all snapshots is currently not supported"}
+    {:available => false, :message => _("Removing all snapshots is currently not supported")}
   end
 
   def validate_revert_to_snapshot
     {:available => allowed_to_revert?,
-     :message   => "Revert is allowed only when vm is down. Current state is #{current_state}"}
+     :message   => _("Revert is allowed only when vm is down. Current state is %{state}") % {:State => current_state}}
   end
 
   def allowed_to_revert?
