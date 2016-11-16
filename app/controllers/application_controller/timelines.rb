@@ -9,12 +9,13 @@ module ApplicationController::Timelines
     @tl_options.date.update_from_params(params)
 
     if @tl_options.management_events?
-      @tl_options.mngt.update_from_params(params)
+      @tl_options.management.update_from_params(params)
     else
       @tl_options.policy.update_from_params(params)
     end
 
-    if (@tl_options.management_events? && !@tl_options.mngt.categories.blank?) || (@tl_options.policy_events? && !@tl_options.policy.categories.blank?)
+    if (@tl_options.management_events? && !@tl_options.management.categories.blank?) ||
+       (@tl_options.policy_events? && !@tl_options.policy.categories.blank?)
       tl_gen_timeline_data(refresh = "n")
       return unless @timeline
     end
@@ -139,11 +140,8 @@ module ApplicationController::Timelines
           end
         end
       end
-    else
-      @tl_options.mngt.level = "critical" if @tl_options.mngt.level.nil?
-      # if @tl_options.mngt.filter1.nil?
-      #   @tl_options.mngt.filter1 = "Power Activity"
-      # end
+    elsif @tl_options.management.level.nil?
+      @tl_options.management.level = "critical"
     end
   end
 
@@ -205,8 +203,8 @@ module ApplicationController::Timelines
       params = params.concat(params2)
       @report.where_clause = [cond, *params]
       @report.rpt_options ||= {}
-      @report.rpt_options[:categories] = @tl_options.management_events? ?
-        @tl_options.mngt.categories : @tl_options.policy.categories
+      @report.rpt_options[:categories] =
+        @tl_options.management_events? ? @tl_options.management.categories : @tl_options.policy.categories
       @title = @report.title
     end
   end

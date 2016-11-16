@@ -24,7 +24,7 @@
                   'ng-change'                   => 'eventTypeUpdated()')
                 %span{'ng-if' => 'reportModel.tl_show === "timeline"'}
                   = select_tag("tl_category_management",
-                    options_for_select(@tl_options.mngt.events.keys.sort, nil),
+                    options_for_select(@tl_options.management.events.keys.sort, nil),
                     'ng-model'                    => 'reportModel.tl_categories',
                     "selectpicker-for-select-tag" => '',
                     'data-live-search'            => 'true',
@@ -92,5 +92,5 @@
 :javascript
   ManageIQ.angular.app.value('recordId', '#{@record.id}');
   ManageIQ.angular.app.value('url', '#{url}');
-  ManageIQ.angular.app.value('categories', '#{@tl_options.mngt.events.keys.sort}');
+  ManageIQ.angular.app.value('categories', '#{@tl_options.management.events.keys.sort}');
   miq_bootstrap('#form_div');

@@ -127,15 +127,15 @@ module ApplicationController::Timelines
   Options = Struct.new(
     :date,
     :model,
-    :mngt,
+    :management,
     :policy,
     :tl_show,
   ) do
     def initialize(*args)
       super
-      self.date = DateOptions.new
-      self.mngt = ManagementEventsOptions.new
-      self.policy = PolicyEventsOptions.new
+      self.date       = DateOptions.new
+      self.management = ManagementEventsOptions.new
+      self.policy     = PolicyEventsOptions.new
     end
 
     def management_events?
@@ -151,11 +151,11 @@ module ApplicationController::Timelines
     end
 
     def event_set
-      (policy_events? ? policy : mngt).event_set
+      (policy_events? ? policy : management).event_set
     end
 
     def drop_cache
-      [policy, mngt].each(&:drop_cache)
+      [policy, management].each(&:drop_cache)
     end
   end
 end
