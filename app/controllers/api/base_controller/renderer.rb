@@ -53,11 +53,13 @@ module Api
           [:name, :count, :subcount].each do |opt_name|
             json.set! opt_name.to_s, opts[opt_name] if opts[opt_name]
           end
-          json.resources resources.collect do |resource|
-            if opts[:expand_resources]
-              add_hash json, resource_to_jbuilder(type, reftype, resource, opts).attributes!
-            else
-              json.href normalize_href(reftype, resource["id"])
+          unless @req.hide?("resources")
+            json.resources resources.collect do |resource|
+              if opts[:expand_resources]
+                add_hash json, resource_to_jbuilder(type, reftype, resource, opts).attributes!
+              else
+                json.href normalize_href(reftype, resource["id"])
+              end
             end
           end
           cspec = collection_config[type]

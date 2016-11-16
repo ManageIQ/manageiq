@@ -415,6 +415,15 @@ describe "Querying" do
       expect_query_result(:vms, 1, 1)
       expect_result_resources_to_include_keys("resources", %w(id href guid name vendor software))
     end
+
+    it "supports suppressing resources" do
+      FactoryGirl.create(:vm)
+
+      run_get(vms_url, :hide => "resources")
+
+      expect(response.parsed_body).not_to include("resources")
+      expect(response).to have_http_status(:ok)
+    end
   end
 
   describe "Querying resources" do
