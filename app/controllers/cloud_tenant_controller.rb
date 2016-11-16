@@ -7,58 +7,24 @@ class CloudTenantController < ApplicationController
 
   include Mixins::GenericListMixin
   include Mixins::CheckedIdMixin
+  include Mixins::GenericButtonMixin
 
   # handle buttons pressed on the button bar
   def button
-    @edit = session[:edit]                                  # Restore @edit for adv search box
-    params[:display] = @display if %w(vms instances images).include?(@display)
-    params[:page] = @current_page unless @current_page.nil?   # Save current page for list refresh
-    return tag("CloudTenant") if params[:pressed] == 'cloud_tenant_tag'
-    return tag('CloudSubnet') if params[:pressed] == 'cloud_subnet_tag'
-    return tag('SecurityGroup') if params[:pressed] == 'security_group_tag'
-    return tag('CloudNetwork') if params[:pressed] == 'cloud_network_tag'
-    return tag('NetworkRouter') if params[:pressed] == 'network_router_tag'
-    return tag('FloatingIp') if params[:pressed] == 'floating_ip_tag'
-    return tag('NetworkPort') if params[:pressed] == 'network_port_tag'
-    return tag('CloudVolume') if params[:pressed] == 'cloud_volume_tag'
-    return tag('CloudObjectStoreObject') if params[:pressed] == 'cloud_object_store_object_tag'
-    return tag("CloudVolumeSnapshot") if params[:pressed] == 'cloud_volume_snapshot_tag'
-
-    if params[:pressed].starts_with?("vm_", # Handle buttons from sub-items screen
-                                     "miq_template_",
-                                     "guest_",
-                                     "image_",
-                                     "instance_")
-
-      pfx = pfx_for_vm_button_pressed(params[:pressed])
-      process_vm_buttons(pfx)
-      return if ["#{pfx}_policy_sim", "#{pfx}_compare", "#{pfx}_tag", "#{pfx}_retire",
-                 "#{pfx}_protect", "#{pfx}_ownership", "#{pfx}_refresh", "#{pfx}_right_size",
-                 "#{pfx}_reconfigure"].include?(params[:pressed]) &&
-                @flash_array.nil?
-
-      unless ["#{pfx}_edit", "#{pfx}_miq_request_new", "#{pfx}_clone",
-              "#{pfx}_migrate", "#{pfx}_publish"].include?(params[:pressed])
-        @refresh_div = "main_div"
-        @refresh_partial = "layouts/gtl"
-        show
-      end
-    elsif params[:pressed] == "cloud_tenant_new"
+    case params[:pressed]
+    when "cloud_tenant_new"
       javascript_redirect :action => "new"
-      return
-    elsif params[:pressed] == "cloud_tenant_edit"
+    when "cloud_tenant_edit"
       javascript_redirect :action => "edit", :id => checked_item_id
-      return
-    elsif params[:pressed] == 'cloud_tenant_delete'
+    when 'cloud_tenant_delete'
       delete_cloud_tenants
-      render_flash
-      return
-    elsif params[:pressed] == "custom_button"
-      custom_buttons
+    when "custom_button"
       # custom button screen, so return, let custom_buttons method handle everything
-      return
+      custom_buttons
+    else
+      # calling the method from Mixins::GenericButtonMixin
+      super
     end
-    render_button_partial(pfx)
   end
 
   def self.display_methods
@@ -243,9 +209,11 @@ class CloudTenantController < ApplicationController
       show_list
       @refresh_partial = "layouts/gtl"
     elsif @lastaction == "show" && @layout == "cloud_tenant"
-      @single_delete = true unless flash_errors?
-      if @flash_array.nil?
-        add_flash(_("The selected %{model} was deleted") % {:model => ui_lookup(:table => "cloud_tenant")})
+      # deleting from 'show' so we:
+      if flash_errors? # either show the errors and stay on the 'show'
+        render_flash
+      else             # or (if we deleted what we were showing) we redirect to the listing
+        javascript_redirect :action => 'show_list', :flash_msg => @flash_array[0][:message]
       end
     end
   end
@@ -294,21 +262,6 @@ class CloudTenantController < ApplicationController
       add_flash(n_("Delete initiated for %{number} Cloud Tenant.",
                    "Delete initiated for %{number} Cloud Tenants.",
                    tenants.length) % {:number => tenants.length})
-    end
-  end
-
-  def render_button_partial(pfx)
-    if @flash_array && params[:pressed] == "#{@table_name}_delete" && @single_delete
-      javascript_redirect :action => 'show_list', :flash_msg => @flash_array[0][:message]
-    elsif params[:pressed].ends_with?("_edit") || ["#{pfx}_miq_request_new", "#{pfx}_clone",
-                                                   "#{pfx}_migrate", "#{pfx}_publish"].include?(params[:pressed])
-      render_or_redirect_partial(pfx)
-    else
-      if @refresh_div == "main_div" && @lastaction == "show_list"
-        replace_gtl_main_div
-      else
-        render_flash
-      end
     end
   end
 
