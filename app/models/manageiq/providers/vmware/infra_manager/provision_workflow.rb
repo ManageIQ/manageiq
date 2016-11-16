@@ -148,9 +148,10 @@ class ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow < ManageIQ::P
   def allowed_storage_profiles(_options = {})
     return [] if (src = resources_for_ui).blank? || src[:vm].nil?
     @filters[:StorageProfile] ||= begin
-      @values[:placement_storage_profile] ||= if template = load_ar_obj(src[:vm])
-        [template.storage_profile.try(:id), template.storage_profile.try(:name)]
-      end
+      @values[:placement_storage_profile] ||= begin
+          template = load_ar_obj(src[:vm])
+          [template.storage_profile.try(:id), template.storage_profile.try(:name)] unless template.nil?
+        end
       StorageProfile.where(:ems_id => src[:ems].try(:id)).each_with_object({}) { |s, m| m[s.id] = s.name }
     end
   end
