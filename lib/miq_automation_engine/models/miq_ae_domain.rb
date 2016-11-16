@@ -17,7 +17,7 @@ class MiqAeDomain < MiqAeNamespace
   default_value_for :enabled, false
   before_save :default_priority
   belongs_to :tenant
-  belongs_to :git_repository
+  belongs_to :git_repository, :dependent => :destroy
   validates_inclusion_of :source, :in => VALID_SOURCES
 
   EXPORT_EXCLUDE_KEYS = [/^id$/, /^(?!tenant).*_id$/, /^created_on/, /^updated_on/,
