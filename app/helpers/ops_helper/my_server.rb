@@ -1,6 +1,4 @@
 module OpsHelper::MyServer
-  delegate :id, :to => :my_server, :prefix => true
-
   def my_zone_name
     my_server.my_zone
   end

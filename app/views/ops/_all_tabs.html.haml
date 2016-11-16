@@ -22,7 +22,7 @@
           = _("Authentication")
         = miq_tab_header("settings_workers", @sb[:active_tab]) do
           = _("Workers")
-        - if cur_svr_id == my_server_id
+        - if cur_svr_id == my_server.id
           = miq_tab_header("settings_custom_logos", @sb[:active_tab]) do
             = _("Custom Logos")
           = miq_tab_header("settings_advanced", @sb[:active_tab]) do
@@ -34,7 +34,7 @@
           = render :partial => "settings_authentication_tab"
         = miq_tab_content("settings_workers", @sb[:active_tab]) do
           = render :partial => "settings_workers_tab"
-        - if cur_svr_id == my_server_id
+        - if cur_svr_id == my_server.id
           = miq_tab_content("settings_custom_logos", @sb[:active_tab]) do
             = render :partial => "settings_custom_logos_tab"
           = miq_tab_content("settings_advanced", @sb[:active_tab]) do
@@ -112,14 +112,14 @@
           = render :partial => "diagnostics_cu_repair_tab"
     - elsif x_node.split("-")[0] == "svr"
       %ul.nav.nav-tabs
-        - if @sb[:selected_server_id] == my_server_id || @selected_server.started?
+        - if @sb[:selected_server_id] == my_server.id || @selected_server.started?
           = miq_tab_header("diagnostics_summary", @sb[:active_tab]) do
             = _("Summary")
           = miq_tab_header("diagnostics_workers", @sb[:active_tab]) do
             = _("Workers")
         = miq_tab_header("diagnostics_collect_logs", @sb[:active_tab]) do
           = _("Collect Logs")
-        - if @sb[:selected_server_id] == my_server_id
+        - if @sb[:selected_server_id] == my_server.id
           = miq_tab_header("diagnostics_evm_log", @sb[:active_tab]) do
             = _("%{product} Log") % {:product => I18n.t('product.name')}
           = miq_tab_header("diagnostics_audit_log", @sb[:active_tab]) do
@@ -132,14 +132,14 @@
         = miq_tab_header("diagnostics_timelines", @sb[:active_tab]) do
           = _("Timelines")
       .tab-content
-        - if @sb[:selected_server_id] == my_server_id || @selected_server.started?
+        - if @sb[:selected_server_id] == my_server.id || @selected_server.started?
           = miq_tab_content("diagnostics_summary", @sb[:active_tab]) do
             = render :partial => "diagnostics_summary_tab"
           = miq_tab_content("diagnostics_workers", @sb[:active_tab]) do
             = render :partial => "diagnostics_workers_tab"
         = miq_tab_content("diagnostics_collect_logs", @sb[:active_tab]) do
           = render :partial => "diagnostics_collect_logs_tab"
-        - if @sb[:selected_server_id] == my_server_id
+        - if @sb[:selected_server_id] == my_server.id
           = miq_tab_content("diagnostics_evm_log", @sb[:active_tab]) do
             = render :partial => "diagnostics_evm_log_tab"
           = miq_tab_content("diagnostics_audit_log", @sb[:active_tab]) do
