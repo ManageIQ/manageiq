@@ -1,7 +1,7 @@
 require Rails.root.join('db/fixtures/ae_datastore/ManageIQ/Cloud/Orchestration/' \
                         'Operations/Methods.class/__methods__/available_tenants').to_s
 
-describe AvailableTenants do
+describe ManageIQ::Automate::Cloud::Orchestration::Operations::AvailableTenants do
   let(:tenant1) { FactoryGirl.create(:cloud_tenant) }
   let(:tenant2) { FactoryGirl.create(:cloud_tenant) }
   let(:ems) { FactoryGirl.create(:ems_openstack, :cloud_tenants => [tenant1, tenant2]) }
