@@ -71,7 +71,7 @@ module ManagerRefresh::SaveCollection
               dto.object.save!
             end
           end
-          dto.object.send(:clear_association_cache)
+          dto.object.reload
         end
       end
       _log.info("*************** PROCESSED #{dto_collection}, created=#{created_counter}, "\
