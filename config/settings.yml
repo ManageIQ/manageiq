@@ -505,7 +505,7 @@
       - VM_IMPORT_FAILED
       - VM_IMPORT_INFO
       :detail: []
-      :name: Import / Export
+      :name: Import/Export
     :migration:
       :critical:
       - DatastoreFileMovedEvent
@@ -803,7 +803,7 @@
       - RenameVM_Task
       - RenameVM_Task_Complete
       - VmRenamedEvent
-      :name: Alarm/Status change/Errors
+      :name: Alarm/Status Change/Errors
     :storage:
       :critical:
       - CONNECT_STORAGE_POOL_FAILED
