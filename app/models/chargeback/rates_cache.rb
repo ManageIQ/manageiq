@@ -4,7 +4,7 @@ class Chargeback
       @rates ||= {}
       @rates[perf.hash_features_affecting_rate] ||=
         ChargebackRate.get_assigned_for_target(perf.resource,
-                                               :tag_list => perf.tag_list_reconstruct,
+                                               :tag_list => perf.tag_list_with_prefix,
                                                :parents  => perf.parents_determining_rate)
     end
   end
