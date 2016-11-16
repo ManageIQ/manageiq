@@ -23,6 +23,7 @@
     "angular-mocks": "~1.5.8",
     "angular-patternfly-sass": "~3.12.0",
     "angular-sanitize": "~1.5.8",
+    "angular-ui-codemirror": "~0.3.0",
     "angular.validators": "~4.4.2",
     "array-includes": "~1.0.0",
     "bootstrap-filestyle": "~1.2.1",
