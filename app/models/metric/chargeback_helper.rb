@@ -18,16 +18,14 @@ module Metric::ChargebackHelper
     klass_prefix + TAG_MANAGED_PREFIX
   end
 
-  def tag_list_reconstruct
-    tag_list = tag_names
-
-    if resource_type == Container.name
+  def tag_list_with_prefix
+    if resource.kind_of?(Container)
       state = resource.vim_performance_state_for_ts(timestamp.to_s)
-      tag_list += state.image_tag_names if state.present?
+      image_tag_name = "#{state.image_tag_names}|" if state
       labels = resource.try(:container_image).try(:docker_labels).try(:collect) {|l| "container_image/label/managed/#{l.name}/#{l.value}"}
     end
 
-    tag_list.split("|").map { |tag| "#{tag_prefix}#{tag}" } + (labels || [])
+    "#{image_tag_name}#{tag_names}".split("|").reject(&:empty?).map { |x| "#{tag_prefix}#{x}" } + (labels || [])
   end
 
   def resource_parents
