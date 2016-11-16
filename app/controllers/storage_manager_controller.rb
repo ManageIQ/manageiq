@@ -4,9 +4,7 @@ class StorageManagerController < ApplicationController
   after_action :cleanup_action
   after_action :set_session_data
 
-  def index
-    redirect_to :action => 'show_list'
-  end
+  include Mixins::GenericListMixin
 
   # handle buttons pressed on the button bar
   def button
@@ -230,7 +228,7 @@ class StorageManagerController < ApplicationController
     end
   end
 
-  # Show the main MS list view
+  # Show the main MS list view overiding method from Mixins::GenericListMixin
   def show_list
     process_show_list(:conditions => ["agent_type<>?", "VMDB"])
   end

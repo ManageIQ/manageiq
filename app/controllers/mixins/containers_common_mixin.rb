@@ -1,10 +1,6 @@
 module ContainersCommonMixin
   extend ActiveSupport::Concern
 
-  def index
-    redirect_to :action => 'show_list'
-  end
-
   def show
     # fix breadcrumbs - remove displaying 'topology' when navigating to any container related entity summary page
     if @breadcrumbs.present? && (@breadcrumbs.last[:name].eql? 'Topology')
@@ -42,10 +38,6 @@ module ContainersCommonMixin
         replace_main_div :partial => "layouts/gtl"
       end
     end
-  end
-
-  def show_list
-    process_show_list
   end
 
   private
@@ -237,5 +229,8 @@ module ContainersCommonMixin
 
   included do
     menu_section :cnt
+
+    # include also generic show_list and index methods
+    include Mixins::GenericListMixin
   end
 end

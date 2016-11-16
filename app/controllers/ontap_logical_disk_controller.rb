@@ -1,8 +1,4 @@
 class OntapLogicalDiskController < CimInstanceController
-  def index
-    process_index
-  end
-
   def button
     process_button
   end
@@ -15,10 +11,6 @@ class OntapLogicalDiskController < CimInstanceController
       'hosts'                    => :hosts,
       'storages'                 => :storages
     )
-  end
-
-  def show_list
-    process_show_list
   end
 
   menu_section :nap

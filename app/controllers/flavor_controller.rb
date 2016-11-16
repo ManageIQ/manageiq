@@ -4,9 +4,7 @@ class FlavorController < ApplicationController
   after_action :cleanup_action
   after_action :set_session_data
 
-  def index
-    redirect_to :action => 'show_list'
-  end
+  include Mixins::GenericListMixin
 
   def show
     @display = params[:display] || "main" unless control_selected?
@@ -42,10 +40,6 @@ class FlavorController < ApplicationController
 
     # Came in from outside show_list partial
     replace_gtl_main_div if params[:ppsetting] || params[:searchtag] || params[:entry] || params[:sort_choice]
-  end
-
-  def show_list
-    process_show_list
   end
 
   # handle buttons pressed on the button bar

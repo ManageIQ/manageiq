@@ -4,6 +4,8 @@ class ConfigurationJobController < ApplicationController
   after_action :cleanup_action
   after_action :set_session_data
 
+  include Mixins::GenericListMixin
+
   def self.model
     ManageIQ::Providers::AnsibleTower::ConfigurationManager::Job
   end
@@ -14,10 +16,6 @@ class ConfigurationJobController < ApplicationController
 
   def ems_path(*args)
     ems_configprovider_path(*args)
-  end
-
-  def index
-    redirect_to :action => 'show_list'
   end
 
   def show
@@ -44,10 +42,6 @@ class ConfigurationJobController < ApplicationController
     if params[:ppsetting] || params[:searchtag] || params[:entry] || params[:sort_choice]
       replace_gtl_main_div
     end
-  end
-
-  def show_list
-    process_show_list
   end
 
   def parameters

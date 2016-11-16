@@ -4,9 +4,7 @@ class ResourcePoolController < ApplicationController
   after_action :cleanup_action
   after_action :set_session_data
 
-  def index
-    redirect_to :action => 'show_list'
-  end
+  include Mixins::GenericListMixin
 
   def show
     @display = params[:display] || "main" unless control_selected?
@@ -105,10 +103,6 @@ class ResourcePoolController < ApplicationController
                     :description => db_record.cpu_shares) unless db_record.cpu_shares.nil?
     @rp_config.push(:field       => "CPU Shares Level",
                     :description => db_record.cpu_shares_level) unless db_record.cpu_shares_level.nil?
-  end
-
-  def show_list
-    process_show_list
   end
 
   # handle buttons pressed on the button bar

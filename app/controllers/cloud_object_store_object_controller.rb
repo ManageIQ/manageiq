@@ -4,12 +4,10 @@ class CloudObjectStoreObjectController < ApplicationController
   after_action :cleanup_action
   after_action :set_session_data
 
+  include Mixins::GenericListMixin
+
   def breadcrumb_name(_model)
     ui_lookup(:tables => "cloud_object_store_object")
-  end
-
-  def index
-    redirect_to :action => 'show_list'
   end
 
   def button
@@ -47,10 +45,6 @@ class CloudObjectStoreObjectController < ApplicationController
     if params[:ppsetting] || params[:searchtag] || params[:entry] || params[:sort_choice]
       replace_gtl_main_div
     end
-  end
-
-  def show_list
-    process_show_list
   end
 
   def get_session_data
