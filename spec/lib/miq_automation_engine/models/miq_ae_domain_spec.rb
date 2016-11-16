@@ -434,13 +434,13 @@ describe MiqAeDomain do
       let(:task) { FactoryGirl.create(:miq_task) }
       let(:task_options) { {:action => "Destroy domain", :userid => user.userid} }
       let(:queue_options) do
-      {
-        :class_name  => "MiqAeDomain",
-        :instance_id => domain.id,
-        :method_name => "destroy",
-        :role        => role,
-        :args        => []
-      }
+        {
+          :class_name  => "MiqAeDomain",
+          :instance_id => domain.id,
+          :method_name => "destroy",
+          :role        => role,
+          :args        => []
+        }
       end
     end
 
@@ -453,22 +453,22 @@ describe MiqAeDomain do
 
     context "git enabled domain" do
       include_context "domain_context"
-      let (:domain) { FactoryGirl.create(:miq_ae_git_domain) }
-      let (:role) { "git_owner" }
+      let(:domain) { FactoryGirl.create(:miq_ae_git_domain) }
+      let(:role) { "git_owner" }
 
       it_behaves_like "create queue entry"
     end
 
     context "regular domain" do
       include_context "domain_context"
-      let (:domain) { FactoryGirl.create(:miq_ae_domain) }
-      let (:role) { nil }
+      let(:domain) { FactoryGirl.create(:miq_ae_domain) }
+      let(:role) { nil }
 
       it_behaves_like "create queue entry"
     end
 
     context "raises error if user not provided" do
-      let (:domain) { FactoryGirl.create(:miq_ae_domain) }
+      let(:domain) { FactoryGirl.create(:miq_ae_domain) }
       it "raise ArgumentError" do
         expect { domain.destroy(nil) }.to raise_exception(ArgumentError)
       end
