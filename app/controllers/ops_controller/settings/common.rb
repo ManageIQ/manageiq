@@ -183,9 +183,12 @@ module OpsController::Settings::Common
       end
     end
 
+    exclusion_list = replication_type == :remote ? MiqPglogical.new.active_excludes : MiqPglogical.default_excludes
+
     render :json => {
       :replication_type => replication_type,
-      :subscriptions    => subscriptions
+      :subscriptions    => subscriptions,
+      :exclusion_list   => exclusion_list.to_yaml
     }
   end
 
@@ -205,7 +208,7 @@ module OpsController::Settings::Common
       end
       begin
         PglogicalSubscription.save_all!(subscriptions_to_save)
-      rescue  StandardError => bang
+      rescue StandardError => bang
         add_flash(_("Error during replication configuration save: %{message}") %
                     {:message => bang}, :error)
       else
@@ -218,7 +221,18 @@ module OpsController::Settings::Common
         add_flash(_("Error during replication configuration save: %{message}") %
                     {:message => bang.message}, :error)
       else
-        add_flash(_("Replication configuration save was successful"))
+        if replication_type == :remote && !params[:exclusion_list].empty?
+          begin
+            MiqPglogical.refresh_excludes_queue(YAML.safe_load(params[:exclusion_list]))
+          rescue => bang
+            add_flash(_("Error saving the excluded tables list: %{message}") %
+                        {:message => bang}, :error)
+          else
+            add_flash(_("Replication configuration save was successful"))
+          end
+        else
+          add_flash(_("Replication configuration save was successful"))
+        end
       end
     end
     javascript_flash(:spinner_off => true)

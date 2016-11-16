@@ -12,7 +12,9 @@ describe('pglogicalReplicationFormController', function() {
     $scope = $rootScope.$new();
     $scope.pglogicalReplicationModel = {
       replication_type: 'none',
-      subscriptions   : []};
+      subscriptions   : [],
+      exclusion_list  : ""
+    };
     $httpBackend = _$httpBackend_;
     $controller = _$controller_('pglogicalReplicationFormController', {
       $scope: $scope,
@@ -24,7 +26,9 @@ describe('pglogicalReplicationFormController', function() {
   beforeEach(inject(function(_$controller_) {
     var pglogicalReplicationFormResponse = {
       replication_type: 'none',
-      subscriptions   : []};
+      subscriptions   : [],
+      exclusion_list  : ""
+    };
     $httpBackend.whenGET('/ops/pglogical_subscriptions_form_fields/new').respond(pglogicalReplicationFormResponse);
     $httpBackend.flush();
   }));
@@ -41,6 +45,10 @@ describe('pglogicalReplicationFormController', function() {
 
     it('sets the subscriptions value returned with http request', function() {
       expect($scope.pglogicalReplicationModel.subscriptions).toEqual([]);
+    });
+
+    it('sets the exclusion list to the value returned by the http request', function() {
+      expect($scope.pglogicalReplicationModel.exclusion_list).toEqual("");
     });
   });
 
@@ -73,7 +81,8 @@ describe('pglogicalReplicationFormController', function() {
     it('delegates to miqService.miqAjaxButton', function() {
       var submitContent = {
         replication_type: $scope.pglogicalReplicationModel.replication_type,
-        subscriptions:    $scope.pglogicalReplicationModel.subscriptions};
+        subscriptions:    $scope.pglogicalReplicationModel.subscriptions,
+        exclusion_list:   $scope.pglogicalReplicationModel.exclusion_list};
 
       expect(miqService.miqAjaxButton).toHaveBeenCalledWith('/ops/pglogical_save_subscriptions/new?button=save', submitContent);
     });

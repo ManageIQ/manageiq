@@ -234,6 +234,14 @@
                     %li
                       %a{"ng-click" => "discardSubscription($index)"}
                         = _('Discard')
+    .exclusion_list_div{"ng-if" => "pglogicalReplicationModel.replication_type == 'remote'"}
+      %h3
+        = _('Excluded Tables')
+      %br
+        %textarea{"ui-codemirror" => "",
+                  :name           => "exclusion_list",
+                  'ng-model'      => 'pglogicalReplicationModel.exclusion_list',
+                  'checkchange'   => ''}
 
     .button-group{:align => "right"}
       = button_tag(_("Save"),
