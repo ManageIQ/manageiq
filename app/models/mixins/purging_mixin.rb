@@ -1,6 +1,6 @@
 # Common methods for all purgers.
 #
-# It is expected that the mixee will provide the following methods:
+# For purge_by_date, the mixee must provide the following methods:
 #
 #   purge_scope(older_than): This method will receive a Time object and
 #     should construct an ActiveRecord::Relation representing the conditions
@@ -21,6 +21,24 @@
 #     the ids of the records that have just been deleted, and should purge any
 #     other records associated with those ids.
 #   ? can this be auto defined looking at relations and destroy / delete
+#
+# For purge_by_remaining, the mixee must provide the following methods:
+#
+#   @return [Symbol, Array<Symbol>] resource that is referenced by this table.
+#   def purge_remaining_foreign_key
+#     :foreign_id
+#   end
+#
+#   example for `Driftstate`:
+#   def purge_remaining_foreign_key
+#     [:resource_type, :resource_id]
+#   end
+#
+#   example for `MiqReportResult`:
+#   def purge_remaining_foreign_key
+#     :miq_report_id
+#   end
+#
 module PurgingMixin
   extend ActiveSupport::Concern
 
@@ -33,8 +51,6 @@ module PurgingMixin
       purge_count_by_date(older_than || purge_date)
     end
 
-    private
-
     def purge_count_by_date(older_than)
       purge_scope(older_than).count
     end
@@ -44,6 +60,67 @@ module PurgingMixin
       total = purge_in_batches(purge_scope(older_than), window || purge_window_size, &block)
       _log.info("Purging #{table_name.humanize} older than [#{older_than}]...Complete - Deleted #{total} records")
       total
+    end
+
+    def purge_count_by_remaining(remaining)
+      purge_ids_for_remaining(remaining).size
+    end
+
+    # @param [Integer] remaining number of records per resource to keep (remains in table)
+    # @param [Integer] window number of records to delete in a batch
+    # @return [Integer] number of records deleted
+    def purge_by_remaining(remaining, window = nil, &block)
+      _log.info("Purging #{table_name.humanize} older than last #{remaining} results...")
+      total = purge_in_batches(purge_ids_for_remaining(remaining), window || purge_window_size, &block)
+      _log.info("Purging #{table_name.humanize} older than last #{remaining} results...Complete - Deleted #{total} records")
+      total
+    end
+
+    private
+
+    # Private:  The ids to purge if we want to keep a fixed number of records
+    # for each resource. Newer records (with a higher id/ lower rank) are kept.
+    #
+    # example:
+    #
+    # So given the following DriftStates:
+    #
+    # {id: 1, resource_type: 'foo', resource_id: 1}  # Rank = 2
+    # {id: 2, resource_type: 'foo', resource_id: 1}  # Rank = 1
+    # {id: 3, resource_type: 'foo', resource_id: 2}  # Rank = 2
+    # {id: 4, resource_type: 'foo', resource_id: 2}  # Rank = 1
+    # {id: 5, resource_type: 'bar', resource_id: 6}  # Rank = 1
+    # {id: 6, resource_type: 'baz', resource_id: 4}  # Rank = 1
+    #
+    # For a "remaining" value of `1`, id 1 and 3 would then be up for deletion.
+    #
+    # @param [Integer] remaining number of records per resource to keep (remains in table)
+    # @return [ActiveRecord::Relation] Records to be deleted
+    def purge_ids_for_remaining(remaining)
+      # HACK: `as(table_name)` fixes a bug with `from("").pluck(:id)`
+      from(purge_ids_ranked_by_age.as(table_name)).where("rank > ?", remaining)
+    end
+
+    # Private: Rank records by age for each resource
+    #
+    # Assigns a "RANK" value to each record, categorized by their foreign key(s).
+    #
+    # The higher the id, the lower the rank value, the higher the priority.
+    #
+    # The values to purge are the records with a rank greater than the number
+    # of records to keep.
+    #
+    # @return [ActiveRecord::Relation] the ids prioritized by age.
+    def purge_ids_ranked_by_age
+      c = connection
+      id_key = c.quote_column_name(:id)
+      partition_key = Array.wrap(purge_remaining_foreign_key).collect { |k| c.quote_column_name(k) }.join(", ")
+      select(<<-EOSQL)
+        #{id_key}, RANK() OVER(
+          PARTITION BY #{partition_key}
+          ORDER BY #{id_key} DESC
+        ) AS "rank"
+      EOSQL
     end
 
     def purge_in_batches(conditions, window, total = 0, total_limit = nil)
