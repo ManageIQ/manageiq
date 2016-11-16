@@ -56,6 +56,10 @@ module ManageIQ::Providers::Redhat::InfraManager::Vm::Operations::Snapshot
     current_state == 'off'
   end
 
+  def snapshotting_memory_allowed?
+    current_state == 'on'
+  end
+
   private
 
   def with_snapshots_service(vm_uid_ems)
