@@ -1676,6 +1676,11 @@ module VmCommon
     end
   end
 
+  # return correct node to right cell
+  def x_node_right_cell
+    @sb[@sb[:active_accord]].present? ? @sb[@sb[:active_accord]] : x_node
+  end
+
   # set partial name and cell header for edit screens
   def set_right_cell_vars
     name = @record.try(:name).to_s
@@ -1764,7 +1769,10 @@ module VmCommon
       partial = "layouts/performance"
       header = _("Capacity & Utilization data for %{vm_or_template} \"%{name}\"") %
         {:vm_or_template => ui_lookup(:table => table), :name => name}
-      x_history_add_item(:id => x_node, :text => header, :button => params[:pressed], :display => params[:display])
+      x_history_add_item(:id      => x_node_right_cell,
+                         :text    => header,
+                         :button  => params[:pressed],
+                         :display => params[:display])
       action = nil
     when "policy_sim"
       if params[:action] == "policies"
@@ -1810,7 +1818,9 @@ module VmCommon
       partial = "layouts/tl_show"
       header = _("Timelines for %{virtual_machine} \"%{name}\"") %
         {:virtual_machine => ui_lookup(:table => table), :name => name}
-      x_history_add_item(:id => x_node, :text => header, :button => params[:pressed])
+      x_history_add_item(:id     => x_node_right_cell,
+                         :text   => header,
+                         :button => params[:pressed])
       action = nil
     else
       # now take care of links on summary screen
@@ -1830,7 +1840,10 @@ module VmCommon
           :item_name      => @item.kind_of?(ScanHistory) ? @item.started_on.to_s : @item.name,
           :action         => action_type(@sb[:action], 1)
         }
-        x_history_add_item(:id => x_node, :text => header, :action => @sb[:action], :item => @item.id)
+        x_history_add_item(:id     => x_node_right_cell,
+                           :text   => header,
+                           :action => @sb[:action],
+                           :item   => @item.id)
       else
         header = _("\"%{action}\" for %{vm_or_template} \"%{name}\"") % {
           :vm_or_template => ui_lookup(:table => table),
@@ -1838,9 +1851,13 @@ module VmCommon
           :action         => action_type(@sb[:action], 2)
         }
         if @display && @display != "main"
-          x_history_add_item(:id => x_node, :text => header, :display => @display)
-        else
-          x_history_add_item(:id => x_node, :text => header, :action => @sb[:action]) if @sb[:action] != "drift_history"
+          x_history_add_item(:id      => x_node_right_cell,
+                             :text    => header,
+                             :display => @display)
+        elsif @sb[:action] != "drift_history"
+          x_history_add_item(:id     => x_node_right_cell,
+                             :text   => header,
+                             :action => @sb[:action])
         end
       end
       action = nil
