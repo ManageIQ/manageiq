@@ -93,8 +93,12 @@ class SystemConsole < ApplicationRecord
   end
 
   def self.launch_proxy_if_not_local(console_args, originating_server, host_address, host_port)
+    proxy_disabled = ::Settings.server.try(:console_proxy_disabled)
+    proxy_disabled = proxy_disabled.present? && !proxy_disabled
+
     _log.info "Originating server: #{originating_server}, local server: #{MiqServer.my_server.id}"
-    if SystemConsole.is_local?(originating_server)
+
+    if proxy_disabled || SystemConsole.is_local?(originating_server)
       console_args.update(
         :host_name  => host_address,
         :port       => host_port,
