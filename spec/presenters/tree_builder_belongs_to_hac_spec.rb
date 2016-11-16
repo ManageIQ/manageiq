@@ -5,9 +5,10 @@ describe TreeBuilderBelongsToHac do
     @group = FactoryGirl.create(:miq_group)
     @datacenter1 = FactoryGirl.create(:datacenter)
     @datacenter2 = FactoryGirl.create(:datacenter)
-    @cluster = FactoryGirl.create(:ems_cluster)
     @rp1 = FactoryGirl.create(:resource_pool, :is_default => true)
     @rp2 = FactoryGirl.create(:resource_pool)
+    @cluster = FactoryGirl.create(:ems_cluster)
+    allow(@cluster).to receive(:resource_pools) { [@rp1] }
     @ems_folder = FactoryGirl.create(:ems_folder)
     @subfolder = FactoryGirl.create(:ems_folder, :name => 'host')
     @subfolder_vm = FactoryGirl.create(:ems_folder, :name => 'vm')
@@ -29,12 +30,23 @@ describe TreeBuilderBelongsToHac do
     @ems_azure_network.with_relationship_type("ems_metadata") { @ems_azure_network.add_child(@folder) }
     FactoryGirl.create(:ems_redhat)
     FactoryGirl.create(:ems_google_network)
-    @hac_tree = TreeBuilderBelongsToHac.new(:hac, :hac_tree, {:trees => {}}, true, :edit => @edit, :filters => {}, :group => @group, :selected => {})
+    @hac_tree = TreeBuilderBelongsToHac.new(:hac,
+                                            :hac_tree,
+                                            {:trees => {}},
+                                            true,
+                                            :edit     => @edit,
+                                            :filters  => {},
+                                            :group    => @group,
+                                            :selected => {})
   end
 
   it 'set init options correctly' do
     tree_options = @hac_tree.send(:tree_init_options, :hac)
-    expect(tree_options).to eq(:full_ids => true, :add_root => false, :lazy => false, :checkable => @edit.present?, :selected => {})
+    expect(tree_options).to eq(:full_ids  => true,
+                               :add_root  => false,
+                               :lazy      => false,
+                               :checkable => @edit.present?,
+                               :selected  => {})
   end
 
   it 'set locals for render correctly' do
@@ -53,7 +65,7 @@ describe TreeBuilderBelongsToHac do
   end
 
   it '#x_get_tree_roots' do
-    roots = @hac_tree.send(:x_get_tree_roots, false , nil)
+    roots = @hac_tree.send(:x_get_tree_roots, false, nil)
     expect(roots).to eq(ExtManagementSystem.all)
   end
 
@@ -74,18 +86,18 @@ describe TreeBuilderBelongsToHac do
   end
 
   it '#x_get_tree_datacenter_kids' do
-    kids = @hac_tree.send(:x_get_tree_datacenter_kids, @datacenter1, false)
+    kids = @hac_tree.send(:x_get_tree_datacenter_kids, @datacenter1, false, nil)
     expect(kids).to include(@host)
     expect(kids).to include(@cluster)
     expect(kids).to include(@ems_folder)
     expect(kids.size).to eq(3)
   end
 
-  it '#x_get_tree_cluster_kids TODO add Resource Pool' do
+  it '#x_get_tree_cluster_kids' do
     kids = @hac_tree.send(:x_get_tree_cluster_kids, @cluster, false)
     expect(kids).to include(@host)
-    binding.pry
-    expect(kids.size).to eq(1)
+    expect(kids).to include(@rp1)
+    expect(kids.size).to eq(2)
   end
 
   it '#x_get_resource_pool_kids' do

@@ -168,7 +168,7 @@ class TreeBuilder
         :add_root   => true,
         :open_nodes => [],
         :lazy       => true,
-        :checkable => false
+        :checkable  => false
       )
     )
   end

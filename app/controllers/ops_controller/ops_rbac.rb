@@ -933,10 +933,22 @@ module OpsController::OpsRbac
                                      @sb,
                                      true,
                                      :edit => @edit, :filters => @filters, :group => @group)
-    @hac_tree = TreeBuilderBelongsToHac.new(:hac, :hac_tree, @sb, true, :edit => @edit, :filters => @filters, :group => @group, :selected => @belongsto.keys)
-    #build_belongsto_tree(@belongsto.keys, false, false)  # Build the Hosts & Clusters tree for this user no edit
-    @vat_tree = TreeBuilderBelongsToVat.new(:vat, :vat_tree, @sb, true, :edit => @edit, :filters => @filters, :group => @group, :selected => @belongsto.keys)
-      #build_belongsto_tree(@belongsto.keys, true, false)  # Build the VMs & Templates tree for this user
+    @hac_tree = TreeBuilderBelongsToHac.new(:hac,
+                                            :hac_tree,
+                                            @sb,
+                                            true,
+                                            :edit     => @edit,
+                                            :filters  => @filters,
+                                            :group    => @group,
+                                            :selected => @belongsto.keys)
+    @vat_tree = TreeBuilderBelongsToVat.new(:vat,
+                                            :vat_tree,
+                                            @sb,
+                                            true,
+                                            :edit     => @edit,
+                                            :filters  => @filters,
+                                            :group    => @group,
+                                            :selected => @belongsto.keys)
   end
 
   def rbac_role_get_details(id)
@@ -1041,7 +1053,8 @@ module OpsController::OpsRbac
           @edit[:new][:belongsto].delete("#{klass}_#{from_cid(id)}") #     Remove the tag from the belongsto hash
         else
           object = klass.safe_constantize.find(from_cid(id))
-          @edit[:new][:belongsto]["#{klass}_#{from_cid(id)}"] = MiqFilter.object2belongsto(object) # Put the tag into the belongsto hash
+          # Put the tag into the belongsto hash
+          @edit[:new][:belongsto]["#{klass}_#{from_cid(id)}"] = MiqFilter.object2belongsto(object)
         end
       end
     end
@@ -1103,10 +1116,20 @@ module OpsController::OpsRbac
                                      @sb,
                                      true,
                                      :edit => @edit, :filters => @filters, :group => @group)
-    @hac_tree = TreeBuilderBelongsToHac.new(:hac, :hac_tree, @sb, true, :edit => @edit, :group => @group, :selected => @edit[:new][:belongsto].keys)
-    #build_belongsto_tree(@edit[:new][:belongsto].keys, false, false)  # Build the Hosts & Clusters tree for this user
-    @vat_tree = TreeBuilderBelongsToVat.new(:vat, :vat_tree, @sb, true, :edit => @edit, :group => @group, :selected => @edit[:new][:belongsto].keys)
-      #build_belongsto_tree(@edit[:new][:belongsto].keys, true, false)  # Build the VMs & Templates tree for this user
+    @hac_tree = TreeBuilderBelongsToHac.new(:hac,
+                                            :hac_tree,
+                                            @sb,
+                                            true,
+                                            :edit     => @edit,
+                                            :group    => @group,
+                                            :selected => @edit[:new][:belongsto].keys)
+    @vat_tree = TreeBuilderBelongsToVat.new(:vat,
+                                            :vat_tree,
+                                            @sb,
+                                            true,
+                                            :edit     => @edit,
+                                            :group    => @group,
+                                            :selected => @edit[:new][:belongsto].keys)
   end
 
   # Set group record variables to new values

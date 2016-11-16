@@ -1,10 +1,9 @@
 class TreeBuilderBelongsToVat < TreeBuilderBelongsToHac
-
   def node_builder
     TreeNodeBuilderBelongsToVat
   end
 
-  def initialize(name, type, sandbox, build = true, params)
+  def initialize(name, type, sandbox, build, params)
     super(name, type, sandbox, build, params)
   end
 
@@ -13,7 +12,7 @@ class TreeBuilderBelongsToVat < TreeBuilderBelongsToHac
     locals.merge!(locals.merge!(:id_prefix => 'vat_'))
   end
 
-  def x_get_tree_datacenter_kids(parent, count_only = false, _type)
+  def x_get_tree_datacenter_kids(parent, count_only, _type)
     kids = []
     parent.folders.each do |child|
       next unless child.kind_of?(EmsFolder)

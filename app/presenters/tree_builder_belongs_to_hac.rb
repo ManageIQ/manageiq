@@ -9,13 +9,13 @@ class TreeBuilderBelongsToHac < TreeBuilder
     TreeNodeBuilderBelongsToHac
   end
 
-  def initialize(name, type, sandbox, build = true, params)
+  def initialize(name, type, sandbox, build, params)
     @edit = params[:edit]
     @group = params[:group]
     @selected = params[:selected]
-    # need to remove tree info 
+    # need to remove tree info
     TreeState.new(sandbox).remove_tree(name)
-    super(name, type, sandbox, build = true)
+    super(name, type, sandbox, build)
   end
 
   private
@@ -30,7 +30,6 @@ class TreeBuilderBelongsToHac < TreeBuilder
                                 :check_url         => "/ops/rbac_group_field_changed/#{@group.id || "new"}___",
                                 :oncheck           => @edit ? "miqOnCheckUserFilters" : nil,
                                 :checkboxes        => true,
-                                #:three_checks      => true,
                                 :highlight_changes => true,
                                 :onclick           => false))
   end
@@ -46,21 +45,20 @@ class TreeBuilderBelongsToHac < TreeBuilder
   def x_get_kids_provider(parent, count_only)
     kids = []
     parent.children.each do |child|
-      # this node is not added to a tree
-        kids.concat(child.folders_only)
-        kids.concat(child.datacenters_only)
+      # this node (parent) is not added to a tree
+      kids.concat(child.folders_only)
+      kids.concat(child.datacenters_only)
     end
     count_only_or_objects(count_only, kids)
   end
 
-  def x_get_tree_datacenter_kids(parent, count_only = false, _type)
+  def x_get_tree_datacenter_kids(parent, count_only, _type)
     kids = []
     parent.folders.each do |child|
-      if child.kind_of?(EmsFolder) && child.name == "host"
-        kids.concat(child.folders_only)
-        kids.concat(child.clusters)
-        kids.concat(child.hosts)
-      end
+      next unless child.kind_of?(EmsFolder) && child.name == "host"
+      kids.concat(child.folders_only)
+      kids.concat(child.clusters)
+      kids.concat(child.hosts)
     end
     count_only_or_objects(count_only, kids)
   end
@@ -75,9 +73,8 @@ class TreeBuilderBelongsToHac < TreeBuilder
 
   def x_get_tree_folder_kids(parent, count_only = false)
     count_only_or_objects(count_only, parent.folders_only) +
-        count_only_or_objects(count_only, parent.datacenters_only) +
-        count_only_or_objects(count_only, parent.clusters) +
-        count_only_or_objects(count_only, parent.hosts)
+      count_only_or_objects(count_only, parent.datacenters_only) +
+      count_only_or_objects(count_only, parent.clusters) +
+      count_only_or_objects(count_only, parent.hosts)
   end
 end
-

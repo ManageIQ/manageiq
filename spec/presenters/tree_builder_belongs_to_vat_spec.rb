@@ -13,12 +13,23 @@ describe TreeBuilderBelongsToVat do
     @datacenter.with_relationship_type("ems_metadata") { @datacenter.add_folder(@subfolder) }
     FactoryGirl.create(:ems_redhat)
     FactoryGirl.create(:ems_google_network)
-    @vat_tree = TreeBuilderBelongsToVat.new(:vat, :vat_tree, {:trees => {}}, true, :edit => @edit, :filters => {}, :group => @group, :selected => {})
+    @vat_tree = TreeBuilderBelongsToVat.new(:vat,
+                                            :vat_tree,
+                                            {:trees => {}},
+                                            true,
+                                            :edit     => @edit,
+                                            :filters  => {},
+                                            :group    => @group,
+                                            :selected => {})
   end
 
   it 'set init options correctly' do
     tree_options = @vat_tree.send(:tree_init_options, :vat)
-    expect(tree_options).to eq(:full_ids => true, :add_root => false, :lazy => false, :checkable => @edit.present?, :selected => {})
+    expect(tree_options).to eq(:full_ids  => true,
+                               :add_root  => false,
+                               :lazy      => false,
+                               :checkable => @edit.present?,
+                               :selected  => {})
   end
 
   it 'set locals for render correctly' do

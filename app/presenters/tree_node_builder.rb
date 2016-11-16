@@ -554,11 +554,11 @@ class TreeNodeBuilder
   def ext_management_system_node
     # TODO: This should really leverage .base_model on an EMS
     prefix_model =
-        case object
-        when EmsCloud then "EmsCloud"
-        when EmsInfra then "EmsInfra"
-        else               "ExtManagementSystem"
-        end
+      case object
+      when EmsCloud then "EmsCloud"
+      when EmsInfra then "EmsInfra"
+      else               "ExtManagementSystem"
+      end
 
     generic_node(object.name, "vendor-#{object.image_name}.png", "#{ui_lookup(:model => prefix_model)}: #{object.name}")
   end
