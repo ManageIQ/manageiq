@@ -1471,20 +1471,6 @@ describe ApplicationHelper do
     end
   end
 
-  context '#skip_days_from_time_profile' do
-    it 'should return empty array for whole week' do
-      expect(helper.skip_days_from_time_profile((0..6).to_a)).to eq([])
-    end
-
-    it 'should return whole week for empty array' do
-      expect(helper.skip_days_from_time_profile([])).to eq((1..7).to_a)
-    end
-
-    it 'should handle Sundays' do
-      expect(helper.skip_days_from_time_profile((1..6).to_a)).to eq([7])
-    end
-  end
-
   it 'output of remote_function should not be html_safe' do
     expect(helper.remote_function(:url => {:controller => 'vm_infra', :action => 'explorer'}).html_safe?).to be_falsey
   end
@@ -1659,18 +1645,6 @@ describe ApplicationHelper do
         MiddlewareDatasource.create(:ext_management_system => ems, :name => "Test Middleware")
         expect(helper.multiple_relationship_link(ems, "middleware_datasource")).to eq("<li><a title=\"Show Middleware \
 Datasources\" href=\"/ems_middleware/#{ems.id}?display=middleware_datasources\">Middleware Datasources (1)</a></li>")
-      end
-    end
-  end
-
-  describe "#auth_mode_name" do
-    modes = %w(ldap ldaps amazon httpd database)
-    modes_pretty = %w(LDAP LDAPS Amazon External\ Authentication Database)
-
-    modes.zip modes_pretty.each do |mode, mode_pretty|
-      it "Returns #{mode_pretty} when mode is #{mode}" do
-        stub_settings(:authentication => { :mode => mode }, :server => {})
-        expect(helper.auth_mode_name).to eq(mode_pretty)
       end
     end
   end

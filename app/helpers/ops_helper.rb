@@ -1,5 +1,6 @@
 module OpsHelper
   include_concern 'TextualSummary'
+  include_concern 'MyServer'
 
   def hide_button(button, opt)
     if opt == "on"
@@ -21,5 +22,20 @@ module OpsHelper
 
   def selected?(tree_node, key)
     tree_node.split('-').first == key
+  end
+
+  def auth_mode_name
+    case ::Settings.authentication.mode.downcase
+    when 'ldap'
+      _('LDAP')
+    when 'ldaps'
+      _('LDAPS')
+    when 'amazon'
+      _('Amazon')
+    when 'httpd'
+      _('External Authentication')
+    when 'database'
+      _('Database')
+    end
   end
 end

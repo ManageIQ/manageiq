@@ -1,4 +1,6 @@
 class DashboardController < ApplicationController
+  include DashboardHelper
+
   menu_section :vi
 
   @@items_per_page = 8

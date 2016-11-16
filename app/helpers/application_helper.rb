@@ -1643,27 +1643,6 @@ module ApplicationHelper
     end
   end
 
-  def skip_days_from_time_profile(time_profile_days)
-    (1..7).to_a.delete_if do |d|
-      # time_profile_days has 0 for sunday, skip_days needs 7 for sunday
-      time_profile_days.include?(d % 7)
-    end
-  end
-
-  def breadcrumb_prohibited_for_action?
-    !%w(accordion_select explorer tree_select).include?(action_name)
-  end
-
-  delegate :id, :to => :my_server, :prefix => true
-
-  def my_zone_name
-    my_server.my_zone
-  end
-
-  def my_server
-    @my_server ||= MiqServer.my_server(true)
-  end
-
   def tree_with_advanced_search?
     %i(containers
        containers_filter
@@ -1847,25 +1826,4 @@ module ApplicationHelper
     end
     true
   end
-
-  def auth_mode_name
-    case ::Settings.authentication.mode.downcase
-    when "ldap"
-      _("LDAP")
-    when "ldaps"
-      _("LDAPS")
-    when "amazon"
-      _("Amazon")
-    when "httpd"
-      _("External Authentication")
-    when "database"
-      _("Database")
-    end
-  end
-
-  def ext_auth?(auth_option = nil)
-    return false unless ::Settings.authentication.mode == "httpd"
-    auth_option ? ::Settings.authentication[auth_option] : true
-  end
-  public :ext_auth?
 end

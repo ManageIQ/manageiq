@@ -1968,4 +1968,8 @@ module VmCommon
     locals[:continue_button] = true if @edit[:buttons].include?(:continue)
     locals[:submit_button] = true if @edit[:buttons].include?(:submit)
   end
+
+  def breadcrumb_prohibited_for_action?
+    !%w(accordion_select explorer tree_select).include?(action_name)
+  end
 end
