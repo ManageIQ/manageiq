@@ -42,7 +42,7 @@ module EmsRefresh::SaveInventoryHelper
       deletes.reload
     end
     deletes = deletes.to_a
-    deletes_index = deletes.each_with_object({}) { |x, obj| obj[x] = x }
+    deletes_index = deletes.index_by { |x| x }
 
     child_keys = Array.wrap(child_keys)
     remove_keys = Array.wrap(extra_keys) + child_keys
