@@ -1482,10 +1482,6 @@ module ApplicationHelper
       (@explorer && x_tree && tree_with_advanced_search? && !@record)
   end
 
-  def need_prov_dialogs?(type)
-    !type.starts_with?("generic")
-  end
-
   def db_for_quadicon
     case @layout
     when "ems_infra"
