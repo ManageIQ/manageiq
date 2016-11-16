@@ -89,8 +89,6 @@ class OpsController
       rbac_features_tree_add_node("all_vm_rules", root_node[:key], @all_vm_node[:select])
 
       Menu::Manager.each do |section|
-        # skip storage node unless it's enabled in product setting
-        next if section.id == :sto && !VMDB::Config.new("vmdb").config[:product][:storage]
         next if section.id == :cons && !Settings.product.consumption
         next unless Vmdb::PermissionStores.instance.can?(section.id)
 

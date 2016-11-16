@@ -144,7 +144,6 @@ module Menu
           Menu::Item.new('ems_storage',                  N_('Storage Providers'), 'ems_storage',                  {:feature => 'ems_storage_show_list'},                  '/ems_storage'),
           Menu::Item.new('cloud_volume',                 N_('Volumes'),           'cloud_volume',                 {:feature => 'cloud_volume_show_list'},                 '/cloud_volume'),
           Menu::Item.new('cloud_object_store_container', N_('Object Stores'),     'cloud_object_store_container', {:feature => 'cloud_object_store_container_show_list'}, '/cloud_object_store_container'),
-          netapp_enabled ? netapp_storage_menu_section : empty_menu_section
         ])
       end
 
