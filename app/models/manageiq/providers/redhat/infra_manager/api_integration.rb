@@ -60,6 +60,9 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
     probe_args = { :host => hostname, :port => port, :username => username, :password => password, :insecure => true }
     probe_results = OvirtSDK4::Probe.probe(probe_args)
     probe_results.map(&:version) if probe_results
+  rescue => error
+    _log.error("Error while probing supported api versions #{error}")
+    []
   end
 
   def supports_the_api_version?(version)
