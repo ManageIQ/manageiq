@@ -1,6 +1,6 @@
 class ApplicationHelper::Button::ChargebackRates < ApplicationHelper::Button::Basic
     def role_allows_feature?
-      role_allows?(:feature => 'chargeback_reports')
+      role_allows?(:feature => 'chargeback_rates')
     end
 
     def visible?
