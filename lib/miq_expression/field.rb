@@ -38,7 +38,7 @@ class MiqExpression::Field
   end
 
   def attribute_supported_by_sql?
-    !custom_attribute_column? && model.attribute_supported_by_sql?(column)
+    !custom_attribute_column? && target.attribute_supported_by_sql?(column)
   end
 
   def plural?
