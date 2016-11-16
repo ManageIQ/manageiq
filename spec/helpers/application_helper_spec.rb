@@ -1328,41 +1328,6 @@ describe ApplicationHelper do
     end
   end
 
-  context "#start_page_allowed?" do
-    before do
-      stub_user(:features => :all)
-    end
-
-    it "should return true for storage start pages when product flag is set" do
-      stub_settings(:product => { :storage => true })
-
-      result = helper.start_page_allowed?("cim_storage_extent_show_list")
-      expect(result).to be_truthy
-    end
-
-    it "should return false for storage start pages when product flag is not set" do
-      result = helper.start_page_allowed?("cim_storage_extent_show_list")
-      expect(result).to be_falsey
-    end
-
-    it "should return true for containers start pages when product flag is set" do
-      stub_settings(:product => { :containers => true })
-
-      result = helper.start_page_allowed?("ems_container_show_list")
-      expect(result).to be_truthy
-    end
-
-    it "should return false for containers start pages when product flag is not set" do
-      result = helper.start_page_allowed?("ems_container_show_list")
-      expect(result).to be_falsey
-    end
-
-    it "should return true for host start page" do
-      result = helper.start_page_allowed?("host_show_list")
-      expect(result).to be_truthy
-    end
-  end
-
   context "#tree_with_advanced_search?" do
     it 'should return true for explorer trees with advanced search' do
       controller.instance_variable_set(:@sb,

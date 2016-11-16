@@ -1,5 +1,6 @@
 class DashboardController < ApplicationController
   include DashboardHelper
+  include StartUrl
 
   menu_section :vi
 

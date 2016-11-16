@@ -1,5 +1,7 @@
 require 'miq_bulk_import'
 class ConfigurationController < ApplicationController
+  include StartUrl
+
   logo_dir = File.expand_path(File.join(Rails.root, "public/upload"))
   Dir.mkdir logo_dir unless File.exist?(logo_dir)
   @@logo_file = File.join(logo_dir, "custom_logo.png")
@@ -532,11 +534,6 @@ class ConfigurationController < ApplicationController
         new_tz = MiqServer.my_server.get_config("vmdb").config[:server][:timezone]
         new_tz = 'UTC' if new_tz.blank?
         @edit.store_path(:current, :display, :timezone, new_tz)
-      end
-
-      # Build the start pages pulldown list
-      session[:start_pages] = MiqShortcut.start_pages.each_with_object([]) do |page, pages|
-        pages.push([page[1], page[0]]) if start_page_allowed?(page[2])
       end
     when 'ui_2'
       @edit = {

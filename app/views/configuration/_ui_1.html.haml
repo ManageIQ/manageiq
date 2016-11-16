@@ -51,7 +51,7 @@
               = _('Show at Login')
             .col-md-8
               = select_tag("start_page",
-                           options_for_select(session[:start_pages], @edit[:new][:display][:startpage]),
+                           options_for_select(start_page_options, @edit[:new][:display][:startpage]),
                            "data-live-search" => "true",
                            :class             => "selectpicker")
 
