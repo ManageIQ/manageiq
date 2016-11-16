@@ -66,7 +66,10 @@ module ManagerRefresh::SaveCollection
             dto.object      = entity_builder.create!(hash.except(:id))
             created_counter += 1
           else
-            dto.object.update_attributes!(hash.except(:id, :type))
+            dto.object.assign_attributes(hash.except(:id, :type))
+            if dto.object.changed?
+              dto.object.save!
+            end
           end
           dto.object.send(:clear_association_cache)
         end
