@@ -33,12 +33,15 @@ The image has been tested and validated under docker-1.10.3 (Fedora24)
 
 The first time you run the container, it will initialize the database, **please allow 2-4 mins** for MIQ to respond.
 
-_**Note:**_ As of recent versions of docker-1.10.3 you can run the MIQ container unprivileged
+```
+docker run --privileged -di -p 80:80 -p 443:443 manageiq/manageiq
+```
+Please note you can ommit some ports from the run command if you don't need to use them
 
+_**Note:**_ If you are running a RHEL family docker host you can now run the MIQ container unprivileged as recent versions of docker (1.10.3)
 ```
 docker run -di -p 80:80 -p 443:443 manageiq/manageiq
 ```
-Please note you can ommit some ports from the run command if you don't need to use them
 
 ### On Atomic host
 
@@ -49,12 +52,11 @@ atomic stop -n <name>  manageiq
 atomic uninstall -n <name> manageiq
 ```
 
-
 ## Pull and use latest image from Docker Hub
 
 ### On standard distribution
 ```
-docker run -di -p 80:80 -p 443:443 docker.io/manageiq/manageiq
+docker run --privileged -di -p 80:80 -p 443:443 docker.io/manageiq/manageiq
 ```
 
 ### On Atomic host
@@ -80,7 +82,7 @@ docker exec -ti <container-id> bash -l
 ```
 
 ## Logging
-We can display systemd container journal logs on the docker host thanks to OCI systemd hooks
+We can display systemd container journal logs on the docker host thanks to OCI systemd hooks on RHEL family systems
 
 Ensure the MIQ container has been registered with machinectl on docker host :
 ```bash
