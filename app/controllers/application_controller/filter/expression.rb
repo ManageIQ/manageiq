@@ -36,4 +36,7 @@ module ApplicationController::Filter
     :val2,
   ) do
   end
+  # TODO: expression is now manipulated with fetch_path
+  # We need to extract methods using fetch_path to Expression to avoid the fetch_path call
+  ApplicationController::Filter::Expression.send(:include, MoreCoreExtensions::Shared::Nested)
 end
