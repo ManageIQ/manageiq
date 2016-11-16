@@ -394,8 +394,6 @@ class ApplicationHelper::ToolbarBuilder
         return !["fetch_production_log", "refresh_production_log"].include?(id)
       when "diagnostics_roles_servers", "diagnostics_servers_roles"
         case id
-        when "reload_server_tree"
-          return false
         when "zone_collect_current_logs", "zone_collect_logs", "zone_log_depot_edit"
           return true
         end

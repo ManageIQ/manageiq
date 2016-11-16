@@ -4,7 +4,8 @@ class ApplicationHelper::Toolbar::DiagnosticsRegionCenter < ApplicationHelper::T
       :reload_server_tree,
       'fa fa-repeat fa-lg',
       N_('Reload Current Display'),
-      nil),
+      nil,
+      :klass => ApplicationHelper::Button::ReloadServerTree),
   ])
   button_group('ldap_domain_vmdb', [
     select(
