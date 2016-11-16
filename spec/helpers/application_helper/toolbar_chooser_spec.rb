@@ -95,4 +95,62 @@ describe ApplicationHelper, "ToolbarChooser" do
       end
     end
   end
+
+  describe '#x_gtl_view_tb_render?' do
+    subject do
+      ApplicationHelper::ToolbarChooser.new(nil, nil, :record => record, :explorer => explorer, :layout => layout)
+                                       .send(:x_gtl_view_tb_render?)
+    end
+
+    context 'when record is nil' do
+      let(:record) { nil }
+
+      context 'when explorer is false' do
+        let(:explorer) { false }
+        let(:layout) { 'does not matter' }
+
+        it { is_expected.to be_falsey }
+      end
+
+      context 'when explorer is true' do
+        let(:explorer) { true }
+
+        %w(
+          chargeback
+          generic_object_definition
+          miq_ae_class
+          miq_ae_customization
+          miq_ae_tools
+          miq_capacity_planning
+          miq_capacity_utilization
+          miq_policy
+          miq_policy_rsop
+          ops
+          provider_foreman
+          pxe
+          report
+        ).each do |layout_name|
+          context "when the no_gtl_view_buttons array contains the #{layout_name} layout" do
+            let(:layout) { layout_name }
+
+            it { is_expected.to be_falsey }
+          end
+        end
+
+        context 'when the no_gtl_view_buttons array does not contain the given layout' do
+          let(:layout) { 'potato' }
+
+          it { is_expected.to be_truthy }
+        end
+      end
+    end
+
+    context 'when record is not nil' do
+      let(:record) { 'not nil' }
+      let(:explorer) { 'does not matter' }
+      let(:layout) { 'does not matter' }
+
+      it { is_expected.to be_falsey }
+    end
+  end
 end

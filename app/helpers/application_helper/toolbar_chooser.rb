@@ -54,7 +54,7 @@ class ApplicationHelper::ToolbarChooser
 
   private
 
-  delegate :session, :from_cid, :x_node, :x_active_tree, :super_admin_user?, :render_gtl_view_tb?, :x_gtl_view_tb_render?,
+  delegate :session, :from_cid, :x_node, :x_active_tree, :super_admin_user?, :render_gtl_view_tb?,
            :to => :@view_context
 
   def initialize(view_context, view_binding, instance_data)
@@ -578,5 +578,23 @@ class ApplicationHelper::ToolbarChooser
 
   def unassigned_configuration_profile_node(nodes)
     configuration_profile_center_tb if nodes[2] == "unassigned"
+  end
+
+  NO_GTL_VIEW_BUTTONS = %w(chargeback
+                           generic_object_definition
+                           miq_ae_class
+                           miq_ae_customization
+                           miq_ae_tools
+                           miq_capacity_planning
+                           miq_capacity_utilization
+                           miq_policy
+                           miq_policy_rsop
+                           ops
+                           provider_foreman
+                           pxe
+                           report).to_set.freeze
+
+  def x_gtl_view_tb_render?
+    @record.nil? && @explorer && !NO_GTL_VIEW_BUTTONS.include?(@layout)
   end
 end
