@@ -41,7 +41,7 @@
           %td
             = h(number_to_human_size(row.allocated_disk_storage))
           %td
-            = h(row.deprecated)
+            = h(row.deprecated ? _("true") : _("false"))
           %td
             - if row.ext_management_system
               = h(row.ext_management_system.name)

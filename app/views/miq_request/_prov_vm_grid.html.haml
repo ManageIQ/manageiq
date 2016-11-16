@@ -53,7 +53,7 @@
             %td
               = h(number_to_human_size(row.allocated_disk_storage))
             %td
-              = h(row.deprecated)
+              = h(row.deprecated ? _("true") : _("false"))
             %td
               - if row.ext_management_system
                 = h(row.ext_management_system.name)
@@ -85,6 +85,8 @@
             = h(number_to_human_size(@vm.mem_cpu.to_i * 1024 * 1024))
           %td
             = h(number_to_human_size(@vm.allocated_disk_storage))
+          %td
+            = h(@vm.deprecated ? _("true") : _("false"))
           %td
             - if @vm.ext_management_system
               = h(@vm.ext_management_system.name)
