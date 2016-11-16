@@ -7,11 +7,11 @@ module Metric::ChargebackHelper
   end
 
   def tag_list_reconstruct
-    tag_list = tag_names.split("|").inject([]) { |arr, t| arr << "/tag/managed/#{t}" }
+    tag_list = tag_names.split("|").map { |tag| "/tag/managed/#{tag}" }
 
     if resource_type == Container.name
       state = resource.vim_performance_state_for_ts(timestamp.to_s)
-      tag_list += state.image_tag_names.split("|").inject([]) { |arr, t| arr << "/tag/managed/#{t}" } if state.present?
+      tag_list += state.image_tag_names.split("|").map { |tag| "/tag/managed/#{tag}" } if state.present?
     end
     tag_list
   end
