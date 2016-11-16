@@ -835,4 +835,57 @@ module QuadiconHelper
 
     options
   end
+
+  private
+
+  def vm_quad_link_attributes(record)
+    attributes = vm_cloud_attributes(record) if record.kind_of?(ManageIQ::Providers::CloudManager::Vm)
+    attributes ||= vm_infra_attributes(record) if record.kind_of?(ManageIQ::Providers::InfraManager::Vm)
+    attributes
+  end
+
+  def vm_cloud_attributes(record)
+    attributes = vm_cloud_explorer_accords_attributes(record)
+    attributes ||= service_workload_attributes(record)
+    attributes
+  end
+
+  def vm_infra_attributes(record)
+    attributes = vm_infra_explorer_accords_attributes(record)
+    attributes ||= service_workload_attributes(record)
+    attributes
+  end
+
+  def vm_cloud_explorer_accords_attributes(record)
+    if role_allows?(:feature => 'instances_accord') || role_allows?(:feature => 'instances_filter_accord')
+      attributes = {}
+      attributes[:link] = true
+      attributes[:controller] = 'vm_cloud'
+      attributes[:action] = 'show'
+      attributes[:id] = record.id
+    end
+    attributes
+  end
+
+  def vm_infra_explorer_accords_attributes(record)
+    if role_allows?(:feature => 'vandt_accord') || role_allows?(:feature => 'vms_filter_accord')
+      attributes = {}
+      attributes[:link] = true
+      attributes[:controller] = 'vm_infra'
+      attributes[:action] = 'show'
+      attributes[:id] = record.id
+    end
+    attributes
+  end
+
+  def service_workload_attributes(record)
+    attributes = {}
+    if role_allows?(:feature => 'vms_instances_filter_accord')
+      attributes[:link] = true
+      attributes[:controller] = 'vm_or_template'
+      attributes[:action] = 'explorer'
+      attributes[:id] = "v-#{record.id}"
+    end
+    attributes
+  end
 end
