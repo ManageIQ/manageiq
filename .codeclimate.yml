@@ -35,6 +35,7 @@ engines:
   duplication:
     enabled: true
     config:
+      concurrency: 1
       languages:
       - ruby
       - javascript
