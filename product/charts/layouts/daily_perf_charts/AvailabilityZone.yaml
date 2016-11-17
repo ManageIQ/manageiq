@@ -1,5 +1,5 @@
 # Availability Zone Daily performance chart layouts
---- 
+---
 - :title: CPU (%)
   :type: Line
   :columns:
@@ -23,26 +23,7 @@
   :chart2:
     :type: Line
     :title: Instances
-    :columns: 
-    - derived_vm_count_on
-
-- :title: Memory (MB)
-  :type: Line
-  :columns:
-  - derived_memory_used
-  - min_derived_memory_used
-  - max_derived_memory_used
-  - trend_max_derived_memory_used
-  - resource.derived_memory_used_high_over_time_period
-  - resource.derived_memory_used_low_over_time_period
-  :menu:
-  - Chart-Current-Hourly:Hourly for this day
-  - Chart-VMs-topday:Top Instances on this day
-  - Display-VMs-on:Instances that were running
-  :chart2: 
-    :type: Line
-    :title: Instances
-    :columns: 
+    :columns:
     - derived_vm_count_on
 
 - :title: Disk I/O (KBps)
@@ -58,10 +39,10 @@
 #  - Timeline-Current-Daily:Daily events in this Availability Zone
 #  - Timeline-Current-Hourly:Hourly events in this Availability Zone
   - Display-VMs-on:Instances that were running
-  :chart2: 
+  :chart2:
     :type: Line
     :title: Instances
-    :columns: 
+    :columns:
     - derived_vm_count_on
 
 - :title: Network I/O (KBps)
@@ -77,10 +58,10 @@
 #  - Timeline-Current-Daily:Daily events in this Availability Zone
 #  - Timeline-Current-Hourly:Hourly events in this Availability Zone
   - Display-VMs-on:Instances that were running
-  :chart2: 
+  :chart2:
     :type: Line
     :title: Instances
-    :columns: 
+    :columns:
     - derived_vm_count_on
 
 - :title: Instances
@@ -88,7 +69,7 @@
   :columns:
   - derived_vm_count_on
   - derived_vm_count_off
-  :menu: 
+  :menu:
   - Chart-Current-Hourly:Hourly for this day
   - Display-VMs-on:Instances that were running
   - Display-VMs-off:Instances that were stopped
