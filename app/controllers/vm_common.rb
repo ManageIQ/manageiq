@@ -570,6 +570,20 @@ module VmCommon
   end
   alias_method :vm_snapshot_add, :snap
 
+  def render_missing_field(session, missing_field_name)
+    add_flash(_("%{missing_field_name} is required") %
+              {:missing_field_name => missing_field_name}, :error)
+    @in_a_form = true
+    drop_breadcrumb(:name => _("Snapshot VM '%{name}'") % {:name => @record.name},
+                    :url  => "/vm_common/snap")
+    if session[:edit] && session[:edit][:explorer]
+      @edit = session[:edit] # saving it to use in next transaction
+      javascript_flash(:spinner_off => true)
+    else
+      render :action => "snap"
+    end
+  end
+
   def snap_vm
     @vm = @record = identify_record(params[:id], VmOrTemplate)
     if params["cancel"] || params[:button] == "cancel"
@@ -585,15 +599,9 @@ module VmCommon
       @name = params[:name]
       @description = params[:description]
       if params[:name].blank? && !@record.try(:snapshot_name_optional?)
-        add_flash(_("Name is required"), :error)
-        @in_a_form = true
-        drop_breadcrumb(:name => _("Snapshot VM '%{name}'") % {:name => @record.name}, :url => "/vm_common/snap")
-        if session[:edit] && session[:edit][:explorer]
-          @edit = session[:edit]    # saving it to use in next transaction
-          render :partial => "shared/ajax/flash_msg_replace"
-        else
-          render :action => "snap"
-        end
+        render_missing_field(session, "Name")
+      elsif params[:description].blank? && @record.try(:snapshot_description_required?)
+        render_missing_field(session, "Description")
       else
         flash_error = false
         #       audit = {:event=>"vm_genealogy_change", :target_id=>@record.id, :target_class=>@record.class.base_class.name, :userid => session[:userid]}
