@@ -3,6 +3,58 @@ require 'recursive-open-struct'
 describe ManageIQ::Providers::Openshift::ContainerManager::RefreshParser do
   let(:parser) { described_class.new }
 
+  describe "get_openshift_images" do
+    it "doesn't add duplicated images" do
+      image_name = "image_name"
+      image_tag = "my_tag"
+      image_digest = "sha256:abcdefg"
+      image_registry = '12.34.56.78'
+      image_registry_port = 5000
+      image_ref = ContainerImage::DOCKER_PULLABLE_PREFIX + \
+                  "#{image_registry}:#{image_registry_port}/#{image_name}@#{image_digest}"
+      parser.instance_variable_get('@data')[:container_images] = [{
+        :name          => image_name,
+        :tag           => image_tag,
+        :digest        => image_digest,
+        :image_ref     => image_ref,
+        :registered_on => Time.now.utc - 2.minutes
+      },]
+      parser.instance_variable_get('@data_index').store_path(
+        :container_image,
+        :by_ref_and_registry_host_port,
+        "#{image_registry}:#{image_registry_port}:#{image_ref}",
+        parser.instance_variable_get('@data')[:container_images][0])
+
+      inventory = {"image" => [
+        RecursiveOpenStruct.new(
+          :metadata             => {
+            :name => image_digest
+          },
+          :dockerImageReference => "#{image_registry}:#{image_registry_port}/#{image_name}@#{image_digest}",
+          :dockerImageManifest  => '{"name": "%s", "tag": "%s"}' % [image_name, image_tag],
+          :dockerImageMetadata  => {
+            :Architecture  => "amd64",
+            :Author        => "ManageIQ team",
+            :Size          => "123456",
+            :DockerVersion => "1.12.1",
+            :Config        => {
+              :Cmd          => %w(run this program),
+              :Entrypoint   => %w(entry1 entry2),
+              :ExposedPorts => {"12345/tcp".to_sym => {}},
+              :Env          => ["VAR1=VALUE1", "VAR2=VALUE2"]
+            }
+          }
+        ),
+      ]}
+
+      parser.get_openshift_images(inventory)
+      expect(parser.instance_variable_get('@data')[:container_images].size).to eq(1)
+      expect(parser.instance_variable_get('@data')[:container_images][0]).to eq(
+        parser.instance_variable_get('@data_index')[:container_image][:by_ref_and_registry_host_port].values[0])
+      expect(parser.instance_variable_get('@data')[:container_images][0][:architecture]).to eq('amd64')
+    end
+  end
+
   describe "parse_build" do
     it "handles simple data" do
       expect(parser.send(:parse_build,
