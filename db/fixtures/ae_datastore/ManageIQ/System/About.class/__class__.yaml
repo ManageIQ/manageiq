@@ -18,7 +18,7 @@ object:
       datatype: string
       priority: 1
       owner: 
-      default_value: euwe-1-rc1
+      default_value: euwe-1-rc2
       substitute: true
       message: create
       visibility: 
