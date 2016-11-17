@@ -228,33 +228,43 @@ class ApplicationHelper::Toolbar::XVmCenter < ApplicationHelper::Toolbar::Basic
           :options => {:feature => :reset}),
       ]
     ),
-    button(
-      :vm_console,
-      'pficon pficon-screen fa-lg',
-      N_('Open a web-based console for this VM'),
-      nil,
-      :url     => "console",
-      :confirm => N_("Opening a VM web-based console can take a while and requires that the VMware MKS plugin version configured for Management Engine already be installed and working.  Are you sure?")),
-    button(
-      :vm_vnc_console,
-      'fa fa-html5 fa-lg',
-      N_('Open a web-based VNC or SPICE console for this VM'),
-      nil,
-      :url     => "html5_console"),
-    button(
-      :vm_vmrc_console,
-      'pficon pficon-screen fa-lg',
-      N_('Open a web-based VMRC console for this VM.  This requires that VMRC is pre-configured to work in your browser.'),
-      nil,
-      :url     => "vmrc_console",
-      :confirm => N_("Opening a VM web-based VMRC console requires that VMRC is pre-configured to work in your browser.  Are you sure?")),
-    button(
-      :cockpit_console,
-      nil,
-      N_('Open a new browser window with Cockpit for this VM.  This requires that Cockpit is pre-configured on the VM.'),
-      nil,
-      :image   => "cockpit",
-      :url     => "launch_cockpit"),
+  ])
+  button_group('vm_access', [
+    select(
+      :vm_remote_access_choice,
+      'fa pficon-screen fa-lg',
+      N_('VM Remote Access'),
+      N_('Access'),
+      :items => [
+        button(
+          :vm_console,
+          'pficon pficon-screen fa-lg',
+          N_('Open a web-based console for this VM'),
+          N_('VM console'),
+          :url     => "console",
+          :confirm => N_("Opening a VM web-based console can take a while and requires that the VMware MKS plugin version configured for Management Engine already be installed and working.  Are you sure?")),
+        button(
+          :vm_vnc_console,
+          'pficon pficon-screen fa-lg',
+          N_('Open a web-based VNC or SPICE console for this VM'),
+          N_('VM console'),
+          :url     => "html5_console"),
+        button(
+          :vm_vmrc_console,
+          'pficon pficon-screen fa-lg',
+          N_('Open a web-based VMRC console for this VM.  This requires that VMRC is pre-configured to work in your browser.'),
+          N_('VM console'),
+          :url     => "vmrc_console",
+          :confirm => N_("Opening a VM web-based VMRC console requires that VMRC is pre-configured to work in your browser.  Are you sure?")),
+        button(
+          :cockpit_console,
+          'pficon pficon-screen fa-lg',
+          N_('Open a new browser window with Cockpit for this VM.  This requires that Cockpit is pre-configured on the VM.'),
+          N_('Web console'),
+          # :image   => "cockpit",
+          :url     => "launch_cockpit"),
+      ]
+    ),
   ])
   button_group('snapshot_tasks', [
     button(
