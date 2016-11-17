@@ -1197,6 +1197,8 @@
       - "%redo%"
   :inventory:
     :full_refresh_schedule: "38 * * * *"
+  :max_parallel_scans_per_host: 1
+  :max_qitems_per_scan_request: 0
   :metrics_collection:
     :collection_schedule: "0,15,30,45  * * * *"
     :hourly_rollup_schedule: "8 * * * *"
@@ -1210,8 +1212,6 @@
     :keep_realtime_metrics: 4.hours
     :purge_window_size: 1000
   :watchdog_interval: 1.minute
-  :max_qitems_per_scan_request: 0
-  :max_parallel_scans_per_host: 1
 :ui:
   :mark_translated_strings: false
 :webservices:
