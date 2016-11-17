@@ -24,6 +24,9 @@ describe ContainerImage do
     image = FactoryGirl.create(:container_image, :image_ref => "docker://id")
     expect(image.docker_id).to eq("id")
 
+    image = FactoryGirl.create(:container_image, :image_ref => "docker-pullable://repo/name@id")
+    expect(image.docker_id).to eq("repo/name@id")
+
     image = FactoryGirl.create(:container_image, :image_ref => "rocket://id")
     expect(image.docker_id).to eq(nil)
   end
