@@ -1195,7 +1195,7 @@ module ApplicationHelper
                      ontap_file_share ontap_logical_disk ontap_storage_system ontap_storage_volume
                      ems_network security_group floating_ip cloud_subnet network_router network_port cloud_network
                      ems_storage load_balancer
-                     orchestration_stack resource_pool retired service configuration_job
+                     orchestration_stack resource_pool retired service configuration_job configuration_scripts
                      snia_local_file_system storage_manager templates vm)
     (@lastaction == "show_list" && !session[:menu_click] && show_search.include?(@layout) && !@in_a_form) ||
       (@explorer && x_tree && tree_with_advanced_search? && !@record)
