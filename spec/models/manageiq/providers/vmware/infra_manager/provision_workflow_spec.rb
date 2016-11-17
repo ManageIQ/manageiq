@@ -119,13 +119,18 @@ describe ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow do
     end
 
     context '#set_on_vm_id_changed' do
-      it 'clears StorageProfile filter and placement value' do
+      before(:each) do
         workflow.instance_variable_set(:@filters, :Host => {21 => "ESX 6.0"}, :StorageProfile => {1 => "Tag 1"})
         workflow.instance_variable_set(:@values, :src_vm_id => @src_vm.id, :placement_storage_profile => [])
         allow(workflow).to receive(:set_or_default_hardware_field_values).with(@src_vm)
+      end
+      it 'clears StorageProfile filter' do
         workflow.set_on_vm_id_changed
         filters = workflow.instance_variable_get(:@filters)
         expect(filters).to eq(:Host => {21=>"ESX 6.0"}, :StorageProfile => nil)
+      end
+      it 'clears :placement_storage_profile value' do
+        workflow.set_on_vm_id_changed
         values = workflow.instance_variable_get(:@values)
         expect(values[:placement_storage_profile]).to be_nil
       end
