@@ -1343,6 +1343,20 @@ describe ApplicationHelper do
       expect(result).to be_truthy
     end
 
+    it 'should return true for the configuration scripts tree' do
+      controller.instance_variable_set(:@sb,
+                                       :active_tree => :configuration_scripts_tree,
+                                       :trees       => {
+                                         :configuration_scripts_tree => {
+                                           :tree => :configuration_scripts_tree,
+                                           :type => :configuration_scripts
+                                         }
+                                       }
+                                      )
+      result = helper.tree_with_advanced_search?
+      expect(result).to be_truthy
+    end
+
     it 'should return false for tree w/o advanced search' do
       controller.instance_variable_set(:@sb,
                                        :active_tree => :reports_tree,
