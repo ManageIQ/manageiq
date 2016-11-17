@@ -604,6 +604,8 @@
       - network.update.end
       - router.create.end
       - router.delete.end
+      - router.interface.create
+      - router.interface.delete
       - router.update.end
       - subnet.create.end
       - subnet.delete.end
