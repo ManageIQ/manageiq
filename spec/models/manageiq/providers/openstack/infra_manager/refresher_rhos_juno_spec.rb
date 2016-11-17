@@ -44,7 +44,7 @@ describe ManageIQ::Providers::Openstack::InfraManager::Refresher do
       EmsRefresh.refresh(@ems.network_manager)
       @ems.reload
 
-      @host = ManageIQ::Providers::Openstack::InfraManager::Host.all.detect { |x| x.name.include?('(NovaCompute)') }
+      @host = ManageIQ::Providers::Openstack::InfraManager::Host.all.order(:ems_ref).detect { |x| x.name.include?('(NovaCompute)') }
 
       expect(@host.maintenance).to eq(false)
       expect(@host.maintenance_reason).to eq(nil)
