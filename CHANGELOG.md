@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-# Euwe
+# Euwe Release Candidate 2
 
 ## Added
 
