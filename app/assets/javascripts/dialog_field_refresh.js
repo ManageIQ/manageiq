@@ -15,7 +15,7 @@ var dialogFieldRefresh = {
       $('#' + fieldName).selectpicker('val', selectedValue);
     }
     miqSelectPickerEvent(fieldName, url, {callback: function() {
-      dialogFieldRefresh.triggerAutoRefresh(fieldId, triggerAutoRefresh || "true");
+      dialogFieldRefresh.triggerAutoRefresh(fieldId, triggerAutoRefresh);
       return true;
     }});
   },
@@ -168,7 +168,7 @@ var dialogFieldRefresh = {
 
 
   triggerAutoRefresh: function(fieldId, trigger) {
-    if (trigger === "true") {
+    if (Boolean(trigger) === true) {
       parent.postMessage({fieldId: fieldId}, '*');
     }
   },
