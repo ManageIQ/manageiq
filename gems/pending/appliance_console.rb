@@ -36,7 +36,7 @@ I18n.enforce_available_locales = true
 I18n.backend.load_translations
 
 $terminal.wrap_at = 80
-$terminal.page_at = 25
+$terminal.page_at = 35
 
 def summary_entry(field, value)
   dfield = "#{field}:"
