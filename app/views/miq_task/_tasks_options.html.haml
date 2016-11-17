@@ -43,23 +43,28 @@
       .col-md-8
         = check_box_tag("queued", "1", @tasks_options[@tabform][:queued], "data-miq_observe_checkbox" => {:url => url}.to_json)
         &nbsp;
-        %img{:src => image_path('16/job-queued.png'), :valign => "middle", :title => _("Queued")}= _("Queued")
+        %i.fa.fa-step-forward
+        = _("Queued")
         &nbsp;
         = check_box_tag("running", "1", @tasks_options[@tabform][:running], "data-miq_observe_checkbox" => {:url => url}.to_json)
         &nbsp;
-        %img{:src => image_path('16/job-running.png'), :valign => "middle", :title => _("Warn")}= _("Running")
+        %i.pficon.pficon-running
+        = _("Running")
         &nbsp;
         = check_box_tag("ok", "1", @tasks_options[@tabform][:ok], "data-miq_observe_checkbox" => {:url => url}.to_json)
         &nbsp;
-        %img{:src => image_path('100/checkmark.png'), :valign => "middle", :title => _("Ok"), :style => "height: 16px;"}= _("Ok")
+        %i.pficon.pficon-ok
+        = _("Ok")
         &nbsp;
         = check_box_tag("error", "1", @tasks_options[@tabform][:error], "data-miq_observe_checkbox" => {:url => url}.to_json)
         &nbsp;
-        %img{:src => image_path('100/x.png'), :valign => "middle", :title => _("Error"), :style => "height: 16px;"}= _("Error")
+        %i.pficon.pficon-error-circle-o
+        = _("Error")
         &nbsp;
         = check_box_tag("warn", "1", @tasks_options[@tabform][:warn], "data-miq_observe_checkbox" => {:url => url}.to_json)
         &nbsp;
-        %img{:src => image_path('16/warning.png'), :valign => "middle", :title => _("Warn")}= _("Warn")
+        %i.pficon.pficon-warning-triangle-o
+        = _("Warn")
     .form-group
       %label.control-label.col-md-2
         = _("Task State")
