@@ -119,8 +119,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
        :placement_rp_name,
        :linked_clone,
        :snapshot,
-       :placement_dc_name,
-       :placement_storage_profile]
+       :placement_dc_name]
     )
 
     if vm.nil?
