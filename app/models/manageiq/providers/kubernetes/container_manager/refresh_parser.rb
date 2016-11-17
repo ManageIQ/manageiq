@@ -726,26 +726,37 @@ module ManageIQ::Providers::Kubernetes
     end
 
     def parse_image_name(image, image_ref)
-      parts = %r{
+      # parsing using same logic as in docker
+      # https://github.com/docker/docker/blob/348f6529b71502b561aa493e250fd5be248da0d5/reference/reference.go#L174
+      image_definition_re = %r{
         \A
-          (?:(?:(?<host>([^\.:\/]+\.)+[^\.:\/]+)|(?:(?<host2>[^:\/]+)(?::(?<port>\d+))))\/)?
-          (?<name>(?:[^:\/@]+\/)*[^\/:@]+)
-          (?:(?::(?<tag>.+))|(?:\@(?<digest>.+)))?
+          (?<protocol>#{ContainerImage::DOCKER_PULLABLE_PREFIX})?
+          (?:(?:
+            (?<host>([^\.:/]+\.)+[^\.:/]+)|
+            (?:(?<host2>[^:/]+)(?::(?<port>\d+)))|
+            (?<localhost>localhost)
+          )/)?
+          (?<name>(?:[^:/@]+/)*[^/:@]+)
+          (?::(?<tag>[^:/@]+))?
+          (?:\@(?<digest>.+))?
         \z
-      }x.match(image)
+      }x
+      image_parts = image_definition_re.match(image)
+      image_ref_parts = image_definition_re.match(image_ref)
 
+      hostname = image_parts[:host] || image_parts[:host2] || image_parts[:localhost]
       [
         {
-          :name          => parts[:name],
-          :tag           => parts[:tag],
-          :digest        => parts[:digest],
+          :name          => image_parts[:name],
+          :tag           => image_parts[:tag],
+          :digest        => image_parts[:digest] || (image_ref_parts[:digest] if image_ref_parts),
           :image_ref     => image_ref,
           :registered_on => Time.now.utc
         },
-        (parts[:host] || parts[:host2]) && {
-          :name => parts[:host] || parts[:host2],
-          :host => parts[:host] || parts[:host2],
-          :port => parts[:port],
+        hostname && {
+          :name => hostname,
+          :host => hostname,
+          :port => image_parts[:port],
         },
       ]
     end
