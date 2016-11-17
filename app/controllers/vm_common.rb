@@ -453,7 +453,7 @@ module VmCommon
   def snap_pressed
     session[:snap_selected] = from_cid(params[:id])
     @snap_selected = Snapshot.find_by_id(session[:snap_selected])
-    @vm = @record = identify_record(x_node.split('-').last, VmOrTemplate)
+    @vm = @record = identify_record(x_node_right_cell.split('-').last, VmOrTemplate)
     if @snap_selected.nil?
       @display = "snapshot_info"
       add_flash(_("Last selected Snapshot no longer exists"), :error)
