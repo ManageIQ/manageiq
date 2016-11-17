@@ -2104,7 +2104,8 @@ class ApplicationController < ActionController::Base
       case controller_name
 
       # These controllers don't use breadcrumbs, see above get method to store URL
-      when "dashboard", "report", "support", "alert", "jobs", "ui_jobs", "miq_ae_tools", "miq_policy", "miq_action", "miq_capacity", "chargeback", "service"
+      when "dashboard", "report", "support", "alert", "alert_center", "jobs", "ui_jobs",
+       "miq_ae_tools", "miq_policy", "miq_action", "miq_capacity", "chargeback", "service"
 
       when "ontap_storage_system", "ontap_logical_disk", "cim_base_storage_extent", "ontap_storage_volume", "ontap_file_share", "snia_local_file_system", "storage_manager"
         session[:tab_bc][:sto] = @breadcrumbs.dup if ["show", "show_list", "index"].include?(action_name)

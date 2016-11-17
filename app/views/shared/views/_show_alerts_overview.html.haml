@@ -1,0 +1,70 @@
+.container-fluid.container-tiles-pf.containers-dashboard.miq-dashboard-view.miq-alerts-center{"ng-controller" => "alertsOverviewController as vm"}
+  %span
+    %ol.breadcrumb
+      %li
+        = _("Monitor")
+      %li
+        = _("Alerts")
+      %li.active
+        %strong
+          = _("Overview")
+  .row{"ng-if" => "vm.loadingDone"}
+    %div{"pf-toolbar" => "", "config" => "vm.toolbarConfig"}
+      %actions.group-toolbar-actions
+        %span
+          = _("Group By")
+        %select{"pf-select" => "true",
+                "ng-model" => "vm.category",
+                "ng-options" => "o as o for o in vm.categories",
+                "ng-change" => "vm.filterChange()"}
+        %span
+          = _("Display")
+        %select{"pf-select" => "true",
+                "ng-model" => "vm.displayFilter",
+                "ng-options" => "o as o for o in vm.displayFilters",
+                "ng-change" => "vm.filterChange()"}
+  .row.row-tile-pf
+    %ul.list-group{"ng-if" => "vm.loadingDone"}
+      %li.list-group-item.alerts-group-item{"ng-repeat" => "group in vm.groups track by $index"}
+        %a.miq-alert-group-title{"ng-if" => "group.hasItems",
+                                 "ng-class" => "{'collapsed': !group.open}",
+                                 "ng-click" => "vm.toggleGroupOpen(group)"}
+          {{group.title}} ({{group.itemsList.length}})
+        .card-view-pf{"ng-if" => "group.hasItems", "ng-class" => "{'collapse': !group.open}"}
+          .card-pf.card-pf-aggregate-status{"ng-repeat" => "item in group.itemsList track by item.name"}
+            %span.h2.card-pf-title
+              %img.card-view-type-img{"ng-if" => "item.objectTypeImg",
+                                      "ng-src" => "{{item.objectTypeImg}}"}
+              {{item.name}}
+            .card-pf-body
+              %p.card-pf-aggregate-status-notifications
+                %span.card-pf-aggregate-status-notification{"ng-if" => "item.danger.length > 0",
+                                                            "ng-mouseover" => "vm.onHoverAlerts(item.danger)",
+                                                            "tooltip-template" => "'/static/alert-overview-popover.html'",
+                                                            "tooltip-append-to-body" => "true",
+                                                            "tooltip-class" => "miq-alerts-center",
+                                                            "tooltip-popup-delay" => "1000"}
+                  %a{"href" => "#", "ng-click" => "vm.showGroupAlerts(item, 'Error')"}
+                    %span.pficon.pficon-error-circle-o
+                    {{item.danger.length}}
+                %span.card-pf-aggregate-status-notification{"ng-if" => "item.warning.length > 0",
+                                                            "ng-mouseover" => "vm.onHoverAlerts(item.warning)",
+                                                            "tooltip-template" => "'/static/alert-overview-popover.html'",
+                                                            "tooltip-append-to-body" => "true",
+                                                            "tooltip-class" => "miq-alerts-center",
+                                                            "tooltip-popup-delay" => "1000"}
+                  %a{"href" => "#", "ng-click" => "vm.showGroupAlerts(item, 'Warning')"}
+                    %span.pficon.pficon-warning-triangle-o
+                    {{item.warning.length}}
+                %span.card-pf-aggregate-status-notification{"ng-if" => "item.info.length > 0",
+                                                            "ng-mouseover" => "vm.onHoverAlerts(item.info)",
+                                                            "tooltip-append-to-body" => "true",
+                                                            "tooltip-class" => "miq-alerts-center",
+                                                            "tooltip-template" => "'/static/alert-overview-popover.html'",
+                                                            "tooltip-popup-delay" => "1000"}
+                  %a{"href" => "#", "ng-click" => "vm.showGroupAlerts(item, 'Information')"}
+                    %span.pficon.pficon-info
+                    {{item.info.length}}
+
+:javascript
+  miq_bootstrap('.miq-alerts-center', 'alertsCenter');

@@ -37,7 +37,7 @@ $login-container-details-border-color-rgba: rgba(0, 0, 0, 0.5);
 @import "about_modal_background"; // sets a custom background image in the 'About' modal
 @import "timeline"; // used for the patternfly-timeline styles
 @import "metrics";
-
+@import "alerts";
 
 .login-pf #brand img { // sets size of brand.svg on login screen (upstream only)
   height: 38px;

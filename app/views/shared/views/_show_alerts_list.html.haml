@@ -1,0 +1,130 @@
+.row.miq-alerts-center
+  .container-fluid{"ng-controller" => "alertsListController as vm"}
+    %span
+      %ol.breadcrumb
+        %li
+          = _("Monitor")
+        %li
+          = _("Alerts")
+        %li.active
+          %strong
+            = _("All Alerts")
+    .row{"ng-if" => "vm.loadingDone"}
+      %div{"pf-toolbar" => "", "config" => "vm.toolbarConfig"}
+      .col-md-12.list-view-container.list-view-compact
+        %div{"pf-list-view" => "",
+             "config" => "vm.listConfig",
+             "items" => "vm.alertsList",
+             "menu-actions" => "vm.menuActions",
+             "update-menu-action-for-item-fn" => "vm.updateMenuActionForItemFn",
+             "custom-scope" => "vm"}
+          .list-view-pf-left
+            %span{:class=> "list-view-severity {{item.severityInfo.severityIconClass}}",
+                  "tooltip" => "{{item.severityInfo.title}}",
+                  "tooltip-placement" => "bottom",
+                  "tooltip-popup-delay" => "1000"}
+          .list-view-pf-body
+            .row
+              .col-md-3.col-sm-4.col-xs-6
+                .row.inner-row
+                  .col-md-6
+                    %span.no-wrap
+                      %span.list-view-type-icon.pficon.pficon-screen
+                      %span{"tooltip" => "{{item.node_hostname}}",
+                            "tooltip-placement" => "bottom",
+                            "tooltip-popup-delay" => "1000"}
+                        {{item.node_hostname}}
+                  .col-md-6
+                    %span.no-wrap
+                      %img.list-view-type-img{"ng-src" => "{{item.objectTypeImg}}",
+                                              "ng-if" => "item.objectTypeImg",
+                                              "tooltip" => "{{item.objectType}}",
+                                              "tooltip-placement" => "bottom",
+                                              "tooltip-popup-delay" => "1000"}
+                      %span{"tooltip" => "{{item.objectName}}",
+                            "tooltip-placement" => "bottom",
+                            "tooltip-popup-delay" => "1000"}
+                        {{item.objectName}}
+              .col-md-4.col-sm-3.col-xs-6
+                %span.no-wrap{"tooltip" => "{{item.description}}",
+                              "tooltip-placement" => "bottom",
+                              "tooltip-popup-delay" => "1000"}
+                  {{item.description}}
+              .col-md-3.col-sm-3.col-xs-6.container-fluid
+                .row.inner-row
+                  .col-md-8
+                    %span.no-wrap{"tooltip" => "{{item.lastUpdate| date:'yyyy-MM-dd hh:mm:ss'}}",
+                                  "tooltip-placement" => "bottom",
+                                  "tooltip-popup-delay" => "1000"}
+                      {{item.lastUpdate| date:'yyyy-MM-dd hh:mm:ss'}}
+                  .col-md-4
+                    %span.no-wrap{"tooltip" => "{{item.age}}",
+                                  "tooltip-placement" => "bottom",
+                                  "tooltip-popup-delay" => "1000"}
+                      {{item.age}}
+              .col-md-2.col-sm-2.col-xs-6.assignee-column
+                %span.ack-icon.pficon.pficon-ok{"ng-class" => "{unacknowledged: !item.acknowledged}",
+                                                "tooltip" => "{{customScope.acknowledgedTooltip}}",
+                                                "tooltip-placement" => "bottom",
+                                                "tooltip-popup-delay" => "1000"}
+                %span.assignee.no-wrap{"tooltip" => "{{item.assignee}}",
+                                       "tooltip-placement" => "bottom",
+                                       "tooltip-popup-delay" => "1000"}
+                  {{item.assignee}}
+                %span.comment-icon.fa.fa-comments-o{"ng-if" => "item.numComments > 0",
+                                                    "tooltip" => "{{item.commentsTooltip}}",
+                                                    "tooltip-placement" => "bottom",
+                                                    "tooltip-popup-delay" => "1000"}
+          %list-expanded-content
+            .row
+              .col-md-12
+                %span.header
+                  = _("SOP")
+                %a{"href" => "#"}
+                  = _("Associated link configured by OP Admin")
+            .row
+              .col-md-12
+                %span.header
+                  = _("History")
+              .col-md-12
+                %table.table.table-striped.table-bordered.table-hover
+                  %colgroup
+                    %col.fixed-col
+                    %col.fixed-col
+                    %col.fixed-col
+                    %col.grow-col
+                  %thead
+                    %tr
+                      %th
+                        = _("Time")
+                      %th
+                        = _("Action")
+                      %th
+                        = _("User")
+                      %th
+                        = _("Note")
+                  %tbody
+                    %tr{"ng-repeat" => "state in $parent.item.states"}
+                      %td
+                        .no-wrap{"tooltip" => "{{state.updated_at | date:'yyyy-MM-dd hh:mm:ss'}}",
+                                 "tooltip-placement" => "top",
+                                 "tooltip-popup-delay" => "1000"}
+                          {{state.updated_at | date:'yyyy-MM-dd hh:mm:ss'}}
+                      %td
+                        .no-wrap{"tooltip" => "{{state.action}}",
+                                 "tooltip-placement" => "top",
+                                 "tooltip-popup-delay" => "1000"}
+                          {{state.action}}
+                      %td
+                        .no-wrap{"tooltip" => "{{state.username}}",
+                                 "tooltip-placement" => "top",
+                                 "tooltip-popup-delay" => "1000"}
+                          {{state.username}}
+                      %td
+                        .no-wrap{"tooltip" => "{{state.comment}}",
+                                 "tooltip-placement" => "top",
+                                 "tooltip-popup-delay" => "1000"}
+                          {{state.comment}}
+
+:javascript
+  miq_bootstrap('.miq-alerts-center', 'alertsCenter');
