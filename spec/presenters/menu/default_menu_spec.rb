@@ -80,13 +80,12 @@ describe Menu::DefaultMenu do
     let(:menu) { Menu::DefaultMenu }
 
     context "when the configuration storage product setting is set to true" do
-      it "contains the generic objects item" do
+      it "still does not contain the NetApp item" do
         stub_settings(:product => {:storage => true})
         expect(menu.storage_menu_section.items.map(&:name)).to include(
           "Storage Providers",
           "Volumes",
           "Object Stores",
-          "NetApp"
         )
       end
     end
