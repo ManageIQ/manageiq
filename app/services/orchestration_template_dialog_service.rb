@@ -213,7 +213,8 @@ class OrchestrationTemplateDialogService
   end
 
   def create_parameter_dropdown_list(parameter, group, position, dropdown)
-    dropdown_list = dropdown.allowed_values.collect { |v| [v, v] }
+    values = dropdown.allowed_values
+    dropdown_list = values.kind_of?(Hash) ? values.to_a : values.collect { |v| [v, v] } 
     group.dialog_fields.build(
       :type           => "DialogFieldDropDownList",
       :name           => "param_#{parameter.name}",

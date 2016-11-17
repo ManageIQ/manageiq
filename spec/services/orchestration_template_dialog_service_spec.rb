@@ -46,6 +46,28 @@ describe OrchestrationTemplateDialogService do
     end
   end
 
+  describe "creation of dropdown field from allowed values" do
+    context "when a list of values is given" do
+      it "creates pairs of values" do
+        param_groups = create_dropdown_param(%w(val1 val2))
+        allow(empty_template).to receive(:parameter_groups).and_return(param_groups)
+        dialog = dialog_service.create_dialog("test", empty_template)
+
+        assert_dropdown_field(dialog, "param_dropdown", "val1", [%w(val1 val1), %w(val2 val2)])
+      end
+    end
+
+    context "when a hash of allowed values is given" do
+      it "creates pairs from hashes" do
+        param_groups = create_dropdown_param("key1" => "val1", "key2" => "val2")
+        allow(empty_template).to receive(:parameter_groups).and_return(param_groups)
+        dialog = dialog_service.create_dialog("test", empty_template)
+
+        assert_dropdown_field(dialog, "param_dropdown", "val1", [%w(key1 val1), %w(key2 val2)])
+      end
+    end
+  end
+
   def assert_stack_tab(tab)
     assert_tab_attributes(tab)
 
@@ -161,5 +183,30 @@ describe OrchestrationTemplateDialogService do
     assert_field(fields[0], DialogFieldTextBox,     :name => "param_admin_pass", :validator_rule => '[a-zA-Z0-9]+')
     assert_field(fields[1], DialogFieldTextBox,     :name => "param_db_port",    :label => 'Port Number')
     assert_field(fields[2], DialogFieldTextAreaBox, :name => "param_metadata")
+  end
+
+  def assert_dropdown_field(dialog, field_name, default_value, values)
+    tabs = dialog.dialog_tabs
+    expect(tabs.size).to eq(1)
+    expect(tabs[0].dialog_groups.size).to eq(2)
+    expect(tabs[0].dialog_groups[1].dialog_fields.size).to eq(1)
+    fields = tabs[0].dialog_groups[1].dialog_fields
+    assert_field(fields[0], DialogFieldDropDownList, :name => field_name, :default_value => default_value, :values => values)
+  end
+
+  def create_dropdown_param(allowed_values)
+    [OrchestrationTemplate::OrchestrationParameterGroup.new(
+      :label      => "group",
+      :parameters => [
+        OrchestrationTemplate::OrchestrationParameter.new(
+          :name          => "dropdown",
+          :label         => "Drop down",
+          :data_type     => "string",
+          :default_value => "val1",
+          :constraints   => [
+            OrchestrationTemplate::OrchestrationParameterAllowed.new(:allowed_values => allowed_values)
+          ])
+      ])
+    ]
   end
 end
