@@ -8,7 +8,8 @@ module ManageIQ::Providers
 
       OPENSHIFT_ENTITIES = [
         {:name => 'routes'}, {:name => 'projects'},
-        {:name => 'build_configs'}, {:name => 'builds'}, {:name => 'templates'}
+        {:name => 'build_configs'}, {:name => 'builds'}, {:name => 'templates'},
+        {:name => 'images'}
       ]
 
       def parse_legacy_inventory(ems)
