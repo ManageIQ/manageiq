@@ -425,7 +425,10 @@ class ChargebackController < ApplicationController
       else
         @record = ChargebackRate.find(from_cid(parse_nodetype_and_id(node).last))
         @sb[:action] = nil
-        @right_cell_text = _("%{typ} %{model} \"%{name}\"") % {:typ => @record.rate_type, :model => ui_lookup(:model => "ChargebackRate"), :name => @record.description}
+        @right_cell_text = case @record.rate_type
+                           when "Compute" then _("Compute Chargeback Rate \"%{name}\"") % {:name => @record.description}
+                           when "Storage" then _("Storage Chargeback Rate \"%{name}\"") % {:name => @record.description}
+                           end
         cb_rate_show
       end
     elsif x_active_tree == :cb_assignments_tree
