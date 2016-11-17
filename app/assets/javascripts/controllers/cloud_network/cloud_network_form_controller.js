@@ -35,7 +35,7 @@ ManageIQ.angular.app.controller('cloudNetworkFormController', ['$http', '$scope'
 
   $scope.addClicked = function() {
     var url = 'create/new' + '?button=add';
-    miqService.miqAjaxButton(url, $scope.cloudNetworkModel);
+    miqService.miqAjaxButton(url, $scope.cloudNetworkModel, { complete: false });
   };
 
   $scope.cancelClicked = function() {
@@ -49,7 +49,7 @@ ManageIQ.angular.app.controller('cloudNetworkFormController', ['$http', '$scope'
 
   $scope.saveClicked = function() {
     var url = '/cloud_network/update/' + cloudNetworkFormId + '?button=save';
-    miqService.miqAjaxButton(url, $scope.cloudNetworkModel);
+    miqService.miqAjaxButton(url, $scope.cloudNetworkModel, { complete: false });
   };
 
   $scope.resetClicked = function() {
