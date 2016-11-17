@@ -111,7 +111,7 @@ module EmsRefresh::SaveInventory
 
         found.save!
         h[:id] = found.id
-        found.send(:clear_association_cache)
+        found.reload
         h[:_object] = found
       rescue => err
         # If a vm failed to process, mark it as invalid and log an error

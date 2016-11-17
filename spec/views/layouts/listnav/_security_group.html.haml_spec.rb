@@ -29,7 +29,7 @@ describe "layouts/listnav/_security_group.html.haml" do
         @record = @security_group
         render
         expect(response).to include("href=\"/security_group/show/#{@record.id}?display=main\">Summary")
-        expect(response).to include("Show this Security Group&#39;s parent Network Provider\" href=\"/ems_network/show/#{@record.ext_management_system.id}\">")
+        expect(response).to include("Show this Security Group&#39;s parent Network Provider\" href=\"/ems_network/#{@record.ext_management_system.id}\">")
         expect(response).to include("Show all Instances\" onclick=\"return miqCheckForChanges()\" href=\"/security_group/show/#{@record.id}?display=instances\">")
       end
     end

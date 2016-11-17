@@ -83,6 +83,7 @@ RSpec.configure do |config|
 
   config.include Spec::Support::RakeTaskExampleGroup, :type => :rake_task
   config.include Spec::Support::ButtonHelper, :type => :button
+  config.include Spec::Support::AuthHelper, :type => :button
   config.define_derived_metadata(:file_path => /spec\/helpers\/application_helper\/buttons/) do |metadata|
     metadata[:type] = :button
   end

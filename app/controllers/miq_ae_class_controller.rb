@@ -743,7 +743,7 @@ class MiqAeClassController < ApplicationController
 
     @edit[:new][:fields] = @ae_class.ae_fields.sort_by { |a| [a.priority.to_i] }.collect do |fld|
       field_attributes.each_with_object({}) do |column, hash|
-        hash[column] = fld.send(column)
+        hash[column.to_sym] = fld.send(column)
       end
     end
 
@@ -1927,6 +1927,7 @@ class MiqAeClassController < ApplicationController
   def delete_domain
     assert_privileges("miq_ae_domain_delete")
     aedomains = []
+    git_domains = []
     if params[:id]
       aedomains.push(params[:id])
       self.x_node = "root"
@@ -1937,7 +1938,7 @@ class MiqAeClassController < ApplicationController
         domain = MiqAeDomain.find_by_id(from_cid(item[1]))
         next unless domain
         if domain.editable_properties?
-          aedomains.push(domain.id)
+          domain.git_enabled? ? git_domains.push(domain) : aedomains.push(domain.id)
         else
           add_flash(_("Read Only %{model} \"%{name}\" cannot be deleted") %
             {:model => ui_lookup(:model => "MiqAeDomain"), :name => domain.name}, :error)
@@ -1945,6 +1946,9 @@ class MiqAeClassController < ApplicationController
       end
     end
     process_elements(aedomains, MiqAeDomain, 'destroy') unless aedomains.empty?
+    git_domains.each do |domain|
+      process_element_destroy_via_queue(domain, domain.class, domain.name)
+    end
     replace_right_cell([:ae])
   end
 
@@ -2048,7 +2052,7 @@ class MiqAeClassController < ApplicationController
       field_attributes.each do |field|
         field_name = "field_#{field}".to_sym
         field_sym = field.to_sym
-        if field == "substitute"
+        if field == :substitute
           field_data[field_sym] = new_field[field_sym] = params[field_name] == "1" if params[field_name]
         elsif params[field_name]
           field_data[field_sym] = new_field[field_sym] = params[field_name]
@@ -2071,10 +2075,10 @@ class MiqAeClassController < ApplicationController
 
       @edit[:new][:fields].each_with_index do |fld, i|
         field_attributes.each do |field|
-          field_name = "fields_#{field}_#{i}".to_sym
+          field_name = "fields_#{field}_#{i}"
           field_sym = field.to_sym
           if field == "substitute"
-            fld[field_sym] = params[field_name].to_i == 1 if params[field_name]
+            fld[field_sym] = params[field_name] == "1" if params[field_name]
           elsif %w(aetype datatype).include?(field)
             var_name = "fields_#{field}#{i}"
             fld[field_sym] = params[var_name.to_sym] if params[var_name.to_sym]
@@ -2082,7 +2086,7 @@ class MiqAeClassController < ApplicationController
             fld[field_sym] = params[field_name] if params[field_name]
             fld[field_sym] = params["fields_password_value_#{i}".to_sym] if params["fields_password_value_#{i}".to_sym]
           else
-            fld[field] = params[field_name] if params[field_name]
+            fld[field_sym] = params[field_name] if params[field_name]
           end
         end
       end
@@ -2094,8 +2098,8 @@ class MiqAeClassController < ApplicationController
         return
       end
       new_fields = {}
-      field_attributes.each_with_object({}) { |field| new_fields[field] =
-        @edit[:new_field][field] || @edit[:new_field][field.to_sym]}
+      field_attributes.each_with_object({}) { |field| field = field.to_sym
+      new_fields[field] = @edit[:new_field][field]}
       @edit[:new][:fields].push(new_fields)
       @edit[:new_field] = session[:field_data] = {}
     end
@@ -2261,7 +2265,7 @@ class MiqAeClassController < ApplicationController
     fields = parent_fields(parent)
     highest_priority = fields.count
     @edit[:new][:fields].each_with_index do |fld, i|
-      if fld['id'].nil?
+      if fld[:id].nil?
         new_field = MiqAeField.new
         highest_priority += 1
         new_field.priority  = highest_priority
@@ -2271,11 +2275,12 @@ class MiqAeClassController < ApplicationController
           new_field.class_id = @ae_class.id
         end
       else
-        new_field = parent.nil? ? MiqAeField.find_by_id(fld['id']) : fields.detect { |f| f.id == fld['id'] }
+        new_field = parent.nil? ? MiqAeField.find_by_id(fld[:id]) : fields.detect { |f| f.id == fld[:id] }
       end
 
       field_attributes.each do |attr|
-        if attr == "substitute"
+        attr = attr.to_sym
+        if attr == :substitute
           new_field.send("#{attr}=", @edit[:new][:fields][i][attr])
         else
           new_field.send("#{attr}=", @edit[:new][:fields][i][attr]) if @edit[:new][:fields][i][attr]
@@ -2536,6 +2541,10 @@ class MiqAeClassController < ApplicationController
     session[:changed] = true
 
     git_repo = MiqAeDomain.find(params[:id]).git_repository
+
+    git_based_domain_import_service.refresh(git_repo.id)
+
+    git_repo.reload
     @branch_names = git_repo.git_branches.collect(&:name)
     @tag_names = git_repo.git_tags.collect(&:name)
     @git_repo_id = git_repo.id
@@ -2644,6 +2653,28 @@ class MiqAeClassController < ApplicationController
   def flash_validation_errors(am_obj)
     am_obj.errors.each do |field, msg|
       add_flash("#{field.to_s.capitalize} #{msg}", :error)
+    end
+  end
+
+  def process_element_destroy_via_queue(element, klass, name)
+    return unless element.respond_to?(:destroy)
+
+    audit = {:event        => "#{klass.name.downcase}_record_delete",
+             :message      => "[#{name}] Record deleted",
+             :target_id    => element.id,
+             :target_class => klass.base_class.name,
+             :userid       => session[:userid]}
+
+    model_name  = ui_lookup(:model => klass.name) # Lookup friendly model name in dictionary
+    record_name = get_record_display_name(element)
+
+    begin
+      git_based_domain_import_service.destroy_domain(element.id)
+      AuditEvent.success(audit)
+      add_flash(_("%{model} \"%{name}\": Delete successful") % {:model => model_name, :name => record_name})
+    rescue => bang
+      add_flash(_("%{model} \"%{name}\": Error during delete: %{error_msg}") %
+               {:model => model_name, :name => record_name, :error_msg => bang.message}, :error)
     end
   end
 end

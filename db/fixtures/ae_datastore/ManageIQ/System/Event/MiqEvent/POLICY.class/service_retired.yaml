@@ -10,3 +10,5 @@ object:
   fields:
   - logical_event:
       value: service_retired
+  - rel2:
+      value: "/System/event_handlers/event_enforce_policy"

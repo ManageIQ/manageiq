@@ -49,6 +49,19 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
     self::EventCatcher
   end
 
+  def host_quick_stats(host)
+    qs = {}
+    with_provider_connection(:version => 4) do |connection|
+      stats_list = connection.system_service.hosts_service.host_service(host.uid_ems)
+                             .statistics_service.list
+      qs["overallMemoryUsage"] = stats_list.detect { |x| x.name == "memory.used" }
+                                           .values.first.datum
+      qs["overallCpuUsage"] = stats_list.detect { |x| x.name == "cpu.load.avg.5m" }
+                                        .values.first.datum
+    end
+    qs
+  end
+
   def self.provision_class(via)
     case via
     when "iso" then self::ProvisionViaIso
@@ -92,11 +105,12 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
     {
       :bootable  => disk_spec["bootable"],
       :interface => "VIRTIO",
+      :active    => true,
       :disk      => {
         :provisioned_size => disk_spec["disk_size_in_mb"].to_i * 1024 * 1024,
         :sparse           => disk_spec["thin_provisioned"],
         :format           => disk_spec["format"],
-        :storage_domain   => {:id => ems_storage_uid}
+        :storage_domains  => [:id => ems_storage_uid]
       }
     }
   end
@@ -116,7 +130,27 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
 
   def remove_disks(disks, vm)
     with_disk_attachments_service(vm) do |service|
-      disks.each { |disk_id| service.attachment_service(disk_id).remove }
+      disks.each do |disk|
+        service.attachment_service(disk["disk_name"]).remove(:detach_only => !disk["delete_backing"])
+      end
     end
+  end
+
+  def vm_migrate(vm, options = {})
+    host_id = URI(options[:host]).path.split('/').last
+
+    migration_options = {
+      :host => {
+        :id => host_id
+      }
+    }
+
+    with_version4_vm_service(vm) do |service|
+      service.migrate(migration_options)
+    end
+  end
+
+  def unsupported_migration_options
+    [:storage, :respool, :folder, :datacenter, :host_filter]
   end
 end

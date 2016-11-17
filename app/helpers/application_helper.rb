@@ -178,7 +178,9 @@ module ApplicationHelper
 
   def url_for_record(record, action = "show") # Default action is show
     @id = to_cid(record.id)
-    db  = if record.kind_of?(VmOrTemplate)
+    db  = if controller.kind_of?(VmOrTemplateController)
+            "vm_or_template"
+          elsif record.kind_of?(VmOrTemplate)
             controller_for_vm(model_for_vm(record))
           elsif record.class.respond_to?(:db_name)
             record.class.db_name
@@ -229,6 +231,9 @@ module ApplicationHelper
       end
       if controller == "ems_middleware" && action == "show"
         return ems_middlewares_path
+      end
+      if controller == "ems_network" && action == "show"
+        return ems_networks_path
       end
       if parent && parent.class.base_model.to_s == "MiqCimInstance" && ["CimBaseStorageExtent", "SniaLocalFileSystem"].include?(view.db)
         return url_for(:controller => controller, :action => action, :id => parent.id) + "?show="
@@ -1529,6 +1534,8 @@ module ApplicationHelper
     case pressed
     when "rbac_project_add", "rbac_tenant_add"
       "rbac_tenant_add"
+    else
+      pressed
     end
   end
 

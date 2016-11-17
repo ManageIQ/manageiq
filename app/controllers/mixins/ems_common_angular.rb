@@ -383,6 +383,9 @@ module Mixins
 
       if ems.kind_of?(ManageIQ::Providers::Vmware::CloudManager)
         default_endpoint = {:role => :default, :hostname => hostname, :port => port}
+        if params[:event_stream_selection] == "amqp"
+          amqp_endpoint = {:role => :amqp, :hostname => amqp_hostname, :port => amqp_port, :security_protocol => amqp_security_protocol}
+        end
       end
 
       if ems.kind_of?(ManageIQ::Providers::Azure::CloudManager)
@@ -403,6 +406,10 @@ module Mixins
         default_endpoint = {:role => :default, :hostname => hostname, :port => port}
       end
 
+      if ems.kind_of?(ManageIQ::Providers::Nuage::NetworkManager)
+        default_endpoint = {:role => :default, :hostname => hostname, :port => port, :security_protocol => ems.security_protocol}
+      end
+
       endpoints = {:default     => default_endpoint,
                    :ceilometer  => ceilometer_endpoint,
                    :amqp        => amqp_endpoint,
@@ -418,17 +425,19 @@ module Mixins
       configurations = []
 
       [:default, :ceilometer, :amqp, :ssh_keypair, :metrics, :hawkular].each do |role|
-        configurations << build_configuration(authentications, endpoints, role)
+        configurations << build_configuration(ems, authentications, endpoints, role)
       end
 
       ems.connection_configurations = configurations
     end
 
-    def build_configuration(authentications, endpoints, role)
-      return {:endpoint => endpoints[role], :authentication => nil} unless authentications[role]
+    def build_configuration(ems, authentications, endpoints, role)
+      authtype = role == :default ? ems.default_authentication_type.to_sym : role
+      return {:endpoint => endpoints[role], :authentication => nil} unless authentications[authtype]
 
-      authentication = authentications.delete(role)
-      authentication[:role] = role
+      authentication = authentications.delete(authtype)
+      authentication[:role] = authtype.to_s
+      authentication[:authtype] = authtype.to_s
       {:endpoint => endpoints[role], :authentication => authentication}
     end
 
@@ -465,12 +474,11 @@ module Mixins
                          :save          => (mode != :validate)}
         session[:oauth_response] = nil
       end
-      if ems.kind_of?(ManageIQ::Providers::ContainerManager) &&
-         ems.supports_authentication?(:bearer) && !params[:default_password].blank?
-        creds[:hawkular] = {:auth_key => params[:default_password], :userid => "_"}
-        creds[:bearer] = {:auth_key => params[:default_password]}
+      if ems.kind_of?(ManageIQ::Providers::ContainerManager)
+        default_key = params[:default_password] ? params[:default_password] : ems.authentication_key
+        creds[:hawkular] = {:auth_key => default_key, :save => (mode != :validate)}
+        creds[:bearer] = {:auth_key => default_key, :save => (mode != :validate)}
         creds.delete(:default)
-        ems.update_authentication(creds, :save => (mode != :validate))
       end
       creds
     end

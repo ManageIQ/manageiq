@@ -13,7 +13,7 @@ gem "activerecord-session_store",     "~>1.0.0"
 gem "actioncable",                    "~>5.0.0"
 gem "acts_as_list",                   "~>0.7.2"
 gem "acts_as_tree",                   "~>2.1.0" # acts_as_tree needs to be required so that it loads before ancestry
-gem "ancestry",                       "~>2.1.0",       :require => false
+gem "ancestry",                       "~>2.2.1",       :require => false
 gem "ansible_tower_client",           "~>0.4.0",       :require => false
 gem "aws-sdk",                        "~>2.2.19",      :require => false
 gem "color",                          "~>1.8"
@@ -34,6 +34,7 @@ gem "high_voltage",                   "~>2.4.0"
 gem "htauth",                         "2.0.0",         :require => false
 gem "inifile",                        "~>3.0",         :require => false
 gem "jbuilder",                       "~>2.5.0" # For the REST API
+gem "manageiq-api-client",            "~>0.1.0",       :require => false
 gem "mime-types",                     "~>2.6.1",       :require => "mime/types/columnar"
 gem "nakayoshi_fork",                 "~>0.0.3"  # provides a more CoW friendly fork (GC a few times before fork)
 gem "net-ldap",                       "~>0.14.0",      :require => false
@@ -46,9 +47,10 @@ gem "omniauth-google-oauth2",         "~>0.2.6"
 gem "open4",                          "~>1.3.0",       :require => false
 gem "outfielding-jqplot-rails",       "= 1.0.8"
 gem "ovirt-engine-sdk",               "~>4.0.5",       :require => false # Required by the oVirt provider
-gem "ovirt_metrics",                  "~>1.3.0",       :require => false
+gem "ovirt_metrics",                  "~>1.3.1",       :require => false
 gem "paperclip",                      "~>4.3.0"
 gem "puma",                           "~>3.3.0"
+gem "query_relation",                 "~>0.1.0",       :require => false
 gem "rails",                          "~>5.0.0", ">= 5.0.0.1"
 gem "rails-controller-testing",                        :require => false
 gem "rails-i18n",                     "~>5.x"
@@ -69,10 +71,7 @@ gem "websocket-driver",               "~>0.6.3"
 
 # Modified gems (forked on Github)
 gem "foreman_api_client",             ">=0.1.0",   :require => false, :git => "https://github.com/ManageIQ/foreman_api_client.git", :branch => "master"
-gem "manageiq-api-client",                         :require => false, :git => "https://github.com/ManageIQ/manageiq-api-client.git", :branch => "master"
-gem "query_relation",                              :require => false, :git => "https://github.com/ManageIQ/query_relation.git", :branch => "master"
 gem "ruport",                         "=1.7.0",                       :git => "https://github.com/ManageIQ/ruport.git", :tag => "v1.7.0-3"
-gem "ziya",                           "=2.3.0",    :require => false, :git => "https://github.com/ManageIQ/ziya.git", :tag => "v2.3.0-3"
 
 # In 1.9.3: Time.parse uses british version dd/mm/yyyy instead of american version mm/dd/yyyy
 # american_date fixes this to be compatible with 1.8.7 until all callers can be converted to the 1.9.3 format prior to parsing.

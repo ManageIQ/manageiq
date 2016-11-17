@@ -268,6 +268,8 @@ class MiqRequest < ApplicationRecord
   def approve(userid, reason)
     first_approval.approve(userid, reason) unless self.approved?
   end
+  api_relay_method(:approve) { |_userid, reason| {:reason => reason} }
+  api_relay_method(:deny)    { |_userid, reason| {:reason => reason} }
 
   def stamped_by
     first_approval.stamper ? first_approval.stamper.userid : nil
@@ -472,7 +474,7 @@ class MiqRequest < ApplicationRecord
   def self.find_source_id_from_values(values)
     MiqRequestMixin.get_option(:src_vm_id, nil, values) ||
       MiqRequestMixin.get_option(:src_id, nil, values) ||
-      MiqRequestMixin.get_option(:src_ids, nil, values).try(:first)
+      MiqRequestMixin.get_option(:src_ids, nil, values)
   end
   private_class_method :find_source_id_from_values
 

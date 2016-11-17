@@ -55,8 +55,8 @@ class TreeNodeBuilder
                                                 "availability_zone.png",
                                                 _("Availability Zone: %{name}") % {:name => object.name}) },
     "ConfigurationScript"    => -> { generic_node(object.name,
-                                               "configuration_script.png",
-                                               "Ansible Tower Job Template: #{object.name}") },
+                                                  "configuration_script.png",
+                                                  _("Ansible Tower Job Template: %{name}") % {:name => object.name}) },
     "ExtManagementSystem"    => -> {
       # TODO: This should really leverage .base_model on an EMS
       prefix_model =
@@ -237,7 +237,7 @@ class TreeNodeBuilder
   end
 
   def classification_node
-    generic_node(object.description, 'folder', _("Category: %{description}") % {:description => object.description})
+    generic_node(object.description, 'folder.png', _("Category: %{description}") % {:description => object.description})
     @node[:cfmeNoClick] = true
     @node[:hideCheckbox] = true
   end
@@ -291,7 +291,7 @@ class TreeNodeBuilder
       :title => text,
       :icon  => node_icon(image)
     }
-    @node[:addClass] = "striketrough" unless enabled
+    @node[:addClass] = "strikethrough" unless enabled
     @node[:expand] = true if options[:open_all]  # Start with all nodes open
     tooltip(tip)
   end

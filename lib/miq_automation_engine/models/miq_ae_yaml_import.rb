@@ -79,8 +79,7 @@ class MiqAeYamlImport
     domain_obj = MiqAeDomain.find_by_fqname(domain_name, false)
     track_stats('domain', domain_obj)
     if domain_obj && !@preview && @options['overwrite']
-      domain_obj.destroy
-      domain_obj = nil
+      domain_obj.ae_namespaces.destroy_all
     end
     domain_obj ||= add_domain(domain_yaml, @tenant) unless @preview
     if @options['namespace']
@@ -147,7 +146,11 @@ class MiqAeYamlImport
   end
 
   def process_namespace(domain_obj, namespace_folder, _namespace_yaml, domain_name)
-    fqname = "#{domain_name}#{namespace_folder.sub(domain_folder(@domain_name), '')}"
+    fqname = if @domain_name == '.'
+               "#{domain_name}/#{namespace_folder}"
+             else
+               "#{domain_name}#{namespace_folder.sub(domain_folder(@domain_name), '')}"
+             end
     _log.info("Importing namespace: <#{fqname}>")
     namespace_obj = MiqAeNamespace.find_by_fqname(fqname, false)
     track_stats('namespace', namespace_obj)

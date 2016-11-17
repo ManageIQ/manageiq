@@ -121,7 +121,7 @@ module ManageIQ::Providers
     end
 
     def sync_root_tenant
-      ems_tenant = source_tenant || Tenant.new(:parent => Tenant.root_tenant, :source => self)
+      ems_tenant = source_tenant || Tenant.new(:parent => tenant, :source => self)
 
       ems_tenant_name = "#{self.class.description} Cloud Provider #{name}"
 

@@ -2,12 +2,14 @@ class GitRepository < ApplicationRecord
   include AuthenticationMixin
 
   validates :url, :format => URI::regexp(%w(http https)), :allow_nil => false
+  validate  :check_path
 
   default_value_for :verify_ssl, OpenSSL::SSL::VERIFY_PEER
   validates :verify_ssl, :inclusion => {:in => [OpenSSL::SSL::VERIFY_NONE, OpenSSL::SSL::VERIFY_PEER]}
 
   has_many :git_branches, :dependent => :destroy
   has_many :git_tags, :dependent => :destroy
+  after_destroy :delete_repo_dir
 
   INFO_KEYS = %w(commit_sha commit_message commit_time name).freeze
 
@@ -106,5 +108,15 @@ class GitRepository < ApplicationRecord
       params[:password] = authentications.first.password
     end
     params
+  end
+
+  def delete_repo_dir
+    FileUtils.rm_rf(directory_name)
+  end
+
+  def check_path
+    return unless url
+    parsed = URI.parse(url)
+    errors.add(:url, "missing path component e.g. https://www.example.com/path") if parsed.path.blank?
   end
 end

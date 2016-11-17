@@ -36,7 +36,7 @@ class ManageIQ::Providers::Redhat::InfraManager::Vm
         :url_secret => SecureRandom.hex,
         :ssl        => display[:secure_port].present?
       }
-      host_address = display[:address],
+      host_address = display[:address]
       host_port    = display[:secure_port] || display[:port]
 
       SystemConsole.launch_proxy_if_not_local(console_args, originating_server, host_address, host_port)

@@ -66,4 +66,6 @@ class ManageIQ::Providers::Vmware::InfraManager::Host < ::Host
       port
     end
   end
+
+  supports :quick_stats
 end

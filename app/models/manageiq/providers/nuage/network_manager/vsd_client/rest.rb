@@ -19,7 +19,7 @@ class ManageIQ::Providers::Nuage::NetworkManager::VsdClient::Rest
         @api_key = extracted_data["APIKey"]
         return true, extracted_data["enterpriseID"]
       else
-        return false, nil
+        raise MiqException::MiqInvalidCredentialsError, "Login failed due to a bad username or password."
       end
     end
   end

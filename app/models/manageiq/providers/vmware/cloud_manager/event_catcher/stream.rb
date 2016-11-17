@@ -12,15 +12,13 @@ class ManageIQ::Providers::Vmware::CloudManager::EventCatcher::Stream
       connection.start
       return true
     rescue Bunny::AuthenticationFailureError => e
-      _log.info("Failed testing rabbit amqp connection: #{e.message}")
-      raise MiqException::MiqInvalidCredentialsError.new "Login failed due to a bad username or password."
-    rescue Bunny::TCPConnectionFailedForAllHosts => e
-      raise MiqException::MiqHostError.new "Socket error: #{e.message}"
+      raise MiqException::MiqInvalidCredentialsError.new "bad username or password for #{options[:hostname]}"
+    rescue Bunny::TCPConnectionFailed, Bunny::TCPConnectionFailedForAllHosts
+      raise MiqException::MiqHostError.new "cannot reach #{options[:hostname]}:#{options[:port]}"
     rescue
-      _log.info("Failed testing rabbit amqp connection for #{options[:hostname]}. ")
       raise
     ensure
-      connection.close if connection.respond_to? :close
+      connection.close if connection.respond_to?(:close) && connection.open?
     end
   end
 

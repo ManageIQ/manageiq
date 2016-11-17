@@ -188,6 +188,11 @@
       - VmCreatedEvent
       - VmDeployedEvent
       - VmRegisteredEvent
+      - aggregate.addhost.end
+      - aggregate.create.end
+      - aggregate.removehost.end
+      - aggregate.updateprop.end
+      - aggregate.updatemetadata.end
       - image.update
       - image.create
       - image.upload
@@ -318,6 +323,7 @@
       - GceOperationDone_compute.instances.delete
       - VmDisconnectedEvent
       - VmRemovedEvent
+      - aggregate.delete.end
       - image.delete
       - orchestration.stack.delete.end
       - orchestration.stack.delete.error
@@ -589,10 +595,19 @@
       - NETWORK_UPDATE_TEMPLATE_INTERFACE_FAILED
       - NETWORK_UPDATE_VM_INTERFACE
       - NETWORK_UPDATE_VM_INTERFACE_FAILED
+      - network.create.end
+      - network.delete.end
       - network.floating_ip.allocate
       - network.floating_ip.deallocate
       - network.floating_ip.associate
       - network.floating_ip.disassociate
+      - network.update.end
+      - router.create.end
+      - router.delete.end
+      - router.update.end
+      - subnet.create.end
+      - subnet.delete.end
+      - subnet.update.end
       - POD_HOSTPORTCONFLICT
       :detail: []
       :name: Network
@@ -829,6 +844,14 @@
       - USER_UPDATE_STORAGE_DOMAIN_FAILED
       - USER_UPDATE_STORAGE_POOL
       - USER_UPDATE_STORAGE_POOL_FAILED
+      - backup.create.start
+      - backup.create.end
+      - backup.restore.start
+      - backup.restore.end
+      - snapshot.create.start
+      - snapshot.create.end
+      - snapshot.delete.end
+      - snapshot.update.end
       - volume.create.end
       - volume.delete.end
       - POD_OUTOFDISK
@@ -988,99 +1011,6 @@
 :product:
   :maindb: ExtManagementSystem
   :container_deployment_wizard: false
-:replication:
-  :exclude_tables:
-    - ar_internal_metadata
-    - assigned_server_roles
-    - audit_events
-    - binary_blobs
-    - binary_blob_parts
-    - chargeback_rate_details
-    - chargeback_rates
-    - conditions
-    - conditions_miq_policies
-    - custom_buttons
-    - customization_specs
-    - database_backups
-    - event_logs
-    - file_depots
-    - jobs
-    - log_files
-    - metrics
-    - metrics_00
-    - metrics_01
-    - metrics_02
-    - metrics_03
-    - metrics_04
-    - metrics_05
-    - metrics_06
-    - metrics_07
-    - metrics_08
-    - metrics_09
-    - metrics_10
-    - metrics_11
-    - metrics_12
-    - metrics_13
-    - metrics_14
-    - metrics_15
-    - metrics_16
-    - metrics_17
-    - metrics_18
-    - metrics_19
-    - metrics_20
-    - metrics_21
-    - metrics_22
-    - metrics_23
-    - metric_rollups
-    - miq_actions
-    - miq_ae_classes
-    - miq_ae_fields
-    - miq_ae_instances
-    - miq_ae_methods
-    - miq_ae_namespaces
-    - miq_ae_values
-    - miq_ae_workspaces
-    - miq_alert_statuses
-    - miq_alerts
-    - miq_databases
-    - miq_enterprises
-    - miq_event_definitions
-    - miq_globals
-    - miq_policies
-    - miq_policy_contents
-    - miq_product_features
-    - miq_queue
-    - miq_roles_features
-    - miq_report_result_details
-    - miq_report_results
-    - miq_reports
-    - miq_searches
-    - miq_sets
-    - miq_schedules
-    - miq_shortcuts
-    - miq_tasks
-    - miq_user_roles
-    - miq_widgets
-    - miq_widget_contents
-    - miq_workers
-    - notifications
-    - notification_recipients
-    - notification_types
-    - repl_events
-    - repl_monitor
-    - repl_nodes
-    - rss_feeds
-    - scan_items
-    - schema_migrations
-    - server_roles
-    - sessions
-    - vim_performance_states
-    - vim_performance_tag_values
-    - vmdb_database_metrics
-    - vmdb_databases
-    - vmdb_indexes
-    - vmdb_metrics
-    - vmdb_tables
 :reporting:
   :format_by_class:
     :Fixnum:
@@ -1207,7 +1137,7 @@
       :gc_interval: 15.minutes
       :heartbeat_freq: 10.seconds
       :heartbeat_timeout: 2.minutes
-      :memory_threshold: 200.megabytes
+      :memory_threshold: 400.megabytes
       :nice_delta: 10
       :parent_time_threshold: 3.minutes
       :poll: 3.seconds
@@ -1217,7 +1147,6 @@
       :starting_timeout: 10.minutes
     :ems_refresh_core_worker:
       :poll: 1.seconds
-      :memory_threshold: 400.megabytes
       :nice_delta: 1
       :thread_shutdown_timeout: 10.seconds
     :event_catcher:
@@ -1306,7 +1235,7 @@
       :defaults:
         :cpu_usage_threshold: 100.percent
         :dequeue_method: :drb
-        :memory_threshold: 400.megabytes
+        :memory_threshold: 500.megabytes
         :poll_method: :normal
         :queue_timeout: 10.minutes
       :ems_metrics_collector_worker:
@@ -1329,7 +1258,7 @@
         :ems_metrics_collector_worker_vmware: {}
       :ems_metrics_processor_worker:
         :count: 2
-        :memory_threshold: 400.megabytes
+        :memory_threshold: 600.megabytes
         :nice_delta: 7
         :poll_method: :escalate
       :ems_refresh_worker:
@@ -1376,6 +1305,7 @@
         :poll_method: :normal
         :queue_timeout: 60.minutes
       :priority_worker:
+        :memory_threshold: 600.megabytes
         :count: 2
         :nice_delta: 1
         :poll: 1.seconds
@@ -1409,7 +1339,7 @@
       :job_timeout_interval: 60.seconds
       :log_active_configuration_interval: 1.days
       :log_database_statistics_interval: 1.days
-      :memory_threshold: 300.megabytes
+      :memory_threshold: 500.megabytes
       :nice_delta: 3
       :orchestration_stack_retired_interval: 10.minutes
       :load_balancer_retired_interval: 10.minutes

@@ -25,7 +25,7 @@ http_interactions:
       Server:
       - nginx/1.10.1
       Date:
-      - Thu, 15 Sep 2016 20:39:00 GMT
+      - Wed, 19 Oct 2016 08:25:09 GMT
       Content-Type:
       - application/json
       Content-Length:
@@ -44,7 +44,7 @@ http_interactions:
           "Initialized" : "true"
         }
     http_version: 
-  recorded_at: Thu, 15 Sep 2016 20:39:00 GMT
+  recorded_at: Wed, 19 Oct 2016 08:25:09 GMT
 - request:
     method: get
     uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/status
@@ -70,7 +70,7 @@ http_interactions:
       Server:
       - nginx/1.10.1
       Date:
-      - Thu, 15 Sep 2016 20:39:00 GMT
+      - Wed, 19 Oct 2016 08:25:09 GMT
       Content-Type:
       - application/json
       Content-Length:
@@ -83,7 +83,501 @@ http_interactions:
       encoding: UTF-8
       string: '{"MetricsService":"STARTED","Implementation-Version":"0.19.2.Final","Built-From-Git-SHA1":"ae0e942d65c180d23e4f2791a86b21915b04a334"}'
     http_version: 
-  recorded_at: Thu, 15 Sep 2016 20:39:00 GMT
+  recorded_at: Wed, 19 Oct 2016 08:25:09 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/inventory/traversal/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsubsystem=messaging-activemq%2Fserver=default/r;Local~%2Fsubsystem=messaging-activemq%2Fserver=default%2Fjms-queue=DLQ/rl;incorporates/type=m?sort=id
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.3p173
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx/1.10.1
+      Date:
+      - Wed, 19 Oct 2016 08:25:09 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '6280'
+      Connection:
+      - keep-alive
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Pragma:
+      - no-cache
+      X-Total-Count:
+      - '5'
+      Link:
+      - <http://hservices.torii.gva.redhat.com/hawkular/inventory/traversal/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-queue%3DDLQ/rl;incorporates/type=m?sort=id>;
+        rel="current"
+    body:
+      encoding: ASCII-8BIT
+      string: |-
+        [ {
+          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-queue%3DDLQ/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-queue%3DDLQ%5D~MT~JMS%20Queue%20Metrics~Consumer%20Count",
+          "name" : "Consumer Count",
+          "identityHash" : "d3a27d161b6103f411a3d9ae543fba9a2d49",
+          "contentHash" : "d2e3b177e4e54deb3c1c8a543186d07599219c",
+          "syncHash" : "2784edc2137b4626eaa97edfffbd78f3d3951e1",
+          "type" : {
+            "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/mt;JMS%20Queue%20Metrics~Consumer%20Count",
+            "name" : "Consumer Count",
+            "identityHash" : "f9156787a21d62acb79c4535d0f031e6260ba",
+            "contentHash" : "9da36885f35f7acb9cb53c5846fccbadc21a70",
+            "syncHash" : "74eaf326d2f5e6cc2c3e33792997feb21153a9de",
+            "unit" : "NONE",
+            "metricDataType" : "gauge",
+            "collectionInterval" : 30,
+            "type" : "GAUGE",
+            "id" : "JMS Queue Metrics~Consumer Count"
+          },
+          "id" : "MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-queue=DLQ]~MT~JMS Queue Metrics~Consumer Count"
+        }, {
+          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-queue%3DDLQ/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-queue%3DDLQ%5D~MT~JMS%20Queue%20Metrics~Delivering%20Count",
+          "name" : "Delivering Count",
+          "identityHash" : "addb3b40eb99f00aeb32769854decd39921e74d",
+          "contentHash" : "f7621349f85555c9a6d5a79eb842f6cfa1cb76",
+          "syncHash" : "c967c5b715811dbfefddf9cd0e5fe4f9e9d1430",
+          "type" : {
+            "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/mt;JMS%20Queue%20Metrics~Delivering%20Count",
+            "name" : "Delivering Count",
+            "identityHash" : "36ede6b05fb7921c8bc9351763c81e429ca73f",
+            "contentHash" : "f1d49137e5fb38fe24849554f1934e49ea13345b",
+            "syncHash" : "e622df938bc1c043bfdcb97dede0f4178bb66789",
+            "unit" : "NONE",
+            "metricDataType" : "gauge",
+            "collectionInterval" : 30,
+            "type" : "GAUGE",
+            "id" : "JMS Queue Metrics~Delivering Count"
+          },
+          "id" : "MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-queue=DLQ]~MT~JMS Queue Metrics~Delivering Count"
+        }, {
+          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-queue%3DDLQ/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-queue%3DDLQ%5D~MT~JMS%20Queue%20Metrics~Message%20Count",
+          "name" : "Message Count",
+          "identityHash" : "6eb9a36fb09f61ba7f60eea4fa3ed3521ae8de",
+          "contentHash" : "aa623b9d472de908691c72135b4ce9d7320e4d1",
+          "syncHash" : "20dd19cf67ab4e5e162b17a978da0b66a61b3fe",
+          "type" : {
+            "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/mt;JMS%20Queue%20Metrics~Message%20Count",
+            "name" : "Message Count",
+            "identityHash" : "375b56311438fed7e62946404bad9ed82c77886c",
+            "contentHash" : "6d5d9d439beb2dbddc45fa7824a1ae3a5c3e27",
+            "syncHash" : "302340244bdd959171fa232d25a14317f18d10dd",
+            "unit" : "NONE",
+            "metricDataType" : "gauge",
+            "collectionInterval" : 30,
+            "type" : "GAUGE",
+            "id" : "JMS Queue Metrics~Message Count"
+          },
+          "id" : "MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-queue=DLQ]~MT~JMS Queue Metrics~Message Count"
+        }, {
+          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-queue%3DDLQ/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-queue%3DDLQ%5D~MT~JMS%20Queue%20Metrics~Messages%20Added",
+          "name" : "Messages Added",
+          "identityHash" : "aee432341d555a3dd8f5c91e3b0bc44e6cb4327",
+          "contentHash" : "fb254971dbcaafdbd75e495fb3866dc71ef58b4a",
+          "syncHash" : "ed469d325791c888b2a2fcd3b2fb2571e125e",
+          "type" : {
+            "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/mt;JMS%20Queue%20Metrics~Messages%20Added",
+            "name" : "Messages Added",
+            "identityHash" : "41549a7046d41118cd97823f404a835f8f457472",
+            "contentHash" : "8d4cba225679582c3fa3d9c84e97ad0aaa4474",
+            "syncHash" : "2093667f74e57af7c07c7a1c543b31a9624137c4",
+            "unit" : "NONE",
+            "metricDataType" : "counter",
+            "collectionInterval" : 30,
+            "type" : "COUNTER",
+            "id" : "JMS Queue Metrics~Messages Added"
+          },
+          "id" : "MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-queue=DLQ]~MT~JMS Queue Metrics~Messages Added"
+        }, {
+          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-queue%3DDLQ/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-queue%3DDLQ%5D~MT~JMS%20Queue%20Metrics~Scheduled%20Count",
+          "name" : "Scheduled Count",
+          "identityHash" : "57ec0aa2e1b6beb96d6c68270ffd44238ae7ae",
+          "contentHash" : "ccb5b21296683655598858722afb3973689afe4",
+          "syncHash" : "d155c6b5b0537024e2f4ddab3139e4d8b23def",
+          "type" : {
+            "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/mt;JMS%20Queue%20Metrics~Scheduled%20Count",
+            "name" : "Scheduled Count",
+            "identityHash" : "6fc1b71420d02de59849ddfd2f65b2f41b81223",
+            "contentHash" : "e542875924c82fbf4c1815b086da8561495ef2",
+            "syncHash" : "753342e5b3c793b093335d7d82ace1e6fee2d9fc",
+            "unit" : "NONE",
+            "metricDataType" : "gauge",
+            "collectionInterval" : 30,
+            "type" : "GAUGE",
+            "id" : "JMS Queue Metrics~Scheduled Count"
+          },
+          "id" : "MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-queue=DLQ]~MT~JMS Queue Metrics~Scheduled Count"
+        } ]
+    http_version: 
+  recorded_at: Wed, 19 Oct 2016 08:25:09 GMT
+- request:
+    method: post
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/metrics/stats/query
+    body:
+      encoding: UTF-8
+      string: '{"metrics":{"gauge":["MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-queue=DLQ]~MT~JMS
+        Queue Metrics~Consumer Count","MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-queue=DLQ]~MT~JMS
+        Queue Metrics~Delivering Count","MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-queue=DLQ]~MT~JMS
+        Queue Metrics~Message Count","MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-queue=DLQ]~MT~JMS
+        Queue Metrics~Scheduled Count"],"counter":["MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-queue=DLQ]~MT~JMS
+        Queue Metrics~Messages Added"],"availability":[]},"start":1476864000000,"end":1476874800001,"bucketDuration":"3600s","types":["gauge","gauge_rate","counter","counter_rate","availability"]}'
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.3p173
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '928'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx/1.10.1
+      Date:
+      - Wed, 19 Oct 2016 08:25:09 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '4503'
+      Connection:
+      - keep-alive
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Pragma:
+      - no-cache
+    body:
+      encoding: UTF-8
+      string: '{"gauge":{"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-queue=DLQ]~MT~JMS
+        Queue Metrics~Consumer Count":[{"start":1476864000000,"end":1476867600000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":39,"empty":false},{"start":1476867600000,"end":1476871200000,"empty":true},{"start":1476871200000,"end":1476874800000,"empty":true},{"start":1476874800000,"end":1476878400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-queue=DLQ]~MT~JMS
+        Queue Metrics~Scheduled Count":[{"start":1476864000000,"end":1476867600000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":39,"empty":false},{"start":1476867600000,"end":1476871200000,"empty":true},{"start":1476871200000,"end":1476874800000,"empty":true},{"start":1476874800000,"end":1476878400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-queue=DLQ]~MT~JMS
+        Queue Metrics~Message Count":[{"start":1476864000000,"end":1476867600000,"min":3.0,"avg":3.0,"median":3.0,"max":3.0,"sum":117.0,"samples":39,"empty":false},{"start":1476867600000,"end":1476871200000,"empty":true},{"start":1476871200000,"end":1476874800000,"empty":true},{"start":1476874800000,"end":1476878400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-queue=DLQ]~MT~JMS
+        Queue Metrics~Delivering Count":[{"start":1476864000000,"end":1476867600000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":39,"empty":false},{"start":1476867600000,"end":1476871200000,"empty":true},{"start":1476871200000,"end":1476874800000,"empty":true},{"start":1476874800000,"end":1476878400000,"empty":true}]},"counter_rate":{"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-queue=DLQ]~MT~JMS
+        Queue Metrics~Messages Added":[{"start":1476864000000,"end":1476867600000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":38,"empty":false},{"start":1476867600000,"end":1476871200000,"empty":true},{"start":1476871200000,"end":1476874800000,"empty":true},{"start":1476874800000,"end":1476878400000,"empty":true}]},"gauge_rate":{"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-queue=DLQ]~MT~JMS
+        Queue Metrics~Consumer Count":[{"start":1476864000000,"end":1476867600000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":38,"empty":false},{"start":1476867600000,"end":1476871200000,"empty":true},{"start":1476871200000,"end":1476874800000,"empty":true},{"start":1476874800000,"end":1476878400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-queue=DLQ]~MT~JMS
+        Queue Metrics~Scheduled Count":[{"start":1476864000000,"end":1476867600000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":38,"empty":false},{"start":1476867600000,"end":1476871200000,"empty":true},{"start":1476871200000,"end":1476874800000,"empty":true},{"start":1476874800000,"end":1476878400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-queue=DLQ]~MT~JMS
+        Queue Metrics~Message Count":[{"start":1476864000000,"end":1476867600000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":38,"empty":false},{"start":1476867600000,"end":1476871200000,"empty":true},{"start":1476871200000,"end":1476874800000,"empty":true},{"start":1476874800000,"end":1476878400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-queue=DLQ]~MT~JMS
+        Queue Metrics~Delivering Count":[{"start":1476864000000,"end":1476867600000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":38,"empty":false},{"start":1476867600000,"end":1476871200000,"empty":true},{"start":1476871200000,"end":1476874800000,"empty":true},{"start":1476874800000,"end":1476878400000,"empty":true}]},"counter":{"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-queue=DLQ]~MT~JMS
+        Queue Metrics~Messages Added":[{"start":1476864000000,"end":1476867600000,"min":3.0,"avg":3.0,"median":3.0,"max":3.0,"sum":117.0,"samples":39,"empty":false},{"start":1476867600000,"end":1476871200000,"empty":true},{"start":1476871200000,"end":1476874800000,"empty":true},{"start":1476874800000,"end":1476878400000,"empty":true}]}}'
+    http_version: 
+  recorded_at: Wed, 19 Oct 2016 08:25:09 GMT
+- request:
+    method: post
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/metrics/stats/query
+    body:
+      encoding: UTF-8
+      string: '{"metrics":{"gauge":["MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-queue=DLQ]~MT~JMS
+        Queue Metrics~Consumer Count","MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-queue=DLQ]~MT~JMS
+        Queue Metrics~Delivering Count","MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-queue=DLQ]~MT~JMS
+        Queue Metrics~Message Count"],"counter":[],"availability":[]},"start":1476864000000,"end":1476874800001,"bucketDuration":"3600s","types":["gauge","gauge_rate","counter","counter_rate","availability"]}'
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.3p173
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '634'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx/1.10.1
+      Date:
+      - Wed, 19 Oct 2016 08:25:10 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '2694'
+      Connection:
+      - keep-alive
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Pragma:
+      - no-cache
+    body:
+      encoding: UTF-8
+      string: '{"gauge":{"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-queue=DLQ]~MT~JMS
+        Queue Metrics~Consumer Count":[{"start":1476864000000,"end":1476867600000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":39,"empty":false},{"start":1476867600000,"end":1476871200000,"empty":true},{"start":1476871200000,"end":1476874800000,"empty":true},{"start":1476874800000,"end":1476878400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-queue=DLQ]~MT~JMS
+        Queue Metrics~Message Count":[{"start":1476864000000,"end":1476867600000,"min":3.0,"avg":3.0,"median":3.0,"max":3.0,"sum":117.0,"samples":39,"empty":false},{"start":1476867600000,"end":1476871200000,"empty":true},{"start":1476871200000,"end":1476874800000,"empty":true},{"start":1476874800000,"end":1476878400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-queue=DLQ]~MT~JMS
+        Queue Metrics~Delivering Count":[{"start":1476864000000,"end":1476867600000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":39,"empty":false},{"start":1476867600000,"end":1476871200000,"empty":true},{"start":1476871200000,"end":1476874800000,"empty":true},{"start":1476874800000,"end":1476878400000,"empty":true}]},"gauge_rate":{"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-queue=DLQ]~MT~JMS
+        Queue Metrics~Consumer Count":[{"start":1476864000000,"end":1476867600000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":38,"empty":false},{"start":1476867600000,"end":1476871200000,"empty":true},{"start":1476871200000,"end":1476874800000,"empty":true},{"start":1476874800000,"end":1476878400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-queue=DLQ]~MT~JMS
+        Queue Metrics~Message Count":[{"start":1476864000000,"end":1476867600000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":38,"empty":false},{"start":1476867600000,"end":1476871200000,"empty":true},{"start":1476871200000,"end":1476874800000,"empty":true},{"start":1476874800000,"end":1476878400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-queue=DLQ]~MT~JMS
+        Queue Metrics~Delivering Count":[{"start":1476864000000,"end":1476867600000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":38,"empty":false},{"start":1476867600000,"end":1476871200000,"empty":true},{"start":1476871200000,"end":1476874800000,"empty":true},{"start":1476874800000,"end":1476878400000,"empty":true}]}}'
+    http_version: 
+  recorded_at: Wed, 19 Oct 2016 08:25:10 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=messaging-activemq%2Fserver=default%2Fjms-queue=DLQ%5D~MT~JMS%20Queue%20Metrics~Consumer%20Count
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.3p173
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx/1.10.1
+      Date:
+      - Wed, 19 Oct 2016 08:25:10 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '266'
+      Connection:
+      - keep-alive
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Pragma:
+      - no-cache
+    body:
+      encoding: UTF-8
+      string: '{"id":"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-queue=DLQ]~MT~JMS
+        Queue Metrics~Consumer Count","dataRetention":7,"type":"gauge","tenantId":"hawkular","minTimestamp":1476864335125,"maxTimestamp":1476865497002}'
+    http_version: 
+  recorded_at: Wed, 19 Oct 2016 08:25:10 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=messaging-activemq%2Fserver=default%2Fjms-queue=DLQ%5D~MT~JMS%20Queue%20Metrics~Delivering%20Count
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.3p173
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx/1.10.1
+      Date:
+      - Wed, 19 Oct 2016 08:25:10 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '268'
+      Connection:
+      - keep-alive
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Pragma:
+      - no-cache
+    body:
+      encoding: UTF-8
+      string: '{"id":"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-queue=DLQ]~MT~JMS
+        Queue Metrics~Delivering Count","dataRetention":7,"type":"gauge","tenantId":"hawkular","minTimestamp":1476864335139,"maxTimestamp":1476865497004}'
+    http_version: 
+  recorded_at: Wed, 19 Oct 2016 08:25:10 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=messaging-activemq%2Fserver=default%2Fjms-queue=DLQ%5D~MT~JMS%20Queue%20Metrics~Message%20Count
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.3p173
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx/1.10.1
+      Date:
+      - Wed, 19 Oct 2016 08:25:10 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '265'
+      Connection:
+      - keep-alive
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Pragma:
+      - no-cache
+    body:
+      encoding: UTF-8
+      string: '{"id":"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-queue=DLQ]~MT~JMS
+        Queue Metrics~Message Count","dataRetention":7,"type":"gauge","tenantId":"hawkular","minTimestamp":1476864335141,"maxTimestamp":1476865497005}'
+    http_version: 
+  recorded_at: Wed, 19 Oct 2016 08:25:10 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/counters/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=messaging-activemq%2Fserver=default%2Fjms-queue=DLQ%5D~MT~JMS%20Queue%20Metrics~Messages%20Added
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.3p173
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx/1.10.1
+      Date:
+      - Wed, 19 Oct 2016 08:25:10 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '268'
+      Connection:
+      - keep-alive
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Pragma:
+      - no-cache
+    body:
+      encoding: UTF-8
+      string: '{"id":"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-queue=DLQ]~MT~JMS
+        Queue Metrics~Messages Added","dataRetention":7,"type":"counter","tenantId":"hawkular","minTimestamp":1476864335117,"maxTimestamp":1476865497004}'
+    http_version: 
+  recorded_at: Wed, 19 Oct 2016 08:25:11 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=messaging-activemq%2Fserver=default%2Fjms-queue=DLQ%5D~MT~JMS%20Queue%20Metrics~Scheduled%20Count
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.3p173
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Server:
+      - nginx/1.10.1
+      Date:
+      - Wed, 19 Oct 2016 08:25:11 GMT
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '267'
+      Connection:
+      - keep-alive
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Pragma:
+      - no-cache
+    body:
+      encoding: UTF-8
+      string: '{"id":"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-queue=DLQ]~MT~JMS
+        Queue Metrics~Scheduled Count","dataRetention":7,"type":"gauge","tenantId":"hawkular","minTimestamp":1476864335030,"maxTimestamp":1476865497002}'
+    http_version: 
+  recorded_at: Wed, 19 Oct 2016 08:25:11 GMT
 - request:
     method: get
     uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/inventory/traversal/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsubsystem=messaging-activemq%2Fserver=default/r;Local~%2Fsubsystem=messaging-activemq%2Fserver=default%2Fjms-topic=HawkularAlertData/rl;incorporates/type=m?sort=id
@@ -109,7 +603,7 @@ http_interactions:
       Server:
       - nginx/1.10.1
       Date:
-      - Thu, 15 Sep 2016 20:39:00 GMT
+      - Wed, 19 Oct 2016 08:25:11 GMT
       Content-Type:
       - application/json
       Content-Length:
@@ -286,7 +780,7 @@ http_interactions:
           "id" : "MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-topic=HawkularAlertData]~MT~JMS Topic Metrics~Subscription Count"
         } ]
     http_version: 
-  recorded_at: Thu, 15 Sep 2016 20:39:00 GMT
+  recorded_at: Wed, 19 Oct 2016 08:25:11 GMT
 - request:
     method: get
     uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=messaging-activemq%2Fserver=default%2Fjms-topic=HawkularAlertData%5D~MT~JMS%20Topic%20Metrics~Delivering%20Count
@@ -312,7 +806,7 @@ http_interactions:
       Server:
       - nginx/1.10.1
       Date:
-      - Thu, 15 Sep 2016 20:39:01 GMT
+      - Wed, 19 Oct 2016 08:25:11 GMT
       Content-Type:
       - application/json
       Content-Length:
@@ -330,9 +824,9 @@ http_interactions:
     body:
       encoding: UTF-8
       string: '{"id":"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-topic=HawkularAlertData]~MT~JMS
-        Topic Metrics~Delivering Count","dataRetention":7,"type":"gauge","tenantId":"hawkular","minTimestamp":1473969658112,"maxTimestamp":1473971917003}'
+        Topic Metrics~Delivering Count","dataRetention":7,"type":"gauge","tenantId":"hawkular","minTimestamp":1476864335118,"maxTimestamp":1476865499005}'
     http_version: 
-  recorded_at: Thu, 15 Sep 2016 20:39:01 GMT
+  recorded_at: Wed, 19 Oct 2016 08:25:11 GMT
 - request:
     method: get
     uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=messaging-activemq%2Fserver=default%2Fjms-topic=HawkularAlertData%5D~MT~JMS%20Topic%20Metrics~Durable%20Message%20Count
@@ -358,7 +852,7 @@ http_interactions:
       Server:
       - nginx/1.10.1
       Date:
-      - Thu, 15 Sep 2016 20:39:01 GMT
+      - Wed, 19 Oct 2016 08:25:11 GMT
       Content-Type:
       - application/json
       Content-Length:
@@ -376,9 +870,9 @@ http_interactions:
     body:
       encoding: UTF-8
       string: '{"id":"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-topic=HawkularAlertData]~MT~JMS
-        Topic Metrics~Durable Message Count","dataRetention":7,"type":"gauge","tenantId":"hawkular","minTimestamp":1473969658010,"maxTimestamp":1473971917001}'
+        Topic Metrics~Durable Message Count","dataRetention":7,"type":"gauge","tenantId":"hawkular","minTimestamp":1476864335007,"maxTimestamp":1476865499002}'
     http_version: 
-  recorded_at: Thu, 15 Sep 2016 20:39:01 GMT
+  recorded_at: Wed, 19 Oct 2016 08:25:11 GMT
 - request:
     method: get
     uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=messaging-activemq%2Fserver=default%2Fjms-topic=HawkularAlertData%5D~MT~JMS%20Topic%20Metrics~Durable%20Subscription%20Count
@@ -404,7 +898,7 @@ http_interactions:
       Server:
       - nginx/1.10.1
       Date:
-      - Thu, 15 Sep 2016 20:39:01 GMT
+      - Wed, 19 Oct 2016 08:25:12 GMT
       Content-Type:
       - application/json
       Content-Length:
@@ -422,9 +916,9 @@ http_interactions:
     body:
       encoding: UTF-8
       string: '{"id":"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-topic=HawkularAlertData]~MT~JMS
-        Topic Metrics~Durable Subscription Count","dataRetention":7,"type":"gauge","tenantId":"hawkular","minTimestamp":1473969658146,"maxTimestamp":1473971917009}'
+        Topic Metrics~Durable Subscription Count","dataRetention":7,"type":"gauge","tenantId":"hawkular","minTimestamp":1476864335158,"maxTimestamp":1476865499010}'
     http_version: 
-  recorded_at: Thu, 15 Sep 2016 20:39:01 GMT
+  recorded_at: Wed, 19 Oct 2016 08:25:12 GMT
 - request:
     method: get
     uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=messaging-activemq%2Fserver=default%2Fjms-topic=HawkularAlertData%5D~MT~JMS%20Topic%20Metrics~Message%20Count
@@ -450,7 +944,7 @@ http_interactions:
       Server:
       - nginx/1.10.1
       Date:
-      - Thu, 15 Sep 2016 20:39:01 GMT
+      - Wed, 19 Oct 2016 08:25:12 GMT
       Content-Type:
       - application/json
       Content-Length:
@@ -468,9 +962,9 @@ http_interactions:
     body:
       encoding: UTF-8
       string: '{"id":"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-topic=HawkularAlertData]~MT~JMS
-        Topic Metrics~Message Count","dataRetention":7,"type":"gauge","tenantId":"hawkular","minTimestamp":1473969658144,"maxTimestamp":1473971917009}'
+        Topic Metrics~Message Count","dataRetention":7,"type":"gauge","tenantId":"hawkular","minTimestamp":1476864335142,"maxTimestamp":1476865499009}'
     http_version: 
-  recorded_at: Thu, 15 Sep 2016 20:39:01 GMT
+  recorded_at: Wed, 19 Oct 2016 08:25:12 GMT
 - request:
     method: get
     uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/counters/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=messaging-activemq%2Fserver=default%2Fjms-topic=HawkularAlertData%5D~MT~JMS%20Topic%20Metrics~Messages%20Added
@@ -496,7 +990,7 @@ http_interactions:
       Server:
       - nginx/1.10.1
       Date:
-      - Thu, 15 Sep 2016 20:39:01 GMT
+      - Wed, 19 Oct 2016 08:25:12 GMT
       Content-Type:
       - application/json
       Content-Length:
@@ -514,9 +1008,9 @@ http_interactions:
     body:
       encoding: UTF-8
       string: '{"id":"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-topic=HawkularAlertData]~MT~JMS
-        Topic Metrics~Messages Added","dataRetention":7,"type":"counter","tenantId":"hawkular","minTimestamp":1473969658142,"maxTimestamp":1473971917008}'
+        Topic Metrics~Messages Added","dataRetention":7,"type":"counter","tenantId":"hawkular","minTimestamp":1476864335140,"maxTimestamp":1476865499007}'
     http_version: 
-  recorded_at: Thu, 15 Sep 2016 20:39:01 GMT
+  recorded_at: Wed, 19 Oct 2016 08:25:12 GMT
 - request:
     method: get
     uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=messaging-activemq%2Fserver=default%2Fjms-topic=HawkularAlertData%5D~MT~JMS%20Topic%20Metrics~Non-Durable%20Message%20Count
@@ -542,7 +1036,7 @@ http_interactions:
       Server:
       - nginx/1.10.1
       Date:
-      - Thu, 15 Sep 2016 20:39:01 GMT
+      - Wed, 19 Oct 2016 08:25:12 GMT
       Content-Type:
       - application/json
       Content-Length:
@@ -560,9 +1054,9 @@ http_interactions:
     body:
       encoding: UTF-8
       string: '{"id":"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-topic=HawkularAlertData]~MT~JMS
-        Topic Metrics~Non-Durable Message Count","dataRetention":7,"type":"gauge","tenantId":"hawkular","minTimestamp":1473969658052,"maxTimestamp":1473971917002}'
+        Topic Metrics~Non-Durable Message Count","dataRetention":7,"type":"gauge","tenantId":"hawkular","minTimestamp":1476864335031,"maxTimestamp":1476865499004}'
     http_version: 
-  recorded_at: Thu, 15 Sep 2016 20:39:01 GMT
+  recorded_at: Wed, 19 Oct 2016 08:25:12 GMT
 - request:
     method: get
     uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=messaging-activemq%2Fserver=default%2Fjms-topic=HawkularAlertData%5D~MT~JMS%20Topic%20Metrics~Non-Durable%20Subscription%20Count
@@ -588,7 +1082,7 @@ http_interactions:
       Server:
       - nginx/1.10.1
       Date:
-      - Thu, 15 Sep 2016 20:39:02 GMT
+      - Wed, 19 Oct 2016 08:25:12 GMT
       Content-Type:
       - application/json
       Content-Length:
@@ -606,9 +1100,9 @@ http_interactions:
     body:
       encoding: UTF-8
       string: '{"id":"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-topic=HawkularAlertData]~MT~JMS
-        Topic Metrics~Non-Durable Subscription Count","dataRetention":7,"type":"gauge","tenantId":"hawkular","minTimestamp":1473969658135,"maxTimestamp":1473971917006}'
+        Topic Metrics~Non-Durable Subscription Count","dataRetention":7,"type":"gauge","tenantId":"hawkular","minTimestamp":1476864335126,"maxTimestamp":1476865499002}'
     http_version: 
-  recorded_at: Thu, 15 Sep 2016 20:39:02 GMT
+  recorded_at: Wed, 19 Oct 2016 08:25:12 GMT
 - request:
     method: get
     uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=messaging-activemq%2Fserver=default%2Fjms-topic=HawkularAlertData%5D~MT~JMS%20Topic%20Metrics~Subscription%20Count
@@ -634,7 +1128,7 @@ http_interactions:
       Server:
       - nginx/1.10.1
       Date:
-      - Thu, 15 Sep 2016 20:39:02 GMT
+      - Wed, 19 Oct 2016 08:25:12 GMT
       Content-Type:
       - application/json
       Content-Length:
@@ -652,9 +1146,9 @@ http_interactions:
     body:
       encoding: UTF-8
       string: '{"id":"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-topic=HawkularAlertData]~MT~JMS
-        Topic Metrics~Subscription Count","dataRetention":7,"type":"gauge","tenantId":"hawkular","minTimestamp":1473969658143,"maxTimestamp":1473971917008}'
+        Topic Metrics~Subscription Count","dataRetention":7,"type":"gauge","tenantId":"hawkular","minTimestamp":1476864335141,"maxTimestamp":1476865499007}'
     http_version: 
-  recorded_at: Thu, 15 Sep 2016 20:39:02 GMT
+  recorded_at: Wed, 19 Oct 2016 08:25:12 GMT
 - request:
     method: post
     uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/metrics/stats/query
@@ -668,7 +1162,7 @@ http_interactions:
         Topic Metrics~Non-Durable Message Count","MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-topic=HawkularAlertData]~MT~JMS
         Topic Metrics~Non-Durable Subscription Count","MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-topic=HawkularAlertData]~MT~JMS
         Topic Metrics~Subscription Count"],"counter":["MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-topic=HawkularAlertData]~MT~JMS
-        Topic Metrics~Messages Added"],"availability":[]},"start":1473962400000,"end":1473976800001,"bucketDuration":"3600s","types":["gauge","gauge_rate","counter","counter_rate","availability"]}'
+        Topic Metrics~Messages Added"],"availability":[]},"start":1476864000000,"end":1476874800001,"bucketDuration":"3600s","types":["gauge","gauge_rate","counter","counter_rate","availability"]}'
     headers:
       Accept:
       - application/json
@@ -690,11 +1184,11 @@ http_interactions:
       Server:
       - nginx/1.10.1
       Date:
-      - Thu, 15 Sep 2016 20:39:02 GMT
+      - Wed, 19 Oct 2016 08:25:13 GMT
       Content-Type:
       - application/json
       Content-Length:
-      - '8399'
+      - '7487'
       Connection:
       - keep-alive
       Expires:
@@ -708,24 +1202,24 @@ http_interactions:
     body:
       encoding: UTF-8
       string: '{"gauge":{"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-topic=HawkularAlertData]~MT~JMS
-        Topic Metrics~Durable Message Count":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":75,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-topic=HawkularAlertData]~MT~JMS
-        Topic Metrics~Non-Durable Subscription Count":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":1.0,"avg":1.0,"median":1.0,"max":1.0,"sum":75.0,"samples":75,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-topic=HawkularAlertData]~MT~JMS
-        Topic Metrics~Subscription Count":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":1.0,"avg":1.0,"median":1.0,"max":1.0,"sum":75.0,"samples":75,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-topic=HawkularAlertData]~MT~JMS
-        Topic Metrics~Durable Subscription Count":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":75,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-topic=HawkularAlertData]~MT~JMS
-        Topic Metrics~Non-Durable Message Count":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":75,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-topic=HawkularAlertData]~MT~JMS
-        Topic Metrics~Delivering Count":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":75,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-topic=HawkularAlertData]~MT~JMS
-        Topic Metrics~Message Count":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":75,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}]},"counter_rate":{"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-topic=HawkularAlertData]~MT~JMS
-        Topic Metrics~Messages Added":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":74,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}]},"gauge_rate":{"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-topic=HawkularAlertData]~MT~JMS
-        Topic Metrics~Durable Message Count":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":74,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-topic=HawkularAlertData]~MT~JMS
-        Topic Metrics~Non-Durable Subscription Count":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":74,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-topic=HawkularAlertData]~MT~JMS
-        Topic Metrics~Subscription Count":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":74,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-topic=HawkularAlertData]~MT~JMS
-        Topic Metrics~Durable Subscription Count":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":74,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-topic=HawkularAlertData]~MT~JMS
-        Topic Metrics~Non-Durable Message Count":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":74,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-topic=HawkularAlertData]~MT~JMS
-        Topic Metrics~Delivering Count":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":74,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-topic=HawkularAlertData]~MT~JMS
-        Topic Metrics~Message Count":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":74,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}]},"counter":{"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-topic=HawkularAlertData]~MT~JMS
-        Topic Metrics~Messages Added":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":75,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}]}}'
+        Topic Metrics~Durable Message Count":[{"start":1476864000000,"end":1476867600000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":39,"empty":false},{"start":1476867600000,"end":1476871200000,"empty":true},{"start":1476871200000,"end":1476874800000,"empty":true},{"start":1476874800000,"end":1476878400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-topic=HawkularAlertData]~MT~JMS
+        Topic Metrics~Non-Durable Subscription Count":[{"start":1476864000000,"end":1476867600000,"min":1.0,"avg":1.0,"median":1.0,"max":1.0,"sum":39.0,"samples":39,"empty":false},{"start":1476867600000,"end":1476871200000,"empty":true},{"start":1476871200000,"end":1476874800000,"empty":true},{"start":1476874800000,"end":1476878400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-topic=HawkularAlertData]~MT~JMS
+        Topic Metrics~Subscription Count":[{"start":1476864000000,"end":1476867600000,"min":1.0,"avg":1.0,"median":1.0,"max":1.0,"sum":39.0,"samples":39,"empty":false},{"start":1476867600000,"end":1476871200000,"empty":true},{"start":1476871200000,"end":1476874800000,"empty":true},{"start":1476874800000,"end":1476878400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-topic=HawkularAlertData]~MT~JMS
+        Topic Metrics~Durable Subscription Count":[{"start":1476864000000,"end":1476867600000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":39,"empty":false},{"start":1476867600000,"end":1476871200000,"empty":true},{"start":1476871200000,"end":1476874800000,"empty":true},{"start":1476874800000,"end":1476878400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-topic=HawkularAlertData]~MT~JMS
+        Topic Metrics~Non-Durable Message Count":[{"start":1476864000000,"end":1476867600000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":39,"empty":false},{"start":1476867600000,"end":1476871200000,"empty":true},{"start":1476871200000,"end":1476874800000,"empty":true},{"start":1476874800000,"end":1476878400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-topic=HawkularAlertData]~MT~JMS
+        Topic Metrics~Delivering Count":[{"start":1476864000000,"end":1476867600000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":39,"empty":false},{"start":1476867600000,"end":1476871200000,"empty":true},{"start":1476871200000,"end":1476874800000,"empty":true},{"start":1476874800000,"end":1476878400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-topic=HawkularAlertData]~MT~JMS
+        Topic Metrics~Message Count":[{"start":1476864000000,"end":1476867600000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":39,"empty":false},{"start":1476867600000,"end":1476871200000,"empty":true},{"start":1476871200000,"end":1476874800000,"empty":true},{"start":1476874800000,"end":1476878400000,"empty":true}]},"counter_rate":{"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-topic=HawkularAlertData]~MT~JMS
+        Topic Metrics~Messages Added":[{"start":1476864000000,"end":1476867600000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":38,"empty":false},{"start":1476867600000,"end":1476871200000,"empty":true},{"start":1476871200000,"end":1476874800000,"empty":true},{"start":1476874800000,"end":1476878400000,"empty":true}]},"gauge_rate":{"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-topic=HawkularAlertData]~MT~JMS
+        Topic Metrics~Durable Message Count":[{"start":1476864000000,"end":1476867600000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":38,"empty":false},{"start":1476867600000,"end":1476871200000,"empty":true},{"start":1476871200000,"end":1476874800000,"empty":true},{"start":1476874800000,"end":1476878400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-topic=HawkularAlertData]~MT~JMS
+        Topic Metrics~Non-Durable Subscription Count":[{"start":1476864000000,"end":1476867600000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":38,"empty":false},{"start":1476867600000,"end":1476871200000,"empty":true},{"start":1476871200000,"end":1476874800000,"empty":true},{"start":1476874800000,"end":1476878400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-topic=HawkularAlertData]~MT~JMS
+        Topic Metrics~Subscription Count":[{"start":1476864000000,"end":1476867600000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":38,"empty":false},{"start":1476867600000,"end":1476871200000,"empty":true},{"start":1476871200000,"end":1476874800000,"empty":true},{"start":1476874800000,"end":1476878400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-topic=HawkularAlertData]~MT~JMS
+        Topic Metrics~Durable Subscription Count":[{"start":1476864000000,"end":1476867600000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":38,"empty":false},{"start":1476867600000,"end":1476871200000,"empty":true},{"start":1476871200000,"end":1476874800000,"empty":true},{"start":1476874800000,"end":1476878400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-topic=HawkularAlertData]~MT~JMS
+        Topic Metrics~Non-Durable Message Count":[{"start":1476864000000,"end":1476867600000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":38,"empty":false},{"start":1476867600000,"end":1476871200000,"empty":true},{"start":1476871200000,"end":1476874800000,"empty":true},{"start":1476874800000,"end":1476878400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-topic=HawkularAlertData]~MT~JMS
+        Topic Metrics~Delivering Count":[{"start":1476864000000,"end":1476867600000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":38,"empty":false},{"start":1476867600000,"end":1476871200000,"empty":true},{"start":1476871200000,"end":1476874800000,"empty":true},{"start":1476874800000,"end":1476878400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-topic=HawkularAlertData]~MT~JMS
+        Topic Metrics~Message Count":[{"start":1476864000000,"end":1476867600000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":38,"empty":false},{"start":1476867600000,"end":1476871200000,"empty":true},{"start":1476871200000,"end":1476874800000,"empty":true},{"start":1476874800000,"end":1476878400000,"empty":true}]},"counter":{"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-topic=HawkularAlertData]~MT~JMS
+        Topic Metrics~Messages Added":[{"start":1476864000000,"end":1476867600000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":39,"empty":false},{"start":1476867600000,"end":1476871200000,"empty":true},{"start":1476871200000,"end":1476874800000,"empty":true},{"start":1476874800000,"end":1476878400000,"empty":true}]}}'
     http_version: 
-  recorded_at: Thu, 15 Sep 2016 20:39:02 GMT
+  recorded_at: Wed, 19 Oct 2016 08:25:13 GMT
 - request:
     method: post
     uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/metrics/stats/query
@@ -734,7 +1228,7 @@ http_interactions:
       string: '{"metrics":{"gauge":["MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-topic=HawkularAlertData]~MT~JMS
         Topic Metrics~Delivering Count","MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-topic=HawkularAlertData]~MT~JMS
         Topic Metrics~Durable Message Count","MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-topic=HawkularAlertData]~MT~JMS
-        Topic Metrics~Durable Subscription Count"],"counter":[],"availability":[]},"start":1473962400000,"end":1473976800001,"bucketDuration":"3600s","types":["gauge","gauge_rate","counter","counter_rate","availability"]}'
+        Topic Metrics~Durable Subscription Count"],"counter":[],"availability":[]},"start":1476864000000,"end":1476874800001,"bucketDuration":"3600s","types":["gauge","gauge_rate","counter","counter_rate","availability"]}'
     headers:
       Accept:
       - application/json
@@ -756,11 +1250,11 @@ http_interactions:
       Server:
       - nginx/1.10.1
       Date:
-      - Thu, 15 Sep 2016 20:39:02 GMT
+      - Wed, 19 Oct 2016 08:25:13 GMT
       Content-Type:
       - application/json
       Content-Length:
-      - '3158'
+      - '2816'
       Connection:
       - keep-alive
       Expires:
@@ -774,506 +1268,12 @@ http_interactions:
     body:
       encoding: UTF-8
       string: '{"gauge":{"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-topic=HawkularAlertData]~MT~JMS
-        Topic Metrics~Durable Message Count":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":75,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-topic=HawkularAlertData]~MT~JMS
-        Topic Metrics~Durable Subscription Count":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":75,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-topic=HawkularAlertData]~MT~JMS
-        Topic Metrics~Delivering Count":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":75,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}]},"gauge_rate":{"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-topic=HawkularAlertData]~MT~JMS
-        Topic Metrics~Durable Message Count":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":74,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-topic=HawkularAlertData]~MT~JMS
-        Topic Metrics~Durable Subscription Count":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":74,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-topic=HawkularAlertData]~MT~JMS
-        Topic Metrics~Delivering Count":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":74,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}]}}'
+        Topic Metrics~Durable Message Count":[{"start":1476864000000,"end":1476867600000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":39,"empty":false},{"start":1476867600000,"end":1476871200000,"empty":true},{"start":1476871200000,"end":1476874800000,"empty":true},{"start":1476874800000,"end":1476878400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-topic=HawkularAlertData]~MT~JMS
+        Topic Metrics~Durable Subscription Count":[{"start":1476864000000,"end":1476867600000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":39,"empty":false},{"start":1476867600000,"end":1476871200000,"empty":true},{"start":1476871200000,"end":1476874800000,"empty":true},{"start":1476874800000,"end":1476878400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-topic=HawkularAlertData]~MT~JMS
+        Topic Metrics~Delivering Count":[{"start":1476864000000,"end":1476867600000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":39,"empty":false},{"start":1476867600000,"end":1476871200000,"empty":true},{"start":1476871200000,"end":1476874800000,"empty":true},{"start":1476874800000,"end":1476878400000,"empty":true}]},"gauge_rate":{"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-topic=HawkularAlertData]~MT~JMS
+        Topic Metrics~Durable Message Count":[{"start":1476864000000,"end":1476867600000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":38,"empty":false},{"start":1476867600000,"end":1476871200000,"empty":true},{"start":1476871200000,"end":1476874800000,"empty":true},{"start":1476874800000,"end":1476878400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-topic=HawkularAlertData]~MT~JMS
+        Topic Metrics~Durable Subscription Count":[{"start":1476864000000,"end":1476867600000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":38,"empty":false},{"start":1476867600000,"end":1476871200000,"empty":true},{"start":1476871200000,"end":1476874800000,"empty":true},{"start":1476874800000,"end":1476878400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-topic=HawkularAlertData]~MT~JMS
+        Topic Metrics~Delivering Count":[{"start":1476864000000,"end":1476867600000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":38,"empty":false},{"start":1476867600000,"end":1476871200000,"empty":true},{"start":1476871200000,"end":1476874800000,"empty":true},{"start":1476874800000,"end":1476878400000,"empty":true}]}}'
     http_version: 
-  recorded_at: Thu, 15 Sep 2016 20:39:02 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/inventory/traversal/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsubsystem=messaging-activemq%2Fserver=default/r;Local~%2Fsubsystem=messaging-activemq%2Fserver=default%2Fjms-queue=DLQ/rl;incorporates/type=m?sort=id
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.3p173
-      Hawkular-Tenant:
-      - hawkular
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.10.1
-      Date:
-      - Thu, 15 Sep 2016 20:39:03 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '6280'
-      Connection:
-      - keep-alive
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Pragma:
-      - no-cache
-      X-Total-Count:
-      - '5'
-      Link:
-      - <http://hservices.torii.gva.redhat.com/hawkular/inventory/traversal/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-queue%3DDLQ/rl;incorporates/type=m?sort=id>;
-        rel="current"
-    body:
-      encoding: ASCII-8BIT
-      string: |-
-        [ {
-          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-queue%3DDLQ/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-queue%3DDLQ%5D~MT~JMS%20Queue%20Metrics~Consumer%20Count",
-          "name" : "Consumer Count",
-          "identityHash" : "d3a27d161b6103f411a3d9ae543fba9a2d49",
-          "contentHash" : "d2e3b177e4e54deb3c1c8a543186d07599219c",
-          "syncHash" : "2784edc2137b4626eaa97edfffbd78f3d3951e1",
-          "type" : {
-            "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/mt;JMS%20Queue%20Metrics~Consumer%20Count",
-            "name" : "Consumer Count",
-            "identityHash" : "f9156787a21d62acb79c4535d0f031e6260ba",
-            "contentHash" : "9da36885f35f7acb9cb53c5846fccbadc21a70",
-            "syncHash" : "74eaf326d2f5e6cc2c3e33792997feb21153a9de",
-            "unit" : "NONE",
-            "metricDataType" : "gauge",
-            "collectionInterval" : 30,
-            "type" : "GAUGE",
-            "id" : "JMS Queue Metrics~Consumer Count"
-          },
-          "id" : "MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-queue=DLQ]~MT~JMS Queue Metrics~Consumer Count"
-        }, {
-          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-queue%3DDLQ/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-queue%3DDLQ%5D~MT~JMS%20Queue%20Metrics~Delivering%20Count",
-          "name" : "Delivering Count",
-          "identityHash" : "addb3b40eb99f00aeb32769854decd39921e74d",
-          "contentHash" : "f7621349f85555c9a6d5a79eb842f6cfa1cb76",
-          "syncHash" : "c967c5b715811dbfefddf9cd0e5fe4f9e9d1430",
-          "type" : {
-            "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/mt;JMS%20Queue%20Metrics~Delivering%20Count",
-            "name" : "Delivering Count",
-            "identityHash" : "36ede6b05fb7921c8bc9351763c81e429ca73f",
-            "contentHash" : "f1d49137e5fb38fe24849554f1934e49ea13345b",
-            "syncHash" : "e622df938bc1c043bfdcb97dede0f4178bb66789",
-            "unit" : "NONE",
-            "metricDataType" : "gauge",
-            "collectionInterval" : 30,
-            "type" : "GAUGE",
-            "id" : "JMS Queue Metrics~Delivering Count"
-          },
-          "id" : "MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-queue=DLQ]~MT~JMS Queue Metrics~Delivering Count"
-        }, {
-          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-queue%3DDLQ/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-queue%3DDLQ%5D~MT~JMS%20Queue%20Metrics~Message%20Count",
-          "name" : "Message Count",
-          "identityHash" : "6eb9a36fb09f61ba7f60eea4fa3ed3521ae8de",
-          "contentHash" : "aa623b9d472de908691c72135b4ce9d7320e4d1",
-          "syncHash" : "20dd19cf67ab4e5e162b17a978da0b66a61b3fe",
-          "type" : {
-            "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/mt;JMS%20Queue%20Metrics~Message%20Count",
-            "name" : "Message Count",
-            "identityHash" : "375b56311438fed7e62946404bad9ed82c77886c",
-            "contentHash" : "6d5d9d439beb2dbddc45fa7824a1ae3a5c3e27",
-            "syncHash" : "302340244bdd959171fa232d25a14317f18d10dd",
-            "unit" : "NONE",
-            "metricDataType" : "gauge",
-            "collectionInterval" : 30,
-            "type" : "GAUGE",
-            "id" : "JMS Queue Metrics~Message Count"
-          },
-          "id" : "MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-queue=DLQ]~MT~JMS Queue Metrics~Message Count"
-        }, {
-          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-queue%3DDLQ/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-queue%3DDLQ%5D~MT~JMS%20Queue%20Metrics~Messages%20Added",
-          "name" : "Messages Added",
-          "identityHash" : "aee432341d555a3dd8f5c91e3b0bc44e6cb4327",
-          "contentHash" : "fb254971dbcaafdbd75e495fb3866dc71ef58b4a",
-          "syncHash" : "ed469d325791c888b2a2fcd3b2fb2571e125e",
-          "type" : {
-            "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/mt;JMS%20Queue%20Metrics~Messages%20Added",
-            "name" : "Messages Added",
-            "identityHash" : "41549a7046d41118cd97823f404a835f8f457472",
-            "contentHash" : "8d4cba225679582c3fa3d9c84e97ad0aaa4474",
-            "syncHash" : "2093667f74e57af7c07c7a1c543b31a9624137c4",
-            "unit" : "NONE",
-            "metricDataType" : "counter",
-            "collectionInterval" : 30,
-            "type" : "COUNTER",
-            "id" : "JMS Queue Metrics~Messages Added"
-          },
-          "id" : "MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-queue=DLQ]~MT~JMS Queue Metrics~Messages Added"
-        }, {
-          "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/r;Local~~/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-queue%3DDLQ/m;MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-queue%3DDLQ%5D~MT~JMS%20Queue%20Metrics~Scheduled%20Count",
-          "name" : "Scheduled Count",
-          "identityHash" : "57ec0aa2e1b6beb96d6c68270ffd44238ae7ae",
-          "contentHash" : "ccb5b21296683655598858722afb3973689afe4",
-          "syncHash" : "d155c6b5b0537024e2f4ddab3139e4d8b23def",
-          "type" : {
-            "path" : "/t;hawkular/f;71daaa4b-da76-4373-8753-68279f33a884/mt;JMS%20Queue%20Metrics~Scheduled%20Count",
-            "name" : "Scheduled Count",
-            "identityHash" : "6fc1b71420d02de59849ddfd2f65b2f41b81223",
-            "contentHash" : "e542875924c82fbf4c1815b086da8561495ef2",
-            "syncHash" : "753342e5b3c793b093335d7d82ace1e6fee2d9fc",
-            "unit" : "NONE",
-            "metricDataType" : "gauge",
-            "collectionInterval" : 30,
-            "type" : "GAUGE",
-            "id" : "JMS Queue Metrics~Scheduled Count"
-          },
-          "id" : "MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-queue=DLQ]~MT~JMS Queue Metrics~Scheduled Count"
-        } ]
-    http_version: 
-  recorded_at: Thu, 15 Sep 2016 20:39:03 GMT
-- request:
-    method: post
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/metrics/stats/query
-    body:
-      encoding: UTF-8
-      string: '{"metrics":{"gauge":["MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-queue=DLQ]~MT~JMS
-        Queue Metrics~Consumer Count","MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-queue=DLQ]~MT~JMS
-        Queue Metrics~Delivering Count","MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-queue=DLQ]~MT~JMS
-        Queue Metrics~Message Count"],"counter":[],"availability":[]},"start":1473962400000,"end":1473976800001,"bucketDuration":"3600s","types":["gauge","gauge_rate","counter","counter_rate","availability"]}'
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.3p173
-      Hawkular-Tenant:
-      - hawkular
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '634'
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.10.1
-      Date:
-      - Thu, 15 Sep 2016 20:39:03 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '3036'
-      Connection:
-      - keep-alive
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Pragma:
-      - no-cache
-    body:
-      encoding: UTF-8
-      string: '{"gauge":{"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-queue=DLQ]~MT~JMS
-        Queue Metrics~Consumer Count":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":75,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-queue=DLQ]~MT~JMS
-        Queue Metrics~Message Count":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":3.0,"avg":3.0,"median":3.0,"max":3.0,"sum":225.0,"samples":75,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-queue=DLQ]~MT~JMS
-        Queue Metrics~Delivering Count":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":75,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}]},"gauge_rate":{"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-queue=DLQ]~MT~JMS
-        Queue Metrics~Consumer Count":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":74,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-queue=DLQ]~MT~JMS
-        Queue Metrics~Message Count":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":74,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-queue=DLQ]~MT~JMS
-        Queue Metrics~Delivering Count":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":74,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}]}}'
-    http_version: 
-  recorded_at: Thu, 15 Sep 2016 20:39:03 GMT
-- request:
-    method: post
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/metrics/stats/query
-    body:
-      encoding: UTF-8
-      string: '{"metrics":{"gauge":["MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-queue=DLQ]~MT~JMS
-        Queue Metrics~Consumer Count","MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-queue=DLQ]~MT~JMS
-        Queue Metrics~Delivering Count","MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-queue=DLQ]~MT~JMS
-        Queue Metrics~Message Count","MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-queue=DLQ]~MT~JMS
-        Queue Metrics~Scheduled Count"],"counter":["MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-queue=DLQ]~MT~JMS
-        Queue Metrics~Messages Added"],"availability":[]},"start":1473962400000,"end":1473976800001,"bucketDuration":"3600s","types":["gauge","gauge_rate","counter","counter_rate","availability"]}'
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.3p173
-      Hawkular-Tenant:
-      - hawkular
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '928'
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.10.1
-      Date:
-      - Thu, 15 Sep 2016 20:39:03 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '5073'
-      Connection:
-      - keep-alive
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Pragma:
-      - no-cache
-    body:
-      encoding: UTF-8
-      string: '{"gauge":{"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-queue=DLQ]~MT~JMS
-        Queue Metrics~Consumer Count":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":75,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-queue=DLQ]~MT~JMS
-        Queue Metrics~Scheduled Count":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":75,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-queue=DLQ]~MT~JMS
-        Queue Metrics~Message Count":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":3.0,"avg":3.0,"median":3.0,"max":3.0,"sum":225.0,"samples":75,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-queue=DLQ]~MT~JMS
-        Queue Metrics~Delivering Count":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":75,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}]},"counter_rate":{"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-queue=DLQ]~MT~JMS
-        Queue Metrics~Messages Added":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":74,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}]},"gauge_rate":{"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-queue=DLQ]~MT~JMS
-        Queue Metrics~Consumer Count":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":74,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-queue=DLQ]~MT~JMS
-        Queue Metrics~Scheduled Count":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":74,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-queue=DLQ]~MT~JMS
-        Queue Metrics~Message Count":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":74,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}],"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-queue=DLQ]~MT~JMS
-        Queue Metrics~Delivering Count":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":0.0,"avg":0.0,"median":0.0,"max":0.0,"sum":0.0,"samples":74,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}]},"counter":{"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-queue=DLQ]~MT~JMS
-        Queue Metrics~Messages Added":[{"start":1473962400000,"end":1473966000000,"empty":true},{"start":1473966000000,"end":1473969600000,"empty":true},{"start":1473969600000,"end":1473973200000,"min":3.0,"avg":3.0,"median":3.0,"max":3.0,"sum":225.0,"samples":75,"empty":false},{"start":1473973200000,"end":1473976800000,"empty":true},{"start":1473976800000,"end":1473980400000,"empty":true}]}}'
-    http_version: 
-  recorded_at: Thu, 15 Sep 2016 20:39:03 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=messaging-activemq%2Fserver=default%2Fjms-queue=DLQ%5D~MT~JMS%20Queue%20Metrics~Consumer%20Count
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.3p173
-      Hawkular-Tenant:
-      - hawkular
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.10.1
-      Date:
-      - Thu, 15 Sep 2016 20:39:03 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '266'
-      Connection:
-      - keep-alive
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Pragma:
-      - no-cache
-    body:
-      encoding: UTF-8
-      string: '{"id":"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-queue=DLQ]~MT~JMS
-        Queue Metrics~Consumer Count","dataRetention":7,"type":"gauge","tenantId":"hawkular","minTimestamp":1473969658117,"maxTimestamp":1473971917005}'
-    http_version: 
-  recorded_at: Thu, 15 Sep 2016 20:39:03 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=messaging-activemq%2Fserver=default%2Fjms-queue=DLQ%5D~MT~JMS%20Queue%20Metrics~Delivering%20Count
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.3p173
-      Hawkular-Tenant:
-      - hawkular
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.10.1
-      Date:
-      - Thu, 15 Sep 2016 20:39:04 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '268'
-      Connection:
-      - keep-alive
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Pragma:
-      - no-cache
-    body:
-      encoding: UTF-8
-      string: '{"id":"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-queue=DLQ]~MT~JMS
-        Queue Metrics~Delivering Count","dataRetention":7,"type":"gauge","tenantId":"hawkular","minTimestamp":1473969658141,"maxTimestamp":1473971917008}'
-    http_version: 
-  recorded_at: Thu, 15 Sep 2016 20:39:04 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=messaging-activemq%2Fserver=default%2Fjms-queue=DLQ%5D~MT~JMS%20Queue%20Metrics~Message%20Count
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.3p173
-      Hawkular-Tenant:
-      - hawkular
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.10.1
-      Date:
-      - Thu, 15 Sep 2016 20:39:04 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '265'
-      Connection:
-      - keep-alive
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Pragma:
-      - no-cache
-    body:
-      encoding: UTF-8
-      string: '{"id":"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-queue=DLQ]~MT~JMS
-        Queue Metrics~Message Count","dataRetention":7,"type":"gauge","tenantId":"hawkular","minTimestamp":1473969658143,"maxTimestamp":1473971917008}'
-    http_version: 
-  recorded_at: Thu, 15 Sep 2016 20:39:04 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/counters/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=messaging-activemq%2Fserver=default%2Fjms-queue=DLQ%5D~MT~JMS%20Queue%20Metrics~Messages%20Added
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.3p173
-      Hawkular-Tenant:
-      - hawkular
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.10.1
-      Date:
-      - Thu, 15 Sep 2016 20:39:04 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '268'
-      Connection:
-      - keep-alive
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Pragma:
-      - no-cache
-    body:
-      encoding: UTF-8
-      string: '{"id":"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-queue=DLQ]~MT~JMS
-        Queue Metrics~Messages Added","dataRetention":7,"type":"counter","tenantId":"hawkular","minTimestamp":1473969658111,"maxTimestamp":1473971917003}'
-    http_version: 
-  recorded_at: Thu, 15 Sep 2016 20:39:04 GMT
-- request:
-    method: get
-    uri: http://jdoe:password@hservices.torii.gva.redhat.com/hawkular/metrics/gauges/MI~R~%5B71daaa4b-da76-4373-8753-68279f33a884%2FLocal~%2Fsubsystem=messaging-activemq%2Fserver=default%2Fjms-queue=DLQ%5D~MT~JMS%20Queue%20Metrics~Scheduled%20Count
-    body:
-      encoding: US-ASCII
-      string: ''
-    headers:
-      Accept:
-      - application/json
-      Accept-Encoding:
-      - gzip, deflate
-      User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.3p173
-      Hawkular-Tenant:
-      - hawkular
-      Content-Type:
-      - application/json
-  response:
-    status:
-      code: 200
-      message: OK
-    headers:
-      Server:
-      - nginx/1.10.1
-      Date:
-      - Thu, 15 Sep 2016 20:39:04 GMT
-      Content-Type:
-      - application/json
-      Content-Length:
-      - '267'
-      Connection:
-      - keep-alive
-      Expires:
-      - '0'
-      Cache-Control:
-      - no-cache, no-store, must-revalidate
-      X-Powered-By:
-      - Undertow/1
-      Pragma:
-      - no-cache
-    body:
-      encoding: UTF-8
-      string: '{"id":"MI~R~[71daaa4b-da76-4373-8753-68279f33a884/Local~/subsystem=messaging-activemq/server=default/jms-queue=DLQ]~MT~JMS
-        Queue Metrics~Scheduled Count","dataRetention":7,"type":"gauge","tenantId":"hawkular","minTimestamp":1473969658020,"maxTimestamp":1473971917002}'
-    http_version: 
-  recorded_at: Thu, 15 Sep 2016 20:39:04 GMT
+  recorded_at: Wed, 19 Oct 2016 08:25:13 GMT
 recorded_with: VCR 3.0.3

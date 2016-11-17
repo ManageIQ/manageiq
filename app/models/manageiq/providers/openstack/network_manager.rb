@@ -16,6 +16,7 @@ class ManageIQ::Providers::Openstack::NetworkManager < ManageIQ::Providers::Netw
   include ManageIQ::Providers::Openstack::ManagerMixin
   include SupportsFeatureMixin
 
+  supports :create_security_group
   supports :create_network_router
 
   has_many :public_networks,  :foreign_key => :ems_id, :dependent => :destroy,
@@ -103,6 +104,27 @@ class ManageIQ::Providers::Openstack::NetworkManager < ManageIQ::Providers::Netw
     queue_opts = {
       :class_name  => self.class.name,
       :method_name => 'create_network_router',
+      :instance_id => id,
+      :priority    => MiqQueue::HIGH_PRIORITY,
+      :role        => 'ems_operations',
+      :zone        => my_zone,
+      :args        => [options]
+    }
+    MiqTask.generic_action_with_callback(task_opts, queue_opts)
+  end
+
+  def create_security_group(options)
+    SecurityGroup.raw_create_security_group(self, options)
+  end
+
+  def create_security_group_queue(userid, options = {})
+    task_opts = {
+      :action => "creating Security Group for user #{userid}",
+      :userid => userid
+    }
+    queue_opts = {
+      :class_name  => self.class.name,
+      :method_name => 'create_security_group',
       :instance_id => id,
       :priority    => MiqQueue::HIGH_PRIORITY,
       :role        => 'ems_operations',

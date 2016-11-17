@@ -45,7 +45,7 @@ module ManageIQ::Providers::StorageManager::CinderManager::RefreshParser::CrossL
     end
 
     def link_volume_to_availability_zone(volume_hash, api_obj)
-      az_ref = api_obj.availability_zone ? "volume-#{api_obj.availability_zone}" : "null_az"
+      az_ref = api_obj.availability_zone ? api_obj.availability_zone : "null_az"
       availability_zone = @parent_ems.availability_zones.detect { |az| az.ems_ref == az_ref }
       unless availability_zone
         _log.info "EMS: #{@parent_ems.name}, availability zone not found: #{az_ref}"
@@ -69,7 +69,7 @@ module ManageIQ::Providers::StorageManager::CinderManager::RefreshParser::CrossL
     end
 
     def link_backup_to_availability_zone(backup_hash, api_obj)
-      az_ref = api_obj['availability_zone'] ? "volume-#{api_obj['availability_zone']}" : "null_az"
+      az_ref = api_obj['availability_zone'] ? api_obj['availability_zone'] : "null_az"
       availability_zone = @parent_ems.availability_zones.detect { |az| az.ems_ref == az_ref }
       unless availability_zone
         _log.info "EMS: #{@parent_ems.name}, availability zone not found: #{az_ref}"

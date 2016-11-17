@@ -38,7 +38,7 @@ class CloudTenantController < ApplicationController
       javascript_redirect :action => "new"
       return
     elsif params[:pressed] == "cloud_tenant_edit"
-      javascript_redirect :action => "edit", :id => params[:id]
+      javascript_redirect :action => "edit", :id => get_checked_cloud_tenant_id(params)
       return
     elsif params[:pressed] == 'cloud_tenant_delete'
       delete_cloud_tenants
@@ -59,6 +59,16 @@ class CloudTenantController < ApplicationController
 
   def show_list
     process_show_list
+  end
+
+  def get_checked_cloud_tenant_id(params)
+    if params[:id]
+      checked_cloud_tenant_id = params[:id]
+    else
+      checked_cloud_tenants = find_checked_items
+      checked_cloud_tenant_id = checked_cloud_tenants[0] if checked_cloud_tenants.length == 1
+    end
+    checked_cloud_tenant_id
   end
 
   def new

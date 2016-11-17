@@ -55,8 +55,8 @@ module ManageIQ::Providers
 
     def collect_stats_metrics(metrics, start_time, end_time, interval)
       gauge_ids, counter_ids, avail_ids, metrics_ids_map = parse_metrics_ids(metrics)
-      starts = (start_time - interval).to_i.in_milliseconds
-      ends = end_time.to_i.in_milliseconds + 1
+      starts = start_time.to_i.in_milliseconds
+      ends = (end_time + interval).to_i.in_milliseconds + 1
       bucket_duration = "#{interval}s"
       raw_stats = @metrics_client.query_stats(:gauge_ids       => gauge_ids,
                                               :counter_ids     => counter_ids,

@@ -148,6 +148,16 @@
                             "required"    => true,
                             "checkchange" => ""}
 
+    .form-group{"ng-class" => "{'has-error': angularForm.api_version.$invalid}", "ng-if" => "emsCommonModel.emstype == 'nuage_network'"}
+      %label.col-md-2.control-label{"for" => "textInput-markup"}
+        = _("API Version")
+      .col-md-8
+        = select_tag('api_version',
+                     options_for_select(@nuage_api_versions),
+                     "ng-model"                    => "emsCommonModel.api_version",
+                     "checkchange"                 => "",
+                     "selectpicker-for-select-tag" => "")
+
     .form-group{"ng-class" => "{'has-error': angularForm.provider_id.$invalid}", "ng-if" => "emsCommonModel.emstype == 'openstack' && emsCommonModel.openstack_infra_providers_exist"}
       %label.col-md-2.control-label{"for" => "ems_infra_provider_id"}
         = _("Openstack Infra Provider")

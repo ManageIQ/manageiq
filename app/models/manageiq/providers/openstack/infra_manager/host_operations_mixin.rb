@@ -55,7 +55,7 @@ module ManageIQ::Providers::Openstack::InfraManager::HostOperationsMixin
     _dummy, t = Benchmark.realtime_block(:total_time) do
       begin
         connection = ext_management_system.openstack_handle.detect_baremetal_service
-        response = connection.set_node_power_state(name, power_state)
+        response = connection.set_node_power_state(uid_ems, power_state)
 
         if response.status == 202
           status = "Success"

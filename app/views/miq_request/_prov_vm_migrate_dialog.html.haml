@@ -21,12 +21,13 @@
         :label                      => _("Manager"),
         :keys                       => keys})
   - when :environment
-    - keys = [:placement_dc_name]
-    = render(:partial => "/miq_request/prov_dialog_fieldset",
-      :locals         => {:workflow => wf,
-        :dialog                     => dialog,
-        :label                      => _("Datacenter"),
-        :keys                       => keys})
+    - if wf.field_supported(:datacenter)
+      - keys = [:placement_dc_name]
+      = render(:partial => "/miq_request/prov_dialog_fieldset",
+        :locals         => {:workflow => wf,
+          :dialog                     => dialog,
+          :label                      => _("Datacenter"),
+          :keys                       => keys})
 
     - keys = [:cluster_filter, :placement_cluster_name]
     = render(:partial => "/miq_request/prov_dialog_fieldset",
@@ -35,14 +36,15 @@
         :label                      => title_for_cluster,
         :keys                       => keys})
 
-    - keys = [:rp_filter, :placement_rp_name]
-    = render(:partial => "/miq_request/prov_dialog_fieldset",
-      :locals         => {:workflow => wf,
-        :dialog                     => dialog,
-        :label                      => _("Resource Pool"),
-        :keys                       => keys})
+    - if wf.field_supported(:respool)
+      - keys = [:rp_filter, :placement_rp_name]
+      = render(:partial => "/miq_request/prov_dialog_fieldset",
+        :locals         => {:workflow => wf,
+          :dialog                     => dialog,
+          :label                      => _("Resource Pool"),
+          :keys                       => keys})
 
-    - keys = [:host_filter, :placement_host_name]
+    - keys = [wf.field_supported(:host_filter) ? :host_filter : nil, :placement_host_name].compact
     = render(:partial => "/miq_request/prov_dialog_fieldset",
       :locals         => {:workflow => wf,
         :dialog                     => dialog,
@@ -50,13 +52,15 @@
         :keys                       => keys,
         :extra_table_attributes     => "width=100%"})
 
-    - keys = [:ds_filter, :placement_ds_name]
-    = render(:partial => "/miq_request/prov_dialog_fieldset",
-      :locals         => {:workflow     => wf,
-        :dialog                         => dialog,
-        :label                          => _("Datastore"),
-        :keys                           => keys,
-        :extra_table_attributes         => "width=100%"})
+    - if wf.field_supported(:storage)
+      - keys = [:ds_filter, :placement_ds_name]
+      = render(:partial => "/miq_request/prov_dialog_fieldset",
+        :locals         => {:workflow     => wf,
+          :dialog                         => dialog,
+          :label                          => _("Datastore"),
+          :keys                           => keys,
+          :extra_table_attributes         => "width=100%"})
+
   - when :hardware
     - keys = [:disk_format]
     = render(:partial => "/miq_request/prov_dialog_fieldset",

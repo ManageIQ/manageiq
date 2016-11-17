@@ -58,6 +58,22 @@ describe "Logging" do
       run_get entrypoint_url
     end
 
+    it "filters password attributes in nested parameters" do
+      api_basic_authorize collection_action_identifier(:services, :create)
+
+      log_request_expectations = EXPECTED_LOGGED_PARAMETERS.merge(
+        "Parameters" => a_hash_including(
+          "resource" => a_hash_including(
+            "options" => a_hash_including("password" => "[FILTERED]")
+          )
+        )
+      )
+
+      expect_log_requests(log_request_expectations)
+
+      run_post(services_url, gen_request(:create, "name" => "new_service_1", "options" => { "password" => "SECRET" }))
+    end
+
     it "logs additional system authentication with miq_token" do
       server_guid = MiqServer.first.guid
       userid = api_config(:user)

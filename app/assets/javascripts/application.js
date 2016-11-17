@@ -58,6 +58,7 @@
 //= require bootstrap-switch
 //= require angular-ui-bootstrap
 //= require angular-bootstrap-switch
+//= require angular-ui-codemirror
 //= require patternfly-bootstrap-treeview
 //= require jquery.observe_field
 //= require miq_ujs_bindings

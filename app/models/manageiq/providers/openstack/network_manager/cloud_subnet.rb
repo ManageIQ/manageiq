@@ -1,5 +1,7 @@
 class ManageIQ::Providers::Openstack::NetworkManager::CloudSubnet < ::CloudSubnet
   def self.raw_create_subnet(ext_management_system, options)
+    # TODO: remove this log line once this uses the task queue, as the task queue has its own logging
+    _log.info "Command: #{self.class.name}##{__method__}, Args: #{options.inspect}"
     cloud_tenant = options.delete(:cloud_tenant)
     subnet = nil
 
@@ -22,6 +24,8 @@ class ManageIQ::Providers::Openstack::NetworkManager::CloudSubnet < ::CloudSubne
   end
 
   def raw_delete_subnet
+    # TODO: remove this log line once this uses the task queue, as the task queue has its own logging
+    _log.info "Command: #{self.class.name}##{__method__}, ID: #{id}"
     with_provider_object(&:destroy)
     destroy!
   rescue => e
@@ -30,6 +34,8 @@ class ManageIQ::Providers::Openstack::NetworkManager::CloudSubnet < ::CloudSubne
   end
 
   def raw_update_subnet(options)
+    # TODO: remove this log line once this uses the task queue, as the task queue has its own logging
+    _log.info "Command: #{self.class.name}##{__method__}, ID: #{id}, Args: #{options.inspect}"
     with_provider_object do |subnet|
       subnet.attributes.merge!(options)
       subnet.save

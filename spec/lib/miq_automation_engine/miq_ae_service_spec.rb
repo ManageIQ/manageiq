@@ -155,10 +155,11 @@ module MiqAeServiceSpec
       before { NotificationType.seed }
 
       let(:options) { {} }
-      let(:workspace) { double("MiqAeEngine::MiqAeWorkspaceRuntime", :root => options) }
+      let(:workspace) { double("MiqAeEngine::MiqAeWorkspaceRuntime", :root => options, :ae_user => user) }
       let(:miq_ae_service) { MiqAeService.new(workspace) }
       let(:user) { FactoryGirl.create(:user_with_group) }
       let(:vm) { FactoryGirl.create(:vm) }
+      let(:msg_text) { 'mary had a little lamb' }
 
       context "#create_notification!" do
         it "invalid type" do
@@ -177,7 +178,7 @@ module MiqAeServiceSpec
         it "default type of automate_user_info" do
           allow(workspace).to receive(:persist_state_hash).and_return({})
           allow(workspace).to receive(:ae_user).and_return(user)
-          result = miq_ae_service.create_notification!(:message => 'mary had a little lamb')
+          result = miq_ae_service.create_notification!(:message => msg_text)
           expect(result).to be_kind_of(MiqAeMethodService::MiqAeServiceNotification)
         end
 
@@ -185,6 +186,19 @@ module MiqAeServiceSpec
           allow(workspace).to receive(:persist_state_hash).and_return({})
           allow(workspace).to receive(:ae_user).and_return(user)
           result = miq_ae_service.create_notification!(:level => 'success', :audience => 'user', :message => 'test')
+          expect(result).to be_kind_of(MiqAeMethodService::MiqAeServiceNotification)
+        end
+
+        it "type of automate_tenant_info" do
+          expect(workspace).to receive(:persist_state_hash).and_return({})
+          expect(user).to receive(:tenant).and_return(Tenant.root_tenant)
+          result = miq_ae_service.create_notification!(:level => 'success', :audience => 'tenant', :message => 'test')
+          expect(result).to be_kind_of(MiqAeMethodService::MiqAeServiceNotification)
+        end
+
+        it "type of automate_global_info" do
+          expect(workspace).to receive(:persist_state_hash).and_return({})
+          result = miq_ae_service.create_notification!(:level => 'success', :audience => 'global', :message => 'test')
           expect(result).to be_kind_of(MiqAeMethodService::MiqAeServiceNotification)
         end
       end
@@ -206,14 +220,30 @@ module MiqAeServiceSpec
         it "default type of automate_user_info" do
           allow(workspace).to receive(:persist_state_hash).and_return({})
           allow(workspace).to receive(:ae_user).and_return(user)
-          result = miq_ae_service.create_notification(:message => 'mary had a little lamb')
+          result = miq_ae_service.create_notification(:message => msg_text)
           expect(result).to be_kind_of(MiqAeMethodService::MiqAeServiceNotification)
+          ui_representation = result.object_send(:to_h)
+          expect(ui_representation).to include(:text     => '%{message}',
+                                               :bindings => a_hash_including(:message=>{:text=> msg_text}))
         end
 
         it "type of automate_user_info" do
           allow(workspace).to receive(:persist_state_hash).and_return({})
           allow(workspace).to receive(:ae_user).and_return(user)
           result = miq_ae_service.create_notification(:level => 'success', :audience => 'user', :message => 'test')
+          expect(result).to be_kind_of(MiqAeMethodService::MiqAeServiceNotification)
+        end
+
+        it "type of automate_tenant_info" do
+          expect(workspace).to receive(:persist_state_hash).and_return({})
+          expect(user).to receive(:tenant).and_return(Tenant.root_tenant)
+          result = miq_ae_service.create_notification(:level => 'success', :audience => 'tenant', :message => 'test')
+          expect(result).to be_kind_of(MiqAeMethodService::MiqAeServiceNotification)
+        end
+
+        it "type of automate_global_info" do
+          expect(workspace).to receive(:persist_state_hash).and_return({})
+          result = miq_ae_service.create_notification(:level => 'success', :audience => 'global', :message => 'test')
           expect(result).to be_kind_of(MiqAeMethodService::MiqAeServiceNotification)
         end
       end

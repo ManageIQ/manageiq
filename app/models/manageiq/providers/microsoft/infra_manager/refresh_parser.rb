@@ -401,7 +401,7 @@ module ManageIQ::Providers::Microsoft
 
     def process_vm_guest_devices(vm)
       dvds = vm[:Properties][:Props][:VirtualDVDDrives]
-      return [] if dvds.empty?
+      return [] if dvds.blank?
 
       dvdprops   = dvds[0][:Props]
       connection = dvdprops[:Connection]

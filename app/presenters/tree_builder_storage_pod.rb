@@ -35,6 +35,6 @@ class TreeBuilderStoragePod < TreeBuilder
     if(dsc.size > 0)
       objects = dsc.first.storages
     end
-    count_only_or_objects(count_only, objects)
+    count_only_or_objects(count_only, objects, "name")
   end
 end

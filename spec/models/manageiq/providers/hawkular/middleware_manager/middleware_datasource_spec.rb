@@ -1,6 +1,6 @@
 require_relative 'hawkular_helper'
 
-# VCR Cassettes: Hawkular Services 0.0.13.Final-SNAPSHOT (commit ec8f713d4ece69f5f312b95a228776eab4f86f62)
+# VCR Cassettes: Hawkular Services 0.0.13.Final-SNAPSHOT (commit 3cef2062513f4d949aa21a90db51f9cd105cf329)
 
 describe ManageIQ::Providers::Hawkular::MiddlewareManager::MiddlewareDatasource do
 

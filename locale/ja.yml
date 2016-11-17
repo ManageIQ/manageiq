@@ -4,4 +4,8 @@
 ja:
   product:
     name: ManageIQ
+    name_full: ManageIQ
+    copyright: "Copyright (c) 2016 ManageIQ. Sponsored by Red Hat Inc."
+    support_website: "http://www.manageiq.org"
+    support_website_text: "ManageIQ.org"
 

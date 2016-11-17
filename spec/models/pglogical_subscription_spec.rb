@@ -280,7 +280,7 @@ describe PglogicalSubscription do
       allow(pglogical).to receive(:subscriptions).and_return([])
       allow(pglogical).to receive(:enabled?).and_return(true)
       allow(MiqRegionRemote).to receive(:with_remote_connection).and_yield(double(:connection))
-      allow(MiqRegionRemote).to receive(:region_number_from_sequence).and_return(2, 3, 4)
+      allow(MiqRegionRemote).to receive(:region_number_from_sequence).and_return(2, 2, 3, 3)
       with_valid_schemas
 
       # node created
@@ -315,7 +315,7 @@ describe PglogicalSubscription do
       allow(pglogical).to receive(:subscriptions).and_return([])
       allow(pglogical).to receive(:enabled?).and_return(true)
       allow(MiqRegionRemote).to receive(:with_remote_connection).and_yield(double(:connection))
-      allow(MiqRegionRemote).to receive(:region_number_from_sequence).and_return(2, 3, 4)
+      allow(MiqRegionRemote).to receive(:region_number_from_sequence).and_return(2, 2, 3, 3, 4, 4)
       with_valid_schemas
 
       # node created

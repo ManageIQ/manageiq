@@ -83,9 +83,11 @@ module ManageIQ
         return @all_server_resources if @all_server_resources
         resources = []
         stacks.each do |stack|
-          # Filtering just OS::Nova::Server, which is important to us for getting Purpose of the node
+          # Filtering just server resources which is important to us for getting Purpose of the node
           # (compute, controller, etc.).
-          resources += all_stack_server_resources(stack).select { |x| x["resource_type"] == 'OS::Nova::Server' }
+          resources += all_stack_server_resources(stack).select do |x|
+            %w(OS::TripleO::Server OS::Nova::Server).include?(x["resource_type"])
+          end
         end
         @all_server_resources = resources
       end
@@ -142,7 +144,7 @@ module ManageIQ
         indexed_servers = {}
         servers.each { |s| indexed_servers[s.id] = s }
 
-        # Indexed Heat resources, we are interested only in OS::Nova::Server
+        # Indexed Heat resources, we are interested only in OS::Nova::Server/OS::TripleO::Server
         indexed_resources = {}
         all_server_resources.each { |p| indexed_resources[p['physical_resource_id']] = p }
 
@@ -347,7 +349,9 @@ module ManageIQ
           uid = stack.fetch_path(:parent, :ems_ref)
           next unless uid
 
-          nova_server = stack[:resources].detect { |r| r[:resource_category] == 'OS::Nova::Server' }
+          nova_server = stack[:resources].detect do |r|
+            %w(OS::TripleO::Server OS::Nova::Server).include?(r[:resource_category])
+          end
           next unless nova_server
 
           cluster_host_mapping[nova_server[:physical_resource]] = uid

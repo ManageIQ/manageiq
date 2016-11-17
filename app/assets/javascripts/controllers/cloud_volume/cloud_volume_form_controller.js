@@ -1,5 +1,5 @@
 ManageIQ.angular.app.controller('cloudVolumeFormController', ['$http', '$scope', 'cloudVolumeFormId', 'miqService', function($http, $scope, cloudVolumeFormId, miqService) {
-  $scope.cloudVolumeModel = { name: '' };
+  $scope.cloudVolumeModel = { name: '', cloud_tenant_id: '' };
   $scope.formId = cloudVolumeFormId;
   $scope.afterGet = false;
   $scope.modelCopy = angular.copy( $scope.cloudVolumeModel );

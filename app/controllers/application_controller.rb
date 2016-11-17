@@ -641,8 +641,10 @@ class ApplicationController < ActionController::Base
       else
         redirect_to_action = lastaction
       end
-      model = self.class.model
-      if restful_routed?(model)
+
+      # there's no model for ResourceController - defaulting to traditional routing
+      model = self.class.model rescue nil
+      if model && restful_routed?(model)
         javascript_redirect polymorphic_path(model.find(params[:id]), :escape => false, :load_edit_err => true)
       else
         javascript_redirect :action => redirect_to_action, :id => params[:id], :escape => false, :load_edit_err => true
@@ -1624,22 +1626,11 @@ class ApplicationController < ActionController::Base
   def get_view_where_clause(default_where_clause)
     # If doing charts, limit the records to ones showing in the chart
     if session[:menu_click] && session[:sandboxes][params[:sb_controller]][:chart_reports]
-      click_parts = session[:menu_click].split('_')
-      click_last  = click_parts.last.split('-')
-
+      click_parts = session[:menu_click]
       chart_reports = session[:sandboxes][params[:sb_controller]][:chart_reports]
-      legend_idx    = click_last.first.to_i
-      data_idx      = click_last[-2].to_i
-      chart_idx     = click_last.last.to_i
-
-      if Charting.backend == :ziya
-        legend_idx -= 1
-        data_idx   -= 1
-      end
-
-      _, model, typ = click_parts.first.split('-')
-      report        = chart_reports.kind_of?(Array) ? chart_reports[chart_idx] : chart_reports
-      data_row      = report.table.data[data_idx]
+      legend_idx, data_idx, chart_idx, _cmd, model, typ = parse_chart_click(Array(click_parts).first)
+      report = chart_reports.kind_of?(Array) ? chart_reports[chart_idx] : chart_reports
+      data_row = report.table.data[data_idx]
 
       if typ == "bytag"
         ["\"#{model.downcase.pluralize}\".id IN (?)",
@@ -1718,6 +1709,8 @@ class ApplicationController < ActionController::Base
         javascript_redirect edit_ems_container_path(params[:id])
       elsif params[:pressed] == "ems_middleware_edit" && params[:id]
         javascript_redirect edit_ems_middleware_path(params[:id])
+      elsif params[:pressed] == "ems_network_edit" && params[:id]
+        javascript_redirect edit_ems_network_path(params[:id])
       elsif %w(arbitration_profile_edit arbitration_profile_new).include?(params[:pressed]) && params[:id]
         javascript_redirect :action => @refresh_partial, :id => params[:id], :show => @redirect_id
       else

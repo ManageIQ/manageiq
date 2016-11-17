@@ -41,7 +41,11 @@ function miqTreeResetState(treename) {
 
 function miqRemoveNodeChildren(treename, key) {
   var node = miqTreeFindNodeByKey(treename, key);
-  miqTreeObject(treename).removeNode(node);
+  if (node.nodes) {
+    node.nodes.forEach(function (child) {
+      miqTreeObject(treename).removeNode(child);
+    });
+  }
 }
 
 function miqMenuEditor(id) {
@@ -216,8 +220,8 @@ function miqOnClickTimelineSelection(id) {
 
 // OnCheck handler for the belongs to drift/compare sections tree
 function miqOnCheckSections(_tree_name, key, checked, all_checked) {
-  var url = ManageIQ.tree.checkUrl + '?id=' + key + '&check=' + checked + '&all_checked=' + all_checked;
-  miqJqueryRequest(url);
+  var url = ManageIQ.tree.checkUrl + '?id=' + encodeURIComponent(key) + '&check=' + checked;
+  miqJqueryRequest(url, {data: {all_checked: all_checked}});
   return true;
 }
 

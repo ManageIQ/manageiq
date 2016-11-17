@@ -57,6 +57,16 @@ module VmCommon
     end
   end
 
+  # to reload currently displayed summary screen in explorer
+  def reload
+    @_params[:id] = if hide_vms && x_node.split('-')[1] != to_cid(params[:id]) && params[:id].present?
+                      'v-' + to_cid(params[:id])
+                    else
+                      x_node
+                    end
+    tree_select
+  end
+
   def show_timeline
     db = get_rec_cls
     @display = "timeline"
@@ -110,14 +120,21 @@ module VmCommon
                   :mks_classid => get_vmdb_config[:server][:mks_classid]
                 )
               when "vmrc"
+                host = @record.ext_management_system.ipaddress || @record.ext_management_system.hostname
+                vmid = @record.ems_ref
                 {
-                  :host        => @record.ext_management_system.ipaddress ||
-                                  @record.ext_management_system.hostname,
+                  :host        => host,
                   :vmid        => @record.ems_ref,
                   :ticket      => j(params[:ticket]),
                   :api_version => @record.ext_management_system.api_version.to_s,
                   :os          => browser_info(:os),
-                  :name        => @record.name
+                  :name        => @record.name,
+                  :vmrc_uri    => URI::Generic.build(:scheme   => "vmrc",
+                                                     :userinfo => "clone:#{params[:ticket]}",
+                                                     :host     => host,
+                                                     :port     => 443,
+                                                     :path     => "/",
+                                                     :query    => "moid=#{vmid}")
                 }
               end
     render :template => "vm_common/console_#{console_type}",
@@ -1231,9 +1248,11 @@ module VmCommon
   def get_node_info(treenodeid)
     # resetting action that was stored during edit to determine what is being edited
     @sb[:action] = nil
-    @nodetype, id = if vm_selected && hide_vms
+    @nodetype, id = if (treenodeid.split('-')[0] == 'v' || treenodeid.split('-')[0] == 't')  && hide_vms
+                      @sb[@sb[:active_accord]] = treenodeid
                       parse_nodetype_and_id(treenodeid)
                     else
+                      @sb[@sb[:active_accord]] = nil
                       parse_nodetype_and_id(valid_active_node(treenodeid))
                     end
     model, title =  case x_active_tree.to_s
@@ -1365,6 +1384,7 @@ module VmCommon
 
     if !@in_a_form && !@sb[:action]
       id = vm_selected && hide_vms ? TreeBuilder.build_node_cid(@vm) : x_node
+      id = @sb[@sb[:active_accord]] if @sb[@sb[:active_accord]].present? && params[:action] != 'tree_select'
       get_node_info(id)
       type, _id = parse_nodetype_and_id(id)
       # set @delete_node since we don't rebuild vm tree
@@ -1656,9 +1676,14 @@ module VmCommon
     end
   end
 
+  # return correct node to right cell
+  def x_node_right_cell
+    @sb[@sb[:active_accord]].present? ? @sb[@sb[:active_accord]] : x_node
+  end
+
   # set partial name and cell header for edit screens
   def set_right_cell_vars
-    name = @record ? @record.name.to_s.gsub(/'/, "\\\\'") : "" # If record, get escaped name
+    name = @record.try(:name).to_s
     table = request.parameters["controller"]
     case @sb[:action]
     when "attach"
@@ -1744,7 +1769,10 @@ module VmCommon
       partial = "layouts/performance"
       header = _("Capacity & Utilization data for %{vm_or_template} \"%{name}\"") %
         {:vm_or_template => ui_lookup(:table => table), :name => name}
-      x_history_add_item(:id => x_node, :text => header, :button => params[:pressed], :display => params[:display])
+      x_history_add_item(:id      => x_node_right_cell,
+                         :text    => header,
+                         :button  => params[:pressed],
+                         :display => params[:display])
       action = nil
     when "policy_sim"
       if params[:action] == "policies"
@@ -1790,7 +1818,9 @@ module VmCommon
       partial = "layouts/tl_show"
       header = _("Timelines for %{virtual_machine} \"%{name}\"") %
         {:virtual_machine => ui_lookup(:table => table), :name => name}
-      x_history_add_item(:id => x_node, :text => header, :button => params[:pressed])
+      x_history_add_item(:id     => x_node_right_cell,
+                         :text   => header,
+                         :button => params[:pressed])
       action = nil
     else
       # now take care of links on summary screen
@@ -1810,7 +1840,10 @@ module VmCommon
           :item_name      => @item.kind_of?(ScanHistory) ? @item.started_on.to_s : @item.name,
           :action         => action_type(@sb[:action], 1)
         }
-        x_history_add_item(:id => x_node, :text => header, :action => @sb[:action], :item => @item.id)
+        x_history_add_item(:id     => x_node_right_cell,
+                           :text   => header,
+                           :action => @sb[:action],
+                           :item   => @item.id)
       else
         header = _("\"%{action}\" for %{vm_or_template} \"%{name}\"") % {
           :vm_or_template => ui_lookup(:table => table),
@@ -1818,9 +1851,13 @@ module VmCommon
           :action         => action_type(@sb[:action], 2)
         }
         if @display && @display != "main"
-          x_history_add_item(:id => x_node, :text => header, :display => @display)
-        else
-          x_history_add_item(:id => x_node, :text => header, :action => @sb[:action]) if @sb[:action] != "drift_history"
+          x_history_add_item(:id      => x_node_right_cell,
+                             :text    => header,
+                             :display => @display)
+        elsif @sb[:action] != "drift_history"
+          x_history_add_item(:id     => x_node_right_cell,
+                             :text   => header,
+                             :action => @sb[:action])
         end
       end
       action = nil

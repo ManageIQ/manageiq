@@ -2,7 +2,12 @@ language: ruby
 rvm:
 - '2.3.1'
 sudo: false
-cache: bundler
+cache:
+  bundler: true
+  directories:
+    - vendor/assets/bower_components
+before_cache:
+- cat bower.json > vendor/assets/bower_components/bower.json
 env:
   global:
   - RUBY_GC_HEAP_GROWTH_MAX_SLOTS=300000

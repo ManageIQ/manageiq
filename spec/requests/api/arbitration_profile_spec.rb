@@ -11,6 +11,29 @@ RSpec.describe 'Arbitration Profile API' do
     end
   end
 
+  context 'arbitration profiles get' do
+    it 'rejects resource get requests without appropriate role' do
+      api_basic_authorize
+
+      ap = FactoryGirl.create(:arbitration_profile, :ext_management_system => ems)
+
+      run_get(arbitration_profiles_url(ap.id))
+
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it 'accepts resource get requests with appropriate role' do
+      api_basic_authorize action_identifier(:arbitration_profiles, :read, :resource_actions, :get)
+
+      ap = FactoryGirl.create(:arbitration_profile, :ext_management_system => ems)
+
+      run_get(arbitration_profiles_url(ap.id))
+
+      expect(response).to have_http_status(:ok)
+      expect_result_to_have_keys(%w(id href))
+    end
+  end
+
   context 'arbitration defaults create' do
     let(:request_body) do
       {:ems_id => ems.id,

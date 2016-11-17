@@ -1,11 +1,11 @@
 describe ManageIQ::Providers::Openstack::InfraManager::Refresher do
   before(:each) do
     _guid, _server, zone = EvmSpecHelper.create_guid_miq_server_zone
-    @ems = FactoryGirl.create(:ems_openstack_infra, :zone => zone, :hostname => "192.0.2.1",
-                              :ipaddress => "192.0.2.1", :port => 5000, :api_version => 'v2',
+    @ems = FactoryGirl.create(:ems_openstack_infra, :zone => zone, :hostname => "192.168.24.1",
+                              :ipaddress => "192.168.24.1", :port => 5000, :api_version => 'v2',
                               :security_protocol => 'no-ssl')
     @ems.update_authentication(
-      :default => {:userid => "admin", :password => "4b325eaa40030cfc3c2d61972109cc30b140f28d"})
+      :default => {:userid => "admin", :password => "b83387e3b93a015a57f23a9262e799db5d0a22f6"})
   end
 
   it "will perform a full refresh" do
@@ -82,7 +82,7 @@ describe ManageIQ::Providers::Openstack::InfraManager::Refresher do
     expect(Hardware.count).to                    be > 0
     # TODO(tzumainn) Introspection no longer returns disk information, may be
     # an OpenStack issue?
-    expect(Disk.count).to                        eq 0
+    expect(Disk.count).to                        be > -1
     expect(ResourcePool.count).to                eq 0
     expect(Vm.count).to                          eq 0
     expect(CustomAttribute.count).to             eq 0
@@ -161,17 +161,17 @@ describe ManageIQ::Providers::Openstack::InfraManager::Refresher do
       #:manufacturer         => "Red Hat",
       #:model                => "KVM",
       #:bios                 => "seabios-1.7.5-11.el7",
-      :memory_mb            => 4096,
+      :memory_mb            => 8192,
       :memory_console       => nil,
-      :disk_capacity        => 40,
-      :cpu_sockets          => 0,
-      :cpu_total_cores      => 0,
-      :cpu_cores_per_socket => 0,
+      :disk_capacity        => 49,
+      :cpu_sockets          => 1,
+      :cpu_total_cores      => 1,
+      :cpu_cores_per_socket => 1,
       :guest_os             => nil,
       :guest_os_full_name   => nil,
       :cpu_usage            => nil,
       :memory_usage         => nil,
-      :number_of_nics       => 0,
+      :number_of_nics       => 1,
     )
 
     # TODO(tzumainn) Introspection no longer finds disk attributes, may be

@@ -407,6 +407,7 @@ describe QuadiconHelper do
         allow(controller).to receive(:default_url_options) do
           {:controller => "vm_infra"}
         end
+        allow(controller).to receive(:controller_name).and_return("service")
       end
 
       let(:serv_res) do

@@ -360,7 +360,7 @@ class ProviderForemanController < ApplicationController
   end
 
   def tree_select_unprovisioned_configured_system
-    if unassigned_configuration_profile?(params[:id])
+    if unassigned_configuration_profile?(x_node)
       params[:id] = "cs-#{params[:id]}"
       tree_select
     else

@@ -262,5 +262,23 @@ describe OpsController do
         expect(assigns(:flash_array).first[:message]).to include("Central Admin has been disabled")
       end
     end
+
+    context "#update_exclude_tables_for_remote_region" do
+      render_views
+
+      before do
+        EvmSpecHelper.local_miq_server(:zone => Zone.seed)
+        FactoryGirl.create(:miq_region, :region => 10, :description => "The 10th region")
+      end
+
+      it "updates the exclude tables for the remote region" do
+        allow(MiqRegion).to receive(:replication_type).and_return(:remote)
+        allow(controller).to receive(:javascript_flash)
+        params = {:replication_type => "remote", :exclusion_list => "table1", :button => "save", :id => "new"}
+        controller.instance_variable_set(:@_params, params)
+        controller.send(:pglogical_save_subscriptions)
+        expect(assigns(:flash_array).first[:message]).to include("Replication configuration save was successful")
+      end
+    end
   end
 end

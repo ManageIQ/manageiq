@@ -274,4 +274,78 @@ describe GenericObjectDefinition do
       expect(subject.first).to eq(@g1)
     end
   end
+
+  shared_examples 'AR attribute allowing letters' do |hash|
+    it 'allows letters' do
+      expect(described_class.new(:name => 'test', :properties => hash)).to be_valid
+    end
+  end
+
+  shared_examples 'AR attribute allowing numbers' do |hash|
+    it 'allows numbers' do
+      expect(described_class.new(:name => 'test', :properties => hash)).to be_valid
+    end
+  end
+
+  shared_examples 'AR attribute allowing _' do |hash|
+    it 'allows _' do
+      expect(described_class.new(:name => 'test', :properties => hash)).to be_valid
+    end
+  end
+
+  shared_examples 'AR attribute starting with letters only' do |hash|
+    it 'starts with letter only' do
+      testdef = described_class.new(:name => 'test', :properties => hash)
+      expect { testdef.save! }.to raise_error(ActiveRecord::RecordInvalid)
+    end
+  end
+
+  shared_examples 'AR attribute allowing letters, numbers and _ only' do |hash|
+    it 'allows not other characters' do
+      testdef = described_class.new(:name => 'test', :properties => hash)
+      expect { testdef.save! }.to raise_error(ActiveRecord::RecordInvalid)
+    end
+  end
+
+  context 'property attribute name' do
+    it_behaves_like 'AR attribute allowing letters', :attributes => {'address' => :string}
+    it_behaves_like 'AR attribute allowing numbers', :attributes => {'address2' => :string}
+    it_behaves_like 'AR attribute allowing _', :attributes => {'my_address' => :string}
+    it_behaves_like 'AR attribute starting with letters only', :attributes => {'1st_vm' => "string"}
+    it_behaves_like 'AR attribute starting with letters only', :attributes => {'_vm' => "string"}
+    it_behaves_like 'AR attribute allowing letters, numbers and _ only', :attributes => {'my-vm' => "string"}
+    it_behaves_like 'AR attribute allowing letters, numbers and _ only', :attributes => {'my_vm!' => "string"}
+  end
+
+  context 'property association name' do
+    it_behaves_like 'AR attribute allowing letters', :associations => {'vms' => :Vm}
+    it_behaves_like 'AR attribute allowing numbers', :associations => {'vms2' => :Vm}
+    it_behaves_like 'AR attribute allowing _', :associations => {'my_vms' => "Vm"}
+    it_behaves_like 'AR attribute starting with letters only', :associations => {'1st_vm' => "Vm"}
+    it_behaves_like 'AR attribute starting with letters only', :associations => {'_vm' => "Vm"}
+    it_behaves_like 'AR attribute allowing letters, numbers and _ only', :associations => {'active-vms' => "Vm"}
+    it_behaves_like 'AR attribute allowing letters, numbers and _ only', :associations => {'active_vms!' => "Vm"}
+  end
+
+  context 'property method name' do
+    it_behaves_like 'AR attribute allowing letters', :methods => ['vms']
+    it_behaves_like 'AR attribute allowing numbers', :methods => ['vms2']
+    it_behaves_like 'AR attribute allowing _', :methods => ['active_vms']
+    it_behaves_like 'AR attribute starting with letters only', :methods => ['1st_vm']
+    it_behaves_like 'AR attribute starting with letters only', :methods => ['_vm']
+    it_behaves_like 'AR attribute allowing letters, numbers and _ only', :methods => ['active-vms']
+    it_behaves_like 'AR attribute allowing letters, numbers and _ only', :methods => ['active@vms']
+
+    subject { described_class.new(:name => 'test', :properties => {:methods => @attrs}) }
+
+    it 'allows ending with ?' do
+      @attrs = ['active_vm?']
+      expect(subject).to be_valid
+    end
+
+    it 'allows ending with !' do
+      @attrs = ['rename_vm!']
+      expect(subject).to be_valid
+    end
+  end
 end

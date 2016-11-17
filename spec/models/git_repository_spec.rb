@@ -7,6 +7,10 @@ describe GitRepository do
     expect { FactoryGirl.create(:git_repository, :url => "abc") }.to raise_error(ActiveRecord::RecordInvalid)
   end
 
+  it "invalid url, no path" do
+    expect { FactoryGirl.create(:git_repository, :url => "http://example.com") }.to raise_error(ActiveRecord::RecordInvalid)
+  end
+
   it "default dirname" do
     repo = FactoryGirl.create(:git_repository,
                               :url => "http://www.example.com/repos/manageiq")
@@ -187,6 +191,31 @@ describe GitRepository do
       expect(repo.git_tags.collect(&:name)).to match_array(tag_list + ['DUMMY'])
       repo.refresh
       expect(repo.git_tags.collect(&:name)).to match_array(tag_list)
+    end
+
+    context "#destroy" do
+      let(:dir_name) { repo.directory_name }
+
+      context "when repo deletion has no errors" do
+        it "deletes the repo and the directory" do
+          expect(FileUtils).to receive(:rm_rf).with(dir_name)
+
+          repo.destroy
+        end
+      end
+
+      context "when repo deletion has errors" do
+        before do
+          allow(repo).to receive(:delete_repo_dir).and_raise(MiqException::Error, "wham")
+        end
+
+        it "does not delete the repo and the directory" do
+          repo_id = repo.id
+
+          expect { repo.destroy }.to raise_exception(MiqException::Error, "wham")
+          expect(GitRepository.find(repo_id)).not_to be_nil
+        end
+      end
     end
   end
 end

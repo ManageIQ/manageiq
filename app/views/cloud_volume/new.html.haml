@@ -26,7 +26,7 @@
   %h3
     = _('Placement')
   .form-horizontal
-    .form-group
+    .form-group{"ng-class" => "{'has-error': angularForm.cloud_tenant_id.$invalid}"}
       %label.col-md-2.control-label
         = _('Cloud Tenant')
       .col-md-8

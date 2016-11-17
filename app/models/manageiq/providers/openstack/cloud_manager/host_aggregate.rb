@@ -149,7 +149,28 @@ class ManageIQ::Providers::Openstack::CloudManager::HostAggregate < ::HostAggreg
     end.try(:host_name)
   end
 
-  def add_host(new_host)
+  def add_host_queue(userid, new_host)
+    task_opts = {
+      :action => "Adding Host to Host Aggregate for user #{userid}",
+      :userid => userid
+    }
+    queue_opts = {
+      :class_name  => self.class.name,
+      :method_name => 'add_host',
+      :instance_id => id,
+      :priority    => MiqQueue::HIGH_PRIORITY,
+      :role        => 'ems_operations',
+      :zone        => ext_management_system.my_zone,
+      :args        => [new_host.id]
+    }
+    MiqTask.generic_action_with_callback(task_opts, queue_opts)
+  end
+
+  def add_host(host_id)
+    raise ArgumentError, _("Host ID cannot be nil") if host_id.nil?
+    new_host = Host.find(host_id)
+    raise ArgumentError, _("Host cannot be found") if new_host.nil?
+
     unless (hostname = find_external_hostname(new_host)).blank?
       external_aggregate.add_host(hostname)
     end
@@ -158,7 +179,28 @@ class ManageIQ::Providers::Openstack::CloudManager::HostAggregate < ::HostAggreg
     raise MiqException::MiqHostAggregateAddHostError, e.to_s, e.backtrace
   end
 
-  def remove_host(old_host)
+  def remove_host_queue(userid, old_host)
+    task_opts = {
+      :action => "Removing Host from Host Aggregate for user #{userid}",
+      :userid => userid
+    }
+    queue_opts = {
+      :class_name  => self.class.name,
+      :method_name => 'remove_host',
+      :instance_id => id,
+      :priority    => MiqQueue::HIGH_PRIORITY,
+      :role        => 'ems_operations',
+      :zone        => ext_management_system.my_zone,
+      :args        => [old_host.id]
+    }
+    MiqTask.generic_action_with_callback(task_opts, queue_opts)
+  end
+
+  def remove_host(host_id)
+    raise ArgumentError, _("Host ID cannot be nil") if host_id.nil?
+    old_host = Host.find(host_id)
+    raise ArgumentError, _("Host cannot be found") if old_host.nil?
+
     unless (hostname = find_external_hostname(old_host)).blank?
       external_aggregate.remove_host(hostname)
     end

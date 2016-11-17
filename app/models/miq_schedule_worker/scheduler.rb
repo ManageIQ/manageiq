@@ -21,8 +21,8 @@ class MiqScheduleWorker
     end
     alias every schedule_every
 
-    def cron(cronline, callable = nil, opts = {}, &block)
-      role_schedule << rufus_scheduler.cron(cronline, callable, opts, &block)
+    def schedule_cron(cronline, callable = nil, opts = {}, &block)
+      role_schedule << rufus_scheduler.schedule_cron(cronline, callable, opts, &block)
     end
   end
 end

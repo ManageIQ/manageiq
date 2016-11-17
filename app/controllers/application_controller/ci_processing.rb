@@ -3,6 +3,7 @@ module ApplicationController::CiProcessing
 
   included do
     private(:process_elements)
+    helper_method :supports_reconfigure_disks?
   end
 
   def ownership_form_fields
@@ -954,18 +955,17 @@ module ApplicationController::CiProcessing
       if(params[:id] && params[:id] != 'new')
         @request_id = params[:id]
       end
-      if VmReconfigureRequest.make_request(@request_id, options, current_user)
-        flash = _("VM Reconfigure Request was saved")
-        if role_allows?(:feature => "miq_request_show_list", :any => true)
-          javascript_redirect :controller => 'miq_request', :action => 'show_list', :flash_msg => flash
-        else
-          url = previous_breadcrumb_url.split('/')
-          javascript_redirect :controller => url[1], :action => url[2], :flash_msg => flash
-        end
+
+      VmReconfigureRequest.make_request(@request_id, options, current_user)
+      flash = _("VM Reconfigure Request was saved")
+
+      if role_allows?(:feature => "miq_request_show_list", :any => true)
+        javascript_redirect :controller => 'miq_request', :action => 'show_list', :flash_msg => flash
       else
-        # TODO - is request ever nil? ??
-        add_flash(_("Error adding VM Reconfigure Request"))
+        url = previous_breadcrumb_url.split('/')
+        javascript_redirect :controller => url[1], :action => url[2], :flash_msg => flash
       end
+
       if @flash_array
         javascript_flash
         return
@@ -1712,6 +1712,7 @@ module ApplicationController::CiProcessing
     cores_per_socket = @reconfigureitems.first.cpu_cores_per_socket
     cores_per_socket = '' unless @reconfigureitems.all? { |vm| vm.cpu_cores_per_socket == cores_per_socket }
     memory, memory_type = reconfigure_calculations(memory)
+
     # if only one vm that supports disk reconfiguration is selected, get the disks information
     vmdisks = []
     @reconfigureitems.first.hardware.disks.each do |disk|
@@ -1732,6 +1733,10 @@ module ApplicationController::CiProcessing
      :socket_count           => socket_count.to_s,
      :cores_per_socket_count => cores_per_socket.to_s,
      :disks                  => vmdisks}
+  end
+
+  def supports_reconfigure_disks?
+    @reconfigitems && @reconfigitems.size == 1 && @reconfigitems.first.supports_reconfigure_disks?
   end
 
   def get_reconfig_limits

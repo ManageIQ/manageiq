@@ -49,8 +49,8 @@ module ManageIQ::Providers::Openstack::EventCatcherMixin
   end
 
   def process_event(event)
-    if filtered_events.include?(event.payload[:event_type])
-      _log.info "#{log_prefix} Skipping caught event [#{event.payload["event_type"]}]"
+    if filtered_events.include?(event.payload["event_type"])
+      _log.debug "#{log_prefix} Skipping caught event [#{event.payload["event_type"]}]"
     else
       _log.info "#{log_prefix} Caught event [#{event.payload["event_type"]}]"
 

@@ -1,0 +1,3077 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: http://jdoe:password@127.0.0.1:8080/hawkular/inventory/status
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.1p112
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '234'
+      Date:
+      - Tue, 30 Aug 2016 23:12:19 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: |-
+        {
+          "Implementation-Version" : "0.18.0.Final",
+          "Built-From-Git-SHA1" : "be1107e48907ebc1d8de4dc571275edd9daf0424",
+          "Inventory-Implementation" : "org.hawkular.inventory.impl.tinkerpop.TinkerpopInventory",
+          "Initialized" : "true"
+        }
+    http_version: 
+  recorded_at: Tue, 30 Aug 2016 23:12:19 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@127.0.0.1:8080/hawkular/metrics/status
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.1p112
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Connection:
+      - keep-alive
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '133'
+      Date:
+      - Tue, 30 Aug 2016 23:12:19 GMT
+    body:
+      encoding: UTF-8
+      string: '{"MetricsService":"STARTED","Implementation-Version":"0.18.0.Final","Built-From-Git-SHA1":"d5281e70603719809bdada72249b9330b22ebf96"}'
+    http_version: 
+  recorded_at: Tue, 30 Aug 2016 23:12:19 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@127.0.0.1:8080/hawkular/inventory/traversal/type=f
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.1p112
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Tue, 30 Aug 2016 23:12:19 GMT
+      X-Total-Count:
+      - '3'
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '818'
+      Link:
+      - <http://127.0.0.1:8080/hawkular/inventory/traversal/type=f>; rel="current"
+    body:
+      encoding: ASCII-8BIT
+      string: |-
+        [ {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871",
+          "identityHash" : "cfd85919ae53b605c515770ea5056d4297f35f6",
+          "contentHash" : "da39a3ee5e6b4bd3255bfef95601890afd879",
+          "syncHash" : "ff6fb75be1bf6ca5c743a3cac9bffe63a7e216",
+          "id" : "e2daaa52-a9c1-4578-8a60-c6699de99871"
+        }, {
+          "path" : "/t;hawkular/f;feed_may_exist",
+          "identityHash" : "abc4c5719f1f4d4ef252d9b060f33ea09f48db",
+          "contentHash" : "da39a3ee5e6b4bd3255bfef95601890afd879",
+          "syncHash" : "09efb56d1f187c7ae3fa6ce1c864b3dcf5e78e",
+          "id" : "feed_may_exist"
+        } ]
+    http_version: 
+  recorded_at: Tue, 30 Aug 2016 23:12:19 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@127.0.0.1:8080/hawkular/inventory/traversal/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;WildFly%20Server/rl;defines/type=r
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.1p112
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Tue, 30 Aug 2016 23:12:19 GMT
+      X-Total-Count:
+      - '1'
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '665'
+      Link:
+      - <http://127.0.0.1:8080/hawkular/inventory/traversal/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;WildFly%20Server/rl;defines/type=r>;
+        rel="current"
+    body:
+      encoding: ASCII-8BIT
+      string: |-
+        [ {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~",
+          "name" : "WildFly Server [Local]",
+          "identityHash" : "3dea1e437737a93e607d69b7a6e3db517231a",
+          "contentHash" : "279ff07c7f8bb9a36853a063514dd723667afc",
+          "syncHash" : "3e84c1c5b54c0d38016a8a93c2edd872ad5f5",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;WildFly%20Server",
+            "name" : "WildFly Server",
+            "identityHash" : "ab7029efaddc2c15983a8e8a28576b5d6f24c7",
+            "contentHash" : "96dfab5fa91ff8fea2be793138eb9f9d84399bc",
+            "syncHash" : "eaff3fc55473c319fc4135147084ae425eb2ed6b",
+            "id" : "WildFly Server"
+          },
+          "id" : "Local~~"
+        } ]
+    http_version: 
+  recorded_at: Tue, 30 Aug 2016 23:12:19 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@127.0.0.1:8080/hawkular/inventory/entity/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/d;configuration
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.1p112
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Tue, 30 Aug 2016 23:12:19 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '811'
+    body:
+      encoding: ASCII-8BIT
+      string: |-
+        {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/d;configuration",
+          "name" : "configuration",
+          "identityHash" : "993dcbcf56fcb99d3d5de6453431f4cefa6856e",
+          "contentHash" : "1bd15692631f24dd82be3f4adf3084889b8fd4b",
+          "syncHash" : "b03021e09d92e24a2c71d7c96e0e478f1595aa8",
+          "value" : {
+            "Suspend State" : "RUNNING",
+            "Bound Address" : "0.0.0.0",
+            "Running Mode" : "NORMAL",
+            "Home Directory" : "/home/josejulio/Documentos/redhat/hawkular/hawkular-services-new/dist/target/hawkular-services-dist-0.0.11.Final-SNAPSHOT",
+            "Version" : "0.0.11.Final-SNAPSHOT",
+            "Node Name" : "avalanche",
+            "Server State" : "running",
+            "Product Name" : "Hawkular",
+            "Hostname" : "avalanche",
+            "UUID" : "e2daaa52-a9c1-4578-8a60-c6699de99871",
+            "Name" : "avalanche"
+          }
+        }
+    http_version: 
+  recorded_at: Tue, 30 Aug 2016 23:12:19 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@127.0.0.1:8080/hawkular/inventory/traversal/f;e2daaa52-a9c1-4578-8a60-c6699de99871/type=rt
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.1p112
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Tue, 30 Aug 2016 23:12:19 GMT
+      X-Total-Count:
+      - '27'
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '8831'
+      Link:
+      - <http://127.0.0.1:8080/hawkular/inventory/traversal/f;e2daaa52-a9c1-4578-8a60-c6699de99871/type=rt>;
+        rel="current"
+    body:
+      encoding: ASCII-8BIT
+      string: |-
+        [ {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Singleton%20EJB",
+          "name" : "Singleton EJB",
+          "identityHash" : "42f0638e5e8e266d17d2f7e95f35313e96fa9b39",
+          "contentHash" : "9c45b8135d1640115bd1e16ddf6ed623abe9833",
+          "syncHash" : "2260ecbd58da298aae11888aaa666a21dbe71f",
+          "id" : "Singleton EJB"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Deployment",
+          "name" : "Deployment",
+          "identityHash" : "aaa121a15de5fbf47393e9eedccab2f3e4f479bd",
+          "contentHash" : "327a55f82dc6818877a68e37b722bb7f2360b633",
+          "syncHash" : "2a7d8da2a747badbac21bd58531b31afd17c723",
+          "id" : "Deployment"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Messaging%20Server",
+          "name" : "Messaging Server",
+          "identityHash" : "c21e2c4be8b952d760ef3929652e304bd951ac4e",
+          "contentHash" : "333ae92fb6535ccf71d18badfd388f14a441d0",
+          "syncHash" : "35896341e6bfb41fe41e262adfe462dd854ada88",
+          "id" : "Messaging Server"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;ModCluster",
+          "name" : "ModCluster",
+          "identityHash" : "364f9437230722b5892c9595b29c77b62d3396f",
+          "contentHash" : "dbf826da8a4c333766883dba8952e10746225e7",
+          "syncHash" : "3a43f4e6781e56c218cc9cdd548ff4d362858e2",
+          "id" : "ModCluster"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Socket%20Binding",
+          "name" : "Socket Binding",
+          "identityHash" : "9e8eefdeb8e37da1b2fa96e756b262caeea5",
+          "contentHash" : "2f81bc49e564e3806c1179824029ffcac3ecb8ed",
+          "syncHash" : "429b6e781fd8cc8734d8e7c74dcded0cf716a39",
+          "id" : "Socket Binding"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Infinispan",
+          "name" : "Infinispan",
+          "identityHash" : "a02a9a0121b9fe564ef869e72765e7f1c56b2a",
+          "contentHash" : "acbd2d38de78a774e94c399a2922ae46bea3783",
+          "syncHash" : "4daf646564159dbdc4ec5b5c8f9ba62a0ffb6",
+          "id" : "Infinispan"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Socket%20Binding%20Group",
+          "name" : "Socket Binding Group",
+          "identityHash" : "689259496c606a774ff8d4288893cf656230642d",
+          "contentHash" : "cb6167f7e9aabb8464bef22c93e8e16f6365ea3",
+          "syncHash" : "50a5241e87dab3c4b71cad0632ac8f13395e69",
+          "id" : "Socket Binding Group"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Message%20Driven%20EJB",
+          "name" : "Message Driven EJB",
+          "identityHash" : "2eee38e96ef09ab44422a49bc5a8623596a34bc",
+          "contentHash" : "f410641c3079566b173ec6274a361357a77cd49",
+          "syncHash" : "5a568d8bb5d49c38a303f667fa432a3de6b5cfd",
+          "id" : "Message Driven EJB"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Remote%20Destination%20Outbound%20Socket%20Binding",
+          "name" : "Remote Destination Outbound Socket Binding",
+          "identityHash" : "35c9cb7b4ea86e90f10e3fe64c6d14d3456ee96",
+          "contentHash" : "ae41459183688898119286f4e1d5c972297b54f",
+          "syncHash" : "5d39254c7e28d0fbbd30d6f34e7c51bfb8f3a1ce",
+          "id" : "Remote Destination Outbound Socket Binding"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;JGroups%20Channel",
+          "name" : "JGroups Channel",
+          "identityHash" : "b076f142fbf9a283551583114ab2a58039bd488d",
+          "contentHash" : "bbc51e1ef3ddc3f6db28051af5f9ef3ac62ae59",
+          "syncHash" : "60d66189547e89e6bcaadaa74ccbf9d96444fdd1",
+          "id" : "JGroups Channel"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;JMS%20Queue",
+          "name" : "JMS Queue",
+          "identityHash" : "e231d2d4c8c38b428725c32f4e695fad772c1db8",
+          "contentHash" : "75b04b43485b3d9ee4da2153e44944e2f63ef",
+          "syncHash" : "646cd44497a45d7afbdabbd466c412829c3262",
+          "id" : "JMS Queue"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;WildFly%20Server",
+          "name" : "WildFly Server",
+          "identityHash" : "ab7029efaddc2c15983a8e8a28576b5d6f24c7",
+          "contentHash" : "96dfab5fa91ff8fea2be793138eb9f9d84399bc",
+          "syncHash" : "eaff3fc55473c319fc4135147084ae425eb2ed6b",
+          "id" : "WildFly Server"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Hawkular%20WildFly%20Agent",
+          "name" : "Hawkular WildFly Agent",
+          "identityHash" : "3f3074f6ccbc1d5aa93ef70b46860249b2ac755",
+          "contentHash" : "5631a1c89f7b7a5f5adcd5c8555cd43dcfe588",
+          "syncHash" : "f368b5149662f5a59c6e77b33a1f6beee35c5f0",
+          "id" : "Hawkular WildFly Agent"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;SubDeployment",
+          "name" : "SubDeployment",
+          "identityHash" : "e7c36274c35e9eeeb9564de6c5e7f14697bdbdc",
+          "contentHash" : "ed9a1f4e8965cb7c17a2278f406ef1d9bae45d7",
+          "syncHash" : "a7fcbe50b890591b1346776254aa8c2826ec4b3f",
+          "id" : "SubDeployment"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Transaction%20Manager",
+          "name" : "Transaction Manager",
+          "identityHash" : "2c82df7330b7ae48c43ae5413f9b8857f24a85f",
+          "contentHash" : "46c527a46c609bf03a66b2b9d8e091838a28107",
+          "syncHash" : "af0db9d805244129d4b12e8d4c5167ad52c2ca1",
+          "id" : "Transaction Manager"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Servlet",
+          "name" : "Servlet",
+          "identityHash" : "d844da746834ebfc4aa7782c94eeaea85b4abb74",
+          "contentHash" : "8a3d655f3696d872a783c7b5b2888a97188bc29",
+          "syncHash" : "c225714570836f79fdafeeb5eb71fe2ce8b987",
+          "id" : "Servlet"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;JGroups",
+          "name" : "JGroups",
+          "identityHash" : "dd6a37f1e791f41312ab3ce894dad8db26ee3ad",
+          "contentHash" : "7cb9431daf07a2dc58d3786ac5a76f915891564",
+          "syncHash" : "c5a9d8fab9907672ac042ae415ac7e62b2234",
+          "id" : "JGroups"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Stateless%20Session%20EJB",
+          "name" : "Stateless Session EJB",
+          "identityHash" : "8db06fc15c4b85fdfc5843944dde9594652a634",
+          "contentHash" : "bfa5b10fe4963014f26cdf5a6541b7f42814",
+          "syncHash" : "dc33e68f960d5393464f9cec9e915d5842b3835",
+          "id" : "Stateless Session EJB"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Infinispan%20Cache%20Container",
+          "name" : "Infinispan Cache Container",
+          "identityHash" : "53f33112d2fa8726fd7a36b3b09827b874f36c2",
+          "contentHash" : "58e8394667e6d252b359de36a5fd148a2c15352",
+          "syncHash" : "f2771559147eedc294f187c9d2acfa94df82175",
+          "id" : "Infinispan Cache Container"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;JMS%20Topic",
+          "name" : "JMS Topic",
+          "identityHash" : "75c24027bbd562b062152731fd59a0cee80ffa2",
+          "contentHash" : "2eb3b63ebb579817658d11a75d0299b2daf334a",
+          "syncHash" : "f3d5fa41258b4ab487abd41428b89a15372533",
+          "id" : "JMS Topic"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Datasource",
+          "name" : "Datasource",
+          "identityHash" : "b3291af08b396960f425871b493b6d9ee97e339f",
+          "contentHash" : "546c2a207bd841a0c2d94a6ae8a87371c36ffa9f",
+          "syncHash" : "f65ba261ef70efe3812e95a9ecb68d4fb6f3157",
+          "id" : "Datasource"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;JDBC%20Driver",
+          "name" : "JDBC Driver",
+          "identityHash" : "f9eaf22c8dff1416a34eb4d26a4bc6a99c46af2",
+          "contentHash" : "3f1b769e6846f49e2d5cfc55b8fe7a58e2742f2",
+          "syncHash" : "fa298d5f329ae7313f8648b70c0a4816a2734e0",
+          "id" : "JDBC Driver"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;XA%20Datasource",
+          "name" : "XA Datasource",
+          "identityHash" : "738cead59778159f64fa3911e2eff113f0f9d8",
+          "contentHash" : "3e6a387dbbbcf637e951b8c4c5bfa3dbdce858",
+          "syncHash" : "fddf22b49da75825cb141ca5615d1292cfa4457",
+          "id" : "XA Datasource"
+        } ]
+    http_version: 
+  recorded_at: Tue, 30 Aug 2016 23:12:19 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@127.0.0.1:8080/hawkular/inventory/traversal/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Operating%20System/rl;defines/type=r
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.1p112
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Tue, 30 Aug 2016 23:12:19 GMT
+      X-Total-Count:
+      - '1'
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '854'
+      Link:
+      - <http://127.0.0.1:8080/hawkular/inventory/traversal/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Operating%20System/rl;defines/type=r>;
+        rel="current"
+    body:
+      encoding: ASCII-8BIT
+      string: |-
+        [ ]
+    http_version: 
+  recorded_at: Tue, 30 Aug 2016 23:12:19 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@127.0.0.1:8080/hawkular/inventory/traversal/f;feed_may_exist/rt;WildFly%20Server/rl;defines/type=r
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.1p112
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Tue, 30 Aug 2016 23:12:19 GMT
+      X-Total-Count:
+      - "-1"
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '3'
+      Link:
+      - <http://127.0.0.1:8080/hawkular/inventory/traversal/f;feed_may_exist/rt;WildFly%20Server/rl;defines/type=r>;
+        rel="current"
+    body:
+      encoding: ASCII-8BIT
+      string: "[ ]"
+    http_version: 
+  recorded_at: Tue, 30 Aug 2016 23:12:19 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@127.0.0.1:8080/hawkular/inventory/traversal/type=f
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.1p112
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Tue, 30 Aug 2016 23:12:19 GMT
+      X-Total-Count:
+      - '3'
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '818'
+      Link:
+      - <http://127.0.0.1:8080/hawkular/inventory/traversal/type=f>; rel="current"
+    body:
+      encoding: ASCII-8BIT
+      string: |-
+        [ {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871",
+          "identityHash" : "cfd85919ae53b605c515770ea5056d4297f35f6",
+          "contentHash" : "da39a3ee5e6b4bd3255bfef95601890afd879",
+          "syncHash" : "ff6fb75be1bf6ca5c743a3cac9bffe63a7e216",
+          "id" : "e2daaa52-a9c1-4578-8a60-c6699de99871"
+        }, {
+          "path" : "/t;hawkular/f;feed_may_exist",
+          "identityHash" : "abc4c5719f1f4d4ef252d9b060f33ea09f48db",
+          "contentHash" : "da39a3ee5e6b4bd3255bfef95601890afd879",
+          "syncHash" : "09efb56d1f187c7ae3fa6ce1c864b3dcf5e78e",
+          "id" : "feed_may_exist"
+        } ]
+    http_version: 
+  recorded_at: Tue, 30 Aug 2016 23:12:19 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@127.0.0.1:8080/hawkular/inventory/traversal/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Domain%20Host/rl;defines/type=r
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.1p112
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Tue, 30 Aug 2016 23:12:19 GMT
+      X-Total-Count:
+      - "-1"
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '3'
+      Link:
+      - <http://127.0.0.1:8080/hawkular/inventory/traversal/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Domain%20Host/rl;defines/type=r>;
+        rel="current"
+    body:
+      encoding: ASCII-8BIT
+      string: "[ ]"
+    http_version: 
+  recorded_at: Tue, 30 Aug 2016 23:12:19 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@127.0.0.1:8080/hawkular/inventory/traversal/f;feed_may_exist/rt;Domain%20Host/rl;defines/type=r
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.1p112
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Tue, 30 Aug 2016 23:12:19 GMT
+      X-Total-Count:
+      - "-1"
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '3'
+      Link:
+      - <http://127.0.0.1:8080/hawkular/inventory/traversal/f;feed_may_exist/rt;Domain%20Host/rl;defines/type=r>;
+        rel="current"
+    body:
+      encoding: ASCII-8BIT
+      string: "[ ]"
+    http_version: 
+  recorded_at: Tue, 30 Aug 2016 23:12:19 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@127.0.0.1:8080/hawkular/inventory/traversal/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/recursive;over=isParentOf;type=r
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.1p112
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Tue, 30 Aug 2016 23:12:20 GMT
+      X-Total-Count:
+      - '88'
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '76742'
+      Link:
+      - <http://127.0.0.1:8080/hawkular/inventory/traversal/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/recursive;over=isParentOf;type=r>;
+        rel="current"
+    body:
+      encoding: ASCII-8BIT
+      string: |-
+        [ {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS",
+          "name" : "Datasource [ExampleDS]",
+          "identityHash" : "b1ad1d93643dccfbd37acdeb9d5f9c7de3294eb",
+          "contentHash" : "b58b567684c11abcad41d4c9987f5ab7dcc91e9b",
+          "syncHash" : "a43968939bf36bfeeeb7cb5845b8cd749e462df",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Datasource",
+            "name" : "Datasource",
+            "identityHash" : "b3291af08b396960f425871b493b6d9ee97e339f",
+            "contentHash" : "546c2a207bd841a0c2d94a6ae8a87371c36ffa9f",
+            "syncHash" : "f65ba261ef70efe3812e95a9ecb68d4fb6f3157",
+            "id" : "Datasource"
+          },
+          "id" : "Local~/subsystem=datasources/data-source=ExampleDS"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-inventory-dist.war",
+          "name" : "Deployment [hawkular-inventory-dist.war]",
+          "identityHash" : "f3defdd75b42a2d48a6c17fcd06751833bacf2e5",
+          "contentHash" : "417c20bda5537eb48b72cc26a72d0a6c0b3cbe5",
+          "syncHash" : "6c9be5a14585f8c5b4cf270725a21c95fbaf7e9",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Deployment",
+            "name" : "Deployment",
+            "identityHash" : "aaa121a15de5fbf47393e9eedccab2f3e4f479bd",
+            "contentHash" : "327a55f82dc6818877a68e37b722bb7f2360b633",
+            "syncHash" : "2a7d8da2a747badbac21bd58531b31afd17c723",
+            "id" : "Deployment"
+          },
+          "id" : "Local~/deployment=hawkular-inventory-dist.war"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-status.war",
+          "name" : "Deployment [hawkular-status.war]",
+          "identityHash" : "f237ce157626d4fa8254f3325e569fcd5651de",
+          "contentHash" : "6dc4efef84b9a54a70f61074934b7c853a1e17a",
+          "syncHash" : "9e3b71955c795d7734b6ff40f3f74e22913bd8c2",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Deployment",
+            "name" : "Deployment",
+            "identityHash" : "aaa121a15de5fbf47393e9eedccab2f3e4f479bd",
+            "contentHash" : "327a55f82dc6818877a68e37b722bb7f2360b633",
+            "syncHash" : "2a7d8da2a747badbac21bd58531b31afd17c723",
+            "id" : "Deployment"
+          },
+          "id" : "Local~/deployment=hawkular-status.war"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-rest-api.war",
+          "name" : "Deployment [hawkular-rest-api.war]",
+          "identityHash" : "538440b748e7a36aaec485d19d6e6d5632b13d",
+          "contentHash" : "2bfba7848683914b7dc337df6a9e9a299d10f4",
+          "syncHash" : "53d3fa370cdff6e3f92359511ad5aa78176a",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Deployment",
+            "name" : "Deployment",
+            "identityHash" : "aaa121a15de5fbf47393e9eedccab2f3e4f479bd",
+            "contentHash" : "327a55f82dc6818877a68e37b722bb7f2360b633",
+            "syncHash" : "2a7d8da2a747badbac21bd58531b31afd17c723",
+            "id" : "Deployment"
+          },
+          "id" : "Local~/deployment=hawkular-rest-api.war"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsocket-binding-group%3Dstandard-sockets",
+          "name" : "Socket Binding Group [standard-sockets]",
+          "identityHash" : "f866ca4321d1d3c9217722d156ec098138e766",
+          "contentHash" : "57c78c644c2360bfc5251e501570bbc27b1f5466",
+          "syncHash" : "538f17bcb94c7465967834a2a5cff95e831db888",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Socket%20Binding%20Group",
+            "name" : "Socket Binding Group",
+            "identityHash" : "689259496c606a774ff8d4288893cf656230642d",
+            "contentHash" : "cb6167f7e9aabb8464bef22c93e8e16f6365ea3",
+            "syncHash" : "50a5241e87dab3c4b71cad0632ac8f13395e69",
+            "id" : "Socket Binding Group"
+          },
+          "id" : "Local~/socket-binding-group=standard-sockets"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-alerts-actions-email.war",
+          "name" : "Deployment [hawkular-alerts-actions-email.war]",
+          "identityHash" : "16986eecf77de6c8f42c7ec75daefa86e18622c",
+          "contentHash" : "c9e46694a372af5d839b126e4f8e9eaf7f2146a",
+          "syncHash" : "a64fec3af385dcb4941529afcc35284b043d7",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Deployment",
+            "name" : "Deployment",
+            "identityHash" : "aaa121a15de5fbf47393e9eedccab2f3e4f479bd",
+            "contentHash" : "327a55f82dc6818877a68e37b722bb7f2360b633",
+            "syncHash" : "2a7d8da2a747badbac21bd58531b31afd17c723",
+            "id" : "Deployment"
+          },
+          "id" : "Local~/deployment=hawkular-alerts-actions-email.war"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault",
+          "name" : "Messaging Server [default]",
+          "identityHash" : "2e2ffd20fd3a3b7bc5472069cce1fc4da1c7d68",
+          "contentHash" : "e4e99f5c774164440fdc28a9037ffdf7262a9f8",
+          "syncHash" : "1418784f20487eb568972475bd1f7b2d2e622de",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Messaging%20Server",
+            "name" : "Messaging Server",
+            "identityHash" : "c21e2c4be8b952d760ef3929652e304bd951ac4e",
+            "contentHash" : "333ae92fb6535ccf71d18badfd388f14a441d0",
+            "syncHash" : "35896341e6bfb41fe41e262adfe462dd854ada88",
+            "id" : "Messaging Server"
+          },
+          "id" : "Local~/subsystem=messaging-activemq/server=default"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-commons-embedded-cassandra-war.war",
+          "name" : "Deployment [hawkular-commons-embedded-cassandra-war.war]",
+          "identityHash" : "241312a3f1023f5137ad26bde4dd6b130b856db",
+          "contentHash" : "4eae3596373e3c1e74972f272c95552192bde178",
+          "syncHash" : "4f721a87a764d1fba957160a1709e5bf611eec8",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Deployment",
+            "name" : "Deployment",
+            "identityHash" : "aaa121a15de5fbf47393e9eedccab2f3e4f479bd",
+            "contentHash" : "327a55f82dc6818877a68e37b722bb7f2360b633",
+            "syncHash" : "2a7d8da2a747badbac21bd58531b31afd17c723",
+            "id" : "Deployment"
+          },
+          "id" : "Local~/deployment=hawkular-commons-embedded-cassandra-war.war"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-command-gateway-war.war",
+          "name" : "Deployment [hawkular-command-gateway-war.war]",
+          "identityHash" : "fc197b476ad389a1dadbd4877235abbf9208769",
+          "contentHash" : "3d65bb3dceb1e32f1289d923e51a926271e0d723",
+          "syncHash" : "62daa8574c2129689930913971f534ce0556ff2",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Deployment",
+            "name" : "Deployment",
+            "identityHash" : "aaa121a15de5fbf47393e9eedccab2f3e4f479bd",
+            "contentHash" : "327a55f82dc6818877a68e37b722bb7f2360b633",
+            "syncHash" : "2a7d8da2a747badbac21bd58531b31afd17c723",
+            "id" : "Deployment"
+          },
+          "id" : "Local~/deployment=hawkular-command-gateway-war.war"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-wildfly-agent-download.war",
+          "name" : "Deployment [hawkular-wildfly-agent-download.war]",
+          "identityHash" : "c1d2d36294248a6b7f4c526a1c6e9fff1fc9252",
+          "contentHash" : "e0784bf0dd411af714d5b85a98ffaaf9a612b24",
+          "syncHash" : "c953eac0a7405aaba5443850a0aa8f39dec2",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Deployment",
+            "name" : "Deployment",
+            "identityHash" : "aaa121a15de5fbf47393e9eedccab2f3e4f479bd",
+            "contentHash" : "327a55f82dc6818877a68e37b722bb7f2360b633",
+            "syncHash" : "2a7d8da2a747badbac21bd58531b31afd17c723",
+            "id" : "Deployment"
+          },
+          "id" : "Local~/deployment=hawkular-wildfly-agent-download.war"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsubsystem%3Dhawkular-wildfly-agent",
+          "name" : "Hawkular WildFly Agent",
+          "identityHash" : "d9c07665258f43c5b0204259d342c8cb16f3ac",
+          "contentHash" : "fba7866bc34d2ba1ed776115ad9eceb79b6e1c",
+          "syncHash" : "8793bb7095a6da432b3b53773e66d7b02cc7",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Hawkular%20WildFly%20Agent",
+            "name" : "Hawkular WildFly Agent",
+            "identityHash" : "3f3074f6ccbc1d5aa93ef70b46860249b2ac755",
+            "contentHash" : "5631a1c89f7b7a5f5adcd5c8555cd43dcfe588",
+            "syncHash" : "f368b5149662f5a59c6e77b33a1f6beee35c5f0",
+            "id" : "Hawkular WildFly Agent"
+          },
+          "id" : "Local~/subsystem=hawkular-wildfly-agent"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-metrics-component.war",
+          "name" : "Deployment [hawkular-metrics-component.war]",
+          "identityHash" : "39bf1128fee24c49fe1c919432ad13a2da57d",
+          "contentHash" : "e37c6946d156e34663ccd46773d91ac55b61",
+          "syncHash" : "9fdd223a94ffd34988f3d497ec1bd17b4cffe24",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Deployment",
+            "name" : "Deployment",
+            "identityHash" : "aaa121a15de5fbf47393e9eedccab2f3e4f479bd",
+            "contentHash" : "327a55f82dc6818877a68e37b722bb7f2360b633",
+            "syncHash" : "2a7d8da2a747badbac21bd58531b31afd17c723",
+            "id" : "Deployment"
+          },
+          "id" : "Local~/deployment=hawkular-metrics-component.war"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsubsystem%3Dtransactions",
+          "name" : "Transaction Manager",
+          "identityHash" : "fd4c6c6ae631c9d3574596722ecabcd248329087",
+          "contentHash" : "a6c39bff42bb3c59cb2a9df90bd9ba46ecfd4c",
+          "syncHash" : "b3ca44e58ac6adc4de54f9b40b52f7079d8e7",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Transaction%20Manager",
+            "name" : "Transaction Manager",
+            "identityHash" : "2c82df7330b7ae48c43ae5413f9b8857f24a85f",
+            "contentHash" : "46c527a46c609bf03a66b2b9d8e091838a28107",
+            "syncHash" : "af0db9d805244129d4b12e8d4c5167ad52c2ca1",
+            "id" : "Transaction Manager"
+          },
+          "id" : "Local~/subsystem=transactions"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsubsystem%3Ddatasources%2Fjdbc-driver%3Dh2",
+          "name" : "JDBC Driver [h2]",
+          "identityHash" : "8552bea1e08fc66573fff8b1a3645fb845a107d",
+          "contentHash" : "8bcc62c8866ea8f4667c8e881cb848896ef63fa",
+          "syncHash" : "3a11f1aae220d43d6fbaae9187193f680b86c8",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;JDBC%20Driver",
+            "name" : "JDBC Driver",
+            "identityHash" : "f9eaf22c8dff1416a34eb4d26a4bc6a99c46af2",
+            "contentHash" : "3f1b769e6846f49e2d5cfc55b8fe7a58e2742f2",
+            "syncHash" : "fa298d5f329ae7313f8648b70c0a4816a2734e0",
+            "id" : "JDBC Driver"
+          },
+          "id" : "Local~/subsystem=datasources/jdbc-driver=h2"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsubsystem%3Dinfinispan",
+          "name" : "Infinispan",
+          "identityHash" : "ba921964165d1775fa543a8e2ae78f89c1270",
+          "contentHash" : "87f6d31913ce5af34bde86aa383aa81d9958a",
+          "syncHash" : "16bdc1813cba768518be82fb5bd93ba617dee9c",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Infinispan",
+            "name" : "Infinispan",
+            "identityHash" : "a02a9a0121b9fe564ef869e72765e7f1c56b2a",
+            "contentHash" : "acbd2d38de78a774e94c399a2922ae46bea3783",
+            "syncHash" : "4daf646564159dbdc4ec5b5c8f9ba62a0ffb6",
+            "id" : "Infinispan"
+          },
+          "id" : "Local~/subsystem=infinispan"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-alerts-rest.war",
+          "name" : "Deployment [hawkular-alerts-rest.war]",
+          "identityHash" : "cefdcdbbac39815926c1549583d7dcf3fd6b9d35",
+          "contentHash" : "9d248c86d3673fcd56d63bd7bc3c2f2bfd0b3f0",
+          "syncHash" : "bcef86db9ea1e3202e48c80413914df2dabb353",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Deployment",
+            "name" : "Deployment",
+            "identityHash" : "aaa121a15de5fbf47393e9eedccab2f3e4f479bd",
+            "contentHash" : "327a55f82dc6818877a68e37b722bb7f2360b633",
+            "syncHash" : "2a7d8da2a747badbac21bd58531b31afd17c723",
+            "id" : "Deployment"
+          },
+          "id" : "Local~/deployment=hawkular-alerts-rest.war"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fdeployment%3Dsample.war",
+          "name" : "Deployment [sample.war]",
+          "identityHash" : "c1d86b7e823bc99ba03ca3e98dbf07893ed3dad",
+          "contentHash" : "da37e26342d0c2529db1d9ffabd7929473457fd5",
+          "syncHash" : "5730c573eb29b9434c5536b0c1f5a2e1702db2ea",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Deployment",
+            "name" : "Deployment",
+            "identityHash" : "aaa121a15de5fbf47393e9eedccab2f3e4f479bd",
+            "contentHash" : "327a55f82dc6818877a68e37b722bb7f2360b633",
+            "syncHash" : "2a7d8da2a747badbac21bd58531b31afd17c723",
+            "id" : "Deployment"
+          },
+          "id" : "Local~/deployment=sample.war"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fdeployment%3Dsample_2.war",
+          "name" : "Deployment [sample_2.war]",
+          "identityHash" : "c270bb4247acf59173cfe6d86f3e24baca2e94d5",
+          "contentHash" : "ca86fe6e4d6aa4dc6be6e83cdf6db2174ad5b64",
+          "syncHash" : "770777dfea619d795c0bf14fe19c54cf2cf2c5",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Deployment",
+            "name" : "Deployment",
+            "identityHash" : "aaa121a15de5fbf47393e9eedccab2f3e4f479bd",
+            "contentHash" : "327a55f82dc6818877a68e37b722bb7f2360b633",
+            "syncHash" : "2a7d8da2a747badbac21bd58531b31afd17c723",
+            "id" : "Deployment"
+          },
+          "id" : "Local~/deployment=sample_2.war"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fdeployment%3Dsample3.war",
+          "name" : "Deployment [sample3.war]",
+          "identityHash" : "329ce4d838c6e447e4752b9b8cb3c65a4c92a58",
+          "contentHash" : "69f2af546197c7b75bf16524f796b9418b9ab4f2",
+          "syncHash" : "17a381961a88f867c19db1c42ba2405880e21aa3",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Deployment",
+            "name" : "Deployment",
+            "identityHash" : "aaa121a15de5fbf47393e9eedccab2f3e4f479bd",
+            "contentHash" : "327a55f82dc6818877a68e37b722bb7f2360b633",
+            "syncHash" : "2a7d8da2a747badbac21bd58531b31afd17c723",
+            "id" : "Deployment"
+          },
+          "id" : "Local~/deployment=sample3.war"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fdeployment%3Dsample4.war",
+          "name" : "Deployment [sample4.war]",
+          "identityHash" : "a749743a297d3ac0a4eb17b888b319b0abc7496",
+          "contentHash" : "503ec7c7de4bd1d80ae5d4f4a5b81e5d5998ad",
+          "syncHash" : "d2fb8c8f43b455473a8342bc76b84861917cacd",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Deployment",
+            "name" : "Deployment",
+            "identityHash" : "aaa121a15de5fbf47393e9eedccab2f3e4f479bd",
+            "contentHash" : "327a55f82dc6818877a68e37b722bb7f2360b633",
+            "syncHash" : "2a7d8da2a747badbac21bd58531b31afd17c723",
+            "id" : "Deployment"
+          },
+          "id" : "Local~/deployment=sample4.war"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fdeployment%3Dsample5.war",
+          "name" : "Deployment [sample5.war]",
+          "identityHash" : "2bfba888d4fb56649e13a74fcb1e83b61f07d24",
+          "contentHash" : "a41ff112f0853d3d95593359bd254f219deb95c",
+          "syncHash" : "d8529cbccb08de8c93887ce5fb2a5e896da3c",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Deployment",
+            "name" : "Deployment",
+            "identityHash" : "aaa121a15de5fbf47393e9eedccab2f3e4f479bd",
+            "contentHash" : "327a55f82dc6818877a68e37b722bb7f2360b633",
+            "syncHash" : "2a7d8da2a747badbac21bd58531b31afd17c723",
+            "id" : "Deployment"
+          },
+          "id" : "Local~/deployment=sample5.war"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fdeployment%3Dsample_final.war",
+          "name" : "Deployment [sample_final.war]",
+          "identityHash" : "6627d7859911f625d0edf8d268a76bff9de1e62",
+          "contentHash" : "2fccfc75a6f2d1d01f3d9dbf3add906ffb9256e0",
+          "syncHash" : "149dc2df16829b2d6eb33c804938efcfbebe7b8",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Deployment",
+            "name" : "Deployment",
+            "identityHash" : "aaa121a15de5fbf47393e9eedccab2f3e4f479bd",
+            "contentHash" : "327a55f82dc6818877a68e37b722bb7f2360b633",
+            "syncHash" : "2a7d8da2a747badbac21bd58531b31afd17c723",
+            "id" : "Deployment"
+          },
+          "id" : "Local~/deployment=sample_final.war"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-inventory-dist.war/r;Local~%2Fdeployment%3Dhawkular-inventory-dist.war%2Fsubsystem%3Dundertow%2Fservlet%3Dorg.hawkular.inventory.rest.HawkularRestApi",
+          "name" : "Servlet [org.hawkular.inventory.rest.HawkularRestApi]",
+          "identityHash" : "6d1974925c87cf4d0e3794a855287a0b25c856",
+          "contentHash" : "80c5f042a119325548bd8871f4b1843eff977cde",
+          "syncHash" : "884e302bd15594b571737bee25bc83c8317b58",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Servlet",
+            "name" : "Servlet",
+            "identityHash" : "d844da746834ebfc4aa7782c94eeaea85b4abb74",
+            "contentHash" : "8a3d655f3696d872a783c7b5b2888a97188bc29",
+            "syncHash" : "c225714570836f79fdafeeb5eb71fe2ce8b987",
+            "id" : "Servlet"
+          },
+          "id" : "Local~/deployment=hawkular-inventory-dist.war/subsystem=undertow/servlet=org.hawkular.inventory.rest.HawkularRestApi"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-inventory-dist.war/r;Local~%2Fdeployment%3Dhawkular-inventory-dist.war%2Fsubsystem%3Dejb3%2Fsingleton-bean%3DInventoryJNDIPublisher",
+          "name" : "Singleton EJB [InventoryJNDIPublisher]",
+          "identityHash" : "161d87b9c82b5b4610335274f4b566b7f7d7d9",
+          "contentHash" : "d6f27fdf33cb9586cc2ed3d548a8a7535d7e8d7",
+          "syncHash" : "1382d4162e14502dabcfbcbb54e4691d440c0a8",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Singleton%20EJB",
+            "name" : "Singleton EJB",
+            "identityHash" : "42f0638e5e8e266d17d2f7e95f35313e96fa9b39",
+            "contentHash" : "9c45b8135d1640115bd1e16ddf6ed623abe9833",
+            "syncHash" : "2260ecbd58da298aae11888aaa666a21dbe71f",
+            "id" : "Singleton EJB"
+          },
+          "id" : "Local~/deployment=hawkular-inventory-dist.war/subsystem=ejb3/singleton-bean=InventoryJNDIPublisher"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-status.war/r;Local~%2Fdeployment%3Dhawkular-status.war%2Fsubsystem%3Dundertow%2Fservlet%3Dorg.hawkular.services.rest.HawkularServicesStatusApp",
+          "name" : "Servlet [org.hawkular.services.rest.HawkularServicesStatusApp]",
+          "identityHash" : "531358b275e9fa94debfa42cf625efdcc3cc74c",
+          "contentHash" : "c14bdf75c5f086b26bf840c65b1d2fbe3cd338",
+          "syncHash" : "da6fc4beabf4112bb5fd61b4b9cad23ccd09a86",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Servlet",
+            "name" : "Servlet",
+            "identityHash" : "d844da746834ebfc4aa7782c94eeaea85b4abb74",
+            "contentHash" : "8a3d655f3696d872a783c7b5b2888a97188bc29",
+            "syncHash" : "c225714570836f79fdafeeb5eb71fe2ce8b987",
+            "id" : "Servlet"
+          },
+          "id" : "Local~/deployment=hawkular-status.war/subsystem=undertow/servlet=org.hawkular.services.rest.HawkularServicesStatusApp"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-rest-api.war/r;Local~%2Fdeployment%3Dhawkular-rest-api.war%2Fsubsystem%3Dejb3%2Fmessage-driven-bean%3DHawkularTopicListener",
+          "name" : "Message Driven EJB [HawkularTopicListener]",
+          "identityHash" : "c23315e4552e2d84cdb2cd14a82c12ea0695947",
+          "contentHash" : "b6d3cdf29a882af2494fc7bd79f8aad45c9216",
+          "syncHash" : "33421522fe2e836d3cbfb5a35a17931a1f0b567",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Message%20Driven%20EJB",
+            "name" : "Message Driven EJB",
+            "identityHash" : "2eee38e96ef09ab44422a49bc5a8623596a34bc",
+            "contentHash" : "f410641c3079566b173ec6274a361357a77cd49",
+            "syncHash" : "5a568d8bb5d49c38a303f667fa432a3de6b5cfd",
+            "id" : "Message Driven EJB"
+          },
+          "id" : "Local~/deployment=hawkular-rest-api.war/subsystem=ejb3/message-driven-bean=HawkularTopicListener"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-rest-api.war/r;Local~%2Fdeployment%3Dhawkular-rest-api.war%2Fsubsystem%3Dejb3%2Fmessage-driven-bean%3DHawkularQueueListener",
+          "name" : "Message Driven EJB [HawkularQueueListener]",
+          "identityHash" : "23cc67cb54ff64a8374ab83e7e5d0436d7f5351",
+          "contentHash" : "74a0db3da72d8b1cb4d7ba03f570b5ea48d1f5",
+          "syncHash" : "97509b76921fd65e42e6ca1573a8831199728587",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Message%20Driven%20EJB",
+            "name" : "Message Driven EJB",
+            "identityHash" : "2eee38e96ef09ab44422a49bc5a8623596a34bc",
+            "contentHash" : "f410641c3079566b173ec6274a361357a77cd49",
+            "syncHash" : "5a568d8bb5d49c38a303f667fa432a3de6b5cfd",
+            "id" : "Message Driven EJB"
+          },
+          "id" : "Local~/deployment=hawkular-rest-api.war/subsystem=ejb3/message-driven-bean=HawkularQueueListener"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-rest-api.war/r;Local~%2Fdeployment%3Dhawkular-rest-api.war%2Fsubsystem%3Dejb3%2Fmessage-driven-bean%3DCommandEventListener",
+          "name" : "Message Driven EJB [CommandEventListener]",
+          "identityHash" : "fac175aab4439e2f90221cf6a46ea5e88def72fe",
+          "contentHash" : "51f2121ca985cdac97f693c4e87cfdf433a6ac7",
+          "syncHash" : "a718672eb5e4407a651aab12a8e75bfe30b28f",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Message%20Driven%20EJB",
+            "name" : "Message Driven EJB",
+            "identityHash" : "2eee38e96ef09ab44422a49bc5a8623596a34bc",
+            "contentHash" : "f410641c3079566b173ec6274a361357a77cd49",
+            "syncHash" : "5a568d8bb5d49c38a303f667fa432a3de6b5cfd",
+            "id" : "Message Driven EJB"
+          },
+          "id" : "Local~/deployment=hawkular-rest-api.war/subsystem=ejb3/message-driven-bean=CommandEventListener"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-rest-api.war/r;Local~%2Fdeployment%3Dhawkular-rest-api.war%2Fsubsystem%3Dundertow%2Fservlet%3DHystrixMetricsStreamServlet",
+          "name" : "Servlet [HystrixMetricsStreamServlet]",
+          "identityHash" : "2ebc6f793eaaf3c5295988376e385cfb69a71e6e",
+          "contentHash" : "57b26a489a755ea379a116ae7dd25dc6e6964896",
+          "syncHash" : "308136a5b81d3766145cc04064c1e9c8e529a3",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Servlet",
+            "name" : "Servlet",
+            "identityHash" : "d844da746834ebfc4aa7782c94eeaea85b4abb74",
+            "contentHash" : "8a3d655f3696d872a783c7b5b2888a97188bc29",
+            "syncHash" : "c225714570836f79fdafeeb5eb71fe2ce8b987",
+            "id" : "Servlet"
+          },
+          "id" : "Local~/deployment=hawkular-rest-api.war/subsystem=undertow/servlet=HystrixMetricsStreamServlet"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-rest-api.war/r;Local~%2Fdeployment%3Dhawkular-rest-api.war%2Fsubsystem%3Dejb3%2Fmessage-driven-bean%3DInventoryEventListener",
+          "name" : "Message Driven EJB [InventoryEventListener]",
+          "identityHash" : "7145aea182b7e0eafeecf4f195c15d7a5dcad6",
+          "contentHash" : "3ea2444e55c07a42b7e475494d3eefa645587675",
+          "syncHash" : "979adecf7ebbd422c4ec35d29d3e46fd29f05181",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Message%20Driven%20EJB",
+            "name" : "Message Driven EJB",
+            "identityHash" : "2eee38e96ef09ab44422a49bc5a8623596a34bc",
+            "contentHash" : "f410641c3079566b173ec6274a361357a77cd49",
+            "syncHash" : "5a568d8bb5d49c38a303f667fa432a3de6b5cfd",
+            "id" : "Message Driven EJB"
+          },
+          "id" : "Local~/deployment=hawkular-rest-api.war/subsystem=ejb3/message-driven-bean=InventoryEventListener"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-rest-api.war/r;Local~%2Fdeployment%3Dhawkular-rest-api.war%2Fsubsystem%3Dundertow%2Fservlet%3Dorg.hawkular.rest.HawkularRestApi",
+          "name" : "Servlet [org.hawkular.rest.HawkularRestApi]",
+          "identityHash" : "84ff2b3bf6ac1b16a246f8b83199b231ddb3d79",
+          "contentHash" : "d61918d1e73eb4598bb083327133ebd729375cc4",
+          "syncHash" : "31d594a78ee2cd2f2d65d76c29d7ba5cfaeede3c",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Servlet",
+            "name" : "Servlet",
+            "identityHash" : "d844da746834ebfc4aa7782c94eeaea85b4abb74",
+            "contentHash" : "8a3d655f3696d872a783c7b5b2888a97188bc29",
+            "syncHash" : "c225714570836f79fdafeeb5eb71fe2ce8b987",
+            "id" : "Servlet"
+          },
+          "id" : "Local~/deployment=hawkular-rest-api.war/subsystem=undertow/servlet=org.hawkular.rest.HawkularRestApi"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-rest-api.war/r;Local~%2Fdeployment%3Dhawkular-rest-api.war%2Fsubsystem%3Dejb3%2Fsingleton-bean%3DBackfillCacheManager",
+          "name" : "Singleton EJB [BackfillCacheManager]",
+          "identityHash" : "bd6e11875c39d2c06ae158a41c3df6464b533a30",
+          "contentHash" : "288bc219108342e8c97ef2de33fcd33cec443271",
+          "syncHash" : "30d5a1c218a605822a72f199d9ac47e97880da",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Singleton%20EJB",
+            "name" : "Singleton EJB",
+            "identityHash" : "42f0638e5e8e266d17d2f7e95f35313e96fa9b39",
+            "contentHash" : "9c45b8135d1640115bd1e16ddf6ed623abe9833",
+            "syncHash" : "2260ecbd58da298aae11888aaa666a21dbe71f",
+            "id" : "Singleton EJB"
+          },
+          "id" : "Local~/deployment=hawkular-rest-api.war/subsystem=ejb3/singleton-bean=BackfillCacheManager"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-rest-api.war/r;Local~%2Fdeployment%3Dhawkular-rest-api.war%2Fsubsystem%3Dejb3%2Fmessage-driven-bean%3DFeedAvailabilityDataListener",
+          "name" : "Message Driven EJB [FeedAvailabilityDataListener]",
+          "identityHash" : "284cc3de5752f718cd56cac3859cd62423aa557",
+          "contentHash" : "b94a587e1ce9bb23ccbceef6694b733d041e7a5",
+          "syncHash" : "9cadf3d578cae52f22bd4c7b161a03942f47d2a",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Message%20Driven%20EJB",
+            "name" : "Message Driven EJB",
+            "identityHash" : "2eee38e96ef09ab44422a49bc5a8623596a34bc",
+            "contentHash" : "f410641c3079566b173ec6274a361357a77cd49",
+            "syncHash" : "5a568d8bb5d49c38a303f667fa432a3de6b5cfd",
+            "id" : "Message Driven EJB"
+          },
+          "id" : "Local~/deployment=hawkular-rest-api.war/subsystem=ejb3/message-driven-bean=FeedAvailabilityDataListener"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsocket-binding-group%3Dstandard-sockets/r;Local~%2Fsocket-binding-group%3Dstandard-sockets%2Fremote-destination-outbound-socket-binding%3Dmail-smtp",
+          "name" : "Remote Destination Outbound Socket Binding [mail-smtp]",
+          "identityHash" : "8f5567368a3e0488abed7549f49cdc3b560",
+          "contentHash" : "4ec0c3c604848b38c42c4a6edc475ed7c1154",
+          "syncHash" : "fc3d51df947984cb9924763588f9021aedf37fa",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Remote%20Destination%20Outbound%20Socket%20Binding",
+            "name" : "Remote Destination Outbound Socket Binding",
+            "identityHash" : "35c9cb7b4ea86e90f10e3fe64c6d14d3456ee96",
+            "contentHash" : "ae41459183688898119286f4e1d5c972297b54f",
+            "syncHash" : "5d39254c7e28d0fbbd30d6f34e7c51bfb8f3a1ce",
+            "id" : "Remote Destination Outbound Socket Binding"
+          },
+          "id" : "Local~/socket-binding-group=standard-sockets/remote-destination-outbound-socket-binding=mail-smtp"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsocket-binding-group%3Dstandard-sockets/r;Local~%2Fsocket-binding-group%3Dstandard-sockets%2Fsocket-binding%3Dmanagement-https",
+          "name" : "Socket Binding [management-https]",
+          "identityHash" : "b5ac4a2956b86d1f152f24922dde82ad3ca66dc",
+          "contentHash" : "40aa76f8d78ac3349e73e180a4c0e690bbe11cb5",
+          "syncHash" : "ca7c0abd3e8ee2b877bb8f1156057c242b9918",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Socket%20Binding",
+            "name" : "Socket Binding",
+            "identityHash" : "9e8eefdeb8e37da1b2fa96e756b262caeea5",
+            "contentHash" : "2f81bc49e564e3806c1179824029ffcac3ecb8ed",
+            "syncHash" : "429b6e781fd8cc8734d8e7c74dcded0cf716a39",
+            "id" : "Socket Binding"
+          },
+          "id" : "Local~/socket-binding-group=standard-sockets/socket-binding=management-https"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsocket-binding-group%3Dstandard-sockets/r;Local~%2Fsocket-binding-group%3Dstandard-sockets%2Fsocket-binding%3Dtxn-status-manager",
+          "name" : "Socket Binding [txn-status-manager]",
+          "identityHash" : "63de5c556bf2f47fbda31b721af1d6d2c88c9e",
+          "contentHash" : "5b48a46c9e51a680549f6167f6aae133e973383",
+          "syncHash" : "ae521aa916de28bcf7e9818ff34ea41569df4a3",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Socket%20Binding",
+            "name" : "Socket Binding",
+            "identityHash" : "9e8eefdeb8e37da1b2fa96e756b262caeea5",
+            "contentHash" : "2f81bc49e564e3806c1179824029ffcac3ecb8ed",
+            "syncHash" : "429b6e781fd8cc8734d8e7c74dcded0cf716a39",
+            "id" : "Socket Binding"
+          },
+          "id" : "Local~/socket-binding-group=standard-sockets/socket-binding=txn-status-manager"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsocket-binding-group%3Dstandard-sockets/r;Local~%2Fsocket-binding-group%3Dstandard-sockets%2Fsocket-binding%3Dtxn-recovery-environment",
+          "name" : "Socket Binding [txn-recovery-environment]",
+          "identityHash" : "4cea53782366671d1f168840d3c075cc83a99083",
+          "contentHash" : "11233a14674ce338b31cc5f68f6658d1d948d",
+          "syncHash" : "16abb365abb4ce39a278ff9c7d1f8487255683c",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Socket%20Binding",
+            "name" : "Socket Binding",
+            "identityHash" : "9e8eefdeb8e37da1b2fa96e756b262caeea5",
+            "contentHash" : "2f81bc49e564e3806c1179824029ffcac3ecb8ed",
+            "syncHash" : "429b6e781fd8cc8734d8e7c74dcded0cf716a39",
+            "id" : "Socket Binding"
+          },
+          "id" : "Local~/socket-binding-group=standard-sockets/socket-binding=txn-recovery-environment"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsocket-binding-group%3Dstandard-sockets/r;Local~%2Fsocket-binding-group%3Dstandard-sockets%2Fsocket-binding%3Dmanagement-http",
+          "name" : "Socket Binding [management-http]",
+          "identityHash" : "559c23ae196531eb25496c4b4d46a2dab5ac7a8",
+          "contentHash" : "d0eba94951038818d2481856c63186614f9b",
+          "syncHash" : "c6d12e11bf5ddca1172a4dd389aeb2f7414f6",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Socket%20Binding",
+            "name" : "Socket Binding",
+            "identityHash" : "9e8eefdeb8e37da1b2fa96e756b262caeea5",
+            "contentHash" : "2f81bc49e564e3806c1179824029ffcac3ecb8ed",
+            "syncHash" : "429b6e781fd8cc8734d8e7c74dcded0cf716a39",
+            "id" : "Socket Binding"
+          },
+          "id" : "Local~/socket-binding-group=standard-sockets/socket-binding=management-http"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsocket-binding-group%3Dstandard-sockets/r;Local~%2Fsocket-binding-group%3Dstandard-sockets%2Fsocket-binding%3Dajp",
+          "name" : "Socket Binding [ajp]",
+          "identityHash" : "244af65e7e1e55b5a852469b482eafebd95b4e25",
+          "contentHash" : "db6790ce6ce289b458312e959762f4e061b7e1bd",
+          "syncHash" : "4947a569bad6bd87f189bc34cb1b19b8f16242d3",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Socket%20Binding",
+            "name" : "Socket Binding",
+            "identityHash" : "9e8eefdeb8e37da1b2fa96e756b262caeea5",
+            "contentHash" : "2f81bc49e564e3806c1179824029ffcac3ecb8ed",
+            "syncHash" : "429b6e781fd8cc8734d8e7c74dcded0cf716a39",
+            "id" : "Socket Binding"
+          },
+          "id" : "Local~/socket-binding-group=standard-sockets/socket-binding=ajp"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsocket-binding-group%3Dstandard-sockets/r;Local~%2Fsocket-binding-group%3Dstandard-sockets%2Fsocket-binding%3Dhttps",
+          "name" : "Socket Binding [https]",
+          "identityHash" : "84d81febdaf2c958b49c8611bf91f5fd4f8335a0",
+          "contentHash" : "b17723a696316dc7ecb44406fc34d7313b91b10",
+          "syncHash" : "d368db5f6ca6286cfe5a337e759bbc7b87e646c",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Socket%20Binding",
+            "name" : "Socket Binding",
+            "identityHash" : "9e8eefdeb8e37da1b2fa96e756b262caeea5",
+            "contentHash" : "2f81bc49e564e3806c1179824029ffcac3ecb8ed",
+            "syncHash" : "429b6e781fd8cc8734d8e7c74dcded0cf716a39",
+            "id" : "Socket Binding"
+          },
+          "id" : "Local~/socket-binding-group=standard-sockets/socket-binding=https"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsocket-binding-group%3Dstandard-sockets/r;Local~%2Fsocket-binding-group%3Dstandard-sockets%2Fsocket-binding%3Dhttp",
+          "name" : "Socket Binding [http]",
+          "identityHash" : "62f4e95378a414f03ab19a60f64c4cfc9075b",
+          "contentHash" : "cbf2764bfc934aad65762cfb5569e281c1ebd34",
+          "syncHash" : "75e3577cf7efa67df79d5dfc336b69ba54da2",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Socket%20Binding",
+            "name" : "Socket Binding",
+            "identityHash" : "9e8eefdeb8e37da1b2fa96e756b262caeea5",
+            "contentHash" : "2f81bc49e564e3806c1179824029ffcac3ecb8ed",
+            "syncHash" : "429b6e781fd8cc8734d8e7c74dcded0cf716a39",
+            "id" : "Socket Binding"
+          },
+          "id" : "Local~/socket-binding-group=standard-sockets/socket-binding=http"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-alerts-actions-email.war/r;Local~%2Fdeployment%3Dhawkular-alerts-actions-email.war%2Fsubsystem%3Dejb3%2Fsingleton-bean%3DBusActionPluginRegister",
+          "name" : "Singleton EJB [BusActionPluginRegister]",
+          "identityHash" : "722628b893a8767753d4477d1d42bd210548c1",
+          "contentHash" : "d257564168a210f5126264de3958eff30dc56c1",
+          "syncHash" : "ebc7b543ccb9dff8955eb6bf22761928349fc4f",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Singleton%20EJB",
+            "name" : "Singleton EJB",
+            "identityHash" : "42f0638e5e8e266d17d2f7e95f35313e96fa9b39",
+            "contentHash" : "9c45b8135d1640115bd1e16ddf6ed623abe9833",
+            "syncHash" : "2260ecbd58da298aae11888aaa666a21dbe71f",
+            "id" : "Singleton EJB"
+          },
+          "id" : "Local~/deployment=hawkular-alerts-actions-email.war/subsystem=ejb3/singleton-bean=BusActionPluginRegister"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-alerts-actions-email.war/r;Local~%2Fdeployment%3Dhawkular-alerts-actions-email.war%2Fsubsystem%3Dejb3%2Fmessage-driven-bean%3DBusActionPluginListener",
+          "name" : "Message Driven EJB [BusActionPluginListener]",
+          "identityHash" : "2dcf5264402b70817452fc6cbeebf5916135c5f",
+          "contentHash" : "4428e1cff72d34d2d179b9f673ae5afdd97143c",
+          "syncHash" : "4d2d1ab65753a0d87c9753a749869d7fa3af3d2",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Message%20Driven%20EJB",
+            "name" : "Message Driven EJB",
+            "identityHash" : "2eee38e96ef09ab44422a49bc5a8623596a34bc",
+            "contentHash" : "f410641c3079566b173ec6274a361357a77cd49",
+            "syncHash" : "5a568d8bb5d49c38a303f667fa432a3de6b5cfd",
+            "id" : "Message Driven EJB"
+          },
+          "id" : "Local~/deployment=hawkular-alerts-actions-email.war/subsystem=ejb3/message-driven-bean=BusActionPluginListener"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-topic%3DHawkularAvailData",
+          "name" : "JMS Topic [HawkularAvailData]",
+          "identityHash" : "52d45ca771bc846174342df9ff28a449eee0c2",
+          "contentHash" : "6e6c882c85e3a114b61296df4ea7394844f12b58",
+          "syncHash" : "bdb7a33c761b702faeba6c54c4e33a3cb0ebfd81",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;JMS%20Topic",
+            "name" : "JMS Topic",
+            "identityHash" : "75c24027bbd562b062152731fd59a0cee80ffa2",
+            "contentHash" : "2eb3b63ebb579817658d11a75d0299b2daf334a",
+            "syncHash" : "f3d5fa41258b4ab487abd41428b89a15372533",
+            "id" : "JMS Topic"
+          },
+          "id" : "Local~/subsystem=messaging-activemq/server=default/jms-topic=HawkularAvailData"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-queue%3Dhawkular%2Fmetrics%2Fcounters%2Fnew",
+          "name" : "JMS Queue [hawkular/metrics/counters/new]",
+          "identityHash" : "79d3d6c3b8bfdf6253fa761e1a90733c826a6",
+          "contentHash" : "64b9f569ed88d2171fc81483f2e184675855ee5",
+          "syncHash" : "dbe94255b8f4f6beb3dbc599383f5da4a668fa5",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;JMS%20Queue",
+            "name" : "JMS Queue",
+            "identityHash" : "e231d2d4c8c38b428725c32f4e695fad772c1db8",
+            "contentHash" : "75b04b43485b3d9ee4da2153e44944e2f63ef",
+            "syncHash" : "646cd44497a45d7afbdabbd466c412829c3262",
+            "id" : "JMS Queue"
+          },
+          "id" : "Local~/subsystem=messaging-activemq/server=default/jms-queue=hawkular/metrics/counters/new"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-queue%3DHawkularAlertsActionsResponseQueue",
+          "name" : "JMS Queue [HawkularAlertsActionsResponseQueue]",
+          "identityHash" : "2f89df98b8de26c5358e23774191987ec347d0",
+          "contentHash" : "bf6243633217684994a84e6b205ddb9043457",
+          "syncHash" : "261bacff1477605ed579df56689d487272334bc",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;JMS%20Queue",
+            "name" : "JMS Queue",
+            "identityHash" : "e231d2d4c8c38b428725c32f4e695fad772c1db8",
+            "contentHash" : "75b04b43485b3d9ee4da2153e44944e2f63ef",
+            "syncHash" : "646cd44497a45d7afbdabbd466c412829c3262",
+            "id" : "JMS Queue"
+          },
+          "id" : "Local~/subsystem=messaging-activemq/server=default/jms-queue=HawkularAlertsActionsResponseQueue"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-topic%3DHawkularTopic",
+          "name" : "JMS Topic [HawkularTopic]",
+          "identityHash" : "993c56c39b3fbdabcf961c6d739987469e159c",
+          "contentHash" : "132c6fe445f88da736c2f97816614bd7843669",
+          "syncHash" : "278ca8b775f184d3e4133437673e372b774c119",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;JMS%20Topic",
+            "name" : "JMS Topic",
+            "identityHash" : "75c24027bbd562b062152731fd59a0cee80ffa2",
+            "contentHash" : "2eb3b63ebb579817658d11a75d0299b2daf334a",
+            "syncHash" : "f3d5fa41258b4ab487abd41428b89a15372533",
+            "id" : "JMS Topic"
+          },
+          "id" : "Local~/subsystem=messaging-activemq/server=default/jms-topic=HawkularTopic"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-queue%3DExpiryQueue",
+          "name" : "JMS Queue [ExpiryQueue]",
+          "identityHash" : "ed74bf0731fb5d4d73fcb84715d7447f5bc58",
+          "contentHash" : "be8465843986b46521f790755ed20ed975fc02a",
+          "syncHash" : "9b87fd9537412bdda236374e24da8796494fe4fc",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;JMS%20Queue",
+            "name" : "JMS Queue",
+            "identityHash" : "e231d2d4c8c38b428725c32f4e695fad772c1db8",
+            "contentHash" : "75b04b43485b3d9ee4da2153e44944e2f63ef",
+            "syncHash" : "646cd44497a45d7afbdabbd466c412829c3262",
+            "id" : "JMS Queue"
+          },
+          "id" : "Local~/subsystem=messaging-activemq/server=default/jms-queue=ExpiryQueue"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-topic%3DHawkularQueue",
+          "name" : "JMS Topic [HawkularQueue]",
+          "identityHash" : "f8df9ce1c70f3b681543bc46ffade8deae543",
+          "contentHash" : "dd68e13095c7664bc65476f3ee5563edeecbef2b",
+          "syncHash" : "40395192bff5b4d9b229be038dc3e01324c58",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;JMS%20Topic",
+            "name" : "JMS Topic",
+            "identityHash" : "75c24027bbd562b062152731fd59a0cee80ffa2",
+            "contentHash" : "2eb3b63ebb579817658d11a75d0299b2daf334a",
+            "syncHash" : "f3d5fa41258b4ab487abd41428b89a15372533",
+            "id" : "JMS Topic"
+          },
+          "id" : "Local~/subsystem=messaging-activemq/server=default/jms-topic=HawkularQueue"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-topic%3DHawkularAlertData",
+          "name" : "JMS Topic [HawkularAlertData]",
+          "identityHash" : "e7f57dc1b12aadc2b75ad1f2cae7903b7b7ea4",
+          "contentHash" : "7b23ec77694928edcc51d935169c6ab1da3dac7",
+          "syncHash" : "4ec24b5a34b3d59080288929aa3d5051d28998e3",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;JMS%20Topic",
+            "name" : "JMS Topic",
+            "identityHash" : "75c24027bbd562b062152731fd59a0cee80ffa2",
+            "contentHash" : "2eb3b63ebb579817658d11a75d0299b2daf334a",
+            "syncHash" : "f3d5fa41258b4ab487abd41428b89a15372533",
+            "id" : "JMS Topic"
+          },
+          "id" : "Local~/subsystem=messaging-activemq/server=default/jms-topic=HawkularAlertData"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-topic%3DHawkularAlertsActionsTopic",
+          "name" : "JMS Topic [HawkularAlertsActionsTopic]",
+          "identityHash" : "828edac588a6afc7eb6b75a6fe0aa90c6e9d410",
+          "contentHash" : "257c3ac6e910183bcff651a68243f5fa5764324c",
+          "syncHash" : "8426e4a22da29809b1488407cdf98e3ebd468e4",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;JMS%20Topic",
+            "name" : "JMS Topic",
+            "identityHash" : "75c24027bbd562b062152731fd59a0cee80ffa2",
+            "contentHash" : "2eb3b63ebb579817658d11a75d0299b2daf334a",
+            "syncHash" : "f3d5fa41258b4ab487abd41428b89a15372533",
+            "id" : "JMS Topic"
+          },
+          "id" : "Local~/subsystem=messaging-activemq/server=default/jms-topic=HawkularAlertsActionsTopic"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-queue%3Dhawkular%2Fmetrics%2Favailability%2Fnew",
+          "name" : "JMS Queue [hawkular/metrics/availability/new]",
+          "identityHash" : "aad7c6218f8a49273e69c41c628aeece57b8e",
+          "contentHash" : "9dc1ddde8aa08f6ff5a5188d72679a2970113a",
+          "syncHash" : "9d9af02acde0dd93e332d5c378643227793dd3",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;JMS%20Queue",
+            "name" : "JMS Queue",
+            "identityHash" : "e231d2d4c8c38b428725c32f4e695fad772c1db8",
+            "contentHash" : "75b04b43485b3d9ee4da2153e44944e2f63ef",
+            "syncHash" : "646cd44497a45d7afbdabbd466c412829c3262",
+            "id" : "JMS Queue"
+          },
+          "id" : "Local~/subsystem=messaging-activemq/server=default/jms-queue=hawkular/metrics/availability/new"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-queue%3DHawkularAlertsPluginsQueue",
+          "name" : "JMS Queue [HawkularAlertsPluginsQueue]",
+          "identityHash" : "56d62887d465c7449e322cb1e9291ae65ba9e8",
+          "contentHash" : "d91e28d8d63bec9035e47b37f3211b21c8eb528",
+          "syncHash" : "74d4fbfd8725895f19ebbdabbb63daff784e7",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;JMS%20Queue",
+            "name" : "JMS Queue",
+            "identityHash" : "e231d2d4c8c38b428725c32f4e695fad772c1db8",
+            "contentHash" : "75b04b43485b3d9ee4da2153e44944e2f63ef",
+            "syncHash" : "646cd44497a45d7afbdabbd466c412829c3262",
+            "id" : "JMS Queue"
+          },
+          "id" : "Local~/subsystem=messaging-activemq/server=default/jms-queue=HawkularAlertsPluginsQueue"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-topic%3DHawkularInventoryChanges",
+          "name" : "JMS Topic [HawkularInventoryChanges]",
+          "identityHash" : "bab0d1dd66d31ace7f45ba669e595db0859c27",
+          "contentHash" : "2ce11418d61867e6b6594bebbb521b13de13e46",
+          "syncHash" : "e7c68d56fee52e3dcb71ba72a51a1d54f8d72c",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;JMS%20Topic",
+            "name" : "JMS Topic",
+            "identityHash" : "75c24027bbd562b062152731fd59a0cee80ffa2",
+            "contentHash" : "2eb3b63ebb579817658d11a75d0299b2daf334a",
+            "syncHash" : "f3d5fa41258b4ab487abd41428b89a15372533",
+            "id" : "JMS Topic"
+          },
+          "id" : "Local~/subsystem=messaging-activemq/server=default/jms-topic=HawkularInventoryChanges"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-queue%3DDLQ",
+          "name" : "JMS Queue [DLQ]",
+          "identityHash" : "d02acaaaba2970a370749fb042411d80a12c6f",
+          "contentHash" : "b7fd1bfbed2ce39f8d402fac606758a241c6708b",
+          "syncHash" : "be7ba941e9885edc820fd3e6dd3755d2787b8ea",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;JMS%20Queue",
+            "name" : "JMS Queue",
+            "identityHash" : "e231d2d4c8c38b428725c32f4e695fad772c1db8",
+            "contentHash" : "75b04b43485b3d9ee4da2153e44944e2f63ef",
+            "syncHash" : "646cd44497a45d7afbdabbd466c412829c3262",
+            "id" : "JMS Queue"
+          },
+          "id" : "Local~/subsystem=messaging-activemq/server=default/jms-queue=DLQ"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-queue%3Dhawkular%2Fmetrics%2Fgauges%2Fnew",
+          "name" : "JMS Queue [hawkular/metrics/gauges/new]",
+          "identityHash" : "b9a04dc6cb9aad98c94049e0a0ce44d73d095f9",
+          "contentHash" : "34dfac349816c672f3958e517a71dac46438da7",
+          "syncHash" : "d0bc9b23276de7435a1ad6fc5ddab4a4bbdde",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;JMS%20Queue",
+            "name" : "JMS Queue",
+            "identityHash" : "e231d2d4c8c38b428725c32f4e695fad772c1db8",
+            "contentHash" : "75b04b43485b3d9ee4da2153e44944e2f63ef",
+            "syncHash" : "646cd44497a45d7afbdabbd466c412829c3262",
+            "id" : "JMS Queue"
+          },
+          "id" : "Local~/subsystem=messaging-activemq/server=default/jms-queue=hawkular/metrics/gauges/new"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-topic%3DHawkularMetricData",
+          "name" : "JMS Topic [HawkularMetricData]",
+          "identityHash" : "b3ef1c855abd05f4b4bd5768814fee2e8217a6",
+          "contentHash" : "ebbcb56478b2a9167fe12540c2d7f85a96bca",
+          "syncHash" : "de674a97df1444ca4c9be5faea6c9aa9ec5706",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;JMS%20Topic",
+            "name" : "JMS Topic",
+            "identityHash" : "75c24027bbd562b062152731fd59a0cee80ffa2",
+            "contentHash" : "2eb3b63ebb579817658d11a75d0299b2daf334a",
+            "syncHash" : "f3d5fa41258b4ab487abd41428b89a15372533",
+            "id" : "JMS Topic"
+          },
+          "id" : "Local~/subsystem=messaging-activemq/server=default/jms-topic=HawkularMetricData"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-topic%3DHawkularCommandEvent",
+          "name" : "JMS Topic [HawkularCommandEvent]",
+          "identityHash" : "c68f25b4dc8a501ee7abb37e90fa8f79b5b7c2b4",
+          "contentHash" : "4059e5718dadc5704f17227ea74616a3751b6e7",
+          "syncHash" : "2b5d7ec018785d0cf52b59bd23bc588424c1475",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;JMS%20Topic",
+            "name" : "JMS Topic",
+            "identityHash" : "75c24027bbd562b062152731fd59a0cee80ffa2",
+            "contentHash" : "2eb3b63ebb579817658d11a75d0299b2daf334a",
+            "syncHash" : "f3d5fa41258b4ab487abd41428b89a15372533",
+            "id" : "JMS Topic"
+          },
+          "id" : "Local~/subsystem=messaging-activemq/server=default/jms-topic=HawkularCommandEvent"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-wildfly-agent-download.war/r;Local~%2Fdeployment%3Dhawkular-wildfly-agent-download.war%2Fsubsystem%3Dundertow%2Fservlet%3Dorg.hawkular.component.wildflymonitor.WildFlyAgentServlet",
+          "name" : "Servlet [org.hawkular.component.wildflymonitor.WildFlyAgentServlet]",
+          "identityHash" : "c3ee124ecd27a833a94ec93041cd6272e987954",
+          "contentHash" : "ea8c5721c3fc4b31a96f91d847875a91b1b7c9f",
+          "syncHash" : "7fb2c7eb9752dc38ed96d0d02ef4a49b14f4728",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Servlet",
+            "name" : "Servlet",
+            "identityHash" : "d844da746834ebfc4aa7782c94eeaea85b4abb74",
+            "contentHash" : "8a3d655f3696d872a783c7b5b2888a97188bc29",
+            "syncHash" : "c225714570836f79fdafeeb5eb71fe2ce8b987",
+            "id" : "Servlet"
+          },
+          "id" : "Local~/deployment=hawkular-wildfly-agent-download.war/subsystem=undertow/servlet=org.hawkular.component.wildflymonitor.WildFlyAgentServlet"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-metrics-component.war/r;Local~%2Fdeployment%3Dhawkular-metrics-component.war%2Fsubsystem%3Dundertow%2Fservlet%3Dorg.hawkular.metrics.api.jaxrs.HawkularMetricsRestApp",
+          "name" : "Servlet [org.hawkular.metrics.api.jaxrs.HawkularMetricsRestApp]",
+          "identityHash" : "c991134cc7b03f7cfc7a591fa0d92aa05bf2b85c",
+          "contentHash" : "a1e8def843659d7df3781cb01642199d53f54199",
+          "syncHash" : "3276202f48324bbe4ed1e025f6af6fcbaa848d3a",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Servlet",
+            "name" : "Servlet",
+            "identityHash" : "d844da746834ebfc4aa7782c94eeaea85b4abb74",
+            "contentHash" : "8a3d655f3696d872a783c7b5b2888a97188bc29",
+            "syncHash" : "c225714570836f79fdafeeb5eb71fe2ce8b987",
+            "id" : "Servlet"
+          },
+          "id" : "Local~/deployment=hawkular-metrics-component.war/subsystem=undertow/servlet=org.hawkular.metrics.api.jaxrs.HawkularMetricsRestApp"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-metrics-component.war/r;Local~%2Fdeployment%3Dhawkular-metrics-component.war%2Fsubsystem%3Dundertow%2Fservlet%3DstaticContent",
+          "name" : "Servlet [staticContent]",
+          "identityHash" : "ac6fa1d991457eb824929cccc9aea86f4512888",
+          "contentHash" : "e16131c1e93e9f3449f8f8ce7f97064365cc794",
+          "syncHash" : "13417c2029ab6f5752b9a51e9ea87b7798757bd8",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Servlet",
+            "name" : "Servlet",
+            "identityHash" : "d844da746834ebfc4aa7782c94eeaea85b4abb74",
+            "contentHash" : "8a3d655f3696d872a783c7b5b2888a97188bc29",
+            "syncHash" : "c225714570836f79fdafeeb5eb71fe2ce8b987",
+            "id" : "Servlet"
+          },
+          "id" : "Local~/deployment=hawkular-metrics-component.war/subsystem=undertow/servlet=staticContent"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsubsystem%3Dinfinispan/r;Local~%2Fsubsystem%3Dinfinispan%2Fcache-container%3Dhawkular-services",
+          "name" : "Infinispan Cache Container [hawkular-services]",
+          "identityHash" : "8374cd28e214ec8b9be620b3bb3bd25f6c4eac",
+          "contentHash" : "65ec123fa39c4e749c775918ac515dbb1288a5",
+          "syncHash" : "13224deb7eeb8766c63f4566b7995429263ee91",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Infinispan%20Cache%20Container",
+            "name" : "Infinispan Cache Container",
+            "identityHash" : "53f33112d2fa8726fd7a36b3b09827b874f36c2",
+            "contentHash" : "58e8394667e6d252b359de36a5fd148a2c15352",
+            "syncHash" : "f2771559147eedc294f187c9d2acfa94df82175",
+            "id" : "Infinispan Cache Container"
+          },
+          "id" : "Local~/subsystem=infinispan/cache-container=hawkular-services"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsubsystem%3Dinfinispan/r;Local~%2Fsubsystem%3Dinfinispan%2Fcache-container%3Dhibernate",
+          "name" : "Infinispan Cache Container [hibernate]",
+          "identityHash" : "4025a3689a6a5cf962aa46d0f6b081a8fbee466",
+          "contentHash" : "5a777a7148a779aa56734ce2e4d8e7c3e2e61ab",
+          "syncHash" : "ec6a149ea245f551fedd1188e62c1e159aeed4f",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Infinispan%20Cache%20Container",
+            "name" : "Infinispan Cache Container",
+            "identityHash" : "53f33112d2fa8726fd7a36b3b09827b874f36c2",
+            "contentHash" : "58e8394667e6d252b359de36a5fd148a2c15352",
+            "syncHash" : "f2771559147eedc294f187c9d2acfa94df82175",
+            "id" : "Infinispan Cache Container"
+          },
+          "id" : "Local~/subsystem=infinispan/cache-container=hibernate"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsubsystem%3Dinfinispan/r;Local~%2Fsubsystem%3Dinfinispan%2Fcache-container%3Dejb",
+          "name" : "Infinispan Cache Container [ejb]",
+          "identityHash" : "68c0b22be25496dc6265938f39d77b24485ce9c0",
+          "contentHash" : "8b679c14ec55cd786065fee979cb6a17c4e44",
+          "syncHash" : "3bfe56952250d98f6cff6f7eafea54be5e2d993",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Infinispan%20Cache%20Container",
+            "name" : "Infinispan Cache Container",
+            "identityHash" : "53f33112d2fa8726fd7a36b3b09827b874f36c2",
+            "contentHash" : "58e8394667e6d252b359de36a5fd148a2c15352",
+            "syncHash" : "f2771559147eedc294f187c9d2acfa94df82175",
+            "id" : "Infinispan Cache Container"
+          },
+          "id" : "Local~/subsystem=infinispan/cache-container=ejb"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsubsystem%3Dinfinispan/r;Local~%2Fsubsystem%3Dinfinispan%2Fcache-container%3Dhawkular-alerts",
+          "name" : "Infinispan Cache Container [hawkular-alerts]",
+          "identityHash" : "bbebfb8789bf5d3e45a36abc3d9379f86da2d",
+          "contentHash" : "4c41305fab18f53a59a6e5fff8eacecceabd5647",
+          "syncHash" : "b34524e8a03de3772884c3b683f2ef162ede4a6",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Infinispan%20Cache%20Container",
+            "name" : "Infinispan Cache Container",
+            "identityHash" : "53f33112d2fa8726fd7a36b3b09827b874f36c2",
+            "contentHash" : "58e8394667e6d252b359de36a5fd148a2c15352",
+            "syncHash" : "f2771559147eedc294f187c9d2acfa94df82175",
+            "id" : "Infinispan Cache Container"
+          },
+          "id" : "Local~/subsystem=infinispan/cache-container=hawkular-alerts"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsubsystem%3Dinfinispan/r;Local~%2Fsubsystem%3Dinfinispan%2Fcache-container%3Dserver",
+          "name" : "Infinispan Cache Container [server]",
+          "identityHash" : "9140987ff67afe217c820a260cc4d6cb782564",
+          "contentHash" : "d81fd4695e41fcf94e311556eab6e1f32ceb6cb8",
+          "syncHash" : "33b186309bbdf0afcbef11d32ac2bbba63d1e1bd",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Infinispan%20Cache%20Container",
+            "name" : "Infinispan Cache Container",
+            "identityHash" : "53f33112d2fa8726fd7a36b3b09827b874f36c2",
+            "contentHash" : "58e8394667e6d252b359de36a5fd148a2c15352",
+            "syncHash" : "f2771559147eedc294f187c9d2acfa94df82175",
+            "id" : "Infinispan Cache Container"
+          },
+          "id" : "Local~/subsystem=infinispan/cache-container=server"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsubsystem%3Dinfinispan/r;Local~%2Fsubsystem%3Dinfinispan%2Fcache-container%3Dweb",
+          "name" : "Infinispan Cache Container [web]",
+          "identityHash" : "d3bdd424a8671ff0fe63139a13eb8e834373d5ac",
+          "contentHash" : "ca9516408b86fb4bf97daa8f6439347aa615356",
+          "syncHash" : "199798bea9193cb52eee18be90a219d1eaeb65d0",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Infinispan%20Cache%20Container",
+            "name" : "Infinispan Cache Container",
+            "identityHash" : "53f33112d2fa8726fd7a36b3b09827b874f36c2",
+            "contentHash" : "58e8394667e6d252b359de36a5fd148a2c15352",
+            "syncHash" : "f2771559147eedc294f187c9d2acfa94df82175",
+            "id" : "Infinispan Cache Container"
+          },
+          "id" : "Local~/subsystem=infinispan/cache-container=web"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-alerts-rest.war/r;Local~%2Fdeployment%3Dhawkular-alerts-rest.war%2Fsubsystem%3Dejb3%2Fmessage-driven-bean%3DActionPluginRegistrationListener",
+          "name" : "Message Driven EJB [ActionPluginRegistrationListener]",
+          "identityHash" : "71be63102d997cb6a8577981a993bc53ff3747b",
+          "contentHash" : "9cbcffc664d78afe6b55cbdd9d48edbf7f1919",
+          "syncHash" : "89d82f65b8d33c0c1c5a126ba114fc13b68f82f",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Message%20Driven%20EJB",
+            "name" : "Message Driven EJB",
+            "identityHash" : "2eee38e96ef09ab44422a49bc5a8623596a34bc",
+            "contentHash" : "f410641c3079566b173ec6274a361357a77cd49",
+            "syncHash" : "5a568d8bb5d49c38a303f667fa432a3de6b5cfd",
+            "id" : "Message Driven EJB"
+          },
+          "id" : "Local~/deployment=hawkular-alerts-rest.war/subsystem=ejb3/message-driven-bean=ActionPluginRegistrationListener"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-alerts-rest.war/r;Local~%2Fdeployment%3Dhawkular-alerts-rest.war%2Fsubsystem%3Dejb3%2Fsingleton-bean%3DCacheManager",
+          "name" : "Singleton EJB [CacheManager]",
+          "identityHash" : "763a897fe1def1661759fbd041d62cf072ded",
+          "contentHash" : "4c92d93bfb695befde72a6e77ea1a852dcfcae",
+          "syncHash" : "3d4e3cf27f7e17484bf5ac12ae3d2e9af3b5c88",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Singleton%20EJB",
+            "name" : "Singleton EJB",
+            "identityHash" : "42f0638e5e8e266d17d2f7e95f35313e96fa9b39",
+            "contentHash" : "9c45b8135d1640115bd1e16ddf6ed623abe9833",
+            "syncHash" : "2260ecbd58da298aae11888aaa666a21dbe71f",
+            "id" : "Singleton EJB"
+          },
+          "id" : "Local~/deployment=hawkular-alerts-rest.war/subsystem=ejb3/singleton-bean=CacheManager"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-alerts-rest.war/r;Local~%2Fdeployment%3Dhawkular-alerts-rest.war%2Fsubsystem%3Dejb3%2Fstateless-session-bean%3DCassAlertsServiceImpl",
+          "name" : "Stateless Session EJB [CassAlertsServiceImpl]",
+          "identityHash" : "47bc76ca4099417d1981c3549f3e13ab8013debb",
+          "contentHash" : "f474a07c477cc96c4867c2e5747e2710709ba423",
+          "syncHash" : "f5dd0347b9ce67e738ec41dceed138bb8bf44",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Stateless%20Session%20EJB",
+            "name" : "Stateless Session EJB",
+            "identityHash" : "8db06fc15c4b85fdfc5843944dde9594652a634",
+            "contentHash" : "bfa5b10fe4963014f26cdf5a6541b7f42814",
+            "syncHash" : "dc33e68f960d5393464f9cec9e915d5842b3835",
+            "id" : "Stateless Session EJB"
+          },
+          "id" : "Local~/deployment=hawkular-alerts-rest.war/subsystem=ejb3/stateless-session-bean=CassAlertsServiceImpl"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-alerts-rest.war/r;Local~%2Fdeployment%3Dhawkular-alerts-rest.war%2Fsubsystem%3Dejb3%2Fstateless-session-bean%3DCassDefinitionsServiceImpl",
+          "name" : "Stateless Session EJB [CassDefinitionsServiceImpl]",
+          "identityHash" : "f7ce5790e967e45b86c1985e2b6e91f3d8a5ffd",
+          "contentHash" : "85a5198d542fca9809ff1be02ee252cf8466",
+          "syncHash" : "1a111aa66e406a94cc9fa187303b7a63846dd2c1",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Stateless%20Session%20EJB",
+            "name" : "Stateless Session EJB",
+            "identityHash" : "8db06fc15c4b85fdfc5843944dde9594652a634",
+            "contentHash" : "bfa5b10fe4963014f26cdf5a6541b7f42814",
+            "syncHash" : "dc33e68f960d5393464f9cec9e915d5842b3835",
+            "id" : "Stateless Session EJB"
+          },
+          "id" : "Local~/deployment=hawkular-alerts-rest.war/subsystem=ejb3/stateless-session-bean=CassDefinitionsServiceImpl"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-alerts-rest.war/r;Local~%2Fdeployment%3Dhawkular-alerts-rest.war%2Fsubsystem%3Dejb3%2Fmessage-driven-bean%3DAlertDataListener",
+          "name" : "Message Driven EJB [AlertDataListener]",
+          "identityHash" : "8e6e34cacca395b88eb5c6ceef273569d65df7b",
+          "contentHash" : "b39e12f327683b13e45796b63fe7023f91fc98",
+          "syncHash" : "24fa8a258af3ecbed5bfe1a41276ef41b44eba",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Message%20Driven%20EJB",
+            "name" : "Message Driven EJB",
+            "identityHash" : "2eee38e96ef09ab44422a49bc5a8623596a34bc",
+            "contentHash" : "f410641c3079566b173ec6274a361357a77cd49",
+            "syncHash" : "5a568d8bb5d49c38a303f667fa432a3de6b5cfd",
+            "id" : "Message Driven EJB"
+          },
+          "id" : "Local~/deployment=hawkular-alerts-rest.war/subsystem=ejb3/message-driven-bean=AlertDataListener"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-alerts-rest.war/r;Local~%2Fdeployment%3Dhawkular-alerts-rest.war%2Fsubsystem%3Dundertow%2Fservlet%3Dorg.hawkular.alerts.rest.HawkularAlertsApp",
+          "name" : "Servlet [org.hawkular.alerts.rest.HawkularAlertsApp]",
+          "identityHash" : "d79ae59a06ba827d670c962e23e3b728833adf9",
+          "contentHash" : "76aabb1808c205f5a27253cb1c5605066e8f8f",
+          "syncHash" : "714f8c6654613a2caf8c151a7754eae96c25881b",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Servlet",
+            "name" : "Servlet",
+            "identityHash" : "d844da746834ebfc4aa7782c94eeaea85b4abb74",
+            "contentHash" : "8a3d655f3696d872a783c7b5b2888a97188bc29",
+            "syncHash" : "c225714570836f79fdafeeb5eb71fe2ce8b987",
+            "id" : "Servlet"
+          },
+          "id" : "Local~/deployment=hawkular-alerts-rest.war/subsystem=undertow/servlet=org.hawkular.alerts.rest.HawkularAlertsApp"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-alerts-rest.war/r;Local~%2Fdeployment%3Dhawkular-alerts-rest.war%2Fsubsystem%3Dejb3%2Fmessage-driven-bean%3DActionPluginResponsesListener",
+          "name" : "Message Driven EJB [ActionPluginResponsesListener]",
+          "identityHash" : "e063a22b9c16473392d9641143f5b8a7cbfc13f",
+          "contentHash" : "299c733513731bf02c3ab12ffea5dfbd84d99f",
+          "syncHash" : "6ed55fdd567b7a0a68d97eaf1fa14b574cf990",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Message%20Driven%20EJB",
+            "name" : "Message Driven EJB",
+            "identityHash" : "2eee38e96ef09ab44422a49bc5a8623596a34bc",
+            "contentHash" : "f410641c3079566b173ec6274a361357a77cd49",
+            "syncHash" : "5a568d8bb5d49c38a303f667fa432a3de6b5cfd",
+            "id" : "Message Driven EJB"
+          },
+          "id" : "Local~/deployment=hawkular-alerts-rest.war/subsystem=ejb3/message-driven-bean=ActionPluginResponsesListener"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-alerts-rest.war/r;Local~%2Fdeployment%3Dhawkular-alerts-rest.war%2Fsubsystem%3Dejb3%2Fsingleton-bean%3DDroolsRulesEngineImpl",
+          "name" : "Singleton EJB [DroolsRulesEngineImpl]",
+          "identityHash" : "c66f8e6f723b75d75cf3d1937ccfbc0dcb6dc1a",
+          "contentHash" : "777b133977b0b09520df64e695ed62505ec8bb",
+          "syncHash" : "56d2f3b4b4488583107f86c3e7458bac389bef5",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Singleton%20EJB",
+            "name" : "Singleton EJB",
+            "identityHash" : "42f0638e5e8e266d17d2f7e95f35313e96fa9b39",
+            "contentHash" : "9c45b8135d1640115bd1e16ddf6ed623abe9833",
+            "syncHash" : "2260ecbd58da298aae11888aaa666a21dbe71f",
+            "id" : "Singleton EJB"
+          },
+          "id" : "Local~/deployment=hawkular-alerts-rest.war/subsystem=ejb3/singleton-bean=DroolsRulesEngineImpl"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-alerts-rest.war/r;Local~%2Fdeployment%3Dhawkular-alerts-rest.war%2Fsubsystem%3Dejb3%2Fsingleton-bean%3DPartitionManagerImpl",
+          "name" : "Singleton EJB [PartitionManagerImpl]",
+          "identityHash" : "5a81475ebeac2a25da2085cc74e629276d5690",
+          "contentHash" : "205b89cd629ffa187cf6849e46fae45aafbbcbf",
+          "syncHash" : "b3386b58a655ca9ff0fbd0222a1ae836d5cb5e7",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Singleton%20EJB",
+            "name" : "Singleton EJB",
+            "identityHash" : "42f0638e5e8e266d17d2f7e95f35313e96fa9b39",
+            "contentHash" : "9c45b8135d1640115bd1e16ddf6ed623abe9833",
+            "syncHash" : "2260ecbd58da298aae11888aaa666a21dbe71f",
+            "id" : "Singleton EJB"
+          },
+          "id" : "Local~/deployment=hawkular-alerts-rest.war/subsystem=ejb3/singleton-bean=PartitionManagerImpl"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-alerts-rest.war/r;Local~%2Fdeployment%3Dhawkular-alerts-rest.war%2Fsubsystem%3Dejb3%2Fmessage-driven-bean%3DMetricDataListener",
+          "name" : "Message Driven EJB [MetricDataListener]",
+          "identityHash" : "bb96ae88a2d28d7144cda899ee316093ff7a95",
+          "contentHash" : "9cdcead6a37570ded0ea4befe869eea7111b4a22",
+          "syncHash" : "fcc03efc7ec430428b9c4014f5a438a6682d9c7c",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Message%20Driven%20EJB",
+            "name" : "Message Driven EJB",
+            "identityHash" : "2eee38e96ef09ab44422a49bc5a8623596a34bc",
+            "contentHash" : "f410641c3079566b173ec6274a361357a77cd49",
+            "syncHash" : "5a568d8bb5d49c38a303f667fa432a3de6b5cfd",
+            "id" : "Message Driven EJB"
+          },
+          "id" : "Local~/deployment=hawkular-alerts-rest.war/subsystem=ejb3/message-driven-bean=MetricDataListener"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-alerts-rest.war/r;Local~%2Fdeployment%3Dhawkular-alerts-rest.war%2Fsubsystem%3Dejb3%2Fsingleton-bean%3DAlertEngineRegister",
+          "name" : "Singleton EJB [AlertEngineRegister]",
+          "identityHash" : "a0effaf4d23f68867f510e9d9035db740ce39",
+          "contentHash" : "9436e69b459f9379a915e886ff8592c18ab182",
+          "syncHash" : "98958dffd932b1f6623f7a4121b378df6723c6d",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Singleton%20EJB",
+            "name" : "Singleton EJB",
+            "identityHash" : "42f0638e5e8e266d17d2f7e95f35313e96fa9b39",
+            "contentHash" : "9c45b8135d1640115bd1e16ddf6ed623abe9833",
+            "syncHash" : "2260ecbd58da298aae11888aaa666a21dbe71f",
+            "id" : "Singleton EJB"
+          },
+          "id" : "Local~/deployment=hawkular-alerts-rest.war/subsystem=ejb3/singleton-bean=AlertEngineRegister"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-alerts-rest.war/r;Local~%2Fdeployment%3Dhawkular-alerts-rest.war%2Fsubsystem%3Dejb3%2Fsingleton-bean%3DAlertsContext",
+          "name" : "Singleton EJB [AlertsContext]",
+          "identityHash" : "ea316f2f77da5d7744b1257ce24416f614b921b",
+          "contentHash" : "801922d756979ae0da204ccd1664bec8eb6491",
+          "syncHash" : "2d59365b1d279c4906d28e9abf2c6bb0b4a81",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Singleton%20EJB",
+            "name" : "Singleton EJB",
+            "identityHash" : "42f0638e5e8e266d17d2f7e95f35313e96fa9b39",
+            "contentHash" : "9c45b8135d1640115bd1e16ddf6ed623abe9833",
+            "syncHash" : "2260ecbd58da298aae11888aaa666a21dbe71f",
+            "id" : "Singleton EJB"
+          },
+          "id" : "Local~/deployment=hawkular-alerts-rest.war/subsystem=ejb3/singleton-bean=AlertsContext"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-alerts-rest.war/r;Local~%2Fdeployment%3Dhawkular-alerts-rest.war%2Fsubsystem%3Dejb3%2Fmessage-driven-bean%3DAvailDataListener",
+          "name" : "Message Driven EJB [AvailDataListener]",
+          "identityHash" : "6d9d9e655a6d9fc6b21078bc89233cceb6a84a67",
+          "contentHash" : "af24f9e1207e11ad84d0f8847f869153eac568f7",
+          "syncHash" : "73877f89a4c41424e477dfd24cf2e46cec5318",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Message%20Driven%20EJB",
+            "name" : "Message Driven EJB",
+            "identityHash" : "2eee38e96ef09ab44422a49bc5a8623596a34bc",
+            "contentHash" : "f410641c3079566b173ec6274a361357a77cd49",
+            "syncHash" : "5a568d8bb5d49c38a303f667fa432a3de6b5cfd",
+            "id" : "Message Driven EJB"
+          },
+          "id" : "Local~/deployment=hawkular-alerts-rest.war/subsystem=ejb3/message-driven-bean=AvailDataListener"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-alerts-rest.war/r;Local~%2Fdeployment%3Dhawkular-alerts-rest.war%2Fsubsystem%3Dejb3%2Fsingleton-bean%3DDataDrivenGroupCacheManager",
+          "name" : "Singleton EJB [DataDrivenGroupCacheManager]",
+          "identityHash" : "8c38614cb897e9c78409327324ce39b68ac65d9",
+          "contentHash" : "1ba3fcf9f1d084facb846b3c35dd774fcbf8d6d",
+          "syncHash" : "396f778596aca846d46439b395e6db8721826a",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Singleton%20EJB",
+            "name" : "Singleton EJB",
+            "identityHash" : "42f0638e5e8e266d17d2f7e95f35313e96fa9b39",
+            "contentHash" : "9c45b8135d1640115bd1e16ddf6ed623abe9833",
+            "syncHash" : "2260ecbd58da298aae11888aaa666a21dbe71f",
+            "id" : "Singleton EJB"
+          },
+          "id" : "Local~/deployment=hawkular-alerts-rest.war/subsystem=ejb3/singleton-bean=DataDrivenGroupCacheManager"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-alerts-rest.war/r;Local~%2Fdeployment%3Dhawkular-alerts-rest.war%2Fsubsystem%3Dejb3%2Fsingleton-bean%3DAlertsEngineImpl",
+          "name" : "Singleton EJB [AlertsEngineImpl]",
+          "identityHash" : "fd905b10a7620258d7a920368980cac830e62d",
+          "contentHash" : "eab04a5efa45190db94861b5f11fa56af3a290",
+          "syncHash" : "507d1df6fe62c910d5dbfbc8e15e405c1ef28173",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Singleton%20EJB",
+            "name" : "Singleton EJB",
+            "identityHash" : "42f0638e5e8e266d17d2f7e95f35313e96fa9b39",
+            "contentHash" : "9c45b8135d1640115bd1e16ddf6ed623abe9833",
+            "syncHash" : "2260ecbd58da298aae11888aaa666a21dbe71f",
+            "id" : "Singleton EJB"
+          },
+          "id" : "Local~/deployment=hawkular-alerts-rest.war/subsystem=ejb3/singleton-bean=AlertsEngineImpl"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fdeployment%3Dhawkular-alerts-rest.war/r;Local~%2Fdeployment%3Dhawkular-alerts-rest.war%2Fsubsystem%3Dejb3%2Fstateless-session-bean%3DCassActionsServiceImpl",
+          "name" : "Stateless Session EJB [CassActionsServiceImpl]",
+          "identityHash" : "573d391f59dc88960876a6a98941274c2f403b",
+          "contentHash" : "1267c32e2aee569563398f8c57416f57affa81a5",
+          "syncHash" : "d2ca1652ecb31d75f639407da5d67d6084712b28",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Stateless%20Session%20EJB",
+            "name" : "Stateless Session EJB",
+            "identityHash" : "8db06fc15c4b85fdfc5843944dde9594652a634",
+            "contentHash" : "bfa5b10fe4963014f26cdf5a6541b7f42814",
+            "syncHash" : "dc33e68f960d5393464f9cec9e915d5842b3835",
+            "id" : "Stateless Session EJB"
+          },
+          "id" : "Local~/deployment=hawkular-alerts-rest.war/subsystem=ejb3/stateless-session-bean=CassActionsServiceImpl"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fdeployment%3Dsample_2.war/r;Local~%2Fdeployment%3Dsample_2.war%2Fsubsystem%3Dundertow%2Fservlet%3DHelloServlet",
+          "name" : "Servlet [HelloServlet]",
+          "identityHash" : "1648bb92a1f33596a647692b29c9e9735f953fc",
+          "contentHash" : "35b556164feffc1cd352c5617949038ab2ef3",
+          "syncHash" : "c724af55a81112d42444b11f3d72d38ccd8",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Servlet",
+            "name" : "Servlet",
+            "identityHash" : "d844da746834ebfc4aa7782c94eeaea85b4abb74",
+            "contentHash" : "8a3d655f3696d872a783c7b5b2888a97188bc29",
+            "syncHash" : "c225714570836f79fdafeeb5eb71fe2ce8b987",
+            "id" : "Servlet"
+          },
+          "id" : "Local~/deployment=sample_2.war/subsystem=undertow/servlet=HelloServlet"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fdeployment%3Dsample3.war/r;Local~%2Fdeployment%3Dsample3.war%2Fsubsystem%3Dundertow%2Fservlet%3DHelloServlet",
+          "name" : "Servlet [HelloServlet]",
+          "identityHash" : "8113a5362bdf623555c1311da821b19b470e16b",
+          "contentHash" : "35b556164feffc1cd352c5617949038ab2ef3",
+          "syncHash" : "7b3f5b75bbb08eacac3db74ebd25fcea2fd74f7",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Servlet",
+            "name" : "Servlet",
+            "identityHash" : "d844da746834ebfc4aa7782c94eeaea85b4abb74",
+            "contentHash" : "8a3d655f3696d872a783c7b5b2888a97188bc29",
+            "syncHash" : "c225714570836f79fdafeeb5eb71fe2ce8b987",
+            "id" : "Servlet"
+          },
+          "id" : "Local~/deployment=sample3.war/subsystem=undertow/servlet=HelloServlet"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fdeployment%3Dsample4.war/r;Local~%2Fdeployment%3Dsample4.war%2Fsubsystem%3Dundertow%2Fservlet%3DHelloServlet",
+          "name" : "Servlet [HelloServlet]",
+          "identityHash" : "4fd4e46c7d1f7993c917f12139bb733c9c872fd",
+          "contentHash" : "35b556164feffc1cd352c5617949038ab2ef3",
+          "syncHash" : "ae2180a5a7b18e24fde86f6932ba90881bbc35",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Servlet",
+            "name" : "Servlet",
+            "identityHash" : "d844da746834ebfc4aa7782c94eeaea85b4abb74",
+            "contentHash" : "8a3d655f3696d872a783c7b5b2888a97188bc29",
+            "syncHash" : "c225714570836f79fdafeeb5eb71fe2ce8b987",
+            "id" : "Servlet"
+          },
+          "id" : "Local~/deployment=sample4.war/subsystem=undertow/servlet=HelloServlet"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fdeployment%3Dsample5.war/r;Local~%2Fdeployment%3Dsample5.war%2Fsubsystem%3Dundertow%2Fservlet%3DHelloServlet",
+          "name" : "Servlet [HelloServlet]",
+          "identityHash" : "ced422351168d10f4c5b83e03debefb44aadf",
+          "contentHash" : "35b556164feffc1cd352c5617949038ab2ef3",
+          "syncHash" : "5f3d46280d93034b030c435dfafe3ceb32a4f",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Servlet",
+            "name" : "Servlet",
+            "identityHash" : "d844da746834ebfc4aa7782c94eeaea85b4abb74",
+            "contentHash" : "8a3d655f3696d872a783c7b5b2888a97188bc29",
+            "syncHash" : "c225714570836f79fdafeeb5eb71fe2ce8b987",
+            "id" : "Servlet"
+          },
+          "id" : "Local~/deployment=sample5.war/subsystem=undertow/servlet=HelloServlet"
+        }, {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fdeployment%3Dsample_final.war/r;Local~%2Fdeployment%3Dsample_final.war%2Fsubsystem%3Dundertow%2Fservlet%3DHelloServlet",
+          "name" : "Servlet [HelloServlet]",
+          "identityHash" : "2b5da84b1ee48e4caca1b1ff44c14cdb66e78e8",
+          "contentHash" : "35b556164feffc1cd352c5617949038ab2ef3",
+          "syncHash" : "4b3d3cd758a7eb8b6e57feaeecc362b6b60e39c",
+          "type" : {
+            "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/rt;Servlet",
+            "name" : "Servlet",
+            "identityHash" : "d844da746834ebfc4aa7782c94eeaea85b4abb74",
+            "contentHash" : "8a3d655f3696d872a783c7b5b2888a97188bc29",
+            "syncHash" : "c225714570836f79fdafeeb5eb71fe2ce8b987",
+            "id" : "Servlet"
+          },
+          "id" : "Local~/deployment=sample_final.war/subsystem=undertow/servlet=HelloServlet"
+        } ]
+    http_version: 
+  recorded_at: Tue, 30 Aug 2016 23:12:20 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@127.0.0.1:8080/hawkular/inventory/entity/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsubsystem=datasources%2Fdata-source=ExampleDS/d;configuration
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.1p112
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Tue, 30 Aug 2016 23:12:20 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '740'
+    body:
+      encoding: ASCII-8BIT
+      string: |-
+        {
+          "path" : "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsubsystem%3Ddatasources%2Fdata-source%3DExampleDS/d;configuration",
+          "name" : "configuration",
+          "identityHash" : "823ca07d76929e39fc468d25111455355aa81a8",
+          "contentHash" : "20125a70ce2d55719321b336bf632eb518bcb4a",
+          "syncHash" : "765d944a948b9f54ffe4b98d869f8b6ee16b2121",
+          "value" : {
+            "Connection Properties" : null,
+            "Datasource Class" : null,
+            "Security Domain" : null,
+            "Username" : "sa",
+            "Driver Name" : "h2",
+            "JNDI Name" : "java:jboss/datasources/ExampleDS",
+            "Connection URL" : "jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE",
+            "Enabled" : "true",
+            "Driver Class" : null,
+            "Password" : "sa"
+          }
+        }
+    http_version: 
+  recorded_at: Tue, 30 Aug 2016 23:12:20 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@127.0.0.1:8080/hawkular/inventory/entity/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsubsystem=messaging-activemq%2Fserver=default%2Fjms-topic=HawkularAvailData/d;configuration
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.1p112
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Tue, 30 Aug 2016 23:12:20 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '536'
+    body:
+      encoding: ASCII-8BIT
+      string: |-
+        {
+          "errorMsg" : "No DataEntity found on any of the following paths: [[CanonicalPaths[/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-topic%3DHawkularAvailData/d;configuration]]]",
+          "details" : {
+            "entityType" : "DataEntity",
+            "path" : [ [ {
+              "paths" : [ "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-topic%3DHawkularAvailData/d;configuration" ]
+            } ] ]
+          }
+        }
+    http_version: 
+  recorded_at: Tue, 30 Aug 2016 23:12:20 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@127.0.0.1:8080/hawkular/inventory/entity/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsubsystem=messaging-activemq%2Fserver=default%2Fjms-queue=hawkular%2Fmetrics%2Fcounters%2Fnew/d;configuration
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.1p112
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Tue, 30 Aug 2016 23:12:20 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '572'
+    body:
+      encoding: ASCII-8BIT
+      string: |-
+        {
+          "errorMsg" : "No DataEntity found on any of the following paths: [[CanonicalPaths[/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-queue%3Dhawkular%2Fmetrics%2Fcounters%2Fnew/d;configuration]]]",
+          "details" : {
+            "entityType" : "DataEntity",
+            "path" : [ [ {
+              "paths" : [ "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-queue%3Dhawkular%2Fmetrics%2Fcounters%2Fnew/d;configuration" ]
+            } ] ]
+          }
+        }
+    http_version: 
+  recorded_at: Tue, 30 Aug 2016 23:12:20 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@127.0.0.1:8080/hawkular/inventory/entity/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsubsystem=messaging-activemq%2Fserver=default%2Fjms-queue=HawkularAlertsActionsResponseQueue/d;configuration
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.1p112
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Tue, 30 Aug 2016 23:12:20 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '570'
+    body:
+      encoding: ASCII-8BIT
+      string: |-
+        {
+          "errorMsg" : "No DataEntity found on any of the following paths: [[CanonicalPaths[/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-queue%3DHawkularAlertsActionsResponseQueue/d;configuration]]]",
+          "details" : {
+            "entityType" : "DataEntity",
+            "path" : [ [ {
+              "paths" : [ "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-queue%3DHawkularAlertsActionsResponseQueue/d;configuration" ]
+            } ] ]
+          }
+        }
+    http_version: 
+  recorded_at: Tue, 30 Aug 2016 23:12:20 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@127.0.0.1:8080/hawkular/inventory/entity/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsubsystem=messaging-activemq%2Fserver=default%2Fjms-topic=HawkularTopic/d;configuration
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.1p112
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Tue, 30 Aug 2016 23:12:20 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '528'
+    body:
+      encoding: ASCII-8BIT
+      string: |-
+        {
+          "errorMsg" : "No DataEntity found on any of the following paths: [[CanonicalPaths[/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-topic%3DHawkularTopic/d;configuration]]]",
+          "details" : {
+            "entityType" : "DataEntity",
+            "path" : [ [ {
+              "paths" : [ "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-topic%3DHawkularTopic/d;configuration" ]
+            } ] ]
+          }
+        }
+    http_version: 
+  recorded_at: Tue, 30 Aug 2016 23:12:20 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@127.0.0.1:8080/hawkular/inventory/entity/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsubsystem=messaging-activemq%2Fserver=default%2Fjms-queue=ExpiryQueue/d;configuration
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.1p112
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Tue, 30 Aug 2016 23:12:20 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '524'
+    body:
+      encoding: ASCII-8BIT
+      string: |-
+        {
+          "errorMsg" : "No DataEntity found on any of the following paths: [[CanonicalPaths[/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-queue%3DExpiryQueue/d;configuration]]]",
+          "details" : {
+            "entityType" : "DataEntity",
+            "path" : [ [ {
+              "paths" : [ "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-queue%3DExpiryQueue/d;configuration" ]
+            } ] ]
+          }
+        }
+    http_version: 
+  recorded_at: Tue, 30 Aug 2016 23:12:20 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@127.0.0.1:8080/hawkular/inventory/entity/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsubsystem=messaging-activemq%2Fserver=default%2Fjms-topic=HawkularQueue/d;configuration
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.1p112
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Tue, 30 Aug 2016 23:12:20 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '528'
+    body:
+      encoding: ASCII-8BIT
+      string: |-
+        {
+          "errorMsg" : "No DataEntity found on any of the following paths: [[CanonicalPaths[/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-topic%3DHawkularQueue/d;configuration]]]",
+          "details" : {
+            "entityType" : "DataEntity",
+            "path" : [ [ {
+              "paths" : [ "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-topic%3DHawkularQueue/d;configuration" ]
+            } ] ]
+          }
+        }
+    http_version: 
+  recorded_at: Tue, 30 Aug 2016 23:12:20 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@127.0.0.1:8080/hawkular/inventory/entity/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsubsystem=messaging-activemq%2Fserver=default%2Fjms-topic=HawkularAlertData/d;configuration
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.1p112
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Tue, 30 Aug 2016 23:12:20 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '536'
+    body:
+      encoding: ASCII-8BIT
+      string: |-
+        {
+          "errorMsg" : "No DataEntity found on any of the following paths: [[CanonicalPaths[/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-topic%3DHawkularAlertData/d;configuration]]]",
+          "details" : {
+            "entityType" : "DataEntity",
+            "path" : [ [ {
+              "paths" : [ "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-topic%3DHawkularAlertData/d;configuration" ]
+            } ] ]
+          }
+        }
+    http_version: 
+  recorded_at: Tue, 30 Aug 2016 23:12:20 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@127.0.0.1:8080/hawkular/inventory/entity/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsubsystem=messaging-activemq%2Fserver=default%2Fjms-topic=HawkularAlertsActionsTopic/d;configuration
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.1p112
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Tue, 30 Aug 2016 23:12:20 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '554'
+    body:
+      encoding: ASCII-8BIT
+      string: |-
+        {
+          "errorMsg" : "No DataEntity found on any of the following paths: [[CanonicalPaths[/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-topic%3DHawkularAlertsActionsTopic/d;configuration]]]",
+          "details" : {
+            "entityType" : "DataEntity",
+            "path" : [ [ {
+              "paths" : [ "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-topic%3DHawkularAlertsActionsTopic/d;configuration" ]
+            } ] ]
+          }
+        }
+    http_version: 
+  recorded_at: Tue, 30 Aug 2016 23:12:20 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@127.0.0.1:8080/hawkular/inventory/entity/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsubsystem=messaging-activemq%2Fserver=default%2Fjms-queue=hawkular%2Fmetrics%2Favailability%2Fnew/d;configuration
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.1p112
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Tue, 30 Aug 2016 23:12:20 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '580'
+    body:
+      encoding: ASCII-8BIT
+      string: |-
+        {
+          "errorMsg" : "No DataEntity found on any of the following paths: [[CanonicalPaths[/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-queue%3Dhawkular%2Fmetrics%2Favailability%2Fnew/d;configuration]]]",
+          "details" : {
+            "entityType" : "DataEntity",
+            "path" : [ [ {
+              "paths" : [ "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-queue%3Dhawkular%2Fmetrics%2Favailability%2Fnew/d;configuration" ]
+            } ] ]
+          }
+        }
+    http_version: 
+  recorded_at: Tue, 30 Aug 2016 23:12:20 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@127.0.0.1:8080/hawkular/inventory/entity/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsubsystem=messaging-activemq%2Fserver=default%2Fjms-queue=HawkularAlertsPluginsQueue/d;configuration
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.1p112
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Tue, 30 Aug 2016 23:12:20 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '554'
+    body:
+      encoding: ASCII-8BIT
+      string: |-
+        {
+          "errorMsg" : "No DataEntity found on any of the following paths: [[CanonicalPaths[/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-queue%3DHawkularAlertsPluginsQueue/d;configuration]]]",
+          "details" : {
+            "entityType" : "DataEntity",
+            "path" : [ [ {
+              "paths" : [ "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-queue%3DHawkularAlertsPluginsQueue/d;configuration" ]
+            } ] ]
+          }
+        }
+    http_version: 
+  recorded_at: Tue, 30 Aug 2016 23:12:20 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@127.0.0.1:8080/hawkular/inventory/entity/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsubsystem=messaging-activemq%2Fserver=default%2Fjms-topic=HawkularInventoryChanges/d;configuration
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.1p112
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Tue, 30 Aug 2016 23:12:20 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '550'
+    body:
+      encoding: ASCII-8BIT
+      string: |-
+        {
+          "errorMsg" : "No DataEntity found on any of the following paths: [[CanonicalPaths[/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-topic%3DHawkularInventoryChanges/d;configuration]]]",
+          "details" : {
+            "entityType" : "DataEntity",
+            "path" : [ [ {
+              "paths" : [ "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-topic%3DHawkularInventoryChanges/d;configuration" ]
+            } ] ]
+          }
+        }
+    http_version: 
+  recorded_at: Tue, 30 Aug 2016 23:12:20 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@127.0.0.1:8080/hawkular/inventory/entity/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsubsystem=messaging-activemq%2Fserver=default%2Fjms-queue=DLQ/d;configuration
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.1p112
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Tue, 30 Aug 2016 23:12:20 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '508'
+    body:
+      encoding: ASCII-8BIT
+      string: |-
+        {
+          "errorMsg" : "No DataEntity found on any of the following paths: [[CanonicalPaths[/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-queue%3DDLQ/d;configuration]]]",
+          "details" : {
+            "entityType" : "DataEntity",
+            "path" : [ [ {
+              "paths" : [ "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-queue%3DDLQ/d;configuration" ]
+            } ] ]
+          }
+        }
+    http_version: 
+  recorded_at: Tue, 30 Aug 2016 23:12:20 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@127.0.0.1:8080/hawkular/inventory/entity/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsubsystem=messaging-activemq%2Fserver=default%2Fjms-queue=hawkular%2Fmetrics%2Fgauges%2Fnew/d;configuration
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.1p112
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Tue, 30 Aug 2016 23:12:20 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '568'
+    body:
+      encoding: ASCII-8BIT
+      string: |-
+        {
+          "errorMsg" : "No DataEntity found on any of the following paths: [[CanonicalPaths[/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-queue%3Dhawkular%2Fmetrics%2Fgauges%2Fnew/d;configuration]]]",
+          "details" : {
+            "entityType" : "DataEntity",
+            "path" : [ [ {
+              "paths" : [ "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-queue%3Dhawkular%2Fmetrics%2Fgauges%2Fnew/d;configuration" ]
+            } ] ]
+          }
+        }
+    http_version: 
+  recorded_at: Tue, 30 Aug 2016 23:12:20 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@127.0.0.1:8080/hawkular/inventory/entity/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsubsystem=messaging-activemq%2Fserver=default%2Fjms-topic=HawkularMetricData/d;configuration
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.1p112
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Tue, 30 Aug 2016 23:12:20 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '538'
+    body:
+      encoding: ASCII-8BIT
+      string: |-
+        {
+          "errorMsg" : "No DataEntity found on any of the following paths: [[CanonicalPaths[/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-topic%3DHawkularMetricData/d;configuration]]]",
+          "details" : {
+            "entityType" : "DataEntity",
+            "path" : [ [ {
+              "paths" : [ "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-topic%3DHawkularMetricData/d;configuration" ]
+            } ] ]
+          }
+        }
+    http_version: 
+  recorded_at: Tue, 30 Aug 2016 23:12:20 GMT
+- request:
+    method: get
+    uri: http://jdoe:password@127.0.0.1:8080/hawkular/inventory/entity/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsubsystem=messaging-activemq%2Fserver=default%2Fjms-topic=HawkularCommandEvent/d;configuration
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.1p112
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Tue, 30 Aug 2016 23:12:20 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '542'
+    body:
+      encoding: ASCII-8BIT
+      string: |-
+        {
+          "errorMsg" : "No DataEntity found on any of the following paths: [[CanonicalPaths[/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-topic%3DHawkularCommandEvent/d;configuration]]]",
+          "details" : {
+            "entityType" : "DataEntity",
+            "path" : [ [ {
+              "paths" : [ "/t;hawkular/f;e2daaa52-a9c1-4578-8a60-c6699de99871/r;Local~~/r;Local~%2Fsubsystem%3Dmessaging-activemq%2Fserver%3Ddefault%2Fjms-topic%3DHawkularCommandEvent/d;configuration" ]
+            } ] ]
+          }
+        }
+    http_version: 
+  recorded_at: Tue, 30 Aug 2016 23:12:20 GMT
+- request:
+    method: post
+    uri: http://jdoe:password@127.0.0.1:8080/hawkular/metrics/availability/raw/query
+    body:
+      encoding: UTF-8
+      string: '{"ids":["AI~R~[e2daaa52-a9c1-4578-8a60-c6699de99871/Local~/deployment=hawkular-inventory-dist.war]~AT~Deployment
+        Status~Deployment Status","AI~R~[e2daaa52-a9c1-4578-8a60-c6699de99871/Local~/deployment=hawkular-status.war]~AT~Deployment
+        Status~Deployment Status","AI~R~[e2daaa52-a9c1-4578-8a60-c6699de99871/Local~/deployment=hawkular-rest-api.war]~AT~Deployment
+        Status~Deployment Status","AI~R~[e2daaa52-a9c1-4578-8a60-c6699de99871/Local~/deployment=hawkular-alerts-actions-email.war]~AT~Deployment
+        Status~Deployment Status","AI~R~[e2daaa52-a9c1-4578-8a60-c6699de99871/Local~/deployment=hawkular-commons-embedded-cassandra-war.war]~AT~Deployment
+        Status~Deployment Status","AI~R~[e2daaa52-a9c1-4578-8a60-c6699de99871/Local~/deployment=hawkular-command-gateway-war.war]~AT~Deployment
+        Status~Deployment Status","AI~R~[e2daaa52-a9c1-4578-8a60-c6699de99871/Local~/deployment=hawkular-wildfly-agent-download.war]~AT~Deployment
+        Status~Deployment Status","AI~R~[e2daaa52-a9c1-4578-8a60-c6699de99871/Local~/deployment=hawkular-metrics-component.war]~AT~Deployment
+        Status~Deployment Status","AI~R~[e2daaa52-a9c1-4578-8a60-c6699de99871/Local~/deployment=hawkular-alerts-rest.war]~AT~Deployment
+        Status~Deployment Status","AI~R~[e2daaa52-a9c1-4578-8a60-c6699de99871/Local~/deployment=sample.war]~AT~Deployment
+        Status~Deployment Status","AI~R~[e2daaa52-a9c1-4578-8a60-c6699de99871/Local~/deployment=sample_2.war]~AT~Deployment
+        Status~Deployment Status","AI~R~[e2daaa52-a9c1-4578-8a60-c6699de99871/Local~/deployment=sample3.war]~AT~Deployment
+        Status~Deployment Status","AI~R~[e2daaa52-a9c1-4578-8a60-c6699de99871/Local~/deployment=sample4.war]~AT~Deployment
+        Status~Deployment Status","AI~R~[e2daaa52-a9c1-4578-8a60-c6699de99871/Local~/deployment=sample5.war]~AT~Deployment
+        Status~Deployment Status","AI~R~[e2daaa52-a9c1-4578-8a60-c6699de99871/Local~/deployment=sample_final.war]~AT~Deployment
+        Status~Deployment Status"],"start":null,"end":null,"limit":1,"order":"DESC"}'
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.1p112
+      Hawkular-Tenant:
+      - hawkular
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '1953'
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Expires:
+      - '0'
+      Cache-Control:
+      - no-cache, no-store, must-revalidate
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Pragma:
+      - no-cache
+      Date:
+      - Tue, 30 Aug 2016 23:12:21 GMT
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '2753'
+    body:
+      encoding: UTF-8
+      string: '[{"id":"AI~R~[e2daaa52-a9c1-4578-8a60-c6699de99871/Local~/deployment=hawkular-inventory-dist.war]~AT~Deployment
+        Status~Deployment Status","data":[{"timestamp":1472598684001,"value":"up"}]},{"id":"AI~R~[e2daaa52-a9c1-4578-8a60-c6699de99871/Local~/deployment=hawkular-status.war]~AT~Deployment
+        Status~Deployment Status","data":[{"timestamp":1472598684000,"value":"up"}]},{"id":"AI~R~[e2daaa52-a9c1-4578-8a60-c6699de99871/Local~/deployment=hawkular-rest-api.war]~AT~Deployment
+        Status~Deployment Status","data":[{"timestamp":1472598684001,"value":"up"}]},{"id":"AI~R~[e2daaa52-a9c1-4578-8a60-c6699de99871/Local~/deployment=hawkular-alerts-actions-email.war]~AT~Deployment
+        Status~Deployment Status","data":[{"timestamp":1472598684001,"value":"up"}]},{"id":"AI~R~[e2daaa52-a9c1-4578-8a60-c6699de99871/Local~/deployment=hawkular-commons-embedded-cassandra-war.war]~AT~Deployment
+        Status~Deployment Status","data":[{"timestamp":1472598684000,"value":"up"}]},{"id":"AI~R~[e2daaa52-a9c1-4578-8a60-c6699de99871/Local~/deployment=hawkular-command-gateway-war.war]~AT~Deployment
+        Status~Deployment Status","data":[{"timestamp":1472598684001,"value":"up"}]},{"id":"AI~R~[e2daaa52-a9c1-4578-8a60-c6699de99871/Local~/deployment=hawkular-wildfly-agent-download.war]~AT~Deployment
+        Status~Deployment Status","data":[{"timestamp":1472598684001,"value":"up"}]},{"id":"AI~R~[e2daaa52-a9c1-4578-8a60-c6699de99871/Local~/deployment=hawkular-metrics-component.war]~AT~Deployment
+        Status~Deployment Status","data":[{"timestamp":1472598684001,"value":"up"}]},{"id":"AI~R~[e2daaa52-a9c1-4578-8a60-c6699de99871/Local~/deployment=hawkular-alerts-rest.war]~AT~Deployment
+        Status~Deployment Status","data":[{"timestamp":1472598684001,"value":"up"}]},{"id":"AI~R~[e2daaa52-a9c1-4578-8a60-c6699de99871/Local~/deployment=sample.war]~AT~Deployment
+        Status~Deployment Status","data":[{"timestamp":1472598684001,"value":"down"}]},{"id":"AI~R~[e2daaa52-a9c1-4578-8a60-c6699de99871/Local~/deployment=sample_2.war]~AT~Deployment
+        Status~Deployment Status","data":[{"timestamp":1472598684000,"value":"up"}]},{"id":"AI~R~[e2daaa52-a9c1-4578-8a60-c6699de99871/Local~/deployment=sample3.war]~AT~Deployment
+        Status~Deployment Status","data":[{"timestamp":1472598684000,"value":"up"}]},{"id":"AI~R~[e2daaa52-a9c1-4578-8a60-c6699de99871/Local~/deployment=sample4.war]~AT~Deployment
+        Status~Deployment Status","data":[{"timestamp":1472598684001,"value":"up"}]},{"id":"AI~R~[e2daaa52-a9c1-4578-8a60-c6699de99871/Local~/deployment=sample5.war]~AT~Deployment
+        Status~Deployment Status","data":[{"timestamp":1472598684001,"value":"up"}]},{"id":"AI~R~[e2daaa52-a9c1-4578-8a60-c6699de99871/Local~/deployment=sample_final.war]~AT~Deployment
+        Status~Deployment Status","data":[{"timestamp":1472598684000,"value":"up"}]}]'
+    http_version: 
+  recorded_at: Tue, 30 Aug 2016 23:12:21 GMT
+recorded_with: VCR 3.0.3

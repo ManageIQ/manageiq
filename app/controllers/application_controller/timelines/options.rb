@@ -83,25 +83,18 @@ module ApplicationController::Timelines
     :result
   ) do
     def update_from_params(params)
-      self.result = if params[:showSuccessfulEvents] == "true" && params[:showFailedEvents] == "true"
-                      "both"
-                    elsif params[:showSuccessfulEvents] == "true"
-                      "success"
-                    elsif params[:showFailedEvents] == "true"
-                      "failure"
-                    end
-
+      self.result = params[:tl_result] || "success"
       self.categories = {}
       if params[:tl_categories]
         params[:tl_categories].each do |category|
-          categories[events[category]] = {:display_name => category}
+          categories[category] = {:display_name => category, :event_groups => events[category]}
         end
       end
     end
 
     def events
       @events ||= MiqEventDefinitionSet.all.each_with_object({}) do |event, hash|
-        hash[event.description] = event.members.collect(&:id)
+        hash[event.description] = event.members.collect(&:name)
       end
     end
 
@@ -115,7 +108,7 @@ module ApplicationController::Timelines
     end
 
     def event_set
-      applied_filters.blank? ? [] : applied_filters.collect { |e| events[e] }
+      categories.blank? ? [] : categories.collect { |_, e| e[:event_groups] }
     end
 
     private
@@ -134,15 +127,15 @@ module ApplicationController::Timelines
   Options = Struct.new(
     :date,
     :model,
-    :mngt,
+    :management,
     :policy,
     :tl_show,
   ) do
     def initialize(*args)
       super
-      self.date = DateOptions.new
-      self.mngt = ManagementEventsOptions.new
-      self.policy = PolicyEventsOptions.new
+      self.date       = DateOptions.new
+      self.management = ManagementEventsOptions.new
+      self.policy     = PolicyEventsOptions.new
     end
 
     def management_events?
@@ -158,11 +151,11 @@ module ApplicationController::Timelines
     end
 
     def event_set
-      (policy_events? ? policy : mngt).event_set
+      (policy_events? ? policy : management).event_set
     end
 
     def drop_cache
-      [policy, mngt].each(&:drop_cache)
+      [policy, management].each(&:drop_cache)
     end
   end
 end

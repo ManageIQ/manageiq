@@ -84,10 +84,39 @@ class ApplicationHelper::Toolbar::MiddlewareServerCenter < ApplicationHelper::To
           :confirm => N_("Do you want to resume this server?")),
         button(
           :middleware_server_reload,
-          'pficon pficon-restart fa-lg',
+          nil,
           N_('Reload this server'),
           N_('Reload Server'),
-          :confirm => N_("Do you want to trigger a reload of this server?"))
+          :image   => 'guest_restart',
+          :confirm => N_("Do you want to trigger a reload of this server?")),
+        button(
+          :middleware_domain_server_start,
+          nil,
+          N_('Start this server'),
+          N_('Start Server'),
+          :image   => 'start',
+          :confirm => N_("Do you want to trigger a start of this server?")),
+        button(
+          :middleware_domain_server_stop,
+          nil,
+          N_('Stop this server'),
+          N_('Stop Server'),
+          :image   => 'guest_shutdown',
+          :confirm => N_("Do you want to trigger a stop of this server?")),
+        button(
+          :middleware_domain_server_restart,
+          nil,
+          N_('Restart this server'),
+          N_('Restart Server'),
+          :image   => 'reset',
+          :confirm => N_("Do you want to trigger a restart of this server?")),
+        button(
+          :middleware_domain_server_kill,
+          nil,
+          N_('Kill this server'),
+          N_('Kill Server'),
+          :image   => 'power_off',
+          :confirm => N_("Do you want to trigger a kill of this server?")),
       ]
     ),
   ])

@@ -69,10 +69,12 @@ module SupportsFeatureMixin
     :cinder_service             => 'Cinder storage service',
     :create_host_aggregate      => 'Host Aggregate Creation',
     :create_network_router      => 'Network Router Creation',
+    :create_security_group      => 'Security Group Creation',
     :swift_service              => 'Swift storage service',
     :delete                     => 'Deletion',
     :delete_aggregate           => 'Host Aggregate Deletion',
     :delete_network_router      => 'Network Router Deletion',
+    :delete_security_group      => 'Security Group Deletion',
     :disassociate_floating_ip   => 'Disassociate a Floating IP',
     :discovery                  => 'Discovery of Managers for a Provider',
     :evacuate                   => 'Evacuation',
@@ -81,8 +83,10 @@ module SupportsFeatureMixin
     :live_migrate               => 'Live Migration',
     :migrate                    => 'Migration',
     :provisioning               => 'Provisioning',
+    :quick_stats                => 'Quick Stats',
     :reboot_guest               => 'Reboot Guest Operation',
     :reconfigure                => 'Reconfiguration',
+    :reconfigure_disks          => 'Reconfigure Virtual Machines Disks',
     :refresh_new_target         => 'Refresh non-existing record',
     :regions                    => 'Regions of a Provider',
     :remove_host                => 'Remove Host',
@@ -96,6 +100,8 @@ module SupportsFeatureMixin
     :update_aggregate           => 'Host Aggregate Update',
     :update_network_router      => 'Network Router Update',
     :refresh_network_interfaces => 'Refresh Network Interfaces for a Host',
+    :ems_network_new            => 'New EMS Network Provider',
+    :update_security_group      => 'Security Group Update',
   }.freeze
 
   # Whenever this mixin is included we define all features as unsupported by default.
@@ -207,7 +213,12 @@ module SupportsFeatureMixin
       define_method(method_name) do
         unsupported.delete(feature)
         if block_given?
-          instance_eval(&block)
+          begin
+            instance_eval(&block)
+          rescue => e
+            _log.log_backtrace(e)
+            unsupported_reason_add(feature, "Internal Error: #{e.message}")
+          end
         else
           unsupported_reason_add(feature, reason) unless is_supported
         end

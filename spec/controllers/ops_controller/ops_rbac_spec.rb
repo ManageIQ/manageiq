@@ -444,4 +444,28 @@ describe OpsController do
       expect(controller.instance_variable_get(:@users_count)).to eq(5)
     end
   end
+
+  context "rbac_role_edit" do
+    before do
+      MiqUserRole.seed
+      MiqGroup.seed
+      MiqRegion.seed
+      stub_user(:features => :all)
+    end
+
+    it "creates a new user role successfully" do
+      allow(controller).to receive(:replace_right_cell)
+      controller.instance_variable_set(:@_params, :button => "add")
+      new = {:features => ["everything"], :name => "foo"}
+      edit = {:key     => "rbac_role_edit__new",
+              :new     => new,
+              :current => new
+      }
+      session[:edit] = edit
+      controller.send(:rbac_role_edit)
+      flash_messages = assigns(:flash_array)
+      expect(flash_messages.first[:message]).to include("Role \"foo\" was saved")
+      expect(controller.send(:flash_errors?)).to be_falsey
+    end
+  end
 end

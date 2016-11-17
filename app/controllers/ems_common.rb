@@ -549,6 +549,12 @@ module EmsCommon
 
     if !@flash_array.nil? && params[:pressed] == "#{@table_name}_delete" && @single_delete
       javascript_redirect :action => 'show_list', :flash_msg => @flash_array[0][:message] # redirect to build the retire screen
+    elsif params[:pressed] == "host_aggregate_edit"
+      javascript_redirect :controller => "host_aggregate", :action => "edit", :id => find_checked_items[0]
+    elsif params[:pressed] == "cloud_tenant_edit"
+      javascript_redirect :controller => "cloud_tenant", :action => "edit", :id => find_checked_items[0]
+    elsif params[:pressed] == "cloud_volume_edit"
+      javascript_redirect :controller => "cloud_volume", :action => "edit", :id => find_checked_items[0]
     elsif params[:pressed].ends_with?("_edit") || ["arbitration_profile_new", "#{pfx}_miq_request_new", "#{pfx}_clone",
                                                    "#{pfx}_migrate", "#{pfx}_publish"].include?(params[:pressed])
       render_or_redirect_partial(pfx)
@@ -763,6 +769,7 @@ module EmsCommon
     end
 
     @edit[:openstack_api_versions] = retrieve_openstack_api_versions
+    @edit[:nuage_api_versions]     = retrieve_nuage_api_versions
     @edit[:vmware_cloud_api_versions] = retrieve_vmware_cloud_api_versions
 
     @edit[:new][:default_userid] = @ems.authentication_userid
@@ -809,11 +816,13 @@ module EmsCommon
     @provider_regions = retrieve_provider_regions
     @openstack_infra_providers = retrieve_openstack_infra_providers
     @openstack_security_protocols = retrieve_openstack_security_protocols
-    @openstack_amqp_security_protocols = retrieve_openstack_amqp_security_protocols
+    @amqp_security_protocols = retrieve_amqp_security_protocols
+    @nuage_security_protocols = retrieve_nuage_security_protocols
     @scvmm_security_protocols = [[_('Basic (SSL)'), 'ssl'], ['Kerberos', 'kerberos']]
     @openstack_api_versions = retrieve_openstack_api_versions
     @vmware_cloud_api_versions = retrieve_vmware_cloud_api_versions
     @emstype_display = model.supported_types_and_descriptions_hash[@ems.emstype]
+    @nuage_api_versions = retrieve_nuage_api_versions
   end
 
   def retrieve_provider_regions
@@ -839,11 +848,23 @@ module EmsCommon
     [['vCloud API 5.1', '5.1'], ['vCloud API 5.5', '5.5'], ['vCloud API 5.6', '5.6'], ['vCloud API 9.0', '9.0']]
   end
 
-  def retrieve_openstack_security_protocols
+  def retrieve_nuage_api_versions
+    [['Version 3.2', 'v3_2'], ['Version 4.0', 'v4_0']]
+  end
+
+  def retrieve_security_protocols
     [[_('SSL without validation'), 'ssl'], [_('SSL'), 'ssl-with-validation'], [_('Non-SSL'), 'non-ssl']]
   end
 
-  def retrieve_openstack_amqp_security_protocols
+  def retrieve_openstack_security_protocols
+    retrieve_security_protocols
+  end
+
+  def retrieve_nuage_security_protocols
+    retrieve_security_protocols
+  end
+
+  def retrieve_amqp_security_protocols
     # OSP8 doesn't support SSL for AMQP
     [[_('Non-SSL'), 'non-ssl']]
   end

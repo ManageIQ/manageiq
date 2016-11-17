@@ -5,6 +5,7 @@ class ChargebackVm < Chargeback
     :interval_name            => :string,
     :display_range            => :string,
     :chargeback_rates         => :string,
+    :vm_id                    => :integer,
     :vm_name                  => :string,
     :tag_name                 => :string,
     :vm_uid                   => :string,
@@ -104,6 +105,7 @@ class ChargebackVm < Chargeback
     @vm_owners[perf.resource_id] ||= perf.resource.evm_owner_name
 
     extra_fields = {
+      "vm_id"         => perf.resource_id,
       "vm_name"       => perf.resource_name,
       "vm_uid"        => perf.resource.ems_ref,
       "vm_guid"       => perf.resource.try(:guid),
@@ -168,6 +170,7 @@ class ChargebackVm < Chargeback
 
   def get_rate_parents(perf)
     @enterprise ||= MiqEnterprise.my_enterprise
-    [perf.parent_host, perf.parent_ems_cluster, perf.parent_storage, perf.parent_ems, @enterprise, perf.resource.try(:tenant)]
+    parents = perf.resource_parents + [@enterprise]
+    parents.compact
   end
 end # class Chargeback

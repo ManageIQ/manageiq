@@ -9,6 +9,8 @@ class GenericObjectDefinition < ApplicationRecord
   }.freeze
 
   FEATURES = %w(attribute association method).freeze
+  REG_ATTRIBUTE_NAME = /\A[a-z][a-zA-Z_0-9]*\z/
+  REG_METHOD_NAME    = /\A[a-z][a-zA-Z_0-9]*[!?]?\z/
 
   serialize :properties, Hash
 
@@ -18,6 +20,7 @@ class GenericObjectDefinition < ApplicationRecord
   validates :name, :presence => true, :uniqueness => true
   validate  :validate_property_attributes,
             :validate_property_associations,
+            :validate_property_methods,
             :validate_property_name_unique,
             :validate_supported_property_features
 
@@ -152,6 +155,7 @@ class GenericObjectDefinition < ApplicationRecord
   def validate_property_attributes
     properties[:attributes].each do |name, type|
       errors[:properties] << "attribute [#{name}] is not of a recognized type: [#{type}]" unless TYPE_MAP.key?(type.to_sym)
+      errors[:properties] << "invalid attribute name: [#{name}]" unless REG_ATTRIBUTE_NAME =~ name
     end
   end
 
@@ -162,12 +166,18 @@ class GenericObjectDefinition < ApplicationRecord
       rescue NameError
         errors[:properties] << "association [#{name}] is not of a valid model: [#{klass}]"
       end
+      errors[:properties] << "invalid association name: [#{name}]" unless REG_ATTRIBUTE_NAME =~ name
+    end
+  end
+
+  def validate_property_methods
+    properties[:methods].each do |name|
+      errors[:properties] << "invalid method name: [#{name}]" unless REG_METHOD_NAME =~ name
     end
   end
 
   def validate_property_name_unique
-    all = properties[:attributes].keys + properties[:associations].keys + properties[:methods]
-    common = all.group_by(&:to_s).select { |_k, v| v.size > 1 }.collect(&:first)
+    common = property_keywords.group_by(&:to_s).select { |_k, v| v.size > 1 }.collect(&:first)
     errors[:properties] << "property name has to be unique: [#{common.join(",")}]" unless common.blank?
   end
 
@@ -175,6 +185,10 @@ class GenericObjectDefinition < ApplicationRecord
     if properties.keys.any? { |f| !f.to_s.singularize.in?(FEATURES) }
       errors[:properties] << "only these features are supported: [#{FEATURES.join(", ")}]"
     end
+  end
+
+  def property_keywords
+    properties[:attributes].keys + properties[:associations].keys + properties[:methods]
   end
 
   def check_not_in_use

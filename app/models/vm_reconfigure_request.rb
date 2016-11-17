@@ -79,6 +79,14 @@ class VmReconfigureRequest < MiqRequest
     errors
   end
 
+  def self.make_request(request, values, requester, auto_approve = false)
+    values[:request_type] = :vm_reconfigure
+
+    ApplicationRecord.group_ids_by_region(values[:src_ids]).collect do |_region, ids|
+      super(request, values.merge(:src_ids => ids), requester, auto_approve)
+    end
+  end
+
   def my_zone
     vm = Vm.find_by(:id => options[:src_ids])
     vm.nil? ? super : vm.my_zone

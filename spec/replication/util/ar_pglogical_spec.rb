@@ -226,6 +226,22 @@ describe "ar_pglogical extension" do
             expect(connection.pglogical.tables_in_replication_set(set_name)).to eq(["test"])
           end
         end
+
+        describe "#with_replication_set_lock" do
+          it "takes a lock on the replication set table" do
+            connection.pglogical.with_replication_set_lock(set_name) do
+              result = connection.exec_query(<<-SQL)
+                SELECT 1
+                FROM pg_locks JOIN pg_class
+                  ON pg_locks.relation = pg_class.oid
+                WHERE
+                  pg_class.relname = 'replication_set' AND
+                  pg_locks.mode = 'RowShareLock'
+              SQL
+              expect(result.count).to eq(1)
+            end
+          end
+        end
       end
     end
   end
