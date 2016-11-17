@@ -454,8 +454,11 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     result = {"disabled" => "<None>"}
 
     case src[:vm].try(:platform)
-    when 'windows' then result.merge!("fields" => "Specification", "file"  => "Sysprep Answer File")
-    when 'linux'   then result.merge!("fields" => "Specification")
+    when 'windows'
+      result["fields"] = "Specification"
+      result["file"]   = "Sysprep Answer File"
+    when 'linux'
+      result["fields"] = "Specification"
     end
 
     result
