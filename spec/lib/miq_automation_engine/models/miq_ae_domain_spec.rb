@@ -428,7 +428,7 @@ describe MiqAeDomain do
     end
   end
 
-  describe "#destroy_via_queue" do
+  describe "#destroy_queue" do
     shared_context "domain_context" do
       let(:user) { FactoryGirl.create(:user_with_group) }
       let(:task) { FactoryGirl.create(:miq_task) }
@@ -447,7 +447,7 @@ describe MiqAeDomain do
     shared_examples_for "create queue entry" do
       it "valid queue entry" do
         expect(MiqTask).to receive(:generic_action_with_callback).with(task_options, queue_options).and_return(task.id)
-        expect(domain.destroy_via_queue(user)).to eq(task.id)
+        expect(domain.destroy_queue(user)).to eq(task.id)
       end
     end
 
@@ -470,7 +470,7 @@ describe MiqAeDomain do
     context "raises error if user not provided" do
       let(:domain) { FactoryGirl.create(:miq_ae_domain) }
       it "raise ArgumentError" do
-        expect { domain.destroy(nil) }.to raise_exception(ArgumentError)
+        expect { domain.destroy_queue(nil) }.to raise_exception(ArgumentError)
       end
     end
   end

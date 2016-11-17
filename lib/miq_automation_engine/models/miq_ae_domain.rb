@@ -153,8 +153,8 @@ class MiqAeDomain < MiqAeNamespace
     "#{domain_name} (#{ref})"
   end
 
-  def destroy_via_queue(user = User.current_user)
-    raise ArgumentError, "User not provided, to destroy_via_queue" unless user
+  def destroy_queue(user = User.current_user)
+    raise ArgumentError, "User not provided, to destroy_queue" unless user
 
     task_options = {
       :action => "Destroy domain",
