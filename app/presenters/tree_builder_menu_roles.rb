@@ -20,10 +20,12 @@ class TreeBuilderMenuRoles < TreeBuilder
   private
 
   def set_locals_for_render
-    super.merge!({
+    locals = {
       :click_url => "/report/menu_editor/",
       :onclick   => "miqMenuEditor"
-    })
+    }
+
+    super.merge!(locals)
   end
 
   def tree_init_options(_tree_name)
@@ -44,11 +46,11 @@ class TreeBuilderMenuRoles < TreeBuilder
       grandkids = i.last.kind_of?(Array) ? i.last : []
 
       {
-        :id       => "p__#{i.first}",
-        :image    => "folder",
-        :text     => i.first,
-        :tooltip  => i.first,
-        :data     => grandkids
+        :id      => "p__#{i.first}",
+        :image   => "folder",
+        :text    => i.first,
+        :tooltip => i.first,
+        :data    => grandkids
       }
     end
 
@@ -71,11 +73,11 @@ class TreeBuilderMenuRoles < TreeBuilder
 
   def build_middle_child(parent_name, item)
     {
-      :id       => "s__#{parent_name}:#{item.first}",
-      :image    => "folder",
-      :text     => item.first,
-      :tooltip  => item.first,
-      :data     => item.last
+      :id      => "s__#{parent_name}:#{item.first}",
+      :image   => "folder",
+      :text    => item.first,
+      :tooltip => item.first,
+      :data    => item.last
     }
   end
 

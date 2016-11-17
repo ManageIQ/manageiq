@@ -616,7 +616,7 @@ module ReportController::Menus
   end
 
   def edit_folder
-    if params[:button] == "reset" || params[:button] == "default"  # resetting node in case reset button is pressed
+    if params[:button] == "reset" || params[:button] == "default" # resetting node in case reset button is pressed
       session[:node_selected] = "xx-b__Report Menus for #{session[:role_choice]}"
     end
 

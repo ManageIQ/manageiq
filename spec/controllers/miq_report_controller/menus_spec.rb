@@ -11,7 +11,7 @@ describe ReportController do
     end
 
     before do
-      controller.instance_variable_set(:@edit, {:new => {}})
+      controller.instance_variable_set(:@edit, :new => {})
       controller.instance_variable_set(:@sb, :new => {})
       controller.instance_variable_set(:@_params, :button => "default")
 
