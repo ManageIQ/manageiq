@@ -272,12 +272,15 @@ describe "Service Dialogs API" do
       expect_result_resources_to_include_data("resources", "label" => dialogs.pluck(:label))
     end
 
-    it "queries service dialogs content with the template and related resource action specified" do
-      expect_any_instance_of(Dialog).to receive(:content).with(template, ra1, true)
-
+    it "queries service dialogs content with the template and related resource action specified and returns IDs" do
       run_get "#{service_templates_url(template.id)}/service_dialogs/#{dialog1.id}", :attributes => "content"
+      expected = {
+        'content' => a_collection_including(
+          a_hash_including('id' => dialog1.id)
+        )}
 
       expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
     end
   end
 

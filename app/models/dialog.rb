@@ -101,7 +101,7 @@ class Dialog < ApplicationRecord
       # Accessing dialog_field.values forces an update for any values coming from automate
       dialog_field.values = dialog_field.values
     end
-    DialogSerializer.new.serialize(Array[workflow.dialog])
+    DialogSerializer.new.serialize(Array[workflow.dialog], all_attributes)
   end
 
   # Allows you to pass dialog tabs as a hash
