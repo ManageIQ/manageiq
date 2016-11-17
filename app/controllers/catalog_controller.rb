@@ -132,8 +132,9 @@ class CatalogController < ApplicationController
       "amazon"                => "Amazon",
       "azure"                 => "Azure",
       "generic"               => "Generic",
-      "generic_orchestration" => "Orchestration",
       "generic_ansible_tower" => "AnsibleTower",
+      "generic_container"     => "Container",
+      "generic_orchestration" => "Orchestration",
       "google"                => "Google",
       "microsoft"             => "SCVMM",
       "openstack"             => "OpenStack",
@@ -896,6 +897,7 @@ class CatalogController < ApplicationController
     common_st_record_vars(st)
     add_orchestration_template_vars(st) if st.kind_of?(ServiceTemplateOrchestration)
     add_ansible_tower_job_template_vars(st) if st.kind_of?(ServiceTemplateAnsibleTower)
+    add_container_template_vars(st) if st.kind_of?(ServiceTemplateContainer)
     st.service_type = "atomic"
 
     if request
@@ -1291,6 +1293,7 @@ class CatalogController < ApplicationController
     @edit[:new][:available_catalogs] = @edit[:new][:available_catalogs].sort
     available_orchestration_templates if @record.kind_of?(ServiceTemplateOrchestration)
     available_ansible_tower_managers if @record.kind_of?(ServiceTemplateAnsibleTower)
+    available_container_managers if @record.kind_of?(ServiceTemplateContainer)
 
     # initialize fqnames
     @edit[:new][:fqname] = @edit[:new][:reconfigure_fqname] = @edit[:new][:retire_fqname] = ""
@@ -1432,6 +1435,7 @@ class CatalogController < ApplicationController
 
     get_form_vars_orchestration if @edit[:new][:st_prov_type] == 'generic_orchestration'
     get_form_vars_ansible_tower if @edit[:new][:st_prov_type] == 'generic_ansible_tower'
+    get_form_vars_container     if @edit[:new][:st_prov_type] == 'generic_container'
   end
 
   def get_form_vars_orchestration
@@ -1457,6 +1461,20 @@ class CatalogController < ApplicationController
       else
         @edit[:new][:manager_id] = params[:manager_id]
         available_ansible_tower_job_templates(params[:manager_id])
+      end
+    end
+    @edit[:new][:template_id] = params[:template_id] if params[:template_id]
+  end
+
+  def get_form_vars_container
+    if params[:manager_id]
+      if params[:manager_id] == ""
+        @edit[:new][:available_templates] = []
+        @edit[:new][:template_id]         = nil
+        @edit[:new][:manager_id]          = nil
+      else
+        @edit[:new][:manager_id] = params[:manager_id]
+        available_container_templates(params[:manager_id])
       end
     end
     @edit[:new][:template_id] = params[:template_id] if params[:template_id]
@@ -1498,6 +1516,19 @@ class CatalogController < ApplicationController
     available_ansible_tower_job_templates(@edit[:new][:manager_id]) if @edit[:new][:manager_id]
   end
 
+  def available_container_templates(manager_id)
+    @edit[:new][:available_templates] =
+      ExtManagementSystem.find_by(:id => manager_id).container_templates.collect { |t| [t.name, t.id] }.sort
+  end
+
+  def available_container_managers
+    @edit[:new][:available_managers] =
+      ManageIQ::Providers::ContainerManager.all.collect { |t| [t.name, t.id] }.sort
+    @edit[:new][:template_id] = @record.container_template.try(:id)
+    @edit[:new][:manager_id] = @record.container_manager.try(:id)
+    available_container_templates(@edit[:new][:manager_id]) if @edit[:new][:manager_id]
+  end
+
   def add_orchestration_template_vars(st)
     st.orchestration_template = @edit[:new][:template_id].nil? ?
       nil : OrchestrationTemplate.find_by_id(@edit[:new][:template_id])
@@ -1508,6 +1539,11 @@ class CatalogController < ApplicationController
   def add_ansible_tower_job_template_vars(st)
     st.job_template = @edit[:new][:template_id].nil? ?
       nil : ConfigurationScript.find_by(:id => @edit[:new][:template_id])
+  end
+
+  def add_container_template_vars(st)
+    st.container_template = @edit[:new][:template_id].nil? ?
+      nil : ContainerTemplate.find_by(:id => @edit[:new][:template_id])
   end
 
   def st_get_form_vars
