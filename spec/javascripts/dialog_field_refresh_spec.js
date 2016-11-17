@@ -423,14 +423,36 @@ describe('dialogFieldRefresh', function() {
       expect(window.miqSelectPickerEvent).toHaveBeenCalledWith('fieldName', 'url', {callback: jasmine.any(Function)});
     });
 
-    it('triggers the auto refresh when the drop down changes', function() {
-      dialogFieldRefresh.initializeDialogSelectPicker(fieldName, fieldId, selectedValue, url);
+    it('triggers autorefresh with true only when triggerAutoRefresh arg is true', function() {
+      dialogFieldRefresh.initializeDialogSelectPicker(fieldName, fieldId, selectedValue, url, 'true');
       expect(dialogFieldRefresh.triggerAutoRefresh).toHaveBeenCalledWith(fieldId, 'true');
     });
+  });
 
-    it('triggers autorefresh with "false" when triggerAutoRefresh arg is false', function() {
-      dialogFieldRefresh.initializeDialogSelectPicker(fieldName, fieldId, selectedValue, url, 'false');
-      expect(dialogFieldRefresh.triggerAutoRefresh).toHaveBeenCalledWith(fieldId, 'false');
+  describe('#triggerAutoRefresh', function() {
+    beforeEach(function() {
+      spyOn(parent, 'postMessage');
+    });
+
+    context('when the trigger passed in falsy', function() {
+      it('does not post any messages', function() {
+        dialogFieldRefresh.triggerAutoRefresh(123, "");
+        expect(parent.postMessage).not.toHaveBeenCalled();
+      });
+    });
+
+    context('when the trigger passed in is the string "true"', function() {
+      it('posts a message', function() {
+        dialogFieldRefresh.triggerAutoRefresh(123, "true");
+        expect(parent.postMessage).toHaveBeenCalledWith({fieldId: 123}, '*');
+      });
+    });
+
+    context('when the trigger passed in is true', function() {
+      it('posts a message', function() {
+        dialogFieldRefresh.triggerAutoRefresh(123, true);
+        expect(parent.postMessage).toHaveBeenCalledWith({fieldId: 123}, '*');
+      });
     });
   });
 });
