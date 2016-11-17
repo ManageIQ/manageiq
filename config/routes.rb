@@ -940,13 +940,6 @@ Vmdb::Application.routes.draw do
       )
     },
 
-    :subnet_topology         => {
-      :get => %w(
-        show
-        data
-      )
-    },
-
     :cloud_topology         => {
       :get => %w(
         show
