@@ -5,6 +5,7 @@ FactoryGirl.define do
     sequence(:ipaddress) { |n| ip_from_seq(n) }
     guid                 { MiqUUID.new_guid }
     zone                 { Zone.first || FactoryGirl.create(:zone) }
+    storage_profiles     { [] }
   end
 
   # Intermediate classes

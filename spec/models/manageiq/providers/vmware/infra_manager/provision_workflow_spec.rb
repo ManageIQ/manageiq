@@ -88,13 +88,61 @@ describe ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow do
       workflow.instance_variable_set(:@target_resource, nil)
     end
 
+    context '#allowed_storage_profiles' do
+      let(:profile) { FactoryGirl.create(:storage_profile, :name => 'Gold') }
+      it 'when storage_profile selection is set, will not touch storage_profile selection value' do
+        selected = []
+        workflow.instance_variable_set(:@values, :src_vm_id => template.id, :placement_storage_profile => selected)
+        workflow.allowed_storage_profiles
+        values = workflow.instance_variable_get(:@values)
+        expect(values[:placement_storage_profile]).to eq(selected)
+      end
+
+      context 'when storage_profile selection is not set' do
+        it 'set storage_profile selection to [nil, nil] if template has no storage_profile' do
+          template = FactoryGirl.create(:vm_vmware, :host => @host1, :ems_id => @ems.id)
+          workflow.instance_variable_set(:@values, :src_vm_id => template.id, :placement_storage_profile => nil)
+          workflow.allowed_storage_profiles
+          values = workflow.instance_variable_get(:@values)
+          expect(values[:placement_storage_profile]).to eq([nil, nil])
+        end
+
+        it 'set storage_profile selection to that of template if template has one' do
+          template = FactoryGirl.create(:vm_vmware, :host => @host1, :ems_id => @ems.id, :storage_profile => profile)
+          workflow.instance_variable_set(:@values, :src_vm_id => template.id, :placement_storage_profile => nil)
+          workflow.allowed_storage_profiles
+          values = workflow.instance_variable_get(:@values)
+          expect(values[:placement_storage_profile]).to eq([profile.id, profile.name])
+        end
+      end
+
+      context 'storage_profile filter' do
+        let(:ems) { FactoryGirl.create(:ems_vmware, :storage_profiles => [profile]) }
+        let(:template) { FactoryGirl.create(:vm_vmware, :ems_id => ems.id) }
+        it 'list storage_profiles associated with ems' do
+          workflow.instance_variable_set(:@values, :src_vm_id => template.id, :src_ems_id => ems.id)
+          workflow.allowed_storage_profiles
+          filters = workflow.instance_variable_get(:@filters)
+          expect(filters[:StorageProfile]).to eq(profile.id => profile.name)
+        end
+      end
+    end
+
     context '#set_on_vm_id_changed' do
-      it 'clears StorageProfile filter' do
+      before(:each) do
         workflow.instance_variable_set(:@filters, :Host => {21 => "ESX 6.0"}, :StorageProfile => {1 => "Tag 1"})
+        workflow.instance_variable_set(:@values, :src_vm_id => @src_vm.id, :placement_storage_profile => [])
         allow(workflow).to receive(:set_or_default_hardware_field_values).with(@src_vm)
+      end
+      it 'clears StorageProfile filter' do
         workflow.set_on_vm_id_changed
         filters = workflow.instance_variable_get(:@filters)
         expect(filters).to eq(:Host => {21=>"ESX 6.0"}, :StorageProfile => nil)
+      end
+      it 'clears :placement_storage_profile value' do
+        workflow.set_on_vm_id_changed
+        values = workflow.instance_variable_get(:@values)
+        expect(values[:placement_storage_profile]).to be_nil
       end
     end
 
