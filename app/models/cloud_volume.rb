@@ -27,12 +27,11 @@ class CloudVolume < ApplicationRecord
   acts_as_miq_taggable
 
   def my_zone
-    ems = ext_management_system
-    ems ? ems.my_zone : MiqServer.my_zone
+    ext_management_system.try(:my_zone) || MiqServer.my_zone
   end
 
   def self.eligible_for_provisioning
-    where(:type => %w(ManageIQ::Providers::Openstack::CloudManager::CloudVolume), :bootable => true)
+    where(:type => "ManageIQ::Providers::Openstack::CloudManager::CloudVolume", :bootable => true)
   end
 
   def self.available

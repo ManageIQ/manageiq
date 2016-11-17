@@ -464,6 +464,7 @@ class MiqRequest < ApplicationRecord
     values[:src_ids] = values[:src_ids].to_miq_a unless values[:src_ids].nil?
     request_type = values.delete(:__request_type__) || request_types.first
     request = create!(:options => values, :requester => requester, :request_type => request_type)
+
     request.post_create(auto_approve)
   end
   api_relay_class_method(:create_request, :create) do |values, requester, auto_approve|

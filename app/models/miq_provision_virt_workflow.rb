@@ -62,9 +62,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
       request = request.kind_of?(MiqRequest) ? request : MiqRequest.find(request)
       request.src_vm_id = get_value(values[:src_vm_id])
       new_src_type = get_value(values[:src_type])
-      unless new_src_type.nil?
-        request.src_type = new_src_type
-      end
+      request.src_type = new_src_type if new_src_type
     end
 
     super
@@ -369,7 +367,8 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     MiqSearch.filtered(get_value(@values[:vm_filter]).to_i,
                        MiqProvisionSource.get_provisioning_request_source_class(@values[:src_type]),
                        vms,
-                       :user => @requester, :conditions => condition)
+                       :user       => @requester,
+                       :conditions => condition)
   end
 
   def allowed_provision_types(_options = {})
@@ -1039,9 +1038,9 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
   end
 
   def create_hash_struct_from_source(source, options)
-    if source.class <= CloudVolume
+    if source.class.kind_of? CloudVolume
       create_hash_struct_from_volume(source, options)
-    elsif source.class <= CloudVolumeSnapshot
+    elsif source.class.kind_of? CloudVolumeSnapshot
       create_hash_struct_from_volume_snapshot(source, options)
     else
       create_hash_struct_from_vm_or_template(source, options)

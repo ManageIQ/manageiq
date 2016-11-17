@@ -25,7 +25,7 @@ class CloudVolumeSnapshot < ApplicationRecord
 
   def self.eligible_for_provisioning
     joins(:cloud_volume).where("cloud_volumes.bootable = ?", true)
-                        .where(:type => %w(ManageIQ::Providers::Openstack::CloudManager::CloudVolumeSnapshot))
+                        .where(:type => "ManageIQ::Providers::Openstack::CloudManager::CloudVolumeSnapshot")
   end
 
   def self.my_zone(ems)

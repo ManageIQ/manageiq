@@ -39,11 +39,11 @@ module ManageIQ::Providers::Openstack::CloudManager::Provision::VolumeAttachment
       :delete_on_termination => true,
       :uuid                  => source.ems_ref
     }
-    if source.class <= CloudVolume
+    if source.class.kind_of? CloudVolume
       attrs[:destination_type] = "volume"
       attrs[:source_type] = "volume"
       attrs[:delete_on_termination] = false
-    elsif source.class <= CloudVolumeSnapshot
+    elsif source.class.kind_of? CloudVolumeSnapshot
       attrs[:destination_type] = "volume"
       attrs[:source_type] = "snapshot"
       attrs[:size] = [instance_type.root_disk_size, source.size].max / 1.gigabyte
