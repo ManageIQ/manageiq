@@ -1,6 +1,6 @@
 module ManageIQ::Providers::Openstack::CloudManager::Provision::Cloning
   def do_clone_task_check(clone_task_ref)
-    manager = source.ext_management_system.try(:parent_manager) || source.ext_management_system
+    manager = source.ext_management_system.top_level_manager
     manager.with_provider_connection do |openstack|
       instance = openstack.handled_list(:servers).detect { |s| s.id == clone_task_ref }
       status   = instance.state.downcase.to_sym
@@ -41,11 +41,11 @@ module ManageIQ::Providers::Openstack::CloudManager::Provision::Cloning
   def start_clone(clone_options)
     connection_options = {:tenant_name => options[:cloud_tenant][1]} if options[:cloud_tenant].kind_of? Array
     # If basing a new vm on an snapshot or volume, there's no image so remove it
-    if source.class <= CloudVolume || source.class <= CloudVolumeSnapshot
+    if (source.class.kind_of? CloudVolume) || (source.class.kind_of? CloudVolumeSnapshot)
       clone_options.delete :image_ref
     end
     # try to navigate up from the storage manager to the cloud manager if there is one
-    manager = source.ext_management_system.try(:parent_manager) || source.ext_management_system
+    manager = source.ext_management_system.top_level_manager
     manager.with_provider_connection(connection_options) do |openstack|
       instance = openstack.servers.create(clone_options)
       return instance.id

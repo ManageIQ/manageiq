@@ -113,10 +113,7 @@ class ManageIQ::Providers::CloudManager::ProvisionWorkflow < ::MiqProvisionVirtW
   end
 
   def get_targets_for_ems(src, filter_name, klass, relats)
-    ems = src.try(:ext_management_system)
-    # if the source is related directly to a sub-manager like networkmanager
-    # or storagemanager, we might need to get the parent manager
-    ems = ems.try(:parent_manager) || ems
+    ems = src.try(:ext_management_system).try(:top_level_manager)
 
     return {} if ems.nil?
     process_filter(filter_name, klass, ems.deep_send(relats))

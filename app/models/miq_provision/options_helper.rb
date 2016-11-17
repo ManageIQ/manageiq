@@ -31,7 +31,7 @@ module MiqProvision::OptionsHelper
       raise MiqException::MiqProvisionError,
             _("Unable to find source Template/Vm with id [%{number}]") % {:number => source_id}
     end
-    ems = source.ext_management_system.try(:parent_manager) || source.ext_management_system
+    ems = source.ext_management_system.top_level_manager
     if ems.nil?
       raise MiqException::MiqProvisionError,
             _("%{class_name} [%{name}] is not attached to a Management System") % {:class_name => source.class.name,

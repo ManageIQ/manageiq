@@ -36,7 +36,7 @@ class MiqProvisionRequest < MiqRequest
     raise MiqException::MiqProvisionError, "Unable to find source #{source_type} with id [#{source_id}]" if provisioning_source.nil?
 
     via = MiqRequestMixin.get_option(:provision_type, nil, attribs['options'])
-    manager = provisioning_source.ext_management_system.try(:parent_manager) || provisioning_source.ext_management_system
+    manager = provisioning_source.ext_management_system.top_level_manager
     manager.class.provision_class(via)
   end
 

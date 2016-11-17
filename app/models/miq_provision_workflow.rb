@@ -29,8 +29,7 @@ class MiqProvisionWorkflow < MiqRequestWorkflow
              end
     return nil if source.nil?
     source.class.try(:manager_class).try(:provision_workflow_class) ||
-      source.ext_management_system.try(:parent_manager).try(:class).try(:provision_workflow_class) ||
-      source.ext_management_system.class.provision_workflow_class
+      source.ext_management_system.top_level_manager.class.provision_workflow_class
   end
 
   def self.encrypted_options_fields

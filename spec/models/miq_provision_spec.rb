@@ -257,10 +257,7 @@ describe MiqProvision do
         end
 
         it "#my_zone" do
-          expect_any_instance_of(@vm_prov.source.class).to receive(:my_zone).once
-          expect_any_instance_of(@pr.class).to receive(:my_zone).never
-
-          @vm_prov.my_zone
+          expect(@vm_prov.my_zone).to eq(@vm_prov.source.ext_management_system.my_zone)
         end
       end
 
@@ -370,10 +367,7 @@ describe MiqProvision do
         end
 
         it "#my_zone" do
-          expect_any_instance_of(@vm_prov.source.class).to receive(:my_zone).once
-          expect_any_instance_of(@pr.class).to receive(:my_zone).never
-
-          @vm_prov.my_zone
+          expect(@vm_prov.my_zone).to eq(@vm_prov.source.ext_management_system.my_zone)
         end
       end
     end
