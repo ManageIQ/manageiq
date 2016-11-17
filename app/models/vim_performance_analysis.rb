@@ -437,7 +437,6 @@ module VimPerformanceAnalysis
                   .where(:timestamp => Metric::Helper.time_range_from_hash(options), :resource => obj)
                   .where(options[:conditions]).order("timestamp")
                   .select(options[:select])
-                  .to_a
   end
 
   # @param obj base object

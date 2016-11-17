@@ -23,7 +23,7 @@ module MiqReport::Generator::Utilization
       # Roll up results by timestamp
       results = VimPerformanceAnalysis.group_perf_by_timestamp(resource, results, cols)
     else
-      results = VimPerformanceAnalysis.find_perf_for_time_period(resource, db_options[:interval], db_options.merge(:ext_options => {:tz => tz, :time_profile => time_profile}))
+      results = VimPerformanceAnalysis.find_perf_for_time_period(resource, db_options[:interval], db_options.merge(:ext_options => {:tz => tz, :time_profile => time_profile})).to_a
     end
 
     # Return rpt object:
