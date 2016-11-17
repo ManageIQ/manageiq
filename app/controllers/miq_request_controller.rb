@@ -129,19 +129,18 @@ class MiqRequestController < ApplicationController
     time_period = 7
     resource_type = get_request_tab_type        # storing resource type in local variable so dont have to call method everytime
     kls = @layout == "miq_request_ae" ? AutomationRequest : MiqRequest
+    gv_options = nil
     if is_approver && (!@sb[:prov_options] || (@sb[:prov_options] && !@sb[:prov_options].key?(resource_type.to_sym)))
       gv_options = {:filter => prov_condition(:resource_type => resource_type, :time_period => time_period)}
-      @view, @pages = get_view(kls, gv_options)                 # Get all requests
     elsif @sb[:prov_options] && @sb[:prov_options].key?(resource_type.to_sym) # added this here so grid can be drawn when page redraws, when there were no records on initial load.
       prov_set_default_options if @sb[:def_prov_options][:applied_states].blank? && !params[:button] == "apply" # no filter statuses selected, setting to default
       gv_options = {:filter => prov_condition(@sb[:def_prov_options][resource_type.to_sym])}
-      @view, @pages = get_view(kls, gv_options) # Get view and paginator, based on the selected options
     else
       gv_options = {:filter => prov_condition(:resource_type => resource_type,
                                               :time_period   => time_period,
                                               :requester_id  => current_user.try(:id))}
-      @view, @pages = get_view(kls, gv_options)     # Get requests for this user
     end
+    @view, @pages = get_view(kls, gv_options)
     @sb[:prov_options] ||= {}
     @sb[:def_prov_options] ||= {}
     @sb[:prov_options][:resource_type] = resource_type.to_sym                   # storing current resource type
