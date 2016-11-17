@@ -88,7 +88,8 @@ describe ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow do
       workflow.instance_variable_set(:@target_resource, nil)
     end
 
-    context 'on storage_profile selection' do
+    context '#allowed_storage_profiles' do
+      let(:profile) { FactoryGirl.create(:storage_profile, :name => 'Gold') }
       it 'when storage_profile selection is set, will not touch storage_profile selection value' do
         selected = []
         workflow.instance_variable_set(:@values, :src_vm_id => template.id, :placement_storage_profile => selected)
@@ -98,8 +99,6 @@ describe ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow do
       end
 
       context 'when storage_profile selection is not set' do
-        let(:profile) { FactoryGirl.create(:storage_profile, :name => 'Gold') }
-
         it 'set storage_profile selection to [nil, nil] if template has no storage_profile' do
           template = FactoryGirl.create(:vm_vmware, :host => @host1, :ems_id => @ems.id)
           workflow.instance_variable_set(:@values, :src_vm_id => template.id, :placement_storage_profile => nil)
@@ -114,6 +113,17 @@ describe ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow do
           workflow.allowed_storage_profiles
           values = workflow.instance_variable_get(:@values)
           expect(values[:placement_storage_profile]).to eq([profile.id, profile.name])
+        end
+      end
+
+      context 'storage_profile filter' do
+        let(:ems) { FactoryGirl.create(:ems_vmware, :storage_profiles => [profile]) }
+        let(:template) { FactoryGirl.create(:vm_vmware, :ems_id => ems.id) }
+        it 'list storage_profiles associated with ems' do
+          workflow.instance_variable_set(:@values, :src_vm_id => template.id, :src_ems_id => ems.id)
+          workflow.allowed_storage_profiles
+          filters = workflow.instance_variable_get(:@filters)
+          expect(filters[:StorageProfile]).to eq(profile.id => profile.name)
         end
       end
     end
