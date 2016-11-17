@@ -30,7 +30,7 @@ class User < ApplicationRecord
 
   validates_presence_of   :name, :userid, :region
   validates_uniqueness_of :userid, :scope => :region
-  validates_format_of     :email, :with => /\A([\w\.\-\+]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i,
+  validates_format_of     :email, :with => /\A([\w\.\-\+']+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i,
     :allow_nil => true, :message => "must be a valid email address"
   validates_inclusion_of  :current_group, :in => proc { |u| u.miq_groups }, :allow_nil => true
 

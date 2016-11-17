@@ -23,6 +23,10 @@ describe User do
     it "should reject invalid characters in email address" do
       expect(FactoryGirl.build(:user, :email => "{{that.guy}}@manageiq.com")).not_to be_valid
     end
+
+    it "allows apostrophes in email address" do
+      expect(FactoryGirl.build(:user, :email => "timmy.o'toole@manageiq.com")).to be_valid
+    end
   end
 
   describe "#change_password" do
