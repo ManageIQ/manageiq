@@ -66,7 +66,7 @@ class CloudSubnetController < ApplicationController
     @cloud_tenant_choices = {}
     CloudTenant.all.each { |tenant| @cloud_tenant_choices[tenant.name] = tenant.id }
     drop_breadcrumb(
-      :name => _("Add New Subnet") % {:model => ui_lookup(:table => 'cloud_subnet')},
+      :name => _("Add New Subnet"),
       :url  => "/cloud_subnet/new"
     )
   end
@@ -88,12 +88,9 @@ class CloudSubnetController < ApplicationController
           CloudSubnet.create_subnet(ems, options)
           # TODO: To replace with targeted refresh when avail. or either use tasks
           EmsRefresh.queue_refresh(ManageIQ::Providers::NetworkManager)
-          add_flash(_("Creating %{subnet} \"%{subnet_name}\"") % {
-            :subnet      => ui_lookup(:table => 'cloud_subnet'),
-            :subnet_name => options[:name]})
+          add_flash(_("Creating Cloud Subnet \"%{subnet_name}\"") % {:subnet_name => options[:name]})
         rescue => ex
-          add_flash(_("Unable to create %{subnet} \"%{subnet_name}\": %{details}") % {
-            :subnet      => ui_lookup(:table => 'cloud_subnet'),
+          add_flash(_("Unable to create Cloud Subnet \"%{subnet_name}\": %{details}") % {
             :subnet_name => options[:name],
             :details     => ex}, :error)
         end
@@ -122,23 +119,20 @@ class CloudSubnetController < ApplicationController
               end
 
     if subnets.empty?
-      add_flash(_("No subnet were selected for deletion.") % {
-        :models => ui_lookup(:tables => "cloud_subnet")
-      }, :error)
+      add_flash(_("No Cloud Subnet were selected for deletion."), :error)
     end
 
     subnets_to_delete = []
     subnets.each do |s|
       subnet = CloudSubnet.find_by_id(s)
       if subnet.nil?
-        add_flash(_("Subnet no longer exists.") % {:model => ui_lookup(:table => "cloud_subnet")}, :error)
+        add_flash(_("Cloud Subnet no longer exists."), :error)
       else
         valid_delete, delete_details = subnet.validate_delete_subnet
         if valid_delete
           subnets_to_delete.push(subnet)
         else
           add_flash(_("Couldn't initiate deletion of Subnet \"%{name}\": %{details}") % {
-            :model   => ui_lookup(:table => 'cloud_subnet'),
             :name    => subnet.name,
             :details => delete_details}, :error)
         end
@@ -157,7 +151,7 @@ class CloudSubnetController < ApplicationController
     elsif @lastaction == "show" && @layout == "cloud_subnet"
       @single_delete = true unless flash_errors?
       if @flash_array.nil?
-        add_flash(_("The selected Subnet was deleted") % {:model => ui_lookup(:table => "cloud_subnet")})
+        add_flash(_("The selected Cloud Subnet was deleted"))
       end
     end
   end
@@ -167,7 +161,7 @@ class CloudSubnetController < ApplicationController
     @subnet = find_by_id_filtered(CloudSubnet, params[:id])
     @in_a_form = true
     drop_breadcrumb(
-      :name => _("Edit Subnet \"%{name}\"") % {:model => ui_lookup(:table => 'cloud_subnet'), :name => @subnet.name},
+      :name => _("Edit Subnet \"%{name}\"") % {:name => @subnet.name},
       :url  => "/cloud_subnet/edit/#{@subnet.id}"
     )
   end
@@ -188,21 +182,16 @@ class CloudSubnetController < ApplicationController
 
     case params[:button]
     when "cancel"
-      cancel_action(_("Edit of Subnet \"%{name}\" was cancelled by the user") % {
-        :model => ui_lookup(:table => 'cloud_subnet'),
-        :name  => @subnet.name
-      })
+      cancel_action(_("Edit of Subnet \"%{name}\" was cancelled by the user") % {:name  => @subnet.name})
 
     when "save"
       begin
         @subnet.update_subnet(form_params)
         add_flash(_("Updating Subnet \"%{name}\"") % {
-          :model => ui_lookup(:table => 'cloud_subnet'),
           :name  => @subnet.name
         })
       rescue => e
         add_flash(_("Unable to update Subnet \"%{name}\": %{details}") % {
-          :model   => ui_lookup(:table => 'cloud_subnet'),
           :name    => @subnet.name,
           :details => e
         }, :error)
