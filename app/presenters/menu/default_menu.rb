@@ -187,7 +187,6 @@ module Menu
                                            'cloud_object_store_container',
                                            {:feature => 'cloud_object_store_container_show_list'},
                                            '/cloud_object_store_container'),
-                            netapp_enabled ? netapp_storage_menu_section : empty_menu_section
                           ])
       end
 
