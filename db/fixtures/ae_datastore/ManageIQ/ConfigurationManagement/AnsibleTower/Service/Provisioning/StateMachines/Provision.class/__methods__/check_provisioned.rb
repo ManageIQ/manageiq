@@ -31,7 +31,6 @@ class AnsibleTowerCheckProvisioned
       @handle.log("info", "Please examine job console output for more details") if @handle.root['ae_result'] == 'error'
 
       job.refresh_ems
-      task.miq_request.user_message = @handle.root['ae_reason'].truncate(255) unless @handle.root['ae_reason'].blank?
     end
   end
 
