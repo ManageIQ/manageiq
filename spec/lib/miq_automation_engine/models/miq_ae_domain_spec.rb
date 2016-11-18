@@ -427,4 +427,51 @@ describe MiqAeDomain do
       end
     end
   end
+
+  describe "#destroy_queue" do
+    shared_context "domain_context" do
+      let(:user) { FactoryGirl.create(:user_with_group) }
+      let(:task) { FactoryGirl.create(:miq_task) }
+      let(:task_options) { {:action => "Destroy domain", :userid => user.userid} }
+      let(:queue_options) do
+        {
+          :class_name  => "MiqAeDomain",
+          :instance_id => domain.id,
+          :method_name => "destroy",
+          :role        => role,
+          :args        => []
+        }
+      end
+    end
+
+    shared_examples_for "create queue entry" do
+      it "valid queue entry" do
+        expect(MiqTask).to receive(:generic_action_with_callback).with(task_options, queue_options).and_return(task.id)
+        expect(domain.destroy_queue(user)).to eq(task.id)
+      end
+    end
+
+    context "git enabled domain" do
+      include_context "domain_context"
+      let(:domain) { FactoryGirl.create(:miq_ae_git_domain) }
+      let(:role) { "git_owner" }
+
+      it_behaves_like "create queue entry"
+    end
+
+    context "regular domain" do
+      include_context "domain_context"
+      let(:domain) { FactoryGirl.create(:miq_ae_domain) }
+      let(:role) { nil }
+
+      it_behaves_like "create queue entry"
+    end
+
+    context "raises error if user not provided" do
+      let(:domain) { FactoryGirl.create(:miq_ae_domain) }
+      it "raise ArgumentError" do
+        expect { domain.destroy_queue(nil) }.to raise_exception(ArgumentError)
+      end
+    end
+  end
 end
