@@ -128,6 +128,13 @@ describe PostgresAdmin do
     end
   end
 
+  describe ".before_restore" do
+    it "doesn't raise if runcmd does" do
+      expect(described_class).to receive(:runcmd).and_raise(AwesomeSpawn::CommandResultError.new("", ""))
+      expect { described_class.before_restore({}) }.to_not raise_error
+    end
+  end
+
   describe ".database_in_recovery?" do
     before do
       begin
