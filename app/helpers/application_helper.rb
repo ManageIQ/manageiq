@@ -1552,6 +1552,7 @@ module ApplicationHelper
     %i(containers
        containers_filter
        cs_filter
+       configuration_scripts
        foreman_providers
        images
        images_filter
