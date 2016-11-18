@@ -73,7 +73,7 @@ class Vm < VmOrTemplate
     end
 
     begin
-      require 'miq-wmi'
+      require 'win32/miq-wmi'
       cred = my_zone_obj.auth_user_pwd(:windows_domain)
       ipaddresses.each do |ipaddr|
         break unless pl.blank?
