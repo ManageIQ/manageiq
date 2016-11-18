@@ -414,10 +414,9 @@ class ReportController < ApplicationController
     nodes = x_node.split('-')
     show_saved_report
     @record = MiqReportResult.find_by_id(from_cid(nodes.last))
-    @right_cell_text = _("%{model} \"%{name}\"") % {
-      :name  => "#{@record.name} - #{format_timezone(@record.created_on, Time.zone, "gt")}",
-      :model => "Saved Report"
-    }
+    @right_cell_text = _("Saved Report \"%{name} - %{timestamp}\"") % {
+      :name      => @record.name,
+      :timestamp => format_timezone(@record.created_on, Time.zone, "gt")}
     @right_cell_div  = "savedreports_list"
   end
 
@@ -439,7 +438,7 @@ class ReportController < ApplicationController
     miq_report = MiqReport.find(@sb[:miq_report_id])
     @sb[:sel_saved_rep_id] = nodes.last
     @right_cell_div        = "savedreports_list"
-    @right_cell_text = _("%{model} \"%{name}\"") % {:name  => miq_report.name, :model => "Saved Reports"}
+    @right_cell_text = _("Saved Report \"%{name}\"") % {:name  => miq_report.name}
   end
 
   def reports_get_node_info
