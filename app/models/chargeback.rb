@@ -141,41 +141,13 @@ class Chargeback < ActsAsArModel
 
     rates.each do |rate|
       rate.chargeback_rate_details.each do |r|
-        if !chargeback_fields_present && r.fixed?
-          cost = 0
-        else
-          r.hours_in_interval = hours_in_interval
-          metric_value = r.metric_value_by(metric_rollup_records)
-          cost = r.cost(metric_value) * hours_in_interval
+        r.charge(relevant_fields, chargeback_fields_present, metric_rollup_records, hours_in_interval).each do |field, value|
+          next unless self.class.attribute_names.include?(field)
+          self[field] = (self[field] || 0) + value
         end
-
-        accumulate_metrics_and_costs_per_rate(r.rate_name, r.group, metric_value, cost)
       end
     end
   end
-
-  def accumulate_metrics_and_costs_per_rate(rate_name, rate_group, metric, cost)
-    cost_key         = "#{rate_name}_cost"    # metric cost value (e.g. Storage [Used|Allocated|Fixed] Cost)
-    metric_key       = "#{rate_name}_metric"  # metric value (e.g. Storage [Used|Allocated|Fixed])
-    cost_group_key   = "#{rate_group}_cost"   # for total of metric's costs (e.g. Storage Total Cost)
-    metric_group_key = "#{rate_group}_metric" # for total of metrics (e.g. Storage Total)
-
-    col_hash = {}
-
-    defined_column_for_report = (self.class.report_col_options.keys & [metric_key, cost_key]).present?
-
-    if defined_column_for_report
-      [metric_key, metric_group_key].each             { |col| col_hash[col] = metric }
-      [cost_key,   cost_group_key, 'total_cost'].each { |col| col_hash[col] = cost }
-    end
-
-    col_hash.each do |k, val|
-      next unless self.class.attribute_names.include?(k)
-      self[k] ||= 0
-      self[k] += val
-    end
-  end
-  private :accumulate_metrics_and_costs_per_rate
 
   def self.report_cb_model(model)
     model.gsub(/^Chargeback/, "")
@@ -235,5 +207,11 @@ class Chargeback < ActsAsArModel
     define_method(custom_attribute.to_sym) do
       entity.send(custom_attribute)
     end
+  end
+
+  private
+
+  def relevant_fields
+    @relevant_fields ||= self.class.report_col_options.keys.to_set
   end
 end # class Chargeback
