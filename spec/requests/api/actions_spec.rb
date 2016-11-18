@@ -90,7 +90,7 @@ describe "Actions API" do
 
       expect(response.parsed_body["results"].count).to eq(2)
 
-      expect(MiqAction.pluck(:description)).to eq(%w(change change2))
+      expect(MiqAction.pluck(:description)).to match_array(%w(change change2))
     end
   end
 end
