@@ -9,7 +9,7 @@
     %h3
       = _("Object Details")
     .form-group
-      %label.col-md-2.control-label
+      %label.col-md-3.control-label
         = _("System/Process")
       .col-md-8
         = select_tag('instance_name',
@@ -22,7 +22,7 @@
           miqInitSelectPicker();
           miqSelectPickerEvent('instance_name', "#{url}")
   .form-group
-    %label.col-md-2.control-label
+    %label.col-md-3.control-label
       = _("Message")
     .col-md-8
       = text_field_tag("object_message",
@@ -34,7 +34,7 @@
       - unless is_browser_ie?
         = javascript_tag("if (!$('#description').length) #{javascript_focus('object_message')}")
   .form-group
-    %label.col-md-2.control-label
+    %label.col-md-3.control-label
       = _("Request")
     .col-md-8
       = text_field_tag("object_request",
@@ -49,7 +49,7 @@
       = _("Object Attribute")
     .form-horizontal
       .form-group
-        %label.col-md-2.control-label
+        %label.col-md-3.control-label
           = _("Type")
         .col-md-8
           = ui_lookup(:model => @resolve[:target_class])
@@ -59,7 +59,7 @@
       = _("Object Attribute")
     .form-horizontal
       .form-group
-        %label.col-md-2.control-label
+        %label.col-md-3.control-label
           = _("Type")
         .col-md-8
           = select_tag('target_class',
@@ -73,7 +73,7 @@
             miqSelectPickerEvent('target_class', "#{url}")
       - if resolve[:new][:target_class] && !resolve[:new][:target_class].blank? && resolve[:targets]
         .form-group
-          %label.col-md-2.control-label
+          %label.col-md-3.control-label
             = _("Selection")
           .col-md-8
             = select_tag('target_id',
@@ -91,7 +91,7 @@
     = _("Simulation Parameters")
   .form-horizontal
     .form-group
-      %label.col-md-2.control-label
+      %label.col-md-3.control-label
         = _("Execute Methods")
       .col-md-8
         = check_box_tag("readonly",
@@ -106,7 +106,7 @@
     - f = "attribute_" + (i + 1).to_s
     - v = "value_" + (i + 1).to_s
     .form-group
-      %label.col-md-2.control-label
+      %label.col-md-3.control-label
         = (i + 1).to_s
       .col-md-4
         = text_field_tag(f,
