@@ -36,14 +36,12 @@ module VmOrTemplate::RightSizing
   end
 
   module ClassMethods
-    DEFAULT_CPU_RECOMMENDATION_MINIMUM = 1
     def cpu_recommendation_minimum
-      VMDB::Config.new("vmdb").config.fetch_path(:recommendations, :cpu_minimum) || DEFAULT_CPU_RECOMMENDATION_MINIMUM
+      ::Settings.recommendations.cpu_minimum
     end
 
-    DEFAULT_MEM_RECOMMENDATION_MINIMUM = 32.megabytes
     def mem_recommendation_minimum
-      min = (VMDB::Config.new("vmdb").config.fetch_path(:recommendations, :mem_minimum) || DEFAULT_MEM_RECOMMENDATION_MINIMUM).to_i_with_method
+      min = ::Settings.recommendations.mem_minimum.to_i_with_method
       min / 1.megabyte
     end
   end

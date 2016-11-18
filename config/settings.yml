@@ -1013,6 +1013,9 @@
 :product:
   :maindb: ExtManagementSystem
   :container_deployment_wizard: false
+:recommendations:
+  :cpu_minimum: 1
+  :mem_minimum: 32.megabytes
 :reporting:
   :format_by_class:
     :Fixnum:
