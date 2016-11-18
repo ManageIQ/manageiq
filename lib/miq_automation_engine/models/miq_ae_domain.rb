@@ -153,6 +153,25 @@ class MiqAeDomain < MiqAeNamespace
     "#{domain_name} (#{ref})"
   end
 
+  def destroy_queue(user = User.current_user)
+    raise ArgumentError, "User not provided, to destroy_queue" unless user
+
+    task_options = {
+      :action => "Destroy domain",
+      :userid => user.userid
+    }
+
+    queue_options = {
+      :class_name  => self.class.to_s,
+      :method_name => "destroy",
+      :instance_id => id,
+      :role        => git_enabled? ? "git_owner" : nil,
+      :args        => []
+    }
+
+    MiqTask.generic_action_with_callback(task_options, queue_options)
+  end
+
   private
 
   def squeeze_priorities
