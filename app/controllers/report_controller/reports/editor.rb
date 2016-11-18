@@ -24,14 +24,13 @@ module ReportController::Reports::Editor
     @report = nil     # Clear any saved report object
     if params[:tab] # Came in to change the tab
       check_tabs
-      build_edit_screen
     else
       @sb[:miq_tab] = "edit_1"
       @rpt          = MiqReport.find(params[:id])
       @rpt.id       = nil # Treat as a new report
       set_form_vars
-      build_edit_screen
     end
+    build_edit_screen
     @ina_form = @lock_tree = true
     replace_right_cell
   end
@@ -100,7 +99,6 @@ module ReportController::Reports::Editor
         @rpt = @edit[:rpt_id] ? MiqReport.find(@edit[:rpt_id]) :
             MiqReport.new
         check_tabs
-        build_edit_screen
       else
         @sb[:miq_tab] = "edit_1"
         @rpt = params[:id] && params[:id] != "new" ? MiqReport.find(params[:id]) :
@@ -111,8 +109,8 @@ module ReportController::Reports::Editor
           return
         end
         set_form_vars
-        build_edit_screen
       end
+      build_edit_screen
       @changed          = (@edit[:new] != @edit[:current])
       session[:changed] = @changed
       @lock_tree        = true
