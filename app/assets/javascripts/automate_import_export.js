@@ -6,7 +6,7 @@ var Automate = {
   getAndRenderAutomateJson: function(importFileUploadId, message) {
     $('.hidden-import-file-upload-id').val(importFileUploadId);
 
-    $.getJSON("automate_json?import_file_upload_id=" + importFileUploadId)
+    $.getJSON('automate_json?import_file_upload_id=' + importFileUploadId)
       .done(function(rows_json) {
         Automate.addDomainOptions(rows_json);
         Automate.setupInitialTree(rows_json);
@@ -23,7 +23,7 @@ var Automate = {
       .fail(function(failedMessage) {
         var messageData = JSON.parse(failedMessage.responseText);
 
-        if (messageData.level == 'warning') {
+        if (messageData.level === 'warning') {
           showWarningMessage(messageData.message);
         } else {
           showErrorMessage(messageData.message);
@@ -33,16 +33,16 @@ var Automate = {
 
   renderGitImport: function(branches, tags, gitRepoId, messages) {
     clearMessages();
-    message = JSON.parse(messages).message;
-    messageLevel = JSON.parse(messages).level;
+    var message = JSON.parse(messages).message;
+    var messageLevel = JSON.parse(messages).level;
 
-    if (messageLevel === "error") {
+    if (messageLevel === 'error') {
       showErrorMessage(message);
     } else {
       $('.hidden-git-repo-id').val(gitRepoId);
       $('.git-import-data').show();
       $('.import-or-export').hide();
-      if (messageLevel === "warning") {
+      if (messageLevel === 'warning') {
         showWarningMessage(message);
       } else {
         showSuccessMessage(message);
@@ -52,15 +52,15 @@ var Automate = {
         $('select.git-' + identifier).append(
           $('<option>', {
             value: child,
-            text: child
+            text: child,
           })
         );
       };
 
-      $.each(JSON.parse(branches), function(index, child) {
+      $.each(JSON.parse(branches), function(_index, child) {
         addToDropDown('branches', child);
       });
-      $.each(JSON.parse(tags), function(index, child) {
+      $.each(JSON.parse(tags), function(_index, child) {
         addToDropDown('tags', child);
       });
 
@@ -91,7 +91,7 @@ var Automate = {
       $('select.importing-domains').append(
         $('<option>', {
           value: child.key,
-          text:  child.text
+          text:  child.text,
         })
       );
     });
@@ -107,7 +107,7 @@ var Automate = {
       showImage:         true,
       hierarchicalCheck: true,
       expandIcon:        'fa fa-fw fa-chevron-right',
-      collapseIcon:      'fa fa-fw fa-chevron-down'
+      collapseIcon:      'fa fa-fw fa-chevron-down',
     });
   },
 
@@ -121,7 +121,7 @@ var Automate = {
           showImage:         true,
           hierarchicalCheck: true,
           expandIcon:        'fa fa-fw fa-chevron-right',
-          collapseIcon:      'fa fa-fw fa-chevron-down'
+          collapseIcon:      'fa fa-fw fa-chevron-down',
         });
       }
     });
@@ -150,14 +150,14 @@ var Automate = {
       postData += '&';
 
       var treeName = $('.domain-tree').attr('name');
-      var serialized = $.param($('.domain-tree').treeview(true).getChecked().map(function (node) {
-        return {name: treeName, value: node.key}
+      var serialized = $.param($('.domain-tree').treeview(true).getChecked().map(function(node) {
+        return {name: treeName, value: node.key};
       }));
       postData = postData.concat(serialized);
 
       $.post('import_automate_datastore', postData, function(data) {
         var flashMessage = JSON.parse(data)[0];
-        if (flashMessage.level == 'error') {
+        if (flashMessage.level === 'error') {
           showErrorMessage(flashMessage.message);
         } else {
           showSuccessMessage(flashMessage.message);
@@ -180,7 +180,7 @@ var Automate = {
 
       $.post('import_via_git', $('#git-branch-tag-form').serialize(), function(data) {
         var flashMessage = data[0];
-        if (flashMessage.level == 'error') {
+        if (flashMessage.level === 'error') {
           showErrorMessage(flashMessage.message);
         } else {
           showSuccessMessage(flashMessage.message);
@@ -233,11 +233,11 @@ var Automate = {
 
     $('.git-branch-or-tag-select').on('change', function(event) {
       event.preventDefault();
-      if ($(event.currentTarget).val() === "Branch") {
+      if ($(event.currentTarget).val() === 'Branch') {
         $('.git-branch-group').show();
         $('.git-tag-group').hide();
         $('.git-branch-or-tag').val($('select.git-branches').val());
-      } else if ($(event.currentTarget).val() === "Tag") {
+      } else if ($(event.currentTarget).val() === 'Tag') {
         $('.git-branch-group').hide();
         $('.git-tag-group').show();
         $('.git-branch-or-tag').val($('select.git-tags').val());
@@ -245,14 +245,14 @@ var Automate = {
       toggleSubmitButton();
     });
 
-    $('select.git-branches').on('change', function(event) {
+    $('select.git-branches').on('change', function(_event) {
       $('.git-branch-or-tag').val($('select.git-branches').val());
       toggleSubmitButton();
     });
 
-    $('select.git-tags').on('change', function(event) {
+    $('select.git-tags').on('change', function(_event) {
       $('.git-branch-or-tag').val($('select.git-tags').val());
       toggleSubmitButton();
     });
-  }
+  },
 };
