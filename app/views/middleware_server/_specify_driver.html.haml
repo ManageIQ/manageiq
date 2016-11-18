@@ -7,7 +7,7 @@
                                                   "ng-required"  => "true",
                                                   "ng-maxlength" => "100",
                                                   "placeholder"  => _("Enter JDBC Driver name"),
-                                                  "ng-model"     => "step2DsModel.jdbcDriverName"}
+                                                  "ng-model"     => "vm.step2DsModel.jdbcDriverName"}
   .col-sm-6.col-sm-offset-4
     %p.ng-error-messages{"ng-show" => "step2Form.jdbc_ds_driver_name_input.$error.required"}
       = _("Required")
@@ -23,7 +23,7 @@
                                                 "ng-required"  => "true",
                                                 "ng-maxlength" => "256",
                                                 "placeholder"  => _("Enter JDBC Module name"),
-                                                "ng-model"     => "step2DsModel.jdbcModuleName"}
+                                                "ng-model"     => "vm.step2DsModel.jdbcModuleName"}
 
   .col-sm-6.col-sm-offset-4
     %p.ng-error-messages{"ng-show" => "step2Form.jdbc_modoule_name_input.$error.required"}
@@ -40,7 +40,7 @@
                                              "ng-required"  => "true",
                                              "ng-maxlength" => "256",
                                              "placeholder"  => _("Enter JDBC Driver Class"),
-                                             "ng-model"     => "step2DsModel.driverClass"}
+                                             "ng-model"     => "vm.step2DsModel.driverClass"}
 
   .col-sm-6.col-sm-offset-4
     %p.ng-error-messages{"ng-show" => "step2Form.jdbc_ds_driver_input.$error.required"}
