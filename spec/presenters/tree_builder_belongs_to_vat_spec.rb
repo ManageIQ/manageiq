@@ -43,7 +43,7 @@ describe TreeBuilderBelongsToVat do
   end
 
   it '#x_get_tree_datacenter_kids' do
-    kids = @vat_tree.send(:x_get_tree_datacenter_kids, @datacenter, false)
+    kids = @vat_tree.send(:x_get_tree_datacenter_kids, @datacenter, false, nil)
     expect(kids).to include(@ems_folder)
     expect(kids.size).to eq(1)
   end

@@ -18,6 +18,23 @@ describe 'ops/_rbac_group_details.html.haml' do
                                        {},
                                        true,
                                        :edit => {}, :filters => {}, :group => @group)
+      @ems_azure_network = FactoryGirl.create(:ems_azure_network)
+      @hac_tree = TreeBuilderBelongsToHac.new(:hac,
+                                              :hac_tree,
+                                              {:trees => {}},
+                                              true,
+                                              :edit     => nil,
+                                              :filters  => {},
+                                              :group    => @group,
+                                              :selected => {})
+      @vat_tree = TreeBuilderBelongsToVat.new(:vat,
+                                              :vat_tree,
+                                              {:trees => {}},
+                                              true,
+                                              :edit     => nil,
+                                              :filters  => {},
+                                              :group    => @group,
+                                              :selected => {})
     end
 
     it 'should show "Look up groups" checkbox and label for auth mode ldap' do

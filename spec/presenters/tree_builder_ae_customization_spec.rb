@@ -11,6 +11,7 @@ describe TreeBuilderAeCustomization  do
         :add_root    => true,
         :open_nodes  => [],
         :lazy        => true,
+        :checkable   => false,
         :open_all    => true,
         :active_node => "root"
       }
