@@ -1308,7 +1308,7 @@ function miqSelectPickerEvent(element, url, options) {
 
   $('#' + element).on('change', _.debounce(function() {
     var selected = $(this).val();
-    var finalUrl = url + (firstarg ? '?' : '&') + element + '=' + escape(selected);
+    var finalUrl = url + (firstarg ? '?' : '&') + element + '=' + encodeURIComponent(selected);
 
     if (typeof $(this).attr('data-miq_sparkle_on') != 'undefined')
       options.beforeSend = $(this).attr('data-miq_sparkle_on') == 'true';
