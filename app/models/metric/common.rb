@@ -169,7 +169,9 @@ module Metric::Common
 
     # @param :time_profile_or_tz [TimeProfile|Timezone] (default: DEFAULT_TIMEZONE)
     def with_time_profile_or_tz(time_profile_or_tz = nil)
-      if (time_profile = TimeProfile.default_time_profile(time_profile_or_tz))
+      if Thread.current[:default_time_profile_ids_cache]
+        where(:time_profile_id => Thread.current[:default_time_profile_ids_cache])
+      elsif (time_profile = TimeProfile.default_time_profile(time_profile_or_tz))
         tp_ids = time_profile.profile_for_each_region
         where(:time_profile => tp_ids)
       else
