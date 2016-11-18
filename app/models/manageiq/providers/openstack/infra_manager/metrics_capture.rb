@@ -1,5 +1,5 @@
 class ManageIQ::Providers::Openstack::InfraManager::MetricsCapture < ManageIQ::Providers::Openstack::BaseMetricsCapture
-  CPU_METERS     = %w(hardware.system_stats.cpu.util)
+  CPU_METERS     = %w(hardware.cpu.util)
   MEMORY_METERS  = %w(hardware.memory.used
                       hardware.memory.total)
   SWAP_METERS    = %w(hardware.memory.swap.avail

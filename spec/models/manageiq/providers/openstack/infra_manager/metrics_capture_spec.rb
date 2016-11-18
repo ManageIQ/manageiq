@@ -26,7 +26,7 @@ describe ManageIQ::Providers::Openstack::InfraManager::MetricsCapture do
     end
 
     it "treats openstack timestamp as UTC" do
-      ts_as_utc = api_time_as_utc(@mock_stats_data.get_statistics("hardware.system_stats.cpu.util").last)
+      ts_as_utc = api_time_as_utc(@mock_stats_data.get_statistics("hardware.cpu.util").last)
       _counters, values_by_id_and_ts = @host.perf_collect_metrics("realtime")
       ts = Time.parse(values_by_id_and_ts[@host.ems_ref].keys.max)
 
@@ -124,11 +124,11 @@ describe ManageIQ::Providers::Openstack::InfraManager::MetricsCapture do
     # Check that samples are correctly normalized into 20s intervals.
     #
     # the first two openstack metrics should look like:
-    #   ts: 2013-08-28T11:01:09 => hardware.system_stats.cpu.util: 50
-    #   ts: 2013-08-28T11:02:12 => hardware.system_stats.cpu.util: 100
-    #   ts: 2013-08-28T11:03:15 => hardware.system_stats.cpu.util: 25
-    #   ts: 2013-08-28T11:04:18 => hardware.system_stats.cpu.util: 50
-    #   ts: 2013-08-28T11:05:21 => hardware.system_stats.cpu.util: 20
+    #   ts: 2013-08-28T11:01:09 => hardware.cpu.util: 50
+    #   ts: 2013-08-28T11:02:12 => hardware.cpu.util: 100
+    #   ts: 2013-08-28T11:03:15 => hardware.cpu.util: 25
+    #   ts: 2013-08-28T11:04:18 => hardware.cpu.util: 50
+    #   ts: 2013-08-28T11:05:21 => hardware.cpu.util: 20
     #
     # after capture and processing, the first six statistics should look like:
     #   ts: 2013-08-28T11:01:40 => cpu_usage_rate_average: 100
@@ -588,7 +588,7 @@ describe ManageIQ::Providers::Openstack::InfraManager::MetricsCapture do
 
     it "checks that the net_usage_rate_average should have last incomplete stat not saved" do
       # Ensure that the first 21 statistics match nil. This happens because there is one more stat of
-      # hardware.system_stats.cpu.util, but net usage stat has been incomplete, so we store nil values, those nil
+      # hardware.cpu.util, but net usage stat has been incomplete, so we store nil values, those nil
       # values has been filled with the right value in previous collection period.
       # !!!!!!! It's up to saving mechanism to not overwrite the old values with nil. !!!!!!!!!!!
       (0..20).each { |i| expect(@values_by_ts[@ts_keys[i]]["net_usage_rate_average"]).to eq nil }
@@ -893,7 +893,7 @@ describe ManageIQ::Providers::Openstack::InfraManager::MetricsCapture do
 
     it "checks that the mem_usage_absolute_average should have last incomplete stat not saved" do
       # Ensure that the first 21 statistics match nil. This happens because there is one more stat of
-      # hardware.system_stats.cpu.util, but net usage stat has been incomplete, so we store nil values, those nil
+      # hardware.cpu.util, but net usage stat has been incomplete, so we store nil values, those nil
       # values has been filled with the right value in previous collection period.
       # !!!!!!! It's up to saving mechanism to not overwrite the old values with nil. !!!!!!!!!!!
       (0..20).each { |i| expect(@values_by_ts[@ts_keys[i]]["mem_usage_absolute_average"]).to eq nil }
