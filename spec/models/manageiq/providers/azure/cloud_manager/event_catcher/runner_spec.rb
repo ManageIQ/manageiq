@@ -6,7 +6,7 @@ describe ManageIQ::Providers::Azure::CloudManager::EventCatcher::Runner do
     let(:event) do
       {"authorization" => {"action" => "Microsoft.Compute/virtualMachines/deallocate/action"},
        "eventName"     => {"value"  => "EndRequest"},
-       "resourceId"    => "/subscriptions/12345/resourceGroups/Rg1/providers/Microsoft.Compute/virtualMachines/testvm"}
+       "resourceId"    => "/subscriptions/12345/resourceGroups/Rg1/providers/Microsoft.Compute/virtualMachines/TestVm"}
     end
 
     before do
@@ -20,7 +20,7 @@ describe ManageIQ::Providers::Azure::CloudManager::EventCatcher::Runner do
       end
 
       it "vm ref" do
-        expect(catcher.parse_vm_ref(event)).to eq "12345\\rg1\\microsoft.compute/virtualmachines\\testvm"
+        expect(catcher.parse_vm_ref(event)).to eq "12345\\rg1\\microsoft.compute/virtualmachines\\TestVm"
       end
     end
   end
