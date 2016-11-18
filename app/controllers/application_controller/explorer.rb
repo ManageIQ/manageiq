@@ -5,6 +5,8 @@ module ApplicationController::Explorer
   # Historical tree item selected
   def x_history
     @hist = x_tree_history[params[:item].to_i]  # Set instance var so we know hist button was pressed
+    # remove id that is used in replace_right_cell method in vm_common
+    @sb[@sb[:active_accord]] = nil if @sb.fetch_path(@sb[:active_accord]) && @sb[@sb[:active_accord]] != @hist[:id]
     if @hist[:button]         # Button press from show screen
       self.x_node = @hist[:id]
       params[:id] = parse_nodetype_and_id(x_node).last
