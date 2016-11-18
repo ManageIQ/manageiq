@@ -118,10 +118,10 @@ var Automate = {
 
   setUpAutomateImportClickHandlers: function() {
     var tearDownGitImportOptions = function() {
-      $('.git-branches').find('option').remove().end();
-      $('.git-tags').find('option').remove().end();
-      $('.git-branches').selectpicker('refresh');
-      $('.git-tags').selectpicker('refresh');
+      $('select.git-branches').find('option').remove().end();
+      $('select.git-tags').find('option').remove().end();
+      $('select.git-branches').selectpicker('refresh');
+      $('select.git-tags').selectpicker('refresh');
 
       $('.import-or-export').show();
       $('.git-import-data').hide();
@@ -158,6 +158,7 @@ var Automate = {
 
     $('.git-retreive-datastore').click(function() {
       miqSparkleOn();
+      $('.git-import-submit').prop('disabled', true);
     });
 
     $('.git-import-submit').click(function(event) {
@@ -213,6 +214,14 @@ var Automate = {
   },
 
   setUpGitRefreshClickHandlers: function() {
+    var toggleSubmitButton = function() {
+      if ($('.git-branch-or-tag').val() !== "") {
+        $('.git-import-submit').prop('disabled', false);
+      } else {
+        $('.git-import-submit').prop('disabled', true);
+      }
+    };
+
     $('.git-branch-or-tag-select').on('change', function(event) {
       event.preventDefault();
       if ($(event.currentTarget).val() === "Branch") {
@@ -224,14 +233,17 @@ var Automate = {
         $('.git-tag-group').show();
         $('.git-branch-or-tag').val($('select.git-tags').val());
       }
+      toggleSubmitButton();
     });
 
     $('select.git-branches').on('change', function(event) {
       $('.git-branch-or-tag').val($('select.git-branches').val());
+      toggleSubmitButton();
     });
 
     $('select.git-tags').on('change', function(event) {
       $('.git-branch-or-tag').val($('select.git-tags').val());
+      toggleSubmitButton();
     });
   }
 };

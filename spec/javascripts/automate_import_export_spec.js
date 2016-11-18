@@ -38,6 +38,7 @@ describe('Automate', function() {
       html += '  <option value="1" selected="selected">Tag 1</option>';
       html += '  <option value="2">Tag 2</option>';
       html += '</select>';
+      html += '<button class="git-import-submit"/>';
       html += '';
       setFixtures(html);
 
@@ -64,6 +65,10 @@ describe('Automate', function() {
         it('copies the value of the git-branches select into the hidden field', function() {
           expect($('.git-branch-or-tag').val()).toEqual("2");
         });
+
+        it('toggles the submit button', function() {
+          expect($('.git-import-submit').prop('disabled')).toEqual(false);
+        });
       });
 
       describe('when "Tag" is selected', function() {
@@ -83,6 +88,10 @@ describe('Automate', function() {
         it('copies the value of the git-tag select into the hidden field', function() {
           expect($('.git-branch-or-tag').val()).toEqual("1");
         });
+
+        it('toggles the submit button', function() {
+          expect($('.git-import-submit').prop('disabled')).toEqual(false);
+        });
       });
     });
 
@@ -95,6 +104,10 @@ describe('Automate', function() {
       it('copies the value of the git-branches select into the hidden field', function() {
         expect($('.git-branch-or-tag').val()).toEqual("1");
       });
+
+      it('toggles the submit button', function() {
+        expect($('.git-import-submit').prop('disabled')).toEqual(false);
+      });
     });
 
     describe('when the select.git-tags field changes', function() {
@@ -105,6 +118,10 @@ describe('Automate', function() {
 
       it('copies the value of the git-tags select into the hidden field', function() {
         expect($('.git-branch-or-tag').val()).toEqual("2");
+      });
+
+      it('toggles the submit button', function() {
+        expect($('.git-import-submit').prop('disabled')).toEqual(false);
       });
     });
   });
