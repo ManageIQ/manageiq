@@ -369,9 +369,12 @@ module MiqReport::Generator
     objs = build_add_missing_timestamps(objs)
 
     data = build_includes(objs)
-    result = data.collect do|entry|
-      build_reportable_data(entry, {:only => only_cols, "include" => include}, nil)
-    end.flatten
+
+    result = TimeProfile.with_cached_time_profile_ids do
+      data.collect do |entry|
+        build_reportable_data(entry, {:only => only_cols, "include" => include}, nil)
+      end.flatten
+    end
 
     if rpt_options && rpt_options[:pivot]
       result = build_pivot(result)
