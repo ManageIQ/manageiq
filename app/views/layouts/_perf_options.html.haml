@@ -13,19 +13,19 @@
           - rt_chart = YAML.load(File.open("#{CHARTS_LAYOUTS_FOLDER}/realtime_perf_charts/#{@perf_options[:model]}.yaml"))
           - @rt_hide = rt_chart[@perf_options[:index].to_i][:type] == "None"
         - if request.parameters["controller"] == "storage" && @perf_options[:cat]
-          = select("perf", "typ", %w(Hourly Daily), {:selected => @perf_options[:typ]},
+          = select("perf", "typ", [[_("Hourly"), "Hourly"], [_("Daily"), "Daily"]], {:selected => @perf_options[:typ]},
                                                       :disabled => "")
         - elsif %(Host VmOrTemplate ContainerNode Container ContainerGroup MiddlewareServer |
           MiddlewareDatasource MiddlewareMessaging).include?(@perf_options[:model]) && !@rt_hide |
           = select_tag("perf_typ",
-                        options_for_select(["Hourly", "Daily", ["Most Recent Hour", "realtime"]], @perf_options[:typ]),
+                        options_for_select([[_("Hourly"), "Hourly"], [_("Daily"), "Daily"], [_("Most Recent Hour"), "realtime"]], @perf_options[:typ]),
                         "data-miq_sparkle_on" => true,
                         :class    => "selectpicker")
           :javascript
              miqSelectPickerEvent("perf_typ", "#{url}")
         - else
           = select_tag("perf_typ",
-                        options_for_select(%w(Hourly Daily), @perf_options[:typ]),
+                        options_for_select([[_("Hourly"), "Hourly"], [_("Daily"), "Daily"]], @perf_options[:typ]),
                         "data-miq_sparkle_on" => true,
                         :class    => "selectpicker")
           :javascript
