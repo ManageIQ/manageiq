@@ -44,7 +44,7 @@
     "moment-timezone": "~0.4.1",
     "numeral": "~1.5.3",
     "patternfly-bootstrap-treeview": "~2.1.1",
-    "patternfly-timeline": "~1.0.2",
+    "patternfly-timeline": "~1.0.3",
     "phantomjs-polyfill": "~0.0.2",
     "qs": "~0.3.10",
     "rx-angular": "rx.angular#~1.1.3",

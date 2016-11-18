@@ -13,7 +13,8 @@ ManageIQ.angular.app.controller('timelineOptionsController', ['$http', '$scope',
         $scope.afterGet  = true;
         $scope.dateOptions = {
             autoclose: true,
-            todayHighlight: true
+            todayHighlight: true,
+            orientation: 'bottom'
         };
         ManageIQ.angular.scope = $scope;
         $scope.availableCategories = categories;
