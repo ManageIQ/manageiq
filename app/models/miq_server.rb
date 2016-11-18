@@ -194,6 +194,7 @@ class MiqServer < ApplicationRecord
     end
 
     unless hostname.blank?
+      hostname = nil if hostname =~ /.*localhost.*/
       server_hash[:hostname] = config_hash[:hostname] = hostname
     end
 
