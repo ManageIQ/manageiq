@@ -41,8 +41,8 @@ col_order:
 # Column titles, in order
 headers:
 - Date/Time
-- Delivering Message Count
-- Message Count
+- Delivering Messages Count
+- Messages Count
 - Messages Added
 - Consumers Count
 
