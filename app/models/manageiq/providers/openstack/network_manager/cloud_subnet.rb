@@ -1,13 +1,13 @@
 class ManageIQ::Providers::Openstack::NetworkManager::CloudSubnet < ::CloudSubnet
-  supports :create_subnet
-  supports :delete_subnet do
+  supports :create
+  supports :delete do
     if ext_management_system.nil?
       unsupported_reason_add(:delete_subnet, _("The subnet is not connected to an active %{table}") % {
         :table => ui_lookup(:table => "ext_management_systems")
       })
     end
   end
-  supports :update_subnet do
+  supports :update do
     if ext_management_system.nil?
       unsupported_reason_add(:update_subnet, _("The subnet is not connected to an active %{table}") % {
         :table => ui_lookup(:table => "ext_management_systems")

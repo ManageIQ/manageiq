@@ -72,14 +72,12 @@ module SupportsFeatureMixin
     :create_host_aggregate      => 'Host Aggregate Creation',
     :create_network_router      => 'Network Router Creation',
     :create_security_group      => 'Security Group Creation',
-    :create_subnet              => 'Cloud Subnet Creation',
     :swift_service              => 'Swift storage service',
     :delete                     => 'Deletion',
     :delete_aggregate           => 'Host Aggregate Deletion',
     :delete_floating_ip         => 'Floating IP Deletion',
     :delete_network_router      => 'Network Router Deletion',
     :delete_security_group      => 'Security Group Deletion',
-    :delete_subnet              => 'Cloud Subnet Deletion',
     :disassociate_floating_ip   => 'Disassociate a Floating IP',
     :discovery                  => 'Discovery of Managers for a Provider',
     :evacuate                   => 'Evacuation',
@@ -112,7 +110,6 @@ module SupportsFeatureMixin
     :update_network_router      => 'Network Router Update',
     :ems_network_new            => 'New EMS Network Provider',
     :update_security_group      => 'Security Group Update',
-    :update_subnet              => 'Cloud Subnet Update',
   }.freeze
 
   # Whenever this mixin is included we define all features as unsupported by default.
