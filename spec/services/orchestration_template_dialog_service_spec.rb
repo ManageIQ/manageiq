@@ -46,24 +46,50 @@ describe OrchestrationTemplateDialogService do
     end
   end
 
-  describe "creation of dropdown field from allowed values" do
-    context "when a list of values is given" do
-      it "creates pairs of values" do
-        param_groups = create_dropdown_param(%w(val1 val2))
+  describe "creation of dropdown parameter fields" do
+    context "when allowed values are given" do
+      it "creates a dropdown field with pairs of values" do
+        # Create a simple dialog with one dropdown parameter.
+        constraint = OrchestrationTemplate::OrchestrationParameterAllowed.new(:allowed_values => %w(val1 val2))
+        param_groups = create_dropdown_param(constraint)
         allow(empty_template).to receive(:parameter_groups).and_return(param_groups)
         dialog = dialog_service.create_dialog("test", empty_template)
 
-        assert_dropdown_field(dialog, "param_dropdown", "val1", [%w(val1 val1), %w(val2 val2)])
+        # Get the dropdown field
+        field = dropdown_field(dialog)
+        # Ensure the allowed values are properly stored.
+        assert_field(field, DialogFieldDropDownList, :name => "param_dropdown", :default_value => "val1", :values => [%w(val1 val1), %w(val2 val2)])
       end
     end
 
     context "when a hash of allowed values is given" do
       it "creates pairs from hashes" do
-        param_groups = create_dropdown_param("key1" => "val1", "key2" => "val2")
+        # Create a simple dialog with one dropdown parameter.
+        constraint = OrchestrationTemplate::OrchestrationParameterAllowed.new(:allowed_values => {"key1" => "val1", "key2" => "val2"})
+        param_groups = create_dropdown_param(constraint)
         allow(empty_template).to receive(:parameter_groups).and_return(param_groups)
         dialog = dialog_service.create_dialog("test", empty_template)
 
-        assert_dropdown_field(dialog, "param_dropdown", "val1", [%w(key1 val1), %w(key2 val2)])
+        # Get the dropdown field
+        field = dropdown_field(dialog)
+        # Ensure the allowed values are properly stored.
+        assert_field(field, DialogFieldDropDownList, :name => "param_dropdown", :default_value => "val1", :values => [%w(key1 val1), %w(key2 val2)])
+      end
+    end
+
+    context "when automate method is given" do
+      it "creates a dropdown field requested resource_action" do
+        # Create a simple dialog with one dropdown parameter.
+        constraint = OrchestrationTemplate::OrchestrationParameterAllowedDynamic.new(:fqname => "/Path/To/Method")
+        param_groups = create_dropdown_param(constraint)
+        allow(empty_template).to receive(:parameter_groups).and_return(param_groups)
+        dialog = dialog_service.create_dialog("test", empty_template)
+
+        # Get the dropdown field
+        field = dropdown_field(dialog)
+        # Ensure the field is properly defined with the resource action.
+        expect(field.resource_action.fqname).to eq("/Path/To/Method")
+        assert_field(field, DialogFieldDropDownList, :name => "param_dropdown")
       end
     end
   end
@@ -185,16 +211,18 @@ describe OrchestrationTemplateDialogService do
     assert_field(fields[2], DialogFieldTextAreaBox, :name => "param_metadata")
   end
 
-  def assert_dropdown_field(dialog, field_name, default_value, values)
+  def dropdown_field(dialog)
+    # First ensure that the dialog is properly constructed.
     tabs = dialog.dialog_tabs
     expect(tabs.size).to eq(1)
     expect(tabs[0].dialog_groups.size).to eq(2)
     expect(tabs[0].dialog_groups[1].dialog_fields.size).to eq(1)
     fields = tabs[0].dialog_groups[1].dialog_fields
-    assert_field(fields[0], DialogFieldDropDownList, :name => field_name, :default_value => default_value, :values => values)
+    # Return the first field; it should be the only field.
+    fields[0]
   end
 
-  def create_dropdown_param(allowed_values)
+  def create_dropdown_param(constraint)
     [OrchestrationTemplate::OrchestrationParameterGroup.new(
       :label      => "group",
       :parameters => [
@@ -203,9 +231,7 @@ describe OrchestrationTemplateDialogService do
           :label         => "Drop down",
           :data_type     => "string",
           :default_value => "val1",
-          :constraints   => [
-            OrchestrationTemplate::OrchestrationParameterAllowed.new(:allowed_values => allowed_values)
-          ])
+          :constraints   => [constraint])
       ])
     ]
   end

@@ -200,15 +200,33 @@ class OrchestrationTemplateDialogService
 
   def add_parameter_field(parameter, group, position)
     if parameter.constraints
+      dynamic_dropdown = parameter.constraints.detect { |c| c.kind_of? OrchestrationTemplate::OrchestrationParameterAllowedDynamic }
+      return create_parameter_dynamic_dropdown_list(parameter, group, position, dynamic_dropdown) if dynamic_dropdown
+
       dropdown = parameter.constraints.detect { |c| c.kind_of? OrchestrationTemplate::OrchestrationParameterAllowed }
-      checkbox = parameter.constraints.detect { |c| c.kind_of? OrchestrationTemplate::OrchestrationParameterBoolean } unless dropdown
+      return create_parameter_dropdown_list(parameter, group, position, dropdown) if dropdown
+
+      checkbox = parameter.constraints.detect { |c| c.kind_of? OrchestrationTemplate::OrchestrationParameterBoolean }
+      return create_parameter_checkbox(parameter, group, position) if checkbox
     end
-    if dropdown
-      create_parameter_dropdown_list(parameter, group, position, dropdown)
-    elsif checkbox
-      create_parameter_checkbox(parameter, group, position)
-    else
-      create_parameter_textbox(parameter, group, position)
+
+    create_parameter_textbox(parameter, group, position)
+  end
+
+  def create_parameter_dynamic_dropdown_list(parameter, group, position, dynamic_dropdown)
+    group.dialog_fields.build(
+      :type         => "DialogFieldDropDownList",
+      :name         => "param_#{parameter.name}",
+      :data_type    => "string",
+      :dynamic      => true,
+      :display      => "edit",
+      :required     => false,
+      :label        => parameter.label,
+      :description  => parameter.description,
+      :position     => position,
+      :dialog_group => group
+    ).tap do |dialog_field|
+      dialog_field.resource_action.fqname = dynamic_dropdown.fqname
     end
   end
 
