@@ -945,7 +945,10 @@
   - host_aggregate
   - all_vm_rules
   - compute
+  - cloud_network
+  - cloud_subnet
   - flavor
+  - floating_ip
   - bottlenecks
   - chargeback
   - ontap_storage_system
@@ -959,11 +962,13 @@
   - datacenter
   - storage
   - ems_cloud
+  - ems_network
   - ems_cluster
   - ems_infra
   - host
   - job_all_smartproxy
   - job_my_smartproxy
+  - load_balancer
   - miq_ae_class_explorer
   - miq_ae_customization_explorer
   - miq_ae_class_import_export
@@ -973,6 +978,8 @@
   - miq_task_all_ui
   - miq_task_my_ui
   - my_settings
+  - network_port
+  - network_router
   - policy_simulation
   - policy_log
   - miq_report
