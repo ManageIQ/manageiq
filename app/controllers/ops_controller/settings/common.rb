@@ -872,8 +872,8 @@ module OpsController::Settings::Common
       w = wb[:websocket_worker]
       w[:count] = params[:websocket_worker_count].to_i if params[:websocket_worker_count]
     when "settings_custom_logos"                                            # Custom Logo tab
-      new[:server][:custom_logo] = (params[:server_uselogo] == "1") if params[:server_uselogo]
-      new[:server][:custom_login_logo] = (params[:server_useloginlogo] == "1") if params[:server_useloginlogo]
+      new[:server][:custom_logo] = (params[:server_uselogo] == "true") if params[:server_uselogo]
+      new[:server][:custom_login_logo] = (params[:server_useloginlogo] == "true") if params[:server_useloginlogo]
       new[:server][:use_custom_login_text] = (params[:server_uselogintext] == "true") if params[:server_uselogintext]
       if params[:login_text]
         new[:server][:custom_login_text] = params[:login_text]
@@ -1096,6 +1096,12 @@ module OpsController::Settings::Common
       @edit[:key] = "#{@sb[:active_tab]}_edit__#{@sb[:selected_server_id]}"
       if @edit[:current].config[:server][:custom_logo].nil?
         @edit[:current].config[:server][:custom_logo] = false # Set default custom_logo flag
+      end
+      if @edit[:current].config[:server][:custom_login_logo].nil?
+        @edit[:current].config[:server][:custom_login_logo] = false # Set default custom_logo flag
+      end
+      if @edit[:current].config[:server][:use_custom_login_text].nil?
+        @edit[:current].config[:server][:use_custom_login_text] = false # Set default custom_logo flag
       end
       @logo_file = @@logo_file
       @login_logo_file = @@login_logo_file
