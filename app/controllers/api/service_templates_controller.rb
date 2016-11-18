@@ -9,7 +9,6 @@ module Api
 
     def create_resource(_type, _id, data)
       # Temporarily only supporting atomic.
-      # Will update API to support composite separately.
       raise 'Service Type composite not supported' if data['service_type'] == 'composite'
       create_atomic(data).tap(&:save!)
     rescue => err
@@ -23,43 +22,51 @@ module Api
     end
 
     def create_atomic(data)
-      validate_atomic_data(data)
       service_template = ServiceTemplate.new(data.except('request_info'))
-      service_template.add_resource(create_service_template_request(data))
-      set_new_resource_actions(data['request_info'], service_template)
-    end
-
-    def validate_atomic_data(data)
-      raise 'Must provide request info' unless data.key?('request_info')
-      raise 'Provisioning Entry Point is required' unless data['request_info']['fqname']
-      raise 'Source VM is required' unless data['request_info']['src_vm_id']
+      dialog = nil
+      if data.key?('request_info')
+        service_template.add_resource(create_service_template_request(data['request_info']))
+        dialog = Dialog.find(data['request_info']['dialog_id']) if data['request_info']['dialog_id']
+      end
+      set_provision_action(service_template, dialog, data['request_info'])
+      set_retirement_reconfigure_action(service_template, dialog, data['request_info'])
+      service_template
     end
 
     # Need to set the request for non-generic Service Template
-    def create_service_template_request(data)
-      # hash must be passed as symbols
-      request_params = data['request_info'].symbolize_keys
-      wf = MiqProvisionWorkflow.class_for_source(data['request_info']['src_vm_id']).new(request_params, @auth_user_obj)
+    def create_service_template_request(request_data)
+      # data must be symbolized
+      request_params = request_data.symbolize_keys
+      wf = MiqProvisionWorkflow.class_for_source(request_params[:src_vm_id]).new(request_params, @auth_user_obj)
       raise 'Could not find Provision Workflow class for source VM' unless wf
       request = wf.make_request(nil, request_params)
       raise 'Could not create valid request' if request == false || !request.valid?
       request
     end
 
-    # Set Resource Actions
-    def set_new_resource_actions(data, service_template)
-      dialog = data['dialog_id'].nil? ? nil : Dialog.find(data['dialog_id'])
+    def set_provision_action(service_template, dialog, request_info)
+      fqname = if request_info && request_info['fqname']
+                 request_info['fqname']
+               else
+                 service_template.class.default_provisioning_entry_point(service_template.service_type)
+               end
+      ra = service_template.resource_actions.build(:action => 'Provision')
+      ra.update_attributes(:dialog => dialog, :fqname => fqname)
+    end
+
+    def set_retirement_reconfigure_action(service_template, dialog, request_info)
       [
-        {:name => 'Provision', :params_key => 'fqname'},
-        {:name => 'Reconfigure', :params_key => 'reconfigure_fqname'},
-        {:name => 'Retirement', :params_key => 'retire_fqname'}
+        {:name => 'Reconfigure', :param_key => 'reconfigure_fqname', :method => 'default_reconfiguration_entry_point'},
+        {:name => 'Retirement', :param_key => 'retire_fqname', :method => 'default_retirement_entry_point'}
       ].each do |action|
-        unless data[action[:params_key]].nil?
-          ra = service_template.resource_actions.build(:action => action[:name])
-          ra.update_attributes(:dialog => dialog, :fqname => data[action[:params_key]])
-        end
+        ra = service_template.resource_actions.build(:action => action[:name], :dialog => dialog)
+        fqname = if request_info && request_info[action[:param_key]]
+                   request_info[action[:param_key]]
+                 else
+                   service_template.class.send(action[:method])
+                 end
+        ra.update_attributes(:fqname => fqname) if fqname
       end
-      service_template
     end
   end
 end

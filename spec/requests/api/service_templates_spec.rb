@@ -247,7 +247,7 @@ describe "Service Templates API" do
     end
 
     it 'can create a single service template' do
-      api_basic_authorize action_identifier(:service_templates, :create)
+      api_basic_authorize collection_action_identifier(:service_templates, :create)
 
       expected = {
         'results' => a_collection_including(
@@ -268,7 +268,7 @@ describe "Service Templates API" do
     end
 
     it 'can create multiple service templates' do
-      api_basic_authorize action_identifier(:service_templates, :create)
+      api_basic_authorize collection_action_identifier(:service_templates, :create)
 
       template_hash = {
         'name'         => 'Atomic Service Template',
@@ -293,51 +293,22 @@ describe "Service Templates API" do
       expect(response.parsed_body).to include(expected)
     end
 
-    it 'requires request_info' do
-      api_basic_authorize action_identifier(:service_templates, :create)
+    it 'can create a generic service template' do
+      api_basic_authorize collection_action_identifier(:service_templates, :create)
+      template_params = {
+        'name'            => 'Generic Service Template',
+        'service_type'    => 'atomic',
+        'prov_type'       => 'generic',
+        'generic_subtype' => ''
+      }
 
       expected = {
-        'error' => a_hash_including(
-          'kind'    => 'bad_request',
-          'message' => 'Could not create Service Template - Must provide request info'
-        )
+        'results' => [a_hash_including(template_params)]
       }
-      run_post(service_templates_url, template_parameters.except(:request_info))
-
-      expect(response).to have_http_status(:bad_request)
-      expect(response.parsed_body).to include(expected)
-    end
-
-    it 'requires a Provisioning Entrypoint' do
-      api_basic_authorize action_identifier(:service_templates, :create)
-      template_parameters[:request_info].delete(:fqname)
-
-      expected = {
-        'error' =>
-                   a_hash_including(
-                     'kind'    => 'bad_request',
-                     'message' => 'Could not create Service Template - Provisioning Entry Point is required'
-                   )
-      }
-      run_post(service_templates_url, template_parameters)
-
-      expect(response).to have_http_status(:bad_request)
-      expect(response.parsed_body).to include(expected)
-    end
-
-    it 'requires a source VM' do
-      api_basic_authorize action_identifier(:service_templates, :create)
-      template_parameters[:request_info].delete(:src_vm_id)
-
-      expected = {
-        'error' => a_hash_including(
-          'kind'    => 'bad_request',
-          'message' => 'Could not create Service Template - Source VM is required'
-        )
-      }
-      run_post(service_templates_url, template_parameters)
-
-      expect(response).to have_http_status(:bad_request)
+      expect do
+        run_post(service_templates_url, template_params)
+      end.to change(ServiceTemplate, :count).by(1)
+      expect(response).to have_http_status(:ok)
       expect(response.parsed_body).to include(expected)
     end
   end
