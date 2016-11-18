@@ -59,7 +59,8 @@ class CloudNetworkController < ApplicationController
       :cloud_tenant_name     => network.cloud_tenant.name,
       :enabled               => network.enabled,
       :external_facing       => network.external_facing,
-      :port_security_enabled => network.port_security_enabled,
+      # TODO: uncomment once form contains this field
+      #:port_security_enabled => network.port_security_enabled,
       :provider_network_type => network.provider_network_type,
       :qos_policy_id         => network.qos_policy_id,
       :shared                => network.shared,
@@ -244,7 +245,8 @@ class CloudNetworkController < ApplicationController
     options = {}
     # True by default
     params[:enabled] = false unless params[:enabled]
-    params[:port_security_enabled] = false unless params[:port_security_enabled]
+    # TODO: uncomment once form contains this field
+    # params[:port_security_enabled] = false unless params[:port_security_enabled]
     params[:qos_policy_id] = nil if params[:qos_policy_id].empty?
 
 
@@ -252,7 +254,8 @@ class CloudNetworkController < ApplicationController
     options[:admin_state_up] = switch_to_bol(params[:enabled]) unless @network.enabled == switch_to_bol(params[:enabled])
     options[:shared] = switch_to_bol(params[:shared]) unless @network.shared == switch_to_bol(params[:shared])
     options[:external_facing] = switch_to_bol(params[:external_facing]) unless @network.external_facing == switch_to_bol(params[:external_facing])
-    options[:port_security_enabled] = switch_to_bol(params[:port_security_enabled]) unless @network.port_security_enabled == switch_to_bol(params[:port_security_enabled])
+    # TODO: uncomment once form contains this field
+    # options[:port_security_enabled] = switch_to_bol(params[:port_security_enabled]) unless @network.port_security_enabled == switch_to_bol(params[:port_security_enabled])
     options[:qos_policy_id] = params[:qos_policy_id] unless @network.qos_policy_id == params[:qos_policy_id]
     options
   end
@@ -267,7 +270,8 @@ class CloudNetworkController < ApplicationController
     options[:admin_state_up] = switch_to_bol(params[:enabled])
     options[:shared] = switch_to_bol(params[:shared])
     options[:external_facing] = switch_to_bol(params[:external_facing])
-    options[:port_security_enabled] = params[:port_security_enabled] if params[:port_security_enabled]
+    # TODO: uncomment once form contains this field
+    # options[:port_security_enabled] = params[:port_security_enabled] if params[:port_security_enabled]
     options[:qos_policy_id] = params[:qos_policy_id] if params[:qos_policy_id]
     options[:provider_network_type] = params[:provider_network_type] if params[:provider_network_type]
     options[:cloud_tenant_id] = params[:cloud_tenant_id] if params[:cloud_tenant_id]
