@@ -223,7 +223,9 @@ module Rbac
       end
 
       if search_filter && targets && (!exp_attrs || !exp_attrs[:supported_by_sql])
-        rejects     = targets.reject { |obj| matches_search_filters?(obj, search_filter, tz) }
+        rejects = TimeProfile.with_cached_time_profile_ids do
+          targets.reject { |obj| matches_search_filters?(obj, search_filter, tz) }
+        end
         auth_count -= rejects.length unless options[:skip_counts]
         targets -= rejects
       end
