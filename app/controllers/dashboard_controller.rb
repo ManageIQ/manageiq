@@ -332,7 +332,7 @@ class DashboardController < ApplicationController
       return
     end
 
-    if get_vmdb_config[:product][:allow_passed_in_credentials]  # Only pre-populate credentials if setting is turned on
+    if ::Settings.product.allow_passed_in_credentials # Only pre-populate credentials if setting is turned on
       @user_name     = params[:user_name]
       @user_password = params[:user_password]
     end
@@ -445,10 +445,10 @@ class DashboardController < ApplicationController
     }
 
     if params[:user_name].blank? && params[:user_password].blank? &&
-      request.headers["X-Remote-User"].blank? &&
-      get_vmdb_config[:authentication][:mode] == "httpd" &&
-      get_vmdb_config[:authentication][:sso_enabled] &&
-      params[:action] == "authenticate"
+       request.headers["X-Remote-User"].blank? &&
+       ::Settings.authentication.mode == "httpd" &&
+       ::Settings.authentication.sso_enabled &&
+       params[:action] == "authenticate"
 
       javascript_redirect root_path
       return

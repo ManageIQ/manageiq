@@ -79,7 +79,7 @@ module Api
     def validate_user_create_data(data)
       validate_user_data(data)
       req_attrs = %w(name userid group)
-      req_attrs << "password" if VMDB::Config.new("vmdb").config.fetch_path(:authentication, :mode) == "database"
+      req_attrs << "password" if ::Settings.authentication.mode == "database"
       bad_attrs = []
       req_attrs.each { |attr| bad_attrs << attr if data[attr].blank? }
       raise BadRequestError, "Missing attribute(s) #{bad_attrs.join(', ')} for creating a user" if bad_attrs.present?

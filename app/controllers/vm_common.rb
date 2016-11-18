@@ -96,7 +96,7 @@ module VmCommon
 
   # Launch a VM console
   def console
-    console_type = get_vmdb_config.fetch_path(:server, :remote_console_type).downcase
+    console_type = ::Settings.server.remote_console_type.downcase
     params[:task_id] ? console_after_task(console_type) : console_before_task(console_type)
   end
   alias_method :vmrc_console, :console  # VMRC needs its own URL for RBAC checking
@@ -116,13 +116,13 @@ module VmCommon
   end
 
   def launch_vmware_console
-    console_type = get_vmdb_config.fetch_path(:server, :remote_console_type).downcase
+    console_type = ::Settings.server.remote_console_type.downcase
     @vm = @record = identify_record(params[:id], VmOrTemplate)
     options = case console_type
               when "mks"
                 @sb[:mks].update(
-                  :version     => get_vmdb_config[:server][:mks_version],
-                  :mks_classid => get_vmdb_config[:server][:mks_classid]
+                  :version     => ::Settings.server.mks_version,
+                  :mks_classid => ::Settings.server.mks_classid
                 )
               when "vmrc"
                 host = @record.ext_management_system.ipaddress || @record.ext_management_system.hostname
@@ -146,12 +146,6 @@ module VmCommon
            :layout   => false,
            :locals   => options
   end
-
-  def websocket_use_ssl?
-    ssl_requested = get_vmdb_config.fetch_path(:server, :websocket, :encrypt)
-    request.ssl? ? ssl_requested != false : ssl_requested == true
-  end
-  private :websocket_use_ssl?
 
   def hide_vms
     !User.current_user.settings.fetch_path(:display, :display_vms) # default value is false
