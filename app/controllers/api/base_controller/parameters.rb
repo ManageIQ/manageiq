@@ -91,6 +91,9 @@ module Api
                           unless methods[:datetime]
                             raise BadRequestError, "Unsupported operator for datetime: #{operator}"
                           end
+                          unless Time.zone.parse(filter_value)
+                            raise BadRequestError, "Bad format for datetime: #{filter_value}"
+                          end
                           [filter_value, methods[:datetime]]
                         else
                           [filter_value, methods[:default]]

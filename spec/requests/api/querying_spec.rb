@@ -395,6 +395,13 @@ describe "Querying" do
       expect(response.parsed_body).to include_error_with_message("Unsupported operator for datetime: !=")
       expect(response).to have_http_status(:bad_request)
     end
+
+    it "will handle poorly formed datetimes in the filter" do
+      run_get(vms_url, :filter => ["retires_on > foobar"])
+
+      expect(response.parsed_body).to include_error_with_message("Bad format for datetime: foobar")
+      expect(response).to have_http_status(:bad_request)
+    end
   end
 
   describe "Querying vm attributes" do
