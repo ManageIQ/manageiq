@@ -135,6 +135,7 @@ module Metric::Processing
       end
 
       new_perf = klass.new(last_perf[interval].attributes)
+      new_perf.id = nil
       new_perf.timestamp = last_perf[interval].timestamp + interval
       new_perf.capture_interval = 0
       Metric::Rollup::ROLLUP_COLS.each do |c|
