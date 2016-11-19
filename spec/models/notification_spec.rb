@@ -6,7 +6,7 @@ describe Notification, :type => :model do
   describe '.emit' do
     context 'successful' do
       let(:vm) { FactoryGirl.create(:vm, :tenant => tenant) }
-      let(:notification_type) { :vm_provisioned }
+      let(:notification_type) { :vm_retired }
 
       subject { Notification.create(:type => notification_type, :subject => vm) }
 
