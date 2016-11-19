@@ -255,10 +255,23 @@ describe ExtManagementSystem do
     end
   end
 
-  context "with virtual totals" do
+  context "with virtual totals and virtual aggregate" do
     before(:each) do
       @ems = FactoryGirl.create(:ems_vmware)
-      (1..2).each { |i| FactoryGirl.create(:vm_vmware, :ext_management_system => @ems, :name => "vm_#{i}") }
+      (1..2).each { FactoryGirl.create(:vm_vmware, :ext_management_system => @ems) }
+      (1..2).each do
+        FactoryGirl.create(:host,
+                           :ext_management_system => @ems,
+                           :hardware              => FactoryGirl.create(:hardware, :cpu2x2, :ram1GB))
+      end
+    end
+
+    it "#total_vcpus" do
+      expect(@ems.total_vcpus).to eq(8)
+    end
+
+    it "#total_memory" do
+      expect(@ems.total_memory).to eq(2048)
     end
 
     it "#total_vms_on" do

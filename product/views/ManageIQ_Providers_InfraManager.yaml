@@ -24,6 +24,8 @@ cols:
 - ipaddress
 - emstype_description
 - port
+- total_vcpus
+- total_memory
 - total_hosts
 - total_storages
 - total_vms
@@ -48,12 +50,22 @@ col_order:
 - ipaddress
 - emstype_description
 - zone.name
+- total_vcpus
+- total_memory
 - total_hosts
 - total_storages
 - total_vms
 - total_miq_templates
 - region_description
 
+col_formats:
+-
+-
+-
+-
+-
+-
+- :megabytes_human
 # Column titles, in order
 headers:
 - Name
@@ -61,6 +73,8 @@ headers:
 - Discovered IP Address
 - Type
 - EVM Zone
+- VCores
+- Memory
 - Hosts
 - Datastores
 - VMs
