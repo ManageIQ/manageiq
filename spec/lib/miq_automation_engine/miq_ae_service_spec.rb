@@ -172,7 +172,7 @@ module MiqAeServiceSpec
         end
 
         it "invalid subject" do
-          expect { miq_ae_service.create_notification!(:type => :vm_provisioned, :subject => 'fred') }
+          expect { miq_ae_service.create_notification!(:type => :vm_retired, :subject => 'fred') }
             .to raise_error(ArgumentError, "Subject must be a valid Active Record object")
         end
 
@@ -205,7 +205,7 @@ module MiqAeServiceSpec
         end
 
         it "invalid subject" do
-          expect { miq_ae_service.create_notification(:type => :vm_provisioned, :subject => 'fred') }
+          expect { miq_ae_service.create_notification(:type => :vm_retired, :subject => 'fred') }
             .not_to raise_error
         end
 

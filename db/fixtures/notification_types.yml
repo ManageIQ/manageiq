@@ -4,7 +4,7 @@
   :expires_in: 7.days
   :level: :success
   :audience: tenant
-- :name: service_provisioned
+- :name: automate_service_provisioned
   :message: Service %{subject} has been provisioned.
   :expires_in: 7.days
   :level: :success
@@ -14,7 +14,7 @@
   :expires_in: 7.days
   :level: :success
   :audience: tenant
-- :name: vm_provisioned
+- :name: automate_vm_provisioned
   :message: Virtual Machine %{subject} has been provisioned.
   :expires_in: 7.days
   :level: :success
