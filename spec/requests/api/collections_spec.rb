@@ -51,7 +51,7 @@ describe "Rest API Collections" do
 
     it "query query Alert status" do
       FactoryGirl.create(:miq_alert_status)
-      test_collection_bulk_query(:alerts_statuses, alerts_statuses_url, MiqAlertStatus)
+      test_collection_bulk_query(:alert_statuses, alert_statuses_url, MiqAlertStatus)
     end
 
     it "query Automation Requests" do

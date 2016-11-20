@@ -1,25 +1,18 @@
 module Api
-  class AlertsStatusesController < BaseController
+  class AlertStatusesController < BaseController
     include Subcollections::AlertStatusStates
-
-    def update
-      if @req.action == "providers_alerts"
-        providers_alerts_resource
-      else
-        super
-      end
-    end
-
-    def providers_alerts_resource
+    def options
       payload = {"providers" => []}
-      ExtManagementSystem.all.each do |provider|
+      ExtManagementSystem.select do |m|
+        m.kind_of?(ManageIQ::Providers::CloudManager) || m.kind_of?(ManageIQ::Providers::InfraManager) || m.kind_of?(ManageIQ::Providers::ContainerManager)
+      end.each do |provider|
         payload["providers"] << {
           "environment" => "production",
           "name"        => provider.name,
           "type"        => provider.class.to_s,
           "id"          => provider.id}.merge("alerts" => alerts_and_states(provider))
       end
-      render_resource :alertes_statuses, payload
+      render_options(:alert_statuses, payload)
     end
 
     private
@@ -28,10 +21,12 @@ module Api
       result = []
       provider.miq_alert_statuses.each do |alert_status|
         alert = {
+          "id"            => alert_status.id,
           "evaluated_on"  => alert_status.evaluated_on,
           "link_text"     => alert_status.miq_alert.link_text,
           "node_hostname" => alert_status.resource.name,
           "description"   => alert_status.miq_alert.description,
+          "severity"      => alert_status.miq_alert.severity,
           "states"        => add_alert_status_state(alert_status)
         }
         result << alert

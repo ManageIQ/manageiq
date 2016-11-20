@@ -673,9 +673,9 @@
           :identifier: action_edit
         - :name: delete
           :identifier: action_delete
-  :alerts_statuses:
+  :alert_statuses:
     :description: Alerts Statuses
-    :identifier: alerts_statuses
+    :identifier: alert_statuses
     :options:
     - :collection
     - :subcollection
@@ -690,8 +690,6 @@
       :post:
       - :name: query
         :identifier: alert_status_show_list
-      - :name: providers_alerts
-        :identifier: providers_alerts_statuses_show
     :resource_actions:
       :get:
       - :name: read

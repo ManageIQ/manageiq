@@ -8,33 +8,29 @@ RSpec.describe "Alert Status States API" do
     api_basic_authorize
 
     expect do
-      run_post("#{alerts_statuses_url(miq_alert_status.id)}/alert_status_states/#{miq_alert_status_state.id}", gen_request(:delete))
+      run_post("#{alert_statuses_url(miq_alert_status.id)}/alert_status_states/#{miq_alert_status_state.id}", gen_request(:delete))
     end.to change(MiqAlertStatusState, :count).by(-1)
     expect(response.parsed_body).to include("id" => miq_alert_status_state.id)
   end
 
   it "can add a alert status state through its nested URI" do
-    miq_alert_status
-    miq_alert_status_state
     api_basic_authorize
-
-    run_post("#{alerts_statuses_url(miq_alert_status.id)}/alert_status_states/#{miq_alert_status_state.id}",
-             gen_request(:edit, {'comment' => "I was worng"}))
+    run_post("#{alert_statuses_url(miq_alert_status.id)}/alert_status_states/#{miq_alert_status_state.id}",
+             gen_request(:edit, 'comment' => "I was worng"))
     expect(response.parsed_body).to include("miq_alert_status_id" => miq_alert_status.id, "comment" => "I was worng", "action" => "comment")
   end
 
   it "can add a alert status state through its nested URI" do
     api_basic_authorize
-    run_post("#{alerts_statuses_url(miq_alert_status.id)}/alert_status_states",
+    run_post("#{alert_statuses_url(miq_alert_status.id)}/alert_status_states",
              gen_request(:add, 'comment' => "I was worng", :action => "comment"))
     expect(response.parsed_body["results"].first).to include("miq_alert_status_id" => miq_alert_status.id, "comment" => "I was worng", "action" => "comment")
   end
 
   it "can read all alert status state through its nested URI" do
-    miq_alert_status
     miq_alert_status_state
     api_basic_authorize
-    run_get("#{alerts_statuses_url(miq_alert_status.id)}/alert_status_states")
+    run_get("#{alert_statuses_url(miq_alert_status.id)}/alert_status_states")
     expect(response.parsed_body["count"]).to eq(1)
   end
 end

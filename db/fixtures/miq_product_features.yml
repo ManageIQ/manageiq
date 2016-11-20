@@ -1912,7 +1912,7 @@
     :protected: true
     :feature_type: node
     :hidden: true
-    :identifier: alerts_statuses
+    :identifier: alert_statuses
     :children:
     - :name: View
       :description: View Alerts Statuses
@@ -1930,7 +1930,7 @@
       - :name: ProvidersAlerts
         :description: Display Alerts Statuses for provider
         :feature_type: view
-        :identifier: providers_alerts_statuses_show
+        :identifier: providers_alert_statuses_show
     - :name: Modify
       :description: Modify Alerts Statuses
       :feature_type: admin

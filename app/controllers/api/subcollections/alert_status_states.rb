@@ -11,7 +11,7 @@ module Api
         alert_status_state
       end
 
-      def alert_status_states_delete_resource(object, _type, id = nil, data = nil)
+      def alert_status_states_delete_resource(object, _type, id = nil, _data = nil)
         raise BadRequestError, "Must specify an id for deleting a #{type} resource" unless id
         alert_status_state = find_alert_status_state(object, id)
         delete_alert_status_state(alert_status_state)
@@ -26,6 +26,8 @@ module Api
 
       def find_alert_status_state(object, id)
         object.miq_alert_status_states.find(id)
+      rescue => err
+        raise BadRequestError, err.to_s
       end
 
       def delete_alert_status_state(alert_status_state)
@@ -39,6 +41,8 @@ module Api
 
       def update_alert_status_state(alert_status_state, data)
         alert_status_state.update_attributes!(data)
+      rescue => err
+        raise BadRequestError, err.to_s
       end
     end
   end
