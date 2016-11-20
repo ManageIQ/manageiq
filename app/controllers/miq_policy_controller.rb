@@ -665,7 +665,7 @@ class MiqPolicyController < ApplicationController
                           msg % {:name => @alert.description, :model => "#{pfx} #{ui_lookup(:model => "MiqAlert")}"}
                         end
     end
-    presenter[:right_cell_text] = right_cell_text
+    presenter[:right_cell_text] = @right_cell_text = right_cell_text
 
     presenter.reload_toolbars(:history => h_tb, :center => c_tb)
 
