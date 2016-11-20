@@ -580,33 +580,13 @@ module EmsCommon
   end
 
   def check_compliance(model)
-    showlist = @lastaction == "show_list"
-    ids = showlist ? find_checked_items : find_current_item(model)
-
-    if ids.empty?
-      add_flash(_("No %{model} were selected for %{task}") % {:model => ui_lookup(:models => model),
-                                                              :task  => "Compliance Check"}, :error)
-    else
-      process_check_compliance(model, ids)
+    emss = find_checked_items
+    if emss.empty?
+      add_flash(_("No %{record} were selected for %{task}") % {model => ui_lookup(:models => model),
+                                                               :task  => "Compliance Check"}, :error)
     end
-
-    showlist ? show_list : show
-    ids.count
-  end
-
-  def process_check_compliance(model, ids)
-    model.where(:id => ids).order("lower(name)").each do |entity|
-      begin
-        entity.check_compliance
-      rescue => bang
-        add_flash(_("%{model} \"%{name}\": Error during 'Check Compliance': ") %
-                    {:model => ui_lookup(:model => model),
-                     :name  => entity.name} << bang.message,
-                  :error) # Push msg and error flag
-      else
-        add_flash(_("\"%{record}\": Compliance check successfully initiated") % {:record => entity.name})
-      end
-    end
+    process_emss(emss, "check_compliance")
+    @lastaction == "show_list" ? show_list : show
   end
 
   def arbitration_profile_edit
