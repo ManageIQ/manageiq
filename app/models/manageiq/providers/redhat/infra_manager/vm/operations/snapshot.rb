@@ -39,6 +39,10 @@ module ManageIQ::Providers::Redhat::InfraManager::Vm::Operations::Snapshot
     true
   end
 
+  def snapshot_description_required?
+    true
+  end
+
   def validate_remove_all_snapshots
     {:available => false, :message => "Removing all snapshots is currently not supported"}
   end
