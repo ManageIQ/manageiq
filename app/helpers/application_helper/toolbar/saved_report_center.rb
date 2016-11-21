@@ -13,6 +13,7 @@ class ApplicationHelper::Toolbar::SavedReportCenter < ApplicationHelper::Toolbar
           t,
           :url     => "/report_only",
           :popup   => true,
+          :klass   => ApplicationHelper::Button::ButtonWithoutRbacCheck,
           :confirm => N_("This will show the entire report (all rows) in your browser.  Do you want to proceed?")),
         button(
           :saved_report_delete,
