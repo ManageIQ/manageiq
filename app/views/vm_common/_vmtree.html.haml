@@ -16,3 +16,4 @@
       :oncheck                   => "miqGetChecked",
       :reselect_node             => session[:base_vm],
       :check_url                 => "/vm/set_checked_items/"})
+  = render(:partial => "shared/tree", :locals => {:tree => @genealogy_tree, :name => @genealogy_tree.name})
