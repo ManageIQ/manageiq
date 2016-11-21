@@ -140,6 +140,15 @@ describe MiqGroup do
 
       expect(MiqGroup.get_httpd_groups_by_user('user')).to eq(memberships.first)
     end
+
+    it "should remove FQDN from the groups by user name with external authentication" do
+      ifp_memberships = [%w(foo@fqdn bar@fqdn)]
+      memberships = [%w(foo bar)]
+
+      allow(@ifp_interface).to receive(:GetUserGroups).with('user').and_return(ifp_memberships)
+
+      expect(MiqGroup.get_httpd_groups_by_user('user')).to eq(memberships.first)
+    end
   end
 
   describe "#get_ldap_groups_by_user" do
