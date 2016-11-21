@@ -432,11 +432,6 @@ module ApplicationHelper
                                                                :userid          => session[:userid])
   end
 
-  # Replacing calls to VMDB::Config.new in the views/controllers
-  def get_vmdb_config
-    @vmdb_config ||= VMDB::Config.new("vmdb").config
-  end
-
   # Derive the browser title text based on the layout value
   def title_from_layout(layout)
     # TODO: leave I18n until we have productization capability in gettext
