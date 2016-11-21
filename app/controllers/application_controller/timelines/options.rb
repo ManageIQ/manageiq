@@ -1,5 +1,5 @@
 module ApplicationController::Timelines
-  SELECT_EVENT_TYPE = [[_('Management Events'), 'timeline'], [_('Policy Events'), 'policy_timeline']].freeze
+  SELECT_EVENT_TYPE = [[N_('Management Events'), 'timeline'], [N_('Policy Events'), 'policy_timeline']].freeze
   SELECT_RESULT_TYPE = {_('Both') => 'both', _('True') => 'success', _('False') => 'failure'}.freeze
   EVENT_COLORS = ['#CD051C', '#005C25', '#035CB1', '#FF3106', '#FF00FF', '#000000'].freeze
 
