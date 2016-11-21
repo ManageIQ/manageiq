@@ -46,43 +46,6 @@ class TreeNodeBuilder
   end
 
   def build
-    generic_node(@new_node_obj)
-    @node
-  end
-
-  private
-
-  def tooltip(tip)
-    unless tip.blank?
-      tip = tip.kind_of?(Proc) ? tip.call : _(tip)
-      tip = ERB::Util.html_escape(URI.unescape(tip)) unless tip.html_safe?
-      @node[:tooltip] = tip
-    end
-  end
-
-  def node_icon(icon)
-    if icon.start_with?("/")
-      icon
-    elsif icon =~ %r{^[a-zA-Z0-9]+/}
-      ActionController::Base.helpers.image_path(icon)
-    else
-      ActionController::Base.helpers.image_path("100/#{icon}")
-    end
-  end
-
-  def generic_node(node)
-    text = ERB::Util.html_escape(node.title ? URI.unescape(node.title) : node.title) unless node.title.html_safe?
-    @node = {
-      :key          => node.key,
-      :title        => text ? text : node.title,
-      :icon         => node_icon(node.image),
-      :expand       => node.expand,
-      :hideCheckbox => node.hide_checkbox,
-      :addClass     => node.klass,
-      :cfmeNoClick  => node.no_click,
-      :select       => node.selected,
-      :checkable    => node.checkable
-    }
-    tooltip(node.tooltip)
+    @new_node_obj.to_h
   end
 end

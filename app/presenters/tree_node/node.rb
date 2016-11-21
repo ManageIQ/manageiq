@@ -32,5 +32,34 @@ module TreeNode
         "#{@options[:full_ids] && !@parent_id.blank? ? "#{@parent_id}_" : ''}#{prefix}-#{cid}"
       end
     end
+
+    def to_h
+      text = ERB::Util.html_escape(title ? URI.unescape(title) : title) unless title.html_safe?
+      node = {
+        :key          => key,
+        :title        => text ? text : title,
+        :expand       => expand,
+        :hideCheckbox => hide_checkbox,
+        :addClass     => klass,
+        :cfmeNoClick  => no_click,
+        :select       => selected,
+        :checkable    => checkable
+      }
+      unless tooltip.blank?
+        tip = tooltip.kind_of?(Proc) ? tooltip.call : _(tooltip)
+        tip = ERB::Util.html_escape(URI.unescape(tip)) unless tip.html_safe?
+        node[:tooltip] = tip
+      end
+
+      node[:icon] = if image.start_with?("/")
+                      image
+                    elsif image =~ %r{^[a-zA-Z0-9]+/}
+                      ActionController::Base.helpers.image_path(image)
+                    else
+                      ActionController::Base.helpers.image_path("100/#{image}")
+                    end
+
+      node
+    end
   end
 end
