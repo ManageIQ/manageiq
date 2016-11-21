@@ -64,11 +64,24 @@ var Automate = {
         addToDropDown('tags', child);
       });
 
+      Automate.selectDefaultBranch();
+
       $('select.git-branches').selectpicker('refresh');
       $('select.git-tags').selectpicker('refresh');
     }
 
     miqSparkleOff();
+  },
+
+  selectDefaultBranch: function() {
+    if ($('select.git-branches').find('option[value="origin/master"]').length === 0) {
+      $('select.git-branches').prop('selectedIndex', 0);
+    } else {
+      $('select.git-branches').val('origin/master');
+    }
+
+    $('.git-branch-or-tag').val($('select.git-branches').val());
+    $('.git-import-submit').prop('disabled', false);
   },
 
   addDomainOptions: function(domains) {
@@ -158,7 +171,6 @@ var Automate = {
 
     $('.git-retreive-datastore').click(function() {
       miqSparkleOn();
-      $('.git-import-submit').prop('disabled', true);
     });
 
     $('.git-import-submit').click(function(event) {

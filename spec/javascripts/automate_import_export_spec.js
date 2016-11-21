@@ -20,6 +20,66 @@ describe('Automate', function() {
     });
   });
 
+  describe('#selectDefaultBranch', function() {
+    context('when "origin/master" does not exist as a branch', function() {
+      beforeEach(function() {
+        var html = '';
+        html += '<input type="hidden" class="git-branch-or-tag"></input>';
+        html += '<select class="git-branches selectpicker">';
+        html += '  <option value="1">Branch 1</option>';
+        html += '  <option value="2" selected="selected">Branch 2</option>';
+        html += '</select>';
+        html += '<button class="git-import-submit" disabled="true"/>';
+        html += '';
+        setFixtures(html);
+
+        miqInitSelectPicker();
+        Automate.selectDefaultBranch();
+      });
+
+      it('defaults to the first option', function() {
+        expect($('select.git-branches').val()).toEqual('1');
+      });
+
+      it('sets the hidden input to the correct value', function() {
+        expect($('.git-branch-or-tag').val()).toEqual('1');
+      });
+
+      it('sets the disabled property on the submit button to false', function() {
+        expect($('.git-import-submit').prop('disabled')).toEqual(false);
+      });
+    });
+
+    context('when "origin/master" does exist as a branch', function() {
+      beforeEach(function() {
+        var html = '';
+        html += '<input type="hidden" class="git-branch-or-tag"></input>';
+        html += '<select class="git-branches selectpicker">';
+        html += '  <option value="1">Branch 1</option>';
+        html += '  <option value="origin/master">origin/master</option>';
+        html += '</select>';
+        html += '<button class="git-import-submit" disabled="true"/>';
+        html += '';
+        setFixtures(html);
+
+        miqInitSelectPicker();
+        Automate.selectDefaultBranch();
+      });
+
+      it('selects "origin/master" as the value', function() {
+        expect($('select.git-branches').val()).toEqual('origin/master');
+      });
+
+      it('sets the hidden input to the correct value', function() {
+        expect($('.git-branch-or-tag').val()).toEqual('origin/master');
+      });
+
+      it('sets the disabled property on the submit button to false', function() {
+        expect($('.git-import-submit').prop('disabled')).toEqual(false);
+      });
+    });
+  });
+
   describe('#setUpGitRefreshClickHandlers', function() {
     beforeEach(function() {
       var html = '';
