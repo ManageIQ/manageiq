@@ -672,7 +672,7 @@
     period_start: "2013-08-28T12:44:20"
     avg: 196911321.0
     sum: 89.74293759622134
-  hardware.system_stats.cpu.util:
+  hardware.cpu.util:
   -
     count: 1
     duration_start: "2013-08-28T11:01:09"
