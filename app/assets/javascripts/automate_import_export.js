@@ -215,11 +215,8 @@ var Automate = {
 
   setUpGitRefreshClickHandlers: function() {
     var toggleSubmitButton = function() {
-      if ($('.git-branch-or-tag').val() !== "") {
-        $('.git-import-submit').prop('disabled', false);
-      } else {
-        $('.git-import-submit').prop('disabled', true);
-      }
+      var branchOrTagSelected = $('.git-branch-or-tag').val() === '';
+      $('.git-import-submit').prop('disabled', branchOrTagSelected);
     };
 
     $('.git-branch-or-tag-select').on('change', function(event) {
