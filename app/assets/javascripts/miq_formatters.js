@@ -6,7 +6,6 @@
   function apply_format_precision(val, precision) {
     if (val == null || ! _.isNumber(val))
       return val;
-
     return sprintf("%." + (~~ precision) + "f", val);
   };
 
@@ -22,7 +21,6 @@
 
   function number_with_delimiter(val, options) {
     options = _.extend({ delimiter: ',', separator: '.' }, options || {});
-
     var intpart, floatpart, minus;
     if (_.isNumber(val)) {
       intpart = ~~ val;
@@ -81,11 +79,10 @@
       fmt = "0";
     } else {
       var p = options.precision - 1;
-      while (p > 0) {
+      while (p-- > 0) {
         fmt += '0';
       }
     }
-
     return numeral(val).format(fmt + ' b');
   };
 
@@ -112,6 +109,11 @@
     return numeral(val).format('0o');
   };
 
+  function remove_right_side_zeros(str_val, separator) {
+    var v = str_val.split(separator);
+    return v[0].replace(/(?:\.0+|(\.\d+?)0+)$/, "$1") + separator + v[1];
+  };
+
   var format = {
     number_with_delimiter: function(val, options) {
       options = options || {};
@@ -131,21 +133,21 @@
 
     bytes_to_human_size: function(val, options) {
       options = options || {};
-      var av_options = { precision: options.precision || 1 };  // Precision of 0 returns the significant digits
+      var av_options = { precision: options.precision || 0 };  // Precision of 0 returns the significant digits
       val = number_to_human_size(val, av_options);
-      return apply_prefix_and_suffix(val, options);
+      return remove_right_side_zeros(apply_prefix_and_suffix(val, options), ' ');
     },
 
     kbytes_to_human_size: function(val, options) {
-      return format.bytes_to_human_size(val * 1024, options);
+      return remove_right_side_zeros(format.bytes_to_human_size(val * 1024, options), ' ');
     },
 
     mbytes_to_human_size: function(val, options) {
-      return format.kbytes_to_human_size(val * 1024, options);
+      return remove_right_side_zeros(format.kbytes_to_human_size(val * 1024, options), ' ');
     },
 
     gbytes_to_human_size: function(val, options) {
-      return format.mbytes_to_human_size(val * 1024, options);
+      return remove_right_side_zeros(format.mbytes_to_human_size(val * 1024, options), ' ');
     },
 
     mhz_to_human_size: function(val, options) {

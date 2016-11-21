@@ -1675,9 +1675,15 @@ function chartData(type, data, data2) {
       _.isObject(data.axis.y.tick) &&
       _.isObject(data.axis.y.tick.format) &&
       data.axis.y.tick.format.function) {
-    var o = data.axis.y.tick.format;
-    data.axis.y.tick.format = ManageIQ.charts.formatters[o.function].c3(o.options);
-    data.tooltip.format.value = ManageIQ.charts.formatters[o.function].c3(o.options);
+    var format = data.axis.y.tick.format;
+    data.axis.y.tick.format = ManageIQ.charts.formatters[format.function].c3(format.options);
+
+    var title_format = _.cloneDeep(format);
+    title_format.options.precision += 2;
+    data.tooltip.format.value = function (value, _ratio, _id) {
+      var format = ManageIQ.charts.formatters[title_format.function].c3(title_format.options);
+      return format(value);
+    }
   }
 
   var config = _.cloneDeep(ManageIQ.charts.c3config[type]);
