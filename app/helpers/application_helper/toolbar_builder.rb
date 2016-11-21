@@ -469,35 +469,6 @@ class ApplicationHelper::ToolbarBuilder
     return false if id.start_with?('history_')
     return true if id == "blank_button" # Always hide the blank button placeholder
 
-    # Hide configuration buttons for specific Container* entities
-    return true if %w(container_node_edit container_node_delete container_node_new).include?(id) &&
-                   (@record.kind_of?(ContainerNode) || @record.nil?)
-
-    return true if %w(container_service_edit container_service_delete container_service_new).include?(id) &&
-                   (@record.kind_of?(ContainerService) || @record.nil?)
-
-    return true if %w(container_group_edit container_group_delete container_group_new).include?(id) &&
-                   (@record.kind_of?(ContainerGroup) || @record.nil?)
-
-    return true if %w(container_edit container_delete container_new).include?(id) &&
-                   (@record.kind_of?(Container) || @record.nil?)
-
-    return true if %w(container_replicator_edit container_replicator_delete container_replicator_new).include?(id) &&
-                   (@record.kind_of?(ContainerReplicator) || @record.nil?)
-
-    return true if %w(container_image_registry_edit container_image_registry_delete
-                      container_image_registry_new).include?(id) &&
-                   (@record.kind_of?(ContainerImageRegistry) || @record.nil?)
-
-    return true if %w(persistent_volume_edit persistent_volume_delete persistent_volume_new).include?(id) &&
-                   (@record.kind_of?(PersistentVolume) || @record.nil?)
-
-    return true if %w(container_build_edit container_build_delete container_build_new).include?(id) &&
-                   (@record.kind_of?(ContainerBuild) || @record.nil?)
-
-    return true if %w(container_template_edit container_template_delete container_template_new).include?(id) &&
-                   (@record.kind_of?(ContainerTemplate) || @record.nil?)
-
     # hide compliance check and comparison buttons rendered for orchestration stack instances
     return true if @record.kind_of?(OrchestrationStack) && @display == "instances" &&
                    %w(instance_check_compliance instance_compare).include?(id)
@@ -686,41 +657,6 @@ class ApplicationHelper::ToolbarBuilder
       when "host_timeline"
         unless @record.has_events? || @record.has_events?(:policy_events)
           return N_("No Timeline data has been collected for this Host")
-        end
-      end
-    when "Container"
-      case id
-      when "container_timeline"
-        unless @record.has_events? || @record.has_events?(:policy_events)
-          return N_("No Timeline data has been collected for this Container")
-        end
-      end
-    when "ContainerNode"
-      case id
-      when "container_node_timeline"
-        unless @record.has_events? || @record.has_events?(:policy_events)
-          return N_("No Timeline data has been collected for this Node")
-        end
-      end
-    when "ContainerGroup"
-      case id
-      when "container_group_timeline"
-        unless @record.has_events? || @record.has_events?(:policy_events)
-          return N_("No Timeline data has been collected for this Pod")
-        end
-      end
-    when "ContainerReplicator"
-      case id
-      when "container_replicator_timeline"
-        unless @record.has_events? || @record.has_events?(:policy_events)
-          return N_("No Timeline data has been collected for this Replicator")
-        end
-      end
-    when "ContainerProject"
-      case id
-      when "container_project_timeline"
-        unless @record.has_events? || @record.has_events?(:policy_events)
-          return N_("No Timeline data has been collected for this Project")
         end
       end
     when "MiqAction"
