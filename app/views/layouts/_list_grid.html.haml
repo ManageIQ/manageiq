@@ -46,12 +46,13 @@
     %tr
       - grid_hash[:head].each do |h|
         %th{:class => h[:is_narrow] ? 'narrow' : ''}
+          - text = translate_header_text(h[:text])
           - if h[:sort]
             %a{:href => '#',
                :onclick => "miqGridSort(#{h[:col_idx] + 1})"}
-              = _(h[:text])
+              = text
           - else
-            = h[:text]
+            = text
 
           - if @sortcol && @sortcol == h[:col_idx]
             .pull-right

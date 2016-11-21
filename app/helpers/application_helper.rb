@@ -1732,4 +1732,12 @@ module ApplicationHelper
     end
     true
   end
+
+  def translate_header_text(text)
+    if text == "Region"
+      I18n.t("product.name") + " " + _(text)
+    else
+     _(text)
+    end
+  end
 end
