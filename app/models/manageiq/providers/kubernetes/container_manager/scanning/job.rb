@@ -173,12 +173,8 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
     end
   end
 
-  def cleanup(*args)
-    image = target_entity
-    if image
-      # TODO: check job success / failure
-      MiqEvent.raise_evm_job_event(image, :type => "scan", :suffix => "complete")
-    end
+  def delete_pod
+    return if options[:pod_name].blank?
     client = kubernetes_client
 
     begin
@@ -208,6 +204,17 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
         # TODO: handle the cleanup at a later time
       end
     end
+  end
+
+  def cleanup(*args)
+    image = target_entity
+    if image
+      # TODO: check job success / failure
+      MiqEvent.raise_evm_job_event(image, :type => "scan", :suffix => "complete")
+    end
+
+    delete_pod
+
   ensure
     case self.state
     when 'aborting' then process_abort(*args)
