@@ -83,10 +83,6 @@
         fmt += '0';
       }
     }
-    //console.log(val);
-    //console.log(numeral(val).format(fmt));
-    //var a = numeral(val).format(fmt).replace(/(?:\.0+|(\.\d+?)0+)$/, "$1");
-    //return numeral(a).format(' b');
     return numeral(val).format(fmt + ' b');
   };
 

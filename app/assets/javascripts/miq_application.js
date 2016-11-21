@@ -1673,7 +1673,6 @@ function chartData(type, data, data2) {
   // some PatternFly default configs define size of chart
   config.size = {};
   var ret = _.defaultsDeep({}, data, config, data2);
-  console.log(ret);
   return ret;
 }
 

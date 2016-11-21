@@ -34,7 +34,7 @@ describe('topologyService', function() {
       it('to entity pages', function() {
         var d = { id:"2",  item:{display_kind:"Openshift", kind:"ContainerManager", id:"2", miq_id:"37"}};
         expect(testService.geturl(d)).toEqual("/ems_container/37");
-        expect(testService.geturl(mw_manager)).toEqual("/ems_middleware/show/1");
+        expect(testService.geturl(mw_manager)).toEqual("/ems_middleware/1");
         d = { id:"3",  item:{display_kind:"Pod", kind:"ContainerGroup", id:"3", miq_id:"30"}};
         expect(testService.geturl(d)).toEqual("/container_group/show/30");
         d = { id:"4",  item:{display_kind:"VM", kind:"Vm", id:"4", miq_id:"25"}};
