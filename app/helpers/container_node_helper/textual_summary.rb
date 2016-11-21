@@ -5,8 +5,8 @@ module ContainerNodeHelper::TextualSummary
 
   def textual_group_properties
     %i(name creation_timestamp resource_version num_cpu_cores memory
-       max_container_groups identity_system identity_machine identity_infra runtime_version
-       kubelet_version proxy_version os_distribution kernel_version)
+       max_container_groups identity_system identity_machine identity_infra container_runtime_version
+       kubernetes_kubelet_version kubernetes_proxy_version os_distribution kernel_version)
   end
 
   def textual_group_relationships
@@ -88,15 +88,15 @@ module ContainerNodeHelper::TextualSummary
     }
   end
 
-  def textual_runtime_version
+  def textual_container_runtime_version
     @record.container_runtime_version || _("N/A")
   end
 
-  def textual_kubelet_version
+  def textual_kubernetes_kubelet_version
     @record.kubernetes_kubelet_version || _("N/A")
   end
 
-  def textual_proxy_version
+  def textual_kubernetes_proxy_version
     @record.kubernetes_proxy_version || _("N/A")
   end
 
