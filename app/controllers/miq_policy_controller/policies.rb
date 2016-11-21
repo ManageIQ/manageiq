@@ -71,7 +71,7 @@ module MiqPolicyController::Policies
         when :policy_tree
           @nodetype = "p"
           if params[:button] == "add"
-            self.x_node = @new_policy_node = "xx-#{policy.mode.downcase}_xx-#{policy.mode.downcase}-#{policy.towhat.camelize(:lower)}_p-#{to_cid(policy.id)}"
+            self.x_node = @new_policy_node = policy_node(policy)
             get_node_info(@new_policy_node)
           end
           replace_right_cell("p", params[:button] == "save" ? [:policy_profile, :policy] : [:policy])
@@ -106,7 +106,7 @@ module MiqPolicyController::Policies
                          :message      => "New Policy ID %{new_id} was copied from Policy ID %{old_id}" %
                                           {:new_id => new_pol.id, :old_id => policy.id})
       add_flash(_("%{model} \"%{name}\" was added") % {:model => ui_lookup(:model => "MiqPolicy"), :name => new_desc})
-      @new_policy_node = "xx-#{policy.mode.downcase}_xx-#{policy.mode.downcase}-#{policy.towhat.camelize(:lower)}_p-#{to_cid(policy.id)}"
+      @new_policy_node = policy_node(policy)
       get_node_info(@new_policy_node)
       replace_right_cell("p", [:policy])
     end
@@ -122,7 +122,7 @@ module MiqPolicyController::Policies
                 :error)
     else
       policies.push(params[:id])
-      self.x_node = @new_policy_node = "xx-#{pol.mode.downcase}_xx-#{pol.mode.downcase}-#{pol.towhat.camelize(:lower)}"
+      self.x_node = @new_policy_node = policies_node(pol.mode, pol.towhat)
     end
     process_policies(policies, "destroy") unless policies.empty?
     add_flash(_("The selected %{models} was deleted") %
@@ -160,6 +160,15 @@ module MiqPolicyController::Policies
 
   def policy_get_all
     peca_get_all('policy', -> { get_view(MiqPolicy, :conditions => ["mode = ? and towhat = ?", @sb[:mode].downcase, @sb[:nodeid].camelize]) })
+  end
+
+  def policies_node(mode, towhat)
+    ["xx-#{mode.downcase}",
+     "xx-#{mode.downcase}-#{towhat.camelize(:lower)}"].join("_")
+  end
+
+  def policy_node(policy)
+    [policies_node(policy.mode, policy.towhat), "p-#{to_cid(policy.id)}"].join("_")
   end
 
   private

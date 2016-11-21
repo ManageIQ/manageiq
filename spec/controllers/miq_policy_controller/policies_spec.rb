@@ -7,8 +7,8 @@ describe MiqPolicyController do
       render_views
 
       before :each do
-        event = FactoryGirl.create(:miq_event_definition, :name => "containergroup_compliance_check")
-        action = FactoryGirl.create(:miq_action, :name => "compliance_failed")
+        FactoryGirl.create(:miq_event_definition, :name => "containergroup_compliance_check")
+        FactoryGirl.create(:miq_action, :name => "compliance_failed")
         allow(controller).to receive(:policy_get_node_info)
         allow(controller).to receive(:get_node_info)
       end
@@ -36,7 +36,8 @@ describe MiqPolicyController do
       end
 
       it "Renders the control policy creation form correctly" do
-        session[:sandboxes] = {"miq_policy" => {:trees       => {:policy_tree => {:active_node => "xx-compliance_xx-compliance-containerGroup"}},
+        active_node = "xx-compliance_xx-compliance-containerGroup"
+        session[:sandboxes] = {"miq_policy" => {:trees       => {:policy_tree => {:active_node => active_node}},
                                                 :active_tree => :policy_tree,
                                                 :folder      => "compliance-containerGroup",
                                                 :nodeid      => "containerGroup"}}
