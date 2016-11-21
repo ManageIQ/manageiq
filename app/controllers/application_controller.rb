@@ -464,8 +464,7 @@ class ApplicationController < ActionController::Base
     if name == :ae_tree
       TreeBuilderAeClass.new(name, type, @sb)
     else
-      node_builder = TreeBuilderAutomate.select_node_builder(controller_name)
-      @automate_tree = TreeBuilderAutomate.new(name, type, @sb, true, :node_builder => node_builder)
+      @automate_tree = TreeBuilderAutomate.new(name, type, @sb)
     end
   end
 

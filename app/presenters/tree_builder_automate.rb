@@ -13,12 +13,15 @@ class TreeBuilderAutomate < TreeBuilderAeClass
                   :highlighting => true)
   end
 
-  def self.select_node_builder(controller)
-    case controller
-    when 'catalog'
+  def node_builder
+    if @type == :catalog
       TreeNodeBuilderAutomateCatalog
-    when 'miq_ae_class'
+    else
       TreeNodeBuilderAutomate
     end
+  end
+
+  def root_options
+    [t = _("Datastore"), t, nil, {:cfmeNoClick => true}]
   end
 end
