@@ -42,7 +42,7 @@
     "manageiq-ui-components": "~0.0.9",
     "moment-strftime": "himdel/moment-strftime#~0.1.7",
     "moment-timezone": "~0.4.1",
-    "numeral": "~1.5.3",
+    "numeral": "~1.5.5",
     "patternfly-bootstrap-treeview": "~2.1.1",
     "patternfly-timeline": "~1.0.3",
     "phantomjs-polyfill": "~0.0.2",
