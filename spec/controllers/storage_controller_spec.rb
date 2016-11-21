@@ -159,7 +159,6 @@ describe StorageController do
 
         main_content = JSON.parse(response.body)['updatePartials']['main_div']
         expect(main_content).to include("<h3>\n1 Datastore Being Tagged\n<\/h3>")
-        expect(main_content).to include("Name: #{datastore.name} | Datastores Type: ")
       end
 
       it 'can Perform a datastore Smart State Analysis from the datastore summary page' do

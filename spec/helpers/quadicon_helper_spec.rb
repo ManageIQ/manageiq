@@ -562,6 +562,13 @@ describe QuadiconHelper do
 
         expect(subject).to have_selector('span')
       end
+
+      it 'has no links when @quadicon_no_url is true' do
+        @quadicon_no_url = true
+        @embedded = true
+        @showlinks = false
+        expect(subject).not_to include('href')
+      end
     end
 
     context "when not in embedded view" do

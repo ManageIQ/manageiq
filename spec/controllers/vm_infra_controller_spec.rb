@@ -198,6 +198,25 @@ describe VmInfraController do
     expect(response).to render_template(:partial => 'layouts/_tagging')
   end
 
+  it 'The VM quadicons on the tagging screen do not links' do
+    classification = FactoryGirl.create(:classification, :name => "department", :description => "D    epartment")
+    @tag1 = FactoryGirl.create(:classification_tag,
+                               :name   => "tag1",
+                               :parent => classification)
+    @tag2 = FactoryGirl.create(:classification_tag,
+                               :name   => "tag2",
+                               :parent => classification)
+    get :show, :params => { :id => vm_vmware.id }
+    expect(response).to redirect_to(:action => 'explorer')
+
+    post :explorer
+    expect(response.status).to eq(200)
+
+    post :x_button, :params => { :pressed => 'vm_tag', :id => vm_vmware.id }
+    expect(response.status).to eq(200)
+    expect(response.body).to_not include('/vm_infra/x_button')
+  end
+
   it 'can Check VM Compliance' do
     get :show, :params => { :id => vm_vmware.id }
     expect(response).to redirect_to(:action => 'explorer')

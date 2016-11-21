@@ -51,6 +51,10 @@ module QuadiconHelper
     !quadicon_in_embedded_view? || quadicon_show_link_ivar?
   end
 
+  def quadicon_show_url?
+    !@quadicon_no_url
+  end
+
   def quadicon_policy_sim?
     !!@policy_sim
   end
@@ -303,6 +307,7 @@ module QuadiconHelper
   # Build a link with common quadicon options
   #
   def quadicon_link_to(url, sparkle: false, remote: false, options: {}, &block)
+    return if url.nil? && !quadicon_show_url?
     if sparkle
       options["data-miq_sparkle_on"] = true
       options["data-miq_sparkle_off"] = true
