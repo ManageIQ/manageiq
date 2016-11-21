@@ -93,6 +93,10 @@ class MiqGroup < ApplicationRecord
     end
   end
 
+  def self.strip_group_domains(group_list)
+    group_list.collect { |group| group.gsub(/@.*/, '') }
+  end
+
   def self.get_ldap_groups_by_user(user, bind_dn, bind_pwd)
     auth = VMDB::Config.new("vmdb").config[:authentication]
     auth[:group_memberships_max_depth] ||= User::DEFAULT_GROUP_MEMBERSHIPS_MAX_DEPTH
@@ -124,7 +128,7 @@ class MiqGroup < ApplicationRecord
     rescue => err
       raise _("Unable to get groups for user %{user_name} - %{error}") % {:user_name => username, :error => err}
     end
-    user_groups.first
+    strip_group_domains(user_groups.first)
   end
 
   def get_filters(type = nil)
