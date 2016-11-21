@@ -14,7 +14,7 @@ class ServiceTemplateOrchestration < ServiceTemplate
   end
 
   def self.default_provisioning_entry_point(_service_type)
-    '/Cloud/Orchestration/Provisioning/StateMachines/Provision/CatalogItemInitization'
+    '/Cloud/Orchestration/Provisioning/StateMachines/Provision/CatalogItemInitialization'
   end
 
   def self.default_reconfiguration_entry_point

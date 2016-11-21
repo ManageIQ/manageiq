@@ -4,9 +4,9 @@ version: 1.0
 object:
   attributes:
     display_name: 
-    name: provision_from_bundle
+    name: CatalogItemInitialization
     inherits: 
-    description: default
+    description: 
   fields:
   - sequencer:
       value: "/Service/Provisioning/StateMachines/Methods/GroupSequenceCheck"
