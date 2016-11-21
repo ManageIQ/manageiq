@@ -56,7 +56,7 @@ describe 'miq_request/_prov_options.html.haml' do
   context 'requester dropdown select box is not visible' do
     before(:each) do
       EvmSpecHelper.create_guid_miq_server_zone
-      allow(view).to receive(:get_vmdb_config).and_return(:server => {}, :session => {})
+      stub_settings(:server => {}, :session => {})
     end
 
     it 'for desktop' do
