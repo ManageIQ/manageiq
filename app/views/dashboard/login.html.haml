@@ -49,7 +49,7 @@
             = text_field_tag('user_name', @user_name,
                              :class => "form-control",
                              :placeholder => _('Username'),
-                             :onkeypress => "if (miqEnterPressed(event)) miqAjaxAuth();")
+                             :onkeypress => ext_auth? ? "if (miqEnterPressed(event)) miqAjaxExtAuth();" : "if (miqEnterPressed(event)) miqAjaxAuth();")
             = javascript_tag(javascript_focus('user_name'))
 
         .form-group
@@ -57,7 +57,7 @@
           .col-md-9
             = password_field_tag('user_password',
               @user_password,
-              :onkeypress => "if (miqEnterPressed(event)) miqAjaxAuth();",
+              :onkeypress => ext_auth? ? "if (miqEnterPressed(event)) miqAjaxExtAuth();" : "if (miqEnterPressed(event)) miqAjaxAuth();",
               :autocomplete => "off",
               :placeholder => (auth_mode == "httpd" ? _('Password or Password+One-Time-Password') : _('Password')),
               :class => "form-control")
@@ -98,7 +98,7 @@
                       :class                => "btn btn-primary",
                       :alt                  => _("Login"),
                       :title                => _("Login"),
-                      :onclick              => "miqAjaxAuth('#{j login_url}'); return false;")
+                      :onclick              => ext_auth? ? "miqAjaxExtAuth(); return false;" : "miqAjaxAuth('#{j login_url}'); return false;")
 
             = link_to(_("SSO Login"), '',
                       :id                    => "sso_login",

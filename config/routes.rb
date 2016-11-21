@@ -982,6 +982,7 @@ Vmdb::Application.routes.draw do
         widget_to_pdf
       ),
       :post => %w(
+        external_authenticate
         kerberos_authenticate
         initiate_saml_login
         authenticate
