@@ -224,7 +224,6 @@ class ApplicationHelper::ToolbarChooser
   end
 
   def center_toolbar_filename_containers
-    # TreeBuilder.get_model_for_prefix(@nodetype) == "Container" ? "containers_center_tb" : "container_center_tb"
     if x_node == "root"
       return "containers_center_tb"
     else
