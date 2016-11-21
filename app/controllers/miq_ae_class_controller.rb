@@ -844,13 +844,12 @@ class MiqAeClassController < ApplicationController
               page << javascript_hide(def_field)
               page << javascript_show(pwd_field)
               page << "$('##{pwd_field}').val('');"
-              @edit[:new][:fields][f[1].to_i]['default_value'] = nil
             else
               page << javascript_hide(pwd_field)
               page << javascript_show(def_field)
               page << "$('##{def_field}').val('');"
-              @edit[:new][:fields][f[1].to_i]['default_value'] = nil
             end
+            @edit[:new][:fields][f[1].to_i]['default_value'] = nil
           end
         end
       end
@@ -932,13 +931,12 @@ class MiqAeClassController < ApplicationController
               page << javascript_hide(def_field)
               page << javascript_show(pwd_field)
               page << "$('##{pwd_field}').val('');"
-              @edit[:new][:fields][f[1].to_i]['default_value'] = nil
             else
               page << javascript_hide(pwd_field)
               page << javascript_show(def_field)
               page << "$('##{def_field}').val('');"
-              @edit[:new][:fields][f[1].to_i]['default_value'] = nil
             end
+            @edit[:new][:fields][f[1].to_i]['default_value'] = nil
           end
         end
         if @edit[:default_verify_status] != session[:log_depot_default_verify_status]
