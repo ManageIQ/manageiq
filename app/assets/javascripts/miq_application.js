@@ -922,6 +922,28 @@ function miqAjaxAuthSso(url) {
   });
 }
 
+
+// Send External Authentication via ajax
+function miqAjaxExtAuth(url) {
+  miqEnableLoginFields(false);
+  miqSparkleOn();
+
+  // Note: /dashboard/external_authenticate creates an API token
+  //       based on the authenticated external user
+  //       and stores it in sessionStore.miq_token
+
+  var credentials = {
+    login: $('#user_name').val(),
+    password: $('#user_password').val(),
+    serialized: miqSerializeForm('login_div'),
+  }
+
+  miqJqueryRequest(url || '/dashboard/external_authenticate', {
+    beforeSend: true,
+    data: credentials.serialized,
+  });
+}
+
 // add a flash message to an existing #flash_msg_div
 // levels are error, warning, info, success
 function add_flash(msg, level, options) {
