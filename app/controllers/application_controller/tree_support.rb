@@ -37,7 +37,9 @@ module ApplicationController::TreeSupport
   end
 
   def tree_add_child_nodes(id)
-    nodes = TreeBuilder.tree_add_child_nodes(@sb, x_tree[:klass_name], id, controller_name)
+    tree_type = @sb[:active_tree].to_s.sub(/_tree$/, '')
+    tree_type = 'catalog' if controller_name == 'catalog' && tree_type == 'automate'
+    nodes = TreeBuilder.tree_add_child_nodes(@sb, x_tree[:klass_name], id, tree_type)
     TreeBuilder.convert_bs_tree(nodes)
   end
 

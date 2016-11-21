@@ -135,9 +135,7 @@ class TreeBuilder
   end
 
   # Add child nodes to the active tree below node 'id'
-  def self.tree_add_child_nodes(sandbox, klass_name, id, controller)
-    tree_type = sandbox[:active_tree].to_s.sub(/_tree$/, '')
-    tree_type = controller if controller == 'catalog' && tree_type == 'automate'
+  def self.tree_add_child_nodes(sandbox, klass_name, id, tree_type)
     tree = klass_name.constantize.new(sandbox[:active_tree].to_s, tree_type, sandbox, false)
     tree.x_get_child_nodes(id)
   end
