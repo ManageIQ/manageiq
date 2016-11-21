@@ -223,7 +223,7 @@ describe "Service Templates API" do
         :service_type => 'atomic',
         :prov_type    => 'amazon',
         :display      => 'false',
-        :request_info => {
+        :config_info  => {
           :miq_request_dialog_name => dialog.name,
           :placement_auto          => [true, 1],
           :number_of_vms           => [1, '1'],
@@ -308,6 +308,54 @@ describe "Service Templates API" do
       expect do
         run_post(service_templates_url, template_params)
       end.to change(ServiceTemplate, :count).by(1)
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
+    end
+
+    it 'can create a ServiceTemplateOrchestration' do
+      api_basic_authorize collection_action_identifier(:service_templates, :create)
+      orchestration_template = FactoryGirl.create(:orchestration_template)
+      ems = FactoryGirl.create(:ext_management_system)
+      template_params = {
+        'name'         => 'Orchestration Template',
+        'type'         => 'ServiceTemplateOrchestration',
+        'prov_type'    => 'generic_orchestration',
+        'service_type' => 'atomic',
+        'config_info'  => {
+          'template_id' => orchestration_template.id,
+          'manager_id'  => ems.id
+        }
+      }
+
+      expected = {
+        'results' => [a_hash_including(template_params.except('config_info'))]
+      }
+      expect do
+        run_post(service_templates_url, template_params)
+      end.to change(ServiceTemplateOrchestration, :count).by(1)
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
+    end
+
+    it 'can create a ServiceTemplateAnsibleTower' do
+      api_basic_authorize collection_action_identifier(:service_templates, :create)
+      config_script = FactoryGirl.create(:configuration_script)
+      template_params = {
+        'name'         => 'Ansible Tower',
+        'type'         => 'ServiceTemplateAnsibleTower',
+        'prov_type'    => 'generic_ansible_tower',
+        'service_type' => 'atomic',
+        'config_info'  => {
+          'template_id' => config_script.id
+        }
+      }
+
+      expected = {
+        'results' => [a_hash_including(template_params.except('config_info'))]
+      }
+      expect do
+        run_post(service_templates_url, template_params)
+      end.to change(ServiceTemplateAnsibleTower, :count).by(1)
       expect(response).to have_http_status(:ok)
       expect(response.parsed_body).to include(expected)
     end

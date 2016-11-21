@@ -22,14 +22,18 @@ module Api
     end
 
     def create_atomic(data)
-      service_template = ServiceTemplate.new(data.except('request_info'))
-      dialog = nil
-      if data.key?('request_info')
-        service_template.add_resource(create_service_template_request(data['request_info']))
-        dialog = Dialog.find(data['request_info']['dialog_id']) if data['request_info']['dialog_id']
+      service_template = ServiceTemplate.new(data.except('config_info'))
+      config_info = data['config_info'].nil? ? {} : data['config_info']
+      case service_template.type
+      when 'ServiceTemplateOrchestration'
+        add_orchestration_template_vars(service_template, config_info)
+      when 'ServiceTemplateAnsibleTower'
+        add_ansible_tower_job_template_vars(service_template, config_info)
+      else
+        service_template.add_resource(create_service_template_request(config_info)) unless config_info == {}
       end
-      set_provision_action(service_template, dialog, data['request_info'])
-      set_retirement_reconfigure_action(service_template, dialog, data['request_info'])
+      dialog = Dialog.find(config_info['dialog_id']) if config_info['dialog_id']
+      service_template.set_resource_actions(config_info, dialog)
       service_template
     end
 
@@ -44,29 +48,19 @@ module Api
       request
     end
 
-    def set_provision_action(service_template, dialog, request_info)
-      fqname = if request_info && request_info['fqname']
-                 request_info['fqname']
-               else
-                 service_template.class.default_provisioning_entry_point(service_template.service_type)
-               end
-      ra = service_template.resource_actions.build(:action => 'Provision')
-      ra.update_attributes(:dialog => dialog, :fqname => fqname)
+    def add_orchestration_template_vars(service_template, config_info)
+      service_template.orchestration_template = unless config_info['template_id'].nil?
+                                                  OrchestrationTemplate.find(config_info['template_id'])
+                                                end
+      service_template.orchestration_manager = unless config_info['manager_id'].nil?
+                                                 ExtManagementSystem.find(config_info['manager_id'])
+                                               end
     end
 
-    def set_retirement_reconfigure_action(service_template, dialog, request_info)
-      [
-        {:name => 'Reconfigure', :param_key => 'reconfigure_fqname', :method => 'default_reconfiguration_entry_point'},
-        {:name => 'Retirement', :param_key => 'retire_fqname', :method => 'default_retirement_entry_point'}
-      ].each do |action|
-        ra = service_template.resource_actions.build(:action => action[:name], :dialog => dialog)
-        fqname = if request_info && request_info[action[:param_key]]
-                   request_info[action[:param_key]]
-                 else
-                   service_template.class.send(action[:method])
-                 end
-        ra.update_attributes(:fqname => fqname) if fqname
-      end
+    def add_ansible_tower_job_template_vars(service_template, config_info)
+      service_template.job_template = unless config_info['template_id'].nil?
+                                        ConfigurationScript.find(config_info['template_id'])
+                                      end
     end
   end
 end
