@@ -118,15 +118,15 @@ class MiqStorageMetric < ApplicationRecord
   #
 
   def self.purge_window_size
-    VMDB::Config.new("vmdb").config.fetch_path(:storage, :metrics_history, :purge_window_size) || 100
+    ::Settings.storage.metrics_history.purge_window_size
   end
 
   def self.purge_date(type)
-    value = VMDB::Config.new("vmdb").config.fetch_path(:storage, :metrics_history, type.to_sym)
+    value = ::Settings.storage.metrics_history[type]
     return nil if value.nil?
 
     value = value.to_i.days if value.kind_of?(Fixnum) # Default unit is days
-    value = value.to_i_with_method.seconds.ago.utc unless value.nil?
+    value = value.to_i_with_method.seconds.ago.utc
     value
   end
 

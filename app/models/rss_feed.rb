@@ -12,13 +12,13 @@ class RssFeed < ApplicationRecord
   YML_DIR = File.join(File.expand_path(Rails.root), "product", "alerts", "rss")
 
   def url(host = nil)
-    proto = VMDB::Config.new("vmdb").config[:webservices][:consume_protocol]
+    proto = ::Settings.webservices.consume_protocol
     host_url = host.nil? ? "#{proto}://localhost:3000" : "#{proto}://" + host
     "#{host_url}#{link}"
   end
 
   def generate(host = nil, local = false, proto = nil)
-    proto ||= VMDB::Config.new("vmdb").config[:webservices][:consume_protocol]
+    proto ||= ::Settings.webservices.consume_protocol
     host_url = host.nil? ? "#{proto}://localhost:3000" : "#{proto}://" + host
 
     options = {

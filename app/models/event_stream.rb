@@ -38,7 +38,7 @@ class EventStream < ApplicationRecord
   #
 
   def self.keep_ems_events
-    VMDB::Config.new("vmdb").config.fetch_path(:ems_events, :history, :keep_ems_events)
+    ::Settings.ems_events.history.keep_ems_events
   end
 
   def self.purge_date
@@ -48,7 +48,7 @@ class EventStream < ApplicationRecord
   end
 
   def self.purge_window_size
-    VMDB::Config.new("vmdb").config.fetch_path(:ems_events, :history, :purge_window_size) || 1000
+    ::Settings.ems_events.history.purge_window_size
   end
 
   def self.purge_timer

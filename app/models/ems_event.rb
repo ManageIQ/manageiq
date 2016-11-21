@@ -21,15 +21,15 @@ class EmsEvent < EventStream
   end
 
   def self.task_final_events
-    VMDB::Config.new('event_handling').config[:task_final_events]
+    ::Settings.event_handling.task_final_events.to_hash
   end
 
   def self.event_groups
-    VMDB::Config.new('event_handling').config[:event_groups]
+    ::Settings.event_handling.event_groups.to_hash
   end
 
   def self.bottleneck_event_groups
-    VMDB::Config.new('event_handling').config[:bottleneck_event_groups]
+    ::Settings.event_handling.bottleneck_event_groups.to_hash
   end
 
   def self.group_and_level(event_type)

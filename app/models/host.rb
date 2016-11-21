@@ -1073,7 +1073,7 @@ class Host < ApplicationRecord
     rl_user, rl_password, su_user, su_password, additional_options = ssh_users_and_passwords
     options.merge!(additional_options)
 
-    prompt_delay = VMDB::Config.new("vmdb").config.fetch_path(:ssh, :authentication_prompt_delay)
+    prompt_delay = ::Settings.ssh.try(:authentication_prompt_delay)
     options[:authentication_prompt_delay] = prompt_delay unless prompt_delay.nil?
 
     users = su_user.nil? ? rl_user : "#{rl_user}/#{su_user}"
@@ -1351,7 +1351,7 @@ class Host < ApplicationRecord
     end
 
     _log.info("Queuing scan of #{log_target}")
-    timeout = (VMDB::Config.new("vmdb").config.fetch_path(:host_scan, :queue_timeout) || 20.minutes).to_i_with_method
+    timeout = ::Settings.host_scan.queue_timeout.to_i_with_method
     cb = {:class_name => task.class.name, :instance_id => task.id, :method_name => :queue_callback_on_exceptions, :args => ['Finished']}
     MiqQueue.put(
       :class_name   => self.class.name,

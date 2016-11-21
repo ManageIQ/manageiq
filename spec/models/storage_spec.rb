@@ -1,33 +1,21 @@
 describe Storage do
   it "#scan_watchdog_interval" do
-    allow(Storage).to receive_messages(:vmdb_storage_config => {})
-    expect(Storage.scan_watchdog_interval).to eq(Storage::DEFAULT_WATCHDOG_INTERVAL)
-
-    allow(Storage).to receive_messages(:vmdb_storage_config => {'watchdog_interval' => '5.minutes'})
+    stub_settings(:storage => {'watchdog_interval' => '5.minutes'})
     expect(Storage.scan_watchdog_interval).to eq(5.minutes)
   end
 
   it "#max_parallel_storage_scans_per_host" do
-    allow(Storage).to receive_messages(:vmdb_storage_config => {})
-    expect(Storage.max_parallel_storage_scans_per_host).to eq(Storage::DEFAULT_MAX_PARALLEL_SCANS_PER_HOST)
-
-    allow(Storage).to receive_messages(:vmdb_storage_config => {'max_parallel_scans_per_host' => 3})
+    stub_settings(:storage => {'max_parallel_scans_per_host' => 3})
     expect(Storage.max_parallel_storage_scans_per_host).to eq(3)
   end
 
   it "#max_qitems_per_scan_request" do
-    allow(Storage).to receive_messages(:vmdb_storage_config => {})
-    expect(Storage.max_qitems_per_scan_request).to eq(Storage::DEFAULT_MAX_QITEMS_PER_SCAN_REQUEST)
-
-    allow(Storage).to receive_messages(:vmdb_storage_config => {'max_qitems_per_scan_request' => 3})
+    stub_settings(:storage => {'max_qitems_per_scan_request' => 3})
     expect(Storage.max_qitems_per_scan_request).to eq(3)
   end
 
   it "#scan_collection_timeout" do
-    allow(Storage).to receive_messages(:vmdb_storage_config => {})
-    expect(Storage.scan_collection_timeout).to be_nil
-
-    allow(Storage).to receive_messages(:vmdb_storage_config => {:collection => {:timeout => 3}})
+    stub_settings(:storage => {:collection => {:timeout => 3}})
     expect(Storage.scan_collection_timeout).to eq(3)
   end
 
@@ -38,12 +26,6 @@ describe Storage do
     Timecop.travel(start) do
       expect(Storage.scan_watchdog_deliver_on - (start + scan_watchdog_interval)).to be_within(0.001).of(0.0)
     end
-  end
-
-  it "#vmdb_storage_config" do
-    config = {:foo => 1, :bar => 2}
-    stub_server_configuration(config, "storage")
-    expect(Storage.vmdb_storage_config).to eq(config)
   end
 
   it "#scan_complete?" do

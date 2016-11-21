@@ -247,7 +247,7 @@ class Storage < ApplicationRecord
   end
 
   def self.scan_collection_timeout
-    vmdb_storage_config[:collection] && vmdb_storage_config[:collection][:timeout]
+    ::Settings.storage.collection.timeout
   end
 
   def self.scan_queue_watchdog(miq_task_id)
@@ -290,27 +290,16 @@ class Storage < ApplicationRecord
     scan_queue_watchdog(miq_task.id)
   end
 
-  def self.vmdb_storage_config
-    VMDB::Config.new("storage").config
-  end
-
-  DEFAULT_WATCHDOG_INTERVAL = 1.minute
   def self.scan_watchdog_interval
-    config = vmdb_storage_config
-    return DEFAULT_WATCHDOG_INTERVAL if config['watchdog_interval'].nil?
-    config['watchdog_interval'].to_s.to_i_with_method
+    ::Settings.storage.watchdog_interval.to_s.to_i_with_method
   end
 
-  DEFAULT_MAX_QITEMS_PER_SCAN_REQUEST = 0
   def self.max_qitems_per_scan_request
-    config = vmdb_storage_config
-    config['max_qitems_per_scan_request'] || DEFAULT_MAX_QITEMS_PER_SCAN_REQUEST
+    ::Settings.storage.max_qitems_per_scan_request
   end
 
-  DEFAULT_MAX_PARALLEL_SCANS_PER_HOST = 1
   def self.max_parallel_storage_scans_per_host
-    config = vmdb_storage_config
-    config['max_parallel_scans_per_host'] || DEFAULT_MAX_PARALLEL_SCANS_PER_HOST
+    ::Settings.storage.max_parallel_scans_per_host
   end
 
   def self.scan_eligible_storages(zone_name = nil)

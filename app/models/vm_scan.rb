@@ -190,11 +190,10 @@ class VmScan < Job
   end
 
   def config_snapshot
-    config = VMDB::Config.new('vmdb').config
     snapshot = {"use_existing" => options[:use_existing_snapshot],
                 "description"  => options[:snapshot_description]}
-    snapshot['create_free_percent'] = config.fetch_path(:snapshots, :create_free_percent) || 100
-    snapshot['remove_free_percent'] = config.fetch_path(:snapshots, :remove_free_percent) || 100
+    snapshot['create_free_percent'] = ::Settings.snapshots.create_free_percent
+    snapshot['remove_free_percent'] = ::Settings.snapshots.remove_free_percent
     snapshot
   end
 
