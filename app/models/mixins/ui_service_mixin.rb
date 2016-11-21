@@ -27,7 +27,7 @@ module UiServiceMixin
       :FloatingIp              => {:type => "glyph", :icon => "\uF041", :fontfamily => "FontAwesome"},             # fa-map-marker
       :CloudNetwork            => {:type => "glyph", :icon => "\uE62c", :fontfamily => "IcoMoon"},
       :CloudTenant             => {:type => "glyph", :icon => "\uE904", :fontfamily => "PatternFlyIcons-webfont"}, # pficon-cloud-tenant
-      :LoadBalancer            => {:type => "glyph", :icon => "\uE608", :fontfamily => "PatternFlyIcons-webfont"}, # pficon-load-balancer
+      :LoadBalancer            => {:type => "glyph", :icon => "\uE637", :fontfamily => "IcoMoon"},                 # load_balancer
       :Tag                     => {:type => "glyph", :icon => "\uF02b", :fontfamily => "FontAwesome"},
       :Openstack               => {:type => "image", :icon => provider_icon(:Openstack)},
       :Amazon                  => {:type => "image", :icon => provider_icon(:Amazon)},
