@@ -64,7 +64,7 @@ describe Authenticator::Httpd do
     end
 
     let(:username) { 'alice' }
-    let(:user_groups) { 'wibble:bubble' }
+    let(:user_groups) { 'wibble@fqdn:bubble@fqdn' }
 
     context "with user details" do
       context "using local authorization" do

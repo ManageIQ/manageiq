@@ -36,7 +36,7 @@ module Authenticator
 
     def groups_for(identity)
       _user_attrs, membership_list = identity
-      membership_list
+      MiqGroup.strip_group_domains(membership_list)
     end
 
     def update_user_attributes(user, _username, identity)
