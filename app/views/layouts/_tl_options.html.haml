@@ -17,7 +17,7 @@
             .form-group
               %div{'class' => 'timeline-filterbar'}
                 = select_tag("tl_show",
-                  options_for_select(ApplicationController::Timelines::SELECT_EVENT_TYPE, nil),
+                  options_for_select(ApplicationController::Timelines::SELECT_EVENT_TYPE.map {|key, value| [_(key), value]}, nil),
                   'ng-model'                    => 'reportModel.tl_show',
                   "selectpicker-for-select-tag" => '',
                   :class                        => 'selectpicker',
