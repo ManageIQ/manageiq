@@ -27,7 +27,7 @@ ManageIQ.angular.app.controller('cloudSubnetFormController', ['$http', '$scope',
 
   $scope.addClicked = function() {
     var url = 'create/new' + '?button=add';
-    miqService.miqAjaxButton(url, true);
+    miqService.miqAjaxButton(url, $scope.cloudSubnetModel, { complete: false });
   };
 
   $scope.cancelClicked = function() {
@@ -41,7 +41,7 @@ ManageIQ.angular.app.controller('cloudSubnetFormController', ['$http', '$scope',
 
   $scope.saveClicked = function() {
     var url = '/cloud_subnet/update/' + cloudSubnetFormId + '?button=save';
-    miqService.miqAjaxButton(url, true);
+    miqService.miqAjaxButton(url, $scope.cloudSubnetModel, { complete: false });
   };
 
   $scope.resetClicked = function() {
