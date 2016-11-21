@@ -304,8 +304,13 @@ module EmsCommon
     _model = model
     flash = _("Edit of %{model} \"%{name}\" was cancelled by the user") %
             {:model => ui_lookup(:model => _model.to_s), :name => @ems.name}
-    javascript_redirect :action => @lastaction, :id => @ems.id, :display => session[:ems_display],
-                        :flash_msg => flash, :record => @ems
+    js_args = {:action    => @lastaction,
+               :id        => @ems.id,
+               :display   => session[:ems_display],
+               :flash_msg => flash,
+               :record    => @ems
+    }
+    javascript_redirect(javascript_process_redirect_args(js_args))
   end
   private :update_button_cancel
 
@@ -323,7 +328,8 @@ module EmsCommon
               {:model => ui_lookup(:model => model.to_s), :name => update_ems.name}
       AuditEvent.success(build_saved_audit(update_ems, @edit))
       session[:edit] = nil  # clean out the saved info
-      javascript_redirect :action => 'show', :id => @ems.id.to_s, :flash_msg => flash, :record => @ems
+      js_args = {:action => 'show', :id => @ems.id.to_s, :flash_msg => flash, :record => @ems}
+      javascript_redirect(javascript_process_redirect_args(js_args))
       return
     else
       @edit[:errors].each { |msg| add_flash(msg, :error) }

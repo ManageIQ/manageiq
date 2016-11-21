@@ -1115,32 +1115,33 @@ module ApplicationHelper
     true
   end
 
-  def javascript_redirect(args)
+  def javascript_process_redirect_args(args)
     # there's no model for ResourceController - defaulting to traditional routing
-    model = self.class.model rescue nil
+    begin
+      model = self.class.model
+    rescue => _err
+      model = nil
+    end
     if model && args.class == Hash && args[:action] == 'show' && restful_routed?(model)
       args.delete(:action)
       polymorphic_path_redirect(model, args)
     else
-      non_polymorphic_path_redirect(args)
+      args
     end
   end
 
-  def polymorphic_path_redirect(model, args)
-    args[:record] ? record = args[:record] : record = model.find(args[:id] || params[:id])
-    args.delete(:record)
-    args.delete(:id)
-    render :update do |page|
-      page << javascript_prologue
-      page.redirect_to polymorphic_path(record, args)
-    end
-  end
-
-  def non_polymorphic_path_redirect(args)
+  def javascript_redirect(args)
     render :update do |page|
       page << javascript_prologue
       page.redirect_to args
     end
+  end
+
+  def polymorphic_path_redirect(model, args)
+    record = args[:record] ? args[:record] : model.find(args[:id] || params[:id])
+    args.delete(:record)
+    args.delete(:id)
+    polymorphic_path(record, args)
   end
 
   def javascript_flash(**args)

@@ -623,7 +623,12 @@ class ApplicationController < ActionController::Base
       else
         redirect_to_action = lastaction
       end
-      javascript_redirect :action => redirect_to_action, :id => params[:id], :escape => false, :load_edit_err => true
+      js_args = {:action        => redirect_to_action,
+                 :id            => params[:id],
+                 :escape        => false,
+                 :load_edit_err => true
+      }
+      javascript_redirect(javascript_process_redirect_args(js_args))
     else
       redirect_to :action => lastaction, :id => params[:id], :escape => false
     end
