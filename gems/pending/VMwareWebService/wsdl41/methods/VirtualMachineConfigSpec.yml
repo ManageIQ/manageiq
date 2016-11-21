@@ -99,3 +99,5 @@ changeTrackingEnabled:
 vmProfile:
   :type: :VirtualMachineProfileSpec
   :isArray: true
+memoryReservationLockedToMax:
+  :type: :SOAP::SOAPBoolean

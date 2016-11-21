@@ -98,3 +98,5 @@ vAssertsEnabled:
   :type: :SOAP::SOAPBoolean
 changeTrackingEnabled:
   :type: :SOAP::SOAPBoolean
+memoryReservationLockedToMax:
+  :type: :SOAP::SOAPBoolean

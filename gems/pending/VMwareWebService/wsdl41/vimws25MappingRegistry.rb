@@ -34510,7 +34510,10 @@
       ["ftInfo", "VimWs25::FaultToleranceConfigInfo", [0, 1]],
       ["vAppConfig", "VimWs25::VmConfigInfo", [0, 1]],
       ["vAssertsEnabled", "SOAP::SOAPBoolean", [0, 1]],
-      ["changeTrackingEnabled", "SOAP::SOAPBoolean", [0, 1]]
+      ["changeTrackingEnabled", "SOAP::SOAPBoolean", [0, 1]],
+
+      # memoryReservationLockedToMax added from VIM 5.0
+      ["memoryReservationLockedToMax", "SOAP::SOAPBoolean", [0, 1]]
     ]
   )
 
@@ -34629,7 +34632,10 @@
       ["changeTrackingEnabled", "SOAP::SOAPBoolean", [0, 1]],
 
       # vmProfile added from VIM 5.5
-      ["vmProfile", "VimWs25::VirtualMachineProfileSpec[]", [0, nil]]
+      ["vmProfile", "VimWs25::VirtualMachineProfileSpec[]", [0, nil]],
+
+      # memoryReservationLockedToMax added from VIM 5.0
+      ["memoryReservationLockedToMax", "SOAP::SOAPBoolean", [0, 1]]
     ]
   )
 
@@ -77249,7 +77255,10 @@
       ["ftInfo", "VimWs25::FaultToleranceConfigInfo", [0, 1]],
       ["vAppConfig", "VimWs25::VmConfigInfo", [0, 1]],
       ["vAssertsEnabled", "SOAP::SOAPBoolean", [0, 1]],
-      ["changeTrackingEnabled", "SOAP::SOAPBoolean", [0, 1]]
+      ["changeTrackingEnabled", "SOAP::SOAPBoolean", [0, 1]],
+
+      # memoryReservationLockedToMax added from VIM 5.0
+      ["memoryReservationLockedToMax", "SOAP::SOAPBoolean", [0, 1]]
     ]
   )
 
@@ -77376,7 +77385,10 @@
       ["changeTrackingEnabled", "SOAP::SOAPBoolean", [0, 1]],
 
       # vmProfile added from VIM 5.5
-      ["vmProfile", "VimWs25::VirtualMachineProfileSpec[]", [0, nil]]
+      ["vmProfile", "VimWs25::VirtualMachineProfileSpec[]", [0, nil]],
+
+      # memoryReservationLockedToMax added from VIM 5.0
+      ["memoryReservationLockedToMax", "SOAP::SOAPBoolean", [0, 1]]
     ]
   )
 
