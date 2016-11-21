@@ -42,7 +42,7 @@ class ApplicationHelper::ToolbarBuilder
   private
 
   delegate :request, :current_user, :to => :@view_context
-  delegate :get_vmdb_config, :role_allows?, :model_for_vm, :rbac_common_feature_for_buttons, :to => :@view_context
+  delegate :role_allows?, :model_for_vm, :rbac_common_feature_for_buttons, :to => :@view_context
   delegate :x_tree_history, :x_node, :x_active_tree, :to => :@view_context
   delegate :is_browser?, :is_browser_os?, :to => :@view_context
 
@@ -596,18 +596,18 @@ class ApplicationHelper::ToolbarBuilder
     when "miq_task_canceljob"
       return true unless ["all_tasks", "all_ui_tasks"].include?(@layout)
     when "vm_console"
-      type = get_vmdb_config.fetch_path(:server, :remote_console_type)
+      type = ::Settings.server.remote_console_type
       return type != 'MKS' || !@record.console_supported?(type)
     when "vm_vnc_console"
-      type = get_vmdb_config.fetch_path(:server, :remote_console_type)
+      type = ::Settings.server.remote_console_type
       return type != 'VNC' || !@record.console_supported?(type)
     when "vm_vmrc_console"
-      type = get_vmdb_config.fetch_path(:server, :remote_console_type)
+      type = ::Settings.server.remote_console_type
       return type != 'VMRC' || !@record.console_supported?(type)
     # Check buttons behind SMIS setting
     when "ontap_storage_system_statistics", "ontap_logical_disk_statistics", "ontap_storage_volume_statistics",
         "ontap_file_share_statistics"
-      return true unless get_vmdb_config[:product][:smis]
+      return true unless ::Settings.product.smis
     when "host_register_nodes"
       return true if @record.class != ManageIQ::Providers::Openstack::InfraManager
     when "host_introspect", "host_provide"
