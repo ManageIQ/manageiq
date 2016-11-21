@@ -63,7 +63,7 @@ module ApplicationController::DialogRunner
       flash = _("All changes have been reset")
       if session[:edit][:explorer]
         add_flash(flash, :warning)
-        replace_right_cell("dialog_provision")
+        replace_right_cell(:action => "dialog_provision")
       else
         javascript_redirect :action => 'dialog_load', :flash_msg => flash, :flash_warning => true, :escape => false # redirect to miq_request show_list screen
       end
@@ -156,7 +156,7 @@ module ApplicationController::DialogRunner
     @in_a_form = true
     @changed = session[:changed] = true
     if @edit[:explorer]
-      replace_right_cell("dialog_provision")
+      replace_right_cell(:action => "dialog_provision")
     else
       javascript_redirect :action => 'dialog_load'
     end

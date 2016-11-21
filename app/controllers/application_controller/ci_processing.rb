@@ -179,7 +179,7 @@ module ApplicationController::CiProcessing
       if @edit[:explorer]
         ownership
         add_flash(_("All changes have been reset"), :warning)
-        request.parameters[:controller] == "service" ? replace_right_cell("ownership") : replace_right_cell
+        request.parameters[:controller] == "service" ? replace_right_cell(:nodetype => "ownership") : replace_right_cell
       else
         javascript_redirect :action        => 'ownership',
                             :flash_msg     => _("All changes have been reset"),

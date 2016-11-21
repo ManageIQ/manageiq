@@ -7,7 +7,7 @@ describe PxeController do
     it 'calls methods with x_node as param' do
       controller.instance_variable_set(:@_params, :id => 'root', :tree => :pxe_servers_tree)
       expect(controller).to receive(:get_node_info).with("root")
-      expect(controller).to receive(:replace_right_cell).with("root")
+      expect(controller).to receive(:replace_right_cell).with(:nodetype => "root")
       controller.tree_select
     end
   end
@@ -17,7 +17,7 @@ describe PxeController do
       controller.instance_variable_set(:@_params, :id => 'pxe_servers_accord', :tree => :pxe_servers_tree)
       allow(controller).to receive(:x_node).and_return('root')
       expect(controller).to receive(:get_node_info).with("root")
-      expect(controller).to receive(:replace_right_cell).with("root")
+      expect(controller).to receive(:replace_right_cell).with(:nodetype => "root")
       controller.accordion_select
     end
   end

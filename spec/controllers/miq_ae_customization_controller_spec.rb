@@ -414,7 +414,7 @@ describe MiqAeCustomizationController do
       end
 
       it "updates the dialogs tree" do
-        expect(controller).to receive(:replace_right_cell).with(nil, [:dialogs])
+        expect(controller).to receive(:replace_right_cell).with(:nodetype => nil, :replace_trees => [:dialogs])
         post :import_service_dialogs, :params => params, :xhr => true
       end
     end

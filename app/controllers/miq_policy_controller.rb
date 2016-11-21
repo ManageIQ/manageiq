@@ -255,7 +255,7 @@ class MiqPolicyController < ApplicationController
     self.x_active_accord = params[:id].sub(/_accord$/, '')
     self.x_active_tree   = "#{self.x_active_accord}_tree"
     get_node_info(x_node)
-    replace_right_cell(@nodetype)
+    replace_right_cell(:nodetype => @nodetype)
   end
 
   def tree_select
@@ -266,16 +266,16 @@ class MiqPolicyController < ApplicationController
     self.x_node          = params[:id]
 
     get_node_info(x_node)
-    replace_right_cell(@nodetype)
+    replace_right_cell(:nodetype => @nodetype)
   end
 
   def search
     get_node_info(x_node)
     case x_active_tree
     when "profile", "event", "action", "alert"
-      replace_right_cell(x_node)
+      replace_right_cell(:nodetype => x_node)
     when "policy", "condition", "alert_profile"
-      replace_right_cell("xx")
+      replace_right_cell(:nodetype => "xx")
     end
   end
 
@@ -471,8 +471,10 @@ class MiqPolicyController < ApplicationController
   end
 
   # replace_trees can be an array of tree symbols to be replaced
-  def replace_right_cell(nodetype, replace_trees = [], presenter = nil)
+  def replace_right_cell(options = {})
+    nodetype, replace_trees, presenter = options.values_at(:nodetype, :replace_trees, :presenter)
     replace_trees = @replace_trees if @replace_trees  # get_node_info might set this
+    replace_trees = Array(replace_trees)
     @explorer = true
 
     # we need to be able to replace trees even if explorer has never been called on the current instance

@@ -476,7 +476,7 @@ module OpsController::Settings::Common
       end
       #     redirect_to :action => 'explorer', :flash_msg=>msg, :flash_error=>err, :no_refresh=>true
       get_node_info(x_node)
-      replace_right_cell(@nodetype)
+      replace_right_cell(:nodetype => @nodetype)
       return
     end
     if !%w(settings_advanced settings_rhn_edit settings_workers).include?(@sb[:active_tab]) &&
@@ -522,12 +522,12 @@ module OpsController::Settings::Common
         session[:changed] = @changed = false
         get_node_info(x_node)
         if @sb[:active_tab] == "settings_server"
-          replace_right_cell(@nodetype, [:diagnostics, :settings])
+          replace_right_cell(:nodetype => @nodetype, :replace_trees => [:diagnostics, :settings])
         elsif @sb[:active_tab] == "settings_custom_logos"
           javascript_redirect :action => 'explorer', :flash_msg => @flash_array[0][:message], :flash_error => @flash_array[0][:level] == :error, :escape => false # redirect to build the server screen
           return
         else
-          replace_right_cell(@nodetype)
+          replace_right_cell(:nodetype => @nodetype)
         end
       else
         @update.errors.each do |field, msg|
@@ -536,7 +536,7 @@ module OpsController::Settings::Common
         @changed = true
         session[:changed] = @changed
         get_node_info(x_node)
-        replace_right_cell(@nodetype)
+        replace_right_cell(:nodetype => @nodetype)
       end
     elsif @sb[:active_tab] == "settings_workers" &&
           x_node.split("-").first != "z"
@@ -562,19 +562,19 @@ module OpsController::Settings::Common
         end
         @changed = false
         get_node_info(x_node)
-        replace_right_cell(@nodetype)
+        replace_right_cell(:nodetype => @nodetype)
       else
         @update.errors.each do |field, msg|
           add_flash("#{field.titleize}: #{msg}", :error)
         end
         @changed = true
         get_node_info(x_node)
-        replace_right_cell(@nodetype)
+        replace_right_cell(:nodetype => @nodetype)
       end
     else
       @changed = false
       get_node_info(x_node)
-      replace_right_cell(@nodetype)
+      replace_right_cell(:nodetype => @nodetype)
     end
   end
 
@@ -585,7 +585,7 @@ module OpsController::Settings::Common
       edit_rhn
     else
       get_node_info(x_node)
-      replace_right_cell(@nodetype)
+      replace_right_cell(:nodetype => @nodetype)
     end
   end
 
@@ -595,7 +595,7 @@ module OpsController::Settings::Common
     @edit = nil
     settings_get_info('root')
     add_flash(_("Edit of Customer Information was cancelled"))
-    replace_right_cell('root')
+    replace_right_cell(:nodetype => 'root')
   end
 
   def settings_server_validate

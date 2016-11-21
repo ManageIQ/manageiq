@@ -14,7 +14,7 @@ module MiqPolicyController::MiqActions
       end
       @sb[:action] = nil
       get_node_info(x_node)
-      replace_right_cell(@nodetype)
+      replace_right_cell(:nodetype => @nodetype)
       return
     when "reset", nil # Reset or first time in
       action_build_edit_screen
@@ -22,7 +22,7 @@ module MiqPolicyController::MiqActions
       if params[:button] == "reset"
         add_flash(_("All changes have been reset"), :warning)
       end
-      replace_right_cell("a")
+      replace_right_cell(:nodetype => "a")
       return
     end
 
@@ -49,7 +49,7 @@ module MiqPolicyController::MiqActions
         @edit = nil
         @nodetype = "a"
         @new_action_node = "a-#{to_cid(action.id)}"
-        replace_right_cell("a", params[:button] == "save" ? [:policy_profile, :policy, :action] : [:action])
+        replace_right_cell(:nodetype => "a", :replace_trees => params[:button] == "save" ? [:policy_profile, :policy, :action] : [:action])
         @sb[:action] = nil
       else
         action.errors.each do |field, msg|
@@ -60,7 +60,7 @@ module MiqPolicyController::MiqActions
     when "move_right", "move_left", "move_allleft"
       action_handle_selection_buttons(:alerts)
       session[:changed] = (@edit[:new] != @edit[:current])
-      replace_right_cell("a")
+      replace_right_cell(:nodetype => "a")
     end
   end
 
@@ -77,7 +77,7 @@ module MiqPolicyController::MiqActions
     process_actions(actions, "destroy") unless actions.empty?
     @new_action_node = self.x_node = "root"
     get_node_info(x_node)
-    replace_right_cell("root", [:action])
+    replace_right_cell(:nodetype => "root", :replace_trees => [:action])
   end
 
   def action_field_changed

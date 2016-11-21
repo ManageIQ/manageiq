@@ -8,7 +8,7 @@ module MiqPolicyController::Events
       @edit = nil
       add_flash(_("Edit Event cancelled by user"))
       get_node_info(x_node)
-      replace_right_cell(@nodetype)
+      replace_right_cell(:nodetype => @nodetype)
       return
     when "reset", nil # Reset or first time in
       event_build_edit_screen
@@ -16,7 +16,7 @@ module MiqPolicyController::Events
       if params[:button] == "reset"
         add_flash(_("All changes have been reset"), :warning)
       end
-      replace_right_cell("ev")
+      replace_right_cell(:nodetype => "ev")
       return
     end
 
@@ -38,15 +38,15 @@ module MiqPolicyController::Events
       @nodetype = "ev"
       event_get_info(MiqEventDefinition.find(event.id))
       @edit = nil
-      replace_right_cell("ev", [:policy_profile, :policy])
+      replace_right_cell(:nodetype => "ev", :replace_trees => [:policy_profile, :policy])
     when "true_right", "true_left", "true_allleft", "true_up", "true_down", "true_sync", "true_async"
       handle_selection_buttons(:actions_true, :members_chosen_true, :choices_true, :choices_chosen_true)
       session[:changed] = (@edit[:new] != @edit[:current])
-      replace_right_cell("ev")
+      replace_right_cell(:nodetype => "ev")
     when "false_right", "false_left", "false_allleft", "false_up", "false_down", "false_sync", "false_async"
       handle_selection_buttons(:actions_false, :members_chosen_false, :choices_false, :choices_chosen_false)
       session[:changed] = (@edit[:new] != @edit[:current])
-      replace_right_cell("ev")
+      replace_right_cell(:nodetype => "ev")
     end
   end
 

@@ -148,7 +148,7 @@ module ApplicationController::Explorer
     self.x_node = params[:id]
     if node_info
       get_node_info(x_node)
-      replace_right_cell(x_node)
+      replace_right_cell(:nodetype => x_node)
     else
       replace_right_cell
     end
@@ -162,7 +162,7 @@ module ApplicationController::Explorer
     self.x_active_tree   = "#{self.x_active_accord}_tree"
     if node_info
       get_node_info(x_node)
-      replace_right_cell(x_node)
+      replace_right_cell(:nodetype => x_node)
     else
       replace_right_cell
     end

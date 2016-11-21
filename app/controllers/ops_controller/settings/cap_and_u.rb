@@ -38,12 +38,12 @@ module OpsController::Settings::CapAndU
 
       add_flash(_("Capacity and Utilization Collection settings saved"))
       get_node_info(x_node)
-      replace_right_cell(@nodetype)
+      replace_right_cell(:nodetype => @nodetype)
     elsif params[:button] == "reset"
       @changed = false
       add_flash(_("All changes have been reset"), :warning)
       get_node_info(x_node)
-      replace_right_cell(@nodetype)
+      replace_right_cell(:nodetype => @nodetype)
     end
   end
 

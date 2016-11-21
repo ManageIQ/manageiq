@@ -13,7 +13,7 @@ module MiqPolicyController::AlertProfiles
         add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model => ui_lookup(:model => "MiqAlertSet"), :name => @alert_profile.description})
       end
       get_node_info(x_node)
-      replace_right_cell(@nodetype)
+      replace_right_cell(:nodetype => @nodetype)
       return
     when "reset", nil # Reset or first time in
       alert_profile_build_edit_screen
@@ -21,7 +21,7 @@ module MiqPolicyController::AlertProfiles
       if params[:button] == "reset"
         add_flash(_("All changes have been reset"), :warning)
       end
-      replace_right_cell("ap")
+      replace_right_cell(:nodetype => "ap")
       return
     end
 
@@ -58,17 +58,17 @@ module MiqPolicyController::AlertProfiles
         @edit = nil
         self.x_node = @new_alert_profile_node = "xx-#{alert_profile.mode}_ap-#{to_cid(alert_profile.id)}"
         get_node_info(@new_alert_profile_node)
-        replace_right_cell("ap", [:alert_profile])
+        replace_right_cell(:nodetype => "ap", :replace_trees => [:alert_profile])
       else
         alert_profile.errors.each do |field, msg|
           add_flash("#{field.to_s.capitalize} #{msg}", :error)
         end
-        replace_right_cell("ap")
+        replace_right_cell(:nodetype => "ap")
       end
     when "move_right", "move_left", "move_allleft"
       handle_selection_buttons(:alerts)
       session[:changed] = (@edit[:new] != @edit[:current])
-      replace_right_cell("ap")
+      replace_right_cell(:nodetype => "ap")
     end
   end
 
@@ -81,7 +81,7 @@ module MiqPolicyController::AlertProfiles
       @assign = nil
       add_flash(_("Edit %{model} assignments cancelled by user") % {:model => ui_lookup(:model => "MiqAlertSet")})
       get_node_info(x_node)
-      replace_right_cell(@nodetype)
+      replace_right_cell(:nodetype => @nodetype)
     when "save"
       if @assign[:new][:assign_to].to_s.ends_with?("-tags") && !@assign[:new][:cat]
         add_flash(_("A Tag Category must be selected"), :error)
@@ -97,13 +97,13 @@ module MiqPolicyController::AlertProfiles
         get_node_info(x_node)
         @assign = nil
       end
-      replace_right_cell("ap")
+      replace_right_cell(:nodetype => "ap")
     when "reset", nil # Reset or first time in
       alert_profile_build_assign_screen
       if params[:button] == "reset"
         add_flash(_("All changes have been reset"), :warning)
       end
-      replace_right_cell("ap")
+      replace_right_cell(:nodetype => "ap")
     end
   end
 
@@ -123,7 +123,7 @@ module MiqPolicyController::AlertProfiles
     nodes.pop
     self.x_node = nodes.join("_")
     get_node_info(x_node)
-    replace_right_cell("xx", [:alert_profile])
+    replace_right_cell(:nodetype => "xx", :replace_trees => [:alert_profile])
   end
 
   def alert_profile_field_changed

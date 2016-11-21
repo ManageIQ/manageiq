@@ -41,7 +41,7 @@ module OpsController::Settings::Ldap
       get_node_info(x_node)
       @ldap_region = nil
       @edit = session[:edit] = nil  # clean out the saved info
-      replace_right_cell(@nodetype)
+      replace_right_cell(:nodetype => @nodetype)
     when "save", "add"
       id = params[:id] ? params[:id] : "new"
       return unless load_edit("ldap_region_edit__#{id}", "replace_cell__explorer")
@@ -68,7 +68,7 @@ module OpsController::Settings::Ldap
           self.x_node = "lr-#{to_cid(@ldap_region.id)}"
           get_node_info(x_node)
         end
-        replace_right_cell("root", [:settings])
+        replace_right_cell(:nodetype => "root", :replace_trees => [:settings])
       else
         @ldap_region.errors.each do |field, msg|
           add_flash("#{field.to_s.capitalize} #{msg}", :error)
@@ -86,7 +86,7 @@ module OpsController::Settings::Ldap
       if params[:button] == "reset"
         add_flash(_("All changes have been reset"), :warning)
       end
-      replace_right_cell("lre")
+      replace_right_cell(:nodetype => "lre")
     end
   end
 
@@ -123,7 +123,7 @@ module OpsController::Settings::Ldap
     end
     self.x_node = "xx-l"
     get_node_info(x_node)
-    replace_right_cell(x_node, [:settings])
+    replace_right_cell(:nodetype => x_node, :replace_trees => [:settings])
   end
 
   def ldap_domain_add
@@ -158,7 +158,7 @@ module OpsController::Settings::Ldap
       get_node_info(x_node)
       @ldap_domain = nil
       @edit = session[:edit] = nil  # clean out the saved info
-      replace_right_cell(@nodetype)
+      replace_right_cell(:nodetype => @nodetype)
     elsif params[:button] == "save" || params[:button] == "add"
       id = params[:id] ? params[:id] : "new"
       return unless load_edit("ldap_domain_edit__#{id}", "replace_cell__explorer")
@@ -187,7 +187,7 @@ module OpsController::Settings::Ldap
           self.x_node = "ld-#{to_cid(@ldap_domain.id)}"
         end
         get_node_info(x_node)
-        replace_right_cell(x_node, [:settings])
+        replace_right_cell(:nodetype => x_node, :replace_trees => [:settings])
       else
         @ldap_domain.errors.each do |field, msg|
           add_flash("#{field.to_s.capitalize} #{msg}", :error)
@@ -236,7 +236,7 @@ module OpsController::Settings::Ldap
       if params[:button] == "reset"
         add_flash(_("All changes have been reset"), :warning)
       end
-      replace_right_cell("lde")
+      replace_right_cell(:nodetype => "lde")
     end
   end
 
@@ -291,7 +291,7 @@ module OpsController::Settings::Ldap
     self.x_node = "lr-#{ld.ldap_region_id}"
     process_ldap_domains(ldap_domains, "destroy") unless ldap_domains.empty?
     get_node_info(x_node)
-    replace_right_cell(x_node, [:settings])
+    replace_right_cell(:nodetype => x_node, :replace_trees => [:settings])
   end
 
   # AJAX driven routine to select a classification entry

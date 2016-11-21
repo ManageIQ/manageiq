@@ -173,7 +173,7 @@ describe VmOrTemplateController do
                                                                          :no_reset        => true,
                                                                          :submit_button   => true,
                                                                          :continue_button => false}).exactly(1).times
-      controller.send(:replace_right_cell, 'migrate', presenter)
+      controller.send(:replace_right_cell, {:action => 'migrate', :presenter => presenter})
       expect(presenter[:update_partials]).to have_key(:form_buttons_div)
     end
   end

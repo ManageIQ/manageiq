@@ -18,7 +18,7 @@ module ApplicationController::Buttons
       add_flash(_("%{model_name} Group Reorder cancelled") % {:model_name => ui_lookup(:model => "CustomButton")})
       @edit = session[:edit] = nil  # clean out the saved info
       ab_get_node_info(x_node) if x_active_tree == :ab_tree
-      replace_right_cell(x_node)
+      replace_right_cell(:nodetype => x_node)
     when "save"
       return unless load_edit("group_reorder", "replace_cell__explorer")
       # save group_index of each custombuttonset in set_data
@@ -43,7 +43,7 @@ module ApplicationController::Buttons
       add_flash(_("%{model_name} Group Reorder saved") % {:model_name => ui_lookup(:model => "CustomButton")})
       @edit = session[:edit] = nil  # clean out the saved info
       ab_get_node_info(x_node) if x_active_tree == :ab_tree
-      replace_right_cell(x_node, x_active_tree == :ab_tree ? [:ab] : [:sandt])
+      replace_right_cell(:nodetype => x_node, :replace_trees => x_active_tree == :ab_tree ? [:ab] : [:sandt])
     else
       if params[:button] == "reset"
         @changed = session[:changed] = false
@@ -53,7 +53,7 @@ module ApplicationController::Buttons
       @in_a_form = true
       @lastaction = "automate_button"
       @layout = "miq_ae_automate_button"
-      replace_right_cell("group_reorder")
+      replace_right_cell(:nodetype => "group_reorder")
     end
   end
 
@@ -152,7 +152,7 @@ module ApplicationController::Buttons
       id.pop
       self.x_node = id.join("_")
       ab_get_node_info(x_node) if x_active_tree == :ab_tree
-      replace_right_cell(x_node, x_active_tree == :ab_tree ? [:ab] : [:sandt])
+      replace_right_cell(:nodetype => x_node, :replace_trees => x_active_tree == :ab_tree ? [:ab] : [:sandt])
     else
       custom_button.errors.each { |field, msg| add_flash("#{field.to_s.capitalize} #{msg}", :error) }
       javascript_flash
@@ -208,7 +208,7 @@ module ApplicationController::Buttons
     if x_node.split('_').last == "ub"
       add_flash(_("'Unassigned Buttons Group' can not be deleted"), :error)
       get_node_info
-      replace_right_cell(x_node)
+      replace_right_cell(:nodetype => x_node)
       return
     end
     custom_button_set = CustomButtonSet.find(from_cid(params[:id]))
@@ -229,7 +229,7 @@ module ApplicationController::Buttons
       id.pop
       self.x_node = id.join("_")
       ab_get_node_info(x_node) if x_active_tree == :ab_tree
-      replace_right_cell(x_node, x_active_tree == :ab_tree ? [:ab] : [:sandt])
+      replace_right_cell(:nodetype => x_node, :replace_trees => x_active_tree == :ab_tree ? [:ab] : [:sandt])
     else
       custom_button_set.errors.each { |field, msg| add_flash("#{field.to_s.capitalize} #{msg}", :error) }
       javascript_flash
@@ -294,7 +294,7 @@ module ApplicationController::Buttons
     end
     @edit = session[:edit] = nil  # clean out the saved info
     ab_get_node_info(x_node) if x_active_tree == :ab_tree
-    replace_right_cell(x_node)
+    replace_right_cell(:nodetype => x_node)
   end
 
   def group_button_add_save(typ)
@@ -332,7 +332,7 @@ module ApplicationController::Buttons
         add_flash(_("%{model} \"%{name}\" was saved") % {:model => ui_lookup(:model => "CustomButtonSet"), :name => @edit[:new][:description]})
         @edit = session[:edit] = nil  # clean out the saved info
         ab_get_node_info(x_node) if x_active_tree == :ab_tree
-        replace_right_cell(x_node, x_active_tree == :ab_tree ? [:ab] : [:sandt])
+        replace_right_cell(:nodetype => x_node, :replace_trees => x_active_tree == :ab_tree ? [:ab] : [:sandt])
       else
         @custom_button_set.errors.each do |field, msg|
           add_flash(_("Error during 'edit': %{field_name} %{error_message}") %
@@ -367,7 +367,7 @@ module ApplicationController::Buttons
         add_flash(_("%{model} \"%{name}\" was added") % {:model => ui_lookup(:model => "CustomButtonSet"), :name => @edit[:new][:description]})
         @edit = session[:edit] = nil  # clean out the saved info
         ab_get_node_info(x_node) if x_active_tree == :ab_tree
-        replace_right_cell(x_node, x_active_tree == :ab_tree ? [:ab] : [:sandt])
+        replace_right_cell(:nodetype => x_node, :replace_trees => x_active_tree == :ab_tree ? [:ab] : [:sandt])
       else
         @custom_button_set.errors.each do |field, msg|
           add_flash(_("Error during 'add': %{field_name} %{error_name}") %
@@ -387,7 +387,7 @@ module ApplicationController::Buttons
     @in_a_form  = true
     @lastaction = "automate_button"
     @layout     = "miq_ae_automate_button"
-    replace_right_cell("button_edit")
+    replace_right_cell(:nodetype => "button_edit")
   end
 
   def group_create_update(typ)
@@ -415,7 +415,7 @@ module ApplicationController::Buttons
       end
       @edit = session[:edit] = nil  # clean out the saved info
       ab_get_node_info(x_node) if x_active_tree == :ab_tree
-      replace_right_cell(x_node)
+      replace_right_cell(:nodetype => x_node)
     elsif params[:button] == "add"
       assert_privileges("ab_button_new")
       @resolve = session[:resolve]
@@ -468,7 +468,7 @@ module ApplicationController::Buttons
           end
 
           ab_get_node_info(x_node) if x_active_tree == :ab_tree
-          replace_right_cell(x_node, x_active_tree == :ab_tree ? [:ab] : [:sandt])
+          replace_right_cell(:nodetype => x_node, :replace_trees => x_active_tree == :ab_tree ? [:ab] : [:sandt])
         else
           @custom_button.errors.each do |field, msg|
             add_flash(_("Error during 'add': %{error_message}") %
@@ -502,7 +502,7 @@ module ApplicationController::Buttons
           add_flash(_("%{model} \"%{name}\" was saved") % {:model => ui_lookup(:model => "CustomButton"), :name => @edit[:new][:description]})
           @edit = session[:edit] = nil  # clean out the saved info
           ab_get_node_info(x_node) if x_active_tree == :ab_tree
-          replace_right_cell(x_node, x_active_tree == :ab_tree ? [:ab] : [:sandt])
+          replace_right_cell(:nodetype => x_node, :replace_trees => x_active_tree == :ab_tree ? [:ab] : [:sandt])
         else
           @custom_button.errors.each do |field, msg|
             add_flash(_("Error during 'edit': %{field_name} %{error_message}") %
@@ -524,7 +524,7 @@ module ApplicationController::Buttons
       drop_breadcrumb(:name => _("Edit of Button"), :url => "/miq_ae_customization/button_edit")
       @lastaction = "automate_button"
       @layout = "miq_ae_automate_button"
-      replace_right_cell("button_edit")
+      replace_right_cell(:nodetype => "button_edit")
     end
   end
 
@@ -566,7 +566,7 @@ module ApplicationController::Buttons
     if typ == "edit" && x_node.split('_').last == "ub"
       add_flash(_("'Unassigned Buttons Group' can not be edited"), :error)
       get_node_info
-      replace_right_cell(x_node)
+      replace_right_cell(:nodetype => x_node)
       return
     end
     group_set_form_vars
@@ -575,7 +575,7 @@ module ApplicationController::Buttons
     @layout = "miq_ae_automate_button"
     @sb[:button_groups] = nil
     @sb[:buttons] = nil
-    replace_right_cell("group_edit")
+    replace_right_cell(:nodetype => "group_edit")
   end
 
   def button_new_edit(typ)
@@ -596,7 +596,7 @@ module ApplicationController::Buttons
     @layout = "miq_ae_automate_button"
     @sb[:buttons] = nil
     @sb[:button_groups] = nil
-    replace_right_cell("button_edit")
+    replace_right_cell(:nodetype => "button_edit")
   end
 
   # Set form variables for button add/edit

@@ -14,7 +14,7 @@ module OpsController::Settings::LabelTagMapping
       end
       get_node_info(x_node)
       @lt_map = @edit = session[:edit] = nil # clean out the saved info
-      replace_right_cell(@nodetype)
+      replace_right_cell(:nodetype => @nodetype)
     when "save", "add"
       id = params[:id] ? params[:id] : "new"
       return unless load_edit("label_tag_mapping_edit__#{id}", "replace_cell__explorer")
@@ -46,7 +46,7 @@ module OpsController::Settings::LabelTagMapping
       if params[:button] == "reset"
         add_flash(_("All changes have been reset"), :warning)
       end
-      replace_right_cell("ltme")
+      replace_right_cell(:nodetype => "ltme")
     end
   end
 
@@ -157,7 +157,7 @@ module OpsController::Settings::LabelTagMapping
                                                        :name  => label_name})
       get_node_info(x_node)
       @lt_map = @edit = session[:edit] = nil # clean out the saved info
-      replace_right_cell("root")
+      replace_right_cell(:nodetype => "root")
     end
   end
 
@@ -175,7 +175,7 @@ module OpsController::Settings::LabelTagMapping
                                                        :name  => mapping.label_name})
       get_node_info(x_node)
       @lt_map = @edit = session[:edit] = nil # clean out the saved info
-      replace_right_cell("root")
+      replace_right_cell(:nodetype => "root")
     end
   end
 

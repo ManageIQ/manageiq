@@ -45,7 +45,7 @@ module OpsController::Settings::Tags
       end
       get_node_info(x_node)
       @category = @edit = session[:edit] = nil    # clean out the saved info
-      replace_right_cell(@nodetype)
+      replace_right_cell(:nodetype => @nodetype)
     when "save", "add"
       id = params[:id] ? params[:id] : "new"
       return unless load_edit("category_edit__#{id}", "replace_cell__explorer")
@@ -81,7 +81,7 @@ module OpsController::Settings::Tags
           add_flash(_("%{model} \"%{name}\" was added") % {:model => ui_lookup(:model => "Classification"), :name => @category.description})
           get_node_info(x_node)
           @category = @edit = session[:edit] = nil    # clean out the saved info
-          replace_right_cell("root")
+          replace_right_cell(:nodetype => "root")
         end
       else
         update_category = Classification.find(@category.id)
@@ -102,7 +102,7 @@ module OpsController::Settings::Tags
           session[:edit] = nil  # clean out the saved info
           get_node_info(x_node)
           @category = @edit = session[:edit] = nil    # clean out the saved info
-          replace_right_cell("root")
+          replace_right_cell(:nodetype => "root")
         end
       end
     when "reset", nil # Reset or first time in
@@ -117,7 +117,7 @@ module OpsController::Settings::Tags
       if params[:button] == "reset"
         add_flash(_("All changes have been reset"), :warning)
       end
-      replace_right_cell("ce")
+      replace_right_cell(:nodetype => "ce")
     end
   end
 

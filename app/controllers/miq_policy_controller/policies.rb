@@ -14,7 +14,7 @@ module MiqPolicyController::Policies
       end
       @edit = nil
       get_node_info(x_node)
-      replace_right_cell(@nodetype)
+      replace_right_cell(:nodetype => @nodetype)
       return
     when "reset", nil # Reset or first time in
       @sb[:action] = "policy_edit"
@@ -22,7 +22,7 @@ module MiqPolicyController::Policies
       if params[:button] == "reset"
         add_flash(_("All changes have been reset"), :warning)
       end
-      replace_right_cell("p")
+      replace_right_cell(:nodetype => "p")
       return
     end
 
@@ -67,25 +67,25 @@ module MiqPolicyController::Policies
         @nodetype = "p"
         case x_active_tree
         when :policy_profile_tree
-          replace_right_cell("p", [:policy_profile, :policy])
+          replace_right_cell(:nodetype => "p", :replace_trees => [:policy_profile, :policy])
         when :policy_tree
           @nodetype = "p"
           if params[:button] == "add"
             self.x_node = @new_policy_node = "xx-#{policy.mode.downcase}_xx-#{policy.mode.downcase}-#{policy.towhat.downcase}_p-#{to_cid(policy.id)}"
             get_node_info(@new_policy_node)
           end
-          replace_right_cell("p", params[:button] == "save" ? [:policy_profile, :policy] : [:policy])
+          replace_right_cell(:nodetype => "p", :replace_trees => params[:button] == "save" ? [:policy_profile, :policy] : [:policy])
         end
       else
         policy.errors.each do |field, msg|
           add_flash("#{field.to_s.capitalize} #{msg}", :error)
         end
-        replace_right_cell("p")
+        replace_right_cell(:nodetype => "p")
       end
     when "move_right", "move_left", "move_allleft"
       handle_selection_buttons(:conditions)
       session[:changed] = (@edit[:new] != @edit[:current])
-      replace_right_cell("p")
+      replace_right_cell(:nodetype => "p")
     end
   end
 
@@ -108,7 +108,7 @@ module MiqPolicyController::Policies
       add_flash(_("%{model} \"%{name}\" was added") % {:model => ui_lookup(:model => "MiqPolicy"), :name => new_desc})
       @new_policy_node = "xx-#{policy.mode.downcase}_xx-#{policy.mode.downcase}-#{policy.towhat.downcase}_p-#{to_cid(policy.id)}"
       get_node_info(@new_policy_node)
-      replace_right_cell("p", [:policy])
+      replace_right_cell(:nodetype => "p", :replace_tres => [:policy])
     end
   end
 
@@ -128,7 +128,7 @@ module MiqPolicyController::Policies
     add_flash(_("The selected %{models} was deleted") %
       {:models => ui_lookup(:models => "MiqPolicy")}) if @flash_array.nil?
     get_node_info(@new_policy_node)
-    replace_right_cell("xx", [:policy, :policy_profile])
+    replace_right_cell(:nodetype => "xx", :replace_tres => [:policy, :policy_profile])
   end
 
   def policy_field_changed

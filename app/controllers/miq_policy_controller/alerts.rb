@@ -13,7 +13,7 @@ module MiqPolicyController::Alerts
         add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model => ui_lookup(:model => "MiqAlert"), :name => @alert.description})
       end
       get_node_info(x_node)
-      replace_right_cell(@nodetype)
+      replace_right_cell(:nodetype => @nodetype)
     when "save", "add"
       id = params[:id] && params[:button] != "add" ? params[:id] : "new"
       return unless load_edit("alert_edit__#{id}", "replace_cell__explorer")
@@ -30,12 +30,12 @@ module MiqPolicyController::Alerts
         @edit = nil
         @nodetype = "al"
         @new_alert_node = "al-#{to_cid(alert.id)}"
-        replace_right_cell("al", [:alert_profile, :alert])
+        replace_right_cell(:nodetype => "al", :replace_trees => [:alert_profile, :alert])
       else
         alert.errors.each do |field, msg|
           add_flash("#{field.to_s.capitalize} #{msg}", :error)
         end
-        replace_right_cell("al")
+        replace_right_cell(:nodetype => "al")
       end
     when "reset", nil # Reset or first time in
       alert_build_edit_screen
@@ -43,7 +43,7 @@ module MiqPolicyController::Alerts
       if params[:button] == "reset"
         add_flash(_("All changes have been reset"), :warning)
       end
-      replace_right_cell("al")
+      replace_right_cell(:nodetype => "al")
     end
   end
 
@@ -66,7 +66,7 @@ module MiqPolicyController::Alerts
     process_alerts(alerts, "destroy") unless alerts.empty?
     @new_alert_node = self.x_node = "root"
     get_node_info(x_node)
-    replace_right_cell("root", [:alert_profile, :alert])
+    replace_right_cell(:nodetype => "root", :replace_trees => [:alert_profile, :alert])
   end
 
   def alert_field_changed

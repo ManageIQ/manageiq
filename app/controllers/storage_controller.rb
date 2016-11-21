@@ -262,7 +262,7 @@ class StorageController < ApplicationController
     @search_text = @sb[:storage_search_text]["#{x_active_accord}_search_text"]
 
     load_or_clear_adv_search
-    replace_right_cell(x_node)
+    replace_right_cell(:nodetype => x_node)
   end
 
   def load_or_clear_adv_search
@@ -301,7 +301,7 @@ class StorageController < ApplicationController
 
     load_or_clear_adv_search
     apply_node_search_text if x_active_tree == :storage_tree
-    replace_right_cell(x_node)
+    replace_right_cell(:nodetype => x_node)
   end
 
   def tree_record
@@ -455,7 +455,9 @@ class StorageController < ApplicationController
     record.try(:id)
   end
 
-  def replace_right_cell(_nodetype = "root", replace_trees = [])
+  def replace_right_cell(options = {})
+    # FIXME: nodetype passed here, but not used
+    _nodetype, replace_trees = options.values_at(:nodetype, :replace_trees)
     replace_trees = @replace_trees if @replace_trees  # get_node_info might set this
     # FIXME
     @explorer = true

@@ -143,7 +143,7 @@ module OpsController::Settings::RHN
       @edit    = nil
       @sb[:active_tab] = 'settings_rhn'
       settings_get_info('root')
-      replace_right_cell('root')
+      replace_right_cell(:nodetype => 'root')
     end
   end
 
@@ -346,7 +346,7 @@ module OpsController::Settings::RHN
     @edit[:key] = "#{@sb[:active_tab]}__rhn_edit"
     @edit[:current] = copy_hash(@edit[:new])
     reset_repo_name_from_default
-    replace_right_cell('rhn')
+    replace_right_cell(:nodetype => 'rhn')
   end
 
   private

@@ -51,7 +51,7 @@ module OpsController::Settings::Schedules
       end
       get_node_info(x_node)
       @schedule = nil
-      replace_right_cell(@nodetype)
+      replace_right_cell(:nodetype => @nodetype)
     when "save", "add"
       schedule = params[:id] != "new" ? MiqSchedule.find_by_id(params[:id]) : MiqSchedule.new(:userid => session[:userid])
 
@@ -87,7 +87,7 @@ module OpsController::Settings::Schedules
           @selected_schedule = schedule
           get_node_info(x_node)
         end
-        replace_right_cell("root", [:settings])
+        replace_right_cell(:nodetype => "root", :replace_trees => [:settings])
       end
     when "reset", nil # Reset or first time in
       obj = find_checked_items
@@ -112,7 +112,7 @@ module OpsController::Settings::Schedules
       if params[:button] == "reset"
         add_flash(_("All changes have been reset"), :warning)
       end
-      replace_right_cell("se")
+      replace_right_cell(:nodetype => "se")
     end
   end
 
@@ -202,7 +202,7 @@ module OpsController::Settings::Schedules
       process_schedules(schedules, "destroy") unless schedules.empty?
       schedule_build_list
       settings_get_info("st")
-      replace_right_cell("root", [:settings])
+      replace_right_cell(:nodetype => "root", :replace_trees => [:settings])
     else # showing 1 schedule, delete it
       if params[:id].nil? || MiqSchedule.find_by_id(params[:id]).nil?
         add_flash(_("%{table} no longer exists") % {:table => ui_lookup(:table => "miq_schedule")}, :error)
@@ -213,7 +213,7 @@ module OpsController::Settings::Schedules
       process_schedules(schedules, "destroy") unless schedules.empty?
       self.x_node = "xx-msc"
       get_node_info(x_node)
-      replace_right_cell(x_node, [:settings])
+      replace_right_cell(:nodetype => x_node, :replace_trees => [:settings])
     end
   end
 
@@ -233,7 +233,7 @@ module OpsController::Settings::Schedules
     add_flash(msg, :info, true) unless flash_errors?
     schedule_build_list
     settings_get_info("st")
-    replace_right_cell("root")
+    replace_right_cell(:nodetype => "root")
   end
 
   def schedule_enable

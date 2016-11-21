@@ -19,7 +19,7 @@ module PxeController::IsoDatastores
     @isd = IsoDatastore.new
     iso_datastore_set_form_vars
     @in_a_form = true
-    replace_right_cell("isd")
+    replace_right_cell(:nodetype => "isd")
   end
 
   def iso_datastore_edit
@@ -31,7 +31,7 @@ module PxeController::IsoDatastores
     iso_datastore_set_form_vars
     @in_a_form = true
     session[:changed] = false
-    replace_right_cell("isd")
+    replace_right_cell(:nodetype => "isd")
   end
 
   def iso_datastore_create
@@ -42,7 +42,7 @@ module PxeController::IsoDatastores
       @edit = session[:edit] = nil # clean out the saved info
       add_flash(_("Add of new %{model} was cancelled by the user") % {:model => ui_lookup(:model => "IsoDatastore")})
       get_node_info(x_node)
-      replace_right_cell(x_node)
+      replace_right_cell(:nodetype => x_node)
     elsif params[:button] == "add"
       isd = params[:id] ? find_by_id_filtered(IsoDatastore, params[:id]) : IsoDatastore.new
       if @edit[:new][:ems_id].blank?
@@ -61,7 +61,7 @@ module PxeController::IsoDatastores
         @edit = session[:edit] = nil # clean out the saved info
 
         get_node_info(x_node)
-        replace_right_cell(x_node, [:iso_datastores])
+        replace_right_cell(:nodetype => x_node, :replace_trees => [:iso_datastores])
       else
         @in_a_form = true
         isd.errors.each do |field, msg|
@@ -108,7 +108,7 @@ module PxeController::IsoDatastores
       end
 
       get_node_info(x_node)
-      replace_right_cell(x_node, [:iso_datastores])
+      replace_right_cell(:nodetype => x_node, :replace_trees => [:iso_datastores])
     else # showing 1 vm
       if params[:id].nil? || IsoDatastore.find_by_id(params[:id]).nil?
         add_flash(_("%{model} no longer exists") % {:model => ui_lookup(:model => "IsoDatastore")},
@@ -125,7 +125,7 @@ module PxeController::IsoDatastores
           @single_delete = true unless flash_errors?
         end
         get_node_info(x_node)
-        replace_right_cell(x_node, [:iso_datastores])
+        replace_right_cell(:nodetype => x_node, :replace_trees => [:iso_datastores])
       end
     end
     isds.count
@@ -171,7 +171,7 @@ module PxeController::IsoDatastores
       add_flash(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model => ui_lookup(:model => "IsoImage"), :name => session[:edit][:img].name})
       @edit = session[:edit] = nil  # clean out the saved info
       get_node_info(x_node)
-      replace_right_cell(x_node)
+      replace_right_cell(:nodetype => x_node)
     when "save"
       return unless load_edit("iso_img_edit__#{params[:id]}", "replace_cell__explorer")
       update_img = find_by_id_filtered(IsoImage, params[:id])
@@ -182,7 +182,7 @@ module PxeController::IsoDatastores
         refresh_tree = @edit[:new][:default_for_windows] == @edit[:current][:default_for_windows] ? [] : [:iso_datastore]
         @edit = session[:edit] = nil  # clean out the saved info
         get_node_info(x_node)
-        replace_right_cell(x_node, refresh_tree)
+        replace_right_cell(:nodetype => x_node, :replace_trees => refresh_tree)
       else
         update_img.errors.each do |field, msg|
           add_flash("#{field.to_s.capitalize} #{msg}", :error)
@@ -200,7 +200,7 @@ module PxeController::IsoDatastores
       if params[:button] == "reset"
         add_flash(_("All changes have been reset"), :warning)
       end
-      replace_right_cell("isi")
+      replace_right_cell(:nodetype => "isi")
     end
   end
 

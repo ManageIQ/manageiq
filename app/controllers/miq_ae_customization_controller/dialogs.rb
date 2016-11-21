@@ -110,7 +110,7 @@ module MiqAeCustomizationController::Dialogs
     dialog_set_form_vars
     @in_a_form = true
     @sb[:node_typ] = nil
-    replace_right_cell(x_node)
+    replace_right_cell(:nodetype => x_node)
   end
 
   # Add new dialog
@@ -129,12 +129,12 @@ module MiqAeCustomizationController::Dialogs
     @edit[:key] = "dialog_edit__#{@record.id || "new"}"
     session[:changed] = @in_a_form = true
     @sb[:node_typ] = nil
-    replace_right_cell(x_node)
+    replace_right_cell(:nodetype => x_node)
   end
 
   def change_tab
     get_node_info
-    replace_right_cell(x_node)
+    replace_right_cell(:nodetype => x_node)
   end
 
   # add resource to a dialog
@@ -177,7 +177,7 @@ module MiqAeCustomizationController::Dialogs
         @sb[:node_typ] = "element"
       end
 
-      replace_right_cell(x_node, [:dialog_edit])
+      replace_right_cell(:nodetype => x_node, :replace_trees => [:dialog_edit])
 
     else
       javascript_flash(:spinner_off => true)
@@ -198,7 +198,7 @@ module MiqAeCustomizationController::Dialogs
       @edit = session[:edit] = nil # clean out the saved info
       self.x_active_tree = :dialogs_tree
       get_node_info
-      replace_right_cell(x_node)
+      replace_right_cell(:nodetype => x_node)
 
     when 'add', 'save'
       id = params[:id] || 'new'
@@ -238,7 +238,7 @@ module MiqAeCustomizationController::Dialogs
         end
 
         get_node_info
-        replace_right_cell(x_node, [:dialogs])
+        replace_right_cell(:nodetype => x_node, :replace_trees => [:dialogs])
       end
 
     when 'reset', nil      # first time in or resettting
@@ -253,7 +253,7 @@ module MiqAeCustomizationController::Dialogs
       @sb[:node_typ] = nil
       add_flash(_("All changes have been reset"), :warning) if params[:button] == "reset"
       @in_a_form = true
-      replace_right_cell(x_node)
+      replace_right_cell(:nodetype => x_node)
     end
   end
 
@@ -294,7 +294,7 @@ module MiqAeCustomizationController::Dialogs
     end
     dialog_edit_build_tree
     @sb[:edit_typ] = nil
-    replace_right_cell(x_node, [:dialog_edit])
+    replace_right_cell(:nodetype => x_node, :replace_trees => [:dialog_edit])
   end
 
   def dialog_resource_remove
@@ -364,7 +364,7 @@ module MiqAeCustomizationController::Dialogs
     end
     dialog_edit_set_form_vars
 
-    replace_right_cell(x_node, [:dialog_edit])
+    replace_right_cell(:nodetype => x_node, :replace_trees => [:dialog_edit])
   end
 
   # Reorder dialog resources
@@ -1359,7 +1359,7 @@ module MiqAeCustomizationController::Dialogs
         process_dialogs(dialogs, method)
       end
       get_node_info
-      replace_right_cell(x_node, [:dialogs])
+      replace_right_cell(:nodetype => x_node, :replace_trees => [:dialogs])
     else # showing 1 dialog
       if params[:id].nil? || Dialog.find_by_id(params[:id]).nil?
         add_flash(_("%{record} no longer exists") % {:record => ui_lookup(:model => "Dialog")}, :error)
@@ -1374,7 +1374,7 @@ module MiqAeCustomizationController::Dialogs
           self.x_node = "root"
         end
         get_node_info
-        replace_right_cell(x_node, [:dialogs])
+        replace_right_cell(:nodetype => x_node, :replace_trees => [:dialogs])
       end
     end
     dialogs.count

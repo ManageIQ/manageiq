@@ -56,7 +56,7 @@ class MiqAeCustomizationController < ApplicationController
       end
     end
     get_node_info
-    replace_right_cell(x_node)
+    replace_right_cell(:nodetype => x_node)
   end
 
   def import_service_dialogs
@@ -81,7 +81,7 @@ class MiqAeCustomizationController < ApplicationController
       add_flash(_("Service dialog import cancelled"), :success)
     end
     get_node_info
-    replace_right_cell(x_node, [:dialogs])
+    replace_right_cell(:nodetype => x_node, :replace_trees => [:dialogs])
   end
 
   def export_service_dialogs
@@ -101,7 +101,7 @@ class MiqAeCustomizationController < ApplicationController
     self.x_active_accord = params[:id].sub(/_accord$/, '')
     self.x_active_tree   = "#{x_active_accord}_tree"
     get_node_info
-    replace_right_cell(x_node)
+    replace_right_cell(:nodetype => x_node)
   end
 
   def explorer
@@ -140,9 +140,9 @@ class MiqAeCustomizationController < ApplicationController
       if @replace_tree
 
         # record being viewed and saved in @sb[:active_node] has been deleted outside UI from VMDB, need to refresh tree
-        replace_right_cell(x_node, [:dialogs])
+        replace_right_cell(:nodetype => x_node, :replace_trees => [:dialogs])
       else
-        replace_right_cell(x_node)
+        replace_right_cell(:nodetype => x_node)
       end
     else
       render :update do |page|
@@ -201,7 +201,8 @@ class MiqAeCustomizationController < ApplicationController
     @dialog_import_service ||= DialogImportService.new
   end
 
-  def replace_right_cell(nodetype, replace_trees = [])
+  def replace_right_cell(options = {})
+    nodetype, replace_trees = options.values_at(:nodetype, :replace_trees)
     # fixme, don't call all the time
     build_ae_tree(:automate, :automate_tree) # Build Catalog Items tree
     trees = {}

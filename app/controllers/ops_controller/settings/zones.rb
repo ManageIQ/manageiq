@@ -9,7 +9,7 @@ module OpsController::Settings::Zones
       add_flash((@zone && @zone.id) ? _("Edit of %{model} \"%{name}\" was cancelled by the user") % {:model => ui_lookup(:table => "miq_zone"), :name => @zone.name} :
           _("Add of new %{table} was cancelled by the user") % {:table => ui_lookup(:table => "miq_zone")})
       get_node_info(x_node)
-      replace_right_cell(@nodetype)
+      replace_right_cell(:nodetype => @nodetype)
     when "save", "add"
       assert_privileges("zone_#{params[:id] ? "edit" : "new"}")
       id = params[:id] ? params[:id] : "new"
@@ -36,21 +36,21 @@ module OpsController::Settings::Zones
         self.x_node = params[:button] == "save" ?
               "z-#{@zone.id}" : "xx-z"
         get_node_info(x_node)
-        replace_right_cell("root", [:settings, :diagnostics])
+        replace_right_cell(:nodetype => "root", :replace_trees => [:settings, :diagnostics])
       else
         @in_a_form = true
         @edit[:errors].each { |msg| add_flash(msg, :error) }
         @zone.errors.each do |field, msg|
           add_flash("#{field.to_s.capitalize} #{msg}", :error)
         end
-        replace_right_cell("ze")
+        replace_right_cell(:nodetype => "ze")
       end
     when "reset", nil # Reset or first time in
       zone_build_edit_screen
       if params[:button] == "reset"
         add_flash(_("All changes have been reset"), :warning)
       end
-      replace_right_cell("ze")
+      replace_right_cell(:nodetype => "ze")
     end
   end
 
@@ -71,7 +71,7 @@ module OpsController::Settings::Zones
       @sb[:active_tab] = "settings_list"
       self.x_node = "xx-z"
       get_node_info(x_node)
-      replace_right_cell(x_node, [:settings, :diagnostics])
+      replace_right_cell(:nodetype => x_node, :replace_trees => [:settings, :diagnostics])
     end
   end
 

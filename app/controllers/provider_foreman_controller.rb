@@ -183,7 +183,7 @@ class ProviderForemanController < ApplicationController
       else
         add_flash(_("%{model} \"%{name}\" was updated") % {:model => model, :name => @provider_cfgmgmt.name})
       end
-      replace_right_cell([:configuration_manager_providers])
+      replace_right_cell(:replace_trees => [:configuration_manager_providers])
     else
       @provider_cfgmgmt.errors.each do |field, msg|
         @sb[:action] = nil
@@ -276,7 +276,7 @@ class ProviderForemanController < ApplicationController
                          end
       replace_right_cell
     else
-      replace_right_cell([:configuration_manager_providers])
+      replace_right_cell(:replace_trees => [:configuration_manager_providers])
     end
   end
 
@@ -292,7 +292,7 @@ class ProviderForemanController < ApplicationController
     @search_text = @sb[:foreman_search_text]["#{x_active_accord}_search_text"]
 
     load_or_clear_adv_search
-    replace_right_cell([x_active_accord])
+    replace_right_cell(:replace_trees => [x_active_accord])
   end
 
   def load_or_clear_adv_search
@@ -798,7 +798,8 @@ class ProviderForemanController < ApplicationController
     presenter[:right_cell_text] = @right_cell_text
   end
 
-  def replace_right_cell(replace_trees = [])
+  def replace_right_cell(options = {})
+    replace_trees = options[:replace_trees]
     return if @in_a_form
     @explorer = true
     @in_a_form = false
