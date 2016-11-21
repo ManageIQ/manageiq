@@ -56,7 +56,7 @@ describe TreeBuilderServersByRole do
     it 'returns Servers by Roles' do
       nodes = [{'key'     => "role-#{MiqRegion.compress_id(@server_role.id)}",
                 'tooltip' => "Role: SmartProxy (stopped)",
-                "image"   => "/assets/100/role-a7880dc9091046a9e3cae3238896b496f85c8b42435a9824e34bc40e9add0fa3.png",
+                "image"   => ActionController::Base.helpers.image_path('100/role.png'),
                 'text'    => "Role: SmartProxy (stopped)",
                 'nodes'   => [{'key'   => "asr-#{MiqRegion.compress_id(@assigned_server_role1.id)}",
                                'image' => ActionController::Base.helpers.image_path('100/suspended.png'),
