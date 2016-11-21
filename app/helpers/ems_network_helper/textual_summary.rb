@@ -44,7 +44,7 @@ module EmsNetworkHelper::TextualSummary
   end
 
   def textual_type
-    @ems.emstype_description
+    {:label => _("Type"), :value => @ems.emstype_description}
   end
 
   def textual_port
@@ -56,34 +56,34 @@ module EmsNetworkHelper::TextualSummary
   end
 
   def textual_parent_ems_cloud
-    @record.try(:parent_manager)
+    {:label => _("Parent Cloud Provider"), :value => @record.try(:parent_manager)}
   end
 
   def textual_security_groups
-    @record.security_groups
+    textual_link(@record.security_groups, :label => _("Security Groups"))
   end
 
   def textual_floating_ips
-    @record.floating_ips
+    textual_link(@record.floating_ips, :label => _("Floating IPs"))
   end
 
   def textual_network_routers
-    @record.network_routers
+    textual_link(@record.network_routers, :label => _("Network Routers"))
   end
 
   def textual_network_ports
-    @record.network_ports
+    textual_link(@record.network_ports, :label => _("Network Ports"))
   end
 
   def textual_load_balancers
-    @record.load_balancers
+    textual_link(@record.load_balancers, :label => _("Load Balancers"))
   end
 
   def textual_cloud_networks
-    @record.cloud_networks
+    textual_link(@record.cloud_networks, :label => _("Cloud Networks"))
   end
   def textual_cloud_subnets
-    @record.cloud_subnets
+    textual_link(@record.cloud_subnets, :label => _("Cloud Subnets"))
   end
 
   def textual_topology
