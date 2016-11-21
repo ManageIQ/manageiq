@@ -33,7 +33,7 @@ ManageIQ.angular.app.controller('networkRouterFormController', ['$http', '$scope
     } else {
       var url = '/network_router/update/' + networkRouterFormId + '?button=cancel';
     }
-    miqService.miqAjaxButton(url, true);
+    miqService.miqAjaxButton(url);
   };
 
   $scope.saveClicked = function() {
