@@ -210,7 +210,7 @@ describe TreeNodeBuilder do
     end
 
     it 'ConfigurationProfile node' do
-      config_profile = FactoryGirl.build(:configuration_profile_forman)
+      config_profile = FactoryGirl.build(:configuration_profile_foreman)
       node = TreeNodeBuilder.build(config_profile, nil, {})
       expect(node).to eq(
         :key     => "-#{config_profile.name}",
