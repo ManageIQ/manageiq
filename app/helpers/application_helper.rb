@@ -1580,4 +1580,12 @@ module ApplicationHelper
     auth_option ? ::Settings.authentication[auth_option] : true
   end
   public :ext_auth?
+
+  def translate_header_text(text)
+    if text == "Region"
+      I18n.t("product.name") + " " + _(text)
+    else
+      _(text)
+    end
+  end
 end
