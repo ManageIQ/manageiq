@@ -1,5 +1,5 @@
-module MiqAeServiceVmVmwareSpec
-  describe MiqAeMethodService::MiqAeServiceUser do
+module MiqAeServiceManageIQ_Providers_Vmware_InfraManager_VmSpec
+  describe MiqAeMethodService::MiqAeServiceManageIQ_Providers_Vmware_InfraManager_Vm do
     let(:vm)         { FactoryGirl.create(:vm_vmware) }
     let(:service_vm) { MiqAeMethodService::MiqAeServiceManageIQ_Providers_Vmware_InfraManager_Vm.find(vm.id) }
 
@@ -58,28 +58,6 @@ module MiqAeServiceVmVmwareSpec
         @base_queue_options.merge(
           :method_name => 'vm_destroy',
           :args        => [])
-      )
-    end
-
-    it "#create_snapshot without memory" do
-      service_vm.create_snapshot('snap', 'crackle & pop')
-
-      expect(MiqQueue.first.args.first).to have_attributes(
-        :task        => 'create_snapshot',
-        :memory      => false,
-        :name        => 'snap',
-        :description => 'crackle & pop'
-      )
-    end
-
-    it "#create_snapshot with memory" do
-      service_vm.create_snapshot('snap', 'crackle & pop', true)
-
-      expect(MiqQueue.first.args.first).to have_attributes(
-        :task        => 'create_snapshot',
-        :memory      => true,
-        :name        => 'snap',
-        :description => 'crackle & pop'
       )
     end
   end

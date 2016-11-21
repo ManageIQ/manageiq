@@ -10,6 +10,7 @@ module MiqAeServiceVmSpec
       @ae_result_key = 'foo'
 
       @vm   = FactoryGirl.create(:vm_vmware, :name => "template1", :location => "abc/abc.vmx")
+      allow(MiqServer).to receive(:my_zone).and_return('default')
     end
 
     def invoke_ae
@@ -214,6 +215,37 @@ module MiqAeServiceVmSpec
 
       expect(service_vm.retirement_warn).to eq(60)
       expect(vm.retirement_last_warn).to be_nil
+    end
+
+    context "#create_snapshot" do
+      it "without memory" do
+        service_vm.create_snapshot('snap', 'crackle & pop')
+
+        expect(MiqQueue.first.args.first).to have_attributes(
+          :task        => 'create_snapshot',
+          :memory      => false,
+          :name        => 'snap',
+          :description => 'crackle & pop'
+        )
+      end
+
+      it "with memory" do
+        service_vm.create_snapshot('snap', 'crackle & pop', true)
+
+        expect(MiqQueue.first.args.first).to have_attributes(
+          :task        => 'create_snapshot',
+          :memory      => true,
+          :name        => 'snap',
+          :description => 'crackle & pop'
+        )
+      end
+
+      it "when not supported" do
+        vm_amazon = FactoryGirl.create(:vm_amazon, :name => "template1")
+        svc_vm = MiqAeMethodService::MiqAeServiceManageIQ_Providers_Amazon_CloudManager_Vm.find(vm_amazon.id)
+
+        expect { svc_vm.create_snapshot('snap', 'crackle & pop') }.to raise_error(RuntimeError)
+      end
     end
   end
 end
