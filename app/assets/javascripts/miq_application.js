@@ -1637,7 +1637,7 @@ function chartData(type, data, data2) {
       data.axis.y.tick.values = [0, max];
     }
 
-    if (data.miq.reporting_chart) {
+    if (data.miq.expand_tooltip) {
       data.tooltip.format.name = function (_name, _ratio, id, _index) {
         return data.miq.name_table[id];
       };
@@ -1667,6 +1667,7 @@ function chartData(type, data, data2) {
   // some PatternFly default configs define size of chart
   config.size = {};
   var ret = _.defaultsDeep({}, data, config, data2);
+  console.log(ret);
   return ret;
 }
 

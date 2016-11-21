@@ -158,12 +158,17 @@ module ReportFormatter
     end
 
     def build_reporting_chart(_maxcols, _divider)
-      mri.chart[:miq][:reporting_chart] = true
+      mri.chart[:miq][:expand_tooltip] = true
       super
     end
 
     def build_reporting_chart_numeric(_maxcols, _divider)
-      mri.chart[:miq][:reporting_chart] = true
+      mri.chart[:miq][:expand_tooltip] = true
+      super
+    end
+
+    def build_performance_chart_pie(_maxcols, _divider)
+      mri.chart[:miq][:expand_tooltip] = true
       super
     end
   end
