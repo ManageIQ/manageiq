@@ -136,8 +136,8 @@ class Chargeback < ActsAsArModel
 
     rates.each do |rate|
       rate.chargeback_rate_details.each do |r|
-        metric_value = r.metric_value_by(metric_rollup_records)
         r.hours_in_interval = hours_in_interval
+        metric_value = r.metric_value_by(metric_rollup_records)
         cost = r.cost(metric_value) * hours_in_interval
 
         # add values to hash and sum
