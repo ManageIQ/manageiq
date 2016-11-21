@@ -274,7 +274,7 @@ class CloudNetworkController < ApplicationController
     # options[:port_security_enabled] = params[:port_security_enabled] if params[:port_security_enabled]
     options[:qos_policy_id] = params[:qos_policy_id] if params[:qos_policy_id]
     options[:provider_network_type] = params[:provider_network_type] if params[:provider_network_type]
-    options[:cloud_tenant_id] = params[:cloud_tenant_id] if params[:cloud_tenant_id]
+    options[:cloud_tenant] = find_by_id_filtered(CloudTenant, params[:cloud_tenant_id]) if params[:cloud_tenant_id]
     options
   end
 

@@ -240,7 +240,7 @@ class NetworkRouterController < ApplicationController
     options[:admin_state_up] = params[:admin_state_up] if params[:admin_state_up]
 
     # Relationships
-    options[:cloud_tenant_id] = params[:cloud_tenant_id] if params[:cloud_tenant_id]
+    options[:cloud_tenant] = find_by_id_filtered(CloudTenant, params[:cloud_tenant_id]) if params[:cloud_tenant_id]
     options[:cloud_network_id] = params[:cloud_network_id].gsub(/number:/, '') if params[:cloud_network_id]
     options[:cloud_group_id] = params[:cloud_group_id] if params[:cloud_group_id]
     options
