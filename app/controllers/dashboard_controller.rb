@@ -744,14 +744,7 @@ class DashboardController < ApplicationController
     end
 
     @report.extras[:browser_name] = browser_info(:name)
-    if is_browser_ie?
-      blob = BinaryBlob.new(:name => "timeline_results")
-      blob.binary = @report.to_timeline
-      session[:tl_xml_blob_id] = blob.id
-    else
-      @tl_json = @report.to_timeline
-    end
-
+    @tl_json = @report.to_timeline
     tz = @report.tz || Time.zone
     session[:tl_position] = format_timezone(@report.extras[:tl_position], tz, "tl")
   end
