@@ -9,7 +9,8 @@ module ManagerRefresh
     delegate :each, :size, :to => :to_a
 
     def initialize(model_class, manager_ref: nil, association: nil, parent: nil, strategy: nil, saved: nil,
-                   custom_save_block: nil, delete_method: nil, data_index: nil, data: nil, dependency_attributes: nil)
+                   custom_save_block: nil, delete_method: nil, data_index: nil, data: nil, dependency_attributes: nil,
+                   attributes_blacklist: nil, attributes_whitelist: nil)
       @model_class           = model_class
       @manager_ref           = manager_ref || [:ems_ref]
       @association           = association || []
@@ -24,6 +25,9 @@ module ManagerRefresh
       @attributes_whitelist  = Set.new
       @custom_save_block     = custom_save_block
       @internal_attributes   = [:__feedback_edge_set_parent]
+
+      blacklist_attributes!(attributes_blacklist) if attributes_blacklist.present?
+      whitelist_attributes!(attributes_whitelist) if attributes_whitelist.present?
     end
 
     def to_a
@@ -99,6 +103,20 @@ module ManagerRefresh
       ::ManagerRefresh::Dto.new(self, hash)
     end
 
+    def filtered_dependency_attributes
+      filtered_attributes = dependency_attributes
+
+      if attributes_blacklist.present?
+        filtered_attributes = filtered_attributes.reject { |key, _value| attributes_blacklist.include?(key) }
+      end
+
+      if attributes_whitelist.present?
+        filtered_attributes = filtered_attributes.reject { |key, _value| !attributes_whitelist.include?(key) }
+      end
+
+      filtered_attributes
+    end
+
     def fixed_dependencies
       presence_validators = model_class.validators.detect { |x| x.kind_of? ActiveRecord::Validations::PresenceValidator }
       # Attributes that has to be always on the entity, so attributes making unique index of the record + attributes
@@ -107,20 +125,20 @@ module ManagerRefresh
       fixed_attributes    += presence_validators.attributes unless presence_validators.blank?
 
       fixed_dependencies = Set.new
-      dependency_attributes.each do |key, value|
+      filtered_dependency_attributes.each do |key, value|
         fixed_dependencies += value if fixed_attributes.include?(key)
       end
       fixed_dependencies
     end
 
     def dependencies
-      dependency_attributes.values.map(&:to_a).flatten.uniq
+      filtered_dependency_attributes.values.map(&:to_a).flatten.uniq
     end
 
     def dependency_attributes_for(dto_collections)
       attributes = Set.new
       dto_collections.each do |dto_collection|
-        attributes += dependency_attributes.select { |_key, value| value.include?(dto_collection) }.keys
+        attributes += filtered_dependency_attributes.select { |_key, value| value.include?(dto_collection) }.keys
       end
       attributes
     end
@@ -130,7 +148,6 @@ module ManagerRefresh
       # do not automatically remove attributes causing fixed dependencies, so beware that without them, you won't be
       # able to create the record.
       self.attributes_blacklist += attributes - (manager_ref + internal_attributes)
-      dependency_attributes.delete_if { |key, _value| attributes_blacklist.include?(key) }
     end
 
     def whitelist_attributes!(attributes)
@@ -138,7 +155,6 @@ module ManagerRefresh
       # dto object. We do not automatically add attributes causing fixed dependencies, so beware that without them, you
       # won't be able to create the record.
       self.attributes_whitelist += attributes + (manager_ref + internal_attributes)
-      dependency_attributes.delete_if { |key, _value| !attributes_whitelist.include?(key) }
     end
 
     def clone
