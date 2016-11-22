@@ -40,6 +40,7 @@ class MiqReport < ApplicationRecord
   belongs_to                :user
   has_many                  :miq_widgets, :as => :resource
 
+  alias_attribute :menu_name, :name
   attr_accessor_that_yamls :table, :sub_table, :filter_summary, :extras, :ids, :scoped_association, :html_title, :file_name,
                            :extras, :record_id, :tl_times, :user_categories, :trend_data, :performance, :include_for_find,
                            :report_run_time, :chart
