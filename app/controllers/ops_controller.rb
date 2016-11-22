@@ -773,10 +773,10 @@ class OpsController < ApplicationController
                    :old_value => @edit[:current][k].keys.join(","),
                    :new_value => @edit[:new][k].keys.join(",")}
           else
-            msg = _("%{message} %{key}:[%{old_value}] to [new_value]") % {:message   => msg,
-                                                                          :key       => k.to_s,
-                                                                          :old_value => @edit[:current][k].to_s,
-                                                                          :new_value => @edit[:new][k].to_s}
+            msg = _("%{message} %{key}:[%{old_value}] to [%{new_value}]") % {:message   => msg,
+                                                                             :key       => k.to_s,
+                                                                             :old_value => @edit[:current][k].to_s,
+                                                                             :new_value => @edit[:new][k].to_s}
           end
         end
       end
