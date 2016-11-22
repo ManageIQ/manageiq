@@ -29,7 +29,7 @@ module HostHelper::TextualSummary
   end
 
   def textual_group_diagnostics
-    return nil unless get_vmdb_config[:product][:proto]
+    return nil unless ::Settings.product.proto
     %i(esx_logs)
   end
 

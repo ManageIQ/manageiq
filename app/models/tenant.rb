@@ -342,12 +342,6 @@ class Tenant < ApplicationRecord
     self.name = nil unless name.present?
   end
 
-  def get_vmdb_config
-    Vmdb::Deprecation.deprecation_warning("Tenant#get_vmdb_config",
-                                          "Prefer using ::Settings directly.", caller)
-    @vmdb_config ||= VMDB::Config.new("vmdb").config
-  end
-
   # validates that there is only one tree
   def validate_only_one_root
     unless parent_id || parent

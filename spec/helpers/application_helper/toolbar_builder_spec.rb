@@ -378,18 +378,18 @@ describe ApplicationHelper do
       end
 
       it "and server's remote_console_type not set" do
-        @vmdb_config = {:server => nil}
+        stub_settings(:server => {})
         expect(subject).to be_truthy
       end
 
       it "and server's remote_console_type is not MKS" do
-        @vmdb_config = {:server => {:remote_console_type => "not_MKS"}}
+        stub_settings(:server => {:remote_console_type => "not_MKS"})
         expect(subject).to be_truthy
       end
 
       it "and record is console supported and server's remote_console_type is MKS" do
         allow(@record).to receive_messages(:console_supported? => true)
-        @vmdb_config = {:server => {:remote_console_type => "MKS"}}
+        stub_settings(:server => {:remote_console_type => "MKS"})
         expect(subject).to be_falsey
       end
     end
@@ -406,18 +406,18 @@ describe ApplicationHelper do
       end
 
       it "and server's remote_console_type not set" do
-        @vmdb_config = {:server => nil}
+        stub_settings(:server => {})
         expect(subject).to be_truthy
       end
 
       it "and server's remote_console_type is not VNC" do
-        @vmdb_config = {:server => {:remote_console_type => "not_VNC"}}
+        stub_settings(:server => {:remote_console_type => "not_VNC"})
         expect(subject).to be_truthy
       end
 
       it "and record is console supported and server's remote_console_type is VNC" do
         allow(@record).to receive_messages(:console_supported? => true)
-        @vmdb_config = {:server => {:remote_console_type => "VNC"}}
+        stub_settings(:server => {:remote_console_type => "VNC"})
         expect(subject).to be_falsey
       end
     end
@@ -434,18 +434,18 @@ describe ApplicationHelper do
       end
 
       it "and server's remote_console_type not set" do
-        @vmdb_config = {:server => nil}
+        stub_settings(:server => {})
         expect(subject).to be_truthy
       end
 
       it "and server's remote_console_type is not VMRC" do
-        @vmdb_config = {:server => {:remote_console_type => "not_VMRC"}}
+        stub_settings(:server => {:remote_console_type => "not_VMRC"})
         expect(subject).to be_truthy
       end
 
       it "and record is console supported and server's remote_console_type is VMRC" do
         allow(@record).to receive_messages(:console_supported? => true)
-        @vmdb_config = {:server => {:remote_console_type => "VMRC"}}
+        stub_settings(:server => {:remote_console_type => "VMRC"})
         expect(subject).to be_falsey
       end
     end
@@ -457,13 +457,13 @@ describe ApplicationHelper do
           stub_user(:features => :all)
         end
 
-        it "and @vmdb_config[:product][:smis] != true " do
-          @vmdb_config = {:product => {:smis => false}}
+        it "and Settings.product.smis != true " do
+          stub_settings(:product => {:smis => false})
           expect(subject).to be_truthy
         end
 
-        it "and @vmdb_config[:product][:smis] = true " do
-          @vmdb_config = {:product => {:smis => true}}
+        it "and Settings.product.smis = true " do
+          stub_settings(:product => {:smis => true})
           expect(subject).to be_falsey
         end
       end

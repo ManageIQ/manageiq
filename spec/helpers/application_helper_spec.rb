@@ -528,12 +528,6 @@ describe ApplicationHelper do
     end
   end
 
-  context "#get_vmdb_config" do
-    it "Replaces calls to VMDB::Config.new in the views/controllers" do
-      expect(helper.get_vmdb_config).to eq(VMDB::Config.new("vmdb").config)
-    end
-  end
-
   context "#to_cid" do
     it "converts record id to compressed id" do
       expect(helper.to_cid(12_000_000_000_056)).to eq('12r56')

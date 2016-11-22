@@ -11,7 +11,7 @@ class WidgetPresenter
 
   extend Forwardable
   def_delegators(:@controller, :current_user, :url_for, :initiate_wait_for_task,
-                 :session_init, :session_reset, :get_vmdb_config, :start_url_for_user)
+                 :session_init, :session_reset, :start_url_for_user)
 
   attr_reader :widget
 
