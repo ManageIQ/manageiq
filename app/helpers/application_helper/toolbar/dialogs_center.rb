@@ -10,7 +10,8 @@ class ApplicationHelper::Toolbar::DialogsCenter < ApplicationHelper::Toolbar::Ba
           :dialog_new,
           'pficon pficon-add-circle-o fa-lg',
           t = N_('Add a new Dialog'),
-          t),
+          t,
+          :klass => ApplicationHelper::Button::DialogAction),
         button(
           :dialog_edit,
           'pficon pficon-edit fa-lg',
@@ -18,7 +19,8 @@ class ApplicationHelper::Toolbar::DialogsCenter < ApplicationHelper::Toolbar::Ba
           t,
           :url_parms => "main_div",
           :enabled   => false,
-          :onwhen    => "1"),
+          :onwhen    => "1",
+          :klass     => ApplicationHelper::Button::DialogAction),
         button(
           :dialog_copy,
           'fa fa-files-o fa-lg',
@@ -26,7 +28,8 @@ class ApplicationHelper::Toolbar::DialogsCenter < ApplicationHelper::Toolbar::Ba
           t,
           :url_parms => "main_div",
           :enabled   => false,
-          :onwhen    => "1"),
+          :onwhen    => "1",
+          :klass     => ApplicationHelper::Button::DialogAction),
         button(
           :dialog_delete,
           'pficon pficon-delete fa-lg',
@@ -35,7 +38,8 @@ class ApplicationHelper::Toolbar::DialogsCenter < ApplicationHelper::Toolbar::Ba
           :url_parms => "main_div",
           :confirm   => N_("Warning: The selected Dialog will be permanently removed from the Virtual Management Database!"),
           :enabled   => false,
-          :onwhen    => "1+"),
+          :onwhen    => "1+",
+          :klass     => ApplicationHelper::Button::DialogAction),
       ]
     ),
   ])
