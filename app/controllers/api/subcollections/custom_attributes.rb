@@ -2,11 +2,15 @@ module Api
   module Subcollections
     module CustomAttributes
       def custom_attributes_query_resource(object)
-        object.custom_attributes
+        object.respond_to?(:custom_attributes) ? object.custom_attributes : []
       end
 
       def custom_attributes_add_resource(object, _type, _id, data = nil)
-        add_custom_attribute(object, data)
+        if object.respond_to?(:custom_attributes)
+          add_custom_attribute(object, data)
+        else
+          raise BadRequestError, "#{object.class.name} does not support management of custom attributes"
+        end
       end
 
       def custom_attributes_edit_resource(object, _type, id = nil, data = nil)
@@ -61,7 +65,11 @@ module Api
       end
 
       def find_custom_attribute(object, id, data)
-        (id.present? && id > 0) ? object.custom_attributes.find(id) : find_custom_attribute_by_data(object, data)
+        if object.respond_to?(:custom_attributes)
+          (id.present? && id > 0) ? object.custom_attributes.find(id) : find_custom_attribute_by_data(object, data)
+        else
+          raise BadRequestError, "#{object.class.name} does not support management of custom attributes"
+        end
       end
 
       def find_custom_attribute_by_data(object, data)

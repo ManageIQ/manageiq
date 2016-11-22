@@ -686,4 +686,38 @@ describe "Providers API" do
       expect_results_to_match_hash("results", [failed_auth_action(p1.id), failed_auth_action(p2.id)])
     end
   end
+
+  describe 'query Providers' do
+    describe 'query custom_attributes' do
+      let!(:generic_provider) { FactoryGirl.create(:provider) }
+      it 'does not blow-up on provider without custom_attributes' do
+        api_basic_authorize collection_action_identifier(:providers, :read, :get)
+        run_get(providers_url, :expand => 'resources,custom_attributes', :provider_class => 'provider')
+        expect_query_result(:providers, 1, 1)
+      end
+    end
+  end
+
+  describe 'edit custom_attributes on providers' do
+    context 'provider_class=provider' do
+      let(:generic_provider) { FactoryGirl.create(:provider) }
+      let(:attr) { FactoryGirl.create(:custom_attribute) }
+      let(:url) do
+        # TODO: provider_class in params, when supported (https://github.com/brynary/rack-test/issues/150)
+        providers_url(generic_provider.id) + '/custom_attributes' + '?provider_class=provider'
+      end
+
+      it 'cannot add a custom_attribute' do
+        api_basic_authorize subcollection_action_identifier(:providers, :custom_attributes, :add, :post)
+        run_post(url, gen_request(:add, :name => 'x'))
+        expect_bad_request("#{generic_provider.class.name} does not support management of custom attributes")
+      end
+
+      it 'cannot edit custom_attribute' do
+        api_basic_authorize subcollection_action_identifier(:providers, :custom_attributes, :edit, :post)
+        run_post(url, gen_request(:edit, :href => custom_attributes_url(attr.id)))
+        expect_bad_request("#{generic_provider.class.name} does not support management of custom attributes")
+      end
+    end
+  end
 end
