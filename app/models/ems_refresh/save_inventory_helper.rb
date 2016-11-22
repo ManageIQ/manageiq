@@ -42,6 +42,7 @@ module EmsRefresh::SaveInventoryHelper
       deletes.reload
     end
     deletes = deletes.to_a
+    deletes_index = deletes.index_by { |x| x }
 
     child_keys = Array.wrap(child_keys)
     remove_keys = Array.wrap(extra_keys) + child_keys
@@ -50,11 +51,12 @@ module EmsRefresh::SaveInventoryHelper
 
     new_records = []
     hashes.each do |h|
-      found = save_inventory_with_findkey(association, h.except(*remove_keys), deletes, new_records, record_index)
+      found = save_inventory_with_findkey(association, h.except(*remove_keys), deletes_index, new_records, record_index)
       save_child_inventory(found, h, child_keys)
     end
 
     # Delete the items no longer found
+    deletes = deletes_index.values
     unless deletes.blank?
       type = association.proxy_association.reflection.name
       _log.info("[#{type}] Deleting #{log_format_deletes(deletes)}")
