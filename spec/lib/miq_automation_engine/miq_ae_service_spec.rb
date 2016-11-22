@@ -152,7 +152,10 @@ module MiqAeServiceSpec
       end
     end
     context "create notifications" do
-      before { NotificationType.seed }
+      before do
+        NotificationType.seed
+        allow(User).to receive_messages(:server_timezone => 'UTC')
+      end
 
       let(:options) { {} }
       let(:workspace) do
