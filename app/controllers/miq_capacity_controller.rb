@@ -736,13 +736,7 @@ class MiqCapacityController < ApplicationController
     else
       tz = @sb[:bottlenecks][:report].tz ? @sb[:bottlenecks][:report].tz : Time.zone
       @sb[:bottlenecks][:report].extras[:browser_name] = browser_info(:name)
-      if is_browser_ie?
-        blob = BinaryBlob.new(:name => "timeline_results")
-        blob.binary = (@sb[:bottlenecks][:report].to_timeline)
-        session[:tl_xml_blob_id] = blob.id
-      else
-        @tl_json = @sb[:bottlenecks][:report].to_timeline
-      end
+      @tl_json = @sb[:bottlenecks][:report].to_timeline
       #         START of TIMELINE TIMEZONE Code
       #     session[:tl_position] = @sb[:bottlenecks][:report].extras[:tl_position]
       session[:tl_position] = format_timezone(@sb[:bottlenecks][:report].extras[:tl_position], tz, "tl")

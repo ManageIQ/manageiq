@@ -236,13 +236,7 @@ module ApplicationController::Timelines
           add_flash(_("No records found for this timeline"), :warning)
         else
           @report.extras[:browser_name] = browser_info(:name)
-          if is_browser_ie?
-            blob = BinaryBlob.new(:name => "timeline_results")
-            blob.binary = (@report.to_timeline)
-            session[:tl_xml_blob_id] = blob.id
-          else
-            @tl_json = @report.to_timeline
-          end
+          @tl_json = @report.to_timeline
           #         START of TIMELINE TIMEZONE Code
           session[:tl_position] = @report.extras[:tl_position]
           #         session[:tl_position] = format_timezone(@report.extras[:tl_position],Time.zone,"tl")
