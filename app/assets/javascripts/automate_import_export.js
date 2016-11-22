@@ -64,11 +64,24 @@ var Automate = {
         addToDropDown('tags', child);
       });
 
+      Automate.selectDefaultBranch();
+
       $('select.git-branches').selectpicker('refresh');
       $('select.git-tags').selectpicker('refresh');
     }
 
     miqSparkleOff();
+  },
+
+  selectDefaultBranch: function() {
+    if ($('select.git-branches').find('option[value="origin/master"]').length === 0) {
+      $('select.git-branches').prop('selectedIndex', 0);
+    } else {
+      $('select.git-branches').val('origin/master');
+    }
+
+    $('.git-branch-or-tag').val($('select.git-branches').val());
+    $('.git-import-submit').prop('disabled', false);
   },
 
   addDomainOptions: function(domains) {
@@ -118,10 +131,10 @@ var Automate = {
 
   setUpAutomateImportClickHandlers: function() {
     var tearDownGitImportOptions = function() {
-      $('.git-branches').find('option').remove().end();
-      $('.git-tags').find('option').remove().end();
-      $('.git-branches').selectpicker('refresh');
-      $('.git-tags').selectpicker('refresh');
+      $('select.git-branches').find('option').remove().end();
+      $('select.git-tags').find('option').remove().end();
+      $('select.git-branches').selectpicker('refresh');
+      $('select.git-tags').selectpicker('refresh');
 
       $('.import-or-export').show();
       $('.git-import-data').hide();
@@ -213,6 +226,11 @@ var Automate = {
   },
 
   setUpGitRefreshClickHandlers: function() {
+    var toggleSubmitButton = function() {
+      var branchOrTagSelected = $('.git-branch-or-tag').val() === '';
+      $('.git-import-submit').prop('disabled', branchOrTagSelected);
+    };
+
     $('.git-branch-or-tag-select').on('change', function(event) {
       event.preventDefault();
       if ($(event.currentTarget).val() === "Branch") {
@@ -224,14 +242,17 @@ var Automate = {
         $('.git-tag-group').show();
         $('.git-branch-or-tag').val($('select.git-tags').val());
       }
+      toggleSubmitButton();
     });
 
     $('select.git-branches').on('change', function(event) {
       $('.git-branch-or-tag').val($('select.git-branches').val());
+      toggleSubmitButton();
     });
 
     $('select.git-tags').on('change', function(event) {
       $('.git-branch-or-tag').val($('select.git-tags').val());
+      toggleSubmitButton();
     });
   }
 };

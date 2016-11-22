@@ -91,9 +91,9 @@
           = _('Branch/Tag')
         .col-md-8
           = select_tag("branch_or_tag",
-                       options_for_select(["Please select 'Branch' or 'Tag'", "Branch", "Tag"]),
+                       options_for_select(["Branch", "Tag"]),
                        :class => "git-branch-or-tag-select selectpicker")
-      .form-group.git-branch-group{:style => "display: none;"}
+      .form-group.git-branch-group
         %label.col-md-2.control-label
           = _('Branches')
         .col-md-8
