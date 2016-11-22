@@ -39,8 +39,10 @@ module ManagerRefresh::SaveCollection
       record_index = {}
 
       create_or_update_inventory!(dto_collection, record_index, association)
-      # TODO(lsmola) delete only if DtoCollection is complete?
-      delete_inventory!(dto_collection, record_index, association)
+
+      # Delete only if DtoCollection is complete. If it's not complete, we are sending only subset of the records, so
+      # we cannot invoke deleting of the missing records.
+      delete_inventory!(dto_collection, record_index, association) if dto_collection.complete?
     end
 
     def create_or_update_inventory!(dto_collection, record_index, association)
