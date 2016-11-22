@@ -57,6 +57,12 @@ class ApplicationHelper::Toolbar::EmsCloudCenter < ApplicationHelper::Toolbar::B
           'pficon pficon-edit fa-lg',
           N_('Edit Tags for this Cloud Provider'),
           N_('Edit Tags')),
+        button(
+          :ems_cloud_check_compliance,
+          'fa fa-search fa-lg',
+          N_('Check Compliance of the last known configuration for this Cloud Manager'),
+          N_('Check Compliance of Last Known Configuration'),
+          :confirm => N_("Initiate Check Compliance of the last known configuration for this item?")),
       ]
     ),
   ])

@@ -24,7 +24,7 @@ module ApplicationController::TreeSupport
   def find_record
     # TODO: This logic should probably be reversed - fixed list for VmOrTemplate.
     # (Better yet, override the method only in VmOrTemplate related controllers.)
-    if %w(host container_replicator container_group container_node container_image).include? controller_name
+    if %w(host container_replicator container_group container_node container_image ext_management_system).include? controller_name
       identify_record(params[:id], controller_name.classify)
     else
       identify_record(params[:id], VmOrTemplate)

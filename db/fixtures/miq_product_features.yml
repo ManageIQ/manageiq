@@ -425,6 +425,10 @@
       :description: Manage Policies of Cloud Providers
       :feature_type: control
       :identifier: ems_cloud_protect
+    - :name: Check Compliance
+      :description: Check Compliance of Last Known Configuration
+      :feature_type: control
+      :identifier: ems_cloud_check_compliance
     - :name: Refresh
       :description: Refresh Cloud Providers
       :feature_type: control
@@ -924,6 +928,10 @@
       :description: Manage Policies of Infrastructure Providers
       :feature_type: control
       :identifier: ems_infra_protect
+    - :name: Check Compliance
+      :description: Check Compliance of Last Known Configuration
+      :feature_type: control
+      :identifier: ems_infra_check_compliance
     - :name: Refresh
       :description: Refresh Infrastructure Providers
       :feature_type: control
@@ -3601,6 +3609,10 @@
       :description: Re-check Authentication Status of Containers Providers
       :feature_type: control
       :identifier: ems_container_recheck_auth_status
+    - :name: Check Compliance
+      :description: Check Compliance of Last Known Configuration
+      :feature_type: control
+      :identifier: ems_container_check_compliance
     - :name: Container Deployments
       :description: Container Deployments
       :feature_type: node

@@ -68,6 +68,12 @@ class ApplicationHelper::Toolbar::EmsInfraCenter < ApplicationHelper::Toolbar::B
           'pficon pficon-edit fa-lg',
           N_('Edit Tags for this Infrastructure Provider'),
           N_('Edit Tags')),
+        button(
+          :ems_infra_check_compliance,
+          'fa fa-search fa-lg',
+          N_('Check Compliance of the last known configuration for this Infra Manager'),
+          N_('Check Compliance of Last Known Configuration'),
+          :confirm => N_("Initiate Check Compliance of the last known configuration for this item?")),
       ]
     ),
   ])

@@ -11,6 +11,12 @@ describe EmsInfraController do
       ApplicationController.handle_exceptions = true
     end
 
+    it "EmsInfra check compliance is called when Compliance is pressed" do
+      ems_infra = FactoryGirl.create(:ems_vmware)
+      expect(controller).to receive(:check_compliance)
+      post :button, :params => {:pressed => "ems_infra_check_compliance", :format => :js, :id => ems_infra.id}
+    end
+
     it "when VM Right Size Recommendations is pressed" do
       expect(controller).to receive(:vm_right_size)
       post :button, :params => { :pressed => "vm_right_size", :format => :js }

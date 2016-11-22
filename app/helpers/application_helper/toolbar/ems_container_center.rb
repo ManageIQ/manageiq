@@ -76,6 +76,12 @@ class ApplicationHelper::Toolbar::EmsContainerCenter < ApplicationHelper::Toolba
           'pficon pficon-edit fa-lg',
           N_('Manage Policies for this Containers Provider'),
           N_('Manage Policies')),
+        button(
+          :ems_container_check_compliance,
+          'fa fa-search fa-lg',
+          N_('Check Compliance of the last known configuration for this Container Manager'),
+          N_('Check Compliance of Last Known Configuration'),
+          :confirm => N_("Initiate Check Compliance of the last known configuration for this item?")),
       ]
     ),
   ])

@@ -13,7 +13,7 @@ class MiqPolicyController < ApplicationController
   after_action :cleanup_action
   after_action :set_session_data
 
-  UI_FOLDERS = [Host, Vm, ContainerReplicator, ContainerGroup, ContainerNode, ContainerImage].freeze
+  UI_FOLDERS = [Host, Vm, ContainerReplicator, ContainerGroup, ContainerNode, ContainerImage, ExtManagementSystem].freeze
 
   def index
     redirect_to :action => 'explorer'
