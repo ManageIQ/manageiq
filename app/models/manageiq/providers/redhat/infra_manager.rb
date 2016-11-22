@@ -18,6 +18,13 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
   supports :provisioning
   supports :refresh_new_target
 
+  #
+  # Hot plug of virtual memory has to be done in quanta of this size. Actually this is configurable in the
+  # engine, using the `HotPlugMemoryMultiplicationSizeMb` configuration parameter, but it is very unlikely
+  # that it will change.
+  #
+  HOT_PLUG_DIMM_SIZE = 256.megabyte.freeze
+
   def self.ems_type
     @ems_type ||= "rhevm".freeze
   end
@@ -115,16 +122,19 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
     }
   end
 
-  # RHEVM requires that the memory of the VM will be bigger or equal to the reserved memory at any given time.
-  # Therefore, increasing the memory of the vm should precede to updating the reserved memory, and the opposite:
-  # Decreasing the memory to a lower value than the reserved memory requires first to update the reserved memory
-  def update_vm_memory(rhevm_vm, memory)
-    if memory > rhevm_vm.attributes.fetch_path(:memory)
-      rhevm_vm.memory = memory
-      rhevm_vm.memory_reserve = memory
+  def update_vm_memory(vm, virtual)
+    # Adjust the virtual and guaranteed memory:
+    virtual = calculate_adjusted_virtual_memory(vm, virtual)
+    guaranteed = calculate_adjusted_guaranteed_memory(vm, virtual)
+
+    # If the virtual machine is running we need to update first the configuration that will be used during the
+    # next run, as the guaranteed memory can't be changed for the running virtual machine.
+    state = vm.attributes.fetch_path(:status, :state)
+    if state == 'up'
+      vm.update_memory(virtual, guaranteed, :next_run => true)
+      vm.update_memory(virtual, nil, :next_run => false)
     else
-      rhevm_vm.memory_reserve = memory
-      rhevm_vm.memory = memory
+      vm.update_memory(virtual, guaranteed)
     end
   end
 
@@ -152,5 +162,84 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
 
   def unsupported_migration_options
     [:storage, :respool, :folder, :datacenter, :host_filter]
+  end
+
+  private
+
+  #
+  # Adjusts the new requested virtual memory of a virtual machine so that it satisfies the constraints imposed
+  # by the engine.
+  #
+  # @param vm [Hash] The current representation of the virtual machine.
+  #
+  # @param requested [Integer] The new amount of virtual memory requested by the user.
+  #
+  # @return [Integer] The amount of virtual memory requested by the user adjusted so that it satisfies the constrains
+  #   imposed by the engine.
+  #
+  def calculate_adjusted_virtual_memory(vm, requested)
+    # Get the current state of the virtual machine, and the current amount of virtual memory:
+    attributes = vm.attributes
+    name = attributes.fetch_path(:name)
+    state = attributes.fetch_path(:status, :state)
+    current = attributes.fetch_path(:memory)
+
+    # Initially there is no need for adjustment:
+    adjusted = requested
+
+    # If the virtual machine is running then the difference in memory has to be a multiple of 256 MiB, otherwise
+    # the engine will not perform the hot plug of the new memory. The reason for this is that hot plugging of
+    # memory is performed adding a new virtual DIMM to the virtual machine, and the size of the virtual DIMM
+    # is 256 MiB. This means that we need to round the difference up to the closest multiple of 256 MiB.
+    if state == 'up'
+      delta = requested - current
+      remainder = delta % HOT_PLUG_DIMM_SIZE
+      if remainder > 0
+        adjustment = HOT_PLUG_DIMM_SIZE - remainder
+        adjusted = requested + adjustment
+        _log.info(
+          "The change in virtual memory of virtual machine '#{name}' needs to be a multiple of " \
+          "#{HOT_PLUG_DIMM_SIZE / 1.megabyte} MiB, so it will be adjusted to #{adjusted / 1.megabyte} MiB."
+        )
+      end
+    end
+
+    # Return the adjusted memory:
+    adjusted
+  end
+
+  #
+  # Adjusts the guaranteed memory of a virtual machie so that it satisfies the constraints imposed by the
+  # engine.
+  #
+  # @param vm [Hash] The current representation of the virtual machine.
+  #
+  # @param virtual [Integer] The new amount of virtual memory requested by the user (and maybe already adjusted).
+  #
+  # @return [Integer] The amount of guarantted memory to request so that it satisfies the constraints imposed by
+  #   the engine.
+  #
+  def calculate_adjusted_guaranteed_memory(vm, virtual)
+    # Get the current amount of guaranteed memory:
+    attributes = vm.attributes
+    name = attributes.fetch_path(:name)
+    current = attributes.fetch_path(:memory_policy, :guaranteed)
+
+    # Initially there is no need for adjustment:
+    adjusted = current
+
+    # The engine requires that the virtual memory is bigger or equal than the guaranteed memory at any given
+    # time. Therefore, we need to adjust the guaranteed memory so that it is the minimum of the previous
+    # guaranteed memory and the new virtual memory.
+    if current > virtual
+      adjusted = virtual
+      _log.info(
+        "The guaranteed physical memory of virtual machine '#{name}' needs to be less or equal than the virtual " \
+        "memory, so it will be adjusted to #{adjusted / 1.megabyte} MiB."
+      )
+    end
+
+    # Return the adjusted guaranteed memory:
+    adjusted
   end
 end

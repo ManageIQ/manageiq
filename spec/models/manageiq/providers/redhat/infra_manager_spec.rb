@@ -33,10 +33,11 @@ describe ManageIQ::Providers::Redhat::InfraManager do
 
       @cores_per_socket = 2
       @num_of_sockets   = 3
-      @total_mem_in_mb  = 4096
 
       @rhevm_vm_attrs = double('rhevm_vm_attrs')
-      allow(@rhevm_vm_attrs).to receive(:fetch_path).with(:memory).and_return(@total_mem_in_mb.megabytes)
+      allow(@rhevm_vm_attrs).to receive(:fetch_path).with(:name).and_return('myvm')
+      allow(@rhevm_vm_attrs).to receive(:fetch_path).with(:memory).and_return(4.gigabytes)
+      allow(@rhevm_vm_attrs).to receive(:fetch_path).with(:memory_policy, :guaranteed).and_return(2.gigabytes)
       @rhevm_vm = double('rhevm_vm')
       allow(@rhevm_vm).to receive(:attributes).and_return(@rhevm_vm_attrs)
       allow(@vm).to receive(:with_provider_object).and_yield(@rhevm_vm)
@@ -52,13 +53,65 @@ describe ManageIQ::Providers::Redhat::InfraManager do
       @ems.vm_reconfigure(@vm, :spec => spec)
     end
 
-    it "memory=" do
+    it 'updates the current and persistent configuration if the VM is up' do
       spec = {
-        "memoryMB" => @total_mem_in_mb
+        'memoryMB' => 8.gigabytes / 1.megabyte
       }
+      allow(@rhevm_vm_attrs).to receive(:fetch_path).with(:status, :state).and_return('up')
+      expect(@rhevm_vm).to receive(:update_memory).with(8.gigabytes, 2.gigabytes, :next_run => true)
+      expect(@rhevm_vm).to receive(:update_memory).with(8.gigabytes, nil, :next_run => false)
+      @ems.vm_reconfigure(@vm, :spec => spec)
+    end
 
-      expect(@rhevm_vm).to receive(:memory=).with(@total_mem_in_mb.megabytes)
-      expect(@rhevm_vm).to receive(:memory_reserve=).with(@total_mem_in_mb.megabytes)
+    it 'updates only the persistent configuration when the VM is down' do
+      spec = {
+        'memoryMB' => 8.gigabytes / 1.megabyte
+      }
+      allow(@rhevm_vm_attrs).to receive(:fetch_path).with(:status, :state).and_return('down')
+      expect(@rhevm_vm).to receive(:update_memory).with(8.gigabytes, 2.gigabytes)
+      @ems.vm_reconfigure(@vm, :spec => spec)
+    end
+
+    it 'adjusts the increased memory to the next 256 MiB multiple if the VM is up' do
+      spec = {
+        'memoryMB' => 8.gigabytes / 1.megabyte + 1
+      }
+      adjusted = 8.gigabytes + 256.megabytes
+      allow(@rhevm_vm_attrs).to receive(:fetch_path).with(:status, :state).and_return('up')
+      expect(@rhevm_vm).to receive(:update_memory).with(adjusted, 2.gigabytes, :next_run => true)
+      expect(@rhevm_vm).to receive(:update_memory).with(adjusted, nil, :next_run => false)
+      @ems.vm_reconfigure(@vm, :spec => spec)
+    end
+
+    it 'adjusts reduced memory to the next 256 MiB multiple if the VM is up' do
+      spec = {
+        'memoryMB' => 8.gigabytes / 1.megabyte - 1
+      }
+      adjusted = 8.gigabytes
+      allow(@rhevm_vm_attrs).to receive(:fetch_path).with(:status, :state).and_return('up')
+      expect(@rhevm_vm).to receive(:update_memory).with(adjusted, 2.gigabytes, :next_run => true)
+      expect(@rhevm_vm).to receive(:update_memory).with(adjusted, nil, :next_run => false)
+      @ems.vm_reconfigure(@vm, :spec => spec)
+    end
+
+    it 'adjusts the guaranteed memory if it is larger than the virtual memory if the VM is up' do
+      spec = {
+        'memoryMB' => 1.gigabyte / 1.megabyte
+      }
+      adjusted = 1.gigabyte
+      allow(@rhevm_vm_attrs).to receive(:fetch_path).with(:status, :state).and_return('up')
+      expect(@rhevm_vm).to receive(:update_memory).with(1.gigabyte, adjusted, :next_run => true)
+      expect(@rhevm_vm).to receive(:update_memory).with(1.gigabyte, nil, :next_run => false)
+      @ems.vm_reconfigure(@vm, :spec => spec)
+    end
+
+    it 'adjusts the guaranteed memory if it is larger than the virtual memory if the VM is down' do
+      spec = {
+        'memoryMB' => 1.gigabyte / 1.megabyte
+      }
+      adjusted = 1.gigabyte
+      allow(@rhevm_vm_attrs).to receive(:fetch_path).with(:status, :state).and_return('down')
+      expect(@rhevm_vm).to receive(:update_memory).with(1.gigabyte, adjusted)
       @ems.vm_reconfigure(@vm, :spec => spec)
     end
   end
