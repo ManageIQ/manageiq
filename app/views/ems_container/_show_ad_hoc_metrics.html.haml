@@ -13,12 +13,19 @@
       .spinner.spinner-lg.loading{"ng-if" => "loadingMetrics"}
       .col-md-12{"pf-list-view" => "", "config" => "listConfig", "items" => "items"}
         .list-view-pf-body.row
-          .col-md-4
+          .col-md-3.col-sm-6.no-wrap{"tooltip" => "{{item.tags.group_id}}", "tooltip-placement" => "bottom"}
             {{item.tags.group_id}}
-          .col-md-4
+          .col-md-4.col-sm-6.no-wrap{"tooltip" => "{{item.id}}", "tooltip-placement" => "bottom"}
             {{item.id}}
-          .col-md-4
-            Last value : {{item.last_value || "-"}}
+          .col-md-2.col-sm-6.no-wrap{"tooltip" => "{{item.maxTimestamp | date:'yyyy-MM-dd hh:mm:ss'}}", "tooltip-placement" => "bottom"}
+            {{item.maxTimestamp | date:'yyyy-MM-dd hh:mm:ss'}}
+          .col-md-3.col-sm-6.no-wrap{"tooltip" => "{{item.last_value || '-'}}", "tooltip-placement" => "bottom"}
+            %strong.pull-left
+              = _("Last value")
+            %span.last-value
+              {{item.last_value || "-"}}
+            %span.last-value
+              {{item.percent_change}}
         %list-expanded-content
           .row
             .col-md-12
@@ -31,7 +38,7 @@
         = _("Metrics")
       %p
         = _("Add tags and click the Apply button to view available metrics")
-  %div.metrics-graph{"ng-if" => "viewGraph"}
+  .metrics-graph{"ng-if" => "viewGraph"}
     %div{"pf-toolbar" => "", "config" => "graphToolbarConfig"}
       %actions
         %button.btn.btn-primary{"type" => "button", "ng-click" => "refresh_graph_data()"}
@@ -40,7 +47,7 @@
           = _("Change Metrics")
     .line-chart
       .spinner.spinner-lg.loading{"ng-if" => "loadingData"}
-      %div#adHocMetricsChart{"pf-line-chart" => "",
+      #adHocMetricsChart{"pf-line-chart" => "",
                              "ng-if" => "chartDataInit",
                              "chart-data" => "chartData",
                              "config" => "chartConfig",

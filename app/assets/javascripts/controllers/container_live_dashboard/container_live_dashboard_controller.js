@@ -117,7 +117,6 @@ miqHttpInject(angular.module('containerLiveDashboard', ['ui.bootstrap', 'pattern
 
     var getMetricTags = function() {
       $http.get(url + '&query=metric_tags').success(function(response) {
-        console.dir(response);
         $scope.tagsLoaded = true;
         if (response && angular.isArray(response.metric_tags)) {
           response.metric_tags.sort();
@@ -138,6 +137,40 @@ miqHttpInject(angular.module('containerLiveDashboard', ['ui.bootstrap', 'pattern
       });
     };
 
+    var getLatestData = function(item) {
+      var ends = new Date().getTime();
+      var diff = 60 * 60 * 60 * 1000;
+      var starts = ends - diff;
+      var params = '&query=get_data&metric_id=' + item.id + '&ends=' + ends + '&starts=' + starts;
+
+      $http.get(url + params).success(function (response) {
+        'use strict';
+        if (response.error) {
+          console.dir(response);
+        } else {
+          var data = response.data.sort(function (data1, data2) {
+            return (data2.timestamp || data2.start) < (data1.timestamp || data1.start);
+          });
+          var lastValue = data[0].value;
+          item.last_value = formatNumber(lastValue);
+          if (data.length > 1) {
+            var prevValue = data[1].value;
+            if (angular.isNumber(lastValue) && angular.isNumber(prevValue)) {
+              var change;
+              if (prevValue !== 0) {
+                change = Math.round(((lastValue - prevValue) / lastValue) * 100.0);
+              } else if (lastValue !== 0) {
+                change = 100;
+              } else {
+                change = 0;
+              }
+              item.percent_change = "(" + change + "%)";
+            }
+          }
+        }
+      });
+    };
+
     $scope.refresh = function() {
       $scope.loadingMetrics = true;
       var _tags = $scope.tags != {} ? '&tags=' + JSON.stringify($scope.tags) : '';
@@ -150,7 +183,13 @@ miqHttpInject(angular.module('containerLiveDashboard', ['ui.bootstrap', 'pattern
           return;
         }
 
-        $scope.items = response.metric_definitions;
+        $scope.items = response.metric_definitions.filter(function(item) {
+          return item.tags && item.tags.group_id && item.id && item.minTimestamp;
+        });
+
+        // TODO:  Is this correct or can the last two values be retrieved via the initial call?
+        angular.forEach($scope.items, getLatestData);
+
         $scope.filterConfig.resultsCount = $scope.items.length;
       });
     };
