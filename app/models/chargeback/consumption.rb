@@ -1,5 +1,7 @@
 class Chargeback
   class Consumption
+    attr_reader :hours_in_interval
+
     def initialize(metric_rollup_records, hours_in_interval)
       @rollups = metric_rollup_records
       @hours_in_interval = hours_in_interval
