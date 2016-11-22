@@ -1,6 +1,6 @@
 module Metric::Purging
   def self.purge_date(type)
-    value = VMDB::Config.new("vmdb").config.fetch_path(:performance, :history, type.to_sym)
+    value = ::Settings.performance.history[type]
 
     case value
     when Numeric
@@ -21,17 +21,17 @@ module Metric::Purging
   end
 
   def self.purge_daily_timer(ts = nil)
-    ts ||= purge_date(:keep_daily_performances) || 6.months.ago.utc
+    ts ||= purge_date(:keep_daily_performances)
     purge_timer(ts, "daily")
   end
 
   def self.purge_hourly_timer(ts = nil)
-    ts ||= purge_date(:keep_hourly_performances) || 6.months.ago.utc
+    ts ||= purge_date(:keep_hourly_performances)
     purge_timer(ts, "hourly")
   end
 
   def self.purge_realtime_timer(ts = nil)
-    ts ||= purge_date(:keep_realtime_performances) || 4.hours.ago.utc
+    ts ||= purge_date(:keep_realtime_performances)
     purge_timer(ts, "realtime")
   end
 
@@ -47,7 +47,7 @@ module Metric::Purging
   end
 
   def self.purge_window_size
-    VMDB::Config.new("vmdb").config.fetch_path(:performance, :history, :purge_window_size) || 1000
+    ::Settings.performance.history.purge_window_size
   end
 
   def self.purge_scope(older_than, interval)

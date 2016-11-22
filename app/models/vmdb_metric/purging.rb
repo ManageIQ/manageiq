@@ -5,7 +5,7 @@ module VmdbMetric::Purging
   module ClassMethods
     def purge_date(interval)
       type  = "keep_#{interval}_metrics".to_sym
-      value = VMDB::Config.new("vmdb").config.fetch_path(:database, :metrics_history, type)
+      value = ::Settings.database.metrics_history[type]
       value = value.to_i.days if value.kind_of?(Fixnum) # Default unit is days
       value = value.to_i_with_method.seconds.ago.utc unless value.nil?
       value
@@ -18,13 +18,13 @@ module VmdbMetric::Purging
 
     def purge_daily_timer(ts = nil)
       interval = "daily"
-      ts ||= purge_date(interval) || 6.months.ago.utc
+      ts ||= purge_date(interval)
       purge_timer(ts, interval)
     end
 
     def purge_hourly_timer(ts = nil)
       interval = "hourly"
-      ts ||= purge_date(interval) || 6.months.ago.utc
+      ts ||= purge_date(interval)
       purge_timer(ts, interval)
     end
 
@@ -40,7 +40,7 @@ module VmdbMetric::Purging
     end
 
     def purge_window_size
-      VMDB::Config.new("vmdb").config.fetch_path(:database, :metrics_history, :purge_window_size) || 10000
+      ::Settings.database.metrics_history.purge_window_size
     end
 
     def purge_count(mode, value, interval)

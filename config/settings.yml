@@ -86,7 +86,7 @@
     :keep_daily_metrics: 6.months
     :keep_hourly_metrics: 6.months
     :purge_schedule: "50 * * * *"
-    :purge_window_size: 100000
+    :purge_window_size: 10000
 :drift_states:
   :history:
     :keep_drift_states: 6.months
@@ -1122,7 +1122,7 @@
     :keep_daily_metrics: 6.months
     :keep_hourly_metrics: 6.months
     :keep_realtime_metrics: 4.hours
-    :purge_window_size: 1000
+    :purge_window_size: 100
   :watchdog_interval: 1.minute
 :ui:
   :mark_translated_strings: false
