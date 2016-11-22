@@ -56,6 +56,7 @@ class Chargeback < ActsAsArModel
       # values are grouped by resource_id and timestamp (query_start_time...query_end_time)
       records.group_by(&:resource_id).each do |_, metric_rollup_records|
         metric_rollup_records = metric_rollup_records.select { |x| x.resource.present? }
+        consumption = Consumption.new(metric_rollup_records, hours_in_interval)
         next if metric_rollup_records.empty?
 
         # we need to select ChargebackRates for groups of MetricRollups records
@@ -73,7 +74,7 @@ class Chargeback < ActsAsArModel
         data[key]["chargeback_rates"] = chargeback_rates.uniq.join(', ')
 
         # we are getting hash with metrics and costs for metrics defined for chargeback
-        data[key].calculate_costs(metric_rollup_records, rates_to_apply, hours_in_interval)
+        data[key].calculate_costs(consumption, rates_to_apply)
       end
     end
 
@@ -124,8 +125,7 @@ class Chargeback < ActsAsArModel
     [key, extra_fields]
   end
 
-  def calculate_costs(metric_rollup_records, rates, hours_in_interval)
-    consumption = Consumption.new(metric_rollup_records, hours_in_interval)
+  def calculate_costs(consumption, rates)
     self.fixed_compute_metric = consumption.chargeback_fields_present if consumption.chargeback_fields_present
 
     rates.each do |rate|
