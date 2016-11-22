@@ -314,6 +314,94 @@ describe "Querying" do
       expect_query_result(:vms, 1, 2)
       expect_result_resources_to_match_hash([{"name" => vm_2.name, "guid" => vm_2.guid}])
     end
+
+    it "supports = with dates mixed with virtual attributes" do
+      _vm_1 = FactoryGirl.create(:vm, :retires_on => "2016-01-01", :vendor => "vmware")
+      vm_2 = FactoryGirl.create(:vm, :retires_on => "2016-01-02", :vendor => "vmware")
+      _vm_3 = FactoryGirl.create(:vm, :retires_on => "2016-01-02", :vendor => "openstack")
+
+      run_get(vms_url, :filter => ["retires_on = 2016-01-02", "vendor_display = VMware"])
+
+      expected = {"resources" => [{"href" => a_string_matching(vms_url(vm_2.id))}]}
+      expect(response.parsed_body).to include(expected)
+      expect(response).to have_http_status(:ok)
+    end
+
+    it "supports > with dates mixed with virtual attributes" do
+      _vm_1 = FactoryGirl.create(:vm, :retires_on => "2016-01-01", :vendor => "vmware")
+      vm_2 = FactoryGirl.create(:vm, :retires_on => "2016-01-02", :vendor => "vmware")
+      _vm_3 = FactoryGirl.create(:vm, :retires_on => "2016-01-03", :vendor => "openstack")
+
+      run_get(vms_url, :filter => ["retires_on > 2016-01-01", "vendor_display = VMware"])
+
+      expected = {"resources" => [{"href" => a_string_matching(vms_url(vm_2.id))}]}
+      expect(response.parsed_body).to include(expected)
+      expect(response).to have_http_status(:ok)
+    end
+
+    it "supports > with datetimes mixed with virtual attributes" do
+      _vm_1 = FactoryGirl.create(:vm, :last_scan_on => "2016-01-01T07:59:59Z", :vendor => "vmware")
+      vm_2 = FactoryGirl.create(:vm, :last_scan_on => "2016-01-01T08:00:00Z", :vendor => "vmware")
+      _vm_3 = FactoryGirl.create(:vm, :last_scan_on => "2016-01-01T08:00:00Z", :vendor => "openstack")
+
+      run_get(vms_url, :filter => ["last_scan_on > 2016-01-01T07:59:59Z", "vendor_display = VMware"])
+
+      expected = {"resources" => [{"href" => a_string_matching(vms_url(vm_2.id))}]}
+      expect(response.parsed_body).to include(expected)
+      expect(response).to have_http_status(:ok)
+    end
+
+    it "supports < with dates mixed with virtual attributes" do
+      _vm_1 = FactoryGirl.create(:vm, :retires_on => "2016-01-01", :vendor => "openstack")
+      vm_2 = FactoryGirl.create(:vm, :retires_on => "2016-01-02", :vendor => "vmware")
+      _vm_3 = FactoryGirl.create(:vm, :retires_on => "2016-01-03", :vendor => "vmware")
+
+      run_get(vms_url, :filter => ["retires_on < 2016-01-03", "vendor_display = VMware"])
+
+      expected = {"resources" => [{"href" => a_string_matching(vms_url(vm_2.id))}]}
+      expect(response.parsed_body).to include(expected)
+      expect(response).to have_http_status(:ok)
+    end
+
+    it "supports < with datetimes mixed with virtual attributes" do
+      _vm_1 = FactoryGirl.create(:vm, :last_scan_on => "2016-01-01T07:59:59Z", :vendor => "openstack")
+      vm_2 = FactoryGirl.create(:vm, :last_scan_on => "2016-01-01T07:59:59Z", :vendor => "vmware")
+      _vm_3 = FactoryGirl.create(:vm, :last_scan_on => "2016-01-01T08:00:00Z", :vendor => "vmware")
+
+      run_get(vms_url, :filter => ["last_scan_on < 2016-01-01T08:00:00Z", "vendor_display = VMware"])
+
+      expected = {"resources" => [{"href" => a_string_matching(vms_url(vm_2.id))}]}
+      expect(response.parsed_body).to include(expected)
+      expect(response).to have_http_status(:ok)
+    end
+
+    it "does not support filtering with <= with datetimes" do
+      run_get(vms_url, :filter => ["retires_on <= 2016-01-03"])
+
+      expect(response.parsed_body).to include_error_with_message("Unsupported operator for datetime: <=")
+      expect(response).to have_http_status(:bad_request)
+    end
+
+    it "does not support filtering with >= with datetimes" do
+      run_get(vms_url, :filter => ["retires_on >= 2016-01-03"])
+
+      expect(response.parsed_body).to include_error_with_message("Unsupported operator for datetime: >=")
+      expect(response).to have_http_status(:bad_request)
+    end
+
+    it "does not support filtering with != with datetimes" do
+      run_get(vms_url, :filter => ["retires_on != 2016-01-03"])
+
+      expect(response.parsed_body).to include_error_with_message("Unsupported operator for datetime: !=")
+      expect(response).to have_http_status(:bad_request)
+    end
+
+    it "will handle poorly formed datetimes in the filter" do
+      run_get(vms_url, :filter => ["retires_on > foobar"])
+
+      expect(response.parsed_body).to include_error_with_message("Bad format for datetime: foobar")
+      expect(response).to have_http_status(:bad_request)
+    end
   end
 
   describe "Querying vm attributes" do

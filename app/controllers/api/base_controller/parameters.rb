@@ -25,9 +25,9 @@ module Api
           "!=" => {:default => "!=", :regex => "REGULAR EXPRESSION DOES NOT MATCH", :null => "IS NOT NULL"},
           "<=" => {:default => "<="},
           ">=" => {:default => ">="},
-          "<"  => {:default => "<"},
-          ">"  => {:default => ">"},
-          "="  => {:default => "=", :regex => "REGULAR EXPRESSION MATCHES", :null => "IS NULL"}
+          "<"  => {:default => "<", :datetime => "BEFORE"},
+          ">"  => {:default => ">", :datetime => "AFTER"},
+          "="  => {:default => "=", :datetime => "IS", :regex => "REGULAR EXPRESSION MATCHES", :null => "IS NULL"}
         }
 
         and_expressions = []
@@ -73,6 +73,7 @@ module Api
               "Unknown operator specified in filter #{filter}" if operator.blank?
 
         filter_attr, _, filter_value = filter.partition(operator)
+        filter_attr.strip!
         filter_value.strip!
         str_method = filter_value =~ /%|\*/ && methods[:regex] || methods[:default]
 
@@ -85,7 +86,18 @@ module Api
                       when /^(NULL|nil)$/i
                         [nil, methods[:null] || methods[:default]]
                       else
-                        [filter_value, methods[:default]]
+                        model = collection_class(@req.subcollection || @req.collection)
+                        if column_type(model, filter_attr) == :datetime
+                          unless methods[:datetime]
+                            raise BadRequestError, "Unsupported operator for datetime: #{operator}"
+                          end
+                          unless Time.zone.parse(filter_value)
+                            raise BadRequestError, "Bad format for datetime: #{filter_value}"
+                          end
+                          [filter_value, methods[:datetime]]
+                        else
+                          [filter_value, methods[:default]]
+                        end
                       end
 
         if filter_value =~ /%|\*/
@@ -93,7 +105,7 @@ module Api
           filter_value.gsub!(/%|\\\*/, ".*")
         end
 
-        {:logical_or => logical_or, :operator => method, :attr => filter_attr.strip, :value => filter_value}
+        {:logical_or => logical_or, :operator => method, :attr => filter_attr, :value => filter_value}
       end
 
       def by_tag_param
