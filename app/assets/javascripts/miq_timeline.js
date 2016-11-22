@@ -72,7 +72,7 @@
           data[x].name = json[x].name;
         }
         data[x].data = [];
-        if (json[x].data.length > 0) {
+        if (json[x].data !== undefined && json[x].data.length > 0) {
           var timelinedata = json[x].data[0];
           for (var y in timelinedata) {
             data[x].data.push({});
