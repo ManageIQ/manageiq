@@ -18,6 +18,10 @@ class Chargeback
       values(metric).empty?
     end
 
+    def chargeback_fields_present
+      @chargeback_fields_present ||= @rollups.count(&:chargeback_fields_present?)
+    end
+
     private
 
     def values(metric)
