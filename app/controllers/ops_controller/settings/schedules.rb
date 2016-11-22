@@ -23,9 +23,9 @@ module OpsController::Settings::Schedules
                   @selected_schedule.run_at[:tz] : session[:user_tz]
 
     if @selected_schedule.sched_action[:method] == 'automation_request'
-      params = @selected_schedule.filter[:parameters]
-      @object_class = ui_lookup(:model => params[:object_class])
-      @object_name = params[:object_class].constantize.find_by(:id => params[:object_id]).name if params[:object_class]
+      params = @selected_schedule.filter[:ui][:ui_object]
+      @object_class = ui_lookup(:model => params[:target_class])
+      @object_name = params[:target_class].constantize.find_by(:id => params[:target_id]).name if params[:target_class]
     end
 
     if @selected_schedule.filter.kind_of?(MiqExpression)
@@ -175,8 +175,7 @@ module OpsController::Settings::Schedules
         :target_classes  => automate_request[:target_classes],
         :targets         => automate_request[:targets],
         :target_id       => automate_request[:target_id],
-        :attrs           => automate_request[:attrs],
-        :readonly        => automate_request[:readonly],
+        :ui_attrs        => automate_request[:ui_attrs],
         :filter_type     => nil
       )
     end
@@ -500,12 +499,12 @@ module OpsController::Settings::Schedules
       uri_settings[:save] = true
       schedule.verify_file_depot(uri_settings)
     elsif params[:action_typ] == "automation_request"
-      attrs = []
+      ui_attrs = []
       AE_MAX_RESOLUTION_FIELDS.times do |i|
-        next unless params[:attrs] && params[:attrs][i.to_s]
-        attrs[i] = []
-        attrs[i][0] = params[:attrs][i.to_s][0]
-        attrs[i][1] = params[:attrs][i.to_s][1]
+        next unless params[:ui_attrs] && params[:ui_attrs][i.to_s]
+        ui_attrs[i] = []
+        ui_attrs[i][0] = params[:ui_attrs][i.to_s][0]
+        ui_attrs[i][1] = params[:ui_attrs][i.to_s][1]
       end
       schedule.filter = {
         :uri_parts  => {
@@ -513,14 +512,16 @@ module OpsController::Settings::Schedules
           :instance  => params[:instance_name],
           :message   => params[:object_message]
         },
+        :ui => {:ui_attrs => ui_attrs,
+                :ui_object => {:target_class => params[:target_class].present? ? params[:target_class] : nil,
+                               :target_id    => params[:target_id]
+                              }
+        },
         :parameters => {
           :request        => params[:object_request],
           :instance_name  => params[:instance_name],
           :object_message => params[:object_message],
-          :attrs          => attrs,
-          :object_class   => params[:target_class] == "" ? nil : params[:target_class],
-          :object_id      => params[:target_id]
-        }.merge!(attrs.to_h)
+        }.merge!(ui_attrs.to_h).merge!(build_attrs_from_params(params))
       }
     elsif %w(global my).include?(params[:filter_typ])  # Search filter chosen, set up relationship
       schedule.filter     = nil  # Clear out existing filter expression
@@ -529,6 +530,13 @@ module OpsController::Settings::Schedules
       schedule.filter     = MiqExpression.new(build_search_filter_from_params)
       schedule.miq_search = nil if schedule.miq_search  # Clear out any search relationship
     end
+  end
+
+  def build_attrs_from_params(params)
+    return {} if params[:target_class].empty?
+    klass = params[:target_class].constantize
+    object = klass.find_by_id(params[:target_id])
+    {"#{MiqAeEngine.create_automation_attribute_key(object)}" => MiqAeEngine.create_automation_attribute_value(object)}
   end
 
   def build_search_filter_from_params
