@@ -42,6 +42,11 @@ class Notification < ApplicationRecord
 
   def set_notification_recipients
     subscribers = notification_type.subscriber_ids(subject, initiator)
+    if subject
+      subscribers.reject! do |subscriber_id|
+        Rbac.filtered_object(subject, :user => User.find(subscriber_id)).blank?
+      end
+    end
     self.notification_recipients_attributes = subscribers.collect { |id| {:user_id => id } }
   end
 

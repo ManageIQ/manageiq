@@ -1,4 +1,5 @@
 describe Notification, :type => :model do
+  before { allow(User).to receive_messages(:server_timezone => 'UTC') }
   before { NotificationType.seed }
   let(:tenant) { FactoryGirl.create(:tenant) }
   let!(:user) { FactoryGirl.create(:user_with_group, :tenant => tenant) }
@@ -21,6 +22,18 @@ describe Notification, :type => :model do
       it 'broadcasts the message through ActionCable' do
         expect_any_instance_of(ActionCable::Server::Base).to receive(:broadcast)
         subject # force the creation of the db object
+      end
+
+      context 'tenant includes user without access to the subject (vm)' do
+        let(:limiting_role) { FactoryGirl.create(:miq_user_role, :settings => {:restrictions=>{:vms=>:user}}) }
+        let(:limited_group) do
+          FactoryGirl.create(:miq_group, :tenant_type, :tenant => tenant, :miq_user_role => limiting_role)
+        end
+        let!(:limited_user) { FactoryGirl.create(:user, :miq_groups => [limited_group]) }
+
+        it 'emits notifications only to those users, who are authorized to see the subject' do
+          expect(subject.recipients).to match_array([user])
+        end
       end
     end
   end
