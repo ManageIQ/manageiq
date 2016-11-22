@@ -39,6 +39,8 @@ describe EmsInfraController do
     tree_autoload
     update
     wait_for_task
+    protect
+    squash_toggle
     scaling
     scaledown
     x_show

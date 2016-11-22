@@ -1033,6 +1033,7 @@ Vmdb::Application.routes.draw do
         tl_chooser
         update
         wait_for_task
+        squash_toggle
       ) +
                adv_search_post +
                compare_post +
@@ -1116,6 +1117,7 @@ Vmdb::Application.routes.draw do
         scaling
         scaledown
         x_show
+        squash_toggle
       ) +
                adv_search_post +
                compare_post +
@@ -1159,6 +1161,7 @@ Vmdb::Application.routes.draw do
         wait_for_task
         tagging_edit
         tag_edit_form_field_changed
+        squash_toggle
       ) +
                adv_search_post +
                compare_post +
