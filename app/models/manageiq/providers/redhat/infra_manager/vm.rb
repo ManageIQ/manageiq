@@ -42,6 +42,35 @@ class ManageIQ::Providers::Redhat::InfraManager::Vm < ManageIQ::Providers::Infra
   alias_method :owning_cluster, :parent_cluster
   alias_method :ems_cluster, :parent_cluster
 
+  def disconnect_storage(_s = nil)
+    vm_disks = collect_disks
+
+    if vm_disks.blank?
+      storage = nil
+    else
+      vm_storages = ([storage] + storages).compact.uniq
+      storage = vm_storages.select { |store| !vm_disks.include?(store.ems_ref) }
+    end
+
+    super(storage)
+  end
+
+  def collect_disks
+    disks = hardware.disks.map { |disk| "#{disk.storage.ems_ref}/disks/#{disk.filename}" }
+    vm_disks = []
+
+    ext_management_system.with_provider_connection do |rhevm|
+      disks.each do |disk|
+        begin
+          vm_disks << Ovirt::Disk.find_by_href(rhevm, disk)
+        rescue Ovirt::MissingResourceError
+          nil
+        end
+      end
+    end
+    vm_disks
+  end
+
   #
   # UI Button Validation Methods
   #
