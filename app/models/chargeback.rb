@@ -126,12 +126,11 @@ class Chargeback < ActsAsArModel
 
   def calculate_costs(metric_rollup_records, rates, hours_in_interval)
     consumption = Consumption.new(metric_rollup_records, hours_in_interval)
-    chargeback_fields_present = metric_rollup_records.count(&:chargeback_fields_present?)
-    self.fixed_compute_metric = chargeback_fields_present if chargeback_fields_present
+    self.fixed_compute_metric = consumption.chargeback_fields_present if consumption.chargeback_fields_present
 
     rates.each do |rate|
       rate.chargeback_rate_details.each do |r|
-        r.charge(relevant_fields, chargeback_fields_present, consumption, hours_in_interval).each do |field, value|
+        r.charge(relevant_fields, consumption, hours_in_interval).each do |field, value|
           next unless self.class.attribute_names.include?(field)
           self[field] = (self[field] || 0) + value
         end
