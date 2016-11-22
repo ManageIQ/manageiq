@@ -399,7 +399,8 @@ class MiqPolicyController < ApplicationController
     _modelname, nodeid, @nodetype = TreeBuilder.extract_node_model_and_id(valid_active_node(treenodeid))
     node_ids = {}
     treenodeid.split("_").each do |p|
-      node_ids[p.split("-").first] = p.split("-").last  # Create a hash of all record ids represented by the selected tree node
+      # Create a hash of all record ids represented by the selected tree node
+      node_ids[p.split("-").first] = p.split("-").last
     end
     @sb[:node_ids] ||= {}
     @sb[:node_ids][x_active_tree] = node_ids
@@ -414,14 +415,15 @@ class MiqPolicyController < ApplicationController
       condition_get_info(Condition.find(from_cid(nodeid)))
     when "ev" # Event
       event_get_info(MiqEventDefinition.find(from_cid(nodeid)))
-    when "a", "ta", "fa"  # Action or True/False Action
+    when "a", "ta", "fa" # Action or True/False Action
       action_get_info(MiqAction.find(from_cid(nodeid)))
     when "ap" # Alert Profile
       alert_profile_get_info(MiqAlertSet.find(from_cid(nodeid)))
     when "al" # Alert
       alert_get_info(MiqAlert.find(from_cid(nodeid)))
     end
-    @show_adv_search = (@nodetype == "xx" && !@folders) || (@nodetype == "root" && ![:alert_profile_tree, :condition_tree, :policy_tree].include?(x_active_tree))
+    @show_adv_search = (@nodetype == "xx"   && !@folders) ||
+                       (@nodetype == "root" && ![:alert_profile_tree, :condition_tree, :policy_tree].include?(x_active_tree))
     x_history_add_item(:id => treenodeid, :text => @right_cell_text)
   end
 
@@ -539,15 +541,15 @@ class MiqPolicyController < ApplicationController
     case nodetype
     when 'root'
       partial_name, model =
-      case x_active_tree
-      when :policy_profile_tree then ['profile_list',          ui_lookup(:models => 'MiqPolicySet')]
-      when :policy_tree         then ['policy_folders',        ui_lookup(:models => 'MiqPolicy')]
-      when :event_tree          then ['event_list',            ui_lookup(:tables => 'miq_event_definition')]
-      when :condition_tree      then ['condition_folders',     ui_lookup(:models => 'Condition')]
-      when :action_tree         then ['action_list',           ui_lookup(:models => 'MiqAction')]
-      when :alert_profile_tree  then ['alert_profile_folders', ui_lookup(:models => 'MiqAlertSet')]
-      when :alert_tree          then ['alert_list',            ui_lookup(:models => 'MiqAlert')]
-      end
+        case x_active_tree
+        when :policy_profile_tree then ['profile_list',          ui_lookup(:models => 'MiqPolicySet')]
+        when :policy_tree         then ['policy_folders',        ui_lookup(:models => 'MiqPolicy')]
+        when :event_tree          then ['event_list',            ui_lookup(:tables => 'miq_event_definition')]
+        when :condition_tree      then ['condition_folders',     ui_lookup(:models => 'Condition')]
+        when :action_tree         then ['action_list',           ui_lookup(:models => 'MiqAction')]
+        when :alert_profile_tree  then ['alert_profile_folders', ui_lookup(:models => 'MiqAlertSet')]
+        when :alert_tree          then ['alert_list',            ui_lookup(:models => 'MiqAlert')]
+        end
 
       presenter.update(:main_div, r[:partial => partial_name])
       right_cell_text = _("All %{models}") % {:models => model}
@@ -557,11 +559,13 @@ class MiqPolicyController < ApplicationController
         if @profile && @profile.id.blank?
           _("Adding a new %{record}") % {:record => ui_lookup(:model => 'MiqPolicySet')}
         else
-          @edit ? _("Editing %{model} \"%{name}\"") % {:name => @profile.description, :model => ui_lookup(:model => "MiqPolicySet")} :
-                  _("%{model} \"%{name}\"") % {:model => ui_lookup(:model => "MiqPolicySet"), :name => @profile.description}
+          msg = @edit ? _("Editing %{model} \"%{name}\"") : _("%{model} \"%{name}\"")
+          msg % {:name  => @profile.description,
+                 :model => ui_lookup(:model => "MiqPolicySet")}
         end
     when 'xx'
-      presenter.update(:main_div,
+      presenter.update(
+        :main_div,
         if @profiles
           r[:partial => 'profile_list']
         elsif @policies || (@view && @sb[:tree_typ] == 'policies')
@@ -619,16 +623,14 @@ class MiqPolicyController < ApplicationController
       presenter.update(:main_div, r[:partial => 'condition_details', :locals => {:read_only => true}])
       right_cell_text = if @condition.id.blank?
                           _("Adding a new %{model}") % {:model => ui_lookup(:model => 'Condition')}
-                        else
-                          if @edit
-                            _("Editing %{model} Condition \"%{name}\"") %
+                        elsif @edit
+                          _("Editing %{model} Condition \"%{name}\"") %
                             {:name  => @condition.description,
                              :model => ui_lookup(:model => @edit[:new][:towhat])}
-                          else
-                            _("%{model} Condition \"%{name}\"") %
+                        else
+                          _("%{model} Condition \"%{name}\"") %
                             {:name  => @condition.description,
                              :model => ui_lookup(:model => @condition.towhat)}
-                          end
                         end
     when 'ev'
       presenter.update(:main_div, r[:partial => 'event_details', :locals => {:read_only => true}])
@@ -639,23 +641,20 @@ class MiqPolicyController < ApplicationController
       right_cell_text = if @action.id.blank?
                           _("Adding a new %{record}") % {:record => ui_lookup(:model => 'MiqAction')}
                         else
-                          if @edit
-                            _("Editing %{model} \"%{name}\"") %
-                            {:name  => @action.description,
-                             :model => ui_lookup(:model => 'MiqAction')}
-                          else
-                            _("%{model} \"%{name}\"") %
-                            {:name  => @action.description,
-                             :model => ui_lookup(:model => 'MiqAction')}
-                          end
+                          msg = @edit ? _("Editing %{model} \"%{name}\"") : _("%{model} \"%{name}\"")
+                          msg % {:name  => @action.description,
+                                 :model => ui_lookup(:model => 'MiqAction')}
                         end
     when 'ap'
       presenter.update(:main_div, r[:partial => 'alert_profile_details', :locals => {:read_only => true}])
       right_cell_text = if @alert_profile.id.blank?
                           _("Adding a new %{record}") % {:record => ui_lookup(:model => 'MiqAlertSet')}
+                        elsif @edit
+                          _("Editing %{model} \"%{name}\"") % {:name  => @alert_profile.description,
+                                                               :model => "#{ui_lookup(:model => @edit[:new][:mode])} #{ui_lookup(:model => 'MiqAlertSet')}"}
                         else
-                          @edit ? _("Editing %{model} \"%{name}\"") % {:name => @alert_profile.description, :model => "#{ui_lookup(:model => @edit[:new][:mode])} #{ui_lookup(:model => 'MiqAlertSet')}"} :
-                                  _("%{model} \"%{name}\"") % {:name => @alert_profile.description, :model => ui_lookup(:model => 'MiqAlertSet')}
+                          _("%{model} \"%{name}\"") % {:name  => @alert_profile.description,
+                                                       :model => ui_lookup(:model => 'MiqAlertSet')}
                         end
     when 'al'
       presenter.update(:main_div, r[:partial => 'alert_details', :locals => {:read_only => true}])
@@ -681,7 +680,8 @@ class MiqPolicyController < ApplicationController
       presenter.show(:paging_div, :form_buttons_div)
       presenter.update(:form_buttons_div, r[:partial => "layouts/x_edit_buttons", :locals => locals])
     else
-      # Added so buttons can be turned off even tho div is not being displayed it still pops up Abandon changes box when trying to change a node on tree after saving a record
+      # Added so buttons can be turned off even tho div is not being displayed it still pops up
+      # Abandon changes box when trying to change a node on tree after saving a record
       presenter.hide(:button_on).show(:toolbar).hide(:paging_div)
     end
 
@@ -744,29 +744,29 @@ class MiqPolicyController < ApplicationController
   # Handle the middle buttons on the add/edit forms
   # pass in member list symbols (i.e. :policies)
   def handle_selection_buttons(members,
-                                members_chosen = :members_chosen,
-                                choices = :choices,
-                                choices_chosen = :choices_chosen)
+                               members_chosen = :members_chosen,
+                               choices = :choices,
+                               choices_chosen = :choices_chosen)
     if params[:button].ends_with?("_left")
       if params[members_chosen].nil?
         add_flash(_("No %{members} were selected to move left") % {:members => members.to_s.split("_").first.titleize},
                   :error)
+      elsif @edit[:event_id]
+        # Handle Actions for an Event
+        params[members_chosen].each do |mc|
+          idx = nil
+          # Find the index of the new members array
+          @edit[:new][members].each_with_index { |mem, i| idx = mem[-1] == mc.to_i ? i : idx }
+          next if idx.nil?
+          desc = @edit[:new][members][idx][0].slice(4..-1) # Remove (x) prefix from the chosen item
+          @edit[choices][desc] = mc.to_i # Add item back into the choices hash
+          @edit[:new][members].delete_at(idx) # Remove item from the array
+        end
       else
-        if @edit[:event_id]                                           # Handle Actions for an Event
-          params[members_chosen].each do |mc|
-            idx = nil
-            @edit[:new][members].each_with_index { |mem, i| idx = mem[-1] == mc.to_i ? i : idx }  # Find the index of the new members array
-            next if idx.nil?
-            desc = @edit[:new][members][idx][0].slice(4..-1)        # Remove (x) prefix from the chosen item
-            @edit[choices][desc] = mc.to_i                          # Add item back into the choices hash
-            @edit[:new][members].delete_at(idx)                     # Remove item from the array
-          end
-        else
-          mems = @edit[:new][members].invert
-          params[members_chosen].each do |mc|
-            @edit[choices][mems[mc.to_i]] = mc.to_i
-            @edit[:new][members].delete(mems[mc.to_i])
-          end
+        mems = @edit[:new][members].invert
+        params[members_chosen].each do |mc|
+          @edit[choices][mems[mc.to_i]] = mc.to_i
+          @edit[:new][members].delete(mems[mc.to_i])
         end
       end
     elsif params[:button].ends_with?("_right")
@@ -775,10 +775,12 @@ class MiqPolicyController < ApplicationController
           {:member => members.to_s.split("_").first.titleize}, :error)
       else
         mems = @edit[choices].invert
-        if @edit[:event_id]                                           # Handle Actions for an Event
+        if @edit[:event_id]
+          # Handle Actions for an Event
           params[choices_chosen].each do |mc|
-            @edit[:new][members].push(["(S) " + mems[mc.to_i], true, mc.to_i])  # Add selection to chosen members array, default to synch = true
-            @edit[choices].delete(mems[mc.to_i])                    # Remove from the choices hash
+            # Add selection to chosen members array, default to synch = true
+            @edit[:new][members].push(["(S) " + mems[mc.to_i], true, mc.to_i])
+            @edit[choices].delete(mems[mc.to_i]) # Remove from the choices hash
           end
         else
           params[choices_chosen].each do |mc|
@@ -791,18 +793,18 @@ class MiqPolicyController < ApplicationController
       if @edit[:new][members].length == 0
         add_flash(_("No %{member} were selected to move left") %
           {:member => members.to_s.split("_").first.titleize}, :error)
-      else
-        if @edit[:event_id]                                           # Handle Actions for an Event
-          @edit[:new][members].each do |m|
-            @edit[choices][m.first.slice(4..-1)] = m.last           # Put description/id of each chosen member back into choices hash
-          end
-        else
-          @edit[:new][members].each do |key, value|
-            @edit[choices][key] = value
-          end
+      elsif @edit[:event_id]
+        # Handle Actions for an Event
+        @edit[:new][members].each do |m|
+          # Put description/id of each chosen member back into choices hash
+          @edit[choices][m.first.slice(4..-1)] = m.last
         end
-        @edit[:new][members].clear
+      else
+        @edit[:new][members].each do |key, value|
+          @edit[choices][key] = value
+        end
       end
+      @edit[:new][members].clear
     elsif params[:button].ends_with?("_up")
       if params[members_chosen].nil? || params[members_chosen].length != 1
         add_flash(_("Select only one or consecutive %{member} to move up") %
@@ -815,7 +817,8 @@ class MiqPolicyController < ApplicationController
         end
         idx = nil
         mc = params[members_chosen][0]
-        @edit[:new][members].each_with_index { |mem, i| idx = mem[-1] == mc.to_i ? i : idx }  # Find item index in new members array
+        # Find item index in new members array
+        @edit[:new][members].each_with_index { |mem, i| idx = mem[-1] == mc.to_i ? i : idx }
         return if idx.nil? || idx == 0
         pulled = @edit[:new][members].delete_at(idx)
         @edit[:new][members].insert(idx - 1, pulled)
@@ -832,7 +835,8 @@ class MiqPolicyController < ApplicationController
         end
         idx = nil
         mc = params[members_chosen][0]
-        @edit[:new][members].each_with_index { |mem, i| idx = mem[-1] == mc.to_i ? i : idx }  # Find item index in new members array
+        # Find item index in new members array
+        @edit[:new][members].each_with_index { |mem, i| idx = mem[-1] == mc.to_i ? i : idx }
         return if idx.nil? || idx >= @edit[:new][members].length - 1
         pulled = @edit[:new][members].delete_at(idx)
         @edit[:new][members].insert(idx + 1, pulled)
@@ -849,10 +853,11 @@ class MiqPolicyController < ApplicationController
         end
         params[members_chosen].each do |mc|
           idx = nil
-          @edit[:new][members].each_with_index { |mem, i| idx = mem[-1] == mc.to_i ? i : idx }  # Find the index in the new members array
+          # Find the index in the new members array
+          @edit[:new][members].each_with_index { |mem, i| idx = mem[-1] == mc.to_i ? i : idx }
           next if idx.nil?
-          @edit[:new][members][idx][0] = "(S) " + @edit[:new][members][idx][0].slice(4..-1)   # Change prefix to (S)
-          @edit[:new][members][idx][1] = true                     # Set synch to true
+          @edit[:new][members][idx][0] = "(S) " + @edit[:new][members][idx][0].slice(4..-1) # Change prefix to (S)
+          @edit[:new][members][idx][1] = true # Set synch to true
         end
       end
     elsif params[:button].ends_with?("_async")
@@ -867,10 +872,12 @@ class MiqPolicyController < ApplicationController
         end
         params[members_chosen].each do |mc|
           idx = nil
-          @edit[:new][members].each_with_index { |mem, i| idx = mem[-1] == mc.to_i ? i : idx }  # Find the index in the new members array
+          # Find the index in the new members array
+          @edit[:new][members].each_with_index { |mem, i| idx = mem[-1] == mc.to_i ? i : idx }
           next if idx.nil?
-          @edit[:new][members][idx][0] = "(A) " + @edit[:new][members][idx][0].slice(4..-1)   # Change prefix to (A)
-          @edit[:new][members][idx][1] = false                    # Set synch to false
+          @edit[:new][members][idx][0] = "(A) " + @edit[:new][members][idx][0].slice(4..-1) # Change prefix to (A)
+
+          @edit[:new][members][idx][1] = false # Set synch to false
         end
       end
     end
