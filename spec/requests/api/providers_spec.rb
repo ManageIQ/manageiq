@@ -753,4 +753,27 @@ describe "Providers API" do
       end
     end
   end
+
+  describe 'edit custom_attributes on providers' do
+    context 'provider_class=provider' do
+      let(:generic_provider) { FactoryGirl.create(:provider) }
+      let(:attr) { FactoryGirl.create(:custom_attribute) }
+      let(:url) do
+        # TODO: provider_class in params, when supported (https://github.com/brynary/rack-test/issues/150)
+        providers_url(generic_provider.id) + '/custom_attributes' + '?provider_class=provider'
+      end
+
+      it 'cannot add a custom_attribute' do
+        api_basic_authorize subcollection_action_identifier(:providers, :custom_attributes, :add, :post)
+        run_post(url, gen_request(:add, :name => 'x'))
+        expect_bad_request("#{generic_provider.class.name} does not support management of custom attributes")
+      end
+
+      it 'cannot edit custom_attribute' do
+        api_basic_authorize subcollection_action_identifier(:providers, :custom_attributes, :edit, :post)
+        run_post(url, gen_request(:edit, :href => custom_attributes_url(attr.id)))
+        expect_bad_request("#{generic_provider.class.name} does not support management of custom attributes")
+      end
+    end
+  end
 end
