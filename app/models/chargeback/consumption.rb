@@ -1,10 +1,8 @@
 class Chargeback
   class Consumption
-    attr_reader :hours_in_interval
-
-    def initialize(metric_rollup_records, hours_in_interval)
+    def initialize(metric_rollup_records, start_time, end_time)
       @rollups = metric_rollup_records
-      @hours_in_interval = hours_in_interval
+      @start_time, @end_time = start_time, end_time
     end
 
     def max(metric)
@@ -13,7 +11,7 @@ class Chargeback
 
     def avg(metric)
       metric_sum = values(metric).sum
-      metric_sum / @hours_in_interval
+      metric_sum / hours_in_interval
     end
 
     def none?(metric)
@@ -22,6 +20,10 @@ class Chargeback
 
     def chargeback_fields_present
       @chargeback_fields_present ||= @rollups.count(&:chargeback_fields_present?)
+    end
+
+    def hours_in_interval
+      @hours_in_interval ||= (@end_time - @start_time).round / 1.hour
     end
 
     private

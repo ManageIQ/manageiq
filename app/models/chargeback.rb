@@ -47,13 +47,11 @@ class Chargeback < ActsAsArModel
       next if records.empty?
       _log.info("Found #{records.length} records for time range #{[query_start_time, query_end_time].inspect}")
 
-      hours_in_interval = hours_in_interval(query_start_time, query_end_time)
-
       # we are building hash with grouped calculated values
       # values are grouped by resource_id and timestamp (query_start_time...query_end_time)
       records.group_by(&:resource_id).each do |_, metric_rollup_records|
         metric_rollup_records = metric_rollup_records.select { |x| x.resource.present? }
-        consumption = Consumption.new(metric_rollup_records, hours_in_interval)
+        consumption = Consumption.new(metric_rollup_records, query_start_time, query_end_time)
         next if metric_rollup_records.empty?
 
         # we need to select ChargebackRates for groups of MetricRollups records
@@ -78,10 +76,6 @@ class Chargeback < ActsAsArModel
     _log.info("Calculating chargeback costs...Complete")
 
     [data.values]
-  end
-
-  def self.hours_in_interval(query_start_time, query_end_time)
-    (query_end_time - query_start_time).round / 1.hour
   end
 
   def self.key_and_fields(metric_rollup_record)
