@@ -1,0 +1,23 @@
+.miq-metrics {
+  .toolbar-pf .form-group {
+    padding-left: 20px;
+  }
+  .toolbar-pf .form-group .btn-group {
+    margin-left: 0;
+  }
+  .list-view-container {
+    height: calc(100vh - 316px);
+    overflow-y: auto;
+    position: static;
+  }
+  .blank-slate-pf {
+    height: calc(100vh - 316px);
+    margin-bottom: 0;
+  }
+  .metrics-graph {
+    .line-chart {
+      height: calc(100vh - 275px);
+      padding: 20px 20px 10px 0;
+    }
+  }
+}

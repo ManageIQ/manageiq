@@ -1,44 +1,51 @@
 = # render :partial => "shared/views/show_ad_hoc_containers_metrics"
 = render :partial => "layouts/flash_msg"
 
-.containers-live-dashboard.row.miq-dashboard-view{"ng-controller" => "containerLiveDashboardController"}
-  .col-md-12
-    %div{"pf-toolbar" => "", "id" => "exampleToolbar", "config" => "toolbarConfig"}
+.containers-live-dashboard.row.miq-dashboard-view.miq-metrics{"ng-controller" => "containerLiveDashboardController"}
+  %div{"ng-if" => "!viewGraph"}
+    %div{"pf-toolbar" => "", "id" => "exampleToolbar", "config" => "toolbarConfig", "ng-if" => "tagsLoaded"}
       %actions
-        %span.dropdown.primary-action{"dropdown" => ""}
-          %button.btn.btn-default.dropdown-toggle{"dropdown-toggle" => "", "type" => "button"}
-            Menu Action
-            %span.caret
+        %button.btn.btn-primary{"type" => "button", "ng-click" => "doApply()", "ng-if" => "toolbarConfig.filterConfig"}
+          = _("Apply")
+        %button.btn.btn-default{"type" => "button", "ng-click" => "doViewGraph()", "ng-disabled" => "!itemSelected"}
+          = _("View Graph")
+    .list-view-container.list-view-compact{"ng-if" => "applied"}
+      .spinner.spinner-lg.loading{"ng-if" => "loadingMetrics"}
+      .col-md-12{"pf-list-view" => "", "config" => "listConfig", "items" => "items"}
+        .list-view-pf-body.row
+          .col-md-4
+            {{item.tags.group_id}}
+          .col-md-4
+            {{item.id}}
+          .col-md-4
+            Last value : {{item.last_value || "-"}}
+        %list-expanded-content
+          .row
+            .col-md-12
+              %div Tags: {{$parent.item.tags}}
 
-    .col-md-12
-      %br
-      .col-md-12.list-view-container{"ng-if" => "viewType == 'listView'"}
-        %div{"pf-list-view" => "", "config" => "listConfig", "items" => "items"}
-          .list-view-pf-description
-            .list-group-item-heading
-              {{item.definition.tags.group_id}}
-            .list-group-item-text
-              {{item.definition.id}}
-          .list-view-pf-additional-info
-            .list-view-pf-additional-info-item
-              Last value : {{item.last_value || "-"}}
-          %list-expanded-content
-            .row
-              .col-md-12
-                %div Tags: {{$parent.item.definition.tags}}
-
-      .col-md-12.card-view-container{"ng-if" => "viewType == 'cardView'"}
-        .row.row-tile-pf
-          .col-xs-12.col-sm-12.col-md-12
-            %div{"pf-card" => ""}
-              %h4 {{liveTitle}}
-              .spinner.spinner-lg.loading{"ng-if" => "!liveTitle"}
-              %div{"chart-data" => "liveData",
-                   "config" => "liveConfig",
-                   "ng-if" => "loadingDone",
-                   "show-x-axis" => true,
-                   "show-y-axis" => true,
-                   "pf-line-chart" => ""}
+    .blank-slate-pf{"ng-if" => "!applied"}
+      .blank-slate-pf-icon
+        %span.fa.fa-info-circle
+      %h1
+        = _("Metrics")
+      %p
+        = _("Add tags and click the Apply button to view available metrics")
+  %div.metrics-graph{"ng-if" => "viewGraph"}
+    %div{"pf-toolbar" => "", "config" => "graphToolbarConfig"}
+      %actions
+        %button.btn.btn-primary{"type" => "button", "ng-click" => "refresh_graph_data()"}
+          = _("Refresh")
+        %button.btn.btn-default{"type" => "button", "ng-click" => "doViewMetrics()"}
+          = _("Change Metrics")
+    .line-chart
+      .spinner.spinner-lg.loading{"ng-if" => "loadingData"}
+      %div#adHocMetricsChart{"pf-line-chart" => "",
+                             "ng-if" => "chartDataInit",
+                             "chart-data" => "chartData",
+                             "config" => "chartConfig",
+                             "show-x-axis" => true,
+                             "show-y-axis" => true}
 
 :javascript
   miq_bootstrap('.containers-live-dashboard', 'containerLiveDashboard');

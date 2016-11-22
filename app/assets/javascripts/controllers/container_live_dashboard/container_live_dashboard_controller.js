@@ -4,13 +4,14 @@ miqHttpInject(angular.module('containerLiveDashboard', ['ui.bootstrap', 'pattern
   .controller('containerLiveDashboardController', ['$scope', 'pfViewUtils', '$location', '$http', '$interval', '$timeout', '$window',
   function ($scope, pfViewUtils, $location, $http, $interval, $timeout, $window) {
     $scope.filtersText = '';
+    $scope.definitions = [];
     $scope.items = [];
     $scope.tags = {};
+    $scope.tagsLoaded = false;
 
-    $scope.loadingDone = [];
-    $scope.liveData = {};
-    //$scope.liveTitle = [];
-    //$scope.liveConfig = [];
+    $scope.applied = false;
+    $scope.viewGraph = false;
+    $scope.chartData = {};
 
     // Graphs
     var formatNumber = function (n) {
@@ -25,14 +26,24 @@ miqHttpInject(angular.module('containerLiveDashboard', ['ui.bootstrap', 'pattern
         }
       }
       return n.toFixed(2).toString();
-    }
+    };
 
-    var dailyPodTimeTooltip = function (data) {
-      var theMoment = moment(data[0].x);
-      return _.template('<div class="tooltip-inner"><%- col1 %> | <%- col2 %></div>')({
-        col1: theMoment.utc().format('HH:mm'),
-        col2: formatNumber(data[0].value)
-      });
+    $scope.chartConfig = {
+      legend       : { show: false },
+      chartId      : 'adHocMetricsChart',
+      point        : { r: 1 },
+      axis         : {
+        x: {
+          tick: {
+            format: function (value) { return moment(value).utc().format(__('MM/DD/YYYY HH:mm')); }
+          }},
+        y: {
+          tick: {
+            count: 4,
+            format: function (value) { return formatNumber(value); }
+          }}
+      },
+      setAreaChart : true
     };
 
     // get the pathname and remove trailing / if exist
@@ -44,193 +55,151 @@ miqHttpInject(angular.module('containerLiveDashboard', ['ui.bootstrap', 'pattern
     var filterChange = function (filters) {
       $scope.filtersText = "";
       $scope.tags = {};
-      filters.forEach(function (filter) {
+      $scope.filterConfig.appliedFilters.forEach(function (filter) {
         $scope.filtersText += filter.title + " : " + filter.value + "\n";
         $scope.tags[filter.id] = filter.value;
       });
     };
 
     $scope.filterConfig = {
-      fields: [
-        {
-          id: 'type',
-          title:  'Type',
-          placeholder: 'Filter by Type...',
-          filterType: 'select',
-          filterValues: ['node', 'cluster', 'ns', 'pod']
-        },
-        {
-          id: 'hostname',
-          title:  'Hostname',
-          placeholder: 'Filter by Hostname...',
-          filterType: 'text'
-        },
-        {
-          id: 'group_id',
-          title:  'Group id',
-          placeholder: 'Filter by Groups id...',
-          filterType: 'text'
-        }
-      ],
+      fields: [],
       resultsCount: $scope.items.length,
       appliedFilters: [],
       onFilterChange: filterChange
     };
 
-    var viewSelected = function(viewId) {
-      $scope.viewType = viewId;
-      if (viewId == 'cardView') {
-        $scope.refresh_grahp_data();
-      } else {
-        $scope.refresh_list_data();
+    var selectionChange = function() {
+      $scope.itemSelected = false;
+      for (var i = 0; i < $scope.items.length && !$scope.itemSelected; i++) {
+        if ($scope.items[i].selected) {
+          $scope.itemSelected = true;
+        }
       }
     };
 
-    $scope.viewsConfig = {
-      views: [pfViewUtils.getListView(), pfViewUtils.getCardView()],
-      onViewSelect: viewSelected
+    $scope.doApply = function() {
+      $scope.applied = true;
+      $scope.refresh();
     };
-    $scope.viewsConfig.currentView = $scope.viewsConfig.views[0].id;
-    $scope.viewType = $scope.viewsConfig.currentView;
 
-    var performAction = function (action) {
+    $scope.doViewGraph = function() {
+      $scope.viewGraph = true;
+      $scope.chartDataInit = false;
+      $scope.refresh_graph_data();
+    };
+
+    $scope.doViewMetrics = function() {
+      $scope.viewGraph = false;
       $scope.refresh();
     };
 
     $scope.actionsConfig = {
-      primaryActions: [
-        {
-          name: 'Filter',
-          title: 'Apply filters',
-          actionFn: performAction
-        }
-      ]
+      actionsInclude: true
     };
 
     $scope.toolbarConfig = {
-      viewsConfig: $scope.viewsConfig,
       filterConfig: $scope.filterConfig,
       actionsConfig: $scope.actionsConfig
     };
 
-    $scope.listConfig = {
-      selectionMatchProp: 'i',
-      multiSelect: true,
-      selectItems: true,
-      showSelectBox: false,
-      useExpandingRows: true
+    $scope.graphToolbarConfig = {
+      actionsConfig: $scope.actionsConfig
     };
 
-    $scope.refresh = function() {
-      var _tags = $scope.tags != {} ? '&tags=' + JSON.stringify($scope.tags) : '';
-      $http.get(url + '&query=metric_definitions' + _tags).success(function(response) {
-        'use strict';
-        if (response.error) {
-          $timeout($scope.refresh, 500);
-          return;
+    $scope.itemSelected = false;
+
+    $scope.listConfig = {
+      selectionMatchProp: 'id',
+      showSelectBox: true,
+      useExpandingRows: true,
+      onCheckBoxChange: selectionChange
+    };
+
+    var getMetricTags = function() {
+      $http.get(url + '&query=metric_tags').success(function(response) {
+        console.dir(response);
+        $scope.tagsLoaded = true;
+        if (response && angular.isArray(response.metric_tags)) {
+          response.metric_tags.sort();
+          for (var i = 0; i < response.metric_tags.length; i++) {
+            $scope.filterConfig.fields.push(
+              {
+                id: response.metric_tags[i],
+                title:  response.metric_tags[i],
+                placeholder: sprintf(__("Filter by %s..."), response.metric_tags[i]),
+                filterType: 'alpha'
+              });
+          }
+        } else {
+          // No filters available, apply without filtering
+          $scope.toolbarConfig.filterConfig = undefined;
+          $scope.doApply();
         }
-
-        var definitions;
-        $scope.items = [];
-        $scope.toolbarConfig.filterConfig.resultsCount = $scope.items.length;
-
-        definitions = response.metric_definitions;
-
-        for (var i in definitions) {
-          var definition = definitions[i];
-          $scope.items[i] = {i: i, definition: definition};
-          $scope.loadingDone = false;
-          $scope.liveTitle   = '';
-          $scope.liveConfig = {
-            chartId      : 'liveChart_' + i,
-            tooltip      : {
-              contents: dailyPodTimeTooltip
-            },
-            point        : { r: 1 },
-            axis         : {
-              x: {
-                tick: {
-                  format: function (value) { return moment(value).utc().format('MM/DD/YYYY HH:mm'); }
-                }},
-              y: {
-                tick: {
-                  count: 4,
-                  format: function (value) { return formatNumber(value); }
-                }}
-            },
-            subchart: {
-                show: true
-            }
-          };
-        };
-
-        $scope.toolbarConfig.filterConfig.resultsCount = $scope.items.length;
-        viewSelected('listView');
       });
     };
 
-    $scope.refresh_graph = function(metric_id) {
-      console.log(metric_id);
+    $scope.refresh = function() {
+      $scope.loadingMetrics = true;
+      var _tags = $scope.tags != {} ? '&tags=' + JSON.stringify($scope.tags) : '';
+      $http.get(url + '&query=metric_definitions' + _tags).success(function (response) {
+        'use strict';
+        $scope.loadingMetrics = false;
+        if (response.error) {
+          console.dir(response.error);
+          $timeout($scope.refresh, 500);   // TODO: This seems a bit extreme
+          return;
+        }
+
+        $scope.items = response.metric_definitions;
+        $scope.filterConfig.resultsCount = $scope.items.length;
+      });
+    };
+
+    $scope.refresh_graph = function(metric_id, n) {
       var ends = new Date().getTime();
       var diff = 60 * 60 * 60 * 1000;
       var starts = ends - diff;
-      //var bucket_duration = diff / 1000 / 30;
+      var bucket_duration = diff / 1000 / 30;
       var params = '&query=get_data&metric_id=' + metric_id + '&ends=' + ends + '&starts=' + starts;
 
       $http.get(url + params).success(function(response) {
         'use strict';
         if (response.error) {
-          $timeout(function() { $scope.refresh_graph(metric_id); }, 1000);
+          $timeout(function() { $scope.refresh_graph(metric_id); }, 1000);   // TODO: This seems a bit extreme
           return;
         }
 
-        // data
-        var n = $scope.items.filter(gr => gr.definition.id == response.id).map(gr => gr.i)[0];
-
-        var definition = $scope.items[n].definition;
         var data       = response.data;
         var xData      = data.filter(d => !d.empty).map(d => d.timestamp || d.start);
         var yData      = data.filter(d => !d.empty).map(d => d.value || d.avg || 0);
+
         xData.unshift('time');
-        yData.unshift(definition.id);
+        yData.unshift(metric_id);
 
-        $scope.liveTitle   = definition.id;
-        $scope.liveData["xData"] = xData;
-        $scope.liveData["yData" + (n - 1)] = yData;
-        $scope.loadingDone = true;
-        console.log($scope.liveData);
-      });
-    };
+        // TODO: Use time buckets
+        $scope.chartData.xData = xData;
+        $scope.chartData['yData'+n] = yData;
 
-    $scope.refresh_list = function(metric_id) {
-      console.log(metric_id);
-      var params = '&query=get_last&metric_id=' + metric_id;
-
-      $http.get(url + params).success(function(response) {
-        'use strict';
-        if (response.error) {
-          $timeout(function() { $scope.refresh_list(metric_id); }, 1000);
-          return;
+        $scope.chartDataInit = true;
+        $scope.loadCount++;
+        if ($scope.loadCount >= $scope.selectedItems.length) {
+          $scope.loadingData = false;
         }
-
-        // data
-        var n = $scope.items.filter(gr => gr.definition.id == response.id).map(gr => gr.i)[0];
-        $scope.items[n].last_value = response.last_data.value;
       });
     };
 
-    $scope.refresh_grahp_data = function() {
-      for (var i in $scope.items) {
-        var metric_id = $scope.items[i].definition.id;
-        $scope.refresh_graph(metric_id);
-      };
-    };
+    $scope.refresh_graph_data = function() {
+      $scope.loadCount = 0;
+      $scope.loadingData = true;
 
-    $scope.refresh_list_data = function() {
-      for (var i in $scope.items) {
-        var metric_id = $scope.items[i].definition.id;
-        $scope.refresh_list(metric_id);
-      };
+      $scope.selectedItems = $scope.items.filter(item => item.selected);
+
+      for (var i = 0; i < $scope.selectedItems.length; i++) {
+        var metric_id = $scope.selectedItems[i].id;
+        $scope.refresh_graph(metric_id, i);
+      }
     };
+    
+    getMetricTags();
   }
 ]);
