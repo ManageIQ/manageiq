@@ -35,7 +35,7 @@ class HawkularProxyService
 
   def metric_definitions
     tags = @params['tags'].blank? ? nil : JSON.parse(@params['tags'])
-    tags = nil if tags.empty?
+    tags = nil if tags == {}
     client.gauges.query(tags).compact.map { |m| m.json if m.json }.sort { |a, b| a["id"].downcase <=> b["id"].downcase }
   end
 
