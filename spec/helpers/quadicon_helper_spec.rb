@@ -91,6 +91,12 @@ RSpec.shared_examples :vm_or_template_compliance do
   end
 end
 
+RSpec.shared_examples :has_name_in_title_attr do
+  it 'has a title attribute equal to the name' do
+    expect(subject).to have_selector("img[title='#{item.name}']")
+  end
+end
+
 # FIXME: complex describe blocks mirror the existing complex control flow
 
 describe QuadiconHelper do
@@ -1267,6 +1273,8 @@ describe QuadiconHelper do
               helper.request.parameters[:controller] = "service"
             end
 
+            include_examples :has_name_in_title_attr
+
             it 'does not build a remote link' do
               expect(vm_quad).not_to have_selector("a[data-remote]")
               expect(vm_quad).not_to have_selector("a[data-method='post']")
@@ -1318,6 +1326,7 @@ describe QuadiconHelper do
             end
 
             include_examples :has_remote_link
+            include_examples :has_name_in_title_attr
           end
         end
 
@@ -1325,6 +1334,8 @@ describe QuadiconHelper do
           before(:each) do
             @explorer = false
           end
+
+          include_examples :has_name_in_title_attr
 
           it 'links to the record' do
             expect(vm_quad).to have_selector("a[href^='/vm_or_template/show']")
@@ -1353,6 +1364,7 @@ describe QuadiconHelper do
 
             include_examples :has_remote_link
             include_examples :has_sparkle_link
+            include_examples :has_name_in_title_attr
           end
 
           context "and when @edit or @edit[:explorer] is not present" do
@@ -1378,6 +1390,8 @@ describe QuadiconHelper do
           it 'links to an inferred url' do
             expect(vm_quad).to have_selector("a[href^='/vm_or_template/show']")
           end
+
+          include_examples :has_name_in_title_attr
         end
       end
     end

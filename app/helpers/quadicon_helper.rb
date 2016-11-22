@@ -804,18 +804,12 @@ module QuadiconHelper
   def quadicon_vt_img_options(item, size: 72)
     options = {
       :width  => size,
-      :height => size
+      :height => size,
+      :title  => item.name
     }
 
-    if quadicon_hide_links? && quadicon_policy_sim?
+    if quadicon_hide_links? && quadicon_policy_sim? && !quadicon_edit_key?(:explorer)
       options = {:title => _("Show policy details for #{h(item.name)}")}
-    end
-
-    if quadicon_show_links? && quadicon_in_explorer_view? &&
-       quadicon_service_ctrlr_and_vm_view_db? &&
-       !quadicon_vm_attributes_present?(item)
-
-      options = {:title => item.name}
     end
 
     options
