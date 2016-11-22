@@ -10,9 +10,6 @@ class Chargeback < ActsAsArModel
     :fixed_compute_metric => :integer,
   )
 
-  HOURS_IN_DAY = 24
-  HOURS_IN_WEEK = 168
-
   VIRTUAL_COL_USES = {
     "v_derived_cpu_total_cores_used" => "cpu_usage_rate_average"
   }
@@ -50,7 +47,7 @@ class Chargeback < ActsAsArModel
       next if records.empty?
       _log.info("Found #{records.length} records for time range #{[query_start_time, query_end_time].inspect}")
 
-      hours_in_interval = hours_in_interval(query_start_time, query_end_time, options.interval)
+      hours_in_interval = hours_in_interval(query_start_time, query_end_time)
 
       # we are building hash with grouped calculated values
       # values are grouped by resource_id and timestamp (query_start_time...query_end_time)
@@ -83,11 +80,8 @@ class Chargeback < ActsAsArModel
     [data.values]
   end
 
-  def self.hours_in_interval(query_start_time, query_end_time, interval)
-    return HOURS_IN_DAY if interval == "daily"
-    return HOURS_IN_WEEK if interval == "weekly"
-
-    (query_end_time - query_start_time) / 1.hour
+  def self.hours_in_interval(query_start_time, query_end_time)
+    (query_end_time - query_start_time).round / 1.hour
   end
 
   def self.key_and_fields(metric_rollup_record)
