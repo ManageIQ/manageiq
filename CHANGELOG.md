@@ -2,6 +2,112 @@
 
 All notable changes to this project will be documented in this file.
 
+## Unreleased - as of Sprint 50 end 2016-12-05
+
+### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+49+Ending+Dec+5%2C+2016%22+label%3Aenhancement)
+
+- Automate
+  - Retirement: Generic service retirement option ([#12619](https://github.com/ManageIQ/manageiq/pull/12619))
+  - Service Dialog: Add dynamic dropdown list support for orchestration service dialog ([#12693](https://github.com/ManageIQ/manageiq/pull/12693))
+  - Service Model
+    - Expose custom_attribute methods to ext_management_system service model. ([#12602](https://github.com/ManageIQ/manageiq/pull/12602))
+    - Move snapshot code to Vm in service model. ([#12726](https://github.com/ManageIQ/manageiq/pull/12726))
+    - RBAC support for Automate Service Models ([#12369](https://github.com/ManageIQ/manageiq/pull/12369))
+    - Add ae_service for google auth_key_pair ([#12973](https://github.com/ManageIQ/manageiq/pull/12973))
+    - Expose miq_groups ([#12294](https://github.com/ManageIQ/manageiq/pull/12294))
+  - Notifications: Send Notification when retirement starts for Services and VMs ([#12796](https://github.com/ManageIQ/manageiq/pull/12796))
+
+- Platform
+  - Reporting: Round of metric values to precision 2 in chargeback reports ([#12629](https://github.com/ManageIQ/manageiq/pull/12629))
+  - Allow network manager features for tenant administrator ([#12383](https://github.com/ManageIQ/manageiq/pull/12383))
+  - Use settings.yaml for purging records ([#12552](https://github.com/ManageIQ/manageiq/pull/12552))
+
+- Providers
+  - Middleware: Add link to Server Group in the summary page of a server ([#12815](https://github.com/ManageIQ/manageiq/pull/12815))
+  - Add root password validation regex for Azure dialog ([#12967](https://github.com/ManageIQ/manageiq/pull/12967))
+
+- REST API
+  - Add option to hide resources ([#12694](https://github.com/ManageIQ/manageiq/pull/12694))
+  - Allow adding custom attributes with sections ([#12913](https://github.com/ManageIQ/manageiq/pull/12913))
+
+- User Interface (Classic)
+  - Add Replication excluded tables to the Settings Replication tab ([#12604](https://github.com/ManageIQ/manageiq/pull/12604))
+  - Orchestration: Support hash values in dropdown orchestration dialog fields ([#12570](https://github.com/ManageIQ/manageiq/pull/12570))
+  - Containers
+    - Provider policies ([#11002](https://github.com/ManageIQ/manageiq/pull/11002))
+    - Custom attributes table on Container Node ([#12832](https://github.com/ManageIQ/manageiq/pull/12832))
+  - OpenStack: Add human readable names of private and public openstack cloud networks ([#12855](https://github.com/ManageIQ/manageiq/pull/12855))
+  - Add settings key to disable console proxy ([#12675](https://github.com/ManageIQ/manageiq/pull/12675))
+  - Separate Storage Managers By Type ([#12399](https://github.com/ManageIQ/manageiq/pull/12399))
+  - Launch an URL returned by an automate button ([#10118](https://github.com/ManageIQ/manageiq/pull/10118))
+
+### [Changed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+49+Ending+Dec+5%2C+2016%22+label%3Aenhancement)
+
+- Performance
+  - DTO refresh optimization for saves ([#12679](https://github.com/ManageIQ/manageiq/pull/12679))
+  - Purge remaining records using single query ([#12560](https://github.com/ManageIQ/manageiq/pull/12560))
+  - Use `Settings` API over `VMDB::Config.new` for speed improvements for `VmOrTemplate::RightSizing`  ([#12751](https://github.com/ManageIQ/manageiq/pull/12751))
+  - Don't queue ntp reload on newly created zones ([#12974](https://github.com/ManageIQ/manageiq/pull/12974))
+
+- Platform
+  - LDAP: Allow apostrophes in email address ([#12729](https://github.com/ManageIQ/manageiq/pull/12729))
+  - Increase the web socket worker's pool size  ([#12800](https://github.com/ManageIQ/manageiq/pull/12800))
+  - Drop currency column when editing chargeback rates ([#12834](https://github.com/ManageIQ/manageiq/pull/12834))
+
+- REST API: Updating API versioning to 2.4.0-pre ([#12890](https://github.com/ManageIQ/manageiq/pull/12890))
+
+- Service UI
+  - Hid  power status and buttons in the SUI Services list view until more performant [manageiq-ui-service #368](https://github.com/ManageIQ/manageiq-ui-service/pull/368)
+  - Add power status and buttons to the Service detail page
+[ManageIQ/manageiq-ui-service #330](https://github.com/ManageIQ/manageiq-ui-service/pull/330)
+
+- SmartState analysis
+  - Containers deletion: Separate the pod deletion and skip it if no pod was created before ([#12750](https://github.com/ManageIQ/manageiq/pull/12750))
+
+- User Interface
+  - Reports: Better names for policy event sample reports  ([#12934](https://github.com/ManageIQ/manageiq/pull/12934))
+
+### [Fixed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+50+Ending+Dec+5%2C+2016%22+label%3bugs)
+
+Notable fixes include:
+
+- Automate
+  - Automate Provisioned Notifications - Use Automate notifications instead of event notifications ([#12424](https://github.com/ManageIQ/manageiq/pull/12424))
+  - Provisioning
+    - Fix auto-placement for hosts without a datastore that can hold the new VM ([#12931](https://github.com/ManageIQ/manageiq/pull/12931))
+    - Support provider name & template name to uniquely identify a template ([#11669](https://github.com/ManageIQ/manageiq/pull/11669))
+  - Git Domains: Delete the repo directory for Git based domains ([#12539](https://github.com/ManageIQ/manageiq/pull/12539))
+
+- Platform
+  - Authentication
+    - Support a separate auth URL for external authentication ([#12697](https://github.com/ManageIQ/manageiq/pull/12697))
+    - Remove the FQDN from group names for ext authentication ([#12752](https://github.com/ManageIQ/manageiq/pull/12752))
+  - Fix Audit Log to record settings/values when creating new user ([#12786](https://github.com/ManageIQ/manageiq/pull/12786))
+  - Fix issue where local settings files were ignoredFix issue where local settings files were ignored ([#12821](https://github.com/ManageIQ/manageiq/pull/12821))
+
+- Providers
+  - RHVM
+    - Require a description when creating Snapshot ([#12637](https://github.com/ManageIQ/manageiq/pull/12637))
+    - Update cluster when modified ([#12927](https://github.com/ManageIQ/manageiq/pull/12927))
+  - Openstack: Remove port_security_enabled from attributes passed to network create ([#12736](https://github.com/ManageIQ/manageiq/pull/12736))
+  - Fetch disk info when a vm removed ([#12788](https://github.com/ManageIQ/manageiq/pull/12788))
+
+- User Interface
+  - Prevent service dialog refreshing every time a dropdown item is selected ([#12718](https://github.com/ManageIQ/manageiq/pull/12718))
+  - Fix angular controller for Network Router Network Router ([#12707](https://github.com/ManageIQ/manageiq/pull/12707)) and Cloud Subnet ([#12706](https://github.com/ManageIQ/manageiq/pull/12706))
+  - Ansible: Add configuration_scripts to the list of trees with advanced search ([#12704](https://github.com/ManageIQ/manageiq/pull/12704))
+  - RBAC: Add Storage Product Features for Adding Roles ([#12701](https://github.com/ManageIQ/manageiq/pull/12701))
+  - Remove confirmation when opening the HTML5 vnc/spice console. ([#12673](https://github.com/ManageIQ/manageiq/pull/12673))
+  - Set categories correctly for policy timelines ([#12664](https://github.com/ManageIQ/manageiq/pull/12664))
+  - Display name of a chosen filter in Infrastructure Providers ([#12307](https://github.com/ManageIQ/manageiq/pull/12307))
+  - Only enable git import submit button when a branch or tag is selected ([#12753](https://github.com/ManageIQ/manageiq/pull/12753))
+  - Send notifications only when user is authorized to see the referenced object ([#12771](https://github.com/ManageIQ/manageiq/pull/12771))
+  - Add tags to objects in list view in Cloud Tenant ([#12833](https://github.com/ManageIQ/manageiq/pull/12833))
+  - Set start date explicitly only when changing schedule interval ([#12816](https://github.com/ManageIQ/manageiq/pull/12816))
+  - Display parent tenant only when it is allowed by RBAC ([#12848](https://github.com/ManageIQ/manageiq/pull/12848))
+  - Fix position of chart menu in C&U when clicking close to right edge ([#12922](https://github.com/ManageIQ/manageiq/pull/12922))
+  Fix missing Smart State Analysis button on Cloud Instances list view ([#12559](https://github.com/ManageIQ/manageiq/pull/12559))
+
 ## Unreleased - as of Sprint 49 end 2016-11-14
 
 ### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+49+Ending+Nov+14%2C+2016%22+label%3Aenhancement)
@@ -19,7 +125,7 @@ All notable changes to this project will be documented in this file.
   - Services
     - Expose service power state
 - Platform
-  - High Availabilty: Raise event when failover successful
+  - High Availability: Raise event when failover successful
   - Chargeback: Add daily to chargeback rate for 'per time' types
   - Replication: Add logging when the replication set is altered
   - Logging: Add configurable number of saved logfile rotations
