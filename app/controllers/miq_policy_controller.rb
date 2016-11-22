@@ -539,15 +539,15 @@ class MiqPolicyController < ApplicationController
     case nodetype
     when 'root'
       partial_name, model =
-      case x_active_tree
-      when :policy_profile_tree then ['profile_list',          ui_lookup(:models => 'MiqPolicySet')]
-      when :policy_tree         then ['policy_folders',        ui_lookup(:models => 'MiqPolicy')]
-      when :event_tree          then ['event_list',            ui_lookup(:tables => 'miq_event_definition')]
-      when :condition_tree      then ['condition_folders',     ui_lookup(:models => 'Condition')]
-      when :action_tree         then ['action_list',           ui_lookup(:models => 'MiqAction')]
-      when :alert_profile_tree  then ['alert_profile_folders', ui_lookup(:models => 'MiqAlertSet')]
-      when :alert_tree          then ['alert_list',            ui_lookup(:models => 'MiqAlert')]
-      end
+        case x_active_tree
+        when :policy_profile_tree then ['profile_list',          ui_lookup(:models => 'MiqPolicySet')]
+        when :policy_tree         then ['policy_folders',        ui_lookup(:models => 'MiqPolicy')]
+        when :event_tree          then ['event_list',            ui_lookup(:tables => 'miq_event_definition')]
+        when :condition_tree      then ['condition_folders',     ui_lookup(:models => 'Condition')]
+        when :action_tree         then ['action_list',           ui_lookup(:models => 'MiqAction')]
+        when :alert_profile_tree  then ['alert_profile_folders', ui_lookup(:models => 'MiqAlertSet')]
+        when :alert_tree          then ['alert_list',            ui_lookup(:models => 'MiqAlert')]
+        end
 
       presenter.update(:main_div, r[:partial => partial_name])
       right_cell_text = _("All %{models}") % {:models => model}
@@ -557,11 +557,13 @@ class MiqPolicyController < ApplicationController
         if @profile && @profile.id.blank?
           _("Adding a new %{record}") % {:record => ui_lookup(:model => 'MiqPolicySet')}
         else
-          @edit ? _("Editing %{model} \"%{name}\"") % {:name => @profile.description, :model => ui_lookup(:model => "MiqPolicySet")} :
-                  _("%{model} \"%{name}\"") % {:model => ui_lookup(:model => "MiqPolicySet"), :name => @profile.description}
+          msg = @edit ? _("Editing %{model} \"%{name}\"") : _("%{model} \"%{name}\"")
+          msg % {:name  => @profile.description,
+                 :model => ui_lookup(:model => "MiqPolicySet")}
         end
     when 'xx'
-      presenter.update(:main_div,
+      presenter.update(
+        :main_div,
         if @profiles
           r[:partial => 'profile_list']
         elsif @policies || (@view && @sb[:tree_typ] == 'policies')
@@ -619,16 +621,14 @@ class MiqPolicyController < ApplicationController
       presenter.update(:main_div, r[:partial => 'condition_details', :locals => {:read_only => true}])
       right_cell_text = if @condition.id.blank?
                           _("Adding a new %{model}") % {:model => ui_lookup(:model => 'Condition')}
-                        else
-                          if @edit
-                            _("Editing %{model} Condition \"%{name}\"") %
+                        elsif @edit
+                          _("Editing %{model} Condition \"%{name}\"") %
                             {:name  => @condition.description,
                              :model => ui_lookup(:model => @edit[:new][:towhat])}
-                          else
-                            _("%{model} Condition \"%{name}\"") %
+                        else
+                          _("%{model} Condition \"%{name}\"") %
                             {:name  => @condition.description,
                              :model => ui_lookup(:model => @condition.towhat)}
-                          end
                         end
     when 'ev'
       presenter.update(:main_div, r[:partial => 'event_details', :locals => {:read_only => true}])
@@ -639,23 +639,20 @@ class MiqPolicyController < ApplicationController
       right_cell_text = if @action.id.blank?
                           _("Adding a new %{record}") % {:record => ui_lookup(:model => 'MiqAction')}
                         else
-                          if @edit
-                            _("Editing %{model} \"%{name}\"") %
-                            {:name  => @action.description,
-                             :model => ui_lookup(:model => 'MiqAction')}
-                          else
-                            _("%{model} \"%{name}\"") %
-                            {:name  => @action.description,
-                             :model => ui_lookup(:model => 'MiqAction')}
-                          end
+                          msg = @edit ? _("Editing %{model} \"%{name}\"") : _("%{model} \"%{name}\"")
+                          msg % {:name  => @action.description,
+                                 :model => ui_lookup(:model => 'MiqAction')}
                         end
     when 'ap'
       presenter.update(:main_div, r[:partial => 'alert_profile_details', :locals => {:read_only => true}])
       right_cell_text = if @alert_profile.id.blank?
                           _("Adding a new %{record}") % {:record => ui_lookup(:model => 'MiqAlertSet')}
+                        elsif @edit
+                          _("Editing %{model} \"%{name}\"") % {:name  => @alert_profile.description,
+                                                               :model => "#{ui_lookup(:model => @edit[:new][:mode])} #{ui_lookup(:model => 'MiqAlertSet')}"}
                         else
-                          @edit ? _("Editing %{model} \"%{name}\"") % {:name => @alert_profile.description, :model => "#{ui_lookup(:model => @edit[:new][:mode])} #{ui_lookup(:model => 'MiqAlertSet')}"} :
-                                  _("%{model} \"%{name}\"") % {:name => @alert_profile.description, :model => ui_lookup(:model => 'MiqAlertSet')}
+                          _("%{model} \"%{name}\"") % {:name  => @alert_profile.description,
+                                                       :model => ui_lookup(:model => 'MiqAlertSet')}
                         end
     when 'al'
       presenter.update(:main_div, r[:partial => 'alert_details', :locals => {:read_only => true}])
@@ -681,7 +678,8 @@ class MiqPolicyController < ApplicationController
       presenter.show(:paging_div, :form_buttons_div)
       presenter.update(:form_buttons_div, r[:partial => "layouts/x_edit_buttons", :locals => locals])
     else
-      # Added so buttons can be turned off even tho div is not being displayed it still pops up Abandon changes box when trying to change a node on tree after saving a record
+      # Added so buttons can be turned off even tho div is not being displayed it still pops up
+      # Abandon changes box when trying to change a node on tree after saving a record
       presenter.hide(:button_on).show(:toolbar).hide(:paging_div)
     end
 
