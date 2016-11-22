@@ -3,12 +3,12 @@
   %h3
     = _('Network Provider')
   .form-horizontal
-    .form-group
+    .form-group{"ng-class" => "{'has-error': angularForm.ems_id.$invalid}"}
       %label.col-md-2.control-label
         = _('Network Manager')
       .col-md-8
         = select_tag("ems_id",
-                      options_for_select(@network_provider_choices.sort),
+                      options_for_select([["<#{_('Choose')}>", nil]] + @network_provider_choices.sort),
                       "ng-model"                    => "cloudSubnetModel.ems_id",
                       "required"                    => "",
                       :miqrequired                  => true,
@@ -28,12 +28,12 @@
                             'ng-maxlength' => 128,
                             :miqrequired   => true,
                             :checkchange   => true}
-    .form-group
+    .form-group{"ng-class" => "{'has-error': angularForm.network_id.$invalid}"}
       %label.col-md-2.control-label
         = _('Network')
       .col-md-8
         = select_tag("network_id",
-                      options_for_select(@network_choices.sort),
+                      options_for_select([["<#{_('Choose')}>", nil]] + @network_choices.sort),
                       "ng-model"                    => "cloudSubnetModel.network_id",
                       "required"                    => "",
                       :miqrequired                  => true,
@@ -63,12 +63,12 @@
   %h3
     = _('Placement')
   .form-horizontal
-    .form-group
+    .form-group{"ng-class" => "{'has-error': angularForm.cloud_tenant_id.$invalid}"}
       %label.col-md-2.control-label
         = _('Cloud Tenant')
       .col-md-8
         = select_tag("cloud_tenant_id",
-                      options_for_select(@cloud_tenant_choices.sort),
+                      options_for_select([["<#{_('Choose')}>", nil]] + @cloud_tenant_choices.sort),
                       "ng-model"                    => "cloudSubnetModel.cloud_tenant_id",
                       "required"                    => "",
                       :miqrequired                  => true,
