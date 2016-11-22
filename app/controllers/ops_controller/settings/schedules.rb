@@ -512,11 +512,9 @@ module OpsController::Settings::Schedules
           :instance  => params[:instance_name],
           :message   => params[:object_message]
         },
-        :ui => {:ui_attrs => ui_attrs,
-                :ui_object => {:target_class => params[:target_class].present? ? params[:target_class] : nil,
-                               :target_id    => params[:target_id]
-                              }
-        },
+        :ui         => {:ui_attrs  => ui_attrs,
+                        :ui_object => {:target_class => params[:target_class].present? ? params[:target_class] : nil,
+                                       :target_id    => params[:target_id]}},
         :parameters => {
           :request        => params[:object_request],
           :instance_name  => params[:instance_name],
@@ -536,7 +534,7 @@ module OpsController::Settings::Schedules
     return {} if params[:target_class].empty?
     klass = params[:target_class].constantize
     object = klass.find_by_id(params[:target_id])
-    {"#{MiqAeEngine.create_automation_attribute_key(object)}" => MiqAeEngine.create_automation_attribute_value(object)}
+    { MiqAeEngine.create_automation_attribute_key(object).to_s => MiqAeEngine.create_automation_attribute_value(object) }
   end
 
   def build_search_filter_from_params
