@@ -34,22 +34,13 @@ class ChargebackRateDetail < ApplicationRecord
     result
   end
 
-  def max_of_metric_from(metric_rollup_records)
-    metric_rollup_records.map(&metric.to_sym).max
-  end
-
-  def avg_of_metric_from(metric_rollup_records)
-    metric_sum = metric_rollup_records.sum(&metric.to_sym)
-    metric_sum / @hours_in_interval
-  end
-
   def metric_value_by(metric_rollup_records)
     return 1.0 if fixed?
 
-    metric_rollups_without_nils = metric_rollup_records.select { |x| x.send(metric.to_sym).present? }
-    return 0 if metric_rollups_without_nils.empty?
-    return max_of_metric_from(metric_rollups_without_nils) if allocated?
-    return avg_of_metric_from(metric_rollups_without_nils) if used?
+    consumption = Chargeback::Consumption.new(metric_rollup_records, @hours_in_interval)
+    return 0 if consumption.none?(metric)
+    return consumption.max(metric) if allocated?
+    return consumption.avg(metric) if used?
   end
 
   def used?
