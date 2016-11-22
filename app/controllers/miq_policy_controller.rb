@@ -399,7 +399,8 @@ class MiqPolicyController < ApplicationController
     _modelname, nodeid, @nodetype = TreeBuilder.extract_node_model_and_id(valid_active_node(treenodeid))
     node_ids = {}
     treenodeid.split("_").each do |p|
-      node_ids[p.split("-").first] = p.split("-").last  # Create a hash of all record ids represented by the selected tree node
+      # Create a hash of all record ids represented by the selected tree node
+      node_ids[p.split("-").first] = p.split("-").last
     end
     @sb[:node_ids] ||= {}
     @sb[:node_ids][x_active_tree] = node_ids
@@ -414,14 +415,15 @@ class MiqPolicyController < ApplicationController
       condition_get_info(Condition.find(from_cid(nodeid)))
     when "ev" # Event
       event_get_info(MiqEventDefinition.find(from_cid(nodeid)))
-    when "a", "ta", "fa"  # Action or True/False Action
+    when "a", "ta", "fa" # Action or True/False Action
       action_get_info(MiqAction.find(from_cid(nodeid)))
     when "ap" # Alert Profile
       alert_profile_get_info(MiqAlertSet.find(from_cid(nodeid)))
     when "al" # Alert
       alert_get_info(MiqAlert.find(from_cid(nodeid)))
     end
-    @show_adv_search = (@nodetype == "xx" && !@folders) || (@nodetype == "root" && ![:alert_profile_tree, :condition_tree, :policy_tree].include?(x_active_tree))
+    @show_adv_search = (@nodetype == "xx"   && !@folders) ||
+                       (@nodetype == "root" && ![:alert_profile_tree, :condition_tree, :policy_tree].include?(x_active_tree))
     x_history_add_item(:id => treenodeid, :text => @right_cell_text)
   end
 
