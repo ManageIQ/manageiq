@@ -37,6 +37,8 @@ module Api
 
       def create_alert_status_state(data)
         MiqAlertStatusState.create(data)
+      rescue => err
+        raise BadRequestError, err.to_s
       end
 
       def update_alert_status_state(alert_status_state, data)
