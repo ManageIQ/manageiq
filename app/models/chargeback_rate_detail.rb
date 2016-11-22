@@ -21,10 +21,10 @@ class ChargebackRateDetail < ApplicationRecord
 
   attr_accessor :hours_in_interval
 
-  def charge(relevant_fields, consumption, hours_in_interval)
+  def charge(relevant_fields, consumption)
     result = {}
     if (relevant_fields & [metric_keys[0], cost_keys[0]]).present?
-      metric_value, cost = metric_and_cost_by(consumption, hours_in_interval)
+      metric_value, cost = metric_and_cost_by(consumption)
       if !consumption.chargeback_fields_present && fixed?
         cost = 0
       end
@@ -226,10 +226,10 @@ class ChargebackRateDetail < ApplicationRecord
      'total_cost']
   end
 
-  def metric_and_cost_by(consumption, hours_in_interval)
-    @hours_in_interval = hours_in_interval
+  def metric_and_cost_by(consumption)
+    @hours_in_interval = consumption.hours_in_interval
     metric_value = metric_value_by(consumption)
-    [metric_value, hourly_cost(metric_value) * hours_in_interval]
+    [metric_value, hourly_cost(metric_value) * consumption.hours_in_interval]
   end
 
   def first_tier?(tier,tiers)

@@ -130,7 +130,7 @@ class Chargeback < ActsAsArModel
 
     rates.each do |rate|
       rate.chargeback_rate_details.each do |r|
-        r.charge(relevant_fields, consumption, hours_in_interval).each do |field, value|
+        r.charge(relevant_fields, consumption).each do |field, value|
           next unless self.class.attribute_names.include?(field)
           self[field] = (self[field] || 0) + value
         end
