@@ -620,7 +620,7 @@ class MiqPolicyController < ApplicationController
       right_cell_text = if @condition.id.blank?
                           _("Adding a new %{model}") % {:model => ui_lookup(:model => 'Condition')}
                         else
-                          if @right_cell_text == @edit
+                          if @edit
                             _("Editing %{model} Condition \"%{name}\"") %
                             {:name  => @condition.description,
                              :model => ui_lookup(:model => @edit[:new][:towhat])}
