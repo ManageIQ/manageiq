@@ -329,6 +329,20 @@ describe ApplicationHelper do
       end
     end
 
+    context "when with ems_network_new" do
+      it "with product nuage not set to true" do
+        @id = 'ems_network_new'
+        expect(subject).to be_truthy
+      end
+    end
+
+    context "when with ems_network_edit" do
+      it "with product nuage not set to true" do
+        @id = 'ems_network_edit'
+        expect(subject).to be_truthy
+      end
+    end
+
     context "when with miq_task_canceljob" do
       before do
         @id = 'miq_task_canceljob'
