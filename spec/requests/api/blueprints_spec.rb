@@ -199,8 +199,22 @@ RSpec.describe "Blueprints API" do
       expect(response).to have_http_status(:forbidden)
     end
 
-    xit "can publish multiple blueprints" do
-      blueprint1, blueprint2 = FactoryGirl.create_list(:blueprint, 2)
+    it "can publish multiple blueprints" do
+      service_template = FactoryGirl.create(:service_template)
+      dialog = FactoryGirl.create(:dialog_with_tab_and_group_and_field)
+      ui_properties = {
+        "service_dialog"        => {"id" => dialog.id},
+        "chart_data_model"      => {
+          "nodes" => [{
+            "id"   => service_template.id,
+            "tags" => []
+          }]},
+        "automate_entry_points" => {
+          "Reconfigure" => "foo",
+          "Provision"   => "bar"
+        }
+      }
+      blueprint1, blueprint2 = FactoryGirl.create_list(:blueprint, 2, :ui_properties => ui_properties)
 
       api_basic_authorize collection_action_identifier(:blueprints, :publish)
 
@@ -246,8 +260,22 @@ RSpec.describe "Blueprints API" do
       expect(response).to have_http_status(:forbidden)
     end
 
-    xit "publishes a single blueprint" do
-      blueprint = FactoryGirl.create(:blueprint)
+    it "publishes a single blueprint" do
+      service_template = FactoryGirl.create(:service_template)
+      dialog = FactoryGirl.create(:dialog_with_tab_and_group_and_field)
+      ui_properties = {
+        "service_dialog"        => {"id" => dialog.id},
+        "chart_data_model"      => {
+          "nodes" => [{
+            "id"   => service_template.id,
+            "tags" => []
+          }]},
+        "automate_entry_points" => {
+          "Reconfigure" => "foo",
+          "Provision"   => "bar"
+        }
+      }
+      blueprint = FactoryGirl.create(:blueprint, :ui_properties => ui_properties)
       api_basic_authorize action_identifier(:blueprints, :publish)
 
       run_post(blueprints_url(blueprint.id), :action => "publish")
@@ -256,7 +284,6 @@ RSpec.describe "Blueprints API" do
         "id"     => blueprint.id,
         "status" => "published"
       }
-
       expect(response.parsed_body).to include(expected)
       expect(response).to have_http_status(:ok)
     end
