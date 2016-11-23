@@ -333,7 +333,8 @@ class ApplicationController < ActionController::Base
     settings[:sort_col] = @sortcol unless settings.nil?
     render :json => {
       :settings => settings,
-      :data     => view_to_hash(current_view)
+      :data     => view_to_hash(current_view),
+      :messages => @flash_array || session[:flash_msg]
     }
   end
 

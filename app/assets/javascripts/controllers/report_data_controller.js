@@ -61,12 +61,13 @@
   * @param MiQEndpointsService service for setting basic routes.
   * @param $filter angular filter Service.
   */
-  var ReportDataController = function(MiQDataTableService, MiQEndpointsService, $filter, $scope) {
+  var ReportDataController = function(MiQDataTableService, MiQEndpointsService, $filter, $location, $scope) {
     this.settings = {};
     this.MiQDataTableService = MiQDataTableService;
     this.MiQEndpointsService = MiQEndpointsService;
     this.$filter = $filter;
     this.$scope = $scope;
+    this.$location = $location;
     initEndpoints(this.MiQEndpointsService);
     subscribeToSubject.bind(this)();
     this.perPage = defaultPaging();
@@ -183,6 +184,7 @@
     initObject.modelName = decodeURIComponent(initObject.modelName);
     this.initObjects(initObject);
     this.setSandPaperClass(initObject.gtlType);
+    this.showMessage = this.$location.search().flash_msg;
     return this.getData(initObject.modelName, initObject.activeTree, initObject.currId, initObject.isExplorer, this.settings)
       .then(function(data) {
         var start = (this.settings.current - 1) * this.settings.perpage;
@@ -232,7 +234,7 @@
       }.bind(this));
   }
 
-  ReportDataController.$inject = ['MiQDataTableService', 'MiQEndpointsService', '$filter', '$scope'];
+  ReportDataController.$inject = ['MiQDataTableService', 'MiQEndpointsService', '$filter', '$location', '$scope'];
   miqHttpInject(angular.module('ManageIQ.gtl'))
     .controller(COTNROLLER_NAME, ReportDataController);
 })();

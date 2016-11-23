@@ -1,6 +1,9 @@
 - current_model = controller.class.model if controller.class.respond_to?("model") && !controller.class.model.nil?
 - gtl_type_string = j_str(@gtl_type)
 #miq-gtl-view{"ng-controller" => "reportDataController as dataCtrl"}
+  .msg-info{"ng-show" => "dataCtrl.showMessage && dataCtrl.showMessage !== ''"}
+    = render(:partial => "layouts/info_msg",
+               :locals => {:message => "{{dataCtrl.showMessage}}"})
   %miq-tile-view{"ng-if"            => "dataCtrl.gtlType === 'grid' || dataCtrl.gtlType === 'tile'",
                  "settings"         => "dataCtrl.settings",
                  "per-page"         => "dataCtrl.perPage",
