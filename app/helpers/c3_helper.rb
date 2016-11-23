@@ -5,6 +5,7 @@ module C3Helper
     content_tag(:div, '', :id => chart_id) +
       javascript_tag(<<-EOJ)
 $.get("#{url}").success(function(data) {
+  data.miq.zoomed = "#{opts[:zoomed]}";
   var chart = c3.generate(chartData(data.miqChart, data, { bindto: "##{chart_id}" }));
   ManageIQ.charts.c3["#{chart_id}"] = chart;
   miqSparkleOff();

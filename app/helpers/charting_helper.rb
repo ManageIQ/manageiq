@@ -11,7 +11,7 @@ module ChartingHelper
     when :c3
       c3chart_remote(url_for(:controller => a_controller,
                              :action     => options[:action] || 'render_chart'),
-                     options.slice(:id))
+                     options.slice(:id, :zoomed))
     end
   end
 
