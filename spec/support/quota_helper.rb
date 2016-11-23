@@ -108,21 +108,29 @@ module Spec
          :cores_per_socket  => [2, '2']}
       end
 
-      def vmware_model
+      def vmware_template
         @ems = FactoryGirl.create(:ems_vmware)
-        @vm_template = FactoryGirl.create(:template_vmware,
-                                          :hardware => FactoryGirl.create(:hardware, :cpu1x2, :memory_mb => 512))
+        FactoryGirl.create(:template_vmware,
+                           :hardware => FactoryGirl.create(:hardware, :cpu1x2, :memory_mb => 512))
+      end
+
+      def vmware_model
+        @vm_template = vmware_template
         @storage = FactoryGirl.create(:storage_nfs)
         create_request(vmware_requested_quota_values)
         create_hardware
         create_vmware_vms
       end
 
-      def google_model
-        ems = FactoryGirl.create(:ems_google_with_authentication,
+      def google_template
+        @ems = FactoryGirl.create(:ems_google_with_authentication,
                                  :availability_zones => [FactoryGirl.create(:availability_zone_google)])
-        @vm_template = FactoryGirl.create(:template_google, :ext_management_system => ems)
-        m2_small_flavor = FactoryGirl.create(:flavor_google, :ems_id => ems.id, :cloud_subnet_required => false,
+        FactoryGirl.create(:template_google, :ext_management_system => @ems)
+      end
+
+      def google_model
+        @vm_template = google_template
+        m2_small_flavor = FactoryGirl.create(:flavor_google, :ems_id => @ems.id, :cloud_subnet_required => false,
                                              :cpus => 4, :cpu_cores => 1, :memory => 1024)
         create_request(:number_of_vms => 1, :owner_email    => 'user@example.com',
                                             :src_vm_id      => @vm_template.id,
@@ -132,11 +140,15 @@ module Spec
         create_google_vms
       end
 
+      def generic_template
+        FactoryGirl.create(:service_template,
+                           :name         => 'generic',
+                           :service_type => 'atomic',
+                           :prov_type    => 'generic')
+      end
+
       def build_generic_service_item
-        @service_template = FactoryGirl.create(:service_template,
-                                               :name         => 'generic',
-                                               :service_type => 'atomic',
-                                               :prov_type    => 'generic')
+        @service_template = generic_template
         @service_request = build_service_template_request("generic", @user, :dialog => {"test" => "dialog"})
       end
 
@@ -159,10 +171,21 @@ module Spec
         @service_request = build_service_template_request("vmware_service_item", @user, :dialog => {"test" => "dialog"})
       end
 
-      def setup_model(vendor = "vmware")
+      def create_service_bundle(items)
+        user_setup
+        create_tenant_quota
+        build_model_from_vms(items)
+        @service_request = build_service_template_request("top", @user, :dialog => {"test" => "dialog"})
+      end
+
+      def user_setup
         @user = FactoryGirl.create(:user_with_group)
         @miq_group = @user.current_group
         @tenant = @miq_group.tenant
+      end
+
+      def setup_model(vendor = "vmware")
+        user_setup
         create_tenant_quota
         send("#{vendor}_model") unless vendor == 'generic'
       end

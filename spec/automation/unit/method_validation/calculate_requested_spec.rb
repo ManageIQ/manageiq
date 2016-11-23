@@ -45,6 +45,18 @@ describe "Quota Validation" do
     end
   end
 
+  context "Service Bundle provisioning quota" do
+    it "Bundle of 2, google and vmware" do
+      create_service_bundle([google_template, vmware_template])
+      expect { run_automate_method(service_attrs) }.not_to raise_exception
+    end
+
+    it "Bundle of 2, google and generic" do
+      create_service_bundle([google_template, generic_template])
+      expect { run_automate_method(service_attrs) }.not_to raise_exception
+    end
+  end
+
   context "VM provisioning quota" do
     it "vmware calculate_requested" do
       setup_model("vmware")
