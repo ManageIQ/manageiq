@@ -297,6 +297,13 @@ describe('miq_application.js', function() {
         miqProcessObserveQueue();
         expect(deferred.reject).toHaveBeenCalled();
       });
+
+      it('displays an alert message', function() {
+        spyOn(window, 'add_flash');
+
+        miqProcessObserveQueue();
+        expect(add_flash).toHaveBeenCalled();
+      });
     });
   });
 
@@ -330,6 +337,26 @@ describe('miq_application.js', function() {
 
     it('returns a Promise', function() {
       expect(miqObserveRequest('/foo')).toEqual(jasmine.any(Promise));
+    });
+  });
+
+  describe('miqAjax', function() {
+    context('on failure', function() {
+      beforeEach(function () {
+        spyOn(window, 'miqJqueryRequest').and.callFake(function () {
+          return {
+            then: function (ok, err) {
+              err()
+            }
+          };
+        });
+      });
+
+      it('displays an alert on error', function () {
+        spyOn(window, 'add_flash');
+        miqAjax('/foo', false, {});
+        expect(add_flash).toHaveBeenCalled();
+      });
     });
   });
 
