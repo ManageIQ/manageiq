@@ -192,6 +192,8 @@ module ManageIQ::Providers
             docker_metadata[:Config][:Env]),
           :size                  => docker_metadata[:Size],
           :labels                => parse_labels(openshift_image),
+          :docker_labels         => parse_identifying_attributes(docker_metadata[:Config][:Labels],
+                                                                 'docker_labels', "openshift"),
         )
         new_result
       end
