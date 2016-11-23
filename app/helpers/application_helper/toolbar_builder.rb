@@ -449,10 +449,9 @@ class ApplicationHelper::ToolbarBuilder
         return @ght_type == "tabular" && @report.try(:graph).nil? && !@zgraph
       end
     when :savedreports_tree
-      if %w(saved_report_delete).include?(id)
-        return true unless role_allows?(:feature => id)
-      end
       case id
+      when "saved_report_delete"
+        return !role_allows?(:feature => id)
       when "reload"
         return x_node != "root"
       when "view_graph", "view_hybrid", "view_tabular"
