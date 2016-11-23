@@ -72,13 +72,12 @@ class ApplicationHelper::Toolbar::ContainerNodeCenter < ApplicationHelper::Toolb
       ]
     ),
   ])
-  button_group('container_cockpit_button_group', [
+  button_group('vm_access', [
     button(
       :cockpit_console,
-      nil,
-      N_('Open a new browser window with Cockpit for this Node.  This requires that Cockpit is pre-configured on the Node.'),
-      nil,
-      :image => "cockpit",
-      :url   => "launch_cockpit"),
+      'pficon pficon-screen fa-lg',
+      N_('Open a new browser window with Cockpit for this VM.  This requires that Cockpit is pre-configured on the VM.'),
+      N_('Web Console'),
+      :url     => "launch_cockpit"),
   ])
 end
