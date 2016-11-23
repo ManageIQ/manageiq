@@ -226,7 +226,7 @@ class CloudSubnetController < ApplicationController
     options[:cidr] = params[:cidr] if params[:cidr]
     options[:gateway] = params[:gateway] if params[:gateway]
     options[:ip_version] = params[:ip_version]
-    options[:cloud_tenant_id] = params[:cloud_tenant_id] if params[:cloud_tenant_id]
+    options[:cloud_tenant] = find_by_id_filtered(CloudTenant, params[:cloud_tenant_id]) if params[:cloud_tenant_id]
     options[:network_id] = params[:network_id] if params[:network_id]
     # TODO: Adds following fields for create/update
     options[:dhcp_enabled] = params[:dhcp_enabled]
