@@ -151,7 +151,7 @@ class GenericMailer < ActionMailer::Base
 
   def prepare_generic_email(options)
     _log.info("options: #{options.inspect}")
-    options[:from] = VMDB::Config.new("vmdb").config.fetch_path(:smtp, :from) if options[:from].blank?
+    options[:from] = ::Settings.smtp.from if options[:from].blank?
     @content = options[:body]
     options[:attachment] ||= []
     options[:attachment].each do |a|
@@ -166,7 +166,7 @@ class GenericMailer < ActionMailer::Base
   AUTHENTICATION_SMTP_KEYS = [:authentication, :user_name, :password]
   OPTIONAL_SMTP_KEYS = [:enable_starttls_auto, :openssl_verify_mode]
   def set_mailer_smtp(evm_settings = nil)
-    evm_settings ||= VMDB::Config.new("vmdb").config[:smtp]
+    evm_settings ||= ::Settings.smtp
     am_settings =  {}
 
     DESTINATION_SMTP_KEYS.each { |key| am_settings[key] = evm_settings[key] }
@@ -179,7 +179,7 @@ class GenericMailer < ActionMailer::Base
     else                  raise ArgumentError, "authentication value #{evm_settings[:authentication].inspect} must be one of: 'none', 'plain', 'login'"
     end
 
-    OPTIONAL_SMTP_KEYS.each { |key| am_settings[key] = evm_settings[key] if evm_settings.key?(key) }
+    OPTIONAL_SMTP_KEYS.each { |key| am_settings[key] = evm_settings[key] if evm_settings[key] }
 
     ActionMailer::Base.smtp_settings = am_settings
     log_smtp_settings = am_settings.dup

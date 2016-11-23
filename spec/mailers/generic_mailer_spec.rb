@@ -80,7 +80,7 @@ describe GenericMailer do
   end
 
   it "call deliver for generic_notification without a 'from' address" do
-    stub_server_configuration(:smtp => {:from => "test@123.com"})
+    stub_settings(:smtp => {:from => "test@123.com"})
     new_args = @args.dup
     new_args.delete(:from)
     msg = GenericMailer.deliver(:generic_notification, new_args)
