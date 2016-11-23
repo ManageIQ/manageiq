@@ -46,7 +46,7 @@ module ManageIQ::Providers
         _log.debug "#{log_header} Parsing VC inventory..."
         hashes, = Benchmark.realtime_block(:parse_vc_data) do
           if refresher_options.try(:[], :dto_refresh)
-            InfraManager::RefreshParserDto.ems_inv_to_hashes(inventory)
+            InfraManager::RefreshParserDto.ems_inv_to_hashes(ems, inventory, refresher_options)
           else
             InfraManager::RefreshParser.ems_inv_to_hashes(inventory)
           end
