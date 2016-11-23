@@ -25,9 +25,9 @@ class ApplicationHelper::ToolbarChooser
       'miq_capacity_view_tb'
     elsif @record && @explorer && (%w(services catalogs).include?(@layout) || %w(performance timeline).include?(@display))
       'blank_view_tb'
-    elsif %w(report).include?(@layout)
+    elsif @layout == 'report'
       @report ? "report_view_tb" : "blank_view_tb"
-    elsif %w(provider_foreman).include?(@layout)
+    elsif @layout == 'provider_foreman'
       @showtype == 'main' ? "x_summary_view_tb" : "x_gtl_view_tb"
     else
       'blank_view_tb'

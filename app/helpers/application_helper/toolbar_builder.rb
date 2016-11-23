@@ -442,8 +442,7 @@ class ApplicationHelper::ToolbarBuilder
       when "saved_report_delete", "reload"
         return @sb[:active_tab] != "saved_reports"
       when "miq_report_edit", "miq_report_delete"
-        return @sb[:active_tab] == "report_info" && @record.rpt_type == "Custom" ?
-               false : true
+        return @sb[:active_tab] != "report_info" || @record.rpt_type != "Custom"
       when "miq_report_copy", "miq_report_new", "miq_report_run", "miq_report_only", "miq_report_schedule_add"
         return @sb[:active_tab] == "saved_reports"
       when "view_graph", "view_hybrid", "view_tabular"
