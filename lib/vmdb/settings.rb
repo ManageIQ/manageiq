@@ -86,10 +86,15 @@ module Vmdb
 
     def self.build(resource)
       build_without_local(resource).tap do |settings|
-        local_sources.each { |s| settings.add_source!(s) } if resource.try(:is_local?)
+        local_sources.each { |s| settings.add_source!(s) } if resource_is_local?(resource)
       end
     end
     private_class_method :build
+
+    def self.resource_is_local?(resource)
+      resource == :my_server || resource.try(:is_local?)
+    end
+    private_class_method :resource_is_local?
 
     def self.parent_settings_without_local(resource)
       build_template.tap do |settings|

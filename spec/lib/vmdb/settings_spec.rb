@@ -371,4 +371,13 @@ describe Vmdb::Settings do
       expect(settings.api.token_ttl).to eq "5.hour"
     end
   end
+
+  it "with .local file" do
+    stub_local_settings_file(
+      Rails.root.join("config/settings/test.local.yml"),
+      {"api" => {"token_ttl" => "2.minutes"}}.to_yaml
+    )
+
+    expect(::Settings.api.token_ttl).to eq("2.minutes")
+  end
 end
