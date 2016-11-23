@@ -53,8 +53,7 @@ module EmsStorageHelper::TextualSummary
   end
 
   def textual_parent_ems_cloud
-    label = ui_lookup(:model => "ManageIQ::Providers::CloudManager")
-    textual_link(@record.try(:parent_manager), :label => _("Parent #{label}"))
+    textual_link(@record.try(:parent_manager), :label => _("Parent Cloud Provider"))
   end
 
   def textual_zone
