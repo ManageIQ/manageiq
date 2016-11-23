@@ -1614,7 +1614,7 @@ module ReportController::Reports::Editor
               end
             when 'entity'
               unless @edit[:new][:cb_entity_id]
-                _("A specific #{ui_lookup(:model => @edit[:new][:cb_model])} or all must be selected")
+                _("A specific %{chargeback} or all must be selected") % {:chargeback => ui_lookup(:model => @edit[:new][:cb_model])}
               end
             end
 

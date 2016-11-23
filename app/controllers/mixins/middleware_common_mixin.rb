@@ -87,7 +87,7 @@ module MiddlewareCommonMixin
 
   def run_operation(operation_info, items, success_msg = "%{msg}")
     if items.nil?
-      add_flash(_("No #{controller_name.pluralize} selected"))
+      add_flash(_("No %{item_type} selected") % {:item_type => controller_name.pluralize})
       return
     end
     operation_triggered = run_operation_batch(operation_info, items)

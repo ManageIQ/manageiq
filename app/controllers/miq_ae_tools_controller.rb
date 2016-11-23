@@ -240,7 +240,7 @@ Methods updated/added: %{method_stats}") % stat_options, :success)
         add_flash(_(flash_message), :success)
       rescue => err
         git_repo.destroy if git_repo && new_git_repo
-        add_flash(_("Error during repository fetch: #{err.message}"), :error)
+        add_flash(_("Error during repository fetch: %{error_message}") % {:error_message => err.message}, :error)
       end
     end
 

@@ -1871,7 +1871,7 @@ class VmOrTemplate < ApplicationRecord
     if archived?
       return [false, nil]
     elsif orphaned?
-      return [false, _("#{message_prefix} cannot be performed on orphaned VM.")]
+      return [false, _("%{action} cannot be performed on orphaned VM.") % {:action => message_prefix}]
     end
     [true, nil]
   end
