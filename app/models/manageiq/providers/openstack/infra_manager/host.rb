@@ -221,7 +221,6 @@ class ManageIQ::Providers::Openstack::InfraManager::Host < ::Host
     end
 
     _log.info("Queuing provide of #{log_target}")
-    timeout = (VMDB::Config.new("vmdb").config.fetch_path(:host_manageable, :queue_timeout) || 20.minutes).to_i_with_method
     cb = {:class_name => task.class.name, :instance_id => task.id, :method_name => :queue_callback_on_exceptions, :args => ['Finished']}
     MiqQueue.put(
       :class_name   => self.class.name,
@@ -229,7 +228,7 @@ class ManageIQ::Providers::Openstack::InfraManager::Host < ::Host
       :args         => [task.id],
       :method_name  => "manageable",
       :miq_callback => cb,
-      :msg_timeout  => timeout,
+      :msg_timeout  => ::Settings.host_manageable.queue_timeout.to_i_with_method,
       :zone         => my_zone
     )
   end
@@ -287,7 +286,6 @@ class ManageIQ::Providers::Openstack::InfraManager::Host < ::Host
     end
 
     _log.info("Queuing introspection of #{log_target}")
-    timeout = (VMDB::Config.new("vmdb").config.fetch_path(:host_introspect, :queue_timeout) || 20.minutes).to_i_with_method
     cb = {:class_name => task.class.name, :instance_id => task.id, :method_name => :queue_callback_on_exceptions, :args => ['Finished']}
     MiqQueue.put(
       :class_name   => self.class.name,
@@ -295,7 +293,7 @@ class ManageIQ::Providers::Openstack::InfraManager::Host < ::Host
       :args         => [task.id],
       :method_name  => "introspect",
       :miq_callback => cb,
-      :msg_timeout  => timeout,
+      :msg_timeout  => ::Settings.host_introspect.queue_timeout.to_i_with_method,
       :zone         => my_zone
     )
   end
@@ -362,7 +360,6 @@ class ManageIQ::Providers::Openstack::InfraManager::Host < ::Host
     end
 
     _log.info("Queuing provide of #{log_target}")
-    timeout = (VMDB::Config.new("vmdb").config.fetch_path(:host_provide, :queue_timeout) || 20.minutes).to_i_with_method
     cb = {:class_name => task.class.name, :instance_id => task.id, :method_name => :queue_callback_on_exceptions, :args => ['Finished']}
     MiqQueue.put(
       :class_name   => self.class.name,
@@ -370,7 +367,7 @@ class ManageIQ::Providers::Openstack::InfraManager::Host < ::Host
       :args         => [task.id],
       :method_name  => "provide",
       :miq_callback => cb,
-      :msg_timeout  => timeout,
+      :msg_timeout  => ::Settings.host_provide.queue_timeout.to_i_with_method,
       :zone         => my_zone
     )
   end
@@ -473,7 +470,6 @@ class ManageIQ::Providers::Openstack::InfraManager::Host < ::Host
     end
 
     _log.info("Queuing destroy_ironic of #{log_target}")
-    timeout = (VMDB::Config.new("vmdb").config.fetch_path(:host_delete, :queue_timeout) || 20.minutes).to_i_with_method
     cb = {:class_name  => task.class.name,
           :instance_id => task.id,
           :method_name => :queue_callback_on_exceptions,
@@ -484,7 +480,7 @@ class ManageIQ::Providers::Openstack::InfraManager::Host < ::Host
       :args         => [task.id],
       :method_name  => "destroy_ironic",
       :miq_callback => cb,
-      :msg_timeout  => timeout,
+      :msg_timeout  => ::Settings.host_delete.queue_timeout.to_i_with_method,
       :zone         => my_zone
     )
   end

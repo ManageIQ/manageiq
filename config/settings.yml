@@ -921,7 +921,19 @@
     - MoveIntoResourcePool
     :VmSuspendedEvent:
     - SuspendVM_Task
+:host_delete:
+  :queue_timeout: 20.minutes
+:host_introspect:
+  :queue_timeout: 20.minutes
+:host_manageable:
+  :queue_timeout: 20.minutes
+:host_provide:
+  :queue_timeout: 20.minutes
 :host_scan:
+  :queue_timeout: 20.minutes
+:host_start:
+  :queue_timeout: 20.minutes
+:host_stop:
   :queue_timeout: 20.minutes
 :http_proxy:
   :default:
