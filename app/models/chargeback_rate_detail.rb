@@ -93,7 +93,7 @@ class ChargebackRateDetail < ApplicationRecord
                   when "hourly"  then rate
                   when "daily"   then rate / 24
                   when "weekly"  then rate / 24 / 7
-                  when "monthly" then rate / consumption.hours_in_interval
+                  when "monthly" then rate / consumption.hours_in_month
                   when "yearly"  then rate / 24 / 365
                   else raise "rate time unit of '#{per_time}' not supported"
                   end
