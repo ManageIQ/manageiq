@@ -280,6 +280,7 @@ class CloudVolumeController < ApplicationController
       @volume = CloudVolume.new
       options = form_params
       cloud_tenant = find_by_id_filtered(CloudTenant, options[:cloud_tenant_id])
+      options[:cloud_tenant] = cloud_tenant
       valid_action, action_details = CloudVolume.validate_create_volume(cloud_tenant.ext_management_system)
       if valid_action
         begin
