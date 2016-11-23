@@ -47,9 +47,7 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
     return queue_signal(:abort_job, "no image found", "error") unless image
     return queue_signal(:abort_job, "cannot analyze non docker images", "error") unless image.docker_id
 
-    ems_configs = VMDB::Config.new('vmdb').config[:ems]
-
-    namespace = ems_configs.fetch_path(:ems_kubernetes, :miq_namespace)
+    namespace = ::Settings.ems.ems_kubernetes.miq_namespace
     namespace = INSPECTOR_NAMESPACE_FALLBACK if namespace.blank?
 
     update!(:options => options.merge(
