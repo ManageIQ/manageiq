@@ -194,6 +194,10 @@ module Sandbox
     x_node_set(node, x_active_tree)
   end
 
+  def nodes(delimiter = '-')
+    x_node.split(delimiter)
+  end
+
   def x_node_set(node, tree)
     sandbox.store_path(:trees, tree, :active_node, node)
   end
