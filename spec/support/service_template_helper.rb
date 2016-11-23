@@ -32,6 +32,28 @@ module Spec
         end
       end
 
+      def build_model_from_vms(items)
+        model = {}
+        child_options = {}
+        children = []
+        items.each_with_index do |item, index|
+          key = "vm_service#{index+1}"
+          model[key] = {:type => 'atomic',
+                        :request => {:src_vm_id => item.id,
+                                     :number_of_vms => 1, :requester => @user}
+                        }
+          children.append(key)
+          child_options[key] = {:provision_index => index}
+        end
+
+        model['top'] = { :type          => 'composite',
+                         :children      => children,
+                         :child_options => child_options }
+
+        build_service_template_tree(model)
+      end
+
+
       def build_a_composite(name, hash)
         item = FactoryGirl.create(:service_template, :name         => name,
                                                      :options      => {:dialog => {}},

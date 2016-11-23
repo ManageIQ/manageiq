@@ -5,7 +5,7 @@ describe "CatalogBundleInitialization Automate Method" do
     @allowed_service_templates = %w(top vm_service1 vm_service2)
     user_helper
     build_small_environment
-    build_model
+    build_model_from_vms([@src_vm, @src_vm])
   end
 
   def create_request_and_tasks(dialog_options = {})
@@ -13,23 +13,6 @@ describe "CatalogBundleInitialization Automate Method" do
     service_template_stubs
     request_stubs
     @request.create_request_tasks
-  end
-
-  def build_model
-    model = {"top"         => {:type          => 'composite',
-                               :children      => %w(vm_service1 vm_service2),
-                               :child_options => {'vm_service1' => {:provision_index => 0},
-                                                  'vm_service2' => {:provision_index => 1}}},
-             "vm_service1" => {:type    => 'atomic',
-                               :request => {:src_vm_id => @src_vm.id,
-                                            :number_of_vms => 1, :requester => @user}
-                              },
-             "vm_service2" => {:type    => 'atomic',
-                               :request => {:src_vm_id => @src_vm.id,
-                                            :number_of_vms => 1, :requester => @user}
-                              }
-            }
-    build_service_template_tree(model)
   end
 
   def run_automate_method
