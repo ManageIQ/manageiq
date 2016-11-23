@@ -48,8 +48,7 @@ module MiqReport::Generator
     end
 
     def default_queue_timeout
-      value = VMDB::Config.new("vmdb").config.fetch_path(:reporting, :queue_timeout) || 3600
-      value.to_i_with_method
+      ::Settings.reporting.queue_timeout.to_i_with_method
     end
   end
 
@@ -124,7 +123,7 @@ module MiqReport::Generator
     options[:mode] ||= "async"
     options[:report_source] ||= "Requested by user"
 
-    sync = options.delete(:report_sync) || VMDB::Config.new("vmdb").config[:product][:report_sync]
+    sync = options.delete(:report_sync) || ::Settings.product.report_sync
 
     task = MiqTask.create(:name => "Generate Report: '#{name}'")
 
