@@ -1100,6 +1100,7 @@
   :host: localhost
   :password: ''
   :port: '25'
+  :recipient_address_byte_limit: 100
   :user_name: evmadmin
 :snapshots:
   :create_free_percent: 100
