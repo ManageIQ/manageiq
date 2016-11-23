@@ -620,14 +620,6 @@ class ApplicationHelper::ToolbarBuilder
                     !role_allows?(:feature => "ems_infra_scale") ||
                    (@record.class == ManageIQ::Providers::Openstack::InfraManager && @record.orchestration_stacks.count == 0))
 
-    # Now check model/record specific rules
-    case get_record_cls(@record)
-    when "ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem", "ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem"
-      case id
-      when "configured_system_provision"
-        return true unless @record.provisionable?
-      end
-    end
     false  # No reason to hide, allow the button to show
   end
 

@@ -16,7 +16,8 @@ module ApplicationHelper::Toolbar::ConfiguredSystem::LifecycleMixin
             :url       => "provision",
             :url_parms => "main_div",
             :enabled   => false,
-            :onwhen    => "1+"),
+            :onwhen    => "1+",
+            :klass     => ApplicationHelper::Button::ConfiguredSystemProvision),
         ]
       ),
     ])
