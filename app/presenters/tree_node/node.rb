@@ -1,23 +1,97 @@
 module TreeNode
-  class Node < NodeBuilder
+  class Node
     include ActionView::Context
     include ActionView::Helpers::TagHelper
     include ActionView::Helpers::TextHelper
     include ActionView::Helpers::CaptureHelper
 
-    set_attribute(:title, &:name)
-    set_attribute(:tooltip, nil)
-    set_attribute(:klass, nil)
-    set_attribute(:no_click, nil)
-    set_attribute(:selected, nil)
-    set_attribute(:checkable, true)
-    set_attribute(:expand) do
+    def initialize(object, parent_id, options)
+      @object = object
+      @parent_id = parent_id
+      @options = options
+    end
+
+    def self.set_attribute(attribute, value = nil, &block)
+      atvar = "@#{attribute}".to_sym
+
+      define_method(attribute) do
+        result = instance_variable_get(atvar)
+
+        if result.nil?
+          if block_given?
+            args = [@object, @options, @parent_id].take(block.arity.abs)
+            result = instance_exec(*args, &block)
+          else
+            result = value
+          end
+          instance_variable_set(atvar, result)
+        end
+
+        result
+      end
+
+      equals_method(attribute)
+    end
+
+    def self.set_attributes(*attributes, &block)
+      attributes.each do |attribute|
+        define_method(attribute) do
+          result = instance_variable_get("@#{attribute}".to_sym)
+
+          if result.nil?
+            results = instance_eval(&block)
+            attributes.each_with_index do |local, index|
+              instance_variable_set("@#{local}".to_sym, results[index])
+              result = results[index] if local == attribute
+            end
+          end
+
+          result
+        end
+
+        equals_method(attribute)
+      end
+    end
+
+    def self.equals_method(attribute)
+      define_method("#{attribute}=".to_sym) do |result|
+        instance_variable_set("@#{attribute}".to_sym, result)
+      end
+    end
+
+    def title
+      @object.name
+    end
+
+    def tooltip
+      nil
+    end
+
+    def klass
+      nil
+    end
+
+    def no_click
+      nil
+    end
+
+    def selected
+      nil
+    end
+
+    def checkable
+      true
+    end
+
+    def expand
       @options[:open_all].present? && @options[:open_all] && @options[:expand] != false
     end
-    set_attribute(:hide_checkbox) do
+
+    def hide_checkbox
       @options.key?(:hideCheckbox) && @options[:hideCheckbox]
     end
-    set_attribute(:key) do
+
+    def key
       if @object.id.nil?
         # FIXME: this makes problems in tests
         # to handle "Unassigned groups" node in automate buttons tree
