@@ -27,6 +27,7 @@
  *= require topology
  *= require container_topology
  *= require middleware_topology
+ *= require network_topology
  *= require service_dialogs
  *= require xml_display
  *= require patternfly-timeline/dist/timeline
