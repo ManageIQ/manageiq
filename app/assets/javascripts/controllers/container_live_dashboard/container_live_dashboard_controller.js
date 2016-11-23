@@ -13,6 +13,25 @@ miqHttpInject(angular.module('containerLiveDashboard', ['ui.bootstrap', 'pattern
     $scope.viewGraph = false;
     $scope.chartData = {};
 
+    $scope.gr_date = new Date();
+    $scope.gr_timerange = 1;
+    $scope.gr_range_count = 24;
+    $scope.dateOptions = {
+        autoclose: true,
+        todayHighlight: true,
+        orientation: 'bottom'
+    };
+
+    $scope.countDecrement = function() {
+        if($scope.gr_range_count > 1) {
+            $scope.gr_range_count--;
+        }
+    };
+
+    $scope.countIncrement = function() {
+        $scope.gr_range_count++;
+    };
+
     // Graphs
     var formatNumber = function (n) {
       var ranges = [
@@ -197,10 +216,11 @@ miqHttpInject(angular.module('containerLiveDashboard', ['ui.bootstrap', 'pattern
     };
 
     $scope.refresh_graph = function(metric_id, n) {
-      var ends = new Date().getTime();
-      var diff = 60 * 60 * 60 * 1000;
+      // TODO: replace with a datetimepicker, until then add 24 hours to the date
+      var ends = $scope.gr_date.getTime() + 24 * 60 * 60 * 1000;
+      var diff = $scope.gr_timerange * $scope.gr_range_count * 60 * 60 * 1000; // gr_timerange is in hours
       var starts = ends - diff;
-      var bucket_duration = diff / 1000 / 30;
+      var bucket_duration = diff / 1000 / 100; // bucket duration is in secondes
       var params = '&query=get_data&metric_id=' + metric_id + '&ends=' + ends + 
                    '&starts=' + starts+ '&bucket_duration=' + bucket_duration + 's';
 

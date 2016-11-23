@@ -58,6 +58,30 @@
           = _("Refresh")
         %button.btn.btn-default{"type" => "button", "ng-click" => "doViewMetrics()"}
           = _("Change Metrics")
+
+    %form#form_div{:name => 'angularForm'}
+      .input-group.bootstrap-touchspin.timeline-stepper.pull-left
+        %span.input-group-btn
+          %button.btn.btn-default.bootstrap-touchspin-down{"ng-click" => "countDecrement()",
+                                                           :type      => "button"} -
+        %input.timeline-range-input.bootstrap-touchspin.form-control{"ng-model" => "gr_range_count",
+                                                                      :readonly => "readonly",
+                                                                      :type     => "text"}
+        %span.input-group-btn
+          %button.btn.btn-default.bootstrap-touchspin-up{"ng-click" => "countIncrement()", :type => "button"} +
+      = select_tag("gr_range",
+                   options_for_select([[_("Hours"), "1"],
+                                       [_("Days"), "24"],
+                                       [_("Weeks"), "168"],
+                                       [_("Months"), "672"]], nil),
+                   'ng-model'                    => 'gr_timerange',
+                   "selectpicker-for-select-tag" => '',
+                   :class                        => 'selectpicker')
+      %input{'pf-datepicker' => '',
+            'options' => 'dateOptions',
+            'date'    => 'gr_date',
+            'class'   => 'pull-righto timeline-date-input'}
+
     .line-chart
       .spinner.spinner-lg.loading{"ng-if" => "loadingData"}
       #adHocMetricsChart{"pf-line-chart" => "",
