@@ -29,6 +29,7 @@ module ApplianceConsole
     private
 
     def confirm_selection
+      return false unless disk
       agree("Continue with disk: #{disk.path}: #{disk.size.to_i / 1.megabyte} MB (Y/N):")
     end
 
