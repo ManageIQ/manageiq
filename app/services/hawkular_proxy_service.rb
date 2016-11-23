@@ -23,9 +23,6 @@ class HawkularProxyService
     when 'get_data'
       { :id   => @params['metric_id'],
         :data => get_data(@params['metric_id']).compact }
-    when 'get_last'
-      { :id        => @params['metric_id'],
-        :last_data => get_last(@params['metric_id']) }
     else
       {}
     end
@@ -44,21 +41,16 @@ class HawkularProxyService
   end
 
   def get_data(id)
-    ends = @params['ends'] || nil
-    starts = @params['starts'] || nil
+    ends = @params['ends'] || (DateTime.now.to_i * 1000)
+    starts = @params['starts'] || (ends - 8 * 60 * 60 * 1000)
     bucket_duration = @params['bucket_duration'] || nil
+    order = @params['order'] || 'ASC'
 
     client.gauges.get_data(id,
                            :limit          => @params['limit'] || 100,
                            :starts         => starts.to_i,
                            :ends           => ends.to_i,
                            :bucketDuration => bucket_duration,
-                           :order          => 'ASC')
-  end
-
-  def get_last(id)
-    client.gauges.get_data(id,
-                           :limit => 1,
-                           :order => 'DESC').first
+                           :order          => order)
   end
 end

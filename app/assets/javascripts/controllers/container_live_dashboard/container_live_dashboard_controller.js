@@ -43,7 +43,10 @@ miqHttpInject(angular.module('containerLiveDashboard', ['ui.bootstrap', 'pattern
             format: function (value) { return formatNumber(value); }
           }}
       },
-      setAreaChart : true
+      setAreaChart : true,
+      subchart: {
+        show: true
+      }
     };
 
     // get the pathname and remove trailing / if exist
@@ -138,26 +141,27 @@ miqHttpInject(angular.module('containerLiveDashboard', ['ui.bootstrap', 'pattern
     };
 
     var getLatestData = function(item) {
-      var ends = new Date().getTime();
-      var diff = 60 * 60 * 60 * 1000;
-      var starts = ends - diff;
-      var params = '&query=get_data&metric_id=' + item.id + '&ends=' + ends + '&starts=' + starts;
+      var params = '&query=get_data&metric_id=' + item.id + '&limit=5&order=DESC';
 
       $http.get(url + params).success(function (response) {
         'use strict';
         if (response.error) {
-          console.dir(response);
+          // TODO: do something ?
         } else {
-          var data = response.data.sort(function (data1, data2) {
-            return (data2.timestamp || data2.start) < (data1.timestamp || data1.start);
+          var data = response.data;
+
+          item.lastValues = {};
+          angular.forEach(data, function(d) {
+            item.lastValues[d.timestamp] = formatNumber(d.value);
           });
+
           var lastValue = data[0].value;
           item.last_value = formatNumber(lastValue);
           if (data.length > 1) {
             var prevValue = data[1].value;
             if (angular.isNumber(lastValue) && angular.isNumber(prevValue)) {
               var change;
-              if (prevValue !== 0) {
+              if (prevValue !== 0 && lastValue !== 0) {
                 change = Math.round(((lastValue - prevValue) / lastValue) * 100.0);
               } else if (lastValue !== 0) {
                 change = 100;
@@ -178,8 +182,7 @@ miqHttpInject(angular.module('containerLiveDashboard', ['ui.bootstrap', 'pattern
         'use strict';
         $scope.loadingMetrics = false;
         if (response.error) {
-          console.dir(response.error);
-          $timeout($scope.refresh, 500);   // TODO: This seems a bit extreme
+          // TODO: do something ?
           return;
         }
 
@@ -187,7 +190,6 @@ miqHttpInject(angular.module('containerLiveDashboard', ['ui.bootstrap', 'pattern
           return item.tags && item.tags.group_id && item.id && item.minTimestamp;
         });
 
-        // TODO:  Is this correct or can the last two values be retrieved via the initial call?
         angular.forEach($scope.items, getLatestData);
 
         $scope.filterConfig.resultsCount = $scope.items.length;
@@ -199,18 +201,19 @@ miqHttpInject(angular.module('containerLiveDashboard', ['ui.bootstrap', 'pattern
       var diff = 60 * 60 * 60 * 1000;
       var starts = ends - diff;
       var bucket_duration = diff / 1000 / 30;
-      var params = '&query=get_data&metric_id=' + metric_id + '&ends=' + ends + '&starts=' + starts;
+      var params = '&query=get_data&metric_id=' + metric_id + '&ends=' + ends + 
+                   '&starts=' + starts+ '&bucket_duration=' + bucket_duration + 's';
 
       $http.get(url + params).success(function(response) {
         'use strict';
         if (response.error) {
-          $timeout(function() { $scope.refresh_graph(metric_id); }, 1000);   // TODO: This seems a bit extreme
+          // TODO: do something ?
           return;
         }
 
-        var data       = response.data;
-        var xData      = data.filter(d => !d.empty).map(d => d.timestamp || d.start);
-        var yData      = data.filter(d => !d.empty).map(d => d.value || d.avg || 0);
+        var data  = response.data;
+        var xData = data.map(d => d.start);
+        var yData = data.map(d => d.avg || null);
 
         xData.unshift('time');
         yData.unshift(metric_id);

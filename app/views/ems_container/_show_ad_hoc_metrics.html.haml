@@ -1,4 +1,3 @@
-= # render :partial => "shared/views/show_ad_hoc_containers_metrics"
 = render :partial => "layouts/flash_msg"
 
 .containers-live-dashboard.row.miq-dashboard-view.miq-metrics{"ng-controller" => "containerLiveDashboardController"}
@@ -13,24 +12,35 @@
       .spinner.spinner-lg.loading{"ng-if" => "loadingMetrics"}
       .col-md-12{"pf-list-view" => "", "config" => "listConfig", "items" => "items"}
         .list-view-pf-body.row
-          .col-md-3.col-sm-6.no-wrap{"tooltip" => "{{item.tags.group_id}}", "tooltip-placement" => "bottom"}
-            {{item.tags.group_id}}
-          .col-md-4.col-sm-6.no-wrap{"tooltip" => "{{item.id}}", "tooltip-placement" => "bottom"}
+          .col-md-2.col-sm-6.no-wrap{"tooltip" => "{{item.tags.group_id}}", "tooltip-placement" => "bottom"}
+            %strong
+              {{item.tags.group_id}}
+          .col-md-5.col-sm-6.no-wrap{"tooltip" => "{{item.id}}", "tooltip-placement" => "bottom"}
             {{item.id}}
-          .col-md-2.col-sm-6.no-wrap{"tooltip" => "{{item.maxTimestamp | date:'yyyy-MM-dd hh:mm:ss'}}", "tooltip-placement" => "bottom"}
-            {{item.maxTimestamp | date:'yyyy-MM-dd hh:mm:ss'}}
-          .col-md-3.col-sm-6.no-wrap{"tooltip" => "{{item.last_value || '-'}}", "tooltip-placement" => "bottom"}
-            %strong.pull-left
-              = _("Last value")
-            %span.last-value
+          .col-md-3.col-sm-6.no-wrap{"tooltip" => "{{item.maxTimestamp | date:'yyyy-MM-dd hh:mm:ss'}}", "tooltip-placement" => "bottom"}
+            %strong.pull-right
+              {{item.maxTimestamp | date:'yyyy-MM-dd hh:mm:ss'}}
+          .col-md-2.col-sm-6.no-wrap{"tooltip" => "{{item.last_value || '-'}}", "tooltip-placement" => "bottom"}
+            %strong.last-value
               {{item.last_value || "-"}}
             %span.last-value
               {{item.percent_change}}
         %list-expanded-content
           .row
-            .col-md-12
-              %div Tags: {{$parent.item.tags}}
-
+            .col-md-6.col-sm-12.no-wrap
+              .row{"ng-repeat" => "(key, value) in $parent.item.tags"}
+                .col-md-6.col-sm-6.no-wrap.metric-no-padding
+                  %strong.pull-right
+                    {{key}}:
+                .col-md-6.col-sm-9.no-wrap
+                  {{value}}
+            .col-md-6.col-sm-12.no-wrap
+              .row{"ng-repeat" => "(timestamp, value) in $parent.item.lastValues"}
+                .col-md-6.col-sm-9.no-wrap.metric-no-padding
+                  %strong.pull-right
+                    {{timestamp | date:'yyyy-MM-dd hh:mm:ss'}}:
+                .col-md-6.col-sm-3.no-wrap
+                  {{value}}
     .blank-slate-pf{"ng-if" => "!applied"}
       .blank-slate-pf-icon
         %span.fa.fa-info-circle
