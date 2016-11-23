@@ -18,8 +18,6 @@ class ChargebackRateDetail < ApplicationRecord
     'yearly'  => _('Yearly')
   }.freeze
 
-  attr_accessor :hours_in_interval
-
   def charge(relevant_fields, consumption)
     result = {}
     if (relevant_fields & [metric_keys[0], cost_keys[0]]).present?
