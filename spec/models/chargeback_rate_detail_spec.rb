@@ -35,10 +35,10 @@ describe ChargebackRateDetail do
     per_time = 'monthly'
     per_unit = 'megabytes'
     cbd = FactoryGirl.build(:chargeback_rate_detail,
-                            :per_time          => per_time,
-                            :per_unit          => per_unit,
-                            :enabled           => true,
-                            :hours_in_interval => hours_in_month)
+                            :per_time => per_time,
+                            :per_unit => per_unit,
+                            :enabled  => true)
+    cbd.instance_variable_set(:@hours_in_interval, hours_in_month)
     cbt = FactoryGirl.create(:chargeback_tier,
                              :chargeback_rate_detail_id => cbd.id,
                              :start                     => tier_start,
@@ -75,12 +75,11 @@ describe ChargebackRateDetail do
       'yearly',   'megabytes',  rate / 24 / 365
     ].each_slice(3) do |per_time, per_unit, hourly_rate|
       cbd = FactoryGirl.build(:chargeback_rate_detail,
-                               :per_time                          => per_time,
-                               :per_unit                          => per_unit,
-                               :metric                            => 'derived_memory_available',
-                               :chargeback_rate_detail_measure_id => cbdm.id,
-                               :hours_in_interval                 => hours_in_month
-                              )
+                              :per_time                          => per_time,
+                              :per_unit                          => per_unit,
+                              :metric                            => 'derived_memory_available',
+                              :chargeback_rate_detail_measure_id => cbdm.id)
+      cbd.instance_variable_set(:@hours_in_interval, hours_in_month)
       expect(cbd.hourly(rate)).to eq(hourly_rate)
     end
     cbd = FactoryGirl.build(:chargeback_rate_detail, :per_time => 'annually')
@@ -195,14 +194,14 @@ Monthly @ 5.0 + 2.5 per Megabytes from 5.0 to Infinity")
                                   :per_unit                          => 'bytes',
                                   :metric                            => 'derived_memory_available',
                                   :per_time                          => 'monthly',
-                                  :chargeback_rate_detail_measure_id => cbdm.id,
-                                  :hours_in_interval                 => hours_in_month)
+                                  :chargeback_rate_detail_measure_id => cbdm.id)
+    cbd_bytes.instance_variable_set(:@hours_in_interval, hours_in_month)
     cbd_gigabytes = FactoryGirl.build(:chargeback_rate_detail,
                                       :per_unit                          => 'gigabytes',
                                       :metric                            => 'derived_memory_available',
                                       :per_time                          => 'monthly',
-                                      :chargeback_rate_detail_measure_id => cbdm.id,
-                                      :hours_in_interval                 => hours_in_month)
+                                      :chargeback_rate_detail_measure_id => cbdm.id)
+    cbd_gigabytes.instance_variable_set(:@hours_in_interval, hours_in_month)
     expect(cbd_bytes.hourly_cost(100)).to eq(cbd_gigabytes.hourly_cost(100))
   end
 
