@@ -673,6 +673,14 @@ table .label {  // Adds margin to the label to vertically align with text
   .list-view-pf-left {
     padding-right: 40px;
   }
+  .row {
+    margin-left: -10px;
+    margin-right: -10px;
+  }
+  [class^="col-"] {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
   .no-wrap {
     white-space: nowrap;
     overflow: hidden;

@@ -13,34 +13,37 @@
       .col-md-12{"pf-list-view" => "", "config" => "listConfig", "items" => "items"}
         .list-view-pf-body.row
           .col-md-2.col-sm-6.no-wrap{"tooltip" => "{{item.tags.group_id}}", "tooltip-placement" => "bottom"}
-            %strong
-              {{item.tags.group_id}}
-          .col-md-5.col-sm-6.no-wrap{"tooltip" => "{{item.id}}", "tooltip-placement" => "bottom"}
+            {{item.tags.group_id}}
+          .col-md-4.col-sm-6.no-wrap{"tooltip" => "{{item.id}}", "tooltip-placement" => "bottom"}
             {{item.id}}
-          .col-md-3.col-sm-6.no-wrap{"tooltip" => "{{item.maxTimestamp | date:'yyyy-MM-dd hh:mm:ss'}}", "tooltip-placement" => "bottom"}
-            %strong.pull-right
-              {{item.maxTimestamp | date:'yyyy-MM-dd hh:mm:ss'}}
-          .col-md-2.col-sm-6.no-wrap{"tooltip" => "{{item.last_value || '-'}}", "tooltip-placement" => "bottom"}
-            %strong.last-value
-              {{item.last_value || "-"}}
-            %span.last-value
-              {{item.percent_change}}
+          .col-md-6.col-sm-12.no-wrap
+            .row
+              .col-md-7.col-sm-6.no-wrap{"tooltip" => "{{item.maxTimestamp | date:'yyyy-MM-dd hh:mm:ss'}}", "tooltip-placement" => "bottom"}
+                %strong
+                  = _("Most Recent")
+                %span.time-stamp
+                  {{item.maxTimestamp | date:'yyyy-MM-dd hh:mm:ss'}}
+              .col-md-5.col-sm-6.no-wrap{"tooltip" => "{{item.last_value || '-'}}", "tooltip-placement" => "bottom"}
+                %span.last-value
+                  {{item.last_value || "-"}}
+                %span.last-value
+                  {{item.percent_change}}
         %list-expanded-content
           .row
-            .col-md-6.col-sm-12.no-wrap
+            .col-md-8.col-sm-12.no-wrap
               .row{"ng-repeat" => "(key, value) in $parent.item.tags"}
-                .col-md-6.col-sm-6.no-wrap.metric-no-padding
+                .col-md-3.col-sm-6.no-wrap.metric-no-padding
                   %strong.pull-right
-                    {{key}}:
-                .col-md-6.col-sm-9.no-wrap
+                    {{key}}
+                .col-md-9.col-sm-9.no-wrap{"tooltip" => "{{value}}", "tooltip-placement" => "bottom"}
                   {{value}}
-            .col-md-6.col-sm-12.no-wrap
+            .col-md-4.col-sm-12.no-wrap
               .row{"ng-repeat" => "(timestamp, value) in $parent.item.lastValues"}
-                .col-md-6.col-sm-9.no-wrap.metric-no-padding
-                  %strong.pull-right
-                    {{timestamp | date:'yyyy-MM-dd hh:mm:ss'}}:
-                .col-md-6.col-sm-3.no-wrap
-                  {{value}}
+                .col-md-12
+                  %strong.pull-left.metric-no-padding
+                    {{timestamp | date:'yyyy-MM-dd hh:mm:ss'}}
+                  %span.last-value
+                    {{value}}
     .blank-slate-pf{"ng-if" => "!applied"}
       .blank-slate-pf-icon
         %span.fa.fa-info-circle
