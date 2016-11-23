@@ -94,6 +94,7 @@ function MwAddDatasourceCtrl($scope, $rootScope, miqService, mwAddDatasourceServ
   $scope.finishAddDatasource = function() {
     var payload = Object.assign({}, getPayload());
     $rootScope.$broadcast(DATASOURCE_EVENT, payload);
+    $scope.reset();
   };
 
   $scope.finishAddDatasourceBack = function() {
