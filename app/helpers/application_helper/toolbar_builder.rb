@@ -422,23 +422,6 @@ class ApplicationHelper::ToolbarBuilder
     end
   end
 
-  def hide_button_pxe(id)
-    case x_active_tree
-    when :customization_templates_tree
-      return true unless role_allows?(:feature => id)
-      nodes = x_node.split('-')
-      if nodes.first == "root"
-        # show only add button on root node
-        id != "customization_template_new"
-      elsif nodes.last == "system" || (@record && @record.system)
-        # allow only copy button for system customization templates
-        id != "customization_template_copy"
-      else
-        false
-      end
-    end
-  end
-
   def hide_button_report(id)
     if %w(miq_report_copy miq_report_delete miq_report_edit
           miq_report_new miq_report_run miq_report_schedule_add).include?(id) ||
@@ -556,11 +539,6 @@ class ApplicationHelper::ToolbarBuilder
 
     if @layout == "ops"
       res = hide_button_ops(id)
-      return res
-    end
-
-    if @layout == "pxe" || id.starts_with?("pxe_", "customization_template_")
-      res = hide_button_pxe(id)
       return res
     end
 
