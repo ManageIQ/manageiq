@@ -4,14 +4,69 @@ describe ManageIQ::Providers::Openshift::ContainerManager::RefreshParser do
   let(:parser) { described_class.new }
 
   describe "get_openshift_images" do
+    let(:image_name) { "image_name" }
+    let(:image_tag) { "my_tag" }
+    let(:image_digest) { "sha256:abcdefg" }
+    let(:image_registry) { '12.34.56.78' }
+    let(:image_registry_port) { 5000 }
+    let(:image_ref) do
+      ContainerImage::DOCKER_PULLABLE_PREFIX + \
+        "#{image_registry}:#{image_registry_port}/#{image_name}@#{image_digest}"
+    end
+    let(:image_from_openshift) do
+      RecursiveOpenStruct.new(
+        :metadata             => {
+          :name => image_digest
+        },
+        :dockerImageReference => "#{image_registry}:#{image_registry_port}/#{image_name}@#{image_digest}",
+        :dockerImageManifest  => '{"name": "%s", "tag": "%s"}' % [image_name, image_tag],
+        :dockerImageMetadata  => {
+          :Architecture  => "amd64",
+          :Author        => "ManageIQ team",
+          :Size          => "123456",
+          :DockerVersion => "1.12.1",
+          :Config        => {
+            :Cmd          => %w(run this program),
+            :Entrypoint   => %w(entry1 entry2),
+            :ExposedPorts => {"12345/tcp".to_sym => {}},
+            :Env          => ["VAR1=VALUE1", "VAR2=VALUE2"],
+            :Labels       => {:key1 => "value1", :key2 => "value2"}
+          }
+        }
+      )
+    end
+
+    it "collects data from openshift images correctly" do
+      expect(parser.send(:parse_openshift_image,
+                         image_from_openshift).except(:registered_on)).to eq(
+                           :name                     => image_name,
+                           :digest                   => image_digest,
+                           :image_ref                => image_ref,
+                           :tag                      => image_tag,
+                           :container_image_registry => {:name => image_registry,
+                                                         :host => image_registry,
+                                                         :port => image_registry_port.to_s},
+                           :architecture             => "amd64",
+                           :author                   => "ManageIQ team",
+                           :command                  => %w(run this program),
+                           :entrypoint               => %w(entry1 entry2),
+                           :docker_version           => "1.12.1",
+                           :exposed_ports            => {'tcp' => '12345'},
+                           :environment_variables    => {"VAR1" => "VALUE1", "VAR2" => "VALUE2"},
+                           :size                     => "123456",
+                           :labels                   => [],
+                           :docker_labels            => [{:section => "docker_labels",
+                                                          :name    => "key1",
+                                                          :value   => "value1",
+                                                          :source  => "openshift"},
+                                                         {:section => "docker_labels",
+                                                          :name    => "key2",
+                                                          :value   => "value2",
+                                                          :source  => "openshift"}]
+                         )
+    end
+
     it "doesn't add duplicated images" do
-      image_name = "image_name"
-      image_tag = "my_tag"
-      image_digest = "sha256:abcdefg"
-      image_registry = '12.34.56.78'
-      image_registry_port = 5000
-      image_ref = ContainerImage::DOCKER_PULLABLE_PREFIX + \
-                  "#{image_registry}:#{image_registry_port}/#{image_name}@#{image_digest}"
       parser.instance_variable_get('@data')[:container_images] = [{
         :name          => image_name,
         :tag           => image_tag,
@@ -25,27 +80,7 @@ describe ManageIQ::Providers::Openshift::ContainerManager::RefreshParser do
         "#{image_registry}:#{image_registry_port}:#{image_ref}",
         parser.instance_variable_get('@data')[:container_images][0])
 
-      inventory = {"image" => [
-        RecursiveOpenStruct.new(
-          :metadata             => {
-            :name => image_digest
-          },
-          :dockerImageReference => "#{image_registry}:#{image_registry_port}/#{image_name}@#{image_digest}",
-          :dockerImageManifest  => '{"name": "%s", "tag": "%s"}' % [image_name, image_tag],
-          :dockerImageMetadata  => {
-            :Architecture  => "amd64",
-            :Author        => "ManageIQ team",
-            :Size          => "123456",
-            :DockerVersion => "1.12.1",
-            :Config        => {
-              :Cmd          => %w(run this program),
-              :Entrypoint   => %w(entry1 entry2),
-              :ExposedPorts => {"12345/tcp".to_sym => {}},
-              :Env          => ["VAR1=VALUE1", "VAR2=VALUE2"]
-            }
-          }
-        ),
-      ]}
+      inventory = {"image" => [image_from_openshift,]}
 
       parser.get_openshift_images(inventory)
       expect(parser.instance_variable_get('@data')[:container_images].size).to eq(1)
