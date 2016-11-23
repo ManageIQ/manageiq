@@ -3,7 +3,7 @@ module MiqReport::Generator::Async
   module ClassMethods
     def async_generate_tables(options = {})
       options[:userid] ||= "system"
-      sync = VMDB::Config.new("vmdb").config[:product][:report_sync]
+      sync = ::Settings.product.report_sync
 
       task = MiqTask.create(:name => "Generate Reports: #{options[:reports].collect(&:name).inspect}")
       MiqQueue.put(
@@ -48,7 +48,7 @@ module MiqReport::Generator::Async
 
   def async_generate_table(options = {})
     options[:userid] ||= "system"
-    sync = VMDB::Config.new("vmdb").config[:product][:report_sync]
+    sync = ::Settings.product.report_sync
 
     task = MiqTask.create(:name => _("Generate Report: '%{name}'") % {:name => name})
     unless sync # Only queued if sync reporting disabled (default)
