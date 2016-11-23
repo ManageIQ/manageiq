@@ -55,34 +55,42 @@ describe ChargebackRateDetail do
     expect(cbd.hourly_cost(cvalue, consumption)).to eq(0.0)
   end
 
-  it "#hourly" do
-    [
-      0,
-      0.0,
-      0.00
-    ].each do |rate|
-      cbd = FactoryGirl.build(:chargeback_rate_detail, :per_time => 'hourly')
+  describe '#hourly (rate)' do
+    let(:rate) { 8.26 }
+    it 'returns 0 when the rate was 0' do
+      [
+        0,
+        0.0,
+        0.00
+      ].each do |zero|
+        cbd = FactoryGirl.build(:chargeback_rate_detail, :per_time => 'hourly')
+        expect(cbd.hourly(zero, consumption)).to eq(0.0)
+      end
+    end
 
-      expect(cbd.hourly(rate, consumption)).to eq(0.0)
+    it 'calculates hourly rate for given rate' do
+      cbdm = FactoryGirl.create(:chargeback_rate_detail_measure)
+      [
+        'hourly',   'megabytes',  rate,
+        'daily',    'megabytes',  rate / 24,
+        'weekly',   'megabytes',  rate / 24 / 7,
+        'monthly',  'megabytes',  rate / 24 / 30,
+        'yearly',   'megabytes',  rate / 24 / 365
+      ].each_slice(3) do |per_time, per_unit, hourly_rate|
+        cbd = FactoryGirl.build(:chargeback_rate_detail,
+                                :per_time                          => per_time,
+                                :per_unit                          => per_unit,
+                                :metric                            => 'derived_memory_available',
+                                :chargeback_rate_detail_measure_id => cbdm.id)
+        expect(cbd.hourly(rate, consumption)).to eq(hourly_rate)
+      end
     end
-    cbdm = FactoryGirl.create(:chargeback_rate_detail_measure)
-    rate = 8.26
-    [
-      'hourly',   'megabytes',  rate,
-      'daily',    'megabytes',  rate / 24,
-      'weekly',   'megabytes',  rate / 24 / 7,
-      'monthly',  'megabytes',  rate / 24 / 30,
-      'yearly',   'megabytes',  rate / 24 / 365
-    ].each_slice(3) do |per_time, per_unit, hourly_rate|
-      cbd = FactoryGirl.build(:chargeback_rate_detail,
-                              :per_time                          => per_time,
-                              :per_unit                          => per_unit,
-                              :metric                            => 'derived_memory_available',
-                              :chargeback_rate_detail_measure_id => cbdm.id)
-      expect(cbd.hourly(rate, consumption)).to eq(hourly_rate)
+
+    let(:annual_rate) { FactoryGirl.build(:chargeback_rate_detail, :per_time => 'annually') }
+    it 'cannot calculate for unknown time interval' do
+      expect { annual_rate.hourly(rate, consumption) }.to raise_error(RuntimeError,
+                                                                      "rate time unit of 'annually' not supported")
     end
-    cbd = FactoryGirl.build(:chargeback_rate_detail, :per_time => 'annually')
-    expect  { cbd.hourly(rate, consumption) }.to raise_error(RuntimeError, "rate time unit of 'annually' not supported")
   end
 
   it "#rate_adjustment" do
