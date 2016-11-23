@@ -24,8 +24,7 @@ describe ChargebackRateDetail do
     end
   end
 
-  let(:hours_in_month) { 720 }
-  let(:consumption) { instance_double('Consumption', :hours_in_interval => hours_in_month) }
+  let(:consumption) { instance_double('Consumption', :hours_in_month => (1.month / 1.hour)) }
 
   it '#hourly_cost' do
     cvalue   = 42.0
