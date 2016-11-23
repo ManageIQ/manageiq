@@ -10,26 +10,37 @@ miqHttpInject(angular.module('containerLiveDashboard', ['ui.bootstrap', 'pattern
     $scope.tagsLoaded = false;
 
     $scope.applied = false;
+    $scope.filterChanged = true;
     $scope.viewGraph = false;
     $scope.chartData = {};
 
-    $scope.gr_date = new Date();
-    $scope.gr_timerange = 1;
-    $scope.gr_range_count = 24;
+    $scope.timeRanges = [
+      {title: _("Hours"), value: 1},
+      {title: _("Days"), value: 24},
+      {title: _("Weeks"), value: 168},
+      {title: _("Months"), value: 672}
+    ];
+
+    $scope.timeFilter = {
+      time_range: 1,
+      range_count: 24,
+      date: new Date()
+    };
+
     $scope.dateOptions = {
-        autoclose: true,
-        todayHighlight: true,
-        orientation: 'bottom'
+      autoclose: true,
+      todayHighlight: true,
+      orientation: 'bottom'
     };
 
     $scope.countDecrement = function() {
-        if($scope.gr_range_count > 1) {
-            $scope.gr_range_count--;
+        if($scope.timeFilter.range_count > 1) {
+            $scope.timeFilter.range_count--;
         }
     };
 
     $scope.countIncrement = function() {
-        $scope.gr_range_count++;
+        $scope.timeFilter.range_count++;
     };
 
     // Graphs
@@ -75,6 +86,7 @@ miqHttpInject(angular.module('containerLiveDashboard', ['ui.bootstrap', 'pattern
     var url = '/container_dashboard/data' + id + '/?live=true&tenant=' + tenant;
 
     var filterChange = function (filters) {
+      $scope.filterChanged = true;
       $scope.filtersText = "";
       $scope.tags = {};
       $scope.filterConfig.appliedFilters.forEach(function (filter) {
@@ -101,6 +113,7 @@ miqHttpInject(angular.module('containerLiveDashboard', ['ui.bootstrap', 'pattern
 
     $scope.doApply = function() {
       $scope.applied = true;
+      $scope.filterChanged = false;
       $scope.refresh();
     };
 
@@ -215,12 +228,16 @@ miqHttpInject(angular.module('containerLiveDashboard', ['ui.bootstrap', 'pattern
       });
     };
 
+    $scope.rangeChange = function() {
+      console.log($scope.timeFilter.time_range);
+    };
+
     $scope.refresh_graph = function(metric_id, n) {
       // TODO: replace with a datetimepicker, until then add 24 hours to the date
-      var ends = $scope.gr_date.getTime() + 24 * 60 * 60 * 1000;
-      var diff = $scope.gr_timerange * $scope.gr_range_count * 60 * 60 * 1000; // gr_timerange is in hours
+      var ends = $scope.timeFilter.date.getTime() + 24 * 60 * 60 * 1000;
+      var diff = $scope.timeFilter.time_range * $scope.timeFilter.range_count * 60 * 60 * 1000; // time_range is in hours
       var starts = ends - diff;
-      var bucket_duration = diff / 1000 / 100; // bucket duration is in secondes
+      var bucket_duration = diff / 1000 / 100; // bucket duration is in seconds
       var params = '&query=get_data&metric_id=' + metric_id + '&ends=' + ends + 
                    '&starts=' + starts+ '&bucket_duration=' + bucket_duration + 's';
 

@@ -4,11 +4,17 @@
   %div{"ng-if" => "!viewGraph"}
     %div{"pf-toolbar" => "", "id" => "exampleToolbar", "config" => "toolbarConfig", "ng-if" => "tagsLoaded"}
       %actions
-        %button.btn.btn-primary{"type" => "button", "ng-click" => "doApply()", "ng-if" => "toolbarConfig.filterConfig"}
+        %button.btn.btn-primary{"type" => "button",
+                                "ng-click" => "doApply()",
+                                "ng-if" => "toolbarConfig.filterConfig",
+                                "ng-disabled" => "!filterChanged"}
           = _("Apply")
-        %button.btn.btn-default{"type" => "button", "ng-click" => "doViewGraph()", "ng-disabled" => "!itemSelected"}
+        %button.btn.btn-default{"type" => "button",
+                                "ng-click" => "doViewGraph()",
+                                "ng-disabled" => "!itemSelected"}
           = _("View Graph")
-    .list-view-container.list-view-compact{"ng-if" => "applied"}
+    .list-view-container.list-view-compact{"ng-if" => "applied",
+                                           "ng-class" => "{'no-filters': filterConfig.fields.length === 0}"}
       .spinner.spinner-lg.loading{"ng-if" => "loadingMetrics"}
       .col-md-12{"pf-list-view" => "", "config" => "listConfig", "items" => "items"}
         .list-view-pf-body.row
@@ -44,12 +50,17 @@
                     {{timestamp | date:'yyyy-MM-dd hh:mm:ss'}}
                   %span.last-value
                     {{value}}
-    .blank-slate-pf{"ng-if" => "!applied"}
+    .blank-slate-pf{"ng-if" => "!applied",
+                    "ng-class" => "{'no-filters': filterConfig.fields.length === 0,
+                                    'loading': !tagsLoaded}"}
+      .spinner.spinner-lg.loading{"ng-if" => "!tagsLoaded"}
       .blank-slate-pf-icon
         %span.fa.fa-info-circle
       %h1
         = _("Metrics")
-      %p
+      %p{"ng-if" => "!tagsLoaded"}
+        = _("Loading available tags")
+      %p{"ng-if" => "tagsLoaded"}
         = _("Add tags and click the Apply button to view available metrics")
   .metrics-graph{"ng-if" => "viewGraph"}
     %div{"pf-toolbar" => "", "config" => "graphToolbarConfig"}
@@ -59,29 +70,29 @@
         %button.btn.btn-default{"type" => "button", "ng-click" => "doViewMetrics()"}
           = _("Change Metrics")
 
-    %form#form_div{:name => 'angularForm'}
-      .input-group.bootstrap-touchspin.timeline-stepper.pull-left
-        %span.input-group-btn
-          %button.btn.btn-default.bootstrap-touchspin-down{"ng-click" => "countDecrement()",
-                                                           :type      => "button"} -
-        %input.timeline-range-input.bootstrap-touchspin.form-control{"ng-model" => "gr_range_count",
-                                                                      :readonly => "readonly",
-                                                                      :type     => "text"}
-        %span.input-group-btn
-          %button.btn.btn-default.bootstrap-touchspin-up{"ng-click" => "countIncrement()", :type => "button"} +
-      = select_tag("gr_range",
-                   options_for_select([[_("Hours"), "1"],
-                                       [_("Days"), "24"],
-                                       [_("Weeks"), "168"],
-                                       [_("Months"), "672"]], nil),
-                   'ng-model'                    => 'gr_timerange',
-                   "selectpicker-for-select-tag" => '',
-                   :class                        => 'selectpicker')
-      %input{'pf-datepicker' => '',
-            'options' => 'dateOptions',
-            'date'    => 'gr_date',
-            'class'   => 'pull-righto timeline-date-input'}
-
+    %form.time-range-form#form_div{:name => 'angularForm'}
+      .form-group.pull-left
+        .input-group.bootstrap-touchspin.timeline-stepper.pull-left
+          %span.input-group-btn
+            %button.btn.btn-default.bootstrap-touchspin-down{"ng-click" => "countDecrement()",
+                                                             :type      => "button"} -
+          %input.timeline-range-input.bootstrap-touchspin.form-control{"ng-model" => "timeFilter.range_count",
+                                                                        :readonly => "readonly",
+                                                                        :type     => "text"}
+          %span.input-group-btn
+            %button.btn.btn-default.bootstrap-touchspin-up{"ng-click" => "countIncrement()",
+                                                           :type => "button"} +
+      .form-group.pull-left
+        %select{"pf-select"  => "",
+                "id" => "timeRange",
+                "ng-model" => "timeFilter.time_range",
+                "ng-options" => "range.value as range.title for range in timeRanges",
+                "class"   => "timeline-date-input"}
+      .form-group.pull-left
+        %input{"pf-datepicker" => "",
+               "options" => "dateOptions",
+               "date"    => "timeFilter.date",
+               "class"   => "timeline-date-input"}
     .line-chart
       .spinner.spinner-lg.loading{"ng-if" => "loadingData"}
       #adHocMetricsChart{"pf-line-chart" => "",
