@@ -75,25 +75,25 @@ class ChargebackRateDetail < ApplicationRecord
     :yearly  => "Year"
   }
 
-  def hourly_cost(value)
+  def hourly_cost(value, consumption)
     return 0.0 unless self.enabled?
 
     value = 1.0 if fixed?
 
     (fixed_rate, variable_rate) = find_rate(value)
 
-    hourly_fixed_rate    = hourly(fixed_rate)
-    hourly_variable_rate = hourly(variable_rate)
+    hourly_fixed_rate    = hourly(fixed_rate, consumption)
+    hourly_variable_rate = hourly(variable_rate, consumption)
 
     hourly_fixed_rate + rate_adjustment(hourly_variable_rate) * value
   end
 
-  def hourly(rate)
+  def hourly(rate, consumption)
     hourly_rate = case per_time
                   when "hourly"  then rate
                   when "daily"   then rate / 24
                   when "weekly"  then rate / 24 / 7
-                  when "monthly" then rate / @hours_in_interval
+                  when "monthly" then rate / consumption.hours_in_interval
                   when "yearly"  then rate / 24 / 365
                   else raise "rate time unit of '#{per_time}' not supported"
                   end
@@ -223,9 +223,8 @@ class ChargebackRateDetail < ApplicationRecord
   end
 
   def metric_and_cost_by(consumption)
-    @hours_in_interval = consumption.hours_in_interval
     metric_value = metric_value_by(consumption)
-    [metric_value, hourly_cost(metric_value) * consumption.hours_in_interval]
+    [metric_value, hourly_cost(metric_value, consumption) * consumption.hours_in_interval]
   end
 
   def first_tier?(tier,tiers)
