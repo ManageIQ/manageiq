@@ -14,7 +14,8 @@
           :text       => _('Timelines'),
           :record_id  => @record.id,
           :display    => 'timeline',
-          :title      => _("Show Timelines"))
+          :title      => _("Show Timelines"),
+          :disabled_title => _("No Timeline data has been collected for Policy or Management Events"))
 
     = miq_accordion_panel(_("Relationships"), false, "ems_rel") do
       %ul.nav.nav-pills.nav-stacked
