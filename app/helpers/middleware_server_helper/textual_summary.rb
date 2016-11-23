@@ -9,7 +9,7 @@ module MiddlewareServerHelper::TextualSummary
 
   def textual_group_relationships
     # Order of items should be from parent to child
-    %i(ems middleware_deployments middleware_datasources lives_on middleware_messagings)
+    %i(ems middleware_server_group middleware_deployments middleware_datasources lives_on middleware_messagings)
   end
 
   #
