@@ -121,6 +121,7 @@
       })
       .each(function(item) {
         item.eventFunction = function($event) {
+          sendDataWithRx({tollbarEvent: 'itemClicked'});
           miqToolbarOnClick.bind($event.delegateTarget)($event);
         }
       })

@@ -42,6 +42,8 @@
         this.initController(event.initController.data);
       } else if (event.unsubscribe && event.unsubscribe === COTNROLLER_NAME) {
         this.onUnsubscribe();
+      } else if (event.tollbarEvent && (event.tollbarEvent === 'itemClicked')) {
+        this.setSandPaperClass();
       }
     }.bind(this),
     function (err) {
@@ -124,7 +126,10 @@
     event.preventDefault();
     if (this.initObject.isExplorer) {
       var prefix = '/' + ManageIQ.controller;
-      $.post(prefix + '/x_show/' + item.id);
+      $.post(prefix + '/x_show/' + item.id)
+        .always(function() {
+          this.setSandPaperClass();
+        }.bind(this));
     } else {
       var prefix = this.initObject.showUrl;
       DoNav(prefix + '/' + item.id);
@@ -202,7 +207,7 @@
         mainConentClasses.splice(sandPaperIndex, 1);
         mainContent.className = mainConentClasses.join(' ');
       }
-      if (viewType === 'grid' || viewType === 'tile') {
+      if (viewType && (viewType === 'grid' || viewType === 'tile')) {
         mainContent.className += ' miq-sand-paper';
       }
     }
