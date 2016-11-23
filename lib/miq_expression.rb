@@ -1000,7 +1000,17 @@ class MiqExpression
     end
   end
 
-  # TODO: update this to use the more nuanced .sanitize_regular_expression
+  # TODO: update this to use the more nuanced
+  # .sanitize_regular_expression after performing Regexp.escape. The
+  # extra substitution is required because, although the result from
+  # Regexp.escape is fine to pass to Regexp.new, it is not when eval'd
+  # as we do:
+  #
+  # ```ruby
+  # regexp_string = Regexp.escape("/") # => "/"
+  # # ...
+  # eval("/" + regexp_string + "/")
+  # ```
   def self.re_escape(s)
     Regexp.escape(s).gsub(/\//, '\/')
   end
