@@ -90,6 +90,12 @@ describe ChargebackRateDetail do
       expect { annual_rate.hourly(rate, consumption) }.to raise_error(RuntimeError,
                                                                       "rate time unit of 'annually' not supported")
     end
+
+    let(:monthly_rate) { FactoryGirl.build(:chargeback_rate_detail, :per_time => 'monthly') }
+    let(:weekly_consumption) { Chargeback::ConsumptionWithRollups.new([], Time.current - 1.week, Time.current) }
+    it 'monhtly rate returns correct hourly(_rate) when consumption slice is weekly' do
+      expect(monthly_rate.hourly(rate, weekly_consumption)).to eq(rate / (1.month / 1.hour))
+    end
   end
 
   it "#rate_adjustment" do
