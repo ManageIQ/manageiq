@@ -62,7 +62,7 @@ module ManageIQ::Providers
 
     def self.use_vim_broker?
       return false unless MiqVimBrokerWorker.has_required_role?
-      cfg = VMDB::Config.new("vmdb").config[:webservices][:use_vim_broker]
+      cfg = ::Settings.webservices.use_vim_broker
       return true if cfg == "force"
       return true if cfg && Sys::Platform::OS == :unix
       false
@@ -332,55 +332,50 @@ module ManageIQ::Providers
     end
 
     def vm_create_snapshot(vm, options = {})
-      config = VMDB::Config.new('vmdb').config
       defaults = {
         :memory             => false,
         :quiesce            => "false",
         :wait               => true,
-        :free_space_percent => config.fetch_path(:snapshots, :create_free_percent) || 100
+        :free_space_percent => ::Settings.snapshots.create_free_percent
       }
       options = defaults.merge(options)
       invoke_vim_ws(:createSnapshot, vm, options[:user_event], options[:name], options[:desc], options[:memory], options[:quiesce], options[:wait], options[:free_space_percent])
     end
 
     def vm_create_evm_snapshot(vm, options = {})
-      config = VMDB::Config.new('vmdb').config
       defaults = {
         :quiesce            => "false",
         :wait               => true,
-        :free_space_percent => config.fetch_path(:snapshots, :create_free_percent) || 100
+        :free_space_percent => ::Settings.snapshots.create_free_percent
       }
       options = defaults.merge(options)
       invoke_vim_ws(:createEvmSnapshot, vm, options[:user_event], options[:desc], options[:quiesce], options[:wait], options[:free_space_percent])
     end
 
     def vm_remove_snapshot(vm, options = {})
-      config = VMDB::Config.new('vmdb').config
       defaults = {
         :subTree            => "false",
         :wait               => true,
-        :free_space_percent => config.fetch_path(:snapshots, :remove_free_percent) || 100
+        :free_space_percent => ::Settings.snapshots.remove_free_percent
       }
       options = defaults.merge(options)
       invoke_vim_ws(:removeSnapshot, vm, options[:user_event], options[:snMor], options[:subTree], options[:wait], options[:free_space_percent])
     end
 
     def vm_remove_snapshot_by_description(vm, options = {})
-      config = VMDB::Config.new('vmdb').config
       defaults = {
         :subTree            => "false",
         :refresh            => false,
         :wait               => true,
-        :free_space_percent => config.fetch_path(:snapshots, :remove_free_percent) || 100
+        :free_space_percent => ::Settings.snapshots.remove_free_percent
       }
       options.reverse_merge!(defaults)
       invoke_vim_ws(:removeSnapshotByDescription, vm, options[:user_event], options[:description], options[:refresh], options[:subTree], options[:wait], options[:free_space_percent])
     end
 
     def vm_remove_all_snapshots(vm, options = {})
-      config = VMDB::Config.new('vmdb').config
       defaults = {
-        :free_space_percent => config.fetch_path(:snapshots, :remove_free_percent) || 100
+        :free_space_percent => ::Settings.snapshots.remove_free_percent
       }
       options.reverse_merge!(defaults)
       invoke_vim_ws(:removeAllSnapshots, vm, options[:user_event], options[:free_space_percent])
