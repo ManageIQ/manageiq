@@ -52,10 +52,10 @@ function MwAddDatasourceService($http, $q) {
         function (response) { // success
           var data = response.data;
 
-          if (data.status === 'ok') {
-            deferred.resolve(data.msg);
+          if (data.status === 'success') {
+            deferred.resolve(response);
           } else {
-            deferred.reject(data.msg);
+            deferred.reject(response);
           }
         })
       .catch(function () {

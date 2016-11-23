@@ -50,7 +50,13 @@ function MwAddDatasourceCtrl($scope, $rootScope, miqService, mwAddDatasourceServ
   $scope.chooseDsModel.datasources = mwAddDatasourceService.getDatasources();
 
   $scope.$on(DATASOURCE_EVENT, function(event, payload) {
-    mwAddDatasourceService.sendAddDatasource(payload);
+    mwAddDatasourceService.sendAddDatasource(payload).then(
+      function(result) { // success
+        miqService.miqFlash(result.data.status, result.data.msg);
+      },
+      function(error) { // error
+        miqService.miqFlash('error', __('Unable to install the Datasource on this server.'));
+      });
     angular.element('#modal_ds_div').modal('hide');
     miqService.sparkleOff();
   });
