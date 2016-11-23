@@ -206,5 +206,6 @@ describe ManageIQ::Providers::Openshift::ContainerManager::Refresher do
     expect(@container_image.ext_management_system).to eq(@ems)
     expect(@container_image.environment_variables.count).to eq(9)
     expect(@container_image.labels.count).to eq(1)
+    expect(@container_image.docker_labels.count).to eq(9)
   end
 end

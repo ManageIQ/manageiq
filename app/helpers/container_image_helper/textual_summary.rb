@@ -112,4 +112,8 @@ module ContainerImageHelper
       [name, value, nil]
     end
   end
+
+  def textual_group_container_docker_labels
+    textual_key_value_group(@record.docker_labels.to_a)
+  end
 end
