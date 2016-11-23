@@ -423,6 +423,7 @@ Vmdb::Application.routes.draw do
 
     :cloud_volume             => {
       :get  => %w(
+        delete_volumes
         download_data
         attach
         detach
@@ -1526,6 +1527,7 @@ Vmdb::Application.routes.draw do
 
     :cloud_subnet             => {
       :get  => %w(
+        delete_subnets
         download_data
         cloud_subnet_form_fields
         edit
@@ -1570,6 +1572,7 @@ Vmdb::Application.routes.draw do
       :post => %w(
         button
         create
+        delete_networks
         dynamic_checkbox_refresh
         form_field_changed
         quick_search
@@ -1612,6 +1615,7 @@ Vmdb::Application.routes.draw do
 
     :network_router           => {
       :get  => %w(
+        delete_network_routers
         download_data
         edit
         index

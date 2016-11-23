@@ -36,11 +36,8 @@ class NetworkRouterController < ApplicationController
 
   def cancel_action(message)
     session[:edit] = nil
-    @breadcrumbs.pop if @breadcrumbs
-    javascript_redirect :action    => @lastaction,
-                        :id        => @router.id,
-                        :display   => session[:network_router_display],
-                        :flash_msg => message
+    add_flash(message, :warning)
+    javascript_redirect previous_breadcrumb_url
   end
 
   def network_router_form_fields
@@ -165,6 +162,7 @@ class NetworkRouterController < ApplicationController
   end
 
   def edit
+    params[:id] = get_checked_router_id(params) unless params[:id].present?
     assert_privileges("network_router_edit")
     @router = find_by_id_filtered(NetworkRouter, params[:id])
     @in_a_form = true
@@ -214,11 +212,10 @@ class NetworkRouterController < ApplicationController
                                                                    :details => task.message }, :error)
     end
 
-    @breadcrumbs.pop if @breadcrumbs
     session[:edit] = nil
     session[:flash_msgs] = @flash_array.dup if @flash_array
 
-    javascript_redirect :action => "show", :id => router_id
+    javascript_redirect previous_breadcrumb_url
   end
 
   private

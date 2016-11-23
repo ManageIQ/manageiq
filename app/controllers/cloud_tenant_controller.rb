@@ -21,9 +21,31 @@ class CloudTenantController < ApplicationController
     when "custom_button"
       # custom button screen, so return, let custom_buttons method handle everything
       custom_buttons
+      return
     else
-      # calling the method from Mixins::GenericButtonMixin
-      super
+      if params[:pressed].starts_with?(*CloudTenantController.display_methods.map(&:singularize))
+        target_controller = CloudTenantController.display_methods.map(&:singularize).find{ |n| params[:pressed].starts_with?(n)}
+        action = params[:pressed].sub("#{target_controller}_", '')
+        action = "#{action}_#{target_controller.sub('cloud_','').pluralize}" if action == 'delete'
+        if action == 'detach'
+          volume = find_by_id_filtered(CloudVolume, from_cid(params[:miq_grid_checks]))
+          if volume.attachments.empty?
+            render_flash(_("%{volume} \"%{volume_name}\" is not attached to any %{instances}") % {
+                :volume      => ui_lookup(:table => 'cloud_volume'),
+                :volume_name => volume.name,
+                :instances   => ui_lookup(:tables => 'vm_cloud')}, :error)
+            return
+          end
+        end
+        javascript_redirect :controller => target_controller, :miq_grid_checks => params[:miq_grid_checks], :action => action
+        return
+      elsif params[:pressed].starts_with?('delete') #TODO ???
+        return
+      else
+        # calling the method from Mixins::GenericButtonMixin
+        super
+        return
+      end
     end
   end
 

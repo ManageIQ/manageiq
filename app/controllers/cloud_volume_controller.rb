@@ -130,6 +130,7 @@ class CloudVolumeController < ApplicationController
   end
 
   def attach
+    params[:id] = get_checked_volume_id(params) unless params[:id].present?
     assert_privileges("cloud_volume_attach")
     @vm_choices = {}
     @volume = find_by_id_filtered(CloudVolume, params[:id])
@@ -145,6 +146,7 @@ class CloudVolumeController < ApplicationController
   end
 
   def detach
+    params[:id] = get_checked_volume_id(params) unless params[:id].present?
     assert_privileges("cloud_volume_detach")
     @volume = find_by_id_filtered(CloudVolume, params[:id])
     @vm_choices = @volume.vms.each_with_object({}) { |vm, hash| hash[vm.name] = vm.id }
@@ -160,11 +162,8 @@ class CloudVolumeController < ApplicationController
 
   def cancel_action(message)
     session[:edit] = nil
-    @breadcrumbs.pop if @breadcrumbs
-    javascript_redirect :action    => @lastaction,
-                        :id        => @volume.id,
-                        :display   => session[:cloud_volume_display],
-                        :flash_msg => message
+    add_flash(message, :warning)
+    javascript_redirect previous_breadcrumb_url
   end
 
   def attach_volume
@@ -307,6 +306,7 @@ class CloudVolumeController < ApplicationController
   end
 
   def edit
+    params[:id] = get_checked_volume_id(params) unless params[:id].present?
     assert_privileges("cloud_volume_edit")
     @volume = find_by_id_filtered(CloudVolume, params[:id])
     @in_a_form = true
@@ -347,10 +347,10 @@ class CloudVolumeController < ApplicationController
       else
         add_flash(_(update_details), :error)
       end
-      @breadcrumbs.pop if @breadcrumbs
       session[:edit] = nil
       session[:flash_msgs] = @flash_array.dup if @flash_array
-      javascript_redirect :action => "show", :id => @volume.id
+
+      javascript_redirect previous_breadcrumb_url
 
     when "validate"
       @in_a_form = true
@@ -369,11 +369,12 @@ class CloudVolumeController < ApplicationController
   # delete selected volumes
   def delete_volumes
     assert_privileges("cloud_volume_delete")
-
     volumes = if @lastaction == "show_list" || (@lastaction == "show" && @layout != "cloud_volume")
                 find_checked_items
-              else
+              elsif params[:id].present?
                 [params[:id]]
+              else
+                find_checked_items
               end
 
     if volumes.empty?
@@ -415,6 +416,8 @@ class CloudVolumeController < ApplicationController
       if @flash_array.nil?
         add_flash(_("The selected %{model} was deleted") % {:model => ui_lookup(:table => "cloud_volume")})
       end
+    else
+      javascript_redirect previous_breadcrumb_url
     end
   end
 

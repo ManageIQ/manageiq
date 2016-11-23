@@ -36,11 +36,8 @@ class CloudSubnetController < ApplicationController
 
   def cancel_action(message)
     session[:edit] = nil
-    @breadcrumbs.pop if @breadcrumbs
-    javascript_redirect :action    => @lastaction,
-                        :id        => @subnet.id,
-                        :display   => session[:cloud_subnet_display],
-                        :flash_msg => message
+    add_flash(message, :warning)
+    javascript_redirect previous_breadcrumb_url
   end
 
   def cloud_subnet_form_fields
@@ -154,6 +151,7 @@ class CloudSubnetController < ApplicationController
   end
 
   def edit
+    params[:id] = get_checked_subnet_id(params) unless params[:id].present?
     assert_privileges("cloud_subnet_edit")
     @subnet = find_by_id_filtered(CloudSubnet, params[:id])
     @in_a_form = true
@@ -184,10 +182,10 @@ class CloudSubnetController < ApplicationController
         }, :error)
       end
 
-      @breadcrumbs.pop if @breadcrumbs
       session[:edit] = nil
       session[:flash_msgs] = @flash_array.dup if @flash_array
-      javascript_redirect :action => "show", :id => @subnet.id
+
+      javascript_redirect previous_breadcrumb_url
     end
   end
 

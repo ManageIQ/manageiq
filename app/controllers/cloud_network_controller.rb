@@ -44,11 +44,8 @@ class CloudNetworkController < ApplicationController
 
   def cancel_action(message)
     session[:edit] = nil
-    @breadcrumbs.pop if @breadcrumbs
-    javascript_redirect :action    => @lastaction,
-                        :id        => @network.id,
-                        :display   => session[:cloud_network_display],
-                        :flash_msg => message
+    add_flash(message, :warning)
+    javascript_redirect previous_breadcrumb_url
   end
 
   def cloud_network_form_fields
@@ -56,7 +53,7 @@ class CloudNetworkController < ApplicationController
     network = find_by_id_filtered(CloudNetwork, params[:id])
     render :json => {
       :name                  => network.name,
-      :cloud_tenant_name     => network.cloud_tenant.name,
+      :cloud_tenant_name     => network.cloud_tenant.present? ? network.cloud_tenant.name : '',
       :enabled               => network.enabled,
       :external_facing       => network.external_facing,
       # TODO: uncomment once form contains this field
@@ -162,6 +159,7 @@ class CloudNetworkController < ApplicationController
   end
 
   def edit
+    params[:id] = get_checked_network_id(params) unless params[:id].present?
     assert_privileges("cloud_network_edit")
     @network = find_by_id_filtered(CloudNetwork, params[:id])
     @network_provider_network_type_choices = PROVIDERS_NETWORK_TYPES
@@ -217,10 +215,10 @@ class CloudNetworkController < ApplicationController
         }, :error)
       end
 
-      @breadcrumbs.pop if @breadcrumbs
       session[:edit] = nil
       session[:flash_msgs] = @flash_array.dup if @flash_array
-      javascript_redirect :action => "show", :id => @network.id
+
+      javascript_redirect previous_breadcrumb_url
     end
   end
 
