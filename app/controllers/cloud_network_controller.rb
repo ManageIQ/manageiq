@@ -8,6 +8,7 @@ class CloudNetworkController < ApplicationController
   include Mixins::GenericListMixin
   include Mixins::GenericSessionMixin
   include Mixins::GenericShowMixin
+  include Mixins::CheckedIdMixin
 
   PROVIDERS_NETWORK_TYPES = {
     "Local" => "local",
@@ -31,7 +32,7 @@ class CloudNetworkController < ApplicationController
     delete_networks if params[:pressed] == 'cloud_network_delete'
 
     if params[:pressed] == "cloud_network_edit"
-      checked_network_id = get_checked_network_id(params)
+      checked_network_id = get_checked_item_id(params)
       javascript_redirect :action => "edit", :id => checked_network_id
     elsif params[:pressed] == "cloud_network_new"
       javascript_redirect :action => "new"
@@ -170,16 +171,6 @@ class CloudNetworkController < ApplicationController
       :name => _("Edit %{model} \"%{name}\"") % {:model => ui_lookup(:table => 'cloud_network'), :name => @network.name},
       :url  => "/cloud_network/edit/#{@network.id}"
     )
-  end
-
-  def get_checked_network_id(params)
-    if params[:id]
-      checked_network_id = params[:id]
-    else
-      checked_networks = find_checked_items
-      checked_network_id = checked_networks[0] if checked_networks.length == 1
-    end
-    checked_network_id
   end
 
   def new
