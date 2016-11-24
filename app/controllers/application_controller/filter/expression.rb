@@ -50,6 +50,21 @@ module ApplicationController::Filter
         page << "ManageIQ.expEditor.second.title = '#{val2[:title]}';"
       end
     end
+
+    def val_type_for(key, field)
+      if !self[key] || !self[field]
+        nil
+      elsif self[key].starts_with?('REG')
+        :regexp
+      else
+        typ = MiqExpression.get_col_info(self[field])[:format_sub_type]
+        if MiqExpression::FORMAT_SUB_TYPES.keys.include?(typ)
+          typ
+        else
+          :string
+        end
+      end
+    end
   end
   # TODO: expression is now manipulated with fetch_path
   # We need to extract methods using fetch_path to Expression to avoid the fetch_path call

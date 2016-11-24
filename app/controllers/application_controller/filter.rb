@@ -1026,18 +1026,18 @@ module ApplicationController::Filter
       if @edit[@expkey][:exp_key] == EXP_IS && @edit[@expkey][:val1][:date_format] == 's'
         @edit[@expkey][:val1][:type] = :date
       else
-        @edit[@expkey][:val1][:type] = exp_prefill_type(@edit[@expkey][:exp_key], @edit[@expkey][:exp_field])
+        @edit[@expkey][:val1][:type] = @edit[@expkey].val_type_for(:exp_key, :exp_field)
       end
     elsif @edit[@expkey][:exp_typ] == "find"
       if @edit[@expkey][:exp_skey] == EXP_IS && @edit[@expkey][:val1][:date_format] == 's'
         @edit[@expkey][:val1][:type] = :date
       else
-        @edit[@expkey][:val1][:type] = exp_prefill_type(@edit[@expkey][:exp_skey], @edit[@expkey][:exp_field])
+        @edit[@expkey][:val1][:type] = @edit[@expkey].val_type_for(:exp_skey, :exp_field)
       end
       if @edit[@expkey][:exp_ckey] && @edit[@expkey][:exp_ckey] == EXP_IS && @edit[@expkey][:val2][:date_format] == 's'
         @edit[@expkey][:val2][:type] = :date
       else
-        @edit[@expkey][:val2][:type] = @edit[@expkey][:exp_check] == "checkcount" ? :integer : exp_prefill_type(@edit[@expkey][:exp_ckey], @edit[@expkey][:exp_cfield])
+        @edit[@expkey][:val2][:type] = @edit[@expkey][:exp_check] == "checkcount" ? :integer : @edit[@expkey].val_type_for(:exp_ckey, :exp_cfield)
       end
     elsif @edit[@expkey][:exp_typ] == "count"
       @edit[@expkey][:val1][:type] = :integer
@@ -1046,18 +1046,6 @@ module ApplicationController::Filter
     end
     @edit[@expkey][:val1][:title] = MiqExpression::FORMAT_SUB_TYPES[@edit[@expkey][:val1][:type]][:title] if @edit[@expkey][:val1][:type]
     @edit[@expkey][:val2][:title] = MiqExpression::FORMAT_SUB_TYPES[@edit[@expkey][:val2][:type]][:title] if @edit[@expkey][:val2][:type]
-  end
-
-  # Get the field type for miqExpressionPrefill using the operator key and field
-  def exp_prefill_type(key, field)
-    return nil unless key && field
-    return :regex if key.starts_with?("REG")
-    typ = MiqExpression.get_col_info(field)[:format_sub_type] # :human_data_type?
-    if MiqExpression::FORMAT_SUB_TYPES.keys.include?(typ)
-      return typ
-    else
-      return :string
-    end
   end
 
   # Remove :token keys from an expression before setting in a record
