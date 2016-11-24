@@ -10,6 +10,7 @@ class ChargebackRateDetail < ApplicationRecord
   validate :contiguous_tiers?
 
   delegate :rate_type, :to => :chargeback_rate, :allow_nil => true
+  serialize :options
 
   FORM_ATTRIBUTES = %i(description per_time per_unit metric group source metric).freeze
   PER_TIME_TYPES = {
