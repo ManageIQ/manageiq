@@ -3,581 +3,597 @@ require_relative 'spec_parsed_data'
 describe ManagerRefresh::SaveInventory do
   include SpecParsedData
 
-  context 'one DtoCollection with Vm data' do
-    before(:each) do
-      @zone = FactoryGirl.create(:zone)
-      @ems  = FactoryGirl.create(:ems_cloud, :zone => @zone)
-    end
+  ######################################################################################################################
+  #
+  # Testing SaveInventory for one DtoCollection with Vm data and various DtoCollection constructor attributes, to verify
+  # that saving of one isolated DtoCollection works correctly for Full refresh, Targeted refresh, Skeletal refresh or
+  # any other variations of refreshes that needs to save partial or complete collection with partial or complete data.
+  #
+  ######################################################################################################################
 
-    context 'with no Vms in the DB' do
-      it 'creates VMs' do
-        # Initialize the DtoCollections
-        data       = {}
-        data[:vms] = ::ManagerRefresh::DtoCollection.new(
-          ManageIQ::Providers::Amazon::CloudManager::Vm, :parent => @ems, :association => :vms)
-
-        # Fill the DtoCollections with data
-        add_data_to_dto_collection(data[:vms], vm_data(1), vm_data(2))
-
-        # Invoke the DtoCollections saving
-        ManagerRefresh::SaveInventory.save_inventory(@ems, data)
-
-        # Assert saved data
-        assert_all_records_match_hashes(
-          [Vm.all, @ems.vms],
-          {:ems_ref => "vm_ems_ref_1", :name => "vm_name_1", :location => "vm_location_1"},
-          {:ems_ref => "vm_ems_ref_2", :name => "vm_name_2", :location => "vm_location_2"})
-      end
-
-      it 'creates and updates VMs' do
-        # Initialize the DtoCollections
-        data       = {}
-        data[:vms] = ::ManagerRefresh::DtoCollection.new(
-          ManageIQ::Providers::Amazon::CloudManager::Vm, :parent => @ems, :association => :vms)
-
-        # Fill the DtoCollections with data
-        add_data_to_dto_collection(data[:vms],
-                                   vm_data(1),
-                                   vm_data(2))
-
-        # Invoke the DtoCollections saving
-        ManagerRefresh::SaveInventory.save_inventory(@ems, data)
-
-        # Assert that saved data have the updated values, checking id to make sure the original records are updated
-        assert_all_records_match_hashes(
-          [Vm.all, @ems.vms],
-          {:ems_ref => "vm_ems_ref_1", :name => "vm_name_1", :location => "vm_location_1"},
-          {:ems_ref => "vm_ems_ref_2", :name => "vm_name_2", :location => "vm_location_2"})
-
-        # Fetch the created Vms from the DB
-        vm1        = Vm.find_by(:ems_ref => "vm_ems_ref_1")
-        vm2        = Vm.find_by(:ems_ref => "vm_ems_ref_2")
-
-        # Second saving with the updated data
-        # Initialize the DtoCollections
-        data       = {}
-        data[:vms] = ::ManagerRefresh::DtoCollection.new(
-          ManageIQ::Providers::Amazon::CloudManager::Vm, :parent => @ems, :association => :vms)
-
-        # Fill the DtoCollections with data, that have a modified name
-        add_data_to_dto_collection(data[:vms],
-                                   vm_data(1).merge(:name => "vm_changed_name_1"),
-                                   vm_data(2).merge(:name => "vm_changed_name_2"))
-
-        # Invoke the DtoCollections saving
-        ManagerRefresh::SaveInventory.save_inventory(@ems, data)
-
-        # Assert that saved data have the updated values, checking id to make sure the original records are updated
-        assert_all_records_match_hashes(
-          [Vm.all, @ems.vms],
-          {:id => vm1.id, :ems_ref => "vm_ems_ref_1", :name => "vm_changed_name_1", :location => "vm_location_1"},
-          {:id => vm2.id, :ems_ref => "vm_ems_ref_2", :name => "vm_changed_name_2", :location => "vm_location_2"})
-      end
-    end
-
-    context 'with existing Vms in the DB' do
+  # Test all settings for ManagerRefresh::SaveInventory
+  [{:dto_saving_strategy => nil},
+   {:dto_saving_strategy => :recursive},
+  ].each do |dto_settings|
+    context "with settings #{dto_settings}" do
       before :each do
-        # Fill DB with test Vms
-        @vm1 = FactoryGirl.create(:vm_cloud, vm_data(1).merge(:ext_management_system => @ems))
-        @vm2 = FactoryGirl.create(:vm_cloud, vm_data(2).merge(:ext_management_system => @ems))
+        @zone = FactoryGirl.create(:zone)
+        @ems  = FactoryGirl.create(:ems_cloud, :zone => @zone)
+
+        allow(@ems.class).to receive(:ems_type).and_return(:mock)
+        allow(Settings.ems_refresh).to receive(:mock).and_return(dto_settings)
       end
 
-      context 'with VM DtoCollection with default settings' do
-        before :each do
+      context 'with no Vms in the DB' do
+        it 'creates VMs' do
           # Initialize the DtoCollections
-          @data       = {}
-          @data[:vms] = ::ManagerRefresh::DtoCollection.new(
+          data       = {}
+          data[:vms] = ::ManagerRefresh::DtoCollection.new(
             ManageIQ::Providers::Amazon::CloudManager::Vm, :parent => @ems, :association => :vms)
-        end
 
-        it 'has correct records in the DB' do
-          # Check we really have the expected Vms in the DB
+          # Fill the DtoCollections with data
+          add_data_to_dto_collection(data[:vms], vm_data(1), vm_data(2))
+
+          # Invoke the DtoCollections saving
+          ManagerRefresh::SaveInventory.save_inventory(@ems, data)
+
+          # Assert saved data
           assert_all_records_match_hashes(
             [Vm.all, @ems.vms],
             {:ems_ref => "vm_ems_ref_1", :name => "vm_name_1", :location => "vm_location_1"},
             {:ems_ref => "vm_ems_ref_2", :name => "vm_name_2", :location => "vm_location_2"})
         end
 
-        it 'updates existing VMs' do
-          # Fill the DtoCollections with data, that have a modified name
-          add_data_to_dto_collection(@data[:vms],
-                                     vm_data(1).merge(:name => "vm_changed_name_1"),
-                                     vm_data(2).merge(:name => "vm_changed_name_2"))
+        it 'creates and updates VMs' do
+          # Initialize the DtoCollections
+          data       = {}
+          data[:vms] = ::ManagerRefresh::DtoCollection.new(
+            ManageIQ::Providers::Amazon::CloudManager::Vm, :parent => @ems, :association => :vms)
+
+          # Fill the DtoCollections with data
+          add_data_to_dto_collection(data[:vms],
+                                     vm_data(1),
+                                     vm_data(2))
 
           # Invoke the DtoCollections saving
-          ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
+          ManagerRefresh::SaveInventory.save_inventory(@ems, data)
 
           # Assert that saved data have the updated values, checking id to make sure the original records are updated
           assert_all_records_match_hashes(
             [Vm.all, @ems.vms],
-            {:id => @vm1.id, :ems_ref => "vm_ems_ref_1", :name => "vm_changed_name_1", :location => "vm_location_1"},
-            {:id => @vm2.id, :ems_ref => "vm_ems_ref_2", :name => "vm_changed_name_2", :location => "vm_location_2"})
-        end
+            {:ems_ref => "vm_ems_ref_1", :name => "vm_name_1", :location => "vm_location_1"},
+            {:ems_ref => "vm_ems_ref_2", :name => "vm_name_2", :location => "vm_location_2"})
 
-        it 'creates new VMs' do
-          # Fill the DtoCollections with data, that have a new VM
-          add_data_to_dto_collection(@data[:vms],
+          # Fetch the created Vms from the DB
+          vm1        = Vm.find_by(:ems_ref => "vm_ems_ref_1")
+          vm2        = Vm.find_by(:ems_ref => "vm_ems_ref_2")
+
+          # Second saving with the updated data
+          # Initialize the DtoCollections
+          data       = {}
+          data[:vms] = ::ManagerRefresh::DtoCollection.new(
+            ManageIQ::Providers::Amazon::CloudManager::Vm, :parent => @ems, :association => :vms)
+
+          # Fill the DtoCollections with data, that have a modified name
+          add_data_to_dto_collection(data[:vms],
                                      vm_data(1).merge(:name => "vm_changed_name_1"),
-                                     vm_data(2).merge(:name => "vm_changed_name_2"),
-                                     vm_data(3).merge(:name => "vm_changed_name_3"))
+                                     vm_data(2).merge(:name => "vm_changed_name_2"))
 
           # Invoke the DtoCollections saving
-          ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
+          ManagerRefresh::SaveInventory.save_inventory(@ems, data)
 
-          # Assert that saved data contain the new VM
+          # Assert that saved data have the updated values, checking id to make sure the original records are updated
           assert_all_records_match_hashes(
             [Vm.all, @ems.vms],
-            {:id => @vm1.id, :ems_ref => "vm_ems_ref_1", :name => "vm_changed_name_1", :location => "vm_location_1"},
-            {:id => @vm2.id, :ems_ref => "vm_ems_ref_2", :name => "vm_changed_name_2", :location => "vm_location_2"},
-            {:id => anything, :ems_ref => "vm_ems_ref_3", :name => "vm_changed_name_3", :location => "vm_location_3"})
-        end
-
-        it 'deletes missing VMs' do
-          # Fill the DtoCollections with data, that are missing one VM
-          add_data_to_dto_collection(@data[:vms],
-                                     vm_data(1).merge(:name => "vm_changed_name_1"))
-
-          # Invoke the DtoCollections saving
-          ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
-
-          # Assert that saved data do miss the deleted VM
-          assert_all_records_match_hashes(
-            [Vm.all, @ems.vms],
-            {:id => @vm1.id, :ems_ref => "vm_ems_ref_1", :name => "vm_changed_name_1", :location => "vm_location_1"})
-        end
-
-        it 'deletes missing and creates new VMs' do
-          # Fill the DtoCollections with data, that have one new VM and are missing one VM
-          add_data_to_dto_collection(@data[:vms],
-                                     vm_data(1).merge(:name => "vm_changed_name_1"),
-                                     vm_data(3).merge(:name => "vm_changed_name_3"))
-
-          # Invoke the DtoCollections saving
-          ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
-
-          # Assert that saved data have the new VM and miss the deleted VM
-          assert_all_records_match_hashes(
-            [Vm.all, @ems.vms],
-            {:id => @vm1.id, :ems_ref => "vm_ems_ref_1", :name => "vm_changed_name_1", :location => "vm_location_1"},
-            {:id => anything, :ems_ref => "vm_ems_ref_3", :name => "vm_changed_name_3", :location => "vm_location_3"})
+            {:id => vm1.id, :ems_ref => "vm_ems_ref_1", :name => "vm_changed_name_1", :location => "vm_location_1"},
+            {:id => vm2.id, :ems_ref => "vm_ems_ref_2", :name => "vm_changed_name_2", :location => "vm_location_2"})
         end
       end
 
-      context 'with VM DtoCollection with :delete_method => :disconnect_inv' do
+      context 'with existing Vms in the DB' do
         before :each do
-          # Initialize the DtoCollections
-          @data       = {}
-          @data[:vms] = ::ManagerRefresh::DtoCollection.new(
-            ManageIQ::Providers::Amazon::CloudManager::Vm,
-            :parent        => @ems,
-            :association   => :vms,
-            :delete_method => :disconnect_inv)
+          # Fill DB with test Vms
+          @vm1 = FactoryGirl.create(:vm_cloud, vm_data(1).merge(:ext_management_system => @ems))
+          @vm2 = FactoryGirl.create(:vm_cloud, vm_data(2).merge(:ext_management_system => @ems))
         end
 
-        it 'disconnects a missing VM instead of deleting it' do
-          # Fill the DtoCollections with data, that have a modified name, new VM and a missing VM
-          add_data_to_dto_collection(@data[:vms],
-                                     vm_data(1).merge(:name => "vm_changed_name_1"),
-                                     vm_data(3).merge(:name => "vm_changed_name_3"))
+        context 'with VM DtoCollection with default settings' do
+          before :each do
+            # Initialize the DtoCollections
+            @data       = {}
+            @data[:vms] = ::ManagerRefresh::DtoCollection.new(
+              ManageIQ::Providers::Amazon::CloudManager::Vm, :parent => @ems, :association => :vms)
+          end
 
-          # Invoke the DtoCollections saving
-          ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
+          it 'has correct records in the DB' do
+            # Check we really have the expected Vms in the DB
+            assert_all_records_match_hashes(
+              [Vm.all, @ems.vms],
+              {:ems_ref => "vm_ems_ref_1", :name => "vm_name_1", :location => "vm_location_1"},
+              {:ems_ref => "vm_ems_ref_2", :name => "vm_name_2", :location => "vm_location_2"})
+          end
 
-          # Assert that DB still contains the disconnected VMs
-          assert_all_records_match_hashes(
-            Vm.all,
-            {:id => @vm1.id, :ems_ref => "vm_ems_ref_1", :name => "vm_changed_name_1", :location => "vm_location_1"},
-            {:id => @vm2.id, :ems_ref => "vm_ems_ref_2", :name => "vm_name_2", :location => "vm_location_2"},
-            {:id => anything, :ems_ref => "vm_ems_ref_3", :name => "vm_changed_name_3", :location => "vm_location_3"})
+          it 'updates existing VMs' do
+            # Fill the DtoCollections with data, that have a modified name
+            add_data_to_dto_collection(@data[:vms],
+                                       vm_data(1).merge(:name => "vm_changed_name_1"),
+                                       vm_data(2).merge(:name => "vm_changed_name_2"))
 
-          # Assert that ems do not have the disconnected VMs associated
-          assert_all_records_match_hashes(
-            @ems.vms,
-            {:id => @vm1.id, :ems_ref => "vm_ems_ref_1", :name => "vm_changed_name_1", :location => "vm_location_1"},
-            {:id => anything, :ems_ref => "vm_ems_ref_3", :name => "vm_changed_name_3", :location => "vm_location_3"})
-        end
-      end
+            # Invoke the DtoCollections saving
+            ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
 
-      context 'with VM DtoCollection blacklist or whitelist used' do
-        let :changed_data do
-          [
-            vm_data(1).merge(:name            => "vm_changed_name_1",
-                             :location        => "vm_changed_location_1",
-                             :uid_ems         => "uid_ems_changed_1",
-                             :raw_power_state => "raw_power_state_changed_1"),
-            vm_data(2).merge(:name            => "vm_changed_name_2",
-                             :location        => "vm_changed_location_2",
-                             :uid_ems         => "uid_ems_changed_2",
-                             :raw_power_state => "raw_power_state_changed_2"),
-            vm_data(3).merge(:name            => "vm_changed_name_3",
-                             :location        => "vm_changed_location_3",
-                             :uid_ems         => "uid_ems_changed_3",
-                             :raw_power_state => "raw_power_state_changed_3")
-          ]
-        end
+            # Assert that saved data have the updated values, checking id to make sure the original records are updated
+            assert_all_records_match_hashes(
+              [Vm.all, @ems.vms],
+              {:id => @vm1.id, :ems_ref => "vm_ems_ref_1", :name => "vm_changed_name_1", :location => "vm_location_1"},
+              {:id => @vm2.id, :ems_ref => "vm_ems_ref_2", :name => "vm_changed_name_2", :location => "vm_location_2"})
+          end
 
-        # TODO(lsmola) fixed attributes should contain also other attributes, like inclusion validation of :vendor
-        # column
-        it 'recognizes correct presence validators' do
-          dto_collection      = ::ManagerRefresh::DtoCollection.new(
-            ManageIQ::Providers::Amazon::CloudManager::Vm,
-            :parent               => @ems,
-            :association          => :vms,
-            :attributes_blacklist => [:ems_ref, :uid_ems, :name, :location])
+          it 'creates new VMs' do
+            # Fill the DtoCollections with data, that have a new VM
+            add_data_to_dto_collection(@data[:vms],
+                                       vm_data(1).merge(:name => "vm_changed_name_1"),
+                                       vm_data(2).merge(:name => "vm_changed_name_2"),
+                                       vm_data(3).merge(:name => "vm_changed_name_3"))
 
-          # Check that :name and :location do have validate presence, those attributes will not be blacklisted
-          presence_validators = dto_collection.model_class.validators
-                                  .detect { |x| x.kind_of? ActiveRecord::Validations::PresenceValidator }.attributes
+            # Invoke the DtoCollections saving
+            ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
 
-          expect(presence_validators).to include(:name)
-          expect(presence_validators).to include(:location)
-        end
+            # Assert that saved data contain the new VM
+            assert_all_records_match_hashes(
+              [Vm.all, @ems.vms],
+              {:id => @vm1.id, :ems_ref => "vm_ems_ref_1", :name => "vm_changed_name_1", :location => "vm_location_1"},
+              {:id => @vm2.id, :ems_ref => "vm_ems_ref_2", :name => "vm_changed_name_2", :location => "vm_location_2"},
+              {:id => anything, :ems_ref => "vm_ems_ref_3", :name => "vm_changed_name_3", :location => "vm_location_3"})
+          end
 
-        it 'does not blacklist fixed attributes with default manager_ref' do
-          # Fixed attributes are attributes used for unique ID of the DTO or attributes with presence validation
-          dto_collection = ::ManagerRefresh::DtoCollection.new(
-            ManageIQ::Providers::Amazon::CloudManager::Vm,
-            :parent               => @ems,
-            :association          => :vms,
-            :attributes_blacklist => [:ems_ref, :uid_ems, :name, :location, :vendor, :raw_power_state])
+          it 'deletes missing VMs' do
+            # Fill the DtoCollections with data, that are missing one VM
+            add_data_to_dto_collection(@data[:vms],
+                                       vm_data(1).merge(:name => "vm_changed_name_1"))
 
-          expect(dto_collection.attributes_blacklist).to match_array([:vendor, :uid_ems, :raw_power_state])
-        end
+            # Invoke the DtoCollections saving
+            ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
 
-        it 'has fixed and internal attributes amongst whitelisted_attributes with default manager_ref' do
-          # Fixed attributes are attributes used for unique ID of the DTO or attributes with presence validation
-          dto_collection = ::ManagerRefresh::DtoCollection.new(
-            ManageIQ::Providers::Amazon::CloudManager::Vm,
-            :parent               => @ems,
-            :association          => :vms,
-            :attributes_whitelist => [:raw_power_state])
+            # Assert that saved data do miss the deleted VM
+            assert_all_records_match_hashes(
+              [Vm.all, @ems.vms],
+              {:id => @vm1.id, :ems_ref => "vm_ems_ref_1", :name => "vm_changed_name_1", :location => "vm_location_1"})
+          end
 
-          expect(dto_collection.attributes_whitelist).to match_array([:__feedback_edge_set_parent, :ems_ref,
-                                                                      :name, :location, :raw_power_state])
-        end
+          it 'deletes missing and creates new VMs' do
+            # Fill the DtoCollections with data, that have one new VM and are missing one VM
+            add_data_to_dto_collection(@data[:vms],
+                                       vm_data(1).merge(:name => "vm_changed_name_1"),
+                                       vm_data(3).merge(:name => "vm_changed_name_3"))
 
-        it 'does not blacklist fixed attributes when changing manager_ref' do
-          dto_collection = ::ManagerRefresh::DtoCollection.new(
-            ManageIQ::Providers::Amazon::CloudManager::Vm,
-            :manager_ref          => [:uid_ems],
-            :parent               => @ems,
-            :association          => :vms,
-            :attributes_blacklist => [:ems_ref, :uid_ems, :name, :location, :vendor, :raw_power_state])
+            # Invoke the DtoCollections saving
+            ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
 
-          expect(dto_collection.attributes_blacklist).to match_array([:vendor, :ems_ref, :raw_power_state])
+            # Assert that saved data have the new VM and miss the deleted VM
+            assert_all_records_match_hashes(
+              [Vm.all, @ems.vms],
+              {:id => @vm1.id, :ems_ref => "vm_ems_ref_1", :name => "vm_changed_name_1", :location => "vm_location_1"},
+              {:id => anything, :ems_ref => "vm_ems_ref_3", :name => "vm_changed_name_3", :location => "vm_location_3"})
+          end
         end
 
-        it 'has fixed and internal attributes amongst whitelisted_attributes when changing manager_ref' do
-          # Fixed attributes are attributes used for unique ID of the DTO or attributes with presence validation
-          dto_collection = ::ManagerRefresh::DtoCollection.new(
-            ManageIQ::Providers::Amazon::CloudManager::Vm,
-            :manager_ref          => [:uid_ems],
-            :parent               => @ems,
-            :association          => :vms,
-            :attributes_whitelist => [:raw_power_state])
+        context 'with VM DtoCollection with :delete_method => :disconnect_inv' do
+          before :each do
+            # Initialize the DtoCollections
+            @data       = {}
+            @data[:vms] = ::ManagerRefresh::DtoCollection.new(
+              ManageIQ::Providers::Amazon::CloudManager::Vm,
+              :parent        => @ems,
+              :association   => :vms,
+              :delete_method => :disconnect_inv)
+          end
 
-          expect(dto_collection.attributes_whitelist).to match_array([:__feedback_edge_set_parent, :uid_ems, :name,
-                                                                      :location, :raw_power_state])
+          it 'disconnects a missing VM instead of deleting it' do
+            # Fill the DtoCollections with data, that have a modified name, new VM and a missing VM
+            add_data_to_dto_collection(@data[:vms],
+                                       vm_data(1).merge(:name => "vm_changed_name_1"),
+                                       vm_data(3).merge(:name => "vm_changed_name_3"))
+
+            # Invoke the DtoCollections saving
+            ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
+
+            # Assert that DB still contains the disconnected VMs
+            assert_all_records_match_hashes(
+              Vm.all,
+              {:id => @vm1.id, :ems_ref => "vm_ems_ref_1", :name => "vm_changed_name_1", :location => "vm_location_1"},
+              {:id => @vm2.id, :ems_ref => "vm_ems_ref_2", :name => "vm_name_2", :location => "vm_location_2"},
+              {:id => anything, :ems_ref => "vm_ems_ref_3", :name => "vm_changed_name_3", :location => "vm_location_3"})
+
+            # Assert that ems do not have the disconnected VMs associated
+            assert_all_records_match_hashes(
+              @ems.vms,
+              {:id => @vm1.id, :ems_ref => "vm_ems_ref_1", :name => "vm_changed_name_1", :location => "vm_location_1"},
+              {:id => anything, :ems_ref => "vm_ems_ref_3", :name => "vm_changed_name_3", :location => "vm_location_3"})
+          end
         end
 
-        it 'saves all attributes with blacklist and whitelist disabled' do
-          # Initialize the DtoCollections
-          @data       = {}
-          @data[:vms] = ::ManagerRefresh::DtoCollection.new(
-            ManageIQ::Providers::Amazon::CloudManager::Vm,
-            :parent      => @ems,
-            :association => :vms)
+        context 'with VM DtoCollection blacklist or whitelist used' do
+          let :changed_data do
+            [
+              vm_data(1).merge(:name            => "vm_changed_name_1",
+                               :location        => "vm_changed_location_1",
+                               :uid_ems         => "uid_ems_changed_1",
+                               :raw_power_state => "raw_power_state_changed_1"),
+              vm_data(2).merge(:name            => "vm_changed_name_2",
+                               :location        => "vm_changed_location_2",
+                               :uid_ems         => "uid_ems_changed_2",
+                               :raw_power_state => "raw_power_state_changed_2"),
+              vm_data(3).merge(:name            => "vm_changed_name_3",
+                               :location        => "vm_changed_location_3",
+                               :uid_ems         => "uid_ems_changed_3",
+                               :raw_power_state => "raw_power_state_changed_3")
+            ]
+          end
 
-          # Fill the DtoCollections with data, that have a modified name, new VM and a missing VM
-          add_data_to_dto_collection(@data[:vms], *changed_data)
+          # TODO(lsmola) fixed attributes should contain also other attributes, like inclusion validation of :vendor
+          # column
+          it 'recognizes correct presence validators' do
+            dto_collection      = ::ManagerRefresh::DtoCollection.new(
+              ManageIQ::Providers::Amazon::CloudManager::Vm,
+              :parent               => @ems,
+              :association          => :vms,
+              :attributes_blacklist => [:ems_ref, :uid_ems, :name, :location])
 
-          # Invoke the DtoCollections saving
-          ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
+            # Check that :name and :location do have validate presence, those attributes will not be blacklisted
+            presence_validators = dto_collection.model_class.validators
+                                    .detect { |x| x.kind_of? ActiveRecord::Validations::PresenceValidator }.attributes
 
-          # Assert that saved data don;t have the blacklisted attributes updated nor filled
-          assert_all_records_match_hashes(
-            [Vm.all, @ems.vms],
-            {:id              => @vm1.id,
-             :ems_ref         => "vm_ems_ref_1",
-             :name            => "vm_changed_name_1",
-             :raw_power_state => "raw_power_state_changed_1",
-             :uid_ems         => "uid_ems_changed_1",
-             :location        => "vm_changed_location_1"},
-            {:id              => @vm2.id,
-             :ems_ref         => "vm_ems_ref_2",
-             :name            => "vm_changed_name_2",
-             :raw_power_state => "raw_power_state_changed_2",
-             :uid_ems         => "uid_ems_changed_2",
-             :location        => "vm_changed_location_2"},
-            {:id              => anything,
-             :ems_ref         => "vm_ems_ref_3",
-             :name            => "vm_changed_name_3",
-             :raw_power_state => "raw_power_state_changed_3",
-             :uid_ems         => "uid_ems_changed_3",
-             :location        => "vm_changed_location_3"})
+            expect(presence_validators).to include(:name)
+            expect(presence_validators).to include(:location)
+          end
+
+          it 'does not blacklist fixed attributes with default manager_ref' do
+            # Fixed attributes are attributes used for unique ID of the DTO or attributes with presence validation
+            dto_collection = ::ManagerRefresh::DtoCollection.new(
+              ManageIQ::Providers::Amazon::CloudManager::Vm,
+              :parent               => @ems,
+              :association          => :vms,
+              :attributes_blacklist => [:ems_ref, :uid_ems, :name, :location, :vendor, :raw_power_state])
+
+            expect(dto_collection.attributes_blacklist).to match_array([:vendor, :uid_ems, :raw_power_state])
+          end
+
+          it 'has fixed and internal attributes amongst whitelisted_attributes with default manager_ref' do
+            # Fixed attributes are attributes used for unique ID of the DTO or attributes with presence validation
+            dto_collection = ::ManagerRefresh::DtoCollection.new(
+              ManageIQ::Providers::Amazon::CloudManager::Vm,
+              :parent               => @ems,
+              :association          => :vms,
+              :attributes_whitelist => [:raw_power_state])
+
+            expect(dto_collection.attributes_whitelist).to match_array([:__feedback_edge_set_parent, :ems_ref,
+                                                                        :name, :location, :raw_power_state])
+          end
+
+          it 'does not blacklist fixed attributes when changing manager_ref' do
+            dto_collection = ::ManagerRefresh::DtoCollection.new(
+              ManageIQ::Providers::Amazon::CloudManager::Vm,
+              :manager_ref          => [:uid_ems],
+              :parent               => @ems,
+              :association          => :vms,
+              :attributes_blacklist => [:ems_ref, :uid_ems, :name, :location, :vendor, :raw_power_state])
+
+            expect(dto_collection.attributes_blacklist).to match_array([:vendor, :ems_ref, :raw_power_state])
+          end
+
+          it 'has fixed and internal attributes amongst whitelisted_attributes when changing manager_ref' do
+            # Fixed attributes are attributes used for unique ID of the DTO or attributes with presence validation
+            dto_collection = ::ManagerRefresh::DtoCollection.new(
+              ManageIQ::Providers::Amazon::CloudManager::Vm,
+              :manager_ref          => [:uid_ems],
+              :parent               => @ems,
+              :association          => :vms,
+              :attributes_whitelist => [:raw_power_state])
+
+            expect(dto_collection.attributes_whitelist).to match_array([:__feedback_edge_set_parent, :uid_ems, :name,
+                                                                        :location, :raw_power_state])
+          end
+
+          it 'saves all attributes with blacklist and whitelist disabled' do
+            # Initialize the DtoCollections
+            @data       = {}
+            @data[:vms] = ::ManagerRefresh::DtoCollection.new(
+              ManageIQ::Providers::Amazon::CloudManager::Vm,
+              :parent      => @ems,
+              :association => :vms)
+
+            # Fill the DtoCollections with data, that have a modified name, new VM and a missing VM
+            add_data_to_dto_collection(@data[:vms], *changed_data)
+
+            # Invoke the DtoCollections saving
+            ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
+
+            # Assert that saved data don;t have the blacklisted attributes updated nor filled
+            assert_all_records_match_hashes(
+              [Vm.all, @ems.vms],
+              {:id              => @vm1.id,
+               :ems_ref         => "vm_ems_ref_1",
+               :name            => "vm_changed_name_1",
+               :raw_power_state => "raw_power_state_changed_1",
+               :uid_ems         => "uid_ems_changed_1",
+               :location        => "vm_changed_location_1"},
+              {:id              => @vm2.id,
+               :ems_ref         => "vm_ems_ref_2",
+               :name            => "vm_changed_name_2",
+               :raw_power_state => "raw_power_state_changed_2",
+               :uid_ems         => "uid_ems_changed_2",
+               :location        => "vm_changed_location_2"},
+              {:id              => anything,
+               :ems_ref         => "vm_ems_ref_3",
+               :name            => "vm_changed_name_3",
+               :raw_power_state => "raw_power_state_changed_3",
+               :uid_ems         => "uid_ems_changed_3",
+               :location        => "vm_changed_location_3"})
+          end
+
+          it 'does not save blacklisted attributes (excluding fixed attributes)' do
+            # Initialize the DtoCollections
+            @data       = {}
+            @data[:vms] = ::ManagerRefresh::DtoCollection.new(
+              ManageIQ::Providers::Amazon::CloudManager::Vm,
+              :parent               => @ems,
+              :association          => :vms,
+              :attributes_blacklist => [:name, :location, :raw_power_state])
+
+            # Fill the DtoCollections with data, that have a modified name, new VM and a missing VM
+            add_data_to_dto_collection(@data[:vms], *changed_data)
+
+            # Invoke the DtoCollections saving
+            ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
+
+            # Assert that saved data don;t have the blacklisted attributes updated nor filled
+            assert_all_records_match_hashes(
+              [Vm.all, @ems.vms],
+              {:id              => @vm1.id,
+               :ems_ref         => "vm_ems_ref_1",
+               :name            => "vm_changed_name_1",
+               :raw_power_state => "unknown",
+               :uid_ems         => "uid_ems_changed_1",
+               :location        => "vm_changed_location_1"},
+              {:id              => @vm2.id,
+               :ems_ref         => "vm_ems_ref_2",
+               :name            => "vm_changed_name_2",
+               :raw_power_state => "unknown",
+               :uid_ems         => "uid_ems_changed_2",
+               :location        => "vm_changed_location_2"},
+              {:id              => anything,
+               :ems_ref         => "vm_ems_ref_3",
+               :name            => "vm_changed_name_3",
+               :raw_power_state => nil,
+               :uid_ems         => "uid_ems_changed_3",
+               :location        => "vm_changed_location_3"})
+          end
+
+          it 'saves only whilelisted attributes (including fixed attributes)' do
+            # Initialize the DtoCollections
+            @data       = {}
+            @data[:vms] = ::ManagerRefresh::DtoCollection.new(
+              ManageIQ::Providers::Amazon::CloudManager::Vm,
+              :parent               => @ems,
+              :association          => :vms,
+              # TODO(lsmola) vendor is not getting caught by fixed attributes
+              :attributes_whitelist => [:uid_ems, :vendor])
+
+            # Fill the DtoCollections with data, that have a modified name, new VM and a missing VM
+            add_data_to_dto_collection(@data[:vms], *changed_data)
+
+            # Invoke the DtoCollections saving
+            ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
+
+            # Assert that saved data don;t have the blacklisted attributes updated nor filled
+            assert_all_records_match_hashes(
+              [Vm.all, @ems.vms],
+              {:id              => @vm1.id,
+               :ems_ref         => "vm_ems_ref_1",
+               :name            => "vm_changed_name_1",
+               :raw_power_state => "unknown",
+               :uid_ems         => "uid_ems_changed_1",
+               :location        => "vm_changed_location_1"},
+              {:id              => @vm2.id,
+               :ems_ref         => "vm_ems_ref_2",
+               :name            => "vm_changed_name_2",
+               :raw_power_state => "unknown",
+               :uid_ems         => "uid_ems_changed_2",
+               :location        => "vm_changed_location_2"},
+              {:id              => anything,
+               :ems_ref         => "vm_ems_ref_3",
+               :name            => "vm_changed_name_3",
+               :raw_power_state => nil,
+               :uid_ems         => "uid_ems_changed_3",
+               :location        => "vm_changed_location_3"})
+          end
+
+          it 'saves correct set of attributes when both whilelist and blacklist are used' do
+            # Initialize the DtoCollections
+            @data       = {}
+            @data[:vms] = ::ManagerRefresh::DtoCollection.new(
+              ManageIQ::Providers::Amazon::CloudManager::Vm,
+              :parent               => @ems,
+              :association          => :vms,
+              # TODO(lsmola) vendor is not getting caught by fixed attributes
+              :attributes_whitelist => [:uid_ems, :raw_power_state, :vendor],
+              :attributes_blacklist => [:name, :ems_ref, :raw_power_state])
+
+            # Fill the DtoCollections with data, that have a modified name, new VM and a missing VM
+            add_data_to_dto_collection(@data[:vms], *changed_data)
+
+            # Invoke the DtoCollections saving
+            ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
+
+            # Assert that saved data don;t have the blacklisted attributes updated nor filled
+            assert_all_records_match_hashes(
+              [Vm.all, @ems.vms],
+              {:id              => @vm1.id,
+               :ems_ref         => "vm_ems_ref_1",
+               :name            => "vm_changed_name_1",
+               :raw_power_state => "unknown",
+               :uid_ems         => "uid_ems_changed_1",
+               :location        => "vm_changed_location_1"},
+              {:id              => @vm2.id,
+               :ems_ref         => "vm_ems_ref_2",
+               :name            => "vm_changed_name_2",
+               :raw_power_state => "unknown",
+               :uid_ems         => "uid_ems_changed_2",
+               :location        => "vm_changed_location_2"},
+              {:id              => anything,
+               :ems_ref         => "vm_ems_ref_3",
+               :name            => "vm_changed_name_3",
+               :raw_power_state => nil,
+               :uid_ems         => "uid_ems_changed_3",
+               :location        => "vm_changed_location_3"})
+          end
         end
 
-        it 'does not save blacklisted attributes (excluding fixed attributes)' do
-          # Initialize the DtoCollections
-          @data       = {}
-          @data[:vms] = ::ManagerRefresh::DtoCollection.new(
-            ManageIQ::Providers::Amazon::CloudManager::Vm,
-            :parent               => @ems,
-            :association          => :vms,
-            :attributes_blacklist => [:name, :location, :raw_power_state])
+        context 'with VM DtoCollection with :complete => false' do
+          before :each do
+            # Initialize the DtoCollections
+            @data       = {}
+            @data[:vms] = ::ManagerRefresh::DtoCollection.new(
+              ManageIQ::Providers::Amazon::CloudManager::Vm,
+              :parent      => @ems,
+              :association => :vms,
+              :complete    => false)
+          end
 
-          # Fill the DtoCollections with data, that have a modified name, new VM and a missing VM
-          add_data_to_dto_collection(@data[:vms], *changed_data)
+          it 'only updates existing Vms and creates new VMs, does not delete or update missing VMs' do
+            # Fill the DtoCollections with data, that have a new VM
+            add_data_to_dto_collection(@data[:vms],
+                                       vm_data(1).merge(:name => "vm_changed_name_1"),
+                                       vm_data(3).merge(:name => "vm_changed_name_3"))
 
-          # Invoke the DtoCollections saving
-          ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
+            # Invoke the DtoCollections saving
+            ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
 
-          # Assert that saved data don;t have the blacklisted attributes updated nor filled
-          assert_all_records_match_hashes(
-            [Vm.all, @ems.vms],
-            {:id              => @vm1.id,
-             :ems_ref         => "vm_ems_ref_1",
-             :name            => "vm_changed_name_1",
-             :raw_power_state => "unknown",
-             :uid_ems         => "uid_ems_changed_1",
-             :location        => "vm_changed_location_1"},
-            {:id              => @vm2.id,
-             :ems_ref         => "vm_ems_ref_2",
-             :name            => "vm_changed_name_2",
-             :raw_power_state => "unknown",
-             :uid_ems         => "uid_ems_changed_2",
-             :location        => "vm_changed_location_2"},
-            {:id              => anything,
-             :ems_ref         => "vm_ems_ref_3",
-             :name            => "vm_changed_name_3",
-             :raw_power_state => nil,
-             :uid_ems         => "uid_ems_changed_3",
-             :location        => "vm_changed_location_3"})
+            # Assert that saved data contain the new VM, but no VM was deleted
+            assert_all_records_match_hashes(
+              [Vm.all, @ems.vms],
+              {:id => @vm1.id, :ems_ref => "vm_ems_ref_1", :name => "vm_changed_name_1", :location => "vm_location_1"},
+              {:id => @vm2.id, :ems_ref => "vm_ems_ref_2", :name => "vm_name_2", :location => "vm_location_2"},
+              {:id => anything, :ems_ref => "vm_ems_ref_3", :name => "vm_changed_name_3", :location => "vm_location_3"})
+          end
         end
 
-        it 'saves only whilelisted attributes (including fixed attributes)' do
-          # Initialize the DtoCollections
-          @data       = {}
-          @data[:vms] = ::ManagerRefresh::DtoCollection.new(
-            ManageIQ::Providers::Amazon::CloudManager::Vm,
-            :parent               => @ems,
-            :association          => :vms,
-            # TODO(lsmola) vendor is not getting caught by fixed attributes
-            :attributes_whitelist => [:uid_ems, :vendor])
+        context 'with changed parent and association' do
+          it 'with AvailabilityZone parent, deletes missing and creates new VMs' do
+            availability_zone = FactoryGirl.create(:availability_zone, :ext_management_system => @ems)
+            @vm1.update_attributes(:availability_zone => availability_zone)
+            @vm2.update_attributes(:availability_zone => availability_zone)
 
-          # Fill the DtoCollections with data, that have a modified name, new VM and a missing VM
-          add_data_to_dto_collection(@data[:vms], *changed_data)
+            # Initialize the DtoCollections
+            data       = {}
+            data[:vms] = ::ManagerRefresh::DtoCollection.new(
+              ManageIQ::Providers::Amazon::CloudManager::Vm, :parent => availability_zone, :association => :vms)
 
-          # Invoke the DtoCollections saving
-          ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
+            # Fill the DtoCollections with data, that have one new VM and are missing one VM
+            add_data_to_dto_collection(data[:vms],
+                                       vm_data(1).merge(:name => "vm_changed_name_1", :ext_management_system => @ems),
+                                       vm_data(3).merge(:name => "vm_changed_name_3", :ext_management_system => @ems))
 
-          # Assert that saved data don;t have the blacklisted attributes updated nor filled
-          assert_all_records_match_hashes(
-            [Vm.all, @ems.vms],
-            {:id              => @vm1.id,
-             :ems_ref         => "vm_ems_ref_1",
-             :name            => "vm_changed_name_1",
-             :raw_power_state => "unknown",
-             :uid_ems         => "uid_ems_changed_1",
-             :location        => "vm_changed_location_1"},
-            {:id              => @vm2.id,
-             :ems_ref         => "vm_ems_ref_2",
-             :name            => "vm_changed_name_2",
-             :raw_power_state => "unknown",
-             :uid_ems         => "uid_ems_changed_2",
-             :location        => "vm_changed_location_2"},
-            {:id              => anything,
-             :ems_ref         => "vm_ems_ref_3",
-             :name            => "vm_changed_name_3",
-             :raw_power_state => nil,
-             :uid_ems         => "uid_ems_changed_3",
-             :location        => "vm_changed_location_3"})
-        end
+            # Invoke the DtoCollections saving
+            ManagerRefresh::SaveInventory.save_inventory(@ems, data)
 
-        it 'saves correct set of attributes when both whilelist and blacklist are used' do
-          # Initialize the DtoCollections
-          @data       = {}
-          @data[:vms] = ::ManagerRefresh::DtoCollection.new(
-            ManageIQ::Providers::Amazon::CloudManager::Vm,
-            :parent               => @ems,
-            :association          => :vms,
-            # TODO(lsmola) vendor is not getting caught by fixed attributes
-            :attributes_whitelist => [:uid_ems, :raw_power_state, :vendor],
-            :attributes_blacklist => [:name, :ems_ref, :raw_power_state])
+            # Assert that saved data have the new VM and miss the deleted VM
+            assert_all_records_match_hashes(
+              [Vm.all, @ems.vms, availability_zone.vms],
+              {:id => @vm1.id, :ems_ref => "vm_ems_ref_1", :name => "vm_changed_name_1", :location => "vm_location_1"},
+              {:id => anything, :ems_ref => "vm_ems_ref_3", :name => "vm_changed_name_3", :location => "vm_location_3"})
+          end
 
-          # Fill the DtoCollections with data, that have a modified name, new VM and a missing VM
-          add_data_to_dto_collection(@data[:vms], *changed_data)
+          it 'with CloudTenant parent, deletes missing and creates new VMs' do
+            cloud_tenant = FactoryGirl.create(:cloud_tenant, :ext_management_system => @ems)
+            @vm1.update_attributes(:cloud_tenant => cloud_tenant)
+            @vm2.update_attributes(:cloud_tenant => cloud_tenant)
 
-          # Invoke the DtoCollections saving
-          ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
+            # Initialize the DtoCollections
+            data       = {}
+            data[:vms] = ::ManagerRefresh::DtoCollection.new(
+              ManageIQ::Providers::Amazon::CloudManager::Vm, :parent => cloud_tenant, :association => :vms)
 
-          # Assert that saved data don;t have the blacklisted attributes updated nor filled
-          assert_all_records_match_hashes(
-            [Vm.all, @ems.vms],
-            {:id              => @vm1.id,
-             :ems_ref         => "vm_ems_ref_1",
-             :name            => "vm_changed_name_1",
-             :raw_power_state => "unknown",
-             :uid_ems         => "uid_ems_changed_1",
-             :location        => "vm_changed_location_1"},
-            {:id              => @vm2.id,
-             :ems_ref         => "vm_ems_ref_2",
-             :name            => "vm_changed_name_2",
-             :raw_power_state => "unknown",
-             :uid_ems         => "uid_ems_changed_2",
-             :location        => "vm_changed_location_2"},
-            {:id              => anything,
-             :ems_ref         => "vm_ems_ref_3",
-             :name            => "vm_changed_name_3",
-             :raw_power_state => nil,
-             :uid_ems         => "uid_ems_changed_3",
-             :location        => "vm_changed_location_3"})
-        end
-      end
+            # Fill the DtoCollections with data, that have one new VM and are missing one VM
+            add_data_to_dto_collection(data[:vms],
+                                       vm_data(1).merge(:name => "vm_changed_name_1", :ext_management_system => @ems),
+                                       vm_data(3).merge(:name => "vm_changed_name_3", :ext_management_system => @ems))
 
-      context 'with VM DtoCollection with :complete => false' do
-        before :each do
-          # Initialize the DtoCollections
-          @data       = {}
-          @data[:vms] = ::ManagerRefresh::DtoCollection.new(
-            ManageIQ::Providers::Amazon::CloudManager::Vm,
-            :parent      => @ems,
-            :association => :vms,
-            :complete    => false)
-        end
+            # Invoke the DtoCollections saving
+            ManagerRefresh::SaveInventory.save_inventory(@ems, data)
 
-        it 'only updates existing Vms and creates new VMs, does not delete or update missing VMs' do
-          # Fill the DtoCollections with data, that have a new VM
-          add_data_to_dto_collection(@data[:vms],
-                                     vm_data(1).merge(:name => "vm_changed_name_1"),
-                                     vm_data(3).merge(:name => "vm_changed_name_3"))
+            # Assert that saved data have the new VM and miss the deleted VM
+            assert_all_records_match_hashes(
+              [Vm.all, @ems.vms, cloud_tenant.vms],
+              {:id => @vm1.id, :ems_ref => "vm_ems_ref_1", :name => "vm_changed_name_1", :location => "vm_location_1"},
+              {:id => anything, :ems_ref => "vm_ems_ref_3", :name => "vm_changed_name_3", :location => "vm_location_3"})
+          end
 
-          # Invoke the DtoCollections saving
-          ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
+          it 'with CloudTenant parent, not providing ems_relation, only relation to CloudTenant is affected' do
+            cloud_tenant = FactoryGirl.create(:cloud_tenant, :ext_management_system => @ems)
+            @vm1.update_attributes(:cloud_tenant => cloud_tenant)
+            @vm2.update_attributes(:cloud_tenant => cloud_tenant)
 
-          # Assert that saved data contain the new VM, but no VM was deleted
-          assert_all_records_match_hashes(
-            [Vm.all, @ems.vms],
-            {:id => @vm1.id, :ems_ref => "vm_ems_ref_1", :name => "vm_changed_name_1", :location => "vm_location_1"},
-            {:id => @vm2.id, :ems_ref => "vm_ems_ref_2", :name => "vm_name_2", :location => "vm_location_2"},
-            {:id => anything, :ems_ref => "vm_ems_ref_3", :name => "vm_changed_name_3", :location => "vm_location_3"})
-        end
-      end
+            # Initialize the DtoCollections
+            data       = {}
+            data[:vms] = ::ManagerRefresh::DtoCollection.new(
+              ManageIQ::Providers::Amazon::CloudManager::Vm, :parent => cloud_tenant, :association => :vms)
 
-      context 'with changed parent and association' do
-        it 'with AvailabilityZone parent, deletes missing and creates new VMs' do
-          availability_zone = FactoryGirl.create(:availability_zone, :ext_management_system => @ems)
-          @vm1.update_attributes(:availability_zone => availability_zone)
-          @vm2.update_attributes(:availability_zone => availability_zone)
+            # Fill the DtoCollections with data, that have one new VM and are missing one VM
+            add_data_to_dto_collection(data[:vms],
+                                       vm_data(1).merge(:name => "vm_changed_name_1"),
+                                       vm_data(3).merge(:name => "vm_changed_name_3"))
 
-          # Initialize the DtoCollections
-          data       = {}
-          data[:vms] = ::ManagerRefresh::DtoCollection.new(
-            ManageIQ::Providers::Amazon::CloudManager::Vm, :parent => availability_zone, :association => :vms)
+            # Invoke the DtoCollections saving
+            ManagerRefresh::SaveInventory.save_inventory(@ems, data)
 
-          # Fill the DtoCollections with data, that have one new VM and are missing one VM
-          add_data_to_dto_collection(data[:vms],
-                                     vm_data(1).merge(:name => "vm_changed_name_1", :ext_management_system => @ems),
-                                     vm_data(3).merge(:name => "vm_changed_name_3", :ext_management_system => @ems))
+            # Assert that saved data have the new VM and miss the deleted VM
+            assert_all_records_match_hashes(
+              [Vm.all, cloud_tenant.vms],
+              {:id => @vm1.id, :ems_ref => "vm_ems_ref_1", :name => "vm_changed_name_1", :location => "vm_location_1"},
+              {:id => anything, :ems_ref => "vm_ems_ref_3", :name => "vm_changed_name_3", :location => "vm_location_3"})
 
-          # Invoke the DtoCollections saving
-          ManagerRefresh::SaveInventory.save_inventory(@ems, data)
+            # Assert that ems relation exists only for the updated VM
+            assert_all_records_match_hashes(
+              @ems.vms,
+              {:id => @vm1.id, :ems_ref => "vm_ems_ref_1", :name => "vm_changed_name_1", :location => "vm_location_1"})
+          end
 
-          # Assert that saved data have the new VM and miss the deleted VM
-          assert_all_records_match_hashes(
-            [Vm.all, @ems.vms, availability_zone.vms],
-            {:id => @vm1.id, :ems_ref => "vm_ems_ref_1", :name => "vm_changed_name_1", :location => "vm_location_1"},
-            {:id => anything, :ems_ref => "vm_ems_ref_3", :name => "vm_changed_name_3", :location => "vm_location_3"})
-        end
+          it 'with CloudTenant parent, does not delete the missing VMs with :complete => false' do
+            cloud_tenant = FactoryGirl.create(:cloud_tenant, :ext_management_system => @ems)
+            @vm1.update_attributes(:cloud_tenant => cloud_tenant)
+            @vm2.update_attributes(:cloud_tenant => cloud_tenant)
 
-        it 'with CloudTenant parent, deletes missing and creates new VMs' do
-          cloud_tenant = FactoryGirl.create(:cloud_tenant, :ext_management_system => @ems)
-          @vm1.update_attributes(:cloud_tenant => cloud_tenant)
-          @vm2.update_attributes(:cloud_tenant => cloud_tenant)
+            # Initialize the DtoCollections
+            data       = {}
+            data[:vms] = ::ManagerRefresh::DtoCollection.new(
+              ManageIQ::Providers::Amazon::CloudManager::Vm,
+              :parent      => cloud_tenant,
+              :association => :vms,
+              :complete    => false)
 
-          # Initialize the DtoCollections
-          data       = {}
-          data[:vms] = ::ManagerRefresh::DtoCollection.new(
-            ManageIQ::Providers::Amazon::CloudManager::Vm, :parent => cloud_tenant, :association => :vms)
+            # Fill the DtoCollections with data, that have one new VM and are missing one VM
+            add_data_to_dto_collection(data[:vms],
+                                       vm_data(1).merge(:name => "vm_changed_name_1"),
+                                       vm_data(3).merge(:name => "vm_changed_name_3"))
 
-          # Fill the DtoCollections with data, that have one new VM and are missing one VM
-          add_data_to_dto_collection(data[:vms],
-                                     vm_data(1).merge(:name => "vm_changed_name_1", :ext_management_system => @ems),
-                                     vm_data(3).merge(:name => "vm_changed_name_3", :ext_management_system => @ems))
+            # Invoke the DtoCollections saving
+            ManagerRefresh::SaveInventory.save_inventory(@ems, data)
 
-          # Invoke the DtoCollections saving
-          ManagerRefresh::SaveInventory.save_inventory(@ems, data)
+            # Assert that saved data have the new VM and miss the deleted VM
+            assert_all_records_match_hashes(
+              [Vm.all, cloud_tenant.vms],
+              {:id => @vm1.id, :ems_ref => "vm_ems_ref_1", :name => "vm_changed_name_1", :location => "vm_location_1"},
+              {:id => @vm2.id, :ems_ref => "vm_ems_ref_2", :name => "vm_name_2", :location => "vm_location_2"},
+              {:id => anything, :ems_ref => "vm_ems_ref_3", :name => "vm_changed_name_3", :location => "vm_location_3"})
 
-          # Assert that saved data have the new VM and miss the deleted VM
-          assert_all_records_match_hashes(
-            [Vm.all, @ems.vms, cloud_tenant.vms],
-            {:id => @vm1.id, :ems_ref => "vm_ems_ref_1", :name => "vm_changed_name_1", :location => "vm_location_1"},
-            {:id => anything, :ems_ref => "vm_ems_ref_3", :name => "vm_changed_name_3", :location => "vm_location_3"})
-        end
-
-        it 'with CloudTenant parent, not providing ems_relation, only relation to CloudTenant is affected' do
-          cloud_tenant = FactoryGirl.create(:cloud_tenant, :ext_management_system => @ems)
-          @vm1.update_attributes(:cloud_tenant => cloud_tenant)
-          @vm2.update_attributes(:cloud_tenant => cloud_tenant)
-
-          # Initialize the DtoCollections
-          data       = {}
-          data[:vms] = ::ManagerRefresh::DtoCollection.new(
-            ManageIQ::Providers::Amazon::CloudManager::Vm, :parent => cloud_tenant, :association => :vms)
-
-          # Fill the DtoCollections with data, that have one new VM and are missing one VM
-          add_data_to_dto_collection(data[:vms],
-                                     vm_data(1).merge(:name => "vm_changed_name_1"),
-                                     vm_data(3).merge(:name => "vm_changed_name_3"))
-
-          # Invoke the DtoCollections saving
-          ManagerRefresh::SaveInventory.save_inventory(@ems, data)
-
-          # Assert that saved data have the new VM and miss the deleted VM
-          assert_all_records_match_hashes(
-            [Vm.all, cloud_tenant.vms],
-            {:id => @vm1.id, :ems_ref => "vm_ems_ref_1", :name => "vm_changed_name_1", :location => "vm_location_1"},
-            {:id => anything, :ems_ref => "vm_ems_ref_3", :name => "vm_changed_name_3", :location => "vm_location_3"})
-
-          # Assert that ems relation exists only for the updated VM
-          assert_all_records_match_hashes(
-            @ems.vms,
-            {:id => @vm1.id, :ems_ref => "vm_ems_ref_1", :name => "vm_changed_name_1", :location => "vm_location_1"})
-        end
-
-        it 'with CloudTenant parent, does not delete the missing VMs with :complete => false' do
-          cloud_tenant = FactoryGirl.create(:cloud_tenant, :ext_management_system => @ems)
-          @vm1.update_attributes(:cloud_tenant => cloud_tenant)
-          @vm2.update_attributes(:cloud_tenant => cloud_tenant)
-
-          # Initialize the DtoCollections
-          data       = {}
-          data[:vms] = ::ManagerRefresh::DtoCollection.new(
-            ManageIQ::Providers::Amazon::CloudManager::Vm,
-            :parent      => cloud_tenant,
-            :association => :vms,
-            :complete    => false)
-
-          # Fill the DtoCollections with data, that have one new VM and are missing one VM
-          add_data_to_dto_collection(data[:vms],
-                                     vm_data(1).merge(:name => "vm_changed_name_1"),
-                                     vm_data(3).merge(:name => "vm_changed_name_3"))
-
-          # Invoke the DtoCollections saving
-          ManagerRefresh::SaveInventory.save_inventory(@ems, data)
-
-          # Assert that saved data have the new VM and miss the deleted VM
-          assert_all_records_match_hashes(
-            [Vm.all, cloud_tenant.vms],
-            {:id => @vm1.id, :ems_ref => "vm_ems_ref_1", :name => "vm_changed_name_1", :location => "vm_location_1"},
-            {:id => @vm2.id, :ems_ref => "vm_ems_ref_2", :name => "vm_name_2", :location => "vm_location_2"},
-            {:id => anything, :ems_ref => "vm_ems_ref_3", :name => "vm_changed_name_3", :location => "vm_location_3"})
-
-          # Assert that ems relation exists only for the updated VM
-          assert_all_records_match_hashes(
-            @ems.vms,
-            {:id => @vm1.id, :ems_ref => "vm_ems_ref_1", :name => "vm_changed_name_1", :location => "vm_location_1"},
-            {:id => @vm2.id, :ems_ref => "vm_ems_ref_2", :name => "vm_name_2", :location => "vm_location_2"})
+            # Assert that ems relation exists only for the updated VM
+            assert_all_records_match_hashes(
+              @ems.vms,
+              {:id => @vm1.id, :ems_ref => "vm_ems_ref_1", :name => "vm_changed_name_1", :location => "vm_location_1"},
+              {:id => @vm2.id, :ems_ref => "vm_ems_ref_2", :name => "vm_name_2", :location => "vm_location_2"})
+          end
         end
       end
     end
