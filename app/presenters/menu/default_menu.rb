@@ -111,6 +111,17 @@ module Menu
         ])
       end
 
+      def datawarehouse_menu_section
+        if ::Settings.product.datawarehouse_manager
+          Menu::Section.new(:dwh, N_("Datawarehouse"), 'fa product-datawarehouse fa-2x', [
+            Menu::Item.new('ems_datawarehouse', N_('Providers'), 'ems_datawarehouse',
+                           {:feature => 'ems_datawarehouse_show_list'}, '/ems_datawarehouse')
+            ])
+        else
+          empty_menu_section
+        end
+      end
+
       def middleware_menu_section
         Menu::Section.new(:mdl, N_("Middleware"), 'fa product-middleware fa-2x', [
           Menu::Item.new('ems_middleware',        N_('Providers'),   'ems_middleware',        {:feature => 'ems_middleware_show_list'},          '/ems_middleware'),
@@ -205,7 +216,7 @@ module Menu
 
       def default_menu
         [cloud_inteligence_menu_section, services_menu_section, compute_menu_section, configuration_menu_section,
-         network_menu_section, middleware_menu_section, storage_menu_section,
+         network_menu_section, middleware_menu_section, datawarehouse_menu_section, storage_menu_section,
          control_menu_section, automate_menu_section, optimize_menu_section, settings_menu_section].compact
       end
     end

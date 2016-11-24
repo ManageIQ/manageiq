@@ -26,6 +26,10 @@ module ManageIQ::Providers
       raise MiqException::Error, 'Unable to verify credentials'
     end
 
+    def validate_authentication_status
+      {:available => true, :message => nil}
+    end
+
     def self.verify_ssl_mode
       # TODO: support real authentication using certificates
       OpenSSL::SSL::VERIFY_NONE
@@ -53,7 +57,7 @@ module ManageIQ::Providers
     end
 
     def supported_auth_types
-      %w(default bearer)
+      %w(default auth_key)
     end
 
     def supports_authentication?(authtype)
@@ -61,7 +65,7 @@ module ManageIQ::Providers
     end
 
     def default_authentication_type
-      :bearer
+      :default
     end
 
     def self.ems_type

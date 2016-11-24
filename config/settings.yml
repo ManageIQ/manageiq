@@ -1013,6 +1013,7 @@
 :product:
   :maindb: ExtManagementSystem
   :container_deployment_wizard: false
+  :datawarehouse_manager: false
 :recommendations:
   :cpu_minimum: 1
   :mem_minimum: 32.megabytes
