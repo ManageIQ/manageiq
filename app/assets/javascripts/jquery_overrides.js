@@ -1,15 +1,15 @@
 function logError(fn) {
   return function (text) {
     try {
-      fn(text);
+      return fn(text);
     } catch (ex) {
       if (typeof console !== "undefined" && typeof console.error !== "undefined") {
         console.error('exception caught evaling RJS');
         console.error(ex);
         console.debug('script follows:', text);
       }
+      return text;
     }
-    return text;
   };
 }
 
