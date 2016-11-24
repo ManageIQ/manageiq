@@ -1023,22 +1023,22 @@ module ApplicationController::Filter
     @edit[@expkey][:val1][:type] = nil
     @edit[@expkey][:val2][:type] = nil
     if @edit[@expkey][:exp_typ] == "field"
-      if @edit[@expkey][:exp_key] == EXP_IS && @edit[@expkey][:val1][:date_format] == 's'
-        @edit[@expkey][:val1][:type] = :date
-      else
-        @edit[@expkey][:val1][:type] = @edit[@expkey].val_type_for(:exp_key, :exp_field)
-      end
+      @edit[@expkey][:val1][:type] = if @edit[@expkey][:exp_key] == EXP_IS && @edit[@expkey][:val1][:date_format] == 's'
+                                       :date
+                                     else
+                                       @edit[@expkey].val_type_for(:exp_key, :exp_field)
+                                     end
     elsif @edit[@expkey][:exp_typ] == "find"
-      if @edit[@expkey][:exp_skey] == EXP_IS && @edit[@expkey][:val1][:date_format] == 's'
-        @edit[@expkey][:val1][:type] = :date
-      else
-        @edit[@expkey][:val1][:type] = @edit[@expkey].val_type_for(:exp_skey, :exp_field)
-      end
-      if @edit[@expkey][:exp_ckey] && @edit[@expkey][:exp_ckey] == EXP_IS && @edit[@expkey][:val2][:date_format] == 's'
-        @edit[@expkey][:val2][:type] = :date
-      else
-        @edit[@expkey][:val2][:type] = @edit[@expkey][:exp_check] == "checkcount" ? :integer : @edit[@expkey].val_type_for(:exp_ckey, :exp_cfield)
-      end
+      @edit[@expkey][:val1][:type] = if @edit[@expkey][:exp_skey] == EXP_IS && @edit[@expkey][:val1][:date_format] == 's'
+                                       :date
+                                     else
+                                       @edit[@expkey].val_type_for(:exp_skey, :exp_field)
+                                     end
+      @edit[@expkey][:val2][:type] = if @edit[@expkey][:exp_ckey] && @edit[@expkey][:exp_ckey] == EXP_IS && @edit[@expkey][:val2][:date_format] == 's'
+                                       :date
+                                     else
+                                       @edit[@expkey][:exp_check] == "checkcount" ? :integer : @edit[@expkey].val_type_for(:exp_ckey, :exp_cfield)
+                                     end
     elsif @edit[@expkey][:exp_typ] == "count"
       @edit[@expkey][:val1][:type] = :integer
     elsif @edit[@expkey][:exp_typ] == "regkey"
