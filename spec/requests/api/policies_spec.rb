@@ -366,6 +366,7 @@ describe "Policies API" do
       {
         "description"    => "sample policy",
         "name"           => "sample policy",
+        "mode"           => "compliance",
         "towhat"         => "ManageIQ::Providers::Redhat::InfraManager",
         "conditions_ids" => [conditions.first.id, conditions.second.id],
       }
