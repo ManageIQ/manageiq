@@ -1,15 +1,17 @@
-jQuery.evalLog = function (text) {
-  try {
-    jQuery.globalEval(text.slice('throw "error";'.length));
-  } catch (ex) {
-    if (typeof console !== "undefined" && typeof console.error !== "undefined") {
-      console.error('exception caught evaling RJS');
-      console.error(ex);
-      console.debug('script follows:', text);
+function logError(fn) {
+  return function (text) {
+    try {
+      fn(text);
+    } catch (ex) {
+      if (typeof console !== "undefined" && typeof console.error !== "undefined") {
+        console.error('exception caught evaling RJS');
+        console.error(ex);
+        console.debug('script follows:', text);
+      }
     }
-  }
-  return text;
-};
+    return text;
+  };
+}
 
 jQuery.jsonPayload = function (text, fallback) {
   var parsed_json = jQuery.parseJSON(text);
@@ -28,16 +30,16 @@ $.ajaxSetup({
     json: /application\/json/
   },
   converters: {
-    "text json": function (text) {
+    "text json": logError(function (text) {
       return jQuery.jsonPayload(text, function (text) { return jQuery.parseJSON(text); });
-    },
-    "text script": function (text) {
+    }),
+    "text script": logError(function (text) {
       if (text.match(/^{/)) {
         return jQuery.jsonPayload(text, function (text) { return text; });
       } else { // JavaScript payload
-        jQuery.evalLog.call(this, text);
+        jQuery.globalEval(text.slice('throw "error";'.length));
         return text;
       }
-    }
+    }),
   }
 });
