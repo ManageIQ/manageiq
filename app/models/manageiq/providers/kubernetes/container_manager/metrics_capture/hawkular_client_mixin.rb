@@ -28,8 +28,7 @@ module ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCapture::Hawkul
   def hawkular_options
     { :tenant         => @tenant,
       :verify_ssl     => @ext_management_system.verify_ssl_mode,
-      :http_proxy_uri => VMDB::Util.http_proxy_uri.to_s,
-      :timeout        => 100
+      :http_proxy_uri => VMDB::Util.http_proxy_uri.to_s
     }
   end
 

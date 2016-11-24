@@ -3,6 +3,8 @@
 miqHttpInject(angular.module('containerLiveDashboard', ['ui.bootstrap', 'patternfly', 'patternfly.charts']))
   .controller('containerLiveDashboardController', ['$scope', 'pfViewUtils', '$location', '$http', '$interval', '$timeout', '$window',
   function ($scope, pfViewUtils, $location, $http, $interval, $timeout, $window) {
+    var tenant = '_ops';
+
     $scope.filtersText = '';
     $scope.definitions = [];
     $scope.items = [];
@@ -22,8 +24,8 @@ miqHttpInject(angular.module('containerLiveDashboard', ['ui.bootstrap', 'pattern
     ];
 
     $scope.timeFilter = {
-      time_range: 1,
-      range_count: 24,
+      time_range: 24,
+      range_count: 2,
       date: new Date()
     };
 
@@ -34,29 +36,16 @@ miqHttpInject(angular.module('containerLiveDashboard', ['ui.bootstrap', 'pattern
     };
 
     $scope.countDecrement = function() {
-        if($scope.timeFilter.range_count > 1) {
-            $scope.timeFilter.range_count--;
-        }
+      if ($scope.timeFilter.range_count > 1) {
+        $scope.timeFilter.range_count--;
+      }
     };
 
     $scope.countIncrement = function() {
-        $scope.timeFilter.range_count++;
+      $scope.timeFilter.range_count++;
     };
 
     // Graphs
-    var formatNumber = function (n) {
-      var ranges = [
-        { divider: 1e9 , suffix: 'G' },
-        { divider: 1e6 , suffix: 'M' },
-        { divider: 1e3 , suffix: 'k' }
-      ];
-      for (var i = 0; i < ranges.length; i++) {
-        if (n >= ranges[i].divider) {
-          return (n / ranges[i].divider).toFixed(2).toString() + ranges[i].suffix;
-        }
-      }
-      return n.toFixed(2).toString();
-    };
 
     $scope.chartConfig = {
       legend       : { show: false },
@@ -70,7 +59,7 @@ miqHttpInject(angular.module('containerLiveDashboard', ['ui.bootstrap', 'pattern
         y: {
           tick: {
             count: 4,
-            format: function (value) { return formatNumber(value); }
+            format: function (value) { return numeral(value).format('0,0.00a'); }
           }}
       },
       setAreaChart : true,
@@ -80,7 +69,6 @@ miqHttpInject(angular.module('containerLiveDashboard', ['ui.bootstrap', 'pattern
     };
 
     // get the pathname and remove trailing / if exist
-    var tenant = '_system';
     var pathname = $window.location.pathname.replace(/\/$/, '');
     var id = '/' + (/^\/[^\/]+\/(\d+)$/.exec(pathname)[1]);
     var url = '/container_dashboard/data' + id + '/?live=true&tenant=' + tenant;
@@ -178,29 +166,30 @@ miqHttpInject(angular.module('containerLiveDashboard', ['ui.bootstrap', 'pattern
       $http.get(url + params).success(function (response) {
         'use strict';
         if (response.error) {
-          // TODO: do something ?
+          showErrorMessage(response.error);
         } else {
           var data = response.data;
 
           item.lastValues = {};
           angular.forEach(data, function(d) {
-            item.lastValues[d.timestamp] = formatNumber(d.value);
+            item.lastValues[d.timestamp] = numeral(d.value).format('0,0.00a');
           });
 
           var lastValue = data[0].value;
-          item.last_value = formatNumber(lastValue);
+          item.last_value = numeral(lastValue).format('0,0.00a');
+          item.last_timestamp = data[0].timestamp;
           if (data.length > 1) {
             var prevValue = data[1].value;
             if (angular.isNumber(lastValue) && angular.isNumber(prevValue)) {
               var change;
               if (prevValue !== 0 && lastValue !== 0) {
-                change = Math.round(((lastValue - prevValue) / lastValue) * 100.0);
+                change = Math.round((lastValue - prevValue) / lastValue);
               } else if (lastValue !== 0) {
-                change = 100;
+                change = 1;
               } else {
                 change = 0;
               }
-              item.percent_change = "(" + change + "%)";
+              item.percent_change = "(" + numeral(change).format('0,0.00%') + ")";
             }
           }
         }
@@ -214,7 +203,7 @@ miqHttpInject(angular.module('containerLiveDashboard', ['ui.bootstrap', 'pattern
         'use strict';
         $scope.loadingMetrics = false;
         if (response.error) {
-          // TODO: do something ?
+          showErrorMessage(response.error);
           return;
         }
 
@@ -226,10 +215,6 @@ miqHttpInject(angular.module('containerLiveDashboard', ['ui.bootstrap', 'pattern
 
         $scope.filterConfig.resultsCount = $scope.items.length;
       });
-    };
-
-    $scope.rangeChange = function() {
-      console.log($scope.timeFilter.time_range);
     };
 
     $scope.refresh_graph = function(metric_id, n) {
@@ -244,13 +229,13 @@ miqHttpInject(angular.module('containerLiveDashboard', ['ui.bootstrap', 'pattern
       $http.get(url + params).success(function(response) {
         'use strict';
         if (response.error) {
-          // TODO: do something ?
+          showErrorMessage(response.error);
           return;
         }
 
         var data  = response.data;
-        var xData = data.map(d => d.start);
-        var yData = data.map(d => d.avg || null);
+        var xData = data.map(function(d) { return d.start; });
+        var yData = data.map(function(d) { return d.avg || null; });
 
         xData.unshift('time');
         yData.unshift(metric_id);
@@ -270,8 +255,9 @@ miqHttpInject(angular.module('containerLiveDashboard', ['ui.bootstrap', 'pattern
     $scope.refresh_graph_data = function() {
       $scope.loadCount = 0;
       $scope.loadingData = true;
+      $scope.chartData = {};
 
-      $scope.selectedItems = $scope.items.filter(item => item.selected);
+      $scope.selectedItems = $scope.items.filter(function(item) { return item.selected });
 
       for (var i = 0; i < $scope.selectedItems.length; i++) {
         var metric_id = $scope.selectedItems[i].id;

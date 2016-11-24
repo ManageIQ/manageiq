@@ -28,7 +28,7 @@
                 %strong
                   = _("Most Recent")
                 %span.time-stamp
-                  {{item.maxTimestamp | date:'yyyy-MM-dd hh:mm:ss'}}
+                  {{item.last_timestamp | date:'yyyy-MM-dd hh:mm:ss'}}
               .col-md-5.col-sm-6.no-wrap{"tooltip" => "{{item.last_value || '-'}}", "tooltip-placement" => "bottom"}
                 %span.last-value
                   {{item.last_value || "-"}}
