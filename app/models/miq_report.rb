@@ -1,4 +1,6 @@
 class MiqReport < ApplicationRecord
+  EXCLUDE_REPORT_FIELDS_FOR_MODEL = {'ChargebackVm' => %w(cpu_metric)}.freeze
+
   include ActiveRecord::AttributeAccessorThatYamls
 
   include_concern 'Formatting'
@@ -47,8 +49,22 @@ class MiqReport < ApplicationRecord
 
   attr_accessor_that_yamls :reserved # For legacy imports
 
+  after_initialize :exclude_fields
+
   GROUPINGS = [[:min, "Minimum"], [:avg, "Average"], [:max, "Maximum"], [:total, "Total"]]
   PIVOTS    = [[:min, "Minimum"], [:avg, "Average"], [:max, "Maximum"], [:total, "Total"]]
+
+  # this method (and other exclude_* methods) are for supporting legacy reports that may have some of the columns
+  # that are being removed by this PR in them
+  # TODO(lpichler) create migration for removing them from legacy report
+  def exclude_fields
+    return unless try(:db)
+    return unless EXCLUDE_REPORT_FIELDS_FOR_MODEL[self[:db]]
+
+    self[:headers] -= exclude_headers if try(:headers)
+    self[:col_order] -= exclude_columns if try(:col_order)
+    self[:cols] -= exclude_columns if try(:cols)
+  end
 
   def self.filter_with_report_results_by(miq_group_ids)
     miq_group_condition = {:miq_report_results => {:miq_group_id => miq_group_ids}}
@@ -235,5 +251,15 @@ class MiqReport < ApplicationRecord
     chart_column = MiqExpression::Field.parse(graph[:column]).column
     column_index = col_order.index { |col| col.include?(chart_column) }
     headers[column_index]
+  end
+
+  private
+
+  def exclude_columns
+    EXCLUDE_REPORT_FIELDS_FOR_MODEL[db] || []
+  end
+
+  def exclude_headers
+    exclude_columns.map { |x| Dictionary.gettext(x, :type => :column, :notfound => :titleize) }
   end
 end
