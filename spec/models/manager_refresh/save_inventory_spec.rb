@@ -197,6 +197,243 @@ describe ManagerRefresh::SaveInventory do
             {:id => anything, :ems_ref => "vm_ems_ref_3", :name => "vm_changed_name_3", :location => "vm_location_3"})
         end
       end
+
+      context 'with VM DtoCollection blacklist or whitelist used' do
+        let :changed_data do
+          [
+            vm_data(1).merge(:name            => "vm_changed_name_1",
+                             :location        => "vm_changed_location_1",
+                             :uid_ems         => "uid_ems_changed_1",
+                             :raw_power_state => "raw_power_state_changed_1"),
+            vm_data(2).merge(:name            => "vm_changed_name_2",
+                             :location        => "vm_changed_location_2",
+                             :uid_ems         => "uid_ems_changed_2",
+                             :raw_power_state => "raw_power_state_changed_2"),
+            vm_data(3).merge(:name            => "vm_changed_name_3",
+                             :location        => "vm_changed_location_3",
+                             :uid_ems         => "uid_ems_changed_3",
+                             :raw_power_state => "raw_power_state_changed_3")
+          ]
+        end
+
+        # TODO(lsmola) fixed attributes should contain also other attributes, like inclusion validation of :vendor
+        # column
+        it 'recognizes correct presence validators' do
+          dto_collection      = ::ManagerRefresh::DtoCollection.new(
+            ManageIQ::Providers::Amazon::CloudManager::Vm,
+            :parent               => @ems,
+            :association          => :vms,
+            :attributes_blacklist => [:ems_ref, :uid_ems, :name, :location])
+
+          # Check that :name and :location do have validate presence, those attributes will not be blacklisted
+          presence_validators = dto_collection.model_class.validators
+                                  .detect { |x| x.kind_of? ActiveRecord::Validations::PresenceValidator }.attributes
+
+          expect(presence_validators).to include(:name)
+          expect(presence_validators).to include(:location)
+        end
+
+        it 'does not blacklist fixed attributes with default manager_ref' do
+          # Fixed attributes are attributes used for unique ID of the DTO or attributes with presence validation
+          dto_collection = ::ManagerRefresh::DtoCollection.new(
+            ManageIQ::Providers::Amazon::CloudManager::Vm,
+            :parent               => @ems,
+            :association          => :vms,
+            :attributes_blacklist => [:ems_ref, :uid_ems, :name, :location, :vendor, :raw_power_state])
+
+          expect(dto_collection.attributes_blacklist).to match_array([:vendor, :uid_ems, :raw_power_state])
+        end
+
+        it 'has fixed and internal attributes amongst whitelisted_attributes with default manager_ref' do
+          # Fixed attributes are attributes used for unique ID of the DTO or attributes with presence validation
+          dto_collection = ::ManagerRefresh::DtoCollection.new(
+            ManageIQ::Providers::Amazon::CloudManager::Vm,
+            :parent               => @ems,
+            :association          => :vms,
+            :attributes_whitelist => [:raw_power_state])
+
+          expect(dto_collection.attributes_whitelist).to match_array([:__feedback_edge_set_parent, :ems_ref,
+                                                                      :name, :location, :raw_power_state])
+        end
+
+        it 'does not blacklist fixed attributes when changing manager_ref' do
+          dto_collection = ::ManagerRefresh::DtoCollection.new(
+            ManageIQ::Providers::Amazon::CloudManager::Vm,
+            :manager_ref          => [:uid_ems],
+            :parent               => @ems,
+            :association          => :vms,
+            :attributes_blacklist => [:ems_ref, :uid_ems, :name, :location, :vendor, :raw_power_state])
+
+          expect(dto_collection.attributes_blacklist).to match_array([:vendor, :ems_ref, :raw_power_state])
+        end
+
+        it 'has fixed and internal attributes amongst whitelisted_attributes when changing manager_ref' do
+          # Fixed attributes are attributes used for unique ID of the DTO or attributes with presence validation
+          dto_collection = ::ManagerRefresh::DtoCollection.new(
+            ManageIQ::Providers::Amazon::CloudManager::Vm,
+            :manager_ref          => [:uid_ems],
+            :parent               => @ems,
+            :association          => :vms,
+            :attributes_whitelist => [:raw_power_state])
+
+          expect(dto_collection.attributes_whitelist).to match_array([:__feedback_edge_set_parent, :uid_ems, :name,
+                                                                      :location, :raw_power_state])
+        end
+
+        it 'saves all attributes with blacklist and whitelist disabled' do
+          # Initialize the DtoCollections
+          @data       = {}
+          @data[:vms] = ::ManagerRefresh::DtoCollection.new(
+            ManageIQ::Providers::Amazon::CloudManager::Vm,
+            :parent      => @ems,
+            :association => :vms)
+
+          # Fill the DtoCollections with data, that have a modified name, new VM and a missing VM
+          add_data_to_dto_collection(@data[:vms], *changed_data)
+
+          # Invoke the DtoCollections saving
+          ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
+
+          # Assert that saved data don;t have the blacklisted attributes updated nor filled
+          assert_all_records_match_hashes(
+            [Vm.all, @ems.vms],
+            {:id              => @vm1.id,
+             :ems_ref         => "vm_ems_ref_1",
+             :name            => "vm_changed_name_1",
+             :raw_power_state => "raw_power_state_changed_1",
+             :uid_ems         => "uid_ems_changed_1",
+             :location        => "vm_changed_location_1"},
+            {:id              => @vm2.id,
+             :ems_ref         => "vm_ems_ref_2",
+             :name            => "vm_changed_name_2",
+             :raw_power_state => "raw_power_state_changed_2",
+             :uid_ems         => "uid_ems_changed_2",
+             :location        => "vm_changed_location_2"},
+            {:id              => anything,
+             :ems_ref         => "vm_ems_ref_3",
+             :name            => "vm_changed_name_3",
+             :raw_power_state => "raw_power_state_changed_3",
+             :uid_ems         => "uid_ems_changed_3",
+             :location        => "vm_changed_location_3"})
+        end
+
+        it 'does not save blacklisted attributes (excluding fixed attributes)' do
+          # Initialize the DtoCollections
+          @data       = {}
+          @data[:vms] = ::ManagerRefresh::DtoCollection.new(
+            ManageIQ::Providers::Amazon::CloudManager::Vm,
+            :parent               => @ems,
+            :association          => :vms,
+            :attributes_blacklist => [:name, :location, :raw_power_state])
+
+          # Fill the DtoCollections with data, that have a modified name, new VM and a missing VM
+          add_data_to_dto_collection(@data[:vms], *changed_data)
+
+          # Invoke the DtoCollections saving
+          ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
+
+          # Assert that saved data don;t have the blacklisted attributes updated nor filled
+          assert_all_records_match_hashes(
+            [Vm.all, @ems.vms],
+            {:id              => @vm1.id,
+             :ems_ref         => "vm_ems_ref_1",
+             :name            => "vm_changed_name_1",
+             :raw_power_state => "unknown",
+             :uid_ems         => "uid_ems_changed_1",
+             :location        => "vm_changed_location_1"},
+            {:id              => @vm2.id,
+             :ems_ref         => "vm_ems_ref_2",
+             :name            => "vm_changed_name_2",
+             :raw_power_state => "unknown",
+             :uid_ems         => "uid_ems_changed_2",
+             :location        => "vm_changed_location_2"},
+            {:id              => anything,
+             :ems_ref         => "vm_ems_ref_3",
+             :name            => "vm_changed_name_3",
+             :raw_power_state => nil,
+             :uid_ems         => "uid_ems_changed_3",
+             :location        => "vm_changed_location_3"})
+        end
+
+        it 'saves only whilelisted attributes (including fixed attributes)' do
+          # Initialize the DtoCollections
+          @data       = {}
+          @data[:vms] = ::ManagerRefresh::DtoCollection.new(
+            ManageIQ::Providers::Amazon::CloudManager::Vm,
+            :parent               => @ems,
+            :association          => :vms,
+            # TODO(lsmola) vendor is not getting caught by fixed attributes
+            :attributes_whitelist => [:uid_ems, :vendor])
+
+          # Fill the DtoCollections with data, that have a modified name, new VM and a missing VM
+          add_data_to_dto_collection(@data[:vms], *changed_data)
+
+          # Invoke the DtoCollections saving
+          ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
+
+          # Assert that saved data don;t have the blacklisted attributes updated nor filled
+          assert_all_records_match_hashes(
+            [Vm.all, @ems.vms],
+            {:id              => @vm1.id,
+             :ems_ref         => "vm_ems_ref_1",
+             :name            => "vm_changed_name_1",
+             :raw_power_state => "unknown",
+             :uid_ems         => "uid_ems_changed_1",
+             :location        => "vm_changed_location_1"},
+            {:id              => @vm2.id,
+             :ems_ref         => "vm_ems_ref_2",
+             :name            => "vm_changed_name_2",
+             :raw_power_state => "unknown",
+             :uid_ems         => "uid_ems_changed_2",
+             :location        => "vm_changed_location_2"},
+            {:id              => anything,
+             :ems_ref         => "vm_ems_ref_3",
+             :name            => "vm_changed_name_3",
+             :raw_power_state => nil,
+             :uid_ems         => "uid_ems_changed_3",
+             :location        => "vm_changed_location_3"})
+        end
+
+        it 'saves correct set of attributes when both whilelist and blacklist are used' do
+          # Initialize the DtoCollections
+          @data       = {}
+          @data[:vms] = ::ManagerRefresh::DtoCollection.new(
+            ManageIQ::Providers::Amazon::CloudManager::Vm,
+            :parent               => @ems,
+            :association          => :vms,
+            # TODO(lsmola) vendor is not getting caught by fixed attributes
+            :attributes_whitelist => [:uid_ems, :raw_power_state, :vendor],
+            :attributes_blacklist => [:name, :ems_ref, :raw_power_state])
+
+          # Fill the DtoCollections with data, that have a modified name, new VM and a missing VM
+          add_data_to_dto_collection(@data[:vms], *changed_data)
+
+          # Invoke the DtoCollections saving
+          ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
+
+          # Assert that saved data don;t have the blacklisted attributes updated nor filled
+          assert_all_records_match_hashes(
+            [Vm.all, @ems.vms],
+            {:id              => @vm1.id,
+             :ems_ref         => "vm_ems_ref_1",
+             :name            => "vm_changed_name_1",
+             :raw_power_state => "unknown",
+             :uid_ems         => "uid_ems_changed_1",
+             :location        => "vm_changed_location_1"},
+            {:id              => @vm2.id,
+             :ems_ref         => "vm_ems_ref_2",
+             :name            => "vm_changed_name_2",
+             :raw_power_state => "unknown",
+             :uid_ems         => "uid_ems_changed_2",
+             :location        => "vm_changed_location_2"},
+            {:id              => anything,
+             :ems_ref         => "vm_ems_ref_3",
+             :name            => "vm_changed_name_3",
+             :raw_power_state => nil,
+             :uid_ems         => "uid_ems_changed_3",
+             :location        => "vm_changed_location_3"})
+        end
+      end
     end
   end
 
