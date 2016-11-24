@@ -370,7 +370,7 @@ describe ManagerRefresh::SaveInventory do
                :location        => "vm_changed_location_3"})
           end
 
-          it 'saves only whilelisted attributes (including fixed attributes)' do
+          it 'saves only whitelisted attributes (including fixed attributes)' do
             # Initialize the DtoCollections
             @data       = {}
             @data[:vms] = ::ManagerRefresh::DtoCollection.new(
@@ -461,7 +461,7 @@ describe ManagerRefresh::SaveInventory do
               :complete    => false)
           end
 
-          it 'only updates existing Vms and creates new VMs, does not delete or update missing VMs' do
+          it 'updates only existing VMs and creates new VMs, does not delete or update missing VMs' do
             # Fill the DtoCollections with data, that have a new VM
             add_data_to_dto_collection(@data[:vms],
                                        vm_data(1).merge(:name => "vm_changed_name_1"),
@@ -479,8 +479,8 @@ describe ManagerRefresh::SaveInventory do
           end
         end
 
-        context 'with changed parent and association' do
-          it 'with AvailabilityZone parent, deletes missing and creates new VMs' do
+        context 'with VM DtoCollection with changed parent and association' do
+          it 'deletes missing and creates new VMs with AvailabilityZone parent, ' do
             availability_zone = FactoryGirl.create(:availability_zone, :ext_management_system => @ems)
             @vm1.update_attributes(:availability_zone => availability_zone)
             @vm2.update_attributes(:availability_zone => availability_zone)
@@ -505,7 +505,7 @@ describe ManagerRefresh::SaveInventory do
               {:id => anything, :ems_ref => "vm_ems_ref_3", :name => "vm_changed_name_3", :location => "vm_location_3"})
           end
 
-          it 'with CloudTenant parent, deletes missing and creates new VMs' do
+          it 'deletes missing and creates new VMs with CloudTenant parent' do
             cloud_tenant = FactoryGirl.create(:cloud_tenant, :ext_management_system => @ems)
             @vm1.update_attributes(:cloud_tenant => cloud_tenant)
             @vm2.update_attributes(:cloud_tenant => cloud_tenant)
@@ -530,7 +530,7 @@ describe ManagerRefresh::SaveInventory do
               {:id => anything, :ems_ref => "vm_ems_ref_3", :name => "vm_changed_name_3", :location => "vm_location_3"})
           end
 
-          it 'with CloudTenant parent, not providing ems_relation, only relation to CloudTenant is affected' do
+          it 'affects oly relation to CloudTenant when not providing EMS relation and with CloudTenant parent' do
             cloud_tenant = FactoryGirl.create(:cloud_tenant, :ext_management_system => @ems)
             @vm1.update_attributes(:cloud_tenant => cloud_tenant)
             @vm2.update_attributes(:cloud_tenant => cloud_tenant)
@@ -560,7 +560,7 @@ describe ManagerRefresh::SaveInventory do
               {:id => @vm1.id, :ems_ref => "vm_ems_ref_1", :name => "vm_changed_name_1", :location => "vm_location_1"})
           end
 
-          it 'with CloudTenant parent, does not delete the missing VMs with :complete => false' do
+          it 'does not delete the missing VMs with :complete => false and with CloudTenant parent' do
             cloud_tenant = FactoryGirl.create(:cloud_tenant, :ext_management_system => @ems)
             @vm1.update_attributes(:cloud_tenant => cloud_tenant)
             @vm2.update_attributes(:cloud_tenant => cloud_tenant)
