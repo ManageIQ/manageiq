@@ -7,7 +7,7 @@ describe "Actions API" do
         :name        => "sample_action",
         :description => "sample_action",
         :action_type => "custom_automation",
-        :options     => {:ae_message => "message", :ae_request => "request", :ae_hash => {"key "=>"value"}}
+        :options     => {:ae_message => "message", :ae_request => "request", :ae_hash => {"key"=>"value"}}
       }
     end
     let(:action_url) { actions_url(action.id) }
@@ -49,7 +49,7 @@ describe "Actions API" do
 
       actions_amount = response.parsed_body["count"]
 
-      expect(actions_amount).to eq(1)
+      expect(actions_amount).to eq(MiqAction.count)
     end
 
     it "deletes action" do
@@ -90,7 +90,8 @@ describe "Actions API" do
 
       expect(response.parsed_body["results"].count).to eq(2)
 
-      expect(MiqAction.pluck(:description)).to match_array(%w(change change2))
+      expect(actions.first.reload.description).to eq("change")
+      expect(actions.second.reload.description).to eq("change2")
     end
   end
 end
