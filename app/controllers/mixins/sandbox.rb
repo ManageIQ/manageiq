@@ -205,4 +205,8 @@ module Sandbox
   def edit_typ
     sandbox[:edit_typ]
   end
+
+  def active_tab
+    sandbox[:active_tab]
+  end
 end
