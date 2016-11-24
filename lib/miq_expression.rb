@@ -216,12 +216,6 @@ class MiqExpression
     settings
     tag_names
     v_qualified_desc
-
-    disk_io_cost
-    disk_io_metric
-    net_io_cost
-    net_io_metric
-    fixed_2_cost
   )
 
   EXCLUDE_EXCEPTIONS = %w(
