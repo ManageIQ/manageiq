@@ -39,6 +39,17 @@ module ApplicationController::Filter
     def calendar_needed?
       [val1, val2].compact.any? { |val| [:date, :datetime].include? val[:type] }
     end
+
+    def render_values_to(page)
+      if val1.try(:type)
+        page << "ManageIQ.expEditor.first.type = '#{val1[:type]}';"
+        page << "ManageIQ.expEditor.first.title = '#{val1[:title]}';"
+      end
+      if val2.try(:type)
+        page << "ManageIQ.expEditor.second.type = '#{val2[:type]}';"
+        page << "ManageIQ.expEditor.second.title = '#{val2[:title]}';"
+      end
+    end
   end
   # TODO: expression is now manipulated with fetch_path
   # We need to extract methods using fetch_path to Expression to avoid the fetch_path call

@@ -119,14 +119,7 @@ module ApplicationController::Filter
         page << ENABLE_CALENDAR if @edit[@expkey].calendar_needed?
 
         if @edit[@expkey][:exp_key] && @edit[@expkey][:exp_field]
-          if @edit[@expkey][:val1][:type]
-            page << "ManageIQ.expEditor.first.type = '#{@edit[@expkey][:val1][:type]}';"
-            page << "ManageIQ.expEditor.first.title = '#{@edit[@expkey][:val1][:title]}';"
-          end
-          if @edit[@expkey][:val2][:type]
-            page << "ManageIQ.expEditor.second.type = '#{@edit[@expkey][:val2][:type]}';"
-            page << "ManageIQ.expEditor.second.title = '#{@edit[@expkey][:val2][:title]}';"
-          end
+          @edit[@expkey].render_values_to(page)
         end
         page << "miqSparkle(false);"  # Need to turn off sparkle in case original ajax element gets replaced
       end
@@ -420,14 +413,7 @@ module ApplicationController::Filter
         page.replace("exp_atom_editor_div", :partial => "layouts/exp_atom/editor")
 
         page << ENABLE_CALENDAR if @edit[@expkey].calendar_needed?
-        if @edit.fetch_path(@expkey, :val1, :type)
-          page << "ManageIQ.expEditor.first.type = '#{@edit[@expkey][:val1][:type]}';"
-          page << "ManageIQ.expEditor.first.title = '#{@edit[@expkey][:val1][:title]}';"
-        end
-        if @edit.fetch_path(@expkey, :val2, :type)
-          page << "ManageIQ.expEditor.second.type = '#{@edit[@expkey][:val2][:type]}';"
-          page << "ManageIQ.expEditor.second.title = '#{@edit[@expkey][:val2][:title]}';"
-        end
+        @edit[@expkey].render_values_to(page)
         page << "miqSparkle(false);" # Need to turn off sparkle in case original ajax element gets replaced
       end
     end
@@ -454,14 +440,7 @@ module ApplicationController::Filter
         page.replace("adv_search_footer", :partial => "layouts/adv_search_footer")
         page << "$('#adv_search_img').prop('src', '#{ActionController::Base.helpers.image_path('toolbars/squashed-false.png')}')"
         page << ENABLE_CALENDAR if @edit[@expkey].calendar_needed?
-        if @edit.fetch_path(@expkey, :val1, :type)
-          page << "ManageIQ.expEditor.first.type = '#{@edit[@expkey][:val1][:type]}';"
-          page << "ManageIQ.expEditor.first.title = '#{@edit[@expkey][:val1][:title]}';"
-        end
-        if @edit.fetch_path(@expkey, :val2, :type)
-          page << "ManageIQ.expEditor.second.type = '#{@edit[@expkey][:val2][:type]}';"
-          page << "ManageIQ.expEditor.second.title = '#{@edit[@expkey][:val2][:title]}';"
-        end
+        @edit[@expkey].render_values_to(page)
       end
       page << set_spinner_off
       # Rememeber this settting in the model settings
