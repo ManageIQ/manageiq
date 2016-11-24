@@ -36,6 +36,9 @@ module ApplicationController::Filter
     :val2,
     :record_filter
   ) do
+    def calendar_needed?
+      [val1, val2].compact.any? { |val| [:date, :datetime].include? val[:type] }
+    end
   end
   # TODO: expression is now manipulated with fetch_path
   # We need to extract methods using fetch_path to Expression to avoid the fetch_path call
