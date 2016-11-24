@@ -44,7 +44,7 @@ module ApplicationController::TreeSupport
   end
 
   def tree_exists?(tree_name)
-    @sb[:trees].key?(tree_name.to_s)
+    @sb[:trees].try(:key?, tree_name.to_s)
   end
 
   private ############################
