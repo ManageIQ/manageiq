@@ -463,6 +463,123 @@ describe ManagerRefresh::SaveInventory do
             {:id => anything, :ems_ref => "vm_ems_ref_3", :name => "vm_changed_name_3", :location => "vm_location_3"})
         end
       end
+
+      context 'with changed parent and association' do
+        it 'with AvailabilityZone parent, deletes missing and creates new VMs' do
+          availability_zone = FactoryGirl.create(:availability_zone, :ext_management_system => @ems)
+          @vm1.update_attributes(:availability_zone => availability_zone)
+          @vm2.update_attributes(:availability_zone => availability_zone)
+
+          # Initialize the DtoCollections
+          data       = {}
+          data[:vms] = ::ManagerRefresh::DtoCollection.new(
+            ManageIQ::Providers::Amazon::CloudManager::Vm, :parent => availability_zone, :association => :vms)
+
+          # Fill the DtoCollections with data, that have one new VM and are missing one VM
+          add_data_to_dto_collection(data[:vms],
+                                     vm_data(1).merge(:name => "vm_changed_name_1", :ext_management_system => @ems),
+                                     vm_data(3).merge(:name => "vm_changed_name_3", :ext_management_system => @ems))
+
+          # Invoke the DtoCollections saving
+          ManagerRefresh::SaveInventory.save_inventory(@ems, data)
+
+          # Assert that saved data have the new VM and miss the deleted VM
+          assert_all_records_match_hashes(
+            [Vm.all, @ems.vms, availability_zone.vms],
+            {:id => @vm1.id, :ems_ref => "vm_ems_ref_1", :name => "vm_changed_name_1", :location => "vm_location_1"},
+            {:id => anything, :ems_ref => "vm_ems_ref_3", :name => "vm_changed_name_3", :location => "vm_location_3"})
+        end
+
+        it 'with CloudTenant parent, deletes missing and creates new VMs' do
+          cloud_tenant = FactoryGirl.create(:cloud_tenant, :ext_management_system => @ems)
+          @vm1.update_attributes(:cloud_tenant => cloud_tenant)
+          @vm2.update_attributes(:cloud_tenant => cloud_tenant)
+
+          # Initialize the DtoCollections
+          data       = {}
+          data[:vms] = ::ManagerRefresh::DtoCollection.new(
+            ManageIQ::Providers::Amazon::CloudManager::Vm, :parent => cloud_tenant, :association => :vms)
+
+          # Fill the DtoCollections with data, that have one new VM and are missing one VM
+          add_data_to_dto_collection(data[:vms],
+                                     vm_data(1).merge(:name => "vm_changed_name_1", :ext_management_system => @ems),
+                                     vm_data(3).merge(:name => "vm_changed_name_3", :ext_management_system => @ems))
+
+          # Invoke the DtoCollections saving
+          ManagerRefresh::SaveInventory.save_inventory(@ems, data)
+
+          # Assert that saved data have the new VM and miss the deleted VM
+          assert_all_records_match_hashes(
+            [Vm.all, @ems.vms, cloud_tenant.vms],
+            {:id => @vm1.id, :ems_ref => "vm_ems_ref_1", :name => "vm_changed_name_1", :location => "vm_location_1"},
+            {:id => anything, :ems_ref => "vm_ems_ref_3", :name => "vm_changed_name_3", :location => "vm_location_3"})
+        end
+
+        it 'with CloudTenant parent, not providing ems_relation, only relation to CloudTenant is affected' do
+          cloud_tenant = FactoryGirl.create(:cloud_tenant, :ext_management_system => @ems)
+          @vm1.update_attributes(:cloud_tenant => cloud_tenant)
+          @vm2.update_attributes(:cloud_tenant => cloud_tenant)
+
+          # Initialize the DtoCollections
+          data       = {}
+          data[:vms] = ::ManagerRefresh::DtoCollection.new(
+            ManageIQ::Providers::Amazon::CloudManager::Vm, :parent => cloud_tenant, :association => :vms)
+
+          # Fill the DtoCollections with data, that have one new VM and are missing one VM
+          add_data_to_dto_collection(data[:vms],
+                                     vm_data(1).merge(:name => "vm_changed_name_1"),
+                                     vm_data(3).merge(:name => "vm_changed_name_3"))
+
+          # Invoke the DtoCollections saving
+          ManagerRefresh::SaveInventory.save_inventory(@ems, data)
+
+          # Assert that saved data have the new VM and miss the deleted VM
+          assert_all_records_match_hashes(
+            [Vm.all, cloud_tenant.vms],
+            {:id => @vm1.id, :ems_ref => "vm_ems_ref_1", :name => "vm_changed_name_1", :location => "vm_location_1"},
+            {:id => anything, :ems_ref => "vm_ems_ref_3", :name => "vm_changed_name_3", :location => "vm_location_3"})
+
+          # Assert that ems relation exists only for the updated VM
+          assert_all_records_match_hashes(
+            @ems.vms,
+            {:id => @vm1.id, :ems_ref => "vm_ems_ref_1", :name => "vm_changed_name_1", :location => "vm_location_1"})
+        end
+
+        it 'with CloudTenant parent, does not delete the missing VMs with :complete => false' do
+          cloud_tenant = FactoryGirl.create(:cloud_tenant, :ext_management_system => @ems)
+          @vm1.update_attributes(:cloud_tenant => cloud_tenant)
+          @vm2.update_attributes(:cloud_tenant => cloud_tenant)
+
+          # Initialize the DtoCollections
+          data       = {}
+          data[:vms] = ::ManagerRefresh::DtoCollection.new(
+            ManageIQ::Providers::Amazon::CloudManager::Vm,
+            :parent      => cloud_tenant,
+            :association => :vms,
+            :complete    => false)
+
+          # Fill the DtoCollections with data, that have one new VM and are missing one VM
+          add_data_to_dto_collection(data[:vms],
+                                     vm_data(1).merge(:name => "vm_changed_name_1"),
+                                     vm_data(3).merge(:name => "vm_changed_name_3"))
+
+          # Invoke the DtoCollections saving
+          ManagerRefresh::SaveInventory.save_inventory(@ems, data)
+
+          # Assert that saved data have the new VM and miss the deleted VM
+          assert_all_records_match_hashes(
+            [Vm.all, cloud_tenant.vms],
+            {:id => @vm1.id, :ems_ref => "vm_ems_ref_1", :name => "vm_changed_name_1", :location => "vm_location_1"},
+            {:id => @vm2.id, :ems_ref => "vm_ems_ref_2", :name => "vm_name_2", :location => "vm_location_2"},
+            {:id => anything, :ems_ref => "vm_ems_ref_3", :name => "vm_changed_name_3", :location => "vm_location_3"})
+
+          # Assert that ems relation exists only for the updated VM
+          assert_all_records_match_hashes(
+            @ems.vms,
+            {:id => @vm1.id, :ems_ref => "vm_ems_ref_1", :name => "vm_changed_name_1", :location => "vm_location_1"},
+            {:id => @vm2.id, :ems_ref => "vm_ems_ref_2", :name => "vm_name_2", :location => "vm_location_2"})
+        end
+      end
     end
   end
 
