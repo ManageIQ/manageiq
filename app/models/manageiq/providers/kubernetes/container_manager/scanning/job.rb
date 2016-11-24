@@ -395,7 +395,7 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
   end
 
   def inspector_image
-    'docker.io/openshift/image-inspector:2.0'
+    'docker.io/openshift/image-inspector:2.1'
   end
 
   def inspector_proxy_env_variables
