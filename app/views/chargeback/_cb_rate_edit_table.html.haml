@@ -7,9 +7,8 @@
       %th{:rowspan => "2"}= _('Per Time')
       %th{:rowspan => "2"}= _('Per Unit')
       %th{:colspan => "2"}= _('Range')
-      %th{:colspan => "2"}= _('Rate')
+      = render :partial => 'cb_rate_currency'
       %th{:rowspan => "2"}= _('Actions')
-      %th{:rowspan => "2"}= _('Currency')
     %tr
       %th= _("Start")
       %th= _("Finish")
@@ -48,9 +47,6 @@
                                  :onclick => "miqAjaxButton('#{url_for(:action => "cb_tier_add",
                                                                        :detail_index => detail_index,
                                                                        :button => "add")}');")
-        /Show the code of the currency selected by the user
-        %td{:id => "column_currency_#{detail_index}", :rowspan => num_tiers}
-          = @edit[:new][:code_currency]
       - (1..num_tiers.to_i - 1).each do |tier_index|
         - tier = @edit[:new][:tiers][detail_index][tier_index]
         %tr.rdetail{:id => "rate_detail_row_#{detail_index}_#{tier_index}"}

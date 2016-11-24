@@ -189,21 +189,7 @@ class ChargebackController < ApplicationController
       page << javascript_prologue
       changed = (@edit[:new] != @edit[:current])
       # Update the new column with the code of the currency selected by the user
-      first_new_detail = @edit[:new][:details].first
-      new_rate_detail_currency = ChargebackRateDetailCurrency.find_by(:id => first_new_detail[:currency])
-      @edit[:new][:details].each_with_index do |_detail, i|
-        new_rate_details = @edit[:new][:details][i]
-        current_rate_details = @edit[:current][:details][i]
-        next if new_rate_details[:currency] == current_rate_details[:currency]
-
-        current_rate_details[:currency] = new_rate_details[:currency]
-        locals = {
-          :code_currency => new_rate_detail_currency.code,
-          :id_column => i,
-          :num_tiers => @edit[:new][:num_tiers][i]
-        }
-        page.replace("column_currency_#{i}", :partial => "cb_new_currency_column", :locals => locals)
-      end
+      page.replace('chargeback_rate_currency', :partial => 'cb_rate_currency')
       page << javascript_for_miq_button_visibility(changed)
     end
   end
@@ -574,6 +560,9 @@ class ChargebackController < ApplicationController
   # Get variables from edit form
   def cb_rate_get_form_vars
     @edit[:new][:description] = params[:description] if params[:description]
+    if params[:currency]
+      @edit[:new][:code_currency] = ChargebackRateDetailCurrency.find(params[:currency]).code
+    end
     @edit[:new][:details].each_with_index do |detail, detail_index|
       %i{per_time per_unit}.each do |measure|
         key = "#{measure}_#{detail_index}".to_sym
