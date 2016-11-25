@@ -150,13 +150,13 @@ module ApplicationController::Filter
       when "count"
         @edit[@expkey][:exp_count] = nil
         @edit[@expkey][:exp_key] = MiqExpression.get_col_operators(:count).first
-        exp_get_prefill_types                         # Get the field type
+        @edit[@expkey].prefill_val_types
       when "tag"
         @edit[@expkey][:exp_tag] = nil
         @edit[@expkey][:exp_key] = "CONTAINS"
       when "regkey"
         @edit[@expkey][:exp_key] = MiqExpression.get_col_operators(:regkey).first
-        exp_get_prefill_types                         # Get the field type
+        @edit[@expkey].prefill_val_types
       when "find"
         @edit[@expkey][:exp_field] = nil
         @edit[@expkey][:exp_key] = "FIND"
@@ -177,7 +177,7 @@ module ApplicationController::Filter
               @edit[@expkey][:exp_key] = nil unless MiqExpression.get_col_operators(@edit[@expkey][:exp_field]).include?(@edit[@expkey][:exp_key])  # Remove if not in list
               @edit[@expkey][:exp_key] ||= MiqExpression.get_col_operators(@edit[@expkey][:exp_field]).first  # Default to first operator
             end
-            exp_get_prefill_types                                   # Get the field type
+            @edit[@expkey].prefill_val_types
             process_datetime_expression_field(:val1, :exp_key, :exp_value)
           else
             @edit[@expkey][:exp_field] = nil
@@ -239,7 +239,7 @@ module ApplicationController::Filter
         end
         # Did the key change?, Save the key
         @edit[@expkey][:exp_key] = params[:chosen_key] if params[:chosen_key] && params[:chosen_key] != @edit[@expkey][:exp_key]
-        exp_get_prefill_types                         # Get the field type
+        @edit[@expkey].prefill_val_types
 
       when "find"
         if params[:chosen_field] && params[:chosen_field] != @edit[@expkey][:exp_field] # Did the field change?
@@ -257,7 +257,7 @@ module ApplicationController::Filter
                 end
               end
             end
-            exp_get_prefill_types                                   # Get the field types
+            @edit[@expkey].prefill_val_types
             process_datetime_expression_field(:val1, :exp_skey, :exp_value)
           else
             @edit[@expkey][:exp_field] = nil
@@ -293,7 +293,7 @@ module ApplicationController::Filter
           unless params[:chosen_cfield] == "<Choose>"
             @edit[@expkey][:exp_ckey] = nil unless MiqExpression.get_col_operators(@edit[@expkey][:exp_cfield]).include?(@edit[@expkey][:exp_ckey]) # Remove if not in list
             @edit[@expkey][:exp_ckey] ||= MiqExpression.get_col_operators(@edit[@expkey][:exp_cfield]).first  # Default to first operator
-            exp_get_prefill_types                                 # Get the field types
+            @edit[@expkey].prefill_val_types
             process_datetime_expression_field(:val2, :exp_ckey, :exp_cvalue)
           else
             @edit[@expkey][:exp_cfield] = nil
@@ -424,7 +424,7 @@ module ApplicationController::Filter
 
     # Rebuild the pulldowns if opening the search box
     adv_search_build_lists unless @edit[:adv_search_open]
-    exp_get_prefill_types unless @edit[:adv_search_open]
+    @edit[@expkey].prefill_val_types unless @edit[:adv_search_open]
 
     render :update do |page|
       page << javascript_prologue
@@ -718,7 +718,7 @@ module ApplicationController::Filter
 
     when "cancel"
       @edit[@expkey][:exp_table] = exp_build_table(@edit[@expkey][:expression]) # Rebuild the existing expression table
-      exp_get_prefill_types                                     # Get the prefill field type
+      @edit[@expkey].prefill_val_types
     end
 
     # Reset fields if delete or reset ran
@@ -1016,38 +1016,6 @@ module ApplicationController::Filter
     tc[0..tc.index(from_choice)]
   end
 
-  # Get the prefill types of the fields for the current expression
-  def exp_get_prefill_types
-    @edit[@expkey][:val1] ||= {}
-    @edit[@expkey][:val2] ||= {}
-    @edit[@expkey][:val1][:type] = nil
-    @edit[@expkey][:val2][:type] = nil
-    if @edit[@expkey][:exp_typ] == "field"
-      @edit[@expkey][:val1][:type] = if @edit[@expkey][:exp_key] == EXP_IS && @edit[@expkey][:val1][:date_format] == 's'
-                                       :date
-                                     else
-                                       @edit[@expkey].val_type_for(:exp_key, :exp_field)
-                                     end
-    elsif @edit[@expkey][:exp_typ] == "find"
-      @edit[@expkey][:val1][:type] = if @edit[@expkey][:exp_skey] == EXP_IS && @edit[@expkey][:val1][:date_format] == 's'
-                                       :date
-                                     else
-                                       @edit[@expkey].val_type_for(:exp_skey, :exp_field)
-                                     end
-      @edit[@expkey][:val2][:type] = if @edit[@expkey][:exp_ckey] && @edit[@expkey][:exp_ckey] == EXP_IS && @edit[@expkey][:val2][:date_format] == 's'
-                                       :date
-                                     else
-                                       @edit[@expkey][:exp_check] == "checkcount" ? :integer : @edit[@expkey].val_type_for(:exp_ckey, :exp_cfield)
-                                     end
-    elsif @edit[@expkey][:exp_typ] == "count"
-      @edit[@expkey][:val1][:type] = :integer
-    elsif @edit[@expkey][:exp_typ] == "regkey"
-      @edit[@expkey][:val1][:type] = :string
-    end
-    @edit[@expkey][:val1][:title] = MiqExpression::FORMAT_SUB_TYPES[@edit[@expkey][:val1][:type]][:title] if @edit[@expkey][:val1][:type]
-    @edit[@expkey][:val2][:title] = MiqExpression::FORMAT_SUB_TYPES[@edit[@expkey][:val2][:type]][:title] if @edit[@expkey][:val2][:type]
-  end
-
   # Remove :token keys from an expression before setting in a record
   def exp_remove_tokens(exp)
     if exp.kind_of?(Array)         # Is this and AND or OR
@@ -1122,8 +1090,7 @@ module ApplicationController::Filter
     @edit[@expkey][:exp_key] = key.upcase
     @edit[@expkey][:exp_orig_key] = key.upcase        # Hang on to the original key for commit
     @edit[@expkey][:exp_typ] = typ
-
-    exp_get_prefill_types                             # Get the format sub types of the fields in this atom
+    @edit[@expkey].prefill_val_types
 
     @edit[:suffix] = @edit[:suffix2] = nil
     unless @edit[@expkey][:exp_value] == :user_input  # Ignore user input fields
@@ -1522,7 +1489,7 @@ module ApplicationController::Filter
     end
 
     @edit[@expkey][exp_key] = params[chosen_key]  # Save the key
-    exp_get_prefill_types # Prefill type may change based on selected key for date/time fields
+    @edit[@expkey].prefill_val_types
 
     # Convert to/from "<date>" and "<date time>" strings in the exp_value array for specific date/times
     if @edit[@expkey][exp_valx][:date_format] == "s"

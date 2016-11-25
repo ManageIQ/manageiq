@@ -51,6 +51,38 @@ module ApplicationController::Filter
       end
     end
 
+    def prefill_val_types
+      self.val1 ||= {}
+      self.val2 ||= {}
+      val1[:type] = case exp_typ
+                    when 'field'
+                      if exp_key == EXP_IS && val1[:date_format] == 's'
+                        :date
+                      else
+                        val_type_for(:exp_key, :exp_field)
+                      end
+                    when 'find'
+                      if exp_skey == EXP_IS && val1[:date_format] == 's'
+                        :date
+                      else
+                        val_type_for(:exp_skey, :exp_field)
+                      end
+                    when 'count'
+                      :integer
+                    when 'regkey'
+                      :string
+                    end
+      val2[:type] = if exp_typ == 'find'
+                      if exp_ckey && val2[:date_format] == 's'
+                        :date
+                      else
+                        exp_check == 'checkcount' ? :integer : val_type_for(:exp_ckey, :exp_cfield)
+                      end
+                    end
+      val1[:title] = MiqExpression::FORMAT_SUB_TYPES[val1[:type]][:title] if val1[:type]
+      val2[:title] = MiqExpression::FORMAT_SUB_TYPES[val2[:type]][:title] if val2[:type]
+    end
+
     def val_type_for(key, field)
       if !self[key] || !self[field]
         nil

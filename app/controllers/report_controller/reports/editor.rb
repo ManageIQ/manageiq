@@ -198,7 +198,7 @@ module ReportController::Reports::Editor
         # Initialize the exp array
         exp_array(:init, @edit[:record_filter][:expression]) if @edit[:record_filter][:exp_array].nil?
         @edit[:record_filter][:exp_table] = exp_build_table(@edit[:record_filter][:expression])
-        exp_get_prefill_types # Build prefill lists
+        @edit[:record_filter].prefill_val_types
         @edit[:record_filter][:exp_model] = @edit[:new][:model] # Set the model for the expression editor
       end
 
