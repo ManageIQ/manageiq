@@ -198,7 +198,7 @@ module ReportController::Reports::Editor
         # Initialize the exp array
         exp_array(:init, @edit[:record_filter][:expression]) if @edit[:record_filter][:exp_array].nil?
         @edit[:record_filter][:exp_table] = exp_build_table(@edit[:record_filter][:expression])
-        exp_get_prefill_types # Build prefill lists
+        @edit[:record_filter].prefill_val_types
         @edit[:record_filter][:exp_model] = @edit[:new][:model] # Set the model for the expression editor
       end
 
@@ -1308,7 +1308,7 @@ module ReportController::Reports::Editor
     end
 
     expkey = :record_filter
-    @edit[expkey] ||= {}                                                # Create hash for this expression, if needed
+    @edit[expkey] ||= ApplicationController::Filter::Expression.new
     @edit[expkey][:record_filter] = []                               # Store exps in an array
     @edit[expkey][:exp_idx] ||= 0
     @edit[expkey][:expression] = {"???" => "???"}                           # Set as new exp element
@@ -1325,7 +1325,7 @@ module ReportController::Reports::Editor
     # Get the display_filter MiqExpression
     @edit[:new][:display_filter] = @rpt.display_filter.nil? ? nil : @rpt.display_filter.exp
     expkey = :display_filter
-    @edit[expkey] ||= {}                                                # Create hash for this expression, if needed
+    @edit[expkey] ||= ApplicationController::Filter::Expression.new
     @edit[expkey][:expression] = []                                    # Store exps in an array
     @edit[expkey][:exp_idx] ||= 0                                           # Start at first exp
     @edit[expkey][:expression] = {"???" => "???"}                           # Set as new exp element

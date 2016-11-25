@@ -1,10 +1,6 @@
 # Filter/search/expression methods included in application.rb
 module ApplicationController::Filter
   extend ActiveSupport::Concern
-  included do
-    helper_method :calendar_needed?  # because it is being called inside a render block
-  end
-
   include MiqExpression::FilterSubstMixin
   include ApplicationController::ExpressionHtml
 
@@ -120,17 +116,10 @@ module ApplicationController::Filter
           page << javascript_show("exp_buttons_on")
         end
 
-        page << ENABLE_CALENDAR if calendar_needed?
+        page << ENABLE_CALENDAR if @edit[@expkey].calendar_needed?
 
         if @edit[@expkey][:exp_key] && @edit[@expkey][:exp_field]
-          if @edit[@expkey][:val1][:type]
-            page << "ManageIQ.expEditor.first.type = '#{@edit[@expkey][:val1][:type]}';"
-            page << "ManageIQ.expEditor.first.title = '#{@edit[@expkey][:val1][:title]}';"
-          end
-          if @edit[@expkey][:val2][:type]
-            page << "ManageIQ.expEditor.second.type = '#{@edit[@expkey][:val2][:type]}';"
-            page << "ManageIQ.expEditor.second.title = '#{@edit[@expkey][:val2][:title]}';"
-          end
+          @edit[@expkey].render_values_to(page)
         end
         page << "miqSparkle(false);"  # Need to turn off sparkle in case original ajax element gets replaced
       end
@@ -161,13 +150,13 @@ module ApplicationController::Filter
       when "count"
         @edit[@expkey][:exp_count] = nil
         @edit[@expkey][:exp_key] = MiqExpression.get_col_operators(:count).first
-        exp_get_prefill_types                         # Get the field type
+        @edit[@expkey].prefill_val_types
       when "tag"
         @edit[@expkey][:exp_tag] = nil
         @edit[@expkey][:exp_key] = "CONTAINS"
       when "regkey"
         @edit[@expkey][:exp_key] = MiqExpression.get_col_operators(:regkey).first
-        exp_get_prefill_types                         # Get the field type
+        @edit[@expkey].prefill_val_types
       when "find"
         @edit[@expkey][:exp_field] = nil
         @edit[@expkey][:exp_key] = "FIND"
@@ -188,7 +177,7 @@ module ApplicationController::Filter
               @edit[@expkey][:exp_key] = nil unless MiqExpression.get_col_operators(@edit[@expkey][:exp_field]).include?(@edit[@expkey][:exp_key])  # Remove if not in list
               @edit[@expkey][:exp_key] ||= MiqExpression.get_col_operators(@edit[@expkey][:exp_field]).first  # Default to first operator
             end
-            exp_get_prefill_types                                   # Get the field type
+            @edit[@expkey].prefill_val_types
             process_datetime_expression_field(:val1, :exp_key, :exp_value)
           else
             @edit[@expkey][:exp_field] = nil
@@ -250,7 +239,7 @@ module ApplicationController::Filter
         end
         # Did the key change?, Save the key
         @edit[@expkey][:exp_key] = params[:chosen_key] if params[:chosen_key] && params[:chosen_key] != @edit[@expkey][:exp_key]
-        exp_get_prefill_types                         # Get the field type
+        @edit[@expkey].prefill_val_types
 
       when "find"
         if params[:chosen_field] && params[:chosen_field] != @edit[@expkey][:exp_field] # Did the field change?
@@ -260,15 +249,7 @@ module ApplicationController::Filter
           unless params[:chosen_field] == "<Choose>"
             @edit[@expkey][:exp_skey] = nil unless MiqExpression.get_col_operators(@edit[@expkey][:exp_field]).include?(@edit[@expkey][:exp_skey])  # Remove if not in list
             @edit[@expkey][:exp_skey] ||= MiqExpression.get_col_operators(@edit[@expkey][:exp_field]).first # Default to first operator
-            @edit[@expkey][:exp_available_cfields] = []      # Create the check fields pulldown array
-            MiqExpression.miq_adv_search_lists(@edit[@expkey][:exp_model], :exp_available_finds).each do |af|
-              unless af.last == @edit[@expkey][:exp_field]
-                if af.last.split("-").first == @edit[@expkey][:exp_field].split("-").first
-                  @edit[@expkey][:exp_available_cfields].push([af.first.split(":").last, af.last])
-                end
-              end
-            end
-            exp_get_prefill_types                                   # Get the field types
+            @edit[@expkey].prefill_val_types
             process_datetime_expression_field(:val1, :exp_skey, :exp_value)
           else
             @edit[@expkey][:exp_field] = nil
@@ -304,7 +285,7 @@ module ApplicationController::Filter
           unless params[:chosen_cfield] == "<Choose>"
             @edit[@expkey][:exp_ckey] = nil unless MiqExpression.get_col_operators(@edit[@expkey][:exp_cfield]).include?(@edit[@expkey][:exp_ckey]) # Remove if not in list
             @edit[@expkey][:exp_ckey] ||= MiqExpression.get_col_operators(@edit[@expkey][:exp_cfield]).first  # Default to first operator
-            exp_get_prefill_types                                 # Get the field types
+            @edit[@expkey].prefill_val_types
             process_datetime_expression_field(:val2, :exp_ckey, :exp_cvalue)
           else
             @edit[@expkey][:exp_cfield] = nil
@@ -423,15 +404,8 @@ module ApplicationController::Filter
         page.replace("flash_msg_div", :partial => "layouts/flash_msg")
         page.replace("exp_atom_editor_div", :partial => "layouts/exp_atom/editor")
 
-        page << ENABLE_CALENDAR if calendar_needed?
-        if @edit.fetch_path(@expkey, :val1, :type)
-          page << "ManageIQ.expEditor.first.type = '#{@edit[@expkey][:val1][:type]}';"
-          page << "ManageIQ.expEditor.first.title = '#{@edit[@expkey][:val1][:title]}';"
-        end
-        if @edit.fetch_path(@expkey, :val2, :type)
-          page << "ManageIQ.expEditor.second.type = '#{@edit[@expkey][:val2][:type]}';"
-          page << "ManageIQ.expEditor.second.title = '#{@edit[@expkey][:val2][:title]}';"
-        end
+        page << ENABLE_CALENDAR if @edit[@expkey].calendar_needed?
+        @edit[@expkey].render_values_to(page)
         page << "miqSparkle(false);" # Need to turn off sparkle in case original ajax element gets replaced
       end
     end
@@ -442,7 +416,7 @@ module ApplicationController::Filter
 
     # Rebuild the pulldowns if opening the search box
     adv_search_build_lists unless @edit[:adv_search_open]
-    exp_get_prefill_types unless @edit[:adv_search_open]
+    @edit[@expkey].prefill_val_types unless @edit[:adv_search_open]
 
     render :update do |page|
       page << javascript_prologue
@@ -457,15 +431,8 @@ module ApplicationController::Filter
         page.replace("adv_search_body", :partial => "layouts/adv_search_body")
         page.replace("adv_search_footer", :partial => "layouts/adv_search_footer")
         page << "$('#adv_search_img').prop('src', '#{ActionController::Base.helpers.image_path('toolbars/squashed-false.png')}')"
-        page << ENABLE_CALENDAR if calendar_needed?
-        if @edit.fetch_path(@expkey, :val1, :type)
-          page << "ManageIQ.expEditor.first.type = '#{@edit[@expkey][:val1][:type]}';"
-          page << "ManageIQ.expEditor.first.title = '#{@edit[@expkey][:val1][:title]}';"
-        end
-        if @edit.fetch_path(@expkey, :val2, :type)
-          page << "ManageIQ.expEditor.second.type = '#{@edit[@expkey][:val2][:type]}';"
-          page << "ManageIQ.expEditor.second.title = '#{@edit[@expkey][:val2][:title]}';"
-        end
+        page << ENABLE_CALENDAR if @edit[@expkey].calendar_needed?
+        @edit[@expkey].render_values_to(page)
       end
       page << set_spinner_off
       # Rememeber this settting in the model settings
@@ -743,7 +710,7 @@ module ApplicationController::Filter
 
     when "cancel"
       @edit[@expkey][:exp_table] = exp_build_table(@edit[@expkey][:expression]) # Rebuild the existing expression table
-      exp_get_prefill_types                                     # Get the prefill field type
+      @edit[@expkey].prefill_val_types
     end
 
     # Reset fields if delete or reset ran
@@ -1041,50 +1008,6 @@ module ApplicationController::Filter
     tc[0..tc.index(from_choice)]
   end
 
-  # Get the prefill types of the fields for the current expression
-  def exp_get_prefill_types
-    @edit[@expkey][:val1] ||= {}
-    @edit[@expkey][:val2] ||= {}
-    @edit[@expkey][:val1][:type] = nil
-    @edit[@expkey][:val2][:type] = nil
-    if @edit[@expkey][:exp_typ] == "field"
-      if @edit[@expkey][:exp_key] == EXP_IS && @edit[@expkey][:val1][:date_format] == 's'
-        @edit[@expkey][:val1][:type] = :date
-      else
-        @edit[@expkey][:val1][:type] = exp_prefill_type(@edit[@expkey][:exp_key], @edit[@expkey][:exp_field])
-      end
-    elsif @edit[@expkey][:exp_typ] == "find"
-      if @edit[@expkey][:exp_skey] == EXP_IS && @edit[@expkey][:val1][:date_format] == 's'
-        @edit[@expkey][:val1][:type] = :date
-      else
-        @edit[@expkey][:val1][:type] = exp_prefill_type(@edit[@expkey][:exp_skey], @edit[@expkey][:exp_field])
-      end
-      if @edit[@expkey][:exp_ckey] && @edit[@expkey][:exp_ckey] == EXP_IS && @edit[@expkey][:val2][:date_format] == 's'
-        @edit[@expkey][:val2][:type] = :date
-      else
-        @edit[@expkey][:val2][:type] = @edit[@expkey][:exp_check] == "checkcount" ? :integer : exp_prefill_type(@edit[@expkey][:exp_ckey], @edit[@expkey][:exp_cfield])
-      end
-    elsif @edit[@expkey][:exp_typ] == "count"
-      @edit[@expkey][:val1][:type] = :integer
-    elsif @edit[@expkey][:exp_typ] == "regkey"
-      @edit[@expkey][:val1][:type] = :string
-    end
-    @edit[@expkey][:val1][:title] = MiqExpression::FORMAT_SUB_TYPES[@edit[@expkey][:val1][:type]][:title] if @edit[@expkey][:val1][:type]
-    @edit[@expkey][:val2][:title] = MiqExpression::FORMAT_SUB_TYPES[@edit[@expkey][:val2][:type]][:title] if @edit[@expkey][:val2][:type]
-  end
-
-  # Get the field type for miqExpressionPrefill using the operator key and field
-  def exp_prefill_type(key, field)
-    return nil unless key && field
-    return :regex if key.starts_with?("REG")
-    typ = MiqExpression.get_col_info(field)[:format_sub_type] # :human_data_type?
-    if MiqExpression::FORMAT_SUB_TYPES.keys.include?(typ)
-      return typ
-    else
-      return :string
-    end
-  end
-
   # Remove :token keys from an expression before setting in a record
   def exp_remove_tokens(exp)
     if exp.kind_of?(Array)         # Is this and AND or OR
@@ -1135,12 +1058,6 @@ module ApplicationController::Filter
       skey = @edit[@expkey][:exp_skey] = exp[key]["search"].keys.first  # Get the search operator
       @edit[@expkey][:exp_field] = exp[key]["search"][skey]["field"]    # Get the search field
       @edit[@expkey][:alias] = exp[key]["search"][skey]["alias"]        # Get the field alias
-      @edit[@expkey][:exp_available_cfields] = []                # Create the check fields pulldown array
-      MiqExpression.miq_adv_search_lists(@edit[@expkey][:exp_model], :exp_available_finds).each do |af|
-        if af.last.split("-").first == @edit[@expkey][:exp_field].split("-").first
-          @edit[@expkey][:exp_available_cfields].push([af.first.split(":").last, af.last]) # Include fields from the chosen table
-        end
-      end
       @edit[@expkey][:exp_value] = exp[key]["search"][skey]["value"]    # Get the search value
       if exp[key].key?("checkall")                        # Find the check hash key
         chk = @edit[@expkey][:exp_check] = "checkall"
@@ -1159,8 +1076,7 @@ module ApplicationController::Filter
     @edit[@expkey][:exp_key] = key.upcase
     @edit[@expkey][:exp_orig_key] = key.upcase        # Hang on to the original key for commit
     @edit[@expkey][:exp_typ] = typ
-
-    exp_get_prefill_types                             # Get the format sub types of the fields in this atom
+    @edit[@expkey].prefill_val_types
 
     @edit[:suffix] = @edit[:suffix2] = nil
     unless @edit[@expkey][:exp_value] == :user_input  # Ignore user input fields
@@ -1559,7 +1475,7 @@ module ApplicationController::Filter
     end
 
     @edit[@expkey][exp_key] = params[chosen_key]  # Save the key
-    exp_get_prefill_types # Prefill type may change based on selected key for date/time fields
+    @edit[@expkey].prefill_val_types
 
     # Convert to/from "<date>" and "<date time>" strings in the exp_value array for specific date/times
     if @edit[@expkey][exp_valx][:date_format] == "s"
@@ -1613,9 +1529,4 @@ module ApplicationController::Filter
   end
 
   ENABLE_CALENDAR = "miqBuildCalendar();".freeze
-  def calendar_needed?
-    return true if [:date, :datetime].include?(@edit.fetch_path(@expkey, :val1, :type))
-    return true if [:date, :datetime].include?(@edit.fetch_path(@expkey, :val2, :type))
-    false
-  end
 end

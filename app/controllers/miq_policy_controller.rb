@@ -1061,7 +1061,7 @@ class MiqPolicyController < ApplicationController
   def build_expression(parent, model)
     @edit[:new][:expression] = parent.expression.kind_of?(MiqExpression) ? parent.expression.exp : nil
     # Populate exp editor fields for the expression column
-    @edit[:expression] ||= {}                                     # Create hash for this expression, if needed
+    @edit[:expression] ||= ApplicationController::Filter::Expression.new
     @edit[:expression][:expression] = []                         # Store exps in an array
     @edit[:expression][:exp_idx] = 0                                    # Start at first exp
     if @edit[:new][:expression].blank?

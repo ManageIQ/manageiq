@@ -136,7 +136,7 @@
     "data-miq_sparkle_off" => true)
   - if @edit[@expkey][:exp_check] != "checkcount"
     = select_tag('chosen_cfield',
-      options_for_select(["<Choose>"] + @edit[@expkey][:exp_available_cfields], @edit[@expkey][:exp_cfield]),
+      options_for_select(["<Choose>"] + @edit[@expkey].exp_available_cfields, @edit[@expkey][:exp_cfield]),
       :multiple              => false,
       :class                 => 'selectpicker',
       "data-miq_sparkle_on"  => true,
