@@ -431,8 +431,8 @@ class MiqAlert < ApplicationRecord
         ]},
       {:name => "mw_non_heap_used", :description => _("JVM Non Heap Used"), :db => ["MiddlewareServer"], :responds_to_events => "hawkular_event",
         :options => [
-          {:name => :value_mw_greater_than, :description => _("> Non Heap Max (%)"), :numeric => true},
-          {:name => :value_mw_less_than, :description => _("< Non Heap Max (%)"), :numeric => true}
+          {:name => :value_mw_greater_than, :description => _("> Non Heap Committed (%)"), :numeric => true},
+          {:name => :value_mw_less_than, :description => _("< Non Heap Committed (%)"), :numeric => true}
         ]},
       {:name => "mw_accumulated_gc_duration", :description => _("JVM Accumulated GC Duration"), :db => ["MiddlewareServer"], :responds_to_events => "hawkular_event",
         :options => [

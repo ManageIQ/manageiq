@@ -76,7 +76,9 @@ module ManageIQ::Providers
 
     def generate_mw_jvm_conditions(eval_method, options)
       data_id = mw_server_metrics_by_column[eval_method]
-      data2_id = mw_server_metrics_by_column["mw_heap_max"]
+      data2_id = if eval_method == "mw_heap_used" then mw_server_metrics_by_column["mw_heap_max"]
+                 else mw_server_metrics_by_column["mw_non_heap_committed"]
+                 end
       c = []
       c[0] = generate_mw_compare_condition(data_id, data2_id, :GT, options[:value_mw_greater_than].to_f / 100)
       c[1] = generate_mw_compare_condition(data_id, data2_id, :LT, options[:value_mw_less_than].to_f / 100)
