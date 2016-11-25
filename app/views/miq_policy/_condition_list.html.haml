@@ -3,10 +3,11 @@
     %div{:style => "padding-top: 10px;"}
     = render :partial => "layouts/flash_msg"
     - if @conditions.empty?
+      - model = ui_lookup(:model => @sb[:folder].camelize)
       - if @search_text.blank?
-        - msg = _("No %{model} Conditions are defined.") % {:model => ui_lookup(:model => @sb[:folder])}
+        - msg = _("No %{model} Conditions are defined.") % {:model => model}
       - else
-        - msg = _("No %{model} Conditions are defined that match the entered search string.") % {:model => ui_lookup(:model => @sb[:folder])}
+        - msg = _("No %{model} Conditions are defined that match the entered search string.") % {:model => model}
       = render :partial => 'layouts/info_msg', :locals => {:message => msg}
     - else
       %table.table.table-striped.table-bordered.table-hover
