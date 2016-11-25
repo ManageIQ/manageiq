@@ -5,6 +5,7 @@ class CloudObjectStoreContainerController < ApplicationController
   after_action :set_session_data
 
   include Mixins::GenericListMixin
+  include Mixins::GenericShowMixin
 
   def breadcrumb_name(_model)
     ui_lookup(:tables => "cloud_object_store_container")
@@ -17,46 +18,8 @@ class CloudObjectStoreContainerController < ApplicationController
     return tag("CloudObjectStoreContainer") if params[:pressed] == 'cloud_object_store_container_tag'
   end
 
-  def show
-    @display = params[:display] || "main" unless control_selected?
-    @showtype = @display
-    @lastaction = "show"
-
-    @cloud_object_store_container = @record = identify_record(params[:id])
-    return if record_no_longer_exists?(@record)
-
-    @gtl_url = "/show"
-    drop_breadcrumb(
-      {
-        :name => ui_lookup(:tables => "cloud_object_stores"),
-        :url  => "/cloud_object_store_container/show_list?page=#{@current_page}&refresh=y"
-      },
-      true
-    )
-
-    case @display
-    when "download_pdf", "main", "summary_only"
-      get_tagdata(@record)
-      drop_breadcrumb(
-        :name => _("%{name} (Summary)") % {:name => @record.key.to_s},
-        :url  => "/cloud_object_store_container/show/#{@record.id}"
-      )
-      @showtype = "main"
-      set_summary_pdf_data if %w(download_pdf summary_only).include?(@display)
-    when "cloud_object_store_objects"
-      title = ui_lookup(:tables => 'cloud_objects')
-      kls   = CloudObjectStoreObject
-      drop_breadcrumb(
-        :name => _("%{name} (All %{title})") % {:name => @record.name, :title => title},
-        :url  => "/cloud_object_store_container/show/#{@record.id}?display=cloud_object_store_objects"
-      )
-      @view, @pages = get_view(kls, :parent => @record, :association => :cloud_object_store_objects)
-      @showtype = "cloud_object_store_objects"
-    end
-
-    if params[:ppsetting] || params[:searchtag] || params[:entry] || params[:sort_choice]
-      replace_gtl_main_div
-    end
+  def self.display_methods
+    %w(cloud_object_store_objects)
   end
 
   private
