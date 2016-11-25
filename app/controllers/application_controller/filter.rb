@@ -249,14 +249,6 @@ module ApplicationController::Filter
           unless params[:chosen_field] == "<Choose>"
             @edit[@expkey][:exp_skey] = nil unless MiqExpression.get_col_operators(@edit[@expkey][:exp_field]).include?(@edit[@expkey][:exp_skey])  # Remove if not in list
             @edit[@expkey][:exp_skey] ||= MiqExpression.get_col_operators(@edit[@expkey][:exp_field]).first # Default to first operator
-            @edit[@expkey][:exp_available_cfields] = []      # Create the check fields pulldown array
-            MiqExpression.miq_adv_search_lists(@edit[@expkey][:exp_model], :exp_available_finds).each do |af|
-              unless af.last == @edit[@expkey][:exp_field]
-                if af.last.split("-").first == @edit[@expkey][:exp_field].split("-").first
-                  @edit[@expkey][:exp_available_cfields].push([af.first.split(":").last, af.last])
-                end
-              end
-            end
             @edit[@expkey].prefill_val_types
             process_datetime_expression_field(:val1, :exp_skey, :exp_value)
           else
@@ -1066,12 +1058,6 @@ module ApplicationController::Filter
       skey = @edit[@expkey][:exp_skey] = exp[key]["search"].keys.first  # Get the search operator
       @edit[@expkey][:exp_field] = exp[key]["search"][skey]["field"]    # Get the search field
       @edit[@expkey][:alias] = exp[key]["search"][skey]["alias"]        # Get the field alias
-      @edit[@expkey][:exp_available_cfields] = []                # Create the check fields pulldown array
-      MiqExpression.miq_adv_search_lists(@edit[@expkey][:exp_model], :exp_available_finds).each do |af|
-        if af.last.split("-").first == @edit[@expkey][:exp_field].split("-").first
-          @edit[@expkey][:exp_available_cfields].push([af.first.split(":").last, af.last]) # Include fields from the chosen table
-        end
-      end
       @edit[@expkey][:exp_value] = exp[key]["search"][skey]["value"]    # Get the search value
       if exp[key].key?("checkall")                        # Find the check hash key
         chk = @edit[@expkey][:exp_check] = "checkall"
