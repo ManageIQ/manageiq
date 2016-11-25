@@ -8,6 +8,7 @@ class CloudSubnetController < ApplicationController
   include Mixins::GenericListMixin
   include Mixins::GenericSessionMixin
   include Mixins::GenericShowMixin
+  include Mixins::CheckedIdMixin
 
   def self.display_methods
     %w(instances cloud_subnets)
@@ -23,7 +24,7 @@ class CloudSubnetController < ApplicationController
     delete_subnets if params[:pressed] == 'cloud_subnet_delete'
 
     if params[:pressed] == "cloud_subnet_edit"
-      checked_subnet_id = get_checked_subnet_id(params)
+      checked_subnet_id = get_checked_item_id(params)
       javascript_redirect :action => "edit", :id => checked_subnet_id
     elsif params[:pressed] == "cloud_subnet_new"
       javascript_redirect :action => "new"
@@ -164,16 +165,6 @@ class CloudSubnetController < ApplicationController
       :name => _("Edit Subnet \"%{name}\"") % {:name => @subnet.name},
       :url  => "/cloud_subnet/edit/#{@subnet.id}"
     )
-  end
-
-  def get_checked_subnet_id(params)
-    if params[:id]
-      checked_subnet_id = params[:id]
-    else
-      checked_subnets = find_checked_items
-      checked_subnet_id = checked_subnets[0] if checked_subnets.length == 1
-    end
-    checked_subnet_id
   end
 
   def update

@@ -8,6 +8,7 @@ class NetworkRouterController < ApplicationController
   include Mixins::GenericListMixin
   include Mixins::GenericSessionMixin
   include Mixins::GenericShowMixin
+  include Mixins::CheckedIdMixin
 
   def self.display_methods
     %w(instances cloud_subnets)
@@ -23,7 +24,7 @@ class NetworkRouterController < ApplicationController
     delete_network_routers if params[:pressed] == 'network_router_delete'
 
     if params[:pressed] == "network_router_edit"
-      checked_router_id = get_checked_router_id(params)
+      checked_router_id = get_checked_item_id(params)
       javascript_redirect :action => "edit", :id => checked_router_id
     elsif params[:pressed] == "network_router_new"
       javascript_redirect :action => "new"
@@ -172,16 +173,6 @@ class NetworkRouterController < ApplicationController
       :name => _("Edit Router \"%{name}\"") % {:model => ui_lookup(:table => 'network_router'), :name => @router.name},
       :url  => "/network_router/edit/#{@router.id}"
     )
-  end
-
-  def get_checked_router_id(params)
-    if params[:id]
-      checked_router_id = params[:id]
-    else
-      checked_routers = find_checked_items
-      checked_router_id = checked_routers[0] if checked_routers.length == 1
-    end
-    checked_router_id
   end
 
   def update

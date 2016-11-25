@@ -5,16 +5,7 @@ class CloudVolumeController < ApplicationController
   after_action :set_session_data
 
   include Mixins::GenericListMixin
-
-  def get_checked_volume_id(params)
-    if params[:id]
-      checked_volume_id = params[:id]
-    else
-      checked_volumes = find_checked_items
-      checked_volume_id = checked_volumes[0] if checked_volumes.length == 1
-    end
-    checked_volume_id
-  end
+  include Mixins::CheckedIdMixin
 
   # handle buttons pressed on the button bar
   def button
@@ -42,10 +33,10 @@ class CloudVolumeController < ApplicationController
     end
 
     if params[:pressed] == "cloud_volume_attach"
-      checked_volume_id = get_checked_volume_id(params)
+      checked_volume_id = get_checked_item_id(params)
       javascript_redirect :action => "attach", :id => checked_volume_id
     elsif params[:pressed] == "cloud_volume_detach"
-      checked_volume_id = get_checked_volume_id(params)
+      checked_volume_id = get_checked_item_id(params)
       @volume = find_by_id_filtered(CloudVolume, checked_volume_id)
       if @volume.attachments.empty?
         render_flash(_("%{volume} \"%{volume_name}\" is not attached to any %{instances}") % {
@@ -56,18 +47,18 @@ class CloudVolumeController < ApplicationController
         javascript_redirect :action => "detach", :id => checked_volume_id
       end
     elsif params[:pressed] == "cloud_volume_edit"
-      checked_volume_id = get_checked_volume_id(params)
+      checked_volume_id = get_checked_item_id(params)
       javascript_redirect :action => "edit", :id => checked_volume_id
     elsif params[:pressed] == "cloud_volume_snapshot_create"
-      checked_volume_id = get_checked_volume_id(params)
+      checked_volume_id = get_checked_item_id(params)
       javascript_redirect :action => "snapshot_new", :id => checked_volume_id
     elsif params[:pressed] == "cloud_volume_new"
       javascript_redirect :action => "new"
     elsif params[:pressed] == "cloud_volume_backup_create"
-      checked_volume_id = get_checked_volume_id(params)
+      checked_volume_id = get_checked_item_id(params)
       javascript_redirect :action => "backup_new", :id => checked_volume_id
     elsif params[:pressed] == "cloud_volume_backup_restore"
-      checked_volume_id = get_checked_volume_id(params)
+      checked_volume_id = get_checked_item_id(params)
       javascript_redirect :action => "backup_select", :id => checked_volume_id
     elsif !flash_errors? && @refresh_div == "main_div" && @lastaction == "show_list"
       replace_gtl_main_div

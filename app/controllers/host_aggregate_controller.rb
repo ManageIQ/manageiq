@@ -5,6 +5,7 @@ class HostAggregateController < ApplicationController
   after_action :set_session_data
 
   include Mixins::GenericListMixin
+  include Mixins::CheckedIdMixin
 
   def show
     return if perfmenu_click?
@@ -72,16 +73,6 @@ class HostAggregateController < ApplicationController
     end
   end
 
-  def get_checked_host_aggregate_id(params)
-    if params[:id]
-      checked_host_aggregate_id = params[:id]
-    else
-      checked_host_aggregates = find_checked_items
-      checked_host_aggregate_id = checked_host_aggregates[0] if checked_host_aggregates.length == 1
-    end
-    checked_host_aggregate_id
-  end
-
   def host_aggregate_form_fields
     assert_privileges("host_aggregate_edit")
     host_aggregate = find_by_id_filtered(HostAggregate, params[:id])
@@ -127,17 +118,17 @@ class HostAggregateController < ApplicationController
       javascript_redirect :action => "new"
       return
     elsif params[:pressed] == "host_aggregate_edit"
-      javascript_redirect :action => "edit", :id => get_checked_host_aggregate_id(params)
+      javascript_redirect :action => "edit", :id => get_checked_item_id(params)
       return
     elsif params[:pressed] == 'host_aggregate_delete'
       delete_host_aggregates
       render_flash
       return
     elsif params[:pressed] == "host_aggregate_add_host"
-      javascript_redirect :action => "add_host_select", :id => get_checked_host_aggregate_id(params)
+      javascript_redirect :action => "add_host_select", :id => get_checked_item_id(params)
       return
     elsif params[:pressed] == "host_aggregate_remove_host"
-      javascript_redirect :action => "remove_host_select", :id => get_checked_host_aggregate_id(params)
+      javascript_redirect :action => "remove_host_select", :id => get_checked_item_id(params)
       return
     elsif params[:pressed].ends_with?("_edit") || ["#{pfx}_miq_request_new", "#{pfx}_clone",
                                                    "#{pfx}_migrate", "#{pfx}_publish"].include?(params[:pressed])
