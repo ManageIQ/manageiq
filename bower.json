@@ -17,8 +17,6 @@
     "tests"
   ],
   "dependencies": {
-    "angular-patternfly-sass": "~3.14.0",
-    "manageiq-ui-components": "~0.0.9"
   },
   "resolutions": {
   }
