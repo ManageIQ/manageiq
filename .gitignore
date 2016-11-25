@@ -124,7 +124,6 @@ tmp/*
 
 # vendor/
 vendor/bundle
-vendor/assets/bower_components/
 
 # npm
 node_modules/
