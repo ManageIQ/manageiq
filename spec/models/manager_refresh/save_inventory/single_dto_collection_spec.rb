@@ -31,7 +31,7 @@ describe ManagerRefresh::SaveInventory do
           # Initialize the DtoCollections
           data       = {}
           data[:vms] = ::ManagerRefresh::DtoCollection.new(
-            ManageIQ::Providers::Amazon::CloudManager::Vm, :parent => @ems, :association => :vms)
+            ManageIQ::Providers::CloudManager::Vm, :parent => @ems, :association => :vms)
 
           # Fill the DtoCollections with data
           add_data_to_dto_collection(data[:vms], vm_data(1), vm_data(2))
@@ -50,7 +50,7 @@ describe ManagerRefresh::SaveInventory do
           # Initialize the DtoCollections
           data       = {}
           data[:vms] = ::ManagerRefresh::DtoCollection.new(
-            ManageIQ::Providers::Amazon::CloudManager::Vm, :parent => @ems, :association => :vms)
+            ManageIQ::Providers::CloudManager::Vm, :parent => @ems, :association => :vms)
 
           # Fill the DtoCollections with data
           add_data_to_dto_collection(data[:vms],
@@ -74,7 +74,7 @@ describe ManagerRefresh::SaveInventory do
           # Initialize the DtoCollections
           data       = {}
           data[:vms] = ::ManagerRefresh::DtoCollection.new(
-            ManageIQ::Providers::Amazon::CloudManager::Vm, :parent => @ems, :association => :vms)
+            ManageIQ::Providers::CloudManager::Vm, :parent => @ems, :association => :vms)
 
           # Fill the DtoCollections with data, that have a modified name
           add_data_to_dto_collection(data[:vms],
@@ -104,7 +104,7 @@ describe ManagerRefresh::SaveInventory do
             # Initialize the DtoCollections
             @data       = {}
             @data[:vms] = ::ManagerRefresh::DtoCollection.new(
-              ManageIQ::Providers::Amazon::CloudManager::Vm, :parent => @ems, :association => :vms)
+              ManageIQ::Providers::CloudManager::Vm, :parent => @ems, :association => :vms)
           end
 
           it 'has correct records in the DB' do
@@ -185,7 +185,7 @@ describe ManagerRefresh::SaveInventory do
             # Initialize the DtoCollections
             @data       = {}
             @data[:vms] = ::ManagerRefresh::DtoCollection.new(
-              ManageIQ::Providers::Amazon::CloudManager::Vm,
+              ManageIQ::Providers::CloudManager::Vm,
               :parent        => @ems,
               :association   => :vms,
               :delete_method => :disconnect_inv)
@@ -237,7 +237,7 @@ describe ManagerRefresh::SaveInventory do
           # column
           it 'recognizes correct presence validators' do
             dto_collection      = ::ManagerRefresh::DtoCollection.new(
-              ManageIQ::Providers::Amazon::CloudManager::Vm,
+              ManageIQ::Providers::CloudManager::Vm,
               :parent               => @ems,
               :association          => :vms,
               :attributes_blacklist => [:ems_ref, :uid_ems, :name, :location])
@@ -253,7 +253,7 @@ describe ManagerRefresh::SaveInventory do
           it 'does not blacklist fixed attributes with default manager_ref' do
             # Fixed attributes are attributes used for unique ID of the DTO or attributes with presence validation
             dto_collection = ::ManagerRefresh::DtoCollection.new(
-              ManageIQ::Providers::Amazon::CloudManager::Vm,
+              ManageIQ::Providers::CloudManager::Vm,
               :parent               => @ems,
               :association          => :vms,
               :attributes_blacklist => [:ems_ref, :uid_ems, :name, :location, :vendor, :raw_power_state])
@@ -264,7 +264,7 @@ describe ManagerRefresh::SaveInventory do
           it 'has fixed and internal attributes amongst whitelisted_attributes with default manager_ref' do
             # Fixed attributes are attributes used for unique ID of the DTO or attributes with presence validation
             dto_collection = ::ManagerRefresh::DtoCollection.new(
-              ManageIQ::Providers::Amazon::CloudManager::Vm,
+              ManageIQ::Providers::CloudManager::Vm,
               :parent               => @ems,
               :association          => :vms,
               :attributes_whitelist => [:raw_power_state])
@@ -275,7 +275,7 @@ describe ManagerRefresh::SaveInventory do
 
           it 'does not blacklist fixed attributes when changing manager_ref' do
             dto_collection = ::ManagerRefresh::DtoCollection.new(
-              ManageIQ::Providers::Amazon::CloudManager::Vm,
+              ManageIQ::Providers::CloudManager::Vm,
               :manager_ref          => [:uid_ems],
               :parent               => @ems,
               :association          => :vms,
@@ -287,7 +287,7 @@ describe ManagerRefresh::SaveInventory do
           it 'has fixed and internal attributes amongst whitelisted_attributes when changing manager_ref' do
             # Fixed attributes are attributes used for unique ID of the DTO or attributes with presence validation
             dto_collection = ::ManagerRefresh::DtoCollection.new(
-              ManageIQ::Providers::Amazon::CloudManager::Vm,
+              ManageIQ::Providers::CloudManager::Vm,
               :manager_ref          => [:uid_ems],
               :parent               => @ems,
               :association          => :vms,
@@ -301,7 +301,7 @@ describe ManagerRefresh::SaveInventory do
             # Initialize the DtoCollections
             @data       = {}
             @data[:vms] = ::ManagerRefresh::DtoCollection.new(
-              ManageIQ::Providers::Amazon::CloudManager::Vm,
+              ManageIQ::Providers::CloudManager::Vm,
               :parent      => @ems,
               :association => :vms)
 
@@ -338,7 +338,7 @@ describe ManagerRefresh::SaveInventory do
             # Initialize the DtoCollections
             @data       = {}
             @data[:vms] = ::ManagerRefresh::DtoCollection.new(
-              ManageIQ::Providers::Amazon::CloudManager::Vm,
+              ManageIQ::Providers::CloudManager::Vm,
               :parent               => @ems,
               :association          => :vms,
               :attributes_blacklist => [:name, :location, :raw_power_state])
@@ -376,7 +376,7 @@ describe ManagerRefresh::SaveInventory do
             # Initialize the DtoCollections
             @data       = {}
             @data[:vms] = ::ManagerRefresh::DtoCollection.new(
-              ManageIQ::Providers::Amazon::CloudManager::Vm,
+              ManageIQ::Providers::CloudManager::Vm,
               :parent               => @ems,
               :association          => :vms,
               # TODO(lsmola) vendor is not getting caught by fixed attributes
@@ -415,7 +415,7 @@ describe ManagerRefresh::SaveInventory do
             # Initialize the DtoCollections
             @data       = {}
             @data[:vms] = ::ManagerRefresh::DtoCollection.new(
-              ManageIQ::Providers::Amazon::CloudManager::Vm,
+              ManageIQ::Providers::CloudManager::Vm,
               :parent               => @ems,
               :association          => :vms,
               # TODO(lsmola) vendor is not getting caught by fixed attributes
@@ -457,7 +457,7 @@ describe ManagerRefresh::SaveInventory do
             # Initialize the DtoCollections
             @data       = {}
             @data[:vms] = ::ManagerRefresh::DtoCollection.new(
-              ManageIQ::Providers::Amazon::CloudManager::Vm,
+              ManageIQ::Providers::CloudManager::Vm,
               :parent      => @ems,
               :association => :vms,
               :complete    => false)
@@ -490,7 +490,7 @@ describe ManagerRefresh::SaveInventory do
             # Initialize the DtoCollections
             data       = {}
             data[:vms] = ::ManagerRefresh::DtoCollection.new(
-              ManageIQ::Providers::Amazon::CloudManager::Vm, :parent => availability_zone, :association => :vms)
+              ManageIQ::Providers::CloudManager::Vm, :parent => availability_zone, :association => :vms)
 
             # Fill the DtoCollections with data, that have one new VM and are missing one VM
             add_data_to_dto_collection(data[:vms],
@@ -515,7 +515,7 @@ describe ManagerRefresh::SaveInventory do
             # Initialize the DtoCollections
             data       = {}
             data[:vms] = ::ManagerRefresh::DtoCollection.new(
-              ManageIQ::Providers::Amazon::CloudManager::Vm, :parent => cloud_tenant, :association => :vms)
+              ManageIQ::Providers::CloudManager::Vm, :parent => cloud_tenant, :association => :vms)
 
             # Fill the DtoCollections with data, that have one new VM and are missing one VM
             add_data_to_dto_collection(data[:vms],
@@ -540,7 +540,7 @@ describe ManagerRefresh::SaveInventory do
             # Initialize the DtoCollections
             data       = {}
             data[:vms] = ::ManagerRefresh::DtoCollection.new(
-              ManageIQ::Providers::Amazon::CloudManager::Vm, :parent => cloud_tenant, :association => :vms)
+              ManageIQ::Providers::CloudManager::Vm, :parent => cloud_tenant, :association => :vms)
 
             # Fill the DtoCollections with data, that have one new VM and are missing one VM
             add_data_to_dto_collection(data[:vms],
@@ -570,7 +570,7 @@ describe ManagerRefresh::SaveInventory do
             # Initialize the DtoCollections
             data       = {}
             data[:vms] = ::ManagerRefresh::DtoCollection.new(
-              ManageIQ::Providers::Amazon::CloudManager::Vm,
+              ManageIQ::Providers::CloudManager::Vm,
               :parent      => cloud_tenant,
               :association => :vms,
               :complete    => false)
