@@ -14,7 +14,8 @@
             = select_tag("profile_id",
                          options_for_select(@all_profs.invert.sort_by { |desc, _id| desc.downcase }, "select"),
                          "data-miq_observe" => {:url => url}.to_json,
-                         "class"            => "selectpicker")
+                         "class"            => "selectpicker",
+                         "data-width"       => "auto")
             :javascript
               miqInitSelectPicker();
               miqSelectPickerEvent("profile_id", "#{url}", {beforeSend: true, complete: true});
