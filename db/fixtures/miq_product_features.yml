@@ -1382,6 +1382,21 @@
       :feature_type: view
       :identifier: miq_report_view
       :children:
+      - :name: View Graph
+        :description: Show Report Graph
+        :feature_type: admin
+        :hidden: true
+        :identifier: view_graph
+      - :name: View Hybrid
+        :description: Show Report Hybrid
+        :feature_type: admin
+        :hidden: true
+        :identifier: view_hybrid
+      - :name: View Tabular
+        :description: Show Report Tabular
+        :feature_type: admin
+        :hidden: true
+        :identifier: view_tabular
       - :name: Download CSV Format
         :description: Download Report in CSV Format
         :feature_type: admin
