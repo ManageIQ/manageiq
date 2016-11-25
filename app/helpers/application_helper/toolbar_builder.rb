@@ -628,8 +628,12 @@ class ApplicationHelper::ToolbarBuilder
       type = get_vmdb_config.fetch_path(:server, :remote_console_type)
       return type != 'MKS' || !@record.console_supported?(type)
     when "vm_vnc_console"
-      type = get_vmdb_config.fetch_path(:server, :remote_console_type)
-      return type != 'VNC' || !@record.console_supported?(type)
+      if @record.vendor == 'vmware'
+        # remote_console_type is only useful for vmware consoles
+        type = get_vmdb_config.fetch_path(:server, :remote_console_type)
+        return type != 'VNC' || !@record.console_supported?(type)
+      end
+      return !@record.console_supported?('vnc')
     when "vm_vmrc_console"
       type = get_vmdb_config.fetch_path(:server, :remote_console_type)
       return type != 'VMRC' || !@record.console_supported?(type)

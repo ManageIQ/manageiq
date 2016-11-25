@@ -635,6 +635,7 @@ describe ApplicationHelper do
         @id = "vm_vnc_console"
         stub_user(:features => :all)
         allow(@record).to receive_messages(:console_supported? => false)
+        allow(@record).to receive_messages(:vendor => "vmware")
       end
 
       it "and record is not console supported" do
@@ -654,6 +655,12 @@ describe ApplicationHelper do
       it "and record is console supported and server's remote_console_type is VNC" do
         allow(@record).to receive_messages(:console_supported? => true)
         @vmdb_config = {:server => {:remote_console_type => "VNC"}}
+        expect(subject).to be_falsey
+      end
+
+      it "and record is console supported and not vmware" do
+        allow(@record).to receive_messages(:console_supported? => true)
+        allow(@record).to receive_messages(:vendor => "not_vmware")
         expect(subject).to be_falsey
       end
     end
