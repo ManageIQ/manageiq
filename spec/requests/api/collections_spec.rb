@@ -244,7 +244,7 @@ describe "Rest API Collections" do
     end
 
     it "query Tenants" do
-      api_basic_authorize "rbac_tenant_show_list"
+      api_basic_authorize "rbac_tenant_view"
       Tenant.seed
       test_collection_query(:tenants, tenants_url, Tenant)
     end
@@ -484,7 +484,7 @@ describe "Rest API Collections" do
     end
 
     it "bulk query Tenants" do
-      api_basic_authorize "rbac_tenant_show_list"
+      api_basic_authorize "rbac_tenant_view"
       Tenant.seed
       test_collection_bulk_query(:tenants, tenants_url, Tenant)
     end

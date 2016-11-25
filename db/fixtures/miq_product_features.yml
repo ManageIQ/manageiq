@@ -2740,15 +2740,6 @@
         :description: View Tenants
         :feature_type: view
         :identifier: rbac_tenant_view
-        :children:
-        - :name: List
-          :description: Display Lists of Tenants
-          :feature_type: view
-          :identifier: rbac_tenant_show_list
-        - :name: Show
-          :description: Display Individual Tenants
-          :feature_type: view
-          :identifier: rbac_tenant_show
       - :name: Modify
         :description: Modify Tenant/Project
         :feature_type: admin

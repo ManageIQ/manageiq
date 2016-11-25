@@ -58,7 +58,7 @@
           - if @group.tenant
             - tenant = @group.tenant
             - params = {:class => "product product-#{tenant.divisible ? "tenant" : "project"}"}
-            - if role_allows?(:feature => "rbac_tenant_show")
+            - if role_allows?(:feature => "rbac_tenant_view")
               - params[:class] = "#{params[:class]} pointer"
               - params[:onclick] = "miqTreeActivateNode('rbac_tree', 'tn-#{to_cid(tenant.id)}');"
               - params[:title] = tenant.divisible ? _("View this Tenant") : _("View this Project")
