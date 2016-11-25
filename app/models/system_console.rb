@@ -24,8 +24,8 @@ class SystemConsole < ApplicationRecord
   end
 
   def self.allocate_port
-    port_range_start = ::Settings.server.proxy_port.try(:start) || 6000
-    port_range_end   = ::Settings.server.proxy_port.try(:end) || 7000
+    port_range_start = ::Settings.server.proxy_port.start || 6000
+    port_range_end   = ::Settings.server.proxy_port.end || 7000
 
     used_ports = SystemConsole.where.not(:proxy_pid => nil).where(:host_name => local_address).order(:port).pluck(:port)
 
@@ -93,7 +93,7 @@ class SystemConsole < ApplicationRecord
   end
 
   def self.launch_proxy_if_not_local(console_args, originating_server, host_address, host_port)
-    proxy_disabled = ::Settings.server.try(:console_proxy_disabled)
+    proxy_disabled = ::Settings.server.console_proxy_disabled
     proxy_disabled = proxy_disabled.present? && !proxy_disabled
 
     _log.info "Originating server: #{originating_server}, local server: #{MiqServer.my_server.id}"
