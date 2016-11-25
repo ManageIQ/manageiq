@@ -180,7 +180,7 @@ module MiqPolicyController::Conditions
     @edit[:new][:applies_to_exp] = @condition.applies_to_exp.kind_of?(MiqExpression) ? @condition.applies_to_exp.exp : nil
 
     # Populate exp editor fields for the expression column
-    @edit[:expression] ||= {}                                     # Create hash for this expression, if needed
+    @edit[:expression] ||= ApplicationController::Filter::Expression.new
     @edit[:expression][:expression] = []                         # Store exps in an array
     @edit[:expression][:exp_idx] = 0                                    # Start at first exp
     if @edit[:new][:expression].blank?

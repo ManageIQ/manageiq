@@ -370,7 +370,7 @@ module MiqPolicyController::Alerts
   end
 
   def alert_build_blank_exp
-    @edit[:expression] ||= {}                                     # Create hash for this expression, if needed
+    @edit[:expression] ||= ApplicationController::Filter::Expression.new
     @edit[:expression][:expression] = []                         # Store exps in an array
     @edit[:expression][:exp_idx] = 0                                    # Start at first exp
     @edit[:expression][:expression] = {"???" => "???"}                    # Set as new exp element
