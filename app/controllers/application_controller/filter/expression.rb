@@ -34,6 +34,7 @@ module ApplicationController::Filter
     :selected,
     :val1,
     :val2,
+    :record_filter
   ) do
   end
   # TODO: expression is now manipulated with fetch_path
