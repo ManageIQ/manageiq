@@ -4,7 +4,6 @@ module Mixins
       @display = params[:display] || "main" unless control_selected?
 
       @lastaction = "show"
-      @showtype   = "config"
       @record     = identify_record(params[:id])
       return if record_no_longer_exists?(@record)
 
