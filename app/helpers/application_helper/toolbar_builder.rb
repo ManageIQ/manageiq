@@ -591,8 +591,12 @@ class ApplicationHelper::ToolbarBuilder
       type = ::Settings.server.remote_console_type
       return type != 'MKS' || !@record.console_supported?(type)
     when "vm_vnc_console"
-      type = ::Settings.server.remote_console_type
-      return type != 'VNC' || !@record.console_supported?(type)
+      if @record.vendor == 'vmware'
+        # remote_console_type is only useful for vmware consoles
+        type = ::Settings.server.remote_console_type
+        return type != 'VNC' || !@record.console_supported?(type)
+      end
+      return !@record.console_supported?('vnc')
     when "vm_vmrc_console"
       type = ::Settings.server.remote_console_type
       return type != 'VMRC' || !@record.console_supported?(type)
