@@ -60,12 +60,10 @@ class ResourcePoolController < ApplicationController
       @view, @pages = get_view(ResourcePool, :parent => @record)  # Get the records (into a view) and the paginator
       @showtype = "resource_pools"
 
-    when"config_info"
+    when "config_info"
       @showtype = "config"
       drop_breadcrumb(:name => _("Configuration"), :url => "/resource_pool/show/#{@record.id}?display=#{@display}")
     end
-
-    set_config(@record)
 
     # Came in from outside show_list partial
     if params[:ppsetting] || params[:searchtag] || params[:entry] || params[:sort_choice]
@@ -73,36 +71,8 @@ class ResourcePoolController < ApplicationController
     end
   end
 
-  def set_config(db_record)
-    @rp_config = []
-    @rp_config.push(:field       => "Memory Reserve",
-                    :description => db_record.memory_reserve) unless db_record.memory_reserve.nil?
-    @rp_config.push(:field       => "Memory Reserve Expand",
-                    :description => db_record.memory_reserve_expand) unless db_record.memory_reserve_expand.nil?
-    unless db_record.memory_limit.nil?
-      mem_limit = db_record.memory_limit
-      mem_limit = "Unlimited" if db_record.memory_limit == -1
-      @rp_config.push(:field       => "Memory Limit",
-                      :description => mem_limit)
-    end
-    @rp_config.push(:field       => "Memory Shares",
-                    :description => db_record.memory_shares) unless db_record.memory_shares.nil?
-    @rp_config.push(:field       => "Memory Shares Level",
-                    :description => db_record.memory_shares_level) unless db_record.memory_shares_level.nil?
-    @rp_config.push(:field       => "CPU Reserve",
-                    :description => db_record.cpu_reserve) unless db_record.cpu_reserve.nil?
-    @rp_config.push(:field       => "CPU Reserve Expand",
-                    :description => db_record.cpu_reserve_expand) unless db_record.cpu_reserve_expand.nil?
-    unless db_record.cpu_limit.nil?
-      cpu_limit = db_record.cpu_limit
-      cpu_limit = "Unlimited" if db_record.cpu_limit == -1
-      @rp_config.push(:field       => "CPU Limit",
-                      :description => cpu_limit)
-    end
-    @rp_config.push(:field       => "CPU Shares",
-                    :description => db_record.cpu_shares) unless db_record.cpu_shares.nil?
-    @rp_config.push(:field       => "CPU Shares Level",
-                    :description => db_record.cpu_shares_level) unless db_record.cpu_shares_level.nil?
+  def show_list
+    process_show_list
   end
 
   # handle buttons pressed on the button bar
@@ -185,6 +155,4 @@ class ResourcePoolController < ApplicationController
     session[:resource_pool_search_text]  = @search_text
     session[:rp_lastaction]              = @lastaction
   end
-
-  menu_section :inf
 end
