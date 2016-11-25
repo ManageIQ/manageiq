@@ -196,10 +196,10 @@ class CloudVolumeController < ApplicationController
       else
         add_flash(_(volume.is_available_now_error_message(:attach_volume)), :error)
       end
-      @breadcrumbs.pop if @breadcrumbs
       session[:edit] = nil
       session[:flash_msgs] = @flash_array.dup if @flash_array
-      javascript_redirect :action => "show", :id => @volume.id.to_s
+
+      javascript_redirect previous_breadcrumb_url
     end
   end
 
@@ -234,10 +234,10 @@ class CloudVolumeController < ApplicationController
       else
         add_flash(_(volume.is_available_now_error_message(:detach_volume)), :error)
       end
-      @breadcrumbs.pop if @breadcrumbs
       session[:edit] = nil
       session[:flash_msgs] = @flash_array.dup if @flash_array
-      javascript_redirect :action => "show", :id => @volume.id.to_s
+
+      javascript_redirect previous_breadcrumb_url
     end
   end
 
