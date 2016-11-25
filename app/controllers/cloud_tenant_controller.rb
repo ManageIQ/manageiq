@@ -47,7 +47,7 @@ class CloudTenantController < ApplicationController
       javascript_redirect :action => "new"
       return
     elsif params[:pressed] == "cloud_tenant_edit"
-      javascript_redirect :action => "edit", :id => get_checked_item_id(params)
+      javascript_redirect :action => "edit", :id => checked_item_id
       return
     elsif params[:pressed] == 'cloud_tenant_delete'
       delete_cloud_tenants

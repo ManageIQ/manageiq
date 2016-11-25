@@ -32,8 +32,7 @@ class CloudNetworkController < ApplicationController
     delete_networks if params[:pressed] == 'cloud_network_delete'
 
     if params[:pressed] == "cloud_network_edit"
-      checked_network_id = get_checked_item_id(params)
-      javascript_redirect :action => "edit", :id => checked_network_id
+      javascript_redirect :action => "edit", :id => checked_item_id
     elsif params[:pressed] == "cloud_network_new"
       javascript_redirect :action => "new"
     elsif !flash_errors? && @refresh_div == "main_div" && @lastaction == "show_list"
