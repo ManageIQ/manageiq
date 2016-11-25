@@ -1667,6 +1667,12 @@ function chartData(type, data, data2) {
         return data.miq.category_table[x];
       };
     }
+    if(data.miq.zoomed){
+      data.size = { height: $('#lightbox-panel').height() - 200 };
+      data.data.names = data.miq.name_table;
+      data.legend = { position : 'bottom'};
+
+    }
   }
 
   // set formating function for tooltip and y tick labels
