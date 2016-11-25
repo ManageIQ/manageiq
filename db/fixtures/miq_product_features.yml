@@ -1596,6 +1596,11 @@
       :feature_type: admin
       :hidden: true
       :identifier: chargeback_download_text
+    - :name: Show Full Screen Report
+      :description: Show Full Screen Report
+      :feature_type: admin
+      :hidden: true
+      :identifier: chargeback_report_only
   - :name: Rates
     :description: Rates Accordion
     :feature_type: node
