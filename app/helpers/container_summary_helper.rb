@@ -73,6 +73,12 @@ module ContainerSummaryHelper
     textual_key_value_group(@record.labels.to_a)
   end
 
+  def textual_miq_custom_attributes
+    attrs = @record.custom_attributes
+    return nil if attrs.blank?
+    attrs.collect { |a| {:label => a.name.tr("_", " "), :value => a.value} }
+  end
+
   def textual_group_container_selectors
     textual_key_value_group(@record.selector_parts.to_a)
   end
