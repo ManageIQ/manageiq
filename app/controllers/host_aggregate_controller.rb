@@ -118,17 +118,17 @@ class HostAggregateController < ApplicationController
       javascript_redirect :action => "new"
       return
     elsif params[:pressed] == "host_aggregate_edit"
-      javascript_redirect :action => "edit", :id => get_checked_item_id(params)
+      javascript_redirect :action => "edit", :id => checked_item_id
       return
     elsif params[:pressed] == 'host_aggregate_delete'
       delete_host_aggregates
       render_flash
       return
     elsif params[:pressed] == "host_aggregate_add_host"
-      javascript_redirect :action => "add_host_select", :id => get_checked_item_id(params)
+      javascript_redirect :action => "add_host_select", :id => checked_item_id
       return
     elsif params[:pressed] == "host_aggregate_remove_host"
-      javascript_redirect :action => "remove_host_select", :id => get_checked_item_id(params)
+      javascript_redirect :action => "remove_host_select", :id => checked_item_id
       return
     elsif params[:pressed].ends_with?("_edit") || ["#{pfx}_miq_request_new", "#{pfx}_clone",
                                                    "#{pfx}_migrate", "#{pfx}_publish"].include?(params[:pressed])

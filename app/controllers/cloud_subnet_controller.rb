@@ -24,8 +24,7 @@ class CloudSubnetController < ApplicationController
     delete_subnets if params[:pressed] == 'cloud_subnet_delete'
 
     if params[:pressed] == "cloud_subnet_edit"
-      checked_subnet_id = get_checked_item_id(params)
-      javascript_redirect :action => "edit", :id => checked_subnet_id
+      javascript_redirect :action => "edit", :id => checked_item_id
     elsif params[:pressed] == "cloud_subnet_new"
       javascript_redirect :action => "new"
     elsif !flash_errors? && @refresh_div == "main_div" && @lastaction == "show_list"
