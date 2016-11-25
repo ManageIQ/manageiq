@@ -17,6 +17,16 @@ class CloudTenantController < ApplicationController
     params[:display] = @display if %w(vms instances images).include?(@display)
     params[:page] = @current_page unless @current_page.nil?   # Save current page for list refresh
     return tag("CloudTenant") if params[:pressed] == 'cloud_tenant_tag'
+    return tag('CloudSubnet') if params[:pressed] == 'cloud_subnet_tag'
+    return tag('SecurityGroup') if params[:pressed] == 'security_group_tag'
+    return tag('CloudNetwork') if params[:pressed] == 'cloud_network_tag'
+    return tag('NetworkRouter') if params[:pressed] == 'network_router_tag'
+    return tag('FloatingIp') if params[:pressed] == 'floating_ip_tag'
+    return tag('NetworkPort') if params[:pressed] == 'network_port_tag'
+    return tag('CloudVolume') if params[:pressed] == 'cloud_volume_tag'
+    return tag('CloudObjectStoreObject') if params[:pressed] == 'cloud_object_store_object_tag'
+    return tag("CloudVolumeSnapshot") if params[:pressed] == 'cloud_volume_snapshot_tag'
+
     if params[:pressed].starts_with?("vm_", # Handle buttons from sub-items screen
                                      "miq_template_",
                                      "guest_",

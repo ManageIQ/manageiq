@@ -155,6 +155,7 @@ module ApplicationController::Tags
     @in_a_form = true
     session[:changed] = false
     add_flash(_("All changes have been reset"), :warning) if params[:button] == "reset"
+    @title = _('Tag Assignment')
     if tagging_explorer_controller?
       @refresh_partial = "layouts/tagging"
       replace_right_cell(@sb[:action]) if params[:button]
