@@ -1666,10 +1666,10 @@
     :collection_actions:
       :get:
       - :name: read
-        :identifier: rbac_tenant_show_list
+        :identifier: rbac_tenant_view
       :post:
       - :name: query
-        :identifier: rbac_tenant_show_list
+        :identifier: rbac_tenant_view
       - :name: create
         :identifier: rbac_tenant_add
       - :name: edit
@@ -1679,7 +1679,7 @@
     :resource_actions:
       :get:
       - :name: read
-        :identifier: rbac_tenant_show
+        :identifier: rbac_tenant_view
       :post:
       - :name: edit
         :identifier: rbac_tenant_edit
