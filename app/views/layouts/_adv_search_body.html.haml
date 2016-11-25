@@ -69,7 +69,7 @@
           .col-md-6
             %span#search_name_span
               = text_field_tag("search_name",
-                               h(@edit[:adv_search_name]),
+                               h(@edit[:new_search_name]) || h(@edit[:adv_search_name]),
                                :maxlength         => 30,
                                :class             => "form-control",
                                "data-miq_focus"   => true,
