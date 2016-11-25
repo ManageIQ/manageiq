@@ -24,6 +24,13 @@ ManageIQ.explorer.buildCalendar = function(options) {
 
 ManageIQ.explorer.lock_tree = function(tree_name, lock) {
   var tree = miqTreeObject(tree_name);
+  if (!tree || "length" in tree) {
+    // "length" in tree - because miqTreeObject returns a jquery array when the element doesn't exist
+    // https://github.com/patternfly/patternfly-bootstrap-treeview/issues/16
+    console.warn("Attempting to lock_tree a tree which doesn't exist", tree_name, lock);
+    return;
+  }
+
   lock ? tree.disableAll({silent: true, keepState: true}) : tree.enableAll();
   miqDimDiv('#' + tree_name + '_div', lock);
 };

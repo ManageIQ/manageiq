@@ -884,7 +884,7 @@ class ReportController < ApplicationController
     else
       presenter.lock_tree(x_active_tree, false)
       [:db_tree, :reports_tree, :savedreports_tree, :schedules_tree, :widgets_tree, :roles_tree].each do |tree|
-        presenter.lock_tree(tree, false)
+        presenter.lock_tree(tree, false) if tree_exists?(tree)
       end
     end
 

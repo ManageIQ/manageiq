@@ -41,6 +41,10 @@ module ApplicationController::TreeSupport
     TreeBuilder.convert_bs_tree(nodes)
   end
 
+  def tree_exists?(tree_name)
+    @sb[:trees].try(:key?, tree_name.to_s)
+  end
+
   private ############################
 
   # Build the H&C or V&T tree with nodes selected
