@@ -764,6 +764,8 @@ en:
       ManageIQ::Providers::Openstack::CloudManager:                         Cloud Provider (OpenStack)
       ManageIQ::Providers::Openstack::NetworkManager:                       Network Provider (OpenStack)
       ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork:         Cloud Network (OpenStack)
+      ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork::Private: Cloud Network (OpenStack)
+      ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork::Public: External Cloud Network (OpenStack)
       ManageIQ::Providers::Amazon::CloudManager:                            Cloud Provider (Amazon)
       ManageIQ::Providers::Azure::CloudManager:                             Cloud Provider (Microsoft Azure)
       ManageIQ::Providers::Vmware::CloudManager:                            Cloud Provider (VMware vCloud)
