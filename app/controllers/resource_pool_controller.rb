@@ -39,8 +39,7 @@ class ResourcePoolController < ApplicationController
       @showtype = "config"
 
       self.x_active_tree = :datacenter_tree
-      cluster = @record
-      @datacenter_tree = TreeBuilderDatacenter.new(:datacenter_tree, :datacenter, @sb, true, cluster)
+      @datacenter_tree = TreeBuilderDatacenter.new(:datacenter_tree, :datacenter, @sb, true, @record)
 
     when "all_vms"
       drop_breadcrumb(:name => "%{name} (All VMs)" % {:name => @record.name},
@@ -69,10 +68,6 @@ class ResourcePoolController < ApplicationController
     if params[:ppsetting] || params[:searchtag] || params[:entry] || params[:sort_choice]
       replace_gtl_main_div
     end
-  end
-
-  def show_list
-    process_show_list
   end
 
   # handle buttons pressed on the button bar
@@ -109,15 +104,7 @@ class ResourcePoolController < ApplicationController
 
     return if ["resource_pool_tag", "resource_pool_protect"].include?(params[:pressed]) && @flash_array.nil?   # Tag screen showing, so return
 
-    if !@flash_array && !@refresh_partial # if no button handler ran, show not implemented msg
-      add_flash(_("Button not yet implemented"), :error)
-      @refresh_partial = "layouts/flash_msg"
-      @refresh_div     = "flash_msg_div"
-    elsif @flash_array && @lastaction == "show"
-      @record = identify_record(params[:id])
-      @refresh_partial = "layouts/flash_msg"
-      @refresh_div     = "flash_msg_div"
-    end
+    check_if_button_is_implemented
 
     if !@flash_array.nil? && params[:pressed] == "resource_pool_delete" && @single_delete
       javascript_redirect :action => 'show_list', :flash_msg => @flash_array[0][:message] # redirect to build the retire screen
@@ -155,4 +142,6 @@ class ResourcePoolController < ApplicationController
     session[:resource_pool_search_text]  = @search_text
     session[:rp_lastaction]              = @lastaction
   end
+
+  menu_section :inf
 end

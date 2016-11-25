@@ -34,5 +34,4 @@ module ResourcePoolHelper
 
     rp_config
   end
-
 end
