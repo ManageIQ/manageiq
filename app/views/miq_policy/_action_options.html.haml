@@ -74,6 +74,8 @@
               :bs_tree                     => @cat_tree,
               :click_url                   => "/miq_policy/action_tag_pressed/",
               :onclick                     => "miqOnClickTagCat"})
+          = render(:partial => 'shared/tree', :locals => {:tree => @cat_tree2, :name => @cat_tree2.name})
+
   - when "create_snapshot"
     %h3
       = _("Snapshot Settings")

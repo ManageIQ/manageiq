@@ -136,14 +136,32 @@ module MiqPolicyController::MiqActions
   end
 
   def action_tag_pressed
+
     @edit = session[:edit]
     @action = @edit[:action_id] ? MiqAction.find_by_id(@edit[:action_id]) : MiqAction.new
-    tag_name = params[:id].split('__')[1]
-    @tag_selected = Classification.tag2human(tag_name)
-    @edit[:new][:options][:tags] = {} unless tag_name.nil?
-    @edit[:new][:options][:tags] = [tag_name] unless tag_name.nil?
 
-    send_button_changes
+    #"t__/managed/department/retail_test"
+    param = params[:id]
+
+    if param.start_with?('t')
+      tag_name = params[:id].split('__')[1]
+      @tag_selected = Classification.tag2human(tag_name)
+      @edit[:new][:options][:tags] = {} unless tag_name.nil?
+      @edit[:new][:options][:tags] = [tag_name] unless tag_name.nil?
+
+      send_button_changes
+    else
+      id = params[:id].split('-')[1]
+      id = TreeBuilder.from_cid(id)
+      node = Classification.find(id)
+      tag_name = node.tag.name
+      tag_name.prepend('t__')
+      @tag_selected = Classification.tag2human(tag_name)
+      @edit[:new][:options][:tags] = {} unless tag_name.nil?
+      @edit[:new][:options][:tags] = [tag_name] unless tag_name.nil?
+
+      send_button_changes
+    end
   end
 
   def action_get_all
@@ -330,6 +348,14 @@ module MiqPolicyController::MiqActions
       r_node[:children] = r_kids
     end
     @cat_tree = TreeBuilder.convert_bs_tree(r_node).to_json
+
+    @cat_tree2 = action_build_cat_tree2
+  end
+
+  def action_build_cat_tree2()
+    name = 'action_tags'
+    builder = TreeBuilderMiqActionCat.new(name, name, @sb, "#{current_tenant.name} Tags")
+    builder
   end
 
   # Set action record variables to new values

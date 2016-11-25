@@ -227,9 +227,7 @@ function miqOnCheckSections(_tree_name, key, checked, all_checked) {
 
 // OnClick handler for catgories Tree
 function miqOnClickTagCat(id) {
-  if (id.split('__')[0] == 't') {
-    miqJqueryRequest(ManageIQ.tree.clickUrl + '?id=' + id, {beforeSend: true, complete: true});
-  }
+  miqJqueryRequest(ManageIQ.tree.clickUrl + '?id=' + id, {beforeSend: true, complete: true});
 }
 
 // OnClick handler for Genealogy Tree
