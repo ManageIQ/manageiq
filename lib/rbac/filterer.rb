@@ -12,6 +12,7 @@ module Rbac
       ConfigurationProfile
       ConfiguredSystem
       Container
+      ContainerBuild
       ContainerGroup
       ContainerImage
       ContainerImageRegistry
