@@ -24,4 +24,15 @@ module Metric::ChargebackHelper
      resource.try(:tenant)
     ].compact
   end
+
+  def parents_determining_rate
+    case resource_type
+    when VmOrTemplate.name
+      (resource_parents + [MiqEnterprise.my_enterprise]).compact
+    when ContainerProject.name
+      [parent_ems].compact
+    when Container.name
+      []
+    end
+  end
 end
