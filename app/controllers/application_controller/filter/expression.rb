@@ -90,6 +90,8 @@ module ApplicationController::Filter
       val2[:title] = MiqExpression::FORMAT_SUB_TYPES[val2[:type]][:title] if val2[:type]
     end
 
+    private
+
     def val_type_for(key, field)
       if !self[key] || !self[field]
         nil
