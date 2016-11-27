@@ -527,6 +527,8 @@ class ChargebackController < ApplicationController
       end
 
       temp[:id] = params[:pressed] == 'chargeback_rates_copy' ? nil : detail.id
+      temp[:breakdown_options] = detail.breakdown_options
+      temp[:breakdown] = detail.breakdown
 
       tiers[detail_index] ||= []
 

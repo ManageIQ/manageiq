@@ -11,6 +11,10 @@ class ChargebackRateDetail < ApplicationRecord
 
   delegate :rate_type, :to => :chargeback_rate, :allow_nil => true
   serialize :options
+  OPTION_FIELDS = %w(breakdown).freeze
+  OPTION_FIELDS.each do |f|
+    define_method(f) { options.try(:[], f) }
+  end
 
   FORM_ATTRIBUTES = %i(description per_time per_unit metric group source metric).freeze
   PER_TIME_TYPES = {
@@ -63,6 +67,19 @@ class ChargebackRateDetail < ApplicationRecord
 
   def fixed?
     group == "fixed"
+  end
+
+  def breakdown_options
+    if metric == 'derived_vm_allocated_disk_storage'
+      volume_types = CloudVolume.pluck(:volume_type).uniq.compact
+      unless volume_types.empty?
+        res = {}
+        res[_('All')] = ''
+        volume_types.each { |type| res[type.capitalize] = type }
+        res[_('Other - Unclassified')] = 'unclassified'
+        res
+      end
+    end
   end
 
   # Set the rates according to the tiers
