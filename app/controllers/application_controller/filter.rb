@@ -550,12 +550,6 @@ module ApplicationController::Filter
     @edit[:adv_search_open] = false                               # Close the adv search box
   end
 
-  # Add a new search and set the model
-  def adv_search_new
-    MiqSearch.new(:db => @edit[@expkey][:exp_model], :description => @edit[:new_search_name])
-  end
-  private :adv_search_new
-
   def adv_search_set_details(search, type, user=nil)
     search.update_attributes(
       :search_key => user,
@@ -582,7 +576,7 @@ module ApplicationController::Filter
         if @edit[@expkey][:selected].nil? || # If no search was loaded
            @edit[:new_search_name] != @edit[@expkey][:selected][:description] || # or user changed the name of a loaded search
            @edit[@expkey][:selected][:typ] == "default"                          # or loaded search is a default search, save it as my search
-          s = adv_search_new
+          s = @edit[@expkey].build_new_search(@edit[:new_search_name])
           if @edit[:search_type]
             adv_search_set_details(s, "global")
           else
@@ -594,13 +588,13 @@ module ApplicationController::Filter
           if @edit[:search_type]
             # Search selected was not global
             if s.name != "global_#{@edit[:new_search_name]}"
-              s = adv_search_new
+              s = @edit[@expkey].build_new_search(@edit[:new_search_name])
             end
               adv_search_set_details(s, "global")
           else
             # Search selected was not my search, create new search
             if s.name != "user_#{session[:userid]}_#{@edit[:new_search_name]}"
-              s = adv_search_new
+              s = @edit[@expkey].build_new_search(@edit[:new_search_name])
             end
             adv_search_set_details(s, "user", session[:userid])
           end

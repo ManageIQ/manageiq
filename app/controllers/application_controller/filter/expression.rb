@@ -90,6 +90,10 @@ module ApplicationController::Filter
       val2[:title] = MiqExpression::FORMAT_SUB_TYPES[val2[:type]][:title] if val2[:type]
     end
 
+    def build_new_search(name_given_by_user)
+      MiqSearch.new(:db => exp_model, :description => name_given_by_user)
+    end
+
     private
 
     def val_type_for(key, field)
