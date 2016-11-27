@@ -308,10 +308,10 @@ module ApplicationController::Filter
       # Check incoming date and time values
       # Copy FIND exp_skey to exp_key so following IFs work properly
       @edit[@expkey][:exp_key] = @edit[@expkey][:exp_skey] if @edit[@expkey][:exp_typ] == "FIND"
-      process_datetime_selector("1_0", :exp_key)  # First date selector
-      process_datetime_selector("1_1")            # 2nd date selector, only on FROM
-      process_datetime_selector("2_0", :exp_ckey) # First date selector in FIND/CHECK
-      process_datetime_selector("2_1")            # 2nd date selector, only on FROM
+      @edit[@expkey].process_datetime_selector(params, '1_0', :exp_key)  # First date selector
+      @edit[@expkey].process_datetime_selector(params, '1_1')            # 2nd date selector, only on FROM
+      @edit[@expkey].process_datetime_selector(params, '2_0', :exp_ckey) # First date selector in FIND/CHECK
+      @edit[@expkey].process_datetime_selector(params, '2_1')            # 2nd date selector, only on FROM
 
       # Check incoming FROM/THROUGH date/time choice values
       if params[:chosen_from_1]
@@ -1361,28 +1361,6 @@ module ApplicationController::Filter
     @def_searches = MiqSearch.where(:db => [db, db.constantize.to_s]).visible_to_all.sort_by { |s| s.description.downcase }
     @def_searches = @def_searches.unshift(temp) unless @def_searches.empty?
     @my_searches = MiqSearch.where(:search_type => "user", :search_key => session[:userid], :db => [db, db.constantize.to_s]).sort_by { |s| s.description.downcase }
-  end
-
-  def process_datetime_selector(param_key_suffix, exp_key = nil)
-    param_date_key  = "miq_date_#{param_key_suffix}".to_sym
-    param_time_key  = "miq_time_#{param_key_suffix}".to_sym
-    return unless params[param_date_key] || params[param_time_key]
-
-    exp_value_index = param_key_suffix[-1].to_i
-    value_key       = "val#{param_key_suffix[0]}".to_sym
-    exp_value_key   = param_key_suffix.starts_with?("1") ? :exp_value : :exp_cvalue
-    exp             = @edit[@expkey]
-
-    date = params[param_date_key] || (params[param_time_key] && exp[exp_value_key][exp_value_index].split(' ').first)
-    time = params[param_time_key] if params[param_time_key]
-
-    if time.to_s.blank? && exp[value_key][:type] == :datetime && exp[exp_key] != EXP_IS
-      time = "00:00" # If time is blank, add in midnight if needed
-    end
-
-    time = " #{time}" unless time.to_s.blank? # Prepend a blank, if time is non-blank
-
-    exp[exp_value_key][exp_value_index] = "#{date}#{time}"
   end
 
   ENABLE_CALENDAR = "miqBuildCalendar();".freeze

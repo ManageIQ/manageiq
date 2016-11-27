@@ -195,6 +195,26 @@ module ApplicationController::Filter
       end
     end
 
+    def process_datetime_selector(params, param_key_suffix, exp_key = nil)
+      param_date_key  = "miq_date_#{param_key_suffix}".to_sym
+      param_time_key  = "miq_time_#{param_key_suffix}".to_sym
+      return unless params[param_date_key] || params[param_time_key]
+
+      exp_value_index = param_key_suffix[-1].to_i
+      value_key       = "val#{param_key_suffix[0]}".to_sym
+      exp_value_key   = param_key_suffix.starts_with?('1') ? :exp_value : :exp_cvalue
+
+      date = params[param_date_key] || (params[param_time_key] && self[exp_value_key][exp_value_index].split(' ').first)
+      time = params[param_time_key] if params[param_time_key]
+
+      if time.to_s.blank? && self[value_key][:type] == :datetime && self[exp_key] != EXP_IS
+        time = '00:00' # If time is blank, add in midnight if needed
+      end
+      time = " #{time}" unless time.to_s.blank? # Prepend a blank, if time is non-blank
+
+      self[exp_value_key][exp_value_index] = "#{date}#{time}"
+    end
+
     private
 
     def build_new_search(name_given_by_user)
