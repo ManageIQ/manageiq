@@ -550,15 +550,6 @@ module ApplicationController::Filter
     @edit[:adv_search_open] = false                               # Close the adv search box
   end
 
-  def adv_search_set_details(search, type, user=nil)
-    search.update_attributes(
-      :search_key => user,
-      :name => "#{type == "global" ? "global" : "user_#{user}"}_#{@edit[:new_search_name]}",
-      :search_type => type
-    )
-  end
-  private :adv_search_set_details
-
   # One of the form buttons was pressed on the advanced search panel
   def adv_search_button
     @edit = session[:edit]
@@ -578,9 +569,9 @@ module ApplicationController::Filter
            @edit[@expkey][:selected][:typ] == "default"                          # or loaded search is a default search, save it as my search
           s = @edit[@expkey].build_new_search(@edit[:new_search_name])
           if @edit[:search_type]
-            adv_search_set_details(s, "global")
+            miq_search_set_details(s, :global, @edit[:new_search_name])
           else
-            adv_search_set_details(s, "user", session[:userid])
+            miq_search_set_details(s, :user, @edit[:new_search_name], session[:userid])
           end
         else # search was loaded exists or saving it with same name
           # Fetch the last search loaded
@@ -590,13 +581,13 @@ module ApplicationController::Filter
             if s.name != "global_#{@edit[:new_search_name]}"
               s = @edit[@expkey].build_new_search(@edit[:new_search_name])
             end
-              adv_search_set_details(s, "global")
+            miq_search_set_details(s, :global, @edit[:new_search_name])
           else
             # Search selected was not my search, create new search
             if s.name != "user_#{session[:userid]}_#{@edit[:new_search_name]}"
               s = @edit[@expkey].build_new_search(@edit[:new_search_name])
             end
-            adv_search_set_details(s, "user", session[:userid])
+            miq_search_set_details(s, :user, @edit[:new_search_name], session[:userid])
           end
         end
         s.filter = MiqExpression.new(@edit[:new][@expkey]) # Set the new expression

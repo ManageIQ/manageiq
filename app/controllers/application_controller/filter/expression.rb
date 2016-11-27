@@ -94,6 +94,14 @@ module ApplicationController::Filter
       MiqSearch.new(:db => exp_model, :description => name_given_by_user)
     end
 
+    def miq_search_set_details(search, type, name_given_by_user, userid = nil)
+      search.update_attributes(
+        :search_key  => userid,
+        :name        => "#{type == :global ? 'global' : "user_#{userid}"}_#{name_given_by_user}",
+        :search_type => type
+      )
+    end
+
     private
 
     def val_type_for(key, field)
