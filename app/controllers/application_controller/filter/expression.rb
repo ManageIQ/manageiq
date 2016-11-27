@@ -90,6 +90,34 @@ module ApplicationController::Filter
       val2[:title] = MiqExpression::FORMAT_SUB_TYPES[val2[:type]][:title] if val2[:type]
     end
 
+    def build_search(name_given_by_user, global_search, userid)
+      if selected.nil? ||                                # if no search was loaded
+         name_given_by_user != selected[:description] || # or user changed the name of loaded search
+         selected[:typ] == 'default'                     # or loaded search is default search, save it as my search
+        s = build_new_search(name_given_by_user)
+        if global_search
+          miq_search_set_details(s, :global, name_given_by_user)
+        else
+          miq_search_set_details(s, :user, name_given_by_user, userid)
+        end
+      else
+        s = MiqSearch.find(selected[:id])
+        if global_search
+          unless s.name == "global_#{name_given_by_user}" # it was already global before
+            s = build_new_search(name_given_by_user)
+          end
+          miq_search_set_details(s, :global, name_given_by_user)
+        else
+          unless s.name == "user_#{userid}_#{name_given_by_user}" # iw was already "My Search"
+            s = build_new_search(name_given_by_user)
+          end
+        end
+      end
+      s
+    end
+
+    private
+
     def build_new_search(name_given_by_user)
       MiqSearch.new(:db => exp_model, :description => name_given_by_user)
     end

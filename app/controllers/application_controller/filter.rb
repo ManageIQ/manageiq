@@ -564,32 +564,7 @@ module ApplicationController::Filter
         add_flash(_("Search Name is required"), :error)
         params[:button] = "save" # Redraw the save screen
       else
-        if @edit[@expkey][:selected].nil? || # If no search was loaded
-           @edit[:new_search_name] != @edit[@expkey][:selected][:description] || # or user changed the name of a loaded search
-           @edit[@expkey][:selected][:typ] == "default"                          # or loaded search is a default search, save it as my search
-          s = @edit[@expkey].build_new_search(@edit[:new_search_name])
-          if @edit[:search_type]
-            miq_search_set_details(s, :global, @edit[:new_search_name])
-          else
-            miq_search_set_details(s, :user, @edit[:new_search_name], session[:userid])
-          end
-        else # search was loaded exists or saving it with same name
-          # Fetch the last search loaded
-          s = MiqSearch.find(@edit[@expkey][:selected][:id])
-          if @edit[:search_type]
-            # Search selected was not global
-            if s.name != "global_#{@edit[:new_search_name]}"
-              s = @edit[@expkey].build_new_search(@edit[:new_search_name])
-            end
-            miq_search_set_details(s, :global, @edit[:new_search_name])
-          else
-            # Search selected was not my search, create new search
-            if s.name != "user_#{session[:userid]}_#{@edit[:new_search_name]}"
-              s = @edit[@expkey].build_new_search(@edit[:new_search_name])
-            end
-            miq_search_set_details(s, :user, @edit[:new_search_name], session[:userid])
-          end
-        end
+        s = @edit[@expkey].build_search(@edit[:new_search_name], @edit[:search_type], session[:userid])
         s.filter = MiqExpression.new(@edit[:new][@expkey]) # Set the new expression
         if s.save
           add_flash(_("%{model} search \"%{name}\" was saved") %
