@@ -193,6 +193,24 @@ module ApplicationController::Filter
         end
       end
     end
+
+    def self.through_choices(from_choice) # Return the through_choices pulldown array for FROM datetime/date operators
+      tc = if FROM_HOURS.include?(from_choice)
+             FROM_HOURS
+           elsif FROM_DAYS.include?(from_choice)
+             FROM_DAYS
+           elsif FROM_WEEKS.include?(from_choice)
+             FROM_WEEKS
+           elsif FROM_MONTHS.include?(from_choice)
+             FROM_MONTHS
+           elsif FROM_QUARTERS.include?(from_choice)
+             FROM_QUARTERS
+           elsif FROM_YEARS.include?(from_choice)
+             FROM_YEARS
+           end
+      # Return the THROUGH choices based on the FROM choice
+      tc[0..tc.index(from_choice)]
+    end
   end
   # TODO: expression is now manipulated with fetch_path
   # We need to extract methods using fetch_path to Expression to avoid the fetch_path call

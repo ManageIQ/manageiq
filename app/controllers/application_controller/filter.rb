@@ -316,7 +316,7 @@ module ApplicationController::Filter
       # Check incoming FROM/THROUGH date/time choice values
       if params[:chosen_from_1]
         @edit[@expkey][:exp_value][0] = params[:chosen_from_1]
-        @edit[@expkey][:val1][:through_choices] = exp_through_choices(params[:chosen_from_1])
+        @edit[@expkey][:val1][:through_choices] = Expression.through_choices(params[:chosen_from_1])
         if (@edit[@expkey][:exp_typ] == "field" && @edit[@expkey][:exp_key] == EXP_FROM) ||
            (@edit[@expkey][:exp_typ] == "find" && @edit[@expkey][:exp_skey] == EXP_FROM)
           # If the through value is not in the through choices, set it to the first choice
@@ -329,7 +329,7 @@ module ApplicationController::Filter
 
       if params[:chosen_from_2]
         @edit[@expkey][:exp_cvalue][0] = params[:chosen_from_2]
-        @edit[@expkey][:val2][:through_choices] = exp_through_choices(params[:chosen_from_2])
+        @edit[@expkey][:val2][:through_choices] = Expression.through_choices(params[:chosen_from_2])
         if @edit[@expkey][:exp_ckey] == EXP_FROM
           # If the through value is not in the through choices, set it to the first choice
           unless @edit[@expkey][:val2][:through_choices].include?(@edit[@expkey][:exp_cvalue][1])
@@ -344,12 +344,12 @@ module ApplicationController::Filter
     if params[:date_format_1] && @edit[@expkey][:exp_value].present?
       @edit[@expkey][:val1][:date_format] = params[:date_format_1]
       @edit[@expkey][:exp_value].collect! { |_| params[:date_format_1] == "s" ? nil : EXP_TODAY }
-      @edit[@expkey][:val1][:through_choices] = exp_through_choices(@edit[@expkey][:exp_value][0]) if params[:date_format_1] == "r"
+      @edit[@expkey][:val1][:through_choices] = Expression.through_choices(@edit[@expkey][:exp_value][0]) if params[:date_format_1] == "r"
     end
     if params[:date_format_2] && @edit[@expkey][:exp_cvalue].present?
       @edit[@expkey][:val2][:date_format] = params[:date_format_2]
       @edit[@expkey][:exp_cvalue].collect! { |_| params[:date_format_2] == "s" ? nil : EXP_TODAY }
-      @edit[@expkey][:val2][:through_choices] = exp_through_choices(@edit[@expkey][:exp_cvalue][0]) if params[:date_format_2] == "r"
+      @edit[@expkey][:val2][:through_choices] = Expression.through_choices(@edit[@expkey][:exp_cvalue][0]) if params[:date_format_2] == "r"
     end
 
     # Check for suffixes changed
@@ -911,25 +911,6 @@ module ApplicationController::Filter
     end
   end
 
-  # Return the through_choices pulldown array for FROM datetime/date operators
-  def exp_through_choices(from_choice)
-    if FROM_HOURS.include?(from_choice)
-      tc = FROM_HOURS
-    elsif FROM_DAYS.include?(from_choice)
-      tc = FROM_DAYS
-    elsif FROM_WEEKS.include?(from_choice)
-      tc = FROM_WEEKS
-    elsif FROM_MONTHS.include?(from_choice)
-      tc = FROM_MONTHS
-    elsif FROM_QUARTERS.include?(from_choice)
-      tc = FROM_QUARTERS
-    elsif FROM_YEARS.include?(from_choice)
-      tc = FROM_YEARS
-    end
-    # Return the THROUGH choices based on the FROM choice
-    tc[0..tc.index(from_choice)]
-  end
-
   # Remove :token keys from an expression before setting in a record
   def exp_remove_tokens(exp)
     if exp.kind_of?(Array)         # Is this and AND or OR
@@ -1027,14 +1008,14 @@ module ApplicationController::Filter
       @edit[@expkey][:exp_value] = @edit[@expkey][:exp_value].to_miq_a  # Turn date/time values into an array
       @edit[@expkey][:val1][:date_format] = @edit[@expkey][:exp_value].to_s.first.include?("/") ? "s" : "r"
       if key == EXP_FROM && @edit[@expkey][:val1][:date_format] == "r"
-        @edit[@expkey][:val1][:through_choices] = exp_through_choices(@edit[@expkey][:exp_value][0])
+        @edit[@expkey][:val1][:through_choices] = Expression.through_choices(@edit[@expkey][:exp_value][0])
       end
     end
     if [:datetime, :date].include?(@edit.fetch_path(@expkey, :val2, :type))
       @edit[@expkey][:exp_cvalue] = @edit[@expkey][:exp_cvalue].to_miq_a  # Turn date/time cvalues into an array
       @edit[@expkey][:val2][:date_format] = @edit[@expkey][:exp_cvalue].first.include?("/") ? "s" : "r"
       if ckey == EXP_FROM && @edit[@expkey][:val2][:date_format] == "r"
-        @edit[@expkey][:val2][:through_choices] = exp_through_choices(@edit[@expkey][:exp_cvalue][0])
+        @edit[@expkey][:val2][:through_choices] = Expression.through_choices(@edit[@expkey][:exp_cvalue][0])
       end
     end
   end
@@ -1389,7 +1370,7 @@ module ApplicationController::Filter
     # Set THROUGH value if changing to FROM
     if params[chosen_key] == EXP_FROM
       if @edit[@expkey][exp_valx][:date_format] == "r" # Format is relative
-        @edit[@expkey][exp_valx][:through_choices] = exp_through_choices(@edit[@expkey][exp_value][0])
+        @edit[@expkey][exp_valx][:through_choices] = Expression.through_choices(@edit[@expkey][exp_value][0])
         @edit[@expkey][exp_value][1] = @edit[@expkey][exp_valx][:through_choices].first
       else                                          # Format is specific, just add second value
         @edit[@expkey][exp_value][1] = nil
