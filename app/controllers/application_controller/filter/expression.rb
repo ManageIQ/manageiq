@@ -151,6 +151,38 @@ module ApplicationController::Filter
       end
     end
 
+    def process_changed_expression(params, chosen_key, exp_key, exp_value, exp_valx)
+      # Remove the second exp_value if the operator changed from EXP_FROM
+      self[exp_value].delete_at(1) if self[exp_key] == EXP_FROM
+
+      # Set THROUGH value if changing to FROM
+      if params[chosen_key] == EXP_FROM
+        if self[exp_valx][:date_format] == 'r' # Format is relative
+          self[exp_valx][:through_choices] = self.class.through_choices(self[exp_value][0])
+          self[exp_value][1] = self[exp_valx][:through_choices].first
+        else # Format is specific, just add second value
+          self[exp_value][1] = nil
+        end
+      end
+
+      self[exp_key] = params[chosen_key]
+      prefill_val_types
+
+      # Convert to/from "<date>" and "<date time>" strings in the exp_value array for specific date/times
+      if self[exp_valx][:date_format] == 's'
+        if [:datetime, :date].include?(self[exp_valx][:type])
+          self[exp_value].each_with_index do |v, v_idx|
+            next if v.blank?
+            self[exp_value][v_idx] = if params[chosen_key] == EXP_IS || self[exp_valx][:type] == :date
+                                       v.split(' ').first if v.include?(':')
+                                     else
+                                       v + ' 00:00' unless v.include?(':')
+                                     end
+          end
+        end
+      end
+    end
+
     def process_datetime_expression_field(value_key, exp_key, exp_value_key)
       if [:date, :datetime].include?(self[value_key][:type]) # Seting value for date/time fields
         self[value_key][:date_format] ||= 'r'

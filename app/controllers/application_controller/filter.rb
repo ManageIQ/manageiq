@@ -155,7 +155,7 @@ module ApplicationController::Filter
         end
 
         if params[:chosen_key] && params[:chosen_key] != @edit[@expkey][:exp_key] # Did the key change?
-          process_changed_expression(params, :chosen_key, :exp_key, :exp_value, :val1)
+          @edit[@expkey].process_changed_expression(params, :chosen_key, :exp_key, :exp_value, :val1)
         end
 
         if ui = params[:user_input]
@@ -235,7 +235,7 @@ module ApplicationController::Filter
         end
 
         if params[:chosen_skey] && params[:chosen_skey] != @edit[@expkey][:exp_skey]  # Did the key change?
-          process_changed_expression(params, :chosen_skey, :exp_skey, :exp_value, :val1)
+          @edit[@expkey].process_changed_expression(params, :chosen_skey, :exp_skey, :exp_value, :val1)
         end
 
         if params[:chosen_check] && params[:chosen_check] != @edit[@expkey][:exp_check] # Did check type change?
@@ -262,7 +262,7 @@ module ApplicationController::Filter
         end
 
         if params[:chosen_ckey] && params[:chosen_ckey] != @edit[@expkey][:exp_ckey]  # Did the key change?
-          process_changed_expression(params, :chosen_ckey, :exp_ckey, :exp_cvalue, :val2)
+          @edit[@expkey].process_changed_expression(params, :chosen_ckey, :exp_ckey, :exp_cvalue, :val2)
         end
 
         if params[:chosen_cvalue] && params[:chosen_cvalue] != @edit[@expkey][:exp_cvalue].to_s # Did the value change?
@@ -1361,38 +1361,6 @@ module ApplicationController::Filter
     @def_searches = MiqSearch.where(:db => [db, db.constantize.to_s]).visible_to_all.sort_by { |s| s.description.downcase }
     @def_searches = @def_searches.unshift(temp) unless @def_searches.empty?
     @my_searches = MiqSearch.where(:search_type => "user", :search_key => session[:userid], :db => [db, db.constantize.to_s]).sort_by { |s| s.description.downcase }
-  end
-
-  def process_changed_expression(params, chosen_key, exp_key, exp_value, exp_valx)
-    # Remove the second exp_value if the operator changed from EXP_FROM
-    @edit[@expkey][exp_value].delete_at(1) if @edit[@expkey][exp_key] == EXP_FROM
-
-    # Set THROUGH value if changing to FROM
-    if params[chosen_key] == EXP_FROM
-      if @edit[@expkey][exp_valx][:date_format] == "r" # Format is relative
-        @edit[@expkey][exp_valx][:through_choices] = Expression.through_choices(@edit[@expkey][exp_value][0])
-        @edit[@expkey][exp_value][1] = @edit[@expkey][exp_valx][:through_choices].first
-      else                                          # Format is specific, just add second value
-        @edit[@expkey][exp_value][1] = nil
-      end
-    end
-
-    @edit[@expkey][exp_key] = params[chosen_key]  # Save the key
-    @edit[@expkey].prefill_val_types
-
-    # Convert to/from "<date>" and "<date time>" strings in the exp_value array for specific date/times
-    if @edit[@expkey][exp_valx][:date_format] == "s"
-      if [:datetime, :date].include?(@edit[@expkey][exp_valx][:type])
-        @edit[@expkey][exp_value].each_with_index do |v, v_idx|
-          next if v.blank?
-          if params[chosen_key] == EXP_IS || @edit[@expkey][exp_valx][:type] == :date
-            @edit[@expkey][exp_value][v_idx] = v.split(" ").first if v.include?(":")
-          else
-            @edit[@expkey][exp_value][v_idx] = v + " 00:00" unless v.include?(":")
-          end
-        end
-      end
-    end
   end
 
   def process_datetime_selector(param_key_suffix, exp_key = nil)
