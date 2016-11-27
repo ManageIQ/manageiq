@@ -124,6 +124,33 @@ module ApplicationController::Filter
       self.exp_last_loaded = selected if last_loaded
     end
 
+    def set_exp_typ(chosen_typ)
+      self.exp_typ = chosen_typ
+      self.exp_key = self.alias = self.exp_skey = self.exp_ckey = self.exp_value = self.exp_cvalue = nil
+      self.exp_regkey = self.exp_regval = self.val1_suffix = self.val2_suffix = nil
+      case exp_typ
+      when '<Choose>'
+        self.exp_typ = nil
+      when 'field'
+        self.exp_field = nil
+      when 'count'
+        self.exp_count = nil
+        self.exp_key = MiqExpression.get_col_operators(:count).first
+        prefill_val_types
+      when 'tag'
+        self.exp_tag = nil
+        self.exp_key = 'CONTAINS'
+      when 'regkey'
+        self.exp_key = MiqExpression.get_col_operators(:regkey).first
+        prefill_val_types
+      when 'find'
+        self.exp_field = nil
+        self.exp_key = 'FIND'
+        self.exp_check = 'checkall'
+        self.exp_cfield = nil
+      end
+    end
+
     private
 
     def build_new_search(name_given_by_user)

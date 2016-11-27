@@ -130,39 +130,7 @@ module ApplicationController::Filter
   def exp_changed
     @edit = session[:edit]
     if params[:chosen_typ] && params[:chosen_typ] != @edit[@expkey][:exp_typ] # Did the type field change?
-      @edit[@expkey][:exp_typ] = params[:chosen_typ]
-
-      @edit[@expkey][:exp_key] = nil                  # Clear operators and values
-      @edit[@expkey][:alias] = nil
-      @edit[@expkey][:exp_skey] = nil
-      @edit[@expkey][:exp_ckey] = nil
-      @edit[@expkey][:exp_value] = nil
-      @edit[@expkey][:exp_cvalue] = nil
-      @edit[@expkey][:exp_regkey] = nil
-      @edit[@expkey][:exp_regval] = nil
-      @edit[@expkey].val1_suffix = @edit[@expkey].val2_suffix = nil
-
-      case @edit[@expkey][:exp_typ]                   # Change the exp fields based on the new type
-      when "<Choose>"
-        @edit[@expkey][:exp_typ] = nil
-      when "field"
-        @edit[@expkey][:exp_field] = nil
-      when "count"
-        @edit[@expkey][:exp_count] = nil
-        @edit[@expkey][:exp_key] = MiqExpression.get_col_operators(:count).first
-        @edit[@expkey].prefill_val_types
-      when "tag"
-        @edit[@expkey][:exp_tag] = nil
-        @edit[@expkey][:exp_key] = "CONTAINS"
-      when "regkey"
-        @edit[@expkey][:exp_key] = MiqExpression.get_col_operators(:regkey).first
-        @edit[@expkey].prefill_val_types
-      when "find"
-        @edit[@expkey][:exp_field] = nil
-        @edit[@expkey][:exp_key] = "FIND"
-        @edit[@expkey][:exp_check] = "checkall"
-        @edit[@expkey][:exp_cfield] = nil
-      end
+      @edit[@expkey].set_exp_typ(params[:chosen_typ])
     else
       case @edit[@expkey][:exp_typ]                   # Check the type of expression we are dealing with
       when "field"
