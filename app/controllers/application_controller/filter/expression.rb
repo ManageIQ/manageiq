@@ -124,6 +124,210 @@ module ApplicationController::Filter
       self.exp_last_loaded = selected if last_loaded
     end
 
+    def update_from_expression_editor(params)
+      if params[:chosen_typ] && params[:chosen_typ] != exp_typ
+        set_exp_typ(params[:chosen_typ])
+      else
+        case exp_typ
+        when 'field'
+          if params[:chosen_field] && params[:chosen_field] != exp_field
+            self.exp_field = params[:chosen_field]
+            self.exp_value = nil
+            self.val1_suffix = nil
+            if params[:chosen_field] == '<Choose>'
+              self.exp_field = nil
+              self.exp_key = nil
+            else
+              if exp_model != '_display_filter_' && MiqExpression::Field.parse(exp_field).plural?
+                self.exp_key = 'CONTAINS' # CONTAINS is valid only for plural tables
+              else
+                self.exp_key = nil unless MiqExpression.get_col_operators(exp_field).include?(exp_key)
+                self.exp_key ||= MiqExpression.get_col_operators(exp_field).first # Default to first operator
+              end
+              prefill_val_types
+              process_datetime_expression_field(:val1, :exp_key, :exp_value)
+            end
+            self.alias = nil
+          end
+
+          if params[:chosen_key] && params[:chosen_key] != exp_key
+            process_changed_expression(params, :chosen_key, :exp_key, :exp_value, :val1)
+          end
+
+          if params[:user_input]
+            self.exp_value = params[:user_input] == '1' ? :user_input : ''
+          end
+        when 'count'
+          if params[:chosen_count] && params[:chosen_count] != exp_count
+            if params[:chosen_count] == '<Choose>'
+              self.exp_count = nil
+              self.exp_key = nil
+              self.exp_value = nil
+            else
+              self.exp_count = params[:chosen_count]
+              self.exp_key = nil unless MiqExpression.get_col_operators(:count).include?(exp_key)
+              self.exp_key ||= MiqExpression.get_col_operators(:count).first
+            end
+            self.alias = nil
+          end
+          self.exp_key = params[:chosen_key] if params[:chosen_key]
+
+          if params[:user_input]
+            self.exp_value = params[:user_input] == '1' ? :user_input : nil
+          end
+        when 'tag'
+          if params[:chosen_tag] && params[:chosen_tag] != exp_tag
+            self.exp_tag = params[:chosen_tag] == '<Choose>' ? nil : params[:chosen_tag]
+            self.exp_key = exp_model == '_display_filter_' ? '=' : 'CONTAINS'
+            self.exp_value = nil
+            self.alias = nil
+          end
+
+          if params[:user_input]
+            self.exp_value = params[:user_input] == '1' ? :user_input : nil
+          end
+        when 'regkey'
+          self.exp_regkey = params[:chosen_regkey] if params[:chosen_regkey]
+          self.exp_regval = params[:chosen_regval] if params[:chosen_regval]
+          self.exp_key = params[:chosen_key] if params[:chosen_key]
+          prefill_val_types
+
+        when 'find'
+          if params[:chosen_field] && params[:chosen_field] != exp_field
+            self.exp_field = params[:chosen_field]
+            self.exp_value = nil
+            self.val1_suffix = nil
+            if params[:chosen_field] == '<Choose>'
+              self.exp_field = nil
+              self.exp_skey = nil
+            else
+              self.exp_skey = nil unless MiqExpression.get_col_operators(exp_field).include?(exp_skey)
+              self.exp_skey ||= MiqExpression.get_col_operators(exp_field).first
+              prefill_val_types
+              process_datetime_expression_field(:val1, :exp_skey, :exp_value)
+            end
+            if (exp_cfield.present? && exp_field.present?) && # Clear expression check portion
+               (exp_cfield == exp_field || # if find field matches check field
+                exp_cfield.split('-').first != exp_field.split('-').first) # or user chose a different table field
+              self.exp_check = 'checkall'
+              self.exp_cfield = nil
+              self.exp_ckey = nil
+              self.exp_cvalue = nil
+            end
+            self.alias = nil
+          end
+
+          if params[:chosen_skey] && params[:chosen_skey] != exp_skey
+            process_changed_expression(params, :chosen_skey, :exp_skey, :exp_value, :val1)
+          end
+
+          if params[:chosen_check] && params[:chosen_check] != exp_check
+            self.exp_check = params[:chosen_check]
+            self.exp_cfield = nil
+            self.exp_ckey = exp_check == 'checkcount' ? '=' : nil
+            self.exp_cvalue = nil
+            self.val2_suffix = nil
+          end
+          if params[:chosen_cfield] && params[:chosen_cfield] != exp_cfield
+            self.exp_cfield = params[:chosen_cfield]
+            self.exp_cvalue = nil
+            self.val2_suffix = nil
+            if params[:chosen_cfield] == '<Choose>'
+              self.exp_cfield = nil
+              self.exp_ckey = nil
+            else
+              self.exp_ckey = nil unless MiqExpression.get_col_operators(exp_cfield).include?(exp_ckey)
+              self.exp_ckey ||= MiqExpression.get_col_operators(exp_cfield).first
+              prefill_val_types
+              process_datetime_expression_field(:val2, :exp_ckey, :exp_cvalue)
+            end
+          end
+
+          if params[:chosen_ckey] && params[:chosen_ckey] != exp_ckey
+            process_changed_expression(params, :chosen_ckey, :exp_ckey, :exp_cvalue, :val2)
+          end
+
+          self.exp_cvalue = params[:chosen_cvalue] if params[:chosen_cvalue]
+        end
+
+        # Check the value field for all exp types
+        if params[:chosen_value] && params[:chosen_value] != exp_value.to_s
+          self.exp_value = params[:chosen_value] == '<Choose>' ? nil : params[:chosen_value]
+        end
+
+        # Use alias checkbox
+        if params.key?(:use_alias)
+          self.alias = if params[:use_alias] == '1'
+                         case exp_typ
+                         when 'field', 'find'
+                           MiqExpression.value2human(exp_field).split(':').last
+                         when 'tag'
+                           MiqExpression.value2human(exp_tag).split(':').last
+                         when 'count'
+                           MiqExpression.value2human(exp_count).split('.').last
+                         end.strip
+                       end
+        end
+
+        # Check the alias field
+        if params.key?(:alias) && params[:alias] != self.alias.to_s # Did the value change?
+          self.alias = params[:alias].strip.blank? ? nil : params[:alias]
+        end
+
+        # Check incoming date and time values
+        # Copy FIND exp_skey to exp_key so following IFs work properly
+        self.exp_key = exp_skey if exp_typ == 'FIND'
+        process_datetime_selector(params, '1_0', :exp_key)  # First date selector
+        process_datetime_selector(params, '1_1')            # 2nd date selector, only on FROM
+        process_datetime_selector(params, '2_0', :exp_ckey) # First date selector in FIND/CHECK
+        process_datetime_selector(params, '2_1')            # 2nd date selector, only on FROM
+
+        # Check incoming FROM/THROUGH date/time choice values
+        if params[:chosen_from_1]
+          exp_value[0] = params[:chosen_from_1]
+          val1[:through_choices] = Expression.through_choices(params[:chosen_from_1])
+          if (exp_typ == 'field' && exp_key == EXP_FROM) ||
+             (exp_typ == 'find' && exp_skey == EXP_FROM)
+            # If the through value is not in the through choices, set it to the first choice
+            unless val1[:through_choices].include?(exp_value[1])
+              exp_value[1] = val1[:through_choices].first
+            end
+          end
+        end
+        exp_value[1] = params[:chosen_through_1] if params[:chosen_through_1]
+
+        if params[:chosen_from_2]
+          exp_cvalue[0] = params[:chosen_from_2]
+          val2[:through_choices] = Expression.through_choices(params[:chosen_from_2])
+          if exp_ckey == EXP_FROM
+            # If the through value is not in the through choices, set it to the first choice
+            unless val2[:through_choices].include?(exp_cvalue[1])
+              exp_cvalue[1] = val2[:through_choices].first
+            end
+          end
+        end
+        exp_cvalue[1] = params[:chosen_through_2] if params[:chosen_through_2]
+      end
+
+      # Check for changes in date format
+      if params[:date_format_1] && exp_value.present?
+        val1[:date_format] = params[:date_format_1]
+        exp_value.collect! { |_| params[:date_format_1] == 's' ? nil : EXP_TODAY }
+        val1[:through_choices] = Expression.through_choices(exp_value[0]) if params[:date_format_1] == 'r'
+      end
+      if params[:date_format_2] && exp_cvalue.present?
+        val2[:date_format] = params[:date_format_2]
+        exp_cvalue.collect! { |_| params[:date_format_2] == 's' ? nil : EXP_TODAY }
+        val2[:through_choices] = Expression.through_choices(exp_cvalue[0]) if params[:date_format_2] == 'r'
+      end
+
+      # Check for suffixes changed
+      self.val1_suffix = MiqExpression::BYTE_FORMAT_WHITELIST[params[:choosen_suffix]] if params[:choosen_suffix]
+      self.val2_suffix = MiqExpression::BYTE_FORMAT_WHITELIST[params[:choosen_suffix2]] if params[:choosen_suffix2]
+    end
+
+    private
+
     def set_exp_typ(chosen_typ)
       self.exp_typ = chosen_typ
       self.exp_key = self.alias = self.exp_skey = self.exp_ckey = self.exp_value = self.exp_cvalue = nil
@@ -215,8 +419,6 @@ module ApplicationController::Filter
       self[exp_value_key][exp_value_index] = "#{date}#{time}"
     end
 
-    private
-
     def build_new_search(name_given_by_user)
       MiqSearch.new(:db => exp_model, :description => name_given_by_user)
     end
@@ -228,8 +430,6 @@ module ApplicationController::Filter
         :search_type => type
       )
     end
-
-    private
 
     def val_type_for(key, field)
       if !self[key] || !self[field]
