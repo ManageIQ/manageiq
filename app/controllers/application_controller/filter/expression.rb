@@ -34,6 +34,7 @@ module ApplicationController::Filter
     :val1,
     :val1_suffix,
     :val2,
+    :val2_suffix,
     :record_filter
   ) do
     def exp_available_cfields # fields on exp_model for check_all, check_any, and check_count operation

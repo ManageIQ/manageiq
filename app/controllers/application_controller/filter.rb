@@ -140,7 +140,7 @@ module ApplicationController::Filter
       @edit[@expkey][:exp_cvalue] = nil
       @edit[@expkey][:exp_regkey] = nil
       @edit[@expkey][:exp_regval] = nil
-      @edit[@expkey].val1_suffix = @edit[:suffix2] = nil
+      @edit[@expkey].val1_suffix = @edit[@expkey].val2_suffix = nil
 
       case @edit[@expkey][:exp_typ]                   # Change the exp fields based on the new type
       when "<Choose>"
@@ -276,12 +276,12 @@ module ApplicationController::Filter
           # Clear the operator, unless checkcount, then set to =
           @edit[@expkey][:exp_ckey] = @edit[@expkey][:exp_check] == "checkcount" ? "=" : nil
           @edit[@expkey][:exp_cvalue] = nil                       # Clear the value
-          @edit[:suffix2] = nil                                   # Clear the suffix
+          @edit[@expkey].val2_suffix = nil                        # Clear the suffix
         end
         if params[:chosen_cfield] && params[:chosen_cfield] != @edit[@expkey][:exp_cfield]  # Did the check field change?
           @edit[@expkey][:exp_cfield] = params[:chosen_cfield]    # Save the check field
           @edit[@expkey][:exp_cvalue] = nil                       # Clear the value
-          @edit[:suffix2] = nil                                   # Clear the suffix
+          @edit[@expkey].val2_suffix = nil                        # Clear the suffix
           unless params[:chosen_cfield] == "<Choose>"
             @edit[@expkey][:exp_ckey] = nil unless MiqExpression.get_col_operators(@edit[@expkey][:exp_cfield]).include?(@edit[@expkey][:exp_ckey]) # Remove if not in list
             @edit[@expkey][:exp_ckey] ||= MiqExpression.get_col_operators(@edit[@expkey][:exp_cfield]).first  # Default to first operator
@@ -386,7 +386,7 @@ module ApplicationController::Filter
 
     # Check for suffixes changed
     @edit[@expkey].val1_suffix = MiqExpression::BYTE_FORMAT_WHITELIST[params[:choosen_suffix]] if params[:choosen_suffix]
-    @edit[:suffix2] = MiqExpression::BYTE_FORMAT_WHITELIST[params[:choosen_suffix2]] if params[:choosen_suffix2]
+    @edit[@expkey].val2_suffix = MiqExpression::BYTE_FORMAT_WHITELIST[params[:choosen_suffix2]] if params[:choosen_suffix2]
 
     # See if only a text value changed
     if params[:chosen_value] || params[:chosen_regkey] || params[:chosen_regval] ||
@@ -1032,7 +1032,7 @@ module ApplicationController::Filter
     @edit[@expkey][:exp_typ] = typ
     @edit[@expkey].prefill_val_types
 
-    @edit[@expkey].val1_suffix = @edit[:suffix2] = nil
+    @edit[@expkey].val1_suffix = @edit[@expkey].val2_suffix = nil
     unless @edit[@expkey][:exp_value] == :user_input  # Ignore user input fields
       if @edit.fetch_path(@expkey, :val1, :type) == :bytes
         if is_numeric?(@edit[@expkey][:exp_value])                        # Value is a number
@@ -1046,10 +1046,10 @@ module ApplicationController::Filter
     end
     if @edit.fetch_path(@expkey, :val2, :type) == :bytes
       if is_numeric?(@edit[@expkey][:exp_cvalue])                       # Value is a number
-        @edit[:suffix2] = :bytes                                        #  Default to :bytes
+        @edit[@expkey].val2_suffix = :bytes                             #  Default to :bytes
         @edit[@expkey][:exp_cvalue] = @edit[@expkey][:exp_cvalue].to_s  #  Get the value
       else                                                              # Value is a string
-        @edit[:suffix2] = @edit[@expkey][:exp_cvalue].split(".").last.to_sym  #  Get the suffix
+        @edit[@expkey].val2_suffix = @edit[@expkey][:exp_cvalue].split(".").last.to_sym # Get the suffix
         @edit[@expkey][:exp_cvalue] = @edit[@expkey][:exp_cvalue].split(".")[0...-1].join(".")  # Remove the suffix
       end
     end
@@ -1231,7 +1231,7 @@ module ApplicationController::Filter
                                          @edit[@expkey][:exp_ckey],
                                          @edit[@expkey][:exp_cvalue].kind_of?(Array) ?
                                            @edit[@expkey][:exp_cvalue] :
-                                           (@edit[@expkey][:exp_cvalue].to_s + (@edit[:suffix2] ? ".#{@edit[:suffix2]}" : ""))
+                                           (@edit[@expkey][:exp_cvalue].to_s + (@edit[@expkey].val2_suffix ? ".#{@edit[@expkey].val2_suffix}" : ""))
                                         )
         add_flash(_("Check Value Error: %{msg}") % {:msg => e}, :error)
       else
@@ -1264,7 +1264,7 @@ module ApplicationController::Filter
         end
         unless ckey.include?("NULL") || ckey.include?("EMPTY")  # Check for "IS/IS NOT NULL/EMPTY"
           exp[@edit[@expkey][:exp_key]][chk][ckey]["value"] = @edit[@expkey][:exp_cvalue] #   else set the value
-          exp[@edit[@expkey][:exp_key]][chk][ckey]["value"] += ".#{@edit[:suffix2]}" if @edit[:suffix2]  # Append the suffix, if present
+          exp[@edit[@expkey][:exp_key]][chk][ckey]["value"] += ".#{@edit[@expkey].val2_suffix}" if @edit[@expkey].val2_suffix # Append the suffix, if present
         end
         exp[@edit[@expkey][:exp_key]]["search"][skey]["alias"] = @edit[@expkey][:alias] if @edit.fetch_path(@expkey, :alias)
       end
