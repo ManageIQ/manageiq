@@ -25,21 +25,21 @@
               %b= h([token].flatten.first)
     %fieldset
       .form-horizontal
-        - unless @edit[@expkey][:exp_search_expressions].blank?
+        - unless @edit[@expkey].available_adv_searches.blank?
           .form-group
             %label.control-label.col-md-2
               %font{:color => "black"}
                 = _("Choose a saved %{model} filter:") % {:model => ui_lookup(:model => @edit[@expkey][:exp_model])}
             .col-md-8
               = select_tag("chosen_search",
-                           options_for_select([[_("<Choose>"), "0"]] + @edit[@expkey][:exp_search_expressions],
+                           options_for_select([[_("<Choose>"), "0"]] + @edit[@expkey].available_adv_searches,
                                                   @edit[@expkey][:exp_chosen_search]),
                            :multiple          => false,
                            :class             => "selectpicker")
               :javascript
                 miqInitSelectPicker();
                 miqSelectPickerEvent('chosen_search', '#{url}')
-        - unless @edit[@expkey][:exp_search_expressions].blank? || report_expressions.blank?
+        - unless @edit[@expkey].available_adv_searches.blank? || report_expressions.blank?
           .form-group
             %label.control-label.col-md-2
               = _("-- OR --")

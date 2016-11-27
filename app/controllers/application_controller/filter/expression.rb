@@ -20,7 +20,6 @@ module ApplicationController::Filter
     :exp_regkey,
     :exp_regval,
     :exp_skey,
-    :exp_search_expressions,
     :exp_table,
     :exp_tag,
     :exp_token,
@@ -41,12 +40,29 @@ module ApplicationController::Filter
       self.history ||= ExpressionEditHistory.new
     end
 
+    def drop_cache
+      @available_adv_searches = nil
+    end
+
     def exp_available_cfields # fields on exp_model for check_all, check_any, and check_count operation
       MiqExpression.miq_adv_search_lists(exp_model, :exp_available_finds).each_with_object([]) do |af, res|
         next if af.last == exp_field
         next unless af.last.split('-').first == exp_field.split('-').first
         res.push([af.first.split(':').last, af.last])
       end
+    end
+
+    def available_adv_searches
+      @available_adv_searches ||=
+        begin
+          global_expressions = MiqSearch.get_expressions(:db => exp_model, :search_type => 'global')
+          user_expressions = MiqSearch.get_expressions(:db => exp_model, :search_type => 'user',
+                                                       :search_key => User.current_user.userid)
+          user_expressions = Array(user_expressions).sort
+          global_expressions = Array(global_expressions).sort
+          global_expressions.each { |ge| ge[0] = "Global - #{ge[0]}" }
+          global_expressions + user_expressions
+        end
     end
 
     def calendar_needed?

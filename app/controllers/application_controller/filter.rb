@@ -155,7 +155,6 @@ module ApplicationController::Filter
     @edit = session[:edit]
 
     # Rebuild the pulldowns if opening the search box
-    adv_search_build_lists unless @edit[:adv_search_open]
     @edit[@expkey].prefill_val_types unless @edit[:adv_search_open]
 
     render :update do |page|
@@ -307,7 +306,6 @@ module ApplicationController::Filter
           add_flash(_("%{model} search \"%{name}\" was saved") %
             {:model => ui_lookup(:model => @edit[@expkey][:exp_model]),
              :name => @edit[:new_search_name]})
-          adv_search_build_lists
           @edit[@expkey].select_filter(s)
           @edit[:new_search_name] = @edit[:adv_search_name] = @edit[@expkey][:exp_last_loaded][:description]
           @edit[@expkey][:expression] = copy_hash(@edit[:new][@expkey])
@@ -373,8 +371,6 @@ module ApplicationController::Filter
                  :userid       => session[:userid]}
         AuditEvent.success(audit)
       end
-
-      adv_search_build_lists
 
     when "reset"
       add_flash(_("The current search details have been reset"), :warning)
@@ -1075,25 +1071,6 @@ module ApplicationController::Filter
       @edit[:adv_search_applied] = {:text => @hist[:text], :qs_exp => @hist[:qs_exp]}
       session[:adv_search][model.to_s] = copy_hash(@edit) # Save updated adv_search options
     end
-  end
-
-  # Build the pulldown lists for the adv search box
-  def adv_search_build_lists
-    db = @edit[@expkey][:exp_model]
-    global_expressions = MiqSearch.get_expressions(
-      :db          => db,
-      :search_type => "global"
-    )
-    user_expressions = MiqSearch.get_expressions(
-      :db          => db,
-      :search_type => "user",
-      :search_key  => session[:userid]
-    )
-
-    user_expressions = Array(user_expressions).sort
-    global_expressions = Array(global_expressions).sort
-    global_expressions.each { |ge| ge[0] = "Global - #{ge[0]}" }
-    @edit[@expkey][:exp_search_expressions] = global_expressions + user_expressions
   end
 
   def build_listnav_search_list(db)
