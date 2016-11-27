@@ -92,7 +92,7 @@ class Vm < VmOrTemplate
     pl
   end
 
-  def set_remote_console_url(url, user_id)
+  def remote_console_url=(url, user_id)
     SystemConsole.where(:vm_id => id).each(&:destroy)
     console = SystemConsole.create!(
       :vm_id      => id,
