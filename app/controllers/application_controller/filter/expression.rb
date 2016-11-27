@@ -116,6 +116,12 @@ module ApplicationController::Filter
       s
     end
 
+    def select_filter(miq_search, last_loaded = false) # save the last search loaded
+      self.selected = {:id => miq_search.id, :name => miq_search.name, :description => miq_search.description,
+                       :typ => miq_search.search_type}
+      self.exp_last_loaded = selected if last_loaded
+    end
+
     private
 
     def build_new_search(name_given_by_user)

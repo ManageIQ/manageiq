@@ -493,10 +493,7 @@ module ApplicationController::Filter
       @edit[@expkey][:pre_qs_selected] = @edit[@expkey][:selected]            # Save previous selected search
       @edit[:qs_prev_adv_search_applied] = @edit[:adv_search_applied]         # Save any existing adv search
     end
-    @edit[@expkey][:selected] = {:id          => s.id,
-                                 :name        => s.name,
-                                 :description => s.description,
-                                 :typ         => s.search_type}               # Save the last search loaded
+    @edit[@expkey].select_filter(s)
     @edit[:new_search_name] = @edit[:adv_search_name] = @edit.fetch_path(@expkey, :selected, :description)
     @edit[@expkey][:expression] = copy_hash(@edit[:new][@expkey])
     @edit[@expkey][:exp_table] = exp_build_table(@edit[@expkey][:expression]) # Build the expression table
@@ -536,7 +533,7 @@ module ApplicationController::Filter
       clear_default_search
     else
       @edit[:new][@expkey] = s.filter.exp
-      @edit[@expkey][:selected] = {:id => s.id, :name => s.name, :description => s.description, :typ => s.search_type}        # Save the last search loaded
+      @edit[@expkey].select_filter(s)
       @edit[:new_search_name] = @edit[:adv_search_name] = @edit[@expkey][:selected].nil? ? nil : @edit[@expkey][:selected][:description]
       @edit[@expkey][:expression] = copy_hash(@edit[:new][@expkey])
       @edit[@expkey][:exp_table] = exp_build_table(@edit[@expkey][:expression])       # Build the expression table
@@ -571,8 +568,7 @@ module ApplicationController::Filter
             {:model => ui_lookup(:model => @edit[@expkey][:exp_model]),
              :name => @edit[:new_search_name]})
           adv_search_build_lists
-          # Save the last search loaded (saved)
-          @edit[@expkey][:exp_last_loaded] = {:id => s.id, :name => s.name, :description => s.description, :typ => s.search_type}
+          @edit[@expkey].select_filter(s)
           @edit[:new_search_name] = @edit[:adv_search_name] = @edit[@expkey][:exp_last_loaded][:description]
           @edit[@expkey][:expression] = copy_hash(@edit[:new][@expkey])
           # Build the expression table
@@ -593,7 +589,7 @@ module ApplicationController::Filter
         @edit[:selected] = true
         s = MiqSearch.find(@edit[@expkey][:exp_chosen_search].to_s)
         @edit[:new][@expkey] = s.filter.exp
-        @edit[@expkey][:selected] = @edit[@expkey][:exp_last_loaded] = {:id => s.id, :name => s.name, :description => s.description, :typ => s.search_type}       # Save the last search loaded
+        @edit[@expkey].select_filter(s, true)
         @edit[:search_type] = s[:search_type] == 'global' ? 'global' : nil
       elsif @edit[@expkey][:exp_chosen_report]
         r = MiqReport.find(@edit[@expkey][:exp_chosen_report].to_s)
@@ -799,7 +795,7 @@ module ApplicationController::Filter
         session[:adv_search][@edit[@expkey][:exp_model]] = copy_hash(@edit) # Save by model name in settings
         if @settings[:default_search] && @settings[:default_search][@view.db.to_s.to_sym] && @settings[:default_search][@view.db.to_s.to_sym].to_i != 0
           s = MiqSearch.find(@settings[:default_search][@view.db.to_s.to_sym])
-          @edit[@expkey][:selected] = {:id => s.id, :name => s.name, :description => s.description, :typ => s.search_type}        # Save the last search loaded
+          @edit[@expkey].select_filter(s)
           @edit[:selected] = false
         else
           @edit[@expkey][:selected] = {:id => 0}
