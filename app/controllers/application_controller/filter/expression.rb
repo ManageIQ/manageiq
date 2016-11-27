@@ -32,6 +32,7 @@ module ApplicationController::Filter
     :use_mytags,
     :selected,
     :val1,
+    :val1_suffix,
     :val2,
     :record_filter
   ) do

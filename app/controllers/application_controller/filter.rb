@@ -140,7 +140,7 @@ module ApplicationController::Filter
       @edit[@expkey][:exp_cvalue] = nil
       @edit[@expkey][:exp_regkey] = nil
       @edit[@expkey][:exp_regval] = nil
-      @edit[:suffix] = @edit[:suffix2] = nil
+      @edit[@expkey].val1_suffix = @edit[:suffix2] = nil
 
       case @edit[@expkey][:exp_typ]                   # Change the exp fields based on the new type
       when "<Choose>"
@@ -169,7 +169,7 @@ module ApplicationController::Filter
         if params[:chosen_field] && params[:chosen_field] != @edit[@expkey][:exp_field] # Did the field change?
           @edit[@expkey][:exp_field] = params[:chosen_field]        # Save the field
           @edit[@expkey][:exp_value] = nil                          # Clear the value
-          @edit[:suffix] = nil                                      # Clear the suffix
+          @edit[@expkey].val1_suffix = nil                          # Clear the suffix
           unless params[:chosen_field] == "<Choose>"
             if @edit[@expkey][:exp_model] != "_display_filter_" && MiqExpression::Field.parse(@edit[@expkey][:exp_field]).plural?
               @edit[@expkey][:exp_key] = "CONTAINS"                 # CONTAINS only valid for plural tables
@@ -245,7 +245,7 @@ module ApplicationController::Filter
         if params[:chosen_field] && params[:chosen_field] != @edit[@expkey][:exp_field] # Did the field change?
           @edit[@expkey][:exp_field] = params[:chosen_field]        # Save the field
           @edit[@expkey][:exp_value] = nil                          # Clear the value
-          @edit[:suffix] = nil                                      # Clear the suffix
+          @edit[@expkey].val1_suffix = nil                                      # Clear the suffix
           unless params[:chosen_field] == "<Choose>"
             @edit[@expkey][:exp_skey] = nil unless MiqExpression.get_col_operators(@edit[@expkey][:exp_field]).include?(@edit[@expkey][:exp_skey])  # Remove if not in list
             @edit[@expkey][:exp_skey] ||= MiqExpression.get_col_operators(@edit[@expkey][:exp_field]).first # Default to first operator
@@ -385,10 +385,8 @@ module ApplicationController::Filter
     end
 
     # Check for suffixes changed
-    %w(suffix suffix2).each do |key|
-      params_key = "chosen_#{key}"
-      @edit[key.to_sym] = MiqExpression::BYTE_FORMAT_WHITELIST[params[params_key]] if params[params_key]
-    end
+    @edit[@expkey].val1_suffix = MiqExpression::BYTE_FORMAT_WHITELIST[params[:choosen_suffix]] if params[:choosen_suffix]
+    @edit[:suffix2] = MiqExpression::BYTE_FORMAT_WHITELIST[params[:choosen_suffix2]] if params[:choosen_suffix2]
 
     # See if only a text value changed
     if params[:chosen_value] || params[:chosen_regkey] || params[:chosen_regval] ||
@@ -1034,14 +1032,14 @@ module ApplicationController::Filter
     @edit[@expkey][:exp_typ] = typ
     @edit[@expkey].prefill_val_types
 
-    @edit[:suffix] = @edit[:suffix2] = nil
+    @edit[@expkey].val1_suffix = @edit[:suffix2] = nil
     unless @edit[@expkey][:exp_value] == :user_input  # Ignore user input fields
       if @edit.fetch_path(@expkey, :val1, :type) == :bytes
         if is_numeric?(@edit[@expkey][:exp_value])                        # Value is a number
-          @edit[:suffix] = :bytes                                         #  Default to :bytes
+          @edit[@expkey].val1_suffix = :bytes                             #  Default to :bytes
           @edit[@expkey][:exp_value] = @edit[@expkey][:exp_value].to_s    #  Get the value
         else                                                              # Value is a string
-          @edit[:suffix] = @edit[@expkey][:exp_value].split(".").last.to_sym  #  Get the suffix
+          @edit[@expkey].val1_suffix = @edit[@expkey][:exp_value].split(".").last.to_sym # Get the suffix
           @edit[@expkey][:exp_value] = @edit[@expkey][:exp_value].split(".")[0...-1].join(".")  # Remove the suffix
         end
       end
@@ -1148,7 +1146,7 @@ module ApplicationController::Filter
                                          @edit[@expkey][:exp_key],
                                          @edit[@expkey][:exp_value].kind_of?(Array) ?
                                            @edit[@expkey][:exp_value] :
-                                           (@edit[@expkey][:exp_value].to_s + (@edit[:suffix] ? ".#{@edit[:suffix]}" : ""))
+                                           (@edit[@expkey][:exp_value].to_s + (@edit[@expkey].val1_suffix ? ".#{@edit[@expkey].val1_suffix}" : ""))
                                         )
         add_flash(_("Field Value Error: %{msg}") % {:msg => e}, :error)
       else
@@ -1163,7 +1161,7 @@ module ApplicationController::Filter
         unless @edit[@expkey][:exp_key].include?("NULL") || @edit[@expkey][:exp_key].include?("EMPTY")  # Check for "IS/IS NOT NULL/EMPTY"
           exp[@edit[@expkey][:exp_key]]["value"] = @edit[@expkey][:exp_value]   #   else set the value
           unless exp[@edit[@expkey][:exp_key]]["value"] == :user_input
-            exp[@edit[@expkey][:exp_key]]["value"] += ".#{@edit[:suffix]}" if @edit[:suffix] # Append the suffix, if present
+            exp[@edit[@expkey][:exp_key]]["value"] += ".#{@edit[@expkey].val1_suffix}" if @edit[@expkey].val1_suffix # Append the suffix, if present
           end
         end
         exp[@edit[@expkey][:exp_key]]["alias"] = @edit[@expkey][:alias] if @edit.fetch_path(@expkey, :alias)
@@ -1226,7 +1224,7 @@ module ApplicationController::Filter
                                          @edit[@expkey][:exp_skey],
                                          @edit[@expkey][:exp_value].kind_of?(Array) ?
                                            @edit[@expkey][:exp_value] :
-                                           (@edit[@expkey][:exp_value].to_s + (@edit[:suffix] ? ".#{@edit[:suffix]}" : ""))
+                                           (@edit[@expkey][:exp_value].to_s + (@edit[@expkey].val1_suffix ? ".#{@edit[@expkey].val1_suffix}" : ""))
                                         )
         add_flash(_("Find Value Error: %{msg}") % {:msg => e}, :error)
       elsif e = MiqExpression.atom_error(@edit[@expkey][:exp_check] == "checkcount" ? :count : @edit[@expkey][:exp_cfield],
@@ -1253,7 +1251,7 @@ module ApplicationController::Filter
         exp[@edit[@expkey][:exp_key]]["search"][skey]["field"] = @edit[@expkey][:exp_field] # Set the search field
         unless skey.include?("NULL") || skey.include?("EMPTY")  # Check for "IS/IS NOT NULL/EMPTY"
           exp[@edit[@expkey][:exp_key]]["search"][skey]["value"] = @edit[@expkey][:exp_value] #   else set the value
-          exp[@edit[@expkey][:exp_key]]["search"][skey]["value"] += ".#{@edit[:suffix]}" if @edit[:suffix] # Append the suffix, if present
+          exp[@edit[@expkey][:exp_key]]["search"][skey]["value"] += ".#{@edit[@expkey].val1_suffix}" if @edit[@expkey].val1_suffix # Append the suffix, if present
         end
         chk = @edit[@expkey][:exp_check]
         exp[@edit[@expkey][:exp_key]][chk] = {}                 # Create the check hash
