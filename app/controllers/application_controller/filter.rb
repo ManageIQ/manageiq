@@ -146,7 +146,7 @@ module ApplicationController::Filter
               @edit[@expkey][:exp_key] ||= MiqExpression.get_col_operators(@edit[@expkey][:exp_field]).first  # Default to first operator
             end
             @edit[@expkey].prefill_val_types
-            process_datetime_expression_field(:val1, :exp_key, :exp_value)
+            @edit[@expkey].process_datetime_expression_field(:val1, :exp_key, :exp_value)
           else
             @edit[@expkey][:exp_field] = nil
             @edit[@expkey][:exp_key] = nil
@@ -218,7 +218,7 @@ module ApplicationController::Filter
             @edit[@expkey][:exp_skey] = nil unless MiqExpression.get_col_operators(@edit[@expkey][:exp_field]).include?(@edit[@expkey][:exp_skey])  # Remove if not in list
             @edit[@expkey][:exp_skey] ||= MiqExpression.get_col_operators(@edit[@expkey][:exp_field]).first # Default to first operator
             @edit[@expkey].prefill_val_types
-            process_datetime_expression_field(:val1, :exp_skey, :exp_value)
+            @edit[@expkey].process_datetime_expression_field(:val1, :exp_skey, :exp_value)
           else
             @edit[@expkey][:exp_field] = nil
             @edit[@expkey][:exp_skey] = nil
@@ -254,7 +254,7 @@ module ApplicationController::Filter
             @edit[@expkey][:exp_ckey] = nil unless MiqExpression.get_col_operators(@edit[@expkey][:exp_cfield]).include?(@edit[@expkey][:exp_ckey]) # Remove if not in list
             @edit[@expkey][:exp_ckey] ||= MiqExpression.get_col_operators(@edit[@expkey][:exp_cfield]).first  # Default to first operator
             @edit[@expkey].prefill_val_types
-            process_datetime_expression_field(:val2, :exp_ckey, :exp_cvalue)
+            @edit[@expkey].process_datetime_expression_field(:val2, :exp_ckey, :exp_cvalue)
           else
             @edit[@expkey][:exp_cfield] = nil
             @edit[@expkey][:exp_ckey] = nil
@@ -1410,20 +1410,6 @@ module ApplicationController::Filter
             @edit[@expkey][exp_value][v_idx] = v + " 00:00" unless v.include?(":")
           end
         end
-      end
-    end
-  end
-
-  def process_datetime_expression_field(value_key, exp_key, exp_value_key)
-    if [:date, :datetime].include?(@edit[@expkey][value_key][:type])  # Set value for date/time fields
-      @edit[@expkey][value_key][:date_format] ||= "r"
-      if @edit[@expkey][exp_key] == EXP_FROM
-        @edit[@expkey][exp_value_key] = @edit[@expkey][value_key][:date_format] == "s" ?
-                                      Array.new(2) :
-                                      [EXP_TODAY, EXP_TODAY]
-        @edit[@expkey][value_key][:through_choices] = [EXP_TODAY] if @edit[@expkey][value_key][:date_format] == "r"
-      else
-        @edit[@expkey][exp_value_key] = @edit[@expkey][value_key][:date_format] == "s" ? [] : [EXP_TODAY]
       end
     end
   end

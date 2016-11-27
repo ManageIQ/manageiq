@@ -151,6 +151,18 @@ module ApplicationController::Filter
       end
     end
 
+    def process_datetime_expression_field(value_key, exp_key, exp_value_key)
+      if [:date, :datetime].include?(self[value_key][:type]) # Seting value for date/time fields
+        self[value_key][:date_format] ||= 'r'
+        if self[exp_key] == EXP_FROM
+          self[exp_value_key] = self[value_key][:date_format] == 's' ? Array.new(2) : [EXP_TODAY, EXP_TODAY]
+          self[value_key][:through_choices] = [EXP_TODAY] if self[value_key][:date_format] == 'r'
+        else
+          self[exp_value_key] = self[value_key][:date_format] == 's' ? [] : [EXP_TODAY]
+        end
+      end
+    end
+
     private
 
     def build_new_search(name_given_by_user)
