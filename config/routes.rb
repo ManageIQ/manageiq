@@ -1560,6 +1560,7 @@ Vmdb::Application.routes.draw do
     :cloud_network             => {
       :get  => %w(
         cloud_network_form_fields
+        delete_networks
         download_data
         edit
         index
@@ -1572,7 +1573,6 @@ Vmdb::Application.routes.draw do
       :post => %w(
         button
         create
-        delete_networks
         dynamic_checkbox_refresh
         form_field_changed
         quick_search

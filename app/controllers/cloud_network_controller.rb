@@ -106,7 +106,7 @@ class CloudNetworkController < ApplicationController
   def delete_networks
     assert_privileges("cloud_network_delete")
 
-    networks = if @lastaction == "show_list" || (@lastaction == "show" && @layout != "cloud_network")
+    networks = if @lastaction == "show_list" || (@lastaction == "show" && @layout != "cloud_network") || @lastaction.nil?
                  find_checked_items
                else
                  [params[:id]]
@@ -124,14 +124,14 @@ class CloudNetworkController < ApplicationController
       if network.nil?
         add_flash(_("%{model} no longer exists.") % {:model => ui_lookup(:table => "cloud_network")}, :error)
       else
-        valid_delete, delete_details = network.validate_delete_network
-        if valid_delete
+        valid_delete = network.validate_delete_network
+        if valid_delete[:available]
           networks_to_delete.push(network)
         else
           add_flash(_("Couldn't initiate deletion of %{model} \"%{name}\": %{details}") % {
             :model   => ui_lookup(:table => 'cloud_network'),
             :name    => network.name,
-            :details => delete_details}, :error)
+            :details => valid_delete[:message]}, :error)
         end
       end
     end
@@ -150,11 +150,15 @@ class CloudNetworkController < ApplicationController
       if @flash_array.nil?
         add_flash(_("The selected %{model} was deleted") % {:model => ui_lookup(:table => "cloud_network")})
       end
+    else
+      drop_breadcrumb(:name => 'dummy', :url  => " ") # missing a bc to get correctly back so here's a dummy
+      session[:flash_msgs] = @flash_array.dup if @flash_array
+      redirect_to(previous_breadcrumb_url)
     end
   end
 
   def edit
-    params[:id] = get_checked_network_id(params) unless params[:id].present?
+    params[:id] = checked_item_id unless params[:id].present?
     assert_privileges("cloud_network_edit")
     @network = find_by_id_filtered(CloudNetwork, params[:id])
     @network_provider_network_type_choices = PROVIDERS_NETWORK_TYPES
@@ -212,7 +216,6 @@ class CloudNetworkController < ApplicationController
 
       session[:edit] = nil
       session[:flash_msgs] = @flash_array.dup if @flash_array
-
       javascript_redirect previous_breadcrumb_url
     end
   end

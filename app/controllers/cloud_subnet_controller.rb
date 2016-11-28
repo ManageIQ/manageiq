@@ -103,7 +103,7 @@ class CloudSubnetController < ApplicationController
   def delete_subnets
     assert_privileges("cloud_subnet_delete")
 
-    subnets = if @lastaction == "show_list" || (@lastaction == "show" && @layout != "cloud_subnet")
+    subnets = if @lastaction == "show_list" || (@lastaction == "show" && @layout != "cloud_subnet") || @lastaction.nil?
                 find_checked_items
               else
                 [params[:id]]
@@ -135,19 +135,22 @@ class CloudSubnetController < ApplicationController
 
     # refresh the list if applicable
     if @lastaction == "show_list"
-      cancel_action('')
-      #show_list
-      #@refresh_partial = "layouts/gtl"
+      show_list
+      @refresh_partial = "layouts/gtl"
     elsif @lastaction == "show" && @layout == "cloud_subnet"
       @single_delete = true unless flash_errors?
       if @flash_array.nil?
         add_flash(_("The selected Cloud Subnet was deleted"))
       end
+    else
+      drop_breadcrumb(:name => 'dummy', :url  => " ") # missing a bc to get correctly back so here's a dummy
+      session[:flash_msgs] = @flash_array.dup if @flash_array
+      redirect_to(previous_breadcrumb_url)
     end
   end
 
   def edit
-    params[:id] = get_checked_subnet_id(params) unless params[:id].present?
+    params[:id] = checked_item_id unless params[:id].present?
     assert_privileges("cloud_subnet_edit")
     @subnet = find_by_id_filtered(CloudSubnet, params[:id])
     @in_a_form = true
@@ -171,16 +174,20 @@ class CloudSubnetController < ApplicationController
         add_flash(_("Updating Subnet \"%{name}\"") % {
           :name  => @subnet.name
         })
-      rescue => e
-        add_flash(_("Unable to update Subnet \"%{name}\": %{details}") % {
+      rescue Excon::Error::Unauthorized => e
+        add_flash(_("Unable to update Subnet \"%{name}\": The request you have made requires authentication.") % {
           :name    => @subnet.name,
           :details => e
+        }, :error)
+      rescue => e
+        add_flash(_("Unable to update Subnet \"%{name}\": %{details}") % {
+            :name    => @subnet.name,
+            :details => e
         }, :error)
       end
 
       session[:edit] = nil
       session[:flash_msgs] = @flash_array.dup if @flash_array
-
       javascript_redirect previous_breadcrumb_url
     end
   end

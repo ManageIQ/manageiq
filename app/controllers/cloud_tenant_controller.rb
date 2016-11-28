@@ -241,16 +241,6 @@ class CloudTenantController < ApplicationController
     end
   end
 
- # def cancel_action(message)
- #   session[:edit] = nil
- # @breadcrumbs.pop if @breadcrumbs
- #   javascript_redirect :action    => @lastaction,
- #                       :id        => @tenant.id,
- #                       :display   => session[:cloud_tenant_display],
- # :flash_msg => message
- #  end
-
-
   private
 
   def form_params
@@ -296,6 +286,7 @@ class CloudTenantController < ApplicationController
     @display    = session[:cloud_tenant_display]
     @filters    = session[:cloud_tenant_filters]
     @catinfo    = session[:cloud_tenant_catinfo]
+    @flash_array = session[:flash_msgs] if session[:flash_msgs].present?
   end
 
   def set_session_data

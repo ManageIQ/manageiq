@@ -301,7 +301,7 @@ class CloudVolumeController < ApplicationController
   end
 
   def edit
-    params[:id] = get_checked_volume_id(params) unless params[:id].present?
+    params[:id] = checked_item_id unless params[:id].present?
     assert_privileges("cloud_volume_edit")
     @volume = find_by_id_filtered(CloudVolume, params[:id])
     @in_a_form = true
@@ -389,29 +389,40 @@ class CloudVolumeController < ApplicationController
           :name      => volume.name,
           :instances => ui_lookup(:tables => 'vm_cloud')}, :warning)
       else
-        valid_delete, delete_details = volume.validate_delete_volume
-        if valid_delete[:available]
-          volumes_to_delete.push(volume)
-        else
+        begin
+          valid_delete = volume.validate_delete_volume
+          if valid_delete[:available]
+            volumes_to_delete.push(volume)
+          else
+            add_flash(_("Couldn't initiate deletion of %{model} \"%{name}\": %{details}") % {
+                :model   => ui_lookup(:table => 'cloud_volume'),
+                :name    => volume.name,
+                :details => valid_delete[:message]}, :error)
+          end
+        rescue Excon::Error::Unauthorized => e
           add_flash(_("Couldn't initiate deletion of %{model} \"%{name}\": %{details}") % {
-            :model   => ui_lookup(:table => 'cloud_volume'),
-            :name    => volume.name,
-            :details => delete_details}, :error)
+              :model   => ui_lookup(:table => 'cloud_volume'),
+              :name    => volume.name,
+              :details => e}, :error)
         end
+
       end
     end
     process_cloud_volumes(volumes_to_delete, "destroy") unless volumes_to_delete.empty?
 
     # refresh the list if applicable
-    if @lastaction == "show_list"
-      javascript_redirect previous_breadcrumb_url
+    if @lastaction == "show_list" && @breadcrumbs.last[:url].include?(@lastaction)
+      show_list
+      @refresh_partial = "layouts/gtl"
     elsif @lastaction == "show" && @layout == "cloud_volume"
       @single_delete = true unless flash_errors?
       if @flash_array.nil?
         add_flash(_("The selected %{model} was deleted") % {:model => ui_lookup(:table => "cloud_volume")})
       end
     else
-      javascript_redirect previous_breadcrumb_url
+      drop_breadcrumb(:name => 'dummy', :url  => " ") # missing a bc to get correctly back so here's a dummy
+      session[:flash_msgs] = @flash_array.dup if @flash_array
+      redirect_to(previous_breadcrumb_url)
     end
   end
 
