@@ -175,16 +175,31 @@ describe ManageIQ::Providers::Openstack::CloudManager::ProvisionWorkflow do
       end
 
       context "#allowed_instance_types" do
-        let(:hardware) { FactoryGirl.create(:hardware, :size_on_disk => 1.gigabyte, :memory_mb_minimum => 512) }
         let(:template) { FactoryGirl.create(:template_openstack, :hardware => hardware, :ext_management_system => provider) }
 
-        it "filters flavors too small" do
-          flavor = FactoryGirl.create(:flavor_openstack, :memory => 1.gigabyte, :root_disk_size => 1.terabyte)
-          provider.flavors << flavor
-          provider.flavors << FactoryGirl.create(:flavor_openstack, :memory => 1.gigabyte, :root_disk_size => 1.megabyte) # Disk too small
-          provider.flavors << FactoryGirl.create(:flavor_openstack, :memory => 1.megabyte, :root_disk_size => 1.terabyte) # Memory too small
+        context "with regular hardware" do
+          let(:hardware) { FactoryGirl.create(:hardware, :size_on_disk => 1.gigabyte, :memory_mb_minimum => 512) }
 
-          expect(workflow.allowed_instance_types).to eq(flavor.id => flavor.name)
+          it "filters flavors too small" do
+            flavor = FactoryGirl.create(:flavor_openstack, :memory => 1.gigabyte, :root_disk_size => 1.terabyte)
+            provider.flavors << flavor
+            provider.flavors << FactoryGirl.create(:flavor_openstack, :memory => 1.gigabyte, :root_disk_size => 1.megabyte) # Disk too small
+            provider.flavors << FactoryGirl.create(:flavor_openstack, :memory => 1.megabyte, :root_disk_size => 1.terabyte) # Memory too small
+
+            expect(workflow.allowed_instance_types).to eq(flavor.id => flavor.name)
+          end
+        end
+
+        context "hardware with no size_on_disk" do
+          let(:hardware) { FactoryGirl.create(:hardware, :memory_mb_minimum => 512) }
+
+          it "filters flavors too small" do
+            flavor = FactoryGirl.create(:flavor_openstack, :memory => 1.gigabyte, :root_disk_size => 1.terabyte)
+            provider.flavors << flavor
+            provider.flavors << FactoryGirl.create(:flavor_openstack, :memory => 1.megabyte, :root_disk_size => 1.terabyte) # Memory too small
+
+            expect(workflow.allowed_instance_types).to eq(flavor.id => flavor.name)
+          end
         end
       end
 
