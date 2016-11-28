@@ -24,6 +24,8 @@ module ManageIQ::Providers
     has_many :load_balancer_listener_pools,       :through => :load_balancer_listeners
     has_many :load_balancer_health_checks,        :foreign_key => :ems_id, :dependent => :destroy
     has_many :load_balancer_health_check_members, :through => :load_balancer_health_checks
+    has_many :hosts,                              :through => :parent_manager
+    has_many :vms,                                :through => :parent_manager
 
     # Uses "ext_management_systems"."parent_ems_id" instead of "ext_management_systems"."id"
     #
@@ -68,9 +70,7 @@ module ManageIQ::Providers
              :orchestration_stacks_resources,
              :direct_orchestration_stacks,
              :resource_groups,
-             :vms,
              :total_vms,
-             :hosts,
              :to        => :parent_manager,
              :allow_nil => true
 
