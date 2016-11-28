@@ -266,6 +266,7 @@ class CloudNetworkController < ApplicationController
     return if networks.empty?
 
     if operation == "destroy"
+      deleted_networks = 0
       networks.each do |network|
         audit = {
           :event        => "cloud_network_record_delete_initiated",
@@ -275,11 +276,20 @@ class CloudNetworkController < ApplicationController
           :userid       => session[:userid]
         }
         AuditEvent.success(audit)
-        network.delete_network
+        begin
+          network.delete_network
+          deleted_networks += 1
+        rescue NotImplementedError
+          add_flash(_("Cannot delete Network %{name}: Not supported.") % {:name => network.name}, :error)
+        rescue MiqException::MiqNetworkDeleteError => e
+          add_flash(_("Cannot delete Network %{name}: %{error_message}") % {:name => network.name, :error_message => e.message}, :error)
+        end
       end
-      add_flash(n_("Delete initiated for %{number} Cloud Network.",
-                   "Delete initiated for %{number} Cloud Networks.",
-                   networks.length) % {:number => networks.length})
+      if deleted_networks > 0
+        add_flash(n_("Delete initiated for %{number} Cloud Network.",
+                     "Delete initiated for %{number} Cloud Networks.",
+                     deleted_networks) % {:number => deleted_networks})
+      end
     end
   end
 

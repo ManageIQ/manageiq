@@ -390,7 +390,7 @@ class CloudVolumeController < ApplicationController
           :instances => ui_lookup(:tables => 'vm_cloud')}, :warning)
       else
         valid_delete, delete_details = volume.validate_delete_volume
-        if valid_delete
+        if valid_delete[:available]
           volumes_to_delete.push(volume)
         else
           add_flash(_("Couldn't initiate deletion of %{model} \"%{name}\": %{details}") % {
@@ -404,8 +404,7 @@ class CloudVolumeController < ApplicationController
 
     # refresh the list if applicable
     if @lastaction == "show_list"
-      show_list
-      @refresh_partial = "layouts/gtl"
+      javascript_redirect previous_breadcrumb_url
     elsif @lastaction == "show" && @layout == "cloud_volume"
       @single_delete = true unless flash_errors?
       if @flash_array.nil?

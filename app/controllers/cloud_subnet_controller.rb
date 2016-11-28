@@ -135,8 +135,9 @@ class CloudSubnetController < ApplicationController
 
     # refresh the list if applicable
     if @lastaction == "show_list"
-      show_list
-      @refresh_partial = "layouts/gtl"
+      cancel_action('')
+      #show_list
+      #@refresh_partial = "layouts/gtl"
     elsif @lastaction == "show" && @layout == "cloud_subnet"
       @single_delete = true unless flash_errors?
       if @flash_array.nil?
@@ -214,6 +215,7 @@ class CloudSubnetController < ApplicationController
     return if subnets.empty?
 
     if operation == "destroy"
+      deleted_subnets = 0
       subnets.each do |subnet|
         audit = {
           :event        => "cloud_subnet_record_delete_initiated",
@@ -223,11 +225,20 @@ class CloudSubnetController < ApplicationController
           :userid       => session[:userid]
         }
         AuditEvent.success(audit)
-        subnet.delete_subnet
+        begin
+          subnet.delete_subnet
+          deleted_subnets += 1
+        rescue NotImplementedError
+          add_flash(_("Cannot delete Network %{name}: Not supported.") % {:name => subnet.name}, :error)
+        rescue MiqException::MiqCloudSubnetDeleteError => e
+          add_flash(_("Cannot delete Network %{name}: %{error_message}") % {:name => subnet.name, :error_message => e.message}, :error)
+        end
       end
-      add_flash(n_("Delete initiated for %{number} Cloud Subnet.",
-                   "Delete initiated for %{number} Cloud Subnets.",
-                   subnets.length) % {:number => subnets.length})
+      if  deleted_subnets > 0
+        add_flash(n_("Delete initiated for %{number} Cloud Subnet.",
+                     "Delete initiated for %{number} Cloud Subnets.",
+                     deleted_subnets) % {:number =>  deleted_subnets})
+      end
     end
   end
 
