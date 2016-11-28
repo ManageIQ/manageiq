@@ -37,7 +37,7 @@ shared_examples :shared_examples_for_cloud_network_controller do |providers|
           get :show, :params => {:id => @cloud_network.id}
           expect(response.status).to eq(200)
           expect(response.body).to_not be_empty
-          expect(assigns(:breadcrumbs)).to eq([{:name => "cloud_networks",
+          expect(assigns(:breadcrumbs)).to eq([{:name => "Cloud Networks",
                                                 :url  => "/cloud_network/show_list?page=&refresh=y"},
                                                {:name => "Cloud Network (Summary)",
                                                 :url  => "/cloud_network/show/#{@cloud_network.id}"}])
