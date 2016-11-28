@@ -35,7 +35,7 @@ module Mixins
       restful? ? '/' : '/show'
     end
 
-    def init_show
+    def init_show(model_class = self.class.model)
       @record = identify_record(params[:id], model_class)
       return false if record_no_longer_exists?(@record)
       @lastaction = 'show'
