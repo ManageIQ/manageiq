@@ -42,5 +42,5 @@ class CloudObjectStoreContainerController < ApplicationController
     session[:cloud_object_store_container_showtype]   = @showtype
   end
 
-  menu_section :sto
+  menu_section :ost
 end

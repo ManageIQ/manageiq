@@ -40,4 +40,6 @@ class EmsBlockStorageController < ApplicationController
             :model                     => model}
     process_show_list(opts)
   end
+
+  menu_section :bst
 end

@@ -140,4 +140,6 @@ class CloudVolumeSnapshotController < ApplicationController
                    snapshots.length) % {:number => snapshots.length})
     end
   end
+
+  menu_section :bst
 end

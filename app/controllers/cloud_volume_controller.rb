@@ -663,5 +663,5 @@ class CloudVolumeController < ApplicationController
     session[:cloud_volume_showtype]   = @showtype
   end
 
-  menu_section :sto
+  menu_section :bst
 end
