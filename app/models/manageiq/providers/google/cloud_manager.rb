@@ -19,7 +19,7 @@ class ManageIQ::Providers::Google::CloudManager < ManageIQ::Providers::CloudMana
   supports :provisioning
   supports :regions
 
-  before_validation :ensure_managers
+  before_create :ensure_managers
 
   def ensure_network_manager
     build_network_manager(:type => 'ManageIQ::Providers::Google::NetworkManager') unless network_manager

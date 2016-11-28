@@ -46,7 +46,7 @@ class ManageIQ::Providers::Openstack::CloudManager < ManageIQ::Providers::CloudM
   supports :swift_service
   supports :create_host_aggregate
 
-  before_validation :ensure_managers,
+  before_create :ensure_managers,
                     :ensure_cinder_managers,
                     :ensure_swift_managers
 
