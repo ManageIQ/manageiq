@@ -157,12 +157,6 @@ class ExplorerPresenter
     self
   end
 
-  def self.open_window_with_post_params(url, post_params)
-    new(:mode       => 'window_with_post',
-        :open_url   => url,
-        :postParams => post_params)
-  end
-
   def self.open_window(url)
     new(:mode => 'window', :open_url => url)
   end
@@ -177,11 +171,10 @@ class ExplorerPresenter
 
   def for_render
     case @options[:mode]
-    when 'main_div'           then for_render_main_div
-    when 'flash'              then for_render_flash
-    when 'buttons'            then for_render_buttons
-    when 'window'             then for_render_window
-    when 'window_with_post'   then for_render_window_with_post
+    when 'main_div' then for_render_main_div
+    when 'flash'    then for_render_flash
+    when 'buttons'  then for_render_buttons
+    when 'window'   then for_render_window
     else for_render_default
     end
   end
@@ -195,14 +188,6 @@ class ExplorerPresenter
     data[:scrollTop] = true if @options[:scroll_top]
     data[:focus] = @options[:focus] if @options[:focus]
     data[:activateNode] = @options[:activate_node] if @options[:activate_node]
-    data
-  end
-
-  def for_render_window_with_post
-    data = {:explorer => 'window_with_post'}
-    data[:openUrl] = @options[:open_url]
-    data[:spinnerOff] = true if @options[:spinner_off]
-    data[:postParams] = @options[:postParams]
     data
   end
 
