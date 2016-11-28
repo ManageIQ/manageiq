@@ -5,8 +5,11 @@ describe LaunchAnsibleJob do
   let(:jt_class) { MiqAeMethodService::MiqAeServiceManageIQ_Providers_AnsibleTower_ConfigurationManager_ConfigurationScript }
   let(:user) { FactoryGirl.create(:user_with_group) }
   let(:vm) { FactoryGirl.create(:vm) }
+  let(:manager) { FactoryGirl.create(:configuration_manager_ansible_tower, :name => "AT1") }
   let(:svc_vm) { MiqAeMethodService::MiqAeServiceVm.find(vm.id) }
-  let(:job_template) { FactoryGirl.create(:ansible_configuration_script) }
+  let(:job_template) do
+    FactoryGirl.create(:ansible_configuration_script, :manager_id => manager.id)
+  end
   let(:svc_job_template) { jt_class.find(job_template.id) }
   let(:ip_addr) { '1.1.1.1' }
   let(:job) { FactoryGirl.create(:ansible_tower_job) }
@@ -49,6 +52,34 @@ describe LaunchAnsibleJob do
     ext_vars['y'] = 'Y'
     root_object['vm'] = svc_vm
     current_object = Spec::Support::MiqAeMockObject.new(:job_template_name => job_template.name)
+    current_object.parent = root_object
+    service.object = current_object
+    job_args[:limit] = vm.name
+    expect(job_class).to receive(:create_job).with(anything, job_args).and_return(svc_job)
+    LaunchAnsibleJob.new(service).main
+    expect(service.get_state_var(:ansible_job_id)).to eq(job.id)
+  end
+
+  it "run a job using job template name and provider name" do
+    ext_vars['x'] = 'X'
+    ext_vars['y'] = 'Y'
+    root_object['vm'] = svc_vm
+    current_object = Spec::Support::MiqAeMockObject.new(:job_template_name => job_template.name)
+    current_object['ansible_tower_provider_name'] = manager.name
+    current_object.parent = root_object
+    service.object = current_object
+    job_args[:limit] = vm.name
+    expect(job_class).to receive(:create_job).with(anything, job_args).and_return(svc_job)
+    LaunchAnsibleJob.new(service).main
+    expect(service.get_state_var(:ansible_job_id)).to eq(job.id)
+  end
+
+  it "run a job using job template name and dialog provider name" do
+    ext_vars['x'] = 'X'
+    ext_vars['y'] = 'Y'
+    root_object['vm'] = svc_vm
+    current_object = Spec::Support::MiqAeMockObject.new(:job_template_name => job_template.name)
+    current_object['dialog_ansible_tower_provider_name'] = manager.name
     current_object.parent = root_object
     service.object = current_object
     job_args[:limit] = vm.name
