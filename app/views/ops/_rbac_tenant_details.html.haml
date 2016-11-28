@@ -15,7 +15,7 @@
       .col-md-8
         = h(@tenant.description)
     - parent = @tenant.parent
-    - if parent
+    - if parent && parent.allowed?
       .form-group
         %label.control-label.col-md-2
           = _("Parent")

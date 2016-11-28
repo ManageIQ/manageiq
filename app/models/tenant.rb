@@ -320,6 +320,10 @@ class Tenant < ApplicationRecord
     data_tenant
   end
 
+  def allowed?
+    Rbac::Filterer.filtered_object(self).present?
+  end
+
   private
 
   # when a root tenant has an attribute with a nil value,
