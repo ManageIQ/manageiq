@@ -258,7 +258,7 @@ error("request") if @miq_request.nil?
 
 options_hash = service_options if @service
 
-if @service && @service_template.prov_type.starts_with?("generic")
+if @service && !@service_template.prov_type.nil? && @service_template.prov_type.starts_with?("generic")
   $evm.log(:info, "Generic Service Item.  No quota check being done.")
   $evm.root['ae_result'] = 'ok'
   $evm.root['ae_next_state'] = 'finished'
