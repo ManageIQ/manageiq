@@ -19,7 +19,7 @@ require 'faraday'
 require 'faraday_middleware'
 
 class RestApi
-  VERSION = "2.3.0-pre".freeze
+  VERSION = "2.4.0-pre".freeze
   API_CMD = File.basename($PROGRAM_NAME)
 
   class Cli

@@ -3,12 +3,12 @@
   :module: api
   :name: API
   :description: REST API
-  :version: '2.3.0'
+  :version: '2.4.0-pre'
 :version:
   :regex: !ruby/regexp /^v[0-9]+(?>\\.[0-9a-zA-Z]+)*(-[0-9A-Za-z-]+(\\.[0-9A-Za-z-]+)*)?/
   :definitions:
-  - :name: '2.3.0'
-    :ident: 'v2.3.0'
+  - :name: '2.4.0-pre'
+    :ident: 'v2.4.0-pre'
 :verb:
   :names:
   - :get
