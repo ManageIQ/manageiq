@@ -14,9 +14,13 @@ class ChargebackRateDetail < ApplicationRecord
   OPTION_FIELDS = %w(breakdown).freeze
   OPTION_FIELDS.each do |f|
     define_method(f) { options.try(:[], f) }
+    define_method("#{f}=") do |val|
+      self.options ||= {}
+      options[f] = val
+    end
   end
 
-  FORM_ATTRIBUTES = %i(description per_time per_unit metric group source metric).freeze
+  FORM_ATTRIBUTES = %i(description per_time per_unit metric group source metric).freeze + OPTION_FIELDS
   PER_TIME_TYPES = {
     "hourly"  => _("Hourly"),
     "daily"   => _("Daily"),

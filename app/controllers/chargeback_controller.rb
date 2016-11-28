@@ -566,7 +566,7 @@ class ChargebackController < ApplicationController
       @edit[:new][:code_currency] = ChargebackRateDetailCurrency.find(params[:currency]).code
     end
     @edit[:new][:details].each_with_index do |detail, detail_index|
-      %i{per_time per_unit}.each do |measure|
+      %i(per_time per_unit breakdown).each do |measure|
         key = "#{measure}_#{detail_index}".to_sym
         detail[measure] = params[key] if params[key]
       end
