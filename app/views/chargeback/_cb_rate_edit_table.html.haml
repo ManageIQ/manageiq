@@ -30,9 +30,9 @@
           = detail[:description]
         %td{:rowspan => num_tiers}
           = select_tag("per_time_#{detail_index}",
-            options_for_select(@edit[:new][:per_time_types].invert, @edit[:new][:details][detail_index][:per_time]),
+            options_for_select(@edit[:new][:per_time_types].invert, detail[:per_time]),
             "data-miq_observe" => {:url => url}.to_json)
-        - measure = @edit[:new][:details][detail_index][:detail_measure]
+        - measure = detail[:detail_measure]
         - if measure.nil?
           /if the rate detail don't have a metric associated, display the per_unit_display
           %td{:rowspan => num_tiers}
