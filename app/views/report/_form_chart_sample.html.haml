@@ -8,4 +8,4 @@
                         :rand   => "#{rand(999_999_999)}"),
                         :id => 'my_chart', :bgcolor => '#f2f2f2', :width => 400, :height => 250)
       - elsif Charting.backend == :c3
-        = chart_remote('report', :action => 'sample_chart', :id => "my_chart")
+        = chart_remote('report', :action => 'sample_chart', :id => "my_chart", :zoomed => false)
