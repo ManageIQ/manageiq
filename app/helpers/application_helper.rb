@@ -956,8 +956,9 @@ module ApplicationHelper
         end
       end
     else
+      tag_attrs_disabled = {:title => args[:disabled_title]}
       content_tag(:li, :class => "disabled") do
-        link_to(link_text, "#")
+        link_to(link_text, "#", tag_attrs_disabled)
       end
     end
   end
