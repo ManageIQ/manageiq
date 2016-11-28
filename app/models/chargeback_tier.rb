@@ -25,6 +25,10 @@ class ChargebackTier < ApplicationRecord
     finish == Float::INFINITY
   end
 
+  def gratis?
+    fixed_rate.zero? && variable_rate.zero?
+  end
+
   def continuity?
     is_continuous = start < finish
     errors.add(:finish, "value must be greater than start value.") unless is_continuous

@@ -139,6 +139,10 @@ class ChargebackRateDetail < ApplicationRecord
     end
   end
 
+  def affects_report_fields(report_cols)
+    (metric_keys & report_cols).present? || ((cost_keys & report_cols).present? && !gratis?)
+  end
+
   def rate_name
     "#{group}_#{source}"
   end
@@ -211,6 +215,10 @@ class ChargebackRateDetail < ApplicationRecord
   end
 
   private
+
+  def gratis?
+    chargeback_tiers.all?(&:gratis?)
+  end
 
   def metric_keys
     ["#{rate_name}_metric", # metric value (e.g. Storage [Used|Allocated|Fixed])
