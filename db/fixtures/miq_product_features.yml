@@ -4789,11 +4789,11 @@
       :feature_type: admin
       :identifier: container_service_delete
     - :name: Edit
-      :description: Edit a Container Services
+      :description: Edit a Container Service
       :feature_type: admin
       :identifier: container_service_edit
     - :name: Add
-      :description: Add a Container Services
+      :description: Add a Container Service
       :feature_type: admin
       :identifier: container_service_new
   - :name: Operate
