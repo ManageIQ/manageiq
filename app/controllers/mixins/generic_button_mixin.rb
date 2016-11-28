@@ -3,7 +3,7 @@ module Mixins
     # handle buttons pressed on the button bar
     def button
       @edit = session[:edit] # Restore @edit for adv search box
-      params[:display] = @display if %w(images instances).include?(@display) # Were we displaying vms/hosts/storages
+      params[:display] = @display if %w(vms images instances).include?(@display)
       params[:page] = @current_page unless @current_page.nil? # Save current page for list refresh
 
       # Handle buttons from sub-items screen
