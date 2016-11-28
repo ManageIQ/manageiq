@@ -40,7 +40,9 @@ class ManageIQ::Providers::Azure::CloudManager::EventCatcher::Runner <
   end
 
   def filtered?(event)
-    event_type = parse_event_type(event)
-    filtered_events.include?(event_type)
+    event_type    = parse_event_type(event)
+    provider_type = event["resourceProviderName"]["value"]
+
+    @ems.blacklisted_provider_types.match(provider_type) || filtered_events.include?(event_type)
   end
 end
