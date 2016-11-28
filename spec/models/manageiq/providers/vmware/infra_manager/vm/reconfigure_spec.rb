@@ -5,7 +5,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::Vm::Reconfigure do
       :name            => 'test_vm',
       :raw_power_state => 'poweredOff',
       :storage         => FactoryGirl.create(:storage, :name => 'storage'),
-      :hardware        => FactoryGirl.create(:hardware, :cpu2x2, :ram1GB, :virtual_hw_version => "07")
+      :hardware        => FactoryGirl.create(:hardware, :cpu4x2, :ram1GB, :virtual_hw_version => "07")
     )
   end
 
@@ -91,6 +91,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::Vm::Reconfigure do
 
       context "with CPU Hot-Add disabled" do
         it "raises an exception when adding CPUs" do
+          options[:number_of_cpus] = '16'
           expect { subject }.to raise_error(MiqException::MiqVmError, "CPU Hot-Add not enabled")
         end
       end
@@ -114,14 +115,15 @@ describe ManageIQ::Providers::Vmware::InfraManager::Vm::Reconfigure do
         end
 
         it "sets numCPUs correctly" do
-          expect(subject["numCPUs"]).to eq(8)
+          options[:number_of_cpus] = '16'
+
+          expect(subject["numCPUs"]).to eq(16)
         end
       end
 
       context "with Memory Hot-Add disabled" do
         it "raises an exception when adding RAM" do
-          options[:vm_memory]      = '2048'
-          options[:number_of_cpus] = vm.cpu_total_cores.to_s
+          options[:vm_memory] = '2048'
 
           expect { subject }.to raise_error(MiqException::MiqVmError, "Memory Hot-Add not enabled")
         end
@@ -134,22 +136,19 @@ describe ManageIQ::Providers::Vmware::InfraManager::Vm::Reconfigure do
         end
 
         it "raises an exception when removing memory" do
-          options[:vm_memory]      = '512'
-          options[:number_of_cpus] = vm.cpu_total_cores.to_s
+          options[:vm_memory] = '512'
 
           expect { subject }.to raise_error(MiqException::MiqVmError, "Cannot remove memory from a running VM")
         end
 
         it "raises an exception if adding more than the memory limit" do
-          options[:vm_memory]      = '4096'
-          options[:number_of_cpus] = vm.cpu_total_cores.to_s
+          options[:vm_memory] = '4096'
 
           expect { subject }.to raise_error(MiqException::MiqVmError, "Cannot add more than 2048MB to this VM")
         end
 
         it "sets memoryMB correctly" do
           options[:vm_memory] = '1536'
-          options[:number_of_cpus] = vm.cpu_total_cores.to_s
 
           expect(subject["memoryMB"]).to eq(1536)
         end
