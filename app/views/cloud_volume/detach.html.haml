@@ -3,14 +3,14 @@
   %h3
     = _('Detach Volume')
   .form-horizontal
-    .form-group
-      %label.col-md-2.control-label
+    .form-group{"ng-class" => "{'has-error': angularForm.vm_id.$invalid}"}
+      %label.col-md-2.control-label{"for" => "vm_id"}
         = _('Instance')
       .col-md-8
         = select_tag("vm_id",
-                      options_for_select(@vm_choices.sort),
+                      options_for_select([["<#{_('Choose')}>", nil]] + @vm_choices.sort, disabled: ["<#{_('Choose')}>", nil]),
                       "ng-model"                    => "cloudVolumeModel.vm_id",
-                      :miqrequired                  => true,
+                      "required"                    => true,
                       :checkchange                  => true,
                       "selectpicker-for-select-tag" => "")
 
