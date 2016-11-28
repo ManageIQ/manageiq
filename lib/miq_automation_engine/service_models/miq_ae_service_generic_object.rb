@@ -23,7 +23,19 @@ module MiqAeMethodService
 
     def method_missing(method_name, *args)
       ae_user_identity unless @ae_user
-      object_send(method_name, *args)
+      args = convert_params_to_ar_model(args)
+      results = object_send(method_name, *args)
+      wrap_results(results)
+    end
+
+    def convert_params_to_ar_model(args)
+      if args.kind_of?(Array)
+        args.collect { |arg| convert_params_to_ar_model(arg) }
+      elsif args.kind_of?(Hash)
+        args.each { |k, v| args[k] = convert_params_to_ar_model(v) }
+      else
+        args.kind_of?(MiqAeMethodService::MiqAeServiceModelBase) ? args.object_send(:itself) : args
+      end
     end
 
     def respond_to_missing?(method_name, include_private = false)

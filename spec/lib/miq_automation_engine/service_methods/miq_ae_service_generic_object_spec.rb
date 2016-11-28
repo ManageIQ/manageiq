@@ -7,7 +7,7 @@ module MiqAeServiceGenericObjectSpec
     let(:service2)         { FactoryGirl.create(:service) }
     let(:service_service2) { MiqAeMethodService::MiqAeServiceService.find(service2.id) }
 
-    context "#add_to_service" do
+    describe "#add_to_service" do
       it "adds a generic object to service_resources of a valid service" do
         service_go.add_to_service(service_service)
         assert_service_resource(service, generic_object)
@@ -27,7 +27,7 @@ module MiqAeServiceGenericObjectSpec
       end
     end
 
-    context "#remove_from_service" do
+    describe "#remove_from_service" do
       it "removes a generic object from a connected service" do
         service_go.add_to_service(service_service)
         expect(service.service_resources.count).to eq(1)
@@ -50,6 +50,49 @@ module MiqAeServiceGenericObjectSpec
       it "raises an error when adding a generic object to an invalid service" do
         expect { service_go.remove_from_service('wrong type') }
           .to raise_error(ArgumentError, /service must be a MiqAeServiceService/)
+      end
+    end
+
+    describe '#convert_params_to_ar_model' do
+      let(:user) { FactoryGirl.create(:user_with_group) }
+      subject    { service_go.send(:convert_params_to_ar_model, @args) }
+
+      before do
+        allow(DRb).to receive_message_chain('front.workspace.ae_user').and_return(user)
+      end
+
+      context 'converts service model object to AR object' do
+        it 'with a single value' do
+          @args = service_service
+          expect(subject).to eq(service)
+        end
+
+        it 'with an array' do
+          @args = [service_service, service_service2]
+          expect(subject).to match_array([service, service2])
+        end
+
+        it 'with a hash' do
+          @args = { :services => [service_service, service_service2] }
+          expect(subject).to eq(:services => [service, service2])
+        end
+      end
+
+      context 'does not touch non-service model object' do
+        it 'with a single value' do
+          @args = service
+          expect(subject).to eq(service)
+        end
+
+        it 'with an array' do
+          @args = [service, service2]
+          expect(subject).to eq(@args)
+        end
+
+        it 'with a hash' do
+          @args = { :services => [service, service2] }
+          expect(subject).to eq(@args)
+        end
       end
     end
 
