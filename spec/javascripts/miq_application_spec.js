@@ -345,7 +345,7 @@ describe('miq_application.js', function() {
       beforeEach(function () {
         spyOn(window, 'miqJqueryRequest').and.callFake(function () {
           return {
-            then: function (ok, err) {
+            catch: function (err) {
               err()
             }
           };

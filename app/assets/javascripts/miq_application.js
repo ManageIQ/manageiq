@@ -737,10 +737,12 @@ function miqAjax(url, serialize_fields, options) {
     complete: true,
   };
 
-  miqJqueryRequest(url, _.extend(defaultOptions, options || {}, { data: data })).then(function(arg) {
-  }, function(err) {
-    add_flash(__("Error requesting data from server"), 'error');
-  });
+  miqJqueryRequest(url, _.extend(defaultOptions, options || {}, { data: data }))
+    .catch(function(err){
+      add_flash(__("Error requesting data from server"), 'error');
+      console.log(err);
+      return Promise.reject(err)
+    });
 }
 
 // Function to generate an Ajax request for EVM async processing
@@ -1054,9 +1056,11 @@ function miq_tabs_init(id, url) {
     } else if (typeof(url) != 'undefined') {
       // Load remote tab if an URL is specified
       var currTabTarget = $(e.target).attr('href').substring(1);
-      miqJqueryRequest(url + '/?tab_id=' + currTabTarget, {beforeSend: true}).then(function(arg) {
-      }, function(err) {
-        add_flash(__("Error requesting data from server"), 'error');
+      miqJqueryRequest(url + '/?tab_id=' + currTabTarget, {beforeSend: true})
+        .catch(function(err){
+          add_flash(__("Error requesting data from server"), 'error');
+          console.log(err);
+          return Promise.reject(err)
       });
     }
   });
@@ -1189,6 +1193,7 @@ function miqProcessObserveQueue() {
   }, function(err) {
     ManageIQ.observe.processing = false;
     add_flash(__("Error requesting data from server"), 'error');
+    console.log(err);
     request.deferred.reject(err);
   });
 }
