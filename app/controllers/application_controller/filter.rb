@@ -869,7 +869,7 @@ module ApplicationController::Filter
                                          @edit[@expkey][:exp_key],
                                          @edit[@expkey][:exp_value].kind_of?(Array) ?
                                            @edit[@expkey][:exp_value] :
-                                           (@edit[@expkey][:exp_value].to_s + (@edit[@expkey].val1_suffix ? ".#{@edit[@expkey].val1_suffix}" : ""))
+                                           (@edit[@expkey][:exp_value].to_s + Expression.prefix_by_dot(@edit[@expkey].val1_suffix))
                                         )
         add_flash(_("Field Value Error: %{msg}") % {:msg => e}, :error)
       else
@@ -884,7 +884,7 @@ module ApplicationController::Filter
         unless @edit[@expkey][:exp_key].include?("NULL") || @edit[@expkey][:exp_key].include?("EMPTY")  # Check for "IS/IS NOT NULL/EMPTY"
           exp[@edit[@expkey][:exp_key]]["value"] = @edit[@expkey][:exp_value]   #   else set the value
           unless exp[@edit[@expkey][:exp_key]]["value"] == :user_input
-            exp[@edit[@expkey][:exp_key]]["value"] += ".#{@edit[@expkey].val1_suffix}" if @edit[@expkey].val1_suffix # Append the suffix, if present
+            exp[@edit[@expkey][:exp_key]]["value"] += Expression.prefix_by_dot(@edit[@expkey].val1_suffix)
           end
         end
         exp[@edit[@expkey][:exp_key]]["alias"] = @edit[@expkey][:alias] if @edit.fetch_path(@expkey, :alias)
@@ -947,14 +947,14 @@ module ApplicationController::Filter
                                          @edit[@expkey][:exp_skey],
                                          @edit[@expkey][:exp_value].kind_of?(Array) ?
                                            @edit[@expkey][:exp_value] :
-                                           (@edit[@expkey][:exp_value].to_s + (@edit[@expkey].val1_suffix ? ".#{@edit[@expkey].val1_suffix}" : ""))
+                                           (@edit[@expkey][:exp_value].to_s + Expression.prefix_by_dot(@edit[@expkey].val1_suffix))
                                         )
         add_flash(_("Find Value Error: %{msg}") % {:msg => e}, :error)
       elsif e = MiqExpression.atom_error(@edit[@expkey][:exp_check] == "checkcount" ? :count : @edit[@expkey][:exp_cfield],
                                          @edit[@expkey][:exp_ckey],
                                          @edit[@expkey][:exp_cvalue].kind_of?(Array) ?
                                            @edit[@expkey][:exp_cvalue] :
-                                           (@edit[@expkey][:exp_cvalue].to_s + (@edit[@expkey].val2_suffix ? ".#{@edit[@expkey].val2_suffix}" : ""))
+                                           (@edit[@expkey][:exp_cvalue].to_s + Expression.prefix_by_dot(@edit[@expkey].val2_suffix))
                                         )
         add_flash(_("Check Value Error: %{msg}") % {:msg => e}, :error)
       else
@@ -974,7 +974,7 @@ module ApplicationController::Filter
         exp[@edit[@expkey][:exp_key]]["search"][skey]["field"] = @edit[@expkey][:exp_field] # Set the search field
         unless skey.include?("NULL") || skey.include?("EMPTY")  # Check for "IS/IS NOT NULL/EMPTY"
           exp[@edit[@expkey][:exp_key]]["search"][skey]["value"] = @edit[@expkey][:exp_value] #   else set the value
-          exp[@edit[@expkey][:exp_key]]["search"][skey]["value"] += ".#{@edit[@expkey].val1_suffix}" if @edit[@expkey].val1_suffix # Append the suffix, if present
+          exp[@edit[@expkey][:exp_key]]["search"][skey]["value"] += Expression.prefix_by_dot(@edit[@expkey].val1_suffix)
         end
         chk = @edit[@expkey][:exp_check]
         exp[@edit[@expkey][:exp_key]][chk] = {}                 # Create the check hash
@@ -987,7 +987,7 @@ module ApplicationController::Filter
         end
         unless ckey.include?("NULL") || ckey.include?("EMPTY")  # Check for "IS/IS NOT NULL/EMPTY"
           exp[@edit[@expkey][:exp_key]][chk][ckey]["value"] = @edit[@expkey][:exp_cvalue] #   else set the value
-          exp[@edit[@expkey][:exp_key]][chk][ckey]["value"] += ".#{@edit[@expkey].val2_suffix}" if @edit[@expkey].val2_suffix # Append the suffix, if present
+          exp[@edit[@expkey][:exp_key]][chk][ckey]["value"] += Expression.prefix_by_dot(@edit[@expkey].val2_suffix)
         end
         exp[@edit[@expkey][:exp_key]]["search"][skey]["alias"] = @edit[@expkey][:alias] if @edit.fetch_path(@expkey, :alias)
       end

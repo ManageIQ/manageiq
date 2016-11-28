@@ -463,6 +463,10 @@ module ApplicationController::Filter
       # Return the THROUGH choices based on the FROM choice
       tc[0..tc.index(from_choice)]
     end
+
+    def self.prefix_by_dot(suffix)
+      suffix ? ".#{suffix}" : ''
+    end
   end
   # TODO: expression is now manipulated with fetch_path
   # We need to extract methods using fetch_path to Expression to avoid the fetch_path call
