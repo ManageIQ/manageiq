@@ -126,7 +126,7 @@ module ApplicationController::Filter
 
     def update_from_expression_editor(params)
       if params[:chosen_typ] && params[:chosen_typ] != exp_typ
-        set_exp_typ(params[:chosen_typ])
+        change_exp_typ(params[:chosen_typ])
       else
         case exp_typ
         when 'field'
@@ -328,7 +328,7 @@ module ApplicationController::Filter
 
     private
 
-    def set_exp_typ(chosen_typ)
+    def change_exp_typ(chosen_typ)
       self.exp_typ = chosen_typ
       self.exp_key = self.alias = self.exp_skey = self.exp_ckey = self.exp_value = self.exp_cvalue = nil
       self.exp_regkey = self.exp_regval = self.val1_suffix = self.val2_suffix = nil
