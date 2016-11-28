@@ -123,7 +123,7 @@ describe Job do
         description = "Snapshot for scan job: #{@job.guid}, EVM Server build: #{build} #{scan_type} Server Time: #{Time.now.utc.iso8601}"
         @snapshot = FactoryGirl.create(:snapshot, :vm_or_template_id => @vm.id, :name => 'EvmSnapshot', :description => description)
 
-        @zone2     = FactoryGirl.create(:zone, :name => "Zone 2")
+        @zone2     = FactoryGirl.create(:zone)
         @ems2      = FactoryGirl.create(:ems_vmware, :zone => @zone2, :name => "Test EMS 2")
         @vm2       = FactoryGirl.create(:vm_vmware, :ems_id => @ems2.id)
         @job2      = @vm2.scan
