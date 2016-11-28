@@ -2,14 +2,6 @@ module MiddlewareCommonMixin
   extend ActiveSupport::Concern
   include MiddlewareOperationsMixin
 
-  def show_list
-    process_show_list
-  end
-
-  def index
-    redirect_to :action => 'show_list'
-  end
-
   def show
     return unless init_show
     show_middleware
