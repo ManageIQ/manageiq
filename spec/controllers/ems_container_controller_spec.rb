@@ -29,6 +29,13 @@ describe EmsContainerController do
         is_expected.to have_http_status 200
         is_expected.to render_template(:partial => "layouts/listnav/_ems_container")
       end
+
+      it "renders topology view" do
+        get :show, :params => { :id => @container.id, :display => 'topology' }
+        expect(response.status).to eq(200)
+        expect(response.body).to_not be_empty
+        expect(response).to render_template('container_topology/show')
+      end
     end
   end
 end
