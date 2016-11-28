@@ -497,7 +497,23 @@ class MiqExpression
       clause = "!(" + clause + ")" if operator.downcase == "not like"
     when "regular expression matches", "regular expression does not match"
       operands = operands2rubyvalue(operator, exp[operator], context_type)
-      operands[1] = "/" + operands[1].to_s + "/" unless operands[1].starts_with?("/") && (operands[1].ends_with?("/") || operands[1][-2..-2] == "/")
+
+      # If it looks like a regular expression, sanitize from forward
+      # slashes and interpolation
+      #
+      # Regular expressions with a single option are also supported,
+      # e.g. "/abc/i"
+      #
+      # Otherwise sanitize the whole string and add the delimiters
+      #
+      # TODO: support regexes with more than one option
+      if operands[1].starts_with?("/") && operands[1].ends_with?("/")
+        operands[1][1..-2] = sanitize_regular_expression(operands[1][1..-2])
+      elsif operands[1].starts_with?("/") && operands[1][-2] == "/"
+        operands[1][1..-3] = sanitize_regular_expression(operands[1][1..-3])
+      else
+        operands[1] = "/" + sanitize_regular_expression(operands[1].to_s) + "/"
+      end
       clause = operands.join(" #{normalize_ruby_operator(operator)} ")
     when "and", "or"
       clause = "(" + exp[operator].collect { |operand| _to_ruby(operand, context_type, tz) }.join(" #{normalize_ruby_operator(operator)} ") + ")"
@@ -1007,8 +1023,24 @@ class MiqExpression
     end
   end
 
+  # TODO: update this to use the more nuanced
+  # .sanitize_regular_expression after performing Regexp.escape. The
+  # extra substitution is required because, although the result from
+  # Regexp.escape is fine to pass to Regexp.new, it is not when eval'd
+  # as we do:
+  #
+  # ```ruby
+  # regexp_string = Regexp.escape("/") # => "/"
+  # # ...
+  # eval("/" + regexp_string + "/")
+  # ```
   def self.re_escape(s)
     Regexp.escape(s).gsub(/\//, '\/')
+  end
+
+  # Escape any unescaped forward slashes and/or interpolation
+  def self.sanitize_regular_expression(string)
+    string.gsub(%r{\\*/}, "\\/").gsub(/\\*#/, "\\\#")
   end
 
   def self.preprocess_managed_tag(tag)

@@ -727,6 +727,90 @@ describe MiqExpression do
       expect(exp.to_ruby).to eq('<value ref=host, type=numeric_set>/virtual/enabled_inbound_ports</value> == [22,427,5988,5989]')
     end
 
+    it "escapes forward slashes for values in REGULAR EXPRESSION MATCHES expressions" do
+      value = "//; puts 'Hi, mom!';//"
+      actual = described_class.new("REGULAR EXPRESSION MATCHES" => {"field" => "Vm-name", "value" => value}).to_ruby
+      expected = "<value ref=vm, type=string>/virtual/name</value> =~ /\\/; puts 'Hi, mom!';\\//"
+      expect(actual).to eq(expected)
+    end
+
+    it "preserves the delimiters when escaping forward slashes in case-insensitive REGULAR EXPRESSION MATCHES expressions" do
+      value = "//; puts 'Hi, mom!';//i"
+      actual = described_class.new("REGULAR EXPRESSION MATCHES" => {"field" => "Vm-name", "value" => value}).to_ruby
+      expected = "<value ref=vm, type=string>/virtual/name</value> =~ /\\/; puts 'Hi, mom!';\\//i"
+      expect(actual).to eq(expected)
+    end
+
+    it "escapes forward slashes for non-Regexp literal values in REGULAR EXPRESSION MATCHES expressions" do
+      value = ".*/; puts 'Hi, mom!';/.*"
+      actual = described_class.new("REGULAR EXPRESSION MATCHES" => {"field" => "Vm-name", "value" => value}).to_ruby
+      expected = "<value ref=vm, type=string>/virtual/name</value> =~ /.*\\/; puts 'Hi, mom!';\\/.*/"
+      expect(actual).to eq(expected)
+    end
+
+    it "does not escape escaped forward slashes for values in REGULAR EXPRESSION MATCHES expressions" do
+      value = "\/foo\/bar"
+      actual = described_class.new("REGULAR EXPRESSION MATCHES" => {"field" => "Vm-name", "value" => value}).to_ruby
+      expected = "<value ref=vm, type=string>/virtual/name</value> =~ /\\/foo\\/bar/"
+      expect(actual).to eq(expected)
+    end
+
+    it "handles arbitarily long escaping of forward " do
+      value = "\\\\\\/foo\\\\\\/bar"
+      actual = described_class.new("REGULAR EXPRESSION MATCHES" => {"field" => "Vm-name", "value" => value}).to_ruby
+      expected = "<value ref=vm, type=string>/virtual/name</value> =~ /\\/foo\\/bar/"
+      expect(actual).to eq(expected)
+    end
+
+    it "escapes interpolation in REGULAR EXPRESSION MATCHES expressions" do
+      value = "/\#{puts 'Hi, mom!'}/"
+      actual = described_class.new("REGULAR EXPRESSION MATCHES" => {"field" => "Vm-name", "value" => value}).to_ruby
+      expected = "<value ref=vm, type=string>/virtual/name</value> =~ /\\\#{puts 'Hi, mom!'}/"
+      expect(actual).to eq(expected)
+    end
+
+    it "handles arbitrarily long escaping of interpolation in REGULAR EXPRESSION MATCHES expressions" do
+      value = "/\\\\\#{puts 'Hi, mom!'}/"
+      actual = described_class.new("REGULAR EXPRESSION MATCHES" => {"field" => "Vm-name", "value" => value}).to_ruby
+      expected = "<value ref=vm, type=string>/virtual/name</value> =~ /\\\#{puts 'Hi, mom!'}/"
+      expect(actual).to eq(expected)
+    end
+
+    it "escapes interpolation in non-Regexp literal values in REGULAR EXPRESSION MATCHES expressions" do
+      value = "\#{puts 'Hi, mom!'}"
+      actual = described_class.new("REGULAR EXPRESSION MATCHES" => {"field" => "Vm-name", "value" => value}).to_ruby
+      expected = "<value ref=vm, type=string>/virtual/name</value> =~ /\\\#{puts 'Hi, mom!'}/"
+      expect(actual).to eq(expected)
+    end
+
+    it "escapes forward slashes for values in REGULAR EXPRESSION DOES NOT MATCH expressions" do
+      value = "//; puts 'Hi, mom!';//"
+      actual = described_class.new("REGULAR EXPRESSION DOES NOT MATCH" => {"field" => "Vm-name", "value" => value}).to_ruby
+      expected = "<value ref=vm, type=string>/virtual/name</value> !~ /\\/; puts 'Hi, mom!';\\//"
+      expect(actual).to eq(expected)
+    end
+
+    it "preserves the delimiters when escaping forward slashes in case-insensitive REGULAR EXPRESSION DOES NOT MATCH expressions" do
+      value = "//; puts 'Hi, mom!';//i"
+      actual = described_class.new("REGULAR EXPRESSION DOES NOT MATCH" => {"field" => "Vm-name", "value" => value}).to_ruby
+      expected = "<value ref=vm, type=string>/virtual/name</value> !~ /\\/; puts 'Hi, mom!';\\//i"
+      expect(actual).to eq(expected)
+    end
+
+    it "escapes forward slashes for non-Regexp literal values in REGULAR EXPRESSION DOES NOT MATCH expressions" do
+      value = ".*/; puts 'Hi, mom!';/.*"
+      actual = described_class.new("REGULAR EXPRESSION DOES NOT MATCH" => {"field" => "Vm-name", "value" => value}).to_ruby
+      expected = "<value ref=vm, type=string>/virtual/name</value> !~ /.*\\/; puts 'Hi, mom!';\\/.*/"
+      expect(actual).to eq(expected)
+    end
+
+    it "does not escape escaped forward slashes for values in REGULAR EXPRESSION DOES NOT MATCH expressions" do
+      value = "\/foo\/bar"
+      actual = described_class.new("REGULAR EXPRESSION DOES NOT MATCH" => {"field" => "Vm-name", "value" => value}).to_ruby
+      expected = "<value ref=vm, type=string>/virtual/name</value> !~ /\\/foo\\/bar/"
+      expect(actual).to eq(expected)
+    end
+
     # Note: To debug these tests, the following may be helpful:
     # puts "Expression Raw:      #{filter.exp.inspect}"
     # puts "Expression in Human: #{filter.to_human}"
