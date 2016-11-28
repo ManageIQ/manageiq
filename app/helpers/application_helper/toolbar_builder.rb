@@ -990,6 +990,13 @@ class ApplicationHelper::ToolbarBuilder
         return @report.present? && @report_result_id.present? &&
           MiqReportResult.find(@report_result_id).try(:miq_report_result_details).try(:length).to_i > 0 ? false : N_("No records found for this report")
       end
+    when "ExtManagementSystem"
+      case id
+      when "ems_storage_monitoring_choice"
+        unless @record.has_events? || @record.has_events?(:policy_events)
+          return N_("No Timeline data has been collected for Policy or Management Events")
+        end
+      end
     end
     false
   end
