@@ -1,4 +1,6 @@
 class MiddlewareDeploymentController < ApplicationController
+  include Mixins::GenericListMixin
+  include Mixins::GenericShowMixin
   include EmsCommon
   include MiddlewareCommonMixin
 

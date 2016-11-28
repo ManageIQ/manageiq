@@ -1,4 +1,6 @@
 class MiddlewareServerController < ApplicationController
+  include Mixins::GenericListMixin
+  include Mixins::GenericShowMixin
   include EmsCommon
   include MiddlewareCommonMixin
 
