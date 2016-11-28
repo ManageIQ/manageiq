@@ -75,16 +75,16 @@
 
   %div
     = _("Attribute/Value Pairs")
-    .form-group{"ng-repeat" => "key_val in scheduleModel.attrs track by $index"}
+    .form-group{"ng-repeat" => "key_val in scheduleModel.ui_attrs track by $index"}
       %label.col-md-2.control-label{"for" => "key_val"}
         {{$index+1}}
       .col-md-2
         %input.form-control{"type"        => "text",
                             "name"        => "attrs",
-                            "ng-model"    => "scheduleModel.attrs[$index][0]",
+                            "ng-model"    => "scheduleModel.ui_attrs[$index][0]",
                             "checkchange" => ""}
       .col-md-2
         %input.form-control{"type"        => "text",
                             "name"        => "attrs",
-                            "ng-model"    => "scheduleModel.attrs[$index][1]",
+                            "ng-model"    => "scheduleModel.ui_attrs[$index][1]",
                             "checkchange" => ""}
