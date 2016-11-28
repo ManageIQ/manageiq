@@ -971,8 +971,8 @@ en:
       network_port:                Network Port
       network_router:              Network Router
       evm_owner:                   EVM Owner
-      ext_management_system:       Cloud/Infrastructure Provider
-      ext_management_systems:      Cloud/Infrastructure Providers
+      ext_management_system:       Provider
+      ext_management_systems:      Providers
       filesystem_drivers:          File System Drivers
       filesystems:                 Files
       flavor:                      Flavor
