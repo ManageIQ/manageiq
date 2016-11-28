@@ -46,6 +46,10 @@ class ManageIQ::Providers::Azure::CloudManager < ManageIQ::Providers::CloudManag
     )
   end
 
+  def blacklisted_provider_types
+    %r{Microsoft.Classic}
+  end
+
   def self.hostname_required?
     false
   end
