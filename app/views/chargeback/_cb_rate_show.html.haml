@@ -40,6 +40,7 @@
             = h(rate_detail_group(detail[:group]))
           %td{:rowspan => num_tiers}
             = detail[:description]
+            = "(#{detail.breakdown})" if detail.breakdown.present?
           - tier = tiers.first
           %td
             = tier.start ? tier.start : 0
