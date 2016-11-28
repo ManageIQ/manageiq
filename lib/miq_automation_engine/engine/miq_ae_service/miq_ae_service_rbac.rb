@@ -39,13 +39,6 @@ module MiqAeMethodService
         MiqAeEngine::MiqAeWorkspaceRuntime.current || MiqAeEngine::DrbRemoteInvoker.workspace
       end
 
-      def workspace_from_drb_thread
-        DRb.front.workspace
-      rescue DRb::DRbServerNotFound => err
-        $miq_ae_logger.warn("Could not fetch DRb front object #{err}")
-        nil
-      end
-
       def rbac_enabled?
         workspace && workspace.rbac_enabled?
       end

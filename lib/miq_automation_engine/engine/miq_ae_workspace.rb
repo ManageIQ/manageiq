@@ -62,11 +62,11 @@ module MiqAeEngine
     end
 
     def self.current=(ws)
-      Thread.current.thread_variable_set(:current_workspace, ws)
+      Thread.current[:current_workspace] = ws
     end
 
     def self.current
-      Thread.current.thread_variable_get(:current_workspace)
+      Thread.current[:current_workspace]
     end
 
     def self.clear_stored_workspace
