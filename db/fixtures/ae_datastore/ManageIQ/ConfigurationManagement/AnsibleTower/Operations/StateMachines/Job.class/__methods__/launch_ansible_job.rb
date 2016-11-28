@@ -9,6 +9,7 @@ class LaunchAnsibleJob
   ANSIBLE_DIALOG_VAR_REGEX = Regexp.new(/dialog_param_(.*)/)
   SCRIPT_CLASS = 'ManageIQ_Providers_AnsibleTower_ConfigurationManager_ConfigurationScript'.freeze
   JOB_CLASS = 'ManageIQ_Providers_AnsibleTower_ConfigurationManager_Job'.freeze
+  MANAGER_CLASS = 'ManageIQ_Providers_AnsibleTower_ConfigurationManager'.freeze
 
   def initialize(handle)
     @handle = handle
@@ -64,7 +65,10 @@ class LaunchAnsibleJob
   end
 
   def job_template
-    job_template = var_search(@handle.object, 'job_template') || job_template_by_name || job_template_by_id
+    job_template = var_search(@handle.object, 'job_template') ||
+                   job_template_by_id ||
+                   job_template_by_provider ||
+                   job_template_by_name
 
     if job_template.nil?
       raise "Job Template not specified"
@@ -72,16 +76,26 @@ class LaunchAnsibleJob
     job_template
   end
 
+  def job_template_name
+    @job_template_name ||= var_search(@handle.object, 'job_template_name') ||
+                           var_search(@handle.object, 'dialog_job_template_name')
+  end
+
   def job_template_by_name
-    name = var_search(@handle.object, 'job_template_name') ||
-           var_search(@handle.object, 'dialog_job_template_name')
-    @handle.vmdb(SCRIPT_CLASS).where('lower(name) = ?', name.downcase).first if name
+    @handle.vmdb(SCRIPT_CLASS).where('lower(name) = ?', job_template_name.downcase).first if job_template_name
   end
 
   def job_template_by_id
     job_template_id = var_search(@handle.object, 'job_template_id') ||
                       var_search(@handle.object, 'dialog_job_template_id')
     @handle.vmdb(SCRIPT_CLASS).where(:id => job_template_id).first if job_template_id
+  end
+
+  def job_template_by_provider
+    provider_name = var_search(@handle.object, 'ansible_tower_provider_name') ||
+                    var_search(@handle.object, 'dialog_ansible_tower_provider_name')
+    provider = @handle.vmdb(MANAGER_CLASS).where('lower(name) = ?', provider_name.downcase).first if provider_name
+    provider.configuration_scripts.detect { |s| s.name.casecmp(job_template_name) == 0 } if provider && job_template_name
   end
 
   def extra_variables
