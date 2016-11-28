@@ -715,16 +715,6 @@ class ApplicationController < ActionController::Base
     @sb[:rpt_menu] = get_reports_menu(group, tree_type, mode)
   end
 
-  # Gather information for the report accordions
-  def build_report_listnav(tree_type = "reports", tree = "listnav", mode = "menu")
-    populate_reports_menu(tree_type, mode)
-    if tree == "listnav" && tree_type == "timeline"
-      build_timeline_tree(@sb[:rpt_menu], tree_type)
-    else
-      build_menu_tree(@sb[:rpt_menu], tree_type)
-    end
-  end
-
   def reports_group_title
     tenant_name = current_tenant.name
     if current_user.admin_user?

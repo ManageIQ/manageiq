@@ -1,5 +1,5 @@
 describe ReportController do
-  context "#edit_folder" do
+  describe "#edit_folder" do
     before(:each) do
       controller.instance_variable_set(:@grid_folders, nil)
       session[:node_selected] = 'foo__bar'
@@ -20,7 +20,7 @@ describe ReportController do
     end
   end
 
-  context "#menu_folders" do
+  describe "#menu_folders" do
     it "can handle nil" do
       controller.instance_variable_set(:@edit, {:user_typ => true})
       out = controller.send(:menu_folders, [nil, 'foo'])
@@ -66,6 +66,5 @@ describe ReportController do
       expect(out).to eq([{:id => "i_A", :text => "A"},
                          {:id => "|-|i_B", :text => "B"}])
     end
-
   end
 end

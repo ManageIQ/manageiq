@@ -10,7 +10,9 @@ module ReportController::Menus
       @rpt_menu = copy_array(@edit[:new])
     elsif @menu_lastaction == "default"
     else
-      build_report_listnav("reports", "menu")
+      populate_reports_menu("reports", "menu")
+      tree = build_menu_roles_tree
+      @rpt_menu = tree.rpt_menu
     end
     @menu_lastaction     = "menu_editor" if @menu_lastaction != "commit" && @menu_lastaction != "discard_changes" && params[:action] == "get_tree_data"
     menu_editor
@@ -20,16 +22,17 @@ module ReportController::Menus
     menu_set_form_vars if ["explorer", "tree_select", "x_history"].include?(params[:action])
     @in_a_form = true
     if @menu_lastaction != "menu_editor"
-      @menu_roles_tree = TreeBuilder.convert_bs_tree(build_menu_tree(@edit[:new])).to_json
+      @menu_roles_tree = build_menu_roles_tree(@edit[:new])
     else
-      @menu_roles_tree = TreeBuilder.convert_bs_tree(build_menu_tree(@rpt_menu)).to_json # changing rpt_menu if changes have been commited to show updated tree with changes
+      # changing rpt_menu if changes have been commited to show updated tree with changes
+      @menu_roles_tree = build_menu_roles_tree
     end
     @sb[:role_list_flag] = true if params[:id]
 
     if params[:node_id]
       session[:node_selected] = params[:node_id]
     elsif session[:node_selected].blank?
-      session[:node_selected] = "b__Report Menus for #{session[:role_choice]}"
+      session[:node_selected] = "xx-b__Report Menus for #{session[:role_choice]}"
     end
     @sb[:node_clicked] = (params[:node_clicked] == "1")
 
@@ -208,9 +211,10 @@ module ReportController::Menus
       get_tree_data
       replace_right_cell(:menu_edit_action => "menu_reset")
     elsif params[:button] == "default"
-      @menu_roles_tree = TreeBuilder.convert_bs_tree(build_report_listnav("reports", "menu", "default")).to_json
-      @edit[:new]               = copy_array(@rpt_menu)
-      @menu_lastaction          = "default"
+      populate_reports_menu("reports", "default")
+      @menu_roles_tree = build_menu_roles_tree
+      @edit[:new]      = copy_array(@sb[:rpt_menu])
+      @menu_lastaction = "default"
       add_flash(_("Report Menu set to default"), :warning)
       get_tree_data
       # set menu_default flag to true
@@ -336,103 +340,17 @@ module ReportController::Menus
     end
   end
 
-  # menus tree for the group selected in the roles tree on left
-  def build_menu_tree(rpt_menu, _tree_type = "reports")
-    @rpt_menu = []
-    @menu_roles_tree = nil
-    menus = []
-    rpt_menu.each do |r|
-      # create/modify new array that doesn't have custom reports folder, dont need custom folder in menu_editor
-      # add any new empty folders that were added
-      menus.push(r) if (r[1] && r[1].empty?) || (r[1] && !r[1].empty? && r[1][0].empty?) || (r[1] && !r[1].empty? && !r[1][0].empty? && r[1][0][0] != "Custom") # Check the second level menu for "Custom"
-    end
-    @tree_type = "menu"
-    @rpt_menu = menus
-    base_node = {
-      :key    => "b__Report Menus for #{session[:role_choice]}",
-      :title  => 'Top Level',
-      :icon   => ActionController::Base.helpers.image_path('100/folder.png'),
-      :expand => true,
-      :style  => 'background: #fff;
-                  padding: 2px 0 6px 2px;
-                  color:#4b4b4b;
-                  font-size:12px;
-                  font-weight:bold;'
-    }
-
-    @tree = []
-    @branch = []
-    @parent_node = {}
-    menus.each do |r|
-      r.each_slice(2) do |menu, section|
-        @parent_node = TreeNodeBuilder.generic_tree_node(
-          "p__#{menu}",
-          menu,
-          'folder.png',
-          "Group: #{menu}",
-          :style => 'cursor: default;
-                     color: #4b4b4b;
-                     display: block;
-                     font-size:1.1em bold;
-                     font-weight:bold;
-                     height:22px;
-                     line-height: 22px;
-                     text-decoration:none;
-                     text-indent: 8px;
-                     vertical-align: top;
-                     width: 205px;'
-        )
-        if !section.nil? && section.class != String
-          section.each do |s|
-            if s.class == Array
-              s.each do |rec|
-                @branch_node = []
-                if rec.class == String
-                  @menu_node = TreeNodeBuilder.generic_tree_node(
-                    "s__#{menu}:#{rec}",
-                    rec,
-                    'folder.png',
-                    "Menu: #{rec}",
-                    :style => 'cursor:default;' # No cursor pointer
-                  )
-                else
-                  rec.each do |r|
-                    temp = rep_kids_menutree(r)
-                    @branch_node.push(temp) unless temp.nil? || temp.empty?
-                  end
-                  @menu_node[:children] = @branch_node unless @branch_node.nil? || @menu_node.include?(@branch_node)
-                end
-                @branch.push(@menu_node) unless @menu_node.nil? || @branch.include?(@menu_node)
-              end
-            elsif s.class == String
-              temp = rep_kids_menutree(s)
-              @branch.push(temp) unless temp.nil? || temp.empty?
-            end
-          end
-        end
-        @parent_node[:children] = @branch unless @branch.nil? || @parent_node.include?(@branch)
-        @tree.push(@parent_node) unless @parent_node.nil?
-        @branch = []
-      end
-    end
-    base_node[:children] = @tree
-    menu_roles_tree = base_node unless base_node.nil? || base_node.empty?
-    menu_roles_tree
-  end
-
-  def rep_kids_menutree(rec)
-    rpt = MiqReport.find_by_name(rec.strip)
-    @tag_node = {}
-    unless rpt.nil?
-      @tag_node = TreeNodeBuilder.generic_tree_node(
-        "r__#{rpt.id}_#{rpt.name}",
-        rpt.name,
-        'report.png',
-        "Report: #{rpt.name}",
-        :style => 'padding-bottom: 2px; padding-left: 0px;' # No cursor pointer
-      )
-    end
-    @tag_node
+  # Convenience for TreeBuilderMenuRoles
+  #
+  def build_menu_roles_tree(rpt_menu = nil)
+    TreeBuilderMenuRoles.new(
+      :menu_roles_tree, # name
+      :menu_roles,      # type
+      @sb,              # sandbox
+      true,             # build
+      role_choice: session[:role_choice],
+      rpt_menu: rpt_menu
+    )
   end
 
   def move_menu_cols_left
@@ -698,13 +616,16 @@ module ReportController::Menus
   end
 
   def edit_folder
-    session[:node_selected] = "b__Report Menus for #{session[:role_choice]}" if params[:button] == "reset" || params[:button] == "default"  # resetting node in case reset button is pressed
+    if params[:button] == "reset" || params[:button] == "default" # resetting node in case reset button is pressed
+      session[:node_selected] = "xx-b__Report Menus for #{session[:role_choice]}"
+    end
+
     @selected = session[:node_selected].split('__')
     @folders = []
     @edit[:folders] = []
 
     # calculating selected reports for selected folder
-    if session[:node_selected] == "b__Report Menus for #{session[:role_choice]}"
+    if session[:node_selected] == "xx-b__Report Menus for #{session[:role_choice]}"
       @edit[:new].each do |arr|
         if arr[0] != @sb[:grp_title]
           @folders.push(arr[0])
