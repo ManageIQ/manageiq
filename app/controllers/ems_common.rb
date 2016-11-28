@@ -143,7 +143,7 @@ module EmsCommon
     @lastaction = "show"
     session[:tl_record_id] = @record.id
 
-    replace_gtl_main_div if is_gtl_request?
+    replace_gtl_main_div if gtl_request?
     render :template => "shared/views/ems_common/show" if params[:action] == 'show' && !performed?
   end
 
