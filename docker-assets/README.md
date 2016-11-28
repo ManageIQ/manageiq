@@ -38,7 +38,7 @@ docker run --privileged -di -p 80:80 -p 443:443 manageiq/manageiq
 ```
 Please note you can ommit some ports from the run command if you don't need to use them
 
-_**Note:**_ If you are running a RHEL family docker host you can now run the MIQ container unprivileged as recent versions of docker (1.10.3)
+_**Note:**_ If you are running a RHEL family docker host you can now run the MIQ container unprivileged as recent versions of docker (1.10.3). Please ensure oci-systemd-hook and oci-register-machine packages are installed in your system.
 ```
 docker run -di -p 80:80 -p 443:443 manageiq/manageiq
 ```
