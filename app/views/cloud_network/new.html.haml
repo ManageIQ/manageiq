@@ -3,7 +3,7 @@
   %h3
     = _('Network Management Provider')
   .form-horizontal
-    .form-group
+    .form-group{"ng-class" => "{'has-error': angularForm.ems_id.$invalid}"}
       %label.col-md-2.control-label
         = _('Network Manager')
       .col-md-8
@@ -18,7 +18,7 @@
   %h3
     = _('Network Provider Information')
   .form-horizontal
-    .form-group
+    .form-group{"ng-class" => "{'has-error': angularForm.provider_network_type.$invalid}"}
       %label.col-md-2.control-label
         = _('Provider Network Type')
       .col-md-8
@@ -32,7 +32,7 @@
   %h3
     = _('Placement')
   .form-horizontal
-    .form-group
+    .form-group{"ng-class" => "{'has-error': angularForm.cloud_tenant_id.$invalid}"}
       %label.col-md-2.control-label
         = _('Cloud Tenant')
       .col-md-8

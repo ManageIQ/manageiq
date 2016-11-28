@@ -1,5 +1,5 @@
 ManageIQ.angular.app.controller('cloudNetworkFormController', ['$http', '$scope', 'cloudNetworkFormId', 'miqService', function($http, $scope, cloudNetworkFormId, miqService) {
-  $scope.cloudNetworkModel = { name: '' };
+  $scope.cloudNetworkModel = { name: '', ems_id: '', cloud_tenant_id: '', provider_network_type: ''  };
   $scope.formId = cloudNetworkFormId;
   $scope.afterGet = false;
   $scope.modelCopy = angular.copy( $scope.cloudNetworkModel );
