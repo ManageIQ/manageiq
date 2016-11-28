@@ -118,10 +118,6 @@ class PxeController < ApplicationController
 
     replace_trees_by_presenter(presenter, trees)
 
-    # forcing form buttons to turn off, to prevent Abandon changes popup when replacing right cell after form button was pressed
-    presenter[:reload_toolbars][:center] = c_tb if c_tb.present?
-    presenter.set_visibility(c_tb.present?, :toolbar)
-
     # Rebuild the toolbars
     presenter.reload_toolbars(:history => h_tb)
     case x_active_tree
@@ -183,6 +179,10 @@ class PxeController < ApplicationController
         when 'isi'  then _("%{model} \"%{name}\"") % {:name => @img.name, :model => ui_lookup(:model => "IsoImage")}
         end
     end
+
+    # forcing form buttons to turn off, to prevent Abandon changes popup when replacing right cell after form button was pressed
+    presenter[:reload_toolbars][:center] = c_tb if c_tb.present?
+    presenter.set_visibility(c_tb.present?, :toolbar)
 
     # FIXME: check where @right_cell_text is set and replace that with loca variable
     presenter[:right_cell_text] = right_cell_text || @right_cell_text
