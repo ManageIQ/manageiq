@@ -50,7 +50,7 @@ module MiqServer::RoleManagement
   end
 
   def set_assigned_roles
-    self.role = VMDB::Config.new("vmdb").config[:server][:role]
+    self.role = ::Settings.server.role
   end
 
   def deactivate_all_roles
@@ -181,7 +181,7 @@ module MiqServer::RoleManagement
 
   def licensed_roles
     roles = ServerRole.all.to_a
-    unless VMDB::Config.new("vmdb").config[:product][:storage]
+    unless ::Settings.product.storage
       roles.delete_if { |r| r.name.starts_with?('storage_') }
       roles.delete_if { |r| r.name == 'vmdb_storage_bridge' }
     end
