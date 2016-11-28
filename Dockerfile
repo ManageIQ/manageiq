@@ -163,11 +163,11 @@ LABEL name="manageiq" \
       url="http://manageiq.org/" \
       summary="ManageIQ appliance image" \
       description="ManageIQ is a management and automation platform for virtual, private, and hybrid cloud infrastructures." \
-      INSTALL='docker run -ti --privileged \
+      INSTALL='docker run -ti \
                 --name ${NAME}_volume \
                 --entrypoint /usr/bin/docker_initdb \
                 $IMAGE' \
-      RUN='docker run -di --privileged \
+      RUN='docker run -di \
             --name ${NAME}_run \
             -v /etc/localtime:/etc/localtime:ro \
             --volumes-from ${NAME}_volume \
