@@ -66,8 +66,8 @@ module ManageIQ::Providers::Vmware::InfraManager::Vm::Reconfigure
         vm_memory = options[:vm_memory].to_i
 
         raise MiqException::MiqVmError, "Memory Hot-Add not enabled"                                if vm_memory > ram_size && !memory_hot_add_enabled
+        raise MiqException::MiqVmError, "Cannot add more than #{memory_hot_add_limit}MB to this VM" if vm_memory > ram_size && vm_memory > memory_hot_add_limit
         raise MiqException::MiqVmError, "Cannot remove memory from a running VM"                    if vm_memory < ram_size
-        raise MiqException::MiqVmError, "Cannot add more than #{memory_hot_add_limit}MB to this VM" if vm_memory > memory_hot_add_limit
       end
     end
   end
