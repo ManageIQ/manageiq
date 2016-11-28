@@ -5,15 +5,15 @@ ManageIQ.angular.app.directive('selectpickerForSelectTag', function() {
       scope['form_' + ctrl.$name] = elem[0];
 
       scope.$watch(attr.ngModel, function() {
-        $(scope['form_' + ctrl.$name]).selectpicker({
-          dropupAuto: false
+        angular.element(scope['form_' + ctrl.$name]).selectpicker({
+          dropupAuto: false,
         });
-        $(scope['form_' + ctrl.$name]).selectpicker('show');
-        $(scope['form_' + ctrl.$name]).selectpicker('refresh');
-        $(scope['form_' + ctrl.$name]).addClass('span12').selectpicker('setStyle');
+        angular.element(scope['form_' + ctrl.$name]).selectpicker('show');
+        angular.element(scope['form_' + ctrl.$name]).selectpicker('refresh');
+        angular.element(scope['form_' + ctrl.$name]).addClass('span12').selectpicker('setStyle');
       });
       scope.$watch('loaded.bs.select', function() {
-        $('.bootstrap-select button').removeAttr('title');
+        angular.element('.bootstrap-select button').removeAttr('title');
       });
 
       scope.$on('$destroy', function () {
