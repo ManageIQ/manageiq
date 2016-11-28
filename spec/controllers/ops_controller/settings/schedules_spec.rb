@@ -115,6 +115,7 @@ describe OpsController do
     let(:server) { double("MiqServer", :logon_status => :ready, :id => 1, :my_zone => zone) }
     let(:user) { stub_user(:features => :all) }
     let(:schedule) { FactoryGirl.create(:miq_automate_schedule) }
+    let(:vm) { FactoryGirl.create(:vm_vmware) }
 
     before do
       allow(MiqServer).to receive(:my_server).and_return(server)
@@ -127,16 +128,51 @@ describe OpsController do
       filter_params = {
         :starting_object => "SYSTEM/PROCESS",
         :instance_name   => "test",
-        :object_request  => "test_request",
-        :attrs           => {"0"=>%w(key1 value1)},
-        :target_class    => "test_target",
-        :target_id       => "0100"
+        :object_request  => "Request",
+        :ui_attrs        => {"0"=>%w(key1 value1)},
+        :target_class    => vm.class.name.to_s,
+        :target_id       => vm.id.to_s
       }
       params.merge!(filter_params)
       allow(controller).to receive(:params).and_return(params)
       set_vars = controller.send(:schedule_set_record_vars, schedule)
-      expect(set_vars[:parameters]).to include(:request => filter_params[:object_request], 'key1' => 'value1', :object_class => 'test_target', :object_id => '0100')
+      expect(set_vars[:parameters]).to include(:request => filter_params[:object_request], "key1" => "value1", "VmOrTemplate::vm" => vm.id)
       expect(set_vars[:uri_parts]).to include(:namespace => filter_params[:starting_object])
+    end
+  end
+
+  context "#build_attrs_from_params" do
+    let(:zone) { double("Zone", :name => "foo") }
+    let(:server) { double("MiqServer", :logon_status => :ready, :id => 1, :my_zone => zone) }
+    let(:user) { stub_user(:features => :all) }
+    let(:vm) { FactoryGirl.create(:vm_vmware) }
+
+    before do
+      allow(MiqServer).to receive(:my_server).and_return(server)
+      allow(server).to receive(:zone_id).and_return(1)
+      stub_user(:features => :all)
+    end
+
+    it "correctly formats Automate objects for parsing by the Automate engine" do
+      filter_params = {
+        :target_class => vm.class.name.to_s,
+        :target_id    => vm.id.to_s
+      }
+      params.merge!(filter_params)
+      allow(controller).to receive(:params).and_return(params)
+      automate_vars = controller.send(:build_attrs_from_params, params)
+      expect(automate_vars).to eq "VmOrTemplate::vm"=>vm.id
+    end
+
+    it "returns an empty hash if no target class is passed in" do
+      filter_params = {
+        :target_class => {},
+        :target_id    => vm.id.to_s
+      }
+      params.merge!(filter_params)
+      allow(controller).to receive(:params).and_return(params)
+      automate_vars = controller.send(:build_attrs_from_params, params)
+      expect(automate_vars).to be_empty
     end
   end
 

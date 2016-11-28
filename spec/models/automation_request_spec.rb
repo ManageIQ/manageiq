@@ -19,6 +19,18 @@ describe AutomationRequest do
     expect(AutomationRequest.request_task_class).to eq(AutomationTask)
   end
 
+  context ".parse_out_objects" do
+    it "isolates objects including the '::' class separator" do
+      object_parameters = {'VmOrTemplate::vm' => 10, 'var2' => @ae_var2.to_s, 'var3' => @ae_var3.to_s}
+      non_object_parameters = {'var2' => @ae_var2.to_s, 'var3' => @ae_var3.to_s}
+      object_hash = AutomationRequest.parse_out_objects(object_parameters)
+      non_object_hash = AutomationRequest.parse_out_objects(non_object_parameters)
+      expect(object_hash).to eq 'VmOrTemplate::vm' => 10
+      expect(non_object_hash).to be_a Hash
+      expect(non_object_hash).to be_empty
+    end
+  end
+
   context ".create_from_ws" do
     it "with empty requester string" do
       ar = AutomationRequest.create_from_ws(@version, admin, @uri_parts, @parameters, {})
@@ -36,6 +48,12 @@ describe AutomationRequest do
       expect(ar.options[:attrs][:var2]).to eq(@ae_var2)
       expect(ar.options[:attrs][:var3]).to eq(@ae_var3)
       expect(ar.options[:attrs][:userid]).to eq(admin.userid)
+    end
+
+    it 'doesnt downcase and stringify objects in the parameters hash' do
+      @object_parameters = {'VmOrTemplate::vm' => 10, 'var2' => @ae_var2.to_s, 'var3' => @ae_var3.to_s}
+      ar = AutomationRequest.create_from_ws(@version, admin, @uri_parts, @object_parameters, {})
+      expect(ar.options[:attrs]).to include("VmOrTemplate::vm" => 10, :var2 => @ae_var2.to_s)
     end
 
     it "doesnt allow overriding userid who is NOT in the database" do
