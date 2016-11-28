@@ -77,10 +77,10 @@
             %p.form-control-static
               = h(@object_name)
 
-      - if @selected_schedule.filter[:parameters][:attrs].present?
+      - if @selected_schedule.filter[:ui][:ui_attrs].present?
         %div
           = _("Attribute/Value Pairs")
-          - @selected_schedule.filter[:parameters][:attrs].each_with_index do |attr, i|
+          - @selected_schedule.filter[:ui][:ui_attrs].each_with_index do |attr, i|
             .form-group
               %label.control-label.col-md-2
                 = (i + 1).to_s

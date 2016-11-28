@@ -27,7 +27,9 @@ class AutomationRequest < MiqRequest
     options[:class_name]    = (options.delete(:class) || DEFAULT_CLASS).strip.gsub(/(^\/|\/$)/, "")
     options[:instance_name] = (options.delete(:instance) || DEFAULT_INSTANCE).strip
 
+    object_parameters = parse_out_objects(parameters)
     attrs = MiqRequestWorkflow.parse_ws_string(parameters)
+    attrs.merge!(object_parameters)
 
     attrs[:userid]     = user.userid
     options[:user_id]  = user.id
@@ -43,6 +45,13 @@ class AutomationRequest < MiqRequest
     uri_parts.stringify_keys!
     parameters.stringify_keys!
     create_from_ws("1.1", user, uri_parts, parameters, approval)
+  end
+
+  def self.parse_out_objects(parameters)
+    object_hash = parameters.select { |key, _v| key.to_s.include?(MiqAeEngine::MiqAeObject::CLASS_SEPARATOR) }
+    object_hash.each do |key, _v|
+      parameters.delete(key)
+    end
   end
 
   def self.zone(options)
