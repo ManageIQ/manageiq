@@ -50,10 +50,8 @@ module ReportFormatter
         # Following line commented for now - for not showing repeating column values
         #       prev_data = String.new                # Initialize the prev_data variable
 
-        cfg = VMDB::Config.new("vmdb").config[:reporting]       # Read in the reporting column precisions
-        default_precision = cfg[:precision][:default]           # Set the default
-        precision_by_column = cfg[:precision_by_column]         # get the column overrides
-        precisions = {}                                         # Hash to store columns we hit
+        precision_by_column = ::Settings.reporting.precision_by_column # get the column overrides
+        precisions = {} # Hash to store columns we hit
 
         # derive a default precision by looking at the suffixes of the column hearers
         zero_precision_suffixes = ["(ms)", "(mb)", "(seconds)", "(b)"]
