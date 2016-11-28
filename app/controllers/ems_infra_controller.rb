@@ -1,4 +1,5 @@
 class EmsInfraController < ApplicationController
+  include Mixins::GenericShowMixin
   include EmsCommon        # common methods for EmsInfra/Cloud controllers
   include Mixins::EmsCommonAngular
 

@@ -1,4 +1,5 @@
 class EmsNetworkController < ApplicationController
+  include Mixins::GenericShowMixin
   include EmsCommon
   include Mixins::EmsCommonAngular
   include Mixins::GenericSessionMixin
