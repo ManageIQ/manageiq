@@ -1,23 +1,6 @@
 module EmsCommon
   extend ActiveSupport::Concern
 
-  def gtl_url
-    restful? ? '/' : '/show'
-  end
-
-  def show_download
-    get_tagdata(@ems)
-    drop_breadcrumb(:name => @ems.name + _(" (Summary)"), :url => show_link(@ems))
-    @showtype = "main"
-    set_summary_pdf_data
-  end
-
-  def show_main
-    get_tagdata(@ems)
-    drop_breadcrumb(:name => @ems.name + _(" (Summary)"), :url => show_link(@ems))
-    @showtype = "main"
-  end
-
   def show_props
     drop_breadcrumb(:name => @ems.name + _(" (Properties)"), :url => show_link(@ems, :display  =>  "props"))
   end
@@ -131,15 +114,11 @@ module EmsCommon
   end
 
   def show
-    @display = params[:display] || "main" unless control_selected?
-
+    return unless init_show
     session[:vm_summary_cool] = (settings(:views, :vm_summary_cool).to_s == "summary")
     @summary_view = session[:vm_summary_cool]
-    @ems = @record = identify_record(params[:id])
-    return if record_no_longer_exists?(@ems)
+    @ems = @record
 
-    @gtl_url = gtl_url
-    @showtype = "config"
     drop_breadcrumb({:name => ui_lookup(:tables => @table_name), :url => "/#{@table_name}/show_list?page=#{@current_page}&refresh=y"}, true)
 
     case params[:display]
@@ -164,11 +143,7 @@ module EmsCommon
     @lastaction = "show"
     session[:tl_record_id] = @record.id
 
-    # Came in from outside show_list partial
-    if params[:ppsetting] || params[:searchtag] || params[:entry] || params[:sort_choice]
-      replace_gtl_main_div
-    end
-
+    replace_gtl_main_div if is_gtl_request?
     render :template => "shared/views/ems_common/show" if params[:action] == 'show' && !performed?
   end
 
