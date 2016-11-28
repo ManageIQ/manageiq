@@ -9,6 +9,7 @@ class NetworkRouterController < ApplicationController
   include Mixins::GenericSessionMixin
   include Mixins::GenericShowMixin
   include Mixins::CheckedIdMixin
+  include Mixins::GenericFormMixin
 
   def self.display_methods
     %w(instances cloud_subnets)
@@ -32,12 +33,6 @@ class NetworkRouterController < ApplicationController
     else
       render_flash
     end
-  end
-
-  def cancel_action(message)
-    session[:edit] = nil
-    add_flash(message, :warning)
-    javascript_redirect previous_breadcrumb_url
   end
 
   def network_router_form_fields

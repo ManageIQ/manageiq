@@ -8,6 +8,7 @@ class CloudTenantController < ApplicationController
   include Mixins::GenericListMixin
   include Mixins::CheckedIdMixin
   include Mixins::GenericButtonMixin
+  include Mixins::GenericFormMixin
 
   # handle buttons pressed on the button bar
   def button
@@ -240,14 +241,15 @@ class CloudTenantController < ApplicationController
     end
   end
 
-  def cancel_action(message)
-    session[:edit] = nil
-    @breadcrumbs.pop if @breadcrumbs
-    javascript_redirect :action    => @lastaction,
-                        :id        => @tenant.id,
-                        :display   => session[:cloud_tenant_display],
-                        :flash_msg => message
-  end
+ # def cancel_action(message)
+ #   session[:edit] = nil
+ # @breadcrumbs.pop if @breadcrumbs
+ #   javascript_redirect :action    => @lastaction,
+ #                       :id        => @tenant.id,
+ #                       :display   => session[:cloud_tenant_display],
+ # :flash_msg => message
+ #  end
+
 
   private
 

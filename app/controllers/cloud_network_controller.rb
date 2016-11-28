@@ -9,6 +9,7 @@ class CloudNetworkController < ApplicationController
   include Mixins::GenericSessionMixin
   include Mixins::GenericShowMixin
   include Mixins::CheckedIdMixin
+  include Mixins::GenericFormMixin
 
   PROVIDERS_NETWORK_TYPES = {
     "Local" => "local",
@@ -40,12 +41,6 @@ class CloudNetworkController < ApplicationController
     else
       render_flash
     end
-  end
-
-  def cancel_action(message)
-    session[:edit] = nil
-    add_flash(message, :warning)
-    javascript_redirect previous_breadcrumb_url
   end
 
   def cloud_network_form_fields

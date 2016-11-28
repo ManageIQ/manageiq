@@ -6,6 +6,7 @@ class CloudVolumeController < ApplicationController
 
   include Mixins::GenericListMixin
   include Mixins::CheckedIdMixin
+  include Mixins::GenericFormMixin
 
   # handle buttons pressed on the button bar
   def button
@@ -158,12 +159,6 @@ class CloudVolumeController < ApplicationController
         :name  => @volume.name
       },
       :url  => "/cloud_volume/detach")
-  end
-
-  def cancel_action(message)
-    session[:edit] = nil
-    add_flash(message, :warning)
-    javascript_redirect previous_breadcrumb_url
   end
 
   def attach_volume
