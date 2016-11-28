@@ -28,6 +28,14 @@ describe ApplianceConsole::LogfileConfiguration do
 
       expect(subject.ask_questions).to be false
     end
+
+    it "returns false when no disk is found" do
+      expect(subject).to receive(:agree).with("Configure a new logfile disk volume? (Y/N):").and_return(true)
+      expect(subject).to_not receive(:agree).with(/Continue with disk:/)
+      expect(subject).to receive(:ask_for_disk).and_return(nil)
+
+      expect(subject.ask_questions).to be false
+    end
   end
 
   describe "#activate" do
