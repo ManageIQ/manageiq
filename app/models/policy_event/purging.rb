@@ -5,11 +5,11 @@ class PolicyEvent < ApplicationRecord
 
     module ClassMethods
       def purge_date
-        (purge_config(:keep_policy_events) || 6.months).to_i_with_method.seconds.ago.utc
+        ::Settings.policy_events.history.keep_policy_events.to_i_with_method.seconds.ago.utc
       end
 
       def purge_window_size
-        purge_config(:purge_window_size) || 1000
+        ::Settings.policy_events.history.purge_window_size
       end
 
       def purge_queue
@@ -28,12 +28,6 @@ class PolicyEvent < ApplicationRecord
 
       def purge_associated_records(ids)
         PolicyEventContent.where(:policy_event_id => ids).delete_all
-      end
-
-      private
-
-      def purge_config(key)
-        VMDB::Config.new("vmdb").config.fetch_path(:policy_events, :history, key)
       end
     end
   end
