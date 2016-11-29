@@ -69,7 +69,6 @@ class ChargebackVm < Chargeback
     else
       raise _("must provide options :owner or :tag")
     end
-    return [[]] if vms.empty?
 
     @vm_owners = vms.inject({}) { |h, v| h[v.id] = v.evm_owner_name; h }
 
