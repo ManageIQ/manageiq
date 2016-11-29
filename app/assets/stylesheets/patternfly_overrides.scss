@@ -659,3 +659,45 @@ table .label {  // Adds margin to the label to vertically align with text
 .label-low-severity {
   background-color: $color-low-severity;
 }
+
+// Compact List view styling
+.list-view-compact .list-view-pf {
+  .list-group-item {
+    padding-top: 7px;
+    padding-bottom: 7px;
+    margin-bottom: 0px;
+  }
+  .list-view-pf-main-info {
+    padding: 0;
+  }
+  .list-view-pf-left {
+    padding-right: 40px;
+  }
+  .row {
+    margin-left: -10px;
+    margin-right: -10px;
+  }
+  [class^="col-"] {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  .no-wrap {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block;
+  }
+  .list-view-pf-actions {
+    margin: 0;
+  }
+  .dropdown-kebab-pf .btn-link {
+    margin-top: -7px;
+  }
+  .list-view-pf-checkbox, .list-view-pf-expand {
+    margin-bottom: 0;
+    margin-top: -2px;
+  }
+  .list-group-item.list-view-pf-expand-active {
+    padding-bottom: 0;
+  }
+}

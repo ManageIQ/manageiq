@@ -48,6 +48,10 @@ module ManageIQ::Providers
       {:available => true, :message => nil}
     end
 
+    def validate_ad_hoc_metrics
+      {:available => true, :message => nil}
+    end
+
     def validate_authentication_status
       {:available => true, :message => nil}
     end

@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://capture.context.com/hawkular/metrics/status
+    uri: https://hawkular.example.com/hawkular/metrics/status
     body:
       encoding: US-ASCII
       string: ''
@@ -16,7 +16,7 @@ http_interactions:
       Hawkular-Tenant:
       - _system
       Authorization:
-      - Bearer theToken
+      - Bearer the_token
       Content-Type:
       - application/json
   response:
@@ -33,20 +33,20 @@ http_interactions:
       Content-Length:
       - '133'
       Date:
-      - Tue, 22 Nov 2016 16:27:54 GMT
+      - Wed, 26 Oct 2016 08:25:01 GMT
       Set-Cookie:
-      - f5489604a2df0d7b0e8c7b7b0a17e360=fae6b852e584aed1966a9104cdee8d12; path=/;
+      - f5489604a2df0d7b0e8c7b7b0a17e360=408987ff52f5c660d744129185bb9e8b; path=/;
         HttpOnly; Secure
       Cache-Control:
       - private
     body:
       encoding: UTF-8
-      string: '{"MetricsService":"STARTED","Implementation-Version":"0.21.5.Final","Built-From-Git-SHA1":"e779588593f13224225356a94f1d8642fbccb30f"}'
+      string: '{"MetricsService":"STARTED","Implementation-Version":"0.18.3.Final","Built-From-Git-SHA1":"38ea6c2a1e33ed1024684084812ad2ad5730fb76"}'
     http_version: 
-  recorded_at: Tue, 22 Nov 2016 16:27:54 GMT
+  recorded_at: Wed, 26 Oct 2016 08:25:01 GMT
 - request:
     method: get
-    uri: https://capture.context.com/hawkular/metrics/status
+    uri: https://hawkular.example.com/hawkular/metrics/gauges/machine%2Fhawkular.example.com%2Fcpu%2Flimit/raw/?limit=5&order=DESC
     body:
       encoding: US-ASCII
       string: ''
@@ -60,7 +60,7 @@ http_interactions:
       Hawkular-Tenant:
       - _system
       Authorization:
-      - Bearer theToken
+      - Bearer the_token
       Content-Type:
       - application/json
   response:
@@ -75,17 +75,17 @@ http_interactions:
       Content-Type:
       - application/json
       Content-Length:
-      - '133'
+      - '201'
       Date:
-      - Tue, 22 Nov 2016 16:27:54 GMT
+      - Wed, 26 Oct 2016 08:25:01 GMT
       Set-Cookie:
-      - f5489604a2df0d7b0e8c7b7b0a17e360=fae6b852e584aed1966a9104cdee8d12; path=/;
+      - f5489604a2df0d7b0e8c7b7b0a17e360=408987ff52f5c660d744129185bb9e8b; path=/;
         HttpOnly; Secure
       Cache-Control:
       - private
     body:
       encoding: UTF-8
-      string: '{"MetricsService":"STARTED","Implementation-Version":"0.21.5.Final","Built-From-Git-SHA1":"e779588593f13224225356a94f1d8642fbccb30f"}'
+      string: '[{"timestamp":1477470280000,"value":0.0},{"timestamp":1477470270000,"value":0.0},{"timestamp":1477470250000,"value":0.0},{"timestamp":1477470240000,"value":0.0},{"timestamp":1477470220000,"value":0.0}]'
     http_version: 
-  recorded_at: Tue, 22 Nov 2016 16:27:54 GMT
+  recorded_at: Wed, 26 Oct 2016 08:25:01 GMT
 recorded_with: VCR 3.0.3

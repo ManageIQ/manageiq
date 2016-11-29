@@ -1,8 +1,13 @@
 module ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCapture::HawkularClientMixin
   def hawkular_client
     require 'hawkular/hawkular_client'
-    @client ||= Hawkular::Metrics::Client.new(
-      hawkular_entrypoint, hawkular_credentials, hawkular_options)
+
+    @hawkular_entrypoint ||= hawkular_entrypoint
+    @hawkular_credentials ||= hawkular_credentials
+    @hawkular_options ||= hawkular_options
+
+    Hawkular::Metrics::Client.new(
+      @hawkular_entrypoint, @hawkular_credentials, @hawkular_options)
   end
 
   def hawkular_entrypoint
@@ -34,6 +39,6 @@ module ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCapture::Hawkul
     # because only if the connection is ok, and the token is valid,
     # we will get an OK response, with an array of data, or an empty array
     # if no data availabel.
-    @client.avail.get_data('all', :limit => 1).kind_of?(Array)
+    hawkular_client.avail.get_data('all', :limit => 1).kind_of?(Array)
   end
 end

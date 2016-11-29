@@ -53,6 +53,12 @@ module EmsCommon
     drop_breadcrumb(:name => @ems.name + _(" (Dashboard)"), :url => show_link(@ems))
   end
 
+  def show_ad_hoc_metrics
+    @showtype = "ad_hoc_metrics"
+    @lastaction = "show_ad_hoc_metrics"
+    drop_breadcrumb(:name => @ems.name + _(" (Ad hoc Metrics)"), :url => show_link(@ems))
+  end
+
   def show_topology
     @showtype = "topology"
     @lastaction = "show_topology"
@@ -137,6 +143,7 @@ module EmsCommon
     when 'ems_folders'                   then show_ems_folders
     when 'timeline'                      then show_timeline
     when 'dashboard'                     then show_dashboard
+    when 'ad_hoc_metrics'                then show_ad_hoc_metrics
     when 'topology'                      then show_topology
     when 'performance'                   then show_performance
     when nil
@@ -514,6 +521,13 @@ module EmsCommon
                         :url  => show_link(@record, :refresh => "n", :display => "performance"))
         perf_gen_init_options # Intialize options, charts are generated async
         javascript_redirect polymorphic_path(@record, :display => "performance")
+        return
+      end
+      if params[:pressed] == "#{@table_name}_ad_hoc_metrics"
+        @showtype = "ad_hoc_metrics"
+        @record = find_by_id_filtered(model, params[:id])
+        drop_breadcrumb(:name => @record.name + _(" (Ad hoc Metrics)"), :url => show_link(@record))
+        javascript_redirect polymorphic_path(@record, :display => "ad_hoc_metrics")
         return
       end
       if params[:pressed] == "refresh_server_summary"

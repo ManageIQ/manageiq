@@ -1,0 +1,17 @@
+{
+  "metric_definitions":
+    [
+      {
+        "id":"hello1",
+        "dataRetention":7,
+        "type":"gauge",
+        "tenantId":"_ops"
+      },
+      {
+        "id":"hello2",
+        "dataRetention":7,
+        "type":"gauge",
+        "tenantId":"_ops"
+      }
+    ]
+}

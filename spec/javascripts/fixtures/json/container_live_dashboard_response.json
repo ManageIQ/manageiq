@@ -1,0 +1,17 @@
+{
+  "metric_tags":
+    [
+      "descriptor_name",
+      "group_id",
+      "host_id",
+      "hostname",
+      "labels",
+      "namespace_id",
+      "namespace_name",
+      "nodename",
+      "resource_id",
+      "resource_id_description",
+      "type",
+      "units"
+    ]
+}

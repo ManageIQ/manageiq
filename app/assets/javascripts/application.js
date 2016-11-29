@@ -52,6 +52,7 @@
 //= require jquery-ui
 //= require bootstrap
 //= require bootstrap-datepicker
+//= require eonasdan-bootstrap-datetimepicker
 //= require bootstrap-filestyle
 //= require bootstrap-select
 //= require bootstrap-hover-dropdown
