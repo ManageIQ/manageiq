@@ -1039,6 +1039,10 @@
 :server:
   :case_sensitive_name_search: false
   :company: My Company
+  :console_proxy_disabled: true
+  :console_proxy_port:
+    :start: 6000
+    :end: 7000
   :custom_logo: false
   :events:
     :disk_usage_gt_percent: 80
