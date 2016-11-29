@@ -47,13 +47,16 @@ class ChargebackContainerImage < Chargeback
     build_results_for_report_chargeback(options)
   end
 
-  def self.get_keys_and_extra_fields(perf, ts_key)
+  def self.default_key(metric_rollup_record, ts_key)
+    project = @data_index.fetch_path(:container_project, :by_container_id, metric_rollup_record.resource_id)
+    image = @data_index.fetch_path(:container_image, :by_container_id, metric_rollup_record.resource_id)
+    @options[:groupby] == 'project' ? "#{project.id}_#{ts_key}" : "#{project.id}_#{image.id}_#{ts_key}"
+  end
+
+  def self.get_extra_fields(perf)
     project = @data_index.fetch_path(:container_project, :by_container_id, perf.resource_id)
     image = @data_index.fetch_path(:container_image, :by_container_id, perf.resource_id)
-
-    key = @options[:groupby] == 'project' ? "#{project.id}_#{ts_key}" : "#{project.id}_#{image.id}_#{ts_key}"
-
-    extra_fields = {
+    {
       "project_name"  => project.name,
       "image_name"    => image.try(:full_name) || _("Deleted"), # until image archiving is implemented
       "project_uid"   => project.ems_ref,
@@ -61,8 +64,6 @@ class ChargebackContainerImage < Chargeback
       "provider_uid"  => perf.parent_ems.try(:name),
       "archived"      => project.archived? ? _("Yes") : _("No")
     }
-
-    [key, extra_fields]
   end
 
   def self.where_clause(records, _options)

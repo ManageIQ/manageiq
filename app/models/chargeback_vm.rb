@@ -76,11 +76,9 @@ class ChargebackVm < Chargeback
     build_results_for_report_chargeback(options)
   end
 
-  def self.get_keys_and_extra_fields(perf, ts_key)
-    key = "#{perf.resource_id}_#{ts_key}"
+  def self.get_extra_fields(perf)
     @vm_owners[perf.resource_id] ||= perf.resource.evm_owner_name
-
-    extra_fields = {
+    {
       "vm_id"         => perf.resource_id,
       "vm_name"       => perf.resource_name,
       "vm_uid"        => perf.resource.ems_ref,
@@ -89,8 +87,6 @@ class ChargebackVm < Chargeback
       "provider_name" => perf.parent_ems.try(:name),
       "provider_uid"  => perf.parent_ems.try(:guid)
     }
-
-    [key, extra_fields]
   end
 
   def self.where_clause(records, options)

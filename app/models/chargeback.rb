@@ -59,11 +59,8 @@ class Chargeback < ActsAsArModel
         metric_rollup_record = metric_rollup_records.first
         rates_to_apply = rates.get(metric_rollup_record)
 
-        # key contains resource_id and timestamp (query_start_time...query_end_time)
-        # extra_fields there some extra field like resource name and
-        # some of them are related to specific chargeback (ChargebackVm, ChargebackContainer,...)
-        key, extra_fields = key_and_fields(metric_rollup_record)
-        data[key] ||= new(extra_fields)
+        key = report_row_key(metric_rollup_record)
+        data[key] ||= new(fields(metric_rollup_record))
 
         chargeback_rates = data[key]["chargeback_rates"].split(', ') + rates_to_apply.collect(&:description)
         data[key]["chargeback_rates"] = chargeback_rates.uniq.join(', ')
@@ -78,22 +75,34 @@ class Chargeback < ActsAsArModel
     [data.values]
   end
 
+  def self.report_row_key(metric_rollup_record)
+    ts_key = @options.start_of_report_step(metric_rollup_record.timestamp)
+    if @options[:groupby_tag].present?
+      classification = classification_for_perf(metric_rollup_record)
+      classification_id = classification.present? ? classification.id : 'none'
+      "#{classification_id}_#{ts_key}"
+    else
+      default_key(metric_rollup_record, ts_key)
+    end
+  end
+
+  def self.default_key(metric_rollup_record, ts_key)
+    "#{metric_rollup_record.resource_id}_#{ts_key}"
+  end
+
   def self.classification_for_perf(metric_rollup_record)
     tag = metric_rollup_record.tag_names.split('|').find { |x| x.starts_with?(@options[:groupby_tag]) } # 'department/*'
     tag = tag.split('/').second unless tag.blank? # 'department/finance' -> 'finance'
     @options.tag_hash[tag]
   end
 
-  def self.key_and_fields(metric_rollup_record)
-    ts_key = @options.start_of_report_step(metric_rollup_record.timestamp)
-
-    key, extra_fields = if @options[:groupby_tag].present?
-                          get_tag_keys_and_fields(metric_rollup_record, ts_key)
-                        else
-                          get_keys_and_extra_fields(metric_rollup_record, ts_key)
-                        end
-
-    [key, date_fields(metric_rollup_record).merge(extra_fields)]
+  def self.fields(metric_rollup_record)
+    extra_fields = if @options[:groupby_tag].present?
+                     get_tag_fields(metric_rollup_record)
+                   else
+                     get_extra_fields(metric_rollup_record)
+                   end
+    date_fields(metric_rollup_record).merge(extra_fields)
   end
 
   def self.date_fields(metric_rollup_record)
@@ -109,12 +118,9 @@ class Chargeback < ActsAsArModel
     }
   end
 
-  def self.get_tag_keys_and_fields(perf, ts_key)
+  def self.get_tag_fields(perf)
     classification = classification_for_perf(perf)
-    classification_id = classification.present? ? classification.id : 'none'
-    key = "#{classification_id}_#{ts_key}"
-    extra_fields = { "tag_name" => classification.present? ? classification.description : _('<Empty>') }
-    [key, extra_fields]
+    { "tag_name" => classification.present? ? classification.description : _('<Empty>') }
   end
 
   def calculate_costs(consumption, rates)

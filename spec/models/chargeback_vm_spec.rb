@@ -806,45 +806,55 @@ describe ChargebackVm do
     end
   end
 
-  describe ".get_keys_and_extra_fields" do
-    let(:timestamp_key) { "2012-08-31T07:00:00Z" }
+  describe '.report_row_key' do
+    let(:report_options) { Chargeback::ReportOptions.new }
+    let(:timestamp_key) { 'Fri, 13 May 2016 10:40:00 UTC +00:00' }
+    let(:beginning_of_day) { timestamp_key.in_time_zone.beginning_of_day }
+    let(:metric_rollup) { FactoryGirl.build(:metric_rollup_vm_hr, :timestamp => timestamp_key, :resource => @vm1) }
+    subject { described_class.report_row_key(metric_rollup) }
+    before do
+      described_class.instance_variable_set(:@options, report_options)
+    end
+
+    it { is_expected.to eq("#{metric_rollup.resource_id}_#{beginning_of_day}") }
+  end
+
+  describe '.get_extra_fields' do
     let(:vm_owners)     { {@vm1.id => @vm1.evm_owner_name} }
     let(:metric_rollup) do
-      FactoryGirl.create(:metric_rollup_vm_hr, :timestamp => timestamp_key, :tag_names => "environment/prod",
-                         :parent_host_id => @host1.id, :parent_ems_cluster_id => @ems_cluster.id,
-                         :parent_ems_id => @ems.id, :parent_storage_id => @storage.id,
-                         :resource => @vm1, :resource_name => @vm1.name)
+      FactoryGirl.build(:metric_rollup_vm_hr, :tag_names => 'environment/prod',
+                        :parent_host_id => @host1.id, :parent_ems_cluster_id => @ems_cluster.id,
+                        :parent_ems_id => @ems.id, :parent_storage_id => @storage.id,
+                        :resource => @vm1, :resource_name => @vm1.name)
+    end
+
+    before do
+      ChargebackVm.instance_variable_set(:@vm_owners, vm_owners)
     end
 
     it "returns extra fields" do
-      ChargebackVm.instance_variable_set(:@vm_owners, vm_owners)
-
-      extra_fields = ChargebackVm.get_keys_and_extra_fields(metric_rollup, timestamp_key)
+      extra_fields = ChargebackVm.get_extra_fields(metric_rollup)
       expected_fields = {"vm_name" => @vm1.name, "owner_name" => @admin.name, "provider_name" => @ems.name,
                          "provider_uid" => @ems.guid, "vm_uid" => "ems_ref", "vm_guid" => @vm1.guid,
                          "vm_id" => @vm1.id}
 
-      expect("#{metric_rollup.resource_id}_#{timestamp_key}").to eq(extra_fields.first)
-      expect(extra_fields.second).to eq(expected_fields)
+      expect(extra_fields).to eq(expected_fields)
     end
 
     let(:metric_rollup_without_ems) do
-      FactoryGirl.create(:metric_rollup_vm_hr, :timestamp => timestamp_key, :tag_names => "environment/prod",
-                         :parent_host_id => @host1.id, :parent_ems_cluster_id => @ems_cluster.id,
-                         :parent_storage_id => @storage.id,
-                         :resource => @vm1, :resource_name => @vm1.name)
+      FactoryGirl.build(:metric_rollup_vm_hr, :tag_names => 'environment/prod',
+                        :parent_host_id => @host1.id, :parent_ems_cluster_id => @ems_cluster.id,
+                        :parent_storage_id => @storage.id,
+                        :resource => @vm1, :resource_name => @vm1.name)
     end
 
     it "return extra fields when parent ems is missing" do
-      ChargebackVm.instance_variable_set(:@vm_owners, vm_owners)
-
-      extra_fields = ChargebackVm.get_keys_and_extra_fields(metric_rollup_without_ems, timestamp_key)
+      extra_fields = ChargebackVm.get_extra_fields(metric_rollup_without_ems)
       expected_fields = {"vm_name" => @vm1.name, "owner_name" => @admin.name, "provider_name" => nil,
                          "provider_uid" => nil, "vm_uid" => "ems_ref", "vm_guid" => @vm1.guid,
                          "vm_id" => @vm1.id}
 
-      expect("#{metric_rollup.resource_id}_#{timestamp_key}").to eq(extra_fields.first)
-      expect(extra_fields.second).to eq(expected_fields)
+      expect(extra_fields).to eq(expected_fields)
     end
   end
 
