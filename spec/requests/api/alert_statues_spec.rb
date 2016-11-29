@@ -11,7 +11,7 @@ describe "Alert Status API" do
                        :user             => user,
                        :assignee         => user)
   end
-  let(:container_node) { FactoryGirl.create(:kubernetes_node, :name => "exmaple.com") }
+  let(:container_node) { FactoryGirl.create(:kubernetes_node, :name => "example.com") }
   let(:miq_alert) { FactoryGirl.create(:miq_alert, :severity => "info") }
   let(:user) { FactoryGirl.create(:user_with_group) }
 
@@ -29,13 +29,11 @@ describe "Alert Status API" do
     run_get(alert_statuses_url)
     expect(response).to have_http_status(:ok)
 
-    alert_statues_amount = response.parsed_body["count"]
-
-    expect(alert_statues_amount).to eq(1)
+    expect(response.parsed_body["count"]).to eq(1)
   end
 
   context "alerts status subcollection" do
-    before :each do
+    before do
       alert_status.miq_alert = miq_alert
       miq_alert_status_state
       alert_status.save!

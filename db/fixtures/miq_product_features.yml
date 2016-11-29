@@ -1907,6 +1907,44 @@
         :feature_type: admin
         :hidden: true
         :identifier: alert_delete
+  - :name: Alerts Statuses States
+    :description: Everything under Alerts Status states
+    :protected: true
+    :feature_type: node
+    :hidden: true
+    :identifier: alert_status_state
+    :children:
+    - :name: View
+      :description: View Alerts Statuses
+      :feature_type: view
+      :identifier: alert_status_state_show
+      :children:
+      - :name: List
+        :description: Display Lists of Alert Status states
+        :feature_type: view
+        :identifier: alert_status_state_show
+      - :name: Show
+        :description: Display Individual Alert Status state
+        :feature_type: view
+        :identifier: alert_status_state_show
+    - :name: Modify
+      :description: Modify Alerts Status States
+      :feature_type: admin
+      :hidden: true
+      :identifier: alert_status_state_admin
+      :children:
+      - :name: Create
+        :description: Create an Alert Status State
+        :hidden: true
+        :identifier: alert_status_state_admin
+      - :name: Edit
+        :description: Edit an Alert Status State
+        :hidden: true
+        :identifier: alert_status_state_admin
+      - :name: Delete
+        :description: Delete an Alert Status State
+        :hidden: true
+        :identifier: alert_status_state_admin
   - :name: Alerts Statuses
     :description: Everything under Alerts Statuses
     :protected: true
@@ -1931,22 +1969,6 @@
         :description: Display Alerts Statuses for provider
         :feature_type: view
         :identifier: providers_alert_statuses_show
-    - :name: Modify
-      :description: Modify Alerts Statuses
-      :feature_type: admin
-      :hidden: true
-      :identifier: alert_status_admin
-      :children:
-      - :name: Edit
-        :description: Edit an Alert Status
-        :feature_type: admin
-        :hidden: true
-        :identifier: alert_status_edit
-      - :name: Delete
-        :description: Delete an Alert Status
-        :feature_type: admin
-        :hidden: true
-        :identifier: alert_status_delete
 # Policy Simulation
 - :name: Simulation
   :description: Policy Simulation

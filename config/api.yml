@@ -1536,12 +1536,19 @@
     :subcollection_actions:
       :post:
       - :name: add
+        :identifier: alert_status_state_admin
       - :name: edit
+        :identifier: alert_status_state_admin
       - :name: delete
+        :identifier: alert_status_state_admin
     :subresource_actions:
       :post:
+      - :name: add
+        :identifier: alert_status_state_admin
       - :name: edit
+        :identifier: alert_status_state_admin
       - :name: delete
+        :identifier: alert_status_state_admin
   :alert_statuses:
     :description: Alerts Statuses
     :identifier: alert_statuses
@@ -1549,7 +1556,7 @@
     - :collection
     - :subcollection
     :subcollections:
-        - :alert_status_states
+    - :alert_status_states
     :verbs: *gpd
     :klass: MiqAlertStatus
     :collection_actions:
