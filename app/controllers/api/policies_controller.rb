@@ -3,7 +3,7 @@ module Api
     include Subcollections::Conditions
     include Subcollections::Events
     include Subcollections::PolicyActions
-    REQUIRED_FIELDS = %w(name description towhat conditions_ids policy_contents).freeze
+    REQUIRED_FIELDS = %w(name mode description towhat conditions_ids policy_contents).freeze
 
     def create_resource(type, _id, data = {})
       assert_id_not_specified(data, type)
@@ -30,7 +30,9 @@ module Api
     def create_policy(data)
       policy = MiqPolicy.create!(:name        => data.delete("name"),
                                  :description => data.delete("description"),
-                                 :towhat      => data.delete("towhat")
+                                 :towhat      => data.delete("towhat"),
+                                 :mode        => data.delete("mode"),
+                                 :active      => true
                                 )
       add_policies_content(data, policy)
       policy.conditions = Condition.where(:id => data.delete("conditions_ids")) if data["conditions_ids"]
