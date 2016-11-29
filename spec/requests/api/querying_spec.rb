@@ -402,6 +402,17 @@ describe "Querying" do
       expect(response.parsed_body).to include_error_with_message("Bad format for datetime: foobar")
       expect(response).to have_http_status(:bad_request)
     end
+
+    it "does not support filtering vms as a subcollection" do
+      service = FactoryGirl.create(:service)
+      service << FactoryGirl.create(:vm_vmware, :name => "foo")
+      service << FactoryGirl.create(:vm_vmware, :name => "bar")
+
+      run_get("#{services_url(service.id)}/vms", :filter => ["name=foo"])
+
+      expect(response.parsed_body).to include_error_with_message("Filtering is not supported on vms subcollection")
+      expect(response).to have_http_status(:bad_request)
+    end
   end
 
   describe "Querying vm attributes" do

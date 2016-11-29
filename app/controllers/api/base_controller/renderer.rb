@@ -165,6 +165,9 @@ module Api
         miq_expression = filter_param(klass)
 
         if miq_expression
+          if is_subcollection && !res.respond_to?(:where)
+            raise BadRequestError, "Filtering is not supported on #{type} subcollection"
+          end
           sql, _, attrs = miq_expression.to_sql
           res = res.where(sql) if attrs[:supported_by_sql]
         end
