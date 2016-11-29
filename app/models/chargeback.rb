@@ -60,7 +60,7 @@ class Chargeback < ActsAsArModel
         rates_to_apply = rates.get(metric_rollup_record)
 
         key = report_row_key(metric_rollup_record)
-        data[key] ||= new(options, fields(metric_rollup_record))
+        data[key] ||= new(options, metric_rollup_record)
 
         chargeback_rates = data[key]["chargeback_rates"].split(', ') + rates_to_apply.collect(&:description)
         data[key]["chargeback_rates"] = chargeback_rates.uniq.join(', ')
@@ -96,18 +96,14 @@ class Chargeback < ActsAsArModel
     @options.tag_hash[tag]
   end
 
-  def initialize(options, *args)
+  def initialize(options, metric_rollup_record)
     @options = options
-    super(*args)
-  end
-
-  def self.fields(metric_rollup_record)
     extra_fields = if @options[:groupby_tag].present?
-                     get_tag_fields(metric_rollup_record)
+                     self.class.get_tag_fields(metric_rollup_record)
                    else
-                     get_extra_fields(metric_rollup_record)
+                     self.class.get_extra_fields(metric_rollup_record)
                    end
-    date_fields(metric_rollup_record).merge(extra_fields)
+    super(self.class.date_fields(metric_rollup_record).merge(extra_fields))
   end
 
   def self.date_fields(metric_rollup_record)
