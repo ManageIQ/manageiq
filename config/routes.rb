@@ -1,8 +1,17 @@
 Vmdb::Application.routes.draw do
   root :to => 'dashboard#login'
+
   get '/saml_login(/*path)' => 'dashboard#saml_login'
 
-  # Let's serve pictures directly from the DB
+  # pure-angular templates
+  get '/static/*id' => 'static#show', :format => false
+
+  # ping response for load balancing
+  get '/ping' => 'ping#index'
+
+  get "/auth/:provider/callback" => "sessions#create"
+
+  # serve pictures directly from the DB
   get '/pictures/:basename' => 'picture#show', :basename => /[\da-zA-Z]+\.[\da-zA-Z]+/
 
   #
@@ -82,20 +91,12 @@ Vmdb::Application.routes.draw do
     end
   end
 
-  # pure-angular templates
-  get '/static/*id' => 'static#show', :format => false
-
-  # ping response for load balancing
-  get '/ping' => 'ping#index'
-
   resources :ems_cloud, :as => :ems_clouds
   resources :ems_infra, :as => :ems_infras
   resources :ems_container, :as => :ems_containers
   resources :ems_middleware, :as => :ems_middlewares
   resources :ems_datawarehouse, :as => :ems_datawarehouses
   resources :ems_network, :as => :ems_networks
-
-  match "/auth/:provider/callback" => "sessions#create", :via => :get
 
   if Rails.env.development? && defined?(Rails::Server)
     mount WebsocketServer.new(:logger => Logger.new(STDOUT)) => '/ws'
