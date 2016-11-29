@@ -20,7 +20,8 @@ module ManageIQ
 
                 begin
                   stack = service.deploy_orchestration_stack
-                  @handle.log("info", "Stack #{service.stack_name} with reference id (#{stack.ems_ref}) is being created")
+                  @handle.log("info",
+                              "Stack #{service.stack_name} with reference id (#{stack.ems_ref}) is being created")
                 rescue => err
                   @handle.root['ae_result'] = 'error'
                   @handle.root['ae_reason'] = err.message
