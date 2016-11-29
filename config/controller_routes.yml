@@ -1,0 +1,2740 @@
+---
+__grouped_routes__:
+- &adv_search_post
+  - adv_search_button
+  - adv_search_clear
+  - adv_search_load_choice
+  - adv_search_name_typed
+  - adv_search_toggle
+- &button_post
+  - button_create
+  - button_update
+- &compare_get
+  - compare_miq
+  - compare_to_csv
+  - compare_to_pdf
+  - compare_to_txt
+- &compare_post
+  - compare_choose_base
+  - compare_compress
+  - compare_miq
+  - compare_miq_all
+  - compare_miq_differences
+  - compare_miq_same
+  - compare_mode
+  - compare_remove
+  - compare_set_state
+- &dialog_runner_post
+  - dialog_field_changed
+  - dialog_form_button_pressed
+  - dynamic_checkbox_refresh
+  - dynamic_date_refresh
+  - dynamic_radio_button_refresh
+  - dynamic_text_box_refresh
+- &discover_get_post
+  - discover
+  - discover_field_changed
+- &drift_get
+  - drift
+  - drift_history
+  - drift_to_csv
+  - drift_to_pdf
+  - drift_to_txt
+- &drift_post
+  - drift_all
+  - drift_compress
+  - drift_differences
+  - drift_history
+  - drift_mode
+  - drift_same
+- &evm_relationship_post
+  - evm_relationship_field_changed
+  - evm_relationship_update
+- &exp_post
+  - exp_button
+  - exp_changed
+  - exp_token_pressed
+- &ownership_post
+  - ownership
+  - ownership_field_changed
+  - ownership_update
+- &perf_post
+  - perf_chart_chooser
+  - perf_top_chart
+- &policy_post
+  - policy_options
+  - policy_show_options
+  - policy_sim
+  - policy_sim_add
+  - policy_sim_remove
+- &pre_prov_post
+  - pre_prov
+  - pre_prov_continue
+- &save_post
+  - save_default_search
+- &snap_post
+  - snap_pressed
+  - snap_vm
+- &x_post
+  - x_button
+  - x_history
+  - x_search_by_name
+  - x_show
+alert:
+  get:
+  - index
+  - rss
+  - show_list
+  post:
+  - role_selected
+  - start_rss
+auth_key_pair_cloud:
+  get:
+  - download_data
+  - ems_form_choices
+  - index
+  - new
+  - show
+  - show_list
+  - tag_edit_form_field_changed
+  - tagging_edit
+  - *compare_get
+  post:
+  - button
+  - create
+  - dynamic_checkbox_refresh
+  - form_field_changed
+  - listnav_search_selected
+  - quick_search
+  - show
+  - show_list
+  - tag_edit_form_field_changed
+  - tagging_edit
+  - *adv_search_post
+  - *compare_post
+  - *exp_post
+  - *save_post
+availability_zone:
+  get:
+  - download_data
+  - index
+  - perf_top_chart
+  - show
+  - show_list
+  - tagging_edit
+  - *compare_get
+  post:
+  - button
+  - listnav_search_selected
+  - quick_search
+  - sections_field_changed
+  - show
+  - show_list
+  - tag_edit_form_field_changed
+  - tagging_edit
+  - tl_chooser
+  - wait_for_task
+  - *adv_search_post
+  - *compare_post
+  - *exp_post
+  - *perf_post
+  - *save_post
+catalog:
+  get:
+  - download_data
+  - explorer
+  - ot_edit
+  - ot_show
+  - show
+  post:
+  - ab_group_reorder
+  - accordion_select
+  - ae_tree_select
+  - ae_tree_select_discard
+  - ae_tree_select_toggle
+  - atomic_form_field_changed
+  - atomic_st_edit
+  - automate_button_field_changed
+  - explorer
+  - get_ae_tree_edit_key
+  - group_create
+  - group_form_field_changed
+  - group_reorder_field_changed
+  - group_update
+  - identify_catalog
+  - orchestration_template_add
+  - orchestration_template_copy
+  - orchestration_template_edit
+  - ot_add_form_field_changed
+  - ot_add_submit
+  - ot_copy_submit
+  - ot_edit_submit
+  - ot_form_field_changed
+  - ot_tags_edit
+  - process_sts
+  - prov_field_changed
+  - reload
+  - resolve
+  - resource_delete
+  - service_dialog_from_ot_submit
+  - servicetemplate_edit
+  - sort_ds_grid
+  - sort_host_grid
+  - sort_iso_img_grid
+  - sort_pxe_img_grid
+  - sort_vc_grid
+  - sort_vm_grid
+  - st_catalog_edit
+  - st_catalog_form_field_changed
+  - st_delete
+  - st_edit
+  - st_form_field_changed
+  - st_tags_edit
+  - st_upload_image
+  - svc_catalog_provision
+  - tag_edit_form_field_changed
+  - tree_autoload
+  - tree_select
+  - x_button
+  - x_history
+  - x_show
+  - *button_post
+  - *dialog_runner_post
+chargeback:
+  get:
+  - explorer
+  - render_csv
+  - render_pdf
+  - render_txt
+  - report_only
+  post:
+  - accordion_select
+  - cb_assign_field_changed
+  - cb_assign_update
+  - cb_rate_edit
+  - cb_rate_form_field_changed
+  - cb_rate_show
+  - cb_rates_delete
+  - cb_rates_list
+  - cb_tier_add
+  - cb_tier_remove
+  - explorer
+  - saved_report_paging
+  - tree_autoload
+  - tree_select
+  - x_button
+  - x_show
+cloud_network:
+  get:
+  - cloud_network_form_fields
+  - download_data
+  - edit
+  - index
+  - new
+  - show
+  - show_list
+  - tagging_edit
+  - *compare_get
+  post:
+  - button
+  - create
+  - dynamic_checkbox_refresh
+  - form_field_changed
+  - listnav_search_selected
+  - quick_search
+  - show
+  - show_list
+  - tag_edit_form_field_changed
+  - tagging_edit
+  - update
+  - *adv_search_post
+  - *compare_post
+  - *exp_post
+  - *save_post
+cloud_object_store_container:
+  get:
+  - download_data
+  - index
+  - show
+  - show_list
+  - tag_edit_form_field_changed
+  - tagging_edit
+  - *compare_get
+  post:
+  - button
+  - dynamic_checkbox_refresh
+  - form_field_changed
+  - listnav_search_selected
+  - quick_search
+  - show
+  - show_list
+  - tag_edit_form_field_changed
+  - tagging_edit
+  - *adv_search_post
+  - *compare_post
+  - *exp_post
+  - *save_post
+cloud_object_store_object:
+  get:
+  - download_data
+  - edit
+  - index
+  - new
+  - show
+  - show_list
+  - tag_edit_form_field_changed
+  - tagging_edit
+  - *compare_get
+  post:
+  - button
+  - create
+  - dynamic_checkbox_refresh
+  - form_field_changed
+  - listnav_search_selected
+  - quick_search
+  - show
+  - show_list
+  - tag_edit_form_field_changed
+  - tagging_edit
+  - update
+  - *adv_search_post
+  - *compare_post
+  - *exp_post
+  - *save_post
+cloud_subnet:
+  get:
+  - cloud_subnet_form_fields
+  - download_data
+  - edit
+  - index
+  - new
+  - show
+  - show_list
+  - tagging_edit
+  - *compare_get
+  post:
+  - button
+  - create
+  - dynamic_checkbox_refresh
+  - form_field_changed
+  - listnav_search_selected
+  - quick_search
+  - show
+  - show_list
+  - tag_edit_form_field_changed
+  - tagging_edit
+  - update
+  - *adv_search_post
+  - *compare_post
+  - *exp_post
+  - *save_post
+cloud_tenant:
+  get:
+  - cloud_tenant_form_fields
+  - download_data
+  - edit
+  - index
+  - new
+  - protect
+  - show
+  - show_list
+  - tagging_edit
+  - *compare_get
+  post:
+  - button
+  - create
+  - listnav_search_selected
+  - protect
+  - quick_search
+  - sections_field_changed
+  - show
+  - show_list
+  - tag_edit_form_field_changed
+  - tagging_edit
+  - update
+  - wait_for_task
+  - *adv_search_post
+  - *compare_post
+  - *exp_post
+  - *save_post
+cloud_topology:
+  get:
+  - data
+  - show
+cloud_volume:
+  get:
+  - attach
+  - backup_new
+  - backup_select
+  - cloud_volume_form_fields
+  - cloud_volume_tenants
+  - detach
+  - download_data
+  - edit
+  - index
+  - new
+  - show
+  - show_list
+  - snapshot_new
+  - tag_edit_form_field_changed
+  - tagging_edit
+  - *compare_get
+  post:
+  - attach_volume
+  - backup_create
+  - backup_restore
+  - button
+  - create
+  - detach_volume
+  - dynamic_checkbox_refresh
+  - form_field_changed
+  - listnav_search_selected
+  - quick_search
+  - show
+  - show_list
+  - snapshot_create
+  - tag_edit_form_field_changed
+  - tagging_edit
+  - update
+  - wait_for_task
+  - *adv_search_post
+  - *compare_post
+  - *exp_post
+  - *save_post
+cloud_volume_backup:
+  get:
+  - download_data
+  - edit
+  - index
+  - new
+  - show
+  - show_list
+  - tag_edit_form_field_changed
+  - tagging_edit
+  - *compare_get
+  post:
+  - button
+  - create
+  - dynamic_checkbox_refresh
+  - form_field_changed
+  - listnav_search_selected
+  - quick_search
+  - show
+  - show_list
+  - tag_edit_form_field_changed
+  - tagging_edit
+  - update
+  - *adv_search_post
+  - *compare_post
+  - *exp_post
+  - *save_post
+cloud_volume_snapshot:
+  get:
+  - download_data
+  - index
+  - show
+  - show_list
+  - tag_edit_form_field_changed
+  - tagging_edit
+  - *compare_get
+  post:
+  - button
+  - dynamic_checkbox_refresh
+  - form_field_changed
+  - listnav_search_selected
+  - quick_search
+  - show
+  - show_list
+  - tag_edit_form_field_changed
+  - tagging_edit
+  - *adv_search_post
+  - *compare_post
+  - *exp_post
+  - *save_post
+configuration:
+  # TODO: routes for new/edit/copy buttons need to be revisited
+  # TODO: so they can be changed to send up POST request instead of GET
+  get:
+  - change_tab
+  - index
+  - show
+  - time_profile_form_fields
+  - timeprofile_copy
+  - timeprofile_edit
+  - timeprofile_new
+  post:
+  - button
+  - filters_field_changed
+  - form_field_changed
+  - theme_changed
+  - timeprofile_create
+  - timeprofile_delete
+  - timeprofile_field_changed
+  - timeprofile_update
+  - tree_autoload
+  - update
+  - view_selected
+configuration_job:
+  get:
+  - download_data
+  - index
+  - outputs
+  - parameters
+  - protect
+  - resources
+  - show
+  - show_list
+  - tagging_edit
+  post:
+  - button
+  - listnav_search_selected
+  - outputs
+  - panel_control
+  - parameters
+  - protect
+  - quick_search
+  - resources
+  - sections_field_changed
+  - show
+  - show_list
+  - tag_edit_form_field_changed
+  - tagging_edit
+  - *adv_search_post
+  - *exp_post
+  - *save_post
+consumption:
+  get:
+  - show
+container:
+  get:
+  - download_data
+  - explorer
+  - perf_top_chart
+  - show
+  - show_list
+  - tag_edit_form_field_changed
+  - tagging_edit
+  - tl_chooser
+  - wait_for_task
+  post:
+  - accordion_select
+  - button
+  - container_edit
+  - container_form_field_changed
+  - container_tag
+  - explorer
+  - quick_search
+  - reload
+  - tag_edit_form_field_changed
+  - tl_chooser
+  - tree_autoload
+  - tree_select
+  - wait_for_task
+  - *adv_search_post
+  - *exp_post
+  - *perf_post
+  - *save_post
+  - *x_post
+container_build:
+  get:
+  - download_data
+  - edit
+  - index
+  - new
+  - show
+  - show_list
+  - tag_edit_form_field_changed
+  - tagging_edit
+  post:
+  - button
+  - create
+  - dynamic_checkbox_refresh
+  - form_field_changed
+  - listnav_search_selected
+  - quick_search
+  - sections_field_changed
+  - show
+  - show_list
+  - tag_edit_form_field_changed
+  - tagging_edit
+  - update
+  - *adv_search_post
+  - *exp_post
+  - *save_post
+container_dashboard:
+  get:
+  - data
+  - show
+container_group:
+  get:
+  - download_data
+  - edit
+  - index
+  - new
+  - perf_top_chart
+  - protect
+  - show
+  - show_list
+  - tag_edit_form_field_changed
+  - tagging_edit
+  post:
+  - button
+  - create
+  - dynamic_checkbox_refresh
+  - form_field_changed
+  - listnav_search_selected
+  - protect
+  - quick_search
+  - sections_field_changed
+  - show
+  - show_list
+  - squash_toggle
+  - tag_edit_form_field_changed
+  - tagging_edit
+  - tl_chooser
+  - update
+  - wait_for_task
+  - *adv_search_post
+  - *exp_post
+  - *perf_post
+  - *save_post
+container_image:
+  get:
+  - download_data
+  - edit
+  - guest_applications
+  - index
+  - new
+  - openscap_html
+  - openscap_rule_results
+  - protect
+  - show
+  - show_list
+  - tag_edit_form_field_changed
+  - tagging_edit
+  post:
+  - button
+  - create
+  - dynamic_checkbox_refresh
+  - form_field_changed
+  - guest_applications
+  - listnav_search_selected
+  - openscap_rule_results
+  - protect
+  - quick_search
+  - sections_field_changed
+  - show
+  - show_list
+  - squash_toggle
+  - tag_edit_form_field_changed
+  - tagging_edit
+  - update
+  - *adv_search_post
+  - *exp_post
+  - *save_post
+container_image_registry:
+  get:
+  - download_data
+  - edit
+  - index
+  - new
+  - show
+  - show_list
+  - tag_edit_form_field_changed
+  - tagging_edit
+  post:
+  - button
+  - create
+  - dynamic_checkbox_refresh
+  - form_field_changed
+  - listnav_search_selected
+  - quick_search
+  - sections_field_changed
+  - show
+  - show_list
+  - tag_edit_form_field_changed
+  - tagging_edit
+  - update
+  - *adv_search_post
+  - *exp_post
+  - *save_post
+container_node:
+  get:
+  - download_data
+  - edit
+  - index
+  - new
+  - perf_top_chart
+  - protect
+  - show
+  - show_list
+  - tag_edit_form_field_changed
+  - tagging_edit
+  post:
+  - button
+  - create
+  - dynamic_checkbox_refresh
+  - form_field_changed
+  - launch_cockpit
+  - listnav_search_selected
+  - protect
+  - quick_search
+  - sections_field_changed
+  - show
+  - show_list
+  - squash_toggle
+  - tag_edit_form_field_changed
+  - tagging_edit
+  - tl_chooser
+  - update
+  - wait_for_task
+  - *adv_search_post
+  - *exp_post
+  - *perf_post
+  - *save_post
+container_project:
+  get:
+  - download_data
+  - edit
+  - index
+  - new
+  - perf_top_chart
+  - show
+  - show_list
+  - tag_edit_form_field_changed
+  - tagging_edit
+  post:
+  - button
+  - create
+  - dynamic_checkbox_refresh
+  - form_field_changed
+  - listnav_search_selected
+  - quick_search
+  - sections_field_changed
+  - show
+  - show_list
+  - tag_edit_form_field_changed
+  - tagging_edit
+  - tl_chooser
+  - update
+  - wait_for_task
+  - *adv_search_post
+  - *exp_post
+  - *perf_post
+  - *save_post
+container_replicator:
+  get:
+  - download_data
+  - edit
+  - index
+  - new
+  - perf_top_chart
+  - protect
+  - show
+  - show_list
+  - tag_edit_form_field_changed
+  - tagging_edit
+  post:
+  - button
+  - create
+  - dynamic_checkbox_refresh
+  - form_field_changed
+  - listnav_search_selected
+  - protect
+  - quick_search
+  - sections_field_changed
+  - show
+  - show_list
+  - squash_toggle
+  - tag_edit_form_field_changed
+  - tagging_edit
+  - tl_chooser
+  - update
+  - wait_for_task
+  - *adv_search_post
+  - *exp_post
+  - *perf_post
+  - *save_post
+container_route:
+  get:
+  - download_data
+  - edit
+  - index
+  - new
+  - show
+  - show_list
+  - tag_edit_form_field_changed
+  - tagging_edit
+  post:
+  - button
+  - create
+  - dynamic_checkbox_refresh
+  - form_field_changed
+  - listnav_search_selected
+  - quick_search
+  - sections_field_changed
+  - show
+  - show_list
+  - tag_edit_form_field_changed
+  - tagging_edit
+  - update
+  - *adv_search_post
+  - *exp_post
+  - *save_post
+container_service:
+  get:
+  - download_data
+  - edit
+  - index
+  - new
+  - perf_top_chart
+  - show
+  - show_list
+  - tag_edit_form_field_changed
+  - tagging_edit
+  post:
+  - button
+  - create
+  - dynamic_checkbox_refresh
+  - form_field_changed
+  - listnav_search_selected
+  - quick_search
+  - sections_field_changed
+  - show
+  - show_list
+  - tag_edit_form_field_changed
+  - tagging_edit
+  - update
+  - wait_for_task
+  - *adv_search_post
+  - *exp_post
+  - *perf_post
+  - *save_post
+container_template:
+  get:
+  - download_data
+  - index
+  - show
+  - show_list
+  - tag_edit_form_field_changed
+  - tagging_edit
+  post:
+  - button
+  - dynamic_checkbox_refresh
+  - form_field_changed
+  - listnav_search_selected
+  - quick_search
+  - sections_field_changed
+  - show
+  - show_list
+  - tag_edit_form_field_changed
+  - tagging_edit
+  - *adv_search_post
+  - *exp_post
+  - *save_post
+container_topology:
+  get:
+  - data
+  - show
+dashboard:
+  get:
+  - auth_error
+  - change_tab
+  - iframe
+  - index
+  - login
+  - logout
+  - maintab
+  - render_chart
+  - render_csv
+  - render_pdf
+  - render_txt
+  - report_only
+  - saml_login
+  - show
+  - timeline
+  - timeline_data
+  - widget_to_pdf
+  post:
+  - authenticate
+  - change_group
+  - csp_report
+  - external_authenticate
+  - initiate_saml_login
+  - kerberos_authenticate
+  - login_retry
+  - reset_widgets
+  - resize_layout
+  - show_timeline
+  - timeline_data
+  - tl_generate
+  - wait_for_task
+  - widget_add
+  - widget_close
+  - widget_dd_done
+  - widget_toggle_minmax
+  - widget_zoom
+ems_cloud:
+  get:
+  - arbitration_profile_edit
+  - arbitration_profiles
+  - dialog_load
+  - discover
+  - download_data
+  - ems_cloud_form_fields
+  - protect
+  - show_list
+  - tagging_edit
+  - *compare_get
+  post:
+  - arbitration_profile_edit
+  - arbitration_profiles
+  - button
+  - create
+  - dynamic_checkbox_refresh
+  - dynamic_list_refresh
+  - dynamic_radio_button_refresh
+  - dynamic_text_box_refresh
+  - form_field_changed
+  - listnav_search_selected
+  - protect
+  - provider_type_field_changed
+  - quick_search
+  - sections_field_changed
+  - show
+  - show_list
+  - squash_toggle
+  - tag_edit_form_field_changed
+  - tagging_edit
+  - tl_chooser
+  - update
+  - wait_for_task
+  - *adv_search_post
+  - *compare_post
+  - *dialog_runner_post
+  - *discover_get_post
+  - *exp_post
+  - *save_post
+ems_cluster:
+  get:
+  - columns_json
+  - dialog_load
+  - download_data
+  - index
+  - perf_top_chart
+  - protect
+  - rows_json
+  - show
+  - show_list
+  - tagging_edit
+  - *compare_get
+  - *drift_get
+  post:
+  - button
+  - listnav_search_selected
+  - protect
+  - quick_search
+  - sections_field_changed
+  - show
+  - show_list
+  - tag_edit_form_field_changed
+  - tagging_edit
+  - tl_chooser
+  - tree_autoload
+  - wait_for_task
+  - *adv_search_post
+  - *compare_post
+  - *dialog_runner_post
+  - *drift_post
+  - *exp_post
+  - *perf_post
+  - *save_post
+ems_container:
+  get:
+  - download_data
+  - ems_container_form_fields
+  - perf_top_chart
+  - protect
+  - show_list
+  - tag_edit_form_field_changed
+  - tagging_edit
+  - *compare_get
+  post:
+  - button
+  - create
+  - dynamic_checkbox_refresh
+  - form_field_changed
+  - listnav_search_selected
+  - protect
+  - quick_search
+  - sections_field_changed
+  - show
+  - show_list
+  - squash_toggle
+  - tag_edit_form_field_changed
+  - tagging_edit
+  - tl_chooser
+  - update
+  - wait_for_task
+  - *adv_search_post
+  - *compare_post
+  - *exp_post
+  - *perf_post
+  - *save_post
+ems_datawarehouse:
+  get:
+  - download_data
+  - ems_datawarehouse_form_fields
+  - show_list
+  - tag_edit_form_field_changed
+  - tagging_edit
+  - *compare_get
+  post:
+  - button
+  - create
+  - dynamic_checkbox_refresh
+  - form_field_changed
+  - listnav_search_selected
+  - quick_search
+  - sections_field_changed
+  - show
+  - show_list
+  - tag_edit_form_field_changed
+  - tagging_edit
+  - tl_chooser
+  - update
+  - wait_for_task
+  - *adv_search_post
+  - *compare_post
+  - *exp_post
+  - *save_post
+ems_infra:
+  get:
+  - dialog_load
+  - discover
+  - download_data
+  - ems_infra_form_fields
+  - introspect_nodes
+  - protect
+  - register_nodes
+  - scaledown
+  - scaling
+  - show_list
+  - tagging_edit
+  - *compare_get
+  post:
+  - button
+  - create
+  - form_field_changed
+  - introspect_nodes
+  - listnav_search_selected
+  - protect
+  - quick_search
+  - register_nodes
+  - scaledown
+  - scaling
+  - sections_field_changed
+  - show
+  - show_list
+  - squash_toggle
+  - tag_edit_form_field_changed
+  - tagging_edit
+  - tl_chooser
+  - tree_autoload
+  - update
+  - wait_for_task
+  - x_show
+  - *adv_search_post
+  - *compare_post
+  - *dialog_runner_post
+  - *discover_get_post
+  - *exp_post
+  - *save_post
+ems_infra_dashboard:
+  get:
+  - data
+  - show
+ems_middleware:
+  get:
+  - download_data
+  - ems_middleware_form_fields
+  - show_list
+  - tag_edit_form_field_changed
+  - tagging_edit
+  - *compare_get
+  post:
+  - button
+  - create
+  - dynamic_checkbox_refresh
+  - form_field_changed
+  - listnav_search_selected
+  - quick_search
+  - sections_field_changed
+  - show
+  - show_list
+  - tag_edit_form_field_changed
+  - tagging_edit
+  - tl_chooser
+  - update
+  - wait_for_task
+  - *adv_search_post
+  - *compare_post
+  - *exp_post
+  - *save_post
+ems_network:
+  get:
+  - dialog_load
+  - download_data
+  - ems_network_form_fields
+  - index
+  - protect
+  - show_list
+  - tag_edit_form_field_changed
+  - tagging_edit
+  - *compare_get
+  post:
+  - button
+  - create
+  - dynamic_checkbox_refresh
+  - dynamic_list_refresh
+  - dynamic_radio_button_refresh
+  - dynamic_text_box_refresh
+  - form_field_changed
+  - listnav_search_selected
+  - protect
+  - provider_type_field_changed
+  - quick_search
+  - sections_field_changed
+  - show_list
+  - tag_edit_form_field_changed
+  - tagging_edit
+  - tl_chooser
+  - update
+  - wait_for_task
+  - *adv_search_post
+  - *compare_post
+  - *dialog_runner_post
+  - *exp_post
+  - *save_post
+ems_storage:
+  get:
+  - dialog_load
+  - download_data
+  - edit
+  - ems_storage_form_fields
+  - index
+  - new
+  - protect
+  - show
+  - show_list
+  - tag_edit_form_field_changed
+  - tagging_edit
+  - *compare_get
+  post:
+  - button
+  - create
+  - dynamic_checkbox_refresh
+  - dynamic_list_refresh
+  - dynamic_radio_button_refresh
+  - dynamic_text_box_refresh
+  - form_field_changed
+  - listnav_search_selected
+  - protect
+  - provider_type_field_changed
+  - quick_search
+  - sections_field_changed
+  - show
+  - show_list
+  - tag_edit_form_field_changed
+  - tagging_edit
+  - tl_chooser
+  - update
+  - wait_for_task
+  - *adv_search_post
+  - *compare_post
+  - *dialog_runner_post
+  - *exp_post
+  - *save_post
+flavor:
+  # FIXME: Change tagging_edit to POST only; We need to remove the redirects
+  # in app/controllers/application_controller/tags.rb#tag that are used in
+  # a role of a method call.
+  # Then remove this route from all other controllers too.
+  get:
+  - download_data
+  - index
+  - show
+  - show_list
+  - tagging_edit
+  - *compare_get
+  post:
+  - button
+  - listnav_search_selected
+  - quick_search
+  - sections_field_changed
+  - show
+  - show_list
+  - tag_edit_form_field_changed
+  - tagging_edit
+  - *adv_search_post
+  - *compare_post
+  - *exp_post
+  - *save_post
+floating_ip:
+  get:
+  - download_data
+  - index
+  - show
+  - show_list
+  - tagging_edit
+  - *compare_get
+  post:
+  - button
+  - listnav_search_selected
+  - quick_search
+  - show
+  - show_list
+  - tag_edit_form_field_changed
+  - tagging_edit
+  - *adv_search_post
+  - *compare_post
+  - *exp_post
+  - *save_post
+generic_object:
+  get:
+  - all_object_data
+  - explorer
+  - object_data
+  - tree_data
+  post:
+  - create
+host:
+  get:
+  - advanced_settings
+  - dialog_load
+  - download_data
+  - edit
+  - filesystem_download
+  - filesystems
+  - firewall_rules
+  - groups
+  - guest_applications
+  - host_cloud_services
+  - host_form_fields
+  - host_services
+  - index
+  - list
+  - new
+  - patches
+  - perf_top_chart
+  - protect
+  - show
+  - show_association
+  - show_details
+  - show_list
+  - start
+  - tagging_edit
+  - timeline_data
+  - users
+  - *compare_get
+  - *discover_get_post
+  - *drift_get
+  post:
+  - advanced_settings
+  - button
+  - create
+  - drift_all
+  - drift_compress
+  - drift_differences
+  - drift_mode
+  - drift_same
+  - filesystems
+  - firewall_rules
+  - firewallrules
+  - form_field_changed
+  - groups
+  - guest_applications
+  - host_cloud_services
+  - host_services
+  - listnav_search_selected
+  - patches
+  - protect
+  - quick_search
+  - sections_field_changed
+  - show
+  - show_list
+  - squash_toggle
+  - tag_edit_form_field_changed
+  - tagging_edit
+  - tl_chooser
+  - tree_autoload
+  - update
+  - users
+  - wait_for_task
+  - *adv_search_post
+  - *compare_post
+  - *dialog_runner_post
+  - *discover_get_post
+  - *exp_post
+  - *perf_post
+  - *save_post
+host_aggregate:
+  get:
+  - add_host_select
+  - download_data
+  - edit
+  - host_aggregate_form_fields
+  - index
+  - new
+  - perf_top_chart
+  - remove_host_select
+  - show
+  - show_list
+  - tagging_edit
+  - *compare_get
+  post:
+  - add_host
+  - add_host_select
+  - button
+  - create
+  - quick_search
+  - remove_host
+  - remove_host_select
+  - sections_field_changed
+  - show
+  - show_list
+  - tag_edit_form_field_changed
+  - tagging_edit
+  - tl_chooser
+  - update
+  - wait_for_task
+  - *adv_search_post
+  - *compare_post
+  - *exp_post
+  - *perf_post
+infra_networking:
+  get:
+  - download_data
+  - explorer
+  - hosts
+  - show
+  - show_list
+  - tagging
+  - tagging_edit
+  - x_show
+  post:
+  - button
+  - explorer
+  - hosts
+  - listnav_search_selected
+  - panel_control
+  - quick_search
+  - reload
+  - show
+  - show_list
+  - tag_edit_form_field_changed
+  - tagging
+  - tagging_edit
+  - tree_autoload
+  - tree_select
+  - x_button
+  - x_search_by_name
+  - x_show
+  - *adv_search_post
+  - *exp_post
+  - *save_post
+  - *x_post
+infra_topology:
+  get:
+  - data
+  - show
+load_balancer:
+  get:
+  - download_data
+  - index
+  - show
+  - show_list
+  - tagging_edit
+  - *compare_get
+  post:
+  - button
+  - listnav_search_selected
+  - quick_search
+  - show
+  - show_list
+  - tag_edit_form_field_changed
+  - tagging_edit
+  - *adv_search_post
+  - *compare_post
+  - *exp_post
+  - *save_post
+middleware_datasource:
+  get:
+  - download_data
+  - edit
+  - index
+  - new
+  - perf_chart_chooser
+  - show
+  - show_list
+  - tag_edit_form_field_changed
+  - tagging_edit
+  - *compare_get
+  post:
+  - button
+  - create
+  - dynamic_checkbox_refresh
+  - form_field_changed
+  - listnav_search_selected
+  - perf_chart_chooser
+  - quick_search
+  - sections_field_changed
+  - show
+  - show_list
+  - tag_edit_form_field_changed
+  - tagging_edit
+  - tl_chooser
+  - update
+  - wait_for_task
+  - *adv_search_post
+  - *compare_post
+  - *exp_post
+  - *save_post
+middleware_deployment:
+  get:
+  - download_data
+  - edit
+  - index
+  - new
+  - show
+  - show_list
+  - tag_edit_form_field_changed
+  - tagging_edit
+  - *compare_get
+  post:
+  - button
+  - create
+  - dynamic_checkbox_refresh
+  - form_field_changed
+  - listnav_search_selected
+  - quick_search
+  - sections_field_changed
+  - show
+  - show_list
+  - tag_edit_form_field_changed
+  - tagging_edit
+  - tl_chooser
+  - update
+  - wait_for_task
+  - *adv_search_post
+  - *compare_post
+  - *exp_post
+  - *save_post
+middleware_domain:
+  get:
+  - download_data
+  - edit
+  - index
+  - show
+  - show_list
+  - tag_edit_form_field_changed
+  - tagging_edit
+  - *compare_get
+  post:
+  - button
+  - create
+  - dynamic_checkbox_refresh
+  - form_field_changed
+  - listnav_search_selected
+  - quick_search
+  - sections_field_changed
+  - show
+  - show_list
+  - tag_edit_form_field_changed
+  - tagging_edit
+  - tl_chooser
+  - update
+  - wait_for_task
+  - *adv_search_post
+  - *compare_post
+  - *exp_post
+  - *save_post
+middleware_messaging:
+  get:
+  - download_data
+  - index
+  - perf_chart_chooser
+  - show
+  - show_list
+  - tag_edit_form_field_changed
+  - tagging_edit
+  - *compare_get
+  post:
+  - button
+  - listnav_search_selected
+  - perf_chart_chooser
+  - quick_search
+  - show
+  - show_list
+  - tag_edit_form_field_changed
+  - tagging_edit
+  - tl_chooser
+  - update
+  - wait_for_task
+  - *adv_search_post
+  - *exp_post
+  - *save_post
+middleware_server:
+  get:
+  - download_data
+  - edit
+  - index
+  - new
+  - perf_top_chart
+  - show
+  - show_list
+  - tag_edit_form_field_changed
+  - tagging_edit
+  - *compare_get
+  post:
+  - add_datasource
+  - add_deployment
+  - add_jdbc_driver
+  - button
+  - create
+  - dynamic_checkbox_refresh
+  - form_field_changed
+  - listnav_search_selected
+  - perf_chart_chooser
+  - quick_search
+  - run_operation
+  - sections_field_changed
+  - show
+  - show_list
+  - tag_edit_form_field_changed
+  - tagging_edit
+  - tl_chooser
+  - update
+  - wait_for_task
+  - *adv_search_post
+  - *compare_post
+  - *exp_post
+  - *save_post
+middleware_server_group:
+  get:
+  - download_data
+  - edit
+  - index
+  - show
+  - show_list
+  - tag_edit_form_field_changed
+  - tagging_edit
+  - *compare_get
+  post:
+  - button
+  - create
+  - dynamic_checkbox_refresh
+  - form_field_changed
+  - listnav_search_selected
+  - quick_search
+  - sections_field_changed
+  - show
+  - show_list
+  - tag_edit_form_field_changed
+  - tagging_edit
+  - tl_chooser
+  - update
+  - wait_for_task
+  - *adv_search_post
+  - *compare_post
+  - *exp_post
+  - *save_post
+middleware_topology:
+  get:
+  - data
+  - show
+miq_ae_class:
+  get:
+  - explorer
+  post:
+  - ae_tree_select
+  - ae_tree_select_toggle
+  - change_tab
+  - copy_objects
+  - create
+  - create_instance
+  - create_method
+  - create_ns
+  - domains_priority_edit
+  - expand_toggle
+  - explorer
+  - field_accept
+  - field_delete
+  - field_method_accept
+  - field_method_delete
+  - field_method_select
+  - field_select
+  - fields_form_field_changed
+  - fields_seq_edit
+  - fields_seq_field_changed
+  - form_copy_objects_field_changed
+  - form_field_changed
+  - form_instance_field_changed
+  - form_method_field_changed
+  - form_ns_field_changed
+  - priority_form_field_changed
+  - refresh_git_domain
+  - reload
+  - tree_autoload
+  - tree_select
+  - update
+  - update_fields
+  - update_instance
+  - update_method
+  - update_ns
+  - validate_method_data
+  - x_button
+  - x_history
+  - x_show
+miq_ae_customization:
+  get:
+  - dialog_accordion_json
+  - explorer
+  - export_service_dialogs
+  post:
+  - ab_group_reorder
+  - accordion_select
+  - ae_tree_select
+  - ae_tree_select_toggle
+  - automate_button_field_changed
+  - cancel_import
+  - change_tab
+  - dialog_edit
+  - dialog_form_field_changed
+  - dialog_list
+  - dialog_res_remove
+  - dialog_res_reorder
+  - explorer
+  - field_value_accept
+  - field_value_delete
+  - field_value_select
+  - group_create
+  - group_form_field_changed
+  - group_reorder_field_changed
+  - group_update
+  - import_service_dialogs
+  - old_dialogs_form_field_changed
+  - old_dialogs_list
+  - old_dialogs_update
+  - reload
+  - resolve
+  - tree_autoload
+  - tree_select
+  - upload_import_file
+  - x_button
+  - x_history
+  - x_show
+  - *button_post
+miq_ae_tools:
+  get:
+  - automate_json
+  - export_datastore
+  - fetch_log
+  - import_export
+  - log
+  - resolve
+  - review_git_import
+  - review_import
+  post:
+  - button
+  - cancel_import
+  - form_field_changed
+  - import_automate_datastore
+  - import_via_git
+  - reset_datastore
+  - resolve
+  - retrieve_git_datastore
+  - upload
+  - upload_import_file
+  - wait_for_task
+miq_capacity:
+  get:
+  - bottlenecks
+  - index
+  - planning
+  - planning_report_download
+  - timeline_data
+  - util_report_download
+  - utilization
+  post:
+  - bottleneck_tl_chooser
+  - change_tab
+  - optimize_tree_select
+  - planning
+  - planning_option_changed
+  - reload
+  - tree_autoload
+  - util_chart_chooser
+  - wait_for_task
+miq_policy:
+  get:
+  - explorer
+  - export
+  - fetch_log
+  - fetch_yaml
+  - get_json
+  - import
+  - log
+  - rsop
+  post:
+  - accordion_select
+  - action_edit
+  - action_field_changed
+  - action_get_all
+  - action_tag_pressed
+  - alert_delete
+  - alert_edit
+  - alert_field_changed
+  - alert_get_all
+  - alert_profile_assign
+  - alert_profile_assign_changed
+  - alert_profile_delete
+  - alert_profile_edit
+  - alert_profile_field_changed
+  - button
+  - condition_edit
+  - condition_field_changed
+  - event_edit
+  - export
+  - export_field_changed
+  - import
+  - policy_edit
+  - policy_field_changed
+  - policy_get_all
+  - profile_edit
+  - profile_field_changed
+  - quick_search
+  - reload
+  - rsop
+  - rsop_option_changed
+  - rsop_show_options
+  - rsop_toggle
+  - tree_autoload
+  - tree_select
+  - upload
+  - wait_for_task
+  - *adv_search_post
+  - *exp_post
+  - *x_post
+miq_request:
+  # FIXME: Change stamp to POST only; We need to remove the redirec
+  get:
+  - index
+  - post_install_callback
+  - pre_prov
+  - prov_copy
+  - prov_edit
+  - show
+  - show_list
+  - stamp
+  post:
+  - button
+  - post_install_callback
+  - pre_prov
+  - prov_button
+  - prov_change_options
+  - prov_continue
+  - prov_edit
+  - prov_field_changed
+  - prov_load_tab
+  - prov_show_option
+  - request_copy
+  - request_edit
+  - retrieve_email
+  - show_list
+  - sort_configured_system_grid
+  - sort_ds_grid
+  - sort_host_grid
+  - sort_iso_img_grid
+  - sort_pxe_img_grid
+  - sort_template_grid
+  - sort_vc_grid
+  - sort_vm_grid
+  - sort_windows_image_grid
+  - stamp
+  - stamp_field_changed
+  - upload
+  - vm_pre_prov
+  - *dialog_runner_post
+miq_task:
+  get:
+  - change_tab
+  - index
+  - jobs
+  - tasks_show_option
+  post:
+  - button
+  - jobs
+  - tasks_button
+  - tasks_change_options
+miq_template:
+  get:
+  - edit
+  - ownership
+  - show
+  post:
+  - edit
+  - edit_vm
+  - form_field_changed
+  - show
+  - *ownership_post
+network_port:
+  get:
+  - download_data
+  - index
+  - show
+  - show_list
+  - tagging_edit
+  - *compare_get
+  post:
+  - button
+  - listnav_search_selected
+  - quick_search
+  - show
+  - show_list
+  - tag_edit_form_field_changed
+  - tagging_edit
+  - *adv_search_post
+  - *compare_post
+  - *exp_post
+  - *save_post
+network_router:
+  get:
+  - download_data
+  - edit
+  - index
+  - network_router_form_fields
+  - network_router_networks_by_ems
+  - new
+  - show
+  - show_list
+  - tagging_edit
+  - *compare_get
+  post:
+  - button
+  - create
+  - form_field_changed
+  - listnav_search_selected
+  - quick_search
+  - sections_field_changed
+  - show
+  - show_list
+  - tag_edit_form_field_changed
+  - tagging_edit
+  - update
+  - wait_for_task
+  - *adv_search_post
+  - *compare_post
+  - *exp_post
+  - *save_post
+network_topology:
+  get:
+  - data
+  - show
+ontap_file_share:
+  get:
+  - cim_base_storage_extents
+  - create_ds
+  - download_data
+  - index
+  - protect
+  - show
+  - show_list
+  - snia_local_file_systems
+  - tagging_edit
+  - *compare_get
+  post:
+  - button
+  - create_ds
+  - create_ds_field_changed
+  - protect
+  - quick_search
+  - sections_field_changed
+  - show
+  - show_list
+  - tag_edit_form_field_changed
+  - tagging_edit
+  - *adv_search_post
+  - *compare_post
+  - *exp_post
+ontap_logical_disk:
+  get:
+  - cim_base_storage_extents
+  - download_data
+  - index
+  - protect
+  - show
+  - show_list
+  - snia_local_file_systems
+  - tagging_edit
+  - *compare_get
+  post:
+  - button
+  - perf_chart_chooser
+  - protect
+  - quick_search
+  - sections_field_changed
+  - show
+  - show_list
+  - tag_edit_form_field_changed
+  - tagging_edit
+  - wait_for_task
+  - *adv_search_post
+  - *compare_post
+  - *exp_post
+ontap_storage_system:
+  get:
+  - cim_base_storage_extents
+  - create_ld
+  - download_data
+  - index
+  - protect
+  - show
+  - show_list
+  - snia_local_file_systems
+  - tagging_edit
+  - *compare_get
+  post:
+  - button
+  - create_ld
+  - create_ld_field_changed
+  - protect
+  - quick_search
+  - sections_field_changed
+  - show
+  - show_list
+  - tag_edit_form_field_changed
+  - tagging_edit
+  - *adv_search_post
+  - *compare_post
+  - *exp_post
+ontap_storage_volume:
+  get:
+  - cim_base_storage_extents
+  - download_data
+  - index
+  - protect
+  - show
+  - show_list
+  - tagging_edit
+  - *compare_get
+  post:
+  - button
+  - protect
+  - quick_search
+  - sections_field_changed
+  - show
+  - show_list
+  - tag_edit_form_field_changed
+  - tagging_edit
+  - *adv_search_post
+  - *compare_post
+  - *exp_post
+ops:
+  get:
+  - explorer
+  - fetch_audit_log
+  - fetch_build
+  - fetch_log
+  - fetch_production_log
+  - ldap_regions_list
+  - log_collection_form_fields
+  - log_protocol_changed
+  - pglogical_subscriptions_form_fields
+  - schedule_form_fields
+  - show_product_update
+  - tenant_form_fields
+  - tenant_quotas_form_fields
+  post:
+  - accordion_select
+  - activate
+  - ap_ce_delete
+  - ap_ce_select
+  - ap_edit
+  - ap_form_field_changed
+  - ap_set_active_tab
+  - apply_imports
+  - aps_list
+  - automate_schedules_set_vars
+  - category_delete
+  - category_edit
+  - category_field_changed
+  - category_update
+  - ce_accept
+  - ce_delete
+  - ce_new_cat
+  - ce_select
+  - change_tab
+  - cu_collection_field_changed
+  - cu_collection_update
+  - cu_repair
+  - cu_repair_field_changed
+  - db_backup
+  - db_backup_form_field_changed
+  - db_gc_collection
+  - db_list
+  - diagnostics_server_list
+  - diagnostics_tree_select
+  - diagnostics_worker_selected
+  - disable_central_admin
+  - edit_rhn
+  - enable_central_admin
+  - explorer
+  - fetch_build
+  - fetch_target_ids
+  - forest_accept
+  - forest_delete
+  - forest_form_field_changed
+  - forest_select
+  - label_tag_mapping_delete
+  - label_tag_mapping_edit
+  - label_tag_mapping_field_changed
+  - label_tag_mapping_update
+  - ldap_domain_edit
+  - ldap_domain_form_field_changed
+  - ldap_entry_changed
+  - ldap_region_add
+  - ldap_region_edit
+  - ldap_region_form_field_changed
+  - log_depot_edit
+  - log_depot_field_changed
+  - log_depot_validate
+  - ls_delete
+  - ls_select
+  - orphaned_records_delete
+  - perf_chart_chooser
+  - pglogical_save_subscriptions
+  - pglogical_validate_subscription
+  - product_updates_list
+  - rbac_group_edit
+  - rbac_group_field_changed
+  - rbac_group_seq_edit
+  - rbac_group_user_lookup
+  - rbac_groups_list
+  - rbac_role_edit
+  - rbac_role_field_changed
+  - rbac_roles_list
+  - rbac_tags_edit
+  - rbac_tenant_edit
+  - rbac_tenant_manage_quotas
+  - rbac_tenants_list
+  - rbac_user_edit
+  - rbac_user_field_changed
+  - rbac_users_list
+  - region_edit
+  - region_form_field_changed
+  - repo_default_name
+  - restart_server
+  - rhn_buttons
+  - rhn_default_server
+  - rhn_validate
+  - schedule_edit
+  - schedule_form_field_changed
+  - schedule_form_filter_type_field_changed
+  - schedule_update
+  - schedules_list
+  - settings_form_field_changed
+  - settings_update
+  - show
+  - show_product_update
+  - smartproxy_affinity_field_changed
+  - tag_edit_form_field_changed
+  - tl_chooser
+  - tree_autoload
+  - tree_select
+  - update
+  - upload_csv
+  - upload_form_field_changed
+  - upload_login_logo
+  - upload_logo
+  - validate_replcation_worker
+  - wait_for_task
+  - x_button
+  - x_show
+  - zone_edit
+  - zone_field_changed
+orchestration_stack:
+  get:
+  - cloud_networks
+  - download_data
+  - index
+  - outputs
+  - parameters
+  - protect
+  - resources
+  - retire
+  - retirement_info
+  - show
+  - show_list
+  - stacks_ot_info
+  - tagging_edit
+  post:
+  - button
+  - cloud_networks
+  - listnav_search_selected
+  - outputs
+  - parameters
+  - protect
+  - quick_search
+  - resources
+  - retire
+  - sections_field_changed
+  - show
+  - show_list
+  - stacks_ot_copy
+  - tag_edit_form_field_changed
+  - tagging_edit
+  - *adv_search_post
+  - *exp_post
+  - *save_post
+persistent_volume:
+  get:
+  - download_data
+  - edit
+  - index
+  - new
+  - show
+  - show_list
+  - tag_edit_form_field_changed
+  - tagging_edit
+  post:
+  - button
+  - create
+  - dynamic_checkbox_refresh
+  - form_field_changed
+  - listnav_search_selected
+  - quick_search
+  - sections_field_changed
+  - show
+  - show_list
+  - tag_edit_form_field_changed
+  - tagging_edit
+  - update
+  - *adv_search_post
+  - *exp_post
+  - *save_post
+provider_foreman:
+  get:
+  - download_data
+  - explorer
+  - provider_foreman_form_fields
+  - show
+  - show_list
+  - tagging_edit
+  post:
+  - accordion_select
+  - authentication_validate
+  - button
+  - change_tab
+  - configscript_service_dialog_submit
+  - cs_form_field_changed
+  - delete
+  - edit
+  - exp_button
+  - exp_changed
+  - exp_token_pressed
+  - explorer
+  - form_field_changed
+  - new
+  - provision
+  - quick_search
+  - refresh
+  - reload
+  - show
+  - show_list
+  - tag_edit_form_field_changed
+  - tagging
+  - tagging_edit
+  - tree_autoload
+  - tree_select
+  - users
+  - wait_for_task
+  - *adv_search_post
+  - *x_post
+pxe:
+  get:
+  - explorer
+  post:
+  - accordion_select
+  - explorer
+  - iso_datastore_create
+  - iso_datastore_form_field_changed
+  - iso_datastore_list
+  - iso_image_edit
+  - iso_img_form_field_changed
+  - log_depot_validate
+  - pxe_image_edit
+  - pxe_image_type_edit
+  - pxe_image_type_form_field_changed
+  - pxe_image_type_list
+  - pxe_img_form_field_changed
+  - pxe_server_create_update
+  - pxe_server_form_field_changed
+  - pxe_server_list
+  - pxe_wimg_edit
+  - pxe_wimg_form_field_changed
+  - reload
+  - template_create_update
+  - template_form_field_changed
+  - template_list
+  - tree_autoload
+  - tree_select
+  - x_button
+  - x_history
+report:
+  get:
+  - db_widget_dd_done
+  - download_report
+  - explorer
+  - export_widgets
+  - miq_report_edit
+  - miq_report_new
+  - preview_chart
+  - preview_timeline
+  - render_chart
+  - report_only
+  - sample_chart
+  - sample_timeline
+  - send_report_data
+  - tree_autoload
+  - tree_select
+  post:
+  - accordion_select
+  - change_tab
+  - create
+  - db_edit
+  - db_form_field_changed
+  - db_seq_edit
+  - db_widget_dd_done
+  - db_widget_remove
+  - discard_changes
+  - explorer
+  - export_field_changed
+  - filter_change
+  - form_field_changed
+  - get_report
+  - import_widgets
+  - menu_editor
+  - menu_field_changed
+  - menu_folder_message_display
+  - menu_update
+  - miq_report_edit
+  - reload
+  - rep_change_tab
+  - saved_report_paging
+  - schedule_edit
+  - schedule_form_field_changed
+  - show_preview
+  - show_saved
+  - tree_autoload
+  - tree_select
+  - upload
+  - upload_widget_import_file
+  - wait_for_task
+  - widget_edit
+  - widget_form_field_changed
+  - widget_shortcut_dd_done
+  - widget_shortcut_remove
+  - widget_shortcut_reset
+  - x_button
+  - x_history
+  - x_show
+  - *exp_post
+resource_pool:
+  get:
+  - download_data
+  - index
+  - protect
+  - show
+  - show_list
+  - tagging_edit
+  - *compare_get
+  post:
+  - button
+  - listnav_search_selected
+  - protect
+  - quick_search
+  - sections_field_changed
+  - show
+  - show_list
+  - tag_edit_form_field_changed
+  - tagging_edit
+  - tree_autoload
+  - *adv_search_post
+  - *compare_post
+  - *exp_post
+  - *save_post
+restful_redirect:
+  get:
+  - index
+security_group:
+  get:
+  - download_data
+  - index
+  - show
+  - show_list
+  - tagging_edit
+  - *compare_get
+  post:
+  - button
+  - listnav_search_selected
+  - quick_search
+  - show
+  - show_list
+  - tag_edit_form_field_changed
+  - tagging_edit
+  - *adv_search_post
+  - *compare_post
+  - *exp_post
+  - *save_post
+service:
+  get:
+  - download_data
+  - edit
+  - explorer
+  - ownership_form_fields
+  - reconfigure_form_fields
+  - retire
+  - retirement_info
+  - service_form_fields
+  - show
+  post:
+  - button
+  - explorer
+  - ownership_field_changed
+  - ownership_update
+  - reload
+  - retire
+  - service_edit
+  - service_tag
+  - tag_edit_form_field_changed
+  - tree_autoload
+  - tree_select
+  - x_button
+  - x_history
+  - x_show
+  - *dialog_runner_post
+snia_local_file_system:
+  # TODO: revisit this controller/route, might be removed after other storage issues are sorted out
+  get:
+  - show
+storage:
+  get:
+  - button
+  - debris_files
+  - dialog_load
+  - disk_files
+  - download_data
+  - explorer
+  - files
+  - perf_chart_chooser
+  - protect
+  - show
+  - show_list
+  - snapshot_files
+  - tagging_edit
+  - tree_select
+  - vm_misc_files
+  - vm_ram_files
+  - x_show
+  - *compare_get
+  post:
+  - accordion_select
+  - button
+  - debris_files
+  - disk_files
+  - explorer
+  - files
+  - listnav_search_selected
+  - perf_chart_chooser
+  - protect
+  - quick_search
+  - reload
+  - sections_field_changed
+  - show
+  - show_association
+  - show_details
+  - show_list
+  - snapshot_files
+  - storage_list
+  - storage_pod_list
+  - tag_edit_form_field_changed
+  - tagging
+  - tagging_edit
+  - tree_autoload
+  - tree_select
+  - vm_misc_files
+  - vm_ram_files
+  - wait_for_task
+  - x_search_by_name
+  - x_show
+  - *adv_search_post
+  - *compare_post
+  - *dialog_runner_post
+  - *exp_post
+  - *save_post
+  - *x_post
+storage_manager:
+  get:
+  - download_data
+  - edit
+  - index
+  - new
+  - show
+  - show_list
+  post:
+  - button
+  - create
+  - form_field_changed
+  - quick_search
+  - show
+  - show_list
+  - update
+  - *adv_search_post
+  - *exp_post
+support:
+  get:
+  - index
+vm:
+  get:
+  - associate_floating_ip
+  - associate_floating_ip_form_fields
+  - disassociate_floating_ip
+  - disassociate_floating_ip_form_fields
+  - download_data
+  - edit
+  - evacuate
+  - evacuate_form_fields
+  - live_migrate
+  - live_migrate_form_fields
+  - ownership
+  - ownership_form_fields
+  - policy_sim
+  - reconfigure
+  - reconfigure_form_fields
+  - resize
+  - retire
+  - retirement_info
+  - right_size
+  - show
+  - show_list
+  post:
+  - associate_floating_ip_vm
+  - disassociate_floating_ip_vm
+  - edit_vm
+  - evacuate_vm
+  - form_field_changed
+  - live_migrate_vm
+  - ownership_update
+  - policy_sim
+  - policy_sim_add
+  - policy_sim_remove
+  - provision
+  - reconfigure
+  - reconfigure_form_fields
+  - reconfigure_update
+  - resize_field_changed
+  - resize_vm
+  - retire
+  - right_size
+  - set_checked_items
+  - show_list
+  - tree_autoload
+  - vmtree_selected
+  - *ownership_post
+  - *pre_prov_post
+vm_cloud:
+  get:
+  - associate_floating_ip
+  - associate_floating_ip_form_fields
+  - attach
+  - detach
+  - disassociate_floating_ip
+  - disassociate_floating_ip_form_fields
+  - download_data
+  - drift_to_csv
+  - drift_to_pdf
+  - drift_to_txt
+  - evacuate
+  - evacuate_form_fields
+  - explorer
+  - filesystem_download
+  - launch_html5_console
+  - live_migrate_form_fields
+  - migrate
+  - ownership_form_fields
+  - perf_chart_chooser
+  - protect
+  - reconfigure_form_fields
+  - resize
+  - retire
+  - retirement_info
+  - show
+  - tagging_edit
+  - *compare_get
+  post:
+  - accordion_select
+  - advanced_settings
+  - associate_floating_ip_vm
+  - attach_volume
+  - button
+  - cloud_networks
+  - cloud_subnets
+  - cloud_volumes
+  - detach_volume
+  - disassociate_floating_ip_vm
+  - edit_vm
+  - evacuate_vm
+  - event_logs
+  - explorer
+  - filesystem_drivers
+  - filesystems
+  - floating_ips
+  - form_field_changed
+  - groups
+  - guest_applications
+  - html5_console
+  - kernel_drivers
+  - launch_cockpit
+  - launch_html5_console
+  - linux_initprocesses
+  - live_migrate_vm
+  - load_balancers
+  - network_ports
+  - network_routers
+  - ownership_field_changed
+  - ownership_update
+  - ownership_update
+  - patches
+  - perf_chart_chooser
+  - policies
+  - processes
+  - protect
+  - prov_edit
+  - prov_field_changed
+  - quick_search
+  - reconfigure_update
+  - registry_items
+  - reload
+  - resize_field_changed
+  - resize_vm
+  - retire
+  - scan_histories
+  - sections_field_changed
+  - security_groups
+  - show
+  - squash_toggle
+  - tag_edit_form_field_changed
+  - tagging_edit
+  - tl_chooser
+  - tree_autoload
+  - tree_select
+  - users
+  - vm_pre_prov
+  - wait_for_task
+  - win32_services
+  - *adv_search_post
+  - *compare_post
+  - *dialog_runner_post
+  - *drift_post
+  - *evm_relationship_post
+  - *exp_post
+  - *policy_post
+  - *pre_prov_post
+  - *snap_post
+  - *x_post
+vm_infra:
+  get:
+  - download_data
+  - drift_to_csv
+  - drift_to_pdf
+  - drift_to_txt
+  - explorer
+  - filesystem_download
+  - launch_html5_console
+  - launch_vmware_console
+  - ownership_form_fields
+  - perf_chart_chooser
+  - policies
+  - protect
+  - reconfigure_form_fields
+  - retire
+  - retirement_info
+  - show
+  - tagging_edit
+  - *compare_get
+  post:
+  - accordion_select
+  - advanced_settings
+  - button
+  - edit_vm
+  - event_logs
+  - explorer
+  - filesystem_drivers
+  - filesystems
+  - form_field_changed
+  - groups
+  - guest_applications
+  - html5_console
+  - kernel_drivers
+  - launch_cockpit
+  - linux_initprocesses
+  - ontap_file_shares
+  - ontap_logical_disks
+  - ontap_storage_systems
+  - ontap_storage_volume
+  - ownership_field_changed
+  - ownership_update
+  - ownership_update
+  - patches
+  - perf_chart_chooser
+  - policies
+  - processes
+  - protect
+  - prov_edit
+  - prov_field_changed
+  - quick_search
+  - reconfigure_field_changed
+  - reconfigure_update
+  - registry_items
+  - reload
+  - retire
+  - scan_histories
+  - sections_field_changed
+  - security_groups
+  - show
+  - sort_ds_grid
+  - sort_host_grid
+  - sort_iso_img_grid
+  - sort_template_grid
+  - sort_vc_grid
+  - sort_vm_grid
+  - squash_toggle
+  - tag_edit_form_field_changed
+  - tagging_edit
+  - tl_chooser
+  - tree_autoload
+  - tree_select
+  - users
+  - vm_pre_prov
+  - vm_vdi
+  - vmrc_console
+  - wait_for_task
+  - win32_services
+  - *adv_search_post
+  - *compare_post
+  - *dialog_runner_post
+  - *drift_post
+  - *evm_relationship_post
+  - *exp_post
+  - *policy_post
+  - *pre_prov_post
+  - *snap_post
+  - *x_post
+vm_or_template:
+  get:
+  - download_data
+  - drift_to_csv
+  - drift_to_pdf
+  - drift_to_txt
+  - explorer
+  - launch_html5_console
+  - launch_vmware_console
+  - ownership_form_fields
+  - protect
+  - reconfigure_form_fields
+  - retire
+  - retirement_info
+  - show
+  - tagging_edit
+  - util_report_download
+  - utilization
+  - vm_show
+  - *compare_get
+  post:
+  - accordion_select
+  - advanced_settings
+  - button
+  - cloud_networks
+  - cloud_subnets
+  - cloud_volumes
+  - console
+  - drift_all
+  - drift_differences
+  - drift_history
+  - drift_mode
+  - drift_same
+  - edit_vm
+  - event_logs
+  - explorer
+  - filesystem_drivers
+  - filesystems
+  - floating_ips
+  - form_field_changed
+  - groups
+  - guest_applications
+  - html5_console
+  - kernel_drivers
+  - linux_initprocesses
+  - network_ports
+  - network_routers
+  - ontap_file_shares
+  - ontap_logical_disks
+  - ontap_storage_systems
+  - ownership_field_changed
+  - ownership_update
+  - ownership_update
+  - patches
+  - perf_chart_chooser
+  - policies
+  - processes
+  - protect
+  - prov_edit
+  - prov_field_changed
+  - quick_search
+  - reconfigure_field_changed
+  - reconfigure_update
+  - registry_items
+  - reload
+  - retire
+  - scan_histories
+  - sections_field_changed
+  - security_groups
+  - show
+  - sort_ds_grid
+  - sort_host_grid
+  - sort_iso_img_grid
+  - sort_vc_grid
+  - squash_toggle
+  - tag_edit_form_field_changed
+  - tagging_edit
+  - tl_chooser
+  - tree_select
+  - users
+  - util_chart_chooser
+  - vm_pre_prov
+  - vmrc_console
+  - wait_for_task
+  - win32_services
+  - x_button
+  - x_history
+  - x_search_by_name
+  - x_show
+  - *adv_search_post
+  - *compare_post
+  - *dialog_runner_post
+  - *evm_relationship_post
+  - *exp_post
+  - *policy_post
+  - *pre_prov_post
+  - *snap_post
