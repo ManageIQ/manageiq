@@ -75,6 +75,7 @@ describe "Conditions API" do
       condition_id = response.parsed_body["results"].first["id"]
 
       expect(Condition.exists?(condition_id)).to be_truthy
+      expect(Condition.find(condition_id).expression.class).to eq(MiqExpression)
     end
 
     it "creates new conditions" do
@@ -114,6 +115,7 @@ describe "Conditions API" do
       expect(response).to have_http_status(:ok)
 
       expect(Condition.find(condition.id).description).to eq("change")
+      expect(Condition.find(condition.id).expression.class).to eq(MiqExpression)
     end
 
     it "edits conditions" do
