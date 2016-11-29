@@ -103,20 +103,11 @@ class Chargeback < ActsAsArModel
                    else
                      self.class.get_extra_fields(metric_rollup_record)
                    end
-    super(self.class.date_fields(metric_rollup_record).merge(extra_fields))
-  end
-
-  def self.date_fields(metric_rollup_record)
-    start_ts, end_ts, display_range = @options.report_step_range(metric_rollup_record.timestamp)
-
-    {
-      'start_date'       => start_ts,
-      'end_date'         => end_ts,
-      'display_range'    => display_range,
-      'interval_name'    => @options.interval,
-      'chargeback_rates' => '',
-      'entity'           => metric_rollup_record.resource
-    }
+    super(extra_fields)
+    self.start_date, self.end_date, self.display_range = options.report_step_range(metric_rollup_record.timestamp)
+    self.interval_name = options.interval
+    self.chargeback_rates = ''
+    self.entity = metric_rollup_record.resource
   end
 
   def self.get_tag_fields(perf)
