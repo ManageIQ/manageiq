@@ -78,6 +78,12 @@ class Chargeback < ActsAsArModel
     [data.values]
   end
 
+  def self.classification_for_perf(metric_rollup_record)
+    tag = metric_rollup_record.tag_names.split('|').find { |x| x.starts_with?(@options[:groupby_tag]) } # 'department/*'
+    tag = tag.split('/').second unless tag.blank? # 'department/finance' -> 'finance'
+    @options.tag_hash[tag]
+  end
+
   def self.key_and_fields(metric_rollup_record)
     ts_key = @options.start_of_report_step(metric_rollup_record.timestamp)
 
@@ -104,9 +110,7 @@ class Chargeback < ActsAsArModel
   end
 
   def self.get_tag_keys_and_fields(perf, ts_key)
-    tag = perf.tag_names.split("|").select { |x| x.starts_with?(@options[:groupby_tag]) }.first # 'department/*'
-    tag = tag.split('/').second unless tag.blank? # 'department/finance' -> 'finance'
-    classification = @options.tag_hash[tag]
+    classification = classification_for_perf(perf)
     classification_id = classification.present? ? classification.id : 'none'
     key = "#{classification_id}_#{ts_key}"
     extra_fields = { "tag_name" => classification.present? ? classification.description : _('<Empty>') }
