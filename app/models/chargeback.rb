@@ -98,21 +98,17 @@ class Chargeback < ActsAsArModel
 
   def initialize(options, metric_rollup_record)
     @options = options
-    extra_fields = if @options[:groupby_tag].present?
-                     self.class.get_tag_fields(metric_rollup_record)
-                   else
-                     self.class.get_extra_fields(metric_rollup_record)
-                   end
-    super(extra_fields)
+    if @options[:groupby_tag].present?
+      super()
+      classification = self.class.classification_for_perf(metric_rollup_record)
+      self.tag_name = classification.present? ? classification.description : _('<Empty>')
+    else
+      super(self.class.get_extra_fields(metric_rollup_record))
+    end
     self.start_date, self.end_date, self.display_range = options.report_step_range(metric_rollup_record.timestamp)
     self.interval_name = options.interval
     self.chargeback_rates = ''
     self.entity = metric_rollup_record.resource
-  end
-
-  def self.get_tag_fields(perf)
-    classification = classification_for_perf(perf)
-    { "tag_name" => classification.present? ? classification.description : _('<Empty>') }
   end
 
   def calculate_costs(consumption, rates)
