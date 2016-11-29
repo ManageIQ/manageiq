@@ -7,6 +7,7 @@
 - :conf
 - :inf
 - :mdl
+- :dwh
 - :net
 - :opt
 - :set
@@ -24,6 +25,7 @@
 - ems-type:gce
 - ems-type:gce_network
 - ems-type:hawkular
+- ems-type:hawkular_datawarehouse
 - ems-type:kubernetes
 - ems-type:nuage_network
 - ems-type:openshift

@@ -231,6 +231,9 @@ module ApplicationHelper
       if controller == "ems_middleware" && action == "show"
         return ems_middlewares_path
       end
+      if controller == "ems_datawarehouse" && action == "show"
+        return ems_datawarehouses_path
+      end
       if controller == "ems_network" && action == "show"
         return ems_networks_path
       end
@@ -1311,6 +1314,7 @@ module ApplicationHelper
           ems_cloud
           ems_cluster
           ems_container
+          ems_datawarehouse
           ems_infra
           ems_middleware
           ems_network
@@ -1376,6 +1380,7 @@ module ApplicationHelper
              ems_cloud
              ems_cluster
              ems_container
+             ems_datawarehouse
              ems_infra
              ems_middleware
              ems_network

@@ -4032,6 +4032,64 @@
       :feature_type: control
       :identifier: middleware_messaging_tag
 
+# EmsDatawarehouse
+- :name: Providers
+  :description: Everything under Datawarehouse Providers
+  :feature_type: node
+  :identifier: ems_datawarehouse
+  :children:
+  - :name: View
+    :description: View Datawarehouse Providers
+    :feature_type: view
+    :identifier: ems_datawarehouse_view
+    :children:
+    - :name: List
+      :description: Display Lists of Datawarehouse Providers
+      :feature_type: view
+      :identifier: ems_datawarehouse_show_list
+    - :name: Show
+      :description: Display Individual Datawarehouse Providers
+      :feature_type: view
+      :identifier: ems_datawarehouse _show
+    - :name: Timeline
+      :description: Display Timelines for Datawarehouse Providers
+      :feature_type: view
+      :identifier: ems_datawarehouse_timeline
+  - :name: Operate
+    :description: Perform Operations on Datawarehouse Providers
+    :feature_type: control
+    :identifier: ems_datawarehouse_control
+    :children:
+    - :name: Refresh
+      :description: Refresh Datawarehouse Providers
+      :feature_type: control
+      :identifier: ems_datawarehouse_refresh
+    - :name: Re-check Authentication Status
+      :description: Re-check Authentication Status of Datawarehouse Providers
+      :feature_type: control
+      :identifier: ems_datawarehouse_recheck_auth_status
+    - :name: Edit Tags
+      :description: Edit Tags of Datawarehouse Providers
+      :feature_type: control
+      :identifier: ems_datawarehouse_tag
+  - :name: Modify
+    :description: Modify Datawarehouse Providers
+    :feature_type: admin
+    :identifier: ems_datawarehouse_admin
+    :children:
+    - :name: Remove
+      :description: Remove Datawarehouse Providers
+      :feature_type: admin
+      :identifier: ems_datawarehouse_delete
+    - :name: Edit
+      :description: Edit a Datawarehouse Provider
+      :feature_type: admin
+      :identifier: ems_datawarehouse_edit
+    - :name: Add
+      :description: Add a Datawarehouse Provider
+      :feature_type: admin
+      :identifier: ems_datawarehouse_new
+
 # EmsNetwork
 - :name: Network Providers
   :description: Everything under Network Providers

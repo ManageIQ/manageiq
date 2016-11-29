@@ -950,6 +950,7 @@ en:
       ems_infras:                  Infrastructure Providers
       ems_container:               Containers Provider
       ems_containers:              Containers Providers
+      ems_datawarehouse:           Datawarehouse Provider
       ems_middleware:              Middleware Provider
       ems_middlewares:             Middleware Providers
       evm_server:                  EVM Server

@@ -28,6 +28,7 @@ describe ExtManagementSystem do
       "gce"                         => "Google Compute Engine",
       "gce_network"                 => "Google Network",
       "hawkular"                    => "Hawkular",
+      "hawkular_datawarehouse"      => "Hawkular Datawarehouse",
       "kubernetes"                  => "Kubernetes",
       "openshift"                   => "OpenShift Origin",
       "openshift_enterprise"        => "OpenShift Container Platform",
