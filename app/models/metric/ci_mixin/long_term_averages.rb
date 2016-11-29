@@ -12,18 +12,15 @@ module Metric::CiMixin::LongTermAverages
 
   private
 
-  def averages_over_time_period(col, typ, options = {})
-    options[:avg_days] ||= Metric::LongTermAverages::AVG_DAYS
-
+  def averages_over_time_period(col, typ)
+    # there is only ever 1 of these. It has days = 30 (AVG_DAYS)
     vpor = vim_performance_operating_ranges.detect do |rec|
-      rec.time_profile == options[:time_profile] && rec.days == options[:avg_days]
+      rec.days == Metric::LongTermAverages::AVG_DAYS
     end
 
-    unless vpor && vpor.updated_at.utc >= 1.day.ago.utc
-      vpor ||= vim_performance_operating_ranges.build(
-        :time_profile => options[:time_profile],
-        :days         => options[:avg_days]
-      )
+    if vpor.nil? || vpor.updated_at.utc < 1.day.ago.utc
+      vpor ||= vim_performance_operating_ranges.build(:days => Metric::LongTermAverages::AVG_DAYS)
+      options = {:avg_days => Metric::LongTermAverages::AVG_DAYS}
       averages = Metric::LongTermAverages.get_averages_over_time_period(self, options)
 
       vpor.update_attributes(:values => averages)
