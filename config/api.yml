@@ -6,6 +6,7 @@
   :version: '2.3.0'
 :version:
   :regex: !ruby/regexp /^v[0-9]+(?>\\.[0-9a-zA-Z]+)*(-[0-9A-Za-z-]+(\\.[0-9A-Za-z-]+)*)?/
+  :route_regex: !ruby/regexp /v[\d]+(\.[\da-zA-Z]+)*(\-[\da-zA-Z]+)?/
   :definitions:
   - :name: '2.3.0'
     :ident: 'v2.3.0'
