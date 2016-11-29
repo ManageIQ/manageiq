@@ -1,5 +1,5 @@
 describe "miq_ae_class/_class_fields.html.haml" do
-  include Spec::Support::AutomationHelper
+  include AutomationSpecHelper
 
   context 'display class fields' do
     before do
