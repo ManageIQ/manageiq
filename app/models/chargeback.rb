@@ -60,7 +60,7 @@ class Chargeback < ActsAsArModel
         rates_to_apply = rates.get(metric_rollup_record)
 
         key = report_row_key(metric_rollup_record)
-        data[key] ||= new(fields(metric_rollup_record))
+        data[key] ||= new(options, fields(metric_rollup_record))
 
         chargeback_rates = data[key]["chargeback_rates"].split(', ') + rates_to_apply.collect(&:description)
         data[key]["chargeback_rates"] = chargeback_rates.uniq.join(', ')
@@ -94,6 +94,11 @@ class Chargeback < ActsAsArModel
     tag = metric_rollup_record.tag_names.split('|').find { |x| x.starts_with?(@options[:groupby_tag]) } # 'department/*'
     tag = tag.split('/').second unless tag.blank? # 'department/finance' -> 'finance'
     @options.tag_hash[tag]
+  end
+
+  def initialize(options, *args)
+    @options = options
+    super(*args)
   end
 
   def self.fields(metric_rollup_record)
