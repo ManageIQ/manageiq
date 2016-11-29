@@ -71,7 +71,13 @@ Vmdb::Application.routes.draw do
   controller_routes.each do |controller_name, controller_actions|
     # Default route with no action to controller's index action
     unless %w(ems_cloud ems_infra ems_container ems_middleware ems_datawarehouse ems_network).include?(controller_name)
-      get controller_name, :controller => controller_name, :action => :index
+      get(
+        "#{controller_name}(/:id)",
+        :controller => controller_name,
+        :action     => :index,
+        :id         => ArRegion::CID_OR_ID_MATCHER_ROUTES,
+        :as         => controller_name
+      )
     end
 
     if controller_actions["get"]
