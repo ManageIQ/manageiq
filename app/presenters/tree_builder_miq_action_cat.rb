@@ -14,8 +14,8 @@ class TreeBuilderMiqActionCat < TreeBuilder
   end
 
   def tree_init_options(_tree_name)
-  {:expand        => true,
-   :lazy          => false}
+    {:expand        => true,
+     :lazy          => false}
   end
 
   def set_locals_for_render
@@ -26,21 +26,17 @@ class TreeBuilderMiqActionCat < TreeBuilder
   end
 
   def root_options
-    title = @tenant_name
-    [title, title, "tag.png"]
+    [title = @tenant_name, title, "tag.png"]
   end
 
   # Get root nodes count/array for explorer tree
   def x_get_tree_roots(_count_only, _options)
-    cats = Classification.categories.select(&:show).sort_by(&:name)
+    cats = Classification.categories.select(&:show)
     cats = cats.select{|c| c.entries.any? }
-    cats.sort_by! { |c| c.description.downcase }
-    count_only_or_objects(_count_only, cats)
+    count_only_or_objects(_count_only, cats, :description)
   end
 
   def x_get_tree_classification_kids(c, count_only)
-    ent = c.entries
-    c_kids = ent.sort_by { |t| t.description.downcase }
-    count_only_or_objects(count_only, c_kids)
+    count_only_or_objects(count_only, c.entries, :description)
   end
 end

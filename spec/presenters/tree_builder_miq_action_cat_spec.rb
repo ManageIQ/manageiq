@@ -16,10 +16,9 @@ describe TreeBuilderMiqActionCat do
   context 'read-only mode' do
     before do
       @treeName = 'action_tags'
-      @tree = TreeBuilderMiqActionCat.new(@treeName, @treeName, {}, true, @tenant)
+      @tree = TreeBuilderMiqActionCat.new(@treeName + '_tree', @treeName, {}, true, @tenant)
     end
     it 'set init options correctly' do
-      #binding.pry
       tree_options = @tree.send(:tree_init_options, @treeName)
       expect(tree_options).to eq(:expand => true, :lazy => false)
     end
@@ -35,19 +34,19 @@ describe TreeBuilderMiqActionCat do
       nodeB = TreeNodeBuilderMiqActionCat.new(@tag1, @folder1.id, {})
       node = nodeB.send(:classification_node)
 
-      expect(node[:hideCheckbox]).to eq true
-      expect(node[:tooltip]).to eq desc1
-      expect(node[:title]).to eq desc2
+      expect(node[:hideCheckbox]).to eq(true)
+      expect(node[:tooltip]).to eq(desc1)
+      expect(node[:title]).to eq(desc2)
 
       desc1 = _("Category: %{description}") % {:description => @folder1.description}
       desc2 = @folder1.description
       nodeB = TreeNodeBuilderMiqActionCat.new(@folder1, nil, {})
       node = nodeB.send(:classification_node)
 
-      expect(node[:hideCheckbox]).to eq true
+      expect(node[:hideCheckbox]).to eq(true)
       expect(node[:tooltip]).to eq desc1
       expect(node[:title]).to eq desc2
-      expect(node[:cfmeNoClick]).to eq true
+      expect(node[:cfmeNoClick]).to eq(true)
     end
 
     it 'sets root' do
@@ -56,7 +55,7 @@ describe TreeBuilderMiqActionCat do
     end
     it 'sets first level nodes correctly' do
       roots = @tree.send(:x_get_tree_roots, false, nil)
-      expect(roots).to eq([@folder1, @folder2].sort_by! { |c| c.description.downcase })
+      expect(roots).to eq([@folder1, @folder2].sort_by { |c| c.description.downcase })
     end
     it 'sets second level nodes correctly' do
       kid1 = @tree.send(:x_get_tree_classification_kids, @folder1, false)

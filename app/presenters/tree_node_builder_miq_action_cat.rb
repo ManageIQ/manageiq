@@ -16,5 +16,4 @@ class TreeNodeBuilderMiqActionCat  < TreeNodeBuilder
     @node[:hideCheckbox] = true
     @node
   end
-
 end
