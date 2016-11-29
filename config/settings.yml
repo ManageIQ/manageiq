@@ -1042,8 +1042,6 @@
   :history:
     :keep_reports: 6.months
     :purge_window_size: 100
-  :precision:
-    :default: 2
   :precision_by_column:
     :slope: 4
   :queue_timeout: 1.hour
