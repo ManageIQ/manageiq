@@ -121,7 +121,7 @@
           \%
         - elsif MiqExpression::FORMAT_SUB_TYPES[@edit[@expkey][:val1][:type]][:units]
           = select_tag('chosen_suffix',
-            options_for_select(MiqExpression::FORMAT_SUB_TYPES[@edit[@expkey][:val1][:type]][:units], @edit[:suffix]),
+            options_for_select(MiqExpression::FORMAT_SUB_TYPES[@edit[@expkey][:val1][:type]][:units], @edit[@expkey].val1_suffix),
             :multiple              => false,
             :class                 => 'selectpicker',
             "data-miq_sparkle_on"  => true,
@@ -237,7 +237,7 @@
               \%
             - elsif MiqExpression::FORMAT_SUB_TYPES[@edit[@expkey][:val2][:type]][:units]
               = select_tag('chosen_suffix2',
-                options_for_select(MiqExpression::FORMAT_SUB_TYPES[@edit[@expkey][:val2][:type]][:units], @edit[:suffix2]),
+                options_for_select(MiqExpression::FORMAT_SUB_TYPES[@edit[@expkey][:val2][:type]][:units], @edit[@expkey].val2_suffix),
                 :multiple              => false,
                 :class                 => 'selectpicker',
                 "data-miq_sparkle_on"  => true,
