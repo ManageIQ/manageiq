@@ -186,7 +186,13 @@ class RestApi
           multi_options = {:default => "", :multi => true}
           API_PARAMETERS.each { |p| opt p.intern, p, (MULTI_PARAMS.include?(p) ? multi_options.dup : norm_options.dup) }
         end
-        API_PARAMETERS.each { |param| params[param] = api_params[param.intern] unless api_params[param.intern].empty? }
+        API_PARAMETERS.each do |param|
+          if MULTI_PARAMS.include?(param)
+            params[param] = api_params[param.intern] unless api_params[param.intern].all?(&:empty?)
+          else
+            params[param] = api_params[param.intern] unless api_params[param.intern].empty?
+          end
+        end
       end
 
       if action != "run"
