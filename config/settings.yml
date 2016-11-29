@@ -1051,9 +1051,6 @@
   :mks_version: 2.1.0.0
   :monitor_poll: 5.seconds
   :name: EVM
-  :console_proxy_port:
-    :start: 6000
-    :end: 7000
   :rails_server: puma
   :remote_console_type: VMRC
   :role: database_operations,event,reporting,scheduler,smartstate,ems_operations,ems_inventory,user_interface,websocket,web_services,automate
