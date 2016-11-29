@@ -1,8 +1,8 @@
 /* global miqHttpInject */
 
 miqHttpInject(angular.module('containerLiveDashboard', ['ui.bootstrap', 'patternfly', 'patternfly.charts']))
-  .controller('containerLiveDashboardController', ['$scope', 'pfViewUtils', '$location', '$http', '$interval', '$timeout', '$window',
-  function ($scope, pfViewUtils, $location, $http, $interval, $timeout, $window) {
+  .controller('containerLiveDashboardController', ['$scope', 'pfViewUtils', '$http', '$interval', '$timeout', '$window',
+  function ($scope, pfViewUtils, $http, $interval, $timeout, $window) {
     var tenant = '_ops';
 
     $scope.filtersText = '';
@@ -53,7 +53,7 @@ miqHttpInject(angular.module('containerLiveDashboard', ['ui.bootstrap', 'pattern
         x: {
           tick: {
             count: 25,
-            format: function (value) { return moment(value).utc().format(__('MM/DD/YYYY HH:mm')); }
+            format: function (value) { return moment(value).format(__('MM/DD/YYYY HH:mm')); }
           }},
         y: {
           tick: {
@@ -207,7 +207,7 @@ miqHttpInject(angular.module('containerLiveDashboard', ['ui.bootstrap', 'pattern
         }
 
         $scope.items = response.metric_definitions.filter(function(item) {
-          return item.tags && item.tags.group_id && item.id && item.minTimestamp;
+          return item.id && item.type;
         });
 
         angular.forEach($scope.items, getLatestData);
