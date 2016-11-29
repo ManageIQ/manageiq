@@ -14,6 +14,10 @@ class VimService < Handsoap::Service
     @serviceInstanceMor = VimString.new("ServiceInstance", "ServiceInstance")
     @session_cookie     = nil
 
+    @xml_payload_len  = 0
+    @xml_payload_max  = 10.megabytes
+    @xml_payload_lock = Mutex.new
+
     @sic = retrieveServiceContent
 
     @about           = @sic.about
@@ -1236,16 +1240,32 @@ class VimService < Handsoap::Service
     end
   end
 
-  def parse_response(response, rType)
-    doc  = response.document
-    raise "Response <#{response.inspect}> has no XML document" if doc.nil?
+  def handle_memory_and_gc(response)
+    xml_len = response.instance_variable_get(:@http_body).length
 
     # At this point we don't need the internal raw XML content since we
     #   have the parsed XML document, so we can free it for the GC.
     response.instance_variable_set(:@http_body, nil)
-    # Force a GC, because Ruby's GC is triggered on number of objects without
-    #   regard to size.  The object we just freed may not be released right away.
-    GC.start
+
+    @xml_payload_lock.synchronize do
+      @xml_payload_len += xml_len
+
+      if @xml_payload_len > @xml_payload_max
+        @xml_payload_len = 0
+
+        # Force a GC, because Ruby's GC is triggered on number of objects without
+        #   regard to size.  The object we just freed may not be released right away.
+        GC.start
+      end
+    end
+  end
+
+  def parse_response(response, rType)
+    doc  = response.document
+    raise "Response <#{response.inspect}> has no XML document" if doc.nil?
+
+    # Cleanup the raw XML document from the response and kick a GC
+    handle_memory_and_gc(response)
 
     search_path = "//n1:#{rType}"
     node = doc.xpath(search_path, @ns).first
