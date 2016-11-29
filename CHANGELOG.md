@@ -1,4 +1,4 @@
-# Darga 
+# Darga - 5
 
 ## Added
 
@@ -18,7 +18,7 @@
 - Switchboard events for OpenStack
     - New Events: compute.instance.reboot.end, compute.instance.reset.end, compute.instance.snapshot.start
     - Policy Event updates: compute.instance.snapshot.end, compute.instance.suspend
-- Service Model 
+- Service Model
   - Added “networks” relationship to Hardware model
   - Support where method, find_by, and find_by!
   - Azure VM retirement modeling added
@@ -47,6 +47,7 @@
 
 ### Platform (Appliance)
 - Chargeback
+  - Vm group by tag
   - Able to assign rates to tenants
   - Can generate reports by tenant
   - Currencies added to rates
@@ -60,7 +61,7 @@
   - New classes Settings and Vmdb::Settings
   - `VMDB::Config` is deprecated
   - `config/*.tmpl.yml` -> `config/settings.yml`
-  - Locally override with `config/settings.local.yml` or `config/settings/development.local.yml` 
+  - Locally override with `config/settings.local.yml` or `config/settings/development.local.yml`
 - Replication (pglogical)
     - Replacement of rubyrep with pglogical
     - New MiqPglogical class: provides generic functionality for remote and global regions
@@ -102,18 +103,18 @@ and before subscription is enabled
     - Cloud Cross Linking
     - Pod Network Metrics
     - Persistent Volume Claims
-    - Seed for policies, policy sets, policy contents and conditions 
+    - Seed for policies, policy sets, policy contents and conditions
     - Auto-tagging from kubernetes labels (backend only)
     - MiqAction to annotate container images as non-secure at
     - Multiple endpoint support OpenShift
-- Google Compute Engine 
+- Google Compute Engine
   - Inventory
   - Power Operations
   - Provisioning
   - Events
   - Better OS identification for VMs
   - Allow custom flavors
-- Hawkular 
+- Hawkular
   - First Middleware provider
   - Inventory and topology
   - Event Catcher and power operations to reload and stop Middleware servers
@@ -129,15 +130,18 @@ and before subscription is enabled
 - Microsoft SCVMM
   - Inventory Performance improvements
   - Ability to delete VMs
+  - Set CPU sockets and cores per socket
 - VMware
   - Read-only datastores
   - Clustered datastores
   - Add/remove disk methods for reconfigure
-- Red Hat Enterprise Virtualization: Targeted refresh process
-- Red Hat OpenStack 
+- Red Hat Enterprise Virtualization
+  - Targeted refresh process
+  - Report manufacturer and product info for RHEVM hosts
+- Red Hat OpenStack
   - Instance Evacuation
   - Better neutron modeling
-  - Ceilometer events 
+  - Ceilometer events
   - cleanup SSL support
   - VM operations
   - Memory metrics
@@ -161,7 +165,7 @@ and before subscription is enabled
   - Microsoft Azure
 - Services Back End
   - Service Order (Cart) created for each Service Request based on current user and tenant.
-- VMware 
+- VMware
   - Clustered Datastores in Provisioning
   - Distributed Switches referenced from database during provisioning workflow
 - Google Compute Engine: Added Google Auto-Placement methods
@@ -188,7 +192,8 @@ and before subscription is enabled
 - Automation Requests approve and deny actions
 
 ### SmartState
-- Microsoft SCVMM: new 
+- Support analysis of VMs residing on NFS41 datastores
+- Microsoft SCVMM: new
   - Virtual hard disks residing on Hyper-V servers
   - VHD, and newer VHDX disk formats
   - Snapshotted disks
@@ -209,6 +214,8 @@ and before subscription is enabled
 - Added ability to report on tenants and tenant quotas
 
 ### User Interface
+- Added rate assigning by tags to Container images
+- Allow bringing VM out of retirement from detail page
 - VM: Devices and Network Adapters
 - Cloud: Key Pairs, Object Stores, Objects, Object Summary
 - Bootstrap switches
@@ -239,8 +246,8 @@ and before subscription is enabled
 - Topology Status Colors
 - Vertical navigation menus
 - VM Reconfigure - add/remove disks
-- Orderable Orchestration Templates - create and copy 
-- Explorer for Datastore Clusters for VMware vSphere 5+ 
+- Orderable Orchestration Templates - create and copy
+- Explorer for Datastore Clusters for VMware vSphere 5+
 - Template/Image compliance policy checking (previously only allowed for VMs/Instances)
 - New UI for replication configuration
 - OpenStack - Cloud Volumes Add/Delete/Update/Attach/Detach
@@ -248,7 +255,7 @@ and before subscription is enabled
 - Support for Ansible Tower Jobs
 - Support to add Service Dialog for a Job Template & display Surveys on summary screen
 - Support added for Evacuate Openstack VMs
-   
+
 ## Removed
 
 - Providers: Removed Amazon SDK v1
@@ -264,9 +271,19 @@ and before subscription is enabled
   - EXT4 - 64bit group descriptor: Variable group descriptor size correctly determined.
   - Collect services that are symlinked
 - Automate
+  - Provisioning
+    - Set zone when deliver a service template provision task
+    - Allow VMware provision without needing to specify a host
+    - Service Model: Expose ems_events to Vm service model
+  - Domain
+    - Broken ordering of ae_domains for root tenant
+    - Fixed problem with request_pending email method.
+  - Alerts
+    - Fixed alerts not sending SNMP v1 traps
+    - Fixed users not being able to add alerts
   - Retirement state-machine updates for SCVMM
   - Enhanced .missing method support
-     - Save original method name in `_missing`_instance property
+     - Save original method name in `_missing`_ instance property
      - Accessible during instance resolution and within methods
 - [Self Service UI](https://github.com/ManageIQ/manageiq-ui-self_service) extracted into its own repository setting up pattern for other independent UIs
   -  Initializers can now load ApplicationController w/o querying DB
@@ -290,7 +307,8 @@ and before subscription is enabled
   - Performance capture failure on cloud platforms caused by orphan VMs
   - Reduction in base size of workers
   - Reduction in memory used by EmsRefresh
-- Platform 
+- Platform
+  - Security: Perform RBAC user filter check on requested ids before allowing request
   - Updated to Rails 5 (using Rails master branch until stable branch is cut)
   - Appliance OS updated to CentOS 7.2 build 1511
   - oVirt-metrics gem fixed for Rails 5
@@ -306,4 +324,7 @@ and before subscription is enabled
 - Providers
   - Memory issues during inventory collection
   - Validating endpoints should not save data
-
+- User Interface
+  - Use VMRC desktop client if no NPAPI plugin is available
+  - Add Advanced Search to Containers explorer
+  - Save Authentication status on a Save
