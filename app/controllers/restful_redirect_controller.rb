@@ -12,7 +12,7 @@ class RestfulRedirectController < ApplicationController
                    end
       redirect_to :controller => controller, :action => 'show', :id => params[:id]
     else
-      redirect_to :controller => 'dashboard', :flash_msg => _("Could not find #{params[:model]}[id=#{params[:id]}]")
+      redirect_to :controller => 'dashboard', :flash_msg => _("Could not find %{model}[id=%{id}]") % {:model => params[:model], :id => params[:id]}
     end
   end
 end

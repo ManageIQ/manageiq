@@ -221,16 +221,16 @@ class MiddlewareServerController < ApplicationController
       mw_server = identify_record mw_server
 
       if mw_server.product == 'Hawkular' && operation_info.fetch(:skip)
-        skip_message = _("Not #{operation_info.fetch(:hawk)} the provider")
+        skip_message = _("Not %{operation_info} the provider") % {:operation_info => operation_info.fetch(:hawk)}
         render :json => {:status => :ok, :msg => skip_message}
       elsif mw_server.in_domain? && !DOMAIN_SERVER_OPERATIONS.value?(operation_info)
-        skip_message = _("Not #{operation_info.fetch(:hawk)} the domain server")
+        skip_message = _("Not %{operation_info} the domain server") % {:operation_info => operation_info.fetch(:hawk)}
         render :json => {:status => :ok, :msg => skip_message}
       else
         operation_triggered = trigger_param_operation(operation_info, mw_server, :param)
       end
       if operation_triggered
-        initiated_msg = _("#{operation_info.fetch(:msg)} initiated for selected server(s)")
+        initiated_msg = _("%{operation} initiated for selected server(s)") % {:operation => operation_info.fetch(:msg)}
         render :json => {:status => :ok, :msg => initiated_msg}
       end
     end
@@ -270,7 +270,7 @@ class MiddlewareServerController < ApplicationController
         operation_triggered = true
       end
     end
-    add_flash(_("#{operation_info.fetch(:msg)} initiated for selected server(s)")) if operation_triggered
+    add_flash(_("%{operation} initiated for selected server(s)") % {:operation => operation_info.fetch(:msg)}) if operation_triggered
   end
 
   def trigger_mw_operation(operation, mw_server, params = nil)

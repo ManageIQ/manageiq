@@ -73,7 +73,7 @@ end
 
 RSpec.shared_examples :storage_name_type_title do
   it 'has a title with name and type' do
-    expect(subject).to include("Name: #{item.name} | Datastores Type: VMFS")
+    expect(subject).to include("Name: #{item.name} | Datastore Type: VMFS")
   end
 end
 

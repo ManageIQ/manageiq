@@ -719,7 +719,7 @@ module QuadiconHelper
     opts = {
       :width  => size,
       :height => size,
-      :title  => _("Name: #{h(item.name)} | #{ui_lookup(:table => "storages")} Type: #{h(item.store_type)}")
+      :title  => _("Name: %{name} | Datastore Type: %{storage_type}") % {:name => h(item.name), :storage_type => h(item.store_type)}
     }
 
     opts
@@ -809,7 +809,7 @@ module QuadiconHelper
     }
 
     if quadicon_hide_links? && quadicon_policy_sim? && !quadicon_edit_key?(:explorer)
-      options = {:title => _("Show policy details for #{h(item.name)}")}
+      options = {:title => _("Show policy details for %{item_name}") % {:item_name => h(item.name)}}
     end
 
     options
