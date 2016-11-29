@@ -5,6 +5,7 @@ class CloudVolumeSnapshotController < ApplicationController
   after_action :set_session_data
 
   include Mixins::GenericListMixin
+  include Mixins::GenericSessionMixin
 
   # handle buttons pressed on the button bar
   def button
@@ -100,24 +101,6 @@ class CloudVolumeSnapshotController < ApplicationController
   end
 
   private
-
-  def get_session_data
-    @title      = ui_lookup(:table => 'cloud_volume_snapshot')
-    @layout     = "cloud_volume_snapshot"
-    @lastaction = session[:cloud_volume_snapshot_lastaction]
-    @display    = session[:cloud_volume_snapshot_display]
-    @filters    = session[:cloud_volume_snapshot_filters]
-    @catinfo    = session[:cloud_volume_snapshot_catinfo]
-    @showtype   = session[:cloud_volume_snapshot_showtype]
-  end
-
-  def set_session_data
-    session[:cloud_volume_snapshot_lastaction] = @lastaction
-    session[:cloud_volume_snapshot_display]    = @display unless @display.nil?
-    session[:cloud_volume_snapshot_filters]    = @filters
-    session[:cloud_volume_snapshot_catinfo]    = @catinfo
-    session[:cloud_volume_snapshot_showtype]   = @showtype
-  end
 
   # dispatches tasks to multiple snapshots
   def process_cloud_volume_snapshots(snapshots, task)
