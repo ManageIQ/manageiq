@@ -51,14 +51,22 @@ describe TreeBuilderTags do
       selected_kid = @tags_tree.send(:x_get_classification_kids, @folder_selected, false)
       not_selected_kid = @tags_tree.send(:x_get_classification_kids, @folder_not_selected, false)
       expect(selected_kid).to eq([{:id          => @tag_selected.id,
+<<<<<<< HEAD
                                    :image       => "100/tag.png",
+=======
+                                   :image       => "tag",
+>>>>>>> fix errors
                                    :text        => @tag_selected.description,
                                    :checkable   => @edit.present?,
                                    :tooltip     => "Tag: #{@tag_selected.description}",
                                    :cfmeNoClick => true,
                                    :select      => true}])
       expect(not_selected_kid).to eq([{:id          => @tag_not_selected.id,
+<<<<<<< HEAD
                                        :image       => "100/tag.png",
+=======
+                                       :image       => "tag",
+>>>>>>> fix errors
                                        :text        => @tag_not_selected.description,
                                        :checkable   => @edit.present?,
                                        :tooltip     => "Tag: #{@tag_not_selected.description}",
@@ -80,14 +88,22 @@ describe TreeBuilderTags do
       not_selected_kid = @tags_tree.send(:x_get_classification_kids, @folder_not_selected, false)
 
       expect(selected_kid).to eq([{:id          => @tag_selected.id,
+<<<<<<< HEAD
                                    :image       => "100/tag.png",
+=======
+                                   :image       => "tag",
+>>>>>>> fix errors
                                    :text        => @tag_selected.description,
                                    :checkable   => @edit.present?,
                                    :tooltip     => "Tag: #{@tag_selected.description}",
                                    :cfmeNoClick => true,
                                    :select      => true}])
       expect(not_selected_kid).to eq([{:id          => @tag_not_selected.id,
+<<<<<<< HEAD
                                        :image       => "100/tag.png",
+=======
+                                       :image       => "tag",
+>>>>>>> fix errors
                                        :text        => @tag_not_selected.description,
                                        :checkable   => @edit.present?,
                                        :tooltip     => "Tag: #{@tag_not_selected.description}",

@@ -1,9 +1,8 @@
 class TreeNodeBuilderMiqActionCat  < TreeNodeBuilder
 
   def classification_node
-    ents = object.entries
     img = "blank.gif"
-    leaf = !ents.any?
+    leaf = !object.entries.any?
 
     if !leaf
       img = "tag.png"
