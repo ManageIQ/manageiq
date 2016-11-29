@@ -77,7 +77,7 @@ module MiqServer::WorkerManagement::Heartbeat
   def validate_heartbeat(w)
     if w.last_heartbeat.nil?
       @workers_lock.synchronize(:SH) do
-        w.last_heartbeat ||= @workers[w.pid][:last_heartbeat] if @workers.key?(w.pid)
+        w.last_heartbeat = @workers[w.pid][:last_heartbeat] if @workers.key?(w.pid)
       end unless @workers_lock.nil?
       w.last_heartbeat ||= Time.now.utc
     else
