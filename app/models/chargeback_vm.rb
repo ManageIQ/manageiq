@@ -93,7 +93,7 @@ class ChargebackVm < Chargeback
     if options[:tag] && (@report_user.nil? || !@report_user.self_service?)
       scope.where.not(:resource_id => nil).for_tag_names(options[:tag].split("/")[2..-1])
     else
-      scope.where(:resource_id => @vm_owners.keys)
+      scope.where(:resource => @vms)
     end
   end
 
