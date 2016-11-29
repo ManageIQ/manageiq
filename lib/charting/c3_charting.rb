@@ -49,7 +49,8 @@ class C3Charting < Charting
           ['data3', 10, 25, 10, 250, 10, 30]
         ],
       },
-      :miqChart => _options[:graph_type]
+      :miqChart => _options[:graph_type],
+      :miq      => { :zoomed => false }
     }
     sample[:data][:groups] = [['data1','data2', 'data3']] if _options[:graph_type].include? 'Stacked'
     sample
