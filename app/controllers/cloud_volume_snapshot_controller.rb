@@ -6,19 +6,17 @@ class CloudVolumeSnapshotController < ApplicationController
 
   include Mixins::GenericListMixin
   include Mixins::GenericSessionMixin
+  include Mixins::GenericButtonMixin
+
+  private
 
   # handle buttons pressed on the button bar
-  def button
-    @edit = session[:edit] # Restore @edit for adv search box
-    params[:page] = @current_page unless @current_page.nil? # Save current page for list refresh
-    return tag("CloudVolumeSnapshot") if params[:pressed] == 'cloud_volume_snapshot_tag'
-    if params[:pressed] == 'cloud_volume_snapshot_delete'
+  def specific_buttons(pressed)
+    if pressed == 'cloud_volume_snapshot_delete'
       delete_cloud_volume_snapshots
-    elsif @refresh_div == "main_div" && @lastaction == "show_list"
-      replace_gtl_main_div
-    else
-      render_flash
+      return true
     end
+    false
   end
 
   def self.display_methods
@@ -65,8 +63,6 @@ class CloudVolumeSnapshotController < ApplicationController
     end
     render_flash
   end
-
-  private
 
   # dispatches tasks to multiple snapshots
   def process_cloud_volume_snapshots(snapshots, task)

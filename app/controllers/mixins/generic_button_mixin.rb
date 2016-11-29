@@ -48,6 +48,11 @@ module Mixins
         return if @flash_array.nil?
       end
 
+      if respond_to?(:specific_buttons, true)
+        handled = specific_buttons(params[:pressed])
+        return if handled
+      end
+
       check_if_button_is_implemented
 
       if params[:pressed].ends_with?("_edit") || ["#{pfx}_miq_request_new", "#{pfx}_clone",
