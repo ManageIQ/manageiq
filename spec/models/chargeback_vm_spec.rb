@@ -318,9 +318,7 @@ describe ChargebackVm do
 
       used_metric = used_average_for(:disk_usage_rate_average, hours_in_day)
       expect(subject.disk_io_used_metric).to eq(used_metric)
-      expect(subject.disk_io_metric).to eq(subject.disk_io_metric)
       expect(subject.disk_io_used_cost).to be_within(0.01).of(used_metric * @hourly_rate * hours_in_day)
-      expect(subject.disk_io_cost).to eq(subject.disk_io_used_cost)
     end
 
     it "net io" do
@@ -341,7 +339,6 @@ describe ChargebackVm do
       used_metric = used_average_for(:net_usage_rate_average, hours_in_day)
       expect(subject.net_io_used_metric).to eq(used_metric)
       expect(subject.net_io_used_cost).to eq(used_metric * @hourly_rate * hours_in_day)
-      expect(subject.net_io_cost).to eq(subject.net_io_used_cost)
     end
 
     it "storage" do
@@ -655,7 +652,6 @@ describe ChargebackVm do
       expect(subject.disk_io_used_metric).to be_within(0.01).of(used_metric)
 
       expect(subject.disk_io_used_cost).to be_within(0.01).of(used_metric * @hourly_rate * @hours_in_month)
-      expect(subject.disk_io_cost).to eq(subject.disk_io_used_cost)
     end
 
     it "net io" do
@@ -675,7 +671,6 @@ describe ChargebackVm do
       used_metric = used_average_for(:net_usage_rate_average, @hours_in_month)
       expect(subject.net_io_used_metric).to be_within(0.01).of(used_metric)
       expect(subject.net_io_used_cost).to be_within(0.01).of(used_metric * @hourly_rate * @hours_in_month)
-      expect(subject.net_io_cost).to eq(subject.net_io_used_cost)
     end
 
     let(:hourly_fixed_rate) { 10 }
