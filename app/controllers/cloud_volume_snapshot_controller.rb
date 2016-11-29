@@ -21,46 +21,12 @@ class CloudVolumeSnapshotController < ApplicationController
     end
   end
 
-  def show
-    @display = params[:display] || "main" unless control_selected?
-    @showtype = @display
-    @lastaction = "show"
+  def self.display_methods
+    %w(based_volumes)
+  end
 
-    @snapshot = @record = identify_record(params[:id])
-    return if record_no_longer_exists?(@snapshot)
-
-    @gtl_url = "/show"
-    drop_breadcrumb(
-      {
-        :name => ui_lookup(:tables => 'cloud_volume_snapshot'),
-        :url  => "/cloud_volume_snapshot/show_list?page=#{@current_page}&refresh=y"
-      },
-      true
-    )
-
-    case @display
-    when "download_pdf", "main", "summary_only"
-      get_tagdata(@snapshot)
-      drop_breadcrumb(
-        :name => _("%{name} (Summary)") % {:name => @snapshot.name},
-        :url  => "/cloud_volume_snapshot/show/#{@snapshot.id}"
-      )
-      @showtype = "main"
-      set_summary_pdf_data if %w(download_pdf summary_only).include?(@display)
-    when "based_volumes"
-      title = ui_lookup(:table => 'based_volumes')
-      kls   = CloudVolume
-      drop_breadcrumb(
-        :name => _("%{name} (All %{children})") % {:name => @snapshot.name, :children => title},
-        :url  => "/cloud_volume_snapshot/show/#{@snapshot.id}?display=based_volumes"
-      )
-      @view, @pages = get_view(kls, :parent => @snapshot, :association => :based_volumes)
-      @showtype = "based_volumes"
-    end
-
-    if params[:ppsetting] || params[:searchtag] || params[:entry] || params[:sort_choice]
-      replace_gtl_main_div
-    end
+  def display_based_volumes
+    nested_list('based_volumes', CloudVolume)
   end
 
   def delete_cloud_volume_snapshots
