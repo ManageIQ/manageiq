@@ -53,16 +53,22 @@ class ChargebackContainerImage < Chargeback
     @options[:groupby] == 'project' ? "#{project.id}_#{ts_key}" : "#{project.id}_#{image.id}_#{ts_key}"
   end
 
+  def self.image(perf)
+    @data_index.fetch_path(:container_image, :by_container_id, perf.resource_id)
+  end
+
+  def self.project(perf)
+    @data_index.fetch_path(:container_project, :by_container_id, perf.resource_id)
+  end
+
   def self.get_extra_fields(perf)
-    project = @data_index.fetch_path(:container_project, :by_container_id, perf.resource_id)
-    image = @data_index.fetch_path(:container_image, :by_container_id, perf.resource_id)
     {
-      "project_name"  => project.name,
-      "image_name"    => image.try(:full_name) || _("Deleted"), # until image archiving is implemented
-      "project_uid"   => project.ems_ref,
+      "project_name"  => project(perf).name,
+      "image_name"    => image(perf).try(:full_name) || _("Deleted"), # until image archiving is implemented
+      "project_uid"   => project(perf).ems_ref,
       "provider_name" => perf.parent_ems.try(:name),
       "provider_uid"  => perf.parent_ems.try(:name),
-      "archived"      => project.archived? ? _("Yes") : _("No")
+      "archived"      => project(perf).archived? ? _("Yes") : _("No")
     }
   end
 
