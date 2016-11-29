@@ -3112,23 +3112,22 @@ Vmdb::Application.routes.draw do
       match controller_name.to_s, :controller => controller_name, :action => :index, :via => :get
     end
 
-    # One-by-one get/post routes for defined controllers
-    if controller_actions.kind_of?(Hash)
-      unless controller_actions[:get].nil?
-        controller_actions[:get].each do |action_name|
-          get "#{controller_name}/#{action_name}(/:id)",
-              :action     => action_name,
-              :controller => controller_name
-        end
-      end
+    next unless controller_actions.kind_of?(Hash)
 
-      unless controller_actions[:post].nil?
-        controller_actions[:post].each do |action_name|
-          post "#{controller_name}/#{action_name}(/:id)",
-               :action     => action_name,
-               :controller => controller_name
-        end
-      end
+    if controller_actions[:get]
+      get(
+        "#{controller_name}/:action(/:id)",
+        :controller => controller_name,
+        :action     => Regexp.new(controller_actions[:get].flatten.join("|"))
+      )
+    end
+
+    if controller_actions[:post]
+      post(
+        "#{controller_name}/:action(/:id)",
+        :controller => controller_name,
+        :action     => Regexp.new(controller_actions[:post].flatten.join("|"))
+      )
     end
   end
 
