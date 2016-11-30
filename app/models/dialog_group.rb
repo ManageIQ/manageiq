@@ -19,6 +19,12 @@ class DialogGroup < ApplicationRecord
     fields.each do |field|
       if field.key?('id')
         DialogField.find(field['id']).tap do |dialog_field|
+          resource_action_fields = field.delete('resource_action') || {}
+          if resource_action_fields.key?('id')
+            dialog_field.resource_action.update_attributes(resource_action_fields.except('id'))
+          elsif resource_action_fields.present?
+            dialog_field.resource_action = ResourceAction.create(resource_action_fields)
+          end
           dialog_field.update_attributes(field)
           updated_fields << dialog_field
         end
