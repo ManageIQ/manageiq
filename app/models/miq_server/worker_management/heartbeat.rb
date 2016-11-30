@@ -81,18 +81,23 @@ module MiqServer::WorkerManagement::Heartbeat
 
   # Get the latest heartbeat between the SQL and memory (updated via DRb)
   def validate_heartbeat(w)
+    last_heartbeat = workers_last_heartbeat(w.pid)
+
     if w.last_heartbeat.nil?
-      @workers_lock.synchronize(:SH) do
-        last_heartbeat = @workers[w.pid][:last_heartbeat] if @workers.key?(w.pid)
-      end unless @workers_lock.nil?
       last_heartbeat ||= Time.now.utc
       w.update_attributes(:last_heartbeat => last_heartbeat)
-    else
-      @workers_lock.synchronize(:SH) do
-        if @workers.key?(w.pid) && !@workers[w.pid][:last_heartbeat].nil? && @workers[w.pid][:last_heartbeat] > w.last_heartbeat
-          w.update_attributes(:last_heartbeat => @workers[w.pid][:last_heartbeat])
-        end unless @workers_lock.nil?
-      end
+    elsif !last_heartbeat.nil? && last_heartbeat > w.last_heartbeat
+      w.update_attributes(:last_heartbeat => last_heartbeat)
+    end
+  end
+
+  private
+
+  def workers_last_heartbeat(pid)
+    return unless @workers_lock
+
+    @workers_lock.synchronize(:SH) do
+      @workers.fetch_path(pid, :last_heartbeat)
     end
   end
 end
