@@ -3,7 +3,7 @@ where_clause:
 dims: 
 created_on: 2009-04-03 23:04:39 Z
 reserved: 
-title: Policy Events for Last Week - Sample 2
+title: Policy Events for the Last 7 Days
 conditions: !ruby/object:MiqExpression
   exp:
     "after":
@@ -12,7 +12,7 @@ conditions: !ruby/object:MiqExpression
 updated_on: 2009-04-06 20:18:30 Z
 order: Ascending
 graph: 
-menu_name: Policy Events for Last Week - Sample 2
+menu_name: Policy Events for the Last 7 Days
 rpt_group: Custom
 priority: 
 col_order: 
