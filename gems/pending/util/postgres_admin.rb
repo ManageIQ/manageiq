@@ -103,12 +103,20 @@ class PostgresAdmin
   end
 
   def self.restore(opts)
-    before_restore
+    before_restore(opts)
     restore_pg_compress(opts)
   end
 
-  def self.before_restore
-    # TODO: Make sure destination DB is empty and not in use?
+  def self.before_restore(opts)
+    runcmd("psql", opts, :command => <<-SQL)
+      SELECT
+        drop_subscription
+      FROM
+        pglogical.subscription subs,
+        LATERAL pglogical.drop_subscription(subs.sub_name)
+    SQL
+  rescue AwesomeSpawn::CommandResultError
+    $log.info("MIQ(#{name}.#{__method__}) Ignoring failure to remove pglogical subscriptions ...")
   end
 
   def self.backup_compress_with_gzip
