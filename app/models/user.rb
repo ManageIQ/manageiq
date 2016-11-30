@@ -163,6 +163,11 @@ class User < ApplicationRecord
     authenticator(username).lookup_by_identity(username)
   end
 
+  def self.authorize_by_userid(userid)
+    return if userid.blank? || admin?(userid)
+    authenticator(userid).authorize_user_by_userid(userid)
+  end
+
   def logoff
     self.lastlogoff = Time.now.utc
     save
@@ -194,6 +199,10 @@ class User < ApplicationRecord
   end
 
   def admin?
+    self.class.admin?(userid)
+  end
+
+  def self.admin?(userid)
     userid == "admin"
   end
 

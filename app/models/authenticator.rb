@@ -34,9 +34,23 @@ module Authenticator
       false
     end
 
+    def authorize_user_by_userid?
+      false
+    end
+
+    def authorize_user_by_userid(userid)
+      return unless authorize_user_by_userid?
+      options = {
+        :require_user   => true,
+        :authorize_only => true
+      }
+      authenticate(userid, "", {}, options)
+    end
+
     def authenticate(username, password, request = nil, options = {})
       options = options.dup
       options[:require_user] ||= false
+      options[:authorize_only] ||= false
       fail_message = _("Authentication failed")
 
       user_or_taskid = nil
@@ -46,11 +60,11 @@ module Authenticator
 
         username = normalize_username(username)
 
-        if _authenticate(username, password, request)
+        if options[:authorize_only] || _authenticate(username, password, request)
           AuditEvent.success(audit.merge(:message => "User #{username} successfully validated by #{self.class.proper_name}"))
 
           if authorize?
-            user_or_taskid = authorize_queue(username, request)
+            user_or_taskid = authorize_queue(username, request, options)
           else
             # If role_mode == database we will only use the external system for authentication. Also, the user must exist in our database
             # otherwise we will fail authentication
@@ -205,7 +219,7 @@ module Authenticator
       config[:bind_pwd] = MiqPassword.try_encrypt(config[:bind_pwd])
     end
 
-    def authorize_queue(username, _request, *args)
+    def authorize_queue(username, _request, _options, *args)
       task = MiqTask.create(:name => "#{self.class.proper_name} User Authorization of '#{username}'", :userid => username)
       if authorize_queue?
         encrypt_ldap_password(config) if MiqLdap.using_ldap?

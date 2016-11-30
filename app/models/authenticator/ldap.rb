@@ -9,6 +9,10 @@ module Authenticator
         find_or_create_by_ldap(username)
     end
 
+    def authorize_user_by_userid?
+      true
+    end
+
     private
 
     def ldap
@@ -76,7 +80,7 @@ module Authenticator
         ldap_bind(username, password)
     end
 
-    def find_external_identity(username)
+    def find_external_identity(username, *_args)
       # Ldap will be used for authentication and role assignment
       _log.info("Bind DN: [#{config[:bind_dn]}]")
       _log.info(" User FQDN: [#{username}]")

@@ -58,7 +58,7 @@ module Authenticator
       end
     end
 
-    def find_external_identity(username)
+    def find_external_identity(username, *_args)
       # Amazon IAM will be used for authentication and role assignment
       _log.info("AWS key: [#{config[:amazon_key]}]")
       _log.info(" User: [#{username}]")
