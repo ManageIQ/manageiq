@@ -122,16 +122,20 @@ module ManagerRefresh
       filtered_attributes
     end
 
-    def fixed_dependencies
+    def fixed_attributes
       presence_validators = model_class.validators.detect { |x| x.kind_of? ActiveRecord::Validations::PresenceValidator }
       # Attributes that has to be always on the entity, so attributes making unique index of the record + attributes
       # that have presence validation
       fixed_attributes    = manager_ref
       fixed_attributes    += presence_validators.attributes unless presence_validators.blank?
+      fixed_attributes
+    end
 
+    def fixed_dependencies
+      fixed_attrs        = fixed_attributes
       fixed_dependencies = Set.new
       filtered_dependency_attributes.each do |key, value|
-        fixed_dependencies += value if fixed_attributes.include?(key)
+        fixed_dependencies += value if fixed_attrs.include?(key)
       end
       fixed_dependencies
     end
@@ -152,14 +156,14 @@ module ManagerRefresh
       # The manager_ref attributes cannot be blacklisted, otherwise we will not be able to identify the dto object. We
       # do not automatically remove attributes causing fixed dependencies, so beware that without them, you won't be
       # able to create the record.
-      self.attributes_blacklist += attributes - (manager_ref + internal_attributes)
+      self.attributes_blacklist += attributes - (fixed_attributes + internal_attributes)
     end
 
     def whitelist_attributes!(attributes)
       # The manager_ref attributes always needs to be in the white list, otherwise we will not be able to identify the
       # dto object. We do not automatically add attributes causing fixed dependencies, so beware that without them, you
       # won't be able to create the record.
-      self.attributes_whitelist += attributes + (manager_ref + internal_attributes)
+      self.attributes_whitelist += attributes + (fixed_attributes + internal_attributes)
     end
 
     def clone
