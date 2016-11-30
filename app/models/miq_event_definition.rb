@@ -38,6 +38,16 @@ class MiqEventDefinition < ApplicationRecord
   end
 
   def self.import_from_hash(event, options = {})
+    # The import is only intended to create non-projected event
+    # definitions which have a `#definition` of `nil`. The
+    # `#definition` attribute is only used for projected event
+    # definitions which are not user-defined. The message within the
+    # definition gets `eval`d, so it is critical that projected events
+    # cannot be created on import. So here any definition attribute
+    # keyed with either a string or symbol (AR accepts either) is
+    # removed from the hash.
+    event.except!("definition", :definition)
+
     status = {:class => name, :description => event["description"]}
     e = MiqEventDefinition.find_by_name(event["name"])
     msg_pfx = "Importing Event: name=[#{event["name"]}]"
