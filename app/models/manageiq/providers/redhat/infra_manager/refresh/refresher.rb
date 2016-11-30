@@ -1,9 +1,9 @@
-class ManageIQ::Providers::Redhat::InfraManager
+module ManageIQ::Providers::Redhat::InfraManager::Refresh
   class Refresher < ManageIQ::Providers::BaseManager::Refresher
     include ::EmsRefresh::Refreshers::EmsRefresherMixin
 
     def collect_inventory_for_targets(ems, targets)
-      inventory = ems.rhevm_inventory
+      inventory = inventory_from_ovirt(ems)
       raise "Invalid RHEV server ip address." if inventory.api.nil?
 
       # TODO before iterating over targets it would be good to check whether ExtMgmntSystem is part of it
@@ -64,7 +64,7 @@ class ManageIQ::Providers::Redhat::InfraManager
       log_header = format_ems_for_logging(ems)
       _log.debug "#{log_header} Parsing inventory..."
       hashes, = Benchmark.realtime_block(:parse_inventory) do
-        RefreshParser.ems_inv_to_hashes(inventory)
+        Parse::ParserBuilder.new(ems).build.ems_inv_to_hashes(inventory)
       end
       _log.debug "#{log_header} Parsing inventory...Complete"
 
@@ -73,6 +73,10 @@ class ManageIQ::Providers::Redhat::InfraManager
 
     def post_process_refresh_classes
       [::VmOrTemplate, ::Host]
+    end
+
+    def inventory_from_ovirt(ems)
+      ems.rhevm_inventory
     end
   end
 end

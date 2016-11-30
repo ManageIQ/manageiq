@@ -2,7 +2,6 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
   require_nested  :EventCatcher
   require_nested  :EventParser
   require_nested  :RefreshWorker
-  require_nested  :RefreshParser
   require_nested  :MetricsCapture
   require_nested  :MetricsCollectorWorker
   require_nested  :Host
@@ -10,7 +9,7 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
   require_nested  :ProvisionViaIso
   require_nested  :ProvisionViaPxe
   require_nested  :ProvisionWorkflow
-  require_nested  :Refresher
+  require_nested  :Refresh
   require_nested  :Template
   require_nested  :Vm
   include_concern :ApiIntegration
@@ -25,6 +24,10 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
   # that it will change.
   #
   HOT_PLUG_DIMM_SIZE = 256.megabyte.freeze
+
+  def refresher
+    Refresh::RefresherBuilder.new(self).build
+  end
 
   def self.ems_type
     @ems_type ||= "rhevm".freeze

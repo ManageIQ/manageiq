@@ -215,6 +215,10 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
     connection.close
   end
 
+  def highest_supported_api_version
+    supported_api_versions.sort.last
+  end
+
   class_methods do
     def api3_supported_features
       []
@@ -280,7 +284,6 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
       read_timeout, open_timeout = ems_timeouts(:ems_redhat, service)
       params[:timeout]      = read_timeout if read_timeout
       params[:open_timeout] = open_timeout if open_timeout
-
       const = service == "Inventory" ? OvirtInventory : Ovirt.const_get(service)
       const.new(params)
     end

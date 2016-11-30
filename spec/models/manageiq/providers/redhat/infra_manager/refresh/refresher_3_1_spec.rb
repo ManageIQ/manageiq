@@ -1,4 +1,4 @@
-describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
+describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
   before(:each) do
     guid, server, zone = EvmSpecHelper.create_guid_miq_server_zone
     @ems = FactoryGirl.create(:ems_redhat, :zone => zone, :hostname => "192.168.252.230", :ipaddress => "192.168.252.230", :port => 443)
