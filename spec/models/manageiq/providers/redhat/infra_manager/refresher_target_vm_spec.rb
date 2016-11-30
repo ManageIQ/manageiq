@@ -10,16 +10,6 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
                                   :ems_id  => @ems.id,
                                   :name    => "Default")
 
-    @dc = FactoryGirl.create(:datacenter,
-                             :ems_ref => "/api/datacenters/00000001-0001-0001-0001-0000000002c0",
-                             :name    => "Default",
-                             :uid_ems => "00000001-0001-0001-0001-0000000002c0")
-    @dc.with_relationship_type("ems_metadata") { @dc.add_cluster @cluster }
-
-    @rp = FactoryGirl.create(:resource_pool,
-                             :ems_id  => @ems.id,
-                             :uid_ems => "00000002-0002-0002-0002-0000000001e9_respool")
-    @cluster.with_relationship_type("ems_metadata") { @cluster.add_child @rp }
     allow(@ems).to receive(:supported_api_versions).and_return([3, 4])
   end
 
@@ -42,7 +32,6 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
                             :storage               => storage,
                             :storages              => [storage],
                             :hardware              => hardware)
-    vm.with_relationship_type("ems_metadata") { vm.parent = @rp }
 
     VCR.use_cassette("#{described_class.name.underscore}_target_vm") do
       EmsRefresh.refresh(vm)
@@ -51,7 +40,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
     assert_table_counts
     assert_vm(vm, storage)
     assert_vm_rels(vm, hardware, storage)
-    assert_cluster
+    assert_cluster(vm)
     assert_storage(storage, vm)
   end
 
@@ -61,7 +50,6 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
                             :uid_ems               => "4f6dd4c3-5241-494f-8afc-f1c67254bf77",
                             :ems_cluster           => @cluster,
                             :ems_ref               => "/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77")
-    vm.with_relationship_type("ems_metadata") { vm.parent = @rp }
 
     VCR.use_cassette("#{described_class.name.underscore}_target_new_vm") do
       EmsRefresh.refresh(vm)
@@ -74,7 +62,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
 
     hardware = Hardware.find_by(:vm_or_template_id => vm.id)
     assert_vm_rels(vm, hardware, storage)
-    assert_cluster
+    assert_cluster(vm)
     assert_storage(storage, vm)
   end
 
@@ -89,9 +77,10 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
     expect(Hardware.count).to eq(1)
     expect(OperatingSystem.count).to eq(1)
     expect(Snapshot.count).to eq(1)
+    expect(Datacenter.count).to eq(1)
 
-    expect(Relationship.count).to eq(6)
-    expect(MiqQueue.count).to eq(3)
+    expect(Relationship.count).to eq(9)
+    expect(MiqQueue.count).to eq(4)
   end
 
   def assert_vm(vm, storage)
@@ -164,7 +153,6 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
 
     expect(vm.ext_management_system).to eq(@ems)
     expect(vm.ems_cluster).to eq(@cluster)
-    expect(vm.parent_resource_pool).to eq(@rp)
     expect(vm.storage).to eq(storage)
   end
 
@@ -303,7 +291,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
     )
   end
 
-  def assert_cluster
+  def assert_cluster(vm)
     @cluster.reload
     expect(@cluster).to have_attributes(
       :ems_ref                 => "/api/clusters/00000002-0002-0002-0002-0000000001e9",
@@ -321,9 +309,9 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
       :type                    => nil
     )
 
-    @rp.reload
-    expect(@cluster.default_resource_pool).to eq(@rp)
-    expect(@rp).to have_attributes(
+    rp = vm.parent_resource_pool
+    expect(@cluster.default_resource_pool).to eq(rp)
+    expect(rp).to have_attributes(
       :ems_ref               => nil,
       :ems_ref_obj           => nil,
       :uid_ems               => "00000002-0002-0002-0002-0000000001e9_respool",
@@ -342,9 +330,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
       :vapp                  => nil
     )
 
-    @dc.reload
-    expect(@cluster.parent_datacenter).to eq(@dc)
-    expect(@dc).to have_attributes(
+    expect(vm.parent_datacenter).to have_attributes(
       :name    => "Default",
       :ems_ref => "/api/datacenters/00000001-0001-0001-0001-0000000002c0",
       :uid_ems => "00000001-0001-0001-0001-0000000002c0",
