@@ -3,74 +3,34 @@
 miqHttpInject(angular.module('containerLiveDashboard', ['ui.bootstrap', 'patternfly', 'patternfly.charts']))
   .controller('containerLiveDashboardController', ['$scope', 'pfViewUtils', '$http', '$interval', '$timeout', '$window',
   function ($scope, pfViewUtils, $http, $interval, $timeout, $window) {
-    var tenant = '_ops';
-
-    $scope.filtersText = '';
-    $scope.definitions = [];
-    $scope.items = [];
-    $scope.tags = {};
-    $scope.tagsLoaded = false;
-
-    $scope.applied = false;
-    $scope.filterChanged = true;
-    $scope.viewGraph = false;
-    $scope.chartData = {};
-
-    $scope.timeRanges = [
-      {title: _("Hours"), value: 1},
-      {title: _("Days"), value: 24},
-      {title: _("Weeks"), value: 168},
-      {title: _("Months"), value: 672}
-    ];
-
-    $scope.timeFilter = {
-      time_range: 24,
-      range_count: 1,
-      date: moment()
-    };
-
-    $scope.dateOptions = {
-      format: __('MM/DD/YYYY HH:mm')
-    };
-
-    $scope.countDecrement = function() {
-      if ($scope.timeFilter.range_count > 1) {
-        $scope.timeFilter.range_count--;
-      }
-    };
-
-    $scope.countIncrement = function() {
-      $scope.timeFilter.range_count++;
-    };
-
-    // Graphs
-
-    $scope.chartConfig = {
-      legend       : { show: false },
-      chartId      : 'adHocMetricsChart',
-      point        : { r: 1 },
-      axis         : {
-        x: {
-          tick: {
-            count: 25,
-            format: function (value) { return moment(value).format(__('MM/DD/YYYY HH:mm')); }
-          }},
-        y: {
-          tick: {
-            count: 4,
-            format: function (value) { return numeral(value).format('0,0.00a'); }
-          }}
-      },
-      setAreaChart : true,
-      subchart: {
-        show: true
-      }
-    };
+    $scope.tenant = '_ops';
 
     // get the pathname and remove trailing / if exist
     var pathname = $window.location.pathname.replace(/\/$/, '');
     var id = '/' + (/^\/[^\/]+\/(\d+)$/.exec(pathname)[1]);
-    var url = '/container_dashboard/data' + id + '/?live=true&tenant=' + tenant;
+
+    var initialization = function() {
+      $scope.filtersText = '';
+      $scope.definitions = [];
+      $scope.items = [];
+      $scope.tags = {};
+      $scope.tagsLoaded = false;
+
+      $scope.applied = false;
+      $scope.filterChanged = true;
+      $scope.viewGraph = false;
+      $scope.chartData = {};
+
+      $scope.filterConfig.fields = [];
+      $scope.filterConfig.resultsCount = $scope.items.length;
+      $scope.filterConfig.appliedFilters = [];
+      $scope.filterConfig.onFilterChange = filterChange;
+
+      $scope.toolbarConfig.filterConfig = $scope.filterConfig;
+      $scope.toolbarConfig.actionsConfig = $scope.actionsConfig;
+
+      $scope.url = '/container_dashboard/data' + id + '/?live=true&tenant=' + $scope.tenant;
+    }
 
     var filterChange = function (filters) {
       $scope.filterChanged = true;
@@ -80,13 +40,6 @@ miqHttpInject(angular.module('containerLiveDashboard', ['ui.bootstrap', 'pattern
         $scope.filtersText += filter.title + " : " + filter.value + "\n";
         $scope.tags[filter.id] = filter.value;
       });
-    };
-
-    $scope.filterConfig = {
-      fields: [],
-      resultsCount: $scope.items.length,
-      appliedFilters: [],
-      onFilterChange: filterChange
     };
 
     var selectionChange = function() {
@@ -115,30 +68,16 @@ miqHttpInject(angular.module('containerLiveDashboard', ['ui.bootstrap', 'pattern
       $scope.refresh();
     };
 
-    $scope.actionsConfig = {
-      actionsInclude: true
-    };
+    var doRefreshTenant = function (action) {
+      $scope.tenant = action.tenant;
 
-    $scope.toolbarConfig = {
-      filterConfig: $scope.filterConfig,
-      actionsConfig: $scope.actionsConfig
-    };
-
-    $scope.graphToolbarConfig = {
-      actionsConfig: $scope.actionsConfig
-    };
-
-    $scope.itemSelected = false;
-
-    $scope.listConfig = {
-      selectionMatchProp: 'id',
-      showSelectBox: true,
-      useExpandingRows: true,
-      onCheckBoxChange: selectionChange
+      initialization();
+      filterChange();
+      getMetricTags();
     };
 
     var getMetricTags = function() {
-      $http.get(url + '&query=metric_tags').success(function(response) {
+      $http.get($scope.url + '&query=metric_tags').success(function(response) {
         $scope.tagsLoaded = true;
         if (response && angular.isArray(response.metric_tags)) {
           response.metric_tags.sort();
@@ -162,7 +101,7 @@ miqHttpInject(angular.module('containerLiveDashboard', ['ui.bootstrap', 'pattern
     var getLatestData = function(item) {
       var params = '&query=get_data&metric_id=' + item.id + '&limit=5&order=DESC';
 
-      $http.get(url + params).success(function (response) {
+      $http.get($scope.url + params).success(function (response) {
         'use strict';
         if (response.error) {
           showErrorMessage(response.error);
@@ -174,9 +113,15 @@ miqHttpInject(angular.module('containerLiveDashboard', ['ui.bootstrap', 'pattern
             item.lastValues[d.timestamp] = numeral(d.value).format('0,0.00a');
           });
 
-          var lastValue = data[0].value;
-          item.last_value = numeral(lastValue).format('0,0.00a');
-          item.last_timestamp = data[0].timestamp;
+          if (data.length > 0) {
+            var lastValue = data[0].value;
+            item.last_value = numeral(lastValue).format('0,0.00a');
+            item.last_timestamp = data[0].timestamp;
+          } else {
+            item.last_value = '-';
+            item.last_timestamp = '-';
+          }
+
           if (data.length > 1) {
             var prevValue = data[1].value;
             if (angular.isNumber(lastValue) && angular.isNumber(prevValue)) {
@@ -198,7 +143,7 @@ miqHttpInject(angular.module('containerLiveDashboard', ['ui.bootstrap', 'pattern
     $scope.refresh = function() {
       $scope.loadingMetrics = true;
       var _tags = $scope.tags != {} ? '&tags=' + JSON.stringify($scope.tags) : '';
-      $http.get(url + '&query=metric_definitions' + _tags).success(function (response) {
+      $http.get($scope.url + '&query=metric_definitions' + _tags).success(function (response) {
         'use strict';
         $scope.loadingMetrics = false;
         if (response.error) {
@@ -222,10 +167,10 @@ miqHttpInject(angular.module('containerLiveDashboard', ['ui.bootstrap', 'pattern
       var diff = $scope.timeFilter.time_range * $scope.timeFilter.range_count * 60 * 60 * 1000; // time_range is in hours
       var starts = ends - diff;
       var bucket_duration = parseInt(diff / 1000 / 200); // bucket duration is in seconds
-      var params = '&query=get_data&metric_id=' + metric_id + '&ends=' + ends + 
+      var params = '&query=get_data&metric_id=' + metric_id + '&ends=' + ends +
                    '&starts=' + starts+ '&bucket_duration=' + bucket_duration + 's';
 
-      $http.get(url + params).success(function(response) {
+      $http.get($scope.url + params).success(function(response) {
         'use strict';
         if (response.error) {
           showErrorMessage(response.error);
@@ -263,7 +208,92 @@ miqHttpInject(angular.module('containerLiveDashboard', ['ui.bootstrap', 'pattern
         $scope.refresh_graph(metric_id, i);
       }
     };
-    
+
+    $scope.timeRanges = [
+      {title: _("Hours"), value: 1},
+      {title: _("Days"), value: 24},
+      {title: _("Weeks"), value: 168},
+      {title: _("Months"), value: 672}
+    ];
+
+    $scope.timeFilter = {
+      time_range: 24,
+      range_count: 1,
+      date: moment()
+    };
+
+    $scope.dateOptions = {
+      format: __('MM/DD/YYYY HH:mm')
+    };
+
+    $scope.countDecrement = function() {
+      if ($scope.timeFilter.range_count > 1) {
+        $scope.timeFilter.range_count--;
+      }
+    };
+
+    $scope.countIncrement = function() {
+      $scope.timeFilter.range_count++;
+    };
+
+    // Graphs
+    $scope.chartConfig = {
+      legend       : { show: false },
+      chartId      : 'adHocMetricsChart',
+      point        : { r: 1 },
+      axis         : {
+        x: {
+          tick: {
+            count: 25,
+            format: function (value) { return moment(value).format(__('MM/DD/YYYY HH:mm')); }
+          }},
+        y: {
+          tick: {
+            count: 4,
+            format: function (value) { return numeral(value).format('0,0.00a'); }
+          }}
+      },
+      setAreaChart : true,
+      subchart: {
+        show: true
+      }
+    };
+
+    $scope.actionsConfig = {
+      actionsInclude: true,
+      moreActions: [
+        {
+          name: 'System',
+          tenant: '_system',
+          title: __("Use the System Tenant Metrics"),
+          actionFn: doRefreshTenant
+        },
+        {
+          name: 'Ops',
+          tenant: '_ops',
+          title: __("Use the Ops Tenant Metrics"),
+          actionFn: doRefreshTenant
+        }
+      ]
+    };
+
+    $scope.graphToolbarConfig = {
+      actionsConfig: $scope.actionsConfig
+    };
+
+    $scope.itemSelected = false;
+
+    $scope.listConfig = {
+      selectionMatchProp: 'id',
+      showSelectBox: true,
+      useExpandingRows: true,
+      onCheckBoxChange: selectionChange
+    };
+
+    $scope.filterConfig = {};
+    $scope.toolbarConfig = {};
+
+    initialization();
     getMetricTags();
   }
 ]);
