@@ -67,7 +67,7 @@ module Api
       if CustomAttribute::ALLOWED_API_VALUE_TYPES.include? attribute["field_type"]
         attribute["value"] = attribute.delete("field_type").safe_constantize.parse(attribute["value"])
       end
-      attribute["section"] = "metadata" unless @req.action == "edit"
+      attribute["section"] ||= "metadata" unless @req.action == "edit"
       attribute
     rescue => err
       raise BadRequestError, "Invalid provider custom attributes specified - #{err}"

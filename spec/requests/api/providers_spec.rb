@@ -183,11 +183,11 @@ describe "Providers API" do
       api_basic_authorize action_identifier(:providers, :edit)
 
       run_post(provider_ca_url, gen_request(:add, [{"name" => "name1", "value" => "value1"},
-                                                   {"name" => "name2", "value" => "value2"}]))
+                                                   {"name" => "name2", "value" => "value2", "section" => "section2"}]))
       expected = {
         "results" => a_collection_containing_exactly(
           a_hash_including("name" => "name1", "value" => "value1", "section" => "metadata"),
-          a_hash_including("name" => "name2", "value" => "value2", "section" => "metadata")
+          a_hash_including("name" => "name2", "value" => "value2", "section" => "section2")
         )
       }
       expect(response).to have_http_status(:ok)
