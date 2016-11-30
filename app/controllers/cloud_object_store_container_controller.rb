@@ -6,6 +6,7 @@ class CloudObjectStoreContainerController < ApplicationController
 
   include Mixins::GenericListMixin
   include Mixins::GenericShowMixin
+  include Mixins::GenericSessionMixin
 
   def breadcrumb_name(_model)
     ui_lookup(:tables => "cloud_object_store_container")
@@ -20,26 +21,6 @@ class CloudObjectStoreContainerController < ApplicationController
 
   def self.display_methods
     %w(cloud_object_store_objects)
-  end
-
-  private
-
-  def get_session_data
-    @title      = _("Cloud Object Store Containers")
-    @layout     = "cloud_object_store_container"
-    @lastaction = session[:cloud_object_store_container_lastaction]
-    @display    = session[:cloud_object_store_container_display]
-    @filters    = session[:cloud_object_store_container_filters]
-    @catinfo    = session[:cloud_object_store_container_catinfo]
-    @showtype   = session[:cloud_object_store_container_showtype]
-  end
-
-  def set_session_data
-    session[:cloud_object_store_container_lastaction] = @lastaction
-    session[:cloud_object_store_container_display]    = @display unless @display.nil?
-    session[:cloud_object_store_container_filters]    = @filters
-    session[:cloud_object_store_container_catinfo]    = @catinfo
-    session[:cloud_object_store_container_showtype]   = @showtype
   end
 
   menu_section :ost
