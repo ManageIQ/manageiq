@@ -213,6 +213,136 @@ describe ManagerRefresh::SaveInventory do
             })
         end
       end
+
+      context 'with the existing data in the DB' do
+        it 'updates existing records with a graph of DtoCollections' do
+          # Fill the mocked data in the DB
+          initialize_mocked_records
+
+          # Assert that the mocked data in the DB are correct
+          assert_full_dto_collections_graph
+
+          assert_all_records_match_hashes(
+            [Vm.all, @ems.vms],
+            {
+              :ems_ref  => "vm_ems_ref_1",
+              :name     => "vm_name_1",
+              :location => "host_10_10_10_1.com",
+            }, {
+              :ems_ref  => "vm_ems_ref_12",
+              :name     => "vm_name_12",
+              :location => "host_10_10_10_1.com",
+            }, {
+              :ems_ref  => "vm_ems_ref_2",
+              :name     => "vm_name_2",
+              :location => "host_10_10_10_2.com",
+            }, {
+              :ems_ref  => "vm_ems_ref_4",
+              :name     => "vm_name_4",
+              :location => "default_value_unknown",
+            })
+
+          # Now save the records using DtoCollections
+          # Fill the DtoCollections with data, that have a modified name
+          initialize_data_and_dto_collections
+          add_data_to_dto_collection(@data[:vms],
+                                     @vm_data_1.merge(:name => "vm_name_1_changed"),
+                                     @vm_data_12.merge(:name => "vm_name_12_changed"),
+                                     @vm_data_2.merge(:name => "vm_name_2_changed"),
+                                     @vm_data_4.merge(:name => "vm_name_4_changed"),
+                                     vm_data(5))
+          add_data_to_dto_collection(@data[:miq_templates], @image_data_1, @image_data_2, @image_data_3)
+          add_data_to_dto_collection(@data[:key_pairs], @key_pair_data_1, @key_pair_data_12, @key_pair_data_2, @key_pair_data_3)
+          add_data_to_dto_collection(@data[:hardwares], @hardware_data_1, @hardware_data_2, @hardware_data_12)
+          add_data_to_dto_collection(@data[:disks],
+                                     @disk_data_1.merge(:device_type => "nvme_ssd_1"),
+                                     @disk_data_12.merge(:device_type => "nvme_ssd_12"),
+                                     @disk_data_13.merge(:device_type => "nvme_ssd_13"),
+                                     @disk_data_2.merge(:device_type => "nvme_ssd_2"))
+          add_data_to_dto_collection(@data[:networks], @public_network_data_1, @public_network_data_12,
+                                     @public_network_data_13, @public_network_data_14, @public_network_data_2)
+          add_data_to_dto_collection(@data[:flavors], @flavor_data_1, @flavor_data_2, @flavor_data_3)
+
+          # Invoke the DtoCollections saving
+          ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
+
+          # Assert saved data
+          assert_full_dto_collections_graph
+          # Assert that saved data have the updated values, checking id to make sure the original records are updated
+          assert_all_records_match_hashes(
+            [Vm.all, @ems.vms],
+            {
+              :id       => @vm1.id,
+              :ems_ref  => "vm_ems_ref_1",
+              :name     => "vm_name_1_changed",
+              :location => "host_10_10_10_1.com",
+            }, {
+              :id       => @vm12.id,
+              :ems_ref  => "vm_ems_ref_12",
+              :name     => "vm_name_12_changed",
+              :location => "host_10_10_10_1.com",
+            }, {
+              :id       => @vm2.id,
+              :ems_ref  => "vm_ems_ref_2",
+              :name     => "vm_name_2_changed",
+              :location => "host_10_10_10_2.com",
+            }, {
+              :id       => @vm4.id,
+              :ems_ref  => "vm_ems_ref_4",
+              :name     => "vm_name_4_changed",
+              :location => "default_value_unknown",
+            }, {
+              :id       => anything,
+              :ems_ref  => "vm_ems_ref_5",
+              :name     => "vm_name_5",
+              :location => "vm_location_5",
+            })
+
+          assert_all_records_match_hashes(
+            [Disk.all, @ems.disks],
+            {
+              :id          => @disk1.id,
+              :hardware    => @hardware1,
+              :device_type => "nvme_ssd_1"
+            }, {
+              :id          => @disk12.id,
+              :hardware    => @hardware12,
+              :device_type => "nvme_ssd_12"
+            }, {
+              :id          => @disk13.id,
+              :hardware    => @hardware12,
+              :device_type => "nvme_ssd_13"
+            }, {
+              :id          => @disk2.id,
+              :hardware    => @hardware2,
+              :device_type => "nvme_ssd_2"
+            })
+
+          vm1  = Vm.find_by(:ems_ref => "vm_ems_ref_1")
+          vm12 = Vm.find_by(:ems_ref => "vm_ems_ref_12")
+          vm2  = Vm.find_by(:ems_ref => "vm_ems_ref_2")
+
+          # Check that all records were only updated
+          expect(vm1.genealogy_parent.id).to eq(@image1.id)
+          expect(vm12.genealogy_parent.id).to eq(@image1.id)
+          expect(vm2.genealogy_parent.id).to eq(@image2.id)
+          expect(vm1.hardware.id).to eq(@hardware1.id)
+          expect(vm12.hardware.id).to eq(@hardware12.id)
+          expect(vm2.hardware.id).to eq(@hardware2.id)
+          expect(vm1.hardware.networks.pluck(:id)).to match_array([@public_network1.id])
+          expect(vm12.hardware.networks.pluck(:id)).to match_array([@public_network12.id, @public_network13.id])
+          expect(vm2.hardware.networks.pluck(:id)).to match_array([@public_network2.id])
+          expect(vm1.hardware.disks.pluck(:id)).to match_array([@disk1.id])
+          expect(vm12.hardware.disks.pluck(:id)).to match_array([@disk12.id, @disk13.id])
+          expect(vm2.hardware.disks.pluck(:id)).to match_array([@disk2.id])
+          expect(vm1.flavor.id).to eq(@flavor1.id)
+          expect(vm12.flavor.id).to eq(@flavor1.id)
+          expect(vm2.flavor.id).to eq(@flavor2.id)
+          expect(vm1.key_pairs.pluck(:id)).to match_array([@key_pair1.id])
+          expect(vm12.key_pairs.pluck(:id)).to match_array([@key_pair1.id, @key_pair12.id])
+          expect(vm2.key_pairs.pluck(:id)).to match_array([@key_pair2.id])
+        end
+      end
     end
   end
 
@@ -388,5 +518,134 @@ describe ManagerRefresh::SaveInventory do
     @public_network_data_2  = public_network_data(2).merge(
       :hardware => @data[:hardwares].lazy_find(vm_data(2)[:ems_ref]),
     )
+  end
+
+  def initialize_mocked_records
+    @flavor1 = FactoryGirl.create(:flavor, flavor_data(1).merge(:ext_management_system => @ems))
+    @flavor2 = FactoryGirl.create(:flavor, flavor_data(2).merge(:ext_management_system => @ems))
+    @flavor3 = FactoryGirl.create(:flavor, flavor_data(3).merge(:ext_management_system => @ems))
+
+    @image1 = FactoryGirl.create(:miq_template, image_data(1).merge(:ext_management_system => @ems))
+    @image2 = FactoryGirl.create(:miq_template, image_data(2).merge(:ext_management_system => @ems))
+    @image3 = FactoryGirl.create(:miq_template, image_data(3).merge(:ext_management_system => @ems))
+
+    @image_hardware1 = FactoryGirl.create(
+      :hardware,
+      image_hardware_data(1).merge(
+        :guest_os       => "linux_generic_1",
+        :vm_or_template => @image1
+      ))
+    @image_hardware2 = FactoryGirl.create(
+      :hardware,
+      image_hardware_data(2).merge(
+        :guest_os       => "linux_generic_2",
+        :vm_or_template => @image2
+      ))
+    @image_hardware3 = FactoryGirl.create(
+      :hardware,
+      image_hardware_data(3).merge(
+        :guest_os       => "linux_generic_3",
+        :vm_or_template => @image3
+      ))
+
+    @key_pair1  = FactoryGirl.create(:auth_key_pair_cloud, key_pair_data(1).merge(:resource => @ems))
+    @key_pair12 = FactoryGirl.create(:auth_key_pair_cloud, key_pair_data(12).merge(:resource => @ems))
+    @key_pair2  = FactoryGirl.create(:auth_key_pair_cloud, key_pair_data(2).merge(:resource => @ems))
+    @key_pair3  = FactoryGirl.create(:auth_key_pair_cloud, key_pair_data(3).merge(:resource => @ems))
+
+    @vm1  = FactoryGirl.create(
+      :vm_cloud,
+      vm_data(1).merge(
+        :flavor                => @flavor_1,
+        :genealogy_parent      => @image1,
+        :key_pairs             => [@key_pair1],
+        :location              => 'host_10_10_10_1.com',
+        :ext_management_system => @ems,
+      ))
+    @vm12 = FactoryGirl.create(
+      :vm_cloud,
+      vm_data(12).merge(
+        :flavor                => @flavor1,
+        :genealogy_parent      => @image1,
+        :key_pairs             => [@key_pair1, @key_pair12],
+        :location              => 'host_10_10_10_1.com',
+        :ext_management_system => @ems,
+      ))
+    @vm2  = FactoryGirl.create(
+      :vm_cloud,
+      vm_data(2).merge(
+        :flavor                => @flavor2,
+        :genealogy_parent      => @image2,
+        :key_pairs             => [@key_pair2],
+        :location              => 'host_10_10_10_2.com',
+        :ext_management_system => @ems,
+      ))
+    @vm4  = FactoryGirl.create(
+      :vm_cloud,
+      vm_data(4).merge(
+        :location              => 'default_value_unknown',
+        :ext_management_system => @ems))
+
+    @hardware1  = FactoryGirl.create(
+      :hardware,
+      hardware_data(1).merge(
+        :guest_os       => @image1.hardware.guest_os,
+        :vm_or_template => @vm1
+      ))
+    @hardware12 = FactoryGirl.create(
+      :hardware,
+      hardware_data(12).merge(
+        :guest_os       => @image1.hardware.guest_os,
+        :vm_or_template => @vm12
+      ))
+    @hardware2  = FactoryGirl.create(
+      :hardware,
+      hardware_data(2).merge(
+        :guest_os       => @image2.hardware.guest_os,
+        :vm_or_template => @vm2
+      ))
+
+    @disk1  = FactoryGirl.create(
+      :disk,
+      disk_data(1).merge(
+        :hardware => @hardware1,
+      ))
+    @disk12 = FactoryGirl.create(
+      :disk,
+      disk_data(12).merge(
+        :hardware => @hardware12,
+      ))
+    @disk13 = FactoryGirl.create(
+      :disk,
+      disk_data(13).merge(
+        :hardware => @hardware12,
+      ))
+    @disk2  = FactoryGirl.create(
+      :disk,
+      disk_data(2).merge(
+        :hardware => @hardware2,
+      ))
+
+    @public_network1  = FactoryGirl.create(
+      :network,
+      public_network_data(1).merge(
+        :hardware => @hardware1,
+      ))
+    @public_network12 = FactoryGirl.create(
+      :network,
+      public_network_data(12).merge(
+        :hardware => @hardware12,
+      ))
+    @public_network13 = FactoryGirl.create(
+      :network,
+      public_network_data(13).merge(
+        :hardware    => @hardware12,
+        :description => "public_2"
+      ))
+    @public_network2  = FactoryGirl.create(
+      :network,
+      public_network_data(2).merge(
+        :hardware => @hardware2,
+      ))
   end
 end
