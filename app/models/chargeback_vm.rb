@@ -45,18 +45,6 @@ class ChargebackVm < Chargeback
     build_results_for_report_chargeback(options)
   end
 
-  def self.get_extra_fields(perf)
-    {
-      "vm_id"         => perf.resource_id,
-      "vm_name"       => perf.resource_name,
-      "vm_uid"        => perf.resource.ems_ref,
-      "vm_guid"       => perf.resource.try(:guid),
-      "owner_name"    => vm_owner(perf),
-      "provider_name" => perf.parent_ems.try(:name),
-      "provider_uid"  => perf.parent_ems.try(:guid)
-    }
-  end
-
   def self.where_clause(records, options)
     scope = records.where(:resource_type => "VmOrTemplate")
     if options[:tag] && (@report_user.nil? || !@report_user.self_service?)
@@ -142,5 +130,17 @@ class ChargebackVm < Chargeback
           raise _("must provide options :owner or :tag")
         end
       end
+  end
+
+  private
+
+  def init_extra_fields(perf)
+    self.vm_id         = perf.resource_id
+    self.vm_name       = perf.resource_name
+    self.vm_uid        = perf.resource.ems_ref
+    self.vm_guid       = perf.resource.try(:guid)
+    self.owner_name    = self.class.vm_owner(perf)
+    self.provider_name = perf.parent_ems.try(:name)
+    self.provider_uid  = perf.parent_ems.try(:guid)
   end
 end # class Chargeback

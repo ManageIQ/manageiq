@@ -98,12 +98,12 @@ class Chargeback < ActsAsArModel
 
   def initialize(options, metric_rollup_record)
     @options = options
+    super()
     if @options[:groupby_tag].present?
-      super()
       classification = self.class.classification_for_perf(metric_rollup_record)
       self.tag_name = classification.present? ? classification.description : _('<Empty>')
     else
-      super(self.class.get_extra_fields(metric_rollup_record))
+      init_extra_fields(metric_rollup_record)
     end
     self.start_date, self.end_date, self.display_range = options.report_step_range(metric_rollup_record.timestamp)
     self.interval_name = options.interval

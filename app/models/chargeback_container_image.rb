@@ -61,17 +61,6 @@ class ChargebackContainerImage < Chargeback
     @data_index.fetch_path(:container_project, :by_container_id, perf.resource_id)
   end
 
-  def self.get_extra_fields(perf)
-    {
-      "project_name"  => project(perf).name,
-      "image_name"    => image(perf).try(:full_name) || _("Deleted"), # until image archiving is implemented
-      "project_uid"   => project(perf).ems_ref,
-      "provider_name" => perf.parent_ems.try(:name),
-      "provider_uid"  => perf.parent_ems.try(:name),
-      "archived"      => project(perf).archived? ? _("Yes") : _("No")
-    }
-  end
-
   def self.where_clause(records, _options)
     records.where(:resource_type => Container.name, :resource_id => @containers.pluck(:id))
   end
@@ -94,5 +83,16 @@ class ChargebackContainerImage < Chargeback
       "net_io_used_metric"    => {:grouping => [:total]},
       "total_cost"            => {:grouping => [:total]}
     }
+  end
+
+  private
+
+  def init_extra_fields(perf)
+    self.project_name  = self.class.project(perf).name
+    self.image_name    = self.class.image(perf).try(:full_name) || _('Deleted') # until image archiving is implemented
+    self.project_uid   = self.class.project(perf).ems_ref
+    self.provider_name = perf.parent_ems.try(:name)
+    self.provider_uid  = perf.parent_ems.try(:name)
+    self.archived      = self.class.project(perf).archived? ? _('Yes') : _('No')
   end
 end # class ChargebackContainerImage
