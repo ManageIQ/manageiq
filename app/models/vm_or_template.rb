@@ -1534,12 +1534,12 @@ class VmOrTemplate < ApplicationRecord
     allocated_disk_storage.to_i + ram_size_in_bytes
   end
 
-  def used_storage(include_ram = true, check_state = false)
-    used_disk_storage.to_i + (include_ram ? ram_size_in_bytes(check_state) : 0)
+  def used_storage
+    used_disk_storage.to_i + ram_size_in_bytes
   end
 
-  def used_storage_by_state(include_ram = true)
-    used_storage(include_ram, true)
+  def used_storage_by_state
+    used_disk_storage.to_i + ram_size_in_bytes_by_state
   end
 
   def uncommitted_storage
@@ -1550,20 +1550,20 @@ class VmOrTemplate < ApplicationRecord
     hardware.nil? ? false : hardware.disks.any? { |d| d.disk_type == 'thin' }
   end
 
-  def ram_size(check_state = false)
-    hardware.nil? || (check_state && state != 'on') ? 0 : hardware.memory_mb
+  def ram_size
+    hardware.try(:memory_mb) || 0
   end
 
   def ram_size_by_state
-    ram_size(true)
+    state == 'on' ? ram_size : 0
   end
 
-  def ram_size_in_bytes(check_state = false)
-    ram_size(check_state).to_i * 1.megabyte
+  def ram_size_in_bytes
+    ram_size * 1.megabyte
   end
 
   def ram_size_in_bytes_by_state
-    ram_size_in_bytes(true)
+    ram_size_by_state * 1.megabyte
   end
 
   alias_method :mem_cpu, :ram_size
