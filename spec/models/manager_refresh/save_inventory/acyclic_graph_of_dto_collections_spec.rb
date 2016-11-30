@@ -343,6 +343,78 @@ describe ManagerRefresh::SaveInventory do
           expect(vm2.key_pairs.pluck(:id)).to match_array([@key_pair2.id])
         end
       end
+
+      context "lazy_find vs find" do
+        before :each do
+          # Initialize the DtoCollections
+          @data             = {}
+          @data[:vms]       = ::ManagerRefresh::DtoCollection.new(
+            ManageIQ::Providers::CloudManager::Vm,
+            :parent      => @ems,
+            :association => :vms)
+          @data[:hardwares] = ::ManagerRefresh::DtoCollection.new(
+            Hardware,
+            :parent      => @ems,
+            :association => :hardwares,
+            :manager_ref => [:vm_or_template])
+        end
+
+        it "misses relation using find and loading data in a wrong order" do
+          # Load data into DtoCollections in wrong order, we are accessing @data[:vms] using find before we filled it
+          # with data
+          @vm_data_1       = vm_data(1)
+          @hardware_data_1 = hardware_data(1).merge(
+            :vm_or_template => @data[:vms].find(vm_data(1)[:ems_ref])
+          )
+
+          add_data_to_dto_collection(@data[:vms], @vm_data_1)
+          add_data_to_dto_collection(@data[:hardwares], @hardware_data_1)
+
+          # Invoke the DtoCollections saving
+          ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
+
+          # Assert saved data
+          vm1 = Vm.find_by(:ems_ref => "vm_ems_ref_1")
+          expect(vm1.hardware).to eq(nil)
+        end
+
+        it "has a relation using find and loading data in a right order" do
+          # Load data into DtoCollections in a right order, we are accessing @data[:vms] using find when the data are present
+          @vm_data_1 = vm_data(1)
+          add_data_to_dto_collection(@data[:vms], @vm_data_1)
+
+          @hardware_data_1 = hardware_data(1).merge(
+            :vm_or_template => @data[:vms].find(vm_data(1)[:ems_ref])
+          )
+          add_data_to_dto_collection(@data[:hardwares], @hardware_data_1)
+
+          # Invoke the DtoCollections saving
+          ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
+
+          # Assert saved data
+          vm1 = Vm.find_by(:ems_ref => "vm_ems_ref_1")
+          expect(vm1.hardware.virtualization_type).to eq("virtualization_type_1")
+        end
+
+        it "has a relation using lazy_find and loading data in a wrong order" do
+          # Using lazy_find, it doesn't matter in which order we load data into dto_collections. The lazy relation
+          # is evaluated before saving, all DtoCollections have data loaded at that time.
+          @vm_data_1       = vm_data(1)
+          @hardware_data_1 = hardware_data(1).merge(
+            :vm_or_template => @data[:vms].lazy_find(vm_data(1)[:ems_ref])
+          )
+
+          add_data_to_dto_collection(@data[:vms], @vm_data_1)
+          add_data_to_dto_collection(@data[:hardwares], @hardware_data_1)
+
+          # Invoke the DtoCollections saving
+          ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
+
+          # Assert saved data
+          vm1 = Vm.find_by(:ems_ref => "vm_ems_ref_1")
+          expect(vm1.hardware.virtualization_type).to eq("virtualization_type_1")
+        end
+      end
     end
   end
 
