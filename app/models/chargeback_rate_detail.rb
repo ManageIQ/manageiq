@@ -21,11 +21,11 @@ class ChargebackRateDetail < ApplicationRecord
 
   attr_accessor :hours_in_interval
 
-  def charge(relevant_fields, chargeback_fields_present, metric_rollup_records, hours_in_interval)
+  def charge(relevant_fields, consumption)
     result = {}
     if (relevant_fields & [metric_keys[0], cost_keys[0]]).present?
-      metric_value, cost = metric_and_cost_by(metric_rollup_records, hours_in_interval)
-      if !chargeback_fields_present && fixed?
+      metric_value, cost = metric_and_cost_by(consumption)
+      if !consumption.chargeback_fields_present && fixed?
         cost = 0
       end
       metric_keys.each { |field| result[field] = metric_value }
@@ -34,22 +34,12 @@ class ChargebackRateDetail < ApplicationRecord
     result
   end
 
-  def max_of_metric_from(metric_rollup_records)
-    metric_rollup_records.map(&metric.to_sym).max
-  end
-
-  def avg_of_metric_from(metric_rollup_records)
-    metric_sum = metric_rollup_records.sum(&metric.to_sym)
-    metric_sum / @hours_in_interval
-  end
-
-  def metric_value_by(metric_rollup_records)
+  def metric_value_by(consumption)
     return 1.0 if fixed?
 
-    metric_rollups_without_nils = metric_rollup_records.select { |x| x.send(metric.to_sym).present? }
-    return 0 if metric_rollups_without_nils.empty?
-    return max_of_metric_from(metric_rollups_without_nils) if allocated?
-    return avg_of_metric_from(metric_rollups_without_nils) if used?
+    return 0 if consumption.none?(metric)
+    return consumption.max(metric) if allocated?
+    return consumption.avg(metric) if used?
   end
 
   def used?
@@ -236,10 +226,10 @@ class ChargebackRateDetail < ApplicationRecord
      'total_cost']
   end
 
-  def metric_and_cost_by(metric_rollup_records, hours_in_interval)
-    @hours_in_interval = hours_in_interval
-    metric_value = metric_value_by(metric_rollup_records)
-    [metric_value, hourly_cost(metric_value) * hours_in_interval]
+  def metric_and_cost_by(consumption)
+    @hours_in_interval = consumption.hours_in_interval
+    metric_value = metric_value_by(consumption)
+    [metric_value, hourly_cost(metric_value) * consumption.hours_in_interval]
   end
 
   def first_tier?(tier,tiers)

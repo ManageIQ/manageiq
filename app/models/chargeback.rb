@@ -10,9 +10,6 @@ class Chargeback < ActsAsArModel
     :fixed_compute_metric => :integer,
   )
 
-  HOURS_IN_DAY = 24
-  HOURS_IN_WEEK = 168
-
   VIRTUAL_COL_USES = {
     "v_derived_cpu_total_cores_used" => "cpu_usage_rate_average"
   }
@@ -50,12 +47,11 @@ class Chargeback < ActsAsArModel
       next if records.empty?
       _log.info("Found #{records.length} records for time range #{[query_start_time, query_end_time].inspect}")
 
-      hours_in_interval = hours_in_interval(query_start_time, query_end_time, options.interval)
-
       # we are building hash with grouped calculated values
       # values are grouped by resource_id and timestamp (query_start_time...query_end_time)
       records.group_by(&:resource_id).each do |_, metric_rollup_records|
         metric_rollup_records = metric_rollup_records.select { |x| x.resource.present? }
+        consumption = Consumption.new(metric_rollup_records, query_start_time, query_end_time)
         next if metric_rollup_records.empty?
 
         # we need to select ChargebackRates for groups of MetricRollups records
@@ -73,20 +69,13 @@ class Chargeback < ActsAsArModel
         data[key]["chargeback_rates"] = chargeback_rates.uniq.join(', ')
 
         # we are getting hash with metrics and costs for metrics defined for chargeback
-        data[key].calculate_costs(metric_rollup_records, rates_to_apply, hours_in_interval)
+        data[key].calculate_costs(consumption, rates_to_apply)
       end
     end
 
     _log.info("Calculating chargeback costs...Complete")
 
     [data.values]
-  end
-
-  def self.hours_in_interval(query_start_time, query_end_time, interval)
-    return HOURS_IN_DAY if interval == "daily"
-    return HOURS_IN_WEEK if interval == "weekly"
-
-    (query_end_time - query_start_time) / 1.hour
   end
 
   def self.key_and_fields(metric_rollup_record)
@@ -124,13 +113,12 @@ class Chargeback < ActsAsArModel
     [key, extra_fields]
   end
 
-  def calculate_costs(metric_rollup_records, rates, hours_in_interval)
-    chargeback_fields_present = metric_rollup_records.count(&:chargeback_fields_present?)
-    self.fixed_compute_metric = chargeback_fields_present if chargeback_fields_present
+  def calculate_costs(consumption, rates)
+    self.fixed_compute_metric = consumption.chargeback_fields_present if consumption.chargeback_fields_present
 
     rates.each do |rate|
       rate.chargeback_rate_details.each do |r|
-        r.charge(relevant_fields, chargeback_fields_present, metric_rollup_records, hours_in_interval).each do |field, value|
+        r.charge(relevant_fields, consumption).each do |field, value|
           next unless self.class.attribute_names.include?(field)
           self[field] = (self[field] || 0) + value
         end
