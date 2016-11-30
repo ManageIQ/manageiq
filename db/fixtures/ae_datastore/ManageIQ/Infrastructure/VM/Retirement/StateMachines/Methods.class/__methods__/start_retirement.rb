@@ -3,7 +3,7 @@
 #
 
 $evm.log("info", "Listing Root Object Attributes:")
-$evm.root.attributes.sort.each { |k, v| $evm.log("info", "\t#{k}: #{v}")  }
+$evm.root.attributes.sort.each { |k, v| $evm.log("info", "\t#{k}: #{v}") }
 $evm.log("info", "===========================================")
 
 vm = $evm.root['vm']
@@ -24,6 +24,7 @@ end
 
 $evm.log('info', "VM before start_retirement: #{vm.inspect} ")
 
+$evm.create_notification(:type => :vm_retiring, :subject => vm)
 vm.start_retirement
 
 $evm.log('info', "VM after start_retirement: #{vm.inspect} ")

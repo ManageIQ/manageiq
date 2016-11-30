@@ -3,7 +3,7 @@
 #
 
 $evm.log("info", "Listing Root Object Attributes:")
-$evm.root.attributes.sort.each { |k, v| $evm.log("info", "\t#{k}: #{v}")  }
+$evm.root.attributes.sort.each { |k, v| $evm.log("info", "\t#{k}: #{v}") }
 $evm.log("info", "===========================================")
 
 stack = $evm.root['orchestration_stack']
@@ -23,5 +23,6 @@ if stack.retiring?
 end
 
 $evm.log('info', "Stack before start_retirement: #{stack.inspect} ")
+$evm.create_notification(:type => :vm_retiring, :subject => stack)
 
 stack.start_retirement

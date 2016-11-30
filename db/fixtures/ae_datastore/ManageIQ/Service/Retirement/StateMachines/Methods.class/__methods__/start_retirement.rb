@@ -20,6 +20,7 @@ if service.retiring?
   exit MIQ_ABORT
 end
 
+$evm.create_notification(:type => :service_retiring, :subject => service)
 service.start_retirement
 
 $evm.log('info', "Service after start_retirement: #{service.inspect} ")
