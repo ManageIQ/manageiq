@@ -21,7 +21,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
     assert_ems
     assert_specific_cluster
     assert_specific_storage
-    # assert_specific_host
+    assert_specific_host
     # assert_specific_vm_powered_on
     # assert_specific_vm_powered_off
     # assert_specific_template
