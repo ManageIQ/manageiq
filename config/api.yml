@@ -1316,6 +1316,8 @@
         :identifier: miq_request_approval
       - :name: delete
         :identifier: miq_request_delete
+      - :name: edit
+        :identifier: miq_request_edit
     :resource_actions:
       :get:
       - :name: read
@@ -1327,6 +1329,8 @@
         :identifier: miq_request_approval
       - :name: delete
         :identifier: miq_request_delete
+      - :name: edit
+        :identifier: miq_request_edit
       :delete:
       - :name: delete
         :identifier: miq_request_delete
