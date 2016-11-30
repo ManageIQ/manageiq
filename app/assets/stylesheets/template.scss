@@ -2,20 +2,11 @@ html { padding: 0 0 /*25*/px 0;  /* create area for notification */}
 legend { display: none;}
 textarea { width: 98.5%; border: 1px solid #d1d1d1; padding: 7px; line-height: 1.5em}
 
-/* begin modified Patternfly code */
-
-div.disabled {
-  cursor: default;
-}
-
-/* end modified Patternfly code */
-
 fieldset {
   position: relative;
   margin: 0 7px 20px 0px;
   padding: 10px;
   border:1px solid #e9e8e8;
-  background-color: #fff;
 }
 
 nobr { white-space: nowrap;}
@@ -72,21 +63,8 @@ ul.searchtoolbar  { margin: 0;padding: 2px 0 0 5px; width:100%;height: 30px;}
 .dimmed { background:#f5f5f5; opacity:0.4; filter:alpha(opacity=40);filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=40);}
 
 img.small, input.small { float: left;margin: 0;padding: 0;width:24px;height:24px;border: 0;}
-img.small-nofloat, input.small-nofloat { margin: 0; padding: 0;width:24px;height:24px; border: 0;}
 img.tiny { margin: 0; padding: 0;width:20px;height:20px; border: 0; vertical-align:bottom;}
 
-#list li{ display: inline;margin: 0 -6px 0 0;line-height: 0;}
-#list img:hover{ background: #4b4b4b;}
-
-
-/*** form buttons ***/
-
-#policy_bar img, #policy_bar2  img { width: 35px; height: 35px; border: 1px #ccc solid;}
-#policy_bar  img:hover, #policy_bar2  img:hover, #policy_bar .active img, #policy_bar2 .active img { background: #e4e4e4;}
-#policy_bar { margin-bottom: 3px;padding: 1px 0 0 4px; width: 99.6%;height: 42px; border: none; background: none; line-height: 50px;}
-#policy_bar li{ display: inline;margin: 0 -6px 0 0;line-height: 0;}
-
-/*************************** Class for html buttons in explorer views *********************************/
 /************ Quad Icons ************/
 
 .quadicon { position:relative;float:left;padding: 0 1px 1px 0;width: 72px; height: 80px;color: #e3e4e4;text-transform: none;}
@@ -112,20 +90,6 @@ div.panecontent .flobj { margin-left: 40px;}
 /************ Misc ************/
 /*select boxes*/
 .form .widthed{ width:400px;}
-#logview { top: 0; z-index:5; width: 100%; height:400px; border: 1px solid #ccc; background: #f9f9f9;} /*Diagnostics > Logs*/
-
-img.timeline-event-bubble-image { width: 64px; height: 64px;}
-.timeline-band-layer-inner img{ width: 24px; height: 16px;}
-
-.textAreaWithLines{
-  display:block;
-  margin:0;
-  padding: 0 8px 0 0;
-  width: 27px;
-  border: 1px 0 1px 1px 1px;
-  border: 1px solid #999;
-  background:#f0f0f0;
-}
 
 /*Lightbox background */
 
@@ -157,8 +121,6 @@ img.timeline-event-bubble-image { width: 64px; height: 64px;}
   background: #fff;
 }
 
-DIV#candu_charts_div fieldset p{ padding-top: 0;padding-bottom: 0;}
-
 .miq_rpt_red_bg {background: #fbdbdb !important}
 .miq_rpt_yellow_bg {background: #ffdc99 !important}
 .miq_rpt_green_bg {background: #cef7c9 !important}
@@ -175,10 +137,4 @@ DIV#candu_charts_div fieldset p{ padding-top: 0;padding-bottom: 0;}
 .miq_rpt_maroon_text {color: #76badf; font-weight: bold}
 .miq_rpt_gray_text {color: gray; font-weight: bold}
 
-ul#toolbars { line-height: 0;}
-  #toolbars li { float: left; display: inline; border: 1px solid #7e7e7e;}
-  #toolbars img { width:24px; height: 24px;}
-  #toolbars  img:hover, #toolbars  img:hover, #toolbars .active img, #toolbars.active img { background: #e4e4e4;}
-
 #spinner_div { margin-top: -45px; margin-left: -35px; width:180px; height: 180px; border-radius: 8px; background: image-url('layout/overlay_dark.png');}
-#prov_vm_div {height: 150px;overflow:auto}

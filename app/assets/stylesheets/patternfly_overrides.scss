@@ -701,3 +701,9 @@ table .label {  // Adds margin to the label to vertically align with text
     padding-bottom: 0;
   }
 }
+
+// display pointer on disabled elements
+
+div.disabled {
+  cursor: default;
+}
