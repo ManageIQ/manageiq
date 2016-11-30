@@ -141,7 +141,8 @@ describe CloudSubnetController do
     before do
       stub_user(:features => :all)
       EvmSpecHelper.create_guid_miq_server_zone
-      @subnet = FactoryGirl.create(:cloud_subnet_openstack)
+      @ems = FactoryGirl.create(:ems_openstack).network_manager
+      @subnet = FactoryGirl.create(:cloud_subnet_openstack, :ext_management_system => @ems)
     end
 
     it "deletes itself" do
