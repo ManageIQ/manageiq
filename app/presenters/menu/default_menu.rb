@@ -159,7 +159,7 @@ module Menu
 
       def block_storage_menu_section
         Menu::Section.new(:bst, N_("Block Storage"), 'fa fa-database fa-2x', [
-                            Menu::Item.new('ems_storage',
+                            Menu::Item.new('ems_block_storage',
                                            N_('Managers'),
                                            'ems_block_storage',
                                            {:feature => 'ems_block_storage_show_list'},
@@ -184,7 +184,7 @@ module Menu
 
       def object_storage_menu_section
         Menu::Section.new(:ost, N_("Object Storage"), 'fa fa-database fa-2x', [
-                            Menu::Item.new('ems_storage',
+                            Menu::Item.new('ems_object_storage',
                                            N_('Managers'),
                                            'ems_object_storage',
                                            {:feature => 'ems_object_storage_show_list'},
