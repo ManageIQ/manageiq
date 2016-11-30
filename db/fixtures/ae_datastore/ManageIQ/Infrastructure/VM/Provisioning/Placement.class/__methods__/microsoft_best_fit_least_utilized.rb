@@ -19,7 +19,8 @@ prov.eligible_hosts.each do |h|
   nvms = h.vms.length
 
   if min_registered_vms.nil? || nvms < min_registered_vms
-    s = h.writable_storages.max_by(&:free_space)
+    storages = h.writable_storages.find_all { |s| s.free_space > vm.provisioned_storage } # Filter out storages that do not have enough free space for the Vm
+    s = storages.max_by(&:free_space)
     unless s.nil?
       host    = h
       storage = s
