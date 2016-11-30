@@ -22,7 +22,7 @@ class ManageIQ::Providers::Azure::CloudManager::EventCatcher::Runner <
 
   def process_event(event)
     if filtered?(event)
-      _log.info "#{log_prefix} Skipping filtered Azure event #{parse_event_type(event)} for #{event["resourceId"]}"
+      _log.debug "#{log_prefix} Skipping filtered Azure event #{parse_event_type(event)} for #{event["resourceId"]}"
     else
       _log.info "#{log_prefix} Caught event #{parse_event_type(event)} for #{event["resourceId"]}"
       EmsEvent.add_queue('add_azure', @cfg[:ems_id], event)
