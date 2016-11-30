@@ -60,6 +60,7 @@ class ApplicationHelper::Toolbar::EmsStorageCenter < ApplicationHelper::Toolbar:
                        'product product-timeline fa-lg',
                        N_('Show Timelines for this Storage Manager'),
                        N_('Timelines'),
+                       :klass     => ApplicationHelper::Button::EmsStorageTimeline,
                        :url       => "/show",
                        :url_parms => "?display=timeline"),
                    ]
