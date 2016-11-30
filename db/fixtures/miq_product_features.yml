@@ -1368,6 +1368,11 @@
         :description: Delete a Saved Report
         :feature_type: admin
         :identifier: saved_report_delete
+      - :name: Show full screen Report
+        :description: Show full screen Report
+        :feature_type: admin
+        :hidden: true
+        :identifier: report_only
   - :name: Reports
     :description: Everything under Reports Accordion
     :feature_type: node
