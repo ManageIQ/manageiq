@@ -4,7 +4,7 @@ module ManagerRefresh
     attr_reader :dto_collection, :data
 
     delegate :manager_ref, :to => :dto_collection
-    delegate :id, :to => :object
+    delegate :id, :to => :object, :allow_nil => true
     delegate :[], :[]=, :to => :data
 
     def initialize(dto_collection, data)
