@@ -958,17 +958,13 @@ module OpsController::OpsRbac
     @edit[:user_id] = @record.id unless copy
     @edit[:key] = "rbac_user_edit__#{@edit[:user_id] || "new"}"
     # prefill form fields for edit and copy action
-    @edit[:new].merge!({
-      :name => @user.userid,
-      :email => @user.email,
-      :group => @user.current_group ? @user.current_group.id : nil,
-    })
+    @edit[:new].merge!(:name  => @user.name,
+                       :email => @user.email,
+                       :group => @user.current_group ? @user.current_group.id : nil)
     unless copy
-      @edit[:new].merge!({
-        :userid => @user.userid,
-        :password => @user.password,
-        :verify => @user.password,
-      })
+      @edit[:new].merge!(:userid   => @user.userid,
+                         :password => @user.password,
+                         :verify   => @user.password)
     end
     # load all user groups
     @edit[:groups] = MiqGroup.non_tenant_groups_in_my_region.sort_by { |g| g.description.downcase }.collect { |g| [g.description, g.id] }
