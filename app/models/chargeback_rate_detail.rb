@@ -140,7 +140,7 @@ class ChargebackRateDetail < ApplicationRecord
   end
 
   def affects_report_fields(report_cols)
-    (metric_keys & report_cols).present? || ((cost_keys & report_cols).present? && !gratis?)
+    (metric_keys.to_set & report_cols).present? || ((cost_keys.to_set & report_cols).present? && !gratis?)
   end
 
   def rate_name

@@ -25,6 +25,11 @@ class ChargebackRate < ApplicationRecord
 
   VALID_CB_RATE_TYPES = ["Compute", "Storage"]
 
+  def rate_details_relevant_to(report_cols)
+    # we can memoize, as we get the same report_cols thrrough the life of the object
+    @relevant ||= chargeback_rate_details.select { |r| r.affects_report_fields(report_cols) }
+  end
+
   def self.validate_rate_type(type)
     unless VALID_CB_RATE_TYPES.include?(type.to_s.capitalize)
       raise "Chargeback rate type '#{type}' is not supported"

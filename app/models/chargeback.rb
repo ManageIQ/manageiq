@@ -67,7 +67,7 @@ class Chargeback < ActsAsArModel
     self.fixed_compute_metric = consumption.chargeback_fields_present if consumption.chargeback_fields_present
 
     rates.each do |rate|
-      rate.chargeback_rate_details.each do |r|
+      rate.rate_details_relevant_to(relevant_fields).each do |r|
         r.charge(relevant_fields, consumption).each do |field, value|
           next unless self.class.attribute_names.include?(field)
           self[field] = (self[field] || 0) + value
@@ -135,6 +135,6 @@ class Chargeback < ActsAsArModel
   private
 
   def relevant_fields
-    @relevant_fields ||= self.class.report_col_options.keys.to_set
+    @relevant_fields ||= (@options.report_cols || self.class.report_col_options.keys).to_set
   end
 end # class Chargeback
