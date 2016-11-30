@@ -12,7 +12,7 @@ class Dialog < ApplicationRecord
   virtual_has_one :content, :class_name => "Hash"
 
   before_destroy          :reject_if_has_resource_actions
-  validates_uniqueness_of :label
+  validates :label, :uniqueness => {:conditions => -> { in_my_region } }
 
   alias_attribute  :name, :label
 
