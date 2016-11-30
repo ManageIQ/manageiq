@@ -5,6 +5,14 @@ describe ReportFormatter::C3Formatter do
     allow(Charting).to receive(:backend).and_return(:c3)
     allow(Charting).to receive(:format).and_return(:c3)
   end
+
+  describe "#add_series" do
+    it "does not raise error for 'stack' chart" do
+      report = numeric_chart_3d(true)
+      expect { render_report(report) }.to_not raise_error
+    end
+  end
+
   context '#build_numeric_chart_grouped' do
     [true, false].each do |other|
       it "builds 2d numeric charts from summaries #{other ? 'with' : 'without'} 'other'" do
