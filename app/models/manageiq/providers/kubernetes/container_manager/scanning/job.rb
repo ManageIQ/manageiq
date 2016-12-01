@@ -113,6 +113,23 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
     end
   end
 
+  def verify_scanned_image_id
+    metadata = image_inspector_client.fetch_metadata
+    actual = metadata.Id
+    return nil if actual == options[:docker_image_id]
+    msg = "cannot analyze image %s with id %s: detected ids were %s" % [
+      options[:image_full_name], options[:docker_image_id][0..11], actual[0..11]]
+
+    if metadata.RepoDigests
+      metadata.RepoDigests.each do |repo_digest|
+        return nil if repo_digest == options[:docker_image_id]
+        msg << repo_digest.split('@')[0..11] + ", "
+      end
+    end
+
+    msg
+  end
+
   def analyze
     image = target_entity
     return queue_signal(:abort_job, "no image found", "error") unless image
@@ -126,13 +143,10 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
       :guest_os      => IMAGES_GUEST_OS
     }
 
-    actual = image_inspector_client.fetch_metadata.Id
-    if actual != options[:docker_image_id]
-      msg = "cannot analyze image %s with id %s: detected id was %s"
-      _log.error(msg % [options[:image_full_name], options[:docker_image_id], actual])
-      return queue_signal(:abort_job,
-                          msg % [options[:image_full_name], options[:docker_image_id][0..11], actual[0..11]],
-                          'error')
+    verify_error = verify_scanned_image_id
+    if verify_error
+      _log.error(verify_error)
+      return queue_signal(:abort_job, verify_error, 'error')
     end
 
     collect_compliance_data(image)
@@ -402,7 +416,7 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
   end
 
   def inspector_image
-    'docker.io/openshift/image-inspector:2.0'
+    'docker.io/openshift/image-inspector:2.1'
   end
 
   def inspector_proxy_env_variables

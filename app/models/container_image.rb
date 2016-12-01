@@ -6,6 +6,8 @@ class ContainerImage < ApplicationRecord
 
 
   DOCKER_IMAGE_PREFIX = "docker://"
+  DOCKER_PULLABLE_PREFIX = "docker-pullable://".freeze
+  DOCKER_PREFIXES = [DOCKER_IMAGE_PREFIX, DOCKER_PULLABLE_PREFIX].freeze
 
   belongs_to :container_image_registry
   belongs_to :ext_management_system, :foreign_key => "ems_id"
@@ -45,9 +47,10 @@ class ContainerImage < ApplicationRecord
   end
 
   def docker_id
-    if image_ref.start_with?(DOCKER_IMAGE_PREFIX)
-      return image_ref[DOCKER_IMAGE_PREFIX.length..-1]
+    DOCKER_PREFIXES.each do |prefix|
+      return image_ref[prefix.length..-1] if image_ref.start_with?(prefix)
     end
+    nil
   end
 
   # The guid is required by the smart analysis infrastructure

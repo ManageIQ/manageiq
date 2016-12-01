@@ -131,6 +131,18 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
                                        :image_ref => example_ref},
                        :registry   => {:name => "localhost", :host => "localhost", :port => nil}},
 
+                      # tag and digest together
+                      {:image_name => "reg.example.com:1234/name1:tagos@sha256:123abcdef",
+                       :image      => {:name => "name1", :tag => "tagos", :digest => "sha256:123abcdef",
+                                       :image_ref => example_ref},
+                       :registry   => {:name => "reg.example.com", :host => "reg.example.com", :port => "1234"}},
+
+                      # digest from new docker-pullable
+                      {:image_name => "reg.example.com:1234/name1:tagos",
+                       :image      => {:name => "name1", :tag => "tagos", :digest => "sha256:321bcd",
+                                       :image_ref => "docker-pullable://reg.example.com:1234/name1@sha256:321bcd"},
+                       :registry   => {:name => "reg.example.com", :host => "reg.example.com", :port => "1234"}},
+
                       {:image_name => "example@sha256:1234567abcdefg",
                        :image      => {:name => "example", :tag => nil, :digest => "sha256:1234567abcdefg",
                                        :image_ref => example_ref},
@@ -138,7 +150,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
 
     example_images.each do |ex|
       it "tests '#{ex[:image_name]}'" do
-        result_image, result_registry = parser.send(:parse_image_name, ex[:image_name], example_ref)
+        result_image, result_registry = parser.send(:parse_image_name, ex[:image_name], ex[:image][:image_ref])
 
         expect(result_image.except(:registered_on)).to eq(ex[:image])
         expect(result_registry).to eq(ex[:registry])
