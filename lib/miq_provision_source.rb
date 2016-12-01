@@ -1,6 +1,13 @@
 module MiqProvisionSource
-  def self.get_provisioning_request_source_class(_src_type_string)
-    VmOrTemplate
+  def self.get_provisioning_request_source_class(src_type_string)
+    case src_type_string
+    when "CloudVolumeSnapshot"
+      CloudVolumeSnapshot
+    when "CloudVolume"
+      CloudVolume
+    else
+      VmOrTemplate
+    end
   end
 
   def self.get_provisioning_request_source(src_id, src_type_string)

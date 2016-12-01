@@ -297,7 +297,14 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     rails_logger('allowed_templates', 0)
     vms = MiqProvisionSource.get_provisioning_request_source_class(@values[:src_type]).all
 
-    condition = allowed_template_condition
+    condition = case @values[:src_type]
+                when "CloudVolume"
+                  allowed_volume_condition
+                when "CloudVolumeSnapshot"
+                  allowed_volume_snapshot_condition
+                else
+                  allowed_template_condition
+                end
 
     unless options[:tag_filters].blank?
       tag_filters = options[:tag_filters].collect(&:to_s)
@@ -345,6 +352,14 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     return ["vms.template = ? AND vms.ems_id IS NOT NULL", true] unless self.class.respond_to?(:provider_model)
 
     ["vms.template = ? AND vms.ems_id in (?)", true, self.class.provider_model.pluck(:id)]
+  end
+
+  def allowed_volume_condition
+    ["cloud_volumes.ems_id IS NOT NULL", true]
+  end
+
+  def allowed_volume_snapshot_condition
+    ["cloud_volume_snapshots.ems_id IS NOT NULL", true]
   end
 
   def source_vm_rbac_filter(vms, condition = nil)
@@ -1022,7 +1037,13 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
   end
 
   def create_hash_struct_from_source(source, options)
-    create_hash_struct_from_vm_or_template(source, options)
+    if source.class.kind_of? CloudVolume
+      create_hash_struct_from_volume(source, options)
+    elsif source.class.kind_of? CloudVolumeSnapshot
+      create_hash_struct_from_volume_snapshot(source, options)
+    else
+      create_hash_struct_from_vm_or_template(source, options)
+    end
   end
 
   def create_hash_struct_from_vm_or_template(vm_or_template, options)
@@ -1047,6 +1068,34 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     if options[:include_datacenter] == true
       hash_struct.datacenter_name = vm_or_template.owning_blue_folder.try(:parent_datacenter).try(:name)
     end
+
+    hash_struct
+  end
+
+  def create_hash_struct_from_volume(volume, _options)
+    data_hash = {:id               => volume.id,
+                 :name             => volume.name,
+                 :size             => volume.size,
+                 :evm_object_class => :CloudVolume}
+    data_hash[:cloud_tenant] = volume.cloud_tenant if volume.respond_to?(:cloud_tenant)
+    hash_struct = MiqHashStruct.new(data_hash)
+    hash_struct.ext_management_system = MiqHashStruct.new(
+      :name => volume.ext_management_system.name
+    ) if volume.ext_management_system
+
+    hash_struct
+  end
+
+  def create_hash_struct_from_volume_snapshot(volume, _options)
+    data_hash = {:id               => volume.id,
+                 :name             => volume.name,
+                 :size             => volume.size,
+                 :evm_object_class => :CloudVolumeSnapshot}
+    data_hash[:cloud_tenant] = volume.cloud_tenant if volume.respond_to?(:cloud_tenant)
+    hash_struct = MiqHashStruct.new(data_hash)
+    hash_struct.ext_management_system = MiqHashStruct.new(
+      :name => volume.ext_management_system.name
+    ) if volume.ext_management_system
 
     hash_struct
   end

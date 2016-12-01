@@ -231,6 +231,10 @@ module MiqProvisionMixin
   def source_type
     if vm_template.kind_of?(MiqTemplate)
       return 'template'
+    elsif vm_template.kind_of?(CloudVolume)
+      return 'cloudvolume'
+    elsif vm_template.kind_of?(CloudVolumeSnapshot)
+      return 'cloudvolumesnapshot'
     else
       return 'vm'
     end
