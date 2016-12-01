@@ -8,6 +8,23 @@ describe ManageIQ::Providers::Azure::CloudManager do
     expect(described_class.description).to eq('Azure')
   end
 
+  it "does not create orphaned network_manager" do
+    # When the cloud_manager is destroyed during a refresh the there will still be an instance
+    # of the cloud_manager in the refresh worker. After the refresh we will try to save the cloud_manager
+    # and because the network_manager was added before_validate it would create a new network_manager
+    #
+    # https://bugzilla.redhat.com/show_bug.cgi?id=1389459
+    # https://bugzilla.redhat.com/show_bug.cgi?id=1393675
+    ems = FactoryGirl.create(:ems_azure)
+    same_ems = ExtManagementSystem.find(ems.id)
+
+    ems.destroy
+    expect(ExtManagementSystem.count).to eq(0)
+
+    same_ems.save!
+    expect(ExtManagementSystem.count).to eq(0)
+  end
+
   context "#connectivity" do
     before do
       @e = FactoryGirl.create(:ems_azure)
