@@ -44,12 +44,23 @@ class MockKubeClient
 end
 
 class MockImageInspectorClient
-  def initialize(for_id)
+  def initialize(for_id, repo_digest = nil)
     @for_id = for_id
+    @repo_digest = repo_digest
   end
 
   def fetch_metadata(*_args)
-    OpenStruct.new('Id' => @for_id)
+    if @repo_digest
+      OpenStruct.new('Id' => @for_id, 'RepoDigests' => [@repo_digest])
+    else
+      OpenStruct.new('Id' => @for_id)
+    end
+  end
+
+  def fetch_oscap_arf
+    File.read(
+      File.expand_path(File.join(File.dirname(__FILE__), "ssg-fedora-ds-arf.xml"))
+    ).encode("UTF-8")
   end
 end
 
@@ -109,15 +120,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job do
 
     context "completes successfully" do
       before(:each) do
-        if OpenscapResult.openscap_available?
-          allow_any_instance_of(MockImageInspectorClient).to receive(:fetch_oscap_arf) do
-            File.read(
-              File.expand_path(File.join(File.dirname(__FILE__), "ssg-fedora-ds-arf.xml"))
-            ).encode("UTF-8")
-          end
-        else
-          allow_any_instance_of(described_class).to receive_messages(:collect_compliance_data)
-        end
+        allow_any_instance_of(described_class).to receive_messages(:collect_compliance_data) unless OpenscapResult.openscap_available?
 
         VCR.use_cassette(described_class.name.underscore, :record => :none) do # needed for health check
           expect(@job.state).to eq 'waiting_to_start'
@@ -132,11 +135,6 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job do
 
       it 'should persist openscap data' do
         skip unless OpenscapResult.openscap_available?
-        allow_any_instance_of(MockImageInspectorClient).to receive(:fetch_oscap_arf) do
-          File.read(
-            File.expand_path(File.join(File.dirname(__FILE__), "ssg-fedora-ds-arf.xml"))
-          ).encode("UTF-8")
-        end
 
         expect(@image.openscap_result).to be
         expect(@image.openscap_result.binary_blob.md5).to eq('d1f1857281573cd777b31d76e8529dc9')
@@ -239,10 +237,21 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job do
     end
 
     context 'when the image tag points to a different image' do
+      MODIFIED_IMAGE_ID = '0d071bb732e1e3eb1e01629600c9b6c23f2b26b863b5321335f564c8f018c452'.freeze
       before(:each) do
-        MODIFIED_IMAGE_ID = '0d071bb732e1e3eb1e01629600c9b6c23f2b26b863b5321335f564c8f018c452'.freeze
         allow_any_instance_of(described_class).to receive_messages(
           :image_inspector_client => MockImageInspectorClient.new(MODIFIED_IMAGE_ID))
+      end
+
+      it 'should check for repo_digests' do
+        allow_any_instance_of(described_class).to receive_messages(:collect_compliance_data) unless OpenscapResult.openscap_available?
+        allow_any_instance_of(described_class).to receive_messages(
+          :image_inspector_client => MockImageInspectorClient.new(MODIFIED_IMAGE_ID, IMAGE_ID))
+        VCR.use_cassette(described_class.name.underscore, :record => :none) do # needed for health check
+          @job.signal(:start)
+          expect(@job.state).to eq 'finished'
+          expect(@job.status).to eq 'ok'
+        end
       end
 
       it 'should report the error' do
@@ -251,7 +260,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job do
           expect(@job.state).to eq 'finished'
           expect(@job.status).to eq 'error'
           expect(@job.message).to eq "cannot analyze image #{IMAGE_NAME} with id #{IMAGE_ID[0..11]}:"\
-                                     " detected id was #{MODIFIED_IMAGE_ID[0..11]}"
+                                     " detected ids were #{MODIFIED_IMAGE_ID[0..11]}"
         end
       end
     end
