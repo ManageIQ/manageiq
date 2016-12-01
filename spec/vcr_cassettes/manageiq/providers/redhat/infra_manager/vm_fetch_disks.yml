@@ -1,0 +1,107 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://192.168.1.31:8443/api
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+  response:
+    status:
+      code: 401
+      message: Unauthorized
+    headers:
+      Connection:
+      - keep-alive
+      Www-Authenticate:
+      - Basic realm="ENGINE"
+      Content-Type:
+      - text/html;charset=UTF-8
+      Content-Length:
+      - '71'
+      Date:
+      - Thu, 01 Dec 2016 12:28:30 GMT
+    body:
+      encoding: UTF-8
+      string: "<html><head><title>Error</title></head><body>Unauthorized</body></html>"
+    http_version:
+  recorded_at: Thu, 01 Dec 2016 12:28:30 GMT
+- request:
+    method: get
+    uri: https://admin%40internal:engine@192.168.1.31:8443/api/storagedomains/ee745353-c069-4de8-8d76-ec2e155e2ca0/disks/da123bb9-095a-4933-95f2-8032dfa332e1
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Connection:
+      - keep-alive
+      Set-Cookie:
+      - JSESSIONID=VlxUPb99qJPwMA_BW1X6Rib8vi8ceeu2JQIpa_3V.f18; path=/api; HttpOnly
+      Content-Type:
+      - application/xml
+      Content-Length:
+      - '1476'
+      Jsessionid:
+      - VlxUPb99qJPwMA_BW1X6Rib8vi8ceeu2JQIpa_3V
+      Date:
+      - Thu, 01 Dec 2016 12:28:31 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: |
+        <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+        <disk href="/api/storagedomains/ee745353-c069-4de8-8d76-ec2e155e2ca0/disks/da123bb9-095a-4933-95f2-8032dfa332e1" id="da123bb9-095a-4933-95f2-8032dfa332e1">
+            <actions>
+                <link href="/api/storagedomains/ee745353-c069-4de8-8d76-ec2e155e2ca0/disks/da123bb9-095a-4933-95f2-8032dfa332e1/export" rel="export"/>
+            </actions>
+            <name>GlanceDisk-73786f4</name>
+            <description>CirrOS 0.3.1 (73786f4)</description>
+            <vms>
+                <vm id="4f6dd4c3-5241-494f-8afc-f1c67254bf77"/>
+            </vms>
+            <alias>GlanceDisk-73786f4</alias>
+            <image_id>cbfd10d8-6aac-4046-8b4f-0b607a6d4d1b</image_id>
+            <storage_domain href="/api/storagedomains/ee745353-c069-4de8-8d76-ec2e155e2ca0" id="ee745353-c069-4de8-8d76-ec2e155e2ca0"/>
+            <storage_domains>
+                <storage_domain id="ee745353-c069-4de8-8d76-ec2e155e2ca0"/>
+            </storage_domains>
+            <size>41126400</size>
+            <provisioned_size>41126400</provisioned_size>
+            <actual_size>2564096</actual_size>
+            <status>
+                <state>ok</state>
+            </status>
+            <interface>virtio</interface>
+            <format>cow</format>
+            <sparse>true</sparse>
+            <bootable>false</bootable>
+            <shareable>false</shareable>
+            <wipe_after_delete>false</wipe_after_delete>
+            <propagate_errors>false</propagate_errors>
+            <disk_profile href="/api/diskprofiles/5e1859c2-9c6b-48f7-af3c-eb7ea49d86c5" id="5e1859c2-9c6b-48f7-af3c-eb7ea49d86c5"/>
+            <storage_type>image</storage_type>
+        </disk>
+    http_version:
+  recorded_at: Thu, 01 Dec 2016 12:28:30 GMT
+recorded_with: VCR 3.0.3
