@@ -83,9 +83,8 @@ describe Menu::DefaultMenu do
       it "still does not contain the NetApp item" do
         stub_settings(:product => {:storage => true})
         expect(menu.storage_menu_section.items.map(&:name)).to include(
-          "Storage Providers",
-          "Volumes",
-          "Object Stores",
+          "Block Storage",
+          "Object Storage",
         )
       end
     end
@@ -94,11 +93,30 @@ describe Menu::DefaultMenu do
       it "does not contain the NetApp item" do
         stub_settings(:product => {:storage => "juliet" })
         expect(menu.storage_menu_section.items.map(&:name)).to include(
-          "Storage Providers",
-          "Volumes",
-          "Object Stores",
+          "Block Storage",
+          "Object Storage",
         )
       end
+    end
+  end
+
+  context "block_storage_menu_section" do
+    let(:menu) { Menu::DefaultMenu }
+
+    it "shows correct content for Block Storage submenu" do
+      menu = Menu::DefaultMenu.block_storage_menu_section.items.map(&:name)
+      result = ["Managers", "Volumes", "Volume Snapshots", "Volume Backups"]
+      expect(menu).to eq(result)
+    end
+  end
+
+  context "object_storage_menu_section" do
+    let(:menu) { Menu::DefaultMenu }
+
+    it "shows correct content for Object Storage submenu" do
+      menu = Menu::DefaultMenu.object_storage_menu_section.items.map(&:name)
+      result = ["Managers", "Object Store Containers", "Object Store Objects"]
+      expect(menu).to eq(result)
     end
   end
 

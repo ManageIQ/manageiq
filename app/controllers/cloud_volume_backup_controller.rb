@@ -27,4 +27,6 @@ class CloudVolumeBackupController < ApplicationController
     session[:cloud_volume_backup_catinfo]    = @catinfo
     session[:cloud_volume_backup_showtype]   = @showtype
   end
+
+  menu_section :bst
 end

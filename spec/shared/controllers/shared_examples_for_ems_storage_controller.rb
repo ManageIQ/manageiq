@@ -36,7 +36,7 @@ shared_examples :shared_examples_for_ems_storage_controller do |providers|
           get :show, :params => {:id => @ems.id}
           expect(response.status).to eq(200)
           expect(response.body).to_not be_empty
-          expect(assigns(:breadcrumbs)).to eq([{:name => "Storage Providers",
+          expect(assigns(:breadcrumbs)).to eq([{:name => "Storage Managers",
                                                 :url  => "/ems_storage/show_list?page=&refresh=y"},
                                                {:name => "Test Cloud Manager Cinder Manager (Summary)",
                                                 :url  => "/ems_storage/show/#{@ems.id}"}])

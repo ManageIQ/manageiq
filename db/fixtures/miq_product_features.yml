@@ -5923,63 +5923,111 @@
       :identifier: blueprint_publish
 
 # EmsStorage
-- :name: Storage Providers
-  :description: Everything under Storage Providers
+- :name: Storage Managers
+  :description: Everything under Storage Managers
   :feature_type: node
   :identifier: ems_storage
   :children:
   - :name: View
-    :description: View Storage Providers
+    :description: View Storage Managers
     :feature_type: view
     :identifier: ems_storage_view
     :children:
     - :name: List
-      :description: Display Lists of Storage Providers
+      :description: Display Lists of Storage Managers
       :feature_type: view
       :identifier: ems_storage_show_list
     - :name: Show
-      :description: Display Individual Storage Providers
+      :description: Display Individual Storage Managers
       :feature_type: view
       :identifier: ems_storage_show
     - :name: Timeline
-      :description: Display Timelines for Storage Providers
+      :description: Display Timelines for Storage Managers
       :feature_type: view
       :identifier: ems_storage_timeline
   - :name: Operate
-    :description: Perform Operations on Storage Providers
+    :description: Perform Operations on Storage Managers
     :feature_type: control
     :identifier: ems_storage_control
     :children:
     - :name: Discover
-      :description: Discover Storage Providers
+      :description: Discover Storage Managers
       :feature_type: control
       :identifier: ems_storage_discover
     - :name: Edit Tags
-      :description: Edit Tags of Storage Providers
+      :description: Edit Tags of Storage Managers
       :feature_type: control
       :identifier: ems_storage_tag
     - :name: Manage Policies
-      :description: Manage Policies of Storage Providers
+      :description: Manage Policies of Storage Managers
       :feature_type: control
       :identifier: ems_storage_protect
     - :name: Refresh
-      :description: Refresh Storage Providers
+      :description: Refresh Storage Managers
       :feature_type: control
       :identifier: ems_storage_refresh
   - :name: Modify
-    :description: Modify Storage Providers
+    :description: Modify Storage Managers
     :feature_type: admin
     :identifier: ems_storage_admin
     :children:
     - :name: Remove
-      :description: Remove Storage Provider
+      :description: Remove Storage Manager
       :feature_type: admin
       :identifier: ems_storage_delete
     - :name: Edit
-      :description: Edit a Storage Provider
+      :description: Edit a Storage Manager
       :feature_type: admin
       :identifier: ems_storage_edit
     - :name: Add
-      :description: Add a Storage Provider
+      :description: Add a Storage Manager
       :feature_type: admin
       :identifier: ems_storage_new
+
+# EmsBlockStorage
+- :name: Block Storage Managers
+  :description: Everything under Block Storage Managers
+  :feature_type: node
+  :identifier: ems_block_storage
+  :children:
+  - :name: View
+    :description: View Block Storage Managers
+    :feature_type: view
+    :identifier: ems_block_storage_view
+    :children:
+    - :name: List
+      :description: Display Lists of Block Storage Managers
+      :feature_type: view
+      :identifier: ems_block_storage_show_list
+    - :name: Show
+      :description: Display Individual Block Storage Managers
+      :feature_type: view
+      :identifier: ems_block_storage_show
+    - :name: Timeline
+      :description: Display Timelines for Block Storage Managers
+      :feature_type: view
+      :identifier: ems_block_storage_timeline
+
+# EmsObjectStorage
+- :name: Object Storage Managers
+  :description: Everything under Object Storage Managers
+  :feature_type: node
+  :identifier: ems_object_storage
+  :children:
+  - :name: View
+    :description: View Object Storage Managers
+    :feature_type: view
+    :identifier: ems_object_storage_view
+    :children:
+    - :name: List
+      :description: Display Lists of Object Storage Managers
+      :feature_type: view
+      :identifier: ems_object_storage_show_list
+    - :name: Show
+      :description: Display Individual Object Storage Managers
+      :feature_type: view
+      :identifier: ems_object_storage_show
+    - :name: Timeline
+      :description: Display Timelines for Object Storage Managers
+      :feature_type: view
+      :identifier: ems_object_storage_timeline

@@ -480,7 +480,7 @@ class ApplicationHelper::ToolbarChooser
               ontap_file_share ontap_logical_disk container_topology middleware_topology cloud_topology middleware_server
               middleware_deployment middleware_datasource middleware_domain middleware_server_group middleware_messaging
               ontap_storage_system orchestration_stack resource_pool storage_manager container_template
-              timeline usage).include?(@layout)
+              ems_block_storage ems_object_storage timeline usage).include?(@layout)
           if ["show_list"].include?(@lastaction)
             return "#{@layout.pluralize}_center_tb"
           else

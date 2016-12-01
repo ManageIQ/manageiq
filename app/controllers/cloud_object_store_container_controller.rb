@@ -25,7 +25,7 @@ class CloudObjectStoreContainerController < ApplicationController
   private
 
   def get_session_data
-    @title      = _("Cloud Object Stores")
+    @title      = _("Cloud Object Store Containers")
     @layout     = "cloud_object_store_container"
     @lastaction = session[:cloud_object_store_container_lastaction]
     @display    = session[:cloud_object_store_container_display]
@@ -42,5 +42,5 @@ class CloudObjectStoreContainerController < ApplicationController
     session[:cloud_object_store_container_showtype]   = @showtype
   end
 
-  menu_section :sto
+  menu_section :ost
 end

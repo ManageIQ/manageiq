@@ -896,8 +896,8 @@ en:
       based_volumes:               Cloud Volumes Based on Snapshot
       cdroms:                      CD/DVD Drives
       cim_base_storage_extent:     Base Extents
-      cloud_object_store_container: Cloud Object Store
-      cloud_object_store_object:   Cloud Object
+      cloud_object_store_container: Cloud Object Store Container
+      cloud_object_store_object:   Cloud Object Store Object
       cloud_network:               Cloud Network
       cloud_subnet:                Cloud Subnet
       cloud_tenant:                Cloud Tenant
@@ -936,6 +936,8 @@ en:
       container_templates:         Templates
       custom_button:               Button
       custom_button_set:           Buttons Group
+      ems_block_storage:           Block Storage Manager
+      ems_block_storages:          Block Storage Managers
       ems_cloud:                   Cloud Provider
       ems_clouds:                  Cloud Providers
       ems_cluster:                 Cluster / Deployment Role
@@ -953,9 +955,11 @@ en:
       ems_datawarehouse:           Datawarehouse Provider
       ems_middleware:              Middleware Provider
       ems_middlewares:             Middleware Providers
+      ems_object_storage:          Object Storage Manager
+      ems_object_storages:         Object Storage Managers
       evm_server:                  EVM Server
       ems_network:                 Network Provider
-      ems_storage:                 Storage Provider
+      ems_storage:                 Storage Manager
       load_balancer:               Load Balancer
       middleware_server:           Middleware Server
       middleware_servers:          Middleware Servers
