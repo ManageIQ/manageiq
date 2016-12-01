@@ -34,7 +34,7 @@ class EmsCluster < ApplicationRecord
 
   virtual_has_many :storages,       :uses => {:hosts => :storages}
   virtual_has_many :resource_pools, :uses => :all_relationships
-  virtual_has_many :failover_hosts, :uses => :hosts
+  has_many :failover_hosts, -> { failover }, :class_name => "Host"
 
   virtual_has_many :base_storage_extents, :class_name => "CimStorageExtent"
   virtual_has_many :storage_systems,      :class_name => "CimComputerSystem"
@@ -118,15 +118,6 @@ class EmsCluster < ApplicationRecord
   alias_method :all_vm_ids,             :vm_ids
   alias_method :all_miq_templates,      :miq_templates
   alias_method :all_miq_template_ids,   :miq_template_ids
-
-  # Host relationship methods
-  def failover_hosts(_options = {})
-    hosts.select(&:failover)
-  end
-
-  def failover_host_ids
-    failover_hosts.collect(&:id)
-  end
 
   # Direct Vm relationship methods
   def direct_vm_rels

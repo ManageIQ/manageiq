@@ -130,7 +130,7 @@ module EmsCluster::CapacityPlanning
   def capacity_failover_host_resources(profile, resource)
     return 0 if capacity_failover_rule == 'none' || (capacity_failover_rule == 'discovered' && !self.ha_enabled?)
 
-    if failover_hosts.length > 0
+    if failover_hosts.size > 0
       capacity_failover_host_resources_with_failover_hosts(profile, resource)
     else
       # TODO: Support the other ways to specify failover

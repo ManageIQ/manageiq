@@ -32,6 +32,8 @@ class ExtManagementSystem < ApplicationRecord
   has_many :endpoints, :as => :resource, :dependent => :destroy, :autosave => true
 
   has_many :hosts, :foreign_key => "ems_id", :dependent => :nullify, :inverse_of => :ext_management_system
+  has_many :non_clustered_hosts, -> { non_clustered }, :class_name => "Host", :foreign_key => "ems_id"
+  has_many :clustered_hosts, -> { clustered }, :class_name => "Host", :foreign_key => "ems_id"
   has_many :vms_and_templates, :foreign_key => "ems_id", :dependent => :nullify,
            :class_name => "VmOrTemplate", :inverse_of => :ext_management_system
   has_many :miq_templates,     :foreign_key => :ems_id, :inverse_of => :ext_management_system
@@ -415,14 +417,6 @@ class ExtManagementSystem < ApplicationRecord
     inputs[:vm]   = target if target.kind_of?(Vm)
     inputs[:host] = target if target.kind_of?(Host)
     MiqEvent.raise_evm_event(target, event, inputs)
-  end
-
-  def non_clustered_hosts
-    hosts.where(:ems_cluster_id => nil)
-  end
-
-  def clustered_hosts
-    hosts.where.not(:ems_cluster_id => nil)
   end
 
   alias_method :all_storages,           :storages

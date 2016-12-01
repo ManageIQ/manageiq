@@ -15,9 +15,14 @@ class Zone < ApplicationRecord
   has_many :ldap_regions
   has_many :providers
 
-  virtual_has_many :hosts,              :uses => {:ext_management_systems => :hosts}
+  has_many :hosts,               :through => :ext_management_systems
+  has_many :clustered_hosts,     :through => :ext_management_systems
+  has_many :non_clustered_hosts, :through => :ext_management_systems
+  has_many :vms_and_templates,   :through => :ext_management_systems
+  has_many :vms,                 :through => :ext_management_systems
+  has_many :miq_templates,       :through => :ext_management_systems
+  has_many :ems_clusters,        :through => :ext_management_systems
   virtual_has_many :active_miq_servers, :class_name => "MiqServer"
-  virtual_has_many :vms_and_templates,  :uses => {:ext_management_systems => :vms_and_templates}
 
   before_destroy :check_zone_in_use_on_destroy
   after_save     :queue_ntp_reload_if_changed
@@ -109,32 +114,8 @@ class Zone < ApplicationRecord
     miq_servers.any? { |s| s.log_collection_active_recently?(since) }
   end
 
-  def host_ids
-    hosts.collect(&:id)
-  end
-
-  def hosts
-    MiqPreloader.preload(self, :ext_management_systems => :hosts)
-    ext_management_systems.flat_map(&:hosts)
-  end
-
   def self.hosts_without_a_zone
     Host.where(:ems_id => nil).to_a
-  end
-
-  def non_clustered_hosts
-    MiqPreloader.preload(self, :ext_management_systems => :hosts)
-    ext_management_systems.flat_map(&:non_clustered_hosts)
-  end
-
-  def clustered_hosts
-    MiqPreloader.preload(self, :ext_management_systems => :hosts)
-    ext_management_systems.flat_map(&:clustered_hosts)
-  end
-
-  def ems_clusters
-    MiqPreloader.preload(self, :ext_management_systems => :ems_clusters)
-    ext_management_systems.flat_map(&:ems_clusters)
   end
 
   def self.clusters_without_a_zone
@@ -178,35 +159,8 @@ class Zone < ApplicationRecord
     ems_clouds.flat_map(&:availability_zones)
   end
 
-  def vms_and_templates
-    MiqPreloader.preload(self, :ext_management_systems => :vms_and_templates)
-    ext_management_systems.flat_map(&:vms_and_templates)
-  end
-
-  def vms
-    MiqPreloader.preload(self, :ext_management_systems => :vms)
-    ext_management_systems.flat_map(&:vms)
-  end
-
   def self.vms_without_a_zone
     Vm.where(:ems_id => nil).to_a
-  end
-
-  def miq_templates
-    MiqPreloader.preload(self, :ext_management_systems => :miq_templates)
-    ext_management_systems.flat_map(&:miq_templates)
-  end
-
-  def vm_or_template_ids
-    vms_and_templates.collect(&:id)
-  end
-
-  def vm_ids
-    vms.collect(&:id)
-  end
-
-  def miq_template_ids
-    miq_templates.collect(&:id)
   end
 
   def storages
