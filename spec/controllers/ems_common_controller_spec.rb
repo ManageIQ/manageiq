@@ -142,6 +142,15 @@ describe EmsCloudController do
         expect(response.status).to eq 200
         expect(response.body).to include('vm/retire')
       end
+
+      it "when Retire Button is pressed for an Orchestration Stack" do
+        allow(controller).to receive(:role_allows?).and_return(true)
+        ems = FactoryGirl.create("ems_amazon")
+        ost = FactoryGirl.create(:orchestration_stack_cloud, :ext_management_system => ems)
+        post :button, :params => { :pressed => "orchestration_stack_retire", "check_#{ost.id}" => "1", :format => :js, :id => ems.id, :display => 'orchestration_stacks' }
+        expect(response.status).to eq 200
+        expect(response.body).to include('orchestration_stack/retire')
+      end
     end
   end
 
