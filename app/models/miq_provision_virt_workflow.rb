@@ -13,9 +13,10 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     # Check if the caller passed the source VM as part of the initial call
     if initial_pass == true
       src_vm_id = get_value(@values[:src_vm_id])
+      src_type = get_value(@values[:src_type])
       unless src_vm_id.blank?
-        vm = VmOrTemplate.find_by(:id => src_vm_id)
-        @values[:src_vm_id] = [vm.id, vm.name] unless vm.blank?
+        src = MiqProvisionSource.get_provisioning_request_source(src_vm_id, src_type)
+        @values[:src_vm_id] = [src.id, src.name] unless src.blank?
       end
     end
 
@@ -33,6 +34,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
 
     password_helper(@values, false) # Decrypt passwords in the hash for the UI
     @last_vm_id = get_value(@values[:src_vm_id]) unless initial_pass == true
+    @last_vm_type = get_value(@values[:src_type]) unless initial_pass == true
 
     return if options[:skip_dialog_load] == true
 
@@ -59,6 +61,8 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     if request
       request = request.kind_of?(MiqRequest) ? request : MiqRequest.find(request)
       request.src_vm_id = get_value(values[:src_vm_id])
+      new_src_type = get_value(values[:src_type])
+      request.src_type = new_src_type if new_src_type
     end
 
     super
@@ -66,8 +70,10 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
 
   def refresh_field_values(values)
     st = Time.now
-    new_src = get_value(values[:src_vm_id])
-    vm_changed = @last_vm_id != new_src
+    new_src_id = get_value(values[:src_vm_id])
+    new_src_type = get_value(values[:src_type])
+
+    vm_changed = (@last_vm_id != new_src_id) && (@last_vm_type != new_src_type)
 
     # Note: This makes a copy of the values hash so we have a copy of the object to modify
     @values = values
@@ -89,6 +95,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     update_field_visibility
 
     @last_vm_id = get_value(@values[:src_vm_id])
+    @last_vm_src = get_value(@values[:src_type])
     _log.info "provision refresh completed in [#{Time.now - st}] seconds"
   rescue => err
     _log.error "[#{err}]"
@@ -135,11 +142,11 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
       set_or_default_hardware_field_values(vm)
 
       # Record the nic/lan setting on the template for validation checks at provision time.
-      @values[:src_vm_nics] = vm.hardware.nil? ? nil : vm.hardware.nics.collect(&:device_name).compact
-      @values[:src_vm_lans] = vm.lans.collect(&:name).compact
+      @values[:src_vm_nics] = vm.try(:hardware).nil? ? nil : vm.hardware.nics.collect(&:device_name).compact
+      @values[:src_vm_lans] = vm.try(:lans).nil? ? [] : vm.lans.collect(&:name).compact
       vlan = @values[:src_vm_lans].first
       vm_description = vm.description
-      case vm.platform
+      case vm.try(:platform)
       when 'linux', 'windows' then show_dialog(:customize, :show, "enabled")
       else                         show_dialog(:customize, :hide, "disabled")
       end
@@ -278,8 +285,8 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
   def allowed_templates(options = {})
     # Return pre-selected VM if we are called for cloning
     if [:clone_to_vm, :clone_to_template].include?(request_type)
-      vm_or_template = VmOrTemplate.find_by(:id => get_value(@values[:src_vm_id]))
-      return [create_hash_struct_from_vm_or_template(vm_or_template, options)].compact
+      source = MiqProvisionSource.get_provisioning_request_source(@values[:src_vm_id], @values[:src_type])
+      return [create_hash_struct_from_source(source, options)].compact
     end
 
     filter_id = get_value(@values[:vm_filter]).to_i
@@ -288,7 +295,8 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     end
 
     rails_logger('allowed_templates', 0)
-    vms = VmOrTemplate.all
+    vms = MiqProvisionSource.get_provisioning_request_source_class(@values[:src_type]).all
+
     condition = allowed_template_condition
 
     unless options[:tag_filters].blank?
@@ -322,15 +330,14 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     else
       _log.warn "Allowed Templates is returning <#{allowed_templates_list.length}> template(s)"
       allowed_templates_list.each do |vm|
-        _log.debug "Allowed Template <#{vm.id}:#{vm.name}>  GUID: <#{vm.guid}>  UID_EMS: <#{vm.uid_ems}>"
+        _log.debug "Allowed Template <#{vm.id}:#{vm.name}>  GUID: <#{vm.try(:guid)}>  UID_EMS: <#{vm.try(:uid_ems)}>"
       end
     end
 
     MiqPreloader.preload(allowed_templates_list, [:snapshots, :operating_system, :ext_management_system, {:hardware => :disks}])
     @allowed_templates_cache = allowed_templates_list.collect do |template|
-      create_hash_struct_from_vm_or_template(template, options)
+      create_hash_struct_from_source(template, options)
     end
-
     @allowed_templates_cache
   end
 
@@ -341,8 +348,11 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
   end
 
   def source_vm_rbac_filter(vms, condition = nil)
-    MiqSearch.filtered(get_value(@values[:vm_filter]).to_i, VmOrTemplate, vms,
-                       :user => @requester, :conditions => condition)
+    MiqSearch.filtered(get_value(@values[:vm_filter]).to_i,
+                       MiqProvisionSource.get_provisioning_request_source_class(@values[:src_type]),
+                       vms,
+                       :user       => @requester,
+                       :conditions => condition)
   end
 
   def allowed_provision_types(_options = {})
@@ -375,15 +385,16 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     return @target_resource if @target_resource && refresh == false
 
     vm_id = get_value(@values[:src_vm_id])
+    vm_type = get_value(@values[:src_type])
     rails_logger('get_source_and_targets', 0)
-    svm = VmOrTemplate.find_by(:id => vm_id)
+    svm = MiqProvisionSource.get_provisioning_request_source(vm_id, vm_type)
 
     if svm.nil?
       @vm_snapshot_count = 0
       return @target_resource = {}
     end
 
-    @vm_snapshot_count = svm.v_total_snapshots
+    @vm_snapshot_count = svm.try(:v_total_snapshots) || 0
     result = {}
     result[:vm] = ci_to_hash_struct(svm)
     result[:ems] = ci_to_hash_struct(svm.ext_management_system)
@@ -426,7 +437,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
 
     result = {"disabled" => "<None>"}
 
-    case src[:vm].platform
+    case src[:vm].try(:platform)
     when 'windows' then result.merge!("fields" => "Specification", "file"  => "Sysprep Answer File")
     when 'linux'   then result["fields"] = "Specification"
     end
@@ -1008,6 +1019,10 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
       :sysprep_custom_spec             => get_value(@values[:sysprep_custom_spec]),
       :sysprep_enabled                 => get_value(@values[:sysprep_enabled])
     }
+  end
+
+  def create_hash_struct_from_source(source, options)
+    create_hash_struct_from_vm_or_template(source, options)
   end
 
   def create_hash_struct_from_vm_or_template(vm_or_template, options)

@@ -229,7 +229,11 @@ module MiqProvisionMixin
   end
 
   def source_type
-    vm_template.kind_of?(MiqTemplate) ? 'template' : 'vm'
+    if vm_template.kind_of?(MiqTemplate)
+      return 'template'
+    else
+      return 'vm'
+    end
   end
 
   def set_nic_settings(idx, nic_hash, value = nil)
