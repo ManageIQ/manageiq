@@ -197,7 +197,7 @@ module MiqPolicyController::Conditions
     @edit[:expression][:exp_model] = @edit[:new][:towhat]               # Set model for the exp editor
 
     # Populate exp editor fields for the applies_to_exp column
-    @edit[:applies_to_exp] ||= {}                                   # Create hash for this expression, if needed
+    @edit[:applies_to_exp] ||= ApplicationController::Filter::Expression.new
     @edit[:applies_to_exp][:expression] = []                       # Store exps in an array
     @edit[:applies_to_exp][:exp_idx] = 0                                  # Start at first exp
     if @edit[:new][:applies_to_exp].blank?
