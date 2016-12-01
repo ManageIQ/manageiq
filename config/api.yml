@@ -800,6 +800,7 @@
     - :policy_profiles
     - :cloud_networks
     - :custom_attributes
+    - :alert_statuses
     :collection_actions:
       :get:
       - :name: read
@@ -847,6 +848,10 @@
         :identifier: ems_infra_edit
       - :name: delete
         :identifier: ems_infra_edit
+    :alert_statuses_subcollection_actions:
+      :get:
+      - :name: show
+        :identifier: alert_status_show_list
     :policies_subcollection_actions:
       :post:
       - :name: assign
@@ -1522,6 +1527,49 @@
       :post:
       - :name: edit
       - :name: delete
+  :alert_status_states:
+    :description: alert status state
+    :options:
+    - :subcollection
+    :verbs: *gpd
+    :klass: MiqAlertStatusState
+    :subcollection_actions:
+      :post:
+      - :name: add
+        :identifier: alert_status_state_admin
+      - :name: edit
+        :identifier: alert_status_state_admin
+      - :name: delete
+        :identifier: alert_status_state_admin
+    :subresource_actions:
+      :post:
+      - :name: add
+        :identifier: alert_status_state_admin
+      - :name: edit
+        :identifier: alert_status_state_admin
+      - :name: delete
+        :identifier: alert_status_state_admin
+  :alert_statuses:
+    :description: Alerts Statuses
+    :identifier: alert_statuses
+    :options:
+    - :collection
+    - :subcollection
+    :subcollections:
+    - :alert_status_states
+    :verbs: *gpd
+    :klass: MiqAlertStatus
+    :collection_actions:
+      :get:
+      - :name: read
+        :identifier: alert_status_show_list
+      :post:
+      - :name: query
+        :identifier: alert_status_show_list
+    :resource_actions:
+      :get:
+      - :name: read
+        :identifier: alert_status_show
   :tags:
     :description: Tags
     :identifier: ops_settings

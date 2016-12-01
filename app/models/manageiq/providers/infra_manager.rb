@@ -6,6 +6,7 @@ module ManageIQ::Providers
     require_nested :VmOrTemplate
 
     include AvailabilityMixin
+    has_many :miq_alert_statuses, :through => :vms
 
     class << model_name
       define_method(:route_key) { "ems_infras" }

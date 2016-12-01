@@ -1912,7 +1912,68 @@
         :feature_type: admin
         :hidden: true
         :identifier: alert_delete
-
+  - :name: Alerts Statuses States
+    :description: Everything under Alerts Status states
+    :protected: true
+    :feature_type: node
+    :hidden: true
+    :identifier: alert_status_state
+    :children:
+    - :name: View
+      :description: View Alerts Statuses
+      :feature_type: view
+      :identifier: alert_status_state_show
+      :children:
+      - :name: List
+        :description: Display Lists of Alert Status states
+        :feature_type: view
+        :identifier: alert_status_state_show
+      - :name: Show
+        :description: Display Individual Alert Status state
+        :feature_type: view
+        :identifier: alert_status_state_show
+    - :name: Modify
+      :description: Modify Alerts Status States
+      :feature_type: admin
+      :hidden: true
+      :identifier: alert_status_state_admin
+      :children:
+      - :name: Create
+        :description: Create an Alert Status State
+        :hidden: true
+        :identifier: alert_status_state_admin
+      - :name: Edit
+        :description: Edit an Alert Status State
+        :hidden: true
+        :identifier: alert_status_state_admin
+      - :name: Delete
+        :description: Delete an Alert Status State
+        :hidden: true
+        :identifier: alert_status_state_admin
+  - :name: Alerts Statuses
+    :description: Everything under Alerts Statuses
+    :protected: true
+    :feature_type: node
+    :hidden: true
+    :identifier: alert_statuses
+    :children:
+    - :name: View
+      :description: View Alerts Statuses
+      :feature_type: view
+      :identifier: alert_status_view
+      :children:
+      - :name: List
+        :description: Display Lists of Alert Statuses
+        :feature_type: view
+        :identifier: alert_status_show_list
+      - :name: Show
+        :description: Display Individual Alert Status
+        :feature_type: view
+        :identifier: alert_status_show
+      - :name: ProvidersAlerts
+        :description: Display Alerts Statuses for provider
+        :feature_type: view
+        :identifier: providers_alert_statuses_show
 # Policy Simulation
 - :name: Simulation
   :description: Policy Simulation

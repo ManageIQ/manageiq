@@ -49,6 +49,11 @@ describe "Rest API Collections" do
       test_collection_query(:automate_domains, automate_domains_url, MiqAeDomain)
     end
 
+    it "query query Alert status" do
+      FactoryGirl.create(:miq_alert_status)
+      test_collection_bulk_query(:alert_statuses, alert_statuses_url, MiqAlertStatus)
+    end
+
     it "query Automation Requests" do
       FactoryGirl.create(:automation_request)
       test_collection_query(:automation_requests, automation_requests_url, AutomationRequest)
