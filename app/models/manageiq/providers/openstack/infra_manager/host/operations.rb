@@ -51,4 +51,36 @@ module ManageIQ::Providers::Openstack::InfraManager::Host::Operations
   def external_get_node_maintenance
     ironic_fog_node.maintenance
   end
+
+  def ironic_set_power_state_queue(userid = "system",
+                                   power_state = "power off")
+    task_opts = {
+      :action  => "Set Ironic Node Power State",
+      :user_id => userid
+    }
+
+    queue_opts = {
+      :class_name  => self.class.name,
+      :method_name => "ironic_set_power_state",
+      :instance_id => id,
+      :priority    => MiqQueue::HIGH_PRIORITY,
+      :role        => 'ems_operations',
+      :args        => [power_state],
+      :zone        => my_zone
+    }
+
+    MiqTask.generic_action_with_callback(task_opts, queue_opts)
+  end
+
+  def ironic_set_power_state(power_state = "power off")
+    connection = ext_management_system.openstack_handle.detect_baremetal_service
+    response = connection.set_node_power_state(uid_ems, power_state)
+
+    if response.status == 202
+      EmsRefresh.queue_refresh(ext_management_system)
+    end
+  rescue => e
+    _log.error "node=[#{name}], error: #{e}"
+    raise MiqException::MiqOpenstackInfraHostSetPowerStateError, e.to_s, e.backtrace
+  end
 end
