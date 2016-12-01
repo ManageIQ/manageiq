@@ -1115,10 +1115,28 @@ module ApplicationHelper
   end
 
   def javascript_redirect(args)
+    args = encode_query_string(args)
     render :update do |page|
       page << javascript_prologue
       page.redirect_to args
     end
+  end
+
+  def encode_query_string(args)
+    if args.kind_of?(String) && args.include?("?")
+      uri = URI(args)
+      query_string = Rack::Utils.parse_nested_query(uri.query)
+      query_string.each { |k, v| query_string[k] = URI.encode(v) }
+      args = "#{uri.path}?#{query_string.to_query}"
+    elsif args.kind_of?(Hash) && args[:flash_msg]
+      encode_flash(args)
+    end
+    args
+  end
+
+  def encode_flash(args)
+    args[:flash_msg] = URI.encode(args[:flash_msg])
+    args
   end
 
   def javascript_flash(**args)
