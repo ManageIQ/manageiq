@@ -163,7 +163,7 @@ describe ProviderForemanController do
     controller.instance_variable_set(:@provider_cfgmgmt, provider2)
     allow(controller).to receive(:render_flash)
     controller.save_provider_foreman
-    expect(assigns(:flash_array).first[:message]).to include("Configuration_manager.name has already been taken")
+    expect(assigns(:flash_array).first[:message]).to include("Name has already been taken")
   end
 
   context "#edit" do
