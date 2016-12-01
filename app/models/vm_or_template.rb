@@ -149,7 +149,9 @@ class VmOrTemplate < ApplicationRecord
   virtual_column :used_storage,                         :type => :integer,    :uses => [:used_disk_storage, :mem_cpu]
   virtual_column :used_storage_by_state,                :type => :integer,    :uses => :used_storage
   virtual_column :uncommitted_storage,                  :type => :integer,    :uses => [:provisioned_storage, :used_storage_by_state]
-  virtual_column :mem_cpu,                              :type => :integer,    :uses => :hardware
+  virtual_delegate :ram_size_in_bytes,                  :to => :hardware, :allow_nil => true, :default => 0
+  virtual_delegate :mem_cpu,                            :to => "hardware.memory_mb", :allow_nil => true, :default => 0
+  virtual_delegate :ram_size,                           :to => "hardware.memory_mb", :allow_nil => true, :default => 0
   virtual_column :ipaddresses,                          :type => :string_set, :uses => {:hardware => :ipaddresses}
   virtual_column :hostnames,                            :type => :string_set, :uses => {:hardware => :hostnames}
   virtual_column :mac_addresses,                        :type => :string_set, :uses => {:hardware => :mac_addresses}
@@ -1550,23 +1552,13 @@ class VmOrTemplate < ApplicationRecord
     hardware.nil? ? false : hardware.disks.any? { |d| d.disk_type == 'thin' }
   end
 
-  def ram_size
-    hardware.try(:memory_mb) || 0
-  end
-
   def ram_size_by_state
     state == 'on' ? ram_size : 0
-  end
-
-  def ram_size_in_bytes
-    ram_size * 1.megabyte
   end
 
   def ram_size_in_bytes_by_state
     ram_size_by_state * 1.megabyte
   end
-
-  alias_method :mem_cpu, :ram_size
 
   def num_cpu
     hardware.nil? ? 0 : hardware.cpu_sockets
