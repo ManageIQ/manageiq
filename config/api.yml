@@ -1276,6 +1276,8 @@
         :identifier: svc_catalog_provision
       - :name: delete
         :identifier: svc_catalog_provision
+      - :name: copy
+        :identifier: svc_catalog_provision
     :resource_actions:
       :get:
       - :name: read
@@ -1288,6 +1290,8 @@
       - :name: clear
         :identifier: svc_catalog_provision
       - :name: order
+        :identifier: svc_catalog_provision
+      - :name: copy
         :identifier: svc_catalog_provision
       :delete:
       - :name: delete

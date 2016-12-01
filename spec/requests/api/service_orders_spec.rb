@@ -541,4 +541,48 @@ RSpec.describe "service orders API" do
       end
     end
   end
+
+  context 'Copy Service Order' do
+    before do
+      @service_order = FactoryGirl.create(:shopping_cart, :user => @user)
+      @service_order_2 = FactoryGirl.create(:shopping_cart, :user => @user)
+    end
+
+    it 'forbids service order copy without an appropriate role' do
+      api_basic_authorize
+
+      run_post(service_orders_url(@service_order.id), :action => 'copy')
+
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it 'can copy a single service order' do
+      api_basic_authorize action_identifier(:service_orders, :copy)
+
+      expect do
+        run_post(service_orders_url(@service_order.id), :action => 'copy', :name => 'foo')
+      end.to change(ServiceOrder, :count).by(1)
+      expect(response.parsed_body).to include('name' => 'foo')
+      expect(response).to have_http_status(:ok)
+    end
+
+    it 'can copy multiple service orders' do
+      api_basic_authorize collection_action_identifier(:service_orders, :copy)
+
+      expected = {
+        'results' => a_collection_including(
+          a_hash_including('name' => 'foo'),
+          a_hash_including('name' => 'bar')
+        )
+      }
+      expect do
+        run_post(service_orders_url, :action => 'copy', :resources => [
+                   { :id => @service_order.id, :name => 'foo'},
+                   { :id => @service_order_2.id, :name => 'bar' }
+                 ])
+      end.to change(ServiceOrder, :count).by(2)
+      expect(response.parsed_body).to include(expected)
+      expect(response).to have_http_status(:ok)
+    end
+  end
 end
