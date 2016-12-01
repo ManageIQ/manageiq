@@ -97,4 +97,27 @@ describe ServiceOrder do
     error_message = "Invalid operation [remove_from_cart] for Service Order in state [ordered]"
     expect { ServiceOrder.remove_from_cart(request, user) }.to raise_error(RuntimeError, error_message)
   end
+
+  context '#deep_copy' do
+    it 'should copy the miq_requests' do
+      service_order.miq_requests << [request, request2]
+      service_order_copy = service_order.deep_copy
+      expect(service_order_copy.miq_requests.count).to eq(2)
+    end
+
+    it 'should have its order ID in the name unless specified' do
+      service_order_copy = service_order.deep_copy
+      expect(service_order_copy.name).to eq("Order # #{service_order_copy.id}")
+    end
+
+    it 'should accept new attributes' do
+      service_order_copy = service_order.deep_copy(:name => "foo bar")
+      expect(service_order_copy.name).to eq("foo bar")
+    end
+
+    it 'should be in the cart state' do
+      service_order_copy = service_order.deep_copy
+      expect(service_order_copy.state).to eq(ServiceOrder::STATE_CART)
+    end
+  end
 end

@@ -2,6 +2,8 @@ class ServiceOrder < ApplicationRecord
   STATE_CART    = 'cart'.freeze
   STATE_WISH    = 'wish'.freeze
   STATE_ORDERED = 'ordered'.freeze
+  REQUEST_ATTRIBUTES = %w(id name approval_state request_state message
+                          created_on fulfilled_on updated_on placed_on).freeze
 
   before_destroy :destroy_unprocessed_requests
   belongs_to :tenant
@@ -88,6 +90,22 @@ class ServiceOrder < ApplicationRecord
                         :user         => requester,
                         :miq_requests => [request],
                         :tenant       => requester.current_tenant).checkout_immediately
+  end
+
+  def deep_copy(new_attributes = {})
+    dup.tap do |new_service_order|
+      # Set it to nil - the after_create hook will give it the correct name
+      new_service_order.name = nil
+      # Should be put back into the Cart state
+      new_service_order.state = STATE_CART
+      new_service_order.miq_requests = miq_requests.collect do |request|
+        request.class.send(:create, request.attributes.except(*REQUEST_ATTRIBUTES))
+      end
+      new_attributes.each do |attr, value|
+        new_service_order.send("#{attr}=", value) if self.class.attribute_names.include? attr.to_s
+      end
+      new_service_order.save!
+    end
   end
 
   private
