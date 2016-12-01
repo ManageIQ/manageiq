@@ -182,7 +182,7 @@ module MiqPolicyController::Conditions
     # Populate exp editor fields for the expression column
     @edit[:expression] ||= ApplicationController::Filter::Expression.new
     @edit[:expression][:expression] = []                         # Store exps in an array
-    @edit[:expression][:exp_idx] = 0                                    # Start at first exp
+    @edit[:expression].history.idx = 0                                    # Start at first exp
     if @edit[:new][:expression].blank?
       @edit[:expression][:expression] = {"???" => "???"}                  # Set as new exp element
       @edit[:new][:expression] = copy_hash(@edit[:expression][:expression])   # Copy to new exp
@@ -199,7 +199,7 @@ module MiqPolicyController::Conditions
     # Populate exp editor fields for the applies_to_exp column
     @edit[:applies_to_exp] ||= ApplicationController::Filter::Expression.new
     @edit[:applies_to_exp][:expression] = []                       # Store exps in an array
-    @edit[:applies_to_exp][:exp_idx] = 0                                  # Start at first exp
+    @edit[:applies_to_exp].history.idx = 0                                  # Start at first exp
     if @edit[:new][:applies_to_exp].blank?
       @edit[:applies_to_exp][:expression] = {"???" => "???"}                # Set as new exp element
       @edit[:new][:applies_to_exp] = copy_hash(@edit[:applies_to_exp][:expression]) # Copy to new exp

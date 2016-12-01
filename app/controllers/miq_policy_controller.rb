@@ -1063,7 +1063,7 @@ class MiqPolicyController < ApplicationController
     # Populate exp editor fields for the expression column
     @edit[:expression] ||= ApplicationController::Filter::Expression.new
     @edit[:expression][:expression] = []                         # Store exps in an array
-    @edit[:expression][:exp_idx] = 0                                    # Start at first exp
+    @edit[:expression].history.idx = 0                                  # Start at first exp
     if @edit[:new][:expression].blank?
       @edit[:expression][:expression] = {"???" => "???"}                  # Set as new exp element
       @edit[:new][:expression] = copy_hash(@edit[:expression][:expression])   # Copy to new exp

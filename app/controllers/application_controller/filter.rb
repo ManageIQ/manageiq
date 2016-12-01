@@ -672,7 +672,7 @@ module ApplicationController::Filter
 
   # Set advanced search filter text
   def adv_search_set_text
-    if @edit[@expkey][:exp_idx] == 0                          # Are we pointing at the first exp
+    if @edit[@expkey].history.idx == 0                          # Are we pointing at the first exp
       if @edit[:adv_search_name]
         @edit[:adv_search_applied][:text] = _(" - Filtered by \"%{text}\"") % {:text => @edit[:adv_search_name]}
       else
@@ -1040,14 +1040,14 @@ module ApplicationController::Filter
     end
   end
 
-  # Method to maintain the expression undo array in @edit[@expkey][:exp_array]
+  # Method to maintain the expression undo array in @edit[@expkey].history.array
   def exp_array(func, exp = nil)
-    @edit[@expkey][:exp_array] ||= []
-    exp_ary = @edit[@expkey][:exp_array]          # Put exp array in local var
-    exp_idx = @edit[@expkey][:exp_idx]            # Put exp index in local var
+    @edit[@expkey].history.array ||= []
+    exp_ary = @edit[@expkey].history.array        # Put exp array in local var
+    exp_idx = @edit[@expkey].history.idx          # Put exp index in local var
     case func
     when :init
-      exp_ary = @edit[@expkey][:exp_array] = []      # Clear/create the exp array
+      exp_ary = @edit[@expkey].history.array = [] # Clear/create the exp array
       exp_idx = 0                                 # Initialize the exp index
       exp_ary.push(copy_hash(exp))                # Push the exp onto the array
     when :push
@@ -1056,16 +1056,16 @@ module ApplicationController::Filter
       exp_ary.push(copy_hash(exp))                    # Push the new exp onto the array
     when :undo
       if exp_idx > 0                              # If not on first element
-        @edit[@expkey][:exp_idx] -= 1                     # Decrement exp index
+        @edit[@expkey].history.idx -= 1           # Decrement exp index
         return copy_hash(exp_ary[exp_idx - 1])    # Return the prior exp
       end
     when :redo
       if exp_idx < exp_ary.length - 1             # If not on last element
-        @edit[@expkey][:exp_idx] += 1                     # Increment exp index
+        @edit[@expkey].history.idx += 1           # Increment exp index
         return copy_hash(exp_ary[exp_idx + 1])    # Return the next exp
       end
     end
-    @edit[@expkey][:exp_idx] = exp_idx                      # Save local index back to @edit object
+    @edit[@expkey].history.idx = exp_idx          # Save local index back to @edit object
     nil                                    # Return nil if no exp was returned
   end
 
@@ -1088,7 +1088,7 @@ module ApplicationController::Filter
       @edit = {}
       @edit[@expkey] ||= Expression.new
       @edit[@expkey][:expression] = []                           # Store exps in an array
-      @edit[@expkey][:exp_idx] = 0                                      # Start at first exp
+      @edit[@expkey].history.idx = 0                                    # Start at first exp
       @edit[@expkey][:expression] = {"???" => "???"}                      # Set as new exp element
       @edit[@expkey][:use_mytags] = true                                # Include mytags in tag search atoms
       @edit[:custom_search] = false                                     # setting default to false
