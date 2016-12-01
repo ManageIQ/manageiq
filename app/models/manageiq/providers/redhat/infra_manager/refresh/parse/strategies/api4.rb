@@ -37,5 +37,49 @@ module ManageIQ::Providers::Redhat::InfraManager::Refresh::Parse::Strategies
       end
       return result, result_uids, result_res_pools
     end
+
+    def self.storage_inv_to_hashes(inv)
+      result = []
+      result_uids = {:storage_id => {}}
+      return result, result_uids if inv.nil?
+
+      inv.each do |storage_inv|
+        mor = storage_inv.id
+
+        storage_type = storage_inv&.storage&.type.to_s.upcase
+        location = if storage_type == 'NFS' || storage_type == 'GLUSTERFS'
+                     "#{storage_inv&.storage&.address}:#{storage_inv&.storage&.path}"
+                   else
+                     storage_inv.attributes.fetch_path(:storage, :volume_group, :logical_unit, :id)
+                   end
+
+        free        = storage_inv&.available.to_i
+        used        = storage_inv&.used.to_i
+        total       = free + used
+        committed   = storage_inv&.committed.to_i
+        uncommitted = total - committed
+
+        ems_ref = ManageIQ::Providers::Redhat::InfraManager.make_ems_ref(storage_inv&.href)
+
+        new_result = {
+          :ems_ref             => ems_ref,
+          :ems_ref_obj         => ems_ref,
+          :name                => storage_inv&.name,
+          :store_type          => storage_type,
+          :storage_domain_type => storage_inv&.type.try(:downcase),
+          :total_space         => total,
+          :free_space          => free,
+          :uncommitted         => uncommitted,
+          :multiplehostaccess  => true,
+          :location            => location,
+          :master              => storage_inv&.master
+        }
+
+        result << new_result
+        result_uids[mor] = new_result
+        result_uids[:storage_id][storage_inv&.id] = new_result
+      end
+      return result, result_uids
+    end
   end
 end
