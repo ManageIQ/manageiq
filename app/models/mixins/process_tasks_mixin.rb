@@ -54,7 +54,7 @@ module ProcessTasksMixin
         remote_options = options.merge(:ids => ids)
 
         begin
-          remote_connection = api_client_connection_for_region(region, remote_options[:userid])
+          remote_connection = InterRegionApiMethodRelay.api_client_connection_for_region(region, remote_options[:userid])
           invoke_api_tasks(remote_connection, remote_options)
         rescue NotImplementedError => err
           $log.error("#{name} is not currently able to invoke tasks for remote regions")
@@ -112,23 +112,6 @@ module ProcessTasksMixin
         collection.send(action, post_args)
       end
     end
-
-    def api_client_connection_for_region(region, user)
-      hostname = MiqRegion.find_by_region(region).remote_ws_address
-      if hostname.nil?
-        $log.error("An error occurred while invoking remote tasks...The remote region [#{region}] does not have a web service address.")
-        raise "Failed to establish API connection to region #{region}"
-      end
-
-      require 'manageiq-api-client'
-
-      ManageIQ::API::Client.new(
-        :url      => "https://#{hostname}",
-        :miqtoken => MiqRegion.api_system_auth_token_for_region(region, user),
-        :ssl      => {:verify => false}
-      )
-    end
-    private :api_client_connection_for_region
 
     # default: invoked by task, can be overridden
     def task_invoked_by(_options)

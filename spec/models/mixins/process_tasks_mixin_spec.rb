@@ -82,7 +82,6 @@ describe ProcessTasksMixin do
 
     context "when the server has an ip address" do
       let(:api_connection)    { double("ManageIQ::API::Client connection") }
-      let(:region_auth_token) { double("MiqRegion API auth token") }
 
       before do
         server.ipaddress = "192.0.2.1"
@@ -90,24 +89,16 @@ describe ProcessTasksMixin do
       end
 
       it "calls invoke_api_tasks with the api connection and options" do
-        require "manageiq-api-client"
-
-        expect(MiqRegion).to receive(:api_system_auth_token_for_region)
-          .with(ApplicationRecord.my_region_number, request_user).and_return(region_auth_token)
-
-        client_connection_hash = {
-          :url      => "https://#{server.ipaddress}",
-          :miqtoken => region_auth_token,
-          :ssl      => {:verify => false}
-        }
-        expect(ManageIQ::API::Client).to receive(:new).with(client_connection_hash).and_return(api_connection)
+        expect(InterRegionApiMethodRelay).to receive(:api_client_connection_for_region)
+          .with(ApplicationRecord.my_region_number, request_user)
+          .and_return(api_connection)
 
         expect(test_class).to receive(:invoke_api_tasks).with(api_connection, test_options)
         test_class.invoke_tasks_remote(test_options)
       end
 
       it "requeues invoke_tasks_remote when invoke_api_tasks fails" do
-        expect(test_class).to receive(:api_client_connection_for_region)
+        expect(InterRegionApiMethodRelay).to receive(:api_client_connection_for_region)
         expect(test_class).to receive(:invoke_api_tasks).and_raise(RuntimeError)
         test_class.invoke_tasks_remote(test_options)
 
@@ -119,7 +110,7 @@ describe ProcessTasksMixin do
       end
 
       it "does not requeue for a NotImplementedError" do
-        expect(test_class).to receive(:api_client_connection_for_region)
+        expect(InterRegionApiMethodRelay).to receive(:api_client_connection_for_region)
         expect(test_class).to receive(:invoke_api_tasks).and_raise(NotImplementedError)
         expect(MiqQueue).not_to receive(:put)
         test_class.invoke_tasks_remote(test_options)

@@ -48,7 +48,7 @@ module InterRegionApiMethodRelay
     end
   end
 
-  def self.api_client_connection_for_region(region_number)
+  def self.api_client_connection_for_region(region_number, user = User.current_userid)
     region = MiqRegion.find_by(:region => region_number)
 
     unless region.auth_key_configured?
@@ -66,7 +66,7 @@ module InterRegionApiMethodRelay
 
     ManageIQ::API::Client.new(
       :url      => url,
-      :miqtoken => region.api_system_auth_token(User.current_userid),
+      :miqtoken => region.api_system_auth_token(user),
       :ssl      => {:verify => false}
     )
   end
