@@ -24,6 +24,7 @@ class MiqExpression
     ContainerReplicator
     ContainerRoute
     ContainerService
+    ContainerTemplate
     ManageIQ::Providers::CloudManager
     EmsCluster
     EmsClusterPerformance
