@@ -20,7 +20,7 @@ class ManageIQ::Providers::Foreman::Provider < ::Provider
 
   delegate :api_cached?, :ensure_api_cached, :to => :connect
 
-  before_validation :ensure_managers
+  before_create :ensure_managers
 
   validates :name, :presence => true, :uniqueness => true
   validates :url,  :presence => true
