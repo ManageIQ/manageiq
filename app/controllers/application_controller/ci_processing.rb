@@ -193,7 +193,7 @@ module ApplicationController::CiProcessing
   def retirevms
     assert_privileges(params[:pressed])
     vms = find_checked_items
-    if !%w(orchestration_stack service).include?(request.parameters["controller"]) &&
+    if !%w(orchestration_stack service).include?(request.parameters["controller"]) && !%w(orchestration_stacks).include?(params[:display]) &&
        VmOrTemplate.find(vms).any? { |vm| !vm.supports_retire? }
       add_flash(_("Set Retirement Date does not apply to selected %{model}") %
         {:model => ui_lookup(:table => "miq_template")}, :error)
@@ -207,7 +207,7 @@ module ApplicationController::CiProcessing
     elsif request.parameters[:controller] == "service"
       rec_cls =  "service"
       bc_msg = _("Retire Service")
-    elsif request.parameters[:controller] == "orchestration_stack"
+    elsif request.parameters[:controller] == "orchestration_stack" || %w(orchestration_stacks).include?(params[:display])
       rec_cls = "orchestration_stack"
       bc_msg = _("Retire Orchestration Stack")
     end
@@ -2782,6 +2782,8 @@ module ApplicationController::CiProcessing
       return "instance"
     elsif params[:pressed].starts_with?("miq_template_")
       return "miq_template"
+    elsif params[:pressed].starts_with?("orchestration_stack_")
+      return "orchestration_stack"
     else
       return "vm"
     end
