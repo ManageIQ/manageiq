@@ -194,7 +194,7 @@ module ReportController::Reports::Editor
         @expkey = :record_filter
 
         # Initialize the exp array
-        exp_array(:init, @edit[:record_filter][:expression]) if @edit[:record_filter].history.array.nil?
+        @edit[@expkey].history.reset(@edit[:record_filter][:expression]) if @edit[:record_filter].history.array.nil?
         @edit[:record_filter][:exp_table] = exp_build_table(@edit[:record_filter][:expression])
         @edit[:record_filter].prefill_val_types
         @edit[:record_filter][:exp_model] = @edit[:new][:model] # Set the model for the expression editor
@@ -206,7 +206,7 @@ module ReportController::Reports::Editor
       @expkey = :display_filter
 
       # Initialize the exp array
-      exp_array(:init, @edit[:display_filter][:expression]) if @edit[:display_filter].history.array.nil?
+      @edit[@expkey].history.reset(@edit[:display_filter][:expression]) if @edit[:display_filter].history.array.nil?
 
       @edit[:display_filter][:exp_table] = exp_build_table(@edit[:display_filter][:expression])
 

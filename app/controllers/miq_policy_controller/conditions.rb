@@ -191,7 +191,7 @@ module MiqPolicyController::Conditions
     @edit[:expression_table] = @edit[:expression][:expression] == {"???" => "???"} ? nil : exp_build_table(@edit[:expression][:expression])
 
     @expkey = :expression                                               # Set expression key to expression
-    exp_array(:init, @edit[:expression][:expression])                   # Initialize the exp array
+    @edit[@expkey].history.reset(@edit[:expression][:expression])
     @edit[:expression][:exp_table] = exp_build_table(@edit[:expression][:expression])
     @edit[:expression][:exp_model] = @edit[:new][:towhat]               # Set model for the exp editor
 
@@ -207,7 +207,7 @@ module MiqPolicyController::Conditions
     @edit[:scope_table] = @edit[:applies_to_exp][:expression] == {"???" => "???"} ? nil : exp_build_table(@edit[:applies_to_exp][:expression])
 
     @expkey = :applies_to_exp                                             # Set temporarily while building applies_to_exp exp editor vars
-    exp_array(:init, @edit[:applies_to_exp][:expression])                 # Initialize the exp array
+    @edit[@expkey].history.reset(@edit[:applies_to_exp][:expression])
     @edit[:applies_to_exp][:exp_table] = exp_build_table(@edit[:applies_to_exp][:expression])
     @expkey = :expression                                                 # Reset to default to editing the expression column
     @edit[:applies_to_exp][:exp_model] = @edit[:new][:towhat]             # Set model for the exp editor

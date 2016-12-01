@@ -1072,7 +1072,7 @@ class MiqPolicyController < ApplicationController
     @edit[:expression_table] = @edit[:expression][:expression] == {"???" => "???"} ? nil : exp_build_table(@edit[:expression][:expression])
 
     @expkey = :expression                                               # Set expression key to expression
-    exp_array(:init, @edit[:expression][:expression])                   # Initialize the exp array
+    @edit[@expkey].history.reset(@edit[:expression][:expression])
     @edit[:expression][:exp_table] = exp_build_table(@edit[:expression][:expression])
     @edit[:expression][:exp_model] = model                              # Set model for the exp editor
   end

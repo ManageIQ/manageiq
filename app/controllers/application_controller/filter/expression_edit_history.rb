@@ -7,5 +7,10 @@ module ApplicationController::Filter
       super
       self.idx ||= 0
     end
+
+    def reset(value)
+      self.array = [copy_hash(value)]
+      self.idx = 0
+    end
   end
 end
