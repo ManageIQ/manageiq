@@ -176,5 +176,9 @@ module Metric::Common
         none
       end
     end
+
+    def with_interval_and_time_range(interval, timestamp)
+      where(:capture_interval_name => interval, :timestamp => timestamp)
+    end
   end
 end
