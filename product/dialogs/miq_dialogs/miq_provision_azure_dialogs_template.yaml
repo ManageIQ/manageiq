@@ -225,16 +225,18 @@
           :notes_display: :hide
         :vm_name: 
           :description: Instance Name
-          :required_method: :validate_vm_name
-          :required_regex: !ruby/regex /^[^-_][a-zA-Z0-9_-]{1,15}(?<![-_])$/
+          :required_method:
+            - :validate_vm_name
+            - :validate_regex
+          :required_regex: !ruby/regexp /^[^-_][a-zA-Z0-9_-]{1,15}(?<![-_])$/
           :required_regex_fail_details: The name must be composed only of 1-15 English alphabet characters (a-z), numbers (0-9), dashes (-) or underscores (_). The first and last character must be an English alphabet character.
           :required: true
           :notes: 
           :display: :edit
           :data_type: :string
           :notes_display: :show
-          :min_length: 
-          :max_length:
+          :min_length: 1
+          :max_length: 15
       :display: :show
     :schedule:
       :description: Schedule
