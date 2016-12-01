@@ -25,8 +25,8 @@ class ApplicationHelper::Toolbar::VmCloudsCenter < ApplicationHelper::Toolbar::B
           :url_parms => "main_div",
           :confirm   => N_("Perform SmartState Analysis on the selected items?"),
           :enabled   => false,
-          :onwhen    => "1+",
-          :klass     => ApplicationHelper::Button::VmInstanceScan),
+          :klass     => ApplicationHelper::Button::BasicImage,
+          :onwhen    => "1+"),
         button(
           :instance_compare,
           'product product-compare fa-lg',
