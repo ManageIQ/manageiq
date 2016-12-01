@@ -4,7 +4,7 @@ version: 1.0
 object:
   attributes:
     display_name: 
-    name: CatalogItemInitization
+    name: ".missing"
     inherits: 
     description: default
   fields:
@@ -13,4 +13,4 @@ object:
   - pre1:
       value: "/Service/Provisioning/StateMachines/Methods/CatalogItemInitialization"
   - pre2:
-      value: "/Cloud/Orchestration/Provisioning/StateMachines/Methods/Preprovision"
+      value: Method::preprovision
