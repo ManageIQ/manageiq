@@ -1,0 +1,73 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://192.168.1.31:8443/api
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+  response:
+    status:
+      code: 401
+      message: Unauthorized
+    headers:
+      Connection:
+      - keep-alive
+      Www-Authenticate:
+      - Basic realm="ENGINE"
+      Content-Type:
+      - text/html;charset=UTF-8
+      Content-Length:
+      - '71'
+      Date:
+      - Thu, 01 Dec 2016 12:41:29 GMT
+    body:
+      encoding: UTF-8
+      string: "<html><head><title>Error</title></head><body>Unauthorized</body></html>"
+    http_version: 
+  recorded_at: Thu, 01 Dec 2016 12:41:28 GMT
+- request:
+    method: get
+    uri: https://admin%40internal:engine@192.168.1.31:8443/api/storagedomains/ee745353-c069-4de8-8d76-ec2e155e2ca0/disks/da123bb9-095a-4933-95f2-8032dfa332e1
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Connection:
+      - keep-alive
+      Set-Cookie:
+      - JSESSIONID=wgFKbxhmyF8DSFVWxXLBhdTTj-3c-1snGjezqC4W.f18; path=/api; HttpOnly
+      Content-Length:
+      - '0'
+      Jsessionid:
+      - wgFKbxhmyF8DSFVWxXLBhdTTj-3c-1snGjezqC4W
+      Date:
+      - Thu, 01 Dec 2016 12:41:29 GMT
+    body:
+      encoding: UTF-8
+      string: ''
+    http_version: 
+  recorded_at: Thu, 01 Dec 2016 12:41:29 GMT
+recorded_with: VCR 3.0.3

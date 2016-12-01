@@ -112,4 +112,38 @@ describe ManageIQ::Providers::Redhat::InfraManager::Vm do
       end
     end
   end
+
+  describe "#disconnect_storage" do
+    before(:each) do
+      _, _, zone = EvmSpecHelper.create_guid_miq_server_zone
+      ems = FactoryGirl.create(:ems_redhat, :zone => zone, :hostname => "192.168.1.31",
+                               :ipaddress => "192.168.1.31", :port => 8443)
+      ems.update_authentication(:default => {:userid => "admin@internal", :password => "engine"})
+      allow(ems).to receive(:supported_api_versions).and_return([3, 4])
+
+      @storage = FactoryGirl.create(:storage, :ems_ref => "/api/storagedomains/ee745353-c069-4de8-8d76-ec2e155e2ca0")
+      disk = FactoryGirl.create(:disk, :storage => @storage, :filename => "da123bb9-095a-4933-95f2-8032dfa332e1")
+      hardware = FactoryGirl.create(:hardware, :disks => [disk])
+      @vm = FactoryGirl.create(:vm_redhat, :storage => @storage, :storages => [@storage], :hardware => hardware, :ext_management_system => ems)
+    end
+
+    context "vm removed and" do
+      it "disks removed" do
+        VCR.use_cassette("#{described_class.name.underscore}_fetch_no_disks") do
+          @vm.disconnect_storage
+        end
+
+        expect(@vm.storage).to be_nil
+        expect(@vm.storages).to be_empty
+      end
+
+      it "disks not removed" do
+        VCR.use_cassette("#{described_class.name.underscore}_fetch_disks") do
+          @vm.disconnect_storage
+        end
+
+        expect(@vm.storage).to eq(@storage)
+      end
+    end
+  end
 end
