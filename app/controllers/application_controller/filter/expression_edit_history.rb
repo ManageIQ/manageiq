@@ -3,5 +3,9 @@ module ApplicationController::Filter
     :array,
     :idx
   ) do
+    def initialize(*args)
+      super
+      self.idx ||= 0
+    end
   end
 end

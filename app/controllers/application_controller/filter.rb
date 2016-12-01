@@ -1088,7 +1088,6 @@ module ApplicationController::Filter
       @edit = {}
       @edit[@expkey] ||= Expression.new
       @edit[@expkey][:expression] = []                           # Store exps in an array
-      @edit[@expkey].history.idx = 0                                    # Start at first exp
       @edit[@expkey][:expression] = {"???" => "???"}                      # Set as new exp element
       @edit[@expkey][:use_mytags] = true                                # Include mytags in tag search atoms
       @edit[:custom_search] = false                                     # setting default to false

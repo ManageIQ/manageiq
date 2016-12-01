@@ -372,7 +372,6 @@ module MiqPolicyController::Alerts
   def alert_build_blank_exp
     @edit[:expression] ||= ApplicationController::Filter::Expression.new
     @edit[:expression][:expression] = []                         # Store exps in an array
-    @edit[:expression].history.idx = 0                                    # Start at first exp
     @edit[:expression][:expression] = {"???" => "???"}                    # Set as new exp element
     @edit[:new][:expression] = copy_hash(@edit[:expression][:expression]) # Copy to new exp
     @edit[:expression_table] = @edit[:expression][:expression] == {"???" => "???"} ? nil : exp_build_table(@edit[:expression][:expression])
