@@ -81,5 +81,13 @@ module ManageIQ::Providers::Redhat::InfraManager::Refresh::Parse::Strategies
       end
       return result, result_uids
     end
+
+    def self.host_inv_to_hashes(inv, ems_inv, cluster_uids, _storage_uids)
+      HostInventory.new(inv: inv, logger: _log).host_inv_to_hashes(inv, ems_inv, cluster_uids, _storage_uids)
+    end
+
+    def self.vm_inv_to_hashes(inv, _storage_inv, storage_uids, cluster_uids, host_uids, lan_uids)
+      VmInventory.new(inv: inv, logger: _log).vm_inv_to_hashes(inv, _storage_inv, storage_uids, cluster_uids, host_uids, lan_uids)    
+    end
   end
 end
