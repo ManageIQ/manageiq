@@ -198,11 +198,9 @@ class ChargebackRateDetail < ApplicationRecord
       elsif first_tier?(tier,tiers)
         error = true if !tier.starts_with_zero? || tier.ends_with_infinity?
       elsif last_tier?(tier,tiers)
-        error = true if !consecutive_tiers?(tier, tiers[index - 1])
-        error = true if !tier.ends_with_infinity?
+        error = true if !consecutive_tiers?(tier, tiers[index - 1]) || !tier.ends_with_infinity?
       elsif middle_tier?(tier,tiers)
-        error = true if !consecutive_tiers?(tier, tiers[index - 1])
-        error = true if tier.ends_with_infinity?
+        error = true if !consecutive_tiers?(tier, tiers[index - 1]) || tier.ends_with_infinity?
       end
 
       break if error
