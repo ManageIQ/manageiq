@@ -198,6 +198,7 @@ class PglogicalSubscription < ActsAsArModel
 
   # sets this instance's password field to the one in the subscription dsn in the database
   def find_password
+    return password if password.present?
     s = pglogical.subscription_show_status(id).symbolize_keys
     dsn_hash = PG::DSNParser.parse(s.delete(:provider_dsn))
     self.password = dsn_hash[:password]
