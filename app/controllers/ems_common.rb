@@ -506,6 +506,10 @@ module EmsCommon
       refreshemss if params[:pressed] == "#{@table_name}_refresh"
       #     scanemss if params[:pressed] == "scan"
       tag(model) if params[:pressed] == "#{@table_name}_tag"
+
+      # Edit Tags for Middleware Manager Relationship pages
+      tag(@display.camelize.singularize) if @display && @display != 'main' &&
+                                            params[:pressed] == "#{@display.singularize}_tag"
       assign_policies(model) if params[:pressed] == "#{@table_name}_protect"
       check_compliance(model) if params[:pressed] == "#{@table_name}_check_compliance"
       edit_record if params[:pressed] == "#{@table_name}_edit"
