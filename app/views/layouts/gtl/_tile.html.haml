@@ -21,7 +21,9 @@
                                       :class   => "listcheckbox list-grid-checkbox",
                                       :onchange => "miqGridOnCheck(this, '#{button_div}', 'gtl_div');")
                   %td
-                    = render_quadicon(item, :mode => :icon)
+                    - options = {:mode => :icon}
+                    - options[:x_show_id] = row['x_show_id'] if item.id.nil?
+                    = render_quadicon(item, options)
                 %tr
                   %td{:colspan => "2", :style => "padding-top: 0px; margin-top: 0px;"}
                     = render_quadicon_text(item, row)
