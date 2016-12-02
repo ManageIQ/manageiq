@@ -366,11 +366,7 @@ class MiqCimInstance < ApplicationRecord
   private
 
   def decode(val)
-    return val.value if val.kind_of?(WBEM::Uint8)
-    return val.value if val.kind_of?(WBEM::Uint16)
-    return val.value if val.kind_of?(WBEM::Uint32)
-    return val.value if val.kind_of?(WBEM::Uint64)
-    return val.value if val.kind_of?(WBEM::Boolean)
+    return val.value if val.kind_of?(WBEM::Uint8) || val.kind_of?(WBEM::Uint16) || val.kind_of?(WBEM::Uint32) || val.kind_of?(WBEM::Uint64) || val.kind_of?(WBEM::Boolean)
     val
   end
 end
