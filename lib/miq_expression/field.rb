@@ -26,7 +26,10 @@ class MiqExpression::Field
   end
 
   def self.valid_field?(field)
-    FIELD_REGEX.match(field).present? if field.kind_of?(String)
+    if field.kind_of?(String)
+      match = FIELD_REGEX.match(field)
+      match.present? && match[:model_name].safe_constantize.present?
+    end
   end
 
   def datetime?
