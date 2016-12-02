@@ -21,6 +21,8 @@ module ManageIQ::Providers
     has_one :container_deployment, :foreign_key => :deployed_ems_id, :inverse_of => :deployed_ems
     has_many :computer_systems, :through => :container_nodes
 
+    virtual_column :port_show, :type => :string
+
     # required by aggregate_hardware
     alias :all_computer_systems :computer_systems
     alias :all_computer_system_ids :computer_system_ids
