@@ -31,7 +31,7 @@ module ApplicationController::Filter
           exp.clear                                         # Remove all existing keys
           exp["???"] = "???"                                # Set new exp key
           @edit[:edit_exp] = copy_hash(exp)
-          exp_set_fields(@edit[:edit_exp])
+          @edit[@expkey].update_from_exp_tree(exp)
         end
       else
         @edit[:edit_exp] = nil
@@ -95,7 +95,7 @@ module ApplicationController::Filter
       exp = exp_find_by_token(@edit[@expkey][:expression], token)
       @edit[:edit_exp] = copy_hash(exp)
       begin
-        exp_set_fields(@edit[:edit_exp])
+        @edit[@expkey].update_from_exp_tree(exp)
       rescue => bang
         @exp_atom_errors = [_("There is an error in the selected expression element, perhaps it was imported or edited manually."),
                             _("This element should be removed and recreated or you can report the error to your %{product} administrator.") % {:product => I18n.t('product.name')},
@@ -699,94 +699,6 @@ module ApplicationController::Filter
         exp_remove_tokens(exp["or"])
       end
 
-    end
-  end
-
-  # Set the fields for the expression editor based on the current expression
-  def exp_set_fields(exp)
-    exp.delete(:token)                  # Clear out the token key, if present
-    key = exp.keys.first
-    if exp[key]["field"]
-      typ = "field"
-      @edit[@expkey][:exp_field] = exp[key]["field"]
-      @edit[@expkey][:exp_value] = exp[key]["value"]
-      @edit[@expkey][:alias] = exp[key]["alias"]
-    elsif exp[key]["count"]
-      typ = "count"
-      @edit[@expkey][:exp_count] = exp[key]["count"]
-      @edit[@expkey][:exp_value] = exp[key]["value"]
-      @edit[@expkey][:alias] = exp[key]["alias"]
-    elsif exp[key]["tag"]
-      typ = "tag"
-      @edit[@expkey][:exp_tag] = exp[key]["tag"]
-      @edit[@expkey][:exp_value] = exp[key]["value"]
-      @edit[@expkey][:alias] = exp[key]["alias"]
-    elsif exp[key]["regkey"]
-      typ = "regkey"
-      @edit[@expkey][:exp_regkey] = exp[key]["regkey"]
-      @edit[@expkey][:exp_regval] = exp[key]["regval"]
-      @edit[@expkey][:exp_value] = exp[key]["value"]
-    elsif exp[key]["search"]
-      typ = "find"
-      skey = @edit[@expkey][:exp_skey] = exp[key]["search"].keys.first  # Get the search operator
-      @edit[@expkey][:exp_field] = exp[key]["search"][skey]["field"]    # Get the search field
-      @edit[@expkey][:alias] = exp[key]["search"][skey]["alias"]        # Get the field alias
-      @edit[@expkey][:exp_value] = exp[key]["search"][skey]["value"]    # Get the search value
-      if exp[key].key?("checkall")                        # Find the check hash key
-        chk = @edit[@expkey][:exp_check] = "checkall"
-      elsif exp[key].key?("checkany")
-        chk = @edit[@expkey][:exp_check] = "checkany"
-      elsif exp[key].key?("checkcount")
-        chk = @edit[@expkey][:exp_check] = "checkcount"
-      end
-      ckey = @edit[@expkey][:exp_ckey] = exp[key][chk].keys.first     # Get the check operator
-      @edit[@expkey][:exp_cfield] = exp[key][chk][ckey]["field"]        # Get the check field
-      @edit[@expkey][:exp_cvalue] = exp[key][chk][ckey]["value"]        # Get the check value
-    else
-      typ = nil
-    end
-
-    @edit[@expkey][:exp_key] = key.upcase
-    @edit[@expkey][:exp_orig_key] = key.upcase        # Hang on to the original key for commit
-    @edit[@expkey][:exp_typ] = typ
-    @edit[@expkey].prefill_val_types
-
-    @edit[@expkey].val1_suffix = @edit[@expkey].val2_suffix = nil
-    unless @edit[@expkey][:exp_value] == :user_input  # Ignore user input fields
-      if @edit.fetch_path(@expkey, :val1, :type) == :bytes
-        if is_numeric?(@edit[@expkey][:exp_value])                        # Value is a number
-          @edit[@expkey].val1_suffix = :bytes                             #  Default to :bytes
-          @edit[@expkey][:exp_value] = @edit[@expkey][:exp_value].to_s    #  Get the value
-        else                                                              # Value is a string
-          @edit[@expkey].val1_suffix = @edit[@expkey][:exp_value].split(".").last.to_sym # Get the suffix
-          @edit[@expkey][:exp_value] = @edit[@expkey][:exp_value].split(".")[0...-1].join(".")  # Remove the suffix
-        end
-      end
-    end
-    if @edit.fetch_path(@expkey, :val2, :type) == :bytes
-      if is_numeric?(@edit[@expkey][:exp_cvalue])                       # Value is a number
-        @edit[@expkey].val2_suffix = :bytes                             #  Default to :bytes
-        @edit[@expkey][:exp_cvalue] = @edit[@expkey][:exp_cvalue].to_s  #  Get the value
-      else                                                              # Value is a string
-        @edit[@expkey].val2_suffix = @edit[@expkey][:exp_cvalue].split(".").last.to_sym # Get the suffix
-        @edit[@expkey][:exp_cvalue] = @edit[@expkey][:exp_cvalue].split(".")[0...-1].join(".")  # Remove the suffix
-      end
-    end
-
-    # Change datetime and date field values into arrays while editing
-    if [:datetime, :date].include?(@edit.fetch_path(@expkey, :val1, :type))
-      @edit[@expkey][:exp_value] = @edit[@expkey][:exp_value].to_miq_a  # Turn date/time values into an array
-      @edit[@expkey][:val1][:date_format] = @edit[@expkey][:exp_value].to_s.first.include?("/") ? "s" : "r"
-      if key == EXP_FROM && @edit[@expkey][:val1][:date_format] == "r"
-        @edit[@expkey][:val1][:through_choices] = Expression.through_choices(@edit[@expkey][:exp_value][0])
-      end
-    end
-    if [:datetime, :date].include?(@edit.fetch_path(@expkey, :val2, :type))
-      @edit[@expkey][:exp_cvalue] = @edit[@expkey][:exp_cvalue].to_miq_a  # Turn date/time cvalues into an array
-      @edit[@expkey][:val2][:date_format] = @edit[@expkey][:exp_cvalue].first.include?("/") ? "s" : "r"
-      if ckey == EXP_FROM && @edit[@expkey][:val2][:date_format] == "r"
-        @edit[@expkey][:val2][:through_choices] = Expression.through_choices(@edit[@expkey][:exp_cvalue][0])
-      end
     end
   end
 
