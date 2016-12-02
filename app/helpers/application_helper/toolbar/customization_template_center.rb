@@ -10,19 +10,22 @@ class ApplicationHelper::Toolbar::CustomizationTemplateCenter < ApplicationHelpe
           :customization_template_copy,
           'fa fa-files-o fa-lg',
           t = N_('Copy this Customization Template'),
-          t),
+          t,
+          :klass => ApplicationHelper::Button::CustomizationTemplateCopy),
         button(
           :customization_template_edit,
           'pficon pficon-edit fa-lg',
           t = N_('Edit this Customization Template'),
-          t),
+          t,
+          :klass => ApplicationHelper::Button::CustomizationTemplate),
         button(
           :customization_template_delete,
           'pficon pficon-delete fa-lg',
           t = N_('Remove this Customization Template'),
           t,
           :url_parms => "&refresh=y",
-          :confirm   => N_("Warning: This Customization Template will be permanently removed!")),
+          :confirm   => N_("Warning: This Customization Template will be permanently removed!"),
+          :klass     => ApplicationHelper::Button::CustomizationTemplate),
       ]
     ),
   ])
