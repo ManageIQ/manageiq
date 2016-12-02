@@ -196,23 +196,24 @@ Methods updated/added: %{method_stats}") % stat_options, :success)
   end
 
   def retrieve_git_datastore
-    redirect_options = {:action => :review_git_import}
     git_url = params[:git_url]
-    verify_ssl = params[:git_verify_ssl] == "true" ? OpenSSL::SSL::VERIFY_PEER : OpenSSL::SSL::VERIFY_NONE
-    new_git_repo = false
 
     if git_url.blank?
       add_flash(_("Please provide a valid git URL"), :error)
+      response_json = {:message => @flash_array.first}
     elsif !GitBasedDomainImportService.available?
       add_flash(_("Please enable the git owner role in order to import git repositories"), :error)
+      response_json = {:message => @flash_array.first}
     else
       begin
-        git_repo = GitRepository.find_or_create_by!(:url => git_url) { new_git_repo = true }
-        git_repo.update_attributes(:verify_ssl => verify_ssl)
-        if params[:git_username] && params[:git_password]
-          git_repo.update_authentication(:values => {:userid   => params[:git_username],
-                                                     :password => params[:git_password]})
-        end
+        setup_results = git_repository_service.setup(
+          git_url,
+          params[:git_username],
+          params[:git_password],
+          params[:git_verify_ssl]
+        )
+        git_repo_id = setup_results[:git_repo_id]
+        new_git_repo = setup_results[:new_git_repo?]
 
         task_options = {
           :action => "Retrieve git repository",
@@ -221,32 +222,56 @@ Methods updated/added: %{method_stats}") % stat_options, :success)
         queue_options = {
           :class_name  => "GitRepository",
           :method_name => "refresh",
-          :instance_id => git_repo.id,
+          :instance_id => git_repo_id,
           :role        => "git_owner",
           :args        => []
         }
 
         task_id = MiqTask.generic_action_with_callback(task_options, queue_options)
-        task = MiqTask.wait_for_taskid(task_id)
-
-        raise task.message unless task.status == "Ok"
-
-        branch_names = git_repo.git_branches.collect(&:name)
-        tag_names = git_repo.git_tags.collect(&:name)
-        redirect_options[:git_branches] = branch_names.to_json
-        redirect_options[:git_tags] = tag_names.to_json
-        redirect_options[:git_repo_id] = git_repo.id
-        flash_message = "Successfully found git repository, please choose a branch or tag"
-        add_flash(_(flash_message), :success)
+        response_json = {:task_id => task_id, :git_repo_id => git_repo_id, :new_git_repo => new_git_repo}
       rescue => err
-        git_repo.destroy if git_repo && new_git_repo
-        add_flash(_("Error during repository fetch: %{error_message}") % {:error_message => err.message}, :error)
+        add_flash(_("Error during repository setup: %{error_message}") % {:error_message => err.message}, :error)
+        response_json = {:message => @flash_array.first}
       end
     end
 
-    redirect_options[:message] = @flash_array.first.to_json
+    respond_to do |format|
+      format.js { render :json => response_json.to_json, :status => 200 }
+    end
+  end
 
-    redirect_to redirect_options
+  def check_git_task
+    task = MiqTask.find(params[:task_id])
+    json = if task.state != MiqTask::STATE_FINISHED
+             {:state => task.state}
+           else
+             git_repo = GitRepository.find(params[:git_repo_id])
+
+             if task.status == "Ok"
+               branch_names = git_repo.git_branches.collect(&:name)
+               tag_names = git_repo.git_tags.collect(&:name)
+               flash_message = "Successfully found git repository, please choose a branch or tag"
+               add_flash(_(flash_message), :success)
+               {
+                 :git_branches => branch_names,
+                 :git_tags     => tag_names,
+                 :git_repo_id  => git_repo.id,
+                 :success      => true,
+                 :message      => @flash_array.first
+               }
+             else
+               git_repo.destroy if git_repo && params[:new_git_repo] != "false"
+               add_flash(_("Error during repository fetch: #{task.message}"), :error)
+               {
+                 :success => false,
+                 :message => @flash_array.first
+               }
+             end
+           end
+
+    respond_to do |format|
+      format.js { render :json => json.to_json, :status => 200 }
+    end
   end
 
   def review_git_import
@@ -318,6 +343,10 @@ Methods updated/added: %{method_stats}") % stat_options)
 
   def git_based_domain_import_service
     @git_based_domain_import_service ||= GitBasedDomainImportService.new
+  end
+
+  def git_repository_service
+    @git_repository_service ||= GitRepositoryService.new
   end
 
   def add_stats(stats_hash)
