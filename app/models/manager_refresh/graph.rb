@@ -32,7 +32,7 @@ module ManagerRefresh
       feedback_edge_set = []
 
       while edges.present?
-        edge = edges.pop
+        edge = edges.shift
         if detect_cycle(edge, acyclic_edges)
           feedback_edge_set << edge
         else

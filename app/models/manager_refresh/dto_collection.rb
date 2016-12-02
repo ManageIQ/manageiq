@@ -4,28 +4,29 @@ module ManagerRefresh
 
     attr_reader :model_class, :strategy, :attributes_blacklist, :attributes_whitelist, :custom_save_block, :parent,
                 :internal_attributes, :delete_method, :data, :data_index, :dependency_attributes, :manager_ref,
-                :association, :complete
+                :association, :complete, :transitive_dependency_attributes
 
     delegate :each, :size, :to => :to_a
 
     def initialize(model_class, manager_ref: nil, association: nil, parent: nil, strategy: nil, saved: nil,
                    custom_save_block: nil, delete_method: nil, data_index: nil, data: nil, dependency_attributes: nil,
                    attributes_blacklist: nil, attributes_whitelist: nil, complete: nil)
-      @model_class           = model_class
-      @manager_ref           = manager_ref || [:ems_ref]
-      @association           = association || []
-      @parent                = parent || []
-      @dependency_attributes = dependency_attributes || {}
-      @data                  = data || []
-      @data_index            = data_index || {}
-      @saved                 = saved || false
-      @strategy              = process_strategy(strategy)
-      @delete_method         = delete_method || :destroy
-      @attributes_blacklist  = Set.new
-      @attributes_whitelist  = Set.new
-      @custom_save_block     = custom_save_block
-      @internal_attributes   = [:__feedback_edge_set_parent]
-      @complete              = complete.nil? ? true : complete
+      @model_class                      = model_class
+      @manager_ref                      = manager_ref || [:ems_ref]
+      @association                      = association || []
+      @parent                           = parent || []
+      @dependency_attributes            = dependency_attributes || {}
+      @transitive_dependency_attributes = Set.new
+      @data                             = data || []
+      @data_index                       = data_index || {}
+      @saved                            = saved || false
+      @strategy                         = process_strategy(strategy)
+      @delete_method                    = delete_method || :destroy
+      @attributes_blacklist             = Set.new
+      @attributes_whitelist             = Set.new
+      @custom_save_block                = custom_save_block
+      @internal_attributes              = [:__feedback_edge_set_parent]
+      @complete                         = complete.nil? ? true : complete
 
       blacklist_attributes!(attributes_blacklist) if attributes_blacklist.present?
       whitelist_attributes!(attributes_whitelist) if attributes_whitelist.present?
@@ -200,14 +201,23 @@ module ManagerRefresh
       dto.data.each do |key, value|
         if dependency?(value)
           (dependency_attributes[key] ||= Set.new) << value.dto_collection
+          self.transitive_dependency_attributes << key if transitive_dependency?(value)
         elsif value.kind_of?(Array) && value.any? { |x| dependency?(x) }
           (dependency_attributes[key] ||= Set.new) << value.detect { |x| dependency?(x) }.dto_collection
+          self.transitive_dependency_attributes << key if value.any? { |x| transitive_dependency?(x) }
         end
       end
     end
 
     def dependency?(value)
       (value.kind_of?(::ManagerRefresh::DtoLazy) && value.dependency?) || value.kind_of?(::ManagerRefresh::Dto)
+    end
+
+    def transitive_dependency?(value)
+      # If the dependency is dto_collection.lazy_find(:ems_ref, :key => :stack)
+      # and a :stack is a relation to another object, in the Dto object,
+      # then this dependency is considered transitive.
+      (value.kind_of?(::ManagerRefresh::DtoLazy) && value.transitive_dependency?)
     end
   end
 end

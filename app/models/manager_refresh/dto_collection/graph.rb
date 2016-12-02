@@ -43,7 +43,7 @@ module ManagerRefresh
         # edges are transferred to newly created nodes.
         convert_to_dag!(nodes, feedback_edge_set)
 
-        # And assert again we really built a DAG
+        # And assert again we've really built a DAG
         assert_graph!(edges)
 
         self
@@ -83,7 +83,6 @@ module ManagerRefresh
           # blacklisted_attribute in any dto_collection dependency_attribute_keys that depend on this dto collection,
           # we will also need to move this dependency. And if the result cause a cycle, we should repeat the build_dag
           # method, with a max depth 10. We should throw a warning maybe asking for simplifying the interconnections.
-
           dto_collection.blacklist_attributes!(attrs)
           new_dto_collection.whitelist_attributes!(attrs)
         end
@@ -93,15 +92,27 @@ module ManagerRefresh
       end
 
       def build_edges(dto_collections)
-        edges       = []
+        edges            = []
+        transitive_edges = []
         fixed_edges = []
         dto_collections.each do |dto_collection|
           dto_collection.dependencies.each do |dependency|
             fixed_edges << [dependency, dto_collection] if dto_collection.fixed_dependencies.include?(dependency)
-            edges << [dependency, dto_collection]
+            if dto_collection.dependency_attributes_for([dependency]).any? { |x| dto_collection.transitive_dependency_attributes.include?(x) }
+              # The condition checks if the dependency is a transitive dependency, in other words a DtoLazy with :key
+              # pointing to another object.
+              transitive_edges << [dependency, dto_collection]
+            else
+              edges << [dependency, dto_collection]
+            end
           end
         end
-        return edges, fixed_edges
+        # We put transitive edges to the end. Transitive edge is e.g.: given graph (X,Y,Z), we have a lazy link, from X
+        # to Y, making edge (Y, X), using a :key pointing to Z. Which means that also edge from Y to Z (Z, Y) exists.
+        # If the edge (Z, Y) is placed before (Y, X), we process it first. Then the edge (Y, X), causing hidden
+        # transitive relation X to Z (it's hidden because edge (Z, X) is not present), is processed as last and we do a
+        # more effective cycle removal if needed.
+        return edges + transitive_edges, fixed_edges
       end
     end
   end

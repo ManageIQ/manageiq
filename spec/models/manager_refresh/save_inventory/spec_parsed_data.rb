@@ -65,4 +65,23 @@ module SpecParsedData
       :name => "t#{i}.nano",
     }.merge(data)
   end
+
+  def orchestration_stack_data(i, data = {})
+    {
+      :ems_ref       => "stack_ems_ref_#{i}",
+      :name          => "stack_name_#{i}",
+      :description   => "stack_description_#{i}",
+      :status        => "stack_status_#{i}",
+      :status_reason => "stack_status_reason_#{i}",
+    }.merge(data)
+  end
+
+  def orchestration_stack_resource_data(i, data ={})
+    {
+      :ems_ref           => "stack_resource_physical_resource_#{i}",
+      :name              => "stack_resource_name_#{i}",
+      :logical_resource  => "stack_resource_logical_resource_#{i}",
+      :physical_resource => "stack_resource_physical_resource_#{i}",
+    }.merge(data)
+  end
 end
