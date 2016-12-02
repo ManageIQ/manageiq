@@ -126,6 +126,76 @@ describe ManagerRefresh::SaveInventory do
         end
       end
 
+      context 'with empty DB and reversed DtoCollections' do
+        before :each do
+          initialize_dto_collections_reversed
+        end
+
+        it 'creates and updates a graph of DtoCollections with cycle stack -> stack' do
+          # Doing 2 times, to make sure we first create all records then update all records
+          2.times do
+            # Fill the DtoCollections with data
+            init_stack_data_with_stack_stack_cycle
+            init_resource_data
+
+            add_data_to_dto_collection(@data[:orchestration_stacks],
+                                       @orchestration_stack_data_0_1,
+                                       @orchestration_stack_data_0_2,
+                                       @orchestration_stack_data_1_11,
+                                       @orchestration_stack_data_1_12,
+                                       @orchestration_stack_data_11_21,
+                                       @orchestration_stack_data_12_22,
+                                       @orchestration_stack_data_12_23)
+            add_data_to_dto_collection(@data[:orchestration_stacks_resources],
+                                       @orchestration_stack_resource_data_1_11,
+                                       @orchestration_stack_resource_data_1_11_1,
+                                       @orchestration_stack_resource_data_1_12,
+                                       @orchestration_stack_resource_data_1_12_1,
+                                       @orchestration_stack_resource_data_11_21,
+                                       @orchestration_stack_resource_data_12_22,
+                                       @orchestration_stack_resource_data_12_23)
+
+            # Invoke the DtoCollections saving
+            ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
+
+            # Assert saved data
+            assert_full_dto_collections_graph
+          end
+        end
+
+        it 'creates and updates a graph of DtoCollections with cycle stack -> resource -> stack, through resource :key' do
+          # Doing 2 times, to make sure we first create all records then update all records
+          2.times do
+            # Fill the DtoCollections with data
+            init_stack_data_with_stack_resource_stack_cycle
+            init_resource_data
+
+            add_data_to_dto_collection(@data[:orchestration_stacks],
+                                       @orchestration_stack_data_0_1,
+                                       @orchestration_stack_data_0_2,
+                                       @orchestration_stack_data_1_11,
+                                       @orchestration_stack_data_1_12,
+                                       @orchestration_stack_data_11_21,
+                                       @orchestration_stack_data_12_22,
+                                       @orchestration_stack_data_12_23)
+            add_data_to_dto_collection(@data[:orchestration_stacks_resources],
+                                       @orchestration_stack_resource_data_1_11,
+                                       @orchestration_stack_resource_data_1_11_1,
+                                       @orchestration_stack_resource_data_1_12,
+                                       @orchestration_stack_resource_data_1_12_1,
+                                       @orchestration_stack_resource_data_11_21,
+                                       @orchestration_stack_resource_data_12_22,
+                                       @orchestration_stack_resource_data_12_23)
+
+            # Invoke the DtoCollections saving
+            ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
+
+            # Assert saved data
+            assert_full_dto_collections_graph
+          end
+        end
+      end
+
       context 'with the existing data in the DB' do
         it 'updates existing records with a graph of DtoCollections with cycle stack -> stack' do
           # Create all relations directly in DB
@@ -352,6 +422,20 @@ describe ManagerRefresh::SaveInventory do
       OrchestrationStackResource,
       :parent      => @ems,
       :association => :orchestration_stacks_resources)
+  end
+
+  def initialize_dto_collections_reversed
+    # Initialize the DtoCollections in reversed order, so we know that untangling of the cycle does not depend on the
+    # order of the DtoCollections
+    @data                                  = {}
+    @data[:orchestration_stacks_resources] = ::ManagerRefresh::DtoCollection.new(
+      OrchestrationStackResource,
+      :parent      => @ems,
+      :association => :orchestration_stacks_resources)
+    @data[:orchestration_stacks]           = ::ManagerRefresh::DtoCollection.new(
+      ManageIQ::Providers::CloudManager::OrchestrationStack,
+      :parent      => @ems,
+      :association => :orchestration_stacks)
   end
 
   def init_stack_data_with_stack_stack_cycle
