@@ -125,6 +125,160 @@ describe ManagerRefresh::SaveInventory do
           end
         end
       end
+
+      context 'with the existing data in the DB' do
+        it 'updates existing records with a graph of DtoCollections with cycle stack -> stack' do
+          # Create all relations directly in DB
+          initialize_mocked_records
+          # And check the relations are correct
+          assert_full_dto_collections_graph
+
+          # Now we will update existing DB using SaveInventory
+          # Fill the DtoCollections with data
+          initialize_dto_collections
+          init_stack_data_with_stack_stack_cycle
+          init_resource_data
+
+          add_data_to_dto_collection(@data[:orchestration_stacks],
+                                     @orchestration_stack_data_0_1,
+                                     @orchestration_stack_data_0_2,
+                                     @orchestration_stack_data_1_11,
+                                     @orchestration_stack_data_1_12,
+                                     @orchestration_stack_data_11_21,
+                                     @orchestration_stack_data_12_22,
+                                     @orchestration_stack_data_12_23)
+          add_data_to_dto_collection(@data[:orchestration_stacks_resources],
+                                     @orchestration_stack_resource_data_1_11,
+                                     @orchestration_stack_resource_data_1_11_1,
+                                     @orchestration_stack_resource_data_1_12,
+                                     @orchestration_stack_resource_data_1_12_1,
+                                     @orchestration_stack_resource_data_11_21,
+                                     @orchestration_stack_resource_data_12_22,
+                                     @orchestration_stack_resource_data_12_23)
+
+          # Invoke the DtoCollections saving
+          ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
+
+          # Assert saved data
+          assert_full_dto_collections_graph
+
+          # Check that we only updated the existing records
+          orchestration_stack_0_1   = OrchestrationStack.find_by(:ems_ref => "stack_ems_ref_0_1")
+          orchestration_stack_0_2   = OrchestrationStack.find_by(:ems_ref => "stack_ems_ref_0_2")
+          orchestration_stack_1_11  = OrchestrationStack.find_by(:ems_ref => "stack_ems_ref_1_11")
+          orchestration_stack_1_12  = OrchestrationStack.find_by(:ems_ref => "stack_ems_ref_1_12")
+          orchestration_stack_11_21 = OrchestrationStack.find_by(:ems_ref => "stack_ems_ref_11_21")
+          orchestration_stack_12_22 = OrchestrationStack.find_by(:ems_ref => "stack_ems_ref_12_22")
+          orchestration_stack_12_23 = OrchestrationStack.find_by(:ems_ref => "stack_ems_ref_12_23")
+
+          orchestration_stack_resource_1_11   = OrchestrationStackResource.find_by(
+            :ems_ref => "stack_ems_ref_1_11")
+          orchestration_stack_resource_1_11_1 = OrchestrationStackResource.find_by(
+            :ems_ref => "stack_resource_physical_resource_1_11_1")
+          orchestration_stack_resource_1_12   = OrchestrationStackResource.find_by(
+            :ems_ref => "stack_ems_ref_1_12")
+          orchestration_stack_resource_1_12_1 = OrchestrationStackResource.find_by(
+            :ems_ref => "stack_resource_physical_resource_1_12_1")
+          orchestration_stack_resource_11_21  = OrchestrationStackResource.find_by(
+            :ems_ref => "stack_ems_ref_11_21")
+          orchestration_stack_resource_12_22  = OrchestrationStackResource.find_by(
+            :ems_ref => "stack_ems_ref_12_22")
+          orchestration_stack_resource_12_23  = OrchestrationStackResource.find_by(
+            :ems_ref => "stack_ems_ref_12_23")
+
+          expect(orchestration_stack_0_1).to eq(@orchestration_stack_0_1)
+          expect(orchestration_stack_0_2).to eq(@orchestration_stack_0_2)
+          expect(orchestration_stack_1_11).to eq(@orchestration_stack_1_11)
+          expect(orchestration_stack_1_12).to eq(@orchestration_stack_1_12)
+          expect(orchestration_stack_11_21).to eq(@orchestration_stack_11_21)
+          expect(orchestration_stack_12_22).to eq(@orchestration_stack_12_22)
+          expect(orchestration_stack_12_23).to eq(@orchestration_stack_12_23)
+
+          expect(orchestration_stack_resource_1_11).to eq(@orchestration_stack_resource_1_11)
+          expect(orchestration_stack_resource_1_11_1).to eq(@orchestration_stack_resource_1_11_1)
+          expect(orchestration_stack_resource_1_12).to eq(@orchestration_stack_resource_1_12)
+          expect(orchestration_stack_resource_1_12_1).to eq(@orchestration_stack_resource_1_12_1)
+          expect(orchestration_stack_resource_11_21).to eq(@orchestration_stack_resource_11_21)
+          expect(orchestration_stack_resource_12_22).to eq(@orchestration_stack_resource_12_22)
+          expect(orchestration_stack_resource_12_23).to eq(@orchestration_stack_resource_12_23)
+        end
+
+        it 'updates existing records with a graph of DtoCollections with cycle stack -> resource -> stack, through resource :key' do
+          # Create all relations directly in DB
+          initialize_mocked_records
+          # And check the relations are correct
+          assert_full_dto_collections_graph
+
+          # Now we will update existing DB using SaveInventory
+          # Fill the DtoCollections with data
+          initialize_dto_collections
+          init_stack_data_with_stack_resource_stack_cycle
+          init_resource_data
+
+          add_data_to_dto_collection(@data[:orchestration_stacks],
+                                     @orchestration_stack_data_0_1,
+                                     @orchestration_stack_data_0_2,
+                                     @orchestration_stack_data_1_11,
+                                     @orchestration_stack_data_1_12,
+                                     @orchestration_stack_data_11_21,
+                                     @orchestration_stack_data_12_22,
+                                     @orchestration_stack_data_12_23)
+          add_data_to_dto_collection(@data[:orchestration_stacks_resources],
+                                     @orchestration_stack_resource_data_1_11,
+                                     @orchestration_stack_resource_data_1_11_1,
+                                     @orchestration_stack_resource_data_1_12,
+                                     @orchestration_stack_resource_data_1_12_1,
+                                     @orchestration_stack_resource_data_11_21,
+                                     @orchestration_stack_resource_data_12_22,
+                                     @orchestration_stack_resource_data_12_23)
+
+          # Invoke the DtoCollections saving
+          ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
+
+          # Assert saved data
+          assert_full_dto_collections_graph
+
+          # Check that we only updated the existing records
+          orchestration_stack_0_1   = OrchestrationStack.find_by(:ems_ref => "stack_ems_ref_0_1")
+          orchestration_stack_0_2   = OrchestrationStack.find_by(:ems_ref => "stack_ems_ref_0_2")
+          orchestration_stack_1_11  = OrchestrationStack.find_by(:ems_ref => "stack_ems_ref_1_11")
+          orchestration_stack_1_12  = OrchestrationStack.find_by(:ems_ref => "stack_ems_ref_1_12")
+          orchestration_stack_11_21 = OrchestrationStack.find_by(:ems_ref => "stack_ems_ref_11_21")
+          orchestration_stack_12_22 = OrchestrationStack.find_by(:ems_ref => "stack_ems_ref_12_22")
+          orchestration_stack_12_23 = OrchestrationStack.find_by(:ems_ref => "stack_ems_ref_12_23")
+
+          orchestration_stack_resource_1_11   = OrchestrationStackResource.find_by(
+            :ems_ref => "stack_ems_ref_1_11")
+          orchestration_stack_resource_1_11_1 = OrchestrationStackResource.find_by(
+            :ems_ref => "stack_resource_physical_resource_1_11_1")
+          orchestration_stack_resource_1_12   = OrchestrationStackResource.find_by(
+            :ems_ref => "stack_ems_ref_1_12")
+          orchestration_stack_resource_1_12_1 = OrchestrationStackResource.find_by(
+            :ems_ref => "stack_resource_physical_resource_1_12_1")
+          orchestration_stack_resource_11_21  = OrchestrationStackResource.find_by(
+            :ems_ref => "stack_ems_ref_11_21")
+          orchestration_stack_resource_12_22  = OrchestrationStackResource.find_by(
+            :ems_ref => "stack_ems_ref_12_22")
+          orchestration_stack_resource_12_23  = OrchestrationStackResource.find_by(
+            :ems_ref => "stack_ems_ref_12_23")
+
+          expect(orchestration_stack_0_1).to eq(@orchestration_stack_0_1)
+          expect(orchestration_stack_0_2).to eq(@orchestration_stack_0_2)
+          expect(orchestration_stack_1_11).to eq(@orchestration_stack_1_11)
+          expect(orchestration_stack_1_12).to eq(@orchestration_stack_1_12)
+          expect(orchestration_stack_11_21).to eq(@orchestration_stack_11_21)
+          expect(orchestration_stack_12_22).to eq(@orchestration_stack_12_22)
+          expect(orchestration_stack_12_23).to eq(@orchestration_stack_12_23)
+
+          expect(orchestration_stack_resource_1_11).to eq(@orchestration_stack_resource_1_11)
+          expect(orchestration_stack_resource_1_11_1).to eq(@orchestration_stack_resource_1_11_1)
+          expect(orchestration_stack_resource_1_12).to eq(@orchestration_stack_resource_1_12)
+          expect(orchestration_stack_resource_1_12_1).to eq(@orchestration_stack_resource_1_12_1)
+          expect(orchestration_stack_resource_11_21).to eq(@orchestration_stack_resource_11_21)
+          expect(orchestration_stack_resource_12_22).to eq(@orchestration_stack_resource_12_22)
+          expect(orchestration_stack_resource_12_23).to eq(@orchestration_stack_resource_12_23)
+        end
+      end
     end
   end
 
@@ -275,5 +429,84 @@ describe ManagerRefresh::SaveInventory do
       :ems_ref => orchestration_stack_data("12_23")[:ems_ref],
       :stack   => @data[:orchestration_stacks].lazy_find(orchestration_stack_data("1_12")[:ems_ref]),
     )
+  end
+
+  def initialize_mocked_records
+    @orchestration_stack_0_1   = FactoryGirl.create(
+      :orchestration_stack_cloud,
+      orchestration_stack_data("0_1").merge(
+        :ext_management_system => @ems,
+        :parent                => nil))
+    @orchestration_stack_0_2   = FactoryGirl.create(
+      :orchestration_stack_cloud,
+      orchestration_stack_data("0_2").merge(
+        :ext_management_system => @ems,
+        :parent                => nil))
+    @orchestration_stack_1_11  = FactoryGirl.create(
+      :orchestration_stack_cloud,
+      orchestration_stack_data("1_11").merge(
+        :ext_management_system => @ems,
+        :parent                => @orchestration_stack_0_1))
+    @orchestration_stack_1_12  = FactoryGirl.create(
+      :orchestration_stack_cloud,
+      orchestration_stack_data("1_12").merge(
+        :ext_management_system => @ems,
+        :parent                => @orchestration_stack_0_1))
+    @orchestration_stack_11_21 = FactoryGirl.create(
+      :orchestration_stack_cloud,
+      orchestration_stack_data("11_21").merge(
+        :ext_management_system => @ems,
+        :parent                => @orchestration_stack_1_11))
+    @orchestration_stack_12_22 = FactoryGirl.create(
+      :orchestration_stack_cloud,
+      orchestration_stack_data("12_22").merge(
+        :ext_management_system => @ems,
+        :parent                => @orchestration_stack_1_12))
+    @orchestration_stack_12_23 = FactoryGirl.create(
+      :orchestration_stack_cloud,
+      orchestration_stack_data("12_23").merge(
+        :ext_management_system => @ems,
+        :parent                => @orchestration_stack_1_12))
+
+    @orchestration_stack_resource_1_11   = FactoryGirl.create(
+      :orchestration_stack_resource,
+      orchestration_stack_resource_data("1_11").merge(
+        :ems_ref => orchestration_stack_data("1_11")[:ems_ref],
+        :stack   => @orchestration_stack_0_1,
+      ))
+    @orchestration_stack_resource_1_11_1 = FactoryGirl.create(
+      :orchestration_stack_resource,
+      orchestration_stack_resource_data("1_11_1").merge(
+        :stack => @orchestration_stack_0_1,
+      ))
+    @orchestration_stack_resource_1_12   = FactoryGirl.create(
+      :orchestration_stack_resource,
+      orchestration_stack_resource_data("1_12").merge(
+        :ems_ref => orchestration_stack_data("1_12")[:ems_ref],
+        :stack   => @orchestration_stack_0_1,
+      ))
+    @orchestration_stack_resource_1_12_1 = FactoryGirl.create(
+      :orchestration_stack_resource,
+      orchestration_stack_resource_data("1_12_1").merge(
+        :stack => @orchestration_stack_0_1,
+      ))
+    @orchestration_stack_resource_11_21  = FactoryGirl.create(
+      :orchestration_stack_resource,
+      orchestration_stack_resource_data("11_21").merge(
+        :ems_ref => orchestration_stack_data("11_21")[:ems_ref],
+        :stack   => @orchestration_stack_1_11,
+      ))
+    @orchestration_stack_resource_12_22  = FactoryGirl.create(
+      :orchestration_stack_resource,
+      orchestration_stack_resource_data("12_22").merge(
+        :ems_ref => orchestration_stack_data("12_22")[:ems_ref],
+        :stack   => @orchestration_stack_1_12,
+      ))
+    @orchestration_stack_resource_12_23  = FactoryGirl.create(
+      :orchestration_stack_resource,
+      orchestration_stack_resource_data("12_23").merge(
+        :ems_ref => orchestration_stack_data("12_23")[:ems_ref],
+        :stack   => @orchestration_stack_1_12,
+      ))
   end
 end
