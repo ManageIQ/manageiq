@@ -214,6 +214,9 @@ module ManagerRefresh
     end
 
     def transitive_dependency?(value)
+      # If the dependency is dto_collection.lazy_find(:ems_ref, :key => :stack)
+      # and a :stack is a relation to another object, in the Dto object,
+      # then this dependency is considered transitive.
       (value.kind_of?(::ManagerRefresh::DtoLazy) && value.transitive_dependency?)
     end
   end
