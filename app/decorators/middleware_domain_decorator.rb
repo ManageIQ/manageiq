@@ -3,7 +3,7 @@ class MiddlewareDomainDecorator < Draper::Decorator
   include MiddlewareDecoratorMixin
 
   def fonticon
-    'domain'.freeze
+    'pficon-domain'.freeze
   end
 
   # Determine the icon

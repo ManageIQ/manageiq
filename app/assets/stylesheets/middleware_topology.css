@@ -8,11 +8,3 @@
     font-size: 20px;
     fill: #555;
 }
-
-.middleware .kube-topology g.MiddlewareDomain text.glyph {
-    font-family: IcoMoon;
-}
-
-.middleware .kube-topology g.MiddlewareServerGroup text.glyph {
-    font-family: IcoMoon;
-}
