@@ -656,7 +656,9 @@ function miqBuildChartMenuEx(col, row, _value, category, series, chart_set, char
       $("#" + pid).append("<li><a id='"+btoa(JSON.stringify(row_col_chart_index))+"' href='#' onclick='miqChartMenuClick(this.id)'>" + menu_title + "</a></li>");
     }
 
-    chartmenu_el.css({'left': ManageIQ.mouse.x, 'top': ManageIQ.mouse.y});
+    //chart menu has min-width: 160 a has two levels
+    var x_position = (ManageIQ.mouse.x > $(window).width() - 320) ? $(window).width() - 320 : ManageIQ.mouse.x;
+    chartmenu_el.css({'left': x_position, 'top': ManageIQ.mouse.y});
     chartmenu_el.dropdown('toggle');
     chart_el.find('.overlay').show();
   }
