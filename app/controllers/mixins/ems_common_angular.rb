@@ -2,10 +2,6 @@ module Mixins
   module EmsCommonAngular
     extend ActiveSupport::Concern
 
-    def index
-      redirect_to :action => 'show_list'
-    end
-
     def update
       assert_privileges("#{permission_prefix}_edit")
       case params[:button]

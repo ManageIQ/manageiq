@@ -158,11 +158,6 @@ module EmsCommon
     @showtype = @display = display
   end
 
-  # Show the main MS list view
-  def show_list
-    process_show_list
-  end
-
   def new
     @doc_url = provider_documentation_url
     assert_privileges("#{permission_prefix}_new")
