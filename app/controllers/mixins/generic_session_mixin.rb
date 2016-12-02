@@ -11,6 +11,7 @@ module Mixins
       @display    = session["#{self.class.table_name}_display".to_sym]
       @filters    = session["#{self.class.table_name}_filters".to_sym]
       @catinfo    = session["#{self.class.table_name}_catinfo".to_sym]
+      @showtype   = session["#{self.class.table_name}_showtype".to_sym]
     end
 
     def set_session_data
@@ -18,6 +19,7 @@ module Mixins
       session["#{self.class.table_name}_display".to_sym]    = @display unless @display.nil?
       session["#{self.class.table_name}_filters".to_sym]    = @filters
       session["#{self.class.table_name}_catinfo".to_sym]    = @catinfo
+      session["#{self.class.table_name}_showtype".to_sym]   = @showtype
     end
   end
 end

@@ -5,6 +5,7 @@ class ResourcePoolController < ApplicationController
   after_action :set_session_data
 
   include Mixins::GenericListMixin
+  include Mixins::GenericSessionMixin
 
   def show
     @display = params[:display] || "main" unless control_selected?
@@ -118,29 +119,6 @@ class ResourcePoolController < ApplicationController
         render_flash
       end
     end
-  end
-
-  private ############################
-
-  def get_session_data
-    @title        = _("Resource Pools")
-    @layout       = "resource_pool"
-    @display      = session[:resource_pool_display]
-    @filters      = session[:resource_pool_filters]
-    @catinfo      = session[:resource_pool_catinfo]
-    @current_page = session[:resource_pool_current_page]
-    @search_text  = session[:resource_pool_search_text]
-    @lastaction   = session[:rp_lastaction]
-  end
-
-  def set_session_data
-    session[:resource_pool_lastaction]   = @lastaction
-    session[:resource_pool_display]      = @display || session[:resource_pool_display]
-    session[:resource_pool_filters]      = @filters
-    session[:resource_pool_catinfo]      = @catinfo
-    session[:resource_pool_current_page] = @current_page
-    session[:resource_pool_search_text]  = @search_text
-    session[:rp_lastaction]              = @lastaction
   end
 
   menu_section :inf
