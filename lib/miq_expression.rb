@@ -640,7 +640,7 @@ class MiqExpression
   end
 
   def value_in_sql?(value)
-    !Field.valid_field?(value) || Field.parse(value).attribute_supported_by_sql?
+    !Field.is_field?(value) || Field.parse(value).attribute_supported_by_sql?
   end
 
   def field_in_sql?(field)
@@ -962,7 +962,7 @@ class MiqExpression
   end
 
   def self.quote(val, typ)
-    if Field.valid_field?(val)
+    if Field.is_field?(val)
       ref, value = value2tag(val)
       col_type = get_col_type(val) || "string"
       return ref ? "<value ref=#{ref}, type=#{col_type}>#{value}</value>" : "<value type=#{col_type}>#{value}</value>"
@@ -1643,7 +1643,7 @@ class MiqExpression
   def to_arel(exp, tz)
     operator = exp.keys.first
     field = Field.parse(exp[operator]["field"]) if exp[operator].kind_of?(Hash) && exp[operator]["field"]
-    if(exp[operator].kind_of?(Hash) && exp[operator]["value"] && Field.valid_field?(exp[operator]["value"]))
+    if(exp[operator].kind_of?(Hash) && exp[operator]["value"] && Field.is_field?(exp[operator]["value"]))
       parsed_value = Field.parse(exp[operator]["value"]).arel_attribute
     elsif exp[operator].kind_of?(Hash)
       parsed_value = exp[operator]["value"]

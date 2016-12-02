@@ -25,7 +25,7 @@ class MiqExpression::Field
     column_type == :date
   end
 
-  def self.valid_field?(field)
+  def self.is_field?(field)
     if field.kind_of?(String)
       match = FIELD_REGEX.match(field)
       match.present? && match[:model_name].safe_constantize.present?

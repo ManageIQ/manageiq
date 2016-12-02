@@ -159,13 +159,13 @@ RSpec.describe MiqExpression::Field do
     end
   end
 
-  describe "#valid_field?" do
+  describe "#is_field?" do
     it "detects a valid field" do
-      expect(MiqExpression::Field.valid_field?("Vm-name")).to be_truthy
+      expect(MiqExpression::Field.is_field?("Vm-name")).to be_truthy
     end
 
     it "does not detect a string to looks like a field but isn't" do
-      expect(MiqExpression::Field.valid_field?("NetworkManager-team")).to be_falsey
+      expect(MiqExpression::Field.is_field?("NetworkManager-team")).to be_falsey
     end
   end
 end
