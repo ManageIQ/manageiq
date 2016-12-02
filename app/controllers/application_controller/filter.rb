@@ -9,7 +9,7 @@ module ApplicationController::Filter
     @edit = session[:edit]
     case params[:pressed]
     when "undo", "redo"
-      @edit[@expkey][:expression] = exp_array(params[:pressed].to_sym)
+      @edit[@expkey][:expression] = @edit[@expkey].history.rewind(params[:pressed])
       @edit[:new][@expkey] = copy_hash(@edit[@expkey][:expression])
     when "not"
       exp_add_not(@edit[@expkey][:expression], @edit[@expkey][:exp_token])
@@ -1038,27 +1038,6 @@ module ApplicationController::Filter
       exp.delete(deletekey)                             # Remove the AND or OR hash
       return false                                      # Done removing item, return
     end
-  end
-
-  # Method to maintain the expression undo array in @edit[@expkey].history.array
-  def exp_array(func, exp = nil)
-    @edit[@expkey].history.array ||= []
-    exp_ary = @edit[@expkey].history.array        # Put exp array in local var
-    exp_idx = @edit[@expkey].history.idx          # Put exp index in local var
-    case func
-    when :undo
-      if exp_idx > 0                              # If not on first element
-        @edit[@expkey].history.idx -= 1           # Decrement exp index
-        return copy_hash(exp_ary[exp_idx - 1])    # Return the prior exp
-      end
-    when :redo
-      if exp_idx < exp_ary.length - 1             # If not on last element
-        @edit[@expkey].history.idx += 1           # Increment exp index
-        return copy_hash(exp_ary[exp_idx + 1])    # Return the next exp
-      end
-    end
-    @edit[@expkey].history.idx = exp_idx          # Save local index back to @edit object
-    nil                                    # Return nil if no exp was returned
   end
 
   # Build advanced search expression
