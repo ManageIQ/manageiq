@@ -326,16 +326,7 @@ Methods updated/added: 10
 
         context "when everything works fine" do
           let(:git_repo) { double("GitRepository", :id => 123) }
-          let(:task_options) { {:action => "Retrieve git repository", :userid => controller.current_user.userid} }
-          let(:queue_options) do
-            {
-              :class_name  => "GitRepository",
-              :method_name => "refresh",
-              :instance_id => 123,
-              :role        => "git_owner",
-              :args        => []
-            }
-          end
+          let(:git_based_domain_import_service) { double("GitBasedDomainImportService") }
 
           before do
             allow(git_repository_service).to receive(:setup).with(
@@ -344,7 +335,8 @@ Methods updated/added: 10
               "gitpassword",
               "gitverifyssl"
             ).and_return({:git_repo_id => git_repo.id, :new_git_repo? => false})
-            allow(MiqTask).to receive(:generic_action_with_callback).with(task_options, queue_options).and_return(321)
+            allow(GitBasedDomainImportService).to receive(:new).and_return(git_based_domain_import_service)
+            allow(git_based_domain_import_service).to receive(:queue_refresh).with(123).and_return(321)
           end
 
           it "responds with task information" do

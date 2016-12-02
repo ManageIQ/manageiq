@@ -215,19 +215,7 @@ Methods updated/added: %{method_stats}") % stat_options, :success)
         git_repo_id = setup_results[:git_repo_id]
         new_git_repo = setup_results[:new_git_repo?]
 
-        task_options = {
-          :action => "Retrieve git repository",
-          :userid => current_user.userid
-        }
-        queue_options = {
-          :class_name  => "GitRepository",
-          :method_name => "refresh",
-          :instance_id => git_repo_id,
-          :role        => "git_owner",
-          :args        => []
-        }
-
-        task_id = MiqTask.generic_action_with_callback(task_options, queue_options)
+        task_id = git_based_domain_import_service.queue_refresh(git_repo_id)
         response_json = {:task_id => task_id, :git_repo_id => git_repo_id, :new_git_repo => new_git_repo}
       rescue => err
         add_flash(_("Error during repository setup: %{error_message}") % {:error_message => err.message}, :error)
