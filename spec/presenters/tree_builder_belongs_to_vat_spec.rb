@@ -23,28 +23,34 @@ describe TreeBuilderBelongsToVat do
                                             :selected => {})
   end
 
-  it 'set init options correctly' do
-    tree_options = @vat_tree.send(:tree_init_options, :vat)
-    expect(tree_options).to eq(:full_ids  => true,
-                               :add_root  => false,
-                               :lazy      => false,
-                               :checkable => @edit.present?,
-                               :selected  => {})
+  describe '#tree_init_options' do
+    it 'sets tree options correctly' do
+      tree_options = @vat_tree.send(:tree_init_options, :vat)
+      expect(tree_options).to eq(:full_ids             => true,
+                                 :add_root             => false,
+                                 :lazy                 => false,
+                                 :checkable_checkboxes => @edit.present?,
+                                 :selected             => {})
+    end
   end
 
-  it 'set locals for render correctly' do
-    locals = @vat_tree.send(:set_locals_for_render)
-    expect(locals[:id_prefix]).to eq('vat_')
-    expect(locals[:checkboxes]).to eq(true)
-    expect(locals[:check_url]).to eq("/ops/rbac_group_field_changed/#{@group.id || "new"}___")
-    expect(locals[:onclick]).to eq(false)
-    expect(locals[:oncheck]).to eq(@edit ? "miqOnCheckUserFilters" : nil,)
-    expect(locals[:highlight_changes]).to eq(true)
+  describe '#set_locals_for_render' do
+    it 'set locals for render correctly' do
+      locals = @vat_tree.send(:set_locals_for_render)
+      expect(locals[:id_prefix]).to eq('vat_')
+      expect(locals[:checkboxes]).to eq(true)
+      expect(locals[:check_url]).to eq("/ops/rbac_group_field_changed/#{@group.id || "new"}___")
+      expect(locals[:onclick]).to eq(false)
+      expect(locals[:oncheck]).to eq(@edit ? "miqOnCheckUserFilters" : nil,)
+      expect(locals[:highlight_changes]).to eq(true)
+    end
   end
 
-  it '#x_get_tree_datacenter_kids' do
-    kids = @vat_tree.send(:x_get_tree_datacenter_kids, @datacenter, false, nil)
-    expect(kids).to include(@ems_folder)
-    expect(kids.size).to eq(1)
+  describe '#x_get_tree_datacenter_kids' do
+    it 'returns folders' do
+      kids = @vat_tree.send(:x_get_tree_datacenter_kids, @datacenter, false, nil)
+      expect(kids).to include(@ems_folder)
+      expect(kids.size).to eq(1)
+    end
   end
 end

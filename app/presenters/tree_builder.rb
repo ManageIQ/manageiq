@@ -161,14 +161,14 @@ class TreeBuilder
   def add_to_sandbox
     @tree_state.add_tree(
       @options.reverse_merge(
-        :tree       => @name,
-        :type       => type,
-        :klass_name => self.class.name,
-        :leaf       => @options[:leaf],
-        :add_root   => true,
-        :open_nodes => [],
-        :lazy       => true,
-        :checkable  => false
+        :tree                 => @name,
+        :type                 => type,
+        :klass_name           => self.class.name,
+        :leaf                 => @options[:leaf],
+        :add_root             => true,
+        :open_nodes           => [],
+        :lazy                 => true,
+        :checkable_checkboxes => false
       )
     )
   end

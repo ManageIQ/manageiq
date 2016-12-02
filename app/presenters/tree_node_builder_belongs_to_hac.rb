@@ -31,6 +31,6 @@ class TreeNodeBuilderBelongsToHac < TreeNodeBuilder
   def generic_node(text, image, tip = nil)
     super
     @node[:cfmeNoClick] = true
-    @node[:checkable] = options[:checkable] if options.key?(:checkable)
+    @node[:checkable] = options[:checkable_checkboxes] if options.key?(:checkable_checkboxes)
   end
 end
