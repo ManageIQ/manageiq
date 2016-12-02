@@ -121,7 +121,9 @@ class NetworkRouterController < ApplicationController
   def delete_network_routers
     assert_privileges("network_router_delete")
 
-    routers = if @lastaction == "show_list" || (@lastaction == "show" && @layout != "network_router") || @lastaction.nil?
+    routers = if @lastaction == "show_list" ||
+                 (@lastaction == "show" && @layout != "network_router") ||
+                 @lastaction.nil?
                 find_checked_items
               else
                 [params[:id]]

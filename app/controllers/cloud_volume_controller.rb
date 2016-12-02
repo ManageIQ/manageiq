@@ -395,15 +395,15 @@ class CloudVolumeController < ApplicationController
             volumes_to_delete.push(volume)
           else
             add_flash(_("Couldn't initiate deletion of %{model} \"%{name}\": %{details}") % {
-                :model   => ui_lookup(:table => 'cloud_volume'),
-                :name    => volume.name,
-                :details => valid_delete[:message]}, :error)
+              :model   => ui_lookup(:table => 'cloud_volume'),
+              :name    => volume.name,
+              :details => valid_delete[:message]}, :error)
           end
         rescue Excon::Error::Unauthorized => e
           add_flash(_("Couldn't initiate deletion of %{model} \"%{name}\": %{details}") % {
-              :model   => ui_lookup(:table => 'cloud_volume'),
-              :name    => volume.name,
-              :details => e}, :error)
+            :model   => ui_lookup(:table => 'cloud_volume'),
+            :name    => volume.name,
+            :details => e}, :error)
         end
 
       end
@@ -420,7 +420,7 @@ class CloudVolumeController < ApplicationController
         add_flash(_("The selected %{model} was deleted") % {:model => ui_lookup(:table => "cloud_volume")})
       end
     else
-      drop_breadcrumb(:name => 'dummy', :url  => " ") # missing a bc to get correctly back so here's a dummy
+      drop_breadcrumb(:name => 'dummy', :url => " ") # missing a bc to get correctly back so here's a dummy
       session[:flash_msgs] = @flash_array.dup if @flash_array
       redirect_to(previous_breadcrumb_url)
     end

@@ -111,7 +111,6 @@ class CloudNetworkController < ApplicationController
                else
                  [params[:id]]
                end
-
     if networks.empty?
       add_flash(_("No %{models} were selected for deletion.") % {
         :models => ui_lookup(:tables => "cloud_network")
@@ -151,7 +150,7 @@ class CloudNetworkController < ApplicationController
         add_flash(_("The selected %{model} was deleted") % {:model => ui_lookup(:table => "cloud_network")})
       end
     else
-      drop_breadcrumb(:name => 'dummy', :url  => " ") # missing a bc to get correctly back so here's a dummy
+      drop_breadcrumb(:name => 'dummy', :url => " ") # missing a bc to get correctly back so here's a dummy
       session[:flash_msgs] = @flash_array.dup if @flash_array
       redirect_to(previous_breadcrumb_url)
     end
@@ -239,7 +238,9 @@ class CloudNetworkController < ApplicationController
     options[:name] = params[:name] if params[:name] unless @network.name == params[:name]
     options[:admin_state_up] = switch_to_bol(params[:enabled]) unless @network.enabled == switch_to_bol(params[:enabled])
     options[:shared] = switch_to_bol(params[:shared]) unless @network.shared == switch_to_bol(params[:shared])
-    options[:external_facing] = switch_to_bol(params[:external_facing]) unless @network.external_facing == switch_to_bol(params[:external_facing])
+    unless @network.external_facing == switch_to_bol(params[:external_facing])
+      options[:external_facing] = switch_to_bol(params[:external_facing])
+    end
     # TODO: uncomment once form contains this field
     # options[:port_security_enabled] = switch_to_bol(params[:port_security_enabled]) unless @network.port_security_enabled == switch_to_bol(params[:port_security_enabled])
     options[:qos_policy_id] = params[:qos_policy_id] unless @network.qos_policy_id == params[:qos_policy_id]

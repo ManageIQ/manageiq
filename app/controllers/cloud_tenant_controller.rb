@@ -22,10 +22,10 @@ class CloudTenantController < ApplicationController
     when "custom_button"
       # custom button screen, so return, let custom_buttons method handle everything
       custom_buttons
-      return
     else
-      if params[:pressed].starts_with?(*CloudTenantController.display_methods.map(&:singularize))
-        target_controller = CloudTenantController.display_methods.map(&:singularize).find{ |n| params[:pressed].starts_with?(n)}
+      editable_objects = CloudTenantController.display_methods.map(&:singularize) - %w(instance image) # handled in super
+      if params[:pressed].starts_with?(*editable_objects)
+        target_controller = editable_objects.find { |n| params[:pressed].starts_with?(n) }
         action = params[:pressed].sub("#{target_controller}_", '')
         action = "#{action}_#{target_controller.sub('cloud_','').pluralize}" if action == 'delete'
         if action == 'detach'
@@ -39,13 +39,9 @@ class CloudTenantController < ApplicationController
           end
         end
         javascript_redirect :controller => target_controller, :miq_grid_checks => params[:miq_grid_checks], :action => action
-        return
-      elsif params[:pressed].starts_with?('delete') #TODO ???
-        return
       else
         # calling the method from Mixins::GenericButtonMixin
         super
-        return
       end
     end
   end
