@@ -1093,7 +1093,8 @@ class ProviderForemanController < ApplicationController
     unassigned_configuration_profile.description = unassigned_configuration_profile_desc
 
     unassigned_profile_row =
-      {'description'                    => unassigned_configuration_profile_desc,
+      {'x_show_id'                      => "-#{provider_id}-unassigned",
+       'description'                    => unassigned_configuration_profile_desc,
        'total_configured_systems'       => unprovisioned_configured_systems,
        'configuration_environment_name' => unassigned_configuration_profile.configuration_environment_name,
        'my_zone'                        => unassigned_configuration_profile.my_zone,

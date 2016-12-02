@@ -106,9 +106,9 @@ module QuadiconHelper
   # Currently can't use `url_for_record` because it attempts to guess the
   # controller and guesses incorrectly for some situations.
   #
-  def quadicon_url_to_xshow_from_cid(item)
+  def quadicon_url_to_xshow_from_cid(item, options = {})
     # Previously: {:action => 'x_show', :id => controller.send(:list_row_id, item)}
-    {:action => 'x_show', :id => to_cid(item.id)}
+    {:action => 'x_show', :id => to_cid(item.id) || options[:x_show_id]}
   end
 
   # Currently only used once
@@ -263,7 +263,7 @@ module QuadiconHelper
     else
       attrs[:controller] = controller_name
       attrs[:action]  = 'x_show'
-      attrs[:id]      = to_cid(row['id'])
+      attrs[:id]      = to_cid(row['id']) || row['x_show_id']
     end
 
     url_for(attrs)
@@ -593,7 +593,7 @@ module QuadiconHelper
       if quadicon_show_links?
         if quadicon_in_explorer_view?
           img_opts.delete(:path)
-          url = quadicon_url_to_xshow_from_cid(item)
+          url = quadicon_url_to_xshow_from_cid(item, options)
           link_opts = {:sparkle => true, :remote => true}
         else
           url = url_for_record(item)
