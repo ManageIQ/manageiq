@@ -1900,6 +1900,15 @@ class ApplicationController < ActionController::Base
     prov_redirect("publish")
   end
 
+  def handle_remember_tab
+    return if request.xml_http_request? || !request.get? || request.format != Mime[:html] ||
+      request.headers['X-Angular-Request'].present?
+
+    return if controller_name == 'dashboard' && action_name == 'maintab'
+
+    remember_tab
+  end
+
   def remember_tab
     section_id = menu_section_id(params)
     return if section_id.nil?
@@ -1948,7 +1957,7 @@ class ApplicationController < ActionController::Base
     session[:host_url] = request.host_with_port
     session[:tab_url] ||= {}
 
-    remember_tab if !request.xml_http_request? && request.get? && request.format == Mime[:html] && request.headers['X-Angular-Request'].nil?
+    handle_remember_tab
 
     # Get all of the global variables used by most of the controllers
     @pp_choices = PPCHOICES
