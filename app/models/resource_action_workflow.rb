@@ -124,7 +124,7 @@ class ResourceActionWorkflow < MiqRequestWorkflow
   end
 
   def validate(_values = nil)
-    @dialog.try(:validate)
+    validate_dialog.blank?
   end
 
   private
