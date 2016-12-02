@@ -1,6 +1,8 @@
 /* global miqSparkleOn miqSparkleOff showErrorMessage clearMessages */
 
 var GitImport = {
+  TASK_POLL_TIMEOUT: 1500,
+
   retrieveDatastoreClickHandler: function() {
     $('.git-retrieve-datastore').click(function(event) {
       event.preventDefault();
@@ -10,7 +12,7 @@ var GitImport = {
       $.post('retrieve_git_datastore', $('#retrieve-git-datastore-form').serialize(), function(data) {
         var parsedData = JSON.parse(data);
         var messages = parsedData.message;
-        if (messages && messages.level === "error") {
+        if (messages && messages.level === 'error') {
           showErrorMessage(messages.message);
           miqSparkleOff();
         } else {
@@ -24,7 +26,7 @@ var GitImport = {
     $.get('check_git_task', gitData, function(data) {
       var parsedData = JSON.parse(data);
       if (parsedData.state) {
-        setTimeout(GitImport.pollForGitTaskCompletion, 1500, gitData);
+        setTimeout(GitImport.pollForGitTaskCompletion, GitImport.TASK_POLL_TIMEOUT, gitData);
       } else {
         GitImport.gitTaskCompleted(parsedData);
       }
