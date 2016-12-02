@@ -51,7 +51,7 @@ describe AutomateImportService do
       ])
       allow(miq_ae_import).to receive(:remove_entry)
       allow(miq_ae_import).to receive(:update_sorted_entries)
-      allow(miq_ae_import).to receive(:import)
+      allow(miq_ae_import).to receive(:import).and_return(true)
     end
 
     it "removes unrelated entries" do

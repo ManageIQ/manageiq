@@ -152,14 +152,17 @@ class MiqAeToolsController < ApplicationController
           params[:selected_domain_to_import_to],
           selected_namespaces.sort
         )
+        if import_stats.nil?
+          add_flash(_("Error: Datastore import was not successful"), :error)
+        else
+          stat_options = generate_stat_options(import_stats)
 
-        stat_options = generate_stat_options(import_stats)
-
-        add_flash(_("Datastore import was successful.
+          add_flash(_("Datastore import was successful.
 Namespaces updated/added: %{namespace_stats}
 Classes updated/added: %{class_stats}
 Instances updated/added: %{instance_stats}
 Methods updated/added: %{method_stats}") % stat_options, :success)
+        end
       else
         add_flash(_("Error: Datastore import file upload expired"), :error)
       end
