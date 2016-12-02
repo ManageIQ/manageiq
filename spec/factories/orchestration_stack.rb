@@ -56,6 +56,9 @@ FactoryGirl.define do
     end
   end
 
+  factory :orchestration_stack_resource, :class => "OrchestrationStackResource" do
+  end
+
   factory :orchestration_stack_resource_openstack_infra, :class => "OrchestrationStackResource" do
   end
 
