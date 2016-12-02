@@ -404,5 +404,18 @@ describe PglogicalSubscription do
         .with("another-example.net", 5423, "root", "p=as' s'", "vmdb's_test")
       sub.validate('host' => "another-example.net", 'port' => 5423)
     end
+
+    it "validates a subscription that has not been saved without accessing the database" do
+      sub = described_class.new
+      sub.host     = "my.example.com"
+      sub.password = "thepassword"
+      sub.user     = "root"
+      sub.dbname   = "vmdb_production"
+
+      expect(pglogical).not_to receive(:subscription_show_status)
+      expect(MiqRegionRemote).to receive(:validate_connection_settings)
+        .with("my.example.com", nil, "root", "thepassword", "vmdb_production")
+      sub.validate
+    end
   end
 end
