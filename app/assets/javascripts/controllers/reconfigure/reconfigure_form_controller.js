@@ -88,7 +88,7 @@ ManageIQ.angular.app.controller('reconfigureFormController', ['$http', '$scope',
       var cpuUnchanged = false;
       miqService.miqFlashClear();
 
-      if (!$scope.newRecord || $scope.cb_disks)
+      if (!$scope.newRecord)
         return;
       $scope.angularForm.$setValidity("unchanged", true);
 
