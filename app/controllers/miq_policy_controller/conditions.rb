@@ -182,7 +182,6 @@ module MiqPolicyController::Conditions
     # Populate exp editor fields for the expression column
     @edit[:expression] ||= ApplicationController::Filter::Expression.new
     @edit[:expression][:expression] = []                         # Store exps in an array
-    @edit[:expression][:exp_idx] = 0                                    # Start at first exp
     if @edit[:new][:expression].blank?
       @edit[:expression][:expression] = {"???" => "???"}                  # Set as new exp element
       @edit[:new][:expression] = copy_hash(@edit[:expression][:expression])   # Copy to new exp
@@ -192,14 +191,13 @@ module MiqPolicyController::Conditions
     @edit[:expression_table] = @edit[:expression][:expression] == {"???" => "???"} ? nil : exp_build_table(@edit[:expression][:expression])
 
     @expkey = :expression                                               # Set expression key to expression
-    exp_array(:init, @edit[:expression][:expression])                   # Initialize the exp array
+    @edit[@expkey].history.reset(@edit[:expression][:expression])
     @edit[:expression][:exp_table] = exp_build_table(@edit[:expression][:expression])
     @edit[:expression][:exp_model] = @edit[:new][:towhat]               # Set model for the exp editor
 
     # Populate exp editor fields for the applies_to_exp column
-    @edit[:applies_to_exp] ||= {}                                   # Create hash for this expression, if needed
+    @edit[:applies_to_exp] ||= ApplicationController::Filter::Expression.new
     @edit[:applies_to_exp][:expression] = []                       # Store exps in an array
-    @edit[:applies_to_exp][:exp_idx] = 0                                  # Start at first exp
     if @edit[:new][:applies_to_exp].blank?
       @edit[:applies_to_exp][:expression] = {"???" => "???"}                # Set as new exp element
       @edit[:new][:applies_to_exp] = copy_hash(@edit[:applies_to_exp][:expression]) # Copy to new exp
@@ -209,7 +207,7 @@ module MiqPolicyController::Conditions
     @edit[:scope_table] = @edit[:applies_to_exp][:expression] == {"???" => "???"} ? nil : exp_build_table(@edit[:applies_to_exp][:expression])
 
     @expkey = :applies_to_exp                                             # Set temporarily while building applies_to_exp exp editor vars
-    exp_array(:init, @edit[:applies_to_exp][:expression])                 # Initialize the exp array
+    @edit[@expkey].history.reset(@edit[:applies_to_exp][:expression])
     @edit[:applies_to_exp][:exp_table] = exp_build_table(@edit[:applies_to_exp][:expression])
     @expkey = :expression                                                 # Reset to default to editing the expression column
     @edit[:applies_to_exp][:exp_model] = @edit[:new][:towhat]             # Set model for the exp editor

@@ -2,7 +2,6 @@ module ApplicationController::Filter
   Expression = Struct.new(
     :alias,
     :expression,
-    :exp_array,
     :exp_available_tags,
     :exp_available_fields,
     :exp_cfield,
@@ -13,7 +12,6 @@ module ApplicationController::Filter
     :exp_cvalue,
     :exp_count,
     :exp_field,
-    :exp_idx,
     :exp_key,
     :exp_last_loaded,
     :exp_mode,
@@ -28,6 +26,7 @@ module ApplicationController::Filter
     :exp_token,
     :exp_typ,
     :exp_value,
+    :history,
     :pre_qs_selected,
     :use_mytags,
     :selected,
@@ -37,6 +36,11 @@ module ApplicationController::Filter
     :val2_suffix,
     :record_filter
   ) do
+    def initialize(*args)
+      super
+      self.history ||= ExpressionEditHistory.new
+    end
+
     def exp_available_cfields # fields on exp_model for check_all, check_any, and check_count operation
       MiqExpression.miq_adv_search_lists(exp_model, :exp_available_finds).each_with_object([]) do |af, res|
         next if af.last == exp_field

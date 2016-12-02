@@ -188,22 +188,17 @@ module ReportController::Reports::Editor
       if @edit[:miq_exp] || # Is this stored as an MiqExp object
          ["new", "copy", "create"].include?(request.parameters["action"])        # or it's a new condition
 
-        @edit[:record_filter][:exp_idx] ||= 0 # Start at first exp
-
         new_record_filter = @edit[:new][:record_filter]
         @edit[:record_filter][:expression] = copy_hash(new_record_filter) unless new_record_filter.blank?
 
         @expkey = :record_filter
 
         # Initialize the exp array
-        exp_array(:init, @edit[:record_filter][:expression]) if @edit[:record_filter][:exp_array].nil?
+        @edit[@expkey].history.reset(@edit[:record_filter][:expression]) if @edit[:record_filter].history.array.nil?
         @edit[:record_filter][:exp_table] = exp_build_table(@edit[:record_filter][:expression])
         @edit[:record_filter].prefill_val_types
         @edit[:record_filter][:exp_model] = @edit[:new][:model] # Set the model for the expression editor
       end
-
-      # Build display filter expression
-      @edit[:display_filter][:exp_idx] ||= 0 # Start at first exp
 
       new_display_filter = @edit[:new][:display_filter]
       @edit[:display_filter][:expression] = copy_hash(new_display_filter) unless new_display_filter.blank?
@@ -211,7 +206,7 @@ module ReportController::Reports::Editor
       @expkey = :display_filter
 
       # Initialize the exp array
-      exp_array(:init, @edit[:display_filter][:expression]) if @edit[:display_filter][:exp_array].nil?
+      @edit[@expkey].history.reset(@edit[:display_filter][:expression]) if @edit[:display_filter].history.array.nil?
 
       @edit[:display_filter][:exp_table] = exp_build_table(@edit[:display_filter][:expression])
 
@@ -1310,7 +1305,6 @@ module ReportController::Reports::Editor
     expkey = :record_filter
     @edit[expkey] ||= ApplicationController::Filter::Expression.new
     @edit[expkey][:record_filter] = []                               # Store exps in an array
-    @edit[expkey][:exp_idx] ||= 0
     @edit[expkey][:expression] = {"???" => "???"}                           # Set as new exp element
     # Get the conditions MiqExpression
     if @rpt.conditions.kind_of?(MiqExpression)
@@ -1327,7 +1321,6 @@ module ReportController::Reports::Editor
     expkey = :display_filter
     @edit[expkey] ||= ApplicationController::Filter::Expression.new
     @edit[expkey][:expression] = []                                    # Store exps in an array
-    @edit[expkey][:exp_idx] ||= 0                                           # Start at first exp
     @edit[expkey][:expression] = {"???" => "???"}                           # Set as new exp element
     # Build display filter expression
     @edit[:new][:display_filter] = @edit[expkey][:expression] if @edit[:new][:display_filter].nil?              # Copy to new exp

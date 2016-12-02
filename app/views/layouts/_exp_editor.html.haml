@@ -9,7 +9,7 @@
 #exp_editor_div
   %fieldset{:style => "width: auto; padding-left: 6px; padding-top: 6px"}
     %ul.searchtoolbar
-      - if @edit[@expkey][:exp_idx] > 0
+      - if @edit[@expkey].history.idx > 0
         %li
           = link_to(image_tag(image_path('toolbars/undo.png'),
                               :alt => _('Undo the last change')),
@@ -24,7 +24,7 @@
         %li.dimmed
           = image_tag(image_path('toolbars/undo.png'))
 
-      - if @edit[@expkey][:exp_idx] < @edit[@expkey][:exp_array].length - 1
+      - if @edit[@expkey].history.idx < @edit[@expkey].history.array.length - 1
         %li
           = link_to(image_tag(image_path('toolbars/redo.png'),
                               :alt => _('Re-apply the previous change')),

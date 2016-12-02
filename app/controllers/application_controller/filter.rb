@@ -9,7 +9,7 @@ module ApplicationController::Filter
     @edit = session[:edit]
     case params[:pressed]
     when "undo", "redo"
-      @edit[@expkey][:expression] = exp_array(params[:pressed].to_sym)
+      @edit[@expkey][:expression] = @edit[@expkey].history.rewind(params[:pressed])
       @edit[:new][@expkey] = copy_hash(@edit[@expkey][:expression])
     when "not"
       exp_add_not(@edit[@expkey][:expression], @edit[@expkey][:exp_token])
@@ -53,7 +53,7 @@ module ApplicationController::Filter
         copy = copy_hash(@edit[@expkey][:expression])
         copy.deep_delete :token
         @edit[:new][@expkey] = copy
-        exp_array(:push, @edit[:new][@expkey])
+        @edit[@expkey].history.push(@edit[:new][@expkey])
       end
       unless ["and", "or"].include?(params[:pressed]) # Unless adding an AND or OR token
         @edit[@expkey][:exp_token] = nil                        #   clear the current selected token
@@ -213,7 +213,7 @@ module ApplicationController::Filter
     @edit[:adv_search_applied] = nil
     @edit[@expkey][:expression] = {"???" => "???"}                            # Set as new exp element
     @edit[:new][@expkey] = copy_hash(@edit[@expkey][:expression])             # Copy to new exp
-    exp_array(:init, @edit[@expkey][:expression])                             # Initialize the exp array
+    @edit[@expkey].history.reset(@edit[@expkey][:expression])
     @edit[@expkey][:exp_table] = exp_build_table(@edit[@expkey][:expression]) # Rebuild the expression table
     @edit[@expkey][:selected] = {:id => 0}                                    # Save the last search loaded
     @edit[:adv_search_name] = nil                                             # Clear search name
@@ -237,7 +237,7 @@ module ApplicationController::Filter
     @edit[:new_search_name] = @edit[:adv_search_name] = @edit.fetch_path(@expkey, :selected, :description)
     @edit[@expkey][:expression] = copy_hash(@edit[:new][@expkey])
     @edit[@expkey][:exp_table] = exp_build_table(@edit[@expkey][:expression]) # Build the expression table
-    exp_array(:init, @edit[@expkey][:expression])
+    @edit[@expkey].history.reset(@edit[@expkey][:expression])
     @edit[@expkey][:exp_token] = nil                                        # Clear the current selected token
     @edit[:adv_search_applied] = {}
 
@@ -254,7 +254,7 @@ module ApplicationController::Filter
     @edit[:adv_search_applied] = nil
     @edit[@expkey][:expression] = {"???" => "???"}                              # Set as new exp element
     @edit[:new][@expkey] = @edit[@expkey][:expression]                        # Copy to new exp
-    exp_array(:init, @edit[@expkey][:expression])                             # Initialize the exp array
+    @edit[@expkey].history.reset(@edit[@expkey][:expression])
     @edit[@expkey][:exp_table] = exp_build_table(@edit[@expkey][:expression]) # Rebuild the expression table
     # @edit[@expkey][:exp_last_loaded] = nil                                   # Clear the last search loaded
     @edit[:adv_search_name] = nil                                             # Clear search name
@@ -277,7 +277,7 @@ module ApplicationController::Filter
       @edit[:new_search_name] = @edit[:adv_search_name] = @edit[@expkey][:selected].nil? ? nil : @edit[@expkey][:selected][:description]
       @edit[@expkey][:expression] = copy_hash(@edit[:new][@expkey])
       @edit[@expkey][:exp_table] = exp_build_table(@edit[@expkey][:expression])       # Build the expression table
-      exp_array(:init, @edit[@expkey][:expression])
+      @edit[@expkey].history.reset(@edit[@expkey][:expression])
       @edit[@expkey][:exp_token] = nil                                        # Clear the current selected token
       @edit[:adv_search_applied] = {}
       adv_search_set_text # Set search text filter suffix
@@ -313,7 +313,7 @@ module ApplicationController::Filter
           @edit[@expkey][:expression] = copy_hash(@edit[:new][@expkey])
           # Build the expression table
           @edit[@expkey][:exp_table] = exp_build_table(@edit[@expkey][:expression])
-          exp_array(:init, @edit[@expkey][:expression])
+          @efit[@expkey].history.reset(@edit[@expkey][:expression])
           # Clear the current selected token
           @edit[@expkey][:exp_token] = nil
         else
@@ -340,7 +340,7 @@ module ApplicationController::Filter
       @edit[:new_search_name] = @edit[:adv_search_name] = @edit[@expkey][:exp_last_loaded].nil? ? nil : @edit[@expkey][:exp_last_loaded][:description]
       @edit[@expkey][:expression] = copy_hash(@edit[:new][@expkey])
       @edit[@expkey][:exp_table] = exp_build_table(@edit[@expkey][:expression])       # Build the expression table
-      exp_array(:init, @edit[@expkey][:expression])
+      @edit[@expkey].history.reset(@edit[@expkey][:expression])
       @edit[@expkey][:exp_token] = nil                                        # Clear the current selected token
       add_flash(_("%{model} search \"%{name}\" was successfully loaded") %
         {:model => ui_lookup(:model => @edit[@expkey][:exp_model]), :name => @edit[:new_search_name]})
@@ -413,7 +413,7 @@ module ApplicationController::Filter
     if ["delete", "reset"].include?(params[:button])
       @edit[@expkey][:expression] = {"???" => "???"}              # Set as new exp element
       @edit[:new][@expkey] = @edit[@expkey][:expression]        # Copy to new exp
-      exp_array(:init, @edit[@expkey][:expression])             # Initialize the exp array
+      @edit[@expkey].history.reset(@edit[@expkey][:expression])
       @edit[@expkey][:exp_table] = exp_build_table(@edit[@expkey][:expression])       # Rebuild the expression table
       @edit[@expkey][:exp_last_loaded] = nil                    # Clear the last search loaded
       @edit[:adv_search_name] = nil                             # Clear search name
@@ -672,7 +672,7 @@ module ApplicationController::Filter
 
   # Set advanced search filter text
   def adv_search_set_text
-    if @edit[@expkey][:exp_idx] == 0                          # Are we pointing at the first exp
+    if @edit[@expkey].history.idx == 0                          # Are we pointing at the first exp
       if @edit[:adv_search_name]
         @edit[:adv_search_applied][:text] = _(" - Filtered by \"%{text}\"") % {:text => @edit[:adv_search_name]}
       else
@@ -1040,35 +1040,6 @@ module ApplicationController::Filter
     end
   end
 
-  # Method to maintain the expression undo array in @edit[@expkey][:exp_array]
-  def exp_array(func, exp = nil)
-    @edit[@expkey][:exp_array] ||= []
-    exp_ary = @edit[@expkey][:exp_array]          # Put exp array in local var
-    exp_idx = @edit[@expkey][:exp_idx]            # Put exp index in local var
-    case func
-    when :init
-      exp_ary = @edit[@expkey][:exp_array] = []      # Clear/create the exp array
-      exp_idx = 0                                 # Initialize the exp index
-      exp_ary.push(copy_hash(exp))                # Push the exp onto the array
-    when :push
-      exp_idx = exp_ary.blank? ? 0 : exp_idx + 1      # Increment index to next array element
-      exp_ary.slice!(exp_idx..-1) if exp_ary[exp_idx] # Remove exp_idx element and above
-      exp_ary.push(copy_hash(exp))                    # Push the new exp onto the array
-    when :undo
-      if exp_idx > 0                              # If not on first element
-        @edit[@expkey][:exp_idx] -= 1                     # Decrement exp index
-        return copy_hash(exp_ary[exp_idx - 1])    # Return the prior exp
-      end
-    when :redo
-      if exp_idx < exp_ary.length - 1             # If not on last element
-        @edit[@expkey][:exp_idx] += 1                     # Increment exp index
-        return copy_hash(exp_ary[exp_idx + 1])    # Return the next exp
-      end
-    end
-    @edit[@expkey][:exp_idx] = exp_idx                      # Save local index back to @edit object
-    nil                                    # Return nil if no exp was returned
-  end
-
   # Build advanced search expression
   def adv_search_build(model)
     # Restore @edit hash if it's saved in @settings
@@ -1088,13 +1059,12 @@ module ApplicationController::Filter
       @edit = {}
       @edit[@expkey] ||= Expression.new
       @edit[@expkey][:expression] = []                           # Store exps in an array
-      @edit[@expkey][:exp_idx] = 0                                      # Start at first exp
       @edit[@expkey][:expression] = {"???" => "???"}                      # Set as new exp element
       @edit[@expkey][:use_mytags] = true                                # Include mytags in tag search atoms
       @edit[:custom_search] = false                                     # setting default to false
       @edit[:new] = {}
       @edit[:new][@expkey] = @edit[@expkey][:expression]                # Copy to new exp
-      exp_array(:init, @edit[@expkey][:expression])                     # Initialize the exp array
+      @edit[@expkey].history.reset(@edit[@expkey][:expression])
       @edit[:adv_search_open] = false
       @edit[@expkey][:exp_model] = model.to_s
     end
