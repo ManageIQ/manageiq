@@ -5,6 +5,7 @@ class CimInstanceController < ApplicationController
   after_action  :set_session_data
 
   include Mixins::GenericListMixin
+  include Mixins::GenericSessionMixin
 
   private
 
@@ -144,21 +145,5 @@ class CimInstanceController < ApplicationController
     if params[:ppsetting] || params[:searchtag] || params[:entry] || params[:sort_choice]
       replace_gtl_main_div
     end
-  end
-
-  def get_session_data
-    @title      = ui_lookup(:tables => self.class.table_name)
-    @layout     = self.class.table_name
-    prefix      = self.class.session_key_prefix
-    @lastaction = session["#{prefix}_lastaction".to_sym]
-    @showtype   = session["#{prefix}_showtype".to_sym]
-    @display    = session["#{prefix}_display".to_sym]
-  end
-
-  def set_session_data
-    prefix                                 = self.class.session_key_prefix
-    session["#{prefix}_lastaction".to_sym] = @lastaction
-    session["#{prefix}_showtype".to_sym]   = @showtype
-    session["#{prefix}_display".to_sym]    = @display unless @display.nil?
   end
 end
