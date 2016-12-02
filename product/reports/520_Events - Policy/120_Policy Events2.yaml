@@ -6,7 +6,7 @@ reserved:
 title: Policy Events for the Last 7 Days
 conditions: !ruby/object:MiqExpression
   exp:
-    ">=":
+    "after":
       field: PolicyEvent.miq_policy_sets-created_on
       value: 7 Days Ago
 updated_on: 2009-04-06 20:18:30 Z
