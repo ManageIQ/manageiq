@@ -27,8 +27,10 @@ module ManagerRefresh
 
     def dependency?
       # If key is not set, DtoLazy is a dependency, cause it points to the record itself. Otherwise DtoLazy is a
-      # dependency only if it points to an attribute which is a dependency.
-      !key || dto_collection.dependency_attributes.keys.include?(key)
+      # dependency only if it points to an attribute which is a dependency or a relation.
+      !!(!key ||
+        dto_collection.dependency_attributes.keys.include?(key) ||
+        dto_collection.model_class.reflect_on_association(key))
     end
 
     private
