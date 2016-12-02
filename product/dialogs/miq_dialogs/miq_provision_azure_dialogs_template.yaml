@@ -355,9 +355,13 @@
           :data_type: :string
         :root_password:
           :description: Password
+          :required_method: :validate_regex
+          :required_regex: !ruby/regexp /[(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])[\W\D].*?]{12,72}$/
           :required: true
           :display: :edit
           :data_type: :string
+          :min_length: 12
+          :max_length: 72
         :hostname:
           :description: Host Name
           :required: false
