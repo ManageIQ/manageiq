@@ -53,7 +53,7 @@ module ApplicationController::Filter
         copy = copy_hash(@edit[@expkey][:expression])
         copy.deep_delete :token
         @edit[:new][@expkey] = copy
-        exp_array(:push, @edit[:new][@expkey])
+        @edit[@expkey].history.push(@edit[:new][@expkey])
       end
       unless ["and", "or"].include?(params[:pressed]) # Unless adding an AND or OR token
         @edit[@expkey][:exp_token] = nil                        #   clear the current selected token
@@ -1046,10 +1046,6 @@ module ApplicationController::Filter
     exp_ary = @edit[@expkey].history.array        # Put exp array in local var
     exp_idx = @edit[@expkey].history.idx          # Put exp index in local var
     case func
-    when :push
-      exp_idx = exp_ary.blank? ? 0 : exp_idx + 1      # Increment index to next array element
-      exp_ary.slice!(exp_idx..-1) if exp_ary[exp_idx] # Remove exp_idx element and above
-      exp_ary.push(copy_hash(exp))                    # Push the new exp onto the array
     when :undo
       if exp_idx > 0                              # If not on first element
         @edit[@expkey].history.idx -= 1           # Decrement exp index
