@@ -25,7 +25,7 @@ class Zone < ApplicationRecord
   virtual_has_many :active_miq_servers, :class_name => "MiqServer"
 
   before_destroy :check_zone_in_use_on_destroy
-  after_save     :queue_ntp_reload_if_changed
+  after_update   :queue_ntp_reload_if_changed
 
   include AuthenticationMixin
 
