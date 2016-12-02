@@ -313,10 +313,6 @@ class JobProxyDispatcher
     end
   end
 
-  cache_with_timeout(:coresident_miqproxy, 30.seconds) do
-    MiqServer.my_server.get_config("vmdb").config.fetch_path(:coresident_miqproxy)
-  end
-
   def embedded_resource_limit_exceeded?(job)
     return false unless job.target_class == "VmOrTemplate"
 
@@ -326,10 +322,10 @@ class JobProxyDispatcher
     end
 
     if @vm.scan_via_ems?
-      count_allowed = self.class.coresident_miqproxy[:concurrent_per_ems].to_i
+      count_allowed = ::Settings.coresident_miqproxy.concurrent_per_ems.to_i
     else
       return false if @vm.host_id.nil?  # e.g. EC2 images do not have hosts
-      count_allowed = self.class.coresident_miqproxy[:concurrent_per_host].to_i
+      count_allowed = ::Settings.coresident_miqproxy.concurrent_per_host.to_i
     end
 
     return false if busy_resources_for_embedded_scanning.blank?
