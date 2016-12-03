@@ -5,6 +5,7 @@ MwAddDatasourceService.$inject = ['$http', '$q'];
 
 function MwAddDatasourceService($http, $q) {
   var JDBC_PREFIX = 'jdbc:';
+  var self = this;
   // NOTE: these are config objects that will basically never change
   var datasources = [
     {id: 'H2', label: 'H2', name: 'H2DS', jndiName: 'java:jboss/datasources/H2DS',
@@ -33,8 +34,9 @@ function MwAddDatasourceService($http, $q) {
       driverName: 'mysql', driverModuleName: 'com.mysql', driverClass: 'com.mysql.jdbc.Driver',
       connectionUrl: '://localhost:3306/db_name'},
   ];
+  var dsDriverNames = _.pluck(datasources, 'driverName');
 
-  this.getExistingJdbcDrivers = function(serverId) {
+  self.getExistingJdbcDrivers = function(serverId) {
     var deferred = $q.defer();
     var BASE_URL = '/middleware_server/jdbc_drivers';
     var parameterizedUrl = BASE_URL + '?server_id=' + serverId;
@@ -53,20 +55,28 @@ function MwAddDatasourceService($http, $q) {
     return deferred.promise;
   };
 
-  this.getDatasources = function() {
+  self.getDatasources = function() {
     return Object.freeze(datasources);
   };
 
-  this.isXaDriver = function(driver) {
+  self.isXaDriver = function(driver) {
     return driver.hasOwnProperty('xaDsClass') && driver.xaDsClass !== '';
   };
 
-  this.determineConnectionUrl = function(dsSelection) {
+  self.determineConnectionUrl = function(dsSelection) {
     var driverName = dsSelection.driverName;
     return JDBC_PREFIX + driverName + dsSelection.connectionUrl;
   };
 
-  this.findDatasourceById = function(id) {
+  self.isValidDatasourceName = function(dsName) {
+    if (dsName) {
+      return _.contains(dsDriverNames, dsName.toLowerCase());
+    } else {
+      return null;
+    }
+  };
+
+  self.findDatasourceById = function(id) {
     return _.find(datasources, function(datasource) {
       // handle special case when JDBC Driver Name doesn't match naming of Datasource
       // For instance, 'POSTGRES' vs 'POSTGRESQL'
@@ -79,8 +89,24 @@ function MwAddDatasourceService($http, $q) {
     });
   };
 
-  this.determineConnectionUrlFromExisting = function(driverSelection) {
-    var dsSelection = this.findDatasourceById(driverSelection.id);
+  self.findDatasourceByDriverClass = function(driverClass) {
+    return _.find(datasources, function(datasource) {
+      return datasource.driverClass === driverClass;
+    });
+  };
+
+  self.findDsSelectionFromDriver = function(driverSelection) {
+    var dsSelection;
+    if (self.isValidDatasourceName(driverSelection.id)) {
+      dsSelection = self.findDatasourceById(driverSelection.id);
+    } else {
+      dsSelection = self.findDatasourceByDriverClass(driverSelection.driverClass);
+    }
+    return dsSelection;
+  };
+
+  self.determineConnectionUrlFromExisting = function(driverSelection) {
+    var dsSelection = self.findDsSelectionFromDriver(driverSelection);
     return JDBC_PREFIX + dsSelection.driverName + dsSelection.connectionUrl;
   };
 

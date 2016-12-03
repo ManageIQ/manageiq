@@ -73,12 +73,15 @@ function MwAddDatasourceCtrl($scope, $rootScope, miqService, mwAddDatasourceServ
   });
 
   $scope.$watch(angular.bind(this, function() {
-    return this.step2DsModel.selectedJdbcDriver;
+    return vm.step2DsModel.selectedJdbcDriver;
   }), function(driverSelection) {
-    var dsSelection = mwAddDatasourceService.findDatasourceById(driverSelection.id);
-    vm.step1DsModel.datasourceName = dsSelection.name;
-    vm.step1DsModel.jndiName = dsSelection.jndiName;
-    vm.step2DsModel.jdbcDriverName = dsSelection.driverName;
+    var dsSelection = mwAddDatasourceService.findDsSelectionFromDriver(driverSelection);
+    if (dsSelection) {
+      vm.step1DsModel.datasourceName = dsSelection.name;
+      vm.step1DsModel.jndiName = dsSelection.jndiName;
+      vm.step2DsModel.jdbcDriverName = dsSelection.driverName;
+      vm.step3DsModel.connectionUrl = '';
+    }
     if (mwAddDatasourceService.isXaDriver(driverSelection)) {
       vm.step2DsModel.xaDsClass = driverSelection.xaDsClass;
     } else {
