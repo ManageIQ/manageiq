@@ -144,8 +144,7 @@ class MiddlewareServerController < ApplicationController
   def jdbc_drivers
     mw_server = MiddlewareServer.find(params[:server_id])
     mw_manager = mw_server.ext_management_system
-    feed = mw_manager.feeds.first
-    drivers = mw_manager.jdbc_drivers(feed)
+    drivers = mw_manager.jdbc_drivers(mw_server.feed)
 
     render :json => {
       :status => :success, :data => drivers
