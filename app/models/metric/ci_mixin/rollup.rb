@@ -99,7 +99,12 @@ module Metric::CiMixin::Rollup
       Benchmark.realtime_block(:db_update_perf) { perf.update_attributes(new_perf) }
       Benchmark.realtime_block(:process_perfs_tag) { VimPerformanceTagValue.build_from_performance_record(perf) }
 
-      Benchmark.realtime_block(:process_bottleneck) { BottleneckEvent.generate_future_events(self) } if interval_name == 'hourly'
+      case interval_name
+      when "hourly"
+        Benchmark.realtime_block(:process_bottleneck) { BottleneckEvent.generate_future_events(self) }
+      when "daily"
+        Benchmark.realtime_block(:process_operating_ranges) { generate_vim_performance_operating_ranges }
+      end
 
       perf_rollup_to_parents(interval_name, time)
     end

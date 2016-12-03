@@ -6,6 +6,14 @@ class VimPerformanceOperatingRange < ApplicationRecord
 
   DEFAULT_STD_DEV_MULT = 1
 
+  def recalculate_values
+    self.values = Metric::LongTermAverages.get_averages_over_time_period(
+      resource,
+      :avg_days    => days,
+      :ext_options => {:time_profile => time_profile}
+    )
+  end
+
   def values_to_metrics(options = {})
     options[:std_dev_mult] ||= DEFAULT_STD_DEV_MULT
 
