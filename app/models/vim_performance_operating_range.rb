@@ -15,21 +15,26 @@ class VimPerformanceOperatingRange < ApplicationRecord
   end
 
   def values_to_metrics(options = {})
-    options[:std_dev_mult] ||= DEFAULT_STD_DEV_MULT
+    @values_with_metrics ||= begin
+      results = values_with_std_dev(options[:std_dev_mult])
+      Metric::LongTermAverages::AVG_METHODS_INFO.each_with_object({}) do |(meth, info), h|
+        h[meth.to_s] = results.fetch_path(info[:type], info[:column])
+      end
+    end
+  end
+
+  private
+
+  def values_with_std_dev(std_dev_mult)
+    std_dev_mult ||= DEFAULT_STD_DEV_MULT
 
     results = values.dup.merge(:low => {}, :high => {})
     results[:avg].each_key do |c|
-      dev = (results[:dev][c] * options[:std_dev_mult])
+      dev = (results[:dev][c] * std_dev_mult)
       results[:low][c]  = results[:avg][c] - dev
       results[:low][c]  = 0 if results[:low][c] < 0
       results[:high][c] = results[:avg][c] + dev
     end
-
-    metrics = {}
-    Metric::LongTermAverages::AVG_METHODS_INFO.each do |meth, info|
-      metrics[meth.to_s] = results.fetch_path(info[:type], info[:column])
-    end
-
-    metrics
+    results
   end
 end
