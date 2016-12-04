@@ -447,8 +447,7 @@ class ApplicationHelper::ToolbarBuilder
       when "miq_report_copy", "miq_report_new", "miq_report_run", "miq_report_only", "miq_report_schedule_add"
         return @sb[:active_tab] == "saved_reports"
       when "view_graph", "view_hybrid", "view_tabular"
-        return @ght_type && @report && @report.graph &&
-          !(@zgraph || (@ght_type == "tabular" && @html))
+        return @ght_type == "tabular" && @report.try(:graph).nil? && !@zgraph
       end
     when :savedreports_tree
       if %w(saved_report_delete).include?(id)
@@ -458,8 +457,7 @@ class ApplicationHelper::ToolbarBuilder
       when "reload"
         return x_node != "root"
       when "view_graph", "view_hybrid", "view_tabular"
-        return @ght_type && @report && @report.graph &&
-          !(@zgraph || (@ght_type == "tabular" && @html))
+        return @ght_type == "tabular" && @report.try(:graph).nil? && !@zgraph
       end
     else
       return false
