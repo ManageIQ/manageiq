@@ -623,14 +623,12 @@ class ApplicationController < ActionController::Base
       else
         redirect_to_action = lastaction
       end
-
-      # there's no model for ResourceController - defaulting to traditional routing
-      model = self.class.model rescue nil
-      if model && restful_routed?(model)
-        javascript_redirect polymorphic_path(model.find(params[:id]), :escape => false, :load_edit_err => true)
-      else
-        javascript_redirect :action => redirect_to_action, :id => params[:id], :escape => false, :load_edit_err => true
-      end
+      js_args = {:action        => redirect_to_action,
+                 :id            => params[:id],
+                 :escape        => false,
+                 :load_edit_err => true
+      }
+      javascript_redirect(javascript_process_redirect_args(js_args))
     else
       redirect_to :action => lastaction, :id => params[:id], :escape => false
     end

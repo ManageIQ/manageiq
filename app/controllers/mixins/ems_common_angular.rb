@@ -21,15 +21,12 @@ module Mixins
       flash_msg = _("Edit of %{model} \"%{name}\" was cancelled by the user") %
                   {:model => ui_lookup(:model => model_name),
                    :name  => update_ems.name}
-      ems_path = ems_path(update_ems, :flash_msg => flash_msg)
-      if @lastaction == "show"
-        javascript_redirect ems_path
-      else
-        javascript_redirect :action    => @lastaction,
-                            :id        => update_ems.id,
-                            :display   => session[:ems_display],
-                            :flash_msg => flash_msg
-      end
+      js_args = {:action    => @lastaction,
+                 :id        => update_ems.id,
+                 :display   => session[:ems_display],
+                 :flash_msg => flash_msg,
+                 :record    => update_ems}
+      javascript_redirect(javascript_process_redirect_args(js_args))
     end
 
     def update_ems_button_save
