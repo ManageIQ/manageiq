@@ -16,6 +16,7 @@ class ManageIQ::Providers::Openstack::NetworkManager < ManageIQ::Providers::Netw
   include ManageIQ::Providers::Openstack::ManagerMixin
   include SupportsFeatureMixin
 
+  supports :create
   supports :create_floating_ip
   supports :create_security_group
   supports :create_network_router
@@ -91,6 +92,27 @@ class ManageIQ::Providers::Openstack::NetworkManager < ManageIQ::Providers::Netw
 
   def self.event_monitor_class
     ManageIQ::Providers::Openstack::NetworkManager::EventCatcher
+  end
+
+  def create_cloud_network(options)
+    CloudNetwork.raw_create_cloud_network(self, options)
+  end
+
+  def create_cloud_network_queue(userid, options = {})
+    task_opts = {
+      :action => "creating Cloud Network for user #{userid}",
+      :userid => userid
+    }
+    queue_opts = {
+      :class_name  => self.class.name,
+      :method_name => 'create_cloud_network',
+      :instance_id => id,
+      :priority    => MiqQueue::HIGH_PRIORITY,
+      :role        => 'ems_operations',
+      :zone        => my_zone,
+      :args        => [options]
+    }
+    MiqTask.generic_action_with_callback(task_opts, queue_opts)
   end
 
   def create_network_router(options)
