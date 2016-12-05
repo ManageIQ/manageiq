@@ -8,6 +8,8 @@ module ApplianceConsole
     include ApplianceConsole::Logging
 
     REPMGR_CONFIG = '/etc/repmgr.conf'.freeze
+    REPMGR_LOG    = '/var/log/repmgr/repmgrd.log'.freeze
+    PGPASS_FILE   = '/var/lib/pgsql/.pgpass'.freeze
 
     attr_accessor :cluster_name, :node_number, :database_name, :database_user,
                   :database_password, :primary_host
@@ -45,15 +47,23 @@ Replication Server Configuration
     end
 
     def create_config_file(host)
-      File.open(REPMGR_CONFIG, "w") do |f|
-        f.puts("cluster=#{cluster_name}")
-        f.puts("node=#{node_number}")
-        f.puts("node_name=#{host}")
-        f.puts("conninfo='host=#{host} user=#{database_user} dbname=#{database_name}'")
-        f.puts("use_replication_slots=1")
-        f.puts("pg_basebackup_options='--xlog-method=stream'")
-      end
+      File.write(REPMGR_CONFIG, config_file_contents(host))
       true
+    end
+
+    def config_file_contents(host)
+      <<-EOS.strip_heredoc
+        cluster=#{cluster_name}
+        node=#{node_number}
+        node_name=#{host}
+        conninfo='host=#{host} user=#{database_user} dbname=#{database_name}'
+        use_replication_slots=1
+        pg_basebackup_options='--xlog-method=stream'
+        failover=automatic
+        promote_command='repmgr standby promote'
+        follow_command='repmgr standby follow'
+        logfile=#{REPMGR_LOG}
+      EOS
     end
 
     def generate_cluster_name
@@ -67,6 +77,17 @@ Replication Server Configuration
         Logging.logger.error("Failed to get primary region number #{e.message}")
         return false
       end
+      true
+    end
+
+    def write_pgpass_file
+      File.open(PGPASS_FILE, "w") do |f|
+        f.write("*:*:#{database_name}:#{database_user}:#{database_password}\n")
+        f.write("*:*:replication:#{database_user}:#{database_password}\n")
+      end
+
+      FileUtils.chmod(0600, PGPASS_FILE)
+      FileUtils.chown("postgres", "postgres", PGPASS_FILE)
       true
     end
 

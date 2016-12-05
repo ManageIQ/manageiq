@@ -57,46 +57,36 @@ describe ApplianceConsole::DatabaseReplication do
   end
 
   context "#create_config_file" do
-    before do
+    it "writes the config file contents" do
+      expect(subject).to receive(:config_file_contents).and_return("the contents")
+      expect(File).to receive(:write).with(described_class::REPMGR_CONFIG, "the contents")
+      expect(subject.create_config_file("host")).to be true
+    end
+  end
+
+  context "#config_file_contents" do
+    let(:expected_config_file) do
+      <<-EOS.strip_heredoc
+        cluster=clustername
+        node=nodenumber
+        node_name=host
+        conninfo='host=host user=user dbname=databasename'
+        use_replication_slots=1
+        pg_basebackup_options='--xlog-method=stream'
+        failover=automatic
+        promote_command='repmgr standby promote'
+        follow_command='repmgr standby follow'
+        logfile=/var/log/repmgr/repmgrd.log
+      EOS
+    end
+
+    it "returns the correct contents" do
       subject.cluster_name      = "clustername"
       subject.node_number       = "nodenumber"
       subject.database_name     = "databasename"
       subject.database_user     = "user"
 
-      @temp_file = Tempfile.new(subject.class.name.split("::").last.downcase)
-      stub_const("ApplianceConsole::DatabaseReplication::REPMGR_CONFIG", @temp_file.path)
-    end
-
-    after do
-      @temp_file.close
-      @temp_file.unlink
-    end
-
-    it "should correctly populate the config file" do
-      expected_config_file = "cluster=clustername\n"
-      expected_config_file << "node=nodenumber\n"
-      expected_config_file << "node_name=host\n"
-      expected_config_file << "conninfo='host=host user=user dbname=databasename'\n"
-      expected_config_file << "use_replication_slots=1\n"
-      expected_config_file << "pg_basebackup_options='--xlog-method=stream'\n"
-
-      subject.create_config_file("host")
-
-      expect(File.read(@temp_file.path)).to eq(expected_config_file)
-    end
-
-    it "should overwrite an existing config file" do
-      expected_config_file = "cluster=clustername\n"
-      expected_config_file << "node=nodenumber\n"
-      expected_config_file << "node_name=differenthostname\n"
-      expected_config_file << "conninfo='host=differenthostname user=user dbname=databasename'\n"
-      expected_config_file << "use_replication_slots=1\n"
-      expected_config_file << "pg_basebackup_options='--xlog-method=stream'\n"
-
-      subject.create_config_file("host")
-      subject.create_config_file("differenthostname")
-
-      expect(File.read(@temp_file.path)).to eq(expected_config_file)
+      expect(subject.config_file_contents("host")).to eq(expected_config_file)
     end
   end
 
@@ -113,6 +103,35 @@ describe ApplianceConsole::DatabaseReplication do
       expect(PG::Connection).to receive(:new).and_raise(PG::ConnectionBad)
       expect(subject).to receive(:say).with(/^failed/i)
       expect(subject.generate_cluster_name).to be_falsey
+    end
+  end
+
+  context "#write_pgpass_file" do
+    let(:pgpass_path) { Tempfile.new("pgpass").path }
+
+    before do
+      stub_const("#{described_class}::PGPASS_FILE", pgpass_path)
+    end
+
+    after do
+      FileUtils.rm_f(pgpass_path)
+    end
+
+    it "writes the .pgpass file correctly" do
+      subject.database_name     = "dbname"
+      subject.database_user     = "someuser"
+      subject.database_password = "secret"
+
+      expect(FileUtils).to receive(:chown).with("postgres", "postgres", pgpass_path)
+      subject.write_pgpass_file
+
+      expect(File.read(pgpass_path)).to eq(<<-EOS.gsub(/^\s+/, ""))
+        *:*:dbname:someuser:secret
+        *:*:replication:someuser:secret
+      EOS
+
+      pgpass_stat = File.stat(pgpass_path)
+      expect(pgpass_stat.mode.to_s(8)).to eq("100600")
     end
   end
 end
