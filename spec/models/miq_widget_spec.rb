@@ -286,6 +286,23 @@ describe MiqWidget do
       @widget.queue_generate_content
     end
 
+    it "does not generate content if visibility set to group only and there are no users in that group" do
+      @widget.visibility.delete(:roles)
+      @widget.visibility[:groups] = @group2.description
+      @user2.delete
+
+      expect(@widget).not_to receive(:queue_generate_content_for_users_or_group)
+      @widget.queue_generate_content
+    end
+
+    it "generate content if visibility set to group only with users in that group" do
+      @widget.visibility.delete(:roles)
+      @widget.visibility[:groups] = @group2.description
+
+      expect(@widget).to receive(:queue_generate_content_for_users_or_group).once
+      @widget.queue_generate_content
+    end
+
     it "creates a new task when previous task is finished" do
       @widget.queue_generate_content
       MiqTask.first.state_finished
