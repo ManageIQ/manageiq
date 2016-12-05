@@ -8,7 +8,7 @@ class TreeBuilderMiqActionCat < TreeBuilder
     TreeNodeBuilderMiqActionCat
   end
 
-  def initialize(name, type, sandbox,  build = true, tenant_name = nil)
+  def initialize(name, type, sandbox, build = true, tenant_name = nil)
     @tenant_name = tenant_name
     super(name, type, sandbox, build)
   end
