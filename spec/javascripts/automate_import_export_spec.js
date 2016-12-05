@@ -185,4 +185,94 @@ describe('Automate', function() {
       });
     });
   });
+
+  describe('#renderGitImport', function() {
+    beforeEach(function() {
+      var html = '';
+      html += '<input type="hidden" class="hidden-git-repo-id" />';
+      html += '<div class="git-import-data" style="display: none;" />';
+      html += '<div class="import-or-export" />';
+      html += '<select class="git-branches"></select>';
+      html += '<select class="git-tags"></select>';
+
+      spyOn(window, 'clearMessages');
+
+      setFixtures(html);
+    });
+
+    context('when the message level is an error', function() {
+      beforeEach(function() {
+        spyOn(window, 'showErrorMessage');
+      });
+
+      it('clears messages', function() {
+        Automate.renderGitImport('branches', 'tags', 'gitrepoid', {message: 'the message', level: 'error'});
+        expect(window.clearMessages).toHaveBeenCalled();
+      });
+
+      it('calls showErrorMessage with the message', function() {
+        Automate.renderGitImport('branches', 'tags', 'gitrepoid', {message: 'the message', level: 'error'});
+        expect(window.showErrorMessage).toHaveBeenCalledWith('the message');
+      });
+    });
+
+    context('when the message level is not an error', function() {
+      beforeEach(function() {
+        spyOn(Automate, 'selectDefaultBranch');
+        spyOn($.fn, 'selectpicker');
+      });
+
+      context('when the message level is a warning', function() {
+        beforeEach(function() {
+          spyOn(window, 'showWarningMessage');
+        });
+
+        it('assigns the repo id into the hidden input', function() {
+          Automate.renderGitImport(['branches'], ['tags'], '123', {message: 'the message', level: 'warning'});
+          expect($('.hidden-git-repo-id').val()).toEqual("123");
+        });
+
+        it('shows the git import data div', function() {
+          Automate.renderGitImport(['branches'], ['tags'], '123', {message: 'the message', level: 'warning'});
+          expect($('.git-import-data')).toBeVisible();
+        });
+
+        it('hides the import or export div', function() {
+          Automate.renderGitImport(['branches'], ['tags'], '123', {message: 'the message', level: 'warning'});
+          expect($('.import-or-export')).not.toBeVisible();
+        });
+
+        it('calls showWarningMessage with the message', function() {
+          Automate.renderGitImport(['branches'], ['tags'], '123', {message: 'the message', level: 'warning'});
+          expect(window.showWarningMessage).toHaveBeenCalledWith('the message');
+        });
+
+        it('adds the options to the dropdowns', function() {
+          expect($('select.git-branches')[0].options.length).toEqual(0);
+          expect($('select.git-tags')[0].options.length).toEqual(0);
+          Automate.renderGitImport(['branches'], ['tags'], '123', {message: 'the message', level: 'warning'});
+          expect($('select.git-branches')[0].options.length).toEqual(1);
+          expect($('select.git-tags')[0].options.length).toEqual(1);
+        });
+
+        it('calls Automate.selectDefaultBranch', function() {
+          Automate.renderGitImport(['branches'], ['tags'], '123', {message: 'the message', level: 'warning'});
+          expect(Automate.selectDefaultBranch).toHaveBeenCalled();
+        });
+
+        it('refreshes the selectpicker for git-branches and git-tags', function() {
+          Automate.renderGitImport(['branches'], ['tags'], '123', {message: 'the message', level: 'warning'});
+          expect($.fn.selectpicker.calls.allArgs()).toEqual([['refresh'], ['refresh']]);
+          expect($.fn.selectpicker.calls.first().object.selector).toEqual('select.git-branches');
+          expect($.fn.selectpicker.calls.mostRecent().object.selector).toEqual('select.git-tags');
+        });
+      });
+
+      context('when the message level is not a warning', function() {
+        beforeEach(function() {
+          spyOn(window, 'showSuccessMessage');
+        });
+      });
+    });
+  });
 });

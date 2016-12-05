@@ -1877,6 +1877,7 @@ Vmdb::Application.routes.draw do
     :miq_ae_tools             => {
       :get  => %w(
         automate_json
+        check_git_task
         export_datastore
         fetch_log
         import_export

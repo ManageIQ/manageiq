@@ -19,8 +19,7 @@ var ImportSetup = {
 
   listenForGitPostMessages: function() {
     window.addEventListener('message', function(event) {
-      var unencodedMessage = event.data.message.replace(/&quot;/g, '"');
-      var messageData = JSON.parse(unencodedMessage);
+      var messageData = event.data.message;
 
       if (messageData.level === 'error') {
         showErrorMessage(messageData.message);

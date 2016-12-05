@@ -27,7 +27,8 @@
     = _('Import Datastore via git')
   = form_tag({:action => "retrieve_git_datastore"},
               :target => "upload_target",
-              :method => :post) do
+              :method => :post,
+              :id     => "retrieve-git-datastore-form") do
     .form-horizontal
       .form-group
         %label.col-sm-2.control-label
@@ -54,7 +55,7 @@
         .col-md-8
           = submit_tag(_("Submit"),
             :id       => "git-url-import",
-            :class    => "git-retreive-datastore btn btn-default",
+            :class    => "git-retrieve-datastore btn btn-default",
             :disabled => !git_import_button_enabled?)
           = git_import_submit_help
 
