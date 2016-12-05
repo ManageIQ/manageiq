@@ -8,8 +8,5 @@ module MiqAeMethodService
     expose :network_ports,         :association => true
     expose :vms,                   :association => true
     expose :private_networks,      :association => true
-
-    expose :raw_update_network_router
-    expose :raw_delete_network_router
   end
 end
