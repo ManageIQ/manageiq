@@ -1,5 +1,5 @@
 .row.miq-alerts-center
-  .container-fluid{"ng-controller" => "alertsListController as vm"}
+  .container-fluid{"ng-controller" => "alertsMostRecentController as vm"}
     %span
       %ol.breadcrumb
         %li
@@ -8,7 +8,7 @@
           = _("Alerts")
         %li.active
           %strong
-            = _("All Alerts")
+            = _("Most Recent Alerts")
     .row{"ng-if" => "vm.loadingDone"}
       = render :partial => "shared/views/alerts_list"
 

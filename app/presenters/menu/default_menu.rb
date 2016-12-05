@@ -267,7 +267,13 @@ module Menu
               N_('All Alerts'),
               'alert_list',
               {:feature => 'alerts', :any => true},
-              '/alerts_list')
+              '/alerts_list'),
+            Menu::Item.new(
+              'alerts_most_recent',
+              N_('Most Recent Alerts'),
+              'alerts_most_recent',
+              {:feature => 'alerts', :any => true},
+              '/alerts_most_recent')
           ])
       end
 

@@ -29,7 +29,7 @@
         %a.miq-alert-group-title{"ng-if" => "group.hasItems",
                                  "ng-class" => "{'collapsed': !group.open}",
                                  "ng-click" => "vm.toggleGroupOpen(group)"}
-          {{group.title}} ({{group.itemsList.length}})
+          {{group.name}} ({{group.itemsList.length}})
         .card-view-pf{"ng-if" => "group.hasItems", "ng-class" => "{'collapse': !group.open}"}
           .card-pf.card-pf-aggregate-status{"ng-repeat" => "item in group.itemsList track by item.name"}
             %span.h2.card-pf-title

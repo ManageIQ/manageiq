@@ -1,10 +1,9 @@
 /* global miqHttpInject */
 
-angular.module('alertsCenter').controller('alertsListController', ['$scope', '$window', 'alertsCenterService',
+angular.module('alertsCenter').controller('alertsMostRecentController', ['$scope', '$window', 'alertsCenterService',
   function($scope, $window, alertsCenterService) {
     var vm = this;
 
-    vm.alerts = [];
     vm.alertsList = [];
 
     function processData(response) {
@@ -14,8 +13,12 @@ angular.module('alertsCenter').controller('alertsListController', ['$scope', '$w
     }
 
     function setupConfig () {
-      vm.severities = alertsCenterService.severities;
       vm.acknowledgedTooltip = __("Acknowledged");
+
+      vm.showCount = 25;
+      vm.showCounts = [25, 50, 100];
+
+      vm.severities = alertsCenterService.severities;
 
       vm.listConfig = {
         showSelectBox: false,
@@ -58,7 +61,18 @@ angular.module('alertsCenter').controller('alertsListController', ['$scope', '$w
     }
 
     vm.filterChange = function() {
-      vm.alertsList = alertsCenterService.filterAlerts(vm.alerts, vm.filterConfig.appliedFilters);
+      vm.alertsList = [];
+
+      // Sort by update time descending
+      vm.alerts.sort(function(alert1, alert2) {
+        return (alert2.evaluated_on - alert1.evaluated_on);
+      });
+
+
+      // Keep only the most recent
+      var alerts = vm.alerts.slice(0, vm.showCount);
+
+      vm.alertsList = alertsCenterService.filterAlerts(alerts, vm.filterConfig.appliedFilters);
 
       vm.toolbarConfig.filterConfig.resultsCount = vm.alertsList.length;
 
@@ -70,9 +84,9 @@ angular.module('alertsCenter').controller('alertsListController', ['$scope', '$w
       if (vm.alertsList) {
         vm.alertsList.sort(function(item1, item2) {
           return alertsCenterService.compareAlerts(item1,
-            item2,
-            vm.toolbarConfig.sortConfig.currentField.id,
-            vm.toolbarConfig.sortConfig.isAscending);
+                                                   item2,
+                                                   vm.toolbarConfig.sortConfig.currentField.id,
+                                                   vm.toolbarConfig.sortConfig.isAscending);
         });
       }
     }

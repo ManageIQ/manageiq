@@ -6066,3 +6066,7 @@
     :description: Show Alerts List
     :feature_type: view
     :identifier: alert_list
+  - :name: Most Recent
+    :description: Show Most Recent Alerts
+    :feature_type: view
+    :identifier: alerts_most_recent

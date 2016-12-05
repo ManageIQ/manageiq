@@ -141,12 +141,17 @@
   }
 
   .group-toolbar-actions {
-    .bootstrap-select {
-      margin: 0 10px 0 5px !important;
-      width: 115px !important;
+    .bootstrap-select:not([class*="col-"]):not([class*="form-control"]):not(.input-group-btn) {
+      margin: 0 10px 0 5px;
+      width: 115px;
     }
     .bootstrap-select:last-of-type {
       margin-right: 0;
+    }
+  }
+  .recent-toolbar-actions {
+    .bootstrap-select:not([class*="col-"]):not([class*="form-control"]):not(.input-group-btn) {
+      width: 60px;
     }
   }
   .alerts-group-item {
