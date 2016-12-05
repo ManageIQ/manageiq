@@ -34,7 +34,8 @@ class ApplicationHelper::Toolbar::VmCloudsCenter < ApplicationHelper::Toolbar::B
           N_('Compare Selected items'),
           :url_parms => "main_div",
           :enabled   => false,
-          :onwhen    => "2+"),
+          :onwhen    => "2+",
+          :klass     => ApplicationHelper::Button::InstanceCheckCompare),
         separator,
         button(
           :instance_edit,
@@ -115,7 +116,8 @@ class ApplicationHelper::Toolbar::VmCloudsCenter < ApplicationHelper::Toolbar::B
           :url_parms => "main_div",
           :confirm   => N_("Initiate Check Compliance of the last known configuration for the selected items?"),
           :enabled   => false,
-          :onwhen    => "1+"),
+          :onwhen    => "1+",
+          :klass     => ApplicationHelper::Button::InstanceCheckCompare),
       ]
     ),
   ])
@@ -140,7 +142,8 @@ class ApplicationHelper::Toolbar::VmCloudsCenter < ApplicationHelper::Toolbar::B
           N_('Set Retirement Dates'),
           :url_parms => "main_div",
           :enabled   => false,
-          :onwhen    => "1+"),
+          :onwhen    => "1+",
+          :klass     => ApplicationHelper::Button::InstanceRetire),
         button(
           :instance_retire_now,
           'fa fa-clock-o fa-lg',
@@ -149,7 +152,8 @@ class ApplicationHelper::Toolbar::VmCloudsCenter < ApplicationHelper::Toolbar::B
           :url_parms => "main_div",
           :confirm   => N_("Retire the selected items?"),
           :enabled   => false,
-          :onwhen    => "1+"),
+          :onwhen    => "1+",
+          :klass     => ApplicationHelper::Button::InstanceRetire),
         button(
           :instance_live_migrate,
           'product product-migrate fa-lg',
