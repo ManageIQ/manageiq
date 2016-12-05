@@ -109,7 +109,7 @@ describe('import.js', function() {
             spyOn(window, 'showErrorMessage');
             spyOn($.fn, 'prop');
             event.data = {
-              message: '{&quot;level&quot;: &quot;error&quot;, &quot;message&quot;: &quot;test&quot;}'
+              message: {level: 'error', message: 'test'}
             };
             gitPostMessageCallback(event);
           });

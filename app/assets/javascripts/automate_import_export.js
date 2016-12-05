@@ -33,8 +33,9 @@ var Automate = {
 
   renderGitImport: function(branches, tags, gitRepoId, messages) {
     clearMessages();
-    var message = JSON.parse(messages).message;
-    var messageLevel = JSON.parse(messages).level;
+
+    var message = messages.message;
+    var messageLevel = messages.level;
 
     if (messageLevel === 'error') {
       showErrorMessage(message);
@@ -50,17 +51,14 @@ var Automate = {
 
       var addToDropDown = function(identifier, child) {
         $('select.git-' + identifier).append(
-          $('<option>', {
-            value: child,
-            text: child,
-          })
+          $('<option>', {value: child, text: child})
         );
       };
 
-      $.each(JSON.parse(branches), function(_index, child) {
+      $.each(branches, function(_index, child) {
         addToDropDown('branches', child);
       });
-      $.each(JSON.parse(tags), function(_index, child) {
+      $.each(tags, function(_index, child) {
         addToDropDown('tags', child);
       });
 
@@ -169,9 +167,7 @@ var Automate = {
 
     Automate.setUpGitRefreshClickHandlers();
 
-    $('.git-retreive-datastore').click(function() {
-      miqSparkleOn();
-    });
+    GitImport.retrieveDatastoreClickHandler();
 
     $('.git-import-submit').click(function(event) {
       event.preventDefault();
