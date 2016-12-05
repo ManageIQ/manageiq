@@ -96,10 +96,10 @@ module ServiceHelper::TextualSummary
   def textual_orchestration_stack
     ost = @record.try(:orchestration_stack)
     {
-      :label => _("Stack"),
+      :label => _("Orchestration Stack"),
       :image => "orchestration_stack",
       :value => ost.name,
-      :title => _("Show this Service's Stack"),
+      :title => _("Show this Service's Orchestration Stack"),
       :link  => url_for(:controller => 'orchestration_stack', :action => 'show', :id => ost.id)
     } if ost
   end
