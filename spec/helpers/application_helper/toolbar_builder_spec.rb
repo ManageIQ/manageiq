@@ -970,25 +970,6 @@ describe ApplicationHelper do
       end
     end
 
-    context "when record class = MiqWidget" do
-      context "and id = widget_generate_content" do
-        before do
-          @id = "widget_generate_content"
-          @record = FactoryGirl.create(:miq_widget)
-        end
-        it "when not member of a widgetset" do
-          expect(subject).to eq("Widget has to be assigned to a dashboard to generate content")
-        end
-
-        it "when Widget content generation is already running or queued up" do
-          @widget_running = true
-          db = FactoryGirl.create(:miq_widget_set)
-          db.replace_children([@record])
-          expect(subject).to eq("This Widget content generation is already running or queued up")
-        end
-      end
-    end
-
     context "when record class = ServiceTemplate" do
       context "and id = svc_catalog_provision" do
         before do
@@ -1346,44 +1327,6 @@ describe ApplicationHelper do
     end
 
     %w(rbac_group_edit rbac_role_edit).each do |id|
-      context "when with #{id} button should not be visible as user does not have access to these features" do
-        before { @id = id }
-        it "and record_id" do
-          expect(subject).to be_truthy
-        end
-      end
-    end
-  end
-
-  describe "#hide_button_report saved_report admin" do
-    subject { hide_button_report(@id) }
-    before do
-      @record = FactoryGirl.create(:miq_report_result)
-      feature = EvmSpecHelper.specific_product_features(%w(saved_report_delete))
-      login_as FactoryGirl.create(:user, :features => feature)
-      @sb = {:active_tree => :savedreports_tree}
-    end
-
-    %w(saved_report_delete).each do |id|
-      context "when with #{id} button should be visible" do
-        before { @id = id }
-        it "and record_id" do
-          expect(subject).to be_falsey
-        end
-      end
-    end
-  end
-
-  describe "#hide_button_report with saved_report view only" do
-    subject { hide_button_report(@id) }
-    before do
-      @record = FactoryGirl.create(:miq_report_result)
-      feature = EvmSpecHelper.specific_product_features(%w(miq_report_saved_reports_view))
-      login_as FactoryGirl.create(:user, :features => feature)
-      @sb = {:active_tree => :savedreports_tree}
-    end
-
-    %w(saved_report_delete).each do |id|
       context "when with #{id} button should not be visible as user does not have access to these features" do
         before { @id = id }
         it "and record_id" do
