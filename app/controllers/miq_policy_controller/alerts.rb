@@ -60,7 +60,7 @@ module MiqPolicyController::Alerts
     else
       alerts.push(params[:id])
     end
-    alert_get_info(MiqAlert.find(params[:id]))
+    @alert = MiqAlert.find(params[:id])
     alert_sync_provider(:delete)
 
     process_alerts(alerts, "destroy") unless alerts.empty?
@@ -232,7 +232,8 @@ module MiqPolicyController::Alerts
       # skip record id when copying attributes
       @alert = MiqAlert.find(params[:id]).dup
     else
-      @alert = params[:id] ? MiqAlert.find(params[:id]) : MiqAlert.new  # Get existing or new record
+      # Get existing record if edit action or create new record
+      @alert = params[:id] ? MiqAlert.find(params[:id]) : MiqAlert.new
       @alert.enabled = true unless @alert.id            # Default enabled to true if new record
     end
     @edit[:key] = "alert_edit__#{@alert.id || "new"}"
