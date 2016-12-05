@@ -44,19 +44,6 @@ class ChargebackContainerProject < Chargeback
     build_results_for_report_chargeback(options)
   end
 
-  def self.get_keys_and_extra_fields(perf, ts_key)
-    key = "#{perf.resource_id}_#{ts_key}"
-    extra_fields = {
-      "project_name"  => perf.resource_name,
-      "project_uid"   => perf.resource.ems_ref,
-      "provider_name" => perf.parent_ems.try(:name),
-      "provider_uid"  => perf.parent_ems.try(:guid),
-      "archived"      => perf.resource.archived? ? _("Yes") : _("No")
-    }
-
-    [key, extra_fields]
-  end
-
   def self.where_clause(records, _options)
     records.where(:resource_type => ContainerProject.name, :resource_id => @projects.select(:id))
   end
@@ -79,5 +66,15 @@ class ChargebackContainerProject < Chargeback
       "net_io_used_metric"    => {:grouping => [:total]},
       "total_cost"            => {:grouping => [:total]}
     }
+  end
+
+  private
+
+  def init_extra_fields(perf)
+    self.project_name  = perf.resource_name
+    self.project_uid   = perf.resource.ems_ref
+    self.provider_name = perf.parent_ems.try(:name)
+    self.provider_uid  = perf.parent_ems.try(:guid)
+    self.archived      = perf.resource.archived? ? _('Yes') : _('No')
   end
 end # class Chargeback

@@ -41,56 +41,8 @@ class ChargebackVm < Chargeback
 
     @report_user = User.find_by(:userid => options[:userid])
 
-    # Find Vms by user or by tag
-    if options[:owner]
-      user = User.find_by_userid(options[:owner])
-      if user.nil?
-        _log.error("Unable to find user '#{options[:owner]}'. Calculating chargeback costs aborted.")
-        raise MiqException::Error, _("Unable to find user '%{name}'") % {:name => options[:owner]}
-      end
-      vms = user.vms
-    elsif options[:tag]
-      vms = Vm.find_tagged_with(:all => options[:tag], :ns => "*")
-      vms &= @report_user.accessible_vms if @report_user && @report_user.self_service?
-    elsif options[:tenant_id]
-      tenant = Tenant.find(options[:tenant_id])
-      if tenant.nil?
-        _log.error("Unable to find tenant '#{options[:tenant_id]}'. Calculating chargeback costs aborted.")
-        raise MiqException::Error, "Unable to find tenant '#{options[:tenant_id]}'"
-      end
-      vms = tenant.vms
-    elsif options[:service_id]
-      service = Service.find(options[:service_id])
-      if service.nil?
-        _log.error("Unable to find service '#{options[:service_id]}'. Calculating chargeback costs aborted.")
-        raise MiqException::Error, "Unable to find service '#{options[:service_id]}'"
-      end
-      vms = service.vms
-    else
-      raise _("must provide options :owner or :tag")
-    end
-    return [[]] if vms.empty?
-
-    @vm_owners = vms.inject({}) { |h, v| h[v.id] = v.evm_owner_name; h }
-
+    @vm_owners = @vms = nil
     build_results_for_report_chargeback(options)
-  end
-
-  def self.get_keys_and_extra_fields(perf, ts_key)
-    key = "#{perf.resource_id}_#{ts_key}"
-    @vm_owners[perf.resource_id] ||= perf.resource.evm_owner_name
-
-    extra_fields = {
-      "vm_id"         => perf.resource_id,
-      "vm_name"       => perf.resource_name,
-      "vm_uid"        => perf.resource.ems_ref,
-      "vm_guid"       => perf.resource.try(:guid),
-      "owner_name"    => @vm_owners[perf.resource_id],
-      "provider_name" => perf.parent_ems.try(:name),
-      "provider_uid"  => perf.parent_ems.try(:guid)
-    }
-
-    [key, extra_fields]
   end
 
   def self.where_clause(records, options)
@@ -98,7 +50,7 @@ class ChargebackVm < Chargeback
     if options[:tag] && (@report_user.nil? || !@report_user.self_service?)
       scope.where.not(:resource_id => nil).for_tag_names(options[:tag].split("/")[2..-1])
     else
-      scope.where(:resource_id => @vm_owners.keys)
+      scope.where(:resource => vms)
     end
   end
 
@@ -138,5 +90,57 @@ class ChargebackVm < Chargeback
       "storage_used_metric"      => {:grouping => [:total]},
       "total_cost"               => {:grouping => [:total]}
     }
+  end
+
+  def self.vm_owner(perf)
+    @vm_owners ||= vms.each_with_object({}) { |vm, res| res[vm.id] = vm.evm_owner_name }
+    @vm_owners[perf.resource_id] ||= perf.resource.evm_owner_name
+  end
+
+  def self.vms
+    @vms ||=
+      begin
+        # Find Vms by user or by tag
+        if @options[:owner]
+          user = User.find_by_userid(@options[:owner])
+          if user.nil?
+            _log.error("Unable to find user '#{@options[:owner]}'. Calculating chargeback costs aborted.")
+            raise MiqException::Error, _("Unable to find user '%{name}'") % {:name => @options[:owner]}
+          end
+          user.vms
+        elsif @options[:tag]
+          vms = Vm.find_tagged_with(:all => @options[:tag], :ns => '*')
+          vms &= @report_user.accessible_vms if @report_user && @report_user.self_service?
+          vms
+        elsif @options[:tenant_id]
+          tenant = Tenant.find(@options[:tenant_id])
+          if tenant.nil?
+            _log.error("Unable to find tenant '#{@options[:tenant_id]}'. Calculating chargeback costs aborted.")
+            raise MiqException::Error, "Unable to find tenant '#{@options[:tenant_id]}'"
+          end
+          tenant.vms
+        elsif @options[:service_id]
+          service = Service.find(@options[:service_id])
+          if service.nil?
+            _log.error("Unable to find service '#{@options[:service_id]}'. Calculating chargeback costs aborted.")
+            raise MiqException::Error, "Unable to find service '#{@options[:service_id]}'"
+          end
+          service.vms
+        else
+          raise _("must provide options :owner or :tag")
+        end
+      end
+  end
+
+  private
+
+  def init_extra_fields(perf)
+    self.vm_id         = perf.resource_id
+    self.vm_name       = perf.resource_name
+    self.vm_uid        = perf.resource.ems_ref
+    self.vm_guid       = perf.resource.try(:guid)
+    self.owner_name    = self.class.vm_owner(perf)
+    self.provider_name = perf.parent_ems.try(:name)
+    self.provider_uid  = perf.parent_ems.try(:guid)
   end
 end # class Chargeback

@@ -47,22 +47,18 @@ class ChargebackContainerImage < Chargeback
     build_results_for_report_chargeback(options)
   end
 
-  def self.get_keys_and_extra_fields(perf, ts_key)
-    project = @data_index.fetch_path(:container_project, :by_container_id, perf.resource_id)
-    image = @data_index.fetch_path(:container_image, :by_container_id, perf.resource_id)
+  def self.default_key(metric_rollup_record, ts_key)
+    project = @data_index.fetch_path(:container_project, :by_container_id, metric_rollup_record.resource_id)
+    image = @data_index.fetch_path(:container_image, :by_container_id, metric_rollup_record.resource_id)
+    @options[:groupby] == 'project' ? "#{project.id}_#{ts_key}" : "#{project.id}_#{image.id}_#{ts_key}"
+  end
 
-    key = @options[:groupby] == 'project' ? "#{project.id}_#{ts_key}" : "#{project.id}_#{image.id}_#{ts_key}"
+  def self.image(perf)
+    @data_index.fetch_path(:container_image, :by_container_id, perf.resource_id)
+  end
 
-    extra_fields = {
-      "project_name"  => project.name,
-      "image_name"    => image.try(:full_name) || _("Deleted"), # until image archiving is implemented
-      "project_uid"   => project.ems_ref,
-      "provider_name" => perf.parent_ems.try(:name),
-      "provider_uid"  => perf.parent_ems.try(:name),
-      "archived"      => project.archived? ? _("Yes") : _("No")
-    }
-
-    [key, extra_fields]
+  def self.project(perf)
+    @data_index.fetch_path(:container_project, :by_container_id, perf.resource_id)
   end
 
   def self.where_clause(records, _options)
@@ -87,5 +83,16 @@ class ChargebackContainerImage < Chargeback
       "net_io_used_metric"    => {:grouping => [:total]},
       "total_cost"            => {:grouping => [:total]}
     }
+  end
+
+  private
+
+  def init_extra_fields(perf)
+    self.project_name  = self.class.project(perf).name
+    self.image_name    = self.class.image(perf).try(:full_name) || _('Deleted') # until image archiving is implemented
+    self.project_uid   = self.class.project(perf).ems_ref
+    self.provider_name = perf.parent_ems.try(:name)
+    self.provider_uid  = perf.parent_ems.try(:name)
+    self.archived      = self.class.project(perf).archived? ? _('Yes') : _('No')
   end
 end # class ChargebackContainerImage
