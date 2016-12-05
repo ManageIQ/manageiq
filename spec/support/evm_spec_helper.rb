@@ -71,8 +71,7 @@ module EvmSpecHelper
   def self.remote_miq_server(attrs = {})
     Tenant.root_tenant || Tenant.create!(:use_config_for_attributes => false)
 
-    server = FactoryGirl.create(:miq_server, attrs)
-    server
+    FactoryGirl.create(:miq_server, attrs)
   end
 
   def self.remote_guid_miq_server_zone
