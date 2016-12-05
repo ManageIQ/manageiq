@@ -843,9 +843,9 @@ module ApplicationController::Buttons
       :target_class   => @resolve[:target_class],
       :name           => @custom_button.name,
       :description    => @custom_button.description,
-      :button_image   => @custom_button.options.try(:button_image).to_s,
-      :display        => @custom_button.options.try(:display) ? @custom_button.options[:display] : true,
-      :open_url       => @custom_button.options.try(:open_url) ? @custom_button.options[:open_url] : false,
+      :button_image   => @custom_button.options.try(:[], :button_image).to_s,
+      :display        => @custom_button.options.try(:[], :display).nil? ? true : @custom_button.options[:display],
+      :open_url       => @custom_button.options.try(:[], :open_url) ? @custom_button.options[:open_url] : false,
       :object_message => @custom_button.uri_message || "create",
     )
     @edit[:current] = copy_hash(@edit[:new])

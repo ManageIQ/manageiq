@@ -145,6 +145,7 @@ describe ApplicationController do
       expect(assigns(:edit)[:new][:target_class]).to eq(ui_lookup(:model => "Vm"))
       expect(assigns(:edit)[:new][:display]).to eq(false)
       expect(assigns(:edit)[:new][:button_image]).to eq('5')
+      expect(assigns(:edit)[:new][:open_url]).to eq(false)
 
       controller.instance_variable_set(:@sb,
                                        :trees       => {
