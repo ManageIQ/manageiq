@@ -143,6 +143,7 @@ describe CloudSubnetController do
       EvmSpecHelper.create_guid_miq_server_zone
       @ems = FactoryGirl.create(:ems_openstack).network_manager
       @subnet = FactoryGirl.create(:cloud_subnet_openstack, :ext_management_system => @ems)
+      session[:cloud_subnet_lastaction] = 'show'
     end
 
     it "deletes itself" do

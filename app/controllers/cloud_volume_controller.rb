@@ -6,6 +6,7 @@ class CloudVolumeController < ApplicationController
 
   include Mixins::GenericListMixin
   include Mixins::CheckedIdMixin
+  include Mixins::GenericFormMixin
 
   # handle buttons pressed on the button bar
   def button
@@ -130,6 +131,7 @@ class CloudVolumeController < ApplicationController
   end
 
   def attach
+    params[:id] = get_checked_volume_id(params) unless params[:id].present?
     assert_privileges("cloud_volume_attach")
     @vm_choices = {}
     @volume = find_by_id_filtered(CloudVolume, params[:id])
@@ -145,6 +147,7 @@ class CloudVolumeController < ApplicationController
   end
 
   def detach
+    params[:id] = get_checked_volume_id(params) unless params[:id].present?
     assert_privileges("cloud_volume_detach")
     @volume = find_by_id_filtered(CloudVolume, params[:id])
     @vm_choices = @volume.vms.each_with_object({}) { |vm, hash| hash[vm.name] = vm.id }
@@ -156,15 +159,6 @@ class CloudVolumeController < ApplicationController
         :name  => @volume.name
       },
       :url  => "/cloud_volume/detach")
-  end
-
-  def cancel_action(message)
-    session[:edit] = nil
-    @breadcrumbs.pop if @breadcrumbs
-    javascript_redirect :action    => @lastaction,
-                        :id        => @volume.id,
-                        :display   => session[:cloud_volume_display],
-                        :flash_msg => message
   end
 
   def attach_volume
@@ -197,10 +191,10 @@ class CloudVolumeController < ApplicationController
       else
         add_flash(_(volume.is_available_now_error_message(:attach_volume)), :error)
       end
-      @breadcrumbs.pop if @breadcrumbs
       session[:edit] = nil
       session[:flash_msgs] = @flash_array.dup if @flash_array
-      javascript_redirect :action => "show", :id => @volume.id.to_s
+
+      javascript_redirect previous_breadcrumb_url
     end
   end
 
@@ -235,10 +229,10 @@ class CloudVolumeController < ApplicationController
       else
         add_flash(_(volume.is_available_now_error_message(:detach_volume)), :error)
       end
-      @breadcrumbs.pop if @breadcrumbs
       session[:edit] = nil
       session[:flash_msgs] = @flash_array.dup if @flash_array
-      javascript_redirect :action => "show", :id => @volume.id.to_s
+
+      javascript_redirect previous_breadcrumb_url
     end
   end
 
@@ -307,6 +301,7 @@ class CloudVolumeController < ApplicationController
   end
 
   def edit
+    params[:id] = checked_item_id unless params[:id].present?
     assert_privileges("cloud_volume_edit")
     @volume = find_by_id_filtered(CloudVolume, params[:id])
     @in_a_form = true
@@ -347,10 +342,10 @@ class CloudVolumeController < ApplicationController
       else
         add_flash(_(update_details), :error)
       end
-      @breadcrumbs.pop if @breadcrumbs
       session[:edit] = nil
       session[:flash_msgs] = @flash_array.dup if @flash_array
-      javascript_redirect :action => "show", :id => @volume.id
+
+      javascript_redirect previous_breadcrumb_url
 
     when "validate"
       @in_a_form = true
@@ -369,11 +364,12 @@ class CloudVolumeController < ApplicationController
   # delete selected volumes
   def delete_volumes
     assert_privileges("cloud_volume_delete")
-
     volumes = if @lastaction == "show_list" || (@lastaction == "show" && @layout != "cloud_volume")
                 find_checked_items
-              else
+              elsif params[:id].present?
                 [params[:id]]
+              else
+                find_checked_items
               end
 
     if volumes.empty?
@@ -393,21 +389,29 @@ class CloudVolumeController < ApplicationController
           :name      => volume.name,
           :instances => ui_lookup(:tables => 'vm_cloud')}, :warning)
       else
-        valid_delete, delete_details = volume.validate_delete_volume
-        if valid_delete
-          volumes_to_delete.push(volume)
-        else
+        begin
+          valid_delete = volume.validate_delete_volume
+          if valid_delete[:available]
+            volumes_to_delete.push(volume)
+          else
+            add_flash(_("Couldn't initiate deletion of %{model} \"%{name}\": %{details}") % {
+              :model   => ui_lookup(:table => 'cloud_volume'),
+              :name    => volume.name,
+              :details => valid_delete[:message]}, :error)
+          end
+        rescue Excon::Error::Unauthorized => e
           add_flash(_("Couldn't initiate deletion of %{model} \"%{name}\": %{details}") % {
             :model   => ui_lookup(:table => 'cloud_volume'),
             :name    => volume.name,
-            :details => delete_details}, :error)
+            :details => e}, :error)
         end
+
       end
     end
     process_cloud_volumes(volumes_to_delete, "destroy") unless volumes_to_delete.empty?
 
     # refresh the list if applicable
-    if @lastaction == "show_list"
+    if @lastaction == "show_list" && @breadcrumbs.last[:url].include?(@lastaction)
       show_list
       @refresh_partial = "layouts/gtl"
     elsif @lastaction == "show" && @layout == "cloud_volume"
@@ -415,6 +419,10 @@ class CloudVolumeController < ApplicationController
       if @flash_array.nil?
         add_flash(_("The selected %{model} was deleted") % {:model => ui_lookup(:table => "cloud_volume")})
       end
+    else
+      drop_breadcrumb(:name => 'dummy', :url => " ") # missing a bc to get correctly back so here's a dummy
+      session[:flash_msgs] = @flash_array.dup if @flash_array
+      redirect_to(previous_breadcrumb_url)
     end
   end
 

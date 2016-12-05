@@ -92,7 +92,8 @@ class TreeNodeBuilder
     "DialogGroup"            => -> { generic_node(object.label, "dialog_group.png") },
     "DialogField"            => -> { generic_node(object.label, "dialog_field.png") },
     "EmsFolder"              => -> { ems_folder_node },
-    "EmsCluster"             => -> { generic_node(object.name, "cluster.png", "#{ui_lookup(:table => "ems_cluster")}: #{object.name}") },
+    "EmsCluster"             => -> {
+      generic_node(object.name, "cluster.png", "#{ui_lookup(:table => "ems_cluster")}: #{object.name}") },
     "GuestDevice"            => -> { guest_node(object) },
     "Host"                   => -> { generic_node(object.name,
                                                 "host.png",

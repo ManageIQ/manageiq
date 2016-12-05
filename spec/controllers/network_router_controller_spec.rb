@@ -176,6 +176,7 @@ describe NetworkRouterController do
       @ems = FactoryGirl.create(:ems_openstack).network_manager
       @router = FactoryGirl.create(:network_router_openstack,
                                    :ext_management_system => @ems)
+      session[:network_router_lastaction] = 'show'
     end
 
     context "#delete" do

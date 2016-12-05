@@ -9,6 +9,7 @@ class NetworkRouterController < ApplicationController
   include Mixins::GenericSessionMixin
   include Mixins::GenericShowMixin
   include Mixins::CheckedIdMixin
+  include Mixins::GenericFormMixin
 
   def self.display_methods
     %w(instances cloud_subnets)
@@ -32,15 +33,6 @@ class NetworkRouterController < ApplicationController
     else
       render_flash
     end
-  end
-
-  def cancel_action(message)
-    session[:edit] = nil
-    @breadcrumbs.pop if @breadcrumbs
-    javascript_redirect :action    => @lastaction,
-                        :id        => @router.id,
-                        :display   => session[:network_router_display],
-                        :flash_msg => message
   end
 
   def network_router_form_fields
@@ -129,7 +121,9 @@ class NetworkRouterController < ApplicationController
   def delete_network_routers
     assert_privileges("network_router_delete")
 
-    routers = if @lastaction == "show_list" || (@lastaction == "show" && @layout != "network_router")
+    routers = if @lastaction == "show_list" ||
+                 (@lastaction == "show" && @layout != "network_router") ||
+                 @lastaction.nil?
                 find_checked_items
               else
                 [params[:id]]
@@ -153,7 +147,7 @@ class NetworkRouterController < ApplicationController
     process_network_routers(routers_to_delete, "destroy") unless routers_to_delete.empty?
 
     # refresh the list if applicable
-    if @lastaction == "show_list"
+    if @lastaction == "show_list" && @breadcrumbs.last[:url].include?(@lastaction)
       show_list
       @refresh_partial = "layouts/gtl"
     elsif @lastaction == "show" && @layout == "network_router"
@@ -161,10 +155,15 @@ class NetworkRouterController < ApplicationController
       if @flash_array.nil?
         add_flash(_("The selected Router was deleted") % {:model => ui_lookup(:table => "network_router")})
       end
+    else
+      drop_breadcrumb(:name => 'dummy', :url => " ") # missing a bc to get correctly back so here's a dummy
+      session[:flash_msgs] = @flash_array.dup if @flash_array
+      redirect_to(previous_breadcrumb_url)
     end
   end
 
   def edit
+    params[:id] = checked_item_id unless params[:id].present?
     assert_privileges("network_router_edit")
     @router = find_by_id_filtered(NetworkRouter, params[:id])
     @in_a_form = true
@@ -214,11 +213,9 @@ class NetworkRouterController < ApplicationController
                                                                    :details => task.message }, :error)
     end
 
-    @breadcrumbs.pop if @breadcrumbs
     session[:edit] = nil
     session[:flash_msgs] = @flash_array.dup if @flash_array
-
-    javascript_redirect :action => "show", :id => router_id
+    javascript_redirect previous_breadcrumb_url
   end
 
   private

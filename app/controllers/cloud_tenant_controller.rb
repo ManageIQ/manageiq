@@ -8,6 +8,7 @@ class CloudTenantController < ApplicationController
   include Mixins::GenericListMixin
   include Mixins::CheckedIdMixin
   include Mixins::GenericButtonMixin
+  include Mixins::GenericFormMixin
 
   # handle buttons pressed on the button bar
   def button
@@ -22,8 +23,26 @@ class CloudTenantController < ApplicationController
       # custom button screen, so return, let custom_buttons method handle everything
       custom_buttons
     else
-      # calling the method from Mixins::GenericButtonMixin
-      super
+      editable_objects = CloudTenantController.display_methods.map(&:singularize) - %w(instance image) # handled in super
+      if params[:pressed].starts_with?(*editable_objects)
+        target_controller = editable_objects.find { |n| params[:pressed].starts_with?(n) }
+        action = params[:pressed].sub("#{target_controller}_", '')
+        action = "#{action}_#{target_controller.sub('cloud_','').pluralize}" if action == 'delete'
+        if action == 'detach'
+          volume = find_by_id_filtered(CloudVolume, from_cid(params[:miq_grid_checks]))
+          if volume.attachments.empty?
+            render_flash(_("%{volume} \"%{volume_name}\" is not attached to any %{instances}") % {
+                :volume      => ui_lookup(:table => 'cloud_volume'),
+                :volume_name => volume.name,
+                :instances   => ui_lookup(:tables => 'vm_cloud')}, :error)
+            return
+          end
+        end
+        javascript_redirect :controller => target_controller, :miq_grid_checks => params[:miq_grid_checks], :action => action
+      else
+        # calling the method from Mixins::GenericButtonMixin
+        super
+      end
     end
   end
 
@@ -218,15 +237,6 @@ class CloudTenantController < ApplicationController
     end
   end
 
-  def cancel_action(message)
-    session[:edit] = nil
-    @breadcrumbs.pop if @breadcrumbs
-    javascript_redirect :action    => @lastaction,
-                        :id        => @tenant.id,
-                        :display   => session[:cloud_tenant_display],
-                        :flash_msg => message
-  end
-
   private
 
   def form_params
@@ -272,6 +282,7 @@ class CloudTenantController < ApplicationController
     @display    = session[:cloud_tenant_display]
     @filters    = session[:cloud_tenant_filters]
     @catinfo    = session[:cloud_tenant_catinfo]
+    @flash_array = session[:flash_msgs] if session[:flash_msgs].present?
   end
 
   def set_session_data
