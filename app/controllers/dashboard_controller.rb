@@ -82,6 +82,10 @@ class DashboardController < ApplicationController
     render :action => "show"
   end
 
+  def start_url
+    redirect_to start_url_for_user(nil)
+  end
+
   def show
     @layout    = "dashboard"
     @dashboard = true
