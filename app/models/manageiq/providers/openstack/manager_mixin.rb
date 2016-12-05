@@ -38,10 +38,9 @@ module ManageIQ::Providers::Openstack::ManagerMixin
       username = options[:user] || authentication_userid(options[:auth_type])
       password = options[:pass] || authentication_password(options[:auth_type])
 
-      vmdb_config = VMDB::Config.new("vmdb").config
       extra_options = {
-        :ssl_ca_file    => vmdb_config.fetch_path(:ssl, :ssl_ca_file),
-        :ssl_ca_path    => vmdb_config.fetch_path(:ssl, :ssl_ca_path),
+        :ssl_ca_file    => ::Settings.ssl.ssl_ca_file,
+        :ssl_ca_path    => ::Settings.ssl.ssl_ca_path,
         :ssl_cert_store => OpenSSL::X509::Store.new
       }
       extra_options[:domain_id] = keystone_v3_domain_id

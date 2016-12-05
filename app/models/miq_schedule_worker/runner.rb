@@ -251,23 +251,22 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
     # Schedule - Database Metrics capture run by the appliance with a database_operations role
     return unless schedule_enabled?(:database_operations)
     scheduler = scheduler_for(:database_operations)
-    cfg = VMDB::Config.new("vmdb").config
 
-    sched = cfg.fetch_path(:database, :metrics_collection, :collection_schedule)
+    sched = ::Settings.database.metrics_collection.collection_schedule
     _log.info("database_metrics_collection_schedule: #{sched}")
     scheduler.schedule_cron(
       sched,
       :tags => [:database_operations, :database_metrics_collection_schedule],
     ) { enqueue :vmdb_database_capture_metrics_timer }
 
-    sched = cfg.fetch_path(:database, :metrics_collection, :daily_rollup_schedule)
+    sched = ::Settings.database.metrics_collection.daily_rollup_schedule
     _log.info("database_metrics_daily_rollup_schedule: #{sched}")
     scheduler.schedule_cron(
       sched,
       :tags => [:database_operations, :database_metrics_daily_rollup_schedule],
     ) { enqueue :vmdb_database_rollup_metrics_timer }
 
-    sched = cfg.fetch_path(:database, :metrics_history, :purge_schedule)
+    sched = ::Settings.database.metrics_history.purge_schedule
     _log.info("database_metrics_purge_schedule: #{sched}")
     scheduler.schedule_cron(
       sched,
@@ -281,10 +280,8 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
     # These schedules need to run with the LDAP SYnchronizartion role
     return unless schedule_enabled?(:ldap_synchronization)
     scheduler = scheduler_for(:ldap_synchronization)
-    ldap_synchronization_schedule_default = "0 2 * * *"
-    ldap_synchronization_schedule         = [:ldap_synchronization, :ldap_synchronization_schedule]
 
-    sched = VMDB::Config.new("vmdb").config.fetch_path(ldap_synchronization_schedule) || ldap_synchronization_schedule_default
+    sched = ::Settings.ldap_synchronization.ldap_synchronization_schedule
     _log.info("ldap_synchronization_schedule: #{sched}")
 
     scheduler.schedule_cron(
@@ -354,20 +351,19 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
     # These schedules need to run by the servers with the coordinator role
     return unless schedule_enabled?(:storage_metrics_coordinator)
     scheduler = scheduler_for(:storage_metrics_coordinator)
-    cfg = VMDB::Config.new("vmdb").config
 
     # Schedule - Storage metrics collection
-    sched = cfg.fetch_path(:storage, :metrics_collection, :collection_schedule)
+    sched = ::Settings.storage.metrics_collection.collection_schedule
     _log.info("storage_metrics_collection_schedule: #{sched}")
     scheduler.schedule_cron(sched) { enqueue :storage_refresh_metrics }
 
     # Schedule - Storage metrics hourly rollup
-    sched = cfg.fetch_path(:storage, :metrics_collection, :hourly_rollup_schedule)
+    sched = ::Settings.storage.metrics_collection.hourly_rollup_schedule
     _log.info("storage_metrics_hourly_rollup_schedule: #{sched}")
     scheduler.schedule_cron(sched) { enqueue :storage_metrics_rollup_hourly }
 
     # Schedule - Storage metrics daily rollup
-    base_sched = cfg.fetch_path(:storage, :metrics_collection, :daily_rollup_schedule)
+    base_sched = ::Settings.storage.metrics_collection.daily_rollup_schedule
     TimeProfile.rollup_daily_metrics.each do |tp|
       tz = ActiveSupport::TimeZone::MAPPING[tp.tz]
       sched = "#{base_sched} #{tz}"
@@ -376,12 +372,12 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
     end
 
     # Schedule - Storage metrics purge
-    sched = cfg.fetch_path(:storage, :metrics_history, :purge_schedule)
+    sched = ::Settings.storage.metrics_history.purge_schedule
     _log.info("storage_metrics_purge_schedule: #{sched}")
     scheduler.schedule_cron(sched) { enqueue :miq_storage_metric_purge_all_timer }
 
     # Schedule - Storage inventory collection
-    sched = cfg.fetch_path(:storage, :inventory, :full_refresh_schedule)
+    sched = ::Settings.storage.inventory.full_refresh_schedule
     _log.info("storage_inventory_full_refresh_schedule: #{sched}")
     scheduler.schedule_cron(sched) { enqueue :storage_refresh_inventory }
 
@@ -575,16 +571,10 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
   private
 
   def schedule_settings_for_ems_refresh
-    config = VMDB::Config.new("vmdb").config.fetch(:ems_refresh, {})
-
     ExtManagementSystem.leaf_subclasses.each.with_object({}) do |klass, hash|
       next unless klass.ems_type
-
-      every   = config.fetch_path(klass.ems_type.to_sym, :refresh_interval)
-      every ||= config.fetch(:refresh_interval, 24.hours)
-
-      every   = every.respond_to?(:to_i_with_method) ? every.to_i_with_method : every.to_i
-
+      every = ::Settings.ems_refresh[klass.ems_type].try(:refresh_interval) || ::Settings.ems_refresh.refresh_interval
+      every = every.respond_to?(:to_i_with_method) ? every.to_i_with_method : every.to_i
       hash[klass] = every unless every == 0
     end
   end

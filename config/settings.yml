@@ -921,7 +921,19 @@
     - MoveIntoResourcePool
     :VmSuspendedEvent:
     - SuspendVM_Task
+:host_delete:
+  :queue_timeout: 20.minutes
+:host_introspect:
+  :queue_timeout: 20.minutes
+:host_manageable:
+  :queue_timeout: 20.minutes
+:host_provide:
+  :queue_timeout: 20.minutes
 :host_scan:
+  :queue_timeout: 20.minutes
+:host_start:
+  :queue_timeout: 20.minutes
+:host_stop:
   :queue_timeout: 20.minutes
 :http_proxy:
   :default:
@@ -1006,6 +1018,7 @@
   :host_overhead:
     :memory: 2.01.percent
     :cpu: 0.15.percent
+  :vim_cache_ttl: 1.hour
 :policy_events:
   :history:
     :keep_policy_events: 6.months
@@ -1029,8 +1042,6 @@
   :history:
     :keep_reports: 6.months
     :purge_window_size: 100
-  :precision:
-    :default: 2
   :precision_by_column:
     :slope: 4
   :queue_timeout: 1.hour
@@ -1087,6 +1098,7 @@
   :host: localhost
   :password: ''
   :port: '25'
+  :recipient_address_byte_limit: 100
   :user_name: evmadmin
 :snapshots:
   :create_free_percent: 100

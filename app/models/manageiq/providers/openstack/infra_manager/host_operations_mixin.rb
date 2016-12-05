@@ -19,7 +19,7 @@ module ManageIQ::Providers::Openstack::InfraManager::HostOperationsMixin
     end
 
     _log.info("Queuing #{power_state_text} for #{log_target}")
-    timeout = (VMDB::Config.new("vmdb").config.fetch_path(feature, :queue_timeout) || 20.minutes).to_i_with_method
+    timeout = ::Settings[feature].queue_timeout.to_i_with_method
     cb = {:class_name  => task.class.name,
           :instance_id => task.id,
           :method_name => :queue_callback_on_exceptions,

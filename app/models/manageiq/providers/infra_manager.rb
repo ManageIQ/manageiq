@@ -24,7 +24,7 @@ module ManageIQ::Providers
     #     :service
     #        :read_timeout: 1.hour
     #
-    cache_with_timeout(:ems_config, 2.minutes) { VMDB::Config.new("vmdb").config[:ems] || {} }
+    cache_with_timeout(:ems_config, 2.minutes) { ::Settings.ems }
 
     def self.ems_timeouts(type, service = nil)
       read_timeout = open_timeout = nil

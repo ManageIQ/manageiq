@@ -5,7 +5,7 @@ describe PurgingMixin do
 
   describe ".purge_date" do
     it "purge_date should not raise exception" do
-      allow(example_class).to receive(:purge_config).with(:keep_policy_events).and_return(120)
+      stub_settings(:policy_events => {:history => {:keep_policy_events => 120}})
       expect(example_class.purge_date).to be_within(1.second).of(120.seconds.ago.utc)
     end
   end

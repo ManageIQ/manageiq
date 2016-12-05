@@ -7,7 +7,7 @@ class ManageIQ::Providers::Vmware::InfraManager::MetricsCapture < ManageIQ::Prov
   #
 
   cache_with_timeout(:perf_history_results,
-                     -> { (VMDB::Config.new("vmdb").config.fetch_path(:performance, :vim_cache_ttl) || 1.hour).to_i_with_method }
+                     -> { ::Settings.performance.vim_cache_ttl.to_i_with_method }
                     ) { Hash.new }
 
   def self.intervals(ems, vim_hist)

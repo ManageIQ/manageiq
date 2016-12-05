@@ -140,19 +140,12 @@ class LogFile < ApplicationRecord
                    :description => "Default logfile")
   end
 
-  # Added tcp ping stuff here until ftp is refactored into a separate class
-  def self.get_ping_depot_options
-    @@ping_depot_options ||= VMDB::Config.new("vmdb").config[:log][:collection]
-  end
-
   def self.ping_timeout
-    get_ping_depot_options
-    @@ping_timeout ||= (@@ping_depot_options[:ping_depot_timeout] || 20)
+    ::Settings.log.collection.ping_depot_timeout
   end
 
   def self.do_ping?
-    get_ping_depot_options
-    @@do_ping ||= @@ping_depot_options[:ping_depot] == true
+    ::Settings.log.collection.ping_depot == true
   end
 
   def upload_log_file_ftp
