@@ -204,16 +204,16 @@ class MiqVimBrokerWorker::Runner < MiqWorker::Runner
     drain_event while @queue.length > 0
   end
 
-  def before_exit(message, _exit_code)
+  def before_exit(message, exit_code)
     # Gracefully Shutdown the Broker
     if @vim_broker_server
-      safe_log("#{message} Stopping Broker.")
+      safe_log("#{message} Stopping Broker.", exit_code)
       @vim_broker_server.shutdown rescue nil
     end
 
     # Drain the Queue of the Vim Events
     if @queue
-      safe_log("#{message} Draining Event Queue.")
+      safe_log("#{message} Draining Event Queue.", exit_code)
       drain_queue rescue nil
     end
   end
