@@ -38,7 +38,7 @@ describe Zone do
 
   context "when dealing with clouds" do
     before :each do
-      guid, server, @zone = EvmSpecHelper.create_guid_miq_server_zone
+      _, _, @zone = EvmSpecHelper.create_guid_miq_server_zone
     end
 
     it "returns the set of ems_clouds" do
