@@ -15,9 +15,9 @@ module UiServiceMixin
       :MiddlewareDeployment    => {:type => "glyph", :icon => "\uE603", :fontfamily => "icomoon"},                 # product-report
       :MiddlewareDeploymentEar => {:type => "glyph", :icon => "\uE626", :fontfamily => "icomoon"},                 # product-file-ear-o
       :MiddlewareDeploymentWar => {:type => "glyph", :icon => "\uE627", :fontfamily => "icomoon"},                 # product-file-war-o
-      :MiddlewareDomain        => {:type => "glyph", :icon => "\uE639", :fontfamily => "icomoon"},
+      :MiddlewareDomain        => {:type => "glyph", :icon => "\uE919", :fontfamily => "PatternFlyIcons-webfont"}, # pficon-domain
       :MiddlewareMessaging     => {:type => "glyph", :icon => "\uF0EC", :fontfamily => "FontAwesome"},             # fa-exchange (placeholder)
-      :MiddlewareServerGroup   => {:type => "glyph", :icon => "\uE638", :fontfamily => "icomoon"},
+      :MiddlewareServerGroup   => {:type => "glyph", :icon => "\uE91a", :fontfamily => "PatternFlyIcons-webfont"}, # pficon-server-group
       :Kubernetes              => {:type => "image", :icon => provider_icon(:Kubernetes)},
       :Openshift               => {:type => "image", :icon => provider_icon(:Openshift)},
       :OpenshiftEnterprise     => {:type => "image", :icon => provider_icon(:OpenshiftEnterprise)},

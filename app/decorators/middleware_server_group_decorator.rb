@@ -3,7 +3,7 @@ class MiddlewareServerGroupDecorator < Draper::Decorator
   include MiddlewareDecoratorMixin
 
   def fonticon
-    'server-group'.freeze
+    'pficon-server-group'.freeze
   end
 
   # Determine the icon
