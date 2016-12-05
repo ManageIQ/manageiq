@@ -29,7 +29,8 @@ class ApplicationHelper::Toolbar::MiqWidgetCenter < ApplicationHelper::Toolbar::
           'fa fa-cog fa-lg',
           t = N_('Generate Widget content now'),
           t,
-          :confirm => N_("Are you sure you want initiate content generation for this Widget now?")),
+          :confirm => N_("Are you sure you want initiate content generation for this Widget now?"),
+          :klass   => ApplicationHelper::Button::WidgetGenerateContent),
       ]
     ),
   ])

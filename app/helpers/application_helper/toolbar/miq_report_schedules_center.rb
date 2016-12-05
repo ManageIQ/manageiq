@@ -10,7 +10,8 @@ class ApplicationHelper::Toolbar::MiqReportSchedulesCenter < ApplicationHelper::
           :miq_report_schedule_add,
           'pficon pficon-add-circle-o fa-lg',
           t = N_('Add a new Schedule'),
-          t),
+          t,
+          :klass => ApplicationHelper::Button::MiqReportAction),
         button(
           :miq_report_schedule_edit,
           'pficon pficon-edit fa-lg',

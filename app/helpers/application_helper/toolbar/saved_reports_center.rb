@@ -5,7 +5,8 @@ class ApplicationHelper::Toolbar::SavedReportsCenter < ApplicationHelper::Toolba
       'fa fa-repeat fa-lg',
       N_('Reload selected Reports'),
       nil,
-      :url => "reload"),
+      :url   => "reload",
+      :klass => ApplicationHelper::Button::Reload)
   ])
   button_group('saved_report_vmdb', [
     select(
@@ -32,7 +33,8 @@ class ApplicationHelper::Toolbar::SavedReportsCenter < ApplicationHelper::Toolba
           :url_parms => "main_div",
           :confirm   => N_("Warning: The selected Saved Reports will be permanently removed from the database!"),
           :enabled   => false,
-          :onwhen    => "1+"),
+          :onwhen    => "1+",
+          :klass     => ApplicationHelper::Button::SavedReportDelete),
       ]
     ),
   ])
