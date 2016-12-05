@@ -33,3 +33,5 @@
     = render :partial => 'show_dashboard'
   - elsif @showtype == 'ad_hoc_metrics'
     = render :partial => 'show_ad_hoc_metrics'
+  - elsif @showtype == 'topology'
+    = render :file => 'container_topology/show'
