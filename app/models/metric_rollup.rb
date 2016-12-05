@@ -12,20 +12,36 @@ class MetricRollup < ApplicationRecord
     where(:capture_interval_name => interval, :timestamp => timestamp)
   end
 
+  def self.extract_from_min_max_as_arel(col)
+    lambda do |t|
+      min_max_col_match = Arel::Nodes::SqlLiteral.new(%Q{"metric_rollups"."min_max" from '#{col}: ([0-9\.]+)'})
+      substring_function = Arel::Nodes::NamedFunction.new("substring", [min_max_col_match])
+      Arel::Nodes::NamedFunction.new("CAST", [substring_function.as("double precision")])
+    end
+  end
+
   #
   # min_max column getters
   #
 
-  Metric::Rollup::ROLLUP_COLS.product([:min, :max]).each do |c, mode|
+  Metric::Rollup::ROLLUP_COLS.reject {|col| col.to_s =~ /(.+)_reserved$/}
+                             .product([:min, :max]).compact.each do |c, mode|
     col = "#{mode}_#{c}".to_sym
-    define_method(col) { extract_from_min_max(col) }
+    define_method(col) { extract_from_min_max_with_arel_check(col) }
+    virtual_attribute col, :float, :arel => extract_from_min_max_as_arel(col)
+  end
+
+  Metric::Rollup::ROLLUP_COLS.select {|col| col.to_s =~ /(.+)_reserved$/}
+                             .product([:min, :max]).compact.each do |c, mode|
+    col = "#{mode}_#{c}".to_sym
+    define_method(col) { extract_from_min_max_reserved(col) }
     virtual_column col, :type => :float
   end
 
   Metric::Rollup::BURST_COLS.product([:min, :max]).each do |c, mode|
     col = "abs_#{mode}_#{c}_value".to_sym
-    define_method(col) { extract_from_min_max(col) }
-    virtual_column col, :type => :float
+    define_method(col) { extract_from_min_max_with_arel_check(col) }
+    virtual_attribute col, :float, :arel => extract_from_min_max_as_arel(col)
   end
 
   Metric::Rollup::BURST_COLS.product([:min, :max]).each do |c, mode|
@@ -34,18 +50,31 @@ class MetricRollup < ApplicationRecord
     virtual_column col, :type => :datetime
   end
 
+  def extract_from_min_max_with_arel_check(col)
+    if has_attribute?(col.to_s)
+      self[col.to_s]
+    else
+      self.min_max ||= {}
+      self.min_max[col.to_sym]
+    end
+  end
+
   def extract_from_min_max(col)
     self.min_max ||= {}
-    val = self.min_max[col.to_sym]
+    self.min_max[col.to_sym]
+  end
 
-    # HACK: for non-vmware environments, *_reserved values are 0.
-    # Assume, a nil or 0 reservation means all available memory/cpu is available by using the *_available column.
-    # This should really be done by subclassing where each subclass can define reservations or
-    # changing the reports to allow for optional reservations.
+  # HACK: for non-vmware environments, *_reserved values are 0.
+  # Assume, a nil or 0 reservation means all available memory/cpu is available by using the *_available column.
+  # This should really be done by subclassing where each subclass can define reservations or
+  # changing the reports to allow for optional reservations.
+  def extract_from_min_max_reserved(col)
+    val = extract_from_min_max(col)
+
     if val.to_i == 0 && col.to_s =~ /(.+)_reserved$/
-      return send("#{$1}_available")
+      send("#{$1}_available")
     else
-      return val
+      val
     end
   end
 
