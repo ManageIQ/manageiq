@@ -12,7 +12,7 @@ class TreeBuilderSnapshots < TreeBuilder
   private
 
   def tree_init_options(_tree_name)
-    {:full_ids => true}
+    {:full_ids => true, :selected_node => @selected_node}
   end
 
   def set_locals_for_render
