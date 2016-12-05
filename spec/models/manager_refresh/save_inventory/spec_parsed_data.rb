@@ -84,4 +84,13 @@ module SpecParsedData
       :physical_resource => "stack_resource_physical_resource_#{i}",
     }.merge(data)
   end
+
+  def network_port_data(i, data ={})
+    {
+      :name            => "network_port_name_#{i}",
+      :ems_ref         => "network_port_ems_ref_#{i}",
+      :status          => "network_port_status#{i}",
+      :mac_address     => "network_port_mac_#{i}",
+    }.merge(data)
+  end
 end
