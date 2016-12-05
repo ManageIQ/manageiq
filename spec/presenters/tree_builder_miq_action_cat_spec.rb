@@ -16,7 +16,7 @@ describe TreeBuilderMiqActionCat do
   context 'read-only mode' do
     before do
       @tree_name = 'action_tags'
-      @tree = TreeBuilderMiqActionCat.new(@tree_name + '_tree', @tree_name, {}, @tenant, true)
+      @tree = TreeBuilderMiqActionCat.new('action_tags_tree', 'action_tags', {}, true, @tenant)
     end
     it 'set init options correctly' do
       tree_options = @tree.send(:tree_init_options, @tree_name)
