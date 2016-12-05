@@ -10,6 +10,7 @@ class FloatingIp < ApplicationRecord
   belongs_to :vm
   belongs_to :cloud_tenant
   belongs_to :cloud_network
+  belongs_to :load_balancer
   belongs_to :network_port
   belongs_to :network_router
 

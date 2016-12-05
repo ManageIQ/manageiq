@@ -1325,6 +1325,7 @@ floating_ips:
 - cloud_network_id
 - fixed_ip_address
 - status
+- load_balancer_id
 generic_object_definitions:
 - id
 - name
