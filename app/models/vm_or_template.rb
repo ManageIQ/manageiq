@@ -157,8 +157,7 @@ class VmOrTemplate < ApplicationRecord
   virtual_column :num_hard_disks,                       :type => :integer,    :uses => {:hardware => :hard_disks}
   virtual_column :num_disks,                            :type => :integer,    :uses => {:hardware => :disks}
   virtual_column :num_cpu,                              :type => :integer,    :uses => :hardware
-  virtual_column :cpu_total_cores,                      :type => :integer,    :uses => :hardware
-  virtual_column :cpu_cores_per_socket,                 :type => :integer,    :uses => :hardware
+  virtual_delegate :cpu_total_cores, :cpu_cores_per_socket, :to => :hardware, :allow_nil => true, :default => 0
   virtual_delegate :annotation, :to => :hardware, :prefix => "v", :allow_nil => true
   virtual_column :has_rdm_disk,                         :type => :boolean,    :uses => {:hardware => :disks}
   virtual_column :disks_aligned,                        :type => :string,     :uses => {:hardware => {:hard_disks => :partitions_aligned}}
@@ -1570,14 +1569,6 @@ class VmOrTemplate < ApplicationRecord
 
   def num_cpu
     hardware.nil? ? 0 : hardware.cpu_sockets
-  end
-
-  def cpu_total_cores
-    hardware.nil? ? 0 : hardware.cpu_total_cores
-  end
-
-  def cpu_cores_per_socket
-    hardware.nil? ? 0 : hardware.cpu_cores_per_socket
   end
 
   def num_disks

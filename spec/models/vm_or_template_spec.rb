@@ -740,6 +740,40 @@ describe VmOrTemplate do
     end
   end
 
+  describe ".cpu_total_cores" do
+    let(:vm) { FactoryGirl.create(:vm) }
+    it "handles no hardware" do
+      expect(vm.cpu_total_cores).to eq(0)
+    end
+
+    it "handles hardware" do
+      FactoryGirl.create(:hardware, :vm => vm, :cpu_total_cores => 8)
+      expect(vm.cpu_total_cores).to eq(8)
+    end
+
+    it "calculates in the database" do
+      FactoryGirl.create(:hardware, :vm => vm, :cpu_total_cores => 8)
+      expect(virtual_column_sql_value(VmOrTemplate, "cpu_total_cores")).to eq(8)
+    end
+  end
+
+  describe ".cpu_cores_per_socket" do
+    let(:vm) { FactoryGirl.create(:vm) }
+    it "handles no hardware" do
+      expect(vm.cpu_cores_per_socket).to eq(0)
+    end
+
+    it "handles hardware" do
+      FactoryGirl.create(:hardware, :vm => vm, :cpu_cores_per_socket => 4)
+      expect(vm.cpu_cores_per_socket).to eq(4)
+    end
+
+    it "calculates in the database" do
+      FactoryGirl.create(:hardware, :vm => vm, :cpu_cores_per_socket => 4)
+      expect(virtual_column_sql_value(VmOrTemplate, "cpu_cores_per_socket")).to eq(4)
+    end
+  end
+
   describe "#disconnect_ems" do
     let(:ems) { FactoryGirl.build(:ext_management_system) }
     let(:vm) do
