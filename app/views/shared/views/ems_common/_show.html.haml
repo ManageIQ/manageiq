@@ -30,3 +30,5 @@
     = render :partial => 'main'
   - elsif @showtype == 'dashboard'
     = render :partial => 'show_dashboard'
+  - elsif @showtype == 'topology'
+    = render :file => 'container_topology/show'
