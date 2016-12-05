@@ -8,10 +8,6 @@ class MetricRollup < ApplicationRecord
                                 net_usage_rate_average derived_vm_used_disk_storage
                                 derived_vm_allocated_disk_storage).freeze
 
-  def self.with_interval_and_time_range(interval, timestamp)
-    where(:capture_interval_name => interval, :timestamp => timestamp)
-  end
-
   #
   # min_max column getters
   #
