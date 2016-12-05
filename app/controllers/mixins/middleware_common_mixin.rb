@@ -2,16 +2,11 @@ module MiddlewareCommonMixin
   extend ActiveSupport::Concern
   include MiddlewareOperationsMixin
 
-  def show_list
-    process_show_list
-  end
-
-  def index
-    redirect_to :action => 'show_list'
-  end
-
   def show
     return unless init_show
+    @ems = @record
+    clear_topology_breadcrumb
+
     show_middleware
   end
 
@@ -34,16 +29,6 @@ module MiddlewareCommonMixin
     if @breadcrumbs.present? && (@breadcrumbs.last[:name].eql? 'Topology')
       @breadcrumbs.clear
     end
-  end
-
-  def init_show(model_class = self.class.model)
-    @ems = @record = identify_record(params[:id], model_class)
-    return false if record_no_longer_exists?(@record)
-    clear_topology_breadcrumb
-    @lastaction = 'show'
-    @gtl_url = '/show'
-    @display = params[:display] || 'main' unless control_selected?
-    true
   end
 
   def show_middleware

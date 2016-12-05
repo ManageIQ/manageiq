@@ -36,7 +36,7 @@ shared_examples :shared_examples_for_network_port_controller do |providers|
           get :show, :params => {:id => @network_port.id}
           expect(response.status).to eq(200)
           expect(response.body).to_not be_empty
-          expect(assigns(:breadcrumbs)).to eq([{:name => "network_ports",
+          expect(assigns(:breadcrumbs)).to eq([{:name => "Network Ports",
                                                 :url  => "/network_port/show_list?page=&refresh=y"},
                                                {:name => "eth0 (Summary)",
                                                 :url  => "/network_port/show/#{@network_port.id}"}])

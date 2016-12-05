@@ -1,6 +1,9 @@
 class EmsDatawarehouseController < ApplicationController
+  include Mixins::GenericListMixin
+  include Mixins::GenericShowMixin
   include EmsCommon
   include Mixins::EmsCommonAngular
+  include Mixins::GenericSessionMixin
 
   before_action :check_privileges
   before_action :get_session_data
@@ -13,10 +16,6 @@ class EmsDatawarehouseController < ApplicationController
 
   def self.table_name
     @table_name ||= "ems_datawarehouse"
-  end
-
-  def index
-    redirect_to :action => 'show_list'
   end
 
   def show_link(ems, options = {})

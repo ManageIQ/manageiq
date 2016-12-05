@@ -37,7 +37,7 @@ shared_examples :shared_examples_for_cloud_subnet_controller do |providers|
           get :show, :params => {:id => @cloud_subnet.id}
           expect(response.status).to eq(200)
           expect(response.body).to_not be_empty
-          expect(assigns(:breadcrumbs)).to eq([{:name => "cloud_subnets",
+          expect(assigns(:breadcrumbs)).to eq([{:name => "Cloud Subnets",
                                                 :url  => "/cloud_subnet/show_list?page=&refresh=y"},
                                                {:name => "Cloud Subnet (Summary)",
                                                 :url  => "/cloud_subnet/show/#{@cloud_subnet.id}"}])

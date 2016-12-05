@@ -37,7 +37,7 @@ shared_examples :shared_examples_for_security_group_controller do |providers|
           get :show, :params => {:id => @security_group.id}
           expect(response.status).to eq(200)
           expect(response.body).to_not be_empty
-          expect(assigns(:breadcrumbs)).to eq([{:name => "security_groups",
+          expect(assigns(:breadcrumbs)).to eq([{:name => "Security Groups",
                                                 :url  => "/security_group/show_list?page=&refresh=y"},
                                                {:name => "Security Group (Summary)",
                                                 :url  => "/security_group/show/#{@security_group.id}"}])
