@@ -32,11 +32,11 @@ class ManageIQ::Providers::Redhat::InfraManager
 
           methods = {
             :primary => {
-              :cluster     => target.parent_cluster.ems_ref,
-              :data_center => target.parent_datacenter.ems_ref,
-              :vm          => vm,
-              :template    => "/api/templates?search=vm.id=#{vm_id}",
-              :storage     => target.storages.empty? ? {:storagedomains => "storage_domain"} : target.storages.map(&:ems_ref)
+              :cluster    => {:clusters => "cluster"},
+              :datacenter => {:datacenters => "data_center"},
+              :vm         => vm,
+              :template   => "/api/templates?search=vm.id=#{vm_id}",
+              :storage    => target.storages.empty? ? {:storagedomains => "storage_domain"} : target.storages.map(&:ems_ref)
             },
             :secondary => {
               :vm         => [:disks, :snapshots, :nics],

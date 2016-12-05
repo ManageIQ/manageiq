@@ -182,7 +182,7 @@ http_interactions:
   recorded_at: Mon, 22 Aug 2016 09:57:56 GMT
 - request:
     method: get
-    uri: https://192.168.1.31:8443/api/clusters/00000002-0002-0002-0002-0000000001e9
+    uri: https://192.168.1.31:8443/api/clusters?search=sortby%20name%20asc%20page%201
     body:
       encoding: US-ASCII
       string: ''
@@ -218,72 +218,74 @@ http_interactions:
       encoding: ASCII-8BIT
       string: |
         <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-        <cluster href="/api/clusters/00000002-0002-0002-0002-0000000001e9" id="00000002-0002-0002-0002-0000000001e9">
-            <actions>
-                <link href="/api/clusters/00000002-0002-0002-0002-0000000001e9/resetemulatedmachine" rel="resetemulatedmachine"/>
-            </actions>
-            <name>Default</name>
-            <description>The default server cluster</description>
-            <link href="/api/clusters/00000002-0002-0002-0002-0000000001e9/networks" rel="networks"/>
-            <link href="/api/clusters/00000002-0002-0002-0002-0000000001e9/permissions" rel="permissions"/>
-            <link href="/api/clusters/00000002-0002-0002-0002-0000000001e9/glustervolumes" rel="glustervolumes"/>
-            <link href="/api/clusters/00000002-0002-0002-0002-0000000001e9/glusterhooks" rel="glusterhooks"/>
-            <link href="/api/clusters/00000002-0002-0002-0002-0000000001e9/affinitygroups" rel="affinitygroups"/>
-            <link href="/api/clusters/00000002-0002-0002-0002-0000000001e9/cpuprofiles" rel="cpuprofiles"/>
-            <cpu id="Intel SandyBridge Family">
-                <architecture>X86_64</architecture>
-            </cpu>
-            <data_center href="/api/datacenters/00000001-0001-0001-0001-0000000002c0" id="00000001-0001-0001-0001-0000000002c0"/>
-            <memory_policy>
-                <overcommit percent="100"/>
-                <transparent_hugepages>
+        <clusters>
+            <cluster href="/api/clusters/00000002-0002-0002-0002-0000000001e9" id="00000002-0002-0002-0002-0000000001e9">
+                <actions>
+                    <link href="/api/clusters/00000002-0002-0002-0002-0000000001e9/resetemulatedmachine" rel="resetemulatedmachine"/>
+                </actions>
+                <name>Default</name>
+                <description>The default server cluster</description>
+                <link href="/api/clusters/00000002-0002-0002-0002-0000000001e9/networks" rel="networks"/>
+                <link href="/api/clusters/00000002-0002-0002-0002-0000000001e9/permissions" rel="permissions"/>
+                <link href="/api/clusters/00000002-0002-0002-0002-0000000001e9/glustervolumes" rel="glustervolumes"/>
+                <link href="/api/clusters/00000002-0002-0002-0002-0000000001e9/glusterhooks" rel="glusterhooks"/>
+                <link href="/api/clusters/00000002-0002-0002-0002-0000000001e9/affinitygroups" rel="affinitygroups"/>
+                <link href="/api/clusters/00000002-0002-0002-0002-0000000001e9/cpuprofiles" rel="cpuprofiles"/>
+                <cpu id="Intel SandyBridge Family">
+                    <architecture>X86_64</architecture>
+                </cpu>
+                <data_center href="/api/datacenters/00000001-0001-0001-0001-0000000002c0" id="00000001-0001-0001-0001-0000000002c0"/>
+                <memory_policy>
+                    <overcommit percent="100"/>
+                    <transparent_hugepages>
+                        <enabled>true</enabled>
+                    </transparent_hugepages>
+                </memory_policy>
+                <scheduling_policy href="/api/schedulingpolicies/b4ed2332-a7ac-4d5f-9596-99a439cb2812" id="b4ed2332-a7ac-4d5f-9596-99a439cb2812">
+                    <name>none</name>
+                    <policy>none</policy>
+                </scheduling_policy>
+                <version major="3" minor="6"/>
+                <error_handling>
+                    <on_error>migrate</on_error>
+                </error_handling>
+                <virt_service>true</virt_service>
+                <gluster_service>false</gluster_service>
+                <threads_as_cores>false</threads_as_cores>
+                <tunnel_migration>false</tunnel_migration>
+                <trusted_service>false</trusted_service>
+                <ha_reservation>false</ha_reservation>
+                <optional_reason>false</optional_reason>
+                <maintenance_reason_required>false</maintenance_reason_required>
+                <ballooning_enabled>false</ballooning_enabled>
+                <ksm>
                     <enabled>true</enabled>
-                </transparent_hugepages>
-            </memory_policy>
-            <scheduling_policy href="/api/schedulingpolicies/b4ed2332-a7ac-4d5f-9596-99a439cb2812" id="b4ed2332-a7ac-4d5f-9596-99a439cb2812">
-                <name>none</name>
-                <policy>none</policy>
-            </scheduling_policy>
-            <version major="3" minor="6"/>
-            <error_handling>
-                <on_error>migrate</on_error>
-            </error_handling>
-            <virt_service>true</virt_service>
-            <gluster_service>false</gluster_service>
-            <threads_as_cores>false</threads_as_cores>
-            <tunnel_migration>false</tunnel_migration>
-            <trusted_service>false</trusted_service>
-            <ha_reservation>false</ha_reservation>
-            <optional_reason>false</optional_reason>
-            <maintenance_reason_required>false</maintenance_reason_required>
-            <ballooning_enabled>false</ballooning_enabled>
-            <ksm>
-                <enabled>true</enabled>
-                <merge_across_nodes>true</merge_across_nodes>
-            </ksm>
-            <required_rng_sources>
-                <source>RANDOM</source>    assert_table_counts
-            </required_rng_sources>
-            <fencing_policy>
-                <enabled>true</enabled>
-                <skip_if_sd_active>
-                    <enabled>false</enabled>
-                </skip_if_sd_active>
-                <skip_if_connectivity_broken>
-                    <enabled>false</enabled>
-                    <threshold>50</threshold>
-                </skip_if_connectivity_broken>
-            </fencing_policy>
-            <migration>
-                <auto_converge>inherit</auto_converge>
-                <compressed>inherit</compressed>
-            </migration>
-        </cluster>
-    http_version:
-  recorded_at: Mon, 22 Aug 2016 09:57:57 GMT
+                    <merge_across_nodes>true</merge_across_nodes>
+                </ksm>
+                <required_rng_sources>
+                    <source>RANDOM</source>
+                </required_rng_sources>
+                <fencing_policy>
+                    <enabled>true</enabled>
+                    <skip_if_sd_active>
+                        <enabled>false</enabled>
+                    </skip_if_sd_active>
+                    <skip_if_connectivity_broken>
+                        <enabled>false</enabled>
+                        <threshold>50</threshold>
+                    </skip_if_connectivity_broken>
+                </fencing_policy>
+                <migration>
+                    <auto_converge>inherit</auto_converge>
+                    <compressed>inherit</compressed>
+                </migration>
+            </cluster>
+        </clusters>
+    http_version: 
+  recorded_at: Wed, 30 Nov 2016 15:43:33 GMT
 - request:
     method: get
-    uri: https://192.168.1.31:8443/api/datacenters/00000001-0001-0001-0001-0000000002c0
+    uri: https://192.168.1.31:8443/api/clusters?search=sortby%20name%20asc%20page%202
     body:
       encoding: US-ASCII
       string: ''
@@ -319,30 +321,114 @@ http_interactions:
       encoding: ASCII-8BIT
       string: |
         <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-        <data_center href="/api/datacenters/00000001-0001-0001-0001-0000000002c0" id="00000001-0001-0001-0001-0000000002c0">
-            <name>Default</name>
-            <description>The default Data Center</description>
-            <link href="/api/datacenters/00000001-0001-0001-0001-0000000002c0/storagedomains" rel="storagedomains"/>
-            <link href="/api/datacenters/00000001-0001-0001-0001-0000000002c0/clusters" rel="clusters"/>
-            <link href="/api/datacenters/00000001-0001-0001-0001-0000000002c0/networks" rel="networks"/>
-            <link href="/api/datacenters/00000001-0001-0001-0001-0000000002c0/permissions" rel="permissions"/>
-            <link href="/api/datacenters/00000001-0001-0001-0001-0000000002c0/quotas" rel="quotas"/>
-            <link href="/api/datacenters/00000001-0001-0001-0001-0000000002c0/qoss" rel="qoss"/>
-            <link href="/api/datacenters/00000001-0001-0001-0001-0000000002c0/iscsibonds" rel="iscsibonds"/>
-            <local>false</local>
-            <storage_format>v3</storage_format>
-            <version major="3" minor="6"/>
-            <supported_versions>
+        <clusters/>
+    http_version: 
+  recorded_at: Wed, 30 Nov 2016 15:43:33 GMT
+- request:
+    method: get
+    uri: https://192.168.1.31:8443/api/datacenters?search=sortby%20name%20asc%20page%201
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=ioqyvKuZl9BBFrnEJzZ8Sb0tSLEYOKD2tctOWoFD.f18
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/xml
+      Content-Length:
+      - '1473'
+      Jsessionid:
+      - ioqyvKuZl9BBFrnEJzZ8Sb0tSLEYOKD2tctOWoFD
+      Date:
+      - Wed, 30 Nov 2016 15:43:34 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: |
+        <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+        <data_centers>
+            <data_center href="/api/datacenters/00000001-0001-0001-0001-0000000002c0" id="00000001-0001-0001-0001-0000000002c0">
+                <name>Default</name>
+                <description>The default Data Center</description>
+                <link href="/api/datacenters/00000001-0001-0001-0001-0000000002c0/storagedomains" rel="storagedomains"/>
+                <link href="/api/datacenters/00000001-0001-0001-0001-0000000002c0/clusters" rel="clusters"/>
+                <link href="/api/datacenters/00000001-0001-0001-0001-0000000002c0/networks" rel="networks"/>
+                <link href="/api/datacenters/00000001-0001-0001-0001-0000000002c0/permissions" rel="permissions"/>
+                <link href="/api/datacenters/00000001-0001-0001-0001-0000000002c0/quotas" rel="quotas"/>
+                <link href="/api/datacenters/00000001-0001-0001-0001-0000000002c0/qoss" rel="qoss"/>
+                <link href="/api/datacenters/00000001-0001-0001-0001-0000000002c0/iscsibonds" rel="iscsibonds"/>
+                <local>false</local>
+                <storage_format>v3</storage_format>
                 <version major="3" minor="6"/>
-            </supported_versions>
-            <status>
-                <state>up</state>
-            </status>
-            <mac_pool href="/api/macpools/0000000d-000d-000d-000d-000000000365" id="0000000d-000d-000d-000d-000000000365"/>
-            <quota_mode>disabled</quota_mode>
-        </data_center>
-    http_version:
-  recorded_at: Mon, 22 Aug 2016 09:57:57 GMT
+                <supported_versions>
+                    <version major="3" minor="6"/>
+                </supported_versions>
+                <status>
+                    <state>up</state>
+                </status>
+                <mac_pool href="/api/macpools/0000000d-000d-000d-000d-000000000365" id="0000000d-000d-000d-000d-000000000365"/>
+                <quota_mode>disabled</quota_mode>
+            </data_center>
+        </data_centers>
+    http_version: 
+  recorded_at: Wed, 30 Nov 2016 15:43:34 GMT
+- request:
+    method: get
+    uri: https://192.168.1.31:8443/api/datacenters?search=sortby%20name%20asc%20page%202
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=ioqyvKuZl9BBFrnEJzZ8Sb0tSLEYOKD2tctOWoFD.f18
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/xml
+      Content-Length:
+      - '72'
+      Jsessionid:
+      - ioqyvKuZl9BBFrnEJzZ8Sb0tSLEYOKD2tctOWoFD
+      Date:
+      - Wed, 30 Nov 2016 15:43:34 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: |
+        <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+        <data_centers/>
+    http_version: 
+  recorded_at: Wed, 30 Nov 2016 15:43:34 GMT
 - request:
     method: get
     uri: https://192.168.1.31:8443/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77
@@ -987,7 +1073,7 @@ http_interactions:
         rel=openstacknetworkproviders,<https://192.168.1.31:8443/api/katelloerrata>;
         rel=katelloerrata"
       Date:
-      - Mon, 22 Aug 2016 09:57:59 GMT
+      - Wed, 30 Nov 2016 15:43:35 GMT
     body:
       encoding: ASCII-8BIT
       string: |
