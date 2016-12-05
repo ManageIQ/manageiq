@@ -35,7 +35,9 @@ class ApplicationHelper::Toolbar::ContainerNodeCenter < ApplicationHelper::Toolb
           N_('Show Timelines for this Node'),
           N_('Timelines'),
           :url       => "/show",
-          :url_parms => "?display=timeline"),
+          :url_parms => "?display=timeline",
+          :options   => {:entity => 'Node'},
+          :klass     => ApplicationHelper::Button::ContainerTimeline),
         button(
           :container_node_perf,
           'product product-monitoring fa-lg',

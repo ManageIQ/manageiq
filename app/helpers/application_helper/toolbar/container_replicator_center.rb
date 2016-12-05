@@ -35,7 +35,9 @@ class ApplicationHelper::Toolbar::ContainerReplicatorCenter < ApplicationHelper:
           N_('Show Timelines for this Replicator'),
           N_('Timelines'),
           :url       => "/show",
-          :url_parms => "?display=timeline"),
+          :url_parms => "?display=timeline",
+          :options   => {:entity => 'Replicator'},
+          :klass     => ApplicationHelper::Button::ContainerTimeline),
         button(
           :container_replicator_perf,
           'product product-monitoring fa-lg',

@@ -35,7 +35,9 @@ class ApplicationHelper::Toolbar::ContainerProjectCenter < ApplicationHelper::To
           N_('Show Timelines for this Project'),
           N_('Timelines'),
           :url       => "/show",
-          :url_parms => "?display=timeline"),
+          :url_parms => "?display=timeline",
+          :options   => {:entity => 'Project'},
+          :klass     => ApplicationHelper::Button::ContainerTimeline),
         button(
           :container_project_perf,
           'product product-monitoring fa-lg',

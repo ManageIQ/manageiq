@@ -1,5 +1,15 @@
-class ApplicationHelper::Button::ContainerTimeline < ApplicationHelper::Button::Container
+class ApplicationHelper::Button::ContainerTimeline < ApplicationHelper::Button::Basic
   needs :@record
+
+  def initialize(view_context, view_binding, instance_data, props)
+    super
+    @entity = props[:options][:entity]
+  end
+
+  def calculate_properties
+    super
+    self[:title] = @error_message if @error_message.present?
+  end
 
   def disabled?
     @error_message = _('No Timeline data has been collected for this %{entity}') %

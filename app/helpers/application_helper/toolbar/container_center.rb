@@ -34,7 +34,9 @@ class ApplicationHelper::Toolbar::ContainerCenter < ApplicationHelper::Toolbar::
           'product product-timeline fa-lg',
           N_('Show Timelines for this Container'),
           N_('Timelines'),
-          :url_parms => "?display=timeline"),
+          :url_parms => "?display=timeline",
+          :options   => {:entity => 'Container'},
+          :klass     => ApplicationHelper::Button::ContainerTimeline),
         button(
           :container_perf,
           'product product-monitoring fa-lg',

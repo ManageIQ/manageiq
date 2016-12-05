@@ -35,7 +35,9 @@ class ApplicationHelper::Toolbar::ContainerGroupCenter < ApplicationHelper::Tool
           N_('Show Timelines for this Group'),
           N_('Timelines'),
           :url       => "/show",
-          :url_parms => "?display=timeline"),
+          :url_parms => "?display=timeline",
+          :options   => {:entity => 'Group'},
+          :klass     => ApplicationHelper::Button::ContainerTimeline),
         button(
           :container_group_perf,
           'product product-monitoring fa-lg',
