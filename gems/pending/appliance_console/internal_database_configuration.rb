@@ -46,7 +46,16 @@ module ApplianceConsole
 
     def ask_questions
       choose_disk
-      self.run_as_evm_server = !ask_yn?("Configure this server as a dedicated database instance")
+      self.run_as_evm_server = !ask_yn?(<<-EOS.gsub!(/^ +/m, ""), "N")
+
+        Should this appliance run as a standalone database server?
+
+        NOTE:
+        * The #{I18n.t("product.name")} application will not be running.
+        * This is required when using highly available database deployments.
+        * CAUTION: This is not reversible.
+
+      EOS
       # TODO: Assume we want to create a region for a new internal database disk
       # until we allow for the internal selection against an already initialized disk.
       create_new_region_questions(false) if run_as_evm_server
