@@ -424,6 +424,7 @@ Vmdb::Application.routes.draw do
 
     :cloud_volume             => {
       :get  => %w(
+        delete_volumes
         download_data
         attach
         detach
@@ -1492,6 +1493,7 @@ Vmdb::Application.routes.draw do
 
     :cloud_subnet             => {
       :get  => %w(
+        delete_subnets
         download_data
         cloud_subnet_form_fields
         edit
@@ -1524,6 +1526,7 @@ Vmdb::Application.routes.draw do
     :cloud_network             => {
       :get  => %w(
         cloud_network_form_fields
+        delete_networks
         download_data
         edit
         index
@@ -1578,6 +1581,7 @@ Vmdb::Application.routes.draw do
 
     :network_router           => {
       :get  => %w(
+        delete_network_routers
         download_data
         edit
         index

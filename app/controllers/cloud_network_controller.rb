@@ -8,6 +8,7 @@ class CloudNetworkController < ApplicationController
   include Mixins::GenericListMixin
   include Mixins::GenericSessionMixin
   include Mixins::GenericShowMixin
+  include Mixins::GenericFormMixin
 
   PROVIDERS_NETWORK_TYPES = {
     "Local" => "local",
@@ -42,21 +43,12 @@ class CloudNetworkController < ApplicationController
     end
   end
 
-  def cancel_action(message)
-    session[:edit] = nil
-    @breadcrumbs.pop if @breadcrumbs
-    javascript_redirect :action    => @lastaction,
-                        :id        => @network.id,
-                        :display   => session[:cloud_network_display],
-                        :flash_msg => message
-  end
-
   def cloud_network_form_fields
     assert_privileges("cloud_network_edit")
     network = find_by_id_filtered(CloudNetwork, params[:id])
     render :json => {
       :name                  => network.name,
-      :cloud_tenant_name     => network.cloud_tenant.name,
+      :cloud_tenant_name     => network.cloud_tenant.present? ? network.cloud_tenant.name : '',
       :enabled               => network.enabled,
       :external_facing       => network.external_facing,
       # TODO: uncomment once form contains this field
@@ -114,12 +106,11 @@ class CloudNetworkController < ApplicationController
   def delete_networks
     assert_privileges("cloud_network_delete")
 
-    networks = if @lastaction == "show_list" || (@lastaction == "show" && @layout != "cloud_network")
+    networks = if @lastaction == "show_list" || (@lastaction == "show" && @layout != "cloud_network") || @lastaction.nil?
                  find_checked_items
                else
                  [params[:id]]
                end
-
     if networks.empty?
       add_flash(_("No %{models} were selected for deletion.") % {
         :models => ui_lookup(:tables => "cloud_network")
@@ -132,14 +123,14 @@ class CloudNetworkController < ApplicationController
       if network.nil?
         add_flash(_("%{model} no longer exists.") % {:model => ui_lookup(:table => "cloud_network")}, :error)
       else
-        valid_delete, delete_details = network.validate_delete_network
-        if valid_delete
+        valid_delete = network.validate_delete_network
+        if valid_delete[:available]
           networks_to_delete.push(network)
         else
           add_flash(_("Couldn't initiate deletion of %{model} \"%{name}\": %{details}") % {
             :model   => ui_lookup(:table => 'cloud_network'),
             :name    => network.name,
-            :details => delete_details}, :error)
+            :details => valid_delete[:message]}, :error)
         end
       end
     end
@@ -158,10 +149,15 @@ class CloudNetworkController < ApplicationController
       if @flash_array.nil?
         add_flash(_("The selected %{model} was deleted") % {:model => ui_lookup(:table => "cloud_network")})
       end
+    else
+      drop_breadcrumb(:name => 'dummy', :url => " ") # missing a bc to get correctly back so here's a dummy
+      session[:flash_msgs] = @flash_array.dup if @flash_array
+      redirect_to(previous_breadcrumb_url)
     end
   end
 
   def edit
+    params[:id] = get_checked_network_id(params) unless params[:id].present?
     assert_privileges("cloud_network_edit")
     @network = find_by_id_filtered(CloudNetwork, params[:id])
     @network_provider_network_type_choices = PROVIDERS_NETWORK_TYPES
@@ -227,10 +223,9 @@ class CloudNetworkController < ApplicationController
         }, :error)
       end
 
-      @breadcrumbs.pop if @breadcrumbs
       session[:edit] = nil
       session[:flash_msgs] = @flash_array.dup if @flash_array
-      javascript_redirect :action => "show", :id => @network.id
+      javascript_redirect previous_breadcrumb_url
     end
   end
 
@@ -253,7 +248,9 @@ class CloudNetworkController < ApplicationController
     options[:name] = params[:name] if params[:name] unless @network.name == params[:name]
     options[:admin_state_up] = switch_to_bol(params[:enabled]) unless @network.enabled == switch_to_bol(params[:enabled])
     options[:shared] = switch_to_bol(params[:shared]) unless @network.shared == switch_to_bol(params[:shared])
-    options[:external_facing] = switch_to_bol(params[:external_facing]) unless @network.external_facing == switch_to_bol(params[:external_facing])
+    unless @network.external_facing == switch_to_bol(params[:external_facing])
+      options[:external_facing] = switch_to_bol(params[:external_facing])
+    end
     # TODO: uncomment once form contains this field
     # options[:port_security_enabled] = switch_to_bol(params[:port_security_enabled]) unless @network.port_security_enabled == switch_to_bol(params[:port_security_enabled])
     options[:qos_policy_id] = params[:qos_policy_id] unless @network.qos_policy_id == params[:qos_policy_id]
@@ -283,6 +280,7 @@ class CloudNetworkController < ApplicationController
     return if networks.empty?
 
     if operation == "destroy"
+      deleted_networks = 0
       networks.each do |network|
         audit = {
           :event        => "cloud_network_record_delete_initiated",
@@ -292,11 +290,20 @@ class CloudNetworkController < ApplicationController
           :userid       => session[:userid]
         }
         AuditEvent.success(audit)
-        network.delete_network
+        begin
+          network.delete_network
+          deleted_networks += 1
+        rescue NotImplementedError
+          add_flash(_("Cannot delete Network %{name}: Not supported.") % {:name => network.name}, :error)
+        rescue MiqException::MiqNetworkDeleteError => e
+          add_flash(_("Cannot delete Network %{name}: %{error_message}") % {:name => network.name, :error_message => e.message}, :error)
+        end
       end
-      add_flash(n_("Delete initiated for %{number} Cloud Network.",
-                   "Delete initiated for %{number} Cloud Networks.",
-                   networks.length) % {:number => networks.length})
+      if deleted_networks > 0
+        add_flash(n_("Delete initiated for %{number} Cloud Network.",
+                     "Delete initiated for %{number} Cloud Networks.",
+                     deleted_networks) % {:number => deleted_networks})
+      end
     end
   end
 end

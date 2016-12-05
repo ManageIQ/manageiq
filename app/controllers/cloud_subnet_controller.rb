@@ -8,6 +8,7 @@ class CloudSubnetController < ApplicationController
   include Mixins::GenericListMixin
   include Mixins::GenericSessionMixin
   include Mixins::GenericShowMixin
+  include Mixins::GenericFormMixin
 
   def self.display_methods
     %w(instances cloud_subnets)
@@ -32,15 +33,6 @@ class CloudSubnetController < ApplicationController
     else
       render_flash
     end
-  end
-
-  def cancel_action(message)
-    session[:edit] = nil
-    @breadcrumbs.pop if @breadcrumbs
-    javascript_redirect :action    => @lastaction,
-                        :id        => @subnet.id,
-                        :display   => session[:cloud_subnet_display],
-                        :flash_msg => message
   end
 
   def cloud_subnet_form_fields
@@ -115,7 +107,7 @@ class CloudSubnetController < ApplicationController
   def delete_subnets
     assert_privileges("cloud_subnet_delete")
 
-    subnets = if @lastaction == "show_list" || (@lastaction == "show" && @layout != "cloud_subnet")
+    subnets = if @lastaction == "show_list" || (@lastaction == "show" && @layout != "cloud_subnet") || @lastaction.nil?
                 find_checked_items
               else
                 [params[:id]]
@@ -159,10 +151,15 @@ class CloudSubnetController < ApplicationController
       if @flash_array.nil?
         add_flash(_("The selected Subnet was deleted") % {:model => ui_lookup(:table => "cloud_subnet")})
       end
+    else
+      drop_breadcrumb(:name => 'dummy', :url  => " ") # missing a bc to get correctly back so here's a dummy
+      session[:flash_msgs] = @flash_array.dup if @flash_array
+      redirect_to(previous_breadcrumb_url)
     end
   end
 
   def edit
+    params[:id] = get_checked_subnet_id(params) unless params[:id].present?
     assert_privileges("cloud_subnet_edit")
     @subnet = find_by_id_filtered(CloudSubnet, params[:id])
     @in_a_form = true
@@ -200,18 +197,21 @@ class CloudSubnetController < ApplicationController
           :model => ui_lookup(:table => 'cloud_subnet'),
           :name  => @subnet.name
         })
-      rescue => e
-        add_flash(_("Unable to update Subnet \"%{name}\": %{details}") % {
-          :model   => ui_lookup(:table => 'cloud_subnet'),
+      rescue Excon::Error::Unauthorized => e
+        add_flash(_("Unable to update Subnet \"%{name}\": The request you have made requires authentication.") % {
           :name    => @subnet.name,
           :details => e
         }, :error)
+      rescue => e
+        add_flash(_("Unable to update Subnet \"%{name}\": %{details}") % {
+            :name    => @subnet.name,
+            :details => e
+        }, :error)
       end
 
-      @breadcrumbs.pop if @breadcrumbs
       session[:edit] = nil
       session[:flash_msgs] = @flash_array.dup if @flash_array
-      javascript_redirect :action => "show", :id => @subnet.id
+      javascript_redirect previous_breadcrumb_url
     end
   end
 
@@ -245,6 +245,7 @@ class CloudSubnetController < ApplicationController
     return if subnets.empty?
 
     if operation == "destroy"
+      deleted_subnets = 0
       subnets.each do |subnet|
         audit = {
           :event        => "cloud_subnet_record_delete_initiated",
@@ -254,11 +255,20 @@ class CloudSubnetController < ApplicationController
           :userid       => session[:userid]
         }
         AuditEvent.success(audit)
-        subnet.delete_subnet
+        begin
+          subnet.delete_subnet
+          deleted_subnets += 1
+        rescue NotImplementedError
+          add_flash(_("Cannot delete Network %{name}: Not supported.") % {:name => subnet.name}, :error)
+        rescue MiqException::MiqCloudSubnetDeleteError => e
+          add_flash(_("Cannot delete Network %{name}: %{error_message}") % {:name => subnet.name, :error_message => e.message}, :error)
+        end
       end
-      add_flash(n_("Delete initiated for %{number} Cloud Subnet.",
-                   "Delete initiated for %{number} Cloud Subnets.",
-                   subnets.length) % {:number => subnets.length})
+      if  deleted_subnets > 0
+        add_flash(n_("Delete initiated for %{number} Cloud Subnet.",
+                     "Delete initiated for %{number} Cloud Subnets.",
+                     deleted_subnets) % {:number =>  deleted_subnets})
+      end
     end
   end
 end
