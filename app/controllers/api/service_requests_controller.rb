@@ -44,5 +44,16 @@ module Api
       return {} if @auth_user_obj.admin?
       {:requester => @auth_user_obj}
     end
+
+    def add_approver_resource(type, id, data)
+      raise 'Must provide a user id' unless data['user_id']
+      user = User.find(data['user_id'])
+      miq_approval = MiqApproval.create(:approver => user)
+      resource_search(id, type, collection_class(:service_requests)).tap do |service_request|
+        service_request.miq_approvals << miq_approval
+      end
+    rescue => err
+      raise BadRequestError, "Cannot add approver - #{err}"
+    end
   end
 end
