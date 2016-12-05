@@ -41,24 +41,29 @@ module MiqAeServiceSpec
 
   describe MiqAeService do
     context "#service_model" do
-      let(:miq_ae_service) { MiqAeService.new(double('ws', :persist_state_hash => {})) }
+      let(:workspace) { double('ws', :persist_state_hash => {}) }
+      let(:miq_ae_service) { MiqAeService.new(workspace) }
       let(:prefix) { "MiqAeMethodService::MiqAeService" }
 
       it "loads base model" do
+        allow(workspace).to receive(:disable_rbac)
         expect(miq_ae_service.service_model(:VmOrTemplate)).to   be(MiqAeMethodService::MiqAeServiceVmOrTemplate)
         expect(miq_ae_service.service_model(:vm_or_template)).to be(MiqAeMethodService::MiqAeServiceVmOrTemplate)
       end
 
       it "loads sub-classed model" do
+        allow(workspace).to receive(:disable_rbac)
         expect(miq_ae_service.service_model(:Vm)).to be(MiqAeMethodService::MiqAeServiceVm)
         expect(miq_ae_service.service_model(:vm)).to be(MiqAeMethodService::MiqAeServiceVm)
       end
 
       it "loads model with mapped name" do
+        allow(workspace).to receive(:disable_rbac)
         expect(miq_ae_service.service_model(:ems)).to be(MiqAeMethodService::MiqAeServiceExtManagementSystem)
       end
 
       it "loads name-spaced model by mapped name" do
+        allow(workspace).to receive(:disable_rbac)
         MiqAeMethodService::Deprecation.silence do
           expect(miq_ae_service.service_model(:ems_openstack)).to be(
             MiqAeMethodService::MiqAeServiceManageIQ_Providers_Openstack_CloudManager)
@@ -68,6 +73,7 @@ module MiqAeServiceSpec
       end
 
       it "loads name-spaced model by fully-qualified name" do
+        allow(workspace).to receive(:disable_rbac)
         expect(miq_ae_service.service_model(:ManageIQ_Providers_Openstack_CloudManager)).to    be(
           MiqAeMethodService::MiqAeServiceManageIQ_Providers_Openstack_CloudManager)
         expect(miq_ae_service.service_model(:ManageIQ_Providers_Openstack_CloudManager_Vm)).to be(
@@ -75,16 +81,19 @@ module MiqAeServiceSpec
       end
 
       it "raises error on invalid service_model name" do
+        allow(workspace).to receive(:disable_rbac)
         expect { miq_ae_service.service_model(:invalid_model) }.to raise_error(NameError)
       end
 
       it "loads all mapped models" do
+        allow(workspace).to receive(:disable_rbac)
         MiqAeMethodService::MiqAeService::LEGACY_MODEL_NAMES.values.each do |model_name|
           expect { "MiqAeMethodService::MiqAeService#{model_name}".constantize }.to_not raise_error
         end
       end
 
       it "loads cloud networks" do
+        allow(workspace).to receive(:disable_rbac)
         items = %w(
           ManageIQ_Providers_Openstack_NetworkManager_CloudNetwork
           ManageIQ_Providers_Openstack_NetworkManager_CloudNetwork_Private
@@ -146,6 +155,7 @@ module MiqAeServiceSpec
       let(:ns) { "fred" }
 
       it "set namespace" do
+        allow(workspace).to receive(:disable_rbac)
         allow(workspace).to receive(:persist_state_hash).and_return({})
         expect(workspace).to receive(:prepend_namespace=).with(ns)
 
@@ -156,6 +166,7 @@ module MiqAeServiceSpec
       before do
         NotificationType.seed
         allow(User).to receive_messages(:server_timezone => 'UTC')
+        allow(workspace).to receive(:disable_rbac)
       end
 
       let(:options) { {} }
