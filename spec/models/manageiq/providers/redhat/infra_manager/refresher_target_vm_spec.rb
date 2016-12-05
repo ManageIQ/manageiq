@@ -24,25 +24,10 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
   end
 
   it "should refresh a vm" do
-    storage = FactoryGirl.create(:storage,
-                                 :ems_ref  => "/api/storagedomains/ee745353-c069-4de8-8d76-ec2e155e2ca0",
-                                 :location => "192.168.1.106:/home/pkliczewski/export/hosted")
-
-    disk = FactoryGirl.create(:disk,
-                              :storage  => storage,
-                              :filename => "da123bb9-095a-4933-95f2-8032dfa332e1")
-    hardware = FactoryGirl.create(:hardware,
-                                  :disks => [disk])
-
-    vm = FactoryGirl.create(:vm_redhat,
-                            :ext_management_system => @ems,
-                            :uid_ems               => "4f6dd4c3-5241-494f-8afc-f1c67254bf77",
-                            :ems_cluster           => @cluster,
-                            :ems_ref               => "/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77",
-                            :storage               => storage,
-                            :storages              => [storage],
-                            :hardware              => hardware)
-    vm.with_relationship_type("ems_metadata") { vm.parent = @rp }
+    storage = create_storage
+    disk = create_disk(storage)
+    hardware = create_hardware(disk)
+    vm = create_existing_vm(storage, hardware)
 
     VCR.use_cassette("#{described_class.name.underscore}_target_vm") do
       EmsRefresh.refresh(vm)
@@ -50,9 +35,39 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
 
     assert_table_counts
     assert_vm(vm, storage)
-    assert_vm_rels(vm, hardware, storage)
+    assert_vm_rels(vm, hardware, storage, disk)
     assert_cluster
-    assert_storage(storage, vm)
+    assert_storage(vm, storage)
+  end
+
+  it "should remove a vm without disk" do
+    storage = create_storage
+    disk = create_disk(storage)
+    hardware = create_hardware(disk)
+    vm = create_existing_vm(storage, hardware)
+
+    VCR.use_cassette("#{described_class.name.underscore}_target_removed_vm") do
+      EmsRefresh.refresh(vm)
+    end
+
+    assert_table_counts_removed
+    assert_removed_vm(vm, storage)
+    assert_removed_vm_rels(vm, hardware, storage)
+  end
+
+  it "should remove a vm with disk" do
+    storage = create_storage
+    disk = create_disk(storage)
+    hardware = create_hardware(disk)
+    vm = create_existing_vm(storage, hardware)
+
+    VCR.use_cassette("#{described_class.name.underscore}_target_removed_vm_with_disk") do
+      EmsRefresh.refresh(vm)
+    end
+
+    assert_table_counts_removed
+    assert_removed_vm(vm, storage, true)
+    assert_removed_vm_rels(vm, hardware, storage)
   end
 
   it "should refresh new vm" do
@@ -75,7 +90,38 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
     hardware = Hardware.find_by(:vm_or_template_id => vm.id)
     assert_vm_rels(vm, hardware, storage)
     assert_cluster
-    assert_storage(storage, vm)
+    assert_storage(vm, storage)
+  end
+
+  def create_storage
+    FactoryGirl.create(:storage,
+                       :ems_ref  => "/api/storagedomains/ee745353-c069-4de8-8d76-ec2e155e2ca0",
+                       :location => "192.168.1.106:/home/pkliczewski/export/hosted")
+  end
+
+  def create_disk(storage)
+    FactoryGirl.create(:disk,
+                       :storage  => storage,
+                       :filename => "da123bb9-095a-4933-95f2-8032dfa332e1")
+  end
+
+  def create_hardware(disk)
+    FactoryGirl.create(:hardware,
+                       :disks => [disk])
+  end
+
+  def create_existing_vm(storage, hardware)
+    vm = FactoryGirl.create(:vm_redhat,
+                            :ext_management_system => @ems,
+                            :uid_ems               => "4f6dd4c3-5241-494f-8afc-f1c67254bf77",
+                            :ems_cluster           => @cluster,
+                            :ems_ref               => "/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77",
+                            :storage               => storage,
+                            :storages              => [storage],
+                            :hardware              => hardware)
+    vm.with_relationship_type("ems_metadata") { vm.parent = @rp }
+
+    vm
   end
 
   def assert_table_counts
@@ -85,13 +131,103 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
     expect(Vm.count).to eq(1)
     expect(Storage.count).to eq(1)
     expect(Disk.count).to eq(1)
-    expect(GuestDevice.count).to eq(1)
     expect(Hardware.count).to eq(1)
+    expect(GuestDevice.count).to eq(1)
     expect(OperatingSystem.count).to eq(1)
     expect(Snapshot.count).to eq(1)
 
     expect(Relationship.count).to eq(6)
     expect(MiqQueue.count).to eq(3)
+  end
+
+  def assert_table_counts_removed
+    expect(ExtManagementSystem.count).to eq(1)
+    expect(EmsCluster.count).to eq(1)
+    expect(ResourcePool.count).to eq(1)
+    expect(Vm.count).to eq(1)
+    expect(Storage.count).to eq(1)
+    expect(Disk.count).to eq(1)
+    expect(Hardware.count).to eq(1)
+
+    expect(Relationship.count).to eq(5)
+    expect(MiqQueue.count).to eq(3)
+  end
+
+  def assert_removed_vm(vm, storage, with_disk = false)
+    vm.reload
+    expect(vm).to have_attributes(
+      :template               => false,
+      :ems_ref                => "/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77",
+      :ems_ref_obj            => nil,
+      :uid_ems                => "4f6dd4c3-5241-494f-8afc-f1c67254bf77",
+      :vendor                 => "redhat",
+      :raw_power_state        => "unknown",
+      :power_state            => "unknown",
+      :connection_state       => nil,
+      :format                 => nil,
+      :version                => nil,
+      :description            => nil,
+      :location               => "unknown",
+      :config_xml             => nil,
+      :autostart              => nil,
+      :host_id                => nil,
+      :last_sync_on           => nil,
+      :storage_id             => with_disk ? nil : storage.id,
+      :last_scan_on           => nil,
+      :last_scan_attempt_on   => nil,
+      :retires_on             => nil,
+      :retired                => nil,
+      :boot_time              => nil,
+      :tools_status           => nil,
+      :standby_action         => nil,
+      :previous_state         => "up",
+      :last_perf_capture_on   => nil,
+      :registered             => nil,
+      :busy                   => nil,
+      :smart                  => nil,
+      :memory_reserve         => nil,
+      :memory_reserve_expand  => nil,
+      :memory_limit           => nil,
+      :memory_shares          => nil,
+      :memory_shares_level    => nil,
+      :cpu_reserve            => nil,
+      :cpu_reserve_expand     => nil,
+      :cpu_limit              => nil,
+      :cpu_shares             => nil,
+      :cpu_shares_level       => nil,
+      :cpu_affinity           => nil,
+      :ems_created_on         => nil,
+      :evm_owner_id           => nil,
+      :linked_clone           => nil,
+      :fault_tolerance        => nil,
+      :type                   => "ManageIQ::Providers::Redhat::InfraManager::Vm",
+      :ems_cluster_id         => nil,
+      :retirement_warn        => nil,
+      :retirement_last_warn   => nil,
+      :vnc_port               => nil,
+      :flavor_id              => nil,
+      :availability_zone_id   => nil,
+      :cloud                  => false,
+      :retirement_state       => nil,
+      :cloud_network_id       => nil,
+      :cloud_subnet_id        => nil,
+      :cloud_tenant_id        => nil,
+      :publicly_available     => nil,
+      :orchestration_stack_id => nil,
+      :retirement_requester   => nil,
+      :resource_group_id      => nil,
+      :deprecated             => nil,
+      :storage_profile_id     => nil
+    )
+
+    expect(vm.ext_management_system).not_to eq(@ems)
+    expect(vm.ems_cluster).not_to eq(@cluster)
+    expect(vm.parent_resource_pool).not_to eq(@rp)
+    if with_disk
+      expect(vm.storage).to be_nil
+    else
+      expect(vm.storage).to eq(storage)
+    end
   end
 
   def assert_vm(vm, storage)
@@ -168,7 +304,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
     expect(vm.storage).to eq(storage)
   end
 
-  def assert_vm_rels(vm, hardware, storage)
+  def assert_vm_rels(vm, hardware, storage, disk = nil)
     expect(vm.snapshots.size).to eq(1)
     snapshot = vm.snapshots.first
     expect(snapshot).to have_attributes(
@@ -222,30 +358,32 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
       :memory_mb_minimum    => nil
     )
 
-    expect(vm.hardware.disks.size).to eq(1)
-    disk = vm.hardware.disks.first
-    expect(disk.storage).to eq(storage)
-    expect(disk).to have_attributes(
-      :device_name        => "GlanceDisk-73786f4",
-      :device_type        => "disk",
-      :location           => "0",
-      :filename           => "da123bb9-095a-4933-95f2-8032dfa332e1",
-      :hardware_id        => hardware.id,
-      :mode               => "persistent",
-      :controller_type    => "virtio",
-      :size               => 41.megabyte,
-      :free_space         => nil,
-      :size_on_disk       => 25.megabyte,
-      :present            => true,
-      :start_connected    => true,
-      :auto_detect        => nil,
-      :disk_type          => "thin",
-      :storage_id         => storage.id,
-      :backing_id         => nil,
-      :backing_type       => nil,
-      :storage_profile_id => nil,
-      :bootable           => false
-    )
+    unless disk.nil?
+      expect(vm.hardware.disks.size).to eq(1)
+      disk = vm.hardware.disks.first
+      expect(disk.storage).to eq(storage)
+      expect(disk).to have_attributes(
+        :device_name        => "GlanceDisk-73786f4",
+        :device_type        => "disk",
+        :location           => "0",
+        :filename           => "da123bb9-095a-4933-95f2-8032dfa332e1",
+        :hardware_id        => hardware.id,
+        :mode               => "persistent",
+        :controller_type    => "virtio",
+        :size               => 41.megabyte,
+        :free_space         => nil,
+        :size_on_disk       => 25.megabyte,
+        :present            => true,
+        :start_connected    => true,
+        :auto_detect        => nil,
+        :disk_type          => "thin",
+        :storage_id         => storage.id,
+        :backing_id         => nil,
+        :backing_type       => nil,
+        :storage_profile_id => nil,
+        :bootable           => false
+      )
+    end
 
     expect(vm.hardware.guest_devices.size).to eq(1)
     guest_device = vm.hardware.guest_devices.first
@@ -303,6 +441,50 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
     )
   end
 
+  def assert_removed_vm_rels(vm, hardware, storage)
+    expect(vm.hardware).to eq(hardware)
+    expect(vm.hardware).to have_attributes(
+      :guest_os             => nil,
+      :guest_os_full_name   => nil,
+      :bios                 => nil,
+      :cpu_cores_per_socket => nil,
+      :cpu_total_cores      => nil,
+      :cpu_sockets          => 1,
+      :annotation           => nil,
+      :memory_mb            => nil,
+      :config_version       => nil,
+      :virtual_hw_version   => nil,
+      :bios_location        => nil,
+      :time_sync            => nil,
+      :vm_or_template_id    => vm.id,
+      :host_id              => nil,
+      :cpu_speed            => nil,
+      :cpu_type             => nil,
+      :size_on_disk         => nil,
+      :manufacturer         => "",
+      :model                => "",
+      :number_of_nics       => nil,
+      :cpu_usage            => nil,
+      :memory_usage         => nil,
+      :vmotion_enabled      => nil,
+      :disk_free_space      => nil,
+      :disk_capacity        => nil,
+      :memory_console       => nil,
+      :bitness              => nil,
+      :virtualization_type  => nil,
+      :root_device_type     => nil,
+      :computer_system_id   => nil,
+      :disk_size_minimum    => nil,
+      :memory_mb_minimum    => nil
+    )
+
+    disks = vm.hardware.disks
+    disk = storage.disks.first
+    expect(disks.size).to eq(1)
+    expect(disks.first.storage).to eq(storage)
+    expect(disks.first).to eq(disk)
+  end
+
   def assert_cluster
     @cluster.reload
     expect(@cluster).to have_attributes(
@@ -353,7 +535,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
     )
   end
 
-  def assert_storage(storage, vm)
+  def assert_storage(vm, storage)
     storage.reload
 
     expect(vm.storage).to eq(storage)
