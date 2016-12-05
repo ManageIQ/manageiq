@@ -259,168 +259,191 @@ Methods updated/added: 10
     include_context "valid session"
 
     let(:params) do
-      {:git_url => git_url, :git_username => nil, :git_password => nil, :git_verify_ssl => git_verify_ssl}
+      {
+        :git_url        => git_url,
+        :git_username   => "gitusername",
+        :git_password   => "gitpassword",
+        :git_verify_ssl => "gitverifyssl"
+      }
     end
 
     context "when the git url is blank" do
       let(:git_url) { "" }
-      let(:git_verify_ssl) { "true" }
 
-      it "redirects with a flash error" do
-        post :retrieve_git_datastore, :params => params
-        expect(response).to redirect_to(
-          :action  => :review_git_import,
+      it "responds with an error message" do
+        post :retrieve_git_datastore, :params => params, :xhr => true
+        expect(response.body).to eq({
           :message => {
             :message => "Please provide a valid git URL",
             :level   => :error
-          }.to_json
-        )
+          }
+        }.to_json)
       end
     end
 
     context "when the git url is not blank" do
-      let(:git_url) { "http://www.example.com" }
-      let(:git_verify_ssl) { "true" }
-      let(:my_region) { double("MiqRegion") }
+      let(:git_url) { "http://www.example.com/" }
 
-      before do
-        allow(MiqRegion).to receive(:my_region).and_return(my_region)
-        allow(my_region).to receive(:role_active?).with("git_owner").and_return(git_owner_active)
-      end
+      context "when the import service is not available" do
+        before do
+          allow(GitBasedDomainImportService).to receive(:available?).and_return(false)
+        end
 
-      context "when the MiqRegion does not have an active git_owner role" do
-        let(:git_owner_active) { false }
-
-        it "redirects with a flash error" do
-          post :retrieve_git_datastore, :params => params
-          expect(response).to redirect_to(
-            :action  => :review_git_import,
+        it "responds with an error message" do
+          post :retrieve_git_datastore, :params => params, :xhr => true
+          expect(response.body).to eq({
             :message => {
               :message => "Please enable the git owner role in order to import git repositories",
               :level   => :error
-            }.to_json
-          )
+            }
+          }.to_json)
         end
       end
 
-      context "when the MiqRegion has an active git_owner role" do
-        let(:verify_ssl) { OpenSSL::SSL::VERIFY_PEER }
-        let(:task_message) { "Success" }
-        let(:task_status) { "Ok" }
-        let(:git_owner_active) { true }
-        let(:git_repo) { double("GitRepository", :id => 321) }
-        let(:miq_task) do
-          double("MiqTask", :id => 3211, :status => task_status, :message => task_message)
-        end
-        let(:git_branches) { [double("GitBranch", :name => "git_branch1")] }
-        let(:git_tags) { [double("GitTag", :name => "git_tag1")] }
-        let(:task_options) { {:action => "Retrieve git repository", :userid => controller.current_user.userid} }
-        let(:queue_options) do
-          {
-            :class_name  => "GitRepository",
-            :method_name => "refresh",
-            :instance_id => git_repo.id,
-            :role        => "git_owner",
-            :args        => []
-          }
-        end
+      context "when the import service is available" do
+        let(:git_repository_service) { double("GitRepositoryService") }
 
         before do
-          allow(GitRepository).to receive(:create!).with(:url => git_url).and_return(git_repo)
-          allow(git_repo).to receive(:update_authentication).with(:values => {:userid => "", :password => ""})
-          allow(MiqTask).to receive(:generic_action_with_callback)
-            .with(task_options, queue_options).and_return(miq_task.id)
-          allow(MiqTask).to receive(:wait_for_taskid).with(miq_task.id).and_return(miq_task)
-          allow(git_repo).to receive(:git_branches).and_return(git_branches)
-          allow(git_repo).to receive(:git_tags).and_return(git_tags)
-          allow(git_repo).to receive(:update_attributes).and_return(nil)
+          allow(GitBasedDomainImportService).to receive(:available?).and_return(true)
+          allow(GitRepositoryService).to receive(:new).and_return(git_repository_service)
         end
 
-        shared_examples_for "task failure" do
-          it "check error message" do
-            post :retrieve_git_datastore, :params => params
-            expect(response).to redirect_to(
-              :action       => :review_git_import,
-              :message      => {
-                :message => "Error during repository fetch: #{task_message}",
+        context "when something goes wrong in the git repository service" do
+          before do
+            allow(git_repository_service).to receive(:setup).and_raise("Oopsies")
+          end
+
+          it "responds with an error message" do
+            post :retrieve_git_datastore, :params => params, :xhr => true
+            expect(response.body).to eq({
+              :message => {
+                :message => "Error during repository setup: Oopsies",
                 :level   => :error
-              }.to_json
-            )
+              }
+            }.to_json)
           end
         end
 
-        context "when the git repository exists with the given url" do
+        context "when everything works fine" do
+          let(:git_repo) { double("GitRepository", :id => 123) }
+          let(:git_based_domain_import_service) { double("GitBasedDomainImportService") }
+
           before do
-            allow(GitRepository).to receive(:find_or_create_by!).with(:url => git_url).and_return(git_repo)
+            allow(git_repository_service).to receive(:setup).with(
+              git_url,
+              "gitusername",
+              "gitpassword",
+              "gitverifyssl"
+            ).and_return({:git_repo_id => git_repo.id, :new_git_repo? => false})
+            allow(GitBasedDomainImportService).to receive(:new).and_return(git_based_domain_import_service)
+            allow(git_based_domain_import_service).to receive(:queue_refresh).with(123).and_return(321)
           end
 
-          it "queues the refresh action" do
-            expect(MiqTask).to receive(:generic_action_with_callback).with(task_options, queue_options)
-            post :retrieve_git_datastore, :params => params
+          it "responds with task information" do
+            post :retrieve_git_datastore, :params => params, :xhr => true
+            expect(response.body).to eq({
+              :task_id      => 321,
+              :git_repo_id  => 123,
+              :new_git_repo => false
+            }.to_json)
+          end
+        end
+      end
+    end
+  end
+
+  describe "#check_git_task" do
+    include_context "valid session"
+
+    let(:params) do
+      {:task_id => 123, :git_repo_id => 321, :new_git_repo => new_git_repo}
+    end
+    let(:new_git_repo) { false }
+
+    let(:miq_task) { double("MiqTask", :state => state, :status => status, :message => "o noes") }
+    let(:status) { "not ok" }
+
+    before do
+      allow(MiqTask).to receive(:find).with("123").and_return(miq_task)
+    end
+
+    context "when the task's state is not finished" do
+      let(:state) { "potato" }
+
+      it "renders the state as json" do
+        get :check_git_task, :params => params, :xhr => true
+        expect(response.body).to eq({:state => "potato"}.to_json)
+      end
+    end
+
+    context "when the task's state is finished" do
+      let(:state) { MiqTask::STATE_FINISHED }
+      let(:git_repo) { double("GitRepository", :id => 321, :git_branches => git_branches, :git_tags => git_tags) }
+      let(:git_branches) { [double("GitBranch", :name => "branches")] }
+      let(:git_tags) { [double("GitTag", :name => "tags")] }
+
+      before do
+        allow(GitRepository).to receive(:find).with("321").and_return(git_repo)
+      end
+
+      context "when the status is 'Ok'" do
+        let(:status) { "Ok" }
+
+        it "responds with the git information" do
+          get :check_git_task, :params => params, :xhr => true
+          expect(response.body).to eq({
+            :git_branches => ["branches"],
+            :git_tags     => ["tags"],
+            :git_repo_id  => 321,
+            :success      => true,
+            :message      => {
+              :message => "Successfully found git repository, please choose a branch or tag",
+              :level   => :success
+            }
+          }.to_json)
+        end
+      end
+
+      context "when the status is not 'Ok'" do
+        context "when the repository is new" do
+          let(:new_git_repo) { true }
+
+          before do
+            allow(git_repo).to receive(:destroy)
           end
 
-          it "waits for the refresh action" do
-            expect(MiqTask).to receive(:wait_for_taskid).with(miq_task.id)
-            post :retrieve_git_datastore, :params => params
+          it "destroys the git repository" do
+            expect(git_repo).to receive(:destroy)
+            get :check_git_task, :params => params, :xhr => true
           end
 
-          context "task failure" do
-            let(:task_message) { "Disaster happened" }
-            let(:task_status) { "Failed" }
-            it_behaves_like "task failure"
+          it "responds with the error" do
+            get :check_git_task, :params => params, :xhr => true
+            expect(response.body).to eq({
+              :success => false,
+              :message => {
+                :message => "Error during repository fetch: o noes",
+                :level   => :error
+              }
+            }.to_json)
           end
         end
 
-        context "when the repository is using self signed certificates" do
-          let (:verify_ssl) { OpenSSL::SSL::VERIFY_NONE }
-          let (:git_verify_ssl) { "false" }
-
-          before do
-            allow(GitRepository).to receive(:exists?).with(:url => git_url).and_return(false)
-          end
-          it "queues the refresh action" do
-            expect(MiqTask).to receive(:generic_action_with_callback).with(task_options, queue_options)
-            post :retrieve_git_datastore, :params => params
-          end
-        end
-
-        context "when the git repository does not exist with the given url" do
-          before do
-            allow(GitRepository).to receive(:find_or_create_by!).with(:url => git_url).and_return(git_repo)
+        context "when the repository is not new" do
+          it "does not destroy the git repository" do
+            expect(git_repo).to_not receive(:destroy)
+            get :check_git_task, :params => params, :xhr => true
           end
 
-          it "queues the refresh action" do
-            expect(MiqTask).to receive(:generic_action_with_callback).with(task_options, queue_options)
-            post :retrieve_git_datastore, :params => params
-          end
-
-          it "waits for the refresh action" do
-            expect(MiqTask).to receive(:wait_for_taskid).with(miq_task.id).and_return(miq_task)
-            post :retrieve_git_datastore, :params => params
-          end
-
-          context "task failure" do
-            before do
-              allow(git_repo).to receive(:destroy).with(no_args)
-            end
-
-            let(:task_message) { "Disaster happened" }
-            let(:task_status) { "Failed" }
-            it_behaves_like "task failure"
-          end
-
-          it "adds a success flash message with the other redirect options" do
-            post :retrieve_git_datastore, :params => params
-            expect(response).to redirect_to(
-              :action       => :review_git_import,
-              :git_branches => ["git_branch1"].to_json,
-              :git_tags     => ["git_tag1"].to_json,
-              :git_repo_id  => 321,
-              :message      => {
-                :message => "Successfully found git repository, please choose a branch or tag",
-                :level   => :success
-              }.to_json
-            )
+          it "responds with the error" do
+            get :check_git_task, :params => params, :xhr => true
+            expect(response.body).to eq({
+              :success => false,
+              :message => {
+                :message => "Error during repository fetch: o noes",
+                :level   => :error
+              }
+            }.to_json)
           end
         end
       end
