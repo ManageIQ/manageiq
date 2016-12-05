@@ -8,21 +8,25 @@ class TreeBuilderMiqActionCat < TreeBuilder
     TreeNodeBuilderMiqActionCat
   end
 
-  def initialize(name, type, sandbox, build = true, tenant_name)
+  def initialize(name, type, sandbox, tenant_name, build = true)
     @tenant_name = tenant_name
     super(name, type, sandbox, build)
   end
 
   def tree_init_options(_tree_name)
-    {:expand        => true,
-     :lazy          => false}
+    {
+      :expand => true,
+      :lazy   => false
+    }
   end
 
   def set_locals_for_render
     locals = super
-    locals.merge!(:id_prefix   => "cat_tree",
-                  :click_url => "/miq_policy/action_tag_pressed/",
-                  :onclick   => "miqOnClickTagCat")
+    locals.merge!(
+      :id_prefix => "cat_tree",
+      :click_url => "/miq_policy/action_tag_pressed/",
+      :onclick   => "miqOnClickTagCat"
+    )
   end
 
   def root_options
@@ -30,10 +34,10 @@ class TreeBuilderMiqActionCat < TreeBuilder
   end
 
   # Get root nodes count/array for explorer tree
-  def x_get_tree_roots(_count_only, _options)
+  def x_get_tree_roots(count_only, _options)
     cats = Classification.categories.select(&:show)
     cats = cats.select{|c| c.entries.any? }
-    count_only_or_objects(_count_only, cats, :description)
+    count_only_or_objects(count_only, cats, :description)
   end
 
   def x_get_tree_classification_kids(c, count_only)

@@ -15,11 +15,11 @@ describe TreeBuilderMiqActionCat do
   end
   context 'read-only mode' do
     before do
-      @treeName = 'action_tags'
-      @tree = TreeBuilderMiqActionCat.new(@treeName + '_tree', @treeName, {}, true, @tenant)
+      @tree_name = 'action_tags'
+      @tree = TreeBuilderMiqActionCat.new(@tree_name + '_tree', @tree_name, {}, @tenant, true)
     end
     it 'set init options correctly' do
-      tree_options = @tree.send(:tree_init_options, @treeName)
+      tree_options = @tree.send(:tree_init_options, @tree_name)
       expect(tree_options).to eq(:expand => true, :lazy => false)
     end
     it 'set locals for render correctly' do
@@ -44,8 +44,8 @@ describe TreeBuilderMiqActionCat do
       node = nodeB.send(:classification_node)
 
       expect(node[:hideCheckbox]).to eq(true)
-      expect(node[:tooltip]).to eq desc1
-      expect(node[:title]).to eq desc2
+      expect(node[:tooltip]).to eq(desc1)
+      expect(node[:title]).to eq(desc2)
       expect(node[:cfmeNoClick]).to eq(true)
     end
 

@@ -1,18 +1,10 @@
-class TreeNodeBuilderMiqActionCat  < TreeNodeBuilder
-
+class TreeNodeBuilderMiqActionCat < TreeNodeBuilder
   def classification_node
     img = "blank.gif"
     leaf = !object.entries.any?
-
-    if !leaf
-      img = "tag.png"
-    end
-
+    img = "tag.png" unless leaf
     generic_node(object.description, img, _("Category: %{description}") % {:description => object.description})
-
-    if !leaf
-      @node[:cfmeNoClick] = true
-    end
+    @node[:cfmeNoClick] = true unless leaf
     @node[:hideCheckbox] = true
     @node
   end

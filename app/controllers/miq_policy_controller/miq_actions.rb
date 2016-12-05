@@ -142,7 +142,6 @@ module MiqPolicyController::MiqActions
     id = TreeBuilder.from_cid(id)
     node = Classification.find(id)
     tag_name = node.tag.name
-    tag_name.prepend('t__')
     @tag_selected = Classification.tag2human(tag_name)
     @edit[:new][:options][:tags] = {} unless tag_name.nil?
     @edit[:new][:options][:tags] = [tag_name] unless tag_name.nil?
@@ -339,7 +338,7 @@ module MiqPolicyController::MiqActions
 
   def action_build_cat_tree2()
     name = 'action_tags'
-    @cat_tree = TreeBuilderMiqActionCat.new(name + '_tree', name, @sb, "#{current_tenant.name} Tags")
+    @cat_tree = TreeBuilderMiqActionCat.new(name + '_tree', name, @sb, "#{current_tenant.name} Tags", true)
   end
 
   # Set action record variables to new values
