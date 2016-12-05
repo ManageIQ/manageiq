@@ -6,6 +6,10 @@ class ApplicationHelper::Button::HistoryItem < ApplicationHelper::Button::Button
     end
   end
 
+  def disabled?
+    history_item_id == 1 && @view_context.x_tree_history.length < 2
+  end
+
   # History toolbar is a strange beast. The yaml definition contains bunch of pre-defined
   # buttons and these are then hidden one by one by the following code.
   # TODO: Generate the buttons from the history instead.
