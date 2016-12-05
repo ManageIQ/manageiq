@@ -3,7 +3,7 @@ describe ChargebackVm do
     MiqRegion.seed
     ChargebackRate.seed
 
-    guid, server, zone = EvmSpecHelper.create_guid_miq_server_zone
+    EvmSpecHelper.create_guid_miq_server_zone
     @ems = FactoryGirl.create(:ems_vmware)
     cat = FactoryGirl.create(:classification, :description => "Environment", :name => "environment", :single_value => true, :show => true)
     c = FactoryGirl.create(:classification, :name => "prod", :description => "Production", :parent_id => cat.id)

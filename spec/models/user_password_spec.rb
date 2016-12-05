@@ -3,7 +3,7 @@ require 'bcrypt'
 describe "User Password" do
   context "With admin user" do
     before(:each) do
-      guid, server, @zone = EvmSpecHelper.create_guid_miq_server_zone
+      EvmSpecHelper.create_guid_miq_server_zone
 
       @old = 'smartvm'
       @admin = FactoryGirl.create(:user, :userid          => 'admin',
