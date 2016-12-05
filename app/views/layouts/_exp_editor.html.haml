@@ -40,43 +40,43 @@
           %button.btn.btn-default.disabled
             = image_tag(image_path('toolbars/redo.png'))
 
-      %span#exp_buttons_off
-        - %w(and or not discard).each do |image|
-          %button.btn.btn-default.disabled
-            = image_tag(image_path("toolbars/#{image}.png"))
-
-      %span#exp_buttons_not{:style => "display: none"}
-        - [[_("AND with a new expression element"), 'and',     'and'],
-           [_("OR with a new expression element"),  'or',      'or'],
-           ["",                                     'not',     ''],
-           [_("Remove this expression element"),    'discard', 'remove']].each do |title, image, pressed|
-          - if title.empty?
+        %span#exp_buttons_off
+          - %w(and or not discard).each do |image|
             %button.btn.btn-default.disabled
-              = link_to(image_tag(image_path("toolbars/#{image}.png")))
-          - else
+              = image_tag(image_path("toolbars/#{image}.png"))
+
+        %span#exp_buttons_not{:style => "display: none"}
+          - [[_("AND with a new expression element"), 'and',     'and'],
+             [_("OR with a new expression element"),  'or',      'or'],
+             ["",                                     'not',     ''],
+             [_("Remove this expression element"),    'discard', 'remove']].each do |title, image, pressed|
+            - if title.empty?
+              %button.btn.btn-default.disabled
+                = link_to(image_tag(image_path("toolbars/#{image}.png")))
+            - else
+              %button.btn.btn-default
+                = link_to(image_tag(image_path("toolbars/#{image}.png"),
+                                    :alt => title),
+                          {:action  => "exp_button",
+                           :pressed => pressed},
+                          "data-miq_sparkle_on"  => true,
+                          "data-miq_sparkle_off" => true,
+                          :remote                => true,
+                          "data-method"          => :post,
+                          :title                 => title)
+
+        %span#exp_buttons_on{:style => "display: none"}
+          - [[_("AND with a new expression element"),       'and',     'and'],
+             [_("OR with a new expression element"),        'or',      'or'],
+             [_("Wrap this expression element with a NOT"), 'not',     'not'],
+             [_("Remove this expression element"),          'discard', 'remove']].each do |title, image, pressed|
             %button.btn.btn-default
-              = link_to(image_tag(image_path("toolbars/#{image}.png"),
-                                  :alt => title),
-                        {:action  => "exp_button",
-                         :pressed => pressed},
+              = link_to(image_tag(image_path("toolbars/#{image}.png"), :alt => title), {:action => 'exp_button', :pressed => pressed},
                         "data-miq_sparkle_on"  => true,
                         "data-miq_sparkle_off" => true,
                         :remote                => true,
                         "data-method"          => :post,
                         :title                 => title)
-
-      %span#exp_buttons_on{:style => "display: none"}
-        - [[_("AND with a new expression element"),       'and',     'and'],
-           [_("OR with a new expression element"),        'or',      'or'],
-           [_("Wrap this expression element with a NOT"), 'not',     'not'],
-           [_("Remove this expression element"),          'discard', 'remove']].each do |title, image, pressed|
-          %button.btn.btn-default
-            = link_to(image_tag(image_path("toolbars/#{image}.png"), :alt => title), {:action => 'exp_button', :pressed => pressed},
-                      "data-miq_sparkle_on"  => true,
-                      "data-miq_sparkle_off" => true,
-                      :remote                => true,
-                      "data-method"          => :post,
-                      :title                 => title)
 
     - @edit[@expkey][:exp_table].each do |token|
       - if ! %w(AND OR ( ) ???).include?([token].flatten.first)
