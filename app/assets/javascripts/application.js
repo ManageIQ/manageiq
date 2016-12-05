@@ -11,7 +11,6 @@
 //= require angular-patternfly-sass/dist/angular-patternfly
 //= require angular-ui-bootstrap
 //= require angular-ui-bootstrap-tpls
-//= require angular-resource
 //= require angular-sanitize
 //= require angular.validators
 //= require moment
