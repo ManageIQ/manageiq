@@ -7,41 +7,42 @@
   = javascript_tag("ManageIQ.expEditor.second.title = '#{@edit[@expkey][:val2][:title]}';")
 
 #exp_editor_div
-  %fieldset{:style => "width: auto; padding-left: 6px; padding-top: 6px"}
-    %ul.searchtoolbar
-      - if @edit[@expkey].history.idx > 0
-        %li
-          = link_to(image_tag(image_path('toolbars/undo.png'),
-                              :alt => _('Undo the last change')),
-                    {:action  => 'exp_button',
-                     :pressed => 'undo'},
-                    "data-miq_sparkle_on"  => true,
-                    "data-miq_sparkle_off" => true,
-                    :remote                => true,
-                    "data-method"          => :post,
-                    :title                 => _('Undo the last change'))
-      - else
-        %li.dimmed
-          = image_tag(image_path('toolbars/undo.png'))
+  %fieldset
+    .toolbar-pf-actions
+      .form-group
+        - if @edit[@expkey].history.idx > 0
+          %button.btn.btn-default
+            = link_to(image_tag(image_path('toolbars/undo.png'),
+                                :alt => _('Undo the last change')),
+                      {:action  => 'exp_button',
+                       :pressed => 'undo'},
+                      "data-miq_sparkle_on"  => true,
+                      "data-miq_sparkle_off" => true,
+                      :remote                => true,
+                      "data-method"          => :post,
+                      :title                 => _('Undo the last change'))
+        - else
+          %button.btn.btn-default.disabled
+            = image_tag(image_path('toolbars/undo.png'))
 
-      - if @edit[@expkey].history.idx < @edit[@expkey].history.array.length - 1
-        %li
-          = link_to(image_tag(image_path('toolbars/redo.png'),
-                              :alt => _('Re-apply the previous change')),
-                    {:action  => 'exp_button',
-                     :pressed => 'redo'},
-                    "data-miq_sparkle_on"  => true,
-                    "data-miq_sparkle_off" => true,
-                    :remote                => true,
-                    "data-method"          => :post,
-                    :title                 => _('Re-apply the previous change'))
-      - else
-        %li.dimmed
-          = image_tag(image_path('toolbars/redo.png'))
+        - if @edit[@expkey].history.idx < @edit[@expkey].history.array.length - 1
+          %button
+            = link_to(image_tag(image_path('toolbars/redo.png'),
+                                :alt => _('Re-apply the previous change')),
+                      {:action  => 'exp_button',
+                       :pressed => 'redo'},
+                      "data-miq_sparkle_on"  => true,
+                      "data-miq_sparkle_off" => true,
+                      :remote                => true,
+                      "data-method"          => :post,
+                      :title                 => _('Re-apply the previous change'))
+        - else
+          %button.btn.btn-default.disabled
+            = image_tag(image_path('toolbars/redo.png'))
 
       %span#exp_buttons_off
         - %w(and or not discard).each do |image|
-          %li.dimmed
+          %button.btn.btn-default.disabled
             = image_tag(image_path("toolbars/#{image}.png"))
 
       %span#exp_buttons_not{:style => "display: none"}
@@ -50,10 +51,10 @@
            ["",                                     'not',     ''],
            [_("Remove this expression element"),    'discard', 'remove']].each do |title, image, pressed|
           - if title.empty?
-            %li.dimmed
+            %button.btn.btn-default.disabled
               = link_to(image_tag(image_path("toolbars/#{image}.png")))
           - else
-            %li
+            %button.btn.btn-default
               = link_to(image_tag(image_path("toolbars/#{image}.png"),
                                   :alt => title),
                         {:action  => "exp_button",
@@ -69,7 +70,7 @@
            [_("OR with a new expression element"),        'or',      'or'],
            [_("Wrap this expression element with a NOT"), 'not',     'not'],
            [_("Remove this expression element"),          'discard', 'remove']].each do |title, image, pressed|
-          %li
+          %button.btn.btn-default
             = link_to(image_tag(image_path("toolbars/#{image}.png"), :alt => title), {:action => 'exp_button', :pressed => pressed},
                       "data-miq_sparkle_on"  => true,
                       "data-miq_sparkle_off" => true,
@@ -77,32 +78,31 @@
                       "data-method"          => :post,
                       :title                 => title)
 
-    %div{:style => "padding: 10px"}
-      - @edit[@expkey][:exp_table].each do |token|
-        - if ! %w(AND OR ( ) ???).include?([token].flatten.first)
-          = link_to(token.first,
-                    {:action => 'exp_token_pressed',
-                     :token  => token.last},
-                    :style                 => "color: black",
-                    "data-miq_sparkle_on"  => true,
-                    "data-miq_sparkle_off" => true,
-                    :remote                => true,
-                    "data-method"          => :post,
-                    :id                    => "exp_#{token.last}")
-        - elsif [token].flatten.first == "???"
-          = link_to(token.first,
-                    {:action => 'exp_token_pressed',
-                     :token  => token.last},
-                    :style                 => "color: black; background-color: yellow",
-                    "data-miq_sparkle_on"  => true,
-                    "data-miq_sparkle_off" => true,
-                    :remote                => true,
-                    "data-method"          => :post,
-                    :id                    => "exp_#{token.last}")
-        - else
-          %font{:color => "red"}
-            %b
-              = token
+    - @edit[@expkey][:exp_table].each do |token|
+      - if ! %w(AND OR ( ) ???).include?([token].flatten.first)
+        = link_to(token.first,
+                  {:action => 'exp_token_pressed',
+                   :token  => token.last},
+                  :style                 => "color: black",
+                  "data-miq_sparkle_on"  => true,
+                  "data-miq_sparkle_off" => true,
+                  :remote                => true,
+                  "data-method"          => :post,
+                  :id                    => "exp_#{token.last}")
+      - elsif [token].flatten.first == "???"
+        = link_to(token.first,
+                  {:action => 'exp_token_pressed',
+                   :token  => token.last},
+                  :style                 => "color: black; background-color: yellow",
+                  "data-miq_sparkle_on"  => true,
+                  "data-miq_sparkle_off" => true,
+                  :remote                => true,
+                  "data-method"          => :post,
+                  :id                    => "exp_#{token.last}")
+      - else
+        %font{:color => "red"}
+          %b
+            = token
 
   - if @edit[@expkey][:exp_token]
     = render(:partial => 'layouts/exp_atom/editor')
