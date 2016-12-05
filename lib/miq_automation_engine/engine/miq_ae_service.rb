@@ -1,6 +1,7 @@
 require_relative 'miq_ae_service/miq_ae_service_model_legacy'
 require_relative 'miq_ae_service/miq_ae_service_object_common'
 require_relative 'miq_ae_service/miq_ae_service_vmdb'
+require_relative 'miq_ae_service/miq_ae_service_rbac'
 module MiqAeMethodService
   class Deprecation < Vmdb::Deprecation
     def self.default_log
@@ -25,6 +26,7 @@ module MiqAeMethodService
     include DRbUndumped
     include MiqAeMethodService::MiqAeServiceModelLegacy
     include MiqAeMethodService::MiqAeServiceVmdb
+    include MiqAeMethodService::MiqAeServiceRbac
 
     attr_accessor :logger
 
@@ -59,7 +61,10 @@ module MiqAeMethodService
       @persist_state_hash    = ws.persist_state_hash
       @logger                = logger
       self.class.add(self)
+      ws.disable_rbac
     end
+
+    delegate :enable_rbac, :disable_rbac, :rbac_enabled?, :to =>  :@workspace
 
     def stdout
       @stdout ||= Vmdb::Loggers::IoLogger.new(logger, :info, "Method STDOUT:")
