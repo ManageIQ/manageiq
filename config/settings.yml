@@ -1254,6 +1254,7 @@
       :ems_metrics_collector_worker:
         :defaults:
           :count: 2
+          :memory_threshold: 400.megabytes
           :nice_delta: 3
           :poll_method: :escalate
         :ems_metrics_collector_worker_azure: {}
