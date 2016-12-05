@@ -975,6 +975,7 @@ Vmdb::Application.routes.draw do
         timeline
         timeline_data
         widget_to_pdf
+        start_url
       ),
       :post => %w(
         external_authenticate
