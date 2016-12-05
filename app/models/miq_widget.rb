@@ -428,7 +428,7 @@ class MiqWidget < ApplicationRecord
   end
 
   def available_for_group?(group)
-    group ? has_visibility?(:roles, group.miq_user_role_name) : false
+    group ? has_visibility?(:roles, group.miq_user_role_name) || has_visibility?(:groups, group.description) : false
   end
 
   def self.available_for_user(user)
