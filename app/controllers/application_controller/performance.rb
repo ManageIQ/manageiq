@@ -1543,7 +1543,7 @@ module ApplicationController::Performance
           tip = ts_rpt.format(col + '_tip', r[col + '_tip'])
         end
         val = ts_rpt.format(col, r[col], :format => {:function => {:name => "number_with_delimiter", :suffix => "%"}, :precision => "0"})
-        ss.push([ts_rpt.headers[col_idx], "#{tip} (#{val})"])
+        ss.push([_(ts_rpt.headers[col_idx]), "#{tip} (#{val})"])
         total_vals += r[col].to_f # Total up the values for this section
       end
     end
