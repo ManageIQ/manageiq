@@ -248,6 +248,12 @@ describe AuthenticationMixin do
             expect(messages.count).to eq(1)
             expect(messages.first.args.last).to eq(:attempt => 2)
           end
+
+          it "filters out attempt from the authentication_check call" do
+            expect(@host1).to receive(:authentication_check).with(nil, hash_excluding(:attempt)).and_return([true, ""])
+            expect(@host1).to receive(:authentication_check).with(nil, hash_including(:attempt)).and_return([true, ""]).never
+            @host1.authentication_check_types(:attempt => 1)
+          end
         end
       end
     end
