@@ -141,6 +141,8 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCapture do
             .and_return(metrics[:data])
         end
 
+        allow_any_instance_of(described_class::CaptureContext).to receive(:fetch_strings_keys).and_return([])
+
         _, values_by_ts = @node.perf_collect_metrics('realtime')
 
         expect(values_by_ts['target']).to eq(exercise[:node_expected])
