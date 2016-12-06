@@ -892,6 +892,7 @@ class ApplicationHelper::ToolbarBuilder
       when "vm_snapshot_delete_all"
         return @record.is_available_now_error_message(:remove_all_snapshots) unless @record.is_available?(:remove_all_snapshots)
       when "vm_snapshot_revert"
+        return N_("Select a snapshot that is not the active one") if @active
         return @record.is_available_now_error_message(:revert_to_snapshot) unless @record.is_available?(:revert_to_snapshot)
       end
     when "MiqTemplate"
