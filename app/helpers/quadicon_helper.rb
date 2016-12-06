@@ -733,7 +733,7 @@ module QuadiconHelper
 
     if settings(:quadicons, item.class.base_model.name.underscore.to_sym)
       output << flobj_img_simple(size, "#{size}/base.png")
-      output << flobj_img_simple(size, "100/os-#{h(item.os_image_name.downcase)}.png", "a#{size}")
+      output << flobj_img_simple(size, "svg/os-#{h(item.os_image_name.downcase)}.svg", "a#{size}")
       output << flobj_img_simple(size, "72/currentstate-#{h(item.normalized_state.downcase)}.png", "b#{size}")
       output << flobj_img_simple(size, "svg/vendor-#{h(item.vendor.downcase)}.svg", "c#{size}")
 

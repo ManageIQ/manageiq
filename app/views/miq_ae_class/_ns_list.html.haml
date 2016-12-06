@@ -21,7 +21,7 @@
               %input{:type => 'checkbox', :value => cls_cid}
             %td.narrow
               - if record.git_enabled?
-                %img{:src => image_path('100/ae_git_domain.png')}
+                %img{:src => image_path('svg/ae_git_domain.svg')}
               - elsif record.name == MiqAeDatastore::MANAGEIQ_DOMAIN
                 %i.product.product-product
               - elsif record.top_level_namespace
