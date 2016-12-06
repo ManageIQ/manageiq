@@ -72,5 +72,20 @@ describe DialogGroup do
         end.to change(dialog_group.reload.dialog_fields, :count).by(-1)
       end
     end
+
+    context 'it symbolizes a dialog fields options' do
+      let(:updated_fields) do
+        [{ 'name' => 'new', 'label' => 'new field label', 'type' => 'DialogFieldTagControl', 'options' =>
+          { 'name' => 'foo', 'description' => 'bar'} }]
+      end
+
+      it 'dialog_field.options has symbolized keys' do
+        dialog_group.update_dialog_fields(updated_fields)
+        dialog_group.reload
+        expect(dialog_group.dialog_fields.first.options).to eq(:name        => 'foo',
+                                                               :description => 'bar',
+                                                               :category_id => nil)
+      end
+    end
   end
 end
