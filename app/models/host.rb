@@ -1289,10 +1289,11 @@ class Host < ApplicationRecord
     hosts.each do |host|
       begin
         if host.ipmi_config_valid?(true) == false
-          errors.add(:"Error -", "Host not available for provisioning. Name: [#{host.name}]")
+          errors.add(:"Error -", _("Host not available for provisioning. Name: [%{host_name}]") % {:host_name => host.name})
         end
       rescue => err
-        errors.add(:error_checking, "Error, '#{err.message}, checking Host for provisioning: Name: [#{host.name}]")
+        errors.add(:error_checking, _("Error, '%{error_message}, checking Host for provisioning: Name: [%{host_name}]") %
+          {:error_message => err.message, :host_name => host.name})
       end
     end
 
