@@ -712,7 +712,6 @@ class MiqPolicyController < ApplicationController
     elsif @assign
       @changed = (@assign[:new] != @assign[:current])
     end
-    get_tags_tree if @action_type_changed || @snmp_trap_refresh
     render :update do |page|
       page << javascript_prologue
       if @edit
