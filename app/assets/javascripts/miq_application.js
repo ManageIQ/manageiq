@@ -353,7 +353,7 @@ function miqValidateButtons(h_or_s, prefix) {
 // Convert Button image to hyperlink
 function toggleConvertButtonToLink(button, url, toggle) {
   if (toggle) {
-    button.removeClass('dimmed');
+    button.removeClass('disabled');
     if (!button.parent().is('a[href]')) {
       button
         .wrap($('<a/>')
@@ -361,7 +361,7 @@ function toggleConvertButtonToLink(button, url, toggle) {
           .attr('title', button.attr('alt')));
     }
   } else {
-    button.addClass('dimmed');
+    button.addClass('disabled');
     if (button.parent().is('a[href]')) {
       button.unwrap();
     }

@@ -264,6 +264,14 @@ ManageIQ.explorer.processReplaceRightCell = function(data) {
 
   miqInitMainContent();
   miqInitAccordions();
+  //Disable export button when no report is selected in Custom Reports 
+  if ($('#custom_reports')!=undefined && $('#custom_reports').val()=='true') {
+    if($('#choices_chosen').val()==null) {
+      $('#export_button').addClass('disabled');
+    } else {
+      $('#export_button').removeClass('disabled');
+    }
+  }
 
   if (data.hideModal) { $('#quicksearchbox').modal('hide'); }
   if (data.initAccords) { miqInitAccordions(); }

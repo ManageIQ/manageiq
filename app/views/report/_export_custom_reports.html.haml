@@ -37,6 +37,7 @@
       = _('Available Custom Reports:')
     .col-md-8
       %div{:style => "overflow: auto; width: 400px; border: 1px solid #999999;"}
+        %input{:type => "hidden", :id => "custom_reports", :name => "custom_reports", :value => "true"}
         = select_tag('choices_chosen',
           options_for_select(@export_reports.sort),
           :size              => 15,
