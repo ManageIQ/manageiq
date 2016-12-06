@@ -92,8 +92,8 @@ class ChargebackContainerImage < Chargeback
     self.image_name    = self.class.image(perf).try(:full_name) || _('Deleted') # until image archiving is implemented
     self.project_uid   = self.class.project(perf).ems_ref
     self.provider_name = perf.parent_ems.try(:name)
-    self.provider_uid  = perf.parent_ems.try(:name)
-    self.archived      = self.class.project(perf).archived? ? _('Yes') : _('No'),
+    self.provider_uid  = perf.parent_ems.try(:guid)
+    self.archived      = self.class.project(perf).archived? ? _('Yes') : _('No')
     self.entity        = self.class.image(perf)
   end
 end # class ChargebackContainerImage
