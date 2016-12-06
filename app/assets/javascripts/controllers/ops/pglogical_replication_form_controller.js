@@ -105,7 +105,7 @@ ManageIQ.angular.app.controller('pglogicalReplicationFormController', ['$http', 
   $scope.enableSubscriptionAdd = function() {
     $scope.pglogicalReplicationModel.updateEnabled = false;
     $scope.pglogicalReplicationModel.addEnabled    = true;
-    $scope.pglogicalReplicationModel.dbname        = '';
+    $scope.pglogicalReplicationModel.dbname        = 'vmdb_production';
     $scope.pglogicalReplicationModel.host          = '';
     $scope.pglogicalReplicationModel.user          = '';
     $scope.pglogicalReplicationModel.password      = '';
