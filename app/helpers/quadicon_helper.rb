@@ -135,9 +135,7 @@ module QuadiconHelper
   end
 
   def quadicon_default_options
-    {
-      :size => 72
-    }
+    { :size => 72 }
   end
 
   def render_quadicon(item, options = {})
@@ -146,13 +144,23 @@ module QuadiconHelper
     options = quadicon_default_options.merge!(options)
 
     tag_options = {
-      :id => "quadicon_#{item.id}"
+      :id    => "quadicon_#{item.id}",
+      :class => "quadicon quadicon-#{quadicon_builder_name_from(item)}"
     }
 
     if options[:typ] == :listnav
       tag_options[:style] = quadicon_default_inline_styles
-      tag_options[:class] = ""
+      tag_options[:class] = "quadicon-listnav"
     end
+
+    # TEMP -- for visual testing
+    # if item.kind_of?(Storage)
+    #   quadicon_for(item)
+    # else
+    #   quadicon_tag(tag_options) do
+    #     quadicon_builder_factory(item, options)
+    #   end
+    # end
 
     quadicon_tag(tag_options) do
       quadicon_builder_factory(item, options)
@@ -562,17 +570,17 @@ module QuadiconHelper
     size = options[:size]
     output = []
 
-    img_path = if item.kind_of?(MiqCimInstance)
-                 if item.kind_of?(CimStorageExtent)
-                   "100/cim_base_storage_extent.png"
-                 else
-                   "100/#{item.class.to_s.underscore}.png"
-                 end
-               elsif item.respond_to?(:decorator_class?) && item.decorator_class?
-                 item.decorate.try(:listicon_image)
-               else
-                 "100/#{item.class.base_class.to_s.underscore}.png"
-               end
+    img_path =  if item.kind_of?(MiqCimInstance)
+                  if item.kind_of?(CimStorageExtent)
+                    "100/cim_base_storage_extent.png"
+                  else
+                    "100/#{item.class.to_s.underscore}.png"
+                  end
+                elsif item.respond_to?(:decorator_class?) && item.decorator_class?
+                  item.decorate.try(:listicon_image)
+                else
+                  "100/#{item.class.base_class.to_s.underscore}.png"
+                end
 
     output << flobj_img_simple(size, "#{size}/base-single.png")
     output << flobj_img_simple(size, img_path, "e#{size}")
@@ -887,5 +895,32 @@ module QuadiconHelper
       attributes[:id] = "v-#{record.id}"
     end
     attributes
+  end
+
+
+  #######################################
+  # Use OO Builders
+  #######################################
+
+  def quadicon_for(record, options = {})
+    context = Quadicons::Context.new(self) do |c|
+      # set attributes with view state
+      c.controller  = request.parameters[:controller]
+      c.edit        = @edit
+      c.embedded    = quadicon_in_embedded_view?
+      c.explorer    = quadicon_in_explorer_view?
+      c.lastaction  = @lastaction
+      c.listicon    = @listicon
+      c.listnav     = @listnav # TODO: set from options
+      c.parent      = @parent
+      c.policies    = session[:policies]
+      c.policy_sim  = quadicon_policy_sim?
+      c.settings    = @settings
+      c.showlinks   = @showlinks
+      c.view        = @view
+    end
+
+    # Quadicons.build_quadicon_for(record, context)
+    Quadicons::StorageQuadicon.new(record, context).render
   end
 end

@@ -6,6 +6,14 @@ class ResourcePoolDecorator < Draper::Decorator
   end
 
   def listicon_image
-    "100/#{vapp ? 'vapp' : 'resource_pool'}.png"
+    quadicon_image_path
+  end
+
+  def quadicon_image_path
+    "100/#{quadicon_image_name}.png"
+  end
+
+  def quadicon_image_name
+    vapp ? 'vapp' : 'resource_pool'
   end
 end
