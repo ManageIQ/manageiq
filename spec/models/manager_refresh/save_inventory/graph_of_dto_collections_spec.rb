@@ -500,6 +500,75 @@ describe ManagerRefresh::SaveInventory do
           expect(network_port_3.device).to eq(orchestration_stack_1_12)
         end
 
+        it 'test network_port -> stack -> resource -> stack reverted' do
+          @data                                  = {}
+          @data[:network_ports]                  = ::ManagerRefresh::DtoCollection.new(
+            NetworkPort,
+            :parent      => @ems.network_manager,
+            :association => :network_ports)
+          @data[:orchestration_stacks_resources] = ::ManagerRefresh::DtoCollection.new(
+            OrchestrationStackResource,
+            :parent      => @ems,
+            :association => :orchestration_stacks_resources)
+          @data[:orchestration_stacks]           = ::ManagerRefresh::DtoCollection.new(
+            ManageIQ::Providers::CloudManager::OrchestrationStack,
+            :parent      => @ems,
+            :association => :orchestration_stacks)
+
+          init_stack_data_with_stack_resource_stack_cycle
+          init_resource_data
+
+          @network_port_1 = network_port_data(1).merge(
+            :device => @data[:orchestration_stacks].lazy_find(orchestration_stack_data("1_11")[:ems_ref],
+                                                              :key => :parent)
+          )
+          @network_port_2 = network_port_data(2).merge(
+            :device => @data[:orchestration_stacks].lazy_find(orchestration_stack_data("11_21")[:ems_ref],
+                                                              :key => :parent)
+          )
+          @network_port_3 = network_port_data(3).merge(
+            :device => @data[:orchestration_stacks].lazy_find(orchestration_stack_data("12_22")[:ems_ref],
+                                                              :key => :parent)
+          )
+
+          add_data_to_dto_collection(@data[:orchestration_stacks],
+                                     @orchestration_stack_data_0_1,
+                                     @orchestration_stack_data_0_2,
+                                     @orchestration_stack_data_1_11,
+                                     @orchestration_stack_data_1_12,
+                                     @orchestration_stack_data_11_21,
+                                     @orchestration_stack_data_12_22,
+                                     @orchestration_stack_data_12_23)
+          add_data_to_dto_collection(@data[:orchestration_stacks_resources],
+                                     @orchestration_stack_resource_data_1_11,
+                                     @orchestration_stack_resource_data_1_11_1,
+                                     @orchestration_stack_resource_data_1_12,
+                                     @orchestration_stack_resource_data_1_12_1,
+                                     @orchestration_stack_resource_data_11_21,
+                                     @orchestration_stack_resource_data_12_22,
+                                     @orchestration_stack_resource_data_12_23)
+          add_data_to_dto_collection(@data[:network_ports],
+                                     @network_port_1,
+                                     @network_port_2,
+                                     @network_port_3)
+
+          # Invoke the DtoCollections saving
+          ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
+          # Assert saved data
+          assert_full_dto_collections_graph
+
+          network_port_1 = NetworkPort.find_by(:ems_ref => "network_port_ems_ref_1")
+          network_port_2 = NetworkPort.find_by(:ems_ref => "network_port_ems_ref_2")
+          network_port_3 = NetworkPort.find_by(:ems_ref => "network_port_ems_ref_3")
+
+          orchestration_stack_0_1   = OrchestrationStack.find_by(:ems_ref => "stack_ems_ref_0_1")
+          orchestration_stack_1_11  = OrchestrationStack.find_by(:ems_ref => "stack_ems_ref_1_11")
+          orchestration_stack_1_12  = OrchestrationStack.find_by(:ems_ref => "stack_ems_ref_1_12")
+          expect(network_port_1.device).to eq(orchestration_stack_0_1)
+          expect(network_port_2.device).to eq(orchestration_stack_1_11)
+          expect(network_port_3.device).to eq(orchestration_stack_1_12)
+        end
+
         it "test network_port -> network_port through network_port's :device can't be converted to DAG" do
           # We are creating an unsolvable cycle, cause only option to save this data is writing a custom method, that
           # saved the data in a correct order. In this case, we would need to save this data by creating a tree of
