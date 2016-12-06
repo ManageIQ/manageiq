@@ -343,4 +343,51 @@ describe "Service Requests API" do
       expect(response).to have_http_status(:forbidden)
     end
   end
+
+  context 'service request update' do
+    it 'forbids service request update without an appropriate role' do
+      api_basic_authorize
+
+      run_post(requests_url, gen_request(:edit))
+
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it 'updates a single service request' do
+      api_basic_authorize collection_action_identifier(:service_requests, :edit)
+
+      run_post(requests_url(service_request.id), gen_request(:edit, :options => {:foo => "bar"}))
+
+      expected = {
+        "id"      => service_request.id,
+        "options" => a_hash_including("foo" => "bar")
+      }
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
+    end
+
+    it 'updates multiple service requests' do
+      service_request_2 = FactoryGirl.create(:service_template_provision_request,
+                                             :requester   => @user,
+                                             :source_id   => template.id,
+                                             :source_type => template.class.name)
+      api_basic_authorize collection_action_identifier(:service_requests, :edit)
+
+      run_post(requests_url, :action    => "edit",
+                             :resources => [
+                               {:id      => service_request.id,
+                                :options => {:foo => 'bar'}},
+                               {:id      => service_request_2.id,
+                                :options => {:foo => 'foo'}}
+                             ])
+      expected = {
+        'results' => a_collection_including(
+          a_hash_including("options" => { "foo" => "bar"}),
+          a_hash_including("options" => {"foo" => "foo"})
+        )
+      }
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
+    end
+  end
 end

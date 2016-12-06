@@ -25,6 +25,15 @@ module Api
       action_result(false, err.to_s)
     end
 
+    def edit_resource(type, id, data)
+      request = resource_search(id, type, collection_class(:service_requests))
+      request_options = RequestParser.parse_options(data)
+      user = RequestParser.parse_user(data) || @auth_user_object
+      request.update_request(request_options, user)
+    rescue => err
+      raise BadRequestError, "Could not update the service request - #{err}"
+    end
+
     def find_service_requests(id)
       klass = collection_class(:service_requests)
       return klass.find(id) if @auth_user_obj.admin?
