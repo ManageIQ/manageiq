@@ -12,35 +12,267 @@ describe ManagerRefresh::SaveInventory do
   #
   # 1. Example, cycle is stack -> stack
   #
-  #                   +---------------+
-  #                   |               <-----+
-  #                   |     Stack     |     |
-  #                   |               +-----+
-  #                   +-------^-------+
-  #                           |
-  #                           |
-  #                           |
-  #                   +-------+-------+
-  #                   |               |
-  #                   |    Resource   |
-  #                   |               |
-  #                   +---------------+
+  # edge Stack -> Stack is created by (:parent => @data[:orchestration_stacks].lazy_find(stack_ems_ref)) meaning Stack
+  #   depends on Stack through :parent attribute
+  #
+  # edge Resource -> Stack is created by (:stack => @data[:orchestration_stacks].lazy_find(stack_ems_ref)) meaning
+  #   Resource depends on Stack through :stack attribute
+  #
+  #              +-----------------------+                                  +-----------------------+
+  #              |                       |                                  |                       |
+  #              |                       |                                  |                       |
+  #              |                       |                                  |                       |
+  #              |         Stack         |                                  |         Stack         |
+  #              |                       <-----+                            | blacklist: [:parent]  |
+  #              |                       |     |                            |                       <---------+
+  #              |              :parent  |     |                            |                       |         |
+  #              +---^--------------+----+     |    to DAG ->               +---^----------------^--+         |
+  #                  |              |          |                                |                |            |
+  #                  |              |          |                                |                |            |
+  #  +---------------+-------+      +----------+                +---------------+-------+     +--+------------+-------+
+  #  |            :stack     |                                  |            :stack     |     | :parent    :internal  |
+  #  |                       |                                  |                       |     |                       |
+  #  |                       |                                  |                       |     |                       |
+  #  |         Resource      |                                  |         Resource      |     |         Stack         |
+  #  |                       |                                  |                       |     | whitelist: [:parent]  |
+  #  |                       |                                  |                       |     |                       |
+  #  |                       |                                  |                       |     |                       |
+  #  +-----------------------+                                  +-----------------------+     +-----------------------+
   #
   # 2. Example, cycle is stack -> resource -> stack
   #
-  #                   +---------------+
-  #                   |               |
-  #                   |     Stack     |
-  #                   |               |
-  #                   +---^------+----+
-  #                       |      |
-  #                       |      |
-  #                       |      |
-  #                   +---+------v----+
-  #                   |               |
-  #                   |    Resource   |
-  #                   |               |
-  #                   +---------------+
+  # edge Stack -> Resource is created by
+  #   (:parent => @data[:orchestration_stacks_resources].lazy_find(resource_ems_ref, :key => :stack)) meaning Stack
+  #   depends on Resource through :parent attribute. Due to the usage of :key => :stack, Stack actually depends on
+  #   Resource that has :stack attribute saved.
+  #
+  # edge Resource -> Stack is created by (:stack => @data[:orchestration_stacks].lazy_find(stack_ems_ref)) meaning
+  #   Resource depends on Stack through :stack attribute
+  #
+  #  +-----------------------+                                  +-----------------------+
+  #  |                       |                                  |                       |
+  #  |                       |                                  |                       |
+  #  |                       |                                  |                       |
+  #  |         Stack         |                                  |         Stack         |
+  #  |                       |                                  | blacklist: [:parent]  |
+  #  |                       |                                  |                       |
+  #  |              :parent  |                                  |                       <--+
+  #  +---^-------------+-----+                                  +---------------^-------+  |
+  #      |             |               to DAG ->                                |          |
+  #      |             |                                                        |          |
+  #      |             |                                        +---------------+-------+  |
+  #  +---+-------------v-----+                                  |            :stack     |  |
+  #  |   :stack              |                                  |                       |  |
+  #  |                       |                                  |                       |  |
+  #  |                       |                                  |         Resource      |  |
+  #  |        Resource       |                                  |                       |  |
+  #  |                       |                                  |                       |  |
+  #  |                       |                                  |                       |  |
+  #  |                       |                                  +----^------------------+  |
+  #  +-----------------------+                                       |                     |
+  #                                                                  |                     |
+  #                                                             +----+------------------+  |
+  #                                                             | :parent      :internal+--+
+  #                                                             |                       |
+  #                                                             |                       |
+  #                                                             |         Stack         |
+  #                                                             | whitelist: [:parent]  |
+  #                                                             |                       |
+  #                                                             |                       |
+  #                                                             +-----------------------+
+  #
+  # 3. Example, cycle is network_port -> stack -> resource -> stack
+  #
+  # edge Stack -> Resource is created by
+  #   (:parent => @data[:orchestration_stacks_resources].lazy_find(resource_ems_ref, :key => :stack)) meaning Stack
+  #   depends on Resource through :parent attribute. Due to the usage of :key => :stack, Stack actually depends on
+  #   Resource that has :stack attribute saved.
+  #
+  # edge Resource -> Stack is created by (:stack => @data[:orchestration_stacks].lazy_find(stack_ems_ref)) meaning
+  #   Resource depends on Stack through :stack attribute
+  #
+  # edge NetworkPort -> Stack is created by
+  #   (:device => @data[:orchestration_stacks].lazy_find(stack_ems_ref, :key => :parent)) meaning that NetworkPort
+  #   depends on Stack through :device polymorphic attribute. Due to the usage of :key => :parent, NetworkPort actually
+  #   depends on Stack with :parent attribute saved.
+  #
+  #   So in this case the DAG conversion also needs to change the edge which was NetworkPort -> Stack(with blacklist)
+  #   to NetworkPort -> Stack(with whitelist)
+  #
+  #  +-----------------------+     +-----------------------+
+  #  |                       |     |                       |
+  #  |                       |     |                       |
+  #  |                       |     |                       |
+  #  |       NetworkPort     |     |         Stack         |
+  #  |                       |  +-->                       |
+  #  |                       |  |  |                       |
+  #  |         :device       |  |  |              :parent  |
+  #  +--------------+--------+  |  +---^-------------+-----+
+  #                 |           |      |             |
+  #                 +-----------+      |             |
+  #                                    |             |
+  #                                +---+-------------v-----+
+  #                                |   :stack              |
+  #                                |                       |
+  #                                |                       |
+  #                                |        Resource       |
+  #                                |                       |
+  #                                |                       |
+  #                                |                       |
+  #                                +-----------------------+
+  #
+  #                          to DAG
+  #                             |
+  #                             |
+  #                             v
+  #
+  #  +-----------------------+     +-----------------------+
+  #  |                       |     |                       |
+  #  |                       |     |                       |
+  #  |                       |     |                       |
+  #  |       NetworkPort     |     |         Stack         |
+  #  |                       |     | blacklist: [:parent]  |
+  #  |                       |     |                       |
+  #  |        :device        |     |                       <--+
+  #  +-----------+-----------+     +---------------^-------+  |
+  #              |                                 |          |
+  #              |                                 |          |
+  #              +--------------+  +---------------+-------+  |
+  #                             |  |            :stack     |  |
+  #                             |  |                       |  |
+  #                             |  |                       |  |
+  #                             |  |         Resource      |  |
+  #                             |  |                       |  |
+  #                             |  |                       |  |
+  #                             |  |                       |  |
+  #                             |  +----^------------------+  |
+  #                             |       |                     |
+  #                             |       |                     |
+  #                             |  +----+------------------+  |
+  #                             |  | :parent      :internal+--+
+  #                             |  |                       |
+  #                             |  |                       |
+  #                             +-->         Stack         |
+  #                                | whitelist: [:parent]  |
+  #                                |                       |
+  #                                |                       |
+  #                                +-----------------------+
+  #
+  # 4. Example, cycle is network_port -> network_port -> stack -> resource -> stack
+  #
+  # edge Stack -> Resource is created by
+  #   (:parent => @data[:orchestration_stacks_resources].lazy_find(resource_ems_ref, :key => :stack)) meaning Stack
+  #   depends on Resource through :parent attribute. Due to the usage of :key => :stack, Stack actually depends on
+  #   Resource that has :stack attribute saved.
+  #
+  # edge Resource -> Stack is created by (:stack => @data[:orchestration_stacks].lazy_find(stack_ems_ref)) meaning
+  #   Resource depends on Stack through :stack attribute
+  #
+  # edge NetworkPort -> NetworkPort is created by (:device => @data[:network_ports].lazy_find(network_port_ems_ref))
+  #   meaning that NetworkPort depends on NetworkPort through :device polymorphic attribute
+  #
+  # edge NetworkPort -> Stack is created by
+  #   (:device => @data[:orchestration_stacks].lazy_find(stack_ems_ref, :key => :parent)) meaning that NetworkPort
+  #   depends on Stack through :device polymorphic attribute. Due to the usage of :key => :parent, NetworkPort actually
+  #   depends on Stack with :parent attribute saved.
+  #
+  #   So in this case the DAG conversion also needs to change the edge which was NetworkPort(with whitelist) ->
+  #   Stack(with blacklist) to NetworkPort(with whitelist) -> Stack(with whitelist)
+  #
+  #  +-----------------------+     +-----------------------+
+  #  |                       |     |                       |
+  #  |                       |     |                       |
+  #  |                       |     |                       |
+  #  |       NetworkPort     |     |         Stack         |
+  #  |                       |  +-->                       |
+  #  |                       |  |  |                       |
+  #  |         :device       |  |  |              :parent  |
+  #  +---------+-^--+--------+  |  +---^-------------+-----+
+  #            | |  |           |      |             |
+  #            +-+  +-----------+      |             |
+  #                                    |             |
+  #                                +---+-------------v-----+
+  #                                |   :stack              |
+  #                                |                       |
+  #                                |                       |
+  #                                |        Resource       |
+  #                                |                       |
+  #                                |                       |
+  #                                |                       |
+  #                                +-----------------------+
+  #
+  #                          to DAG
+  #                             |
+  #                             |
+  #                             v
+  #
+  #  +-----------------------+     +-----------------------+
+  #  |                       |     |                       |
+  #  |                       |     |                       |
+  #  |                       |     |                       |
+  #  |       NetworkPort     |     |         Stack         |
+  #  |  blacklist: [:device] |     | blacklist: [:parent]  |
+  #  |                       |     |                       |
+  #  |                       |     |                       <--+
+  #  +----^------^-----------+     +---------------^-------+  |
+  #       |      |                                 |          |
+  #       |      |                                 |          |
+  #       |      | +------------+  +---------------+-------+  |
+  #       |      | |            |  |            :stack     |  |
+  #       |      | |            |  |                       |  |
+  #  +----+------+-+---------+  |  |                       |  |
+  #  |:internal :device      |  |  |         Resource      |  |
+  #  |                       |  |  |                       |  |
+  #  |                       |  |  |                       |  |
+  #  |       NetworkPort     |  |  |                       |  |
+  #  |  whitelist: [:device] |  |  +----^------------------+  |
+  #  |                       |  |       |                     |
+  #  |                       |  |       |                     |
+  #  +-----------------------+  |  +----+------------------+  |
+  #                             |  | :parent      :internal+--+
+  #                             |  |                       |
+  #                             |  |                       |
+  #                             +-->         Stack         |
+  #                                | whitelist: [:parent]  |
+  #                                |                       |
+  #                                |                       |
+  #                                +-----------------------+
+  #
+  # 5. Example, cycle is network_port -> network_port using key
+  #
+  # The edge NetworkPort -> NetworkPort is created by
+  #   :device => @data[:network_ports].lazy_find(network_port_ems_ref)
+  #   and
+  #   :device => @data[:network_ports].lazy_find(network_port_ems_ref, :key => :device)
+  #   which creates an unsolvable cycle, since NetworkPort depends on NetworkPort with :device attribute saved, through
+  #   :device attribute
+  #
+  #  +-----------------------+                 +-----------------------+
+  #  |                       |                 |                       |
+  #  |                       |                 |                       |
+  #  |                       |                 |                       |
+  #  |       NetworkPort     |                 |       NetworkPort     |
+  #  |  blacklist: [:device] |                 |  blacklist: [:device] |
+  #  |                       |                 |                       |
+  #  |       :device         |                 |                       |
+  #  +---------+--^----------+    to DAG ->    +------------------^----+
+  #            |  |                                               |
+  #            |  |                                               |
+  #            +--+                                   +--+        |
+  #                                                   |  |        |
+  #                                                   |  |        |
+  #                                            +------+--v--------+----+
+  #                                            |    :device   :internal|
+  #                                            |                       |
+  #                                            |                       |
+  #                                            |       NetworkPort     |
+  #                                            |  whitelist: [:device] |
+  #                                            |                       |
+  #                                            |                       |
+  #                                            +-----------------------+
+  # We can see that the cycle just moved to NetworkPort(with whitelist), since the only way to solve this dependency
+  # is to actually store records of the NetworkPort in a certain order with a custom saving method.
+  #
   ######################################################################################################################
   #
   # Test all settings for ManagerRefresh::SaveInventory
@@ -266,6 +498,199 @@ describe ManagerRefresh::SaveInventory do
           expect(network_port_1.device).to eq(orchestration_stack_0_1)
           expect(network_port_2.device).to eq(orchestration_stack_1_11)
           expect(network_port_3.device).to eq(orchestration_stack_1_12)
+        end
+
+        it "test network_port -> network_port through network_port's :device can't be converted to DAG" do
+          # We are creating an unsolvable cycle, cause only option to save this data is writing a custom method, that
+          # saved the data in a correct order. In this case, we would need to save this data by creating a tree of
+          # data dependencies and saving it according to the tree.
+          @data                 = {}
+          @data[:network_ports] = ::ManagerRefresh::DtoCollection.new(
+            NetworkPort,
+            :parent      => @ems.network_manager,
+            :association => :network_ports)
+
+          @network_port_1 = network_port_data(1).merge(
+            :device => @data[:network_ports].lazy_find(network_port_data(1)[:ems_ref])
+          )
+          @network_port_2 = network_port_data(2).merge(
+            :device => @data[:network_ports].lazy_find(network_port_data(1)[:ems_ref],
+                                                       :key => :device)
+          )
+
+          add_data_to_dto_collection(@data[:network_ports],
+                                     @network_port_1,
+                                     @network_port_2)
+
+          # Invoke the DtoCollections saving and check we raise an exception that a cycle was found, after we attempted
+          # to remove the cycles.
+          expect { ManagerRefresh::SaveInventory.save_inventory(@ems, @data) }.to raise_error(/^Cycle from /)
+        end
+
+        it 'test network_port -> network_port -> stack -> resource -> stack' do
+          # TODO(lmola) this test should pass, since there is not an unbreakable cycle, we should move only edge
+          # network_port ->> stack to network_port -> stack_new. Now we move also edge created by untangling to cycle,
+          # that was network_port -> network_port, then it's correctly network_port_new -> network_port, but then
+          # the transitive edge check catch this and it's turned to network_port_new -> network_port_new, which is a
+          # cycle again.
+          # What this needs to be:
+          #
+          # It can happen, that one edge is transitive but other is not using the same relations:
+          # So this is a transitive edge:
+          #  :device => @data[:orchestration_stacks].lazy_find(orchestration_stack_data("11_21")[:ems_ref],
+          #                                                   :key => :parent)
+          # And this is not:
+          #  :device => @data[:network_ports].lazy_find(network_port_data(4)[:ems_ref])
+          #
+          # By correctly storing that :device is causing transitive edge only when pointing to
+          # @data[:orchestration_stacks] but not when pointing to @data[:network_ports], then we can transform the
+          # edge correctly and this cycle is solvable.
+          @data                                  = {}
+          @data[:orchestration_stacks]           = ::ManagerRefresh::DtoCollection.new(
+            ManageIQ::Providers::CloudManager::OrchestrationStack,
+            :parent      => @ems,
+            :association => :orchestration_stacks)
+          @data[:orchestration_stacks_resources] = ::ManagerRefresh::DtoCollection.new(
+            OrchestrationStackResource,
+            :parent      => @ems,
+            :association => :orchestration_stacks_resources)
+          @data[:network_ports]                  = ::ManagerRefresh::DtoCollection.new(
+            NetworkPort,
+            :parent      => @ems.network_manager,
+            :association => :network_ports)
+
+          init_stack_data_with_stack_resource_stack_cycle
+          init_resource_data
+
+          @network_port_1 = network_port_data(1).merge(
+            :device => @data[:orchestration_stacks].lazy_find(orchestration_stack_data("1_11")[:ems_ref],
+                                                              :key => :parent)
+          )
+          @network_port_2 = network_port_data(2).merge(
+            :device => @data[:orchestration_stacks].lazy_find(orchestration_stack_data("11_21")[:ems_ref],
+                                                              :key => :parent)
+          )
+          @network_port_3 = network_port_data(3).merge(
+            :device => @data[:orchestration_stacks].lazy_find(orchestration_stack_data("12_22")[:ems_ref],
+                                                              :key => :parent)
+          )
+          @network_port_4 = network_port_data(4).merge(
+            :device => @data[:network_ports].lazy_find(network_port_data(3)[:ems_ref])
+          )
+          @network_port_5 = network_port_data(5).merge(
+            :device => @data[:network_ports].lazy_find(network_port_data(4)[:ems_ref])
+          )
+          @network_port_6 = network_port_data(7).merge(
+            :device => @data[:network_ports].lazy_find(network_port_data(7)[:ems_ref])
+          )
+
+          add_data_to_dto_collection(@data[:orchestration_stacks],
+                                     @orchestration_stack_data_0_1,
+                                     @orchestration_stack_data_0_2,
+                                     @orchestration_stack_data_1_11,
+                                     @orchestration_stack_data_1_12,
+                                     @orchestration_stack_data_11_21,
+                                     @orchestration_stack_data_12_22,
+                                     @orchestration_stack_data_12_23)
+          add_data_to_dto_collection(@data[:orchestration_stacks_resources],
+                                     @orchestration_stack_resource_data_1_11,
+                                     @orchestration_stack_resource_data_1_11_1,
+                                     @orchestration_stack_resource_data_1_12,
+                                     @orchestration_stack_resource_data_1_12_1,
+                                     @orchestration_stack_resource_data_11_21,
+                                     @orchestration_stack_resource_data_12_22,
+                                     @orchestration_stack_resource_data_12_23)
+          add_data_to_dto_collection(@data[:network_ports],
+                                     @network_port_1,
+                                     @network_port_2,
+                                     @network_port_3,
+                                     @network_port_4,
+                                     @network_port_5,
+                                     @network_port_6)
+
+          # Invoke the DtoCollections saving and check we raise an exception that a cycle was found, after we attempted
+          # to remove the cycles.
+          # TODO(lsmola) make this spec pass, by enhancing the logic around transitive edges
+          expect { ManagerRefresh::SaveInventory.save_inventory(@ems, @data) }.to raise_error(/^Cycle from /)
+        end
+
+        it 'test network_port -> stack -> resource -> stack and network_port -> resource -> stack -> resource -> stack ' do
+          @data                                  = {}
+          @data[:orchestration_stacks]           = ::ManagerRefresh::DtoCollection.new(
+            ManageIQ::Providers::CloudManager::OrchestrationStack,
+            :parent      => @ems,
+            :association => :orchestration_stacks)
+          @data[:orchestration_stacks_resources] = ::ManagerRefresh::DtoCollection.new(
+            OrchestrationStackResource,
+            :parent      => @ems,
+            :association => :orchestration_stacks_resources)
+          @data[:network_ports]                  = ::ManagerRefresh::DtoCollection.new(
+            NetworkPort,
+            :parent      => @ems.network_manager,
+            :association => :network_ports)
+
+          init_stack_data_with_stack_resource_stack_cycle
+          init_resource_data
+
+          @network_port_1 = network_port_data(1).merge(
+            :device => @data[:orchestration_stacks].lazy_find(orchestration_stack_data("1_11")[:ems_ref],
+                                                              :key => :parent)
+          )
+          @network_port_2 = network_port_data(2).merge(
+            :device => @data[:orchestration_stacks].lazy_find(orchestration_stack_data("11_21")[:ems_ref],
+                                                              :key => :parent)
+          )
+          @network_port_3 = network_port_data(3).merge(
+            :device => @data[:orchestration_stacks_resources].lazy_find(orchestration_stack_data("12_22")[:ems_ref],
+                                                                        :key => :stack)
+          )
+          @network_port_4 = network_port_data(4).merge(
+            :device => @data[:orchestration_stacks_resources].lazy_find(orchestration_stack_data("12_22")[:ems_ref])
+          )
+
+          add_data_to_dto_collection(@data[:orchestration_stacks],
+                                     @orchestration_stack_data_0_1,
+                                     @orchestration_stack_data_0_2,
+                                     @orchestration_stack_data_1_11,
+                                     @orchestration_stack_data_1_12,
+                                     @orchestration_stack_data_11_21,
+                                     @orchestration_stack_data_12_22,
+                                     @orchestration_stack_data_12_23)
+          add_data_to_dto_collection(@data[:orchestration_stacks_resources],
+                                     @orchestration_stack_resource_data_1_11,
+                                     @orchestration_stack_resource_data_1_11_1,
+                                     @orchestration_stack_resource_data_1_12,
+                                     @orchestration_stack_resource_data_1_12_1,
+                                     @orchestration_stack_resource_data_11_21,
+                                     @orchestration_stack_resource_data_12_22,
+                                     @orchestration_stack_resource_data_12_23)
+          add_data_to_dto_collection(@data[:network_ports],
+                                     @network_port_1,
+                                     @network_port_2,
+                                     @network_port_3,
+                                     @network_port_4)
+
+          # Invoke the DtoCollections saving
+          ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
+
+          # Assert saved data
+          assert_full_dto_collections_graph
+
+          network_port_1 = NetworkPort.find_by(:ems_ref => "network_port_ems_ref_1")
+          network_port_2 = NetworkPort.find_by(:ems_ref => "network_port_ems_ref_2")
+          network_port_3 = NetworkPort.find_by(:ems_ref => "network_port_ems_ref_3")
+          network_port_4 = NetworkPort.find_by(:ems_ref => "network_port_ems_ref_4")
+
+          orchestration_stack_0_1  = OrchestrationStack.find_by(:ems_ref => "stack_ems_ref_0_1")
+          orchestration_stack_1_11 = OrchestrationStack.find_by(:ems_ref => "stack_ems_ref_1_11")
+          orchestration_stack_1_12 = OrchestrationStack.find_by(:ems_ref => "stack_ems_ref_1_12")
+
+          orchestration_resource_12_22 = OrchestrationStackResource.find_by(:ems_ref => "stack_ems_ref_12_22")
+
+          expect(network_port_1.device).to eq(orchestration_stack_0_1)
+          expect(network_port_2.device).to eq(orchestration_stack_1_11)
+          expect(network_port_3.device).to eq(orchestration_stack_1_12)
+          expect(network_port_4.device).to eq(orchestration_resource_12_22)
         end
       end
 
