@@ -6,7 +6,7 @@ module Api
     def create_resource(type, _id, data)
       assert_id_not_specified(data, type)
       request_klass = collection_class(:requests)
-      request_options = parse_request_options(data["options"])
+      request_options = RequestParser.parse_options(data)
 
       begin
         typed_request_klass = request_klass.class_from_request_data(request_options)
@@ -17,8 +17,8 @@ module Api
       # We must authorize the user based on the request type klass
       authorize_request(typed_request_klass)
 
-      user = parse_requester_user(data["requester"])
-      auto_approve = parse_auto_approve(data["auto_approve"])
+      user = RequestParser.parse_user(data) || @auth_user_obj
+      auto_approve = RequestParser.parse_auto_approve(data)
 
       begin
         typed_request_klass.create_request(request_options, user, auto_approve)
@@ -32,8 +32,8 @@ module Api
       request_klass = collection_class(:requests)
       request = resource_search(id, type, request_klass)
 
-      request_options = parse_request_options(data["options"])
-      user = parse_requester_user(data["requester"])
+      request_options = RequestParser.parse_options(data)
+      user = RequestParser.parse_user(data) || @auth_user_obj
 
       begin
         request.update_request(request_options, user)
@@ -86,27 +86,6 @@ module Api
 
       if request_spec.identifier && !api_user_role_allows?(request_spec.identifier)
         raise ForbiddenError, "Create action is forbidden for #{typed_request_klass} requests"
-      end
-    end
-
-    def parse_request_options(request_options)
-      raise BadRequestError, "Request is missing options" if request_options.blank?
-      request_options.symbolize_keys
-    end
-
-    def parse_requester_user(requester)
-      user_name = Hash(requester)["user_name"]
-      return @auth_user_obj if user_name.blank?
-      user = User.lookup_by_identity(user_name)
-      raise BadRequestError, "Unknown requester user_name #{user_name} specified" unless user
-      user
-    end
-
-    def parse_auto_approve(auto_approve)
-      case auto_approve
-      when TrueClass, "true" then true
-      when FalseClass, "false", nil then false
-      else raise BadRequestError, "Invalid requester auto_approve value #{auto_approve} specified"
       end
     end
   end
