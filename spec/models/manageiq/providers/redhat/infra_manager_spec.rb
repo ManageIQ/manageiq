@@ -139,6 +139,20 @@ describe ManageIQ::Providers::Redhat::InfraManager do
         it 'returns from cache' do
           expect(supported_api_versions).to match_array([3])
         end
+
+        context "when the stored value is empty" do
+          let(:cached_api_versions) do
+            {
+              :created_at => Time.now.utc,
+              :value      => []
+            }
+          end
+
+          it "fetches new values by calling the probe" do
+            expect(OvirtSDK4::Probe).to receive(:probe).and_return([])
+            supported_api_versions
+          end
+        end
       end
     end
 
