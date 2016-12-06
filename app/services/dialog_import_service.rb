@@ -76,6 +76,7 @@ class DialogImportService
 
   def build_dialog_fields(dialog_group)
     dialog_group["dialog_fields"].collect do |dialog_field|
+      dialog_field["options"].try(:symbolize_keys!)
       @dialog_field_importer.import_field(dialog_field)
     end
   end

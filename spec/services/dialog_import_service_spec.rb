@@ -409,7 +409,7 @@ describe DialogImportService do
       let(:dialog_fields) do
         {
           'dialog_fields' => [
-            {'name' => 'field name', 'label' => 'field label'}
+            {'name' => 'field name', 'label' => 'field label', 'options' => {'name' => 'foo'}}
           ]
         }
       end
@@ -418,6 +418,11 @@ describe DialogImportService do
         expect do
           DialogImportService.new.build_dialog_fields(dialog_fields)
         end.to change(DialogField, :count).by(1)
+      end
+
+      it 'symbolizes the dialog field options' do
+        fields = DialogImportService.new.build_dialog_fields(dialog_fields)
+        expect(fields.first.options).to eq(:name => 'foo')
       end
     end
   end
