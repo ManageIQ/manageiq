@@ -68,11 +68,10 @@ miqHttpInject(angular.module('containerLiveDashboard', ['ui.bootstrap', 'pattern
       $scope.refresh();
     };
 
-    var doRefreshTenant = function (action) {
-      $scope.tenant = action.tenant;
+    $scope.doRefreshTenant = function() {
+      $scope.tenant = $("#ad-hoc-tenant").val();
 
       initialization();
-      filterChange();
       getMetricTags();
     };
 
@@ -209,6 +208,14 @@ miqHttpInject(angular.module('containerLiveDashboard', ['ui.bootstrap', 'pattern
       }
     };
 
+    $scope.getTenenats = function(prefix) {
+      return $http.get($scope.url + "&query=get_tenants&prefix=" + prefix).then(function(response){
+        return response.data.tenants.map(function(item){
+          return item.id;
+        });
+      });
+    }
+
     $scope.timeRanges = [
       {title: _("Hours"), value: 1},
       {title: _("Days"), value: 24},
@@ -260,21 +267,7 @@ miqHttpInject(angular.module('containerLiveDashboard', ['ui.bootstrap', 'pattern
     };
 
     $scope.actionsConfig = {
-      actionsInclude: true,
-      moreActions: [
-        {
-          name: 'System',
-          tenant: '_system',
-          title: __("Use the System Tenant Metrics"),
-          actionFn: doRefreshTenant
-        },
-        {
-          name: 'Ops',
-          tenant: '_ops',
-          title: __("Use the Ops Tenant Metrics"),
-          actionFn: doRefreshTenant
-        }
-      ]
+      actionsInclude: true
     };
 
     $scope.graphToolbarConfig = {

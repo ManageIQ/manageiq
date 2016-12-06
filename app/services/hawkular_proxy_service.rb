@@ -23,6 +23,8 @@ class HawkularProxyService
     when 'get_data'
       { :id   => @params['metric_id'],
         :data => get_data(@params['metric_id']).compact }
+    when 'get_tenants'
+      { :tenants => tenants }
     else
       {}
     end
@@ -52,5 +54,16 @@ class HawkularProxyService
                            :ends           => ends.to_i,
                            :bucketDuration => bucket_duration,
                            :order          => order)
+  end
+
+  def tenants
+    tenants = client.hawkular_client.http_get('/tenants')
+    tenants = if @params['prefix'].blank?
+                tenants
+              else
+                tenants.map { |x| x if x["id"].start_with?(@params['prefix']) }.compact
+              end
+
+    tenants[0..8]
   end
 end
