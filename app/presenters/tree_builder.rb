@@ -134,13 +134,14 @@ class TreeBuilder
     nodes
   end
 
-  # Add child nodes to the active tree below node 'id'
-  def self.tree_add_child_nodes(sandbox, klass_name, id, controller)
-    args = [sandbox[:active_tree].to_s, sandbox[:active_tree].to_s.sub(/_tree$/, ''), sandbox, false]
+  # Add child nodes to a tree below node 'id'
+  def self.tree_add_child_nodes(sandbox:, klass_name:, name:, type:, id:)
+    args = [name, type, sandbox, false]
     if klass_name == 'TreeBuilderAutomate'
-      args << { :node_builder => TreeBuilderAutomate.select_node_builder(controller) }
+      args << { :node_builder => TreeBuilderAutomate.select_node_builder(type.to_s) }
     end
     tree = klass_name.constantize.new(*args)
+
     tree.x_get_child_nodes(id)
   end
 
