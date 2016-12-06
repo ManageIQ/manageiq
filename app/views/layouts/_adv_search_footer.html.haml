@@ -5,7 +5,7 @@
 
 #adv_search_footer
   - if mode == "search"
-    - if @edit[@expkey][:exp_search_expressions].blank? && report_expressions.blank?
+    - if @edit[@expkey].available_adv_searches.blank? && report_expressions.blank?
       = button_tag(_("Load..."),
                    :class => "btn btn-primary disabled pull-left",
                    :alt   => t = _("No saved filters or report filters are available to load"),

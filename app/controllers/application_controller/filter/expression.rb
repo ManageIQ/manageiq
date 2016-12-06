@@ -20,7 +20,6 @@ module ApplicationController::Filter
     :exp_regkey,
     :exp_regval,
     :exp_skey,
-    :exp_search_expressions,
     :exp_table,
     :exp_tag,
     :exp_token,
@@ -41,12 +40,29 @@ module ApplicationController::Filter
       self.history ||= ExpressionEditHistory.new
     end
 
+    def drop_cache
+      @available_adv_searches = nil
+    end
+
     def exp_available_cfields # fields on exp_model for check_all, check_any, and check_count operation
       MiqExpression.miq_adv_search_lists(exp_model, :exp_available_finds).each_with_object([]) do |af, res|
         next if af.last == exp_field
         next unless af.last.split('-').first == exp_field.split('-').first
         res.push([af.first.split(':').last, af.last])
       end
+    end
+
+    def available_adv_searches
+      @available_adv_searches ||=
+        begin
+          global_expressions = MiqSearch.get_expressions(:db => exp_model, :search_type => 'global')
+          user_expressions = MiqSearch.get_expressions(:db => exp_model, :search_type => 'user',
+                                                       :search_key => User.current_user.userid)
+          user_expressions = Array(user_expressions).sort
+          global_expressions = Array(global_expressions).sort
+          global_expressions.each { |ge| ge[0] = "Global - #{ge[0]}" }
+          global_expressions + user_expressions
+        end
     end
 
     def calendar_needed?
@@ -328,6 +344,92 @@ module ApplicationController::Filter
       # Check for suffixes changed
       self.val1_suffix = MiqExpression::BYTE_FORMAT_WHITELIST[params[:choosen_suffix]] if params[:choosen_suffix]
       self.val2_suffix = MiqExpression::BYTE_FORMAT_WHITELIST[params[:choosen_suffix2]] if params[:choosen_suffix2]
+    end
+
+    def update_from_exp_tree(exp)
+      exp.delete(:token)
+      key = exp.keys.first
+      if exp[key]['field']
+        typ = 'field'
+        self.exp_field = exp[key]['field']
+        self.exp_value = exp[key]['value']
+        self.alias = exp[key]['alias']
+      elsif exp[key]['count']
+        typ = 'count'
+        self.exp_count = exp[key]['count']
+        self.exp_value = exp[key]['value']
+        self.alias = exp[key]['alias']
+      elsif exp[key]['tag']
+        typ = 'tag'
+        self.exp_tag = exp[key]['tag']
+        self.exp_value = exp[key]['value']
+        self.alias = exp[key]['alias']
+      elsif exp[key]['regkey']
+        typ = 'regkey'
+        self.exp_regkey = exp[key]['regkey']
+        self.exp_regval = exp[key]['regval']
+        self.exp_value = exp[key]['value']
+      elsif exp[key]['search']
+        typ = 'find'
+        skey = self.exp_skey = exp[key]['search'].keys.first  # Get the search operator
+        self.exp_field = exp[key]['search'][skey]['field']    # Get the search field
+        self.alias = exp[key]['search'][skey]['alias']        # Get the field alias
+        self.exp_value = exp[key]['search'][skey]['value']    # Get the search value
+        if exp[key].key?('checkall')                          # Find the check hash key
+          chk = self.exp_check = 'checkall'
+        elsif exp[key].key?('checkany')
+          chk = self.exp_check = 'checkany'
+        elsif exp[key].key?('checkcount')
+          chk = self.exp_check = 'checkcount'
+        end
+        ckey = self.exp_ckey = exp[key][chk].keys.first       # Get the check operator
+        self.exp_cfield = exp[key][chk][ckey]['field']        # Get the check field
+        self.exp_cvalue = exp[key][chk][ckey]['value']        # Get the check value
+      else
+        typ = nil
+      end
+
+      self.exp_key = key.upcase
+      self.exp_orig_key = key.upcase                          # Hang on to the original key for commit
+      self.exp_typ = typ
+      prefill_val_types
+
+      self.val1_suffix = self.val2_suffix = nil
+      unless exp_value == :user_input                         # Ignore user input fields
+        if val1 && val1[:type] == :bytes
+          if is_numeric?(exp_value)                           # Value is a number
+            self.val1_suffix = :bytes                         #  Default to :bytes
+            self.exp_value = exp_value.to_s                   #  Get the value
+          else                                                # Value is a string
+            self.val1_suffix = exp_value.split('.').last.to_sym # Get the suffix
+            self.exp_value = exp_value.split('.')[0...-1].join('.') # Remove the suffix
+          end
+        end
+      end
+      if val2 && val2[:type] == :bytes
+        if is_numeric?(exp_cvalue)                            # Value is a number
+          self.val2_suffix = :bytes                           #  Default to :bytes
+          self.exp_cvalue = exp_cvalue.to_s                   #  Get the value
+        else                                                  # Value is a string
+          self.val2_suffix = exp_cvalue.split('.').last.to_sym # Get the suffix
+          self.exp_cvalue = exp_cvalue.split('.')[0...-1].join('.') # Remove the suffix
+        end
+      end
+
+      if val1 && [:datetime, :date].include?(val1[:type])     # Change datetime and date field values into arrays while editing
+        self.exp_value = exp_value.to_miq_a                   # Turn date/time values into an array
+        val1[:date_format] = exp_value.to_s.first.include?('/') ? 's' : 'r'
+        if key == EXP_FROM && val1[:date_format] == 'r'
+          val1[:through_choices] = Expression.through_choices(exp_value[0])
+        end
+      end
+      if val2 && [:datetime, :date].include?(val2[:type])
+        self.exp_cvalue = exp_cvalue.to_miq_a                 # Turn date/time cvalues into an array
+        val2[:date_format] = exp_cvalue.first.include?('/') ? 's' : 'r'
+        if ckey == EXP_FROM && val2[:date_format] == 'r'
+          val2[:through_choices] = Expression.through_choices(exp_cvalue[0])
+        end
+      end
     end
 
     private

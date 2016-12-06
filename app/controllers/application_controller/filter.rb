@@ -31,7 +31,7 @@ module ApplicationController::Filter
           exp.clear                                         # Remove all existing keys
           exp["???"] = "???"                                # Set new exp key
           @edit[:edit_exp] = copy_hash(exp)
-          exp_set_fields(@edit[:edit_exp])
+          @edit[@expkey].update_from_exp_tree(exp)
         end
       else
         @edit[:edit_exp] = nil
@@ -95,7 +95,7 @@ module ApplicationController::Filter
       exp = exp_find_by_token(@edit[@expkey][:expression], token)
       @edit[:edit_exp] = copy_hash(exp)
       begin
-        exp_set_fields(@edit[:edit_exp])
+        @edit[@expkey].update_from_exp_tree(exp)
       rescue => bang
         @exp_atom_errors = [_("There is an error in the selected expression element, perhaps it was imported or edited manually."),
                             _("This element should be removed and recreated or you can report the error to your %{product} administrator.") % {:product => I18n.t('product.name')},
@@ -155,7 +155,6 @@ module ApplicationController::Filter
     @edit = session[:edit]
 
     # Rebuild the pulldowns if opening the search box
-    adv_search_build_lists unless @edit[:adv_search_open]
     @edit[@expkey].prefill_val_types unless @edit[:adv_search_open]
 
     render :update do |page|
@@ -307,7 +306,6 @@ module ApplicationController::Filter
           add_flash(_("%{model} search \"%{name}\" was saved") %
             {:model => ui_lookup(:model => @edit[@expkey][:exp_model]),
              :name => @edit[:new_search_name]})
-          adv_search_build_lists
           @edit[@expkey].select_filter(s)
           @edit[:new_search_name] = @edit[:adv_search_name] = @edit[@expkey][:exp_last_loaded][:description]
           @edit[@expkey][:expression] = copy_hash(@edit[:new][@expkey])
@@ -373,8 +371,6 @@ module ApplicationController::Filter
                  :userid       => session[:userid]}
         AuditEvent.success(audit)
       end
-
-      adv_search_build_lists
 
     when "reset"
       add_flash(_("The current search details have been reset"), :warning)
@@ -706,94 +702,6 @@ module ApplicationController::Filter
     end
   end
 
-  # Set the fields for the expression editor based on the current expression
-  def exp_set_fields(exp)
-    exp.delete(:token)                  # Clear out the token key, if present
-    key = exp.keys.first
-    if exp[key]["field"]
-      typ = "field"
-      @edit[@expkey][:exp_field] = exp[key]["field"]
-      @edit[@expkey][:exp_value] = exp[key]["value"]
-      @edit[@expkey][:alias] = exp[key]["alias"]
-    elsif exp[key]["count"]
-      typ = "count"
-      @edit[@expkey][:exp_count] = exp[key]["count"]
-      @edit[@expkey][:exp_value] = exp[key]["value"]
-      @edit[@expkey][:alias] = exp[key]["alias"]
-    elsif exp[key]["tag"]
-      typ = "tag"
-      @edit[@expkey][:exp_tag] = exp[key]["tag"]
-      @edit[@expkey][:exp_value] = exp[key]["value"]
-      @edit[@expkey][:alias] = exp[key]["alias"]
-    elsif exp[key]["regkey"]
-      typ = "regkey"
-      @edit[@expkey][:exp_regkey] = exp[key]["regkey"]
-      @edit[@expkey][:exp_regval] = exp[key]["regval"]
-      @edit[@expkey][:exp_value] = exp[key]["value"]
-    elsif exp[key]["search"]
-      typ = "find"
-      skey = @edit[@expkey][:exp_skey] = exp[key]["search"].keys.first  # Get the search operator
-      @edit[@expkey][:exp_field] = exp[key]["search"][skey]["field"]    # Get the search field
-      @edit[@expkey][:alias] = exp[key]["search"][skey]["alias"]        # Get the field alias
-      @edit[@expkey][:exp_value] = exp[key]["search"][skey]["value"]    # Get the search value
-      if exp[key].key?("checkall")                        # Find the check hash key
-        chk = @edit[@expkey][:exp_check] = "checkall"
-      elsif exp[key].key?("checkany")
-        chk = @edit[@expkey][:exp_check] = "checkany"
-      elsif exp[key].key?("checkcount")
-        chk = @edit[@expkey][:exp_check] = "checkcount"
-      end
-      ckey = @edit[@expkey][:exp_ckey] = exp[key][chk].keys.first     # Get the check operator
-      @edit[@expkey][:exp_cfield] = exp[key][chk][ckey]["field"]        # Get the check field
-      @edit[@expkey][:exp_cvalue] = exp[key][chk][ckey]["value"]        # Get the check value
-    else
-      typ = nil
-    end
-
-    @edit[@expkey][:exp_key] = key.upcase
-    @edit[@expkey][:exp_orig_key] = key.upcase        # Hang on to the original key for commit
-    @edit[@expkey][:exp_typ] = typ
-    @edit[@expkey].prefill_val_types
-
-    @edit[@expkey].val1_suffix = @edit[@expkey].val2_suffix = nil
-    unless @edit[@expkey][:exp_value] == :user_input  # Ignore user input fields
-      if @edit.fetch_path(@expkey, :val1, :type) == :bytes
-        if is_numeric?(@edit[@expkey][:exp_value])                        # Value is a number
-          @edit[@expkey].val1_suffix = :bytes                             #  Default to :bytes
-          @edit[@expkey][:exp_value] = @edit[@expkey][:exp_value].to_s    #  Get the value
-        else                                                              # Value is a string
-          @edit[@expkey].val1_suffix = @edit[@expkey][:exp_value].split(".").last.to_sym # Get the suffix
-          @edit[@expkey][:exp_value] = @edit[@expkey][:exp_value].split(".")[0...-1].join(".")  # Remove the suffix
-        end
-      end
-    end
-    if @edit.fetch_path(@expkey, :val2, :type) == :bytes
-      if is_numeric?(@edit[@expkey][:exp_cvalue])                       # Value is a number
-        @edit[@expkey].val2_suffix = :bytes                             #  Default to :bytes
-        @edit[@expkey][:exp_cvalue] = @edit[@expkey][:exp_cvalue].to_s  #  Get the value
-      else                                                              # Value is a string
-        @edit[@expkey].val2_suffix = @edit[@expkey][:exp_cvalue].split(".").last.to_sym # Get the suffix
-        @edit[@expkey][:exp_cvalue] = @edit[@expkey][:exp_cvalue].split(".")[0...-1].join(".")  # Remove the suffix
-      end
-    end
-
-    # Change datetime and date field values into arrays while editing
-    if [:datetime, :date].include?(@edit.fetch_path(@expkey, :val1, :type))
-      @edit[@expkey][:exp_value] = @edit[@expkey][:exp_value].to_miq_a  # Turn date/time values into an array
-      @edit[@expkey][:val1][:date_format] = @edit[@expkey][:exp_value].to_s.first.include?("/") ? "s" : "r"
-      if key == EXP_FROM && @edit[@expkey][:val1][:date_format] == "r"
-        @edit[@expkey][:val1][:through_choices] = Expression.through_choices(@edit[@expkey][:exp_value][0])
-      end
-    end
-    if [:datetime, :date].include?(@edit.fetch_path(@expkey, :val2, :type))
-      @edit[@expkey][:exp_cvalue] = @edit[@expkey][:exp_cvalue].to_miq_a  # Turn date/time cvalues into an array
-      @edit[@expkey][:val2][:date_format] = @edit[@expkey][:exp_cvalue].first.include?("/") ? "s" : "r"
-      if ckey == EXP_FROM && @edit[@expkey][:val2][:date_format] == "r"
-        @edit[@expkey][:val2][:through_choices] = Expression.through_choices(@edit[@expkey][:exp_cvalue][0])
-      end
-    end
-  end
-
   # Add a joiner (and/or) above an expression
   def exp_add_joiner(exp, token, joiner)
     if exp[:token] && exp[:token] == token            # If the token matches
@@ -1075,25 +983,6 @@ module ApplicationController::Filter
       @edit[:adv_search_applied] = {:text => @hist[:text], :qs_exp => @hist[:qs_exp]}
       session[:adv_search][model.to_s] = copy_hash(@edit) # Save updated adv_search options
     end
-  end
-
-  # Build the pulldown lists for the adv search box
-  def adv_search_build_lists
-    db = @edit[@expkey][:exp_model]
-    global_expressions = MiqSearch.get_expressions(
-      :db          => db,
-      :search_type => "global"
-    )
-    user_expressions = MiqSearch.get_expressions(
-      :db          => db,
-      :search_type => "user",
-      :search_key  => session[:userid]
-    )
-
-    user_expressions = Array(user_expressions).sort
-    global_expressions = Array(global_expressions).sort
-    global_expressions.each { |ge| ge[0] = "Global - #{ge[0]}" }
-    @edit[@expkey][:exp_search_expressions] = global_expressions + user_expressions
   end
 
   def build_listnav_search_list(db)

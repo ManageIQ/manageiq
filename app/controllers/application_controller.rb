@@ -2092,9 +2092,6 @@ class ApplicationController < ActionController::Base
     session[:miq_exists_mode] = @exists_mode unless @exists_mode.nil?
     session[:last_trans_time] = Time.now
 
-    # Save @edit key for the expression editor to use
-    session[:expkey] = @expkey
-
     # Set server hash, if @server_options is present
     session[:server_options] = @server_options
 
@@ -2153,6 +2150,10 @@ class ApplicationController < ActionController::Base
       @edit ||= session[:edit]                              #   Remember the previous @edit
       @view ||= session[:view]                              #   Remember the previous @view
     end
+
+    # Save @edit key for the expression editor to use
+    session[:expkey] = @expkey
+    @edit[@expkey].drop_cache if @edit && @edit[@expkey]
 
     session[:edit] = @edit ? @edit : nil                    # Set or clear session edit hash
 
