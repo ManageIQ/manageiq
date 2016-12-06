@@ -171,6 +171,7 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
   end
 
   def verify_credentials(auth_type = nil, options = {})
+    options[:skip_supported_api_validation] = true
     auth_type ||= 'default'
     case auth_type.to_s
     when 'default' then verify_credentials_for_rhevm(options)
