@@ -2010,7 +2010,7 @@ class MiqAeClassController < ApplicationController
       if session[:field_data][:name].blank? || session[:field_data][:aetype].blank?
         field = session[:field_data][:name].blank? ? "Name" : "Type"
         field += " and Type" if field == "Name" && session[:field_data][:aetype].blank?
-        add_flash(_(field + " is required"), :error)
+        add_flash(_("%{field} is required") % {:field => field}, :error)
         return
       end
       new_fields = {}

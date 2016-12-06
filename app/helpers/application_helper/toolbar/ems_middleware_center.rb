@@ -69,7 +69,9 @@ class ApplicationHelper::Toolbar::EmsMiddlewareCenter < ApplicationHelper::Toolb
         button(
           :ems_middleware_recheck_auth_status,
           'fa fa-search fa-lg',
-          N_("Re-check Authentication Status for this #{ui_lookup(:table=>'ems_middleware')}"),
+          proc do
+            _("Re-check Authentication Status for this %{provider}") % {:provider => ui_lookup(:table=>'ems_middleware')}
+          end,
           N_('Re-check Authentication Status'),
           :klass => ApplicationHelper::Button::GenericFeatureButton,
           :options => {:feature => :authentication_status}),

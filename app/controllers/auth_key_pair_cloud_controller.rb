@@ -161,7 +161,7 @@ class AuthKeyPairCloudController < ApplicationController
     end
 
     if key_pairs.empty?
-      add_flash(_("No #{ui_lookup(:tables => 'auth_key_pair_cloud')} were selected for deletion"), :error)
+      add_flash(_("No %#{models} were selected for deletion") % {:models =>  ui_lookup(:tables => 'auth_key_pair_cloud')}, :error)
     end
 
     key_pairs_to_delete = []

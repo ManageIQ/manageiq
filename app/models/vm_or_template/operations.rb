@@ -99,7 +99,7 @@ module VmOrTemplate::Operations
             elsif !connection_state.nil? && !connected_to_ems?
               _('The VM does not have a valid connection state')
             elsif !has_active_ems?
-              _("The VM is not connected to an active #{ui_lookup(:table => "ext_management_systems")}")
+              _("The VM is not connected to an active %{table}") % {:table => ui_lookup(:table => "ext_management_systems")}
             end
       unsupported_reason_add(:control, msg) if msg
     end
