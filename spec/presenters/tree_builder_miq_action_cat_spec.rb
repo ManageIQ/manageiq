@@ -31,8 +31,8 @@ describe TreeBuilderMiqActionCat do
     it 'set node' do
       desc1 = _("Category: %{description}") % {:description => @tag1.description}
       desc2 = @tag1.description
-      nodeB = TreeNodeBuilderMiqActionCat.new(@tag1, @folder1.id, {})
-      node = nodeB.send(:classification_node)
+      node2 = TreeNodeBuilderMiqActionCat.new(@tag1, @folder1.id, {})
+      node = node2.send(:classification_node)
 
       expect(node[:hideCheckbox]).to eq(true)
       expect(node[:tooltip]).to eq(desc1)
@@ -40,8 +40,8 @@ describe TreeBuilderMiqActionCat do
 
       desc1 = _("Category: %{description}") % {:description => @folder1.description}
       desc2 = @folder1.description
-      nodeB = TreeNodeBuilderMiqActionCat.new(@folder1, nil, {})
-      node = nodeB.send(:classification_node)
+      node2 = TreeNodeBuilderMiqActionCat.new(@folder1, nil, {})
+      node = node2.send(:classification_node)
 
       expect(node[:hideCheckbox]).to eq(true)
       expect(node[:tooltip]).to eq(desc1)

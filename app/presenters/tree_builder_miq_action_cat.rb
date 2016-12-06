@@ -36,7 +36,7 @@ class TreeBuilderMiqActionCat < TreeBuilder
   # Get root nodes count/array for explorer tree
   def x_get_tree_roots(count_only, _options)
     cats = Classification.categories.select(&:show)
-    cats = cats.select{|c| c.entries.any? }
+    cats = cats.select { |c| c.entries.any? }
     count_only_or_objects(count_only, cats, :description)
   end
 
