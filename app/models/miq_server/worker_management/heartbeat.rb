@@ -94,8 +94,6 @@ module MiqServer::WorkerManagement::Heartbeat
   private
 
   def workers_last_heartbeat(pid)
-    return unless @workers_lock
-
     @workers_lock.synchronize(:SH) do
       @workers.fetch_path(pid, :last_heartbeat)
     end
