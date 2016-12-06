@@ -46,9 +46,8 @@ describe ReportFormatter::C3Formatter do
 
     it "handle long strings" do
       render_report(long_report)
-
       expect(long_report.chart[:miq][:category_table][2]).to eq(long_category)
-      expect(long_report.chart[:miq][:name_table]['1']).to eq(long_header)
+      expect(long_report.chart[:miq][:name_table]['1']).to eq('RAM Size (MB)')
     end
   end
 
