@@ -123,13 +123,9 @@ module ContainerHelper::TextualSummary
     }
   end
 
-  def collect_env
+  def collect_env_variables
     @record.container_definition.container_env_vars.collect do |var|
-      [
-        var.name,
-        var.value.nil? ? "REFERENCE" : "VALUE",
-        {:value => var.value.nil? ? var.field_path : var.value, :expandable => true}
-      ]
+      [var.name, var.value, var.field_path]
     end
   end
 end

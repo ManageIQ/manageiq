@@ -194,6 +194,16 @@ module ContainerSummaryHelper
     h
   end
 
+  def collect_env
+    collect_env_variables.collect do |name, value, field_path|
+      [
+        name,
+        value.nil? ? "REFERENCE" : "VALUE",
+        {:value => value.nil? ? field_path : value, :expandable => true}
+      ]
+    end
+  end
+
   private
 
   def textual_key_value_group(items)

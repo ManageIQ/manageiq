@@ -29,6 +29,7 @@ describe ManageIQ::Providers::Openshift::ContainerManager::Refresher do
       assert_specific_container_build
       assert_specific_container_build_pod
       assert_specific_container_template
+      assert_specific_container_image
     end
   end
 
@@ -44,6 +45,7 @@ describe ManageIQ::Providers::Openshift::ContainerManager::Refresher do
     expect(ContainerBuild.count).to eq(1)
     expect(ContainerBuildPod.count).to eq(1)
     expect(ContainerTemplate.count).to eq(6)
+    expect(ContainerImage.count).to eq(31)
   end
 
   def assert_ems
@@ -196,5 +198,14 @@ describe ManageIQ::Providers::Openshift::ContainerManager::Refresher do
     expect(@container_template.container_template_parameters.last).to have_attributes(
       :name => "NODE"
     )
+  end
+
+  def assert_specific_container_image
+    @container_image = ContainerImage.find_by_name("centos/postgresql-95-centos7")
+
+    expect(@container_image.ext_management_system).to eq(@ems)
+    expect(@container_image.environment_variables.count).to eq(9)
+    expect(@container_image.labels.count).to eq(1)
+    expect(@container_image.docker_labels.count).to eq(9)
   end
 end
