@@ -95,19 +95,35 @@ describe CloudNetworkController do
       @network = FactoryGirl.create(:cloud_network_openstack)
     end
 
-    it "builds create screen" do
-      post :button, :params => { :pressed => "cloud_network_new", :format => :js }
-      expect(assigns(:flash_array)).to be_nil
-    end
+    context "#create" do
+      let(:task_options) do
+        {
+          :action => "creating Cloud Network for user %{user}" % {:user => controller.current_user.userid},
+          :userid => controller.current_user.userid
+        }
+      end
+      let(:queue_options) do
+        {
+          :class_name  => @ems.class.name,
+          :method_name => 'create_cloud_network',
+          :instance_id => @ems.id,
+          :priority    => MiqQueue::HIGH_PRIORITY,
+          :role        => 'ems_operations',
+          :zone        => @ems.my_zone,
+          :args        => [{:name => "test", :admin_state_up => false, :shared => false, :external_facing => false}]
+        }
+      end
 
-    it "creates a cloud network" do
-      allow(ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork)
-        .to receive(:raw_create_network).and_return(@network)
-      post :create, :params => { :button => "add", :format => :js,
-        :name => "test", :tenant_id => 'id', :ems_id => @ems.id }
-      expect(controller.send(:flash_errors?)).to be_falsey
-      expect(assigns(:flash_array).first[:message]).to include("Creating Cloud Network")
-      expect(assigns(:edit)).to be_nil
+      it "builds create screen" do
+        post :button, :params => { :pressed => "cloud_network_new", :format => :js }
+        expect(assigns(:flash_array)).to be_nil
+      end
+
+      it "queues the create action" do
+        expect(MiqTask).to receive(:generic_action_with_callback).with(task_options, queue_options)
+        post :create, :params => { :button => "add", :format => :js, :name => 'test',
+                                   :tenant_id => 'id', :ems_id => @ems.id }
+      end
     end
   end
 
@@ -115,23 +131,38 @@ describe CloudNetworkController do
     before do
       stub_user(:features => :all)
       EvmSpecHelper.create_guid_miq_server_zone
-      @network = FactoryGirl.create(:cloud_network_openstack)
+      @ems = FactoryGirl.create(:ems_openstack).network_manager
+      @network = FactoryGirl.create(:cloud_network_openstack, :ext_management_system => @ems)
     end
 
-    it "builds edit screen" do
-      post :button, :params => { :pressed => "cloud_network_edit", :format => :js, :id => @network.id }
-      expect(assigns(:flash_array)).to be_nil
-    end
+    context "#edit" do
+      let(:task_options) do
+        {
+          :action => "updating Cloud Network for user %{user}" % {:user => controller.current_user.userid},
+          :userid => controller.current_user.userid
+        }
+      end
+      let(:queue_options) do
+        {
+          :class_name  => @network.class.name,
+          :method_name => 'raw_update_cloud_network',
+          :instance_id => @network.id,
+          :priority    => MiqQueue::HIGH_PRIORITY,
+          :role        => 'ems_operations',
+          :zone        => @ems.my_zone,
+          :args        => [{:name=>"test2", :admin_state_up => false, :shared => false, :external_facing => false}]
+        }
+      end
 
-    it "updates itself" do
-      skip "Issue with flash message not matching"
-      allow_any_instance_of(ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork)
-        .to receive(:raw_update_network)
-      session[:breadcrumbs] = [{:url => "cloud_network/show/#{@network.id}"}, 'placeholder']
-      post :update, :params => { :button => "save", :format => :js, :id => @network.id }
-      expect(controller.send(:flash_errors?)).to be_falsey
-      expect(assigns(:flash_array).first[:message]).to include("Updating Cloud Network")
-      expect(assigns(:edit)).to be_nil
+      it "builds edit screen" do
+        post :button, :params => { :pressed => "cloud_network_edit", :format => :js, :id => @network.id }
+        expect(assigns(:flash_array)).to be_nil
+      end
+
+      it "queues the update action" do
+        expect(MiqTask).to receive(:generic_action_with_callback).with(task_options, queue_options)
+        post :update, :params => { :button => "save", :format => :js, :id => @network.id, :name => "test2" }
+      end
     end
   end
 
@@ -139,16 +170,33 @@ describe CloudNetworkController do
     before do
       stub_user(:features => :all)
       EvmSpecHelper.create_guid_miq_server_zone
-      @network = FactoryGirl.create(:cloud_network_openstack)
+      @ems = FactoryGirl.create(:ems_openstack).network_manager
+      @network = FactoryGirl.create(:cloud_network_openstack, :ext_management_system => @ems)
       session[:cloud_network_lastaction] = 'show'
     end
 
-    it "deletes itself" do
-      allow_any_instance_of(ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork)
-        .to receive(:raw_delete_network)
-      post :button, :params => { :id => @network.id, :pressed => "cloud_network_delete", :format => :js }
-      # request to delete one network should always return one flash message with info about success/failure that cannot be foreseen
-      expect(controller.instance_variable_get(:@flash_array).size).to eq(1)
+    context "#delete" do
+      let(:task_options) do
+        {
+          :action => "deleting Cloud Network for user %{user}" % {:user => controller.current_user.userid},
+          :userid => controller.current_user.userid
+        }
+      end
+      let(:queue_options) do
+        {
+          :class_name  => @network.class.name,
+          :method_name => 'raw_delete_cloud_network',
+          :instance_id => @network.id,
+          :priority    => MiqQueue::HIGH_PRIORITY,
+          :role        => 'ems_operations',
+          :zone        => @ems.my_zone,
+          :args        => []
+        }
+      end
+      it "queues the delete action" do
+        expect(MiqTask).to receive(:generic_action_with_callback).with(task_options, queue_options)
+        post :button, :params => { :id => @network.id, :pressed => "cloud_network_delete", :format => :js }
+      end
     end
   end
 end
