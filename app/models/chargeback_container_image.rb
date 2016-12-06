@@ -109,8 +109,7 @@ class ChargebackContainerImage < Chargeback
     }
   end
 
-  def get_rate_parents(_perf)
-    # get rates from image tags only
-    []
+  def get_rate_parents(perf)
+    [perf.parent_ems]
   end
 end # class ChargebackContainerImage

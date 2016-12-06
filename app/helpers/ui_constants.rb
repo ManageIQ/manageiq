@@ -523,6 +523,9 @@ module UiConstants
     "container_image-tags"  => PostponedTranslation.new(N_("Tagged %{tables}")) do
                                  {:tables => ui_lookup(:tables => "container_image")}
                                end,
+    "container_image-labels"  => PostponedTranslation.new(N_("Labeled %{tables}")) do
+                                 {:tables => ui_lookup(:tables => "container_image")}
+                               end,
     "tenant"                => N_("Tenants")
   }
 
