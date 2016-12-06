@@ -56,8 +56,7 @@ class Entitlement < ApplicationRecord
       *category, _tag = filter_to_remove.split("/")
       category = category.join("/")
       self.filters["managed"].each do |filter|
-        next unless filter.first.starts_with?(category)
-        next unless filter.include?(filter_to_remove)
+        next unless filter.first.starts_with?(category) || filter.include?(filter_to_remove)
         filter.delete(filter_to_remove)
       end
       self.filters["managed"].reject!(&:empty?)
