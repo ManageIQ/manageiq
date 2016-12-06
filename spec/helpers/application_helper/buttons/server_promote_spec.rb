@@ -1,10 +1,8 @@
 describe ApplicationHelper::Button::ServerPromote do
   describe '#disabled?' do
-    context "record has priority == 2" do
+    context "with medium priority server role" do
       before do
-        @record = FactoryGirl.create(:assigned_server_role, :priority => 2)
-        allow(@record).to receive(:master_supported?).and_return(true)
-        allow(@record.server_role).to receive(:regional_role?).and_return(true)
+        @record = FactoryGirl.create(:assigned_server_role_in_master_region, :priority => 2)
       end
 
       it "disables the button and returns the error message" do
@@ -17,11 +15,9 @@ describe ApplicationHelper::Button::ServerPromote do
       end
     end
 
-    context "record has priority == 1" do
+    context "with high priority server role" do
       before do
-        @record = FactoryGirl.create(:assigned_server_role, :priority => 1)
-        allow(@record).to receive(:master_supported?).and_return(true)
-        allow(@record.server_role).to receive(:regional_role?).and_return(true)
+        @record = FactoryGirl.create(:assigned_server_role_in_master_region, :priority => 1)
       end
 
       it "disables the button and returns the error message" do
