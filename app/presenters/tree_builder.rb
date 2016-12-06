@@ -134,9 +134,9 @@ class TreeBuilder
     nodes
   end
 
-  # Add child nodes to the active tree below node 'id'
-  def self.tree_add_child_nodes(sandbox, klass_name, id, tree_type)
-    tree = klass_name.constantize.new(sandbox[:active_tree].to_s, tree_type, sandbox, false)
+  # Add child nodes to a tree below node 'id'
+  def self.tree_add_child_nodes(sandbox:, klass_name:, name:, type:, id:)
+    tree = klass_name.constantize.new(name, type, sandbox, false)
     tree.x_get_child_nodes(id)
   end
 

@@ -37,9 +37,18 @@ module ApplicationController::TreeSupport
   end
 
   def tree_add_child_nodes(id)
-    tree_type = @sb[:active_tree].to_s.sub(/_tree$/, '')
-    tree_type = 'catalog' if controller_name == 'catalog' && tree_type == 'automate'
-    nodes = TreeBuilder.tree_add_child_nodes(@sb, x_tree[:klass_name], id, tree_type)
+    tree_name = (params[:tree] || x_active_tree).to_sym
+    tree_type = tree_name.to_s.sub(/_tree$/, '').to_sym
+    tree_klass = x_tree(tree_name)[:klass_name]
+
+    # FIXME after euwe: build_ae_tree
+    tree_type = :catalog if controller_name == 'catalog' && tree_type == :automate
+
+    nodes = TreeBuilder.tree_add_child_nodes(:sandbox    => @sb,
+                                             :klass_name => tree_klass,
+                                             :name       => tree_name,
+                                             :type       => tree_type,
+                                             :id         => id)
     TreeBuilder.convert_bs_tree(nodes)
   end
 
