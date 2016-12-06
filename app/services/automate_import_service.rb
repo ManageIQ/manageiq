@@ -14,7 +14,8 @@ class AutomateImportService
     import_options = {
       "import_as" => domain_name_to_import_to.presence || domain_name_to_import_from,
       "overwrite" => true,
-      "zip_file"  => "automate_temporary_zip.zip"
+      "zip_file"  => "automate_temporary_zip.zip",
+      "tenant_id" => User.current_user.current_tenant.id
     }
     ae_import = MiqAeImport.new(domain_name_to_import_from, import_options)
 
