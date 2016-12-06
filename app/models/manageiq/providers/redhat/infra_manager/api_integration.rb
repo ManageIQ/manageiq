@@ -47,7 +47,10 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
   end
 
   def supported_api_versions_from_cache
-    Cacher.new(cache_key).fetch_fresh(last_refresh_date) { supported_api_verions_from_sdk }
+    cacher = Cacher.new(cache_key)
+    current_cache_val = cacher.read
+    force = current_cache_val.blank?
+    cacher.fetch_fresh(last_refresh_date, :force => force) { supported_api_verions_from_sdk }
   end
 
   def cache_key
@@ -314,10 +317,15 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
       @key = key
     end
 
-    def fetch_fresh(last_refresh_time)
-      force = stale_cache?(last_refresh_time)
+    def fetch_fresh(last_refresh_time, options)
+      force = options[:force] || stale_cache?(last_refresh_time)
       res = Rails.cache.fetch(key, force: force) { build_entry { yield } }
       res[:value]
+    end
+
+    def read
+      res = Rails.cache.read(key)
+      res && res[:value]
     end
 
     private
