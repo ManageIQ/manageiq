@@ -316,7 +316,7 @@ module EmsRefresh::SaveInventoryContainer
     end
 
     save_inventory_multi(ems.container_images, hashes, deletes, [:image_ref, :container_image_registry_id], [],
-                         :container_image_registry)
+                         :container_image_registry, true)
     store_ids_for_new_records(ems.container_images, hashes,
                               [:image_ref, :container_image_registry_id])
   end
