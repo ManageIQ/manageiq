@@ -1,15 +1,15 @@
 .button-group{"ng-controller" => "buttonGroupController"}
-  = button_tag(_(button_label),
+  = button_tag(button_label,
                "class"       => "btn btn-primary disabled",
-               :alt          => _(button_label),
-               :title        => _(button_label),
+               :alt          => button_label,
+               :title        => button_label,
                "ng-click"    => "disabledClick($event)",
                "ng-show"     => "!saveable(angularForm)")
 
   = button_tag(_(button_label),
                :class        => "btn btn-primary",
-               :alt          => _(button_label),
-               :title        => _(button_label),
+               :alt          => button_label,
+               :title        => button_label,
                "ng-click"    => button_click,
                "ng-show"     => "saveable(angularForm)")
 
