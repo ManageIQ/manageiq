@@ -452,7 +452,7 @@ class TreeBuilder
     "azu" => "OrchestrationTemplateAzure",
     "at"  => "ManageIQ::Providers::AnsibleTower::ConfigurationManager",
     "cl"  => "Classification",
-    "cf " => "ConfigurationScript",
+    "cf" => "ConfigurationScript",
     "cnt" => "Container",
     "co"  => "Condition",
     "cbg" => "CustomButtonSet",
