@@ -7,6 +7,8 @@ class ManageIQ::Providers::Microsoft::InfraManager::Template < ManageIQ::Provide
     end
   end
 
+  supports_not :clone
+
   def proxies4job(_job = nil)
     {
       :proxies => [MiqServer.my_server],
