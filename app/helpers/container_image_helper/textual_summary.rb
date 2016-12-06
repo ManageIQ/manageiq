@@ -5,7 +5,7 @@ module ContainerImageHelper
     #
 
     def textual_group_properties
-      %i(name tag id full_name os_distribution product_type product_name)
+      %i(name tag id full_name os_distribution product_type product_name architecture author command entrypoint docker_version exposed_ports size)
     end
 
     def textual_group_relationships
@@ -79,5 +79,41 @@ module ContainerImageHelper
       high = failed_rules_summary[:High]
       {:label => _("High"), :value => high} if high
     end
+
+    def textual_exposed_ports
+      {:label => _("Exposed Ports"),
+       :value => (@record['exposed_ports'].collect { |t, p| "#{p}/#{t}" }).join(', ')
+      }
+    end
+
+    def method_missing(mthd_sym, *args, &bolck)
+      match = /textual_(.*)/.match(mthd_sym)
+      if match && match.size > 1
+        prop = match[1]
+        value = @record[prop] if @record.attribute_present?(prop)
+        value = value.join(' ') if value.kind_of?(Array)
+        {:label => _(prop.titlecase), :value => value}
+      else
+        super
+      end
+    end
+  end
+
+  def textual_group_env
+    {
+      :additional_table_class => "table-fixed",
+      :labels                 => [_("Name"), _("Type"), _("Value")],
+      :values                 => collect_env
+    }
+  end
+
+  def collect_env_variables
+    @record['environment_variables'].collect do |name, value|
+      [name, value, nil]
+    end
+  end
+
+  def textual_group_container_docker_labels
+    textual_key_value_group(@record.docker_labels.to_a)
   end
 end

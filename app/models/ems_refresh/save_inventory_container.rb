@@ -315,8 +315,8 @@ module EmsRefresh::SaveInventoryContainer
       h[:container_image_registry_id] = h[:container_image_registry][:id] unless h[:container_image_registry].nil?
     end
 
-    save_inventory_multi(ems.container_images, hashes, deletes, [:image_ref, :container_image_registry_id], [],
-                         :container_image_registry)
+    save_inventory_multi(ems.container_images, hashes, deletes, [:image_ref, :container_image_registry_id],
+                         [:labels, :docker_labels], :container_image_registry, true)
     store_ids_for_new_records(ems.container_images, hashes,
                               [:image_ref, :container_image_registry_id])
   end
@@ -395,18 +395,28 @@ module EmsRefresh::SaveInventoryContainer
     store_ids_for_new_records(container_group.container_volumes, hashes, :name)
   end
 
-  def save_labels_inventory(entity, hashes, target = nil)
+  def save_custom_attribute_attribute_inventory(entity, attribute_name, hashes, target = nil)
     return if hashes.nil?
 
-    entity.labels.reset
+    entity.send(attribute_name).reset
     deletes = if target.kind_of?(ExtManagementSystem)
                 :use_association
               else
                 []
               end
 
-    save_inventory_multi(entity.labels, hashes, deletes, [:section, :name])
-    store_ids_for_new_records(entity.labels, hashes, [:section, :name])
+    save_inventory_multi(entity.send(attribute_name),
+                         hashes, deletes, [:section, :name])
+    store_ids_for_new_records(entity.send(attribute_name),
+                              hashes, [:section, :name])
+  end
+
+  def save_labels_inventory(entity, hashes, target = nil)
+    save_custom_attribute_attribute_inventory(entity, :labels, hashes, target)
+  end
+
+  def save_docker_labels_inventory(entity, hashes, target = nil)
+    save_custom_attribute_attribute_inventory(entity, :docker_labels, hashes, target)
   end
 
   def save_tags_inventory(entity, hashes, _target = nil)

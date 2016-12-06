@@ -21,7 +21,7 @@ class Chargeback < ActsAsArModel
     rates = RatesCache.new
 
     base_rollup = MetricRollup.includes(
-      :resource           => [:hardware, :tenant, :tags, :vim_performance_states, :custom_attributes],
+      :resource           => [:hardware, :tenant, :tags, :vim_performance_states, :custom_attributes, {:container_image => :custom_attributes}],
       :parent_host        => :tags,
       :parent_ems_cluster => :tags,
       :parent_storage     => :tags,

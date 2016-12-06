@@ -240,7 +240,7 @@ class ChargebackController < ApplicationController
     render :update do |page|
       page << javascript_prologue
       changed = (@edit[:new] != @edit[:current])
-      page.replace("cb_assignment_div", :partial => "cb_assignments") if params[:cbshow_typ] || params[:cbtag_cat]      # only replace if cbshow_typ or cbtag_cat has changed
+      page.replace("cb_assignment_div", :partial => "cb_assignments") if params[:cbshow_typ] || params[:cbtag_cat] || params[:cblabel_key]
       page << javascript_for_miq_button_visibility(changed)
     end
   end
@@ -623,6 +623,19 @@ class ChargebackController < ApplicationController
           @edit[:set_assignments].push(temp)
         end
       end
+    elsif @edit[:new][:cbshow_typ].ends_with?("-labels")
+      @edit[:set_assignments] = []
+      @edit[:cb_assign][:docker_label_values].each do |id, _value|
+        key = "#{@edit[:new][:cbshow_typ]}__#{id}"
+        if !@edit[:new][key].nil? && @edit[:new][key] != "nil"
+          temp = {
+            :cb_rate => ChargebackRate.find(@edit[:new][key]),
+            :label   => [CustomAttribute.find(id)]
+          }
+          temp[:label].push(@edit[:new][:cbshow_typ].split("-").first)
+          @edit[:set_assignments].push(temp)
+        end
+      end
     else
       @edit[:set_assignments] = []
       @edit[:cb_assign][:cis].each do |id, _ci|
@@ -670,7 +683,11 @@ class ChargebackController < ApplicationController
                                   when MiqEnterprise
                                     "enterprise"
                                   when NilClass
-                                    "#{@edit[:current_assignment][0][:tag][1]}-tags"
+                                    if @edit[:current_assignment][0][:tag]
+                                      "#{@edit[:current_assignment][0][:tag][1]}-tags"
+                                    else
+                                      "#{@edit[:current_assignment][0][:label][1]}-labels"
+                                    end
                                   else
                                     @edit[:current_assignment][0][:object].class.name.downcase
                                   end
@@ -684,6 +701,16 @@ class ChargebackController < ApplicationController
       else
         @edit[:current_assignment] = []
       end
+    elsif @edit[:new][:cbshow_typ] && @edit[:new][:cbshow_typ].ends_with?("-labels")
+      get_docker_labels_all_keys
+      label = @edit[:current_assignment][0][:label][0]
+      if label
+        label = @edit[:cb_assign][:docker_label_keys].detect { |_key, value| value == label.name }
+        @edit[:new][:cblabel_key] = label.first.to_s
+        get_docker_labels_all_values(label.first)
+      else
+        @edit[:current_assignment] = []
+      end
     elsif @edit[:new][:cbshow_typ]
       get_cis_all
     end
@@ -693,6 +720,9 @@ class ChargebackController < ApplicationController
         @edit[:new]["#{@edit[:new][:cbshow_typ]}__#{el[:object]["id"]}"] = el[:cb_rate]["id"].to_s
       elsif el[:tag]
         @edit[:new]["#{@edit[:new][:cbshow_typ]}__#{el[:tag][0]["id"]}"] = el[:cb_rate]["id"].to_s
+      elsif el[:label]
+        label = @edit[:cb_assign][:docker_label_values].detect { |_key, value| value == el[:label][0].value }
+        @edit[:new]["#{@edit[:new][:cbshow_typ]}__#{label.first}"] = el[:cb_rate]["id"].to_s
       end
     end
 
@@ -716,6 +746,22 @@ class ChargebackController < ApplicationController
     @edit[:cb_assign][:tags] = {}
     classification = Classification.find_by_id(category.to_s)
     classification.entries.each { |e| @edit[:cb_assign][:tags][e.id.to_s] = e.description } if classification
+  end
+
+  def get_docker_labels_all_keys
+    @edit[:cb_assign][:docker_label_keys] = {}
+    CustomAttribute.where(:section => "docker_labels").pluck(:id, :name).uniq(&:second).each do |label|
+      @edit[:cb_assign][:docker_label_keys][label.first.to_s] = label.second
+    end
+  end
+
+  def get_docker_labels_all_values(label_id)
+    @edit[:cb_assign][:docker_label_values] = {}
+    label_name = CustomAttribute.find(label_id).name
+
+    CustomAttribute.where(:section => "docker_labels", :name => label_name).pluck(:id, :value).uniq(&:second).each do |label|
+      @edit[:cb_assign][:docker_label_values][label.first.to_s] = label.second
+    end
   end
 
   WHITELIST_INSTANCE_TYPE = %w(enterprise storage ext_management_system ems_cluster tenant ems_container).freeze
@@ -763,16 +809,22 @@ class ChargebackController < ApplicationController
     @edit[:new][:cbshow_typ] = params[:cbshow_typ] if params[:cbshow_typ]
     @edit[:new][:cbtag_cat] = nil if params[:cbshow_typ]                  # Reset categories pull down if assign to selection is changed
     @edit[:new][:cbtag_cat] = params[:cbtag_cat].to_s if params[:cbtag_cat]
+    @edit[:new][:cblabel_key] = nil if params[:cbshow_typ]
+    @edit[:new][:cblabel_key] = params[:cblabel_key].to_s if params[:cblabel_key]
 
     if @edit[:new][:cbshow_typ].ends_with?("-tags")
       get_categories_all
       get_tags_all(params[:cbtag_cat]) if params[:cbtag_cat]
+    elsif @edit[:new][:cbshow_typ].ends_with?("-labels")
+      get_docker_labels_all_keys
+      get_docker_labels_all_values(params[:cblabel_key]) unless params[:cblabel_key].blank?
     else
       get_cis_all
     end
 
     cb_assign_params_to_edit(:cis)
     cb_assign_params_to_edit(:tags)
+    cb_assign_params_to_edit(:docker_label_values)
   end
 
   def replace_right_cell(options = {})

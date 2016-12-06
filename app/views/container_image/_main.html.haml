@@ -3,6 +3,8 @@
  .col-sm-12.col-md-12.col-lg-6
   = render :partial => "shared/summary/textual", :locals => {:title => _("Properties"),
                                                              :items => textual_group_properties}
+  = render :partial => "shared/summary/textual", :locals => {:title => _("Labels"),
+                                                             :items => textual_group_container_labels}
   = render :partial => "shared/summary/textual", :locals => {:title => _("Compliance"),
                                                              :items => textual_group_compliance}
  .col-sm-12.col-md-12.col-lg-6
@@ -14,3 +16,10 @@
                                                              :items => textual_group_configuration}
   = render :partial => "shared/summary/textual", :locals => {:title => _("OpenSCAP Failed Rules Summary"),
                                                              :items => textual_openscap_failed_rules}
+.row
+ .col-sm-12.col-md-12.col-lg-6
+  = render :partial => "shared/summary/textual_multilabel", :locals => {:title => _("Environment variables"),
+                                                                        :items => textual_group_env}
+ .col-sm-12.col-md-12.col-lg-6
+  = render :partial => "shared/summary/textual", :locals => {:title => _("Docker Labels"),
+                                                             :items => textual_group_container_docker_labels}

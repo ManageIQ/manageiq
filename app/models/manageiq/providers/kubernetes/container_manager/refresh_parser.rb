@@ -568,7 +568,7 @@ module ManageIQ::Providers::Kubernetes
       parse_identifying_attributes(entity.spec.nodeSelector, 'node_selectors')
     end
 
-    def parse_identifying_attributes(attributes, section)
+    def parse_identifying_attributes(attributes, section, source = "kubernetes")
       result = []
       return result if attributes.nil?
       attributes.to_h.each do |key, value|
@@ -576,7 +576,7 @@ module ManageIQ::Providers::Kubernetes
           :section => section,
           :name    => key.to_s,
           :value   => value,
-          :source  => "kubernetes"
+          :source  => source
         }
         result << custom_attr
       end

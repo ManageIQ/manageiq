@@ -45,9 +45,28 @@ module AssignmentMixin
     reload
   end
 
+  def assign_to_labels(objects, klass)
+    # objects => A single item or array of items
+    #   item  => A classification entry instance or a classification entry id
+    # klass   => The class of the object that self is to be assigned to - (Takes both forms - Host or host, EmsCluster or ems_cluster)
+    objects.to_miq_a.each do |obj|
+      unless obj.kind_of?(ActiveRecord::Base) # obj is the id of a classification entry instance
+        id = obj
+        obj = CustomAttribute.find_by_id(id)
+        if obj.nil?
+          _log.warn("Unable to find label with id [#{id}], skipping assignment")
+          next
+        end
+      end
+      tag = "#{klass.underscore}/label/managed/#{obj.name}/#{obj.value}"
+      tag_add(tag, :ns => namespace)
+    end
+    reload
+  end
+
   def get_assigned_tos
     # Returns: {:objects => [obj, obj, ...], :tags => [[Classification.entry_object, klass], ...]}
-    result = {:objects => [], :tags => []}
+    result = {:objects => [], :tags => [], :labels => []}
     tags = tag_list(:ns => namespace).split
     tags.each do |t|
       parts = t.split("/")
@@ -61,6 +80,9 @@ module AssignmentMixin
       when :tag
         tag = Tag.find_by_name("/" + parts.join("/"))
         result[:tags] << [Classification.find_by_tag_id(tag.id), klass] unless tag.nil?
+      when :label
+        label = CustomAttribute.find_by(:name => parts[1], :value => parts[2])
+        result[:labels] << [label, klass] unless label.nil?
       end
     end
 

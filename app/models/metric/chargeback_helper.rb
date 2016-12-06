@@ -22,9 +22,10 @@ module Metric::ChargebackHelper
     if resource.kind_of?(Container)
       state = resource.vim_performance_state_for_ts(timestamp.to_s)
       image_tag_name = "#{state.image_tag_names}|" if state
+      labels = resource.try(:container_image).try(:docker_labels).try(:collect) { |l| "container_image/label/managed/#{l.name}/#{l.value}" }
     end
 
-    "#{image_tag_name}#{tag_names}".split("|").reject(&:empty?).map { |x| "#{tag_prefix}#{x}" }
+    "#{image_tag_name}#{tag_names}".split("|").reject(&:empty?).map { |x| "#{tag_prefix}#{x}" } + (labels || [])
   end
 
   def resource_parents
@@ -43,7 +44,7 @@ module Metric::ChargebackHelper
     when ContainerProject.name
       [parent_ems].compact
     when Container.name
-      []
+      [parent_ems]
     end
   end
 end
