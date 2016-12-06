@@ -20,10 +20,10 @@ class NetworkTopologyService < TopologyService
       :cloud_subnets => [
         :parent_cloud_subnet,
         :tags,
-        :cloud_network => :tags,
-        :vms => [
+        :cloud_network  => :tags,
+        :vms            => [
           :tags,
-          :load_balancers,
+          :load_balancers  => :tags,
           :floating_ips    => :tags,
           :cloud_tenant    => :tags,
           :security_groups => :tags],
