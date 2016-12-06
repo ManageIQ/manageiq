@@ -52,7 +52,7 @@
                 - else
                   - params = {}
                 %i.product.product-group{params}
-                = h(g.description)
+                = link_to(g.description, "#", params)
     .col-md-12.col-lg-6
       %hr
       - if @edit
