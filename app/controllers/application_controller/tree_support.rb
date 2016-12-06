@@ -37,12 +37,12 @@ module ApplicationController::TreeSupport
   end
 
   def tree_add_child_nodes(id)
-    tree_name = (params[:tree] || x_active_tree).to_s
-    tree_type = tree_name.sub(/_tree$/, '')
+    tree_name = (params[:tree] || x_active_tree).to_sym
+    tree_type = tree_name.to_s.sub(/_tree$/, '').to_sym
     tree_klass = x_tree(tree_name)[:klass_name].constantize
 
     # FIXME after euwe: build_ae_tree
-    tree_type = 'catalog' if controller_name == 'catalog' && tree_type == 'automate'
+    tree_type = :catalog if controller_name == 'catalog' && tree_type == :automate
 
     nodes = TreeBuilder.tree_add_child_nodes(:sandbox => @sb,
                                              :klass   => tree_klass,
