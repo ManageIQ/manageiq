@@ -60,6 +60,17 @@
                             'ng-maxlength' => 20,
                             :miqrequired   => false,
                             :checkchange   => true}
+    .form-group
+      %label.col-md-2.control-label
+        = _('IP Version')
+      .col-md-8
+        = select_tag("ip_version",
+                      options_for_select([4, 6]),
+                      "ng-model"                    => "cloudSubnetModel.ip_version",
+                      "required"                    => "",
+                      :miqrequired                  => true,
+                      :checkchange                  => true,
+                      "selectpicker-for-select-tag" => "")
   %h3
     = _('Placement')
   .form-horizontal
