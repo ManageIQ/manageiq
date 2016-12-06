@@ -6,6 +6,7 @@ class TreeBuilderDatacenter < TreeBuilder
   has_kids_for ResourcePool, [:x_get_resource_pool_kids]
 
   def override(node, object, pid, options)
+    return if node[:tooltip].nil?
     t = case object
         when Host         then _('Host')
         when EmsCluster   then _('Cluster')

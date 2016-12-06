@@ -113,11 +113,11 @@ module TreeNode
         :key          => key,
         :title        => text ? text : title,
         :expand       => expand,
-        :hideCheckbox => hide_checkbox,
+        :hideCheckbox => hide_checkbox ? hide_checkbox : nil,
         :addClass     => klass,
-        :cfmeNoClick  => no_click,
+        :cfmeNoClick  => no_click ? no_click : nil,
         :select       => selected,
-        :checkable    => checkable
+        :checkable    => checkable ? nil : false,
       }
       unless tooltip.blank?
         tip = tooltip.kind_of?(Proc) ? tooltip.call : _(tooltip)
@@ -125,7 +125,9 @@ module TreeNode
         node[:tooltip] = tip
       end
 
-      node[:icon] = if image.start_with?("/")
+      node[:icon] = if !image
+                      nil
+                    elsif image.start_with?("/")
                       image
                     elsif image =~ %r{^[a-zA-Z0-9]+/}
                       ActionController::Base.helpers.image_path(image)
@@ -133,7 +135,7 @@ module TreeNode
                       ActionController::Base.helpers.image_path("100/#{image}")
                     end
 
-      node
+      node.delete_if { |_, v| v.nil? }
     end
   end
 end

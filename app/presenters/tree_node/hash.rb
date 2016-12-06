@@ -4,15 +4,15 @@ module TreeNode
 
     set_attribute(:image) { @object[:image] ? "100/#{@object[:image]}.png" : nil }
 
-    set_attribute(:no_click) { @object.key?(:cfmeNoClick) && @object[:cfmeNoClick] }
+    set_attribute(:no_click) { @object.key?(:cfmeNoClick) && @object[:cfmeNoClick] ? true : nil }
 
-    set_attribute(:hide_checkbox) { @object.key?(:hideCheckbox) && @object[:hideCheckbox] }
+    set_attribute(:hide_checkbox) { @object.key?(:hideCheckbox) && @object[:hideCheckbox] ? true : nil }
 
-    set_attribute(:selected) { @object.key?(:select) && @object[:select] }
+    set_attribute(:selected) { @object.key?(:select) && @object[:select] ? true : nil }
 
-    set_attribute(:klass) { @object.key?(:addClass) ? @object[:addClass] : '' }
+    set_attribute(:klass) { @object.key?(:addClass) ? @object[:addClass] : nil }
 
-    set_attribute(:checkable) { @object[:checkable] != false }
+    set_attribute(:checkable) { @object[:checkable] != false ? true : nil }
 
     set_attribute(:tooltip) { @object[:tip] }
 
