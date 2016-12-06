@@ -597,6 +597,9 @@
       - NETWORK_UPDATE_TEMPLATE_INTERFACE_FAILED
       - NETWORK_UPDATE_VM_INTERFACE
       - NETWORK_UPDATE_VM_INTERFACE_FAILED
+      - floatingip.create.end
+      - floatingip.delete.end
+      - floatingip.update.end
       - network.create.end
       - network.delete.end
       - network.floating_ip.allocate
@@ -607,6 +610,9 @@
       - router.create.end
       - router.delete.end
       - router.update.end
+      - security_group.create.end
+      - security_group.delete.end
+      - security_group.update.end
       - subnet.create.end
       - subnet.delete.end
       - subnet.update.end
@@ -1190,7 +1196,7 @@
         :amqp_heartbeat: 30
         :amqp_recovery_attempts: 4
         :ceilometer:
-          :event_types_regex: '\A(?!firewall|floatingip|gateway|net|port|router|subnet|security-group|vpn)'
+          :event_types_regex: '\A(?!firewall|floatingip|gateway|net|port|router|subnet|security_group|vpn)'
       :event_catcher_openstack_infra:
         :poll: 15.seconds
         :topics:
@@ -1205,7 +1211,7 @@
         :amqp_heartbeat: 30
         :amqp_recovery_attempts: 4
         :ceilometer:
-          :event_types_regex: '\A(?!firewall|floatingip|gateway|net|port|router|subnet|security-group|vpn)'
+          :event_types_regex: '\A(?!firewall|floatingip|gateway|net|port|router|subnet|security_group|vpn)'
       :event_catcher_openstack_network:
         :poll: 15.seconds
         :topics:
@@ -1216,7 +1222,7 @@
         :amqp_heartbeat: 30
         :amqp_recovery_attempts: 4
         :ceilometer:
-          :event_types_regex: '\A(firewall|floatingip|gateway|net|port|router|subnet|security-group|vpn)'
+          :event_types_regex: '\A(firewall|floatingip|gateway|net|port|router|subnet|security_group|vpn)'
       :event_catcher_amazon:
         :poll: 15.seconds
       :event_catcher_azure:
