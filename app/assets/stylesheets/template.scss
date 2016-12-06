@@ -1,5 +1,3 @@
-html { padding: 0 0 /*25*/px 0;  /* create area for notification */}
-legend { display: none;}
 textarea { width: 98.5%; border: 1px solid #d1d1d1; padding: 7px; line-height: 1.5em}
 
 fieldset {
@@ -8,8 +6,6 @@ fieldset {
   padding: 10px;
   border:1px solid #e9e8e8;
 }
-
-nobr { white-space: nowrap;}
 
 /*Centering for Hovered VMs*/
 #outer { position: absolute;top: 50%;left: 0;overflow: visible;width: 100%;height: 1px;}
@@ -45,18 +41,6 @@ nobr { white-space: nowrap;}
   text-shadow: #000 2px 2px 0;
 }
 
-/************ Tabs ************/
-
-ul.searchtoolbar  { margin: 0;padding: 2px 0 0 5px; width:100%;height: 30px;}
-.searchtoolbar li { margin-right: 7px;padding: 0 4px 1px 4px; height:22px; width: 30px;float: left;display: inline;border: 1px solid #7e7e7e;}
-.searchtoolbar li:hover { background: #aeaeae;}
-.searchtoolbar li img.dimmed { background: none;}
-
-/* Automate Specific */
-.checkall { padding: 0 0 7px 7px;} /*styling for automate (Check All) */
-
-/* End Automate Specific */
-
 /************ Hover Buttons ************/
 .rollover img, input.rollover { display:block;}
 .rollover img:hover, img.rollover:hover, input.rollover:hover, i.rollover:hover { background:#e4e4e4;}
@@ -69,8 +53,6 @@ img.tiny { margin: 0; padding: 0;width:20px;height:20px; border: 0; vertical-ali
 
 .quadicon { position:relative;float:left;padding: 0 1px 1px 0;width: 72px; height: 80px;color: #e3e4e4;text-transform: none;}
 .quadicon:hover{ padding: 1px 0 0 1px;}
-
-div.panecontent .flobj { margin-left: 40px;}
 
 .flobj { position: absolute;z-index: auto;width: 72px;}
 .flobj p { margin: 5px 0 0 0;padding: 0;color: #e3e4e4;vertical-align: middle;text-align:center;text-transform: none;text-shadow: 0 0 3px #000;font: normal 16px OpenSansSemibold,Arial,Helvetica,sans-serif !important;}
