@@ -507,26 +507,26 @@ module UiConstants
   # This set of assignments was created for chargeback_rates
   ASSIGN_TOS[:chargeback_storage] = ASSIGN_TOS["Storage"]
   ASSIGN_TOS[:chargeback_compute] = {
-    "enterprise"            => N_("The Enterprise"),
-    "ext_management_system" => PostponedTranslation.new(N_("Selected %{tables}")) do
+    "enterprise"             => N_("The Enterprise"),
+    "ext_management_system"  => PostponedTranslation.new(N_("Selected %{tables}")) do
                                  {:tables => ui_lookup(:tables => "ext_management_systems")}
-                               end,
-    "ems_cluster"           => PostponedTranslation.new(N_("Selected %{tables}")) do
+                                end,
+    "ems_cluster"            => PostponedTranslation.new(N_("Selected %{tables}")) do
                                  {:tables => ui_lookup(:tables => "ems_cluster")}
-                               end,
-    "ems_container"         => PostponedTranslation.new(N_("Selected %{tables}")) do
+                                end,
+    "ems_container"          => PostponedTranslation.new(N_("Selected %{tables}")) do
                                  {:tables => ui_lookup(:tables => "ems_container")}
-                               end,
-    "vm-tags"               => PostponedTranslation.new(N_("Tagged %{tables}")) do
+                                end,
+    "vm-tags"                => PostponedTranslation.new(N_("Tagged %{tables}")) do
                                  {:tables => ui_lookup(:tables => "vm")}
-                               end,
-    "container_image-tags"  => PostponedTranslation.new(N_("Tagged %{tables}")) do
+                                end,
+    "container_image-tags"   => PostponedTranslation.new(N_("Tagged %{tables}")) do
                                  {:tables => ui_lookup(:tables => "container_image")}
-                               end,
-    "container_image-labels"  => PostponedTranslation.new(N_("Labeled %{tables}")) do
+                                end,
+    "container_image-labels" => PostponedTranslation.new(N_("Labeled %{tables}")) do
                                  {:tables => ui_lookup(:tables => "container_image")}
-                               end,
-    "tenant"                => N_("Tenants")
+                                end,
+    "tenant"                 => N_("Tenants")
   }
 
   EXP_COUNT_TYPE = [N_("Count of"), "count"].freeze  # Selection for count based filters
