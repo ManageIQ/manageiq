@@ -19,7 +19,7 @@ msgstr ""
 "Project-Id-Version: manageiq 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-11-15 11:23+0100\n"
-"PO-Revision-Date: 2016-11-28 03:54-0500\n"
+"PO-Revision-Date: 2016-12-03 03:31-0500\n"
 "Last-Translator: Gladys Guerrero <gguerrer@redhat.com>\n"
 "Language-Team: Spanish\n"
 "MIME-Version: 1.0\n"
@@ -458,9 +458,9 @@ msgid ""
 "\"%{task}\": not available for %{hostname}. %{hostname}'s provision state "
 "must be in \"available\", \"adoptfail\", \"cleanfail\", or \"inspectfail\""
 msgstr ""
-"\"%{task}\": no está disponible para %{hostname}. El estado de provisión de "
-"%{hostname} debe ser \"available\", \"adoptfail\", \"cleanfail\", o "
-"\"inspectfail\""
+"\"%{task}\": no está disponible para %{hostname}. El estado de "
+"aprovisionamiento de %{hostname} debe ser \"available\", \"adoptfail\", "
+"\"cleanfail\", o \"inspectfail\""
 
 #: ../app/controllers/application_controller/ci_processing.rb:2410
 #: ../app/controllers/application_controller/ci_processing.rb:2419
@@ -468,8 +468,8 @@ msgid ""
 "\"%{task}\": not available for %{hostname}. %{hostname}'s provision state "
 "needs to be in \"manageable\""
 msgstr ""
-"\"%{task}\": no está disponible para %{hostname}.  El estado de provisión de"
-" %{hostname} debe estar en \"manageable\""
+"\"%{task}\": no está disponible para %{hostname}.  El estado de "
+"aprovisionamiento de %{hostname} debe ser \"manageable\""
 
 #: ../app/controllers/application_controller/ci_processing.rb:2352
 #: ../app/controllers/application_controller/ci_processing.rb:2363
@@ -820,19 +820,19 @@ msgstr "%{message} no está disponible para %{name}."
 
 #: ../app/models/miq_template/operations.rb:42
 msgid "%{message} is not available for Images/Templates."
-msgstr "%{message} no está disponible para Imágenes/Plantillas."
+msgstr "%{message} no está disponible para Imágenes o plantillas."
 
 #: ../app/controllers/application_controller/buttons.rb:18
 msgid "%{model_name} Group Reorder cancelled"
-msgstr "%{model_name} Group Reorder cancelado"
+msgstr "%{model_name} Reordenamiento de grupos cancelado"
 
 #: ../app/controllers/application_controller/buttons.rb:43
 msgid "%{model_name} Group Reorder saved"
-msgstr "%{model_name} Group Reorder guardado"
+msgstr "%{model_name} Reordenamiento de grupos guardado"
 
 #: ../app/controllers/miq_ae_customization_controller.rb:400
 msgid "%{models} Group Reorder"
-msgstr "%{models} Group Reorder"
+msgstr "%{models} Reordenamiento de grupos "
 
 #: ../app/controllers/miq_policy_controller/alerts.rb:59
 msgid "%{models} can not be deleted"
@@ -1702,7 +1702,7 @@ msgstr "Tipo de %{storage}"
 #: ../app/presenters/tree_builder_region.rb:37
 #: ../app/presenters/tree_builder_region.rb:42
 msgid "%{tables} (Click to open)"
-msgstr "%{tables} (Click para abrir)"
+msgstr "%{tables} (Haga clic para abrir)"
 
 #: ../app/views/layouts/listnav/_cloud_object_store_container.html.haml:37
 #: ../app/views/layouts/listnav/_cloud_object_store_container.html.haml:44
@@ -1734,7 +1734,7 @@ msgstr "%{table}: %{name}"
 
 #: ../app/controllers/application_controller.rb:2409
 msgid "%{task} does not apply to at least one of the selected %{model}"
-msgstr "%{task} no se aplica a al menos uno de los %{model} seleccionados"
+msgstr "%{task} no se aplica por lo menos a uno de los %{model} seleccionados"
 
 #: ../app/controllers/ems_common.rb:987
 msgid "%{task} initiated for %{count} %{model} from the %{product} Database"
@@ -1802,7 +1802,7 @@ msgstr "%{tenant_name} (Todos los %{groups})"
 
 #: ../app/helpers/textual_mixins/textual_authentications_status.rb:5
 msgid "%{time} Ago"
-msgstr "%{time} atrás"
+msgstr "Hace %{time} "
 
 #: ../app/views/ops/_rbac_group_details.html.haml:279
 msgid "%{title_for_hosts} & %{title_for_clusters}"
@@ -2063,12 +2063,12 @@ msgstr ""
 msgid ""
 "* Caution: Changing these fields will clear all selected values below them!"
 msgstr ""
-"* Precaución: ¡Al cambiar estos campos se borrarán todos los valores "
+"* Atención: ¡Al cambiar estos campos se borrarán todos los valores "
 "seleccionados que están por debajo de ellos!"
 
 #: ../app/views/chargeback/_cb_rate_edit.html.haml:69
 msgid "* Caution: The value Range end will not be included in the tier."
-msgstr "* Precaución: El valor del rango final no sera incluido en el nivel."
+msgstr "* Atención: El valor del rango final no sera incluido en el nivel."
 
 #: ../app/views/ops/_schedule_form_timer.html.haml:57
 #: ../app/views/report/_schedule_form_timer.html.haml:103
@@ -2904,7 +2904,7 @@ msgstr "<Elegir un Proyecto/Inquilino>"
 #: ../app/views/layouts/_adv_search_body.html.haml:55
 #: ../app/views/layouts/_edit_to_email.html.haml:59
 msgid "<Choose>"
-msgstr "ffc6fc45730f7b5a7e54ec421d36c894<Elegir>"
+msgstr "<Elegir>"
 
 #: ../app/views/ops/_ldap_server_entry.html.haml:98
 msgid "<Click on this row to create a new LDAP Server>"
@@ -2951,19 +2951,19 @@ msgstr "<Nuevo Servidor LDAP>"
 #: ../app/views/ops/_log_collection.html.haml:32
 #: ../app/views/layouts/_edit_log_depot_settings.html.haml:26
 msgid "<No Depot>"
-msgstr "<No Depot>"
+msgstr "<Ningún depósito>"
 
 #: ../app/controllers/miq_policy_controller/alerts.rb:658
 msgid "<No Event configured>"
-msgstr "<No Event configured>"
+msgstr "<Ningún evento configurado>"
 
 #: ../app/models/miq_report_result.rb:158
 msgid "<No Title>"
-msgstr "<No Title>"
+msgstr "<Ningún título>"
 
 #: ../app/views/report/_form_chart.html.haml:20
 msgid "<No chart>"
-msgstr "<No hay gráfico>"
+msgstr "<Ningún gráfico>"
 
 #: ../app/controllers/application_controller.rb:1372
 #: ../app/controllers/mixins/vm_show_mixin.rb:126
@@ -2985,7 +2985,7 @@ msgstr "<Igual a importar desde>"
 
 #: ../app/views/layouts/_tag_edit_cat_tags.html.haml:4
 msgid "<Select a value to assign>"
-msgstr "<Selecciona un valor a asignar>"
+msgstr "<Seleccionar el valor a asignar>"
 
 #: ../app/controllers/report_controller/widgets.rb:324
 msgid "<To All Users>"
@@ -2993,20 +2993,20 @@ msgstr "<A todos los usuarios>"
 
 #: ../app/helpers/textual_summary_helper.rb:174
 msgid "<Unknown>"
-msgstr "<Unknown>"
+msgstr "<Desconocido>"
 
 #: ../app/helpers/container_service_helper/textual_summary.rb:22
 #: ../app/helpers/container_service_helper/textual_summary.rb:59
 msgid "<Unnamed>"
-msgstr "<sin-nombre>"
+msgstr "<Sin nombre>"
 
 #: ../app/models/miq_alert.rb:429
 msgid "> Heap Max (%)"
-msgstr "> máx. montón (%)"
+msgstr ">  Heap Máx (%)"
 
 #: ../app/models/miq_alert.rb:434
 msgid "> Non Heap Max (%)"
-msgstr "> máx. no montón (%)"
+msgstr "> Non Heap Máx (%)"
 
 #: ../app/controllers/report_controller/widgets.rb:636
 msgid "A %{type} must be selected"
@@ -3014,7 +3014,7 @@ msgstr "Un %{type} debe ser seleccionado"
 
 #: ../app/controllers/miq_policy_controller/alerts.rb:572
 msgid "A Driving Event must be selected"
-msgstr "Un Evento Dirigido debe ser seleccionado"
+msgstr "Debe seleccionar un Evento dirigido"
 
 #: ../app/controllers/report_controller/reports/editor.rb:1649
 msgid "A Group by Tag must be selected"
@@ -3658,7 +3658,7 @@ msgstr "Añadir espacio de nombre de automatización"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3050
 msgid "Add Blueprint"
-msgstr "Agregar plano"
+msgstr "Agregar diagrama"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1269
@@ -3939,9 +3939,8 @@ msgstr "Añadir un replicador de contenedor"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2501
-#, fuzzy
 msgid "Add a Container Services"
-msgstr "Agregar  un servicio de contenedor"
+msgstr "Agregar  servicios de contenedor"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2473
@@ -4014,9 +4013,8 @@ msgid "Add a New Catalog"
 msgstr "Añadir un nuevo catálogo"
 
 #: ../app/helpers/application_helper/toolbar/servicetemplates_center.rb:17
-#, fuzzy
 msgid "Add a New Catalog Bundle"
-msgstr "Añadir un nuevo paquete de catálogos"
+msgstr "Agregar un nuevo paquete de catálogos"
 
 #: ../app/helpers/application_helper/toolbar/servicetemplates_center.rb:12
 msgid "Add a New Catalog Item"
@@ -4566,8 +4564,8 @@ msgid ""
 "Add tags individually for each VM or select multiple rows and edit tags as a"
 " group."
 msgstr ""
-"Agregar etiquetas individualmente para cada máquina virtual o seleccionar "
-"varias filas y modificar etiquetas como grupo."
+"Agregar etiquetas individualmente para cada MV o seleccionar varias filas y "
+"modificar etiquetas como un grupo."
 
 #: ../app/views/shared/views/ems_common/_form.html.haml:180
 msgid "Add this %{provider}"
@@ -4575,7 +4573,7 @@ msgstr "Agregar este %{provider}"
 
 #: ../app/controllers/dashboard_controller.rb:172
 msgid "Add this Chart Widget"
-msgstr "Añadir este asistente de cuadros"
+msgstr "Añadir este asistente de gráficos"
 
 #: ../app/views/ops/_ldap_server_entry.html.haml:7
 msgid "Add this LDAP Server"
@@ -4583,7 +4581,7 @@ msgstr "Añadir este Servidor LDAP"
 
 #: ../app/controllers/dashboard_controller.rb:170
 msgid "Add this Menu Widget"
-msgstr "Añadir este asistente Menu"
+msgstr "Agregar este asistente de Menú"
 
 #: ../app/controllers/dashboard_controller.rb:171
 msgid "Add this RSS Feed Widget"
@@ -4697,14 +4695,13 @@ msgstr "Añadir una nueva plantilla de orquestación"
 
 #: ../app/controllers/provider_foreman_controller.rb:1201
 msgid "Adding a new Service Dialog from \"%{name}\""
-msgstr ""
-"Adición de un nuevo cuadro de cuadro de diálogo de servicios de \"%{name}\""
+msgstr "Adición de un nuevo cuadro de diálogo de servicios de \"%{name}\""
 
 #: ../app/controllers/catalog_controller.rb:804
 msgid "Adding a new Service Dialog from Orchestration Template \"%{name}\""
 msgstr ""
-"Adición de un nuevo cuadro de cuadro de diálogo de servicios de la plantilla"
-" de orquestación \"%{name}\""
+"Adición de un nuevo cuadro de diálogo de servicios de la plantilla de "
+"orquestación \"%{name}\""
 
 #: ../app/controllers/report_controller.rb:691
 msgid "Adding a new dashboard"
@@ -4838,7 +4835,7 @@ msgstr "Objetos afectados"
 #: ../app/views/vm_common/_reconfigure.html.haml:388
 #: ../app/views/miq_request/_reconfigure_show.html.haml:111
 msgid "Affected VMs"
-msgstr "VMs afectadas"
+msgstr "MV afectadas"
 
 #: ../app/helpers/vm_cloud_helper/textual_summary.rb:256
 #: ../app/helpers/vm_helper/textual_summary.rb:737
@@ -4848,7 +4845,7 @@ msgstr "Dirección del agente"
 #: ../app/helpers/vm_cloud_helper/textual_summary.rb:261
 #: ../app/helpers/vm_helper/textual_summary.rb:742
 msgid "Agent Port"
-msgstr "Puerto del agente"
+msgstr "Puerto de agente"
 
 #: ../app/helpers/storage_manager_helper/textual_summary.rb:23
 msgid "Agent Type"
@@ -4856,35 +4853,35 @@ msgstr "Tipo de agente"
 
 #: ../app/helpers/ems_infra_helper/textual_summary.rb:63
 msgid "Aggregate %{title} CPU Cores"
-msgstr "Agregar núcleos de CPU %{title} "
+msgstr "Núcleos de CPU del agregado %{title} "
 
 #: ../app/helpers/ems_infra_helper/textual_summary.rb:49
 msgid "Aggregate %{title} CPU Resources"
-msgstr "Agregar recursos de CPU %{title} "
+msgstr "Recursos de CPU del agregado %{title}  "
 
 #: ../app/helpers/ems_infra_helper/textual_summary.rb:59
 msgid "Aggregate %{title} CPUs"
-msgstr "Agregar CPUs %{title}"
+msgstr "CPUs del agregado %{title}"
 
 #: ../app/helpers/ems_infra_helper/textual_summary.rb:54
 msgid "Aggregate %{title} Memory"
-msgstr "Agregar memoria %{title}"
+msgstr "Memoria del agregado %{title}"
 
 #: ../app/views/ontap_storage_system/_create_logical_disk.html.haml:26
 msgid "Aggregate (free space)"
-msgstr "Agregar (espacio libre)"
+msgstr "Agregado (espacio libre)"
 
 #: ../app/helpers/ems_container_helper/textual_summary.rb:71
 msgid "Aggregate Node CPU Cores"
-msgstr "Agregar núcleos de CPU al nodo"
+msgstr "Núcleos de CPU de nodos de agregado"
 
 #: ../app/helpers/ems_container_helper/textual_summary.rb:65
 msgid "Aggregate Node Memory"
-msgstr "Agregar memoria al nodo"
+msgstr "Memoria de nodos de agregado"
 
 #: ../app/controllers/ontap_storage_system_controller.rb:117
 msgid "Aggregate is required"
-msgstr "Se requiere agregado"
+msgstr "Agregado obligatorio"
 
 #: ../app/views/shared/views/_show_containers_dashboard.html.haml:105
 msgid "Aggregated Node Utilization"
@@ -5102,7 +5099,7 @@ msgstr "Todas las asignaciones"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3038
 msgid "All Blueprint Access Rules"
-msgstr "Todas las reglas de acceso a planos"
+msgstr "Todas las reglas de acceso a diagramas"
 
 #: ../app/presenters/tree_builder_catalog_items.rb:17
 msgid "All Catalog Items"
@@ -5329,11 +5326,11 @@ msgstr "Todas las plantillas e imágenes"
 #: ../app/controllers/ops_controller/settings/schedules.rb:649
 #: ../app/controllers/ops_controller/settings/schedules.rb:650
 msgid "All Templates for %{table}"
-msgstr "Todas las Plantillas para %{table}"
+msgstr "Todas las plantillas para %{table}"
 
 #: ../app/controllers/ops_controller/settings/schedules.rb:651
 msgid "All Templates for Host"
-msgstr "Todas las Plantillas para el Host"
+msgstr "Todas las plantillas para el Host"
 
 #: ../app/views/miq_task/_tasks_options.html.haml:44
 #: ../app/views/configuration/_timeprofile_form.html.haml:56
@@ -5364,7 +5361,7 @@ msgstr "Todos los índices de la VMDB"
 #: ../app/views/layouts/listnav/_resource_pool.html.haml:50
 #: ../config/yaml_strings.rb:4862
 msgid "All VMs"
-msgstr "Todas las VM"
+msgstr "Todas las MV"
 
 #: ../app/presenters/tree_builder_vms_instances_filter.rb:12
 msgid "All VMs & Instances"
@@ -5397,7 +5394,7 @@ msgstr "Todas las MV para el Host"
 
 #: ../app/views/miq_capacity/_planning_options.html.haml:16
 msgid "All VMs/Instances"
-msgstr "Todas las MV/instancias"
+msgstr "Todas las MV e instancias"
 
 #: ../app/presenters/tree_builder_report_widgets.rb:13
 #: ../app/controllers/report_controller/widgets.rb:240
@@ -6476,7 +6473,7 @@ msgstr ""
 
 #: ../app/controllers/application_controller/ci_processing.rb:1426
 msgid "At least 1 item must be selected for discovery"
-msgstr "Al menos 1 ítem debe ser seleccionado para el detección"
+msgstr "Al menos 1 ítem debe ser seleccionado para detección"
 
 #: ../app/controllers/report_controller.rb:212
 #: ../app/controllers/miq_ae_customization_controller.rb:100
@@ -7193,33 +7190,27 @@ msgstr "Zona Disponible"
 
 #: ../config/model_attributes.rb:115
 msgid "AvailabilityZone|Cpu usagemhz rate average avg over time period"
-msgstr ""
-"AvailabilityZone|Promedio de uso de mhz de Cpu sobre período de tiempo"
+msgstr "Promedio de uso de mhz de CPU en el  período de tiempo"
 
 #: ../config/model_attributes.rb:116
 msgid "AvailabilityZone|Cpu usagemhz rate average high over time period"
-msgstr ""
-"AvailabilityZone|Promedio alto de uso de mhz de Cpu sobre período de tiempo"
+msgstr "Promedio alto de uso de mhz de CPU en el período de tiempo"
 
 #: ../config/model_attributes.rb:117
 msgid "AvailabilityZone|Cpu usagemhz rate average low over time period"
-msgstr ""
-"AvailabilityZone|Promedio bajo de uso de mhz de Cpu sobre período de tiempo"
+msgstr "Promedio bajo de uso de mhz de CPU en el  período de tiempo"
 
 #: ../config/model_attributes.rb:118
 msgid "AvailabilityZone|Derived memory used avg over time period"
-msgstr ""
-"AvailabilityZone|Memoria derivada promedio utilizada sobre período de tiempo"
+msgstr "Memoria derivada promedio utilizada en el período de tiempo"
 
 #: ../config/model_attributes.rb:119
 msgid "AvailabilityZone|Derived memory used high over time period"
-msgstr ""
-"AvailabilityZone|Memoria derivada alta utilizada sobre período de tiempo"
+msgstr "Memoria derivada alta utilizada en el período de tiempo"
 
 #: ../config/model_attributes.rb:120
 msgid "AvailabilityZone|Derived memory used low over time period"
-msgstr ""
-"AvailabilityZone|Memoria derivada baja utilizada sobre período de tiempo"
+msgstr "Memoria derivada baja utilizada en período de tiempo"
 
 #: ../config/model_attributes.rb:121
 msgid "AvailabilityZone|Ems ref"
@@ -7227,16 +7218,13 @@ msgstr "Ems de referencia"
 
 #: ../config/model_attributes.rb:122
 msgid "AvailabilityZone|Max cpu usage rate average avg over time period"
-msgstr ""
-"Zona de disponibilidad|Promedio de tasa de uso máximo de CPU en un periodo"
+msgstr "Promedio de tasa de uso máximo de CPU en un periodo"
 
 #: ../config/model_attributes.rb:123
 msgid ""
 "AvailabilityZone|Max cpu usage rate average avg over time period without "
 "overhead"
-msgstr ""
-"Zona de disponibilidad|Promedio de tasa de uso máximo de CPU en un periodo "
-"sin sobrecarga"
+msgstr "Promedio de tasa de uso máximo de CPU en un periodo sin sobrecarga"
 
 #: ../config/model_attributes.rb:124
 msgid "AvailabilityZone|Max cpu usage rate average high over time period"
@@ -7249,8 +7237,7 @@ msgid ""
 "AvailabilityZone|Max cpu usage rate average high over time period without "
 "overhead"
 msgstr ""
-"Zona de disponibilidad|Promedio alto de tasa de uso máximo de CPU en un "
-"periodo sin sobrecarga"
+"Promedio alto de tasa de uso máximo de CPU en un periodo sin sobrecarga"
 
 #: ../config/model_attributes.rb:126
 msgid "AvailabilityZone|Max cpu usage rate average low over time period"
@@ -7268,17 +7255,14 @@ msgstr ""
 
 #: ../config/model_attributes.rb:128
 msgid "AvailabilityZone|Max mem usage absolute average avg over time period"
-msgstr ""
-"Zona de disponibilidad|Promedio absoluto de uso máximo de memoria en un "
-"periodo"
+msgstr "Promedio absoluto de uso máximo de memoria en un periodo"
 
 #: ../config/model_attributes.rb:129
 msgid ""
 "AvailabilityZone|Max mem usage absolute average avg over time period without"
 " overhead"
 msgstr ""
-"Zona de disponibilidad||Promedio absoluto de uso máximo de memoria en un "
-"periodo sin sobrecarga"
+"Promedio absoluto de uso máximo de memoria en un periodo sin sobrecarga"
 
 #: ../config/model_attributes.rb:130
 msgid "AvailabilityZone|Max mem usage absolute average high over time period"
@@ -7504,36 +7488,36 @@ msgstr "Copia de seguridad para %{model} \"%{name}\" fue cancelada por el usuari
 #: ../app/views/ops/_ldap_domain_form.html.haml:150
 #: ../app/views/_ldap_domain_form.html.haml:150
 msgid "Base DN"
-msgstr "DN Base"
+msgstr "DN de Base"
 
 #. TRANSLATORS: en.yml key: dictionary.table.cim_base_storage_extent
 #: ../config/dictionary_strings.rb:2086
 msgid "Base Extents"
-msgstr "Extensiones base"
+msgstr "Tamaño de base"
 
 #: ../app/views/static/deploy_containers_provider/deploy-provider-details-create-vms.html.haml:34
 #: ../app/views/static/deploy_containers_provider/deploy-provider-details-create-vms.html.haml:97
 msgid "Base Name"
-msgstr "Nombre base"
+msgstr "Nombre de base"
 
 #. TRANSLATORS: en.yml key: dictionary.table.base_snapshot
 #: ../config/dictionary_strings.rb:2076
 msgid "Base Snapshot"
-msgstr "Snapshot base"
+msgstr "Instantánea de base"
 
 #. TRANSLATORS: en.yml key: dictionary.table.base_snapshot (plural form)
 #: ../config/dictionary_strings.rb:2078
 msgid "Base Snapshots"
-msgstr "Snapshots base"
+msgstr "Instantáneas de base"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1658
 msgid "Base Storage Extents"
-msgstr "Extensiones de almacenamiento base"
+msgstr "Tamaño de almacenamiento de base"
 
 #: ../app/views/report/_form_tl_settings.html.haml:19
 msgid "Base Timeline on"
-msgstr "Línea de tiempo base en"
+msgstr "Línea de tiempo de base en"
 
 #. TRANSLATORS: file: product/views/MiqAlert.yaml
 #: ../app/views/miq_policy/_alert_details.html.haml:67
@@ -7818,12 +7802,12 @@ msgstr "Texto azul"
 
 #: ../config/model_attributes.rb:160
 msgid "Blueprint"
-msgstr "Plano"
+msgstr "Diagrama"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3036
 msgid "Blueprints"
-msgstr "Planos"
+msgstr "Diagramas"
 
 #: ../config/model_attributes.rb:161
 msgid "Blueprint|Description"
@@ -7843,7 +7827,7 @@ msgstr "Número de región"
 
 #: ../config/model_attributes.rb:165
 msgid "Blueprint|Status"
-msgstr "Estado"
+msgstr "Estatus"
 
 #: ../config/model_attributes.rb:166
 msgid "Blueprint|Ui properties"
@@ -8197,11 +8181,11 @@ msgstr "Acordeón de botones"
 #. TRANSLATORS: en.yml key: dictionary.table.custom_button_set
 #: ../config/dictionary_strings.rb:1322 ../config/dictionary_strings.rb:2208
 msgid "Buttons Group"
-msgstr "Botones Grupo"
+msgstr "Grupo de botones"
 
 #: ../app/controllers/catalog_controller.rb:1881
 msgid "Buttons Group Reorder"
-msgstr "Reorden del grupo de botones"
+msgstr "Reordenamiento del grupo de botones"
 
 #. TRANSLATORS: en.yml key: dictionary.model.CustomButtonSet (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.custom_button_set (plural form)
@@ -8332,7 +8316,7 @@ msgstr "CIDR"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1660
 msgid "CIM Base Storage Extents"
-msgstr "Alcances del almacenamiento base CIM"
+msgstr "Tamaño del almacenamiento de base CIM"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1640
@@ -8418,28 +8402,28 @@ msgstr "CPU: Tasa de uso mínimo absoluto (marca de tiempo)"
 #: ../config/dictionary_strings.rb:246
 msgid "CPU - Aggregate Time Child VMs Spent in Ready State (ms)"
 msgstr ""
-"CPU: Tiempo total que las máquinas virtuales secundarias pasaron en estado "
-"listo (ms)"
+"CPU -Suma del tiempo utilizado por las máquinas virtuales secundarias en "
+"estado Listo (ms)"
 
 #. TRANSLATORS: en.yml key: dictionary.column.cpu_system_delta_summation
 #: ../config/dictionary_strings.rb:258
 msgid "CPU - Aggregate Time Child VMs Spent in System State (ms)"
 msgstr ""
-"CPU: Tiempo total que las máquinas virtuales secundarias pasaron en estado "
-"del sistema (ms)"
+"CPU - Suma del tiempo utilizado por las máquinas virtuales secundarias en "
+"estado del sistema (ms)"
 
 #. TRANSLATORS: en.yml key: dictionary.column.cpu_wait_delta_summation
 #: ../config/dictionary_strings.rb:278
 msgid "CPU - Aggregate Time Spent in Wait State for Child VMs (ms)"
 msgstr ""
-"CPU: Tiempo total pasado en modo de espera para las máquinas virtuales "
+"CPU - Suma del tiempo utilizado en modo de espera para máquinas virtuales "
 "secundarias (ms)"
 
 #. TRANSLATORS: en.yml key: dictionary.column.cpu_used_delta_summation
 #: ../config/dictionary_strings.rb:276
 msgid "CPU - Aggregate Time Used for Child VMs (ms)"
 msgstr ""
-"CPU: Tiempo total utilizado para las máquinas virtuales secundarias (ms)"
+"CPU - Suma de tiempo utilizado para las máquinas virtuales secundarias (ms)"
 
 #. TRANSLATORS: en.yml key:
 #. dictionary.column.EmsClusterPerformance.cpu_usage_rate_average
@@ -8849,13 +8833,13 @@ msgstr "Afinidad de CPU"
 #. TRANSLATORS: en.yml key: dictionary.column.trend_cpu_usagemhz_rate_average
 #: ../config/dictionary_strings.rb:968
 msgid "CPU Average Used MHz Trend"
-msgstr "Tendencia de MHz promedio usados de la CPU"
+msgstr "Tendencia de MHz promedio usados de CPU"
 
 #. TRANSLATORS: file: product/views/Flavor.yaml
 #: ../app/helpers/flavor_helper/textual_summary.rb:39
 #: ../config/yaml_strings.rb:4840
 msgid "CPU Cores"
-msgstr "Núcleos de la CPU"
+msgstr "Núcleos de CPU"
 
 #: ../app/helpers/host_helper/textual_summary.rb:242
 msgid "CPU Cores Per Socket"
@@ -8864,36 +8848,36 @@ msgstr "Núcleos de la CPU por socket"
 #. TRANSLATORS: en.yml key: dictionary.column.v_cpu_vr_ratio
 #: ../config/dictionary_strings.rb:1002
 msgid "CPU Cores Virtual to Real Ratio"
-msgstr "Relación núcleos de la CPU virtuales/reales"
+msgstr "Relación núcleos de CPU virtuales a reales"
 
 #. TRANSLATORS: en.yml key: dictionary.column.cpu_limit
 #: ../app/helpers/resource_pool_helper/textual_summary.rb:163
 #: ../app/views/vm_common/_config.html.haml:236
 #: ../config/dictionary_strings.rb:244
 msgid "CPU Limit"
-msgstr "Límite de la CPU"
+msgstr "Límite de CPU"
 
 #. TRANSLATORS: en.yml key: dictionary.column.max_derived_cpu_reserved
 #: ../config/dictionary_strings.rb:476
 msgid "CPU Max Available MHz"
-msgstr "MHz máximos disponibles de la CPU"
+msgstr "MHz máximos disponibles de CPU"
 
 #. TRANSLATORS: en.yml key:
 #. dictionary.column.VmPerformance.max_derived_cpu_reserved
 #: ../config/dictionary_strings.rb:108
 msgid "CPU Max Reserved MHz"
-msgstr "MHz máximos reservados de la CPU"
+msgstr "MHz máximos reservados de CPU"
 
 #. TRANSLATORS: en.yml key: dictionary.column.max_derived_cpu_available
 #: ../config/dictionary_strings.rb:474
 msgid "CPU Max Total MHz"
-msgstr "MHz máximos totales de la CPU"
+msgstr "MHz máximos totales de CPU"
 
 #. TRANSLATORS: en.yml key:
 #. dictionary.column.trend_max_cpu_usagemhz_rate_average
 #: ../config/dictionary_strings.rb:972
 msgid "CPU Max Used MHz Trend"
-msgstr "Tendencia de MHz máximos usados de la CPU"
+msgstr "Tendencia de MHz máximos usados de CPU"
 
 #. TRANSLATORS: file: product/views/MiqWorker.yaml
 #: ../app/views/ops/_selected_by_roles.html.haml:176
@@ -8901,35 +8885,35 @@ msgstr "Tendencia de MHz máximos usados de la CPU"
 #: ../app/views/ops/_selected_by_servers.html.haml:128
 #: ../config/yaml_strings.rb:4743
 msgid "CPU Percent"
-msgstr "Porcentaje de la CPU"
+msgstr "Porcentaje de CPU"
 
 #. TRANSLATORS: en.yml key: dictionary.column.cpu_reserve
 #: ../app/helpers/resource_pool_helper/textual_summary.rb:151
 #: ../app/views/vm_common/_config.html.haml:236
 #: ../config/dictionary_strings.rb:248
 msgid "CPU Reserve"
-msgstr "Reserva de la CPU"
+msgstr "Reserva de CPU"
 
 #. TRANSLATORS: en.yml key: dictionary.column.cpu_reserve_expand
 #: ../app/helpers/resource_pool_helper/textual_summary.rb:157
 #: ../app/views/vm_common/_config.html.haml:236
 #: ../config/dictionary_strings.rb:250
 msgid "CPU Reserve Expand"
-msgstr "Ampliar reserva de la CPU"
+msgstr "Ampliar reserva de CPU"
 
 #. TRANSLATORS: en.yml key: dictionary.column.cpu_shares
 #: ../app/helpers/resource_pool_helper/textual_summary.rb:169
 #: ../app/views/vm_common/_config.html.haml:236
 #: ../config/dictionary_strings.rb:252
 msgid "CPU Shares"
-msgstr "Recursos compartidos de la CPU"
+msgstr "Recursos compartidos de CPU"
 
 #. TRANSLATORS: en.yml key: dictionary.column.cpu_shares_level
 #: ../app/helpers/resource_pool_helper/textual_summary.rb:175
 #: ../app/views/vm_common/_config.html.haml:236
 #: ../config/dictionary_strings.rb:254
 msgid "CPU Shares Level"
-msgstr "Nivel de recursos compartidos de la CPU"
+msgstr "Nivel de recursos compartidos de CPU"
 
 #. TRANSLATORS: en.yml key: dictionary.column.cpu_speed
 #: ../app/controllers/application_controller.rb:1190
@@ -8954,17 +8938,17 @@ msgstr "Tiempo de la CPU"
 #. TRANSLATORS: en.yml key: dictionary.column.cpu_metric
 #: ../config/dictionary_strings.rb:1150
 msgid "CPU Total"
-msgstr "Total de la CPU"
+msgstr "Total de CPU"
 
 #. TRANSLATORS: en.yml key: dictionary.column.cpu_cost
 #: ../config/dictionary_strings.rb:1148
 msgid "CPU Total Cost"
-msgstr "Costo total de la CPU"
+msgstr "Costo total de CPU"
 
 #. TRANSLATORS: en.yml key: dictionary.column.derived_cpu_available
 #: ../config/dictionary_strings.rb:288
 msgid "CPU Total Installed"
-msgstr "Total instalado de la CPU"
+msgstr "Total instalado de CPU"
 
 #. TRANSLATORS: en.yml key: dictionary.column.cpu_type
 #: ../app/controllers/application_controller.rb:1187
@@ -8975,7 +8959,7 @@ msgstr "Tipo de CPU"
 #: ../app/helpers/vm_helper/textual_summary.rb:797
 #: ../app/views/vm_common/_right_size.html.haml:79
 msgid "CPU Usage"
-msgstr "Uso de la CPU"
+msgstr "Uso de CPU"
 
 #. TRANSLATORS: en.yml key: dictionary.column.cpu_used_metric
 #: ../config/dictionary_strings.rb:1154
@@ -9311,7 +9295,7 @@ msgstr "No se puede apagar. Ya está apagada."
 
 #: ../app/views/vm_common/console_vnc.html.haml:38
 msgid "Canvas not supported."
-msgstr "No se admite canvas."
+msgstr "No soporta lienzo."
 
 #: ../app/views/persistent_volume/_main.html.haml:22
 msgid "Capacity"
@@ -9337,7 +9321,7 @@ msgstr "Capacidad y utilización"
 
 #: ../app/controllers/vm_common.rb:1752
 msgid "Capacity & Utilization data for %{vm_or_template} \"%{name}\""
-msgstr "Datos de capacidad y utilización para %{vm_or_template} \"%{nombre}\""
+msgstr "Capacidad y uso de datos para %{vm_or_template} \"%{name}\""
 
 #. TRANSLATORS: en.yml key: dictionary.column.derived_storage_free
 #: ../config/dictionary_strings.rb:318
@@ -9770,7 +9754,7 @@ msgstr "Categoría: %{description}"
 
 #: ../app/views/miq_policy/_alert_builtin_exp.html.haml:207
 msgid "Caution:"
-msgstr "Precaución:"
+msgstr "Atención:"
 
 #: ../app/views/ops/_settings_advanced_tab.html.haml:18
 msgid "Caution: Manual changes to configuration files can disable the Server!"
@@ -10574,7 +10558,7 @@ msgstr "Elija>"
 #. TRANSLATORS: file: product/views/CimBaseStorageExtent.yaml
 #: ../config/yaml_strings.rb:4705
 msgid "Cim Base Storage Extent"
-msgstr "Alcance del almacenamiento base CIM"
+msgstr "Tamaño del almacenamiento de base CIM"
 
 #. TRANSLATORS: file: product/views/OntapLogicalDisk.yaml
 #: ../config/yaml_strings.rb:4885
@@ -10584,7 +10568,7 @@ msgstr "Disco lógico CIM"
 #. TRANSLATORS: file: product/views/CimStorageExtent.yaml
 #: ../config/yaml_strings.rb:4897
 msgid "Cim Storage Extent"
-msgstr "Alcance del almacenamiento CIM"
+msgstr "Capacidad del almacenamiento CIM"
 
 #. TRANSLATORS: file: product/views/OntapStorageVolume.yaml
 #: ../config/yaml_strings.rb:4327
@@ -10594,12 +10578,12 @@ msgstr "Volumen de almacenamiento CIM"
 #. TRANSLATORS: file: product/views/CimBaseStorageExtent.yaml
 #: ../config/yaml_strings.rb:4707
 msgid "CimBaseStorageExtents"
-msgstr "CimBaseStorageExtents"
+msgstr "Capacidad de almacenamiento de base Cim"
 
 #. TRANSLATORS: file: product/views/CimStorageExtent.yaml
 #: ../config/yaml_strings.rb:4899
 msgid "CimStorageExtents"
-msgstr "CimStorageExtents"
+msgstr "Capacidad de almacenamiento de base Cim"
 
 #: ../app/models/classification.rb:216 ../app/models/classification.rb:282
 msgid "Class '%{name}' is not eligible for classification"
@@ -12422,9 +12406,8 @@ msgid "Commit"
 msgstr "Confirmar"
 
 #: ../app/controllers/report_controller.rb:754
-#, fuzzy
 msgid "Commit Accordion management changes"
-msgstr "Confirmar los cambios del acordeón de gestión"
+msgstr "Confirmar los cambios de gestión"
 
 #: ../app/views/miq_ae_customization/_dialog_import_export.html.haml:65
 #: ../app/views/report/_export_widgets.html.haml:66
@@ -15033,8 +15016,7 @@ msgid ""
 "ContainerNode|Max cpu usage rate average avg over time period without "
 "overhead"
 msgstr ""
-"ContainerNode|Tasa promedio de uso máximo de CPU durante período de tiempo "
-"sin sobrecarga"
+"Tasa promedio de uso máximo de CPU durante período de tiempo sin sobrecarga"
 
 #: ../config/model_attributes.rb:780
 msgid "ContainerNode|Max cpu usage rate average high over time period"
@@ -15047,8 +15029,8 @@ msgid ""
 "ContainerNode|Max cpu usage rate average high over time period without "
 "overhead"
 msgstr ""
-"ContainerNode|Tasa promedio de uso máximo alto de CPU durante período de "
-"tiempo sin sobrecarga"
+"Tasa promedio de uso máximo alto de CPU durante período de tiempo sin "
+"sobrecarga"
 
 #: ../config/model_attributes.rb:782
 msgid "ContainerNode|Max cpu usage rate average low over time period"
@@ -15061,8 +15043,8 @@ msgid ""
 "ContainerNode|Max cpu usage rate average low over time period without "
 "overhead"
 msgstr ""
-"ContainerNode|Tasa promedio de uso máximo bajo de CPU durante período de "
-"tiempo sin sobrecarga"
+"Tasa promedio de uso máximo bajo de CPU durante período de tiempo sin "
+"sobrecarga"
 
 #: ../config/model_attributes.rb:784
 msgid "ContainerNode|Max mem usage absolute average avg over time period"
@@ -15075,8 +15057,8 @@ msgid ""
 "ContainerNode|Max mem usage absolute average avg over time period without "
 "overhead"
 msgstr ""
-"ContainerNode|Uso de memoria máximo absoluto promedio durante período de "
-"tiempo sin sobrecarga"
+"Uso de memoria máximo absoluto promedio durante período de tiempo sin "
+"sobrecarga"
 
 #: ../config/model_attributes.rb:786
 msgid "ContainerNode|Max mem usage absolute average high over time period"
@@ -15089,8 +15071,8 @@ msgid ""
 "ContainerNode|Max mem usage absolute average high over time period without "
 "overhead"
 msgstr ""
-"ContainerNode|Uso de memoria máximo absoluto promedio alto durante período "
-"de tiempo sin sobrecarga"
+"Uso de memoria máximo absoluto promedio alto durante período de tiempo sin "
+"sobrecarga"
 
 #: ../config/model_attributes.rb:788
 msgid "ContainerNode|Max mem usage absolute average low over time period"
@@ -15568,8 +15550,8 @@ msgid ""
 "ContainerReplicator|Max cpu usage rate average low over time period without "
 "overhead"
 msgstr ""
-"ContainerReplicator|Tasa promedio de uso máximo bajo de CPU durante período "
-"de tiempo sin sobrecarga"
+"Tasa promedio de uso máximo bajo de CPU durante período de tiempo sin "
+"sobrecarga"
 
 #: ../config/model_attributes.rb:890
 msgid ""
@@ -15583,8 +15565,8 @@ msgid ""
 "ContainerReplicator|Max mem usage absolute average avg over time period "
 "without overhead"
 msgstr ""
-"ContainerReplicator|Uso de memoria máximo absoluto promedio durante período "
-"de tiempo sin sobrecarga"
+"Uso de memoria máximo absoluto promedio durante período de tiempo sin "
+"sobrecarga"
 
 #: ../config/model_attributes.rb:892
 msgid ""
@@ -15598,8 +15580,8 @@ msgid ""
 "ContainerReplicator|Max mem usage absolute average high over time period "
 "without overhead"
 msgstr ""
-"ContainerReplicator|Uso de memoria máximo absoluto promedio alto durante "
-"período de tiempo sin sobrecarga"
+"Uso de memoria máximo absoluto promedio alto durante período de tiempo sin "
+"sobrecarga"
 
 #: ../config/model_attributes.rb:894
 msgid ""
@@ -15613,8 +15595,8 @@ msgid ""
 "ContainerReplicator|Max mem usage absolute average low over time period "
 "without overhead"
 msgstr ""
-"ContainerReplicator|Uso de memoria máximo absoluto promedio bajo durante "
-"período de tiempo sin sobrecarga"
+"Uso de memoria máximo absoluto promedio bajo durante período de tiempo sin "
+"sobrecarga"
 
 #: ../config/model_attributes.rb:896
 msgid "ContainerReplicator|Name"
@@ -15847,8 +15829,7 @@ msgid ""
 "ContainerService|Max cpu usage rate average avg over time period without "
 "overhead"
 msgstr ""
-"ContainerService|Tasa promedio de uso máximo de CPU durante período de "
-"tiempo sin sobrecarga"
+"Tasa promedio de uso máximo de CPU durante período de tiempo sin sobrecarga"
 
 #: ../config/model_attributes.rb:942
 msgid "ContainerService|Max cpu usage rate average high over time period"
@@ -15861,8 +15842,8 @@ msgid ""
 "ContainerService|Max cpu usage rate average high over time period without "
 "overhead"
 msgstr ""
-"ContainerService|Tasa promedio de uso máximo alto de CPU durante período de "
-"tiempo sin sobrecarga"
+"Tasa promedio de uso máximo alto de CPU durante período de tiempo sin "
+"sobrecarga"
 
 #: ../config/model_attributes.rb:944
 msgid "ContainerService|Max cpu usage rate average low over time period"
@@ -15875,8 +15856,8 @@ msgid ""
 "ContainerService|Max cpu usage rate average low over time period without "
 "overhead"
 msgstr ""
-"ContainerService|Tasa promedio de uso máximo bajo de CPU durante período de "
-"tiempo sin sobrecarga"
+"Tasa promedio de uso máximo bajo de CPU durante período de tiempo sin "
+"sobrecarga"
 
 #: ../config/model_attributes.rb:946
 msgid "ContainerService|Max mem usage absolute average avg over time period"
@@ -15889,8 +15870,8 @@ msgid ""
 "ContainerService|Max mem usage absolute average avg over time period without"
 " overhead"
 msgstr ""
-"ContainerService|Uso de memoria máximo absoluto promedio durante período de "
-"tiempo sin sobrecarga"
+"Uso de memoria máximo absoluto promedio durante período de tiempo sin "
+"sobrecarga"
 
 #: ../config/model_attributes.rb:948
 msgid "ContainerService|Max mem usage absolute average high over time period"
@@ -15903,8 +15884,8 @@ msgid ""
 "ContainerService|Max mem usage absolute average high over time period "
 "without overhead"
 msgstr ""
-"ContainerService|Uso de memoria máximo absoluto promedio alto durante "
-"período de tiempo sin sobrecarga"
+"Uso de memoria máximo absoluto promedio alto durante período de tiempo sin "
+"sobrecarga"
 
 #: ../config/model_attributes.rb:950
 msgid "ContainerService|Max mem usage absolute average low over time period"
@@ -15917,8 +15898,8 @@ msgid ""
 "ContainerService|Max mem usage absolute average low over time period without"
 " overhead"
 msgstr ""
-"ContainerService|Uso de memoria máximo absoluto promedio bajo durante "
-"período de tiempo sin sobrecarga"
+"Uso de memoria máximo absoluto promedio bajo durante período de tiempo sin "
+"sobrecarga"
 
 #: ../config/model_attributes.rb:952
 msgid "ContainerService|Name"
@@ -16366,8 +16347,7 @@ msgstr ""
 msgid ""
 "Container|Max cpu usage rate average avg over time period without overhead"
 msgstr ""
-"Container|Tasa promedio de uso máximo de CPU durante período de tiempo sin "
-"sobrecarga"
+"Tasa promedio de uso máximo de CPU durante período de tiempo sin sobrecarga"
 
 #: ../config/model_attributes.rb:521
 msgid "Container|Max cpu usage rate average high over time period"
@@ -16378,8 +16358,8 @@ msgstr ""
 msgid ""
 "Container|Max cpu usage rate average high over time period without overhead"
 msgstr ""
-"Container|Tasa promedio de uso máximo alto de CPU durante período de tiempo "
-"sin sobrecarga"
+"Tasa promedio de uso máximo alto de CPU durante período de tiempo sin "
+"sobrecarga"
 
 #: ../config/model_attributes.rb:523
 msgid "Container|Max cpu usage rate average low over time period"
@@ -16390,8 +16370,8 @@ msgstr ""
 msgid ""
 "Container|Max cpu usage rate average low over time period without overhead"
 msgstr ""
-"Container|Tasa promedio de uso máximo bajo de CPU durante período de tiempo "
-"sin sobrecarga"
+"Tasa promedio de uso máximo bajo de CPU durante período de tiempo sin "
+"sobrecarga"
 
 #: ../config/model_attributes.rb:525
 msgid "Container|Max mem usage absolute average avg over time period"
@@ -16403,8 +16383,8 @@ msgid ""
 "Container|Max mem usage absolute average avg over time period without "
 "overhead"
 msgstr ""
-"Container|Uso de memoria máximo absoluto promedio durante período de tiempo "
-"sin sobrecarga"
+"Uso de memoria máximo absoluto promedio durante período de tiempo sin "
+"sobrecarga"
 
 #: ../config/model_attributes.rb:527
 msgid "Container|Max mem usage absolute average high over time period"
@@ -16417,8 +16397,8 @@ msgid ""
 "Container|Max mem usage absolute average high over time period without "
 "overhead"
 msgstr ""
-"Container|Uso de memoria máximo absoluto promedio alto durante período de "
-"tiempo sin sobrecarga"
+"Uso de memoria máximo absoluto promedio alto durante período de tiempo sin "
+"sobrecarga"
 
 #: ../config/model_attributes.rb:529
 msgid "Container|Max mem usage absolute average low over time period"
@@ -16431,8 +16411,8 @@ msgid ""
 "Container|Max mem usage absolute average low over time period without "
 "overhead"
 msgstr ""
-"Container|Uso de memoria máximo absoluto promedio bajo durante período de "
-"tiempo sin sobrecarga"
+"Uso de memoria máximo absoluto promedio bajo durante período de tiempo sin "
+"sobrecarga"
 
 #: ../config/model_attributes.rb:531
 msgid "Container|Message"
@@ -16672,11 +16652,11 @@ msgstr "Políticas de control"
 
 #: ../app/models/netapp_rcu.rb:163
 msgid "Controller '%{name}' does not have aggregate '%{item}'"
-msgstr "El controlador '%{name}' no tiene aggregate '%{item}'."
+msgstr "El controlador '%{name}' no tiene el agregado '%{item}'."
 
 #: ../app/models/netapp_rcu.rb:168
 msgid "Controller '%{name}' does not have volume '%{item}'"
-msgstr "El controlador '%{name}' no tiene volumen '%{item}'."
+msgstr "El controlador '%{name}' no tiene el volumen '%{item}'."
 
 #. TRANSLATORS: file: db/fixtures/miq_report_formats.yml
 #: ../config/yaml_strings.rb:3191
@@ -17146,8 +17126,7 @@ msgstr ""
 #: ../app/helpers/application_helper/toolbar/configuration_script_center.rb:12
 #: ../app/helpers/application_helper/toolbar/x_configuration_script_center.rb:12
 msgid "Create Service Dialog from this Job Template"
-msgstr ""
-"Crear cuadro de cuadro de diálogo de servicio desde esta plantilla de tareas"
+msgstr "Crear cuadro de diálogo de servicio desde esta plantilla de tareas"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:301
@@ -18416,11 +18395,11 @@ msgstr "Se guardó el porcentaje de deduplicación."
 
 #: ../app/helpers/ontap_logical_disk_helper/textual_summary.rb:151
 msgid "Dedup Size Saved"
-msgstr "Se guardó el tamaño de deduplicación."
+msgstr "Se guardó el tamaño de duplicación."
 
 #: ../app/helpers/ontap_logical_disk_helper/textual_summary.rb:155
 msgid "Dedup Size Shared"
-msgstr "Tamaño de deduplicación compartido"
+msgstr "Tamaño de duplicación compartido"
 
 #. TRANSLATORS: file: product/views/MiqDialog.yaml
 #. TRANSLATORS: file: product/views/MiqWidget-all.yaml
@@ -18738,7 +18717,7 @@ msgstr "Eliminar cuadro de diálogo"
 #: ../app/helpers/application_helper/toolbar/host_aggregate_center.rb:40
 #: ../app/helpers/application_helper/toolbar/host_aggregates_center.rb:43
 msgid "Delete Host Aggregates"
-msgstr "Borrar los agregados de host"
+msgstr "Borrar los agregados de hosts"
 
 #: ../app/models/manageiq/providers/cloud_manager/auth_key_pair/operations.rb:13
 msgid "Delete KeyPair Operation"
@@ -18748,12 +18727,12 @@ msgstr "Eliminar operación de par de claves"
 #: ../app/helpers/application_helper/toolbar/tasks_center.rb:31
 #: ../config/yaml_strings.rb:1407
 msgid "Delete Older"
-msgstr "Eliminar más antigua"
+msgstr "Eliminar anteriores"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1409
 msgid "Delete Older Tasks"
-msgstr "Eliminar tareas más antiguas"
+msgstr "Eliminar tareas anteriores"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1444
@@ -19029,28 +19008,29 @@ msgstr[1] "Eliminar iniciado para %{number} volúmenes de nube"
 #: ../app/controllers/host_aggregate_controller.rb:617
 msgid "Delete initiated for %{number} Host Aggregate."
 msgid_plural "Delete initiated for %{number} Host Aggregates."
-msgstr[0] "Eliminar iniciado para %{number} agregado de hosts"
-msgstr[1] "Eliminar iniciado para %{number} agregados de hosts"
+msgstr[0] "Borrar el iniciado para %{number} agregado de hosts"
+msgstr[1] "Borrar el iniciado para %{number} agregados de hosts"
 
 #: ../app/controllers/auth_key_pair_cloud_controller.rb:249
 msgid "Delete initiated for %{number} Key Pair"
 msgid_plural "Delete initiated for %{number} Key Pairs"
-msgstr[0] "Eliminar iniciado para %{number} par de claves"
-msgstr[1] "Eliminar iniciado para %{number} pares de claves"
+msgstr[0] "Eliminar el  iniciado para %{number} par de claves"
+msgstr[1] "Eliminar el iniciado para %{number} pares de claves"
 
 #: ../app/controllers/network_router_controller.rb:265
 msgid "Delete initiated for %{number} Network Router."
 msgid_plural "Delete initiated for %{number} Network Routers."
-msgstr[0] "Eliminar iniciado para %{number} enrutador de red"
-msgstr[1] "Eliminar iniciado para %{number}  enrutadores de red"
+msgstr[0] "Eliminar el iniciado para %{number} enrutador de red"
+msgstr[1] "Eliminar el iniciado para %{number} enrutadores de red"
 
 #: ../app/controllers/application_controller/ci_processing.rb:2595
 msgid "Delete initiated for Datastore from the %{product} Database"
 msgid_plural "Delete initiated for Datastores from the %{product} Database"
 msgstr[0] ""
-"Eliminar iniciado para el almacén de datos de la base de datos de %{product}"
+"Eliminar el  iniciado para el almacén de datos de la base de datos de "
+"%{product}"
 msgstr[1] ""
-"Eliminar iniciado para los almacenes de datos de la base de datos de "
+"Eliminar el iniciado para los almacenes de datos de la base de datos de "
 "%{product}"
 
 #: ../app/helpers/application_helper/toolbar/dialog_center.rb:75
@@ -19059,7 +19039,7 @@ msgstr "Eliminar %{dialog_resource} seleccionado"
 
 #: ../app/controllers/report_controller.rb:752
 msgid "Delete selected Accordion and its contents"
-msgstr "Eliminar Accordion seleccionado y su contenido"
+msgstr "Eliminar el acordeón seleccionado y su contenido"
 
 #: ../app/helpers/application_helper/toolbar/cloud_networks_center.rb:26
 msgid "Delete selected Cloud Networks"
@@ -19067,7 +19047,7 @@ msgstr "Eliminar las redes de nube seleccionadas"
 
 #: ../app/helpers/application_helper/toolbar/cloud_subnets_center.rb:28
 msgid "Delete selected Cloud Subnets"
-msgstr "Eliminar subredes de nube seleccionadas"
+msgstr "Eliminar las  subredes de nube seleccionadas"
 
 #: ../app/helpers/application_helper/toolbar/cloud_tenants_center.rb:25
 msgid "Delete selected Cloud Tenants"
@@ -19084,15 +19064,15 @@ msgstr "Eliminar grupos seleccionados"
 #: ../app/helpers/application_helper/toolbar/host_aggregate_center.rb:39
 #: ../app/helpers/application_helper/toolbar/host_aggregates_center.rb:42
 msgid "Delete selected Host Aggregates"
-msgstr "Eliminar los agregados de host seleccionados"
+msgstr "Eliminar los agregados de hosts seleccionados"
 
 #: ../app/helpers/application_helper/toolbar/ldap_regions_center.rb:26
 msgid "Delete selected LDAP Regions"
-msgstr "Eliminar regiones LDAP seleccionadas"
+msgstr "Eliminar las regiones LDAP seleccionadas"
 
 #: ../app/helpers/application_helper/toolbar/user_roles_center.rb:34
 msgid "Delete selected Roles"
-msgstr "Eliminar roles seleccionados"
+msgstr "Eliminar los roles seleccionados"
 
 #: ../app/helpers/application_helper/toolbar/network_routers_center.rb:30
 msgid "Delete selected Routers"
@@ -20212,9 +20192,8 @@ msgid "Discard"
 msgstr "Descartar"
 
 #: ../app/controllers/report_controller.rb:755
-#, fuzzy
 msgid "Discard Accordion management changes"
-msgstr "Descartar los cambios del acordeón de gestión "
+msgstr "Descartar los cambios de gestión "
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1279
@@ -20748,12 +20727,12 @@ msgstr "Mostrar grupos individuales"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:396
 msgid "Display Individual Host Aggregates"
-msgstr "Mostrar agregados de host individuales"
+msgstr "Mostrar agregados de hosts individuales"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:681
 msgid "Display Individual Hosts / Nodes"
-msgstr "Mostrar hosts/nodos individuales"
+msgstr "Mostrar hosts o nodos individuales"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2776
@@ -20898,17 +20877,17 @@ msgstr "Mostrar instantáneas individuales"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1666
 msgid "Display Individual Storage Extents"
-msgstr "Mostrar alcances de almacenamiento individuales"
+msgstr "Mostrar capacidad de almacenamiento individual"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1718
 msgid "Display Individual Storage Managers"
-msgstr "Mostrar administradores de almacenamiento individuales"
+msgstr "Mostrar administradores de almacenamiento individual"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3069
 msgid "Display Individual Storage Providers"
-msgstr "Mostrar proveedores de almacenamiento individuales"
+msgstr "Mostrar proveedores de almacenamiento individual"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1610
@@ -21245,7 +21224,7 @@ msgstr "Mostrar listas de instantáneas"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1664
 msgid "Display Lists of Storage Extents"
-msgstr "Mostrar listas de alcances de almacenamiento"
+msgstr "Mostrar listas de capacidad de almacenamiento"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1716
@@ -21360,7 +21339,7 @@ msgstr "Parámetros de visualización"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1668
 msgid "Display Storage Extents Utilization"
-msgstr "Mostrar utilización de alcances de almacenamiento"
+msgstr "Mostrar utilización de capacidad de almacenamiento"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1612
@@ -22040,7 +22019,7 @@ msgstr "Evento impulsor"
 
 #: ../app/helpers/container_helper/textual_summary.rb:78
 msgid "Drop Capabilities"
-msgstr "Capacidades de colocación"
+msgstr "Funcionalidades de desplazamiento"
 
 #: ../app/models/dialog_field.rb:51
 msgid "Drop Down List"
@@ -22381,12 +22360,12 @@ msgstr "Modificar información básica, alcance y notas"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3052
 msgid "Edit Blueprint"
-msgstr "Modificar plano"
+msgstr "Modificar diagrama"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3046
 msgid "Edit Blueprint Tags"
-msgstr "Modificar etiquetas de planos"
+msgstr "Modificar etiquetas de diagramas"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1321
@@ -22810,7 +22789,7 @@ msgstr "Modificar servicios"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1672
 msgid "Edit Storage Extents Tags"
-msgstr "Modificar etiquetas de alcances de almacenamiento"
+msgstr "Modificar etiquetas de capacidad de almacenamiento"
 
 #: ../app/controllers/storage_manager_controller.rb:131
 #: ../app/controllers/storage_manager_controller.rb:182
@@ -23889,8 +23868,8 @@ msgid ""
 "access from multiple tabs or windows of the same browser.  Please close any "
 "duplicate sessions before proceeding."
 msgstr ""
-"Se anuló la edición. %{product} no admite el botón Atrás dle navegador ni el"
-" acceso desde varias fichas o ventanas del mismo navegador. Cierre las "
+"Se anuló la edición. %{product} no soporta el botón Atrás del navegador ni "
+"el acceso desde varias pestañas o ventanas del mismo navegador. Cierre las "
 "sesiones duplicadas antes de continuar."
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -24332,7 +24311,7 @@ msgstr "Modificar este panel"
 #: ../app/helpers/application_helper/toolbar/miq_dialog_center.rb:12
 #: ../app/helpers/application_helper/toolbar/dialog_center.rb:12
 msgid "Edit this Dialog"
-msgstr "Modificar este cuadro de cuadro de diálogo"
+msgstr "Modificar este cuadro de diálogo"
 
 #: ../app/helpers/application_helper/toolbar/miq_ae_domain_center.rb:12
 msgid "Edit this Domain"
@@ -24711,235 +24690,227 @@ msgstr "EmsCloud"
 
 #: ../config/model_attributes.rb:1193
 msgid "EmsCluster|Aggregate cpu speed"
-msgstr "Agregado de velocidad de CPU"
+msgstr "Velocidad de CPU total"
 
 #: ../config/model_attributes.rb:1194
 msgid "EmsCluster|Aggregate cpu total cores"
-msgstr "Agregado de núcleos totales de CPU"
+msgstr "Suma de los núcleos de CPU"
 
 #: ../config/model_attributes.rb:1195
 msgid "EmsCluster|Aggregate disk capacity"
-msgstr "Agregado de capacidad de disco"
+msgstr "Capacidad de disco del agregado"
 
 #: ../config/model_attributes.rb:1196
 msgid "EmsCluster|Aggregate memory"
-msgstr "Agregado de memoria"
+msgstr "Memoria del agregado"
 
 #: ../config/model_attributes.rb:1197
 msgid "EmsCluster|Aggregate physical cpus"
-msgstr "Agregado de CPU físicas"
+msgstr "Suma de CPU físicas"
 
 #: ../config/model_attributes.rb:1198
 msgid "EmsCluster|Aggregate vm cpus"
-msgstr "Agregado de CPU de máquina virtual"
+msgstr "Suma de CPUs de máquinas virtuales"
 
 #: ../config/model_attributes.rb:1199
 msgid "EmsCluster|Aggregate vm memory"
-msgstr "Agregado de memoria de máquina virtual"
+msgstr "Suma de memoria de máquina virtual"
 
 #: ../config/model_attributes.rb:1200
 msgid "EmsCluster|Capacity profile 1 available host memory"
-msgstr "Perfil de capacidad 1 memoria de host disponible"
+msgstr "Perfil de capacidad 1 - memoria de host disponible"
 
 #: ../config/model_attributes.rb:1201
 msgid "EmsCluster|Capacity profile 1 available host vcpu"
-msgstr "Perfil de capacidad 1 VCPU de host disponible"
+msgstr "Perfil de capacidad 1 - VCPU de host disponible"
 
 #: ../config/model_attributes.rb:1202
 msgid "EmsCluster|Capacity profile 1 memory commitment ratio"
-msgstr "Perfil de capacidad 1 relación de compromiso de la memoria"
+msgstr "Perfil de capacidad 1 - relación de compromiso de la memoria"
 
 #: ../config/model_attributes.rb:1203
 msgid "EmsCluster|Capacity profile 1 memory maximum"
-msgstr "Perfil de capacidad 1 memoria máxima"
+msgstr "Perfil de capacidad 1 - memoria máxima"
 
 #: ../config/model_attributes.rb:1204
 msgid "EmsCluster|Capacity profile 1 memory method"
-msgstr "Perfil de capacidad 1 método de memoria"
+msgstr "Perfil de capacidad 1 - método de memoria"
 
 #: ../config/model_attributes.rb:1205
 msgid "EmsCluster|Capacity profile 1 memory minimum"
-msgstr "Perfil de capacidad 1 memoria mínima"
+msgstr "Perfil de capacidad 1 - memoria mínima"
 
 #: ../config/model_attributes.rb:1206
 msgid "EmsCluster|Capacity profile 1 memory per vm"
-msgstr "Perfil de capacidad 1 memoria por máquina virtual"
+msgstr "Perfil de capacidad 1 - memoria por máquina virtual"
 
 #: ../config/model_attributes.rb:1207
 msgid "EmsCluster|Capacity profile 1 memory per vm with min max"
-msgstr ""
-"EmsCluster|Perfil de capacidad 1 memoria por máquina virtual con mín. y máx."
+msgstr "Perfil de capacidad 1 - memoria por máquina virtual con mín. y máx."
 
 #: ../config/model_attributes.rb:1208
 msgid "EmsCluster|Capacity profile 1 projected vm count based on all"
 msgstr ""
-"EmsCluster|Perfil de capacidad 1 conteo de máquinas virtuales proyectado "
-"basado en todo"
+"Perfil de capacidad 1 - conteo de máquinas virtuales proyectado basado en "
+"todo"
 
 #: ../config/model_attributes.rb:1209
 msgid "EmsCluster|Capacity profile 1 projected vm count based on memory"
 msgstr ""
-"EmsCluster|Perfil de capacidad 1 conteo de máquinas virtuales proyectado "
-"basado en memoria"
+"Perfil de capacidad 1 - conteo de máquinas virtuales proyectado basado en "
+"memoria"
 
 #: ../config/model_attributes.rb:1210
 msgid "EmsCluster|Capacity profile 1 projected vm count based on vcpu"
 msgstr ""
-"EmsCluster|Perfil de capacidad 1 conteo de máquinas virtuales proyectado "
-"basado en VCPU"
+"Perfil de capacidad 1 - conteo de máquinas virtuales proyectado basado en "
+"VCPU"
 
 #: ../config/model_attributes.rb:1211
 msgid "EmsCluster|Capacity profile 1 remaining host memory"
-msgstr "Perfil de capacidad 1 memoria de host restante"
+msgstr "Perfil de capacidad 1 - memoria de host restante"
 
 #: ../config/model_attributes.rb:1212
 msgid "EmsCluster|Capacity profile 1 remaining host vcpu"
-msgstr "Perfil de capacidad 1 VCPU de host restante"
+msgstr "Perfil de capacidad 1-  VCPU de host restante"
 
 #: ../config/model_attributes.rb:1213
 msgid "EmsCluster|Capacity profile 1 remaining vm count based on all"
 msgstr ""
-"EmsCluster|Perfil de capacidad 1 conteo de máquinas virtuales restante "
-"basado en todo"
+"Perfil de capacidad 1 - conteo de máquinas virtuales restante basado en todo"
 
 #: ../config/model_attributes.rb:1214
 msgid "EmsCluster|Capacity profile 1 remaining vm count based on memory"
 msgstr ""
-"EmsCluster|Perfil de capacidad 1 conteo de máquinas virtuales restante "
-"basado en memoria"
+"Perfil de capacidad 1 - conteo de máquinas virtuales restante basado en "
+"memoria"
 
 #: ../config/model_attributes.rb:1215
 msgid "EmsCluster|Capacity profile 1 remaining vm count based on vcpu"
 msgstr ""
-"EmsCluster|Perfil de capacidad 1 conteo de máquinas virtuales restante "
-"basado en VCPU"
+"Perfil de capacidad 1 - conteo de máquinas virtuales restante basado en VCPU"
 
 #: ../config/model_attributes.rb:1216
 msgid "EmsCluster|Capacity profile 1 vcpu commitment ratio"
-msgstr "Perfil de capacidad 1 relación de compromiso de VCPU"
+msgstr "Perfil de capacidad 1 - relación de compromiso de VCPU"
 
 #: ../config/model_attributes.rb:1217
 msgid "EmsCluster|Capacity profile 1 vcpu maximum"
-msgstr "Perfil de capacidad 1 VCPU máxima"
+msgstr "Perfil de capacidad 1 - VCPU máxima"
 
 #: ../config/model_attributes.rb:1218
 msgid "EmsCluster|Capacity profile 1 vcpu method"
-msgstr "Perfil de capacidad 1 método de VCPU"
+msgstr "Perfil de capacidad 1 - método de VCPU"
 
 #: ../config/model_attributes.rb:1219
 msgid "EmsCluster|Capacity profile 1 vcpu minimum"
-msgstr "Capacidad de perfil 1 VCPU mínima"
+msgstr "Perfil de capacidad 1 - VCPU mínima"
 
 #: ../config/model_attributes.rb:1220
 msgid "EmsCluster|Capacity profile 1 vcpu per vm"
-msgstr "Perfil de capacidad 1 VCPU por máquina virtual"
+msgstr "Perfil de capacidad 1 - VCPU por máquina virtual"
 
 #: ../config/model_attributes.rb:1221
 msgid "EmsCluster|Capacity profile 1 vcpu per vm with min max"
-msgstr ""
-"EmsCluster|Perfil de capacidad 1 VCPU por máquina virtual con mín. y máx."
+msgstr "Perfil de capacidad 1 - VCPU por máquina virtual con mín. y máx."
 
 #: ../config/model_attributes.rb:1222
 msgid "EmsCluster|Capacity profile 2 available host memory"
-msgstr "Perfil de capacidad 2 memoria de host disponible"
+msgstr "Perfil de capacidad 2 - memoria de host disponible"
 
 #: ../config/model_attributes.rb:1223
 msgid "EmsCluster|Capacity profile 2 available host vcpu"
-msgstr "Perfil de capacidad 2 VCPU de host disponible"
+msgstr "Perfil de capacidad 2 - VCPU de host disponible"
 
 #: ../config/model_attributes.rb:1224
 msgid "EmsCluster|Capacity profile 2 memory commitment ratio"
-msgstr "Perfil de capacidad 2 relación de compromiso de la memoria"
+msgstr "Perfil de capacidad 2 - tasa de compromiso de memoria"
 
 #: ../config/model_attributes.rb:1225
 msgid "EmsCluster|Capacity profile 2 memory maximum"
-msgstr "Perfil de capacidad 2 memoria máxima"
+msgstr "Perfil de capacidad 2 - memoria máxima"
 
 #: ../config/model_attributes.rb:1226
 msgid "EmsCluster|Capacity profile 2 memory method"
-msgstr "Perfil de capacidad 2 método de memoria"
+msgstr "Perfil de capacidad 2 - método de memoria"
 
 #: ../config/model_attributes.rb:1227
 msgid "EmsCluster|Capacity profile 2 memory minimum"
-msgstr "Perfil de capacidad 2 memoria mínima"
+msgstr "Perfil de capacidad 2 - memoria mínima"
 
 #: ../config/model_attributes.rb:1228
 msgid "EmsCluster|Capacity profile 2 memory per vm"
-msgstr "Perfil de capacidad 2 memoria por máquina virtual"
+msgstr "Perfil de capacidad 2 - memoria por máquina virtual"
 
 #: ../config/model_attributes.rb:1229
 msgid "EmsCluster|Capacity profile 2 memory per vm with min max"
-msgstr ""
-"EmsCluster|Perfil de capacidad 2 memoria por máquina virtual con mín. y máx."
+msgstr "Perfil de capacidad 2 - memoria por máquina virtual con mín. y máx."
 
 #: ../config/model_attributes.rb:1230
 msgid "EmsCluster|Capacity profile 2 projected vm count based on all"
 msgstr ""
-"EmsCluster|Perfil de capacidad 2 conteo de máquinas virtuales proyectado "
-"basado en todo"
+"Perfil de capacidad 2 - conteo de máquinas virtuales proyectado basado en "
+"todo"
 
 #: ../config/model_attributes.rb:1231
 msgid "EmsCluster|Capacity profile 2 projected vm count based on memory"
 msgstr ""
-"EmsCluster|Perfil de capacidad 2 conteo de máquinas virtuales proyectado "
-"basado en memoria"
+"Perfil de capacidad 2 - conteo de máquinas virtuales proyectado basado en "
+"memoria"
 
 #: ../config/model_attributes.rb:1232
 msgid "EmsCluster|Capacity profile 2 projected vm count based on vcpu"
 msgstr ""
-"EmsCluster|Perfil de capacidad 2 conteo de máquinas virtuales proyectado "
-"basado en VCPU"
+"Perfil de capacidad 2 - conteo de máquinas virtuales proyectado basado en "
+"VCPU"
 
 #: ../config/model_attributes.rb:1233
 msgid "EmsCluster|Capacity profile 2 remaining host memory"
-msgstr "Perfil de capacidad 2 memoria de host restante"
+msgstr "Perfil de capacidad 2 - memoria de host restante"
 
 #: ../config/model_attributes.rb:1234
 msgid "EmsCluster|Capacity profile 2 remaining host vcpu"
-msgstr "Perfil de capacidad 2 VCPU de host restante"
+msgstr "Perfil de capacidad 2 - VCPU de host restante"
 
 #: ../config/model_attributes.rb:1235
 msgid "EmsCluster|Capacity profile 2 remaining vm count based on all"
 msgstr ""
-"EmsCluster|Perfil de capacidad 2 conteo de máquinas virtuales restante "
-"basado en todo"
+"Perfil de capacidad 2 - conteo de máquinas virtuales restante basado en todo"
 
 #: ../config/model_attributes.rb:1236
 msgid "EmsCluster|Capacity profile 2 remaining vm count based on memory"
 msgstr ""
-"EmsCluster|Perfil de capacidad 2 conteo de máquinas virtuales restante "
-"basado en memoria"
+"Perfil de capacidad 2 - conteo de máquinas virtuales restante basado en "
+"memoria"
 
 #: ../config/model_attributes.rb:1237
 msgid "EmsCluster|Capacity profile 2 remaining vm count based on vcpu"
 msgstr ""
-"EmsCluster|Perfil de capacidad 2 conteo de máquinas virtuales restante "
-"basado en VCPU"
+"Perfil de capacidad 2 - conteo de máquinas virtuales restante basado en VCPU"
 
 #: ../config/model_attributes.rb:1238
 msgid "EmsCluster|Capacity profile 2 vcpu commitment ratio"
-msgstr "Perfil de capacidad 2 relación de compromiso de VCPU"
+msgstr "Perfil de capacidad 2 - tasa de compromiso de VCPU"
 
 #: ../config/model_attributes.rb:1239
 msgid "EmsCluster|Capacity profile 2 vcpu maximum"
-msgstr "Perfil de capacidad 2 VCPU máxima"
+msgstr "Perfil de capacidad 2 - VCPU máxima"
 
 #: ../config/model_attributes.rb:1240
 msgid "EmsCluster|Capacity profile 2 vcpu method"
-msgstr "Perfil de capacidad 2 método de VCPU"
+msgstr "Perfil de capacidad 2 - método de VCPU"
 
 #: ../config/model_attributes.rb:1241
 msgid "EmsCluster|Capacity profile 2 vcpu minimum"
-msgstr "Perfil de capacidad 2 VCPU mínima"
+msgstr "Perfil de capacidad 2 - VCPU mínima"
 
 #: ../config/model_attributes.rb:1242
 msgid "EmsCluster|Capacity profile 2 vcpu per vm"
-msgstr "Perfil de capacidad 2 VCPU por máquina virtual"
+msgstr "Perfil de capacidad 2 - VCPU por máquina virtual"
 
 #: ../config/model_attributes.rb:1243
 msgid "EmsCluster|Capacity profile 2 vcpu per vm with min max"
-msgstr ""
-"EmsCluster|Perfil de capacidad 2 VCPU por máquina virtual con mín. y máx."
+msgstr "Perfil de capacidad 2 - VCPU por máquina virtual con mín. y máx."
 
 #: ../config/model_attributes.rb:1244
 msgid "EmsCluster|Cpu usagemhz rate average avg over time period"
@@ -25005,19 +24976,19 @@ msgstr "Marca de tiempo de primer estado de desplazamiento"
 
 #: ../config/model_attributes.rb:1259
 msgid "EmsCluster|Ha admit control"
-msgstr "Control de adm. HA"
+msgstr "Control de admisión de alta disponibilidad (HA)"
 
 #: ../config/model_attributes.rb:1260
 msgid "EmsCluster|Ha enabled"
-msgstr "HA habilitado"
+msgstr "HA habilitada"
 
 #: ../config/model_attributes.rb:1261
 msgid "EmsCluster|Ha max failures"
-msgstr "Máx. fallas HA"
+msgstr "Máx. fallas de HA"
 
 #: ../config/model_attributes.rb:1262
 msgid "EmsCluster|Last drift state timestamp"
-msgstr "Marca de tiempo de último estado de desplazamiento"
+msgstr "Marca de tiempo del último estado de desplazamiento"
 
 #: ../config/model_attributes.rb:1263
 msgid "EmsCluster|Last perf capture on"
@@ -25025,84 +24996,77 @@ msgstr "Fecha de última captura"
 
 #: ../config/model_attributes.rb:1264
 msgid "EmsCluster|Last scan on"
-msgstr "Fecha de último escaneo"
+msgstr "Fecha del último escaneo"
 
 #: ../config/model_attributes.rb:1265
 msgid "EmsCluster|Max cpu usage rate average avg over time period"
-msgstr ""
-"EmsCluster|Tasa promedio de uso máximo de CPU durante período de tiempo"
+msgstr "Tasa promedio de uso máximo de CPU durante período de tiempo"
 
 #: ../config/model_attributes.rb:1266
 msgid ""
 "EmsCluster|Max cpu usage rate average avg over time period without overhead"
 msgstr ""
-"EmsCluster|Tasa promedio de uso máximo de CPU durante período de tiempo sin "
-"sobrecarga"
+"Tasa promedio de uso máximo de CPU durante período de tiempo sin sobrecarga"
 
 #: ../config/model_attributes.rb:1267
 msgid "EmsCluster|Max cpu usage rate average high over time period"
-msgstr ""
-"EmsCluster|Tasa promedio de uso máximo alto de CPU durante período de tiempo"
+msgstr "Tasa promedio de uso máximo alto de CPU durante período de tiempo"
 
 #: ../config/model_attributes.rb:1268
 msgid ""
 "EmsCluster|Max cpu usage rate average high over time period without overhead"
 msgstr ""
-"EmsCluster|Tasa promedio de uso máximo alto de CPU durante período de tiempo"
-" sin sobrecarga"
+"Tasa promedio de uso máximo alto de CPU durante período de tiempo sin "
+"sobrecarga"
 
 #: ../config/model_attributes.rb:1269
 msgid "EmsCluster|Max cpu usage rate average low over time period"
-msgstr ""
-"EmsCluster|Tasa promedio de uso máximo bajo de CPU durante período de tiempo"
+msgstr "Tasa promedio de uso máximo bajo de CPU durante período de tiempo"
 
 #: ../config/model_attributes.rb:1270
 msgid ""
 "EmsCluster|Max cpu usage rate average low over time period without overhead"
 msgstr ""
-"EmsCluster|Tasa promedio de uso máximo bajo de CPU durante período de tiempo"
-" sin sobrecarga"
+"Tasa promedio de uso máximo bajo de CPU durante período de tiempo sin "
+"sobrecarga"
 
 #: ../config/model_attributes.rb:1271
 msgid "EmsCluster|Max mem usage absolute average avg over time period"
-msgstr ""
-"EmsCluster|Uso de memoria máximo absoluto promedio durante período de tiempo"
+msgstr "Uso de memoria máximo absoluto promedio durante período de tiempo"
 
 #: ../config/model_attributes.rb:1272
 msgid ""
 "EmsCluster|Max mem usage absolute average avg over time period without "
 "overhead"
 msgstr ""
-"EmsCluster|Uso de memoria máximo absoluto promedio durante período de tiempo"
-" sin sobrecarga"
+"Uso de memoria máximo absoluto promedio durante período de tiempo sin "
+"sobrecarga"
 
 #: ../config/model_attributes.rb:1273
 msgid "EmsCluster|Max mem usage absolute average high over time period"
 msgstr ""
-"EmsCluster|Uso de memoria máximo absoluto promedio alto durante período de "
-"tiempo"
+"Uso de memoria máximo absoluto promedio alto durante período de tiempo"
 
 #: ../config/model_attributes.rb:1274
 msgid ""
 "EmsCluster|Max mem usage absolute average high over time period without "
 "overhead"
 msgstr ""
-"EmsCluster|Uso de memoria máximo absoluto promedio alto durante período de "
-"tiempo sin sobrecarga"
+"Uso de memoria máximo absoluto promedio alto durante período de tiempo sin "
+"sobrecarga"
 
 #: ../config/model_attributes.rb:1275
 msgid "EmsCluster|Max mem usage absolute average low over time period"
 msgstr ""
-"EmsCluster|Uso de memoria máximo absoluto promedio bajo durante período de "
-"tiempo"
+"Uso de memoria máximo absoluto promedio bajo durante período de tiempo"
 
 #: ../config/model_attributes.rb:1276
 msgid ""
 "EmsCluster|Max mem usage absolute average low over time period without "
 "overhead"
 msgstr ""
-"EmsCluster|Uso de memoria máximo absoluto promedio bajo durante período de "
-"tiempo sin sobrecarga"
+"Uso de memoria máximo absoluto promedio bajo durante período de tiempo sin "
+"sobrecarga"
 
 #: ../config/model_attributes.rb:1277
 msgid "EmsCluster|Name"
@@ -25167,35 +25131,35 @@ msgstr "Relación RAM VR"
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_ContainerManager.yaml
 #: ../config/yaml_strings.rb:4312
 msgid "EmsContainer"
-msgstr "EmsContainer"
+msgstr "Contenedor EMS"
 
 #: ../config/model_attributes.rb:1293
 msgid "EmsFolder|Aggregate cpu speed"
-msgstr "Aggregate de velocidad de CPU"
+msgstr "Suma de velocidad de CPU"
 
 #: ../config/model_attributes.rb:1294
 msgid "EmsFolder|Aggregate cpu total cores"
-msgstr "Aggregate de núcleos totales de CPU"
+msgstr "Total de núcleos de CPU del agregado "
 
 #: ../config/model_attributes.rb:1295
 msgid "EmsFolder|Aggregate disk capacity"
-msgstr "Aggregate de capacidad de disco"
+msgstr "Capacidad de disco del agregado"
 
 #: ../config/model_attributes.rb:1296
 msgid "EmsFolder|Aggregate memory"
-msgstr "Aggregate de memoria"
+msgstr "Memoria del agregado "
 
 #: ../config/model_attributes.rb:1297
 msgid "EmsFolder|Aggregate physical cpus"
-msgstr "Aggregate de CPU físicas"
+msgstr "CPU físicas del agregado "
 
 #: ../config/model_attributes.rb:1298
 msgid "EmsFolder|Aggregate vm cpus"
-msgstr "Aggregate de CPU de máquina virtual"
+msgstr "CPU de máquina virtual del agregado "
 
 #: ../config/model_attributes.rb:1299
 msgid "EmsFolder|Aggregate vm memory"
-msgstr "Aggregate de memoria de máquina virtual"
+msgstr "Memoria de máquina virtual del agregado "
 
 #: ../config/model_attributes.rb:1300
 msgid "EmsFolder|Created on"
@@ -26353,23 +26317,23 @@ msgstr "Fecha de creación"
 
 #: ../config/model_attributes.rb:1344
 msgid "EventStream|Dest ems cluster name"
-msgstr "Nombre del clúster de EMS de dest"
+msgstr "Nombre del clúster de destino para EMS"
 
 #: ../config/model_attributes.rb:1345
 msgid "EventStream|Dest ems cluster uid"
-msgstr "UID del clúster de EMS de dest"
+msgstr "UID del clúster de destino para EMS"
 
 #: ../config/model_attributes.rb:1346
 msgid "EventStream|Dest host name"
-msgstr "Nombre del host de dest"
+msgstr "Nombre del host de destino"
 
 #: ../config/model_attributes.rb:1347
 msgid "EventStream|Dest vm location"
-msgstr "Ubicación de la máquina virtual de dest"
+msgstr "Ubicación de la máquina virtual de destino"
 
 #: ../config/model_attributes.rb:1348
 msgid "EventStream|Dest vm name"
-msgstr "Nombre de la máquina virtual de dest"
+msgstr "Nombre de la máquina virtual de destino"
 
 #: ../config/model_attributes.rb:1349
 msgid "EventStream|Ems cluster name"
@@ -26914,7 +26878,6 @@ msgstr "Métodos de ejecución"
 #: ../app/helpers/application_helper/toolbar/drift_center.rb:35
 #: ../app/helpers/configuration_helper/configuration_view_helper.rb:53
 #: ../app/helpers/configuration_helper/configuration_view_helper.rb:58
-#, fuzzy
 msgid "Exists Mode"
 msgstr "Modo: Existencias"
 
@@ -27022,41 +26985,40 @@ msgid "Expression: "
 msgstr "Expresión: "
 
 #: ../config/model_attributes.rb:1366
-#, fuzzy
 msgid "Ext management system"
-msgstr "Sistema de gestión externo"
+msgstr "Sistema de gestión extendido"
 
 #: ../config/model_attributes.rb:1367
 msgid "ExtManagementSystem|Aggregate cpu speed"
-msgstr "Velocidad de CPU agregada"
+msgstr "Velocidad de CPU del agregado"
 
 #: ../config/model_attributes.rb:1368
 msgid "ExtManagementSystem|Aggregate cpu total cores"
-msgstr "Total de núcleos de CPU agregados"
+msgstr "Total de núcleos de CPU del agregado "
 
 #: ../config/model_attributes.rb:1369
 msgid "ExtManagementSystem|Aggregate disk capacity"
-msgstr "Capacidad de disco agregada"
+msgstr "Capacidad de disco del agregado"
 
 #: ../config/model_attributes.rb:1370
 msgid "ExtManagementSystem|Aggregate memory"
-msgstr "Memoria agregada"
+msgstr "Memoria del agregado "
 
 #: ../config/model_attributes.rb:1371
 msgid "ExtManagementSystem|Aggregate physical cpus"
-msgstr "CPU físicas agregadas"
+msgstr "Suma de CPU físicas"
 
 #: ../config/model_attributes.rb:1372
 msgid "ExtManagementSystem|Aggregate vm cpus"
-msgstr "CPU de máquinas virtuales agregadas"
+msgstr "Suma de CPU de máquinas virtuales"
 
 #: ../config/model_attributes.rb:1373
 msgid "ExtManagementSystem|Aggregate vm memory"
-msgstr "Memoria de máquina virtual agregada"
+msgstr "Suma de memoria de máquina virtual"
 
 #: ../config/model_attributes.rb:1374
 msgid "ExtManagementSystem|Api version"
-msgstr "Versión de la API"
+msgstr "Versión de API"
 
 #: ../config/model_attributes.rb:1375
 msgid "ExtManagementSystem|Authentication status"
@@ -27159,11 +27121,11 @@ msgstr "Inicio del puerto VNC predeterminado del host"
 
 #: ../config/model_attributes.rb:1397
 msgid "ExtManagementSystem|Hostname"
-msgstr "Host Name"
+msgstr "Nombre de host"
 
 #: ../config/model_attributes.rb:1398
 msgid "ExtManagementSystem|Ipaddress"
-msgstr "IP Address"
+msgstr "Dirección IP"
 
 #: ../config/model_attributes.rb:1399
 msgid "ExtManagementSystem|Last metrics error"
@@ -27243,8 +27205,8 @@ msgid ""
 "ExtManagementSystem|Max mem usage absolute average avg over time period "
 "without overhead"
 msgstr ""
-"ExtManagementSystem|Uso de memoria máximo absoluto promedio durante período "
-"de tiempo sin sobrecarga"
+"Uso de memoria máximo absoluto promedio durante período de tiempo sin "
+"sobrecarga"
 
 #: ../config/model_attributes.rb:1413
 msgid ""
@@ -27258,8 +27220,7 @@ msgid ""
 "ExtManagementSystem|Max mem usage absolute average high over time period "
 "without overhead"
 msgstr ""
-"ExtManagementSystem|Uso de memoria máximo absoluto alto durante período de "
-"tiempo sin sobrecarga"
+"Uso de memoria máximo absoluto alto durante período de tiempo sin sobrecarga"
 
 #: ../config/model_attributes.rb:1415
 msgid ""
@@ -27273,8 +27234,7 @@ msgid ""
 "ExtManagementSystem|Max mem usage absolute average low over time period "
 "without overhead"
 msgstr ""
-"ExtManagementSystem|Uso de memoria máximo absoluto bajo durante período de "
-"tiempo sin sobrecarga"
+"Uso de memoria máximo absoluto bajo durante período de tiempo sin sobrecarga"
 
 #: ../config/model_attributes.rb:1417
 msgid "ExtManagementSystem|Name"
@@ -27407,7 +27367,7 @@ msgstr "Autenticación externa"
 
 #: ../app/views/ops/_settings_authentication_tab.html.haml:438
 msgid "External Authentication (httpd) Settings"
-msgstr "Configuración de la autenticación externa (httpd)"
+msgstr "Parámetros de autenticación externa (httpd)"
 
 #: ../app/controllers/ops_controller/diagnostics.rb:969
 msgid "External Database"
@@ -28094,19 +28054,19 @@ msgstr "Tamaño del disco raíz"
 
 #: ../config/model_attributes.rb:1506
 msgid "Flavor|Supports 32 bit"
-msgstr "Admite 32 bits"
+msgstr "Soporta 32 bits"
 
 #: ../config/model_attributes.rb:1507
 msgid "Flavor|Supports 64 bit"
-msgstr "Admite 64 bits"
+msgstr "Soporta 64 bits"
 
 #: ../config/model_attributes.rb:1508
 msgid "Flavor|Supports hvm"
-msgstr "Admite HVM"
+msgstr "Soporta  HVM"
 
 #: ../config/model_attributes.rb:1509
 msgid "Flavor|Supports paravirtual"
-msgstr "Admite paravirtual"
+msgstr "Soporte paravirtual"
 
 #: ../config/model_attributes.rb:1510
 msgid "Flavor|Swap disk size"
@@ -28784,7 +28744,7 @@ msgstr "Vista de cuadrícula"
 
 #: ../app/views/configuration/_ui_1.html.haml:20
 msgid "Grid/Tile Icons"
-msgstr "Iconos Grid/Tile"
+msgstr "Iconos de Cuadrícula o Mosaico"
 
 #. TRANSLATORS: file: product/views/MiqReportResult-all.yaml
 #. TRANSLATORS: file: product/views/MiqReportResult.yaml
@@ -29109,11 +29069,11 @@ msgstr "Hardware reconfigurado"
 
 #: ../config/model_attributes.rb:1587
 msgid "Hardware|Aggregate cpu speed"
-msgstr "Agregar velocidad de CPU"
+msgstr "Velocidad de CPU del agregado "
 
 #: ../config/model_attributes.rb:1588
 msgid "Hardware|Allocated disk storage"
-msgstr "Almacenamiento en disco asignado"
+msgstr "Almacenamiento de disco asignado"
 
 #: ../config/model_attributes.rb:1589
 msgid "Hardware|Annotation"
@@ -29686,8 +29646,7 @@ msgid ""
 "HostAggregate|Max cpu usage rate average avg over time period without "
 "overhead"
 msgstr ""
-"HostAggregate|Tasa media de uso máximo de CPU durante período de tiempo sin "
-"sobrecarga"
+"Tasa media de uso máximo de CPU durante período de tiempo sin sobrecarga"
 
 #: ../config/model_attributes.rb:1736
 msgid "HostAggregate|Max cpu usage rate average high over time period"
@@ -29700,8 +29659,8 @@ msgid ""
 "HostAggregate|Max cpu usage rate average high over time period without "
 "overhead"
 msgstr ""
-"HostAggregate|Tasa media de uso máximo alto de CPU durante período de tiempo"
-" sin sobrecarga"
+"Tasa media de uso máximo alto de CPU durante período de tiempo sin "
+"sobrecarga"
 
 #: ../config/model_attributes.rb:1738
 msgid "HostAggregate|Max cpu usage rate average low over time period"
@@ -29713,50 +29672,48 @@ msgid ""
 "HostAggregate|Max cpu usage rate average low over time period without "
 "overhead"
 msgstr ""
-"HostAggregate|Tasa media de uso máximo bajo de CPU durante período de tiempo"
-" sin sobrecarga"
+"Tasa media de uso máximo bajo de CPU durante período de tiempo sin "
+"sobrecarga"
 
 #: ../config/model_attributes.rb:1740
 msgid "HostAggregate|Max mem usage absolute average avg over time period"
 msgstr ""
-"HostAggregate|Promedio absoluto de uso de memoria máxima durante período de "
-"tiempo sin sobrecarga"
+"Promedio absoluto de uso de memoria máxima durante período de tiempo sin "
+"sobrecarga"
 
 #: ../config/model_attributes.rb:1741
 msgid ""
 "HostAggregate|Max mem usage absolute average avg over time period without "
 "overhead"
 msgstr ""
-"HostAggregate|Promedio absoluto de uso de memoria máxima durante período de "
-"tiempo sin sobrecarga"
+"Promedio absoluto de uso de memoria máxima durante período de tiempo sin "
+"sobrecarga"
 
 #: ../config/model_attributes.rb:1742
 msgid "HostAggregate|Max mem usage absolute average high over time period"
 msgstr ""
-"HostAggregate|Promedio absoluto de uso alto de memoria máxima durante "
-"período de tiempo"
+"Promedio absoluto de uso alto de memoria máxima durante período de tiempo"
 
 #: ../config/model_attributes.rb:1743
 msgid ""
 "HostAggregate|Max mem usage absolute average high over time period without "
 "overhead"
 msgstr ""
-"HostAggregate|Promedio absoluto de uso alto de memoria máxima durante "
-"período de tiempo sin sobrecarga"
+"Promedio absoluto de uso alto de memoria máxima durante período de tiempo "
+"sin sobrecarga"
 
 #: ../config/model_attributes.rb:1744
 msgid "HostAggregate|Max mem usage absolute average low over time period"
 msgstr ""
-"HostAggregate|Promedio absoluto de uso bajo de memoria máxima durante "
-"período de tiempo"
+"Promedio absoluto de uso bajo de memoria máxima durante período de tiempo"
 
 #: ../config/model_attributes.rb:1745
 msgid ""
 "HostAggregate|Max mem usage absolute average low over time period without "
 "overhead"
 msgstr ""
-"HostAggregate|Promedio absoluto de uso de memoria máxima durante período de "
-"tiempo sin sobrecarga"
+"Promedio absoluto de uso de memoria máxima durante período de tiempo sin "
+"sobrecarga"
 
 #: ../config/model_attributes.rb:1746
 msgid "HostAggregate|Metadata"
@@ -31722,7 +31679,7 @@ msgstr "Estado"
 
 #: ../config/model_attributes.rb:1797
 msgid "Job|Status"
-msgstr "Estado"
+msgstr "Estatus"
 
 #: ../config/model_attributes.rb:1798
 msgid "Job|Sync key"
@@ -32784,7 +32741,7 @@ msgstr "Lista"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3042
 msgid "List Blueprint"
-msgstr "Lista de planos"
+msgstr "Lista de diagramas"
 
 #: ../app/helpers/application_helper/toolbar/gtl_view.rb:22
 #: ../app/helpers/application_helper/toolbar/x_gtl_view.rb:22
@@ -33570,7 +33527,7 @@ msgstr "Modo de mantenimiento"
 
 #: ../app/helpers/application_helper/button/host_toggle_maintenance.rb:8
 msgid "Maintenance mode is not supported for this host"
-msgstr "No se admite el modo de mantenimiento para este host"
+msgstr "El modo de mantenimiento no recibe soporte para este host"
 
 #: ../app/views/middleware_server/_add_jdbc_driver.html.haml:152
 msgid "Major Version"
@@ -35423,11 +35380,11 @@ msgstr "Promedio absoluto máx. de memoria swap"
 
 #: ../config/model_attributes.rb:2172
 msgid "MetricRollup|Max mem swapped absolute average"
-msgstr "Memoria - Promedio máx. swapped"
+msgstr "Memoria - Promedio máx. intercambiado"
 
 #: ../config/model_attributes.rb:2173
 msgid "MetricRollup|Max mem swaptarget absolute average"
-msgstr "Memoria - promedio máximo de destino swap"
+msgstr "Memoria - Promedio máximo de destino de swap"
 
 #: ../config/model_attributes.rb:2174
 msgid "MetricRollup|Max mem usage absolute average"
@@ -35435,13 +35392,11 @@ msgstr "Promedio absoluto máx. de uso de memoria"
 
 #: ../config/model_attributes.rb:2175
 msgid "MetricRollup|Max mem vmmemctl absolute average"
-msgstr "Promedio absoluto máx. de memoria de máquina virtual ctl"
+msgstr "Promedio absoluto máx. de memoria de vmmemctl "
 
 #: ../config/model_attributes.rb:2176
 msgid "MetricRollup|Max mem vmmemctltarget absolute average"
-msgstr ""
-"MetricRollup|Promedio absoluto máx. de memoria de máquina virtual ctl "
-"objetivo"
+msgstr "Promedio absoluto máx. de memoria de vmmemctltarget"
 
 #: ../config/model_attributes.rb:2177
 msgid "MetricRollup|Max net usage rate average"
@@ -35465,7 +35420,7 @@ msgstr "Tiempo de actividad máx. absoluto del sistema más reciente"
 
 #: ../config/model_attributes.rb:2182
 msgid "MetricRollup|Mem swapin absolute average"
-msgstr "Promedio absoluto de  swap in en memoria"
+msgstr "Promedio absoluto de  swap en memoria"
 
 #: ../config/model_attributes.rb:2183
 msgid "MetricRollup|Mem swapout absolute average"
@@ -35477,11 +35432,11 @@ msgstr "Promedio absoluto de swap de memoria"
 
 #: ../config/model_attributes.rb:2185
 msgid "MetricRollup|Mem swaptarget absolute average"
-msgstr "Promedio absoluto de destino de swap de memoria"
+msgstr "Memoria - Promedio absoluto de destino de swap"
 
 #: ../config/model_attributes.rb:2186
 msgid "MetricRollup|Mem usage absolute average"
-msgstr " Promedio absoluto de uso de memoria"
+msgstr " Memoria - Promedio absoluto de uso de memoria"
 
 #: ../config/model_attributes.rb:2187
 msgid "MetricRollup|Mem vmmemctl absolute average"
@@ -36077,7 +36032,7 @@ msgstr "Memoria -  promedio absoluto Swapped "
 
 #: ../config/model_attributes.rb:2029
 msgid "Metric|Mem swaptarget absolute average"
-msgstr "Memoria - Promedio absoluto de destino de swap"
+msgstr "Promedio absoluto de destino de memoria swap"
 
 #: ../config/model_attributes.rb:2030
 msgid "Metric|Mem usage absolute average"
@@ -36654,7 +36609,7 @@ msgstr "Minuto"
 #. TRANSLATORS: file: product/views/MiqDialog.yaml
 #: ../config/yaml_strings.rb:4522
 msgid "Miq Dialogs"
-msgstr "cuadro de diálogos de MIQ"
+msgstr "Cuadro de diálogos de MIQ"
 
 #. TRANSLATORS: file:
 #. product/timelines/miq_reports/tl_policy_events_daily.yaml
@@ -36682,7 +36637,7 @@ msgstr "Informes de MIQ"
 #. TRANSLATORS: file: product/views/MiqWidget.yaml
 #: ../config/yaml_strings.rb:3755
 msgid "Miq Widgets"
-msgstr "asistentes de MIQ"
+msgstr "Asistentes de MIQ"
 
 #: ../config/model_attributes.rb:2330
 msgid "Miq action"
@@ -36738,7 +36693,7 @@ msgstr "Base de datos de MIQ"
 
 #: ../config/model_attributes.rb:2509
 msgid "Miq dialog"
-msgstr "cuadro de diálogo de MIQ"
+msgstr "Cuadro de diálogo de MIQ"
 
 #: ../config/model_attributes.rb:2519
 msgid "Miq enterprise"
@@ -36750,7 +36705,7 @@ msgstr "Definición de eventos de MIQ"
 
 #: ../config/model_attributes.rb:2564
 msgid "Miq event definition set"
-msgstr "Conjunto de definición de eventos de MIQ"
+msgstr "Conjunto de definiciones de eventos de MIQ"
 
 #: ../config/model_attributes.rb:2578
 msgid "Miq group"
@@ -37562,49 +37517,43 @@ msgstr "Número de región"
 
 #: ../config/model_attributes.rb:2520
 msgid "MiqEnterprise|Aggregate cpu speed"
-msgstr "Agregar velocidad de CPU"
+msgstr "Velocidad de CPU del agregado "
 
 #: ../config/model_attributes.rb:2521
 msgid "MiqEnterprise|Aggregate cpu total cores"
-msgstr "Agregar núcleos totales de CPU"
+msgstr "Suma total de núcleos de CPU"
 
 #: ../config/model_attributes.rb:2522
 msgid "MiqEnterprise|Aggregate disk capacity"
-msgstr "Agregar capacidad de disco"
+msgstr "Capacidad de disco del agregado "
 
 #: ../config/model_attributes.rb:2523
 msgid "MiqEnterprise|Aggregate memory"
-msgstr "Agregar memoria"
+msgstr "Memoria del agregado"
 
 #: ../config/model_attributes.rb:2524
 msgid "MiqEnterprise|Aggregate physical cpus"
-msgstr "Agregar CPU físicas"
+msgstr "Suma de CPU físicas"
 
 #: ../config/model_attributes.rb:2525
 msgid "MiqEnterprise|Aggregate vm cpus"
-msgstr "Agregar CPU de máquinas virtuales"
+msgstr "Suma de CPU de máquinas virtuales"
 
 #: ../config/model_attributes.rb:2526
 msgid "MiqEnterprise|Aggregate vm memory"
-msgstr "Agregar memoria de máquinas virtuales"
+msgstr "Suma de memoria de máquinas virtuales"
 
 #: ../config/model_attributes.rb:2527
 msgid "MiqEnterprise|Cpu usagemhz rate average avg over time period"
-msgstr ""
-"MiqEnterprise|Tasa promedio de uso de MHz de CPU durante un período de "
-"tiempo"
+msgstr "Tasa promedio de uso de MHz de CPU durante un período de tiempo"
 
 #: ../config/model_attributes.rb:2528
 msgid "MiqEnterprise|Cpu usagemhz rate average high over time period"
-msgstr ""
-"MiqEnterprise|Tasa promedio de uso alto de MHz de CPU durante un período de "
-"tiempo"
+msgstr "Tasa promedio de uso alto de MHz de CPU durante un período de tiempo"
 
 #: ../config/model_attributes.rb:2529
 msgid "MiqEnterprise|Cpu usagemhz rate average low over time period"
-msgstr ""
-"MiqEnterprise|Tasa promedio de uso bajo de MHz de CPU durante un período de "
-"tiempo"
+msgstr "Tasa promedio de uso bajo de MHz de CPU durante un período de tiempo"
 
 #: ../config/model_attributes.rb:2530
 msgid "MiqEnterprise|Created on"
@@ -38208,31 +38157,31 @@ msgstr "Zona"
 
 #: ../config/model_attributes.rb:2679
 msgid "MiqRegion|Aggregate cpu speed"
-msgstr "Agregar velocidad de cpu"
+msgstr "Velocidad de CPU del agregado "
 
 #: ../config/model_attributes.rb:2680
 msgid "MiqRegion|Aggregate cpu total cores"
-msgstr "Agregar núcleos totales de cpu"
+msgstr "Suma total de núcleos de CPU"
 
 #: ../config/model_attributes.rb:2681
 msgid "MiqRegion|Aggregate disk capacity"
-msgstr "Agregar capacidad de disco"
+msgstr "Capacidad de disco del agregado "
 
 #: ../config/model_attributes.rb:2682
 msgid "MiqRegion|Aggregate memory"
-msgstr "Agregar memoria"
+msgstr "Memoria del agregado "
 
 #: ../config/model_attributes.rb:2683
 msgid "MiqRegion|Aggregate physical cpus"
-msgstr "Agregar cpu físicos"
+msgstr "Suma de CPU físicas"
 
 #: ../config/model_attributes.rb:2684
 msgid "MiqRegion|Aggregate vm cpus"
-msgstr "Agregar cpu de máquinas virtuales"
+msgstr "Suma de CPU de máquinas virtuales"
 
 #: ../config/model_attributes.rb:2685
 msgid "MiqRegion|Aggregate vm memory"
-msgstr "Agregar memoria de máquina virtual"
+msgstr "Suma de memoria de máquina virtual"
 
 #: ../config/model_attributes.rb:2686
 msgid "MiqRegion|Authentication status"
@@ -38907,15 +38856,15 @@ msgstr "Compilación"
 
 #: ../config/model_attributes.rb:2858
 msgid "MiqServer|Capabilities"
-msgstr "Capacidades"
+msgstr "Funcionalidades"
 
 #: ../config/model_attributes.rb:2859
 msgid "MiqServer|Cpu time"
-msgstr "Tiempo de cpu"
+msgstr "Tiempo de CPU"
 
 #: ../config/model_attributes.rb:2860
 msgid "MiqServer|Drb uri"
-msgstr "Uri de drb"
+msgstr "URI de drb"
 
 #: ../config/model_attributes.rb:2861
 msgid "MiqServer|Guid"
@@ -39590,7 +39539,7 @@ msgstr "Modificar almacenes de datos"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1255
 msgid "Modify Dialogs"
-msgstr "Modificar cuadros de cuadro de diálogo"
+msgstr "Modificar cuadro de diálogo"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1162
@@ -39750,7 +39699,7 @@ msgstr "Modificar proveedores"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1289
 msgid "Modify Provisioning Dialogs"
-msgstr "Modificar cuadros de cuadro de diálogo de aprovisionamiento"
+msgstr "Modificar cuadros de diálogo de aprovisionamiento"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:883
@@ -40711,7 +40660,9 @@ msgstr "E/S de red - Tasa de uso mín. absoluta (marca horaria)"
 #. dictionary.column.EmsClusterPerformance.net_usage_rate_average
 #: ../config/dictionary_strings.rb:68
 msgid "Network I/O - Aggregate of Avg for Child Hosts (KBps)"
-msgstr "E/S de red - Aggregate de promedio para hosts secundarios (KBps)"
+msgstr ""
+"E/S de red -Suma de promedio para hosts secundarios (en Kilo Bytes por "
+"segundo)"
 
 #. TRANSLATORS: en.yml key: dictionary.column.net_usage_rate_average
 #: ../config/dictionary_strings.rb:600
@@ -41767,7 +41718,7 @@ msgstr "No se especificó ningún valor de fecha/hora"
 #: ../app/controllers/application_controller/buttons.rb:962
 #: ../app/views/catalog/_form_basic_info.html.haml:85
 msgid "No Dialog"
-msgstr "Ningún cuadro de cuadro de diálogo"
+msgstr "Ningún cuadro de diálogo"
 
 #: ../app/views/report/_form_filter.html.haml:73
 msgid "No Display Filter defined."
@@ -43159,8 +43110,8 @@ msgstr "Solo se pueden eliminar %{storage} sin máquinas virtuales y hosts"
 #: ../app/views/miq_ae_customization/_dialog_field_form.html.haml:88
 msgid "Only 1 Date or Date/Time element can be present in a Dialog"
 msgstr ""
-"Solo puede estar presente un ítem de fecha o fecha/hora en un cuadro de "
-"cuadro de diálogo"
+"Solo puede estar presente un ítem de Fecha o Fecha/hora en un cuadro de "
+"diálogo"
 
 #: ../app/helpers/application_helper/toolbar_builder.rb:831
 msgid "Only active Roles on active Servers can be suspended"
@@ -43178,15 +43129,15 @@ msgstr "Solo se pueden reordenar más de un grupo de botones personalizados"
 
 #: ../config/model_attributes.rb:3079
 msgid "Ontap aggregate derived metric"
-msgstr "Métrica derivada de aggregate de Ontap"
+msgstr "Métrica derivada del agregado Ontap"
 
 #: ../config/model_attributes.rb:3092
 msgid "Ontap aggregate metrics rollup"
-msgstr "Acumulación de métricas de aggregate de Ontap"
+msgstr "Acumulación de métrica del agregado Ontap"
 
 #: ../config/model_attributes.rb:3120
 msgid "Ontap disk derived metric"
-msgstr "Métrica derivada de disco de Ontap"
+msgstr "Métrica derivada de disco Ontap"
 
 #: ../config/model_attributes.rb:3153
 msgid "Ontap disk metrics rollup"
@@ -43246,7 +43197,7 @@ msgstr "Tiempo de estadísticas"
 
 #: ../config/model_attributes.rb:3087
 msgid "OntapAggregateDerivedMetric|Total transfers"
-msgstr "Transferencias totales"
+msgstr "Total de transferencias"
 
 #: ../config/model_attributes.rb:3088
 msgid "OntapAggregateDerivedMetric|User read blocks"
@@ -45781,7 +45732,7 @@ msgstr "Número de región"
 #: ../app/controllers/catalog_controller.rb:954
 #: ../app/views/catalog/_svccat_tree_show.html.haml:80
 msgid "Order"
-msgstr "Solicitar"
+msgstr "Ordenar"
 
 #: ../app/controllers/catalog_controller.rb:550
 msgid "Order %{model} \"%{name}\""
@@ -45789,7 +45740,7 @@ msgstr "Ordenar %{model} \"%{name}\""
 
 #: ../app/controllers/application_controller/dialog_runner.rb:44
 msgid "Order Request was Submitted"
-msgstr "Se envío la solicitud de orden"
+msgstr "La orden ha sido enviada"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:217
@@ -45798,11 +45749,11 @@ msgstr "Ordenar servicios"
 
 #: ../app/views/miq_policy/_event_details.html.haml:78
 msgid "Order of Actions if ALL Conditions are True"
-msgstr "Orden de las acciones si TODAS las condiciones son verdaderas"
+msgstr "Orden de acciones si TODAS las condiciones son verdaderas"
 
 #: ../app/views/miq_policy/_event_details.html.haml:254
 msgid "Order of Actions if ANY Conditions are False"
-msgstr "Orden de las acciones si TODAS las condiciones son falsas"
+msgstr "Orden de acciones si TODAS las condiciones son falsas"
 
 #: ../app/controllers/catalog_controller.rb:956
 #: ../app/views/catalog/_svccat_tree_show.html.haml:80
@@ -48701,12 +48652,12 @@ msgstr "Aprovisionamiento"
 #: ../app/controllers/miq_ae_customization_controller.rb:178
 #: ../config/yaml_strings.rb:1285
 msgid "Provisioning Dialogs"
-msgstr "Cuadros de cuadro de diálogo de aprovisionamiento"
+msgstr "Cuadros de diálogo de aprovisionamiento"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1287
 msgid "Provisioning Dialogs Accordion"
-msgstr "Accordion de cuadros de cuadro de diálogo de aprovisionamiento"
+msgstr "Acordeón de cuadros de diálogo de aprovisionamiento"
 
 #: ../app/views/catalog/_form_basic_info.html.haml:216
 msgid "Provisioning Entry Point"
@@ -48761,7 +48712,7 @@ msgstr "Publicar %{vm_or_template}"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3058
 msgid "Publish Blueprint"
-msgstr "Publicar esquema"
+msgstr "Publicar diagrama"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2888
@@ -50748,7 +50699,7 @@ msgstr ""
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3054
 msgid "Remove Blueprint"
-msgstr "Eliminar plan"
+msgstr "Eliminar diagrama"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../app/helpers/application_helper/toolbar/servicetemplatecatalog_center.rb:20
@@ -50866,7 +50817,7 @@ msgstr "Eliminar almacenes de datos"
 #: ../app/helpers/application_helper/toolbar/miq_dialog_center.rb:25
 #: ../app/helpers/application_helper/toolbar/dialog_center.rb:25
 msgid "Remove Dialog"
-msgstr "Eliminar cuadro de cuadro de diálogo"
+msgstr "Eliminar cuadro de diálogo"
 
 #: ../app/views/miq_request/_reconfigure_show.html.haml:93
 msgid "Remove Disks"
@@ -51271,7 +51222,7 @@ msgstr "Eliminar los almacenes de datos seleccionados"
 #: ../app/helpers/application_helper/toolbar/dialogs_center.rb:33
 #: ../app/helpers/application_helper/toolbar/miq_dialogs_center.rb:34
 msgid "Remove selected Dialogs"
-msgstr "Eliminar los cuadros de cuadro de diálogo seleccionados"
+msgstr "Eliminar los cuadros de diálogo seleccionados"
 
 #: ../app/helpers/application_helper/toolbar/miq_ae_domains_center.rb:25
 msgid "Remove selected Domains"
@@ -51492,7 +51443,7 @@ msgstr "Eliminar este almacén de datos"
 #: ../app/helpers/application_helper/toolbar/miq_dialog_center.rb:24
 #: ../app/helpers/application_helper/toolbar/dialog_center.rb:24
 msgid "Remove this Dialog"
-msgstr "Eliminar este cuadro de cuadro de diálogo"
+msgstr "Eliminar este cuadro de diálogo"
 
 #: ../app/helpers/application_helper/toolbar/miq_ae_domain_center.rb:17
 msgid "Remove this Domain"
@@ -52529,35 +52480,35 @@ msgstr "Memoria total"
 
 #: ../config/model_attributes.rb:3768
 msgid "ResourcePool|Aggregate physical cpus"
-msgstr "Cpu físicos totales"
+msgstr "Total de CPU físicas"
 
 #: ../config/model_attributes.rb:3769
 msgid "ResourcePool|Aggregate vm cpus"
-msgstr "Cpu de máquina virtual totales"
+msgstr "Total CPU de máquina virtual"
 
 #: ../config/model_attributes.rb:3770
 msgid "ResourcePool|Aggregate vm memory"
-msgstr "Memoria de máquina virtual total"
+msgstr "Total de memoria de máquina virtual"
 
 #: ../config/model_attributes.rb:3771
 msgid "ResourcePool|Cpu limit"
-msgstr "Límite de cpu"
+msgstr "Límite de CPU"
 
 #: ../config/model_attributes.rb:3772
 msgid "ResourcePool|Cpu reserve"
-msgstr "Reserva de cpu"
+msgstr "Reserva de CPU"
 
 #: ../config/model_attributes.rb:3773
 msgid "ResourcePool|Cpu reserve expand"
-msgstr "Expansión de reserva de cpu"
+msgstr "Expansión de reserva de CPU"
 
 #: ../config/model_attributes.rb:3774
 msgid "ResourcePool|Cpu shares"
-msgstr "Recursos compartidos de cpu"
+msgstr "Recursos compartidos de CPU"
 
 #: ../config/model_attributes.rb:3775
 msgid "ResourcePool|Cpu shares level"
-msgstr "Nivel de recursos compartidos de cpu"
+msgstr "Nivel de recursos compartidos de CPU"
 
 #: ../config/model_attributes.rb:3776
 msgid "ResourcePool|Created on"
@@ -54301,7 +54252,7 @@ msgstr "Seleccionar host de destino"
 
 #: ../app/controllers/miq_ae_customization_controller.rb:55
 msgid "Select Dialogs to import"
-msgstr "Seleccionar cuadros de cuadro de diálogo para importar"
+msgstr "Seleccionar cuadros de diálogo para importar"
 
 #: ../app/views/layouts/_ae_tree_select.html.haml:34
 msgid "Select Entry Point %{entry_point}"
@@ -54591,15 +54542,15 @@ msgstr "Seleccionar moneda: "
 
 #: ../app/views/miq_ae_tools/_import_export.html.haml:272
 msgid "Select domain you wish to import from:"
-msgstr "Seleccionar el dominio desde donde desee importar:"
+msgstr "Seleccionar el dominio desde donde desea importar:"
 
 #: ../app/views/miq_ae_tools/_import_export.html.haml:256
 msgid "Select existing domain to import into:"
-msgstr "Seleccionar dominio existente hacia donde importar:"
+msgstr "Seleccionar dominio existente hacia donde desea importar:"
 
 #: ../app/views/static/deploy_containers_provider/deploy-provider-config-settings.html.haml:8
 msgid "Select items to configure"
-msgstr "Seleccionar ítemes para configurar"
+msgstr "Seleccionar ítemes a configurar"
 
 #: ../app/views/miq_ae_tools/_import_export.html.haml:285
 msgid "Select namespaces you wish to import:"
@@ -55076,7 +55027,7 @@ msgstr "El cuadro de diálogo de servicio \"%{name}\" se creó con éxito"
 
 #: ../app/controllers/miq_ae_customization_controller.rb:271
 msgid "Service Dialog Import / Export"
-msgstr "Importación/Exportación de cuadros de cuadro de diálogo de servicio"
+msgstr "Importación/Exportación de cuadros de diálogo de servicio"
 
 #: ../app/presenters/tree_builder_ae_customization.rb:14
 msgid "Service Dialog Import/Export"
@@ -55089,7 +55040,7 @@ msgstr "Nombre del servicio Dialog"
 
 #: ../app/controllers/miq_ae_customization_controller.rb:183
 msgid "Service Dialogs"
-msgstr "Cuadros de cuadro de diálogo de servicio"
+msgstr "Cuadros de diálogo de servicio"
 
 #. TRANSLATORS: file: product/views/Patch.yaml
 #: ../app/controllers/application_controller.rb:1319
@@ -55352,55 +55303,51 @@ msgstr "Servicios"
 
 #: ../config/model_attributes.rb:3874
 msgid "Service|Aggregate all vm cpus"
-msgstr "Cpu de todas las máquinas virtuales en total"
+msgstr "Suma de todas las CPU de máquinas virtuales"
 
 #: ../config/model_attributes.rb:3875
 msgid "Service|Aggregate all vm disk count"
-msgstr "Conteo de discos de todas las máquinas virtuales total"
+msgstr "Suma total de todos los discos de máquinas virtuales"
 
 #: ../config/model_attributes.rb:3876
 msgid "Service|Aggregate all vm disk space allocated"
-msgstr ""
-"Service|Espacio en disco asignado a todas las máquinas virtuales total"
+msgstr "Suma de todo el espacio en disco asignado a máquinas virtuales"
 
 #: ../config/model_attributes.rb:3877
 msgid "Service|Aggregate all vm disk space used"
-msgstr ""
-"Service|Espacio en disco de todas las máquinas virtuales utilizado total"
+msgstr "Suma de todo el espacio en disco utilizado de máquinas virtuales"
 
 #: ../config/model_attributes.rb:3878
 msgid "Service|Aggregate all vm memory"
-msgstr "Memoria de todas las máquinas virtuales total"
+msgstr "Suma de toda la memoria de las máquinas virtuales"
 
 #: ../config/model_attributes.rb:3879
 msgid "Service|Aggregate all vm memory on disk"
-msgstr "Memoria en disco de todas las máquinas virtuales total"
+msgstr "Suma de toda la memoria en disco de las máquinas virtuales"
 
 #: ../config/model_attributes.rb:3880
 msgid "Service|Aggregate direct vm cpus"
-msgstr "Cpu directas a las máquinas virtuales en total"
+msgstr "Suma de  CPU de máquinas virtuales directas"
 
 #: ../config/model_attributes.rb:3881
 msgid "Service|Aggregate direct vm disk count"
-msgstr "Conteo de discos directos a las máquinas virtuales total"
+msgstr "Suma total de discos de máquinas virtuales directas"
 
 #: ../config/model_attributes.rb:3882
 msgid "Service|Aggregate direct vm disk space allocated"
-msgstr ""
-"Service|Espacio en disco asignado directo a las máquinas virtuales total"
+msgstr "Suma de espacio asignado en disco de MV directas"
 
 #: ../config/model_attributes.rb:3883
 msgid "Service|Aggregate direct vm disk space used"
-msgstr ""
-"Service|Espacio en disco directo a las máquinas virtuales utilizado total"
+msgstr "Suma de espacio utilizado de disco de MV directas"
 
 #: ../config/model_attributes.rb:3884
 msgid "Service|Aggregate direct vm memory"
-msgstr "Memoria directa a las máquinas virtuales total"
+msgstr "Suma de memoria de MV directas"
 
 #: ../config/model_attributes.rb:3885
 msgid "Service|Aggregate direct vm memory on disk"
-msgstr "Memoria en disco directa a las máquinas virtuales total"
+msgstr "Suma de memoria en disco de MV directas"
 
 #: ../config/model_attributes.rb:3886
 msgid "Service|Ancestry"
@@ -56087,7 +56034,7 @@ msgstr "Mostrar configuración de arbitraje"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3044
 msgid "Show Blueprint"
-msgstr "Mostrar plan"
+msgstr "Mostrar diagrama"
 
 #: ../app/views/layouts/listnav/_ems_cluster.html.haml:26
 #: ../app/views/layouts/listnav/_container_node.html.haml:19
@@ -56652,7 +56599,7 @@ msgstr ""
 #: ../app/views/layouts/listnav/_resource_pool.html.haml:42
 msgid "Show VMs in this Resource Pool, but not in Resource Pools below"
 msgstr ""
-"Mostrar máquinas virtuales en esta agrupación de recurso, pero no en la "
+"Mostrar máquinas virtuales en esta agrupación de recursos, pero no en la "
 "agrupación de recursos debajo"
 
 #: ../app/helpers/ems_infra_helper/textual_summary.rb:89
@@ -56789,8 +56736,7 @@ msgstr ""
 
 #: ../app/views/layouts/listnav/_cloud_volume_snapshot.html.haml:45
 msgid "Show all Cloud Volumes based on this Snapshot"
-msgstr ""
-"Mostrar todos los volúmenes de la nube sobre la base de esta instantánea"
+msgstr "Mostrar todos los volúmenes de la nube con base en esta instantánea"
 
 #: ../app/views/layouts/listnav/_ontap_logical_disk.html.haml:79
 #: ../app/views/layouts/listnav/_ontap_storage_volume.html.haml:56
@@ -58651,23 +58597,23 @@ msgstr "Almacenamiento"
 #. TRANSLATORS: en.yml key: dictionary.model.OntapConcreteExtent
 #: ../config/dictionary_strings.rb:1884
 msgid "Storage - Aggregate"
-msgstr "Almacenamiento - Agregar"
+msgstr "Almacenamiento - Agregado"
 
 #. TRANSLATORS: en.yml key: dictionary.model.OntapConcreteExtent (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.ontap_concrete_extents
 #: ../config/dictionary_strings.rb:1886 ../config/dictionary_strings.rb:2450
 msgid "Storage - Aggregates"
-msgstr "Almacenamiento - Aggregates"
+msgstr "Almacenamiento - Agregados"
 
 #. TRANSLATORS: en.yml key: dictionary.model.CimStorageExtent
 #: ../config/dictionary_strings.rb:1278
 msgid "Storage - Extent"
-msgstr "Almacenamiento - Alcance"
+msgstr "Almacenamiento - Capacidad"
 
 #. TRANSLATORS: en.yml key: dictionary.model.CimStorageExtent (plural form)
 #: ../config/dictionary_strings.rb:1280
 msgid "Storage - Extents"
-msgstr "Almacenamiento - Alcances"
+msgstr "Almacenamiento - Capacidad"
 
 #. TRANSLATORS: en.yml key: dictionary.model.OntapFileShare
 #: ../config/dictionary_strings.rb:1888
@@ -60403,7 +60349,7 @@ msgstr "Plantillas Accordion"
 #: ../app/views/provider_foreman/_main.html.haml:16
 #: ../app/views/provider_foreman/_main_configuration_profile.html.haml:16
 msgid "Tenancy"
-msgstr "Arrendamiento"
+msgstr "Tenencia"
 
 #. TRANSLATORS: file: product/views/ServiceCatalog.yaml
 #. TRANSLATORS: file: product/views/ServiceTemplate.yaml
@@ -64988,12 +64934,12 @@ msgstr "Vista de copias de seguridad"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1662
 msgid "View Base Storage Extents"
-msgstr "Ver extensiones del almacenamiento base"
+msgstr "Ver capacidad de almacenamiento de base"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3040
 msgid "View Blueprint"
-msgstr "Ver plan"
+msgstr "Ver diagrama"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:185
@@ -67455,14 +67401,14 @@ msgid ""
 "Warning: The selected Dialog will be permanently removed from the Virtual "
 "Management Database!"
 msgstr ""
-"Advertencia: El cuadro de cuadro de diálogo seleccionado se eliminará de "
-"manera permanente de la base de datos de administración virtual."
+"Advertencia: El cuadro de diálogo seleccionado se eliminará de manera "
+"permanente de la base de datos de administración virtual."
 
 #: ../app/helpers/application_helper/toolbar/miq_dialogs_center.rb:38
 msgid "Warning: The selected Dialog will be permanently removed!"
 msgstr ""
-"Advertencia: El cuadro de cuadro de diálogo seleccionado se eliminará de "
-"manera permanente."
+"Advertencia: El cuadro de diálogo seleccionado se eliminará de manera "
+"permanente."
 
 #: ../app/helpers/application_helper/toolbar/host_aggregate_center.rb:42
 #: ../app/helpers/application_helper/toolbar/host_aggregates_center.rb:45
@@ -67850,14 +67796,13 @@ msgid ""
 "Warning: This Dialog will be permanently removed from the Virtual Management"
 " Database!"
 msgstr ""
-"Advertencia: Este cuadro de cuadro de diálogo se eliminará de manera "
-"permanente de la base de datos de administración virtual."
+"Advertencia: Este cuadro de diálogo será eliminado de manera permanente de "
+"la base de datos de administración virtual."
 
 #: ../app/helpers/application_helper/toolbar/dialog_center.rb:27
 msgid "Warning: This Dialog will be permanently removed!"
 msgstr ""
-"Advertencia: Este cuadro de cuadro de diálogo se eliminará de manera "
-"permanente."
+"Advertencia: Este cuadro de diálogo será eliminado de manera permanente."
 
 #: ../app/helpers/application_helper/toolbar/iso_datastore_center.rb:15
 msgid ""
@@ -68239,7 +68184,7 @@ msgstr "Asistentes"
 
 #: ../app/controllers/report_controller.rb:248
 msgid "Widgets imported successfully"
-msgstr "asistentes importados con éxito"
+msgstr "Los asistentes han sido importados."
 
 #: ../app/models/system_service.rb:18
 msgid "Win32 Own Process"
@@ -68572,11 +68517,11 @@ msgstr "Zonas"
 
 #: ../config/model_attributes.rb:4585
 msgid "Zone|Aggregate cpu speed"
-msgstr "Velocidad de cpu total"
+msgstr "Velocidad de CPU total"
 
 #: ../config/model_attributes.rb:4586
 msgid "Zone|Aggregate cpu total cores"
-msgstr "Núcleos totales de cpu"
+msgstr "Suma de núcleos de CPU"
 
 #: ../config/model_attributes.rb:4587
 msgid "Zone|Aggregate disk capacity"
@@ -68588,15 +68533,15 @@ msgstr "Memoria total"
 
 #: ../config/model_attributes.rb:4589
 msgid "Zone|Aggregate physical cpus"
-msgstr "Cpu físicos totales"
+msgstr "Suma de CPU físicas"
 
 #: ../config/model_attributes.rb:4590
 msgid "Zone|Aggregate vm cpus"
-msgstr "Cpu virtuales de máquinas virtuales totales"
+msgstr "Suma de CPUs de máquinas virtuales"
 
 #: ../config/model_attributes.rb:4591
 msgid "Zone|Aggregate vm memory"
-msgstr "Memoria de máquina virtual total"
+msgstr "Total de memoria de MV"
 
 #: ../config/model_attributes.rb:4592
 msgid "Zone|Authentication status"
