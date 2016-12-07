@@ -70,9 +70,7 @@ class ApplicationHelper::Toolbar::EmsDatawarehouseCenter < ApplicationHelper::To
         button(
           :ems_datawarehouse_recheck_auth_status,
           'fa fa-search fa-lg',
-          proc do
-            _("Re-check Authentication Status for this %{warehouse}") % {:warehouse => ui_lookup(:table=>'ems_datawarehouse')}
-          end,
+          N_("Re-check Authentication Status for this Datawarehouse Provider"),
           N_('Re-check Authentication Status'),
           :klass => ApplicationHelper::Button::GenericFeatureButton,
           :options => {:feature => :authentication_status}),
