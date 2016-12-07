@@ -47,6 +47,13 @@ module Api
       {:user => @auth_user_obj, :tenant => @auth_user_obj.current_tenant}
     end
 
+    def copy_resource(type, id, data)
+      service_order = resource_search(id, type, collection_class(type))
+      service_order.deep_copy(data)
+    rescue => err
+      raise BadRequestError, "Could not copy service order - #{err}"
+    end
+
     private
 
     def add_request_to_cart(workflow)
