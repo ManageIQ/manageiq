@@ -9,6 +9,7 @@ class ApplicationHelper::Toolbar::SummaryCenter < ApplicationHelper::Toolbar::Ba
       end,
       nil,
       :url       => "/show",
-      :url_parms => "?id=\#{@record.id}"),
+      :url_parms => "?id=\#{@record.id}",
+      :klass     => ApplicationHelper::Button::ShowSummary),
   ])
 end
