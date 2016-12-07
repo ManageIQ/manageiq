@@ -357,6 +357,16 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     result
   end
 
+  def allowed_tags(options = {})
+    return {} if (source = load_ar_obj(get_source_vm)).blank?
+    super(options.merge(:region_number => source.region_number))
+  end
+
+  def allowed_pxe_servers(_options = {})
+    return {} if (source = load_ar_obj(get_source_vm)).blank?
+    PxeServer.in_region(source.region_number).each_with_object({}) { |p, h| h[p.id] = p.name }
+  end
+
   def get_source_vm
     get_source_and_targets[:vm]
   end
