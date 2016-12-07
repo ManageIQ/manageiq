@@ -131,6 +131,7 @@ module OpsController::Settings::RHN
     end
 
     begin
+      RegistrationSystem.update_rhsm_conf_queue(rhn_credentials_from_edit)
       db.save!
     rescue => bang
       add_flash(_(bang.message), :error)
