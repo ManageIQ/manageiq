@@ -10,6 +10,7 @@
           %strong
             = _("All Alerts")
     .row{"ng-if" => "vm.loadingDone"}
+      %div{"pf-toolbar" => "", "config" => "vm.toolbarConfig"}
       = render :partial => "shared/views/alerts_list"
 
 :javascript
