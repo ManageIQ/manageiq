@@ -47,14 +47,14 @@ module ManageIQ::Providers::Kubernetes::ContainerManager::EventCatcherMixin
     reset_event_monitor_handle
   end
 
-  def process_event(event)
+  def queue_event(event)
     event_data = extract_event_data(event)
-    if event_data.nil?
-      _log.debug "#{log_prefix} Discarding event [#{event_data}]"
-    else
-      _log.info "#{log_prefix} Queuing event [#{event_data}]"
-      EmsEvent.add_queue('add_kubernetes', @cfg[:ems_id], event_data)
-    end
+    _log.info "#{log_prefix} Queuing event [#{event_data}]"
+    EmsEvent.add_queue('add_kubernetes', @cfg[:ems_id], event_data)
+  end
+
+  def filtered?(event)
+    extract_event_data(event).nil?
   end
 
   # Returns hash, or nil if event should be discarded.
