@@ -21,7 +21,8 @@ class ApplicationHelper::Toolbar::EmsNetworksCenter < ApplicationHelper::Toolbar
           'pficon pficon-add-circle-o fa-lg',
           t = N_('Add a New Network Provider'),
           t,
-          :url => "/new"),
+          :url   => "/new",
+          :klass => ApplicationHelper::Button::EmsNetwork),
         button(
           :ems_network_edit,
           'pficon pficon-edit fa-lg',
@@ -29,7 +30,8 @@ class ApplicationHelper::Toolbar::EmsNetworksCenter < ApplicationHelper::Toolbar
           N_('Edit Selected Network Provider'),
           :url_parms => "main_div",
           :enabled   => false,
-          :onwhen    => "1"),
+          :onwhen    => "1",
+          :klass     => ApplicationHelper::Button::EmsNetwork),
         button(
           :ems_network_delete,
           'pficon pficon-delete fa-lg',
