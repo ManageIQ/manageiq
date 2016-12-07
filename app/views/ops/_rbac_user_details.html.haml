@@ -99,7 +99,7 @@
             - if role_allows?(:feature => "rbac_group_show")
               - params = {:class => "pointer", :onclick => "miqTreeActivateNode('rbac_tree', 'g-#{to_cid(@user.current_group.id)}');", :title => _("View this Group")}
             %i.product.product-group{params}
-            = h(@user.current_group.description)
+            = link_to(@user.current_group.description, "#", params)
         - else
           - if disabled
             %p.form-control-static
@@ -123,7 +123,7 @@
             - else
               - params = {}
             %i.product.product-role{params}
-            = h(@user.miq_user_role_name)
+            = link_to(@user.miq_user_role_name, "#", params)
           - else
             %p.form-control-static
               = h(@user.miq_user_role_name)
