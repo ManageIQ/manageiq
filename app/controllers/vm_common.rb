@@ -1324,15 +1324,17 @@ module VmCommon
             options[:where_clause], VmOrTemplate::NOT_ARCHIVED_NOR_OPRHANED_CONDITIONS
           )
           process_show_list(options)
-          model_name = @nodetype == "d" ? "Datacenter" : ui_lookup(:model => rec.class.base_class.to_s)
+          model_name = @nodetype == "d" ? _("Datacenter") : ui_lookup(:model => rec.class.base_class.to_s)
           @is_redhat = case model_name
                        when 'Datacenter' then ManageIQ::Providers::InfraManager.find(rec.ems_id).type == 'ManageIQ::Providers::Redhat::InfraManager'
                        when 'Provider'   then rec.type == 'ManageIQ::Providers::Redhat::InfraManager'
                        else false
                        end
-          #       @right_cell_text = "#{ui_lookup(:models=>"VmOrTemplate")} under #{model_name} \"#{rec.name}\""
-          # TODO: Change ui_lookup/dictionary to handle VmOrTemplate, returning VMs And Templates
-          @right_cell_text = "#{model ? ui_lookup(:models => model) : "VMs & Templates"} under #{model_name} \"#{rec.name}\""
+          @right_cell_text = _("%{object_types} under %{datastore_or_provider} \"%{provider_or_datastore_name}\"") % {
+            :object_types               => model ? ui_lookup(:models => model) : _("VMs & Templates"),
+            :datastore_or_provider      => model_name,
+            :provider_or_datastore_name => rec.name
+          }
         end
       end
       # Add adv search filter to header
