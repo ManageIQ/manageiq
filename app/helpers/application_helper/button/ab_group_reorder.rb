@@ -1,6 +1,7 @@
 class ApplicationHelper::Button::AbGroupReorder < ApplicationHelper::Button::AbGroupEdit
   def disabled?
-    @error_message = _('Only more than 1 Custom Button Groups can be reordered') unless reorderable?
+    @error_message = _('Only more than 1 Custom Button Groups can be %{action}') %
+                     {:action => @action} unless reorderable?
     @error_message.present?
   end
 
