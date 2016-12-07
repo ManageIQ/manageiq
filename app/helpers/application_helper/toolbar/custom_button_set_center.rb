@@ -28,8 +28,7 @@ class ApplicationHelper::Toolbar::CustomButtonSetCenter < ApplicationHelper::Too
             end
           end,
           N_('Reorder'),
-          :klass   => ApplicationHelper::Button::AbGroupReorder,
-          :options => {:action => 'reordered'}),
+          :klass   => ApplicationHelper::Button::AbGroupReorder),
       ]
     ),
   ])
