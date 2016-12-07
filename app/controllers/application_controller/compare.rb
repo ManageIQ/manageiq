@@ -1451,17 +1451,17 @@ module ApplicationController::Compare
     txt = h[:name].truncate(16)
     html_text = ""
     if %w(Vm VmOrTemplate).include?(@sb[:compare_db])
-      img = ActionController::Base.helpers.image_path("100/vendor-#{h[:vendor].downcase}.png")
+      img = ActionController::Base.helpers.image_path("svg/vendor-#{h[:vendor].downcase}.svg")
       html_text << "<a title=\"#{h[:name]}\" href=\"/#{controller_name}/show/#{h[:id]}\">
                       <img src=\"#{img}\" align=\"middle\" border=\"0\" width=\"20\" height=\"20\"/>
                     </a>"
     elsif @sb[:compare_db] == "Host"
-      img = ActionController::Base.helpers.image_path("100/vendor-#{h[:vmm_vendor].downcase}.png")
+      img = ActionController::Base.helpers.image_path("svg/vendor-#{h[:vmm_vendor].downcase}.svg")
       html_text << "<a href=\"/host/show/#{h[:id]}\">
                       <img src=\"#{img}\" align=\"middle\" border=\"0\" width=\"20\" height=\"20\" />
                     </a>"
     else
-      img = ActionController::Base.helpers.image_path("100/vendor-#{h[:compare_db].downcase}.png")
+      img = ActionController::Base.helpers.image_path("svg/vendor-#{h[:compare_db].downcase}.svg")
       html_text <<
         "<a href=\"/ems_cluster/show/#{h[:id]}\">
           <img src=\"#{img}\" align=\"middle\" border=\"0\" width=\"20\" height=\"20\"/>

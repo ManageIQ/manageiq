@@ -32,7 +32,7 @@
             %div{:class => "flobj c#{size}"}
               %img{:src => image_path("svg/vendor-#{h(@drift_obj.vendor.downcase)}.svg")}
             %div{:class => "flobj a#{size}"}
-              %img{:src => image_path("100/os-#{h(@drift_obj.os_image_name.downcase)}.png")}
+              %img{:src => image_path("svg/os-#{h(@drift_obj.os_image_name.downcase)}.svg")}
             %div{:class => "flobj d#{size}"}
               %p
                 = @drift_obj.number_of(:snapshots)
