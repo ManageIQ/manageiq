@@ -4,7 +4,7 @@ describe ManageIQ::Providers::Redhat::InfraManager do
   end
 
   it ".description" do
-    expect(described_class.description).to eq('Red Hat Enterprise Virtualization Manager')
+    expect(described_class.description).to eq('Red Hat Virtualization Manager')
   end
 
   describe ".metrics_collector_queue_name" do
