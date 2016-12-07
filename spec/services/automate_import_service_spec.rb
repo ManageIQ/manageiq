@@ -32,12 +32,15 @@ describe AutomateImportService do
     let(:miq_ae_import) { double("MiqAeYamlImportZipfs", :import_stats => "import stats") }
     let(:removable_entry) { double(:name => "carrot/something_else/namespace.yaml") }
     let(:removable_class_entry) { double(:name => "carrot/something_else.class/class.yaml") }
+    let(:user) { FactoryGirl.create(:user_with_group) }
 
     before do
+      User.current_user = user
       import_options = {
         "import_as" => "potato",
         "overwrite" => true,
-        "zip_file"  => "automate_temporary_zip.zip"
+        "zip_file"  => "automate_temporary_zip.zip",
+        "tenant_id" => user.current_tenant.id
       }
       allow(MiqAeImport).to receive(:new).with("carrot", import_options).and_return(miq_ae_import)
       allow(miq_ae_import).to receive(:remove_unrelated_entries)
@@ -91,7 +94,8 @@ describe AutomateImportService do
           "carrot",
           "import_as" => "carrot",
           "overwrite" => true,
-          "zip_file"  => "automate_temporary_zip.zip"
+          "zip_file"  => "automate_temporary_zip.zip",
+          "tenant_id" => user.current_tenant.id
         ).and_return(miq_ae_import)
         automate_import_service.import_datastore(import_file_upload, "carrot", "", ["starch"])
       end
