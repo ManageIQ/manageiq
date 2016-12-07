@@ -57,6 +57,9 @@ module ApplicationHelper::PageLayouts
     %w(
       all_tasks
       all_ui_tasks
+      miq_request_ae
+      miq_request_host
+      miq_request_vm
       my_tasks
       my_ui_tasks
     ).include? @layout
