@@ -25,6 +25,22 @@ class ApplicationHelper::Toolbar::NetworkRoutersCenter < ApplicationHelper::Tool
             :onwhen    => '1'
           ),
           button(
+            :network_router_add_interface,
+            'pficon pficon-edit fa-lg',
+            t = N_('Add Interface to selected Router'),
+            t,
+            :url_parms => "main_div",
+            :enabled   => false,
+            :onwhen    => "1"),
+          button(
+            :network_router_remove_interface,
+            'pficon pficon-edit fa-lg',
+            t = N_('Remove Interface from selected Router'),
+            t,
+            :url_parms => "main_div",
+            :enabled   => false,
+            :onwhen    => "1"),
+          button(
             :network_router_delete,
             'pficon pficon-delete fa-lg',
             t = N_('Delete selected Routers'),

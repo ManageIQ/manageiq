@@ -1,0 +1,23 @@
+%form#form_div{:name => "angularForm", 'ng-controller' => "networkRouterFormController", :novalidate => true}
+  = render :partial => "layouts/flash_msg"
+  %h3
+    = _('Remove Interface from Router')
+  .form-horizontal
+    .form-group
+      %label.col-md-2.control-label
+        = _('Subnet')
+      .col-md-8
+        = select_tag("cloud_subnet_id",
+          options_for_select([["<#{_('Choose')}>", nil]] + @subnet_choices.sort),
+                      "ng-model"                    => "networkRouterModel.cloud_subnet_id",
+                      "required"                    => "",
+                      :miqrequired                  => true,
+                      :checkchange                  => true,
+                      "selectpicker-for-select-tag" => "")
+  = render :partial => "layouts/angular/x_custom_form_buttons_angular",
+           :locals  => {:button_label           => _("Remove"),
+                        :button_click           => "removeInterfaceClicked()"}
+
+:javascript
+  ManageIQ.angular.app.value('networkRouterFormId', '#{@router.id}');
+  miq_bootstrap('#form_div');
