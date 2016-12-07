@@ -33,7 +33,9 @@ class HawkularProxyService
   def metric_definitions
     tags = @params['tags'].blank? ? nil : JSON.parse(@params['tags'])
     tags = nil if tags == {}
-    client.gauges.query(tags).compact.map { |m| m.json if m.json }.sort { |a, b| a["id"].downcase <=> b["id"].downcase }
+    definitions = client.gauges.query(tags).compact.map { |m| m.json if m.json }.sort { |a, b| a["id"] <=> b["id"] }
+
+    definitions[0..100]
   end
 
   def metric_tags
@@ -45,12 +47,14 @@ class HawkularProxyService
     starts = @params['starts'] || (ends - 8 * 60 * 60 * 1000)
     bucket_duration = @params['bucket_duration'] || nil
     order = @params['order'] || 'ASC'
+    limit = @params['limit'].to_i || 500
 
-    client.gauges.get_data(id,
-                           :limit          => @params['limit'] || 100,
-                           :starts         => starts.to_i,
-                           :ends           => ends.to_i,
-                           :bucketDuration => bucket_duration,
-                           :order          => order)
+    data = client.gauges.get_data(id,
+                                  :limit          => limit,
+                                  :starts         => starts.to_i,
+                                  :ends           => ends.to_i,
+                                  :bucketDuration => bucket_duration,
+                                  :order          => order)
+    data[0..(limit - 1)]
   end
 end
