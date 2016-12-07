@@ -374,7 +374,7 @@ describe EmsInfraController do
         edit[:new][:name] = "abc"
         edit[:ems_types] = {"scvmm"           => "Microsoft System Center VMM",
                             "openstack_infra" => "OpenStack Platform Director",
-                            "rhevm"           => "Red Hat Enterprise Virtualization Manager",
+                            "rhevm"           => "Red Hat Virtualization Manager",
                             "vmwarews"        => "VMware vCenter"}
         controller.instance_variable_set(:@edit, edit)
         post :form_field_changed, :params => { :id => "new", :server_emstype => "scvmm" }
