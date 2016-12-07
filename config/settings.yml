@@ -13,7 +13,6 @@
   :ldaphost:
   :ldapport: '389'
   :mode: database
-  :resolve_ldap_host: false
   :search_timeout: 30
   :user_suffix:
   :user_type: userprincipalname
