@@ -7,7 +7,7 @@ module ManageIQ::Providers
     end
 
     def listicon_image
-      "100/vendor-#{image_name.downcase}.png"
+      "svg/vendor-#{image_name.downcase}.svg"
     end
   end
 end

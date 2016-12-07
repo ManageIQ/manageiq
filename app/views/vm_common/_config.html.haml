@@ -26,7 +26,7 @@
             %td.label
               = h(item[:osinfo])
             %td
-              %img{:src => image_path("100/os-#{h(@record.os_image_name.downcase)}.png")}
+              %img{:src => image_path("svg/os-#{h(@record.os_image_name.downcase)}.svg")}
               = h(item[:description])
     %hr
   - regexosname = Regexp.new(/linux/)
