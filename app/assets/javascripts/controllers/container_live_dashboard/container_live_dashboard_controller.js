@@ -104,7 +104,7 @@ miqHttpInject(angular.module('containerLiveDashboard', ['ui.bootstrap', 'pattern
       $http.get($scope.url + params).success(function (response) {
         'use strict';
         if (response.error) {
-          showErrorMessage(response.error);
+          add_flash(response.error, 'error');
         } else {
           var data = response.data;
 
@@ -147,7 +147,7 @@ miqHttpInject(angular.module('containerLiveDashboard', ['ui.bootstrap', 'pattern
         'use strict';
         $scope.loadingMetrics = false;
         if (response.error) {
-          showErrorMessage(response.error);
+          add_flash(response.error, 'error');
           return;
         }
 
@@ -173,7 +173,7 @@ miqHttpInject(angular.module('containerLiveDashboard', ['ui.bootstrap', 'pattern
       $http.get($scope.url + params).success(function(response) {
         'use strict';
         if (response.error) {
-          showErrorMessage(response.error);
+          add_flash(response.error, 'error');
           return;
         }
 
