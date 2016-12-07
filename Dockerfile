@@ -111,6 +111,7 @@ RUN ${APPLIANCE_ROOT}/setup && \
     mkdir ${APP_ROOT}/log/apache && \
     mv /etc/httpd/conf.d/ssl.conf{,.orig} && \
     echo "# This file intentionally left blank. ManageIQ maintains its own SSL configuration" > /etc/httpd/conf.d/ssl.conf && \
+    cp ${APP_ROOT}/config/cable.yml.sample ${APP_ROOT}/config/cable.yml && \
     echo "export APP_ROOT=${APP_ROOT}" >> /etc/default/evm && \
     echo "export CONTAINER=true" >> /etc/default/evm
 
@@ -119,8 +120,10 @@ WORKDIR ${APP_ROOT}
 RUN source /etc/default/evm && \
     export RAILS_USE_MEMORY_STORE="true" && \
     npm install gulp bower yarn -g && \
-    gem install bundler -v ">=1.8.4" && \
-    bin/setup --no-db --no-tests && \
+    gem install bundler --conservative && \
+    bower install --allow-root -F --silent --config.analytics=false && \
+    bundle install && \
+    bin/rails log:clear tmp:clear && \
     rake evm:compile_assets && \
     rake evm:compile_sti_loader && \
     # Cleanup install artifacts
