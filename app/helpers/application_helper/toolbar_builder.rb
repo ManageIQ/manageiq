@@ -550,8 +550,6 @@ class ApplicationHelper::ToolbarBuilder
 
     return false if id.starts_with?("miq_capacity_") && @sb[:active_tab] == "report"
 
-    return true if %w(ems_network_new ems_network_edit).include?(id) && ::Settings.product.nuage != true
-
     # don't check for feature RBAC if id is miq_request_approve/deny
     unless %w(miq_policy catalogs).include?(@layout)
       return true if !role_allows?(:feature => id) && !["miq_request_approve", "miq_request_deny"].include?(id) &&
