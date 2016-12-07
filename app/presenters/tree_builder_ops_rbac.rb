@@ -5,7 +5,7 @@ class TreeBuilderOpsRbac < TreeBuilder
 
   def tree_init_options(_tree_name)
     {
-      :open_all => true,
+      :open_all => false,
       :leaf     => "Access Control",
       :expand   => false
     }
