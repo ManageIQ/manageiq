@@ -1898,7 +1898,7 @@ module ApplicationController::CiProcessing
     when "miq_template"
       return MiqTemplate
     when "orchestration_stack"
-      return OrchestrationStack
+      return params[:display] == 'instances' ? VmOrTemplate : OrchestrationStack
     when "service"
       return Service
     else
