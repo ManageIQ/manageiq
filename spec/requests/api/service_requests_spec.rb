@@ -390,6 +390,45 @@ describe "Service Requests API" do
 
       expect(response).to have_http_status(:forbidden)
     end
+
+    it 'supports user reference hash with id' do
+      service_request.miq_approvals << FactoryGirl.create(:miq_approval)
+      user = FactoryGirl.create(:user)
+      api_basic_authorize collection_action_identifier(:service_requests, :add_approver)
+
+      expect do
+        run_post(service_requests_url(service_request.id), :action => 'add_approver', :user => { :id => user.id})
+      end.to change(MiqApproval, :count).by(1)
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include('id' => service_request.id)
+    end
+
+    it 'supports user reference hash with href' do
+      service_request.miq_approvals << FactoryGirl.create(:miq_approval)
+      user = FactoryGirl.create(:user)
+      api_basic_authorize collection_action_identifier(:service_requests, :add_approver)
+
+      expect do
+        run_post(service_requests_url(service_request.id),
+                 :action => 'add_approver', :user => { :href => users_url(user.id)})
+      end.to change(MiqApproval, :count).by(1)
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include('id' => service_request.id)
+    end
+
+    it 'raises an error if no user is supplied' do
+      api_basic_authorize collection_action_identifier(:service_requests, :add_approver)
+
+      expected = {
+        'error' => a_hash_including(
+          'kind'    => 'bad_request',
+          'message' => 'Cannot add approver - Must specify a valid user_id or user'
+        )
+      }
+      run_post(service_requests_url(service_request.id), :action => 'add_approver')
+      expect(response.parsed_body).to include(expected)
+      expect(response).to have_http_status(:bad_request)
+    end
   end
 
   context 'service request update' do
