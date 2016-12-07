@@ -5,10 +5,6 @@ class TreeBuilder
 
   attr_reader :name, :type, :tree_nodes
 
-  def node_builder
-    TreeNodeBuilder
-  end
-
   def self.class_for_type(type)
     raise('Obsolete tree type.') if type == :filter
     @x_tree_node_classes ||= {}
@@ -280,7 +276,8 @@ class TreeBuilder
   end
 
   def x_build_single_node(object, pid, options)
-    node = node_builder.build(object, pid, options)
+    # FIXME: to_h is for backwards compatibility with hash-trees, it needs to be removed in the future
+    node = TreeNode.new(object, pid, options).to_h
     override(node, object, pid, options) if self.class.method_defined?(:override) || self.class.private_method_defined?(:override)
     node
   end
