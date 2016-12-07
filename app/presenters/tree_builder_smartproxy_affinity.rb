@@ -9,7 +9,7 @@ class TreeBuilderSmartproxyAffinity < TreeBuilder
 
   private
 
-  def override(node, object, pid, options)
+  def override(node, _object, _pid, _options)
     node[:cfmeNoClick] = true
   end
 

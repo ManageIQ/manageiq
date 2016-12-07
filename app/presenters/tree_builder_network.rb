@@ -2,7 +2,7 @@ class TreeBuilderNetwork < TreeBuilder
   has_kids_for Lan, [:x_get_tree_lan_kids]
   has_kids_for Switch, [:x_get_tree_switch_kids]
 
-  def override(node, object, pid, options)
+  def override(node, _object, _pid, _options)
     node[:cfmeNoClick] = true unless node[:icon].include?('100/currentstate-')
   end
 

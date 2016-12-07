@@ -8,7 +8,7 @@ class TreeBuilderAutomate < TreeBuilderAeClass
     super(name, type, sandbox, build)
   end
 
-  def override(node, object, pid, options)
+  def override(node, object, _pid, _options)
     if @type == 'catalog'
       # Only the instance items should be clickable when selecting a catalog item entry point
       node[:cfmeNoClick] = true unless object.kind_of?(MiqAeInstance) # catalog
