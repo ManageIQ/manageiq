@@ -218,8 +218,7 @@
                   %tr{:title => _('View This Alert'),
                     :onclick => remote_function(:url => "/miq_policy/x_show/#{id}?accord=alert")}
                     %td.narrow
-                      %img{:src => image_path('100/miq_alert.png')}
-                    %td
+                      %i.pficon.pficon-warning-triangle-o
                       = alert.description
           %hr
         - when "inherit_parent_tags"

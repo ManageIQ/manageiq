@@ -1594,7 +1594,7 @@ module ApplicationHelper
   end
 
   def listicon_image_tag(db, row)
-    img_attr = {:valign => "middle", :width => "20", :height => "20", :alt => nil, :border => "0"}
+    img_attr = {:alt => nil}
     if %w(Job MiqTask).include?(db)
       img_attr = {:valign => "middle", :width => "16", :height => "16", :alt => nil}
       if row["state"].downcase == "finished" && row["status"]
