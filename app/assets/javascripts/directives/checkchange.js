@@ -50,10 +50,10 @@ var viewModelComparison = function(scope, ctrl) {
 };
 
 var viewModelDateComparison = function(scope, ctrl) {
-  var modelDate = moment(ctrl.$modelValue);
-  var copyDate = moment(scope.modelCopy[ctrl.$name]);
+  var modelDate = (ctrl.$modelValue != undefined) ? moment(ctrl.$modelValue) : null;
+  var copyDate = (scope.modelCopy[ctrl.$name] != undefined) ? moment(scope.modelCopy[ctrl.$name]) : null;
 
-  if (modelDate.diff(copyDate, 'days') == 0) {
+  if((modelDate && copyDate && (modelDate.diff(copyDate, 'days') == 0)) || (!modelDate && !copyDate)){
     scope.angularForm[scope['formchange_' + ctrl.$name]].$setPristine();
     scope.angularForm[scope['formchange_' + ctrl.$name]].$setUntouched();
     scope.angularForm.$pristine = true;
