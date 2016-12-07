@@ -504,8 +504,8 @@ class ApplicationHelper::ToolbarBuilder
 
     # don't hide view buttons in toolbar
     return false if %w(view_grid view_tile view_list view_dashboard view_summary view_topology
-      refresh_log fetch_log common_drift download_text download_csv download_pdf download_view vm_download_pdf
-      tree_large tree_small).include?(id) && !%w(miq_policy_rsop ops).include?(@layout)
+      refresh_log fetch_log common_drift download_text download_csv download_pdf download_view
+      vm_download_pdf).include?(id) && !%w(miq_policy_rsop ops).include?(@layout)
 
     # dont hide back to summary button button when not in explorer
     return false if id == "show_summary" && !@explorer
