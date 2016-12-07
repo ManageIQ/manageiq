@@ -457,9 +457,6 @@ class CloudVolumeController < ApplicationController
 
       task_id = @volume.backup_create_queue(session[:userid], options)
 
-      add_flash(_("Cloud volume backup creation failed: Task start failed: ID [%{id}]") %
-                {:id => task_id.inspect}, :error)
-
       if task_id.kind_of?(Integer)
         initiate_wait_for_task(:task_id => task_id, :action => "backup_create_finished")
       else
