@@ -265,7 +265,7 @@ module AuthenticationMixin
     types = args.first                  if types.blank?
     types = [nil]                       if types.blank?
     Array(types).each do |t|
-      success = authentication_check(t, options).first
+      success = authentication_check(t, options.except(:attempt)).first
       retry_scheduled_authentication_check(t, options) unless success
     end
   end
