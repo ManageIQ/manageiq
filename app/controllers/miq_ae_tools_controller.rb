@@ -252,7 +252,7 @@ Methods updated/added: %{method_stats}") % stat_options, :success)
                }
              else
                git_repo.destroy if git_repo && params[:new_git_repo] != "false"
-               add_flash(_("Error during repository fetch: #{task.message}"), :error)
+               add_flash(_("Error during repository fetch: %{message}") % {:message => task.message}, :error)
                {
                  :success => false,
                  :message => @flash_array.first

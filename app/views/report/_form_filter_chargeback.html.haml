@@ -75,8 +75,8 @@
         %label.control-label.col-md-2
           = _("Provider")
         .col-md-8
-          - opts = [["<#{_('Choose %{provider}')}>" % {:provider => _("Provider")}, nil],
-                    [_("All %{providers}" % {:providers => _("Providers")}), :all]]
+          - opts = [["<#{_('Choose Provider')}>", nil],
+                    [_("All Providers"), :all]]
           - if @edit[:cb_providers][@edit[:new][:cb_model].underscore.to_sym].present?
             - opts += Array(@edit[:cb_providers][@edit[:new][:cb_model].underscore.to_sym]).sort_by { |a| a.first.downcase }
           = select_tag('cb_provider_id',
