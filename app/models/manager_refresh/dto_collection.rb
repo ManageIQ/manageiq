@@ -50,7 +50,7 @@ module ManagerRefresh
 
     def process_strategy_local_db_cache_all
       self.saved = true
-      selected   = [:id] + manager_ref
+      selected   = [:id] + manager_ref.map { |x| model_class.reflect_on_association(x).try(:foreign_key) || x }
       selected << :type if model_class.new.respond_to? :type
       parent.send(association).select(selected).find_each do |record|
         self.data_index[object_index(record)] = record
