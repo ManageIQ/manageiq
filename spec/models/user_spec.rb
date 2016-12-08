@@ -364,7 +364,7 @@ describe User do
   end
 
   context ".seed" do
-    include_examples(".seed called multiple times", 2)
+    include_examples(".seed called multiple times", 1)
 
     include_examples("seeding users with", [])
 
