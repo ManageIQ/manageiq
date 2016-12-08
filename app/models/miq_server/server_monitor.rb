@@ -16,7 +16,7 @@ module MiqServer::ServerMonitor
   end
 
   def make_master_server(last_master)
-    _log.info "Master server has #{last_master.nil? ? "not been set" : "died"}.  Attempting takeover as new master server."
+    _log.info "Master server has #{last_master.nil? ? "not been set" : "died, #{last_master.name}"}.  Attempting takeover as new master server, #{name}."
     parent = MiqRegion.my_region
     parent.lock do
       all_servers = parent.miq_servers
@@ -24,17 +24,17 @@ module MiqServer::ServerMonitor
       _log.debug "Double checking that nothing has changed"
       master = all_servers.detect(&:is_master?)
       if (last_master.nil? && !master.nil?) || (!last_master.nil? && !master.nil? && last_master.id != master.id)
-        _log.info "Aborting master server takeover as another server has taken control first."
+        _log.info "Aborting master server takeover as another server, #{master.name}, has taken control first."
         return nil
       end
 
-      _log.debug "Setting this server as master server"
       all_servers.each do |s|
+      _log.debug "Setting this server, #{name}, as master server"
         s.is_master = (id == s.id)
         s.save!
       end
     end
-    _log.info "This server is now set as the master server"
+    _log.info "This server #{name} is now set as the master server, last_master: #{last_master.try(:name)}"
     self
   end
 
