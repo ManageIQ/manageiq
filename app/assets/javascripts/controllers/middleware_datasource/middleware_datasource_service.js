@@ -44,29 +44,7 @@ function MwAddDatasourceService($http, $q) {
   };
 
   this.sendAddDatasource = function(payload) {
-    var errorMsg = _('Error running add_datasource on this server.');
-    var deferred = $q.defer();
-
-    $http.post('/middleware_server/add_datasource', angular.toJson(payload))
-      .then(
-        function (response) { // success
-          var data = response.data;
-
-          if (data.status === 'ok') {
-            deferred.resolve(data.msg);
-          } else {
-            deferred.reject(data.msg);
-          }
-        })
-      .catch(function () {
-        deferred.reject(errorMsg);
-      })
-      .finally(function () {
-        // we should already be resolved and promises can only fire once
-        deferred.resolve(data.msg);
-      });
-    return deferred.promise;
-
+    return $http.post('/middleware_server/add_datasource', angular.toJson(payload));
   }
 }
 

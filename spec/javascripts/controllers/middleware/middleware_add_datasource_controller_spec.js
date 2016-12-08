@@ -20,6 +20,10 @@ describe('middlewareAddDatasourceController', function() {
       miqService: miqService,
     });
 
+    $scope.dsAddForm = {
+      $setPristine: function (value) {}
+    };
+
     spyOn(rootScope, '$broadcast');
   }));
 

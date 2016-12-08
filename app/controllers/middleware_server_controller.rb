@@ -162,7 +162,7 @@ class MiddlewareServerController < ApplicationController
 
       run_server_operation(STANDALONE_SERVER_OPERATIONS.fetch(:middleware_add_datasource), selected_server)
       render :json => {
-        :status => :success, :msg => _("Datasource \"%s\" has been installed on this server.") % params["datasource"]
+        :status => :success, :msg => _("Datasource \"%s\" installation has started on this server.") % datasource_name
       }
     end
   end
