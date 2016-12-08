@@ -10,11 +10,7 @@ class ApplicationHelper::Button::UtilizationDownload < ApplicationHelper::Button
     return false if @sb.fetch_path(:util, :trend_rpt) && @sb.fetch_path(:util, :summary)
 
     # otherwise the button is off
-    true
-  end
-
-  def calculate_properties
-    super
-    self[:title] = _("No records found for this report") if disabled?
+    @error_message = _('No records found for this report')
+    @error_message.present?
   end
 end

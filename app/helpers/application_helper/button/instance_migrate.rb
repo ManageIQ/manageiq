@@ -1,10 +1,6 @@
 class ApplicationHelper::Button::InstanceMigrate < ApplicationHelper::Button::Basic
-  def calculate_properties
-    super
-    self[:title] = @record.unsupported_reason(:live_migrate) if disabled?
-  end
-
   def disabled?
-    !@record.supports_live_migrate?
+    @error_message = @record.unsupported_reason(:live_migrate) unless @record.supports_live_migrate?
+    @error_message.present?
   end
 end

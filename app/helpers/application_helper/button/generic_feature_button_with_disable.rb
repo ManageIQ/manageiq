@@ -1,11 +1,6 @@
 class ApplicationHelper::Button::GenericFeatureButtonWithDisable < ApplicationHelper::Button::GenericFeatureButton
   needs :@record
 
-  def calculate_properties
-    super
-    self[:title] = @error_message if disabled?
-  end
-
   def disabled?
     @error_message = if @record.feature_known?(@feature)
                        unless @record.supports?(@feature)

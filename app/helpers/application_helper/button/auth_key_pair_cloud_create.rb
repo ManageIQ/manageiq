@@ -1,11 +1,4 @@
 class ApplicationHelper::Button::AuthKeyPairCloudCreate < ApplicationHelper::Button::Basic
-  def calculate_properties
-    super
-    if disabled?
-      self[:title] = _("No cloud providers support key pair import or creation.")
-    end
-  end
-
   def disabled?
     # check that at least one EMS the user has access to supports
     # creation or import of key pairs.
@@ -14,6 +7,7 @@ class ApplicationHelper::Button::AuthKeyPairCloudCreate < ApplicationHelper::But
         return false
       end
     end
-    return true
+    @error_message = _('No cloud providers support key pair import or creation.')
+    @error_message.present?
   end
 end

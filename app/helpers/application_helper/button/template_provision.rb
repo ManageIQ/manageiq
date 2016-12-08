@@ -1,10 +1,6 @@
 class ApplicationHelper::Button::TemplateProvision < ApplicationHelper::Button::Basic
-  def calculate_properties
-    super
-    self[:title] = _("Selected item is not eligible for Provisioning") if disabled?
-  end
-
   def disabled?
-    !@record.supports_provisioning?
+    @error_message = _('Selected item is not eligible for Provisioning') unless @record.supports_provisioning?
+    @error_message.present?
   end
 end

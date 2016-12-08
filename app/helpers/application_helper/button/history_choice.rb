@@ -1,9 +1,5 @@
 class ApplicationHelper::Button::HistoryChoice < ApplicationHelper::Button::ButtonWithoutRbacCheck
-  def calculate_properties
-    super
-    # Show disabled history button if no history
-    if @view_context.x_tree_history.length < 2
-      self[:enabled] = false
-    end
+  def disabled?
+    @view_context.x_tree_history.length < 2
   end
 end

@@ -1,11 +1,6 @@
 class ApplicationHelper::Button::ServerDemote < ApplicationHelper::Button::ServerLevelOptions
   needs :@record, :@sb
 
-  def calculate_properties
-    super
-    self[:title] = @error_message if disabled?
-  end
-
   def disabled?
     @error_message = if @record.master_supported?
                        if @record.priority == 1 || @record.priority == 2
