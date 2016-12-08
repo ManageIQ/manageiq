@@ -7,7 +7,7 @@ class ApplicationHelper::Button::ReadOnly < ApplicationHelper::Button::Basic
 
   def calculate_properties
     super
-    self[:title] = N_(
+    self[:title] = _(
       "This %{klass} is read only and cannot be modified" % {
         :klass => ui_lookup(:model => @record.class.name)
       }

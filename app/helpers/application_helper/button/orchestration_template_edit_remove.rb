@@ -9,9 +9,9 @@ class ApplicationHelper::Button::OrchestrationTemplateEditRemove < ApplicationHe
     super
     if disabled?
       self[:title] = if self[:id] =~ /_edit$/
-                       N_('Orchestration Templates that are in use cannot be edited')
+                       _('Orchestration Templates that are in use cannot be edited')
                      else
-                       N_('Orchestration Templates that are in use cannot be removed')
+                       _('Orchestration Templates that are in use cannot be removed')
                      end
     end
   end

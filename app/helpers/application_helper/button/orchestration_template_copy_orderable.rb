@@ -1,7 +1,7 @@
 class ApplicationHelper::Button::OrchestrationTemplateCopyOrderable < ApplicationHelper::Button::Basic
   def calculate_properties
     super
-    self[:title] = N_("This Template is already orderable") if disabled?
+    self[:title] = _("This Template is already orderable") if disabled?
   end
 
   def disabled?
