@@ -6,69 +6,26 @@ class ResourcePoolController < ApplicationController
 
   include Mixins::GenericListMixin
   include Mixins::GenericSessionMixin
+  include Mixins::GenericShowMixin
 
-  def show
-    @display = params[:display] || "main" unless control_selected?
+  def self.display_methods
+    %w(vms descendant_vms all_vms)
+  end
 
-    @lastaction = "show"
-    @showtype   = "config"
-    @record = identify_record(params[:id])
-    return if record_no_longer_exists?(@record)
+  def display_descendant_vms
+    @showtype = "config"
+    drop_breadcrumb(:name => _("%{name} (All VMs - Tree View)") % {:name => @record.name},
+                    :url  => "/resource_pool/show/#{@record.id}?display=descendant_vms&treestate=true")
+    self.x_active_tree = :datacenter_tree
+    @datacenter_tree = TreeBuilderDatacenter.new(:datacenter_tree, :datacenter, @sb, true, @record)
+  end
 
-    @gtl_url = "/show"
-    drop_breadcrumb({:name => _("Resource Pools"),
-                     :url  => "/resource_pool/show_list?page=#{@current_page}&refresh=y"}, true)
+  def display_vms
+    nested_list(_("(Direct VMs)"), Vm, "all_vms")
+  end
 
-    case @display
-    when "download_pdf", "main", "summary_only"
-      get_tagdata(@record)
-      txt = @record.vapp ? _("(vApp)") : ""
-      drop_breadcrumb(:name => _("%{name} %{text} (Summary)") % {:name => @record.name, :text => txt},
-                      :url  => "/resource_pool/show/#{@record.id}")
-      @showtype = "main"
-      set_summary_pdf_data if ["download_pdf", "summary_only"].include?(@display)
-
-    when "vms"
-      drop_breadcrumb(:name => _("%{name} (Direct VMs)") % {:name => @record.name},
-                      :url  => "/resource_pool/show/#{@record.id}?display=vms")
-      @view, @pages = get_view(Vm, :parent => @record)  # Get the records (into a view) and the paginator
-      @showtype = "vms"
-
-    when "descendant_vms"
-      drop_breadcrumb(:name => _("%{name} (All VMs - Tree View)") % {:name => @record.name},
-                      :url  => "/resource_pool/show/#{@record.id}?display=descendant_vms&treestate=true")
-      @showtype = "config"
-
-      self.x_active_tree = :datacenter_tree
-      @datacenter_tree = TreeBuilderDatacenter.new(:datacenter_tree, :datacenter, @sb, true, @record)
-
-    when "all_vms"
-      drop_breadcrumb(:name => "%{name} (All VMs)" % {:name => @record.name},
-                      :url  => "/resource_pool/show/#{@record.id}?display=all_vms")
-      @view, @pages = get_view(Vm, :parent => @record, :association => "all_vms") # Get the records (into a view) and the paginator
-      @showtype = "vms"
-
-    when "clusters"
-      drop_breadcrumb(:name => _("%{name} (All %{title})") % {:name => @record.name, :title => title_for_clusters},
-                      :url  => "/resource_pool/show/#{@record.id}?display=clusters")
-      @view, @pages = get_view(EmsCluster, :parent => @record)  # Get the records (into a view) and the paginator
-      @showtype = "clusters"
-
-    when "resource_pools"
-      drop_breadcrumb(:name => _("%{name} (All Resource Pools)") % {:name => @record.name},
-                      :url  => "/resource_pool/show/#{@record.id}?display=resource_pools")
-      @view, @pages = get_view(ResourcePool, :parent => @record)  # Get the records (into a view) and the paginator
-      @showtype = "resource_pools"
-
-    when "config_info"
-      @showtype = "config"
-      drop_breadcrumb(:name => _("Configuration"), :url => "/resource_pool/show/#{@record.id}?display=#{@display}")
-    end
-
-    # Came in from outside show_list partial
-    if params[:ppsetting] || params[:searchtag] || params[:entry] || params[:sort_choice]
-      replace_gtl_main_div
-    end
+  def display_all_vms
+    nested_list({:table => "vms"}, Vm)
   end
 
   # handle buttons pressed on the button bar
