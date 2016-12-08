@@ -1,6 +1,7 @@
 class StorageController < ApplicationController
   include_concern 'StorageD'
   include_concern 'StoragePod'
+  include Mixins::GenericSessionMixin
 
   before_action :check_privileges
   before_action :get_session_data
@@ -637,24 +638,6 @@ class StorageController < ApplicationController
   end
 
   private
-
-  def get_session_data
-    @title      = _("Storage")
-    @layout     = "storage"
-    @lastaction = session[:storage_lastaction]
-    @display    = session[:storage_display]
-    @filters    = session[:storage_filters]
-    @catinfo    = session[:storage_catinfo]
-    @showtype   = session[:storage_showtype]
-  end
-
-  def set_session_data
-    session[:storage_lastaction] = @lastaction
-    session[:storage_display]    = @display unless @display.nil?
-    session[:storage_filters]    = @filters
-    session[:storage_catinfo]    = @catinfo
-    session[:storage_showtype]   = @showtype
-  end
 
   menu_section :inf
 end
