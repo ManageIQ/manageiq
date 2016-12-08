@@ -90,7 +90,14 @@ class Service < ApplicationRecord
   end
 
   def power_state
-    options[:power_state]
+    if options[:power_status] == "starting"
+      return 'on'  if power_states_match?(:start)
+    elsif options[:power_status] == "stopping"
+      return 'off' if power_states_match?(:stop)
+    else
+      return 'on'  if power_states_match?(:start)
+      return 'off' if power_states_match?(:stop)
+    end
   end
 
   def power_status
@@ -196,7 +203,12 @@ class Service < ApplicationRecord
   end
 
   def power_states_match?(action)
-    power_states.uniq == map_power_states(action)
+    if power_states.uniq == map_power_states(action)
+      options[:power_status] = "#{action}_complete"
+      update_attributes(:options => options)
+      return true
+    end
+    false
   end
 
   def map_power_states(action)
@@ -240,7 +252,6 @@ class Service < ApplicationRecord
     # Setup processing for the next group
     next_grp_idx = next_group_index(group_idx, direction)
     if next_grp_idx.nil?
-      queue_power_calculation(combined_group_delay(action), action)
       raise_final_process_event(action)
     else
       queue_group_action(action, next_grp_idx, direction, delay_for_action(next_grp_idx, action))
