@@ -42,7 +42,7 @@ module ManagerRefresh::SaveCollection
 
       # Delete only if DtoCollection is complete. If it's not complete, we are sending only subset of the records, so
       # we cannot invoke deleting of the missing records.
-      delete_inventory!(dto_collection, record_index, association) if dto_collection.complete?
+      delete_inventory!(dto_collection, record_index, association) if dto_collection.delete_allowed?
     end
 
     def create_or_update_inventory!(dto_collection, record_index, association)
@@ -65,6 +65,7 @@ module ManagerRefresh::SaveCollection
           hash       = dto.attributes(dto_collection)
           dto.object = record_index.delete(dto.manager_uuid)
           if dto.object.nil?
+            next unless dto_collection.create_allowed?
             dto.object      = entity_builder.create!(hash.except(:id))
             created_counter += 1
           else
@@ -73,7 +74,7 @@ module ManagerRefresh::SaveCollection
               dto.object.save!
             end
           end
-          dto.object.reload
+          dto.object.try(:reload)
         end
       end
       _log.info("*************** PROCESSED #{dto_collection}, created=#{created_counter}, "\
