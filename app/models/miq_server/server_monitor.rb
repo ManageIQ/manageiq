@@ -17,7 +17,7 @@ module MiqServer::ServerMonitor
 
   def make_master_server(last_master)
     _log.info "Master server has #{last_master.nil? ? "not been set" : "died, #{last_master.name}"}.  Attempting takeover as new master server, #{name}."
-    parent = MiqRegion.my_region
+    parent = MiqRegion.my_region(true)
     parent.lock do
       # See if an ACTIVE server has already taken over
       active_servers = parent.active_miq_servers
