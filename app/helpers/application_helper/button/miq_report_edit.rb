@@ -1,5 +1,6 @@
 class ApplicationHelper::Button::MiqReportEdit < ApplicationHelper::Button::Basic
   include ApplicationHelper::Button::Mixins::XActiveTreeMixin
+  needs :@record
 
   def visible?
     reports_tree? ? custom_report_info? : true
