@@ -122,8 +122,6 @@ describe "Authentication API" do
   end
 
   context "Token Based Authentication" do
-    let(:ui_token_ttl) { VMDB::Config.new("vmdb").config[:session][:timeout].to_i_with_method }
-
     it "gets a token based identifier" do
       api_basic_authorize
 
@@ -179,13 +177,11 @@ describe "Authentication API" do
 
     it "gets a token based identifier with the default API based token_ttl" do
       api_basic_authorize
-
-      api_token_ttl = VMDB::Config.new("vmdb").config[:api][:token_ttl].to_i_with_method
       run_get auth_url
 
       expect(response).to have_http_status(:ok)
       expect_result_to_have_keys(%w(auth_token token_ttl expires_on))
-      expect(response.parsed_body["token_ttl"]).to eq(api_token_ttl)
+      expect(response.parsed_body["token_ttl"]).to eq(::Settings.api.token_ttl.to_i_with_method)
     end
 
     it "gets a token based identifier with an invalid requester_type" do
@@ -203,7 +199,7 @@ describe "Authentication API" do
 
       expect(response).to have_http_status(:ok)
       expect_result_to_have_keys(%w(auth_token token_ttl expires_on))
-      expect(response.parsed_body["token_ttl"]).to eq(ui_token_ttl)
+      expect(response.parsed_body["token_ttl"]).to eq(::Settings.session.timeout.to_i_with_method)
     end
 
     it "forgets the current token when asked to" do
@@ -224,7 +220,7 @@ describe "Authentication API" do
         run_get auth_url, :requester_type => 'ws'
         expect(response).to have_http_status(:ok)
         expect_result_to_have_keys(%w(auth_token token_ttl expires_on))
-        expect(response.parsed_body["token_ttl"]).to eq(ui_token_ttl)
+        expect(response.parsed_body["token_ttl"]).to eq(::Settings.session.timeout.to_i_with_method)
       end
 
       it 'cannot authorize user to api based on token that is dedicated for web sockets' do
