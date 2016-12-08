@@ -13,8 +13,9 @@ module SpecParsedData
 
   def key_pair_data(i, data = {})
     {
-      :type => ManageIQ::Providers::CloudManager::AuthKeyPair.name,
-      :name => "key_pair_name_#{i}",
+      :type   => ManageIQ::Providers::CloudManager::AuthKeyPair.name,
+      :name   => "key_pair_name_#{i}",
+      :status => "status_#{i}"
     }.merge(data)
   end
 
