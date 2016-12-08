@@ -1,5 +1,5 @@
 describe MiqWidget do
-  include_examples(".seed called multiple times", 10)
+  include_examples(".seed called multiple times", 21)
 
   before(:each) do
     EvmSpecHelper.local_miq_server

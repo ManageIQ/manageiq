@@ -1,0 +1,46 @@
+---
+title: Pods per Ready Status
+rpt_group: Configuration Management - Containers
+rpt_type: Default
+priority: 60
+db: ContainerGroup
+cols:
+- name
+- ready_condition_status
+include: {}
+col_order:
+- name
+- ready_condition_status
+headers:
+- "# Pods per Ready Status"
+- Ready Condition Status
+conditions: 
+order: Ascending
+sortby:
+- ready_condition_status
+group: 
+graph:
+  :type: PieThreed
+  :count: 10
+  :other: true
+dims: 1
+filename: 170_Configuration Management - Containers/060_Container Groups per Ready Status.yaml
+categories: []
+timeline: 
+template_type: report
+where_clause: 
+db_options: {}
+generate_cols: 
+generate_rows: 
+col_formats:
+- 
+- 
+tz: 
+time_profile_id: 
+display_filter: 
+col_options: {}
+rpt_options:
+  :pdf:
+    :page_size: us-letter
+  :queue_timeout: 
+menu_name: Pods per Ready Status
