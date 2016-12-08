@@ -362,7 +362,8 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
           'manageiq.org' => "true"
         },
         :annotations => {
-          'manageiq.org/hostname' => options[:miq_server_host],
+          # in case hostname is not set and options[:miq_server_host] is nil, change ""
+          'manageiq.org/hostname' => options[:miq_server_host] || "unknown",
           'manageiq.org/guid'     => options[:miq_server_guid],
           'manageiq.org/image'    => options[:image_full_name],
           'manageiq.org/jobid'    => jobid,
