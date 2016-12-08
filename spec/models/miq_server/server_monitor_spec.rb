@@ -460,7 +460,7 @@ describe "Server Monitor" do
         @miq_server3.reload
       end
 
-      it "handles multiple failover transitions" do
+      it "should support multiple failover transitions from stopped master" do
         # server1 is first to start, becomes master
         @miq_server1.monitor_servers
 
@@ -490,6 +490,23 @@ describe "Server Monitor" do
         expect(@miq_server1.reload.is_master).to be_falsey
         expect(@miq_server2.reload.is_master).to be_truthy
         expect(@miq_server3.reload.is_master).to be_falsey
+      end
+
+      it "should failover from stopped master on startup" do
+        # server 1 is first to start, becomes master
+        @miq_server1.monitor_servers
+
+        # server 1 shuts down
+        @miq_server1.update(:status => "stopped")
+
+        # server 3 boots and hasn't run monitor_servers yet
+        expect(@miq_server1.reload.is_master).to be_truthy
+        expect(@miq_server3.reload.is_master).to be_falsey
+
+        # server 3 runs monitor_servers and becomes master
+        @miq_server3.monitor_servers
+        expect(@miq_server1.reload.is_master).to be_falsey
+        expect(@miq_server3.reload.is_master).to be_truthy
       end
 
       it "should have all roles active after sync between them" do
