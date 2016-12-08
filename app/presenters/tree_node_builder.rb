@@ -429,6 +429,10 @@ class TreeNodeBuilder
 
   def snapshot_node
     generic_node(object.name, 'snapshot.png', object.name)
+    if (options[:selected_node].present? && @node[:key] == options[:selected_node]) ||
+       (options[:selected_node].nil? && object.children.empty?)
+      @node[:highlighted] = true
+    end
     @node[:title] += _(' (Active)') if object.current?
   end
 

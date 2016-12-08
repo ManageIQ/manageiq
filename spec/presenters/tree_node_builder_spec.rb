@@ -900,11 +900,12 @@ describe TreeNodeBuilder do
       snapshot = FactoryGirl.build(:snapshot, :name => "Polaroid Picture")
       node = TreeNodeBuilder.build(snapshot, nil, {})
       expect(node).to eq(
-        :key     => "-#{snapshot.name}",
-        :title   => snapshot.name,
-        :icon    => "100/snapshot.png",
-        :tooltip => snapshot.name,
-        :expand  => false
+        :key         => "-#{snapshot.name}",
+        :title       => snapshot.name,
+        :icon        => "100/snapshot.png",
+        :tooltip     => snapshot.name,
+        :expand      => false,
+        :highlighted => true
       )
     end
 
@@ -915,7 +916,7 @@ describe TreeNodeBuilder do
         :key    => "-#{storage.name}",
         :title  => storage.name,
         :icon   => "100/storage.png",
-        :expand => false
+        :expand => false,
       )
     end
 
