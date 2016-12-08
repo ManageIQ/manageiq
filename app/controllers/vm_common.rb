@@ -262,8 +262,14 @@ module VmCommon
     elsif @display == "snapshot_info"
       drop_breadcrumb(:name => @record.name + _(" (Snapshots)"),
                       :url  => "/#{rec_cls}/show/#{@record.id}?display=#{@display}")
+      @sb[@sb[:active_accord]] = TreeBuilder.build_node_id(@record)
       @snapshot_tree = TreeBuilderSnapshots.new(:snapshot_tree, :snapshot, @sb, true, :root => @record)
-      @active = !['root', nil].include?(@snapshot_tree.selected_node)
+      @active = if @snapshot_tree.selected_node
+                  snap_selected = Snapshot.find_by_id(from_cid(@snapshot_tree.selected_node.split('-').last))
+                  snap_selected.current?
+                else
+                  false
+                end
       @button_group = "snapshot"
     elsif @display == "devices"
       drop_breadcrumb(:name => @record.name + _(" (Devices)"),
@@ -446,7 +452,7 @@ module VmCommon
                                               true,
                                               :root          => @record,
                                               :selected_node => session[:snap_selected])
-    @active = @snap_selected.current.to_i == 1 if @snap_selected
+    @active = @snap_selected.current? if @snap_selected
     @button_group = "snapshot"
     @explorer = true
     c_tb = build_toolbar("x_vm_center_tb")
