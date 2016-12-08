@@ -117,8 +117,6 @@ module Menu
             Menu::Item.new('ems_datawarehouse', N_('Providers'), 'ems_datawarehouse',
                            {:feature => 'ems_datawarehouse_show_list'}, '/ems_datawarehouse')
             ])
-        else
-          empty_menu_section
         end
       end
 
@@ -200,10 +198,6 @@ module Menu
                                            {:feature => 'cloud_object_store_object_show_list'},
                                            '/cloud_object_store_object'),
                           ])
-      end
-
-      def empty_menu_section
-        Menu::Section.new(nil, nil, nil, nil)
       end
 
       def netapp_storage_menu_section
