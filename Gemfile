@@ -12,6 +12,9 @@ gem "handsoap", "~>0.2.5", :require => false, :git => "https://github.com/Manage
 gem "rubywbem",            :require => false, :git => "https://github.com/ManageIQ/rubywbem.git", :branch => "rubywbem_0_1_0"
 
 # when using this Gemfile inside a providers Gemfile, the dependency for the provider is already declared
+unless dependencies.detect { |d| d.name == "manageiq-content" }
+  gem "manageiq-content", :git => "https://github.com/ManageIQ/manageiq-content", :branch => "master"
+end
 unless dependencies.detect { |d| d.name == "manageiq-providers-amazon" }
   gem "manageiq-providers-amazon", :git => "https://github.com/ManageIQ/manageiq-providers-amazon", :branch => "master"
 end

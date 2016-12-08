@@ -142,10 +142,6 @@ module MiqAeDatastore
     end
   end
 
-  def self.reset_manageiq_domain
-    reset_domain(DATASTORE_DIRECTORY, MANAGEIQ_DOMAIN, Tenant.root_tenant)
-  end
-
   def self.seed_default_namespace
     default_ns   = MiqAeNamespace.create!(:name => DEFAULT_OBJECT_NAMESPACE)
     object_class = default_ns.ae_classes.create!(:name => 'Object')
@@ -169,9 +165,17 @@ module MiqAeDatastore
       reset_domain(DATASTORE_DIRECTORY, domain_name, Tenant.root_tenant)
     end
 
+    reset_domains_from_vmdb_plugins
+
     restore_attrs_for_domains(saved_attrs)
     reset_default_namespace
     MiqAeDomain.reset_priorities
+  end
+
+  def self.reset_domains_from_vmdb_plugins
+    Vmdb::Plugins.instance.registered_automate_domains.each do |domain|
+      reset_domain(domain.datastores_path.to_s, domain.name, Tenant.root_tenant)
+    end
   end
 
   def self.default_domain_names

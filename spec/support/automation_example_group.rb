@@ -14,7 +14,7 @@ module AutomationExampleGroup
           puts "** Resetting ManageIQ domain"
           Tenant.seed
           MiqAeDatastore.reset
-          MiqAeDatastore.reset_manageiq_domain
+          MiqAeDatastore.reset_to_defaults
         end
 
         config.after(:suite) do
