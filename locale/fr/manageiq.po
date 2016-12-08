@@ -11,7 +11,7 @@ msgstr ""
 "Project-Id-Version: manageiq 1.0.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-11-15 11:23+0100\n"
-"PO-Revision-Date: 2016-11-28 04:38-0500\n"
+"PO-Revision-Date: 2016-12-02 12:09-0500\n"
 "Last-Translator: croe <croe@redhat.com>\n"
 "Language-Team: French\n"
 "MIME-Version: 1.0\n"
@@ -128,7 +128,8 @@ msgstr " (Cliquez pour afficher)"
 
 #: ../app/controllers/vm_common.rb:300
 msgid " (Compliance History - Last %{number} Checks)"
-msgstr " (Historique des Conformités - Dernières  %{number} vérifications)"
+msgstr ""
+" (Historique des Conformités - Les  %{number} dernières vérifications)"
 
 #: ../app/controllers/vm_common.rb:265
 msgid " (Container)"
@@ -387,7 +388,7 @@ msgstr "\"%{action}\" pour %{vm_or_template} \"%{name}\""
 #: ../app/controllers/application_controller/ci_processing.rb:2711
 msgid "\"%{datastore_name}\": cannot be removed, has vms or hosts"
 msgstr ""
-"\"%{datastore_name}\": ne peut pas être supprimé, car ils possèdent MV ou "
+"\"%{datastore_name}\": ne peut pas être supprimé, possèdent des MV ou des "
 "hyperviseurs"
 
 #: ../app/controllers/miq_ae_class_controller.rb:1988
@@ -435,12 +436,12 @@ msgstr "\"%{record}\" : vérification de conformité démarrée"
 
 #: ../app/controllers/application_controller/ci_processing.rb:2614
 msgid "\"%{record}\": Refresh successfully initiated"
-msgstr "\"%{record}\" : rafraichissement lancée"
+msgstr "\"%{record}\" : rafraîchissement lancé"
 
 #: ../app/controllers/application_controller/ci_processing.rb:2383
 #: ../app/controllers/application_controller/ci_processing.rb:2388
 msgid "\"%{record}\": Scheduling is %{status} now."
-msgstr "\"%{record}\" : l'état de la planification est maintenant %{status}."
+msgstr "\"%{record}\" : l'état du planning est maintenant %{status}."
 
 #: ../app/controllers/application_controller/buttons.rb:274
 msgid "\"%{task_description}\" was executed"
@@ -656,7 +657,7 @@ msgstr ""
 
 #: ../app/models/miq_provision/options_helper.rb:36
 msgid "%{class_name} [%{name}] is not attached to a Management System"
-msgstr "%{class_name} [%{name}] n'est pas attachée à un Management System"
+msgstr "%{class_name} [%{name}] n'est pas attachée à un Système de gestion"
 
 #: ../app/models/mixins/alert_mixin.rb:5
 msgid "%{class_name} expected to respond to event_logs and doesn't!"
@@ -821,7 +822,7 @@ msgstr "%{message} non disponible pour %{name}."
 
 #: ../app/models/miq_template/operations.rb:42
 msgid "%{message} is not available for Images/Templates."
-msgstr "%{message} non disponible pour Images/Templates."
+msgstr "%{message} non disponible pour Images/Modèles."
 
 #: ../app/controllers/application_controller/buttons.rb:18
 msgid "%{model_name} Group Reorder cancelled"
@@ -1479,7 +1480,7 @@ msgstr "%{name} balises"
 
 #: ../app/models/mixins/retirement_mixin.rb:132
 msgid "%{name} already retired"
-msgstr "%{name} Déjà désactivé"
+msgstr "%{name} Déjà désactivée"
 
 #: ../app/controllers/dashboard_controller.rb:677
 msgid "%{name} dashboard for user %{id} in group id %{current_group_id}"
@@ -2774,7 +2775,7 @@ msgstr "Profils d''analyse"
 
 #: ../app/helpers/application_helper.rb:484
 msgid ": Automate"
-msgstr ": Automatisation"
+msgstr ": Automate"
 
 #: ../app/helpers/application_helper.rb:469
 msgid ": Configuration"
@@ -2919,7 +2920,7 @@ msgstr "<Cliquez sur cette ligne pour créer une entrée>"
 
 #: ../app/views/ops/_ldap_forest_entries.html.haml:44
 msgid "<Click on this row to create a new forest>"
-msgstr "<Cliquez sur cette ligne pour créer nouveau Forest>"
+msgstr "<Cliquez sur cette ligne pour créer une nouvelle forêt>"
 
 #: ../app/views/ops/_settings_label_tag_mapping_tab.html.haml:26
 msgid "<Click on this row to create a new mapping rule>"
@@ -2968,7 +2969,7 @@ msgstr "<No chart>"
 #: ../app/controllers/mixins/vm_show_mixin.rb:126
 #: ../app/controllers/vm_common.rb:342
 msgid "<No notes have been entered for this VM>"
-msgstr "<No notes have been entered for this VM>"
+msgstr "<aucune note saisie pour cette MV>"
 
 #: ../app/views/shared/buttons/_ab_form.html.haml:113
 msgid "<None>"
@@ -3271,7 +3272,7 @@ msgstr "Contrôle d''Accès %{text}"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1458
 msgid "Access Control Accordion"
-msgstr "Contrôle d'accès Accordion"
+msgstr "Accordéon Contrôle d'accès"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:770
@@ -3360,7 +3361,7 @@ msgstr ""
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:12
 msgid "Accordions"
-msgstr "Accordions"
+msgstr "Accordéons"
 
 #: ../app/views/ops/rhn/_info_subscribed.html.haml:45
 #: ../config/model_attributes.rb:2
@@ -3890,7 +3891,7 @@ msgstr ""
 #: ../app/helpers/application_helper/toolbar/scan_profiles_center.rb:18
 #: ../config/yaml_strings.rb:1432
 msgid "Add VM Analysis Profile"
-msgstr "Ajouter un Profil d''Analyse de MV"
+msgstr "Ajouter un Profil d'Analyse de MV"
 
 #: ../app/controllers/vm_common.rb:831
 msgid "Add VM to a Service"
@@ -3898,7 +3899,7 @@ msgstr "Ajouter une MV à un Service"
 
 #: ../app/views/vm_common/_add_to_service.html.haml:49
 msgid "Add VM to the selected Service"
-msgstr "Ajouter une MV au service Sélectionné"
+msgstr "Ajouter une MV au service sélectionné"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:984
@@ -4055,7 +4056,7 @@ msgstr "Ajouter un Nouveau Domaine"
 
 #: ../app/helpers/application_helper/toolbar/host_aggregates_center.rb:12
 msgid "Add a New Host Aggregate"
-msgstr "Ajouter un Nouvel Agrégat d'hôtes"
+msgstr "Ajouter un nouvel Agrégat d'hôtes"
 
 #: ../app/helpers/application_helper/toolbar/iso_datastores_center.rb:12
 msgid "Add a New ISO Datastore"
@@ -4088,7 +4089,7 @@ msgstr "Ajouter un nouvel espace de nommage"
 
 #: ../app/helpers/application_helper/toolbar/ems_networks_center.rb:22
 msgid "Add a New Network Provider"
-msgstr "Ajouter un Nouveau Fournisseur réseau"
+msgstr "Ajouter un nouveau Fournisseur réseau"
 
 #: ../app/helpers/application_helper/toolbar/container_nodes_center.rb:12
 msgid "Add a New Node"
@@ -4282,7 +4283,7 @@ msgstr "Ajouter un nouveau taux de rétrofacturation"
 
 #: ../app/helpers/application_helper/toolbar/cloud_networks_center.rb:12
 msgid "Add a new Cloud Network"
-msgstr "Ajouter un Nouveau Réseau Cloud"
+msgstr "Ajouter un nouveau Réseau Cloud"
 
 #: ../app/helpers/application_helper/toolbar/cloud_subnets_center.rb:12
 msgid "Add a new Cloud Subnet"
@@ -4335,7 +4336,7 @@ msgstr "Ajouter une nouvelle Région LDAP"
 
 #: ../app/helpers/application_helper/toolbar/middleware_server_center.rb:171
 msgid "Add a new Middleware Datasource"
-msgstr "Ajouter une Nouvelle Source de données de Middleware"
+msgstr "Ajouter une nouvelle Source de données de Middleware"
 
 #: ../app/helpers/application_helper/toolbar/middleware_server_center.rb:133
 msgid "Add a new Middleware Deployment"
@@ -4446,7 +4447,7 @@ msgstr "Ajouter un locataire enfant à ce locataire"
 
 #: ../app/controllers/report_controller.rb:751
 msgid "Add folder to selected Accordion"
-msgstr "Ajouter un dossier à l'accordion sélectionné"
+msgstr "Ajouter un dossier à l'accordéon sélectionné"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2018
@@ -4698,7 +4699,7 @@ msgstr "Ajout d'une nouvelle catégorie"
 
 #: ../app/controllers/ops_controller.rb:562
 msgid "Adding a new Mapping"
-msgstr "Ajouter un Nouveau Mappage"
+msgstr "Ajouter un nouveau Mappage"
 
 #: ../app/controllers/catalog_controller.rb:768
 msgid "Adding a new Orchestration Template"
@@ -5074,12 +5075,12 @@ msgstr "Tout (%{number})"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:82
 msgid "All Accordions under Instances"
-msgstr "Tous les accordions sous Instances"
+msgstr "Tous les accordéons sous Instances"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:32
 msgid "All Accordions under Virtual Machines"
-msgstr "Tous les accordions sous Machines virtuelles"
+msgstr "Tous les accordéons sous Machines virtuelles"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:14
@@ -5402,7 +5403,7 @@ msgstr "Toutes les MV pour %{table}"
 
 #: ../app/controllers/ops_controller/settings/schedules.rb:641
 msgid "All VMs for Host"
-msgstr "Toutes les MV pour l''Hôte"
+msgstr "Toutes les MV pour l'Hôte"
 
 #: ../app/views/miq_capacity/_planning_options.html.haml:16
 msgid "All VMs/Instances"
@@ -6144,7 +6145,7 @@ msgstr ""
 #: ../app/views/ops/_diagnostics_database_tab.html.haml:185
 msgid "Are you sure you want to Run a Database Backup Now?"
 msgstr ""
-"Voulez-vous vraiment Lancer une Copie de Sauvegarde pour une base de donnée "
+"Voulez-vous vraiment lancer une copie de sauvegarde pour une base de donnée "
 "maintenant ?"
 
 #: ../app/helpers/application_helper/toolbar/miq_alert_center.rb:20
@@ -6169,7 +6170,7 @@ msgstr "Voulez-vous vraiment supprimer le champ du schéma ?"
 
 #: ../app/views/ops/_ldap_forest_entries.html.haml:152
 msgid "Are you sure you want to delete forest %{ldaphost} ?"
-msgstr "Voulez-vous vraiment supprimer Forest %{ldaphost} ?"
+msgstr "Voulez-vous vraiment supprimer la forêt %{ldaphost} ?"
 
 #: ../app/views/miq_ae_class/_inputs.html.haml:30
 msgid "Are you sure you want to delete input field from method?"
@@ -6199,7 +6200,7 @@ msgstr "Voulez-vous vraiment supprimer cette Action ?"
 
 #: ../app/helpers/application_helper/toolbar/miq_alert_profile_center.rb:27
 msgid "Are you sure you want to delete this Alert Profile?"
-msgstr "Voulez-vous vraiment supprimer ce Profil d'Alerte ?"
+msgstr "Voulez-vous vraiment supprimer ce Profil d'alerte ?"
 
 #: ../app/helpers/application_helper/toolbar/miq_alert_center.rb:28
 msgid "Are you sure you want to delete this Alert?"
@@ -6442,7 +6443,7 @@ msgstr "Affectations"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:994
 msgid "Assignments Accordion"
-msgstr "Accordion - allocations"
+msgstr "Accordéon - allocations"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../app/views/vm_common/_associate_floating_ip.html.haml:7
@@ -7037,7 +7038,7 @@ msgstr "Sélection automatique de l'Hôte?"
 
 #: ../app/presenters/menu/default_menu.rb:223
 msgid "Automate"
-msgstr "Automatiser"
+msgstr "Automate"
 
 #. TRANSLATORS: en.yml key: dictionary.model.MiqAeClass
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -7141,7 +7142,7 @@ msgstr "Erreur d'automatisation : %{error_message}"
 
 #: ../app/controllers/application_controller/automate.rb:6
 msgid "Automation Simulation has been run"
-msgstr "La Simulation d'automatisation a été lancée"
+msgstr "La simulation d'automatisation a été lancée"
 
 #: ../app/controllers/miq_ae_tools_controller.rb:63
 msgid "Automation log downloaded"
@@ -7201,35 +7202,28 @@ msgstr "Zone de disponibilité"
 
 #: ../config/model_attributes.rb:115
 msgid "AvailabilityZone|Cpu usagemhz rate average avg over time period"
-msgstr ""
-"Zone de disponibilité|Utilisation processeur - Moyenne taux MHz - Moyenne "
-"sur la période"
+msgstr "Utilisation processeur - Moyenne taux MHz - Moyenne sur la période"
 
 #: ../config/model_attributes.rb:116
 msgid "AvailabilityZone|Cpu usagemhz rate average high over time period"
 msgstr ""
-"Zone de disponibilité|Utilisation processeur - Moyenne taux MHz s- Taux "
-"élevé sur la période"
+"Utilisation processeur - Moyenne taux MHz s- Taux élevé sur la période"
 
 #: ../config/model_attributes.rb:117
 msgid "AvailabilityZone|Cpu usagemhz rate average low over time period"
-msgstr ""
-"Zone de disponibilité|Utilisation processeur - Moyenne taux MHz - Taux bas "
-"sur la période"
+msgstr "Utilisation processeur - Moyenne taux MHz - Taux bas sur la période"
 
 #: ../config/model_attributes.rb:118
 msgid "AvailabilityZone|Derived memory used avg over time period"
-msgstr ""
-"Zone de disponibilité|Mémoire dérivée utilisée - Moyenne sur la période"
+msgstr "Mémoire dérivée utilisée - Moyenne sur la période"
 
 #: ../config/model_attributes.rb:119
 msgid "AvailabilityZone|Derived memory used high over time period"
-msgstr "Zone de disponibilité|Mémoire dérivée utilisée sur la période"
+msgstr "Mémoire dérivée utilisée sur la période"
 
 #: ../config/model_attributes.rb:120
 msgid "AvailabilityZone|Derived memory used low over time period"
-msgstr ""
-"Zone de disponibilité|Mémoire dérivée utilisée - Taux bas sur la période"
+msgstr "Mémoire dérivée utilisée - Taux bas sur la période"
 
 #: ../config/model_attributes.rb:121
 msgid "AvailabilityZone|Ems ref"
@@ -7373,7 +7367,7 @@ msgstr "Rapports Personnalisés Disponibles:"
 
 #: ../app/views/report/_column_lists.html.haml:9
 msgid "Available Fields:"
-msgstr "Champs Disponibles:"
+msgstr "Champs disponibles:"
 
 #: ../app/views/miq_policy/_profile_details.html.haml:51
 msgid "Available Policies:"
@@ -7381,7 +7375,7 @@ msgstr "Stratégies Disponibles:"
 
 #: ../app/views/ops/rhn/_server_table.html.haml:16
 msgid "Available Product version:"
-msgstr "Version de Produit Disponible :"
+msgstr "Version de Produit disponible :"
 
 #: ../app/views/report/_menu_form2.html.haml:19
 msgid "Available Reports:"
@@ -7530,7 +7524,7 @@ msgstr "Clichés de base"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1658
 msgid "Base Storage Extents"
-msgstr "Éxtensions du stockage de base"
+msgstr "Étendues du stockage de base"
 
 #: ../app/views/report/_form_tl_settings.html.haml:19
 msgid "Base Timeline on"
@@ -8192,7 +8186,7 @@ msgstr "Boutons"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1301
 msgid "Buttons Accordion"
-msgstr "Accordion - boutons"
+msgstr "Accordéon - boutons"
 
 #. TRANSLATORS: en.yml key: dictionary.model.CustomButtonSet
 #. TRANSLATORS: en.yml key: dictionary.table.custom_button_set
@@ -8333,7 +8327,7 @@ msgstr "CIDR "
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1660
 msgid "CIM Base Storage Extents"
-msgstr "Extensions de stockage de base CIM"
+msgstr "Étendues du stockage de base CIM"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1640
@@ -9922,12 +9916,12 @@ msgstr "Taux de rétrofacturation"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:998
 msgid "Chargeback Rate currencies Accordion"
-msgstr "Accordion - devise de taux de rétrofacturation "
+msgstr "Accordéon - devise de rétrofacturation "
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1002
 msgid "Chargeback Rate measures Accordion"
-msgstr "Accordion - mesures du taux de rétrofacturation"
+msgstr "Accordéon - taux rétrofacturation"
 
 #. TRANSLATORS: en.yml key: dictionary.model.ChargebackRate (plural form)
 #. TRANSLATORS: file: product/views/ChargebackRate.yaml
@@ -9955,15 +9949,15 @@ msgstr "Détails sur le taux de rétrofacturation"
 
 #: ../config/model_attributes.rb:202
 msgid "Chargeback rate detail currency"
-msgstr "Devise des détails sur le taux de rétrofacturation"
+msgstr "Devise sur le taux de rétrofacturation"
 
 #: ../config/model_attributes.rb:210
 msgid "Chargeback rate detail measure"
-msgstr "Mesure des détails sur le taux de côut"
+msgstr "Détails sur le taux de rétrofacturation"
 
 #: ../config/model_attributes.rb:217
 msgid "Chargeback tier"
-msgstr "Niveau de retrofacturation"
+msgstr "Niveau de rétrofacturation"
 
 #: ../config/model_attributes.rb:203
 msgid "ChargebackRateDetailCurrency|Code"
@@ -10544,7 +10538,7 @@ msgstr "Choisir un rôle à modifier dans la partie gauche."
 
 #: ../app/views/report/_schedule_list.html.haml:18
 msgid "Choose a Schedule to view from the menus on the left."
-msgstr "Choisir une planification à afficher dans les menus de gauche."
+msgstr "Choisir un Planning à afficher dans les menus de gauche."
 
 #: ../app/helpers/application_helper/button/timeline_download.rb:4
 #: ../app/views/dashboard/_tl_detail.html.haml:24
@@ -10786,7 +10780,7 @@ msgstr "Cliquez pour ajouter une nouvelle entrée"
 
 #: ../app/views/ops/_ldap_forest_entries.html.haml:35
 msgid "Click to add a new forest"
-msgstr "Cliquez pour ajouter nouveau Forest"
+msgstr "Cliquez pour ajouter une nouvelle forêt"
 
 #: ../app/views/miq_ae_class/_inputs.html.haml:69
 msgid "Click to add a new parameter"
@@ -10832,7 +10826,7 @@ msgstr "Cliquez pour supprimer ce champ du schéma"
 
 #: ../app/views/ops/_ldap_forest_entries.html.haml:153
 msgid "Click to delete this forest"
-msgstr "Cliquez pour supprimer ce Forest"
+msgstr "Cliquez pour supprimer cette forêt"
 
 #: ../app/views/miq_ae_class/_inputs.html.haml:30
 #: ../app/views/miq_ae_class/_inputs.html.haml:30
@@ -10854,7 +10848,7 @@ msgstr "Cliquez pour modifier cette catégorie"
 #: ../app/views/ops/_ldap_forest_entries.html.haml:178
 #: ../app/views/ops/_ldap_forest_entries.html.haml:183
 msgid "Click to edit this forest"
-msgstr "Cliquez pour modifier ce Forest"
+msgstr "Cliquez pour modifier cette forêt"
 
 #: ../app/views/ops/_settings_label_tag_mapping_tab.html.haml:41
 msgid "Click to edit this mapping rule"
@@ -11328,7 +11322,7 @@ msgstr "Configuration du service cloud"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:743
 msgid "Cloud Service Scheduling toggle"
-msgstr "Activation/désactivation de la planification du service cloud"
+msgstr "Activation/désactivation du planning du service cloud"
 
 #: ../app/controllers/host_controller.rb:231
 #: ../app/views/host/_main.html.haml:33
@@ -11924,7 +11918,7 @@ msgstr "Planification désactivée"
 
 #: ../config/model_attributes.rb:309
 msgid "CloudService|Scheduling disabled reason"
-msgstr "Motif de désactivation de la planification"
+msgstr "Motif de désactivation du planning"
 
 #: ../config/model_attributes.rb:310
 msgid "CloudService|Source"
@@ -12458,7 +12452,7 @@ msgstr "Valider"
 
 #: ../app/controllers/report_controller.rb:754
 msgid "Commit Accordion management changes"
-msgstr "Valider les modifications de gestion Accordion"
+msgstr "Accordéon - Valider les modifications de gestion"
 
 #: ../app/views/miq_ae_customization/_dialog_import_export.html.haml:65
 #: ../app/views/report/_export_widgets.html.haml:66
@@ -13394,9 +13388,7 @@ msgstr "Nom de support du script de personnalisation"
 
 #: ../config/model_attributes.rb:453
 msgid "ConfigurationProfile|Customization script ptable name"
-msgstr ""
-"Profil configuration|Nom de la table de partition du script de "
-"personnalisation"
+msgstr "Nom de la table de partition du script de personnalisation"
 
 #: ../config/model_attributes.rb:454
 msgid "ConfigurationProfile|Description"
@@ -15834,7 +15826,7 @@ msgid ""
 "ContainerService|Max mem usage absolute average avg over time period without"
 " overhead"
 msgstr ""
-"|Moyenne absolue d'utilisation mémoire max. - Moyenne sur la période sans "
+"Moyenne absolue d'utilisation mémoire max. - Moyenne sur la période sans "
 "surcharge système"
 
 #: ../config/model_attributes.rb:948
@@ -16351,8 +16343,8 @@ msgid ""
 "Container|Max mem usage absolute average high over time period without "
 "overhead"
 msgstr ""
-"|Moyenne absolue d'utilisation mémoire max. - Taux élevé sur la période sans"
-" surcharge système"
+"Moyenne absolue d'utilisation mémoire max. - Taux élevé sur la période sans "
+"surcharge système"
 
 #: ../config/model_attributes.rb:529
 msgid "Container|Max mem usage absolute average low over time period"
@@ -17869,7 +17861,7 @@ msgstr "Widget du Tableau de bord"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:942
 msgid "Dashboard Widgets Accordion"
-msgstr "Accordion - Composants d'interface du tableau de bord"
+msgstr "Accordéon - Composants d'interface du tableau de bord"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../app/controllers/report_controller.rb:288 ../config/yaml_strings.rb:922
@@ -18821,7 +18813,7 @@ msgstr "Supprimer un rapport enregistré"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:912
 msgid "Delete a Schedule"
-msgstr "Supprimer une planification"
+msgstr "Supprimer un planning"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1532
@@ -19104,7 +19096,7 @@ msgstr ""
 #: ../app/helpers/application_helper/toolbar/miq_report_schedules_center.rb:25
 #: ../app/helpers/application_helper/toolbar/miq_schedules_center.rb:25
 msgid "Delete the selected Schedules"
-msgstr "Supprimer les planifications sélectionnées"
+msgstr "Supprimer les plannings sélectionnées"
 
 #: ../app/helpers/application_helper/toolbar/vm_clouds_center.rb:275
 msgid "Delete the selected items"
@@ -19140,7 +19132,7 @@ msgstr "Supprimer ce profil d'analyse"
 
 #: ../app/helpers/application_helper/toolbar/cloud_network_center.rb:18
 msgid "Delete this Cloud Network"
-msgstr "Supprimer ce réseau cloud"
+msgstr "Supprimer ce Réseau cloud"
 
 #: ../app/helpers/application_helper/toolbar/cloud_subnet_center.rb:19
 msgid "Delete this Cloud Subnet"
@@ -19197,11 +19189,11 @@ msgstr "Supprimer ce Rapport sauvegardé de la Base de données"
 
 #: ../app/helpers/application_helper/toolbar/miq_report_schedule_center.rb:17
 msgid "Delete this Schedule"
-msgstr "Supprimer cette planification"
+msgstr "Supprimer ce Planning"
 
 #: ../app/helpers/application_helper/toolbar/miq_schedule_center.rb:17
 msgid "Delete this Schedule from the Database"
-msgstr "Supprimer cette planification de la base de données"
+msgstr "Supprimer ce Planning de la base de données"
 
 #: ../app/helpers/application_helper/toolbar/user_center.rb:22
 msgid "Delete this User"
@@ -20082,7 +20074,7 @@ msgstr "Désactiver le déploiement de middleware"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:920
 msgid "Disable a Schedule"
-msgstr "Désactiver une planification"
+msgstr "Désactiver un planning"
 
 #: ../app/views/layouts/angular/_multi_auth_credentials.html.haml:331
 msgid "Disable event monitoring."
@@ -20100,7 +20092,7 @@ msgstr "Désactiver le déploiement de middleware"
 #: ../app/helpers/application_helper/toolbar/miq_report_schedules_center.rb:42
 #: ../app/helpers/application_helper/toolbar/miq_schedules_center.rb:42
 msgid "Disable the selected Schedules"
-msgstr "Désactiver les planifications sélectionnées"
+msgstr "Désactiver les plannings sélectionnées"
 
 #: ../app/helpers/application_helper/toolbar/middleware_deployments_center.rb:44
 msgid "Disable these Middleware Deployments"
@@ -21453,12 +21445,12 @@ msgstr "Afficher les données des goulots d'étranglement"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1343
 msgid "Display of Planning Data"
-msgstr "Afficher les données de planification"
+msgstr "Afficher les données de planning"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1339
 msgid "Display of Utilization Data"
-msgstr "Affichage des Données d'utilisation"
+msgstr "Affichage des données d'utilisation"
 
 #: ../app/views/shared/buttons/_ab_list.html.haml:158
 #: ../app/views/shared/buttons/_ab_show.html.haml:27
@@ -21557,11 +21549,11 @@ msgstr "Voulez-vous relancer ce serveur ?"
 
 #: ../app/helpers/application_helper/toolbar/middleware_server_center.rb:67
 msgid "Do you want to stop this server?"
-msgstr "Voulez-vous arrêter ce serveur?"
+msgstr "Voulez-vous arrêter ce serveur ?"
 
 #: ../app/helpers/application_helper/toolbar/middleware_server_center.rb:119
 msgid "Do you want to trigger a kill of this server?"
-msgstr "Voulez-vous initier une suppression-kill de ce serveur ?"
+msgstr "Voulez-vous initier un kill de ce serveur ?"
 
 #: ../app/helpers/application_helper/toolbar/middleware_server_center.rb:91
 msgid "Do you want to trigger a reload of this server?"
@@ -23782,7 +23774,7 @@ msgstr "Modifier un router"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:910
 msgid "Edit a Schedule"
-msgstr "Modifier une planification"
+msgstr "Modifier un planning"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:3087
@@ -24208,7 +24200,7 @@ msgstr "Modifier le rôle sélectionné"
 #: ../app/helpers/application_helper/toolbar/miq_report_schedules_center.rb:17
 #: ../app/helpers/application_helper/toolbar/miq_schedules_center.rb:17
 msgid "Edit the selected Schedule"
-msgstr "Modifier la planification sélectionnée"
+msgstr "Modifier le planning sélectiionné"
 
 #: ../app/helpers/application_helper/toolbar/pxe_image_types_center.rb:18
 msgid "Edit the selected System Image Type"
@@ -24438,7 +24430,7 @@ msgstr "Modifier ce router"
 #: ../app/helpers/application_helper/toolbar/miq_report_schedule_center.rb:12
 #: ../app/helpers/application_helper/toolbar/miq_schedule_center.rb:12
 msgid "Edit this Schedule"
-msgstr "Modifier cette planification"
+msgstr "Modifier ce planning"
 
 #: ../app/views/miq_policy/_form_scope.html.haml:12
 msgid "Edit this Scope"
@@ -24767,8 +24759,8 @@ msgstr "Profil de capacité 1 - vCPU hôte restant"
 #: ../config/model_attributes.rb:1213
 msgid "EmsCluster|Capacity profile 1 remaining vm count based on all"
 msgstr ""
-"Cluster EMS|Profil de capacité 1 - Nombre de machines virtuelles restantes "
-"selon l'ensemble des éléments"
+"Profil de capacité 1 - Nombre de machines virtuelles restantes selon "
+"l'ensemble des éléments"
 
 #: ../config/model_attributes.rb:1214
 msgid "EmsCluster|Capacity profile 1 remaining vm count based on memory"
@@ -24901,7 +24893,7 @@ msgstr "Profil de capacité 2 - vCPU par machine virtuelle"
 
 #: ../config/model_attributes.rb:1243
 msgid "EmsCluster|Capacity profile 2 vcpu per vm with min max"
-msgstr "|Profil de capacité 2 - vCPU par machine virtuelle avec min./max."
+msgstr "Profil de capacité 2 - vCPU par machine virtuelle avec min./max."
 
 #: ../config/model_attributes.rb:1244
 msgid "EmsCluster|Cpu usagemhz rate average avg over time period"
@@ -25328,7 +25320,7 @@ msgstr "Date de Fin"
 
 #: ../app/controllers/ops_controller/diagnostics.rb:252
 msgid "End Date cannot be greater than Start Date"
-msgstr "La Date de Fin ne peut pas être plus grande que la Date de début"
+msgstr "La Date de fin ne peut pas être plus grande que la Date de début"
 
 #. TRANSLATORS: file: product/views/FirewallRule.yaml
 #: ../app/views/security_group/_main.html.haml:20
@@ -25963,7 +25955,7 @@ msgstr "Texte d'erreur :"
 
 #: ../app/controllers/ops_controller/settings/schedules.rb:76
 msgid "Error when adding a new schedule: %{message}"
-msgstr "Erreur lors de l'ajout d'une nouvelle planification : %{message}"
+msgstr "Erreur lors de l'ajout d'un nouveau planning : %{message}"
 
 #: ../app/controllers/ops_controller/ops_rbac.rb:128
 msgid "Error when adding a new tenant: %{message}"
@@ -26023,7 +26015,7 @@ msgstr ""
 
 #: ../app/services/user_validation_service.rb:138
 msgid "Error: New password can not be blank"
-msgstr "Erreur: le nouveau nom ne peut rester vide."
+msgstr "Erreur : le nouveau nom ne peut rester vide."
 
 #: ../app/services/user_validation_service.rb:141
 msgid "Error: New password is the same as existing password"
@@ -27003,7 +26995,7 @@ msgstr "Expression : "
 
 #: ../config/model_attributes.rb:1366
 msgid "Ext management system"
-msgstr "Système de gestion ext."
+msgstr "Système de gestion étendu"
 
 #: ../config/model_attributes.rb:1367
 msgid "ExtManagementSystem|Aggregate cpu speed"
@@ -27485,7 +27477,7 @@ msgstr "URL du flux"
 
 #: ../app/views/ops/_diagnostics_database_tab.html.haml:102
 msgid "Fetch settings from a schedule"
-msgstr "Récupérer les paramètres d'une planification"
+msgstr "Récupérer les paramètres d'un planning"
 
 #: ../app/helpers/ui_constants.rb:532
 #: ../app/views/layouts/exp_atom/_editor.html.haml:65
@@ -27643,7 +27635,7 @@ msgstr[1] "Pilotes du système de fichiers"
 
 #: ../config/model_attributes.rb:1450
 msgid "Filesystem|Atime"
-msgstr "ATime"
+msgstr "Atime"
 
 #: ../config/model_attributes.rb:1451
 msgid "Filesystem|Base name"
@@ -28548,7 +28540,7 @@ msgstr "Obtenir des réseaux cloud"
 #: ../app/views/ops/_ldap_domain_form.html.haml:120
 #: ../app/views/_ldap_domain_form.html.haml:120
 msgid "Get Roles from Home Forest"
-msgstr "Obtenir des rôles de l'accueil de Forest"
+msgstr "Obtenir des rôles de l'accueil de la forêt"
 
 #: ../app/views/ops/_settings_authentication_tab.html.haml:412
 msgid "Get User Groups from Amazon"
@@ -29549,7 +29541,7 @@ msgstr "Agrégat de machines"
 
 #: ../config/model_attributes.rb:1751
 msgid "Host aggregate host"
-msgstr "Agrégat de machines"
+msgstr "Hôte d'Agrégat de machines"
 
 #: ../app/models/manageiq/providers/openstack/cloud_manager/host_aggregate.rb:172
 #: ../app/models/manageiq/providers/openstack/cloud_manager/host_aggregate.rb:202
@@ -29652,7 +29644,7 @@ msgstr "Réf. EMS"
 
 #: ../config/model_attributes.rb:1734
 msgid "HostAggregate|Max cpu usage rate average avg over time period"
-msgstr "|Moyenne taux d'utilisation max. processeur - Moyenne sur la période"
+msgstr "Moyenne taux d'utilisation max. processeur - Moyenne sur la période"
 
 #: ../config/model_attributes.rb:1735
 msgid ""
@@ -31293,7 +31285,7 @@ msgstr "Instances (VMware vCloud)"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:92
 msgid "Instances Accordion"
-msgstr "Instances Accordion"
+msgstr "Accordéon d'instances"
 
 #. TRANSLATORS: file: product/views/InstanceOrImage.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Vm-
@@ -32416,7 +32408,7 @@ msgstr "Obtenir des groupes directs"
 
 #: ../config/model_attributes.rb:1823
 msgid "LdapDomain|Get roles from home forest"
-msgstr "Obtenir des rôles de l'accueil de Forest"
+msgstr "Obtenir des rôles de l'accueil de la forêt"
 
 #: ../config/model_attributes.rb:1824
 msgid "LdapDomain|Get user groups"
@@ -33048,7 +33040,7 @@ msgstr "États du bilan de santé de l'équilibreur de charges"
 
 #: ../config/model_attributes.rb:1951
 msgid "LoadBalancerPoolMember|Load balancer health check states with reason"
-msgstr "|États du bilan de santé de l'équilibreur de charges avec raison"
+msgstr "États du bilan de santé de l'équilibreur de charges avec raison"
 
 #: ../config/model_attributes.rb:1952
 msgid "LoadBalancerPoolMember|Port"
@@ -34938,11 +34930,11 @@ msgstr "Valeur moyenne du taux d'utilisation de réseau max. absolu"
 
 #: ../config/model_attributes.rb:2063
 msgid "MetricRollup|Abs min cpu usage rate average timestamp"
-msgstr "|Horodatage moyen du taux d'utilisation de processeur min. absolu"
+msgstr "Horodatage moyen du taux d'utilisation de processeur min. absolu"
 
 #: ../config/model_attributes.rb:2064
 msgid "MetricRollup|Abs min cpu usage rate average value"
-msgstr "|Valeur moyenne du taux d'utilisation de processeur min. absolu"
+msgstr "Valeur moyenne du taux d'utilisation de processeur min. absolu"
 
 #: ../config/model_attributes.rb:2065
 msgid "MetricRollup|Abs min disk usage rate average timestamp"
@@ -35646,7 +35638,7 @@ msgstr "Mémoire swap min. - Moyenne absolue"
 
 #: ../config/model_attributes.rb:2240
 msgid "MetricRollup|Min mem swaptarget absolute average"
-msgstr "Cible de swap de mémoire min. - Moyenne absolue"
+msgstr "Mémoire swap min Cible - Moyenne absolue"
 
 #: ../config/model_attributes.rb:2241
 msgid "MetricRollup|Min mem usage absolute average"
@@ -37134,7 +37126,7 @@ msgstr "GUID"
 
 #: ../config/model_attributes.rb:2405
 msgid "MiqAlert|Notify automate"
-msgstr "Notification automatique"
+msgstr "Notification Automate"
 
 #: ../config/model_attributes.rb:2406
 msgid "MiqAlert|Notify email"
@@ -39382,7 +39374,7 @@ msgstr "Modifier"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1200
 msgid "Modify Automate Class"
-msgstr "Modifier la classe d'automatisation"
+msgstr "Modifier la classe Automate"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:215
@@ -39692,7 +39684,7 @@ msgstr "Modifier les rapports enregistrés"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:906
 msgid "Modify Schedules"
-msgstr "Modifier les planifications"
+msgstr "Modifier les plannings"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1238
@@ -41554,7 +41546,7 @@ msgstr "Aucun(e) attribut/paire de valeurs trouvé(e)."
 
 #: ../app/views/ops/_diagnostics_database_tab.html.haml:110
 msgid "No Backup Schedules are defined"
-msgstr "Aucune planification de sauvegarde n'est définie"
+msgstr "Aucun planning de sauvegarde n'est défini"
 
 #: ../app/controllers/application_controller/buttons.rb:75
 msgid "No Button Group was selected!"
@@ -41637,8 +41629,7 @@ msgstr "Aucune classification à importer"
 #: ../app/controllers/cloud_volume_snapshot_controller.rb:82
 msgid "No Cloud Volume Snapshots were selected for deletion."
 msgstr ""
-"Auncuns clichés de volume cloud n'ont été sélectionnés afin d'être "
-"supprimés."
+"Aucuns clichés de volume cloud n'ont été sélectionnés afin d'être supprimés."
 
 #: ../app/presenters/tree_builder_compliance_history.rb:39
 msgid "No Compliance Policies Found"
@@ -41731,7 +41722,7 @@ msgstr "Aucun serveur PXE n'est disponible pour la mise en service d'hôte"
 
 #: ../app/helpers/container_build_helper/textual_summary.rb:88
 msgid "No Pod"
-msgstr "Aucune POD"
+msgstr "Aucune Pod"
 
 #: ../app/views/miq_policy/_profile_details.html.haml:128
 msgid "No Policies are defined."
@@ -41785,7 +41776,7 @@ msgstr "Aucun enregistrement trouvé."
 
 #: ../app/controllers/report_controller/schedules.rb:103
 msgid "No Report Schedules were selected to be Run now"
-msgstr "Aucune planification de rapport sélectionnée à exécuter maintenant"
+msgstr "Aucun planning de rapport sélectionné à exécuter maintenant"
 
 #: ../app/views/dashboard/_widget_report.html.haml:10
 msgid "No Report data found"
@@ -41814,7 +41805,7 @@ msgstr "Aucun rapport enregistré disponible."
 
 #: ../app/views/report/_schedule_list.html.haml:12
 msgid "No Schedules available."
-msgstr "Aucune planification disponible."
+msgstr "Aucun planning disponible."
 
 #: ../app/controllers/ops_controller/settings/rhn.rb:292
 msgid "No Server was selected"
@@ -41942,7 +41933,7 @@ msgstr ""
 msgid "No Utilization data available to generate planning results"
 msgstr ""
 "Aucune donnée d'utilisation disponible pour générer des résultats de "
-"planification"
+"planning"
 
 #: ../app/views/miq_capacity/_planning_options.html.haml:91
 msgid "No VMs found"
@@ -42202,7 +42193,7 @@ msgstr "Aucune donnée de performance disponible pour l'élément sélectionné.
 
 #: ../app/views/miq_capacity/_planning_summary.html.haml:34
 msgid "No planning data is available for the selected item."
-msgstr "Aucune donnée de planification disponible pour l'élément sélectionné."
+msgstr "Aucune donnée de planning disponible pour l'élément sélectionné."
 
 #: ../app/views/layouts/_policy_sim.html.haml:54
 msgid "No policies have been chosen yet"
@@ -43542,7 +43533,7 @@ msgstr "Blocs d'écriture garantie min."
 
 #: ../config/model_attributes.rb:3185
 msgid "OntapDiskMetricsRollup|Guarenteed write chain"
-msgstr "|Chaîne d'écriture garantie"
+msgstr "Chaîne d'écriture garantie"
 
 #: ../config/model_attributes.rb:3186
 msgid "OntapDiskMetricsRollup|Guarenteed write chain max"
@@ -46483,7 +46474,7 @@ msgstr "Effectuer les opérations sur les sauvegardes"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:1670
 msgid "Perform Operations on Base Storage Extents"
-msgstr "Effectuer les opérations sur les extensions de stockage de base"
+msgstr "Effectuer les opérations sur les étendues de stockage de base"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:207
@@ -46776,7 +46767,7 @@ msgstr "Effectuer les opérations sur les agents SMI-S"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:900
 msgid "Perform Operations on Schedules"
-msgstr "Effectuer les opérations sur les ordonnancements"
+msgstr "Effectuer les opérations sur les plannings"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2172
@@ -47216,7 +47207,7 @@ msgstr "Résumé du planning"
 
 #: ../app/controllers/miq_capacity_controller.rb:559
 msgid "Planning options have been reset by the user"
-msgstr "Les options de planification ont été réinitialisées par l'utilisateur"
+msgstr "Les options de planning ont été réinitialisées par l'utilisateur"
 
 #. TRANSLATORS: file: product/views/Host-hosts.yaml
 #. TRANSLATORS: file: product/views/Host.yaml
@@ -48890,19 +48881,18 @@ msgstr "Mettre ce rapport en file d'attente de production"
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:904
 msgid "Queue up Schedules to run now"
-msgstr "Mettre les ordonnancements en file d'attente pour exécution immédiate"
+msgstr "Mettre les plannings en file d'attente pour exécution immédiate"
 
 #: ../app/helpers/application_helper/toolbar/miq_report_schedules_center.rb:51
 #: ../app/helpers/application_helper/toolbar/miq_schedules_center.rb:51
 msgid "Queue up selected Schedules to run now"
 msgstr ""
-"Mettre les ordonnancements sélectionnés en file d'attente pour exécution "
-"immédiate"
+"Mettre les plannings sélectionnés en file d'attente pour exécution immédiate"
 
 #: ../app/helpers/application_helper/toolbar/miq_report_schedule_center.rb:25
 #: ../app/helpers/application_helper/toolbar/miq_schedule_center.rb:25
 msgid "Queue up this Schedule to run now"
-msgstr "Mettre cet ordonnancement en file d'attente pour exécution immédiate"
+msgstr "Mettre ce planning en file d'attente pour exécution immédiate"
 
 #. TRANSLATORS: file: product/views/Job.yaml
 #: ../app/helpers/ui_constants.rb:418
@@ -53584,8 +53574,8 @@ msgstr "Rapport enregistré \"%{name}\""
 #: ../app/controllers/report_controller/saved_reports.rb:33
 msgid "Saved Report \"%{time}\" not found, Schedule may have failed"
 msgstr ""
-"Le rapport enregistré \"%{time}\" est introuvable, l'ordonnancements a peut-"
-"êre échoué"
+"Le rapport enregistré \"%{time}\" est introuvable, le planning a peut-être "
+"échoué"
 
 #: ../app/controllers/report_controller/saved_reports.rb:96
 msgid "Saved Report no longer exists"
@@ -53842,7 +53832,7 @@ msgstr "Scanning"
 #. TRANSLATORS: file: product/views/MiqSchedule.yaml
 #: ../config/dictionary_strings.rb:1836 ../config/yaml_strings.rb:4561
 msgid "Schedule"
-msgstr "Ordonnancement"
+msgstr "Planning"
 
 #: ../app/views/shared/views/_prov_dialog.html.haml:408
 #: ../app/views/miq_request/_prov_host_dialog.html.haml:117
@@ -53850,15 +53840,15 @@ msgstr "Ordonnancement"
 #: ../app/views/miq_request/_prov_configured_system_foreman_dialog.html.haml:60
 #: ../app/views/report/_show_schedule.html.haml:3
 msgid "Schedule Info"
-msgstr "Informations sur l'ordonnancement"
+msgstr "Informations sur le planning"
 
 #: ../app/models/miq_schedule.rb:360
 msgid ""
 "Schedule: [%{id}] [%{name}], cannot calculate next run with past start_time "
 "using: %{path}"
 msgstr ""
-"Ordonnancement: [%{id}] [%{name}], impossible de calculer la prochaine "
-"exécution avec une heure de début passée en utilisant : %{path}"
+"Planning: [%{id}] [%{name}], impossible de calculer la prochaine exécution "
+"avec une heure de début passée en utilisant : %{path}"
 
 #. TRANSLATORS: en.yml key: dictionary.model.MiqSchedule (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.miq_schedules
@@ -53872,17 +53862,17 @@ msgstr ""
 #: ../config/dictionary_strings.rb:1838 ../config/dictionary_strings.rb:2420
 #: ../config/yaml_strings.rb:894
 msgid "Schedules"
-msgstr "Ordonnancements"
+msgstr "Plannings"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:896
 msgid "Schedules Accordion"
-msgstr "Accordéon d'ordonnancements"
+msgstr "Accordéon des plannings"
 
 #. TRANSLATORS: file: product/views/CloudService.yaml
 #: ../config/yaml_strings.rb:4745
 msgid "Scheduling Disabled"
-msgstr "Ordonnancement désactivé"
+msgstr "Planning désactivé"
 
 #: ../app/views/miq_ae_class/_all_tabs.html.haml:17
 #: ../app/views/miq_ae_class/_class_fields.html.haml:8
@@ -53956,8 +53946,7 @@ msgstr "Rechercher par nom dans les résultats"
 #: ../app/models/miq_search.rb:12
 msgid "Search is referenced in a schedule and cannot be deleted"
 msgstr ""
-"La recherche est référencée dans un ordonnancement et ne peut pas être "
-"supprimée"
+"La recherche est référencée dans un planning et ne peut pas être supprimée"
 
 #. TRANSLATORS: en.yml key: dictionary.model.MiqSearch (plural form)
 #: ../config/dictionary_strings.rb:1842
@@ -58938,7 +58927,7 @@ msgstr "Utilisation processeur - Moyenne taux MHz - Taux élevé sur la période
 
 #: ../config/model_attributes.rb:4002
 msgid "Storage|Cpu usagemhz rate average low over time period"
-msgstr "|Utilisation processeur - Moyenne taux MHz - Taux bas sur la période"
+msgstr "Utilisation processeur - Moyenne taux MHz - Taux bas sur la période"
 
 #: ../config/model_attributes.rb:4003
 msgid "Storage|Created on"
@@ -60721,22 +60710,20 @@ msgstr "Le rapport enregistré sélectionné a été supprimé"
 
 #: ../app/controllers/report_controller/schedules.rb:125
 msgid "The selected Schedule has been queued to run"
-msgstr ""
-"L'ordonnancement sélectionné a été mis en file d'attente pour exécution"
+msgstr "le planning sélectionné a été mis en file d'attente pour exécution"
 
 #: ../app/controllers/report_controller/schedules.rb:127
 msgid "The selected Schedules have been queued to run"
 msgstr ""
-"Les ordonnancements sélectionnés ont été mis en file d'attente pour "
-"exécution"
+"Les plannings sélectionnés ont été mis en file d'attente pour exécution"
 
 #: ../app/controllers/ops_controller/settings/schedules.rb:224
 msgid "The selected Schedules were disabled"
-msgstr "Les ordonnancements sélectionnés ont été désactivés"
+msgstr "Les plannings sélectionnés ont été désactivés"
 
 #: ../app/controllers/ops_controller/settings/schedules.rb:222
 msgid "The selected Schedules were enabled"
-msgstr "Les ordonnancements sélectionnés ont été activés"
+msgstr "Les plannings sélectionnés ont été activés"
 
 #: ../app/controllers/cloud_subnet_controller.rb:160
 msgid "The selected Subnet was deleted"
@@ -61916,7 +61903,7 @@ msgstr "Tronquer le texte long"
 
 #: ../app/views/ops/_ldap_forest_entries.html.haml:4
 msgid "Trusted Forest Settings"
-msgstr "Paramètres Forest fiable"
+msgstr "Paramètres de la forêt fiables"
 
 #: ../app/views/configuration/_timeprofile_days_hours.html.haml:20
 #: ../app/assets/javascripts/controllers/configuration/time_profile_form_controller.js:22
@@ -65296,7 +65283,7 @@ msgstr "Afficher les rapports enregistrés"
 #: ../app/views/ops/_settings_details_tab.html.haml:93
 #: ../config/yaml_strings.rb:898
 msgid "View Schedules"
-msgstr "Afficher les ordonnancements"
+msgstr "Afficher les plannings"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:2166
@@ -65510,7 +65497,7 @@ msgstr "Afficher ce rôle"
 
 #: ../app/views/report/_report_info.html.haml:169
 msgid "View this Schedule"
-msgstr "Afficher cet ordonnancement"
+msgstr "Afficher ce plannning"
 
 #: ../app/views/ops/_rbac_group_details.html.haml:100
 msgid "View this Tenant"
@@ -67501,8 +67488,8 @@ msgid ""
 "Warning: The selected Schedules and ALL of their components will be "
 "permanently removed!"
 msgstr ""
-"Avertissement : les ordonnancements sélectionnés et TOUS leurs composants "
-"seront définitivement supprimés"
+"Avertissement : les plannings sélectionnés et TOUS leurs composants seront "
+"définitivement supprimés"
 
 #: ../app/helpers/application_helper/toolbar/services_center.rb:25
 #: ../app/helpers/application_helper/toolbar/container_projects_center.rb:28
@@ -67860,8 +67847,8 @@ msgid ""
 "Warning: This Schedule and ALL of its components will be permanently "
 "removed!"
 msgstr ""
-"Avertissement : cet ordonnancement et TOUS ses composants seront "
-"définitivement supprimés"
+"Avertissement : ce planning et TOUS ses composants seront définitivement "
+"supprimés"
 
 #: ../app/helpers/application_helper/toolbar/container_service_center.rb:21
 msgid ""
@@ -68464,18 +68451,15 @@ msgstr "Statut d'authentification"
 
 #: ../config/model_attributes.rb:4593
 msgid "Zone|Cpu usagemhz rate average avg over time period"
-msgstr ""
-"Zone|Utilisation processeur - Moyenne taux MHz - Moyenne sur la période"
+msgstr "Utilisation processeur - Moyenne taux MHz - Moyenne sur la période"
 
 #: ../config/model_attributes.rb:4594
 msgid "Zone|Cpu usagemhz rate average high over time period"
-msgstr ""
-"Zone|Utilisation processeur - Moyenne taux MHz - Taux élevé sur la période"
+msgstr "Utilisation processeur - Moyenne taux MHz - Taux élevé sur la période"
 
 #: ../config/model_attributes.rb:4595
 msgid "Zone|Cpu usagemhz rate average low over time period"
-msgstr ""
-"Zone|Utilisation processeur - Moyenne taux MHz - Taux bas sur la période"
+msgstr "Utilisation processeur - Moyenne taux MHz - Taux bas sur la période"
 
 #: ../config/model_attributes.rb:4596
 msgid "Zone|Created on"
