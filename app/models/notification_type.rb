@@ -1,12 +1,15 @@
 class NotificationType < ApplicationRecord
   AUDIENCE_USER = 'user'.freeze
+  AUDIENCE_GROUP = 'group'.freeze
   AUDIENCE_TENANT = 'tenant'.freeze
   AUDIENCE_GLOBAL = 'global'.freeze
   AUDIENCE_SUPERADMIN = 'superadmin'.freeze
   has_many :notifications
   validates :message, :presence => true
   validates :level, :inclusion => { :in => %w(success error warning info) }
-  validates :audience, :inclusion => { :in => [AUDIENCE_USER, AUDIENCE_TENANT, AUDIENCE_GLOBAL, AUDIENCE_SUPERADMIN] }
+  validates :audience, :inclusion => {
+    :in => [AUDIENCE_USER, AUDIENCE_GROUP, AUDIENCE_TENANT, AUDIENCE_GLOBAL, AUDIENCE_SUPERADMIN]
+  }
 
   def subscriber_ids(subject, initiator)
     case audience
@@ -14,6 +17,8 @@ class NotificationType < ApplicationRecord
       User.pluck(:id)
     when AUDIENCE_USER
       [initiator.id]
+    when AUDIENCE_GROUP
+      subject.try(:requester).try(:current_group).try(:user_ids)
     when AUDIENCE_TENANT
       subject.tenant.user_ids
     when AUDIENCE_SUPERADMIN
