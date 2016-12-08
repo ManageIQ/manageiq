@@ -707,3 +707,31 @@ table .label {  // Adds margin to the label to vertically align with text
 div.disabled {
   cursor: default;
 }
+
+.miq-tile-with-body .card-view-pf {
+  .card.active {
+    margin-bottom: 16px;
+  }
+}
+
+.miq-sand-paper, .miq-sand-paper > div {
+  background: #f5f5f5;
+  overflow: hidden !important;
+}
+
+.miq-pagination {
+  position: fixed;
+  width: 84%;
+  bottom: -17px;
+  z-index: 99;
+}
+
+.miq-data-table .miq-pagination {
+  bottom: -7px;
+}
+
+#right_div.right-panel-data {
+  #pc_div_1 {
+    display: none !important;
+  }
+}

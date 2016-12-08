@@ -1,5 +1,7 @@
 (function(){
   var COTNROLLER_NAME = 'reportDataController';
+  var MAIN_CONTETN_ID = 'main-content';
+  var RIGHT_PANEL = 'right_div';
 
   /**
   * Private method for setting rootPoint of MiQEndpointsService.
@@ -43,7 +45,7 @@
       } else if (event.unsubscribe && event.unsubscribe === COTNROLLER_NAME) {
         this.onUnsubscribe();
       } else if (event.tollbarEvent && (event.tollbarEvent === 'itemClicked')) {
-        this.setSandPaperClass();
+        this.setExtraClasses();
       }
     }.bind(this),
     function (err) {
@@ -129,7 +131,7 @@
       var prefix = '/' + ManageIQ.controller;
       $.post(prefix + '/x_show/' + item.id)
         .always(function() {
-          this.setSandPaperClass();
+          this.setExtraClasses();
         }.bind(this));
     } else {
       var prefix = this.initObject.showUrl;
@@ -183,7 +185,7 @@
   ReportDataController.prototype.initController = function(initObject) {
     initObject.modelName = decodeURIComponent(initObject.modelName);
     this.initObjects(initObject);
-    this.setSandPaperClass(initObject.gtlType);
+    this.setExtraClasses(initObject.gtlType);
     this.showMessage = this.$location.search().flash_msg;
     return this.getData(initObject.modelName, initObject.activeTree, initObject.currId, initObject.isExplorer, this.settings)
       .then(function(data) {
@@ -193,24 +195,40 @@
         if (sortId !== -1) {
           this.setSort(sortId, this.settings.sort_dir === 'ASC');
         }
-        this.settings.selectAllTitle = __('Select All');
-        this.settings.sortedByTitle = __('Sorted By');
-        this.settings.isLoading = false;
+        this.setDefaults();
         return data;
       }.bind(this));
   }
 
-  ReportDataController.prototype.setSandPaperClass = function(viewType) {
-    var mainContent = document.getElementById('main-content');
+  /**
+  * Public method for setting default values of settings object.
+  * Fileds which are set:
+  *       selectAllTitle - String  => title for select all
+  *       sortedByTitle  - String  => title for sort by
+  *       isLoading      - Boolean => if loading has finished.
+  *       scrollElement  - String  => ID of scroll element.
+  */
+  ReportDataController.prototype.setDefaults = function() {
+    this.settings.selectAllTitle = __('Select All');
+    this.settings.sortedByTitle = __('Sorted By');
+    this.settings.isLoading = false;
+    this.settings.scrollElement = MAIN_CONTETN_ID;
+  }
+
+  ReportDataController.prototype.setExtraClasses = function(viewType) {
+    var mainContent = document.getElementById(MAIN_CONTETN_ID);
     if (mainContent) {
-      var mainConentClasses = mainContent.className.split(' ');
-      var sandPaperIndex = mainConentClasses.indexOf('miq-sand-paper');
-      if (sandPaperIndex != -1) {
-        mainConentClasses.splice(sandPaperIndex, 1);
-        mainContent.className = mainConentClasses.join(' ');
-      }
+      angular.element(mainContent).removeClass('miq-sand-paper');
       if (viewType && (viewType === 'grid' || viewType === 'tile')) {
-        mainContent.className += ' miq-sand-paper';
+        angular.element(mainContent).addClass('miq-sand-paper');
+      }
+    }
+    
+    var rightPanel = document.getElementById(RIGHT_PANEL);
+    if (rightPanel) {
+      angular.element(rightPanel).removeClass('right-panel-data');
+      if (viewType && (viewType === 'grid' || viewType === 'tile' || viewType === 'list')) {
+        angular.element(rightPanel).addClass('right-panel-data');
       }
     }
   }
