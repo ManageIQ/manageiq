@@ -6,6 +6,13 @@ class AvailabilityZoneController < ApplicationController
 
   include Mixins::GenericListMixin
 
+  def show_performance
+    @showtype = "performance"
+    drop_breadcrumb(:name => _("%{name} Capacity & Utilization") % {:name => @availability_zone.name},
+                    :url  => "/availability_zone/show/#{@availability_zone.id}?display=#{@display}&refresh=n")
+    perf_gen_init_options               # Intialize perf chart options, charts will be generated async
+  end
+
   def show
     return if perfmenu_click?
     @display = params[:display] || "main" unless control_selected?
@@ -27,10 +34,7 @@ class AvailabilityZoneController < ApplicationController
       set_summary_pdf_data if ["download_pdf", "summary_only"].include?(@display)
 
     when "performance"
-      @showtype = "performance"
-      drop_breadcrumb(:name => _("%{name} Capacity & Utilization") % {:name => @availability_zone.name},
-                      :url  => "/availability_zone/show/#{@availability_zone.id}?display=#{@display}&refresh=n")
-      perf_gen_init_options               # Intialize perf chart options, charts will be generated async
+      render :action => "show_performance"
 
     when "ems_cloud"
       drop_breadcrumb(:name => _("%{name} (%{table}(s))") % {:name  => @availability_zone.name,

@@ -1055,6 +1055,7 @@ Vmdb::Application.routes.draw do
         protect
         rows_json
         show
+        show_performance
         show_list
         tagging_edit
       ) +
@@ -1736,6 +1737,7 @@ Vmdb::Application.routes.draw do
         show_association
         show_details
         show_list
+        show_performance
         start
         tagging_edit
         users

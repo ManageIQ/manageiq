@@ -57,7 +57,7 @@ module ApplicationController::Explorer
     'disassociate_floating_ip' => :s2,
 
     # specials
-    'perf'         => :show,
+    'perf'         => :show_performance,
     'download_pdf' => :show,
     'perf_reload'  => :perf_chart_chooser,
     'perf_refresh' => :perf_refresh_data,

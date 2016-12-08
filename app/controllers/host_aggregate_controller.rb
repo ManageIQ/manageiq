@@ -7,6 +7,13 @@ class HostAggregateController < ApplicationController
   include Mixins::GenericListMixin
   include Mixins::CheckedIdMixin
 
+  def show_performance
+    @showtype = "performance"
+    drop_breadcrumb(:name => _("%{name} Capacity & Utilization") % {:name => @host_aggregate.name},
+                    :url  => "/host_aggregate/show/#{@host_aggregate.id}?display=#{@display}&refresh=n")
+    perf_gen_init_options # Intialize perf chart options, charts will be generated async
+  end
+
   def show
     return if perfmenu_click?
     @display = params[:display] || "main" unless control_selected?
@@ -28,10 +35,7 @@ class HostAggregateController < ApplicationController
       set_summary_pdf_data if %w(download_pdf summary_only).include?(@display)
 
     when "performance"
-      @showtype = "performance"
-      drop_breadcrumb(:name => _("%{name} Capacity & Utilization") % {:name => @host_aggregate.name},
-                      :url  => "/host_aggregate/show/#{@host_aggregate.id}?display=#{@display}&refresh=n")
-      perf_gen_init_options # Intialize perf chart options, charts will be generated async
+      render :action => "show_performance"
 
     when "ems_cloud"
       drop_breadcrumb(:name => _("%{name} (%{table}(s))") % {:name  => @host_aggregate.name,

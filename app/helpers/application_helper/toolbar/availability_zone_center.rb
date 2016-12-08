@@ -26,8 +26,7 @@ class ApplicationHelper::Toolbar::AvailabilityZoneCenter < ApplicationHelper::To
           'product product-monitoring fa-lg',
           N_('Show Capacity & Utilization data for this Availability Zone'),
           N_('Utilization'),
-          :url       => "/show",
-          :url_parms => "?display=performance"),
+          :url => "/show_performance"),
         button(
           :availability_zone_timeline,
           'product product-timeline fa-lg',

@@ -101,6 +101,13 @@ class CimInstanceController < ApplicationController
     end
   end
 
+  def show_performance
+    @showtype = "performance"
+    drop_breadcrumb(:name => _("%{name} Capacity & Utilization") % {:name => @record.evm_display_name},
+                    :url  => "/#{self.class.table_name}/show/#{@record.id}?display=#{@display}&refresh=n")
+    perf_gen_init_options               # Intialize perf chart options, charts will be generated async
+  end
+
   def process_show(associations = {})
     return if perfmenu_click?
     @display = params[:display] || "main" unless control_selected?
@@ -123,11 +130,7 @@ class CimInstanceController < ApplicationController
       set_summary_pdf_data if ["download_pdf", "summary_only"].include?(@display)
 
     when "performance"
-      @showtype = "performance"
-      drop_breadcrumb(:name => _("%{name} Capacity & Utilization") % {:name => @record.evm_display_name},
-                      :url  => "/#{self.class.table_name}/show/#{@record.id}?display=#{@display}&refresh=n")
-      perf_gen_init_options               # Intialize perf chart options, charts will be generated async
-
+      render :action => "show_performance"
     else
       whitelisted_key = associations.keys.find { |key| key == @display }
       if whitelisted_key.present?

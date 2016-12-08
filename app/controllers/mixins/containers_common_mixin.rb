@@ -46,6 +46,14 @@ module ContainersCommonMixin
     ui_lookup(:tables => @record.class.base_class.name)
   end
 
+  def show_performance
+    @showtype = "performance"
+    drop_breadcrumb(:name => _("%{name} Capacity & Utilization") % {:name => record.name},
+                    :url  => "/#{controller_name}/show/#{record.id}" \
+                               "?display=#{@display}&refresh=n")
+    perf_gen_init_options # Intialize options, charts are generated async
+  end
+
   def show_container(record, controller_name, display_name)
     return if record_no_longer_exists?(record)
 
@@ -68,11 +76,8 @@ module ContainersCommonMixin
                       :url  => "/#{controller_name}/show/#{record.id}" \
                                "?refresh=n&display=timeline")
     elsif @display == "performance"
-      @showtype = "performance"
-      drop_breadcrumb(:name => _("%{name} Capacity & Utilization") % {:name => record.name},
-                      :url  => "/#{controller_name}/show/#{record.id}" \
-                               "?display=#{@display}&refresh=n")
-      perf_gen_init_options # Intialize options, charts are generated async
+      render :action => "show_performance"
+
     elsif @display == "compliance_history"
       count = params[:count] ? params[:count].to_i : 10
       update_session_for_compliance_history(record, count)

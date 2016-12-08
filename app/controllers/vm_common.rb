@@ -300,10 +300,7 @@ module VmCommon
       end
       @showtype = @display
     elsif @display == "performance"
-      @showtype = "performance"
-      drop_breadcrumb(:name => _("%{name} Capacity & Utilization") % {:name => @record.name},
-                      :url  => "/#{rec_cls}/show/#{@record.id}?display=#{@display}&refresh=n")
-      perf_gen_init_options               # Initialize perf chart options, charts will be generated async
+      render :action => "show_performnce"
     elsif @display == "disks"
       @showtype = "disks"
       disks

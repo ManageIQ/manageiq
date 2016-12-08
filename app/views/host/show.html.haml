@@ -11,6 +11,7 @@
     - when "drift_history", "item"
       = render(:partial => "layouts/#{@showtype}")
     - when "performance"
+      = raise 'performance partial called through "show"'
       = render(:partial => "layouts/performance")
       :javascript
         ManageIQ.afterOnload = "miqAsyncAjax('#{url_for(:action => @ajax_action, :id => @record)}');"

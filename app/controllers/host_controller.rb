@@ -11,6 +11,15 @@ class HostController < ApplicationController
     super
   end
 
+  def show_performance
+    @showtype = "performance"
+    @host = @perf_record = identify_record(params[:id])
+    @record = identify_tl_or_perf_record
+    drop_breadcrumb(:name => _("%{name} Capacity & Utilization") % {:name => @record.name},
+                    :url  => "/host/show_performance/#{@host.id}&refresh=n")
+    perf_gen_init_options  # Intialize perf chart options, charts will be generated async
+  end
+
   def show
     return if perfmenu_click?
 
@@ -54,10 +63,10 @@ class HostController < ApplicationController
       self.x_active_tree = :network_tree
 
     when "performance"
-      @showtype = "performance"
-      drop_breadcrumb(:name => _("%{name} Capacity & Utilization") % {:name => @host.name},
-                      :url  => "/host/show/#{@host.id}?display=#{@display}&refresh=n")
-      perf_gen_init_options               # Intialize perf chart options, charts will be generated async
+      drop_breadcrumb(:name => _("%{name} Capacity & Utilization") % {:name => @record.name},
+                    :url  => "/host/show_performance/#{@host.id}&refresh=n")
+      perf_gen_init_options  # Intialize perf chart options, charts will be generated async
+      render :action => "show_performance"
 
     when "timeline"
       @showtype = "timeline"

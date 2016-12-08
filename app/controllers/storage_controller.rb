@@ -85,10 +85,7 @@ class StorageController < ApplicationController
       set_summary_pdf_data if ["download_pdf", "summary_only"].include?(@display)
 
     when "performance"
-      @showtype = "performance"
-      drop_breadcrumb(:name => _("%{name} Capacity & Utilization") % {:name => @storage.name},
-                      :url  => "/storage/x_show/#{@storage.id}?display=#{@display}&refresh=n")
-      perf_gen_init_options               # Intialize perf chart options, charts will be generated async
+      render :action => "show_performance"
 
     when "storage_extents"
       drop_breadcrumb(:name => _(" (All %{tables})") % {:name   => @storage.name,

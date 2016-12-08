@@ -16,16 +16,6 @@ describe "host/show.html.haml" do
     assign(:showtype, showtype)
   end
 
-  context "when showtype is 'performance'" do
-    let(:showtype) { "performance" }
-
-    before do
-      assign(:perf_options, :chart_type => :performance)
-    end
-
-    it_behaves_like "miq_before_onload JS is needed"
-  end
-
   context "when showtype is 'timeline'" do
     let(:showtype) { "timeline" }
 
