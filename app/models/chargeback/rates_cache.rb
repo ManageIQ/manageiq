@@ -13,7 +13,7 @@ class Chargeback
                                                      :parents  => metric_rollup_record.parents_determining_rate)
 
       if metric_rollup_record.resource_type == Container.name && rates.empty?
-        rates = [ChargebackRate.find_by(:description => "Default", :rate_type => "Compute")]
+        rates = [ChargebackRate.find_by(:description => "Default Container Image Rate", :rate_type => "Compute")]
       end
 
       metric_rollup_record_tags = metric_rollup_record.tag_names.split("|")
