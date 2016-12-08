@@ -44,6 +44,7 @@ class ApplicationHelper::Button::Basic < Hash
   #   self[:text]    -- text for the button
   def calculate_properties
     self[:enabled] = !disabled? if self[:enabled].nil?
+    self[:title] = @error_message if @error_message.present?
   end
 
   # Check if all instance variables for that button works with are set and
