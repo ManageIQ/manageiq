@@ -25,6 +25,7 @@ module ManagerRefresh::SaveCollection
 
         unless dto_collection.saveable?
           dto_collection.dependencies.each do |dependency|
+            next if dependency.saved?
             if traversed_collections.include? dependency
               raise "Edge from #{dto_collection} to #{dependency} creates a cycle"
             end
