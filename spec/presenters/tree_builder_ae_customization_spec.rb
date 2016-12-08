@@ -4,16 +4,16 @@ describe TreeBuilderAeCustomization  do
   describe "#init_tree" do
     let(:expected_sandbox_values) do
       {
-        :tree        => :dialog_import_export_tree,
-        :type        => :dialog_import_export,
-        :klass_name  => "TreeBuilderAeCustomization",
-        :leaf        => nil,
-        :add_root    => true,
-        :open_nodes  => [],
-        :lazy        => true,
-        :checkable   => false,
-        :open_all    => true,
-        :active_node => "root"
+        :tree                 => :dialog_import_export_tree,
+        :type                 => :dialog_import_export,
+        :klass_name           => "TreeBuilderAeCustomization",
+        :leaf                 => nil,
+        :add_root             => true,
+        :open_nodes           => [],
+        :lazy                 => true,
+        :checkable_checkboxes => false,
+        :open_all             => true,
+        :active_node          => "root"
       }
     end
 

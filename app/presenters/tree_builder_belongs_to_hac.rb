@@ -21,7 +21,11 @@ class TreeBuilderBelongsToHac < TreeBuilder
   private
 
   def tree_init_options(_tree_name)
-    {:full_ids => true, :add_root => false, :lazy => false, :checkable => @edit.present?, :selected => @selected}
+    {:full_ids             => true,
+     :add_root             => false,
+     :lazy                 => false,
+     :checkable_checkboxes => @edit.present?,
+     :selected             => @selected}
   end
 
   def set_locals_for_render
