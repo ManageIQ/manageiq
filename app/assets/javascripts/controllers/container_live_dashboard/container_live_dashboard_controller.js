@@ -209,10 +209,8 @@ miqHttpInject(angular.module('containerLiveDashboard', ['ui.bootstrap', 'pattern
     };
 
     $scope.getTenenats = function(prefix) {
-      return $http.get($scope.url + "&query=get_tenants&prefix=" + prefix).then(function(response){
-        return response.data.tenants.map(function(item){
-          return item.id;
-        });
+      return $http.get($scope.url + "&query=get_tenants&limit=7&prefix=" + prefix).then(function(response){
+        return response.data.tenants;
       });
     }
 
