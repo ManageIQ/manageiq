@@ -564,6 +564,7 @@ module VmCommon
     @name = @description = ""
     @in_a_form = true
     @button_group = "snap"
+    @show_snapshot_memory_checkbox = show_snapshot_memory_checkbox?(@vm)
     drop_breadcrumb(:name    => _("Snapshot VM '%{name}''") % {:name => @record.name},
                     :url     => "/vm_common/snap",
                     :display => "snapshot_info")
@@ -588,6 +589,11 @@ module VmCommon
     else
       render :action => "snap"
     end
+  end
+
+  def show_snapshot_memory_checkbox?(vm)
+    return true unless vm.respond_to?(:snapshotting_memory_allowed?)
+    vm.snapshotting_memory_allowed?
   end
 
   def snap_vm

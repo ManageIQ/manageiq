@@ -16,7 +16,7 @@
           = _('Description')
         .col-md-8
           = text_area_tag("description", @description, :size => "50x4")
-      .form-group
+      %div{:class => "form-group #{@show_snapshot_memory_checkbox ? "" : "hidden"}"}
         %label.control-label.col-md-2
           = _('Snapshot VM memory')
         .col-md-8
