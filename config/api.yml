@@ -2085,12 +2085,16 @@
         :identifier: orchestration_template_edit
       - :name: delete
         :identifier: orchestration_template_remove
+      - :name: copy
+        :identifier: orchestration_template_copy
     :resource_actions:
       :post:
       - :name: edit
         :identifier: orchestration_template_edit
       - :name: delete
         :identifier: orchestration_template_remove
+      - :name: copy
+        :identifier: orchestration_template_copy
       :delete:
       - :name: delete
         :identifier: orchestration_template_remove
