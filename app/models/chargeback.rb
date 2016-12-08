@@ -145,7 +145,7 @@ class Chargeback < ActsAsArModel
                                                :parents  => get_rate_parents(perf))
       end
     if perf.resource_type == Container.name && @rates[perf.hash_features_affecting_rate].empty?
-      @rates[perf.hash_features_affecting_rate] = [ChargebackRate.find_by(:description => "Default", :rate_type => "Compute")]
+      @rates[perf.hash_features_affecting_rate] = [ChargebackRate.find_by(:description => "Default Container Image Rate", :rate_type => "Compute")]
     end
     @rates[perf.hash_features_affecting_rate]
   end
