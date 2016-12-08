@@ -11,7 +11,9 @@ describe ApplicationHelper::Button::VolumeAttach do
     it "when the attach action is unavailable then the button is disabled" do
       view_context = setup_view_context_with_sandbox({})
       button = described_class.new(
-        view_context, {}, {"record" => object_double(CloudVolume.new, :is_available? => false)}, {}
+        view_context, {},
+        {"record" => object_double(CloudVolume.new, :is_available?                  => false,
+                                                    :is_available_now_error_message => "unavailable")}, {}
       )
       expect(button.disabled?).to be true
     end

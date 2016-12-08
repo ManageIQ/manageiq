@@ -11,7 +11,10 @@ describe ApplicationHelper::Button::VolumeDetach do
     it "when the detach action is unavailable then the button is disabled" do
       view_context = setup_view_context_with_sandbox({})
       button = described_class.new(
-        view_context, {}, {"record" => object_double(CloudVolume.new, :is_available? => false, :number_of => 1)}, {}
+        view_context, {},
+        {"record" => object_double(CloudVolume.new, :is_available?                  => false,
+                                                    :number_of                      => 1,
+                                                    :is_available_now_error_message => "unavailable")}, {}
       )
       expect(button.disabled?).to be true
     end
@@ -19,7 +22,9 @@ describe ApplicationHelper::Button::VolumeDetach do
     it "when the volume is not attached to any instances then the button is disabled" do
       view_context = setup_view_context_with_sandbox({})
       button = described_class.new(
-        view_context, {}, {"record" => object_double(CloudVolume.new, :is_available? => true, :number_of => 0)}, {}
+        view_context, {}, {"record" => object_double(CloudVolume.new, :is_available? => true,
+                                                                      :number_of     => 0,
+                                                                      :name          => '')}, {}
       )
       expect(button.disabled?).to be true
     end

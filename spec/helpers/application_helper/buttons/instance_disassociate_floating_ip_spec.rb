@@ -3,7 +3,8 @@ describe ApplicationHelper::Button::InstanceDisassociateFloatingIp do
     it "when the disassociate ip action is available and the instance has floating ips then the button is enabled" do
       view_context = setup_view_context_with_sandbox({})
       button = described_class.new(
-        view_context, {}, {"record" => object_double(VmCloud.new, :supports_disassociate_floating_ip? => true, :number_of => 1)}, {}
+        view_context, {}, {"record" => object_double(VmCloud.new, :supports_disassociate_floating_ip? => true,
+                                                                  :number_of                          => 1)}, {}
       )
       expect(button.disabled?).to be false
     end
@@ -11,7 +12,10 @@ describe ApplicationHelper::Button::InstanceDisassociateFloatingIp do
     it "when the disassociate floating ip action is unavailable then the button is disabled" do
       view_context = setup_view_context_with_sandbox({})
       button = described_class.new(
-        view_context, {}, {"record" => object_double(VmCloud.new, :supports_disassociate_floating_ip? => false, :number_of => 1)}, {}
+        view_context, {},
+        {"record" => object_double(VmCloud.new, :supports_disassociate_floating_ip? => false,
+                                                :number_of                          => 1,
+                                                :unsupported_reason                 => "unavailable")}, {}
       )
       expect(button.disabled?).to be true
     end
@@ -19,7 +23,10 @@ describe ApplicationHelper::Button::InstanceDisassociateFloatingIp do
     it "when the instance is not associated to any floating ips then the button is disabled" do
       view_context = setup_view_context_with_sandbox({})
       button = described_class.new(
-        view_context, {}, {"record" => object_double(VmCloud.new, :supports_disassociate_floating_ip? => true, :number_of => 0)}, {}
+        view_context, {}, {"record" => object_double(VmCloud.new,
+                                                     :supports_disassociate_floating_ip? => true,
+                                                     :number_of                          => 0,
+                                                     :name                               => '')}, {}
       )
       expect(button.disabled?).to be true
     end
@@ -30,7 +37,9 @@ describe ApplicationHelper::Button::InstanceDisassociateFloatingIp do
       view_context = setup_view_context_with_sandbox({})
       button = described_class.new(
         view_context, {}, {"record" => object_double(
-          VmCloud.new, :supports_disassociate_floating_ip? => false, :number_of => 1, :unsupported_reason => "unavailable"
+          VmCloud.new, :supports_disassociate_floating_ip? => false,
+                       :number_of                          => 1,
+                       :unsupported_reason                 => "unavailable"
         )}, {}
       )
       button.calculate_properties

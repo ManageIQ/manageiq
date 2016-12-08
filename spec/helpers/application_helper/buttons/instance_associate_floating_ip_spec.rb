@@ -13,7 +13,9 @@ describe ApplicationHelper::Button::InstanceAssociateFloatingIp do
     it "when the associate floating ip action is unavailable then the button is disabled" do
       view_context = setup_view_context_with_sandbox({})
       button = described_class.new(
-        view_context, {}, {"record" => object_double(VmCloud.new, :supports_associate_floating_ip? => false)}, {}
+        view_context, {},
+        {"record" => object_double(VmCloud.new, :supports_associate_floating_ip? => false,
+                                                :unsupported_reason              => "unavailable")}, {}
       )
       expect(button.disabled?).to be true
     end
