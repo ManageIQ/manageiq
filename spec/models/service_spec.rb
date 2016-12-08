@@ -52,7 +52,7 @@ describe Service do
 
     it "queues a power calculation if the next_group_index is nil" do
       expect(@service).to receive(:next_group_index).and_return(nil)
-      expect(@service).to receive(:queue_power_calculation).once
+      expect(@service).to receive(:queue_power_calculation).never
       expect(MiqEvent).to receive(:raise_evm_event).with(@service, :service_started)
 
       @service.process_group_action(:start, 0, 1)
@@ -95,9 +95,9 @@ describe Service do
     it "#update_progress" do
       expect(@service.power_state).to be_nil
       @service.update_progress(:power_state => "on")
-      expect(@service.power_state).to eq "on"
+      expect(@service.power_state).to be_nil
       @service.update_progress(:power_state => "off")
-      expect(@service.power_state).to eq "off"
+      expect(@service.power_state).to be_nil
       @service.update_progress(:power_status => "stopping")
       expect(@service.power_status).to eq "stopping"
       expect { |b| @service.update_progress(:power_state => "timeout", &b) }.to yield_with_args(:reset => true)
@@ -118,7 +118,7 @@ describe Service do
       end
 
       it "returns a power_state of 'on' and a power_status of 'start_complete' if power_states_match" do
-        expect(@service).to receive(:power_states_match?).and_return(true)
+        expect(@service).to receive(:power_states_match?).twice.and_return(true)
         @service.calculate_power_state(:start)
         expect(@service.power_state).to eq "on"
         expect(@service.power_status).to eq "start_complete"
@@ -133,7 +133,7 @@ describe Service do
 
       it "returns the uniq value for the 'off' power state" do
         expect(@service).to receive(:map_power_states).with(:stop).and_return(["off"])
-        expect(@service).to receive(:vm_power_states).and_return(["off"])
+        expect(@service).to receive(:power_states).and_return(["off"])
         expect(@service.power_states_match?(:stop)).to be_truthy
       end
     end
