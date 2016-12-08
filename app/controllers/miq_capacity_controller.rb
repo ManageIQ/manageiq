@@ -778,10 +778,10 @@ class MiqCapacityController < ApplicationController
   # Create an array of hashes from the Utilization summary report tab information
   def util_summ_hashes
     a = []
-    @sb[:util][:summary][:info].each { |r| a.push("section" => "Basic Info", "item" => r[0], "value" => r[1]) } if @sb[:util][:summary][:info]
-    @sb[:util][:summary][:cpu].each { |r| a.push("section" => "CPU", "item" => r[0], "value" => r[1]) } if @sb[:util][:summary][:cpu]
-    @sb[:util][:summary][:memory].each { |r| a.push("section" => "Memory", "item" => r[0], "value" => r[1]) } if @sb[:util][:summary][:memory]
-    @sb[:util][:summary][:storage].each { |r| a.push("section" => "Disk", "item" => r[0], "value" => r[1]) } if @sb[:util][:summary][:storage]
+    @sb[:util][:summary][:info].each { |r| a.push("section" => _("Basic Info"), "item" => r[0], "value" => r[1]) } if @sb[:util][:summary][:info]
+    @sb[:util][:summary][:cpu].each { |r| a.push("section" => _("CPU"), "item" => r[0], "value" => r[1]) } if @sb[:util][:summary][:cpu]
+    @sb[:util][:summary][:memory].each { |r| a.push("section" => _("Memory"), "item" => r[0], "value" => r[1]) } if @sb[:util][:summary][:memory]
+    @sb[:util][:summary][:storage].each { |r| a.push("section" => _("Disk"), "item" => r[0], "value" => r[1]) } if @sb[:util][:summary][:storage]
     a
   end
 

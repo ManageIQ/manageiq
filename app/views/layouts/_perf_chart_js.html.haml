@@ -5,7 +5,7 @@
         .chart_parent{"id" => "miq_chart_parent_#{chart_set}_#{chart_index}"}
           %div
             .card-pf-heading
-              %h2.card-pf-title= charts[chart_index][:title]
+              %h2.card-pf-title= _(charts[chart_index][:title])
             .overlay-container{"style" => "position: relative"}
               .card-pf-body
                 = chart_no_url(:id      => "miq_chart_#{chart_set}_#{chart_index}")
@@ -43,7 +43,7 @@
     .chart_parent{"id" => "miq_chart_parent_#{chart_set}_#{chart_index}", "style" => "margin-bottom: 50px"}
       %div
         .card-pf-heading
-          %h2.card-pf-title= charts[chart_index][:title]
+          %h2.card-pf-title= _(charts[chart_index][:title])
         .card-pf-body
           .overlay-container{"style" => "position: relative"}
             = chart_no_url(:id      => "miq_chart_#{chart_set}_#{chart_index}")
