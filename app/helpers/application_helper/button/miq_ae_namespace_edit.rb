@@ -2,7 +2,7 @@ class ApplicationHelper::Button::MiqAeNamespaceEdit < ApplicationHelper::Button:
   needs :@record
 
   def disabled?
-    @error_message = N_('Domain is Locked.') unless editable?
+    @error_message = _('Domain is Locked.') unless editable?
     @error_message.present?
   end
 
