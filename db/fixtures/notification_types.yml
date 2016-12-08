@@ -38,12 +38,12 @@
   :message: Request %{subject} has been approved.
   :expires_in: 14.days
   :level: :success
-  :audience: tenant
+  :audience: group
 - :name: request_denied
   :message: Request %{subject} has been denied.
   :expires_in: 14.days
   :level: :warning
-  :audience: tenant
+  :audience: group
 - :name: automate_user_success
   :message: '%{message}'
   :expires_in: 24.hours

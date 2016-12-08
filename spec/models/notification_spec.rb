@@ -35,6 +35,23 @@ describe Notification, :type => :model do
           expect(subject.recipients).to match_array([user])
         end
       end
+
+      context 'emiting for MiqRequest' do
+        let(:friends) { FactoryGirl.create(:miq_group) }
+        let(:requester) { FactoryGirl.create(:user, :miq_groups => [friends]) }
+        let!(:peer) { FactoryGirl.create(:user, :miq_groups => [friends]) }
+        let!(:non_peer) { FactoryGirl.create(:user) }
+        let(:vm) { FactoryGirl.create(:vm_vmware, :name => 'vm', :location => 'abc/def.vmx') }
+        let(:request) do
+          FactoryGirl.create(:miq_provision_request, :requester => requester, :src_vm_id => vm.id,
+                             :options => {:owner_email => 'tester@miq.com'})
+        end
+        subject { Notification.create(:subject => request, :type => 'request_approved') }
+
+        it 'subscribes only users of the group' do
+          expect(subject.recipients).to match_array([requester, peer])
+        end
+      end
     end
   end
 
