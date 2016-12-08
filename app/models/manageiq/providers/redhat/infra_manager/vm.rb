@@ -20,6 +20,8 @@ class ManageIQ::Providers::Redhat::InfraManager::Vm < ManageIQ::Providers::Infra
     end
   end
 
+  supports_not :publish
+
   POWER_STATES = {
     'up'        => 'on',
     'down'      => 'off',
@@ -81,9 +83,5 @@ class ManageIQ::Providers::Redhat::InfraManager::Vm < ManageIQ::Providers::Infra
 
   def self.calculate_power_state(raw_power_state)
     POWER_STATES[raw_power_state] || super
-  end
-
-  def validate_publish
-    validate_unsupported("Publish VM")
   end
 end

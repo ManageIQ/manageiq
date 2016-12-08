@@ -2,6 +2,7 @@ class ManageIQ::Providers::Microsoft::InfraManager::Vm < ManageIQ::Providers::In
   include_concern 'ManageIQ::Providers::Microsoft::InfraManager::VmOrTemplateShared'
 
   supports_not :migrate, :reason => _("Migrate operation is not supported.")
+  supports_not :publish
 
   POWER_STATES = {
     "Running"  => "on",
@@ -27,9 +28,5 @@ class ManageIQ::Providers::Microsoft::InfraManager::Vm < ManageIQ::Providers::In
 
   def has_proxy?
     true
-  end
-
-  def validate_publish
-    validate_unsupported("Publish VM")
   end
 end

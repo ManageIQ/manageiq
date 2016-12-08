@@ -1331,11 +1331,6 @@ module VmCommon
           )
           process_show_list(options)
           model_name = @nodetype == "d" ? _("Datacenter") : ui_lookup(:model => rec.class.base_class.to_s)
-          @is_redhat = case model_name
-                       when 'Datacenter' then ManageIQ::Providers::InfraManager.find(rec.ems_id).type == 'ManageIQ::Providers::Redhat::InfraManager'
-                       when 'Provider'   then rec.type == 'ManageIQ::Providers::Redhat::InfraManager'
-                       else false
-                       end
           @right_cell_text = _("%{object_types} under %{datastore_or_provider} \"%{provider_or_datastore_name}\"") % {
             :object_types               => model ? ui_lookup(:models => model) : _("VMs & Templates"),
             :datastore_or_provider      => model_name,

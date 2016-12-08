@@ -118,7 +118,8 @@ class ApplicationHelper::Toolbar::XVmCenter < ApplicationHelper::Toolbar::Basic
           'pficon pficon-export',
           t = N_('Publish this VM to a Template'),
           t,
-          :klass => ApplicationHelper::Button::VmPublish),
+          :klass   => ApplicationHelper::Button::GenericFeatureButton,
+          :options => {:feature => :publish}),
         button(
           :vm_migrate,
           'product product-migrate fa-lg',
