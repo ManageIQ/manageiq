@@ -430,9 +430,6 @@ class ApplicationHelper::ToolbarBuilder
     return true if id.ends_with?("_new", "_discover") &&
                    @lastaction == "show" && !["main", "vms"].include?(@display)
 
-    return false if id == "miq_request_reload" && # Show the request reload button
-                    (@lastaction == "show_list" || @showtype == "miq_provisions")
-
     if @layout == "ops"
       res = hide_button_ops(id)
       return res
@@ -442,7 +439,8 @@ class ApplicationHelper::ToolbarBuilder
 
     # don't check for feature RBAC if id is miq_request_approve/deny
     unless %w(miq_policy catalogs).include?(@layout)
-      return true if !role_allows?(:feature => id) && !["miq_request_approve", "miq_request_deny"].include?(id) &&
+      return true if !role_allows?(:feature => id) &&
+                     !["miq_request_approve", "miq_request_deny", "miq_request_reload"].include?(id) &&
                      id !~ /^history_\d*/ &&
                      !(id == "show_summary" && !@explorer) && id != "summary_reload"
                      !id.starts_with?("dialog_", "miq_task_", "compare_", "drift_", "comparemode_", "driftmode_",
