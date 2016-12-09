@@ -435,8 +435,6 @@ class ApplicationHelper::ToolbarBuilder
       return res
     end
 
-    return false if id.starts_with?("miq_capacity_") && @sb[:active_tab] == "report"
-
     # don't check for feature RBAC if id is miq_request_approve/deny
     unless %w(miq_policy catalogs).include?(@layout)
       return true if !role_allows?(:feature => id) &&
@@ -444,7 +442,8 @@ class ApplicationHelper::ToolbarBuilder
                      id !~ /^history_\d*/ &&
                      !(id == "show_summary" && !@explorer) && id != "summary_reload"
                      !id.starts_with?("dialog_", "miq_task_", "compare_", "drift_", "comparemode_", "driftmode_",
-                                      "custom_") && @layout != 'miq_ae_tools'
+                                      "custom_") && @layout != 'miq_ae_tools' &&
+                     !(id.starts_with?("miq_capacity_") && @sb[:active_tab] == "report")
     end
 
     # Check buttons with other restriction logic
