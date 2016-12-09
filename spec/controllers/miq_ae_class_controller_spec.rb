@@ -489,9 +489,9 @@ describe MiqAeClassController do
     end
 
     it "Should not allow to create two schema fields with identical name" do
-      field = {:aetype   => "attribute",
-               :datatype => "string",
-               :name     => "name01"}
+      field = {"aetype"   => "attribute",
+               "datatype" => "string",
+               "name"     => "name01"}
       session[:edit][:new][:fields] = [field, field]
       controller.instance_variable_set(:@_params, :button => "save", :id => @cls.id)
       controller.send(:update_fields)
@@ -499,10 +499,10 @@ describe MiqAeClassController do
     end
 
     it "Should not allow to add two parameters with identical name to a method" do
-      field = {:default_value => nil,
-               :datatype      => nil,
-               :name          => "name01",
-               :method_id     => @method.id}
+      field = {"default_value" => nil,
+               "datatype"      => nil,
+               "name"          => "name01",
+               "method_id"     => @method.id}
       session[:edit] = {
         :key         => "aemethod_edit__#{@method.id}",
         :ae_class_id => @cls.id,
@@ -518,10 +518,10 @@ describe MiqAeClassController do
     end
 
     it "Should not allow to add two parameters with identical name to a newly created method" do
-      field = {:default_value => nil,
-               :datatype      => nil,
-               :name          => "name01",
-               :method_id     => nil}
+      field = {"default_value" => nil,
+               "datatype"      => nil,
+               "name"          => "name01",
+               "method_id"     => nil}
       session[:edit] = {
         :key         => "aemethod_edit__new",
         :ae_class_id => @cls.id,
@@ -559,10 +559,10 @@ describe MiqAeClassController do
     end
 
     it "update a method with inputs" do
-      field = {:default_value => nil,
-               :datatype      => nil,
-               :name          => "name01",
-               :method_id     => @method.id}
+      field = {"default_value" => nil,
+               "datatype"      => nil,
+               "name"          => "name01",
+               "method_id"     => @method.id}
       session[:edit] = {
         :key              => "aemethod_edit__#{@method.id}",
         :fields_to_delete => [],
@@ -583,9 +583,9 @@ describe MiqAeClassController do
     end
 
     it "update a class with fields" do
-      field = {:aetype   => "attribute",
-               :datatype => "string",
-               :name     => "name01"}
+      field = {"aetype"   => "attribute",
+               "datatype" => "string",
+               "name"     => "name01"}
       session[:edit] = {
         :key              => "aefields_edit__#{@cls.id}",
         :ae_class_id      => @cls.id,
@@ -603,9 +603,9 @@ describe MiqAeClassController do
     end
 
     it "update a default value of existing class field" do
-      field = {:aetype        => "attribute",
-               :default_value => "Wilma",
-               :name          => "name01"}
+      field = {"aetype"        => "attribute",
+               "default_value" => "Wilma",
+               "name"          => "name01"}
       session[:field_data] = field
       session[:edit] = {
         :key              => "aefields_edit__#{@cls.id}",
@@ -706,20 +706,20 @@ describe MiqAeClassController do
       ns = FactoryGirl.create(:miq_ae_namespace)
       cls = FactoryGirl.create(:miq_ae_class, :namespace_id => ns.id)
       field1 = FactoryGirl.create(:miq_ae_field,
-                                  :aetype   => "attribute",
-                                  :datatype => "string",
-                                  :name     => "name01",
-                                  :class_id => cls.id,
-                                  :priority => 1)
+                                  "aetype"   => "attribute",
+                                  "datatype" => "string",
+                                  "name"     => "name01",
+                                  "class_id" => cls.id,
+                                  "priority" => 1)
       field2 = FactoryGirl.create(:miq_ae_field,
-                                  :aetype   => "attribute",
-                                  :datatype => "string",
-                                  :name     => "name02",
-                                  :class_id => cls.id,
-                                  :priority => 2)
-      field3 = {:aetype   => "attribute",
-                :datatype => "string",
-                :name     => "name03"}
+                                  "aetype"   => "attribute",
+                                  "datatype" => "string",
+                                  "name"     => "name02",
+                                  "class_id" => cls.id,
+                                  "priority" => 2)
+      field3 = {"aetype"   => "attribute",
+                "datatype" => "string",
+                "name"     => "name03"}
       edit = {:fields_to_delete => [], :new => {:fields => [field2, field3, field1]}}
       controller.instance_variable_set(:@edit, edit)
       controller.instance_variable_set(:@ae_class, cls)
