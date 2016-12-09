@@ -238,6 +238,24 @@ describe MiqRegion do
     end
   end
 
+  describe "#encrypt" do
+    let(:region) { FactoryGirl.create(:miq_region, :region => ApplicationRecord.my_region_number) }
+
+    it "correctly encrypts a string using the authentication token" do
+      expect(region).to receive(:authentication_token).and_return(File.read(Rails.root.join("certs/v2_key")))
+
+      a_string = "this should be encrypted correctly"
+      enc = region.encrypt(a_string)
+      other_string = MiqPassword.decrypt(enc)
+
+      expect(other_string).to eq(a_string)
+    end
+
+    it "raises if no key is configured" do
+      expect { region.encrypt("a string") }.to raise_error(RuntimeError)
+    end
+  end
+
   context "ConfigurationManagementMixin" do
     let(:region) { FactoryGirl.create(:miq_region, :region => ApplicationRecord.my_region_number) }
 
