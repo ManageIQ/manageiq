@@ -52,6 +52,17 @@ describe Notification, :type => :model do
           expect(subject.recipients).to match_array([requester, peer])
         end
       end
+
+      context 'subject does not have tenant' do
+        let!(:peer) { FactoryGirl.create(:user_with_group, :tenant => tenant) }
+        let!(:non_peer) { FactoryGirl.create(:user) }
+
+        subject { Notification.create(:initiator => user, :type => 'automate_tenant_info') }
+
+        it 'sends notification to the tenant of initiator' do
+          expect(subject.recipients).to match_array([user, peer])
+        end
+      end
     end
   end
 

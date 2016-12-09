@@ -20,7 +20,11 @@ class NotificationType < ApplicationRecord
     when AUDIENCE_GROUP
       subject.try(:requester).try(:current_group).try(:user_ids)
     when AUDIENCE_TENANT
-      subject.tenant.user_ids
+      if subject.respond_to? :tenant
+        subject.tenant
+      elsif initiator.kind_of? User
+        initiator.current_tenant
+      end.try(:user_ids)
     when AUDIENCE_SUPERADMIN
       User.superadmins.pluck(:id)
     end
