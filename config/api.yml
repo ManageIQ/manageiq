@@ -631,11 +631,14 @@
     :options:
     - :collection
     - :subcollection
-    :verbs: *g
+    :verbs: *gp
     :klass: LoadBalancer
     :collection_actions:
       :get:
       - :name: read
+        :identifier: load_balancer_show_list
+      :post:
+      - :name: query
         :identifier: load_balancer_show_list
     :resource_actions:
       :get:

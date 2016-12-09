@@ -294,6 +294,11 @@ describe "Rest API Collections" do
       FactoryGirl.create(:arbitration_rule)
       test_collection_query(:arbitration_rules, arbitration_rules_url, ArbitrationRule)
     end
+
+    it 'query LoadBalancers' do
+      FactoryGirl.create(:load_balancer)
+      test_collection_query(:load_balancers, load_balancers_url, LoadBalancer)
+    end
   end
 
   context "Collections Bulk Queries" do
@@ -544,6 +549,11 @@ describe "Rest API Collections" do
     it "bulk query Zones" do
       FactoryGirl.create(:zone, :name => "api zone")
       test_collection_bulk_query(:zones, zones_url, Zone)
+    end
+
+    it 'bulk query LoadBalancers' do
+      FactoryGirl.create(:load_balancer)
+      test_collection_bulk_query(:load_balancers, load_balancers_url, LoadBalancer)
     end
   end
 end
