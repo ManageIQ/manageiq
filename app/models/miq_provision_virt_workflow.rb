@@ -43,6 +43,8 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
       show_dialog(:requester, :hide, "disabled")
       show_dialog(:purpose,   :hide, "disabled")
     end
+
+    create_values_methods
   end
 
   def dialog_name_from_automate(message = 'get_dialog_name', extra_attrs = {})

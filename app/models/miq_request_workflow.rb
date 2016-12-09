@@ -65,6 +65,8 @@ class MiqRequestWorkflow
       set_default_values
       update_field_visibility
     end
+
+    create_values_methods
   end
 
   def instance_var_init(values, requester, options)
@@ -122,6 +124,21 @@ class MiqRequestWorkflow
         else
           # Set to default value
           init_values[field_name] = val
+        end
+      end
+    end
+  end
+
+  def create_values_methods
+    get_all_dialogs(false).keys.each do |dialog_name|
+      get_all_fields(dialog_name, false).each do |field_name, field|
+        next unless field.key?(:values_from)
+
+        self.class.send(:define_method, "#{dialog_name}_#{field_name}_values") do |*options|
+          Rails.cache.fetch("#{self.class.name}/#{dialog_name}_#{field_name}_values", :expire_in => 30.minutes) do
+            options = options.first || {}
+            send(field[:values_from][:method], options)
+          end
         end
       end
     end
