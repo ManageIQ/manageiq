@@ -11,13 +11,13 @@ class ApplicationHelper::Toolbar::StackOrchestrationTemplateCenter < Application
           'pficon pficon-edit fa-lg',
           t = N_('Make the Orchestration Template orderable'),
           t,
-          :klass => ApplicationHelper::Button::OrchestrationTemplateMakeOrderable),
+          :klass => ApplicationHelper::Button::OrchestrationTemplateOrderable),
         button(
           :orchestration_template_copy,
           'fa fa-files-o fa-lg',
           t = N_('Copy this Orchestration Template as orderable'),
           t,
-          :klass => ApplicationHelper::Button::OrchestrationTemplateCopyOrderable),
+          :klass => ApplicationHelper::Button::OrchestrationTemplateOrderable),
         button(
           :orchestration_templates_view,
           'fa pficon-info fa-lg',
