@@ -863,12 +863,8 @@ class VmOrTemplate < ApplicationRecord
     self.class.proxy_host_for_repository_scans
   end
 
-  cache_with_timeout(:scan_via_host?, 30.seconds) do
-    ::Settings.coresident_miqproxy.scan_via_host
-  end
-
   def self.scan_via_ems?
-    !self.scan_via_host?
+    !::Settings.coresident_miqproxy.scan_via_host
   end
 
   delegate :scan_via_ems?, :to => :class
