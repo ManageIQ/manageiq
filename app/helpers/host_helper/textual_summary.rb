@@ -92,13 +92,13 @@ module HostHelper::TextualSummary
 
       all = {:title => _("Show list of all %{name}") % {:name => x.name},
              :value => _("All (%{number})") % {:number => all_count},
-             :image => 'service',
+             :image => '100/service.png',
              :link => all_count > 0 ? url_for(:controller => controller.controller_name, :action => 'host_services',
                                               :id => @record, :db => controller.controller_name,
                                               :host_service_group => x.id, :status => :all) : nil}
 
       configuration = {:title => _("Show list of configuration files of %{name}") % {:name => x.name},
-                       :image => 'filesystems',
+                       :image => '100/filesystems.png',
                        :value => _("Configuration (%{number})") % {:number => configuration_count},
                        :link  => configuration_count > 0 ? url_for(:controller => controller.controller_name,
                                                                   :action => 'filesystems', :id => @record,

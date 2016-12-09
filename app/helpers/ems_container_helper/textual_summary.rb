@@ -82,7 +82,7 @@ module EmsContainerHelper::TextualSummary
 
   def textual_topology
     {:label => _('Topology'),
-     :image => 'topology',
+     :image => '100/topology.png',
      :link  => polymorphic_path(@ems, :display => 'topology'),
      :title => _("Show topology")}
   end

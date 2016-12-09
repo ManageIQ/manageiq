@@ -88,7 +88,7 @@ module EmsNetworkHelper::TextualSummary
 
   def textual_topology
     {:label => _('Topology'),
-     :image => 'topology',
+     :image => '100/topology.png',
      :link  => url_for(:controller => 'network_topology', :action => 'show', :id => @ems.id),
      :title => _("Show topology")}
   end

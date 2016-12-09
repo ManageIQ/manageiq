@@ -69,7 +69,7 @@ module EmsClusterHelper::TextualSummary
 
       all = {:title => _("Show list of hosts with %{name}") % {:name => x.name},
              :value => _("All (%{number})") % {:number => all_count},
-             :image => 'host',
+             :image => '100/host.png',
              :link  => if all_count > 0
                          url_for(:controller              => controller.controller_name,
                                  :action                  => 'show',
