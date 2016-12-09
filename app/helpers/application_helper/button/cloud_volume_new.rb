@@ -6,13 +6,8 @@ class ApplicationHelper::Button::CloudVolumeNew < ApplicationHelper::Button::Bas
     end
   end
 
+  # disable button if no active providers support create action
   def disabled?
-    ems_clouds = EmsCloud.all
-    # if any connected provider supports this action,
-    # we can enable the button.
-    ems_clouds.each do |ems|
-      return false if CloudVolume.class_by_ems(ems).supports_create?
-    end
-    true
+    EmsCloud.all.none? { |ems| CloudVolume.class_by_ems(ems).supports_create? }
   end
 end
