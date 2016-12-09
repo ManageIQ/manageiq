@@ -14,11 +14,11 @@ describe TreeNodeBuilderBelongsToVat do
       node_datacenter = TreeNodeBuilderBelongsToVat.build(datacenter, nil, {})
       expect(node_datacenter[:hideCheckbox]).to be true
     end
-    it 'returns datacenter selected node correctly' do
+    it 'returns folder selected node correctly' do
       node_folder = TreeNodeBuilderBelongsToVat.build(folder, nil, :selected => ["EmsFolder_#{folder[:id]}"])
       expect(node_folder[:select]).to be true
     end
-    it 'returns datacenter unselected node correctly' do
+    it 'returns folder unselected node correctly' do
       node_folder = TreeNodeBuilderBelongsToVat.build(folder, nil, :selected => [])
       expect(node_folder[:select]).to be false
     end

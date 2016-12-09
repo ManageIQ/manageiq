@@ -9,7 +9,6 @@ describe TreeNodeBuilderBelongsToHac do
       node_unselected = TreeNodeBuilderBelongsToHac.build(ems, nil, :selected => [])
       expect(node_unselected[:select]).to be false
     end
-
   end
 
   describe '#host_node' do
@@ -58,7 +57,6 @@ describe TreeNodeBuilderBelongsToHac do
       folder_node_unselected = TreeNodeBuilderBelongsToHac.build(folder, nil, :selected => [])
       expect(folder_node_unselected[:select]).to be false
     end
-
   end
 
   describe '#resource_pool_node' do

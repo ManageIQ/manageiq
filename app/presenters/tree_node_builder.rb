@@ -57,7 +57,16 @@ class TreeNodeBuilder
     "ConfigurationScript"    => -> { generic_node(object.name,
                                                   "configuration_script.png",
                                                   _("Ansible Tower Job Template: %{name}") % {:name => object.name}) },
-    "ExtManagementSystem"    => -> { ext_management_system_node },
+    "ExtManagementSystem"    => -> {
+      # TODO: This should really leverage .base_model on an EMS
+      prefix_model =
+        case object
+        when EmsCloud then "EmsCloud"
+        when EmsInfra then "EmsInfra"
+        else               "ExtManagementSystem"
+        end
+
+      generic_node(object.name, "vendor-#{object.image_name}.png", "#{ui_lookup(:model => prefix_model)}: #{object.name}") },
     "ChargebackRate"         => -> { generic_node(object.description, "chargeback_rate.png") },
     "Classification"         => -> { classification_node },
     "Compliance"             => -> {
@@ -83,15 +92,19 @@ class TreeNodeBuilder
     "DialogGroup"            => -> { generic_node(object.label, "dialog_group.png") },
     "DialogField"            => -> { generic_node(object.label, "dialog_field.png") },
     "EmsFolder"              => -> { ems_folder_node },
-    "EmsCluster"             => -> { cluster_node },
+    "EmsCluster"             => -> {
+      generic_node(object.name, "cluster.png", "#{ui_lookup(:table => "ems_cluster")}: #{object.name}") },
     "GuestDevice"            => -> { guest_node(object) },
-    "Host"                   => -> { host_node(object) },
+    "Host"                   => -> { generic_node(object.name,
+                                                "host.png",
+                                                "#{ui_lookup(:table => "host")}: #{object.name}") },
     "IsoDatastore"           => -> { generic_node(object.name, "isodatastore.png") },
     "IsoImage"               => -> { generic_node(object.name, "isoimage.png") },
-    "ResourcePool"           => -> { resource_pool_node },
+    "ResourcePool"           => -> { generic_node(object.name, object.vapp ? "vapp.png" : "resource_pool.png") },
+
     "Lan"                    => -> { generic_node(object.name,
-                                                  "lan.png",
-                                                  _("Port Group: %{name}") % {:name => object.name}) },
+                                                "lan.png",
+                                                _("Port Group: %{name}") % {:name => object.name}) },
     "LdapDomain"             => -> { generic_node(_("Domain: %{domain_name}") % {:domain_name => object.name},
                                                 "ldap_domain.png",
                                                 _("LDAP Domain: %{ldap_domain_name}") % {:ldap_domain_name => object.name}) },
@@ -230,14 +243,6 @@ class TreeNodeBuilder
     @node[:hideCheckbox] = true
   end
 
-  def host_node(object)
-    generic_node(object.name, "host.png", "#{ui_lookup(:table => "host")}: #{object.name}")
-  end
-
-  def resource_pool_node
-    generic_node(object.name, object.vapp ? "vapp.png" : "resource_pool.png")
-  end
-
   def hash_node
     text = object[:text]
     text = text.kind_of?(Proc) ? text.call : _(text)
@@ -362,10 +367,6 @@ class TreeNodeBuilder
     else # normal Folders
       normal_folder_node
     end
-  end
-
-  def cluster_node
-    generic_node(object.name, "cluster.png", "#{ui_lookup(:table => "ems_cluster")}: #{object.name}")
   end
 
   def miq_scsi_target(iscsi_name, target)
@@ -549,18 +550,6 @@ class TreeNodeBuilder
       @node[:addClass] = "opacity"
     end
     @node
-  end
-
-  def ext_management_system_node
-    # TODO: This should really leverage .base_model on an EMS
-    prefix_model =
-      case object
-      when EmsCloud then "EmsCloud"
-      when EmsInfra then "EmsInfra"
-      else               "ExtManagementSystem"
-      end
-
-    generic_node(object.name, "vendor-#{object.image_name}.png", "#{ui_lookup(:model => prefix_model)}: #{object.name}")
   end
 
   def server_role_node(object)
