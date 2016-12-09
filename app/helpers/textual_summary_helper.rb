@@ -44,7 +44,7 @@ module TextualSummaryHelper
     h = {:label => label}
     tags = session[:assigned_filters]
     if tags.blank?
-      h[:image] = "smarttag"
+      h[:image] = "100/smarttag.png"
       h[:value] = _("No %{label} have been assigned") % {:label => label}
     else
       h[:value] = tags.sort_by { |category, _assigned| category.downcase }

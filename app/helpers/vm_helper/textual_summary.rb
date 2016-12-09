@@ -126,7 +126,7 @@ module VmHelper::TextualSummary
     if vendor.blank?
       h[:value] = _("None")
     else
-      h[:image] = "vendor-#{vendor}"
+      h[:image] = "100/vendor-#{vendor}.png"
       h[:title] = _("Show VMM container information")
       h[:explorer] = true
       h[:link]  = url_for(:action => 'show', :id => @record, :display => 'hv_info')

@@ -134,9 +134,9 @@ module HostHelper::TextualSummary
     h = {:label => _("VMM Information")}
     if @vmminfo.nil? || @vmminfo.empty?
       h[:value] = _("None")
-      h[:image] = "unknown"
+      h[:image] = "100/unknown.png"
     else
-      h[:image] = "vendor-#{@vmminfo[0][:description].downcase}"
+      h[:image] = "100/vendor-#{@vmminfo[0][:description].downcase}.png"
       h[:value] = @vmminfo[0][:description]
       h[:title] = _("Show VMM container information")
       h[:link]  = url_for(:action => 'show', :id => @record, :display => 'hv_info')
@@ -166,9 +166,9 @@ module HostHelper::TextualSummary
     h = {:label => _("Operating System")}
     if @osinfo.nil? || @osinfo.empty?
       h[:value] = _("Unknown")
-      h[:image] = "os-unknown"
+      h[:image] = "100/os-unknown.png"
     else
-      h[:image] = "os-#{@record.os_image_name.downcase}"
+      h[:image] = "100/os-#{@record.os_image_name.downcase}.png"
       h[:value] = @osinfo[0][:description]
       unless @record.operating_system.version.blank?
         h[:value] << " #{@record.operating_system.version}"

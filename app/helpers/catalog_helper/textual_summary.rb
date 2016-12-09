@@ -19,7 +19,7 @@ module CatalogHelper::TextualSummary
     label = _("%{name} Tags") % {:name => session[:customer_name]}
     tags = {:label => label}
     if @record.tags.blank?
-      tags[:image] = "smarttag"
+      tags[:image] = "100/smarttag.png"
       tags[:value] = _("No %{label} have been assigned") % {:label => label}
     else
       tags[:value] = tags_from_record
