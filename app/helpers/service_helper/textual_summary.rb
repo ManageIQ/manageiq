@@ -86,7 +86,7 @@ module ServiceHelper::TextualSummary
     parent = @record.parent_service
     {
       :label => _("Parent Service"),
-      :image => parent.picture ? "/pictures/#{parent.picture.basename}" : 'service',
+      :image => parent.picture ? "/pictures/#{parent.picture.basename}" : '100/service.png',
       :value => parent.name,
       :title => _("Show this Service's Parent Service"),
       :link  => url_for(:controller => 'service', :action => 'show', :id => parent)

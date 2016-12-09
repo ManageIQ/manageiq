@@ -45,7 +45,7 @@ module EmsClusterHelper::TextualSummary
 
       running = {:title => _("Show list of hosts with running %{name}") % {:name => x.name},
                  :value => _("Running (%{number})") % {:number => running_count},
-                 :image => failed_count == 0 && running_count > 0 ? 'status_complete' : nil,
+                 :image => failed_count == 0 && running_count > 0 ? '100/status_complete.png' : nil,
                  :link  => if running_count > 0
                              url_for(:controller              => controller.controller_name,
                                      :action                  => 'show',
@@ -57,7 +57,7 @@ module EmsClusterHelper::TextualSummary
 
       failed = {:title => _("Show list of hosts with failed %{name}") % {:name => x.name},
                 :value => _("Failed (%{number})") % {:number => failed_count},
-                :image => failed_count > 0 ? 'status_error' : nil,
+                :image => failed_count > 0 ? '100/status_error.png' : nil,
                 :link  => if failed_count > 0
                             url_for(:controller              => controller.controller_name,
                                     :action                  => 'show',

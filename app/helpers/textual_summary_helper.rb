@@ -139,7 +139,7 @@ module TextualSummaryHelper
   def textual_object_icon(object, klass)
     case object
     when ExtManagementSystem
-      "vendor-#{object.image_name}"
+      "100/vendor-#{object.image_name}.png"
     else
       textual_class_icon(klass)
     end
@@ -151,11 +151,11 @@ module TextualSummaryHelper
 
   def textual_class_icon(klass)
     if klass <= AdvancedSetting
-      "advancedsetting"
+      "100/advancedsetting.png"
     elsif klass <= MiqTemplate
-      "vm"
+      "100/vm.png"
     else
-      klass.name.underscore
+      "100/#{klass.name.underscore}.png"
     end
   end
 

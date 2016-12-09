@@ -239,7 +239,7 @@ module VmHelper::TextualSummary
 
   def textual_resource_pool
     rp = @record.parent_resource_pool
-    image = (rp && rp.vapp?) ? "vapp" : "resource_pool"
+    image = (rp && rp.vapp?) ? "100/vapp.png" : "100/resource_pool.png"
     h = {:label => _("Resource Pool"), :image => image, :value => (rp.nil? ? _("None") : rp.name)}
     if rp && role_allows?(:feature => "resource_pool_show")
       h[:title] = _("Show this VM's Resource Pool")

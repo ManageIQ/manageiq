@@ -76,7 +76,7 @@ module HostHelper::TextualSummary
 
       running = {:title => _("Show list of running %{name}") % {:name => x.name},
                  :value => _("Running (%{number})") % {:number => running_count},
-                 :image => failed_count == 0 && running_count > 0 ? 'status_complete' : nil,
+                 :image => failed_count == 0 && running_count > 0 ? '100/status_complete.png' : nil,
                  :link => running_count > 0 ? url_for(:controller => controller.controller_name,
                                                       :action => 'host_services', :id => @record,
                                                       :db => controller.controller_name, :host_service_group => x.id,
@@ -84,7 +84,7 @@ module HostHelper::TextualSummary
 
       failed = {:title => _("Show list of failed %{name}") % {:name => x.name},
                 :value => _("Failed (%{number})") % {:number => failed_count},
-                :image => failed_count > 0 ? 'status_error' : nil,
+                :image => failed_count > 0 ? '100/status_error.png' : nil,
                 :link => failed_count > 0 ? url_for(:controller => controller.controller_name,
                                                     :action => 'host_services', :id => @record,
                                                     :db => controller.controller_name, :host_service_group => x.id,
