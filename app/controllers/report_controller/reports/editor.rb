@@ -1623,6 +1623,8 @@ module ReportController::Reports::Editor
       end
     end
 
+    active_tab = 'edit_5' unless valid_chart_data_column?
+
     # Validate column styles
     unless rpt.col_options.blank? || @edit[:new][:field_order].nil?
       @edit[:new][:field_order].each do |f| # Go thru all of the cols in order
@@ -1660,6 +1662,14 @@ module ReportController::Reports::Editor
     end
     @sb[:miq_tab] = active_tab if flash_errors?
     @flash_array.nil?
+  end
+
+  def valid_chart_data_column?
+    is_valid = !(@edit[:new][:graph_type] && @edit[:new][:chart_mode] == 'values' && @edit[:new][:chart_column].blank?)
+
+    add_flash(_('Data column must be selected when chart mode is set to "Values"'), :error) unless is_valid
+
+    is_valid
   end
 
   # Check for valid report configuration in @edit[:new]
@@ -1747,6 +1757,8 @@ module ReportController::Reports::Editor
       elsif Chargeback.db_is_chargeback?(@edit[:new][:model]) && !valid_chargeback_fields
         add_flash(_('Preview tab is not available until Chargeback Filters has been configured'), :error)
         active_tab = 'edit_3'
+      elsif !valid_chart_data_column?
+        active_tab = 'edit_5'
       end
     when '9'
       if @edit[:new][:fields].empty?
