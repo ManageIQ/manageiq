@@ -856,6 +856,9 @@ module ReportController::Reports::Editor
             @edit[:new][:sortby2] = NOTHING_STRING
           end
 
+          # Clear out selected chart data column
+          @edit[:new][:chart_column] = nil if @edit[:new][:chart_column] == nf.last
+
           @edit[:new][:col_options].delete(field_to_col(nf.last)) # Remove this column from the col_options hash
         end
       end
