@@ -439,7 +439,6 @@ class ApplicationHelper::ToolbarBuilder
     unless %w(miq_policy catalogs).include?(@layout)
       return true if !role_allows?(:feature => id) &&
                      !["miq_request_approve", "miq_request_deny", "miq_request_reload"].include?(id) &&
-                     id !~ /^history_\d*/ &&
                      !(id == "show_summary" && !@explorer) && id != "summary_reload"
                      !id.starts_with?("dialog_", "miq_task_", "compare_", "drift_", "comparemode_", "driftmode_",
                                       "custom_") && @layout != 'miq_ae_tools' &&
