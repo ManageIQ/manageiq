@@ -8,7 +8,7 @@ class ManageIQ::Providers::Openstack::NetworkManager::NetworkRouter < ::NetworkR
   supports :add_interface
   supports :remove_interface
 
-  def self.create_network_router(ext_management_system, options)
+  def self.raw_create_network_router(ext_management_system, options)
     cloud_tenant = options.delete(:cloud_tenant)
     name = options.delete(:name)
     router = nil
