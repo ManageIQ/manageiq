@@ -188,24 +188,6 @@ describe ApplicationHelper do
     end
 
     %w(
-      view_grid
-      view_tile
-      view_list
-      download_text
-      download_csv
-      download_pdf
-      download_view
-      vm_download_pdf
-      refresh_log
-      fetch_log
-    ).each do |item|
-      it "when with #{item}" do
-        @id = item
-        expect(subject).to be_falsey
-      end
-    end
-
-    %w(
       history_1
       history_2
       history_3
