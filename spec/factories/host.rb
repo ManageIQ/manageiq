@@ -6,6 +6,12 @@ FactoryGirl.define do
     ipaddress           "127.0.0.1"
     user_assigned_os    "linux_generic"
     power_state         "on"
+
+    trait :with_hardware do
+      after(:create) do
+        create :hardware
+      end
+    end
   end
 
   factory :host_with_ref, :parent => :host do
