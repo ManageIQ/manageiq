@@ -2265,7 +2265,7 @@ class MiqAeClassController < ApplicationController
     fields = parent_fields(parent)
     highest_priority = fields.count
     @edit[:new][:fields].each_with_index do |fld, i|
-      if fld[:id].nil?
+      if fld["id"].nil?
         new_field = MiqAeField.new
         highest_priority += 1
         new_field.priority  = highest_priority
@@ -2275,12 +2275,11 @@ class MiqAeClassController < ApplicationController
           new_field.class_id = @ae_class.id
         end
       else
-        new_field = parent.nil? ? MiqAeField.find_by_id(fld[:id]) : fields.detect { |f| f.id == fld[:id] }
+        new_field = parent.nil? ? MiqAeField.find_by_id(fld["id"]) : fields.detect { |f| f.id == fld["id"] }
       end
 
       field_attributes.each do |attr|
-        attr = attr.to_sym
-        if attr == :substitute
+        if attr == "substitute"
           new_field.send("#{attr}=", @edit[:new][:fields][i][attr])
         else
           new_field.send("#{attr}=", @edit[:new][:fields][i][attr]) if @edit[:new][:fields][i][attr]
@@ -2290,7 +2289,6 @@ class MiqAeClassController < ApplicationController
         raise StandardError, new_field.errors.full_messages[0] unless fields.push(new_field)
       end
     end
-
     reset_field_priority(fields)
   end
   alias_method :set_input_vars, :set_field_vars
