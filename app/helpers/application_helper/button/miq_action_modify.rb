@@ -1,4 +1,6 @@
 class ApplicationHelper::Button::MiqActionModify < ApplicationHelper::Button::Basic
+  include CompressedIds
+
   def role_allows_feature?
     super && role_allows?(:feature => 'event_edit')
   end
@@ -22,7 +24,7 @@ class ApplicationHelper::Button::MiqActionModify < ApplicationHelper::Button::Ba
   def any_policy_read_only?
     @view_context.x_node.split('_').any? do |level|
       node_type, id = level.split('-')
-      node_type == 'p' && MiqPolicy.find(id).try(:read_only)
+      node_type == 'p' && MiqPolicy.find(from_cid(id)).try(:read_only)
     end
   end
 
