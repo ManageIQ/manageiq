@@ -88,9 +88,7 @@ module ApplicationController::CiProcessing
   DONT_CHANGE_OWNER = "0"
 
   def build_ownership_info(ownership_items)
-    @users = {}   # Users array for first chooser
     klass = get_class_from_controller_param(params[:controller])
-    Rbac.filtered(User).each { |u| @users[u.name] = u.id.to_s }
     record = klass.find(ownership_items[0])
     user = record.evm_owner if ownership_items.length == 1
     @user = user ? user.id.to_s : nil
@@ -110,8 +108,6 @@ module ApplicationController::CiProcessing
 
   # Build the ownership assignment screen
   def build_ownership_hash(ownership_items)
-    @users = {} # Users array for first chooser
-    Rbac.filtered(User).each { |u| @users[u.name] = u.id.to_s }
     klass = get_class_from_controller_param(params[:controller])
     record = klass.find(ownership_items[0])
     user = record.evm_owner if ownership_items.length == 1

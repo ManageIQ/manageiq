@@ -225,46 +225,18 @@ describe ApplicationController do
       FactoryGirl.create(:miq_group, :description => "Great Grand Child group", :role => great_grand_child_tenant_role,
                                      :tenant => great_grand_child_tenant)
     end
-
-    let!(:admin_user)             { FactoryGirl.create(:user_admin) }
-    let!(:child_user)             { FactoryGirl.create(:user, :miq_groups => [child_group]) }
-    let!(:grand_child_user)       { FactoryGirl.create(:user, :miq_groups => [grand_child_group]) }
-    let!(:great_grand_child_user) { FactoryGirl.create(:user, :miq_groups => [great_grand_child_group]) }
-
-    before do
-      @vm_or_template = FactoryGirl.create(:vm_or_template)
-      @ownership_items = [@vm_or_template.id]
-      @params = {:controller =>'vm_or_template'}
-      @user = nil
-    end
+    let(:admin_user) { FactoryGirl.create(:user_admin) }
 
     it "lists all non-tenant groups when (admin user is logged)" do
+      @vm_or_template = FactoryGirl.create(:vm_or_template)
+      @ownership_items = [@vm_or_template.id]
       login_as(admin_user)
-      controller.instance_variable_set(:@_params, @params)
-      controller.instance_variable_set(:@user, @user)
+      controller.instance_variable_set(:@_params, :controller => 'vm_or_template')
+      controller.instance_variable_set(:@user, nil)
 
       controller.build_ownership_info(@ownership_items)
       groups = controller.instance_variable_get(:@groups)
       expect(groups.count).to eq(MiqGroup.non_tenant_groups.count)
-    end
-
-    it "lists all users when (admin user is logged)" do
-      login_as(admin_user)
-      controller.instance_variable_set(:@_params, @params)
-      controller.instance_variable_set(:@user, @user)
-      controller.build_ownership_info(@ownership_items)
-      users = controller.instance_variable_get(:@users)
-      expect(users.count).to eq(User.all.count)
-    end
-
-    it "lists users in the tenant that the user belongs to and the users in the tenants below" do
-      login_as(grand_child_user)
-      controller.instance_variable_set(:@_params, @params)
-      controller.instance_variable_set(:@user, @user)
-      controller.build_ownership_info(@ownership_items)
-      users = controller.instance_variable_get(:@users)
-      expected_ids = [great_grand_child_tenant.user_ids, grand_child_tenant.user_ids].flatten
-      expect(expected_ids).to match_array(users.values(&:id).map(&:to_i))
     end
   end
 end

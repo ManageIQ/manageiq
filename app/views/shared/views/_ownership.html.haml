@@ -15,7 +15,7 @@
           - opts = [["<#{_("Don't change")}>", ApplicationController::CiProcessing::DONT_CHANGE_OWNER], ["<#{_('No Owner')}>", '']]
         - else
           - opts =  [["<#{_('No Owner')}>", '']]
-        - opts += @users.sort
+        - opts += ownership_user_options.sort
         = select_tag("user",
                     options_for_select(opts, @user),
                       "ng-model"                    => "ownershipModel.user",

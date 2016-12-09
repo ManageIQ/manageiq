@@ -6,4 +6,8 @@ module ApplicationHelper
     include Discover
     include FormTags
   end
+
+  def ownership_user_options
+    @ownership_users ||= Rbac.filtered(User).each_with_object({}) { |u, r| r[u.name] = u.id.to_s }
+  end
 end
