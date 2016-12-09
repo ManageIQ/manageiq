@@ -77,7 +77,7 @@ module EmsContainerHelper::TextualSummary
   end
 
   def textual_zone
-    {:label => _("Managed by Zone"), :image => "zone", :value => @ems.zone.name}
+    {:label => _("Managed by Zone"), :image => "100/zone.png", :value => @ems.zone.name}
   end
 
   def textual_topology
@@ -90,7 +90,7 @@ module EmsContainerHelper::TextualSummary
   def textual_volumes
     count_of_volumes = @ems.number_of(:persistent_volumes)
     label = ui_lookup(:tables => "volume")
-    h     = {:label => label, :image => "container_volume", :value => count_of_volumes}
+    h     = {:label => label, :image => "100/container_volume.png", :value => count_of_volumes}
     if count_of_volumes > 0 && role_allows?(:feature => "persistent_volume_show_list")
       h[:link]  = ems_container_path(@ems.id, :display => 'persistent_volumes')
       h[:title] = _("Show all %{label}") % {:label => label}

@@ -97,7 +97,7 @@ module VmCloudHelper::TextualSummary
 
   def textual_snapshots
     num = @record.number_of(:snapshots)
-    h = {:label => _("Snapshots"), :image => "snapshot", :value => (num == 0 ? _("None") : num)}
+    h = {:label => _("Snapshots"), :image => "100/snapshot.png", :value => (num == 0 ? _("None") : num)}
     if role_allows?(:feature => "vm_snapshot_show_list") && @record.supports_snapshots?
       h[:title] = _("Show the snapshot info for this VM")
       h[:explorer] = true
@@ -118,7 +118,7 @@ module VmCloudHelper::TextualSummary
 
   def textual_users
     num = @record.number_of(:users)
-    h = {:label => _("Users"), :image => "user", :value => num}
+    h = {:label => _("Users"), :image => "100/user.png", :value => num}
     if num > 0
       h[:title] = n_("Show the User defined on this VM", "Show the Users defined on this VM", num)
       h[:explorer] = true
@@ -129,7 +129,7 @@ module VmCloudHelper::TextualSummary
 
   def textual_groups
     num = @record.number_of(:groups)
-    h = {:label => _("Groups"), :image => "group", :value => num}
+    h = {:label => _("Groups"), :image => "100/group.png", :value => num}
     if num > 0
       h[:title] = n_("Show the Group defined on this VM", "Show the Groups defined on this VM", num)
       h[:explorer] = true
@@ -151,7 +151,7 @@ module VmCloudHelper::TextualSummary
     return nil if os == "unknown"
     num = @record.number_of(:guest_applications)
     label = (os =~ /linux/) ? n_("Package", "Packages", num) : n_("Application", "Applications", num)
-    h = {:label => label, :image => "guest_application", :value => num}
+    h = {:label => label, :image => "100/guest_application.png", :value => num}
     if num > 0
       h[:title] = ("Show the %{label} installed on this VM") % {:label => label}
       h[:explorer] = true
@@ -164,7 +164,7 @@ module VmCloudHelper::TextualSummary
     os = @record.os_image_name.downcase
     return nil if os == "unknown" || os =~ /linux/
     num = @record.number_of(:win32_services)
-    h = {:label => _("Win32 Services"), :image => "win32service", :value => num}
+    h = {:label => _("Win32 Services"), :image => "100/win32service.png", :value => num}
     if num > 0
       h[:title] = n_("Show the Win32 Service installed on this VM",
                      "Show the Win32 Services installed on this VM", num)
@@ -179,7 +179,7 @@ module VmCloudHelper::TextualSummary
     return nil if os == "unknown" || os =~ /linux/
     num = @record.number_of(:kernel_drivers)
     # TODO: Why is this image different than graphical?
-    h = {:label => _("Kernel Drivers"), :image => "gears", :value => num}
+    h = {:label => _("Kernel Drivers"), :image => "100/gears.png", :value => num}
     if num > 0
       h[:title] = n_("Show the Kernel Driver installed on this VM",
                      "Show the Kernel Drivers installed on this VM", num)
@@ -194,7 +194,7 @@ module VmCloudHelper::TextualSummary
     return nil if os == "unknown" || os =~ /linux/
     num = @record.number_of(:filesystem_drivers)
     # TODO: Why is this image different than graphical?
-    h = {:label => _("File System Drivers"), :image => "gears", :value => num}
+    h = {:label => _("File System Drivers"), :image => "100/gears.png", :value => num}
     if num > 0
       h[:title] = n_("Show the File System Driver installed on this VM" ,
                     "Show the File System Drivers installed on this VM", num)
@@ -209,7 +209,7 @@ module VmCloudHelper::TextualSummary
     return nil if os == "unknown" || os =~ /linux/
     num = @record.number_of(:registry_items)
     # TODO: Why is this label different from the link title text?
-    h = {:label => _("Registry Entries"), :image => "registry_item", :value => num}
+    h = {:label => _("Registry Entries"), :image => "100/registry_item.png", :value => num}
     if num > 0
       h[:title] = n_("Show the Registry Item installed on this VM", "Show the Registry Items installed on this VM", num)
       h[:explorer] = true
@@ -220,7 +220,7 @@ module VmCloudHelper::TextualSummary
 
   def textual_processes
     return nil if @record.kind_of?(ManageIQ::Providers::CloudManager::Template)
-    h = {:label => _("Running Processes"), :image => "processes"}
+    h = {:label => _("Running Processes"), :image => "100/processes.png"}
     date = last_date(:processes)
     if date.nil?
       h[:value] = _("Not Available")
@@ -237,7 +237,7 @@ module VmCloudHelper::TextualSummary
   def textual_event_logs
     return nil if @record.kind_of?(ManageIQ::Providers::CloudManager::Template)
     num = @record.operating_system.nil? ? 0 : @record.operating_system.number_of(:event_logs)
-    h = {:label => _("Event Logs"), :image => "event_logs", :value => (num == 0 ? _("Not Available") : _("Available"))}
+    h = {:label => _("Event Logs"), :image => "100/event_logs.png", :value => (num == 0 ? _("Not Available") : _("Available"))}
     if num > 0
       h[:title] = n_("Show Event Log on this VM", "Show Event Logs on this VM", num)
       h[:explorer] = true

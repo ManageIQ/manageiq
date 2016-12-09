@@ -64,7 +64,7 @@ module ServiceHelper::TextualSummary
 
   def textual_retirement_date
     {:label => _("Retirement Date"),
-     :image => "retirement",
+     :image => "100/retirement.png",
      :value => (@record.retires_on.nil? ? _("Never") : @record.retires_on.strftime("%x %R %Z"))}
   end
 
@@ -74,7 +74,7 @@ module ServiceHelper::TextualSummary
 
   def textual_catalog_item
     st = @record.service_template
-    s = {:label => _("Parent Catalog Item"), :image => "service_template", :value => (st.nil? ? _("None") : st.name)}
+    s = {:label => _("Parent Catalog Item"), :image => "100/service_template.png", :value => (st.nil? ? _("None") : st.name)}
     if st && role_allows?(:feature => "catalog_items_accord")
       s[:title] = _("Show this Service's Parent Service Catalog")
       s[:link]  = url_for(:controller => 'catalog', :action => 'show', :id => st)
@@ -101,7 +101,7 @@ module ServiceHelper::TextualSummary
     job = @record.try(:job)
     {
       :label => _("Job"),
-      :image => "orchestration_stack",
+      :image => "100/orchestration_stack.png",
       :value => job.name,
       :title => _("Show this Service's Job"),
       :link  => url_for(:controller => 'configuration_job', :action => 'show', :id => job.id)

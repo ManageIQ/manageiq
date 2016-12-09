@@ -186,7 +186,7 @@ module HostHelper::TextualSummary
   def textual_power_state
     state = @record.state.to_s.downcase
     state = "unknown" if state.blank?
-    {:label => _("Power State"), :image => "currentstate-#{state}", :value => state}
+    {:label => _("Power State"), :image => "100/currentstate-#{state}.png", :value => state}
   end
 
   def textual_lockdown_mode
@@ -200,7 +200,7 @@ module HostHelper::TextualSummary
   def textual_storage_adapters
     return nil if @record.openstack_host?
     num = @record.hardware.nil? ? 0 : @record.hardware.number_of(:storage_adapters)
-    h = {:label => _("Storage Adapters"), :image => "sa", :value => num}
+    h = {:label => _("Storage Adapters"), :image => "100/sa.png", :value => num}
     if num > 0
       h[:title] = _("Show %{title} Storage Adapters") % {:title => host_title}
       h[:link]  = url_for(:action => 'show', :id => @record, :display => 'storage_adapters')
@@ -211,7 +211,7 @@ module HostHelper::TextualSummary
   def textual_network
     return nil if @record.openstack_host?
     num = @record.number_of(:switches)
-    h = {:label => _("Network"), :image => "network", :value => (num == 0 ? _("N/A") : _("Available"))}
+    h = {:label => _("Network"), :image => "100/network.png", :value => (num == 0 ? _("N/A") : _("Available"))}
     if num > 0
       h[:title] = _("Show %{title} Network") % {:title => host_title}
       h[:link]  = url_for(:action => 'show', :id => @record, :display => 'network')
@@ -221,7 +221,7 @@ module HostHelper::TextualSummary
 
   def textual_devices
     h = {:label => _("Devices"),
-         :image => "devices",
+         :image => "100/devices.png",
          :value => (@devices.nil? || @devices.empty? ? _("None") : @devices.length)}
     if @devices.length > 0
       h[:title] = _("Show %{title} devices") % {:title => host_title}
@@ -262,7 +262,7 @@ module HostHelper::TextualSummary
 
   def textual_cluster
     cluster = @record.ems_cluster
-    h = {:label => title_for_cluster, :image => "ems_cluster", :value => (cluster.nil? ? _("None") : cluster.name)}
+    h = {:label => title_for_cluster, :image => "100/ems_cluster.png", :value => (cluster.nil? ? _("None") : cluster.name)}
     if cluster && role_allows?(:feature => "ems_cluster_show")
       h[:title] = _("Show this %{host_title}'s %{cluster_title}") %
                   {:host_title => host_title, :cluster_title => title_for_cluster}
@@ -287,7 +287,7 @@ module HostHelper::TextualSummary
     return nil unless role_allows?(:feature => "host_drift")
     label = _("Drift History")
     num   = @record.number_of(:drift_states)
-    h     = {:label => label, :image => "drift", :value => num}
+    h     = {:label => label, :image => "100/drift.png", :value => num}
     if num > 0
       h[:title] = _("Show all %{label}") % {:label => label}
       h[:link]  = url_for(:action => 'drift_history', :id => @record)
@@ -300,7 +300,7 @@ module HostHelper::TextualSummary
     availability_zone = @record.availability_zone
     label = ui_lookup(:table => "availability_zone")
     h = {:label => label,
-         :image => "availability_zone",
+         :image => "100/availability_zone.png",
          :value => (availability_zone.nil? ? _("None") : availability_zone.name)}
     if availability_zone && role_allows?(:feature => "availability_zone_show")
       h[:title] = _("Show this %{title}'s %{label}") % {:title => host_title, :label => label}
@@ -319,7 +319,7 @@ module HostHelper::TextualSummary
   def textual_vms
     label = _("VMs")
     num   = @record.number_of(:vms)
-    h     = {:label => label, :image => "vm", :value => num}
+    h     = {:label => label, :image => "100/vm.png", :value => num}
     if num > 0 && role_allows?(:feature => "vm_show_list")
       h[:title] = _("Show all %{label}") % {:label => label}
       h[:link]  = url_for(:action => 'show', :id => @record, :display => 'vms')
@@ -335,7 +335,7 @@ module HostHelper::TextualSummary
   def textual_storage_systems
     num = @record.storage_systems_size
     label = ui_lookup(:tables => "ontap_storage_system")
-    h = {:label => label, :image => "ontap_storage_system", :value => num}
+    h = {:label => label, :image => "100/ontap_storage_system.png", :value => num}
     if num > 0 && role_allows?(:feature => "ontap_storage_system_show_list")
       h[:title] = _("Show all %{label}") % {:label => label}
       h[:link]  = url_for(:controller => controller.controller_name, :action => 'show', :id => @record, :display => "ontap_storage_systems")
@@ -346,7 +346,7 @@ module HostHelper::TextualSummary
   def textual_storage_volumes
     num = @record.storage_volumes_size
     label = ui_lookup(:tables => "ontap_storage_volume")
-    h = {:label => label, :image => "ontap_storage_volume", :value => num}
+    h = {:label => label, :image => "100/ontap_storage_volume.png", :value => num}
     if num > 0 && role_allows?(:feature => "ontap_storage_volume_show_list")
       h[:title] = _("Show all %{label}") % {:label => label}
       h[:link]  = url_for(:controller => controller.controller_name, :action => 'show', :id => @record, :display => "ontap_storage_volumes")
@@ -357,7 +357,7 @@ module HostHelper::TextualSummary
   def textual_file_shares
     num = @record.file_shares_size
     label = ui_lookup(:tables => "ontap_file_share")
-    h = {:label => label, :image => "ontap_file_share", :value => num}
+    h = {:label => label, :image => "100/ontap_file_share.png", :value => num}
     if num > 0 && role_allows?(:feature => "ontap_file_share_show_list")
       h[:title] = _("Show all %{label}") % {:label => label}
       h[:link]  = url_for(:controller => controller.controller_name, :action => 'show', :id => @record, :display => "ontap_file_shares")
@@ -368,7 +368,7 @@ module HostHelper::TextualSummary
   def textual_logical_disks
     num = @record.logical_disks_size
     label = ui_lookup(:tables => "ontap_logical_disk")
-    h = {:label => label, :image => "ontap_logical_disk", :value => num}
+    h = {:label => label, :image => "100/ontap_logical_disk.png", :value => num}
     if num > 0 && role_allows?(:feature => "ontap_logical_disk_show_list")
       h[:title] = _("Show all %{label}") % {:label => label}
       h[:link]  = url_for(:controller => controller.controller_name, :action => 'show', :id => @record, :display => "ontap_logical_disks")
@@ -383,7 +383,7 @@ module HostHelper::TextualSummary
   def textual_users
     return nil if @record.is_vmware_esxi?
     num = @record.number_of(:users)
-    h = {:label => _("Users"), :image => "user", :value => num}
+    h = {:label => _("Users"), :image => "100/user.png", :value => num}
     if num > 0
       h[:title] = n_("Show the User defined on this VM", "Show the Users defined on this VM", num)
       h[:link]  = url_for(:action => 'users', :id => @record, :db => controller.controller_name)
@@ -394,7 +394,7 @@ module HostHelper::TextualSummary
   def textual_groups
     return nil if @record.is_vmware_esxi?
     num = @record.number_of(:groups)
-    h = {:label => _("Groups"), :image => "group", :value => num}
+    h = {:label => _("Groups"), :image => "100/group.png", :value => num}
     if num > 0
       h[:title] = n_("Show the Group defined on this %{title}", "Show the Groups defined on this %{title}", num) %
         {:title => host_title}
@@ -406,7 +406,7 @@ module HostHelper::TextualSummary
   def textual_firewall_rules
     return nil if @record.is_vmware_esxi?
     num = @record.number_of(:firewall_rules)
-    h = {:label => _("Firewall Rules"), :image => "firewallrule", :value => num}
+    h = {:label => _("Firewall Rules"), :image => "100/firewallrule.png", :value => num}
     if num > 0
       h[:title] = n_("Show the Firewall Rule defined on this %{title}",
                     "Show the Firewall Rules defined on this %{title}", num) % {:title => host_title}
@@ -423,7 +423,7 @@ module HostHelper::TextualSummary
   def textual_patches
     return nil if @record.is_vmware_esxi?
     num = @record.number_of(:patches)
-    h = {:label => _("Patches"), :image => "patch", :value => num}
+    h = {:label => _("Patches"), :image => "100/patch.png", :value => num}
     if num > 0
       h[:title] = n_("Show the Patch defined on this %{title}", "Show the Patches defined on this %{title}", num) %
         {:title => host_title}
@@ -434,7 +434,7 @@ module HostHelper::TextualSummary
 
   def textual_guest_applications
     num = @record.number_of(:guest_applications)
-    h = {:label => _("Packages"), :image => "guest_application", :value => num}
+    h = {:label => _("Packages"), :image => "100/guest_application.png", :value => num}
     if num > 0
       h[:title] = n_("Show the Package installed on this %{title}",
                      "Show the Packages installed on this %{title}", num) % {:title => host_title}
@@ -445,7 +445,7 @@ module HostHelper::TextualSummary
 
   def textual_host_services
     num = @record.number_of(:host_services)
-    h = {:label => _("Services"), :image => "service", :value => num}
+    h = {:label => _("Services"), :image => "100/service.png", :value => num}
     if num > 0
       h[:title] = n_("Show the Service installed on this %{title}",
                      "Show the Services installed on this %{title}", num) % {:title => host_title}
@@ -456,7 +456,7 @@ module HostHelper::TextualSummary
 
   def textual_filesystems
     num = @record.number_of(:filesystems)
-    h = {:label => _("Files"), :image => "filesystems", :value => num}
+    h = {:label => _("Files"), :image => "100/filesystems.png", :value => num}
     if num > 0
       h[:title] = n_("Show the File installed on this %{title}", "Show the Files installed on this %{title}", num) %
         {:title => host_title}
@@ -467,7 +467,7 @@ module HostHelper::TextualSummary
 
   def textual_advanced_settings
     num = @record.number_of(:advanced_settings)
-    h = {:label => _("Advanced Settings"), :image => "advancedsetting", :value => num}
+    h = {:label => _("Advanced Settings"), :image => "100/advancedsetting.png", :value => num}
     if num > 0
       h[:title] = n_("Show the Advanced Setting installed on this %{title}",
                      "Show the Advanced Settings installed on this %{title}", num) % {:title => host_title}
@@ -478,7 +478,7 @@ module HostHelper::TextualSummary
 
   def textual_esx_logs
     num = @record.operating_system.nil? ? 0 : @record.operating_system.number_of(:event_logs)
-    h = {:label => _("ESX Logs"), :image => "logs", :value => (num == 0 ? _("Not Available") : _("Available"))}
+    h = {:label => _("ESX Logs"), :image => "100/logs.png", :value => (num == 0 ? _("Not Available") : _("Available"))}
     if num > 0
       h[:title] = _("Show %{title} Network") % {:title => host_title}
       h[:link]  = url_for(:action => 'show', :id => @record, :display => 'event_logs')

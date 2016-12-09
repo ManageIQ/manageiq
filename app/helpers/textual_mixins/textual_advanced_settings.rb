@@ -1,7 +1,7 @@
 module TextualMixins::TextualAdvancedSettings
   def textual_advanced_settings
     num = @record.number_of(:advanced_settings)
-    h = {:label => _("Advanced Settings"), :image => "advancedsetting", :value => num}
+    h = {:label => _("Advanced Settings"), :image => "100/advancedsetting.png", :value => num}
     if num > 0
       h[:title] = _("Show the advanced settings on this VM")
       h[:explorer] = true

@@ -3,7 +3,7 @@ module TextualMixins::TextualPatches
     os = @record.os_image_name.downcase
     return nil if os == "unknown" || os =~ /linux/
     num = @record.number_of(:patches)
-    h = {:label => _("Patches"), :image => "patch", :value => num}
+    h = {:label => _("Patches"), :image => "100/patch.png", :value => num}
     if num > 0
       h[:title] = n_("Show the Patch defined on this VM", "Show the Patches defined on this VM", num)
       h[:explorer] = true

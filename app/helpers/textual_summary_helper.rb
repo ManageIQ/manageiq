@@ -49,7 +49,7 @@ module TextualSummaryHelper
     else
       h[:value] = tags.sort_by { |category, _assigned| category.downcase }
                   .collect do |category, assigned|
-                    {:image => "smarttag",
+                    {:image => "100/smarttag.png",
                      :label => category,
                      :value => assigned}
                   end

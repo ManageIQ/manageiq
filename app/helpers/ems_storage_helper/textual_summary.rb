@@ -57,7 +57,7 @@ module EmsStorageHelper::TextualSummary
   end
 
   def textual_zone
-    {:label => _("Managed by Zone"), :image => "zone", :value => @ems.zone.try(:name)}
+    {:label => _("Managed by Zone"), :image => "100/zone.png", :value => @ems.zone.try(:name)}
   end
 
   def textual_cloud_volumes

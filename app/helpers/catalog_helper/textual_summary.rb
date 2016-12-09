@@ -9,7 +9,7 @@ module CatalogHelper::TextualSummary
         p[:value].push(value)
       else
         name = Classification.find_by(:id => Classification.find_by(:tag_id => tag.id).parent_id).description
-        tags.push(:image => "smarttag", :label => name, :value => [value])
+        tags.push(:image => "100/smarttag.png", :label => name, :value => [value])
       end
     end
     tags
