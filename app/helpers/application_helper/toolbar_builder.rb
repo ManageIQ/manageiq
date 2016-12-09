@@ -435,20 +435,8 @@ class ApplicationHelper::ToolbarBuilder
       return res
     end
 
-    # don't check for feature RBAC if id is miq_request_approve/deny
-    unless %w(miq_policy catalogs).include?(@layout)
-      return true if !role_allows?(:feature => id) &&
-                     !["miq_request_approve", "miq_request_deny", "miq_request_reload"].include?(id) &&
-                     !(id == "show_summary" && !@explorer) && id != "summary_reload"
-                     !id.starts_with?("dialog_", "miq_task_", "compare_", "drift_", "comparemode_", "driftmode_",
-                                      "custom_") && @layout != 'miq_ae_tools' &&
-                     !(id.starts_with?("miq_capacity_") && @sb[:active_tab] == "report")
-    end
-
     # Check buttons with other restriction logic
     case id
-    when "miq_task_canceljob"
-      return true unless ["all_tasks", "all_ui_tasks"].include?(@layout)
     when "vm_console"
       type = ::Settings.server.remote_console_type
       return type != 'MKS' || !@record.console_supported?(type)
