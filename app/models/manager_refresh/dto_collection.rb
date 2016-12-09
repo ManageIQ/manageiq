@@ -4,13 +4,13 @@ module ManagerRefresh
 
     attr_reader :model_class, :strategy, :attributes_blacklist, :attributes_whitelist, :custom_save_block, :parent,
                 :internal_attributes, :delete_method, :data, :data_index, :dependency_attributes, :manager_ref,
-                :association, :complete, :transitive_dependency_attributes
+                :association, :complete, :update_only, :transitive_dependency_attributes
 
     delegate :each, :size, :to => :to_a
 
     def initialize(model_class, manager_ref: nil, association: nil, parent: nil, strategy: nil, saved: nil,
                    custom_save_block: nil, delete_method: nil, data_index: nil, data: nil, dependency_attributes: nil,
-                   attributes_blacklist: nil, attributes_whitelist: nil, complete: nil)
+                   attributes_blacklist: nil, attributes_whitelist: nil, complete: nil, update_only: nil)
       @model_class                      = model_class
       @manager_ref                      = manager_ref || [:ems_ref]
       @association                      = association || []
@@ -27,6 +27,7 @@ module ManagerRefresh
       @custom_save_block                = custom_save_block
       @internal_attributes              = [:__feedback_edge_set_parent]
       @complete                         = complete.nil? ? true : complete
+      @update_only                      = update_only.nil? ? false : update_only
 
       blacklist_attributes!(attributes_blacklist) if attributes_blacklist.present?
       whitelist_attributes!(attributes_whitelist) if attributes_whitelist.present?
@@ -49,7 +50,7 @@ module ManagerRefresh
 
     def process_strategy_local_db_cache_all
       self.saved = true
-      selected   = [:id] + manager_ref
+      selected   = [:id] + manager_ref.map { |x| model_class.reflect_on_association(x).try(:foreign_key) || x }
       selected << :type if model_class.new.respond_to? :type
       parent.send(association).select(selected).find_each do |record|
         self.data_index[object_index(record)] = record
@@ -58,6 +59,18 @@ module ManagerRefresh
 
     def complete?
       complete
+    end
+
+    def update_only?
+      update_only
+    end
+
+    def delete_allowed?
+      complete? && !update_only?
+    end
+
+    def create_allowed?
+      !update_only?
     end
 
     def saved?
