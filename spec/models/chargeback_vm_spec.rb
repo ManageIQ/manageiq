@@ -902,7 +902,7 @@ describe ChargebackVm do
 
   context 'for SCVMM (hyper-v)' do
     let(:base_options) do
-      {:interval_size => 1, :end_interval_offset => 0, :tag => '/managed/environment/prod',
+      {:interval_size => 2, :end_interval_offset => 0, :tag => '/managed/environment/prod',
        :ext_options => {:tz => 'UTC'}, :userid => admin.userid}
     end
     let!(:vm1) do
