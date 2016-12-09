@@ -1,10 +1,9 @@
 ManageIQ.angular.app.service('mwAddDatasourceService', MwAddDatasourceService);
 
-MwAddDatasourceService.$inject = ['$http', '$q'];
+MwAddDatasourceService.$inject = ['$http'];
 
-function MwAddDatasourceService($http, $q) {
-
-   var datasources = [
+function MwAddDatasourceService($http) {
+  var datasources = [
     {id: 'H2', label: 'H2', name: 'H2DS', jndiName: 'java:jboss/datasources/H2DS',
       driverName: 'h2', driverModuleName: 'com.h2database.h2', driverClass: 'org.h2.Driver',
       connectionUrl: ':mem:test;DB_CLOSE_DELAY=-1'},
