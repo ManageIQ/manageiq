@@ -1,7 +1,7 @@
 module MiqAeMethodService
   class MiqAeServiceVm < MiqAeServiceVmOrTemplate
     def remote_console_url=(url)
-      object_send(:remote_console_url=, url, DRb.front.workspace.ae_user.id)
+      object_send(:remote_console_url=, url, MiqAeEngine::DrbRemoteInvoker.workspace.ae_user.id)
     end
 
     def add_to_service(service)
