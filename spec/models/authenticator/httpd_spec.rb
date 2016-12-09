@@ -29,6 +29,12 @@ describe Authenticator::Httpd do
     end
   end
 
+  describe '.can_authorize_user_by_userid?' do
+    it "is true" do
+      expect(subject.can_authorize_user_by_userid?).to be_truthy
+    end
+  end
+
   describe '#lookup_by_identity' do
     it "finds existing users" do
       expect(subject.lookup_by_identity('alice')).to eq(alice)
@@ -288,6 +294,44 @@ describe Authenticator::Httpd do
             expect(task.status).to eq('Error')
             expect(MiqTask.status_error?(task.status)).to be_truthy
           end
+        end
+      end
+
+      describe ".get_user_attrs" do
+        before do
+          require "dbus"
+          sysbus = double('sysbus')
+          ifp_service = double('ifp_service')
+          ifp_object  = double('ifp_object')
+          @ifp_interface = double('ifp_interface')
+
+          allow(DBus).to receive(:system_bus).and_return(sysbus)
+          allow(sysbus).to receive(:[]).with("org.freedesktop.sssd.infopipe").and_return(ifp_service)
+          allow(ifp_service).to receive(:object).with("/org/freedesktop/sssd/infopipe").and_return(ifp_object)
+          allow(ifp_object).to receive(:introspect)
+          allow(ifp_object).to receive(:[]).with("org.freedesktop.sssd.infopipe").and_return(@ifp_interface)
+        end
+
+        it "should return nil for unspecified user" do
+          expect(subject.get_user_attrs(nil)).to be_nil
+        end
+
+        it "should return user attributes hash for valid user" do
+          requested_attrs = %w(mail givenname sn displayname)
+
+          jdoe_attrs = [{"mail"        => ["jdoe@example.com"],
+                         "givenname"   => ["John"],
+                         "sn"          => ["Doe"],
+                         "displayname" => ["John Doe"]}]
+
+          expected_jdoe_attrs = {"mail"        => "jdoe@example.com",
+                                 "givenname"   => "John",
+                                 "sn"          => "Doe",
+                                 "displayname" => "John Doe"}
+
+          allow(@ifp_interface).to receive(:GetUserAttr).with('jdoe', requested_attrs).and_return(jdoe_attrs)
+
+          expect(subject.get_user_attrs('jdoe')).to eq(expected_jdoe_attrs)
         end
       end
     end

@@ -9,7 +9,7 @@ module Authenticator
         find_or_create_by_ldap(username)
     end
 
-    def authorize_user_by_userid?
+    def can_authorize_user_by_userid?
       true
     end
 

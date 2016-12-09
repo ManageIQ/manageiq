@@ -98,6 +98,12 @@ describe Authenticator::Ldap do
     end
   end
 
+  describe ".can_authorize_user_by_userid?" do
+    it "is true" do
+      expect(subject.can_authorize_user_by_userid?).to be_truthy
+    end
+  end
+
   describe '#lookup_by_identity' do
     it "finds existing users" do
       expect(subject.lookup_by_identity('alice')).to eq(alice)

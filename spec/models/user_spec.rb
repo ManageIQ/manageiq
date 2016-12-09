@@ -527,4 +527,24 @@ describe User do
       expect(User.super_admin).to be_super_admin_user
     end
   end
+
+  context ".admin?" do
+    it "admin? succeeds with admin account" do
+      expect(User.admin?("admin")).to be_truthy
+    end
+
+    it "admin? fails with non-admin account" do
+      expect(User.admin?("regular_user")).to be_falsey
+    end
+  end
+
+  context ".authorize_by_userid" do
+    it "returns nil with blank userid" do
+      expect(User.authorize_by_userid("")).to be_nil
+    end
+
+    it "returns nil with admin userid" do
+      expect(User.authorize_by_userid("admin")).to be_nil
+    end
+  end
 end

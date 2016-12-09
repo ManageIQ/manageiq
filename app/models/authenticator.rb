@@ -34,12 +34,12 @@ module Authenticator
       false
     end
 
-    def authorize_user_by_userid?
+    def can_authorize_user_by_userid?
       false
     end
 
     def authorize_user_by_userid(userid)
-      return unless authorize_user_by_userid?
+      return unless can_authorize_user_by_userid?
       options = {
         :require_user   => true,
         :authorize_only => true
