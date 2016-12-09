@@ -149,7 +149,9 @@ class VmOrTemplate < ApplicationRecord
   virtual_column :used_storage,                         :type => :integer,    :uses => [:used_disk_storage, :mem_cpu]
   virtual_column :used_storage_by_state,                :type => :integer,    :uses => :used_storage
   virtual_column :uncommitted_storage,                  :type => :integer,    :uses => [:provisioned_storage, :used_storage_by_state]
-  virtual_column :mem_cpu,                              :type => :integer,    :uses => :hardware
+  virtual_delegate :ram_size_in_bytes,                  :to => :hardware, :allow_nil => true, :default => 0
+  virtual_delegate :mem_cpu,                            :to => "hardware.memory_mb", :allow_nil => true, :default => 0
+  virtual_delegate :ram_size,                           :to => "hardware.memory_mb", :allow_nil => true, :default => 0
   virtual_column :ipaddresses,                          :type => :string_set, :uses => {:hardware => :ipaddresses}
   virtual_column :hostnames,                            :type => :string_set, :uses => {:hardware => :hostnames}
   virtual_column :mac_addresses,                        :type => :string_set, :uses => {:hardware => :mac_addresses}
@@ -1533,12 +1535,12 @@ class VmOrTemplate < ApplicationRecord
     allocated_disk_storage.to_i + ram_size_in_bytes
   end
 
-  def used_storage(include_ram = true, check_state = false)
-    used_disk_storage.to_i + (include_ram ? ram_size_in_bytes(check_state) : 0)
+  def used_storage
+    used_disk_storage.to_i + ram_size_in_bytes
   end
 
-  def used_storage_by_state(include_ram = true)
-    used_storage(include_ram, true)
+  def used_storage_by_state
+    used_disk_storage.to_i + ram_size_in_bytes_by_state
   end
 
   def uncommitted_storage
@@ -1549,23 +1551,13 @@ class VmOrTemplate < ApplicationRecord
     hardware.nil? ? false : hardware.disks.any? { |d| d.disk_type == 'thin' }
   end
 
-  def ram_size(check_state = false)
-    hardware.nil? || (check_state && state != 'on') ? 0 : hardware.memory_mb
-  end
-
   def ram_size_by_state
-    ram_size(true)
-  end
-
-  def ram_size_in_bytes(check_state = false)
-    ram_size(check_state).to_i * 1.megabyte
+    state == 'on' ? ram_size : 0
   end
 
   def ram_size_in_bytes_by_state
-    ram_size_in_bytes(true)
+    ram_size_by_state * 1.megabyte
   end
-
-  alias_method :mem_cpu, :ram_size
 
   def num_cpu
     hardware.nil? ? 0 : hardware.cpu_sockets
