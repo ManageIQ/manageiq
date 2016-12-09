@@ -9,7 +9,7 @@
         = _("Role Information")
       .form-horizontal
         .form-group
-          %label.col-md-2.control-label
+          %label.col-md-4.control-label
             = _("Name")
           .col-md-8
             - if !@edit
@@ -23,8 +23,8 @@
                                "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
               = javascript_tag(javascript_focus('name'))
         .form-group
-          %label.col-md-2.control-label
-            = _("VM & Template Access Restriction")
+          %label.col-md-4.control-label
+            = _('Access Restriction for Services, VMs, and Templates')
           .col-md-8
             - if !@edit
               - if @role.settings.kind_of?(Hash) && @role.settings.fetch_path(:restrictions, :vms)
@@ -41,7 +41,7 @@
             miqSelectPickerEvent('vm_restriction', "#{url}")
         - unless @edit
           .form-group
-            %label.col-md-2.control-label
+            %label.col-md-4.control-label
               = _("Groups Using this Role")
             .col-md-8
               - @role.miq_groups.sort_by { |a| a.description.downcase }.each do |g|
