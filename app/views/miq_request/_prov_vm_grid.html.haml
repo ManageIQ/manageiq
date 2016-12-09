@@ -94,7 +94,7 @@
             = h(@vm.v_total_snapshots)
           - if @edit[:vm_headers].key? 'cloud_tenant'
             %td
-              = h(@vm.cloud_tenant.name)
+              = h(@vm.cloud_tenant.name) unless @vm.cloud_tenant.nil?
 
 :javascript
   miqScrollToSelected('prov_vm_div')

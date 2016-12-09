@@ -25,7 +25,6 @@ describe 'miq_request/_prov_vm_grid.html.haml' do
 
   context 'prints tenant name' do
     let(:admin_user) { FactoryGirl.create(:user_with_group, :role => 'super_administrator') }
-    let(:cloud_tenant) { FactoryGirl.create(:cloud_tenant, :name => 'cloud_tenant_name') }
 
     before do
       @vm = [FactoryGirl.create(:template_openstack, :tenant => Tenant.root_tenant)]
@@ -38,7 +37,6 @@ describe 'miq_request/_prov_vm_grid.html.haml' do
       allow(@vm).to receive(:v_total_snapshots).and_return('128')
       allow(@vm).to receive(:deprecated).and_return(true)
       allow(@vm).to receive(:ext_management_system)
-      allow(@vm).to receive(:cloud_tenant).and_return(cloud_tenant)
 
       edit = {:req_id     => 'foo',
               :new        => {},
@@ -55,10 +53,19 @@ describe 'miq_request/_prov_vm_grid.html.haml' do
     end
 
     it 'validates tenant name is printed out' do
+      allow(@vm).to receive(:cloud_tenant).and_return(FactoryGirl.create(:cloud_tenant, :name => 'cloud_tenant_name'))
       login_as admin_user
       render :partial => 'miq_request/prov_vm_grid.html.haml', :locals => {:field_id => 'service__src_vm_id'},
-                                                               :params => { 'tab_id' => 'service' }
+             :params => { 'tab_id' => 'service' }
       expect(rendered).to have_selector('tr.selected td', :text => 'cloud_tenant_name')
+    end
+
+    it 'validates tenant name is not printed out when cloud_tenant is nil' do
+      allow(@vm).to receive(:cloud_tenant).and_return(nil)
+      login_as admin_user
+      render :partial => 'miq_request/prov_vm_grid.html.haml', :locals => {:field_id => 'service__src_vm_id'},
+             :params => { 'tab_id' => 'service' }
+      expect(rendered).to have_selector('tr.selected td', :text => '')
     end
   end
 end
