@@ -8,14 +8,12 @@
       - items.each do |item|
         %tr{:class => 'no-hover'}
           %td{:class => 'hover'}
-            - if item[:image]
-              %img{:src => image_path("100/#{item[:image]}.png")}
+            = render :partial => "shared/summary/icon_or_image", :locals => {:item => item}
             = item[:value]
           - item[:sub_items].each do |sub_item|
             %td{:class => sub_item[:link] ? 'hover' : '',
                 :style => sub_item[:link] ? 'cursor: pointer; cursor: hand;' : '',
                 :title => sub_item[:title],
                 :onclick => sub_item[:link] ? "DoNav('#{sub_item[:link]}');" : ""}
-              - unless sub_item[:image].blank?
-                %img{:src => image_path("100/#{sub_item[:image]}.png")}
+              = render :partial => "shared/summary/icon_or_image", :locals => {:item => sub_item}
               = sub_item[:value]

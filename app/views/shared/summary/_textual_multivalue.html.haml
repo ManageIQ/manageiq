@@ -4,6 +4,5 @@
         :title => item[:title] ? item[:title] : "",
         :onclick => item[:link] ? "DoNav('#{item[:link]}');" : ""}
       %td{:style => "border: 0; margin: 0; padding: 0"}
-        - if item[:image]
-          %img{:src => image_path("100/#{item[:image]}.png")}
+        = render :partial => "shared/summary/icon_or_image", :locals => {:item => item}
         = item[:value]
