@@ -36,14 +36,14 @@ module MiqAeServiceGenericObjectSpec
     end
 
     let(:options) do
-     { :object_type   => "GenericObject",
-       :object_id     => go.id,
-       :instance_name => "GenericObject",
-       :user_id       => user.id,
-       :miq_group_id  => user.current_group.id,
-       :tenant_id     => user.current_tenant.id,
-       :attrs         => {:method_name => method_name}
-     }
+      { :object_type   => "GenericObject",
+        :object_id     => go.id,
+        :instance_name => "GenericObject",
+        :user_id       => user.id,
+        :miq_group_id  => user.current_group.id,
+        :tenant_id     => user.current_tenant.id,
+        :attrs         => {:method_name => method_name}
+      }
     end
 
     describe "call method on generic object" do
