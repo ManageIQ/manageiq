@@ -522,10 +522,6 @@ class ApplicationHelper::ToolbarBuilder
     when "vm_vmrc_console"
       type = ::Settings.server.remote_console_type
       return type != 'VMRC' || !@record.console_supported?(type)
-    # Check buttons behind SMIS setting
-    when "ontap_storage_system_statistics", "ontap_logical_disk_statistics", "ontap_storage_volume_statistics",
-        "ontap_file_share_statistics"
-      return true unless ::Settings.product.smis
     end
 
     # Scale is only supported by OpenStack Infrastructure Provider
@@ -564,33 +560,9 @@ class ApplicationHelper::ToolbarBuilder
           return N_("No Timeline data has been collected for this Availability Zone")
         end
       end
-    when "OntapStorageSystem"
-      case id
-      when "ontap_storage_system_statistics"
-        return N_("No Statistics Collected") unless @record.latest_derived_metrics
-      end
-    when "OntapLogicalDisk"
-      case id
-      when "ontap_logical_disk_perf"
-        unless @record.has_perf_data?
-          return N_("No Capacity & Utilization data has been collected for this Logical Disk")
-        end
-      when "ontap_logical_disk_statistics"
-        return N_("No Statistics collected for this Logical Disk") unless @record.latest_derived_metrics
-      end
     when "CimBaseStorageExtent"
       case id
       when "cim_base_storage_extent_statistics"
-        return N_("No Statistics Collected") unless @record.latest_derived_metrics
-      end
-    when "OntapStorageVolume"
-      case id
-      when "ontap_storage_volume_statistics"
-        return N_("No Statistics Collected") unless @record.latest_derived_metrics
-      end
-    when "OntapFileShare"
-      case id
-      when "ontap_file_share_statistics"
         return N_("No Statistics Collected") unless @record.latest_derived_metrics
       end
     when "SniaLocalFileSystem"
