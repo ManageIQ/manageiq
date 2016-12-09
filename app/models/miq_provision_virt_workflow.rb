@@ -308,11 +308,11 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
 
     filter_id = get_value(@values[:vm_filter]).to_i
     if filter_id == @allowed_templates_filter && (options[:tag_filters].blank? || (@values[:vm_tags] == @allowed_templates_tag_filters))
-      return @allowed_templates_cache
+      return Rails.cache.read("#{self.class.name}/#{__method__}")
     end
 
     rails_logger('allowed_templates', 0)
-    vms = VmOrTemplate.in_my_region.all
+    vms = Rails.cache.fetch("#{self.class.name}/vms", :expires_in => 30.minutes) { VmOrTemplate.in_my_region.all }
     condition = allowed_template_condition
 
     unless options[:tag_filters].blank?
@@ -351,11 +351,11 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     end
 
     MiqPreloader.preload(allowed_templates_list, [:snapshots, :operating_system, :ext_management_system, {:hardware => :disks}])
-    @allowed_templates_cache = allowed_templates_list.collect do |template|
-      create_hash_struct_from_vm_or_template(template, options)
+    Rails.cache.fetch("#{self.class.name}/#{__method__}", :expires_in => 30.minutes) do
+      allowed_templates_list.collect do |template|
+        create_hash_struct_from_vm_or_template(template, options)
+      end
     end
-
-    @allowed_templates_cache
   end
 
   def allowed_template_condition
