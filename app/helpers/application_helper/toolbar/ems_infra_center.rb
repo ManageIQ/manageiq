@@ -34,13 +34,15 @@ class ApplicationHelper::Toolbar::EmsInfraCenter < ApplicationHelper::Toolbar::B
           'pficon pficon-edit fa-lg',
           t = N_('Scale this Infrastructure Provider'),
           t,
-          :url => "/scaling"),
+          :url   => "/scaling",
+          :klass => ApplicationHelper::Button::EmsInfraScale),
         button(
           :ems_infra_scaledown,
           'pficon pficon-edit fa-lg',
           t = N_('Scale this Infrastructure Provider down'),
           t,
-          :url => "/scaledown"),
+          :url   => "/scaledown",
+          :klass => ApplicationHelper::Button::EmsInfraScale),
         button(
           :ems_infra_delete,
           'pficon pficon-delete fa-lg',
