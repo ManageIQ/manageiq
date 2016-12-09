@@ -1,4 +1,10 @@
 describe MiqRegion do
+  let(:region) { FactoryGirl.create(:miq_region, :region => ApplicationRecord.my_region_number) }
+  # the first id from a region other than ours
+  let(:external_region_id) do
+    remote_region_number = ApplicationRecord.my_region_number + 1
+    ApplicationRecord.region_to_range(remote_region_number).first
+  end
   context "after seeding" do
     before(:each) do
       MiqRegion.seed
@@ -214,8 +220,6 @@ describe MiqRegion do
   end
 
   describe "#api_system_auth_token" do
-    let(:region) { FactoryGirl.create(:miq_region, :region => ApplicationRecord.my_region_number) }
-
     it "generates the token correctly" do
       user = "admin"
       server = FactoryGirl.create(:miq_server, :has_active_webservices => true)
@@ -231,16 +235,12 @@ describe MiqRegion do
   end
 
   describe "#required_credential_fields" do
-    let(:region) { FactoryGirl.create(:miq_region, :region => ApplicationRecord.my_region_number) }
-
     it "checks the right credential fields" do
       expect(region.required_credential_fields(:system_api)).to eq([:auth_key])
     end
   end
 
   context "ConfigurationManagementMixin" do
-    let(:region) { FactoryGirl.create(:miq_region, :region => ApplicationRecord.my_region_number) }
-
     describe "#settings_for_resource" do
       it "returns the resource's settings" do
         settings = {:some_thing => [1, 2, 3]}
@@ -261,11 +261,6 @@ describe MiqRegion do
     end
 
     describe "#reload_all_server_settings" do
-      let(:external_region_id) do
-        remote_region_number = ApplicationRecord.my_region_number + 1
-        ApplicationRecord.region_to_range(remote_region_number).first
-      end
-
       it "queues #reload_settings for the started servers" do
         started_server = FactoryGirl.create(:miq_server, :status => "started")
         FactoryGirl.create(:miq_server, :status => "started", :id => external_region_id)
@@ -278,6 +273,36 @@ describe MiqRegion do
         expect(message.instance_id).to eq(started_server.id)
         expect(message.method_name).to eq("reload_settings")
       end
+    end
+  end
+
+  describe "#vms" do
+    it "brings them back" do
+      FactoryGirl.create(:vm_vmware, :id => external_region_id)
+      vm = FactoryGirl.create(:vm_vmware)
+      FactoryGirl.create(:template_vmware)
+
+      expect(region.vms).to eq([vm])
+    end
+  end
+
+  describe "#miq_templates" do
+    it "brings them back" do
+      FactoryGirl.create(:vm_vmware, :id => external_region_id)
+      FactoryGirl.create(:vm_vmware)
+      t = FactoryGirl.create(:template_vmware)
+
+      expect(region.miq_templates).to eq([t])
+    end
+  end
+
+  describe "#vms_and_templates" do
+    it "brings them back" do
+      FactoryGirl.create(:vm_vmware, :id => external_region_id)
+      vm = FactoryGirl.create(:vm_vmware)
+      t = FactoryGirl.create(:template_vmware)
+
+      expect(region.vms_and_templates).to match_array [vm, t]
     end
   end
 end
