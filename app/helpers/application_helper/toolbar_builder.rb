@@ -430,9 +430,6 @@ class ApplicationHelper::ToolbarBuilder
     return true if id.ends_with?("_new", "_discover") &&
                    @lastaction == "show" && !["main", "vms"].include?(@display)
 
-    # user can see the buttons if they can get to Policy RSOP/Automate Simulate screen
-    return false if ["miq_ae_tools"].include?(@layout)
-
     return false if id == "miq_request_reload" && # Show the request reload button
                     (@lastaction == "show_list" || @showtype == "miq_provisions")
 
@@ -449,7 +446,7 @@ class ApplicationHelper::ToolbarBuilder
                      id !~ /^history_\d*/ &&
                      !(id == "show_summary" && !@explorer) && id != "summary_reload"
                      !id.starts_with?("dialog_", "miq_task_", "compare_", "drift_", "comparemode_", "driftmode_",
-                                      "custom_")
+                                      "custom_") && @layout != 'miq_ae_tools'
     end
 
     # Check buttons with other restriction logic
