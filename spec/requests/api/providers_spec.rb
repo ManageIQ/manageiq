@@ -754,6 +754,45 @@ describe "Providers API" do
     end
   end
 
+  context 'load balancers subcollection' do
+    before do
+      @provider = FactoryGirl.create(:ems_amazon_network)
+      @load_balancer = FactoryGirl.create(:load_balancer_amazon, :ext_management_system => @provider)
+      load_balancer_listener = FactoryGirl.create(:load_balancer_listener_amazon,
+                                                  :ext_management_system => @provider)
+      load_balancer_pool = FactoryGirl.create(:load_balancer_pool_amazon,
+                                              :ext_management_system => @provider)
+      load_balancer_pool_member = FactoryGirl.create(:load_balancer_pool_member_amazon,
+                                                     :ext_management_system => @provider)
+      @load_balancer.load_balancer_listeners << load_balancer_listener
+      load_balancer_listener.load_balancer_pools << load_balancer_pool
+      load_balancer_pool.load_balancer_pool_members << load_balancer_pool_member
+    end
+
+    it 'queries all load balancers' do
+      api_basic_authorize subcollection_action_identifier(:providers, :load_balancers, :show, :get)
+      expected = {
+        'resources' => [
+          { 'href' => a_string_matching("#{providers_url(@provider.id)}/load_balancers/#{@load_balancer.id}") }
+        ]
+
+      }
+      run_get("#{providers_url(@provider.id)}/load_balancers")
+
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
+    end
+
+    it 'queries a single load balancer' do
+      api_basic_authorize subcollection_action_identifier(:providers, :load_balancers, :show, :get)
+
+      run_get("#{providers_url(@provider.id)}/load_balancers/#{@load_balancer.id}")
+
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include('id' => @load_balancer.id)
+    end
+  end
+
   describe 'edit custom_attributes on providers' do
     context 'provider_class=provider' do
       let(:generic_provider) { FactoryGirl.create(:provider) }

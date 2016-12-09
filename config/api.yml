@@ -576,6 +576,8 @@
     :verbs: *gp
     :options:
     - :collection
+    :subcollections:
+    - :load_balancers
     :collection_actions:
       :get:
       - :name: read
@@ -620,6 +622,28 @@
         :identifier: instance_guest_restart
       - :name: reset
         :identifier: instance_reset
+    :load_balancers_subcollection_actions:
+      :get:
+      - :name: show
+        :identifier: load_balancer_show
+  :load_balancers:
+    :description: Load Balancers
+    :options:
+    - :collection
+    - :subcollection
+    :verbs: *gp
+    :klass: LoadBalancer
+    :collection_actions:
+      :get:
+      - :name: read
+        :identifier: load_balancer_show_list
+      :post:
+      - :name: query
+        :identifier: load_balancer_show_list
+    :resource_actions:
+      :get:
+      - :name: read
+        :identifier: load_balancer_show
   :notifications:
     :description: "User's past notifications"
     :options:
@@ -800,6 +824,7 @@
     - :policy_profiles
     - :cloud_networks
     - :custom_attributes
+    - :load_balancers
     :collection_actions:
       :get:
       - :name: read
@@ -863,6 +888,10 @@
       :get:
       - :name: show
       - :identifier: miq_cloud_networks_view
+    :load_balancers_subcollection_actions:
+      :get:
+      - :name: show
+        :identifier: load_balancer_show
   :provision_dialogs:
     :description: Provisioning Dialogs
     :identifier: miq_ae_customization_explorer
