@@ -620,6 +620,47 @@ describe VmOrTemplate do
     end
   end
 
+  describe ".ram_size", ".mem_cpu" do
+    let(:vm) { FactoryGirl.create(:vm_vmware, :hardware => hardware) }
+    let(:hardware) { FactoryGirl.create(:hardware, :memory_mb => 10) }
+
+    it "supports null hardware" do
+      vm = FactoryGirl.create(:vm_vmware)
+      expect(vm.ram_size).to eq(0)
+      expect(vm.mem_cpu).to eq(0)
+    end
+
+    it "calculates in ruby" do
+      expect(vm.ram_size).to eq(10)
+      expect(vm.mem_cpu).to eq(10)
+    end
+
+    it "calculates in the database" do
+      vm.save
+      expect(virtual_column_sql_value(VmOrTemplate, "ram_size")).to eq(10)
+      expect(virtual_column_sql_value(VmOrTemplate, "mem_cpu")).to eq(10)
+    end
+  end
+
+  describe ".ram_size_in_bytes" do
+    let(:vm) { FactoryGirl.create(:vm_vmware, :hardware => hardware) }
+    let(:hardware) { FactoryGirl.create(:hardware, :memory_mb => 10) }
+
+    it "supports null hardware" do
+      vm = FactoryGirl.create(:vm_vmware)
+      expect(vm.ram_size_in_bytes).to eq(0)
+    end
+
+    it "calculates in ruby" do
+      expect(vm.ram_size_in_bytes).to eq(10.megabytes)
+    end
+
+    it "calculates in the database" do
+      vm.save
+      expect(virtual_column_sql_value(VmOrTemplate, "ram_size_in_bytes")).to eq(10.megabytes)
+    end
+  end
+
   describe ".host_name" do
     let(:vm) { FactoryGirl.create(:vm_vmware, :host => host) }
     let(:host) { FactoryGirl.create(:host_vmware, :name => "our host") }

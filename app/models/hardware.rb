@@ -28,6 +28,7 @@ class Hardware < ApplicationRecord
   virtual_column :mac_addresses, :type => :string_set, :uses => :nics
   virtual_aggregate :used_disk_storage,      :disks, :sum, :used_disk_storage
   virtual_aggregate :allocated_disk_storage, :disks, :sum, :size
+  virtual_attribute :ram_size_in_bytes, :integer, :arel => ->(t) { t.grouping(t[:memory_mb] * 1.megabyte) }
 
   def ipaddresses
     @ipaddresses ||= networks.collect(&:ipaddress).compact.uniq
@@ -39,6 +40,10 @@ class Hardware < ApplicationRecord
 
   def mac_addresses
     @mac_addresses ||= nics.collect(&:address).compact.uniq
+  end
+
+  def ram_size_in_bytes
+    memory_mb * 1.megabyte
   end
 
   @@dh = {"type" => "device_name", "devicetype" => "device_type", "id" => "location", "present" => "present",
