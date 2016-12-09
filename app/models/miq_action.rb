@@ -425,8 +425,7 @@ class MiqAction < ApplicationRecord
 
   def self.inheritable_cats
     Classification.in_my_region.categories.inject([]) do |arr, c|
-      next(arr) if c.name.starts_with?("folder_path_")
-      next(arr) if c.entries.size == 0
+      next(arr) if c.name.starts_with?("folder_path_") || c.entries.empty?
       arr << c
     end
   end
@@ -599,8 +598,7 @@ class MiqAction < ApplicationRecord
     has_ch = false
     snaps_to_delete = rec.snapshots.each_with_object([]) do |s, arr|
       has_ch = true if s.is_a_type?(:consolidate_helper)
-      next          if s.is_a_type?(:evm_snapshot)
-      next          if s.is_a_type?(:vcb_snapshot)
+      next if s.is_a_type?(:evm_snapshot) || s.is_a_type?(:vcb_snapshot)
 
       arr << s if s.create_time < age_threshold
     end
@@ -637,8 +635,7 @@ class MiqAction < ApplicationRecord
         has_ch = true
         next
       end
-      next if s.is_a_type?(:evm_snapshot)
-      next if s.is_a_type?(:vcb_snapshot)
+      next if s.is_a_type?(:evm_snapshot) || s.is_a_type?(:vcb_snapshot)
 
       snap ||= s # Take the first eligable snapshot
     end
