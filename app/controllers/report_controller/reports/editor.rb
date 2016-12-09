@@ -234,7 +234,7 @@ module ReportController::Reports::Editor
       if options.empty?
         @edit[:new][:chart_column] = nil
       else
-        options[0][1] unless options.detect { |_, v| v == @edit[:new][:chart_column] }
+        @edit[:new][:chart_column] = options[0][1] unless options.detect { |_, v| v == @edit[:new][:chart_column] }
       end
 
     when "6"  # Timeline
