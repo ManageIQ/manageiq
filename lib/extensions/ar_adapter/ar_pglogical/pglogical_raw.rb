@@ -21,8 +21,8 @@ class PgLogicalRaw
 
   # Enables pglogical postgres extensions
   def enable
-    connection.enable_extension("pglogical")
     connection.enable_extension("pglogical_origin") if connection.postgresql_version < 90_500
+    connection.enable_extension("pglogical")
   end
 
   def disable
@@ -295,7 +295,7 @@ class PgLogicalRaw
   def tables_in_replication_set(set_name)
     typed_exec(<<-SQL, set_name).values.flatten
       SELECT set_reloid
-      FROM pglogical.replication_set_table
+      FROM pglogical.replication_set_relation
       JOIN pglogical.replication_set
         USING (set_id)
       WHERE set_name = $1
