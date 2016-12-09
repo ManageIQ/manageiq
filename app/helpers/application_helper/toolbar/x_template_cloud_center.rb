@@ -63,7 +63,8 @@ class ApplicationHelper::Toolbar::XTemplateCloudCenter < ApplicationHelper::Tool
                        'pficon pficon-add-circle-o fa-lg',
                        t = N_('Provision Instances using this Image'),
                        t,
-                       :klass => ApplicationHelper::Button::TemplateProvision)
+                       :klass   => ApplicationHelper::Button::GenericFeatureButtonWithDisable,
+                       :options => {:feature => :provisioning})
                    ]
                  ),
                ])
