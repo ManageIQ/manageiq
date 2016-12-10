@@ -668,31 +668,6 @@ class ApplicationHelper::ToolbarBuilder
       case id
       when "instance_perf", "vm_perf", "container_perf"
         return N_("No Capacity & Utilization data has been collected for this VM") unless @record.has_perf_data?
-      when "vm_check_compliance"
-        unless @record.has_compliance_policies?
-          return N_("No Compliance Policies assigned to this virtual machine")
-        end
-      when "vm_timeline"
-        unless @record.has_events? || @record.has_events?(:policy_events)
-          return N_("No Timeline data has been collected for this VM")
-        end
-      when "vm_snapshot_add"
-        if @record.number_of(:snapshots) <= 0
-          return @record.is_available_now_error_message(:create_snapshot) unless @record.is_available?(:create_snapshot)
-        else
-          unless @record.is_available?(:create_snapshot)
-            return @record.is_available_now_error_message(:create_snapshot)
-          else
-            return N_("Select the Active snapshot to create a new snapshot for this VM") unless @active
-          end
-        end
-      when "vm_snapshot_delete"
-        return @record.is_available_now_error_message(:remove_snapshot) unless @record.is_available?(:remove_snapshot)
-      when "vm_snapshot_delete_all"
-        return @record.is_available_now_error_message(:remove_all_snapshots) unless @record.is_available?(:remove_all_snapshots)
-      when "vm_snapshot_revert"
-        return N_("Select a snapshot that is not the active one") if @active
-        return @record.is_available_now_error_message(:revert_to_snapshot) unless @record.is_available?(:revert_to_snapshot)
       end
     when "MiqTemplate"
       case id
