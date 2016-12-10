@@ -459,19 +459,6 @@ class ApplicationHelper::ToolbarBuilder
     case id
     when "miq_task_canceljob"
       return true unless ["all_tasks", "all_ui_tasks"].include?(@layout)
-    when "vm_console"
-      type = ::Settings.server.remote_console_type
-      return type != 'MKS' || !@record.console_supported?(type)
-    when "vm_vnc_console"
-      if @record.vendor == 'vmware'
-        # remote_console_type is only useful for vmware consoles
-        type = ::Settings.server.remote_console_type
-        return type != 'VNC' || !@record.console_supported?(type)
-      end
-      return !@record.console_supported?('vnc')
-    when "vm_vmrc_console"
-      type = ::Settings.server.remote_console_type
-      return type != 'VMRC' || !@record.console_supported?(type)
     # Check buttons behind SMIS setting
     when "ontap_storage_system_statistics", "ontap_logical_disk_statistics", "ontap_storage_volume_statistics",
         "ontap_file_share_statistics"
@@ -684,27 +671,6 @@ class ApplicationHelper::ToolbarBuilder
       when "vm_check_compliance"
         unless @record.has_compliance_policies?
           return N_("No Compliance Policies assigned to this virtual machine")
-        end
-      when "vm_console", "vm_vmrc_console"
-        if !is_browser?(%w(explorer firefox mozilla chrome)) ||
-           !is_browser_os?(%w(windows linux))
-          return N_("The web-based console is only available on IE, Firefox or Chrome (Windows/Linux)")
-        end
-
-        if id.in?(["vm_vmrc_console"])
-          begin
-            @record.validate_remote_console_vmrc_support
-          rescue MiqException::RemoteConsoleNotSupportedError => err
-            return N_("VM VMRC Console error: %{error}") % {:error => err}
-          end
-        end
-
-        if @record.current_state != "on"
-          return N_("The web-based console is not available because the VM is not powered on")
-        end
-      when "vm_vnc_console"
-        if @record.current_state != "on"
-          return N_("The web-based VNC console is not available because the VM is not powered on")
         end
       when "vm_timeline"
         unless @record.has_events? || @record.has_events?(:policy_events)
