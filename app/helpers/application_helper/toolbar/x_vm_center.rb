@@ -95,7 +95,8 @@ class ApplicationHelper::Toolbar::XVmCenter < ApplicationHelper::Toolbar::Basic
           'fa fa-search fa-lg',
           N_('Check Compliance of the last known configuration for this VM'),
           N_('Check Compliance of Last Known Configuration'),
-          :confirm => N_("Initiate Check Compliance of the last known configuration for this VM?")),
+          :confirm => N_("Initiate Check Compliance of the last known configuration for this VM?"),
+          :klass   => ApplicationHelper::Button::VmCheckCompliance),
       ]
     ),
   ])
@@ -161,7 +162,8 @@ class ApplicationHelper::Toolbar::XVmCenter < ApplicationHelper::Toolbar::Basic
           'product product-timeline fa-lg',
           N_('Show Timelines for this VM'),
           N_('Timelines'),
-          :url_parms => "?display=timeline"),
+          :url_parms => "?display=timeline",
+          :klass     => ApplicationHelper::Button::VmTimeline),
       ]
     ),
   ])
@@ -276,7 +278,8 @@ class ApplicationHelper::Toolbar::XVmCenter < ApplicationHelper::Toolbar::Basic
       'pficon pficon-add-circle-o fa-lg',
       N_('Create a new snapshot for this VM'),
       nil,
-      :onwhen => "1"),
+      :onwhen => "1",
+      :klass  => ApplicationHelper::Button::VmSnapshotAdd),
     select(
       :vm_delete_snap_choice,
       'pficon pficon-delete fa-lg',
@@ -290,13 +293,17 @@ class ApplicationHelper::Toolbar::XVmCenter < ApplicationHelper::Toolbar::Basic
           t,
           :confirm   => N_("The selected snapshot will be permanently deleted. Are you sure you want to delete the selected snapshot?"),
           :url_parms => "main_div",
-          :onwhen    => "1"),
+          :onwhen    => "1",
+          :klass     => ApplicationHelper::Button::GenericFeatureButtonWithDisable,
+          :options   => {:feature => :remove_snapshot}),
         button(
           :vm_snapshot_delete_all,
           'pficon pficon-delete fa-lg',
           t = N_('Delete All Existing Snapshots'),
           t,
-          :confirm => N_("Delete all of this VMs existing snapshots?")),
+          :confirm => N_("Delete all of this VMs existing snapshots?"),
+          :klass   => ApplicationHelper::Button::GenericFeatureButtonWithDisable,
+          :options => {:feature => :remove_all_snapshots}),
       ]
     ),
     button(
