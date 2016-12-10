@@ -112,7 +112,8 @@ module ApplicationHelper::Toolbar::Cloud::InstanceOperationsButtonGroupMixin
             'pficon pficon-screen fa-lg',
             N_('Open a web-based VNC or SPICE console for this VM'),
             N_('VM Console'),
-            :url => "html5_console"),
+            :url   => "html5_console",
+            :klass => ApplicationHelper::Button::VmVncConsole),
         ]
       ),
     ])
