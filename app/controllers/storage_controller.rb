@@ -2,6 +2,7 @@ class StorageController < ApplicationController
   include_concern 'StorageD'
   include_concern 'StoragePod'
   include Mixins::GenericSessionMixin
+  include Mixins::GenericButtonMixin
 
   before_action :check_privileges
   before_action :get_session_data
@@ -121,78 +122,44 @@ class StorageController < ApplicationController
     @lastaction = "show"
   end
 
-
-  # handle buttons pressed on the button bar
-  def button
-    @edit = session[:edit]                                  # Restore @edit for adv search box
-    params[:display] = @display if %w(all_vms vms hosts).include?(@display) # Were we displaying vms or hosts
-
-    if params[:pressed].starts_with?("vm_", # Handle buttons from sub-items screen
-                                     "miq_template_",
-                                     "guest_",
-                                     "host_")
-
-      scanhosts if params[:pressed] == "host_scan"
-      analyze_check_compliance_hosts if params[:pressed] == "host_analyze_check_compliance"
-      check_compliance_hosts if params[:pressed] == "host_check_compliance"
-      refreshhosts   if params[:pressed] == "host_refresh"
-      tag(Host) if params[:pressed] == "host_tag"
-      assign_policies(Host) if params[:pressed] == "host_protect"
-      edit_record  if params[:pressed] == "host_edit"
-      deletehosts if params[:pressed] == "host_delete"
-
-      pfx = pfx_for_vm_button_pressed(params[:pressed])
-      # Handle Host power buttons
-      if ["host_shutdown", "host_reboot", "host_standby", "host_enter_maint_mode", "host_exit_maint_mode",
-          "host_start", "host_stop", "host_reset"].include?(params[:pressed])
-        powerbutton_hosts(params[:pressed].split("_")[1..-1].join("_")) # Handle specific power button
-      else
-        process_vm_buttons(pfx)
-        return if ["host_tag", "#{pfx}_policy_sim", "host_scan", "host_refresh", "host_protect",
-                   "#{pfx}_compare", "#{pfx}_tag", "#{pfx}_protect", "#{pfx}_retire",
-                   "#{pfx}_ownership", "#{pfx}_right_size", "#{pfx}_reconfigure"].include?(params[:pressed]) &&
-                  @flash_array.nil?   # Tag screen is showing, so return
-
-        unless ["host_edit", "#{pfx}_edit", "#{pfx}_miq_request_new", "#{pfx}_clone", "#{pfx}_migrate", "#{pfx}_publish"].include?(params[:pressed])
-          @refresh_div = "main_div"
-          @refresh_partial = "layouts/gtl"
-          show
-          @display = "vms"
-        end
-      end
-    else
-      @refresh_div = "main_div" # Default div for button.rjs to refresh
-      refreshstorage if params[:pressed] == "storage_refresh"
-      tag(Storage) if params[:pressed] == "storage_tag"
-      scanstorage if params[:pressed] == "storage_scan"
-      deletestorages if params[:pressed] == "storage_delete"
-      custom_buttons if params[:pressed] == "custom_button"
+  def specific_buttons(pressed)
+    case pressed
+    when "custom_button"                  then custom_buttons
+    when "host_analyze_check_compliance"  then handle_analyze_check_compliance_hosts
+    when "host_check_compliance"          then handle_analyze_check_compliance_hosts
+    when "host_delete"                    then deletehosts
+    when "host_edit"                      then edit_record
+    when "host_protect"                   then assign_policies(Host)
+    when "host_refresh"                   then refreshhosts
+    when "host_scan"                      then scanhosts
+    when "host_tag"                       then tag(Host)
+    when "storage_delete"                 then deletestorages
+    when "storage_refresh"                then refreshstorage
+    when "storage_scan"                   then scanstorage
+    when "storage_tag"                    then tag(Storage)
     end
 
-    return if ["custom_button"].include?(params[:pressed])    # custom button screen, so return, let custom_buttons method handle everything
-    return if ["storage_tag"].include?(params[:pressed]) && @flash_array.nil?   # Tag screen showing, so return
-    if !@flash_array && !@refresh_partial # if no button handler ran, show not implemented msg
-      add_flash(_("Button not yet implemented"), :error)
-      @refresh_partial = "layouts/flash_msg"
-      @refresh_div = "flash_msg_div"
-    elsif @flash_array && @lastaction == "show"
-      @storage = @record = identify_record(params[:id])
-      @refresh_partial = "layouts/flash_msg"
-      @refresh_div = "flash_msg_div"
-    end
+    handle_host_power_buttons(pressed)
 
-    if !@flash_array.nil? && params[:pressed] == "storage_delete" && @single_delete
-      javascript_redirect :action => 'show_list', :flash_msg => @flash_array[0][:message] # redirect to build the retire screen
-    elsif params[:pressed].ends_with?("_edit") || ["#{pfx}_miq_request_new", "#{pfx}_clone",
-                                                   "#{pfx}_migrate", "#{pfx}_publish"].include?(params[:pressed])
-      render_or_redirect_partial(pfx)
-    else
-      if !flash_errors? && @refresh_div == "main_div" && @lastaction == "show_list"
-        replace_gtl_main_div
-      else
-        javascript_flash
-      end
+    return %w{
+      custom_button host_analyze_check_compliance host_check_compliance
+      host_delete host_edit host_protect host_refresh host_scan host_tag
+      storage_delete storage_refresh storage_scan storage_tag
+    }.include?(pressed)
+  end
+
+  def handle_host_power_buttons(pressed)
+    power_events = %w{ host_enter_maint_mode host_exit_maint_mode host_reboot
+      host_reset host_shutdown host_standby host_start host_stop }
+
+    if power_events.include?(pressed)
+      powerbutton_hosts( pressed.split("_")[1..-1].join("_") )
     end
+  end
+
+  def handle_analyze_check_compliance_hosts
+    analyze_check_compliance_hosts
+    javascript_flash
   end
 
   def files
