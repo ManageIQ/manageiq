@@ -96,32 +96,79 @@ describe MiqAlert do
       before(:each) do
         @alert = MiqAlert.find_by(:description => "VM Unregistered")
         allow(@alert).to receive_messages(:eval_expression => true)
-        @alert.evaluate([@vm.class.base_class.name, @vm.id])
       end
 
       it "should have a link from the MiqAlert to the miq alert status" do
+        @alert.evaluate([@vm.class.base_class.name, @vm.id])
         expect(@alert.miq_alert_statuses.where(:resource_type => @vm.class.base_class.name, :resource_id => @vm.id).count).to eq(1)
       end
 
       it "should have a miq alert status for MiqAlert with a result of true" do
+        @alert.evaluate([@vm.class.base_class.name, @vm.id])
         expect(@alert.miq_alert_statuses.find_by(:resource_type => @vm.class.base_class.name, :resource_id => @vm.id).result).to be_truthy
       end
 
-      it "cookie stamps the description on the alert" do
+      it "miq_alert_status.description = miq_alert.description if no ems_event.message" do
+        @alert.evaluate([@vm.class.base_class.name, @vm.id])
         mas = @alert.miq_alert_statuses.where(:resource_type => @vm.class.base_class.name, :resource_id => @vm.id).first
         expect(mas.description).to eq("VM Unregistered")
       end
 
+      it "miq_alert_status.description = ems_event.message if present" do
+        @alert.evaluate(
+          [@vm.class.base_class.name, @vm.id],
+          :ems_event => FactoryGirl.create(:ems_event, :message => "oh no!")
+        )
+        mas = @alert.miq_alert_statuses.where(:resource_type => @vm.class.base_class.name, :resource_id => @vm.id).first
+        expect(mas.description).to eq("oh no!")
+      end
+
+      it "miq_alert_status.severity = ems_event.full_data.severity if present" do
+        @alert.evaluate(
+          [@vm.class.base_class.name, @vm.id],
+          :ems_event => FactoryGirl.create(:ems_event, :full_data => {:severity => 'warning'})
+        )
+        mas = @alert.miq_alert_statuses.where(:resource_type => @vm.class.base_class.name, :resource_id => @vm.id).first
+        expect(mas.severity).to eq('warning')
+      end
+
+      it "miq_alert_status.severity = nil if  ems_event.full_data.severity not present" do
+        @alert.evaluate([@vm.class.base_class.name, @vm.id])
+        mas = @alert.miq_alert_statuses.where(:resource_type => @vm.class.base_class.name, :resource_id => @vm.id).first
+        expect(mas.severity).to eq(nil)
+      end
+
+      it "miq_alert_status.url = ems_event.full_data.url if present" do
+        @alert.evaluate(
+            [@vm.class.base_class.name, @vm.id],
+            :ems_event => FactoryGirl.create(
+              :ems_event,
+              :full_data => {:url => 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'}
+            )
+        )
+        mas = @alert.miq_alert_statuses.where(:resource_type => @vm.class.base_class.name, :resource_id => @vm.id).first
+        expect(mas.url).to eq('https://www.youtube.com/watch?v=dQw4w9WgXcQ')
+      end
+
+      it "miq_alert_status.url = nil if ems_event.full_data.url is not present" do
+        @alert.evaluate([@vm.class.base_class.name, @vm.id])
+        mas = @alert.miq_alert_statuses.where(:resource_type => @vm.class.base_class.name, :resource_id => @vm.id).first
+        expect(mas.url).to eq(nil)
+      end
+
       it "should have a link from the Vm to the miq alert status" do
+        @alert.evaluate([@vm.class.base_class.name, @vm.id])
         expect(@vm.miq_alert_statuses.where(:miq_alert_id => @alert.id).count).to eq(1)
       end
 
       it "should have a miq alert status for Vm with a result of true" do
+        @alert.evaluate([@vm.class.base_class.name, @vm.id])
         expect(@vm.miq_alert_statuses.find_by(:miq_alert_id => @alert.id).result).to be_truthy
       end
 
       context "with the alert now evaluated to false" do
         before(:each)  do
+          @alert.evaluate([@vm.class.base_class.name, @vm.id])
           allow(@alert).to receive_messages(:eval_expression => false)
           @alert.options.store_path(:notifications, :delay_next_evaluation, 0)
           @alert.evaluate([@vm.class.base_class.name, @vm.id])
@@ -146,6 +193,7 @@ describe MiqAlert do
 
       context "with a delay_next_evaluation value of 5 minutes" do
         before(:each) do
+          @alert.evaluate([@vm.class.base_class.name, @vm.id])
           @alert.options ||= {}
           @alert.options.store_path(:notifications, :delay_next_evaluation, 5.minutes)
           @alert.save
