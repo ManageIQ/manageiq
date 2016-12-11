@@ -1,4 +1,6 @@
 class TreeBuilderServices < TreeBuilder
+  # Services are returned in a tree - kids are discovered automatically
+
   private
 
   def tree_init_options(_tree_name)
@@ -18,16 +20,12 @@ class TreeBuilderServices < TreeBuilder
 
   # Get root nodes count/array for explorer tree
   def x_get_tree_roots(count_only, _options)
-    roots = rbac_filtered_objects(Service.roots)
-
-    # Preload the root service picture since it's called by TreeNodeBuilder#build
-    MiqPreloader.preload(roots, :picture)
-
-    count_only_or_objects(count_only, roots, "name")
-  end
-
-  def x_get_tree_service_kids(object, count_only)
-    objects = rbac_filtered_objects(object.direct_service_children.select(&:display).sort_by { |o| o.name.downcase })
-    count_only_or_objects(count_only, objects, 'name')
+    all_services = Rbac.filtered(Service.where(:display => true))
+    if count_only
+      all_services.size
+    else
+      MiqPreloader.preload(all_services.to_a, :picture)
+      Service.arrange_nodes(all_services.sort_by { |n| [n.ancestry.to_s, n.name.downcase] })
+    end
   end
 end

@@ -328,6 +328,28 @@ class TreeBuilder
     [{:key => 'root', :children => child_nodes, :expand => true}]
   end
 
+  # determine if this is an ancestry node, and return the approperiate object
+  #
+  # @param object [Hash,Array,Object] object that is possibly an ancestry node
+  # @returns [Object, Hash] The object of interest from this ancestry tree, and the children
+  #
+  # Ancestry trees are of the form:
+  #
+  #   {Object => {Object1 => {}, Object2 => {Object2a => {}}}}
+  #
+  # Since `build_tree` and x_build_node uses enumeration, it comes in as:
+  #   [Object, {Object1 => {}, Object2 => {Object2a => {}}}]
+  #
+  def object_from_ancestry(object)
+    if object.kind_of?(Array) && object.size == 2 && object[1].kind_of?(Hash)
+      obj = object.first
+      children = object.last
+      [obj, children]
+    else
+      [object, nil]
+    end
+  end
+
   # Get objects (or count) to put into a tree under a parent node.
   # TODO: Perhaps push the object sorting down to SQL, if possible -- no point where there are few items.
   # parent  --- Parent object for which we need child tree nodes returned
@@ -404,25 +426,28 @@ class TreeBuilder
     children_or_count || (count_only ? 0 : [])
   end
 
-  # Return a tree node for the passed in object
-  def x_build_node(object, pid, options)    # Called with object, tree node parent id, tree options
+  # @param object the current node object (or an ancestry tree hash)
+  # @param pid [String|Nil] parent id root nodes are nil
+  # @param options [Hash] tree options
+  # @returns [Hash] display hash for this node and all children
+  def x_build_node(object, pid, options)
     parents = pid.to_s.split('_')
 
     options[:is_current] =
         ((object.kind_of?(MiqServer) && MiqServer.my_server(true).id == object.id) ||
          (object.kind_of?(Zone) && MiqServer.my_server(true).my_zone == object.name))
 
+    object, ancestry_kids = object_from_ancestry(object)
     node = x_build_single_node(object, pid, options)
 
     # Process the node's children
-    if Array(@tree_state.x_tree(@name)[:open_nodes]).include?(node[:key]) ||
-       options[:open_all] ||
+    node[:expand] = Array(@tree_state.x_tree(@name)[:open_nodes]).include?(node[:key]) || !!options[:open_all] || node[:expand]
+    if ancestry_kids ||
        object[:load_children] ||
        node[:expand] ||
        @options[:lazy] == false
-      node[:expand] = true if options[:type] == :automate &&
-                              Array(@tree_state.x_tree(@name)[:open_nodes]).include?(node[:key])
-      kids = x_get_tree_objects(object, options, false, parents).map do |o|
+
+      kids = (ancestry_kids || x_get_tree_objects(object, options, false, parents)).map do |o|
         x_build_node(o, node[:key], options)
       end
       node[:children] = kids unless kids.empty?
