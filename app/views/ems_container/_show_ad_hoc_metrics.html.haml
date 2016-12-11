@@ -3,7 +3,8 @@
 .containers-live-dashboard.row.miq-dashboard-view.miq-metrics{"ng-controller" => "containerLiveDashboardController"}
 
   .col-md-12.ad-hoc-tenant{"ng-if" => "!viewGraph"}
-    %button.btn.btn-default.ad-hoc-tenant-button{"type" => "button",
+    %button.btn.btn-primary.ad-hoc-tenant-button{"type" => "button",
+                                                 "ng-disabled" => "!tenantChanged",
                                                  "ng-click" => "doRefreshTenant()"}
       = _("Set tenant")
     %input.form-control{"id"                   => "ad-hoc-tenant",

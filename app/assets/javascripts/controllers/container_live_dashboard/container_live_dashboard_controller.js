@@ -10,6 +10,8 @@ miqHttpInject(angular.module('containerLiveDashboard', ['ui.bootstrap', 'pattern
     var id = '/' + (/^\/[^\/]+\/(\d+)$/.exec(pathname)[1]);
 
     var initialization = function() {
+      $scope.tenantChanged = false;
+
       $scope.filtersText = '';
       $scope.definitions = [];
       $scope.items = [];
@@ -209,6 +211,7 @@ miqHttpInject(angular.module('containerLiveDashboard', ['ui.bootstrap', 'pattern
     };
 
     $scope.getTenants = function(prefix) {
+      $scope.tenantChanged = true;
       return $http.get($scope.url + "&query=get_tenants&limit=7&prefix=" + prefix).then(function(response){
         return response.data.tenants;
       });
