@@ -5,6 +5,7 @@ GlobalVars:
   - $api_log
   - $aws_log
   - $azure_log
+  - $datawarehouse_log
   - $fog_log
   - $lenovo_log
   - $log
