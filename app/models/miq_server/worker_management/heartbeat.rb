@@ -65,6 +65,12 @@ module MiqServer::WorkerManagement::Heartbeat
     processed_worker_ids = []
     miq_workers.each do |w|
       next unless class_name.nil? || (w.type == class_name)
+
+      # Note, STATUSES_CURRENT_OR_STARTING doesn't include 'stopping'.
+      # We already restarted 'stopping' workers, so we bail out early here.
+      # 'stopping' workers continue to run and heartbeat through drb, which
+      # updates the in memory @workers.  The last heartbeat in the workers row is
+      # NOT updated because we no longer call validate_heartbeat when we skip validate_worker below.
       next unless MiqWorker::STATUSES_CURRENT_OR_STARTING.include?(w.status)
       processed_worker_ids << w.id
       next unless validate_worker(w)
@@ -75,13 +81,21 @@ module MiqServer::WorkerManagement::Heartbeat
 
   # Get the latest heartbeat between the SQL and memory (updated via DRb)
   def validate_heartbeat(w)
+    last_heartbeat = workers_last_heartbeat(w.pid)
+
     if w.last_heartbeat.nil?
-      w.last_heartbeat ||= @workers[w.pid][:last_heartbeat] if @workers.key?(w.pid)
-      w.last_heartbeat ||= Time.now.utc
-    else
-      if @workers.key?(w.pid) && !@workers[w.pid][:last_heartbeat].nil? && @workers[w.pid][:last_heartbeat] > w.last_heartbeat
-        w.update_attributes(:last_heartbeat => @workers[w.pid][:last_heartbeat])
-      end
+      last_heartbeat ||= Time.now.utc
+      w.update_attributes(:last_heartbeat => last_heartbeat)
+    elsif !last_heartbeat.nil? && last_heartbeat > w.last_heartbeat
+      w.update_attributes(:last_heartbeat => last_heartbeat)
+    end
+  end
+
+  private
+
+  def workers_last_heartbeat(pid)
+    @workers_lock.synchronize(:SH) do
+      @workers.fetch_path(pid, :last_heartbeat)
     end
   end
 end
