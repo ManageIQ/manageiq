@@ -1245,6 +1245,7 @@ event_streams:
 - middleware_server_name
 - middleware_deployment_id
 - middleware_deployment_name
+- generating_ems_id
 ext_management_systems:
 - id
 - name
