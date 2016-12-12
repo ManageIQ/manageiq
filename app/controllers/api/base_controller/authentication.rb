@@ -61,7 +61,7 @@ module Api
       end
 
       def userid_to_userobj(userid)
-        User.find_by_userid(userid)
+        User.lookup_by_identity(userid)
       end
 
       def authorize_user_group(user_obj)
@@ -145,6 +145,8 @@ module Api
 
         validate_system_token_server(@miq_token_hash[:server_guid])
         validate_system_token_timestamp(@miq_token_hash[:timestamp])
+
+        User.authorize_user(@miq_token_hash[:userid])
 
         @auth_user     = @miq_token_hash[:userid]
         @auth_user_obj = userid_to_userobj(@auth_user)
