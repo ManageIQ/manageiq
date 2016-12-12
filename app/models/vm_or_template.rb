@@ -472,6 +472,17 @@ class VmOrTemplate < ApplicationRecord
     )
   end
 
+  def self.invoke_tasks_remote_queue(options, deliver_on = nil)
+    queue_opts = {
+      :role        => "user_interface",
+      :class_name  => base_class.name,
+      :method_name => 'invoke_tasks_remote',
+      :args        => [options]
+    }
+    queue_opts[:deliver_on] = deliver_on if deliver_on
+    MiqQueue.put(queue_opts)
+  end
+
   def self.invoke_tasks_remote(options)
     ids_by_region = options[:ids].group_by { |id| ApplicationRecord.id_to_region(id.to_i) }
     ids_by_region.each do |region, ids|
@@ -496,12 +507,7 @@ class VmOrTemplate < ApplicationRecord
 
         $log.error("An error occurred while invoking remote tasks...Requeueing for 1 minute from now.")
         $log.log_backtrace(err)
-        MiqQueue.put(
-          :class_name  => base_class.name,
-          :method_name => 'invoke_tasks_remote',
-          :args        => [remote_options],
-          :deliver_on  => Time.now.utc + 1.minute
-        )
+        invoke_tasks_remote_queue(remote_options, Time.now.utc + 1.minute)
         next
       end
 
