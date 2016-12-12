@@ -98,6 +98,12 @@ describe Authenticator::Ldap do
     end
   end
 
+  describe ".user_authorizable_without_authentication?" do
+    it "is true" do
+      expect(subject.user_authorizable_without_authentication?).to be_truthy
+    end
+  end
+
   describe '#lookup_by_identity' do
     it "finds existing users" do
       expect(subject.lookup_by_identity('alice')).to eq(alice)
