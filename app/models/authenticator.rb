@@ -268,7 +268,7 @@ module Authenticator
       return [] if external_group_names.empty?
       external_group_names = external_group_names.collect(&:downcase)
 
-      internal_groups = MiqGroup.order(:sequence).to_a
+      internal_groups = MiqGroup.in_my_region.order(:sequence).to_a
 
       external_group_names.each { |g| _log.debug("External Group: #{g}") }
       internal_groups.each      { |g| _log.debug("Internal Group: #{g.description.downcase}") }
