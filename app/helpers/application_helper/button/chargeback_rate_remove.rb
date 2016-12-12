@@ -2,14 +2,13 @@ class ApplicationHelper::Button::ChargebackRateRemove < ApplicationHelper::Butto
   needs :@record
 
   def disabled?
-    if @record.default? || @record.description == 'Default Container Image Rate'
-      @error_message = _("Default Chargeback Rate cannot be removed.")
-    end
+    @error_message = _('Default Chargeback Rate cannot be removed.') if default?
     @error_message.present?
   end
 
-  def calculate_properties
-    super
-    self[:title] = @error_message if disabled?
+  private
+
+  def default?
+    @record.default? || @record.description == 'Default Container Image Rate'
   end
 end

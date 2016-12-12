@@ -71,7 +71,8 @@ class ApplicationHelper::Toolbar::OpenstackVmCloudCenter < ApplicationHelper::To
           'pficon pficon-edit fa-lg',
           t = N_('Reconfigure this Instance'),
           t,
-          :klass => ApplicationHelper::Button::InstanceReconfigure),
+          :klass   => ApplicationHelper::Button::GenericFeatureButtonWithDisable,
+          :options => {:feature => :resize}),
         button(
           :vm_right_size,
           'product product-custom-6 fa-lg',
@@ -134,14 +135,16 @@ class ApplicationHelper::Toolbar::OpenstackVmCloudCenter < ApplicationHelper::To
           'product product-migrate fa-lg',
           t = N_('Migrate Instance'),
           t,
-          :klass     => ApplicationHelper::Button::InstanceMigrate,
+          :klass     => ApplicationHelper::Button::GenericFeatureButtonWithDisable,
+          :options   => {:feature => :live_migrate},
           :url_parms => 'main_div'),
         button(
           :instance_evacuate,
           'product product-migrate fa-lg',
           t = N_('Evacuate Instance'),
           t,
-          :klass     => ApplicationHelper::Button::InstanceEvacuate,
+          :klass     => ApplicationHelper::Button::GenericFeatureButtonWithDisable,
+          :options   => {:feature => :evacuate},
           :url_parms => 'main_div')
       ]
     ),

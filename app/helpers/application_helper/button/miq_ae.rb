@@ -6,14 +6,9 @@ class ApplicationHelper::Button::MiqAe < ApplicationHelper::Button::Basic
     role_allows?(:feature => 'miq_ae_domain_edit')
   end
 
-  def calculate_properties
-    super
-    self[:title] = @error_message if @error_message.present?
-  end
-
   def disabled?
-    disabled = !editable_domain?(@record) && !domains_available_for_copy?
-    @error_message = _('At least one domain should be enabled and unlocked') if disabled
+    @error_message = _('At least one domain should be enabled and unlocked') if !editable_domain?(@record) &&
+                                                                                !domains_available_for_copy?
     @error_message.present?
   end
 

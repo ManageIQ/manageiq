@@ -38,7 +38,8 @@ class ApplicationHelper::Toolbar::CloudVolumeCenter < ApplicationHelper::Toolbar
                        'pficon pficon-volume fa-lg',
                        t = N_('Attach this Cloud Volume to an Instance'),
                        t,
-                       :klass     => ApplicationHelper::Button::VolumeAttach,
+                       :klass     => ApplicationHelper::Button::GenericFeatureButtonWithDisable,
+                       :options   => {:feature => :attach_volume},
                        :url_parms => 'main_div'
                      ),
                      button(

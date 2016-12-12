@@ -86,7 +86,8 @@ class ApplicationHelper::Toolbar::XMiqTemplateCenter < ApplicationHelper::Toolba
           'pficon pficon-add-circle-o fa-lg',
           t = N_('Provision VMs using this Template'),
           t,
-          :klass => ApplicationHelper::Button::TemplateProvision),
+          :klass   => ApplicationHelper::Button::GenericFeatureButtonWithDisable,
+          :options => {:feature => :provisioning}),
         button(
           :miq_template_clone,
           'product product-clone fa-lg',

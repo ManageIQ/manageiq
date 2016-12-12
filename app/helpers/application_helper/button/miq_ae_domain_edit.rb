@@ -2,7 +2,7 @@ class ApplicationHelper::Button::MiqAeDomainEdit < ApplicationHelper::Button::Mi
   needs :@record
 
   def disabled?
-    @error_message = N_('Read Only Domain cannot be edited') if super
+    @error_message = _('Read Only Domain cannot be edited') if super
     @error_message.present?
   end
 

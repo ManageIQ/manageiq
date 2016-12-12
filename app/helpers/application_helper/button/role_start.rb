@@ -1,11 +1,6 @@
 class ApplicationHelper::Button::RoleStart < ApplicationHelper::Button::RolePowerOptions
   needs :@record, :@sb
 
-  def calculate_properties
-    super
-    self[:title] = @error_message if disabled?
-  end
-
   def disabled?
     @error_message = if @record.class == AssignedServerRole
                        if @record.active

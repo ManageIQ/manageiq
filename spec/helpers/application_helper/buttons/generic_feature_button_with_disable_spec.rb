@@ -1,31 +1,42 @@
 describe ApplicationHelper::Button::GenericFeatureButtonWithDisable do
+  let(:view_context) { setup_view_context_with_sandbox({}) }
+  let(:feature) { :evacuate }
+  let(:available) { true }
+  let(:record) { FactoryGirl.create(:vm_or_template) }
+  let(:button) { described_class.new(view_context, {}, {'record' => record}, {:options => {:feature => feature}}) }
+  before do
+    allow(record).to receive(:is_available?).with(feature).and_return(available)
+    allow(record).to receive(:is_available_now_error_message).and_return('unavailable')
+  end
+
   describe '#disabled?' do
-    context "when record has an error message" do
-      it "disables the button and returns the stop error message" do
-        record = double
-        message = "xx stop message"
-        allow(record).to receive(:feature_known?).with(:some_feature).and_return(true)
-        allow(record).to receive(:supports?).with(:some_feature).and_return(false)
-        allow(record).to receive(:unsupported_reason).with(:some_feature).and_return(message)
-        view_context = setup_view_context_with_sandbox({})
-        button = described_class.new(view_context, {}, {'record' => record}, {:options => {:feature => :some_feature}})
-        expect(button.disabled?).to be_truthy
-        button.calculate_properties
-        expect(button[:title]).to eq(message)
+    subject { button.disabled? }
+
+    context 'when feature exists' do
+      let(:feature) { :evacuate }
+      before do
+        allow(record).to receive(:supports_evacuate?).and_return(support)
+        allow(record).to receive(:unsupported_reason).and_return('feature not supported')
       end
 
-      it "disables the button and returns the stop error message" do
-        # TODO: remove with deleting AvailabilityMixin module
-        record = double
-        message = "xx stop message"
-        allow(record).to receive(:feature_known?).with(:some_feature).and_return(false)
-        allow(record).to receive(:is_available?).with(:some_feature).and_return(false)
-        allow(record).to receive(:is_available_now_error_message).with(:some_feature).and_return(message)
-        view_context = setup_view_context_with_sandbox({})
-        button = described_class.new(view_context, {}, {'record' => record}, {:options => {:feature => :some_feature}})
-        expect(button.disabled?).to be_truthy
-        button.calculate_properties
-        expect(button[:title]).to eq(message)
+      context 'when feature is supported' do
+        let(:support) { true }
+        it { expect(subject).to be_falsey }
+      end
+      context 'when feature is not supported' do
+        let(:support) { false }
+        it { expect(subject).to be_truthy }
+      end
+    end
+    context 'when feature is unknown' do
+      let(:feature) { :non_existent_feature }
+
+      context 'and feature is not available' do
+        let(:available) { false }
+        it { expect(subject).to be_truthy }
+      end
+      context 'but feature is available' do
+        it { expect(subject).to be_falsey }
       end
     end
   end
