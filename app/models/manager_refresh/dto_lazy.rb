@@ -43,7 +43,16 @@ module ManagerRefresh
 
     def load_object_with_key
       # TODO(lsmola) Log error if we are accessing path that is present in blacklist or not present in whitelist
-      (dto_collection.find(to_s).try(:data) || {})[key] || default
+      found = dto_collection.find(to_s)
+      if found.present?
+        if found.try(:data).present?
+          found.data[key] || default
+        else
+          found.public_send(key)
+        end
+      else
+        default
+      end
     end
 
     def load_object
