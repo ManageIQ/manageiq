@@ -11,7 +11,12 @@ class HawkularProxyService
   end
 
   def client
-    ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCapture::HawkularClient.new(@ems, @tenant)
+    cli = ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCapture::HawkularClient.new(@ems, @tenant)
+    if @params['type'] == "counters"
+      cli.hawkular_client.counters
+    else
+      cli.hawkular_client.gauges
+    end
   end
 
   def data(query)
@@ -33,7 +38,7 @@ class HawkularProxyService
   def metric_definitions
     tags = @params['tags'].blank? ? nil : JSON.parse(@params['tags'])
     tags = nil if tags == {}
-    client.gauges.query(tags).compact.map { |m| m.json if m.json }.sort { |a, b| a["id"].downcase <=> b["id"].downcase }
+    client.query(tags).compact.map { |m| m.json if m.json }.sort { |a, b| a["id"].downcase <=> b["id"].downcase }
   end
 
   def metric_tags
@@ -46,7 +51,7 @@ class HawkularProxyService
     bucket_duration = @params['bucket_duration'] || nil
     order = @params['order'] || 'ASC'
 
-    client.gauges.get_data(id,
+    client.get_data(id,
                            :limit          => @params['limit'] || 100,
                            :starts         => starts.to_i,
                            :ends           => ends.to_i,

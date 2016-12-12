@@ -18,10 +18,10 @@ describe('containerLiveDashboardController', function() {
     pfViewUtils = _pfViewUtils_;
     $scope = $rootScope.$new();
     $httpBackend = _$httpBackend_;
-    $httpBackend.when('GET','/container_dashboard/data/42/?live=true&tenant=_ops&query=metric_tags').respond(mock_data);
-    $httpBackend.when('GET','/container_dashboard/data/42/?live=true&tenant=_ops&query=metric_definitions&tags={}').respond(mock_metrics_data);
-    $httpBackend.when('GET','/container_dashboard/data/42/?live=true&tenant=_ops&query=get_data&metric_id=hello1&limit=5&order=DESC').respond(mock_data1_data);
-    $httpBackend.when('GET','/container_dashboard/data/42/?live=true&tenant=_ops&query=get_data&metric_id=hello2&limit=5&order=DESC').respond(mock_data2_data);
+    $httpBackend.when('GET','/container_dashboard/data/42/?live=true&type=gauges&tenant=_ops&query=metric_tags').respond(mock_data);
+    $httpBackend.when('GET','/container_dashboard/data/42/?live=true&type=gauges&tenant=_ops&query=metric_definitions&tags={}').respond(mock_metrics_data);
+    $httpBackend.when('GET','/container_dashboard/data/42/?live=true&type=gauges&tenant=_ops&query=get_data&metric_id=hello1&limit=5&order=DESC').respond(mock_data1_data);
+    $httpBackend.when('GET','/container_dashboard/data/42/?live=true&type=gauges&tenant=_ops&query=get_data&metric_id=hello2&limit=5&order=DESC').respond(mock_data2_data);
     $controller = _$controller_('containerLiveDashboardController', {
         $scope: $scope,
         pfViewUtils: pfViewUtils
