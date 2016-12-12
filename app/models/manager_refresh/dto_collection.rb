@@ -4,15 +4,17 @@ module ManagerRefresh
 
     attr_reader :model_class, :strategy, :attributes_blacklist, :attributes_whitelist, :custom_save_block, :parent,
                 :internal_attributes, :delete_method, :data, :data_index, :dependency_attributes, :manager_ref,
-                :association, :complete, :update_only, :transitive_dependency_attributes
+                :association, :complete, :update_only, :transitive_dependency_attributes, :custom_manager_uuid
 
     delegate :each, :size, :to => :to_a
 
     def initialize(model_class, manager_ref: nil, association: nil, parent: nil, strategy: nil, saved: nil,
                    custom_save_block: nil, delete_method: nil, data_index: nil, data: nil, dependency_attributes: nil,
-                   attributes_blacklist: nil, attributes_whitelist: nil, complete: nil, update_only: nil)
+                   attributes_blacklist: nil, attributes_whitelist: nil, complete: nil, update_only: nil,
+                   custom_manager_uuid: nil)
       @model_class                      = model_class
       @manager_ref                      = manager_ref || [:ems_ref]
+      @custom_manager_uuid              = custom_manager_uuid
       @association                      = association || []
       @parent                           = parent || []
       @dependency_attributes            = dependency_attributes || {}
@@ -31,6 +33,8 @@ module ManagerRefresh
 
       blacklist_attributes!(attributes_blacklist) if attributes_blacklist.present?
       whitelist_attributes!(attributes_whitelist) if attributes_whitelist.present?
+
+      validate_dto_collection!
     end
 
     def to_a
@@ -53,7 +57,11 @@ module ManagerRefresh
       selected   = [:id] + manager_ref.map { |x| model_class.reflect_on_association(x).try(:foreign_key) || x }
       selected << :type if model_class.new.respond_to? :type
       parent.send(association).select(selected).find_each do |record|
-        self.data_index[object_index(record)] = record
+        if custom_manager_uuid.nil?
+          self.data_index[object_index(record)] = record
+        else
+          self.data_index[stringify_reference(custom_manager_uuid.call(record))] = record
+        end
       end
     end
 
@@ -91,7 +99,12 @@ module ManagerRefresh
     end
 
     def object_index(object)
-      manager_ref.map { |attribute| object.public_send(attribute).try(:id) || object.public_send(attribute).to_s }.join("__")
+      stringify_reference(
+        manager_ref.map { |attribute| object.public_send(attribute).try(:id) || object.public_send(attribute).to_s })
+    end
+
+    def stringify_reference(reference)
+      reference.join("__")
     end
 
     def manager_ref_to_cols
@@ -231,6 +244,23 @@ module ManagerRefresh
       # and a :stack is a relation to another object, in the Dto object,
       # then this dependency is considered transitive.
       (value.kind_of?(::ManagerRefresh::DtoLazy) && value.transitive_dependency?)
+    end
+
+    def validate_dto_collection!
+      if @strategy == :local_db_cache_all
+        if (manager_ref & association_attributes).present?
+          # Our manager_ref unique key contains a reference, that means that index we get from the API and from the
+          # db will differ. We need a custom indexing method, so the indexing is correct.
+          raise "The unique key list manager_ref contains a reference, which can't be built automatically when loading"\
+                " the DtoCollection from the DB, you need to provide a custom_manager_uuid lambda, that builds the"\
+                " correct manager_uuid given a DB record" if custom_manager_uuid.nil?
+        end
+      end
+    end
+
+    def association_attributes
+      # All association attributes and foreign keys of the model class
+      model_class.reflect_on_all_associations.map { |x| [x.name, x.foreign_key] }.flatten.compact.map(&:to_sym)
     end
   end
 end
