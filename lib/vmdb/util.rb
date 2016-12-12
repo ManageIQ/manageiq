@@ -3,12 +3,7 @@ module VMDB
     def self.http_proxy_uri(proxy_config = :default)
       # TODO: (julian) This looks really messy. Need to make it look nicer.
 
-      if ::Settings.http_proxy[proxy_config].nil?
-        $log.warn("Could not find proxy setting for #{proxy_config}")
-        proxy = ::Settings.http_proxy.to_h
-      else
-        proxy = ::Settings.http_proxy[proxy_config].to_h
-      end
+      proxy = (::Settings.http_proxy[proxy_config] || ::Settings.http_proxy).to_h
       return nil unless proxy[:host]
 
       user     = proxy.delete(:user)
