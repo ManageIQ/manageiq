@@ -4,6 +4,7 @@ miqHttpInject(angular.module('containerLiveDashboard', ['ui.bootstrap', 'pattern
   .controller('containerLiveDashboardController', ['$scope', 'pfViewUtils', '$http', '$interval', '$timeout', '$window',
   function ($scope, pfViewUtils, $http, $interval, $timeout, $window) {
     $scope.tenant = '_ops';
+    $scope.metricsType = 'gauges';
 
     // get the pathname and remove trailing / if exist
     var pathname = $window.location.pathname.replace(/\/$/, '');
@@ -29,7 +30,8 @@ miqHttpInject(angular.module('containerLiveDashboard', ['ui.bootstrap', 'pattern
       $scope.toolbarConfig.filterConfig = $scope.filterConfig;
       $scope.toolbarConfig.actionsConfig = $scope.actionsConfig;
 
-      $scope.url = '/container_dashboard/data' + id + '/?live=true&tenant=' + $scope.tenant;
+      $scope.url = '/container_dashboard/data' + id + 
+        '/?live=true&type=' + $scope.metricsType + '&tenant=' + $scope.tenant;
     }
 
     var filterChange = function (filters) {
@@ -73,6 +75,13 @@ miqHttpInject(angular.module('containerLiveDashboard', ['ui.bootstrap', 'pattern
 
       initialization();
       filterChange();
+      getMetricTags();
+    };
+
+    var doRefreshCounters = function (action) {
+      $scope.metricsType = action.type;
+
+      initialization();
       getMetricTags();
     };
 
@@ -273,6 +282,18 @@ miqHttpInject(angular.module('containerLiveDashboard', ['ui.bootstrap', 'pattern
           tenant: '_ops',
           title: __("Use the Ops Tenant Metrics"),
           actionFn: doRefreshTenant
+        },
+        {
+          name: 'Gauges',
+          type: 'gauges',
+          title: __("Gauges Metrics"),
+          actionFn: doRefreshCounters
+        },
+        {
+          name: 'Counters',
+          type: 'counters',
+          title: __("Counters Metrics"),
+          actionFn: doRefreshCounters
         }
       ]
     };
