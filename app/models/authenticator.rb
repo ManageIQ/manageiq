@@ -34,17 +34,13 @@ module Authenticator
       false
     end
 
-    def can_authorize_user_by_userid?
+    def user_authorizable_without_authentication?
       false
     end
 
-    def authorize_user_by_userid(userid)
-      return unless can_authorize_user_by_userid?
-      options = {
-        :require_user   => true,
-        :authorize_only => true
-      }
-      authenticate(userid, "", {}, options)
+    def authorize_user(userid)
+      return unless user_authorizable_without_authentication?
+      authenticate(userid, "", {}, {:require_user => true, :authorize_only => true})
     end
 
     def authenticate(username, password, request = nil, options = {})
@@ -60,7 +56,8 @@ module Authenticator
 
         username = normalize_username(username)
 
-        if options[:authorize_only] || _authenticate(username, password, request)
+        authenticated = options[:authorize_only] || _authenticate(username, password, request)
+        if authenticated
           AuditEvent.success(audit.merge(:message => "User #{username} successfully validated by #{self.class.proper_name}"))
 
           if authorize?

@@ -163,9 +163,9 @@ class User < ApplicationRecord
     authenticator(username).lookup_by_identity(username)
   end
 
-  def self.authorize_by_userid(userid)
+  def self.authorize_user(userid)
     return if userid.blank? || admin?(userid)
-    authenticator(userid).authorize_user_by_userid(userid)
+    authenticator(userid).authorize_user(userid)
   end
 
   def logoff

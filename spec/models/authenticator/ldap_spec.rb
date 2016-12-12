@@ -98,9 +98,9 @@ describe Authenticator::Ldap do
     end
   end
 
-  describe ".can_authorize_user_by_userid?" do
+  describe ".user_authorizable_without_authentication?" do
     it "is true" do
-      expect(subject.can_authorize_user_by_userid?).to be_truthy
+      expect(subject.user_authorizable_without_authentication?).to be_truthy
     end
   end
 

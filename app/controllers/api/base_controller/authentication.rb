@@ -146,7 +146,7 @@ module Api
         validate_system_token_server(@miq_token_hash[:server_guid])
         validate_system_token_timestamp(@miq_token_hash[:timestamp])
 
-        User.authorize_by_userid(@miq_token_hash[:userid])
+        User.authorize_user(@miq_token_hash[:userid])
 
         @auth_user     = @miq_token_hash[:userid]
         @auth_user_obj = userid_to_userobj(@auth_user)

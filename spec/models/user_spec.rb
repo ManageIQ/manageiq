@@ -538,13 +538,13 @@ describe User do
     end
   end
 
-  context ".authorize_by_userid" do
+  context ".authorize_user" do
     it "returns nil with blank userid" do
-      expect(User.authorize_by_userid("")).to be_nil
+      expect(User.authorize_user("")).to be_nil
     end
 
     it "returns nil with admin userid" do
-      expect(User.authorize_by_userid("admin")).to be_nil
+      expect(User.authorize_user("admin")).to be_nil
     end
   end
 end

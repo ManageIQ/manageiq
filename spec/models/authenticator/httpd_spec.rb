@@ -29,9 +29,9 @@ describe Authenticator::Httpd do
     end
   end
 
-  describe '.can_authorize_user_by_userid?' do
+  describe '.user_authorizable_without_authentication?' do
     it "is true" do
-      expect(subject.can_authorize_user_by_userid?).to be_truthy
+      expect(subject.user_authorizable_without_authentication?).to be_truthy
     end
   end
 
@@ -297,7 +297,7 @@ describe Authenticator::Httpd do
         end
       end
 
-      describe ".get_user_attrs" do
+      describe ".user_attrs_from_external_directory" do
         before do
           require "dbus"
           sysbus = double('sysbus')
@@ -313,7 +313,7 @@ describe Authenticator::Httpd do
         end
 
         it "should return nil for unspecified user" do
-          expect(subject.get_user_attrs(nil)).to be_nil
+          expect(subject.send(:user_attrs_from_external_directory, nil)).to be_nil
         end
 
         it "should return user attributes hash for valid user" do
@@ -331,7 +331,7 @@ describe Authenticator::Httpd do
 
           allow(@ifp_interface).to receive(:GetUserAttr).with('jdoe', requested_attrs).and_return(jdoe_attrs)
 
-          expect(subject.get_user_attrs('jdoe')).to eq(expected_jdoe_attrs)
+          expect(subject.send(:user_attrs_from_external_directory, 'jdoe')).to eq(expected_jdoe_attrs)
         end
       end
     end

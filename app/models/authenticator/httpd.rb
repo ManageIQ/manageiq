@@ -6,10 +6,10 @@ module Authenticator
 
     def authorize_queue(username, request, options, *_args)
       user_attrs, membership_list =
-        if options[:authorize_only] == true
-          get_user_details_by_userid(username)
+        if options[:authorize_only]
+          user_details_from_external_directory(username)
         else
-          get_user_details_from_headers(username, request)
+          user_details_from_headers(username, request)
         end
 
       super(username, request, {}, user_attrs, membership_list)
@@ -21,7 +21,7 @@ module Authenticator
       false
     end
 
-    def can_authorize_user_by_userid?
+    def user_authorizable_without_authentication?
       true
     end
 
@@ -53,8 +53,10 @@ module Authenticator
       user.email      = user_attrs[:email] unless user_attrs[:email].blank?
     end
 
-    def get_user_details_by_userid(username)
-      ext_user_attrs = get_user_attrs(username)
+    private
+
+    def user_details_from_external_directory(username)
+      ext_user_attrs = user_attrs_from_external_directory(username)
       user_attrs = {:username  => username,
                     :fullname  => ext_user_attrs["displayname"],
                     :firstname => ext_user_attrs["givenname"],
@@ -63,7 +65,7 @@ module Authenticator
       [user_attrs, MiqGroup.get_httpd_groups_by_user(username)]
     end
 
-    def get_user_details_from_headers(username, request)
+    def user_details_from_headers(username, request)
       user_attrs = {:username  => username,
                     :fullname  => request.headers['X-REMOTE-USER-FULLNAME'],
                     :firstname => request.headers['X-REMOTE-USER-FIRSTNAME'],
@@ -72,7 +74,7 @@ module Authenticator
       [user_attrs, (request.headers['X-REMOTE-USER-GROUPS'] || '').split(/[;:]/)]
     end
 
-    def get_user_attrs(username)
+    def user_attrs_from_external_directory(username)
       return unless username
       require "dbus"
 
