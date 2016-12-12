@@ -55,7 +55,7 @@ class Chargeback < ActsAsArModel
         # we need to select ChargebackRates for groups of MetricRollups records
         # and rates are selected by first MetricRollup record
         metric_rollup_record = metric_rollup_records.first
-        rates_to_apply = cb.get_rates(metric_rollup_record)
+        rates_to_apply = cb.rates(metric_rollup_record)
 
         # key contains resource_id and timestamp (query_start_time...query_end_time)
         # extra_fields there some extra field like resource name and
@@ -73,6 +73,30 @@ class Chargeback < ActsAsArModel
     _log.info("Calculating chargeback costs...Complete")
 
     [data.map { |r| new(r.last) }]
+  end
+
+  def rates(metric_rollup_record)
+    rates = get_rates(metric_rollup_record)
+
+    metric_rollup_record_tags = metric_rollup_record.tag_names.split("|")
+
+    unique_rates_by_tagged_resources(rates, metric_rollup_record_tags)
+  end
+
+  def unique_rates_by_tagged_resources(rates, metric_rollup_record_tags)
+    grouped_rates = rates.group_by(&:rate_type)
+
+    compute_rates = select_rate_by_tags(grouped_rates["Compute"] || [], metric_rollup_record_tags)
+    storage_rates = select_rate_by_tags(grouped_rates["Storage"] || [], metric_rollup_record_tags)
+
+    [compute_rates, storage_rates].flatten
+  end
+
+  def select_rate_by_tags(rates, metric_rollup_record_tags)
+    return rates if rates.empty? || rates.count == 1
+    return rates unless rates.all?(&:assigned_tags?) # Are rates assigned to tagged resources ?
+
+    rates.sort_by(&:description).detect { |rate| (rate.assigned_tags & metric_rollup_record_tags).present? }
   end
 
   def self.hours_in_interval(query_start_time, query_end_time, interval)
