@@ -11,6 +11,7 @@ class ApplicationHelper::Toolbar::CloudVolumesCenter < ApplicationHelper::Toolba
                        'pficon pficon-add-circle-o fa-lg',
                        t = N_('Add a new Cloud Volume'),
                        t,
+                       :klass => ApplicationHelper::Button::CloudVolumeNew
                      ),
                      separator,
                      button(
