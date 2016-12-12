@@ -27,7 +27,7 @@ module ProcessTasksMixin
 
       # TODO: invoke_tasks_remote currently is only implemented by VmOrTemplate.
       # it can be refactored to be generalized like invoke_tasks_local
-      invoke_tasks_remote(options.merge(:ids => remote)) if remote.present? && respond_to?("invoke_tasks_remote")
+      invoke_tasks_remote_queue(options.merge(:ids => remote)) if remote.present? && respond_to?("invoke_tasks_remote_queue")
     end
 
     def invoke_tasks_local(options)

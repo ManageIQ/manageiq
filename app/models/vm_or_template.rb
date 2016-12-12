@@ -483,6 +483,52 @@ class VmOrTemplate < ApplicationRecord
     MiqQueue.put(queue_opts)
   end
 
+  def self.invoke_api_task(hostname, action, ids)
+    require 'rest-client'
+    require 'json'
+
+    api_user     = Settings.webservices.remote_miq_api.user
+    api_password = Settings.webservices.remote_miq_api.password
+
+    raise "No API password provided for user #{api_user} for remote #{action}" if api_password.blank?
+
+    uri = URI::HTTPS.build(
+      :host     => hostname,
+      :userinfo => "#{api_user}:#{api_password}",
+      :path     => "/api/vms"
+    )
+
+    request = {
+      "action"    => action,
+      "resources" => ids.collect { |id| {"id" => id} }
+    }
+
+    begin
+      timeout = Settings.webservices.remote_miq_api.request_timeout
+
+      RestClient::Resource.new(
+        uri.to_s,
+        :verify_ssl   => OpenSSL::SSL::VERIFY_NONE,
+        :timeout      => timeout,
+        :open_timeout => timeout,
+        :read_timeout => timeout
+      ).post(request.to_json) do |response|
+        if [301, 302, 307].include?(response.code)
+          response.follow_redirection
+        end
+        result = JSON.parse(response)
+        if response.code >= 400
+          $log.error("Remote #{action} to #{hostname} for VMs #{ids} failed: #{result["error"]["message"]}")
+          raise
+        end
+        $log.info("Remote #{action} to #{hostname} for VMs #{ids} succeeded: #{result}")
+      end
+    rescue RestClient::Exception => err
+      $log.error("RestClient exception during remote #{action} to #{hostname} for VMs #{ids}: #{err.message}")
+      raise
+    end
+  end
+
   def self.invoke_tasks_remote(options)
     ids_by_region = options[:ids].group_by { |id| ApplicationRecord.id_to_region(id.to_i) }
     ids_by_region.each do |region, ids|
@@ -494,9 +540,7 @@ class VmOrTemplate < ApplicationRecord
       end
 
       begin
-        raise _("SOAP services are no longer supported. Remote server operations are dependent on a REST client library.")
-        # client = VmdbwsClient.new(hostname)  FIXME: Replace with REST client library
-        client.vm_invoke_tasks(remote_options)
+        invoke_api_task(hostname, options[:task], options[:ids])
       rescue => err
         # Handle specific error case, until we can figure out how it occurs
         if err.class == ArgumentError && err.message == "cannot interpret as DNS name: nil"
@@ -505,7 +549,8 @@ class VmOrTemplate < ApplicationRecord
           next
         end
 
-        $log.error("An error occurred while invoking remote tasks...Requeueing for 1 minute from now.")
+        $log.error("An error occurred while invoking remote tasks: #{err.message}")
+        $log.warn("Requeueing remote task for 1 minute from now.")
         $log.log_backtrace(err)
         invoke_tasks_remote_queue(remote_options, Time.now.utc + 1.minute)
         next
