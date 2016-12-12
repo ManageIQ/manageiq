@@ -435,7 +435,7 @@ describe "Service Requests API" do
     it 'forbids service request update without an appropriate role' do
       api_basic_authorize
 
-      run_post(requests_url, gen_request(:edit))
+      run_post(service_requests_url, gen_request(:edit))
 
       expect(response).to have_http_status(:forbidden)
     end
@@ -443,7 +443,7 @@ describe "Service Requests API" do
     it 'updates a single service request' do
       api_basic_authorize collection_action_identifier(:service_requests, :edit)
 
-      run_post(requests_url(service_request.id), gen_request(:edit, :options => {:foo => "bar"}))
+      run_post(service_requests_url(service_request.id), gen_request(:edit, :options => {:foo => "bar"}))
 
       expected = {
         "id"      => service_request.id,
@@ -460,13 +460,14 @@ describe "Service Requests API" do
                                              :source_type => template.class.name)
       api_basic_authorize collection_action_identifier(:service_requests, :edit)
 
-      run_post(requests_url, :action    => "edit",
-                             :resources => [
-                               {:id      => service_request.id,
-                                :options => {:foo => 'bar'}},
-                               {:id      => service_request_2.id,
-                                :options => {:foo => 'foo'}}
-                             ])
+      run_post(service_requests_url,
+               :action    => "edit",
+               :resources => [
+                 {:id      => service_request.id,
+                  :options => {:foo => 'bar'}},
+                 {:id      => service_request_2.id,
+                  :options => {:foo => 'foo'}}
+               ])
       expected = {
         'results' => a_collection_including(
           a_hash_including("options" => { "foo" => "bar"}),
