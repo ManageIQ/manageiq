@@ -200,6 +200,10 @@ describe MiqWorker do
 
     it "uses passed in config" do
       settings.store_path(:workers, :worker_base, :queue_worker_base, :ems_refresh_worker,
+                          :ems_refresh_worker_amazon, :memory_threshold, "5.terabyte")
+      stub_settings(settings)
+
+      settings.store_path(:workers, :worker_base, :queue_worker_base, :ems_refresh_worker,
                           :ems_refresh_worker_amazon, :memory_threshold, "1.terabyte")
       actual = ManageIQ::Providers::Amazon::CloudManager::RefreshWorker
                .worker_settings(:config => settings)[:memory_threshold]
