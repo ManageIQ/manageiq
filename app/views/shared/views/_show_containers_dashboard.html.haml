@@ -93,13 +93,13 @@
     .col-xs-12.col-sm-6.col-md-5
       .row.row-tile-pf
         .col-xs-12.col-sm-12.col-md-12
-          %div{"head-title" => "{{networkUtilizationDailyConfig.headTitle}}",
+          %div{"head-title" => "{{networkUtilizationConfig.headTitle}}",
                "pf-card" => ""}
 
             .spinner.spinner-lg.loading{"ng-if" => "!loadingDone"}
-            %div{"chart-data" => "dailyNetworkUtilization",
+            %div{"chart-data" => "networkUtilization",
                  "chart-height" => "chartHeight",
-                 :config => "networkUtilizationDailyConfig",
+                 :config => "networkUtilizationConfig",
                  "ng-if" => "loadingDone",
                  "pf-trends-chart" => ""}
 

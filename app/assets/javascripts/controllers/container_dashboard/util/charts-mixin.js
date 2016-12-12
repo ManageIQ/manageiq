@@ -9,6 +9,14 @@ angular.module('miq.util').factory('chartsMixin', ['pfUtils', function(pfUtils) 
     });
   };
 
+  var hourlyTimeTooltip = function (data) {
+    var theMoment = moment(data[0].x);
+    return _.template('<div class="tooltip-inner"><%- col1 %>: <%- col2 %></div>')({
+      col1: theMoment.format('h:mm A'),
+      col2: data[0].value + ' ' + data[0].name
+    });
+  };
+
   var dailyPodTimeTooltip = function (data) {
     var theMoment = moment(data[0].x);
     return _.template('<div class="tooltip-inner"><%- col1 %></br>  <%- col2 %></div>')({
@@ -65,6 +73,22 @@ angular.module('miq.util').factory('chartsMixin', ['pfUtils', function(pfUtils) 
       units    : __('KBps'),
       dataName : __('KBps'),
       tooltipFn  : dailyTimeTooltip
+    },
+    hourlyNetworkUsageConfig: {
+      chartId  : 'networkUsageHourlyChart',
+      headTitle: __('Network Utilization Trend'),
+      timeFrame: __('Last 24 Hours'),
+      units    : __('KBps'),
+      dataName : __('KBps'),
+      tooltipFn  : hourlyTimeTooltip
+    },
+    realtimeNetworkUsageConfig: {
+      chartId  : 'networkUsageHourlyChart',
+      headTitle: __('Network Utilization Trend'),
+      timeFrame: __('Last 60 minutes'),
+      units    : __('KBps'),
+      dataName : __('KBps'),
+      tooltipFn  : hourlyTimeTooltip
     },
     dailyPodUsageConfig: {
       chartId     : 'podUsageDailyChart',

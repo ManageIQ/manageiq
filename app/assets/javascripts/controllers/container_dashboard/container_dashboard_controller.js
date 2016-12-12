@@ -124,12 +124,34 @@ miqHttpInject(angular.module('containerDashboard', ['ui.bootstrap', 'patternfly'
           $scope.nodeMemoryUsage.loadingDone = true;
 
           // Network metrics
-          $scope.networkUtilizationDailyConfig = chartsMixin.chartConfig.dailyNetworkUsageConfig;
+          if (data.daily_network_metrics != undefined && data.daily_network_metrics.xData.length > 1) {
+            $scope.networkUtilizationConfig = chartsMixin.chartConfig.dailyNetworkUsageConfig;
+            $scope.networkUtilization =
+              chartsMixin.processUtilizationData(data.daily_network_metrics,
+                                                 "dates",
+                                                 $scope.networkUtilizationConfig.units);
+          } else if (data.hourly_network_metrics != undefined && data.hourly_network_metrics.xData.length > 1) {
+            data.hourly_network_metrics.xData = data.hourly_network_metrics.xData.map(function (date) {
+              return dashboardUtilsFactory.parseDate(date)
+            });
 
-          $scope.dailyNetworkUtilization =
-            chartsMixin.processUtilizationData(data.daily_network_metrics,
-                                               "dates",
-                                               $scope.networkUtilizationDailyConfig.units);
+            $scope.networkUtilizationConfig = chartsMixin.chartConfig.hourlyNetworkUsageConfig;
+            $scope.networkUtilization =
+              chartsMixin.processUtilizationData(data.hourly_network_metrics,
+                                                 "dates",
+                                                  $scope.networkUtilizationConfig.units);
+          } else {
+            if (data.realtime_network_metrics != undefined) {
+              data.realtime_network_metrics.xData = data.realtime_network_metrics.xData.map(function (date) {
+                return dashboardUtilsFactory.parseDate(date)
+              });
+            }
+            $scope.networkUtilizationConfig = chartsMixin.chartConfig.realtimeNetworkUsageConfig;
+            $scope.networkUtilization =
+              chartsMixin.processUtilizationData(data.realtime_network_metrics,
+                    "dates",
+                    $scope.networkUtilizationConfig.units);
+          }
 
           // Pod metrics
           $scope.podEntityTrendDailyConfig = chartsMixin.chartConfig.dailyPodUsageConfig;

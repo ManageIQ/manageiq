@@ -10,15 +10,16 @@ class ContainerDashboardService
 
   def all_data
     {
-      :providers_link         => get_url_to_entity(:ems_container),
-      :status                 => status,
-      :providers              => providers,
-      :heatmaps               => heatmaps,
-      :ems_utilization        => ems_utilization,
-      :hourly_network_metrics => hourly_network_metrics,
-      :daily_network_metrics  => daily_network_metrics,
-      :daily_pod_metrics      => daily_pod_metrics,
-      :daily_image_metrics    => daily_image_metrics
+      :providers_link           => get_url_to_entity(:ems_container),
+      :status                   => status,
+      :providers                => providers,
+      :heatmaps                 => heatmaps,
+      :ems_utilization          => ems_utilization,
+      :realtime_network_metrics => realtime_network_metrics,
+      :hourly_network_metrics   => hourly_network_metrics,
+      :daily_network_metrics    => daily_network_metrics,
+      :daily_pod_metrics        => daily_pod_metrics,
+      :daily_image_metrics      => daily_image_metrics
     }.compact
   end
 
@@ -182,6 +183,25 @@ class ContainerDashboardService
       {
         :cpu => nil,
         :mem => nil
+      }
+    end
+  end
+
+  def realtime_network_metrics
+    current_user = @controller.current_user
+    tp = TimeProfile.profile_for_user_tz(current_user.id, current_user.get_timezone) || TimeProfile.default_time_profile
+    realtime_network_trend = Hash.new(0)
+    Metric::Helper.find_for_interval_name('realtime', tp)
+                  .where(:resource => (@ems.try(:container_nodes) || ContainerNode.all))
+                  .where('timestamp > ?', 1.hour.ago.utc).order('timestamp').each do |m|
+      minute = m.timestamp.beginning_of_minute.utc
+      realtime_network_trend[minute] += m.net_usage_rate_average if m.net_usage_rate_average.present?
+    end
+
+    if realtime_network_trend.any?
+      {
+        :xData => realtime_network_trend.keys,
+        :yData => realtime_network_trend.values.map(&:round)
       }
     end
   end
