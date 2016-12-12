@@ -593,7 +593,7 @@ class ChargebackController < ApplicationController
       @edit[:new][:details].push(temp)
     end
 
-    @edit[:new][:per_time_types] = {"hourly" => _("Hourly")}
+    @edit[:new][:per_time_types] = {"hourly" => _("Hourly"), "monthly" => _("Monthly")}
 
     if params[:typ] == "copy"
       @rate.id = nil
