@@ -222,7 +222,7 @@ module Rbac
   end
 
   def self.find_targets_filtered_by_ids(scope, find_options, u_filtered_ids, filtered_ids)
-    total_count  = total_scope(scope, u_filtered_ids, find_options[:conditions], find_options[:include]).count
+    total_count  = total_scope(scope, u_filtered_ids, find_options[:conditions], find_options[:include]).count(:all)
     if filtered_ids
       ids_clause  = ["#{scope.table_name}.id IN (?)", filtered_ids]
       find_options[:conditions] = MiqExpression.merge_where_clauses(find_options[:conditions], ids_clause)
