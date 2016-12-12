@@ -1,4 +1,7 @@
 module Metric::LongTermAverages
+  LIVE_PERF_SUPPORTED_OBJ = %w(ContainerNode ContainerGroup Container ContainerProject ContainerManager).freeze
+  LIVE_PERF_TAG = '/managed/live_reports/use_hawkular'.freeze
+
   AVG_COLS_TO_OVERHEAD_TYPE = {
     :cpu_usagemhz_rate_average      => nil,
     :derived_memory_used            => nil,
@@ -30,6 +33,29 @@ module Metric::LongTermAverages
 
   AVG_DAYS = 30
 
+  def self.get_class_name(obj)
+    obj.class.name.split('::').last
+  end
+
+  def self.get_field_value(record, field)
+    if record.kind_of?(Hash)
+      record[field]
+    else
+      record.send(field)
+    end
+  end
+
+  def self.live_report?(obj)
+    class_name = get_class_name(obj) if obj
+    ems = if class_name == "ContainerManager"
+            obj
+          elsif obj.try(:ems_id)
+            ExtManagementSystem.find(obj.ems_id)
+          end
+
+    ems && ems.tags.exists?(:name => LIVE_PERF_TAG) && LIVE_PERF_SUPPORTED_OBJ.include?(class_name)
+  end
+
   def self.get_averages_over_time_period(obj, options = {})
     results = {:avg => {}, :dev => {}}
     vals = {}
@@ -40,7 +66,16 @@ module Metric::LongTermAverages
     avg_cols = options[:avg_cols] || AVG_COLS
 
     ext_options = ext_options.merge(:only_cols => avg_cols)
-    perfs = VimPerformanceAnalysis.find_perf_for_time_period(obj, "daily", :end_date => Time.now.utc, :days => avg_days, :ext_options => ext_options)
+    perfs = if live_report?(obj)
+              VimPerformanceAnalysis.live_perf_for_time_period(
+                obj, "daily", :end_date => Time.now.utc, :days => avg_days, :ext_options => ext_options
+              ) || []
+            else
+              VimPerformanceAnalysis.find_perf_for_time_period(
+                obj, "daily", :end_date => Time.now.utc, :days => avg_days, :ext_options => ext_options
+              )
+            end
+
     perfs.each do |p|
       if ext_options[:time_profile] && !ext_options[:time_profile].ts_day_in_profile?(p.timestamp.in_time_zone(tz))
         next
@@ -51,7 +86,7 @@ module Metric::LongTermAverages
         results[:avg][c] ||= 0
         counts[c] ||= 0
 
-        val =  p.send(c) || 0
+        val = get_field_value(p, c) || 0
         vals[c] << val
         val *= 1.0 unless val.nil?
         Metric::Aggregation::Aggregate.average(c, self, results[:avg], counts, val)
