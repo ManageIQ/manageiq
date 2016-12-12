@@ -202,8 +202,6 @@ module SupportsFeatureMixin
       SupportsFeatureMixin::QUERYABLE_FEATURES.key?(feature.to_sym)
     end
 
-    private
-
     def unsupported
       # This is a class variable and it might be modified during runtime
       # because we dont eager load all classes at boot time, so it needs to be thread safe
@@ -245,5 +243,9 @@ module SupportsFeatureMixin
         !unsupported.key?(feature)
       end
     end
+
+    private :unsupported
+    private :unsupported_reason_add
+    private :define_supports_feature_methods
   end
 end
