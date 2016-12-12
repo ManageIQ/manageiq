@@ -63,7 +63,8 @@
       %tr{:onclick => "miqRowClick('#{j row[:id]}', #{row_url}, #{j row_url_ajax.to_s}); return false;"}
         - row[:cells].each do |cell|
           -# double {{}} to work around hamlit issue #28
-          %td{{:onclick => (cell[:is_checkbox] || cell[:is_button]) ? "event.stopPropagation()" : false}}
+          %td{{:onclick => (cell[:is_checkbox] || cell[:is_button]) ? "event.stopPropagation()" : false,
+               :title => cell[:text]}}
             - if cell[:is_checkbox]
               = check_box_tag("check_#{row[:id]}", row[:id], false,
                 :onchange => "miqGridOnCheck(this, '#{button_div}')",
@@ -81,4 +82,4 @@
                 %i{:class => cell[:icon], :title => cell[:title]}
               - elsif cell[:image]
                 = image_tag(image_path(cell[:image]), :alt => cell[:title], :title => cell[:title])
-              = cell[:text]
+              = truncate(cell[:text], length: 30)
