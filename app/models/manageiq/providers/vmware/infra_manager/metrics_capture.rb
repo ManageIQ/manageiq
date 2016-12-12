@@ -134,7 +134,7 @@ class ManageIQ::Providers::Vmware::InfraManager::MetricsCapture < ManageIQ::Prov
       next if counter.nil?
 
       # Filter the metrics for only the cols we will use
-      next unless Metric::Capture.capture_cols.include?(counter[:counter_key].to_sym)
+      next unless Metric::Capture::CAPTURE_COLS.include?(counter[:counter_key].to_sym)
 
       vim_key      = metric["counterId"].to_s
       instance     = metric["instance"].to_s

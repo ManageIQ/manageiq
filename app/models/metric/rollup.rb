@@ -1,8 +1,8 @@
 module Metric::Rollup
-  ROLLUP_COLS  = Metric.columns_hash.collect { |c, h| c.to_sym if h.type == :float || c[0, 7] == "derived" }.compact +
+  ROLLUP_COLS  = Metric::Capture::CAPTURE_COLS +
                  [:stat_container_group_create_rate,
                   :stat_container_group_delete_rate,
-                  :stat_container_image_registration_rate]
+                  :stat_container_image_registration_rate].freeze
   STORAGE_COLS = Metric.columns_hash.collect { |c, _h| c.to_sym if c.starts_with?("derived_storage_") }.compact
 
   NON_STORAGE_ROLLUP_COLS = (ROLLUP_COLS - STORAGE_COLS)
@@ -214,7 +214,7 @@ module Metric::Rollup
     new_perf_counts = {}
 
     rt_perfs.each do |rt|
-      Metric::Capture.capture_cols.each do |col|
+      Metric::Capture::CAPTURE_COLS.each do |col|
         new_perf[col] ||= 0
         new_perf_counts[col] ||= 0
 
