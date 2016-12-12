@@ -260,11 +260,12 @@ class MiqPolicyController < ApplicationController
 
   def tree_select
     # set these when a link on one of the summary screen was pressed
-    self.x_active_accord = params[:accord]           if params[:accord]
-    self.x_active_tree   = "#{params[:accord]}_tree" if params[:accord]
-    self.x_active_tree   = params[:tree]             if params[:tree]
-    self.x_node          = params[:id]
-
+    if params[:accord]
+      self.x_active_accord = params[:accord]
+      self.x_active_tree = "#{params[:accord]}_tree"
+    end
+    self.x_active_tree = params[:tree] if params[:tree]
+    self.x_node = params[:id]
     get_node_info(x_node)
     replace_right_cell(:nodetype => @nodetype)
   end
