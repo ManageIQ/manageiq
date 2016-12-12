@@ -23,6 +23,8 @@ cols:
 - emstype_description
 - port
 - total_vms
+- total_cloud_vcpus
+- total_cloud_memory
 - total_miq_templates
 - region_description
 
@@ -43,8 +45,18 @@ col_order:
 - emstype_description
 - zone.name
 - total_vms
+- total_cloud_vcpus
+- total_cloud_memory
 - total_miq_templates
 - region_description
+
+col_formats:
+-
+-
+-
+-
+-
+- :megabytes_human
 
 # Column titles, in order
 headers:
@@ -52,6 +64,8 @@ headers:
 - Type
 - EVM Zone
 - Instances
+- VCpus
+- Memory
 - Images
 - Region
 

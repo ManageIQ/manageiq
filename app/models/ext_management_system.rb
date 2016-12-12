@@ -138,6 +138,9 @@ class ExtManagementSystem < ApplicationRecord
   virtual_column :total_vms_suspended,     :type => :integer
   virtual_total  :total_subnets,           :cloud_subnets
 
+  virtual_aggregate :total_cloud_vcpus, :vms, :sum, :cpu_total_cores
+  virtual_aggregate :total_cloud_memory, :vms, :sum, :ram_size
+
   alias_method :clusters, :ems_clusters # Used by web-services to return clusters as the property name
   alias_attribute :to_s, :name
 
