@@ -79,12 +79,23 @@ class ChargebackRateDetail < ApplicationRecord
     hourly_fixed_rate + rate_adjustment(hourly_variable_rate) * value
   end
 
+  def hours_in_month
+    # If the interval is monthly, we have use exact number of days in interval (i.e. 28, 29, 30, or 31)
+    # othewise (for weekly and daily intervals) we assume month equals to 30 days
+    monthly? ? @hours_in_interval : (1.month / 1.hour)
+  end
+
+  def monthly?
+    # A heuristic. Is the interval lenght about 30 days?
+    (@hours_in_interval * 1.hour - 1.month).abs < 3.days
+  end
+
   def hourly(rate)
     hourly_rate = case per_time
                   when "hourly"  then rate
                   when "daily"   then rate / 24
                   when "weekly"  then rate / 24 / 7
-                  when "monthly" then rate / @hours_in_interval
+                  when "monthly" then rate / hours_in_month
                   when "yearly"  then rate / 24 / 365
                   else raise "rate time unit of '#{per_time}' not supported"
                   end
