@@ -54,11 +54,14 @@ function MwAddDatasourceCtrl($scope, $rootScope, miqService, mwAddDatasourceServ
 
   vm.chooseDsModel.datasources = mwAddDatasourceService.getDatasources();
 
-  $scope.$on(ADD_DATASOURCE_EVENT, function(event, payload) {
+  $scope.$on(ADD_DATASOURCE_EVENT, function(_event, payload) {
     if (mwAddDatasourceService.isXaDriver(vm.step2DsModel.selectedJdbcDriver)) {
-      angular.extend(payload, {xaDatasource: true,
-        xaDatasourceClass: vm.step2DsModel.xaDsClass,
-        driverClass: ''});
+      angular.extend(payload,
+        {
+          xaDatasource: true,
+          xaDatasourceClass: vm.step2DsModel.xaDsClass,
+          driverClass: '',
+        });
     }
 
     mwAddDatasourceService.sendAddDatasource(payload).then(
@@ -163,4 +166,3 @@ function MwAddDatasourceCtrl($scope, $rootScope, miqService, mwAddDatasourceServ
     vm.step3DsModel.securityDomain = '';
   };
 }
-
