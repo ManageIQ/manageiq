@@ -114,13 +114,13 @@ class CimInstanceController < ApplicationController
     @gtl_url = "/show"
 
     case @display
-    when "download_pdf", "main", "summary_only"
+    when "main", "summary_only"
       get_tagdata(@record)
       drop_breadcrumb({:name => ui_lookup(:tables => self.class.table_name), :url => "/#{self.class.table_name}/show_list?page=#{@current_page}&refresh=y"}, true)
       drop_breadcrumb(:name => _("%{name} (Summary)") % {:name => @record.evm_display_name},
                       :url  => "/#{self.class.table_name}/show/#{@record.id}")
       @showtype = "main"
-      set_summary_pdf_data if ["download_pdf", "summary_only"].include?(@display)
+      set_summary_pdf_data if @display == "summary_only"
 
     when "performance"
       @showtype = "performance"

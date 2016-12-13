@@ -17,6 +17,12 @@ class InfraNetworkingController < ApplicationController
     redirect_to :action => 'explorer', :flash_msg => @flash_array ? @flash_array[0][:message] : nil
   end
 
+  def download_summary_pdf
+    super do
+      @switch = @record
+    end
+  end
+
   def show(id = nil)
     @explorer = true
     @display = params[:display] || "main" unless control_selected?
@@ -55,12 +61,11 @@ class InfraNetworkingController < ApplicationController
       drop_breadcrumb(:name => _("%{name} (All Registered Hosts)") % {:name => @record.name},
                       :url  => "/infra_networking/x_show/#{@record.id}?display=hosts")
       @showtype = "hosts"
-    when "download_pdf", "main"
+    when "main"
       get_tagdata(@configuration_job)
       drop_breadcrumb(:name => _("%{name} (Summary)") % {:name => @record..name},
                       :url  => "/infra_networking/show/#{@record.id}")
       @showtype = "main"
-      set_summary_pdf_data if %w(download_pdf).include?(@display)
     end
     @lastaction = "show"
   end

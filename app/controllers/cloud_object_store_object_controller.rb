@@ -17,6 +17,12 @@ class CloudObjectStoreObjectController < ApplicationController
     return tag("CloudObjectStoreObject") if params[:pressed] == 'cloud_object_store_object_tag'
   end
 
+  def download_summary_pdf
+    super do
+      @object_store_object = @record
+    end
+  end
+
   def show
     @display = params[:display] || "main" unless control_selected?
     @showtype = @display
@@ -33,14 +39,14 @@ class CloudObjectStoreObjectController < ApplicationController
       true
     )
     case @display
-    when "download_pdf", "main", "summary_only"
+    when "main", "summary_only"
       get_tagdata(@object_store_object)
       drop_breadcrumb(
         :name => _("%{name} (Summary)") % {:name => @object_store_object.key.to_s},
         :url  => "/cloud_object_store_object/show/#{@object_store_object.id}"
       )
       @showtype = "main"
-      set_summary_pdf_data if %w(download_pdf summary_only).include?(@display)
+      set_summary_pdf_data if @display == "summary_only"
     end
 
     if params[:ppsetting] || params[:searchtag] || params[:entry] || params[:sort_choice]

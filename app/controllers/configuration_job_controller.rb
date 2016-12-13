@@ -18,6 +18,12 @@ class ConfigurationJobController < ApplicationController
     ems_configprovider_path(*args)
   end
 
+  def download_summary_pdf
+    super do
+      @configuration_job = @record
+    end
+  end
+
   def show
     return if perfmenu_click?
     @display = params[:display] || "main" unless control_selected?
@@ -30,12 +36,12 @@ class ConfigurationJobController < ApplicationController
     drop_breadcrumb({:name => _("Configuration_Jobs"),
                      :url  => "/configuration_job/show_list?page=#{@current_page}&refresh=y"}, true)
     case @display
-    when "download_pdf", "main", "summary_only"
+    when "main", "summary_only"
       get_tagdata(@configuration_job)
       drop_breadcrumb(:name => _("%{name} (Summary)") % {:name => @configuration_job.name},
                       :url  => "/configuration_job/show/#{@configuration_job.id}")
       @showtype = "main"
-      set_summary_pdf_data if %w(download_pdf summary_only).include?(@display)
+      set_summary_pdf_data if @display == 'summary_only'
     end
 
     # Came in from outside show_list partial

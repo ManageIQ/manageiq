@@ -151,6 +151,14 @@ class ApplicationController < ActionController::Base
     redirect_to(:action => params[:tab], :id => params[:id])
   end
 
+  def download_summary_pdf
+    @record = identify_record(params[:id])
+    return if record_no_longer_exists?(@record)
+    yield if block_given?
+    @display = "download_pdf"
+    set_summary_pdf_data
+  end
+
   def build_targets_hash(items, typ = true)
     @targets_hash ||= {}
     if typ

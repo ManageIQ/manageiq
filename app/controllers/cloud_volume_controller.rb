@@ -65,6 +65,12 @@ class CloudVolumeController < ApplicationController
     end
   end
 
+  def download_summary_pdf
+    super do
+      @volume = @record
+    end
+  end
+
   def show
     @display = params[:display] || "main" unless control_selected?
     @showtype = @display
@@ -80,14 +86,14 @@ class CloudVolumeController < ApplicationController
                     true)
 
     case @display
-    when "download_pdf", "main", "summary_only"
+    when "main", "summary_only"
       get_tagdata(@volume)
       drop_breadcrumb(
         :name => _("%{name} (Summary)") % {:name => @volume.name.to_s},
         :url  => "/cloud_volume/show/#{@volume.id}"
       )
       @showtype = "main"
-      set_summary_pdf_data if %w(download_pdf summary_only).include?(@display)
+      set_summary_pdf_data if @display == 'summary_only'
     when "cloud_volume_snapshots"
       title = ui_lookup(:tables => 'cloud_volume_snapshots')
       kls   = CloudVolumeSnapshot

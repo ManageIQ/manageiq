@@ -20,13 +20,13 @@ class ResourcePoolController < ApplicationController
                      :url  => "/resource_pool/show_list?page=#{@current_page}&refresh=y"}, true)
 
     case @display
-    when "download_pdf", "main", "summary_only"
+    when "main", "summary_only"
       get_tagdata(@record)
       txt = @record.vapp ? _("(vApp)") : ""
       drop_breadcrumb(:name => _("%{name} %{text} (Summary)") % {:name => @record.name, :text => txt},
                       :url  => "/resource_pool/show/#{@record.id}")
       @showtype = "main"
-      set_summary_pdf_data if ["download_pdf", "summary_only"].include?(@display)
+      set_summary_pdf_data if @display == "summary_only"
 
     when "vms"
       drop_breadcrumb(:name => _("%{name} (Direct VMs)") % {:name => @record.name},

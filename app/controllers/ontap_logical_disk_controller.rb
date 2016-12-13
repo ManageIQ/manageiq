@@ -3,6 +3,8 @@ class OntapLogicalDiskController < CimInstanceController
     process_button
   end
 
+  # TODO add download_summary_pdf
+
   def show
     process_show(
       'cim_base_storage_extents' => :base_storage_extents,

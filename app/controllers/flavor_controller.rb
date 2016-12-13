@@ -13,5 +13,11 @@ class FlavorController < ApplicationController
     %w(instances)
   end
 
+  def download_summary_pdf
+    @record = identify_record(params[:id])
+    @display = "download_pdf"
+    set_summary_pdf_data
+  end
+
   menu_section :clo
 end

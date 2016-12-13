@@ -12,6 +12,12 @@ class OrchestrationStackController < ApplicationController
     redirect_to :action => 'show_list'
   end
 
+  def download_summary_pdf
+    super do
+      @orchestration_stack = @record
+    end
+  end
+
   def show
     return if perfmenu_click?
     @display = params[:display] || "main" unless control_selected?
@@ -24,12 +30,12 @@ class OrchestrationStackController < ApplicationController
     drop_breadcrumb({:name => _("Orchestration Stacks"),
                      :url  => "/orchestration_stack/show_list?page=#{@current_page}&refresh=y"}, true)
     case @display
-    when "download_pdf", "main", "summary_only"
+    when "main", "summary_only"
       get_tagdata(@orchestration_stack)
       drop_breadcrumb(:name => _("%{name} (Summary)") % {:name => @orchestration_stack.name},
                       :url  => "/orchestration_stack/show/#{@orchestration_stack.id}")
       @showtype = "main"
-      set_summary_pdf_data if %w(download_pdf summary_only).include?(@display)
+      set_summary_pdf_data if @display == 'summary_only'
     when "instances"
       title = ui_lookup(:tables => "vm_cloud")
       drop_breadcrumb(:name => _("%{name} (All %{title})") % {:name => @orchestration_stack.name, :title => title},

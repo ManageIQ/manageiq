@@ -113,6 +113,12 @@ module EmsCommon
     view_setup_helper(display, *view_setup_params[display])
   end
 
+  def download_summary_pdf
+    super do
+      @ems = @record
+    end
+  end
+
   def show
     return unless init_show
     session[:vm_summary_cool] = (settings(:views, :vm_summary_cool).to_s == "summary")
@@ -123,7 +129,7 @@ module EmsCommon
 
     case params[:display]
     when 'main'                          then show_main
-    when 'download_pdf', 'summary_only'  then show_download
+    when 'summary_only'                  then show_download
     when 'props'                         then show_props
     when 'ems_folders'                   then show_ems_folders
     when 'timeline'                      then show_timeline

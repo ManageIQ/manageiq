@@ -53,11 +53,11 @@ module ContainersCommonMixin
     drop_breadcrumb({:name => display_name,
                      :url  => "/#{controller_name}/show_list?page=#{@current_page}&refresh=y"},
                     true)
-    if %w(download_pdf main summary_only).include? @display
+    if %w(main summary_only).include? @display
       get_tagdata(@record)
       drop_breadcrumb(:name => _("%{name} (Summary)") % {:name => record.name},
                       :url  => "/#{controller_name}/show/#{record.id}")
-      set_summary_pdf_data if %w(download_pdf summary_only).include?(@display)
+      set_summary_pdf_data if @display == 'summary_only'
     elsif @display == "timeline"
       @showtype = "timeline"
       session[:tl_record_id] = params[:id] if params[:id]

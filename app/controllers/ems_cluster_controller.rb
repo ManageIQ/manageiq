@@ -11,6 +11,13 @@ class EmsClusterController < ApplicationController
     super
   end
 
+  def download_summary_pdf
+    super do
+      @ems_cluster = @record
+    end
+  end
+
+
   def show
     return if perfmenu_click?
     @display = params[:display] || "main" unless control_selected?
@@ -23,12 +30,12 @@ class EmsClusterController < ApplicationController
     @gtl_url = "/show"
 
     case @display
-    when "download_pdf", "main", "summary_only"
+    when "main", "summary_only"
       get_tagdata(@ems_cluster)
       drop_breadcrumb({:name => _("Clusters"), :url => "/ems_cluster/show_list?page=#{@current_page}&refresh=y"}, true)
       drop_breadcrumb(:name => @ems_cluster.name + _(" (Summary)"), :url => "/ems_cluster/show/#{@ems_cluster.id}")
       @showtype = "main"
-      set_summary_pdf_data if ["download_pdf", "summary_only"].include?(@display)
+      set_summary_pdf_data if @display == "summary_only"
 
     when "descendant_vms"
       drop_breadcrumb(:name => @ems_cluster.name + _(" (All VMs - Tree View)"),
