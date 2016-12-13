@@ -1,3 +1,9 @@
+.row.toolbar-pf-results
+  .col-sm-12
+    - view.col_order.each do |col|
+      - if col.starts_with?("total_")
+        %h5
+          "#{table.data.map { |s| s[col] }.reduce(0, :+)} #{view.headers[view.col_order.index(col)]}"
 - if @grid_hash
   - url = @showlinks == false ? nil : view_to_url(view, @parent)
   - grid_options = {:grid_id         => "list_grid",
