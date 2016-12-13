@@ -131,6 +131,8 @@ class Blueprint < ApplicationRecord
       if node["tags"]
         parse_tags(node["tags"]).each { |tag| Classification.classify_by_tag(new_template, tag) }
       end
+      # Update node to include ID of copied or new ServiceTemplate
+      node['id'] = new_template.id
       new_template
     end
   end
