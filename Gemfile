@@ -90,10 +90,6 @@ gem "ruport",                         "=1.7.0",                       :git => "h
 # https://github.com/jeremyevans/ruby-american_date
 gem "american_date"
 
-group :automate do
-  gem "savon",                        "~>2.2.0",   :require => false  # Automate uses this for simple SOAP Integration
-end
-
 group :ui_dependencies do # Added to Bundler.require in config/application.rb
   # Unmodified gems
   gem "angular-ui-bootstrap-rails",   "~>0.13.0"
