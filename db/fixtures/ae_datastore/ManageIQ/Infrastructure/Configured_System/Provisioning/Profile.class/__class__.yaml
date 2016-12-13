@@ -16,7 +16,7 @@ object:
       name: get_dialog_name
       display_name: 
       datatype: string
-      priority: 4
+      priority: 1
       owner: 
       default_value: 
       substitute: true
@@ -36,7 +36,7 @@ object:
       name: dialog_name
       display_name: 
       datatype: string
-      priority: 6
+      priority: 2
       owner: 
       default_value: miq_provision_configured_system_foreman_dialogs
       substitute: true
@@ -56,7 +56,7 @@ object:
       name: auto_approval_state_machine
       display_name: 
       datatype: string
-      priority: 7
+      priority: 3
       owner: 
       default_value: ProvisionRequestApproval
       substitute: true
@@ -76,7 +76,7 @@ object:
       name: quota_state_machine
       display_name: 
       datatype: string
-      priority: 8
+      priority: 4
       owner: 
       default_value: ProvisionRequestQuotaVerification
       substitute: true
@@ -96,7 +96,7 @@ object:
       name: state_machine
       display_name: 
       datatype: string
-      priority: 9
+      priority: 5
       owner: 
       default_value: Provision
       substitute: true

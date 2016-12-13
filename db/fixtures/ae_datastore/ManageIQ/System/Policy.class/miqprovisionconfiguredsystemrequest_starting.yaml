@@ -9,6 +9,4 @@ object:
     description: 
   fields:
   - rel5:
-      value: "/Infrastructure/${/#miq_request.resource.ci_type}/Provisioning/Profile/${/#user.normalized_ldap_group}#get_quota_state_machine"
-  - rel6:
-      value: "/Infrastructure/${/#miq_request.resource.ci_type}/Provisioning/StateMachines/${/#state_machine}/Default"
+      value: "/System/CommonMethods/QuotaStatemachine/quota"

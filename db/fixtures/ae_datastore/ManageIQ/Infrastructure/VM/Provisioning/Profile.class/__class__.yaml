@@ -158,7 +158,7 @@ object:
       datatype: string
       priority: 8
       owner: 
-      default_value: ProvisionRequestQuotaVerification
+      default_value: 
       substitute: true
       message: get_quota_state_machine
       visibility: 
