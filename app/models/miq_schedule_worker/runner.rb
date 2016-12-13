@@ -182,6 +182,11 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
       enqueue :storage_authentication_check_schedule
     end
 
+    every = worker_setting_or_default(:drift_state_purge_interval, 1.day)
+    scheduler.schedule_every(every, :first_in => every) do
+      enqueue :drift_state_purge_timer
+    end
+
     # Schedule - Check for session timeouts
     scheduler.schedule_every(worker_setting_or_default(:session_timeout_interval)) do
       # Session is global to the region, therefore, run it only once on the scheduler's server

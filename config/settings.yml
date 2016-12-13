@@ -1342,6 +1342,7 @@
     :schedule_worker:
       :authentication_check_interval: 1.hour
       :db_diagnostics_interval: 30.minutes
+      :drift_state_purge_interval: 1.day
       :ems_events_purge_interval: 1.day
       :evm_snapshot_delete_delay_for_job_not_found: 1.hour
       :evm_snapshot_interval: 1.hour
