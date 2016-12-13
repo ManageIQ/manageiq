@@ -1,4 +1,5 @@
 describe ChargebackVm do
+  let(:admin) { FactoryGirl.create(:user_admin) }
   before do
     MiqRegion.seed
     ChargebackRate.seed
@@ -9,9 +10,7 @@ describe ChargebackVm do
     c = FactoryGirl.create(:classification, :name => "prod", :description => "Production", :parent_id => cat.id)
     @tag = Tag.find_by_name("/managed/environment/prod")
 
-    @admin = FactoryGirl.create(:user_admin)
-
-    @vm1 = FactoryGirl.create(:vm_vmware, :name => "test_vm", :evm_owner => @admin, :ems_ref => "ems_ref")
+    @vm1 = FactoryGirl.create(:vm_vmware, :name => "test_vm", :evm_owner => admin, :ems_ref => "ems_ref")
     @vm1.tag_with(@tag.name, :ns => '*')
 
     @host1   = FactoryGirl.create(:host, :hardware => FactoryGirl.create(:hardware, :memory_mb => 8124, :cpu_total_cores => 1, :cpu_speed => 9576), :vms => [@vm1])
@@ -40,7 +39,7 @@ describe ChargebackVm do
                 :end_interval_offset => 0,
                 :tag                 => "/managed/environment/prod",
                 :ext_options         => {:tz => "Pacific Time (US & Canada)"},
-                :userid              => @admin.userid
+                :userid              => admin.userid
                 }
 
     Timecop.travel(Time.parse("2012-09-01 00:00:00 UTC"))
@@ -70,7 +69,7 @@ describe ChargebackVm do
       time     = ts.beginning_of_month.utc
       end_time = ts.end_of_month.utc
 
-      @vm2 = FactoryGirl.create(:vm_vmware, :name => "test_vm 2", :evm_owner => @admin)
+      @vm2 = FactoryGirl.create(:vm_vmware, :name => "test_vm 2", :evm_owner => admin)
 
       while time < end_time
         [@vm1, @vm2].each do |vm|
@@ -835,7 +834,7 @@ describe ChargebackVm do
 
     it 'sets extra fields' do
       extra_fields = ChargebackVm.new(report_options, metric_rollup).attributes
-      expected_fields = {"vm_name" => @vm1.name, "owner_name" => @admin.name, "provider_name" => @ems.name,
+      expected_fields = {"vm_name" => @vm1.name, "owner_name" => admin.name, "provider_name" => @ems.name,
                          "provider_uid" => @ems.guid, "vm_uid" => "ems_ref", "vm_guid" => @vm1.guid,
                          "vm_id" => @vm1.id}
 
@@ -851,7 +850,7 @@ describe ChargebackVm do
 
     it 'sets extra fields when parent ems is missing' do
       extra_fields = ChargebackVm.new(report_options, metric_rollup_without_ems).attributes
-      expected_fields = {"vm_name" => @vm1.name, "owner_name" => @admin.name, "provider_name" => nil,
+      expected_fields = {"vm_name" => @vm1.name, "owner_name" => admin.name, "provider_name" => nil,
                          "provider_uid" => nil, "vm_uid" => "ems_ref", "vm_guid" => @vm1.guid,
                          "vm_id" => @vm1.id}
 
