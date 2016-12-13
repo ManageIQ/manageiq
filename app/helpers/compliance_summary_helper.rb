@@ -35,7 +35,7 @@ module ComplianceSummaryHelper
     if @record.number_of(:compliances) == 0
       h[:value] = _("Not Available")
     else
-      h[:image] = "compliance"
+      h[:image] = "100/compliance.png"
       h[:value] = _("Available")
       h[:title] = _("Show Compliance History of this %{model} (Last 10 Checks)") %
                   {:model => ui_lookup(:model => controller.class.model.name)}
