@@ -18,6 +18,8 @@ describe ChargebackVm do
   let(:vm_used_disk_storage)      { 1.0 }
   let(:vm_allocated_disk_storage) { 4.0 }
   let(:ts) { Time.now.in_time_zone(Metric::Helper.get_time_zone(options[:ext_options])) }
+  let(:month_beginning) { ts.beginning_of_month.utc }
+  let(:month_end) { ts.end_of_month.utc }
 
   before do
     MiqRegion.seed
@@ -68,12 +70,9 @@ describe ChargebackVm do
       @service << @vm1
       @service.save
 
-      time     = ts.beginning_of_month.utc
-      end_time = ts.end_of_month.utc
-
       @vm2 = FactoryGirl.create(:vm_vmware, :name => "test_vm 2", :evm_owner => admin)
 
-      while time < end_time
+      Range.new(month_beginning, month_end, true).step_value(12.hours).each do |time|
         [@vm1, @vm2].each do |vm|
           vm.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr,
                                                   :timestamp                         => time,
@@ -93,8 +92,6 @@ describe ChargebackVm do
                                                   :resource_name                     => @vm1.name,
                                                  )
         end
-
-        time += 12.hours
       end
 
       cbrd = FactoryGirl.build(:chargeback_rate_detail_cpu_used,
@@ -470,12 +467,9 @@ describe ChargebackVm do
   context "Monthly" do
     let(:options) { base_options.merge(:interval => 'monthly') }
     before  do
-      time     = ts.beginning_of_month.utc
-      end_time = ts.end_of_month.utc
+      @hours_in_month = Time.days_in_month(month_beginning.month, month_beginning.year) * 24
 
-      @hours_in_month = Time.days_in_month(time.month, time.year) * 24
-
-      while time < end_time
+      Range.new(month_beginning, month_end, true).step_value(12.hours).each do |time|
         @vm1.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr,
                                                   :timestamp                         => time,
                                                   :cpu_usagemhz_rate_average         => cpu_usagemhz_rate,
@@ -493,7 +487,6 @@ describe ChargebackVm do
                                                   :parent_storage_id                 => @storage.id,
                                                   :resource_name                     => @vm1.name,
                                                  )
-        time += 12.hour
       end
     end
 
@@ -874,12 +867,9 @@ describe ChargebackVm do
   context "Group by tags" do
     let(:options) { base_options.merge(:interval => 'monthly', :groupby_tag => 'environment') }
     before  do
-      time     = ts.beginning_of_month.utc
-      end_time = ts.end_of_month.utc
+      @hours_in_month = Time.days_in_month(month_beginning.month, month_beginning.year) * 24
 
-      @hours_in_month = Time.days_in_month(time.month, time.year) * 24
-
-      while time < end_time
+      Range.new(month_beginning, month_end, true).step_value(12.hours).each do |time|
         @vm1.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr,
                                                   :timestamp                         => time,
                                                   :cpu_usagemhz_rate_average         => cpu_usagemhz_rate,
@@ -897,7 +887,6 @@ describe ChargebackVm do
                                                   :parent_storage_id                 => @storage.id,
                                                   :resource_name                     => @vm1.name,
         )
-        time += 12.hour
       end
     end
 

@@ -7,6 +7,8 @@ describe ChargebackContainerProject do
   let(:memory_used)       { 100.0 }
   let(:net_usage_rate)    { 25.0 }
   let(:ts) { Time.now.in_time_zone(Metric::Helper.get_time_zone(options[:ext_options])) }
+  let(:month_beginning) { ts.beginning_of_month.utc }
+  let(:month_end) { ts.end_of_month.utc }
 
   before do
     MiqRegion.seed
@@ -136,12 +138,9 @@ describe ChargebackContainerProject do
   context "Monthly" do
     let(:options) { base_options.merge(:interval => 'monthly', :entity_id => @project.id, :tag => nil) }
     before do
-      time     = ts.beginning_of_month.utc
-      end_time = ts.end_of_month.utc
+      @hours_in_month = Time.days_in_month(month_beginning.month, month_beginning.year) * 24
 
-      @hours_in_month = Time.days_in_month(time.month, time.year) * 24
-
-      while time < end_time
+      Range.new(month_beginning, month_end, true).step_value(12.hours).each do |time|
         @project.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr,
                                                          :timestamp                => time,
                                                          :cpu_usage_rate_average   => cpu_usage_rate,
@@ -152,8 +151,6 @@ describe ChargebackContainerProject do
                                                          :parent_ems_id            => @ems.id,
                                                          :tag_names                => "",
                                                          :resource_name            => @project.name)
-
-        time += 12.hours
       end
 
       @metric_size = @project.metric_rollups.size
@@ -238,12 +235,9 @@ describe ChargebackContainerProject do
   context "tagged project" do
     let(:options) { base_options.merge(:interval => 'monthly', :entity_id => nil, :tag => '/managed/environment/prod') }
     before do
-      time     = ts.beginning_of_month.utc
-      end_time = ts.end_of_month.utc
+      @hours_in_month = Time.days_in_month(month_beginning.month, month_beginning.year) * 24
 
-      @hours_in_month = Time.days_in_month(time.month, time.year) * 24
-
-      while time < end_time
+      Range.new(month_beginning, month_end, true).step_value(12.hours).each do |time|
         @project.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr,
                                                          :timestamp                => time,
                                                          :cpu_usage_rate_average   => cpu_usage_rate,
@@ -254,7 +248,6 @@ describe ChargebackContainerProject do
                                                          :parent_ems_id            => @ems.id,
                                                          :tag_names                => "",
                                                          :resource_name            => @project.name)
-        time += 12.hours
       end
     end
 
@@ -282,12 +275,9 @@ describe ChargebackContainerProject do
   context "group results by tag" do
     let(:options) { base_options.merge(:interval => 'monthly', :entity_id => nil, :provider_id => 'all', :groupby_tag => 'environment') }
     before do
-      time     = ts.beginning_of_month.utc
-      end_time = ts.end_of_month.utc
+      @hours_in_month = Time.days_in_month(month_beginning.month, month_beginning.year) * 24
 
-      @hours_in_month = Time.days_in_month(time.month, time.year) * 24
-
-      while time < end_time
+      Range.new(month_beginning, month_end, true).step_value(12.hours).each do |time|
         @project.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr,
                                                       :timestamp                => time,
                                                       :cpu_usage_rate_average   => cpu_usage_rate,
@@ -298,8 +288,6 @@ describe ChargebackContainerProject do
                                                       :parent_ems_id            => @ems.id,
                                                       :tag_names                => "environment/prod",
                                                       :resource_name            => @project.name)
-
-        time += 12.hours
       end
     end
 
@@ -328,12 +316,9 @@ describe ChargebackContainerProject do
   context "ignore empty metrics in fixed_compute" do
     let(:options) { base_options.merge(:interval => 'monthly', :entity_id => @project.id, :tag => nil) }
     before do
-      time     = ts.beginning_of_month.utc
-      end_time = ts.end_of_month.utc
+      @hours_in_month = Time.days_in_month(month_beginning.month, month_beginning.year) * 24
 
-      @hours_in_month = Time.days_in_month(time.month, time.year) * 24
-
-      while time < end_time
+      Range.new(month_beginning, month_end, true).step_value(24.hours).each do |time|
         @project.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr,
                                                       :timestamp                => time,
                                                       :cpu_usage_rate_average   => cpu_usage_rate,
@@ -344,19 +329,14 @@ describe ChargebackContainerProject do
                                                       :parent_ems_id            => @ems.id,
                                                       :tag_names                => "",
                                                       :resource_name            => @project.name)
-
-        time += 12.hours
-
         # Empty metric for fixed compute
         @project.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr,
-                                                      :timestamp                => time,
+                                                      :timestamp                => time + 12.hours,
                                                       :cpu_usage_rate_average   => 0.0,
                                                       :derived_memory_used      => 0.0,
                                                       :parent_ems_id            => @ems.id,
                                                       :tag_names                => "",
                                                       :resource_name            => @project.name)
-
-        time += 12.hours
       end
 
       @metric_size = @project.metric_rollups.size

@@ -7,6 +7,8 @@ describe ChargebackContainerImage do
   let(:memory_used)       { 100.0 }
   let(:net_usage_rate)    { 25.0 }
   let(:ts) { Time.now.in_time_zone(Metric::Helper.get_time_zone(options[:ext_options])) }
+  let(:month_beginning) { ts.beginning_of_month.utc }
+  let(:month_end) { ts.end_of_month.utc }
 
   before do
     MiqRegion.seed
@@ -87,13 +89,9 @@ describe ChargebackContainerImage do
   context "Monthly" do
     let(:options) { base_options.merge(:interval => 'monthly', :entity_id => @project.id, :tag => nil) }
     before do
+      @hours_in_month = Time.days_in_month(month_beginning.month, month_beginning.year) * 24
 
-      time     = ts.beginning_of_month.utc
-      end_time = ts.end_of_month.utc
-
-      @hours_in_month = Time.days_in_month(time.month, time.year) * 24
-
-      while time < end_time
+      Range.new(month_beginning, month_end, true).step_value(12.hours).each do |time|
         @container.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr,
                                                         :timestamp                => time,
                                                         :cpu_usage_rate_average   => cpu_usage_rate,
@@ -108,7 +106,6 @@ describe ChargebackContainerImage do
         @container.vim_performance_states << FactoryGirl.create(:vim_performance_state,
                                                                 :timestamp => time,
                                                                 :image_tag_names => "environment/prod")
-        time += 12.hours
       end
     end
 
@@ -140,12 +137,9 @@ describe ChargebackContainerImage do
       @image.docker_labels << @label
       ChargebackRate.set_assignments(:compute, [{ :cb_rate => @cbr, :label => [@label, "container_image"] }])
 
-      time     = ts.beginning_of_month.utc
-      end_time = ts.end_of_month.utc
+      @hours_in_month = Time.days_in_month(month_beginning.month, month_end.year) * 24
 
-      @hours_in_month = Time.days_in_month(time.month, time.year) * 24
-
-      while time < end_time
+      Range.new(month_beginning, month_end, true).step_value(12.hours).each do |time|
         @container.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr,
                                                         :timestamp                => time,
                                                         :cpu_usage_rate_average   => cpu_usage_rate,
@@ -160,7 +154,6 @@ describe ChargebackContainerImage do
         @container.vim_performance_states << FactoryGirl.create(:vim_performance_state,
                                                                 :timestamp => time,
                                                                 :image_tag_names => "")
-        time += 12.hours
       end
     end
 
