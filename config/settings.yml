@@ -106,6 +106,7 @@
     :miq_namespace: management-infra
   :ems_amazon:
     :disabled_regions: []
+    :additional_regions: {}
   :ems_azure:
     :disabled_regions: []
 :ems_events:
