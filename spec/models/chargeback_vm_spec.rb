@@ -17,7 +17,8 @@ describe ChargebackVm do
   let(:net_usage_rate)            { 25.0 }
   let(:vm_used_disk_storage)      { 1.0 }
   let(:vm_allocated_disk_storage) { 4.0 }
-  let(:ts) { Time.now.in_time_zone(Metric::Helper.get_time_zone(options[:ext_options])) }
+  let(:starting_date) { Time.zone.parse('2012-09-01 00:00:00 UTC') }
+  let(:ts) { starting_date.in_time_zone(Metric::Helper.get_time_zone(options[:ext_options])) }
   let(:month_beginning) { ts.beginning_of_month.utc }
   let(:month_end) { ts.end_of_month.utc }
   let(:hours_in_month) { Time.days_in_month(month_beginning.month, month_beginning.year) * 24 }
@@ -46,7 +47,7 @@ describe ChargebackVm do
     temp = {:cb_rate => @cbr, :tag => [c, "vm"]}
     ChargebackRate.set_assignments(:compute, [temp])
 
-    Timecop.travel(Time.parse("2012-09-01 00:00:00 UTC"))
+    Timecop.travel(starting_date)
   end
 
   after do
