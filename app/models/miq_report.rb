@@ -224,4 +224,16 @@ class MiqReport < ApplicationRecord
     vc_attributes = CustomAttributeMixin.select_virtual_custom_attributes(cols).present?
     include.delete(:custom_attributes) if vc_attributes.present? && include && include[:custom_attributes].blank?
   end
+
+  # determine name column from headers for x-axis in chart
+  def chart_header_column
+    if graph[:column].blank?
+      _log.error("The column for the chart's x-axis must be defined in the report")
+      return
+    end
+
+    chart_column = MiqExpression::Field.parse(graph[:column]).column
+    column_index = col_order.index { |col| col.include?(chart_column) }
+    headers[column_index]
+  end
 end
