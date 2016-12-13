@@ -162,7 +162,6 @@ class MiqReportResult < ApplicationRecord
     hdr << "@page{size: #{page_size} landscape}"
     hdr << "@page{margin: 40pt 30pt 40pt 30pt}"
     hdr << "@page{@top{content: '#{title}';color:blue}}"
-    hdr << "@page{@bottom-left{content: url('#{ActionController::Base.helpers.image_path('layout/reportbanner_small1.png')}')}}"
     hdr << "@page{@bottom-center{font-size: 75%;content: '" + _("Report date: %{report_date}") % {:report_date => run_date} + "'}}"
     hdr << "@page{@bottom-right{font-size: 75%;content: '" + _("Page %{page_number} of %{total_pages}") % {:page_number => " ' counter(page) '", :total_pages => " ' counter(pages)}}"}
     hdr << "</style></head>"
