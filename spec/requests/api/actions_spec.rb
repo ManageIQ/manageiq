@@ -73,6 +73,15 @@ describe "Actions API" do
       expect(response.parsed_body["results"].count).to eq(2)
     end
 
+    it "deletes action via DELETE" do
+      api_basic_authorize collection_action_identifier(:actions, :delete)
+
+      run_delete(actions_url(action.id))
+
+      expect(response).to have_http_status(:no_content)
+      expect(MiqAction.exists?(action.id)).to be_falsey
+    end
+
     it "edits new action" do
       api_basic_authorize collection_action_identifier(:actions, :edit)
       run_post(action_url, gen_request(:edit, "description" => "change"))

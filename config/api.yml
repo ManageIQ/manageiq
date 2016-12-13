@@ -697,6 +697,9 @@
           :identifier: action_edit
         - :name: delete
           :identifier: action_delete
+        :delete:
+        - :name: delete
+          :identifier: action_delete
   :policies:
     :description: Policies
     :identifier: policy
