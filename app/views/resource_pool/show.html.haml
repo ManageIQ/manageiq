@@ -5,8 +5,6 @@
     - case @showtype
     - when "details"
       = render :partial => "layouts/gtl", :locals => {:action_url => @lastaction}
-    - when "download_pdf"
-      = render :partial => "layouts/show_pdf"
     - when "compare"
       = raise 'compare partial called through "show"'
       = render :partial => "layouts/#{@showtype}"

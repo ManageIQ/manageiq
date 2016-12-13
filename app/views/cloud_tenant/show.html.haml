@@ -3,8 +3,6 @@
     = render :partial => "layouts/performance"
     :javascript
       ManageIQ.afterOnload = "miqAsyncAjax('#{ url_for(:action => @ajax_action, :id => @record.id)}');"
-  - elsif @showtype == "download_pdf"
-    = render :partial => "layouts/show_pdf"
   - else
     - arr = %w(floating_ips network_ports cloud_tenants cloud_networks cloud_subnets network_routers instances images)
     - arr.concat(%w(security_groups cloud_object_store_containers cloud_volumes cloud_volume_snapshots))

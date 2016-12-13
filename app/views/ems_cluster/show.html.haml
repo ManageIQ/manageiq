@@ -8,8 +8,6 @@
       = render(:partial => "layouts/performance")
       :javascript
         ManageIQ.afterOnload = "miqAsyncAjax('#{url_for(:action => @ajax_action, :id => @record)}');"
-    - when "download_pdf"
-      = render(:partial => "layouts/show_pdf")
     - when "details"
       = render(:partial => "layouts/gtl", :locals => {:action_url => @lastaction})
     - when "compare", "drift"

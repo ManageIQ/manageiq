@@ -3,8 +3,6 @@
     = render :partial => "layouts/performance"
     :javascript
       ManageIQ.afterOnload = "miqAsyncAjax('#{ url_for(:action => @ajax_action, :id => @record.id)}');"
-  - elsif @showtype == "download_pdf"
-    = render :partial => "layouts/show_pdf"
   - else
     - if %w(instances cloud_volumes).include?(@display) && @showtype != "compare"
       = render :partial => "layouts/gtl", :locals => {:action_url => "show/#{@availability_zone.id}"}
