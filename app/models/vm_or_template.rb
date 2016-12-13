@@ -490,6 +490,7 @@ class VmOrTemplate < ApplicationRecord
     api_user     = Settings.webservices.remote_miq_api.user
     api_password = Settings.webservices.remote_miq_api.password
 
+    raise "No API username provided for remote #{action}" if api_user.blank?
     raise "No API password provided for user #{api_user} for remote #{action}" if api_password.blank?
 
     uri = URI::HTTPS.build(
