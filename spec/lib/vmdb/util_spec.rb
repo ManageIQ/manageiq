@@ -6,52 +6,62 @@ describe VMDB::Util do
     end
 
     it "returns proxy for old settings" do
-      stub_server_configuration(:http_proxy => {:host => "1.2.3.4", :port => nil, :user => nil, :password => nil})
+      stub_settings(:http_proxy => {:host => "1.2.3.4", :port => nil, :user => nil, :password => nil})
       expect(described_class.http_proxy_uri).to eq(URI::Generic.build(:scheme => "http", :host => "1.2.3.4"))
     end
 
     it "without a host" do
-      stub_server_configuration(:http_proxy => {:default => {}})
+      stub_settings(:http_proxy => {:default => {}})
       expect(described_class.http_proxy_uri).to be_nil
     end
 
     it "with host" do
-      stub_server_configuration(:http_proxy => {:default => {:host => "1.2.3.4", :port => nil, :user => nil, :password => nil}})
+      stub_settings(:http_proxy => {:default => {:host => "1.2.3.4", :port => nil, :user => nil, :password => nil}})
       expect(described_class.http_proxy_uri).to eq(URI::Generic.build(:scheme => "http", :host => "1.2.3.4"))
     end
 
     it "with host, port" do
-      stub_server_configuration(:http_proxy => {:default => {:host => "1.2.3.4", :port => 4321, :user => nil, :password => nil}})
-      expect(described_class.http_proxy_uri).to eq(URI::Generic.build(:scheme => "http", :host => "1.2.3.4", :port => 4321))
+      stub_settings(:http_proxy => {:default => {:host => "1.2.3.4", :port => 4321, :user => nil, :password => nil}})
+      expect(described_class.http_proxy_uri).to eq(URI::Generic.build(:scheme => "http", :host => "1.2.3.4",
+                                                                      :port   => 4321))
     end
 
     it "with host, port, user" do
-      stub_server_configuration(:http_proxy => {:default => {:host => "1.2.3.4", :port => 4321, :user => "testuser", :password => nil}})
-      expect(described_class.http_proxy_uri).to eq(URI::Generic.build(:scheme => "http", :host => "1.2.3.4", :port => 4321, :userinfo => "testuser"))
+      stub_settings(:http_proxy => {:default => {:host     => "1.2.3.4", :port => 4321, :user => "testuser",
+                                                 :password => nil}})
+      expect(described_class.http_proxy_uri).to eq(URI::Generic.build(:scheme => "http", :host => "1.2.3.4",
+                                                                      :port   => 4321, :userinfo => "testuser"))
     end
 
     it "with host, port, user, password" do
-      stub_server_configuration(:http_proxy => {:default => {:host => "1.2.3.4", :port => 4321, :user => "testuser", :password => "secret"}})
-      expect(described_class.http_proxy_uri).to eq(URI::Generic.build(:scheme => "http", :host => "1.2.3.4", :port => 4321, :userinfo => "testuser:secret"))
+      stub_settings(:http_proxy => {:default => {:host => "1.2.3.4", :port => 4321,
+                                                 :user => "testuser", :password => "secret"}})
+      expect(described_class.http_proxy_uri).to eq(URI::Generic.build(:scheme => "http", :host => "1.2.3.4",
+                                                                      :port => 4321, :userinfo => "testuser:secret"))
     end
 
     it "with user missing" do
-      stub_server_configuration(:http_proxy => {:default => {:host => "1.2.3.4", :port => 4321, :user => nil, :password => "secret"}})
-      expect(described_class.http_proxy_uri).to eq(URI::Generic.build(:scheme => "http", :host => "1.2.3.4", :port => 4321))
+      stub_settings(:http_proxy => {:default => {:host => "1.2.3.4", :port => 4321,
+                                                 :user => nil, :password => "secret"}})
+      expect(described_class.http_proxy_uri).to eq(URI::Generic.build(:scheme => "http", :host => "1.2.3.4",
+                                                                      :port => 4321))
     end
 
     it "with unescaped user value" do
       password = "secret#"
-      config = {:http_proxy => {:default => {:host => "1.2.3.4", :port => 4321, :user => "testuser", :password => password}}}
-      stub_server_configuration(config)
+      config = {:http_proxy => {:default => {:host => "1.2.3.4", :port => 4321,
+                                             :user => "testuser", :password => password}}}
+      stub_settings(config)
       userinfo = "testuser:secret%23"
       uri_parts = {:scheme => "http", :host => "1.2.3.4", :port => 4321, :userinfo => userinfo}
       expect(described_class.http_proxy_uri).to eq(URI::Generic.build(uri_parts))
     end
 
     it "with scheme overridden" do
-      stub_server_configuration(:http_proxy => {:default => {:scheme => "https", :host => "1.2.3.4", :port => 4321, :user => "testuser", :password => "secret"}})
-      expect(described_class.http_proxy_uri).to eq(URI::Generic.build(:scheme => "https", :host => "1.2.3.4", :port => 4321, :userinfo => "testuser:secret"))
+      stub_settings(:http_proxy => {:default => {:scheme => "https", :host => "1.2.3.4", :port => 4321,
+                                                 :user => "testuser", :password => "secret"}})
+      expect(described_class.http_proxy_uri).to eq(URI::Generic.build(:scheme => "https", :host => "1.2.3.4",
+                                                                      :port   => 4321, :userinfo => "testuser:secret"))
     end
   end
 

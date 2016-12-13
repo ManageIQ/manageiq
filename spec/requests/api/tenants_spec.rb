@@ -100,8 +100,6 @@ RSpec.describe "tenants API" do
     end
 
     context "query root tenant that uses configuration settings" do
-      let(:config_attributes) { VMDB::Config.new("vmdb").config.fetch_path(:server) }
-
       before do
         root_tenant.use_config_for_attributes = true
         root_tenant.name = 'Some other name'
@@ -115,7 +113,7 @@ RSpec.describe "tenants API" do
         expect_result_to_match_hash(response.parsed_body,
                                     "href" => tenants_url(root_tenant.id),
                                     "id"   => root_tenant.id,
-                                    "name" => config_attributes[:company],
+                                    "name" => ::Settings.server.company,
                                    )
         expect(response).to have_http_status(:ok)
       end

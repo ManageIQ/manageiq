@@ -140,7 +140,8 @@ describe MiqWorker do
               }
             }
           }
-        }
+        },
+        :ems     => {:ems_amazon => {}}
       }
     end
 
@@ -198,11 +199,14 @@ describe MiqWorker do
     end
 
     it "uses passed in config" do
-      settings.store_path(:workers, :worker_base, :queue_worker_base, :ems_refresh_worker, :ems_refresh_worker_amazon, :memory_threshold, "1.terabyte")
+      settings.store_path(:workers, :worker_base, :queue_worker_base, :ems_refresh_worker,
+                          :ems_refresh_worker_amazon, :memory_threshold, "5.terabyte")
       stub_settings(settings)
 
-      config = VMDB::Config.new("vmdb")
-      actual = ManageIQ::Providers::Amazon::CloudManager::RefreshWorker.worker_settings(:config => config)[:memory_threshold]
+      settings.store_path(:workers, :worker_base, :queue_worker_base, :ems_refresh_worker,
+                          :ems_refresh_worker_amazon, :memory_threshold, "1.terabyte")
+      actual = ManageIQ::Providers::Amazon::CloudManager::RefreshWorker
+               .worker_settings(:config => settings)[:memory_threshold]
       expect(actual).to eq(1.terabyte)
     end
   end

@@ -6,11 +6,14 @@
   :basedn:
   :bind_dn:
   :bind_pwd:
+  :bind_timeout: 30
+  :follow_referrals: false
   :get_direct_groups: true
   :group_memberships_max_depth: 2
   :ldaphost:
   :ldapport: '389'
   :mode: database
+  :search_timeout: 30
   :user_suffix:
   :user_type: userprincipalname
   :amazon_key:
