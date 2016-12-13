@@ -1,5 +1,12 @@
 describe ChargebackContainerImage do
   let(:base_options) { {:interval_size => 1, :end_interval_offset => 0, :ext_options => {:tz => 'Pacific Time (US & Canada)'} } }
+  let(:hourly_rate)       { 0.01 }
+  let(:cpu_usage_rate)    { 50.0 }
+  let(:cpu_count)         { 1.0 }
+  let(:memory_available)  { 1000.0 }
+  let(:memory_used)       { 100.0 }
+  let(:net_usage_rate)    { 25.0 }
+
   before do
     MiqRegion.seed
     ChargebackRate.seed
@@ -23,14 +30,6 @@ describe ChargebackContainerImage do
     @project.tag_with(@tag.name, :ns => '*')
     @image.tag_with(@tag.name, :ns => '*')
 
-    @hourly_rate       = 0.01
-    @count_hourly_rate = 1.00
-    @cpu_usage_rate    = 50.0
-    @cpu_count         = 1.0
-    @memory_available  = 1000.0
-    @memory_used       = 100.0
-    @net_usage_rate    = 25.0
-
     Timecop.travel(Time.parse("2012-09-01 00:00:00 UTC"))
   end
 
@@ -47,11 +46,11 @@ describe ChargebackContainerImage do
       ["2012-08-31T07:00:00Z", "2012-08-31T08:00:00Z", "2012-08-31T09:00:00Z", "2012-08-31T10:00:00Z"].each do |t|
         @container.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr,
                                                         :timestamp                => t,
-                                                        :cpu_usage_rate_average   => @cpu_usage_rate,
-                                                        :derived_vm_numvcpus      => @cpu_count,
-                                                        :derived_memory_available => @memory_available,
-                                                        :derived_memory_used      => @memory_used,
-                                                        :net_usage_rate_average   => @net_usage_rate,
+                                                        :cpu_usage_rate_average   => cpu_usage_rate,
+                                                        :derived_vm_numvcpus      => cpu_count,
+                                                        :derived_memory_available => memory_available,
+                                                        :derived_memory_used      => memory_used,
+                                                        :net_usage_rate_average   => net_usage_rate,
                                                         :parent_ems_id            => @ems.id,
                                                         :tag_names                => "",
                                                         :resource_name            => @project.name,
@@ -70,7 +69,7 @@ describe ChargebackContainerImage do
                          :start         => 0,
                          :finish        => Float::INFINITY,
                          :fixed_rate    => 0.0,
-                         :variable_rate => @hourly_rate.to_s)
+                         :variable_rate => hourly_rate.to_s)
     }
     let!(:cbrd) {
       FactoryGirl.create(:chargeback_rate_detail_fixed_compute_cost,
@@ -80,7 +79,7 @@ describe ChargebackContainerImage do
                          :chargeback_tiers   => [cbt])
     }
     it "fixed_compute" do
-      expect(subject.fixed_compute_1_cost).to eq(@hourly_rate * hours_in_day)
+      expect(subject.fixed_compute_1_cost).to eq(hourly_rate * hours_in_day)
     end
   end
 
@@ -98,11 +97,11 @@ describe ChargebackContainerImage do
       while time < end_time
         @container.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr,
                                                         :timestamp                => time,
-                                                        :cpu_usage_rate_average   => @cpu_usage_rate,
-                                                        :derived_vm_numvcpus      => @cpu_count,
-                                                        :derived_memory_available => @memory_available,
-                                                        :derived_memory_used      => @memory_used,
-                                                        :net_usage_rate_average   => @net_usage_rate,
+                                                        :cpu_usage_rate_average   => cpu_usage_rate,
+                                                        :derived_vm_numvcpus      => cpu_count,
+                                                        :derived_memory_available => memory_available,
+                                                        :derived_memory_used      => memory_used,
+                                                        :net_usage_rate_average   => net_usage_rate,
                                                         :parent_ems_id            => @ems.id,
                                                         :tag_names                => "",
                                                         :resource_name            => @project.name,
@@ -122,7 +121,7 @@ describe ChargebackContainerImage do
                          :start         => 0,
                          :finish        => Float::INFINITY,
                          :fixed_rate    => 0.0,
-                         :variable_rate => @hourly_rate.to_s)
+                         :variable_rate => hourly_rate.to_s)
     }
     let!(:cbrd) {
       FactoryGirl.create(:chargeback_rate_detail_fixed_compute_cost,
@@ -133,7 +132,7 @@ describe ChargebackContainerImage do
     }
     it "fixed_compute" do
       # .to be_within(0.01) is used since theres a float error here
-      expect(subject.fixed_compute_1_cost).to be_within(0.01).of(@hourly_rate * @hours_in_month)
+      expect(subject.fixed_compute_1_cost).to be_within(0.01).of(hourly_rate * @hours_in_month)
     end
   end
 
@@ -153,11 +152,11 @@ describe ChargebackContainerImage do
       while time < end_time
         @container.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr,
                                                         :timestamp                => time,
-                                                        :cpu_usage_rate_average   => @cpu_usage_rate,
-                                                        :derived_vm_numvcpus      => @cpu_count,
-                                                        :derived_memory_available => @memory_available,
-                                                        :derived_memory_used      => @memory_used,
-                                                        :net_usage_rate_average   => @net_usage_rate,
+                                                        :cpu_usage_rate_average   => cpu_usage_rate,
+                                                        :derived_vm_numvcpus      => cpu_count,
+                                                        :derived_memory_available => memory_available,
+                                                        :derived_memory_used      => memory_used,
+                                                        :net_usage_rate_average   => net_usage_rate,
                                                         :parent_ems_id            => @ems.id,
                                                         :tag_names                => "",
                                                         :resource_name            => @project.name,
@@ -177,7 +176,7 @@ describe ChargebackContainerImage do
                          :start         => 0,
                          :finish        => Float::INFINITY,
                          :fixed_rate    => 0.0,
-                         :variable_rate => @hourly_rate.to_s)
+                         :variable_rate => hourly_rate.to_s)
     }
     let!(:cbrd) {
       FactoryGirl.create(:chargeback_rate_detail_fixed_compute_cost,
@@ -188,7 +187,7 @@ describe ChargebackContainerImage do
     }
     it "fixed_compute" do
       # .to be_within(0.01) is used since theres a float error here
-      expect(subject.fixed_compute_1_cost).to be_within(0.01).of(@hourly_rate * @hours_in_month)
+      expect(subject.fixed_compute_1_cost).to be_within(0.01).of(hourly_rate * @hours_in_month)
     end
   end
 end
