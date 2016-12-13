@@ -1,5 +1,13 @@
 describe ChargebackVm do
   let(:admin) { FactoryGirl.create(:user_admin) }
+  let(:base_options) do
+    {:interval_size       => 1,
+     :end_interval_offset => 0,
+     :tag                 => '/managed/environment/prod',
+     :ext_options         => {:tz => 'Pacific Time (US & Canada)'},
+     :userid              => admin.userid}
+  end
+
   before do
     MiqRegion.seed
     ChargebackRate.seed
@@ -35,13 +43,6 @@ describe ChargebackVm do
     @vm_used_disk_storage      = 1.0
     @vm_allocated_disk_storage = 4.0
 
-    @options = {:interval_size       => 1,
-                :end_interval_offset => 0,
-                :tag                 => "/managed/environment/prod",
-                :ext_options         => {:tz => "Pacific Time (US & Canada)"},
-                :userid              => admin.userid
-                }
-
     Timecop.travel(Time.parse("2012-09-01 00:00:00 UTC"))
   end
 
@@ -56,15 +57,18 @@ describe ChargebackVm do
   end
 
   it "succeeds without a userid" do
-    @options.delete(:userid)
-    expect { ChargebackVm.build_results_for_report_ChargebackVm(@options) }.not_to raise_error
+    options = base_options.except(:userid)
+    expect { ChargebackVm.build_results_for_report_ChargebackVm(options) }.not_to raise_error
   end
 
   context "by service" do
+    let(:options) { base_options.merge(:interval => 'monthly', :interval_size => 4, :service_id => @service.id) }
     before(:each) do
-      @options[:interval] = "monthly"
+      @service = FactoryGirl.create(:service)
+      @service << @vm1
+      @service.save
 
-      tz = Metric::Helper.get_time_zone(@options[:ext_options])
+      tz = Metric::Helper.get_time_zone(options[:ext_options])
       ts = Time.now.in_time_zone(tz)
       time     = ts.beginning_of_month.utc
       end_time = ts.end_of_month.utc
@@ -95,10 +99,6 @@ describe ChargebackVm do
         time += 12.hours
       end
 
-      @service = FactoryGirl.create(:service)
-      @service << @vm1
-      @service.save
-
       cbrd = FactoryGirl.build(:chargeback_rate_detail_cpu_used,
                                :chargeback_rate_id => @cbr.id,
                                :per_time           => "hourly"
@@ -125,15 +125,10 @@ describe ChargebackVm do
                               )
       cbrd.chargeback_tiers = [cbt]
       cbrd.save
-
-      @options.merge!(:interval_size => 4,
-                      :ext_options   => {:tz => "Eastern Time (US & Canada)"},
-                      :service_id    => @service.id
-                     )
     end
 
     it "only includes VMs belonging to service in results" do
-      result = described_class.build_results_for_report_ChargebackVm(@options)
+      result = described_class.build_results_for_report_ChargebackVm(options)
       expect(result).not_to be_nil
       expect(result.first.all? { |r| r.vm_name == "test_vm" })
     end
@@ -145,10 +140,9 @@ describe ChargebackVm do
 
   context "Daily" do
     let(:hours_in_day) { 24 }
+    let(:options) { base_options.merge(:interval => 'daily') }
 
     before  do
-      @options[:interval] = "daily"
-
       ["2012-08-31T07:00:00Z", "2012-08-31T08:00:00Z", "2012-08-31T09:00:00Z", "2012-08-31T10:00:00Z"].each do |t|
         @vm1.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr,
                                                   :timestamp                         => t,
@@ -170,7 +164,7 @@ describe ChargebackVm do
       end
     end
 
-    subject { ChargebackVm.build_results_for_report_ChargebackVm(@options).first.first }
+    subject { ChargebackVm.build_results_for_report_ChargebackVm(options).first.first }
 
     it "cpu" do
       cbrd = FactoryGirl.build(:chargeback_rate_detail_cpu_used,
@@ -436,6 +430,7 @@ describe ChargebackVm do
   end
 
   context "Report a chargeback of a tenant" do
+    let(:options_tenant) { base_options.merge(:tenant_id => @tenant.id) }
     before do
       @tenant = FactoryGirl.create(:tenant)
       @tenant_child = FactoryGirl.create(:tenant, :ancestry => @tenant.id)
@@ -460,15 +455,9 @@ describe ChargebackVm do
                              :resource_name                     => @vm_tenant.name,
                             )
       end
-      @options_tenant = {:interval_size       => 1,
-                         :end_interval_offset => 0,
-                         :tag                 => "/managed/environment/prod",
-                         :ext_options         => {:tz => "Pacific Time (US & Canada)"},
-                         :tenant_id           => @tenant.id
-                        }
     end
 
-    subject { ChargebackVm.build_results_for_report_ChargebackVm(@options_tenant).first.first }
+    subject { ChargebackVm.build_results_for_report_ChargebackVm(options_tenant).first.first }
 
     it "report a chargeback of a subtenant" do
       tier = FactoryGirl.create(:chargeback_tier)
@@ -481,10 +470,9 @@ describe ChargebackVm do
     end
   end
   context "Monthly" do
+    let(:options) { base_options.merge(:interval => 'monthly') }
     before  do
-      @options[:interval] = "monthly"
-
-      tz = Metric::Helper.get_time_zone(@options[:ext_options])
+      tz = Metric::Helper.get_time_zone(options[:ext_options])
       ts = Time.now.in_time_zone(tz)
       time     = ts.beginning_of_month.utc
       end_time = ts.end_of_month.utc
@@ -513,7 +501,7 @@ describe ChargebackVm do
       end
     end
 
-    subject { ChargebackVm.build_results_for_report_ChargebackVm(@options).first.first }
+    subject { ChargebackVm.build_results_for_report_ChargebackVm(options).first.first }
 
     it "cpu" do
       cbrd = FactoryGirl.build(:chargeback_rate_detail_cpu_used,
@@ -762,13 +750,9 @@ describe ChargebackVm do
 
     context "by owner" do
       let(:user) { FactoryGirl.create(:user, :name => 'Test VM Owner', :userid => 'test_user') }
+      let(:options) { {:interval_size => 4, :owner => user.userid, :ext_options => {:tz => 'Eastern Time (US & Canada)'} } }
       before do
         @vm1.update_attribute(:evm_owner, user)
-
-        @options = {:interval_size => 4,
-                    :owner         => user.userid,
-                    :ext_options   => {:tz => "Eastern Time (US & Canada)"},
-                   }
       end
 
       it "valid" do
@@ -892,11 +876,9 @@ describe ChargebackVm do
   end
 
   context "Group by tags" do
+    let(:options) { base_options.merge(:interval => 'monthly', :groupby_tag => 'environment') }
     before  do
-      @options[:interval] = "monthly"
-      @options[:groupby_tag] = "environment"
-
-      tz = Metric::Helper.get_time_zone(@options[:ext_options])
+      tz = Metric::Helper.get_time_zone(options[:ext_options])
       ts = Time.now.in_time_zone(tz)
       time     = ts.beginning_of_month.utc
       end_time = ts.end_of_month.utc
@@ -925,7 +907,7 @@ describe ChargebackVm do
       end
     end
 
-    subject { ChargebackVm.build_results_for_report_ChargebackVm(@options).first.first }
+    subject { ChargebackVm.build_results_for_report_ChargebackVm(options).first.first }
 
     it "cpu" do
       cbrd = FactoryGirl.build(:chargeback_rate_detail_cpu_used,

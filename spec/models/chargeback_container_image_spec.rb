@@ -1,4 +1,5 @@
 describe ChargebackContainerImage do
+  let(:base_options) { {:interval_size => 1, :end_interval_offset => 0, :ext_options => {:tz => 'Pacific Time (US & Canada)'} } }
   before do
     MiqRegion.seed
     ChargebackRate.seed
@@ -30,11 +31,6 @@ describe ChargebackContainerImage do
     @memory_used       = 100.0
     @net_usage_rate    = 25.0
 
-    @options = {:interval_size       => 1,
-                :end_interval_offset => 0,
-                :ext_options         => {:tz => "Pacific Time (US & Canada)"},
-    }
-
     Timecop.travel(Time.parse("2012-09-01 00:00:00 UTC"))
   end
 
@@ -44,11 +40,9 @@ describe ChargebackContainerImage do
 
   context "Daily" do
     let(:hours_in_day) { 24 }
+    let(:options) { base_options.merge(:interval => 'daily', :entity_id => @project.id, :tag => nil) }
 
     before do
-      @options[:interval] = "daily"
-      @options[:entity_id] = @project.id
-      @options[:tag] = nil
 
       ["2012-08-31T07:00:00Z", "2012-08-31T08:00:00Z", "2012-08-31T09:00:00Z", "2012-08-31T10:00:00Z"].each do |t|
         @container.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr,
@@ -69,7 +63,7 @@ describe ChargebackContainerImage do
       end
     end
 
-    subject { ChargebackContainerImage.build_results_for_report_ChargebackContainerImage(@options).first.first }
+    subject { ChargebackContainerImage.build_results_for_report_ChargebackContainerImage(options).first.first }
 
     let(:cbt) {
       FactoryGirl.create(:chargeback_tier,
@@ -91,12 +85,10 @@ describe ChargebackContainerImage do
   end
 
   context "Monthly" do
+    let(:options) { base_options.merge(:interval => 'monthly', :entity_id => @project.id, :tag => nil) }
     before do
-      @options[:interval] = "monthly"
-      @options[:entity_id] = @project.id
-      @options[:tag] = nil
 
-      tz = Metric::Helper.get_time_zone(@options[:ext_options])
+      tz = Metric::Helper.get_time_zone(options[:ext_options])
       ts = Time.now.in_time_zone(tz)
       time     = ts.beginning_of_month.utc
       end_time = ts.end_of_month.utc
@@ -123,7 +115,7 @@ describe ChargebackContainerImage do
       @metric_size = @container.metric_rollups.size
     end
 
-    subject { ChargebackContainerImage.build_results_for_report_ChargebackContainerImage(@options).first.first }
+    subject { ChargebackContainerImage.build_results_for_report_ChargebackContainerImage(options).first.first }
 
     let(:cbt) {
       FactoryGirl.create(:chargeback_tier,
@@ -146,14 +138,12 @@ describe ChargebackContainerImage do
   end
 
   context "Label" do
+    let(:options) { base_options.merge(:interval => 'monthly', :entity_id => @project.id, :tag => nil) }
     before do
-      @options[:interval] = "monthly"
-      @options[:entity_id] = @project.id
-      @options[:tag] = nil
       @image.docker_labels << @label
       ChargebackRate.set_assignments(:compute, [{ :cb_rate => @cbr, :label => [@label, "container_image"] }])
 
-      tz = Metric::Helper.get_time_zone(@options[:ext_options])
+      tz = Metric::Helper.get_time_zone(options[:ext_options])
       ts = Time.now.in_time_zone(tz)
       time     = ts.beginning_of_month.utc
       end_time = ts.end_of_month.utc
@@ -180,7 +170,7 @@ describe ChargebackContainerImage do
       @metric_size = @container.metric_rollups.size
     end
 
-    subject { ChargebackContainerImage.build_results_for_report_ChargebackContainerImage(@options).first.first }
+    subject { ChargebackContainerImage.build_results_for_report_ChargebackContainerImage(options).first.first }
 
     let(:cbt) {
       FactoryGirl.create(:chargeback_tier,

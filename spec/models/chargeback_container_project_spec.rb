@@ -1,4 +1,5 @@
 describe ChargebackContainerProject do
+  let(:base_options) { {:interval_size => 1, :end_interval_offset => 0, :ext_options => {:tz => 'Pacific Time (US & Canada)'} } }
   before do
     MiqRegion.seed
     ChargebackRate.seed
@@ -25,11 +26,6 @@ describe ChargebackContainerProject do
     @memory_used       = 100.0
     @net_usage_rate    = 25.0
 
-    @options = {:interval_size       => 1,
-                :end_interval_offset => 0,
-                :ext_options         => {:tz => "Pacific Time (US & Canada)"},
-    }
-
     Timecop.travel(Time.parse("2012-09-01 00:00:00 UTC"))
   end
 
@@ -43,12 +39,9 @@ describe ChargebackContainerProject do
 
   context "Daily" do
     let(:hours_in_day) { 24 }
+    let(:options) { base_options.merge(:interval => 'daily', :entity_id => @project.id, :tag => nil) }
 
     before do
-      @options[:interval] = "daily"
-      @options[:entity_id] = @project.id
-      @options[:tag] = nil
-
       ["2012-08-31T07:00:00Z", "2012-08-31T08:00:00Z", "2012-08-31T09:00:00Z", "2012-08-31T10:00:00Z"].each do |t|
         @project.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr,
                                                          :timestamp                => t,
@@ -65,7 +58,7 @@ describe ChargebackContainerProject do
       @metric_size = @project.metric_rollups.size
     end
 
-    subject { ChargebackContainerProject.build_results_for_report_ChargebackContainerProject(@options).first.first }
+    subject { ChargebackContainerProject.build_results_for_report_ChargebackContainerProject(options).first.first }
 
     it "cpu" do
       cbrd = FactoryGirl.build(:chargeback_rate_detail_cpu_cores_used,
@@ -141,12 +134,9 @@ describe ChargebackContainerProject do
   end
 
   context "Monthly" do
+    let(:options) { base_options.merge(:interval => 'monthly', :entity_id => @project.id, :tag => nil) }
     before do
-      @options[:interval] = "monthly"
-      @options[:entity_id] = @project.id
-      @options[:tag] = nil
-
-      tz = Metric::Helper.get_time_zone(@options[:ext_options])
+      tz = Metric::Helper.get_time_zone(options[:ext_options])
       ts = Time.now.in_time_zone(tz)
       time     = ts.beginning_of_month.utc
       end_time = ts.end_of_month.utc
@@ -171,7 +161,7 @@ describe ChargebackContainerProject do
       @metric_size = @project.metric_rollups.size
     end
 
-    subject { ChargebackContainerProject.build_results_for_report_ChargebackContainerProject(@options).first.first }
+    subject { ChargebackContainerProject.build_results_for_report_ChargebackContainerProject(options).first.first }
 
     it "cpu" do
       cbrd = FactoryGirl.build(:chargeback_rate_detail_cpu_cores_used,
@@ -248,12 +238,9 @@ describe ChargebackContainerProject do
   end
 
   context "tagged project" do
+    let(:options) { base_options.merge(:interval => 'monthly', :entity_id => nil, :tag => '/managed/environment/prod') }
     before do
-      @options[:interval] = "monthly"
-      @options[:entity_id] = nil
-      @options[:tag] = "/managed/environment/prod"
-
-      tz = Metric::Helper.get_time_zone(@options[:ext_options])
+      tz = Metric::Helper.get_time_zone(options[:ext_options])
       ts = Time.now.in_time_zone(tz)
       time     = ts.beginning_of_month.utc
       end_time = ts.end_of_month.utc
@@ -275,7 +262,7 @@ describe ChargebackContainerProject do
       end
     end
 
-    subject { ChargebackContainerProject.build_results_for_report_ChargebackContainerProject(@options).first.first }
+    subject { ChargebackContainerProject.build_results_for_report_ChargebackContainerProject(options).first.first }
 
     it "cpu" do
       cbrd = FactoryGirl.build(:chargeback_rate_detail_cpu_cores_used,
@@ -297,13 +284,9 @@ describe ChargebackContainerProject do
   end
 
   context "group results by tag" do
+    let(:options) { base_options.merge(:interval => 'monthly', :entity_id => nil, :provider_id => 'all', :groupby_tag => 'environment') }
     before do
-      @options[:interval] = "monthly"
-      @options[:entity_id] = nil
-      @options[:provider_id] = "all"
-      @options[:groupby_tag] = "environment"
-
-      tz = Metric::Helper.get_time_zone(@options[:ext_options])
+      tz = Metric::Helper.get_time_zone(options[:ext_options])
       ts = Time.now.in_time_zone(tz)
       time     = ts.beginning_of_month.utc
       end_time = ts.end_of_month.utc
@@ -326,7 +309,7 @@ describe ChargebackContainerProject do
       end
     end
 
-    subject { ChargebackContainerProject.build_results_for_report_ChargebackContainerProject(@options).first.first }
+    subject { ChargebackContainerProject.build_results_for_report_ChargebackContainerProject(options).first.first }
 
     it "cpu" do
       cbrd = FactoryGirl.build(:chargeback_rate_detail_cpu_cores_used,
@@ -349,12 +332,9 @@ describe ChargebackContainerProject do
   end
 
   context "ignore empty metrics in fixed_compute" do
+    let(:options) { base_options.merge(:interval => 'monthly', :entity_id => @project.id, :tag => nil) }
     before do
-      @options[:interval] = "monthly"
-      @options[:entity_id] = @project.id
-      @options[:tag] = nil
-
-      tz = Metric::Helper.get_time_zone(@options[:ext_options])
+      tz = Metric::Helper.get_time_zone(options[:ext_options])
       ts = Time.now.in_time_zone(tz)
       time     = ts.beginning_of_month.utc
       end_time = ts.end_of_month.utc
@@ -390,7 +370,7 @@ describe ChargebackContainerProject do
       @metric_size = @project.metric_rollups.size
     end
 
-    subject { ChargebackContainerProject.build_results_for_report_ChargebackContainerProject(@options).first.first }
+    subject { ChargebackContainerProject.build_results_for_report_ChargebackContainerProject(options).first.first }
 
     let(:cbt) { FactoryGirl.create(:chargeback_tier,
                                    :start                     => 0,
