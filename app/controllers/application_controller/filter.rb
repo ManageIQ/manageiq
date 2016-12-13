@@ -307,7 +307,7 @@ module ApplicationController::Filter
             {:model => ui_lookup(:model => @edit[@expkey][:exp_model]),
              :name => @edit[:new_search_name]})
           @edit[@expkey].select_filter(s)
-          @edit[:new_search_name] = @edit[:adv_search_name] = @edit[@expkey][:exp_last_loaded][:description]
+          @edit[:new_search_name] = @edit[:adv_search_name] = @edit[@expkey][:exp_last_loaded][:description] unless @edit[@expkey][:exp_model] == "Storage"
           @edit[@expkey][:expression] = copy_hash(@edit[:new][@expkey])
           # Build the expression table
           @edit[@expkey][:exp_table] = exp_build_table(@edit[@expkey][:expression])
