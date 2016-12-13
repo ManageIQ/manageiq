@@ -1142,24 +1142,38 @@ class VmOrTemplate < ApplicationRecord
       assign_ems_created_on_queue(added_vm_ids) if VMDB::Config.new("vmdb").config.fetch_path(:ems_refresh, :capture_vm_created_on_date)
     end
 
+    post_refresh_ems_folder_updates(ems, update_start_time, added_vms)
+  end
+
+  def self.post_refresh_ems_folder_updates(ems, update_start_time, added_vms)
     # Collect the updated folder relationships to determine which vms need updated path information
     ems_folders = ems.ems_folders
     MiqPreloader.preload(ems_folders, :all_relationships)
 
-    updated_folders = ems_folders.select do |f|
-      f.created_on >= update_start_time || f.updated_on >= update_start_time || # Has the folder itself changed (e.g. renamed)?
-      f.relationships.any? do |r|                                                  # Or has its relationship rows changed?
-        r.created_at >= update_start_time || r.updated_at >= update_start_time || #   Has the direct relationship changed (e.g. this folder moved under another folder)?
-        r.children.any? do |child_r|                                             #   Or have any of the child relationship rows changed (e.g. vm moved under this folder)?
-          child_r.created_at >= update_start_time || child_r.updated_at >= update_start_time
+    # Find any VMs that were created or moved into a new folder
+    updated_vm_rels = ems_folders.collect do |f|
+      f.relationships.collect do |r|
+        r.children.select do |child_r|
+          child_r.resource_type == "VmOrTemplate" &&
+            (child_r.created_at >= update_start_time || child_r.updated_at >= update_start_time)
         end
       end
+    end.flatten
+
+    # Now find any Folders that were renamed or moved into a new parent folder
+    updated_folders = ems_folders.select do |f|
+      f.created_on >= update_start_time || f.updated_on >= update_start_time ||  # Has the folder itself changed (e.g. renamed)?
+        f.relationships.any? do |r|
+          r.created_at >= update_start_time || r.updated_at >= update_start_time # Has the relationship changed (e.g. this folder moved under another folder)?
+        end
     end
-    unless updated_folders.empty?
-      updated_vms = updated_folders.collect(&:all_vms_and_templates).flatten.uniq - added_vms
-      updated_vms.each(&:classify_with_parent_folder_path_queue)
-    end
+
+    updated_vms  = VmOrTemplate.where(:id => updated_vm_rels.collect(&:resource_id))
+    updated_vms += updated_folders.flat_map(&:all_vms_and_templates)
+    updated_vms  = updated_vms.uniq - added_vms
+    updated_vms.each(&:classify_with_parent_folder_path_queue)
   end
+  private_class_method :post_refresh_ems_folder_updates
 
   def self.assign_ems_created_on_queue(vm_ids)
     MiqQueue.put(

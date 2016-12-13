@@ -774,4 +774,155 @@ describe VmOrTemplate do
       expect(VmOrTemplate.not_archived_nor_orphaned).to eq([vm])
     end
   end
+
+  describe ".post_refresh_ems" do
+    let(:folder_blue1)   { EmsFolder.find_by(:name => "blue1") }
+    let(:folder_blue2)   { EmsFolder.find_by(:name => "blue2") }
+    let(:folder_vm_root) { EmsFolder.find_by(:name => "vm") }
+    let(:vm_blue1)       { VmOrTemplate.find_by(:name => "vm_blue1") }
+    let(:vm_blue2)       { VmOrTemplate.find_by(:name => "vm_blue2") }
+
+    let!(:ems) do
+      _, _, zone = EvmSpecHelper.local_guid_miq_server_zone
+      FactoryGirl.create(:ems_vmware, :zone => zone).tap do |ems|
+        build_vmware_folder_structure!(ems)
+        folder_blue1.add_child(FactoryGirl.create(:vm_vmware, :name => "vm_blue1", :ems_id => ems.id))
+        folder_blue2.add_child(FactoryGirl.create(:vm_vmware, :name => "vm_blue2", :ems_id => ems.id))
+      end
+    end
+
+    let!(:start_time) { Time.now.utc }
+
+    it "when a folder is created under a folder" do
+      new_folder = FactoryGirl.create(:vmware_folder_vm, :ems_id => ems.id)
+      new_folder.parent = folder_blue1
+
+      described_class.post_refresh_ems(ems.id, start_time)
+
+      expect(MiqQueue.count).to eq(0)
+    end
+
+    it "when a folder is renamed" do
+      folder_blue1.update_attributes(:name => "new blue1")
+
+      described_class.post_refresh_ems(ems.id, start_time)
+
+      expect(MiqQueue.count).to eq(1)
+      expect(MiqQueue.first).to have_attributes(
+        :class_name  => vm_blue1.class.name,
+        :instance_id => vm_blue1.id,
+        :method_name => "classify_with_parent_folder_path"
+      )
+    end
+
+    it "when a folder is moved" do
+      folder_blue1.parent = folder_blue2
+
+      described_class.post_refresh_ems(ems.id, start_time)
+
+      expect(MiqQueue.count).to eq(1)
+      expect(MiqQueue.first).to have_attributes(
+        :class_name  => vm_blue1.class.name,
+        :instance_id => vm_blue1.id,
+        :method_name => "classify_with_parent_folder_path"
+      )
+    end
+
+    it "when a VM is created under a folder" do
+      new_vm = FactoryGirl.create(:vm_vmware, :ems_id => ems.id)
+      new_vm.with_relationship_type("ems_metadata") { |v| v.parent = folder_blue1 }
+
+      described_class.post_refresh_ems(ems.id, start_time)
+
+      expect(MiqQueue.count).to eq(1)
+      expect(MiqQueue.first).to have_attributes(
+        :class_name  => new_vm.class.name,
+        :instance_id => new_vm.id,
+        :method_name => "post_create_actions"
+      )
+    end
+
+    it "when a VM is moved to another folder" do
+      vm_blue1.with_relationship_type("ems_metadata") { |v| v.parent = folder_blue2 }
+
+      described_class.post_refresh_ems(ems.id, start_time)
+
+      expect(MiqQueue.count).to eq(1)
+      expect(MiqQueue.first).to have_attributes(
+        :class_name  => vm_blue1.class.name,
+        :instance_id => vm_blue1.id,
+        :method_name => "classify_with_parent_folder_path"
+      )
+    end
+
+    it "when a folder is created and a folder is moved under it simultaneously" do
+      new_folder = FactoryGirl.create(:vmware_folder_vm, :ems_id => ems.id)
+      new_folder.parent = folder_vm_root
+      folder_blue1.parent = new_folder
+
+      described_class.post_refresh_ems(ems.id, start_time)
+
+      expect(MiqQueue.count).to eq(1)
+      expect(MiqQueue.first).to have_attributes(
+        :class_name  => vm_blue1.class.name,
+        :instance_id => vm_blue1.id,
+        :method_name => "classify_with_parent_folder_path"
+      )
+    end
+
+    it "when a folder is renamed and a folder is moved under it simultaneously" do
+      folder_blue1.update_attributes(:name => "new blue1")
+      folder_blue2.parent = folder_blue1
+
+      described_class.post_refresh_ems(ems.id, start_time)
+
+      queue_items = MiqQueue.order(:instance_id)
+      expect(queue_items.count).to eq(2)
+      expect(queue_items[0]).to have_attributes(
+        :class_name  => vm_blue1.class.name,
+        :instance_id => vm_blue1.id,
+        :method_name => "classify_with_parent_folder_path"
+      )
+      expect(queue_items[1]).to have_attributes(
+        :class_name  => vm_blue2.class.name,
+        :instance_id => vm_blue2.id,
+        :method_name => "classify_with_parent_folder_path"
+      )
+    end
+
+    it "when a folder is created and a VM is moved under it simultaneously" do
+      new_folder = FactoryGirl.create(:vmware_folder_vm, :ems_id => ems.id)
+      new_folder.parent = folder_vm_root
+      vm_blue1.with_relationship_type("ems_metadata") { |v| v.parent = new_folder }
+
+      described_class.post_refresh_ems(ems.id, start_time)
+
+      expect(MiqQueue.count).to eq(1)
+      expect(MiqQueue.first).to have_attributes(
+        :class_name  => vm_blue1.class.name,
+        :instance_id => vm_blue1.id,
+        :method_name => "classify_with_parent_folder_path"
+      )
+    end
+
+    it "when a folder is renamed and a VM is moved under it simultaneously" do
+      folder_blue2.update_attributes(:name => "new blue2")
+      vm_blue1.with_relationship_type("ems_metadata") { |v| v.parent = folder_blue2 }
+
+      described_class.post_refresh_ems(ems.id, start_time)
+
+      queue_items = MiqQueue.order(:instance_id)
+      expect(queue_items.count).to eq(2)
+      expect(queue_items[0]).to have_attributes(
+        :class_name  => vm_blue1.class.name,
+        :instance_id => vm_blue1.id,
+        :method_name => "classify_with_parent_folder_path"
+      )
+      expect(queue_items[1]).to have_attributes(
+        :class_name  => vm_blue2.class.name,
+        :instance_id => vm_blue2.id,
+        :method_name => "classify_with_parent_folder_path"
+      )
+    end
+  end
 end
