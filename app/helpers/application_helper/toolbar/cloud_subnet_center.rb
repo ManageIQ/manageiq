@@ -11,7 +11,9 @@ class ApplicationHelper::Toolbar::CloudSubnetCenter < ApplicationHelper::Toolbar
           'pficon pficon-edit fa-lg',
           t = N_('Edit this Cloud Subnet'),
           t,
-          :url_parms => 'main_div'
+          :url_parms => 'main_div',
+          :klass => ApplicationHelper::Button::GenericFeatureButtonWithDisable,
+          :options => {:feature => :update}
         ),
         button(
           :cloud_subnet_delete,
@@ -19,7 +21,9 @@ class ApplicationHelper::Toolbar::CloudSubnetCenter < ApplicationHelper::Toolbar
           t = N_('Delete this Cloud Subnet'),
           t,
           :url_parms => 'main_div',
-          :confirm   => N_('Warning: This Cloud Subnet and ALL of its components will be removed!')
+          :confirm   => N_('Warning: This Cloud Subnet and ALL of its components will be removed!'),
+          :klass => ApplicationHelper::Button::GenericFeatureButtonWithDisable,
+          :options => {:feature => :delete}
         ),
       ]
     )])
