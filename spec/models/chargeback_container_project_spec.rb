@@ -3,7 +3,8 @@ describe ChargebackContainerProject do
 
   let(:base_options) { {:interval_size => 1, :end_interval_offset => 0, :ext_options => {:tz => 'UTC'} } }
   let(:hourly_rate)       { 0.01 }
-  let(:ts) { Time.now.in_time_zone(Metric::Helper.get_time_zone(options[:ext_options])) }
+  let(:starting_date) { Time.parse('2012-09-01 23:59:59Z').utc }
+  let(:ts) { starting_date.in_time_zone(Metric::Helper.get_time_zone(options[:ext_options])) }
   let(:month_beginning) { ts.beginning_of_month.utc }
   let(:month_end) { ts.end_of_month.utc }
   let(:hours_in_month) { Time.days_in_month(month_beginning.month, month_beginning.year) * 24 }
@@ -40,7 +41,7 @@ describe ChargebackContainerProject do
     @tag = c.tag
     @project.tag_with(@tag.name, :ns => '*')
 
-    Timecop.travel(Time.parse('2012-09-01 23:59:59Z').utc)
+    Timecop.travel(starting_date)
   end
 
   after do
