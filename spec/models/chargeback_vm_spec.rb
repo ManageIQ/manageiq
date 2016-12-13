@@ -761,23 +761,23 @@ describe ChargebackVm do
     end
 
     context "by owner" do
+      let(:user) { FactoryGirl.create(:user, :name => 'Test VM Owner', :userid => 'test_user') }
       before do
-        @user = FactoryGirl.create(:user, :name => 'Test VM Owner', :userid => 'test_user')
-        @vm1.update_attribute(:evm_owner, @user)
+        @vm1.update_attribute(:evm_owner, user)
 
         @options = {:interval_size => 4,
-                    :owner         => @user.userid,
+                    :owner         => user.userid,
                     :ext_options   => {:tz => "Eastern Time (US & Canada)"},
                    }
       end
 
       it "valid" do
-        expect(subject.owner_name).to eq(@user.name)
+        expect(subject.owner_name).to eq(user.name)
       end
 
       it "not exist" do
-        @user.delete
-        expect { subject }.to raise_error(MiqException::Error, "Unable to find user '#{@user.userid}'")
+        user.delete
+        expect { subject }.to raise_error(MiqException::Error, "Unable to find user '#{user.userid}'")
       end
     end
   end
