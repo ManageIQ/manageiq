@@ -311,7 +311,7 @@ module ApplicationController::Filter
           @edit[@expkey][:expression] = copy_hash(@edit[:new][@expkey])
           # Build the expression table
           @edit[@expkey][:exp_table] = exp_build_table(@edit[@expkey][:expression])
-          @efit[@expkey].history.reset(@edit[@expkey][:expression])
+          @edit[@expkey].history.reset(@edit[@expkey][:expression])
           # Clear the current selected token
           @edit[@expkey][:exp_token] = nil
         else
