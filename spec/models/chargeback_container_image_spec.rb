@@ -110,7 +110,6 @@ describe ChargebackContainerImage do
                                                                 :image_tag_names => "environment/prod")
         time += 12.hours
       end
-      @metric_size = @container.metric_rollups.size
     end
 
     subject { ChargebackContainerImage.build_results_for_report_ChargebackContainerImage(options).first.first }
@@ -164,7 +163,6 @@ describe ChargebackContainerImage do
                                                                 :image_tag_names => "")
         time += 12.hours
       end
-      @metric_size = @container.metric_rollups.size
     end
 
     subject { ChargebackContainerImage.build_results_for_report_ChargebackContainerImage(options).first.first }
