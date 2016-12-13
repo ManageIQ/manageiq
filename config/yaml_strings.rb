@@ -2380,14 +2380,6 @@ _("Display Timelines for Pods")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Show Capacity & Utilization data of Pods")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Modify Pods")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Remove Pod")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Edit a Pod")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Add a Pod")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Perform Operations on Pods")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Edit Tags of Pods")
@@ -2407,14 +2399,6 @@ _("Display Individual Container Nodes")
 _("Show Capacity & Utilization data of Nodes")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Display Timelines for Container Nodes")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Modify Container Nodes")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Remove Container Nodes")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Edit a Container Nodes")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Add a Container Nodes")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Perform Operations on Container Nodes")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -2436,12 +2420,6 @@ _("Display Individual Container Replicators")
 _("Show Capacity & Utilization data of Replicators")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Display Timelines for container Replicators")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Remove Container Replicator")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Edit a Container Replicator")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Add a Container Replicator")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Perform Operations on Container Replicators")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -2474,14 +2452,6 @@ _("View Container Image Registries")
 _("Display Lists of Container Image Registries")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Display Individual Container Image Registries")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Modify Container Image Registries")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Remove Container Image Registry")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Edit a Container Image Registry")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Add a Container Image Registry")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Perform Operations on Container Image Registries")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -2519,14 +2489,6 @@ _("Display Lists of Container Build")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Display Individual Container Build")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Modify Container Build")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Remove Container Build")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Edit a Container Build")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Add a Container Build")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Perform Operations on Container Build")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Edit Tags of Container Build")
@@ -2558,14 +2520,6 @@ _("Display Lists of Container Services")
 _("Display Individual Container Services")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Show Capacity & Utilization data of Service")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Modify Container Services")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Remove Container Services")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Edit a Container Service")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Add a Container Service")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Perform Operations on Container Services")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -2618,16 +2572,6 @@ _("Display Lists of Containers")
 _("Display Timelines for Containers")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Modify Containers")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Remove Container")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Edit Container")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Edit a Container")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Add Container")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Add a Container")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Show Capacity & Utilization data of Containers")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -3293,6 +3237,12 @@ _("Request %{subject} has been approved.")
 _("Request %{subject} has been denied.")
 # TRANSLATORS: file: db/fixtures/notification_types.yml
 _("%{message}")
+# TRANSLATORS: file: db/fixtures/notification_types.yml
+_("The operation %{op_name} %{op_arg} on %{mw_server} completed successfully.")
+# TRANSLATORS: file: db/fixtures/notification_types.yml
+_("The operation %{op_name} %{op_arg} on %{mw_server} has failed to complete. Please check the logs for further details.")
+# TRANSLATORS: file: product/charts/layouts/planning_charts.yaml
+_("VM Planning")
 # TRANSLATORS: file: product/charts/layouts/ts_util_charts.yaml
 _("Selected Day Percent Utilization")
 # TRANSLATORS: file: product/charts/layouts/daily_util_charts.yaml
@@ -3301,8 +3251,6 @@ _("Trend of CPU Used (Mhz)")
 _("Trend of Memory Used (MB)")
 # TRANSLATORS: file: product/charts/layouts/daily_util_charts.yaml
 _("Trend of Used Disk Space")
-# TRANSLATORS: file: product/charts/layouts/planning_charts.yaml
-_("VM Planning")
 # TRANSLATORS: file: product/charts/layouts/daily_perf_charts/EmsCluster.yaml
 # TRANSLATORS: file: product/charts/layouts/daily_perf_charts/Host.yaml
 # TRANSLATORS: file: product/charts/layouts/daily_perf_charts/ManageIQ_Providers_Openstack_InfraManager_EmsCluster.yaml
@@ -3391,12 +3339,31 @@ _("Disk I/O (blocks per second)")
 # TRANSLATORS: file: product/charts/layouts/hourly_tag_charts/ManageIQ_Providers_Openstack_InfraManager_EmsCluster.yaml
 # TRANSLATORS: file: product/charts/layouts/realtime_perf_charts/ManageIQ_Providers_Openstack_InfraManager_Host.yaml
 _("Network I/O (datagrams per second)")
-# TRANSLATORS: file: product/charts/layouts/daily_tag_charts/EmsCluster.yaml
-# TRANSLATORS: file: product/charts/layouts/daily_tag_charts/Host.yaml
-# TRANSLATORS: file: product/charts/layouts/daily_tag_charts/ManageIQ_Providers_Openstack_InfraManager_Host.yaml
-# TRANSLATORS: file: product/charts/layouts/hourly_tag_charts/EmsCluster.yaml
-# TRANSLATORS: file: product/charts/layouts/hourly_tag_charts/Host.yaml
-_("Virtual Machine CPU Ready (Percent)")
+# TRANSLATORS: file: product/charts/layouts/daily_tag_charts/Storage.yaml
+_("Used Space")
+# TRANSLATORS: file: product/charts/layouts/daily_tag_charts/Storage.yaml
+_("Disk Files")
+# TRANSLATORS: file: product/charts/layouts/daily_tag_charts/Storage.yaml
+_("Snapshot Files")
+# TRANSLATORS: file: product/charts/layouts/daily_tag_charts/Storage.yaml
+_("Memory Files")
+# TRANSLATORS: file: product/charts/layouts/daily_tag_charts/Storage.yaml
+_("Number of VMs")
+# TRANSLATORS: file: product/charts/layouts/daily_perf_charts/AvailabilityZone.yaml
+# TRANSLATORS: file: product/charts/layouts/daily_perf_charts/ContainerNode.yaml
+# TRANSLATORS: file: product/charts/layouts/daily_perf_charts/HostAggregate.yaml
+# TRANSLATORS: file: product/charts/layouts/daily_perf_charts/ManageIQ_Providers_ContainerManager.yaml
+# TRANSLATORS: file: product/charts/layouts/daily_perf_charts/Parent-EmsCluster.yaml
+# TRANSLATORS: file: product/charts/layouts/daily_perf_charts/Parent-Host.yaml
+# TRANSLATORS: file: product/charts/layouts/daily_perf_charts/VmOrTemplate.yaml
+# TRANSLATORS: file: product/charts/layouts/daily_tag_charts/AvailabilityZone.yaml
+# TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/AvailabilityZone.yaml
+# TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/ContainerNode.yaml
+# TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/ManageIQ_Providers_ContainerManager.yaml
+# TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/VmOrTemplate.yaml
+# TRANSLATORS: file: product/charts/layouts/realtime_perf_charts/ContainerNode.yaml
+# TRANSLATORS: file: product/charts/layouts/realtime_perf_charts/VmOrTemplate.yaml
+_("CPU (%)")
 # TRANSLATORS: file: product/charts/layouts/daily_perf_charts/AvailabilityZone.yaml
 # TRANSLATORS: file: product/charts/layouts/daily_perf_charts/EmsCluster.yaml
 # TRANSLATORS: file: product/charts/layouts/daily_perf_charts/Host.yaml
@@ -3455,33 +3422,12 @@ _("Disk I/O (KBps)")
 # TRANSLATORS: file: product/charts/layouts/realtime_perf_charts/Host.yaml
 # TRANSLATORS: file: product/charts/layouts/realtime_perf_charts/VmOrTemplate.yaml
 _("Network I/O (KBps)")
-# TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/AvailabilityZone.yaml
-# TRANSLATORS: file: product/charts/layouts/hourly_tag_charts/AvailabilityZone.yaml
-_("Memory(MB)")
-# TRANSLATORS: file: product/charts/layouts/daily_perf_charts/MiddlewareMessaging_jms_queue.yaml
-# TRANSLATORS: file: product/charts/layouts/daily_perf_charts/MiddlewareMessaging_jms_topic.yaml
-# TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/MiddlewareMessaging_jms_queue.yaml
-# TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/MiddlewareMessaging_jms_topic.yaml
-# TRANSLATORS: file: product/charts/layouts/realtime_perf_charts/MiddlewareMessaging_jms_queue.yaml
-# TRANSLATORS: file: product/charts/layouts/realtime_perf_charts/MiddlewareMessaging_jms_topic.yaml
-_("Messages")
-# TRANSLATORS: file: product/charts/layouts/daily_perf_charts/MiddlewareMessaging_jms_topic.yaml
-# TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/MiddlewareMessaging_jms_topic.yaml
-# TRANSLATORS: file: product/charts/layouts/realtime_perf_charts/MiddlewareMessaging_jms_topic.yaml
-_("Subscribers")
-# TRANSLATORS: file: product/charts/layouts/daily_perf_charts/Container.yaml
-# TRANSLATORS: file: product/charts/layouts/daily_perf_charts/ContainerGroup.yaml
-# TRANSLATORS: file: product/charts/layouts/daily_perf_charts/ContainerProject.yaml
-# TRANSLATORS: file: product/charts/layouts/daily_perf_charts/ContainerReplicator.yaml
-# TRANSLATORS: file: product/charts/layouts/daily_perf_charts/ContainerService.yaml
-# TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/Container.yaml
-# TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/ContainerGroup.yaml
-# TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/ContainerProject.yaml
-# TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/ContainerReplicator.yaml
-# TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/ContainerService.yaml
-# TRANSLATORS: file: product/charts/layouts/realtime_perf_charts/Container.yaml
-# TRANSLATORS: file: product/charts/layouts/realtime_perf_charts/ContainerGroup.yaml
-_("Cores Used")
+# TRANSLATORS: file: product/charts/layouts/daily_tag_charts/EmsCluster.yaml
+# TRANSLATORS: file: product/charts/layouts/daily_tag_charts/Host.yaml
+# TRANSLATORS: file: product/charts/layouts/daily_tag_charts/ManageIQ_Providers_Openstack_InfraManager_Host.yaml
+# TRANSLATORS: file: product/charts/layouts/hourly_tag_charts/EmsCluster.yaml
+# TRANSLATORS: file: product/charts/layouts/hourly_tag_charts/Host.yaml
+_("Virtual Machine CPU Ready (Percent)")
 # TRANSLATORS: file: product/charts/layouts/daily_perf_charts/EmsCluster.yaml
 # TRANSLATORS: file: product/charts/layouts/daily_perf_charts/ManageIQ_Providers_Openstack_InfraManager_EmsCluster.yaml
 # TRANSLATORS: file: product/charts/layouts/daily_perf_charts/Parent-EmsCluster.yaml
@@ -3506,6 +3452,77 @@ _("VMs & Hosts")
 # TRANSLATORS: file: product/views/OntapStorageVolume.yaml
 # TRANSLATORS: file: product/views/SniaLocalFileSystem.yaml
 _("Hosts")
+# TRANSLATORS: file: product/charts/layouts/daily_perf_charts/Container.yaml
+# TRANSLATORS: file: product/charts/layouts/daily_perf_charts/ContainerGroup.yaml
+# TRANSLATORS: file: product/charts/layouts/daily_perf_charts/ContainerProject.yaml
+# TRANSLATORS: file: product/charts/layouts/daily_perf_charts/ContainerReplicator.yaml
+# TRANSLATORS: file: product/charts/layouts/daily_perf_charts/ContainerService.yaml
+# TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/Container.yaml
+# TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/ContainerGroup.yaml
+# TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/ContainerProject.yaml
+# TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/ContainerReplicator.yaml
+# TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/ContainerService.yaml
+# TRANSLATORS: file: product/charts/layouts/realtime_perf_charts/Container.yaml
+# TRANSLATORS: file: product/charts/layouts/realtime_perf_charts/ContainerGroup.yaml
+_("Cores Used")
+# TRANSLATORS: file: product/charts/layouts/daily_perf_charts/Storage.yaml
+# TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/Storage.yaml
+_("Used Space by Type")
+# TRANSLATORS: file: product/charts/layouts/daily_perf_charts/Storage.yaml
+# TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/Storage.yaml
+_("Disk Files Space by Type")
+# TRANSLATORS: file: product/charts/layouts/daily_perf_charts/Storage.yaml
+# TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/Storage.yaml
+_("Snapshot Files Space by Type")
+# TRANSLATORS: file: product/charts/layouts/daily_perf_charts/Storage.yaml
+# TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/Storage.yaml
+_("Memory Files Space by Type")
+# TRANSLATORS: file: product/charts/layouts/daily_perf_charts/Storage.yaml
+# TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/Storage.yaml
+_("Number of VMs by Type")
+# TRANSLATORS: file: product/charts/layouts/daily_perf_charts/Storage.yaml
+# TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/Storage.yaml
+_("Used Disk Space")
+# TRANSLATORS: file: product/charts/layouts/daily_perf_charts/MiddlewareDatasource.yaml
+# TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/MiddlewareDatasource.yaml
+# TRANSLATORS: file: product/charts/layouts/realtime_perf_charts/MiddlewareDatasource.yaml
+_("Availability (Connections)")
+# TRANSLATORS: file: product/charts/layouts/daily_perf_charts/MiddlewareDatasource.yaml
+# TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/MiddlewareDatasource.yaml
+# TRANSLATORS: file: product/charts/layouts/realtime_perf_charts/MiddlewareDatasource.yaml
+_("Responsiveness (ms)")
+# TRANSLATORS: file: product/charts/layouts/daily_perf_charts/MiddlewareMessaging_jms_queue.yaml
+# TRANSLATORS: file: product/charts/layouts/daily_perf_charts/MiddlewareMessaging_jms_topic.yaml
+# TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/MiddlewareMessaging_jms_queue.yaml
+# TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/MiddlewareMessaging_jms_topic.yaml
+# TRANSLATORS: file: product/charts/layouts/realtime_perf_charts/MiddlewareMessaging_jms_queue.yaml
+# TRANSLATORS: file: product/charts/layouts/realtime_perf_charts/MiddlewareMessaging_jms_topic.yaml
+_("Messages")
+# TRANSLATORS: file: product/charts/layouts/daily_perf_charts/MiddlewareMessaging_jms_topic.yaml
+# TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/MiddlewareMessaging_jms_topic.yaml
+# TRANSLATORS: file: product/charts/layouts/realtime_perf_charts/MiddlewareMessaging_jms_topic.yaml
+_("Subscribers")
+# TRANSLATORS: file: product/charts/layouts/daily_perf_charts/OntapLogicalDisk.yaml
+# TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/OntapLogicalDisk.yaml
+_("Average Disk Latency (microseconds)")
+# TRANSLATORS: file: product/charts/layouts/daily_perf_charts/OntapLogicalDisk.yaml
+# TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/OntapLogicalDisk.yaml
+_("Disk Read Latency (microseconds)")
+# TRANSLATORS: file: product/charts/layouts/daily_perf_charts/OntapLogicalDisk.yaml
+# TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/OntapLogicalDisk.yaml
+_("Disk Write Latency (microseconds)")
+# TRANSLATORS: file: product/charts/layouts/daily_perf_charts/OntapLogicalDisk.yaml
+# TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/OntapLogicalDisk.yaml
+_("I/O Operations (per second)")
+# TRANSLATORS: file: product/charts/layouts/daily_perf_charts/OntapLogicalDisk.yaml
+# TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/OntapLogicalDisk.yaml
+_("Read Data (bytes per second)")
+# TRANSLATORS: file: product/charts/layouts/daily_perf_charts/OntapLogicalDisk.yaml
+# TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/OntapLogicalDisk.yaml
+_("Write Data (bytes per second)")
+# TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/AvailabilityZone.yaml
+# TRANSLATORS: file: product/charts/layouts/hourly_tag_charts/AvailabilityZone.yaml
+_("Memory(MB)")
 # TRANSLATORS: file: product/charts/layouts/daily_perf_charts/EmsCluster.yaml
 # TRANSLATORS: file: product/charts/layouts/daily_perf_charts/Host.yaml
 # TRANSLATORS: file: product/charts/layouts/daily_perf_charts/Parent-EmsCluster.yaml
@@ -3526,89 +3543,6 @@ _("Disk Size")
 # TRANSLATORS: file: product/charts/layouts/daily_perf_charts/VmdbDatabase.yaml
 # TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/VmdbDatabase.yaml
 _("Index Nodes")
-# TRANSLATORS: file: product/charts/layouts/daily_perf_charts/AvailabilityZone.yaml
-# TRANSLATORS: file: product/charts/layouts/daily_perf_charts/ContainerNode.yaml
-# TRANSLATORS: file: product/charts/layouts/daily_perf_charts/HostAggregate.yaml
-# TRANSLATORS: file: product/charts/layouts/daily_perf_charts/ManageIQ_Providers_ContainerManager.yaml
-# TRANSLATORS: file: product/charts/layouts/daily_perf_charts/Parent-EmsCluster.yaml
-# TRANSLATORS: file: product/charts/layouts/daily_perf_charts/Parent-Host.yaml
-# TRANSLATORS: file: product/charts/layouts/daily_perf_charts/VmOrTemplate.yaml
-# TRANSLATORS: file: product/charts/layouts/daily_tag_charts/AvailabilityZone.yaml
-# TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/AvailabilityZone.yaml
-# TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/ContainerNode.yaml
-# TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/ManageIQ_Providers_ContainerManager.yaml
-# TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/VmOrTemplate.yaml
-# TRANSLATORS: file: product/charts/layouts/realtime_perf_charts/ContainerNode.yaml
-# TRANSLATORS: file: product/charts/layouts/realtime_perf_charts/VmOrTemplate.yaml
-_("CPU (%)")
-# TRANSLATORS: file: product/charts/layouts/daily_perf_charts/Storage.yaml
-# TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/Storage.yaml
-_("Used Space by Type")
-# TRANSLATORS: file: product/charts/layouts/daily_perf_charts/Storage.yaml
-# TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/Storage.yaml
-_("Disk Files Space by Type")
-# TRANSLATORS: file: product/charts/layouts/daily_perf_charts/Storage.yaml
-# TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/Storage.yaml
-_("Snapshot Files Space by Type")
-# TRANSLATORS: file: product/charts/layouts/daily_perf_charts/Storage.yaml
-# TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/Storage.yaml
-_("Memory Files Space by Type")
-# TRANSLATORS: file: product/charts/layouts/daily_perf_charts/Storage.yaml
-# TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/Storage.yaml
-_("Number of VMs by Type")
-# TRANSLATORS: file: product/charts/layouts/daily_perf_charts/Storage.yaml
-# TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/Storage.yaml
-_("Used Disk Space")
-# TRANSLATORS: file: product/charts/layouts/daily_perf_charts/OntapLogicalDisk.yaml
-# TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/OntapLogicalDisk.yaml
-_("Average Disk Latency (microseconds)")
-# TRANSLATORS: file: product/charts/layouts/daily_perf_charts/OntapLogicalDisk.yaml
-# TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/OntapLogicalDisk.yaml
-_("Disk Read Latency (microseconds)")
-# TRANSLATORS: file: product/charts/layouts/daily_perf_charts/OntapLogicalDisk.yaml
-# TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/OntapLogicalDisk.yaml
-_("Disk Write Latency (microseconds)")
-# TRANSLATORS: file: product/charts/layouts/daily_perf_charts/OntapLogicalDisk.yaml
-# TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/OntapLogicalDisk.yaml
-_("I/O Operations (per second)")
-# TRANSLATORS: file: product/charts/layouts/daily_perf_charts/OntapLogicalDisk.yaml
-# TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/OntapLogicalDisk.yaml
-_("Read Data (bytes per second)")
-# TRANSLATORS: file: product/charts/layouts/daily_perf_charts/OntapLogicalDisk.yaml
-# TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/OntapLogicalDisk.yaml
-_("Write Data (bytes per second)")
-# TRANSLATORS: file: product/charts/layouts/daily_perf_charts/MiddlewareDatasource.yaml
-# TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/MiddlewareDatasource.yaml
-# TRANSLATORS: file: product/charts/layouts/realtime_perf_charts/MiddlewareDatasource.yaml
-_("Availability (Connections)")
-# TRANSLATORS: file: product/charts/layouts/daily_perf_charts/MiddlewareDatasource.yaml
-# TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/MiddlewareDatasource.yaml
-# TRANSLATORS: file: product/charts/layouts/realtime_perf_charts/MiddlewareDatasource.yaml
-_("Responsiveness (ms)")
-# TRANSLATORS: file: product/charts/layouts/daily_perf_charts/MiddlewareServer.yaml
-# TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/MiddlewareServer.yaml
-# TRANSLATORS: file: product/charts/layouts/realtime_perf_charts/MiddlewareServer.yaml
-_("JVM Heap Usage (Bytes)")
-# TRANSLATORS: file: product/charts/layouts/daily_perf_charts/MiddlewareServer.yaml
-# TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/MiddlewareServer.yaml
-# TRANSLATORS: file: product/charts/layouts/realtime_perf_charts/MiddlewareServer.yaml
-_("JVM Non Heap Usage (Bytes)")
-# TRANSLATORS: file: product/charts/layouts/daily_perf_charts/MiddlewareServer.yaml
-# TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/MiddlewareServer.yaml
-# TRANSLATORS: file: product/charts/layouts/realtime_perf_charts/MiddlewareServer.yaml
-_("GC Duration (ms)")
-# TRANSLATORS: file: product/charts/layouts/daily_perf_charts/MiddlewareServer.yaml
-# TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/MiddlewareServer.yaml
-# TRANSLATORS: file: product/charts/layouts/realtime_perf_charts/MiddlewareServer.yaml
-_("Web Sessions")
-# TRANSLATORS: file: product/charts/layouts/daily_perf_charts/MiddlewareServer.yaml
-# TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/MiddlewareServer.yaml
-# TRANSLATORS: file: product/charts/layouts/realtime_perf_charts/MiddlewareServer.yaml
-_("Transactions")
-# TRANSLATORS: file: product/charts/layouts/daily_perf_charts/MiddlewareMessaging_jms_queue.yaml
-# TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/MiddlewareMessaging_jms_queue.yaml
-# TRANSLATORS: file: product/charts/layouts/realtime_perf_charts/MiddlewareMessaging_jms_queue.yaml
-_("Consumers")
 # TRANSLATORS: file: product/charts/layouts/daily_perf_charts/VmdbTable.yaml
 # TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/VmdbTable.yaml
 # TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/025_Location and Size.yaml
@@ -3633,6 +3567,30 @@ _("Rows")
 # TRANSLATORS: file: product/charts/layouts/daily_perf_charts/VmdbTable.yaml
 # TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/VmdbTable.yaml
 _("Row Activity")
+# TRANSLATORS: file: product/charts/layouts/daily_perf_charts/MiddlewareMessaging_jms_queue.yaml
+# TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/MiddlewareMessaging_jms_queue.yaml
+# TRANSLATORS: file: product/charts/layouts/realtime_perf_charts/MiddlewareMessaging_jms_queue.yaml
+_("Consumers")
+# TRANSLATORS: file: product/charts/layouts/daily_perf_charts/MiddlewareServer.yaml
+# TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/MiddlewareServer.yaml
+# TRANSLATORS: file: product/charts/layouts/realtime_perf_charts/MiddlewareServer.yaml
+_("JVM Heap Usage (Bytes)")
+# TRANSLATORS: file: product/charts/layouts/daily_perf_charts/MiddlewareServer.yaml
+# TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/MiddlewareServer.yaml
+# TRANSLATORS: file: product/charts/layouts/realtime_perf_charts/MiddlewareServer.yaml
+_("JVM Non Heap Usage (Bytes)")
+# TRANSLATORS: file: product/charts/layouts/daily_perf_charts/MiddlewareServer.yaml
+# TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/MiddlewareServer.yaml
+# TRANSLATORS: file: product/charts/layouts/realtime_perf_charts/MiddlewareServer.yaml
+_("GC Duration (ms)")
+# TRANSLATORS: file: product/charts/layouts/daily_perf_charts/MiddlewareServer.yaml
+# TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/MiddlewareServer.yaml
+# TRANSLATORS: file: product/charts/layouts/realtime_perf_charts/MiddlewareServer.yaml
+_("Web Sessions")
+# TRANSLATORS: file: product/charts/layouts/daily_perf_charts/MiddlewareServer.yaml
+# TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/MiddlewareServer.yaml
+# TRANSLATORS: file: product/charts/layouts/realtime_perf_charts/MiddlewareServer.yaml
+_("Transactions")
 # TRANSLATORS: file: product/charts/layouts/day_top_charts/ems_cluster-Host.yaml
 # TRANSLATORS: file: product/charts/layouts/day_top_charts/ems_cluster-Vm.yaml
 # TRANSLATORS: file: product/charts/layouts/day_top_charts/host-Vm.yaml
@@ -3672,6 +3630,9 @@ _("Average Disk I/O (KBps)")
 # TRANSLATORS: file: product/charts/layouts/hour_top_charts/ems_cluster-Vm.yaml
 # TRANSLATORS: file: product/charts/layouts/hour_top_charts/host-Vm.yaml
 _("Average Network I/O (KBps)")
+# TRANSLATORS: file: product/charts/layouts/day_top_charts/availability_zone-Vm.yaml
+# TRANSLATORS: file: product/charts/layouts/hour_top_charts/availability_zone-Vm.yaml
+_("Average CPU Used (%)")
 # TRANSLATORS: file: product/charts/layouts/day_top_charts/storage-Vm.yaml
 _("Average Used Space")
 # TRANSLATORS: file: product/charts/layouts/day_top_charts/storage-Vm.yaml
@@ -3680,33 +3641,10 @@ _("Average Disk Files Space")
 _("Average Snapshot Files Space")
 # TRANSLATORS: file: product/charts/layouts/day_top_charts/storage-Vm.yaml
 _("Average Memory Files Space")
-# TRANSLATORS: file: product/charts/layouts/day_top_charts/availability_zone-Vm.yaml
-# TRANSLATORS: file: product/charts/layouts/hour_top_charts/availability_zone-Vm.yaml
-_("Average CPU Used (%)")
-# TRANSLATORS: file: product/charts/layouts/daily_tag_charts/Storage.yaml
-_("Used Space")
-# TRANSLATORS: file: product/charts/layouts/daily_tag_charts/Storage.yaml
-_("Disk Files")
-# TRANSLATORS: file: product/charts/layouts/daily_tag_charts/Storage.yaml
-_("Snapshot Files")
-# TRANSLATORS: file: product/charts/layouts/daily_tag_charts/Storage.yaml
-_("Memory Files")
-# TRANSLATORS: file: product/charts/layouts/daily_tag_charts/Storage.yaml
-_("Number of VMs")
-# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/120_JVM Non Heap Usage - daily over last week.yaml
-_("JVM Non Heap Usage - daily averages for last week")
-# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/120_JVM Non Heap Usage - daily over last week.yaml
-_("JVM Non Heap Usage - daily over last week")
-# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/110_JVM Heap Usage - daily over last week.yaml
-# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/120_JVM Non Heap Usage - daily over last week.yaml
-# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/130_JVM Garbage Collection - daily over last week.yaml
-# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/140_Transactions - every minute over last hour.yaml
-# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/150_Transactions - hourly over last day.yaml
-# TRANSLATORS: file: product/reports/680_Performance by Asset Type - Middleware Datasources/110_Datasource Pool - every minute for the last hour.yaml
-# TRANSLATORS: file: product/reports/680_Performance by Asset Type - Middleware Datasources/120_Datasource Pool - hourly for the last day.yaml
-# TRANSLATORS: file: product/views/ContainerImage.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_ConfigurationManager_Job.yaml
-_("Id")
+# TRANSLATORS: file: product/reports/700_Running Processes - Virtual Machines/110_Processes_for_prod_ VMs_sort_by_CPU_Time.yaml
+_("Processes for prod VMs sorted by CPU Time")
+# TRANSLATORS: file: product/reports/700_Running Processes - Virtual Machines/110_Processes_for_prod_ VMs_sort_by_CPU_Time.yaml
+_("Processes for prod VMs sort by CPU Time")
 # TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/005_VMs with Free Space _ 50% by Department.yaml
 # TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/006_VMs w_Free Space _ 75% by Function.yaml
 # TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/007_VMs w_Free Space _ 75% by LOB.yaml
@@ -3882,229 +3820,28 @@ _("Id")
 # TRANSLATORS: file: product/views/ems_block_storage.yaml
 # TRANSLATORS: file: product/views/ems_object_storage.yaml
 _("Name")
-# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/110_JVM Heap Usage - daily over last week.yaml
-# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/120_JVM Non Heap Usage - daily over last week.yaml
-# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/130_JVM Garbage Collection - daily over last week.yaml
-# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/140_Transactions - every minute over last hour.yaml
-# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/150_Transactions - hourly over last day.yaml
-# TRANSLATORS: file: product/reports/680_Performance by Asset Type - Middleware Datasources/110_Datasource Pool - every minute for the last hour.yaml
-# TRANSLATORS: file: product/reports/680_Performance by Asset Type - Middleware Datasources/120_Datasource Pool - hourly for the last day.yaml
-# TRANSLATORS: file: product/views/SystemService-filesystem_drivers.yaml
-# TRANSLATORS: file: product/views/SystemService-kernel_drivers.yaml
-# TRANSLATORS: file: product/views/SystemService-win32_services.yaml
-_("Start")
-# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/110_JVM Heap Usage - daily over last week.yaml
-# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/120_JVM Non Heap Usage - daily over last week.yaml
-_("Used - min (bytes)")
-# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/110_JVM Heap Usage - daily over last week.yaml
-# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/120_JVM Non Heap Usage - daily over last week.yaml
-_("Used - avg (bytes)")
-# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/110_JVM Heap Usage - daily over last week.yaml
-# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/120_JVM Non Heap Usage - daily over last week.yaml
-_("Used - max (bytes)")
-# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/110_JVM Heap Usage - daily over last week.yaml
-# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/120_JVM Non Heap Usage - daily over last week.yaml
-_("Committed - min (bytes)")
-# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/110_JVM Heap Usage - daily over last week.yaml
-# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/120_JVM Non Heap Usage - daily over last week.yaml
-_("Committed - avg (bytes)")
-# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/110_JVM Heap Usage - daily over last week.yaml
-# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/120_JVM Non Heap Usage - daily over last week.yaml
-_("Committed - max (bytes)")
-# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/140_Transactions - every minute over last hour.yaml
-_("Transactions - every minute over the last hour")
-# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/140_Transactions - every minute over last hour.yaml
-_("Transactions Pool - every minute over the last hour")
-# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/140_Transactions - every minute over last hour.yaml
-# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/150_Transactions - hourly over last day.yaml
-_("Commited count - min")
-# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/140_Transactions - every minute over last hour.yaml
-# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/150_Transactions - hourly over last day.yaml
-_("Commited count - avg")
-# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/140_Transactions - every minute over last hour.yaml
-# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/150_Transactions - hourly over last day.yaml
-_("Commited count - max")
-# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/140_Transactions - every minute over last hour.yaml
-# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/150_Transactions - hourly over last day.yaml
-_("Failed count - min")
-# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/140_Transactions - every minute over last hour.yaml
-# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/150_Transactions - hourly over last day.yaml
-_("Failed count - avg")
-# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/140_Transactions - every minute over last hour.yaml
-# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/150_Transactions - hourly over last day.yaml
-_("Failed count - max")
-# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/140_Transactions - every minute over last hour.yaml
-# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/150_Transactions - hourly over last day.yaml
-# TRANSLATORS: file: product/reports/680_Performance by Asset Type - Middleware Datasources/110_Datasource Pool - every minute for the last hour.yaml
-# TRANSLATORS: file: product/reports/680_Performance by Asset Type - Middleware Datasources/120_Datasource Pool - hourly for the last day.yaml
-_("Timed out count - min")
-# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/140_Transactions - every minute over last hour.yaml
-# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/150_Transactions - hourly over last day.yaml
-# TRANSLATORS: file: product/reports/680_Performance by Asset Type - Middleware Datasources/110_Datasource Pool - every minute for the last hour.yaml
-# TRANSLATORS: file: product/reports/680_Performance by Asset Type - Middleware Datasources/120_Datasource Pool - hourly for the last day.yaml
-_("Timed out count - avg")
-# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/140_Transactions - every minute over last hour.yaml
-# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/150_Transactions - hourly over last day.yaml
-# TRANSLATORS: file: product/reports/680_Performance by Asset Type - Middleware Datasources/110_Datasource Pool - every minute for the last hour.yaml
-# TRANSLATORS: file: product/reports/680_Performance by Asset Type - Middleware Datasources/120_Datasource Pool - hourly for the last day.yaml
-_("Timed out count - max")
-# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/140_Transactions - every minute over last hour.yaml
-# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/150_Transactions - hourly over last day.yaml
-_("Heuristics count - min")
-# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/140_Transactions - every minute over last hour.yaml
-# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/150_Transactions - hourly over last day.yaml
-_("Heuristics count - avg")
-# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/140_Transactions - every minute over last hour.yaml
-# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/150_Transactions - hourly over last day.yaml
-_("Heuristics count - max")
-# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/140_Transactions - every minute over last hour.yaml
-# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/150_Transactions - hourly over last day.yaml
-_("Aborted count - min")
-# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/140_Transactions - every minute over last hour.yaml
-# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/150_Transactions - hourly over last day.yaml
-_("Aborted count - avg")
-# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/140_Transactions - every minute over last hour.yaml
-# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/150_Transactions - hourly over last day.yaml
-_("Aborted count - max")
-# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/150_Transactions - hourly over last day.yaml
-_("Transactions - hourly over the last day")
-# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/150_Transactions - hourly over last day.yaml
-_("Transactions Pool - hourly over the last day")
-# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/130_JVM Garbage Collection - daily over last week.yaml
-_("JVM Garbage Collection - daily averages for last week")
-# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/130_JVM Garbage Collection - daily over last week.yaml
-_("JVM Garbage Collection - daily over last week")
-# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/130_JVM Garbage Collection - daily over last week.yaml
-_("Duration - min (milliseconds)")
-# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/130_JVM Garbage Collection - daily over last week.yaml
-_("Duration - avg (milliseconds)")
-# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/130_JVM Garbage Collection - daily over last week.yaml
-_("Duration - max (milliseconds)")
-# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/110_JVM Heap Usage - daily over last week.yaml
-_("JVM Heap Usage - daily averages for last week")
-# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/110_JVM Heap Usage - daily over last week.yaml
-_("JVM Heap Usage - daily over last week")
-# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/110_JVM Heap Usage - daily over last week.yaml
-_("Maximum - min (bytes)")
-# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/110_JVM Heap Usage - daily over last week.yaml
-_("Maximum - avg (bytes)")
-# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/110_JVM Heap Usage - daily over last week.yaml
-_("Maximum - max (bytes)")
-# TRANSLATORS: file: product/reports/760_Trending - Storage/110_Datastore_Capacity_Trend_over_6 mos.yaml
-_("Datastore Capacity Trend over the last 6 months")
-# TRANSLATORS: file: product/reports/760_Trending - Storage/110_Datastore_Capacity_Trend_over_6 mos.yaml
-_("Datastore Capacity Trend over 6 mos.")
-# TRANSLATORS: file: product/reports/660_Performance by Asset Type - Clusters/110_Cluster_Memory_and_CPU_Usage_7_days.yaml
-_("Cluster Memory and CPU usage over last 7 days")
-# TRANSLATORS: file: product/reports/660_Performance by Asset Type - Clusters/110_Cluster_Memory_and_CPU_Usage_7_days.yaml
-_("Cluster Memory and CPU Usage (7 days)")
-# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/100_VMs_with_Max_Daily_Mem_ 50%_past_mo.yaml
-# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/110_VMs_with_Avg_Daily_Mem_ 50%_past_mo.yaml
-# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/120_VMs_with_Avg_Daily_CPU_ 85%_past_mo.yaml
-# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/130_VMs_with_Max_Daily_CPU_ 85%_past_mo .yaml
-# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/140_VMs with Avg Daily Mem _ 95%_past_mo .yaml
-# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/160_Top CPU Consumers weekly.yaml
-# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/170_Top Memory Consumers weekly.yaml
-# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/180_Top Storage Consumers.yaml
-# TRANSLATORS: file: product/reports/660_Performance by Asset Type - Clusters/110_Cluster_Memory_and_CPU_Usage_7_days.yaml
-_("Cluster Name")
-# TRANSLATORS: file: product/reports/660_Performance by Asset Type - Clusters/110_Cluster_Memory_and_CPU_Usage_7_days.yaml
-_("CPU - Aggregate Usage Rate for Child Hosts for Collected Intervals (%)")
-# TRANSLATORS: file: product/reports/660_Performance by Asset Type - Clusters/110_Cluster_Memory_and_CPU_Usage_7_days.yaml
-_("CPU - Peak Usage Rate Avg for Child Hosts for Collected Intervals (%)")
-# TRANSLATORS: file: product/reports/660_Performance by Asset Type - Clusters/110_Cluster_Memory_and_CPU_Usage_7_days.yaml
-_("Memory - Avg Usage of Total Allocated for Collected Intervals (%)")
-# TRANSLATORS: file: product/reports/660_Performance by Asset Type - Clusters/110_Cluster_Memory_and_CPU_Usage_7_days.yaml
-_("Memory - Peak Aggregate Usage of Allocated for Child Hosts for Collected Intervals (%)")
-# TRANSLATORS: file: product/reports/660_Performance by Asset Type - Clusters/110_Cluster_Memory_and_CPU_Usage_7_days.yaml
-_("Memory - Peak Aggregate Used for Child VMs for Collected Intervals (MB)")
-# TRANSLATORS: file: product/reports/660_Performance by Asset Type - Clusters/110_Cluster_Memory_and_CPU_Usage_7_days.yaml
-_("Memory - Aggregate Used for Child VMs for Collected Intervals (MB)")
-# TRANSLATORS: file: product/reports/660_Performance by Asset Type - Clusters/110_Cluster_Memory_and_CPU_Usage_7_days.yaml
-_("Activity Sample - Day  (MM DD YY)")
-# TRANSLATORS: file: product/reports/420_Operations - Clusters/010_Cluster - DRS migrations.yaml
-_("Cluster - DRS migrations")
-# TRANSLATORS: file: product/reports/420_Operations - Clusters/010_Cluster - DRS migrations.yaml
-_("Ems Cluster Name")
-# TRANSLATORS: file: product/reports/420_Operations - Clusters/010_Cluster - DRS migrations.yaml
-_("Vm Name")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/025_Location and Size.yaml
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/031_Unregistered VMs.yaml
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/032_Orphaned VMs.yaml
-# TRANSLATORS: file: product/reports/140_Configuration Management - Resource Pools/010_Summary.yaml
-# TRANSLATORS: file: product/reports/410_Operations - EVM/030_EVM Server_ UserID Usage Report.yaml
-# TRANSLATORS: file: product/reports/410_Operations - EVM/032_EVM Server_ UserIDs Never Used.yaml
-# TRANSLATORS: file: product/reports/420_Operations - Clusters/010_Cluster - DRS migrations.yaml
-# TRANSLATORS: file: product/timelines/miq_reports/tl_policy_events_daily.yaml
-# TRANSLATORS: file: product/timelines/miq_reports/tl_policy_events_hourly.yaml
-_("Date Created")
-# TRANSLATORS: file: product/reports/420_Operations - Clusters/010_Cluster - DRS migrations.yaml
-# TRANSLATORS: file: product/reports/421_Operations - Events/VC Snapshot Events by User.yaml
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/059_Summary of VM Create and Deletes.yaml
-# TRANSLATORS: file: product/reports/500_Events - Operations/110_vm_operational_vm_power.yaml
-# TRANSLATORS: file: product/reports/500_Events - Operations/120_Events_for_VM_prod_webserver.yaml
-# TRANSLATORS: file: product/reports/500_Events - Operations/140_VC_Events_initiated_by_username_EVM.yaml
-# TRANSLATORS: file: product/reports/520_Events - Policy/110_Policy Events.yaml
-# TRANSLATORS: file: product/timelines/miq_reports/tl_bottleneck_events.yaml
-# TRANSLATORS: file: product/timelines/miq_reports/tl_events_daily.yaml
-# TRANSLATORS: file: product/timelines/miq_reports/tl_events_hourly.yaml
-# TRANSLATORS: file: product/timelines/miq_reports/tl_policy_events_daily.yaml
-# TRANSLATORS: file: product/timelines/miq_reports/tl_policy_events_hourly.yaml
-_("Event Type")
-# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/055_VMs with old VMware tools.yaml
-_("VMs with old VMware tools")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/005_VMs with Free Space _ 50% by Department.yaml
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/006_VMs w_Free Space _ 75% by Function.yaml
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/007_VMs w_Free Space _ 75% by LOB.yaml
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/028_VMs with Volume Free Space -= 20%.yaml
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/029_VMs with Volume Free Space -= 80%.yaml
-# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/050_VMs without VMware tools.yaml
-# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/055_VMs with old VMware tools.yaml
-_("Parent Cluster")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/020_Vendor and Type.yaml
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/025_Location and Size.yaml
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/027_VMs_ with no UUID.yaml
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/030_by MAC Address.yaml
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/010_Summary.yaml
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/011_Host Summary with VM info.yaml
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/012_Virtual Infrastructure Platforms.yaml
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/020_Date Brought under Management.yaml
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/030_Hardware.yaml
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/040_Summary for VMs.yaml
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/070_Storage Adapters.yaml
-# TRANSLATORS: file: product/reports/120_Configuration Management - Providers/020_Host Relationships.yaml
-# TRANSLATORS: file: product/reports/130_Configuration Management - Clusters/030_VM Affinity with Power State.yaml
-# TRANSLATORS: file: product/reports/150_Configuration Management - Storage/030_Summary for Hosts.yaml
-# TRANSLATORS: file: product/reports/300_Migration Readiness - Virtual Machines/010_Summary - VMs migration ready.yaml
-# TRANSLATORS: file: product/reports/300_Migration Readiness - Virtual Machines/011_Summary - VMs NOT migration ready.yaml
-# TRANSLATORS: file: product/reports/300_Migration Readiness - Virtual Machines/020_Detailed - VMs migration ready.yaml
-# TRANSLATORS: file: product/reports/300_Migration Readiness - Virtual Machines/021_Detailed - VMs NOT migration ready.yaml
-# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/010_Registered VMs by Free Space.yaml
-# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/015_Registered Free Space _35%.yaml
-# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/016_Unregistered Free Space _35%.yaml
-# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/050_VMs without VMware tools.yaml
-# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/055_VMs with old VMware tools.yaml
+# TRANSLATORS: file: product/reports/700_Running Processes - Virtual Machines/110_Processes_for_prod_ VMs_sort_by_CPU_Time.yaml
+_("Process Cpu Time")
+# TRANSLATORS: file: product/reports/700_Running Processes - Virtual Machines/110_Processes_for_prod_ VMs_sort_by_CPU_Time.yaml
+_("Process Percent Cpu")
+# TRANSLATORS: file: product/reports/700_Running Processes - Virtual Machines/110_Processes_for_prod_ VMs_sort_by_CPU_Time.yaml
+_("Process Date Created")
+# TRANSLATORS: file: product/reports/700_Running Processes - Virtual Machines/110_Processes_for_prod_ VMs_sort_by_CPU_Time.yaml
+_("Process Date Updated")
+# TRANSLATORS: file: product/reports/700_Running Processes - Virtual Machines/110_Processes_for_prod_ VMs_sort_by_CPU_Time.yaml
+_("Process Memory Size")
+# TRANSLATORS: file: product/reports/700_Running Processes - Virtual Machines/110_Processes_for_prod_ VMs_sort_by_CPU_Time.yaml
+_("Process Memory Usage")
+# TRANSLATORS: file: product/reports/700_Running Processes - Virtual Machines/110_Processes_for_prod_ VMs_sort_by_CPU_Time.yaml
+_("Process Name")
+# TRANSLATORS: file: product/reports/700_Running Processes - Virtual Machines/110_Processes_for_prod_ VMs_sort_by_CPU_Time.yaml
+_("Process Percent Memory")
+# TRANSLATORS: file: product/reports/700_Running Processes - Virtual Machines/110_Processes_for_prod_ VMs_sort_by_CPU_Time.yaml
+_("Process Pid")
+# TRANSLATORS: file: product/reports/700_Running Processes - Virtual Machines/110_Processes_for_prod_ VMs_sort_by_CPU_Time.yaml
+_("Process Priority")
 # TRANSLATORS: file: product/reports/410_Operations - EVM/025_EVM Snapshots.yaml
-# TRANSLATORS: file: product/reports/410_Operations - EVM/026_Consolidate Helper Snapshots.yaml
-# TRANSLATORS: file: product/reports/450_Relationships - Virtual Machines, Folders, Clusters/030_Clusters Relationships.yaml
-# TRANSLATORS: file: product/reports/500_Events - Operations/110_vm_operational_vm_power.yaml
-# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/050_Host CPU Usage per VM.yaml
-# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/065_VM Performance - daily over last week.yaml
-# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/150_All Departments with Performance.yaml
-# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/160_Top CPU Consumers weekly.yaml
-# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/170_Top Memory Consumers weekly.yaml
-# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/180_Top Storage Consumers.yaml
-# TRANSLATORS: file: product/views/MiddlewareDatasource.yaml
-# TRANSLATORS: file: product/views/MiddlewareDeployment.yaml
-# TRANSLATORS: file: product/views/MiddlewareServer.yaml
-_("Host Name")
-# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/050_VMs without VMware tools.yaml
-# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/055_VMs with old VMware tools.yaml
-_("Tools Status")
-# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/045_VMs_ Offline VMs with Snapshot.yaml
-_("Offline VMs with Snapshots")
-# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/045_VMs_ Offline VMs with Snapshot.yaml
-_("Offline VMs with Snapshot")
+_("VMs with EVM Snapshots")
 # TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/009_VM Disk Usage.yaml
 # TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/020_Vendor and Type.yaml
 # TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/025_Location and Size.yaml
@@ -4156,51 +3893,54 @@ _("Offline VMs with Snapshot")
 # TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/130_Provisioning Activity - by Requester.yaml
 # TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/140_Provisioning Activity - by VM.yaml
 _("VM Name")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/020_Vendor and Type.yaml
 # TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/025_Location and Size.yaml
 # TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/027_VMs_ with no UUID.yaml
 # TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/030_by MAC Address.yaml
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/031_Unregistered VMs.yaml
-# TRANSLATORS: file: product/reports/150_Configuration Management - Storage/020_Summary for VMs.yaml
-# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/020_Online VMs.yaml
-# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/022_VMs not Powered On.yaml
-# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/040_VMs_ Offline VMs not yet Scanned.yaml
-# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/045_VMs_ Offline VMs with Snapshot.yaml
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/052_VMs with Volume Free Space -= 75%.yaml
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/053_VMs with disk free space _ 5GB.yaml
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/055_VMs Powered Off registered to a Host.yaml
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/010_Summary.yaml
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/011_Host Summary with VM info.yaml
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/012_Virtual Infrastructure Platforms.yaml
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/020_Date Brought under Management.yaml
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/030_Hardware.yaml
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/040_Summary for VMs.yaml
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/070_Storage Adapters.yaml
+# TRANSLATORS: file: product/reports/120_Configuration Management - Providers/020_Host Relationships.yaml
+# TRANSLATORS: file: product/reports/130_Configuration Management - Clusters/030_VM Affinity with Power State.yaml
+# TRANSLATORS: file: product/reports/150_Configuration Management - Storage/030_Summary for Hosts.yaml
+# TRANSLATORS: file: product/reports/300_Migration Readiness - Virtual Machines/010_Summary - VMs migration ready.yaml
+# TRANSLATORS: file: product/reports/300_Migration Readiness - Virtual Machines/011_Summary - VMs NOT migration ready.yaml
+# TRANSLATORS: file: product/reports/300_Migration Readiness - Virtual Machines/020_Detailed - VMs migration ready.yaml
+# TRANSLATORS: file: product/reports/300_Migration Readiness - Virtual Machines/021_Detailed - VMs NOT migration ready.yaml
+# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/010_Registered VMs by Free Space.yaml
+# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/015_Registered Free Space _35%.yaml
+# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/016_Unregistered Free Space _35%.yaml
+# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/050_VMs without VMware tools.yaml
+# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/055_VMs with old VMware tools.yaml
+# TRANSLATORS: file: product/reports/410_Operations - EVM/025_EVM Snapshots.yaml
+# TRANSLATORS: file: product/reports/410_Operations - EVM/026_Consolidate Helper Snapshots.yaml
+# TRANSLATORS: file: product/reports/450_Relationships - Virtual Machines, Folders, Clusters/030_Clusters Relationships.yaml
+# TRANSLATORS: file: product/reports/500_Events - Operations/110_vm_operational_vm_power.yaml
+# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/050_Host CPU Usage per VM.yaml
+# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/065_VM Performance - daily over last week.yaml
+# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/150_All Departments with Performance.yaml
+# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/160_Top CPU Consumers weekly.yaml
+# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/170_Top Memory Consumers weekly.yaml
+# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/180_Top Storage Consumers.yaml
+# TRANSLATORS: file: product/views/MiddlewareDatasource.yaml
+# TRANSLATORS: file: product/views/MiddlewareDeployment.yaml
+# TRANSLATORS: file: product/views/MiddlewareServer.yaml
+_("Host Name")
+# TRANSLATORS: file: product/reports/410_Operations - EVM/025_EVM Snapshots.yaml
+# TRANSLATORS: file: product/reports/410_Operations - EVM/026_Consolidate Helper Snapshots.yaml
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/054_VM Uptime - longest running.yaml
 # TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/056_VMs pending Retirement.yaml
 # TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/057_VMs that are Retired.yaml
-# TRANSLATORS: file: product/reports/450_Relationships - Virtual Machines, Folders, Clusters/010_VMs Relationships.yaml
-# TRANSLATORS: file: product/reports/450_Relationships - Virtual Machines, Folders, Clusters/020_VM Folders relationships.yaml
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/059_Summary of VM Create and Deletes.yaml
 # TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/110_Provisioning Activity - by Approver.yaml
 # TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/120_Provisioning Activity - by Datastore.yaml
 # TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/130_Provisioning Activity - by Requester.yaml
 # TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/140_Provisioning Activity - by VM.yaml
-# TRANSLATORS: file: product/views/InstanceOrImage.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_InfraManager_Template.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_InfraManager_Vm.yaml
-# TRANSLATORS: file: product/views/MiqTemplate-all_miq_templates.yaml
-# TRANSLATORS: file: product/views/Storage.yaml
-# TRANSLATORS: file: product/views/StorageCluster.yaml
-# TRANSLATORS: file: product/views/Vm-all_vms.yaml
-# TRANSLATORS: file: product/views/VmOrTemplate-all_archived.yaml
-# TRANSLATORS: file: product/views/VmOrTemplate-all_orphaned.yaml
-# TRANSLATORS: file: product/views/VmOrTemplate-all_vms_and_templates.yaml
-# TRANSLATORS: file: product/views/VmOrTemplate.yaml
-_("Datastore")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/025_Location and Size.yaml
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/027_VMs_ with no UUID.yaml
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/030_by MAC Address.yaml
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/031_Unregistered VMs.yaml
-# TRANSLATORS: file: product/reports/300_Migration Readiness - Virtual Machines/020_Detailed - VMs migration ready.yaml
-# TRANSLATORS: file: product/reports/300_Migration Readiness - Virtual Machines/021_Detailed - VMs NOT migration ready.yaml
-# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/015_Registered Free Space _35%.yaml
-# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/016_Unregistered Free Space _35%.yaml
-# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/020_Online VMs.yaml
-# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/022_VMs not Powered On.yaml
-# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/040_VMs_ Offline VMs not yet Scanned.yaml
-# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/045_VMs_ Offline VMs with Snapshot.yaml
-_("Datastore Path")
+_("Location")
 # TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/036_Snapshot Summary.yaml
 # TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/045_VMs_ Offline VMs with Snapshot.yaml
 # TRANSLATORS: file: product/reports/410_Operations - EVM/025_EVM Snapshots.yaml
@@ -4226,207 +3966,107 @@ _("Snapshot Analysis Info Updated")
 # TRANSLATORS: file: product/reports/410_Operations - EVM/025_EVM Snapshots.yaml
 # TRANSLATORS: file: product/reports/410_Operations - EVM/026_Consolidate Helper Snapshots.yaml
 _("Snapshot Analysis Info Date Created")
-# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/040_VMs_ Offline VMs not yet Scanned.yaml
-_("Offline VMs Never Scanned")
-# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/040_VMs_ Offline VMs not yet Scanned.yaml
-_("Last Analysis Attempt On")
-# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/020_Online VMs.yaml
-# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/022_VMs not Powered On.yaml
-# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/040_VMs_ Offline VMs not yet Scanned.yaml
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/054_VM Uptime - longest running.yaml
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/055_VMs Powered Off registered to a Host.yaml
-# TRANSLATORS: file: product/views/EmsCluster.yaml
-# TRANSLATORS: file: product/views/Host-hosts.yaml
-# TRANSLATORS: file: product/views/Host.yaml
-# TRANSLATORS: file: product/views/InstanceOrImage.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Template-all_vms_and_templates.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Template.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Vm-all_vms_and_templates.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Vm-vms.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Vm.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_InfraManager_Template.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_InfraManager_Vm.yaml
-# TRANSLATORS: file: product/views/MiqTemplate-all_miq_templates.yaml
-# TRANSLATORS: file: product/views/MiqTemplate.yaml
-# TRANSLATORS: file: product/views/Storage.yaml
-# TRANSLATORS: file: product/views/StorageCluster.yaml
-# TRANSLATORS: file: product/views/Vm-all_vms.yaml
-# TRANSLATORS: file: product/views/Vm.yaml
-# TRANSLATORS: file: product/views/VmOrTemplate-all_archived.yaml
-# TRANSLATORS: file: product/views/VmOrTemplate-all_orphaned.yaml
-# TRANSLATORS: file: product/views/VmOrTemplate-all_vms_and_templates.yaml
-# TRANSLATORS: file: product/views/VmOrTemplate.yaml
-_("Last Analysis Time")
-# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/040_VMs_ Offline VMs not yet Scanned.yaml
-_("Last Sync Time")
-# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/060_VMware Tools Versions.yaml
-_("VMware Tools Versions")
-# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/060_VMware Tools Versions.yaml
-_("Application Name")
-# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/060_VMware Tools Versions.yaml
-_("VMware Tools Version")
-# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/060_VMware Tools Versions.yaml
-_("VMware Tools Release")
-# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/060_VMware Tools Versions.yaml
-_("Assigned to Host")
-# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/060_VMware Tools Versions.yaml
-_("Host Version")
-# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/050_VMs without VMware tools.yaml
-_("VMs without VMware tools after SmartState Analysis")
-# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/050_VMs without VMware tools.yaml
-_("VMs without VMware tools")
-# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/016_Unregistered Free Space _35%.yaml
-_("Unregistered VMs with Free Space < 35%")
-# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/016_Unregistered Free Space _35%.yaml
-_("Unregistered VMs Free Space <35%")
+# TRANSLATORS: file: product/reports/410_Operations - EVM/032_EVM Server_ UserIDs Never Used.yaml
+_("EVM Server UserIDs Never Used")
+# TRANSLATORS: file: product/reports/410_Operations - EVM/030_EVM Server_ UserID Usage Report.yaml
+# TRANSLATORS: file: product/reports/410_Operations - EVM/032_EVM Server_ UserIDs Never Used.yaml
+_("UserID")
+# TRANSLATORS: file: product/reports/410_Operations - EVM/030_EVM Server_ UserID Usage Report.yaml
+# TRANSLATORS: file: product/reports/410_Operations - EVM/032_EVM Server_ UserIDs Never Used.yaml
+# TRANSLATORS: file: product/views/Account-users.yaml
+# TRANSLATORS: file: product/views/User.yaml
+_("Last Logon")
+# TRANSLATORS: file: product/reports/410_Operations - EVM/030_EVM Server_ UserID Usage Report.yaml
+# TRANSLATORS: file: product/reports/410_Operations - EVM/032_EVM Server_ UserIDs Never Used.yaml
+# TRANSLATORS: file: product/views/User.yaml
+_("Last Logoff")
 # TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/025_Location and Size.yaml
 # TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/031_Unregistered VMs.yaml
 # TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/032_Orphaned VMs.yaml
-# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/015_Registered Free Space _35%.yaml
-# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/016_Unregistered Free Space _35%.yaml
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/053_VMs with disk free space _ 5GB.yaml
-_("Date Updated")
-# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/010_Registered VMs by Free Space.yaml
-# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/015_Registered Free Space _35%.yaml
-# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/016_Unregistered Free Space _35%.yaml
-_("Total Disk")
-# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/010_Registered VMs by Free Space.yaml
-# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/015_Registered Free Space _35%.yaml
-# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/016_Unregistered Free Space _35%.yaml
-_("Free Disk")
-# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/010_Registered VMs by Free Space.yaml
-# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/015_Registered Free Space _35%.yaml
-# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/016_Unregistered Free Space _35%.yaml
-_("Pct Free Disk")
-# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/010_Registered VMs by Free Space.yaml
-# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/015_Registered Free Space _35%.yaml
-# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/016_Unregistered Free Space _35%.yaml
-_("Pct Used Disk")
-# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/015_Registered Free Space _35%.yaml
-_("Registered VMs with Free Space < 35%")
-# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/015_Registered Free Space _35%.yaml
-_("Registered VMs with Free Space <35%")
-# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/020_Online VMs.yaml
-_("Online VMs (Powered On)")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/060_VM Relationships.yaml
-# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/020_Online VMs.yaml
-# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/022_VMs not Powered On.yaml
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/053_VMs with disk free space _ 5GB.yaml
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/055_VMs Powered Off registered to a Host.yaml
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/059_Summary of VM Create and Deletes.yaml
-# TRANSLATORS: file: product/reports/450_Relationships - Virtual Machines, Folders, Clusters/010_VMs Relationships.yaml
-# TRANSLATORS: file: product/reports/450_Relationships - Virtual Machines, Folders, Clusters/020_VM Folders relationships.yaml
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/110_Provisioning Activity - by Approver.yaml
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/120_Provisioning Activity - by Datastore.yaml
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/130_Provisioning Activity - by Requester.yaml
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/140_Provisioning Activity - by VM.yaml
-# TRANSLATORS: file: product/views/ContainerImageRegistry.yaml
-# TRANSLATORS: file: product/views/Host-hosts.yaml
-# TRANSLATORS: file: product/views/Host.yaml
-# TRANSLATORS: file: product/views/InstanceOrImage.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_InfraManager_Template.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_InfraManager_Vm.yaml
-# TRANSLATORS: file: product/views/MiqTemplate-all_miq_templates.yaml
-# TRANSLATORS: file: product/views/Vm-VmReconfigureRequest.yaml
-# TRANSLATORS: file: product/views/Vm-all_vms.yaml
-# TRANSLATORS: file: product/views/VmOrTemplate-all_archived.yaml
-# TRANSLATORS: file: product/views/VmOrTemplate-all_orphaned.yaml
-# TRANSLATORS: file: product/views/VmOrTemplate-all_vms_and_templates.yaml
-# TRANSLATORS: file: product/views/VmOrTemplate.yaml
-_("Host")
-# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/020_Online VMs.yaml
-_("Vm Power State")
-# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/022_VMs not Powered On.yaml
-_("VMs Not Powered On")
-# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/022_VMs not Powered On.yaml
-_("VMs not Powered On")
-# TRANSLATORS: file: product/reports/130_Configuration Management - Clusters/030_VM Affinity with Power State.yaml
-# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/022_VMs not Powered On.yaml
-_("VM Power State")
-# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/010_Registered VMs by Free Space.yaml
-_("Registered VMs by Free Space")
-# TRANSLATORS: file: product/reports/300_Migration Readiness - Virtual Machines/010_Summary - VMs migration ready.yaml
-_("Summary - VMs migration ready - no CD/DVD/Floppy connected")
-# TRANSLATORS: file: product/reports/300_Migration Readiness - Virtual Machines/010_Summary - VMs migration ready.yaml
-_("Summary - VMs migration ready")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/040_Summary for VMs.yaml
-# TRANSLATORS: file: product/reports/300_Migration Readiness - Virtual Machines/010_Summary - VMs migration ready.yaml
-# TRANSLATORS: file: product/reports/300_Migration Readiness - Virtual Machines/011_Summary - VMs NOT migration ready.yaml
-# TRANSLATORS: file: product/reports/300_Migration Readiness - Virtual Machines/020_Detailed - VMs migration ready.yaml
-# TRANSLATORS: file: product/reports/300_Migration Readiness - Virtual Machines/021_Detailed - VMs NOT migration ready.yaml
-_("Parent Datacenter")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/005_VMs with Free Space _ 50% by Department.yaml
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/006_VMs w_Free Space _ 75% by Function.yaml
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/007_VMs w_Free Space _ 75% by LOB.yaml
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/028_VMs with Volume Free Space -= 20%.yaml
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/029_VMs with Volume Free Space -= 80%.yaml
-# TRANSLATORS: file: product/reports/300_Migration Readiness - Virtual Machines/010_Summary - VMs migration ready.yaml
-# TRANSLATORS: file: product/reports/300_Migration Readiness - Virtual Machines/011_Summary - VMs NOT migration ready.yaml
-# TRANSLATORS: file: product/reports/300_Migration Readiness - Virtual Machines/020_Detailed - VMs migration ready.yaml
-# TRANSLATORS: file: product/reports/300_Migration Readiness - Virtual Machines/021_Detailed - VMs NOT migration ready.yaml
-_("Storage Name")
-# TRANSLATORS: file: product/reports/300_Migration Readiness - Virtual Machines/020_Detailed - VMs migration ready.yaml
-_("Detailed - VMs migration ready - no CD/DVD/Floppy connected")
-# TRANSLATORS: file: product/reports/300_Migration Readiness - Virtual Machines/020_Detailed - VMs migration ready.yaml
-_("Detailed - VMs migration ready")
-# TRANSLATORS: file: product/reports/300_Migration Readiness - Virtual Machines/020_Detailed - VMs migration ready.yaml
-# TRANSLATORS: file: product/reports/300_Migration Readiness - Virtual Machines/021_Detailed - VMs NOT migration ready.yaml
-_("Disk Start Connected")
-# TRANSLATORS: file: product/reports/300_Migration Readiness - Virtual Machines/020_Detailed - VMs migration ready.yaml
-# TRANSLATORS: file: product/reports/300_Migration Readiness - Virtual Machines/021_Detailed - VMs NOT migration ready.yaml
-_("Disk Device Type")
-# TRANSLATORS: file: product/reports/300_Migration Readiness - Virtual Machines/011_Summary - VMs NOT migration ready.yaml
-_("Summary - VMs NOT migration ready - CD/DVD/Floppy connected")
-# TRANSLATORS: file: product/reports/300_Migration Readiness - Virtual Machines/011_Summary - VMs NOT migration ready.yaml
-_("Summary - VMs NOT migration ready")
-# TRANSLATORS: file: product/reports/300_Migration Readiness - Virtual Machines/021_Detailed - VMs NOT migration ready.yaml
-_("Detailed - VMs NOT migration ready - CD/DVD/Floppy connected")
-# TRANSLATORS: file: product/reports/300_Migration Readiness - Virtual Machines/021_Detailed - VMs NOT migration ready.yaml
-_("Detailed - VMs NOT migration ready")
-# TRANSLATORS: file: product/reports/421_Operations - Events/VC Snapshot Events by User.yaml
-_("Summary of VC Snapshot Events by User")
-# TRANSLATORS: file: product/reports/421_Operations - Events/VC Snapshot Events by User.yaml
-_("VC Snapshot Events by User")
+# TRANSLATORS: file: product/reports/140_Configuration Management - Resource Pools/010_Summary.yaml
+# TRANSLATORS: file: product/reports/410_Operations - EVM/030_EVM Server_ UserID Usage Report.yaml
+# TRANSLATORS: file: product/reports/410_Operations - EVM/032_EVM Server_ UserIDs Never Used.yaml
+# TRANSLATORS: file: product/reports/420_Operations - Clusters/010_Cluster - DRS migrations.yaml
+# TRANSLATORS: file: product/timelines/miq_reports/tl_policy_events_daily.yaml
+# TRANSLATORS: file: product/timelines/miq_reports/tl_policy_events_hourly.yaml
+_("Date Created")
+# TRANSLATORS: file: product/reports/410_Operations - EVM/030_EVM Server_ UserID Usage Report.yaml
+# TRANSLATORS: file: product/reports/410_Operations - EVM/032_EVM Server_ UserIDs Never Used.yaml
+# TRANSLATORS: file: product/views/MiqAlert.yaml
+_("Email")
+# TRANSLATORS: file: product/reports/410_Operations - EVM/030_EVM Server_ UserID Usage Report.yaml
+_("EVM Server UserID Usage Report")
+# TRANSLATORS: file: product/reports/410_Operations - EVM/026_Consolidate Helper Snapshots.yaml
+_("VMs with Consolidate Helper Snapshots")
+# TRANSLATORS: file: product/reports/520_Events - Policy/120_Policy Events2.yaml
+_("Policy Events for the Last 7 Days")
+# TRANSLATORS: file: product/reports/520_Events - Policy/120_Policy Events2.yaml
+_("Miq Policy Set Date Created")
+# TRANSLATORS: file: product/reports/520_Events - Policy/120_Policy Events2.yaml
+_("Miq Policy Set Date Updated")
+# TRANSLATORS: file: product/reports/520_Events - Policy/120_Policy Events2.yaml
+_("Miq Policy Set Description")
+# TRANSLATORS: file: product/reports/520_Events - Policy/120_Policy Events2.yaml
+_("Miq Policy Set EVM Unique ID (Guid)")
+# TRANSLATORS: file: product/reports/520_Events - Policy/120_Policy Events2.yaml
+_("Miq Policy Set Name")
+# TRANSLATORS: file: product/reports/520_Events - Policy/120_Policy Events2.yaml
+_("Miq Policy Set Read Only")
+# TRANSLATORS: file: product/reports/520_Events - Policy/120_Policy Events2.yaml
+_("Miq Policy Set Reserved")
+# TRANSLATORS: file: product/reports/520_Events - Policy/120_Policy Events2.yaml
+_("Miq Policy Set Set Data")
+# TRANSLATORS: file: product/reports/520_Events - Policy/120_Policy Events2.yaml
+_("Miq Policy Set Set Type")
+# TRANSLATORS: file: product/reports/520_Events - Policy/110_Policy Events.yaml
+_("Policy Events for Last Week")
+# TRANSLATORS: file: product/reports/500_Events - Operations/120_Events_for_VM_prod_webserver.yaml
+# TRANSLATORS: file: product/reports/500_Events - Operations/130_Reconfigure_Events_by_Department.yaml
+# TRANSLATORS: file: product/reports/500_Events - Operations/140_VC_Events_initiated_by_username_EVM.yaml
+# TRANSLATORS: file: product/reports/520_Events - Policy/110_Policy Events.yaml
+# TRANSLATORS: file: product/timelines/miq_reports/tl_bottleneck_events.yaml
+_("Time Stamp")
+# TRANSLATORS: file: product/reports/420_Operations - Clusters/010_Cluster - DRS migrations.yaml
 # TRANSLATORS: file: product/reports/421_Operations - Events/VC Snapshot Events by User.yaml
 # TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/059_Summary of VM Create and Deletes.yaml
-# TRANSLATORS: file: product/views/MiqReportResult-all.yaml
-# TRANSLATORS: file: product/views/MiqReportResult.yaml
-# TRANSLATORS: file: product/views/MiqSchedule.yaml
-# TRANSLATORS: file: product/views/User.yaml
-_("Username")
-# TRANSLATORS: file: product/reports/421_Operations - Events/VC Snapshot Events by User.yaml
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/052_VMs with Volume Free Space -= 75%.yaml
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/053_VMs with disk free space _ 5GB.yaml
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/054_VM Uptime - longest running.yaml
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/055_VMs Powered Off registered to a Host.yaml
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/056_VMs pending Retirement.yaml
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/057_VMs that are Retired.yaml
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/058_VMs with invalid allocation of RAM.yaml
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/059_Summary of VM Create and Deletes.yaml
-# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/150_All Departments with Performance.yaml
-_("VM")
-# TRANSLATORS: file: product/reports/421_Operations - Events/VC Snapshot Events by User.yaml
-_("Event Time Stamp")
-# TRANSLATORS: file: product/reports/421_Operations - Events/VC Snapshot Events by User.yaml
-_("VM Total Snapshots")
-# TRANSLATORS: file: product/reports/421_Operations - Events/VC Snapshot Events by User.yaml
-_("Event Message")
-# TRANSLATORS: file: product/reports/170_Configuration Management - Containers/010_Nodes by Capacity.yaml
-_("Nodes By Capacity")
-# TRANSLATORS: file: product/reports/170_Configuration Management - Containers/010_Nodes by Capacity.yaml
-# TRANSLATORS: file: product/views/Flavor.yaml
-_("CPU Cores")
-# TRANSLATORS: file: product/reports/170_Configuration Management - Containers/010_Nodes by Capacity.yaml
-# TRANSLATORS: file: product/views/Flavor.yaml
-# TRANSLATORS: file: product/views/Vm-VmReconfigureRequest.yaml
-# TRANSLATORS: file: product/views/Vm__restricted.yaml
-_("Memory")
-# TRANSLATORS: file: product/reports/170_Configuration Management - Containers/040_Recently Discovered Container Groups.yaml
-_("Recently Discovered Pods")
-# TRANSLATORS: file: product/reports/170_Configuration Management - Containers/040_Recently Discovered Container Groups.yaml
-_("Ready Status")
-# TRANSLATORS: file: product/reports/170_Configuration Management - Containers/040_Recently Discovered Container Groups.yaml
-_("Creation")
+# TRANSLATORS: file: product/reports/500_Events - Operations/110_vm_operational_vm_power.yaml
+# TRANSLATORS: file: product/reports/500_Events - Operations/120_Events_for_VM_prod_webserver.yaml
+# TRANSLATORS: file: product/reports/500_Events - Operations/140_VC_Events_initiated_by_username_EVM.yaml
+# TRANSLATORS: file: product/reports/520_Events - Policy/110_Policy Events.yaml
+# TRANSLATORS: file: product/timelines/miq_reports/tl_bottleneck_events.yaml
+# TRANSLATORS: file: product/timelines/miq_reports/tl_events_daily.yaml
+# TRANSLATORS: file: product/timelines/miq_reports/tl_events_hourly.yaml
+# TRANSLATORS: file: product/timelines/miq_reports/tl_policy_events_daily.yaml
+# TRANSLATORS: file: product/timelines/miq_reports/tl_policy_events_hourly.yaml
+_("Event Type")
+# TRANSLATORS: file: product/reports/520_Events - Policy/110_Policy Events.yaml
+# TRANSLATORS: file: product/timelines/miq_reports/tl_policy_events_daily.yaml
+# TRANSLATORS: file: product/timelines/miq_reports/tl_policy_events_hourly.yaml
+_("Miq Event Description")
+# TRANSLATORS: file: product/reports/520_Events - Policy/110_Policy Events.yaml
+# TRANSLATORS: file: product/timelines/miq_reports/tl_policy_events_daily.yaml
+# TRANSLATORS: file: product/timelines/miq_reports/tl_policy_events_hourly.yaml
+_("Miq Policy Description")
+# TRANSLATORS: file: product/reports/770_Trending - Hosts/110_Host_Peak_Memory_Used_Trends_for_6_Mos.yaml
+_("Host Peak Memory Used Trends over last 6 Months")
+# TRANSLATORS: file: product/reports/770_Trending - Hosts/110_Host_Peak_Memory_Used_Trends_for_6_Mos.yaml
+_("Host Peak Memory Used Trends for 6 Mos.")
+# TRANSLATORS: file: product/reports/770_Trending - Hosts/140_Host Memory Trends last week.yaml
+_("Host Memory Utilization Trends (last week)")
+# TRANSLATORS: file: product/reports/770_Trending - Hosts/140_Host Memory Trends last week.yaml
+_("Host Memory Trends (last week)")
+# TRANSLATORS: file: product/reports/770_Trending - Hosts/120_Host CPU Trends last week.yaml
+_("Host CPU Utilization trends (last week)")
+# TRANSLATORS: file: product/reports/770_Trending - Hosts/120_Host CPU Trends last week.yaml
+_("Host CPU Trends (last week)")
+# TRANSLATORS: file: product/reports/770_Trending - Hosts/130_Host IO Trends last week.yaml
+_("Host I/O Utilization Trends (last week)")
+# TRANSLATORS: file: product/reports/770_Trending - Hosts/130_Host IO Trends last week.yaml
+_("Host I/O Trends (last week)")
+# TRANSLATORS: file: product/reports/770_Trending - Hosts/110_Host_Peak_CPU_Used_Trend_over_6_mos.yaml
+_("Host Peak CPU Used Trends over last 6 Months")
+# TRANSLATORS: file: product/reports/770_Trending - Hosts/110_Host_Peak_CPU_Used_Trend_over_6_mos.yaml
+_("Host Peak CPU Used Trend over 6 mos.")
 # TRANSLATORS: file: product/reports/170_Configuration Management - Containers/070_Projects by Pod Number.yaml
 _("Projects by Number of Pods")
 # TRANSLATORS: file: product/reports/170_Configuration Management - Containers/070_Projects by Pod Number.yaml
@@ -4446,14 +4086,21 @@ _("Nodes By Memory Usage")
 # TRANSLATORS: file: product/reports/170_Configuration Management - Containers/030_Nodes by Memory Usage.yaml
 # TRANSLATORS: file: product/reports/170_Configuration Management - Containers/090_Projects by Memory Usage.yaml
 _("Memory Usage (%)")
-# TRANSLATORS: file: product/reports/170_Configuration Management - Containers/060_Container Groups per Ready Status.yaml
-_("Pods per Ready Status")
-# TRANSLATORS: file: product/reports/170_Configuration Management - Containers/060_Container Groups per Ready Status.yaml
-_("# Pods per Ready Status")
-# TRANSLATORS: file: product/reports/170_Configuration Management - Containers/060_Container Groups per Ready Status.yaml
-_("Ready Condition Status")
-# TRANSLATORS: file: product/reports/170_Configuration Management - Containers/100_Pod counts For Container Images by Project.yaml
-_("Pod counts For Container Images by Project")
+# TRANSLATORS: file: product/reports/170_Configuration Management - Containers/020_Nodes by CPU Usage.yaml
+_("Nodes By CPU Usage")
+# TRANSLATORS: file: product/reports/170_Configuration Management - Containers/020_Nodes by CPU Usage.yaml
+# TRANSLATORS: file: product/reports/170_Configuration Management - Containers/080_Projects by CPU Usage.yaml
+_("CPU Usage (%)")
+# TRANSLATORS: file: product/reports/170_Configuration Management - Containers/090_Projects by Memory Usage.yaml
+_("Projects By Memory Usage")
+# TRANSLATORS: file: product/reports/170_Configuration Management - Containers/050_Number of Nodes per CPU Cores.yaml
+_("Number of Nodes per CPU Cores")
+# TRANSLATORS: file: product/reports/170_Configuration Management - Containers/050_Number of Nodes per CPU Cores.yaml
+_("Hardware Number of CPU Cores")
+# TRANSLATORS: file: product/reports/170_Configuration Management - Containers/110_Number of Images per Node.yaml
+_("Number of Images per Node")
+# TRANSLATORS: file: product/reports/170_Configuration Management - Containers/110_Number of Images per Node.yaml
+_("Node Name")
 # TRANSLATORS: file: product/reports/170_Configuration Management - Containers/100_Pod counts For Container Images by Project.yaml
 # TRANSLATORS: file: product/reports/170_Configuration Management - Containers/110_Number of Images per Node.yaml
 _("Image Name")
@@ -4461,48 +4108,40 @@ _("Image Name")
 # TRANSLATORS: file: product/reports/170_Configuration Management - Containers/110_Number of Images per Node.yaml
 # TRANSLATORS: file: product/views/Container.yaml
 _("Pod Name")
-# TRANSLATORS: file: product/reports/170_Configuration Management - Containers/110_Number of Images per Node.yaml
-_("Number of Images per Node")
-# TRANSLATORS: file: product/reports/170_Configuration Management - Containers/110_Number of Images per Node.yaml
-_("Node Name")
-# TRANSLATORS: file: product/reports/170_Configuration Management - Containers/090_Projects by Memory Usage.yaml
-_("Projects By Memory Usage")
 # TRANSLATORS: file: product/reports/170_Configuration Management - Containers/080_Projects by CPU Usage.yaml
 _("Projects By CPU Usage")
-# TRANSLATORS: file: product/reports/170_Configuration Management - Containers/020_Nodes by CPU Usage.yaml
-# TRANSLATORS: file: product/reports/170_Configuration Management - Containers/080_Projects by CPU Usage.yaml
-_("CPU Usage (%)")
-# TRANSLATORS: file: product/reports/170_Configuration Management - Containers/020_Nodes by CPU Usage.yaml
-_("Nodes By CPU Usage")
-# TRANSLATORS: file: product/reports/170_Configuration Management - Containers/050_Number of Nodes per CPU Cores.yaml
-_("Number of Nodes per CPU Cores")
-# TRANSLATORS: file: product/reports/170_Configuration Management - Containers/050_Number of Nodes per CPU Cores.yaml
-_("Hardware Number of CPU Cores")
-# TRANSLATORS: file: product/reports/140_Configuration Management - Resource Pools/010_Summary.yaml
-_("Resource Pools Summary")
-# TRANSLATORS: file: product/reports/140_Configuration Management - Resource Pools/010_Summary.yaml
-_("CPU Limit")
-# TRANSLATORS: file: product/reports/140_Configuration Management - Resource Pools/010_Summary.yaml
-_("CPU Reserve Expand")
-# TRANSLATORS: file: product/reports/140_Configuration Management - Resource Pools/010_Summary.yaml
-_("CPU Reserve")
-# TRANSLATORS: file: product/reports/140_Configuration Management - Resource Pools/010_Summary.yaml
-# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/150_All Departments with Performance.yaml
-_("CPU Shares Level")
-# TRANSLATORS: file: product/reports/140_Configuration Management - Resource Pools/010_Summary.yaml
-_("CPU Shares")
-# TRANSLATORS: file: product/reports/140_Configuration Management - Resource Pools/010_Summary.yaml
-_("Memory Limit")
-# TRANSLATORS: file: product/reports/140_Configuration Management - Resource Pools/010_Summary.yaml
-_("Memory Reserve Expand")
-# TRANSLATORS: file: product/reports/140_Configuration Management - Resource Pools/010_Summary.yaml
-# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/150_All Departments with Performance.yaml
-_("Memory Reserve")
-# TRANSLATORS: file: product/reports/140_Configuration Management - Resource Pools/010_Summary.yaml
-# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/150_All Departments with Performance.yaml
-_("Memory Shares Level")
-# TRANSLATORS: file: product/reports/140_Configuration Management - Resource Pools/010_Summary.yaml
-_("Memory Shares")
+# TRANSLATORS: file: product/reports/170_Configuration Management - Containers/010_Nodes by Capacity.yaml
+_("Nodes By Capacity")
+# TRANSLATORS: file: product/reports/170_Configuration Management - Containers/010_Nodes by Capacity.yaml
+# TRANSLATORS: file: product/views/Flavor.yaml
+_("CPU Cores")
+# TRANSLATORS: file: product/reports/170_Configuration Management - Containers/010_Nodes by Capacity.yaml
+# TRANSLATORS: file: product/views/Flavor.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager.yaml
+# TRANSLATORS: file: product/views/Vm-VmReconfigureRequest.yaml
+# TRANSLATORS: file: product/views/Vm__restricted.yaml
+_("Memory")
+# TRANSLATORS: file: product/reports/170_Configuration Management - Containers/100_Pod counts For Container Images by Project.yaml
+_("Pod counts For Container Images by Project")
+# TRANSLATORS: file: product/reports/170_Configuration Management - Containers/060_Container Groups per Ready Status.yaml
+_("Pods per Ready Status")
+# TRANSLATORS: file: product/reports/170_Configuration Management - Containers/060_Container Groups per Ready Status.yaml
+_("# Pods per Ready Status")
+# TRANSLATORS: file: product/reports/170_Configuration Management - Containers/060_Container Groups per Ready Status.yaml
+_("Ready Condition Status")
+# TRANSLATORS: file: product/reports/170_Configuration Management - Containers/040_Recently Discovered Container Groups.yaml
+_("Recently Discovered Pods")
+# TRANSLATORS: file: product/reports/170_Configuration Management - Containers/040_Recently Discovered Container Groups.yaml
+_("Ready Status")
+# TRANSLATORS: file: product/reports/170_Configuration Management - Containers/040_Recently Discovered Container Groups.yaml
+_("Creation")
+# TRANSLATORS: file: product/reports/160_Configuration Management - VM Folders/010_Folders_ VM Relationships.yaml
+# TRANSLATORS: file: product/reports/450_Relationships - Virtual Machines, Folders, Clusters/020_VM Folders relationships.yaml
+_("Folder to VMs Relationships")
+# TRANSLATORS: file: product/reports/160_Configuration Management - VM Folders/010_Folders_ VM Relationships.yaml
+_("Folder VMs Relationships")
+# TRANSLATORS: file: product/reports/160_Configuration Management - VM Folders/010_Folders_ VM Relationships.yaml
+_("Parent Folder Path (VMs & Templates)")
 # TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/090_vLANs and vSwitches.yaml
 # TRANSLATORS: file: product/reports/120_Configuration Management - Providers/030_VM Relationships.yaml
 # TRANSLATORS: file: product/reports/130_Configuration Management - Clusters/010_Summary.yaml
@@ -4515,174 +4154,9 @@ _("Memory Shares")
 # TRANSLATORS: file: product/views/ManageIQ_Providers_ConfigurationManager.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_Foreman_ConfigurationManager.yaml
 _("Provider Name")
-# TRANSLATORS: file: product/reports/680_Performance by Asset Type - Middleware Datasources/120_Datasource Pool - hourly for the last day.yaml
-_("Datasource Pool - hourly for the last day")
-# TRANSLATORS: file: product/reports/680_Performance by Asset Type - Middleware Datasources/110_Datasource Pool - every minute for the last hour.yaml
-# TRANSLATORS: file: product/reports/680_Performance by Asset Type - Middleware Datasources/120_Datasource Pool - hourly for the last day.yaml
-_("Available count - min")
-# TRANSLATORS: file: product/reports/680_Performance by Asset Type - Middleware Datasources/110_Datasource Pool - every minute for the last hour.yaml
-# TRANSLATORS: file: product/reports/680_Performance by Asset Type - Middleware Datasources/120_Datasource Pool - hourly for the last day.yaml
-_("Available count - avg")
-# TRANSLATORS: file: product/reports/680_Performance by Asset Type - Middleware Datasources/110_Datasource Pool - every minute for the last hour.yaml
-# TRANSLATORS: file: product/reports/680_Performance by Asset Type - Middleware Datasources/120_Datasource Pool - hourly for the last day.yaml
-_("Available count - max")
-# TRANSLATORS: file: product/reports/680_Performance by Asset Type - Middleware Datasources/110_Datasource Pool - every minute for the last hour.yaml
-# TRANSLATORS: file: product/reports/680_Performance by Asset Type - Middleware Datasources/120_Datasource Pool - hourly for the last day.yaml
-_("In use count - min")
-# TRANSLATORS: file: product/reports/680_Performance by Asset Type - Middleware Datasources/110_Datasource Pool - every minute for the last hour.yaml
-# TRANSLATORS: file: product/reports/680_Performance by Asset Type - Middleware Datasources/120_Datasource Pool - hourly for the last day.yaml
-_("In use count - avg")
-# TRANSLATORS: file: product/reports/680_Performance by Asset Type - Middleware Datasources/110_Datasource Pool - every minute for the last hour.yaml
-# TRANSLATORS: file: product/reports/680_Performance by Asset Type - Middleware Datasources/120_Datasource Pool - hourly for the last day.yaml
-_("In use count - max")
-# TRANSLATORS: file: product/reports/680_Performance by Asset Type - Middleware Datasources/110_Datasource Pool - every minute for the last hour.yaml
-# TRANSLATORS: file: product/reports/680_Performance by Asset Type - Middleware Datasources/120_Datasource Pool - hourly for the last day.yaml
-_("Average get time - min (ms)")
-# TRANSLATORS: file: product/reports/680_Performance by Asset Type - Middleware Datasources/110_Datasource Pool - every minute for the last hour.yaml
-# TRANSLATORS: file: product/reports/680_Performance by Asset Type - Middleware Datasources/120_Datasource Pool - hourly for the last day.yaml
-_("Average get time - avg (ms)")
-# TRANSLATORS: file: product/reports/680_Performance by Asset Type - Middleware Datasources/110_Datasource Pool - every minute for the last hour.yaml
-# TRANSLATORS: file: product/reports/680_Performance by Asset Type - Middleware Datasources/120_Datasource Pool - hourly for the last day.yaml
-_("Average get time - max (ms)")
-# TRANSLATORS: file: product/reports/680_Performance by Asset Type - Middleware Datasources/110_Datasource Pool - every minute for the last hour.yaml
-# TRANSLATORS: file: product/reports/680_Performance by Asset Type - Middleware Datasources/120_Datasource Pool - hourly for the last day.yaml
-_("Average creation time - min (ms)")
-# TRANSLATORS: file: product/reports/680_Performance by Asset Type - Middleware Datasources/110_Datasource Pool - every minute for the last hour.yaml
-# TRANSLATORS: file: product/reports/680_Performance by Asset Type - Middleware Datasources/120_Datasource Pool - hourly for the last day.yaml
-_("Average creation time - avg (ms)")
-# TRANSLATORS: file: product/reports/680_Performance by Asset Type - Middleware Datasources/110_Datasource Pool - every minute for the last hour.yaml
-# TRANSLATORS: file: product/reports/680_Performance by Asset Type - Middleware Datasources/120_Datasource Pool - hourly for the last day.yaml
-_("Average creation time - max (ms)")
-# TRANSLATORS: file: product/reports/680_Performance by Asset Type - Middleware Datasources/110_Datasource Pool - every minute for the last hour.yaml
-_("Datasource Pool - every minute for the last hour")
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/140_Provisioning Activity - by VM.yaml
-_("Provisioning Activity - by VM Approved Date")
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/140_Provisioning Activity - by VM.yaml
-_("Provisioning Activity - by VM")
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/055_VMs Powered Off registered to a Host.yaml
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/056_VMs pending Retirement.yaml
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/057_VMs that are Retired.yaml
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/058_VMs with invalid allocation of RAM.yaml
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/110_Provisioning Activity - by Approver.yaml
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/120_Provisioning Activity - by Datastore.yaml
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/130_Provisioning Activity - by Requester.yaml
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/140_Provisioning Activity - by VM.yaml
-_("VM Notes")
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/110_Provisioning Activity - by Approver.yaml
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/120_Provisioning Activity - by Datastore.yaml
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/130_Provisioning Activity - by Requester.yaml
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/140_Provisioning Activity - by VM.yaml
-_("Source Template")
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/110_Provisioning Activity - by Approver.yaml
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/120_Provisioning Activity - by Datastore.yaml
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/130_Provisioning Activity - by Requester.yaml
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/140_Provisioning Activity - by VM.yaml
-_("Owner Name")
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/110_Provisioning Activity - by Approver.yaml
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/120_Provisioning Activity - by Datastore.yaml
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/130_Provisioning Activity - by Requester.yaml
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/140_Provisioning Activity - by VM.yaml
-_("Owner Email")
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/110_Provisioning Activity - by Approver.yaml
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/120_Provisioning Activity - by Datastore.yaml
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/130_Provisioning Activity - by Requester.yaml
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/140_Provisioning Activity - by VM.yaml
-_("Requester Name")
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/110_Provisioning Activity - by Approver.yaml
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/120_Provisioning Activity - by Datastore.yaml
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/130_Provisioning Activity - by Requester.yaml
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/140_Provisioning Activity - by VM.yaml
-_("Request Date")
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/110_Provisioning Activity - by Approver.yaml
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/120_Provisioning Activity - by Datastore.yaml
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/130_Provisioning Activity - by Requester.yaml
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/140_Provisioning Activity - by VM.yaml
-_("Approved By")
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/110_Provisioning Activity - by Approver.yaml
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/120_Provisioning Activity - by Datastore.yaml
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/130_Provisioning Activity - by Requester.yaml
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/140_Provisioning Activity - by VM.yaml
-_("Approved By Email")
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/110_Provisioning Activity - by Approver.yaml
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/120_Provisioning Activity - by Datastore.yaml
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/130_Provisioning Activity - by Requester.yaml
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/140_Provisioning Activity - by VM.yaml
-_("Approved Date")
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/110_Provisioning Activity - by Approver.yaml
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/120_Provisioning Activity - by Datastore.yaml
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/130_Provisioning Activity - by Requester.yaml
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/140_Provisioning Activity - by VM.yaml
-_("Provision Description")
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/110_Provisioning Activity - by Approver.yaml
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/120_Provisioning Activity - by Datastore.yaml
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/130_Provisioning Activity - by Requester.yaml
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/140_Provisioning Activity - by VM.yaml
-_("Provision Message")
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/110_Provisioning Activity - by Approver.yaml
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/120_Provisioning Activity - by Datastore.yaml
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/130_Provisioning Activity - by Requester.yaml
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/140_Provisioning Activity - by VM.yaml
-_("Retires On")
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/054_VM Uptime - longest running.yaml
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/056_VMs pending Retirement.yaml
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/057_VMs that are Retired.yaml
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/059_Summary of VM Create and Deletes.yaml
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/110_Provisioning Activity - by Approver.yaml
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/120_Provisioning Activity - by Datastore.yaml
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/130_Provisioning Activity - by Requester.yaml
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/140_Provisioning Activity - by VM.yaml
-# TRANSLATORS: file: product/views/ConfigurationProfile.yaml
-# TRANSLATORS: file: product/views/ConfiguredSystem.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_ConfigurationManager_ConfiguredSystem.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_Foreman_ConfigurationManager_ConfiguredSystem.yaml
-_("Environment")
-# TRANSLATORS: file: product/reports/410_Operations - EVM/025_EVM Snapshots.yaml
-# TRANSLATORS: file: product/reports/410_Operations - EVM/026_Consolidate Helper Snapshots.yaml
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/054_VM Uptime - longest running.yaml
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/056_VMs pending Retirement.yaml
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/057_VMs that are Retired.yaml
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/059_Summary of VM Create and Deletes.yaml
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/110_Provisioning Activity - by Approver.yaml
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/120_Provisioning Activity - by Datastore.yaml
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/130_Provisioning Activity - by Requester.yaml
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/140_Provisioning Activity - by VM.yaml
-_("Location")
-# TRANSLATORS: file: product/reports/120_Configuration Management - Providers/040_Monthly Host Count per Provider.yaml
-# TRANSLATORS: file: product/reports/120_Configuration Management - Providers/050_Monthly Vm Count per Provider.yaml
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/059_Summary of VM Create and Deletes.yaml
-# TRANSLATORS: file: product/reports/500_Events - Operations/110_vm_operational_vm_power.yaml
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/110_Provisioning Activity - by Approver.yaml
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/120_Provisioning Activity - by Datastore.yaml
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/130_Provisioning Activity - by Requester.yaml
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/140_Provisioning Activity - by VM.yaml
-# TRANSLATORS: file: product/timelines/miq_reports/tl_events_daily.yaml
-# TRANSLATORS: file: product/timelines/miq_reports/tl_events_hourly.yaml
-# TRANSLATORS: file: product/views/ContainerBuild.yaml
-# TRANSLATORS: file: product/views/ContainerGroup.yaml
-# TRANSLATORS: file: product/views/ContainerImage.yaml
-# TRANSLATORS: file: product/views/ContainerImageRegistry.yaml
-# TRANSLATORS: file: product/views/ContainerNode.yaml
-# TRANSLATORS: file: product/views/ContainerProject.yaml
-# TRANSLATORS: file: product/views/ContainerReplicator.yaml
-# TRANSLATORS: file: product/views/ContainerRoute.yaml
-# TRANSLATORS: file: product/views/ContainerService.yaml
-# TRANSLATORS: file: product/views/ContainerTemplate.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_OrchestrationStack.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Template.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Vm.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_InfraManager_Template.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_InfraManager_Vm.yaml
-# TRANSLATORS: file: product/views/MiddlewareDomain.yaml
-# TRANSLATORS: file: product/views/MiddlewareServer.yaml
-# TRANSLATORS: file: product/views/OrchestrationStack.yaml
-# TRANSLATORS: file: product/views/PersistentVolume.yaml
-# TRANSLATORS: file: product/views/VmOrTemplate.yaml
-_("Provider")
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/110_Provisioning Activity - by Approver.yaml
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/120_Provisioning Activity - by Datastore.yaml
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/130_Provisioning Activity - by Requester.yaml
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/140_Provisioning Activity - by VM.yaml
-_("Provider Hostname")
+# TRANSLATORS: file: product/reports/450_Relationships - Virtual Machines, Folders, Clusters/010_VMs Relationships.yaml
+# TRANSLATORS: file: product/reports/450_Relationships - Virtual Machines, Folders, Clusters/020_VM Folders relationships.yaml
+_("Folder")
 # TRANSLATORS: file: product/reports/450_Relationships - Virtual Machines, Folders, Clusters/010_VMs Relationships.yaml
 # TRANSLATORS: file: product/reports/450_Relationships - Virtual Machines, Folders, Clusters/020_VM Folders relationships.yaml
 # TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/110_Provisioning Activity - by Approver.yaml
@@ -4719,788 +4193,100 @@ _("Datacenter")
 # TRANSLATORS: file: product/views/VmOrTemplate-all_vms_and_templates.yaml
 # TRANSLATORS: file: product/views/VmOrTemplate.yaml
 _("Cluster")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/059_Guest OS Information (any OS).yaml
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/058_VMs with invalid allocation of RAM.yaml
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/110_Provisioning Activity - by Approver.yaml
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/120_Provisioning Activity - by Datastore.yaml
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/130_Provisioning Activity - by Requester.yaml
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/140_Provisioning Activity - by VM.yaml
-_("Guest OS")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/060_VM Relationships.yaml
+# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/020_Online VMs.yaml
+# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/022_VMs not Powered On.yaml
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/053_VMs with disk free space _ 5GB.yaml
 # TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/055_VMs Powered Off registered to a Host.yaml
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/056_VMs pending Retirement.yaml
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/057_VMs that are Retired.yaml
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/058_VMs with invalid allocation of RAM.yaml
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/110_Provisioning Activity - by Approver.yaml
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/120_Provisioning Activity - by Datastore.yaml
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/130_Provisioning Activity - by Requester.yaml
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/140_Provisioning Activity - by VM.yaml
-_("Allocated RAM (MB)")
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/055_VMs Powered Off registered to a Host.yaml
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/056_VMs pending Retirement.yaml
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/057_VMs that are Retired.yaml
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/058_VMs with invalid allocation of RAM.yaml
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/110_Provisioning Activity - by Approver.yaml
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/120_Provisioning Activity - by Datastore.yaml
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/130_Provisioning Activity - by Requester.yaml
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/140_Provisioning Activity - by VM.yaml
-_("Allocated vCPUs")
-# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/150_All Departments with Performance.yaml
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/110_Provisioning Activity - by Approver.yaml
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/120_Provisioning Activity - by Datastore.yaml
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/130_Provisioning Activity - by Requester.yaml
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/140_Provisioning Activity - by VM.yaml
-_("Total Used Disk Space")
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/110_Provisioning Activity - by Approver.yaml
-_("Provisioning Activity - by Approver")
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/130_Provisioning Activity - by Requester.yaml
-_("Provisioning Activity - by Requester")
-# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/120_Provisioning Activity - by Datastore.yaml
-_("Provisioning Activity - by Datastore")
-# TRANSLATORS: file: product/reports/500_Events - Operations/140_VC_Events_initiated_by_username_EVM.yaml
-_("Virtual Center Events initiated by username EVM")
-# TRANSLATORS: file: product/reports/500_Events - Operations/140_VC_Events_initiated_by_username_EVM.yaml
-_("VC Events initiated by username EVM86")
-# TRANSLATORS: file: product/reports/500_Events - Operations/120_Events_for_VM_prod_webserver.yaml
-# TRANSLATORS: file: product/reports/500_Events - Operations/130_Reconfigure_Events_by_Department.yaml
-# TRANSLATORS: file: product/reports/500_Events - Operations/140_VC_Events_initiated_by_username_EVM.yaml
-# TRANSLATORS: file: product/reports/520_Events - Policy/110_Policy Events.yaml
-# TRANSLATORS: file: product/timelines/miq_reports/tl_bottleneck_events.yaml
-_("Time Stamp")
 # TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/059_Summary of VM Create and Deletes.yaml
-# TRANSLATORS: file: product/reports/500_Events - Operations/110_vm_operational_vm_power.yaml
-# TRANSLATORS: file: product/reports/500_Events - Operations/120_Events_for_VM_prod_webserver.yaml
-# TRANSLATORS: file: product/reports/500_Events - Operations/130_Reconfigure_Events_by_Department.yaml
-# TRANSLATORS: file: product/reports/500_Events - Operations/140_VC_Events_initiated_by_username_EVM.yaml
-# TRANSLATORS: file: product/timelines/miq_reports/tl_bottleneck_events.yaml
-# TRANSLATORS: file: product/timelines/miq_reports/tl_events_daily.yaml
-# TRANSLATORS: file: product/timelines/miq_reports/tl_events_hourly.yaml
-# TRANSLATORS: file: product/views/EventLog-event_logs.yaml
-# TRANSLATORS: file: product/views/Job.yaml
-# TRANSLATORS: file: product/views/MiqTask.yaml
-# TRANSLATORS: file: product/views/ScanHistory.yaml
-_("Message")
-# TRANSLATORS: file: product/reports/500_Events - Operations/110_vm_operational_vm_power.yaml
-_("Operations VM Power On/Off Events for Last Week")
-# TRANSLATORS: file: product/reports/500_Events - Operations/110_vm_operational_vm_power.yaml
-_("Operations VMs Powered On/Off for Last Week")
-# TRANSLATORS: file: product/reports/500_Events - Operations/110_vm_operational_vm_power.yaml
-# TRANSLATORS: file: product/timelines/miq_reports/tl_events_daily.yaml
-# TRANSLATORS: file: product/timelines/miq_reports/tl_events_hourly.yaml
-# TRANSLATORS: file: product/views/EventLog-event_logs.yaml
-_("Date Time")
-# TRANSLATORS: file: product/reports/500_Events - Operations/110_vm_operational_vm_power.yaml
-# TRANSLATORS: file: product/timelines/miq_reports/tl_events_daily.yaml
-# TRANSLATORS: file: product/timelines/miq_reports/tl_events_hourly.yaml
-_("Event Source")
-# TRANSLATORS: file: product/reports/500_Events - Operations/110_vm_operational_vm_power.yaml
-_("VM Location")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/020_Date Brought under Management.yaml
-# TRANSLATORS: file: product/reports/500_Events - Operations/110_vm_operational_vm_power.yaml
-_("VC User Name")
-# TRANSLATORS: file: product/reports/500_Events - Operations/130_Reconfigure_Events_by_Department.yaml
-_("All Reconfigure Events for Department Classified VMs")
-# TRANSLATORS: file: product/reports/500_Events - Operations/130_Reconfigure_Events_by_Department.yaml
-_("Reconfigure Events by Department")
-# TRANSLATORS: file: product/reports/500_Events - Operations/130_Reconfigure_Events_by_Department.yaml
-_("ManageIQ Tag Department")
-# TRANSLATORS: file: product/reports/500_Events - Operations/120_Events_for_VM_prod_webserver.yaml
-# TRANSLATORS: file: product/reports/500_Events - Operations/130_Reconfigure_Events_by_Department.yaml
-_("Initiated By")
-# TRANSLATORS: file: product/reports/500_Events - Operations/120_Events_for_VM_prod_webserver.yaml
-_("Summary of all VC Events for VM prod_webserver")
-# TRANSLATORS: file: product/reports/500_Events - Operations/120_Events_for_VM_prod_webserver.yaml
-_("Events for VM prod_webserver")
-# TRANSLATORS: file: product/reports/160_Configuration Management - VM Folders/010_Folders_ VM Relationships.yaml
-# TRANSLATORS: file: product/reports/450_Relationships - Virtual Machines, Folders, Clusters/020_VM Folders relationships.yaml
-_("Folder to VMs Relationships")
-# TRANSLATORS: file: product/reports/160_Configuration Management - VM Folders/010_Folders_ VM Relationships.yaml
-_("Folder VMs Relationships")
-# TRANSLATORS: file: product/reports/160_Configuration Management - VM Folders/010_Folders_ VM Relationships.yaml
-_("Parent Folder Path (VMs & Templates)")
-# TRANSLATORS: file: product/reports/450_Relationships - Virtual Machines, Folders, Clusters/030_Clusters Relationships.yaml
-_("Cluster Relationships")
-# TRANSLATORS: file: product/reports/450_Relationships - Virtual Machines, Folders, Clusters/010_VMs Relationships.yaml
-_("VM Relationships")
 # TRANSLATORS: file: product/reports/450_Relationships - Virtual Machines, Folders, Clusters/010_VMs Relationships.yaml
 # TRANSLATORS: file: product/reports/450_Relationships - Virtual Machines, Folders, Clusters/020_VM Folders relationships.yaml
-_("Folder")
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/110_Provisioning Activity - by Approver.yaml
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/120_Provisioning Activity - by Datastore.yaml
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/130_Provisioning Activity - by Requester.yaml
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/140_Provisioning Activity - by VM.yaml
+# TRANSLATORS: file: product/views/ContainerImageRegistry.yaml
+# TRANSLATORS: file: product/views/Host-hosts.yaml
+# TRANSLATORS: file: product/views/Host.yaml
+# TRANSLATORS: file: product/views/InstanceOrImage.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_InfraManager_Template.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_InfraManager_Vm.yaml
+# TRANSLATORS: file: product/views/MiqTemplate-all_miq_templates.yaml
+# TRANSLATORS: file: product/views/Vm-VmReconfigureRequest.yaml
+# TRANSLATORS: file: product/views/Vm-all_vms.yaml
+# TRANSLATORS: file: product/views/VmOrTemplate-all_archived.yaml
+# TRANSLATORS: file: product/views/VmOrTemplate-all_orphaned.yaml
+# TRANSLATORS: file: product/views/VmOrTemplate-all_vms_and_templates.yaml
+# TRANSLATORS: file: product/views/VmOrTemplate.yaml
+_("Host")
 # TRANSLATORS: file: product/reports/450_Relationships - Virtual Machines, Folders, Clusters/010_VMs Relationships.yaml
 # TRANSLATORS: file: product/reports/450_Relationships - Virtual Machines, Folders, Clusters/020_VM Folders relationships.yaml
 _("Resource Pool")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/006_VMs w_Free Space _ 75% by Function.yaml
-_("VMs with Volume Free Space > 75% by Function")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/006_VMs w_Free Space _ 75% by Function.yaml
-_("VMs w/Free Space > 75% by Function")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/006_VMs w_Free Space _ 75% by Function.yaml
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/054_VM Uptime - longest running.yaml
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/025_Location and Size.yaml
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/027_VMs_ with no UUID.yaml
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/030_by MAC Address.yaml
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/031_Unregistered VMs.yaml
+# TRANSLATORS: file: product/reports/150_Configuration Management - Storage/020_Summary for VMs.yaml
+# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/020_Online VMs.yaml
+# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/022_VMs not Powered On.yaml
+# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/040_VMs_ Offline VMs not yet Scanned.yaml
+# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/045_VMs_ Offline VMs with Snapshot.yaml
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/052_VMs with Volume Free Space -= 75%.yaml
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/053_VMs with disk free space _ 5GB.yaml
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/055_VMs Powered Off registered to a Host.yaml
 # TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/056_VMs pending Retirement.yaml
 # TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/057_VMs that are Retired.yaml
-_("Function")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/005_VMs with Free Space _ 50% by Department.yaml
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/006_VMs w_Free Space _ 75% by Function.yaml
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/007_VMs w_Free Space _ 75% by LOB.yaml
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/028_VMs with Volume Free Space -= 20%.yaml
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/029_VMs with Volume Free Space -= 80%.yaml
-_("Volume Name")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/005_VMs with Free Space _ 50% by Department.yaml
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/006_VMs w_Free Space _ 75% by Function.yaml
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/007_VMs w_Free Space _ 75% by LOB.yaml
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/028_VMs with Volume Free Space -= 20%.yaml
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/029_VMs with Volume Free Space -= 80%.yaml
-_("Volume Free Space Percent")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/005_VMs with Free Space _ 50% by Department.yaml
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/006_VMs w_Free Space _ 75% by Function.yaml
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/007_VMs w_Free Space _ 75% by LOB.yaml
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/028_VMs with Volume Free Space -= 20%.yaml
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/029_VMs with Volume Free Space -= 80%.yaml
-_("Volume Free Space")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/005_VMs with Free Space _ 50% by Department.yaml
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/006_VMs w_Free Space _ 75% by Function.yaml
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/007_VMs w_Free Space _ 75% by LOB.yaml
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/028_VMs with Volume Free Space -= 20%.yaml
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/029_VMs with Volume Free Space -= 80%.yaml
-_("Volume Size")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/005_VMs with Free Space _ 50% by Department.yaml
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/006_VMs w_Free Space _ 75% by Function.yaml
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/007_VMs w_Free Space _ 75% by LOB.yaml
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/028_VMs with Volume Free Space -= 20%.yaml
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/029_VMs with Volume Free Space -= 80%.yaml
-_("Volume Used Space Percent")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/005_VMs with Free Space _ 50% by Department.yaml
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/006_VMs w_Free Space _ 75% by Function.yaml
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/007_VMs w_Free Space _ 75% by LOB.yaml
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/028_VMs with Volume Free Space -= 20%.yaml
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/029_VMs with Volume Free Space -= 80%.yaml
-_("Volume Used Space")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/005_VMs with Free Space _ 50% by Department.yaml
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/006_VMs w_Free Space _ 75% by Function.yaml
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/007_VMs w_Free Space _ 75% by LOB.yaml
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/028_VMs with Volume Free Space -= 20%.yaml
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/029_VMs with Volume Free Space -= 80%.yaml
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/052_VMs with Volume Free Space -= 75%.yaml
-_("Volume Filesystem")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/050_User Accounts Windows .yaml
-_("VM User Accounts for Windows")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/050_User Accounts Windows .yaml
-_("User Accounts - Windows")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/050_User Accounts Windows .yaml
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/051_User Accounts Linux.yaml
-_("User Name")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/050_User Accounts Windows .yaml
-_("User Display Name")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/050_User Accounts Windows .yaml
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/051_User Accounts Linux.yaml
-_("User Comment")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/050_User Accounts Windows .yaml
-_("User Enabled")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/050_User Accounts Windows .yaml
-_("User Expires")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/050_User Accounts Windows .yaml
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/051_User Accounts Linux.yaml
-_("User Account ID")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/050_User Accounts Windows .yaml
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/051_User Accounts Linux.yaml
-_("User Account Type")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/050_User Accounts Windows .yaml
-_("Account Lockout Duration")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/050_User Accounts Windows .yaml
-_("Account Lockout Threshold")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/050_User Accounts Windows .yaml
-_("Max Pwd Age")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/050_User Accounts Windows .yaml
-_("Min Pwd Age")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/050_User Accounts Windows .yaml
-_("Min Pwd Length")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/050_User Accounts Windows .yaml
-_("User Domain")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/050_User Accounts Windows .yaml
-_("User Local")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/064_Guest OS HKLM Registry Information.yaml
-_("Guest OS HKLM Registry Information")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/064_Guest OS HKLM Registry Information.yaml
-_("Registry Item Name")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/064_Guest OS HKLM Registry Information.yaml
-_("Registry Item Value Name")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/064_Guest OS HKLM Registry Information.yaml
-_("Registry Item Data")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/064_Guest OS HKLM Registry Information.yaml
-_("Registry Item Format")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/064_Guest OS HKLM Registry Information.yaml
-_("Registry Item Date Created")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/064_Guest OS HKLM Registry Information.yaml
-_("Registry Item Date Updated")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/032_Orphaned VMs.yaml
-_("VMs in EVM that have been deleted from VC")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/032_Orphaned VMs.yaml
-_("Orphaned VMs")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/032_Orphaned VMs.yaml
-_("Last Known Datastore Path")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/032_Orphaned VMs.yaml
-_("Last Known Size")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/031_Unregistered VMs.yaml
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/032_Orphaned VMs.yaml
-_("Annotation")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/059_Guest OS Information (any OS).yaml
-_("Guest OS Information - any OS")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/059_Guest OS Information (any OS).yaml
-_("OS Service Pack")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/059_Guest OS Information (any OS).yaml
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/055_VMs Powered Off registered to a Host.yaml
-# TRANSLATORS: file: product/views/CimStorageExtent.yaml
-# TRANSLATORS: file: product/views/GuestApplication.yaml
-# TRANSLATORS: file: product/views/Patch.yaml
-_("Vendor")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/022_Vendor and Guest OS.yaml
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/059_Guest OS Information (any OS).yaml
-_("OS Name")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/059_Guest OS Information (any OS).yaml
-_("OS Version")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/059_Guest OS Information (any OS).yaml
-_("OS Build Number")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/059_Guest OS Information (any OS).yaml
-_("OS Product Key")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/059_Guest OS Information (any OS).yaml
-_("OS Productid")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/036_Snapshot Summary.yaml
-_("VMs Snapshot Summary")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/036_Snapshot Summary.yaml
-_("Active Snapshot (0/1)")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/036_Snapshot Summary.yaml
-# TRANSLATORS: file: product/views/AdvancedSetting.yaml
-# TRANSLATORS: file: product/views/ArbitrationProfile.yaml
-# TRANSLATORS: file: product/views/AutomationRequest.yaml
-# TRANSLATORS: file: product/views/ChargebackRate.yaml
-# TRANSLATORS: file: product/views/CimBaseStorageExtent.yaml
-# TRANSLATORS: file: product/views/CimStorageExtent.yaml
-# TRANSLATORS: file: product/views/Condition.yaml
-# TRANSLATORS: file: product/views/ConditionSet.yaml
-# TRANSLATORS: file: product/views/ConfigurationProfile.yaml
-# TRANSLATORS: file: product/views/CustomizationTemplate.yaml
-# TRANSLATORS: file: product/views/Dialog.yaml
-# TRANSLATORS: file: product/views/GuestApplication.yaml
-# TRANSLATORS: file: product/views/LdapRegion.yaml
-# TRANSLATORS: file: product/views/LoadBalancer.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_ConfigurationManager_ConfigurationScript.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_Vmware_CloudManager_OrchestrationTemplate.yaml
-# TRANSLATORS: file: product/views/MiqAction.yaml
-# TRANSLATORS: file: product/views/MiqActionSet.yaml
-# TRANSLATORS: file: product/views/MiqAeClass.yaml
-# TRANSLATORS: file: product/views/MiqAlert.yaml
-# TRANSLATORS: file: product/views/MiqDialog.yaml
-# TRANSLATORS: file: product/views/MiqEvent-actions.yaml
-# TRANSLATORS: file: product/views/MiqEvent.yaml
-# TRANSLATORS: file: product/views/MiqPolicy.yaml
-# TRANSLATORS: file: product/views/MiqPolicySet.yaml
-# TRANSLATORS: file: product/views/MiqProvision.yaml
-# TRANSLATORS: file: product/views/MiqRequest.yaml
-# TRANSLATORS: file: product/views/MiqSchedule.yaml
-# TRANSLATORS: file: product/views/OntapLogicalDisk.yaml
-# TRANSLATORS: file: product/views/OntapStorageSystem.yaml
-# TRANSLATORS: file: product/views/OntapStorageVolume.yaml
-# TRANSLATORS: file: product/views/OrchestrationStackOutput.yaml
-# TRANSLATORS: file: product/views/OrchestrationTemplate.yaml
-# TRANSLATORS: file: product/views/OrchestrationTemplateAzure.yaml
-# TRANSLATORS: file: product/views/OrchestrationTemplateCfn.yaml
-# TRANSLATORS: file: product/views/OrchestrationTemplateHot.yaml
-# TRANSLATORS: file: product/views/OrchestrationTemplateVnfd.yaml
-# TRANSLATORS: file: product/views/Patch.yaml
-# TRANSLATORS: file: product/views/Policy.yaml
-# TRANSLATORS: file: product/views/PolicySet.yaml
-# TRANSLATORS: file: product/views/ProductUpdate.yaml
-# TRANSLATORS: file: product/views/ScanItemSet.yaml
-# TRANSLATORS: file: product/views/SecurityGroup.yaml
-# TRANSLATORS: file: product/views/Service.yaml
-# TRANSLATORS: file: product/views/ServiceCatalog.yaml
-# TRANSLATORS: file: product/views/ServiceTemplate.yaml
-# TRANSLATORS: file: product/views/ServiceTemplateCatalog.yaml
-# TRANSLATORS: file: product/views/SystemService-filesystem_drivers.yaml
-# TRANSLATORS: file: product/views/SystemService-kernel_drivers.yaml
-# TRANSLATORS: file: product/views/SystemService-linux_initprocesses.yaml
-# TRANSLATORS: file: product/views/SystemService-win32_services.yaml
-# TRANSLATORS: file: product/views/SystemService.yaml
-# TRANSLATORS: file: product/views/Tenant.yaml
-# TRANSLATORS: file: product/views/Vm__restricted.yaml
-# TRANSLATORS: file: product/views/VmdbDatabaseSetting.yaml
-_("Description")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/036_Snapshot Summary.yaml
-_("Create Time")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/036_Snapshot Summary.yaml
-_("Total Size")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/030_by MAC Address.yaml
-_("VMs by MAC Addresses")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/030_by MAC Address.yaml
-_("VMs by MAC Address")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/030_by MAC Address.yaml
-_("MAC Address")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/030_by MAC Address.yaml
-_("Device Location")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/053_Account Groups Linux.yaml
-_("VM Account Groups for Linux")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/053_Account Groups Linux.yaml
-_("Account Groups - Linux")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/052_Account Groups Windows .yaml
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/053_Account Groups Linux.yaml
-_("Group Name")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/052_Account Groups Windows .yaml
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/053_Account Groups Linux.yaml
-_("Group Comment")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/052_Account Groups Windows .yaml
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/053_Account Groups Linux.yaml
-_("Group Account ID")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/052_Account Groups Windows .yaml
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/053_Account Groups Linux.yaml
-_("Group Account Type")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/063_Guest OS Password Information.yaml
-_("Guest OS Password Information for Windows")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/063_Guest OS Password Information.yaml
-_("Guest OS Password Information - Windows")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/060_Guest OS Information - Windows.yaml
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/062_Guest OS Information - Linux.yaml
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/063_Guest OS Password Information.yaml
-_("Product Name")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/063_Guest OS Password Information.yaml
-_("Lockout Duration")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/063_Guest OS Password Information.yaml
-_("Lockout Threshold")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/063_Guest OS Password Information.yaml
-_("Max Pw Age")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/063_Guest OS Password Information.yaml
-_("Min Pw Age")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/063_Guest OS Password Information.yaml
-_("Min Pw Len")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/063_Guest OS Password Information.yaml
-_("Pw Complex")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/063_Guest OS Password Information.yaml
-_("Pw Encrypt")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/063_Guest OS Password Information.yaml
-_("History")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/063_Guest OS Password Information.yaml
-_("Reset Lockout Counter")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/005_VMs with Free Space _ 50% by Department.yaml
-_("VMs with Volume Free Space > 50% by Department")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/005_VMs with Free Space _ 50% by Department.yaml
-_("VMs with Free Space > 50% by Department")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/005_VMs with Free Space _ 50% by Department.yaml
-_("Department Classification")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/025_Location and Size.yaml
-_("VM Location and Size")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/020_Vendor and Type.yaml
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/025_Location and Size.yaml
-_("Last Smart Analysis")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/009_VM Disk Usage.yaml
-_("VM Disk Usage")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/009_VM Disk Usage.yaml
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/054_VM Uptime - longest running.yaml
-# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/050_Host CPU Usage per VM.yaml
-# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/065_VM Performance - daily over last week.yaml
-_("Activity Sample - Timestamp  (Day/Time)")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/009_VM Disk Usage.yaml
-_(" Derived Vm Allocated Disk Storage")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/009_VM Disk Usage.yaml
-_("Derived Vm Used Disk Storage")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/060_Guest OS Information - Windows.yaml
-_("Guest OS Information for Windows")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/060_Guest OS Information - Windows.yaml
-_("Guest OS Information - Windows")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/060_Guest OS Information - Windows.yaml
-# TRANSLATORS: file: product/views/Patch.yaml
-_("Service Pack")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/060_Guest OS Information - Windows.yaml
-# TRANSLATORS: file: product/views/GuestApplication.yaml
-# TRANSLATORS: file: product/views/Host-hosts.yaml
-# TRANSLATORS: file: product/views/Host.yaml
-# TRANSLATORS: file: product/views/MiqServer.yaml
-# TRANSLATORS: file: product/views/ProductUpdate.yaml
-_("Version")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/060_Guest OS Information - Windows.yaml
-_("Build Number")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/060_Guest OS Information - Windows.yaml
-# TRANSLATORS: file: product/views/GuestApplication.yaml
-_("Product Key")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/060_Guest OS Information - Windows.yaml
-_("Product ID")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/027_VMs_ with no UUID.yaml
-_("VMs with no UUID")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/022_Vendor and Guest OS.yaml
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/026_VMs_ UUIDs.yaml
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/027_VMs_ with no UUID.yaml
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/012_Virtual Infrastructure Platforms.yaml
-_("OS Product Name")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/026_VMs_ UUIDs.yaml
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/027_VMs_ with no UUID.yaml
-_("VM UUID")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/026_VMs_ UUIDs.yaml
-_("VM Guest OS UUIDs")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/026_VMs_ UUIDs.yaml
-_("VM UUIDs")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/031_Unregistered VMs.yaml
-_("VMs on Datastore but not registered to a Host")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/031_Unregistered VMs.yaml
-_("Unregistered VMs")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/052_Account Groups Windows .yaml
-_("VM Account Groups for Windows")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/052_Account Groups Windows .yaml
-_("Account Groups - Windows")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/052_Account Groups Windows .yaml
-_("Group Display Name")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/052_Account Groups Windows .yaml
-_("Group Domain")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/052_Account Groups Windows .yaml
-_("Group Enabled")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/052_Account Groups Windows .yaml
-_("Group Expires")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/052_Account Groups Windows .yaml
-_("Group Home Directory")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/052_Account Groups Windows .yaml
-_("Group Local")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/020_Vendor and Type.yaml
-_("VM Vendor and Type")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/020_Vendor and Type.yaml
-_("Vendor and Type")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/020_Vendor and Type.yaml
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/022_Vendor and Guest OS.yaml
-# TRANSLATORS: file: product/timelines/miq_reports/tl_events_daily.yaml
-# TRANSLATORS: file: product/timelines/miq_reports/tl_events_hourly.yaml
-# TRANSLATORS: file: product/views/Container.yaml
-_("Container")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/020_Vendor and Type.yaml
-_("Hardware Guest OS")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/007_VMs w_Free Space _ 75% by LOB.yaml
-_("VMs with Volume Free Space > 75% by Line of Business")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/007_VMs w_Free Space _ 75% by LOB.yaml
-_("VMs w/Free Space > 75% by LOB")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/007_VMs w_Free Space _ 75% by LOB.yaml
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/054_VM Uptime - longest running.yaml
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/056_VMs pending Retirement.yaml
-_("Line of Business")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/051_User Accounts Linux.yaml
-_("VM User Accounts for Linux")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/051_User Accounts Linux.yaml
-_("User Accounts - Linux")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/010_VMs_ Hardware.yaml
-_("Hardware Information for VMs")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/010_VMs_ Hardware.yaml
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/060_VM Relationships.yaml
-_("RAM")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/010_VMs_ Hardware.yaml
+# TRANSLATORS: file: product/reports/450_Relationships - Virtual Machines, Folders, Clusters/010_VMs Relationships.yaml
+# TRANSLATORS: file: product/reports/450_Relationships - Virtual Machines, Folders, Clusters/020_VM Folders relationships.yaml
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/110_Provisioning Activity - by Approver.yaml
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/120_Provisioning Activity - by Datastore.yaml
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/130_Provisioning Activity - by Requester.yaml
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/140_Provisioning Activity - by VM.yaml
+# TRANSLATORS: file: product/views/InstanceOrImage.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_InfraManager_Template.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_InfraManager_Vm.yaml
+# TRANSLATORS: file: product/views/MiqTemplate-all_miq_templates.yaml
+# TRANSLATORS: file: product/views/Storage.yaml
+# TRANSLATORS: file: product/views/StorageCluster.yaml
+# TRANSLATORS: file: product/views/Vm-all_vms.yaml
+# TRANSLATORS: file: product/views/VmOrTemplate-all_archived.yaml
+# TRANSLATORS: file: product/views/VmOrTemplate-all_orphaned.yaml
+# TRANSLATORS: file: product/views/VmOrTemplate-all_vms_and_templates.yaml
+# TRANSLATORS: file: product/views/VmOrTemplate.yaml
+_("Datastore")
+# TRANSLATORS: file: product/reports/450_Relationships - Virtual Machines, Folders, Clusters/010_VMs Relationships.yaml
+_("VM Relationships")
+# TRANSLATORS: file: product/reports/450_Relationships - Virtual Machines, Folders, Clusters/030_Clusters Relationships.yaml
+_("Cluster Relationships")
+# TRANSLATORS: file: product/reports/140_Configuration Management - Resource Pools/010_Summary.yaml
+_("Resource Pools Summary")
+# TRANSLATORS: file: product/reports/140_Configuration Management - Resource Pools/010_Summary.yaml
+_("CPU Limit")
+# TRANSLATORS: file: product/reports/140_Configuration Management - Resource Pools/010_Summary.yaml
+_("CPU Reserve Expand")
+# TRANSLATORS: file: product/reports/140_Configuration Management - Resource Pools/010_Summary.yaml
+_("CPU Reserve")
+# TRANSLATORS: file: product/reports/140_Configuration Management - Resource Pools/010_Summary.yaml
 # TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/150_All Departments with Performance.yaml
-_("vCPUs")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/010_VMs_ Hardware.yaml
-_("Controller Type")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/010_VMs_ Hardware.yaml
-_("Device Type")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/010_VMs_ Hardware.yaml
-_("Mode")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/010_VMs_ Hardware.yaml
-_("Start Connected?")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/029_VMs with Volume Free Space -= 80%.yaml
-_("VMs with Volume Free Space >= 80%")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/062_Guest OS Information - Linux.yaml
-_("Guest OS Information for Linux")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/062_Guest OS Information - Linux.yaml
-_("Guest OS Information - Linux")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/022_Vendor and Guest OS.yaml
-_("Vendor and Guest OS")
-# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/028_VMs with Volume Free Space -= 20%.yaml
-_("VMs with Volume Free Space <= 20%")
-# TRANSLATORS: file: product/reports/520_Events - Policy/120_Policy Events2.yaml
-_("Policy Events for the Last 7 Days")
-# TRANSLATORS: file: product/reports/520_Events - Policy/120_Policy Events2.yaml
-_("Miq Policy Set Date Created")
-# TRANSLATORS: file: product/reports/520_Events - Policy/120_Policy Events2.yaml
-_("Miq Policy Set Date Updated")
-# TRANSLATORS: file: product/reports/520_Events - Policy/120_Policy Events2.yaml
-_("Miq Policy Set Description")
-# TRANSLATORS: file: product/reports/520_Events - Policy/120_Policy Events2.yaml
-_("Miq Policy Set EVM Unique ID (Guid)")
-# TRANSLATORS: file: product/reports/520_Events - Policy/120_Policy Events2.yaml
-_("Miq Policy Set Name")
-# TRANSLATORS: file: product/reports/520_Events - Policy/120_Policy Events2.yaml
-_("Miq Policy Set Read Only")
-# TRANSLATORS: file: product/reports/520_Events - Policy/120_Policy Events2.yaml
-_("Miq Policy Set Reserved")
-# TRANSLATORS: file: product/reports/520_Events - Policy/120_Policy Events2.yaml
-_("Miq Policy Set Set Data")
-# TRANSLATORS: file: product/reports/520_Events - Policy/120_Policy Events2.yaml
-_("Miq Policy Set Set Type")
-# TRANSLATORS: file: product/reports/520_Events - Policy/110_Policy Events.yaml
-_("Policy Events for Last Week")
-# TRANSLATORS: file: product/reports/520_Events - Policy/110_Policy Events.yaml
-# TRANSLATORS: file: product/timelines/miq_reports/tl_policy_events_daily.yaml
-# TRANSLATORS: file: product/timelines/miq_reports/tl_policy_events_hourly.yaml
-_("Miq Event Description")
-# TRANSLATORS: file: product/reports/520_Events - Policy/110_Policy Events.yaml
-# TRANSLATORS: file: product/timelines/miq_reports/tl_policy_events_daily.yaml
-# TRANSLATORS: file: product/timelines/miq_reports/tl_policy_events_hourly.yaml
-_("Miq Policy Description")
-# TRANSLATORS: file: product/reports/410_Operations - EVM/032_EVM Server_ UserIDs Never Used.yaml
-_("EVM Server UserIDs Never Used")
-# TRANSLATORS: file: product/reports/410_Operations - EVM/030_EVM Server_ UserID Usage Report.yaml
-# TRANSLATORS: file: product/reports/410_Operations - EVM/032_EVM Server_ UserIDs Never Used.yaml
-_("UserID")
-# TRANSLATORS: file: product/reports/410_Operations - EVM/030_EVM Server_ UserID Usage Report.yaml
-# TRANSLATORS: file: product/reports/410_Operations - EVM/032_EVM Server_ UserIDs Never Used.yaml
-# TRANSLATORS: file: product/views/Account-users.yaml
-# TRANSLATORS: file: product/views/User.yaml
-_("Last Logon")
-# TRANSLATORS: file: product/reports/410_Operations - EVM/030_EVM Server_ UserID Usage Report.yaml
-# TRANSLATORS: file: product/reports/410_Operations - EVM/032_EVM Server_ UserIDs Never Used.yaml
-# TRANSLATORS: file: product/views/User.yaml
-_("Last Logoff")
-# TRANSLATORS: file: product/reports/410_Operations - EVM/030_EVM Server_ UserID Usage Report.yaml
-# TRANSLATORS: file: product/reports/410_Operations - EVM/032_EVM Server_ UserIDs Never Used.yaml
-# TRANSLATORS: file: product/views/MiqAlert.yaml
-_("Email")
-# TRANSLATORS: file: product/reports/410_Operations - EVM/026_Consolidate Helper Snapshots.yaml
-_("VMs with Consolidate Helper Snapshots")
-# TRANSLATORS: file: product/reports/410_Operations - EVM/030_EVM Server_ UserID Usage Report.yaml
-_("EVM Server UserID Usage Report")
-# TRANSLATORS: file: product/reports/410_Operations - EVM/025_EVM Snapshots.yaml
-_("VMs with EVM Snapshots")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/030_Hardware.yaml
-_("Hardware information for Hosts")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/030_Hardware.yaml
-_("Hardware Information")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/030_Hardware.yaml
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/040_Summary for VMs.yaml
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/070_Storage Adapters.yaml
-# TRANSLATORS: file: product/reports/120_Configuration Management - Providers/010_Summary.yaml
-# TRANSLATORS: file: product/views/Host-hosts.yaml
-# TRANSLATORS: file: product/views/Host.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_ContainerManager.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_DatawarehouseManager.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_MiddlewareManager.yaml
-# TRANSLATORS: file: product/views/MiqServer.yaml
-_("IP Address")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/030_Hardware.yaml
-_("Hardware Manufacturer")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/030_Hardware.yaml
-_("Hardware CPU Type")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/030_Hardware.yaml
-_("Hardware Model")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/030_Hardware.yaml
-_("Hardware CPU Speed")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/030_Hardware.yaml
-_("Hardware Logical Cpus")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/030_Hardware.yaml
-_("Hardware Cores Per Socket")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/011_Host Summary with VM info.yaml
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/030_Hardware.yaml
-_("Hardware RAM")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/030_Hardware.yaml
-_("Hardware Number Of Nics")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/040_Summary for VMs.yaml
-_("Host Summary for VMs")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/040_Summary for VMs.yaml
-_("VM OS Name")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/011_Host Summary with VM info.yaml
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/040_Summary for VMs.yaml
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/060_VM Relationships.yaml
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/054_VM Uptime - longest running.yaml
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/055_VMs Powered Off registered to a Host.yaml
-_("Power State")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/040_Summary for VMs.yaml
-_("Parent Folder")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/040_Summary for VMs.yaml
-_("Parent Resource Pool")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/040_Summary for VMs.yaml
-_("VM is a Template")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/040_Summary for VMs.yaml
-_("Retired?")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/040_Summary for VMs.yaml
-_("VM Retires On")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/050_Patches.yaml
-_("Hosts - Installed Patches")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/050_Patches.yaml
-_("Host Patches")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/050_Patches.yaml
-_("Patch Name")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/050_Patches.yaml
-_("Patch Description")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/050_Patches.yaml
-_("Patch Installed On")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/090_vLANs and vSwitches.yaml
-_("Hosts - vLANs and vSwitches")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/090_vLANs and vSwitches.yaml
-_("Host vLANs and vSwitches")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/020_Date Brought under Management.yaml
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/090_vLANs and vSwitches.yaml
-# TRANSLATORS: file: product/reports/120_Configuration Management - Providers/010_Summary.yaml
-# TRANSLATORS: file: product/views/ConfiguredSystem.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_ConfigurationManager_ConfiguredSystem.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_ContainerManager.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_DatawarehouseManager.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_Foreman_ConfigurationManager_ConfiguredSystem.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_InfraManager.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_MiddlewareManager.yaml
-# TRANSLATORS: file: product/views/MiqServer.yaml
-# TRANSLATORS: file: product/views/StorageManager.yaml
-_("Hostname")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/090_vLANs and vSwitches.yaml
-_("vLAN Name")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/090_vLANs and vSwitches.yaml
-_("vLAN Tag")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/090_vLANs and vSwitches.yaml
-_("vSwitch Name")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/090_vLANs and vSwitches.yaml
-_("vSwitch Ports")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/010_Summary.yaml
-_("Hosts - Summary by Version")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/010_Summary.yaml
-_("Hosts Summary")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/010_Summary.yaml
-_("Primary IP Address")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/010_Summary.yaml
-_("VMM Vendor")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/010_Summary.yaml
-_("VMM Product")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/010_Summary.yaml
-_("VMM Version")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/010_Summary.yaml
-_("VMM Build Number")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/080_Network information.yaml
-_("Hosts - Network Information")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/080_Network information.yaml
-_("Host Network Information")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/080_Network information.yaml
-_("Network IP Address")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/080_Network information.yaml
-_("Network Subnet Mask")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/080_Network information.yaml
-_("Network DHCP Enabled")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/080_Network information.yaml
-_("Network DHCP Server")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/080_Network information.yaml
-_("Network DNS Server")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/080_Network information.yaml
-_("Network Default Gateway")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/080_Network information.yaml
-_("Network Description")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/080_Network information.yaml
-_("Network Domain")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/080_Network information.yaml
-_("Network Lease Expires")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/080_Network information.yaml
-_("Network Lease Obtained")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/011_Host Summary with VM info.yaml
-_("Host Summary with VM info")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/011_Host Summary with VM info.yaml
-_("Hardware Number of Virtual CPUs")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/012_Virtual Infrastructure Platforms.yaml
-_("Virtual Infrastructure Platforms")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/012_Virtual Infrastructure Platforms.yaml
-_("Virtual Infrastructure Platform")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/012_Virtual Infrastructure Platforms.yaml
-_("Infrastructure Product")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/060_VM Relationships.yaml
-_("Host to VM Relationships")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/060_VM Relationships.yaml
-_("Host VM Relationships")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/016_Host - ESX Service Console Packages.yaml
-_("ESX Service Console Packages")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/016_Host - ESX Service Console Packages.yaml
-_("Host - ESX Service Console Packages")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/016_Host - ESX Service Console Packages.yaml
-_("Guest Application Type Name")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/016_Host - ESX Service Console Packages.yaml
-_("Guest Application Name")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/016_Host - ESX Service Console Packages.yaml
-_("Guest Application Version")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/016_Host - ESX Service Console Packages.yaml
-_("Guest Application Description")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/016_Host - ESX Service Console Packages.yaml
-_("Guest Application Arch")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/016_Host - ESX Service Console Packages.yaml
-_("Guest Application V Unique Name")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/015_Host - ESX Services.yaml
-_("ESX Services")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/015_Host - ESX Services.yaml
-_("Host - ESX Services")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/015_Host - ESX Services.yaml
-_("Service Name")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/015_Host - ESX Services.yaml
-_("Service Display Name")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/015_Host - ESX Services.yaml
-_("Service Running")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/020_Date Brought under Management.yaml
-_("Hosts: Date brought under Management for Last Week")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/020_Date Brought under Management.yaml
-_("Date brought under Management for Last Week")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/020_Date Brought under Management.yaml
-_("Date Added")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/070_Storage Adapters.yaml
-_("Hosts - Storage Adapters Information")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/070_Storage Adapters.yaml
-_("Host Storage Adapters")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/070_Storage Adapters.yaml
-_("Storage Adapter Model")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/070_Storage Adapters.yaml
-_("Storage Adapter Controller Type")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/070_Storage Adapters.yaml
-_("Storage Adapter Device Name")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/070_Storage Adapters.yaml
-_("Storage Adapter Device Type")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/070_Storage Adapters.yaml
-_("Storage Adapter Location")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/070_Storage Adapters.yaml
-_("Storage Adapter Iscsi Alias")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/070_Storage Adapters.yaml
-_("Storage Adapter Iscsi Name")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/070_Storage Adapters.yaml
-_("Storage Adapter Present")
-# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/070_Storage Adapters.yaml
-_("Storage Adapter Start Connected")
-# TRANSLATORS: file: product/reports/130_Configuration Management - Clusters/030_VM Affinity with Power State.yaml
-_("Cluster tp VMs Affinity with Power State")
-# TRANSLATORS: file: product/reports/130_Configuration Management - Clusters/030_VM Affinity with Power State.yaml
-_("Cluster VMs Affinity with Power State")
-# TRANSLATORS: file: product/reports/130_Configuration Management - Clusters/010_Summary.yaml
-_("Clusters Summary")
-# TRANSLATORS: file: product/reports/130_Configuration Management - Clusters/010_Summary.yaml
-_("DRS Automation Level")
-# TRANSLATORS: file: product/reports/130_Configuration Management - Clusters/010_Summary.yaml
-_("DRS Enabled")
-# TRANSLATORS: file: product/reports/130_Configuration Management - Clusters/010_Summary.yaml
-_("DRS Migration Threshold")
-# TRANSLATORS: file: product/reports/130_Configuration Management - Clusters/010_Summary.yaml
-_("HA Admit Control")
-# TRANSLATORS: file: product/reports/130_Configuration Management - Clusters/010_Summary.yaml
-_("HA Enabled")
-# TRANSLATORS: file: product/reports/130_Configuration Management - Clusters/010_Summary.yaml
-_("HA Max Failures")
-# TRANSLATORS: file: product/reports/120_Configuration Management - Providers/010_Summary.yaml
-# TRANSLATORS: file: product/reports/130_Configuration Management - Clusters/010_Summary.yaml
-# TRANSLATORS: file: product/reports/130_Configuration Management - Clusters/020_Hosts Affinity.yaml
-# TRANSLATORS: file: product/reports/130_Configuration Management - Clusters/040_Cluster Resources.yaml
-_("Total CPU Speed")
-# TRANSLATORS: file: product/reports/120_Configuration Management - Providers/010_Summary.yaml
-# TRANSLATORS: file: product/reports/130_Configuration Management - Clusters/010_Summary.yaml
-# TRANSLATORS: file: product/reports/130_Configuration Management - Clusters/020_Hosts Affinity.yaml
-# TRANSLATORS: file: product/reports/130_Configuration Management - Clusters/040_Cluster Resources.yaml
-# TRANSLATORS: file: product/views/Service.yaml
-_("Total Memory")
-# TRANSLATORS: file: product/reports/120_Configuration Management - Providers/010_Summary.yaml
-# TRANSLATORS: file: product/reports/130_Configuration Management - Clusters/010_Summary.yaml
-# TRANSLATORS: file: product/reports/130_Configuration Management - Clusters/040_Cluster Resources.yaml
-_("Total Number of Logical CPUs")
-# TRANSLATORS: file: product/reports/120_Configuration Management - Providers/010_Summary.yaml
-# TRANSLATORS: file: product/reports/130_Configuration Management - Clusters/010_Summary.yaml
-# TRANSLATORS: file: product/reports/130_Configuration Management - Clusters/040_Cluster Resources.yaml
-_("Total Number of Physical CPUs")
-# TRANSLATORS: file: product/reports/130_Configuration Management - Clusters/040_Cluster Resources.yaml
-_("Cluster Resources")
-# TRANSLATORS: file: product/reports/130_Configuration Management - Clusters/040_Cluster Resources.yaml
-_("Aggregate Vm Cpus")
-# TRANSLATORS: file: product/reports/130_Configuration Management - Clusters/040_Cluster Resources.yaml
-_("CPU Cores Virtual to Real Ratio")
-# TRANSLATORS: file: product/reports/130_Configuration Management - Clusters/040_Cluster Resources.yaml
-_("Aggregate Vm Memory")
-# TRANSLATORS: file: product/reports/130_Configuration Management - Clusters/040_Cluster Resources.yaml
-_("Memory Virtual to Real Ratio")
-# TRANSLATORS: file: product/reports/130_Configuration Management - Clusters/020_Hosts Affinity.yaml
-_("Cluster to Hosts Affinity")
-# TRANSLATORS: file: product/reports/130_Configuration Management - Clusters/020_Hosts Affinity.yaml
-_("Cluster Hosts Affinity")
+_("CPU Shares Level")
+# TRANSLATORS: file: product/reports/140_Configuration Management - Resource Pools/010_Summary.yaml
+_("CPU Shares")
+# TRANSLATORS: file: product/reports/140_Configuration Management - Resource Pools/010_Summary.yaml
+_("Memory Limit")
+# TRANSLATORS: file: product/reports/140_Configuration Management - Resource Pools/010_Summary.yaml
+_("Memory Reserve Expand")
+# TRANSLATORS: file: product/reports/140_Configuration Management - Resource Pools/010_Summary.yaml
+# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/150_All Departments with Performance.yaml
+_("Memory Reserve")
+# TRANSLATORS: file: product/reports/140_Configuration Management - Resource Pools/010_Summary.yaml
+# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/150_All Departments with Performance.yaml
+_("Memory Shares Level")
+# TRANSLATORS: file: product/reports/140_Configuration Management - Resource Pools/010_Summary.yaml
+_("Memory Shares")
+# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/130_VMs_with_Max_Daily_CPU_ 85%_past_mo .yaml
+_("VMs with Maximum Daily CPU Usage > 85% over last month")
+# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/130_VMs_with_Max_Daily_CPU_ 85%_past_mo .yaml
+_("VMs with Max Daily CPU > 85% (past mo.)")
 # TRANSLATORS: file: product/reports/120_Configuration Management - Providers/020_Host Relationships.yaml
 # TRANSLATORS: file: product/reports/130_Configuration Management - Clusters/020_Hosts Affinity.yaml
 # TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/100_VMs_with_Max_Daily_Mem_ 50%_past_mo.yaml
@@ -5509,236 +4295,16 @@ _("Cluster Hosts Affinity")
 # TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/130_VMs_with_Max_Daily_CPU_ 85%_past_mo .yaml
 # TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/140_VMs with Avg Daily Mem _ 95%_past_mo .yaml
 _("Host Hostname")
-# TRANSLATORS: file: product/reports/120_Configuration Management - Providers/050_Monthly Vm Count per Provider.yaml
-_("Monthly VM Count per Provider")
-# TRANSLATORS: file: product/reports/120_Configuration Management - Providers/040_Monthly Host Count per Provider.yaml
-# TRANSLATORS: file: product/reports/120_Configuration Management - Providers/050_Monthly Vm Count per Provider.yaml
-_("Month (YYYY/MM)")
-# TRANSLATORS: file: product/reports/120_Configuration Management - Providers/040_Monthly Host Count per Provider.yaml
-# TRANSLATORS: file: product/reports/120_Configuration Management - Providers/050_Monthly Vm Count per Provider.yaml
-_("Provider Type")
-# TRANSLATORS: file: product/reports/120_Configuration Management - Providers/040_Monthly Host Count per Provider.yaml
-# TRANSLATORS: file: product/reports/120_Configuration Management - Providers/050_Monthly Vm Count per Provider.yaml
-# TRANSLATORS: file: product/views/AutomationRequest.yaml
-# TRANSLATORS: file: product/views/CimBaseStorageExtent.yaml
-# TRANSLATORS: file: product/views/CimStorageExtent.yaml
-# TRANSLATORS: file: product/views/ConfigurationProfile.yaml
-# TRANSLATORS: file: product/views/EmsCluster.yaml
-# TRANSLATORS: file: product/views/Host-hosts.yaml
-# TRANSLATORS: file: product/views/Host.yaml
-# TRANSLATORS: file: product/views/InstanceOrImage.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Template.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Vm.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_InfraManager.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_InfraManager_Template.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_InfraManager_Vm.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_NetworkManager.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_StorageManager.yaml
-# TRANSLATORS: file: product/views/MiqRequest.yaml
-# TRANSLATORS: file: product/views/MiqServer.yaml
-# TRANSLATORS: file: product/views/OntapFileShare.yaml
-# TRANSLATORS: file: product/views/OntapLogicalDisk.yaml
-# TRANSLATORS: file: product/views/OntapStorageSystem.yaml
-# TRANSLATORS: file: product/views/OntapStorageVolume.yaml
-# TRANSLATORS: file: product/views/ResourcePool.yaml
-# TRANSLATORS: file: product/views/SniaLocalFileSystem.yaml
-# TRANSLATORS: file: product/views/Storage.yaml
-# TRANSLATORS: file: product/views/StorageCluster.yaml
-# TRANSLATORS: file: product/views/StorageManager.yaml
-# TRANSLATORS: file: product/views/VmOrTemplate.yaml
-# TRANSLATORS: file: product/views/ems_block_storage.yaml
-# TRANSLATORS: file: product/views/ems_object_storage.yaml
-_("Region")
-# TRANSLATORS: file: product/reports/120_Configuration Management - Providers/050_Monthly Vm Count per Provider.yaml
-_("Daily VM Count (Max)")
-# TRANSLATORS: file: product/reports/120_Configuration Management - Providers/050_Monthly Vm Count per Provider.yaml
-_("Daily VM Count (Avg)")
-# TRANSLATORS: file: product/reports/120_Configuration Management - Providers/040_Monthly Host Count per Provider.yaml
-_("Monthly Host Count per Provider")
-# TRANSLATORS: file: product/reports/120_Configuration Management - Providers/040_Monthly Host Count per Provider.yaml
-_("Daily Host Count (Max)")
-# TRANSLATORS: file: product/reports/120_Configuration Management - Providers/040_Monthly Host Count per Provider.yaml
-_("Daily Host Socket Count (Max)")
-# TRANSLATORS: file: product/reports/120_Configuration Management - Providers/010_Summary.yaml
-_("Providers Summary")
-# TRANSLATORS: file: product/reports/120_Configuration Management - Providers/010_Summary.yaml
-_("MS Type")
-# TRANSLATORS: file: product/reports/120_Configuration Management - Providers/030_VM Relationships.yaml
-_("Providers VMs Relationships")
-# TRANSLATORS: file: product/reports/120_Configuration Management - Providers/030_VM Relationships.yaml
-_("Provider IP Addr")
-# TRANSLATORS: file: product/reports/120_Configuration Management - Providers/030_VM Relationships.yaml
-_("Network IP Addr")
-# TRANSLATORS: file: product/reports/120_Configuration Management - Providers/020_Host Relationships.yaml
-_("Providers Hosts Relationships")
-# TRANSLATORS: file: product/reports/120_Configuration Management - Providers/020_Host Relationships.yaml
-_("EMS Name")
-# TRANSLATORS: file: product/reports/120_Configuration Management - Providers/020_Host Relationships.yaml
-_("EMS IP Address")
-# TRANSLATORS: file: product/reports/120_Configuration Management - Providers/020_Host Relationships.yaml
-_("EMS Hostname")
-# TRANSLATORS: file: product/reports/120_Configuration Management - Providers/020_Host Relationships.yaml
-_("Host IP Address")
-# TRANSLATORS: file: product/reports/780_Tenants - Tenant Quotas/001_Tenant Quotas.yaml
-_("Tenant Quotas")
-# TRANSLATORS: file: product/reports/780_Tenants - Tenant Quotas/001_Tenant Quotas.yaml
-_("Tenant Name")
-# TRANSLATORS: file: product/reports/780_Tenants - Tenant Quotas/001_Tenant Quotas.yaml
-_("Quota Name")
-# TRANSLATORS: file: product/reports/780_Tenants - Tenant Quotas/001_Tenant Quotas.yaml
-_("Total Quota")
-# TRANSLATORS: file: product/reports/780_Tenants - Tenant Quotas/001_Tenant Quotas.yaml
-_("In Use")
-# TRANSLATORS: file: product/reports/780_Tenants - Tenant Quotas/001_Tenant Quotas.yaml
-_("Allocated")
-# TRANSLATORS: file: product/reports/780_Tenants - Tenant Quotas/001_Tenant Quotas.yaml
-_("Available")
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/055_VMs Powered Off registered to a Host.yaml
-_("VMs Powered Off but registered to Host (sorted by boot time)")
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/055_VMs Powered Off registered to a Host.yaml
-_("VMs Powered Off registered to a Host")
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/055_VMs Powered Off registered to a Host.yaml
-_("Last Boot Time")
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/055_VMs Powered Off registered to a Host.yaml
-_("Power Off Date")
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/055_VMs Powered Off registered to a Host.yaml
-# TRANSLATORS: file: product/views/Host-hosts.yaml
-# TRANSLATORS: file: product/views/Host.yaml
-# TRANSLATORS: file: product/views/ProductUpdate.yaml
-_("Platform")
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/055_VMs Powered Off registered to a Host.yaml
-# TRANSLATORS: file: product/views/ContainerNode.yaml
-_("Operating System")
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/052_VMs with Volume Free Space -= 75%.yaml
-_("VMs with Volume Free Space >= 75% (sorted by Datastore)")
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/052_VMs with Volume Free Space -= 75%.yaml
-_("VMs with Volume Free Space >= 75%")
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/052_VMs with Volume Free Space -= 75%.yaml
-_("Volume")
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/052_VMs with Volume Free Space -= 75%.yaml
-_("Volume Free Space (%)")
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/052_VMs with Volume Free Space -= 75%.yaml
-_("Volume Used Space (%)")
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/052_VMs with Volume Free Space -= 75%.yaml
-_("Volume Free Space (bytes)")
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/052_VMs with Volume Free Space -= 75%.yaml
-_("Volume Used Space (bytes)")
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/052_VMs with Volume Free Space -= 75%.yaml
-_("Volume Size (bytes)")
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/057_VMs that are Retired.yaml
-_("VMs that have been Retired (past retirement date)")
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/057_VMs that are Retired.yaml
-_("VMs that are Retired")
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/056_VMs pending Retirement.yaml
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/057_VMs that are Retired.yaml
-_("VM is Retired?")
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/056_VMs pending Retirement.yaml
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/057_VMs that are Retired.yaml
-_("Retirement Date")
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/056_VMs pending Retirement.yaml
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/057_VMs that are Retired.yaml
-_("Diskspace (bytes)")
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/056_VMs pending Retirement.yaml
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/057_VMs that are Retired.yaml
-# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/150_All Departments with Performance.yaml
-_("Department")
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/057_VMs that are Retired.yaml
-_(" Line of Business")
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/059_Summary of VM Create and Deletes.yaml
-_("Summary of VM Create and Deletes")
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/059_Summary of VM Create and Deletes.yaml
-_("Event Timestamp")
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/058_VMs with invalid allocation of RAM.yaml
-_("VMs with invalid allocation of RAM (32-bit > 4GB allocated)")
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/058_VMs with invalid allocation of RAM.yaml
-_("VMs with invalid allocation of RAM")
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/058_VMs with invalid allocation of RAM.yaml
-_("Container OS")
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/058_VMs with invalid allocation of RAM.yaml
-_("OS Architecture")
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/056_VMs pending Retirement.yaml
-_("VMs that are pending Retirement")
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/056_VMs pending Retirement.yaml
-_("VMs pending Retirement")
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/053_VMs with disk free space _ 5GB.yaml
-_("VMs with disk free space > 5GB (sorted by disk free space)")
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/053_VMs with disk free space _ 5GB.yaml
-_("VMs with disk free space > 5GB")
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/053_VMs with disk free space _ 5GB.yaml
-_("Free Disk Space (bytes)")
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/053_VMs with disk free space _ 5GB.yaml
-_("Total Disk Capacity (bytes)")
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/054_VM Uptime - longest running.yaml
-_("VM Uptime (based on last boot, sorted by VM uptime)")
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/054_VM Uptime - longest running.yaml
-_("VM Uptime - longest running")
-# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/054_VM Uptime - longest running.yaml
-_("VM Boot Time")
-# TRANSLATORS: file: product/reports/700_Running Processes - Virtual Machines/110_Processes_for_prod_ VMs_sort_by_CPU_Time.yaml
-_("Processes for prod VMs sorted by CPU Time")
-# TRANSLATORS: file: product/reports/700_Running Processes - Virtual Machines/110_Processes_for_prod_ VMs_sort_by_CPU_Time.yaml
-_("Processes for prod VMs sort by CPU Time")
-# TRANSLATORS: file: product/reports/700_Running Processes - Virtual Machines/110_Processes_for_prod_ VMs_sort_by_CPU_Time.yaml
-_("Process Cpu Time")
-# TRANSLATORS: file: product/reports/700_Running Processes - Virtual Machines/110_Processes_for_prod_ VMs_sort_by_CPU_Time.yaml
-_("Process Percent Cpu")
-# TRANSLATORS: file: product/reports/700_Running Processes - Virtual Machines/110_Processes_for_prod_ VMs_sort_by_CPU_Time.yaml
-_("Process Date Created")
-# TRANSLATORS: file: product/reports/700_Running Processes - Virtual Machines/110_Processes_for_prod_ VMs_sort_by_CPU_Time.yaml
-_("Process Date Updated")
-# TRANSLATORS: file: product/reports/700_Running Processes - Virtual Machines/110_Processes_for_prod_ VMs_sort_by_CPU_Time.yaml
-_("Process Memory Size")
-# TRANSLATORS: file: product/reports/700_Running Processes - Virtual Machines/110_Processes_for_prod_ VMs_sort_by_CPU_Time.yaml
-_("Process Memory Usage")
-# TRANSLATORS: file: product/reports/700_Running Processes - Virtual Machines/110_Processes_for_prod_ VMs_sort_by_CPU_Time.yaml
-_("Process Name")
-# TRANSLATORS: file: product/reports/700_Running Processes - Virtual Machines/110_Processes_for_prod_ VMs_sort_by_CPU_Time.yaml
-_("Process Percent Memory")
-# TRANSLATORS: file: product/reports/700_Running Processes - Virtual Machines/110_Processes_for_prod_ VMs_sort_by_CPU_Time.yaml
-_("Process Pid")
-# TRANSLATORS: file: product/reports/700_Running Processes - Virtual Machines/110_Processes_for_prod_ VMs_sort_by_CPU_Time.yaml
-_("Process Priority")
-# TRANSLATORS: file: product/reports/750_Trending - Clusters/060_Cluster CPU Trends last week.yaml
-_("Cluster CPU Utilization trends (last week)")
-# TRANSLATORS: file: product/reports/750_Trending - Clusters/060_Cluster CPU Trends last week.yaml
-_("Cluster CPU Trends (last week)")
-# TRANSLATORS: file: product/reports/750_Trending - Clusters/080_Cluster Memory Trends last week.yaml
-_("Cluster Memory Utilization Trends (last week)")
-# TRANSLATORS: file: product/reports/750_Trending - Clusters/080_Cluster Memory Trends last week.yaml
-_("Cluster Memory Trends (last week)")
-# TRANSLATORS: file: product/reports/750_Trending - Clusters/070_Cluster IO Trends last week.yaml
-_("Cluster I/O Utilization Trends (last week)")
-# TRANSLATORS: file: product/reports/750_Trending - Clusters/070_Cluster IO Trends last week.yaml
-_("Cluster I/O Trends (last week)")
-# TRANSLATORS: file: product/reports/750_Trending - Clusters/050_Cluster memory trend  6 months.yaml
-_("Cluster memory trend based on past 6 months")
-# TRANSLATORS: file: product/reports/750_Trending - Clusters/050_Cluster memory trend  6 months.yaml
-_("Cluster memory trend  6 months")
-# TRANSLATORS: file: product/reports/770_Trending - Hosts/110_Host_Peak_CPU_Used_Trend_over_6_mos.yaml
-_("Host Peak CPU Used Trends over last 6 Months")
-# TRANSLATORS: file: product/reports/770_Trending - Hosts/110_Host_Peak_CPU_Used_Trend_over_6_mos.yaml
-_("Host Peak CPU Used Trend over 6 mos.")
-# TRANSLATORS: file: product/reports/770_Trending - Hosts/130_Host IO Trends last week.yaml
-_("Host I/O Utilization Trends (last week)")
-# TRANSLATORS: file: product/reports/770_Trending - Hosts/130_Host IO Trends last week.yaml
-_("Host I/O Trends (last week)")
-# TRANSLATORS: file: product/reports/770_Trending - Hosts/120_Host CPU Trends last week.yaml
-_("Host CPU Utilization trends (last week)")
-# TRANSLATORS: file: product/reports/770_Trending - Hosts/120_Host CPU Trends last week.yaml
-_("Host CPU Trends (last week)")
-# TRANSLATORS: file: product/reports/770_Trending - Hosts/110_Host_Peak_Memory_Used_Trends_for_6_Mos.yaml
-_("Host Peak Memory Used Trends over last 6 Months")
-# TRANSLATORS: file: product/reports/770_Trending - Hosts/110_Host_Peak_Memory_Used_Trends_for_6_Mos.yaml
-_("Host Peak Memory Used Trends for 6 Mos.")
-# TRANSLATORS: file: product/reports/770_Trending - Hosts/140_Host Memory Trends last week.yaml
-_("Host Memory Utilization Trends (last week)")
-# TRANSLATORS: file: product/reports/770_Trending - Hosts/140_Host Memory Trends last week.yaml
-_("Host Memory Trends (last week)")
+# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/100_VMs_with_Max_Daily_Mem_ 50%_past_mo.yaml
+# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/110_VMs_with_Avg_Daily_Mem_ 50%_past_mo.yaml
+# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/120_VMs_with_Avg_Daily_CPU_ 85%_past_mo.yaml
 # TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/130_VMs_with_Max_Daily_CPU_ 85%_past_mo .yaml
-_("VMs with Maximum Daily CPU Usage > 85% over last month")
-# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/130_VMs_with_Max_Daily_CPU_ 85%_past_mo .yaml
-_("VMs with Max Daily CPU > 85% (past mo.)")
+# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/140_VMs with Avg Daily Mem _ 95%_past_mo .yaml
+# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/160_Top CPU Consumers weekly.yaml
+# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/170_Top Memory Consumers weekly.yaml
+# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/180_Top Storage Consumers.yaml
+# TRANSLATORS: file: product/reports/660_Performance by Asset Type - Clusters/110_Cluster_Memory_and_CPU_Usage_7_days.yaml
+_("Cluster Name")
 # TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/100_VMs_with_Max_Daily_Mem_ 50%_past_mo.yaml
 # TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/110_VMs_with_Avg_Daily_Mem_ 50%_past_mo.yaml
 # TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/120_VMs_with_Avg_Daily_CPU_ 85%_past_mo.yaml
@@ -5758,31 +4324,6 @@ _("CPU - Peak Usage Rate Avg for Collected Intervals (%)")
 # TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/120_VMs_with_Avg_Daily_CPU_ 85%_past_mo.yaml
 # TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/130_VMs_with_Max_Daily_CPU_ 85%_past_mo .yaml
 _("CPU - Total Available - from VM Analysis (MHz)")
-# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/050_Host CPU Usage per VM.yaml
-_("Host CPU Usage per VM")
-# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/050_Host CPU Usage per VM.yaml
-# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/065_VM Performance - daily over last week.yaml
-# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/160_Top CPU Consumers weekly.yaml
-# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/170_Top Memory Consumers weekly.yaml
-# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/190_VM Resource Utilization.yaml
-# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/200_Weekly Utilization Overview.yaml
-_("Asset Name")
-# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/050_Host CPU Usage per VM.yaml
-# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/065_VM Performance - daily over last week.yaml
-# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/120_VMs_with_Avg_Daily_CPU_ 85%_past_mo.yaml
-_("CPU - Usage Rate for Collected Intervals (%)")
-# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/050_Host CPU Usage per VM.yaml
-# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/065_VM Performance - daily over last week.yaml
-_("CPU - Usage Rate for Collected Intervals (MHz)")
-# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/160_Top CPU Consumers weekly.yaml
-_("Top CPU Consumers (weekly)")
-# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/150_All Departments with Performance.yaml
-# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/160_Top CPU Consumers weekly.yaml
-_("CPU - Usage Rate (%) (Avg)")
-# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/120_VMs_with_Avg_Daily_CPU_ 85%_past_mo.yaml
-_("VMs with Average Daily CPU Usage > 85% over last month")
-# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/120_VMs_with_Avg_Daily_CPU_ 85%_past_mo.yaml
-_("VMs with Avg Daily CPU > 85% (past mo.)")
 # TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/100_VMs_with_Max_Daily_Mem_ 50%_past_mo.yaml
 _("VMs with Maximum Daily Memory Burst > 50% over past month")
 # TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/100_VMs_with_Max_Daily_Mem_ 50%_past_mo.yaml
@@ -5805,36 +4346,15 @@ _("Memory - Usage of Total Allocated (%)")
 # TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/110_VMs_with_Avg_Daily_Mem_ 50%_past_mo.yaml
 # TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/140_VMs with Avg Daily Mem _ 95%_past_mo .yaml
 _("Memory - Allocated (MB)")
-# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/170_Top Memory Consumers weekly.yaml
-_("Top Memory Consumers (weekly)")
-# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/170_Top Memory Consumers weekly.yaml
-_("Memory - Used for Collected Intervals (MB) (Avg)")
-# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/110_VMs_with_Avg_Daily_Mem_ 50%_past_mo.yaml
-_("VMs with Average Daily Memory Usage < 50% over last month")
-# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/110_VMs_with_Avg_Daily_Mem_ 50%_past_mo.yaml
-_("VMs with Avg Daily Mem < 50% (past mo.)")
-# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/190_VM Resource Utilization.yaml
-_("VM Resource Utilization")
-# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/190_VM Resource Utilization.yaml
-_("Date (MM DD YY)")
-# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/190_VM Resource Utilization.yaml
-_(" CPU - Usage (%)")
-# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/190_VM Resource Utilization.yaml
-_(" Memory - Usage (%)")
-# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/190_VM Resource Utilization.yaml
-_(" Network I/O - Avg (KBps)")
-# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/190_VM Resource Utilization.yaml
-_(" Disk I/O - Avg (KBps)")
-# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/180_Top Storage Consumers.yaml
-_("Top Storage Consumers")
-# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/180_Top Storage Consumers.yaml
-_(" Total Used Disk Space")
-# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/180_Top Storage Consumers.yaml
-# TRANSLATORS: file: product/views/Storage.yaml
-# TRANSLATORS: file: product/views/StorageCluster.yaml
-_("Total Provisioned Space")
 # TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/200_Weekly Utilization Overview.yaml
 _("Weekly Utilization Overview")
+# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/050_Host CPU Usage per VM.yaml
+# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/065_VM Performance - daily over last week.yaml
+# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/160_Top CPU Consumers weekly.yaml
+# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/170_Top Memory Consumers weekly.yaml
+# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/190_VM Resource Utilization.yaml
+# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/200_Weekly Utilization Overview.yaml
+_("Asset Name")
 # TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/200_Weekly Utilization Overview.yaml
 _("Cluster Parent Datacenter")
 # TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/200_Weekly Utilization Overview.yaml
@@ -5844,22 +4364,35 @@ _("Disk I/O  (KBps) (Avg)")
 # TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/150_All Departments with Performance.yaml
 # TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/200_Weekly Utilization Overview.yaml
 _("Memory - Usage (%) (Avg)")
-# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/140_VMs with Avg Daily Mem _ 95%_past_mo .yaml
-_("VMs with Average Daily Memory Usage > 95% over last month")
-# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/140_VMs with Avg Daily Mem _ 95%_past_mo .yaml
-_("VMs with Avg Daily Mem > 95% (past mo.)")
 # TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/150_All Departments with Performance.yaml
 _("All Departments with Performance for last week")
 # TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/150_All Departments with Performance.yaml
 _("All Departments with Performance")
 # TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/150_All Departments with Performance.yaml
 _("Folder Path")
+# TRANSLATORS: file: product/reports/421_Operations - Events/VC Snapshot Events by User.yaml
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/052_VMs with Volume Free Space -= 75%.yaml
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/053_VMs with disk free space _ 5GB.yaml
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/054_VM Uptime - longest running.yaml
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/055_VMs Powered Off registered to a Host.yaml
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/056_VMs pending Retirement.yaml
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/057_VMs that are Retired.yaml
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/058_VMs with invalid allocation of RAM.yaml
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/059_Summary of VM Create and Deletes.yaml
+# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/150_All Departments with Performance.yaml
+_("VM")
 # TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/150_All Departments with Performance.yaml
 _("VM Annotations - Notes")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/010_VMs_ Hardware.yaml
+# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/150_All Departments with Performance.yaml
+_("vCPUs")
 # TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/150_All Departments with Performance.yaml
 _("VM : Memory")
 # TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/150_All Departments with Performance.yaml
 _(" CPU - Peak Usage Rate Avg for Collected Intervals (%) (Max)")
+# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/150_All Departments with Performance.yaml
+# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/160_Top CPU Consumers weekly.yaml
+_("CPU - Usage Rate (%) (Avg)")
 # TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/150_All Departments with Performance.yaml
 _("CPU - Usage Rate (MHz) (Avg)")
 # TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/150_All Departments with Performance.yaml
@@ -5868,6 +4401,12 @@ _(" Memory - Peak Usage of Allocated for Collected Intervals (%) (Max)")
 _("Memory - Used (MB) (Avg)")
 # TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/150_All Departments with Performance.yaml
 _("Total Provisioned Space (Includes RAM)")
+# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/150_All Departments with Performance.yaml
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/110_Provisioning Activity - by Approver.yaml
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/120_Provisioning Activity - by Datastore.yaml
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/130_Provisioning Activity - by Requester.yaml
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/140_Provisioning Activity - by VM.yaml
+_("Total Used Disk Space")
 # TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/150_All Departments with Performance.yaml
 # TRANSLATORS: file: product/views/InstanceOrImage.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_InfraManager_Template.yaml
@@ -5941,10 +4480,34 @@ _("Disk 6 Size")
 _("Disk 6 Size On Disk")
 # TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/150_All Departments with Performance.yaml
 _("Disk 6 % Used")
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/056_VMs pending Retirement.yaml
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/057_VMs that are Retired.yaml
+# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/150_All Departments with Performance.yaml
+_("Department")
+# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/180_Top Storage Consumers.yaml
+_("Top Storage Consumers")
+# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/180_Top Storage Consumers.yaml
+_(" Total Used Disk Space")
+# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/180_Top Storage Consumers.yaml
+# TRANSLATORS: file: product/views/Storage.yaml
+# TRANSLATORS: file: product/views/StorageCluster.yaml
+_("Total Provisioned Space")
 # TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/065_VM Performance - daily over last week.yaml
 _("VM Performance - daily averages for last week")
 # TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/065_VM Performance - daily over last week.yaml
 _("VM Performance - daily over last week")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/009_VM Disk Usage.yaml
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/054_VM Uptime - longest running.yaml
+# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/050_Host CPU Usage per VM.yaml
+# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/065_VM Performance - daily over last week.yaml
+_("Activity Sample - Timestamp  (Day/Time)")
+# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/050_Host CPU Usage per VM.yaml
+# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/065_VM Performance - daily over last week.yaml
+# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/120_VMs_with_Avg_Daily_CPU_ 85%_past_mo.yaml
+_("CPU - Usage Rate for Collected Intervals (%)")
+# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/050_Host CPU Usage per VM.yaml
+# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/065_VM Performance - daily over last week.yaml
+_("CPU - Usage Rate for Collected Intervals (MHz)")
 # TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/065_VM Performance - daily over last week.yaml
 _("Memory - Avg Used for Collected Intervals (MB)")
 # TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/065_VM Performance - daily over last week.yaml
@@ -5959,6 +4522,160 @@ _("Memory - Balloon Target Average")
 _("Memory - Balloon Target Max Average")
 # TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/065_VM Performance - daily over last week.yaml
 _("Memory - Balloon Target Min Average")
+# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/110_VMs_with_Avg_Daily_Mem_ 50%_past_mo.yaml
+_("VMs with Average Daily Memory Usage < 50% over last month")
+# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/110_VMs_with_Avg_Daily_Mem_ 50%_past_mo.yaml
+_("VMs with Avg Daily Mem < 50% (past mo.)")
+# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/120_VMs_with_Avg_Daily_CPU_ 85%_past_mo.yaml
+_("VMs with Average Daily CPU Usage > 85% over last month")
+# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/120_VMs_with_Avg_Daily_CPU_ 85%_past_mo.yaml
+_("VMs with Avg Daily CPU > 85% (past mo.)")
+# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/160_Top CPU Consumers weekly.yaml
+_("Top CPU Consumers (weekly)")
+# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/050_Host CPU Usage per VM.yaml
+_("Host CPU Usage per VM")
+# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/170_Top Memory Consumers weekly.yaml
+_("Top Memory Consumers (weekly)")
+# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/170_Top Memory Consumers weekly.yaml
+_("Memory - Used for Collected Intervals (MB) (Avg)")
+# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/190_VM Resource Utilization.yaml
+_("VM Resource Utilization")
+# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/190_VM Resource Utilization.yaml
+_("Date (MM DD YY)")
+# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/190_VM Resource Utilization.yaml
+_(" CPU - Usage (%)")
+# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/190_VM Resource Utilization.yaml
+_(" Memory - Usage (%)")
+# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/190_VM Resource Utilization.yaml
+_(" Network I/O - Avg (KBps)")
+# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/190_VM Resource Utilization.yaml
+_(" Disk I/O - Avg (KBps)")
+# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/140_VMs with Avg Daily Mem _ 95%_past_mo .yaml
+_("VMs with Average Daily Memory Usage > 95% over last month")
+# TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/140_VMs with Avg Daily Mem _ 95%_past_mo .yaml
+_("VMs with Avg Daily Mem > 95% (past mo.)")
+# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/110_JVM Heap Usage - daily over last week.yaml
+_("JVM Heap Usage - daily averages for last week")
+# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/110_JVM Heap Usage - daily over last week.yaml
+_("JVM Heap Usage - daily over last week")
+# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/110_JVM Heap Usage - daily over last week.yaml
+# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/120_JVM Non Heap Usage - daily over last week.yaml
+# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/130_JVM Garbage Collection - daily over last week.yaml
+# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/140_Transactions - every minute over last hour.yaml
+# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/150_Transactions - hourly over last day.yaml
+# TRANSLATORS: file: product/reports/680_Performance by Asset Type - Middleware Datasources/110_Datasource Pool - every minute for the last hour.yaml
+# TRANSLATORS: file: product/reports/680_Performance by Asset Type - Middleware Datasources/120_Datasource Pool - hourly for the last day.yaml
+# TRANSLATORS: file: product/views/ContainerImage.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_ConfigurationManager_Job.yaml
+_("Id")
+# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/110_JVM Heap Usage - daily over last week.yaml
+# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/120_JVM Non Heap Usage - daily over last week.yaml
+# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/130_JVM Garbage Collection - daily over last week.yaml
+# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/140_Transactions - every minute over last hour.yaml
+# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/150_Transactions - hourly over last day.yaml
+# TRANSLATORS: file: product/reports/680_Performance by Asset Type - Middleware Datasources/110_Datasource Pool - every minute for the last hour.yaml
+# TRANSLATORS: file: product/reports/680_Performance by Asset Type - Middleware Datasources/120_Datasource Pool - hourly for the last day.yaml
+# TRANSLATORS: file: product/views/SystemService-filesystem_drivers.yaml
+# TRANSLATORS: file: product/views/SystemService-kernel_drivers.yaml
+# TRANSLATORS: file: product/views/SystemService-win32_services.yaml
+_("Start")
+# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/110_JVM Heap Usage - daily over last week.yaml
+# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/120_JVM Non Heap Usage - daily over last week.yaml
+_("Used - min (bytes)")
+# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/110_JVM Heap Usage - daily over last week.yaml
+# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/120_JVM Non Heap Usage - daily over last week.yaml
+_("Used - avg (bytes)")
+# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/110_JVM Heap Usage - daily over last week.yaml
+# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/120_JVM Non Heap Usage - daily over last week.yaml
+_("Used - max (bytes)")
+# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/110_JVM Heap Usage - daily over last week.yaml
+# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/120_JVM Non Heap Usage - daily over last week.yaml
+_("Committed - min (bytes)")
+# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/110_JVM Heap Usage - daily over last week.yaml
+# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/120_JVM Non Heap Usage - daily over last week.yaml
+_("Committed - avg (bytes)")
+# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/110_JVM Heap Usage - daily over last week.yaml
+# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/120_JVM Non Heap Usage - daily over last week.yaml
+_("Committed - max (bytes)")
+# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/110_JVM Heap Usage - daily over last week.yaml
+_("Maximum - min (bytes)")
+# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/110_JVM Heap Usage - daily over last week.yaml
+_("Maximum - avg (bytes)")
+# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/110_JVM Heap Usage - daily over last week.yaml
+_("Maximum - max (bytes)")
+# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/150_Transactions - hourly over last day.yaml
+_("Transactions - hourly over the last day")
+# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/150_Transactions - hourly over last day.yaml
+_("Transactions Pool - hourly over the last day")
+# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/140_Transactions - every minute over last hour.yaml
+# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/150_Transactions - hourly over last day.yaml
+_("Commited count - min")
+# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/140_Transactions - every minute over last hour.yaml
+# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/150_Transactions - hourly over last day.yaml
+_("Commited count - avg")
+# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/140_Transactions - every minute over last hour.yaml
+# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/150_Transactions - hourly over last day.yaml
+_("Commited count - max")
+# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/140_Transactions - every minute over last hour.yaml
+# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/150_Transactions - hourly over last day.yaml
+_("Failed count - min")
+# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/140_Transactions - every minute over last hour.yaml
+# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/150_Transactions - hourly over last day.yaml
+_("Failed count - avg")
+# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/140_Transactions - every minute over last hour.yaml
+# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/150_Transactions - hourly over last day.yaml
+_("Failed count - max")
+# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/140_Transactions - every minute over last hour.yaml
+# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/150_Transactions - hourly over last day.yaml
+# TRANSLATORS: file: product/reports/680_Performance by Asset Type - Middleware Datasources/110_Datasource Pool - every minute for the last hour.yaml
+# TRANSLATORS: file: product/reports/680_Performance by Asset Type - Middleware Datasources/120_Datasource Pool - hourly for the last day.yaml
+_("Timed out count - min")
+# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/140_Transactions - every minute over last hour.yaml
+# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/150_Transactions - hourly over last day.yaml
+# TRANSLATORS: file: product/reports/680_Performance by Asset Type - Middleware Datasources/110_Datasource Pool - every minute for the last hour.yaml
+# TRANSLATORS: file: product/reports/680_Performance by Asset Type - Middleware Datasources/120_Datasource Pool - hourly for the last day.yaml
+_("Timed out count - avg")
+# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/140_Transactions - every minute over last hour.yaml
+# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/150_Transactions - hourly over last day.yaml
+# TRANSLATORS: file: product/reports/680_Performance by Asset Type - Middleware Datasources/110_Datasource Pool - every minute for the last hour.yaml
+# TRANSLATORS: file: product/reports/680_Performance by Asset Type - Middleware Datasources/120_Datasource Pool - hourly for the last day.yaml
+_("Timed out count - max")
+# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/140_Transactions - every minute over last hour.yaml
+# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/150_Transactions - hourly over last day.yaml
+_("Heuristics count - min")
+# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/140_Transactions - every minute over last hour.yaml
+# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/150_Transactions - hourly over last day.yaml
+_("Heuristics count - avg")
+# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/140_Transactions - every minute over last hour.yaml
+# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/150_Transactions - hourly over last day.yaml
+_("Heuristics count - max")
+# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/140_Transactions - every minute over last hour.yaml
+# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/150_Transactions - hourly over last day.yaml
+_("Aborted count - min")
+# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/140_Transactions - every minute over last hour.yaml
+# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/150_Transactions - hourly over last day.yaml
+_("Aborted count - avg")
+# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/140_Transactions - every minute over last hour.yaml
+# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/150_Transactions - hourly over last day.yaml
+_("Aborted count - max")
+# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/120_JVM Non Heap Usage - daily over last week.yaml
+_("JVM Non Heap Usage - daily averages for last week")
+# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/120_JVM Non Heap Usage - daily over last week.yaml
+_("JVM Non Heap Usage - daily over last week")
+# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/140_Transactions - every minute over last hour.yaml
+_("Transactions - every minute over the last hour")
+# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/140_Transactions - every minute over last hour.yaml
+_("Transactions Pool - every minute over the last hour")
+# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/130_JVM Garbage Collection - daily over last week.yaml
+_("JVM Garbage Collection - daily averages for last week")
+# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/130_JVM Garbage Collection - daily over last week.yaml
+_("JVM Garbage Collection - daily over last week")
+# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/130_JVM Garbage Collection - daily over last week.yaml
+_("Duration - min (milliseconds)")
+# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/130_JVM Garbage Collection - daily over last week.yaml
+_("Duration - avg (milliseconds)")
+# TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/130_JVM Garbage Collection - daily over last week.yaml
+_("Duration - max (milliseconds)")
 # TRANSLATORS: file: product/reports/150_Configuration Management - Storage/010_Summary.yaml
 _("Datastores Summary")
 # TRANSLATORS: file: product/reports/150_Configuration Management - Storage/010_Summary.yaml
@@ -6012,16 +4729,6 @@ _("Free Space")
 # TRANSLATORS: file: product/views/ems_block_storage.yaml
 # TRANSLATORS: file: product/views/ems_object_storage.yaml
 _("Type")
-# TRANSLATORS: file: product/reports/150_Configuration Management - Storage/020_Summary for VMs.yaml
-_("Datastore Summary for VMs")
-# TRANSLATORS: file: product/reports/150_Configuration Management - Storage/020_Summary for VMs.yaml
-_("VM Size")
-# TRANSLATORS: file: product/reports/150_Configuration Management - Storage/020_Summary for VMs.yaml
-_("Datastore Size")
-# TRANSLATORS: file: product/reports/150_Configuration Management - Storage/020_Summary for VMs.yaml
-_("Datastore Free Space")
-# TRANSLATORS: file: product/reports/150_Configuration Management - Storage/020_Summary for VMs.yaml
-_("Datastore Type")
 # TRANSLATORS: file: product/reports/150_Configuration Management - Storage/040_LUN Information.yaml
 _("Datastore LUN Information")
 # TRANSLATORS: file: product/reports/150_Configuration Management - Storage/040_LUN Information.yaml
@@ -6050,21 +4757,1250 @@ _("Datastore Summary for Hosts")
 # TRANSLATORS: file: product/views/Storage.yaml
 # TRANSLATORS: file: product/views/StorageCluster.yaml
 _("Store Type")
-# TRANSLATORS: file: product/timelines/miq_reports/tl_policy_events_hourly.yaml
-_("Timeline Policy Events Hourly")
-# TRANSLATORS: file: product/timelines/miq_reports/tl_policy_events_daily.yaml
-# TRANSLATORS: file: product/timelines/miq_reports/tl_policy_events_hourly.yaml
-# TRANSLATORS: file: product/views/OpenscapRuleResult.yaml
-_("Result")
+# TRANSLATORS: file: product/reports/150_Configuration Management - Storage/020_Summary for VMs.yaml
+_("Datastore Summary for VMs")
+# TRANSLATORS: file: product/reports/150_Configuration Management - Storage/020_Summary for VMs.yaml
+_("VM Size")
+# TRANSLATORS: file: product/reports/150_Configuration Management - Storage/020_Summary for VMs.yaml
+_("Datastore Size")
+# TRANSLATORS: file: product/reports/150_Configuration Management - Storage/020_Summary for VMs.yaml
+_("Datastore Free Space")
+# TRANSLATORS: file: product/reports/150_Configuration Management - Storage/020_Summary for VMs.yaml
+_("Datastore Type")
+# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/022_VMs not Powered On.yaml
+_("VMs Not Powered On")
+# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/022_VMs not Powered On.yaml
+_("VMs not Powered On")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/025_Location and Size.yaml
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/027_VMs_ with no UUID.yaml
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/030_by MAC Address.yaml
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/031_Unregistered VMs.yaml
+# TRANSLATORS: file: product/reports/300_Migration Readiness - Virtual Machines/020_Detailed - VMs migration ready.yaml
+# TRANSLATORS: file: product/reports/300_Migration Readiness - Virtual Machines/021_Detailed - VMs NOT migration ready.yaml
+# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/015_Registered Free Space _35%.yaml
+# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/016_Unregistered Free Space _35%.yaml
+# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/020_Online VMs.yaml
+# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/022_VMs not Powered On.yaml
+# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/040_VMs_ Offline VMs not yet Scanned.yaml
+# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/045_VMs_ Offline VMs with Snapshot.yaml
+_("Datastore Path")
+# TRANSLATORS: file: product/reports/130_Configuration Management - Clusters/030_VM Affinity with Power State.yaml
+# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/022_VMs not Powered On.yaml
+_("VM Power State")
+# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/020_Online VMs.yaml
+# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/022_VMs not Powered On.yaml
+# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/040_VMs_ Offline VMs not yet Scanned.yaml
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/054_VM Uptime - longest running.yaml
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/055_VMs Powered Off registered to a Host.yaml
+# TRANSLATORS: file: product/views/EmsCluster.yaml
+# TRANSLATORS: file: product/views/Host-hosts.yaml
+# TRANSLATORS: file: product/views/Host.yaml
+# TRANSLATORS: file: product/views/InstanceOrImage.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Template-all_vms_and_templates.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Template.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Vm-all_vms_and_templates.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Vm-vms.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Vm.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_InfraManager_Template.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_InfraManager_Vm.yaml
+# TRANSLATORS: file: product/views/MiqTemplate-all_miq_templates.yaml
+# TRANSLATORS: file: product/views/MiqTemplate.yaml
+# TRANSLATORS: file: product/views/Storage.yaml
+# TRANSLATORS: file: product/views/StorageCluster.yaml
+# TRANSLATORS: file: product/views/Vm-all_vms.yaml
+# TRANSLATORS: file: product/views/Vm.yaml
+# TRANSLATORS: file: product/views/VmOrTemplate-all_archived.yaml
+# TRANSLATORS: file: product/views/VmOrTemplate-all_orphaned.yaml
+# TRANSLATORS: file: product/views/VmOrTemplate-all_vms_and_templates.yaml
+# TRANSLATORS: file: product/views/VmOrTemplate.yaml
+_("Last Analysis Time")
+# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/055_VMs with old VMware tools.yaml
+_("VMs with old VMware tools")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/005_VMs with Free Space _ 50% by Department.yaml
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/006_VMs w_Free Space _ 75% by Function.yaml
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/007_VMs w_Free Space _ 75% by LOB.yaml
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/028_VMs with Volume Free Space -= 20%.yaml
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/029_VMs with Volume Free Space -= 80%.yaml
+# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/050_VMs without VMware tools.yaml
+# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/055_VMs with old VMware tools.yaml
+_("Parent Cluster")
+# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/050_VMs without VMware tools.yaml
+# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/055_VMs with old VMware tools.yaml
+_("Tools Status")
+# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/015_Registered Free Space _35%.yaml
+_("Registered VMs with Free Space < 35%")
+# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/015_Registered Free Space _35%.yaml
+_("Registered VMs with Free Space <35%")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/025_Location and Size.yaml
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/031_Unregistered VMs.yaml
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/032_Orphaned VMs.yaml
+# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/015_Registered Free Space _35%.yaml
+# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/016_Unregistered Free Space _35%.yaml
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/053_VMs with disk free space _ 5GB.yaml
+_("Date Updated")
+# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/010_Registered VMs by Free Space.yaml
+# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/015_Registered Free Space _35%.yaml
+# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/016_Unregistered Free Space _35%.yaml
+_("Total Disk")
+# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/010_Registered VMs by Free Space.yaml
+# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/015_Registered Free Space _35%.yaml
+# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/016_Unregistered Free Space _35%.yaml
+_("Free Disk")
+# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/010_Registered VMs by Free Space.yaml
+# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/015_Registered Free Space _35%.yaml
+# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/016_Unregistered Free Space _35%.yaml
+_("Pct Free Disk")
+# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/010_Registered VMs by Free Space.yaml
+# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/015_Registered Free Space _35%.yaml
+# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/016_Unregistered Free Space _35%.yaml
+_("Pct Used Disk")
+# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/020_Online VMs.yaml
+_("Online VMs (Powered On)")
+# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/020_Online VMs.yaml
+_("Vm Power State")
+# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/010_Registered VMs by Free Space.yaml
+_("Registered VMs by Free Space")
+# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/050_VMs without VMware tools.yaml
+_("VMs without VMware tools after SmartState Analysis")
+# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/050_VMs without VMware tools.yaml
+_("VMs without VMware tools")
+# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/045_VMs_ Offline VMs with Snapshot.yaml
+_("Offline VMs with Snapshots")
+# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/045_VMs_ Offline VMs with Snapshot.yaml
+_("Offline VMs with Snapshot")
+# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/040_VMs_ Offline VMs not yet Scanned.yaml
+_("Offline VMs Never Scanned")
+# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/040_VMs_ Offline VMs not yet Scanned.yaml
+_("Last Analysis Attempt On")
+# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/040_VMs_ Offline VMs not yet Scanned.yaml
+_("Last Sync Time")
+# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/016_Unregistered Free Space _35%.yaml
+_("Unregistered VMs with Free Space < 35%")
+# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/016_Unregistered Free Space _35%.yaml
+_("Unregistered VMs Free Space <35%")
+# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/060_VMware Tools Versions.yaml
+_("VMware Tools Versions")
+# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/060_VMware Tools Versions.yaml
+_("Application Name")
+# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/060_VMware Tools Versions.yaml
+_("VMware Tools Version")
+# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/060_VMware Tools Versions.yaml
+_("VMware Tools Release")
+# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/060_VMware Tools Versions.yaml
+_("Assigned to Host")
+# TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/060_VMware Tools Versions.yaml
+_("Host Version")
+# TRANSLATORS: file: product/reports/760_Trending - Storage/110_Datastore_Capacity_Trend_over_6 mos.yaml
+_("Datastore Capacity Trend over the last 6 months")
+# TRANSLATORS: file: product/reports/760_Trending - Storage/110_Datastore_Capacity_Trend_over_6 mos.yaml
+_("Datastore Capacity Trend over 6 mos.")
+# TRANSLATORS: file: product/reports/500_Events - Operations/140_VC_Events_initiated_by_username_EVM.yaml
+_("Virtual Center Events initiated by username EVM")
+# TRANSLATORS: file: product/reports/500_Events - Operations/140_VC_Events_initiated_by_username_EVM.yaml
+_("VC Events initiated by username EVM86")
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/059_Summary of VM Create and Deletes.yaml
+# TRANSLATORS: file: product/reports/500_Events - Operations/110_vm_operational_vm_power.yaml
+# TRANSLATORS: file: product/reports/500_Events - Operations/120_Events_for_VM_prod_webserver.yaml
+# TRANSLATORS: file: product/reports/500_Events - Operations/130_Reconfigure_Events_by_Department.yaml
+# TRANSLATORS: file: product/reports/500_Events - Operations/140_VC_Events_initiated_by_username_EVM.yaml
 # TRANSLATORS: file: product/timelines/miq_reports/tl_bottleneck_events.yaml
-_("Timeline All Bottleneck Events")
-# TRANSLATORS: file: product/timelines/miq_reports/tl_bottleneck_events.yaml
-# TRANSLATORS: file: product/views/OpenscapRuleResult.yaml
-_("Severity")
-# TRANSLATORS: file: product/timelines/miq_reports/tl_policy_events_daily.yaml
-_("Timeline All Policy Events")
 # TRANSLATORS: file: product/timelines/miq_reports/tl_events_daily.yaml
-_("Timeline All Events")
+# TRANSLATORS: file: product/timelines/miq_reports/tl_events_hourly.yaml
+# TRANSLATORS: file: product/views/EventLog-event_logs.yaml
+# TRANSLATORS: file: product/views/Job.yaml
+# TRANSLATORS: file: product/views/MiqTask.yaml
+# TRANSLATORS: file: product/views/ScanHistory.yaml
+_("Message")
+# TRANSLATORS: file: product/reports/500_Events - Operations/110_vm_operational_vm_power.yaml
+_("Operations VM Power On/Off Events for Last Week")
+# TRANSLATORS: file: product/reports/500_Events - Operations/110_vm_operational_vm_power.yaml
+_("Operations VMs Powered On/Off for Last Week")
+# TRANSLATORS: file: product/reports/500_Events - Operations/110_vm_operational_vm_power.yaml
+# TRANSLATORS: file: product/timelines/miq_reports/tl_events_daily.yaml
+# TRANSLATORS: file: product/timelines/miq_reports/tl_events_hourly.yaml
+# TRANSLATORS: file: product/views/EventLog-event_logs.yaml
+_("Date Time")
+# TRANSLATORS: file: product/reports/500_Events - Operations/110_vm_operational_vm_power.yaml
+# TRANSLATORS: file: product/timelines/miq_reports/tl_events_daily.yaml
+# TRANSLATORS: file: product/timelines/miq_reports/tl_events_hourly.yaml
+_("Event Source")
+# TRANSLATORS: file: product/reports/120_Configuration Management - Providers/040_Monthly Host Count per Provider.yaml
+# TRANSLATORS: file: product/reports/120_Configuration Management - Providers/050_Monthly Vm Count per Provider.yaml
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/059_Summary of VM Create and Deletes.yaml
+# TRANSLATORS: file: product/reports/500_Events - Operations/110_vm_operational_vm_power.yaml
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/110_Provisioning Activity - by Approver.yaml
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/120_Provisioning Activity - by Datastore.yaml
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/130_Provisioning Activity - by Requester.yaml
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/140_Provisioning Activity - by VM.yaml
+# TRANSLATORS: file: product/timelines/miq_reports/tl_events_daily.yaml
+# TRANSLATORS: file: product/timelines/miq_reports/tl_events_hourly.yaml
+# TRANSLATORS: file: product/views/ContainerBuild.yaml
+# TRANSLATORS: file: product/views/ContainerGroup.yaml
+# TRANSLATORS: file: product/views/ContainerImage.yaml
+# TRANSLATORS: file: product/views/ContainerImageRegistry.yaml
+# TRANSLATORS: file: product/views/ContainerNode.yaml
+# TRANSLATORS: file: product/views/ContainerProject.yaml
+# TRANSLATORS: file: product/views/ContainerReplicator.yaml
+# TRANSLATORS: file: product/views/ContainerRoute.yaml
+# TRANSLATORS: file: product/views/ContainerService.yaml
+# TRANSLATORS: file: product/views/ContainerTemplate.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_OrchestrationStack.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Template.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Vm.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_InfraManager_Template.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_InfraManager_Vm.yaml
+# TRANSLATORS: file: product/views/MiddlewareDomain.yaml
+# TRANSLATORS: file: product/views/MiddlewareServer.yaml
+# TRANSLATORS: file: product/views/OrchestrationStack.yaml
+# TRANSLATORS: file: product/views/PersistentVolume.yaml
+# TRANSLATORS: file: product/views/VmOrTemplate.yaml
+_("Provider")
+# TRANSLATORS: file: product/reports/500_Events - Operations/110_vm_operational_vm_power.yaml
+_("VM Location")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/020_Date Brought under Management.yaml
+# TRANSLATORS: file: product/reports/500_Events - Operations/110_vm_operational_vm_power.yaml
+_("VC User Name")
+# TRANSLATORS: file: product/reports/500_Events - Operations/120_Events_for_VM_prod_webserver.yaml
+_("Summary of all VC Events for VM prod_webserver")
+# TRANSLATORS: file: product/reports/500_Events - Operations/120_Events_for_VM_prod_webserver.yaml
+_("Events for VM prod_webserver")
+# TRANSLATORS: file: product/reports/500_Events - Operations/120_Events_for_VM_prod_webserver.yaml
+# TRANSLATORS: file: product/reports/500_Events - Operations/130_Reconfigure_Events_by_Department.yaml
+_("Initiated By")
+# TRANSLATORS: file: product/reports/500_Events - Operations/130_Reconfigure_Events_by_Department.yaml
+_("All Reconfigure Events for Department Classified VMs")
+# TRANSLATORS: file: product/reports/500_Events - Operations/130_Reconfigure_Events_by_Department.yaml
+_("Reconfigure Events by Department")
+# TRANSLATORS: file: product/reports/500_Events - Operations/130_Reconfigure_Events_by_Department.yaml
+_("ManageIQ Tag Department")
+# TRANSLATORS: file: product/reports/120_Configuration Management - Providers/010_Summary.yaml
+_("Providers Summary")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/020_Date Brought under Management.yaml
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/090_vLANs and vSwitches.yaml
+# TRANSLATORS: file: product/reports/120_Configuration Management - Providers/010_Summary.yaml
+# TRANSLATORS: file: product/views/ConfiguredSystem.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_ConfigurationManager_ConfiguredSystem.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_ContainerManager.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_DatawarehouseManager.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_Foreman_ConfigurationManager_ConfiguredSystem.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_InfraManager.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_MiddlewareManager.yaml
+# TRANSLATORS: file: product/views/MiqServer.yaml
+# TRANSLATORS: file: product/views/StorageManager.yaml
+_("Hostname")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/030_Hardware.yaml
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/040_Summary for VMs.yaml
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/070_Storage Adapters.yaml
+# TRANSLATORS: file: product/reports/120_Configuration Management - Providers/010_Summary.yaml
+# TRANSLATORS: file: product/views/Host-hosts.yaml
+# TRANSLATORS: file: product/views/Host.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_ContainerManager.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_DatawarehouseManager.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_MiddlewareManager.yaml
+# TRANSLATORS: file: product/views/MiqServer.yaml
+_("IP Address")
+# TRANSLATORS: file: product/reports/120_Configuration Management - Providers/010_Summary.yaml
+_("MS Type")
+# TRANSLATORS: file: product/reports/120_Configuration Management - Providers/010_Summary.yaml
+# TRANSLATORS: file: product/reports/130_Configuration Management - Clusters/010_Summary.yaml
+# TRANSLATORS: file: product/reports/130_Configuration Management - Clusters/020_Hosts Affinity.yaml
+# TRANSLATORS: file: product/reports/130_Configuration Management - Clusters/040_Cluster Resources.yaml
+# TRANSLATORS: file: product/views/Service.yaml
+_("Total Memory")
+# TRANSLATORS: file: product/reports/120_Configuration Management - Providers/010_Summary.yaml
+# TRANSLATORS: file: product/reports/130_Configuration Management - Clusters/010_Summary.yaml
+# TRANSLATORS: file: product/reports/130_Configuration Management - Clusters/020_Hosts Affinity.yaml
+# TRANSLATORS: file: product/reports/130_Configuration Management - Clusters/040_Cluster Resources.yaml
+_("Total CPU Speed")
+# TRANSLATORS: file: product/reports/120_Configuration Management - Providers/010_Summary.yaml
+# TRANSLATORS: file: product/reports/130_Configuration Management - Clusters/010_Summary.yaml
+# TRANSLATORS: file: product/reports/130_Configuration Management - Clusters/040_Cluster Resources.yaml
+_("Total Number of Logical CPUs")
+# TRANSLATORS: file: product/reports/120_Configuration Management - Providers/010_Summary.yaml
+# TRANSLATORS: file: product/reports/130_Configuration Management - Clusters/010_Summary.yaml
+# TRANSLATORS: file: product/reports/130_Configuration Management - Clusters/040_Cluster Resources.yaml
+_("Total Number of Physical CPUs")
+# TRANSLATORS: file: product/reports/120_Configuration Management - Providers/020_Host Relationships.yaml
+_("Providers Hosts Relationships")
+# TRANSLATORS: file: product/reports/120_Configuration Management - Providers/020_Host Relationships.yaml
+_("EMS Name")
+# TRANSLATORS: file: product/reports/120_Configuration Management - Providers/020_Host Relationships.yaml
+_("EMS IP Address")
+# TRANSLATORS: file: product/reports/120_Configuration Management - Providers/020_Host Relationships.yaml
+_("EMS Hostname")
+# TRANSLATORS: file: product/reports/120_Configuration Management - Providers/020_Host Relationships.yaml
+_("Host IP Address")
+# TRANSLATORS: file: product/reports/120_Configuration Management - Providers/030_VM Relationships.yaml
+_("Providers VMs Relationships")
+# TRANSLATORS: file: product/reports/120_Configuration Management - Providers/030_VM Relationships.yaml
+_("Provider IP Addr")
+# TRANSLATORS: file: product/reports/120_Configuration Management - Providers/030_VM Relationships.yaml
+_("Network IP Addr")
+# TRANSLATORS: file: product/reports/120_Configuration Management - Providers/050_Monthly Vm Count per Provider.yaml
+_("Monthly VM Count per Provider")
+# TRANSLATORS: file: product/reports/120_Configuration Management - Providers/040_Monthly Host Count per Provider.yaml
+# TRANSLATORS: file: product/reports/120_Configuration Management - Providers/050_Monthly Vm Count per Provider.yaml
+_("Month (YYYY/MM)")
+# TRANSLATORS: file: product/reports/120_Configuration Management - Providers/040_Monthly Host Count per Provider.yaml
+# TRANSLATORS: file: product/reports/120_Configuration Management - Providers/050_Monthly Vm Count per Provider.yaml
+_("Provider Type")
+# TRANSLATORS: file: product/reports/120_Configuration Management - Providers/040_Monthly Host Count per Provider.yaml
+# TRANSLATORS: file: product/reports/120_Configuration Management - Providers/050_Monthly Vm Count per Provider.yaml
+# TRANSLATORS: file: product/views/AutomationRequest.yaml
+# TRANSLATORS: file: product/views/CimBaseStorageExtent.yaml
+# TRANSLATORS: file: product/views/CimStorageExtent.yaml
+# TRANSLATORS: file: product/views/ConfigurationProfile.yaml
+# TRANSLATORS: file: product/views/EmsCluster.yaml
+# TRANSLATORS: file: product/views/Host-hosts.yaml
+# TRANSLATORS: file: product/views/Host.yaml
+# TRANSLATORS: file: product/views/InstanceOrImage.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Template.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Vm.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_InfraManager.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_InfraManager_Template.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_InfraManager_Vm.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_NetworkManager.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_StorageManager.yaml
+# TRANSLATORS: file: product/views/MiqRequest.yaml
+# TRANSLATORS: file: product/views/MiqServer.yaml
+# TRANSLATORS: file: product/views/OntapFileShare.yaml
+# TRANSLATORS: file: product/views/OntapLogicalDisk.yaml
+# TRANSLATORS: file: product/views/OntapStorageSystem.yaml
+# TRANSLATORS: file: product/views/OntapStorageVolume.yaml
+# TRANSLATORS: file: product/views/ResourcePool.yaml
+# TRANSLATORS: file: product/views/SniaLocalFileSystem.yaml
+# TRANSLATORS: file: product/views/Storage.yaml
+# TRANSLATORS: file: product/views/StorageCluster.yaml
+# TRANSLATORS: file: product/views/StorageManager.yaml
+# TRANSLATORS: file: product/views/VmOrTemplate.yaml
+# TRANSLATORS: file: product/views/ems_block_storage.yaml
+# TRANSLATORS: file: product/views/ems_object_storage.yaml
+_("Region")
+# TRANSLATORS: file: product/reports/120_Configuration Management - Providers/050_Monthly Vm Count per Provider.yaml
+_("Daily VM Count (Max)")
+# TRANSLATORS: file: product/reports/120_Configuration Management - Providers/050_Monthly Vm Count per Provider.yaml
+_("Daily VM Count (Avg)")
+# TRANSLATORS: file: product/reports/120_Configuration Management - Providers/040_Monthly Host Count per Provider.yaml
+_("Monthly Host Count per Provider")
+# TRANSLATORS: file: product/reports/120_Configuration Management - Providers/040_Monthly Host Count per Provider.yaml
+_("Daily Host Count (Max)")
+# TRANSLATORS: file: product/reports/120_Configuration Management - Providers/040_Monthly Host Count per Provider.yaml
+_("Daily Host Socket Count (Max)")
+# TRANSLATORS: file: product/reports/130_Configuration Management - Clusters/010_Summary.yaml
+_("Clusters Summary")
+# TRANSLATORS: file: product/reports/130_Configuration Management - Clusters/010_Summary.yaml
+_("DRS Automation Level")
+# TRANSLATORS: file: product/reports/130_Configuration Management - Clusters/010_Summary.yaml
+_("DRS Enabled")
+# TRANSLATORS: file: product/reports/130_Configuration Management - Clusters/010_Summary.yaml
+_("DRS Migration Threshold")
+# TRANSLATORS: file: product/reports/130_Configuration Management - Clusters/010_Summary.yaml
+_("HA Admit Control")
+# TRANSLATORS: file: product/reports/130_Configuration Management - Clusters/010_Summary.yaml
+_("HA Enabled")
+# TRANSLATORS: file: product/reports/130_Configuration Management - Clusters/010_Summary.yaml
+_("HA Max Failures")
+# TRANSLATORS: file: product/reports/130_Configuration Management - Clusters/020_Hosts Affinity.yaml
+_("Cluster to Hosts Affinity")
+# TRANSLATORS: file: product/reports/130_Configuration Management - Clusters/020_Hosts Affinity.yaml
+_("Cluster Hosts Affinity")
+# TRANSLATORS: file: product/reports/130_Configuration Management - Clusters/040_Cluster Resources.yaml
+_("Cluster Resources")
+# TRANSLATORS: file: product/reports/130_Configuration Management - Clusters/040_Cluster Resources.yaml
+_("Aggregate Vm Cpus")
+# TRANSLATORS: file: product/reports/130_Configuration Management - Clusters/040_Cluster Resources.yaml
+_("CPU Cores Virtual to Real Ratio")
+# TRANSLATORS: file: product/reports/130_Configuration Management - Clusters/040_Cluster Resources.yaml
+_("Aggregate Vm Memory")
+# TRANSLATORS: file: product/reports/130_Configuration Management - Clusters/040_Cluster Resources.yaml
+_("Memory Virtual to Real Ratio")
+# TRANSLATORS: file: product/reports/130_Configuration Management - Clusters/030_VM Affinity with Power State.yaml
+_("Cluster tp VMs Affinity with Power State")
+# TRANSLATORS: file: product/reports/130_Configuration Management - Clusters/030_VM Affinity with Power State.yaml
+_("Cluster VMs Affinity with Power State")
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/052_VMs with Volume Free Space -= 75%.yaml
+_("VMs with Volume Free Space >= 75% (sorted by Datastore)")
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/052_VMs with Volume Free Space -= 75%.yaml
+_("VMs with Volume Free Space >= 75%")
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/052_VMs with Volume Free Space -= 75%.yaml
+_("Volume")
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/052_VMs with Volume Free Space -= 75%.yaml
+_("Volume Free Space (%)")
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/052_VMs with Volume Free Space -= 75%.yaml
+_("Volume Used Space (%)")
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/052_VMs with Volume Free Space -= 75%.yaml
+_("Volume Free Space (bytes)")
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/052_VMs with Volume Free Space -= 75%.yaml
+_("Volume Used Space (bytes)")
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/052_VMs with Volume Free Space -= 75%.yaml
+_("Volume Size (bytes)")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/005_VMs with Free Space _ 50% by Department.yaml
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/006_VMs w_Free Space _ 75% by Function.yaml
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/007_VMs w_Free Space _ 75% by LOB.yaml
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/028_VMs with Volume Free Space -= 20%.yaml
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/029_VMs with Volume Free Space -= 80%.yaml
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/052_VMs with Volume Free Space -= 75%.yaml
+_("Volume Filesystem")
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/057_VMs that are Retired.yaml
+_("VMs that have been Retired (past retirement date)")
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/057_VMs that are Retired.yaml
+_("VMs that are Retired")
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/055_VMs Powered Off registered to a Host.yaml
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/056_VMs pending Retirement.yaml
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/057_VMs that are Retired.yaml
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/058_VMs with invalid allocation of RAM.yaml
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/110_Provisioning Activity - by Approver.yaml
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/120_Provisioning Activity - by Datastore.yaml
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/130_Provisioning Activity - by Requester.yaml
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/140_Provisioning Activity - by VM.yaml
+_("VM Notes")
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/056_VMs pending Retirement.yaml
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/057_VMs that are Retired.yaml
+_("VM is Retired?")
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/056_VMs pending Retirement.yaml
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/057_VMs that are Retired.yaml
+_("Retirement Date")
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/055_VMs Powered Off registered to a Host.yaml
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/056_VMs pending Retirement.yaml
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/057_VMs that are Retired.yaml
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/058_VMs with invalid allocation of RAM.yaml
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/110_Provisioning Activity - by Approver.yaml
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/120_Provisioning Activity - by Datastore.yaml
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/130_Provisioning Activity - by Requester.yaml
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/140_Provisioning Activity - by VM.yaml
+_("Allocated vCPUs")
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/055_VMs Powered Off registered to a Host.yaml
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/056_VMs pending Retirement.yaml
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/057_VMs that are Retired.yaml
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/058_VMs with invalid allocation of RAM.yaml
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/110_Provisioning Activity - by Approver.yaml
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/120_Provisioning Activity - by Datastore.yaml
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/130_Provisioning Activity - by Requester.yaml
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/140_Provisioning Activity - by VM.yaml
+_("Allocated RAM (MB)")
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/056_VMs pending Retirement.yaml
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/057_VMs that are Retired.yaml
+_("Diskspace (bytes)")
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/054_VM Uptime - longest running.yaml
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/056_VMs pending Retirement.yaml
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/057_VMs that are Retired.yaml
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/059_Summary of VM Create and Deletes.yaml
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/110_Provisioning Activity - by Approver.yaml
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/120_Provisioning Activity - by Datastore.yaml
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/130_Provisioning Activity - by Requester.yaml
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/140_Provisioning Activity - by VM.yaml
+# TRANSLATORS: file: product/views/ConfigurationProfile.yaml
+# TRANSLATORS: file: product/views/ConfiguredSystem.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_ConfigurationManager_ConfiguredSystem.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_Foreman_ConfigurationManager_ConfiguredSystem.yaml
+_("Environment")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/006_VMs w_Free Space _ 75% by Function.yaml
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/054_VM Uptime - longest running.yaml
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/056_VMs pending Retirement.yaml
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/057_VMs that are Retired.yaml
+_("Function")
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/057_VMs that are Retired.yaml
+_(" Line of Business")
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/055_VMs Powered Off registered to a Host.yaml
+_("VMs Powered Off but registered to Host (sorted by boot time)")
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/055_VMs Powered Off registered to a Host.yaml
+_("VMs Powered Off registered to a Host")
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/055_VMs Powered Off registered to a Host.yaml
+_("Last Boot Time")
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/055_VMs Powered Off registered to a Host.yaml
+_("Power Off Date")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/059_Guest OS Information (any OS).yaml
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/055_VMs Powered Off registered to a Host.yaml
+# TRANSLATORS: file: product/views/CimStorageExtent.yaml
+# TRANSLATORS: file: product/views/GuestApplication.yaml
+# TRANSLATORS: file: product/views/Patch.yaml
+_("Vendor")
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/055_VMs Powered Off registered to a Host.yaml
+# TRANSLATORS: file: product/views/Host-hosts.yaml
+# TRANSLATORS: file: product/views/Host.yaml
+# TRANSLATORS: file: product/views/ProductUpdate.yaml
+_("Platform")
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/055_VMs Powered Off registered to a Host.yaml
+# TRANSLATORS: file: product/views/ContainerNode.yaml
+_("Operating System")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/011_Host Summary with VM info.yaml
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/040_Summary for VMs.yaml
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/060_VM Relationships.yaml
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/054_VM Uptime - longest running.yaml
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/055_VMs Powered Off registered to a Host.yaml
+_("Power State")
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/059_Summary of VM Create and Deletes.yaml
+_("Summary of VM Create and Deletes")
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/059_Summary of VM Create and Deletes.yaml
+_("Event Timestamp")
+# TRANSLATORS: file: product/reports/421_Operations - Events/VC Snapshot Events by User.yaml
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/059_Summary of VM Create and Deletes.yaml
+# TRANSLATORS: file: product/views/MiqReportResult-all.yaml
+# TRANSLATORS: file: product/views/MiqReportResult.yaml
+# TRANSLATORS: file: product/views/MiqSchedule.yaml
+# TRANSLATORS: file: product/views/User.yaml
+_("Username")
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/054_VM Uptime - longest running.yaml
+_("VM Uptime (based on last boot, sorted by VM uptime)")
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/054_VM Uptime - longest running.yaml
+_("VM Uptime - longest running")
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/054_VM Uptime - longest running.yaml
+_("VM Boot Time")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/007_VMs w_Free Space _ 75% by LOB.yaml
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/054_VM Uptime - longest running.yaml
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/056_VMs pending Retirement.yaml
+_("Line of Business")
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/058_VMs with invalid allocation of RAM.yaml
+_("VMs with invalid allocation of RAM (32-bit > 4GB allocated)")
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/058_VMs with invalid allocation of RAM.yaml
+_("VMs with invalid allocation of RAM")
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/058_VMs with invalid allocation of RAM.yaml
+_("Container OS")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/059_Guest OS Information (any OS).yaml
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/058_VMs with invalid allocation of RAM.yaml
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/110_Provisioning Activity - by Approver.yaml
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/120_Provisioning Activity - by Datastore.yaml
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/130_Provisioning Activity - by Requester.yaml
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/140_Provisioning Activity - by VM.yaml
+_("Guest OS")
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/058_VMs with invalid allocation of RAM.yaml
+_("OS Architecture")
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/053_VMs with disk free space _ 5GB.yaml
+_("VMs with disk free space > 5GB (sorted by disk free space)")
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/053_VMs with disk free space _ 5GB.yaml
+_("VMs with disk free space > 5GB")
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/053_VMs with disk free space _ 5GB.yaml
+_("Free Disk Space (bytes)")
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/053_VMs with disk free space _ 5GB.yaml
+_("Total Disk Capacity (bytes)")
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/056_VMs pending Retirement.yaml
+_("VMs that are pending Retirement")
+# TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/056_VMs pending Retirement.yaml
+_("VMs pending Retirement")
+# TRANSLATORS: file: product/reports/660_Performance by Asset Type - Clusters/110_Cluster_Memory_and_CPU_Usage_7_days.yaml
+_("Cluster Memory and CPU usage over last 7 days")
+# TRANSLATORS: file: product/reports/660_Performance by Asset Type - Clusters/110_Cluster_Memory_and_CPU_Usage_7_days.yaml
+_("Cluster Memory and CPU Usage (7 days)")
+# TRANSLATORS: file: product/reports/660_Performance by Asset Type - Clusters/110_Cluster_Memory_and_CPU_Usage_7_days.yaml
+_("CPU - Aggregate Usage Rate for Child Hosts for Collected Intervals (%)")
+# TRANSLATORS: file: product/reports/660_Performance by Asset Type - Clusters/110_Cluster_Memory_and_CPU_Usage_7_days.yaml
+_("CPU - Peak Usage Rate Avg for Child Hosts for Collected Intervals (%)")
+# TRANSLATORS: file: product/reports/660_Performance by Asset Type - Clusters/110_Cluster_Memory_and_CPU_Usage_7_days.yaml
+_("Memory - Avg Usage of Total Allocated for Collected Intervals (%)")
+# TRANSLATORS: file: product/reports/660_Performance by Asset Type - Clusters/110_Cluster_Memory_and_CPU_Usage_7_days.yaml
+_("Memory - Peak Aggregate Usage of Allocated for Child Hosts for Collected Intervals (%)")
+# TRANSLATORS: file: product/reports/660_Performance by Asset Type - Clusters/110_Cluster_Memory_and_CPU_Usage_7_days.yaml
+_("Memory - Peak Aggregate Used for Child VMs for Collected Intervals (MB)")
+# TRANSLATORS: file: product/reports/660_Performance by Asset Type - Clusters/110_Cluster_Memory_and_CPU_Usage_7_days.yaml
+_("Memory - Aggregate Used for Child VMs for Collected Intervals (MB)")
+# TRANSLATORS: file: product/reports/660_Performance by Asset Type - Clusters/110_Cluster_Memory_and_CPU_Usage_7_days.yaml
+_("Activity Sample - Day  (MM DD YY)")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/010_Summary.yaml
+_("Hosts - Summary by Version")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/010_Summary.yaml
+_("Hosts Summary")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/010_Summary.yaml
+_("Primary IP Address")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/010_Summary.yaml
+_("VMM Vendor")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/010_Summary.yaml
+_("VMM Product")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/010_Summary.yaml
+_("VMM Version")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/010_Summary.yaml
+_("VMM Build Number")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/020_Date Brought under Management.yaml
+_("Hosts: Date brought under Management for Last Week")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/020_Date Brought under Management.yaml
+_("Date brought under Management for Last Week")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/020_Date Brought under Management.yaml
+_("Date Added")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/050_Patches.yaml
+_("Hosts - Installed Patches")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/050_Patches.yaml
+_("Host Patches")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/050_Patches.yaml
+_("Patch Name")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/050_Patches.yaml
+_("Patch Description")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/050_Patches.yaml
+_("Patch Installed On")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/015_Host - ESX Services.yaml
+_("ESX Services")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/015_Host - ESX Services.yaml
+_("Host - ESX Services")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/015_Host - ESX Services.yaml
+_("Service Name")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/015_Host - ESX Services.yaml
+_("Service Display Name")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/015_Host - ESX Services.yaml
+_("Service Running")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/040_Summary for VMs.yaml
+_("Host Summary for VMs")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/040_Summary for VMs.yaml
+_("VM OS Name")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/040_Summary for VMs.yaml
+# TRANSLATORS: file: product/reports/300_Migration Readiness - Virtual Machines/010_Summary - VMs migration ready.yaml
+# TRANSLATORS: file: product/reports/300_Migration Readiness - Virtual Machines/011_Summary - VMs NOT migration ready.yaml
+# TRANSLATORS: file: product/reports/300_Migration Readiness - Virtual Machines/020_Detailed - VMs migration ready.yaml
+# TRANSLATORS: file: product/reports/300_Migration Readiness - Virtual Machines/021_Detailed - VMs NOT migration ready.yaml
+_("Parent Datacenter")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/040_Summary for VMs.yaml
+_("Parent Folder")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/040_Summary for VMs.yaml
+_("Parent Resource Pool")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/040_Summary for VMs.yaml
+_("VM is a Template")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/040_Summary for VMs.yaml
+_("Retired?")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/040_Summary for VMs.yaml
+_("VM Retires On")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/016_Host - ESX Service Console Packages.yaml
+_("ESX Service Console Packages")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/016_Host - ESX Service Console Packages.yaml
+_("Host - ESX Service Console Packages")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/016_Host - ESX Service Console Packages.yaml
+_("Guest Application Type Name")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/016_Host - ESX Service Console Packages.yaml
+_("Guest Application Name")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/016_Host - ESX Service Console Packages.yaml
+_("Guest Application Version")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/016_Host - ESX Service Console Packages.yaml
+_("Guest Application Description")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/016_Host - ESX Service Console Packages.yaml
+_("Guest Application Arch")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/016_Host - ESX Service Console Packages.yaml
+_("Guest Application V Unique Name")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/090_vLANs and vSwitches.yaml
+_("Hosts - vLANs and vSwitches")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/090_vLANs and vSwitches.yaml
+_("Host vLANs and vSwitches")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/090_vLANs and vSwitches.yaml
+_("vLAN Name")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/090_vLANs and vSwitches.yaml
+_("vLAN Tag")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/090_vLANs and vSwitches.yaml
+_("vSwitch Name")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/090_vLANs and vSwitches.yaml
+_("vSwitch Ports")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/060_VM Relationships.yaml
+_("Host to VM Relationships")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/060_VM Relationships.yaml
+_("Host VM Relationships")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/010_VMs_ Hardware.yaml
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/060_VM Relationships.yaml
+_("RAM")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/030_Hardware.yaml
+_("Hardware information for Hosts")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/030_Hardware.yaml
+_("Hardware Information")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/030_Hardware.yaml
+_("Hardware Manufacturer")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/030_Hardware.yaml
+_("Hardware CPU Type")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/030_Hardware.yaml
+_("Hardware Model")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/030_Hardware.yaml
+_("Hardware CPU Speed")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/030_Hardware.yaml
+_("Hardware Logical Cpus")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/030_Hardware.yaml
+_("Hardware Cores Per Socket")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/011_Host Summary with VM info.yaml
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/030_Hardware.yaml
+_("Hardware RAM")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/030_Hardware.yaml
+_("Hardware Number Of Nics")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/011_Host Summary with VM info.yaml
+_("Host Summary with VM info")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/011_Host Summary with VM info.yaml
+_("Hardware Number of Virtual CPUs")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/080_Network information.yaml
+_("Hosts - Network Information")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/080_Network information.yaml
+_("Host Network Information")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/080_Network information.yaml
+_("Network IP Address")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/080_Network information.yaml
+_("Network Subnet Mask")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/080_Network information.yaml
+_("Network DHCP Enabled")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/080_Network information.yaml
+_("Network DHCP Server")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/080_Network information.yaml
+_("Network DNS Server")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/080_Network information.yaml
+_("Network Default Gateway")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/080_Network information.yaml
+_("Network Description")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/080_Network information.yaml
+_("Network Domain")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/080_Network information.yaml
+_("Network Lease Expires")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/080_Network information.yaml
+_("Network Lease Obtained")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/070_Storage Adapters.yaml
+_("Hosts - Storage Adapters Information")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/070_Storage Adapters.yaml
+_("Host Storage Adapters")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/070_Storage Adapters.yaml
+_("Storage Adapter Model")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/070_Storage Adapters.yaml
+_("Storage Adapter Controller Type")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/070_Storage Adapters.yaml
+_("Storage Adapter Device Name")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/070_Storage Adapters.yaml
+_("Storage Adapter Device Type")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/070_Storage Adapters.yaml
+_("Storage Adapter Location")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/070_Storage Adapters.yaml
+_("Storage Adapter Iscsi Alias")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/070_Storage Adapters.yaml
+_("Storage Adapter Iscsi Name")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/070_Storage Adapters.yaml
+_("Storage Adapter Present")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/070_Storage Adapters.yaml
+_("Storage Adapter Start Connected")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/012_Virtual Infrastructure Platforms.yaml
+_("Virtual Infrastructure Platforms")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/012_Virtual Infrastructure Platforms.yaml
+_("Virtual Infrastructure Platform")
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/012_Virtual Infrastructure Platforms.yaml
+_("Infrastructure Product")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/022_Vendor and Guest OS.yaml
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/026_VMs_ UUIDs.yaml
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/027_VMs_ with no UUID.yaml
+# TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/012_Virtual Infrastructure Platforms.yaml
+_("OS Product Name")
+# TRANSLATORS: file: product/reports/421_Operations - Events/VC Snapshot Events by User.yaml
+_("Summary of VC Snapshot Events by User")
+# TRANSLATORS: file: product/reports/421_Operations - Events/VC Snapshot Events by User.yaml
+_("VC Snapshot Events by User")
+# TRANSLATORS: file: product/reports/421_Operations - Events/VC Snapshot Events by User.yaml
+_("Event Time Stamp")
+# TRANSLATORS: file: product/reports/421_Operations - Events/VC Snapshot Events by User.yaml
+_("VM Total Snapshots")
+# TRANSLATORS: file: product/reports/421_Operations - Events/VC Snapshot Events by User.yaml
+_("Event Message")
+# TRANSLATORS: file: product/reports/780_Tenants - Tenant Quotas/001_Tenant Quotas.yaml
+_("Tenant Quotas")
+# TRANSLATORS: file: product/reports/780_Tenants - Tenant Quotas/001_Tenant Quotas.yaml
+_("Tenant Name")
+# TRANSLATORS: file: product/reports/780_Tenants - Tenant Quotas/001_Tenant Quotas.yaml
+_("Quota Name")
+# TRANSLATORS: file: product/reports/780_Tenants - Tenant Quotas/001_Tenant Quotas.yaml
+_("Total Quota")
+# TRANSLATORS: file: product/reports/780_Tenants - Tenant Quotas/001_Tenant Quotas.yaml
+_("In Use")
+# TRANSLATORS: file: product/reports/780_Tenants - Tenant Quotas/001_Tenant Quotas.yaml
+_("Allocated")
+# TRANSLATORS: file: product/reports/780_Tenants - Tenant Quotas/001_Tenant Quotas.yaml
+_("Available")
+# TRANSLATORS: file: product/reports/750_Trending - Clusters/070_Cluster IO Trends last week.yaml
+_("Cluster I/O Utilization Trends (last week)")
+# TRANSLATORS: file: product/reports/750_Trending - Clusters/070_Cluster IO Trends last week.yaml
+_("Cluster I/O Trends (last week)")
+# TRANSLATORS: file: product/reports/750_Trending - Clusters/080_Cluster Memory Trends last week.yaml
+_("Cluster Memory Utilization Trends (last week)")
+# TRANSLATORS: file: product/reports/750_Trending - Clusters/080_Cluster Memory Trends last week.yaml
+_("Cluster Memory Trends (last week)")
+# TRANSLATORS: file: product/reports/750_Trending - Clusters/050_Cluster memory trend  6 months.yaml
+_("Cluster memory trend based on past 6 months")
+# TRANSLATORS: file: product/reports/750_Trending - Clusters/050_Cluster memory trend  6 months.yaml
+_("Cluster memory trend  6 months")
+# TRANSLATORS: file: product/reports/750_Trending - Clusters/060_Cluster CPU Trends last week.yaml
+_("Cluster CPU Utilization trends (last week)")
+# TRANSLATORS: file: product/reports/750_Trending - Clusters/060_Cluster CPU Trends last week.yaml
+_("Cluster CPU Trends (last week)")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/026_VMs_ UUIDs.yaml
+_("VM Guest OS UUIDs")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/026_VMs_ UUIDs.yaml
+_("VM UUIDs")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/026_VMs_ UUIDs.yaml
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/027_VMs_ with no UUID.yaml
+_("VM UUID")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/007_VMs w_Free Space _ 75% by LOB.yaml
+_("VMs with Volume Free Space > 75% by Line of Business")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/007_VMs w_Free Space _ 75% by LOB.yaml
+_("VMs w/Free Space > 75% by LOB")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/005_VMs with Free Space _ 50% by Department.yaml
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/006_VMs w_Free Space _ 75% by Function.yaml
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/007_VMs w_Free Space _ 75% by LOB.yaml
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/028_VMs with Volume Free Space -= 20%.yaml
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/029_VMs with Volume Free Space -= 80%.yaml
+# TRANSLATORS: file: product/reports/300_Migration Readiness - Virtual Machines/010_Summary - VMs migration ready.yaml
+# TRANSLATORS: file: product/reports/300_Migration Readiness - Virtual Machines/011_Summary - VMs NOT migration ready.yaml
+# TRANSLATORS: file: product/reports/300_Migration Readiness - Virtual Machines/020_Detailed - VMs migration ready.yaml
+# TRANSLATORS: file: product/reports/300_Migration Readiness - Virtual Machines/021_Detailed - VMs NOT migration ready.yaml
+_("Storage Name")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/005_VMs with Free Space _ 50% by Department.yaml
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/006_VMs w_Free Space _ 75% by Function.yaml
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/007_VMs w_Free Space _ 75% by LOB.yaml
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/028_VMs with Volume Free Space -= 20%.yaml
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/029_VMs with Volume Free Space -= 80%.yaml
+_("Volume Name")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/005_VMs with Free Space _ 50% by Department.yaml
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/006_VMs w_Free Space _ 75% by Function.yaml
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/007_VMs w_Free Space _ 75% by LOB.yaml
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/028_VMs with Volume Free Space -= 20%.yaml
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/029_VMs with Volume Free Space -= 80%.yaml
+_("Volume Free Space Percent")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/005_VMs with Free Space _ 50% by Department.yaml
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/006_VMs w_Free Space _ 75% by Function.yaml
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/007_VMs w_Free Space _ 75% by LOB.yaml
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/028_VMs with Volume Free Space -= 20%.yaml
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/029_VMs with Volume Free Space -= 80%.yaml
+_("Volume Free Space")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/005_VMs with Free Space _ 50% by Department.yaml
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/006_VMs w_Free Space _ 75% by Function.yaml
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/007_VMs w_Free Space _ 75% by LOB.yaml
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/028_VMs with Volume Free Space -= 20%.yaml
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/029_VMs with Volume Free Space -= 80%.yaml
+_("Volume Size")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/005_VMs with Free Space _ 50% by Department.yaml
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/006_VMs w_Free Space _ 75% by Function.yaml
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/007_VMs w_Free Space _ 75% by LOB.yaml
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/028_VMs with Volume Free Space -= 20%.yaml
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/029_VMs with Volume Free Space -= 80%.yaml
+_("Volume Used Space Percent")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/005_VMs with Free Space _ 50% by Department.yaml
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/006_VMs w_Free Space _ 75% by Function.yaml
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/007_VMs w_Free Space _ 75% by LOB.yaml
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/028_VMs with Volume Free Space -= 20%.yaml
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/029_VMs with Volume Free Space -= 80%.yaml
+_("Volume Used Space")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/063_Guest OS Password Information.yaml
+_("Guest OS Password Information for Windows")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/063_Guest OS Password Information.yaml
+_("Guest OS Password Information - Windows")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/060_Guest OS Information - Windows.yaml
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/062_Guest OS Information - Linux.yaml
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/063_Guest OS Password Information.yaml
+_("Product Name")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/063_Guest OS Password Information.yaml
+_("Lockout Duration")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/063_Guest OS Password Information.yaml
+_("Lockout Threshold")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/063_Guest OS Password Information.yaml
+_("Max Pw Age")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/063_Guest OS Password Information.yaml
+_("Min Pw Age")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/063_Guest OS Password Information.yaml
+_("Min Pw Len")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/063_Guest OS Password Information.yaml
+_("Pw Complex")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/063_Guest OS Password Information.yaml
+_("Pw Encrypt")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/063_Guest OS Password Information.yaml
+_("History")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/063_Guest OS Password Information.yaml
+_("Reset Lockout Counter")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/006_VMs w_Free Space _ 75% by Function.yaml
+_("VMs with Volume Free Space > 75% by Function")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/006_VMs w_Free Space _ 75% by Function.yaml
+_("VMs w/Free Space > 75% by Function")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/010_VMs_ Hardware.yaml
+_("Hardware Information for VMs")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/010_VMs_ Hardware.yaml
+_("Controller Type")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/010_VMs_ Hardware.yaml
+_("Device Type")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/010_VMs_ Hardware.yaml
+_("Mode")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/010_VMs_ Hardware.yaml
+_("Start Connected?")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/025_Location and Size.yaml
+_("VM Location and Size")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/020_Vendor and Type.yaml
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/025_Location and Size.yaml
+_("Last Smart Analysis")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/029_VMs with Volume Free Space -= 80%.yaml
+_("VMs with Volume Free Space >= 80%")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/020_Vendor and Type.yaml
+_("VM Vendor and Type")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/020_Vendor and Type.yaml
+_("Vendor and Type")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/020_Vendor and Type.yaml
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/022_Vendor and Guest OS.yaml
+# TRANSLATORS: file: product/timelines/miq_reports/tl_events_daily.yaml
+# TRANSLATORS: file: product/timelines/miq_reports/tl_events_hourly.yaml
+# TRANSLATORS: file: product/views/Container.yaml
+_("Container")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/020_Vendor and Type.yaml
+_("Hardware Guest OS")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/032_Orphaned VMs.yaml
+_("VMs in EVM that have been deleted from VC")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/032_Orphaned VMs.yaml
+_("Orphaned VMs")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/032_Orphaned VMs.yaml
+_("Last Known Datastore Path")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/032_Orphaned VMs.yaml
+_("Last Known Size")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/031_Unregistered VMs.yaml
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/032_Orphaned VMs.yaml
+_("Annotation")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/009_VM Disk Usage.yaml
+_("VM Disk Usage")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/009_VM Disk Usage.yaml
+_(" Derived Vm Allocated Disk Storage")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/009_VM Disk Usage.yaml
+_("Derived Vm Used Disk Storage")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/030_by MAC Address.yaml
+_("VMs by MAC Addresses")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/030_by MAC Address.yaml
+_("VMs by MAC Address")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/030_by MAC Address.yaml
+_("MAC Address")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/030_by MAC Address.yaml
+_("Device Location")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/005_VMs with Free Space _ 50% by Department.yaml
+_("VMs with Volume Free Space > 50% by Department")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/005_VMs with Free Space _ 50% by Department.yaml
+_("VMs with Free Space > 50% by Department")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/005_VMs with Free Space _ 50% by Department.yaml
+_("Department Classification")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/028_VMs with Volume Free Space -= 20%.yaml
+_("VMs with Volume Free Space <= 20%")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/062_Guest OS Information - Linux.yaml
+_("Guest OS Information for Linux")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/062_Guest OS Information - Linux.yaml
+_("Guest OS Information - Linux")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/031_Unregistered VMs.yaml
+_("VMs on Datastore but not registered to a Host")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/031_Unregistered VMs.yaml
+_("Unregistered VMs")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/052_Account Groups Windows .yaml
+_("VM Account Groups for Windows")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/052_Account Groups Windows .yaml
+_("Account Groups - Windows")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/052_Account Groups Windows .yaml
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/053_Account Groups Linux.yaml
+_("Group Name")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/052_Account Groups Windows .yaml
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/053_Account Groups Linux.yaml
+_("Group Comment")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/052_Account Groups Windows .yaml
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/053_Account Groups Linux.yaml
+_("Group Account ID")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/052_Account Groups Windows .yaml
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/053_Account Groups Linux.yaml
+_("Group Account Type")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/052_Account Groups Windows .yaml
+_("Group Display Name")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/052_Account Groups Windows .yaml
+_("Group Domain")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/052_Account Groups Windows .yaml
+_("Group Enabled")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/052_Account Groups Windows .yaml
+_("Group Expires")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/052_Account Groups Windows .yaml
+_("Group Home Directory")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/052_Account Groups Windows .yaml
+_("Group Local")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/064_Guest OS HKLM Registry Information.yaml
+_("Guest OS HKLM Registry Information")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/064_Guest OS HKLM Registry Information.yaml
+_("Registry Item Name")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/064_Guest OS HKLM Registry Information.yaml
+_("Registry Item Value Name")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/064_Guest OS HKLM Registry Information.yaml
+_("Registry Item Data")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/064_Guest OS HKLM Registry Information.yaml
+_("Registry Item Format")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/064_Guest OS HKLM Registry Information.yaml
+_("Registry Item Date Created")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/064_Guest OS HKLM Registry Information.yaml
+_("Registry Item Date Updated")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/050_User Accounts Windows .yaml
+_("VM User Accounts for Windows")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/050_User Accounts Windows .yaml
+_("User Accounts - Windows")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/050_User Accounts Windows .yaml
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/051_User Accounts Linux.yaml
+_("User Name")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/050_User Accounts Windows .yaml
+_("User Display Name")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/050_User Accounts Windows .yaml
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/051_User Accounts Linux.yaml
+_("User Comment")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/050_User Accounts Windows .yaml
+_("User Enabled")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/050_User Accounts Windows .yaml
+_("User Expires")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/050_User Accounts Windows .yaml
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/051_User Accounts Linux.yaml
+_("User Account ID")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/050_User Accounts Windows .yaml
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/051_User Accounts Linux.yaml
+_("User Account Type")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/050_User Accounts Windows .yaml
+_("Account Lockout Duration")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/050_User Accounts Windows .yaml
+_("Account Lockout Threshold")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/050_User Accounts Windows .yaml
+_("Max Pwd Age")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/050_User Accounts Windows .yaml
+_("Min Pwd Age")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/050_User Accounts Windows .yaml
+_("Min Pwd Length")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/050_User Accounts Windows .yaml
+_("User Domain")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/050_User Accounts Windows .yaml
+_("User Local")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/036_Snapshot Summary.yaml
+_("VMs Snapshot Summary")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/036_Snapshot Summary.yaml
+_("Active Snapshot (0/1)")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/036_Snapshot Summary.yaml
+# TRANSLATORS: file: product/views/AdvancedSetting.yaml
+# TRANSLATORS: file: product/views/ArbitrationProfile.yaml
+# TRANSLATORS: file: product/views/AutomationRequest.yaml
+# TRANSLATORS: file: product/views/ChargebackRate.yaml
+# TRANSLATORS: file: product/views/CimBaseStorageExtent.yaml
+# TRANSLATORS: file: product/views/CimStorageExtent.yaml
+# TRANSLATORS: file: product/views/Condition.yaml
+# TRANSLATORS: file: product/views/ConditionSet.yaml
+# TRANSLATORS: file: product/views/ConfigurationProfile.yaml
+# TRANSLATORS: file: product/views/CustomizationTemplate.yaml
+# TRANSLATORS: file: product/views/Dialog.yaml
+# TRANSLATORS: file: product/views/GuestApplication.yaml
+# TRANSLATORS: file: product/views/LdapRegion.yaml
+# TRANSLATORS: file: product/views/LoadBalancer.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_ConfigurationManager_ConfigurationScript.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_Vmware_CloudManager_OrchestrationTemplate.yaml
+# TRANSLATORS: file: product/views/MiqAction.yaml
+# TRANSLATORS: file: product/views/MiqActionSet.yaml
+# TRANSLATORS: file: product/views/MiqAeClass.yaml
+# TRANSLATORS: file: product/views/MiqAlert.yaml
+# TRANSLATORS: file: product/views/MiqDialog.yaml
+# TRANSLATORS: file: product/views/MiqEvent-actions.yaml
+# TRANSLATORS: file: product/views/MiqEvent.yaml
+# TRANSLATORS: file: product/views/MiqPolicy.yaml
+# TRANSLATORS: file: product/views/MiqPolicySet.yaml
+# TRANSLATORS: file: product/views/MiqProvision.yaml
+# TRANSLATORS: file: product/views/MiqRequest.yaml
+# TRANSLATORS: file: product/views/MiqSchedule.yaml
+# TRANSLATORS: file: product/views/OntapLogicalDisk.yaml
+# TRANSLATORS: file: product/views/OntapStorageSystem.yaml
+# TRANSLATORS: file: product/views/OntapStorageVolume.yaml
+# TRANSLATORS: file: product/views/OrchestrationStackOutput.yaml
+# TRANSLATORS: file: product/views/OrchestrationTemplate.yaml
+# TRANSLATORS: file: product/views/OrchestrationTemplateAzure.yaml
+# TRANSLATORS: file: product/views/OrchestrationTemplateCfn.yaml
+# TRANSLATORS: file: product/views/OrchestrationTemplateHot.yaml
+# TRANSLATORS: file: product/views/OrchestrationTemplateVnfd.yaml
+# TRANSLATORS: file: product/views/Patch.yaml
+# TRANSLATORS: file: product/views/Policy.yaml
+# TRANSLATORS: file: product/views/PolicySet.yaml
+# TRANSLATORS: file: product/views/ProductUpdate.yaml
+# TRANSLATORS: file: product/views/ScanItemSet.yaml
+# TRANSLATORS: file: product/views/SecurityGroup.yaml
+# TRANSLATORS: file: product/views/Service.yaml
+# TRANSLATORS: file: product/views/ServiceCatalog.yaml
+# TRANSLATORS: file: product/views/ServiceTemplate.yaml
+# TRANSLATORS: file: product/views/ServiceTemplateCatalog.yaml
+# TRANSLATORS: file: product/views/SystemService-filesystem_drivers.yaml
+# TRANSLATORS: file: product/views/SystemService-kernel_drivers.yaml
+# TRANSLATORS: file: product/views/SystemService-linux_initprocesses.yaml
+# TRANSLATORS: file: product/views/SystemService-win32_services.yaml
+# TRANSLATORS: file: product/views/SystemService.yaml
+# TRANSLATORS: file: product/views/Tenant.yaml
+# TRANSLATORS: file: product/views/Vm__restricted.yaml
+# TRANSLATORS: file: product/views/VmdbDatabaseSetting.yaml
+_("Description")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/036_Snapshot Summary.yaml
+_("Create Time")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/036_Snapshot Summary.yaml
+_("Total Size")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/053_Account Groups Linux.yaml
+_("VM Account Groups for Linux")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/053_Account Groups Linux.yaml
+_("Account Groups - Linux")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/027_VMs_ with no UUID.yaml
+_("VMs with no UUID")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/051_User Accounts Linux.yaml
+_("VM User Accounts for Linux")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/051_User Accounts Linux.yaml
+_("User Accounts - Linux")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/060_Guest OS Information - Windows.yaml
+_("Guest OS Information for Windows")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/060_Guest OS Information - Windows.yaml
+_("Guest OS Information - Windows")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/060_Guest OS Information - Windows.yaml
+# TRANSLATORS: file: product/views/Patch.yaml
+_("Service Pack")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/060_Guest OS Information - Windows.yaml
+# TRANSLATORS: file: product/views/GuestApplication.yaml
+# TRANSLATORS: file: product/views/Host-hosts.yaml
+# TRANSLATORS: file: product/views/Host.yaml
+# TRANSLATORS: file: product/views/MiqServer.yaml
+# TRANSLATORS: file: product/views/ProductUpdate.yaml
+_("Version")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/060_Guest OS Information - Windows.yaml
+_("Build Number")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/060_Guest OS Information - Windows.yaml
+# TRANSLATORS: file: product/views/GuestApplication.yaml
+_("Product Key")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/060_Guest OS Information - Windows.yaml
+_("Product ID")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/059_Guest OS Information (any OS).yaml
+_("Guest OS Information - any OS")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/059_Guest OS Information (any OS).yaml
+_("OS Service Pack")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/022_Vendor and Guest OS.yaml
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/059_Guest OS Information (any OS).yaml
+_("OS Name")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/059_Guest OS Information (any OS).yaml
+_("OS Version")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/059_Guest OS Information (any OS).yaml
+_("OS Build Number")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/059_Guest OS Information (any OS).yaml
+_("OS Product Key")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/059_Guest OS Information (any OS).yaml
+_("OS Productid")
+# TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/022_Vendor and Guest OS.yaml
+_("Vendor and Guest OS")
+# TRANSLATORS: file: product/reports/420_Operations - Clusters/010_Cluster - DRS migrations.yaml
+_("Cluster - DRS migrations")
+# TRANSLATORS: file: product/reports/420_Operations - Clusters/010_Cluster - DRS migrations.yaml
+_("Ems Cluster Name")
+# TRANSLATORS: file: product/reports/420_Operations - Clusters/010_Cluster - DRS migrations.yaml
+_("Vm Name")
+# TRANSLATORS: file: product/reports/680_Performance by Asset Type - Middleware Datasources/120_Datasource Pool - hourly for the last day.yaml
+_("Datasource Pool - hourly for the last day")
+# TRANSLATORS: file: product/reports/680_Performance by Asset Type - Middleware Datasources/110_Datasource Pool - every minute for the last hour.yaml
+# TRANSLATORS: file: product/reports/680_Performance by Asset Type - Middleware Datasources/120_Datasource Pool - hourly for the last day.yaml
+_("Available count - min")
+# TRANSLATORS: file: product/reports/680_Performance by Asset Type - Middleware Datasources/110_Datasource Pool - every minute for the last hour.yaml
+# TRANSLATORS: file: product/reports/680_Performance by Asset Type - Middleware Datasources/120_Datasource Pool - hourly for the last day.yaml
+_("Available count - avg")
+# TRANSLATORS: file: product/reports/680_Performance by Asset Type - Middleware Datasources/110_Datasource Pool - every minute for the last hour.yaml
+# TRANSLATORS: file: product/reports/680_Performance by Asset Type - Middleware Datasources/120_Datasource Pool - hourly for the last day.yaml
+_("Available count - max")
+# TRANSLATORS: file: product/reports/680_Performance by Asset Type - Middleware Datasources/110_Datasource Pool - every minute for the last hour.yaml
+# TRANSLATORS: file: product/reports/680_Performance by Asset Type - Middleware Datasources/120_Datasource Pool - hourly for the last day.yaml
+_("In use count - min")
+# TRANSLATORS: file: product/reports/680_Performance by Asset Type - Middleware Datasources/110_Datasource Pool - every minute for the last hour.yaml
+# TRANSLATORS: file: product/reports/680_Performance by Asset Type - Middleware Datasources/120_Datasource Pool - hourly for the last day.yaml
+_("In use count - avg")
+# TRANSLATORS: file: product/reports/680_Performance by Asset Type - Middleware Datasources/110_Datasource Pool - every minute for the last hour.yaml
+# TRANSLATORS: file: product/reports/680_Performance by Asset Type - Middleware Datasources/120_Datasource Pool - hourly for the last day.yaml
+_("In use count - max")
+# TRANSLATORS: file: product/reports/680_Performance by Asset Type - Middleware Datasources/110_Datasource Pool - every minute for the last hour.yaml
+# TRANSLATORS: file: product/reports/680_Performance by Asset Type - Middleware Datasources/120_Datasource Pool - hourly for the last day.yaml
+_("Average get time - min (ms)")
+# TRANSLATORS: file: product/reports/680_Performance by Asset Type - Middleware Datasources/110_Datasource Pool - every minute for the last hour.yaml
+# TRANSLATORS: file: product/reports/680_Performance by Asset Type - Middleware Datasources/120_Datasource Pool - hourly for the last day.yaml
+_("Average get time - avg (ms)")
+# TRANSLATORS: file: product/reports/680_Performance by Asset Type - Middleware Datasources/110_Datasource Pool - every minute for the last hour.yaml
+# TRANSLATORS: file: product/reports/680_Performance by Asset Type - Middleware Datasources/120_Datasource Pool - hourly for the last day.yaml
+_("Average get time - max (ms)")
+# TRANSLATORS: file: product/reports/680_Performance by Asset Type - Middleware Datasources/110_Datasource Pool - every minute for the last hour.yaml
+# TRANSLATORS: file: product/reports/680_Performance by Asset Type - Middleware Datasources/120_Datasource Pool - hourly for the last day.yaml
+_("Average creation time - min (ms)")
+# TRANSLATORS: file: product/reports/680_Performance by Asset Type - Middleware Datasources/110_Datasource Pool - every minute for the last hour.yaml
+# TRANSLATORS: file: product/reports/680_Performance by Asset Type - Middleware Datasources/120_Datasource Pool - hourly for the last day.yaml
+_("Average creation time - avg (ms)")
+# TRANSLATORS: file: product/reports/680_Performance by Asset Type - Middleware Datasources/110_Datasource Pool - every minute for the last hour.yaml
+# TRANSLATORS: file: product/reports/680_Performance by Asset Type - Middleware Datasources/120_Datasource Pool - hourly for the last day.yaml
+_("Average creation time - max (ms)")
+# TRANSLATORS: file: product/reports/680_Performance by Asset Type - Middleware Datasources/110_Datasource Pool - every minute for the last hour.yaml
+_("Datasource Pool - every minute for the last hour")
+# TRANSLATORS: file: product/reports/300_Migration Readiness - Virtual Machines/020_Detailed - VMs migration ready.yaml
+_("Detailed - VMs migration ready - no CD/DVD/Floppy connected")
+# TRANSLATORS: file: product/reports/300_Migration Readiness - Virtual Machines/020_Detailed - VMs migration ready.yaml
+_("Detailed - VMs migration ready")
+# TRANSLATORS: file: product/reports/300_Migration Readiness - Virtual Machines/020_Detailed - VMs migration ready.yaml
+# TRANSLATORS: file: product/reports/300_Migration Readiness - Virtual Machines/021_Detailed - VMs NOT migration ready.yaml
+_("Disk Start Connected")
+# TRANSLATORS: file: product/reports/300_Migration Readiness - Virtual Machines/020_Detailed - VMs migration ready.yaml
+# TRANSLATORS: file: product/reports/300_Migration Readiness - Virtual Machines/021_Detailed - VMs NOT migration ready.yaml
+_("Disk Device Type")
+# TRANSLATORS: file: product/reports/300_Migration Readiness - Virtual Machines/010_Summary - VMs migration ready.yaml
+_("Summary - VMs migration ready - no CD/DVD/Floppy connected")
+# TRANSLATORS: file: product/reports/300_Migration Readiness - Virtual Machines/010_Summary - VMs migration ready.yaml
+_("Summary - VMs migration ready")
+# TRANSLATORS: file: product/reports/300_Migration Readiness - Virtual Machines/011_Summary - VMs NOT migration ready.yaml
+_("Summary - VMs NOT migration ready - CD/DVD/Floppy connected")
+# TRANSLATORS: file: product/reports/300_Migration Readiness - Virtual Machines/011_Summary - VMs NOT migration ready.yaml
+_("Summary - VMs NOT migration ready")
+# TRANSLATORS: file: product/reports/300_Migration Readiness - Virtual Machines/021_Detailed - VMs NOT migration ready.yaml
+_("Detailed - VMs NOT migration ready - CD/DVD/Floppy connected")
+# TRANSLATORS: file: product/reports/300_Migration Readiness - Virtual Machines/021_Detailed - VMs NOT migration ready.yaml
+_("Detailed - VMs NOT migration ready")
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/140_Provisioning Activity - by VM.yaml
+_("Provisioning Activity - by VM Approved Date")
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/140_Provisioning Activity - by VM.yaml
+_("Provisioning Activity - by VM")
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/110_Provisioning Activity - by Approver.yaml
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/120_Provisioning Activity - by Datastore.yaml
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/130_Provisioning Activity - by Requester.yaml
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/140_Provisioning Activity - by VM.yaml
+_("Source Template")
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/110_Provisioning Activity - by Approver.yaml
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/120_Provisioning Activity - by Datastore.yaml
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/130_Provisioning Activity - by Requester.yaml
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/140_Provisioning Activity - by VM.yaml
+_("Owner Name")
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/110_Provisioning Activity - by Approver.yaml
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/120_Provisioning Activity - by Datastore.yaml
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/130_Provisioning Activity - by Requester.yaml
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/140_Provisioning Activity - by VM.yaml
+_("Owner Email")
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/110_Provisioning Activity - by Approver.yaml
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/120_Provisioning Activity - by Datastore.yaml
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/130_Provisioning Activity - by Requester.yaml
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/140_Provisioning Activity - by VM.yaml
+_("Requester Name")
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/110_Provisioning Activity - by Approver.yaml
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/120_Provisioning Activity - by Datastore.yaml
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/130_Provisioning Activity - by Requester.yaml
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/140_Provisioning Activity - by VM.yaml
+_("Request Date")
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/110_Provisioning Activity - by Approver.yaml
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/120_Provisioning Activity - by Datastore.yaml
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/130_Provisioning Activity - by Requester.yaml
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/140_Provisioning Activity - by VM.yaml
+_("Approved By")
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/110_Provisioning Activity - by Approver.yaml
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/120_Provisioning Activity - by Datastore.yaml
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/130_Provisioning Activity - by Requester.yaml
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/140_Provisioning Activity - by VM.yaml
+_("Approved By Email")
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/110_Provisioning Activity - by Approver.yaml
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/120_Provisioning Activity - by Datastore.yaml
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/130_Provisioning Activity - by Requester.yaml
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/140_Provisioning Activity - by VM.yaml
+_("Approved Date")
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/110_Provisioning Activity - by Approver.yaml
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/120_Provisioning Activity - by Datastore.yaml
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/130_Provisioning Activity - by Requester.yaml
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/140_Provisioning Activity - by VM.yaml
+_("Provision Description")
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/110_Provisioning Activity - by Approver.yaml
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/120_Provisioning Activity - by Datastore.yaml
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/130_Provisioning Activity - by Requester.yaml
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/140_Provisioning Activity - by VM.yaml
+_("Provision Message")
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/110_Provisioning Activity - by Approver.yaml
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/120_Provisioning Activity - by Datastore.yaml
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/130_Provisioning Activity - by Requester.yaml
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/140_Provisioning Activity - by VM.yaml
+_("Retires On")
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/110_Provisioning Activity - by Approver.yaml
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/120_Provisioning Activity - by Datastore.yaml
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/130_Provisioning Activity - by Requester.yaml
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/140_Provisioning Activity - by VM.yaml
+_("Provider Hostname")
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/120_Provisioning Activity - by Datastore.yaml
+_("Provisioning Activity - by Datastore")
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/110_Provisioning Activity - by Approver.yaml
+_("Provisioning Activity - by Approver")
+# TRANSLATORS: file: product/reports/900_Provisioning - Activity Reports/130_Provisioning Activity - by Requester.yaml
+_("Provisioning Activity - by Requester")
+# TRANSLATORS: file: product/timelines/miq_reports/tl_events_hourly.yaml
+_("Timeline Events Hourly")
 # TRANSLATORS: file: product/timelines/miq_reports/tl_events_daily.yaml
 # TRANSLATORS: file: product/timelines/miq_reports/tl_events_hourly.yaml
 _("Source Host")
@@ -6111,14 +6047,53 @@ _("Container Replicator")
 # TRANSLATORS: file: product/timelines/miq_reports/tl_events_daily.yaml
 # TRANSLATORS: file: product/timelines/miq_reports/tl_events_hourly.yaml
 _("Middleware Resource")
-# TRANSLATORS: file: product/timelines/miq_reports/tl_events_hourly.yaml
-_("Timeline Events Hourly")
-# TRANSLATORS: file: product/views/CloudVolumeBackup-cloud_volume_backups.yaml
-# TRANSLATORS: file: product/views/CloudVolumeBackup.yaml
-_("Cloud Volume Backup")
-# TRANSLATORS: file: product/views/CloudVolumeBackup-cloud_volume_backups.yaml
-# TRANSLATORS: file: product/views/CloudVolumeBackup.yaml
-_("CloudVolumeBackup")
+# TRANSLATORS: file: product/timelines/miq_reports/tl_policy_events_daily.yaml
+_("Timeline All Policy Events")
+# TRANSLATORS: file: product/timelines/miq_reports/tl_policy_events_daily.yaml
+# TRANSLATORS: file: product/timelines/miq_reports/tl_policy_events_hourly.yaml
+# TRANSLATORS: file: product/views/OpenscapRuleResult.yaml
+_("Result")
+# TRANSLATORS: file: product/timelines/miq_reports/tl_policy_events_daily.yaml
+_("Tagret")
+# TRANSLATORS: file: product/timelines/miq_reports/tl_policy_events_hourly.yaml
+_("Timeline Policy Events Hourly")
+# TRANSLATORS: file: product/timelines/miq_reports/tl_policy_events_hourly.yaml
+_("Target")
+# TRANSLATORS: file: product/timelines/miq_reports/tl_bottleneck_events.yaml
+_("Timeline All Bottleneck Events")
+# TRANSLATORS: file: product/timelines/miq_reports/tl_bottleneck_events.yaml
+# TRANSLATORS: file: product/views/OpenscapRuleResult.yaml
+_("Severity")
+# TRANSLATORS: file: product/timelines/miq_reports/tl_events_daily.yaml
+_("Timeline All Events")
+# TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_ConfigurationManager.yaml
+_("Ansible Tower Providers")
+# TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_ConfigurationManager.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_ConfigurationManager.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_Foreman_ConfigurationManager.yaml
+_("ConfigurationManagerForeman")
+# TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_ConfigurationManager.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_ConfigurationManager.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_Foreman_ConfigurationManager.yaml
+_("URL")
+# TRANSLATORS: file: product/views/ConfigurationProfile.yaml
+# TRANSLATORS: file: product/views/ConfiguredSystem.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_ConfigurationManager.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_ConfigurationManager_ConfiguredSystem.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_ConfigurationManager.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_Foreman_ConfigurationManager.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_Foreman_ConfigurationManager_ConfiguredSystem.yaml
+# TRANSLATORS: file: product/views/MiqServer.yaml
+# TRANSLATORS: file: product/views/VmdbDatabaseConnection.yaml
+_("Zone")
+# TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_ConfigurationManager.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_ConfigurationManager.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_Foreman_ConfigurationManager.yaml
+_("Last Refresh Date")
+# TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_ConfigurationManager.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_ConfigurationManager.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_Foreman_ConfigurationManager.yaml
+_("Region Description")
 # TRANSLATORS: file: product/views/AutomationRequest.yaml
 # TRANSLATORS: file: product/views/CloudNetwork.yaml
 # TRANSLATORS: file: product/views/CloudVolume-based_volumes.yaml
@@ -6146,12 +6121,38 @@ _("CloudVolumeBackup")
 # TRANSLATORS: file: product/views/ScanHistory.yaml
 # TRANSLATORS: file: product/views/ServerBuild.yaml
 _("Status")
-# TRANSLATORS: file: product/views/CloudVolume-based_volumes.yaml
-# TRANSLATORS: file: product/views/CloudVolumeBackup-cloud_volume_backups.yaml
-# TRANSLATORS: file: product/views/CloudVolumeBackup.yaml
-# TRANSLATORS: file: product/views/CloudVolumeSnapshot-cloud_volume_snapshots.yaml
-# TRANSLATORS: file: product/views/CloudVolumeSnapshot.yaml
-_("Cloud Volume")
+# TRANSLATORS: file: product/views/ConfigurationProfile.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_ConfigurationManager.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_ConfigurationManager.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_ConfigurationManager_InventoryGroup.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_Foreman_ConfigurationManager.yaml
+_("Total Configured Systems")
+# TRANSLATORS: file: product/views/CloudObjectStoreContainer-cloud_object_store_containers.yaml
+# TRANSLATORS: file: product/views/CloudObjectStoreContainer.yaml
+# TRANSLATORS: file: product/views/CloudObjectStoreObject-cloud_object_store_objects.yaml
+# TRANSLATORS: file: product/views/CloudObjectStoreObject.yaml
+_("Cloud Object Store")
+# TRANSLATORS: file: product/views/CloudObjectStoreContainer-cloud_object_store_containers.yaml
+# TRANSLATORS: file: product/views/CloudObjectStoreContainer.yaml
+_("CloudObjectStoreContainer")
+# TRANSLATORS: file: product/views/CloudObjectStoreContainer-cloud_object_store_containers.yaml
+# TRANSLATORS: file: product/views/CloudObjectStoreContainer.yaml
+# TRANSLATORS: file: product/views/CloudObjectStoreObject-cloud_object_store_objects.yaml
+# TRANSLATORS: file: product/views/CloudObjectStoreObject.yaml
+# TRANSLATORS: file: product/views/OrchestrationStackOutput.yaml
+_("Key")
+# TRANSLATORS: file: product/views/CloudObjectStoreContainer-cloud_object_store_containers.yaml
+# TRANSLATORS: file: product/views/CloudObjectStoreContainer.yaml
+_("Size (bytes)")
+# TRANSLATORS: file: product/views/CloudObjectStoreContainer-cloud_object_store_containers.yaml
+# TRANSLATORS: file: product/views/CloudObjectStoreContainer.yaml
+_("Object Count")
+# TRANSLATORS: file: product/views/CloudObjectStoreContainer-cloud_object_store_containers.yaml
+# TRANSLATORS: file: product/views/CloudObjectStoreContainer.yaml
+# TRANSLATORS: file: product/views/CloudObjectStoreObject-cloud_object_store_objects.yaml
+# TRANSLATORS: file: product/views/CloudObjectStoreObject.yaml
+# TRANSLATORS: file: product/views/CloudTenant.yaml
+_("Cloud Tenant")
 # TRANSLATORS: file: product/views/AvailabilityZone.yaml
 # TRANSLATORS: file: product/views/CloudObjectStoreContainer-cloud_object_store_containers.yaml
 # TRANSLATORS: file: product/views/CloudObjectStoreContainer.yaml
@@ -6168,104 +6169,10 @@ _("Cloud Volume")
 # TRANSLATORS: file: product/views/HostAggregate.yaml
 # TRANSLATORS: file: product/views/SecurityGroup.yaml
 _("Cloud Provider")
-# TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_ConfigurationManager_ConfiguredSystem.yaml
-_("Ansible Tower Configured System")
-# TRANSLATORS: file: product/views/ConfiguredSystem.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_ConfigurationManager_ConfiguredSystem.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_Foreman_ConfigurationManager_ConfiguredSystem.yaml
-_("ConfiguredSystems")
-# TRANSLATORS: file: product/views/ConfiguredSystem.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_ConfigurationManager_ConfiguredSystem.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_Foreman_ConfigurationManager_ConfiguredSystem.yaml
-_("Last Checkin")
-# TRANSLATORS: file: product/views/ConfiguredSystem.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_ConfigurationManager_ConfiguredSystem.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_Foreman_ConfigurationManager_ConfiguredSystem.yaml
-_("Build State")
-# TRANSLATORS: file: product/views/ConfigurationProfile.yaml
-# TRANSLATORS: file: product/views/ConfiguredSystem.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_ConfigurationManager.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_ConfigurationManager_ConfiguredSystem.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_ConfigurationManager.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_Foreman_ConfigurationManager.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_Foreman_ConfigurationManager_ConfiguredSystem.yaml
-# TRANSLATORS: file: product/views/MiqServer.yaml
-# TRANSLATORS: file: product/views/VmdbDatabaseConnection.yaml
-_("Zone")
-# TRANSLATORS: file: product/views/ContainerTemplate.yaml
-_("Container Templates")
-# TRANSLATORS: file: product/views/ContainerTemplate.yaml
-_("ContainerTemplate")
-# TRANSLATORS: file: product/views/ConfigurationProfile.yaml
-_("ConfigurationProfile")
-# TRANSLATORS: file: product/views/ConfigurationProfile.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_ConfigurationManager.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_ConfigurationManager.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_ConfigurationManager_InventoryGroup.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_Foreman_ConfigurationManager.yaml
-_("Total Configured Systems")
-# TRANSLATORS: file: product/views/Job.yaml
-_("Jobs")
-# TRANSLATORS: file: product/views/Job.yaml
-# TRANSLATORS: file: product/views/MiqTask.yaml
-_("Updated")
-# TRANSLATORS: file: product/views/Job.yaml
-# TRANSLATORS: file: product/views/MiqTask.yaml
-# TRANSLATORS: file: product/views/MiqWorker.yaml
-# TRANSLATORS: file: product/views/ScanHistory.yaml
-_("Started")
-# TRANSLATORS: file: product/views/Job.yaml
-_("Queued")
-# TRANSLATORS: file: product/views/Container.yaml
-# TRANSLATORS: file: product/views/Job.yaml
-# TRANSLATORS: file: product/views/MiqTask.yaml
-_("State")
-# TRANSLATORS: file: product/views/Job.yaml
-# TRANSLATORS: file: product/views/MiqTask.yaml
-_("Task Name")
-# TRANSLATORS: file: product/views/Job.yaml
-# TRANSLATORS: file: product/views/MiqTask.yaml
-_("User")
-# TRANSLATORS: file: product/views/Job.yaml
-# TRANSLATORS: file: product/views/Vm__restricted.yaml
-_("Owner")
-# TRANSLATORS: file: product/views/Job.yaml
-_("Owner Message")
-# TRANSLATORS: file: product/views/Account-groups.yaml
-# TRANSLATORS: file: product/views/Account-users.yaml
-# TRANSLATORS: file: product/views/Group.yaml
-_("Account ID")
-# TRANSLATORS: file: product/views/Account-groups.yaml
-# TRANSLATORS: file: product/views/Account-users.yaml
-# TRANSLATORS: file: product/views/Group.yaml
-_("Home Directory")
-# TRANSLATORS: file: product/views/Account-groups.yaml
-# TRANSLATORS: file: product/views/Account-users.yaml
-# TRANSLATORS: file: product/views/Group.yaml
-_("Local")
-# TRANSLATORS: file: product/views/Account-groups.yaml
-# TRANSLATORS: file: product/views/Account-users.yaml
-# TRANSLATORS: file: product/views/Group.yaml
-_("Domain")
-# TRANSLATORS: file: product/views/Account-groups.yaml
-# TRANSLATORS: file: product/views/Account-users.yaml
-_("Comment")
-# TRANSLATORS: file: product/views/ContainerBuild.yaml
-_("Container Builds")
-# TRANSLATORS: file: product/views/ContainerBuild.yaml
-_("ContainerBuild")
-# TRANSLATORS: file: product/views/ContainerBuild.yaml
-_("Build Type")
-# TRANSLATORS: file: product/views/ContainerBuild.yaml
-_("Service Account")
-# TRANSLATORS: file: product/views/ContainerBuild.yaml
-_("Output")
-# TRANSLATORS: file: product/views/ContainerBuild.yaml
-_("Completion Deadline")
-# TRANSLATORS: file: product/views/ManageIQ_Providers_Vmware_CloudManager_OrchestrationTemplate.yaml
-_("vApp Orchestration Templates")
-# TRANSLATORS: file: product/views/ManageIQ_Providers_Vmware_CloudManager_OrchestrationTemplate.yaml
-_("vApp Orchestration Template")
+# TRANSLATORS: file: product/views/OrchestrationTemplateAzure.yaml
+_("Azure Orchestration Templates")
+# TRANSLATORS: file: product/views/OrchestrationTemplateAzure.yaml
+_("Azure Orchestration Template")
 # TRANSLATORS: file: product/views/ManageIQ_Providers_Vmware_CloudManager_OrchestrationTemplate.yaml
 # TRANSLATORS: file: product/views/OrchestrationTemplate.yaml
 # TRANSLATORS: file: product/views/OrchestrationTemplateAzure.yaml
@@ -6307,32 +6214,157 @@ _("Created On")
 # TRANSLATORS: file: product/views/ResourcePool.yaml
 # TRANSLATORS: file: product/views/Vsc.yaml
 _("Updated On")
-# TRANSLATORS: file: product/views/CloudObjectStoreContainer-cloud_object_store_containers.yaml
-# TRANSLATORS: file: product/views/CloudObjectStoreContainer.yaml
-# TRANSLATORS: file: product/views/CloudObjectStoreObject-cloud_object_store_objects.yaml
-# TRANSLATORS: file: product/views/CloudObjectStoreObject.yaml
-_("Cloud Object Store")
-# TRANSLATORS: file: product/views/CloudObjectStoreContainer-cloud_object_store_containers.yaml
-# TRANSLATORS: file: product/views/CloudObjectStoreContainer.yaml
-_("CloudObjectStoreContainer")
-# TRANSLATORS: file: product/views/CloudObjectStoreContainer-cloud_object_store_containers.yaml
-# TRANSLATORS: file: product/views/CloudObjectStoreContainer.yaml
-# TRANSLATORS: file: product/views/CloudObjectStoreObject-cloud_object_store_objects.yaml
-# TRANSLATORS: file: product/views/CloudObjectStoreObject.yaml
-# TRANSLATORS: file: product/views/OrchestrationStackOutput.yaml
-_("Key")
-# TRANSLATORS: file: product/views/CloudObjectStoreContainer-cloud_object_store_containers.yaml
-# TRANSLATORS: file: product/views/CloudObjectStoreContainer.yaml
-_("Size (bytes)")
-# TRANSLATORS: file: product/views/CloudObjectStoreContainer-cloud_object_store_containers.yaml
-# TRANSLATORS: file: product/views/CloudObjectStoreContainer.yaml
-_("Object Count")
-# TRANSLATORS: file: product/views/CloudObjectStoreContainer-cloud_object_store_containers.yaml
-# TRANSLATORS: file: product/views/CloudObjectStoreContainer.yaml
-# TRANSLATORS: file: product/views/CloudObjectStoreObject-cloud_object_store_objects.yaml
-# TRANSLATORS: file: product/views/CloudObjectStoreObject.yaml
+# TRANSLATORS: file: product/views/AutomationRequest.yaml
+# TRANSLATORS: file: product/views/MiqRequest.yaml
+_("Approval State")
+# TRANSLATORS: file: product/views/AutomationRequest.yaml
+# TRANSLATORS: file: product/views/MiqRequest.yaml
+_("Request ID")
+# TRANSLATORS: file: product/views/AutomationRequest.yaml
+# TRANSLATORS: file: product/views/MiqRequest.yaml
+_("Requester")
+# TRANSLATORS: file: product/views/AutomationRequest.yaml
+# TRANSLATORS: file: product/views/MiqRequest.yaml
+_("Request Type")
+# TRANSLATORS: file: product/views/AutomationRequest.yaml
+# TRANSLATORS: file: product/views/MiqRequest.yaml
+_("Completed")
+# TRANSLATORS: file: product/views/AutomationRequest.yaml
+# TRANSLATORS: file: product/views/MiqRequest.yaml
+_("Approved/Denied On")
+# TRANSLATORS: file: product/views/AutomationRequest.yaml
+# TRANSLATORS: file: product/views/MiqRequest.yaml
+_("Last Update")
+# TRANSLATORS: file: product/views/AutomationRequest.yaml
+# TRANSLATORS: file: product/views/MiqRequest.yaml
+_("Reason")
+# TRANSLATORS: file: product/views/AutomationRequest.yaml
+# TRANSLATORS: file: product/views/MiqProvision.yaml
+# TRANSLATORS: file: product/views/MiqRequest.yaml
+# TRANSLATORS: file: product/views/ServerBuild.yaml
+_("Last Message")
 # TRANSLATORS: file: product/views/CloudTenant.yaml
-_("Cloud Tenant")
+_("CloudTenant")
+# TRANSLATORS: file: product/views/ManageIQ_Providers_NetworkManager.yaml
+_("EmsNetwork")
+# TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_InfraManager.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_NetworkManager.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_StorageManager.yaml
+# TRANSLATORS: file: product/views/MiqSchedule.yaml
+# TRANSLATORS: file: product/views/StorageManager.yaml
+# TRANSLATORS: file: product/views/ems_block_storage.yaml
+# TRANSLATORS: file: product/views/ems_object_storage.yaml
+_("EVM Zone")
+# TRANSLATORS: file: product/views/ManageIQ_Providers_NetworkManager.yaml
+# TRANSLATORS: file: product/views/NetworkPort.yaml
+_("Subnets")
+# TRANSLATORS: file: product/views/ContainerImage.yaml
+_("Container Images")
+# TRANSLATORS: file: product/views/ContainerImage.yaml
+_("ContainerImage")
+# TRANSLATORS: file: product/views/ContainerImage.yaml
+_("Image Registry")
+# TRANSLATORS: file: product/views/ContainerProject.yaml
+_("Container Projects")
+# TRANSLATORS: file: product/views/ContainerProject.yaml
+_("ContainerProject")
+# TRANSLATORS: file: product/views/Account-users.yaml
+# TRANSLATORS: file: product/views/AdvancedSetting.yaml
+# TRANSLATORS: file: product/views/ContainerProject.yaml
+# TRANSLATORS: file: product/views/FirewallRule.yaml
+# TRANSLATORS: file: product/views/MiqAeClass.yaml
+# TRANSLATORS: file: product/views/MiqAeInstance.yaml
+# TRANSLATORS: file: product/views/SystemService-filesystem_drivers.yaml
+# TRANSLATORS: file: product/views/SystemService-kernel_drivers.yaml
+# TRANSLATORS: file: product/views/SystemService-linux_initprocesses.yaml
+# TRANSLATORS: file: product/views/SystemService-win32_services.yaml
+_("Display Name")
+# TRANSLATORS: file: product/views/ContainerProject.yaml
+_("Container Routes")
+# TRANSLATORS: file: product/views/ContainerProject.yaml
+# TRANSLATORS: file: product/views/ContainerService.yaml
+_("Container Services")
+# TRANSLATORS: file: product/views/ContainerProject.yaml
+_("Container Replicators")
+# TRANSLATORS: file: product/views/Container.yaml
+# TRANSLATORS: file: product/views/ContainerGroup.yaml
+# TRANSLATORS: file: product/views/ContainerProject.yaml
+_("Containers")
+# TRANSLATORS: file: product/views/MiqAlert.yaml
+# TRANSLATORS: file: product/views/MiqPolicy.yaml
+# TRANSLATORS: file: product/views/MiqSchedule.yaml
+# TRANSLATORS: file: product/views/MiqWidget-all.yaml
+# TRANSLATORS: file: product/views/MiqWidget.yaml
+_("Active")
+# TRANSLATORS: file: product/views/MiqAlert.yaml
+_("Based On")
+# TRANSLATORS: file: product/views/MiqAlert.yaml
+_("What is evaluated")
+# TRANSLATORS: file: product/views/MiqAlert.yaml
+_("SNMP")
+# TRANSLATORS: file: product/views/MiqAlert.yaml
+_("Event on Timeline")
+# TRANSLATORS: file: product/views/MiqAlert.yaml
+_("Management Event Raised")
+# TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_ConfigurationManager_ConfiguredSystem.yaml
+_("Ansible Tower Configured System")
+# TRANSLATORS: file: product/views/ConfiguredSystem.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_ConfigurationManager_ConfiguredSystem.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_Foreman_ConfigurationManager_ConfiguredSystem.yaml
+_("ConfiguredSystems")
+# TRANSLATORS: file: product/views/ConfiguredSystem.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_ConfigurationManager_ConfiguredSystem.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_Foreman_ConfigurationManager_ConfiguredSystem.yaml
+_("Last Checkin")
+# TRANSLATORS: file: product/views/ConfiguredSystem.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_ConfigurationManager_ConfiguredSystem.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_Foreman_ConfigurationManager_ConfiguredSystem.yaml
+_("Build State")
+# TRANSLATORS: file: product/views/CloudService.yaml
+_("Scheduling Disabled")
+# TRANSLATORS: file: product/views/ContainerBuild.yaml
+_("Container Builds")
+# TRANSLATORS: file: product/views/ContainerBuild.yaml
+_("ContainerBuild")
+# TRANSLATORS: file: product/views/ContainerBuild.yaml
+_("Build Type")
+# TRANSLATORS: file: product/views/ContainerBuild.yaml
+_("Service Account")
+# TRANSLATORS: file: product/views/ContainerBuild.yaml
+_("Output")
+# TRANSLATORS: file: product/views/ContainerBuild.yaml
+_("Completion Deadline")
+# TRANSLATORS: file: product/views/Storage.yaml
+# TRANSLATORS: file: product/views/StorageCluster.yaml
+_("% Free Space")
+# TRANSLATORS: file: product/views/Storage.yaml
+# TRANSLATORS: file: product/views/StorageCluster.yaml
+_("Total Hosts")
+# TRANSLATORS: file: product/views/Storage.yaml
+# TRANSLATORS: file: product/views/StorageCluster.yaml
+_("Managed/Registered VMs")
+# TRANSLATORS: file: product/views/Storage.yaml
+# TRANSLATORS: file: product/views/StorageCluster.yaml
+_("Managed/Unregistered VMs")
+# TRANSLATORS: file: product/views/Storage.yaml
+# TRANSLATORS: file: product/views/StorageCluster.yaml
+_("Unmanaged VMs")
+# TRANSLATORS: file: product/views/Storage.yaml
+# TRANSLATORS: file: product/views/StorageCluster.yaml
+_("Directory Hierarchy")
+# TRANSLATORS: file: product/views/Storage.yaml
+# TRANSLATORS: file: product/views/StorageCluster.yaml
+_("Thin Provisioning")
+# TRANSLATORS: file: product/views/Storage.yaml
+# TRANSLATORS: file: product/views/StorageCluster.yaml
+_("Raw Disk Mappings")
+# TRANSLATORS: file: product/views/ContainerService.yaml
+_("ContainerService")
+# TRANSLATORS: file: product/views/ContainerService.yaml
+_("Portal IP")
+# TRANSLATORS: file: product/views/ContainerService.yaml
+_("Session Affinity")
 # TRANSLATORS: file: product/views/StorageFile-files.yaml
 _("Datastore Files")
 # TRANSLATORS: file: product/views/Filesystem.yaml
@@ -6364,149 +6396,149 @@ _("Size (Bytes)")
 # TRANSLATORS: file: product/views/StorageFile-vm_misc_files.yaml
 # TRANSLATORS: file: product/views/StorageFile-vm_ram_files.yaml
 _("Last Modified Time")
-# TRANSLATORS: file: product/views/MiddlewareServerGroup.yaml
-_("Middleware Server Groups")
-# TRANSLATORS: file: product/views/MiddlewareServerGroup.yaml
-_("Server Group Name")
-# TRANSLATORS: file: product/views/MiddlewareDomain.yaml
-# TRANSLATORS: file: product/views/MiddlewareServer.yaml
-# TRANSLATORS: file: product/views/MiddlewareServerGroup.yaml
-_("Feed")
-# TRANSLATORS: file: product/views/MiddlewareDomain.yaml
-# TRANSLATORS: file: product/views/MiddlewareServerGroup.yaml
-_("Domain Name")
-# TRANSLATORS: file: product/views/MiddlewareServerGroup.yaml
-_("Profile")
-# TRANSLATORS: file: product/views/ChargebackRate.yaml
-_("Chargeback Rates")
+# TRANSLATORS: file: product/views/RegistryItem.yaml
+_("Registry")
+# TRANSLATORS: file: product/views/RegistryItem.yaml
+_("Data")
+# TRANSLATORS: file: product/views/RegistryItem.yaml
+_("Format")
+# TRANSLATORS: file: product/views/CloudVolumeBackup-cloud_volume_backups.yaml
+# TRANSLATORS: file: product/views/CloudVolumeBackup.yaml
+_("Cloud Volume Backup")
+# TRANSLATORS: file: product/views/CloudVolumeBackup-cloud_volume_backups.yaml
+# TRANSLATORS: file: product/views/CloudVolumeBackup.yaml
+_("CloudVolumeBackup")
+# TRANSLATORS: file: product/views/CloudVolume-based_volumes.yaml
+# TRANSLATORS: file: product/views/CloudVolumeBackup-cloud_volume_backups.yaml
+# TRANSLATORS: file: product/views/CloudVolumeBackup.yaml
+# TRANSLATORS: file: product/views/CloudVolumeSnapshot-cloud_volume_snapshots.yaml
+# TRANSLATORS: file: product/views/CloudVolumeSnapshot.yaml
+_("Cloud Volume")
+# TRANSLATORS: file: product/views/MiddlewareDatasource.yaml
+_("Middleware Datasources")
+# TRANSLATORS: file: product/views/MiddlewareDatasource.yaml
+_("Datasource Name")
+# TRANSLATORS: file: product/views/MiddlewareDatasource.yaml
+# TRANSLATORS: file: product/views/MiddlewareDeployment.yaml
+# TRANSLATORS: file: product/views/MiddlewareMessaging.yaml
+# TRANSLATORS: file: product/views/VmdbDatabaseConnection.yaml
+_("Server")
+# TRANSLATORS: file: product/views/MiqWorker.yaml
+_("EVM Worker")
+# TRANSLATORS: file: product/views/MiqWorker.yaml
+_("EVM Workers")
+# TRANSLATORS: file: product/views/MiqWorker.yaml
+# TRANSLATORS: file: product/views/OsProcess-processes.yaml
+# TRANSLATORS: file: product/views/VmdbDatabaseConnection.yaml
+_("PID")
+# TRANSLATORS: file: product/views/MiqWorker.yaml
+# TRANSLATORS: file: product/views/VmdbDatabaseConnection.yaml
+_("SPID")
+# TRANSLATORS: file: product/views/MiqWorker.yaml
+_("URI / Queue Name")
+# TRANSLATORS: file: product/views/Job.yaml
+# TRANSLATORS: file: product/views/MiqTask.yaml
+# TRANSLATORS: file: product/views/MiqWorker.yaml
+# TRANSLATORS: file: product/views/ScanHistory.yaml
+_("Started")
+# TRANSLATORS: file: product/views/MiqWorker.yaml
+_("Last Heartbeat")
+# TRANSLATORS: file: product/views/MiqWorker.yaml
+# TRANSLATORS: file: product/views/OsProcess-processes.yaml
+_("Memory Usage")
+# TRANSLATORS: file: product/views/MiqWorker.yaml
+_("Memory Size")
+# TRANSLATORS: file: product/views/MiqWorker.yaml
+_("CPU Percent")
+# TRANSLATORS: file: product/views/MiqWorker.yaml
+# TRANSLATORS: file: product/views/OsProcess-processes.yaml
+_("CPU Time")
 # TRANSLATORS: file: product/views/MiqActionSet.yaml
 _("Action Sets")
 # TRANSLATORS: file: product/views/MiqActionSet.yaml
 _("ActionSet")
-# TRANSLATORS: file: product/views/IsoDatastore.yaml
-# TRANSLATORS: file: product/views/PxeServer.yaml
-_("Last Refreshed On")
-# TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_ConfigurationManager.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_ConfigurationManager.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_Foreman_ConfigurationManager.yaml
-_("ConfigurationManagerForeman")
-# TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_ConfigurationManager.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_ConfigurationManager.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_Foreman_ConfigurationManager.yaml
-_("URL")
-# TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_ConfigurationManager.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_ConfigurationManager.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_Foreman_ConfigurationManager.yaml
-_("Last Refresh Date")
-# TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_ConfigurationManager.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_ConfigurationManager.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_Foreman_ConfigurationManager.yaml
-_("Region Description")
-# TRANSLATORS: file: product/views/ManageIQ_Providers_Foreman_ConfigurationManager.yaml
-_("Total Configuration Profiles")
-# TRANSLATORS: file: product/views/Policy.yaml
-_("Policy")
-# TRANSLATORS: file: product/views/CloudObjectStoreObject-cloud_object_store_objects.yaml
-# TRANSLATORS: file: product/views/CloudObjectStoreObject.yaml
-_("Cloud Object")
-# TRANSLATORS: file: product/views/CloudObjectStoreObject-cloud_object_store_objects.yaml
-# TRANSLATORS: file: product/views/CloudObjectStoreObject.yaml
-_("CloudObjectStoreObject")
-# TRANSLATORS: file: product/views/CloudObjectStoreObject-cloud_object_store_objects.yaml
-# TRANSLATORS: file: product/views/CloudObjectStoreObject.yaml
-_("Content Length")
-# TRANSLATORS: file: product/views/CloudObjectStoreObject-cloud_object_store_objects.yaml
-# TRANSLATORS: file: product/views/CloudObjectStoreObject.yaml
-# TRANSLATORS: file: product/views/Filesystem.yaml
-_("Last Modified")
-# TRANSLATORS: file: product/views/CloudObjectStoreObject-cloud_object_store_objects.yaml
-# TRANSLATORS: file: product/views/CloudObjectStoreObject.yaml
-_("ETag")
-# TRANSLATORS: file: product/views/VmdbTableEvm.yaml
-_("VmdbTableEvm")
-# TRANSLATORS: file: product/views/VmdbIndex.yaml
-# TRANSLATORS: file: product/views/VmdbTableEvm.yaml
-_("Wasted")
-# TRANSLATORS: file: product/views/VmdbIndex.yaml
-# TRANSLATORS: file: product/views/VmdbTableEvm.yaml
-_("Percent Bloat")
-# TRANSLATORS: file: product/views/ContainerProject.yaml
-# TRANSLATORS: file: product/views/ContainerService.yaml
-_("Container Services")
-# TRANSLATORS: file: product/views/ContainerService.yaml
-_("ContainerService")
-# TRANSLATORS: file: product/views/ContainerService.yaml
-_("Portal IP")
-# TRANSLATORS: file: product/views/ContainerService.yaml
-_("Session Affinity")
-# TRANSLATORS: file: product/views/MiqTask.yaml
-_("UI Tasks")
-# TRANSLATORS: file: product/views/PolicySet.yaml
-_("PolicySet")
-# TRANSLATORS: file: product/views/VmdbDatabaseSetting.yaml
-_("VmdbDatabaseSetting")
-# TRANSLATORS: file: product/views/AdvancedSetting.yaml
-# TRANSLATORS: file: product/views/OrchestrationStackOutput.yaml
-# TRANSLATORS: file: product/views/OrchestrationStackParameter.yaml
-# TRANSLATORS: file: product/views/VmdbDatabaseSetting.yaml
-_("Value")
-# TRANSLATORS: file: product/views/VmdbDatabaseSetting.yaml
-_("Minimum")
-# TRANSLATORS: file: product/views/VmdbDatabaseSetting.yaml
-_("Maximum")
-# TRANSLATORS: file: product/views/VmdbDatabaseSetting.yaml
-_("Unit")
-# TRANSLATORS: file: product/views/SystemService-filesystem_drivers.yaml
-_("File System Drivers")
-# TRANSLATORS: file: product/views/SystemService-filesystem_drivers.yaml
-# TRANSLATORS: file: product/views/SystemService-kernel_drivers.yaml
-# TRANSLATORS: file: product/views/SystemService-win32_services.yaml
-_("Service Type")
-# TRANSLATORS: file: product/views/SystemService-filesystem_drivers.yaml
-# TRANSLATORS: file: product/views/SystemService-kernel_drivers.yaml
-# TRANSLATORS: file: product/views/SystemService-linux_initprocesses.yaml
-# TRANSLATORS: file: product/views/SystemService-win32_services.yaml
-_("Image Path")
-# TRANSLATORS: file: product/views/Account-users.yaml
-# TRANSLATORS: file: product/views/AdvancedSetting.yaml
-# TRANSLATORS: file: product/views/ContainerProject.yaml
-# TRANSLATORS: file: product/views/FirewallRule.yaml
-# TRANSLATORS: file: product/views/MiqAeClass.yaml
-# TRANSLATORS: file: product/views/MiqAeInstance.yaml
-# TRANSLATORS: file: product/views/SystemService-filesystem_drivers.yaml
-# TRANSLATORS: file: product/views/SystemService-kernel_drivers.yaml
-# TRANSLATORS: file: product/views/SystemService-linux_initprocesses.yaml
-# TRANSLATORS: file: product/views/SystemService-win32_services.yaml
-_("Display Name")
-# TRANSLATORS: file: product/views/SystemService-filesystem_drivers.yaml
-# TRANSLATORS: file: product/views/SystemService-kernel_drivers.yaml
-# TRANSLATORS: file: product/views/SystemService-win32_services.yaml
-_("Depend on Service")
-# TRANSLATORS: file: product/views/SystemService-filesystem_drivers.yaml
-# TRANSLATORS: file: product/views/SystemService-kernel_drivers.yaml
-# TRANSLATORS: file: product/views/SystemService-win32_services.yaml
-_("Depend on Group")
-# TRANSLATORS: file: product/views/SystemService-filesystem_drivers.yaml
-# TRANSLATORS: file: product/views/SystemService-kernel_drivers.yaml
-# TRANSLATORS: file: product/views/SystemService-win32_services.yaml
-_("Object Name")
-# TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager.yaml
-_("EmsCloud")
-# TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_InfraManager.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_NetworkManager.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_StorageManager.yaml
-# TRANSLATORS: file: product/views/MiqSchedule.yaml
+# TRANSLATORS: file: product/views/MiqDialog.yaml
+_("Miq Dialogs")
+# TRANSLATORS: file: product/views/MiqDialog.yaml
+# TRANSLATORS: file: product/views/MiqWidget-all.yaml
+# TRANSLATORS: file: product/views/MiqWidget.yaml
+_("Default")
+# TRANSLATORS: file: product/views/ServiceCatalog.yaml
+# TRANSLATORS: file: product/views/ServiceTemplate.yaml
+# TRANSLATORS: file: product/views/ServiceTemplateCatalog.yaml
+_("Tenant")
+# TRANSLATORS: file: product/views/CimStorageExtent.yaml
+_("Cim Storage Extent")
+# TRANSLATORS: file: product/views/CimStorageExtent.yaml
+_("CimStorageExtents")
+# TRANSLATORS: file: product/views/CimBaseStorageExtent.yaml
+# TRANSLATORS: file: product/views/CimStorageExtent.yaml
+# TRANSLATORS: file: product/views/OntapFileShare.yaml
+# TRANSLATORS: file: product/views/OntapLogicalDisk.yaml
+# TRANSLATORS: file: product/views/OntapStorageSystem.yaml
+# TRANSLATORS: file: product/views/OntapStorageVolume.yaml
+# TRANSLATORS: file: product/views/SniaLocalFileSystem.yaml
+_("Operational Status")
+# TRANSLATORS: file: product/views/CimStorageExtent.yaml
+_("Health State")
+# TRANSLATORS: file: product/views/CimBaseStorageExtent.yaml
+# TRANSLATORS: file: product/views/CimStorageExtent.yaml
+# TRANSLATORS: file: product/views/OntapFileShare.yaml
+# TRANSLATORS: file: product/views/OntapLogicalDisk.yaml
+# TRANSLATORS: file: product/views/OntapStorageSystem.yaml
+# TRANSLATORS: file: product/views/OntapStorageVolume.yaml
+# TRANSLATORS: file: product/views/SniaLocalFileSystem.yaml
 # TRANSLATORS: file: product/views/StorageManager.yaml
-# TRANSLATORS: file: product/views/ems_block_storage.yaml
-# TRANSLATORS: file: product/views/ems_object_storage.yaml
-_("EVM Zone")
+_("Last Update Status")
+# TRANSLATORS: file: product/views/OntapLogicalDisk.yaml
+_("Cim Logical Disk")
+# TRANSLATORS: file: product/views/OntapLogicalDisk.yaml
+_("OntapLogicalDisks")
+# TRANSLATORS: file: product/views/OntapFileShare.yaml
+# TRANSLATORS: file: product/views/OntapLogicalDisk.yaml
+# TRANSLATORS: file: product/views/OntapStorageSystem.yaml
+# TRANSLATORS: file: product/views/OntapStorageVolume.yaml
+_("Element Name")
+# TRANSLATORS: file: product/views/CimBaseStorageExtent.yaml
+# TRANSLATORS: file: product/views/OntapLogicalDisk.yaml
+# TRANSLATORS: file: product/views/OntapStorageSystem.yaml
+# TRANSLATORS: file: product/views/OntapStorageVolume.yaml
+_("Health Status")
+# TRANSLATORS: file: product/views/Service.yaml
+# TRANSLATORS: file: product/views/Vsc.yaml
+_("Service")
+# TRANSLATORS: file: product/views/Service.yaml
+_("Retired")
+# TRANSLATORS: file: product/views/Host-hosts.yaml
+# TRANSLATORS: file: product/views/Host.yaml
+# TRANSLATORS: file: product/views/ResourcePool.yaml
+# TRANSLATORS: file: product/views/Service.yaml
+_("Total VMs")
+# TRANSLATORS: file: product/views/Service.yaml
+_("Total CPUs")
+# TRANSLATORS: file: product/views/Service.yaml
+_("Total VM Disk Count")
+# TRANSLATORS: file: product/views/Service.yaml
+_("Total VM Disk Space Allocated")
+# TRANSLATORS: file: product/views/Service.yaml
+_("Total VM Disk Space Used")
+# TRANSLATORS: file: product/views/Service.yaml
+_("Total VM Memory on Disk")
 # TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Template-all_vms_and_templates.yaml
 # TRANSLATORS: file: product/views/VmOrTemplate-all_archived.yaml
 # TRANSLATORS: file: product/views/VmOrTemplate-all_orphaned.yaml
 # TRANSLATORS: file: product/views/VmOrTemplate-all_vms_and_templates.yaml
 # TRANSLATORS: file: product/views/VmOrTemplate.yaml
 _("VMs and Templates")
+# TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Vm-all_vms_and_templates.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Vm-vms.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Vm.yaml
+# TRANSLATORS: file: product/views/NetworkPort.yaml
+# TRANSLATORS: file: product/views/Vm.yaml
+# TRANSLATORS: file: product/views/VmOrTemplate-all_vms_and_templates.yaml
+# TRANSLATORS: file: product/views/VmOrTemplate.yaml
+# TRANSLATORS: file: product/views/Vm__restricted.yaml
+_("IP Addresses")
 # TRANSLATORS: file: product/views/Host-hosts.yaml
 # TRANSLATORS: file: product/views/Host.yaml
 # TRANSLATORS: file: product/views/InstanceOrImage.yaml
@@ -6540,133 +6572,25 @@ _("Compliant")
 # TRANSLATORS: file: product/views/VmOrTemplate-all_vms_and_templates.yaml
 # TRANSLATORS: file: product/views/VmOrTemplate.yaml
 _("Allocated Size")
-# TRANSLATORS: file: product/views/GuestApplication.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Template-all_vms_and_templates.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Template.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Vm-all_vms_and_templates.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Vm-vms.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Vm.yaml
-# TRANSLATORS: file: product/views/ProductUpdate.yaml
-_("Architecture")
-# TRANSLATORS: file: product/views/OntapStorageSystem.yaml
-_("NetApp Filers")
-# TRANSLATORS: file: product/views/OntapStorageSystem.yaml
-_("OntapStorageSystems")
-# TRANSLATORS: file: product/views/OntapFileShare.yaml
-# TRANSLATORS: file: product/views/OntapLogicalDisk.yaml
-# TRANSLATORS: file: product/views/OntapStorageSystem.yaml
-# TRANSLATORS: file: product/views/OntapStorageVolume.yaml
-_("Element Name")
 # TRANSLATORS: file: product/views/CimBaseStorageExtent.yaml
-# TRANSLATORS: file: product/views/OntapLogicalDisk.yaml
-# TRANSLATORS: file: product/views/OntapStorageSystem.yaml
-# TRANSLATORS: file: product/views/OntapStorageVolume.yaml
-_("Health Status")
+_("Cim Base Storage Extent")
 # TRANSLATORS: file: product/views/CimBaseStorageExtent.yaml
-# TRANSLATORS: file: product/views/CimStorageExtent.yaml
-# TRANSLATORS: file: product/views/OntapFileShare.yaml
-# TRANSLATORS: file: product/views/OntapLogicalDisk.yaml
-# TRANSLATORS: file: product/views/OntapStorageSystem.yaml
-# TRANSLATORS: file: product/views/OntapStorageVolume.yaml
-# TRANSLATORS: file: product/views/SniaLocalFileSystem.yaml
-_("Operational Status")
-# TRANSLATORS: file: product/views/CimBaseStorageExtent.yaml
-# TRANSLATORS: file: product/views/CimStorageExtent.yaml
-# TRANSLATORS: file: product/views/OntapFileShare.yaml
-# TRANSLATORS: file: product/views/OntapLogicalDisk.yaml
-# TRANSLATORS: file: product/views/OntapStorageSystem.yaml
-# TRANSLATORS: file: product/views/OntapStorageVolume.yaml
-# TRANSLATORS: file: product/views/SniaLocalFileSystem.yaml
-# TRANSLATORS: file: product/views/StorageManager.yaml
-_("Last Update Status")
-# TRANSLATORS: file: product/views/ProductUpdate.yaml
-_("EVM Server Maintenance")
-# TRANSLATORS: file: product/views/ProductUpdate.yaml
-_("Update Type")
-# TRANSLATORS: file: product/views/Host-hosts.yaml
-# TRANSLATORS: file: product/views/Host.yaml
-# TRANSLATORS: file: product/views/MiqServer.yaml
-# TRANSLATORS: file: product/views/ProductUpdate.yaml
-# TRANSLATORS: file: product/views/ServerBuild.yaml
-_("Build")
-# TRANSLATORS: file: product/views/ProductUpdate.yaml
-_("Component")
-# TRANSLATORS: file: product/views/MiqAeClass.yaml
-_("Classes")
-# TRANSLATORS: file: product/views/MiqAeClass.yaml
-_("Fully Qualified Name")
-# TRANSLATORS: file: product/views/MiqAeClass.yaml
-_("Inherits From")
-# TRANSLATORS: file: product/views/MiddlewareDeployment.yaml
-_("Middleware Deployments")
-# TRANSLATORS: file: product/views/MiddlewareDeployment.yaml
-_("Deployment Name")
-# TRANSLATORS: file: product/views/MiddlewareDatasource.yaml
-# TRANSLATORS: file: product/views/MiddlewareDeployment.yaml
-# TRANSLATORS: file: product/views/MiddlewareMessaging.yaml
-# TRANSLATORS: file: product/views/VmdbDatabaseConnection.yaml
-_("Server")
-# TRANSLATORS: file: product/views/ems_object_storage.yaml
-_("EmsObjectStorage")
-# TRANSLATORS: file: product/views/MiqProvision.yaml
-_("Provisions")
-# TRANSLATORS: file: product/views/AutomationRequest.yaml
-# TRANSLATORS: file: product/views/MiqProvision.yaml
-# TRANSLATORS: file: product/views/MiqRequest.yaml
-# TRANSLATORS: file: product/views/ServerBuild.yaml
-_("Last Message")
-# TRANSLATORS: file: product/views/MiqDialog.yaml
-_("Miq Dialogs")
-# TRANSLATORS: file: product/views/MiqDialog.yaml
-# TRANSLATORS: file: product/views/MiqWidget-all.yaml
-# TRANSLATORS: file: product/views/MiqWidget.yaml
-_("Default")
-# TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_ConfigurationManager.yaml
-_("Ansible Tower Providers")
-# TRANSLATORS: file: product/views/EmsCluster.yaml
-_("Clusters")
-# TRANSLATORS: file: product/views/EmsCluster.yaml
-_("All VMs")
-# TRANSLATORS: file: product/views/EmsCluster.yaml
-_("All Templates")
-# TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_OrchestrationStack.yaml
-# TRANSLATORS: file: product/views/OrchestrationStack.yaml
-_("Orchestration Stack")
-# TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_OrchestrationStack.yaml
-# TRANSLATORS: file: product/views/OrchestrationStack.yaml
-_("OrchestrationStack")
-# TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_OrchestrationStack.yaml
-# TRANSLATORS: file: product/views/OrchestrationStack.yaml
-_("Status Reason")
-# TRANSLATORS: file: product/views/ManageIQ_Providers_InfraManager.yaml
-_("EmsInfra")
-# TRANSLATORS: file: product/views/ManageIQ_Providers_InfraManager.yaml
-_("Discovered IP Address")
-# TRANSLATORS: file: product/views/OrchestrationTemplateHot.yaml
-_("HOT Orchestration Templates")
-# TRANSLATORS: file: product/views/OrchestrationTemplateHot.yaml
-_("HOT Orchestration Template")
-# TRANSLATORS: file: product/views/SystemService-linux_initprocesses.yaml
-_("Linux Init Processes")
-# TRANSLATORS: file: product/views/SystemService-linux_initprocesses.yaml
-_("Enabled Run Levels")
-# TRANSLATORS: file: product/views/SystemService-linux_initprocesses.yaml
-_("Disabled Run Levels")
-# TRANSLATORS: file: product/views/ContainerRoute.yaml
-_("Container Route")
-# TRANSLATORS: file: product/views/ContainerRoute.yaml
-_("ContainerRoute")
-# TRANSLATORS: file: product/views/GuestApplication.yaml
-_("Applications")
-# TRANSLATORS: file: product/views/GuestApplication.yaml
-_("Release")
-# TRANSLATORS: file: product/views/GuestApplication.yaml
-_("Package Name")
-# TRANSLATORS: file: product/views/GuestApplication.yaml
-_("Path")
-# TRANSLATORS: file: product/views/MiqWidget-all.yaml
-# TRANSLATORS: file: product/views/MiqWidget.yaml
-_("Miq Widgets")
+_("CimBaseStorageExtents")
+# TRANSLATORS: file: product/views/CloudVolume.yaml
+_("Cloud Volumes based on Snapshot")
+# TRANSLATORS: file: product/views/CloudVolume-based_volumes.yaml
+# TRANSLATORS: file: product/views/CloudVolume.yaml
+_("CloudVolume")
+# TRANSLATORS: file: product/views/CloudVolume-based_volumes.yaml
+# TRANSLATORS: file: product/views/CloudVolume.yaml
+_("Bootable?")
+# TRANSLATORS: file: product/views/OrchestrationTemplateCfn.yaml
+_("CloudFormations Orchestration Templates")
+# TRANSLATORS: file: product/views/OrchestrationTemplateCfn.yaml
+_("CloudFormations Orchestration Template")
+# TRANSLATORS: file: product/views/MiqReportResult-all.yaml
+# TRANSLATORS: file: product/views/MiqReportResult.yaml
+_("Miq Reports")
 # TRANSLATORS: file: product/views/MiqReportResult-all.yaml
 # TRANSLATORS: file: product/views/MiqReportResult.yaml
 # TRANSLATORS: file: product/views/MiqWidget-all.yaml
@@ -6677,96 +6601,6 @@ _("Queued At")
 # TRANSLATORS: file: product/views/MiqWidget-all.yaml
 # TRANSLATORS: file: product/views/MiqWidget.yaml
 _("Run At")
-# TRANSLATORS: file: product/views/MiqWidget-all.yaml
-# TRANSLATORS: file: product/views/MiqWidget.yaml
-_("Title")
-# TRANSLATORS: file: product/views/MiqAlert.yaml
-# TRANSLATORS: file: product/views/MiqPolicy.yaml
-# TRANSLATORS: file: product/views/MiqSchedule.yaml
-# TRANSLATORS: file: product/views/MiqWidget-all.yaml
-# TRANSLATORS: file: product/views/MiqWidget.yaml
-_("Active")
-# TRANSLATORS: file: product/views/ContainerProject.yaml
-_("Container Projects")
-# TRANSLATORS: file: product/views/ContainerProject.yaml
-_("ContainerProject")
-# TRANSLATORS: file: product/views/ContainerProject.yaml
-_("Container Routes")
-# TRANSLATORS: file: product/views/ContainerProject.yaml
-_("Container Replicators")
-# TRANSLATORS: file: product/views/Container.yaml
-# TRANSLATORS: file: product/views/ContainerGroup.yaml
-# TRANSLATORS: file: product/views/ContainerProject.yaml
-_("Containers")
-# TRANSLATORS: file: product/views/LoadBalancer.yaml
-_("Load Balancer")
-# TRANSLATORS: file: product/views/LoadBalancer.yaml
-_("LoadBalancer")
-# TRANSLATORS: file: product/views/CloudNetwork.yaml
-# TRANSLATORS: file: product/views/CloudSubnet.yaml
-# TRANSLATORS: file: product/views/FloatingIp.yaml
-# TRANSLATORS: file: product/views/LoadBalancer.yaml
-# TRANSLATORS: file: product/views/NetworkPort.yaml
-# TRANSLATORS: file: product/views/NetworkRouter.yaml
-_("Network Provider")
-# TRANSLATORS: file: product/views/Patch.yaml
-_("Patches")
-# TRANSLATORS: file: product/views/Patch.yaml
-_("Date Installed")
-# TRANSLATORS: file: product/views/Patch.yaml
-_("Valid")
-# TRANSLATORS: file: product/views/Patch.yaml
-_("Installed")
-# TRANSLATORS: file: product/views/ManageIQ_Providers_MiddlewareManager.yaml
-_("Middleware Providers")
-# TRANSLATORS: file: product/views/ManageIQ_Providers_MiddlewareManager.yaml
-_("EmsMiddleware")
-# TRANSLATORS: file: product/views/ContainerImageRegistry.yaml
-# TRANSLATORS: file: product/views/FirewallRule.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_ContainerManager.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_DatawarehouseManager.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_MiddlewareManager.yaml
-# TRANSLATORS: file: product/views/StorageManager.yaml
-_("Port")
-# TRANSLATORS: file: product/views/OntapStorageVolume.yaml
-_("Cim Storage Volume")
-# TRANSLATORS: file: product/views/OntapStorageVolume.yaml
-_("OntapStorageVolumes")
-# TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Vm-all_vms_and_templates.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Vm-vms.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Vm.yaml
-# TRANSLATORS: file: product/views/NetworkPort.yaml
-# TRANSLATORS: file: product/views/Vm.yaml
-# TRANSLATORS: file: product/views/VmOrTemplate-all_vms_and_templates.yaml
-# TRANSLATORS: file: product/views/VmOrTemplate.yaml
-# TRANSLATORS: file: product/views/Vm__restricted.yaml
-_("IP Addresses")
-# TRANSLATORS: file: product/views/Tenant.yaml
-_("Parent")
-# TRANSLATORS: file: product/views/MiqAlert.yaml
-_("Based On")
-# TRANSLATORS: file: product/views/MiqAlert.yaml
-_("What is evaluated")
-# TRANSLATORS: file: product/views/MiqAlert.yaml
-_("SNMP")
-# TRANSLATORS: file: product/views/MiqAlert.yaml
-_("Event on Timeline")
-# TRANSLATORS: file: product/views/MiqAlert.yaml
-_("Management Event Raised")
-# TRANSLATORS: file: product/views/MiqUserRole.yaml
-_("User Roles")
-# TRANSLATORS: file: product/views/MiqGroup.yaml
-# TRANSLATORS: file: product/views/MiqUserRole.yaml
-_("Read Only")
-# TRANSLATORS: file: product/views/MiqUserRole.yaml
-_("VM & Template Access Restriction")
-# TRANSLATORS: file: product/views/MiqUserRole.yaml
-_("Number of Groups")
-# TRANSLATORS: file: product/views/AvailabilityZone.yaml
-_("AvailabilityZone")
-# TRANSLATORS: file: product/views/MiqReportResult-all.yaml
-# TRANSLATORS: file: product/views/MiqReportResult.yaml
-_("Miq Reports")
 # TRANSLATORS: file: product/views/EventLog-event_logs.yaml
 # TRANSLATORS: file: product/views/MiqReportResult-all.yaml
 # TRANSLATORS: file: product/views/MiqReportResult.yaml
@@ -6776,253 +6610,16 @@ _("Source")
 # TRANSLATORS: file: product/views/User.yaml
 # TRANSLATORS: file: product/views/Vm__restricted.yaml
 _("Group")
-# TRANSLATORS: file: product/views/NetworkRouter.yaml
-_("Network Router")
-# TRANSLATORS: file: product/views/NetworkRouter.yaml
-_("NetworkRouter")
-# TRANSLATORS: file: product/views/StorageFile-vm_misc_files.yaml
-_("Datastore Other VM Files")
-# TRANSLATORS: file: product/views/AutomationRequest.yaml
-# TRANSLATORS: file: product/views/MiqRequest.yaml
-_("Approval State")
-# TRANSLATORS: file: product/views/AutomationRequest.yaml
-# TRANSLATORS: file: product/views/MiqRequest.yaml
-_("Request ID")
-# TRANSLATORS: file: product/views/AutomationRequest.yaml
-# TRANSLATORS: file: product/views/MiqRequest.yaml
-_("Requester")
-# TRANSLATORS: file: product/views/AutomationRequest.yaml
-# TRANSLATORS: file: product/views/MiqRequest.yaml
-_("Request Type")
-# TRANSLATORS: file: product/views/AutomationRequest.yaml
-# TRANSLATORS: file: product/views/MiqRequest.yaml
-_("Completed")
-# TRANSLATORS: file: product/views/AutomationRequest.yaml
-# TRANSLATORS: file: product/views/MiqRequest.yaml
-_("Approved/Denied On")
-# TRANSLATORS: file: product/views/AutomationRequest.yaml
-# TRANSLATORS: file: product/views/MiqRequest.yaml
-_("Last Update")
-# TRANSLATORS: file: product/views/AutomationRequest.yaml
-# TRANSLATORS: file: product/views/MiqRequest.yaml
-_("Reason")
-# TRANSLATORS: file: product/views/MiqSchedule.yaml
-_("Schedule")
-# TRANSLATORS: file: product/views/MiqSchedule.yaml
-_("Interval")
-# TRANSLATORS: file: product/views/MiqSchedule.yaml
-_("Last Run Time")
-# TRANSLATORS: file: product/views/MiqSchedule.yaml
-_("Next Run Time")
-# TRANSLATORS: file: product/views/FirewallRule.yaml
-_("FirewallRule")
-# TRANSLATORS: file: product/views/Account-users.yaml
-# TRANSLATORS: file: product/views/FirewallRule.yaml
-_("Enabled")
-# TRANSLATORS: file: product/views/CloudSubnet.yaml
-# TRANSLATORS: file: product/views/FirewallRule.yaml
-_("Protocol")
-# TRANSLATORS: file: product/views/FirewallRule.yaml
-_("End Port")
-# TRANSLATORS: file: product/views/FirewallRule.yaml
-_("Direction")
-# TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_ConfigurationManager_ConfigurationScript.yaml
-_("Job Templates")
-# TRANSLATORS: file: product/views/HostAggregate.yaml
-_("Host Aggregate")
-# TRANSLATORS: file: product/views/HostAggregate.yaml
-_("HostAggregate")
-# TRANSLATORS: file: product/views/MiqAction.yaml
-_("Action")
-# TRANSLATORS: file: product/views/OrchestrationStackOutput.yaml
-_("Outputs")
-# TRANSLATORS: file: product/views/OrchestrationTemplateCfn.yaml
-_("CloudFormations Orchestration Templates")
-# TRANSLATORS: file: product/views/OrchestrationTemplateCfn.yaml
-_("CloudFormations Orchestration Template")
-# TRANSLATORS: file: product/views/ServiceCatalog.yaml
-# TRANSLATORS: file: product/views/ServiceTemplate.yaml
-# TRANSLATORS: file: product/views/ServiceTemplateCatalog.yaml
-_("Tenant")
-# TRANSLATORS: file: product/views/ServiceTemplate.yaml
-_("Display in Catalog")
-# TRANSLATORS: file: product/views/ServiceTemplate.yaml
-_("Catalog")
-# TRANSLATORS: file: product/views/Condition.yaml
-_("Condition")
-# TRANSLATORS: file: product/views/Host-hosts.yaml
-# TRANSLATORS: file: product/views/Host.yaml
+# TRANSLATORS: file: product/views/Policy.yaml
+_("Policy")
 # TRANSLATORS: file: product/views/ResourcePool.yaml
-# TRANSLATORS: file: product/views/Service.yaml
-_("Total VMs")
+_("Direct VMs")
 # TRANSLATORS: file: product/views/Host-hosts.yaml
 # TRANSLATORS: file: product/views/Host.yaml
 # TRANSLATORS: file: product/views/ResourcePool.yaml
 _("Total Templates")
-# TRANSLATORS: file: product/views/Host-hosts.yaml
-# TRANSLATORS: file: product/views/Host.yaml
-_("IPMI Enabled")
-# TRANSLATORS: file: product/views/Storage.yaml
-# TRANSLATORS: file: product/views/StorageCluster.yaml
-_("% Free Space")
-# TRANSLATORS: file: product/views/Storage.yaml
-# TRANSLATORS: file: product/views/StorageCluster.yaml
-_("Total Hosts")
-# TRANSLATORS: file: product/views/Storage.yaml
-# TRANSLATORS: file: product/views/StorageCluster.yaml
-_("Managed/Registered VMs")
-# TRANSLATORS: file: product/views/Storage.yaml
-# TRANSLATORS: file: product/views/StorageCluster.yaml
-_("Managed/Unregistered VMs")
-# TRANSLATORS: file: product/views/Storage.yaml
-# TRANSLATORS: file: product/views/StorageCluster.yaml
-_("Unmanaged VMs")
-# TRANSLATORS: file: product/views/Storage.yaml
-# TRANSLATORS: file: product/views/StorageCluster.yaml
-_("Directory Hierarchy")
-# TRANSLATORS: file: product/views/Storage.yaml
-# TRANSLATORS: file: product/views/StorageCluster.yaml
-_("Thin Provisioning")
-# TRANSLATORS: file: product/views/Storage.yaml
-# TRANSLATORS: file: product/views/StorageCluster.yaml
-_("Raw Disk Mappings")
-# TRANSLATORS: file: product/views/OsProcess-processes.yaml
-_("Processes")
-# TRANSLATORS: file: product/views/MiqWorker.yaml
-# TRANSLATORS: file: product/views/OsProcess-processes.yaml
-# TRANSLATORS: file: product/views/VmdbDatabaseConnection.yaml
-_("PID")
-# TRANSLATORS: file: product/views/OsProcess-processes.yaml
-_("Memory %")
-# TRANSLATORS: file: product/views/MiqWorker.yaml
-# TRANSLATORS: file: product/views/OsProcess-processes.yaml
-_("Memory Usage")
-# TRANSLATORS: file: product/views/OsProcess-processes.yaml
-_("CPU %")
-# TRANSLATORS: file: product/views/MiqWorker.yaml
-# TRANSLATORS: file: product/views/OsProcess-processes.yaml
-_("CPU Time")
-# TRANSLATORS: file: product/views/OntapLogicalDisk.yaml
-_("Cim Logical Disk")
-# TRANSLATORS: file: product/views/OntapLogicalDisk.yaml
-_("OntapLogicalDisks")
-# TRANSLATORS: file: product/views/ConfiguredSystem.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_Foreman_ConfigurationManager_ConfiguredSystem.yaml
-_("ConfiguredSystem")
-# TRANSLATORS: file: product/views/ManageIQ_Providers_Foreman_ConfigurationManager_ConfiguredSystem.yaml
-_("Configuration Profile")
-# TRANSLATORS: file: product/views/Switch.yaml
-_("Switches")
-# TRANSLATORS: file: product/views/Switch.yaml
-_("Ports")
-# TRANSLATORS: file: product/views/Switch.yaml
-_("UUID")
-# TRANSLATORS: file: product/views/OrchestrationStackParameter.yaml
-_("Parameters")
-# TRANSLATORS: file: product/views/NetworkPort.yaml
-_("Network Port")
-# TRANSLATORS: file: product/views/NetworkPort.yaml
-_("NetworkPort")
-# TRANSLATORS: file: product/views/NetworkPort.yaml
-_("Mac Address")
-# TRANSLATORS: file: product/views/ManageIQ_Providers_NetworkManager.yaml
-# TRANSLATORS: file: product/views/NetworkPort.yaml
-_("Subnets")
-# TRANSLATORS: file: product/views/CloudSubnet.yaml
-_("Cloud Subnet")
-# TRANSLATORS: file: product/views/CloudSubnet.yaml
-_("CloudSubnet")
-# TRANSLATORS: file: product/views/CloudSubnet.yaml
-_("CIDR")
-# TRANSLATORS: file: product/views/CloudSubnet.yaml
-_("Gateway")
-# TRANSLATORS: file: product/views/CloudSubnet.yaml
-_("DNS Nameservers")
-# TRANSLATORS: file: product/views/OrchestrationStackResource.yaml
-_("Resources")
-# TRANSLATORS: file: product/views/OrchestrationStackResource.yaml
-_("Logical Resource")
-# TRANSLATORS: file: product/views/OrchestrationStackResource.yaml
-_("Physical Resource")
-# TRANSLATORS: file: product/views/OrchestrationStackResource.yaml
-_("Resource Category")
-# TRANSLATORS: file: product/views/OrchestrationStackResource.yaml
-_("Resource Status")
-# TRANSLATORS: file: product/views/OrchestrationStackResource.yaml
-_("Resource Status Reason")
-# TRANSLATORS: file: product/views/ManageIQ_Providers_NetworkManager.yaml
-_("EmsNetwork")
-# TRANSLATORS: file: product/views/CloudVolume-based_volumes.yaml
-# TRANSLATORS: file: product/views/CloudVolume.yaml
-_("CloudVolume")
-# TRANSLATORS: file: product/views/CloudVolume-based_volumes.yaml
-# TRANSLATORS: file: product/views/CloudVolume.yaml
-_("Bootable?")
-# TRANSLATORS: file: product/views/CloudService.yaml
-_("Scheduling Disabled")
-# TRANSLATORS: file: product/views/ContainerImageRegistry.yaml
-_("ImageRegistries")
-# TRANSLATORS: file: product/views/ContainerImageRegistry.yaml
-_("ContainerImageRegistry")
-# TRANSLATORS: file: product/views/StorageFile-debris_files.yaml
-_("Datastore Non-VM Files")
-# TRANSLATORS: file: product/views/PersistentVolume.yaml
-_("Persistent Volumes")
-# TRANSLATORS: file: product/views/PersistentVolume.yaml
-_("PersistentVolume")
-# TRANSLATORS: file: product/views/PersistentVolume.yaml
-_("Access Modes")
-# TRANSLATORS: file: product/views/PersistentVolume.yaml
-_("Reclaim Policy")
-# TRANSLATORS: file: product/views/PersistentVolume.yaml
-_("Status Phase")
-# TRANSLATORS: file: product/views/SecurityGroup.yaml
-_("Security Group")
-# TRANSLATORS: file: product/views/SecurityGroup.yaml
-_("SecurityGroup")
-# TRANSLATORS: file: product/views/ResourcePool.yaml
-_("Direct VMs")
 # TRANSLATORS: file: product/views/ResourcePool.yaml
 _("vApp")
-# TRANSLATORS: file: product/views/MiqTemplate.yaml
-# TRANSLATORS: file: product/views/Vm.yaml
-_("Cloud")
-# TRANSLATORS: file: product/views/ManageIQ_Providers_StorageManager.yaml
-_("Storage Providers")
-# TRANSLATORS: file: product/views/ManageIQ_Providers_StorageManager.yaml
-_("EmsStorage")
-# TRANSLATORS: file: product/views/PxeImageType.yaml
-_("Provision Type")
-# TRANSLATORS: file: product/views/CloudVolumeSnapshot-cloud_volume_snapshots.yaml
-# TRANSLATORS: file: product/views/CloudVolumeSnapshot.yaml
-_("Cloud Volume Snapshot")
-# TRANSLATORS: file: product/views/CloudVolumeSnapshot-cloud_volume_snapshots.yaml
-# TRANSLATORS: file: product/views/CloudVolumeSnapshot.yaml
-_("CloudVolumeSnapshot")
-# TRANSLATORS: file: product/views/CloudVolumeSnapshot-cloud_volume_snapshots.yaml
-# TRANSLATORS: file: product/views/CloudVolumeSnapshot.yaml
-_("Based Volumes")
-# TRANSLATORS: file: product/views/ContainerNode.yaml
-_("Container Nodes")
-# TRANSLATORS: file: product/views/ContainerNode.yaml
-_("ContainerNode")
-# TRANSLATORS: file: product/views/ContainerGroup.yaml
-# TRANSLATORS: file: product/views/ContainerNode.yaml
-_("Ready")
-# TRANSLATORS: file: product/views/ContainerNode.yaml
-_("Kernel Version")
-# TRANSLATORS: file: product/views/ContainerNode.yaml
-_("Runtime Version")
-# TRANSLATORS: file: product/views/MiddlewareMessaging.yaml
-_("Messaging Name")
-# TRANSLATORS: file: product/views/MiddlewareMessaging.yaml
-_("Messaging Type")
-# TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Template.yaml
-_("Virtualization Type")
-# TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Template.yaml
-_("Root Device Type")
-# TRANSLATORS: file: product/views/StorageFile-snapshot_files.yaml
-_("Datastore VM Snapshot Files")
 # TRANSLATORS: file: product/views/FloatingIp.yaml
 _("Floating Ip")
 # TRANSLATORS: file: product/views/FloatingIp.yaml
@@ -7034,29 +6631,60 @@ _("Address")
 _("Fixed Address")
 # TRANSLATORS: file: product/views/FloatingIp.yaml
 _("Instance name")
-# TRANSLATORS: file: product/views/Account-users.yaml
-_("Expires")
-# TRANSLATORS: file: product/views/ScanHistory.yaml
-_("Analysis History")
-# TRANSLATORS: file: product/views/ScanHistory.yaml
-_("Finished")
-# TRANSLATORS: file: product/views/MiqGroup.yaml
-_("Number of Users")
-# TRANSLATORS: file: product/views/MiqGroup.yaml
-# TRANSLATORS: file: product/views/User.yaml
-_("Role")
-# TRANSLATORS: file: product/views/MiqGroup.yaml
-_("Sequence")
-# TRANSLATORS: file: product/views/ManageIQ_Providers_DatawarehouseManager.yaml
-_("Datawarehouse Providers")
-# TRANSLATORS: file: product/views/ManageIQ_Providers_DatawarehouseManager.yaml
-_("EmsDatawarehouse")
+# TRANSLATORS: file: product/views/CloudNetwork.yaml
+# TRANSLATORS: file: product/views/CloudSubnet.yaml
+# TRANSLATORS: file: product/views/FloatingIp.yaml
+# TRANSLATORS: file: product/views/LoadBalancer.yaml
+# TRANSLATORS: file: product/views/NetworkPort.yaml
+# TRANSLATORS: file: product/views/NetworkRouter.yaml
+_("Network Provider")
+# TRANSLATORS: file: product/views/CloudObjectStoreObject-cloud_object_store_objects.yaml
+# TRANSLATORS: file: product/views/CloudObjectStoreObject.yaml
+_("Cloud Object")
+# TRANSLATORS: file: product/views/CloudObjectStoreObject-cloud_object_store_objects.yaml
+# TRANSLATORS: file: product/views/CloudObjectStoreObject.yaml
+_("CloudObjectStoreObject")
+# TRANSLATORS: file: product/views/CloudObjectStoreObject-cloud_object_store_objects.yaml
+# TRANSLATORS: file: product/views/CloudObjectStoreObject.yaml
+_("Content Length")
+# TRANSLATORS: file: product/views/CloudObjectStoreObject-cloud_object_store_objects.yaml
+# TRANSLATORS: file: product/views/CloudObjectStoreObject.yaml
+# TRANSLATORS: file: product/views/Filesystem.yaml
+_("Last Modified")
+# TRANSLATORS: file: product/views/CloudObjectStoreObject-cloud_object_store_objects.yaml
+# TRANSLATORS: file: product/views/CloudObjectStoreObject.yaml
+_("ETag")
+# TRANSLATORS: file: product/views/MiddlewareServerGroup.yaml
+_("Middleware Server Groups")
+# TRANSLATORS: file: product/views/MiddlewareServerGroup.yaml
+_("Server Group Name")
+# TRANSLATORS: file: product/views/MiddlewareDomain.yaml
+# TRANSLATORS: file: product/views/MiddlewareServer.yaml
+# TRANSLATORS: file: product/views/MiddlewareServerGroup.yaml
+_("Feed")
+# TRANSLATORS: file: product/views/MiddlewareDomain.yaml
+# TRANSLATORS: file: product/views/MiddlewareServerGroup.yaml
+_("Domain Name")
+# TRANSLATORS: file: product/views/MiddlewareServerGroup.yaml
+_("Profile")
+# TRANSLATORS: file: product/views/AvailabilityZone.yaml
+_("AvailabilityZone")
+# TRANSLATORS: file: product/views/ConfiguredSystem.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_Foreman_ConfigurationManager_ConfiguredSystem.yaml
+_("ConfiguredSystem")
+# TRANSLATORS: file: product/views/ManageIQ_Providers_Foreman_ConfigurationManager_ConfiguredSystem.yaml
+_("Configuration Profile")
+# TRANSLATORS: file: product/views/Condition.yaml
+_("Condition")
+# TRANSLATORS: file: product/views/Host-hosts.yaml
+# TRANSLATORS: file: product/views/Host.yaml
+# TRANSLATORS: file: product/views/MiqServer.yaml
+# TRANSLATORS: file: product/views/ProductUpdate.yaml
 # TRANSLATORS: file: product/views/ServerBuild.yaml
-_("EVM Server Builds")
-# TRANSLATORS: file: product/views/ServerBuild.yaml
-_("Date/Time")
-# TRANSLATORS: file: product/views/ArbitrationProfile.yaml
-_("ArbitrationProfiles")
+_("Build")
+# TRANSLATORS: file: product/views/Host-hosts.yaml
+# TRANSLATORS: file: product/views/Host.yaml
+_("IPMI Enabled")
 # TRANSLATORS: file: product/views/SystemService.yaml
 _("Running")
 # TRANSLATORS: file: product/views/SystemService.yaml
@@ -7067,132 +6695,45 @@ _("Systemd Active")
 _("Systemd Sub")
 # TRANSLATORS: file: product/views/SystemService.yaml
 _("Enabled run levels")
-# TRANSLATORS: file: product/views/ScanItemSet.yaml
-_("ScanItemSet")
-# TRANSLATORS: file: product/views/OntapFileShare.yaml
-_("Snia File Share")
-# TRANSLATORS: file: product/views/OntapFileShare.yaml
-_("OntapFileShares")
-# TRANSLATORS: file: product/views/ManageIQ_Providers_ConfigurationManager_InventoryGroup.yaml
-_("InventoryGroup")
-# TRANSLATORS: file: product/views/User.yaml
-_("Full Name")
-# TRANSLATORS: file: product/views/User.yaml
-_("E-mail")
-# TRANSLATORS: file: product/views/AdvancedSetting.yaml
-_("AdvancedSetting")
-# TRANSLATORS: file: product/views/MiqRequest.yaml
-_("Request State")
-# TRANSLATORS: file: product/views/MiqRequest.yaml
-_("Approved/Denied By")
-# TRANSLATORS: file: product/views/ContainerReplicator.yaml
-_("ContainerReplicator")
-# TRANSLATORS: file: product/views/ContainerReplicator.yaml
-_("Replicas")
-# TRANSLATORS: file: product/views/ContainerReplicator.yaml
-_("Current Replicas")
-# TRANSLATORS: file: product/views/ConditionSet.yaml
-_("Condition Sets")
-# TRANSLATORS: file: product/views/ConditionSet.yaml
-_("ConditionSet")
-# TRANSLATORS: file: product/views/InstanceOrImage.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Vm-all_vms_and_templates.yaml
-_("Instances and Images")
-# TRANSLATORS: file: product/views/Flavor.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Vm-all_vms_and_templates.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Vm-vms.yaml
-# TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Vm.yaml
-_("Flavor")
-# TRANSLATORS: file: product/views/OpenscapRuleResult.yaml
-_("Openscap Rule Results")
-# TRANSLATORS: file: product/views/OpenscapRuleResult.yaml
-_("Results")
-# TRANSLATORS: file: product/views/ems_block_storage.yaml
-_("EmsBlockStorage")
-# TRANSLATORS: file: product/views/StorageManager.yaml
-_("Storage Manager")
-# TRANSLATORS: file: product/views/StorageManager.yaml
-_("IPAddress")
-# TRANSLATORS: file: product/views/StorageManager.yaml
-_("Created At")
-# TRANSLATORS: file: product/views/MiddlewareDatasource.yaml
-_("Middleware Datasources")
-# TRANSLATORS: file: product/views/MiddlewareDatasource.yaml
-_("Datasource Name")
-# TRANSLATORS: file: product/views/MiddlewareServer.yaml
-_("Middleware Servers")
-# TRANSLATORS: file: product/views/MiddlewareServer.yaml
-_("Server Name")
-# TRANSLATORS: file: product/views/MiddlewareServer.yaml
-_("Product")
-# TRANSLATORS: file: product/views/OrchestrationTemplate.yaml
-_("Orchestration Template")
-# TRANSLATORS: file: product/views/MiqWorker.yaml
-_("EVM Worker")
-# TRANSLATORS: file: product/views/MiqWorker.yaml
-_("EVM Workers")
-# TRANSLATORS: file: product/views/MiqWorker.yaml
-# TRANSLATORS: file: product/views/VmdbDatabaseConnection.yaml
-_("SPID")
-# TRANSLATORS: file: product/views/MiqWorker.yaml
-_("URI / Queue Name")
-# TRANSLATORS: file: product/views/MiqWorker.yaml
-_("Last Heartbeat")
-# TRANSLATORS: file: product/views/MiqWorker.yaml
-_("Memory Size")
-# TRANSLATORS: file: product/views/MiqWorker.yaml
-_("CPU Percent")
-# TRANSLATORS: file: product/views/ManageIQ_Providers_ContainerManager.yaml
-_("Containers Providers")
-# TRANSLATORS: file: product/views/ManageIQ_Providers_ContainerManager.yaml
-_("EmsContainer")
-# TRANSLATORS: file: product/views/VmdbIndex.yaml
-_("VmdbIndex")
-# TRANSLATORS: file: product/views/CloudTenant.yaml
-_("CloudTenant")
-# TRANSLATORS: file: product/views/MiqEvent-actions.yaml
-_("Event Actions")
-# TRANSLATORS: file: product/views/MiqEvent-actions.yaml
-_("Event Action")
-# TRANSLATORS: file: product/views/MiqEvent-actions.yaml
-_("Sync/Async")
-# TRANSLATORS: file: product/views/Dialog.yaml
-_("Label")
-# TRANSLATORS: file: product/views/MiddlewareDomain.yaml
-_("Middleware Domains")
+# TRANSLATORS: file: product/views/LdapRegion.yaml
+_("LdapRegion")
+# TRANSLATORS: file: product/views/ContainerGroup.yaml
+# TRANSLATORS: file: product/views/ContainerNode.yaml
+_("Ready")
+# TRANSLATORS: file: product/views/ContainerGroup.yaml
+_("Phase")
+# TRANSLATORS: file: product/views/ContainerGroup.yaml
+_("Restart Policy")
+# TRANSLATORS: file: product/views/ContainerGroup.yaml
+_("DNS Policy")
+# TRANSLATORS: file: product/views/MiqWidget-all.yaml
+# TRANSLATORS: file: product/views/MiqWidget.yaml
+_("Miq Widgets")
+# TRANSLATORS: file: product/views/MiqWidget-all.yaml
+# TRANSLATORS: file: product/views/MiqWidget.yaml
+_("Title")
+# TRANSLATORS: file: product/views/ManageIQ_Providers_StorageManager.yaml
+_("Storage Providers")
+# TRANSLATORS: file: product/views/ManageIQ_Providers_StorageManager.yaml
+_("EmsStorage")
 # TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_AuthKeyPair.yaml
 _("Auth Key Pair")
 # TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_AuthKeyPair.yaml
 _("AuthKeyPair")
 # TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_AuthKeyPair.yaml
 _("Fingerprint")
-# TRANSLATORS: file: product/views/MiqEvent.yaml
-_("Event")
-# TRANSLATORS: file: product/views/Service.yaml
-# TRANSLATORS: file: product/views/Vsc.yaml
-_("Service")
-# TRANSLATORS: file: product/views/Service.yaml
-_("Retired")
-# TRANSLATORS: file: product/views/Service.yaml
-_("Total CPUs")
-# TRANSLATORS: file: product/views/Service.yaml
-_("Total VM Disk Count")
-# TRANSLATORS: file: product/views/Service.yaml
-_("Total VM Disk Space Allocated")
-# TRANSLATORS: file: product/views/Service.yaml
-_("Total VM Disk Space Used")
-# TRANSLATORS: file: product/views/Service.yaml
-_("Total VM Memory on Disk")
-# TRANSLATORS: file: product/views/OrchestrationTemplateAzure.yaml
-_("Azure Orchestration Templates")
-# TRANSLATORS: file: product/views/OrchestrationTemplateAzure.yaml
-_("Azure Orchestration Template")
-# TRANSLATORS: file: product/views/CloudVolume.yaml
-_("Cloud Volumes based on Snapshot")
-# TRANSLATORS: file: product/views/MiqServer.yaml
-_("EVM Server")
-# TRANSLATORS: file: product/views/MiqServer.yaml
-_("EVM Servers")
+# TRANSLATORS: file: product/views/EmsCluster.yaml
+_("Clusters")
+# TRANSLATORS: file: product/views/EmsCluster.yaml
+_("All VMs")
+# TRANSLATORS: file: product/views/EmsCluster.yaml
+_("All Templates")
+# TRANSLATORS: file: product/views/ScanItemSet.yaml
+_("ScanItemSet")
+# TRANSLATORS: file: product/views/OrchestrationTemplateVnfd.yaml
+_("VNF Orchestration Templates")
+# TRANSLATORS: file: product/views/OrchestrationTemplateVnfd.yaml
+_("VNF Orchestration Template")
 # TRANSLATORS: file: product/views/Filesystem.yaml
 _("Files")
 # TRANSLATORS: file: product/views/Filesystem.yaml
@@ -7203,64 +6744,265 @@ _("Contents Available")
 _("Permissions")
 # TRANSLATORS: file: product/views/Filesystem.yaml
 _("Collected On")
-# TRANSLATORS: file: product/views/LdapRegion.yaml
-_("LdapRegion")
-# TRANSLATORS: file: product/views/Container.yaml
-_("Image")
+# TRANSLATORS: file: product/views/OsProcess-processes.yaml
+_("Processes")
+# TRANSLATORS: file: product/views/OsProcess-processes.yaml
+_("Memory %")
+# TRANSLATORS: file: product/views/OsProcess-processes.yaml
+_("CPU %")
+# TRANSLATORS: file: product/views/MiqEvent-actions.yaml
+_("Event Actions")
+# TRANSLATORS: file: product/views/MiqEvent-actions.yaml
+_("Event Action")
+# TRANSLATORS: file: product/views/MiqEvent-actions.yaml
+_("Sync/Async")
 # TRANSLATORS: file: product/views/StorageFile-vm_ram_files.yaml
 _("Datastore VM Memory Files")
-# TRANSLATORS: file: product/views/RegistryItem.yaml
-_("Registry")
-# TRANSLATORS: file: product/views/RegistryItem.yaml
-_("Data")
-# TRANSLATORS: file: product/views/RegistryItem.yaml
-_("Format")
-# TRANSLATORS: file: product/views/CimBaseStorageExtent.yaml
-_("Cim Base Storage Extent")
-# TRANSLATORS: file: product/views/CimBaseStorageExtent.yaml
-_("CimBaseStorageExtents")
-# TRANSLATORS: file: product/views/ContainerGroup.yaml
-_("Phase")
-# TRANSLATORS: file: product/views/ContainerGroup.yaml
-_("Restart Policy")
-# TRANSLATORS: file: product/views/ContainerGroup.yaml
-_("DNS Policy")
+# TRANSLATORS: file: product/views/IsoDatastore.yaml
+# TRANSLATORS: file: product/views/PxeServer.yaml
+_("Last Refreshed On")
+# TRANSLATORS: file: product/views/ServiceTemplate.yaml
+_("Display in Catalog")
+# TRANSLATORS: file: product/views/ServiceTemplate.yaml
+_("Catalog")
+# TRANSLATORS: file: product/views/OrchestrationStackOutput.yaml
+_("Outputs")
+# TRANSLATORS: file: product/views/AdvancedSetting.yaml
+# TRANSLATORS: file: product/views/OrchestrationStackOutput.yaml
+# TRANSLATORS: file: product/views/OrchestrationStackParameter.yaml
+# TRANSLATORS: file: product/views/VmdbDatabaseSetting.yaml
+_("Value")
+# TRANSLATORS: file: product/views/ManageIQ_Providers_ConfigurationManager_InventoryGroup.yaml
+_("InventoryGroup")
+# TRANSLATORS: file: product/views/SecurityGroup.yaml
+_("Security Group")
+# TRANSLATORS: file: product/views/SecurityGroup.yaml
+_("SecurityGroup")
+# TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_OrchestrationStack.yaml
+# TRANSLATORS: file: product/views/OrchestrationStack.yaml
+_("Orchestration Stack")
+# TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_OrchestrationStack.yaml
+# TRANSLATORS: file: product/views/OrchestrationStack.yaml
+_("OrchestrationStack")
+# TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_OrchestrationStack.yaml
+# TRANSLATORS: file: product/views/OrchestrationStack.yaml
+_("Status Reason")
+# TRANSLATORS: file: product/views/ServerBuild.yaml
+_("EVM Server Builds")
+# TRANSLATORS: file: product/views/ServerBuild.yaml
+_("Date/Time")
+# TRANSLATORS: file: product/views/CloudVolumeSnapshot-cloud_volume_snapshots.yaml
+# TRANSLATORS: file: product/views/CloudVolumeSnapshot.yaml
+_("Cloud Volume Snapshot")
+# TRANSLATORS: file: product/views/CloudVolumeSnapshot-cloud_volume_snapshots.yaml
+# TRANSLATORS: file: product/views/CloudVolumeSnapshot.yaml
+_("CloudVolumeSnapshot")
+# TRANSLATORS: file: product/views/CloudVolumeSnapshot-cloud_volume_snapshots.yaml
+# TRANSLATORS: file: product/views/CloudVolumeSnapshot.yaml
+_("Based Volumes")
+# TRANSLATORS: file: product/views/CloudSubnet.yaml
+_("Cloud Subnet")
+# TRANSLATORS: file: product/views/CloudSubnet.yaml
+_("CloudSubnet")
+# TRANSLATORS: file: product/views/CloudSubnet.yaml
+_("CIDR")
+# TRANSLATORS: file: product/views/CloudSubnet.yaml
+_("Gateway")
+# TRANSLATORS: file: product/views/CloudSubnet.yaml
+# TRANSLATORS: file: product/views/FirewallRule.yaml
+_("Protocol")
+# TRANSLATORS: file: product/views/CloudSubnet.yaml
+_("DNS Nameservers")
+# TRANSLATORS: file: product/views/ContainerNode.yaml
+_("Container Nodes")
+# TRANSLATORS: file: product/views/ContainerNode.yaml
+_("ContainerNode")
+# TRANSLATORS: file: product/views/ContainerNode.yaml
+_("Kernel Version")
+# TRANSLATORS: file: product/views/ContainerNode.yaml
+_("Runtime Version")
+# TRANSLATORS: file: product/views/MiqTemplate.yaml
+# TRANSLATORS: file: product/views/Vm.yaml
+_("Cloud")
+# TRANSLATORS: file: product/views/MiqTask.yaml
+_("UI Tasks")
+# TRANSLATORS: file: product/views/Job.yaml
+# TRANSLATORS: file: product/views/MiqTask.yaml
+_("Updated")
+# TRANSLATORS: file: product/views/Container.yaml
+# TRANSLATORS: file: product/views/Job.yaml
+# TRANSLATORS: file: product/views/MiqTask.yaml
+_("State")
+# TRANSLATORS: file: product/views/Job.yaml
+# TRANSLATORS: file: product/views/MiqTask.yaml
+_("Task Name")
+# TRANSLATORS: file: product/views/Job.yaml
+# TRANSLATORS: file: product/views/MiqTask.yaml
+_("User")
+# TRANSLATORS: file: product/views/OntapStorageVolume.yaml
+_("Cim Storage Volume")
+# TRANSLATORS: file: product/views/OntapStorageVolume.yaml
+_("OntapStorageVolumes")
+# TRANSLATORS: file: product/views/ManageIQ_Providers_DatawarehouseManager.yaml
+_("Datawarehouse Providers")
+# TRANSLATORS: file: product/views/ManageIQ_Providers_DatawarehouseManager.yaml
+_("EmsDatawarehouse")
+# TRANSLATORS: file: product/views/ContainerImageRegistry.yaml
+# TRANSLATORS: file: product/views/FirewallRule.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_ContainerManager.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_DatawarehouseManager.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_MiddlewareManager.yaml
+# TRANSLATORS: file: product/views/StorageManager.yaml
+_("Port")
+# TRANSLATORS: file: product/views/GuestApplication.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Template-all_vms_and_templates.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Template.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Vm-all_vms_and_templates.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Vm-vms.yaml
 # TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Vm.yaml
-_("Load Balancer Status")
-# TRANSLATORS: file: product/views/OrchestrationTemplateVnfd.yaml
-_("VNF Orchestration Templates")
-# TRANSLATORS: file: product/views/OrchestrationTemplateVnfd.yaml
-_("VNF Orchestration Template")
-# TRANSLATORS: file: product/views/SystemService-win32_services.yaml
-_("Win32 Services")
-# TRANSLATORS: file: product/views/SystemService-kernel_drivers.yaml
-_("Kernel Drivers")
-# TRANSLATORS: file: product/views/Vm__restricted.yaml
-_("Processors")
-# TRANSLATORS: file: product/views/Vm__restricted.yaml
-_("Allocated Storage")
-# TRANSLATORS: file: product/views/Vm__restricted.yaml
-_("Used Storage")
-# TRANSLATORS: file: product/views/CimStorageExtent.yaml
-_("Cim Storage Extent")
-# TRANSLATORS: file: product/views/CimStorageExtent.yaml
-_("CimStorageExtents")
-# TRANSLATORS: file: product/views/CimStorageExtent.yaml
-_("Health State")
-# TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_ConfigurationManager_Job.yaml
-_("Ansible Tower Jobs")
-# TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_ConfigurationManager_Job.yaml
-_("Ansible Tower Job")
-# TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_ConfigurationManager_Job.yaml
-_("Template Name")
-# TRANSLATORS: file: product/views/SniaLocalFileSystem.yaml
-_("Snia Local File System")
-# TRANSLATORS: file: product/views/SniaLocalFileSystem.yaml
-_("SniaLocalFileSystems")
+# TRANSLATORS: file: product/views/ProductUpdate.yaml
+_("Architecture")
+# TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Template.yaml
+_("Virtualization Type")
+# TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Template.yaml
+_("Root Device Type")
+# TRANSLATORS: file: product/views/NetworkPort.yaml
+_("Network Port")
+# TRANSLATORS: file: product/views/NetworkPort.yaml
+_("NetworkPort")
+# TRANSLATORS: file: product/views/NetworkPort.yaml
+_("Mac Address")
+# TRANSLATORS: file: product/views/ArbitrationProfile.yaml
+_("ArbitrationProfiles")
+# TRANSLATORS: file: product/views/Patch.yaml
+_("Patches")
+# TRANSLATORS: file: product/views/Patch.yaml
+_("Date Installed")
+# TRANSLATORS: file: product/views/Patch.yaml
+_("Valid")
+# TRANSLATORS: file: product/views/Patch.yaml
+_("Installed")
+# TRANSLATORS: file: product/views/ProductUpdate.yaml
+_("EVM Server Maintenance")
+# TRANSLATORS: file: product/views/ProductUpdate.yaml
+_("Update Type")
+# TRANSLATORS: file: product/views/ProductUpdate.yaml
+_("Component")
+# TRANSLATORS: file: product/views/StorageFile-disk_files.yaml
+_("Datastore VM Provisioned Disk Files")
+# TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager.yaml
+_("EmsCloud")
+# TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager.yaml
+_("VCpus")
+# TRANSLATORS: file: product/views/Tenant.yaml
+_("Parent")
+# TRANSLATORS: file: product/views/OrchestrationTemplateHot.yaml
+_("HOT Orchestration Templates")
+# TRANSLATORS: file: product/views/OrchestrationTemplateHot.yaml
+_("HOT Orchestration Template")
+# TRANSLATORS: file: product/views/ManageIQ_Providers_MiddlewareManager.yaml
+_("Middleware Providers")
+# TRANSLATORS: file: product/views/ManageIQ_Providers_MiddlewareManager.yaml
+_("EmsMiddleware")
+# TRANSLATORS: file: product/views/OrchestrationStackParameter.yaml
+_("Parameters")
+# TRANSLATORS: file: product/views/VmdbTableEvm.yaml
+_("VmdbTableEvm")
+# TRANSLATORS: file: product/views/VmdbIndex.yaml
+# TRANSLATORS: file: product/views/VmdbTableEvm.yaml
+_("Wasted")
+# TRANSLATORS: file: product/views/VmdbIndex.yaml
+# TRANSLATORS: file: product/views/VmdbTableEvm.yaml
+_("Percent Bloat")
+# TRANSLATORS: file: product/views/InstanceOrImage.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Vm-all_vms_and_templates.yaml
+_("Instances and Images")
+# TRANSLATORS: file: product/views/Flavor.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Vm-all_vms_and_templates.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Vm-vms.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Vm.yaml
+_("Flavor")
+# TRANSLATORS: file: product/views/OntapFileShare.yaml
+_("Snia File Share")
+# TRANSLATORS: file: product/views/OntapFileShare.yaml
+_("OntapFileShares")
+# TRANSLATORS: file: product/views/ContainerRoute.yaml
+_("Container Route")
+# TRANSLATORS: file: product/views/ContainerRoute.yaml
+_("ContainerRoute")
 # TRANSLATORS: file: product/views/Vm-VmReconfigureRequest.yaml
 _("Processor Sockets")
 # TRANSLATORS: file: product/views/Vm-VmReconfigureRequest.yaml
 _("Processor Cores Per Socket")
+# TRANSLATORS: file: product/views/StorageFile-debris_files.yaml
+_("Datastore Non-VM Files")
+# TRANSLATORS: file: product/views/Account-groups.yaml
+# TRANSLATORS: file: product/views/Account-users.yaml
+# TRANSLATORS: file: product/views/Group.yaml
+_("Account ID")
+# TRANSLATORS: file: product/views/Account-groups.yaml
+# TRANSLATORS: file: product/views/Account-users.yaml
+# TRANSLATORS: file: product/views/Group.yaml
+_("Home Directory")
+# TRANSLATORS: file: product/views/Account-groups.yaml
+# TRANSLATORS: file: product/views/Account-users.yaml
+# TRANSLATORS: file: product/views/Group.yaml
+_("Local")
+# TRANSLATORS: file: product/views/Account-groups.yaml
+# TRANSLATORS: file: product/views/Account-users.yaml
+# TRANSLATORS: file: product/views/Group.yaml
+_("Domain")
+# TRANSLATORS: file: product/views/Account-groups.yaml
+# TRANSLATORS: file: product/views/Account-users.yaml
+_("Comment")
+# TRANSLATORS: file: product/views/Dialog.yaml
+_("Label")
+# TRANSLATORS: file: product/views/SystemService-linux_initprocesses.yaml
+_("Linux Init Processes")
+# TRANSLATORS: file: product/views/SystemService-filesystem_drivers.yaml
+# TRANSLATORS: file: product/views/SystemService-kernel_drivers.yaml
+# TRANSLATORS: file: product/views/SystemService-linux_initprocesses.yaml
+# TRANSLATORS: file: product/views/SystemService-win32_services.yaml
+_("Image Path")
+# TRANSLATORS: file: product/views/SystemService-linux_initprocesses.yaml
+_("Enabled Run Levels")
+# TRANSLATORS: file: product/views/SystemService-linux_initprocesses.yaml
+_("Disabled Run Levels")
+# TRANSLATORS: file: product/views/MiqUserRole.yaml
+_("User Roles")
+# TRANSLATORS: file: product/views/MiqGroup.yaml
+# TRANSLATORS: file: product/views/MiqUserRole.yaml
+_("Read Only")
+# TRANSLATORS: file: product/views/MiqUserRole.yaml
+_("VM & Template Access Restriction")
+# TRANSLATORS: file: product/views/MiqUserRole.yaml
+_("Number of Groups")
+# TRANSLATORS: file: product/views/SystemService-kernel_drivers.yaml
+_("Kernel Drivers")
+# TRANSLATORS: file: product/views/SystemService-filesystem_drivers.yaml
+# TRANSLATORS: file: product/views/SystemService-kernel_drivers.yaml
+# TRANSLATORS: file: product/views/SystemService-win32_services.yaml
+_("Service Type")
+# TRANSLATORS: file: product/views/SystemService-filesystem_drivers.yaml
+# TRANSLATORS: file: product/views/SystemService-kernel_drivers.yaml
+# TRANSLATORS: file: product/views/SystemService-win32_services.yaml
+_("Depend on Service")
+# TRANSLATORS: file: product/views/SystemService-filesystem_drivers.yaml
+# TRANSLATORS: file: product/views/SystemService-kernel_drivers.yaml
+# TRANSLATORS: file: product/views/SystemService-win32_services.yaml
+_("Depend on Group")
+# TRANSLATORS: file: product/views/SystemService-filesystem_drivers.yaml
+# TRANSLATORS: file: product/views/SystemService-kernel_drivers.yaml
+# TRANSLATORS: file: product/views/SystemService-win32_services.yaml
+_("Object Name")
+# TRANSLATORS: file: product/views/NetworkRouter.yaml
+_("Network Router")
+# TRANSLATORS: file: product/views/NetworkRouter.yaml
+_("NetworkRouter")
+# TRANSLATORS: file: product/views/MiddlewareDeployment.yaml
+_("Middleware Deployments")
+# TRANSLATORS: file: product/views/MiddlewareDeployment.yaml
+_("Deployment Name")
 # TRANSLATORS: file: product/views/Flavor.yaml
 _("CPUs")
 # TRANSLATORS: file: product/views/Flavor.yaml
@@ -7275,8 +7017,59 @@ _("Paravirtualization")
 _("Block Storage Based")
 # TRANSLATORS: file: product/views/Flavor.yaml
 _("Subnet Required")
-# TRANSLATORS: file: product/views/Vsc.yaml
-_("Created By")
+# TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_ConfigurationManager_Job.yaml
+_("Ansible Tower Jobs")
+# TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_ConfigurationManager_Job.yaml
+_("Ansible Tower Job")
+# TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_ConfigurationManager_Job.yaml
+_("Template Name")
+# TRANSLATORS: file: product/views/ManageIQ_Providers_Foreman_ConfigurationManager.yaml
+_("Total Configuration Profiles")
+# TRANSLATORS: file: product/views/VmdbIndex.yaml
+_("VmdbIndex")
+# TRANSLATORS: file: product/views/PersistentVolume.yaml
+_("Persistent Volumes")
+# TRANSLATORS: file: product/views/PersistentVolume.yaml
+_("PersistentVolume")
+# TRANSLATORS: file: product/views/PersistentVolume.yaml
+_("Access Modes")
+# TRANSLATORS: file: product/views/PersistentVolume.yaml
+_("Reclaim Policy")
+# TRANSLATORS: file: product/views/PersistentVolume.yaml
+_("Status Phase")
+# TRANSLATORS: file: product/views/ManageIQ_Providers_Vmware_CloudManager_OrchestrationTemplate.yaml
+_("vApp Orchestration Templates")
+# TRANSLATORS: file: product/views/ManageIQ_Providers_Vmware_CloudManager_OrchestrationTemplate.yaml
+_("vApp Orchestration Template")
+# TRANSLATORS: file: product/views/StorageFile-snapshot_files.yaml
+_("Datastore VM Snapshot Files")
+# TRANSLATORS: file: product/views/StorageManager.yaml
+_("Storage Manager")
+# TRANSLATORS: file: product/views/StorageManager.yaml
+_("IPAddress")
+# TRANSLATORS: file: product/views/StorageManager.yaml
+_("Created At")
+# TRANSLATORS: file: product/views/ManageIQ_Providers_ContainerManager.yaml
+_("Containers Providers")
+# TRANSLATORS: file: product/views/ManageIQ_Providers_ContainerManager.yaml
+_("EmsContainer")
+# TRANSLATORS: file: product/views/ManageIQ_Providers_InfraManager.yaml
+_("EmsInfra")
+# TRANSLATORS: file: product/views/ManageIQ_Providers_InfraManager.yaml
+_("Discovered IP Address")
+# TRANSLATORS: file: product/views/StorageFile-vm_misc_files.yaml
+_("Datastore Other VM Files")
+# TRANSLATORS: file: product/views/OpenscapRuleResult.yaml
+_("Openscap Rule Results")
+# TRANSLATORS: file: product/views/OpenscapRuleResult.yaml
+_("Results")
+# TRANSLATORS: file: product/views/User.yaml
+_("Full Name")
+# TRANSLATORS: file: product/views/User.yaml
+_("E-mail")
+# TRANSLATORS: file: product/views/MiqGroup.yaml
+# TRANSLATORS: file: product/views/User.yaml
+_("Role")
 # TRANSLATORS: file: product/views/EventLog-event_logs.yaml
 _("Event Logs")
 # TRANSLATORS: file: product/views/EventLog-event_logs.yaml
@@ -7287,6 +7080,130 @@ _("Computer Name")
 _("Level")
 # TRANSLATORS: file: product/views/EventLog-event_logs.yaml
 _("Category")
+# TRANSLATORS: file: product/views/ScanHistory.yaml
+_("Analysis History")
+# TRANSLATORS: file: product/views/ScanHistory.yaml
+_("Finished")
+# TRANSLATORS: file: product/views/Job.yaml
+# TRANSLATORS: file: product/views/Vm__restricted.yaml
+_("Owner")
+# TRANSLATORS: file: product/views/Vm__restricted.yaml
+_("Processors")
+# TRANSLATORS: file: product/views/Vm__restricted.yaml
+_("Allocated Storage")
+# TRANSLATORS: file: product/views/Vm__restricted.yaml
+_("Used Storage")
+# TRANSLATORS: file: product/views/ContainerImageRegistry.yaml
+_("ImageRegistries")
+# TRANSLATORS: file: product/views/ContainerImageRegistry.yaml
+_("ContainerImageRegistry")
+# TRANSLATORS: file: product/views/ContainerReplicator.yaml
+_("ContainerReplicator")
+# TRANSLATORS: file: product/views/ContainerReplicator.yaml
+_("Replicas")
+# TRANSLATORS: file: product/views/ContainerReplicator.yaml
+_("Current Replicas")
+# TRANSLATORS: file: product/views/LoadBalancer.yaml
+_("Load Balancer")
+# TRANSLATORS: file: product/views/LoadBalancer.yaml
+_("LoadBalancer")
+# TRANSLATORS: file: product/views/MiqSchedule.yaml
+_("Schedule")
+# TRANSLATORS: file: product/views/MiqSchedule.yaml
+_("Interval")
+# TRANSLATORS: file: product/views/MiqSchedule.yaml
+_("Last Run Time")
+# TRANSLATORS: file: product/views/MiqSchedule.yaml
+_("Next Run Time")
+# TRANSLATORS: file: product/views/MiqGroup.yaml
+_("Number of Users")
+# TRANSLATORS: file: product/views/MiqGroup.yaml
+_("Sequence")
+# TRANSLATORS: file: product/views/PolicySet.yaml
+_("PolicySet")
+# TRANSLATORS: file: product/views/PxeImageType.yaml
+_("Provision Type")
+# TRANSLATORS: file: product/views/HostAggregate.yaml
+_("Host Aggregate")
+# TRANSLATORS: file: product/views/HostAggregate.yaml
+_("HostAggregate")
+# TRANSLATORS: file: product/views/OntapStorageSystem.yaml
+_("NetApp Filers")
+# TRANSLATORS: file: product/views/OntapStorageSystem.yaml
+_("OntapStorageSystems")
+# TRANSLATORS: file: product/views/ConfigurationProfile.yaml
+_("ConfigurationProfile")
+# TRANSLATORS: file: product/views/Vsc.yaml
+_("Created By")
+# TRANSLATORS: file: product/views/MiqServer.yaml
+_("EVM Server")
+# TRANSLATORS: file: product/views/MiqServer.yaml
+_("EVM Servers")
+# TRANSLATORS: file: product/views/MiddlewareDomain.yaml
+_("Middleware Domains")
+# TRANSLATORS: file: product/views/AdvancedSetting.yaml
+_("AdvancedSetting")
+# TRANSLATORS: file: product/views/SniaLocalFileSystem.yaml
+_("Snia Local File System")
+# TRANSLATORS: file: product/views/SniaLocalFileSystem.yaml
+_("SniaLocalFileSystems")
+# TRANSLATORS: file: product/views/SystemService-filesystem_drivers.yaml
+_("File System Drivers")
+# TRANSLATORS: file: product/views/ems_object_storage.yaml
+_("EmsObjectStorage")
+# TRANSLATORS: file: product/views/MiddlewareServer.yaml
+_("Middleware Servers")
+# TRANSLATORS: file: product/views/MiddlewareServer.yaml
+_("Server Name")
+# TRANSLATORS: file: product/views/MiddlewareServer.yaml
+_("Product")
+# TRANSLATORS: file: product/views/ems_block_storage.yaml
+_("EmsBlockStorage")
+# TRANSLATORS: file: product/views/MiqAeClass.yaml
+_("Classes")
+# TRANSLATORS: file: product/views/MiqAeClass.yaml
+_("Fully Qualified Name")
+# TRANSLATORS: file: product/views/MiqAeClass.yaml
+_("Inherits From")
+# TRANSLATORS: file: product/views/SystemService-win32_services.yaml
+_("Win32 Services")
+# TRANSLATORS: file: product/views/ContainerTemplate.yaml
+_("Container Templates")
+# TRANSLATORS: file: product/views/ContainerTemplate.yaml
+_("ContainerTemplate")
+# TRANSLATORS: file: product/views/MiddlewareMessaging.yaml
+_("Messaging Name")
+# TRANSLATORS: file: product/views/MiddlewareMessaging.yaml
+_("Messaging Type")
+# TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_ConfigurationManager_ConfigurationScript.yaml
+_("Job Templates")
+# TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Vm.yaml
+_("Load Balancer Status")
+# TRANSLATORS: file: product/views/Switch.yaml
+_("Switches")
+# TRANSLATORS: file: product/views/Switch.yaml
+_("Ports")
+# TRANSLATORS: file: product/views/Switch.yaml
+_("UUID")
+# TRANSLATORS: file: product/views/VmdbDatabaseSetting.yaml
+_("VmdbDatabaseSetting")
+# TRANSLATORS: file: product/views/VmdbDatabaseSetting.yaml
+_("Minimum")
+# TRANSLATORS: file: product/views/VmdbDatabaseSetting.yaml
+_("Maximum")
+# TRANSLATORS: file: product/views/VmdbDatabaseSetting.yaml
+_("Unit")
+# TRANSLATORS: file: product/views/MiqAction.yaml
+_("Action")
+# TRANSLATORS: file: product/views/FirewallRule.yaml
+_("FirewallRule")
+# TRANSLATORS: file: product/views/Account-users.yaml
+# TRANSLATORS: file: product/views/FirewallRule.yaml
+_("Enabled")
+# TRANSLATORS: file: product/views/FirewallRule.yaml
+_("End Port")
+# TRANSLATORS: file: product/views/FirewallRule.yaml
+_("Direction")
 # TRANSLATORS: file: product/views/VmdbDatabaseConnection.yaml
 _("VmdbDatabaseConnection")
 # TRANSLATORS: file: product/views/VmdbDatabaseConnection.yaml
@@ -7301,11 +7218,49 @@ _("Waiting Resource")
 _("Wait Time")
 # TRANSLATORS: file: product/views/VmdbDatabaseConnection.yaml
 _("Command")
-# TRANSLATORS: file: product/views/ContainerImage.yaml
-_("Container Images")
-# TRANSLATORS: file: product/views/ContainerImage.yaml
-_("ContainerImage")
-# TRANSLATORS: file: product/views/ContainerImage.yaml
-_("Image Registry")
-# TRANSLATORS: file: product/views/StorageFile-disk_files.yaml
-_("Datastore VM Provisioned Disk Files")
+# TRANSLATORS: file: product/views/ChargebackRate.yaml
+_("Chargeback Rates")
+# TRANSLATORS: file: product/views/MiqRequest.yaml
+_("Request State")
+# TRANSLATORS: file: product/views/MiqRequest.yaml
+_("Approved/Denied By")
+# TRANSLATORS: file: product/views/Container.yaml
+_("Image")
+# TRANSLATORS: file: product/views/MiqEvent.yaml
+_("Event")
+# TRANSLATORS: file: product/views/Job.yaml
+_("Jobs")
+# TRANSLATORS: file: product/views/Job.yaml
+_("Queued")
+# TRANSLATORS: file: product/views/Job.yaml
+_("Owner Message")
+# TRANSLATORS: file: product/views/OrchestrationTemplate.yaml
+_("Orchestration Template")
+# TRANSLATORS: file: product/views/Account-users.yaml
+_("Expires")
+# TRANSLATORS: file: product/views/OrchestrationStackResource.yaml
+_("Resources")
+# TRANSLATORS: file: product/views/OrchestrationStackResource.yaml
+_("Logical Resource")
+# TRANSLATORS: file: product/views/OrchestrationStackResource.yaml
+_("Physical Resource")
+# TRANSLATORS: file: product/views/OrchestrationStackResource.yaml
+_("Resource Category")
+# TRANSLATORS: file: product/views/OrchestrationStackResource.yaml
+_("Resource Status")
+# TRANSLATORS: file: product/views/OrchestrationStackResource.yaml
+_("Resource Status Reason")
+# TRANSLATORS: file: product/views/MiqProvision.yaml
+_("Provisions")
+# TRANSLATORS: file: product/views/GuestApplication.yaml
+_("Applications")
+# TRANSLATORS: file: product/views/GuestApplication.yaml
+_("Release")
+# TRANSLATORS: file: product/views/GuestApplication.yaml
+_("Package Name")
+# TRANSLATORS: file: product/views/GuestApplication.yaml
+_("Path")
+# TRANSLATORS: file: product/views/ConditionSet.yaml
+_("Condition Sets")
+# TRANSLATORS: file: product/views/ConditionSet.yaml
+_("ConditionSet")
