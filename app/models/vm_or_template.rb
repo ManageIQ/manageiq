@@ -474,7 +474,6 @@ class VmOrTemplate < ApplicationRecord
 
   def self.invoke_tasks_remote_queue(options, deliver_on = nil)
     queue_opts = {
-      :role        => "user_interface",
       :class_name  => base_class.name,
       :method_name => 'invoke_tasks_remote',
       :args        => [options]
