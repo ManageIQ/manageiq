@@ -10,19 +10,18 @@ describe ChargebackContainerImage do
   let(:month_beginning) { ts.beginning_of_month.utc }
   let(:month_end) { ts.end_of_month.utc }
   let(:hours_in_month) { Time.days_in_month(month_beginning.month, month_beginning.year) * 24 }
+  let(:ems) { FactoryGirl.create(:ems_openshift) }
 
   before do
     MiqRegion.seed
     ChargebackRate.seed
 
     EvmSpecHelper.create_guid_miq_server_zone
-    @ems = FactoryGirl.create(:ems_openshift)
-
     @node = FactoryGirl.create(:container_node, :name => "node")
-    @image = FactoryGirl.create(:container_image, :ext_management_system => @ems)
+    @image = FactoryGirl.create(:container_image, :ext_management_system => ems)
     @label = FactoryGirl.build(:custom_attribute, :name => "version_label-1", :value => "1.0.0-rc_2", :section => 'docker_labels')
-    @project = FactoryGirl.create(:container_project, :name => "my project", :ext_management_system => @ems)
-    @group = FactoryGirl.create(:container_group, :ext_management_system => @ems, :container_project => @project,
+    @project = FactoryGirl.create(:container_project, :name => "my project", :ext_management_system => ems)
+    @group = FactoryGirl.create(:container_group, :ext_management_system => ems, :container_project => @project,
                                 :container_node => @node)
     @container = FactoryGirl.create(:kubernetes_container, :container_group => @group, :container_image => @image)
     cat = FactoryGirl.create(:classification, :description => "Environment", :name => "environment", :single_value => true, :show => true)
@@ -55,7 +54,7 @@ describe ChargebackContainerImage do
                                                         :derived_memory_available => memory_available,
                                                         :derived_memory_used      => memory_used,
                                                         :net_usage_rate_average   => net_usage_rate,
-                                                        :parent_ems_id            => @ems.id,
+                                                        :parent_ems_id            => ems.id,
                                                         :tag_names                => "",
                                                         :resource_name            => @project.name,
                                                         :resource_id              => @project.id)
@@ -98,7 +97,7 @@ describe ChargebackContainerImage do
                                                         :derived_memory_available => memory_available,
                                                         :derived_memory_used      => memory_used,
                                                         :net_usage_rate_average   => net_usage_rate,
-                                                        :parent_ems_id            => @ems.id,
+                                                        :parent_ems_id            => ems.id,
                                                         :tag_names                => "",
                                                         :resource_name            => @project.name,
                                                         :resource_id              => @project.id)
@@ -144,7 +143,7 @@ describe ChargebackContainerImage do
                                                         :derived_memory_available => memory_available,
                                                         :derived_memory_used      => memory_used,
                                                         :net_usage_rate_average   => net_usage_rate,
-                                                        :parent_ems_id            => @ems.id,
+                                                        :parent_ems_id            => ems.id,
                                                         :tag_names                => "",
                                                         :resource_name            => @project.name,
                                                         :resource_id              => @project.id)

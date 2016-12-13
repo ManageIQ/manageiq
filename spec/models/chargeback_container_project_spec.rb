@@ -10,18 +10,17 @@ describe ChargebackContainerProject do
   let(:month_beginning) { ts.beginning_of_month.utc }
   let(:month_end) { ts.end_of_month.utc }
   let(:hours_in_month) { Time.days_in_month(month_beginning.month, month_beginning.year) * 24 }
+  let(:ems) {FactoryGirl.create(:ems_openshift) }
 
   before do
     MiqRegion.seed
     ChargebackRate.seed
 
     EvmSpecHelper.create_guid_miq_server_zone
-    @ems = FactoryGirl.create(:ems_openshift)
-
-    @project = FactoryGirl.create(:container_project, :name => "my project", :ext_management_system => @ems)
+    @project = FactoryGirl.create(:container_project, :name => "my project", :ext_management_system => ems)
 
     @cbr = FactoryGirl.create(:chargeback_rate, :rate_type => "Compute")
-    temp = {:cb_rate => @cbr, :object => @ems}
+    temp = {:cb_rate => @cbr, :object => ems}
     ChargebackRate.set_assignments(:compute, [temp])
 
     cat = FactoryGirl.create(:classification, :description => "Environment", :name => "environment", :single_value => true, :show => true)
@@ -53,7 +52,7 @@ describe ChargebackContainerProject do
                                                          :derived_memory_available => memory_available,
                                                          :derived_memory_used      => memory_used,
                                                          :net_usage_rate_average   => net_usage_rate,
-                                                         :parent_ems_id            => @ems.id,
+                                                         :parent_ems_id            => ems.id,
                                                          :tag_names                => "",
                                                          :resource_name            => @project.name)
       end
@@ -147,7 +146,7 @@ describe ChargebackContainerProject do
                                                          :derived_memory_available => memory_available,
                                                          :derived_memory_used      => memory_used,
                                                          :net_usage_rate_average   => net_usage_rate,
-                                                         :parent_ems_id            => @ems.id,
+                                                         :parent_ems_id            => ems.id,
                                                          :tag_names                => "",
                                                          :resource_name            => @project.name)
       end
@@ -242,7 +241,7 @@ describe ChargebackContainerProject do
                                                          :derived_memory_available => memory_available,
                                                          :derived_memory_used      => memory_used,
                                                          :net_usage_rate_average   => net_usage_rate,
-                                                         :parent_ems_id            => @ems.id,
+                                                         :parent_ems_id            => ems.id,
                                                          :tag_names                => "",
                                                          :resource_name            => @project.name)
       end
@@ -280,7 +279,7 @@ describe ChargebackContainerProject do
                                                       :derived_memory_available => memory_available,
                                                       :derived_memory_used      => memory_used,
                                                       :net_usage_rate_average   => net_usage_rate,
-                                                      :parent_ems_id            => @ems.id,
+                                                      :parent_ems_id            => ems.id,
                                                       :tag_names                => "environment/prod",
                                                       :resource_name            => @project.name)
       end
@@ -319,7 +318,7 @@ describe ChargebackContainerProject do
                                                       :derived_memory_available => memory_available,
                                                       :derived_memory_used      => memory_used,
                                                       :net_usage_rate_average   => net_usage_rate,
-                                                      :parent_ems_id            => @ems.id,
+                                                      :parent_ems_id            => ems.id,
                                                       :tag_names                => "",
                                                       :resource_name            => @project.name)
         # Empty metric for fixed compute
@@ -327,7 +326,7 @@ describe ChargebackContainerProject do
                                                       :timestamp                => time + 12.hours,
                                                       :cpu_usage_rate_average   => 0.0,
                                                       :derived_memory_used      => 0.0,
-                                                      :parent_ems_id            => @ems.id,
+                                                      :parent_ems_id            => ems.id,
                                                       :tag_names                => "",
                                                       :resource_name            => @project.name)
       end
