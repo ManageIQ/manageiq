@@ -3,6 +3,7 @@ class ContainerImage < ApplicationRecord
   include MiqPolicyMixin
   include ScanningMixin
   include TenantIdentityMixin
+  include CustomAttributeMixin
 
 
   DOCKER_IMAGE_PREFIX = "docker://"
@@ -20,6 +21,8 @@ class ContainerImage < ApplicationRecord
   has_one :operating_system, :through => :computer_system
   has_one :openscap_result, :dependent => :destroy
   has_many :openscap_rule_results, :through => :openscap_result
+  has_many :labels, -> { where(:section => "labels") }, :class_name => CustomAttribute, :as => :resource, :dependent => :destroy
+  has_many :docker_labels, -> { where(:section => "docker_labels") }, :class_name => CustomAttribute, :as => :resource, :dependent => :destroy
 
   serialize :exposed_ports, Hash
   serialize :environment_variables, Hash
@@ -97,6 +100,16 @@ class ContainerImage < ApplicationRecord
 
   def openscap_failed_rules_summary
     openscap_rule_results.where(:result => "fail").group(:severity).count.symbolize_keys
+  end
+
+  def disconnect_inv
+    _log.info "Disconnecting Image [#{name}] id [#{id}] from EMS [#{ext_management_system.name}]" \
+    "id [#{ext_management_system.id}] "
+    self.container_image_registry = nil
+    self.old_ems_id = ems_id
+    self.ext_management_system = nil
+    self.deleted_on = Time.now.utc
+    save
   end
 
   alias_method :perform_metadata_sync, :sync_stashed_metadata

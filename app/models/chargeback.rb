@@ -22,7 +22,7 @@ class Chargeback < ActsAsArModel
     end
 
     base_rollup = MetricRollup.includes(
-      :resource           => [:hardware, :tenant, :tags, :vim_performance_states, :custom_attributes],
+      :resource           => [:hardware, :tenant, :tags, :vim_performance_states, :custom_attributes, {:container_image => :custom_attributes}],
       :parent_host        => :tags,
       :parent_ems_cluster => :tags,
       :parent_storage     => :tags,
@@ -144,6 +144,10 @@ class Chargeback < ActsAsArModel
                                                :tag_list => perf.tag_list_reconstruct.map! { |t| prefix + t },
                                                :parents  => get_rate_parents(perf))
       end
+    if perf.resource_type == Container.name && @rates[perf.hash_features_affecting_rate].empty?
+      @rates[perf.hash_features_affecting_rate] = [ChargebackRate.find_by(:description => "Default Container Image Rate", :rate_type => "Compute")]
+    end
+    @rates[perf.hash_features_affecting_rate]
   end
 
   def self.calculate_costs(metric_rollup_records, rates, hours_in_interval)

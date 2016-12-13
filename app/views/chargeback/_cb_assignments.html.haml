@@ -27,8 +27,20 @@
         :javascript
           miqInitSelectPicker();
           miqSelectPickerEvent("cbtag_cat", "#{url}")
+    - if !@edit[:new][:cbshow_typ].blank? && @edit[:new][:cbshow_typ].ends_with?("-labels")
+      .form-group
+        %label.col-md-2.control-label
+          = _('Docker Labels')
+        .col-md-8
+          - options = Array(@edit[:cb_assign][:docker_label_keys].invert).sort_by { |a| a.first.downcase }
+          = select_tag("cblabel_key", options_for_select([["<#{_('Choose a Label')}>", ""]] + options, @edit[:new][:cblabel_key].to_s),
+                      "data-miq_sparkle_on" => true, "data-miq_sparkle_off" => true, :class    => "selectpicker")
+        :javascript
+          miqInitSelectPicker();
+          miqSelectPickerEvent("cblabel_key", "#{url}")
   - unless @edit[:new][:cbshow_typ].nil? || @edit[:new][:cbshow_typ] == "nil"
-    - if !@edit[:new][:cbshow_typ].ends_with?("-tags") || @edit[:new][:cbtag_cat].present?
+    - show_type = @edit[:new][:cbshow_typ]
+    - if !(show_type.ends_with?("-tags") || show_type.ends_with?("-labels")) || @edit[:new][:cbtag_cat].present? || @edit[:new][:cblabel_key].present?
       %hr
       %h3
         = _('Selections')
@@ -76,6 +88,25 @@
               %tr
                 %td
                   = h(tag)
+                %td
+                  - options = @edit[:cb_rates].invert.sort
+                  = select_tag("#{@edit[:new][:cbshow_typ]}__#{id}",
+                              options_for_select([[nothing, "nil"]] + options, @edit[:new]["#{@edit[:new][:cbshow_typ]}__#{id}".to_sym].to_s),
+                              "data-miq_sparkle_on" => true, "data-miq_sparkle_off" => true, :class => "selectpicker")
+                :javascript
+                  miqInitSelectPicker();
+                  miqSelectPickerEvent("#{@edit[:new][:cbshow_typ]}__#{id}", "#{url}")
+      - elsif @edit[:new][:cbshow_typ].ends_with?("-labels")
+        %table.table.table-bordered.table-striped
+          %thead
+            %tr
+              %th= _('Name')
+              %th= _('Rate')
+          %tbody
+            - @edit[:cb_assign][:docker_label_values].invert.sort_by { |a| a.first.downcase }.each do |value, id|
+              %tr
+                %td
+                  = h(value)
                 %td
                   - options = @edit[:cb_rates].invert.sort
                   = select_tag("#{@edit[:new][:cbshow_typ]}__#{id}",

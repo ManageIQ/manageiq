@@ -12,6 +12,7 @@ module Metric::ChargebackHelper
     if resource_type == Container.name
       state = resource.vim_performance_state_for_ts(timestamp.to_s)
       tag_list += state.image_tag_names.split("|").inject([]) { |arr, t| arr << "/tag/managed/#{t}" } if state.present?
+      tag_list += resource.try(:container_image).try(:docker_labels).try(:collect) {|l| "/label/managed/#{l.name}/#{l.value}"}
     end
     tag_list
   end

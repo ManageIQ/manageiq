@@ -40,6 +40,7 @@ class ChargebackRate < ApplicationRecord
       assigned_tos = rate.get_assigned_tos
       assigned_tos[:tags].each    { |tag|    result << {:cb_rate => rate, :tag => tag} }
       assigned_tos[:objects].each { |object| result << {:cb_rate => rate, :object => object} }
+      assigned_tos[:labels].each  { |label|  result << {:cb_rate => rate, :label => label} }
     end
     result
   end
@@ -51,6 +52,7 @@ class ChargebackRate < ApplicationRecord
     cb_rates.each do |rate|
       rate[:cb_rate].assign_to_objects(rate[:object]) if rate.key?(:object)
       rate[:cb_rate].assign_to_tags(*rate[:tag])      if rate.key?(:tag)
+      rate[:cb_rate].assign_to_labels(*rate[:label])  if rate.key?(:label)
     end
   end
 
@@ -159,7 +161,7 @@ class ChargebackRate < ApplicationRecord
   end
 
   def assigned?
-    get_assigned_tos != {:objects => [], :tags => []}
+    get_assigned_tos != {:objects => [], :tags => [], :labels => []}
   end
 
   ###########################################################

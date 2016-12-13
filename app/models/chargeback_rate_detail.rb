@@ -234,7 +234,7 @@ class ChargebackRateDetail < ApplicationRecord
     fixture_file = File.join(FIXTURE_DIR, "chargeback_rates.yml")
     fixture = File.exist?(fixture_file) ? YAML.load_file(fixture_file) : []
     fixture.each do |chargeback_rate|
-      next unless chargeback_rate[:rate_type] == rate_type
+      next unless chargeback_rate[:rate_type] == rate_type && chargeback_rate[:description] == "Default"
 
       chargeback_rate[:rates].each do |detail|
         detail_new = ChargebackRateDetail.new(detail.slice(*ChargebackRateDetail::FORM_ATTRIBUTES))
