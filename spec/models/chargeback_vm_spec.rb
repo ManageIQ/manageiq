@@ -17,6 +17,7 @@ describe ChargebackVm do
   let(:net_usage_rate)            { 25.0 }
   let(:vm_used_disk_storage)      { 1.0 }
   let(:vm_allocated_disk_storage) { 4.0 }
+  let(:ts) { Time.now.in_time_zone(Metric::Helper.get_time_zone(options[:ext_options])) }
 
   before do
     MiqRegion.seed
@@ -67,8 +68,6 @@ describe ChargebackVm do
       @service << @vm1
       @service.save
 
-      tz = Metric::Helper.get_time_zone(options[:ext_options])
-      ts = Time.now.in_time_zone(tz)
       time     = ts.beginning_of_month.utc
       end_time = ts.end_of_month.utc
 
@@ -471,8 +470,6 @@ describe ChargebackVm do
   context "Monthly" do
     let(:options) { base_options.merge(:interval => 'monthly') }
     before  do
-      tz = Metric::Helper.get_time_zone(options[:ext_options])
-      ts = Time.now.in_time_zone(tz)
       time     = ts.beginning_of_month.utc
       end_time = ts.end_of_month.utc
 
@@ -877,8 +874,6 @@ describe ChargebackVm do
   context "Group by tags" do
     let(:options) { base_options.merge(:interval => 'monthly', :groupby_tag => 'environment') }
     before  do
-      tz = Metric::Helper.get_time_zone(options[:ext_options])
-      ts = Time.now.in_time_zone(tz)
       time     = ts.beginning_of_month.utc
       end_time = ts.end_of_month.utc
 

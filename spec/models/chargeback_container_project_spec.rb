@@ -6,6 +6,7 @@ describe ChargebackContainerProject do
   let(:memory_available)  { 1000.0 }
   let(:memory_used)       { 100.0 }
   let(:net_usage_rate)    { 25.0 }
+  let(:ts) { Time.now.in_time_zone(Metric::Helper.get_time_zone(options[:ext_options])) }
 
   before do
     MiqRegion.seed
@@ -135,8 +136,6 @@ describe ChargebackContainerProject do
   context "Monthly" do
     let(:options) { base_options.merge(:interval => 'monthly', :entity_id => @project.id, :tag => nil) }
     before do
-      tz = Metric::Helper.get_time_zone(options[:ext_options])
-      ts = Time.now.in_time_zone(tz)
       time     = ts.beginning_of_month.utc
       end_time = ts.end_of_month.utc
 
@@ -239,8 +238,6 @@ describe ChargebackContainerProject do
   context "tagged project" do
     let(:options) { base_options.merge(:interval => 'monthly', :entity_id => nil, :tag => '/managed/environment/prod') }
     before do
-      tz = Metric::Helper.get_time_zone(options[:ext_options])
-      ts = Time.now.in_time_zone(tz)
       time     = ts.beginning_of_month.utc
       end_time = ts.end_of_month.utc
 
@@ -285,8 +282,6 @@ describe ChargebackContainerProject do
   context "group results by tag" do
     let(:options) { base_options.merge(:interval => 'monthly', :entity_id => nil, :provider_id => 'all', :groupby_tag => 'environment') }
     before do
-      tz = Metric::Helper.get_time_zone(options[:ext_options])
-      ts = Time.now.in_time_zone(tz)
       time     = ts.beginning_of_month.utc
       end_time = ts.end_of_month.utc
 
@@ -333,8 +328,6 @@ describe ChargebackContainerProject do
   context "ignore empty metrics in fixed_compute" do
     let(:options) { base_options.merge(:interval => 'monthly', :entity_id => @project.id, :tag => nil) }
     before do
-      tz = Metric::Helper.get_time_zone(options[:ext_options])
-      ts = Time.now.in_time_zone(tz)
       time     = ts.beginning_of_month.utc
       end_time = ts.end_of_month.utc
 
