@@ -494,7 +494,7 @@ class VmOrTemplate < ApplicationRecord
 
     uri = URI::HTTPS.build(
       :host     => hostname,
-      :userinfo => "#{api_user}:#{api_password}",
+      :userinfo => "#{CGI.escape(api_user)}:#{CGI.escape(api_password)}",
       :path     => "/api/vms"
     )
 
