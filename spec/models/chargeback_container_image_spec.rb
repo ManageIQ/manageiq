@@ -6,6 +6,7 @@ describe ChargebackContainerImage do
   let(:memory_available)  { 1000.0 }
   let(:memory_used)       { 100.0 }
   let(:net_usage_rate)    { 25.0 }
+  let(:ts) { Time.now.in_time_zone(Metric::Helper.get_time_zone(options[:ext_options])) }
 
   before do
     MiqRegion.seed
@@ -86,8 +87,6 @@ describe ChargebackContainerImage do
     let(:options) { base_options.merge(:interval => 'monthly', :entity_id => @project.id, :tag => nil) }
     before do
 
-      tz = Metric::Helper.get_time_zone(options[:ext_options])
-      ts = Time.now.in_time_zone(tz)
       time     = ts.beginning_of_month.utc
       end_time = ts.end_of_month.utc
 
@@ -139,8 +138,6 @@ describe ChargebackContainerImage do
       @image.docker_labels << @label
       ChargebackRate.set_assignments(:compute, [{ :cb_rate => @cbr, :label => [@label, "container_image"] }])
 
-      tz = Metric::Helper.get_time_zone(options[:ext_options])
-      ts = Time.now.in_time_zone(tz)
       time     = ts.beginning_of_month.utc
       end_time = ts.end_of_month.utc
 
