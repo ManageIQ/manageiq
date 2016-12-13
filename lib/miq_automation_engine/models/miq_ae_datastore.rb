@@ -173,9 +173,18 @@ module MiqAeDatastore
   end
 
   def self.reset_domains_from_vmdb_plugins
-    Vmdb::Plugins.instance.registered_automate_domains.each do |domain|
+    datastores_for_reset.each do |domain|
       reset_domain(domain.datastores_path.to_s, domain.name, Tenant.root_tenant)
     end
+  end
+
+  def self.datastores_for_reset
+    if Rails.env == "test" && ENV["AUTOMATE_DOMAINS"]
+      domains = ENV["AUTOMATE_DOMAINS"].split(",")
+      return Vmdb::Plugins.instance.registered_automate_domains.select { |i| domains.include?(i.name) }
+    end
+
+    Vmdb::Plugins.instance.registered_automate_domains
   end
 
   def self.default_domain_names
