@@ -31,8 +31,13 @@ describe ReportHelper do
       }
 
       options = chart_fields_options
+      expected_array = [
+        ["Nothing selected", nil],
+        ["Memory (Total)", "Vm-mem_cpu:total"],
+        ["Allocated Disk Storage (Total)", "Vm-allocated_disk_storage:total"]
+      ]
 
-      expect(options).to eq([["Memory (Total)", "Vm-mem_cpu:total"], ["Allocated Disk Storage (Total)", "Vm-allocated_disk_storage:total"]])
+      expect(options).to eq(expected_array)
     end
 
     it 'should return numeric fields from report with models when "Show Sort Breaks" is "No"' do
@@ -51,7 +56,13 @@ describe ReportHelper do
 
       options = chart_fields_options
 
-      expect(options).to eq([[" Memory", "Vm-mem_cpu"], [" Allocated Disk Storage", "Vm-allocated_disk_storage"]])
+      expected_array = [
+        ["Nothing selected", nil],
+        [" Memory", "Vm-mem_cpu"],
+        [" Allocated Disk Storage", "Vm-allocated_disk_storage"]
+      ]
+
+      expect(options).to eq(expected_array)
     end
   end
 end
