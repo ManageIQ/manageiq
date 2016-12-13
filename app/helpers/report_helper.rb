@@ -27,29 +27,30 @@ module ReportHelper
   end
 
   def chart_fields_options
-    if @edit[:new][:group] != 'No'
-      groupings = @edit[:new][:col_options].find_all do |_field, col_options|
-        col_options[:grouping].present? && !col_options[:grouping].empty?
-      end
-      groupings.each_with_object([]) do |(field, col_options), options|
-        model = @edit[:new][:model]
-        col_options[:grouping].each do |fun|
-          field_key = if field =~ /\./
-                        f = field.sub('.', '-')
-                        "#{model}.#{f}"
-                      else
-                        "#{model}-#{field}"
-                      end
-          field_label = @edit[:new][:headers][field_key]
-          options << ["#{field_label} (#{fun.to_s.titleize})", "#{model}-#{field}:#{fun}"]
-        end
-      end
-    else
-      @edit[:new][:field_order].find_all do |f|
-        ci = MiqReport.get_col_info(f.last.split("__").first)
-        ci[:numeric]
-      end
-    end
+    chart_data_columns = if @edit[:new][:group] != 'No'
+                           groupings = @edit[:new][:col_options].find_all do |_field, col_options|
+                             col_options[:grouping].present? && !col_options[:grouping].empty?
+                           end
+                           groupings.each_with_object([]) do |(field, col_options), options|
+                             model = @edit[:new][:model]
+                             col_options[:grouping].each do |fun|
+                               field_key = if field =~ /\./
+                                             f = field.sub('.', '-')
+                                             "#{model}.#{f}"
+                                           else
+                                             "#{model}-#{field}"
+                                           end
+                               field_label = @edit[:new][:headers][field_key]
+                               options << ["#{field_label} (#{fun.to_s.titleize})", "#{model}-#{field}:#{fun}"]
+                             end
+                           end
+                         else
+                           @edit[:new][:field_order].find_all do |f|
+                             ci = MiqReport.get_col_info(f.last.split("__").first)
+                             ci[:numeric]
+                           end
+                         end
+    [[_("Nothing selected"), nil]] + chart_data_columns
   end
 
   # We allow value-based charts when we have aggregations or
