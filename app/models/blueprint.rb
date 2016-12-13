@@ -4,6 +4,7 @@ class Blueprint < ApplicationRecord
 
   virtual_has_one :bundle
   virtual_has_one :content, :class_name => "Hash"
+  virtual_column :in_use?, :type => :boolean
 
   acts_as_miq_taggable
 
@@ -14,6 +15,11 @@ class Blueprint < ApplicationRecord
 
   def published?
     status == 'published'
+  end
+
+  def in_use?
+    return false unless published?
+    bundle.request_class.exists?(:source_id => bundle.id)
   end
 
   def readonly?
