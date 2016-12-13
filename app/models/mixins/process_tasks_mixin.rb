@@ -22,7 +22,7 @@ module ProcessTasksMixin
 
     # Performs tasks received from the UI via the queue
     def invoke_tasks(options)
-      local, remote = partition_ids_by_remote_region(options[:ids])
+      local, remote = partition_ids_by_remote_region(options[:ids].map(&:to_i))
       invoke_tasks_local(options.merge(:ids => local)) unless local.empty?
 
       # TODO: invoke_tasks_remote currently is only implemented by VmOrTemplate.
