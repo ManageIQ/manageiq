@@ -213,6 +213,7 @@
     this.settings.sortedByTitle = __('Sorted By');
     this.settings.isLoading = false;
     this.settings.scrollElement = MAIN_CONTETN_ID;
+    this.settings.dropDownClass = ['dropup'];
   }
 
   ReportDataController.prototype.setExtraClasses = function(viewType) {
@@ -223,7 +224,7 @@
         angular.element(mainContent).addClass('miq-sand-paper');
       }
     }
-    
+
     var rightPanel = document.getElementById(RIGHT_PANEL);
     if (rightPanel) {
       angular.element(rightPanel).removeClass('right-panel-data');
