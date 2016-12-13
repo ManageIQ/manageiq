@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-# Euwe Release Candidate 2
+# Euwe
 
 ## Added
 
@@ -86,6 +86,7 @@ All notable changes to this project will be documented in this file.
       - `expose :last_compliance`
     - Expose ems_events to Vm service model
     - Expose a group's filters.
+
 - Services
   - Set default entry points for non-generic catalog items
   - Service resolution based on Provision Order
@@ -278,17 +279,16 @@ All notable changes to this project will be documented in this file.
 
 ### REST API
 
-- Adding support for /api/requests creation and edits
+- Support for /api/requests creation and edits
 - Token manager supports for web sockets
 - Added ability to query virtual machines for cockpit support
-- Added support for Bulk queries
-- Added support for UI notification drawer
+- Support for Bulk queries
+- Support for UI notification drawer
 - API entrypoint returns details about the appliance via server_info
 - Support for compressed ids in inbound requests
 - CRUD support for Arbitration Rules
 - Added GET role identifiers
 - Support for arbitrary resource paths
-- Work started on [ManageIQ API Client](https://github.com/ManageIQ/manageiq-api-client)
 - Support for Arbitration Profiles
 - Support for Cloud Networks queries
 - Support for Arbitration Settings
@@ -297,8 +297,7 @@ All notable changes to this project will be documented in this file.
 - Support for approving or denying service requests
 - Support for OpenShift Container Deployments
 - Support for Virtual Templates
-- Version bumped to 2.3.0 in preparation for Euwe release
-- New /api/automate primary collection
+- Added /api/automate primary collection
   - Enhanced to return additional product information for the About modal
   - Bulk queries now support referencing resources by attributes
   - Added ability to delete one’s own notifications
@@ -375,6 +374,8 @@ All notable changes to this project will be documented in this file.
 - Add UI for generating authorization keys for remote regions
 - Topology for Cloud Managers
 - Topology for Infrastructure Providers
+- Show replication excluded tables to the replication tab in Settings
+- Fix angular controller for Network Router and Cloud Subnet
 
 ## Changed
 
@@ -422,6 +423,7 @@ All notable changes to this project will be documented in this file.
   - Filters moved to to Entitlement model
   - Enabler for sharing entitlements   
 - MiqExpression Refactoring
+- LDAP: Allow apostrophes in email addresses
 
 ### Providers
 
@@ -473,12 +475,20 @@ Notable fixes include:
 - Fixed issue where alerts don't send SNMP v1 traps
 - Fixed problem with request_pending email method
 - Set User.current_user in Automation Engine to fix issue where provisioning resources were not being assigned to the correct tenant
-- Provisioning: VMware Infrastructure: sysprep_product_id field is no longer required
+- Provisioning
+  - VMware Infrastructure: sysprep_product_id field is no longer required
+  - Provisioned Notifications - Use Automate notifications instead of event notifications.
 - Fixed ordering ae_domains for a root tenant
 - Set default value of param visible to true for all field types
+- Git Domains
+  - When a domain is deleted, also delete git based bare repository on the appliance with the git owner server role
+  - Only enable git import submit button when a branch or tag is selected
 
 ### Platform
 
+-  Authentication
+  - Support a separate auth URL for external authentication
+  - Remove the FQDN from group names for external authentication
 - Use correct adjustment in chargeback reports
 - Replication
   - Add repmgr tables to replication excludes
@@ -487,6 +497,8 @@ Notable fixes include:
 - Tenancy: User friendly tenant names
 - Perform RBAC user filter check on requested ids before allowing request
 - Increase worker memory thresholds to avoid frequent restarts
+- Send notifications only when user is authorized to see referenced object
+- Increase  web socket worker's pool size
 
 ### Providers
 
@@ -498,10 +510,12 @@ Notable fixes include:
 - Openstack
   - Catch unauthorized exception in refresh
   - Add logs for network and subnet CRUD
+  - Remove port_security_enabled from attributes passed to network create
 - Middleware: Fix operation timeout parameter fetch
 - Red Hat Enterprise Virtualization
   - Access VM Cluster relationship correctly
   - Pass storage domains collection in disks RHV api request
+  - Require a description when creating Snapshot
 
 ### REST API
 
@@ -528,6 +542,9 @@ Notable fixes include:
 - Fix for custom logo in header
 - Fall back to VMRC desktop client if no NPAPI plugin is available
 - Default Filters can be saved or reset
+- Prevent service dialog refreshing every time a dropdown item is selected
+- RBAC: Add Storage Product Features for Roles
+- Set categories correctly for policy timelines
 
 # Darga
 
