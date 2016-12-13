@@ -21,13 +21,13 @@ describe ChargebackVm do
   let(:month_beginning) { ts.beginning_of_month.utc }
   let(:month_end) { ts.end_of_month.utc }
   let(:hours_in_month) { Time.days_in_month(month_beginning.month, month_beginning.year) * 24 }
+  let(:ems) { FactoryGirl.create(:ems_vmware) }
 
   before do
     MiqRegion.seed
     ChargebackRate.seed
 
     guid, server, zone = EvmSpecHelper.create_guid_miq_server_zone
-    @ems = FactoryGirl.create(:ems_vmware)
     cat = FactoryGirl.create(:classification, :description => "Environment", :name => "environment", :single_value => true, :show => true)
     c = FactoryGirl.create(:classification, :name => "prod", :description => "Production", :parent_id => cat.id)
     @tag = Tag.find_by_name("/managed/environment/prod")
@@ -39,7 +39,7 @@ describe ChargebackVm do
     @storage = FactoryGirl.create(:storage_target_vmware)
     @host1.storages << @storage
 
-    @ems_cluster = FactoryGirl.create(:ems_cluster, :ext_management_system => @ems)
+    @ems_cluster = FactoryGirl.create(:ems_cluster, :ext_management_system => ems)
     @ems_cluster.hosts << @host1
 
     @cbr = FactoryGirl.create(:chargeback_rate, :rate_type => "Compute")
@@ -88,7 +88,7 @@ describe ChargebackVm do
                                                   :tag_names                         => "environment/prod",
                                                   :parent_host_id                    => @host1.id,
                                                   :parent_ems_cluster_id             => @ems_cluster.id,
-                                                  :parent_ems_id                     => @ems.id,
+                                                  :parent_ems_id                     => ems.id,
                                                   :parent_storage_id                 => @storage.id,
                                                   :resource_name                     => @vm1.name,
                                                  )
@@ -153,7 +153,7 @@ describe ChargebackVm do
                                                   :tag_names                         => "environment/prod",
                                                   :parent_host_id                    => @host1.id,
                                                   :parent_ems_cluster_id             => @ems_cluster.id,
-                                                  :parent_ems_id                     => @ems.id,
+                                                  :parent_ems_id                     => ems.id,
                                                   :parent_storage_id                 => @storage.id,
                                                   :resource_name                     => @vm1.name,
                                                  )
@@ -449,7 +449,7 @@ describe ChargebackVm do
                              :tag_names                         => "environment/prod",
                              :parent_host_id                    => @host1.id,
                              :parent_ems_cluster_id             => @ems_cluster.id,
-                             :parent_ems_id                     => @ems.id,
+                             :parent_ems_id                     => ems.id,
                              :parent_storage_id                 => @storage.id,
                              :resource_name                     => @vm_tenant.name,
                             )
@@ -485,7 +485,7 @@ describe ChargebackVm do
                                                   :tag_names                         => "environment/prod",
                                                   :parent_host_id                    => @host1.id,
                                                   :parent_ems_cluster_id             => @ems_cluster.id,
-                                                  :parent_ems_id                     => @ems.id,
+                                                  :parent_ems_id                     => ems.id,
                                                   :parent_storage_id                 => @storage.id,
                                                   :resource_name                     => @vm1.name,
                                                  )
@@ -766,7 +766,7 @@ describe ChargebackVm do
     let(:metric_rollup) do
       FactoryGirl.create(:metric_rollup_vm_hr, :timestamp => "2012-08-31T07:00:00Z", :tag_names => "environment/prod",
                                                :parent_host_id => @host1.id, :parent_ems_cluster_id => @ems_cluster.id,
-                                               :parent_ems_id => @ems.id, :parent_storage_id => @storage.id,
+                                               :parent_ems_id => ems.id, :parent_storage_id => @storage.id,
                                                :resource => @vm1)
     end
     let(:consumption) { Chargeback::ConsumptionWithRollups.new([metric_rollup], nil, nil) }
@@ -815,12 +815,12 @@ describe ChargebackVm do
       let(:metric_rollup) do
         FactoryGirl.build(:metric_rollup_vm_hr, :tag_names => 'environment/prod',
                           :parent_host_id => @host1.id, :parent_ems_cluster_id => @ems_cluster.id,
-                          :parent_ems_id => @ems.id, :parent_storage_id => @storage.id,
+                          :parent_ems_id => ems.id, :parent_storage_id => @storage.id,
                           :resource => @vm1, :resource_name => @vm1.name)
       end
 
       it 'sets extra fields' do
-        is_expected.to include(shared_extra_fields.merge('provider_name' => @ems.name, 'provider_uid' => @ems.guid))
+        is_expected.to include(shared_extra_fields.merge('provider_name' => ems.name, 'provider_uid' => ems.guid))
       end
     end
 
@@ -855,7 +855,7 @@ describe ChargebackVm do
                                                   :tag_names                         => "environment/prod",
                                                   :parent_host_id                    => @host1.id,
                                                   :parent_ems_cluster_id             => @ems_cluster.id,
-                                                  :parent_ems_id                     => @ems.id,
+                                                  :parent_ems_id                     => ems.id,
                                                   :parent_storage_id                 => @storage.id,
                                                   :resource_name                     => @vm1.name,
         )
