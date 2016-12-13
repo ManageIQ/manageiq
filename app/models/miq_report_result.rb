@@ -149,7 +149,7 @@ class MiqReportResult < ApplicationRecord
 
     html_string << report_build_html_table(report_results, html_rows.join)  # Build the html report table using all html rows
 
-    PdfGenerator.pdf_from_string(html_string, 'pdf_report')
+    PdfGenerator.pdf_from_string(html_string, "pdf_report.css")
   end
 
   # Generate the header html section for pdfs
