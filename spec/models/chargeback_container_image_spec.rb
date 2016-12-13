@@ -9,6 +9,7 @@ describe ChargebackContainerImage do
   let(:ts) { Time.now.in_time_zone(Metric::Helper.get_time_zone(options[:ext_options])) }
   let(:month_beginning) { ts.beginning_of_month.utc }
   let(:month_end) { ts.end_of_month.utc }
+  let(:hours_in_month) { Time.days_in_month(month_beginning.month, month_beginning.year) * 24 }
 
   before do
     MiqRegion.seed
@@ -89,8 +90,6 @@ describe ChargebackContainerImage do
   context "Monthly" do
     let(:options) { base_options.merge(:interval => 'monthly', :entity_id => @project.id, :tag => nil) }
     before do
-      @hours_in_month = Time.days_in_month(month_beginning.month, month_beginning.year) * 24
-
       Range.new(month_beginning, month_end, true).step_value(12.hours).each do |time|
         @container.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr,
                                                         :timestamp                => time,
@@ -127,7 +126,7 @@ describe ChargebackContainerImage do
     }
     it "fixed_compute" do
       # .to be_within(0.01) is used since theres a float error here
-      expect(subject.fixed_compute_1_cost).to be_within(0.01).of(hourly_rate * @hours_in_month)
+      expect(subject.fixed_compute_1_cost).to be_within(0.01).of(hourly_rate * hours_in_month)
     end
   end
 
@@ -136,8 +135,6 @@ describe ChargebackContainerImage do
     before do
       @image.docker_labels << @label
       ChargebackRate.set_assignments(:compute, [{ :cb_rate => @cbr, :label => [@label, "container_image"] }])
-
-      @hours_in_month = Time.days_in_month(month_beginning.month, month_end.year) * 24
 
       Range.new(month_beginning, month_end, true).step_value(12.hours).each do |time|
         @container.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr,
@@ -175,7 +172,7 @@ describe ChargebackContainerImage do
     }
     it "fixed_compute" do
       # .to be_within(0.01) is used since theres a float error here
-      expect(subject.fixed_compute_1_cost).to be_within(0.01).of(hourly_rate * @hours_in_month)
+      expect(subject.fixed_compute_1_cost).to be_within(0.01).of(hourly_rate * hours_in_month)
     end
   end
 end
