@@ -71,7 +71,6 @@ describe ReportFormatter::JqplotFormatter do
       render_report(report)
       expect(report.chart[:data][0]).to eq([["linux_esx: 3", 3], ["widloze: 1", 1]])
       expect(report.chart[:options][:seriesDefaults][:renderer]).to eq("jQuery.jqplot.PieRenderer")
-      expect(report.chart[:options][:series][0][:label]).to eq("OS Name")
       expect(report.chart[:options][:highlighter]).to be_truthy
     end
   end
