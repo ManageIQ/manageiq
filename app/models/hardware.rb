@@ -41,7 +41,7 @@ class Hardware < ApplicationRecord
   end
 
   def ram_size_in_bytes
-    memory_mb * 1.megabyte
+    memory_mb.to_i * 1.megabyte
   end
 
   @@dh = {"type" => "device_name", "devicetype" => "device_type", "id" => "location", "present" => "present",
