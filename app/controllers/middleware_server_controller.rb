@@ -283,7 +283,10 @@ class MiddlewareServerController < ApplicationController
     end
 
     op = mw_manager.public_method operation
-    if params
+
+    if mw_server.instance_of? MiddlewareDeployment
+      op.call(path, mw_server.name)
+    elsif params
       op.call(path, params)
     else
       op.call(path)
