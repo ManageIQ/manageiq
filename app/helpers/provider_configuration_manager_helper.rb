@@ -12,7 +12,7 @@ module ProviderConfigurationManagerHelper
 
   def textual_hostname
     {:label => _("Hostname"),
-     :image => "configured_system",
+     :image => "100/configured_system.png",
      :value => @record.hostname,
     }
   end
@@ -31,7 +31,7 @@ module ProviderConfigurationManagerHelper
 
   def textual_provider_name
     {:label    => _("Provider"),
-     :image    => "vendor-#{@record.configuration_manager.image_name}",
+     :image    => "100/vendor-#{@record.configuration_manager.image_name}.png",
      :value    => @record.configuration_manager.try(:name),
      :explorer => true
     }
