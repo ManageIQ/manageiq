@@ -306,6 +306,9 @@ describe Blueprint do
 
       ui_property_ids = subject.ui_properties.fetch_path('chart_data_model', 'nodes').pluck('id')
       expect(ui_property_ids).to match_array(bundle.descendants.pluck(:id))
+
+      dialog_id = subject.ui_properties.fetch_path('service_dialog', 'id')
+      expect(dialog_id).to eq(bundle.resource_actions.first.dialog.id)
     end
   end
 end
