@@ -9,6 +9,7 @@ describe ChargebackContainerProject do
   let(:ts) { Time.now.in_time_zone(Metric::Helper.get_time_zone(options[:ext_options])) }
   let(:month_beginning) { ts.beginning_of_month.utc }
   let(:month_end) { ts.end_of_month.utc }
+  let(:hours_in_month) { Time.days_in_month(month_beginning.month, month_beginning.year) * 24 }
 
   before do
     MiqRegion.seed
@@ -134,8 +135,6 @@ describe ChargebackContainerProject do
   context "Monthly" do
     let(:options) { base_options.merge(:interval => 'monthly', :entity_id => @project.id, :tag => nil) }
     before do
-      @hours_in_month = Time.days_in_month(month_beginning.month, month_beginning.year) * 24
-
       Range.new(month_beginning, month_end, true).step_value(12.hours).each do |time|
         @project.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr,
                                                          :timestamp                => time,
@@ -167,9 +166,9 @@ describe ChargebackContainerProject do
       cbrd.chargeback_tiers = [cbt]
       cbrd.save
 
-      metric_used = used_average_for(:cpu_usage_rate_average, @hours_in_month)
+      metric_used = used_average_for(:cpu_usage_rate_average, hours_in_month)
       expect(subject.cpu_cores_used_metric).to be_within(0.01).of(metric_used)
-      expect(subject.cpu_cores_used_cost).to be_within(0.01).of(metric_used * hourly_rate * @hours_in_month)
+      expect(subject.cpu_cores_used_cost).to be_within(0.01).of(metric_used * hourly_rate * hours_in_month)
     end
 
     it "memory" do
@@ -185,9 +184,9 @@ describe ChargebackContainerProject do
       cbrd.chargeback_tiers = [cbt]
       cbrd.save
 
-      metric_used = used_average_for(:derived_memory_used, @hours_in_month)
+      metric_used = used_average_for(:derived_memory_used, hours_in_month)
       expect(subject.memory_used_metric).to be_within(0.01).of(metric_used)
-      expect(subject.memory_used_cost).to be_within(0.01).of(metric_used * hourly_rate * @hours_in_month)
+      expect(subject.memory_used_cost).to be_within(0.01).of(metric_used * hourly_rate * hours_in_month)
     end
 
     it "net io" do
@@ -203,9 +202,9 @@ describe ChargebackContainerProject do
       cbrd.chargeback_tiers = [cbt]
       cbrd.save
 
-      metric_used = used_average_for(:net_usage_rate_average, @hours_in_month)
+      metric_used = used_average_for(:net_usage_rate_average, hours_in_month)
       expect(subject.net_io_used_metric).to be_within(0.01).of(metric_used)
-      expect(subject.net_io_used_cost).to be_within(0.01).of(metric_used * hourly_rate * @hours_in_month)
+      expect(subject.net_io_used_cost).to be_within(0.01).of(metric_used * hourly_rate * hours_in_month)
     end
 
     let(:cbt) { FactoryGirl.create(:chargeback_tier,
@@ -219,7 +218,7 @@ describe ChargebackContainerProject do
                                     :chargeback_tiers   => [cbt]) }
     it "fixed_compute" do
       # .to be_within(0.01) is used since theres a float error here
-      expect(subject.fixed_compute_1_cost).to be_within(0.01).of(hourly_rate * @hours_in_month)
+      expect(subject.fixed_compute_1_cost).to be_within(0.01).of(hourly_rate * hours_in_month)
       expect(subject.fixed_compute_metric).to eq(@metric_size)
     end
   end
@@ -227,8 +226,6 @@ describe ChargebackContainerProject do
   context "tagged project" do
     let(:options) { base_options.merge(:interval => 'monthly', :entity_id => nil, :tag => '/managed/environment/prod') }
     before do
-      @hours_in_month = Time.days_in_month(month_beginning.month, month_beginning.year) * 24
-
       Range.new(month_beginning, month_end, true).step_value(12.hours).each do |time|
         @project.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr,
                                                          :timestamp                => time,
@@ -258,17 +255,15 @@ describe ChargebackContainerProject do
       cbrd.chargeback_tiers = [cbt]
       cbrd.save
 
-      metric_used = used_average_for(:cpu_usage_rate_average, @hours_in_month)
+      metric_used = used_average_for(:cpu_usage_rate_average, hours_in_month)
       expect(subject.cpu_cores_used_metric).to be_within(0.01).of(metric_used)
-      expect(subject.cpu_cores_used_cost).to be_within(0.01).of(metric_used * hourly_rate * @hours_in_month)
+      expect(subject.cpu_cores_used_cost).to be_within(0.01).of(metric_used * hourly_rate * hours_in_month)
     end
   end
 
   context "group results by tag" do
     let(:options) { base_options.merge(:interval => 'monthly', :entity_id => nil, :provider_id => 'all', :groupby_tag => 'environment') }
     before do
-      @hours_in_month = Time.days_in_month(month_beginning.month, month_beginning.year) * 24
-
       Range.new(month_beginning, month_end, true).step_value(12.hours).each do |time|
         @project.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr,
                                                       :timestamp                => time,
@@ -298,9 +293,9 @@ describe ChargebackContainerProject do
       cbrd.chargeback_tiers = [cbt]
       cbrd.save
 
-      metric_used = used_average_for(:cpu_usage_rate_average, @hours_in_month)
+      metric_used = used_average_for(:cpu_usage_rate_average, hours_in_month)
       expect(subject.cpu_cores_used_metric).to be_within(0.01).of(metric_used)
-      expect(subject.cpu_cores_used_cost).to be_within(0.01).of(metric_used * hourly_rate * @hours_in_month)
+      expect(subject.cpu_cores_used_cost).to be_within(0.01).of(metric_used * hourly_rate * hours_in_month)
       expect(subject.tag_name).to eq('Production')
     end
   end
@@ -308,8 +303,6 @@ describe ChargebackContainerProject do
   context "ignore empty metrics in fixed_compute" do
     let(:options) { base_options.merge(:interval => 'monthly', :entity_id => @project.id, :tag => nil) }
     before do
-      @hours_in_month = Time.days_in_month(month_beginning.month, month_beginning.year) * 24
-
       Range.new(month_beginning, month_end, true).step_value(24.hours).each do |time|
         @project.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr,
                                                       :timestamp                => time,
@@ -351,7 +344,7 @@ describe ChargebackContainerProject do
 
     it "fixed_compute" do
       # .to be_within(0.01) is used since theres a float error here
-      expect(subject.fixed_compute_1_cost).to be_within(0.01).of(hourly_rate * @hours_in_month)
+      expect(subject.fixed_compute_1_cost).to be_within(0.01).of(hourly_rate * hours_in_month)
       expect(subject.fixed_compute_metric).to eq(@metric_size / 2)
     end
   end
