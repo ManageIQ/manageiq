@@ -3,7 +3,7 @@ describe ChargebackVm do
 
   let(:admin) { FactoryGirl.create(:user_admin) }
   let(:base_options) do
-    {:interval_size       => 1,
+    {:interval_size       => 2,
      :end_interval_offset => 0,
      :tag                 => '/managed/environment/prod',
      :ext_options         => {:tz => 'UTC'},
@@ -15,8 +15,8 @@ describe ChargebackVm do
   let(:memory_available)          { 1000.0 }
   let(:vm_allocated_disk_storage) { 4.0 }
   let(:starting_date) { Time.parse('2012-09-01 23:59:59Z').utc }
-  let(:ts) { starting_date.in_time_zone(Metric::Helper.get_time_zone(options[:ext_options])) }
-  let(:report_run_time) { starting_date }
+  let(:ts) { starting_date.in_time_zone(Metric::Helper.get_time_zone(base_options[:ext_options])) }
+  let(:report_run_time) { month_end }
   let(:month_beginning) { ts.beginning_of_month.utc }
   let(:month_end) { ts.end_of_month.utc }
   let(:hours_in_month) { Time.days_in_month(month_beginning.month, month_beginning.year) * 24 }

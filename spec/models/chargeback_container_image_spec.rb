@@ -1,9 +1,9 @@
 describe ChargebackContainerImage do
-  let(:base_options) { {:interval_size => 1, :end_interval_offset => 0, :ext_options => {:tz => 'UTC'} } }
+  let(:base_options) { {:interval_size => 2, :end_interval_offset => 0, :ext_options => {:tz => 'UTC'} } }
   let(:hourly_rate)       { 0.01 }
   let(:starting_date) { Time.parse('2012-09-01 23:59:59Z').utc }
   let(:ts) { starting_date.in_time_zone(Metric::Helper.get_time_zone(options[:ext_options])) }
-  let(:report_run_time) { starting_date }
+  let(:report_run_time) { month_end }
   let(:month_beginning) { ts.beginning_of_month.utc }
   let(:month_end) { ts.end_of_month.utc }
   let(:hours_in_month) { Time.days_in_month(month_beginning.month, month_beginning.year) * 24 }
