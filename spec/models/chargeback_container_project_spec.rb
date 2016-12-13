@@ -349,7 +349,7 @@ describe ChargebackContainerProject do
 
         # Empty metric for fixed compute
         @project.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr,
-                                                      :timestamp                => "2012-08-31T07:00:00Z",
+                                                      :timestamp                => time,
                                                       :cpu_usage_rate_average   => 0.0,
                                                       :derived_memory_used      => 0.0,
                                                       :parent_ems_id            => @ems.id,
