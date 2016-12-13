@@ -259,6 +259,7 @@ module MiqAeServiceSpec
 
       it "#port_open" do
         allow(workspace).to receive(:persist_state_hash).and_return({})
+        allow(workspace).to receive(:disable_rbac)
 
         expect(miq_ae_service.utils.respond_to?(:port_open)).to be_truthy
       end
