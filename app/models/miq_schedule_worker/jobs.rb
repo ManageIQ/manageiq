@@ -105,6 +105,10 @@ class MiqScheduleWorker::Jobs
     queue_work(:class_name => "Metric::Purging", :method_name => "purge_rollup_timer", :zone => nil)
   end
 
+  def drift_state_purge_timer
+    queue_work(:class_name => "DriftState", :method_name => "purge_timer", :zone => nil)
+  end
+
   def ems_event_purge_timer
     queue_work(:class_name => "EventStream", :method_name => "purge_timer", :zone => nil)
   end
