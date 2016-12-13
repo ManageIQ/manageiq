@@ -106,6 +106,29 @@ describe ReportFormatter::TimelineMessage do
     end
   end
 
+  describe '#message_html on policy event' do
+    row = {}
+    let(:vm) { FactoryGirl.create(:vm_redhat, :id => 42, :name => 'Test VM') }
+    let(:event) do
+      FactoryGirl.create(:policy_event,
+                         :event_type   => 'vm_poweroff',
+                         :target_id    => 42,
+                         :target_name  => vm.name,
+                         :target_class => 'VmOrTemplate')
+    end
+
+    tests = {'event_type'  => 'vm_poweroff',
+             'target_name' => 'Test VM<br><b>VM or Template:</b>&nbsp;<a href=/vm_or_template/show/42>Test VM</a><br/><b>Assigned Profiles:</b>&nbsp;'}
+
+    tests.each do |column, href|
+      it "Evaluate column #{column} content" do
+        row[column] = 'vm_poweroff'
+        val = ReportFormatter::TimelineMessage.new(row, event, {}, 'PolicyEvent').message_html(column)
+        expect(val).to eq(href)
+      end
+    end
+  end
+
   describe '#events count for different categories' do
     def stub_ems_event(event_type)
       ems = FactoryGirl.create(:ems_redhat)
