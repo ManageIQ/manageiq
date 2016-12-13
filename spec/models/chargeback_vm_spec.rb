@@ -1,7 +1,7 @@
 describe ChargebackVm do
   let(:admin) { FactoryGirl.create(:user_admin) }
   let(:base_options) do
-    {:interval_size       => 1,
+    {:interval_size       => 2,
      :end_interval_offset => 0,
      :tag                 => '/managed/environment/prod',
      :ext_options         => {:tz => 'Pacific Time (US & Canada)'},
@@ -18,7 +18,7 @@ describe ChargebackVm do
   let(:vm_used_disk_storage)      { 1.0 }
   let(:vm_allocated_disk_storage) { 4.0 }
   let(:starting_date) { Time.zone.parse('2012-09-01 00:00:00 UTC') }
-  let(:ts) { starting_date.in_time_zone(Metric::Helper.get_time_zone(options[:ext_options])) }
+  let(:ts) { starting_date.in_time_zone(Metric::Helper.get_time_zone(base_options[:ext_options])) }
   let(:month_beginning) { ts.beginning_of_month.utc }
   let(:month_end) { ts.end_of_month.utc }
   let(:hours_in_month) { Time.days_in_month(month_beginning.month, month_beginning.year) * 24 }
@@ -47,7 +47,7 @@ describe ChargebackVm do
     temp = {:cb_rate => @cbr, :tag => [c, "vm"]}
     ChargebackRate.set_assignments(:compute, [temp])
 
-    Timecop.travel(starting_date)
+    Timecop.travel(month_end)
   end
 
   after do

@@ -1,5 +1,5 @@
 describe ChargebackContainerImage do
-  let(:base_options) { {:interval_size => 1, :end_interval_offset => 0, :ext_options => {:tz => 'Pacific Time (US & Canada)'} } }
+  let(:base_options) { {:interval_size => 2, :end_interval_offset => 0, :ext_options => {:tz => 'Pacific Time (US & Canada)'} } }
   let(:hourly_rate)       { 0.01 }
   let(:cpu_usage_rate)    { 50.0 }
   let(:cpu_count)         { 1.0 }
@@ -34,7 +34,7 @@ describe ChargebackContainerImage do
     @project.tag_with(@tag.name, :ns => '*')
     @image.tag_with(@tag.name, :ns => '*')
 
-    Timecop.travel(starting_date)
+    Timecop.travel(month_end)
   end
 
   after do
