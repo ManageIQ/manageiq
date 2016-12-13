@@ -84,6 +84,7 @@ module ApplicationHelper::Dialogs
     extra_options = {
       "data-miq_sparkle_on"  => true,
       "data-miq_sparkle_off" => true,
+      "data-live-search"     => true
       # data-miq_observe functionality is handled by dialogFieldRefresh.initializeDialogSelectPicker here
     }
 
