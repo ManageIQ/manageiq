@@ -42,7 +42,7 @@
             - else
               - params = {}
             %i.product.product-role{params}
-            = h(@group.miq_user_role.name)
+            = link_to(@group.miq_user_role.name, "#", params)
         - else
           = select_tag('group_role',
               options_for_select(@edit[:roles].sort, @edit[:new][:role]),
