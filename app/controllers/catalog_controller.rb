@@ -1126,7 +1126,7 @@ class CatalogController < ApplicationController
     load_edit("ot_edit__#{params[:id]}", "replace_cell__explorer")
     begin
       ot = OrchestrationTemplate.find_by_id(params[:id])
-      OrchestrationTemplateDialogService.new.create_dialog(@edit[:new][:dialog_name], ot)
+      service_dialog_generator(ot).new.create_dialog(@edit[:new][:dialog_name], ot)
     rescue => bang
       add_flash(_("Error when creating a Service Dialog from Orchestration Template: %{error_message}") %
         {:error_message => bang.message}, :error)
@@ -1138,6 +1138,18 @@ class CatalogController < ApplicationController
       @edit = @record = nil
       replace_right_cell
     end
+  end
+
+  def service_dialog_generator(template)
+    # TODO: the special cases for Amazon and Azure should be removed once the service class is moved to the provider gem
+    if template.kind_of? OrchestrationTemplateCfn
+      return OrchestrationTemplateCfnDialogService
+    elsif template.kind_of? OrchestrationTemplateAzure
+      return OrchestrationTemplateAzureDialogService
+    end
+
+    # TODO: if a template can be used by multiple manager types, the UI should provide a dropdown box for user to select
+    "#{template.class.eligible_manager_types.first}::#{template.class.name.demodulize}DialogService".constantize
   end
 
   def st_catalog_get_form_vars

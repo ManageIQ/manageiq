@@ -3,6 +3,7 @@ class ManageIQ::Providers::Vmware::CloudManager < ManageIQ::Providers::CloudMana
   require_nested :OrchestrationServiceOptionConverter
   require_nested :OrchestrationStack
   require_nested :OrchestrationTemplate
+  require_nested :OrchestrationTemplateDialogService
   require_nested :EventCatcher
   require_nested :EventParser
   require_nested :RefreshParser
