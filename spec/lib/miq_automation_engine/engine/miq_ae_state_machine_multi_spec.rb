@@ -1,5 +1,3 @@
-require "timecop"
-
 describe "MultipleStateMachineSteps" do
   include Spec::Support::AutomationHelper
 
