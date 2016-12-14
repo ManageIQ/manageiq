@@ -3226,6 +3226,22 @@ Vmdb::Application.routes.draw do
     end
   end
 
+  nested_routes = {
+    # TODO: controller_name.to_sym => self.display_methods
+    :security_group => %i(instances network_ports),
+  }
+  nested_routes.each do |collection, display_methods|
+    display_methods.each do |plural|
+      singular = plural.to_s.singularize.to_sym
+      get "#{collection}/:parent_id/#{plural}",
+        :controller => singular,
+        :action => 'show_nested',
+        :parent_collection => collection,
+        :constraints => { :parent_id => /(\d+r)?\d+/ }
+    end
+  end
+
+
   # pure-angular templates
   get '/static/*id' => 'static#show', :format => false
 
