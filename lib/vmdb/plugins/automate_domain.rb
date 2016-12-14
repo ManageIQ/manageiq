@@ -12,6 +12,10 @@ module Vmdb
         @name            = config.fetch_path("object", "attributes", "name")
       end
 
+      def system?
+        @system ||= config.fetch_path("object", "attributes", "source") == "system"
+      end
+
       private
 
       def config

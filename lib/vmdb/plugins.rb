@@ -24,5 +24,9 @@ module Vmdb
         @registered_automate_domains << AutomateDomain.new(domain_directory)
       end
     end
+
+    def system_automate_domains
+      registered_automate_domains.select(&:system?)
+    end
   end
 end

@@ -188,9 +188,7 @@ module MiqAeDatastore
   end
 
   def self.default_domain_names
-    Dir.glob(DATASTORE_DIRECTORY.join("*", MiqAeDomain::DOMAIN_YAML_FILENAME)).collect do |domain_file|
-      File.basename(File.dirname(domain_file))
-    end
+    Vmdb::Plugins.instance.system_automate_domains.collect(&:name)
   end
 
   def self.seed
