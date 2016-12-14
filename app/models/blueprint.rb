@@ -232,12 +232,12 @@ class Blueprint < ApplicationRecord
   end
 
   def add_entry_points(new_bundle, entry_points, dialog, service_type)
-    entry_points ||= {
-      'Provision'  => ServiceTemplate.default_provisioning_entry_point(service_type),
-      'Retirement' => ServiceTemplate.default_retirement_entry_point
-    }
+    entry_points ||= {}
+    entry_points['Provision'] ||= ServiceTemplate.default_provisioning_entry_point(service_type)
+    entry_points['Retirement'] ||= ServiceTemplate.default_retirement_entry_point
 
     entry_points.each do |key, value|
+      next if value.blank?
       new_bundle.resource_actions.build(:action => key, :fqname => value, :dialog => dialog)
     end
   end

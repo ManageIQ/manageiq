@@ -201,6 +201,10 @@ describe Blueprint do
             "ae_namespace" => "x",
             "ae_class"     => "y",
             "ae_instance"  => "z"
+          ),
+          a_hash_including(
+            "action"      => "Retirement",
+            "ae_instance" => "Default"
           )
         )
       }
@@ -299,6 +303,9 @@ describe Blueprint do
 
       prov = bundle.resource_actions.find_by(:action => 'Provision')
       expect(prov.ae_uri).to eq('/a/b/c')
+
+      retirement = bundle.resource_actions.find_by(:action => 'Retirement')
+      expect(retirement.ae_uri).to eq(ServiceTemplate.default_retirement_entry_point)
 
       reconfig = bundle.resource_actions.find_by(:action => 'Reconfigure')
       expect(reconfig.ae_uri).to eq('/x/y/z')
