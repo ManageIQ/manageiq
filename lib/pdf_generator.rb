@@ -43,9 +43,9 @@ class PdfGenerator
   private_class_method :sanitize_html
 
   def self.stylesheet_file_path(stylesheet)
-    # Determine path relative to Rails.public_path
-    "/../app/assets/stylesheets/#{stylesheet}.css"
+    Rails.root.join(*%W(app assets stylesheets #{stylesheet})).to_s
   end
+
   private_class_method :stylesheet_file_path
 end
 
