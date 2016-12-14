@@ -23,6 +23,11 @@ class PgLogicalRaw
     connection.enable_extension("pglogical_origin")
   end
 
+  def disable
+    connection.disable_extension("pglogical")
+    connection.disable_extension("pglogical_origin") if connection.postgresql_version < 90_500
+  end
+
   # Monitoring
   #
 
@@ -293,6 +298,18 @@ class PgLogicalRaw
         USING (set_id)
       WHERE set_name = $1
     SQL
+  end
+
+  def with_replication_set_lock(set_name)
+    connection.transaction(:requires_new => true) do
+      typed_exec(<<-SQL, set_name)
+        SELECT *
+        FROM pglogical.replication_set
+        WHERE set_name = $1
+        FOR UPDATE
+      SQL
+      yield
+    end
   end
 
   private

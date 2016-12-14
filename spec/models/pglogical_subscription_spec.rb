@@ -354,6 +354,7 @@ describe PglogicalSubscription do
       expect(MiqRegion).to receive(:destroy_region)
         .with(instance_of(ActiveRecord::ConnectionAdapters::PostgreSQLAdapter), 0)
       expect(pglogical).to receive(:node_drop).with("region_#{MiqRegion.my_region_number}", true)
+      expect(pglogical).to receive(:disable)
 
       sub.delete
     end

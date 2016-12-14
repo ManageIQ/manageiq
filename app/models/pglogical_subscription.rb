@@ -59,7 +59,10 @@ class PglogicalSubscription < ActsAsArModel
   def delete
     pglogical.subscription_drop(id, true)
     MiqRegion.destroy_region(connection, provider_region)
-    pglogical.node_drop(MiqPglogical.local_node_name, true) if self.class.count == 0
+    if self.class.count == 0
+      pglogical.node_drop(MiqPglogical.local_node_name, true)
+      pglogical.disable
+    end
   end
 
   def self.delete_all

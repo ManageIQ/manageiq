@@ -1,6 +1,8 @@
 require 'pg'
 
 class MiqPglogical
+  include Vmdb::Logging
+
   REPLICATION_SET_NAME = 'miq'.freeze
   SETTINGS_PATH = [:workers, :worker_base, :replication_worker, :replication].freeze
   NODE_PREFIX = "region_".freeze
@@ -41,9 +43,11 @@ class MiqPglogical
   #   node and creating the replication set
   def configure_provider
     return if provider?
-    pglogical.enable
-    create_node unless node?
-    create_replication_set
+    @connection.transaction(:requires_new => true) do
+      pglogical.enable
+      create_node unless node?
+      create_replication_set
+    end
   end
 
   # Removes the replication configuration and pglogical node from the
@@ -52,6 +56,7 @@ class MiqPglogical
     return unless provider?
     pglogical.replication_set_drop(REPLICATION_SET_NAME)
     drop_node
+    pglogical.disable
   end
 
   # Lists the tables currently being replicated by pglogical
@@ -74,14 +79,18 @@ class MiqPglogical
 
   # Aligns the contents of the 'miq' replication set with the currently configured vmdb excludes
   def refresh_excludes
-    # remove newly excluded tables from replication set
-    newly_excluded_tables.each do |table|
-      pglogical.replication_set_remove_table(REPLICATION_SET_NAME, table)
-    end
+    pglogical.with_replication_set_lock(REPLICATION_SET_NAME) do
+      # remove newly excluded tables from replication set
+      newly_excluded_tables.each do |table|
+        _log.info("Removing #{table} from #{REPLICATION_SET_NAME} replication set")
+        pglogical.replication_set_remove_table(REPLICATION_SET_NAME, table)
+      end
 
-    # add tables to the set which are no longer excluded (or new)
-    newly_included_tables.each do |table|
-      pglogical.replication_set_add_table(REPLICATION_SET_NAME, table, true)
+      # add tables to the set which are no longer excluded (or new)
+      newly_included_tables.each do |table|
+        _log.info("Adding #{table} to #{REPLICATION_SET_NAME} replication set")
+        pglogical.replication_set_add_table(REPLICATION_SET_NAME, table, true)
+      end
     end
   end
 
