@@ -40,7 +40,7 @@ describe OrchestrationTemplateDialogService do
 
       tabs = dialog.dialog_tabs
       assert_tab_attributes(tabs[0])
-      expect(tabs[0].dialog_groups.size).to eq(2)
+      expect(tabs[0].dialog_groups.size).to eq(4)
       assert_vmware_cloud_stack_group(tabs[0].dialog_groups[0])
       assert_vmware_cloud_parameters_group(tabs[0].dialog_groups[1])
     end
