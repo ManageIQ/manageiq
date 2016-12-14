@@ -138,6 +138,8 @@ class ExtManagementSystem < ApplicationRecord
   virtual_column :total_vms_suspended,     :type => :integer
   virtual_total  :total_subnets,           :cloud_subnets
 
+  virtual_aggregate :total_vcpus, :hosts, :sum, :total_vcpus
+  virtual_aggregate :total_memory, :hosts, :sum, :ram_size
   virtual_aggregate :total_cloud_vcpus, :vms, :sum, :cpu_total_cores
   virtual_aggregate :total_cloud_memory, :vms, :sum, :ram_size
 

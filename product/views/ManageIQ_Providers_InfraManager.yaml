@@ -25,6 +25,8 @@ cols:
 - emstype_description
 - port
 - total_hosts
+- total_vcpus
+- total_memory
 - total_storages
 - total_vms
 - total_miq_templates
@@ -49,10 +51,22 @@ col_order:
 - emstype_description
 - zone.name
 - total_hosts
+- total_vcpus
+- total_memory
 - total_storages
 - total_vms
 - total_miq_templates
 - region_description
+
+# Format of columns
+col_formats:
+-
+-
+-
+-
+-
+-
+- :megabytes_human
 
 # Column titles, in order
 headers:
@@ -62,6 +76,8 @@ headers:
 - Type
 - EVM Zone
 - Hosts
+- VCores
+- Memory
 - Datastores
 - VMs
 - Templates
