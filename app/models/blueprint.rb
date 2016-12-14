@@ -93,6 +93,8 @@ class Blueprint < ApplicationRecord
         new_bundle.service_template_catalog = parse_service_catalog
 
         new_dialog = parse_service_dialog.deep_copy(:name => random_dialog_name(name), :blueprint => self).tap(&:save!)
+        # Update ui_properties to reflect the new dialog
+        ui_properties['service_dialog']['id'] = new_dialog.id
         add_entry_points(new_bundle, parse_entry_points, new_dialog, 'composite')
 
         new_bundle.display = true # visible for ordering service
@@ -131,6 +133,8 @@ class Blueprint < ApplicationRecord
       if node["tags"]
         parse_tags(node["tags"]).each { |tag| Classification.classify_by_tag(new_template, tag) }
       end
+      # Update node to include ID of copied or new ServiceTemplate
+      node['id'] = new_template.id
       new_template
     end
   end
