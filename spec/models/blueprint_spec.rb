@@ -318,6 +318,28 @@ describe Blueprint do
       expect(dialog_id).to eq(bundle.resource_actions.first.dialog.id)
     end
   end
+
+  describe '#in_use?' do
+    it 'returns false if not published' do
+      expect(subject).not_to be_in_use
+    end
+
+    it 'returns false if it is published and has not been ordered' do
+      subject.ui_properties = ui_properties
+      subject.publish
+
+      expect(subject).not_to be_in_use
+    end
+
+    it 'returns true if it is published and has been ordered' do
+      subject.ui_properties = ui_properties
+      subject.publish
+      user = FactoryGirl.create(:user)
+      FactoryGirl.create(:service_template_provision_request, :requester => user, :source => subject.bundle)
+
+      expect(subject).to be_in_use
+    end
+  end
 end
 
 def add_and_save_service(p, c)
