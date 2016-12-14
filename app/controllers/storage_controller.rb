@@ -124,12 +124,12 @@ class StorageController < ApplicationController
 
   def specific_buttons(pressed)
     if button_press_map[pressed]
-      self.send(button_press_map[pressed])
+      send(button_press_map[pressed])
     end
 
     handle_host_power_buttons(pressed)
 
-    return button_press_map.keys.include?(pressed)
+    button_press_map.keys.include?(pressed)
   end
 
   def button_press_map
@@ -146,11 +146,13 @@ class StorageController < ApplicationController
   end
 
   def handle_host_power_buttons(pressed)
-    power_events = %w{ host_enter_maint_mode host_exit_maint_mode host_reboot
-      host_reset host_shutdown host_standby host_start host_stop }
+    power_events = %w(
+      host_enter_maint_mode host_exit_maint_mode host_reboot
+      host_reset host_shutdown host_standby host_start host_stop
+    )
 
     if power_events.include?(pressed)
-      powerbutton_hosts( pressed.split("_")[1..-1].join("_") )
+      powerbutton_hosts(pressed.split("_")[1..-1].join("_"))
     end
   end
 
