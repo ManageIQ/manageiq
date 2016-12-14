@@ -208,7 +208,14 @@ module Api
       def expand_virtual_attributes(json, type, resource)
         result = {}
         object_hash = {}
-        virtual_attributes_list(resource).each do |vattr|
+
+        virtual_attributes = virtual_attributes_list(resource)
+        if @req.expand?("virtual_attributes")
+          virtual_attributes |=
+            options_attribute_list(collection_class(type).virtual_attribute_names)
+        end
+
+        virtual_attributes.each do |vattr|
           attr_name, attr_base = split_virtual_attribute(vattr)
           value, value_result = if attr_base.blank?
                                   fetch_direct_virtual_attribute(type, resource, attr_name)
