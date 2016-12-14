@@ -34,8 +34,8 @@ module ManagerRefresh::SaveCollection
     private
 
     def save_inventory(dto_collection)
-      dto_collection.parent.reload
-      association  = dto_collection.parent.send(dto_collection.association)
+      dto_collection.parent.reload if dto_collection.parent
+      association  = dto_collection.load_from_db
       record_index = {}
 
       create_or_update_inventory!(dto_collection, record_index, association)
@@ -54,8 +54,7 @@ module ManagerRefresh::SaveCollection
         record_index[dto_collection.object_index_with_keys(unique_index_keys, record)] = record
       end
 
-      association_meta_info = dto_collection.parent.class.reflect_on_association(dto_collection.association)
-      entity_builder        = association_meta_info.options[:through].blank? ? association : dto_collection.model_class
+      entity_builder = get_entity_builder(dto_collection, association)
 
       dto_collection_size = dto_collection.size
       created_counter     = 0
@@ -92,6 +91,15 @@ module ManagerRefresh::SaveCollection
           deletes.map(&dto_collection.delete_method)
         end
         _log.info("*************** DELETED #{dto_collection} ***************")
+      end
+    end
+
+    def get_entity_builder(dto_collection, association)
+      if dto_collection.parent
+        association_meta_info = dto_collection.parent.class.reflect_on_association(dto_collection.association)
+        association_meta_info.options[:through].blank? ? association : dto_collection.model_class
+      else
+        dto_collection.model_class
       end
     end
   end
