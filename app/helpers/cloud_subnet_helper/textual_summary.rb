@@ -56,7 +56,7 @@ module CloudSubnetHelper::TextualSummary
   def textual_instances
     label = ui_lookup(:tables => "vm_cloud")
     num   = @record.number_of(:vms)
-    h     = {:label => label, :image => "vm", :value => num}
+    h     = {:label => label, :image => "100/vm.png", :value => num}
     if num > 0 && role_allows?(:feature => "vm_show_list")
       h[:link]  = url_for(:action => 'show', :id => @record, :display => 'instances')
       h[:title] = _("Show all %{label}") % {:label => label}
@@ -83,7 +83,7 @@ module CloudSubnetHelper::TextualSummary
   def textual_managed_subnets
     label = _("Managed Subnets")
     num   = @record.number_of(:cloud_subnets)
-    h     = {:label => label, :image => "cloud_subnet", :value => num}
+    h     = {:label => label, :image => "100/cloud_subnet.png", :value => num}
     if num > 0 && role_allows?(:feature => "cloud_subnet_show_list")
       h[:link]  = url_for(:action => 'show', :id => @record, :display => 'cloud_subnets')
       h[:title] = _("Show all %{label}") % {:label => label}

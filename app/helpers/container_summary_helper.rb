@@ -150,7 +150,7 @@ module ContainerSummaryHelper
     if object.nil? && @record.respond_to?(:display_registry)
       {
         :label => ui_lookup(:model => ContainerImageRegistry.name),
-        :image => "container_image_registry_unknown",
+        :image => "100/container_image_registry_unknown.png",
         :value => @record.display_registry
       }
     else
@@ -181,13 +181,13 @@ module ContainerSummaryHelper
     if tags.present?
       h[:value] = tags.sort_by { |category, _assigned| category.downcase }.collect do |category, assigned|
         {
-          :image => "smarttag",
+          :image => "100/smarttag.png",
           :label => category,
           :value => assigned
         }
       end
     else
-      h[:image] = "smarttag"
+      h[:image] = "100/smarttag.png"
       h[:value] = _("No %{label} have been assigned") % {:label => label}
     end
 

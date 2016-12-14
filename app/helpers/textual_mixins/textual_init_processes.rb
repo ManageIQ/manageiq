@@ -4,7 +4,7 @@ module TextualMixins::TextualInitProcesses
     return nil unless os =~ /linux/
     num = @record.number_of(:linux_initprocesses)
     # TODO: Why is this image different than graphical?
-    h = {:label => _("Init Processes"), :image => "gears", :value => num}
+    h = {:label => _("Init Processes"), :image => "100/gears.png", :value => num}
     if num > 0
       h[:title] = n_("Show the Init Process installed on this VM", "Show the Init Processes installed on this VM", num)
       h[:explorer] = true

@@ -75,7 +75,7 @@ module EmsCloudHelper::TextualSummary
   def textual_instances
     label = ui_lookup(:tables => "vm_cloud")
     num   = @ems.number_of(:vms)
-    h     = {:label => label, :image => "vm", :value => num}
+    h     = {:label => label, :image => "100/vm.png", :value => num}
     if num > 0 && role_allows?(:feature => "vm_show_list")
       h[:link]  = ems_cloud_path(@ems.id, :display => 'instances')
       h[:title] = _("Show all %{label}") % {:label => label}
@@ -86,7 +86,7 @@ module EmsCloudHelper::TextualSummary
   def textual_images
     label = ui_lookup(:tables => "template_cloud")
     num = @ems.number_of(:miq_templates)
-    h = {:label => label, :image => "vm", :value => num}
+    h = {:label => label, :image => "100/vm.png", :value => num}
     if num > 0 && role_allows?(:feature => "miq_template_show_list")
       h[:link] = ems_cloud_path(@ems.id, :display => 'images')
       h[:title] = _("Show all %{label}") % {:label => label}
@@ -105,7 +105,7 @@ module EmsCloudHelper::TextualSummary
   def textual_storage_managers
     label = _("Storage Managers")
     num   = @ems.try(:storage_managers) ?  @ems.number_of(:storage_managers) : 0
-    h     = {:label => label, :image => "storage_manager", :value => num}
+    h     = {:label => label, :image => "100/storage_manager.png", :value => num}
     if num > 0 && role_allows?(:feature => "ems_storage_show_list")
       h[:title] = _("Show all %{label}") % {:label => label}
       h[:link] = ems_cloud_path(@ems.id, :display => 'storage_managers')
@@ -136,7 +136,7 @@ module EmsCloudHelper::TextualSummary
   def textual_security_groups
     label = ui_lookup(:tables => "security_group")
     num = @ems.number_of(:security_groups)
-    h = {:label => label, :image => "security_group", :value => num}
+    h = {:label => label, :image => "100/security_group.png", :value => num}
     if num > 0 && role_allows?(:feature => "security_group_show_list")
       h[:link] = ems_cloud_path(@ems.id, :display => 'security_groups')
       h[:title] = _("Show all %{label}") % {:label => label}
@@ -146,7 +146,7 @@ module EmsCloudHelper::TextualSummary
 
   def textual_arbitration_profiles
     num = @record.number_of(:arbitration_profiles)
-    h = {:label => _("Arbitration Profiles"), :image => "arbitration_profile", :value => num}
+    h = {:label => _("Arbitration Profiles"), :image => "100/arbitration_profile.png", :value => num}
     if num > 0
       h[:title] = n_("Show Arbitration Profiles for this Provider",
                      "Show Arbitration Profiles for this Provider", num)
@@ -159,12 +159,12 @@ module EmsCloudHelper::TextualSummary
   end
 
   def textual_zone
-    {:label => _("Managed by Zone"), :image => "zone", :value => @ems.zone.name}
+    {:label => _("Managed by Zone"), :image => "100/zone.png", :value => @ems.zone.name}
   end
 
   def textual_topology
     {:label => _('Topology'),
-     :image => 'topology',
+     :image => '100/topology.png',
      :link  => url_for(:controller => 'cloud_topology', :action => 'show', :id => @ems.id),
      :title => _("Show topology")}
   end

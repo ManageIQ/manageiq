@@ -1,6 +1,6 @@
 module TextualMixins::TextualScanHistory
   def textual_scan_history
-    h = {:label => _("Analysis History"), :image => "scan"}
+    h = {:label => _("Analysis History"), :image => "100/scan.png"}
     num = @record.number_of(:scan_histories)
     if num == 0
       h[:value] = _("None")

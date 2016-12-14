@@ -14,13 +14,12 @@
                 %td.label{:rowspan => item[:value].length}
                   = item[:label]
               %td
-                %img{:src => image_path("100/#{subitem[:image]}.png")}
+                = render :partial => "shared/summary/icon_or_image", :locals => {:item => subitem}
                 = "#{subitem[:label]}: #{subitem[:value].collect { |t| h(t) }.join("&nbsp;<b>|</b>&nbsp;")}".html_safe
         - else
           %tr
             %td.label
               = item[:label]
             %td
-              - if item[:image]
-                %img{:src => image_path("100/#{item[:image]}.png")}
-                = item[:value]
+              = render :partial => "shared/summary/icon_or_image", :locals => {:item => item}
+              = item[:value]

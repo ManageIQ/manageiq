@@ -40,7 +40,7 @@ module FloatingIpHelper::TextualSummary
   def textual_instance
     label    = ui_lookup(:table => "vm_cloud")
     instance = @record.vm
-    h        = {:label => label, :image => "vm"}
+    h        = {:label => label, :image => "100/vm.png"}
     if instance && role_allows?(:feature => "vm_show")
       h[:value] = instance.name
       h[:link]  = url_for(:controller => 'vm_cloud', :action => 'show', :id => instance.id)

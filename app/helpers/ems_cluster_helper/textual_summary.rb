@@ -45,7 +45,7 @@ module EmsClusterHelper::TextualSummary
 
       running = {:title => _("Show list of hosts with running %{name}") % {:name => x.name},
                  :value => _("Running (%{number})") % {:number => running_count},
-                 :image => failed_count == 0 && running_count > 0 ? 'status_complete' : nil,
+                 :image => failed_count == 0 && running_count > 0 ? '100/status_complete.png' : nil,
                  :link  => if running_count > 0
                              url_for(:controller              => controller.controller_name,
                                      :action                  => 'show',
@@ -57,7 +57,7 @@ module EmsClusterHelper::TextualSummary
 
       failed = {:title => _("Show list of hosts with failed %{name}") % {:name => x.name},
                 :value => _("Failed (%{number})") % {:number => failed_count},
-                :image => failed_count > 0 ? 'status_error' : nil,
+                :image => failed_count > 0 ? '100/status_error.png' : nil,
                 :link  => if failed_count > 0
                             url_for(:controller              => controller.controller_name,
                                     :action                  => 'show',
@@ -69,7 +69,7 @@ module EmsClusterHelper::TextualSummary
 
       all = {:title => _("Show list of hosts with %{name}") % {:name => x.name},
              :value => _("All (%{number})") % {:number => all_count},
-             :image => 'host',
+             :image => '100/host.png',
              :link  => if all_count > 0
                          url_for(:controller              => controller.controller_name,
                                  :action                  => 'show',
@@ -121,12 +121,12 @@ module EmsClusterHelper::TextualSummary
   end
 
   def textual_parent_datacenter
-    {:label => _("Datacenter"), :image => "datacenter", :value => @record.v_parent_datacenter || _("None")}
+    {:label => _("Datacenter"), :image => "100/datacenter.png", :value => @record.v_parent_datacenter || _("None")}
   end
 
   def textual_total_hosts
     num = @record.total_hosts
-    h = {:label => title_for_hosts, :image => "host", :value => num}
+    h = {:label => title_for_hosts, :image => "100/host.png", :value => num}
     if num > 0 && role_allows?(:feature => "host_show_list")
       h[:title] = _("Show all %{title}") % {:title => title_for_hosts}
       h[:link]  = url_for(:controller => 'ems_cluster', :action => 'show', :id => @record, :display => 'hosts')
@@ -136,7 +136,7 @@ module EmsClusterHelper::TextualSummary
 
   def textual_total_direct_vms
     num = @record.total_direct_vms
-    h = {:label => _("Direct VMs"), :image => "vm", :value => num}
+    h = {:label => _("Direct VMs"), :image => "100/vm.png", :value => num}
     if num > 0 && role_allows?(:feature => "vm_show_list")
       h[:title] = _("Show VMs in this %{title}, but not in Resource Pools below") % {:title => cluster_title}
       h[:link]  = url_for(:controller => 'ems_cluster', :action => 'show', :id => @record, :display => 'vms')
@@ -146,7 +146,7 @@ module EmsClusterHelper::TextualSummary
 
   def textual_allvms_size
     num = @record.total_vms
-    h = {:label => _("All VMs"), :image => "vm", :value => num}
+    h = {:label => _("All VMs"), :image => "100/vm.png", :value => num}
     if num > 0 && role_allows?(:feature => "vm_show_list")
       h[:title] = _("Show all VMs in this %{title}") % {:title => cluster_title}
       h[:link]  = url_for(:controller => 'ems_cluster', :action => 'show', :id => @record, :display => 'all_vms')
@@ -158,7 +158,7 @@ module EmsClusterHelper::TextualSummary
     return nil if @record.kind_of?(ManageIQ::Providers::Openstack::InfraManager::EmsCluster)
 
     num = @record.total_miq_templates
-    h = {:label => _("All Templates"), :image => "vm", :value => num}
+    h = {:label => _("All Templates"), :image => "100/vm.png", :value => num}
     if num > 0 && role_allows?(:feature => "miq_template_show_list")
       h[:title] = _("Show all Templates in this %{title}") % {:title => cluster_title}
       h[:link]  = url_for(:controller => 'ems_cluster', :action => 'show', :id => @record, :display => 'miq_templates')
@@ -168,7 +168,7 @@ module EmsClusterHelper::TextualSummary
 
   def textual_total_vms
     num = @record.total_vms
-    h = {:label => _("All VMs (Tree View)"), :image => "vm", :value => num}
+    h = {:label => _("All VMs (Tree View)"), :image => "100/vm.png", :value => num}
     if num > 0 && role_allows?(:feature => "vm_show_list")
       h[:title] = _("Show tree of all VMs by Resource Pool in this %{title}") % {:title => cluster_title}
       h[:link]  = url_for(:controller => 'ems_cluster', :action => 'show', :id => @record, :display => 'descendant_vms')
@@ -187,7 +187,7 @@ module EmsClusterHelper::TextualSummary
   def textual_states_size
     return nil unless role_allows?(:feature => "ems_cluster_drift")
     num = @record.number_of(:drift_states)
-    h = {:label => _("Drift History"), :image => "drift", :value => (num == 0 ? _("None") : num)}
+    h = {:label => _("Drift History"), :image => "100/drift.png", :value => (num == 0 ? _("None") : num)}
     if num > 0
       h[:title] = _("Show %{title} drift history") % {:title => cluster_title}
       h[:link]  = url_for(:controller => 'ems_cluster', :action => 'drift_history', :id => @record)
@@ -198,7 +198,7 @@ module EmsClusterHelper::TextualSummary
   def textual_ss_size
     num = @record.storage_systems.count
     label = ui_lookup(:tables => "ontap_storage_system")
-    h = {:label => label, :image => "ontap_storage_system", :value => num}
+    h = {:label => label, :image => "100/ontap_storage_system.png", :value => num}
     if num > 0 && role_allows?(:feature => "ontap_storage_system_show_list")
       h[:title] = _("Show all %{label}") % {:label => label}
       h[:link]  = url_for(:controller => 'ems_cluster', :action => 'show', :id => @record, :display => 'storage_systems')
@@ -209,7 +209,7 @@ module EmsClusterHelper::TextualSummary
   def textual_sv_size
     num = @record.storage_systems.count
     label = ui_lookup(:tables => "ontap_storage_volume")
-    h = {:label => label, :image => "ontap_storage_volume", :value => num}
+    h = {:label => label, :image => "100/ontap_storage_volume.png", :value => num}
     if num > 0 && role_allows?(:feature => "ontap_storage_system_show_list")
       h[:title] = _("Show all %{label}") % {:label => label}
       h[:link]  = url_for(:controller => 'ems_cluster', :action => 'show', :id => @record, :display => 'ontap_storage_volumes')
@@ -220,7 +220,7 @@ module EmsClusterHelper::TextualSummary
   def textual_fs_size
     num = @record.file_shares.count
     label = ui_lookup(:tables => "ontap_file_share")
-    h = {:label => label, :image => "ontap_file_share", :value => num}
+    h = {:label => label, :image => "100/ontap_file_share.png", :value => num}
     if num > 0 && role_allows?(:feature => "ontap_file_share_show_list")
       h[:title] = label
       h[:link]  = url_for(:controller => 'ems_cluster', :action => 'show', :id => @record, :display => 'ontap_file_shares')
@@ -231,7 +231,7 @@ module EmsClusterHelper::TextualSummary
   def textual_se_size
     num = @record.base_storage_extents.count
     label = ui_lookup(:tables => "cim_base_storage_extent")
-    h = {:label => label, :image => "cim_base_storage_extent", :value => num}
+    h = {:label => label, :image => "100/cim_base_storage_extent.png", :value => num}
     if num > 0 && role_allows?(:feature => "cim_base_storage_extent_show_list")
       h[:title] = label
       h[:link]  = url_for(:controller => 'ems_cluster', :action => 'show', :id => @record, :display => 'storage_extents')

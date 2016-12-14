@@ -10,7 +10,7 @@ module ComplianceSummaryHelper
     else
       compliant = @record.last_compliance_status
       date      = @record.last_compliance_timestamp
-      h[:image] = compliant ? "check" : "x"
+      h[:image] = "100/#{compliant ? "check" : "x"}.png"
       h[:value] = if !compliant
                     _("Non-Compliant as of %{time} Ago") %
                     {:time => time_ago_in_words(date.in_time_zone(Time.zone)).titleize}
@@ -35,7 +35,7 @@ module ComplianceSummaryHelper
     if @record.number_of(:compliances) == 0
       h[:value] = _("Not Available")
     else
-      h[:image] = "compliance"
+      h[:image] = "100/compliance.png"
       h[:value] = _("Available")
       h[:title] = _("Show Compliance History of this %{model} (Last 10 Checks)") %
                   {:model => ui_lookup(:model => controller.class.model.name)}

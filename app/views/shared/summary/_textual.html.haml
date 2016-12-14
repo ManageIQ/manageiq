@@ -20,6 +20,5 @@
         %td.label
           = item[:label]
         %td
-          - if item[:image]
-            %img{:src => image_path("100/#{item[:image]}#{File.extname(item[:image]).blank? ? '.png' : ''}")}
+          = render :partial => "shared/summary/icon_or_image", :locals => {:item => item}
           = !item[:value].kind_of?(Array) ? item[:value] : render(:partial => "shared/summary/textual_multivalue", :locals => {:items => item[:value]})
