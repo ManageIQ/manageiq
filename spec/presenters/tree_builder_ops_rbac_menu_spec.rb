@@ -1,4 +1,4 @@
-describe TreeBuilderOpsFeatures do
+describe TreeBuilderOpsRbacMenu do
   let(:features) do
     %w{
       all_vm_rules
@@ -17,13 +17,12 @@ describe TreeBuilderOpsFeatures do
   end
 
   let(:tree) do
-    TreeBuilderOpsFeatures.new(
+    TreeBuilderOpsRbacMenu.new(
       "features_tree",
       "features",
       {},
       true,
       role: role,
-      features: features,
       editable: false
     )
   end

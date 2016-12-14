@@ -1,21 +1,21 @@
-class TreeBuilderOpsFeatures < TreeBuilder
+class TreeBuilderOpsRbacMenu < TreeBuilder
   include CompressedIds
 
   has_kids_for Hash, [:x_get_tree_hash_kids]
 
   attr_reader :role, :features, :editable
 
-  def initialize(name, type, sandbox, build, role:, features:, editable: false)
+  def initialize(name, type, sandbox, build, role:, editable: false)
     @role     = role
     @editable = editable
-    @features = features
+    @features = @role.miq_product_features.order(:identifier).pluck(:identifier)
 
     super(name, type, sandbox, build)
   end
 
   private
 
-  def feature_tree
+  def menu_tree
     recurse_menu_items(filtered_menus, root_select)
   end
 
@@ -141,7 +141,7 @@ class TreeBuilderOpsFeatures < TreeBuilder
   end
 
   def x_get_tree_roots(count_only = false, _options)
-    top_nodes = feature_tree
+    top_nodes = menu_tree
     top_nodes << all_vm_node
 
     select_if_kids_selected(root_node, top_nodes.first[:data][:kids])

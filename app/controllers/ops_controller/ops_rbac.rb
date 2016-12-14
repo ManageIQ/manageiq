@@ -945,24 +945,21 @@ module OpsController::OpsRbac
   def rbac_role_get_details(id)
     @edit = nil
     @record = @role = MiqUserRole.find_by_id(from_cid(id))
-    @role_features = @role.feature_identifiers.sort
-    @features_tree = rbac_build_features_tree
+    @rbac_menu_tree = rbac_build_menu_tree
   end
 
-  def rbac_build_features_tree
+  def rbac_build_menu_tree
     # if on edit screen use @record
     if @role.nil?
       @role = @sb[:typ] == "copy" ? @record.dup : @record
     end
 
-    # TreeBuilder.convert_bs_tree(OpsController::RbacTree.build(@role, @role_features, !@edit.nil?)).to_json
-    TreeBuilderOpsFeatures.new(
+    TreeBuilderOpsRbacMenu.new(
       "features_tree",
       "features",
       @sb,
       true,
       role: @role,
-      features: @role_features,
       editable: @edit.present?
     )
   end
@@ -1165,8 +1162,7 @@ module OpsController::OpsRbac
 
     @edit[:current] = copy_hash(@edit[:new])
 
-    @role_features = @record.feature_identifiers.sort
-    @features_tree = rbac_build_features_tree
+    @rbac_menu_tree = rbac_build_menu_tree
   end
 
   # Get array of total set of features from the children of selected features
