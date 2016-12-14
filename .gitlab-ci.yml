@@ -18,11 +18,6 @@ test:vmdb:
     - bower install --allow-root -F --config.analytics=false
     - bundle exec rake test:vmdb:setup
     - bundle exec rake test:vmdb
-test:automation:
-  script:
-    - bundle update
-    - bundle exec rake test:automation:setup
-    - bundle exec rake test:automation
 test:migrations:
   script:
     - bundle update

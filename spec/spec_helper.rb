@@ -57,12 +57,6 @@ RSpec.configure do |config|
   config.include UiConstants,          :type => :controller
   config.include Spec::Support::AuthHelper, :type => :controller
 
-  config.include Spec::Support::AutomationHelper, :type => :automation
-  config.include AutomationExampleGroup, :type => :automation
-  config.define_derived_metadata(:file_path => /spec\/automation/) do |metadata|
-    metadata[:type] ||= :automation
-  end
-
   config.extend  Spec::Support::MigrationHelper::DSL
   config.include Spec::Support::MigrationHelper, :migrations => :up
   config.include Spec::Support::MigrationHelper, :migrations => :down
