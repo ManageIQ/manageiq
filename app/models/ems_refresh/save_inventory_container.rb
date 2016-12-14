@@ -162,7 +162,8 @@ module EmsRefresh::SaveInventoryContainer
               end
 
     save_inventory_multi(ems.container_nodes, hashes, deletes, [:ems_ref],
-                         [:labels, :tags, :computer_system, :container_conditions], [:namespace])
+                         [:labels, :tags, :computer_system, :container_conditions,
+                          :additional_attributes], [:namespace])
     store_ids_for_new_records(ems.container_nodes, hashes, :ems_ref)
   end
 
@@ -393,6 +394,19 @@ module EmsRefresh::SaveInventoryContainer
 
     save_inventory_multi(container_group.container_volumes, hashes, deletes, [:name], [], [:persistent_volume_claim])
     store_ids_for_new_records(container_group.container_volumes, hashes, :name)
+  end
+
+  def save_additional_attributes_inventory(entity, hashes, target = nil)
+    return if hashes.nil?
+
+    deletes = if target.kind_of?(ExtManagementSystem)
+                :use_association
+              else
+                []
+              end
+
+    save_inventory_multi(entity.additional_attributes, hashes, deletes, [:section, :name])
+    store_ids_for_new_records(entity.additional_attributes, hashes, [:section, :name])
   end
 
   def save_custom_attribute_attribute_inventory(entity, attribute_name, hashes, target = nil)

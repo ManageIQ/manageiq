@@ -7,4 +7,5 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCapture::Hawkula
   end
 
   delegate :gauges, :to => :hawkular_client
+  delegate :strings, :to => :hawkular_client
 end

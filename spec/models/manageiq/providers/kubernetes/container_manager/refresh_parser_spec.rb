@@ -770,7 +770,8 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
         },
         :namespace                  => nil,
         :resource_version           => '369104',
-        :type                       => 'ManageIQ::Providers::Kubernetes::ContainerManager::ContainerNode'
+        :type                       => 'ManageIQ::Providers::Kubernetes::ContainerManager::ContainerNode',
+        :additional_attributes      => nil
       })
     end
 
@@ -823,7 +824,8 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
         },
         :namespace                  => nil,
         :resource_version           => '3691041',
-        :type                       => 'ManageIQ::Providers::Kubernetes::ContainerManager::ContainerNode'
+        :type                       => 'ManageIQ::Providers::Kubernetes::ContainerManager::ContainerNode',
+        :additional_attributes      => nil
       })
     end
 
@@ -866,10 +868,200 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
               :kernel_version => nil
             }
           },
-          :namespace            => nil,
-          :resource_version     => '369104',
-          :type                 => 'ManageIQ::Providers::Kubernetes::ContainerManager::ContainerNode'
+          :namespace             => nil,
+          :resource_version      => '369104',
+          :type                  => 'ManageIQ::Providers::Kubernetes::ContainerManager::ContainerNode',
+          :additional_attributes => nil
         })
+    end
+    it "handles node with single custom attribute" do
+      parser.get_additional_attributes(
+        "additional_attributes" => { "node/test-node/key" => "val" }
+      )
+
+      expect(
+        parser.send(
+          :parse_node,
+          RecursiveOpenStruct.new(
+            :metadata => {
+              :name              => 'test-node',
+              :uid               => 'f0c1fe7e-9c09-11e5-bb22-28d2447dcefe',
+              :resourceVersion   => '369104',
+              :creationTimestamp => '2016-01-01T11:10:21Z'
+            },
+            :spec     => {
+              :providerID => 'aws:///zone/aws-id'
+            },
+            :status   => {
+              :capacity => {}
+            }
+          ),
+        )
+      ).to eq(
+        :name                  => 'test-node',
+        :ems_ref               => 'f0c1fe7e-9c09-11e5-bb22-28d2447dcefe',
+        :ems_created_on        => '2016-01-01T11:10:21Z',
+        :container_conditions  => [],
+        :identity_infra        => 'aws:///zone/aws-id',
+        :labels                => [],
+        :tags                  => [],
+        :lives_on_id           => nil,
+        :lives_on_type         => nil,
+        :max_container_groups  => nil,
+        :computer_system       => {
+          :hardware         => {
+            :cpu_total_cores => nil,
+            :memory_mb       => nil
+          },
+          :operating_system => {
+            :distribution   => nil,
+            :kernel_version => nil
+          }
+        },
+        :namespace             => nil,
+        :resource_version      => '369104',
+        :type                  => 'ManageIQ::Providers::Kubernetes::ContainerManager::ContainerNode',
+        :additional_attributes => [{ :name => "key", :value => "val", :section => "additional_attributes" }]
+      )
+    end
+    it "handles node with multiple custom attributes" do
+      parser.get_additional_attributes(
+        "additional_attributes" => { "node/test-node/key1" => "val1",
+                                     "node/test-node/key2" => "val2"}
+      )
+
+      expect(
+        parser.send(
+          :parse_node,
+          RecursiveOpenStruct.new(
+            :metadata => {
+              :name              => 'test-node',
+              :uid               => 'f0c1fe7e-9c09-11e5-bb22-28d2447dcefe',
+              :resourceVersion   => '369104',
+              :creationTimestamp => '2016-01-01T11:10:21Z'
+            },
+            :spec     => {
+              :providerID => 'aws:///zone/aws-id'
+            },
+            :status   => {
+              :capacity => {}
+            }
+          ),
+        )
+      ).to eq(
+        :name                  => 'test-node',
+        :ems_ref               => 'f0c1fe7e-9c09-11e5-bb22-28d2447dcefe',
+        :ems_created_on        => '2016-01-01T11:10:21Z',
+        :container_conditions  => [],
+        :identity_infra        => 'aws:///zone/aws-id',
+        :labels                => [],
+        :tags                  => [],
+        :lives_on_id           => nil,
+        :lives_on_type         => nil,
+        :max_container_groups  => nil,
+        :computer_system       => {
+          :hardware         => {
+            :cpu_total_cores => nil,
+            :memory_mb       => nil
+          },
+          :operating_system => {
+            :distribution   => nil,
+            :kernel_version => nil
+          }
+        },
+        :namespace             => nil,
+        :resource_version      => '369104',
+        :type                  => 'ManageIQ::Providers::Kubernetes::ContainerManager::ContainerNode',
+        :additional_attributes => [{ :name => "key1", :value => "val1", :section => "additional_attributes" },
+                                   { :name => "key2", :value => "val2", :section => "additional_attributes" }]
+      )
+    end
+    it "ignores custom attributes of a different node" do
+      parser.get_additional_attributes(
+        "additional_attributes" => { "node/test-node1/key1" => "val1",
+                                     "node/test-node2/key2" => "val2"}
+      )
+
+      expect(
+        parser.send(
+          :parse_node,
+          RecursiveOpenStruct.new(
+            :metadata => {
+              :name              => 'test-node1',
+              :uid               => 'f0c1fe7e-9c09-11e5-bb22-28d2447dcefe',
+              :resourceVersion   => '369104',
+              :creationTimestamp => '2016-01-01T11:10:21Z'
+            },
+            :spec     => {
+              :providerID => 'aws:///zone/aws-id'
+            },
+            :status   => {
+              :capacity => {}
+            }
+          ),
+        )
+      ).to eq(
+        :name                  => 'test-node1',
+        :ems_ref               => 'f0c1fe7e-9c09-11e5-bb22-28d2447dcefe',
+        :ems_created_on        => '2016-01-01T11:10:21Z',
+        :container_conditions  => [],
+        :identity_infra        => 'aws:///zone/aws-id',
+        :labels                => [],
+        :tags                  => [],
+        :lives_on_id           => nil,
+        :lives_on_type         => nil,
+        :max_container_groups  => nil,
+        :computer_system       => {
+          :hardware         => {
+            :cpu_total_cores => nil,
+            :memory_mb       => nil
+          },
+          :operating_system => {
+            :distribution   => nil,
+            :kernel_version => nil
+          }
+        },
+        :namespace             => nil,
+        :resource_version      => '369104',
+        :type                  => 'ManageIQ::Providers::Kubernetes::ContainerManager::ContainerNode',
+        :additional_attributes => [{ :name => "key1", :value => "val1", :section => "additional_attributes" }]
+      )
+    end
+  end
+
+  describe "parse_additional_attribute" do
+    it "parses node attribute" do
+      expect(
+        parser.send(
+          :parse_additional_attribute,
+          %w(node/test-node/key val)
+        )
+      ).to eq(:node => "test-node", :name => "key", :value => "val", :section => "additional_attributes")
+    end
+    it "parses pod attribute" do
+      expect(
+        parser.send(
+          :parse_additional_attribute,
+          %w(pod/test-pod/key val)
+        )
+      ).to eq(:pod => "test-pod", :name => "key", :value => "val", :section => "additional_attributes")
+    end
+    it "parses empty attribute" do
+      expect(
+        parser.send(
+          :parse_additional_attribute,
+          []
+        )
+      ).to eq({})
+    end
+
+    it "parses wrong format" do
+      expect(
+        parser.send(
+          :parse_additional_attribute,
+          %w(key1 val1)
+        )
+      ).to eq({})
     end
   end
 

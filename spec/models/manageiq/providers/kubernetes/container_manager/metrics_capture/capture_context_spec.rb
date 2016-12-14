@@ -5,8 +5,9 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCapture::Capt
     allow(MiqServer).to receive(:my_zone).and_return("default")
     hostname = 'capture.context.com'
     token = 'theToken'
-    @start_time = 1_468_235_843
-    @end_time   = 1_468_235_843
+
+    @start_time = 1_482_306_073
+    @end_time   = 1_482_306_073
     @interval   = 20
 
     @ems = FactoryGirl.create(

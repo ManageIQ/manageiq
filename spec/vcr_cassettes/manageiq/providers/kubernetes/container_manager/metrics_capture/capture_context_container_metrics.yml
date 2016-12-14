@@ -12,7 +12,7 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.4p230
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.1p112
       Hawkular-Tenant:
       - default
       Authorization:
@@ -33,9 +33,9 @@ http_interactions:
       Content-Length:
       - '133'
       Date:
-      - Tue, 22 Nov 2016 16:28:49 GMT
+      - Thu, 22 Dec 2016 07:42:31 GMT
       Set-Cookie:
-      - f5489604a2df0d7b0e8c7b7b0a17e360=fae6b852e584aed1966a9104cdee8d12; path=/;
+      - f5489604a2df0d7b0e8c7b7b0a17e360=eba450abe5a9ff4df0d24483d1024dfa; path=/;
         HttpOnly; Secure
       Cache-Control:
       - private
@@ -43,10 +43,10 @@ http_interactions:
       encoding: UTF-8
       string: '{"MetricsService":"STARTED","Implementation-Version":"0.21.5.Final","Built-From-Git-SHA1":"e779588593f13224225356a94f1d8642fbccb30f"}'
     http_version: 
-  recorded_at: Tue, 22 Nov 2016 16:28:49 GMT
+  recorded_at: Thu, 22 Dec 2016 07:42:31 GMT
 - request:
     method: get
-    uri: https://capture.context.com/hawkular/metrics/counters/registry%2F13803231-b014-11e6-a062-001a4a16262b%2Fcpu%2Fusage/stats/?bucketDuration=20s&start=1468235823000
+    uri: https://capture.context.com/hawkular/metrics/counters/registry%2F8a36ac1d-bb99-11e6-8a18-001a4a2314d5%2Fcpu%2Fusage/stats/?bucketDuration=20s&start=1482306053000
     body:
       encoding: US-ASCII
       string: ''
@@ -56,7 +56,7 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.4p230
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.1p112
       Hawkular-Tenant:
       - default
       Authorization:
@@ -77,17 +77,17 @@ http_interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 22 Nov 2016 16:28:51 GMT
+      - Thu, 22 Dec 2016 07:42:33 GMT
       Set-Cookie:
-      - f5489604a2df0d7b0e8c7b7b0a17e360=fae6b852e584aed1966a9104cdee8d12; path=/;
+      - f5489604a2df0d7b0e8c7b7b0a17e360=eba450abe5a9ff4df0d24483d1024dfa; path=/;
         HttpOnly; Secure
       Cache-Control:
       - private
     body:
       encoding: UTF-8
-      string: '[{"start":1468235823000,"end":1468235843000,"empty":true},{"start":1479832123000,"end":1479832143000,"empty":true}]'
+      string: '[{"start":1482306053000,"end":1482306073000,"min":3.076499063124E12,"avg":3.076522023415E12,"median":3.076499063124E12,"max":3.076544983706E12,"sum":6.15304404683E12,"samples":2,"empty":false},{"start":1482392533000,"end":1482392553000,"min":3.286007338232E12,"avg":3.286007338232E12,"median":3.286007338232E12,"max":3.286007338232E12,"sum":3.286007338232E12,"samples":1,"empty":false}]'
     http_version: 
-  recorded_at: Tue, 22 Nov 2016 16:28:52 GMT
+  recorded_at: Thu, 22 Dec 2016 07:42:33 GMT
 - request:
     method: get
     uri: https://capture.context.com/hawkular/metrics/status
@@ -100,7 +100,7 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.4p230
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.1p112
       Hawkular-Tenant:
       - default
       Authorization:
@@ -121,9 +121,9 @@ http_interactions:
       Content-Length:
       - '133'
       Date:
-      - Tue, 22 Nov 2016 16:28:55 GMT
+      - Thu, 22 Dec 2016 07:42:33 GMT
       Set-Cookie:
-      - f5489604a2df0d7b0e8c7b7b0a17e360=fae6b852e584aed1966a9104cdee8d12; path=/;
+      - f5489604a2df0d7b0e8c7b7b0a17e360=eba450abe5a9ff4df0d24483d1024dfa; path=/;
         HttpOnly; Secure
       Cache-Control:
       - private
@@ -131,10 +131,10 @@ http_interactions:
       encoding: UTF-8
       string: '{"MetricsService":"STARTED","Implementation-Version":"0.21.5.Final","Built-From-Git-SHA1":"e779588593f13224225356a94f1d8642fbccb30f"}'
     http_version: 
-  recorded_at: Tue, 22 Nov 2016 16:28:55 GMT
+  recorded_at: Thu, 22 Dec 2016 07:42:33 GMT
 - request:
     method: get
-    uri: https://capture.context.com/hawkular/metrics/gauges/registry%2F13803231-b014-11e6-a062-001a4a16262b%2Fmemory%2Fusage/stats/?bucketDuration=20s&start=1468235843000
+    uri: https://capture.context.com/hawkular/metrics/gauges/registry%2F8a36ac1d-bb99-11e6-8a18-001a4a2314d5%2Fmemory%2Fusage/stats/?bucketDuration=20s&start=1482306073000
     body:
       encoding: US-ASCII
       string: ''
@@ -144,7 +144,7 @@ http_interactions:
       Accept-Encoding:
       - gzip, deflate
       User-Agent:
-      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.2.4p230
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.1p112
       Hawkular-Tenant:
       - default
       Authorization:
@@ -165,15 +165,15 @@ http_interactions:
       Content-Type:
       - application/json
       Date:
-      - Tue, 22 Nov 2016 16:28:56 GMT
+      - Thu, 22 Dec 2016 07:42:34 GMT
       Set-Cookie:
-      - f5489604a2df0d7b0e8c7b7b0a17e360=fae6b852e584aed1966a9104cdee8d12; path=/;
+      - f5489604a2df0d7b0e8c7b7b0a17e360=eba450abe5a9ff4df0d24483d1024dfa; path=/;
         HttpOnly; Secure
       Cache-Control:
       - private
     body:
       encoding: UTF-8
-      string: '[{"start":1468235843000,"end":1468235863000,"empty":true},{"start":1479832123000,"end":1479832143000,"empty":true}]'
+      string: '[{"start":1482306073000,"end":1482306093000,"min":1.645568E8,"avg":1.645568E8,"median":1.645568E8,"max":1.645568E8,"sum":3.291136E8,"samples":2,"empty":false},{"start":1482392553000,"end":1482392573000,"empty":true}]'
     http_version: 
-  recorded_at: Tue, 22 Nov 2016 16:28:57 GMT
+  recorded_at: Thu, 22 Dec 2016 07:42:34 GMT
 recorded_with: VCR 3.0.3
