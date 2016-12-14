@@ -447,7 +447,8 @@ describe MiqScheduleWorker::Runner do
           before(:each) do
             allow(@schedule_worker).to receive(:heartbeat)
             @schedule_worker.instance_variable_set(:@active_roles, ["event"])
-            allow(@schedule_worker).to receive(:worker_settings).and_return(:ems_events_purge_interval => 1.day)
+            allow(@schedule_worker).to receive(:worker_settings).and_return(:ems_events_purge_interval    => 1.day,
+                                                                            :policy_events_purge_interval => 1.day)
             allow_any_instance_of(Zone).to receive(:role_active?).with("event").and_return(true)
           end
 
@@ -479,7 +480,7 @@ describe MiqScheduleWorker::Runner do
           before do
             allow(@schedule_worker).to receive(:heartbeat)
             @schedule_worker.instance_variable_set(:@active_roles, ["scheduler"])
-            allow(@schedule_worker).to receive(:worker_settings).and_return(:ems_events_purge_interval => 1.day)
+            allow(@schedule_worker).to receive(:worker_settings).and_return(:chargeback_generation_interval => 1.day)
             @schedule_worker.instance_variable_set(:@schedules, :scheduler => [])
           end
 

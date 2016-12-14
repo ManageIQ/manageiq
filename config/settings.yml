@@ -1367,6 +1367,8 @@
         :queue_timeout: 120.minutes
     :schedule_worker:
       :authentication_check_interval: 1.hour
+      :chargeback_generation_interval: 1.day
+      :chargeback_generation_time_utc: 01:00:00
       :db_diagnostics_interval: 30.minutes
       :drift_state_purge_interval: 1.day
       :ems_events_purge_interval: 1.day
@@ -1376,12 +1378,12 @@
       :job_proxy_dispatcher_stale_message_check_interval: 60.seconds
       :job_proxy_dispatcher_stale_message_timeout: 2.minutes
       :job_timeout_interval: 60.seconds
+      :load_balancer_retired_interval: 10.minutes
       :log_active_configuration_interval: 1.days
       :log_database_statistics_interval: 1.days
       :memory_threshold: 500.megabytes
       :nice_delta: 3
       :orchestration_stack_retired_interval: 10.minutes
-      :load_balancer_retired_interval: 10.minutes
       :performance_collection_interval: 3.minutes
       :performance_collection_start_delay: 5.minutes
       :performance_realtime_purging_interval: 15.minutes
@@ -1390,6 +1392,7 @@
       :performance_rollup_purging_start_delay: 5.minutes
       :policy_events_purge_interval: 1.day
       :poll: 15.seconds
+      :resync_rhn_mirror: 12.hours
       :server_log_stats_interval: 5.minutes
       :server_stats_interval: 60.seconds
       :service_retired_interval: 10.minutes
@@ -1397,8 +1400,7 @@
       :storage_file_collection_interval: 1.days
       :storage_file_collection_time_utc: 21600
       :vm_retired_interval: 10.minutes
-      :chargeback_generation_time_utc: 01:00:00
-      :chargeback_generation_interval: 1.day
+      :yum_update_check: 12.hours
     :smis_refresh_worker:
       :memory_threshold: 1.gigabytes
       :nice_delta: 3
