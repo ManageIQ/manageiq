@@ -46,14 +46,20 @@ module Rbac
     Storage
   )
 
+  # key: descendant::klass
+  # value:
+  #   if it is a symbol/method_name:
+  #     descendant.send(method_name) ==> klass
+  #   if it is an array [klass_id, descendant_id]
+  #     klass.where(klass_id => descendant.select(descendant_id))
   MATCH_VIA_DESCENDANT_RELATIONSHIPS = {
-    "VmOrTemplate::ExtManagementSystem"      => :ext_management_system,
-    "VmOrTemplate::Host"                     => :host,
-    "VmOrTemplate::EmsCluster"               => :ems_cluster,
+    "VmOrTemplate::ExtManagementSystem"      => [:id, :ems_id],
+    "VmOrTemplate::Host"                     => [:id, :host_id],
+    "VmOrTemplate::EmsCluster"               => [:id, :ems_cluster_id],
     "VmOrTemplate::EmsFolder"                => :parent_blue_folders,
     "VmOrTemplate::ResourcePool"             => :resource_pool,
     "ConfiguredSystem::ExtManagementSystem"  => :ext_management_system,
-    "ConfiguredSystem::ConfigurationProfile" => :configuration_profile
+    "ConfiguredSystem::ConfigurationProfile" => [:id, :configuration_profile_id],
   }
 
   # These classes should accept any of the relationship_mixin methods including:
@@ -328,8 +334,13 @@ module Rbac
   def self.matches_via_descendants(klass, descendant_klass, options)
     if descendant_klass && (method_name = lookup_method_for_descendant_class(klass, descendant_klass))
       descendants = filtered(descendant_klass, options)
-      MiqPreloader.preload(descendants, method_name)
-      descendants.flat_map { |object| object.send(method_name) }.grep(klass).uniq
+      if method_name.kind_of?(Array)
+        klass_id, descendant_id = method_name
+        klass.where(klass_id => descendants.select(descendant_id)).distinct
+      else
+        MiqPreloader.preload(descendants, method_name)
+        descendants.flat_map { |object| object.send(method_name) }.grep(klass).uniq
+      end
     end
   end
 
