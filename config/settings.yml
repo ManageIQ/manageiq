@@ -105,6 +105,7 @@
     :additional_regions: {}
   :ems_azure:
     :disabled_regions: []
+    :additional_regions: {}
 :ems_events:
   :history:
     :keep_ems_events: 6.months
