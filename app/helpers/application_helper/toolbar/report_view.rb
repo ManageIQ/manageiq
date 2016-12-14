@@ -6,21 +6,24 @@ class ApplicationHelper::Toolbar::ReportView < ApplicationHelper::Toolbar::Basic
       N_('Graph View'),
       nil,
       :url       => "explorer",
-      :url_parms => "?type=graph"),
+      :url_parms => "?type=graph",
+      :klass     => ApplicationHelper::Button::ViewGHT),
     twostate(
       :view_hybrid,
       'fa fa fa-th-list',
       N_('Hybrid View'),
       nil,
       :url       => "explorer",
-      :url_parms => "?type=hybrid"),
+      :url_parms => "?type=hybrid",
+      :klass     => ApplicationHelper::Button::ViewGHT),
     twostate(
       :view_tabular,
       'product product-report',
       N_('Tabular View'),
       nil,
       :url       => "explorer",
-      :url_parms => "?type=tabular"),
+      :url_parms => "?type=tabular",
+      :klass     => ApplicationHelper::Button::ViewGHT),
   ])
   button_group('download_main', [
     select(

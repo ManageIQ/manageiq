@@ -422,48 +422,6 @@ class ApplicationHelper::ToolbarBuilder
     end
   end
 
-  def hide_button_report(id)
-    if %w(miq_report_copy miq_report_delete miq_report_edit
-          miq_report_new miq_report_run miq_report_schedule_add).include?(id) ||
-       x_active_tree == :schedules_tree
-      return true unless role_allows?(:feature => id)
-    end
-    case x_active_tree
-    when :widgets_tree
-      case id
-      when "widget_new"
-        return x_node == "root"
-      when "widget_generate_content"
-        return @sb[:wtype] == "m"
-      end
-      return false
-    when :reports_tree
-      case id
-      when "saved_report_delete", "reload"
-        return @sb[:active_tab] != "saved_reports"
-      when "miq_report_edit", "miq_report_delete"
-        return @sb[:active_tab] == "report_info" && @record.rpt_type == "Custom" ?
-               false : true
-      when "miq_report_copy", "miq_report_new", "miq_report_run", "miq_report_only", "miq_report_schedule_add"
-        return @sb[:active_tab] == "saved_reports"
-      when "view_graph", "view_hybrid", "view_tabular"
-        return @ght_type == "tabular" && @report.try(:graph).nil? && !@zgraph
-      end
-    when :savedreports_tree
-      if %w(saved_report_delete).include?(id)
-        return true unless role_allows?(:feature => id)
-      end
-      case id
-      when "reload"
-        return x_node != "root"
-      when "view_graph", "view_hybrid", "view_tabular"
-        return @ght_type == "tabular" && @report.try(:graph).nil? && !@zgraph
-      end
-    else
-      return false
-    end
-  end
-
   # Determine if a button should be hidden
   def hide_button?(id)
     return false if id.start_with?('history_')
@@ -537,11 +495,6 @@ class ApplicationHelper::ToolbarBuilder
 
     if @layout == "ops"
       res = hide_button_ops(id)
-      return res
-    end
-
-    if @layout == "report"
-      res = hide_button_report(id)
       return res
     end
 
@@ -771,12 +724,6 @@ class ApplicationHelper::ToolbarBuilder
         end
       when "restart_workers"
         return N_("Select a worker to restart") if @sb[:selected_worker_id].nil?
-      end
-    when "MiqWidget"
-      case id
-      when "widget_generate_content"
-        return N_("Widget has to be assigned to a dashboard to generate content") if @record.memberof.count <= 0
-        return N_("This Widget content generation is already running or queued up") if @widget_running
       end
     when "MiqWidgetSet"
       case id

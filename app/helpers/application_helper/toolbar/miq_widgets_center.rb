@@ -17,7 +17,8 @@ class ApplicationHelper::Toolbar::MiqWidgetsCenter < ApplicationHelper::Toolbar:
           :widget_new,
           'pficon pficon-add-circle-o fa-lg',
           t = N_('Add a new Widget'),
-          t),
+          t,
+          :klass => ApplicationHelper::Button::WidgetNew),
       ]
     ),
   ])
