@@ -123,29 +123,26 @@ class StorageController < ApplicationController
   end
 
   def specific_buttons(pressed)
-    case pressed
-    when "custom_button"                  then custom_buttons
-    when "host_analyze_check_compliance"  then handle_analyze_check_compliance_hosts
-    when "host_check_compliance"          then handle_analyze_check_compliance_hosts
-    when "host_delete"                    then deletehosts
-    when "host_edit"                      then edit_record
-    when "host_protect"                   then assign_policies(Host)
-    when "host_refresh"                   then refreshhosts
-    when "host_scan"                      then scanhosts
-    when "host_tag"                       then tag(Host)
-    when "storage_delete"                 then deletestorages
-    when "storage_refresh"                then refreshstorage
-    when "storage_scan"                   then scanstorage
-    when "storage_tag"                    then tag(Storage)
+    if button_press_map[pressed]
+      self.send(button_press_map[pressed])
     end
 
     handle_host_power_buttons(pressed)
 
-    return %w{
-      custom_button host_analyze_check_compliance host_check_compliance
-      host_delete host_edit host_protect host_refresh host_scan host_tag
-      storage_delete storage_refresh storage_scan storage_tag
-    }.include?(pressed)
+    return button_press_map.keys.include?(pressed)
+  end
+
+  def button_press_map
+    {
+      "custom_button"                 => :custom_buttons,
+      "host_delete"                   => :deletehosts,
+      "host_edit"                     => :edit_record,
+      "host_protect"                  => :assign_policies,
+      "host_refresh"                  => :refreshhosts,
+      "host_scan"                     => :scanhosts,
+      "host_analyze_check_compliance" => :analyze_check_compliance_hosts,
+      "host_check_compliance"         => :check_compliance_hosts
+    }
   end
 
   def handle_host_power_buttons(pressed)
@@ -157,9 +154,18 @@ class StorageController < ApplicationController
     end
   end
 
-  def handle_analyze_check_compliance_hosts
-    analyze_check_compliance_hosts
+  def analyze_check_compliance_hosts
+    super
     javascript_flash
+  end
+
+  def check_compliance_hosts
+    super
+    javascript_flash
+  end
+
+  def assign_policies
+    super(Host)
   end
 
   def files

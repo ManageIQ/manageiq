@@ -61,7 +61,6 @@ describe StorageController do
       controller.instance_variable_set(:@_params, :pressed => "host_analyze_check_compliance")
       allow(controller).to receive(:show)
       expect(controller).to receive(:analyze_check_compliance_hosts)
-      expect(controller).to receive(:render)
       controller.button
       expect(controller.send(:flash_errors?)).not_to be_truthy
     end
