@@ -2204,7 +2204,7 @@ class ApplicationController < ActionController::Base
   end
 
   # Following 3 methods moved here to ensure they are loaded at the right time and will be available to all controllers
-  def find_by_id_filtered(db, id)
+  def find_by_id_filtered(db, id, options = {})
     raise _("Invalid input") unless is_integer?(id)
 
     db_obj = db.find_by(:id => from_cid(id))
@@ -2213,7 +2213,7 @@ class ApplicationController < ActionController::Base
       raise msg
     end
 
-    Rbac.filtered_object(db_obj, :user => current_user) ||
+    Rbac.filtered_object(db_obj, :user => current_user, :named_scope => options[:named_scope]) ||
       raise(_("User '%{user_id}' is not authorized to access '%{model}' record id '%{record_id}'") %
               {:user_id   => current_userid,
                :record_id => id,
