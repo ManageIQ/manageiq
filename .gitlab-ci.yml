@@ -38,12 +38,6 @@ test:replication:
     - bundle update
     - bundle exec rake test:replication:setup
     - bundle exec rake test:replication
-test:gems-pending:
-  script:
-    - cd gems/pending
-    - export BUNDLE_GEMFILE=$PWD/Gemfile
-    - bundle update
-    - bundle exec rake
 test:javascript:
   script:
     - bundle update
