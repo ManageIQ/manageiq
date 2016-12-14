@@ -1,4 +1,6 @@
 describe "MiqAeStateMachineRetry" do
+  include Spec::Support::AutomationHelper
+
   before do
     @method_name     = 'MY_RETRY_METHOD'
     @method_instance = 'MY_RETRY_INSTANCE'

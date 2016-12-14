@@ -1,6 +1,8 @@
 require "timecop"
 
 describe "MultipleStateMachineSteps" do
+  include Spec::Support::AutomationHelper
+
   before do
     MiqAeDatastore.reset_default_namespace
     @instance1           = 'instance1'
