@@ -327,7 +327,7 @@
     :options:
     - :collection
     - :subcollection
-    :verbs: *gp
+    :verbs: *gpd
     :klass: Condition
     :collection_actions:
       :get:
@@ -349,6 +349,9 @@
       :post:
       - :name: edit
         :identifier: condition_edit
+      - :name: delete
+        :identifier: condition_delete
+      :delete:
       - :name: delete
         :identifier: condition_delete
   :data_stores:

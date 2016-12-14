@@ -108,6 +108,15 @@ describe "Conditions API" do
       expect(response.parsed_body["results"].count).to eq(2)
     end
 
+    it "deletes condition via DELETE" do
+      api_basic_authorize collection_action_identifier(:conditions, :delete)
+
+      run_delete(conditions_url(condition.id))
+
+      expect(response).to have_http_status(:no_content)
+      expect(Condition.exists?(condition.id)).to be_falsey
+    end
+
     it "edits condition" do
       api_basic_authorize collection_action_identifier(:conditions, :edit)
       run_post(conditions_url(condition.id), gen_request(:edit, "description" => "change"))
