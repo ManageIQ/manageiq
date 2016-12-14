@@ -283,8 +283,7 @@ module MiqAeEngine
       objects_str.split(',').collect do |element|
         if element.include?(CLASS_SEPARATOR)
           klass, str_value = element.split(CLASS_SEPARATOR)
-          value = MiqAeObject.convert_value_based_on_datatype(str_value, klass)
-          value if value.kind_of?(MiqAeMethodService::MiqAeServiceModelBase)
+          MiqAeObject.convert_value_based_on_datatype(str_value.strip, klass.strip)
         else
           element.presence
         end
@@ -535,6 +534,8 @@ module MiqAeEngine
          (service_model = "MiqAeMethodService::MiqAeService#{SM_LOOKUP[datatype]}".safe_constantize)
         return service_model.find(value)
       end
+
+      (raise MiqAeException::InvalidClass unless MiqAeField.available_datatypes.include?(datatype)) if datatype
 
       # default datatype => 'string'
       value
