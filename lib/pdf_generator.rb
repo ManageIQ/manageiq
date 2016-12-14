@@ -41,11 +41,13 @@ class PdfGenerator
     html_string.gsub('.com:/', '.com/')
       .gsub(/src=["'](\S+)\?\d*["']/i, 'src="\1"')
   end
+  private_class_method :sanitize_html
 
   def self.stylesheet_file_path(stylesheet)
-    # Determine path relative to Rails.public_path
-    "/../app/assets/stylesheets/#{stylesheet}.css"
+    Rails.root.join(*%W(app assets stylesheets #{stylesheet})).to_s
   end
+
+  private_class_method :stylesheet_file_path
 end
 
 # Dynamically load all plugins

@@ -18,7 +18,6 @@ class PrincePdfGenerator < PdfGenerator
       :params  => {
         :input    => "html",
         :style    => stylesheet,
-        :fileroot => Rails.public_path,
         :log      => Rails.root.join("log/prince.log"),
         :output   => "-", # Write to stdout
         "-"       => nil  # Read from stdin
