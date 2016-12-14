@@ -14,7 +14,7 @@ describe "Orchestration provision Method Validation" do
     allow_any_instance_of(ServiceOrchestration).to receive(:deploy_orchestration_stack) { raise "test failure" }
     expect(ws.root['ae_result']).to eq("error")
     expect(ws.root['ae_reason']).to eq("test failure")
-    expect(request.reload.message).to eq("test failure")
+    expect(request.reload.message).to eq("Service_Template_Provisioning - Request Created")
   end
 
   it "truncates the error message exceeding 255 character limits" do
@@ -22,6 +22,6 @@ describe "Orchestration provision Method Validation" do
     allow_any_instance_of(ServiceOrchestration).to receive(:deploy_orchestration_stack) { raise long_error }
     expect(ws.root['ae_result']).to eq("error")
     expect(ws.root['ae_reason']).to eq(long_error)
-    expect(request.reload.message).to eq('t' * 252 + '...')
+    expect(request.reload.message).to eq("Service_Template_Provisioning - Request Created")
   end
 end
