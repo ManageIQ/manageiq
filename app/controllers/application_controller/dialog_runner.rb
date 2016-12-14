@@ -57,12 +57,12 @@ module ApplicationController::DialogRunner
             @in_a_form = false
             if session[:edit][:explorer]
               add_flash(flash)
-              # redirect to miq_request show_list screen
-              render :update do |page|
-                page << javascript_prologue
-                page.redirect_to :controller => 'miq_request',
-                                 :action     => 'show_list',
-                                 :flash_msg  => flash
+              if result[:request].nil?
+                replace_right_cell
+              else
+                javascript_redirect :controller => 'miq_request',
+                                    :action     => 'show_list',
+                                    :flash_msg  => flash
               end
             else
               this_page = redirect_url(flash)
