@@ -576,6 +576,7 @@ module OpsController::Settings::Common
       get_node_info(x_node)
       replace_right_cell(:nodetype => @nodetype)
     end
+    Vmdb::Settings.reload!
   end
 
   def settings_update_reset
