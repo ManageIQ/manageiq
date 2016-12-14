@@ -39,7 +39,9 @@ module ApplicationController::Timelines
       if params[:tl_categories]
         params[:tl_categories].each do |category|
           categories[events[category]] = {:display_name => category}
-          categories[events[category]][:event_groups] = event_groups[events[category]][level]
+          categories[events[category]][:event_groups] = level == :critical ?
+            event_groups[events[category]][level] :
+            event_groups[events[category]][level] + event_groups[events[category]][:critical]
         end
       end
     end
