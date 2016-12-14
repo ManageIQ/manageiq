@@ -70,9 +70,17 @@ module ManageIQ
           :name        => "southindia",
           :description => _("South India"),
         },
+        "usgovarizona" => {
+          :name        => "usgovarizona",
+          :description => _("US Gov Arizona"),
+        },
         "usgoviowa" => {
           :name        => "usgoviowa",
           :description => _("US Gov Iowa"),
+        },
+        "usgovtexas" => {
+          :name        => "usgovtexas",
+          :description => _("US Gov Texas"),
         },
         "usgovvirginia" => {
           :name        => "usgovvirginia",
@@ -100,16 +108,20 @@ module ManageIQ
         },
       }
 
+      def self.regions
+        REGIONS.except(*Array(Settings.ems.ems_azure.try!(:disabled_regions)))
+      end
+
       def self.all
-        REGIONS.values
+        regions.values
       end
 
       def self.names
-        REGIONS.keys
+        regions.keys
       end
 
       def self.find_by_name(name)
-        REGIONS[name]
+        regions[name]
       end
     end
   end
