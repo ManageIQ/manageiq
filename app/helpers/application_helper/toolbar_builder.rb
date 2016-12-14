@@ -980,7 +980,7 @@ class ApplicationHelper::ToolbarBuilder
       when "miq_ae_domain_lock", "miq_ae_namespace_edit"
         return N_("Domain is Locked.") unless editable_domain
       when "miq_ae_domain_unlock"
-        return N_("Domain is Unlocked.") if editable_domain
+        return N_("Domain is Unlocked.") unless @record.unlockable?
       end
     when "MiqAeNamespace", "MiqAeClass", "MiqAeInstance", "MiqAeMethod"
       if %w(miq_ae_namespace_copy miq_ae_instance_copy miq_ae_class_copy miq_ae_method_copy).include?(id) &&
