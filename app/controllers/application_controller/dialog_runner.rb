@@ -60,9 +60,12 @@ module ApplicationController::DialogRunner
               if result[:request].nil?
                 replace_right_cell
               else
-                javascript_redirect :controller => 'miq_request',
-                                    :action     => 'show_list',
-                                    :flash_msg  => flash
+                render :update do |page|
+                  page << javascript_prologue
+                  page.redirect_to :controller => 'miq_request',
+                                   :action     => 'show_list',
+                                   :flash_msg  => flash
+                end
               end
             else
               this_page = redirect_url(flash)
