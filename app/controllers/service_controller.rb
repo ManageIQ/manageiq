@@ -77,6 +77,7 @@ class ServiceController < ApplicationController
     build_accordions_and_trees
 
     if params[:id]  # If a tree node id came in, show in one of the trees
+      @find_with_aggregates = true
       nodetype, id = params[:id].split("-")
       self.x_node = "#{nodetype}-#{to_cid(id)}"
       get_node_info(x_node)
@@ -387,6 +388,14 @@ class ServiceController < ApplicationController
     return if record_no_longer_exists?(@record)
 
     get_tagdata(@record)
+  end
+
+  # Overwriting from application controller
+  #
+  # FIXME:  Find a more graceful way of adding .with_aggregates to the @record
+  def find_by_id_filtered(db, id)
+    options = @find_with_aggregates ? { :named_scope => :with_aggregates } : {}
+    super(db, id, options)
   end
 
   def tagging_explorer_controller?
