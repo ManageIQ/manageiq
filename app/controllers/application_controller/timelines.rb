@@ -70,7 +70,9 @@ module ApplicationController::Timelines
         end
       end
       add_flash(_("At least one filter must be selected"), :warning) if flg
-    else
+    end
+
+    unless @flash_array
       tl_gen_timeline_data(refresh = "n")
       return unless @timeline
     end
