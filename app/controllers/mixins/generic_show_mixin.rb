@@ -78,13 +78,13 @@ module Mixins
       nested_list("template_cloud", ManageIQ::Providers::CloudManager::Template)
     end
 
-    def nested_list(table_name, model)
+    def nested_list(table_name, model, parent_table = self.class.table_name, parent_record = @record)
       title = ui_lookup(:tables => table_name)
-      drop_breadcrumb(:name => _("%{name} (Summary)") % {:name => @record.name},
-                      :url  => "/#{self.class.table_name}/show/#{@record.id}")
-      drop_breadcrumb(:name => _("%{name} (All %{title})") % {:name => @record.name, :title => title},
-                      :url  => "/#{self.class.table_name}/show/#{@record.id}?display=#{@display}")
-      @view, @pages = get_view(model, :parent => @record) # Get the records (into a view) and the paginator
+      drop_breadcrumb(:name => _("%{name} (Summary)") % {:name => parent_record.name},
+                      :url  => "/#{parent_table}/show/#{parent_record.id}")
+      drop_breadcrumb(:name => _("%{name} (All %{title})") % {:name => parent_record.name, :title => title},
+                      :url  => "/#{parent_table}/show/#{parent_record.id}?display=#{@display}")
+      @view, @pages = get_view(model, :parent => parent_record) # Get the records (into a view) and the paginator
       @showtype     = @display
     end
   end
