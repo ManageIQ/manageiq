@@ -50,7 +50,7 @@ class TreeNodeBuilder
   # rubocop:disable LineLength, Style/BlockDelimiters, Style/BlockEndNewline
   # rubocop:disable Style/Lambda, Style/AlignParameters, Style/MultilineBlockLayout
   BUILD_NODE_HASH = {
-    "AssignedServerRole"     => -> { assigned_server_role_node(object) },
+    "AssignedServerRole"     => -> { assigned_server_role_node(object, object.decorate.listicon_image) },
     "AvailabilityZone"       => -> { generic_node(object.name,
                                                 "availability_zone.png",
                                                 _("Availability Zone: %{name}") % {:name => object.name}) },
@@ -203,6 +203,8 @@ class TreeNodeBuilder
   def node_icon(icon)
     if icon.start_with?("/")
       icon
+    elsif icon.start_with?("100/")
+      ActionController::Base.helpers.image_path(icon)
     else
       ActionController::Base.helpers.image_path("100/#{icon}")
     end
@@ -518,9 +520,10 @@ class TreeNodeBuilder
     end
   end
 
-  def assigned_server_role_node(object)
+  def assigned_server_role_node(object, image)
     @node = {
       :key   => build_object_id,
+      :icon  => node_icon(image),
       :title => options[:tree] == :servers_by_role_tree ?
         "<strong>#{_('Server')}: #{object.name} [#{object.id}]</strong>" :
         "<strong>Role: #{object.server_role.description}</strong>"
@@ -537,15 +540,12 @@ class TreeNodeBuilder
                  end
     end
     if object.active? && object.miq_server.started?
-      @node[:icon] = ActionController::Base.helpers.image_path("100/on.png")
       @node[:title] += _(" (%{priority}active, PID=%{number})") % {:priority => priority, :number => object.miq_server.pid}
     else
       if object.miq_server.started?
-        @node[:icon] = ActionController::Base.helpers.image_path("100/suspended.png")
         @node[:title] += _(" (%{priority}available, PID=%{number})") % {:priority => priority,
                                                                         :number   => object.miq_server.pid}
       else
-        @node[:icon] = ActionController::Base.helpers.image_path("100/off.png")
         @node[:title] += _(" (%{priority}unavailable)") % {:priority => priority}
       end
       @node[:addClass] = "red" if object.priority == 1
