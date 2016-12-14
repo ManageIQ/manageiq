@@ -141,7 +141,8 @@ class StorageController < ApplicationController
       "host_refresh"                  => :refreshhosts,
       "host_scan"                     => :scanhosts,
       "host_analyze_check_compliance" => :analyze_check_compliance_hosts,
-      "host_check_compliance"         => :check_compliance_hosts
+      "host_check_compliance"         => :check_compliance_hosts,
+      "host_tag"                      => :tag_host
     }
   end
 
@@ -152,7 +153,7 @@ class StorageController < ApplicationController
     )
 
     if power_events.include?(pressed)
-      powerbutton_hosts(pressed.split("_")[1..-1].join("_"))
+      powerbutton_hosts(pressed.sub("host_", ""))
     end
   end
 
@@ -168,6 +169,10 @@ class StorageController < ApplicationController
 
   def assign_policies
     super(Host)
+  end
+
+  def tag_host
+    tag(Host)
   end
 
   def files
