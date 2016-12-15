@@ -13,6 +13,9 @@ end
 
 require 'active_support/all'
 require 'active_support/concern'
+# this gets around a bug if a user mistakingly
+# serializes a drb object into a configuration hash
+require 'drb'
 require 'manageiq-gems-pending'
 require_relative '../lib/vmdb/settings/walker'
 require 'fix_auth/auth_model'
