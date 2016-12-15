@@ -193,7 +193,7 @@ class HostAggregateController < ApplicationController
         task_id = ext_management_system.create_host_aggregate_queue(session[:userid], options)
 
         add_flash(_("Host Aggregate creation failed: Task start failed: ID [%{id}]") %
-                  {:id => task_id.inspect}, :error) unless task_id.kind_of?(Fixnum)
+                  {:id => task_id.to_s}, :error) unless task_id.kind_of?(Fixnum)
 
         if @flash_array
           javascript_flash(:spinner_off => true)
@@ -265,7 +265,7 @@ class HostAggregateController < ApplicationController
           add_flash(_("Edit of %{model} \"%{name}\" failed: Task start failed: ID [%{id}]") % {
             :model => ui_lookup(:table => 'host_aggregate'),
             :name  => @host_aggregate.name,
-            :id    => task_id.inspect
+            :id    => task_id.to_s
           }, :error)
         end
 
@@ -411,7 +411,7 @@ class HostAggregateController < ApplicationController
           add_flash(_("Add Host to %{model} \"%{name}\" failed: Task start failed: ID [%{id}]") % {
             :model => ui_lookup(:table => 'host_aggregate'),
             :name  => @host_aggregate.name,
-            :id    => task_id.inspect
+            :id    => task_id.to_s
           }, :error)
         end
 
@@ -513,7 +513,7 @@ class HostAggregateController < ApplicationController
           add_flash(_("Remove Host to %{model} \"%{name}\" failed: Task start failed: ID [%{id}]") % {
             :model => ui_lookup(:table => 'host_aggregate'),
             :name  => @host_aggregate.name,
-            :id    => task_id.inspect
+            :id    => task_id.to_s
           }, :error)
         end
 

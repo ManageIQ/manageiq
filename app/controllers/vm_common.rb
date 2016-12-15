@@ -1148,7 +1148,7 @@ module VmCommon
 
     task_id = record.remote_console_acquire_ticket_queue(ticket_type, session[:userid])
     add_flash(_("Console access failed: Task start failed: ID [%{id}]") %
-                {:id => task_id.inspect}, :error) unless task_id.kind_of?(Fixnum)
+                {:id => task_id.to_s}, :error) unless task_id.kind_of?(Fixnum)
 
     if @flash_array
       javascript_flash(:spinner_off => true)
