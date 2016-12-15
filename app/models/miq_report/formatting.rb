@@ -2,7 +2,6 @@
 
 module MiqReport::Formatting
   extend ActiveSupport::Concern
-  FORMATS = MiqReportFormats::FORMATS
 
   module ClassMethods
     def get_available_formats(path, dt)
@@ -22,7 +21,7 @@ module MiqReport::Formatting
     format_name ||= self.class.get_default_format(col, nil)
     return nil unless format_name && format_name != :_none_
 
-    format = FORMATS[format_name]
+    format = MiqReportFormats.details(format_name)
     function_name = format[:function][:name]
 
     options = format.merge(format[:function]).slice(
@@ -48,7 +47,7 @@ module MiqReport::Formatting
     return value.to_s if format == :_none_ # Raw value was requested, do not attempt to format
 
     # Format name passed in as a symbol or string
-    format = FORMATS[format.to_sym] if (format.kind_of?(Symbol) || format.kind_of?(String)) && format != :_default_
+    format = MiqReportFormats.details(format) if (format.kind_of?(Symbol) || format.kind_of?(String)) && format != :_default_
 
     # Look in this report object for column format
     self.col_formats ||= []
@@ -56,7 +55,7 @@ module MiqReport::Formatting
       idx = col.kind_of?(String) ? col_order.index(col) : col
       if idx
         col = col_order[idx]
-        format = FORMATS[self.col_formats[idx]]
+        format = MiqReportFormats.details(self.col_formats[idx])
       end
     end
 

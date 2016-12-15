@@ -34,6 +34,10 @@ class MiqReportFormats
     format
   end
 
+  def self.details(format_name)
+    FORMATS[format_name.try(:to_sym)]
+  end
+
   def self.sub_type(column)
     DEFAULTS_AND_OVERRIDES[:sub_types_by_column][column]
   end
