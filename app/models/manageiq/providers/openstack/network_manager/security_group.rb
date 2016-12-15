@@ -1,6 +1,4 @@
 class ManageIQ::Providers::Openstack::NetworkManager::SecurityGroup < ::SecurityGroup
-  include SupportsFeatureMixin
-
   supports :create
 
   supports :delete do
