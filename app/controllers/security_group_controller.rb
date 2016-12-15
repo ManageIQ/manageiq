@@ -65,9 +65,7 @@ class SecurityGroupController < ApplicationController
     case params[:button]
     when "cancel"
       javascript_redirect :action    => 'show_list',
-                          :flash_msg => _("Add of new Security Group was cancelled by the user") % {
-                            :model => ui_lookup(:table => 'security_group') }
-
+                          :flash_msg => _("Add of new Security Group was cancelled by the user")
     when "add"
       @security_group = SecurityGroup.new
       options = form_params
@@ -123,9 +121,7 @@ class SecurityGroupController < ApplicationController
                       end
 
     if security_groups.empty?
-      add_flash(_("No %{models} were selected for deletion.") % {
-        :models => ui_lookup(:tables => "security_group")
-      }, :error)
+      add_flash(_("No Securty Group were selected for deletion."), :error)
     end
 
     security_groups_to_delete = []
@@ -228,13 +224,9 @@ class SecurityGroupController < ApplicationController
     security_group_name = session[:async][:params][:name]
     task = MiqTask.find(task_id)
     if MiqTask.status_ok?(task.status)
-      add_flash(_("Security Group \"%{name}\" updated") % {
-        :model => ui_lookup(:table => 'security_group'),
-        :name  => security_group_name
-      })
+      add_flash(_("Security Group \"%{name}\" updated") % { :name => security_group_name })
     else
       add_flash(_("Unable to update Security Group \"%{name}\": %{details}") % {
-        :model   => ui_lookup(:table => 'security_group'),
         :name    => security_group_name,
         :details => task.message
       }, :error)
