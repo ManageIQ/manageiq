@@ -135,6 +135,7 @@ describe CatalogController do
 
   describe "#dialog_form_button_pressed" do
     let(:dialog) { double("Dialog") }
+    let(:workflow) { FactoryGirl.build(:miq_provision_workflow) }
     let(:wf) { double(:dialog => dialog) }
 
     before do
@@ -144,16 +145,28 @@ describe CatalogController do
       session[:edit] = edit
     end
 
-    it "redirects to requests show list after dialog is submitted" do
+    it "redirects to requests show list after the dialog is submitted if a request is created" do
       controller.instance_variable_set(:@_params, :button => 'submit', :id => 'foo')
       allow(controller).to receive(:role_allows?).and_return(true)
-      allow(wf).to receive(:submit_request).and_return({})
+      allow(wf).to receive(:submit_request).and_return(:request => workflow.make_request(nil, {}))
       page = double('page')
       allow(page).to receive(:<<).with(any_args)
       expect(page).to receive(:redirect_to).with(:controller => "miq_request",
                                              :action     => "show_list",
                                              :flash_msg  => "Order Request was Submitted")
       expect(controller).to receive(:render).with(:update).and_yield(page)
+      controller.send(:dialog_form_button_pressed)
+    end
+
+    it "stay on the current model page after the dialog is submitted if a request is not created" do
+      controller.instance_variable_set(:@_params, :button => 'submit', :id => 'foo')
+      st = FactoryGirl.create(:service_template)
+      controller.x_node = "xx-st st-#{st.id}"
+      allow(controller).to receive(:role_allows?).and_return(true)
+      allow(controller).to receive(:get_node_info)
+      allow(controller).to receive(:render)
+      allow(wf).to receive(:submit_request).and_return({})
+      expect(controller).to receive(:replace_right_cell)
       controller.send(:dialog_form_button_pressed)
     end
   end
