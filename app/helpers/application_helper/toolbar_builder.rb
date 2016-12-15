@@ -531,18 +531,6 @@ class ApplicationHelper::ToolbarBuilder
     when "ontap_storage_system_statistics", "ontap_logical_disk_statistics", "ontap_storage_volume_statistics",
         "ontap_file_share_statistics"
       return true unless ::Settings.product.smis
-    when "host_register_nodes"
-      return true if @record.class != ManageIQ::Providers::Openstack::InfraManager
-    when "host_introspect", "host_provide"
-      return true unless @record.class == ManageIQ::Providers::Openstack::InfraManager ||
-                         @record.class == ManageIQ::Providers::Openstack::InfraManager::Host
-      return true if @record.class == ManageIQ::Providers::Openstack::InfraManager::Host &&
-                     @record.hardware.provision_state != "manageable"
-    when "host_manageable"
-      return true unless @record.class == ManageIQ::Providers::Openstack::InfraManager ||
-                         @record.class == ManageIQ::Providers::Openstack::InfraManager::Host
-      return true if @record.class == ManageIQ::Providers::Openstack::InfraManager::Host &&
-                     @record.hardware.provision_state == "manageable"
     end
 
     # Scale is only supported by OpenStack Infrastructure Provider

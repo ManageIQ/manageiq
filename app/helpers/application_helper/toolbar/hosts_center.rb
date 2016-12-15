@@ -37,7 +37,8 @@ class ApplicationHelper::Toolbar::HostsCenter < ApplicationHelper::Toolbar::Basi
           'pficon pficon-add-circle-o fa-lg',
           t = N_('Register Nodes'),
           t,
-          :url       => "/register_nodes"),
+          :url   => "/register_nodes",
+          :klass => ApplicationHelper::Button::HostRegisterNodes),
         button(
           :host_manageable,
           'pficon pficon-edit fa-lg',
@@ -45,7 +46,8 @@ class ApplicationHelper::Toolbar::HostsCenter < ApplicationHelper::Toolbar::Basi
           N_('Set Nodes to Manageable'),
           :url_parms => "main_div",
           :confirm   => N_("Set selected items to manageable state?"),
-          :onwhen    => "1+"),
+          :onwhen    => "1+",
+          :klass     => ApplicationHelper::Button::HostManageable),
         button(
           :host_introspect,
           'pficon pficon-edit fa-lg',
@@ -53,7 +55,8 @@ class ApplicationHelper::Toolbar::HostsCenter < ApplicationHelper::Toolbar::Basi
           N_('Introspect Nodes'),
           :url_parms => "main_div",
           :confirm   => N_("Introspect selected items?"),
-          :onwhen    => "1+"),
+          :onwhen    => "1+",
+          :klass     => ApplicationHelper::Button::HostIntrospectProvide),
         button(
           :host_provide,
           'pficon pficon-edit fa-lg',
@@ -61,7 +64,8 @@ class ApplicationHelper::Toolbar::HostsCenter < ApplicationHelper::Toolbar::Basi
           N_('Provide Nodes'),
           :url_parms => "main_div",
           :confirm   => N_("Provide selected items?"),
-          :onwhen    => "1+"),
+          :onwhen    => "1+",
+          :klass     => ApplicationHelper::Button::HostIntrospectProvide),
         button(
           :host_discover,
           'fa fa-search fa-lg',
