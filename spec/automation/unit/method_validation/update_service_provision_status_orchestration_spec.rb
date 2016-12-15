@@ -38,6 +38,20 @@ describe "update_serviceprovision_status" do
       msg = "Server [#{miq_server.name}] Service [#{service_orchestration.name}] Step [] Status [fred] Message [] "
       expect(request.reload.message).to eq(msg)
     end
+
+    it "request message set properly with error" do
+      type = :automate_user_error
+      FactoryGirl.create(:notification_type, :name => type)
+
+      @args = "status=fred&ae_result=error&MiqRequestTask::service_template_provision_task=#{miq_request_task.id}&" \
+              "MiqServer::miq_server=#{miq_server.id}"
+      expect(Notification.count).to eq(0)
+      add_call_method
+      ws
+      msg = "Server [#{miq_server.name}] Service [#{service_orchestration.name}] Step [] Status [fred] Message [] "
+      expect(request.reload.message).to eq(msg)
+      expect(Notification.find_by(:notification_type_id => NotificationType.find_by_name(type).id)).not_to be_nil
+    end
   end
 
   context "without a stp request object" do
