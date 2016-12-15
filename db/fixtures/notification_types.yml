@@ -104,3 +104,13 @@
   :expires_in: 24.hours
   :level: :warning
   :audience: global
+- :name: mw_op_success
+  :message: 'The operation %{op_name} %{op_arg} on %{mw_server} completed successfully.'
+  :expires_in: 24.hours
+  :level: :success
+  :audience: global
+- :name: mw_op_failure
+  :message: 'The operation %{op_name} %{op_arg} on %{mw_server} has failed to complete. Please check the logs for further details.'
+  :expires_in: 24.hours
+  :level: :warning
+  :audience: global
