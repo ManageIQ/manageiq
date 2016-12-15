@@ -1,0 +1,28 @@
+%form#form_div{:name => "angularForm", 'ng-controller' => "securityGroupFormController"}
+  = render :partial => "layouts/flash_msg"
+  = render :partial => "common_new_edit"
+
+  %h3
+    = _('Placement')
+  .form-horizontal
+    .form-group
+      %label.col-md-2.control-label
+        = _('Cloud Tenant')
+      .col-md-8
+        %input.form-control{:type          => "text",
+                            :name          => "cloud_tenant_name",
+                            'ng-model'     => "securityGroupModel.cloud_tenant_name",
+                            'ng-maxlength' => 128,
+                            :miqrequired   => true,
+                            :checkchange   => true,
+                            "readonly"     => true}
+
+  %table{:width => '100%'}
+    %tr
+      %td{:align => 'right'}
+        #buttons_on
+          = render :partial => "layouts/angular/x_edit_buttons_angular"
+
+:javascript
+  ManageIQ.angular.app.value('securityGroupFormId', '#{@security_group.id}');
+  miq_bootstrap('#form_div');

@@ -1,11 +1,23 @@
 class ManageIQ::Providers::Openstack::NetworkManager::SecurityGroup < ::SecurityGroup
-  include ProviderObjectMixin
-  include AsyncDeleteMixin
   include SupportsFeatureMixin
 
-  supports :create_security_group
-  supports :delete_security_group
-  supports :update_security_group
+  supports :create
+
+  supports :delete do
+    if ext_management_system.nil?
+      unsupported_reason_add(:delete_security_group, _("The Security Group is not connected to an active %{table}") % {
+        :table => ui_lookup(:table => "ext_management_systems")
+      })
+    end
+  end
+
+  supports :update do
+    if ext_management_system.nil?
+      unsupported_reason_add(:update_security_group, _("The Security Group is not connected to an active %{table}") % {
+        :table => ui_lookup(:table => "ext_management_systems")
+      })
+    end
+  end
 
   def self.raw_create_security_group(ext_management_system, options)
     cloud_tenant = options.delete(:cloud_tenant)
