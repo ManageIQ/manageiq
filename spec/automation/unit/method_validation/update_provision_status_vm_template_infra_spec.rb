@@ -47,6 +47,18 @@ describe "update_provision_status" do
       msg = "[#{miq_server.name}] VM [] Step [] Status [#{provision.message}] Message [] "
       expect(miq_provision_request.reload.message).to eq(msg)
     end
+    it "method succeeds with error" do
+      type = :automate_user_error
+      FactoryGirl.create(:notification_type, :name => type)
+
+      @args = "status=fred&ae_result=error&MiqProvision::miq_provision=#{provision.id}&" \
+              "MiqServer::miq_server=#{miq_server.id}"
+      expect(Notification.count).to eq(0)
+      add_call_method
+      ws
+      expect(provision.reload.status).to eq('Ok')
+      expect(Notification.find_by(:notification_type_id => NotificationType.find_by_name(type).id)).not_to be_nil
+    end
   end
 
   context "without a provision object" do

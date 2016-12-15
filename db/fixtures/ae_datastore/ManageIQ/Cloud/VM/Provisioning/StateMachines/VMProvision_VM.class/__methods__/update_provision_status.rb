@@ -19,3 +19,8 @@ updated_message += "Message [#{prov.message}] "
 updated_message += "Current Retry Number [#{$evm.root['ae_state_retries']}]" if $evm.root['ae_result'] == 'retry'
 prov.miq_request.user_message = updated_message
 prov.message = status
+
+if $evm.root['ae_result'] == "error"
+  $evm.create_notification(:level => "error", :subject => prov.miq_request, \
+                           :message => "VM Provision Error: #{updated_message}")
+end
