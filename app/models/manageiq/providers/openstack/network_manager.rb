@@ -115,8 +115,29 @@ class ManageIQ::Providers::Openstack::NetworkManager < ManageIQ::Providers::Netw
     MiqTask.generic_action_with_callback(task_opts, queue_opts)
   end
 
+  def create_cloud_subnet(options)
+    CloudSubnet.raw_create_cloud_subnet(self, options)
+  end
+
+  def create_cloud_subnet_queue(userid, options = {})
+    task_opts = {
+      :action => "creating Cloud Subnet for user #{userid}",
+      :userid => userid
+    }
+    queue_opts = {
+      :class_name  => self.class.name,
+      :method_name => 'create_cloud_subnet',
+      :instance_id => id,
+      :priority    => MiqQueue::HIGH_PRIORITY,
+      :role        => 'ems_operations',
+      :zone        => my_zone,
+      :args        => [options]
+    }
+    MiqTask.generic_action_with_callback(task_opts, queue_opts)
+  end
+
   def create_network_router(options)
-    NetworkRouter.create_network_router(self, options)
+    NetworkRouter.raw_create_network_router(self, options)
   end
 
   def create_network_router_queue(userid, options = {})
