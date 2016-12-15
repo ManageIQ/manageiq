@@ -60,7 +60,7 @@ class CloudTenant < ApplicationRecord
       :userid => userid
     }
     queue_opts = {
-      :class_name  => self.class_by_ems(ext_management_system),
+      :class_name  => class_by_ems(ext_management_system),
       :method_name => 'create_cloud_tenant',
       :priority    => MiqQueue::HIGH_PRIORITY,
       :role        => 'ems_operations',

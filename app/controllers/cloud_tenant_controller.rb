@@ -56,17 +56,17 @@ class CloudTenantController < ApplicationController
     @tenant = CloudTenant.new
     @in_a_form = true
     @ems_choices = {}
-    ManageIQ::Providers::Openstack::CloudManager.all.each { |ems|
+    ManageIQ::Providers::Openstack::CloudManager.all.each do |ems|
       @ems_choices[ems.name] = ems.id
       # keystone v3 allows for hierarchical tenants
       if ems.api_version == "v3"
-        ems.cloud_tenants.each { |ems_cloud_tenant|
+        ems.cloud_tenants.each do |ems_cloud_tenant|
           tenant_choice_name = ems.name + " (" + ems_cloud_tenant.name + ")"
           tenant_choice_id = ems.id.to_s + ":" + ems_cloud_tenant.id.to_s
           @ems_choices[tenant_choice_name] = tenant_choice_id
-        }
+        end
       end
-    }
+    end
     drop_breadcrumb(
       :name => _("Add New %{model}") % {:model => ui_lookup(:table => 'cloud_tenant')},
       :url  => "/cloud_tenant/new"
@@ -77,9 +77,10 @@ class CloudTenantController < ApplicationController
     assert_privileges("cloud_tenant_new")
     case params[:button]
     when "cancel"
-      javascript_redirect :action => 'show_list',
-                          :flash_msg => _("Add of new %{model} was cancelled by the user") % {:model => ui_lookup(:table => 'cloud_tenant')}
-
+      javascript_redirect :action    => 'show_list',
+                          :flash_msg => _("Add of new %{model} was cancelled by the user") % {
+                            :model => ui_lookup(:table => 'cloud_tenant')
+                          }
     when "add"
       @tenant = CloudTenant.new
       options = form_params
@@ -105,15 +106,15 @@ class CloudTenantController < ApplicationController
     task = MiqTask.find(task_id)
     if MiqTask.status_ok?(task.status)
       add_flash(_("%{model} \"%{name}\" created") % {
-                  :model => ui_lookup(:table => 'cloud_tenant'),
-                  :name  => tenant_name
-                })
+        :model => ui_lookup(:table => 'cloud_tenant'),
+        :name  => tenant_name
+      })
     else
-        add_flash(_("Unable to create %{model} \"%{name}\": %{details}") % {
-                    :model   => ui_lookup(:table => 'cloud_tenant'),
-                    :name    => tenant_name,
-                    :details => task.message
-                  }, :error)
+      add_flash(_("Unable to create %{model} \"%{name}\": %{details}") % {
+        :model   => ui_lookup(:table => 'cloud_tenant'),
+        :name    => tenant_name,
+        :details => task.message
+      }, :error)
     end
 
     @breadcrumbs.pop if @breadcrumbs
@@ -166,15 +167,15 @@ class CloudTenantController < ApplicationController
     task = MiqTask.find(task_id)
     if MiqTask.status_ok?(task.status)
       add_flash(_("%{model} \"%{name}\" updated") % {
-                  :model => ui_lookup(:table => 'cloud_tenant'),
-                  :name  => tenant_name
-                })
+        :model => ui_lookup(:table => 'cloud_tenant'),
+        :name  => tenant_name
+      })
     else
-        add_flash(_("Unable to update %{model} \"%{name}\": %{details}") % {
-                    :model   => ui_lookup(:table => 'cloud_tenant'),
-                    :name    => tenant_name,
-                    :details => task.message
-                  }, :error)
+      add_flash(_("Unable to update %{model} \"%{name}\": %{details}") % {
+        :model   => ui_lookup(:table => 'cloud_tenant'),
+        :name    => tenant_name,
+        :details => task.message
+      }, :error)
     end
 
     @breadcrumbs.pop if @breadcrumbs
