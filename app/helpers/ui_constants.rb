@@ -505,22 +505,22 @@ module UiConstants
   ASSIGN_TOS[:chargeback_compute] = {
     "enterprise"             => N_("The Enterprise"),
     "ext_management_system"  => PostponedTranslation.new(N_("Selected %{tables}")) do
-                                 {:tables => ui_lookup(:tables => "ext_management_systems")}
+                                  {:tables => ui_lookup(:tables => "ext_management_systems")}
                                 end,
     "ems_cluster"            => PostponedTranslation.new(N_("Selected %{tables}")) do
-                                 {:tables => ui_lookup(:tables => "ems_cluster")}
+                                  {:tables => ui_lookup(:tables => "ems_cluster")}
                                 end,
     "ems_container"          => PostponedTranslation.new(N_("Selected %{tables}")) do
-                                 {:tables => ui_lookup(:tables => "ems_container")}
+                                  {:tables => ui_lookup(:tables => "ems_container")}
                                 end,
     "vm-tags"                => PostponedTranslation.new(N_("Tagged %{tables}")) do
-                                 {:tables => ui_lookup(:tables => "vm")}
+                                  {:tables => ui_lookup(:tables => "vm")}
                                 end,
-    "container_image-tags"   => PostponedTranslation.new(N_("Tagged %{tables}")) do
-                                 {:tables => ui_lookup(:tables => "container_image")}
+    "container_image-tags"   => PostponedTranslation.new(N_("Tagged %{models}")) do
+                                  {:models => ui_lookup(:models => "ContainerImage")}
                                 end,
-    "container_image-labels" => PostponedTranslation.new(N_("Labeled %{tables}")) do
-                                 {:tables => ui_lookup(:tables => "container_image")}
+    "container_image-labels" => PostponedTranslation.new(N_("Labeled %{models}")) do
+                                  {:models => ui_lookup(:models => "ContainerImage")}
                                 end,
     "tenant"                 => N_("Tenants")
   }
