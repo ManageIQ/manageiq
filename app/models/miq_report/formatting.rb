@@ -8,23 +8,7 @@ module MiqReport::Formatting
     def get_available_formats(path, dt)
       col = path.split("-").last.to_sym
       sfx = col.to_s.split("__").last
-      is_break_sfx = (sfx && self.is_break_suffix?(sfx))
-      sub_type = MiqReportFormats.sub_type(col)
-      FORMATS.keys.inject({}) do |h, k|
-        # Ignore formats that don't include suffix if the column name has a break suffix
-        next(h) if is_break_sfx && (FORMATS[k][:suffixes].nil? || !FORMATS[k][:suffixes].include?(sfx.to_sym))
-
-        if FORMATS[k][:columns] && FORMATS[k][:columns].include?(col)
-          h[k] = FORMATS[k][:description]
-        elsif FORMATS[k][:sub_types] && FORMATS[k][:sub_types].include?(sub_type)
-          h[k] = FORMATS[k][:description]
-        elsif FORMATS[k][:data_types] && FORMATS[k][:data_types].include?(dt)
-          h[k] = FORMATS[k][:description]
-        elsif FORMATS[k][:suffixes] && FORMATS[k][:suffixes].include?(sfx.to_sym)
-          h[k] = FORMATS[k][:description]
-        end
-        h
-      end
+      MiqReportFormats.available_formats_for(col, sfx, dt)
     end
 
     def get_default_format(path, dt)
