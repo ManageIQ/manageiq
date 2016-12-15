@@ -486,29 +486,6 @@ describe ApplicationHelper do
       end
     end
 
-    context "when with EmsCluster" do
-      before do
-        @record = EmsCluster.new
-        stub_user(:features => :all)
-      end
-
-      context "and id = common_drift" do
-        before do
-          @id = 'common_drift'
-          @lastaction = 'drift_history'
-        end
-
-        it "and lastaction = drift_history" do
-          expect(subject).to be_falsey
-        end
-      end
-
-      it "and id != common_drift" do
-        @id = 'ems_cluster_view'
-        expect(subject).to be_falsey
-      end
-    end
-
     context "when with Host" do
       before do
         @record = Host.new

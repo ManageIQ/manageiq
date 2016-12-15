@@ -502,9 +502,6 @@ class ApplicationHelper::ToolbarBuilder
     return true if @record.kind_of?(OrchestrationStack) && @display == "instances" &&
                    %w(instance_check_compliance instance_compare).include?(id)
 
-    # don't hide view buttons in toolbar
-    return false if id == 'common_drift'
-
     # dont hide back to summary button button when not in explorer
     return false if id == "show_summary" && !@explorer
 
