@@ -2,17 +2,14 @@
 
 module MiqReport::Formatting
   extend ActiveSupport::Concern
-
-  format_hash = YAML.load_file(ApplicationRecord::FIXTURE_DIR.join("miq_report_formats.yml"))
-  FORMATS                       = format_hash[:formats].freeze
-  FORMAT_DEFAULTS_AND_OVERRIDES = format_hash[:defaults_and_overrides].freeze
+  FORMATS = MiqReportFormats::FORMATS
 
   module ClassMethods
     def get_available_formats(path, dt)
       col = path.split("-").last.to_sym
       sfx = col.to_s.split("__").last
       is_break_sfx = (sfx && self.is_break_suffix?(sfx))
-      sub_type = FORMAT_DEFAULTS_AND_OVERRIDES[:sub_types_by_column][col]
+      sub_type = MiqReportFormats::DEFAULTS_AND_OVERRIDES[:sub_types_by_column][col]
       FORMATS.keys.inject({}) do |h, k|
         # Ignore formats that don't include suffix if the column name has a break suffix
         next(h) if is_break_sfx && (FORMATS[k][:suffixes].nil? || !FORMATS[k][:suffixes].include?(sfx.to_sym))
@@ -34,8 +31,11 @@ module MiqReport::Formatting
       col = path.split("-").last.to_sym
       sfx = col.to_s.split("__").last
       sfx = sfx.to_sym if sfx
-      sub_type = FORMAT_DEFAULTS_AND_OVERRIDES[:sub_types_by_column][col]
-      FORMAT_DEFAULTS_AND_OVERRIDES[:formats_by_suffix][sfx] || FORMAT_DEFAULTS_AND_OVERRIDES[:formats_by_column][col] || FORMAT_DEFAULTS_AND_OVERRIDES[:formats_by_sub_type][sub_type] || FORMAT_DEFAULTS_AND_OVERRIDES[:formats_by_data_type][dt]
+      sub_type = MiqReportFormats::DEFAULTS_AND_OVERRIDES[:sub_types_by_column][col]
+      MiqReportFormats::DEFAULTS_AND_OVERRIDES[:formats_by_suffix][sfx] ||
+        MiqReportFormats::DEFAULTS_AND_OVERRIDES[:formats_by_column][col] ||
+        MiqReportFormats::DEFAULTS_AND_OVERRIDES[:formats_by_sub_type][sub_type] ||
+        MiqReportFormats::DEFAULTS_AND_OVERRIDES[:formats_by_data_type][dt]
     end
   end
 
@@ -89,7 +89,9 @@ module MiqReport::Formatting
       dt = dt.to_sym unless dt.nil?
       format = FORMATS[self.class.get_default_format(expression_col, dt)]
       format = format.deep_clone if format # Make sure we don't taint the original
-      format[:precision] = FORMAT_DEFAULTS_AND_OVERRIDES[:precision_by_column][col.to_sym] if format && FORMAT_DEFAULTS_AND_OVERRIDES[:precision_by_column].key?(col.to_sym)
+      if format && MiqReportFormats::DEFAULTS_AND_OVERRIDES[:precision_by_column].key?(col.to_sym)
+        format[:precision] = MiqReportFormats::DEFAULTS_AND_OVERRIDES[:precision_by_column][col.to_sym]
+      end
     else
       format = format.deep_clone # Make sure we don't taint the original
     end
