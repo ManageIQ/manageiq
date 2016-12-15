@@ -66,11 +66,7 @@ module MiqReport::Formatting
       dt = value.class.to_s.downcase.to_sym if dt.nil?
       dt = dt.to_sym unless dt.nil?
       sfx = col.to_s.split('__').last.try(:to_sym)
-      format = FORMATS[MiqReportFormats.default_format_for(col, sfx, dt)]
-      format = format.deep_clone if format # Make sure we don't taint the original
-      if format && MiqReportFormats::DEFAULTS_AND_OVERRIDES[:precision_by_column].key?(col.to_sym)
-        format[:precision] = MiqReportFormats::DEFAULTS_AND_OVERRIDES[:precision_by_column][col.to_sym]
-      end
+      format = MiqReportFormats.default_format_details_for(col, sfx, dt)
     else
       format = format.deep_clone # Make sure we don't taint the original
     end

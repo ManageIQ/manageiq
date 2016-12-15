@@ -23,6 +23,17 @@ class MiqReportFormats
       DEFAULTS_AND_OVERRIDES[:formats_by_data_type][datatype]
   end
 
+  def self.default_format_details_for(column, suffix, datatype)
+    format = FORMATS[default_format_for(column, suffix, datatype)]
+    if format
+      format = format.deep_clone # Make sure we don't taint the original
+      if DEFAULTS_AND_OVERRIDES[:precision_by_column].key?(column.to_sym)
+        format[:precision] = DEFAULTS_AND_OVERRIDES[:precision_by_column][column.to_sym]
+      end
+    end
+    format
+  end
+
   def self.sub_type(column)
     DEFAULTS_AND_OVERRIDES[:sub_types_by_column][column]
   end
