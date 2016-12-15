@@ -47,7 +47,7 @@ describe ApplicationHelper::Button::RoleSuspend do
         allow(view_context).to receive(:x_node).and_return('z-1r23')
         expect(button.disabled?).to be_truthy
         button.calculate_properties
-        expect(button[:title]).to match(/Activate the cyborg Role on another Server to suspend it on ratman \[\w+]/)
+        expect(button[:title]).to match(/Activate the cyborg Role on another Server to suspend it on ratman \[\w+\]/)
       end
     end
 
