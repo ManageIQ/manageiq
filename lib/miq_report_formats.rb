@@ -16,6 +16,13 @@ class MiqReportFormats
     end
   end
 
+  def self.default_format_for(column, suffix, datatype)
+    DEFAULTS_AND_OVERRIDES[:formats_by_suffix][suffix] ||
+      DEFAULTS_AND_OVERRIDES[:formats_by_column][column] ||
+      DEFAULTS_AND_OVERRIDES[:formats_by_sub_type][MiqReportFormats.sub_type(column)] ||
+      DEFAULTS_AND_OVERRIDES[:formats_by_data_type][datatype]
+  end
+
   def self.sub_type(column)
     DEFAULTS_AND_OVERRIDES[:sub_types_by_column][column]
   end

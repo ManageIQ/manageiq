@@ -13,12 +13,8 @@ module MiqReport::Formatting
 
     def get_default_format(path, dt)
       col = path.split("-").last.to_sym
-      sfx = col.to_s.split("__").last
-      sfx = sfx.to_sym if sfx
-      MiqReportFormats::DEFAULTS_AND_OVERRIDES[:formats_by_suffix][sfx] ||
-        MiqReportFormats::DEFAULTS_AND_OVERRIDES[:formats_by_column][col] ||
-        MiqReportFormats::DEFAULTS_AND_OVERRIDES[:formats_by_sub_type][MiqReportFormats.sub_type(col)] ||
-        MiqReportFormats::DEFAULTS_AND_OVERRIDES[:formats_by_data_type][dt]
+      sfx = col.to_s.split("__").last.try(:to_sym)
+      MiqReportFormats.default_format_for(col, sfx, dt)
     end
   end
 
