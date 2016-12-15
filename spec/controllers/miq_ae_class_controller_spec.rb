@@ -614,18 +614,54 @@ describe MiqAeClassController do
         :new_field        => {},
         :new              => {
           :datatypes => [],
+          :name      => 'freddie',
           :aetypes   => [],
           :fields    => [@cls.ae_fields.first]
         }
       }
-      controller.instance_variable_set(:@_params, "fields_default_value_0" => "Pebbles", :id => @cls.id)
+      controller.instance_variable_set(:@_params,
+                                       "fields_default_value_0" => "Pebbles",
+                                       "fields_name_0"          => "freddie",
+                                       :id                      => @cls.id)
       allow(controller).to receive(:render)
       controller.send(:fields_form_field_changed)
       expect(@cls.ae_fields.first.default_value).to eq("Wilma")
       controller.instance_variable_set(:@_params, :button => "save", :id => @cls.id)
       controller.send(:update_fields)
       @cls.reload
+      expect(@cls.ae_fields.first.name).to eq("freddie")
       expect(@cls.ae_fields.first.default_value).to eq("Pebbles")
+    end
+
+    it "adds a new field to a class and saves the class with new field" do
+      field = {:aetype        => "attribute",
+               :default_value => "Wilma",
+               :name          => "name01"}
+      session[:field_data] = field
+      session[:edit] = {
+        :key              => "aefields_edit__#{@cls.id}",
+        :ae_class_id      => @cls.id,
+        :fields_to_delete => [],
+        :new_field        => {:name => "Bar", :default_value => "Foo"},
+        :new              => {
+          :datatypes => [],
+          :name      => 'fred',
+          :aetypes   => [],
+          :fields    => [@cls.ae_fields.first]
+        }
+      }
+      controller.instance_variable_set(:@_params,
+                                       "fields_default_value" => "Foo",
+                                       "fields_name"          => "Bar",
+                                       :id                    => @cls.id,
+                                       :button                => 'accept')
+      allow(controller).to receive(:render)
+      controller.send(:fields_form_field_changed)
+      controller.instance_variable_set(:@_params, :button => "save", :id => @cls.id)
+      controller.send(:update_fields)
+      @cls.reload
+      expect(@cls.ae_fields.last.name).to eq("Bar")
+      expect(@cls.ae_fields.last.default_value).to eq("Foo")
     end
   end
 

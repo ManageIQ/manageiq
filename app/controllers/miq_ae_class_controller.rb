@@ -743,7 +743,7 @@ class MiqAeClassController < ApplicationController
 
     @edit[:new][:fields] = @ae_class.ae_fields.sort_by { |a| [a.priority.to_i] }.collect do |fld|
       field_attributes.each_with_object({}) do |column, hash|
-        hash[column.to_sym] = fld.send(column)
+        hash[column] = fld.send(column)
       end
     end
 
@@ -2052,7 +2052,7 @@ class MiqAeClassController < ApplicationController
       field_attributes.each do |field|
         field_name = "field_#{field}".to_sym
         field_sym = field.to_sym
-        if field == :substitute
+        if field == "substitute"
           field_data[field_sym] = new_field[field_sym] = params[field_name] == "1" if params[field_name]
         elsif params[field_name]
           field_data[field_sym] = new_field[field_sym] = params[field_name]
@@ -2076,17 +2076,16 @@ class MiqAeClassController < ApplicationController
       @edit[:new][:fields].each_with_index do |fld, i|
         field_attributes.each do |field|
           field_name = "fields_#{field}_#{i}"
-          field_sym = field.to_sym
           if field == "substitute"
-            fld[field_sym] = params[field_name] == "1" if params[field_name]
+            fld[field] = params[field_name] == "1" if params[field_name]
           elsif %w(aetype datatype).include?(field)
             var_name = "fields_#{field}#{i}"
-            fld[field_sym] = params[var_name.to_sym] if params[var_name.to_sym]
+            fld[field] = params[var_name.to_sym] if params[var_name.to_sym]
           elsif field == "default_value"
-            fld[field_sym] = params[field_name] if params[field_name]
-            fld[field_sym] = params["fields_password_value_#{i}".to_sym] if params["fields_password_value_#{i}".to_sym]
-          else
-            fld[field_sym] = params[field_name] if params[field_name]
+            fld[field] = params[field_name] if params[field_name]
+            fld[field] = params["fields_password_value_#{i}".to_sym] if params["fields_password_value_#{i}".to_sym]
+          elsif params[field_name]
+            fld[field] = params[field_name]
           end
         end
       end
@@ -2098,8 +2097,9 @@ class MiqAeClassController < ApplicationController
         return
       end
       new_fields = {}
-      field_attributes.each_with_object({}) { |field| field = field.to_sym
-      new_fields[field] = @edit[:new_field][field]}
+      field_attributes.each do |field_attribute|
+        new_fields[field_attribute] = @edit[:new_field][field_attribute.to_sym]
+      end
       @edit[:new][:fields].push(new_fields)
       @edit[:new_field] = session[:field_data] = {}
     end
