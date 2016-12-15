@@ -94,23 +94,38 @@ describe CloudSubnetController do
       stub_user(:features => :all)
       EvmSpecHelper.create_guid_miq_server_zone
       @ems = FactoryGirl.create(:ems_openstack).network_manager
-      @subnet = FactoryGirl.create(:cloud_subnet_openstack)
+      @cloud_subnet = FactoryGirl.create(:cloud_subnet_openstack)
     end
 
-    it "builds create screen" do
-      post :button, :params => { :pressed => "cloud_subnet_new", :format => :js }
-      expect(assigns(:flash_array)).to be_nil
-    end
+    context "#create" do
+      let(:task_options) do
+        {
+          :action => "creating Cloud Subnet for user %{user}" % {:user => controller.current_user.userid},
+          :userid => controller.current_user.userid
+        }
+      end
+      let(:queue_options) do
+        {
+          :class_name  => @ems.class.name,
+          :method_name => 'create_cloud_subnet',
+          :instance_id => @ems.id,
+          :priority    => MiqQueue::HIGH_PRIORITY,
+          :role        => 'ems_operations',
+          :zone        => @ems.my_zone,
+          :args        => [{:name => "test", :ip_version => "4", :enable_dhcp => false}]
+        }
+      end
 
-    it "creates a cloud subnet" do
-      allow(ManageIQ::Providers::Openstack::NetworkManager::CloudSubnet)
-        .to receive(:raw_create_subnet).and_return(@subnet)
-      post :create, :params => { :button => "add", :format => :js,
-        :name => "test", :network_id => "id", :cidr => "172.16.1.0/24",
-        :gateway => "172.16.1.0", :tenant_id => 'id', :ems_id => @ems.id }
-      expect(controller.send(:flash_errors?)).to be_falsey
-      expect(assigns(:flash_array).first[:message]).to include("Creating Cloud Subnet")
-      expect(assigns(:edit)).to be_nil
+      it "builds create screen" do
+        post :button, :params => { :pressed => "cloud_subnetnew", :format => :js }
+        expect(assigns(:flash_array)).to be_nil
+      end
+
+      it "queues the create action" do
+        expect(MiqTask).to receive(:generic_action_with_callback).with(task_options, queue_options)
+        post :create, :params => { :button => "add", :format => :js, :name => 'test',
+                                   :tenant_id => 'id', :ems_id => @ems.id }
+      end
     end
   end
 
@@ -118,22 +133,38 @@ describe CloudSubnetController do
     before do
       stub_user(:features => :all)
       EvmSpecHelper.create_guid_miq_server_zone
-      @subnet = FactoryGirl.create(:cloud_subnet_openstack)
+      @ems = FactoryGirl.create(:ems_openstack).network_manager
+      @cloud_subnet = FactoryGirl.create(:cloud_subnet_openstack, :ext_management_system => @ems)
     end
 
-    it "builds edit screen" do
-      post :button, :params => { :pressed => "cloud_subnet_edit", :format => :js, :id => @subnet.id }
-      expect(assigns(:flash_array)).to be_nil
-    end
+    context "#edit" do
+      let(:task_options) do
+        {
+          :action => "updating Cloud Subnet for user %{user}" % {:user => controller.current_user.userid},
+          :userid => controller.current_user.userid
+        }
+      end
+      let(:queue_options) do
+        {
+          :class_name  => @cloud_subnet.class.name,
+          :method_name => 'raw_update_cloud_subnet',
+          :instance_id => @cloud_subnet.id,
+          :priority    => MiqQueue::HIGH_PRIORITY,
+          :role        => 'ems_operations',
+          :zone        => @ems.my_zone,
+          :args        => [{:name => "foo2", :enable_dhcp => false}]
+        }
+      end
 
-    it "updates itself" do
-      allow_any_instance_of(ManageIQ::Providers::Openstack::NetworkManager::CloudSubnet)
-        .to receive(:raw_update_subnet)
-      session[:breadcrumbs] = [{:url => "cloud_subnet/show/#{@subnet.id}"}, 'placeholder']
-      post :update, :params => { :button => "save", :format => :js, :id => @subnet.id }
-      expect(controller.send(:flash_errors?)).to be_falsey
-      expect(assigns(:flash_array).first[:message]).to include("Updating Subnet")
-      expect(assigns(:edit)).to be_nil
+      it "builds edit screen" do
+        post :button, :params => { :pressed => "cloud_subnet_edit", :format => :js, :id => @cloud_subnet.id }
+        expect(assigns(:flash_array)).to be_nil
+      end
+
+      it "queues the update action" do
+        expect(MiqTask).to receive(:generic_action_with_callback).with(task_options, queue_options)
+        post :update, :params => { :button => "save", :format => :js, :id => @cloud_subnet.id, :name => "foo2" }
+      end
     end
   end
 
@@ -142,16 +173,33 @@ describe CloudSubnetController do
       stub_user(:features => :all)
       EvmSpecHelper.create_guid_miq_server_zone
       @ems = FactoryGirl.create(:ems_openstack).network_manager
-      @subnet = FactoryGirl.create(:cloud_subnet_openstack, :ext_management_system => @ems)
+      @cloud_subnet = FactoryGirl.create(:cloud_subnet_openstack, :ext_management_system => @ems)
       session[:cloud_subnet_lastaction] = 'show'
     end
 
-    it "deletes itself" do
-      allow_any_instance_of(ManageIQ::Providers::Openstack::NetworkManager::CloudSubnet)
-        .to receive(:raw_delete_subnet)
-      post :button, :params => { :id => @subnet.id, :pressed => "cloud_subnet_delete", :format => :js }
-      expect(controller.send(:flash_errors?)).to be_falsey
-      expect(assigns(:flash_array).first[:message]).to include("Delete initiated for 1 Cloud Subnet")
+    context "#delete" do
+      let(:task_options) do
+        {
+          :action => "deleting Cloud Subnet for user %{user}" % {:user => controller.current_user.userid},
+          :userid => controller.current_user.userid
+        }
+      end
+      let(:queue_options) do
+        {
+          :class_name  => @cloud_subnet.class.name,
+          :method_name => 'raw_delete_cloud_subnet',
+          :instance_id => @cloud_subnet.id,
+          :priority    => MiqQueue::HIGH_PRIORITY,
+          :role        => 'ems_operations',
+          :zone        => @ems.my_zone,
+          :args        => []
+        }
+      end
+
+      it "queues the delete action" do
+        expect(MiqTask).to receive(:generic_action_with_callback).with(task_options, queue_options)
+        post :button, :params => { :id => @cloud_subnet.id, :pressed => "cloud_subnet_delete", :format => :js }
+      end
     end
   end
 end
