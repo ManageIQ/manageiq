@@ -467,6 +467,7 @@ module EmsCommon
       @refresh_div = "main_div" # Default div for button.rjs to refresh
       redirect_to :action => "new" if params[:pressed] == "new"
       deleteemss if params[:pressed] == "#{@table_name}_delete"
+      disableemss if params[:pressed] == "#{@table_name}_disable"
       arbitration_profile_edit if params[:pressed] == "arbitration_profile_new"
       arbitration_profile_edit if params[:pressed] == "arbitration_profile_edit"
       arbitration_profile_delete if params[:pressed] == "arbitration_profile_delete"
@@ -1005,6 +1006,7 @@ module EmsCommon
           :target_class => model.to_s)
     elsif task == "destroy"
       model.where(:id => emss).order("lower(name)").each do |ems|
+        ems.disable_ems
         id = ems.id
         ems_name = ems.name
         audit = {:event        => "ems_record_delete_initiated",
@@ -1021,6 +1023,25 @@ module EmsCommon
          :product => I18n.t('product.name'),
          :model   => ui_lookup(:table => @table_name),
          :models  => ui_lookup(:tables => @table_name)}) if @flash_array.nil?
+    elsif task == "disable"
+      model.where(:id => emss).order("lower(name)").each do |ems|
+        ems.disabled? ? ems.enable_ems : ems.disable_ems
+        id = ems.id
+        ems_name = ems.name
+        audit = {:event        => "ems_toggle_record_disable_initiated",
+                 :message      => _("[%{name}] Toggle record disable initiated") % {:name => ems_name},
+                 :target_id    => id,
+                 :target_class => model.to_s,
+                 :userid       => session[:userid]}
+        AuditEvent.success(audit)
+      end
+      #model.destroy_queue(emss)
+      add_flash(n_("Disable initiated for %{count} %{model} from the %{product} Database",
+                   "Disable initiated for %{count} %{models} from the %{product} Database", emss.length) %
+                    {:count   => emss.length,
+                     :product => I18n.t('product.name'),
+                     :model   => ui_lookup(:table => @table_name),
+                     :models  => ui_lookup(:tables => @table_name)}) if @flash_array.nil?
     else
       model.where(:id => emss).order("lower(name)").each do |ems|
         id = ems.id
@@ -1070,6 +1091,38 @@ module EmsCommon
       @single_delete = true unless flash_errors?
       add_flash(_("The selected %{record} was deleted") %
         {:record => ui_lookup(:tables => @table_name)}) if @flash_array.nil?
+    end
+    if @lastaction == "show_list"
+      show_list
+      @refresh_partial = "layouts/gtl"
+    end
+  end
+
+  def disableemss
+    assert_privileges(params[:pressed])
+    emss = []
+    if @lastaction == "show_list" # showing a list, scan all selected emss
+      emss = find_checked_items
+      if emss.empty?
+        add_flash(_("No %{record} were selected for disable") % {:record => ui_lookup(:table => @table_name)}, :error)
+      end
+      process_emss(emss, "disable") unless emss.empty?
+      add_flash(n_("Disable initiated for %{count} %{model} from the %{product} Database",
+                   "Disable initiated for %{count} %{models} from the %{product} Database", emss.length) %
+                    {:count   => emss.length,
+                     :product => I18n.t('product.name'),
+                     :model   => ui_lookup(:table => @table_name),
+                     :models  => ui_lookup(:tables => @table_name)}) if @flash_array.nil?
+    else
+      if params[:id].nil? || model.find_by_id(params[:id]).nil?
+        add_flash(_("%{record} no longer exists") % {:record => ui_lookup(:table => @table_name)}, :error)
+      else
+        emss.push(params[:id])
+      end
+      process_emss(emss, "disable") unless emss.empty?
+      @single_disable = true unless flash_errors?
+      add_flash(_("The selected %{record} was disabled") %
+                    {:record => ui_lookup(:tables => @table_name)}) if @flash_array.nil?
     end
     if @lastaction == "show_list"
       show_list

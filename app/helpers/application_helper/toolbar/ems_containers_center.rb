@@ -38,6 +38,14 @@ class ApplicationHelper::Toolbar::EmsContainersCenter < ApplicationHelper::Toolb
           :enabled   => false,
           :onwhen    => "1"),
         button(
+          :ems_container_disable,
+          'pficon pficon-trend-down fa-lg',
+          N_('Select a single Containers Provider to disable'),
+          N_('Disable Selected Containers Provider'),
+          :url_parms => "main_div",
+          :enabled   => false,
+          :onwhen    => "1"),
+        button(
           :ems_container_delete,
           'pficon pficon-delete fa-lg',
           N_('Remove selected Containers Providers'),

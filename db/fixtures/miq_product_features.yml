@@ -3638,6 +3638,10 @@
       :description: Refresh Containers Providers
       :feature_type: control
       :identifier: ems_container_refresh
+    - :name: Disable
+      :description: Disable Containers Providers
+      :feature_type: control
+      :identifier: ems_container_disable
     - :name: Edit Tags
       :description: Edit Tags of Containers Providers
       :feature_type: control
