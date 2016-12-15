@@ -386,10 +386,13 @@ module ManageIQ::Providers
     end
 
     def emit_middleware_notification(type, op_name, op_arg, ems_ref)
+      mw_deployment = MiddlewareDeployment.find_by_ems_ref(ems_ref)
+      mw_server = mw_deployment.nil? ? MiddlewareServer.find_by_ems_ref(ems_ref) :
+          MiddlewareServer.find_by_id(mw_deployment.server_id)
       Notification.create(:type => type, :options => {
         :op_name   => op_name,
         :op_arg    => op_arg,
-        :mw_server => ems_ref
+        :mw_server => "#{mw_server.name} (#{mw_server.feed})"
       })
     end
 
