@@ -1,5 +1,7 @@
 class FloatingIp < ApplicationRecord
   include NewWithTypeStiMixin
+  include SupportsFeatureMixin
+
   acts_as_miq_taggable
 
   belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => "ManageIQ::Providers::NetworkManager"
@@ -17,5 +19,10 @@ class FloatingIp < ApplicationRecord
 
   def name
     address
+  end
+
+  def self.class_by_ems(ext_management_system)
+    # TODO: use a factory on ExtManagementSystem side to return correct class for each provider
+    ext_management_system && ext_management_system.class::FloatingIp
   end
 end
