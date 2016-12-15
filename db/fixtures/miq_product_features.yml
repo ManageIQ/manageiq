@@ -4475,23 +4475,6 @@
       :description: Show Capacity & Utilization data of Pods
       :feature_type: view
       :identifier: container_group_perf
-  - :name: Modify
-    :description: Modify Pods
-    :feature_type: admin
-    :identifier: container_group_admin
-    :children:
-    - :name: Remove
-      :description: Remove Pod
-      :feature_type: admin
-      :identifier: container_group_delete
-    - :name: Edit
-      :description: Edit a Pod
-      :feature_type: admin
-      :identifier: container_group_edit
-    - :name: Add
-      :description: Add a Pod
-      :feature_type: admin
-      :identifier: container_group_new
   - :name: Operate
     :description: Perform Operations on Pods
     :feature_type: control
@@ -4537,23 +4520,6 @@
       :description: Display Timelines for Container Nodes
       :feature_type: view
       :identifier: container_node_timeline
-  - :name: Modify
-    :description: Modify Container Nodes
-    :feature_type: admin
-    :identifier: container_node_admin
-    :children:
-    - :name: Remove
-      :description: Remove Container Nodes
-      :feature_type: admin
-      :identifier: container_node_delete
-    - :name: Edit
-      :description: Edit a Container Nodes
-      :feature_type: admin
-      :identifier: container_node_edit
-    - :name: Add
-      :description: Add a Container Nodes
-      :feature_type: admin
-      :identifier: container_node_new
   - :name: Operate
     :description: Perform Operations on Container Nodes
     :feature_type: control
@@ -4599,23 +4565,6 @@
       :description: Display Timelines for container Replicators
       :feature_type: view
       :identifier: container_replicator_timeline
-  - :name: Modify
-    :description: Modify Container Nodes
-    :feature_type: admin
-    :identifier: container_replicator_admin
-    :children:
-    - :name: Remove
-      :description: Remove Container Replicator
-      :feature_type: admin
-      :identifier: container_replicator_delete
-    - :name: Edit
-      :description: Edit a Container Replicator
-      :feature_type: admin
-      :identifier: container_replicator_edit
-    - :name: Add
-      :description: Add a Container Replicator
-      :feature_type: admin
-      :identifier: container_replicator_new
   - :name: Operate
     :description: Perform Operations on Container Replicators
     :feature_type: control
@@ -4695,23 +4644,6 @@
       :description: Display Individual Container Image Registries
       :feature_type: view
       :identifier: container_image_registry_show
-  - :name: Modify
-    :description: Modify Container Image Registries
-    :feature_type: admin
-    :identifier: container_image_registry_admin
-    :children:
-    - :name: Remove
-      :description: Remove Container Image Registry
-      :feature_type: admin
-      :identifier: container_image_registry_delete
-    - :name: Edit
-      :description: Edit a Container Image Registry
-      :feature_type: admin
-      :identifier: container_image_registry_edit
-    - :name: Add
-      :description: Add a Container Image Registry
-      :feature_type: admin
-      :identifier: container_image_registry_new
   - :name: Operate
     :description: Perform Operations on Container Image Registries
     :feature_type: control
@@ -4787,23 +4719,6 @@
       :description: Display Individual Container Build
       :feature_type: view
       :identifier: container_build_show
-  - :name: Modify
-    :description: Modify Container Build
-    :feature_type: admin
-    :identifier: container_build_admin
-    :children:
-    - :name: Remove
-      :description: Remove Container Build
-      :feature_type: admin
-      :identifier: container_build_delete
-    - :name: Edit
-      :description: Edit a Container Build
-      :feature_type: admin
-      :identifier: container_build_edit
-    - :name: Add
-      :description: Add a Container Build
-      :feature_type: admin
-      :identifier: container_build_new
   - :name: Operate
     :description: Perform Operations on Container Build
     :feature_type: control
@@ -4866,23 +4781,6 @@
       :description: Show Capacity & Utilization data of Service
       :feature_type: view
       :identifier: container_service_perf
-  - :name: Modify
-    :description: Modify Container Services
-    :feature_type: admin
-    :identifier: container_service_admin
-    :children:
-    - :name: Remove
-      :description: Remove Container Services
-      :feature_type: admin
-      :identifier: container_service_delete
-    - :name: Edit
-      :description: Edit a Container Service
-      :feature_type: admin
-      :identifier: container_service_edit
-    - :name: Add
-      :description: Add a Container Service
-      :feature_type: admin
-      :identifier: container_service_new
   - :name: Operate
     :description: Perform Operations on Container Services
     :feature_type: control
@@ -4997,18 +4895,6 @@
       :feature_type: admin
       :identifier: container_admin
       :children:
-      - :name: Remove Container
-        :description: Remove Container
-        :feature_type: admin
-        :identifier: container_delete
-      - :name: Edit Container
-        :description: Edit a Container
-        :feature_type: admin
-        :identifier: container_edit
-      - :name: Add Container
-        :description: Add a Container
-        :feature_type: admin
-        :identifier: container_new
       - :name: Utilization
         :description: Show Capacity & Utilization data of Containers
         :feature_type: view
