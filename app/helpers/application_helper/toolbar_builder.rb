@@ -503,8 +503,7 @@ class ApplicationHelper::ToolbarBuilder
                    %w(instance_check_compliance instance_compare).include?(id)
 
     # don't hide view buttons in toolbar
-    return false if id == 'common_drift' &&
-                    !%w(miq_policy_rsop ops).include?(@layout)
+    return false if id == 'common_drift'
 
     # dont hide back to summary button button when not in explorer
     return false if id == "show_summary" && !@explorer
