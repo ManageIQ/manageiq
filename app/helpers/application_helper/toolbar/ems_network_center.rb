@@ -22,7 +22,8 @@ class ApplicationHelper::Toolbar::EmsNetworkCenter < ApplicationHelper::Toolbar:
           :ems_network_edit,
           'pficon pficon-edit fa-lg',
           t = N_('Edit this Network Provider'),
-          t),
+          t,
+          :klass => ApplicationHelper::Button::EmsNetwork),
         button(
           :ems_network_delete,
           'pficon pficon-delete fa-lg',
