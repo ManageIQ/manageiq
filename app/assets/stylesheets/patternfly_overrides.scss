@@ -714,9 +714,16 @@ div.disabled {
   }
 }
 
+.miq-sand-paper, .miq-list-content {
+  & + .no-padding #paging_div {
+    #pc_div_1 {
+      display: none !important;
+    }
+  }
+}
+
 .miq-sand-paper, .miq-sand-paper > div {
-  background: #f5f5f5;
-  overflow: hidden !important;
+   background: #f5f5f5;
 }
 
 .miq-pagination {
@@ -728,10 +735,4 @@ div.disabled {
 
 .miq-data-table .miq-pagination {
   bottom: -7px;
-}
-
-#right_div.right-panel-data {
-  #pc_div_1 {
-    display: none !important;
-  }
 }

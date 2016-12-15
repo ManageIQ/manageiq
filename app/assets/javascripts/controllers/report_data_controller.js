@@ -1,7 +1,6 @@
 (function(){
   var COTNROLLER_NAME = 'reportDataController';
   var MAIN_CONTETN_ID = 'main-content';
-  var RIGHT_PANEL = 'right_div';
 
   /**
   * Private method for setting rootPoint of MiQEndpointsService.
@@ -220,16 +219,11 @@
     var mainContent = document.getElementById(MAIN_CONTETN_ID);
     if (mainContent) {
       angular.element(mainContent).removeClass('miq-sand-paper');
+      angular.element(mainContent).removeClass('miq-list-content');
       if (viewType && (viewType === 'grid' || viewType === 'tile')) {
         angular.element(mainContent).addClass('miq-sand-paper');
-      }
-    }
-
-    var rightPanel = document.getElementById(RIGHT_PANEL);
-    if (rightPanel) {
-      angular.element(rightPanel).removeClass('right-panel-data');
-      if (viewType && (viewType === 'grid' || viewType === 'tile' || viewType === 'list')) {
-        angular.element(rightPanel).addClass('right-panel-data');
+      } else if (viewType && viewType === 'list') {
+        angular.element(mainContent).addClass('miq-list-content');
       }
     }
   }
