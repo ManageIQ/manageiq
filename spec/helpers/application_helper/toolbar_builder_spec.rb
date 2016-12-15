@@ -1982,6 +1982,34 @@ describe ApplicationHelper do
         expect(result).to include(tooltip)
       end
     end
+
+    context "Locked domains" do
+      before do
+        user = FactoryGirl.create(:user_with_group)
+        login_as user
+      end
+
+      let(:builder) do
+        builder = _toolbar_builder
+        allow(builder).to receive(:editable_domain?) { true }
+        builder
+      end
+
+      it 'disables the unlock button for locked domain' do
+        @record = FactoryGirl.build(:miq_ae_domain)
+        @record.lock_contents!
+        result = builder.send(:build_toolbar_disable_button, 'miq_ae_domain_unlock')
+
+        expect(result).to be_falsey
+      end
+
+      it 'disables the lock button for unlocked domain' do
+        @record = FactoryGirl.build(:miq_ae_domain)
+        result = builder.send(:build_toolbar_disable_button, 'miq_ae_domain_lock')
+
+        expect(result).to be_falsey
+      end
+    end
   end # end of disable button
 
   describe "#build_toolbar_hide_button_ops" do
