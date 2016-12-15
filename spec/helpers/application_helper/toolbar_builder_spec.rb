@@ -188,24 +188,6 @@ describe ApplicationHelper do
     end
 
     %w(
-      view_grid
-      view_tile
-      view_list
-      download_text
-      download_csv
-      download_pdf
-      download_view
-      vm_download_pdf
-      refresh_log
-      fetch_log
-    ).each do |item|
-      it "when with #{item}" do
-        @id = item
-        expect(subject).to be_falsey
-      end
-    end
-
-    %w(
       history_1
       history_2
       history_3
@@ -487,29 +469,6 @@ describe ApplicationHelper do
           @id = id
           expect(subject).to be_truthy
         end
-      end
-    end
-
-    context "when with EmsCluster" do
-      before do
-        @record = EmsCluster.new
-        stub_user(:features => :all)
-      end
-
-      context "and id = common_drift" do
-        before do
-          @id = 'common_drift'
-          @lastaction = 'drift_history'
-        end
-
-        it "and lastaction = drift_history" do
-          expect(subject).to be_falsey
-        end
-      end
-
-      it "and id != common_drift" do
-        @id = 'ems_cluster_view'
-        expect(subject).to be_falsey
       end
     end
 
