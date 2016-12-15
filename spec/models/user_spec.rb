@@ -19,14 +19,6 @@ describe User do
     it "should save proper email address" do
       expect(FactoryGirl.build(:user, :email => "that.guy@manageiq.com")).to be_valid
     end
-
-    it "should reject invalid characters in email address" do
-      expect(FactoryGirl.build(:user, :email => "that,guy@manageiq.com")).not_to be_valid
-    end
-
-    it "allows apostrophes in email address" do
-      expect(FactoryGirl.build(:user, :email => "timmy.o'toole@manageiq.com")).to be_valid
-    end
   end
 
   describe "#change_password" do
@@ -330,20 +322,6 @@ describe User do
         expect(described_class).to have_virtual_column vcol.to_s, :integer
       end
     end
-  end
-
-  it 'should invalidate email address that contains "\n"' do
-    group = FactoryGirl.create(:miq_group)
-    user = FactoryGirl.create(:user,
-                              :email      => "admin@email.com",
-                              :miq_groups => [group]
-                             )
-    expect(user).to be_valid
-
-    user.email = "admin@email.com
-                  ); INSERT INTO users
-                  (password, userid) VALUES ('bar', 'foo')--"
-    expect(user).not_to be_valid
   end
 
   context ".authenticate_with_http_basic" do
