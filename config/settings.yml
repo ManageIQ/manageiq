@@ -1081,6 +1081,10 @@
   :timeout: 120
   :use_vim_broker: true
   :authentication_timeout: 30.seconds
+  :remote_miq_api:
+    :user:
+    :password:
+    :request_timeout: 600
 :workers:
   :worker_base:
     :defaults:
