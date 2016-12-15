@@ -133,8 +133,7 @@
           %th= _('Actions')
         %tbody
           %tr{"ng-if"       => "reconfigureModel.addEnabled",
-              "ng-form"     => "rowForm",
-              "ng-disabled" => "{'has-error': rowForm.value.$invalid}"}
+              "ng-form"     => "rowForm"}
             %td
             %td
               = select_tag('hdType',
