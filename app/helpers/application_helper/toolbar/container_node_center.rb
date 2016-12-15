@@ -1,27 +1,4 @@
 class ApplicationHelper::Toolbar::ContainerNodeCenter < ApplicationHelper::Toolbar::Basic
-  button_group('container_node_vmdb', [
-    select(
-      :container_node_vmdb_choice,
-      'fa fa-cog fa-lg',
-      t = N_('Configuration'),
-      t,
-      :items => [
-        button(
-          :container_node_edit,
-          'pficon pficon-edit fa-lg',
-          t = N_('Edit this Node'),
-          t,
-          :url => "/edit"),
-        button(
-          :container_node_delete,
-          'pficon pficon-delete fa-lg',
-          t = N_('Remove this Node from the VMDB'),
-          t,
-          :url_parms => "&refresh=y",
-          :confirm   => N_("Warning: This Node and ALL of its components will be permanently removed!")),
-      ]
-    ),
-  ])
   button_group('container_node_monitoring', [
     select(
       :container_node_monitoring_choice,

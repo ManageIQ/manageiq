@@ -1,27 +1,4 @@
 class ApplicationHelper::Toolbar::ContainerServiceCenter < ApplicationHelper::Toolbar::Basic
-  button_group('container_service_vmdb', [
-    select(
-      :container_service_vmdb_choice,
-      'fa fa-cog fa-lg',
-      t = N_('Configuration'),
-      t,
-      :items => [
-        button(
-          :container_service_edit,
-          'pficon pficon-edit fa-lg',
-          t = N_('Edit this Service'),
-          t,
-          :url => "/edit"),
-        button(
-          :container_service_delete,
-          'pficon pficon-delete fa-lg',
-          t = N_('Remove this Service'),
-          t,
-          :url_parms => "&refresh=y",
-          :confirm   => N_("Warning: This Service and ALL of its components will be permanently removed!")),
-      ]
-    ),
-  ])
   button_group('container_service_monitoring', [
     select(
       :container_service_monitoring_choice,

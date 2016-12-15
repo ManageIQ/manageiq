@@ -1,27 +1,4 @@
 class ApplicationHelper::Toolbar::ContainerReplicatorCenter < ApplicationHelper::Toolbar::Basic
-  button_group('container_replicator_vmdb', [
-    select(
-      :container_replicator_vmdb_choice,
-      'fa fa-cog fa-lg',
-      t = N_('Configuration'),
-      t,
-      :items => [
-        button(
-          :container_replicator_edit,
-          'pficon pficon-edit fa-lg',
-          t = N_('Edit this Replicator'),
-          t,
-          :url => "/edit"),
-        button(
-          :container_replicator_delete,
-          'pficon pficon-delete fa-lg',
-          t = N_('Remove this Replicator from the VMDB'),
-          t,
-          :url_parms => "&refresh=y",
-          :confirm   => N_("Warning: This Replicator and ALL of its components will be permanently removed!")),
-      ]
-    ),
-  ])
   button_group('container_replicator_monitoring', [
     select(
       :container_replicator_monitoring_choice,
