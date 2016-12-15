@@ -1281,6 +1281,7 @@ ext_management_systems:
 - last_metrics_update_date
 - last_metrics_success_date
 - tenant_mapping_enabled
+- enabled
 file_depots:
 - id
 - name
