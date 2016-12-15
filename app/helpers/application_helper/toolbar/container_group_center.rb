@@ -1,27 +1,4 @@
 class ApplicationHelper::Toolbar::ContainerGroupCenter < ApplicationHelper::Toolbar::Basic
-  button_group('container_group_vmdb', [
-    select(
-      :container_group_vmdb_choice,
-      'fa fa-cog fa-lg',
-      t = N_('Configuration'),
-      t,
-      :items => [
-        button(
-          :container_group_edit,
-          'pficon pficon-edit fa-lg',
-          t = N_('Edit this Pod'),
-          t,
-          :url => "/edit"),
-        button(
-          :container_group_delete,
-          'pficon pficon-delete fa-lg',
-          t = N_('Remove this Pod from the VMDB'),
-          t,
-          :url_parms => "&refresh=y",
-          :confirm   => N_("Warning: This Pod and ALL of its components will be permanently removed!")),
-      ]
-    ),
-  ])
   button_group('container_group_monitoring', [
     select(
       :container_group_monitoring_choice,
@@ -35,7 +12,9 @@ class ApplicationHelper::Toolbar::ContainerGroupCenter < ApplicationHelper::Tool
           N_('Show Timelines for this Group'),
           N_('Timelines'),
           :url       => "/show",
-          :url_parms => "?display=timeline"),
+          :url_parms => "?display=timeline",
+          :options   => {:entity => 'Group'},
+          :klass     => ApplicationHelper::Button::ContainerTimeline),
         button(
           :container_group_perf,
           'product product-monitoring fa-lg',
