@@ -16,7 +16,7 @@ class ManageIQ::Providers::Openstack::CloudManager::Vm
             "#{protocol} remote console requires the vm to be running.") if options[:check_if_running] && state != "on"
     end
 
-    def remote_console_acquire_ticket(_userid, _console_type)
+    def remote_console_acquire_ticket(_userid, _originating_server, _console_type)
       url = ext_management_system.with_provider_connection({:service => "Compute", :tenant_name => cloud_tenant.name}) do |con|
         response = con.get_vnc_console(ems_ref, 'novnc')
         return nil if response.body.fetch_path('console', 'type') != 'novnc'
