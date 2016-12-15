@@ -9,7 +9,7 @@ module MiqReport::Formatting
       col = path.split("-").last.to_sym
       sfx = col.to_s.split("__").last
       is_break_sfx = (sfx && self.is_break_suffix?(sfx))
-      sub_type = MiqReportFormats::DEFAULTS_AND_OVERRIDES[:sub_types_by_column][col]
+      sub_type = MiqReportFormats.sub_type(col)
       FORMATS.keys.inject({}) do |h, k|
         # Ignore formats that don't include suffix if the column name has a break suffix
         next(h) if is_break_sfx && (FORMATS[k][:suffixes].nil? || !FORMATS[k][:suffixes].include?(sfx.to_sym))
@@ -31,10 +31,9 @@ module MiqReport::Formatting
       col = path.split("-").last.to_sym
       sfx = col.to_s.split("__").last
       sfx = sfx.to_sym if sfx
-      sub_type = MiqReportFormats::DEFAULTS_AND_OVERRIDES[:sub_types_by_column][col]
       MiqReportFormats::DEFAULTS_AND_OVERRIDES[:formats_by_suffix][sfx] ||
         MiqReportFormats::DEFAULTS_AND_OVERRIDES[:formats_by_column][col] ||
-        MiqReportFormats::DEFAULTS_AND_OVERRIDES[:formats_by_sub_type][sub_type] ||
+        MiqReportFormats::DEFAULTS_AND_OVERRIDES[:formats_by_sub_type][MiqReportFormats.sub_type(col)] ||
         MiqReportFormats::DEFAULTS_AND_OVERRIDES[:formats_by_data_type][dt]
     end
   end
