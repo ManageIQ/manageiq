@@ -47,9 +47,13 @@ module ApplicationController::DialogRunner
             @in_a_form = false
             if session[:edit][:explorer]
               add_flash(flash)
-              javascript_redirect :controller => 'miq_request',
-                                  :action     => 'show_list',
-                                  :flash_msg  => flash
+              if result[:request].nil?
+                replace_right_cell
+              else
+                javascript_redirect :controller => 'miq_request',
+                                    :action     => 'show_list',
+                                    :flash_msg  => flash
+              end
             else
               javascript_redirect redirect_url(flash)
             end
