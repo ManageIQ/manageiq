@@ -398,7 +398,7 @@ module Api
       task_id = queue_object_action(vm, desc,
                                     :method_name => "remote_console_acquire_ticket",
                                     :role        => "ems_operations",
-                                    :args => [@auth_user, protocol])
+                                    :args        => [@auth_user, MiqServer.my_server.id, protocol])
       # NOTE:
       # we are queuing the :remote_console_acquire_ticket and returning the task id and href.
       #
