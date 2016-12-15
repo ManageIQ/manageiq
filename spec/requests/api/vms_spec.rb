@@ -1150,6 +1150,32 @@ describe "Vms API" do
     end
   end
 
+  context "Vm request console action" do
+    it "to an invalid vm" do
+      api_basic_authorize action_identifier(:vms, :request_console)
+
+      run_post(invalid_vm_url, gen_request(:request_console))
+
+      expect(response).to have_http_status(:not_found)
+    end
+
+    it "to an invalid vm without appropriate role" do
+      api_basic_authorize
+
+      run_post(invalid_vm_url, gen_request(:request_console))
+
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it "to a single Vm" do
+      api_basic_authorize action_identifier(:vms, :request_console)
+
+      run_post(vm_url, gen_request(:request_console))
+
+      expect_single_action_result(:success => true, :message => /#{vm.id}.* requesting console/i, :href => vm_url)
+    end
+  end
+
   context "Vm Tag subcollection" do
     let(:tag1)         { {:category => "department", :name => "finance", :path => "/managed/department/finance"} }
     let(:tag2)         { {:category => "cc",         :name => "001",     :path => "/managed/cc/001"} }
