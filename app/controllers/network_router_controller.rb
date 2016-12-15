@@ -200,7 +200,6 @@ class NetworkRouterController < ApplicationController
 
   def update_finished
     task_id = session[:async][:params][:task_id]
-    router_id = session[:async][:params][:id]
     router_name = session[:async][:params][:name]
     task = MiqTask.find(task_id)
     if MiqTask.status_ok?(task.status)
