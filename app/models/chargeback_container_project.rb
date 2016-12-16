@@ -70,11 +70,11 @@ class ChargebackContainerProject < Chargeback
 
   private
 
-  def init_extra_fields(perf)
-    self.project_name  = perf.resource_name
-    self.project_uid   = perf.resource.ems_ref
-    self.provider_name = perf.parent_ems.try(:name)
-    self.provider_uid  = perf.parent_ems.try(:guid)
-    self.archived      = perf.resource.archived? ? _('Yes') : _('No')
+  def init_extra_fields(consumption)
+    self.project_name  = consumption.resource_name
+    self.project_uid   = consumption.resource.ems_ref
+    self.provider_name = consumption.parent_ems.try(:name)
+    self.provider_uid  = consumption.parent_ems.try(:guid)
+    self.archived      = consumption.resource.archived? ? _('Yes') : _('No')
   end
 end # class Chargeback

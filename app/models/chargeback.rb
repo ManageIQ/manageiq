@@ -62,7 +62,7 @@ class Chargeback < ActsAsArModel
       classification = self.class.classification_for_perf(metric_rollup_record)
       self.tag_name = classification.present? ? classification.description : _('<Empty>')
     else
-      init_extra_fields(metric_rollup_record)
+      init_extra_fields(consumption)
     end
     self.start_date, self.end_date, self.display_range = options.report_step_range(consumption.timestamp)
     self.interval_name = options.interval
