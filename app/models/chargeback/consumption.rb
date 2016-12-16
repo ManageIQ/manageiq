@@ -11,6 +11,10 @@ class Chargeback
       @rollups.first
     end
 
+    def tag_names
+      first_metric_rollup_record.tag_names.split('|')
+    end
+
     def max(metric)
       values(metric).max
     end
