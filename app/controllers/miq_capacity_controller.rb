@@ -744,17 +744,6 @@ class MiqCapacityController < ApplicationController
     end
   end
 
-  def send_button_changes
-    changed = (@edit[:new] != @edit[:current])
-    render :update do |page|
-      page << javascript_prologue
-      if changed != session[:changed]
-        session[:changed] = changed
-        page << javascript_for_miq_button_visibility(changed)
-      end
-    end
-  end
-
   def util_build_tree(type, name)
     selected_node = x_node(name)
     if type == :bottlenecks
