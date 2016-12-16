@@ -20,7 +20,7 @@ class Chargeback < ActsAsArModel
       rates_to_apply = rates.get(consumption)
 
       key = consumption.key(self)
-      data[key] ||= new(options, consumption.first_metric_rollup_record)
+      data[key] ||= new(options, consumption)
 
       chargeback_rates = data[key]["chargeback_rates"].split(', ') + rates_to_apply.collect(&:description)
       data[key]["chargeback_rates"] = chargeback_rates.uniq.join(', ')
@@ -54,7 +54,8 @@ class Chargeback < ActsAsArModel
     @options.tag_hash[tag]
   end
 
-  def initialize(options, metric_rollup_record)
+  def initialize(options, consumption)
+    metric_rollup_record = consumption.first_metric_rollup_record
     @options = options
     super()
     if @options[:groupby_tag].present?
@@ -63,10 +64,10 @@ class Chargeback < ActsAsArModel
     else
       init_extra_fields(metric_rollup_record)
     end
-    self.start_date, self.end_date, self.display_range = options.report_step_range(metric_rollup_record.timestamp)
+    self.start_date, self.end_date, self.display_range = options.report_step_range(consumption.timestamp)
     self.interval_name = options.interval
     self.chargeback_rates = ''
-    self.entity = metric_rollup_record.resource
+    self.entity = consumption.resource
   end
 
   def calculate_costs(consumption, rates)

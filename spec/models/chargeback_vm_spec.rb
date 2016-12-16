@@ -794,40 +794,41 @@ describe ChargebackVm do
   describe '#initialize' do
     let(:report_options) { Chargeback::ReportOptions.new }
     let(:vm_owners)     { {@vm1.id => @vm1.evm_owner_name} }
-    let(:metric_rollup) do
-      FactoryGirl.build(:metric_rollup_vm_hr, :tag_names => 'environment/prod',
-                        :parent_host_id => @host1.id, :parent_ems_cluster_id => @ems_cluster.id,
-                        :parent_ems_id => ems.id, :parent_storage_id => @storage.id,
-                        :resource => @vm1, :resource_name => @vm1.name)
+    let(:consumption) { Chargeback::Consumption.new([metric_rollup], nil, nil) }
+    let(:shared_extra_fields) do
+      {'vm_name' => @vm1.name, 'owner_name' => admin.name, 'vm_uid' => 'ems_ref', 'vm_guid' => @vm1.guid,
+       'vm_id' => @vm1.id}
     end
+    subject { ChargebackVm.new(report_options, consumption).attributes }
 
     before do
       ChargebackVm.instance_variable_set(:@vm_owners, vm_owners)
     end
 
-    it 'sets extra fields' do
-      extra_fields = ChargebackVm.new(report_options, metric_rollup).attributes
-      expected_fields = {"vm_name" => @vm1.name, "owner_name" => admin.name, "provider_name" => ems.name,
-                         "provider_uid" => ems.guid, "vm_uid" => "ems_ref", "vm_guid" => @vm1.guid,
-                         "vm_id" => @vm1.id}
+    context 'with parent ems' do
+      let(:metric_rollup) do
+        FactoryGirl.build(:metric_rollup_vm_hr, :tag_names => 'environment/prod',
+                          :parent_host_id => @host1.id, :parent_ems_cluster_id => @ems_cluster.id,
+                          :parent_ems_id => ems.id, :parent_storage_id => @storage.id,
+                          :resource => @vm1, :resource_name => @vm1.name)
+      end
 
-      expect(extra_fields).to include(expected_fields)
+      it 'sets extra fields' do
+        is_expected.to include(shared_extra_fields.merge('provider_name' => ems.name, 'provider_uid' => ems.guid))
+      end
     end
 
-    let(:metric_rollup_without_ems) do
-      FactoryGirl.build(:metric_rollup_vm_hr, :tag_names => 'environment/prod',
-                        :parent_host_id => @host1.id, :parent_ems_cluster_id => @ems_cluster.id,
-                        :parent_storage_id => @storage.id,
-                        :resource => @vm1, :resource_name => @vm1.name)
-    end
+    context 'when parent ems is missing' do
+      let(:metric_rollup) do
+        FactoryGirl.build(:metric_rollup_vm_hr, :tag_names => 'environment/prod',
+                          :parent_host_id => @host1.id, :parent_ems_cluster_id => @ems_cluster.id,
+                          :parent_storage_id => @storage.id,
+                          :resource => @vm1, :resource_name => @vm1.name)
+      end
 
-    it 'sets extra fields when parent ems is missing' do
-      extra_fields = ChargebackVm.new(report_options, metric_rollup_without_ems).attributes
-      expected_fields = {"vm_name" => @vm1.name, "owner_name" => admin.name, "provider_name" => nil,
-                         "provider_uid" => nil, "vm_uid" => "ems_ref", "vm_guid" => @vm1.guid,
-                         "vm_id" => @vm1.id}
-
-      expect(extra_fields).to include(expected_fields)
+      it 'sets extra fields when parent ems is missing' do
+        is_expected.to include(shared_extra_fields.merge('provider_name' => nil, 'provider_uid' => nil))
+      end
     end
   end
 
