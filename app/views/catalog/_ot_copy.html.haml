@@ -39,7 +39,8 @@
             = select_tag('manager_id',
                          options_for_select(opts, @edit[:current][:manager_id]),
                          "data-miq_sparkle_on" => true,
-                         :class                => "selectpicker")
+                         :class                => "selectpicker",
+                         'data-live-search'    => true)
             :javascript
               miqInitSelectPicker();
               miqSelectPickerEvent('manager_id', '#{url}')

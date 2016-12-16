@@ -35,7 +35,8 @@
         = select_tag('catalog_id',
                      options_for_select(([["<#{_('Unassigned')}>", nil]]) + available_catalogs, catalog_id),
                      "data-miq_sparkle_on" => true,
-                     :class                => "selectpicker")
+                     :class                => "selectpicker",
+                     'data-live-search'    => true)
         :javascript
           miqInitSelectPicker();
           miqSelectPickerEvent('catalog_id', '#{url}')
@@ -49,7 +50,8 @@
           = select_tag('dialog_id',
                         options_for_select(options, @edit[:new][:dialog_id]),
                         "data-miq_sparkle_on" => true,
-                        :class                => "selectpicker")
+                        :class                => "selectpicker",
+                        'data-live-search'    => true)
           :javascript
             miqSelectPickerEvent('dialog_id', '#{url}')
     - if @edit[:new][:st_prov_type] == "generic"
@@ -65,7 +67,8 @@
               = select_tag('generic_subtype',
                             options_for_select(available_subtypes, @edit[:new][:generic_subtype]),
                             "data-miq_sparkle_on" => true,
-                            :class                => "selectpicker")
+                            :class                => "selectpicker",
+                            'data-live-search'    => true)
               :javascript
                 miqSelectPickerEvent('generic_subtype', '#{url}')
     - if @edit[:new][:st_prov_type] == "generic_orchestration"
@@ -77,7 +80,8 @@
           = select_tag('template_id',
                         options_for_select(opts, @edit[:new][:template_id]),
                         "data-miq_sparkle_on" => true,
-                        :class                => "selectpicker")
+                        :class                => "selectpicker",
+                        'data-live-search'    => true)
           :javascript
             miqSelectPickerEvent('template_id', '#{url}')
       - if @edit[:new][:template_id]
@@ -89,7 +93,8 @@
             = select_tag('manager_id',
                          options_for_select(opts, @edit[:new][:manager_id]),
                          "data-miq_sparkle_on" => true,
-                         :class               => "selectpicker")
+                         :class                => "selectpicker",
+                         'data-live-search'    => true)
             :javascript
               miqSelectPickerEvent('manager_id', '#{url}')
     - elsif @edit[:new][:st_prov_type] == "generic_ansible_tower"
@@ -101,7 +106,8 @@
           = select_tag('manager_id',
                        options_for_select(opts, @edit[:new][:manager_id]),
                        "data-miq_sparkle_on" => true,
-                       :class                => "selectpicker")
+                       :class                => "selectpicker",
+                       'data-live-search'    => true)
           :javascript
             miqSelectPickerEvent('manager_id', '#{url}')
       - if @edit[:new][:manager_id]
@@ -113,7 +119,8 @@
             = select_tag('template_id',
                           options_for_select(opts, @edit[:new][:template_id]),
                           "data-miq_sparkle_on" => true,
-                          :class                => "selectpicker")
+                          :class                => "selectpicker",
+                          'data-live-search'    => true)
             :javascript
               miqSelectPickerEvent('template_id', '#{url}')
     .form-group

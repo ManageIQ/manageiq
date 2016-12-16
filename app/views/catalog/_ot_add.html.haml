@@ -37,7 +37,8 @@
                                            "Microsoft Azure" => "OrchestrationTemplateAzure",
                                            "VNF" => "OrchestrationTemplateVnfd",},
                                           @edit[:new][:type]),
-                       :class => "selectpicker")
+                       :class                 => "selectpicker",
+                       'data-live-search'     => true)
           :javascript
             miqInitSelectPicker();
             miqSelectPickerEvent('type', '#{url}', {beforeSend: true})
@@ -50,7 +51,8 @@
             = select_tag('manager_id',
                          options_for_select(opts, @edit[:new][:manager_id]),
                          "data-miq_sparkle_on" => true,
-                         :class                => "selectpicker")
+                         :class                => "selectpicker",
+                        'data-live-search'     => true)
             :javascript
               miqSelectPickerEvent('manager_id', '#{url}')
       .form-group
