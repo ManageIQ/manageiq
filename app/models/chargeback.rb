@@ -40,12 +40,12 @@ class Chargeback < ActsAsArModel
       classification_id = classification.present? ? classification.id : 'none'
       "#{classification_id}_#{ts_key}"
     else
-      default_key(consumption.first_metric_rollup_record, ts_key)
+      default_key(consumption, ts_key)
     end
   end
 
-  def self.default_key(metric_rollup_record, ts_key)
-    "#{metric_rollup_record.resource_id}_#{ts_key}"
+  def self.default_key(consumption, ts_key)
+    "#{consumption.resource_id}_#{ts_key}"
   end
 
   def self.classification_for(consumption)
