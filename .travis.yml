@@ -15,7 +15,7 @@ env:
   - RUBY_GC_HEAP_GROWTH_FACTOR=1.25
   - PARALLEL_TEST_PROCESSORS=2
   matrix:
-  - TEST_SUITE=vmdb PARALLEL=true
+  - TEST_SUITE=vmdb
   - TEST_SUITE=automation
   - TEST_SUITE=migrations
   - TEST_SUITE=brakeman
