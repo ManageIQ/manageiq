@@ -22,3 +22,4 @@ table tbody tr td.miq_rpt_gray_bg, table.adminlist tbody tr td.miq_rpt_gray_bg, 
 .miq_rpt_purple_text {color: #925bad; font-weight: bold}
 .miq_rpt_maroon_text {color: #76badf; font-weight: bold}
 .miq_rpt_gray_text {color: gray; font-weight: bold}
+@page { prince-shrink-to-fit: auto }
