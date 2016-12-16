@@ -2276,6 +2276,7 @@ Vmdb::Application.routes.draw do
         cim_base_storage_extents
         create_ds
         download_data
+        download_summary_pdf
         index
         protect
         show
@@ -2305,6 +2306,7 @@ Vmdb::Application.routes.draw do
       :get  => %w(
         cim_base_storage_extents
         download_data
+        download_summary_pdf
         index
         protect
         show
@@ -2335,6 +2337,7 @@ Vmdb::Application.routes.draw do
         cim_base_storage_extents
         create_ld
         download_data
+        download_summary_pdf
         index
         protect
         show
@@ -2364,6 +2367,7 @@ Vmdb::Application.routes.draw do
       :get  => %w(
         cim_base_storage_extents
         download_data
+        download_summary_pdf
         index
         protect
         show

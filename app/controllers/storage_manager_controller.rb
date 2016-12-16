@@ -219,7 +219,7 @@ class StorageManagerController < ApplicationController
     @showtype = "config"
     drop_breadcrumb({:name => ui_lookup(:tables => "storage_managers"), :url => "/storage_manager/show_list?page=#{@current_page}&refresh=y"}, true)
 
-    if ["main", "summary_only"].include?(@display)
+    if %w(main summary_only).include?(@display)
       # get_tagdata(StorageManager)
       drop_breadcrumb(:name => _("%{name} (Summary)") % {:name => @sm.name}, :url => "/storage_manager/show/#{@sm.id}")
       @showtype = "main"

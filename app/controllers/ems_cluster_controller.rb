@@ -17,7 +17,6 @@ class EmsClusterController < ApplicationController
     end
   end
 
-
   def show
     return if perfmenu_click?
     @display = params[:display] || "main" unless control_selected?

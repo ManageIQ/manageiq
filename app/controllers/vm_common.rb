@@ -180,6 +180,13 @@ module VmCommon
     generic_x_show
   end
 
+  def download_summary_pdf
+    super do
+      @flash_array = []
+      @record = identify_record(params[:id], VmOrTemplate)
+    end
+  end
+
   def show(id = nil)
     @flash_array = [] if params[:display] && params[:display] != "snapshot_info"
     @sb[:action] = params[:display]
@@ -200,7 +207,7 @@ module VmCommon
 
     @explorer = true if request.xml_http_request? # Ajax request means in explorer
 
-    if !@explorer
+    unless @explorer
       tree_node_id = TreeBuilder.build_node_id(@record)
       session[:exp_parms] = {:display => @display, :refresh => params[:refresh], :id => tree_node_id}
       controller_name = controller_for_vm(model_for_vm(@record))
@@ -239,7 +246,7 @@ module VmCommon
       rec_cls = "vm"
     end
     @gtl_url = "/show"
-    if ["main", "summary_only"].include?(@display)
+    if %w(main summary_only).include?(@display)
       get_tagdata(@record)
       drop_breadcrumb({:name => _("Virtual Machines"),
                        :url  => "/#{rec_cls}/show_list?page=#{@current_page}&refresh=y"}, true)
