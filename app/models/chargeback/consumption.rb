@@ -11,10 +11,6 @@ class Chargeback
       @rollups.first
     end
 
-    def key(cb_class)
-      cb_class.report_row_key(first_metric_rollup_record)
-    end
-
     def max(metric)
       values(metric).max
     end
