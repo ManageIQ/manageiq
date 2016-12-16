@@ -131,7 +131,7 @@ class CloudVolumeController < ApplicationController
   end
 
   def attach
-    params[:id] = get_checked_volume_id(params) unless params[:id].present?
+    params[:id] = checked_item_id unless params[:id].present?
     assert_privileges("cloud_volume_attach")
     @vm_choices = {}
     @volume = find_by_id_filtered(CloudVolume, params[:id])
@@ -147,7 +147,7 @@ class CloudVolumeController < ApplicationController
   end
 
   def detach
-    params[:id] = get_checked_volume_id(params) unless params[:id].present?
+    params[:id] = checked_item_id unless params[:id].present?
     assert_privileges("cloud_volume_detach")
     @volume = find_by_id_filtered(CloudVolume, params[:id])
     @vm_choices = @volume.vms.each_with_object({}) { |vm, hash| hash[vm.name] = vm.id }
