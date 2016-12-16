@@ -9,10 +9,6 @@ class Chargeback
       @start_time, @end_time = start_time, end_time
     end
 
-    def first_metric_rollup_record
-      @rollups.first
-    end
-
     def tag_names
       first_metric_rollup_record.tag_names.split('|')
     end
@@ -43,6 +39,10 @@ class Chargeback
     def values(metric)
       @values ||= {}
       @values[metric] ||= @rollups.collect(&metric.to_sym).compact
+    end
+
+    def first_metric_rollup_record
+      @fmrr ||= @rollups.first
     end
   end
 end
