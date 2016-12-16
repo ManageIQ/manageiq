@@ -22,7 +22,7 @@ class Chargeback
           metric_rollup_records = metric_rollup_records.select { |x| x.resource.present? }
           consumption = Consumption.new(metric_rollup_records, query_start_time, query_end_time)
           next if metric_rollup_records.empty?
-          yield(consumption, metric_rollup_records.first)
+          yield(consumption)
         end
       end
     end
