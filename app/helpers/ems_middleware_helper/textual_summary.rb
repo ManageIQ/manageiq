@@ -50,7 +50,7 @@ module EmsMiddlewareHelper::TextualSummary
 
   def textual_topology
     {:label => _('Topology'),
-     :image => '100/topology.png',
+     :icon  => "pficon pficon-topology",
      :link  => url_for(:controller => 'middleware_topology', :action => 'show', :id => @ems.id),
      :title => _('Show topology')}
   end

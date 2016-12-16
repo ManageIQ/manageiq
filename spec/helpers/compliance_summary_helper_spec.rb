@@ -18,7 +18,7 @@ describe ComplianceSummaryHelper do
       @record.compliances = [@compliance1]
       date = @compliance1.timestamp
       expect(helper.textual_compliance_status).to eq(:label    => "Status",
-                                                     :image    => "100/check.png",
+                                                     :icon     => "pficon pficon-ok",
                                                      :value    => "Compliant as of #{time_ago_in_words(date.in_time_zone(Time.zone)).titleize} Ago",
                                                      :title    => "Show Details of Compliance Check on #{format_timezone(date)}",
                                                      :explorer => true,
@@ -28,7 +28,7 @@ describe ComplianceSummaryHelper do
     it "#textual_compliance_history" do
       @record.compliances = [@compliance1, @compliance2]
       expect(helper.textual_compliance_history).to eq(:label    => "History",
-                                                      :image    => "100/compliance.png",
+                                                      :icon     => "pficon pficon-history",
                                                       :value    => "Available",
                                                       :explorer => true,
                                                       :title    => "Show Compliance History of this VM or Template (Last 10 Checks)",
@@ -46,7 +46,7 @@ describe ComplianceSummaryHelper do
       @record.compliances = [@compliance1]
       date = @compliance1.timestamp
       expect(helper.textual_compliance_status).to eq(:label => "Status",
-                                                     :image => "100/check.png",
+                                                     :icon  => "pficon pficon-ok",
                                                      :value => "Compliant as of #{time_ago_in_words(date.in_time_zone(Time.zone)).titleize} Ago",
                                                      :title => "Show Details of Compliance Check on #{format_timezone(date)}",
                                                      :link  => "/host/show?count=1&display=compliance_history")
@@ -55,7 +55,7 @@ describe ComplianceSummaryHelper do
     it "#textual_compliance_history" do
       @record.compliances = [@compliance1, @compliance2]
       expect(helper.textual_compliance_history).to eq(:label => "History",
-                                                      :image => "100/compliance.png",
+                                                      :icon  => "pficon pficon-history",
                                                       :value => "Available",
                                                       :title => "Show Compliance History of this Host / Node (Last 10 Checks)",
                                                       :link  => "/host/show?display=compliance_history")

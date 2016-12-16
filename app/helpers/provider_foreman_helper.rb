@@ -13,7 +13,7 @@ module ProviderForemanHelper
 
   def textual_hostname
     {:label => _("Hostname"),
-     :image => "100/configured_system.png",
+     :icon  => "product product-configured_system",
      :value => @record.hostname,
     }
   end
@@ -36,13 +36,13 @@ module ProviderForemanHelper
       :value    => @record.configuration_profile.try(:description),
       :explorer => true
     }
-    h[:image] = "100/configuration_profile.png" if @record.configuration_profile
+    h[:icon] = "fa fa-list-ul" if @record.configuration_profile
     h
   end
 
   def textual_provider_name
     {:label    => _("Provider"),
-     :image    => "100/vendor-#{@record.configuration_manager.image_name}.png",
+     :image    => "svg/vendor-#{@record.configuration_manager.image_name}.svg",
      :value    => @record.configuration_manager.try(:name),
      :explorer => true
     }

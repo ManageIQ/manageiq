@@ -71,7 +71,7 @@ module EmsInfraHelper::TextualSummary
     return nil if @record.kind_of?(ManageIQ::Providers::Openstack::InfraManager)
     label     = "#{title_for_hosts} & #{title_for_clusters}"
     available = @ems.number_of(:ems_folders) > 0 && @ems.ems_folder_root
-    h         = {:label => label, :image => "100/hosts_and_clusters.png", :value => available ? _("Available") : _("N/A")}
+    h         = {:label => label, :icon => "pficon pficon-virtual-machine", :value => available ? _("Available") : _("N/A")}
     if available
       h[:link]  = ems_infra_path(@ems.id, :display => 'ems_folders')
       h[:title] = _("Show %{label}") % {:label => label}
@@ -83,7 +83,7 @@ module EmsInfraHelper::TextualSummary
     return nil if @record.kind_of?(ManageIQ::Providers::Openstack::InfraManager)
     label     = _("VMs & Templates")
     available = @ems.number_of(:ems_folders) > 0 && @ems.ems_folder_root
-    h         = {:label => label, :image => "100/vms_and_templates.png", :value => available ? _("Available") : _("N/A")}
+    h         = {:label => label, :icon => "pficon pficon-virtual-machine", :value => available ? _("Available") : _("N/A")}
     if available
       h[:link]  = ems_infra_path(@ems.id, :display => 'ems_folders', :vat => true)
       h[:title] = _("Show Virtual Machines & Templates")
@@ -94,7 +94,7 @@ module EmsInfraHelper::TextualSummary
   def textual_clusters
     label = title_for_clusters
     num   = @ems.number_of(:ems_clusters)
-    h     = {:label => label, :image => "100/cluster.png", :value => num}
+    h     = {:label => label, :icon => "pficon pficon-cluster", :value => num}
     if num > 0 && role_allows?(:feature => "ems_cluster_show_list")
       h[:link] = ems_infra_path(@ems.id, :display => 'ems_clusters', :vat => true)
       h[:title] = _("Show all %{label}") % {:label => label}
@@ -105,7 +105,7 @@ module EmsInfraHelper::TextualSummary
   def textual_hosts
     label = title_for_hosts
     num   = @ems.number_of(:hosts)
-    h     = {:label => label, :image => "100/host.png", :value => num}
+    h     = {:label => label, :icon => "pficon pficon-screen", :value => num}
     if num > 0 && role_allows?(:feature => "host_show_list")
       h[:link]  = ems_infra_path(@ems.id, :display => 'hosts')
       h[:title] = _("Show all %{label}") % {:label => label}
@@ -169,7 +169,7 @@ module EmsInfraHelper::TextualSummary
   end
 
   def textual_zone
-    {:label => _("Managed by Zone"), :image => "100/zone.png", :value => @ems.zone.name}
+    {:label => _("Managed by Zone"), :icon => "pficon pficon-zone", :value => @ems.zone.name}
   end
 
   def textual_host_default_vnc_port_range
@@ -180,7 +180,7 @@ module EmsInfraHelper::TextualSummary
 
   def textual_topology
     {:label => _('Topology'),
-     :image => '100/topology.png',
+     :icon  => "pficon pficon-topology",
      :link  => url_for(:controller => '/infra_topology', :action => 'show', :id => @ems.id),
      :title => _("Show topology")}
   end

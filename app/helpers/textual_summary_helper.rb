@@ -44,12 +44,12 @@ module TextualSummaryHelper
     h = {:label => label}
     tags = session[:assigned_filters]
     if tags.blank?
-      h[:image] = "100/smarttag.png"
+      h[:icon] = "fa fa-tag"
       h[:value] = _("No %{label} have been assigned") % {:label => label}
     else
       h[:value] = tags.sort_by { |category, _assigned| category.downcase }
                   .collect do |category, assigned|
-                    {:image => "100/smarttag.png",
+                    {:icon  => "fa fa-tag",
                      :label => category,
                      :value => assigned}
                   end
@@ -139,7 +139,7 @@ module TextualSummaryHelper
   def textual_object_icon(object, klass)
     case object
     when ExtManagementSystem
-      "100/vendor-#{object.image_name}.png"
+      "svg/vendor-#{object.image_name}.svg"
     else
       textual_class_icon(klass)
     end

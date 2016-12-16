@@ -1,7 +1,7 @@
 module TextualMixins::TextualDrift
   def textual_drift
     return nil unless role_allows?(:feature => "vm_drift")
-    h = {:label => _("Drift History"), :image => "100/drift.png"}
+    h = {:label => _("Drift History"), :icon => "product product-drift"}
     num = @record.number_of(:drift_states)
     if num == 0
       h[:value] = _("None")
