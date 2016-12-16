@@ -52,12 +52,26 @@ class CloudSubnetController < ApplicationController
     }
   end
 
+  def cloud_subnet_networks_by_ems
+    assert_privileges("cloud_subnet_new")
+    networks = []
+    available_networks = CloudNetwork.where(:ems_id => params[:id]).find_each
+    available_networks.each do |network|
+      networks << { 'name' => network.name, 'id' => network.id }
+    end
+    render :json => {
+      :available_networks => networks
+    }
+  end
+
   def new
     assert_privileges("cloud_subnet_new")
     @subnet = CloudSubnet.new
     @in_a_form = true
     @network_provider_choices = {}
-    ExtManagementSystem.where(:type => "ManageIQ::Providers::Openstack::NetworkManager").find_each { |ems| @network_provider_choices[ems.name] = ems.id }
+    ExtManagementSystem.where(:type => "ManageIQ::Providers::Openstack::NetworkManager").find_each do |ems|
+      @network_provider_choices[ems.name] = ems.id
+    end
     # TODO: (gildub) Replace with angular lookup to narrow choice dynamically
     @network_choices = {}
     CloudNetwork.all.each { |network| @network_choices[network.name] = network.ems_ref }

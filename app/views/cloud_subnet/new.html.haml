@@ -13,22 +13,26 @@
                       "required"                    => "",
                       :miqrequired                  => true,
                       :checkchange                  => true,
+                      "ng-change"                   => "filterNetworkManagerChanged(cloudSubnetModel.ems_id)",
                       "selectpicker-for-select-tag" => "")
 
   %h3
     = _('Cloud Subnet details')
   .form-horizontal
-    .form-group{"ng-class" => "{'has-error': angularForm.network_id.$invalid}"}
+    .form-group{"ng-if" => "cloudSubnetModel.ems_id"}
       %label.col-md-2.control-label
         = _('Network')
       .col-md-8
-        = select_tag("network_id",
-                      options_for_select([["<#{_('Choose')}>", nil]] + @network_choices.sort),
-                      "ng-model"                    => "cloudSubnetModel.network_id",
-                      "required"                    => "",
-                      :miqrequired                  => true,
-                      :checkchange                  => true,
-                      "selectpicker-for-select-tag" => "")
+        %select{"name"                        => "cloud_network_id",
+                "ng-model"                    => "cloudSubnetModel.network_id",
+                "required"                    => "",
+                :miqrequired                  => true,
+                :checkchange                  => true,
+                'ng-options'                  => 'network.id as network.name for network in available_networks',
+                'pf-select'                   => true,
+                "selectpicker-for-select-tag" => ""}
+          %option{"value" => ""}
+            = "<#{_('Choose')}>"
 
     = render :partial => "common_new_edit"
 
