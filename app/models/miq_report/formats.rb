@@ -11,7 +11,9 @@ class MiqReport::Formats
       next unless (properties[:columns] && properties[:columns].include?(column)) ||
                   (properties[:sub_types] && properties[:sub_types].include?(sub_type(column))) ||
                   (properties[:data_types] && properties[:data_types].include?(datatype)) ||
-                  (properties[:suffixes] && properties[:suffixes].include?(suffix.to_sym))
+                  (properties[:suffixes] && properties[:suffixes].include?(suffix.to_sym)) ||
+                  (format_name == sub_type(column))
+
       result[format_name] = properties[:description]
     end
   end
