@@ -21,7 +21,7 @@ class Chargeback < ActsAsArModel
       # and rates are selected by first MetricRollup record
       rates_to_apply = rates.get(first_metric_rollup)
 
-      key = report_row_key(first_metric_rollup)
+      key = consumption.key(self)
       data[key] ||= new(options, first_metric_rollup)
 
       chargeback_rates = data[key]["chargeback_rates"].split(', ') + rates_to_apply.collect(&:description)
