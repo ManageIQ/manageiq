@@ -5,14 +5,14 @@ describe ApplicationHelper::Button::InstanceCheckCompare do
   subject { described_class.new(view_context, {}, {'record' => record, 'display' => display}, {}) }
 
   describe '#visible?' do
-    context 'when display != instances' do
+    context 'when record is not kind of OrchestrationStack && display != instances' do
       it { expect(subject.visible?).to be_truthy }
     end
-    context 'when record is not OrchestrationStack' do
+    context 'when record is kind of OrchestrationStack && display != instances' do
       let(:record) { FactoryGirl.create(:orchestration_stack) }
       it { expect(subject.visible?).to be_truthy }
     end
-    context 'when display == instances && record is an OrchestrationStack' do
+    context 'when record is an OrchestrationStack && display == instances' do
       let(:record) { FactoryGirl.create(:orchestration_stack) }
       let(:display) { 'instances' }
       it { expect(subject.visible?).to be_falsey }
