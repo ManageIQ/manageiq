@@ -94,6 +94,14 @@ class Chargeback
       end
     end
 
+    def classification_for(consumption)
+      tag = consumption.tag_names.find { |x| x.starts_with?(groupby_tag) } # 'department/*'
+      tag = tag.split('/').second unless tag.blank? # 'department/finance' -> 'finance'
+      tag_hash[tag]
+    end
+
+    private
+
     def tag_hash
       if groupby_tag
         @tag_hash ||= Classification.hash_all_by_type_and_name[groupby_tag][:entry]
