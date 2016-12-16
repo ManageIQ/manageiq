@@ -40,6 +40,11 @@ shared_examples_for "OwnershipMixin" do
           expect(described_class.user_or_group_owned(user, nil)).to eq([user_owned])
         end
 
+        it "with mixed case userid" do
+          user.update(:userid => "MixedCase")
+          expect(described_class.user_or_group_owned(user, nil)).to eq([user_owned])
+        end
+
         it "with same userid as another region" do
           user_owned.update!(:evm_owner => user_other_region)
           expect(described_class.user_or_group_owned(user, nil)).to eq([user_owned])
