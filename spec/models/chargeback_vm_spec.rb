@@ -728,7 +728,7 @@ describe ChargebackVm do
                                                :parent_ems_id => ems.id, :parent_storage_id => @storage.id,
                                                :resource => @vm1)
     end
-    let(:consumption) { Chargeback::Consumption.new([metric_rollup], nil, nil) }
+    let(:consumption) { Chargeback::ConsumptionWithRollups.new([metric_rollup], nil, nil) }
 
     before do
       ChargebackRate.set_assignments(:compute, [rate_assignment_options])
@@ -747,7 +747,7 @@ describe ChargebackVm do
     let(:timestamp_key) { 'Fri, 13 May 2016 10:40:00 UTC +00:00' }
     let(:beginning_of_day) { timestamp_key.in_time_zone.beginning_of_day }
     let(:metric_rollup) { FactoryGirl.build(:metric_rollup_vm_hr, :timestamp => timestamp_key, :resource => @vm1) }
-    let(:consumption) { Chargeback::Consumption.new([metric_rollup], nil, nil) }
+    let(:consumption) { Chargeback::ConsumptionWithRollups.new([metric_rollup], nil, nil) }
     subject { described_class.report_row_key(consumption) }
     before do
       described_class.instance_variable_set(:@options, report_options)
@@ -759,7 +759,7 @@ describe ChargebackVm do
   describe '#initialize' do
     let(:report_options) { Chargeback::ReportOptions.new }
     let(:vm_owners)     { {@vm1.id => @vm1.evm_owner_name} }
-    let(:consumption) { Chargeback::Consumption.new([metric_rollup], nil, nil) }
+    let(:consumption) { Chargeback::ConsumptionWithRollups.new([metric_rollup], nil, nil) }
     let(:shared_extra_fields) do
       {'vm_name' => @vm1.name, 'owner_name' => admin.name, 'vm_uid' => 'ems_ref', 'vm_guid' => @vm1.guid,
        'vm_id' => @vm1.id}
@@ -815,7 +815,7 @@ describe ChargebackVm do
                          :parent_ems_id => ems.id, :parent_storage_id => @storage.id,
                          :resource => @vm1)
     end
-    let(:consumption) { Chargeback::Consumption.new([metric_rollup], nil, nil) }
+    let(:consumption) { Chargeback::ConsumptionWithRollups.new([metric_rollup], nil, nil) }
 
     before do
       @storage.tag_with([classification_1.tag.name, classification_2.tag.name], :ns => '*')
