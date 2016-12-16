@@ -1425,8 +1425,6 @@ describe ApplicationHelper, "::ToolbarBuilder" do
       @tb_buttons = {}
       @button = {:id => "custom_#{btn_num}"}
       @button = ApplicationHelper::Button::Basic.new(nil, nil, {}, {:id => "custom_#{btn_num}"})
-      allow_any_instance_of(Object).to receive(:query_string).and_return("")
-      allow_message_expectations_on_nil
     end
 
     context "button visibility" do
@@ -1506,8 +1504,6 @@ describe ApplicationHelper, "::ToolbarBuilder" do
       }
       @tb_buttons = {}
       @item_out = {}
-      allow_any_instance_of(Object).to receive(:query_string).and_return("")
-      allow_message_expectations_on_nil
     end
 
     context "when item[:url] exists" do
@@ -1552,9 +1548,6 @@ describe ApplicationHelper, "::ToolbarBuilder" do
     context "when the given parameter exists in the request query string" do
       before do
         get "/vm/show_list/100", :params => "type=grid"
-        allow_any_instance_of(Object).to receive(:query_string).and_return(@request.query_string)
-        allow_any_instance_of(Object).to receive(:path_info).and_return(@request.path_info)
-        allow_message_expectations_on_nil
       end
 
       it "updates the query string with the given parameter value" do
@@ -1565,9 +1558,6 @@ describe ApplicationHelper, "::ToolbarBuilder" do
     context "when the given parameters do not exist in the request query string" do
       before do
         get "/vm/show_list/100"
-        allow_any_instance_of(Object).to receive(:query_string).and_return(@request.query_string)
-        allow_any_instance_of(Object).to receive(:path_info).and_return(@request.path_info)
-        allow_message_expectations_on_nil
       end
 
       it "adds the params in the query string" do
@@ -1579,9 +1569,6 @@ describe ApplicationHelper, "::ToolbarBuilder" do
       before do
         get "/vm/show_list/100",
             :params => "bc=VMs+running+on+2014-08-25&menu_click=Display-VMs-on_2-6-5&sb_controller=host"
-        allow_any_instance_of(Object).to receive(:query_string).and_return(@request.query_string)
-        allow_any_instance_of(Object).to receive(:path_info).and_return(@request.path_info)
-        allow_message_expectations_on_nil
       end
 
       it "retains the specific parameters and adds the new one" do
@@ -1593,9 +1580,6 @@ describe ApplicationHelper, "::ToolbarBuilder" do
     context "when the request query string has a few specific params to be excluded" do
       before do
         get "/vm/show_list/100", :params => "page=1"
-        allow_any_instance_of(Object).to receive(:query_string).and_return(@request.query_string)
-        allow_any_instance_of(Object).to receive(:path_info).and_return(@request.path_info)
-        allow_message_expectations_on_nil
       end
 
       it "excludes specific parameters and adds the new one" do
