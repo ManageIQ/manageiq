@@ -617,11 +617,8 @@ describe ApplicationHelper, "::ToolbarBuilder" do
     end
 
     def setup_firefox_with_linux
-      # setup for mocking is_browser? and is_browser_os?
-      allow_any_instance_of(ActionController::TestSession)
-        .to receive(:fetch_path).with(:browser, :name).and_return('firefox')
-      allow_any_instance_of(ActionController::TestSession)
-        .to receive(:fetch_path).with(:browser, :os).and_return('linux')
+      allow(session).to receive(:fetch_path).with(:browser, :name).and_return('firefox')
+      allow(session).to receive(:fetch_path).with(:browser, :os).and_return('linux')
     end
 
     ['list', 'tile', 'grid'].each do |g|
