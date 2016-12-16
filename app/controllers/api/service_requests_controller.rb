@@ -28,7 +28,7 @@ module Api
     def edit_resource(type, id, data)
       request = resource_search(id, type, collection_class(:service_requests))
       request_options = RequestParser.parse_options(data)
-      user = RequestParser.parse_user(data) || @auth_user_obj
+      user = RequestParser.parse_user(data) || User.current_user
       request.update_request(request_options, user)
     rescue => err
       raise BadRequestError, "Could not update the service request - #{err}"
@@ -36,13 +36,13 @@ module Api
 
     def find_service_requests(id)
       klass = collection_class(:service_requests)
-      return klass.find(id) if @auth_user_obj.admin?
-      klass.find_by!(:requester => @auth_user_obj, :id => id)
+      return klass.find(id) if User.current_user.admin?
+      klass.find_by!(:requester => User.current_user, :id => id)
     end
 
     def service_requests_search_conditions
-      return {} if @auth_user_obj.admin?
-      {:requester => @auth_user_obj}
+      return {} if User.current_user.admin?
+      {:requester => User.current_user}
     end
 
     def add_approver_resource(type, id, data)

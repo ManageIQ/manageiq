@@ -75,7 +75,7 @@ module Api
       end
 
       def resource_search_by_criteria(criteria, search_val, klass)
-        Rbac.filtered(klass.where(criteria => search_val), :user => @auth_user_obj).first
+        Rbac.filtered(klass.where(criteria => search_val), :user => User.current_user).first
       end
     end
   end

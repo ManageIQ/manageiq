@@ -1,7 +1,7 @@
 module Api
   class AutomateController < BaseController
     def show
-      ae_browser = MiqAeBrowser.new(@auth_user_obj)
+      ae_browser = MiqAeBrowser.new(User.current_user)
       begin
         resources = ae_browser.search(@req.c_suffix, ae_search_options)
       rescue => err
