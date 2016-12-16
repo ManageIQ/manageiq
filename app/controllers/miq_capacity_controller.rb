@@ -748,11 +748,6 @@ class MiqCapacityController < ApplicationController
     changed = (@edit[:new] != @edit[:current])
     render :update do |page|
       page << javascript_prologue
-      if @action_type_changed || @tag_selected || @snmp_trap_refresh
-        page.replace("action_options_div", :partial => "action_options")
-      elsif @alert_refresh
-        page.replace("alert_details_div", :partial => "alert_details")
-      end
       if changed != session[:changed]
         session[:changed] = changed
         page << javascript_for_miq_button_visibility(changed)
