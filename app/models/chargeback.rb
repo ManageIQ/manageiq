@@ -19,7 +19,7 @@ class Chargeback < ActsAsArModel
     ConsumptionHistory.for_report(self, options) do |consumption|
       rates_to_apply = rates.get(consumption)
 
-      key = consumption.key(self)
+      key = report_row_key(consumption)
       data[key] ||= new(options, consumption)
 
       chargeback_rates = data[key]["chargeback_rates"].split(', ') + rates_to_apply.collect(&:description)
@@ -33,14 +33,14 @@ class Chargeback < ActsAsArModel
     [data.values]
   end
 
-  def self.report_row_key(metric_rollup_record)
-    ts_key = @options.start_of_report_step(metric_rollup_record.timestamp)
+  def self.report_row_key(consumption)
+    ts_key = @options.start_of_report_step(consumption.timestamp)
     if @options[:groupby_tag].present?
-      classification = classification_for_perf(metric_rollup_record)
+      classification = classification_for_perf(consumption.first_metric_rollup_record)
       classification_id = classification.present? ? classification.id : 'none'
       "#{classification_id}_#{ts_key}"
     else
-      default_key(metric_rollup_record, ts_key)
+      default_key(consumption.first_metric_rollup_record, ts_key)
     end
   end
 

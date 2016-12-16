@@ -783,7 +783,8 @@ describe ChargebackVm do
     let(:timestamp_key) { 'Fri, 13 May 2016 10:40:00 UTC +00:00' }
     let(:beginning_of_day) { timestamp_key.in_time_zone.beginning_of_day }
     let(:metric_rollup) { FactoryGirl.build(:metric_rollup_vm_hr, :timestamp => timestamp_key, :resource => @vm1) }
-    subject { described_class.report_row_key(metric_rollup) }
+    let(:consumption) { Chargeback::Consumption.new([metric_rollup], nil, nil) }
+    subject { described_class.report_row_key(consumption) }
     before do
       described_class.instance_variable_set(:@options, report_options)
     end
