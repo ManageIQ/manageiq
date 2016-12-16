@@ -42,6 +42,12 @@ shared_examples "miq ownership" do
 
           expect(described_class.user_or_group_owned(owning_user, owning_user.current_group)).to eq([owned_resource])
         end
+
+        it "with mixed case userid" do
+          owned_resource.update(:evm_owner => owning_user)
+          owning_user.update(:userid => "MixedCase")
+          expect(described_class.user_or_group_owned(owning_user, nil)).to eq([owned_resource])
+        end
       end
 
       context "only with a group" do
