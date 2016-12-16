@@ -5,8 +5,12 @@ class Chargeback
       @start_time, @end_time = start_time, end_time
     end
 
+    def first_metric_rollup_record
+      @rollups.first
+    end
+
     def key(cb_class)
-      cb_class.report_row_key(@rollups.first)
+      cb_class.report_row_key(first_metric_rollup_record)
     end
 
     def max(metric)
