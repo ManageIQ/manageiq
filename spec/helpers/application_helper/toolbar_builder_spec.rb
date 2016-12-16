@@ -504,50 +504,6 @@ describe ApplicationHelper do
       end
     end
 
-    context "when id = ems_infra_scale" do
-      before do
-        @id = "ems_infra_scale"
-      end
-
-      context "when @record = EmsOpenstackInfra" do
-        before do
-          @record = FactoryGirl.create(:ems_openstack_infra_with_stack)
-        end
-
-        it "user allowed" do
-          stub_user(:features => :all)
-          expect(subject).to be_falsey
-        end
-
-        it "user not allowed" do
-          stub_user(:features => :none)
-          expect(subject).to be_truthy
-        end
-
-        it "button hidden if provider has no stacks" do
-          @record = FactoryGirl.create(:ems_openstack_infra)
-          stub_user(:features => :all)
-          expect(subject).to be_truthy
-        end
-      end
-
-      context "when @record != EmsOpenstackInfra" do
-        before do
-          @record = ManageIQ::Providers::Vmware::InfraManager.new
-        end
-
-        it "user allowed but hide button because wrong provider" do
-          stub_user(:features => :all)
-          expect(subject).to be_truthy
-        end
-
-        it "user not allowed" do
-          stub_user(:features => :all)
-          expect(subject).to be_truthy
-        end
-      end
-    end
-
     context "when record class = ExtManagementSystem" do
       before do
         @record = FactoryGirl.create(:ems_amazon)

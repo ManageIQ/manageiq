@@ -499,12 +499,6 @@ class ApplicationHelper::ToolbarBuilder
       return true unless ::Settings.product.smis
     end
 
-    # Scale is only supported by OpenStack Infrastructure Provider
-    return true if (id == "ems_infra_scale" || id == "ems_infra_scaledown") &&
-                   (@record.class != ManageIQ::Providers::Openstack::InfraManager ||
-                    !role_allows?(:feature => "ems_infra_scale") ||
-                   (@record.class == ManageIQ::Providers::Openstack::InfraManager && @record.orchestration_stacks.count == 0))
-
     false  # No reason to hide, allow the button to show
   end
 
