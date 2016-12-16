@@ -95,7 +95,7 @@ class Dialog < ApplicationRecord
   def content(target = nil, resource_action = nil, all_attributes = false)
     return DialogSerializer.new.serialize(Array[self], all_attributes) if target.nil? && resource_action.nil?
 
-    workflow = ResourceActionWorkflow.new({}, @auth_user_obj, resource_action, :target => target)
+    workflow = ResourceActionWorkflow.new({}, User.current_user, resource_action, :target => target)
 
     workflow.dialog.dialog_fields.each do |dialog_field|
       # Accessing dialog_field.values forces an update for any values coming from automate

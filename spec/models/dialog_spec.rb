@@ -45,6 +45,13 @@ describe Dialog do
     expect(dialog.label).to eq(dialog.name)
   end
 
+  describe "#content" do
+    it "returns the serialized content" do
+      dialog = FactoryGirl.create(:dialog, :description => "foo", :label => "bar")
+      expect(dialog.content).to match([hash_including("description" => "foo", "label" => "bar")])
+    end
+  end
+
   describe "#readonly?" do
     it "is not readonly if it no blueprint associated" do
       dialog = FactoryGirl.create(:dialog, :label => 'dialog')
