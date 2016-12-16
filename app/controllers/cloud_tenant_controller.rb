@@ -68,7 +68,7 @@ class CloudTenantController < ApplicationController
       end
     end
     drop_breadcrumb(
-      :name => _("Add New %{model}") % {:model => ui_lookup(:table => 'cloud_tenant')},
+      :name => _("Add New Cloud Tenant"),
       :url  => "/cloud_tenant/new"
     )
   end
@@ -78,9 +78,7 @@ class CloudTenantController < ApplicationController
     case params[:button]
     when "cancel"
       javascript_redirect :action    => 'show_list',
-                          :flash_msg => _("Add of new %{model} was cancelled by the user") % {
-                            :model => ui_lookup(:table => 'cloud_tenant')
-                          }
+                          :flash_msg => _("Add of new Cloud Tenenat was cancelled by the user")
     when "add"
       @tenant = CloudTenant.new
       options = form_params
@@ -105,13 +103,11 @@ class CloudTenantController < ApplicationController
     tenant_name = session[:async][:params][:name]
     task = MiqTask.find(task_id)
     if MiqTask.status_ok?(task.status)
-      add_flash(_("%{model} \"%{name}\" created") % {
-        :model => ui_lookup(:table => 'cloud_tenant'),
-        :name  => tenant_name
+      add_flash(_("Cloud Tenant \"%{name}\" created") % {
+        :name => tenant_name
       })
     else
-      add_flash(_("Unable to create %{model} \"%{name}\": %{details}") % {
-        :model   => ui_lookup(:table => 'cloud_tenant'),
+      add_flash(_("Unable to create Cloud Tenant \"%{name}\": %{details}") % {
         :name    => tenant_name,
         :details => task.message
       }, :error)
@@ -129,7 +125,7 @@ class CloudTenantController < ApplicationController
     @tenant = find_by_id_filtered(CloudTenant, params[:id])
     @in_a_form = true
     drop_breadcrumb(
-      :name => _("Edit %{model} \"%{name}\"") % {:model => ui_lookup(:table => 'cloud_tenant'), :name => @tenant.name},
+      :name => _("Edit Cloud Tenant \"%{name}\"") % {:name => @tenant.name},
       :url  => "/cloud_tenant/edit/#{@tenant.id}"
     )
   end
@@ -140,8 +136,7 @@ class CloudTenantController < ApplicationController
 
     case params[:button]
     when "cancel"
-      cancel_action(_("Edit of %{model} \"%{name}\" was cancelled by the user") % {
-        :model => ui_lookup(:table => 'cloud_tenant'),
+      cancel_action(_("Edit of Cloud Tenant \"%{name}\" was cancelled by the user") % {
         :name  => @tenant.name
       })
 
@@ -166,13 +161,11 @@ class CloudTenantController < ApplicationController
     tenant_name = session[:async][:params][:name]
     task = MiqTask.find(task_id)
     if MiqTask.status_ok?(task.status)
-      add_flash(_("%{model} \"%{name}\" updated") % {
-        :model => ui_lookup(:table => 'cloud_tenant'),
-        :name  => tenant_name
+      add_flash(_("Cloud Tenant \"%{name}\" updated") % {
+        :name => tenant_name
       })
     else
-      add_flash(_("Unable to update %{model} \"%{name}\": %{details}") % {
-        :model   => ui_lookup(:table => 'cloud_tenant'),
+      add_flash(_("Unable to update Cloud Tenant \"%{name}\": %{details}") % {
         :name    => tenant_name,
         :details => task.message
       }, :error)
@@ -203,19 +196,16 @@ class CloudTenantController < ApplicationController
               end
 
     if tenants.empty?
-      add_flash(_("No %{models} were selected for deletion.") % {
-        :models => ui_lookup(:tables => "cloud_tenant")
-      }, :error)
+      add_flash(_("No Cloud Tenants were selected for deletion."), :error)
     end
 
     tenants_to_delete = []
     tenants.each do |tenant_id|
       tenant = CloudTenant.find_by_id(tenant_id)
       if tenant.nil?
-        add_flash(_("%{model} no longer exists.") % {:model => ui_lookup(:table => "cloud_tenant")}, :error)
+        add_flash(_("Cloud Tenant no longer exists."), :error)
       elsif !tenant.vms.empty?
-        add_flash(_("%{model} \"%{name}\" cannot be removed because it is attached to one or more %{instances}") % {
-          :model     => ui_lookup(:table => 'cloud_tenant'),
+        add_flash(_("Cloud Tenant \"%{name}\" cannot be removed because it is attached to one or more %{instances}") % {
           :name      => tenant.name,
           :instances => ui_lookup(:tables => 'vm_cloud')}, :warning)
       else
