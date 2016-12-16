@@ -101,9 +101,15 @@ class MiqAeDomain < MiqAeNamespace
   end
 
   def available_version
-    fname = about_file_name
-    return nil if fname.nil? || !File.exist?(fname)
-    class_yaml = YAML.load_file(fname)
+    domain_path   = Vmdb::Plugins.instance.registered_automate_domains.detect { |d| d.name == name }.try(:path)
+    domain_path ||= MiqAeDatastore::DATASTORE_DIRECTORY.join(name)
+    self.class.version_from_schema(domain_path)
+  end
+
+  def self.version_from_schema(path)
+    about_file = path.join("System/About#{CLASS_DIR_SUFFIX}/#{CLASS_YAML_FILENAME}")
+    return unless about_file.file?
+    class_yaml = YAML.load_file(about_file)
     fields = class_yaml.fetch_path('object', 'schema') if class_yaml.kind_of?(Hash)
     version_field = fields.try(:detect) { |f| f.fetch_path('field', 'name') == 'version' }
     version_field.try(:fetch_path, 'field', 'default_value')
@@ -194,11 +200,6 @@ class MiqAeDomain < MiqAeNamespace
   def about_class
     ns = MiqAeNamespace.where(:parent_id => id).find_by("lower(name) = ?", "system")
     MiqAeClass.where(:namespace_id => ns.id).find_by("lower(name) = ?", "about") if ns
-  end
-
-  def about_file_name
-    about = about_class
-    File.join(MiqAeDatastore::DATASTORE_DIRECTORY, "#{about.fqname}#{CLASS_DIR_SUFFIX}", CLASS_YAML_FILENAME) if about
   end
 
   def self.reset_priority_of_system_domains

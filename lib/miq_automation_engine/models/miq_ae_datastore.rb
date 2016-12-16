@@ -142,10 +142,6 @@ module MiqAeDatastore
     end
   end
 
-  def self.reset_manageiq_domain
-    reset_domain(DATASTORE_DIRECTORY, MANAGEIQ_DOMAIN, Tenant.root_tenant)
-  end
-
   def self.seed_default_namespace
     default_ns   = MiqAeNamespace.create!(:name => DEFAULT_OBJECT_NAMESPACE)
     object_class = default_ns.ae_classes.create!(:name => 'Object')
@@ -163,21 +159,41 @@ module MiqAeDatastore
   end
 
   def self.reset_to_defaults
-    raise "Datastore directory [#{DATASTORE_DIRECTORY}] not found" unless Dir.exist?(DATASTORE_DIRECTORY)
     saved_attrs = preserved_attrs_for_domains
-    default_domain_names.each do |domain_name|
-      reset_domain(DATASTORE_DIRECTORY, domain_name, Tenant.root_tenant)
-    end
+
+    reset_domains_from_legacy_directory
+    reset_domains_from_vmdb_plugins
 
     restore_attrs_for_domains(saved_attrs)
     reset_default_namespace
     MiqAeDomain.reset_priorities
   end
 
-  def self.default_domain_names
-    Dir.glob(DATASTORE_DIRECTORY.join("*", MiqAeDomain::DOMAIN_YAML_FILENAME)).collect do |domain_file|
-      File.basename(File.dirname(domain_file))
+  def self.reset_domains_from_legacy_directory
+    domain_files = DATASTORE_DIRECTORY.join('*', MiqAeDomain::DOMAIN_YAML_FILENAME)
+    Dir.glob(domain_files).each do |domain_file|
+      domain_name = File.basename(File.dirname(domain_file))
+      reset_domain(ae_datastore, domain_name, Tenant.root_tenant)
     end
+  end
+
+  def self.reset_domains_from_vmdb_plugins
+    datastores_for_reset.each do |domain|
+      reset_domain(domain.datastores_path.to_s, domain.name, Tenant.root_tenant)
+    end
+  end
+
+  def self.datastores_for_reset
+    if Rails.env == "test" && ENV["AUTOMATE_DOMAINS"]
+      domains = ENV["AUTOMATE_DOMAINS"].split(",")
+      return Vmdb::Plugins.instance.registered_automate_domains.select { |i| domains.include?(i.name) }
+    end
+
+    Vmdb::Plugins.instance.registered_automate_domains
+  end
+
+  def self.default_domain_names
+    Vmdb::Plugins.instance.system_automate_domains.collect(&:name)
   end
 
   def self.seed

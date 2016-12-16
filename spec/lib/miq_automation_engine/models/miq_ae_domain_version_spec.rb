@@ -4,7 +4,7 @@ describe MiqAeDomain do
   before do
     EvmSpecHelper.local_guid_miq_server_zone
     @user = FactoryGirl.create(:user_with_group)
-    @temp_dir = Dir.mktmpdir
+    @temp_dir = Pathname.new(Dir.mktmpdir)
     require 'miq_ae_datastore'
     stub_const("MiqAeDatastore::DATASTORE_DIRECTORY", @temp_dir)
   end
@@ -43,7 +43,7 @@ describe MiqAeDomain do
     schema = [{"field" => {"name" => "version", "default_value" => version}}]
     hash = {"object_type" => "class", "version" => 1.0,
             "object" => {"attributes" => {"name" => "About"}, "schema" => schema}}
-    fname = domain.send(:about_file_name)
+    fname = @temp_dir.join(domain.name, "System/About.class/__class__.yaml")
     FileUtils.mkdir_p(File.dirname(fname))
     File.write(fname, hash.to_yaml)
   end
