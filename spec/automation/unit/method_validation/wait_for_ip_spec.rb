@@ -14,7 +14,7 @@ describe WaitForIP do
     root_object['vm'] = svc_vm
     allow_any_instance_of(klass).to receive(:ipaddresses).with(no_args).and_return(ip_addr)
     allow_any_instance_of(klass).to receive(:refresh).with(no_args).and_return(nil)
-
+    allow_any_instance_of(klass).to receive(:is_port_open?).and_return(true)
     WaitForIP.new(service).main
 
     expect(root_object['ae_result']).to eq('ok')
