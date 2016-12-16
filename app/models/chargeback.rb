@@ -14,44 +14,22 @@ class Chargeback < ActsAsArModel
     _log.info("Calculating chargeback costs...")
     @options = options = ReportOptions.new_from_h(options)
 
-    rates = RatesCache.new
-    base_rollup = ConsumptionHistory.base_rollup_scope
-
-    timerange = options.report_time_range
     data = {}
+    rates = RatesCache.new
+    ConsumptionHistory.for_report(self, options) do |consumption, first_metric_rollup|
+      # we need to select ChargebackRates for groups of MetricRollups records
+      # and rates are selected by first MetricRollup record
+      rates_to_apply = rates.get(first_metric_rollup)
 
-    interval_duration = options.duration_of_report_step
+      key = report_row_key(first_metric_rollup)
+      data[key] ||= new(options, first_metric_rollup)
 
-    timerange.step_value(interval_duration).each_cons(2) do |query_start_time, query_end_time|
-      records = base_rollup.where(:timestamp => query_start_time...query_end_time, :capture_interval_name => "hourly")
-      records = where_clause(records, options)
-      records = Metric::Helper.remove_duplicate_timestamps(records)
-      next if records.empty?
-      _log.info("Found #{records.length} records for time range #{[query_start_time, query_end_time].inspect}")
+      chargeback_rates = data[key]["chargeback_rates"].split(', ') + rates_to_apply.collect(&:description)
+      data[key]["chargeback_rates"] = chargeback_rates.uniq.join(', ')
 
-      # we are building hash with grouped calculated values
-      # values are grouped by resource_id and timestamp (query_start_time...query_end_time)
-      records.group_by(&:resource_id).each do |_, metric_rollup_records|
-        metric_rollup_records = metric_rollup_records.select { |x| x.resource.present? }
-        consumption = Consumption.new(metric_rollup_records, query_start_time, query_end_time)
-        next if metric_rollup_records.empty?
-
-        # we need to select ChargebackRates for groups of MetricRollups records
-        # and rates are selected by first MetricRollup record
-        metric_rollup_record = metric_rollup_records.first
-        rates_to_apply = rates.get(metric_rollup_record)
-
-        key = report_row_key(metric_rollup_record)
-        data[key] ||= new(options, metric_rollup_record)
-
-        chargeback_rates = data[key]["chargeback_rates"].split(', ') + rates_to_apply.collect(&:description)
-        data[key]["chargeback_rates"] = chargeback_rates.uniq.join(', ')
-
-        # we are getting hash with metrics and costs for metrics defined for chargeback
-        data[key].calculate_costs(consumption, rates_to_apply)
-      end
+      # we are getting hash with metrics and costs for metrics defined for chargeback
+      data[key].calculate_costs(consumption, rates_to_apply)
     end
-
     _log.info("Calculating chargeback costs...Complete")
 
     [data.values]
