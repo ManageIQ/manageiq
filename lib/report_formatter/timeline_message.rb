@@ -34,6 +34,32 @@ module ReportFormatter
       "<a href=/host/show/#{to_cid(@event.dest_host_id)}>#{text}</a>" if @event.dest_host_id
     end
 
+    def target_name
+      e_text = if @event.target_name # Create the title using Policy description
+                 @event.target_name
+               elsif @event.miq_policy_id && MiqPolicy.exists?(@event.miq_policy_id) # or Policy name
+                 MiqPolicy.find(@event.miq_policy_id).name
+               else
+                 _("Policy no longer exists")
+               end
+      unless @event.target_id.nil?
+        e_text += "<br><b>#{Dictionary.gettext(@event.target_class, :type => :model, :notfound => :titleize)}:</b>&nbsp;"
+        e_text += "<a href=/#{@event.target_class.underscore}/show/#{to_cid(@event.target_id)}>#{@event.target_name}</a>"
+      end
+      assigned_profiles = @event.miq_policy_sets.each_with_object({}) do |profile, hsh|
+        hsh[profile.id] = profile.description unless profile.description.nil?
+      end
+
+      unless @event.event_type.nil?
+        e_text += "<br/><b>#{_("Assigned Profiles")}:</b>&nbsp;"
+        assigned_profiles.each_with_index do |p, i|
+          e_text += "<a href=/miq_policy/explorer/?id=pp-#{p[0]}>#{p[1]}</a>"
+          e_text += ", " if assigned_profiles.length > 1 && i < assigned_profiles.length
+        end
+      end
+      e_text
+    end
+
     def ems_cluster_name
       "<a href=/ems_cluster/show/#{to_cid(@event.ems_cluster_id)}>#{text}</a>" if @event.ems_cluster_id
     end
