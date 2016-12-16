@@ -33,7 +33,7 @@ module ReportFormatter
 
       # some of the OOTB reports have db as EventStream or PolicyEvent,
       # those do not have event categories, so need to go thru else block for such reports.
-      if (mri.db == "EventStream" || mri.db == "PolicyEvent") && mri.rpt_options[:categories]
+      if (mri.db == "EventStream" || mri.db == "PolicyEvent") && mri.rpt_options.try(:[], :categories)
         mri.rpt_options[:categories].each do |_, options|
           @events_data = []
           all_events = mri.table.data.select { |e| options[:event_groups].include?(e.event_type) }
