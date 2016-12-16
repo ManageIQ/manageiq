@@ -798,10 +798,11 @@ describe ChargebackVm do
                                                :parent_ems_id => @ems.id, :parent_storage_id => @storage.id,
                                                :resource => @vm1)
     end
+    let(:consumption) { Chargeback::Consumption.new([metric_rollup], nil, nil) }
 
     before do
       ChargebackRate.set_assignments(:compute, [rate_assignment_options])
-      @rate = Chargeback::RatesCache.new.get(metric_rollup).first
+      @rate = Chargeback::RatesCache.new.get(consumption).first
       @assigned_rate = ChargebackRate.get_assignments("Compute").first
     end
 
