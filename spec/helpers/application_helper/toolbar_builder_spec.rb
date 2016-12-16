@@ -1,28 +1,24 @@
-describe ApplicationHelper do
-  before do
-    controller.send(:extend, ApplicationHelper)
-    controller.send(:extend, ApplicationController::CurrentUser)
-    self.class.send(:include, ApplicationHelper)
-    self.class.send(:include, ApplicationController::CurrentUser)
+describe ApplicationHelper, "::ToolbarBuilder" do
+  let(:toolbar_builder) do
+    helper._toolbar_builder.tap do |h|
+      # Publicize ToolbarBuilder's private interface for easier testing (Legacy reasons)
+      h.class.send(:public, *h.private_methods)
+    end
   end
 
-  def method_missing(sym, *args)
-    b = _toolbar_builder
-    if b.respond_to?(sym, true)
-      b.send(sym, *args)
-    else
-      super
-    end
+  before do
+    controller.extend(ApplicationController::CurrentUser)
+    controller.class.include(ApplicationController::CurrentUser)
   end
 
   describe "custom_buttons" do
     let(:user) { FactoryGirl.create(:user, :role => "super_administrator") }
 
     shared_examples "no custom buttons" do
-      it("#get_custom_buttons")           { expect(get_custom_buttons(subject)).to be_blank }
-      it("#custom_buttons_hash")          { expect(custom_buttons_hash(subject)).to be_blank }
-      it("#custom_toolbar_class") { expect(custom_toolbar_class(subject).definition).to be_blank }
-      it("#record_to_service_buttons")    { expect(record_to_service_buttons(subject)).to be_blank }
+      it("#get_custom_buttons")        { expect(toolbar_builder.get_custom_buttons(subject)).to be_blank }
+      it("#custom_buttons_hash")       { expect(toolbar_builder.custom_buttons_hash(subject)).to be_blank }
+      it("#custom_toolbar_class")      { expect(toolbar_builder.custom_toolbar_class(subject).definition).to be_blank }
+      it("#record_to_service_buttons") { expect(toolbar_builder.record_to_service_buttons(subject)).to be_blank }
     end
 
     shared_examples "with custom buttons" do
@@ -52,11 +48,11 @@ describe ApplicationHelper do
           :buttons      => [expected_button1]
         }
 
-        expect(get_custom_buttons(subject)).to eq([expected_button_set])
+        expect(toolbar_builder.get_custom_buttons(subject)).to eq([expected_button_set])
       end
 
       it "#record_to_service_buttons" do
-        expect(record_to_service_buttons(subject)).to be_blank
+        expect(toolbar_builder.record_to_service_buttons(subject)).to be_blank
       end
 
       it "#custom_buttons_hash" do
@@ -84,7 +80,7 @@ describe ApplicationHelper do
         }
         items = [button_set_item1]
         name = "custom_buttons_#{@button_set.name}"
-        expect(custom_buttons_hash(subject)).to eq([:name => name, :items => items])
+        expect(toolbar_builder.custom_buttons_hash(subject)).to eq([:name => name, :items => items])
       end
 
       it "#custom_toolbar_class" do
@@ -111,7 +107,7 @@ describe ApplicationHelper do
           :items        => button_set_item1_items
         }
         group_name = "custom_buttons_#{@button_set.name}"
-        expect(custom_toolbar_class(subject).definition[group_name].buttons).to eq([button_set_item1])
+        expect(toolbar_builder.custom_toolbar_class(subject).definition[group_name].buttons).to eq([button_set_item1])
       end
     end
 
@@ -134,7 +130,7 @@ describe ApplicationHelper do
   end
 
   describe "#get_image" do
-    subject { get_image(@img, @button_name) }
+    subject { toolbar_builder.get_image(@img, @button_name) }
 
     context "when with show_summary" do
       before do
@@ -172,7 +168,7 @@ describe ApplicationHelper do
 
   describe "#hide_button?" do
     let(:user) { FactoryGirl.create(:user) }
-    subject { hide_button?(@id) }
+    subject { toolbar_builder.hide_button?(@id) }
     before do
       @record = double("record")
       login_as user
@@ -606,7 +602,7 @@ describe ApplicationHelper do
   end # end of hide_button?
 
   describe "#disable_button" do
-    subject { disable_button(@id) }
+    subject { toolbar_builder.disable_button(@id) }
     before do
       @gtl_type = 'list'
       @settings = {
@@ -631,7 +627,7 @@ describe ApplicationHelper do
     ['list', 'tile', 'grid'].each do |g|
       it "when with view_#{g}" do
         @gtl_type = g
-        expect(disable_button("view_#{g}")).to be_truthy
+        expect(toolbar_builder.disable_button("view_#{g}")).to be_truthy
       end
     end
 
@@ -857,7 +853,7 @@ describe ApplicationHelper do
       it "'collecting' log_file with started server and disables button" do
         @record.status = "not responding"
         error_msg = "Cannot collect current logs unless the Server is started"
-        expect(disable_button("collect_logs")).to eq(error_msg)
+        expect(toolbar_builder.disable_button("collect_logs")).to eq(error_msg)
       end
 
       it "log collecting is in progress and disables button" do
@@ -867,7 +863,7 @@ describe ApplicationHelper do
         @record.status = "started"
         @record.log_files << log_file
         error_msg = "Log collection is already in progress for this Server"
-        expect(disable_button("collect_logs")).to eq(error_msg)
+        expect(toolbar_builder.disable_button("collect_logs")).to eq(error_msg)
       end
 
       it "log collection in progress with unfinished task and disables button" do
@@ -876,27 +872,27 @@ describe ApplicationHelper do
         miq_task.miq_server_id = @record.id
         miq_task.save
         error_msg = "Log collection is already in progress for this Server"
-        expect(disable_button("collect_logs")).to eq(error_msg)
+        expect(toolbar_builder.disable_button("collect_logs")).to eq(error_msg)
       end
 
       it "'collecting' with undefined depot and disables button" do
         @record.status = "started"
         @record.log_file_depot = nil
         error_msg = "Log collection requires the Log Depot settings to be configured"
-        expect(disable_button("collect_logs")).to eq(error_msg)
+        expect(toolbar_builder.disable_button("collect_logs")).to eq(error_msg)
       end
 
       it "'collecting' with undefined depot and disables button" do
         @record.status = "started"
         @record.log_file_depot = nil
         error_msg = "Log collection requires the Log Depot settings to be configured"
-        expect(disable_button("collect_logs")).to eq(error_msg)
+        expect(toolbar_builder.disable_button("collect_logs")).to eq(error_msg)
       end
 
       it "'collecting' with defined depot and enables button" do
         @record.status = "started"
         @record.log_file_depot = file_depot
-        expect(disable_button("collect_logs")).to eq(false)
+        expect(toolbar_builder.disable_button("collect_logs")).to eq(false)
       end
     end
 
@@ -914,7 +910,7 @@ describe ApplicationHelper do
         miq_server.status = "not responding"
         @record.miq_servers << miq_server
         error_msg = "Cannot collect current logs unless there are started Servers in the Zone"
-        expect(disable_button("zone_collect_logs")).to eq(error_msg)
+        expect(toolbar_builder.disable_button("zone_collect_logs")).to eq(error_msg)
       end
 
       it "log collecting is in progress and disables button" do
@@ -926,7 +922,7 @@ describe ApplicationHelper do
         @record.miq_servers << miq_server
         @record.log_file_depot = file_depot
         error_msg = "Log collection is already in progress for one or more Servers in this Zone"
-        expect(disable_button("zone_collect_logs")).to eq(error_msg)
+        expect(toolbar_builder.disable_button("zone_collect_logs")).to eq(error_msg)
       end
 
       it "log collection in progress with unfinished task and disables button" do
@@ -937,7 +933,7 @@ describe ApplicationHelper do
         miq_task.miq_server_id = miq_server.id
         miq_task.save
         error_msg = "Log collection is already in progress for one or more Servers in this Zone"
-        expect(disable_button("zone_collect_logs")).to eq(error_msg)
+        expect(toolbar_builder.disable_button("zone_collect_logs")).to eq(error_msg)
       end
 
       it "'collecting' with undefined depot and disables button" do
@@ -945,14 +941,14 @@ describe ApplicationHelper do
         @record.miq_servers << miq_server
         @record.log_file_depot = nil
         error_msg = "This Zone do not have Log Depot settings configured, collection not allowed"
-        expect(disable_button("zone_collect_logs")).to eq(error_msg)
+        expect(toolbar_builder.disable_button("zone_collect_logs")).to eq(error_msg)
       end
 
       it "'collecting' with defined depot and enables button" do
         miq_server.status = "started"
         @record.miq_servers << miq_server
         @record.log_file_depot = file_depot
-        expect(disable_button("zone_collect_logs")).to eq(false)
+        expect(toolbar_builder.disable_button("zone_collect_logs")).to eq(false)
       end
     end
 
@@ -1255,7 +1251,7 @@ describe ApplicationHelper do
     context "Disable Retire button for already retired VMs and Instances" do
       it "button instance_retire_now" do
         @record = FactoryGirl.create(:vm_amazon, :retired => true)
-        res = disable_button("instance_retire_now")
+        res = toolbar_builder.disable_button("instance_retire_now")
         expect(res).to be_truthy
         expect(res).to include("already retired")
       end
@@ -1275,7 +1271,7 @@ describe ApplicationHelper do
 
       it "and requester.name != @record.requester_name" do
         allow(@record).to receive_messages(:requester_name => 'admin')
-        expect(disable_button("miq_request_delete")).to be_falsey
+        expect(toolbar_builder.disable_button("miq_request_delete")).to be_falsey
       end
 
       it "and approval_state = approved" do
@@ -1289,13 +1285,14 @@ describe ApplicationHelper do
 
       it "and requester.name != @record.requester_name" do
         login_as FactoryGirl.create(:user, :role => "test")
-        expect(disable_button("miq_request_delete")).to include("Users are only allowed to delete their own requests")
+        expect(toolbar_builder.disable_button("miq_request_delete"))
+          .to include("Users are only allowed to delete their own requests")
       end
     end
   end # end of disable button
 
   describe "#hide_button_ops" do
-    subject { hide_button_ops(@id) }
+    subject { toolbar_builder.hide_button_ops(@id) }
     before do
       @record = FactoryGirl.create(:tenant, :parent => Tenant.seed)
       feature = EvmSpecHelper.specific_product_features(%w(ops_rbac rbac_group_add rbac_tenant_add rbac_tenant_delete))
@@ -1323,7 +1320,7 @@ describe ApplicationHelper do
   end
 
   describe "#get_record_cls"  do
-    subject { get_record_cls(record) }
+    subject { toolbar_builder.get_record_cls(record) }
     context "when record not exist" do
       let(:record) { nil }
       it { is_expected.to eq("NilClass") }
@@ -1338,18 +1335,18 @@ describe ApplicationHelper do
       [ManageIQ::Providers::Redhat::InfraManager::Host].each do |c|
         it "and with #{c}" do
           record = c.new
-          expect(get_record_cls(record)).to eq(record.class.base_class.to_s)
+          expect(toolbar_builder.get_record_cls(record)).to eq(record.class.base_class.to_s)
         end
       end
 
       it "and with 'VmOrTemplate'" do
         record = ManageIQ::Providers::Vmware::InfraManager::Template.new
-        expect(get_record_cls(record)).to eq(record.class.base_model.to_s)
+        expect(toolbar_builder.get_record_cls(record)).to eq(record.class.base_model.to_s)
       end
 
       it "otherwise" do
         record = Job.new
-        expect(get_record_cls(record)).to eq(record.class.to_s)
+        expect(toolbar_builder.get_record_cls(record)).to eq(record.class.to_s)
       end
     end
   end
@@ -1367,23 +1364,23 @@ describe ApplicationHelper do
         }
       }
     end
-    subject { twostate_button_selected(id) }
+    subject { toolbar_builder.twostate_button_selected(id) }
 
     ['list', 'tile', 'grid'].each do |g|
       it "when with view_#{g}" do
         @gtl_type = g
-        expect(twostate_button_selected("view_#{g}")).to be_truthy
+        expect(toolbar_builder.twostate_button_selected("view_#{g}")).to be_truthy
       end
     end
 
     it "when with tree_large" do
       @settings[:views][:treesize] = 32
-      expect(twostate_button_selected("tree_large")).to be_truthy
+      expect(toolbar_builder.twostate_button_selected("tree_large")).to be_truthy
     end
 
     it "when with tree_small" do
       @settings[:views][:treesize] = 16
-      expect(twostate_button_selected("tree_small")).to be_truthy
+      expect(toolbar_builder.twostate_button_selected("tree_small")).to be_truthy
     end
 
     context  "when with 'compare_compressed'" do
@@ -1434,19 +1431,19 @@ describe ApplicationHelper do
 
     context "button visibility" do
       it "defaults to hidden false" do
-        props = apply_common_props(@button, @input)
+        props = toolbar_builder.apply_common_props(@button, @input)
         expect(props[:hidden]).to be(false)
       end
 
       it "honors explicit input's hidden properties" do
-        props = apply_common_props(@button, {:hidden => true})
+        props = toolbar_builder.apply_common_props(@button, :hidden => true)
         expect(props[:hidden]).to be(true)
       end
     end
 
     context "saves the item info by the same key" do
       subject do
-        apply_common_props(@button, @input)
+        toolbar_builder.apply_common_props(@button, @input)
       end
 
       it "when input[:hidden] exists" do
@@ -1475,7 +1472,7 @@ describe ApplicationHelper do
           @input[key] = 'Configuration' # common button string, translated into Japanese
         end
         FastGettext.locale = 'ja'
-        apply_common_props(@button, @input)
+        toolbar_builder.apply_common_props(@button, @input)
         %i(text title confirm).each do |key|
           expect(@button[key]).not_to match('Configuration')
         end
@@ -1489,7 +1486,7 @@ describe ApplicationHelper do
           end
         end
         FastGettext.locale = 'ja'
-        apply_common_props(@button, @input)
+        toolbar_builder.apply_common_props(@button, @input)
         %i(text title confirm).each do |key|
           expect(@button[key]).not_to match('Add New Model')
         end
@@ -1515,7 +1512,7 @@ describe ApplicationHelper do
 
     context "when item[:url] exists" do
       subject do
-        update_common_props(@item, @item_out)
+        toolbar_builder.update_common_props(@item, @item_out)
       end
 
       it "saves the value as it is otherwise" do
@@ -1523,9 +1520,8 @@ describe ApplicationHelper do
       end
 
       it "calls url_for_button" do
-        b = _toolbar_builder
-        expect(b).to receive(:url_for_button).and_call_original
-        b.send(:update_common_props, @item, @item_out)
+        expect(toolbar_builder).to receive(:url_for_button).and_call_original
+        toolbar_builder.update_common_props(@item, @item_out)
       end
     end
   end
@@ -1537,12 +1533,12 @@ describe ApplicationHelper do
       end
 
       it "returns / when button is 'view_grid', 'view_tile' or 'view_list'" do
-        result = url_for_button('view_list', '/1r2?', true)
+        result = toolbar_builder.url_for_button('view_list', '/1r2?', true)
         expect(result).to eq('/')
       end
 
       it "supports compressed ids" do
-        result = url_for_button('view_list', '/1?', true)
+        result = toolbar_builder.url_for_button('view_list', '/1?', true)
         expect(result).to eq('/')
       end
     end
@@ -1562,7 +1558,7 @@ describe ApplicationHelper do
       end
 
       it "updates the query string with the given parameter value" do
-        expect(update_url_parms("?type=list")).to eq("?type=list")
+        expect(toolbar_builder.update_url_parms("?type=list")).to eq("?type=list")
       end
     end
 
@@ -1575,7 +1571,7 @@ describe ApplicationHelper do
       end
 
       it "adds the params in the query string" do
-        expect(update_url_parms("?refresh=y&type=list")).to eq("?refresh=y&type=list")
+        expect(toolbar_builder.update_url_parms("?refresh=y&type=list")).to eq("?refresh=y&type=list")
       end
     end
 
@@ -1589,8 +1585,8 @@ describe ApplicationHelper do
       end
 
       it "retains the specific parameters and adds the new one" do
-        expect(update_url_parms("?type=list")).to eq("?bc=VMs+running+on+2014-08-25&menu_click=Display-VMs-on_2-6-5"\
-          "&sb_controller=host&type=list")
+        expect(toolbar_builder.update_url_parms("?type=list"))
+          .to eq("?bc=VMs+running+on+2014-08-25&menu_click=Display-VMs-on_2-6-5&sb_controller=host&type=list")
       end
     end
 
@@ -1603,7 +1599,7 @@ describe ApplicationHelper do
       end
 
       it "excludes specific parameters and adds the new one" do
-        expect(update_url_parms("?type=list")).to eq("?type=list")
+        expect(toolbar_builder.update_url_parms("?type=list")).to eq("?type=list")
       end
     end
   end
