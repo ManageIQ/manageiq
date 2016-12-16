@@ -160,16 +160,8 @@ module ApplicationController::ReportDownloads
 
     if @display == "download_pdf"
       @display = "main"
-      case @record
-      when VmOrTemplate
-        if @record.hardware.present?
-          @record_notes = @record.hardware.annotation || "<No notes have been entered for this VM>"
-        end
+      if @record.kind_of?(VmOrTemplate)
         get_host_for_vm(@record)
-        set_config(@record)
-      when ResourcePool
-        # FIXME: check if this can be put before the test (can we have other
-        # records than Vm and ResourcePool?)
         set_config(@record)
       end
 

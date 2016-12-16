@@ -335,13 +335,6 @@ module VmCommon
       @showtype = "ontap_file_shares"
     end
 
-    unless @record.hardware.nil?
-      @record_notes = if @record.hardware.annotation.nil?
-                        _("<No notes have been entered for this VM>")
-                      else
-                        @record.hardware.annotation
-                      end
-    end
     set_config(@record)
     get_host_for_vm(@record)
     session[:tl_record_id] = @record.id
