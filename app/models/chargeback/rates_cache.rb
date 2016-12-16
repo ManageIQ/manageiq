@@ -1,6 +1,9 @@
 class Chargeback
   class RatesCache
-    def get(perf)
+    def get(consumption)
+      # we need to select ChargebackRates for groups of MetricRollups records
+      # and rates are selected by first MetricRollup record
+      perf = consumption.first_metric_rollup_record
       @rates ||= {}
       @rates[perf.hash_features_affecting_rate] ||= rates(perf)
     end

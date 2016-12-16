@@ -17,9 +17,7 @@ class Chargeback < ActsAsArModel
     data = {}
     rates = RatesCache.new
     ConsumptionHistory.for_report(self, options) do |consumption|
-      # we need to select ChargebackRates for groups of MetricRollups records
-      # and rates are selected by first MetricRollup record
-      rates_to_apply = rates.get(consumption.first_metric_rollup_record)
+      rates_to_apply = rates.get(consumption)
 
       key = consumption.key(self)
       data[key] ||= new(options, consumption.first_metric_rollup_record)

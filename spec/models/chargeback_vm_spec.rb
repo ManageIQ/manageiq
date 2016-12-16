@@ -764,10 +764,11 @@ describe ChargebackVm do
                                                :parent_ems_id => ems.id, :parent_storage_id => @storage.id,
                                                :resource => @vm1)
     end
+    let(:consumption) { Chargeback::Consumption.new([metric_rollup], nil, nil) }
 
     before do
       ChargebackRate.set_assignments(:compute, [rate_assignment_options])
-      @rate = Chargeback::RatesCache.new.get(metric_rollup).first
+      @rate = Chargeback::RatesCache.new.get(consumption).first
       @assigned_rate = ChargebackRate.get_assignments("Compute").first
     end
 
@@ -848,6 +849,7 @@ describe ChargebackVm do
                          :parent_ems_id => ems.id, :parent_storage_id => @storage.id,
                          :resource => @vm1)
     end
+    let(:consumption) { Chargeback::Consumption.new([metric_rollup], nil, nil) }
 
     before do
       @storage.tag_with([classification_1.tag.name, classification_2.tag.name], :ns => '*')
@@ -857,7 +859,7 @@ describe ChargebackVm do
     it "return only one chargeback rate according to tag name of Vm" do
       [rate_assignment_options_1, rate_assignment_options_2].each do |rate_assignment|
         metric_rollup.tag_names = rate_assignment[:tag].first.tag.send(:name_path)
-        uniq_rates = chargeback_vm.send(:get, metric_rollup)
+        uniq_rates = chargeback_vm.get(consumption)
         expect([rate_assignment[:cb_rate]]).to match_array(uniq_rates)
       end
     end
