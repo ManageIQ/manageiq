@@ -17,7 +17,7 @@ module Api
       # We must authorize the user based on the request type klass
       authorize_request(typed_request_klass)
 
-      user = RequestParser.parse_user(data) || @auth_user_obj
+      user = RequestParser.parse_user(data) || User.current_user
       auto_approve = RequestParser.parse_auto_approve(data)
 
       begin
@@ -33,7 +33,7 @@ module Api
       request = resource_search(id, type, request_klass)
 
       request_options = RequestParser.parse_options(data)
-      user = RequestParser.parse_user(data) || @auth_user_obj
+      user = RequestParser.parse_user(data) || User.current_user
 
       begin
         request.update_request(request_options, user)
@@ -68,13 +68,13 @@ module Api
 
     def find_requests(id)
       klass = collection_class(:requests)
-      return klass.find(id) if @auth_user_obj.admin?
-      klass.find_by!(:requester => @auth_user_obj, :id => id)
+      return klass.find(id) if User.current_user.admin?
+      klass.find_by!(:requester => User.current_user, :id => id)
     end
 
     def requests_search_conditions
-      return {} if @auth_user_obj.admin?
-      {:requester => @auth_user_obj}
+      return {} if User.current_user.admin?
+      {:requester => User.current_user}
     end
 
     private

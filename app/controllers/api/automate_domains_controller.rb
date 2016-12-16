@@ -47,7 +47,7 @@ module Api
     end
 
     def current_tenant
-      @auth_user_obj.current_tenant || Tenant.default_tenant
+      User.current_user.current_tenant || Tenant.default_tenant
     end
   end
 end

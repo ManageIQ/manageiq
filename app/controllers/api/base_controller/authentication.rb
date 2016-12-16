@@ -19,10 +19,10 @@ module Api
 
           if (user = authenticate_with_http_basic { |u, p| User.authenticate(u, p, request, authenticate_options) })
             @auth_user     = user.userid
-            @auth_user_obj = userid_to_userobj(@auth_user)
-            authorize_user_group(@auth_user_obj)
-            validate_user_identity(@auth_user_obj)
-            User.current_user = @auth_user_obj
+            auth_user_obj = userid_to_userobj(@auth_user)
+            authorize_user_group(auth_user_obj)
+            validate_user_identity(auth_user_obj)
+            User.current_user = auth_user_obj
           else
             request_http_basic_authentication
           end
@@ -31,7 +31,7 @@ module Api
       end
 
       def auth_identity
-        user  = @auth_user_obj
+        user  = User.current_user
         group = user.current_group
         {
           :userid     => user.userid,
@@ -47,7 +47,7 @@ module Api
       end
 
       def auth_authorization
-        user  = @auth_user_obj
+        user  = User.current_user
         group = user.current_group
         {
           :product_features => product_features(group.miq_user_role)
@@ -57,7 +57,7 @@ module Api
       def user_settings
         {
           :locale => I18n.locale.to_s.sub('-', '_'),
-        }.merge(@auth_user_obj.settings)
+        }.merge(User.current_user.settings)
       end
 
       def userid_to_userobj(userid)
@@ -128,15 +128,15 @@ module Api
           raise AuthenticationError, "Invalid Authentication Token #{@auth_token} specified"
         else
           @auth_user     = api_token_mgr.token_get_info(@auth_token, :userid)
-          @auth_user_obj = userid_to_userobj(@auth_user)
+          auth_user_obj = userid_to_userobj(@auth_user)
 
           unless request.headers['X-Auth-Skip-Token-Renewal'] == 'true'
             api_token_mgr.reset_token(@auth_token)
           end
 
-          authorize_user_group(@auth_user_obj)
-          validate_user_identity(@auth_user_obj)
-          User.current_user = @auth_user_obj
+          authorize_user_group(auth_user_obj)
+          validate_user_identity(auth_user_obj)
+          User.current_user = auth_user_obj
         end
       end
 
@@ -149,11 +149,11 @@ module Api
         User.authorize_user(@miq_token_hash[:userid])
 
         @auth_user     = @miq_token_hash[:userid]
-        @auth_user_obj = userid_to_userobj(@auth_user)
+        auth_user_obj = userid_to_userobj(@auth_user)
 
-        authorize_user_group(@auth_user_obj)
-        validate_user_identity(@auth_user_obj)
-        User.current_user = @auth_user_obj
+        authorize_user_group(auth_user_obj)
+        validate_user_identity(auth_user_obj)
+        User.current_user = auth_user_obj
       rescue => err
         api_log_error("Authentication Failed with System Token\nX-MIQ-Token: #{x_miq_token}\nError: #{err}")
         raise AuthenticationError, "Invalid System Authentication Token specified"

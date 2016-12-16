@@ -145,7 +145,7 @@ module Api
       def resource_search(id, type, klass)
         validate_id(id, klass)
         target = respond_to?("find_#{type}") ? public_send("find_#{type}", id) : klass.find(id)
-        res = Rbac.filtered_object(target, :user => @auth_user_obj, :class => klass)
+        res = Rbac.filtered_object(target, :user => User.current_user, :class => klass)
         raise ForbiddenError, "Access to the resource #{type}/#{id} is forbidden" unless res
         res
       end
@@ -175,7 +175,7 @@ module Api
         sort_options = sort_params(klass) if res.respond_to?(:reorder)
         res = res.reorder(sort_options) if sort_options.present?
 
-        options = {:user => @auth_user_obj}
+        options = {:user => User.current_user}
         options[:order] = sort_options if sort_options.present?
         options[:offset], options[:limit] = expand_paginate_params if paginate_params?
         options[:filter] = miq_expression if miq_expression
@@ -407,7 +407,7 @@ module Api
 
       def api_user_role_allows?(action_identifier)
         return true unless action_identifier
-        @auth_user_obj.role_allows?(:identifier => action_identifier)
+        User.current_user.role_allows?(:identifier => action_identifier)
       end
 
       def render_actions(resource)

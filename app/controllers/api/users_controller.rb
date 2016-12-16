@@ -35,7 +35,7 @@ module Api
     end
 
     def edit_resource(type, id, data)
-      (id == @auth_user_obj.id) ? validate_self_user_data(data) : validate_user_data(data)
+      (id == User.current_user.id) ? validate_self_user_data(data) : validate_user_data(data)
       parse_set_group(data)
       parse_set_settings(data, resource_search(id, type, collection_class(type)))
       super
@@ -43,14 +43,14 @@ module Api
 
     def delete_resource(type, id = nil, data = nil)
       raise BadRequestError, "Must specify an id for deleting a user" unless id
-      raise BadRequestError, "Cannot delete user of current request" if id.to_i == @auth_user_obj.id
+      raise BadRequestError, "Cannot delete user of current request" if id.to_i == User.current_user.id
       super
     end
 
     private
 
     def update_target_is_api_user?
-      @auth_user_obj.id == @req.c_id.to_i
+      User.current_user.id == @req.c_id.to_i
     end
 
     def parse_set_group(data)

@@ -11,7 +11,7 @@ module Api
       parameters  = hash_fetch(data, "parameters")
       requester   = hash_fetch(data, "requester")
 
-      AutomationRequest.create_from_ws(version_str, @auth_user_obj, uri_parts, parameters, requester)
+      AutomationRequest.create_from_ws(version_str, User.current_user, uri_parts, parameters, requester)
     end
 
     def approve_resource(type, id, data)

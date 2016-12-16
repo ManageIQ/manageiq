@@ -218,7 +218,7 @@ module Api
       end
 
       def submit_custom_action_dialog(resource, custom_button, data)
-        wf = ResourceActionWorkflow.new({}, @auth_user_obj, custom_button.resource_action, :target => resource)
+        wf = ResourceActionWorkflow.new({}, User.current_user, custom_button.resource_action, :target => resource)
         data.each { |key, value| wf.set_value(key, value) } if data.present?
         wf_result = wf.submit_request
         raise StandardError, Array(wf_result[:errors]).join(", ") if wf_result[:errors].present?
@@ -244,7 +244,7 @@ module Api
 
       def service_template_workflow(service_template, service_request)
         resource_action = service_template.resource_actions.find_by_action("Provision")
-        workflow = ResourceActionWorkflow.new({}, @auth_user_obj, resource_action, :target => service_template)
+        workflow = ResourceActionWorkflow.new({}, User.current_user, resource_action, :target => service_template)
         service_request.each { |key, value| workflow.set_value(key, value) } if service_request.present?
         workflow
       end

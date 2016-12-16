@@ -150,7 +150,7 @@ module Api
 
     def submit_reconfigure_dialog(svc, data)
       ra = svc.reconfigure_resource_action
-      wf = ResourceActionWorkflow.new({}, @auth_user_obj, ra, :target => svc)
+      wf = ResourceActionWorkflow.new({}, User.current_user, ra, :target => svc)
       data.each { |key, value| wf.set_value(key, value) } if data.present?
       wf_result = wf.submit_request
       raise StandardError, Array(wf_result[:errors]).join(", ") if wf_result[:errors].present?

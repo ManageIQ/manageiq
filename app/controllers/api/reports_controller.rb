@@ -28,7 +28,7 @@ module Api
     end
 
     def import_resource(_type, _id, data)
-      options = data.fetch("options", {}).symbolize_keys.merge(:user => @auth_user_obj)
+      options = data.fetch("options", {}).symbolize_keys.merge(:user => User.current_user)
       result, meta = MiqReport.import_from_hash(data["report"], options)
       action_result(meta[:level] == :info, meta[:message], :result => result)
     end
@@ -62,7 +62,7 @@ module Api
     def fetch_schedule_data(data)
       schedule_data = data.except(*SCHEDULE_ATTRS_TO_TRANSFORM)
 
-      schedule_data['userid'] = @auth_user_obj.userid
+      schedule_data['userid'] = User.current_user.userid
       schedule_data['run_at'] = {
         :start_time => data['start_date'],
         :tz         => data['time_zone'],
@@ -76,7 +76,7 @@ module Api
       schedule_options = {
         :send_email       => data['send_email'] || false,
         :email_url_prefix => email_url_prefix,
-        :miq_group_id     => @auth_user_obj.current_group_id
+        :miq_group_id     => User.current_user.current_group_id
       }
       schedule_data['sched_action'] = {:method  => "run_report",
                                        :options => schedule_options}

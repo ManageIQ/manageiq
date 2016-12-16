@@ -68,7 +68,7 @@ module Api
       end
 
       def remove_service_request(target, service_request)
-        target.class.remove_from_cart(service_request, @auth_user_obj)
+        target.class.remove_from_cart(service_request, User.current_user)
         action_result(true, "Removing #{service_request_ident(service_request)}")
       rescue => e
         action_result(false, e.to_s)

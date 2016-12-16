@@ -11,7 +11,7 @@ module Api
         super
       else
         create_service_order_with_service_requests(service_requests)
-        ServiceOrder.cart_for(@auth_user_obj)
+        ServiceOrder.cart_for(User.current_user)
       end
     end
 
@@ -37,14 +37,14 @@ module Api
 
     def find_service_orders(id)
       if id == USER_CART_ID
-        ServiceOrder.cart_for(@auth_user_obj)
+        ServiceOrder.cart_for(User.current_user)
       else
-        ServiceOrder.find_for_user(@auth_user_obj, id)
+        ServiceOrder.find_for_user(User.current_user, id)
       end
     end
 
     def service_orders_search_conditions
-      {:user => @auth_user_obj, :tenant => @auth_user_obj.current_tenant}
+      {:user => User.current_user, :tenant => User.current_user.current_tenant}
     end
 
     def copy_resource(type, id, data)

@@ -117,7 +117,7 @@ module Api
 
       def define_service_template_dialog(st, dialog_fields)
         resource_action = st.resource_actions.find_by_action("Provision")
-        workflow = ResourceActionWorkflow.new({}, @auth_user_obj, resource_action, :target => st)
+        workflow = ResourceActionWorkflow.new({}, User.current_user, resource_action, :target => st)
         dialog_fields.each { |key, value| workflow.set_value(key, value) }
         workflow.dialog
       end
