@@ -90,7 +90,7 @@ module OwnershipMixin
     private
 
     def user_owned(user)
-      where(arel_table.grouping(Arel::Nodes::NamedFunction.new("LOWER", [arel_attribute(:evm_owner_userid)]).eq(user.userid)))
+      where(arel_table.grouping(Arel::Nodes::NamedFunction.new("LOWER", [arel_attribute(:evm_owner_userid)]).eq(user.userid.downcase)))
     end
 
     def group_owned(miq_group)
