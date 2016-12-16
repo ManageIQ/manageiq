@@ -431,21 +431,9 @@ class ApplicationHelper::ToolbarBuilder
     return true if @record.kind_of?(OrchestrationStack) && @display == "instances" &&
                    %w(instance_check_compliance instance_compare).include?(id)
 
-    # dont hide back to summary button button when not in explorer
-    return false if id == "show_summary" && !@explorer
-
     # need to hide add buttons when on sub-list view screen of a CI.
     return true if id.ends_with?("_new", "_discover") &&
                    @lastaction == "show" && !["main", "vms"].include?(@display)
-
-    if id == "summary_reload"                             # Show reload button if
-      return @explorer && # we are in explorer and
-        ((@record && #    1) we are on a record and
-         !["miq_policy_rsop"].include?(@layout) && # @layout is not one of these
-         !["details", "item"].include?(@showtype)) || #       not showing list or single sub screen item i.e VM/Users
-         @lastaction == "show_list") ? # or 2) selected node shows a list of records
-        false : true
-    end
 
     # user can see the buttons if they can get to Policy RSOP/Automate Simulate screen
     return false if ["miq_ae_tools"].include?(@layout)
@@ -473,7 +461,8 @@ class ApplicationHelper::ToolbarBuilder
     unless %w(miq_policy catalogs).include?(@layout)
       return true if !role_allows?(:feature => id) && !["miq_request_approve", "miq_request_deny"].include?(id) &&
                      id !~ /^history_\d*/ &&
-                     !id.starts_with?("dialog_") && !id.starts_with?("miq_task_")
+                     !id.starts_with?("dialog_") && !id.starts_with?("miq_task_") &&
+                     !(id == "show_summary" && !@explorer) && id != "summary_reload"
     end
 
     # Check buttons with other restriction logic

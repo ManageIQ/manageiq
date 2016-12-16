@@ -205,18 +205,6 @@ describe ApplicationHelper do
       end
     end
 
-    it "when with show_summary and not explorer" do
-      @id = "show_summary"
-      @explorer = false
-      expect(subject).to be_falsey
-    end
-
-    it "when with show_summary and explorer" do
-      @id = "show_summary"
-      @explorer = true
-      expect(subject).to be_truthy
-    end
-
     it "when id likes old_dialogs_*" do
       @id = "old_dialogs_some_thing"
       expect(subject).to be_truthy
