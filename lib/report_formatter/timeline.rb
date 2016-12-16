@@ -103,12 +103,10 @@ module ReportFormatter
           e_title = rec[:name]
           e_icon = ActionController::Base.helpers.image_path("timeline/vendor-#{rec.vendor.downcase}.png")
           e_image = ActionController::Base.helpers.image_path("100/os-#{rec.os_image_name.downcase}.png")
-          e_text = "&lt;a href=/vm/show/#{rec.id}&gt;#{e_title}&lt;/a&gt;"
         when "Host"
           e_title = rec[:name]
           e_icon = ActionController::Base.helpers.image_path("timeline/vendor-#{rec.vmm_vendor_display.downcase}.png")
           e_image = ActionController::Base.helpers.image_path("100/os-#{rec.os_image_name.downcase}.png")
-          e_text = "&lt;a href=/host/show/#{rec.id}&gt;#{e_title}&lt;/a&gt;"
         when "EventStream"
           ems_cloud = false
           if rec[:ems_id] && ExtManagementSystem.exists?(rec[:ems_id])
@@ -149,43 +147,9 @@ module ReportFormatter
           if rec[:vm_or_template_id] && Vm.exists?(rec[:vm_or_template_id])
             e_image = ActionController::Base.helpers.image_path("100/os-#{Vm.find(rec[:vm_or_template_id]).os_image_name.downcase}.png")
           end
-          e_text = e_title
-        when "PolicyEvent"
-          if rec[:target_name]              # Create the title using Policy description
-            e_title = rec[:target_name]
-          elsif rec[:miq_policy_id] && MiqPolicy.exists?(rec[:miq_policy_id])   #   or Policy name
-            e_title = MiqPolicy.find(rec[:miq_policy_id]).name
-          else
-            e_title = "Policy no longer exists"
-          end
-          e_title ||= "No Policy"
-          e_icon = ActionController::Base.helpers.image_path("100/event-#{rec.event_type.downcase}.png")
-          # e_icon = "/images/100/vendor-ec2.png"
-          e_text = e_title
-          unless rec.target_id.nil?
-            e_text += "<br/>&lt;a href=/#{Dictionary.gettext(rec.target_class, :type => :model, :notfound => :titleize).downcase}/show/#{to_cid(rec.target_id)}&gt;<b> #{Dictionary.gettext(rec.target_class, :type => :model, :notfound => :titleize)}:</b> #{rec.target_name}&lt;/a&gt;"
-          end
-
-          assigned_profiles = {}
-          profile_sets = rec.miq_policy_sets
-
-          profile_sets.each do |profile|
-            assigned_profiles[profile.id] = profile.description unless profile.description.nil?
-          end
-
-          unless rec.event_type.nil?
-            e_text += "<br/><b>Assigned Profiles:</b> "
-            assigned_profiles.each_with_index do |p, i|
-              e_text += "&lt;a href=/miq_policy/explorer?profile=#{p[0]}&gt;<b> #{p[1]}&lt;/a&gt;"
-              if assigned_profiles.length > 1 && i < assigned_profiles.length
-                e_text += ", "
-              end
-            end
-          end
         else
           e_title = rec[:name] ? rec[:name] : row[mri.col_order.first].to_s
           e_icon = image = nil
-          e_text = e_title
         end
       end
 

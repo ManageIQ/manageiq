@@ -24,6 +24,9 @@ cols:
 - miq_event_description
 - miq_policy_description
 - result
+- target_name
+- target_id
+- target_class
 
 # Included tables (joined, has_one, has_many) and columns
 include:
@@ -35,6 +38,7 @@ col_order:
 - miq_event_description
 - miq_policy_description
 - result
+- target_name
 
 # Column titles, in order
 headers:
@@ -43,6 +47,7 @@ headers:
 - Miq Event Description
 - Miq Policy Description
 - Result
+- Target
 
 # Condition(s) string for the SQL query
 conditions:
