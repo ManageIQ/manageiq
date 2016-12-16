@@ -13,12 +13,11 @@ end
 def add_provider
   $evm.log(:info, "**************** #{$evm.root['ae_state']} ****************")
   token = provider_token
-  hostname = $evm.root['container_deployment'].perform_agent_commands(["hostname"])[:stdout].strip
   new_provider = $evm.root['container_deployment'].add_deployment_provider(
     :provider_type      => DEPLOYMENT_TYPES[$evm.root['deployment_type'].tr("-", "_").to_sym],
     :provider_name      => $evm.get_state_var(:provider_name),
     :provider_port      => PROVIDER_PORT,
-    :provider_hostname  => hostname,
+    :provider_hostname  => $evm.root['deployment_master'],
     :provider_ipaddress => $evm.root['deployment_master'],
     :auth_type          => "bearer",
     :auth_key           => token)
