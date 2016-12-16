@@ -11,6 +11,7 @@ class ApplicationHelper::Toolbar::CloudSubnetsCenter < ApplicationHelper::Toolba
           'pficon pficon-add-circle-o fa-lg',
           t = N_('Add a new Cloud Subnet'),
           t,
+          :klass => ApplicationHelper::Button::CloudSubnetNew
         ),
         separator,
         # TODO: Uncomment until cross controllers show_list issue fully in place
