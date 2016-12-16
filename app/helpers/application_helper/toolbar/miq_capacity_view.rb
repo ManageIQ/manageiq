@@ -12,14 +12,14 @@ class ApplicationHelper::Toolbar::MiqCapacityView < ApplicationHelper::Toolbar::
           'fa fa-file-text-o fa-lg',
           N_('Download this report in text format'),
           N_('Download as Text'),
-          :url       => "/\#{x_active_tree == :utilization_tree ? \"util_report\" : \"planning_report\"}_download",
+          :url       => "/\#{@view_context.x_active_tree == :utilization_tree ? \"util_report\" : \"planning_report\"}_download",
           :url_parms => "?typ=txt"),
         button(
           :miq_capacity_download_csv,
           'fa fa-file-text-o fa-lg',
           N_('Download this report in CSV format'),
           N_('Download as CSV'),
-          :url       => "/\#{x_active_tree == :utilization_tree ? \"util_report\" : \"planning_report\"}_download",
+          :url       => "/\#{@view_context.x_active_tree == :utilization_tree ? \"util_report\" : \"planning_report\"}_download",
           :url_parms => "?typ=csv"),
         button(
           :miq_capacity_download_pdf,
@@ -27,7 +27,7 @@ class ApplicationHelper::Toolbar::MiqCapacityView < ApplicationHelper::Toolbar::
           N_('Download this report in PDF format'),
           N_('Download as PDF'),
           :klass     => ApplicationHelper::Button::Pdf,
-          :url       => "/\#{x_active_tree == :utilization_tree ? \"util_report\" : \"planning_report\"}_download",
+          :url       => "/\#{@view_context.x_active_tree == :utilization_tree ? \"util_report\" : \"planning_report\"}_download",
           :url_parms => "?typ=pdf"),
       ]
     ),
