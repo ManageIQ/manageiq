@@ -12,7 +12,8 @@ class MiqReport::Formats
                   (properties[:sub_types] && properties[:sub_types].include?(sub_type(column))) ||
                   (properties[:data_types] && properties[:data_types].include?(datatype)) ||
                   (properties[:suffixes] && properties[:suffixes].include?(suffix.to_sym)) ||
-                  (format_name == sub_type(column))
+                  format_name == sub_type(column) ||
+                  format_name == DEFAULTS_AND_OVERRIDES[:formats_by_sub_type][sub_type(column)]
 
       result[format_name] = properties[:description]
     end
