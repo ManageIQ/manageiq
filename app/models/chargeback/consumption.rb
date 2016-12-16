@@ -1,6 +1,6 @@
 class Chargeback
   class Consumption
-    delegate :timestamp, :resource, :to => :first_metric_rollup_record
+    delegate :timestamp, :resource, :resource_id, :resource_name, :parent_ems, :to => :first_metric_rollup_record
 
     def initialize(metric_rollup_records, start_time, end_time)
       @rollups = metric_rollup_records
