@@ -20,6 +20,7 @@ ManageIQ.angular.app.service('topologyService', function() {
 
   this.searchNode = function(svg, query) {
     var nodes = svg.selectAll("g");
+    svg.selectAll('g, line').style('opacity', 1);
     if (query != "") {
       var selected = nodes.filter(function (d) {
         return d.item.name.indexOf(query) == -1;
