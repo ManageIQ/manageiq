@@ -10,6 +10,11 @@ describe MiqReport::Formats do
           elsif name.ends_with?('_metric')
             expect(subj).not_to be_nil
           end
+
+          unless subj.nil?
+            options = described_class.available_formats_for(name.to_sym, name, datatype.first)
+            expect(options.keys).to include(subj)
+          end
         end
       end
     end
