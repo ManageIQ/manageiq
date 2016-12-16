@@ -9,12 +9,12 @@
     %input.form-control{"id"                   => "ad-hoc-tenant",
                         "type"                 => "text",
                         "ng-model"             => "tenant",
-                        "placeholder"          => _("Choos Tenenats"),
-                        "typeahead"            => "tenenat for tenenat in getTenenats($viewValue)",
-                        "typeahead-loading"    => "loadingTenenats",
+                        "placeholder"          => _("Choose Tenants"),
+                        "typeahead"            => "tenenat for tenenat in getTenants($viewValue)",
+                        "typeahead-loading"    => "loadingTenants",
                         "typeahead-no-results" => "noResults",
                         "typeahead-wait-ms"    => 1000}
-    %i.glyphicon.glyphicon-refresh{"ng-show" => "loadingTenenats"}
+    %i.glyphicon.glyphicon-refresh{"ng-show" => "loadingTenants"}
     %div{"ng-show" => "noResults"}
       %i.glyphicon.glyphicon-remove
       = _("No Results Found")

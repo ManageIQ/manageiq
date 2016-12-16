@@ -1,8 +1,8 @@
 /* global miqHttpInject */
 
 miqHttpInject(angular.module('containerLiveDashboard', ['ui.bootstrap', 'patternfly', 'patternfly.charts']))
-  .controller('containerLiveDashboardController', ['$scope', 'pfViewUtils', '$http', '$interval', '$timeout', '$window',
-  function ($scope, pfViewUtils, $http, $interval, $timeout, $window) {
+  .controller('containerLiveDashboardController', ['$scope', 'pfViewUtils', '$http', '$interval', '$timeout', '$window', '$element',
+  function ($scope, pfViewUtils, $http, $interval, $timeout, $window, $element) {
     $scope.tenant = '_ops';
 
     // get the pathname and remove trailing / if exist
@@ -69,7 +69,7 @@ miqHttpInject(angular.module('containerLiveDashboard', ['ui.bootstrap', 'pattern
     };
 
     $scope.doRefreshTenant = function() {
-      $scope.tenant = $("#ad-hoc-tenant").val();
+      $scope.tenant = $element.find("#ad-hoc-tenant").val();
 
       initialization();
       getMetricTags();
@@ -208,7 +208,7 @@ miqHttpInject(angular.module('containerLiveDashboard', ['ui.bootstrap', 'pattern
       }
     };
 
-    $scope.getTenenats = function(prefix) {
+    $scope.getTenants = function(prefix) {
       return $http.get($scope.url + "&query=get_tenants&limit=7&prefix=" + prefix).then(function(response){
         return response.data.tenants;
       });
