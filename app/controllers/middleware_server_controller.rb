@@ -142,13 +142,15 @@ class MiddlewareServerController < ApplicationController
   end
 
   def jdbc_drivers
-    mw_server = MiddlewareServer.find(params[:server_id])
+    mw_server = MiddlewareServer.find(from_cid(params[:server_id]))
     mw_manager = mw_server.ext_management_system
     drivers = mw_manager.jdbc_drivers(mw_server.feed)
 
     render :json => {
       :status => :success, :data => drivers
     }
+  rescue StandardError => err
+    render :json => {:msg => err.message}, :status => :internal_server_error
   end
 
   def add_datasource
