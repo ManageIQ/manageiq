@@ -4797,6 +4797,15 @@ miq_ae_workspaces:
 - setters
 - created_on
 - updated_on
+miq_alert_status_actions:
+- id
+- action_type
+- user_id
+- comment
+- assignee_id
+- miq_alert_status_id
+- created_at
+- updated_at
 miq_alert_statuses:
 - id
 - miq_alert_id
@@ -4804,6 +4813,10 @@ miq_alert_statuses:
 - resource_type
 - evaluated_on
 - result
+- url
+- severity
+- ancestry
+- acknowledged
 miq_alerts:
 - id
 - guid
