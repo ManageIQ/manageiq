@@ -7,7 +7,7 @@ module GettextI18nRailsJs
     end
 
     def output_path
-      ::Manageiq::Ui::Engine.root.join(GettextI18nRailsJs.config.output_path)
+      ::ManageIQ::UI::Classic::Engine.root.join(GettextI18nRailsJs.config.output_path)
     end
   end
 end

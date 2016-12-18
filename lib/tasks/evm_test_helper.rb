@@ -1,7 +1,7 @@
 module EvmTestHelper
   VMDB_EXCLUDED_SPEC_DIRECTORIES = %w(replication migrations).freeze
   MIGRATION_SPECS        = FileList['spec/migrations/**/*_spec.rb'].sort
-  UI_SPECS               = Manageiq::Ui.rspec_paths
+  UI_SPECS               = ManageIQ::UI::Classic.rspec_paths
 
   def self.init_rspec_task(t, rspec_opts = [])
     if ENV['CI']

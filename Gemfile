@@ -24,7 +24,7 @@ end
 
 #unless dependencies.detect { |d| d.name == "manageiq-ui-classic" }
   #gem "manageiq-ui", :git => "https://github.com/ManageIQ/manageiq-ui-classic", :branch => "master"
-  gem "manageiq-ui", :path => "../manageiq-ui-classic/"
+  gem "manageiq-ui-classic", :path => "../manageiq-ui-classic/"
 #end
 
 # Unmodified gems
