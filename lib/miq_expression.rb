@@ -762,7 +762,8 @@ class MiqExpression
       model = ref.klass
     end
     if col
-      result[:data_type] = col_type(model, col)
+      f = Field.new(model, [], col)
+      result[:data_type] = f.column_type
       result[:format_sub_type] = MiqReport::Formats.sub_type(col.to_sym) || result[:data_type]
       result[:virtual_column] = model.virtual_attribute?(col.to_s)
       result[:sql_support] = !result[:virtual_reflection] && model.attribute_supported_by_sql?(col.to_s)
@@ -1367,12 +1368,7 @@ class MiqExpression
     return nil if model.nil?
     return Field.parse(field).column_type if col.include?(CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX)
 
-    col_type(model, col)
-  end
-
-  def self.col_type(model, col)
-    model = model_class(model)
-    model.type_for_attribute(col).type
+    Field.new(model, [], col).column_type
   end
 
   def self.parse_field(field)
@@ -1626,6 +1622,9 @@ class MiqExpression
     end
   end
 
+  def self.create_field(model, associations, field_name)
+    Field.new(model, associations, field_name)
+  end
 
   private
 

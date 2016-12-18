@@ -28,7 +28,7 @@ module Vmdb
     end
 
     def column_type(model, column)
-      MiqExpression.col_type(model, column)
+      MiqExpression.create_field(model, [], column).column_type
     end
 
     # Had to add timezone methods here, they are being called from models
