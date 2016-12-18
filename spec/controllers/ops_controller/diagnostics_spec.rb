@@ -251,6 +251,40 @@ describe OpsController do
           expect(flash_array.first[:message]).to match /Server .*: Error during 'destroy': boom/
         end
       end
+
+      context "#role_start" do
+        before do
+          assigned_server_role = FactoryGirl.create(
+            :assigned_server_role,
+            :miq_server_id  => 1,
+            :server_role_id => 1,
+            :active         => false,
+            :priority       => 1
+          )
+          sb_hash = {
+            :trees            => {:diagnostics_tree => {:active_node => "root"}},
+            :active_tree      => :diagnostics_tree,
+            :diag_selected_id => assigned_server_role.id,
+            :active_tab       => "diagnostics_roles_servers"
+          }
+
+          controller.instance_variable_set(:@sb, sb_hash)
+          controller.instance_variable_set(:@_params, :pressed => "role_start", :action => "x_button")
+          expect(controller).to receive :build_server_tree
+          expect(controller).to receive(:render)
+        end
+
+        it 'sets selected_server to selected region record in diagnostics tree' do
+          controller.send(:role_start)
+          expect(assigns(:selected_server)).to eq(MiqRegion.my_region)
+        end
+
+        it 'sets selected_server to selected zone record in diagnostics tree' do
+          controller.x_node = "z-#{@zone.id}"
+          controller.send(:role_start)
+          expect(assigns(:selected_server)).to eq(@zone)
+        end
+      end
     end
 
     context "#logs_collect" do
