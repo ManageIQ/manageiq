@@ -4,6 +4,7 @@ class FloatingIpController < ApplicationController
   after_action :cleanup_action
   after_action :set_session_data
 
+  include Mixins::CheckedIdMixin
   include Mixins::GenericButtonMixin
   include Mixins::GenericListMixin
   include Mixins::GenericSessionMixin
@@ -28,7 +29,7 @@ class FloatingIpController < ApplicationController
     when 'floating_ip_delete'
       delete_floating_ips
     when "floating_ip_edit"
-      checked_floating_ip_id = get_checked_floating_ip_id(params)
+      checked_floating_ip_id = get_checked_item_id(params)
       javascript_redirect :action => "edit", :id => checked_floating_ip_id
     when "floating_ip_new"
       javascript_redirect :action => "new"
@@ -137,7 +138,7 @@ class FloatingIpController < ApplicationController
     @in_a_form = true
     drop_breadcrumb(
       :name => _("Associate Floating IP \"%{name}\"") % { :name  => @floating_ip.name },
-      :url  => "/floating_ip/edit/#{@floating_ip.id}git")
+      :url  => "/floating_ip/edit/#{@floating_ip.id}")
   end
 
   def floating_ip_form_fields
@@ -159,16 +160,6 @@ class FloatingIpController < ApplicationController
       :network_port_ems_ref => network_port_ems_ref,
       :cloud_tenant_name    => floating_ip.cloud_tenant.try(:name),
     }
-  end
-
-  def get_checked_floating_ip_id(params)
-    if params[:id]
-      checked_floating_ip_id = params[:id]
-    else
-      checked_floating_ips = find_checked_items
-      checked_floating_ip_id = checked_floating_ips[0] if checked_floating_ips.length == 1
-    end
-    checked_floating_ip_id
   end
 
   def networks_by_ems
