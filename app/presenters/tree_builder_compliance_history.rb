@@ -2,8 +2,8 @@ class TreeBuilderComplianceHistory < TreeBuilder
   has_kids_for Compliance, [:x_get_compliance_kids]
   has_kids_for ComplianceDetail, [:x_get_compliance_detail_kids, :parents]
 
-  def node_builder
-    TreeNodeBuilderComplianceHistory
+  def override(node, _object, _pid, _options)
+    node[:cfmeNoClick] = true
   end
 
   def initialize(name, type, sandbox, build = true, root = nil)
@@ -52,7 +52,7 @@ class TreeBuilderComplianceHistory < TreeBuilder
 
   def get_policy_elm(parent, node)
     {:id          => "#{parent.id}-p_#{node.miq_policy_id}",
-     :text        => "<b>" + _("Condition: ") + "</b>" + node.condition_desc,
+     :text        => ("<b>" + _("Condition: ") + "</b>" + node.condition_desc).html_safe,
      :image       => node.condition_result ? "check" : "x",
      :tip         => nil,
      :cfmeNoClick => true}

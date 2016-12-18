@@ -5,10 +5,6 @@ class TreeBuilder
 
   attr_reader :name, :type, :tree_nodes
 
-  def node_builder
-    TreeNodeBuilder
-  end
-
   def self.class_for_type(type)
     raise('Obsolete tree type.') if type == :filter
     @x_tree_node_classes ||= {}
@@ -128,7 +124,7 @@ class TreeBuilder
       node[:state][:selected] = node.delete(:highlighted) if node.key?(:highlighted)
       node[:selectable] = !node.delete(:cfmeNoClick) if node.key?(:cfmeNoClick)
       node[:class] = ''
-      node[:class] = node.delete(:addClass) if node.key?(:addClass)
+      node[:class] = node.delete(:addClass) if node.key?(:addClass) && !node[:addClass].nil?
       node[:class] = node[:class].split(' ').push('no-cursor').join(' ') if node[:selectable] == false
     end
     nodes
@@ -280,7 +276,10 @@ class TreeBuilder
   end
 
   def x_build_single_node(object, pid, options)
-    node_builder.build(object, pid, options)
+    # FIXME: to_h is for backwards compatibility with hash-trees, it needs to be removed in the future
+    node = TreeNode.new(object, pid, options).to_h
+    override(node, object, pid, options) if self.class.method_defined?(:override) || self.class.private_method_defined?(:override)
+    node
   end
 
   # Called with object, tree node parent id, tree options
@@ -450,7 +449,7 @@ class TreeBuilder
     "azu" => "OrchestrationTemplateAzure",
     "at"  => "ManageIQ::Providers::AnsibleTower::ConfigurationManager",
     "cl"  => "Classification",
-    "cf " => "ConfigurationScript",
+    "cf" => "ConfigurationScript",
     "cnt" => "Container",
     "co"  => "Condition",
     "cbg" => "CustomButtonSet",

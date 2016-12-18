@@ -601,7 +601,7 @@ describe ProviderForemanController do
                                                                 'question_name' => 'Survey', 'required' => false,
                                                                 'variable' => 'test', 'choices' => nil,
                                                                 'type' => 'text'}]})
-      tree_node_id = "cf -" + ApplicationRecord.compress_id(@record.id)
+      tree_node_id = "cf-" + ApplicationRecord.compress_id(@record.id)
       allow(controller).to receive(:x_active_tree).and_return(:configuration_scripts_tree)
       allow(controller).to receive(:x_active_accord).and_return(:configuration_scripts)
       allow(controller).to receive(:x_node).and_return(tree_node_id)

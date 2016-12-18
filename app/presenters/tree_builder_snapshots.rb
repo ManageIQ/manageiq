@@ -11,6 +11,12 @@ class TreeBuilderSnapshots < TreeBuilder
 
   private
 
+  def override(node, object, _pid, options)
+    if (options[:selected_node].present? && node[:key] == options[:selected_node]) || object.children.empty?
+      node[:highlighted] = true
+    end
+  end
+
   def tree_init_options(_tree_name)
     {:full_ids => true, :selected_node => @selected_node}
   end
