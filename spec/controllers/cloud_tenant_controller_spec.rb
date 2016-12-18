@@ -98,12 +98,12 @@ describe CloudTenantController do
     end
 
     context "#create" do
-      let(:task_options) {
+      let(:task_options) do
         {
           :action => "creating Cloud Tenant for user %{user}" % {:user => controller.current_user.userid},
           :userid => controller.current_user.userid
         }
-      }
+      end
       let(:queue_options) do
         {
           :class_name  => CloudTenant.class_by_ems(@ems),
@@ -137,12 +137,12 @@ describe CloudTenantController do
     end
 
     context "#edit" do
-      let(:task_options) {
+      let(:task_options) do
         {
           :action => "updating Cloud Tenant for user %{user}" % {:user => controller.current_user.userid},
           :userid => controller.current_user.userid
         }
-      }
+      end
       let(:queue_options) do
         {
           :class_name  => @tenant.class.name,
@@ -177,12 +177,12 @@ describe CloudTenantController do
     end
 
     context "#edit" do
-      let(:task_options) {
+      let(:task_options) do
         {
           :action => "deleting Cloud Tenant for user %{user}" % {:user => controller.current_user.userid},
           :userid => controller.current_user.userid
         }
-      }
+      end
       let(:queue_options) do
         {
           :class_name  => @tenant.class.name,

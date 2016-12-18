@@ -41,14 +41,15 @@ class ManageIQ::Providers::Openstack::CloudManager::CloudTenant < ::CloudTenant
     raise MiqException::MiqCloudTenantDeleteError, e.to_s, e.backtrace
   end
 
-  private
-
   def self.connection_options
     connection_options = {:service => "Identity", :openstack_endpoint_type => 'adminURL'}
     connection_options
   end
 
+  private
+
   def connection_options
     self.class.connection_options
   end
+  private :connection_options
 end
