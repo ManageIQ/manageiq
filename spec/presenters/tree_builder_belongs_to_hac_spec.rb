@@ -5,28 +5,28 @@ describe TreeBuilderBelongsToHac do
     FactoryGirl.create(:ems_google_network)
   end
 
-  let(:edit) { nil }
-  let(:group) { FactoryGirl.create(:miq_group) }
-  let(:datacenter1) do
+  let!(:edit) { nil }
+  let!(:group) { FactoryGirl.create(:miq_group) }
+  let!(:datacenter1) do
     datacenter = FactoryGirl.create(:datacenter)
     datacenter.with_relationship_type("ems_metadata") { datacenter.add_folder(subfolder) }
     datacenter
   end
-  let(:datacenter2) { FactoryGirl.create(:datacenter) }
-  let(:rp1) do
+  let!(:datacenter2) { FactoryGirl.create(:datacenter) }
+  let!(:rp1) do
     rp1 = FactoryGirl.create(:resource_pool, :is_default => true)
     rp1.with_relationship_type("ems_metadata") { rp1.add_child(rp2) }
     rp1
   end
-  let(:rp2) { FactoryGirl.create(:resource_pool) }
-  let(:cluster) do
+  let!(:rp2) { FactoryGirl.create(:resource_pool) }
+  let!(:cluster) do
     cluster = FactoryGirl.create(:ems_cluster)
     allow(cluster).to receive(:resource_pools) { [rp1] }
     allow(cluster).to receive(:hosts) { [host] }
     cluster
   end
-  let(:ems_folder) { FactoryGirl.create(:ems_folder) }
-  let(:subfolder) do
+  let!(:ems_folder) { FactoryGirl.create(:ems_folder) }
+  let!(:subfolder) do
     subfolder = FactoryGirl.create(:ems_folder, :name => 'host')
     subfolder.with_relationship_type("ems_metadata") { subfolder.add_child(datacenter2) }
     subfolder.with_relationship_type("ems_metadata") { subfolder.add_child(ems_folder) }
@@ -34,21 +34,21 @@ describe TreeBuilderBelongsToHac do
     subfolder.with_relationship_type("ems_metadata") { subfolder.add_cluster(cluster) }
     subfolder
   end
-  let(:subfolder_vm) do
+  let!(:subfolder_vm) do
     subfolder_vm = FactoryGirl.create(:ems_folder, :name => 'vm')
     subfolder_vm.with_relationship_type("ems_metadata") { subfolder_vm.add_child(ems_folder) }
     subfolder_vm
   end
-  let(:folder) do
+  let!(:folder) do
     folder = FactoryGirl.create(:ems_folder)
     folder.with_relationship_type("ems_metadata") { folder.add_child(subfolder) }
     folder.with_relationship_type("ems_metadata") { folder.add_child(datacenter1) }
     folder
   end
-  let(:host) do
+  let!(:host) do
     FactoryGirl.create(:host, :ems_cluster => cluster)
   end
-  let(:ems_azure_network) do
+  let!(:ems_azure_network) do
     network = FactoryGirl.create(:ems_azure_network)
     network.with_relationship_type("ems_metadata") { network.add_child(folder) }
     network

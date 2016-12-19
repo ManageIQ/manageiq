@@ -5,8 +5,13 @@ class TreeBuilderBelongsToHac < TreeBuilder
   has_kids_for ExtManagementSystem, [:x_get_kids_provider]
   has_kids_for ResourcePool, [:x_get_resource_pool_kids]
 
-  def node_builder
-    TreeNodeBuilderBelongsToHac
+  def override(node, object, _pid, options)
+    if [ExtManagementSystem, EmsCluster, Datacenter, EmsFolder, ResourcePool].any? { |klass| object.kind_of?(klass) }
+      node[:select] = options.key?(:selected) && options[:selected].include?("#{object.class.name}_#{object[:id]}")
+    end
+    node[:hideCheckbox] = true if object.kind_of?(Host)
+    node[:cfmeNoClick] = true
+    node[:checkable] = options[:checkable_checkboxes] if options.key?(:checkable_checkboxes)
   end
 
   def initialize(name, type, sandbox, build, params)
