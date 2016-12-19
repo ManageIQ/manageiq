@@ -1,8 +1,5 @@
 #!/usr/bin/env ruby
 require_relative 'environment'
-require 'pathname'
-require 'fileutils'
-include FileUtils
 
 def system!(*args)
   system(*args) || abort("\n== Command #{args} failed ==")

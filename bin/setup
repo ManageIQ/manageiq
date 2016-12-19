@@ -1,9 +1,6 @@
 #!/usr/bin/env ruby
 require_relative 'environment'
-require 'pathname'
 require 'optparse'
-require 'fileutils'
-include FileUtils
 
 options = {:do_tests => true, :do_db => true}
 OptionParser.new do |opts|
