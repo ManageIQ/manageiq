@@ -29,8 +29,7 @@ class FloatingIpController < ApplicationController
     when 'floating_ip_delete'
       delete_floating_ips
     when "floating_ip_edit"
-      checked_floating_ip_id = get_checked_item_id(params)
-      javascript_redirect :action => "edit", :id => checked_floating_ip_id
+      javascript_redirect :action => "edit", :id => checked_item_id(params)
     when "floating_ip_new"
       javascript_redirect :action => "new"
     else
