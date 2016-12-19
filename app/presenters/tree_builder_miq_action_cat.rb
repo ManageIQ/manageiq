@@ -3,11 +3,6 @@ class TreeBuilderMiqActionCat < TreeBuilder
 
   private
 
-  # Maybe we should define NodeBuilder inside this class?
-  def node_builder
-    TreeNodeBuilderMiqActionCat
-  end
-
   def override(node, object, _pid, _options)
     img = "blank.gif"
     leaf = !object.entries.any?
