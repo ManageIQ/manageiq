@@ -28,7 +28,7 @@ chdir Environment::APP_ROOT do
 
   puts '== Installing dependencies =='
   Environment.while_updating_bower do
-    system! 'gem install bundler --conservative'
+    Environment.install_bundler
     system('bundle check') || system!('bundle install')
 
     if options[:do_db]

@@ -12,7 +12,7 @@ chdir Environment::APP_ROOT do
 
   puts '== Installing dependencies =='
   Environment.while_updating_bower do
-    system! 'gem install bundler --conservative'
+    Environment.install_bundler
 
     # TODO: This unlocks your dependencies and installs all updates.
     # From: https://github.com/ManageIQ/manageiq/pull/11137

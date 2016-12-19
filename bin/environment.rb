@@ -30,6 +30,10 @@ module Environment
     puts "Updating bower assets complete."
   end
 
+  def self.install_bundler
+    system!('gem install bundler --conservative')
+  end
+
   def self.update_bower
     system!("bower update --allow-root -F --silent --config.analytics=false")
   end
