@@ -16,6 +16,7 @@ module Api
     include Subcollections::CloudNetworks
     include Subcollections::CustomAttributes
     include Subcollections::LoadBalancers
+    include Subcollections::Alerts
 
     def create_resource(type, _id, data = {})
       assert_id_not_specified(data, type)

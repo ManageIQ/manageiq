@@ -652,6 +652,7 @@
     :identifier: alert
     :options:
     - :collection
+    - :subcollection
     :verbs: *g
     :klass: MiqAlertStatus
     :collection_actions:
@@ -846,6 +847,7 @@
     - :cloud_networks
     - :custom_attributes
     - :load_balancers
+    - :alerts
     :collection_actions:
       :get:
       - :name: read
@@ -913,6 +915,10 @@
       :get:
       - :name: show
         :identifier: load_balancer_show
+    :alerts_subcollection_actions:
+      :get:
+      - :name: show
+        :identifier: alert_status_show_list
   :provision_dialogs:
     :description: Provisioning Dialogs
     :identifier: miq_ae_customization_explorer
