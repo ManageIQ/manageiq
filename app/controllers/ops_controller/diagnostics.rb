@@ -785,6 +785,7 @@ module OpsController::Diagnostics
     else
       parent = Zone.find_by_id(from_cid(x_node.split('-').last))
     end
+    @selected_server = parent if params[:action] == "x_button"
     build_server_tree(parent)
     @sb[:center_tb_filename] = center_toolbar_filename
     c_tb = build_toolbar(@sb[:center_tb_filename])
@@ -801,8 +802,6 @@ module OpsController::Diagnostics
         page << "miqTreeActivateNodeSilently('<%= x_active_tree %>', '<%= x_node %>');"
       end
       if params[:action] == "x_button"
-        kls = x_node.split("-").first == "z" ? Zone : MiqServer
-        @selected_server = kls.find(from_cid(x_node.split("-").last))
         page.replace("zone_tree_div", :partial => "zone_tree")
       end
       if c_tb.present?
