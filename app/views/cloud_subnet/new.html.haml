@@ -61,17 +61,20 @@
   %h3
     = _('Placement')
   .form-horizontal
-    .form-group{"ng-class" => "{'has-error': angularForm.cloud_tenant_id.$invalid}"}
+    .form-group{"ng-if" => "cloudSubnetModel.ems_id"}
       %label.col-md-2.control-label
         = _('Cloud Tenant')
       .col-md-8
-        = select_tag("cloud_tenant_id",
-                      options_for_select([["<#{_('Choose')}>", nil]] + @cloud_tenant_choices.sort),
-                      "ng-model"                    => "cloudSubnetModel.cloud_tenant_id",
-                      "required"                    => "",
-                      :miqrequired                  => true,
-                      :checkchange                  => true,
-                      "selectpicker-for-select-tag" => "")
+        %select{"name"                        => "cloud_tenant_id",
+                "ng-model"                    => "cloudSubnetModel.cloud_tenant_id",
+                "required"                    => "",
+                :miqrequired                  => true,
+                :checkchange                  => true,
+                'ng-options'                  => 'tenant.id as tenant.name for tenant in available_tenants',
+                'pf-select'                   => true,
+                "selectpicker-for-select-tag" => ""}
+          %option{"value" => ""}
+            = "<#{_('Choose')}>"
 
   %table{:width => '100%'}
     %tr
