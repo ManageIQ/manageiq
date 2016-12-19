@@ -157,7 +157,7 @@ module MiqPolicyController::MiqActions
   end
 
   def get_tags_tree
-    action_build_cat_tree()
+    action_build_cat_tree
   end
 
   def action_build_snmp_variables
@@ -292,7 +292,7 @@ module MiqPolicyController::MiqActions
     @edit[:new][:alerts] = {}                     # Clear out the alerts hash
   end
 
-  def action_build_cat_tree()
+  def action_build_cat_tree
     @cat_tree = TreeBuilderMiqActionCat.new('action_tags_tree', 'action_tags', @sb, true, "#{current_tenant.name} Tags")
   end
 
