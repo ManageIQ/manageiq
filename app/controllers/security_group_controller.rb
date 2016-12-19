@@ -121,7 +121,7 @@ class SecurityGroupController < ApplicationController
                       end
 
     if security_groups.empty?
-      add_flash(_("No Securty Group were selected for deletion."), :error)
+      add_flash(_("No Security Group were selected for deletion."), :error)
     end
 
     security_groups_to_delete = []
