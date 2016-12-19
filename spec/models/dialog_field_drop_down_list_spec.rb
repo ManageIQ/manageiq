@@ -240,10 +240,6 @@ describe DialogFieldDropDownList do
             end
           end
         end
-
-        it "#automate_key_name" do
-          expect(@df.automate_key_name).to eq("dialog_#{@df.name}")
-        end
       end
 
       context "dialog field dropdown with options hash" do
