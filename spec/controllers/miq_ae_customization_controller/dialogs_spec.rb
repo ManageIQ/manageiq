@@ -123,6 +123,38 @@ describe MiqAeCustomizationController do
         expect(@dialog.dialog_fields.count).to eq(2)
         expect(@dialog.dialog_fields.last[:data_type]).to eq("integer")
       end
+
+      it "initializes Value Type of new text box to String" do
+        allow(controller).to receive(:x_node) { 'root_-0_-0_-0' }
+        new_hash = {
+          :label       => "Dialog 1",
+          :description => "Dialog 1",
+          :buttons     => ["submit"],
+          :tabs        => [
+            {
+              :label       => "Tab 1",
+              :description => "Tab 1",
+              :groups      => [
+                {
+                  :label       => "Box 1",
+                  :description => "Box 1",
+                  :fields      => [
+                    {
+                      :typ => "DialogFieldTextBox",
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+        assigns(:edit)[:new] = new_hash
+        controller.instance_variable_set(:@_params, :id => 'new', :field_typ => "DialogFieldTextBox")
+        controller.instance_variable_set(:@sb, :node_typ => 'element')
+        expect(controller).to receive(:render)
+        controller.send(:dialog_form_field_changed)
+        expect(assigns(:edit)[:field_data_typ]).to eq("string")
+      end
     end
 
     it "Empty dropdown element has to be invalid" do
