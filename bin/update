@@ -1,10 +1,6 @@
 #!/usr/bin/env ruby
 require_relative '../lib/manageiq/environment'
 
-def system!(*args)
-  system(*args) || abort("\n== Command #{args} failed ==")
-end
-
 chdir ManageIQ::Environment::APP_ROOT do
   # This script is a way to update your development environment automatically.
   # Add necessary update steps to this file.
@@ -16,7 +12,7 @@ chdir ManageIQ::Environment::APP_ROOT do
 
     # TODO: This unlocks your dependencies and installs all updates.
     # From: https://github.com/ManageIQ/manageiq/pull/11137
-    # It should be system('bundle check') || system!('bundle install').
+    # It should be 'bundle check' || 'bundle install'.
     # If we need a "reset all the things" script, we should call it bin/reset.
     ManageIQ::Environment.bundle_update
 
