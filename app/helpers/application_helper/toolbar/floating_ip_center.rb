@@ -15,7 +15,7 @@ class ApplicationHelper::Toolbar::FloatingIpCenter < ApplicationHelper::Toolbar:
             t,
             :url_parms => 'main_div',
             :klass     => ApplicationHelper::Button::GenericFeatureButtonWithDisable,
-            :options   => {:feature => :update_floating_ip}
+            :options   => {:feature => :update}
           ),
           button(
             :floating_ip_delete,
@@ -25,7 +25,7 @@ class ApplicationHelper::Toolbar::FloatingIpCenter < ApplicationHelper::Toolbar:
             :url_parms => 'main_div',
             :confirm   => N_('Warning: This Floating IP and ALL of its components will be removed!'),
             :klass     => ApplicationHelper::Button::GenericFeatureButtonWithDisable,
-            :options   => {:feature => :delete_floating_ip}
+            :options   => {:feature => :delete}
           )
         ]
       )
