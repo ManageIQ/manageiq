@@ -106,10 +106,8 @@ RSpec.configure do |config|
     end
   end
 
-  if config.backtrace_exclusion_patterns.delete(%r{/lib\d*/ruby/}) ||
-     config.backtrace_exclusion_patterns.delete(%r{/gems/})
+  if config.backtrace_exclusion_patterns.delete(%r{/lib\d*/ruby/})
     config.backtrace_exclusion_patterns << %r{/lib\d*/ruby/[0-9]}
-    config.backtrace_exclusion_patterns << %r{/gems/[0-9][^/]+/gems/}
   end
 
   config.backtrace_exclusion_patterns << %r{/spec/spec_helper}
