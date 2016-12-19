@@ -34,6 +34,14 @@ module Environment
     system!('gem install bundler --conservative')
   end
 
+  def self.bundle_install
+    system('bundle check') || system!('bundle install')
+  end
+
+  def self.bundle_update
+    system!('bundle update')
+  end
+
   def self.update_bower
     system!("bower update --allow-root -F --silent --config.analytics=false")
   end

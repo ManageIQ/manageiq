@@ -29,7 +29,7 @@ chdir Environment::APP_ROOT do
   puts '== Installing dependencies =='
   Environment.while_updating_bower do
     Environment.install_bundler
-    system('bundle check') || system!('bundle install')
+    Environment.bundle_install
 
     if options[:do_db]
       # Note, we deviate from the default rails db:setup here because
