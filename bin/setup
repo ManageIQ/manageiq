@@ -40,10 +40,7 @@ chdir Environment::APP_ROOT do
       Environment.seed_database
     end
 
-    if options[:do_tests]
-      puts "\n== Preparing tests =="
-      system! "bin/rails test:vmdb:setup"
-    end
+    Environment.setup_test_environment if options[:do_tests]
   end
 
   puts "\n== Removing old logs and tempfiles =="

@@ -57,6 +57,11 @@ module Environment
     system!("#{APP_ROOT.join("bin/rails")} db:seed GOOD_MIGRATIONS=skip")
   end
 
+  def self.setup_test_environment
+    puts "\n== Resetting tests =="
+    system!("#{APP_ROOT.join("bin/rails")} test:vmdb:setup")
+  end
+
   def self.update_bower
     system!("bower update --allow-root -F --silent --config.analytics=false")
   end
