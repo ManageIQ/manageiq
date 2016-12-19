@@ -78,7 +78,7 @@ module ContainerNodeHelper::TextualSummary
     lives_on_entity_name = lives_on_ems.kind_of?(EmsCloud) ? _("Instance") : _("Virtual Machine")
     {
       :label => _("Underlying %{name}") % {:name => lives_on_entity_name},
-      :image => "100/vendor-#{lives_on_ems.image_name}.png",
+      :image => "svg/vendor-#{lives_on_ems.image_name}.svg",
       :value => @record.lives_on.name.to_s,
       :link  => url_for(
         :action     => 'show',

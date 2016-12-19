@@ -46,7 +46,7 @@ module NetworkPortHelper::TextualSummary
     instance = @record.device
     h        = nil
     if instance && role_allows?(:feature => "vm_show")
-      h = {:label => label, :image => "100/vm.png"}
+      h = {:label => label, :icon => "pficon pficon-virtual-machine"}
       h[:value] = instance.name
       h[:link]  = url_for(:controller => 'vm_cloud', :action => 'show', :id => instance.id)
       h[:title] = _("Show %{label}") % {:label => label}
@@ -68,7 +68,7 @@ module NetworkPortHelper::TextualSummary
 
   def textual_host
     return nil unless @record.device_type == "Host"
-    {:image => "100/host.png", :value => @record.device, :link => url_for(:controller => "host",
+    {:icon => "pficon pficon-screen", :value => @record.device, :link => url_for(:controller => "host",
                                                                   :action     => "show",
                                                                   :id         => @record.device.id)}
   end

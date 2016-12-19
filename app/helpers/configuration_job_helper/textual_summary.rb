@@ -30,7 +30,7 @@ module ConfigurationJobHelper::TextualSummary
   end
 
   def textual_service
-    h = {:label => _("Service"), :image => "100/service.png"}
+    h = {:label => _("Service"), :icon => "pficon pficon-service"}
     service = @record.service
     if service.nil?
       h[:value] = _("None")
@@ -43,7 +43,7 @@ module ConfigurationJobHelper::TextualSummary
   end
 
   def textual_provider
-    h = {:label => _("Provider"), :image => "100/vendor-ansible_tower_configuration.png"}
+    h = {:label => _("Provider"), :image => "svg/vendor-ansible_tower_configuration.svg"}
     provider = @record.ext_management_system
     if provider.nil?
       h[:value] = _("None")
@@ -57,7 +57,7 @@ module ConfigurationJobHelper::TextualSummary
 
   def textual_parameters
     num   = @record.number_of(:parameters)
-    h     = {:label => _("Parameters"), :image => "100/parameter.png", :value => num}
+    h     = {:label => _("Parameters"), :icon => "product product-parameter", :value => num}
     if num > 0
       h[:link]  = url_for(:controller => controller.controller_name, :action => 'parameters', :id => @record)
       h[:title] = _("Show all parameters")

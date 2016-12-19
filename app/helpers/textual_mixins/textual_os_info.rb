@@ -7,11 +7,11 @@ module TextualMixins::TextualOsInfo
       if os_image_name.blank?
         h[:value] = _("Unknown")
       else
-        h[:image] = "100/os-#{os_image_name.downcase}.png"
+        h[:image] = "svg/os-#{os_image_name.downcase}.svg"
         h[:value] = os_image_name
       end
     else
-      h[:image] = "100/os-#{@record.os_image_name.downcase}.png"
+      h[:image] = "svg/os-#{@record.os_image_name.downcase}.svg"
       h[:value] = product_name
       h[:title] = _("Show OS container information")
       h[:explorer] = true

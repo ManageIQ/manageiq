@@ -57,13 +57,13 @@ module ResourcePoolHelper::TextualSummary
   end
 
   def textual_parent_datacenter
-    {:label => _("Parent Datacenter"), :image => "100/datacenter.png", :value => @record.v_parent_datacenter || _("None")}
+    {:label => _("Parent Datacenter"), :icon => "fa fa-building-o", :value => @record.v_parent_datacenter || _("None")}
   end
 
   def textual_parent_cluster
     cluster = @record.parent_cluster
     h = {:label => _("Parent '%{title}'") % {:title => title_for_cluster},
-         :image => "100/ems_cluster.png",
+         :icon  => "pficon pficon-cluster",
          :value => (cluster.nil? ? _("None") : cluster.name)}
     if cluster && role_allows?(:feature => "ems_cluster_show")
       h[:title] = _("Show Parent %{title} %{name}") % {:title => title_for_cluster, :name => cluster.name}
@@ -75,7 +75,7 @@ module ResourcePoolHelper::TextualSummary
   def textual_parent_host
     host = @record.parent_host
     h = {:label => _("Parent %{title}") % {:title => title_for_host},
-         :image => "100/host.png",
+         :icon  => "pficon pficon-screen",
          :value => (host.nil? ? _("None") : host.name)}
     if host && role_allows?(:feature => "host_show")
       h[:title] = _("Show Parent %{title} '%{name}'") % {:title => title_for_host, :name => host.name}
@@ -86,7 +86,7 @@ module ResourcePoolHelper::TextualSummary
 
   def textual_direct_vms
     num = @record.v_direct_vms
-    h = {:label => _("Direct VMs"), :image => "100/vm.png", :value => num}
+    h = {:label => _("Direct VMs"), :icon => "pficon pficon-virtual-machine", :value => num}
     if num > 0 && role_allows?(:feature => "vm_show_list")
       h[:title] = _("Show VMs in this Resource Pool, but not in Resource Pools below")
       h[:link]  = url_for(:controller => 'resource_pool', :action => 'show', :id => @record, :display => 'vms')
@@ -96,7 +96,7 @@ module ResourcePoolHelper::TextualSummary
 
   def textual_allvms_size
     num = @record.total_vms
-    h = {:label => _("All VMs"), :image => "100/vm.png", :value => num}
+    h = {:label => _("All VMs"), :icon => "pficon pficon-virtual-machine", :value => num}
     if num > 0 && role_allows?(:feature => "vm_show_list")
       h[:title] = _("Show all VMs in this Resource Pool")
       h[:link]  = url_for(:controller => 'resource_pool', :action => 'show', :id => @record, :display => 'all_vms')
@@ -106,7 +106,7 @@ module ResourcePoolHelper::TextualSummary
 
   def textual_total_vms
     num = @record.v_total_vms
-    h = {:label => _("All VMs (Tree View)"), :image => "100/vm.png", :value => num}
+    h = {:label => _("All VMs (Tree View)"), :icon => "pficon pficon-virtual-machine", :value => num}
     # TODO: Why is this role_allows? resource_pool_show_list but the previous 2 methods are for vm_show_list
     if num > 0 && role_allows?(:feature => "resource_pool_show_list")
       h[:title] = _("Show tree of all VMs in this Resource Pool")

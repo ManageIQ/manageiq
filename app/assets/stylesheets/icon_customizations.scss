@@ -36,6 +36,11 @@
   content: "\e607";
   color: #3188c5;
 }
+.pficon-registry-unknown {
+  color: $color-warning;
+  content: "\e623";
+}
+
 /*end icon class customizations*/
 
 /* custom font for this product */
@@ -265,6 +270,36 @@ span[class^="product-"], span[class*=" product-"], // i & span tags prevent conf
 }
 .product-orchestration_stack:before {
   content: "\e641";
+}
+.product-cloud_object_store:before {
+  content: "\e642";
+}
+.product-network_port:before {
+  content: "\e643";
+}
+.product-file_share:before {
+  content: "\e644";
+}
+.product-resource:before {
+  content: "\e645";
+}
+.product-configured_system:before {
+  content: "\e646";
+}
+.product-parameter:before {
+  content: "\e647";
+}
+.product-application:before {
+  content: "\e648";
+}
+.product-firewall:before {
+  content: "\e649";
+}
+.product-genealogy:before {
+  content: "\e650";
+}
+.product-output:before {
+  content: "\e651";
 }
 
 /* define  colors */

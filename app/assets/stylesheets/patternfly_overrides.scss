@@ -263,6 +263,20 @@ table.table-hover tbody tr:nth-child(even).no-hover:hover td {
   white-space: normal
 }
 
+table.table-summary-screen i { /* font icon styling in table view (equivalent to fa-lg) */
+  padding-left: 2px;
+  font-size: 1.333em;
+  line-height: 0.75em;
+  vertical-align: -15%;
+  margin-right: 3px;
+}
+
+table.table.table-summary-screen tbody td img {
+  margin-left: 2px;
+  height: 16px;
+  width: 16px;
+}
+
 table.table.table-selectable tbody tr.selected td {
   background-color: $link-color;
   color: #fff

@@ -126,7 +126,7 @@ module VmHelper::TextualSummary
     if vendor.blank?
       h[:value] = _("None")
     else
-      h[:image] = "100/vendor-#{vendor}.png"
+      h[:image] = "svg/vendor-#{vendor}.svg"
       h[:title] = _("Show VMM container information")
       h[:explorer] = true
       h[:link]  = url_for(:action => 'show', :id => @record, :display => 'hv_info')
@@ -157,7 +157,7 @@ module VmHelper::TextualSummary
 
   def textual_snapshots
     num = @record.number_of(:snapshots)
-    h = {:label => _("Snapshots"), :image => "100/snapshot.png", :value => (num == 0 ? _("None") : num)}
+    h = {:label => _("Snapshots"), :icon => "fa fa-camera", :value => (num == 0 ? _("None") : num)}
     if role_allows?(:feature => "vm_snapshot_show_list") && @record.supports_snapshots?
       h[:title] = _("Show the snapshot info for this VM")
       h[:explorer] = true
@@ -181,19 +181,19 @@ module VmHelper::TextualSummary
   end
 
   def textual_discovered
-    {:label => _("Discovered"), :image => "100/discover.png", :value => format_timezone(@record.created_on)}
+    {:label => _("Discovered"), :icon => "fa fa-search", :value => format_timezone(@record.created_on)}
   end
 
   def textual_analyzed
     {:label => _("Last Analyzed"),
-     :image => "100/scan.png",
+     :icon  => "fa fa-search",
      :value => (@record.last_sync_on.nil? ? _("Never") : format_timezone(@record.last_sync_on))}
   end
 
   def textual_retirement_date
     return nil if @record.kind_of?(ManageIQ::Providers::Openstack::CloudManager::Template)
     {:label => _("Retirement Date"),
-     :image => "100/retirement.png",
+     :icon  => "fa fa-clock-o",
      :value => (@record.retires_on.nil? ? _("Never") : @record.retires_on.strftime("%x %R %Z"))}
   end
 
@@ -218,7 +218,7 @@ module VmHelper::TextualSummary
   def textual_cluster
     cluster = @record.try(:ems_cluster)
     return nil if cluster.nil?
-    h = {:label => title_for_cluster, :image => "100/ems_cluster.png", :value => (cluster.nil? ? _("None") : cluster.name)}
+    h = {:label => title_for_cluster, :icon => "pficon pficon-cluster", :value => (cluster.nil? ? _("None") : cluster.name)}
     if cluster && role_allows?(:feature => "ems_cluster_show")
       h[:title] = _("Show this VM's %{title}") % {:title => title_for_cluster}
       h[:link]  = url_for(:controller => 'ems_cluster', :action => 'show', :id => cluster)
@@ -229,7 +229,7 @@ module VmHelper::TextualSummary
   def textual_host
     host = @record.host
     return nil if host.nil?
-    h = {:label => title_for_host, :image => "100/host.png", :value => (host.nil? ? _("None") : host.name)}
+    h = {:label => title_for_host, :icon => "pficon pficon-cluster", :value => (host.nil? ? _("None") : host.name)}
     if host && role_allows?(:feature => "host_show")
       h[:title] = _("Show this VM's %{title}") % {:title => title_for_host}
       h[:link]  = url_for(:controller => 'host', :action => 'show', :id => host)
@@ -239,8 +239,7 @@ module VmHelper::TextualSummary
 
   def textual_resource_pool
     rp = @record.parent_resource_pool
-    image = (rp && rp.vapp?) ? "100/vapp.png" : "100/resource_pool.png"
-    h = {:label => _("Resource Pool"), :image => image, :value => (rp.nil? ? _("None") : rp.name)}
+    h = {:label => _("Resource Pool"), :icon => "pficon pficon-resource-pool", :value => (rp.nil? ? _("None") : rp.name)}
     if rp && role_allows?(:feature => "resource_pool_show")
       h[:title] = _("Show this VM's Resource Pool")
       h[:link]  = url_for(:controller => 'resource_pool', :action => 'show', :id => rp)
@@ -251,7 +250,7 @@ module VmHelper::TextualSummary
   def textual_storage
     storages = @record.storages
     label = ui_lookup(:table => "storages")
-    h = {:label => label, :image => "100/storage.png"}
+    h = {:label => label, :icon => "fa fa-database"}
     if storages.empty?
       h[:value] = _("None")
     elsif storages.length == 1
@@ -263,10 +262,10 @@ module VmHelper::TextualSummary
       h.delete(:image) # Image will be part of each line item, instead
       main = @record.storage
       h[:value] = storages.sort_by { |s| s.name.downcase }.collect do |s|
-        {:image => "100/storage.png",
+        {:icon  => "fa fa-database",
          :value => "#{s.name}#{" (main)" if s == main}",
          :title => _("Show this VM's %{label}") % {:label => label},
-         :link => url_for(:controller => 'storage', :action => 'show', :id => s)}
+         :link  => url_for(:controller => 'storage', :action => 'show', :id => s)}
       end
     end
     h
@@ -284,7 +283,7 @@ module VmHelper::TextualSummary
     availability_zone = @record.availability_zone
     label = ui_lookup(:table => "availability_zone")
     h = {:label => label,
-         :image => "100/availability_zone.png",
+         :icon  => "pficon pficon-zone",
          :value => (availability_zone.nil? ? _("None") : availability_zone.name)}
     if availability_zone && role_allows?(:feature => "availability_zone_show")
       h[:title] = _("Show this VM's %{label}") % {:label => label}
@@ -296,7 +295,7 @@ module VmHelper::TextualSummary
   def textual_flavor
     flavor = @record.flavor
     label = ui_lookup(:table => "flavor")
-    h = {:label => label, :image => "100/flavor.png", :value => (flavor.nil? ? _("None") : flavor.name)}
+    h = {:label => label, :icon => "pficon-flavor", :value => (flavor.nil? ? _("None") : flavor.name)}
     if flavor && role_allows?(:feature => "flavor_show")
       h[:title] = _("Show this VM's %{label}") % {:label => label}
       h[:link]  = url_for(:controller => 'flavor', :action => 'show', :id => flavor)
@@ -307,7 +306,7 @@ module VmHelper::TextualSummary
   def textual_vm_template
     vm_template = @record.genealogy_parent
     label = ui_lookup(:table => "miq_template")
-    h = {:label => label, :image => "100/template.png", :value => (vm_template.nil? ? _("None") : vm_template.name)}
+    h = {:label => label, :icon => "product product-template", :value => (vm_template.nil? ? _("None") : vm_template.name)}
     if vm_template && role_allows?(:feature => "miq_template_show")
       h[:title] = _("Show this VM's %{label}") % {:label => label}
       h[:link]  = url_for(:controller => 'miq_template', :action => 'show', :id => vm_template)
@@ -317,7 +316,7 @@ module VmHelper::TextualSummary
 
   def textual_parent_vm
     return nil unless @record.template?
-    h = {:label => _("Parent VM"), :image => "100/vm.png"}
+    h = {:label => _("Parent VM"), :icon => "pficon pficon-virtual-machine"}
     parent_vm = @record.with_relationship_type("genealogy", &:parent)
     if parent_vm.nil?
       h[:value] = _("None")
@@ -334,7 +333,7 @@ module VmHelper::TextualSummary
   def textual_orchestration_stack
     stack = @record.orchestration_stack
     label = ui_lookup(:table => "orchestration_stack")
-    h = {:label => label, :image => "100/orchestration_stack.png", :value => (stack.nil? ? _("None") : stack.name)}
+    h = {:label => label, :icon => "product-orchestration_stack", :value => (stack.nil? ? _("None") : stack.name)}
     if stack && role_allows?(:feature => "orchestration_stack_show")
       h[:title] = _("Show this VM's %{label} '%{name}'") % {:label => label, :name => stack.name}
       h[:link]  = url_for(:controller => 'orchestration_stack', :action => 'show', :id => stack)
@@ -343,7 +342,7 @@ module VmHelper::TextualSummary
   end
 
   def textual_service
-    h = {:label => _("Service"), :image => "100/service.png"}
+    h = {:label => _("Service"), :icon => "pficon pficon-service"}
     service = @record.service
     if service.nil?
       h[:value] = _("None")
@@ -358,7 +357,7 @@ module VmHelper::TextualSummary
   def textual_security_groups
     label = ui_lookup(:tables => "security_group")
     num   = @record.number_of(:security_groups)
-    h     = {:label => label, :image => "100/security_group.png", :value => num}
+    h     = {:label => label, :icon => "pficon pficon-cloud-security", :value => num}
     if num > 0 && role_allows?(:feature => "security_group_show_list")
       h[:title] = _("Show all %{label}") % {:label => label}
       h[:explorer] = true
@@ -370,7 +369,7 @@ module VmHelper::TextualSummary
   def textual_floating_ips
     label = ui_lookup(:tables => "floating_ip")
     num   = @record.number_of(:floating_ips)
-    h     = {:label => label, :image => "100/floating_ip.png", :value => num}
+    h     = {:label => label, :icon => "fa fa-map-marker", :value => num}
     if num > 0 && role_allows?(:feature => "floating_ip_show_list")
       h[:title] = _("Show all %{label}") % {:label => label}
       h[:explorer] = true
@@ -382,7 +381,7 @@ module VmHelper::TextualSummary
   def textual_network_routers
     label = ui_lookup(:tables => "network_router")
     num   = @record.number_of(:network_routers)
-    h     = {:label => label, :image => "100/network_router.png", :value => num}
+    h     = {:label => label, :icon => "pficon pficon-route", :value => num}
     if num > 0 && role_allows?(:feature => "network_router_show_list")
       h[:title] = _("Show all %{label}") % {:label => label}
       h[:explorer] = true
@@ -394,7 +393,7 @@ module VmHelper::TextualSummary
   def textual_cloud_subnets
     label = ui_lookup(:tables => "cloud_subnet")
     num   = @record.number_of(:cloud_subnets)
-    h     = {:label => label, :image => "100/cloud_subnet.png", :value => num}
+    h     = {:label => label, :icon => "pficon pficon-network", :value => num}
     if num > 0 && role_allows?(:feature => "cloud_subnet_show_list")
       h[:title] = _("Show all %{label}") % {:label => label}
       h[:explorer] = true
@@ -406,7 +405,7 @@ module VmHelper::TextualSummary
   def textual_network_ports
     label = ui_lookup(:tables => "network_port")
     num   = @record.number_of(:network_ports)
-    h     = {:label => label, :image => "100/network_port.png", :value => num}
+    h     = {:label => label, :icon => "product product-network_port", :value => num}
     if num > 0 && role_allows?(:feature => "network_port_show_list")
       h[:title] = _("Show all %{label}") % {:label => label}
       h[:explorer] = true
@@ -420,7 +419,7 @@ module VmHelper::TextualSummary
 
     label = ui_lookup(:tables => "load_balancer")
     num   = @record.number_of(:load_balancers)
-    h     = {:label => label, :image => "100/load_balancer.png", :value => num}
+    h     = {:label => label, :icon => "product product-load_balancer", :value => num}
     if num > 0 && role_allows?(:feature => "load_balancer_show_list")
       h[:title] = _("Show all %{label}") % {:label => label}
       h[:explorer] = true
@@ -432,7 +431,7 @@ module VmHelper::TextualSummary
   def textual_cloud_networks
     label = ui_lookup(:tables => "cloud_network")
     num   = @record.number_of(:cloud_networks)
-    h     = {:label => label, :image => "100/cloud_network.png", :value => num}
+    h     = {:label => label, :icon => "product product-cloud_network", :value => num}
     if num > 0 && role_allows?(:feature => "cloud_network_show_list")
       h[:title] = _("Show all %{label}") % {:label => label}
       h[:explorer] = true
@@ -444,7 +443,7 @@ module VmHelper::TextualSummary
   def textual_cloud_tenant
     cloud_tenant = @record.cloud_tenant if @record.respond_to?(:cloud_tenant)
     label = ui_lookup(:table => "cloud_tenants")
-    h = {:label => label, :image => "100/cloud_tenant.png", :value => (cloud_tenant.nil? ? _("None") : cloud_tenant.name)}
+    h = {:label => label, :icon => "pficon pficon-cloud-tenant", :value => (cloud_tenant.nil? ? _("None") : cloud_tenant.name)}
     if cloud_tenant && role_allows?(:feature => "cloud_tenant_show")
       h[:title] = _("Show this VM's %{label}") % {:label => label}
       h[:link]  = url_for(:controller => 'cloud_tenant', :action => 'show', :id => cloud_tenant)
@@ -455,7 +454,7 @@ module VmHelper::TextualSummary
   def textual_cloud_volumes
     label = ui_lookup(:tables => "cloud_volumes")
     num = @record.number_of(:cloud_volumes)
-    h = {:label => label, :image => "100/cloud_volume.png", :value => num}
+    h = {:label => label, :icon => "pficon pficon-volume", :value => num}
     if num > 0 && role_allows?(:feature => "cloud_volume_show_list")
       h[:title]    = _("Show all Cloud Volumes attached to this VM.")
       h[:explorer] = true
@@ -467,7 +466,7 @@ module VmHelper::TextualSummary
   def textual_genealogy
     {
       :label    => _("Genealogy"),
-      :image    => "100/genealogy.png",
+      :icon     => "product product-genealogy",
       :value    => _("Show parent and child VMs"),
       :title    => _("Show virtual machine genealogy"),
       :explorer => true,
@@ -483,7 +482,7 @@ module VmHelper::TextualSummary
 
   def textual_users
     num = @record.number_of(:users)
-    h = {:label => _("Users"), :image => "100/user.png", :value => num}
+    h = {:label => _("Users"), :icon => "pficon pficon-user", :value => num}
     if num > 0
       h[:title] = n_("Show the User defined on this VM", "Show the Users defined on this VM", num)
       h[:explorer] = true
@@ -494,7 +493,7 @@ module VmHelper::TextualSummary
 
   def textual_groups
     num = @record.number_of(:groups)
-    h = {:label => _("Groups"), :image => "100/group.png", :value => num}
+    h = {:label => _("Groups"), :icon => "product product-group", :value => num}
     if num > 0
       h[:title] = n_("Show the Group defined on this VM", "Show the Groups defined on this VM", num)
       h[:explorer] = true
@@ -509,7 +508,7 @@ module VmHelper::TextualSummary
     num = @record.number_of(:guest_applications)
     label = (os =~ /linux/) ? n_("Package", "Packages", num) : n_("Application", "Applications", num)
 
-    h = {:label => label, :image => "100/guest_application.png", :value => num}
+    h = {:label => label, :icon => "product product-application", :value => num}
     if num > 0
       h[:title] = _("Show the %{label} installed on this VM") % {:label => label}
       h[:explorer] = true
@@ -522,7 +521,7 @@ module VmHelper::TextualSummary
     os = @record.os_image_name.downcase
     return nil if os == "unknown" || os =~ /linux/
     num = @record.number_of(:win32_services)
-    h = {:label => _("Win32 Services"), :image => "100/win32service.png", :value => num}
+    h = {:label => _("Win32 Services"), :icon0 => "fa fa-cog", :value => num}
     if num > 0
       h[:title] = n_("Show the Win32 Service installed on this VM", "Show the Win32 Services installed on this VM", num)
       h[:explorer] = true
@@ -536,7 +535,7 @@ module VmHelper::TextualSummary
     return nil if os == "unknown" || os =~ /linux/
     num = @record.number_of(:kernel_drivers)
     # TODO: Why is this image different than graphical?
-    h = {:label => _("Kernel Drivers"), :image => "100/gears.png", :value => num}
+    h = {:label => _("Kernel Drivers"), :icon => "fa fa-cog", :value => num}
     if num > 0
       h[:title] = n_("Show the Kernel Driver installed on this VM", "Show the Kernel Drivers installed on this VM", num)
       h[:explorer] = true
@@ -550,7 +549,7 @@ module VmHelper::TextualSummary
     return nil if os == "unknown" || os =~ /linux/
     num = @record.number_of(:filesystem_drivers)
     # TODO: Why is this image different than graphical?
-    h = {:label => _("File System Drivers"), :image => "100/gears.png", :value => num}
+    h = {:label => _("File System Drivers"), :icon => "fa fa-cog", :value => num}
     if num > 0
       h[:title] = n_("Show the File System Driver installed on this VM",
                      "Show the File System Drivers installed on this VM", num)
@@ -565,7 +564,7 @@ module VmHelper::TextualSummary
     return nil if os == "unknown" || os =~ /linux/
     num = @record.number_of(:registry_items)
     # TODO: Why is this label different from the link title text?
-    h = {:label => _("Registry Entries"), :image => "100/registry_item.png", :value => num}
+    h = {:label => _("Registry Entries"), :icon => "pficon pficon-registry", :value => num}
     if num > 0
       h[:title] = n_("Show the Registry Item installed on this VM", "Show the Registry Items installed on this VM", num)
       h[:explorer] = true
@@ -576,7 +575,7 @@ module VmHelper::TextualSummary
 
   def textual_disks
     num = @record.hardware.nil? ? 0 : @record.hardware.number_of(:disks)
-    h = {:label => _("Number of Disks"), :image => "100/devices.png", :value => num}
+    h = {:label => _("Number of Disks"), :icon => "fa fa-hdd-o", :value => num}
     if num > 0
       h[:title] = n_("Show disk on this VM", "Show disks on this VM", num)
       h[:explorer] = true
@@ -654,7 +653,7 @@ module VmHelper::TextualSummary
   end
 
   def textual_processes
-    h = {:label => _("Running Processes"), :image => "100/processes.png"}
+    h = {:label => _("Running Processes"), :icon => "fa fa-cog"}
     date = last_date(:processes)
     if date.nil?
       h[:value] = _("Not Available")
@@ -670,7 +669,7 @@ module VmHelper::TextualSummary
 
   def textual_event_logs
     num = @record.operating_system.nil? ? 0 : @record.operating_system.number_of(:event_logs)
-    h = {:label => _("Event Logs"), :image => "100/event_logs.png", :value => (num == 0 ? _("Not Available") : _("Available"))}
+    h = {:label => _("Event Logs"), :icon => "fa fa-file-text-o", :value => (num == 0 ? _("Not Available") : _("Available"))}
     if num > 0
       h[:title] = _("Show Event Logs on this VM")
       h[:explorer] = true
@@ -682,7 +681,7 @@ module VmHelper::TextualSummary
   def textual_storage_systems
     num = @record.storage_systems_size
     label = ui_lookup(:tables => "ontap_storage_system")
-    h = {:label => label, :image => "100/ontap_storage_system.png", :value => num}
+    h = {:label => label, :icon => "pficon pficon-volume", :value => num}
     if num > 0 && role_allows?(:feature => "ontap_storage_system_show_list")
       h[:title] = _("Show all %{label}") % {:label => label}
       h[:explorer] = true
@@ -694,7 +693,7 @@ module VmHelper::TextualSummary
   def textual_storage_volumes
     num = @record.storage_volumes_size
     label = ui_lookup(:tables => "ontap_storage_volume")
-    h = {:label => label, :image => "100/ontap_storage_volume.png", :value => num}
+    h = {:label => label, :icon => "pficon pficon-volume", :value => num}
     if num > 0 && role_allows?(:feature => "ontap_storage_volume_show_list")
       h[:title] = _("Show all %{label}") % {:label => label}
       h[:explorer] = true
@@ -706,7 +705,7 @@ module VmHelper::TextualSummary
   def textual_file_shares
     num = @record.file_shares_size
     label = ui_lookup(:tables => "ontap_file_share")
-    h = {:label => label, :image => "100/ontap_file_share.png", :value => num}
+    h = {:label => label, :icon => "product product-file_share", :value => num}
     if num > 0 && role_allows?(:feature => "ontap_file_share_show_list")
       h[:title] = _("Show all %{label}") % {:label => label}
       h[:explorer] = true
@@ -718,7 +717,7 @@ module VmHelper::TextualSummary
   def textual_logical_disks
     num = @record.logical_disks_size
     label = ui_lookup(:tables => "ontap_logical_disk")
-    h = {:label => label, :image => "100/ontap_logical_disk.png", :value => num}
+    h = {:label => label, :icon => "fa fa-hdd-o", :value => num}
     if num > 0 && role_allows?(:feature => "ontap_logical_disk_show_list")
       h[:title] = _("Show all %{label}") % {:label => label}
       h[:explorer] = true
@@ -826,7 +825,7 @@ module VmHelper::TextualSummary
 
   def textual_devices
     h = {:label    => _("Devices"),
-         :image    => "100/devices.png",
+         :icon     => "fa fa-hdd-o",
          :explorer => true,
          :value    => (@devices.nil? || @devices.empty? ? _("None") : @devices.length)}
     if @devices.length > 0

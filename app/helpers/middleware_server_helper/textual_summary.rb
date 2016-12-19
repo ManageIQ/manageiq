@@ -60,7 +60,7 @@ module MiddlewareServerHelper::TextualSummary
     lives_on_entity_name = _("Virtual Machine")
      {
          :label      => "Underlying #{lives_on_entity_name}",
-         :image      => "100/vendor-#{lives_on_ems.image_name}.png",
+         :image      => "svg/vendor-#{lives_on_ems.image_name}.svg",
          :value      => @record.lives_on.name.to_s,
          :link       => url_for(
            :action     => 'show',

@@ -88,12 +88,12 @@ module EmsNetworkHelper::TextualSummary
 
   def textual_topology
     {:label => _('Topology'),
-     :image => '100/topology.png',
+     :icon  => "pficon pficon-topology",
      :link  => url_for(:controller => 'network_topology', :action => 'show', :id => @ems.id),
      :title => _("Show topology")}
   end
 
   def textual_zone
-    {:label => _("Managed by Zone"), :image => "100/zone.png", :value => @ems.zone.try(:name)}
+    {:label => _("Managed by Zone"), :icon => "pficon pficon-zone", :value => @ems.zone.try(:name)}
   end
 end

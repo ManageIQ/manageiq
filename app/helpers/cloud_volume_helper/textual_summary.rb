@@ -33,7 +33,7 @@ module CloudVolumeHelper::TextualSummary
     label = ui_lookup(:table => "availability_zone")
     h = {
       :label => label,
-      :image => "100/availability_zone.png",
+      :icon  => "pficon pficon-zone",
       :value => (availability_zone.nil? ? _("None") : availability_zone.name)
     }
     if availability_zone && role_allows?(:feature => "availability_zone_show")
@@ -48,7 +48,7 @@ module CloudVolumeHelper::TextualSummary
     label = ui_lookup(:table => "base_snapshot")
     h = {
       :label => label,
-      :image => "100/cloud_volume_snapshot.png",
+      :icon  => "fa fa-camera",
       :value => (base_snapshot.nil? ? _("None") : base_snapshot.name)
     }
     if base_snapshot && role_allows?(:feature => "cloud_volume_snapshot_show")
@@ -61,7 +61,7 @@ module CloudVolumeHelper::TextualSummary
   def textual_cloud_tenant
     cloud_tenant = @record.cloud_tenant if @record.respond_to?(:cloud_tenant)
     label = ui_lookup(:table => "cloud_tenants")
-    h = {:label => label, :image => "100/cloud_tenant.png", :value => (cloud_tenant.nil? ? _("None") : cloud_tenant.name)}
+    h = {:label => label, :icon => "pficon pficon-cloud-tenant", :value => (cloud_tenant.nil? ? _("None") : cloud_tenant.name)}
     if cloud_tenant && role_allows?(:feature => "cloud_tenant_show")
       h[:title] = _("Show this Volume's %{cloud_tenant}") % {:cloud_tenant => label}
       h[:link]  = url_for(:controller => 'cloud_tenant', :action => 'show', :id => cloud_tenant)
@@ -72,7 +72,7 @@ module CloudVolumeHelper::TextualSummary
   def textual_cloud_volume_snapshots
     label = ui_lookup(:tables => "cloud_volume_snapshots")
     num   = @record.number_of(:cloud_volume_snapshots)
-    h     = {:label => label, :image => "100/cloud_volume_snapshot.png", :value => num}
+    h     = {:label => label, :icon => "fa fa-camera", :value => num}
     if num > 0 && role_allows?(:feature => "cloud_volume_snapshot_show_list")
       label = ui_lookup(:tables => "cloud_volume_snapshots")
       h[:title] = _("Show all %{models}") % {:models => label}
@@ -84,7 +84,7 @@ module CloudVolumeHelper::TextualSummary
   def textual_cloud_volume_backups
     label = ui_lookup(:tables => "cloud_volume_backup")
     num   = @record.number_of(:cloud_volume_backups)
-    h     = {:label => label, :image => "100/cloud_volume_backup.png", :value => num}
+    h     = {:label => label, :icon => "pficon pficon-volume", :value => num}
     if num > 0 && role_allows?(:feature => "cloud_volume_backup_show_list")
       label = ui_lookup(:tables => "cloud_volume_backups")
       h[:title] = _("Show all %{models}") % {:models => label}
@@ -96,7 +96,7 @@ module CloudVolumeHelper::TextualSummary
   def textual_attachments
     label = ui_lookup(:tables => "vm_cloud")
     num   = @record.number_of(:attachments)
-    h     = {:label => label, :image => "100/vm.png", :value => num}
+    h     = {:label => label, :icon => "pficon pficon-virtual-machine", :value => num}
     if num > 0 && role_allows?(:feature => "vm_show_list")
       h[:title] = _("Show all attached %{models}") % {:models => label}
       h[:link]  = url_for(:action => 'show', :id => @volume, :display => 'instances')

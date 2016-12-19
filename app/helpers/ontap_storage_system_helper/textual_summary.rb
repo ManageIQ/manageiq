@@ -62,7 +62,7 @@ module OntapStorageSystemHelper::TextualSummary
   def textual_storage_volumes
     label = ui_lookup(:tables => "ontap_storage_volume")
     num   = @record.storage_volumes_size
-    h     = {:label => label, :image => "100/ontap_storage_volume.png", :value => num}
+    h     = {:label => label, :icon => "pficon pficon-volume", :value => num}
     if num > 0 && role_allows?(:feature => "ontap_storage_volume_show")
       h[:title] = _("Show all %{label}") % {:label => label}
       h[:link]  = url_for(:controller => 'ontap_storage_system', :action => 'show', :id => @record, :display => 'ontap_storage_volume')
@@ -73,7 +73,7 @@ module OntapStorageSystemHelper::TextualSummary
   def textual_hosted_file_shares
     label = ui_lookup(:tables => "ontap_file_share")
     num   = @record.hosted_file_shares_size
-    h = {:label => label, :image => "100/ontap_file_share.png", :value => num}
+    h = {:label => label, :icon => "product product-file_share", :value => num}
     if num > 0 && role_allows?(:feature => "ontap_file_share_show")
       h[:title] = _("Show all %{label}") % {:label => label}
       h[:link]  = url_for(:controller => 'ontap_storage_system', :action => 'show', :id => @record, :display => 'ontap_file_share')
@@ -84,7 +84,7 @@ module OntapStorageSystemHelper::TextualSummary
   def textual_local_file_systems
     label = ui_lookup(:tables => "snia_local_file_system")
     num   = @record.local_file_systems_size
-    h = {:label => label, :image => "100/snia_local_file_system.png", :value => num}
+    h = {:label => label, :icon => "product product-file_share", :value => num}
     if num > 0 && role_allows?(:feature => "snia_local_file_system_show")
       h[:title] = _("Show all %{label}") % {:label => label}
       h[:link]  = url_for(:action => 'snia_local_file_systems', :id => @record, :db => controller.controller_name)
@@ -95,7 +95,7 @@ module OntapStorageSystemHelper::TextualSummary
   def textual_logical_disks
     label = ui_lookup(:tables => "ontap_logical_disk")
     num   = @record.logical_disks_size
-    h = {:label => label, :image => "100/ontap_logical_disk.png", :value => num}
+    h = {:label => label, :icon => "fa fa-hdd-o", :value => num}
     if num > 0 && role_allows?(:feature => "ontap_logical_disk_show")
       h[:title] = _("Show all %{label}") % {:label => label}
       h[:link]  = url_for(:controller => 'ontap_storage_system', :action => 'show', :id => @record, :display => 'ontap_logical_disks')
@@ -106,7 +106,7 @@ module OntapStorageSystemHelper::TextualSummary
   def textual_base_storage_extents
     label = ui_lookup(:tables => "cim_base_storage_extent")
     num   = @record.base_storage_extents_size
-    h     = {:label => label, :image => "100/cim_base_storage_extent.png", :value => num}
+    h     = {:label => label, :icon => "pficon pficon-volume", :value => num}
     if num > 0 && role_allows?(:feature => "cim_base_storage_extent_show")
       h[:title] = _("Show all %{label}") % {:label => label}
       h[:link]  = url_for(:action => 'cim_base_storage_extents', :id => @record, :db => controller.controller_name)
@@ -117,7 +117,7 @@ module OntapStorageSystemHelper::TextualSummary
   def textual_hosts
     label = title_for_hosts
     num   = @record.hosts_size
-    h     = {:label => label, :image => "100/host.png", :value => num}
+    h     = {:label => label, :icon => "pficon pficon-screen", :value => num}
     if num > 0 && role_allows?(:feature => "host_show_list")
       h[:title] = _("Show all %{label}") % {:label => label}
       h[:link]  = url_for(:action => 'show', :id => @record, :display => 'hosts')
