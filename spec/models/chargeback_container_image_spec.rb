@@ -1,11 +1,6 @@
 describe ChargebackContainerImage do
   let(:base_options) { {:interval_size => 1, :end_interval_offset => 0, :ext_options => {:tz => 'Pacific Time (US & Canada)'} } }
   let(:hourly_rate)       { 0.01 }
-  let(:cpu_usage_rate)    { 50.0 }
-  let(:cpu_count)         { 1.0 }
-  let(:memory_available)  { 1000.0 }
-  let(:memory_used)       { 100.0 }
-  let(:net_usage_rate)    { 25.0 }
   let(:ts) { Time.now.in_time_zone(Metric::Helper.get_time_zone(options[:ext_options])) }
   let(:month_beginning) { ts.beginning_of_month.utc }
   let(:month_end) { ts.end_of_month.utc }
@@ -45,15 +40,9 @@ describe ChargebackContainerImage do
     let(:options) { base_options.merge(:interval => 'daily', :entity_id => @project.id, :tag => nil) }
 
     before do
-
       ["2012-08-31T07:00:00Z", "2012-08-31T08:00:00Z", "2012-08-31T09:00:00Z", "2012-08-31T10:00:00Z"].each do |t|
-        @container.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr,
+        @container.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr, :with_data,
                                                         :timestamp                => t,
-                                                        :cpu_usage_rate_average   => cpu_usage_rate,
-                                                        :derived_vm_numvcpus      => cpu_count,
-                                                        :derived_memory_available => memory_available,
-                                                        :derived_memory_used      => memory_used,
-                                                        :net_usage_rate_average   => net_usage_rate,
                                                         :parent_ems_id            => ems.id,
                                                         :tag_names                => "",
                                                         :resource_name            => @project.name,
@@ -90,13 +79,8 @@ describe ChargebackContainerImage do
     let(:options) { base_options.merge(:interval => 'monthly', :entity_id => @project.id, :tag => nil) }
     before do
       Range.new(month_beginning, month_end, true).step_value(12.hours).each do |time|
-        @container.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr,
+        @container.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr, :with_data,
                                                         :timestamp                => time,
-                                                        :cpu_usage_rate_average   => cpu_usage_rate,
-                                                        :derived_vm_numvcpus      => cpu_count,
-                                                        :derived_memory_available => memory_available,
-                                                        :derived_memory_used      => memory_used,
-                                                        :net_usage_rate_average   => net_usage_rate,
                                                         :parent_ems_id            => ems.id,
                                                         :tag_names                => "",
                                                         :resource_name            => @project.name,
@@ -136,13 +120,8 @@ describe ChargebackContainerImage do
       ChargebackRate.set_assignments(:compute, [{ :cb_rate => @cbr, :label => [@label, "container_image"] }])
 
       Range.new(month_beginning, month_end, true).step_value(12.hours).each do |time|
-        @container.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr,
+        @container.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr, :with_data,
                                                         :timestamp                => time,
-                                                        :cpu_usage_rate_average   => cpu_usage_rate,
-                                                        :derived_vm_numvcpus      => cpu_count,
-                                                        :derived_memory_available => memory_available,
-                                                        :derived_memory_used      => memory_used,
-                                                        :net_usage_rate_average   => net_usage_rate,
                                                         :parent_ems_id            => ems.id,
                                                         :tag_names                => "",
                                                         :resource_name            => @project.name,

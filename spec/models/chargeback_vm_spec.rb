@@ -9,14 +9,10 @@ describe ChargebackVm do
   end
   let(:hourly_rate)               { 0.01 }
   let(:count_hourly_rate)         { 1.00 }
-  let(:cpu_usagemhz_rate)         { 50.0 }
   let(:cpu_count)                 { 1.0 }
   let(:memory_available)          { 1000.0 }
-  let(:memory_used)               { 100.0 }
-  let(:disk_usage_rate)           { 100.0 }
-  let(:net_usage_rate)            { 25.0 }
-  let(:vm_used_disk_storage)      { 1.0 }
   let(:vm_allocated_disk_storage) { 4.0 }
+
   let(:ts) { Time.now.in_time_zone(Metric::Helper.get_time_zone(options[:ext_options])) }
   let(:month_beginning) { ts.beginning_of_month.utc }
   let(:month_end) { ts.end_of_month.utc }
@@ -75,16 +71,8 @@ describe ChargebackVm do
 
       Range.new(month_beginning, month_end, true).step_value(12.hours).each do |time|
         [@vm1, @vm2].each do |vm|
-          vm.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr,
+          vm.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr, :with_data,
                                                   :timestamp                         => time,
-                                                  :cpu_usagemhz_rate_average         => cpu_usagemhz_rate,
-                                                  :derived_vm_numvcpus               => cpu_count,
-                                                  :derived_memory_available          => memory_available,
-                                                  :derived_memory_used               => memory_used,
-                                                  :disk_usage_rate_average           => disk_usage_rate,
-                                                  :net_usage_rate_average            => net_usage_rate,
-                                                  :derived_vm_used_disk_storage      => vm_used_disk_storage.gigabytes,
-                                                  :derived_vm_allocated_disk_storage => vm_allocated_disk_storage.gigabytes,
                                                   :tag_names                         => "environment/prod",
                                                   :parent_host_id                    => @host1.id,
                                                   :parent_ems_cluster_id             => @ems_cluster.id,
@@ -140,16 +128,8 @@ describe ChargebackVm do
 
     before  do
       ["2012-08-31T07:00:00Z", "2012-08-31T08:00:00Z", "2012-08-31T09:00:00Z", "2012-08-31T10:00:00Z"].each do |t|
-        @vm1.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr,
+        @vm1.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr, :with_data,
                                                   :timestamp                         => t,
-                                                  :cpu_usagemhz_rate_average         => cpu_usagemhz_rate,
-                                                  :derived_vm_numvcpus               => cpu_count,
-                                                  :derived_memory_available          => memory_available,
-                                                  :derived_memory_used               => memory_used,
-                                                  :disk_usage_rate_average           => disk_usage_rate,
-                                                  :net_usage_rate_average            => net_usage_rate,
-                                                  :derived_vm_used_disk_storage      => vm_used_disk_storage.gigabytes,
-                                                  :derived_vm_allocated_disk_storage => vm_allocated_disk_storage.gigabytes,
                                                   :tag_names                         => "environment/prod",
                                                   :parent_host_id                    => @host1.id,
                                                   :parent_ems_cluster_id             => @ems_cluster.id,
@@ -433,16 +413,8 @@ describe ChargebackVm do
       @vm_tenant = FactoryGirl.create(:vm_vmware, :tenant_id => @tenant_child.id, :name => "test_vm_tenant")
       ["2012-08-31T07:00:00Z", "2012-08-31T08:00:00Z", "2012-08-31T09:00:00Z", "2012-08-31T10:00:00Z"].each do |t|
         @vm_tenant.metric_rollups <<
-          FactoryGirl.create(:metric_rollup_vm_hr,
+          FactoryGirl.create(:metric_rollup_vm_hr, :with_data,
                              :timestamp                         => t,
-                             :cpu_usagemhz_rate_average         => cpu_usagemhz_rate,
-                             :derived_vm_numvcpus               => cpu_count,
-                             :derived_memory_available          => memory_available,
-                             :derived_memory_used               => memory_used,
-                             :disk_usage_rate_average           => disk_usage_rate,
-                             :net_usage_rate_average            => net_usage_rate,
-                             :derived_vm_used_disk_storage      => vm_used_disk_storage.gigabytes,
-                             :derived_vm_allocated_disk_storage => vm_allocated_disk_storage.gigabytes,
                              :tag_names                         => "environment/prod",
                              :parent_host_id                    => @host1.id,
                              :parent_ems_cluster_id             => @ems_cluster.id,
@@ -469,16 +441,8 @@ describe ChargebackVm do
     let(:options) { base_options.merge(:interval => 'monthly') }
     before  do
       Range.new(month_beginning, month_end, true).step_value(12.hours).each do |time|
-        @vm1.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr,
+        @vm1.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr, :with_data,
                                                   :timestamp                         => time,
-                                                  :cpu_usagemhz_rate_average         => cpu_usagemhz_rate,
-                                                  :derived_vm_numvcpus               => cpu_count,
-                                                  :derived_memory_available          => memory_available,
-                                                  :derived_memory_used               => memory_used,
-                                                  :disk_usage_rate_average           => disk_usage_rate,
-                                                  :net_usage_rate_average            => net_usage_rate,
-                                                  :derived_vm_used_disk_storage      => vm_used_disk_storage.gigabytes,
-                                                  :derived_vm_allocated_disk_storage => vm_allocated_disk_storage.gigabytes,
                                                   :tag_names                         => "environment/prod",
                                                   :parent_host_id                    => @host1.id,
                                                   :parent_ems_cluster_id             => @ems_cluster.id,
@@ -869,18 +833,10 @@ describe ChargebackVm do
 
   context "Group by tags" do
     let(:options) { base_options.merge(:interval => 'monthly', :groupby_tag => 'environment') }
-    before  do
+    before do
       Range.new(month_beginning, month_end, true).step_value(12.hours).each do |time|
-        @vm1.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr,
+        @vm1.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr, :with_data,
                                                   :timestamp                         => time,
-                                                  :cpu_usagemhz_rate_average         => cpu_usagemhz_rate,
-                                                  :derived_vm_numvcpus               => cpu_count,
-                                                  :derived_memory_available          => memory_available,
-                                                  :derived_memory_used               => memory_used,
-                                                  :disk_usage_rate_average           => disk_usage_rate,
-                                                  :net_usage_rate_average            => net_usage_rate,
-                                                  :derived_vm_used_disk_storage      => vm_used_disk_storage.gigabytes,
-                                                  :derived_vm_allocated_disk_storage => vm_allocated_disk_storage.gigabytes,
                                                   :tag_names                         => "environment/prod",
                                                   :parent_host_id                    => @host1.id,
                                                   :parent_ems_cluster_id             => @ems_cluster.id,

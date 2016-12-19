@@ -2,6 +2,7 @@ FactoryGirl.define do
   factory :metric_rollup do
     timestamp { Time.now.utc }
     trait :with_data do
+      cpu_usage_rate_average            50.0
       cpu_usagemhz_rate_average         50.0
       derived_vm_numvcpus               1.0
       derived_memory_available          1000.0
