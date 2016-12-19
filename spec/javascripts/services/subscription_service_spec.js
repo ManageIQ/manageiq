@@ -12,7 +12,7 @@ describe('subscriptionService', function() {
     $timeout = _$timeout_;
 
     spyOn(test, 'callback');
-    spyOn(ManageIQ.angular.rxSubject, 'subscribe').and.callFake(function(callback) {
+    spyOn(window, 'listenToRx').and.callFake(function(callback) {
       loadedReactionFunction = callback;
     });
   }));
@@ -27,7 +27,7 @@ describe('subscriptionService', function() {
     });
 
     it('subscribes', function() {
-      expect(ManageIQ.angular.rxSubject.subscribe).toHaveBeenCalledWith(loadedReactionFunction);
+      expect(listenToRx).toHaveBeenCalledWith(loadedReactionFunction);
     });
 
     describe('#subscribeToEventType reaction function', function() {
