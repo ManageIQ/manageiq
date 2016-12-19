@@ -32,7 +32,8 @@ module ManageIQ
     end
 
     def self.install_bundler
-      system!('gem install bundler --conservative')
+      system!("echo 'gem: --no-ri --no-rdoc --no-document' > ~/.gemrc") if ENV['CI']
+      system!("gem install bundler -v '#{bundler_version}' --conservative")
     end
 
     def self.bundle_install
