@@ -883,4 +883,34 @@ describe ChargebackVm do
       expect(subject.tag_name).to eq('Production')
     end
   end
+
+  context 'for SCVMM (hyper-v)' do
+    let!(:vm1) do
+      vm = FactoryGirl.create(:vm_microsoft)
+      vm.tag_with(@tag.name, :ns => '*')
+      vm
+    end
+    let(:options) { base_options.merge(:interval => 'daily') }
+    let(:tier) do
+      FactoryGirl.create(:chargeback_tier, :start         => 0,
+                                           :finish        => Float::INFINITY,
+                                           :fixed_rate    => hourly_rate.to_s,
+                                           :variable_rate => 0.0)
+    end
+    let!(:rate_detail) do
+      FactoryGirl.create(:chargeback_rate_detail_fixed_compute_cost,
+                         :chargeback_rate_id => @cbr.id,
+                         :chargeback_tiers   => [tier],
+                         :per_time           => 'hourly')
+    end
+
+    subject { ChargebackVm.build_results_for_report_ChargebackVm(options).first.first }
+
+    it 'works' do
+      expect(subject.chargeback_rates).to eq(@cbr.description)
+      expect(subject.fixed_compute_metric).to eq(1) # One day of fixed compute metric
+      expect(subject.fixed_compute_1_cost).to eq(hourly_rate * 24)
+      expect(subject.total_cost).to eq(hourly_rate * 24)
+    end
+  end
 end
