@@ -87,7 +87,7 @@ class NetworkRouterController < ApplicationController
       task_id = ems.create_network_router_queue(session[:userid], options)
 
       add_flash(_("Network Router creation failed: Task start failed: ID [%{id}]") %
-                {:id => task_id.inspect}, :error) unless task_id.kind_of?(Fixnum)
+                {:id => task_id.to_s}, :error) unless task_id.kind_of?(Integer)
 
       if @flash_array
         javascript_flash(:spinner_off => true)
@@ -188,7 +188,7 @@ class NetworkRouterController < ApplicationController
       task_id = @router.update_network_router_queue(session[:userid], options)
 
       add_flash(_("Router update failed: Task start failed: ID [%{id}]") %
-                {:id => task_id.inspect}, :error) unless task_id.kind_of?(Fixnum)
+                {:id => task_id.to_s}, :error) unless task_id.kind_of?(Integer)
 
       if @flash_array
         javascript_flash(:spinner_off => true)
@@ -200,7 +200,6 @@ class NetworkRouterController < ApplicationController
 
   def update_finished
     task_id = session[:async][:params][:task_id]
-    router_id = session[:async][:params][:id]
     router_name = session[:async][:params][:name]
     task = MiqTask.find(task_id)
     if MiqTask.status_ok?(task.status)

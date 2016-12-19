@@ -462,7 +462,7 @@ class CloudVolumeController < ApplicationController
       else
         javascript_flash(
           :text        => _("Cloud volume backup creation failed: Task start failed: ID [%{id}]") %
-            {:id => task_id.inspect},
+            {:id => task_id.to_s},
           :severity    => :error,
           :spinner_off => true
         )
@@ -527,7 +527,7 @@ class CloudVolumeController < ApplicationController
       task_id = @volume.backup_restore_queue(session[:userid], @backup.ems_ref)
 
       add_flash(_("Cloud volume restore failed: Task start failed: ID [%{id}]") %
-                {:id => task_id.inspect}, :error) unless task_id.kind_of?(Integer)
+                {:id => task_id.to_s}, :error) unless task_id.kind_of?(Integer)
 
       if @flash_array
         javascript_flash(:spinner_off => true)
@@ -586,7 +586,7 @@ class CloudVolumeController < ApplicationController
       options[:name] = params[:snapshot_name] if params[:snapshot_name]
       task_id = @volume.create_volume_snapshot_queue(session[:userid], options)
       add_flash(_("Cloud volume snapshot creation failed: Task start failed: ID [%{id}]") %
-                {:id => task_id.inspect}, :error) unless task_id.kind_of?(Integer)
+                {:id => task_id.to_s}, :error) unless task_id.kind_of?(Integer)
       if @flash_array
         javascript_flash(:spinner_off => true)
       else
