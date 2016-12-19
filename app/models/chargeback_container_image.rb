@@ -53,12 +53,12 @@ class ChargebackContainerImage < Chargeback
     @options[:groupby] == 'project' ? "#{project.id}_#{ts_key}" : "#{project.id}_#{image.id}_#{ts_key}"
   end
 
-  def self.image(perf)
-    @data_index.fetch_path(:container_image, :by_container_id, perf.resource_id)
+  def self.image(consumption)
+    @data_index.fetch_path(:container_image, :by_container_id, consumption.resource_id)
   end
 
-  def self.project(perf)
-    @data_index.fetch_path(:container_project, :by_container_id, perf.resource_id)
+  def self.project(consumption)
+    @data_index.fetch_path(:container_project, :by_container_id, consumption.resource_id)
   end
 
   def self.where_clause(records, _options)
@@ -87,13 +87,14 @@ class ChargebackContainerImage < Chargeback
 
   private
 
-  def init_extra_fields(perf)
-    self.project_name  = self.class.project(perf).name
-    self.image_name    = self.class.image(perf).try(:full_name) || _('Deleted') # until image archiving is implemented
-    self.project_uid   = self.class.project(perf).ems_ref
-    self.provider_name = perf.parent_ems.try(:name)
-    self.provider_uid  = perf.parent_ems.try(:guid)
-    self.archived      = self.class.project(perf).archived? ? _('Yes') : _('No')
-    self.entity        = self.class.image(perf)
+  def init_extra_fields(consumption)
+    self.project_name  = self.class.project(consumption).name
+    # until image archiving is implemented
+    self.image_name    = self.class.image(consumption).try(:full_name) || _('Deleted')
+    self.project_uid   = self.class.project(consumption).ems_ref
+    self.provider_name = consumption.parent_ems.try(:name)
+    self.provider_uid  = consumption.parent_ems.try(:guid)
+    self.archived      = self.class.project(consumption).archived? ? _('Yes') : _('No')
+    self.entity        = self.class.image(consumption)
   end
 end # class ChargebackContainerImage

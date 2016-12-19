@@ -764,10 +764,11 @@ describe ChargebackVm do
                                                :parent_ems_id => ems.id, :parent_storage_id => @storage.id,
                                                :resource => @vm1)
     end
+    let(:consumption) { Chargeback::Consumption.new([metric_rollup], nil, nil) }
 
     before do
       ChargebackRate.set_assignments(:compute, [rate_assignment_options])
-      @rate = Chargeback::RatesCache.new.get(metric_rollup).first
+      @rate = Chargeback::RatesCache.new.get(consumption).first
       @assigned_rate = ChargebackRate.get_assignments("Compute").first
     end
 
@@ -782,7 +783,8 @@ describe ChargebackVm do
     let(:timestamp_key) { 'Fri, 13 May 2016 10:40:00 UTC +00:00' }
     let(:beginning_of_day) { timestamp_key.in_time_zone.beginning_of_day }
     let(:metric_rollup) { FactoryGirl.build(:metric_rollup_vm_hr, :timestamp => timestamp_key, :resource => @vm1) }
-    subject { described_class.report_row_key(metric_rollup) }
+    let(:consumption) { Chargeback::Consumption.new([metric_rollup], nil, nil) }
+    subject { described_class.report_row_key(consumption) }
     before do
       described_class.instance_variable_set(:@options, report_options)
     end
@@ -793,40 +795,41 @@ describe ChargebackVm do
   describe '#initialize' do
     let(:report_options) { Chargeback::ReportOptions.new }
     let(:vm_owners)     { {@vm1.id => @vm1.evm_owner_name} }
-    let(:metric_rollup) do
-      FactoryGirl.build(:metric_rollup_vm_hr, :tag_names => 'environment/prod',
-                        :parent_host_id => @host1.id, :parent_ems_cluster_id => @ems_cluster.id,
-                        :parent_ems_id => ems.id, :parent_storage_id => @storage.id,
-                        :resource => @vm1, :resource_name => @vm1.name)
+    let(:consumption) { Chargeback::Consumption.new([metric_rollup], nil, nil) }
+    let(:shared_extra_fields) do
+      {'vm_name' => @vm1.name, 'owner_name' => admin.name, 'vm_uid' => 'ems_ref', 'vm_guid' => @vm1.guid,
+       'vm_id' => @vm1.id}
     end
+    subject { ChargebackVm.new(report_options, consumption).attributes }
 
     before do
       ChargebackVm.instance_variable_set(:@vm_owners, vm_owners)
     end
 
-    it 'sets extra fields' do
-      extra_fields = ChargebackVm.new(report_options, metric_rollup).attributes
-      expected_fields = {"vm_name" => @vm1.name, "owner_name" => admin.name, "provider_name" => ems.name,
-                         "provider_uid" => ems.guid, "vm_uid" => "ems_ref", "vm_guid" => @vm1.guid,
-                         "vm_id" => @vm1.id}
+    context 'with parent ems' do
+      let(:metric_rollup) do
+        FactoryGirl.build(:metric_rollup_vm_hr, :tag_names => 'environment/prod',
+                          :parent_host_id => @host1.id, :parent_ems_cluster_id => @ems_cluster.id,
+                          :parent_ems_id => ems.id, :parent_storage_id => @storage.id,
+                          :resource => @vm1, :resource_name => @vm1.name)
+      end
 
-      expect(extra_fields).to include(expected_fields)
+      it 'sets extra fields' do
+        is_expected.to include(shared_extra_fields.merge('provider_name' => ems.name, 'provider_uid' => ems.guid))
+      end
     end
 
-    let(:metric_rollup_without_ems) do
-      FactoryGirl.build(:metric_rollup_vm_hr, :tag_names => 'environment/prod',
-                        :parent_host_id => @host1.id, :parent_ems_cluster_id => @ems_cluster.id,
-                        :parent_storage_id => @storage.id,
-                        :resource => @vm1, :resource_name => @vm1.name)
-    end
+    context 'when parent ems is missing' do
+      let(:metric_rollup) do
+        FactoryGirl.build(:metric_rollup_vm_hr, :tag_names => 'environment/prod',
+                          :parent_host_id => @host1.id, :parent_ems_cluster_id => @ems_cluster.id,
+                          :parent_storage_id => @storage.id,
+                          :resource => @vm1, :resource_name => @vm1.name)
+      end
 
-    it 'sets extra fields when parent ems is missing' do
-      extra_fields = ChargebackVm.new(report_options, metric_rollup_without_ems).attributes
-      expected_fields = {"vm_name" => @vm1.name, "owner_name" => admin.name, "provider_name" => nil,
-                         "provider_uid" => nil, "vm_uid" => "ems_ref", "vm_guid" => @vm1.guid,
-                         "vm_id" => @vm1.id}
-
-      expect(extra_fields).to include(expected_fields)
+      it 'sets extra fields when parent ems is missing' do
+        is_expected.to include(shared_extra_fields.merge('provider_name' => nil, 'provider_uid' => nil))
+      end
     end
   end
 
@@ -848,6 +851,7 @@ describe ChargebackVm do
                          :parent_ems_id => ems.id, :parent_storage_id => @storage.id,
                          :resource => @vm1)
     end
+    let(:consumption) { Chargeback::Consumption.new([metric_rollup], nil, nil) }
 
     before do
       @storage.tag_with([classification_1.tag.name, classification_2.tag.name], :ns => '*')
@@ -857,7 +861,7 @@ describe ChargebackVm do
     it "return only one chargeback rate according to tag name of Vm" do
       [rate_assignment_options_1, rate_assignment_options_2].each do |rate_assignment|
         metric_rollup.tag_names = rate_assignment[:tag].first.tag.send(:name_path)
-        uniq_rates = chargeback_vm.send(:get, metric_rollup)
+        uniq_rates = chargeback_vm.get(consumption)
         expect([rate_assignment[:cb_rate]]).to match_array(uniq_rates)
       end
     end
