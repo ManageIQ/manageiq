@@ -28,7 +28,7 @@ MwServerController.$inject = ['$scope', 'miqService' ];
 function MwServerController($scope, miqService) {
   ManageIQ.angular.scope = $scope;
 
-  ManageIQ.angular.rxSubject.subscribe(function(event) {
+  listenToRx(function(event) {
     var eventType = event.type,
         operation = event.operation,
         timeout = event.timeout;
@@ -139,7 +139,7 @@ MwServerOpsController.$inject = ['miqService', 'serverOpsService'];
  */
 function MwServerOpsController( miqService, serverOpsService) {
 
-    ManageIQ.angular.rxSubject.subscribe(function(event) {
+    listenToRx(function(event) {
 
       if(event.type == 'mwSeverOpsEvent') {
         miqService.sparkleOn();

@@ -13,7 +13,7 @@
   * For success functuon @see ToolbarController#onRowSelect()
   */
   function subscribeToSubject() {
-    ManageIQ.angular.rxSubject.subscribe(function(event) {
+    listenToRx(function(event) {
       if (event.rowSelect) {
         this.onRowSelect(event.rowSelect);
       } else if (event.redrawToolbar) {

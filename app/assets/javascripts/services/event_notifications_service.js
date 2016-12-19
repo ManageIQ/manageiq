@@ -315,7 +315,7 @@ function eventNotifications($timeout) {
 
   this.doReset(true);
 
-  ManageIQ.angular.rxSubject.subscribe(function (data) {
+  listenToRx(function (data) {
     if (data.notification) {
       var msg = miqFormatNotification(data.notification.text, data.notification.bindings);
       _this.add('event', data.notification.level, msg, {message: msg}, data.notification.id);

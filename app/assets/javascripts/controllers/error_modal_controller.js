@@ -5,7 +5,7 @@ function ErrorModalController($timeout) {
   $ctrl.error = null;
   $ctrl.isHtml = false;
 
-  ManageIQ.angular.rxSubject.subscribe(function(event) {
+  listenToRx(function(event) {
     if ('serverError' in event) {
       $timeout(function() {
         $ctrl.show(event.serverError);
