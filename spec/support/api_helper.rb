@@ -5,14 +5,9 @@
 module Spec
   module Support
     module ApiHelper
-      DEF_HEADERS = {
-        "Content-Type" => "application/json",
-        "Accept"       => "application/json"
-      }
-
       def update_headers(headers)
         headers.merge!("HTTP_AUTHORIZATION" => @http_authorization) if @http_authorization
-        headers.merge(DEF_HEADERS)
+        headers
       end
 
       def run_get(url, options = {})
