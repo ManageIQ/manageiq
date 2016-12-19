@@ -42,7 +42,5 @@ chdir Environment::APP_ROOT do
 
     Environment.setup_test_environment if options[:do_tests]
   end
-
-  puts "\n== Removing old logs and tempfiles =="
-  system! 'bin/rails log:clear tmp:clear'
+  Environment.clear_logs_and_temp
 end

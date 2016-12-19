@@ -28,6 +28,6 @@ chdir Environment::APP_ROOT do
   end
 
   # Make sure bower is done before compiling assets
-  puts "\n== Removing old logs and tempfiles =="
-  system! 'bin/rails log:clear tmp:clear'
+  Environment.compile_assets if ENV['RAILS_ENV'] == 'production'
+  Environment.clear_logs_and_temp
 end

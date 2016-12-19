@@ -72,6 +72,11 @@ module Environment
     system!("#{APP_ROOT.join("bin/rails")} evm:compile_assets")
   end
 
+  def self.clear_logs_and_temp
+    puts "\n== Removing old logs and tempfiles =="
+    system!("#{APP_ROOT.join("bin/rails")} log:clear tmp:clear")
+  end
+
   def self.update_bower
     system!("bower update --allow-root -F --silent --config.analytics=false")
   end
