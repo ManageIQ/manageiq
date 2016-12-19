@@ -1448,8 +1448,11 @@ Vmdb::Application.routes.draw do
 
     :security_group           => {
       :get  => %w(
+        edit
         download_data
         index
+        new
+        security_group_form_fields
         show
         show_list
         tagging_edit
@@ -1457,12 +1460,17 @@ Vmdb::Application.routes.draw do
         compare_get,
       :post => %w(
         button
+        create
+        form_field_changed
         quick_search
         listnav_search_selected
+        sections_field_changed
         show
         show_list
         tag_edit_form_field_changed
         tagging_edit
+        update
+        wait_for_task
       ) +
         adv_search_post +
         compare_post +

@@ -1,5 +1,6 @@
 class SecurityGroup < ApplicationRecord
   include NewWithTypeStiMixin
+  include SupportsFeatureMixin
   include VirtualTotalMixin
 
   acts_as_miq_taggable
@@ -20,5 +21,10 @@ class SecurityGroup < ApplicationRecord
 
   def self.non_cloud_network
     where(:cloud_network_id => nil)
+  end
+
+  def self.class_by_ems(ext_management_system)
+    # TODO: use a factory on ExtManagementSystem side to return correct class for each provider
+    ext_management_system && ext_management_system.class::SecurityGroup
   end
 end

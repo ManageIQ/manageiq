@@ -1,0 +1,23 @@
+%h3
+  = _('Security Group Information')
+.form-horizontal
+  .form-group
+    %label.col-md-2.control-label
+      = _('Security Group Name')
+    .col-md-8
+      %input.form-control{:type          => "text",
+                          :name          => "name",
+                          'ng-model'     => "securityGroupModel.name",
+                          'ng-maxlength' => 128,
+                          :miqrequired   => true,
+                          :checkchange   => true}
+  .form-group
+    %label.col-md-2.control-label
+      = _('Security Group Description')
+    .col-md-8
+      %input.form-control{:type          => "text",
+                          :name          => "description",
+                          'ng-model'     => "securityGroupModel.description",
+                          'ng-maxlength' => 128,
+                          :miqrequired   => false,
+                          :checkchange   => true}

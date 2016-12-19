@@ -4110,6 +4110,23 @@
       :description: Edit Tags of Security Group
       :feature_type: control
       :identifier: security_group_tag
+  - :name: Modify
+    :description: Modify Security Groups
+    :feature_type: admin
+    :identifier: security_group_admin
+    :children:
+    - :name: Add
+      :description: Add a Security Group
+      :feature_type: admin
+      :identifier: security_group_new
+    - :name: Edit
+      :description: Edit a Security Group
+      :feature_type: admin
+      :identifier: security_group_edit
+    - :name: Remove
+      :description: Remove Security Groups
+      :feature_type: admin
+      :identifier: security_group_delete
 
 # Floating IP
 - :name: Floating IPs
