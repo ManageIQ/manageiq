@@ -8,6 +8,7 @@ class TreeBuilderMiqActionCat < TreeBuilder
     leaf = !object.entries.any?
     img = "tag.png" unless leaf
     node[:icon] = img
+    node[:image] = ActionController::Base.helpers.image_path("100/#{img}")
     node[:title] = object.description
     node[:tooltip] = _("Category: %{description}") % {:description => object.description}
     node[:cfmeNoClick] = false if leaf

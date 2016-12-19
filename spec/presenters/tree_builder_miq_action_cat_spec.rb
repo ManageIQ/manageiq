@@ -37,7 +37,7 @@ describe TreeBuilderMiqActionCat do
       expect(node[:tooltip]).to eq(desc1)
       expect(node[:title]).to eq(desc2)
       expect(node[:cfmeNoClick]).to eq(false)
-      
+
       desc1 = _("Category: %{description}") % {:description => @folder1.description}
       desc2 = @folder1.description
       node = @tree.send(:override, {}, @folder1, nil, nil)
@@ -49,7 +49,7 @@ describe TreeBuilderMiqActionCat do
 
     it 'sets root' do
       roots = @tree.send(:root_options)
-      expect(roots).to eq([@tenant, @tenant, "tag.png"])
+      expect(roots).to eq([@tenant, @tenant, "tag"])
     end
     it 'sets first level nodes correctly' do
       roots = @tree.send(:x_get_tree_roots, false, nil)
