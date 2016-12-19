@@ -11,39 +11,33 @@ chdir Environment::APP_ROOT do
   Environment.ensure_config_files
 
   puts '== Installing dependencies =='
-  # Run bower in a thread and continue to do the non-js stuff
-  puts "Updating bower assets in parallel..."
-  bower_thread = Thread.new do
-    system! "bower update --allow-root -F --silent --config.analytics=false"
-  end
-  system! 'gem install bundler --conservative'
+  Environment.while_updating_bower do
+    system! 'gem install bundler --conservative'
 
-  # TODO: This unlocks your dependencies and installs all updates.
-  # From: https://github.com/ManageIQ/manageiq/pull/11137
-  # It should be system('bundle check') || system!('bundle install').
-  # If we need a "reset all the things" script, we should call it bin/reset.
-  system! 'bundle update'
+    # TODO: This unlocks your dependencies and installs all updates.
+    # From: https://github.com/ManageIQ/manageiq/pull/11137
+    # It should be system('bundle check') || system!('bundle install').
+    # If we need a "reset all the things" script, we should call it bin/reset.
+    system! 'bundle update'
 
-  puts "\n== Updating database =="
-  system! 'bin/rails db:migrate'
+    puts "\n== Updating database =="
+    system! 'bin/rails db:migrate'
 
-  puts "\n== Seeding database =="
-  system! "bin/rails db:seed GOOD_MIGRATIONS=skip"
+    puts "\n== Seeding database =="
+    system! "bin/rails db:seed GOOD_MIGRATIONS=skip"
 
-  unless ENV["SKIP_TEST_RESET"]
-    puts "\n== Resetting tests =="
-    system! "bin/rails test:vmdb:setup"
-  end
+    unless ENV["SKIP_TEST_RESET"]
+      puts "\n== Resetting tests =="
+      system! "bin/rails test:vmdb:setup"
+    end
 
-  unless ENV["SKIP_AUTOMATE_RESET"]
-    puts "\n== Resetting Automate Domains =="
-    system! "bin/rails evm:automate:reset"
+    unless ENV["SKIP_AUTOMATE_RESET"]
+      puts "\n== Resetting Automate Domains =="
+      system! "bin/rails evm:automate:reset"
+    end
   end
 
   # Make sure bower is done before compiling assets
-  bower_thread.join
-  puts "Done running `bower update`."
-
   if ENV['RAILS_ENV'] == 'production'
     puts "\n== Recompiling assets =="
     system! "bin/rails evm:compile_assets"
