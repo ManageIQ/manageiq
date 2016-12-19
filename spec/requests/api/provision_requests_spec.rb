@@ -41,6 +41,7 @@ describe "Provision Requests API" do
         "status"         => "Ok"
       }
     end
+    before { Rails.cache.clear }
 
     it "filters the list of provision requests by requester" do
       other_user = FactoryGirl.create(:user)

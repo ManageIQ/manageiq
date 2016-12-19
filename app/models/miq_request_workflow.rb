@@ -109,12 +109,13 @@ class MiqRequestWorkflow
           val = field_values[:default]
         end
 
-        if field_values[:values]
-          if field_values[:values].kind_of?(Hash)
+        possible_values = field_values.key?(:values_from) ? send("#{dialog_name}_#{field_name}_values") : field_values[:values]
+        if possible_values
+          if possible_values.kind_of?(Hash)
             # Save [value, description], skip for timezones array
-            init_values[field_name] = [val, field_values[:values][val]]
+            init_values[field_name] = [val, possible_values[val]]
           else
-            field_values[:values].each do |tz|
+            possible_values.each do |tz|
               if tz[1].to_i_with_method == val.to_i_with_method
                 # Save [value, description] for timezones array
                 init_values[field_name] = [val, tz[0]]
@@ -297,17 +298,17 @@ class MiqRequestWorkflow
     if field.key?(:values_from) && refresh_values
       options = field[:values_from][:options] || {}
       options[:prov_field_name] = field_name
-      field[:values] = send(field[:values_from][:method], options)
 
-      # Reset then currently selected item if it no longer appears in the available values
-      if field[:values].kind_of?(Hash)
-        if field[:values].length == 1
+      field_values = send("#{dialog_name}_#{field_name}_values", options)
+
+      if field_values.kind_of?(Hash)
+        if field_values.length == 1
           unless field[:auto_select_single] == false
-            @values[field_name] = field[:values].to_a.first
+            @values[field_name] = field_values.to_a.first
           end
         else
           currently_selected = get_value(@values[field_name])
-          unless currently_selected.nil? || field[:values].key?(currently_selected)
+          unless currently_selected.nil? || field_values.key?(currently_selected)
             @values[field_name] = [nil, nil]
           end
         end
