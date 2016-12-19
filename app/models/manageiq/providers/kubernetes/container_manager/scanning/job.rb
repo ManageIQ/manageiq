@@ -121,7 +121,7 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
     if metadata.RepoDigests
       metadata.RepoDigests.each do |repo_digest|
         return nil if repo_digest == options[:docker_image_id]
-        msg << repo_digest.split('@')[0..11] + ", "
+        msg << repo_digest.split('@').last[0..11] + ", "
       end
     end
 

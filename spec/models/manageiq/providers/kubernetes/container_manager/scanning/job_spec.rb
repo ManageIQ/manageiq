@@ -51,7 +51,7 @@ class MockImageInspectorClient
 
   def fetch_metadata(*_args)
     if @repo_digest
-      OpenStruct.new('Id' => @for_id, 'RepoDigests' => [@repo_digest])
+      OpenStruct.new('Id' => @for_id, 'RepoDigests' => ["123456677899987765543322", @repo_digest])
     else
       OpenStruct.new('Id' => @for_id)
     end
