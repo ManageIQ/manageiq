@@ -1,6 +1,15 @@
 (function(){
   var COTNROLLER_NAME = 'reportDataController';
   var MAIN_CONTETN_ID = 'main-content';
+  var PAGINATION_CLASS = 'miq-pagination';
+  var CLASSES_TO_WIDTH = {
+    'col-md-12': 100,
+    'col-md-11': 91,
+    'col-md-10': 83,
+    'col-md-9': 75,
+    'col-md-8': 66,
+    'col-md-7': 58
+  };
 
   /**
   * Private method for setting rootPoint of MiQEndpointsService.
@@ -45,6 +54,8 @@
         this.onUnsubscribe();
       } else if (event.tollbarEvent && (event.tollbarEvent === 'itemClicked')) {
         this.setExtraClasses();
+      } else if (event.resize) {
+        this.onResizeElement(event.resize);
       }
     }.bind(this),
     function (err) {
@@ -225,6 +236,14 @@
       } else if (viewType && viewType === 'list') {
         angular.element(mainContent).addClass('miq-list-content');
       }
+    }
+  }
+
+  ReportDataController.prototype.onResizeElement = function(resizeClasses) {
+    var foundClass = _.find(resizeClasses, function (item) {return item.indexOf('col-md-') !== -1});
+    var pagination = angular.element(document.querySelector('.' + PAGINATION_CLASS));
+    if (pagination && CLASSES_TO_WIDTH[foundClass]) {
+      pagination.css('width', CLASSES_TO_WIDTH[foundClass] + '%');
     }
   }
 
