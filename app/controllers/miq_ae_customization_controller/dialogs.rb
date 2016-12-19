@@ -883,7 +883,7 @@ module MiqAeCustomizationController::Dialogs
     end
 
     # initialize data type for textbox
-    if params[:field_typ] == 'TextBox'
+    if params[:field_typ] == 'DialogFieldTextBox'
       @edit[:field_data_typ] = key[:data_typ] = "string"
     end
 
