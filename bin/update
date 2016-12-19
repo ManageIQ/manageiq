@@ -24,10 +24,7 @@ chdir Environment::APP_ROOT do
     Environment.seed_database
 
     Environment.setup_test_environment unless ENV["SKIP_TEST_RESET"]
-    unless ENV["SKIP_AUTOMATE_RESET"]
-      puts "\n== Resetting Automate Domains =="
-      system! "bin/rails evm:automate:reset"
-    end
+    Environment.reset_automate_domain  unless ENV["SKIP_AUTOMATE_RESET"]
   end
 
   # Make sure bower is done before compiling assets

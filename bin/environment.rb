@@ -62,6 +62,11 @@ module Environment
     system!("#{APP_ROOT.join("bin/rails")} test:vmdb:setup")
   end
 
+  def self.reset_automate_domain
+    puts "\n== Resetting Automate Domains =="
+    system!("#{APP_ROOT.join("bin/rails")} evm:automate:reset")
+  end
+
   def self.update_bower
     system!("bower update --allow-root -F --silent --config.analytics=false")
   end
