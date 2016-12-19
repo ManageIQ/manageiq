@@ -21,6 +21,7 @@
 //= require cable
 //= require miq_api
 //= require rxjs/dist/rx.all
+//= require miq_observable
 //= require miq_angular_application
 //= require_tree ./angular_modules/
 //= require_tree ./controllers/
