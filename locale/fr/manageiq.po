@@ -1226,7 +1226,7 @@ msgstr "%{name} %{text} (Résumé)"
 
 #: ../app/controllers/application_controller/compare.rb:420
 msgid "%{name} '%{vm_name}' Drift Report"
-msgstr "%${name} '%{vm_name}' Rapport de dérive"
+msgstr "%{name} '%{vm_name}' Rapport de dérive"
 
 #: ../app/models/flavor.rb:21
 msgid ""
@@ -9259,7 +9259,7 @@ msgstr ""
 msgid ""
 "Cannot collect current logs unless there are started %{servers} in the Zone"
 msgstr ""
-"Impossible de collecter les journaux actuels si aucun %{server} n'est "
+"Impossible de collecter les journaux actuels si aucun %{servers} n'est "
 "démarré dans la zone"
 
 #: ../app/models/mixins/service_mixin.rb:18
@@ -25617,7 +25617,7 @@ msgstr "Erreur"
 #: ../app/models/file_depot_ftp.rb:24
 msgid "Error '%{message}', writing to FTP: [%{uri}], Username: [%{id}]"
 msgstr ""
-"Erreur '%{Traiter des messages}', écriture sur FTP : [%{uri}], Nom "
+"Erreur '%{message}', écriture sur FTP : [%{uri}], Nom "
 "d'utilisateur : [%{id}]"
 
 #: ../app/presenters/tree_node_builder.rb:508
@@ -40486,7 +40486,7 @@ msgstr "Nom : "
 
 #: ../app/helpers/quadicon_helper.rb:486
 msgid "Name: %{name} | Hostname: %{hostname}"
-msgstr " Nom d'hôte : %{hostname}"
+msgstr "Nom: %{name} | Nom d'hôte : %{hostname}"
 
 #: ../app/helpers/quadicon_helper.rb:519
 msgid "Name: %{name} | Hostname: %{hostname} | Refresh Status: %{status}"
@@ -41437,7 +41437,7 @@ msgstr ""
 
 #: ../app/views/miq_policy/_profile_list.html.haml:7
 msgid "No %{mode} Policy Profiles are defined."
-msgstr "Aucun profil de stratégie %{mode} %{model} n'est défini."
+msgstr "Aucun profil de stratégie %{mode} n'est défini."
 
 #: ../app/controllers/miq_ae_class_controller.rb:2374
 msgid "No %{name} were selected to move down"
@@ -48458,7 +48458,7 @@ msgstr "Mettre en service %{vm_or_template} - Sélectionnez %{typ}"
 
 #: ../app/controllers/vm_common.rb:1740 ../app/controllers/vm_common.rb:1744
 msgid "Provision %{vms_or_templates}"
-msgstr "Mettre en service %{MV_or_modèles}"
+msgstr "Mettre en service %{vms_or_templates}"
 
 #: ../app/views/miq_request/_pre_prov.html.haml:8
 msgid "Provision %{what} based on the selected %{type}"
@@ -51689,7 +51689,7 @@ msgstr "Le rapport ne concerne pas les composants graphiques."
 #: ../app/controllers/application_controller/report_downloads.rb:64
 msgid "Report generation returned: Status [%{status}] Message [%{message}]"
 msgstr ""
-"La génération du rapport a renvoyé : Statut [%{États}] Message [%{message}]"
+"La génération du rapport a renvoyé : Statut [%{status}] Message [%{message}]"
 
 #: ../app/controllers/report_controller/reports.rb:20
 msgid "Report has been successfully queued to run"
@@ -51716,7 +51716,7 @@ msgstr "Rapport introuvable."
 msgid ""
 "Report preview generation returned: Status [%{status}] Message [%{message}]"
 msgstr ""
-"La génération de l'aperçu du rapport a renvoyé : Statut [%{États}] Message "
+"La génération de l'aperçu du rapport a renvoyé : Statut [%{status}] Message "
 "[%{message}]"
 
 #: ../app/models/miq_report_result.rb:39
@@ -53045,7 +53045,7 @@ msgstr "Le rôle n'existe plus"
 #: ../app/presenters/tree_node_builder.rb:566
 #: ../app/presenters/tree_node_builder.rb:570
 msgid "Role: %{description} (%{status})"
-msgstr "Rôle : %{description} (%{États})"
+msgstr "Rôle : %{description} (%{status})"
 
 #. TRANSLATORS: en.yml key: dictionary.model.MiqUserRole (plural form)
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -55475,7 +55475,7 @@ msgstr "Définir la propriété de %{model}"
 
 #: ../app/controllers/vm_common.rb:1748
 msgid "Set Ownership for %{vms_or_templates}"
-msgstr "Définir la propriété %{MV_or_modèles}"
+msgstr "Définir la propriété %{vms_or_templates}"
 
 #: ../app/helpers/application_helper/toolbar/services_center.rb:32
 msgid "Set Ownership for the selected Services"
@@ -60654,7 +60654,7 @@ msgstr "Le %{model} sélectionné a été marqué comme %{action}"
 #: ../app/controllers/catalog_controller.rb:309
 msgid "The selected %{number} Catalog Item was deleted"
 msgid_plural "The selected %{number} Catalog Items were deleted"
-msgstr[0] "L'élément de catalogue sélectionné a été supprimé"
+msgstr[0] "Le %{number} élément de catalogue sélectionné a été supprimé"
 msgstr[1] "Les %{number} éléments de catalogue sélectionnés ont été supprimés"
 
 #: ../app/controllers/ems_common.rb:1077
