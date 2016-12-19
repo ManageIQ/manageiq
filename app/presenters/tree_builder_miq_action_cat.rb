@@ -8,6 +8,18 @@ class TreeBuilderMiqActionCat < TreeBuilder
     TreeNodeBuilderMiqActionCat
   end
 
+  def override(node, object, _pid, _options)
+    img = "blank.gif"
+    leaf = !object.entries.any?
+    img = "tag.png" unless leaf
+    node[:icon] = img
+    node[:title] = object.description
+    node[:tooltip] = _("Category: %{description}") % {:description => object.description}
+    node[:cfmeNoClick] = false if leaf
+    node[:hideCheckbox] = true
+    node
+  end
+
   def initialize(name, type, sandbox, build = true, tenant_name = nil)
     @tenant_name = tenant_name
     super(name, type, sandbox, build)
