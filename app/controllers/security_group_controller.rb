@@ -75,7 +75,7 @@ class SecurityGroupController < ApplicationController
         task_id = ems.create_security_group_queue(session[:userid], options)
 
         add_flash(_("Security Group creation: Task start failed: ID [%{id}]") %
-                  {:id => task_id.to_s}, :error) unless task_id.kind_of?(Fixnum)
+                  {:id => task_id.to_s}, :error) unless task_id.kind_of?(Integer)
 
         if @flash_array
           javascript_flash(:spinner_off => true)
@@ -193,7 +193,7 @@ class SecurityGroupController < ApplicationController
       if @security_group.supports_update?
         task_id = @security_group.update_security_group_queue(session[:userid], options)
         add_flash(_("Security Group update failed: Task start failed: ID [%{id}]") %
-                  {:id => task_id.to_s}, :error) unless task_id.kind_of?(Fixnum)
+                  {:id => task_id.to_s}, :error) unless task_id.kind_of?(Integer)
         if @flash_array
           javascript_flash(:spinner_off => true)
         else
