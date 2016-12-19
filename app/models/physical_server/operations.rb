@@ -3,5 +3,4 @@ module PhysicalServer::Operations
 
   include_concern 'Power'
   include_concern 'Led'
-
 end

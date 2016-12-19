@@ -5637,6 +5637,31 @@
         :description: Request to Provision Instances from Images
         :feature_type: admin
         :identifier: image_miq_request_new
+
+  # Physical server access rules
+  - :name: Physical Server Access Rules
+    :description: Access Rules for Physical Servers
+    :feature_type: node
+    :identifier: physical_server
+    :children:
+    - :name: Operate
+      :description: Perform Operations on Physical Servers
+      :feature_type: control
+      :identifier: physical_server_control
+      :children:
+      - :name: Blink LED
+        :description: Blink Loc LED
+        :feature_type: control
+        :identifier: physical_server_blink_loc_led
+      - :name: Turn On LED
+        :description: Turn On Loc LED
+        :feature_type: control
+        :identifier: physical_server_turn_on_loc_led
+      - :name: Turn Off LED
+        :description: Turn Off Loc LED
+        :feature_type: control
+        :identifier: physical_server_turn_off_loc_led
+
   # Virtual Machines access rules
   - :name: VM Access Rules
     :description: Access Rules for Virtual Machines

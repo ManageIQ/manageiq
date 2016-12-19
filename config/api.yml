@@ -53,6 +53,8 @@
         :identifier: physical_server_power_off
       - :name: restart
       - :identifier: physical_server_restart
+      - :name: blink_loc_led
+        :identifier: physical_server_blink_loc_led
       - :name: turn_on_loc_led
         :identifier: physical_server_turn_on_loc_led
       - :name: turn_off_loc_led
@@ -65,6 +67,8 @@
         :identifier: physical_server_power_off
       - :name: restart
         :identifier: physical_server_restart
+      - :name: blink_loc_led
+        :identifier: physical_server_blink_loc_led
       - :name: turn_on_loc_led
         :identifier: physical_server_turn_on_loc_led
       - :name: turn_off_loc_led

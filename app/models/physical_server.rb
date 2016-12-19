@@ -60,7 +60,6 @@ class PhysicalServer < ApplicationRecord
     $lenovo_log.info("Turn off LED")
   end
 
-<<<<<<< HEAD
   def is_refreshable?
     refreshable_status[:show]
   end
@@ -83,6 +82,4 @@ class PhysicalServer < ApplicationRecord
     true
   end
 
-=======
->>>>>>> 029afe9... Merge branch 'development' into refactoring-upgrade
 end
