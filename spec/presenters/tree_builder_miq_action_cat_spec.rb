@@ -49,7 +49,7 @@ describe TreeBuilderMiqActionCat do
 
     it 'sets root' do
       roots = @tree.send(:root_options)
-      expect(roots).to eq([@tenant, @tenant, "tag"])
+      expect(roots).to eq([@tenant, @tenant, "100/tag.png"])
     end
     it 'sets first level nodes correctly' do
       roots = @tree.send(:x_get_tree_roots, false, nil)

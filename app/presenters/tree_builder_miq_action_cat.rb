@@ -38,7 +38,7 @@ class TreeBuilderMiqActionCat < TreeBuilder
   end
 
   def root_options
-    [title = @tenant_name, title, "tag"]
+    [title = @tenant_name, title, "100/tag.png"]
   end
 
   # Get root nodes count/array for explorer tree
