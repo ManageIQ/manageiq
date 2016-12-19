@@ -8,6 +8,7 @@ module Api
       end
 
       def validate_api_request
+        return if %w(metrics gauges).include? @req.collection
         validate_optional_collection_classes
 
         # API Version Validation
@@ -48,6 +49,7 @@ module Api
 
       def validate_api_action
         return unless @req.collection
+        return if %w(metrics gauges).include? @req.collection
         send("validate_#{@req.method}_method")
       end
 
