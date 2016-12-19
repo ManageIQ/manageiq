@@ -751,6 +751,32 @@ describe RelationshipMixin do
     end
   end
 
+  describe "#parent_rel_ids" do
+    it "works with relationships" do
+      pars = vms[8].with_relationship_type(test_rel_type, &:parent_rels)
+      pars_vms = pars.map(&:resource)
+      expect(pars_vms).to eq([vms[7]])
+    end
+  end
+
+  describe "#parent_rel_ids" do
+    it "works with relationships" do
+      ids = vms[8].with_relationship_type(test_rel_type, &:parent_rel_ids)
+      parent_vms = Relationship.where(:id => ids).map(&:resource)
+      expect(parent_vms).to eq([vms[7]])
+    end
+
+    it "works with cached relationships" do
+      ids = vms[8].with_relationship_type(test_rel_type) do |o|
+        # load relationships into the cache
+        o.all_relationships
+        o.parent_rel_ids
+      end
+      parent_vms = Relationship.where(:id => ids).map(&:resource)
+      expect(parent_vms).to eq([vms[7]])
+    end
+  end
+
   protected
 
   def build_relationship_tree(tree, rel_type = test_rel_type, base_factory = :vm_vmware)
