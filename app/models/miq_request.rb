@@ -37,6 +37,8 @@ class MiqRequest < ApplicationRecord
   virtual_column  :resource_type,        :type => :string
   virtual_column  :state,                :type => :string
 
+  virtual_has_one :workflow
+
   before_validation :initialize_attributes, :on => :create
 
   include MiqRequestMixin
