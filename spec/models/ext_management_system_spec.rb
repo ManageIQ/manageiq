@@ -265,6 +265,13 @@ describe ExtManagementSystem do
                                                                         :cpu1x2,
                                                                         :ram1GB))
       end
+      2.times do
+        FactoryGirl.create(:host,
+                           :ext_management_system => @ems,
+                           :hardware              => FactoryGirl.create(:hardware,
+                                                                        :cpu2x2,
+                                                                        :ram1GB))
+      end
     end
 
     it "#total_cloud_vcpus" do
@@ -273,6 +280,14 @@ describe ExtManagementSystem do
 
     it "#total_cloud_memory" do
       expect(@ems.total_cloud_memory).to eq(2048)
+    end
+
+    it "#total_vcpus" do
+      expect(@ems.total_vcpus).to eq(8)
+    end
+
+    it "#total_memory" do
+      expect(@ems.total_memory).to eq(2048)
     end
 
     it "#total_vms_on" do
