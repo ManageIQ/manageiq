@@ -134,6 +134,22 @@ describe EmsCloudController do
         expect(response.status).to eq 200
         expect(response.body).to include('vm/retire')
       end
+
+      it "when Tag Button is pressed for a Cloud provider Volumes" do
+        allow(controller).to receive(:role_allows).and_return(true)
+        ems = FactoryGirl.create("ems_vmware")
+        vm = FactoryGirl.create(:vm_vmware,
+                                :ext_management_system => ems,
+                                :storage               => FactoryGirl.create(:storage)
+                               )
+        post :button, :params => {:pressed         => "cloud_volume_tag",
+                                  "check_#{vm.id}" => "1",
+                                  :format          => :js,
+                                  :id              => ems.id,
+                                  :display         => 'cloud_volumes'}
+        expect(response.status).to eq 200
+        expect(response.body).to include("/ems_cloud/tagging_edit/#{ems.id}?db=CloudVolume&escape=false")
+      end
     end
   end
 
