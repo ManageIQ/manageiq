@@ -1224,7 +1224,7 @@ msgstr "%{name} %{text} (Resumen)"
 
 #: ../app/controllers/application_controller/compare.rb:420
 msgid "%{name} '%{vm_name}' Drift Report"
-msgstr "${name} '%{vm_name}' Informe de desviación"
+msgstr "%{name} '%{vm_name}' Informe de desviación"
 
 #: ../app/models/flavor.rb:21
 msgid ""
@@ -5047,11 +5047,11 @@ msgstr "Todos los %{typ} %{model}"
 
 #: ../app/controllers/miq_policy_controller.rb:946
 msgid "All %{typ} Alert Profiles"
-msgstr "Todos los perfiles de alertas %{type}"
+msgstr "Todos los perfiles de alertas %{typ}"
 
 #: ../app/controllers/miq_policy_controller.rb:940
 msgid "All %{typ} Conditions"
-msgstr "Todas las condiciones %{type}"
+msgstr "Todas las condiciones %{typ}"
 
 #: ../app/helpers/ems_cluster_helper/textual_summary.rb:71
 #: ../app/helpers/host_helper/textual_summary.rb:94
@@ -8201,7 +8201,7 @@ msgstr "Botones para \"%{record}\""
 
 #: ../app/views/miq_policy/_rsop_form.html.haml:47
 msgid "By %{clusters}"
-msgstr "Por %{clusteres}"
+msgstr "Por %{clusters}"
 
 #: ../app/views/miq_policy/_rsop_form.html.haml:47
 msgid "By %{hosts}"
@@ -9213,21 +9213,21 @@ msgstr ""
 #: ../app/models/account.rb:96
 msgid "Cannot call method '%{caller}' on an Account of type '%{type}'"
 msgstr ""
-"No se puede llamar al método '%{autor de la llamada}' en una cuenta tipo "
-"'%{tipo}'."
+"No se puede llamar al método '%{caller}' en una cuenta tipo "
+"'%{type}'."
 
 #: ../app/helpers/application_helper/toolbar_builder.rb:1014
 msgid "Cannot collect current logs unless the %{server} is started"
 msgstr ""
 "No se pueden recopilar los registros actuales, a menos que se inicie "
-"%{servidor}."
+"%{server}."
 
 #: ../app/helpers/application_helper/toolbar_builder.rb:1175
 msgid ""
 "Cannot collect current logs unless there are started %{servers} in the Zone"
 msgstr ""
 "No se pueden recopilar los registros actuales, a menos que haya "
-"%{servidores} iniciados en la zona."
+"%{servers} iniciados en la zona."
 
 #: ../app/models/mixins/service_mixin.rb:18
 msgid "Cannot connect service with nil ID."
@@ -9235,7 +9235,7 @@ msgstr "No se puede conectar el servicio con ID nulo. "
 
 #: ../app/controllers/ems_infra_controller.rb:145
 msgid "Cannot connect to workflow service: %{message}"
-msgstr "No se puede conectar con el servicio del flujo de trabajo: %{mensaje}"
+msgstr "No se puede conectar con el servicio del flujo de trabajo: %{message}"
 
 #: ../app/controllers/application_controller/miq_request_methods.rb:781
 #: ../app/controllers/application_controller/miq_request_methods.rb:969
@@ -9265,7 +9265,7 @@ msgstr "No se puede mostrar el contenido en binario"
 
 #: ../app/controllers/ems_infra_controller.rb:137
 msgid "Cannot parse JSON file: %{message}"
-msgstr "No se puede analizar el archivo JSON: %{mensaje}"
+msgstr "No se puede analizar el archivo JSON: %{message}"
 
 #: ../app/models/miq_report_result.rb:128
 msgid "Cannot parse userid %{user_id}"
@@ -10271,7 +10271,7 @@ msgstr "Cuenta de comprobación"
 
 #: ../app/controllers/application_controller/filter.rb:1377
 msgid "Check Value Error: %{msg}"
-msgstr "Verificar error de valor: %{msj.}"
+msgstr "Verificar error de valor: %{msg}"
 
 #: ../app/views/ops/rhn/_server_table.html.haml:40
 msgid "Check for Updates"
@@ -10287,7 +10287,7 @@ msgid ""
 "[%{name}] with id: [%{id}]"
 msgstr ""
 "Verificar que se esté ejecutando un host y que tenga credenciales válidas "
-"para %{tabla} [%{nombre}] con ID: [%{id}]"
+"para %{table} [%{name}] con ID: [%{id}]"
 
 #: ../app/helpers/orchestration_stack_helper/textual_summary.rb:65
 msgid "Child Orchestration Stacks"
@@ -10425,11 +10425,11 @@ msgstr "Elegir"
 
 #: ../app/views/report/_form_filter_chargeback.html.haml:162
 msgid "Choose %{entity}"
-msgstr "Elija %{entidad}"
+msgstr "Elija %{entity}"
 
 #: ../app/views/report/_form_filter_chargeback.html.haml:137
 msgid "Choose %{provider}"
-msgstr "Elija %{proveedor}"
+msgstr "Elija %{provider}"
 
 #: ../app/views/middleware_server/_choose_datasource.html.haml:5
 msgid "Choose Datasource:"
@@ -10445,7 +10445,7 @@ msgstr "Elegir políticas"
 
 #: ../app/views/miq_capacity/_planning_options.html.haml:51
 msgid "Choose a %{cluster}"
-msgstr "Elija un %{clúster}"
+msgstr "Elija un %{cluster}"
 
 #: ../app/views/miq_capacity/_planning_options.html.haml:39
 msgid "Choose a %{host}"
@@ -10453,15 +10453,15 @@ msgstr "Elija un %{host}"
 
 #: ../app/views/layouts/_adv_search_body.html.haml:84
 msgid "Choose a %{model} report filter"
-msgstr "Elija un filro de informes %{modelo}"
+msgstr "Elija un filro de informes %{model}"
 
 #: ../app/views/miq_capacity/_planning_options.html.haml:62
 msgid "Choose a %{provider}"
-msgstr "Elija un %{proveedor}"
+msgstr "Elija un %{provider}"
 
 #: ../app/views/miq_policy/_alert_builtin_exp.html.haml:340
 msgid "Choose a %{provider} first"
-msgstr "Primero, elija un %{proveedor}"
+msgstr "Primero, elija un %{provider}"
 
 #: ../app/views/ops/_settings_co_tags_tab.html.haml:8
 #: ../app/views/chargeback/_cb_assignments.html.haml:46
@@ -10519,7 +10519,7 @@ msgstr "Elegir una entidad de contenedor y etiqueta"
 
 #: ../app/views/layouts/_adv_search_body.html.haml:49
 msgid "Choose a saved %{model} filter:"
-msgstr "Elija un filtro guardado %{modelo}:"
+msgstr "Elija un filtro guardado %{model}:"
 
 #: ../app/views/layouts/_adv_search_footer.html.haml:84
 msgid "Choose a saved filter or report filter to load"
@@ -10587,11 +10587,11 @@ msgstr "Capacidad de almacenamiento de base Cim"
 
 #: ../app/models/classification.rb:216 ../app/models/classification.rb:282
 msgid "Class '%{name}' is not eligible for classification"
-msgstr "La clase '%{nombre}' no es apta para la clasificación."
+msgstr "La clase '%{name}' no es apta para la clasificación."
 
 #: ../app/models/classification.rb:273
 msgid "Class '%{type}' is not eligible for classification"
-msgstr "La clase '%{tipo}' no es apta para la clasificación."
+msgstr "La clase '%{type}' no es apta para la clasificación."
 
 #: ../app/controllers/miq_ae_class_controller.rb:1515
 msgid "Class Schema Sequence was saved"
@@ -10866,20 +10866,20 @@ msgstr "Haga clic para actualizar esta entrada"
 
 #: ../app/views/report/_db_list.html.haml:66
 msgid "Click to view %{group} "
-msgstr "Haga clic para ver %{grupo} "
+msgstr "Haga clic para ver %{group} "
 
 #: ../app/views/layouts/gtl/_list.html.haml:206
 msgid "Click to view %{record}"
-msgstr "Haga clic para ver %{registro}"
+msgstr "Haga clic para ver %{record}"
 
 #: ../app/views/report/_db_list.html.haml:23
 msgid "Click to view '%{title}'"
-msgstr "Haga clic para ver \"%{título}\""
+msgstr "Haga clic para ver \"%{title}\""
 
 #: ../app/views/report/_db_list.html.haml:111
 msgid "Click to view '%{widgetset_description} (%{widgetset_name})'"
 msgstr ""
-"Haga clic para ver '%{asistenteset_description} (%{asistenteset_name})'"
+"Haga clic para ver '%{widgetset_description} (%{widgetset_name})'"
 
 #: ../app/views/miq_policy/_event_details.html.haml:62
 #: ../app/views/miq_policy/_condition_details.html.haml:133
@@ -10926,11 +10926,11 @@ msgstr "Haga clic para ver el asistente seleccionado"
 
 #: ../app/views/layouts/gtl/_list.html.haml:214
 msgid "Click to view target %{model}"
-msgstr "Haga clic para ver el destino %{modelo}"
+msgstr "Haga clic para ver el destino %{model}"
 
 #: ../app/views/miq_ae_class/_domain_overrides.html.haml:13
 msgid "Click to view this %{model} in the \"%{domain_name}\" Domain"
-msgstr "Haga clic para ver este %{modelo} en el dominio \"%{domain_name}\""
+msgstr "Haga clic para ver este %{model} en el dominio \"%{domain_name}\""
 
 #: ../app/views/ops/_settings_server_tab.html.haml:56
 #: ../app/views/layouts/gtl/_list.html.haml:117
@@ -18057,7 +18057,7 @@ msgstr "Centro de datos: %{datacenter_name}"
 
 #: ../app/controllers/application_controller/tree_support.rb:116
 msgid "Datacenter: %{name}"
-msgstr "Centro de datos: %{datacenter_name}"
+msgstr "Centro de datos: %{name}"
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../config/yaml_strings.rb:622
@@ -21947,7 +21947,7 @@ msgstr "Arrastrar esta ficha a una nueva ubicación"
 
 #: ../app/views/report/_db_widget.html.haml:5
 msgid "Drag/drop Widget \"%{widget_title}\""
-msgstr "Arrastrar/soltar asistente \"%{asistente_title}\""
+msgstr "Arrastrar/soltar asistente \"%{widget_title}\""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #: ../app/views/configuration/_ui_2.html.haml:22 ../config/yaml_strings.rb:640
@@ -22267,16 +22267,16 @@ msgstr "Modificar %{type}"
 
 #: ../app/helpers/application_helper/toolbar/miq_groups_center.rb:53
 msgid "Edit '%{customer_name}' Tags for the selected Groups"
-msgstr "Modificar etiquetas '%{customer_name'} para los grupos seleccionados"
+msgstr "Modificar etiquetas '%{customer_name}' para los grupos seleccionados"
 
 #: ../app/helpers/application_helper/toolbar/tenants_center.rb:50
 msgid "Edit '%{customer_name}' Tags for the selected Tenant"
-msgstr "Modificar etiquetas '%{customer_name'} para el inquilino seleccionado"
+msgstr "Modificar etiquetas '%{customer_name}' para el inquilino seleccionado"
 
 #: ../app/helpers/application_helper/toolbar/users_center.rb:55
 msgid "Edit '%{customer_name}' Tags for the selected Users"
 msgstr ""
-"Modificar etiquetas '%{customer_name'} para los usuarios seleccionados"
+"Modificar etiquetas '%{customer_name}' para los usuarios seleccionados"
 
 #: ../app/helpers/application_helper/toolbar/miq_group_center.rb:35
 msgid "Edit '%{customer_name}' Tags for this Group"
@@ -22284,11 +22284,11 @@ msgstr "Modificar etiquetas '%{customer_name}' para este grupo"
 
 #: ../app/helpers/application_helper/toolbar/tenant_center.rb:52
 msgid "Edit '%{customer_name}' Tags for this Tenant"
-msgstr "Modificar etiquetas '%{customer_name'} para este inquilino"
+msgstr "Modificar etiquetas '%{customer_name}' para este inquilino"
 
 #: ../app/helpers/application_helper/toolbar/user_center.rb:40
 msgid "Edit '%{customer_name}' Tags for this User"
-msgstr "Modificar etiquetas '%{customer_name}'para este usuario"
+msgstr "Modificar etiquetas '%{customer_name}' para este usuario"
 
 #: ../app/controllers/configuration_controller.rb:418
 msgid "Edit '%{description}'"
@@ -23962,7 +23962,7 @@ msgstr ""
 #: ../app/controllers/miq_ae_class_controller.rb:1162
 #: ../app/controllers/host_controller.rb:350
 msgid "Edit of %{model} \"%{name}\" was cancelled by the user"
-msgstr "%La edición de {model} \"%{name}\" fue cancelado por el usuario"
+msgstr "La edición de %{model} \"%{name}\" fue cancelado por el usuario"
 
 #: ../app/controllers/application_controller/miq_request_methods.rb:197
 msgid "Edit of %{model} Request \"%{name}\" was cancelled by the user"
@@ -40536,7 +40536,7 @@ msgstr "Nombre: "
 
 #: ../app/helpers/quadicon_helper.rb:486
 msgid "Name: %{name} | Hostname: %{hostname}"
-msgstr " Nombre de host: %{hostname}"
+msgstr "Nombre: %{name} | Nombre de host: %{hostname}"
 
 #: ../app/helpers/quadicon_helper.rb:519
 msgid "Name: %{name} | Hostname: %{hostname} | Refresh Status: %{status}"
@@ -41779,7 +41779,7 @@ msgstr "No hay políticas definidas."
 
 #: ../app/models/miq_policy_set.rb:63
 msgid "No Policies for Policy Profile == %{profile}"
-msgstr "No hay políticas para el perfil de política == %{profilel}"
+msgstr "No hay políticas para el perfil de política == %{profile}"
 
 #: ../app/controllers/application_controller/policy_support.rb:266
 msgid "No Policy Profiles are available"
@@ -49798,7 +49798,7 @@ msgstr[0] ""
 "Actualización iniciada para %{count} %{model} desde la base de datos de "
 "%{product}"
 msgstr[1] ""
-"Actualización iniciada para %{count} %{model} desde la base de datos de "
+"Actualización iniciada para %{count} %{models} desde la base de datos de "
 "%{product}"
 
 #: ../app/helpers/application_helper/toolbar/ems_container_center.rb:18
@@ -56803,7 +56803,7 @@ msgstr "Mostrar todas las plantillas"
 
 #: ../app/views/layouts/listnav/_ems_cluster.html.haml:65
 msgid "Show all Templates in this %{cluster_title}"
-msgstr "Mostrar todas las plantillas en este %{{cluster_title}"
+msgstr "Mostrar todas las plantillas en este %{cluster_title}"
 
 #: ../app/helpers/ems_cluster_helper/textual_summary.rb:163
 msgid "Show all Templates in this %{title}"
@@ -56851,7 +56851,7 @@ msgstr "Mostrar todos los archivos en este almacén de datos"
 
 #: ../app/views/layouts/listnav/_ems_infra.html.haml:42
 msgid "Show all managed %{cluster}"
-msgstr "Mostrar todos los %{clusters} administrados"
+msgstr "Mostrar todos los %{cluster} administrados"
 
 #: ../app/views/layouts/listnav/_ems_infra.html.haml:49
 msgid "Show all managed %{hosts}"
@@ -58200,7 +58200,7 @@ msgid ""
 "Start the %{server_role_description} Role on Server %{server_name} "
 "[%{server_id}]"
 msgstr ""
-"Iniciar el rol %{server_role_description} en el servidor %{server.name} "
+"Iniciar el rol %{server_role_description} en el servidor %{server_name} "
 "[%{server_id}]"
 
 #: ../app/helpers/application_helper/toolbar/diagnostics_region_center.rb:39
@@ -60926,7 +60926,7 @@ msgstr ""
 
 #: ../app/controllers/dashboard_controller.rb:323
 msgid "The widget \"%{widget_name}\" is already part of the edited dashboard"
-msgstr "El asistente %{asistente_name}\" ya es parte del tablero editado"
+msgstr "El asistente \"%{widget_name}\" ya es parte del tablero editado"
 
 #: ../app/models/manageiq/providers/openstack/cloud_manager/vm/associate_ip.rb:8
 msgid "There are no %{floating_ips} available to this %{instance}."
@@ -62337,7 +62337,7 @@ msgstr ""
 #: ../app/controllers/cloud_volume_controller.rb:624
 msgid "Unable to create snapshot for Cloud Volume \"%{name}\": %{details}"
 msgstr ""
-"No se puede crear instantánea para volumen de nube %{model} \"%{name}\": "
+"No se puede crear instantánea para volumen de nube \"%{name}\": "
 "%{details}"
 
 #: ../app/controllers/cloud_volume_controller.rb:251
@@ -64745,7 +64745,7 @@ msgstr "El valor '%{value}' no es válido"
 
 #: ../lib/miq_expression.rb:1481
 msgid "Value '%{value}' must be in the form of %{format_type}"
-msgstr "El valor '%{value}' debe tener el formato {format_type}"
+msgstr "El valor '%{value}' debe tener el formato %{format_type}"
 
 #: ../app/models/miq_alert.rb:394 ../app/models/miq_alert.rb:410
 msgid "Value Threshold"
