@@ -67,6 +67,11 @@ module Environment
     system!("#{APP_ROOT.join("bin/rails")} evm:automate:reset")
   end
 
+  def self.compile_assets
+    puts "\n== Recompiling assets =="
+    system!("#{APP_ROOT.join("bin/rails")} evm:compile_assets")
+  end
+
   def self.update_bower
     system!("bower update --allow-root -F --silent --config.analytics=false")
   end
