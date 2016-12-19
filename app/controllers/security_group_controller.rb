@@ -4,6 +4,7 @@ class SecurityGroupController < ApplicationController
   after_action :cleanup_action
   after_action :set_session_data
 
+  include Mixins::CheckedIdMixin
   include Mixins::GenericButtonMixin
   include Mixins::GenericListMixin
   include Mixins::GenericSessionMixin
@@ -28,8 +29,7 @@ class SecurityGroupController < ApplicationController
     when 'security_group_delete'
       delete_security_groups
     when "security_group_edit"
-      checked_security_group_id = get_checked_security_group_id(params)
-      javascript_redirect :action => "edit", :id => checked_security_group_id
+      javascript_redirect :action => "edit", :id => checked_item_id(params)
     else
       if params[:pressed] == "security_group_new"
         javascript_redirect :action => "new"
@@ -161,16 +161,6 @@ class SecurityGroupController < ApplicationController
     drop_breadcrumb(
       :name => _("Edit Security Group \"%{name}\"") % { :name  => @security_group.name},
       :url  => "/security_group/edit/#{@security_group.id}")
-  end
-
-  def get_checked_security_group_id(params)
-    if params[:id]
-      checked_security_group_id = params[:id]
-    else
-      checked_security_groups = find_checked_items
-      checked_security_group_id = checked_security_groups[0] if checked_security_groups.length == 1
-    end
-    checked_security_group_id
   end
 
   def new
