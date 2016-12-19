@@ -245,9 +245,8 @@ copyright and license notice:
 ---
 
 
-spec/support/with_constants.rb and
-gems/pending/spec/support/with_constants.rb are copyright (c) 2010 Michael
-Portuesi and released under the MIT license:
+spec/support/with_constants.rb copyright (c) 2010 Michael Portuesi
+and released under the MIT license:
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

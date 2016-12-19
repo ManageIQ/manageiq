@@ -1,5 +1,5 @@
 class PxeServer < ApplicationRecord
-  autoload :WimParser, "win32/wim_parser" # via gems/pending
+  autoload :WimParser, "win32/wim_parser" # via manageiq-gems-pending
 
   include FileDepotMixin
 
