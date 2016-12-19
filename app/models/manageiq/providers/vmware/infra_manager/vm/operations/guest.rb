@@ -9,10 +9,12 @@ module ManageIQ::Providers::Vmware::InfraManager::Vm::Operations::Guest
 
     supports :shutdown_guest do
       unsupported_reason_add(:shutdown_guest, unsupported_reason(:control)) unless supports_control?
-      unless tools_status && tools_status == 'toolsNotInstalled'
-        if current_state != "on"
-          unsupported_reason_add(:shutdown_guest, _("The VM is not powered on"))
+      if current_state == "on"
+        if tools_status == 'toolsNotInstalled'
+          unsupported_reason_add(:shutdown_guest, _("The VM tools is not installed"))
         end
+      else
+        unsupported_reason_add(:shutdown_guest, _("The VM is not powered on"))
       end
     end
 
