@@ -1932,7 +1932,26 @@
         :feature_type: admin
         :hidden: true
         :identifier: alert_delete
-
+  - :name: Alerts Statuses
+    :description: Everything under Alerts Statuses
+    :protected: true
+    :feature_type: node
+    :hidden: true
+    :identifier: alert_status
+    :children:
+    - :name: View
+      :description: View Alerts Statuses
+      :feature_type: view
+      :identifier: alert_status_view
+      :children:
+      - :name: List
+        :description: Display Lists of Alert Statuses
+        :feature_type: view
+        :identifier: alert_status_show_list
+      - :name: Show
+        :description: Display Individual Alert Status
+        :feature_type: view
+        :identifier: alert_status_show
 # Policy Simulation
 - :name: Simulation
   :description: Policy Simulation
