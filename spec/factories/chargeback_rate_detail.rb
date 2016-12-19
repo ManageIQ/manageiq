@@ -12,8 +12,20 @@ FactoryGirl.define do
       detail_measure { FactoryGirl.create(:chargeback_rate_detail_measure_bytes) }
     end
 
+    transient do
+      tiers_params nil
+    end
+
     trait :tiers do
-      chargeback_tiers { [FactoryGirl.create(:chargeback_tier)] }
+      after(:create) do |chargeback_rate_detail, evaluator|
+        if evaluator.tiers_params
+          evaluator.tiers_params.each do |tier|
+            chargeback_rate_detail.chargeback_tiers << FactoryGirl.create(*[:chargeback_tier, tier])
+          end
+        else
+          chargeback_rate_detail.chargeback_tiers << FactoryGirl.create(:chargeback_tier)
+        end
+      end
     end
 
     trait :tiers_with_three_intervals do
