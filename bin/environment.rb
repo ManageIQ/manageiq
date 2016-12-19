@@ -42,6 +42,21 @@ module Environment
     system!('bundle update')
   end
 
+  def self.create_database
+    puts "\n== Updating database =="
+    system!("#{APP_ROOT.join("bin/rails")} db:create")
+  end
+
+  def self.migrate_database
+    puts "\n== Updating database =="
+    system!("#{APP_ROOT.join("bin/rails")} db:migrate")
+  end
+
+  def self.seed_database
+    puts "\n== Seeding database =="
+    system!("#{APP_ROOT.join("bin/rails")} db:seed GOOD_MIGRATIONS=skip")
+  end
+
   def self.update_bower
     system!("bower update --allow-root -F --silent --config.analytics=false")
   end

@@ -20,11 +20,8 @@ chdir Environment::APP_ROOT do
     # If we need a "reset all the things" script, we should call it bin/reset.
     Environment.bundle_update
 
-    puts "\n== Updating database =="
-    system! 'bin/rails db:migrate'
-
-    puts "\n== Seeding database =="
-    system! "bin/rails db:seed GOOD_MIGRATIONS=skip"
+    Environment.migrate_database
+    Environment.seed_database
 
     unless ENV["SKIP_TEST_RESET"]
       puts "\n== Resetting tests =="

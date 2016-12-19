@@ -35,14 +35,9 @@ chdir Environment::APP_ROOT do
       # Note, we deviate from the default rails db:setup here because
       # it invokes the db:setup rake task which creates the db from the
       # schema (and seeds it), but doesn't run through migrations.
-      puts "\n== Preparing database =="
-      system! "bin/rails db:create"
-
-      puts "\n== Migrating database =="
-      system! "bin/rails db:migrate"
-
-      puts "\n== Seeding database =="
-      system! "bin/rails db:seed GOOD_MIGRATIONS=skip"
+      Environment.create_database
+      Environment.migrate_database
+      Environment.seed_database
     end
 
     if options[:do_tests]
