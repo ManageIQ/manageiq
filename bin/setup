@@ -1,5 +1,5 @@
 #!/usr/bin/env ruby
-require_relative 'environment'
+require_relative '../lib/manageiq/environment'
 require 'optparse'
 
 options = {:do_tests => true, :do_db => true}

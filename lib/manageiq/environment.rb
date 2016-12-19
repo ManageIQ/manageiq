@@ -2,7 +2,7 @@ require 'fileutils'
 require 'pathname'
 
 module Environment
-  APP_ROOT = Pathname.new(File.expand_path('../../', __FILE__))
+  APP_ROOT = Pathname.new(File.expand_path('../../..', __FILE__))
 
   def self.ensure_config_files
     config_files = {
