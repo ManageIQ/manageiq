@@ -1,4 +1,4 @@
-class MiqReportFormats
+class MiqReport::Formats
   format_hash = YAML.load_file(ApplicationRecord::FIXTURE_DIR.join('miq_report_formats.yml')).freeze
   FORMATS                = format_hash[:formats].freeze
   DEFAULTS_AND_OVERRIDES = format_hash[:defaults_and_overrides].freeze
@@ -19,7 +19,7 @@ class MiqReportFormats
   def self.default_format_for(column, suffix, datatype)
     DEFAULTS_AND_OVERRIDES[:formats_by_suffix][suffix] ||
       DEFAULTS_AND_OVERRIDES[:formats_by_column][column] ||
-      DEFAULTS_AND_OVERRIDES[:formats_by_sub_type][MiqReportFormats.sub_type(column)] ||
+      DEFAULTS_AND_OVERRIDES[:formats_by_sub_type][sub_type(column)] ||
       DEFAULTS_AND_OVERRIDES[:formats_by_data_type][datatype]
   end
 

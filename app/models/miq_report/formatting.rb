@@ -7,13 +7,13 @@ module MiqReport::Formatting
     def get_available_formats(path, dt)
       col = path.split("-").last.to_sym
       sfx = col.to_s.split("__").last
-      MiqReportFormats.available_formats_for(col, sfx, dt)
+      MiqReport::Formats.available_formats_for(col, sfx, dt)
     end
 
     def get_default_format(path, dt)
       col = path.split("-").last.to_sym
       sfx = col.to_s.split("__").last.try(:to_sym)
-      MiqReportFormats.default_format_for(col, sfx, dt)
+      MiqReport::Formats.default_format_for(col, sfx, dt)
     end
   end
 
@@ -21,7 +21,7 @@ module MiqReport::Formatting
     format_name ||= self.class.get_default_format(col, nil)
     return nil unless format_name && format_name != :_none_
 
-    format = MiqReportFormats.details(format_name)
+    format = MiqReport::Formats.details(format_name)
     function_name = format[:function][:name]
 
     options = format.merge(format[:function]).slice(
@@ -47,7 +47,7 @@ module MiqReport::Formatting
     return value.to_s if format == :_none_ # Raw value was requested, do not attempt to format
 
     # Format name passed in as a symbol or string
-    format = MiqReportFormats.details(format) if (format.kind_of?(Symbol) || format.kind_of?(String)) && format != :_default_
+    format = MiqReport::Formats.details(format) if (format.kind_of?(Symbol) || format.kind_of?(String)) && format != :_default_
 
     # Look in this report object for column format
     self.col_formats ||= []
@@ -55,7 +55,7 @@ module MiqReport::Formatting
       idx = col.kind_of?(String) ? col_order.index(col) : col
       if idx
         col = col_order[idx]
-        format = MiqReportFormats.details(self.col_formats[idx])
+        format = MiqReport::Formats.details(self.col_formats[idx])
       end
     end
 
@@ -65,7 +65,7 @@ module MiqReport::Formatting
       dt = value.class.to_s.downcase.to_sym if dt.nil?
       dt = dt.to_sym unless dt.nil?
       sfx = col.to_s.split('__').last.try(:to_sym)
-      format = MiqReportFormats.default_format_details_for(col, sfx, dt)
+      format = MiqReport::Formats.default_format_details_for(col, sfx, dt)
     else
       format = format.deep_clone # Make sure we don't taint the original
     end
