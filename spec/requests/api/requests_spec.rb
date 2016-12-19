@@ -232,10 +232,12 @@ RSpec.describe "Requests API" do
     it "exposes workflow in the request resources" do
       ems = FactoryGirl.create(:ems_vmware)
       vm_template = FactoryGirl.create(:template_vmware, :name => "template1", :ext_management_system => ems)
-      request = FactoryGirl.create(:miq_provision_request, :requester => @user, :src_vm_id => vm_template.id, :options => {:owner_email => 'tester@miq.com'})
-      workflow_class = request.workflow_class
-      allow_any_instance_of(workflow_class).to receive(:get_dialogs).and_return(:dialogs => {})
+      request = FactoryGirl.create(:miq_provision_request,
+                                   :requester => @user,
+                                   :src_vm_id => vm_template.id,
+                                   :options   => {:owner_email => 'tester@example.com'})
 
+      MiqDialog.seed
       api_basic_authorize action_identifier(:requests, :read, :resource_actions, :get)
       run_get requests_url(request.id), :attributes => "workflow"
 
