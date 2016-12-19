@@ -77,12 +77,6 @@ class ManageIQ::Providers::Google::CloudManager < ManageIQ::Providers::CloudMana
     _log.error "vm=[#{vm.name}], error: #{err}"
   end
 
-  def vm_destroy(vm, _options = {})
-    vm.vm_destroy
-  rescue => err
-    _log.error "vm=[#{vm.name}], error: #{err}"
-  end
-
   def vm_reboot_guest(vm, _options = {})
     vm.reboot_guest
   rescue => err

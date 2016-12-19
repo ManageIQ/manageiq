@@ -105,9 +105,14 @@ module VmOrTemplate::Operations
     end
 
     supports :terminate do
-      msg = unsupported_reason(:control) unless supports_control?
-      msg ||= _("Provider doesn't support vm_destroy") unless ext_management_system.respond_to?(:vm_destroy)
-      unsupported_reason_add(:terminate, msg) if msg
+      unsupported_reason_add(:terminate, unsupported_reason(:control)) unless supports_control?
+      if method(:raw_destroy).owner == VmOrTemplate::Operations
+        # the method in the base class forwards the operation to the manager
+        # hence we check if the operation is available on the manager
+        if ext_management_system && !ext_management_system.respond_to?(:vm_destroy)
+          unsupported_reason_add(:terminate, _("Provider doesn't support vm_destroy"))
+        end
+      end
     end
   end
 
