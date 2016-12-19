@@ -82,6 +82,11 @@ module ManageIQ
       system!("bower update --allow-root -F --silent --config.analytics=false")
     end
 
+    def self.bundler_version
+      gemfile = APP_ROOT.join("Gemfile")
+      File.read(gemfile).match(/gem\s+['"]bundler['"],\s+['"](.+?)['"]/)[1]
+    end
+
     def self.system!(*args)
       system(*args) || abort("\n== Command #{args} failed ==")
     end
