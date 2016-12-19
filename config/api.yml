@@ -647,6 +647,21 @@
       :get:
       - :name: read
         :identifier: load_balancer_show
+  :alerts:
+    :description: Alerts
+    :identifier: alert
+    :options:
+    - :collection
+    :verbs: *g
+    :klass: MiqAlertStatus
+    :collection_actions:
+      :get:
+      - :name: read
+        :identifier: alert_status_show_list
+    :resource_actions:
+      :get:
+      - :name: read
+        :identifier: alert_status_show
   :notifications:
     :description: "User's past notifications"
     :options:
