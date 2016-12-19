@@ -63,8 +63,10 @@ describe "Logging" do
 
       log_request_expectations = EXPECTED_LOGGED_PARAMETERS.merge(
         "Parameters" => a_hash_including(
-          "resource" => a_hash_including(
-            "options" => a_hash_including("password" => "[FILTERED]")
+          "body" => a_hash_including(
+            "resource" => a_hash_including(
+              "options" => a_hash_including("password" => "[FILTERED]")
+            )
           )
         )
       )
