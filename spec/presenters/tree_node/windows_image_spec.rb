@@ -5,5 +5,5 @@ describe TreeNode::WindowsImage do
   let(:object) { FactoryGirl.create(:windows_image) }
 
   include_examples 'TreeNode::Node#key prefix', 'wi-'
-  include_examples 'TreeNode::Node#image', '100/os-windows_generic.png'
+  include_examples 'TreeNode::Node#image', 'svg/os-windows_generic.svg'
 end

@@ -1,6 +1,6 @@
 module TreeNode
   class ExtManagementSystem < Node
-    set_attribute(:image) { "100/vendor-#{@object.image_name}.png" }
+    set_attribute(:image) { "svg/vendor-#{@object.image_name}.svg" }
 
     set_attribute(:tooltip) do
       # # TODO: This should really leverage .base_model on an EMS

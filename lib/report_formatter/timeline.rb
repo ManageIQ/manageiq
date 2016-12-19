@@ -102,11 +102,11 @@ module ReportFormatter
         when "Vm"
           e_title = rec[:name]
           e_icon = ActionController::Base.helpers.image_path("timeline/vendor-#{rec.vendor.downcase}.png")
-          e_image = ActionController::Base.helpers.image_path("100/os-#{rec.os_image_name.downcase}.png")
+          e_image = ActionController::Base.helpers.image_path("svg/os-#{rec.os_image_name.downcase}.svg")
         when "Host"
           e_title = rec[:name]
           e_icon = ActionController::Base.helpers.image_path("timeline/vendor-#{rec.vmm_vendor_display.downcase}.png")
-          e_image = ActionController::Base.helpers.image_path("100/os-#{rec.os_image_name.downcase}.png")
+          e_image = ActionController::Base.helpers.image_path("svg/os-#{rec.os_image_name.downcase}.svg")
         when "EventStream"
           ems_cloud = false
           if rec[:ems_id] && ExtManagementSystem.exists?(rec[:ems_id])
@@ -145,7 +145,7 @@ module ReportFormatter
             end
           end
           if rec[:vm_or_template_id] && Vm.exists?(rec[:vm_or_template_id])
-            e_image = ActionController::Base.helpers.image_path("100/os-#{Vm.find(rec[:vm_or_template_id]).os_image_name.downcase}.png")
+            e_image = ActionController::Base.helpers.image_path("svg/os-#{Vm.find(rec[:vm_or_template_id]).os_image_name.downcase}.svg")
           end
         else
           e_title = rec[:name] ? rec[:name] : row[mri.col_order.first].to_s

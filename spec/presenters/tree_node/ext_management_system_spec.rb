@@ -63,7 +63,7 @@ describe TreeNode::ExtManagementSystem do
 
       describe '#image' do
         it 'returns with the image' do
-          expect(subject.image).to eq("100/vendor-#{object.image_name}.png")
+          expect(subject.image).to eq("svg/vendor-#{object.image_name}.svg")
         end
       end
     end

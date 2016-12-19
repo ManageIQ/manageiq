@@ -15,7 +15,7 @@ module TreeNode
       when !@object.top_level_namespace
         '100/ae_domain.png'
       else
-        "100/vendor-#{@object.top_level_namespace.downcase}.png"
+        "svg/vendor-#{@object.top_level_namespace.downcase}.svg"
       end
       # rubocop:enable LiteralInCondition
     end
