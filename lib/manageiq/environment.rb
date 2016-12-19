@@ -79,6 +79,14 @@ module ManageIQ
       system!("#{APP_ROOT.join("bin/rails")} log:clear tmp:clear")
     end
 
+    def self.write_region_file(region_number = 1)
+      File.write(APP_ROOT.join("REGION"), region_number.to_s)
+    end
+
+    def self.create_database_user
+      system!(%q(psql -c "CREATE USER root SUPERUSER PASSWORD 'smartvm';" -U postgres))
+    end
+
     def self.update_bower
       system!("bower update --allow-root -F --silent --config.analytics=false")
     end
