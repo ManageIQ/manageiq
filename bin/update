@@ -5,29 +5,29 @@ def system!(*args)
   system(*args) || abort("\n== Command #{args} failed ==")
 end
 
-chdir Environment::APP_ROOT do
+chdir ManageIQ::Environment::APP_ROOT do
   # This script is a way to update your development environment automatically.
   # Add necessary update steps to this file.
-  Environment.ensure_config_files
+  ManageIQ::Environment.ensure_config_files
 
   puts '== Installing dependencies =='
-  Environment.while_updating_bower do
-    Environment.install_bundler
+  ManageIQ::Environment.while_updating_bower do
+    ManageIQ::Environment.install_bundler
 
     # TODO: This unlocks your dependencies and installs all updates.
     # From: https://github.com/ManageIQ/manageiq/pull/11137
     # It should be system('bundle check') || system!('bundle install').
     # If we need a "reset all the things" script, we should call it bin/reset.
-    Environment.bundle_update
+    ManageIQ::Environment.bundle_update
 
-    Environment.migrate_database
-    Environment.seed_database
+    ManageIQ::Environment.migrate_database
+    ManageIQ::Environment.seed_database
 
-    Environment.setup_test_environment unless ENV["SKIP_TEST_RESET"]
-    Environment.reset_automate_domain  unless ENV["SKIP_AUTOMATE_RESET"]
+    ManageIQ::Environment.setup_test_environment unless ENV["SKIP_TEST_RESET"]
+    ManageIQ::Environment.reset_automate_domain  unless ENV["SKIP_AUTOMATE_RESET"]
   end
 
   # Make sure bower is done before compiling assets
-  Environment.compile_assets if ENV['RAILS_ENV'] == 'production'
-  Environment.clear_logs_and_temp
+  ManageIQ::Environment.compile_assets if ENV['RAILS_ENV'] == 'production'
+  ManageIQ::Environment.clear_logs_and_temp
 end
