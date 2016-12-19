@@ -29,7 +29,7 @@ class Hardware < ApplicationRecord
   virtual_attribute :ram_size_in_bytes, :integer, :arel => ->(t) { t.grouping(t[:memory_mb] * 1.megabyte) }
 
   def ipaddresses
-    @ipaddresses ||= networks.collect(&:ipaddress).compact.uniq
+    @ipaddresses ||= networks.collect(&:ipaddress).compact.uniq + networks.collect(&:ipv6address).compact.uniq
   end
 
   def hostnames
