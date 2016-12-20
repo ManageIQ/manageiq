@@ -33,20 +33,29 @@ class Chargeback
        MiqEnterprise.my_enterprise].compact
     end
 
-    def none?(_metric)
-      true # No, values except for fixed (RateDetail.fixed?)
-    end
-
-    def max(_metric)
-      raise NotImplementedError # Unreachable code since none?==true
-    end
-
-    def avg(_metric)
-      raise NotImplementedError # Unreachable code since none?==true
+    def none?(metric)
+      current_value(metric).nil?
     end
 
     def chargeback_fields_present
       1 # Yes, charge this interval as fixed_compute_*_*
     end
+
+    def current_value(metric)
+      # Return the last seen allocation for charging purposes.
+      @value ||= {}
+      @value[metric] ||= case metric
+                         when 'derived_vm_numvcpus' # Allocated CPU count
+                           resource.hardware.try(:cpu_total_cores)
+                         when 'derived_memory_available'
+                           resource.hardware.try(:memory_mb)
+                         when 'derived_vm_allocated_disk_storage'
+                           resource.allocated_disk_storage
+                         end
+      @value[metric]
+    end
+    alias avg current_value
+    alias max current_value
+    private :current_value
   end
 end
