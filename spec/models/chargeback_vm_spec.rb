@@ -67,7 +67,7 @@ describe ChargebackVm do
     temp = {:cb_rate => chargeback_rate, :tag => [c, "vm"]}
     ChargebackRate.set_assignments(:compute, [temp])
 
-    Timecop.travel(Time.parse('2012-09-01 23:59:59').utc)
+    Timecop.travel(Time.parse('2012-09-01 23:59:59Z'))
   end
 
   after do
