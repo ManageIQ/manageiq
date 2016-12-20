@@ -1,5 +1,5 @@
 describe ChargebackContainerImage do
-  let(:base_options) { {:interval_size => 1, :end_interval_offset => 0, :ext_options => {:tz => 'Pacific Time (US & Canada)'} } }
+  let(:base_options) { {:interval_size => 1, :end_interval_offset => 0, :ext_options => {:tz => 'UTC'} } }
   let(:hourly_rate)       { 0.01 }
   let(:ts) { Time.now.in_time_zone(Metric::Helper.get_time_zone(options[:ext_options])) }
   let(:month_beginning) { ts.beginning_of_month.utc }
@@ -38,7 +38,7 @@ describe ChargebackContainerImage do
     @project.tag_with(@tag.name, :ns => '*')
     @image.tag_with(@tag.name, :ns => '*')
 
-    Timecop.travel(Time.parse("2012-09-01 00:00:00 UTC"))
+    Timecop.travel(Time.parse('2012-09-01 23:59:59').utc)
   end
 
   after do
@@ -48,9 +48,11 @@ describe ChargebackContainerImage do
   context "Daily" do
     let(:hours_in_day) { 24 }
     let(:options) { base_options.merge(:interval => 'daily', :entity_id => @project.id, :tag => nil) }
+    let(:start_time)  { Time.parse('2012-09-01 07:00:00').utc }
+    let(:finish_time) { Time.parse('2012-09-01 10:00:00').utc }
 
     before do
-      ["2012-08-31T07:00:00Z", "2012-08-31T08:00:00Z", "2012-08-31T09:00:00Z", "2012-08-31T10:00:00Z"].each do |t|
+      Range.new(start_time, finish_time, true).step_value(1.hour).each do |t|
         @container.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr, :with_data,
                                                         :timestamp                => t,
                                                         :parent_ems_id            => ems.id,
