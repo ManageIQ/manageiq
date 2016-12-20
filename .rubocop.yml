@@ -29,7 +29,6 @@ GlobalVars:
 AllCops:
   TargetRubyVersion: 2.2
   Exclude:
-    - gems/pending/VMwareWebService/wsdl41/vimws25MappingRegistry.rb
     - lib/generators/provider/templates/**/*
     - db/schema.rb
     - vendor/**/*
@@ -42,8 +41,6 @@ FileName:
 Metrics/LineLength:
   Exclude:
     - Gemfile
-    - gems/pending/Gemfile
 Style/ExtraSpacing:
   Exclude:
     - Gemfile
-    - gems/pending/Gemfile
