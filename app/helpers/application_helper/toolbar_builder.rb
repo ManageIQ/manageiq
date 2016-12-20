@@ -424,8 +424,6 @@ class ApplicationHelper::ToolbarBuilder
 
   # Determine if a button should be hidden
   def hide_button?(id)
-    return true if id == "blank_button" # Always hide the blank button placeholder
-
     # need to hide add buttons when on sub-list view screen of a CI.
     return true if id.ends_with?("_new", "_discover") &&
                    @lastaction == "show" && !["main", "vms"].include?(@display)

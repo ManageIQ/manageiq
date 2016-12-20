@@ -5,6 +5,7 @@ class ApplicationHelper::Toolbar::BlankView < ApplicationHelper::Toolbar::Basic
       nil,
       nil,
       nil,
-      :enabled => false),
+      :enabled => false,
+      :klass   => ApplicationHelper::Button::BlankButton),
   ])
 end
