@@ -99,12 +99,22 @@ module ApplicationHelper::Toolbar::Cloud::InstanceOperationsButtonGroupMixin
             :options => {:feature => :terminate}),
         ]
       ),
-      included_class.button(
-        :vm_vnc_console,
-        'fa fa-html5 fa-lg',
-        N_('Open a web-based VNC or SPICE console for this VM'),
-        nil,
-        :url => "html5_console"),
+    ])
+    included_class.button_group('vm_access', [
+      included_class.select(
+        :vm_remote_access_choice,
+        'fa pficon-screen fa-lg',
+        N_('VM Remote Access'),
+        N_('Access'),
+        :items => [
+          included_class.button(
+            :vm_vnc_console,
+            'pficon pficon-screen fa-lg',
+            N_('Open a web-based VNC or SPICE console for this VM'),
+            N_('VM Console'),
+            :url => "html5_console"),
+        ]
+      ),
     ])
   end
 end
