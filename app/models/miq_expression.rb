@@ -891,9 +891,7 @@ class MiqExpression
   def field_in_sql?(field)
     # => false if operand is from a virtual reflection
     return false if self.field_from_virtual_reflection?(field)
-
-    # => false if operand if a virtual coulmn
-    return false if self.field_is_virtual_column?(field)
+    return false unless attribute_supported_by_sql?(field)
 
     # => false if excluded by special case defined in preprocess options
     return false if self.field_excluded_by_preprocess_options?(field)
@@ -903,6 +901,10 @@ class MiqExpression
 
   def field_from_virtual_reflection?(field)
     col_details[field][:virtual_reflection]
+  end
+
+  def attribute_supported_by_sql?(field)
+    col_details[field][:sql_support]
   end
 
   def field_is_virtual_column?(field)
@@ -928,7 +930,8 @@ class MiqExpression
 
     operator = exp.keys.first
     if exp[operator].kind_of?(Hash) && exp[operator].key?("field")
-      unless exp[operator]["field"] == "<count>" || self.field_from_virtual_reflection?(exp[operator]["field"]) || self.field_is_virtual_column?(exp[operator]["field"])
+      if exp[operator]["field"] != "<count>" &&
+         !field_from_virtual_reflection?(exp[operator]["field"]) && !field_has_arel?(exp[operator]["field"])
         col = exp[operator]["field"]
         if col.include?(".")
           col = col.split(".").last
@@ -998,7 +1001,7 @@ class MiqExpression
   end
 
   def self.get_col_info(field, options = {})
-    result ||= {:data_type => nil, :virtual_reflection => false, :virtual_column => false, :excluded_by_preprocess_options => false, :tag => false, :include => {}}
+    result ||= {:data_type => nil, :virtual_reflection => false, :virtual_column => false, :sql_support => true, :excluded_by_preprocess_options => false, :tag => false, :include => {}}
     col = field.split("-").last if field.include?("-")
     parts = field.split("-").first.split(".")
     model = parts.shift
@@ -1023,6 +1026,7 @@ class MiqExpression
 
       unless ref
         result[:virtual_reflection] = true
+        result[:sql_support] = false
         result[:virtual_column] = true
         return result
       end
@@ -1032,7 +1036,8 @@ class MiqExpression
     if col
       result[:data_type] = col_type(model, col)
       result[:format_sub_type] = MiqReport::FORMAT_DEFAULTS_AND_OVERRIDES[:sub_types_by_column][col.to_sym] || result[:data_type]
-      result[:virtual_column] = true if model.virtual_attribute?(col.to_s)
+      result[:virtual_column] = model.virtual_attribute?(col.to_s)
+      result[:sql_support] = model.attribute_supported_by_sql?(col.to_s)
       result[:excluded_by_preprocess_options] = self.exclude_col_by_preprocess_options?(col, options)
     end
     result
