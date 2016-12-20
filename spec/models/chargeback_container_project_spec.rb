@@ -7,6 +7,22 @@ describe ChargebackContainerProject do
   let(:hours_in_month) { Time.days_in_month(month_beginning.month, month_beginning.year) * 24 }
   let(:ems) {FactoryGirl.create(:ems_openshift) }
 
+  let(:hourly_variable_tier_rate) { {:variable_rate => hourly_rate.to_s} }
+
+  let(:detail_params) do
+    {
+      :chargeback_rate_detail_fixed_compute_cost => {:tiers  => [hourly_variable_tier_rate],
+                                                     :detail => { :source => 'compute_1'} },
+      :chargeback_rate_detail_cpu_cores_used     => {:tiers => [hourly_variable_tier_rate]},
+      :chargeback_rate_detail_net_io_used        => {:tiers => [hourly_variable_tier_rate]},
+      :chargeback_rate_detail_memory_used        => {:tiers => [hourly_variable_tier_rate]}
+    }
+  end
+
+  let!(:chargeback_rate) do
+    FactoryGirl.create(:chargeback_rate, :detail_params => detail_params)
+  end
+
   before do
     MiqRegion.seed
     ChargebackRate.seed
@@ -14,8 +30,7 @@ describe ChargebackContainerProject do
     EvmSpecHelper.create_guid_miq_server_zone
     @project = FactoryGirl.create(:container_project, :name => "my project", :ext_management_system => ems)
 
-    @cbr = FactoryGirl.create(:chargeback_rate, :rate_type => "Compute")
-    temp = {:cb_rate => @cbr, :object => ems}
+    temp = {:cb_rate => chargeback_rate, :object => ems}
     ChargebackRate.set_assignments(:compute, [temp])
 
     cat = FactoryGirl.create(:classification, :description => "Environment", :name => "environment", :single_value => true, :show => true)
@@ -53,70 +68,21 @@ describe ChargebackContainerProject do
     subject { ChargebackContainerProject.build_results_for_report_ChargebackContainerProject(options).first.first }
 
     it "cpu" do
-      cbrd = FactoryGirl.build(:chargeback_rate_detail_cpu_cores_used,
-                               :chargeback_rate_id => @cbr.id,
-                               :per_time           => "hourly")
-      cbt = FactoryGirl.create(:chargeback_tier,
-                               :chargeback_rate_detail_id => cbrd.id,
-                               :start                     => 0,
-                               :finish                    => Float::INFINITY,
-                               :fixed_rate                => 0.0,
-                               :variable_rate             => hourly_rate.to_s)
-      cbrd.chargeback_tiers = [cbt]
-      cbrd.save
-
       metric_used = used_average_for(:cpu_usage_rate_average, hours_in_day)
       expect(subject.cpu_cores_used_metric).to eq(metric_used)
       expect(subject.cpu_cores_used_cost).to be_within(0.01).of(metric_used * hourly_rate * hours_in_day)
     end
 
     it "memory" do
-      cbrd = FactoryGirl.build(:chargeback_rate_detail_memory_used,
-                               :chargeback_rate_id => @cbr.id,
-                               :per_time           => "hourly")
-      cbt = FactoryGirl.create(:chargeback_tier,
-                               :chargeback_rate_detail_id => cbrd.id,
-                               :start                     => 0,
-                               :finish                    => Float::INFINITY,
-                               :fixed_rate                => 0.0,
-                               :variable_rate             => hourly_rate.to_s)
-      cbrd.chargeback_tiers = [cbt]
-      cbrd.save
-
       metric_used = used_average_for(:derived_memory_used, hours_in_day)
       expect(subject.memory_used_metric).to eq(metric_used)
       expect(subject.memory_used_cost).to be_within(0.01).of(metric_used * hourly_rate * hours_in_day)
     end
 
     it "net io" do
-      cbrd = FactoryGirl.build(:chargeback_rate_detail_net_io_used,
-                               :chargeback_rate_id => @cbr.id,
-                               :per_time           => "hourly")
-      cbt = FactoryGirl.create(:chargeback_tier,
-                               :chargeback_rate_detail_id => cbrd.id,
-                               :start                     => 0,
-                               :finish                    => Float::INFINITY,
-                               :fixed_rate                => 0.0,
-                               :variable_rate             => hourly_rate.to_s)
-      cbrd.chargeback_tiers = [cbt]
-      cbrd.save
-
       metric_used = used_average_for(:net_usage_rate_average, hours_in_day)
       expect(subject.net_io_used_metric).to eq(metric_used)
       expect(subject.net_io_used_cost).to be_within(0.01).of(metric_used * hourly_rate * hours_in_day)
-    end
-
-    let(:cbt) { FactoryGirl.create(:chargeback_tier,
-                                   :start                     => 0,
-                                   :finish                    => Float::INFINITY,
-                                   :fixed_rate                => 0.0,
-                                   :variable_rate             => hourly_rate.to_s) }
-    let!(:cbrd) do
-      FactoryGirl.create(:chargeback_rate_detail_fixed_compute_cost,
-                         :source             => "compute_1",
-                         :chargeback_rate_id => @cbr.id,
-                         :per_time           => "hourly",
-                         :chargeback_tiers   => [cbt])
     end
 
     it "fixed_compute" do
@@ -142,70 +108,21 @@ describe ChargebackContainerProject do
     subject { ChargebackContainerProject.build_results_for_report_ChargebackContainerProject(options).first.first }
 
     it "cpu" do
-      cbrd = FactoryGirl.build(:chargeback_rate_detail_cpu_cores_used,
-                               :chargeback_rate_id => @cbr.id,
-                               :per_time           => "hourly")
-      cbt = FactoryGirl.create(:chargeback_tier,
-                               :chargeback_rate_detail_id => cbrd.id,
-                               :start                     => 0,
-                               :finish                    => Float::INFINITY,
-                               :fixed_rate                => 0.0,
-                               :variable_rate             => hourly_rate.to_s)
-      cbrd.chargeback_tiers = [cbt]
-      cbrd.save
-
       metric_used = used_average_for(:cpu_usage_rate_average, hours_in_month)
       expect(subject.cpu_cores_used_metric).to be_within(0.01).of(metric_used)
       expect(subject.cpu_cores_used_cost).to be_within(0.01).of(metric_used * hourly_rate * hours_in_month)
     end
 
     it "memory" do
-      cbrd = FactoryGirl.build(:chargeback_rate_detail_memory_used,
-                               :chargeback_rate_id => @cbr.id,
-                               :per_time           => "hourly")
-      cbt = FactoryGirl.create(:chargeback_tier,
-                               :chargeback_rate_detail_id => cbrd.id,
-                               :start                     => 0,
-                               :finish                    => Float::INFINITY,
-                               :fixed_rate                => 0.0,
-                               :variable_rate             => hourly_rate.to_s)
-      cbrd.chargeback_tiers = [cbt]
-      cbrd.save
-
       metric_used = used_average_for(:derived_memory_used, hours_in_month)
       expect(subject.memory_used_metric).to be_within(0.01).of(metric_used)
       expect(subject.memory_used_cost).to be_within(0.01).of(metric_used * hourly_rate * hours_in_month)
     end
 
     it "net io" do
-      cbrd = FactoryGirl.build(:chargeback_rate_detail_net_io_used,
-                               :chargeback_rate_id => @cbr.id,
-                               :per_time           => "hourly")
-      cbt = FactoryGirl.create(:chargeback_tier,
-                               :chargeback_rate_detail_id => cbrd.id,
-                               :start                     => 0,
-                               :finish                    => Float::INFINITY,
-                               :fixed_rate                => 0.0,
-                               :variable_rate             => hourly_rate.to_s)
-      cbrd.chargeback_tiers = [cbt]
-      cbrd.save
-
       metric_used = used_average_for(:net_usage_rate_average, hours_in_month)
       expect(subject.net_io_used_metric).to be_within(0.01).of(metric_used)
       expect(subject.net_io_used_cost).to be_within(0.01).of(metric_used * hourly_rate * hours_in_month)
-    end
-
-    let(:cbt) { FactoryGirl.create(:chargeback_tier,
-                                   :start                     => 0,
-                                   :finish                    => Float::INFINITY,
-                                   :fixed_rate                => 0.0,
-                                   :variable_rate             => hourly_rate.to_s) }
-    let!(:cbrd) do
-      FactoryGirl.create(:chargeback_rate_detail_fixed_compute_cost,
-                         :source             => "compute_1",
-                         :chargeback_rate_id => @cbr.id,
-                         :per_time           => "hourly",
-                         :chargeback_tiers   => [cbt])
     end
 
     it "fixed_compute" do
@@ -230,18 +147,6 @@ describe ChargebackContainerProject do
     subject { ChargebackContainerProject.build_results_for_report_ChargebackContainerProject(options).first.first }
 
     it "cpu" do
-      cbrd = FactoryGirl.build(:chargeback_rate_detail_cpu_cores_used,
-                               :chargeback_rate_id => @cbr.id,
-                               :per_time           => "hourly")
-      cbt = FactoryGirl.create(:chargeback_tier,
-                               :chargeback_rate_detail_id => cbrd.id,
-                               :start                     => 0,
-                               :finish                    => Float::INFINITY,
-                               :fixed_rate                => 0.0,
-                               :variable_rate             => hourly_rate.to_s)
-      cbrd.chargeback_tiers = [cbt]
-      cbrd.save
-
       metric_used = used_average_for(:cpu_usage_rate_average, hours_in_month)
       expect(subject.cpu_cores_used_metric).to be_within(0.01).of(metric_used)
       expect(subject.cpu_cores_used_cost).to be_within(0.01).of(metric_used * hourly_rate * hours_in_month)
@@ -263,18 +168,6 @@ describe ChargebackContainerProject do
     subject { ChargebackContainerProject.build_results_for_report_ChargebackContainerProject(options).first.first }
 
     it "cpu" do
-      cbrd = FactoryGirl.build(:chargeback_rate_detail_cpu_cores_used,
-                               :chargeback_rate_id => @cbr.id,
-                               :per_time           => "hourly")
-      cbt = FactoryGirl.create(:chargeback_tier,
-                               :chargeback_rate_detail_id => cbrd.id,
-                               :start                     => 0,
-                               :finish                    => Float::INFINITY,
-                               :fixed_rate                => 0.0,
-                               :variable_rate             => hourly_rate.to_s)
-      cbrd.chargeback_tiers = [cbt]
-      cbrd.save
-
       metric_used = used_average_for(:cpu_usage_rate_average, hours_in_month)
       expect(subject.cpu_cores_used_metric).to be_within(0.01).of(metric_used)
       expect(subject.cpu_cores_used_cost).to be_within(0.01).of(metric_used * hourly_rate * hours_in_month)
@@ -305,19 +198,6 @@ describe ChargebackContainerProject do
     end
 
     subject { ChargebackContainerProject.build_results_for_report_ChargebackContainerProject(options).first.first }
-
-    let(:cbt) { FactoryGirl.create(:chargeback_tier,
-                                   :start                     => 0,
-                                   :finish                    => Float::INFINITY,
-                                   :fixed_rate                => 0.0,
-                                   :variable_rate             => hourly_rate.to_s) }
-    let!(:cbrd) do
-      FactoryGirl.create(:chargeback_rate_detail_fixed_compute_cost,
-                         :chargeback_rate_id => @cbr.id,
-                         :per_time           => "hourly",
-                         :chargeback_tiers   => [cbt],
-                         :source             => "compute_1")
-    end
 
     it "fixed_compute" do
       # .to be_within(0.01) is used since theres a float error here

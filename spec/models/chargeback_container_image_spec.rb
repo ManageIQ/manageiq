@@ -7,6 +7,17 @@ describe ChargebackContainerImage do
   let(:hours_in_month) { Time.days_in_month(month_beginning.month, month_beginning.year) * 24 }
   let(:ems) { FactoryGirl.create(:ems_openshift) }
 
+  let(:hourly_variable_tier_rate) { {:variable_rate => hourly_rate.to_s} }
+
+  let(:detail_params) do
+    {:chargeback_rate_detail_fixed_compute_cost => { :tiers  => [hourly_variable_tier_rate],
+                                                     :detail => { :source => "compute_1"} } }
+  end
+
+  let!(:chargeback_rate) do
+    FactoryGirl.create(:chargeback_rate, :detail_params => detail_params)
+  end
+
   before do
     MiqRegion.seed
     ChargebackRate.seed
@@ -21,8 +32,7 @@ describe ChargebackContainerImage do
     @container = FactoryGirl.create(:kubernetes_container, :container_group => @group, :container_image => @image)
     cat = FactoryGirl.create(:classification, :description => "Environment", :name => "environment", :single_value => true, :show => true)
     c = FactoryGirl.create(:classification, :name => "prod", :description => "Production", :parent_id => cat.id)
-    @cbr = FactoryGirl.create(:chargeback_rate, :rate_type => "Compute")
-    ChargebackRate.set_assignments(:compute, [{ :cb_rate => @cbr, :tag => [c, "container_image"] }])
+    ChargebackRate.set_assignments(:compute, [{ :cb_rate => chargeback_rate, :tag => [c, "container_image"] }])
 
     @tag = c.tag
     @project.tag_with(@tag.name, :ns => '*')
@@ -56,20 +66,6 @@ describe ChargebackContainerImage do
 
     subject { ChargebackContainerImage.build_results_for_report_ChargebackContainerImage(options).first.first }
 
-    let(:cbt) {
-      FactoryGirl.create(:chargeback_tier,
-                         :start         => 0,
-                         :finish        => Float::INFINITY,
-                         :fixed_rate    => 0.0,
-                         :variable_rate => hourly_rate.to_s)
-    }
-    let!(:cbrd) {
-      FactoryGirl.create(:chargeback_rate_detail_fixed_compute_cost,
-                         :source             => "compute_1",
-                         :chargeback_rate_id => @cbr.id,
-                         :per_time           => "hourly",
-                         :chargeback_tiers   => [cbt])
-    }
     it "fixed_compute" do
       expect(subject.fixed_compute_1_cost).to eq(hourly_rate * hours_in_day)
     end
@@ -93,20 +89,6 @@ describe ChargebackContainerImage do
 
     subject { ChargebackContainerImage.build_results_for_report_ChargebackContainerImage(options).first.first }
 
-    let(:cbt) {
-      FactoryGirl.create(:chargeback_tier,
-                         :start         => 0,
-                         :finish        => Float::INFINITY,
-                         :fixed_rate    => 0.0,
-                         :variable_rate => hourly_rate.to_s)
-    }
-    let!(:cbrd) {
-      FactoryGirl.create(:chargeback_rate_detail_fixed_compute_cost,
-                         :chargeback_rate_id => @cbr.id,
-                         :per_time           => "hourly",
-                         :source             => "compute_1",
-                         :chargeback_tiers   => [cbt])
-    }
     it "fixed_compute" do
       # .to be_within(0.01) is used since theres a float error here
       expect(subject.fixed_compute_1_cost).to be_within(0.01).of(hourly_rate * hours_in_month)
@@ -117,7 +99,7 @@ describe ChargebackContainerImage do
     let(:options) { base_options.merge(:interval => 'monthly', :entity_id => @project.id, :tag => nil) }
     before do
       @image.docker_labels << @label
-      ChargebackRate.set_assignments(:compute, [{ :cb_rate => @cbr, :label => [@label, "container_image"] }])
+      ChargebackRate.set_assignments(:compute, [{ :cb_rate => chargeback_rate, :label => [@label, "container_image"] }])
 
       Range.new(month_beginning, month_end, true).step_value(12.hours).each do |time|
         @container.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr, :with_data,
@@ -134,20 +116,6 @@ describe ChargebackContainerImage do
 
     subject { ChargebackContainerImage.build_results_for_report_ChargebackContainerImage(options).first.first }
 
-    let(:cbt) {
-      FactoryGirl.create(:chargeback_tier,
-                         :start         => 0,
-                         :finish        => Float::INFINITY,
-                         :fixed_rate    => 0.0,
-                         :variable_rate => hourly_rate.to_s)
-    }
-    let!(:cbrd) {
-      FactoryGirl.create(:chargeback_rate_detail_fixed_compute_cost,
-                         :chargeback_rate_id => @cbr.id,
-                         :per_time           => "hourly",
-                         :source             => "compute_1",
-                         :chargeback_tiers   => [cbt])
-    }
     it "fixed_compute" do
       # .to be_within(0.01) is used since theres a float error here
       expect(subject.fixed_compute_1_cost).to be_within(0.01).of(hourly_rate * hours_in_month)
