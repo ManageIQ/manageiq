@@ -155,7 +155,7 @@ class MiqQueue < ApplicationRecord
       options[:priority] || MIN_PRIORITY,
     ]
 
-    prefetch_max_per_worker = Settings.server.prefetch_max_per_worker || 10
+    prefetch_max_per_worker = Settings.server.prefetch_max_per_worker
     msgs = MiqQueue.where(cond).order("priority, id").limit(prefetch_max_per_worker)
     return nil if msgs.empty? # Nothing available in the queue
 
