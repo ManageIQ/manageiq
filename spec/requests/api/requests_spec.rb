@@ -236,8 +236,10 @@ RSpec.describe "Requests API" do
                                    :requester => @user,
                                    :src_vm_id => vm_template.id,
                                    :options   => {:owner_email => 'tester@example.com'})
+      FactoryGirl.create(:miq_dialog,
+                         :name        => "miq_provision_dialogs",
+                         :dialog_type => MiqProvisionWorkflow)
 
-      MiqDialog.seed
       api_basic_authorize action_identifier(:requests, :read, :resource_actions, :get)
       run_get requests_url(request.id), :attributes => "workflow"
 
