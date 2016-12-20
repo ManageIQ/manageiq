@@ -424,10 +424,6 @@ class ApplicationHelper::ToolbarBuilder
 
   # Determine if a button should be hidden
   def hide_button?(id)
-    # need to hide add buttons when on sub-list view screen of a CI.
-    return true if id.ends_with?("_new", "_discover") &&
-                   @lastaction == "show" && !["main", "vms"].include?(@display)
-
     # user can see the buttons if they can get to Policy RSOP/Automate Simulate screen
     return false if ["miq_ae_tools"].include?(@layout)
 
