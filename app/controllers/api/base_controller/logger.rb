@@ -35,7 +35,10 @@ module Api
         @parameter_filter ||= ActionDispatch::Http::ParameterFilter.new(Rails.application.config.filter_parameters)
         return unless api_log_info?
         log_request("Request", @req.to_hash)
-        log_request("Parameters", @parameter_filter.filter(request.query_parameters.merge("body" => @req.json_body)))
+        unfiltered_params = request.query_parameters
+                                   .merge(params.permit(:action, :controller, :format).to_h)
+                                   .merge("body" => @req.json_body)
+        log_request("Parameters", @parameter_filter.filter(unfiltered_params))
         log_request_body
       end
 
