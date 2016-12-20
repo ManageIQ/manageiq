@@ -10,7 +10,8 @@ class ApplicationHelper::Toolbar::PxeServersCenter < ApplicationHelper::Toolbar:
           :pxe_server_new,
           'pficon pficon-add-circle-o fa-lg',
           t = N_('Add a New PXE Server'),
-          t),
+          t,
+          :klass => ApplicationHelper::Button::ButtonNewDiscover),
         button(
           :pxe_server_edit,
           'pficon pficon-edit fa-lg',

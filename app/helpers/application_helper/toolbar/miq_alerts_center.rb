@@ -10,7 +10,8 @@ class ApplicationHelper::Toolbar::MiqAlertsCenter < ApplicationHelper::Toolbar::
           :alert_new,
           'pficon pficon-add-circle-o fa-lg',
           t = N_('Add a New Alert'),
-          t),
+          t,
+          :klass => ApplicationHelper::Button::ButtonNewDiscover),
       ]
     ),
   ])

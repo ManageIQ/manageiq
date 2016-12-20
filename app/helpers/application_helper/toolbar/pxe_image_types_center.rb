@@ -10,7 +10,8 @@ class ApplicationHelper::Toolbar::PxeImageTypesCenter < ApplicationHelper::Toolb
           :pxe_image_type_new,
           'pficon pficon-add-circle-o fa-lg',
           t = N_('Add a new System Image Type'),
-          t),
+          t,
+          :klass => ApplicationHelper::Button::ButtonNewDiscover),
         button(
           :pxe_image_type_edit,
           'pficon pficon-edit fa-lg',

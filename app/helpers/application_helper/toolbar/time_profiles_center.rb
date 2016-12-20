@@ -11,7 +11,8 @@ class ApplicationHelper::Toolbar::TimeProfilesCenter < ApplicationHelper::Toolba
           'pficon pficon-add-circle-o fa-lg',
           t = N_('Add a new Time Profile'),
           t,
-          :url => "/timeprofile_new"),
+          :url   => "/timeprofile_new",
+          :klass => ApplicationHelper::Button::ButtonNewDiscover),
         button(
           :tp_edit,
           'pficon pficon-edit fa-lg',

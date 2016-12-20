@@ -72,14 +72,16 @@ class ApplicationHelper::Toolbar::HostsCenter < ApplicationHelper::Toolbar::Basi
           t = N_('Discover items'),
           t,
           :url       => "/discover",
-          :url_parms => "?discover_type=hosts"),
+          :url_parms => "?discover_type=hosts",
+          :klass     => ApplicationHelper::Button::ButtonNewDiscover),
         separator,
         button(
           :host_new,
           'pficon pficon-add-circle-o fa-lg',
           t = N_('Add a New item'),
           t,
-          :url => "/new"),
+          :url   => "/new",
+          :klass => ApplicationHelper::Button::ButtonNewDiscover),
         button(
           :host_edit,
           'pficon pficon-edit fa-lg',
@@ -160,7 +162,8 @@ class ApplicationHelper::Toolbar::HostsCenter < ApplicationHelper::Toolbar::Basi
           N_('Provision items'),
           :url_parms => "main_div",
           :enabled   => false,
-          :onwhen    => "1+"),
+          :onwhen    => "1+",
+          :klass     => ApplicationHelper::Button::ButtonNewDiscover),
       ]
     ),
   ])

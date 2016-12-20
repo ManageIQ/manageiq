@@ -22,7 +22,7 @@ class ApplicationHelper::Toolbar::EmsNetworksCenter < ApplicationHelper::Toolbar
           t = N_('Add a New Network Provider'),
           t,
           :url   => "/new",
-          :klass => ApplicationHelper::Button::EmsNetwork),
+          :klass => ApplicationHelper::Button::EmsNetworkNew),
         button(
           :ems_network_edit,
           'pficon pficon-edit fa-lg',

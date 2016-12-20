@@ -12,7 +12,8 @@ class ApplicationHelper::Toolbar::NetworkRoutersCenter < ApplicationHelper::Tool
             :network_router_new,
             'pficon pficon-add-circle-o fa-lg',
             t = N_('Add a new Router'),
-            t
+            t,
+            :klass => ApplicationHelper::Button::ButtonNewDiscover
           ),
           separator,
           button(

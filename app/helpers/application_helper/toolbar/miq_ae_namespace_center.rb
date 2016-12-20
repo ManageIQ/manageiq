@@ -25,13 +25,13 @@ class ApplicationHelper::Toolbar::MiqAeNamespaceCenter < ApplicationHelper::Tool
           'pficon pficon-add-circle-o fa-lg',
           t = N_('Add a New Namespace'),
           t,
-          :klass => ApplicationHelper::Button::MiqAeDefault),
+          :klass => ApplicationHelper::Button::MiqAeNew),
         button(
           :miq_ae_class_new,
           'pficon pficon-add-circle-o fa-lg',
           t = N_('Add a New Class'),
           t,
-          :klass => ApplicationHelper::Button::MiqAeDefault),
+          :klass => ApplicationHelper::Button::MiqAeNew),
         button(
           :miq_ae_item_edit,
           'pficon pficon-edit fa-lg',

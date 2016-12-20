@@ -109,7 +109,8 @@ class ApplicationHelper::Toolbar::HostCenter < ApplicationHelper::Toolbar::Basic
           :host_miq_request_new,
           'pficon pficon-add-circle-o fa-lg',
           t = N_('Provision this item'),
-          t),
+          t,
+          :klass => ApplicationHelper::Button::ButtonNewDiscover),
       ]
     ),
   ])

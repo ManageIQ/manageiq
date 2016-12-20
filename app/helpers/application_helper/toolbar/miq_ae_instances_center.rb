@@ -32,7 +32,7 @@ class ApplicationHelper::Toolbar::MiqAeInstancesCenter < ApplicationHelper::Tool
           'pficon pficon-add-circle-o fa-lg',
           t = N_('Add a New Instance'),
           t,
-          :klass => ApplicationHelper::Button::MiqAeDefault),
+          :klass => ApplicationHelper::Button::MiqAeNew),
         button(
           :miq_ae_instance_edit,
           'pficon pficon-edit fa-lg',

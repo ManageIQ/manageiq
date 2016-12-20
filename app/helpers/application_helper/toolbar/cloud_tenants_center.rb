@@ -10,7 +10,8 @@ class ApplicationHelper::Toolbar::CloudTenantsCenter < ApplicationHelper::Toolba
           :cloud_tenant_new,
           'pficon pficon-edit fa-lg',
           t = N_('Create Cloud Tenant'),
-          t),
+          t,
+          :klass => ApplicationHelper::Button::ButtonNewDiscover),
         button(
           :cloud_tenant_edit,
           'pficon pficon-edit fa-lg',

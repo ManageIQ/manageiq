@@ -32,7 +32,7 @@ class ApplicationHelper::Toolbar::MiqAeMethodsCenter < ApplicationHelper::Toolba
           'pficon pficon-add-circle-o fa-lg',
           t = N_('Add a New Method'),
           t,
-          :klass => ApplicationHelper::Button::MiqAeDefault),
+          :klass => ApplicationHelper::Button::MiqAeNew),
         button(
           :miq_ae_method_edit,
           'pficon pficon-edit fa-lg',

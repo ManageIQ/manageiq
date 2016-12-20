@@ -21,14 +21,16 @@ class ApplicationHelper::Toolbar::EmsInfrasCenter < ApplicationHelper::Toolbar::
           t = N_('Discover Infrastructure Providers'),
           t,
           :url       => "/discover",
-          :url_parms => "?discover_type=ems"),
+          :url_parms => "?discover_type=ems",
+          :klass     => ApplicationHelper::Button::ButtonNewDiscover),
         separator,
         button(
           :ems_infra_new,
           'pficon pficon-add-circle-o fa-lg',
           t = N_('Add a New Infrastructure Provider'),
           t,
-          :url => "/new"),
+          :url   => "/new",
+          :klass => ApplicationHelper::Button::ButtonNewDiscover),
         button(
           :ems_infra_edit,
           'pficon pficon-edit fa-lg',

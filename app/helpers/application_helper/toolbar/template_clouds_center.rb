@@ -94,7 +94,8 @@ class ApplicationHelper::Toolbar::TemplateCloudsCenter < ApplicationHelper::Tool
           N_('Provision Instances using selected Image'),
           :url_parms => "main_div",
           :enabled   => false,
-          :onwhen    => "1"),
+          :onwhen    => "1",
+          :klass     => ApplicationHelper::Button::ButtonNewDiscover),
       ]
     ),
   ])

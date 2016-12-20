@@ -10,7 +10,8 @@ class ApplicationHelper::Toolbar::MiqActionsCenter < ApplicationHelper::Toolbar:
           :action_new,
           'pficon pficon-add-circle-o fa-lg',
           t = N_('Add a new Action'),
-          t),
+          t,
+          :klass => ApplicationHelper::Button::ButtonNewDiscover),
       ]
     ),
   ])

@@ -36,7 +36,8 @@ class ApplicationHelper::Toolbar::EmsCloudCenter < ApplicationHelper::Toolbar::B
           :arbitration_profile_new,
           'pficon pficon-edit fa-lg',
           t = N_('Add a new Arbitration Profile to this Cloud Provider'),
-          t),
+          t,
+          :klass => ApplicationHelper::Button::ButtonNewDiscover),
       ]
     ),
   ])

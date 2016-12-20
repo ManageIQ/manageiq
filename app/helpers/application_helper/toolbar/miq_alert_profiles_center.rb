@@ -12,7 +12,8 @@ class ApplicationHelper::Toolbar::MiqAlertProfilesCenter < ApplicationHelper::To
           t = proc do
             _('Add a New %{alert_profile_type} Alert Profile') % {:alert_profile_type => ui_lookup(:model => @sb[:folder])}
           end,
-          t),
+          t,
+          :klass => ApplicationHelper::Button::ButtonNewDiscover),
       ]
     ),
   ])
