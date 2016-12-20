@@ -617,10 +617,11 @@ module ActiveRecord
       def select(*fields)
         return super if block_given? || fields.empty?
         # support virtual attributes by adding an alias to the sql phrase for the column
+        # it does not add an as() if the column already has an as
         # this code is based upon _select()
         fields.flatten!
         fields.map! do |field|
-          if virtual_attribute?(field) && (arel = klass.arel_attribute(field))
+          if virtual_attribute?(field) && (arel = klass.arel_attribute(field)) && arel.respond_to?(:as)
             arel.as(field.to_s)
           else
             field
