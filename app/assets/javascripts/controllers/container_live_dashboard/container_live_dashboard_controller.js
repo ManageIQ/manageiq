@@ -210,9 +210,9 @@ miqHttpInject(angular.module('containerLiveDashboard', ['ui.bootstrap', 'pattern
       }
     };
 
-    $scope.getTenants = function(prefix) {
+    $scope.getTenants = function(include) {
       $scope.tenantChanged = true;
-      return $http.get($scope.url + "&query=get_tenants&limit=7&prefix=" + prefix).then(function(response){
+      return $http.get($scope.url + "&query=get_tenants&limit=7&include=" + include).then(function(response) {
         return response.data.tenants;
       });
     }

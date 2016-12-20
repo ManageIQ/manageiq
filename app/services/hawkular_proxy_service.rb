@@ -58,10 +58,10 @@ class HawkularProxyService
 
   def tenants
     tenants = client.hawkular_client.http_get('/tenants')
-    tenants = if @params['prefix'].blank?
+    tenants = if @params['include'].blank?
                 tenants.map { |x| x["id"] }.compact
               else
-                tenants.map { |x| x["id"] if x["id"].start_with?(@params['prefix']) }.compact
+                tenants.map { |x| x["id"] if x["id"].include?(@params['include']) }.compact
               end
 
     limit = @params['limit'].to_i || 7
