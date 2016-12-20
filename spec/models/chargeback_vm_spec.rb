@@ -67,7 +67,7 @@ describe ChargebackVm do
     temp = {:cb_rate => chargeback_rate, :tag => [c, "vm"]}
     ChargebackRate.set_assignments(:compute, [temp])
 
-    Timecop.travel(Time.parse('2012-09-01 23:59:59').utc)
+    Timecop.travel(Time.parse('2012-09-01 23:59:59Z'))
   end
 
   after do
@@ -544,7 +544,7 @@ describe ChargebackVm do
     end
     let!(:rate_detail) do
       FactoryGirl.create(:chargeback_rate_detail_fixed_compute_cost,
-                         :chargeback_rate_id => @cbr.id,
+                         :chargeback_rate_id => chargeback_rate.id,
                          :chargeback_tiers   => [tier],
                          :per_time           => 'hourly')
     end
@@ -552,7 +552,7 @@ describe ChargebackVm do
     subject { ChargebackVm.build_results_for_report_ChargebackVm(options).first.first }
 
     it 'works' do
-      expect(subject.chargeback_rates).to eq(@cbr.description)
+      expect(subject.chargeback_rates).to eq(chargeback_rate.description)
       expect(subject.fixed_compute_metric).to eq(1) # One day of fixed compute metric
       expect(subject.fixed_compute_1_cost).to eq(hourly_rate * 24)
       expect(subject.total_cost).to eq(hourly_rate * 24)
