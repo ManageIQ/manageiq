@@ -33,7 +33,7 @@ class TreeBuilderPolicy < TreeBuilder
     MiqPolicyController::UI_FOLDERS.collect do |model|
       text = text_i18n[mode.to_sym][model.name.to_sym]
       {:id    => "#{mode}-#{model.name.camelize(:lower)}",
-       :image => model.name.underscore,
+       :image => "100/#{model.name.underscore}.png",
        :text  => text,
        :tip   => text}
     end

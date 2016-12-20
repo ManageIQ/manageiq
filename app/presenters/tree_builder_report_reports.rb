@@ -30,7 +30,7 @@ class TreeBuilderReportReports < TreeBuilderReportReportsClass
       objects.push(
         :id    => i.to_s,
         :text  => r[0],
-        :image => (@grp_title == r[0] ? 'blue_folder' : 'folder'),
+        :image => (@grp_title == r[0] ? '100/blue_folder.png' : '100/folder.png'),
         :tip   => r[0]
       )
       # load next level of folders when building the tree
@@ -47,7 +47,7 @@ class TreeBuilderReportReports < TreeBuilderReportReportsClass
         objects.push(
           :id    => "#{nodes.last.split('-').last}-#{i}",
           :text  => r[0],
-          :image => (@grp_title == @rpt_menu[nodes.last.to_i][0] ? 'blue_folder' : 'folder'),
+          :image => (@grp_title == @rpt_menu[nodes.last.to_i][0] ? '100/blue_folder.png' : '100/folder.png'),
           :tip   => r[0]
         )
       end

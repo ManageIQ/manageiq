@@ -66,10 +66,10 @@ class TreeBuilderButtons < TreeBuilderAeCustomization
 
   def buttons_node_image(node)
     case node
-    when "ExtManagementSystem" then "ext_management_system"
-    when "MiqTemplate"         then "vm"
-    when 'CloudTenant'         then 'cloud_tenant'
-    else                            node.downcase
+    when "ExtManagementSystem" then '100/ext_management_system.png'
+    when "MiqTemplate"         then '100/vm.png'
+    when 'CloudTenant'         then '100/cloud_tenant.png'
+    else                            "100/#{node.downcase}.png"
     end
   end
 end

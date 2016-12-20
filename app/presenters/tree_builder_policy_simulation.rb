@@ -29,9 +29,9 @@ class TreeBuilderPolicySimulation < TreeBuilder
 
   def node_icon(result)
     case result
-    when "allow" then "checkmark"
-    when "N/A"   then 'na'
-    else              'x'
+    when "allow" then '100/checkmark.png'
+    when "N/A"   then '100/na.png'
+    else              '100/x.png'
     end
   end
 
@@ -95,11 +95,10 @@ class TreeBuilderPolicySimulation < TreeBuilder
   def condition_node(parent)
     nodes = reject_na_nodes parent[:conditions]
     nodes = nodes.sort_by { |a| a["description"] }.map do |node|
-      icon = node_icon(node["result"])
       name = "<b>" + _("Condition: ") + "</b> #{node['description']}"
       {:id          => node['id'],
        :text        => name.html_safe,
-       :image       => icon,
+       :image       => node_icon(node["result"]),
        :tip         => node['description'],
        :scope       => node['scope'],
        :expression  => node["expression"],
@@ -109,14 +108,14 @@ class TreeBuilderPolicySimulation < TreeBuilder
   end
 
   def scope_node(parent)
-    icon = parent[:scope]["result"] ? "checkmark" : "na"
+    icon = parent[:scope]["result"] ? "100/checkmark.png" : "100/na.png"
     name, tip = exp_build_string(parent[:scope])
     name = "<b>" + _("Scope: ") + "</b> " + name
     {:id => nil, :text => name.html_safe, :image => icon, :tip => tip.html_safe, :cfmeNoClick => true}
   end
 
   def expression_node(parent)
-    icon = parent[:expression]["result"] ? "checkmark" : "na"
+    icon = parent[:expression]["result"] ? "100/checkmark.png" : "100/na.png"
     name, tip = exp_build_string(parent[:expression])
     name = "<b>" + _("Expression: ") + "</b> " +  name
     {:id => nil, :text => name.html_safe, :image => icon, :tip => tip.html_safe, :cfmeNoClick => true}

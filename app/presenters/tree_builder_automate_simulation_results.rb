@@ -53,17 +53,17 @@ class TreeBuilderAutomateSimulationResults < TreeBuilder
                          "#{el.attributes["instance"]}",
       :MiqAeAttribute => el.attributes["name"],
       :not_blank      => el.text,
-      :other          => el.name
+      :other          => el.name,
     }
     choose_correct_attr(el, titles)
   end
 
   def get_element_icon(el)
     icons = {
-      :MiqAeObject    => "q",
-      :MiqAeAttribute => "attribute",
-      :not_blank      => el.name.underscore,
-      :other          => el.name.underscore.sub(/^miq_ae_service_/, '')
+      :MiqAeObject    => "100/q.png",
+      :MiqAeAttribute => "100/attribute.png",
+      :not_blank      => "100/#{el.name.underscore}.png",
+      :other          => "100/#{el.name.underscore.sub(/^miq_ae_service_/, '')}.png",
     }
     choose_correct_attr(el, icons)
   end

@@ -39,7 +39,7 @@ class TreeBuilderSmartproxyAffinity < TreeBuilder
   def x_get_server_kids(parent, count_only = false)
     nodes = %w(host storage).map do |kid|
       {:id          => "#{parent.id}__#{kid}",
-       :image       => kid,
+       :image       => "100/#{kid}.png",
        :parent      => parent,
        :text        => Dictionary.gettext(kid.camelcase, :type => :model, :notfound => :titleize, :plural => true),
        :cfmeNoClick => true,
