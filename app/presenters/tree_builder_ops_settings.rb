@@ -18,7 +18,7 @@ class TreeBuilderOpsSettings < TreeBuilderOps
     title =  _("%{product} Region: %{region_description} [%{region}]") % {:region_description => region.description,
                                                                           :region             => region.region,
                                                                           :product            => I18n.t('product.name')}
-    [title, title, :miq_region]
+    [title, title, '100/miq_region.png']
   end
 
   # Get root nodes count/array for explorer tree

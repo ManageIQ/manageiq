@@ -33,7 +33,7 @@ class TreeBuilderMenuRoles < TreeBuilder
   end
 
   def root_options
-    ["Top Level", "Top Level", "folder", {:key => "xx-b__Report Menus for #{role_choice}"}]
+    [t = _("Top Level"), t, "100/folder.png", {:key => "xx-b__Report Menus for #{role_choice}"}]
   end
 
   # Typically another method will populate the children of a root object.

@@ -46,9 +46,9 @@ class TreeBuilderDatacenter < TreeBuilder
 
   def root_options
     if @root.kind_of?(EmsCluster)
-      [@root.name, _("Cluster: %{name}") % {:name => @root.name}, "cluster"]
+      [@root.name, _("Cluster: %{name}") % {:name => @root.name}, "100/cluster.png"]
     elsif @root.kind_of?(ResourcePool)
-      [@root.name, _("Resource Pool: %{name}") % {:name => @root.name}, @root.vapp ? "vapp" : "resource_pool"]
+      [@root.name, _("Resource Pool: %{name}") % {:name => @root.name}, @root.vapp ? "100/vapp.png" : "100/resource_pool.png"]
     end
   end
 

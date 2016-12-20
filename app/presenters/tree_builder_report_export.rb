@@ -15,7 +15,7 @@ class TreeBuilderReportExport < TreeBuilder
   end
 
   def root_options
-    [t = _("Import / Export"), t, :report]
+    [t = _("Import / Export"), t, '100/report.png']
   end
 
   # Get root nodes count/array for explorer tree

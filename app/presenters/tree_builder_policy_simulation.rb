@@ -24,7 +24,7 @@ class TreeBuilderPolicySimulation < TreeBuilder
   end
 
   def root_options
-    ["<b>#{@root_name}</b>".html_safe, @root_name, 'vm', {:cfmeNoClick => true}]
+    ["<b>#{@root_name}</b>".html_safe, @root_name, '100/vm.png', {:cfmeNoClick => true}]
   end
 
   def node_icon(result)
