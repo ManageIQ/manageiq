@@ -21,12 +21,12 @@ class TreeBuilderUtilization < TreeBuilderRegion
   def root_options
     if MiqEnterprise.my_enterprise.is_enterprise?
       title = _("Enterprise")
-      icon  = :enterprise
+      icon  = '100/enterprise.png'
     else
       title = _("%{product} Region: %{region_description} [%{region}]") % {:region_description => MiqRegion.my_region.description,
                                                                            :region => MiqRegion.my_region.region,
                                                                            :product => I18n.t('product.name')}
-      icon  = :miq_region
+      icon  = '100/miq_region.png'
     end
     [title, title, icon]
   end
@@ -44,7 +44,7 @@ class TreeBuilderUtilization < TreeBuilderRegion
       {
         :id    => "folder_c_xx-#{to_cid(object.id)}",
         :text  => _("Cluster / Deployment Role"),
-        :image => "folder",
+        :image => "100/folder.png",
         :tip   => _("Cluster / Deployment Role (Click to open)")
       }
     ]

@@ -16,21 +16,24 @@ describe TreeBuilderClusters do
       @cluster = {:clusters => [{:id => 1, :name => 'Name', :capture => 'unsure'}], :non_cl_hosts => @non_cluster_hosts}
       @cluster_tree = TreeBuilderClusters.new(:cluster, :cluster_tree, {}, true, @cluster)
     end
+
     it 'sets tree to have full ids, not lazy and no root' do
       root_options = @cluster_tree.send(:tree_init_options, nil)
       expect(root_options).to eq(:full_ids => false, :add_root => false, :lazy => false)
     end
+
     it 'sets tree to have full ids, not lazy and no root' do
       locals = @cluster_tree.send(:set_locals_for_render)
       expect(locals[:checkboxes]).to eq(true)
       expect(locals[:onselect]).to eq("miqOnCheckCUFilters")
       expect(locals[:check_url]).to eq("/ops/cu_collection_field_changed/")
     end
+
     it 'set cluster nodes correctly' do
       cluster_nodes = @cluster_tree.send(:x_get_tree_roots, false)
       expect(cluster_nodes.first).to eq(:id          => "1",
                                         :text        => "Name",
-                                        :image       => "cluster",
+                                        :image       => '100/cluster.png',
                                         :tip         => "Name",
                                         :select      => 'unsure',
                                         :cfmeNoClick => true,
@@ -38,23 +41,25 @@ describe TreeBuilderClusters do
       # non-cluster-node
       expect(cluster_nodes.last).to eq(:id          => "NonCluster",
                                        :text        => _("Non-clustered Hosts"),
-                                       :image       => 'host',
+                                       :image       => '100/host.png',
                                        :tip         => _("Non-clustered Hosts"),
                                        :select      => true,
                                        :cfmeNoClick => true,
                                        :children    => @non_cluster_hosts)
     end
+
     it 'sets non-cluster host nodes correctly' do
       cluster_nodes = @cluster_tree.send(:x_get_tree_roots, false)
       non_cluster_host = @cluster_tree.send(:x_get_tree_hash_kids, cluster_nodes.last, false)
       expect(non_cluster_host).to eq([{:id          => "NonCluster_2",
                                        :text        => "Non Cluster Host",
                                        :tip         => "Host: Non Cluster Host",
-                                       :image       => "host",
+                                       :image       => '100/host.png',
                                        :select      => true,
                                        :cfmeNoClick => true,
                                        :children    => []}])
     end
+
     it 'sets cluster hosts nodes correctly' do
       cluster_nodes = @cluster_tree.send(:x_get_tree_roots, false)
       cluster_hosts = @cluster_tree.send(:x_get_tree_hash_kids, cluster_nodes.first, false)
@@ -62,7 +67,7 @@ describe TreeBuilderClusters do
         {:id          => "#{cluster_nodes.first[:id]}_#{node[:id]}",
          :text        => node[:name],
          :tip         => _("Host: %{name}") % {:name => node[:name]},
-         :image       => 'host',
+         :image       => '100/host.png',
          :select      => true,
          :cfmeNoClick => true,
          :children    => []}
@@ -71,7 +76,7 @@ describe TreeBuilderClusters do
         {:id          => "#{cluster_nodes.first[:id]}_#{node[:id]}",
          :text        => node[:name],
          :tip         => _("Host: %{name}") % {:name => node[:name]},
-         :image       => 'host',
+         :image       => '100/host.png',
          :select      => false,
          :cfmeNoClick => true,
          :children    => []}

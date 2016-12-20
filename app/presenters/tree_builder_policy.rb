@@ -33,7 +33,7 @@ class TreeBuilderPolicy < TreeBuilder
     MiqPolicyController::UI_FOLDERS.collect do |model|
       text = text_i18n[mode.to_sym][model.name.to_sym]
       {:id    => "#{mode}-#{model.name.camelize(:lower)}",
-       :image => model.name.underscore,
+       :image => "100/#{model.name.underscore}.png",
        :text  => text,
        :tip   => text}
     end
@@ -47,8 +47,8 @@ class TreeBuilderPolicy < TreeBuilder
   # level 1 - compliance & control
   def x_get_tree_roots(count_only, _options)
     objects = []
-    objects << {:id => "compliance", :text => N_("Compliance Policies"), :image => "compliance", :tip => N_("Compliance Policies")}
-    objects << {:id => "control", :text => N_("Control Policies"), :image => "control", :tip => N_("Control Policies")}
+    objects << {:id => "compliance", :text => N_("Compliance Policies"), :image => "100/compliance.png", :tip => N_("Compliance Policies")}
+    objects << {:id => "control", :text => N_("Control Policies"), :image => "100/control.png", :tip => N_("Control Policies")}
 
     # Push folder node ids onto open_nodes array
     objects.each { |o| open_node("xx-#{o[:id]}") }

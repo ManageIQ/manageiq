@@ -63,24 +63,28 @@ describe TreeBuilderDefaultFilters do
       @sb = {:active_tree => :default_filters_tree}
       @default_filters_tree = TreeBuilderDefaultFilters.new(:df_tree, :df, @sb, true, @filters)
     end
+
     it 'is not lazy' do
       tree_options = @default_filters_tree.send(:tree_init_options, :df)
       expect(tree_options[:lazy]).to eq(false)
     end
+
     it 'has no root' do
       tree_options = @default_filters_tree.send(:tree_init_options, :df)
       root = @default_filters_tree.send(:root_options)
       expect(tree_options[:add_root]).to eq(false)
       expect(root).to eq([])
     end
+
     it 'returns folders as root kids' do
       kids = @default_filters_tree.send(:x_get_tree_roots, false)
       kids.each do |kid|
-        expect(kid[:image]).to eq('folder')
+        expect(kid[:image]).to eq('100/folder.png')
         expect(kid[:hideCheckbox]).to eq(true)
         expect(kid[:cfmeNoClick]).to eq(true)
       end
     end
+
     it 'returns filter or folder as folder kids' do
       data = @default_filters_tree.send(:prepare_data, @filters)
       grandparents = @default_filters_tree.send(:x_get_tree_roots, false)
@@ -92,19 +96,19 @@ describe TreeBuilderDefaultFilters do
           if offsprings.kind_of?(Hash)
             kids = @default_filters_tree.send(:x_get_tree_hash_kids, parent, false)
             kids.each do |kid|
-              expect(kid[:image]).to eq('folder')
+              expect(kid[:image]).to eq('100/folder.png')
               expect(kid[:hideCheckbox]).to eq(true)
               expect(kid[:cfmeNoClick]).to eq(true)
               grandkids = @default_filters_tree.send(:x_get_tree_hash_kids, kid, false)
               grandkids.each_with_index do |grandkid, index|
-                expect(grandkid[:image]).to eq('filter')
+                expect(grandkid[:image]).to eq('100/filter.png')
                 expect(grandkid[:select]).to eq(offsprings[kid[:text]][index][:search_key] != "_hidden_")
               end
             end
           else
             kids = @default_filters_tree.send(:x_get_tree_hash_kids, parent, false)
             kids.each_with_index do |kid, index|
-              expect(kid[:image]).to eq('filter')
+              expect(kid[:image]).to eq('100/filter.png')
               expect(kid[:select]).to eq(offsprings[index][:search_key] != "_hidden_")
             end
           end

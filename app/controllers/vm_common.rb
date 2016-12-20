@@ -357,20 +357,17 @@ module VmCommon
       @tree_vms.push(vm_parent[0]) unless @tree_vms.include?(vm_parent[0])
       parent_node = {}
       session[:parent_vm] = "_v-" + vm_parent[0].id.to_s       # setting base node id to be passed for check/uncheck all button
-      image = ""
-      if vm_parent[0].retired == true
-        image = "retired.png"
-      else
-        if vm_parent[0].template?
-          if vm_parent[0].host
-            image = "template.png"
-          else
-            image = "template-no-host.png"
-          end
-        else
-          image = "#{vm_parent[0].current_state.downcase}.png"
-        end
-      end
+      image = if vm_parent[0].retired == true
+                "100/retired.png"
+              elsif vm_parent[0].template?
+                if vm_parent[0].host
+                  "100/template.png"
+                else
+                  "100/template-no-host.png"
+                end
+              else
+                "100/#{vm_parent[0].current_state.downcase}.png"
+              end
       parent_node = TreeNodeBuilder.generic_tree_node(
         "_v-#{vm_parent[0].id}",
         "#{vm_parent[0].name} (Parent)",
@@ -406,12 +403,11 @@ module VmCommon
       key = session[:base_vm]
       tooltip = ""
     end
-    image = ""
-    if vm.template?
-      image = vm.host ? "template.png" : "template-no-host.png"
-    else
-      image = "#{vm.current_state.downcase}.png"
-    end
+    image = if vm.template?
+              vm.host ? "100/template.png" : "100/template-no-host.png"
+            else
+              "100/#{vm.current_state.downcase}.png"
+            end
     branch = TreeNodeBuilder.generic_tree_node(key, title, image, tooltip)
     @tree_vms.push(vm) unless @tree_vms.include?(vm)
     if vm.children.any?

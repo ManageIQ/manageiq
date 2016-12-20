@@ -18,7 +18,7 @@ class TreeBuilderAlertProfile < TreeBuilder
 
   # level 0 - root
   def root_options
-    [t = N_("All Alert Profiles"), t]
+    [t = _("All Alert Profiles"), t]
   end
 
   # level 1 - * alert profiles
@@ -31,7 +31,7 @@ class TreeBuilderAlertProfile < TreeBuilder
       text = PostponedTranslation.new(N_("%{model} Alert Profiles")) do
         {:model => ui_lookup(:model => db)}
       end.to_proc
-      {:id => db, :text => text, :image => db.underscore.downcase, :tip => text}
+      {:id => db, :text => text, :image => "100/#{db.underscore.downcase}.png", :tip => text}
     end
 
     count_only_or_objects(count_only, objects)

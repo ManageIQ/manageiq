@@ -56,7 +56,7 @@ class TreeBuilderTags < TreeBuilder
       kid_id = "#{parent.name}-#{kid.name}"
       select = (@edit && @edit.fetch_path(:new, :filters, kid_id)) || (@filters && @filters.key?(kid_id))
       {:id          => kid.id,
-       :image       => 'tag',
+       :image       => '100/tag.png',
        :text        => kid.description,
        :checkable   => @edit.present?,
        :tooltip     => _("Tag: %{description}") % {:description => kid.description},

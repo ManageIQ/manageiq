@@ -300,7 +300,7 @@ module MiqPolicyController::MiqActions
     r_node = TreeNodeBuilder.generic_tree_node(
       "r_#{current_tenant.name}",
       "#{current_tenant.name} Tags",
-      "tag.png",
+      "100/tag.png",
       "#{current_tenant.name} Tags",
       :cfme_no_click => true,
       :expand        => true
@@ -310,14 +310,14 @@ module MiqPolicyController::MiqActions
       cats.sort_by { |c| c.description.downcase }.each do |c|
         next if c.read_only
 
-        c_node = TreeNodeBuilder.generic_tree_node("c_#{c.id}", c.description, "tag.png", c.description, :cfme_no_click => true)
+        c_node = TreeNodeBuilder.generic_tree_node("c_#{c.id}", c.description, "100/tag.png", c.description, :cfme_no_click => true)
         if c.entries.any?
           c_kids ||= []
           c.entries.sort_by { |t| t.description.downcase }.each do |t|
             t_node = TreeNodeBuilder.generic_tree_node(
               "t__#{t.tag.name}",
               t.description,
-              "blank.gif",
+              "100/blank.gif",
               t.description
             )
             c_kids.push(t_node)

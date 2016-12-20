@@ -43,7 +43,7 @@ class TreeBuilderClusters < TreeBuilder
     nodes = @root[:clusters].map do |node|
       { :id          => node[:id].to_s,
         :text        => node[:name],
-        :image       => 'cluster',
+        :image       => '100/cluster.png',
         :tip         => node[:name],
         :select      => node[:capture],
         :children    => @data[node[:id]][:ho_enabled] + @data[node[:id]][:ho_disabled],
@@ -53,7 +53,7 @@ class TreeBuilderClusters < TreeBuilder
     if @root[:non_cl_hosts].present?
       node = {:id          => "NonCluster",
               :text        => _("Non-clustered Hosts"),
-              :image       => 'host',
+              :image       => '100/host.png',
               :tip         => _("Non-clustered Hosts"),
               :select      => non_cluster_selected,
               :children    => @root[:non_cl_hosts],
@@ -73,7 +73,7 @@ class TreeBuilderClusters < TreeBuilder
       {:id          => "#{parent[:id]}_#{node[:id]}",
        :text        => node[:name],
        :tip         => _("Host: %{name}") % {:name => node[:name]},
-       :image       => 'host',
+       :image       => '100/host.png',
        :select      => node.kind_of?(Hash) ? node[:capture] : !value,
        :cfmeNoClick => true,
        :children    => []}

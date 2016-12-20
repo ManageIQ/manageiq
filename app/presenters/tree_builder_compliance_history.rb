@@ -37,7 +37,7 @@ class TreeBuilderComplianceHistory < TreeBuilder
     if parent.compliance_details.empty?
       kid = {:id          => "#{parent.id}-nopol",
              :text        => _("No Compliance Policies Found"),
-             :image       => "#{parent.id}-nopol",
+             :image       => "100/#{parent.id}-nopol.png",
              :tip         => nil,
              :cfmeNoClick => true}
       kids.push(kid)
@@ -53,7 +53,7 @@ class TreeBuilderComplianceHistory < TreeBuilder
   def get_policy_elm(parent, node)
     {:id          => "#{parent.id}-p_#{node.miq_policy_id}",
      :text        => ("<b>" + _("Condition: ") + "</b>" + node.condition_desc).html_safe,
-     :image       => node.condition_result ? "check" : "x",
+     :image       => node.condition_result ? "100/check.png" : "100/x.png",
      :tip         => nil,
      :cfmeNoClick => true}
   end

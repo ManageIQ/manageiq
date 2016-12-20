@@ -28,7 +28,7 @@ class TreeBuilderProtect < TreeBuilder
     nodes = MiqPolicySet.all.sort_by { |profile| profile.description.downcase }.map do |profile|
       { :id          => "policy_profile_#{profile.id}",
         :text        => profile.description,
-        :image       => "policy_profile#{profile.active? ? "" : "_inactive"}",
+        :image       => "100/policy_profile#{profile.active? ? "" : "_inactive"}.png",
         :tip         => profile.description,
         :select      => @data[:new][profile.id] == @data[:pol_items].length,
         :children    => profile.members,
@@ -43,7 +43,7 @@ class TreeBuilderProtect < TreeBuilder
       text = "<b>#{ui_lookup(:model => policy.towhat)} #{policy.mode.capitalize}:</b> #{policy.description}"
       {:id           => "policy_#{policy.id}",
        :text         => text.html_safe,
-       :image        => "miq_policy_#{policy.towhat.downcase}#{policy.active ? "" : "_inactive"}",
+       :image        => "100/miq_policy_#{policy.towhat.downcase}#{policy.active ? "" : "_inactive"}.png",
        :tip          => policy.description,
        :hideCheckbox => true,
        :children     => [],

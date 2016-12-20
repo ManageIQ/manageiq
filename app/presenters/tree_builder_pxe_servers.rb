@@ -35,14 +35,14 @@ class TreeBuilderPxeServers < TreeBuilder
         open_nodes.push("pxe_xx-#{to_cid(object.id)}") unless open_nodes.include?("pxe_xx-#{to_cid(object.id)}")
         objects.push(:id    => "pxe_xx-#{to_cid(object.id)}",
                      :text  => _("PXE Images"),
-                     :image => "folder",
+                     :image => "100/folder.png",
                      :tip   => _("PXE Images"))
       end
       if win_images.size > 0
         open_nodes.push("win_xx-#{to_cid(object.id)}") unless open_nodes.include?("win_xx-#{to_cid(object.id)}")
         objects.push(:id    => "win_xx-#{to_cid(object.id)}",
                      :text  => _("Windows Images"),
-                     :image => "folder",
+                     :image => "100/folder.png",
                      :tip   => _("Windows Images"))
       end
       objects

@@ -21,7 +21,7 @@ class TreeBuilderChargebackRates < TreeBuilder
       else
         objects = []
         rate_types.sort.each do |rtype|
-          img = rtype.downcase == "compute" ? "hardware-processor" : "hardware-disk"
+          img = rtype.downcase == "compute" ? "100/hardware-processor.png" : "100/hardware-disk.png"
           objects.push(
             :id    => rtype,
             :text  => rtype,

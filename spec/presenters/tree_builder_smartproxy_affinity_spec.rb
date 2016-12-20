@@ -55,29 +55,33 @@ describe TreeBuilderSmartproxyAffinity do
       expect(kids1.size).to eq(2)
       expect(kids2.size).to eq(2)
       expect(kids1.first).to eq(:id          => "#{@svr1[:id]}__host",
-                                :image       => "host",
+                                :image       => "100/host.png",
                                 :parent      => @svr1,
                                 :text        => "Host / Nodes",
                                 :cfmeNoClick => true,
-                                :children    => @selected_zone.send('host'.pluralize).sort_by(&:name))
+                                :children    => @selected_zone.send('host'.pluralize).sort_by(&:name),
+                                :smartproxy_kind => "host")
       expect(kids2.first).to eq(:id          => "#{@svr2[:id]}__host",
-                                :image       => "host",
+                                :image       => "100/host.png",
                                 :parent      => @svr2,
                                 :text        => "Host / Nodes",
                                 :cfmeNoClick => true,
-                                :children    => @selected_zone.send('host'.pluralize).sort_by(&:name))
+                                :children    => @selected_zone.send('host'.pluralize).sort_by(&:name),
+                                :smartproxy_kind => "host")
       expect(kids1.last).to eq(:id          => "#{@svr1[:id]}__storage",
-                               :image       => "storage",
+                               :image       => "100/storage.png",
                                :parent      => @svr1,
                                :text        => "Datastores",
                                :cfmeNoClick => true,
-                               :children    => @selected_zone.send('storage'.pluralize).sort_by(&:name))
+                               :children    => @selected_zone.send('storage'.pluralize).sort_by(&:name),
+                               :smartproxy_kind => "storage")
       expect(kids2.last).to eq(:id          => "#{@svr2[:id]}__storage",
-                               :image       => "storage",
+                               :image       => "100/storage.png",
                                :parent      => @svr2,
                                :text        => "Datastores",
                                :cfmeNoClick => true,
-                               :children    => @selected_zone.send('storage'.pluralize).sort_by(&:name))
+                               :children    => @selected_zone.send('storage'.pluralize).sort_by(&:name),
+                               :smartproxy_kind => "storage")
     end
 
     it 'sets Datastores kids correctly' do
@@ -93,7 +97,7 @@ describe TreeBuilderSmartproxyAffinity do
           expect(kids[i][:text]).to eq(kid.name)
           expect(kids[i][:id]).to eq("#{parent[:id]}_#{kid.id}")
           expect(kids[i][:children]).to eq([])
-          expect(kids[i][:select]).to eq( parent[:parent].send("vm_scan_#{parent[:image]}_affinity").collect(&:id).include?(kid.id))
+          expect(kids[i][:select]).to eq( parent[:parent].send("vm_scan_#{parent[:smartproxy_kind]}_affinity").collect(&:id).include?(kid.id))
         end
       end
     end

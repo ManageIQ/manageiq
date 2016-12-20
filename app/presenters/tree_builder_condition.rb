@@ -12,7 +12,7 @@ class TreeBuilderCondition < TreeBuilder
 
   # level 0 - root
   def root_options
-    [t = N_("All Conditions"), t]
+    [t = _("All Conditions"), t]
   end
 
   # level 1 - host / vm
@@ -28,7 +28,7 @@ class TreeBuilderCondition < TreeBuilder
     objects = MiqPolicyController::UI_FOLDERS.collect do |model|
       text = text_i18n[model.name.to_sym]
       {:id    => model.name.camelize(:lower),
-       :image => model.name.underscore,
+       :image => "100/#{model.name.underscore}.png",
        :text  => text,
        :tip   => text}
     end

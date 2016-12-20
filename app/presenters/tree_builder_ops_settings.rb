@@ -18,19 +18,19 @@ class TreeBuilderOpsSettings < TreeBuilderOps
     title =  _("%{product} Region: %{region_description} [%{region}]") % {:region_description => region.description,
                                                                           :region             => region.region,
                                                                           :product            => I18n.t('product.name')}
-    [title, title, :miq_region]
+    [title, title, '100/miq_region.png']
   end
 
   # Get root nodes count/array for explorer tree
   def x_get_tree_roots(_count_only, _options)
     objects = [
-      {:id => "sis", :text => _("Analysis Profiles"), :image => "scan_item_set", :tip => _("Analysis Profiles")},
-      {:id => "z", :text => _("Zones"), :image => "zone", :tip => _("Zones")}
+      {:id => "sis", :text => _("Analysis Profiles"), :image => "100/scan_item_set.png", :tip => _("Analysis Profiles")},
+      {:id => "z", :text => _("Zones"), :image => "100/zone.png", :tip => _("Zones")}
     ]
     if Settings.product.new_ldap
-      objects.push(:id => "l", :text => _("LDAP"), :image => "ldap", :tip => _("LDAP"))
+      objects.push(:id => "l", :text => _("LDAP"), :image => "100/ldap.png", :tip => _("LDAP"))
     end
-    objects.push(:id => "msc", :text => _("Schedules"), :image => "miq_schedule", :tip => _("Schedules"))
+    objects.push(:id => "msc", :text => _("Schedules"), :image => "100/miq_schedule.png", :tip => _("Schedules"))
     objects
   end
 

@@ -29,7 +29,7 @@ class TreeBuilderNetwork < TreeBuilder
   end
 
   def root_options
-    [@root.name, _("Host: %{name}") % {:name => @root.name}, 'host', :cfmeNoClick => true]
+    [@root.name, _("Host: %{name}") % {:name => @root.name}, '100/host.png', {:cfmeNoClick => true}]
   end
 
   def x_get_tree_roots(count_only = false, _options)

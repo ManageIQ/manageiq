@@ -61,7 +61,7 @@ module ApplicationController::Timelines
                 @parent_node = TreeNodeBuilder.generic_tree_node(
                   "p__#{rec}",
                   rec,
-                  "folder.png",
+                  "100/folder.png",
                   _("Group: %{name}") % {:name => rec},
                   :cfme_no_click => true
                 )
@@ -102,7 +102,7 @@ module ApplicationController::Timelines
       @tag_node = TreeNodeBuilder.generic_tree_node(
         "#{rpt.id}__#{rpt.name}",
         rpt.name,
-        "link_internal.gif",
+        "100/link_internal.gif",
         _("Report: %{name}") % {:name => rpt.name}
       )
     end

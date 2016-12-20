@@ -6,7 +6,7 @@ class TreeNodeBuilder
       :key   => key,
       :title => text,
     }
-    node[:icon]         = ActionController::Base.helpers.image_path("100/#{image}") if image
+    node[:icon]         = ActionController::Base.helpers.image_path(image) if image
     node[:addClass]     = options[:style_class]      if options[:style_class]
     node[:cfmeNoClick]  = true                       if options[:cfme_no_click]
     node[:expand]       = options[:expand]           if options[:expand]
