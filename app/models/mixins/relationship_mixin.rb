@@ -113,8 +113,14 @@ module RelationshipMixin
   # Returns the id in the relationship table for this record's parents
   # from this id, relationship records can be brought back and mapped to the resource of interest
   # NOTE: parent_id is read from ancestry field, while parent is a db hit (N+1)
+  # NOTE: relationships can be an array (from all_relationships cache) - so handle both Array and association
   def parent_rel_ids
-    relationships.where.not(:ancestry => [nil, ""]).select(:ancestry).collect(&:parent_id)
+    rel = relationships
+    if rel.kind_of?(Array) || rel.try(:loaded?)
+      rel.reject { |x| x.ancestry.blank? }.collect(&:parent_id)
+    else
+      rel.where.not(:ancestry => [nil, ""]).select(:ancestry).collect(&:parent_id)
+    end
   end
 
   # Returns all of the relationships of the parents of the record, [] for a root node
