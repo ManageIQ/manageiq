@@ -726,7 +726,7 @@ module MiqAeCustomizationController::Dialogs
       tab_node = TreeNodeBuilder.generic_tree_node(
         "root_#{tab[:id]}-#{i}",
         tab[:label] || _('[New Tab]'),
-        "dialog_tab.png",
+        "100/dialog_tab.png",
         tab[:label] || _('[New Tab]'),
         :expand => true
       )
@@ -739,7 +739,7 @@ module MiqAeCustomizationController::Dialogs
           group_node = TreeNodeBuilder.generic_tree_node(
             "#{tab_node[:key]}_#{group[:id]}-#{j}",
             group[:label] || _('[New Box]'),
-            "dialog_group.png",
+            "100/dialog_group.png",
             group[:description] || group[:label],
             :expand => true
           )
@@ -758,7 +758,7 @@ module MiqAeCustomizationController::Dialogs
               field_node = TreeNodeBuilder.generic_tree_node(
                 "#{group_node[:key]}_#{field[:id]}-#{k}",
                 field[:label] || _('[New Element]'),
-                "dialog_field.png",
+                "100/dialog_field.png",
                 field_tooltip
               )
               self.x_node = "#{group_node[:key]}_#{field[:id]}-#{k}" unless field[:label]
@@ -777,7 +777,7 @@ module MiqAeCustomizationController::Dialogs
     base_node = TreeNodeBuilder.generic_tree_node(
       "root",
       (@edit[:new][:label].to_s || _('[New Dialog]')),
-      "dialog.png",
+      "100/dialog.png",
       @edit[:new][:description] || @edit[:new][:label],
       :expand => true
     )
