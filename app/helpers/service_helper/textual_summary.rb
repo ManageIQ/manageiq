@@ -94,7 +94,17 @@ module ServiceHelper::TextualSummary
   end
 
   def textual_orchestration_stack
-    @record.try(:orchestration_stack)
+    ost = @record.try(:orchestration_stack)
+    if ost && !ost.id.present?
+      {
+        :label => _("Orchestration Stack"),
+        :image => "orchestration_stack.png",
+        :value => ost.name,
+        :title => _("Invalid Stack")
+      }
+    elsif ost
+      ost
+    end
   end
 
   def textual_job
