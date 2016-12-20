@@ -13,6 +13,7 @@ class ManageIQ::Providers::Openstack::CloudManager::CloudVolume < ::CloudVolume
   end
 
   def self.raw_create_volume(ext_management_system, options)
+    # TODO: raise here
     cloud_tenant = options.delete(:cloud_tenant)
     volume = nil
 

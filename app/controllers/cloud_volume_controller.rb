@@ -247,6 +247,11 @@ class CloudVolumeController < ApplicationController
       :url  => "/cloud_volume/new"
     )
   end
+  
+  def create_done
+    javascript_flash(:text => 'Create done!', :severity => :info, :spinner_off => true)
+  end
+  private :create_done
 
   def create
     assert_privileges("cloud_volume_new")
@@ -263,10 +268,19 @@ class CloudVolumeController < ApplicationController
       valid_action, action_details = CloudVolume.validate_create_volume(cloud_tenant.ext_management_system)
       if valid_action
         begin
-          CloudVolume.create_volume(cloud_tenant.ext_management_system, options)
-          add_flash(_("Creating %{volume} \"%{volume_name}\"") % {
-            :volume      => ui_lookup(:table => 'cloud_volume'),
-            :volume_name => options[:name]})
+          # FIXME: initiate_wait_for_task
+
+          task_id = CloudVolume.queue_create_volume(cloud_tenant.ext_management_system, options)
+          if task_id.kind_of?(Fixnum)
+            initiate_wait_for_task(:task_id => task_id, :action => 'create_done')
+          else
+            add_flash(_("Creating volume failed: Task start failed: ID [%{id}]") %
+                        {:id => task_id.inspect}, :error) unless task_id.kind_of?(Fixnum)
+          end
+
+          # add_flash(_("Creating %{volume} \"%{volume_name}\"") % {
+          #   :volume      => ui_lookup(:table => 'cloud_volume'),
+          #   :volume_name => options[:name]})
         rescue => ex
           add_flash(_("Unable to create %{volume} \"%{volume_name}\": %{details}") % {
             :volume      => ui_lookup(:table => 'cloud_volume'),
