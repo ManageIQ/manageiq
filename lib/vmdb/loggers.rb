@@ -23,17 +23,18 @@ module Vmdb
     end
 
     def self.apply_config(config)
-      apply_config_value(config, $log,       :level)
-      apply_config_value(config, $rails_log, :level_rails)
-      apply_config_value(config, $vim_log,   :level_vim,   :level_vim_in_evm)
-      apply_config_value(config, $rhevm_log, :level_rhevm, :level_rhevm_in_evm)
-      apply_config_value(config, $aws_log,   :level_aws,   :level_aws_in_evm)
-      apply_config_value(config, $kube_log,  :level_kube,  :level_kube_in_evm)
-      apply_config_value(config, $mw_log,    :level_mw,    :level_mw_in_evm)
-      apply_config_value(config, $scvmm_log, :level_scvmm, :level_scvmm_in_evm)
-      apply_config_value(config, $api_log,   :level_api,   :level_api_in_evm)
-      apply_config_value(config, $fog_log,   :level_fog,   :level_fog_in_evm)
-      apply_config_value(config, $azure_log, :level_azure, :level_azure_in_evm)
+      apply_config_value(config, $log,           :level)
+      apply_config_value(config, $rails_log,     :level_rails)
+      apply_config_value(config, $vim_log,       :level_vim,       :level_vim_in_evm)
+      apply_config_value(config, $rhevm_log,     :level_rhevm,     :level_rhevm_in_evm)
+      apply_config_value(config, $aws_log,       :level_aws,       :level_aws_in_evm)
+      apply_config_value(config, $kube_log,      :level_kube,      :level_kube_in_evm)
+      apply_config_value(config, $mw_log,        :level_mw,        :level_mw_in_evm)
+      apply_config_value(config, $scvmm_log,     :level_scvmm,     :level_scvmm_in_evm)
+      apply_config_value(config, $api_log,       :level_api,       :level_api_in_evm)
+      apply_config_value(config, $fog_log,       :level_fog,       :level_fog_in_evm)
+      apply_config_value(config, $azure_log,     :level_azure,     :level_azure_in_evm)
+      apply_config_value(config, $websocket_log, :level_websocket, :level_websocket_in_evm)
     end
 
     private
