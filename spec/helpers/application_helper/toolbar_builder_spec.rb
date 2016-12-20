@@ -183,49 +183,6 @@ describe ApplicationHelper, "::ToolbarBuilder" do
       }
     end
 
-    it "when id likes old_dialogs_*" do
-      @id = "old_dialogs_some_thing"
-      expect(subject).to be_truthy
-    end
-
-    it "when id likes ab_*" do
-      @id = "ab_some_thing"
-      expect(subject).to be_truthy
-    end
-
-    ["miq_task_", "compare_", "drift_", "comparemode_", "driftmode_", "custom_"].each do |i|
-      it "when id likes #{i}*" do
-        @id = "#{i}some_thing"
-        expect(subject).to be_falsey
-      end
-    end
-
-    context "when with miq_request_reload" do
-      before { @id = "miq_request_reload" }
-      it "and lastaction is show_list" do
-        @lastaction = "show_list"
-        expect(subject).to be_falsey
-      end
-
-      it "and lastaction is not show_list" do
-        @lastaction = "log"
-        expect(subject).to be_truthy
-      end
-    end
-
-    context "when with miq_request_reload" do
-      before { @id = "miq_request_reload" }
-      it "and showtype is miq_provisions" do
-        @showtype = "miq_provisions"
-        expect(subject).to be_falsey
-      end
-
-      it "and showtype is not miq_provisions" do
-        @showtype = "compare"
-        expect(subject).to be_truthy
-      end
-    end
-
     it "when id likes dialog_*" do
       @id = "dialog_some_thing"
       expect(subject).to be_falsey
@@ -243,11 +200,6 @@ describe ApplicationHelper, "::ToolbarBuilder" do
       # when the role allows the feature
       stub_user(:features => :all)
       expect(subject).to be_falsey
-    end
-
-    it "when not with miq_request_approve or miq_request_deny and not allowed by the role" do
-      @id = "miq_request_edit"
-      expect(subject).to be_truthy
     end
 
     ["ems_cluster_protect", "ext_management_system_protect",
@@ -273,33 +225,6 @@ describe ApplicationHelper, "::ToolbarBuilder" do
       it "when with #{id}" do
         @id = id
         stub_user(:features => :all)
-        expect(subject).to be_falsey
-      end
-    end
-
-    context "when with miq_task_canceljob" do
-      before do
-        @id = 'miq_task_canceljob'
-        stub_user(:features => :all)
-      end
-
-      it "and @layout != all_tasks" do
-        @layout = "x_tasks"
-        expect(subject).to be_truthy
-      end
-
-      it "and @layout != all_ui_tasks" do
-        @layout = "x_ui_tasks"
-        expect(subject).to be_truthy
-      end
-
-      it "and @layout = all_tasks" do
-        @layout = "all_tasks"
-        expect(subject).to be_falsey
-      end
-
-      it "and @layout = all_ui_tasks" do
-        @layout = "all_ui_tasks"
         expect(subject).to be_falsey
       end
     end
@@ -424,20 +349,6 @@ describe ApplicationHelper, "::ToolbarBuilder" do
       end
     end
 
-    context "CustomButtonSet" do
-      before do
-        @record = CustomButtonSet.new
-        @sb = {:active_tree => :sandt_tree}
-      end
-
-      %w(ab_button_new ab_group_edit ab_group_delete).each do |id|
-        it "hides #{id} action from toolbar when user has view permission only" do
-          @id = id
-          expect(subject).to be_truthy
-        end
-      end
-    end
-
     context "when with Host" do
       before do
         @record = Host.new
@@ -452,35 +363,6 @@ describe ApplicationHelper, "::ToolbarBuilder" do
 
         it "and lastaction = drift_history" do
           expect(subject).to be_falsey
-        end
-      end
-    end
-
-    context "ServiceTemplate" do
-      before do
-        @record = ServiceTemplate.new
-        @sb = {:active_tree => :sandt_tree}
-      end
-
-      %w(ab_button_new ab_group_new catalogitem_edit catalogitem_delete).each do |id|
-        it "hides #{id} action from toolbar when user has view permission only" do
-          @id = id
-          expect(subject).to be_truthy
-        end
-      end
-    end
-
-    context "when record class = ExtManagementSystem" do
-      before do
-        @record = FactoryGirl.create(:ems_amazon)
-      end
-
-      context "and id = ems_cloud_timeline" do
-        before { @id = "ems_cloud_timeline" }
-
-        it "hide timelines button for EC2 provider" do
-          allow(@record).to receive(:has_events?).and_return(false)
-          expect(subject).to be_truthy
         end
       end
     end
