@@ -12,11 +12,11 @@ module TreeNode
         end
         p  = ::MiqPolicy.find_by_id(ApplicationRecord.uncompress_id(policy_id))
         ev = ::MiqEventDefinition.find_by_id(ApplicationRecord.uncompress_id(event_id))
-        image = p.action_result_for_event(@object, ev) ? "check" : "x"
+
+        p.action_result_for_event(@object, ev) ? "100/check.png" : "100/x.png"
       else
-        image = @object.action_type == "default" ? "miq_action" : "miq_action_#{@object.action_type}"
+        @object.action_type == "default" ? "100/miq_action.png" : "100/miq_action_#{@object.action_type}.png"
       end
-      "100/#{image}.png"
     end
   end
 end
