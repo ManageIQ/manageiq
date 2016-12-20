@@ -2,10 +2,7 @@ class ApplicationHelper::Button::InstanceDetach < ApplicationHelper::Button::Bas
   def calculate_properties
     super
     if @record.number_of(:cloud_volumes).zero?
-      self[:title] = _("This %{model} has no attached %{volumes}.") % {
-        :model   => ui_lookup(:table => 'vm_cloud'),
-        :volumes => ui_lookup(:tables => 'cloud_volumes')
-      }
+      self[:title] = _("This Instance has no attached Cloud Volumes.")
     end
   end
 
