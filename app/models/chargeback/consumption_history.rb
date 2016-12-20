@@ -9,7 +9,12 @@ class Chargeback
       timerange = options.report_time_range
       interval_duration = options.duration_of_report_step
 
+      extra_resources = cb_class.try(:extra_resources_without_rollups) || []
       timerange.step_value(interval_duration).each_cons(2) do |query_start_time, query_end_time|
+        extra_resources.each do |resource|
+          yield ConsumptionWithoutRollups.new(resource, query_start_time, query_end_time)
+        end
+
         records = base_rollup.where(:timestamp => query_start_time...query_end_time, :capture_interval_name => 'hourly')
         records = cb_class.where_clause(records, options)
         records = Metric::Helper.remove_duplicate_timestamps(records)
@@ -20,7 +25,7 @@ class Chargeback
         # values are grouped by resource_id and timestamp (query_start_time...query_end_time)
         records.group_by(&:resource_id).each do |_, metric_rollup_records|
           metric_rollup_records = metric_rollup_records.select { |x| x.resource.present? }
-          consumption = Consumption.new(metric_rollup_records, query_start_time, query_end_time)
+          consumption = ConsumptionWithRollups.new(metric_rollup_records, query_start_time, query_end_time)
           next if metric_rollup_records.empty?
           yield(consumption)
         end

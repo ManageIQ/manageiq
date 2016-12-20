@@ -400,7 +400,7 @@ describe ChargebackVm do
                                                :parent_ems_id => ems.id, :parent_storage_id => @storage.id,
                                                :resource => @vm1)
     end
-    let(:consumption) { Chargeback::Consumption.new([metric_rollup], nil, nil) }
+    let(:consumption) { Chargeback::ConsumptionWithRollups.new([metric_rollup], nil, nil) }
 
     before do
       ChargebackRate.set_assignments(:compute, [rate_assignment_options])
@@ -419,7 +419,7 @@ describe ChargebackVm do
     let(:timestamp_key) { 'Fri, 13 May 2016 10:40:00 UTC +00:00' }
     let(:beginning_of_day) { timestamp_key.in_time_zone.beginning_of_day }
     let(:metric_rollup) { FactoryGirl.build(:metric_rollup_vm_hr, :timestamp => timestamp_key, :resource => @vm1) }
-    let(:consumption) { Chargeback::Consumption.new([metric_rollup], nil, nil) }
+    let(:consumption) { Chargeback::ConsumptionWithRollups.new([metric_rollup], nil, nil) }
     subject { described_class.report_row_key(consumption) }
     before do
       described_class.instance_variable_set(:@options, report_options)
@@ -431,7 +431,7 @@ describe ChargebackVm do
   describe '#initialize' do
     let(:report_options) { Chargeback::ReportOptions.new }
     let(:vm_owners)     { {@vm1.id => @vm1.evm_owner_name} }
-    let(:consumption) { Chargeback::Consumption.new([metric_rollup], nil, nil) }
+    let(:consumption) { Chargeback::ConsumptionWithRollups.new([metric_rollup], nil, nil) }
     let(:shared_extra_fields) do
       {'vm_name' => @vm1.name, 'owner_name' => admin.name, 'vm_uid' => 'ems_ref', 'vm_guid' => @vm1.guid,
        'vm_id' => @vm1.id}
@@ -487,7 +487,7 @@ describe ChargebackVm do
                          :parent_ems_id => ems.id, :parent_storage_id => @storage.id,
                          :resource => @vm1)
     end
-    let(:consumption) { Chargeback::Consumption.new([metric_rollup], nil, nil) }
+    let(:consumption) { Chargeback::ConsumptionWithRollups.new([metric_rollup], nil, nil) }
 
     before do
       @storage.tag_with([classification_1.tag.name, classification_2.tag.name], :ns => '*')
@@ -526,6 +526,36 @@ describe ChargebackVm do
       used_metric = used_average_for(:cpu_usagemhz_rate_average, hours_in_month)
       expect(subject.cpu_used_metric).to be_within(0.01).of(used_metric)
       expect(subject.tag_name).to eq('Production')
+    end
+  end
+
+  context 'for SCVMM (hyper-v)' do
+    let!(:vm1) do
+      vm = FactoryGirl.create(:vm_microsoft)
+      vm.tag_with(@tag.name, :ns => '*')
+      vm
+    end
+    let(:options) { base_options.merge(:interval => 'daily') }
+    let(:tier) do
+      FactoryGirl.create(:chargeback_tier, :start         => 0,
+                                           :finish        => Float::INFINITY,
+                                           :fixed_rate    => hourly_rate.to_s,
+                                           :variable_rate => 0.0)
+    end
+    let!(:rate_detail) do
+      FactoryGirl.create(:chargeback_rate_detail_fixed_compute_cost,
+                         :chargeback_rate_id => @cbr.id,
+                         :chargeback_tiers   => [tier],
+                         :per_time           => 'hourly')
+    end
+
+    subject { ChargebackVm.build_results_for_report_ChargebackVm(options).first.first }
+
+    it 'works' do
+      expect(subject.chargeback_rates).to eq(@cbr.description)
+      expect(subject.fixed_compute_metric).to eq(1) # One day of fixed compute metric
+      expect(subject.fixed_compute_1_cost).to eq(hourly_rate * 24)
+      expect(subject.total_cost).to eq(hourly_rate * 24)
     end
   end
 end
