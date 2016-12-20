@@ -27,7 +27,7 @@ addons:
 before_install:
 - source ${TRAVIS_BUILD_DIR}/tools/ci/before_install.sh
 before_script:
-- source ${TRAVIS_BUILD_DIR}/tools/ci/before_script.sh
+- bundle exec rake ${test:$TEST_SUITE:setup}
 script:
 - bundle exec rake ${TEST_SUITE+test:$TEST_SUITE}
 after_script:
