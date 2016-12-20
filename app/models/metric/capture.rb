@@ -13,7 +13,7 @@ module Metric::Capture
   end
 
   def self.historical_days
-    (Settings.performance.history.initial_capture_days || 7).to_i
+    Settings.performance.history.initial_capture_days.to_i
   end
 
   def self.historical_start_time
@@ -21,20 +21,19 @@ module Metric::Capture
   end
 
   def self.concurrent_requests(interval_name)
-    requests = Settings.performance.concurrent_requests[interval_name]
-    requests ||= interval_name == 'realtime' ? 20 : 1
-    requests = 20 if requests < 20 && interval_name == 'realtime'
-    requests
+    ::Settings.performance.concurrent_requests[interval_name]
   end
 
   def self.standard_capture_threshold(target)
     target_key = target.class.base_model.to_s.underscore.to_sym
-    minutes_ago(Settings.performance.capture_threshold[target_key] || 10)
+    minutes_ago(::Settings.performance.capture_threshold[target_key] ||
+                ::Settings.performance.capture_threshold.default)
   end
 
   def self.alert_capture_threshold(target)
     target_key = target.class.base_model.to_s.underscore.to_sym
-    minutes_ago(Settings.performance.capture_threshold_with_alerts[target_key] || 1)
+    minutes_ago(::Settings.performance.capture_threshold_with_alerts[target_key] ||
+                ::Settings.performance.capture_threshold_with_alerts.default)
   end
 
   def self.perf_capture_timer(zone = nil)

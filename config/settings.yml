@@ -1016,14 +1016,17 @@
   :power_operation_expiration: 10.minutes
 :performance:
   :capture_threshold:
+    :default: 10.minutes
     :ems_cluster: 50.minutes
     :host: 50.minutes
     :storage: 60.minutes
     :vm: 50.minutes
   :capture_threshold_with_alerts:
+    :default: 1.minutes
     :host: 20.minutes
     :vm: 20.minutes
   :concurrent_requests:
+    :historical: 1
     :hourly: 1
     :realtime: 20
   :history:
