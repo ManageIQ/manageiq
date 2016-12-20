@@ -24,6 +24,7 @@ module ManageIQ
       # Run bower in a thread and continue to do the non-js stuff
       puts "Updating bower assets in parallel..."
       bower_thread = Thread.new { update_bower }
+      bower_thread.abort_on_exception = true
 
       yield
 
