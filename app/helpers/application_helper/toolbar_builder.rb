@@ -452,9 +452,6 @@ class ApplicationHelper::ToolbarBuilder
       return res
     end
 
-    return false if role_allows?(:feature => "my_settings_time_profiles") && @layout == "configuration" &&
-                    @tabform == "ui_4"
-
     return false if id.starts_with?("miq_capacity_") && @sb[:active_tab] == "report"
 
     # don't check for feature RBAC if id is miq_request_approve/deny
