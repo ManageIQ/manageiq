@@ -79,7 +79,7 @@ class TreeBuilderDefaultFilters < TreeBuilder
                 kids.map do |kid|
                   {:id          => kid[:id],
                    :text        => kid[:description],
-                   :image       => 'filter',
+                   :image       => '100/filter.png',
                    :tip         => kid[:description],
                    :cfmeNoClick => true,
                    :select      => kid[:search_key] != "_hidden_"}

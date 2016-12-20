@@ -40,7 +40,7 @@ class TreeBuilderPolicySimulationResults < TreeBuilder
     data.sort_by! { |a| a[:name].downcase }.map do |node|
       {:id          => node[:id],
        :text        => "<strong>VM:</strong> #{node[:name]}".html_safe,
-       :image       => 'vm',
+       :image       => '100/vm.png',
        :profiles    => node[:profiles],
        :cfmeNoClick => true}
     end
