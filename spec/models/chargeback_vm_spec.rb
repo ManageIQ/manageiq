@@ -4,7 +4,7 @@ describe ChargebackVm do
     {:interval_size       => 1,
      :end_interval_offset => 0,
      :tag                 => '/managed/environment/prod',
-     :ext_options         => {:tz => 'Pacific Time (US & Canada)'},
+     :ext_options         => {:tz => 'UTC'},
      :userid              => admin.userid}
   end
   let(:hourly_rate)               { 0.01 }
@@ -42,7 +42,7 @@ describe ChargebackVm do
     temp = {:cb_rate => @cbr, :tag => [c, "vm"]}
     ChargebackRate.set_assignments(:compute, [temp])
 
-    Timecop.travel(Time.parse("2012-09-01 00:00:00 UTC"))
+    Timecop.travel(Time.parse('2012-09-01 23:59:59').utc)
   end
 
   after do
@@ -126,8 +126,11 @@ describe ChargebackVm do
     let(:hours_in_day) { 24 }
     let(:options) { base_options.merge(:interval => 'daily') }
 
-    before  do
-      ["2012-08-31T07:00:00Z", "2012-08-31T08:00:00Z", "2012-08-31T09:00:00Z", "2012-08-31T10:00:00Z"].each do |t|
+    let(:start_time)  { Time.parse('2012-09-01 07:00:00').utc }
+    let(:finish_time) { Time.parse('2012-09-01 10:00:00').utc }
+
+    before do
+      Range.new(start_time, finish_time, true).step_value(1.hour).each do |t|
         @vm1.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr, :with_data,
                                                   :timestamp                         => t,
                                                   :tag_names                         => "environment/prod",
@@ -407,11 +410,15 @@ describe ChargebackVm do
 
   context "Report a chargeback of a tenant" do
     let(:options_tenant) { base_options.merge(:tenant_id => @tenant.id) }
+    let(:start_time)  { Time.parse('2012-09-01 07:00:00').utc }
+    let(:finish_time) { Time.parse('2012-09-01 10:00:00').utc }
+
     before do
       @tenant = FactoryGirl.create(:tenant)
       @tenant_child = FactoryGirl.create(:tenant, :ancestry => @tenant.id)
       @vm_tenant = FactoryGirl.create(:vm_vmware, :tenant_id => @tenant_child.id, :name => "test_vm_tenant")
-      ["2012-08-31T07:00:00Z", "2012-08-31T08:00:00Z", "2012-08-31T09:00:00Z", "2012-08-31T10:00:00Z"].each do |t|
+
+      Range.new(start_time, finish_time, true).step_value(1.hour).each do |t|
         @vm_tenant.metric_rollups <<
           FactoryGirl.create(:metric_rollup_vm_hr, :with_data,
                              :timestamp                         => t,
