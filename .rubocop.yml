@@ -11,6 +11,7 @@ GlobalVars:
   - $aws_log
   - $azure_log
   - $fog_log
+  - $lenovo_log
   - $log
   - $miq_ae_logger
   - $policy_log
