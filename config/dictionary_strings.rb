@@ -1580,6 +1580,14 @@ _("Network Providers (OpenStack)")
 _("Cloud Network (OpenStack)")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork (plural form)
 _("Cloud Networks (OpenStack)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork::Private
+_("Cloud Network (OpenStack)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork::Private (plural form)
+_("Cloud Networks (OpenStack)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork::Public
+_("External Cloud Network (OpenStack)")
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork::Public (plural form)
+_("External Cloud Networks (OpenStack)")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Amazon::CloudManager
 _("Cloud Provider (Amazon)")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Amazon::CloudManager (plural form)
@@ -2085,13 +2093,13 @@ _("CD/DVD Drives")
 # TRANSLATORS: en.yml key: dictionary.table.cim_base_storage_extent
 _("Base Extents")
 # TRANSLATORS: en.yml key: dictionary.table.cloud_object_store_container
-_("Cloud Object Store")
+_("Cloud Object Store Container")
 # TRANSLATORS: en.yml key: dictionary.table.cloud_object_store_container (plural form)
-_("Cloud Object Stores")
+_("Cloud Object Store Containers")
 # TRANSLATORS: en.yml key: dictionary.table.cloud_object_store_object
-_("Cloud Object")
+_("Cloud Object Store Object")
 # TRANSLATORS: en.yml key: dictionary.table.cloud_object_store_object (plural form)
-_("Cloud Objects")
+_("Cloud Object Store Objects")
 # TRANSLATORS: en.yml key: dictionary.table.cloud_network
 _("Cloud Network")
 # TRANSLATORS: en.yml key: dictionary.table.cloud_network (plural form)
@@ -2212,6 +2220,12 @@ _("Buttons")
 _("Buttons Group")
 # TRANSLATORS: en.yml key: dictionary.table.custom_button_set (plural form)
 _("Buttons Groups")
+# TRANSLATORS: en.yml key: dictionary.table.ems_block_storage
+_("Block Storage Manager")
+# TRANSLATORS: en.yml key: dictionary.table.ems_block_storage (plural form)
+_("Block Storage Managers")
+# TRANSLATORS: en.yml key: dictionary.table.ems_block_storages
+_("Block Storage Managers")
 # TRANSLATORS: en.yml key: dictionary.table.ems_cloud
 _("Cloud Provider")
 # TRANSLATORS: en.yml key: dictionary.table.ems_cloud (plural form)
@@ -2254,12 +2268,22 @@ _("Containers Provider")
 _("Containers Providers")
 # TRANSLATORS: en.yml key: dictionary.table.ems_containers
 _("Containers Providers")
+# TRANSLATORS: en.yml key: dictionary.table.ems_datawarehouse
+_("Datawarehouse Provider")
+# TRANSLATORS: en.yml key: dictionary.table.ems_datawarehouse (plural form)
+_("Datawarehouse Providers")
 # TRANSLATORS: en.yml key: dictionary.table.ems_middleware
 _("Middleware Provider")
 # TRANSLATORS: en.yml key: dictionary.table.ems_middleware (plural form)
 _("Middleware Providers")
 # TRANSLATORS: en.yml key: dictionary.table.ems_middlewares
 _("Middleware Providers")
+# TRANSLATORS: en.yml key: dictionary.table.ems_object_storage
+_("Object Storage Manager")
+# TRANSLATORS: en.yml key: dictionary.table.ems_object_storage (plural form)
+_("Object Storage Managers")
+# TRANSLATORS: en.yml key: dictionary.table.ems_object_storages
+_("Object Storage Managers")
 # TRANSLATORS: en.yml key: dictionary.table.evm_server
 _("EVM Server")
 # TRANSLATORS: en.yml key: dictionary.table.evm_server (plural form)
@@ -2269,9 +2293,9 @@ _("Network Provider")
 # TRANSLATORS: en.yml key: dictionary.table.ems_network (plural form)
 _("Network Providers")
 # TRANSLATORS: en.yml key: dictionary.table.ems_storage
-_("Storage Provider")
+_("Storage Manager")
 # TRANSLATORS: en.yml key: dictionary.table.ems_storage (plural form)
-_("Storage Providers")
+_("Storage Managers")
 # TRANSLATORS: en.yml key: dictionary.table.load_balancer
 _("Load Balancer")
 # TRANSLATORS: en.yml key: dictionary.table.load_balancer (plural form)
@@ -2325,11 +2349,11 @@ _("EVM Owner")
 # TRANSLATORS: en.yml key: dictionary.table.evm_owner (plural form)
 _("EVM Owners")
 # TRANSLATORS: en.yml key: dictionary.table.ext_management_system
-_("Cloud/Infrastructure Provider")
+_("Provider")
 # TRANSLATORS: en.yml key: dictionary.table.ext_management_system (plural form)
-_("Cloud/Infrastructure Providers")
+_("Providers")
 # TRANSLATORS: en.yml key: dictionary.table.ext_management_systems
-_("Cloud/Infrastructure Providers")
+_("Providers")
 # TRANSLATORS: en.yml key: dictionary.table.filesystem_drivers
 _("File System Drivers")
 # TRANSLATORS: en.yml key: dictionary.table.filesystems

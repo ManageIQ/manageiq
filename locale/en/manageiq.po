@@ -67,9 +67,6 @@ msgstr ""
 msgid "\"#{db}Performance.#{c}\""
 msgstr ""
 
-msgid "\"#{message_prefix} cannot be performed on orphaned VM.\""
-msgstr ""
-
 #. TRANSLATORS: file: product/reports/170_Configuration Management - Containers/060_Container Groups per Ready Status.yaml
 msgid "# Pods per Ready Status"
 msgstr ""
@@ -77,6 +74,9 @@ msgstr ""
 #. TRANSLATORS: file: product/views/Storage.yaml
 #. TRANSLATORS: file: product/views/StorageCluster.yaml
 msgid "% Free Space"
+msgstr ""
+
+msgid "%{action} cannot be performed on orphaned VM."
 msgstr ""
 
 msgid "%{class_name} [%{name}] is attached to <%{ems_class_name}: %{ems_name}> that does not support Provisioning"
@@ -229,7 +229,7 @@ msgstr ""
 msgid "< Heap Max (%)"
 msgstr ""
 
-msgid "< Non Heap Max (%)"
+msgid "< Non Heap Committed (%)"
 msgstr ""
 
 msgid "<Empty>"
@@ -241,7 +241,7 @@ msgstr ""
 msgid "> Heap Max (%)"
 msgstr ""
 
-msgid "> Non Heap Max (%)"
+msgid "> Non Heap Committed (%)"
 msgstr ""
 
 msgid "A VM with name: [%{name}] already exists"
@@ -480,6 +480,10 @@ msgid "Activity Sample - Timestamp (Day/Time)"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Ad hoc Metrics"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Add"
 msgstr ""
 
@@ -537,10 +541,6 @@ msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Add Composite Catalog Item"
-msgstr ""
-
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-msgid "Add Container"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -620,35 +620,15 @@ msgid "Add a Condition"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-msgid "Add a Container"
-msgstr ""
-
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-msgid "Add a Container Build"
-msgstr ""
-
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-msgid "Add a Container Image Registry"
-msgstr ""
-
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-msgid "Add a Container Nodes"
-msgstr ""
-
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-msgid "Add a Container Replicator"
-msgstr ""
-
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-msgid "Add a Container Services"
-msgstr ""
-
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Add a Containers Provider"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Add a Dashboard"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Add a Datawarehouse Provider"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -681,10 +661,6 @@ msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Add a Persistent Volume"
-msgstr ""
-
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-msgid "Add a Pod"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -728,7 +704,7 @@ msgid "Add a Schedule"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-msgid "Add a Storage Provider"
+msgid "Add a Storage Manager"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -1562,6 +1538,12 @@ msgstr ""
 msgid "Automation"
 msgstr ""
 
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/MiddlewareDatasource.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/MiddlewareDatasource.yaml
+#. TRANSLATORS: file: product/charts/layouts/realtime_perf_charts/MiddlewareDatasource.yaml
+msgid "Availability (Connections)"
+msgstr ""
+
 #. TRANSLATORS: file: product/timelines/miq_reports/tl_events_daily.yaml
 #. TRANSLATORS: file: product/timelines/miq_reports/tl_events_hourly.yaml
 #. TRANSLATORS: file: product/views/AvailabilityZone.yaml
@@ -1676,8 +1658,83 @@ msgstr ""
 msgid "Available count - min"
 msgstr ""
 
+#. TRANSLATORS: file: product/charts/layouts/day_top_charts/availability_zone-Vm.yaml
+#. TRANSLATORS: file: product/charts/layouts/hour_top_charts/availability_zone-Vm.yaml
+msgid "Average CPU Used (%)"
+msgstr ""
+
+#. TRANSLATORS: file: product/charts/layouts/day_top_charts/ems_cluster-Host.yaml
+#. TRANSLATORS: file: product/charts/layouts/day_top_charts/ems_cluster-Vm.yaml
+#. TRANSLATORS: file: product/charts/layouts/day_top_charts/host-Vm.yaml
+#. TRANSLATORS: file: product/charts/layouts/hour_top_charts/ems_cluster-Host.yaml
+#. TRANSLATORS: file: product/charts/layouts/hour_top_charts/ems_cluster-Vm.yaml
+#. TRANSLATORS: file: product/charts/layouts/hour_top_charts/host-Vm.yaml
+msgid "Average CPU Used (Mhz)"
+msgstr ""
+
+#. TRANSLATORS: file: product/charts/layouts/day_top_charts/storage-Vm.yaml
+msgid "Average Disk Files Space"
+msgstr ""
+
+#. TRANSLATORS: file: product/charts/layouts/day_top_charts/availability_zone-Vm.yaml
+#. TRANSLATORS: file: product/charts/layouts/day_top_charts/ems_cluster-Host.yaml
+#. TRANSLATORS: file: product/charts/layouts/day_top_charts/ems_cluster-Vm.yaml
+#. TRANSLATORS: file: product/charts/layouts/day_top_charts/host-Vm.yaml
+#. TRANSLATORS: file: product/charts/layouts/hour_top_charts/availability_zone-Vm.yaml
+#. TRANSLATORS: file: product/charts/layouts/hour_top_charts/ems_cluster-Host.yaml
+#. TRANSLATORS: file: product/charts/layouts/hour_top_charts/ems_cluster-Vm.yaml
+#. TRANSLATORS: file: product/charts/layouts/hour_top_charts/host-Vm.yaml
+msgid "Average Disk I/O (KBps)"
+msgstr ""
+
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/OntapLogicalDisk.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/OntapLogicalDisk.yaml
+msgid "Average Disk Latency (microseconds)"
+msgstr ""
+
+#. TRANSLATORS: file: product/charts/layouts/day_top_charts/storage-Vm.yaml
+msgid "Average Memory Files Space"
+msgstr ""
+
+#. TRANSLATORS: file: product/charts/layouts/day_top_charts/ems_cluster-Host.yaml
+#. TRANSLATORS: file: product/charts/layouts/day_top_charts/ems_cluster-Vm.yaml
+#. TRANSLATORS: file: product/charts/layouts/day_top_charts/host-Vm.yaml
+#. TRANSLATORS: file: product/charts/layouts/hour_top_charts/ems_cluster-Host.yaml
+#. TRANSLATORS: file: product/charts/layouts/hour_top_charts/ems_cluster-Vm.yaml
+#. TRANSLATORS: file: product/charts/layouts/hour_top_charts/host-Vm.yaml
+msgid "Average Memory Used (MB)"
+msgstr ""
+
+#. TRANSLATORS: file: product/charts/layouts/day_top_charts/availability_zone-Vm.yaml
+#. TRANSLATORS: file: product/charts/layouts/day_top_charts/ems_cluster-Host.yaml
+#. TRANSLATORS: file: product/charts/layouts/day_top_charts/ems_cluster-Vm.yaml
+#. TRANSLATORS: file: product/charts/layouts/day_top_charts/host-Vm.yaml
+#. TRANSLATORS: file: product/charts/layouts/hour_top_charts/availability_zone-Vm.yaml
+#. TRANSLATORS: file: product/charts/layouts/hour_top_charts/ems_cluster-Host.yaml
+#. TRANSLATORS: file: product/charts/layouts/hour_top_charts/ems_cluster-Vm.yaml
+#. TRANSLATORS: file: product/charts/layouts/hour_top_charts/host-Vm.yaml
+msgid "Average Network I/O (KBps)"
+msgstr ""
+
 #. TRANSLATORS: en.yml key: dictionary.column.avg_read_size
 msgid "Average Read Size"
+msgstr ""
+
+#. TRANSLATORS: file: product/charts/layouts/day_top_charts/storage-Vm.yaml
+msgid "Average Snapshot Files Space"
+msgstr ""
+
+#. TRANSLATORS: file: product/charts/layouts/day_top_charts/storage-Vm.yaml
+msgid "Average Used Space"
+msgstr ""
+
+#. TRANSLATORS: file: product/charts/layouts/day_top_charts/ems_cluster-Host.yaml
+#. TRANSLATORS: file: product/charts/layouts/day_top_charts/ems_cluster-Vm.yaml
+#. TRANSLATORS: file: product/charts/layouts/day_top_charts/host-Vm.yaml
+#. TRANSLATORS: file: product/charts/layouts/hour_top_charts/ems_cluster-Host.yaml
+#. TRANSLATORS: file: product/charts/layouts/hour_top_charts/ems_cluster-Vm.yaml
+#. TRANSLATORS: file: product/charts/layouts/hour_top_charts/host-Vm.yaml
+msgid "Average VM CPU Ready (Percent)"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.column.avg_write_size
@@ -1836,6 +1893,17 @@ msgstr ""
 msgid "Block Storage Based"
 msgstr ""
 
+#. TRANSLATORS: en.yml key: dictionary.table.ems_block_storage
+msgid "Block Storage Manager"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#. TRANSLATORS: file: product/views/ems_block_storage.yaml
+#. TRANSLATORS: en.yml key: dictionary.table.ems_block_storage (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.ems_block_storages
+msgid "Block Storage Managers"
+msgstr ""
+
 #. TRANSLATORS: file: product/views/VmdbDatabaseConnection.yaml
 msgid "Blocked By"
 msgstr ""
@@ -1848,6 +1916,9 @@ msgid "Blueprints"
 msgstr ""
 
 msgid "Blueprint|Description"
+msgstr ""
+
+msgid "Blueprint|In use?"
 msgstr ""
 
 msgid "Blueprint|Name"
@@ -2037,6 +2108,51 @@ msgstr ""
 #. TRANSLATORS: file: product/views/OsProcess-processes.yaml
 #. TRANSLATORS: en.yml key: dictionary.column.percent_cpu
 msgid "CPU %"
+msgstr ""
+
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/AvailabilityZone.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/ContainerNode.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/HostAggregate.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/ManageIQ_Providers_ContainerManager.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/Parent-EmsCluster.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/Parent-Host.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/VmOrTemplate.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_tag_charts/AvailabilityZone.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/AvailabilityZone.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/ContainerNode.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/ManageIQ_Providers_ContainerManager.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/VmOrTemplate.yaml
+#. TRANSLATORS: file: product/charts/layouts/realtime_perf_charts/ContainerNode.yaml
+#. TRANSLATORS: file: product/charts/layouts/realtime_perf_charts/VmOrTemplate.yaml
+msgid "CPU (%)"
+msgstr ""
+
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/EmsCluster.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/Host.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/ManageIQ_Providers_Openstack_InfraManager_EmsCluster.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/ManageIQ_Providers_Openstack_InfraManager_Host.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/Parent-EmsCluster.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/Parent-Host.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/VmOrTemplate.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_tag_charts/EmsCluster.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_tag_charts/Host.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_tag_charts/ManageIQ_Providers_Openstack_InfraManager_EmsCluster.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_tag_charts/ManageIQ_Providers_Openstack_InfraManager_Host.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/EmsCluster.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/Host.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/ManageIQ_Providers_Openstack_InfraManager_EmsCluster.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/ManageIQ_Providers_Openstack_InfraManager_Host.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/Parent-EmsCluster.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/Parent-Host.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/VmOrTemplate.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_tag_charts/AvailabilityZone.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_tag_charts/EmsCluster.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_tag_charts/Host.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_tag_charts/ManageIQ_Providers_Openstack_InfraManager_EmsCluster.yaml
+#. TRANSLATORS: file: product/charts/layouts/realtime_perf_charts/Host.yaml
+#. TRANSLATORS: file: product/charts/layouts/realtime_perf_charts/ManageIQ_Providers_Openstack_InfraManager_Host.yaml
+#. TRANSLATORS: file: product/charts/layouts/realtime_perf_charts/VmOrTemplate.yaml
+msgid "CPU (Mhz)"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.column.overallocated_vcpus_pct
@@ -3025,6 +3141,7 @@ msgid "Cloud Network (Microsoft Azure)"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork::Private
 msgid "Cloud Network (OpenStack)"
 msgstr ""
 
@@ -3050,13 +3167,13 @@ msgid "Cloud Networks (Microsoft Azure)"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork (plural form)
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork::Private (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.manageiq_providers_openstack_infra_manager_cloud_networks
 msgid "Cloud Networks (OpenStack)"
 msgstr ""
 
 #. TRANSLATORS: file: product/views/CloudObjectStoreObject-cloud_object_store_objects.yaml
 #. TRANSLATORS: file: product/views/CloudObjectStoreObject.yaml
-#. TRANSLATORS: en.yml key: dictionary.table.cloud_object_store_object
 msgid "Cloud Object"
 msgstr ""
 
@@ -3064,17 +3181,30 @@ msgstr ""
 #. TRANSLATORS: file: product/views/CloudObjectStoreContainer.yaml
 #. TRANSLATORS: file: product/views/CloudObjectStoreObject-cloud_object_store_objects.yaml
 #. TRANSLATORS: file: product/views/CloudObjectStoreObject.yaml
-#. TRANSLATORS: en.yml key: dictionary.table.cloud_object_store_container
 msgid "Cloud Object Store"
 msgstr ""
 
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#. TRANSLATORS: en.yml key: dictionary.table.cloud_object_store_container
+msgid "Cloud Object Store Container"
+msgstr ""
+
 #. TRANSLATORS: en.yml key: dictionary.table.cloud_object_store_container (plural form)
+msgid "Cloud Object Store Containers"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.table.cloud_object_store_object
+msgid "Cloud Object Store Object"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.table.cloud_object_store_object (plural form)
+msgid "Cloud Object Store Objects"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Cloud Object Stores"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-#. TRANSLATORS: en.yml key: dictionary.table.cloud_object_store_object (plural form)
 msgid "Cloud Objects"
 msgstr ""
 
@@ -3303,15 +3433,6 @@ msgid "Cloud volume backup"
 msgstr ""
 
 msgid "Cloud volume snapshot"
-msgstr ""
-
-#. TRANSLATORS: en.yml key: dictionary.table.ext_management_system
-msgid "Cloud/Infrastructure Provider"
-msgstr ""
-
-#. TRANSLATORS: en.yml key: dictionary.table.ext_management_system (plural form)
-#. TRANSLATORS: en.yml key: dictionary.table.ext_management_systems
-msgid "Cloud/Infrastructure Providers"
 msgstr ""
 
 msgid "CloudDatabaseFlavor|Cpus"
@@ -4532,6 +4653,12 @@ msgstr ""
 msgid "Console using VNC"
 msgstr ""
 
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/MiddlewareMessaging_jms_queue.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/MiddlewareMessaging_jms_queue.yaml
+#. TRANSLATORS: file: product/charts/layouts/realtime_perf_charts/MiddlewareMessaging_jms_queue.yaml
+msgid "Consumers"
+msgstr ""
+
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Consumption"
 msgstr ""
@@ -5246,6 +5373,33 @@ msgstr ""
 msgid "ContainerImage|Created on"
 msgstr ""
 
+msgid "ContainerImage|Custom 1"
+msgstr ""
+
+msgid "ContainerImage|Custom 2"
+msgstr ""
+
+msgid "ContainerImage|Custom 3"
+msgstr ""
+
+msgid "ContainerImage|Custom 4"
+msgstr ""
+
+msgid "ContainerImage|Custom 5"
+msgstr ""
+
+msgid "ContainerImage|Custom 6"
+msgstr ""
+
+msgid "ContainerImage|Custom 7"
+msgstr ""
+
+msgid "ContainerImage|Custom 8"
+msgstr ""
+
+msgid "ContainerImage|Custom 9"
+msgstr ""
+
 msgid "ContainerImage|Deleted on"
 msgstr ""
 
@@ -5380,6 +5534,33 @@ msgid "ContainerNode|Cpu usagemhz rate average low over time period"
 msgstr ""
 
 msgid "ContainerNode|Created on"
+msgstr ""
+
+msgid "ContainerNode|Custom 1"
+msgstr ""
+
+msgid "ContainerNode|Custom 2"
+msgstr ""
+
+msgid "ContainerNode|Custom 3"
+msgstr ""
+
+msgid "ContainerNode|Custom 4"
+msgstr ""
+
+msgid "ContainerNode|Custom 5"
+msgstr ""
+
+msgid "ContainerNode|Custom 6"
+msgstr ""
+
+msgid "ContainerNode|Custom 7"
+msgstr ""
+
+msgid "ContainerNode|Custom 8"
+msgstr ""
+
+msgid "ContainerNode|Custom 9"
 msgstr ""
 
 msgid "ContainerNode|Derived memory used avg over time period"
@@ -6556,6 +6737,21 @@ msgstr ""
 msgid "Cores"
 msgstr ""
 
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/Container.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/ContainerGroup.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/ContainerProject.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/ContainerReplicator.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/ContainerService.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/Container.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/ContainerGroup.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/ContainerProject.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/ContainerReplicator.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/ContainerService.yaml
+#. TRANSLATORS: file: product/charts/layouts/realtime_perf_charts/Container.yaml
+#. TRANSLATORS: file: product/charts/layouts/realtime_perf_charts/ContainerGroup.yaml
+msgid "Cores Used"
+msgstr ""
+
 msgid "Could not find manager entry for NetApp filer: %{name}"
 msgstr ""
 
@@ -7175,6 +7371,15 @@ msgstr ""
 
 #. TRANSLATORS: file: product/reports/150_Configuration Management - Storage/010_Summary.yaml
 msgid "Datastores Summary"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.table.ems_datawarehouse
+msgid "Datawarehouse Provider"
+msgstr ""
+
+#. TRANSLATORS: file: product/views/ManageIQ_Providers_DatawarehouseManager.yaml
+#. TRANSLATORS: en.yml key: dictionary.table.ems_datawarehouse (plural form)
+msgid "Datawarehouse Providers"
 msgstr ""
 
 msgid "Date"
@@ -7995,7 +8200,7 @@ msgid "Discover Network Providers"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-msgid "Discover Storage Providers"
+msgid "Discover Storage Managers"
 msgstr ""
 
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_InfraManager.yaml
@@ -8130,12 +8335,56 @@ msgstr ""
 msgid "Disk Device Type"
 msgstr ""
 
+#. TRANSLATORS: file: product/charts/layouts/daily_tag_charts/Storage.yaml
+msgid "Disk Files"
+msgstr ""
+
 #. TRANSLATORS: en.yml key: dictionary.column.v_disk_percent_of_used
 msgid "Disk Files Percent of Used"
 msgstr ""
 
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/Storage.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/Storage.yaml
+msgid "Disk Files Space by Type"
+msgstr ""
+
 #. TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/200_Weekly Utilization Overview.yaml
 msgid "Disk I/O  (KBps) (Avg)"
+msgstr ""
+
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/AvailabilityZone.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/EmsCluster.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/Host.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/HostAggregate.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/Parent-EmsCluster.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/Parent-Host.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/VmOrTemplate.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_tag_charts/AvailabilityZone.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_tag_charts/EmsCluster.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_tag_charts/Host.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/AvailabilityZone.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/EmsCluster.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/Host.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/Parent-EmsCluster.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/Parent-Host.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/VmOrTemplate.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_tag_charts/AvailabilityZone.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_tag_charts/EmsCluster.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_tag_charts/Host.yaml
+#. TRANSLATORS: file: product/charts/layouts/realtime_perf_charts/Host.yaml
+#. TRANSLATORS: file: product/charts/layouts/realtime_perf_charts/VmOrTemplate.yaml
+msgid "Disk I/O (KBps)"
+msgstr ""
+
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/ManageIQ_Providers_Openstack_InfraManager_EmsCluster.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/ManageIQ_Providers_Openstack_InfraManager_Host.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_tag_charts/ManageIQ_Providers_Openstack_InfraManager_EmsCluster.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_tag_charts/ManageIQ_Providers_Openstack_InfraManager_Host.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/ManageIQ_Providers_Openstack_InfraManager_EmsCluster.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/ManageIQ_Providers_Openstack_InfraManager_Host.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_tag_charts/ManageIQ_Providers_Openstack_InfraManager_EmsCluster.yaml
+#. TRANSLATORS: file: product/charts/layouts/realtime_perf_charts/ManageIQ_Providers_Openstack_InfraManager_Host.yaml
+msgid "Disk I/O (blocks per second)"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.column.abs_max_disk_usage_rate_average_value
@@ -8210,6 +8459,13 @@ msgstr ""
 msgid "Disk Queue Latency - Avg (ms)"
 msgstr ""
 
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/OntapLogicalDisk.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/OntapLogicalDisk.yaml
+msgid "Disk Read Latency (microseconds)"
+msgstr ""
+
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/VmdbDatabase.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/VmdbDatabase.yaml
 #. TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/010_VMs_ Hardware.yaml
 msgid "Disk Size"
 msgstr ""
@@ -8246,6 +8502,11 @@ msgstr ""
 #. TRANSLATORS: file: product/reports/300_Migration Readiness - Virtual Machines/020_Detailed - VMs migration ready.yaml
 #. TRANSLATORS: file: product/reports/300_Migration Readiness - Virtual Machines/021_Detailed - VMs NOT migration ready.yaml
 msgid "Disk Start Connected"
+msgstr ""
+
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/OntapLogicalDisk.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/OntapLogicalDisk.yaml
+msgid "Disk Write Latency (microseconds)"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.column.disks_aligned
@@ -8368,6 +8629,10 @@ msgid "Display Individual Backups"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Display Individual Block Storage Managers"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Display Individual Cloud Networks"
 msgstr ""
 
@@ -8433,6 +8698,10 @@ msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Display Individual Datastores"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Display Individual Datawarehouse Providers"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -8532,6 +8801,10 @@ msgid "Display Individual Networking Elements"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Display Individual Object Storage Managers"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Display Individual Object Store Containers"
 msgstr ""
 
@@ -8577,10 +8850,6 @@ msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Display Individual Storage Managers"
-msgstr ""
-
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-msgid "Display Individual Storage Providers"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -8633,6 +8902,10 @@ msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Display Lists of Backups"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Display Lists of Block Storage Managers"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -8709,6 +8982,10 @@ msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Display Lists of Datastores Clusters"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Display Lists of Datawarehouse Providers"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -8808,6 +9085,10 @@ msgid "Display Lists of Networking Elements"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Display Lists of Object Storage Managers"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Display Lists of Object Store Containers"
 msgstr ""
 
@@ -8853,10 +9134,6 @@ msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Display Lists of Storage Managers"
-msgstr ""
-
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-msgid "Display Lists of Storage Providers"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -8945,6 +9222,10 @@ msgid "Display Timelines for Availability Zones"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Display Timelines for Block Storage Managers"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Display Timelines for Cloud Providers"
 msgstr ""
 
@@ -8962,6 +9243,10 @@ msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Display Timelines for Containers Providers"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Display Timelines for Datawarehouse Providers"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -8997,11 +9282,15 @@ msgid "Display Timelines for Network Providers"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Display Timelines for Object Storage Managers"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Display Timelines for Pods"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-msgid "Display Timelines for Storage Providers"
+msgid "Display Timelines for Storage Managers"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -9318,6 +9607,8 @@ msgstr ""
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_StorageManager.yaml
 #. TRANSLATORS: file: product/views/MiqSchedule.yaml
 #. TRANSLATORS: file: product/views/StorageManager.yaml
+#. TRANSLATORS: file: product/views/ems_block_storage.yaml
+#. TRANSLATORS: file: product/views/ems_object_storage.yaml
 #. TRANSLATORS: en.yml key: dictionary.column.zone_name
 msgid "EVM Zone"
 msgstr ""
@@ -9408,10 +9699,6 @@ msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Edit Configured Systems Tags"
-msgstr ""
-
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-msgid "Edit Container"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -9655,6 +9942,10 @@ msgid "Edit Tags of Containers Providers"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Edit Tags of Datawarehouse Providers"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Edit Tags of Flavor"
 msgstr ""
 
@@ -9755,7 +10046,7 @@ msgid "Edit Tags of Snapshots"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-msgid "Edit Tags of Storage Providers"
+msgid "Edit Tags of Storage Managers"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -9815,35 +10106,15 @@ msgid "Edit a Condition"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-msgid "Edit a Container"
-msgstr ""
-
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-msgid "Edit a Container Build"
-msgstr ""
-
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-msgid "Edit a Container Image Registry"
-msgstr ""
-
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-msgid "Edit a Container Nodes"
-msgstr ""
-
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-msgid "Edit a Container Replicator"
-msgstr ""
-
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-msgid "Edit a Container Services"
-msgstr ""
-
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Edit a Containers Provider"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Edit a Dashboard"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Edit a Datawarehouse Provider"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -9884,10 +10155,6 @@ msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Edit a Persistent Volume"
-msgstr ""
-
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-msgid "Edit a Pod"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -9935,7 +10202,7 @@ msgid "Edit a Schedule"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-msgid "Edit a Storage Provider"
+msgid "Edit a Storage Manager"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -10042,6 +10309,10 @@ msgid "Ems cluster"
 msgstr ""
 
 msgid "Ems folder"
+msgstr ""
+
+#. TRANSLATORS: file: product/views/ems_block_storage.yaml
+msgid "EmsBlockStorage"
 msgstr ""
 
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager.yaml
@@ -10349,6 +10620,10 @@ msgstr ""
 msgid "EmsContainer"
 msgstr ""
 
+#. TRANSLATORS: file: product/views/ManageIQ_Providers_DatawarehouseManager.yaml
+msgid "EmsDatawarehouse"
+msgstr ""
+
 msgid "EmsFolder|Aggregate cpu speed"
 msgstr ""
 
@@ -10407,6 +10682,10 @@ msgstr ""
 
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_NetworkManager.yaml
 msgid "EmsNetwork"
+msgstr ""
+
+#. TRANSLATORS: file: product/views/ems_object_storage.yaml
+msgid "EmsObjectStorage"
 msgstr ""
 
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_StorageManager.yaml
@@ -10580,6 +10859,9 @@ msgid "Error '%{message}', writing to FTP: [%{uri}], Username: [%{id}]"
 msgstr ""
 
 msgid "Error returned from %{name} event processing in Automate: %{error_message}"
+msgstr ""
+
+msgid "Error, '%{error_message}, checking Host for provisioning: Name: [%{host_name}]"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -10844,6 +11126,10 @@ msgid "Everything under Availability Zones"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Everything under Block Storage Managers"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Everything under Catalogs"
 msgstr ""
 
@@ -10980,6 +11266,10 @@ msgid "Everything under Datastores Clusters"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Everything under Datawarehouse Providers"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Everything under Flavors"
 msgstr ""
 
@@ -11053,6 +11343,10 @@ msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Everything under Networking"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Everything under Object Storage Managers"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -11137,10 +11431,6 @@ msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Everything under Storage Managers"
-msgstr ""
-
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-msgid "Everything under Storage Providers"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -11269,6 +11559,12 @@ msgstr "Host Name"
 msgid "ExtManagementSystem|Ipaddress"
 msgstr "IP Address"
 
+msgid "ExtManagementSystem|Last compliance status"
+msgstr ""
+
+msgid "ExtManagementSystem|Last compliance timestamp"
+msgstr ""
+
 msgid "ExtManagementSystem|Last metrics error"
 msgstr ""
 
@@ -11357,6 +11653,12 @@ msgstr ""
 msgid "ExtManagementSystem|Tenant mapping enabled"
 msgstr ""
 
+msgid "ExtManagementSystem|Total cloud memory"
+msgstr ""
+
+msgid "ExtManagementSystem|Total cloud vcpus"
+msgstr ""
+
 msgid "ExtManagementSystem|Total clusters"
 msgstr ""
 
@@ -11409,6 +11711,14 @@ msgstr ""
 #. TRANSLATORS: file: product/views/StorageFile-vm_misc_files.yaml
 #. TRANSLATORS: file: product/views/StorageFile-vm_ram_files.yaml
 msgid "Extension"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork::Public
+msgid "External Cloud Network (OpenStack)"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork::Public (plural form)
+msgid "External Cloud Networks (OpenStack)"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -11948,6 +12258,12 @@ msgid "Function %{function} is invalid, should be one of :min, :max, :avg or nil
 msgstr ""
 
 msgid "GB"
+msgstr ""
+
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/MiddlewareServer.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/MiddlewareServer.yaml
+#. TRANSLATORS: file: product/charts/layouts/realtime_perf_charts/MiddlewareServer.yaml
+msgid "GC Duration (ms)"
 msgstr ""
 
 #. TRANSLATORS: file: product/views/CloudSubnet.yaml
@@ -12493,6 +12809,9 @@ msgstr ""
 msgid "Hardware|Provision state"
 msgstr ""
 
+msgid "Hardware|Ram size in bytes"
+msgstr ""
+
 msgid "Hardware|Region description"
 msgstr ""
 
@@ -12827,6 +13146,9 @@ msgstr ""
 msgid "Host has no EMS, unable to set custom attribute"
 msgstr ""
 
+msgid "Host not available for provisioning. Name: [%{host_name}]"
+msgstr ""
+
 msgid "Host not specified, unable to migrate VM"
 msgstr ""
 
@@ -12971,6 +13293,7 @@ msgstr ""
 #. TRANSLATORS: file: product/views/ConfiguredSystem.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_ConfigurationManager_ConfiguredSystem.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_ContainerManager.yaml
+#. TRANSLATORS: file: product/views/ManageIQ_Providers_DatawarehouseManager.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_Foreman_ConfigurationManager_ConfiguredSystem.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_InfraManager.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_MiddlewareManager.yaml
@@ -12980,6 +13303,12 @@ msgstr ""
 msgid "Hostname"
 msgstr ""
 
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/EmsCluster.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/ManageIQ_Providers_Openstack_InfraManager_EmsCluster.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/Storage.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/EmsCluster.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/ManageIQ_Providers_Openstack_InfraManager_EmsCluster.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/Storage.yaml
 #. TRANSLATORS: file: product/views/CimBaseStorageExtent.yaml
 #. TRANSLATORS: file: product/views/EmsCluster.yaml
 #. TRANSLATORS: file: product/views/Host-hosts.yaml
@@ -13348,6 +13677,11 @@ msgstr ""
 msgid "Human readable model name"
 msgstr ""
 
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/OntapLogicalDisk.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/OntapLogicalDisk.yaml
+msgid "I/O Operations (per second)"
+msgstr ""
+
 #. TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/030_Hardware.yaml
 #. TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/040_Summary for VMs.yaml
 #. TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/070_Storage Adapters.yaml
@@ -13355,6 +13689,7 @@ msgstr ""
 #. TRANSLATORS: file: product/views/Host-hosts.yaml
 #. TRANSLATORS: file: product/views/Host.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_ContainerManager.yaml
+#. TRANSLATORS: file: product/views/ManageIQ_Providers_DatawarehouseManager.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_MiddlewareManager.yaml
 #. TRANSLATORS: file: product/views/MiqServer.yaml
 #. TRANSLATORS: en.yml key: dictionary.column.ip_address
@@ -13557,6 +13892,11 @@ msgstr ""
 msgid "Index"
 msgstr ""
 
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/VmdbDatabase.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/VmdbDatabase.yaml
+msgid "Index Nodes"
+msgstr ""
+
 #. TRANSLATORS: en.yml key: dictionary.model.VmdbIndex (plural form)
 msgid "Indices"
 msgstr ""
@@ -13676,6 +14016,9 @@ msgid "Instance name"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/AvailabilityZone.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/HostAggregate.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/AvailabilityZone.yaml
 #. TRANSLATORS: file: product/views/AvailabilityZone.yaml
 #. TRANSLATORS: file: product/views/CloudNetwork.yaml
 #. TRANSLATORS: file: product/views/CloudSubnet.yaml
@@ -13820,6 +14163,12 @@ msgstr ""
 msgid "JVM Garbage Collection - daily over last week"
 msgstr ""
 
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/MiddlewareServer.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/MiddlewareServer.yaml
+#. TRANSLATORS: file: product/charts/layouts/realtime_perf_charts/MiddlewareServer.yaml
+msgid "JVM Heap Usage (Bytes)"
+msgstr ""
+
 #. TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/110_JVM Heap Usage - daily over last week.yaml
 msgid "JVM Heap Usage - daily averages for last week"
 msgstr ""
@@ -13829,6 +14178,12 @@ msgid "JVM Heap Usage - daily over last week"
 msgstr ""
 
 msgid "JVM Heap Used"
+msgstr ""
+
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/MiddlewareServer.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/MiddlewareServer.yaml
+#. TRANSLATORS: file: product/charts/layouts/realtime_perf_charts/MiddlewareServer.yaml
+msgid "JVM Non Heap Usage (Bytes)"
 msgstr ""
 
 #. TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/120_JVM Non Heap Usage - daily over last week.yaml
@@ -14971,7 +15326,7 @@ msgid "Manage Policies of Resource Pools"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-msgid "Manage Policies of Storage Providers"
+msgid "Manage Policies of Storage Managers"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -15090,6 +15445,7 @@ msgstr ""
 
 #. TRANSLATORS: file: product/reports/170_Configuration Management - Containers/010_Nodes by Capacity.yaml
 #. TRANSLATORS: file: product/views/Flavor.yaml
+#. TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager.yaml
 #. TRANSLATORS: file: product/views/Vm-VmReconfigureRequest.yaml
 #. TRANSLATORS: file: product/views/Vm__restricted.yaml
 #. TRANSLATORS: en.yml key: dictionary.column.mem_cpu
@@ -15099,6 +15455,52 @@ msgstr ""
 #. TRANSLATORS: file: product/views/OsProcess-processes.yaml
 #. TRANSLATORS: en.yml key: dictionary.column.percent_memory
 msgid "Memory %"
+msgstr ""
+
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/Container.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/ContainerGroup.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/ContainerNode.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/ContainerProject.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/ContainerReplicator.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/ContainerService.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/EmsCluster.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/Host.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/HostAggregate.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/ManageIQ_Providers_ContainerManager.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/ManageIQ_Providers_Openstack_InfraManager_EmsCluster.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/ManageIQ_Providers_Openstack_InfraManager_Host.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/Parent-EmsCluster.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/Parent-Host.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/VmOrTemplate.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_tag_charts/AvailabilityZone.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_tag_charts/EmsCluster.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_tag_charts/Host.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_tag_charts/ManageIQ_Providers_Openstack_InfraManager_EmsCluster.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_tag_charts/ManageIQ_Providers_Openstack_InfraManager_Host.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/Container.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/ContainerGroup.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/ContainerNode.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/ContainerProject.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/ContainerReplicator.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/ContainerService.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/EmsCluster.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/Host.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/ManageIQ_Providers_ContainerManager.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/ManageIQ_Providers_Openstack_InfraManager_EmsCluster.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/ManageIQ_Providers_Openstack_InfraManager_Host.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/Parent-EmsCluster.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/Parent-Host.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/VmOrTemplate.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_tag_charts/EmsCluster.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_tag_charts/Host.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_tag_charts/ManageIQ_Providers_Openstack_InfraManager_EmsCluster.yaml
+#. TRANSLATORS: file: product/charts/layouts/realtime_perf_charts/Container.yaml
+#. TRANSLATORS: file: product/charts/layouts/realtime_perf_charts/ContainerGroup.yaml
+#. TRANSLATORS: file: product/charts/layouts/realtime_perf_charts/ContainerNode.yaml
+#. TRANSLATORS: file: product/charts/layouts/realtime_perf_charts/Host.yaml
+#. TRANSLATORS: file: product/charts/layouts/realtime_perf_charts/ManageIQ_Providers_Openstack_InfraManager_Host.yaml
+#. TRANSLATORS: file: product/charts/layouts/realtime_perf_charts/VmOrTemplate.yaml
+msgid "Memory (MB)"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.column.overallocated_mem_pct
@@ -15446,6 +15848,15 @@ msgstr ""
 msgid "Memory Average Used Trend"
 msgstr ""
 
+#. TRANSLATORS: file: product/charts/layouts/daily_tag_charts/Storage.yaml
+msgid "Memory Files"
+msgstr ""
+
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/Storage.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/Storage.yaml
+msgid "Memory Files Space by Type"
+msgstr ""
+
 #. TRANSLATORS: file: product/reports/140_Configuration Management - Resource Pools/010_Summary.yaml
 msgid "Memory Limit"
 msgstr ""
@@ -15524,6 +15935,11 @@ msgstr ""
 msgid "Memory Virtual to Real Ratio"
 msgstr ""
 
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/AvailabilityZone.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_tag_charts/AvailabilityZone.yaml
+msgid "Memory(MB)"
+msgstr ""
+
 #. TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/059_Summary of VM Create and Deletes.yaml
 #. TRANSLATORS: file: product/reports/500_Events - Operations/110_vm_operational_vm_power.yaml
 #. TRANSLATORS: file: product/reports/500_Events - Operations/120_Events_for_VM_prod_webserver.yaml
@@ -15550,6 +15966,15 @@ msgid "Message Level"
 msgstr ""
 
 msgid "Message Source"
+msgstr ""
+
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/MiddlewareMessaging_jms_queue.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/MiddlewareMessaging_jms_topic.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/MiddlewareMessaging_jms_queue.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/MiddlewareMessaging_jms_topic.yaml
+#. TRANSLATORS: file: product/charts/layouts/realtime_perf_charts/MiddlewareMessaging_jms_queue.yaml
+#. TRANSLATORS: file: product/charts/layouts/realtime_perf_charts/MiddlewareMessaging_jms_topic.yaml
+msgid "Messages"
 msgstr ""
 
 #. TRANSLATORS: file: product/views/MiddlewareMessaging.yaml
@@ -18876,22 +19301,6 @@ msgid "Modify Configuration Job"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-msgid "Modify Container Build"
-msgstr ""
-
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-msgid "Modify Container Image Registries"
-msgstr ""
-
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-msgid "Modify Container Nodes"
-msgstr ""
-
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-msgid "Modify Container Services"
-msgstr ""
-
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Modify Containers"
 msgstr ""
 
@@ -18917,6 +19326,10 @@ msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Modify Datastores"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Modify Datawarehouse Providers"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -19016,10 +19429,6 @@ msgid "Modify Persistent Volumes"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-msgid "Modify Pods"
-msgstr ""
-
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Modify Policies"
 msgstr ""
 
@@ -19089,10 +19498,6 @@ msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Modify Storage Managers"
-msgstr ""
-
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-msgid "Modify Storage Providers"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -19312,6 +19717,7 @@ msgstr ""
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Vm.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_ConfigurationManager_InventoryGroup.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_ContainerManager.yaml
+#. TRANSLATORS: file: product/views/ManageIQ_Providers_DatawarehouseManager.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_InfraManager.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_InfraManager_Template.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_InfraManager_Vm.yaml
@@ -19390,6 +19796,8 @@ msgstr ""
 #. TRANSLATORS: file: product/views/VmdbIndex.yaml
 #. TRANSLATORS: file: product/views/VmdbTableEvm.yaml
 #. TRANSLATORS: file: product/views/Vsc.yaml
+#. TRANSLATORS: file: product/views/ems_block_storage.yaml
+#. TRANSLATORS: file: product/views/ems_object_storage.yaml
 msgid "Name"
 msgstr ""
 
@@ -19449,6 +19857,55 @@ msgstr ""
 
 #. TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/080_Network information.yaml
 msgid "Network Domain"
+msgstr ""
+
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/AvailabilityZone.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/ContainerGroup.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/ContainerNode.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/ContainerProject.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/ContainerReplicator.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/ContainerService.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/EmsCluster.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/Host.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/HostAggregate.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/ManageIQ_Providers_ContainerManager.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/Parent-EmsCluster.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/Parent-Host.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/VmOrTemplate.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_tag_charts/AvailabilityZone.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_tag_charts/EmsCluster.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_tag_charts/Host.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/AvailabilityZone.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/ContainerGroup.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/ContainerNode.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/ContainerProject.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/ContainerReplicator.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/ContainerService.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/EmsCluster.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/Host.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/ManageIQ_Providers_ContainerManager.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/Parent-EmsCluster.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/Parent-Host.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/VmOrTemplate.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_tag_charts/AvailabilityZone.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_tag_charts/EmsCluster.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_tag_charts/Host.yaml
+#. TRANSLATORS: file: product/charts/layouts/realtime_perf_charts/ContainerGroup.yaml
+#. TRANSLATORS: file: product/charts/layouts/realtime_perf_charts/ContainerNode.yaml
+#. TRANSLATORS: file: product/charts/layouts/realtime_perf_charts/Host.yaml
+#. TRANSLATORS: file: product/charts/layouts/realtime_perf_charts/VmOrTemplate.yaml
+msgid "Network I/O (KBps)"
+msgstr ""
+
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/ManageIQ_Providers_Openstack_InfraManager_EmsCluster.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/ManageIQ_Providers_Openstack_InfraManager_Host.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_tag_charts/ManageIQ_Providers_Openstack_InfraManager_EmsCluster.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_tag_charts/ManageIQ_Providers_Openstack_InfraManager_Host.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/ManageIQ_Providers_Openstack_InfraManager_EmsCluster.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/ManageIQ_Providers_Openstack_InfraManager_Host.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_tag_charts/ManageIQ_Providers_Openstack_InfraManager_EmsCluster.yaml
+#. TRANSLATORS: file: product/charts/layouts/realtime_perf_charts/ManageIQ_Providers_Openstack_InfraManager_Host.yaml
+msgid "Network I/O (datagrams per second)"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.column.abs_max_net_usage_rate_average_value
@@ -20081,6 +20538,15 @@ msgstr ""
 msgid "Number of Users"
 msgstr ""
 
+#. TRANSLATORS: file: product/charts/layouts/daily_tag_charts/Storage.yaml
+msgid "Number of VMs"
+msgstr ""
+
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/Storage.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/Storage.yaml
+msgid "Number of VMs by Type"
+msgstr ""
+
 #. TRANSLATORS: file: db/fixtures/miq_report_formats.yml
 msgid "Number, 2 Decimals (1,234.00)"
 msgstr ""
@@ -20135,6 +20601,17 @@ msgstr ""
 #. TRANSLATORS: file: product/views/SystemService-kernel_drivers.yaml
 #. TRANSLATORS: file: product/views/SystemService-win32_services.yaml
 msgid "Object Name"
+msgstr ""
+
+#. TRANSLATORS: en.yml key: dictionary.table.ems_object_storage
+msgid "Object Storage Manager"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#. TRANSLATORS: file: product/views/ems_object_storage.yaml
+#. TRANSLATORS: en.yml key: dictionary.table.ems_object_storage (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.ems_object_storages
+msgid "Object Storage Managers"
 msgstr ""
 
 #. TRANSLATORS: file: product/reports/400_Operations- Virtual Machines/040_VMs_ Offline VMs not yet Scanned.yaml
@@ -22385,6 +22862,10 @@ msgid "Perform Operations on Datastores"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Perform Operations on Datawarehouse Providers"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Perform Operations on File Shares"
 msgstr ""
 
@@ -22545,7 +23026,7 @@ msgid "Perform Operations on Snapshots"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-msgid "Perform Operations on Storage Providers"
+msgid "Perform Operations on Storage Managers"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -22832,11 +23313,11 @@ msgid "Policy"
 msgstr ""
 
 #. TRANSLATORS: file: product/reports/520_Events - Policy/110_Policy Events.yaml
-msgid "Policy Events for Last Week - Sample 1"
+msgid "Policy Events for Last Week"
 msgstr ""
 
 #. TRANSLATORS: file: product/reports/520_Events - Policy/120_Policy Events2.yaml
-msgid "Policy Events for Last Week - Sample 2"
+msgid "Policy Events for the Last 7 Days"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -22917,6 +23398,7 @@ msgstr ""
 #. TRANSLATORS: file: product/views/ContainerImageRegistry.yaml
 #. TRANSLATORS: file: product/views/FirewallRule.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_ContainerManager.yaml
+#. TRANSLATORS: file: product/views/ManageIQ_Providers_DatawarehouseManager.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_MiddlewareManager.yaml
 #. TRANSLATORS: file: product/views/StorageManager.yaml
 msgid "Port"
@@ -23159,6 +23641,7 @@ msgstr ""
 #. TRANSLATORS: file: product/views/VmOrTemplate.yaml
 #. TRANSLATORS: en.yml key: dictionary.model.ExtManagementSystem
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::BaseManager
+#. TRANSLATORS: en.yml key: dictionary.table.ext_management_system
 msgid "Provider"
 msgstr ""
 
@@ -23205,6 +23688,8 @@ msgstr ""
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_Foreman_ConfigurationManager.yaml
 #. TRANSLATORS: en.yml key: dictionary.model.ExtManagementSystem (plural form)
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::BaseManager (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.ext_management_system (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.ext_management_systems
 msgid "Providers"
 msgstr ""
 
@@ -23363,6 +23848,9 @@ msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Publish VMs to a Template"
+msgstr ""
+
+msgid "Publish operation in not supported"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -23548,6 +24036,10 @@ msgid "Re-check Authentication Status of Containers Providers"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Re-check Authentication Status of Datawarehouse Providers"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Re-check Authentication Status of Infrastructure Providers"
 msgstr ""
 
@@ -23565,6 +24057,11 @@ msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.column.k_bytes_read_per_sec
 msgid "Read (KBps)"
+msgstr ""
+
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/OntapLogicalDisk.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/OntapLogicalDisk.yaml
+msgid "Read Data (bytes per second)"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.column.read_hit_ios_per_sec
@@ -23655,6 +24152,10 @@ msgid "Refresh Containers Providers"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Refresh Datawarehouse Providers"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Refresh EVM Log"
 msgstr ""
 
@@ -23699,7 +24200,7 @@ msgid "Refresh Status for all items related of Storage Managers"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-msgid "Refresh Storage Providers"
+msgid "Refresh Storage Managers"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -23777,6 +24278,8 @@ msgstr ""
 #. TRANSLATORS: file: product/views/StorageCluster.yaml
 #. TRANSLATORS: file: product/views/StorageManager.yaml
 #. TRANSLATORS: file: product/views/VmOrTemplate.yaml
+#. TRANSLATORS: file: product/views/ems_block_storage.yaml
+#. TRANSLATORS: file: product/views/ems_object_storage.yaml
 #. TRANSLATORS: en.yml key: dictionary.model.MiqRegion
 #. TRANSLATORS: en.yml key: dictionary.table.miq_region
 msgid "Region"
@@ -23987,30 +24490,6 @@ msgid "Remove Configuration Job"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-msgid "Remove Container"
-msgstr ""
-
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-msgid "Remove Container Build"
-msgstr ""
-
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-msgid "Remove Container Image Registry"
-msgstr ""
-
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-msgid "Remove Container Nodes"
-msgstr ""
-
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-msgid "Remove Container Replicator"
-msgstr ""
-
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-msgid "Remove Container Services"
-msgstr ""
-
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Remove Containers Provider"
 msgstr ""
 
@@ -24024,6 +24503,10 @@ msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Remove Datastores"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Remove Datawarehouse Providers"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -24095,10 +24578,6 @@ msgid "Remove Persistent Volume"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-msgid "Remove Pod"
-msgstr ""
-
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Remove Providers"
 msgstr ""
 
@@ -24123,11 +24602,11 @@ msgid "Remove Snapshot"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-msgid "Remove Storage Managers"
+msgid "Remove Storage Manager"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-msgid "Remove Storage Provider"
+msgid "Remove Storage Managers"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -24539,6 +25018,12 @@ msgstr ""
 msgid "Response Time (Seconds)"
 msgstr ""
 
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/MiddlewareDatasource.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/MiddlewareDatasource.yaml
+#. TRANSLATORS: file: product/charts/layouts/realtime_perf_charts/MiddlewareDatasource.yaml
+msgid "Responsiveness (ms)"
+msgstr ""
+
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Restart Guest"
 msgstr ""
@@ -24709,6 +25194,13 @@ msgstr ""
 msgid "Routes"
 msgstr ""
 
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/VmdbTable.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/VmdbTable.yaml
+msgid "Row Activity"
+msgstr ""
+
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/VmdbTable.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/VmdbTable.yaml
 #. TRANSLATORS: file: product/views/VmdbIndex.yaml
 #. TRANSLATORS: file: product/views/VmdbTableEvm.yaml
 msgid "Rows"
@@ -25100,6 +25592,10 @@ msgstr ""
 msgid "SecurityGroup|Total vms"
 msgstr ""
 
+#. TRANSLATORS: file: product/charts/layouts/ts_util_charts.yaml
+msgid "Selected Day Percent Utilization"
+msgstr ""
+
 #. TRANSLATORS: file: product/views/MiqGroup.yaml
 msgid "Sequence"
 msgstr ""
@@ -25173,6 +25669,10 @@ msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/notification_types.yml
 msgid "Service %{subject} has been retired."
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/notification_types.yml
+msgid "Service %{subject} has started retirement."
 msgstr ""
 
 #. TRANSLATORS: file: product/views/ContainerBuild.yaml
@@ -25642,6 +26142,10 @@ msgid "Show"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Show Ad hoc Metrics of Providers"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Show Arbitration List"
 msgstr ""
 
@@ -25746,11 +26250,31 @@ msgid "Show Cloud Networks"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Show Full Screen Report"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Show MiqAction"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Show Report Graph"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Show Report Hybrid"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Show Report Tabular"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Show Virtual Templates"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "Show full screen Report"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -25800,6 +26324,8 @@ msgstr ""
 msgid "Simulation"
 msgstr ""
 
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/VmdbTable.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/VmdbTable.yaml
 #. TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/025_Location and Size.yaml
 #. TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/031_Unregistered VMs.yaml
 #. TRANSLATORS: file: product/reports/110_Configuration Management - Hosts/060_VM Relationships.yaml
@@ -25906,8 +26432,17 @@ msgstr ""
 msgid "Snapshot Description"
 msgstr ""
 
+#. TRANSLATORS: file: product/charts/layouts/daily_tag_charts/Storage.yaml
+msgid "Snapshot Files"
+msgstr ""
+
 #. TRANSLATORS: en.yml key: dictionary.column.v_snapshot_percent_of_used
 msgid "Snapshot Files Percent of Used"
+msgstr ""
+
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/Storage.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/Storage.yaml
+msgid "Snapshot Files Space by Type"
 msgstr ""
 
 #. TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/036_Snapshot Summary.yaml
@@ -26069,9 +26604,6 @@ msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Start Middleware Server in Domain"
-msgstr ""
-
-msgid "Start Operation"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -26348,6 +26880,7 @@ msgstr ""
 #. TRANSLATORS: file: product/views/StorageManager.yaml
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::StorageManager
 #. TRANSLATORS: en.yml key: dictionary.model.StorageManager
+#. TRANSLATORS: en.yml key: dictionary.table.ems_storage
 msgid "Storage Manager"
 msgstr ""
 
@@ -26362,6 +26895,7 @@ msgstr ""
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::StorageManager (plural form)
 #. TRANSLATORS: en.yml key: dictionary.model.StorageManager (plural form)
+#. TRANSLATORS: en.yml key: dictionary.table.ems_storage (plural form)
 #. TRANSLATORS: en.yml key: dictionary.table.storage_managers
 msgid "Storage Managers"
 msgstr ""
@@ -26394,13 +26928,7 @@ msgstr ""
 msgid "Storage Performance - Volumes"
 msgstr ""
 
-#. TRANSLATORS: en.yml key: dictionary.table.ems_storage
-msgid "Storage Provider"
-msgstr ""
-
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_StorageManager.yaml
-#. TRANSLATORS: en.yml key: dictionary.table.ems_storage (plural form)
 msgid "Storage Providers"
 msgstr ""
 
@@ -26759,6 +27287,12 @@ msgstr ""
 msgid "Subnets"
 msgstr ""
 
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/MiddlewareMessaging_jms_topic.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/MiddlewareMessaging_jms_topic.yaml
+#. TRANSLATORS: file: product/charts/layouts/realtime_perf_charts/MiddlewareMessaging_jms_topic.yaml
+msgid "Subscribers"
+msgstr ""
+
 #. TRANSLATORS: file: db/fixtures/miq_report_formats.yml
 msgid "Suffixed Bytes (B, KB, MB, GB)"
 msgstr ""
@@ -27033,6 +27567,10 @@ msgstr ""
 msgid "Tagging|Taggable type"
 msgstr ""
 
+#. TRANSLATORS: file: product/timelines/miq_reports/tl_policy_events_daily.yaml
+msgid "Tagret"
+msgstr ""
+
 msgid "Tag|Name"
 msgstr ""
 
@@ -27044,6 +27582,10 @@ msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Take a Host / Node out of Maintenance Mode"
+msgstr ""
+
+#. TRANSLATORS: file: product/timelines/miq_reports/tl_policy_events_hourly.yaml
+msgid "Target"
 msgstr ""
 
 msgid "Targets must contain a cluster or a host key"
@@ -27266,6 +27808,9 @@ msgstr ""
 msgid "Text String"
 msgstr ""
 
+msgid "The Cloud Network is not connected to an active %{table}"
+msgstr ""
+
 msgid "The Host has invalid IPMI credentials"
 msgstr ""
 
@@ -27281,9 +27826,6 @@ msgstr ""
 msgid "The Keypair is not connected to an active %{table}"
 msgstr ""
 
-msgid "The Network is not connected to an active %{table}"
-msgstr ""
-
 msgid "The Subnet is not connected to an active %{table}"
 msgstr ""
 
@@ -27296,10 +27838,13 @@ msgstr ""
 msgid "The VM is not connected to a Host"
 msgstr ""
 
-msgid "The VM is not connected to an active Cloud/Infrastructure Providers"
+msgid "The VM is not connected to an active Provider"
 msgstr ""
 
 msgid "The VM is not powered on"
+msgstr ""
+
+msgid "The VM is powered on"
 msgstr ""
 
 msgid "The VM is retired"
@@ -27314,7 +27859,18 @@ msgstr ""
 msgid "The Volume is not connected to an active %{table}"
 msgstr ""
 
+#. TRANSLATORS: file: db/fixtures/notification_types.yml
+msgid "The operation %{op_name} %{op_arg} on %{mw_server} completed successfully."
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/notification_types.yml
+msgid "The operation %{op_name} %{op_arg} on %{mw_server} has failed to complete. Please check the logs for further details."
+msgstr ""
+
 msgid "The provider does not support reconfigure disks"
+msgstr ""
+
+msgid "The subnet is not connected to an active %{table}"
 msgstr ""
 
 msgid "The virtual machine is not associated with a provider"
@@ -27668,6 +28224,12 @@ msgstr ""
 msgid "Total VMs Powered Unknown"
 msgstr ""
 
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/MiddlewareServer.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/MiddlewareServer.yaml
+#. TRANSLATORS: file: product/charts/layouts/realtime_perf_charts/MiddlewareServer.yaml
+msgid "Transactions"
+msgstr ""
+
 #. TRANSLATORS: file: product/reports/670_Performance by Asset Type - Middleware Servers/140_Transactions - every minute over last hour.yaml
 msgid "Transactions - every minute over the last hour"
 msgstr ""
@@ -27700,6 +28262,18 @@ msgstr ""
 msgid "Trend"
 msgstr ""
 
+#. TRANSLATORS: file: product/charts/layouts/daily_util_charts.yaml
+msgid "Trend of CPU Used (Mhz)"
+msgstr ""
+
+#. TRANSLATORS: file: product/charts/layouts/daily_util_charts.yaml
+msgid "Trend of Memory Used (MB)"
+msgstr ""
+
+#. TRANSLATORS: file: product/charts/layouts/daily_util_charts.yaml
+msgid "Trend of Used Disk Space"
+msgstr ""
+
 msgid "Trending Down"
 msgstr ""
 
@@ -27724,6 +28298,7 @@ msgstr ""
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_OrchestrationStack.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_ConfigurationManager.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_ContainerManager.yaml
+#. TRANSLATORS: file: product/views/ManageIQ_Providers_DatawarehouseManager.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_Foreman_ConfigurationManager.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_Foreman_ConfigurationManager_ConfiguredSystem.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_InfraManager.yaml
@@ -27739,6 +28314,8 @@ msgstr ""
 #. TRANSLATORS: file: product/views/ServiceTemplate.yaml
 #. TRANSLATORS: file: product/views/StorageManager.yaml
 #. TRANSLATORS: file: product/views/Tenant.yaml
+#. TRANSLATORS: file: product/views/ems_block_storage.yaml
+#. TRANSLATORS: file: product/views/ems_object_storage.yaml
 #. TRANSLATORS: en.yml key: dictionary.column.action_type_description
 #. TRANSLATORS: en.yml key: dictionary.column.emstype_description
 #. TRANSLATORS: en.yml key: dictionary.column.mode
@@ -27823,6 +28400,9 @@ msgid "Unable to find user_role 'EvmRole-%{role_name}' for group '%{group_name}'
 msgstr ""
 
 msgid "Unable to generate report if a task with id [%{number}] is not found!"
+msgstr ""
+
+msgid "Unable to get attributes for external user %{user_name} - %{error}"
 msgstr ""
 
 msgid "Unable to get groups for user %{user_name} - %{error}"
@@ -28391,12 +28971,23 @@ msgstr ""
 msgid "Used - min (bytes)"
 msgstr ""
 
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/Storage.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/Storage.yaml
+msgid "Used Disk Space"
+msgstr ""
+
+#. TRANSLATORS: file: product/charts/layouts/daily_tag_charts/Storage.yaml
 #. TRANSLATORS: en.yml key: dictionary.column.v_used_space
 msgid "Used Space"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.column.v_used_space_percent_of_total
 msgid "Used Space Percent of Total"
+msgstr ""
+
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/Storage.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/Storage.yaml
+msgid "Used Space by Type"
 msgstr ""
 
 #. TRANSLATORS: file: product/views/Vm__restricted.yaml
@@ -28609,6 +29200,10 @@ msgstr ""
 msgid "VC User Name"
 msgstr ""
 
+#. TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager.yaml
+msgid "VCpus"
+msgstr ""
+
 #. TRANSLATORS: file: product/reports/421_Operations - Events/VC Snapshot Events by User.yaml
 #. TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/052_VMs with Volume Free Space -= 75%.yaml
 #. TRANSLATORS: file: product/reports/425_VM Sprawl - Candidates/053_VMs with disk free space _ 5GB.yaml
@@ -28761,6 +29356,10 @@ msgstr ""
 
 #. TRANSLATORS: file: product/reports/650_Performance by Asset Type - Virtual Machines/065_VM Performance - daily over last week.yaml
 msgid "VM Performance - daily over last week"
+msgstr ""
+
+#. TRANSLATORS: file: product/charts/layouts/planning_charts.yaml
+msgid "VM Planning"
 msgstr ""
 
 #. TRANSLATORS: file: product/reports/130_Configuration Management - Clusters/030_VM Affinity with Power State.yaml
@@ -28995,6 +29594,13 @@ msgid "VMRC remote console is not supported on %{vendor}."
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/Host.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/ManageIQ_Providers_Openstack_InfraManager_Host.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/Parent-Host.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/Host.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/ManageIQ_Providers_Openstack_InfraManager_Host.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/Parent-Host.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/Storage.yaml
 #. TRANSLATORS: file: product/views/CimBaseStorageExtent.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Vm-vms.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_InfraManager.yaml
@@ -29010,6 +29616,15 @@ msgstr ""
 #. TRANSLATORS: file: product/views/Vm__restricted.yaml
 #. TRANSLATORS: en.yml key: dictionary.table.vms
 msgid "VMs"
+msgstr ""
+
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/EmsCluster.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/ManageIQ_Providers_Openstack_InfraManager_EmsCluster.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/Parent-EmsCluster.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/EmsCluster.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/ManageIQ_Providers_Openstack_InfraManager_EmsCluster.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/Parent-EmsCluster.yaml
+msgid "VMs & Hosts"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -29389,6 +30004,10 @@ msgid "View Base Storage Extents"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "View Block Storage Managers"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "View Blueprint"
 msgstr ""
 
@@ -29501,6 +30120,10 @@ msgid "View Datastores Clusters"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "View Datawarehouse Providers"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "View File Shares"
 msgstr ""
 
@@ -29510,6 +30133,10 @@ msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "View Floating IPs"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "View Graph"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -29526,6 +30153,10 @@ msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "View Hosts / Nodes"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "View Hybrid"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -29621,6 +30252,10 @@ msgid "View Networking Elements"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "View Object Storage Managers"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "View Objects"
 msgstr ""
 
@@ -29713,10 +30348,6 @@ msgid "View Storage Managers"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
-msgid "View Storage Providers"
-msgstr ""
-
-#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "View Storage Systems"
 msgstr ""
 
@@ -29726,6 +30357,10 @@ msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "View Summary"
+msgstr ""
+
+#. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+msgid "View Tabular"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -29871,6 +30506,10 @@ msgstr ""
 msgid "Virtual Machine %{subject} has been retired."
 msgstr ""
 
+#. TRANSLATORS: file: db/fixtures/notification_types.yml
+msgid "Virtual Machine %{subject} has started retirement."
+msgstr ""
+
 #. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Microsoft::InfraManager::Vm
 msgid "Virtual Machine (Microsoft)"
 msgstr ""
@@ -29883,11 +30522,45 @@ msgstr ""
 msgid "Virtual Machine (VMware)"
 msgstr ""
 
+#. TRANSLATORS: file: product/charts/layouts/daily_tag_charts/EmsCluster.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_tag_charts/Host.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_tag_charts/ManageIQ_Providers_Openstack_InfraManager_Host.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_tag_charts/EmsCluster.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_tag_charts/Host.yaml
+msgid "Virtual Machine CPU Ready (Percent)"
+msgstr ""
+
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/EmsCluster.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/Host.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/Parent-EmsCluster.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/Parent-Host.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/VmOrTemplate.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/EmsCluster.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/Host.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/Parent-EmsCluster.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/Parent-Host.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/VmOrTemplate.yaml
+#. TRANSLATORS: file: product/charts/layouts/realtime_perf_charts/Host.yaml
+#. TRANSLATORS: file: product/charts/layouts/realtime_perf_charts/VmOrTemplate.yaml
+msgid "Virtual Machine CPU States"
+msgstr ""
+
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
 msgid "Virtual Machine Views"
 msgstr ""
 
 #. TRANSLATORS: file: db/fixtures/miq_product_features.yml
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/EmsCluster.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/Host.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/ManageIQ_Providers_Openstack_InfraManager_EmsCluster.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/ManageIQ_Providers_Openstack_InfraManager_Host.yaml
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/Storage.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/EmsCluster.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/Host.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/ManageIQ_Providers_Openstack_InfraManager_EmsCluster.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/ManageIQ_Providers_Openstack_InfraManager_Host.yaml
+#. TRANSLATORS: file: product/charts/layouts/realtime_perf_charts/Host.yaml
+#. TRANSLATORS: file: product/charts/layouts/realtime_perf_charts/ManageIQ_Providers_Openstack_InfraManager_Host.yaml
 #. TRANSLATORS: file: product/views/Vm-VmReconfigureRequest.yaml
 #. TRANSLATORS: file: product/views/Vm-all_vms.yaml
 #. TRANSLATORS: file: product/views/Vm.yaml
@@ -30509,6 +31182,12 @@ msgstr ""
 msgid "VmOrTemplate|Publicly available"
 msgstr ""
 
+msgid "VmOrTemplate|Ram size"
+msgstr ""
+
+msgid "VmOrTemplate|Ram size in bytes"
+msgstr ""
+
 msgid "VmOrTemplate|Raw power state"
 msgstr ""
 
@@ -31039,6 +31718,12 @@ msgstr ""
 msgid "Web Services authentication is not supported for hosts of this type."
 msgstr ""
 
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/MiddlewareServer.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/MiddlewareServer.yaml
+#. TRANSLATORS: file: product/charts/layouts/realtime_perf_charts/MiddlewareServer.yaml
+msgid "Web Sessions"
+msgstr ""
+
 msgid "Week"
 msgstr ""
 
@@ -31145,6 +31830,11 @@ msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.column.write_ios_per_sec
 msgid "Write (IOPS)"
+msgstr ""
+
+#. TRANSLATORS: file: product/charts/layouts/daily_perf_charts/OntapLogicalDisk.yaml
+#. TRANSLATORS: file: product/charts/layouts/hourly_perf_charts/OntapLogicalDisk.yaml
+msgid "Write Data (bytes per second)"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.column.write_hit_ios_per_sec
@@ -31546,13 +32236,7 @@ msgstr ""
 msgid "raw_delete_load_balancer must be implemented in a subclass"
 msgstr ""
 
-msgid "raw_delete_network must be implemented in a subclass"
-msgstr ""
-
 msgid "raw_delete_stack must be implemented in a subclass"
-msgstr ""
-
-msgid "raw_delete_subnet must be implemented in a subclass"
 msgstr ""
 
 msgid "raw_delete_volume must be implemented in a subclass"
@@ -31579,13 +32263,7 @@ msgstr ""
 msgid "raw_update_load_balancer must be implemented in a subclass"
 msgstr ""
 
-msgid "raw_update_network must be implemented in a subclass"
-msgstr ""
-
 msgid "raw_update_stack must be implemented in a subclass"
-msgstr ""
-
-msgid "raw_update_subnet must be implemented in a subclass"
 msgstr ""
 
 msgid "raw_update_volume must be implemented in a subclass"
