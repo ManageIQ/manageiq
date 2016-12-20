@@ -424,7 +424,6 @@ class ApplicationHelper::ToolbarBuilder
 
   # Determine if a button should be hidden
   def hide_button?(id)
-    return false if id.start_with?('history_')
     return true if id == "blank_button" # Always hide the blank button placeholder
 
     # need to hide add buttons when on sub-list view screen of a CI.
@@ -489,7 +488,6 @@ class ApplicationHelper::ToolbarBuilder
   def disable_button(id)
     return true if id.starts_with?("view_") && id.ends_with?("textual")  # Summary view buttons
     return true if @gtl_type && id.starts_with?("view_") && id.ends_with?(@gtl_type)  # GTL view buttons
-    return true if id == "history_1" && x_tree_history.length < 2 # Need 1 child button to show parent
     return true if id == "view_dashboard" && (@showtype == "dashboard")
     return true if id == "view_summary" && (@showtype != "dashboard")
 

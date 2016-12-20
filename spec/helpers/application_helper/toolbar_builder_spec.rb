@@ -183,24 +183,6 @@ describe ApplicationHelper, "::ToolbarBuilder" do
       }
     end
 
-    %w(
-      history_1
-      history_2
-      history_3
-      history_4
-      history_5
-      history_6
-      history_7
-      history_8
-      history_9
-      history_10
-    ).each do |item|
-      it "when with history item #{item}" do
-        @id = item
-        expect(subject).to be_falsey
-      end
-    end
-
     it "when id likes old_dialogs_*" do
       @id = "old_dialogs_some_thing"
       expect(subject).to be_truthy
