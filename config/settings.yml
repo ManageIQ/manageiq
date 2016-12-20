@@ -1084,6 +1084,9 @@
   :monitor_poll: 5.seconds
   :name: EVM
   :prefetch_max_per_worker: 10
+  :prefetch_max_per_worker_dequeue: 100
+  :prefetch_min_per_worker_dequeue: 10
+  :prefetch_stale_threshold: 30.seconds
   :rails_server: puma
   :remote_console_type: VMRC
   :role: database_operations,event,reporting,scheduler,smartstate,ems_operations,ems_inventory,user_interface,websocket,web_services,automate
