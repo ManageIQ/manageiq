@@ -179,9 +179,11 @@ class ReportController < ApplicationController
     @edit = nil
     @sb[:select_node] = false
     # set these when a link on one of the summary screen was pressed
-    self.x_active_accord = params[:accord]           if params[:accord]
-    self.x_active_tree   = "#{params[:accord]}_tree" if params[:accord]
-    self.x_active_tree   = params[:tree]             if params[:tree]
+    if params[:accord]
+      self.x_active_accord = params[:accord]
+      self.x_active_tree = "#{params[:accord]}_tree"
+    end
+    self.x_active_tree = params[:tree] if params[:tree]
     self.x_node = params[:id]
     @sb[:active_tab] = "report_info" if x_active_tree == :reports_tree && params[:action] != "reload"
     if params[:action] == "reload" && @sb[:active_tab] == "saved_reports"
