@@ -15,7 +15,7 @@ class TreeBuilderProvisioningDialogs < TreeBuilderAeCustomization
       {
         :id    => "MiqDialog_#{typ[1]}",
         :text  => typ[0],
-        :image => "folder",
+        :image => "100/folder.png",
         :tip   => typ[0]
       }
     end

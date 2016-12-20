@@ -47,7 +47,7 @@ class TreeBuilderMenuRoles < TreeBuilder
 
       {
         :id      => "p__#{i.first}",
-        :image   => "folder",
+        :image   => "100/folder.png",
         :text    => i.first,
         :tooltip => i.first,
         :data    => grandkids
@@ -74,7 +74,7 @@ class TreeBuilderMenuRoles < TreeBuilder
   def build_middle_child(parent_name, item)
     {
       :id      => "s__#{parent_name}:#{item.first}",
-      :image   => "folder",
+      :image   => "100/folder.png",
       :text    => item.first,
       :tooltip => item.first,
       :data    => item.last
@@ -84,7 +84,7 @@ class TreeBuilderMenuRoles < TreeBuilder
   def build_last_child(child)
     {
       :id          => child,
-      :image       => "report",
+      :image       => "100/report.png",
       :text        => child,
       :tooltip     => child,
       :cfmeNoClick => true,

@@ -33,7 +33,7 @@ class TreeBuilderIsoDatastores < TreeBuilder
         objects.push(
           :id    => "isd_xx-#{to_cid(object.id)}",
           :text  => _("ISO Images"),
-          :image => "folder",
+          :image => "100/folder.png",
           :tip   => _("ISO Images")
         )
       end

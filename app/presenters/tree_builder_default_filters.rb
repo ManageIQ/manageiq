@@ -53,7 +53,7 @@ class TreeBuilderDefaultFilters < TreeBuilder
     roots = @data.keys.map do |folder|
       {:id           => folder,
        :text         => folder,
-       :image        => "folder",
+       :image        => "100/folder.png",
        :tip          => folder,
        :cfmeNoClick  => true,
        :hideCheckbox => true}
@@ -70,7 +70,7 @@ class TreeBuilderDefaultFilters < TreeBuilder
                 folders.map do |folder|
                   {:id           => "#{parent[:id]}_#{folder}",
                    :text         => folder,
-                   :image        => "folder",
+                   :image        => "100/folder.png",
                    :tip          => folder,
                    :cfmeNoClick  => true,
                    :hideCheckbox => true}
