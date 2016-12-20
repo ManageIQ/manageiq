@@ -8,7 +8,7 @@ class TokenStore
         ActiveSupport::Cache::MemoryStore.new(cache_store_options(namespace, token_ttl))
       else
         require 'active_support/cache/dalli_store'
-        memcache_server = ::Settings.session.memcache_server || "127.0.0.1:11221"
+        memcache_server = ::Settings.session.memcache_server
         ActiveSupport::Cache::DalliStore.new(memcache_server, cache_store_options(namespace, token_ttl))
       end
     end
