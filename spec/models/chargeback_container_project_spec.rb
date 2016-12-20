@@ -38,7 +38,7 @@ describe ChargebackContainerProject do
     @tag = c.tag
     @project.tag_with(@tag.name, :ns => '*')
 
-    Timecop.travel(Time.parse('2012-09-01 23:59:59').utc)
+    Timecop.travel(Time.parse('2012-09-01 23:59:59Z').utc)
   end
 
   after do
@@ -52,8 +52,8 @@ describe ChargebackContainerProject do
   context "Daily" do
     let(:hours_in_day) { 24 }
     let(:options) { base_options.merge(:interval => 'daily', :entity_id => @project.id, :tag => nil) }
-    let(:start_time)  { Time.parse('2012-09-01 07:00:00').utc }
-    let(:finish_time) { Time.parse('2012-09-01 10:00:00').utc }
+    let(:start_time)  { Time.parse('2012-09-01 07:00:00Z').utc }
+    let(:finish_time) { Time.parse('2012-09-01 10:00:00Z').utc }
 
     before do
       Range.new(start_time, finish_time, true).step_value(1.hour).each do |t|
