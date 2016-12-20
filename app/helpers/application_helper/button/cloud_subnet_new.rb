@@ -1,4 +1,4 @@
-class ApplicationHelper::Button::CloudSubnetNew < ApplicationHelper::Button::Basic
+class ApplicationHelper::Button::CloudSubnetNew < ApplicationHelper::Button::ButtonNewDiscover
   def calculate_properties
     super
     if disabled?
