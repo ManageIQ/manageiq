@@ -35,7 +35,7 @@ class User < ApplicationRecord
              :to => :miq_user_role, :allow_nil => true
 
   validates_presence_of   :name, :userid
-  validates :userid, :uniqueness => {:conditions => -> { in_my_region } }
+  validates :userid, :unique_within_region => {:match_case => false}
   validates :email, :format => {:with => MoreCoreExtensions::StringFormats::RE_EMAIL,
                                 :allow_nil => true, :message => "must be a valid email address"}
   validates_inclusion_of  :current_group, :in => proc { |u| u.miq_groups }, :allow_nil => true
