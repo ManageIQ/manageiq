@@ -427,10 +427,6 @@ class ApplicationHelper::ToolbarBuilder
     return false if id.start_with?('history_')
     return true if id == "blank_button" # Always hide the blank button placeholder
 
-    # hide compliance check and comparison buttons rendered for orchestration stack instances
-    return true if @record.kind_of?(OrchestrationStack) && @display == "instances" &&
-                   %w(instance_check_compliance instance_compare).include?(id)
-
     # need to hide add buttons when on sub-list view screen of a CI.
     return true if id.ends_with?("_new", "_discover") &&
                    @lastaction == "show" && !["main", "vms"].include?(@display)
@@ -689,8 +685,7 @@ class ApplicationHelper::ToolbarBuilder
       case id
       when "instance_perf", "vm_perf", "container_perf"
         return N_("No Capacity & Utilization data has been collected for this VM") unless @record.has_perf_data?
-      when "instance_check_compliance", "vm_check_compliance"
-        model = model_for_vm(@record).to_s
+      when "vm_check_compliance"
         unless @record.has_compliance_policies?
           return N_("No Compliance Policies assigned to this virtual machine")
         end
@@ -715,8 +710,6 @@ class ApplicationHelper::ToolbarBuilder
         if @record.current_state != "on"
           return N_("The web-based VNC console is not available because the VM is not powered on")
         end
-      when "instance_retire", "instance_retire_now"
-        return N_("Instance is already retired") if @record.retired
       when "vm_timeline"
         unless @record.has_events? || @record.has_events?(:policy_events)
           return N_("No Timeline data has been collected for this VM")

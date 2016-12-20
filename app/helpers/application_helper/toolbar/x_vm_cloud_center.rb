@@ -73,7 +73,8 @@ class ApplicationHelper::Toolbar::XVmCloudCenter < ApplicationHelper::Toolbar::B
           'fa fa-search fa-lg',
           N_('Check Compliance of the last known configuration for this Instance'),
           N_('Check Compliance of Last Known Configuration'),
-          :confirm => N_("Initiate Check Compliance of the last known configuration for this Instance?")),
+          :confirm => N_("Initiate Check Compliance of the last known configuration for this Instance?"),
+          :klass   => ApplicationHelper::Button::InstanceCheckCompare),
       ]
     ),
   ])
@@ -88,13 +89,15 @@ class ApplicationHelper::Toolbar::XVmCloudCenter < ApplicationHelper::Toolbar::B
           :instance_retire,
           'fa fa-clock-o fa-lg',
           N_('Set Retirement Dates for this Instance'),
-          N_('Set Retirement Date')),
+          N_('Set Retirement Date'),
+          :klass   => ApplicationHelper::Button::InstanceRetire),
         button(
           :instance_retire_now,
           'fa fa-clock-o fa-lg',
           t = N_('Retire this Instance'),
           t,
-          :confirm => N_("Retire this Instance?")),
+          :confirm => N_("Retire this Instance?"),
+          :klass   => ApplicationHelper::Button::InstanceRetire),
       ]
     ),
   ])

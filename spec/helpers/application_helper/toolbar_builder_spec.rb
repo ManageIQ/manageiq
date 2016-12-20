@@ -1096,15 +1096,6 @@ describe ApplicationHelper, "::ToolbarBuilder" do
 
     end # end of Vm class
 
-    context "Disable Retire button for already retired VMs and Instances" do
-      it "button instance_retire_now" do
-        @record = FactoryGirl.create(:vm_amazon, :retired => true)
-        res = toolbar_builder.disable_button("instance_retire_now")
-        expect(res).to be_truthy
-        expect(res).to include("already retired")
-      end
-    end
-
     context "and id = miq_request_delete" do
       let(:server) { double("MiqServer", :logon_status => :ready) }
       let(:user)   { FactoryGirl.create(:user_admin) }
