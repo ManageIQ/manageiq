@@ -27,11 +27,11 @@ addons:
 before_install:
 - source ${TRAVIS_BUILD_DIR}/tools/ci/before_install.sh
 before_script:
-- bundle exec rake ${test:$TEST_SUITE:setup}
+- bundle exec rake test:$TEST_SUITE:setup
 script:
-- bundle exec rake ${TEST_SUITE+test:$TEST_SUITE}
+- bundle exec rake test:$TEST_SUITE
 after_script:
-- bundle exec rake ${test:$TEST_SUITE:teardown}
+- bundle exec rake test:$TEST_SUITE:teardown
 after_failure:
 - source ${TRAVIS_BUILD_DIR}/tools/ci/after_failure.sh
 notifications:
