@@ -19,6 +19,7 @@ module ManageIQ::Providers::Vmware
 
       result[:storages], uids[:storages] = storage_inv_to_hashes(inv[:storage])
       result[:clusters], uids[:clusters] = cluster_inv_to_hashes(inv[:cluster])
+      result[:storage_profiles], uids[:storage_profiles] = storage_profile_inv_to_hashes(inv[:storage_profile], uids[:storages], inv[:storage_profile_datastore])
 
       result
     end
@@ -65,8 +66,8 @@ module ManageIQ::Providers::Vmware
       return result, result_uids
     end
 
-    def self.storage_profile_inv_to_hashes(profile_inv, storage_uids, placement_inv)
-      result = []
+    def storage_profile_inv_to_hashes(profile_inv, storage_uids, placement_inv)
+      result = add_dto_collection(StorageProfile, :storage_profiles)
       result_uids = {}
 
       profile_inv.each do |uid, profile|
@@ -74,15 +75,16 @@ module ManageIQ::Providers::Vmware
           :ems_ref                  => uid,
           :name                     => profile.name,
           :profile_type             => profile.profileCategory,
-          :storage_profile_storages => []
+          # TODO: Need to add a DtoCollection here
+          # TODO: :storage_profile_storages => []
         }
 
         placement_inv[uid].to_miq_a.each do |placement_hub|
           datastore = storage_uids[placement_hub.hubId] if placement_hub.hubType == "Datastore"
-          new_result[:storage_profile_storages] << datastore unless datastore.nil?
+          # TODO: new_result[:storage_profile_storages] << datastore unless datastore.nil?
         end
 
-        result << new_result
+        result << result.new_dto(new_result)
         result_uids[uid] = new_result
       end unless profile_inv.nil?
 

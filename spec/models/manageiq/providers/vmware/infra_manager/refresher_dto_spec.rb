@@ -50,7 +50,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
       #expect(Vm.count).to eq(92)
       #expect(MiqTemplate.count).to eq(9)
       expect(Storage.count).to eq(50)
-      #expect(StorageProfile.count).to eq(6)
+      expect(StorageProfile.count).to eq(6)
 
       #expect(CustomAttribute.count).to eq(3)
       #expect(CustomizationSpec.count).to eq(2)
