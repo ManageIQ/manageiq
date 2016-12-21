@@ -7,8 +7,6 @@ namespace :test do
     task :setup => :initialize do
       EvmTestSetupReplication.new.write_released_migrations
     end
-
-    task :teardown
   end
 
   desc "Run all replication specs"

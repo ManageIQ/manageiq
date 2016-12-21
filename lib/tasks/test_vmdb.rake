@@ -19,8 +19,6 @@ namespace :test do
         Rake::Task['test:setup_db'].invoke
       end
     end
-
-    task :teardown
   end
 
   desc "Run all vmdb specs; Use PARALLEL=true to run in parallel."

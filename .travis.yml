@@ -30,8 +30,6 @@ before_script:
 - bundle exec rake test:$TEST_SUITE:setup
 script:
 - bundle exec rake test:$TEST_SUITE
-after_script:
-- bundle exec rake test:$TEST_SUITE:teardown
 after_failure:
 - source ${TRAVIS_BUILD_DIR}/tools/ci/after_failure.sh
 notifications:
