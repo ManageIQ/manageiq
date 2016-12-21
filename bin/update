@@ -24,10 +24,10 @@ chdir APP_ROOT do
   dev_warn_and_exit_if_missing('config/database.yml', 'config/database.pg.yml')
 
   puts '== Installing dependencies =='
-  # Run bower in a thread and continue to do the non-js stuff
-  puts "Updating bower assets in parallel..."
-  bower_thread = Thread.new do
-    system! "bower update --allow-root -F --silent --config.analytics=false"
+  # Run yarn in a thread and continue to do the non-js stuff
+  puts "Updating frontend assets in parallel..."
+  yarn_thread = Thread.new do
+    system! "yarn"
   end
   system! 'gem install bundler --conservative'
 
@@ -53,9 +53,9 @@ chdir APP_ROOT do
     system! "bin/rails evm:automate:reset"
   end
 
-  # Make sure bower is done before compiling assets
-  bower_thread.join
-  puts "Done running `bower update`."
+  # Make sure yarn is done before compiling assets
+  yarn_thread.join
+  puts "Done running `yarn`."
 
   if ENV['RAILS_ENV'] == 'production'
     puts "\n== Recompiling assets =="
