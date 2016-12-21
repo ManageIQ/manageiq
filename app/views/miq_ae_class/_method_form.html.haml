@@ -28,6 +28,12 @@
                         :maxlength         => MAX_NAME_LEN,
                         :class => "form-control",
                         "data-miq_observe" => obs)
+    - if @ae_method.created_on
+      .form-group
+        %label.col-md-2.control-label
+          = _("Created On")
+        .col-md-8
+          = h(format_timezone(@ae_method.created_on, Time.zone, "gtl"))
     .form-group
       %label.col-md-2.control-label
         = _('Location')
@@ -39,16 +45,25 @@
                       "data-miq_observe" => {:url => url}.to_json)
         :javascript
           miqInitSelectPicker();
-          miqSelectPickerEvent("#{prefix}method_location", "#{url}")
-    - if @ae_method.created_on
+          miqSelectPickerEvent("#{prefix}method_location", "#{url}",  {beforeSend: true})
+    - if @edit[:new][:location] == 'expression'
       .form-group
         %label.col-md-2.control-label
-          = _("Created On")
+          = _('Expression Object')
         .col-md-8
-          = h(format_timezone(@ae_method.created_on, Time.zone, "gtl"))
-  %hr
-  %h3= (@edit[:new][:location] == 'builtin') ? _('Builtin name') : _("Data")
-  = render :partial => "method_data", :locals => {:field_name => "#{prefix}method"}
+          = select_tag("#{prefix}exp_object",
+                        options_for_select(@edit[:new][:available_expression_objects],
+                        @edit[:new][:exp_object]),
+                        :class    => "selectpicker",
+                        "data-miq_observe" => {:url => url}.to_json)
+          :javascript
+            miqInitSelectPicker();
+            miqSelectPickerEvent("#{prefix}exp_object", "#{url}",  {beforeSend: true})
+      = render :partial => 'layouts/exp_editor'
+    - else
+      %hr
+      %h3= (@edit[:new][:location] == 'builtin') ? _('Builtin name') : _("Data")
+      = render :partial => "method_data", :locals => {:field_name => "#{prefix}method"}
   %hr
   %h3= _("Input Parameters")
   %table.table.table-bordered.table-striped

@@ -10,6 +10,11 @@ module MiqAeEngine
       raise  MiqAeException::InvalidMethod, "Inline Method Language [#{aem.language}] not supported"
     end
 
+    def self.invoke_expression(aem, obj, inputs)
+      exp_method = MiqAeEngine::MiqAeExpressionMethod.new(aem, obj, inputs)
+      exp_method.run
+    end
+
     def self.invoke_uri(aem, obj, _inputs)
       scheme, userinfo, host, port, registry, path, opaque, query, fragment = URI.split(aem.data)
       raise  MiqAeException::MethodNotFound, "Specified URI [#{aem.data}] in Method [#{aem.name}] has unsupported scheme of #{scheme}; supported scheme is file" unless scheme.downcase == "file"
@@ -44,7 +49,7 @@ module MiqAeEngine
       aem.inputs.each do |f|
         key   = f.name
         value = args[key]
-        value = obj.attributes[key] || f.default_value if value.nil?
+        value = obj.attributes[key] || obj.substitute_value(f.default_value) if value.nil?
         inputs[key] = MiqAeObject.convert_value_based_on_datatype(value, f["datatype"])
 
         if obj.attributes[key] && f["datatype"] != "string"
@@ -59,7 +64,7 @@ module MiqAeEngine
 
       if obj.workspace.readonly?
         $miq_ae_logger.info("Workspace Instantiation is READONLY -- skipping method [#{aem.fqname}] with inputs [#{inputs.inspect}]")
-      elsif ["inline", "builtin", "uri"].include?(aem.location.downcase.strip)
+      elsif %w(inline builtin uri expression).include?(aem.location.downcase.strip)
         $miq_ae_logger.info("Invoking [#{aem.location}] method [#{aem.fqname}] with inputs [#{inputs.inspect}]")
         return MiqAeEngine::MiqAeMethod.send("invoke_#{aem.location.downcase.strip}", aem, obj, inputs)
       end

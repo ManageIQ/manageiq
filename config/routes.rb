@@ -1889,7 +1889,8 @@ Vmdb::Application.routes.draw do
         x_button
         x_history
         x_show
-      )
+      ) + adv_search_post +
+          exp_post
     },
     :miq_ae_customization     => {
       :get  => %w(

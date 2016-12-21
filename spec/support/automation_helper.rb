@@ -35,11 +35,12 @@ module Spec
         attrs = default_ae_model_attributes(attrs)
         method_script = attrs.delete(:method_script)
         method_params = attrs.delete(:method_params) || {}
+        method_loc = attrs.delete(:method_loc) || "inline"
         instance_name = attrs.delete(:instance_name)
         method_name = attrs.delete(:method_name)
         ae_fields = {'execute' => {:aetype => 'method', :datatype => 'string'}}
         ae_instances = {instance_name => {'execute' => {:value => method_name}}}
-        ae_methods = {method_name => {:scope => 'instance', :location => 'inline',
+        ae_methods = {method_name => {:scope => 'instance', :location => method_loc,
                                       :data => method_script,
                                       :language => 'ruby', 'params' => method_params}}
 

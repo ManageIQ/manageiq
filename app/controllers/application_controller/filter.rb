@@ -70,6 +70,10 @@ module ApplicationController::Filter
         else
           page.replace("exp_editor_div", :partial => "layouts/exp_editor")
         end
+
+        if @edit[:expression_method]
+          page.replace("exp_editor_div", :partial => "layouts/exp_editor")
+        end
         if ["not", "discard", "commit", "remove"].include?(params[:pressed])
           page << javascript_hide("exp_buttons_on")
           page << javascript_hide("exp_buttons_not")
@@ -964,15 +968,20 @@ module ApplicationController::Filter
       end
       @edit.delete(:exp_token)                                          # Remove any existing atom being edited
     else                                                                # Create new exp fields
-      @edit = {}
+      @edit ||= {}
       @edit[@expkey] ||= Expression.new
       @edit[@expkey][:expression] = []                           # Store exps in an array
       @edit[@expkey][:expression] = {"???" => "???"}                      # Set as new exp element
       @edit[@expkey][:use_mytags] = true                                # Include mytags in tag search atoms
       @edit[:custom_search] = false                                     # setting default to false
-      @edit[:new] = {}
-      @edit[:new][@expkey] = @edit[@expkey][:expression]                # Copy to new exp
+      @edit[:new] ||= {}
+      if @edit[:new][@expkey]
+        @edit[@expkey][:expression] = @edit[:new][@expkey]                # Copy to new exp
+      else
+        @edit[:new][@expkey] = @edit[@expkey][:expression]                # Copy to new exp
+      end
       @edit[@expkey].history.reset(@edit[@expkey][:expression])
+      exp_array(:init, @edit[@expkey][:expression])                     # Initialize the exp array
       @edit[:adv_search_open] = false
       @edit[@expkey][:exp_model] = model.to_s
     end

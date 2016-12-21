@@ -381,6 +381,7 @@ describe MiqAeClassController do
       context "when the record exists" do
         before do
           allow(MiqAeMethod).to receive(:find_by_id).with(123).and_return(miq_ae_method)
+          allow(miq_ae_method).to receive(:location).with(no_args).and_return("inline")
           allow(miq_ae_method).to receive(:ae_class).and_return(miq_ae_class)
           allow(MiqAeMethod).to receive(:get_homonymic_across_domains)
             .with(@user, "fqname").and_return([override, override2])

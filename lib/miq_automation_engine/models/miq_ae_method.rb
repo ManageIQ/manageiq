@@ -15,7 +15,7 @@ class MiqAeMethod < ApplicationRecord
 
   AVAILABLE_LANGUAGES  = ["ruby", "perl"]  # someday, add sh, perl, python, tcl and any other scripting language
   validates_inclusion_of  :language,  :in => AVAILABLE_LANGUAGES
-  AVAILABLE_LOCATIONS  = ["builtin", "inline", "uri"]
+  AVAILABLE_LOCATIONS = %w(builtin inline uri expression).freeze
   validates_inclusion_of  :location,  :in => AVAILABLE_LOCATIONS
   AVAILABLE_SCOPES     = ["class", "instance"]
   validates_inclusion_of  :scope,     :in => AVAILABLE_SCOPES
@@ -30,6 +30,10 @@ class MiqAeMethod < ApplicationRecord
 
   def self.available_scopes
     AVAILABLE_SCOPES
+  end
+
+  def self.available_expression_objects
+    Rbac::Filterer::CLASSES_THAT_PARTICIPATE_IN_RBAC
   end
 
   # Validate the syntax of the passed in inline ruby code

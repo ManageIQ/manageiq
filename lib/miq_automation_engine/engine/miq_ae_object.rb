@@ -423,6 +423,23 @@ module MiqAeEngine
       uri  # if it was not processed, return the original uri
     end
 
+    def substitute_value(value, _type = nil, required = false)
+      Benchmark.current_realtime[:substitution_count] += 1
+      Benchmark.realtime_block(:substitution_time) do
+        value = value.gsub(RE_SUBST) do |_s|
+          subst   = uri2value($1, required)
+          subst &&= subst.to_s
+          # This encoding of relationship is not needed, until we can get a valid use case
+          # Based on RFC 3986 Section 2.4 "When to Encode or Decode"
+          # We are properly encoding when we send URL requests to external systems
+          # or building an automate request
+          # subst &&= URI.escape(subst, RE_URI_ESCAPE)  if type == :aetype_relationship
+          subst
+        end unless value.nil?
+        return value
+      end
+    end
+
     private
 
     def call_method(obj, method)
@@ -533,23 +550,6 @@ module MiqAeEngine
 
       # default datatype => 'string'
       value
-    end
-
-    def substitute_value(value, _type = nil, required = false)
-      Benchmark.current_realtime[:substitution_count] += 1
-      Benchmark.realtime_block(:substitution_time) do
-        value = value.gsub(RE_SUBST) do |_s|
-          subst   = uri2value($1, required)
-          subst &&= subst.to_s
-          # This encoding of relationship is not needed, until we can get a valid use case
-          # Based on RFC 3986 Section 2.4 "When to Encode or Decode"
-          # We are properly encoding when we send URL requests to external systems
-          # or building an automate request
-          # subst &&= URI.escape(subst, RE_URI_ESCAPE)  if type == :aetype_relationship
-          subst
-        end unless value.nil?
-        return value
-      end
     end
 
     def process_assertion(f, message, args)
