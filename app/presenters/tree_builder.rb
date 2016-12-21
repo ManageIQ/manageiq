@@ -266,10 +266,8 @@ class TreeBuilder
         x_build_node(o, node[:key], options)
       end
       node[:children] = kids unless kids.empty?
-    else
-      if x_get_tree_objects(object, options, true, parents) > 0
-        node[:isLazy] = true  # set child flag if children exist
-      end
+    elsif !Settings.ui.tree.count_lazy_nodes || x_get_tree_objects(object, options, true, parents) > 0
+      node[:isLazy] = true
     end
     node
   end

@@ -1158,6 +1158,8 @@
   :watchdog_interval: 1.minute
 :ui:
   :mark_translated_strings: false
+  :tree:
+    :count_lazy_nodes: true
 :webservices:
   :consume_protocol: https
   :contactwith: ipaddress
