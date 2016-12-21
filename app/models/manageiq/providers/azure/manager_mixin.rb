@@ -6,22 +6,17 @@ module ManageIQ::Providers::Azure::ManagerMixin
 
     client_id  = options[:user] || authentication_userid(options[:auth_type])
     client_key = options[:pass] || authentication_password(options[:auth_type])
-    self.class.raw_connect(client_id, client_key, azure_tenant_id, subscription, options[:proxy_uri])
+    self.class.raw_connect(client_id, client_key, azure_tenant_id, subscription, options[:proxy_uri], provider_region)
   end
 
   def verify_credentials(_auth_type = nil, options = {})
     require 'azure-armrest'
     conf = connect(options)
-
-    unless subscription.blank?
-      vms = ::Azure::Armrest::VirtualMachineService.new(conf)
-      subscriptions = vms.subscriptions.map(&:subscription_id)
-      unless subscriptions.include?(subscription)
-        raise MiqException::MiqInvalidCredentialsError, _("Incorrect credentials - check your Azure Subscription ID")
-      end
-    end
-  rescue Azure::Armrest::UnauthorizedException, Azure::Armrest::BadRequestException
+  rescue ::Azure::Armrest::UnauthorizedException, ::Azure::Armrest::BadRequestException
     raise MiqException::MiqInvalidCredentialsError, _("Incorrect credentials - check your Azure Client ID and Client Key")
+  rescue ArgumentError => err
+    _log.error("Error Class=#{err.class.name}, Message=#{err.message}")
+    raise MiqException::MiqInvalidCredentialsError, _("Incorrect credentials - check your Subscription ID")
   rescue MiqException::MiqInvalidCredentialsError
     raise # Raise before falling into catch-all block below
   rescue StandardError => err
@@ -32,17 +27,41 @@ module ManageIQ::Providers::Azure::ManagerMixin
   end
 
   module ClassMethods
-    def raw_connect(client_id, client_key, azure_tenant_id, subscription = nil, proxy_uri = nil)
+    def raw_connect(client_id, client_key, azure_tenant_id, subscription = nil, proxy_uri = nil, provider_region = nil)
       proxy_uri ||= VMDB::Util.http_proxy_uri
 
       require 'azure-armrest'
-      ::Azure::Armrest::ArmrestService.configure(
+
+      conf = ::Azure::Armrest::Configuration.new(
         :client_id       => client_id,
         :client_key      => client_key,
         :tenant_id       => azure_tenant_id,
         :subscription_id => subscription,
-        :proxy           => proxy_uri
+        :proxy           => proxy_uri,
+        :environment     => environment_for(provider_region)
       )
+
+      # If the subscription was blank, find the first enabled one
+      if subscription.blank?
+        subscription_service = ::Azure::Armrest::SubscriptionService.new(conf)
+        subscription_object = subscription_service.list.find { |sub| sub.state.casecmp('enabled').zero? }
+        if subscription_object.nil?
+          raise MiqException::MiqInvalidCredentialsError, "Unable to find enabled subscription for tenant"
+        else
+          conf.subscription_id = subscription_object.subscription_id
+        end
+      end
+
+      conf
+    end
+
+    def environment_for(region)
+      case region
+      when /usgov/i
+        ::Azure::Armrest::Environment::USGovernment
+      else
+        ::Azure::Armrest::Environment::Public
+      end
     end
 
     # Discovery
