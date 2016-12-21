@@ -64,6 +64,7 @@ gem "outfielding-jqplot-rails",       "= 1.0.8"
 gem "ovirt-engine-sdk",               "~>4.0.6",       :require => false # Required by the oVirt provider
 gem "ovirt_metrics",                  "~>1.4.0",       :require => false
 gem "paperclip",                      "~>4.3.0"
+gem "pg-pglogical",                                    :require => false, :git => "https://github.com/ManageIQ/pg-pglogical", :branch => "master"
 gem "puma",                           "~>3.3.0"
 gem "query_relation",                 "~>0.1.0",       :require => false
 gem "rails",                          "~>5.0.0", ">= 5.0.0.1", "< 5.0.1"
