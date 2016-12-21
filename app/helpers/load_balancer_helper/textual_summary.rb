@@ -11,7 +11,7 @@ module LoadBalancerHelper::TextualSummary
   end
 
   def textual_group_relationships
-    %i(parent_ems_cloud ems_network cloud_tenant instances)
+    %i(parent_ems_cloud ems_network service cloud_tenant instances)
   end
 
   #
@@ -43,6 +43,19 @@ module LoadBalancerHelper::TextualSummary
 
   def textual_parent_ems_cloud
     @record.ext_management_system.try(:parent_manager)
+  end
+
+  def textual_service
+    h = {:label => _("Service"), :image => "service"}
+    service = @record.service
+    if service.nil?
+      h[:value] = _("None")
+    else
+      h[:value] = service.name
+      h[:title] = _("Show this Service")
+      h[:link]  = url_for(:controller => 'service', :action => 'show', :id => service)
+    end
+    h
   end
 
   def textual_cloud_tenant

@@ -132,6 +132,7 @@ class CatalogController < ApplicationController
       "amazon"                => "Amazon",
       "azure"                 => "Azure",
       "generic"               => "Generic",
+      "generic_load_balancer" => "LoadBalancer",
       "generic_orchestration" => "Orchestration",
       "generic_ansible_tower" => "AnsibleTower",
       "google"                => "Google",
@@ -899,6 +900,7 @@ class CatalogController < ApplicationController
       ServiceTemplate.find_by_id(@edit[:rec_id]) :
       class_service_template(@edit[:new][:st_prov_type]).new
     common_st_record_vars(st)
+    add_load_balancer_template_vars(st) if st.kind_of?(ServiceTemplateLoadBalancer)
     add_orchestration_template_vars(st) if st.kind_of?(ServiceTemplateOrchestration)
     add_ansible_tower_job_template_vars(st) if st.kind_of?(ServiceTemplateAnsibleTower)
     st.service_type = "atomic"
@@ -1296,6 +1298,7 @@ class CatalogController < ApplicationController
     @edit[:new][:available_catalogs] = @edit[:new][:available_catalogs].sort
     available_orchestration_templates if @record.kind_of?(ServiceTemplateOrchestration)
     available_ansible_tower_managers if @record.kind_of?(ServiceTemplateAnsibleTower)
+    available_load_balancer_managers if @record.kind_of?(ServiceTemplateLoadBalancer)
 
     # initialize fqnames
     @edit[:new][:fqname] = @edit[:new][:reconfigure_fqname] = @edit[:new][:retire_fqname] = ""
@@ -1435,8 +1438,16 @@ class CatalogController < ApplicationController
     @edit[:new][:long_description] = params[:long_description] if params[:long_description]
     @edit[:new][:long_description] = @edit[:new][:long_description].to_s + "..." if params[:transOne]
 
+    get_form_vars_load_balancer if @edit[:new][:st_prov_type] == 'generic_load_balancer'
     get_form_vars_orchestration if @edit[:new][:st_prov_type] == 'generic_orchestration'
     get_form_vars_ansible_tower if @edit[:new][:st_prov_type] == 'generic_ansible_tower'
+  end
+
+  def get_form_vars_load_balancer
+    available_load_balancer_managers
+    if params[:manager_id]
+      @edit[:new][:manager_id] = (params[:manager_id] == "") ? nil : params[:manager_id]
+    end
   end
 
   def get_form_vars_orchestration
@@ -1474,6 +1485,12 @@ class CatalogController < ApplicationController
     template_type.eligible_managers.collect { |m| [m.name, m.id] }.sort
   end
 
+  def available_load_balancer_managers
+    @edit[:new][:available_managers] =
+      ManageIQ::Providers::NetworkManager.all.collect { |t| [t.name, t.id] }.sort
+    @edit[:new][:manager_id] = @record.try(:load_balancer_manager).try(:id)
+  end
+
   def available_orchestration_managers(template_id)
     @edit[:new][:available_managers] = OrchestrationTemplate.find_by_id(template_id)
                                        .eligible_managers
@@ -1501,6 +1518,11 @@ class CatalogController < ApplicationController
     @edit[:new][:template_id] = @record.job_template.try(:id)
     @edit[:new][:manager_id] = @record.job_template.try(:manager).try(:id)
     available_ansible_tower_job_templates(@edit[:new][:manager_id]) if @edit[:new][:manager_id]
+  end
+
+  def add_load_balancer_template_vars(st)
+    st.load_balancer_manager  = @edit[:new][:manager_id].nil? ?
+      nil : ExtManagementSystem.find_by_id(@edit[:new][:manager_id])
   end
 
   def add_orchestration_template_vars(st)

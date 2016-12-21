@@ -21,7 +21,7 @@ module ServiceHelper::TextualSummary
   end
 
   def textual_group_relationships
-    %i(catalog_item parent_service orchestration_stack job)
+    %i(catalog_item parent_service orchestration_stack job load_balancer)
   end
 
   def textual_group_miq_custom_attributes
@@ -117,6 +117,10 @@ module ServiceHelper::TextualSummary
       :title => _("Show this Service's Job"),
       :link  => url_for(:controller => 'configuration_job', :action => 'show', :id => job.id)
     } if job
+  end
+
+  def textual_load_balancer
+    @record.try(:load_balancer)
   end
 
   def textual_owner

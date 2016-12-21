@@ -1,0 +1,781 @@
+---
+- description: 
+  buttons: submit,cancel
+  label: load_balancer_amazon
+  dialog_tabs:
+  - description: 
+    display: edit
+    label: Load Balancer
+    display_method: 
+    display_method_options: 
+    position: 0
+    dialog_groups:
+    - description: 
+      display: edit
+      label: Basic Configuration
+      display_method: 
+      display_method_options: 
+      position: 0
+      dialog_fields:
+      - name: load_balancer_name
+        description: 
+        data_type: string
+        notes: 
+        notes_display: 
+        display: edit
+        display_method: 
+        display_method_options: {}
+        required: true
+        required_method: 
+        required_method_options: {}
+        default_value: 
+        values: 
+        values_method: 
+        values_method_options: {}
+        options:
+          :protected: false
+        label: Name
+        position: 0
+        validator_type: regex
+        validator_rule: "[A-Za-z0-9-]"
+        reconfigurable: 
+        dynamic: false
+        show_refresh_button: 
+        load_values_on_init: 
+        read_only: false
+        auto_refresh: 
+        trigger_auto_refresh: 
+        visible: true
+        type: DialogFieldTextBox
+        resource_action:
+          action: 
+          resource_type: DialogField
+          ae_namespace: 
+          ae_class: 
+          ae_instance: 
+          ae_message: 
+          ae_attributes: {}
+    - description: ''
+      display: edit
+      label: Create LB inside
+      display_method: 
+      display_method_options: 
+      position: 1
+      dialog_fields:
+      - name: cloud_network
+        description: 
+        data_type: string
+        notes: 
+        notes_display: 
+        display: edit
+        display_method: 
+        display_method_options: {}
+        required: false
+        required_method: 
+        required_method_options: {}
+        default_value: 
+        values:
+        - - 
+          - EC2-classic
+        values_method: 
+        values_method_options: {}
+        options:
+          :sort_by: :value
+        label: VPC/EC2-classic
+        position: 0
+        validator_type: 
+        validator_rule: 
+        reconfigurable: 
+        dynamic: true
+        show_refresh_button: 
+        load_values_on_init: 
+        read_only: false
+        auto_refresh: true
+        trigger_auto_refresh: true
+        visible: true
+        type: DialogFieldDropDownList
+        resource_action:
+          action: 
+          resource_type: DialogField
+          ae_namespace: Cloud/LoadBalancer/Operations/Amazon
+          ae_class: Methods
+          ae_instance: Available_CloudNetworks
+          ae_message: 
+          ae_attributes: {}
+      - name: cloud_subnets
+        description: 
+        data_type: string
+        notes: 
+        notes_display: 
+        display: edit
+        display_method: 
+        display_method_options: {}
+        required: false
+        required_method: 
+        required_method_options: {}
+        default_value: 
+        values:
+        - - 
+          - "-- select a subnet from a list --"
+        values_method: 
+        values_method_options: {}
+        options:
+          :sort_by: :value
+        label: Subnet
+        position: 1
+        validator_type: 
+        validator_rule: 
+        reconfigurable: 
+        dynamic: true
+        show_refresh_button: 
+        load_values_on_init: 
+        read_only: false
+        auto_refresh: true
+        trigger_auto_refresh: 
+        visible: true
+        type: DialogFieldDropDownList
+        resource_action:
+          action: 
+          resource_type: DialogField
+          ae_namespace: Cloud/LoadBalancer/Operations/Amazon
+          ae_class: Methods
+          ae_instance: Available_CloudSubnets
+          ae_message: 
+          ae_attributes: {}
+  - description: 
+    display: edit
+    label: Listener Configuration
+    display_method: 
+    display_method_options: 
+    position: 1
+    dialog_groups:
+    - description: 
+      display: edit
+      label: Listener
+      display_method: 
+      display_method_options: 
+      position: 0
+      dialog_fields:
+      - name: load_balancer_listeners_0_load_balancer_port
+        description: 
+        data_type: 
+        notes: 
+        notes_display: 
+        display: edit
+        display_method: 
+        display_method_options: {}
+        required: true
+        required_method: 
+        required_method_options: {}
+        default_value: 
+        values: 
+        values_method: 
+        values_method_options: {}
+        options:
+          :protected: false
+        label: Load Balancer Port
+        position: 0
+        validator_type: 
+        validator_rule: 
+        reconfigurable: 
+        dynamic: false
+        show_refresh_button: 
+        load_values_on_init: 
+        read_only: false
+        auto_refresh: 
+        trigger_auto_refresh: 
+        visible: true
+        type: DialogFieldTextBox
+        resource_action:
+          action: 
+          resource_type: DialogField
+          ae_namespace: 
+          ae_class: 
+          ae_instance: 
+          ae_message: 
+          ae_attributes: {}
+      - name: load_balancer_listeners_0_load_balancer_protocol
+        description: 
+        data_type: string
+        notes: 
+        notes_display: 
+        display: edit
+        display_method: 
+        display_method_options: {}
+        required: true
+        required_method: 
+        required_method_options: {}
+        default_value: 
+        values: 
+        values_method: 
+        values_method_options: {}
+        options:
+          :protected: false
+        label: Load Balancer Protocol
+        position: 1
+        validator_type: 
+        validator_rule: 
+        reconfigurable: 
+        dynamic: false
+        show_refresh_button: 
+        load_values_on_init: 
+        read_only: false
+        auto_refresh: 
+        trigger_auto_refresh: 
+        visible: true
+        type: DialogFieldTextBox
+        resource_action:
+          action: 
+          resource_type: DialogField
+          ae_namespace: 
+          ae_class: 
+          ae_instance: 
+          ae_message: 
+          ae_attributes: {}
+      - name: load_balancer_listeners_0_instance_port
+        description: 
+        data_type: 
+        notes: 
+        notes_display: 
+        display: edit
+        display_method: 
+        display_method_options: {}
+        required: true
+        required_method: 
+        required_method_options: {}
+        default_value: 
+        values: 
+        values_method: 
+        values_method_options: {}
+        options:
+          :protected: false
+        label: Instance Port
+        position: 2
+        validator_type: 
+        validator_rule: 
+        reconfigurable: 
+        dynamic: false
+        show_refresh_button: 
+        load_values_on_init: 
+        read_only: false
+        auto_refresh: 
+        trigger_auto_refresh: 
+        visible: true
+        type: DialogFieldTextBox
+        resource_action:
+          action: 
+          resource_type: DialogField
+          ae_namespace: 
+          ae_class: 
+          ae_instance: 
+          ae_message: 
+          ae_attributes: {}
+      - name: load_balancer_listeners_0_instance_protocol
+        description: 
+        data_type: string
+        notes: 
+        notes_display: 
+        display: edit
+        display_method: 
+        display_method_options: {}
+        required: true
+        required_method: 
+        required_method_options: {}
+        default_value: 
+        values: 
+        values_method: 
+        values_method_options: {}
+        options:
+          :protected: false
+        label: Instance Protocol
+        position: 3
+        validator_type: 
+        validator_rule: 
+        reconfigurable: 
+        dynamic: false
+        show_refresh_button: 
+        load_values_on_init: 
+        read_only: false
+        auto_refresh: 
+        trigger_auto_refresh: 
+        visible: true
+        type: DialogFieldTextBox
+        resource_action:
+          action: 
+          resource_type: DialogField
+          ae_namespace: 
+          ae_class: 
+          ae_instance: 
+          ae_message: 
+          ae_attributes: {}
+    - description: 
+      display: edit
+      label: Optional Listener 1
+      display_method: 
+      display_method_options: 
+      position: 1
+      dialog_fields:
+      - name: load_balancer_listeners_1_load_balancer_port
+        description: 
+        data_type: 
+        notes: 
+        notes_display: 
+        display: edit
+        display_method: 
+        display_method_options: {}
+        required: false
+        required_method: 
+        required_method_options: {}
+        default_value: 
+        values: 
+        values_method: 
+        values_method_options: {}
+        options:
+          :protected: false
+        label: Load Balancer Port
+        position: 0
+        validator_type: 
+        validator_rule: 
+        reconfigurable: 
+        dynamic: false
+        show_refresh_button: 
+        load_values_on_init: 
+        read_only: false
+        auto_refresh: 
+        trigger_auto_refresh: 
+        visible: true
+        type: DialogFieldTextBox
+        resource_action:
+          action: 
+          resource_type: DialogField
+          ae_namespace: 
+          ae_class: 
+          ae_instance: 
+          ae_message: 
+          ae_attributes: {}
+      - name: load_balancer_listeners_1_load_balancer_protocol
+        description: 
+        data_type: string
+        notes: 
+        notes_display: 
+        display: edit
+        display_method: 
+        display_method_options: {}
+        required: false
+        required_method: 
+        required_method_options: {}
+        default_value: 
+        values: 
+        values_method: 
+        values_method_options: {}
+        options:
+          :protected: false
+        label: Load Balancer Protocol
+        position: 1
+        validator_type: 
+        validator_rule: 
+        reconfigurable: 
+        dynamic: false
+        show_refresh_button: 
+        load_values_on_init: 
+        read_only: false
+        auto_refresh: 
+        trigger_auto_refresh: 
+        visible: true
+        type: DialogFieldTextBox
+        resource_action:
+          action: 
+          resource_type: DialogField
+          ae_namespace: 
+          ae_class: 
+          ae_instance: 
+          ae_message: 
+          ae_attributes: {}
+      - name: load_balancer_listeners_1_instance_port
+        description: 
+        data_type: 
+        notes: 
+        notes_display: 
+        display: edit
+        display_method: 
+        display_method_options: {}
+        required: false
+        required_method: 
+        required_method_options: {}
+        default_value: 
+        values: 
+        values_method: 
+        values_method_options: {}
+        options:
+          :protected: false
+        label: Instance Port
+        position: 2
+        validator_type: 
+        validator_rule: 
+        reconfigurable: 
+        dynamic: false
+        show_refresh_button: 
+        load_values_on_init: 
+        read_only: false
+        auto_refresh: 
+        trigger_auto_refresh: 
+        visible: true
+        type: DialogFieldTextBox
+        resource_action:
+          action: 
+          resource_type: DialogField
+          ae_namespace: 
+          ae_class: 
+          ae_instance: 
+          ae_message: 
+          ae_attributes: {}
+      - name: load_balancer_listeners_1_instance_protocol
+        description: 
+        data_type: string
+        notes: 
+        notes_display: 
+        display: edit
+        display_method: 
+        display_method_options: {}
+        required: false
+        required_method: 
+        required_method_options: {}
+        default_value: 
+        values: 
+        values_method: 
+        values_method_options: {}
+        options:
+          :protected: false
+        label: Instance Protocol
+        position: 3
+        validator_type: 
+        validator_rule: 
+        reconfigurable: 
+        dynamic: false
+        show_refresh_button: 
+        load_values_on_init: 
+        read_only: false
+        auto_refresh: 
+        trigger_auto_refresh: 
+        visible: true
+        type: DialogFieldTextBox
+        resource_action:
+          action: 
+          resource_type: DialogField
+          ae_namespace: 
+          ae_class: 
+          ae_instance: 
+          ae_message: 
+          ae_attributes: {}
+  - description: 
+    display: edit
+    label: Health Check
+    display_method: 
+    display_method_options: 
+    position: 2
+    dialog_groups:
+    - description: 
+      display: edit
+      label: Health Check
+      display_method: 
+      display_method_options: 
+      position: 0
+      dialog_fields:
+      - name: load_balancer_health_checks_target
+        description: Write target in format HTTP:80 or HTTP:80/index.html
+        data_type: string
+        notes: 
+        notes_display: 
+        display: edit
+        display_method: 
+        display_method_options: {}
+        required: true
+        required_method: 
+        required_method_options: {}
+        default_value: 
+        values: 
+        values_method: 
+        values_method_options: {}
+        options:
+          :protected: false
+        label: Target
+        position: 0
+        validator_type: regex
+        validator_rule: "^(\\w+)\\:(\\d+)\\/?(.*?)$"
+        reconfigurable: 
+        dynamic: false
+        show_refresh_button: 
+        load_values_on_init: 
+        read_only: false
+        auto_refresh: 
+        trigger_auto_refresh: 
+        visible: true
+        type: DialogFieldTextBox
+        resource_action:
+          action: 
+          resource_type: DialogField
+          ae_namespace: 
+          ae_class: 
+          ae_instance: 
+          ae_message: 
+          ae_attributes: {}
+      - name: load_balancer_health_checks_interval
+        description: 
+        data_type: 
+        notes: 
+        notes_display: 
+        display: edit
+        display_method: 
+        display_method_options: {}
+        required: true
+        required_method: 
+        required_method_options: {}
+        default_value: 
+        values: 
+        values_method: 
+        values_method_options: {}
+        options:
+          :protected: false
+        label: Interval
+        position: 1
+        validator_type: 
+        validator_rule: 
+        reconfigurable: 
+        dynamic: false
+        show_refresh_button: 
+        load_values_on_init: 
+        read_only: false
+        auto_refresh: 
+        trigger_auto_refresh: 
+        visible: true
+        type: DialogFieldTextBox
+        resource_action:
+          action: 
+          resource_type: DialogField
+          ae_namespace: 
+          ae_class: 
+          ae_instance: 
+          ae_message: 
+          ae_attributes: {}
+      - name: load_balancer_health_checks_timeout
+        description: 
+        data_type: 
+        notes: 
+        notes_display: 
+        display: edit
+        display_method: 
+        display_method_options: {}
+        required: true
+        required_method: 
+        required_method_options: {}
+        default_value: 
+        values: 
+        values_method: 
+        values_method_options: {}
+        options:
+          :protected: false
+        label: timeout
+        position: 2
+        validator_type: 
+        validator_rule: 
+        reconfigurable: 
+        dynamic: false
+        show_refresh_button: 
+        load_values_on_init: 
+        read_only: false
+        auto_refresh: 
+        trigger_auto_refresh: 
+        visible: true
+        type: DialogFieldTextBox
+        resource_action:
+          action: 
+          resource_type: DialogField
+          ae_namespace: 
+          ae_class: 
+          ae_instance: 
+          ae_message: 
+          ae_attributes: {}
+      - name: load_balancer_health_checks_unhealthy_threshold
+        description: 
+        data_type: 
+        notes: 
+        notes_display: 
+        display: edit
+        display_method: 
+        display_method_options: {}
+        required: true
+        required_method: 
+        required_method_options: {}
+        default_value: 
+        values: 
+        values_method: 
+        values_method_options: {}
+        options:
+          :protected: false
+        label: Unhealthy Threshold
+        position: 3
+        validator_type: 
+        validator_rule: 
+        reconfigurable: 
+        dynamic: false
+        show_refresh_button: 
+        load_values_on_init: 
+        read_only: false
+        auto_refresh: 
+        trigger_auto_refresh: 
+        visible: true
+        type: DialogFieldTextBox
+        resource_action:
+          action: 
+          resource_type: DialogField
+          ae_namespace: 
+          ae_class: 
+          ae_instance: 
+          ae_message: 
+          ae_attributes: {}
+      - name: load_balancer_health_checks_healthy_threshold
+        description: 
+        data_type: 
+        notes: 
+        notes_display: 
+        display: edit
+        display_method: 
+        display_method_options: {}
+        required: true
+        required_method: 
+        required_method_options: {}
+        default_value: 
+        values: 
+        values_method: 
+        values_method_options: {}
+        options:
+          :protected: false
+        label: Healthy Threshold
+        position: 4
+        validator_type: 
+        validator_rule: 
+        reconfigurable: 
+        dynamic: false
+        show_refresh_button: 
+        load_values_on_init: 
+        read_only: false
+        auto_refresh: 
+        trigger_auto_refresh: 
+        visible: true
+        type: DialogFieldTextBox
+        resource_action:
+          action: 
+          resource_type: DialogField
+          ae_namespace: 
+          ae_class: 
+          ae_instance: 
+          ae_message: 
+          ae_attributes: {}
+  - description: 
+    display: edit
+    label: Security
+    display_method: 
+    display_method_options: 
+    position: 3
+    dialog_groups:
+    - description: 
+      display: edit
+      label: Security Groups
+      display_method: 
+      display_method_options: 
+      position: 0
+      dialog_fields:
+      - name: security_groups
+        description: 
+        data_type: string
+        notes: 
+        notes_display: 
+        display: edit
+        display_method: 
+        display_method_options: {}
+        required: false
+        required_method: 
+        required_method_options: {}
+        default_value: 
+        values:
+        - - 
+          - "-- select a security_group from a list --"
+        values_method: 
+        values_method_options: {}
+        options:
+          :sort_by: :value
+        label: Security Groups
+        position: 0
+        validator_type: 
+        validator_rule: 
+        reconfigurable: 
+        dynamic: true
+        show_refresh_button: 
+        load_values_on_init: 
+        read_only: false
+        auto_refresh: true
+        trigger_auto_refresh: 
+        visible: true
+        type: DialogFieldDropDownList
+        resource_action:
+          action: 
+          resource_type: DialogField
+          ae_namespace: Cloud/LoadBalancer/Operations/Amazon
+          ae_class: Methods
+          ae_instance: Available_SecurityGroups
+          ae_message: 
+          ae_attributes: {}
+  - description: 
+    display: edit
+    label: Add EC2 instances
+    display_method: 
+    display_method_options: 
+    position: 4
+    dialog_groups:
+    - description: 
+      display: edit
+      label: Instances
+      display_method: 
+      display_method_options: 
+      position: 0
+      dialog_fields:
+      - name: vms
+        description: 
+        data_type: string
+        notes: 
+        notes_display: 
+        display: edit
+        display_method: 
+        display_method_options: {}
+        required: false
+        required_method: 
+        required_method_options: {}
+        default_value: 
+        values:
+        - - 
+          - "-- select a Vms from a list --"
+        values_method: 
+        values_method_options: {}
+        options:
+          :sort_by: :value
+        label: Instances
+        position: 0
+        validator_type: 
+        validator_rule: 
+        reconfigurable: 
+        dynamic: true
+        show_refresh_button: 
+        load_values_on_init: 
+        read_only: false
+        auto_refresh: true
+        trigger_auto_refresh: 
+        visible: true
+        type: DialogFieldDropDownList
+        resource_action:
+          action: 
+          resource_type: DialogField
+          ae_namespace: Cloud/LoadBalancer/Operations/Amazon
+          ae_class: Methods
+          ae_instance: Available_Vms
+          ae_message: 
+          ae_attributes: {}

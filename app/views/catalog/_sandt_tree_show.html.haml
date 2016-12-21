@@ -46,6 +46,18 @@
               = _('Subtype')
             .col-md-8
               = h(ServiceTemplate::GENERIC_ITEM_SUBTYPES[@record[:generic_subtype]])
+        - if @record.prov_type == "generic_load_balancer"
+          .form-group
+            %label.col-md-2.control-label
+              = _('Load Balancer')
+            .col-md-8
+              = h(@record.try(:load_balancer).try(:name))
+          - if @record.load_balancer_manager
+            .form-group
+              %label.col-md-2.control-label
+                = _('Provider')
+              .col-md-8
+                = h(@record.load_balancer_manager.name)
         - if @record.prov_type == "generic_orchestration"
           .form-group
             %label.col-md-2.control-label

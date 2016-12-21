@@ -4481,6 +4481,14 @@
       :description: Edit Tags of Load Balancer
       :feature_type: control
       :identifier: load_balancer_tag
+    - :name: Retire Load Balancer
+      :description: Retire Load Balancer
+      :feature_type: control
+      :identifier: load_balancer_retire_now
+    - :name: Set Retirement Date
+      :description: Set Retirement Date
+      :feature_type: control
+      :identifier: load_balancer_retire
 
 # ContainerGroup
 - :name: Pods
