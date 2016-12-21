@@ -23,25 +23,24 @@
     %fieldset
       .toolbar-pf-actions
         .form-group
-          %button
-            - t = _('Commit expression element changes')
-            = link_to(image_tag(image_path('toolbars/commit.png'), :alt => t),
-              {:action => 'exp_button', :pressed => 'commit'},
-              "data-miq_sparkle_on"  => true,
-              "data-miq_sparkle_off" => true,
-              :remote                => true,
-              "data-method"          => :post,
-              :title                 => t)
-          %button
-            - t = _("Discard expression element changes")
-            = link_to(image_tag(image_path('toolbars/discard.png'), :alt => t),
-              {:action => 'exp_button', :pressed  => 'discard'},
-              "data-miq_sparkle_on"  => true,
-              "data-miq_sparkle_off" => true,
-              :remote                => true,
-              "data-method"          => :post,
-              :title                 => t)
-
+          - t = _('Commit expression element changes')
+          = link_to(image_tag(image_path('toolbars/commit.png'), :alt => t),
+            {:action => 'exp_button', :pressed => 'commit'},
+            "data-miq_sparkle_on"  => true,
+            "data-miq_sparkle_off" => true,
+            :remote                => true,
+            "data-method"          => :post,
+            :title                 => t,
+            :class                 => "btn btn-default")
+          - t = _("Discard expression element changes")
+          = link_to(image_tag(image_path('toolbars/discard.png'), :alt => t),
+            {:action => 'exp_button', :pressed  => 'discard'},
+            "data-miq_sparkle_on"  => true,
+            "data-miq_sparkle_off" => true,
+            :remote                => true,
+            "data-method"          => :post,
+            :title                 => t,
+            :class                 => "btn btn-default")
       - if @edit[@expkey][:exp_key] == "NOT"
         %font{:color => "black"}
           = _('NOT')
