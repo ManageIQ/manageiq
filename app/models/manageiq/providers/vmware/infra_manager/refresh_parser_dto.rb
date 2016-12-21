@@ -37,6 +37,8 @@ module ManageIQ::Providers::Vmware
       result[:folders], uids[:folders] = inv_to_ems_folder_hashes(inv)
       result[:resource_pools], uids[:resource_pools] = rp_inv_to_hashes(inv[:rp])
 
+      # TODO: result[:customization_specs] = customization_spec_inv_to_hashes(inv[:customization_specs]) if inv.key?(:customization_specs)
+
       result
     end
 
@@ -1376,18 +1378,18 @@ module ManageIQ::Providers::Vmware
       return result, result_uids
     end
 
-    def self.customization_spec_inv_to_hashes(inv)
-      result = []
+    def customization_spec_inv_to_hashes(inv)
+      result = add_dto_collection(CustomizationSpec, :customization_specs)
       return result if inv.nil?
 
       inv.each do |spec_inv|
-        result << {
+        result << result.new_dto({
           :name             => spec_inv["name"].to_s,
           :typ              => spec_inv["type"].to_s,
           :description      => spec_inv["description"].to_s,
           :last_update_time => spec_inv["lastUpdateTime"].to_s,
           :spec             => spec_inv["spec"]
-        }
+        })
       end
       result
     end
