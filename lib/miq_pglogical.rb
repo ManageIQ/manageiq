@@ -1,4 +1,6 @@
 require 'pg'
+require 'pg/pglogical'
+require 'pg/pglogical/active_record_extension'
 
 class MiqPglogical
   include Vmdb::Logging

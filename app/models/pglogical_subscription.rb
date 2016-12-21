@@ -2,6 +2,8 @@
 # This is exposed to us through the PostgreSQLAdapter#pglogical object's #subscriptions method
 # This model then exposes select values returned from that method
 require 'pg/dsn_parser'
+require 'pg/pglogical'
+require 'pg/pglogical/active_record_extension'
 
 class PglogicalSubscription < ActsAsArModel
   set_columns_hash(
