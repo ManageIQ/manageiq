@@ -4,11 +4,6 @@ module ManageIQ::Providers::Vmware
 
     def initialize(ems, options = Config::Options.new)
       super
-
-      initialize_dto_collections
-    end
-
-    def initialize_dto_collections
     end
 
     #
@@ -19,11 +14,16 @@ module ManageIQ::Providers::Vmware
     end
 
     def ems_inv_to_hashes(inv)
-      @data
+      uids   = {}
+      result = {:_dto_collection => true}
+
+      result[:storages], uids[:storages] = storage_inv_to_hashes(inv[:storage])
+
+      result
     end
 
-    def self.storage_inv_to_hashes(inv)
-      result = []
+    def storage_inv_to_hashes(inv)
+      result = add_dto_collection(Storage, :storages)
       result_uids = {:storage_id => {}}
       return result, result_uids if inv.nil?
 
@@ -57,7 +57,7 @@ module ManageIQ::Providers::Vmware
           )
         end
 
-        result << new_result
+        result << result.new_dto(new_result)
         result_uids[mor] = new_result
         result_uids[:storage_id][uid] = new_result
       end
@@ -1470,7 +1470,7 @@ module ManageIQ::Providers::Vmware
     # Helper methods for EMS inventory parsing methods
     #
 
-    def self.normalize_storage_uid(inv)
+    def normalize_storage_uid(inv)
       ############################################################################
       # For VMFS, we will use the GUID as the identifier
       ############################################################################
