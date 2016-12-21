@@ -47,7 +47,8 @@ class ApplicationHelper::Toolbar::OpenstackVmCloudCenter < ApplicationHelper::To
           :instance_attach,
           'pficon pficon-volume fa-lg',
           t = N_('Attach a Cloud Volume to this Instance'),
-          t),
+          t,
+          :klass => ApplicationHelper::Button::InstanceAttach),
         button(
           :instance_detach,
           'pficon pficon-volume fa-lg',
