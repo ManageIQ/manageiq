@@ -51,7 +51,7 @@ describe TreeBuilderComplianceHistory do
       expect(kid).to eq(:id          => "#{parent.id}-nopol",
                         :text        => "No Compliance Policies Found",
                         :cfmeNoClick => true,
-                        :image       => "#{parent.id}-nopol",
+                        :image       => "100/#{parent.id}-nopol.png",
                         :tip         => nil)
       expect(kid).to be_a_kind_of(Hash)
       expect(@ch_tree.send(:x_get_tree_custom_kids, kid, true, {})).to eq(0)
