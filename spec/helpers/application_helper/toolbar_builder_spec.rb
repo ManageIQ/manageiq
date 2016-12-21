@@ -314,6 +314,16 @@ describe ApplicationHelper, "::ToolbarBuilder" do
       end
     end
 
+    context "when with instance_miq_request_new" do
+      it "and @lastaction = show, @display = instances" do
+        @id = "instance_miq_request_new"
+        @lastaction = "show"
+        @display = "instances"
+        stub_user(:features => :all)
+        expect(subject).to be_falsey
+      end
+    end
+
     context "when with vm_console" do
       before do
         @id = "vm_console"
