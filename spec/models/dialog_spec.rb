@@ -82,7 +82,7 @@ describe Dialog do
     it "with same label" do
       expect { @dialog = FactoryGirl.create(:dialog, :label => 'dialog') }.to_not raise_error
       expect { @dialog = FactoryGirl.create(:dialog, :label => 'dialog') }
-        .to raise_error(ActiveRecord::RecordInvalid, /Label has already been taken/)
+        .to raise_error(ActiveRecord::RecordInvalid, /Label is not unique within region/)
     end
 
     it "with different labels" do
