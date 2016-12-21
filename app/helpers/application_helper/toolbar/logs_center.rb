@@ -6,7 +6,8 @@ class ApplicationHelper::Toolbar::LogsCenter < ApplicationHelper::Toolbar::Basic
       proc do
         _('Reload the %{log_type} Log Display') % {:log_type => @msg_title}
       end,
-      nil),
+      nil,
+      :klass => ApplicationHelper::Button::EvmLog),
     button(
       :fetch_log,
       'fa fa-download fa-lg',
@@ -14,6 +15,7 @@ class ApplicationHelper::Toolbar::LogsCenter < ApplicationHelper::Toolbar::Basic
         _('Download the Entire %{log_type} Log File') % {:log_type => @msg_title}
       end,
       nil,
+      :klass => ApplicationHelper::Button::EvmLog,
       :url => "/fetch_log"),
   ])
 end

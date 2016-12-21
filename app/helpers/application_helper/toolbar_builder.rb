@@ -382,8 +382,6 @@ class ApplicationHelper::ToolbarBuilder
 
   def hide_button_ops(id)
     case x_active_tree
-    when :settings_tree
-      return ["schedule_run_now"].include?(id)
     when :diagnostics_tree
       case @sb[:active_tab]
       when "diagnostics_audit_log"
@@ -392,14 +390,10 @@ class ApplicationHelper::ToolbarBuilder
         return !%(collect_current_logs collect_logs log_depot_edit
                   zone_collect_current_logs zone_collect_logs
                   zone_log_depot_edit).include?(id)
-      when "diagnostics_evm_log"
-        return !["fetch_log", "refresh_log"].include?(id)
       when "diagnostics_production_log"
         return !["fetch_production_log", "refresh_production_log"].include?(id)
       when "diagnostics_roles_servers", "diagnostics_servers_roles"
         case id
-        when "reload_server_tree"
-          return false
         when "zone_collect_current_logs", "zone_collect_logs", "zone_log_depot_edit"
           return true
         end
@@ -409,7 +403,7 @@ class ApplicationHelper::ToolbarBuilder
       when "diagnostics_workers"
         return !%w(restart_workers refresh_workers).include?(id)
       else
-        return true
+        return false
       end
     when :rbac_tree
       return true unless role_allows?(:feature => rbac_common_feature_for_buttons(id))
@@ -418,7 +412,7 @@ class ApplicationHelper::ToolbarBuilder
     when :vmdb_tree
       return !["db_connections", "db_details", "db_indexes", "db_settings"].include?(@sb[:active_tab])
     else
-      return true
+      return false
     end
   end
 
