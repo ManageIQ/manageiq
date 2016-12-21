@@ -34,7 +34,7 @@ module MiqServer::ConfigurationManagement
     end
 
     unless data.zone.nil?
-      self.zone = Zone.find_by(:name => data.zone)
+      self.zone = Zone.in_my_region.find_by(:name => data.zone)
       save
     end
     update_capabilities
