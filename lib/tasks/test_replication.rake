@@ -4,7 +4,7 @@ if defined?(RSpec) && defined?(RSpec::Core::RakeTask)
 namespace :test do
   namespace :replication do
     desc "Setup environment for replication specs"
-    task :setup => :initialize do
+    task :setup => :setup_db do
       EvmTestSetupReplication.new.write_released_migrations
     end
   end
