@@ -95,7 +95,8 @@ class ApplicationHelper::Toolbar::XVmCenter < ApplicationHelper::Toolbar::Basic
           'fa fa-search fa-lg',
           N_('Check Compliance of the last known configuration for this VM'),
           N_('Check Compliance of Last Known Configuration'),
-          :confirm => N_("Initiate Check Compliance of the last known configuration for this VM?")),
+          :confirm => N_("Initiate Check Compliance of the last known configuration for this VM?"),
+          :klass   => ApplicationHelper::Button::VmCheckCompliance),
       ]
     ),
   ])
@@ -161,7 +162,8 @@ class ApplicationHelper::Toolbar::XVmCenter < ApplicationHelper::Toolbar::Basic
           'product product-timeline fa-lg',
           N_('Show Timelines for this VM'),
           N_('Timelines'),
-          :url_parms => "?display=timeline"),
+          :url_parms => "?display=timeline",
+          :klass     => ApplicationHelper::Button::VmTimeline),
       ]
     ),
   ])
@@ -243,20 +245,23 @@ class ApplicationHelper::Toolbar::XVmCenter < ApplicationHelper::Toolbar::Basic
           N_('Open a web-based console for this VM'),
           N_('VM Console'),
           :url     => "console",
-          :confirm => N_("Opening a VM web-based console can take a while and requires that the VMware MKS plugin version configured for Management Engine already be installed and working.  Are you sure?")),
+          :confirm => N_("Opening a VM web-based console can take a while and requires that the VMware MKS plugin version configured for Management Engine already be installed and working.  Are you sure?"),
+          :klass   => ApplicationHelper::Button::VmConsole),
         button(
           :vm_vnc_console,
           'pficon pficon-screen fa-lg',
           N_('Open a web-based VNC or SPICE console for this VM'),
           N_('VM Console'),
-          :url     => "html5_console"),
+          :url   => "html5_console",
+          :klass => ApplicationHelper::Button::VmVncConsole),
         button(
           :vm_vmrc_console,
           'pficon pficon-screen fa-lg',
           N_('Open a web-based VMRC console for this VM.  This requires that VMRC is pre-configured to work in your browser.'),
           N_('VM Console'),
           :url     => "vmrc_console",
-          :confirm => N_("Opening a VM web-based VMRC console requires that VMRC is pre-configured to work in your browser.  Are you sure?")),
+          :confirm => N_("Opening a VM web-based VMRC console requires that VMRC is pre-configured to work in your browser.  Are you sure?"),
+          :klass   => ApplicationHelper::Button::VmVmrcConsole),
         button(
           :cockpit_console,
           'pficon pficon-screen fa-lg',
@@ -273,7 +278,8 @@ class ApplicationHelper::Toolbar::XVmCenter < ApplicationHelper::Toolbar::Basic
       'pficon pficon-add-circle-o fa-lg',
       N_('Create a new snapshot for this VM'),
       nil,
-      :onwhen => "1"),
+      :onwhen => "1",
+      :klass  => ApplicationHelper::Button::VmSnapshotAdd),
     select(
       :vm_delete_snap_choice,
       'pficon pficon-delete fa-lg',
@@ -287,13 +293,17 @@ class ApplicationHelper::Toolbar::XVmCenter < ApplicationHelper::Toolbar::Basic
           t,
           :confirm   => N_("The selected snapshot will be permanently deleted. Are you sure you want to delete the selected snapshot?"),
           :url_parms => "main_div",
-          :onwhen    => "1"),
+          :onwhen    => "1",
+          :klass     => ApplicationHelper::Button::GenericFeatureButtonWithDisable,
+          :options   => {:feature => :remove_snapshot}),
         button(
           :vm_snapshot_delete_all,
           'pficon pficon-delete fa-lg',
           t = N_('Delete All Existing Snapshots'),
           t,
-          :confirm => N_("Delete all of this VMs existing snapshots?")),
+          :confirm => N_("Delete all of this VMs existing snapshots?"),
+          :klass   => ApplicationHelper::Button::GenericFeatureButtonWithDisable,
+          :options => {:feature => :remove_all_snapshots}),
       ]
     ),
     button(
