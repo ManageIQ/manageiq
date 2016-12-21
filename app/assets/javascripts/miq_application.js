@@ -1222,12 +1222,19 @@ function miqObserveRequest(url, options) {
 }
 
 function miqJqueryRequest(url, options) {
+  return miqJqueryReq(url,options).then(function(arg) {
+  }, function(err) {
+    add_flash(__("Error requesting data from server"), 'error');
+  });
+};
+
+function miqJqueryReq(url, options) {
   if ((ManageIQ.observe.processing || ManageIQ.observe.queue.length) && (!options || !options.observe)) {
     console.debug('Postponing miqJqueryRequest - waiting for the observe queue to empty first');
 
     return new Promise(function(resolve, reject) {
       setTimeout(function() {
-        miqJqueryRequest(url, options)
+        miqJqueryReq(url, options)
         .then(resolve, reject);
       }, 700);
     });
