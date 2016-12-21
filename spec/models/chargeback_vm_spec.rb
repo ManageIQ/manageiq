@@ -67,7 +67,7 @@ describe ChargebackVm do
     temp = {:cb_rate => chargeback_rate, :tag => [c, "vm"]}
     ChargebackRate.set_assignments(:compute, [temp])
 
-    Timecop.travel(Time.parse('2012-09-01 23:59:59Z'))
+    Timecop.travel(Time.parse('2012-09-01 23:59:59Z').utc)
   end
 
   after do
@@ -124,8 +124,8 @@ describe ChargebackVm do
     let(:hours_in_day) { 24 }
     let(:options) { base_options.merge(:interval => 'daily') }
 
-    let(:start_time)  { Time.parse('2012-09-01 07:00:00').utc }
-    let(:finish_time) { Time.parse('2012-09-01 10:00:00').utc }
+    let(:start_time)  { Time.parse('2012-09-01 07:00:00Z').utc }
+    let(:finish_time) { Time.parse('2012-09-01 10:00:00Z').utc }
 
     before do
       Range.new(start_time, finish_time, true).step_value(1.hour).each do |t|
