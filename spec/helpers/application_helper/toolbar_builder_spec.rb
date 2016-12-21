@@ -405,25 +405,6 @@ describe ApplicationHelper, "::ToolbarBuilder" do
       end
     end
 
-    ["ontap_storage_system_statistics", "ontap_logical_disk_statistics", "ontap_storage_volume_statistics", "ontap_file_share_statistics"].each do |id|
-      context "when with #{id}" do
-        before do
-          @id = id
-          stub_user(:features => :all)
-        end
-
-        it "and Settings.product.smis != true " do
-          stub_settings(:product => {:smis => false})
-          expect(subject).to be_truthy
-        end
-
-        it "and Settings.product.smis = true " do
-          stub_settings(:product => {:smis => true})
-          expect(subject).to be_falsey
-        end
-      end
-    end
-
     context "CustomButtonSet" do
       before do
         @record = CustomButtonSet.new
@@ -524,41 +505,6 @@ describe ApplicationHelper, "::ToolbarBuilder" do
       expect(subject).to match(/No.*are available/)
     end
 
-    context "when record class = OntapStorageSystem" do
-      before do
-        @record = OntapStorageSystem.new
-        allow(@record).to receive_messages(:latest_derived_metrics => true)
-      end
-
-      context "and id = ontap_storage_system_statistics" do
-        before { @id = "ontap_storage_system_statistics" }
-        it_behaves_like 'record without latest derived metrics', "No Statistics Collected"
-        it_behaves_like 'default case'
-      end
-    end
-
-    context "when record class = OntapLogicalDisk" do
-      before { @record = OntapLogicalDisk.new }
-
-      context "and id = ontap_logical_disk_perf" do
-        before do
-          @id = "ontap_logical_disk_perf"
-          allow(@record).to receive_messages(:has_perf_data? => true)
-        end
-        it_behaves_like 'record without perf data', "No Capacity & Utilization data has been collected for this Logical Disk"
-        it_behaves_like 'default case'
-      end
-
-      context "and id = ontap_logical_disk_statistics" do
-        before do
-          @id = "ontap_logical_disk_statistics"
-          allow(@record).to receive_messages(:latest_derived_metrics => true)
-        end
-        it_behaves_like 'record without latest derived metrics', "No Statistics collected for this Logical Disk"
-        it_behaves_like 'default case'
-      end
-    end
-
     context "when record class = CimBaseStorageExtent" do
       before do
         @record = CimBaseStorageExtent.new
@@ -567,31 +513,6 @@ describe ApplicationHelper, "::ToolbarBuilder" do
 
       context "and id = cim_base_storage_extent_statistics" do
         before { @id = "cim_base_storage_extent_statistics" }
-        it_behaves_like 'record without latest derived metrics', "No Statistics Collected"
-        it_behaves_like 'default case'
-      end
-    end
-
-    context "when record class = OntapStorageVolume" do
-      before do
-        @record = OntapStorageVolume.new
-        allow(@record).to receive_messages(:latest_derived_metrics => true)
-      end
-
-      context "and id = ontap_storage_volume_statistics" do
-        before { @id = "ontap_storage_volume_statistics" }
-        it_behaves_like 'record without latest derived metrics', "No Statistics Collected"
-        it_behaves_like 'default case'
-      end
-    end
-
-    context "when record class = OntapFileShare" do
-      before do
-        @record = OntapFileShare.new
-        allow(@record).to receive_messages(:latest_derived_metrics => true)
-      end
-      context "and id = ontap_file_share_statistics" do
-        before { @id = "ontap_file_share_statistics" }
         it_behaves_like 'record without latest derived metrics', "No Statistics Collected"
         it_behaves_like 'default case'
       end

@@ -41,7 +41,8 @@ class ApplicationHelper::Toolbar::OntapStorageSystemCenter < ApplicationHelper::
           'product product-monitoring fa-lg',
           N_('Show Utilization for this Filer'),
           N_('Utilization'),
-          :url => "/show_statistics"),
+          :url   => "/show_statistics",
+          :klass => ApplicationHelper::Button::Ontap),
       ]
     ),
   ])

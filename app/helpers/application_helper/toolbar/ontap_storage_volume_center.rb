@@ -26,7 +26,8 @@ class ApplicationHelper::Toolbar::OntapStorageVolumeCenter < ApplicationHelper::
           'product product-monitoring fa-lg',
           N_('Show Utilization for this Storage System'),
           N_('Utilization'),
-          :url => "/show_statistics"),
+          :url   => "/show_statistics",
+          :klass => ApplicationHelper::Button::Ontap),
       ]
     ),
   ])
