@@ -3,7 +3,7 @@ describe ApplicationHelper::Button::HostIntrospectProvide do
   let(:record) { FactoryGirl.create(:host_openstack_infra, :with_hardware) }
   let(:button) { described_class.new(setup_view_context_with_sandbox({}), {}, {'record' => record}, {}) }
 
-  before { allow(record.hardware).to receive(:provision_state).and_return(provision_state) }
+  before { allow(record).to receive_message_chain(:hardware, :provision_state).and_return(provision_state) }
 
   describe '#visible?' do
     subject { button.visible? }
