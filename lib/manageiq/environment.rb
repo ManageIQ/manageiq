@@ -5,6 +5,19 @@ module ManageIQ
   module Environment
     APP_ROOT = Pathname.new(__dir__).join("../..")
 
+    def self.manageiq_plugin_setup
+      install_bundler
+      bundle_install
+
+      ensure_config_files
+
+      if ENV["CI"]
+        write_region_file
+        create_database_user
+        setup_test_environment
+      end
+    end
+
     def self.ensure_config_files
       config_files = {
         "certs/v2_key.dev"        => "certs/v2_key",
