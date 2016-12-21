@@ -37,7 +37,7 @@ class TreeBuilderDatastores < TreeBuilder
       end
       { :id          => node[:id].to_s,
         :text        => "<b>#{node[:name]}</b> [#{node[:location]}]".html_safe,
-        :image       => 'storage',
+        :image       => '100/storage.png',
         :tip         => "#{node[:name]} [#{node[:location]}]",
         :select      => node[:capture] == true,
         :cfmeNoClick => true,
@@ -50,7 +50,7 @@ class TreeBuilderDatastores < TreeBuilder
     nodes = parent[:children].map do |node|
       { :id           => node[:name],
         :text         => node[:name],
-        :image        => 'host',
+        :image        => '100/host.png',
         :tip          => node[:name],
         :hideCheckbox => true,
         :cfmeNoClick  => true,

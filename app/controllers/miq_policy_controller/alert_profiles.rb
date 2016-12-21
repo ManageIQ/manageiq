@@ -197,7 +197,7 @@ module MiqPolicyController::AlertProfiles
         root_node = TreeNodeBuilder.generic_tree_node(
           "OBJROOT",
           @assign[:new][:assign_to].ends_with?("-tags") ? "Tags" : ui_lookup(:tables => @assign[:new][:assign_to]),
-          "folder_open.png",
+          "100/folder_open.png",
           "",
           :cfme_no_click => true,
           :expand        => true,
@@ -206,14 +206,14 @@ module MiqPolicyController::AlertProfiles
         root_node[:children] = []
         @objects.sort_by { |o| (o.name.presence || o.description).downcase }.each do |o|
           if @assign[:new][:assign_to].ends_with?("-tags")
-            icon = "tag.png"
+            icon = "100/tag.png"
           else
             if @assign[:new][:assign_to] == "ext_management_system"
-              icon = "vendor-#{o.image_name}.png"
+              icon = "100/vendor-#{o.image_name}.png"
             elsif @assign[:new][:assign_to] == "resource_pool"
-              icon = o.vapp ? "vapp.png" : "resource_pool.png"
+              icon = o.vapp ? "100/vapp.png" : "100/resource_pool.png"
             else
-              icon = "#{@assign[:new][:assign_to]}.png"
+              icon = "100/#{@assign[:new][:assign_to]}.png"
             end
           end
           node = TreeNodeBuilder.generic_tree_node(

@@ -27,7 +27,7 @@ class TreeBuilderContainers < TreeBuilder
         :id          => c.id,
         :text        => c.name,
         :tip         => c.ems_ref,
-        :image       => "folder",
+        :image       => "100/folder.png",
         :cfmeNoClick => true
       }
     end

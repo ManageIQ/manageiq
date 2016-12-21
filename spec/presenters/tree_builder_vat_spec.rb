@@ -18,13 +18,15 @@ describe TreeBuilderVat do
       end
       @vat_tree = TreeBuilderVat.new(:vat_tree, :vat, {}, true, cluster, true)
     end
+
     it 'returns EmsCluster as root' do
       root = @vat_tree.send(:root_options)
-      image = "vendor-#{@vat_tree.instance_variable_get(:@root).image_name}".to_sym
+      image = "100/vendor-#{@vat_tree.instance_variable_get(:@root).image_name}.png"
       expect(root[0]).to eq(@vat_tree.instance_variable_get(:@root).name)
       expect(root[1]).to eq(@vat_tree.instance_variable_get(:@root).name)
       expect(root[2]).to eq(image)
     end
+
     it 'returns children correctly' do
       kids = @vat_tree.send(:x_get_tree_roots, false)
       expect(kids[0]).to be_a_kind_of(EmsFolder)

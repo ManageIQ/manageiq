@@ -23,14 +23,14 @@ describe TreeBuilderDatastores do
       parent = @datastores_tree.send(:x_get_tree_roots, false, nil)
       expect(parent.first[:text]).to eq("<b>Datastore</b> [#{@datastore.first[:location]}]")
       expect(parent.first[:tip]).to eq("Datastore [#{@datastore.first[:location]}]")
-      expect(parent.first[:image]).to eq('storage')
+      expect(parent.first[:image]).to eq('100/storage.png')
     end
     it 'sets Host node correctly' do
       parent = @datastores_tree.send(:x_get_tree_roots, false, nil)
       kids = @datastores_tree.send(:x_get_tree_hash_kids, parent.first, false)
       expect(kids.first[:text]).to eq(@host[:name])
       expect(kids.first[:tip]).to eq(@host[:name])
-      expect(kids.first[:image]).to eq('host')
+      expect(kids.first[:image]).to eq('100/host.png')
       expect(kids.first[:hideCheckbox]).to eq(true)
       expect(kids.first[:cfmeNoClick]).to eq(true)
       expect(kids.first[:children]).to eq([])

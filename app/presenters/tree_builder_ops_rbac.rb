@@ -21,23 +21,23 @@ class TreeBuilderOpsRbac < TreeBuilder
     title =  _("%{product} Region: %{region_description} [%{region}]") % {:region_description => region.description,
                                                                           :region             => region.region,
                                                                           :product            => I18n.t('product.name')}
-    [title, title, :miq_region]
+    [title, title, '100/miq_region.png']
   end
 
   # Get root nodes count/array for explorer tree
   def x_get_tree_roots(_count_only, _options)
     objects = []
     if ApplicationHelper.role_allows?(:feature => "rbac_user_view", :any => true)
-      objects.push(:id => "u", :text => _("Users"), :image => "user", :tip => _("Users"))
+      objects.push(:id => "u", :text => _("Users"), :image => "100/user.png", :tip => _("Users"))
     end
     if ApplicationHelper.role_allows?(:feature => "rbac_group_view", :any => true)
-      objects.push(:id => "g", :text => _("Groups"), :image => "group", :tip => _("Groups"))
+      objects.push(:id => "g", :text => _("Groups"), :image => "100/group.png", :tip => _("Groups"))
     end
     if ApplicationHelper.role_allows?(:feature => "rbac_role_view", :any => true)
-      objects.push(:id => "ur", :text => _("Roles"), :image => "miq_user_role", :tip => _("Roles"))
+      objects.push(:id => "ur", :text => _("Roles"), :image => "100/miq_user_role.png", :tip => _("Roles"))
     end
     if ApplicationHelper.role_allows?(:feature => "rbac_tenant_view")
-      objects.push(:id => "tn", :text => _("Tenants"), :image => "tenant", :tip => _("Tenants"))
+      objects.push(:id => "tn", :text => _("Tenants"), :image => "100/tenant.png", :tip => _("Tenants"))
     end
     objects
   end

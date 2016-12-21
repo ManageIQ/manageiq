@@ -12,7 +12,7 @@ class TreeBuilderVat < TreeBuilderDatacenter
   private
 
   def root_options
-    image = "vendor-#{@root.image_name}".to_sym
+    image = "100/vendor-#{@root.image_name}.png"
     [@root.name, @root.name, image]
   end
 

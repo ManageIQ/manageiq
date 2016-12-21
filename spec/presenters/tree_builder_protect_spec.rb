@@ -21,33 +21,37 @@ describe TreeBuilderProtect do
       @edit[:pol_items] = [101]
       @protect_tree = TreeBuilderProtect.new(:protect, :protect_tree, {}, true, @edit)
     end
+
     it 'set init options correctly' do
       tree_options = @protect_tree.send(:tree_init_options, :protect)
       expect(tree_options).to eq(:full_ids => false, :add_root => false, :lazy => false)
     end
+
     it 'set locals for render correctly' do
       locals = @protect_tree.send(:set_locals_for_render)
       expect(locals[:oncheck]).to eq("miqOnCheckProtect")
       expect(locals[:checkboxes]).to eq(true)
       expect(locals[:check_url]).to eq("/name/protect/")
     end
+
     it 'sets roots correctly' do
       roots = @protect_tree.send(:x_get_tree_roots, false)
       @roots.each_with_index do |root, i|
         expect(roots[i][:id]).to eq("policy_profile_#{root.id}")
-        expect(roots[i][:image]).to eq("policy_profile#{root.active? ? "" : "_inactive"}")
+        expect(roots[i][:image]).to eq("100/policy_profile#{root.active? ? "" : "_inactive"}.png")
         expect(roots[i][:text]).to eq(root.description)
         expect(roots[i][:children]).to eq(root.members)
         expect(roots[i][:select]).to eq(@edit[:new].keys.include?(root.id))
       end
       expect(roots.size).to eq(3)
     end
+
     it 'sets Policy ' do
       roots = @protect_tree.send(:x_get_tree_roots, false)
       kids = @protect_tree.send(:x_get_tree_hash_kids, roots[0], false)
       expect(kids[0][:id]).to eq("policy_#{@kids[0].id}")
       expect(kids[0][:text]).to eq("<b>#{ui_lookup(:model => @kids[0].towhat)} #{@kids[0].mode.capitalize}:</b> #{@kids[0].description}".html_safe)
-      expect(kids[0][:image]).to eq("miq_policy_#{@kids[0].towhat.downcase}#{@kids[0].active ? "" : "_inactive"}")
+      expect(kids[0][:image]).to eq("100/miq_policy_#{@kids[0].towhat.downcase}#{@kids[0].active ? "" : "_inactive"}.png")
       expect(kids[0][:tip]).to eq(@kids[0].description)
       expect(kids[0][:hideCheckbox]).to eq(true)
       expect(kids[0][:children]).to eq([])

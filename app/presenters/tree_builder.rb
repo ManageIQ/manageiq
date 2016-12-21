@@ -176,7 +176,7 @@ class TreeBuilder
   def add_root_node(nodes)
     root = nodes.first
     root[:title], root[:tooltip], icon, options = root_options
-    root[:icon] = ActionController::Base.helpers.image_path("100/#{icon || 'folder'}.png")
+    root[:icon] = ActionController::Base.helpers.image_path(icon || "100/folder.png")
     if options.present?
       root.merge!(options)
     end

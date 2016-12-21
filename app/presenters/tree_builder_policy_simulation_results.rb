@@ -24,15 +24,15 @@ class TreeBuilderPolicySimulationResults < TreeBuilder
     event = MiqEventDefinition.find(@root[:event_value])
     [_("Policy Simulation Results for Event [%{description}]") % {:description => event.description},
      nil,
-     "event-#{event.name}",
+     "100/event-#{event.name}.png",
      {:cfmeNoClick => true}]
   end
 
   def node_icon(result)
     case result
-    when 'allow' then 'checkmark'
-    when 'N/A'   then 'na'
-    else 'x'
+    when 'allow' then '100/checkmark.png'
+    when 'N/A'   then '100/na.png'
+    else '100/x.png'
     end
   end
 
@@ -40,7 +40,7 @@ class TreeBuilderPolicySimulationResults < TreeBuilder
     data.sort_by! { |a| a[:name].downcase }.map do |node|
       {:id          => node[:id],
        :text        => "<strong>VM:</strong> #{node[:name]}".html_safe,
-       :image       => 'vm',
+       :image       => '100/vm.png',
        :profiles    => node[:profiles],
        :cfmeNoClick => true}
     end
@@ -101,11 +101,11 @@ class TreeBuilderPolicySimulationResults < TreeBuilder
     name, tip = exp_build_string(data)
     image = case data["result"]
             when true
-              'checkmark'
+              '100/checkmark.png'
             when false
-              'x'
+              '100/x.png'
             else
-              'na'
+              '100/na.png'
             end
     {:id          => nil,
      :text        => "<strong>#{_('Expression:')}</strong> <span class='ws-wrap'>#{name}".html_safe,

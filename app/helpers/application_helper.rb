@@ -1600,48 +1600,52 @@ module ApplicationHelper
         row_status = _("Status = %{row}") % {:row => row["status"].capitalize}
         cancel_msg = row["message"].include?('cancel')
         if row["status"].downcase == "ok" && !cancel_msg
-          image = "checkmark"
+          image = "100/checkmark.png"
           img_attr.merge!(:title => row_status)
         elsif row["status"].downcase == "error" || cancel_msg
-          image = "x"
+          image = "100/x.png"
           img_attr.merge!(:title => row_status)
         elsif row["status"].downcase == "warn" || cancel_msg
-          image = "warning"
+          image = "100/warning.png"
           img_attr.merge!(:title => row_status)
         end
       elsif %w(queued waiting_to_start).include?(row["state"].downcase)
-        image = "job-queued"
+        image = "100/job-queued.png"
         img_attr.merge!(:title => "Status = Queued")
       elsif !%w(finished queued waiting_to_start).include?(row["state"].downcase)
-        image = "job-running"
+        image = "100/job-running.png"
         img_attr.merge!(:title => "Status = Running")
       end
     elsif %(Vm VmOrTemplate).include?(db)
       vm = @targets_hash[from_cid(@id)]
       vendor = vm ? vm.vendor : "unknown"
-      image = "vendor-#{vendor}"
+      image = "100/vendor-#{vendor}.png"
     elsif db == "Host"
       host = @targets_hash[@id] if @targets_hash
       vendor = host ? host.vmm_vendor_display.downcase : "unknown"
-      image = "vendor-#{vendor}"
+      image = "100/vendor-#{vendor}.png"
     elsif db == "MiqAction"
       action = @targets_hash[@id.to_i]
-      image = action && action.action_type != "default" ? "miq_action_#{action.action_type}" : "miq_action"
+      image = if action && action.action_type != "default"
+                "100/miq_action_#{action.action_type}.png"
+              else
+                "100/miq_action.png"
+              end
     elsif db == "MiqProvision"
-      image = "miq_request"
+      image = "100/miq_request.png"
     elsif db == "MiqWorker"
       worker = @targets_hash[from_cid(@id)]
-      image = "processmanager-#{worker.normalized_type}"
+      image = "100/processmanager-#{worker.normalized_type}.png"
     elsif db == "ExtManagementSystem"
       ems = @targets_hash[from_cid(@id)]
-      image = "vendor-#{ems.image_name}"
+      image = "100/vendor-#{ems.image_name}.png"
     elsif db == "Tenant"
-      image = row['divisible'] ? "tenant" : "project"
+      image = row['divisible'] ? "100/tenant.png" : "100/project.png"
     else
-      image = db.underscore
+      image = "100/#{db.underscore}.png"
     end
 
-    image_tag(ActionController::Base.helpers.image_path("100/#{image.downcase}.png"), img_attr)
+    image_tag(ActionController::Base.helpers.image_path(image), img_attr)
   end
 
   def listicon_glyphicon_tag_for_widget(widget)
