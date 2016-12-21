@@ -20,6 +20,7 @@ module ManageIQ::Providers::Vmware
       result[:storages], uids[:storages] = storage_inv_to_hashes(inv[:storage])
       result[:clusters], uids[:clusters] = cluster_inv_to_hashes(inv[:cluster])
       result[:storage_profiles], uids[:storage_profiles] = storage_profile_inv_to_hashes(inv[:storage_profile], uids[:storages], inv[:storage_profile_datastore])
+      result[:hosts], uids[:hosts], uids[:clusters_by_host], uids[:lans], uids[:switches], uids[:guest_devices], uids[:scsi_luns] = host_inv_to_hashes(inv[:host], inv, uids[:storages], uids[:clusters])
 
       result
     end
@@ -37,7 +38,7 @@ module ManageIQ::Providers::Vmware
 
         capability = storage_inv["capability"]
 
-        loc = uid = normalize_storage_uid(storage_inv)
+        loc = uid = self.class.normalize_storage_uid(storage_inv)
 
         new_result = {
           :ems_ref            => mor,
@@ -122,8 +123,8 @@ module ManageIQ::Providers::Vmware
       dvportgroup_by_host
     end
 
-    def self.host_inv_to_hashes(inv, ems_inv, storage_uids, cluster_uids)
-      result = []
+    def host_inv_to_hashes(inv, ems_inv, storage_uids, cluster_uids)
+      result = add_dto_collection(ManageIQ::Providers::Vmware::InfraManager::Host, :hosts)
       result_uids = {}
       cluster_uids_by_host = {}
       lan_uids = {}
@@ -132,8 +133,8 @@ module ManageIQ::Providers::Vmware
       scsi_lun_uids = {}
       return result, result_uids, lan_uids, switch_uids, guest_device_uids, scsi_lun_uids if inv.nil?
 
-      dvswitch_by_host = group_dvswitch_by_host(ems_inv[:dvswitch])
-      dvportgroup_by_host = group_dvportgroup_by_host(ems_inv[:dvportgroup], ems_inv[:dvswitch])
+      dvswitch_by_host = self.class.group_dvswitch_by_host(ems_inv[:dvswitch])
+      dvportgroup_by_host = self.class.group_dvportgroup_by_host(ems_inv[:dvportgroup], ems_inv[:dvswitch])
       dvswitch_uid_ems = {}
       dvportgroup_uid_ems = {}
 
@@ -180,7 +181,7 @@ module ManageIQ::Providers::Vmware
             :ems_ref     => mor,
             :ems_ref_obj => mor
           }
-          result << new_result
+          result << result.add_dto(new_result)
           result_uids[mor] = new_result
           next
         end
@@ -188,7 +189,7 @@ module ManageIQ::Providers::Vmware
         # Remove the domain suffix if it is included in the hostname
         hostname = hostname.split(',').first
         # Get the IP address
-        ipaddress = host_inv_to_ip(host_inv, hostname) || hostname
+        ipaddress = self.class.host_inv_to_ip(host_inv, hostname) || hostname
 
         vendor = product["vendor"].split(",").first.to_s.downcase
         vendor = "unknown" unless Host::VENDOR_TYPES.include?(vendor)
@@ -196,25 +197,25 @@ module ManageIQ::Providers::Vmware
         product_name = product["name"].nil? ? nil : product["name"].to_s.gsub(/^VMware\s*/i, "")
 
         # Collect the hardware, networking, and scsi inventories
-        switches, switch_uids[mor] = host_inv_to_switch_hashes(host_inv, dvswitch_by_host[mor], dvswitch_uid_ems)
-        _lans, lan_uids[mor] = host_inv_to_lan_hashes(
+        switches, switch_uids[mor] = self.class.host_inv_to_switch_hashes(host_inv, dvswitch_by_host[mor], dvswitch_uid_ems)
+        _lans, lan_uids[mor] = self.class.host_inv_to_lan_hashes(
           host_inv,
           switch_uids[mor],
           dvportgroup_by_host[mor],
           dvportgroup_uid_ems
         )
 
-        hardware = host_inv_to_hardware_hash(host_inv)
-        hardware[:guest_devices], guest_device_uids[mor] = host_inv_to_guest_device_hashes(host_inv, switch_uids[mor])
-        hardware[:networks] = host_inv_to_network_hashes(host_inv, guest_device_uids[mor])
+        hardware = self.class.host_inv_to_hardware_hash(host_inv)
+        hardware[:guest_devices], guest_device_uids[mor] = self.class.host_inv_to_guest_device_hashes(host_inv, switch_uids[mor])
+        hardware[:networks] = self.class.host_inv_to_network_hashes(host_inv, guest_device_uids[mor])
 
-        _scsi_luns, scsi_lun_uids[mor] = host_inv_to_scsi_lun_hashes(host_inv)
-        _scsi_targets = host_inv_to_scsi_target_hashes(host_inv, guest_device_uids[mor][:storage], scsi_lun_uids[mor])
+        _scsi_luns, scsi_lun_uids[mor] = self.class.host_inv_to_scsi_lun_hashes(host_inv)
+        _scsi_targets = self.class.host_inv_to_scsi_target_hashes(host_inv, guest_device_uids[mor][:storage], scsi_lun_uids[mor])
 
         # Collect the resource pools inventory
-        parent_type, parent_mor, parent_data = host_parent_resource(mor, ems_inv)
+        parent_type, parent_mor, parent_data = self.class.host_parent_resource(mor, ems_inv)
         if parent_type == :host_res
-          rp_uids = get_mors(parent_data, "resourcePool")
+          rp_uids = self.class.get_mors(parent_data, "resourcePool")
           cluster_uids_by_host[mor] = nil
         else
           rp_uids = []
@@ -229,10 +230,10 @@ module ManageIQ::Providers::Vmware
         end
 
         # Link up the storages
-        storages = get_mors(host_inv, 'datastore').collect { |s| storage_uids[s] }.compact
+        storages = self.class.get_mors(host_inv, 'datastore').collect { |s| storage_uids[s] }.compact
 
         # Find the host->storage mount info
-        host_storages = host_inv_to_host_storages_hashes(host_inv, ems_inv[:storage], storage_uids)
+        host_storages = self.class.host_inv_to_host_storages_hashes(host_inv, ems_inv[:storage], storage_uids)
 
         # Store the host 'name' value as uid_ems to use as the lookup value with MiqVim
         uid_ems = summary.nil? ? nil : summary.fetch_path('config', 'name')
@@ -272,18 +273,19 @@ module ManageIQ::Providers::Vmware
           :failover         => failover,
           :hyperthreading   => config.fetch_path("hyperThread", "active").to_s.downcase == "true",
 
-          :ems_cluster      => cluster_uids_by_host[mor],
-          :operating_system => host_inv_to_os_hash(host_inv, hostname),
-          :system_services  => host_inv_to_system_service_hashes(host_inv),
+          # TODO: :ems_cluster      => cluster_uids_by_host[mor],
+          # TODO: :operating_system => self.class.host_inv_to_os_hash(host_inv, hostname),
+          # TODO: :system_services  => self.class.host_inv_to_system_service_hashes(host_inv),
 
-          :hardware         => hardware,
-          :switches         => switches,
-          :storages         => storages,
-          :host_storages    => host_storages,
+          # TODO: :hardware         => hardware,
+          # TODO: :switches         => switches,
+          # TODO: :storages         => storages,
+          # TODO: :host_storages    => host_storages,
 
-          :child_uids       => rp_uids,
+          # TODO: child_uids not supported by DTO yet
+          # :child_uids       => rp_uids,
         }
-        result << new_result
+        result << result.new_dto(new_result)
         result_uids[mor] = new_result
       end
       return result, result_uids, cluster_uids_by_host, lan_uids, switch_uids, guest_device_uids, scsi_lun_uids
@@ -875,7 +877,7 @@ module ManageIQ::Providers::Vmware
         cpu    = resource_config && resource_config["cpuAllocation"]
 
         # Collect the storages and hardware inventory
-        storages = get_mors(vm_inv, 'datastore').collect { |s| storage_uids[s] }.compact
+        storages = self.class.get_mors(vm_inv, 'datastore').collect { |s| storage_uids[s] }.compact
         storage  = storage_uids[normalize_vm_storage_uid(vm_inv, storage_inv)]
 
         host_mor = runtime['host']
@@ -1474,7 +1476,7 @@ module ManageIQ::Providers::Vmware
     # Helper methods for EMS inventory parsing methods
     #
 
-    def normalize_storage_uid(inv)
+    def self.normalize_storage_uid(inv)
       ############################################################################
       # For VMFS, we will use the GUID as the identifier
       ############################################################################
