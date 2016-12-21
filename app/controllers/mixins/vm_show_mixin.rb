@@ -89,6 +89,11 @@ module VmShowMixin
     end
   end
 
+  def show_performance
+    @showtype = "performance"
+    perf_gen_init_options                # Initialize perf chart options, charts will be generated async
+  end
+
   def show_record(id = nil)
     @display = params[:display] || "main" unless control_selected?
 
@@ -113,8 +118,7 @@ module VmShowMixin
       set_summary_pdf_data if ["download_pdf", "summary_only"].include?(@display)
 
     when "performance"
-      @showtype = "performance"
-      perf_gen_init_options                # Initialize perf chart options, charts will be generated async
+      render :action => "show_performance"
 
     when "timeline"
       @showtype = "timeline"

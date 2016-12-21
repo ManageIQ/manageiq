@@ -19,7 +19,7 @@ class ApplicationHelper::Toolbar::ContainerCenter < ApplicationHelper::Toolbar::
           'product product-monitoring fa-lg',
           N_('Show Capacity & Utilization data for this Container'),
           N_('Utilization'),
-          :url_parms => "?display=performance"),
+          :url => "show_performance"),
       ]
     ),
   ])

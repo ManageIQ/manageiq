@@ -54,8 +54,7 @@ class ApplicationHelper::Toolbar::EmsContainerCenter < ApplicationHelper::Toolba
           N_('Show Capacity & Utilization data for this Provider'),
           N_('Utilization'),
           :klass     => ApplicationHelper::Button::GenericFeatureButton,
-          :options   => {:feature => :performance},
-          :url_parms => "?display=performance"),
+          :options   => {:feature => :performance}),
         button(
           :ems_container_ad_hoc_metrics,
           'fa fa-tachometer fa-1xplus',
@@ -63,7 +62,7 @@ class ApplicationHelper::Toolbar::EmsContainerCenter < ApplicationHelper::Toolba
           N_('Ad hoc Metrics'),
           :klass     => ApplicationHelper::Button::GenericFeatureButton,
           :options   => {:feature => :ad_hoc_metrics},
-          :url_parms => "?display=ad_hoc_metrics"),
+          :url => "?display=ad_hoc_metrics"),
       ]
     ),
   ])

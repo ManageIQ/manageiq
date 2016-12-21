@@ -345,7 +345,7 @@ describe VmInfraController do
   end
 
   it 'can run Utilization' do
-    post :x_button, :params => {:display => "performance",  :pressed => 'vm_perf', :id => vm_vmware.id}
+    post :x_button, :params => {:pressed => 'vm_perf', :id => vm_vmware.id}
     expect(response.status).to eq(200)
   end
 

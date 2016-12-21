@@ -155,7 +155,7 @@ class ApplicationHelper::Toolbar::XVmCenter < ApplicationHelper::Toolbar::Basic
           'product product-monitoring fa-lg',
           N_('Show Capacity & Utilization data for this VM'),
           N_('Utilization'),
-          :url_parms => "?display=performance"),
+          :url => "/show_performance"),
         button(
           :vm_timeline,
           'product product-timeline fa-lg',

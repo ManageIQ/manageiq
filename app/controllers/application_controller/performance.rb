@@ -144,7 +144,7 @@ module ApplicationController::Performance
                                        :bc     => params[:bc],
                                        :escape => false))
       @ajax_action = "perf_top_chart"
-      render :action => "show"
+      render :template => "layouts/performance"
     end
   end
 
