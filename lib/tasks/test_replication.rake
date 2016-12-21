@@ -8,12 +8,6 @@ namespace :test do
       EvmTestSetupReplication.new.write_released_migrations
     end
   end
-
-  desc "Run all replication specs"
-  RSpec::Core::RakeTask.new(:replication => :initialize) do |t|
-    EvmTestHelper.init_rspec_task(t)
-    t.pattern = EvmTestHelper::REPLICATION_UTIL_SPECS
-  end
 end
 end # ifdef
 

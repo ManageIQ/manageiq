@@ -1,6 +1,5 @@
 module EvmTestHelper
-  VMDB_EXCLUDED_SPEC_DIRECTORIES = %w(replication migrations).freeze
-  REPLICATION_UTIL_SPECS = FileList['spec/replication/util/*_spec.rb']
+  VMDB_EXCLUDED_SPEC_DIRECTORIES = ["migrations"].freeze
   MIGRATION_SPECS        = FileList['spec/migrations/**/*_spec.rb'].sort
 
   def self.init_rspec_task(t, rspec_opts = [])

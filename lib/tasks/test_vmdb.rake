@@ -4,7 +4,7 @@ if defined?(RSpec) && defined?(RSpec::Core::RakeTask)
 namespace :test do
   namespace :vmdb do
     desc "Setup environment for vmdb specs"
-    task :setup => [:initialize, :verify_no_db_access_loading_rails_environment] do
+    task :setup => [:initialize, :verify_no_db_access_loading_rails_environment, "test:replication:setup"] do
       if ENV['PARALLEL']
         database_config = Pathname.new(__dir__).expand_path + "../../config/database.yml"
         if File.readlines(database_config).grep(/TEST_ENV_NUMBER/).size > 0

@@ -18,7 +18,6 @@ env:
   - TEST_SUITE=vmdb PARALLEL=true
   - TEST_SUITE=migrations
   - TEST_SUITE=brakeman
-  - TEST_SUITE=replication
   - TEST_SUITE=javascript
 matrix:
   fast_finish: true
