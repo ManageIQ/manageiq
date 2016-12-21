@@ -7,7 +7,7 @@ class TreeBuilderAction < TreeBuilder
 
   # level 0 - root
   def root_options
-    [t = _("All Actions"), t]
+    [t = N_("All Actions"), t]
   end
 
   # level 1 - actions
