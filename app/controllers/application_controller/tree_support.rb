@@ -73,7 +73,7 @@ module ApplicationController::TreeSupport
           :checkable   => !@edit.nil?,
           :tooltip     => "#{ui_lookup(:table => "ems_infras")}: #{ems.name}",
           :cfmeNoClick => true,
-          :icon        => ActionController::Base.helpers.image_path("svg/vendor-#{ems.image_name}.svg")
+          :image       => ActionController::Base.helpers.image_path("svg/vendor-#{ems.image_name}.svg")
         }
         if @vat || @rp_only
           ems_node[:hideCheckbox] = true
@@ -129,7 +129,7 @@ module ApplicationController::TreeSupport
     # Handle Datacenter folders
     elsif folder.kind_of?(Datacenter)
       node[:tooltip] = _("Datacenter: %{name}") % {:name => folder.name}
-      node[:icon] = ActionController::Base.helpers.image_path("100/datacenter.png")
+      node[:image] = ActionController::Base.helpers.image_path("100/datacenter.png")
       if @vat || @rp_only
         node[:hideCheckbox] = true
       end
@@ -188,9 +188,9 @@ module ApplicationController::TreeSupport
     elsif folder.kind_of?(EmsFolder)
       node[:tooltip] = _("Folder: %{name}") % {:name => folder.name}
       if vat
-        node[:icon] = ActionController::Base.helpers.image_path("100/blue_folder.png")
+        node[:image] = ActionController::Base.helpers.image_path("100/blue_folder.png")
       else
-        node[:icon] = ActionController::Base.helpers.image_path("100/folder.png")
+        node[:image] = ActionController::Base.helpers.image_path("100/folder.png")
         if @vat || @rp_only
           node[:hideCheckbox] = true
         end
@@ -227,7 +227,7 @@ module ApplicationController::TreeSupport
         if folder.parent_cluster || @rp_only                  # Host is under a cluster, no checkbox
           node[:hideCheckbox] = true
         end
-        node[:icon] = ActionController::Base.helpers.image_path("100/host.png")
+        node[:image] = ActionController::Base.helpers.image_path("100/host.png")
         h_kids = []
         folder.resource_pools.sort_by { |rp| rp.name.downcase }.each do |rp|
           kid_node, kid_checked = user_get_tree_node(rp, node[:key], vat)
@@ -246,7 +246,7 @@ module ApplicationController::TreeSupport
     elsif folder.class == EmsCluster
       if !@rp_only || (@rp_only && folder.resource_pools.count > 0)
         node[:tooltip] = _("Cluster: %{name}") % {:name => folder.name}
-        node[:icon] = ActionController::Base.helpers.image_path("100/cluster.png")
+        node[:image] = ActionController::Base.helpers.image_path("100/cluster.png")
         node[:hideCheckbox] = true if @vat || @rp_only
         cl_kids = []
         folder.hosts.each do |h|                  # Get hosts
@@ -276,7 +276,7 @@ module ApplicationController::TreeSupport
     # Handle non-default Resource Pools
     elsif folder.kind_of?(ResourcePool)         # Resource Pool
       node[:tooltip] = _("Resource Pool: #%{name}") % {:name => folder.name}
-      node[:icon] = ActionController::Base.helpers.image_path(folder.vapp ? "100/vapp.png" : "100/resource_pool.png")
+      node[:image] = ActionController::Base.helpers.image_path(folder.vapp ? "100/vapp.png" : "100/resource_pool.png")
       rp_kids = []
       folder.resource_pools.each do |rp|        # Get the resource pool nodes
         kid_node, kid_checked = user_get_tree_node(rp, node[:key])

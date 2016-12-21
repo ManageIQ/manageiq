@@ -125,15 +125,15 @@ module TreeNode
         node[:tooltip] = tip
       end
 
-      node[:icon] = if !image
-                      nil
-                    elsif image.start_with?("/")
-                      image
-                    elsif image =~ %r{^[a-zA-Z0-9]+/}
-                      ActionController::Base.helpers.image_path(image)
-                    else
-                      ActionController::Base.helpers.image_path("100/#{image}")
-                    end
+      node[:image] = if !image
+                       nil
+                     elsif image.start_with?("/")
+                       image
+                     elsif image =~ %r{^[a-zA-Z0-9]+/}
+                       ActionController::Base.helpers.image_path(image)
+                     else
+                       ActionController::Base.helpers.image_path("100/#{image}")
+                     end
 
       node.delete_if { |_, v| v.nil? }
     end

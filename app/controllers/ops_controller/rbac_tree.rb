@@ -25,7 +25,7 @@ class OpsController
       kids = []
       node = {
         :key         => "#{@role.id ? to_cid(@role.id) : "new"}___tab_#{section.id}",
-        :icon        => ActionController::Base.helpers.image_path('100/feature_node.png'),
+        :image       => ActionController::Base.helpers.image_path('100/feature_node.png'),
         :title       => _(section.name),
         :tooltip     => _("%{title} Main Tab") % {:title => section.name},
         :checkable   => @edit,
@@ -66,7 +66,7 @@ class OpsController
       root = MiqProductFeature.feature_details(root_feature)
       root_node = {
         :key         => "#{@role.id ? to_cid(@role.id) : "new"}__#{root_feature}",
-        :icon        => ActionController::Base.helpers.image_path('100/feature_node.png'),
+        :image       => ActionController::Base.helpers.image_path('100/feature_node.png'),
         :title       => _(root[:name]),
         :tooltip     => _(root[:description]) || _(root[:name]),
         :expand      => true,
@@ -78,7 +78,7 @@ class OpsController
       top_nodes = []
       @all_vm_node = {
         :key         => "#{@role.id ? to_cid(@role.id) : "new"}___tab_all_vm_rules",
-        :icon        => ActionController::Base.helpers.image_path('100/feature_node.png'),
+        :image       => ActionController::Base.helpers.image_path('100/feature_node.png'),
         :title       => t = _("Access Rules for all Virtual Machines"),
         :tooltip     => t,
         :children    => [],
@@ -116,7 +116,7 @@ class OpsController
       kids = []
       node = {
         :key         => "#{@role.id ? to_cid(@role.id) : "new"}__#{feature}",
-        :icon        => ActionController::Base.helpers.image_path("100/feature_#{details[:feature_type]}.png"),
+        :image       => ActionController::Base.helpers.image_path("100/feature_#{details[:feature_type]}.png"),
         :title       => _(details[:name]),
         :tooltip     => _(details[:description]) || _(details[:name]),
         :checkable   => @edit,

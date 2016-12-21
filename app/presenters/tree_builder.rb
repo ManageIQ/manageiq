@@ -114,7 +114,6 @@ class TreeBuilder
     while stack.any?
       node = stack.pop
       stack += node[:children] if node.key?(:children)
-      node[:image] = node.delete(:icon) if node.key?(:icon) && node[:icon].start_with?('/')
       node[:text] = node.delete(:title) if node.key?(:title)
       node[:nodes] = node.delete(:children) if node.key?(:children)
       node[:lazyLoad] = node.delete(:isLazy) if node.key?(:isLazy)
@@ -176,7 +175,7 @@ class TreeBuilder
   def add_root_node(nodes)
     root = nodes.first
     root[:title], root[:tooltip], icon, options = root_options
-    root[:icon] = ActionController::Base.helpers.image_path(icon || "100/folder.png")
+    root[:image] = ActionController::Base.helpers.image_path(icon || "100/folder.png")
     if options.present?
       root.merge!(options)
     end
@@ -206,7 +205,7 @@ class TreeBuilder
 
     child_nodes = children.map do |child|
       # already a node? FIXME: make a class for node
-      if child.kind_of?(Hash) && child.key?(:title) && child.key?(:key) && child.key?(:icon)
+      if child.kind_of?(Hash) && child.key?(:title) && child.key?(:key) && child.key?(:image)
         child
       else
         x_build_node_tree(child, nil, options)

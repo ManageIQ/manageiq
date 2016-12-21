@@ -982,7 +982,7 @@ module ApplicationController::MiqRequestMethods
         :key         => dc[0],
         :title       => dc[0],
         :tooltip     => dc[0],
-        :icon        => ActionController::Base.helpers.image_path("100/folder.png"),
+        :image       => ActionController::Base.helpers.image_path("100/folder.png"),
         :cfmeNoClick => true,
         :addClass    => "cfme-bold-node",
         :expand      => true
@@ -995,7 +995,7 @@ module ApplicationController::MiqRequestMethods
           :key     => id,
           :tooltip => ou[0],
           :title   => ou[0],
-          :icon    => ActionController::Base.helpers.image_path("100/group.png")
+          :image   => ActionController::Base.helpers.image_path("100/group.png")
         }
         if ldap_ous == ou[1][:ou]
           # expand selected nodes parents when editing existing record
@@ -1032,7 +1032,7 @@ module ApplicationController::MiqRequestMethods
       :key     => id,
       :title   => node[0],
       :tooltip => node[0],
-      :icon    => ActionController::Base.helpers.image_path("100/group.png")
+      :image   => ActionController::Base.helpers.image_path("100/group.png")
     }
 
     if ldap_ous == node[1][:ou]
@@ -1074,7 +1074,7 @@ module ApplicationController::MiqRequestMethods
         @ci_node[:title] += " *" if t[:single_value]
         @ci_node[:tooltip] = t[:description]
         @ci_node[:addClass] = "cfme-no-cursor-node"      # No cursor pointer
-        @ci_node[:icon] = parent_icon
+        @ci_node[:image] = parent_icon
         @ci_node[:hideCheckbox] = @ci_node[:cfmeNoClick] = true
         @ci_node[:addClass] = "cfme-bold-node"  # Show node as different
         @ci_kids = []
@@ -1087,7 +1087,7 @@ module ApplicationController::MiqRequestMethods
           temp[:selectable] = false
           temp[:title] = temp[:tooltip] = c[1][:description]
           temp[:addClass] = "cfme-no-cursor-node"
-          temp[:icon] = child_icon
+          temp[:image] = child_icon
           if edit_mode              # Don't show checkboxes/radio buttons in non-edit mode
             if vm_tags && vm_tags.include?(c[0].to_i)
               temp[:select] = true
