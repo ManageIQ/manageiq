@@ -912,7 +912,7 @@ class MiqExpression
 
     if ops["tag"] && context_type != "hash"
       ref, val = value2tag(preprocess_managed_tag(ops["tag"]), ops["value"])
-      [ref ? "<exist ref=#{ref}>#{val}</exist>" : "<exist>#{val}</exist>"]
+      ["<exist ref=#{ref}>#{val}</exist>"]
     elsif ops["tag"] && context_type == "hash"
       # This is only for supporting reporting "display filters"
       # In the report object the tag value is actually the description and not the raw tag name.
@@ -928,15 +928,15 @@ class MiqExpression
       if ops["field"] == "<count>"
         ["<count>", quote(ops["value"], "integer")]
       else
+        col_type = get_col_type(ops["field"]) || "string"
         case context_type
         when "hash"
-          ref = nil
           val = ops["field"].split(".").last.split("-").join(".")
+          fld = "<value type=#{col_type}>#{val}</value>"
         else
           ref, val = value2tag(ops["field"])
+          fld = "<value ref=#{ref}, type=#{col_type}>#{val}</value>"
         end
-        col_type = get_col_type(ops["field"]) || "string"
-        fld = ref ? "<value ref=#{ref}, type=#{col_type}>#{val}</value>" : "<value type=#{col_type}>#{val}</value>"
         if ["like", "not like", "starts with", "ends with", "includes", "regular expression matches", "regular expression does not match"].include?(operator)
           [fld, ops["value"]]
         else
@@ -945,7 +945,7 @@ class MiqExpression
       end
     elsif ops["count"]
       ref, count = value2tag(ops["count"])
-      field = ref ? "<count ref=#{ref}>#{count}</count>" : "<count>#{count}</count>"
+      field = "<count ref=#{ref}>#{count}</count>"
       [field, quote(ops["value"], "integer")]
     elsif ops["regkey"]
       if operator == "key exists"
