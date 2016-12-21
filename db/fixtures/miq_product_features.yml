@@ -4255,6 +4255,23 @@
       :description: Edit Tags of Floating IP
       :feature_type: control
       :identifier: floating_ip_tag
+  - :name: Modify
+    :description: Modify Floating IPs
+    :feature_type: admin
+    :identifier: floating_ip_admin
+    :children:
+    - :name: Add
+      :description: Add a Floating IP
+      :feature_type: admin
+      :identifier: floating_ip_new
+    - :name: Edit
+      :description: Associate/Disassociate a Floating IP
+      :feature_type: admin
+      :identifier: floating_ip_edit
+    - :name: Remove
+      :description: Remove Floating IPs
+      :feature_type: admin
+      :identifier: floating_ip_delete
 
 # Cloud Network
 - :name: Cloud Networks

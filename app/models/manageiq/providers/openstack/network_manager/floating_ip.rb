@@ -1,11 +1,24 @@
 class ManageIQ::Providers::Openstack::NetworkManager::FloatingIp < ::FloatingIp
   include ProviderObjectMixin
   include AsyncDeleteMixin
-  include SupportsFeatureMixin
 
-  supports :create_floating_ip
-  supports :delete_floating_ip
-  supports :update_floating_ip
+  supports :create
+
+  supports :delete do
+    if ext_management_system.nil?
+      unsupported_reason_add(:delete_floating, _("The Floating Ip is not connected to an active %{table}") % {
+        :table => ui_lookup(:table => "ext_management_systems")
+      })
+    end
+  end
+
+  supports :update do
+    if ext_management_system.nil?
+      unsupported_reason_add(:update_floating_ip, _("The Floating Ip is not connected to an active %{table}") % {
+        :table => ui_lookup(:table => "ext_management_systems")
+      })
+    end
+  end
 
   def self.raw_create_floating_ip(ext_management_system, options)
     cloud_tenant = options.delete(:cloud_tenant)
