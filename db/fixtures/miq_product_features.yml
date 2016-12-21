@@ -5971,3 +5971,60 @@
       :description: Display Timelines for Object Storage Managers
       :feature_type: view
       :identifier: ems_object_storage_timeline
+
+# EmsPhysical
+- :name: Physical Providers
+  :description: Everything under Physical Providers
+  :feature_type: node
+  :identifier: ems_physical
+  :children:
+  - :name: View
+    :description: View Physical Providers
+    :feature_type: view
+    :identifier: ems_physical_view
+    :children:
+    - :name: List
+      :description: Display Lists of Containers Providers
+      :feature_type: view
+      :identifier: ems_physical_show_list
+    - :name: Show
+      :description: Display Individual Containers Providers
+      :feature_type: view
+      :identifier: ems_physical_show
+  - :name: Modify
+    :description: Modify Physical Providers
+    :feature_type: admin
+    :identifier: ems_physical_admin
+    :children:
+    - :name: Remove
+      :description: Remove Physical Provider
+      :feature_type: admin
+      :identifier: ems_physical_delete
+    - :name: Edit
+      :description: Edit a Physical Provider
+      :feature_type: admin
+      :identifier: ems_physical_edit
+    - :name: Add
+      :description: Add a Physical Provider
+      :feature_type: admin
+      :identifier: ems_physical_new
+
+# Physical Servers
+- :name: Physical Servers
+  :description: Everything under Physical Servers
+  :feature_type: node
+  :identifier: physical_server
+  :children:
+  - :name: View
+    :description: View Physical Server
+    :feature_type: view
+    :identifier: physical_server_view
+    :children:
+    - :name: List
+      :description: Display Lists of Physical Servers
+      :feature_type: view
+      :identifier: shosical_server_show_list
+    - :name: Show
+      :description: Display Individual Physical Server
+      :feature_type: view
+      :identifier: physical_server_show

@@ -5,7 +5,8 @@ module Menu
         Menu::Section.new(:compute, N_("Compute"), 'fa product-memory fa-2x', [
           clouds_menu_section,
           infrastructure_menu_section,
-          container_menu_section
+          container_menu_section,
+          physical_menu_section
         ])
       end
 
@@ -108,6 +109,13 @@ module Menu
           Menu::Item.new('container_image',          N_('Container Images'),                                    'container_image',          {:feature => 'container_image_show_list'},                 '/container_image'),
           Menu::Item.new('container_template',       N_('Container Templates'),                                 'container_template',       {:feature => 'container_template_show_list'},              '/container_template'),
           Menu::Item.new('container_topology',       N_('Topology'),                                            'container_topology',       {:feature => 'container_topology', :any => true},          '/container_topology')
+        ])
+      end
+
+      def physical_menu_section
+        Menu::Section.new(:phy, N_("Physical Infrastructure"), 'fa fa-plus fa-2x', [
+          Menu::Item.new('ems_physical',    N_('Providers'), 'ems_physical',    {:feature => 'ems_physical_show_list'},    '/ems_physical'),
+          Menu::Item.new('physical_server', N_('Servers'),   'physical_server', {:feature => 'physical_server_show_list'}, '/physical_server'),
         ])
       end
 
