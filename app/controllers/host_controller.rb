@@ -13,7 +13,7 @@ class HostController < ApplicationController
 
   def download_summary_pdf
     super do
-      @host = @record
+      set_config(@record)
     end
   end
 

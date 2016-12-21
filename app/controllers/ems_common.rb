@@ -113,12 +113,6 @@ module EmsCommon
     view_setup_helper(display, *view_setup_params[display])
   end
 
-  def download_summary_pdf
-    super do
-      @ems = @record
-    end
-  end
-
   def show
     return unless init_show
     session[:vm_summary_cool] = (settings(:views, :vm_summary_cool).to_s == "summary")

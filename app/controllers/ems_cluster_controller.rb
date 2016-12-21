@@ -11,12 +11,6 @@ class EmsClusterController < ApplicationController
     super
   end
 
-  def download_summary_pdf
-    super do
-      @ems_cluster = @record
-    end
-  end
-
   def show
     return if perfmenu_click?
     @display = params[:display] || "main" unless control_selected?

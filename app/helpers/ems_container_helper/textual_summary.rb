@@ -14,7 +14,7 @@ module EmsContainerHelper::TextualSummary
     # Order of items should be from parent to child
     items = []
     items.concat(%i(container_projects))
-    items.concat(%i(container_routes)) if @ems.respond_to?(:container_routes)
+    items.concat(%i(container_routes)) if @record.respond_to?(:container_routes)
     items.concat(%i(container_services container_replicators container_groups containers container_nodes
                     container_image_registries container_images volumes container_builds container_templates))
     items
@@ -50,61 +50,61 @@ module EmsContainerHelper::TextualSummary
   #
 
   def textual_name
-    @ems.name
+    @record.name
   end
 
   def textual_type
-    @ems.emstype_description
+    @record.emstype_description
   end
 
   def textual_hostname
-    @ems.hostname
+    @record.hostname
   end
 
   def textual_memory_resources
     {:label => _("Aggregate Node Memory"),
-     :value => number_to_human_size(@ems.aggregate_memory * 1.megabyte,
+     :value => number_to_human_size(@record.aggregate_memory * 1.megabyte,
                                     :precision => 0)}
   end
 
   def textual_cpu_cores
     {:label => _("Aggregate Node CPU Cores"),
-     :value => @ems.aggregate_cpu_total_cores}
+     :value => @record.aggregate_cpu_total_cores}
   end
 
   def textual_port
-    @ems.supports_port? ? @ems.port : nil
+    @record.supports_port? ? @record.port : nil
   end
 
   def textual_zone
-    {:label => _("Managed by Zone"), :icon => "pficon pficon-zone", :value => @ems.zone.name}
+    {:label => _("Managed by Zone"), :icon => "pficon pficon-zone", :value => @record.zone.name}
   end
 
   def textual_topology
     {:label => _('Topology'),
      :icon  => "pficon pficon-topology",
-     :link  => polymorphic_path(@ems, :display => 'topology'),
+     :link  => polymorphic_path(@record, :display => 'topology'),
      :title => _("Show topology")}
   end
 
   def textual_volumes
-    count_of_volumes = @ems.number_of(:persistent_volumes)
+    count_of_volumes = @record.number_of(:persistent_volumes)
     label = ui_lookup(:tables => "volume")
     h     = {:label => label, :icon => "pficon pficon-volume", :value => count_of_volumes}
     if count_of_volumes > 0 && role_allows?(:feature => "persistent_volume_show_list")
-      h[:link]  = ems_container_path(@ems.id, :display => 'persistent_volumes')
+      h[:link]  = ems_container_path(@record.id, :display => 'persistent_volumes')
       h[:title] = _("Show all %{label}") % {:label => label}
     end
     h
   end
 
   def textual_endpoints
-    return unless @ems.connection_configurations.hawkular
+    return unless @record.connection_configurations.hawkular
 
     [{:label => _('Hawkular Host Name'),
-      :value => @ems.connection_configurations.hawkular.endpoint.hostname},
+      :value => @record.connection_configurations.hawkular.endpoint.hostname},
      {:label => _('Hawkular API Port'),
-      :value => @ems.connection_configurations.hawkular.endpoint.port}]
+      :value => @record.connection_configurations.hawkular.endpoint.port}]
   end
 
   def textual_miq_custom_attributes

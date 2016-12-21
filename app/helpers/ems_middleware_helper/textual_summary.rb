@@ -33,25 +33,25 @@ module EmsMiddlewareHelper::TextualSummary
   #
 
   def textual_name
-    @ems.name
+    @record.name
   end
 
   def textual_type
-    @ems.emstype_description
+    @record.emstype_description
   end
 
   def textual_hostname
-    @ems.hostname
+    @record.hostname
   end
 
   def textual_port
-    @ems.supports_port? ? @ems.port : nil
+    @record.supports_port? ? @record.port : nil
   end
 
   def textual_topology
     {:label => _('Topology'),
      :icon  => "pficon pficon-topology",
-     :link  => url_for(:controller => 'middleware_topology', :action => 'show', :id => @ems.id),
+     :link  => url_for(:controller => 'middleware_topology', :action => 'show', :id => @record.id),
      :title => _('Show topology')}
   end
 end

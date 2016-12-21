@@ -99,7 +99,7 @@ module CloudVolumeHelper::TextualSummary
     h     = {:label => label, :icon => "pficon pficon-virtual-machine", :value => num}
     if num > 0 && role_allows?(:feature => "vm_show_list")
       h[:title] = _("Show all attached %{models}") % {:models => label}
-      h[:link]  = url_for(:action => 'show', :id => @volume, :display => 'instances')
+      h[:link]  = url_for(:action => 'show', :id => @record, :display => 'instances')
     end
     h
   end

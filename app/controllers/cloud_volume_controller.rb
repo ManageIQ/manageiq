@@ -65,12 +65,6 @@ class CloudVolumeController < ApplicationController
     end
   end
 
-  def download_summary_pdf
-    super do
-      @volume = @record
-    end
-  end
-
   def show
     @display = params[:display] || "main" unless control_selected?
     @showtype = @display

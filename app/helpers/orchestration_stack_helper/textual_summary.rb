@@ -77,7 +77,7 @@ module OrchestrationStackHelper::TextualSummary
     h = {:label => label, :icon => "product product-template", :value => template.name}
     if role_allows?(:feature => "orchestration_templates_view")
       h[:title] = _("Show this Orchestration Template")
-      h[:link] = url_for(:action => 'show', :id => @orchestration_stack, :display => 'stack_orchestration_template')
+      h[:link] = url_for(:action => 'show', :id => @record, :display => 'stack_orchestration_template')
     end
     h
   end
@@ -87,7 +87,7 @@ module OrchestrationStackHelper::TextualSummary
     num   = @record.number_of(:vms)
     h     = {:label => label, :icon => "pficon pficon-virtual-machine", :value => num}
     if num > 0 && role_allows?(:feature => "vm_show_list")
-      h[:link]  = url_for(:action => 'show', :id => @orchestration_stack, :display => 'instances')
+      h[:link]  = url_for(:action => 'show', :id => @record, :display => 'instances')
       h[:title] = _("Show all %{label}") % {:label => label}
     end
     h
