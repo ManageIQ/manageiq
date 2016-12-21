@@ -1,0 +1,41 @@
+%div
+  .modal-header
+    %button.close{"type" => "button", "ng-click" => "$dismiss()", "aria-hidden" => "true"}
+      %span.pficon.pficon-close
+    %h4.modal-title
+      {{vm.editTitle}}
+  .modal-body
+    %form.form-horizontal
+      .form-group
+        %label.col-sm-2.control-label
+          = _("Message")
+        .col-sm-10
+          %label
+            {{vm.editItem.description}}
+      .form-group
+        %label.col-sm-2.control-label
+          = _("Owner")
+        .col-sm-5
+          %select#assign-select{"ng-if" => "vm.showAssign",
+                                "ng-model"   => "vm.owner",
+                                "ng-options" => "user as user.name for user in vm.existingUsers",
+                                "pf-select"  => ""}
+          %label{"ng-if" => "!vm.showAssign && vm.owner"}
+            {{vm.owner.name}}
+          %label{"ng-if" => "!vm.showAssign && !vm.owner"}
+            = _("Unassigned")
+        .col-sm-4{"ng-if" => "vm.showAssign && vm.owner.id === vm.currentUser.id"}
+          %label.control-label.checkbox-inline
+          %input{"type" => "checkbox", "ng-model" => "vm.currentAcknowledged"}
+            = _("Acknowledge")
+      .form-group
+        %label.col-sm-2.control-label
+          = _("Note")
+        .col-sm-10
+          %textarea.form-control#comment-text-area{"rows" => "4", "ng-model" => "vm.newComment"}
+  .modal-footer
+    .confirmation__buttons
+      %button.confirmation__button.btn.btn-default{"type" => "button", "ng-click" => "$dismiss()"}
+        = _("Cancel")
+      %button.confirmation__button.btn.btn-rounded.btn-primary#edit-alert-ok{"type" => "button", "ng-click" => "$close()"}
+        = _("OK")

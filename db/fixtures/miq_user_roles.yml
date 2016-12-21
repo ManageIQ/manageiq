@@ -9,6 +9,7 @@
   :read_only: true
   :miq_product_feature_identifiers:
   - about
+  - alerts
   - all_vm_rules
   - availability_zone
   - host_aggregate
@@ -96,6 +97,7 @@
   :read_only: true
   :miq_product_feature_identifiers:
   - about
+  - alerts
   - all_vm_rules
   - compute
   - chargeback
@@ -202,6 +204,7 @@
   :read_only: true
   :miq_product_feature_identifiers:
   - about
+  - alerts
   - all_vm_rules
   - bottlenecks
   - compute
@@ -309,6 +312,7 @@
   :read_only: true
   :miq_product_feature_identifiers:
   - about
+  - alerts
   - all_vm_rules
   - compute
   - dashboard
@@ -361,6 +365,7 @@
   :read_only: true
   :miq_product_feature_identifiers:
   - about
+  - alerts
   - all_vm_rules
   - compute
   - chargeback
@@ -498,6 +503,7 @@
   :read_only: true
   :miq_product_feature_identifiers:
   - about
+  - alerts
   - all_vm_rules
   - compute
   - chargeback
@@ -596,6 +602,7 @@
   :read_only: true
   :miq_product_feature_identifiers:
   - about
+  - alerts
   - all_vm_rules
   - compute
   - chargeback
@@ -689,6 +696,7 @@
   :read_only: true
   :miq_product_feature_identifiers:
   - about
+  - alerts
   - all_vm_rules
   - compute
   - chargeback
@@ -781,6 +789,7 @@
       :vms: :user
   :miq_product_feature_identifiers:
   - about
+  - alerts
   - all_vm_rules
   - compute
   - miq_request_admin
@@ -823,6 +832,7 @@
   :miq_product_feature_identifiers:
   - about
   - all_vm_rules
+  - alerts
   - compute
   - miq_template_clone
   - miq_template_drift
@@ -883,6 +893,7 @@
   :read_only: true
   :miq_product_feature_identifiers:
   - about
+  - alerts
   - all_vm_rules
   - compute
   - miq_request_admin
@@ -941,6 +952,7 @@
   :read_only: true
   :miq_product_feature_identifiers:
   - about
+  - alerts
   - availability_zone
   - host_aggregate
   - all_vm_rules
@@ -1012,6 +1024,7 @@
   :read_only: true
   :miq_product_feature_identifiers:
   - about
+  - alerts
   - availability_zone
   - host_aggregate
   - all_vm_rules

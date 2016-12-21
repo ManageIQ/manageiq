@@ -1,0 +1,240 @@
+.miq-alerts-center {
+  margin: -20px;
+  .breadcrumb {
+    background-color: #f5f5f5;
+    border-bottom: 1px solid #d1d1d1;
+    margin: 0 -20px;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  .toolbar-pf .form-group {
+    padding-left: 25px;
+    .btn {
+      margin-left: 0;
+    }
+    .btn.btn-link {
+      margin-left: 10px;
+    }
+    .btn-group {
+      margin-left: 0;
+    }
+  }
+  .list-view-container, .row-tile-pf {
+    height: calc(100vh - 196px);
+    overflow-y: auto;
+    position: static;
+    top: 98px;
+  }
+  .list-view-pf {
+    .list-view-pf-body > .row {
+      width: 100%;
+    }
+    .list-view-pf-left {
+      padding-right: 20px;
+    }
+    [class^="col-"] {
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+    .inner-row {
+      margin-left: -10px;
+      margin-right: -10px;
+    }
+  }
+  .list-group-item.list-view-pf-expand-active {
+    padding-bottom: 0;
+    .list-group-item-header {
+      padding-bottom: 7px;
+    }
+    .list-group-item-container {
+      margin-right: -14px;
+      [class^="col-"] {
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+      .row {
+        margin-bottom: 10px;
+        &:last-of-type {
+          margin-bottom: 0;
+        }
+      }
+      .table {
+        table-layout: fixed;
+        width: 100%;
+        .fixed-col {
+          height: 26px;
+          @media (min-width: $screen-sm) {
+            width: 20%;
+          }
+          @media (min-width: $screen-md) {
+            width: 160px;
+          }
+        }
+        .grow-col {
+          height: 26px;
+        }
+      }
+    }
+    .header {
+      margin-right: 10px;
+      font-size: 14px;
+    }
+  }
+  .list-view-severity {
+    width: 25px;
+    height: 25px;
+    position: relative;
+    top: 3px;
+  }
+  .list-view-type-icon {
+    font-size: 16px;
+    vertical-align: middle;
+  }
+  .list-view-type-img {
+    width: 16px;
+    height: 16px;
+  }
+  .list-group-item {
+    &.alert {
+      padding-left: 15px;
+      &.alert-danger {
+        background-color: $alert-danger-bg;
+      }
+      &.alert-info {
+        background-color: #fff;
+      }
+      &.alert-success {
+        background-color: $alert-success-bg;
+      }
+      &.alert-warning {
+        background-color: $alert-warning-bg;
+      }
+      &:hover {
+        background-color: #ededed;
+      }
+    }
+  }
+  .assignee-column {
+  }
+  .ack-icon {
+    font-size: 14px;
+    margin-top: -12px;
+    vertical-align: middle;
+    width: 14px;
+    &::before {
+      color: #363636;
+    }
+    &.unacknowledged {
+      visibility: hidden;
+    }
+  }
+  .no-wrap.assignee {
+    display: inline-block;
+    width: calc(100% - 50px);
+    margin: 0 5px;
+  }
+  .comment-icon {
+    font-size: 18px;
+    margin-top: -12px;
+    vertical-align: middle;
+    width: 18px;
+  }
+
+  .group-toolbar-actions {
+    .bootstrap-select:not([class*="col-"]):not([class*="form-control"]):not(.input-group-btn) {
+      margin: 0 10px 0 5px;
+      width: 115px;
+    }
+    .bootstrap-select:last-of-type {
+      margin-right: 0;
+    }
+  }
+  .recent-toolbar-actions {
+    .bootstrap-select:not([class*="col-"]):not([class*="form-control"]):not(.input-group-btn) {
+      width: 60px;
+    }
+  }
+  .alerts-group-item {
+    background-color: transparent;
+    > a {
+      color: #030303;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 700;
+      padding-left: 30px;
+      padding-right: 5px;
+      text-decoration: none;
+      transition: 250ms;
+      &:before {
+        content: "\f107";
+        display: block;
+        font-family: FontAwesome;
+        font-size: 16px;
+        font-weight: 500;
+        left: 20px;
+        position: absolute;
+        top: 7px;
+      }
+      &.collapsed {
+        &:before {
+          content: "\f105";
+        }
+      }
+    }
+  }
+  .card-view-pf {
+    margin-left: 20px;
+    .card-pf {
+      height: inherit;
+      display: block;
+      float: left;
+      margin: 0 20px 20px 0;
+      padding: 10px;
+      position: relative;
+      text-align: center;
+      width: 260px;
+    }
+    .card-view-type-img {
+      position: relative;
+      top: -2px;
+      width: 22px;
+      height: 22px;
+    }
+  }
+
+  .tooltip-inner {
+    @media (min-width: $screen-sm) {
+      max-width: 450px;
+    }
+    @media (min-width: $screen-md) {
+      max-width: 600px;
+    }
+    .tip-title {
+      margin: 0 -10px;
+      padding: 0 10px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      border-bottom: 1px solid $color-pf-black;
+    }
+    .tip-row {
+      width: 100%;
+    }
+    .tip-col {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: inline-block;
+    }
+    .name-col {
+      width: 100px;
+    }
+    .description-col {
+      width: calc(100% - 225px);
+      padding: 0 5px;
+    }
+    .date-col {
+      width: 118px;
+    }
+  }
+}
+

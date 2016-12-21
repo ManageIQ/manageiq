@@ -1,0 +1,26 @@
+.row.miq-alerts-center
+  .container-fluid{"ng-controller" => "alertsMostRecentController as vm"}
+    %span
+      %ol.breadcrumb
+        %li
+          = _("Monitor")
+        %li
+          = _("Alerts")
+        %li.active
+          %strong
+            = _("Most Recent Alerts")
+    .row{"ng-if" => "vm.loadingDone"}
+      %div{"pf-toolbar" => "", "config" => "vm.toolbarConfig"}
+        %actions.recent-toolbar-actions
+          %span
+            = _("Show")
+          %select{"pf-select" => "true",
+                  "ng-model" => "vm.showCount",
+                  "ng-options" => "o as o for o in vm.showCounts",
+                  "ng-change" => "vm.filterChange()"}
+          %span
+            = _("alerts")
+      = render :partial => "shared/views/alerts_list"
+
+:javascript
+  miq_bootstrap('.miq-alerts-center', 'alertsCenter');

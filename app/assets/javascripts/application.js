@@ -16,6 +16,7 @@
 //= require moment
 //= require moment-strftime/lib/moment-strftime
 //= require moment-timezone
+//= require moment-duration-format
 //= require sprintf
 //= require numeral
 //= require cable

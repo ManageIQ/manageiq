@@ -1,0 +1,10 @@
+%div
+  .tip-title
+    {{item.name}}
+  .tip-row{"ng-repeat" => "alert in vm.hoverAlerts track by $index"}
+    .tip-col.name-col{"ng-if" => "$index < 5"}
+      {{alert.node_hostname}}
+    .tip-col.description-col{"ng-if" => "$index < 5"}
+      {{alert.description}}
+    .tip-col.date-col{"ng-if" => "$index < 5"}
+      {{alert.updated_at | date:"yyyy-MM-dd hh:mm:ss"}}
