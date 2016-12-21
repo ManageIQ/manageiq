@@ -12,7 +12,7 @@ class TreeBuilderCondition < TreeBuilder
 
   # level 0 - root
   def root_options
-    [t = _("All Conditions"), t]
+    [t = N_("All Conditions"), t]
   end
 
   # level 1 - host / vm

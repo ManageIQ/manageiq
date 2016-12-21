@@ -7,7 +7,7 @@ class TreeBuilderAlert < TreeBuilder
 
   # level 0 - root
   def root_options
-    [t = _("All Alerts"), t]
+    [t = N_("All Alerts"), t]
   end
 
   # level 1 - alerts
