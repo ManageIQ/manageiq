@@ -459,19 +459,6 @@ class ApplicationHelper::ToolbarBuilder
     case id
     when "miq_task_canceljob"
       return true unless ["all_tasks", "all_ui_tasks"].include?(@layout)
-    when "vm_console"
-      type = ::Settings.server.remote_console_type
-      return type != 'MKS' || !@record.console_supported?(type)
-    when "vm_vnc_console"
-      if @record.vendor == 'vmware'
-        # remote_console_type is only useful for vmware consoles
-        type = ::Settings.server.remote_console_type
-        return type != 'VNC' || !@record.console_supported?(type)
-      end
-      return !@record.console_supported?('vnc')
-    when "vm_vmrc_console"
-      type = ::Settings.server.remote_console_type
-      return type != 'VMRC' || !@record.console_supported?(type)
     # Check buttons behind SMIS setting
     when "ontap_storage_system_statistics", "ontap_logical_disk_statistics", "ontap_storage_volume_statistics",
         "ontap_file_share_statistics"
@@ -681,52 +668,6 @@ class ApplicationHelper::ToolbarBuilder
       case id
       when "instance_perf", "vm_perf", "container_perf"
         return N_("No Capacity & Utilization data has been collected for this VM") unless @record.has_perf_data?
-      when "vm_check_compliance"
-        unless @record.has_compliance_policies?
-          return N_("No Compliance Policies assigned to this virtual machine")
-        end
-      when "vm_console", "vm_vmrc_console"
-        if !is_browser?(%w(explorer firefox mozilla chrome)) ||
-           !is_browser_os?(%w(windows linux))
-          return N_("The web-based console is only available on IE, Firefox or Chrome (Windows/Linux)")
-        end
-
-        if id.in?(["vm_vmrc_console"])
-          begin
-            @record.validate_remote_console_vmrc_support
-          rescue MiqException::RemoteConsoleNotSupportedError => err
-            return N_("VM VMRC Console error: %{error}") % {:error => err}
-          end
-        end
-
-        if @record.current_state != "on"
-          return N_("The web-based console is not available because the VM is not powered on")
-        end
-      when "vm_vnc_console"
-        if @record.current_state != "on"
-          return N_("The web-based VNC console is not available because the VM is not powered on")
-        end
-      when "vm_timeline"
-        unless @record.has_events? || @record.has_events?(:policy_events)
-          return N_("No Timeline data has been collected for this VM")
-        end
-      when "vm_snapshot_add"
-        if @record.number_of(:snapshots) <= 0
-          return @record.is_available_now_error_message(:create_snapshot) unless @record.is_available?(:create_snapshot)
-        else
-          unless @record.is_available?(:create_snapshot)
-            return @record.is_available_now_error_message(:create_snapshot)
-          else
-            return N_("Select the Active snapshot to create a new snapshot for this VM") unless @active
-          end
-        end
-      when "vm_snapshot_delete"
-        return @record.is_available_now_error_message(:remove_snapshot) unless @record.is_available?(:remove_snapshot)
-      when "vm_snapshot_delete_all"
-        return @record.is_available_now_error_message(:remove_all_snapshots) unless @record.is_available?(:remove_all_snapshots)
-      when "vm_snapshot_revert"
-        return N_("Select a snapshot that is not the active one") if @active
-        return @record.is_available_now_error_message(:revert_to_snapshot) unless @record.is_available?(:revert_to_snapshot)
       end
     when "MiqTemplate"
       case id
