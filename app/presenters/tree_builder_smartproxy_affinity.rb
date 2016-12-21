@@ -43,20 +43,22 @@ class TreeBuilderSmartproxyAffinity < TreeBuilder
        :parent      => parent,
        :text        => Dictionary.gettext(kid.camelcase, :type => :model, :notfound => :titleize, :plural => true),
        :cfmeNoClick => true,
-       :children    => @data.send(kid.pluralize).sort_by(&:name)}
+       :children    => @data.send(kid.pluralize).sort_by(&:name),
+       :smartproxy_kind => kid}
     end
     count_only_or_objects(count_only, nodes)
   end
 
   def x_get_tree_hash_kids(parent, count_only = false)
-    affinities = parent[:parent].send("vm_scan_#{parent[:image]}_affinity").collect(&:id) if parent[:parent].present?
+    affinities = parent[:parent].send("vm_scan_#{parent[:smartproxy_kind]}_affinity").collect(&:id) if parent[:parent].present?
     nodes = parent[:children].map do |kid|
       {:id          => "#{parent[:id]}_#{kid.id}",
        :image       => parent[:image],
        :text        => kid.name,
        :select      => affinities.include?(kid.id),
        :cfmeNoClick => true,
-       :children    => []}
+       :children    => [],
+       :smartproxy_kind => parent[:smartproxy_kind]}
     end
     count_only_or_objects(count_only, nodes)
   end
