@@ -64,6 +64,12 @@
               = _('Ansible Tower Job Template')
             .col-md-8
               = h(@record.try(:job_template).try(:name))
+        - elsif @record.prov_type == "generic_container"
+          .form-group
+            %label.col-md-2.control-label
+              = _('Container Template')
+            .col-md-8
+              = h(@record.try(:container_template).try(:name))
         - entry_points = [[_("Provisioning"), :fqname]]
         - unless @record.prov_type.try(:start_with?, "generic_")
           - entry_points.push([_("Reconfigure"),  :reconfigure_fqname],
