@@ -9,10 +9,10 @@ function MwAddJdbcDriverController($scope, $http, miqService) {
   });
 
   $scope.$on('mwAddJdbcDriverEvent', function(event, data) {
-
     var fd = new FormData();
+    if(!data.serverIdKey) data.serverIdKey = 'id'
     fd.append('file', data.filePath);
-    fd.append('id', data.serverId);
+    fd.append(data.serverIdKey, data.serverId);
     fd.append('driverJarName', data.driverJarName);
     fd.append('driverName', data.driverName);
     fd.append('moduleName', data.moduleName);
@@ -29,10 +29,10 @@ function MwAddJdbcDriverController($scope, $http, miqService) {
     })
       .then(
         function(result) { // success
-          miqService.miqFlash(result.data.status, result.data.msg);
+          miqService.replacePartials(result.data);
         },
         function() { // error
-          miqService.miqFlash('error', 'Unable to add JDBC Driver "' + data.driverName + '" on this server.');
+          miqService.replacePartials(result.data);
         })
       .finally(function() {
         angular.element("#modal_jdbc_div").modal('hide');

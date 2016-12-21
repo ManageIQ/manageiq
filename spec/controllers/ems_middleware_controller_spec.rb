@@ -26,7 +26,7 @@ describe EmsMiddlewareController do
 
     context "render" do
       render_views
-      it { is_expected.to render_template('shared/views/ems_common/show') }
+      it { is_expected.to render_template('ems_middleware/show') }
 
       it do
         is_expected.to have_http_status 200

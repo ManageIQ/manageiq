@@ -23,7 +23,8 @@
           %input#ds_server_id{:type  => "hidden",
                               :value => params[:id]}
 
-          = render :partial => 'choose_datasource'
-          = render :partial => 'add_datasource_step1'
-          = render :partial => 'add_datasource_step2'
-          = render :partial => 'add_datasource_step3'
+          = render :partial => 'middleware_server/choose_datasource'
+          = render :partial => 'middleware_server/add_datasource_step1'
+          = render :partial => 'middleware_server/add_datasource_step2'
+          = render :partial => 'middleware_server/add_datasource_step3'
+

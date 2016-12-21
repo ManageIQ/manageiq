@@ -14,7 +14,7 @@ describe('middlewareAddJdbcDriverController', function () {
       miqService: miqService
     });
 
-    spyOn(miqService, 'miqFlash');
+    spyOn(miqService, 'replacePartials');
     spyOn(miqService, 'sparkleOff');
   }));
 
@@ -38,8 +38,16 @@ describe('middlewareAddJdbcDriverController', function () {
 
       $scope.$broadcast('mwAddJdbcDriverEvent', eventData);
 
-      var addJDBCDriverResponse = {
-        'status':'success','msg':'JDBC Driver ' + eventData.driverName + ' has been installed on this server.'};
+      var addJDBCDriverResponse = {"explorer":"flash",
+        "replacePartials":{
+        "flash_msg_div":"\u003cdiv id='flash_msg_div' " +
+        "style=''\u003e\n\u003cdiv id='flash_text_div'\u003e\n\u003cdiv " +
+        "class='alert alert-success alert-dismissable'\u003e\n\u003cbutton class='close' " +
+        "data-dismiss='alert'\u003e\n\u003cspan class='pficon pficon-close'\u003e\u003c/span\u003e\n\u003c/" +
+        "button\u003e\n\u003cspan class='pficon pficon-ok'\u003e\u003c/span\u003e\n\u003cstrong\u003eJDBC Driver " +
+        "\u0026quot;Custom\u0026quot; has been installed on this server.\u003c/strong\u003e\n\u003c/div\u003e\n\u003c" +
+        "/div\u003e\n\u003c/div\u003e\n"}}
+
       $httpBackend.expectPOST('/middleware_server/add_jdbc_driver', function(formData) {
         expect(formData instanceof FormData).toBe(true);
 
@@ -57,7 +65,7 @@ describe('middlewareAddJdbcDriverController', function () {
       }).respond(200, addJDBCDriverResponse);
       $httpBackend.flush();
 
-      expect(miqService.miqFlash).toHaveBeenCalledWith(addJDBCDriverResponse.status, addJDBCDriverResponse.msg);
+      expect(miqService.replacePartials).toHaveBeenCalledWith(addJDBCDriverResponse);
       expect(miqService.sparkleOff).toHaveBeenCalled();
     });
   });

@@ -1,6 +1,10 @@
 module EmsCommon
   extend ActiveSupport::Concern
 
+  def view_file_path
+    'shared/views/ems_common/show'
+  end
+
   def show_props
     drop_breadcrumb(:name => @ems.name + _(" (Properties)"), :url => show_link(@ems, :display  =>  "props"))
   end
@@ -120,7 +124,6 @@ module EmsCommon
     @ems = @record
 
     drop_breadcrumb({:name => ui_lookup(:tables => @table_name), :url => "/#{@table_name}/show_list?page=#{@current_page}&refresh=y"}, true)
-
     case params[:display]
     when 'main'                          then show_main
     when 'download_pdf', 'summary_only'  then show_download
@@ -144,7 +147,7 @@ module EmsCommon
     session[:tl_record_id] = @record.id
 
     replace_gtl_main_div if gtl_request?
-    render :template => "shared/views/ems_common/show" if params[:action] == 'show' && !performed?
+    render :template => view_file_path if params[:action] == 'show' && !performed?
   end
 
   def view_setup_helper(display, kls, title, parent_method = nil)

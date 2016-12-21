@@ -40,6 +40,13 @@ ManageIQ.angular.app.service('miqService', ['$timeout', '$document', function($t
     miqSparkleOff();
   };
 
+  this.replacePartials = function(data){
+      partials = data.replacePartials
+      $.each(partials,function(element_id,content){
+          $('#' + element_id).replaceWith(content);
+      })
+  };
+
   // FIXME: merge with add_flash in miq_application.js
   this.miqFlash = function(type, msg) {
     $('#flash_msg_div').text("");
