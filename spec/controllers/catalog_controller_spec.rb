@@ -659,4 +659,17 @@ describe CatalogController do
       expect(assigns(:edit)[:new][:retire_fqname]).to include("Default")
     end
   end
+
+  describe "#service_dialog_generator" do
+    it "gets the right service dialog generator based on the orchestration template type" do
+      expect(controller.send(:service_dialog_generator, OrchestrationTemplateAzure.new))
+        .to eq(OrchestrationTemplateAzureDialogService)
+      expect(controller.send(:service_dialog_generator, OrchestrationTemplateCfn.new))
+        .to eq(OrchestrationTemplateCfnDialogService)
+      expect(controller.send(:service_dialog_generator, OrchestrationTemplateHot.new))
+        .to eq(ManageIQ::Providers::Openstack::CloudManager::OrchestrationTemplateHotDialogService)
+      expect(controller.send(:service_dialog_generator, ManageIQ::Providers::Vmware::CloudManager::OrchestrationTemplate.new))
+        .to eq(ManageIQ::Providers::Vmware::CloudManager::OrchestrationTemplateDialogService)
+    end
+  end
 end

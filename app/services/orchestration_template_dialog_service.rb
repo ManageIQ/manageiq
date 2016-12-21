@@ -21,28 +21,8 @@ class OrchestrationTemplateDialogService
     ).tap do |dialog_group|
       add_tenant_name_field(dialog_group, 0)
       add_stack_name_field(dialog_group, 1)
-
-      if template.kind_of?(OrchestrationTemplateAzure)
-        add_azure_stack_options(dialog_group, 2)
-      elsif template.kind_of?(OrchestrationTemplateVnfd)
-        # TODO(lsmola) add Vnfd specific options
-      elsif template.kind_of?(ManageIQ::Providers::Vmware::CloudManager::OrchestrationTemplate)
-        add_availability_zone_field(dialog_group, 2)
-      else
-        add_aws_openstack_stack_options(dialog_group, 2)
-      end
+      add_deployment_options(dialog_group, 2)
     end
-  end
-
-  def add_aws_openstack_stack_options(dialog_group, position)
-    add_on_failure_field(dialog_group, position)
-    add_timeout_field(dialog_group, position + 1)
-  end
-
-  def add_azure_stack_options(dialog_group, position)
-    add_resource_group_list(dialog_group, position)
-    add_new_resource_group_field(dialog_group, position + 1)
-    add_mode_field(dialog_group, position + 2)
   end
 
   def add_parameter_group(parameter_group, tab, position)
@@ -86,113 +66,6 @@ class OrchestrationTemplateDialogService
       :validator_type => 'regex',
       :validator_rule => '^[A-Za-z][A-Za-z0-9\-]*$',
       :label          => "Stack Name",
-      :position       => position,
-      :dialog_group   => group
-    )
-  end
-
-  def add_availability_zone_field(group, position)
-    group.dialog_fields.build(
-      :type         => "DialogFieldDropDownList",
-      :name         => "availability_zone",
-      :description  => "Availability zone where the stack will be deployed",
-      :data_type    => "string",
-      :dynamic      => true,
-      :display      => "edit",
-      :required     => true,
-      :label        => "Availability zone",
-      :position     => position,
-      :dialog_group => group
-    ).tap do |dialog_field|
-      dialog_field.resource_action.fqname = "/Cloud/Orchestration/Operations/Methods/Available_Availability_Zones"
-    end
-  end
-
-  def add_on_failure_field(group, position)
-    group.dialog_fields.build(
-      :type          => "DialogFieldDropDownList",
-      :name          => "stack_onfailure",
-      :description   => "Select what to do if stack creation failed",
-      :data_type     => "string",
-      :display       => "edit",
-      :required      => true,
-
-      # %w(DELETE Delete\ stack) is available with aws-sdk v2
-      :values        => [%w(ROLLBACK Rollback), %w(DO_NOTHING Do\ nothing)],
-      :default_value => "ROLLBACK",
-      :options       => {:sort_by => :description, :sort_order => :ascending},
-      :label         => "On Failure",
-      :position      => position,
-      :dialog_group  => group
-    )
-  end
-
-  def add_timeout_field(group, position)
-    group.dialog_fields.build(
-      :type         => "DialogFieldTextBox",
-      :name         => "stack_timeout",
-      :description  => "Abort the creation if it does not complete in a proper time window",
-      :data_type    => "integer",
-      :display      => "edit",
-      :required     => false,
-      :options      => {:protected => false},
-      :label        => "Timeout(minutes, optional)",
-      :position     => position,
-      :dialog_group => group
-    )
-  end
-
-  def add_mode_field(group, position)
-    description = "Select deployment mode.\n"\
-                  "WARNING: Complete mode will delete all resources from "\
-                  "the group that are not in the template."
-
-    group.dialog_fields.build(
-      :type          => "DialogFieldDropDownList",
-      :name          => "deploy_mode",
-      :description   => description,
-      :data_type     => "string",
-      :display       => "edit",
-      :required      => true,
-      :values        => [["Incremental", "Incremental (Default)"],
-                         ["Complete",    "Complete (Delete other resources in the group)"]],
-      :default_value => "Incremental",
-      :options       => {:sort_by => :description, :sort_order => :ascending},
-      :label         => "Mode",
-      :position      => position,
-      :dialog_group  => group
-    )
-  end
-
-  def add_resource_group_list(group, position)
-    group.dialog_fields.build(
-      :type         => "DialogFieldDropDownList",
-      :name         => "resource_group",
-      :description  => "Select an existing resource group for deployment",
-      :data_type    => "string",
-      :display      => "edit",
-      :dynamic      => true,
-      :required     => false,
-      :label        => "Existing Resource Group",
-      :position     => position,
-      :dialog_group => group
-    ).tap do |dialog_field|
-      dialog_field.resource_action.fqname = "/Cloud/Orchestration/Operations/Methods/Available_Resource_Groups"
-    end
-  end
-
-  def add_new_resource_group_field(group, position)
-    group.dialog_fields.build(
-      :type           => "DialogFieldTextBox",
-      :name           => "new_resource_group",
-      :description    => "Create a new resource group upon deployment",
-      :data_type      => "string",
-      :display        => "edit",
-      :required       => false,
-      :options        => {:protected => false},
-      :validator_type => 'regex',
-      :validator_rule => '^[A-Za-z][A-Za-z0-9\-_]*$',
-      :label          => "(or) New Resource Group",
       :position       => position,
       :dialog_group   => group
     )
@@ -286,5 +159,9 @@ class OrchestrationTemplateDialogService
       :position       => position,
       :dialog_group   => group
     )
+  end
+
+  def add_deployment_options(_group, _position)
+    # default do nothing; can be overridden by each provider
   end
 end

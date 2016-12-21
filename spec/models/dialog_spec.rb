@@ -415,7 +415,7 @@ describe Dialog do
   end
 
   describe "#deep_copy" do
-    let(:dialog_service) { OrchestrationTemplateDialogService.new }
+    let(:dialog_service) { ManageIQ::Providers::Openstack::CloudManager::OrchestrationTemplateHotDialogService.new }
     let(:template_hot)   { FactoryGirl.create(:orchestration_template_hot_with_content) }
     let(:dialog) { dialog_service.create_dialog('test', template_hot) }
 
