@@ -3,7 +3,7 @@ class TreeBuilderNetwork < TreeBuilder
   has_kids_for Switch, [:x_get_tree_switch_kids]
 
   def override(node, _object, _pid, _options)
-    node[:cfmeNoClick] = true unless node[:icon].include?('100/currentstate-')
+    node[:cfmeNoClick] = true unless node[:image].include?('100/currentstate-')
   end
 
   def initialize(name, type, sandbox, build = true, root = nil, vm_kids = [])
