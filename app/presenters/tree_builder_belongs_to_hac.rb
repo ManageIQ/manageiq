@@ -1,8 +1,8 @@
 class TreeBuilderBelongsToHac < TreeBuilder
-  has_kids_for Datacenter, [:x_get_tree_datacenter_kids, :type]
+  has_kids_for Datacenter, [:x_get_tree_datacenter_kids]
   has_kids_for EmsCluster, [:x_get_tree_cluster_kids]
   has_kids_for EmsFolder, [:x_get_tree_folder_kids]
-  has_kids_for ExtManagementSystem, [:x_get_kids_provider]
+  has_kids_for ExtManagementSystem, [:x_get_provider_kids]
   has_kids_for ResourcePool, [:x_get_resource_pool_kids]
 
   def override(node, object, _pid, options)
@@ -51,17 +51,17 @@ class TreeBuilderBelongsToHac < TreeBuilder
     count_only_or_objects(count_only, ExtManagementSystem.all)
   end
 
-  def x_get_kids_provider(parent, count_only)
+  def x_get_provider_kids(parent, count_only)
     kids = []
     parent.children.each do |child|
-      # this node (parent) is not added to a tree
+      # this node (child) is not added to a tree
       kids.concat(child.folders_only)
       kids.concat(child.datacenters_only)
     end
     count_only_or_objects(count_only, kids)
   end
 
-  def x_get_tree_datacenter_kids(parent, count_only, _type)
+  def x_get_tree_datacenter_kids(parent, count_only)
     kids = []
     parent.folders.each do |child|
       next unless child.kind_of?(EmsFolder) && child.name == "host"
