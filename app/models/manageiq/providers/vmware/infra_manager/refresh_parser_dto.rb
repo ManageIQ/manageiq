@@ -20,7 +20,19 @@ module ManageIQ::Providers::Vmware
       result[:storages], uids[:storages] = storage_inv_to_hashes(inv[:storage])
       result[:clusters], uids[:clusters] = cluster_inv_to_hashes(inv[:cluster])
       result[:storage_profiles], uids[:storage_profiles] = storage_profile_inv_to_hashes(inv[:storage_profile], uids[:storages], inv[:storage_profile_datastore])
+
       result[:hosts], uids[:hosts], uids[:clusters_by_host], uids[:lans], uids[:switches], uids[:guest_devices], uids[:scsi_luns] = host_inv_to_hashes(inv[:host], inv, uids[:storages], uids[:clusters])
+
+      result[:vms], uids[:vms] = vm_inv_to_hashes(
+        inv[:vm],
+        inv[:storage],
+        inv[:storage_profile_entity],
+        uids[:storages],
+        uids[:storage_profiles],
+        uids[:hosts],
+        uids[:clusters_by_host],
+        uids[:lans]
+      )
 
       result
     end
@@ -776,7 +788,7 @@ module ManageIQ::Providers::Vmware
       [groupings['virtualDiskId'], groupings['virtualMachine']]
     end
 
-    def self.vm_inv_to_hashes(
+    def vm_inv_to_hashes(
       inv,
       storage_inv,
       storage_profile_entity_inv,
@@ -786,12 +798,12 @@ module ManageIQ::Providers::Vmware
       cluster_uids_by_host,
       lan_uids
     )
-      result = []
+      result = add_dto_collection(ManageIQ::Providers::Vmware::InfraManager::Vm, :vms_and_templates)
       result_uids = {}
       guest_device_uids = {}
       return result, result_uids if inv.nil?
 
-      storage_profile_by_disk_mor, storage_profile_by_vm_mor = storage_profile_by_entity(
+      storage_profile_by_disk_mor, storage_profile_by_vm_mor = self.class.storage_profile_by_entity(
         storage_profile_entity_inv,
         storage_profile_uids
       )
@@ -820,13 +832,14 @@ module ManageIQ::Providers::Vmware
         if invalid
           _log.warn "#{err} Skipping."
 
-          new_result = {
-            :invalid     => true,
-            :ems_ref     => mor,
-            :ems_ref_obj => mor
-          }
-          result << new_result
-          result_uids[mor] = new_result
+          # TODO: DTO doesn't support invalid vms yet
+          #new_result = {
+          #  :invalid     => true,
+          #  :ems_ref     => mor,
+          #  :ems_ref_obj => mor
+          #}
+          #result << result.new_dto(new_result)
+          #result_uids[mor] = new_result
           next
         end
 
@@ -878,13 +891,13 @@ module ManageIQ::Providers::Vmware
 
         # Collect the storages and hardware inventory
         storages = self.class.get_mors(vm_inv, 'datastore').collect { |s| storage_uids[s] }.compact
-        storage  = storage_uids[normalize_vm_storage_uid(vm_inv, storage_inv)]
+        storage  = storage_uids[self.class.normalize_vm_storage_uid(vm_inv, storage_inv)]
 
         host_mor = runtime['host']
         hardware = vm_inv_to_hardware_hash(vm_inv)
-        hardware[:disks] = vm_inv_to_disk_hashes(vm_inv, storage_uids, storage_profile_by_disk_mor)
-        hardware[:guest_devices], guest_device_uids[mor] = vm_inv_to_guest_device_hashes(vm_inv, lan_uids[host_mor])
-        hardware[:networks] = vm_inv_to_network_hashes(vm_inv, guest_device_uids[mor])
+        hardware[:disks] = self.class.vm_inv_to_disk_hashes(vm_inv, storage_uids, storage_profile_by_disk_mor)
+        hardware[:guest_devices], guest_device_uids[mor] = self.class.vm_inv_to_guest_device_hashes(vm_inv, lan_uids[host_mor])
+        hardware[:networks] = self.class.vm_inv_to_network_hashes(vm_inv, guest_device_uids[mor])
         uid = hardware[:bios]
 
         new_result = {
@@ -902,8 +915,8 @@ module ManageIQ::Providers::Vmware
           :connection_state      => runtime['connectionState'],
           :cpu_affinity          => cpu_affinity,
           :template              => template,
-          :linked_clone          => vm_inv_to_linked_clone(vm_inv),
-          :fault_tolerance       => vm_inv_to_fault_tolerance(vm_inv),
+          :linked_clone          => self.class.vm_inv_to_linked_clone(vm_inv),
+          :fault_tolerance       => self.class.vm_inv_to_fault_tolerance(vm_inv),
 
           :memory_reserve        => memory && memory["reservation"],
           :memory_reserve_expand => memory && memory["expandableReservation"].to_s.downcase == "true",
@@ -917,15 +930,15 @@ module ManageIQ::Providers::Vmware
           :cpu_shares            => cpu && cpu.fetch_path("shares", "shares"),
           :cpu_shares_level      => cpu && cpu.fetch_path("shares", "level"),
 
-          :host                  => host_uids[host_mor],
-          :ems_cluster           => cluster_uids_by_host[host_mor],
-          :storages              => storages,
-          :storage               => storage,
-          :storage_profile       => storage_profile_by_vm_mor[mor],
-          :operating_system      => vm_inv_to_os_hash(vm_inv),
-          :hardware              => hardware,
-          :custom_attributes     => vm_inv_to_custom_attribute_hashes(vm_inv),
-          :snapshots             => vm_inv_to_snapshot_hashes(vm_inv),
+          # TODO: :host                  => host_uids[host_mor],
+          # TODO: :ems_cluster           => cluster_uids_by_host[host_mor],
+          # TODO: :storages              => storages,
+          # TODO: :storage               => storage,
+          # TODO: :storage_profile       => storage_profile_by_vm_mor[mor],
+          # TODO: :operating_system      => self.class.vm_inv_to_os_hash(vm_inv),
+          # TODO: :hardware              => hardware,
+          # TODO: :custom_attributes     => self.class.vm_inv_to_custom_attribute_hashes(vm_inv),
+          # TODO: :snapshots             => self.class.vm_inv_to_snapshot_hashes(vm_inv),
 
           :cpu_hot_add_enabled      => config['cpuHotAddEnabled'],
           :cpu_hot_remove_enabled   => config['cpuHotRemoveEnabled'],
@@ -934,7 +947,7 @@ module ManageIQ::Providers::Vmware
           :memory_hot_add_increment => config['hotPlugMemoryIncrementSize'],
         }
 
-        result << new_result
+        result << result.new_dto(new_result)
         result_uids[mor] = new_result
       end
       return result, result_uids
@@ -967,7 +980,7 @@ module ManageIQ::Providers::Vmware
       result
     end
 
-    def self.vm_inv_to_hardware_hash(inv)
+    def vm_inv_to_hardware_hash(inv)
       config = inv['config']
       inv = inv.fetch_path('summary', 'config')
       return nil if inv.nil?
