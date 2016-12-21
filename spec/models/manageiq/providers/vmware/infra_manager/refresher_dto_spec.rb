@@ -40,9 +40,9 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
     end
 
     def assert_table_counts
-      #expect(ExtManagementSystem.count).to eq(1)
-      #expect(Datacenter.count).to eq(3)
-      #expect(EmsFolder.count).to eq(31)
+      expect(ExtManagementSystem.count).to eq(1)
+      expect(Datacenter.count).to eq(3)
+      expect(EmsFolder.count).to eq(31)
       expect(EmsCluster.count).to eq(1)
       expect(Host.count).to eq(4)
       #expect(ResourcePool.count).to eq(17)

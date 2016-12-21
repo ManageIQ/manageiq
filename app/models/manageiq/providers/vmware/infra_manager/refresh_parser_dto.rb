@@ -34,6 +34,8 @@ module ManageIQ::Providers::Vmware
         uids[:lans]
       )
 
+      result[:folders], uids[:folders] = inv_to_ems_folder_hashes(inv)
+
       result
     end
 
@@ -1208,8 +1210,8 @@ module ManageIQ::Providers::Vmware
       result
     end
 
-    def self.inv_to_ems_folder_hashes(inv)
-      result = []
+    def inv_to_ems_folder_hashes(inv)
+      result = add_dto_collection(EmsFolder, :ems_folders)
       result_uids = {}
 
       folder_inv_to_hashes(inv[:folder], result, result_uids)
@@ -1219,13 +1221,13 @@ module ManageIQ::Providers::Vmware
       return result, result_uids
     end
 
-    def self.folder_inv_to_hashes(inv, result, result_uids)
+    def folder_inv_to_hashes(inv, result, result_uids)
       return result, result_uids if inv.nil?
 
       inv.each do |mor, data|
         mor = data['MOR'] # Use the MOR directly from the data since the mor as a key may be corrupt
 
-        child_mors = get_mors(data, 'childEntity')
+        # TODO: child_mors = get_mors(data, 'childEntity')
 
         new_result = {
           :type        => EmsFolder.name,
@@ -1233,22 +1235,22 @@ module ManageIQ::Providers::Vmware
           :ems_ref_obj => mor,
           :uid_ems     => mor,
           :name        => data["name"],
-          :child_uids  => child_mors,
+          # TODO: :child_uids  => child_mors,
           :hidden      => false
         }
-        result << new_result
+        result << result.new_dto(new_result)
         result_uids[mor] = new_result
       end
       return result, result_uids
     end
 
-    def self.datacenter_inv_to_hashes(inv, result, result_uids)
+    def datacenter_inv_to_hashes(inv, result, result_uids)
       return result, result_uids if inv.nil?
 
       inv.each do |mor, data|
         mor = data['MOR'] # Use the MOR directly from the data since the mor as a key may be corrupt
 
-        child_mors = get_mors(data, 'hostFolder') + get_mors(data, 'vmFolder') + get_mors(data, 'datastoreFolder')
+        # TODO: child_mors = get_mors(data, 'hostFolder') + get_mors(data, 'vmFolder') + get_mors(data, 'datastoreFolder')
 
         new_result = {
           :type        => Datacenter.name,
@@ -1256,22 +1258,22 @@ module ManageIQ::Providers::Vmware
           :ems_ref_obj => mor,
           :uid_ems     => mor,
           :name        => data["name"],
-          :child_uids  => child_mors,
+          # TODO: :child_uids  => child_mors,
           :hidden      => false
         }
-        result << new_result
+        result << result.new_dto(new_result)
         result_uids[mor] = new_result
       end
       return result, result_uids
     end
 
-    def self.storage_pod_inv_to_hashes(inv, result, result_uids)
+    def storage_pod_inv_to_hashes(inv, result, result_uids)
       return result, result_uids if inv.nil?
 
       inv.each do |mor, data|
         mor = data['MOR'] # Use the MOR directly from the data since the mor as a key may be corrupt
 
-        child_mors = get_mors(data, 'childEntity')
+        # TODO: child_mors = get_mors(data, 'childEntity')
         name       = data.fetch_path('summary', 'name')
 
         new_result = {
@@ -1280,11 +1282,11 @@ module ManageIQ::Providers::Vmware
           :ems_ref_obj => mor,
           :uid_ems     => mor,
           :name        => name,
-          :child_uids  => child_mors,
+          # TODO: :child_uids  => child_mors,
           :hidden      => false
         }
 
-        result << new_result
+        result << result.new_dto(new_result)
         result_uids[mor] = new_result
       end
       return result, result_uids
