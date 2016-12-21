@@ -26,16 +26,12 @@ class TreeBuilderBelongsToVat < TreeBuilderBelongsToHac
     end
   end
 
-  def initialize(name, type, sandbox, build, params)
-    super(name, type, sandbox, build, params)
-  end
-
   def set_locals_for_render
     locals = super
     locals.merge!(locals.merge!(:id_prefix => 'vat_'))
   end
 
-  def x_get_tree_datacenter_kids(parent, count_only, _type)
+  def x_get_tree_datacenter_kids(parent, count_only)
     kids = []
     parent.folders.each do |child|
       next unless child.kind_of?(EmsFolder)

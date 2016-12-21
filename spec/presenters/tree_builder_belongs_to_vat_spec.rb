@@ -60,7 +60,7 @@ describe TreeBuilderBelongsToVat do
 
   describe '#x_get_tree_datacenter_kids' do
     it 'returns folders' do
-      kids = subject.send(:x_get_tree_datacenter_kids, datacenter, false, nil)
+      kids = subject.send(:x_get_tree_datacenter_kids, datacenter, false)
       expect(kids).to include(ems_folder)
     end
   end

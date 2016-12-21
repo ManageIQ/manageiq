@@ -928,21 +928,21 @@ module OpsController::OpsRbac
     [@group.get_managed_filters].flatten.each do |f|
       @filters[f.split("/")[-2] + "-" + f.split("/")[-1]] = f
     end
-    @tags_tree = TreeBuilderTags.new(:tags,
-                                     :tags_tree,
+    @tags_tree = TreeBuilderTags.new(:tags_tree,
+                                     :tags,
                                      @sb,
                                      true,
                                      :edit => @edit, :filters => @filters, :group => @group)
-    @hac_tree = TreeBuilderBelongsToHac.new(:hac,
-                                            :hac_tree,
+    @hac_tree = TreeBuilderBelongsToHac.new(:hac_tree,
+                                            :hac,
                                             @sb,
                                             true,
                                             :edit     => @edit,
                                             :filters  => @filters,
                                             :group    => @group,
                                             :selected => @belongsto.keys)
-    @vat_tree = TreeBuilderBelongsToVat.new(:vat,
-                                            :vat_tree,
+    @vat_tree = TreeBuilderBelongsToVat.new(:vat_tree,
+                                            :vat,
                                             @sb,
                                             true,
                                             :edit     => @edit,
@@ -1111,20 +1111,20 @@ module OpsController::OpsRbac
     @edit[:new][:group_tenant] = @group.tenant_id
 
     @edit[:current] = copy_hash(@edit[:new])
-    @tags_tree = TreeBuilderTags.new(:tags,
-                                     :tags_tree,
+    @tags_tree = TreeBuilderTags.new(:tags_tree,
+                                     :tags,
                                      @sb,
                                      true,
                                      :edit => @edit, :filters => @filters, :group => @group)
-    @hac_tree = TreeBuilderBelongsToHac.new(:hac,
-                                            :hac_tree,
+    @hac_tree = TreeBuilderBelongsToHac.new(:hac_tree,
+                                            :hac,
                                             @sb,
                                             true,
                                             :edit     => @edit,
                                             :group    => @group,
                                             :selected => @edit[:new][:belongsto].keys)
-    @vat_tree = TreeBuilderBelongsToVat.new(:vat,
-                                            :vat_tree,
+    @vat_tree = TreeBuilderBelongsToVat.new(:vat_tree,
+                                            :vat,
                                             @sb,
                                             true,
                                             :edit     => @edit,

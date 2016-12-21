@@ -13,22 +13,22 @@ describe 'ops/_rbac_group_details.html.haml' do
       allow(view).to receive(:current_tenant).and_return(Tenant.seed)
       allow(view).to receive(:session).and_return(:assigned_filters => [])
       FactoryGirl.create(:classification, :name => 'folder_selected', :show => true)
-      @tags_tree = TreeBuilderTags.new(:tag,
-                                       :tag_tree,
+      @tags_tree = TreeBuilderTags.new(:tag_tree,
+                                       :tag,
                                        {},
                                        true,
                                        :edit => {}, :filters => {}, :group => @group)
       @ems_azure_network = FactoryGirl.create(:ems_azure_network)
-      @hac_tree = TreeBuilderBelongsToHac.new(:hac,
-                                              :hac_tree,
+      @hac_tree = TreeBuilderBelongsToHac.new(:hac_tree,
+                                              :hac,
                                               {:trees => {}},
                                               true,
                                               :edit     => nil,
                                               :filters  => {},
                                               :group    => @group,
                                               :selected => {})
-      @vat_tree = TreeBuilderBelongsToVat.new(:vat,
-                                              :vat_tree,
+      @vat_tree = TreeBuilderBelongsToVat.new(:vat_tree,
+                                              :vat,
                                               {:trees => {}},
                                               true,
                                               :edit     => nil,

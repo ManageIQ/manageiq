@@ -101,7 +101,7 @@ describe TreeBuilderBelongsToHac do
 
   describe '#x_get_tree_provider_kids' do
     it 'returns datacenter or folder' do
-      kids = subject.send(:x_get_kids_provider, ems_azure_network, false)
+      kids = subject.send(:x_get_provider_kids, ems_azure_network, false)
       expect(kids).to include(datacenter1)
       expect(kids).to include(subfolder)
       expect(kids.length).to eq(2)
@@ -121,7 +121,7 @@ describe TreeBuilderBelongsToHac do
 
   describe '#x_get_tree_datacenter_kids' do
     it 'returns hosts, clusters or folders' do
-      kids = subject.send(:x_get_tree_datacenter_kids, datacenter1, false, nil)
+      kids = subject.send(:x_get_tree_datacenter_kids, datacenter1, false)
       expect(kids).to include(host)
       expect(kids).to include(cluster)
       expect(kids).to include(ems_folder)

@@ -190,8 +190,8 @@ module MiqPolicyController::AlertProfiles
     tree = nil
     unless @objects.empty?               # Build object tree
       if @assign[:new][:assign_to] == "ems_folder"
-        tree = TreeBuilderBelongsToHac.new(:vat,
-                                           :vat_tree,
+        tree = TreeBuilderBelongsToHac.new(:vat_tree,
+                                           :vat,
                                            @sb,
                                            true,
                                            :edit     => @edit,
@@ -199,8 +199,8 @@ module MiqPolicyController::AlertProfiles
                                            :group    => @group,
                                            :selected => @assign[:new][:objects].collect { |f| "EmsFolder_#{f}" })
       elsif @assign[:new][:assign_to] == "resource_pool"
-        tree = TreeBuilderBelongsToHac.new(:hac,
-                                           :hac_tree,
+        tree = TreeBuilderBelongsToHac.new(:hac_tree,
+                                           :hac,
                                            @sb,
                                            true,
                                            :edit     => @edit,
