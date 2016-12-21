@@ -35,6 +35,7 @@ module ManageIQ::Providers::Vmware
       )
 
       result[:folders], uids[:folders] = inv_to_ems_folder_hashes(inv)
+      result[:resource_pools], uids[:resource_pools] = rp_inv_to_hashes(inv[:rp])
 
       result
     end
@@ -1334,8 +1335,8 @@ module ManageIQ::Providers::Vmware
       return result, result_uids
     end
 
-    def self.rp_inv_to_hashes(inv)
-      result = []
+    def rp_inv_to_hashes(inv)
+      result = add_dto_collection(ResourcePool, :resource_pools)
       result_uids = {}
       return result, result_uids if inv.nil?
 
@@ -1367,9 +1368,9 @@ module ManageIQ::Providers::Vmware
           :cpu_shares            => cpu.fetch_path("shares", "shares"),
           :cpu_shares_level      => cpu.fetch_path("shares", "level"),
 
-          :child_uids            => get_mors(data, 'resourcePool') + get_mors(data, 'vm')
+          # TODO: :child_uids            => get_mors(data, 'resourcePool') + get_mors(data, 'vm')
         }
-        result << new_result
+        result << result.new_dto(new_result)
         result_uids[mor] = new_result
       end
       return result, result_uids
