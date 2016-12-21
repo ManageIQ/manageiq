@@ -399,6 +399,18 @@ class ApplicationController < ActionController::Base
     send_data fs.contents, :filename => fs.name
   end
 
+  # Clear out search text when when requested by user
+  def clear_search_text
+    # Fix for now works for Explorer/Trees, to be made more generic and app wide later
+    if @sb.key?(:pol_search_text)
+      session[:flash_msgs] = @flash_array = nil
+      # Clear out ALL iterations of prior search text
+      @search_text = @_params[:search_text] = @sb[:search_text] = @sb[:pol_search_text][@sb[:active_tree]] = nil
+      @_params[:id] = x_node
+      tree_select
+    end
+  end
+
   protected
 
   def render_flash(add_flash_text = nil, severity = nil)
