@@ -34,7 +34,7 @@ ManageIQ.angular.app.controller('scheduleFormController', ['$http', '$scope', 's
       $scope.scheduleModel.filter_typ = 'all';
       $scope.scheduleModel.enabled    = true;
       $scope.filterValuesEmpty        = true;
-      $scope.scheduleModel.start_date = moment(moment.utc().toDate()).format('MM/DD/YYYY');
+      $scope.scheduleModel.start_date = new Date();
       $scope.scheduleModel.timer_typ  = 'Once';
       $scope.scheduleModel.time_zone  = 'UTC';
       $scope.scheduleModel.start_hour = '0';
@@ -59,7 +59,7 @@ ManageIQ.angular.app.controller('scheduleFormController', ['$http', '$scope', 's
         $scope.scheduleModel.name         = data.schedule_name;
         $scope.scheduleModel.timer_typ    = data.schedule_timer_type;
         $scope.scheduleModel.timer_value  = data.schedule_timer_value;
-        $scope.scheduleModel.start_date   = data.schedule_start_date;
+        $scope.scheduleModel.start_date   = moment.utc(data.schedule_start_date, 'MM/DD/YYYY').toDate()
         $scope.scheduleModel.start_hour   = data.schedule_start_hour.toString();
         $scope.scheduleModel.start_min    = data.schedule_start_min.toString();
         $scope.scheduleModel.time_zone    = data.schedule_time_zone;
