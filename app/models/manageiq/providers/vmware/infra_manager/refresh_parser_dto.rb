@@ -39,6 +39,11 @@ module ManageIQ::Providers::Vmware
 
       # TODO: result[:customization_specs] = customization_spec_inv_to_hashes(inv[:customization_specs]) if inv.key?(:customization_specs)
 
+      #link_ems_metadata(result, inv)
+      #link_root_folder(result)
+      #set_hidden_folders(result)
+      #set_default_rps(result)
+
       result
     end
 
