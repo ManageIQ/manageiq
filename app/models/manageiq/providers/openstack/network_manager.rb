@@ -17,7 +17,6 @@ class ManageIQ::Providers::Openstack::NetworkManager < ManageIQ::Providers::Netw
   include SupportsFeatureMixin
 
   supports :create
-  supports :create_floating_ip
   supports :create_network_router
 
   has_many :public_networks,  :foreign_key => :ems_id, :dependent => :destroy,
