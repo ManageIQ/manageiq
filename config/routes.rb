@@ -1546,6 +1546,8 @@ Vmdb::Application.routes.draw do
         delete_subnets
         download_data
         cloud_subnet_form_fields
+        cloud_subnet_networks_by_ems
+        cloud_tenants_by_ems
         edit
         index
         new
