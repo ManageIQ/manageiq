@@ -18,6 +18,7 @@ module ManageIQ::Providers::Vmware
       result = {:_dto_collection => true}
 
       result[:storages], uids[:storages] = storage_inv_to_hashes(inv[:storage])
+      result[:clusters], uids[:clusters] = cluster_inv_to_hashes(inv[:cluster])
 
       result
     end
@@ -1272,8 +1273,8 @@ module ManageIQ::Providers::Vmware
       return result, result_uids
     end
 
-    def self.cluster_inv_to_hashes(inv)
-      result = []
+    def cluster_inv_to_hashes(inv)
+      result = add_dto_collection(EmsCluster, :ems_clusters)
       result_uids = {}
       return result, result_uids if inv.nil?
 
@@ -1305,9 +1306,10 @@ module ManageIQ::Providers::Vmware
           :drs_automation_level    => drs_config["defaultVmBehavior"],
           :drs_migration_threshold => drs_config["vmotionRate"],
 
-          :child_uids              => get_mors(data, 'resourcePool')
+          # TODO: child_uids not supported by DTO yet
+          # :child_uids              => get_mors(data, 'resourcePool')
         }
-        result << new_result
+        result << result.new_dto(new_result)
         result_uids[mor] = new_result
       end
       return result, result_uids
