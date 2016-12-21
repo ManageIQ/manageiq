@@ -795,6 +795,11 @@ module OpsController::OpsRbac
   # AJAX driven routine to check for changes in ANY field on the form
   def rbac_field_changed(rec_type)
     id = params[:id].split('__').first    # Get the record id
+
+    if id =~ /\-/
+      id = id.split('-').last
+    end
+
     id = from_cid(id) unless id == "new" || id == "seq" # Decompress id if not "new"
     return unless load_edit("rbac_#{rec_type}_edit__#{id}", "replace_cell__explorer")
 
@@ -940,13 +945,23 @@ module OpsController::OpsRbac
   def rbac_role_get_details(id)
     @edit = nil
     @record = @role = MiqUserRole.find_by_id(from_cid(id))
-    @role_features = @role.feature_identifiers.sort
-    @features_tree = rbac_build_features_tree
+    @rbac_menu_tree = rbac_build_menu_tree
   end
 
-  def rbac_build_features_tree
-    @role = @sb[:typ] == "copy" ? @record.dup : @record if @role.nil? # if on edit screen use @record
-    TreeBuilder.convert_bs_tree(OpsController::RbacTree.build(@role, @role_features, !@edit.nil?)).to_json
+  def rbac_build_menu_tree
+    # if on edit screen use @record
+    if @role.nil?
+      @role = @sb[:typ] == "copy" ? @record.dup : @record
+    end
+
+    TreeBuilderOpsRbacMenu.new(
+      "features_tree",
+      "features",
+      @sb,
+      true,
+      role: @role,
+      editable: @edit.present?
+    )
   end
 
   # Set form variables for role edit
@@ -1147,8 +1162,7 @@ module OpsController::OpsRbac
 
     @edit[:current] = copy_hash(@edit[:new])
 
-    @role_features = @record.feature_identifiers.sort
-    @features_tree = rbac_build_features_tree
+    @rbac_menu_tree = rbac_build_menu_tree
   end
 
   # Get array of total set of features from the children of selected features
