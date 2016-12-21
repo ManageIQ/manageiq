@@ -27,13 +27,15 @@ class ApplicationHelper::Toolbar::CompareView < ApplicationHelper::Toolbar::Basi
           'fa fa-file-text-o fa-lg',
           N_('Download comparison report in text format'),
           N_('Download as Text'),
-          :url => "/compare_to_txt"),
+          :url   => "/compare_to_txt",
+          :klass => ApplicationHelper::Button::ButtonWithoutRbacCheck),
         button(
           :compare_download_csv,
           'fa fa-file-text-o fa-lg',
           N_('Download comparison report in CSV format'),
           N_('Download as CSV'),
-          :url => "/compare_to_csv"),
+          :url   => "/compare_to_csv",
+          :klass => ApplicationHelper::Button::ButtonWithoutRbacCheck),
         button(
           :compare_download_pdf,
           'fa fa-file-pdf-o fa-lg',

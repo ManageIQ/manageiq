@@ -26,7 +26,8 @@ class ApplicationHelper::Toolbar::MiqRequestCenter < ApplicationHelper::Toolbar:
       'fa fa-repeat fa-lg',
       N_('Reload the current display'),
       N_('Reload'),
-      :url_parms => "&display=miq_provisions"),
+      :url_parms => "&display=miq_provisions",
+      :klass     => ApplicationHelper::Button::MiqRequestReload),
   ])
   button_group('miq_request_approve', [
     button(

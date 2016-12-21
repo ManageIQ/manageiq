@@ -51,7 +51,7 @@ class ApplicationHelper::Button::Basic < Hash
   # are not `nil`
   def all_instance_variables_set
     self.class.instance_variables_required.to_a.all? do |instance_variable|
-      instance_variable_get("#{instance_variable}").present?
+      instance_variable_get(instance_variable.to_s).present?
     end
   end
   private :all_instance_variables_set
@@ -59,7 +59,7 @@ class ApplicationHelper::Button::Basic < Hash
   def skipped?
     return true unless role_allows_feature?
     return true unless all_instance_variables_set
-    return !visible?
+    !visible?
   end
 
   # Tells whether the button should displayed in the toolbar or not

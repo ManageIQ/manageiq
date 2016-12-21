@@ -6,6 +6,7 @@ class ApplicationHelper::Toolbar::MiqAeToolsSimulateCenter < ApplicationHelper::
       N_('Copy object details for use in a Button'),
       N_('Copy'),
       :url       => "resolve",
-      :url_parms => "?button=copy"),
+      :url_parms => "?button=copy",
+      :klass     => ApplicationHelper::Button::ButtonWithoutRbacCheck),
   ])
 end

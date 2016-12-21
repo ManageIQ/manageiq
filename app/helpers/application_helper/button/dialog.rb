@@ -1,4 +1,4 @@
-class ApplicationHelper::Button::Dialog < ApplicationHelper::Button::Basic
+class ApplicationHelper::Button::Dialog < ApplicationHelper::Button::ButtonWithoutRbacCheck
   needs :@edit
 
   def visible?
