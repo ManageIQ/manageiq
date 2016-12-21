@@ -142,9 +142,7 @@ class FloatingIpController < ApplicationController
 
   def floating_ip_form_fields
     assert_privileges("floating_ip_edit")
-    # TODO: find_by_id_filtered fails
-    # floating_ip = find_by_id_filtered(FloatingIp, params[:id])
-    floating_ip = FloatingIp.find(params[:id])
+    floating_ip = find_by_id_filtered(FloatingIp, params[:id])
     network_port_ems_ref = if floating_ip.network_port
                              floating_ip.network_port.ems_ref
                            else
