@@ -52,7 +52,7 @@ module MiqServer::LogManagement
         _log.info(msg)
 
         patterns = [pattern]
-        cfg_pattern = get_config("vmdb").config.fetch_path(:log, :collection, :archive, :pattern)
+        cfg_pattern = ::Settings.log.collection.archive.pattern
         patterns += cfg_pattern if cfg_pattern.kind_of?(Array)
 
         local_file = VMDB::Util.zip_logs("evm_server_daily.zip", patterns, "admin")
@@ -129,13 +129,9 @@ module MiqServer::LogManagement
     task.update_status("Finished", "Ok", "Log files were successfully collected")
   end
 
-  def current_log_pattern_configuration
-    get_config("vmdb").config.fetch_path(:log, :collection, :current, :pattern) || []
-  end
-
   def current_log_patterns
     # use an array union to add pg log path patterns if not already there
-    current_log_pattern_configuration | pg_log_patterns
+    ::Settings.log.collection.current.pattern | pg_log_patterns
   end
 
   def pg_data_dir
