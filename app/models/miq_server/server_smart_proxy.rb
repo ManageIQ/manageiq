@@ -11,17 +11,13 @@ module MiqServer::ServerSmartProxy
     # Called from VM scan job as well as scan_sync_vm
 
     def use_broker_for_embedded_proxy?(type = nil)
-      cores_settings = MiqServer.my_server.get_config("vmdb").config[:coresident_miqproxy].dup
-      result = ManageIQ::Providers::Vmware::InfraManager.use_vim_broker? && cores_settings[:use_vim_broker]
+      result = ManageIQ::Providers::Vmware::InfraManager.use_vim_broker? &&
+               ::Settings.coresident_miqproxy[:use_vim_broker]
+      return result if type.blank? || !result
 
       # Check for a specific type (host/ems) if passed
-      unless type.blank?
-        # Default use_vim_broker to true for ems type
-        cores_settings[:use_vim_broker_ems] = true if cores_settings[:use_vim_broker_ems].blank? && cores_settings[:use_vim_broker_ems] != false
-        cores_settings["use_vim_broker_#{type}".to_sym] ||= false
-        result &&= cores_settings["use_vim_broker_#{type}".to_sym]
-      end
-      result
+      # Default use_vim_broker is true for ems type
+      ::Settings.coresident_miqproxy["use_vim_broker_#{type}"] == true
     end
   end
 

@@ -79,6 +79,7 @@
   :concurrent_per_host: 1
   :scan_via_host: true
   :use_vim_broker: true
+  :use_vim_broker_ems: true
 :container_scanning:
   :concurrent_per_ems: 3
 :database:
