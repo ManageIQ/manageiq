@@ -1,4 +1,4 @@
-.mw_ds_add_step3{"ng-show" => "dsModel.step == 'STEP3'"}
+.mw_ds_add_step3{"ng-show" => "vm.dsModel.step == 'STEP3'"}
   %h3
     = _("Step 3/3: Connection Settings")
 
@@ -10,8 +10,8 @@
         %input.form-control#connection_url_input{:type          => "textarea",
                                                  "name"         => "connection_url_input",
                                                  "ng-required"  => "true",
-                                                 "ng-pattern"   => "step3DsModel.validationRegex",
-                                                 "ng-model"     => "step3DsModel.connectionUrl"}
+                                                 "ng-pattern"   => "vm.step3DsModel.validationRegex",
+                                                 "ng-model"     => "vm.step3DsModel.connectionUrl"}
 
       .col-sm-8.col-sm-offset-4
         %p.ng-error-messages{"ng-show" => "step3Form.connection_url_input.$error.required"}
@@ -25,9 +25,8 @@
       .col-md-8
         %input.form-control#user_name_input{:type          => "text",
                                             "name"         => "user_name_input",
-                                            "ng-required"  => "true",
                                             "placeholder"  => _("Enter Username"),
-                                            "ng-model"     => "step3DsModel.userName"}
+                                            "ng-model"     => "vm.step3DsModel.userName"}
 
       .col-sm-8.col-sm-offset-4
         %p.ng-error-messages{"ng-show" => "step3Form.user_name_input.$error.required"}
@@ -40,7 +39,7 @@
         %input.form-control#password_input{:type          => "password",
                                            "name"         => "password_input",
                                            "placeholder"  => _("Enter Password"),
-                                           "ng-model"     => "step3DsModel.password"}
+                                           "ng-model"     => "vm.step3DsModel.password"}
 
 
     .form-group
@@ -49,22 +48,22 @@
       .col-md-8
         %input.form-control#security_domain_input{:type          => "text",
                                                   "placeholder"  => _("Enter Security Domain"),
-                                                  "ng-model"     => "step3DsModel.securityDomain"}
+                                                  "ng-model"     => "vm.step3DsModel.securityDomain"}
 
     .modal-footer
-      %button.btn.btn-default.dialog-cancel-button{:type          => "button",
+      %button.btn.btn-default.dialog-cancel-button{:type      => "button",
                                                    "alt"      => (t = _("Cancel")),
                                                    "title"    => t,
-                                                   "ng-click"     => "reset()"}
+                                                   "ng-click" => "vm.reset()"}
         = t
       %button.btn.btn-default{:type      => "button",
                               "alt"      => (t = _("Back")),
                               "title"    => t,
-                              "ng-click" => "finishAddDatasourceBack()"}
+                              "ng-click" => "vm.finishAddDatasourceBack()"}
         = t
       %button.btn.btn-primary{:type         => "button",
                               "alt"      => (t = _("Finish")),
                               "title"    => t,
-                              "ng-click"    => "finishAddDatasource()",
+                              "ng-click"    => "vm.finishAddDatasource()",
                               "ng-disabled" => "step3Form.$invalid"}
         = t

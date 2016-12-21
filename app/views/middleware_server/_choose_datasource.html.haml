@@ -1,4 +1,4 @@
-.mw_ds_add_choose{"ng-show" => "dsModel.step == 'CHOOSE_DS'"}
+.mw_ds_add_choose{"ng-show" => "vm.dsModel.step == 'CHOOSE_DS'"}
   %h3
     = _("Choose Datasource:")
 
@@ -8,8 +8,8 @@
         = _("Datasource:")
       .col-md-8
         %select.form-control#chooose_datasource_input{"name"        => "choose_datasource_input",
-                                                      "ng-model"    => "chooseDsModel.selectedDatasource",
-                                                      "ng-options"  => "c.label for c in chooseDsModel.datasources",
+                                                      "ng-model"    => "vm.chooseDsModel.selectedDatasource",
+                                                      "ng-options"  => "c.label for c in vm.chooseDsModel.datasources track by c.id",
                                                       "ng-required" => "true"}
       .col-sm-2
       .col-sm-10
@@ -17,14 +17,14 @@
           = _("Required")
 
   .modal-footer
-    %button.btn.btn-default.dialog-cancel-button{:type        => "button",
+    %button.btn.btn-default.dialog-cancel-button{:type      => "button",
                                                  "alt"      => (t = _("Cancel")),
                                                  "title"    => t,
-                                                 "ng-click"   => "reset()"}
+                                                 "ng-click" => "vm.reset()"}
       = t
     %button.btn.btn-primary{:type         => "button",
-                            "alt"      => (t = _("Next")),
-                            "title"    => t,
-                            "ng-click"    => "addDatasourceChooseNext()",
+                            "alt"         => (t = _("Next")),
+                            "title"       => t,
+                            "ng-click"    => "vm.addDatasourceChooseNext()",
                             "ng-disabled" => "dsChooseForm.$invalid"}
       = t
