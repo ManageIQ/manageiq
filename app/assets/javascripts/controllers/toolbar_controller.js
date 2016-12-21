@@ -14,7 +14,9 @@
   */
   function subscribeToSubject() {
     ManageIQ.angular.rxSubject.subscribe(function(event) {
-      if (event.rowSelect) {
+      if (event.eventType === 'updateToolbarCount') {
+        this.MiQToolbarSettingsService.setCount(event.countSelected);
+      } else if (event.rowSelect) {
         this.onRowSelect(event.rowSelect);
       } else if (event.redrawToolbar) {
          this.onUpdateToolbar(event.redrawToolbar);

@@ -1,5 +1,5 @@
 #generic-object-div{"ng-controller" => "genericObjectDefinitionFormController"}
-  #main_div.generic-object-main-div{"ng-hide" => "showAddForm"}
+  #main_div.generic-object-main-div{"ng-hide" => "showForm"}
     .all-items{"ng-hide" => "showSingleItem"}
       %h4
         = _("Generic Objects")
@@ -33,12 +33,16 @@
           %p.generic-object-definition-description
             {{ genericObjectDefinitionModel.description }}
 
-  .form-horizontal{"ng-show" => "showAddForm"}
-    %form#generic-object-form{"name"          => "angularForm"}
+  .form-horizontal{"ng-show" => "showForm"}
+    %form#generic-object-form{"name" => "angularForm"}
+      %input{"type" => "hidden", "ng-model" => "genericObjectDefinitionModel.id"}
+
       .form-group
         .col-md-10
-          %h4
+          %h4{"ng-show" => "newRecord"}
             = _("Create a new Generic Object Definition")
+          %h4{"ng-hide" => "newRecord"}
+            = _("Edit Generic Object Definition")
 
       .form-group
         %label.col-md-2.control-label{"for" => "generic-object-definition-name"}

@@ -22,6 +22,26 @@ describe('genericObjectSubscriptionService', function() {
     });
   });
 
+  describe('#subscribeToShowEditForm', function() {
+    beforeEach(function() {
+      testService.subscribeToShowEditForm(callback);
+    });
+
+    it('subscribes', function() {
+      expect(subscriptionService.subscribeToEventType).toHaveBeenCalledWith('showEditForm', callback);
+    });
+  });
+
+  describe('#subscribeToDeleteGenericObject', function() {
+    beforeEach(function() {
+      testService.subscribeToDeleteGenericObject(callback);
+    });
+
+    it('subscribes', function() {
+      expect(subscriptionService.subscribeToEventType).toHaveBeenCalledWith('deleteGenericObject', callback);
+    });
+  });
+
   describe('#subscribeToTreeClicks', function() {
     beforeEach(function() {
       testService.subscribeToTreeClicks(callback);

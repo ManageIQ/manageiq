@@ -15,6 +15,30 @@ class ApplicationHelper::Toolbar::GenericObjectDefinition < ApplicationHelper::T
             'function'      => 'sendDataWithRx',
             'function-data' => '{"eventType": "showAddForm"}'
           }
+        ),
+        button(
+          :generic_object_definition_edit,
+          'pficon pficon-edit fa-lg',
+          title = N_('Edit this Generic Object Definition'),
+          title,
+          :onwhen  => "1",
+          :enabled => false,
+          :data    => {
+            'function'      => 'sendDataWithRx',
+            'function-data' => '{"eventType": "showEditForm"}'
+          }
+        ),
+        button(
+          :generic_object_definition_delete,
+          'pficon pficon-delete fa-lg',
+          title = N_('Delete this Generic Object Definition'),
+          title,
+          :onwhen  => "1",
+          :enabled => false,
+          :data    => {
+            'function'      => 'sendDataWithRx',
+            'function-data' => '{"eventType": "deleteGenericObject"}'
+          }
         )
       ]
     )
