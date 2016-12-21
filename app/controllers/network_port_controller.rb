@@ -8,6 +8,7 @@ class NetworkPortController < ApplicationController
   include Mixins::GenericListMixin
   include Mixins::GenericSessionMixin
   include Mixins::GenericShowMixin
+  include Mixins::NestedListMixin
 
   def self.display_methods
     %w(cloud_subnets floating_ips)

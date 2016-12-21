@@ -148,12 +148,12 @@ module ApplicationHelper
     record.class.base_model.name.underscore
   end
 
-  def controller_to_model
-    case self.class.model.to_s
+  def controller_to_model(klass = self.class)
+    case klass.model.to_s
     when "ManageIQ::Providers::CloudManager::Template", "ManageIQ::Providers::CloudManager::Vm", "ManageIQ::Providers::InfraManager::Template", "ManageIQ::Providers::InfraManager::Vm"
       VmOrTemplate
     else
-      self.class.model
+      klass.model
     end
   end
 
