@@ -102,7 +102,7 @@ module ManageIQ
     end
 
     def self.system!(*args)
-      system(*args) || abort("\n== Command #{args} failed ==")
+      system(*args, :chdir => APP_ROOT) || abort("\n== Command #{args} failed ==")
     end
   end
 end
