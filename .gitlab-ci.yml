@@ -28,11 +28,6 @@ test:brakeman:
     - bundle update
     - bundle exec rake test:brakeman:setup
     - bundle exec rake test:brakeman
-test:replication:
-  script:
-    - bundle update
-    - bundle exec rake test:replication:setup
-    - bundle exec rake test:replication
 test:javascript:
   script:
     - bundle update

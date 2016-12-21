@@ -15,8 +15,6 @@ namespace :test do
     desc "Setup environment for migration specs"
     task :setup => :setup_db
 
-    task :teardown
-
     desc "Run the up migration specs only"
     RSpec::Core::RakeTask.new(:up => :initialize) do |t|
       EvmTestHelper.init_rspec_task(t, ["--tag", "migrations:up"])
