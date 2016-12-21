@@ -760,7 +760,7 @@ class MiqExpression
     end
     if col
       result[:data_type] = col_type(model, col)
-      result[:format_sub_type] = MiqReport::FORMAT_DEFAULTS_AND_OVERRIDES[:sub_types_by_column][col.to_sym] || result[:data_type]
+      result[:format_sub_type] = MiqReport::Formats.sub_type(col.to_sym) || result[:data_type]
       result[:virtual_column] = model.virtual_attribute?(col.to_s)
       result[:sql_support] = model.attribute_supported_by_sql?(col.to_s)
       result[:excluded_by_preprocess_options] = self.exclude_col_by_preprocess_options?(col, options)

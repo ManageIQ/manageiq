@@ -3,39 +3,17 @@
 module MiqReport::Formatting
   extend ActiveSupport::Concern
 
-  format_hash = YAML.load_file(ApplicationRecord::FIXTURE_DIR.join("miq_report_formats.yml"))
-  FORMATS                       = format_hash[:formats].freeze
-  FORMAT_DEFAULTS_AND_OVERRIDES = format_hash[:defaults_and_overrides].freeze
-
   module ClassMethods
     def get_available_formats(path, dt)
       col = path.split("-").last.to_sym
       sfx = col.to_s.split("__").last
-      is_break_sfx = (sfx && self.is_break_suffix?(sfx))
-      sub_type = FORMAT_DEFAULTS_AND_OVERRIDES[:sub_types_by_column][col]
-      FORMATS.keys.inject({}) do |h, k|
-        # Ignore formats that don't include suffix if the column name has a break suffix
-        next(h) if is_break_sfx && (FORMATS[k][:suffixes].nil? || !FORMATS[k][:suffixes].include?(sfx.to_sym))
-
-        if FORMATS[k][:columns] && FORMATS[k][:columns].include?(col)
-          h[k] = FORMATS[k][:description]
-        elsif FORMATS[k][:sub_types] && FORMATS[k][:sub_types].include?(sub_type)
-          h[k] = FORMATS[k][:description]
-        elsif FORMATS[k][:data_types] && FORMATS[k][:data_types].include?(dt)
-          h[k] = FORMATS[k][:description]
-        elsif FORMATS[k][:suffixes] && FORMATS[k][:suffixes].include?(sfx.to_sym)
-          h[k] = FORMATS[k][:description]
-        end
-        h
-      end
+      MiqReport::Formats.available_formats_for(col, sfx, dt)
     end
 
     def get_default_format(path, dt)
       col = path.split("-").last.to_sym
-      sfx = col.to_s.split("__").last
-      sfx = sfx.to_sym if sfx
-      sub_type = FORMAT_DEFAULTS_AND_OVERRIDES[:sub_types_by_column][col]
-      FORMAT_DEFAULTS_AND_OVERRIDES[:formats_by_suffix][sfx] || FORMAT_DEFAULTS_AND_OVERRIDES[:formats_by_column][col] || FORMAT_DEFAULTS_AND_OVERRIDES[:formats_by_sub_type][sub_type] || FORMAT_DEFAULTS_AND_OVERRIDES[:formats_by_data_type][dt]
+      sfx = col.to_s.split("__").last.try(:to_sym)
+      MiqReport::Formats.default_format_for(col, sfx, dt)
     end
   end
 
@@ -43,7 +21,7 @@ module MiqReport::Formatting
     format_name ||= self.class.get_default_format(col, nil)
     return nil unless format_name && format_name != :_none_
 
-    format = FORMATS[format_name]
+    format = MiqReport::Formats.details(format_name)
     function_name = format[:function][:name]
 
     options = format.merge(format[:function]).slice(
@@ -69,7 +47,7 @@ module MiqReport::Formatting
     return value.to_s if format == :_none_ # Raw value was requested, do not attempt to format
 
     # Format name passed in as a symbol or string
-    format = FORMATS[format.to_sym] if (format.kind_of?(Symbol) || format.kind_of?(String)) && format != :_default_
+    format = MiqReport::Formats.details(format) if (format.kind_of?(Symbol) || format.kind_of?(String)) && format != :_default_
 
     # Look in this report object for column format
     self.col_formats ||= []
@@ -77,19 +55,17 @@ module MiqReport::Formatting
       idx = col.kind_of?(String) ? col_order.index(col) : col
       if idx
         col = col_order[idx]
-        format = FORMATS[self.col_formats[idx]]
+        format = MiqReport::Formats.details(self.col_formats[idx])
       end
     end
 
     # Use default format for column stil nil
     if format.nil? || format == :_default_
-      expression_col = col_to_expression_col(col)
-      dt = self.class.get_col_type(expression_col)
+      dt = MiqExpression.get_col_type(col_to_expression_col(col))
       dt = value.class.to_s.downcase.to_sym if dt.nil?
       dt = dt.to_sym unless dt.nil?
-      format = FORMATS[self.class.get_default_format(expression_col, dt)]
-      format = format.deep_clone if format # Make sure we don't taint the original
-      format[:precision] = FORMAT_DEFAULTS_AND_OVERRIDES[:precision_by_column][col.to_sym] if format && FORMAT_DEFAULTS_AND_OVERRIDES[:precision_by_column].key?(col.to_sym)
+      sfx = col.to_s.split('__').last.try(:to_sym)
+      format = MiqReport::Formats.default_format_details_for(col, sfx, dt)
     else
       format = format.deep_clone # Make sure we don't taint the original
     end
