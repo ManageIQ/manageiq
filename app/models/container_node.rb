@@ -4,6 +4,7 @@ class ContainerNode < ApplicationRecord
   include MiqPolicyMixin
   include NewWithTypeStiMixin
   include TenantIdentityMixin
+  include SupportsFeatureMixin
 
   # :name, :uid, :creation_timestamp, :resource_version
   belongs_to :ext_management_system, :foreign_key => "ems_id"
@@ -76,5 +77,20 @@ class ContainerNode < ApplicationRecord
 
   def cockpit_url
     URI::HTTP.build(:host => ipaddress, :port => 9090)
+  end
+
+  supports :common_logging do
+    unless ext_management_system.respond_to?(:common_logging_route_name)
+      unsupported_reason_add(:common_logging, _('This provider type doesn\'t support common_logging'))
+    end
+  end
+
+  def common_logging_query
+    nil # {}.to_query # TODO
+  end
+
+  def common_logging_path
+    hostname = name.split('.')[0]
+    "/#/discover?_g=()&_a=(columns:!(_source),filters:!((meta:(disabled:!f,index:.all,key:hostname,negate:!f,value:#{hostname}),query:(match:(hostname:(query:#{hostname},type:phrase))))),index:.all,interval:auto,query:(query_string:(analyze_wildcard:!t,query:'*')),sort:!(time,desc))"
   end
 end

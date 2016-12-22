@@ -3654,6 +3654,10 @@
       :description: Check Compliance of Last Known Configuration
       :feature_type: control
       :identifier: ems_container_check_compliance
+    - :name: Launch Common Logging
+      :description: Open Common Logging from Container Provider
+      :feature_type: control
+      :identifier: ems_container_launch_common_logging
     - :name: Container Deployments
       :description: Container Deployments
       :feature_type: node

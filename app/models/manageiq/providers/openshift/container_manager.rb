@@ -20,6 +20,18 @@ class ManageIQ::Providers::Openshift::ContainerManager < ManageIQ::Providers::Co
     ManageIQ::Providers::Openshift::ContainerManager::EventCatcher
   end
 
+  def common_logging_route_name
+    Settings.container_logging.common_logging_route
+  end
+
+  def common_logging_query
+    nil # should be empty to return all
+  end
+
+  def common_logging_path
+    '/#/dashboard/Operations-Logs-Overivew'
+  end
+
   def supported_auth_attributes
     %w(userid password auth_key)
   end

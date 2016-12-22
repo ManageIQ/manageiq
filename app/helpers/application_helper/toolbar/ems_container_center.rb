@@ -5,6 +5,15 @@ class ApplicationHelper::Toolbar::EmsContainerCenter < ApplicationHelper::Toolba
       'fa fa-repeat fa-lg',
       N_('Reload Current Display'),
       nil),
+    button(
+      :ems_container_launch_common_logging,
+      'product product-monitoring fa-lg',
+      N_('Open a new browser window with the common Logging Presentation UI. ' \
+         'This requires the common logging to be deployed on this Proider.'),
+      N_('Kibana'),
+      :klass => ApplicationHelper::Button::EmsContainerLaunchCommonLogging,
+      :url   => "launch_common_logging"
+    ),
     select(
       :ems_container_vmdb_choice,
       'fa fa-cog fa-lg',

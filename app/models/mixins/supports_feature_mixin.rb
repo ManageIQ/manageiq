@@ -72,6 +72,7 @@ module SupportsFeatureMixin
     :create_host_aggregate      => 'Host Aggregate Creation',
     :create_network_router      => 'Network Router Creation',
     :create_security_group      => 'Security Group Creation',
+    :common_logging             => 'Launch Common Logging UI',
     :swift_service              => 'Swift storage service',
     :delete                     => 'Deletion',
     :delete_aggregate           => 'Host Aggregate Deletion',
