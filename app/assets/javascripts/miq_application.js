@@ -1702,12 +1702,30 @@ function chartData(type, data, data2) {
     min = ManageIQ.charts.formatters[format.function].c3(format.options)(min).split(/[^0-9\,\.]/)[0];
     console.log(min);
     console.log(max);
+
     if(max - min < Math.pow(10, 1 - format.options.precision)){
         format.options.precision += 1;
         console.log(format);
     }
     data.axis.y.tick.format = ManageIQ.charts.formatters[format.function].c3(format.options);
+    data.legend.item = {
+      onclick: function (id) {
+        this.api.toggle(id);
+        var format = ManageIQ.charts.chartData.candu[this.config.bindto.split('_').pop()].xml.miq.format;
+        var minMax = getMinMaxFromChart(this);
+        minMax[0] = this.config.axis_y_tick_format(minMax[0]).split(/[^0-9\,\.]/)[0];
+        minMax[1] = this.config.axis_y_tick_format(minMax[1]).split(/[^0-9\,\.]/)[0];
+        console.log(minMax);
+        console.log(this);
 
+        if(minMax[1] - minMax[0] < Math.pow(10, 1 - format.options.precision)){
+            format.options.precision += 1;
+            console.log('XAXA');
+            this.config.axis_y_tick_format = ManageIQ.charts.formatters[format.function].c3(format.options);
+            this.api.flush();
+        }
+      }
+    }
     var title_format = _.cloneDeep(format);
     title_format.options.precision += 1;
     data.tooltip.format.value = function (value, _ratio, _id) {
@@ -1736,6 +1754,25 @@ $(function () {
   check_for_ellipsis();
   $().setupVerticalNavigation(true);
 });
+
+function getMinMaxFromChart(chart) {
+  var data = [];
+  _.forEach(chart.api.data.shown(), function(o) {
+    _.forEach(o.values, function(elem) {
+      data.push(elem.value);
+    });
+  });
+
+  var max = _.max(data);
+  var min = _.min(data);
+  if(max == Infinity) {
+    max = 0;
+  }
+  if(min == -Infinity){
+    min = 0;
+  }
+  return [min, max];
+}
 
 function miqScrollToSelected(div_name) {
   var rowpos = $('tr.selected').position();
