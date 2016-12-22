@@ -4451,6 +4451,14 @@
       :description: Remove Routers
       :feature_type: admin
       :identifier: network_router_delete
+    - :name: Add Interface
+      :description: Add Interface to Router
+      :feature_type: admin
+      :identifier: network_router_add_interface
+    - :name: Remove Interface
+      :description: Remove Interface from Router
+      :feature_type: admin
+      :identifier: network_router_remove_interface
 
 
 # Load Balancer
