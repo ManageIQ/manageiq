@@ -44,17 +44,26 @@ class TreeBuilderTags < TreeBuilder
   end
 
   def x_get_tree_roots(count_only, _options)
+    return @categories.size if count_only
     # open node if at least one of his kids is selected
-    @categories.each do |c|
-      open_node("cl-#{to_cid(c.id)}") if contain_selected_kid(c)
+    if @edit.present? || @filters.present?
+      @categories.each do |c|
+        open_node("cl-#{to_cid(c.id)}") if contain_selected_kid(c)
+      end
     end
     count_only_or_objects(count_only, @categories)
   end
 
   def x_get_classification_kids(parent, count_only)
+    return parent.entries.size if count_only
     kids = parent.entries.map do |kid|
-      kid_id = "#{parent.name}-#{kid.name}"
-      select = (@edit && @edit.fetch_path(:new, :filters, kid_id)) || (@filters && @filters.key?(kid_id))
+      
+      select = if @edit.blank? && @filters.blank?
+                 false
+               else
+                 kid_id = "#{parent.name}-#{kid.name}"
+                 (@edit && @edit.fetch_path(:new, :filters, kid_id)) || (@filters && @filters.key?(kid_id))
+               end
       {:id          => kid.id,
        :image       => '100/tag.png',
        :text        => kid.description,
