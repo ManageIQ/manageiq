@@ -8,13 +8,6 @@ require File.expand_path('../lib/tasks/evm_rake_helper', __FILE__)
 include Rake::DSL
 Vmdb::Application.load_tasks
 
-begin
-  require 'jasmine'
-  load 'jasmine/tasks/jasmine.rake'
-rescue LoadError
-  # Do nothing because we don't need jasmine in every environment
-end
-
 # Clear noisy and unusable tasks added by rspec-rails
 if defined?(RSpec)
   Rake::Task.tasks.select { |t| t.name =~ /^spec(:)?/ }.each(&:clear)

@@ -28,9 +28,3 @@ test:brakeman:
     - bundle update
     - bundle exec rake test:brakeman:setup
     - bundle exec rake test:brakeman
-test:javascript:
-  script:
-    - bundle update
-    - bower install --allow-root -F --config.analytics=false
-    - bundle exec rake test:javascript:setup
-    - bundle exec rake test:javascript
