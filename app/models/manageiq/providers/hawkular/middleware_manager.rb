@@ -386,12 +386,16 @@ module ManageIQ::Providers
     end
 
     def emit_middleware_notification(type, op_name, op_arg, ems_ref)
-      mw_deployment = MiddlewareDeployment.find_by_ems_ref(ems_ref)
-      mw_server = mw_deployment.nil? ? MiddlewareServer.find_by_ems_ref(ems_ref) :
-          MiddlewareServer.find_by_id(mw_deployment.server_id)
+      mw_deployment = MiddlewareDeployment.find_by(:ems_ref => ems_ref)
+      mw_server = if mw_deployment.nil?
+                    MiddlewareServer.find_by(:ems_ref => ems_ref)
+                  else
+                    MiddlewareServer.find_by(:id => mw_deployment.server_id)
+                  end
+
       Notification.create(:type => type, :options => {
         :op_name   => op_name,
-        :op_arg    => op_arg,
+        :op_arg    => op_arg.nil? ? '' : op_arg,
         :mw_server => "#{mw_server.name} (#{mw_server.feed})"
       })
     end
@@ -490,11 +494,11 @@ module ManageIQ::Providers
         callback = proc do |on|
           on.success do |data|
             _log.debug "Success on websocket-operation #{data}"
-            emit_middleware_notification(:mw_op_success, operation_name, parameters, ems_ref)
+            emit_middleware_notification(:mw_op_success, parameters[:operationName], nil, parameters[:resourcePath])
           end
           on.failure do |error|
             _log.error 'error callback was called, reason: ' + error.to_s
-            emit_middleware_notification(:mw_op_failure, operation_name, parameters, ems_ref)
+            emit_middleware_notification(:mw_op_failure, parameters[:operationName], nil, parameters[:resourcePath])
           end
         end
         operation_connection = connection.operations(true)
