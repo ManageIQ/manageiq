@@ -22,10 +22,10 @@ unless dependencies.detect { |d| d.name == "manageiq-providers-azure" }
   gem "manageiq-providers-azure", :git => "https://github.com/ManageIQ/manageiq-providers-azure", :branch => "master"
 end
 
-#unless dependencies.detect { |d| d.name == "manageiq-ui-classic" }
-  #gem "manageiq-ui", :git => "https://github.com/ManageIQ/manageiq-ui-classic", :branch => "master"
-  gem "manageiq-ui-classic", :path => "../manageiq-ui-classic/"
-#end
+unless dependencies.detect { |d| d.name == "manageiq-ui-classic" }
+  #gem "manageiq-ui-classic", :path => "../manageiq-ui-classic/"
+  gem "manageiq-ui-classic", :git => "https://github.com/ManageIQ/manageiq-ui-classic", :branch => "master"
+end
 
 # Unmodified gems
 gem "activerecord-session_store",     "~>1.0.0"
