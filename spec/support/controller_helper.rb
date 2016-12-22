@@ -60,8 +60,11 @@ module Spec
 
         # The table renders all children objects
         children.each do |child_object|
-          child_object_row = "miqRowClick(&#39;#{child_object.compressed_id}&#39;, &#39;/#{child_route}/&#39;"
-          expect(response.body).to include(child_object_row)
+          expect(response.body).to include("modelName: '#{relation}'")
+          expect(response.body).to include("activeTree: ''")
+          expect(response.body).to include("gtlType: '#{gtl_types.first}'")
+          expect(response.body).to include("currId: '#{parent.id}'")
+          expect(response.body).to include("showUrl: '/#{child_route}/'")
         end
 
         # display needs to be saved to session for GTL pagination and such

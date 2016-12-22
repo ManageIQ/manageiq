@@ -30,7 +30,11 @@ describe InfraNetworkingController do
         seed_session_trees('switch', :infra_networking_tree, 'root')
 
         get :explorer
-        expect(response.body).to match(%r({"text":\s*"test_switch1"}))
+        expect(response.body).to include("modelName: 'switches'")
+        expect(response.body).to include("activeTree: 'infra_networking_tree'")
+        expect(response.body).to include("gtlType: 'list'")
+        expect(response.body).to include("isExplorer: 'true' === 'true' ? true : false")
+        expect(response.body).to include("showUrl: '/infra_networking/x_show/'")
       end
 
       it 'can render the second page of switches' do

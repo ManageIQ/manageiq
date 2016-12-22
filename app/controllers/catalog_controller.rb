@@ -1646,6 +1646,7 @@ class CatalogController < ApplicationController
 
   # Get all info for the node about to be displayed
   def get_node_info(treenodeid)
+    @explorer |= true
     @nodetype, id = parse_nodetype_and_id(valid_active_node(treenodeid))
     # saving this so it can be used while adding buttons/groups in buttons editor
     @sb[:applies_to_id] = from_cid(id)

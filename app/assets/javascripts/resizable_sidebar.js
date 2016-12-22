@@ -127,6 +127,7 @@ $.fn.resizableSidebar = function() {
           }
         }
       });
+      sendDataWithRx({resize: right_class});
       // append the new classes to the divs
       sidebar.attr('class', left_class.join(' '));
       maindiv.attr('class', right_class.join(' '));

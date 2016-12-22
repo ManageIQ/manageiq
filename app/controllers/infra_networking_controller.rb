@@ -286,9 +286,10 @@ class InfraNetworkingController < ApplicationController
     tree
   end
 
-  def get_node_info(treenodeid)
+  def get_node_info(treenodeid, show_list = true)
     @sb[:action] = nil
     @nodetype, id = parse_nodetype_and_id(valid_active_node(treenodeid))
+    @show_list = show_list
 
     model = TreeBuilder.get_model_for_prefix(@nodetype)
     if model == "Hash"
@@ -297,21 +298,18 @@ class InfraNetworkingController < ApplicationController
     end
 
     case model
-    when "EmsFolder"
-      emsfolder_node(id, EmsFolder)
     when  "ExtManagementSystem"
-      provider_switches_list(id, ExtManagementSystem)
+      options = provider_switches_list(id, ExtManagementSystem)
     when  "Host"
-      host_switches_list(id, Host)
+      options = host_switches_list(id, Host)
     when "EmsCluster"
-      cluster_switches_list(id, EmsCluster)
+      options = cluster_switches_list(id, EmsCluster)
     when "Switch"
-
-      dvswitch_node(id, Switch)
+      options = dvswitch_node(id, Switch)
     when "MiqSearch"
-      miq_search_node
+      options = miq_search_node
     else
-      default_node
+      options = default_node
     end
     @right_cell_text += @edit[:adv_search_applied][:text] if x_tree && @edit && @edit[:adv_search_applied]
 
@@ -322,6 +320,7 @@ class InfraNetworkingController < ApplicationController
     else
       x_history_add_item(:id => treenodeid, :text => @right_cell_text) # Add to history pulldown array
     end
+    options
   end
 
   def dvswitches_list(id, model)
@@ -329,8 +328,9 @@ class InfraNetworkingController < ApplicationController
     if x_active_tree == :infra_networking_tree
       options = {:model => "Switch", :where_clause => ["shared = true"]}
       @right_cell_text = _("All %{title}") % {:title => model_to_name(model)}
-      process_show_list(options)
+      process_show_list(options) if @show_list
     end
+    options
   end
 
   def dvswitch_node(id, model)
@@ -346,11 +346,12 @@ class InfraNetworkingController < ApplicationController
       get_node_info("root")
     else
       options = {:model => "Switch", :where_clause => ["shared = true and id in(?)", @host_record.switches.pluck(:id)]}
-      process_show_list(options)
+      process_show_list(options) if @show_list
       @showtype        = 'main'
       @pages           = nil
       @right_cell_text = _("Switches for %{model} \"%{name}\"") % {:model => model, :name => @host_record.name}
     end
+    options
   end
 
   def cluster_switches_list(id, model)
@@ -363,11 +364,12 @@ class InfraNetworkingController < ApplicationController
       hosts = @cluster_record.hosts
       switch_ids = hosts.collect { |host| host.switches.pluck(:id) }
       options = {:model => "Switch", :where_clause => ["shared = true and id in(?)", switch_ids.flatten.uniq]}
-      process_show_list(options)
+      process_show_list(options) if @show_list
       @showtype        = 'main'
       @pages           = nil
       @right_cell_text = _("Switches for %{model} \"%{name}\"") % {:model => model, :name => @cluster_record.name}
     end
+    options
   end
 
   def provider_switches_list(id, model)
@@ -380,24 +382,27 @@ class InfraNetworkingController < ApplicationController
       hosts = Host.where(:ems_id => @provider_record.id)
       switch_ids = hosts.collect { |host| host.switches.pluck(:id) }
       options = {:model => "Switch", :where_clause => ["shared = true and id in(?)", switch_ids.flatten.uniq]}
-      process_show_list(options)
+      process_show_list(options) if @show_list
       @showtype        = 'main'
       @pages           = nil
       @right_cell_text = _("Switches for %{model} \"%{name}\"") % {:model => model, :name => @provider_record.name}
     end
+    options
   end
 
   def miq_search_node
     options = {:model => "Switch"}
-    process_show_list(options)
+    process_show_list(options) if @show_list
     @right_cell_text = _("All %{title} ") % {:title => ui_lookup(:ui_title => model)}
+    options
   end
 
   def default_node
     return unless x_node == "root"
     options = {:model => "Switch", :where_clause => ["shared = true"]}
-    process_show_list(options)
+    process_show_list(options) if @show_list
     @right_cell_text = _("All Switches")
+    options
   end
 
   def rendering_objects

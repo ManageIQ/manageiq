@@ -29,4 +29,5 @@
  *= require service_dialogs
  *= require xml_display
  *= require patternfly-timeline/dist/timeline
+ *= require manageiq-ui-components/dist/css/ui-components
 */
