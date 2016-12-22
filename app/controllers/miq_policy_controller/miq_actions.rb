@@ -138,11 +138,11 @@ module MiqPolicyController::MiqActions
   def action_tag_pressed
     @edit = session[:edit]
     @action = @edit[:action_id] ? MiqAction.find_by_id(@edit[:action_id]) : MiqAction.new
-    tag_name = params[:id].split('__')[1]
+    id = TreeBuilder.from_cid(params[:id].split('-')[1])
+    tag_name = Classification.find(id).tag.name
     @tag_selected = Classification.tag2human(tag_name)
     @edit[:new][:options][:tags] = {} unless tag_name.nil?
     @edit[:new][:options][:tags] = [tag_name] unless tag_name.nil?
-
     send_button_changes
   end
 
@@ -157,10 +157,7 @@ module MiqPolicyController::MiqActions
   end
 
   def get_tags_tree
-    cats = Classification.categories.select(&:show).sort_by(&:name)
-    unless cats.nil?
-      action_build_cat_tree(cats)
-    end
+    action_build_cat_tree
   end
 
   def action_build_snmp_variables
@@ -295,41 +292,8 @@ module MiqPolicyController::MiqActions
     @edit[:new][:alerts] = {}                     # Clear out the alerts hash
   end
 
-  # Build the categories/tags tree node
-  def action_build_cat_tree(cats)
-    r_node = TreeNodeBuilder.generic_tree_node(
-      "r_#{current_tenant.name}",
-      "#{current_tenant.name} Tags",
-      "100/tag.png",
-      "#{current_tenant.name} Tags",
-      :cfme_no_click => true,
-      :expand        => true
-    )
-    if cats.any?
-      r_kids = []
-      cats.sort_by { |c| c.description.downcase }.each do |c|
-        next if c.read_only
-
-        c_node = TreeNodeBuilder.generic_tree_node("c_#{c.id}", c.description, "100/tag.png", c.description, :cfme_no_click => true)
-        if c.entries.any?
-          c_kids ||= []
-          c.entries.sort_by { |t| t.description.downcase }.each do |t|
-            t_node = TreeNodeBuilder.generic_tree_node(
-              "t__#{t.tag.name}",
-              t.description,
-              "100/blank.gif",
-              t.description
-            )
-            c_kids.push(t_node)
-          end
-          c_node[:children] = c_kids
-        end
-        # don't add categories that do not have any entries
-        r_kids.push(c_node) unless c_node[:children].nil?
-      end
-      r_node[:children] = r_kids
-    end
-    @cat_tree = TreeBuilder.convert_bs_tree(r_node).to_json
+  def action_build_cat_tree
+    @cat_tree = TreeBuilderMiqActionCat.new('action_tags_tree', 'action_tags', @sb, true, "#{current_tenant.name} Tags")
   end
 
   # Set action record variables to new values

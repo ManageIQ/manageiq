@@ -67,13 +67,8 @@
     .form-horizontal
       .form-group
         .col-md-8
-          #action_tags_treebox.treeview-pf-hover.treeview-pf-select
-          = render(:partial => "layouts/tree",
-            :locals         => {:tree_id   => "action_tags_treebox",
-              :tree_name                   => "action_tags_tree",
-              :bs_tree                     => @cat_tree,
-              :click_url                   => "/miq_policy/action_tag_pressed/",
-              :onclick                     => "miqOnClickTagCat"})
+          = render(:partial => 'shared/tree', :locals => {:tree => @cat_tree, :name => @cat_tree.name})
+
   - when "create_snapshot"
     %h3
       = _("Snapshot Settings")
