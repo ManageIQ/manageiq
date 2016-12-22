@@ -184,4 +184,32 @@ namespace :locale do
       File.unlink(file)
     end
   end
+
+  desc "Convert PO files from all plugins to JS files"
+  task "po_to_json" => :environment do
+    require_relative 'gettext_task_override.rb'
+    require Rails.root.join("lib/vmdb/gettext/domains")
+
+    po_files = {}
+    Vmdb::Gettext::Domains.paths.each do |path|
+      files = ::Pathname.glob(::File.join(path, "**", "*.po"))
+      files.each do |file|
+        locale = file.dirname.basename.to_s
+        po_files[locale] ||= []
+        po_files[locale].push(file)
+      end
+    end
+
+    combined_dir = File.join(Rails.root, "locale/combined")
+    Dir.mkdir(combined_dir, 0700)
+    po_files.keys.each do |locale|
+      dir = File.join(combined_dir, locale)
+      po = File.join(dir, 'manageiq.po')
+      Dir.mkdir(dir, 0700)
+      system "rmsgcat -o #{po} #{po_files[locale].join(' ')}"
+    end
+
+    Rake::Task['gettext:po_to_json'].invoke
+    system "rm -rf #{combined_dir}"
+  end
 end

@@ -2380,14 +2380,6 @@ _("Display Timelines for Pods")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Show Capacity & Utilization data of Pods")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Modify Pods")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Remove Pod")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Edit a Pod")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Add a Pod")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Perform Operations on Pods")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Edit Tags of Pods")
@@ -2407,14 +2399,6 @@ _("Display Individual Container Nodes")
 _("Show Capacity & Utilization data of Nodes")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Display Timelines for Container Nodes")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Modify Container Nodes")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Remove Container Nodes")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Edit a Container Nodes")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Add a Container Nodes")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Perform Operations on Container Nodes")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -2436,12 +2420,6 @@ _("Display Individual Container Replicators")
 _("Show Capacity & Utilization data of Replicators")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Display Timelines for container Replicators")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Remove Container Replicator")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Edit a Container Replicator")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Add a Container Replicator")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Perform Operations on Container Replicators")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -2474,14 +2452,6 @@ _("View Container Image Registries")
 _("Display Lists of Container Image Registries")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Display Individual Container Image Registries")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Modify Container Image Registries")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Remove Container Image Registry")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Edit a Container Image Registry")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Add a Container Image Registry")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Perform Operations on Container Image Registries")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -2519,14 +2489,6 @@ _("Display Lists of Container Build")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Display Individual Container Build")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Modify Container Build")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Remove Container Build")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Edit a Container Build")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Add a Container Build")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Perform Operations on Container Build")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Edit Tags of Container Build")
@@ -2558,14 +2520,6 @@ _("Display Lists of Container Services")
 _("Display Individual Container Services")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Show Capacity & Utilization data of Service")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Modify Container Services")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Remove Container Services")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Edit a Container Service")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Add a Container Service")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Perform Operations on Container Services")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -2618,16 +2572,6 @@ _("Display Lists of Containers")
 _("Display Timelines for Containers")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Modify Containers")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Remove Container")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Edit Container")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Edit a Container")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Add Container")
-# TRANSLATORS: file: db/fixtures/miq_product_features.yml
-_("Add a Container")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
 _("Show Capacity & Utilization data of Containers")
 # TRANSLATORS: file: db/fixtures/miq_product_features.yml
@@ -3293,6 +3237,10 @@ _("Request %{subject} has been approved.")
 _("Request %{subject} has been denied.")
 # TRANSLATORS: file: db/fixtures/notification_types.yml
 _("%{message}")
+# TRANSLATORS: file: db/fixtures/notification_types.yml
+_("The operation %{op_name} %{op_arg} on %{mw_server} completed successfully.")
+# TRANSLATORS: file: db/fixtures/notification_types.yml
+_("The operation %{op_name} %{op_arg} on %{mw_server} has failed to complete. Please check the logs for further details.")
 # TRANSLATORS: file: product/charts/layouts/ts_util_charts.yaml
 _("Selected Day Percent Utilization")
 # TRANSLATORS: file: product/charts/layouts/daily_util_charts.yaml
@@ -4418,6 +4366,7 @@ _("Nodes By Capacity")
 _("CPU Cores")
 # TRANSLATORS: file: product/reports/170_Configuration Management - Containers/010_Nodes by Capacity.yaml
 # TRANSLATORS: file: product/views/Flavor.yaml
+# TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager.yaml
 # TRANSLATORS: file: product/views/Vm-VmReconfigureRequest.yaml
 # TRANSLATORS: file: product/views/Vm__restricted.yaml
 _("Memory")
@@ -6056,6 +6005,8 @@ _("Timeline Policy Events Hourly")
 # TRANSLATORS: file: product/timelines/miq_reports/tl_policy_events_hourly.yaml
 # TRANSLATORS: file: product/views/OpenscapRuleResult.yaml
 _("Result")
+# TRANSLATORS: file: product/timelines/miq_reports/tl_policy_events_hourly.yaml
+_("Target")
 # TRANSLATORS: file: product/timelines/miq_reports/tl_bottleneck_events.yaml
 _("Timeline All Bottleneck Events")
 # TRANSLATORS: file: product/timelines/miq_reports/tl_bottleneck_events.yaml
@@ -6063,6 +6014,8 @@ _("Timeline All Bottleneck Events")
 _("Severity")
 # TRANSLATORS: file: product/timelines/miq_reports/tl_policy_events_daily.yaml
 _("Timeline All Policy Events")
+# TRANSLATORS: file: product/timelines/miq_reports/tl_policy_events_daily.yaml
+_("Tagret")
 # TRANSLATORS: file: product/timelines/miq_reports/tl_events_daily.yaml
 _("Timeline All Events")
 # TRANSLATORS: file: product/timelines/miq_reports/tl_events_daily.yaml
@@ -6501,6 +6454,8 @@ _("EmsCloud")
 # TRANSLATORS: file: product/views/ems_block_storage.yaml
 # TRANSLATORS: file: product/views/ems_object_storage.yaml
 _("EVM Zone")
+# TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager.yaml
+_("VCpus")
 # TRANSLATORS: file: product/views/ManageIQ_Providers_CloudManager_Template-all_vms_and_templates.yaml
 # TRANSLATORS: file: product/views/VmOrTemplate-all_archived.yaml
 # TRANSLATORS: file: product/views/VmOrTemplate-all_orphaned.yaml

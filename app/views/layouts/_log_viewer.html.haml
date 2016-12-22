@@ -1,6 +1,0 @@
-- legend_text ||= _("Last 1000 lines from server %{server_name} [%{server_id}] in zone %{zone_name}") % {:server_name => @server.name, :server_id => @server_options[:server_id], :zone_name => @server.my_zone}
-= render :partial => "layouts/flash_msg"
-%h3= legend_text
-
-%pre
-  = @log

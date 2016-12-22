@@ -1,8 +1,0 @@
--#
-  Parameters:
-    widget -- MiqWidget object
-.card-pf-body{:style => "text-align: center;"}
-  .mc{:id => "dd_w#{widget.id}_box",
-    :style => "#{@sb[:dashboards][@sb[:active_db]][:minimized].include?(widget.id) ? 'display: none;' : ''}"}
-    %h3= _('No data found.')
-    = _('If this widget is new or has just been added to your dashboard, the data is being generated and should be available soon.')

@@ -1,8 +1,0 @@
-= render :partial => "layouts/flash_msg"
-= render :partial => "miq_request/prov_wf", :locals => {:wf => @edit[:wf]}
-%br
-- unless @edit[:explorer]
-  = render :partial => 'miq_request/prov_form_buttons'
-  = _("Note: Fields marked with * are required.")
-:javascript
-  miqDeleteTreeCookies('prov_trees')

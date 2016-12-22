@@ -1,6 +1,6 @@
 module EvmTestHelper
-  VMDB_EXCLUDED_SPEC_DIRECTORIES = ["migrations"].freeze
-  MIGRATION_SPECS        = FileList['spec/migrations/**/*_spec.rb'].sort
+  VMDB_EXCLUDED_SPEC_DIRECTORIES = %w(migrations).freeze
+  MIGRATION_SPECS = FileList['spec/migrations/**/*_spec.rb'].sort
 
   def self.init_rspec_task(t, rspec_opts = [])
     if ENV['CI']
@@ -23,7 +23,7 @@ module EvmTestHelper
     #
     # Within the spec directory, find:
     #  * directories
-    #  * that aren't automation/migrations/replication (the excluded directories)
+    #  * that aren't excluded directories
     #  * that contain *_spec.rb files
     #
     # This is required because parallel_tests takes directories

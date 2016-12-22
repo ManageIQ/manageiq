@@ -50,7 +50,7 @@ module Vmdb
     end
 
     def self.locale_path
-      @locale_path ||= Rails.root.join("locale")
+      @locale_path ||= Rails.root.join("locale").to_s
     end
 
     def self.register_locales

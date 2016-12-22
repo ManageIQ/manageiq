@@ -1,8 +1,0 @@
-- if @display == 'middleware_servers'
-  = render :partial => 'layouts/gtl', :locals => {:action_url => "show/#{@record.id}"}
-- elsif @showtype == 'performance'
-  = render(:partial => 'layouts/performance')
-  :javascript
-    ManageIQ.afterOnload = "miqAsyncAjax('#{url_for(:action => @ajax_action, :id => @record)}');"
-- else
-  = render :partial => @showtype
