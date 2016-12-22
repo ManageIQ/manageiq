@@ -544,6 +544,7 @@ describe ChargebackVm do
     end
     let!(:rate_detail) do
       FactoryGirl.create(:chargeback_rate_detail_fixed_compute_cost,
+                         :source             => "compute_1",
                          :chargeback_rate_id => chargeback_rate.id,
                          :chargeback_tiers   => [tier],
                          :per_time           => 'hourly')
