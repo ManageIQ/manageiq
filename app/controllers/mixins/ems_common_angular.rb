@@ -400,7 +400,10 @@ module Mixins
       if ems.kind_of?(ManageIQ::Providers::ContainerManager)
         params[:cred_type] = ems.default_authentication_type if params[:cred_type] == "default"
         ems.hostname = hostname
-        hawkular_hostname = hostname if hawkular_hostname.blank?
+        if hawkular_hostname.blank?
+          default_key = params[:default_password] || ems.authentication_key
+          hawkular_hostname = get_hostname_from_routes(ems, hostname, port, default_key)
+        end
 
         default_endpoint = {:role => :default, :hostname => hostname, :port => port}
         hawkular_endpoint = {:role => :hawkular, :hostname => hawkular_hostname, :port => hawkular_api_port}
@@ -427,6 +430,11 @@ module Mixins
                    :hawkular    => hawkular_endpoint}
 
       build_connection(ems, endpoints, mode)
+    end
+
+    def get_hostname_from_routes(ems, hostname, port, token)
+      client = ems.class.raw_connect(hostname, port, :bearer => token)
+      client.get_routes(:name=>'hawkular-metrics').first.try(:spec).try(:host)
     end
 
     def build_connection(ems, endpoints, mode)

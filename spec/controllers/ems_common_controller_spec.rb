@@ -178,7 +178,24 @@ describe EmsCloudController do
 end
 
 describe EmsContainerController do
+  before :each do
+    allow(controller).to receive(:get_hostname_from_routes).and_return("myhawkularoute.com")
+  end
   context "::EmsCommon" do
+    context "#create" do
+      it "adding new provider without hawkular endpoint" do
+        controller.instance_variable_set(:@_params,
+                                         :name             => 'NimiCule',
+                                         :default_userid   => '_',
+                                         :default_hostname => 'mytest.com',
+                                         :default_api_port => '8443',
+                                         :default_password => 'valid-token',
+                                         :emstype          => @type)
+        ems = ManageIQ::Providers::Openshift::ContainerManager.new
+        controller.send(:set_ems_record_vars, ems)
+        expect(ems.connection_configurations.hawkular.endpoint.hostname).to eq('myhawkularoute.com')
+      end
+    end
     context "#update" do
       context "updates provider with new token" do
         after :each do
