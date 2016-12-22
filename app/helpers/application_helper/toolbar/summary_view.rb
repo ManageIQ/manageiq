@@ -6,7 +6,7 @@ class ApplicationHelper::Toolbar::SummaryView < ApplicationHelper::Toolbar::Basi
       N_('Download summary in PDF format'),
       nil,
       :klass     => ApplicationHelper::Button::Pdf,
-      :url       => "/show",
-      :url_parms => "?display=download_pdf"),
+      :url       => "/download_summary_pdf",
+      :url_parms => ''),
   ])
 end

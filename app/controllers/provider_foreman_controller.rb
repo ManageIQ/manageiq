@@ -257,7 +257,6 @@ class ProviderForemanController < ApplicationController
     @explorer = true if request.xml_http_request? # Ajax request means in explorer
 
     @gtl_url = "/show"
-    set_summary_pdf_data if "download_pdf" == @display
   end
 
   def tree_select
@@ -406,7 +405,7 @@ class ProviderForemanController < ApplicationController
     if @record.kind_of?(ConfiguredSystem)
       rec_cls = "#{model_to_type_name(@record.ext_management_system.class.to_s)}_configured_system"
     end
-    return unless %w(download_pdf main).include?(@display)
+    return unless @display == 'main'
     @showtype     = "main"
     @button_group = case x_active_accord
                     when :cs_filter

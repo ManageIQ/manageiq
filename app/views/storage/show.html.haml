@@ -14,8 +14,6 @@
       = render(:partial => "layouts/performance")
       :javascript
         ManageIQ.afterOnload = "miqAsyncAjax('#{url_for(:action => @ajax_action, :id => @record)}');"
-    - when "download_pdf"
-      = render(:partial => "layouts/show_pdf")
     - when "dialog_provision"
       = render(:partial => "shared/dialogs/dialog_provision")
     - else

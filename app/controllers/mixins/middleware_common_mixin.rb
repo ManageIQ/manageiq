@@ -37,7 +37,7 @@ module MiddlewareCommonMixin
                     }, true)
     case @display
     when 'main'                          then show_main
-    when 'download_pdf', 'summary_only'  then show_download
+    when 'summary_only'                  then show_download
     when 'timeline'                      then show_timeline
     when 'performance'                   then show_performance
     end

@@ -20,12 +20,12 @@ class HostAggregateController < ApplicationController
     drop_breadcrumb({:name => _("Host Aggregates"),
                      :url  => "/host_aggregate/show_list?page=#{@current_page}&refresh=y"}, true)
     case @display
-    when "download_pdf", "main", "summary_only"
+    when "main", "summary_only"
       get_tagdata(@host_aggregate)
       drop_breadcrumb(:name => _("%{name} (Summary)") % {:name => @host_aggregate.name},
                       :url  => "/availability_zone/show/#{@host_aggregate.id}")
       @showtype = "main"
-      set_summary_pdf_data if %w(download_pdf summary_only).include?(@display)
+      set_summary_pdf_data if @display == 'summary_only'
 
     when "performance"
       @showtype = "performance"

@@ -4,7 +4,7 @@ module Mixins
       return unless init_show
 
       case @display
-      when "download_pdf", "summary_only" then show_download
+      when "summary_only"                 then show_download
       when "main"                         then show_main
       when *self.class.display_methods    then display_nested_list(@display)
       end

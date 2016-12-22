@@ -25,7 +25,12 @@ class StorageController < ApplicationController
     @explorer = true if request.xml_http_request? # Ajax request means in explorer
 
     @gtl_url = "/show"
-    set_summary_pdf_data if "download_pdf" == @display
+  end
+
+  def download_summary_pdf
+    super do
+      @storage = @record
+    end
   end
 
   def show(record = nil)
@@ -74,7 +79,7 @@ class StorageController < ApplicationController
                       :url  => "/storage/x_show/#{@storage.id}?display=hosts")
       @showtype = "hosts"
 
-    when "download_pdf", "main", "summary_only"
+    when "main", "summary_only"
       get_tagdata(@storage)
       session[:vm_summary_cool] = (@settings[:views][:vm_summary_cool] == "summary")
       @summary_view = session[:vm_summary_cool]
@@ -82,7 +87,7 @@ class StorageController < ApplicationController
       drop_breadcrumb(:name => "%{name} (Summary)" % {:name => @storage.name},
                       :url  => "/storage/x_show/#{@storage.id}?display=main")
       @showtype = "main"
-      set_summary_pdf_data if ["download_pdf", "summary_only"].include?(@display)
+      set_summary_pdf_data if @display == "summary_only"
 
     when "performance"
       @showtype = "performance"
@@ -364,7 +369,7 @@ class StorageController < ApplicationController
     if @record.class.base_model.to_s == "Storage"
       rec_cls = @record.class.base_model.to_s.underscore
     end
-    return unless %w(download_pdf main).include?(@display)
+    return unless @display == 'main'
     @showtype = "main"
     @button_group = "storage_pod_#{rec_cls}" if x_active_accord == :storage_pod
     @button_group = "storage_#{rec_cls}" if x_active_accord == :storage

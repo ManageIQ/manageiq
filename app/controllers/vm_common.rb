@@ -180,6 +180,13 @@ module VmCommon
     generic_x_show
   end
 
+  def download_summary_pdf
+    super do
+      @flash_array = []
+      @record = identify_record(params[:id], VmOrTemplate)
+    end
+  end
+
   def show(id = nil)
     @flash_array = [] if params[:display] && params[:display] != "snapshot_info"
     @sb[:action] = params[:display]
@@ -200,7 +207,7 @@ module VmCommon
 
     @explorer = true if request.xml_http_request? # Ajax request means in explorer
 
-    if !@explorer && @display != "download_pdf"
+    unless @explorer
       tree_node_id = TreeBuilder.build_node_id(@record)
       session[:exp_parms] = {:display => @display, :refresh => params[:refresh], :id => tree_node_id}
       controller_name = controller_for_vm(model_for_vm(@record))
@@ -239,14 +246,14 @@ module VmCommon
       rec_cls = "vm"
     end
     @gtl_url = "/show"
-    if ["download_pdf", "main", "summary_only"].include?(@display)
+    if %w(main summary_only).include?(@display)
       get_tagdata(@record)
       drop_breadcrumb({:name => _("Virtual Machines"),
                        :url  => "/#{rec_cls}/show_list?page=#{@current_page}&refresh=y"}, true)
       drop_breadcrumb(:name => @record.name + _(" (Summary)"), :url => "/#{rec_cls}/show/#{@record.id}")
       @showtype = "main"
       @button_group = rec_cls
-      set_summary_pdf_data if ["download_pdf", "summary_only"].include?(@display)
+      set_summary_pdf_data if @display == "summary_only"
     elsif @display == "networks"
       drop_breadcrumb(:name => @record.name + _(" (Networks)"),
                       :url  => "/#{rec_cls}/show/#{@record.id}?display=#{@display}")
@@ -346,7 +353,7 @@ module VmCommon
     if @explorer
       #     @in_a_form = true
       @refresh_partial = "layouts/performance"
-      replace_right_cell unless ["download_pdf", "performance"].include?(params[:display])
+      replace_right_cell unless params[:display] == "performance"
     end
   end
 

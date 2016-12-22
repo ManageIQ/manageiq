@@ -26,18 +26,18 @@ module EmsDatawarehouseHelper::TextualSummary
   #
 
   def textual_name
-    @ems.name
+    @record.name
   end
 
   def textual_type
-    @ems.emstype_description
+    @record.emstype_description
   end
 
   def textual_hostname
-    @ems.hostname
+    @record.hostname
   end
 
   def textual_port
-    @ems.supports_port? ? @ems.port : nil
+    @record.supports_port? ? @record.port : nil
   end
 end

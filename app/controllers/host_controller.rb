@@ -11,6 +11,12 @@ class HostController < ApplicationController
     super
   end
 
+  def download_summary_pdf
+    super do
+      set_config(@record)
+    end
+  end
+
   def show
     return if perfmenu_click?
 
@@ -26,12 +32,12 @@ class HostController < ApplicationController
     @showtype = "config"
     set_config(@host)
     case @display
-    when "download_pdf", "main", "summary_only"
+    when "main", "summary_only"
       get_tagdata(@host)
       drop_breadcrumb({:name => _("Hosts"), :url => "/host/show_list?page=#{@current_page}&refresh=y"}, true)
       drop_breadcrumb(:name => _("%{name} (Summary)") % {:name => @host.name }, :url => "/host/show/#{@host.id}")
       @showtype = "main"
-      set_summary_pdf_data if ["download_pdf", "summary_only"].include?(@display)
+      set_summary_pdf_data if @display == "summary_only"
 
     when "devices"
       drop_breadcrumb(:name => _("%{name} (Devices)") % {:name => @host.name},
