@@ -40,6 +40,14 @@ miqHttpInject(angular.module('containerLiveDashboard', ['ui.bootstrap', 'pattern
         $scope.filtersText += filter.title + " : " + filter.value + "\n";
         $scope.tags[filter.id] = filter.value;
       });
+
+      if (Object.keys($scope.tags).length > 0) {
+        $scope.doApply();
+      } else {
+        $scope.items = [];
+        $scope.applied = false;
+        $scope.filterConfig.resultsCount = 0;
+      }
     };
 
     var selectionChange = function() {
