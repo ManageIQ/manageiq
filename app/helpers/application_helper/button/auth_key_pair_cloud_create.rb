@@ -1,4 +1,4 @@
-class ApplicationHelper::Button::AuthKeyPairCloudCreate < ApplicationHelper::Button::Basic
+class ApplicationHelper::Button::AuthKeyPairCloudCreate < ApplicationHelper::Button::ButtonNewDiscover
   def disabled?
     # check that at least one EMS the user has access to supports
     # creation or import of key pairs.

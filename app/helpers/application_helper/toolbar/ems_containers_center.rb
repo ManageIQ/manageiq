@@ -21,7 +21,8 @@ class ApplicationHelper::Toolbar::EmsContainersCenter < ApplicationHelper::Toolb
           'pficon pficon-add-circle-o fa-lg',
           t = N_('Add Existing Containers Provider'),
           t,
-          :url => "/new"),
+          :url   => "/new",
+          :klass => ApplicationHelper::Button::ButtonNewDiscover),
         button(
           :ems_container_deployment,
           'pficon pficon-add-circle-o fa-lg',

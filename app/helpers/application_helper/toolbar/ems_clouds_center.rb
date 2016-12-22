@@ -21,14 +21,16 @@ class ApplicationHelper::Toolbar::EmsCloudsCenter < ApplicationHelper::Toolbar::
           t = N_('Discover Cloud Providers'),
           t,
           :url       => "/discover",
-          :url_parms => "?discover_type=ems"),
+          :url_parms => "?discover_type=ems",
+          :klass     => ApplicationHelper::Button::ButtonNewDiscover),
         separator,
         button(
           :ems_cloud_new,
           'pficon pficon-add-circle-o fa-lg',
           t = N_('Add a New Cloud Provider'),
           t,
-          :url => "/new"),
+          :url   => "/new",
+          :klass => ApplicationHelper::Button::ButtonNewDiscover),
         button(
           :ems_cloud_edit,
           'pficon pficon-edit fa-lg',

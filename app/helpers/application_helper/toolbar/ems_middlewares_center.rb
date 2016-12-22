@@ -21,7 +21,8 @@ class ApplicationHelper::Toolbar::EmsMiddlewaresCenter < ApplicationHelper::Tool
           'pficon pficon-add-circle-o fa-lg',
           t = N_('Add a New Middleware Provider'),
           t,
-          :url => "/new"),
+          :url   => "/new",
+          :klass => ApplicationHelper::Button::ButtonNewDiscover),
         button(
           :ems_middleware_edit,
           'pficon pficon-edit fa-lg',

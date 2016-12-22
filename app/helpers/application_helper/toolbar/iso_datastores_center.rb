@@ -10,7 +10,8 @@ class ApplicationHelper::Toolbar::IsoDatastoresCenter < ApplicationHelper::Toolb
           :iso_datastore_new,
           'pficon pficon-add-circle-o fa-lg',
           t = N_('Add a New ISO Datastore'),
-          t),
+          t,
+          :klass => ApplicationHelper::Button::ButtonNewDiscover),
         button(
           :iso_datastore_delete,
           'pficon pficon-delete fa-lg',

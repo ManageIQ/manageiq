@@ -1,4 +1,4 @@
-class ApplicationHelper::Button::VmMiqRequestNew < ApplicationHelper::Button::Basic
+class ApplicationHelper::Button::VmMiqRequestNew < ApplicationHelper::Button::ButtonNewDiscover
   def disabled?
     @error_message = _('No Infrastructure Provider that supports VM provisioning added') unless provisioning_supported?
     @error_message.present?

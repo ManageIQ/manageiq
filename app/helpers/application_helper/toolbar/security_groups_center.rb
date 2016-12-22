@@ -12,7 +12,8 @@ class ApplicationHelper::Toolbar::SecurityGroupsCenter < ApplicationHelper::Tool
             :security_group_new,
             'pficon pficon-add-circle-o fa-lg',
             t = N_('Add a new Security Group'),
-            t),
+            t,
+            :klass => ApplicationHelper::Button::ButtonNewDiscover),
           separator,
           # TODO: Uncomment until cross controllers show_list issue fully in place
           # https://github.com/ManageIQ/manageiq/pull/12551

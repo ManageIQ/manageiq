@@ -11,13 +11,13 @@ class ApplicationHelper::Toolbar::CatalogitemButtonSetCenter < ApplicationHelper
           'pficon pficon-add-circle-o fa-lg',
           t = N_('Add a new Button Group'),
           t,
-          :klass => ApplicationHelper::Button::CatalogItemButton),
+          :klass => ApplicationHelper::Button::CatalogItemButtonNew),
         button(
           :ab_button_new,
           'pficon pficon-add-circle-o fa-lg',
           t = N_('Add a new Button'),
           t,
-          :klass => ApplicationHelper::Button::CatalogItemButton),
+          :klass => ApplicationHelper::Button::CatalogItemButtonNew),
         button(
           :ab_group_reorder,
           'pficon pficon-edit fa-lg',

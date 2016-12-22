@@ -10,12 +10,14 @@ class ApplicationHelper::Toolbar::ServicetemplatesCenter < ApplicationHelper::To
           :atomic_catalogitem_new,
           'pficon pficon-add-circle-o fa-lg',
           t = N_('Add a New Catalog Item'),
-          t),
+          t,
+          :klass => ApplicationHelper::Button::ButtonNewDiscover),
         button(
           :catalogitem_new,
           'pficon pficon-add-circle-o fa-lg',
           t = N_('Add a New Catalog Bundle'),
-          t),
+          t,
+          :klass => ApplicationHelper::Button::ButtonNewDiscover),
         button(
           :catalogitem_edit,
           'pficon pficon-edit fa-lg',

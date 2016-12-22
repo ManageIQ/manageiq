@@ -18,7 +18,8 @@ class ApplicationHelper::Toolbar::ConditionsCenter < ApplicationHelper::Toolbar:
               }
             end
           end,
-          t),
+          t,
+          :klass => ApplicationHelper::Button::ButtonNewDiscover),
       ]
     ),
   ])

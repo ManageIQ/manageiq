@@ -11,7 +11,7 @@ class ApplicationHelper::Toolbar::DialogsCenter < ApplicationHelper::Toolbar::Ba
           'pficon pficon-add-circle-o fa-lg',
           t = N_('Add a new Dialog'),
           t,
-          :klass => ApplicationHelper::Button::DialogAction),
+          :klass => ApplicationHelper::Button::DialogNew),
         button(
           :dialog_edit,
           'pficon pficon-edit fa-lg',

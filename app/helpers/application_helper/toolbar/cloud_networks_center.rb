@@ -12,7 +12,8 @@ class ApplicationHelper::Toolbar::CloudNetworksCenter < ApplicationHelper::Toolb
             :cloud_network_new,
             'pficon pficon-add-circle-o fa-lg',
             t = N_('Add a new Cloud Network'),
-            t),
+            t,
+            :klass => ApplicationHelper::Button::ButtonNewDiscover),
           separator,
           # TODO: Restore when cross controllers show_list issue fully in place
           # https://github.com/ManageIQ/manageiq/pull/12551

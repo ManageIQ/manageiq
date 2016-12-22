@@ -10,7 +10,8 @@ class ApplicationHelper::Toolbar::ZonesCenter < ApplicationHelper::Toolbar::Basi
           :zone_new,
           'pficon pficon-add-circle-o fa-lg',
           t = N_('Add a new Zone'),
-          t),
+          t,
+          :klass => ApplicationHelper::Button::ButtonNewDiscover),
       ]
     ),
   ])

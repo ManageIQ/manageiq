@@ -11,7 +11,7 @@ class ApplicationHelper::Toolbar::MiqAeDomainsCenter < ApplicationHelper::Toolba
           'pficon pficon-add-circle-o fa-lg',
           t = N_('Add a New Domain'),
           t,
-          :klass => ApplicationHelper::Button::MiqAeDefaultNoRecord),
+          :klass => ApplicationHelper::Button::MiqAeDefaultNoRecordNew),
         button(
           :miq_ae_domain_edit,
           'pficon pficon-edit fa-lg',

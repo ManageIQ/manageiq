@@ -10,7 +10,8 @@ class ApplicationHelper::Toolbar::ArbitrationProfilesCenter < ApplicationHelper:
                        :arbitration_profile_new,
                        'pficon pficon-edit fa-lg',
                        N_('Add a new Arbitration Profile'),
-                       N_('Add a new Arbitration Profile')),
+                       N_('Add a new Arbitration Profile'),
+                       :klass => ApplicationHelper::Button::ButtonNewDiscover),
                      button(
                        :arbitration_profile_edit,
                        'pficon pficon-edit fa-lg',

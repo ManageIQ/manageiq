@@ -1,4 +1,4 @@
-class ApplicationHelper::Button::CloudVolumeNew < ApplicationHelper::Button::Basic
+class ApplicationHelper::Button::CloudVolumeNew < ApplicationHelper::Button::ButtonNewDiscover
   def calculate_properties
     super
     if disabled?

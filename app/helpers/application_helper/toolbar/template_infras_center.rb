@@ -122,7 +122,8 @@ class ApplicationHelper::Toolbar::TemplateInfrasCenter < ApplicationHelper::Tool
           N_('Provision VMs using selected Template'),
           :url_parms => "main_div",
           :enabled   => false,
-          :onwhen    => "1"),
+          :onwhen    => "1",
+          :klass     => ApplicationHelper::Button::ButtonNewDiscover),
         button(
           :miq_template_clone,
           'product product-clone fa-lg',

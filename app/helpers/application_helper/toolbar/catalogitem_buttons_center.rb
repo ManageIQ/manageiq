@@ -18,7 +18,7 @@ class ApplicationHelper::Toolbar::CatalogitemButtonsCenter < ApplicationHelper::
           'pficon pficon-add-circle-o fa-lg',
           t = N_('Add a new Button'),
           t,
-          :klass => ApplicationHelper::Button::CatalogItemButton),
+          :klass => ApplicationHelper::Button::CatalogItemButtonNew),
         button(
           :ab_group_delete,
           'pficon pficon-delete fa-lg',

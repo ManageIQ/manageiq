@@ -112,7 +112,8 @@ class ApplicationHelper::Toolbar::VmsCenter < ApplicationHelper::Toolbar::Basic
           'pficon pficon-add-circle-o fa-lg',
           N_('Request to Provision'),
           N_('Provision'),
-          :url_parms => "main_div"),
+          :url_parms => "main_div",
+          :klass     => ApplicationHelper::Button::ButtonNewDiscover),
       ]
     ),
   ])

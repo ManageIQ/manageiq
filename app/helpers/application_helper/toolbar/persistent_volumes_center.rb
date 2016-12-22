@@ -13,7 +13,8 @@ class ApplicationHelper::Toolbar::PersistentVolumesCenter < ApplicationHelper::T
           t = N_('Add a New Volume'),
           t,
           :image => "new",
-          :url   => "/new"),
+          :url   => "/new",
+          :klass => ApplicationHelper::Button::ButtonNewDiscover),
         button(
           :persistent_volume_edit,
           nil,

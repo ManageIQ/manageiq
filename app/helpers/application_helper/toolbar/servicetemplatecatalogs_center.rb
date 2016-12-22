@@ -10,7 +10,8 @@ class ApplicationHelper::Toolbar::ServicetemplatecatalogsCenter < ApplicationHel
           :st_catalog_new,
           'pficon pficon-add-circle-o fa-lg',
           t = N_('Add a New Catalog'),
-          t),
+          t,
+          :klass => ApplicationHelper::Button::ButtonNewDiscover),
         button(
           :st_catalog_edit,
           'pficon pficon-edit fa-lg',

@@ -16,7 +16,8 @@ class ApplicationHelper::Toolbar::MiqPoliciesCenter < ApplicationHelper::Toolbar
               }
           end,
           t,
-          :url_parms => "?typ=basic"),
+          :url_parms => "?typ=basic",
+          :klass     => ApplicationHelper::Button::ButtonNewDiscover),
       ]
     ),
   ])

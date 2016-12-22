@@ -10,7 +10,8 @@ class ApplicationHelper::Toolbar::MiqPolicyProfilesCenter < ApplicationHelper::T
           :profile_new,
           'pficon pficon-add-circle-o fa-lg',
           t = N_('Add a New Policy Profile'),
-          t),
+          t,
+          :klass => ApplicationHelper::Button::ButtonNewDiscover),
       ]
     ),
   ])

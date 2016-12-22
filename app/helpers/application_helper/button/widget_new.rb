@@ -1,5 +1,5 @@
-class ApplicationHelper::Button::WidgetNew < ApplicationHelper::Button::Basic
+class ApplicationHelper::Button::WidgetNew < ApplicationHelper::Button::ButtonNewDiscover
   def visible?
-    @view_context.x_node != 'root'
+    super && @view_context.x_node != 'root'
   end
 end

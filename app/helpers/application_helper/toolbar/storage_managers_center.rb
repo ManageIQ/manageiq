@@ -30,7 +30,8 @@ class ApplicationHelper::Toolbar::StorageManagersCenter < ApplicationHelper::Too
           'pficon pficon-add-circle-o fa-lg',
           t = N_('Add a New Storage Manager'),
           t,
-          :url => "/new"),
+          :url   => "/new",
+          :klass => ApplicationHelper::Button::ButtonNewDiscover),
         button(
           :storage_manager_edit,
           'pficon pficon-edit fa-lg',

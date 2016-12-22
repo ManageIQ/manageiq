@@ -10,7 +10,8 @@ class ApplicationHelper::Toolbar::MiqDialogsCenter < ApplicationHelper::Toolbar:
           :old_dialogs_new,
           'pficon pficon-add-circle-o fa-lg',
           t = N_('Add a new Dialog'),
-          t),
+          t,
+          :klass => ApplicationHelper::Button::ButtonNewDiscover),
         button(
           :old_dialogs_edit,
           'pficon pficon-edit fa-lg',

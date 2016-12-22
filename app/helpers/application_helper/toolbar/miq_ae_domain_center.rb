@@ -43,7 +43,7 @@ class ApplicationHelper::Toolbar::MiqAeDomainCenter < ApplicationHelper::Toolbar
           'pficon pficon-add-circle-o fa-lg',
           t = N_('Add a New Namespace'),
           t,
-          :klass => ApplicationHelper::Button::MiqAeDefault),
+          :klass => ApplicationHelper::Button::MiqAeNew),
         button(
           :miq_ae_namespace_edit,
           'pficon pficon-edit fa-lg',
