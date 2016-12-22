@@ -20,6 +20,9 @@ function ContainerTopologyCtrl($scope, $http, $interval, $location, topologyServ
     var pathname = $window.location.pathname.replace(/\/$/, '');
     if (pathname.match(/show$/)) {
       id = '';
+    } else if (pathname.match(/show\/(\d+)$/)) {
+      // search for pattern /<controller>/show/<id>$
+      id = '/' + (/show\/(\d+)$/.exec(pathname)[1]);
     } else {
       // search for pattern ^/<controler>/<id>$ in the pathname
       id = '/' + (/^\/[^\/]+\/(\d+)$/.exec(pathname)[1]);
