@@ -1696,10 +1696,20 @@ function chartData(type, data, data2) {
       _.isObject(data.axis.y.tick.format) &&
       data.axis.y.tick.format.function) {
     var format = data.axis.y.tick.format;
+    var max = _.max(_.flatten(_.tail(data.data.columns).map(_.tail)));
+    var min = _.min(_.flatten(_.tail(data.data.columns).map(_.tail)));
+    max = ManageIQ.charts.formatters[format.function].c3(format.options)(max).split(/[^0-9\,\.]/)[0];
+    min = ManageIQ.charts.formatters[format.function].c3(format.options)(min).split(/[^0-9\,\.]/)[0];
+    console.log(min);
+    console.log(max);
+    if(max - min < Math.pow(10, 1 - format.options.precision)){
+        format.options.precision += 1;
+        console.log(format);
+    }
     data.axis.y.tick.format = ManageIQ.charts.formatters[format.function].c3(format.options);
 
     var title_format = _.cloneDeep(format);
-    title_format.options.precision += 2;
+    title_format.options.precision += 1;
     data.tooltip.format.value = function (value, _ratio, _id) {
       var format = ManageIQ.charts.formatters[title_format.function].c3(title_format.options);
       return format(value);
