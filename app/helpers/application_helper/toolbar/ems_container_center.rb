@@ -24,6 +24,11 @@ class ApplicationHelper::Toolbar::EmsContainerCenter < ApplicationHelper::Toolba
           t = N_('Edit this Containers Provider'),
           t,),
         button(
+          :ems_container_disable,
+          'pficon pficon-trend-down fa-lg',
+          t = N_('Disable this Containers Provider'),
+          t,),
+        button(
           :ems_container_delete,
           'pficon pficon-delete fa-lg',
           t = N_('Remove this Containers Provider'),

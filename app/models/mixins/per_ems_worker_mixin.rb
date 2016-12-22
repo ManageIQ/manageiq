@@ -65,7 +65,8 @@ module PerEmsWorkerMixin
 
     def start_worker_for_ems(ems_or_queue_name)
       params = {:queue_name => queue_name_for_ems(ems_or_queue_name)}
-      start_worker(params)
+      ems = ems_or_queue_name.kind_of?(ExtManagementSystem) ? ems_or_queue_name : ems_from_queue_name(ems_or_queue_name)
+      start_worker(params) unless ems.disabled
     end
 
     def stop_worker_for_ems(ems_or_queue_name)

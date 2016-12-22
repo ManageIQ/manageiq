@@ -408,6 +408,14 @@ class ExtManagementSystem < ApplicationRecord
     @ems_infra_discovery_types ||= %w(virtualcenter scvmm rhevm)
   end
 
+  def disable_ems
+    update_attributes(:disabled => true)
+  end
+
+  def enable_ems
+    update_attributes(:disabled => false)
+  end
+
   def disconnect_inv
     hosts.each { |h| h.disconnect_ems(self) }
     vms.each   { |v| v.disconnect_ems(self) }
