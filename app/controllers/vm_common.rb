@@ -283,6 +283,7 @@ module VmCommon
       vmtree_nodes = vmtree(@record)
       @vm_tree = TreeBuilder.convert_bs_tree(vmtree_nodes).to_json
       @tree_name = "genealogy_tree"
+      @genealogy_tree = TreeBuilderGenealogy.new(:genealogy, :genealogy_tree, @sb, true, @record)
       @button_group = "vmtree"
     elsif @display == "compliance_history"
       count = params[:count] ? params[:count].to_i : 10
