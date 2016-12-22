@@ -12,6 +12,7 @@ class ReportController < ApplicationController
 
   before_action :check_privileges
   before_action :get_session_data
+  before_action :set_flash_messages, :only => :tree_select, :if => proc { @sb.try(:[], :flash_msg) }
   after_action  :cleanup_action
   after_action  :set_session_data
   layout 'application', :except => [:render_txt, :render_csv, :render_pdf]
@@ -915,6 +916,11 @@ class ReportController < ApplicationController
 
   def widget_import_service
     @widget_import_service ||= WidgetImportService.new
+  end
+
+  def set_flash_messages
+    @flash_array = @sb[:flash_msg]
+    @sb[:flash_msg] = nil
   end
 
   menu_section :vi
