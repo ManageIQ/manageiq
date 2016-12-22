@@ -1,7 +1,0 @@
-- if @report.nil?
-  %h3= _("Report not found.")
-- else
-  %fieldset
-    %h3= @title
-    = render :partial => "layouts/flash_msg"
-    = render :partial => "shared/report_chart_and_html", :locals => {:html => @html, :chart => @zgraph, :report => @report}

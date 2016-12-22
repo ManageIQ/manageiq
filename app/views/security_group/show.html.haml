@@ -1,5 +1,0 @@
-#main_div
-  - if ["instances", "network_ports"].include?(@display) && @showtype != "compare"
-    = render :partial => "layouts/gtl", :locals => {:action_url => "show/#{@record.id}"}
-  - elsif @showtype == 'main'
-    = render(:partial => 'main')

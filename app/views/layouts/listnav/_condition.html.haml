@@ -1,4 +1,0 @@
-- if @record.try(:name) && !%w(new copy create).include?(request.parameters["action"])
-  #accordion.panel-group
-    = miq_accordion_panel(truncate(@record.name, :length => truncate_length), true, "icon") do
-      = render_quadicon(@record, :mode => :icon, :size => 72, :typ => :listnav)

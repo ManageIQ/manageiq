@@ -1,9 +1,0 @@
-- if !@edit[:wf]
-  %span{:style => "color: red;"}
-    = @no_wf_msg
-
-- else
-  %h3= _('Request Info')
-  = render :partial => "miq_request/prov_wf", :locals  => {:wf => @edit[:wf]}
-  %br
-  = _("Note: Fields marked with * are required.")

@@ -1,6 +1,0 @@
-- if @sb[:active_tab] == "diagnostics_summary"
-  - if x_node.split('-').first == "root"
-    = render :partial => "diagnostics_database_tab"
-  - else
-    = render :partial => "layouts/flash_msg"
-    = render :partial => "ops/server_desc"
