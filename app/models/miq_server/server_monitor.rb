@@ -43,7 +43,7 @@ module MiqServer::ServerMonitor
   end
 
   def miq_server_time_threshold
-    (::Settings.server.heartbeat_timeout || 2.minutes).to_i_with_method
+    ::Settings.server.heartbeat_timeout.to_i_with_method
   end
 
   def monitor_servers_as_master
