@@ -190,9 +190,23 @@ module MiqPolicyController::AlertProfiles
     tree = nil
     unless @objects.empty?               # Build object tree
       if @assign[:new][:assign_to] == "ems_folder"
-        tree = build_belongsto_tree(@assign[:new][:objects].collect { |f| "EmsFolder_#{f}" }, true, false)
+        tree = TreeBuilderBelongsToHac.new(:vat_tree,
+                                           :vat,
+                                           @sb,
+                                           true,
+                                           :edit     => @edit,
+                                           :filters  => @filters,
+                                           :group    => @group,
+                                           :selected => @assign[:new][:objects].collect { |f| "EmsFolder_#{f}" })
       elsif @assign[:new][:assign_to] == "resource_pool"
-        tree = build_belongsto_tree(@assign[:new][:objects].collect { |f| "ResourcePool_#{f}" }, false, false, true)
+        tree = TreeBuilderBelongsToHac.new(:hac_tree,
+                                           :hac,
+                                           @sb,
+                                           true,
+                                           :edit     => @edit,
+                                           :filters  => @filters,
+                                           :group    => @group,
+                                           :selected => @assign[:new][:objects].collect { |f| "ResourcePool_#{f}" })
       else
         root_node = TreeNodeBuilder.generic_tree_node(
           "OBJROOT",

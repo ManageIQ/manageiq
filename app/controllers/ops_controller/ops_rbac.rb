@@ -928,13 +928,27 @@ module OpsController::OpsRbac
     [@group.get_managed_filters].flatten.each do |f|
       @filters[f.split("/")[-2] + "-" + f.split("/")[-1]] = f
     end
-    @tags_tree = TreeBuilderTags.new(:tags,
-                                     :tags_tree,
+    @tags_tree = TreeBuilderTags.new(:tags_tree,
+                                     :tags,
                                      @sb,
                                      true,
                                      :edit => @edit, :filters => @filters, :group => @group)
-    @hac_tree = build_belongsto_tree(@belongsto.keys, false, false)  # Build the Hosts & Clusters tree for this user
-    @vat_tree = build_belongsto_tree(@belongsto.keys, true, false)  # Build the VMs & Templates tree for this user
+    @hac_tree = TreeBuilderBelongsToHac.new(:hac_tree,
+                                            :hac,
+                                            @sb,
+                                            true,
+                                            :edit     => @edit,
+                                            :filters  => @filters,
+                                            :group    => @group,
+                                            :selected => @belongsto.keys)
+    @vat_tree = TreeBuilderBelongsToVat.new(:vat_tree,
+                                            :vat,
+                                            @sb,
+                                            true,
+                                            :edit     => @edit,
+                                            :filters  => @filters,
+                                            :group    => @group,
+                                            :selected => @belongsto.keys)
   end
 
   def rbac_role_get_details(id)
@@ -1033,12 +1047,14 @@ module OpsController::OpsRbac
           @edit[:new][:filters]["#{cat_name}-#{tag_name}"] = "/managed/#{cat_name}/#{tag_name}" # Put them in the hash
         end
       else                                          # Belongsto tag checked
+        class_prefix, id = params[:id].split('_').last.split('-')
+        klass = TreeBuilder.get_model_for_prefix(class_prefix)
         if params[:check] == "0"                    #   unchecked
-          @edit[:new][:belongsto].delete(params[:id].split('___').last) #     Remove the tag from the belongsto hash
-        else                                        #   checked
-          objc, objid = params[:id].split('___').last.split("_")      #     Get the object class and id
-          tobj = objc.constantize.find(objid)       #     Get the record
-          @edit[:new][:belongsto][params[:id].split('___').last] = MiqFilter.object2belongsto(tobj) # Put the tag into the belongsto hash
+          @edit[:new][:belongsto].delete("#{klass}_#{from_cid(id)}") #     Remove the tag from the belongsto hash
+        else
+          object = klass.safe_constantize.find(from_cid(id))
+          # Put the tag into the belongsto hash
+          @edit[:new][:belongsto]["#{klass}_#{from_cid(id)}"] = MiqFilter.object2belongsto(object)
         end
       end
     end
@@ -1100,8 +1116,20 @@ module OpsController::OpsRbac
                                      @sb,
                                      true,
                                      :edit => @edit, :filters => @filters, :group => @group)
-    @hac_tree = build_belongsto_tree(@edit[:new][:belongsto].keys, false, false)  # Build the Hosts & Clusters tree for this user
-    @vat_tree = build_belongsto_tree(@edit[:new][:belongsto].keys, true, false)  # Build the VMs & Templates tree for this user
+    @hac_tree = TreeBuilderBelongsToHac.new(:hac,
+                                            :hac_tree,
+                                            @sb,
+                                            true,
+                                            :edit     => @edit,
+                                            :group    => @group,
+                                            :selected => @edit[:new][:belongsto].keys)
+    @vat_tree = TreeBuilderBelongsToVat.new(:vat,
+                                            :vat_tree,
+                                            @sb,
+                                            true,
+                                            :edit     => @edit,
+                                            :group    => @group,
+                                            :selected => @edit[:new][:belongsto].keys)
   end
 
   # Set group record variables to new values

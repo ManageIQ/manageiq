@@ -186,29 +186,13 @@
         = _("This user is limited to the selected items and their children.")
         %br/
         %br/
-        #hac_treebox.treeview-pf-hover.treeview-pf-select{:style => "color:#000"}
-        = render(:partial => "layouts/tree",
-                 :locals  => {:tree_id           => "hac_treebox",
-                              :tree_name         => "hac_tree",
-                              :bs_tree           => @hac_tree,
-                              :oncheck           => @edit.nil? ? nil : "miqOnCheckUserFilters",
-                              :check_url         => "ops/rbac_group_field_changed/#{@group.id || "new"}___",
-                              :highlight_changes => true,
-                              :checkboxes        => true})
+        = render(:partial => 'shared/tree', :locals => {:tree => @hac_tree, :name => @hac_tree.name})
       = miq_tab_content('vms_templates') do
         %br/
         = _("This user is limited to the selected folders and their children.")
         %br/
         %br/
-        #vat_treebox.treeview-pf-hover.treeview-pf-select{:style => "color:#000"}
-        = render(:partial => "layouts/tree",
-                 :locals  => {:tree_id           => "vat_treebox",
-                              :tree_name         => "vat_tree",
-                              :bs_tree           => @vat_tree,
-                              :oncheck           => @edit.nil? ? nil : "miqOnCheckUserFilters",
-                              :check_url         => "/ops/rbac_group_field_changed/#{@group.id || "new"}___",
-                              :highlight_changes => true,
-                              :checkboxes        => true})
+        = render(:partial => 'shared/tree', :locals => {:tree => @vat_tree, :name => @vat_tree.name})
 :javascript
   miq_tabs_init('#rbac_group_tabs');
 %script{:type => "text/javascript"}
