@@ -802,7 +802,7 @@ module ReportController::Reports::Editor
         if params[:available_fields].include?(af[1])        # See if this column was selected to move
           unless @edit[:new][:fields].include?(af)          # Only move if it's not there already
             @edit[:new][:fields].push(af)                     # Add it to the new fields list
-            if af[0].include?(":")                            # Not a base column
+            if af[0].include?(":") && !af[1].include?(CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX) # Not a base column
               table = af[0].split(" : ")[0].split(".")[-1]    # Get the table name
               table = table.singularize unless table == "OS"  # Singularize, except "OS"
               temp = af[0].split(" : ")[1]

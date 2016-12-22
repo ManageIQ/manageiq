@@ -124,14 +124,31 @@ class MiqReport < ApplicationRecord
     }
   end
 
+  # example
+  # converts  "Host.hardware.disks-filename" to
+  # ["Host", "hardware", "disk", "filename"]
+  def self.parse_column(column)
+    prefix = CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX
+    column, column_without_relations = column.split("-#{prefix}") if column.include?(prefix)
+
+    parts = column.split(".")
+
+    if column.include?(prefix)
+      parts.push("#{prefix}#{column_without_relations}")
+    end
+
+    parts[-1] = parts.last.split("-").first # Strip off field name from last element
+
+    parts
+  end
+
   def self.display_filter_details(cols, mode)
     # mode => :field || :tag
     # Only return cols from has_many sub-tables
     return [] if cols.nil?
     cols.inject([]) do |r, c|
       # eg. c = ["Host.Hardware.Disks : File Name", "Host.hardware.disks-filename"]
-      parts = c.last.split(".")
-      parts[-1] = parts.last.split("-").first # Strip off field name from last element
+      parts = parse_column(c.last)
 
       if parts.last == "managed"
         next(r) unless mode == :tag
