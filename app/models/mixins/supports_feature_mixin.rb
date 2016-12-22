@@ -59,6 +59,7 @@ module SupportsFeatureMixin
 
   QUERYABLE_FEATURES = {
     :add_host                   => 'Add Host',
+    :add_interface              => 'Add Interface',
     :associate_floating_ip      => 'Associate a Floating IP',
     :control                    => 'Basic control operations',
     # FIXME: this ^ is just a internal helper and should be refactored
@@ -92,6 +93,7 @@ module SupportsFeatureMixin
     :refresh_new_target         => 'Refresh non-existing record',
     :regions                    => 'Regions of a Provider',
     :remove_host                => 'Remove Host',
+    :remove_interface           => 'Remove Interface',
     :resize                     => 'Resizing',
     :retire                     => 'Retirement',
     :smartstate_analysis        => 'Smartstate Analaysis',

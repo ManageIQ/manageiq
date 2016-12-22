@@ -609,6 +609,8 @@
       - network.update.end
       - router.create.end
       - router.delete.end
+      - router.interface.create
+      - router.interface.delete
       - router.update.end
       - security_group.create.end
       - security_group.delete.end
