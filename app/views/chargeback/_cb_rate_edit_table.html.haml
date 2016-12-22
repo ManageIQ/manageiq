@@ -1,9 +1,12 @@
 - url = url_for(:action => 'cb_rate_form_field_changed', :id => @edit[:rec_id] || "new")
+- breakdown_present = @edit[:new][:details].any? { |d| d.key? :breakdown_options }
 %table.table.table-bordered{:id => "chargeback_rate_edit_form"}
   %thead
     %tr
       %th{:rowspan => "2"}= _('Group')
       %th{:rowspan => "2"}= _('Description')
+      - if breakdown_present
+        %th{:rowspan => '2'}= _('Breakdown')
       %th{:rowspan => "2"}= _('Per Time')
       %th{:rowspan => "2"}= _('Per Unit')
       %th{:colspan => "2"}= _('Range')
@@ -28,6 +31,11 @@
           = h(rate_detail_group(detail[:group]))
         %td{:rowspan => num_tiers}
           = detail[:description]
+        - if breakdown_present
+          %td{:rowspan => num_tiers}
+            - breakdown_options = detail[:breakdown_options]
+            - if breakdown_options.present?
+              = select_tag("breakdown_#{detail_index}", options_for_select(breakdown_options, detail[:breakdown]), 'data-miq_observe' => {:url => url}.to_json)
         %td{:rowspan => num_tiers}
           = select_tag("per_time_#{detail_index}",
             options_for_select(@edit[:new][:per_time_types].invert, detail[:per_time]),
