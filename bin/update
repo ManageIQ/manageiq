@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 require_relative '../lib/manageiq/environment'
 
-chdir ManageIQ::Environment::APP_ROOT do
+Dir.chdir ManageIQ::Environment::APP_ROOT do
   # This script is a way to update your development environment automatically.
   # Add necessary update steps to this file.
   ManageIQ::Environment.ensure_config_files
