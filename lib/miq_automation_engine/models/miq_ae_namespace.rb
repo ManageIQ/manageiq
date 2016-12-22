@@ -15,7 +15,7 @@ class MiqAeNamespace < ApplicationRecord
   validates_presence_of   :name
   validates_format_of     :name, :with    => /\A[\w\.\-\$]+\z/i,
                                  :message => N_("may contain only alphanumeric and _ . - $ characters")
-  validates_uniqueness_of :name, :scope => :parent_id
+  validates_uniqueness_of :name, :scope => :parent_id, :case_sensitive => false
 
   def self.find_by_fqname(fqname, include_classes = true)
     return nil if fqname.blank?

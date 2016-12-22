@@ -31,6 +31,33 @@ describe MiqAeNamespace do
       subject.valid?
       expect(subject.errors[:name]).to be_present
     end
+
+    context "with a duplicite names" do
+      let(:domain) { FactoryGirl.create(:miq_ae_domain) }
+      let(:ns1)    { FactoryGirl.create(:miq_ae_namespace, :name => 'ns1', :parent_id => domain.id) }
+
+      before do
+        FactoryGirl.create(:miq_ae_namespace, :name => 'namespace', :parent_id => ns1.id)
+      end
+
+      it "with a distinct path is allowed" do
+        # domain/ns1/namespace
+        # domain/ns2/namespace
+        ns2 = FactoryGirl.create(:miq_ae_namespace, :name => 'ns2', :parent_id => domain.id)
+        dup_namespace = FactoryGirl.create(:miq_ae_namespace, :name => 'namespace', :parent_id => ns2.id)
+
+        expect(ns2.valid?).to be_truthy
+        expect(dup_namespace.valid?).to be_truthy
+      end
+
+      it "with a same path is not allowed" do
+        # domain/ns1/namespace
+        # domain/ns1/NAMESPACE
+        expect do
+          FactoryGirl.create(:miq_ae_namespace, :name => 'NAMESPACE', :parent_id => ns1.id)
+        end.to raise_error("Validation failed: Name has already been taken")
+      end
+    end
   end
 
   before do
@@ -80,6 +107,7 @@ describe MiqAeNamespace do
     n1 = FactoryGirl.create(:miq_ae_domain, :tenant => @user.current_tenant)
     expect { n1.editable?(nil) }.to raise_error(ArgumentError)
   end
+
   it 'find_by_fqname works with and without leading slash' do
     n1 = MiqAeNamespace.find_or_create_by_fqname("foo/bar")
     MiqAeNamespace.find_by_fqname('/foo/bar').id == n1.id
