@@ -20,7 +20,8 @@
 //= require numeral
 //= require cable
 //= require miq_api
-//= require rxjs/dist/rx.all
+//= require rxjs/rx.global
+//= require miq_observable
 //= require miq_angular_application
 //= require_tree ./angular_modules/
 //= require_tree ./controllers/
@@ -88,5 +89,4 @@
 //= require miq_timeline
 // Bower packages
 //= require manageiq-ui-components/dist/js/ui-components
-//= require rx-angular/dist/rx.angular
 //= require patternfly-timeline/dist/timeline
