@@ -1,8 +1,8 @@
 /* global miqHttpInject */
 
 miqHttpInject(angular.module('containerLiveDashboard', ['ui.bootstrap', 'patternfly', 'patternfly.charts']))
-  .controller('containerLiveDashboardController', ['$scope', 'pfViewUtils', '$http', '$interval', '$timeout', '$window',
-  function ($scope, pfViewUtils, $http, $interval, $timeout, $window) {
+  .controller('containerLiveDashboardController', ['$scope', 'pfViewUtils', '$http', '$interval', '$timeout', '$window', '$element',
+  function ($scope, pfViewUtils, $http, $interval, $timeout, $window, $element) {
     $scope.tenant = '_ops';
 
     // get the pathname and remove trailing / if exist
@@ -10,6 +10,8 @@ miqHttpInject(angular.module('containerLiveDashboard', ['ui.bootstrap', 'pattern
     var id = '/' + (/^\/[^\/]+\/(\d+)$/.exec(pathname)[1]);
 
     var initialization = function() {
+      $scope.tenantChanged = false;
+
       $scope.filtersText = '';
       $scope.definitions = [];
       $scope.items = [];
@@ -68,11 +70,10 @@ miqHttpInject(angular.module('containerLiveDashboard', ['ui.bootstrap', 'pattern
       $scope.refresh();
     };
 
-    var doRefreshTenant = function (action) {
-      $scope.tenant = action.tenant;
+    $scope.doRefreshTenant = function() {
+      $scope.tenant = $element.find("#ad-hoc-tenant").val();
 
       initialization();
-      filterChange();
       getMetricTags();
     };
 
@@ -209,6 +210,13 @@ miqHttpInject(angular.module('containerLiveDashboard', ['ui.bootstrap', 'pattern
       }
     };
 
+    $scope.getTenants = function(include) {
+      $scope.tenantChanged = true;
+      return $http.get($scope.url + "&query=get_tenants&limit=7&include=" + include).then(function(response) {
+        return response.data.tenants;
+      });
+    }
+
     $scope.timeRanges = [
       {title: _("Hours"), value: 1},
       {title: _("Days"), value: 24},
@@ -260,21 +268,7 @@ miqHttpInject(angular.module('containerLiveDashboard', ['ui.bootstrap', 'pattern
     };
 
     $scope.actionsConfig = {
-      actionsInclude: true,
-      moreActions: [
-        {
-          name: 'System',
-          tenant: '_system',
-          title: __("Use the System Tenant Metrics"),
-          actionFn: doRefreshTenant
-        },
-        {
-          name: 'Ops',
-          tenant: '_ops',
-          title: __("Use the Ops Tenant Metrics"),
-          actionFn: doRefreshTenant
-        }
-      ]
+      actionsInclude: true
     };
 
     $scope.graphToolbarConfig = {

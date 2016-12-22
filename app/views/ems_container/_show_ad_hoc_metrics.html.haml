@@ -1,6 +1,25 @@
 = render :partial => "layouts/flash_msg"
 
 .containers-live-dashboard.row.miq-dashboard-view.miq-metrics{"ng-controller" => "containerLiveDashboardController"}
+
+  .col-md-12.ad-hoc-tenant{"ng-if" => "!viewGraph"}
+    %button.btn.btn-primary.ad-hoc-tenant-button{"type" => "button",
+                                                 "ng-disabled" => "!tenantChanged",
+                                                 "ng-click" => "doRefreshTenant()"}
+      = _("Set tenant")
+    %input.form-control{"id"                   => "ad-hoc-tenant",
+                        "type"                 => "text",
+                        "ng-model"             => "tenant",
+                        "placeholder"          => _("Choose Tenants"),
+                        "typeahead"            => "tenenat for tenenat in getTenants($viewValue)",
+                        "typeahead-loading"    => "loadingTenants",
+                        "typeahead-no-results" => "noResults",
+                        "typeahead-wait-ms"    => 1000}
+    %i.glyphicon.glyphicon-refresh{"ng-show" => "loadingTenants"}
+    %div{"ng-show" => "noResults"}
+      %i.glyphicon.glyphicon-remove
+      = _("No Results Found")
+
   %div{"ng-if" => "!viewGraph"}
     %div{"pf-toolbar" => "", "id" => "exampleToolbar", "config" => "toolbarConfig", "ng-if" => "tagsLoaded"}
       %actions

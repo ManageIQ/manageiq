@@ -9,8 +9,12 @@ describe('containerLiveDashboardController', function() {
 
   beforeEach(function() {
     var $window = {location: { pathname: '/ems_container/42' }};
+    var $element = function() {
+      this.find = function() { return "_ops" };
+    };
     module(function($provide) {
       $provide.value('$window', $window);
+      $provide.value('$element', $element);
     });
   });
 
@@ -47,7 +51,7 @@ describe('containerLiveDashboardController', function() {
     });
   });
 
-  describe('count increment', function() {    
+  describe('count increment', function() {
     it('should increment the count', function() {
       $scope.countIncrement();
       expect($scope.timeFilter.range_count).toBe(2);
@@ -60,7 +64,7 @@ describe('containerLiveDashboardController', function() {
     });
   });
 
-  describe('check numeric formater', function() {    
+  describe('check numeric formater', function() {
     it('should fomrat numbers correctly', function() {
       expect($scope.items[0].lastValues[1480424640000]).toBe("10.00");
       expect($scope.items[0].lastValues[1480424630000]).toBe("1.01k");
