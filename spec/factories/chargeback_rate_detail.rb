@@ -1,16 +1,10 @@
 FactoryGirl.define do
-  factory :chargeback_rate_detail, :traits => [:euro, :bytes] do
+  factory :chargeback_rate_detail do
     group   "unknown"
     source  "unknown"
     chargeback_rate
-
-    trait :euro do
-      detail_currency { FactoryGirl.create(:chargeback_rate_detail_currency_EUR) }
-    end
-
-    trait :bytes do
-      detail_measure { FactoryGirl.create(:chargeback_rate_detail_measure_bytes) }
-    end
+    detail_currency { FactoryGirl.create(:chargeback_rate_detail_currency) }
+    detail_measure { FactoryGirl.create(:chargeback_rate_detail_measure) }
 
     transient do
       tiers_params nil
