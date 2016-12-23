@@ -260,4 +260,24 @@ describe EmsCloud do
       end
     end
   end
+
+  describe ".connected_provider_types" do
+    it "return :mixed_providers when there is no providers" do
+      result = described_class.connected_provider_types
+      expect(result).to eq(:mixed_providers)
+    end
+
+    it "return :vcloud when there is VMware only provider" do
+      FactoryGirl.create(:ems_vmware_cloud)
+      result = described_class.connected_provider_types
+      expect(result).to eq(:vcloud)
+    end
+
+    it "return :mixed_providers when there is non-VMware provider" do
+      FactoryGirl.create(:ems_vmware_cloud)
+      FactoryGirl.create(:ems_amazon)
+      result = described_class.connected_provider_types
+      expect(result).to eq(:mixed_providers)
+    end
+  end
 end

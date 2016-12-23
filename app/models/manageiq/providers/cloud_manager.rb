@@ -127,5 +127,15 @@ module ManageIQ::Providers
     def create_cloud_tenant(options)
       CloudTenant.create_cloud_tenant(self, options)
     end
+
+    def self.connected_provider_types
+      types = ManageIQ::Providers::CloudManager.pluck(:type).uniq
+      vcloud_included = types.delete('ManageIQ::Providers::Vmware::CloudManager').present?
+      if vcloud_included && types.blank?
+        :vcloud
+      else
+        :mixed_providers
+      end
+    end
   end
 end
