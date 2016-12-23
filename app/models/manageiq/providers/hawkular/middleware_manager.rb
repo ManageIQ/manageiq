@@ -262,6 +262,14 @@ module ManageIQ::Providers
           :binary_content        => hash[:file]["file"].read,
           :resource_path         => ems_ref.to_s
         }
+        unless hash[:file]['server_groups'].nil?
+          # in case of deploying into server group the resource path should point to the domain controller
+          deployment_data[:server_groups] = hash[:file]['server_groups']
+          server_group_path_hash = ::Hawkular::Inventory::CanonicalPath.parse(deployment_data[:resource_path]).to_h
+          server_group_path_hash[:resource_ids].slice!(1..-1)
+          host_controller_path = ::Hawkular::Inventory::CanonicalPath.new(server_group_path_hash)
+          deployment_data[:resource_path] = host_controller_path.to_s
+        end
 
         connection.operations(true).add_deployment(deployment_data) do |on|
           on.success do |data|

@@ -4031,6 +4031,10 @@
       :description: Edit Tags of Middleware Server Groups
       :feature_type: control
       :identifier: middleware_server_group_tag
+    - :name: Add middleware deployment
+      :description: Add middleware deployment
+      :feature_type: admin
+      :identifier: middleware_group_deployment_add
 
 # Middleware Messaging
 - :name: Middleware Messaging
