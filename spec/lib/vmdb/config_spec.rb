@@ -14,7 +14,7 @@ describe VMDB::Config do
     it "normal" do
       resource = FactoryGirl.create(:miq_server)
       MiqRegion.seed
-      data = Settings.to_hash
+      data = {}
       data.store_path(:api, :token_ttl, "1.day")
       data = data.to_yaml
 
