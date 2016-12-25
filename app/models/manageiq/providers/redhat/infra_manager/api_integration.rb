@@ -2,6 +2,7 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
   extend ActiveSupport::Concern
 
   require 'ovirtsdk4'
+  @connection
 
   included do
     process_api_features_support
@@ -30,12 +31,19 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
     # Create the underlying connection according to the version of the oVirt API requested by
     # the caller:
     connect_method = "raw_connect_v#{version}".to_sym
-    connection = self.class.public_send(connect_method, server, port, path, username, password, service)
+    unless @connection.nil?
+      default_endpoint.path = version == 4 ? '/ovirt-engine/api' : connection.api_path
+      return @connection
+    end
+
+    # reinitialize the connection
+    _log.info("reinitialize the connection")
+    @connection = self.class.public_send(connect_method, server, port, path, username, password, service, compress)
 
     # Copy the API path to the endpoints table:
     default_endpoint.path = version == 4 ? '/ovirt-engine/api' : connection.api_path
 
-    connection
+    @connection
   end
 
   def supports_port?
