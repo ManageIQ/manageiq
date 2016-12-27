@@ -117,7 +117,7 @@ class DashboardController < ApplicationController
          (ws.set_data[:last_group_db_updated] && db.updated_on > ws.set_data[:last_group_db_updated]))
         # if group dashboard was locked earlier but now it is unlocked,
         # reset everything  OR if admin makes changes to a locked db do a reset on user's copies
-        if (db.set_data[:locked] && !ws.set_data[:locked]) || (db.set_data[:locked] && ws.set_data[:locked])
+        if db.set_data[:locked]
           ws.set_data = db.set_data
           ws.set_data[:last_group_db_updated] = db.updated_on
           ws.save
