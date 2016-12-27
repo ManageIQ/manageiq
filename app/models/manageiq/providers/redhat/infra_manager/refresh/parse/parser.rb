@@ -211,6 +211,8 @@ class ManageIQ::Providers::Redhat::InfraManager::Refresh::Parse::Parser
       result[:model] = hw_info[:product_name]
     end
 
+    result[:number_of_nics] = inv[:host_nics].count if inv[:host_nics]
+
     result
   end
 

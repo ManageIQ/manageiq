@@ -222,7 +222,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
       :cpu_type             => "Intel(R) Xeon(R) CPU           E5504  @ 2.00GHz",
       :manufacturer         => "",
       :model                => "",
-      :number_of_nics       => nil,
+      :number_of_nics       => 3,
       :memory_mb            => 56333,
       :memory_console       => nil,
       :cpu_sockets          => 2,
