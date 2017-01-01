@@ -286,3 +286,92 @@
           :finish: Infinity
           :fixed_rate: 0.0
           :variable_rate: 0.0
+    - :description: Container Resource Quota - cpu
+      :group: quota
+      :source: cpu
+      :metric: cpu
+      :per_time: hourly
+      :type_currency: Dollars
+      :tiers:
+        - :start: 0
+          :finish: Infinity
+          :fixed_rate: 0.0
+          :variable_rate: 0.0
+    - :description: Container Resource Quota - memory
+      :group: quota
+      :source: memory
+      :metric: memory
+      :per_time: hourly
+      :measure: Binary Prefix
+      :type_currency: Dollars
+      :tiers:
+        - :start: 0
+          :finish: Infinity
+          :fixed_rate: 0.0
+          :variable_rate: 0.0
+    - :description: Container Resource Quota - pods
+      :group: quota
+      :source: pods
+      :metric: pods
+      :per_time: hourly
+      :type_currency: Dollars
+      :tiers:
+        - :start: 0
+          :finish: Infinity
+          :fixed_rate: 0.0
+          :variable_rate: 0.0
+    - :description: Container Resource Quota - replicationcontrollers
+      :group: quota
+      :source: replicationcontrollers
+      :metric: replicationcontrollers
+      :per_time: hourly
+      :type_currency: Dollars
+      :tiers:
+        - :start: 0
+          :finish: Infinity
+          :fixed_rate: 0.0
+          :variable_rate: 0.0
+    - :description: Container Resource Quota - resourcequotas
+      :group: quota
+      :source: resourcequotas
+      :metric: resourcequotas
+      :per_time: hourly
+      :type_currency: Dollars
+      :tiers:
+        - :start: 0
+          :finish: Infinity
+          :fixed_rate: 0.0
+          :variable_rate: 0.0
+    - :description: Container Resource Quota - services
+      :group: quota
+      :source: services
+      :metric: services
+      :per_time: hourly
+      :type_currency: Dollars
+      :tiers:
+        - :start: 0
+          :finish: Infinity
+          :fixed_rate: 0.0
+          :variable_rate: 0.0
+    - :description: Container Resource Quota - secrets
+      :group: quota
+      :source: secrets
+      :metric: secrets
+      :per_time: hourly
+      :type_currency: Dollars
+      :tiers:
+        - :start: 0
+          :finish: Infinity
+          :fixed_rate: 0.0
+          :variable_rate: 0.0
+    - :description: Container Resource Quota - persistentvolumeclaims
+      :group: quota
+      :source: persistentvolumeclaims
+      :metric: persistentvolumeclaims
+      :per_time: hourly
+      :type_currency: Dollars
+      :tiers:
+        - :start: 0
+          :finish: Infinity
+          :fixed_rate: 0.0
+          :variable_rate: 0.0

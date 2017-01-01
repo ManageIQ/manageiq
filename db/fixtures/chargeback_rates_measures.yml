@@ -11,3 +11,7 @@
   :units_display: ["Bps","KBps","MBps","GBps"]
   :units: ["bps","kbps","mbps","gbps"]
   :step: '1000'
+- :name: Binary Prefix
+  :units_display: ["Bi", "Ki", "Mi", "Gi", "Ti", "Pi", "Ei"]
+  :units: ["bytes", "kibi"," mebi", "gibi", "tebi", "pebi", "exbi"]
+  :step: '1024'

@@ -23,7 +23,9 @@ class ChargebackRateDetail < ApplicationRecord
 
   def charge(relevant_fields, consumption)
     result = {}
-    if (relevant_fields & [metric_keys[0], cost_keys[0]]).present?
+
+    if (relevant_fields & [metric_keys[0], cost_keys[0]]).present? ||
+        (metric_keys[0].include?("quota") && consumption.resource.class.name.include?("Container"))
       metric_value, cost = metric_and_cost_by(consumption)
       if !consumption.chargeback_fields_present && fixed?
         cost = 0
@@ -37,6 +39,16 @@ class ChargebackRateDetail < ApplicationRecord
   def metric_value_by(consumption)
     return 1.0 if fixed?
 
+    if quota?
+      quota_items = if consumption.resource.class == ContainerProject
+                      consumption.resource.container_quota_items
+                    elsif consumption.resource.responds_to?(:container_project)
+                      consumption.resource.container_project.container_quota_items
+                    end
+
+      item = quota_items.find_by(:resource => metric)
+      return item.present? ? item.normalize_field_for_chargeback(:quota_enforced) : 0
+    end
     return 0 if consumption.none?(metric)
     return consumption.max(metric) if allocated?
     return consumption.avg(metric) if used?
@@ -52,6 +64,10 @@ class ChargebackRateDetail < ApplicationRecord
 
   def fixed?
     group == "fixed"
+  end
+
+  def quota?
+    group == 'quota'
   end
 
   # Set the rates according to the tiers
@@ -121,7 +137,7 @@ class ChargebackRateDetail < ApplicationRecord
       per_unit == 'megabytes' ? hr : hr = adjustment_measure(hr, 'megabytes')
     when "net_usage_rate_average", "disk_usage_rate_average" then
       per_unit == 'kbps' ? hr : hr = adjustment_measure(hr, 'kbps')
-    when "derived_vm_allocated_disk_storage", "derived_vm_used_disk_storage" then
+    when "derived_vm_allocated_disk_storage", "derived_vm_used_disk_storage", "memory" then
       per_unit == 'bytes' ? hr : hr = adjustment_measure(hr, 'bytes')
     else hr
     end
