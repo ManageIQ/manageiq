@@ -245,7 +245,7 @@ ManageIQ.explorer.processReplaceRightCell = function(data) {
 
   if (_.isObject(data.chartData)) {
     ManageIQ.charts.chartData = data.chartData;
-    // FIXME:  @out << Charting.js_load_statement(true)
+    load_c3_charts();
   }
 
   if (data.resetChanges) { ManageIQ.changes = null; }
