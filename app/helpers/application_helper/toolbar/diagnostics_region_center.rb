@@ -29,7 +29,7 @@ class ApplicationHelper::Toolbar::DiagnosticsRegionCenter < ApplicationHelper::T
           :role_start,
           'fa fa-play-circle-o fa-lg',
           proc do
-            _('Start the %{server_role_description} Role on Server %{server.name} [%{server.id}]') % {
+            _('Start the %{server_role_description} Role on Server %{server_name} [%{server_id}]') % {
               :server_role_description => @record.server_role.description,
               :server_name             => @record.miq_server.name,
               :server_id               => @record.miq_server.id}
