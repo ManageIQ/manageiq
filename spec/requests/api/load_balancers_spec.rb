@@ -38,7 +38,7 @@ RSpec.describe 'LoadBalancers API' do
       expect(response).to have_http_status(:ok)
     end
 
-    it 'forbids access to a blueprint without an appropriate role' do
+    it 'forbids access to a load balancer without an appropriate role' do
       load_balancer = FactoryGirl.create(:load_balancer)
       api_basic_authorize
 
