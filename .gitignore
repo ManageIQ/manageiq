@@ -76,7 +76,6 @@ log/*.txt
 log/call_graph_*.html
 
 # product/
-product/license
 product/automate
 
 # public/
