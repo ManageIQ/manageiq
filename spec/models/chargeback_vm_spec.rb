@@ -231,8 +231,8 @@ describe ChargebackVm do
 
   context "Report a chargeback of a tenant" do
     let(:options_tenant) { base_options.merge(:tenant_id => @tenant.id) }
-    let(:start_time)  { Time.parse('2012-09-01 07:00:00').utc }
-    let(:finish_time) { Time.parse('2012-09-01 10:00:00').utc }
+    let(:start_time)  { Time.parse('2012-09-01 07:00:00Z').utc }
+    let(:finish_time) { Time.parse('2012-09-01 10:00:00Z').utc }
 
     before do
       @tenant = FactoryGirl.create(:tenant)
