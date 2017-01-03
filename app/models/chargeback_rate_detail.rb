@@ -115,24 +115,24 @@ class ChargebackRateDetail < ApplicationRecord
   def rate_adjustment(hr)
     case metric
     when "cpu_usagemhz_rate_average" then
-      per_unit == 'megahertz' ? hr : hr = adjustment_measure(hr, 'megahertz')
+      per_unit == 'megahertz' ? hr : adjustment_measure('megahertz') * hr
     when "derived_memory_used", "derived_memory_available" then
-      per_unit == 'megabytes' ? hr : hr = adjustment_measure(hr, 'megabytes')
+      per_unit == 'megabytes' ? hr : adjustment_measure('megabytes') * hr
     when "net_usage_rate_average", "disk_usage_rate_average" then
-      per_unit == 'kbps' ? hr : hr = adjustment_measure(hr, 'kbps')
+      per_unit == 'kbps' ? hr : adjustment_measure('kbps') * hr
     when "derived_vm_allocated_disk_storage", "derived_vm_used_disk_storage" then
-      per_unit == 'bytes' ? hr : hr = adjustment_measure(hr, 'bytes')
+      per_unit == 'bytes' ? hr : adjustment_measure('bytes') * hr
     else hr
     end
   end
 
   # Adjusts the hourly rate to the per unit by default
-  def adjustment_measure(hr, pu_destiny)
+  def adjustment_measure(pu_destiny)
     measure = detail_measure
     pos_pu_destiny = measure.units.index(pu_destiny)
     pos_per_unit = measure.units.index(per_unit)
     jumps = pos_pu_destiny - pos_per_unit
-    hr.to_f * (measure.step**jumps)
+    measure.step.to_f**jumps
   end
 
   def affects_report_fields(report_cols)
