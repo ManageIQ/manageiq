@@ -1,4 +1,4 @@
-require_relative '../miq_ae_service/miq_ae_service_object_common'
+require_relative './miq_ae_service_object_common'
 module MiqAeMethodService
   class MiqAeServiceObject
     include MiqAeMethodService::MiqAeServiceObjectCommon
