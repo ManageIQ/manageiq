@@ -35,9 +35,6 @@ SyntaxCheck
 xfer_*.xml
 Thumbs.db
 
-# app/controllers/
-app/controllers/new_module.rb
-
 # app/views/layouts/
 app/views/layouts/_center_buttons_1.rhtml
 app/views/layouts/_center_buttons_new.rhtml
@@ -81,8 +78,6 @@ product/automate
 # public/
 /public/assets/
 /public/doc/
-public/test_grid.xml
-public/test_grid-0.xml
 public/upload
 public/pictures/
 public/ui/
