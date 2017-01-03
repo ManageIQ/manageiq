@@ -1192,6 +1192,7 @@
       :poll_method: :normal
       :restart_interval: 0.hours
       :starting_timeout: 10.minutes
+      :stopping_timeout: 10.minutes
     :embedded_ansible_worker:
       :poll: 10.seconds
       :memory_threshold: 0.megabytes

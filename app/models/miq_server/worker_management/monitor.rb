@@ -89,7 +89,7 @@ module MiqServer::WorkerManagement::Monitor
     processed_workers = []
     miq_workers.each do |w|
       next unless class_name.nil? || (w.type == class_name)
-      next unless [:not_responding, :memory_exceeded].include?(worker_get_monitor_reason(w.pid))
+      next unless monitor_reason_not_responding?(w)
       next unless [:waiting_for_stop_before_restart, :waiting_for_stop].include?(worker_get_monitor_status(w.pid))
       processed_workers << w
       worker_not_responding(w)
@@ -97,6 +97,12 @@ module MiqServer::WorkerManagement::Monitor
     end
     miq_workers.delete(*processed_workers) unless processed_workers.empty?
     processed_workers.collect(&:id)
+  end
+
+  NOT_RESPONDING = :not_responding
+  MEMORY_EXCEEDED = :memory_exceeded
+  def monitor_reason_not_responding?(w)
+    [NOT_RESPONDING, MEMORY_EXCEEDED].include?(worker_get_monitor_reason(w.pid)) || w.stopping_for_too_long?
   end
 
   def do_system_limit_exceeded
