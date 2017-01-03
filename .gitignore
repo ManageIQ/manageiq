@@ -88,12 +88,6 @@ public/upload
 public/pictures/
 public/ui/
 
-# public/javascripts/
-public/javascripts/jmaki.js
-public/javascripts/jmaki-uncompressed.js
-public/javascripts/glue.js
-public/javascripts/system-glue.js
-
 # spec/
 spec/replication/util/data/euwe_migrations
 
