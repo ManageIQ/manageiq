@@ -82,16 +82,11 @@ product/automate
 # public/
 /public/assets/
 /public/doc/
-public/dhtmlx_test.html
-public/dhtmlx_test_cal.html
 public/test_grid.xml
 public/test_grid-0.xml
 public/upload
 public/pictures/
 public/ui/
-
-# public/dhtmlx/
-public/dhtmlx/dhtmlxtoolbar.js.orig
 
 # public/javascripts/
 public/javascripts/jmaki.js
