@@ -1,9 +1,5 @@
 describe ChargebackVm do
-  def set_tier_param_for(metric, param, value, num_of_tier = 0)
-    tier = chargeback_rate.chargeback_rate_details.where(:metric => metric).first.chargeback_tiers[num_of_tier]
-    tier.send("#{param}=", value)
-    tier.save
-  end
+  include Spec::Support::ChargebackHelper
 
   let(:admin) { FactoryGirl.create(:user_admin) }
   let(:base_options) do
@@ -116,10 +112,6 @@ describe ChargebackVm do
     end
   end
 
-  def used_average_for(metric, hours_in_interval)
-    @vm1.metric_rollups.sum(&metric) / hours_in_interval
-  end
-
   context "Daily" do
     let(:hours_in_day) { 24 }
     let(:options) { base_options.merge(:interval => 'daily') }
@@ -145,7 +137,7 @@ describe ChargebackVm do
 
     it "cpu" do
       expect(subject.cpu_allocated_metric).to eq(cpu_count)
-      used_metric = used_average_for(:cpu_usagemhz_rate_average, hours_in_day)
+      used_metric = used_average_for(:cpu_usagemhz_rate_average, hours_in_day, @vm1)
       expect(subject.cpu_used_metric).to eq(used_metric)
 
       expect(subject.cpu_allocated_cost).to eq(cpu_count * count_hourly_rate * hours_in_day)
@@ -159,7 +151,7 @@ describe ChargebackVm do
 
     it "cpu_vm_and_cpu_container_project" do
       expect(subject.cpu_allocated_metric).to eq(cpu_count)
-      used_metric = used_average_for(:cpu_usagemhz_rate_average, hours_in_day)
+      used_metric = used_average_for(:cpu_usagemhz_rate_average, hours_in_day, @vm1)
       expect(subject.cpu_used_metric).to eq(used_metric)
 
       expect(subject.cpu_allocated_cost).to eq(cpu_count * count_hourly_rate * hours_in_day)
@@ -169,7 +161,7 @@ describe ChargebackVm do
 
     it "memory" do
       expect(subject.memory_allocated_metric).to eq(memory_available)
-      used_metric = used_average_for(:derived_memory_used, hours_in_day)
+      used_metric = used_average_for(:derived_memory_used, hours_in_day, @vm1)
       expect(subject.memory_used_metric).to eq(used_metric)
       expect(subject.memory_metric).to eq(subject.memory_allocated_metric + subject.memory_used_metric)
 
@@ -179,19 +171,19 @@ describe ChargebackVm do
     end
 
     it "disk io" do
-      used_metric = used_average_for(:disk_usage_rate_average, hours_in_day)
+      used_metric = used_average_for(:disk_usage_rate_average, hours_in_day, @vm1)
       expect(subject.disk_io_used_metric).to eq(used_metric)
       expect(subject.disk_io_used_cost).to be_within(0.01).of(used_metric * hourly_rate * hours_in_day)
     end
 
     it "net io" do
-      used_metric = used_average_for(:net_usage_rate_average, hours_in_day)
+      used_metric = used_average_for(:net_usage_rate_average, hours_in_day, @vm1)
       expect(subject.net_io_used_metric).to eq(used_metric)
       expect(subject.net_io_used_cost).to eq(used_metric * hourly_rate * hours_in_day)
     end
 
     it "storage" do
-      used_metric = used_average_for(:derived_vm_used_disk_storage, hours_in_day)
+      used_metric = used_average_for(:derived_vm_used_disk_storage, hours_in_day, @vm1)
       expect(subject.storage_used_metric).to eq(used_metric)
       expect(subject.storage_used_cost).to eq(used_metric / 1.gigabyte * count_hourly_rate * hours_in_day)
 
@@ -215,7 +207,7 @@ describe ChargebackVm do
 
       it "storage metrics" do
         expect(subject.storage_allocated_metric).to eq(vm_allocated_disk_storage.gigabytes)
-        used_metric = used_average_for(:derived_vm_used_disk_storage, hours_in_day)
+        used_metric = used_average_for(:derived_vm_used_disk_storage, hours_in_day, @vm1)
         expect(subject.storage_used_metric).to eq(used_metric)
         expect(subject.storage_metric).to eq(subject.storage_allocated_metric + subject.storage_used_metric)
 
@@ -280,7 +272,7 @@ describe ChargebackVm do
 
     it "cpu" do
       expect(subject.cpu_allocated_metric).to eq(cpu_count)
-      used_metric = used_average_for(:cpu_usagemhz_rate_average, hours_in_month)
+      used_metric = used_average_for(:cpu_usagemhz_rate_average, hours_in_month, @vm1)
       expect(subject.cpu_used_metric).to be_within(0.01).of(used_metric)
       expect(subject.cpu_used_cost).to be_within(0.01).of(used_metric * hourly_rate * hours_in_month)
       expect(subject.cpu_allocated_cost).to be_within(0.01).of(cpu_count * count_hourly_rate * hours_in_month)
@@ -296,7 +288,7 @@ describe ChargebackVm do
 
       it "cpu" do
         expect(subject.cpu_allocated_metric).to eq(cpu_count)
-        used_metric = used_average_for(:cpu_usagemhz_rate_average, hours_in_month)
+        used_metric = used_average_for(:cpu_usagemhz_rate_average, hours_in_month, @vm1)
         expect(subject.cpu_used_metric).to be_within(0.01).of(used_metric)
 
         fixed = fixed_rate * hours_in_month
@@ -311,7 +303,7 @@ describe ChargebackVm do
 
     it "memory" do
       expect(subject.memory_allocated_metric).to eq(memory_available)
-      used_metric = used_average_for(:derived_memory_used, hours_in_month)
+      used_metric = used_average_for(:derived_memory_used, hours_in_month, @vm1)
       expect(subject.memory_used_metric).to be_within(0.01).of(used_metric)
       expect(subject.memory_metric).to eq(subject.memory_allocated_metric + subject.memory_used_metric)
 
@@ -322,13 +314,13 @@ describe ChargebackVm do
     end
 
     it "disk io" do
-      used_metric = used_average_for(:disk_usage_rate_average, hours_in_month)
+      used_metric = used_average_for(:disk_usage_rate_average, hours_in_month, @vm1)
       expect(subject.disk_io_used_metric).to be_within(0.01).of(used_metric)
       expect(subject.disk_io_used_cost).to be_within(0.01).of(used_metric * hourly_rate * hours_in_month)
     end
 
     it "net io" do
-      used_metric = used_average_for(:net_usage_rate_average, hours_in_month)
+      used_metric = used_average_for(:net_usage_rate_average, hours_in_month, @vm1)
       expect(subject.net_io_used_metric).to be_within(0.01).of(used_metric)
       expect(subject.net_io_used_cost).to be_within(0.01).of(used_metric * hourly_rate * hours_in_month)
     end
@@ -346,7 +338,7 @@ describe ChargebackVm do
 
       it "storage with only fixed rates" do
         expect(subject.storage_allocated_metric).to eq(vm_allocated_disk_storage.gigabytes)
-        used_metric = used_average_for(:derived_vm_used_disk_storage, hours_in_month)
+        used_metric = used_average_for(:derived_vm_used_disk_storage, hours_in_month, @vm1)
         expect(subject.storage_used_metric).to be_within(0.01).of(used_metric)
         expect(subject.storage_metric).to eq(subject.storage_allocated_metric + subject.storage_used_metric)
 
@@ -361,7 +353,7 @@ describe ChargebackVm do
 
     it "storage" do
       expect(subject.storage_allocated_metric).to eq(vm_allocated_disk_storage.gigabytes)
-      used_metric = used_average_for(:derived_vm_used_disk_storage, hours_in_month)
+      used_metric = used_average_for(:derived_vm_used_disk_storage, hours_in_month, @vm1)
       expect(subject.storage_used_metric).to be_within(0.01).of(used_metric)
       expect(subject.storage_metric).to eq(subject.storage_allocated_metric + subject.storage_used_metric)
 
@@ -523,7 +515,7 @@ describe ChargebackVm do
 
     it "cpu" do
       expect(subject.cpu_allocated_metric).to eq(cpu_count)
-      used_metric = used_average_for(:cpu_usagemhz_rate_average, hours_in_month)
+      used_metric = used_average_for(:cpu_usagemhz_rate_average, hours_in_month, @vm1)
       expect(subject.cpu_used_metric).to be_within(0.01).of(used_metric)
       expect(subject.tag_name).to eq('Production')
     end
