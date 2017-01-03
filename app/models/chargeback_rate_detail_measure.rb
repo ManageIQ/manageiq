@@ -13,6 +13,12 @@ class ChargebackRateDetailMeasure < ApplicationRecord
     Hash[units_display.zip(units)]
   end
 
+  def adjust(from_unit, to_unit)
+    return 1 if from_unit == to_unit
+    jumps = units.index(to_unit) - units.index(from_unit)
+    step.to_f**jumps
+  end
+
   private def units_same_length
     unless (units.count == units_display.count)
       errors.add("Units Problem", "Units_display length diferent that the units length")

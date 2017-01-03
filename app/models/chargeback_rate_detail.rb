@@ -115,20 +115,10 @@ class ChargebackRateDetail < ApplicationRecord
 
   def rate_adjustment
     @rate_adjustment ||= if MetricUnits[metric]
-                           adjustment_measure(MetricUnits[metric])
+                           detail_measure.adjust(per_unit, MetricUnits[metric])
                          else
                            1
                          end
-  end
-
-  # Adjusts the hourly rate to the per unit by default
-  def adjustment_measure(pu_destiny)
-    return 1 if per_unit == pu_destiny
-    measure = detail_measure
-    pos_pu_destiny = measure.units.index(pu_destiny)
-    pos_per_unit = measure.units.index(per_unit)
-    jumps = pos_pu_destiny - pos_per_unit
-    measure.step.to_f**jumps
   end
 
   def rate_name
