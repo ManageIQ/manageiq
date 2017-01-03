@@ -12,7 +12,8 @@ module ManageIQ::Providers::Redhat::InfraManager::Refresh::Parse::Strategies
       result = []
       result_uids = {}
       guest_device_uids = {}
-      return result, result_uids if inv.nil?
+    added_hosts = []
+      return result, result_uids, added_hosts if inv.nil?
 
       inv.each do |vm_inv|
         vm_id = vm_inv.id
@@ -28,7 +29,7 @@ module ManageIQ::Providers::Redhat::InfraManager::Refresh::Parse::Strategies
         storages = []
         vm_inv.disks.to_miq_a.each do |disk|
           disk.storage_domains.to_miq_a.each do |sd|
-            byebug
+            #TODO: this is horrible, fix it!!!!!!!
             storages << storage_uids[sd.id]
           end
         end
@@ -37,13 +38,19 @@ module ManageIQ::Providers::Redhat::InfraManager::Refresh::Parse::Strategies
         storage = storages.first
 
         # Determine the cluster
-        ems_cluster = cluster_uids[vm_inv.attributes.fetch_path(:cluster, :id)]
+        ems_cluster = cluster_uids[vm_inv.cluster.id]
 
         # If the VM is running it will have a host name in the data
         # Otherwise if it is assigned to run on a specific host the host ID will be in the placement_policy
-        host_id = vm_inv.host&.id
-        host_id = vm_inv.placement_policy&.hosts&.id if host_id.blank?
+        host_id = vm_inv.try(:host)&.id
+        host_id = vm_inv.try(:placement_policy)&.hosts&.id if host_id.blank?
         host = host_uids.values.detect { |h| h[:uid_ems] == host_id } unless host_id.blank?
+
+        # If the vm has a host but the refresh does not include it in the "hosts" hash
+        if host.blank? && vm_inv.try(:host).present?
+          host = partial_host_hash(vm_inv.host)
+          added_hosts << host if host
+        end
 
         host_mor = host_id
         hardware = vm_inv_to_hardware_hash(vm_inv)
@@ -77,7 +84,12 @@ module ManageIQ::Providers::Redhat::InfraManager::Refresh::Parse::Strategies
         result << new_result
         result_uids[vm_id] = new_result
       end
-      return result, result_uids
+      return result, result_uids, added_hosts
+    end
+
+    def self.partial_host_hash(partial_host_inv)
+      ems_ref = ManageIQ::Providers::Redhat::InfraManager.make_ems_ref(partial_host_inv.href)
+      { :ems_ref => ems_ref, :uid_ems => partial_host_inv.id }
     end
 
     def create_vm_hash(template, ems_ref, vm_id, name)
@@ -97,13 +109,14 @@ module ManageIQ::Providers::Redhat::InfraManager::Refresh::Parse::Strategies
       return nil if inv.nil?
 
       result = {
-        :guest_os   => inv.attributes.fetch_path(:os, :type),
-        :annotation => inv.description
+        :guest_os   => inv.try(:os)&.type,
+        :annotation => inv.try(:description)
       }
 
       hdw = inv.cpu
-      result[:cpu_cores_per_socket] = hdw&.topology&.cores || 1
-      result[:cpu_sockets]          = hdw&.topology&.sockets || 1
+      topology = hdw.topology
+      result[:cpu_cores_per_socket] = topology&.cores || 1
+      result[:cpu_sockets]          = topology&.sockets || 1
       result[:cpu_total_cores]      = result[:cpu_sockets] * result[:cpu_cores_per_socket]
 
       result[:memory_mb] = inv.memory / 1.megabyte
@@ -120,7 +133,7 @@ module ManageIQ::Providers::Redhat::InfraManager::Refresh::Parse::Strategies
 
       inv.to_miq_a.each do |data|
         uid = data.id
-        address = data&.mac&.address
+        address = data&.try(:mac)&.address
         name = data.name
 
         lan = lan_uids[data&.network&.id] unless lan_uids.nil?
@@ -141,15 +154,14 @@ module ManageIQ::Providers::Redhat::InfraManager::Refresh::Parse::Strategies
     end
 
     def vm_inv_to_network_hashes(inv, guest_device_uids)
-      inv_net = inv&.reported_devices[0] #sdfasdfasdfasdfasdfasf dafa
-
+      reported_device = inv.respond_to?(:reported_devices) ?
+        inv.reported_devices[0] : nil
+      inv_net = reported_device.ips if reported_device
       result = []
       return result if inv_net.nil?
 
       inv_net.to_miq_a.each do |data|
-        new_result = {}
-        new_result[:ipaddress] = data.address
-
+        new_result = { :ipaddress => data.address }
         result << new_result unless new_result.blank?
       end
 
@@ -168,19 +180,17 @@ module ManageIQ::Providers::Redhat::InfraManager::Refresh::Parse::Strategies
 
       result = []
       return result if inv.nil?
-
       # RHEV initially orders disks by bootable status then by name. Attempt
       # to use the disk number in the name, if available, as an ordering hint
       # to support the case where a disk is added after initial VM creation.
       inv = inv.to_miq_a.sort_by do |disk|
         match = disk&.name.match(/disk[^\d]*(?<index>\d+)/i)
-        [disk&.bootable ? 0 : 1, match ? match[:index].to_i : Float::INFINITY, disk.name]
-      end.group_by { |d| d.interface }
+        [disk.try(:bootable) ? 0 : 1, match ? match[:index].to_i : Float::INFINITY, disk.name]
+      end.group_by { |d| d.try(:interface) }
 
       inv.each do |interface, devices|
         devices.each_with_index do |device, index|
           device_type = 'disk'
-
           storage_domain = device.storage_domains.first
           storage_mor = storage_domain && storage_domain.id
 
@@ -195,7 +205,7 @@ module ManageIQ::Providers::Redhat::InfraManager::Refresh::Parse::Strategies
             :size_on_disk    => device.actual_size ? device.actual_size.to_i : 0,
             :disk_type       => device.sparse == true ? 'thin' : 'thick',
             :mode            => 'persistent',
-            :bootable        => device.bootable
+            :bootable        => device.try(:bootable)
           }
 
           new_result[:storage] = storage_uids[storage_mor] unless storage_mor.nil?
@@ -218,28 +228,28 @@ module ManageIQ::Providers::Redhat::InfraManager::Refresh::Parse::Strategies
 
     def vm_inv_to_snapshot_hashes(inv)
       result = []
-      inv = inv.snapshots.to_miq_a.reverse
+      inv = inv.try(:snapshots).to_miq_a.reverse
       return result if inv.nil?
 
       parent_id = nil
       inv.each_with_index do |snapshot, idx|
         result << snapshot_inv_to_snapshot_hashes(snapshot, idx == inv.length - 1, parent_id)
-        parent_id = snapshot[:id]
+        parent_id = snapshot.id
       end
       result
     end
 
     def snapshot_inv_to_snapshot_hashes(inv, current, parent_uid = nil)
-      create_time = inv[:date].getutc
+      create_time = inv.date.getutc
       create_time_ems = create_time.iso8601(6)
 
       # Fix case where blank description comes back as a Hash instead
-      name = description = inv[:description]
+      name = description = inv.description
       name = "Active Image" if name[0, 13] == '_ActiveImage_'
 
       result = {
-        :uid_ems     => inv[:id],
-        :uid         => inv[:id],
+        :uid_ems     => inv.id,
+        :uid         => inv.id,
         :parent_uid  => parent_uid,
         :name        => name,
         :description => description,
@@ -252,7 +262,7 @@ module ManageIQ::Providers::Redhat::InfraManager::Refresh::Parse::Strategies
 
     def vm_inv_to_custom_attribute_hashes(inv)
       result = []
-      custom_attrs = inv.custom_properties
+      custom_attrs = inv.try(:custom_properties)
       return result if custom_attrs.nil?
 
       custom_attrs.each do |ca|
@@ -268,8 +278,10 @@ module ManageIQ::Providers::Redhat::InfraManager::Refresh::Parse::Strategies
       result
     end
 
+    require 'ostruct'
+
     def vm_memory_reserve(vm_inv)
-      in_bytes = vm_inv&.memory_policy&.guaranteed
+      in_bytes = vm_inv.try(:memory_policy)&.guaranteed
       in_bytes.nil? ? nil : in_bytes / Numeric::MEGABYTE
     end
   end
