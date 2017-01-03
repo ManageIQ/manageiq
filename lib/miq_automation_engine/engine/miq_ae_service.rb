@@ -3,12 +3,6 @@ require_relative 'miq_ae_service/miq_ae_service_object_common'
 require_relative 'miq_ae_service/miq_ae_service_vmdb'
 require_relative 'miq_ae_service/miq_ae_service_rbac'
 module MiqAeMethodService
-  class Deprecation < Vmdb::Deprecation
-    def self.default_log
-      $miq_ae_logger
-    end
-  end
-
   class MiqAeServiceFront
     include DRbUndumped
     attr_accessor :workspace

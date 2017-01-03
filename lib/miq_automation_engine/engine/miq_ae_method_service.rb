@@ -1,0 +1,3 @@
+require_relative 'miq_ae_method_service/deprecation'
+module MiqAeMethodService
+end

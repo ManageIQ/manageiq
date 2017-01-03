@@ -1,4 +1,5 @@
 require 'miq_ae_exception'
+require 'engine/miq_ae_method_service'
 require 'engine/miq_ae_service'
 require 'engine/miq_ae_service_model_base'
 require 'engine/miq_ae_event'
