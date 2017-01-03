@@ -101,13 +101,14 @@ describe MiqServer do
     end
 
     it "#current_log_patterns" do
-      allow(@miq_server).to receive_messages(:current_log_pattern_configuration => %w(/var/log/syslog*))
+      stub_settings(:log => {:collection => {:current => {:pattern => %w(/var/log/syslog*)}}})
       allow(@miq_server).to receive_messages(:pg_log_patterns => %w(/var/lib/pgsql/data/*.conf))
       expect(@miq_server.current_log_patterns).to match_array %w(/var/log/syslog* /var/lib/pgsql/data/*.conf)
     end
 
     it "#current_log_patterns with pg_logs duplicated in current_log_pattern_configuration" do
-      allow(@miq_server).to receive_messages(:current_log_pattern_configuration => %w(/var/log/syslog* /var/lib/pgsql/data/*.conf))
+      stub_settings(
+        :log => {:collection => {:current => {:pattern => %w(/var/log/syslog* /var/lib/pgsql/data/*.conf)}}})
       allow(@miq_server).to receive_messages(:pg_log_patterns => %w(/var/lib/pgsql/data/*.conf))
       expect(@miq_server.current_log_patterns).to match_array %w(/var/log/syslog* /var/lib/pgsql/data/*.conf)
     end
