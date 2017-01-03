@@ -59,7 +59,7 @@ class ChargebackRateDetail < ApplicationRecord
     variable_rate = 0.0
     tier_found, = chargeback_tiers.select do |tier|
       tier.starts_with_zero? && value.zero? ||
-      value > rate_adjustment(tier.start) && value <= rate_adjustment(tier.finish)
+        value > (rate_adjustment * tier.start) && value <= (rate_adjustment * tier.finish)
     end
     unless tier_found.nil?
       fixed_rate = tier_found.fixed_rate
@@ -86,7 +86,7 @@ class ChargebackRateDetail < ApplicationRecord
     hourly_fixed_rate    = hourly(fixed_rate, consumption)
     hourly_variable_rate = hourly(variable_rate, consumption)
 
-    hourly_fixed_rate + rate_adjustment(hourly_variable_rate) * value
+    hourly_fixed_rate + rate_adjustment * value * hourly_variable_rate
   end
 
   def hourly(rate, consumption)
@@ -113,12 +113,12 @@ class ChargebackRateDetail < ApplicationRecord
     'derived_vm_used_disk_storage'      => 'bytes'
   }.freeze
 
-  def rate_adjustment(hr)
-    if METRIC_UNITS[metric]
-      adjustment_measure(METRIC_UNITS[metric])
-    else
-      1
-    end * hr
+  def rate_adjustment
+    @rate_adjustment ||= if METRIC_UNITS[metric]
+                           adjustment_measure(METRIC_UNITS[metric])
+                         else
+                           1
+                         end
   end
 
   # Adjusts the hourly rate to the per unit by default
