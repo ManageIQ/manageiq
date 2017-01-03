@@ -1,4 +1,4 @@
-describe ManageIQ::Providers::Redhat::InfraManager::RefreshParser do
+describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Parse::Parser do
   context "#vm_inv_to_disk_hashes" do
     it "should assign location by boot order and name" do
       disk_inv = {:disks => [
@@ -28,7 +28,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::RefreshParser do
         }
       ]}
 
-      result = ManageIQ::Providers::Redhat::InfraManager::RefreshParser.vm_inv_to_disk_hashes(disk_inv, {})
+      result = ManageIQ::Providers::Redhat::InfraManager::Refresh::Parse::Parser.vm_inv_to_disk_hashes(disk_inv, {})
       hashes = result.collect do |d|
         {:interface   => d[:controller_type],
          :location    => d[:location],
@@ -68,7 +68,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::RefreshParser do
           :value => "0" * 1000
         ]
       }
-      result = ManageIQ::Providers::Redhat::InfraManager::RefreshParser.vm_inv_to_custom_attribute_hashes(inv)
+      result = ManageIQ::Providers::Redhat::InfraManager::Refresh::Parse::Parser.vm_inv_to_custom_attribute_hashes(inv)
       expect(result).to eq([
         {
           :section => "custom_field",
@@ -88,7 +88,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::RefreshParser do
           :type => "expected_os_type"
         }
       }
-      result = ManageIQ::Providers::Redhat::InfraManager::RefreshParser.extract_host_os_name(host_inv)
+      result = ManageIQ::Providers::Redhat::InfraManager::Refresh::Parse::Parser.extract_host_os_name(host_inv)
       expect(result).to eq("expected_os_type")
     end
 
@@ -96,7 +96,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::RefreshParser do
       host_inv = {
         :type => "some_os_type",
       }
-      result = ManageIQ::Providers::Redhat::InfraManager::RefreshParser.extract_host_os_name(host_inv)
+      result = ManageIQ::Providers::Redhat::InfraManager::Refresh::Parse::Parser.extract_host_os_name(host_inv)
       expect(result).to eq("some_os_type")
     end
 
@@ -104,8 +104,8 @@ describe ManageIQ::Providers::Redhat::InfraManager::RefreshParser do
       host_inv = {
         :type => "some_os_type",
       }
-      expect(ManageIQ::Providers::Redhat::InfraManager::RefreshParser).to receive(:extract_host_os_name)
-      ManageIQ::Providers::Redhat::InfraManager::RefreshParser.host_inv_to_os_hash(host_inv, "")
+      expect(ManageIQ::Providers::Redhat::InfraManager::Refresh::Parse::Parser).to receive(:extract_host_os_name)
+      ManageIQ::Providers::Redhat::InfraManager::Refresh::Parse::Parser.host_inv_to_os_hash(host_inv, "")
     end
   end
 end

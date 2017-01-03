@@ -1,0 +1,2695 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://localhost:8443/api
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Connection:
+      - keep-alive
+      Content-Type:
+      - text/html;charset=UTF-8
+      Content-Length:
+      - '68'
+      Date:
+      - Mon, 28 Nov 2016 12:55:03 GMT
+    body:
+      encoding: UTF-8
+      string: "<html><head><title>Error</title></head><body>Not Found</body></html>"
+    http_version: 
+  recorded_at: Mon, 28 Nov 2016 12:55:03 GMT
+- request:
+    method: get
+    uri: https://localhost:8443/ovirt-engine/api
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+  response:
+    status:
+      code: 401
+      message: Unauthorized
+    headers:
+      Connection:
+      - keep-alive
+      Www-Authenticate:
+      - Basic realm="RESTAPI"
+      Content-Type:
+      - text/html;charset=UTF-8
+      Content-Length:
+      - '71'
+      Date:
+      - Mon, 28 Nov 2016 12:55:03 GMT
+    body:
+      encoding: UTF-8
+      string: "<html><head><title>Error</title></head><body>Unauthorized</body></html>"
+    http_version: 
+  recorded_at: Mon, 28 Nov 2016 12:55:03 GMT
+- request:
+    method: get
+    uri: https://admin%40internal:123456@localhost:8443/ovirt-engine/api
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
+      Set-Cookie:
+      - JSESSIONID=ZtHF6632CiJj4wCi7ceEYXMGvCq76IuQ40d_ZhWV.localhost; path=/ovirt-engine/api;
+        HttpOnly
+      Content-Type:
+      - application/xml
+      Content-Length:
+      - '856'
+      Link:
+      - "<https://localhost:8443/ovirt-engine/api/capabilities>; rel=capabilities,<https://localhost:8443/ovirt-engine/api/clusters>;
+        rel=clusters,<https://localhost:8443/ovirt-engine/api/clusters?search={query}>;
+        rel=clusters/search,<https://localhost:8443/ovirt-engine/api/datacenters>;
+        rel=datacenters,<https://localhost:8443/ovirt-engine/api/datacenters?search={query}>;
+        rel=datacenters/search,<https://localhost:8443/ovirt-engine/api/events>; rel=events,<https://localhost:8443/ovirt-engine/api/events;from={event_id}?search={query}>;
+        rel=events/search,<https://localhost:8443/ovirt-engine/api/hosts>; rel=hosts,<https://localhost:8443/ovirt-engine/api/hosts?search={query}>;
+        rel=hosts/search,<https://localhost:8443/ovirt-engine/api/networks>; rel=networks,<https://localhost:8443/ovirt-engine/api/networks?search={query}>;
+        rel=networks/search,<https://localhost:8443/ovirt-engine/api/roles>; rel=roles,<https://localhost:8443/ovirt-engine/api/storagedomains>;
+        rel=storagedomains,<https://localhost:8443/ovirt-engine/api/storagedomains?search={query}>;
+        rel=storagedomains/search,<https://localhost:8443/ovirt-engine/api/tags>;
+        rel=tags,<https://localhost:8443/ovirt-engine/api/bookmarks>; rel=bookmarks,<https://localhost:8443/ovirt-engine/api/icons>;
+        rel=icons,<https://localhost:8443/ovirt-engine/api/templates>; rel=templates,<https://localhost:8443/ovirt-engine/api/templates?search={query}>;
+        rel=templates/search,<https://localhost:8443/ovirt-engine/api/instancetypes>;
+        rel=instancetypes,<https://localhost:8443/ovirt-engine/api/instancetypes?search={query}>;
+        rel=instancetypes/search,<https://localhost:8443/ovirt-engine/api/users>;
+        rel=users,<https://localhost:8443/ovirt-engine/api/users?search={query}>;
+        rel=users/search,<https://localhost:8443/ovirt-engine/api/groups>; rel=groups,<https://localhost:8443/ovirt-engine/api/groups?search={query}>;
+        rel=groups/search,<https://localhost:8443/ovirt-engine/api/domains>; rel=domains,<https://localhost:8443/ovirt-engine/api/vmpools>;
+        rel=vmpools,<https://localhost:8443/ovirt-engine/api/vmpools?search={query}>;
+        rel=vmpools/search,<https://localhost:8443/ovirt-engine/api/vms>; rel=vms,<https://localhost:8443/ovirt-engine/api/vms?search={query}>;
+        rel=vms/search,<https://localhost:8443/ovirt-engine/api/disks>; rel=disks,<https://localhost:8443/ovirt-engine/api/disks?search={query}>;
+        rel=disks/search,<https://localhost:8443/ovirt-engine/api/jobs>; rel=jobs,<https://localhost:8443/ovirt-engine/api/storageconnections>;
+        rel=storageconnections,<https://localhost:8443/ovirt-engine/api/vnicprofiles>;
+        rel=vnicprofiles,<https://localhost:8443/ovirt-engine/api/diskprofiles>; rel=diskprofiles,<https://localhost:8443/ovirt-engine/api/cpuprofiles>;
+        rel=cpuprofiles,<https://localhost:8443/ovirt-engine/api/schedulingpolicyunits>;
+        rel=schedulingpolicyunits,<https://localhost:8443/ovirt-engine/api/schedulingpolicies>;
+        rel=schedulingpolicies,<https://localhost:8443/ovirt-engine/api/permissions>;
+        rel=permissions,<https://localhost:8443/ovirt-engine/api/macpools>; rel=macpools,<https://localhost:8443/ovirt-engine/api/networkfilters>;
+        rel=networkfilters,<https://localhost:8443/ovirt-engine/api/operatingsystems>;
+        rel=operatingsystems,<https://localhost:8443/ovirt-engine/api/externalhostproviders>;
+        rel=externalhostproviders,<https://localhost:8443/ovirt-engine/api/openstackimageproviders>;
+        rel=openstackimageproviders,<https://localhost:8443/ovirt-engine/api/openstackvolumeproviders>;
+        rel=openstackvolumeproviders,<https://localhost:8443/ovirt-engine/api/openstacknetworkproviders>;
+        rel=openstacknetworkproviders,<https://localhost:8443/ovirt-engine/api/katelloerrata>;
+        rel=katelloerrata"
+      Date:
+      - Mon, 28 Nov 2016 12:55:04 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAAJ1Yy3LbIBTd5ys02nZsSa7T8aTIWbVfkHbrwRK2iYGrIqTG
+        k+m/F6O3jDMQLTL3eThcAlyMnt84C2oiSwoiDZNlHAZEZJBTcUzDXy8/F5sw
+        KBUWOWYgSBpeSBk+bx8QLuj2IdAfYlScg5MkhzSMoKZSLYg4UkEiHRJluMB7
+        yqiiOi+QhKXhxBQ5gbCqVJpiB9CpXsnPJcEyO6XvfyoiL/9mWFHjdYPMscIZ
+        ESNKY4svhJ3YKMCLG6l1UkerVTwSvx8k8PTdKDua/7OTa2K9eJ2g7Gk1snua
+        nYRxeXEQRP0Fee5o9KpXsp1M5/XiI4H1u6KRndJKBRIfSQ4cU9Hlz4yfALJP
+        bBrjNT2Fjx07Izol7QHOHA+LNOhO6TSDviSN7EaV8IJh1a/GoPul22vYu73K
+        p8utz92MqEvR85ra/GHs/CYhXhyrcjgDG9k9zc7FuLw4HCVURUeiVTwS7TQa
+        n9+tMNmPXhux5gUA61I7zSfVPovW6TWNmg88nDncHd+zhLTsN34ju6fduUav
+        Li8Or7DvKBjR5yTVB44gmaIwP5bHDreSCpoVEg50uCEmJue6zEAmJrf+qahm
+        GGOLW3WyE8krHXIsgNHsUgna9wJ232dghw7T4nACLIjktCxHyze2OEFwnI23
+        cq/6tBi6sqPWcmZ0AgLNGys9//Kiu9t+Q9+Y3RrDNz2wwOzab+l1r2k+kLP7
+        XDler53sTLneIHPge14/6BpYxe9jz91+4O3C3EW/8TvBn3WfwBgQqVcKt5BT
+        WwdTFiSjmO1g/6qPlrKxevQqUdx+C8uf7rvpYPYMi3PHwa0H9BroGi8BVD/N
+        yDpPpMuaV5l+o4gDjMgIzMkWfmsWwQ/DAkXGNETop0sOcmuYLkEeUdRaxiHm
+        ORxw/AoyDddhwKm4SkkY7CvK8jQ0fGvavJrjST0OFWO7FmK7Xuon9Y7j6yMT
+        RRNXO73biaCy4rrlvYwZ8dH6GosChdl2g6JGmDqxvmpqso1R1EoDUjSBQuYR
+        ZYX++iH0ygY9A0Oml7OCJx+CJzbwGRhqb9Zd22hZh3n8cJi1bRgrrDaPlwQp
+        qv+lVnHybZEki9XmJVk/PT4+xetlvIm/xKunWFfexDygyPxQ8h+fnQvzZxEA
+        AA==
+    http_version: 
+  recorded_at: Mon, 28 Nov 2016 12:55:04 GMT
+- request:
+    method: get
+    uri: https://localhost:8443/ovirt-engine/api/clusters
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=ZtHF6632CiJj4wCi7ceEYXMGvCq76IuQ40d_ZhWV.localhost
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/xml
+      Content-Length:
+      - '1156'
+      Date:
+      - Mon, 28 Nov 2016 12:55:04 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAAO1YTY+jOBC9969A3FkIIelEIpnDjkba+6z2iBy7HLwBm7Eh
+        O/3vt/hKgHwM3QojjSY5pEP5lV/ZuMqvOvz0PU2sI2gjlNzYsz882wJJFRNy
+        v7H//vrFWdmWyYlkJFESNvYbGPvT9iWkSWFydNu+WPhpH61YA9/YrjoKnTsg
+        90KCSzLhtnB34QUEFp7nzIPXpRMsPHBWfjB3+JJxj7/yV0K5bQm2sUcha/oq
+        BEJzXIM5WyprIuThMVG5GgzkkBYJyYGlhMY4jW1pSDb21SG3E5x7EV0oSQpb
+        SmehW/16mSJkCfl/Sh9ME+bp0Z2GLgOdClMepZaxa5mIdF+jjyopUmh5B8Zp
+        qWOlDgPi2jQRLeFcSJG/7bUqspZ4YJyImmZFphUXyWmnu5YuKdqrNP5L5pBY
+        /4DJU9BgfSGpSN7sQZYSjSmTA80LDdvvq2W0DDBlusZOKuHMnUdGchJRkPeq
+        T4mpIcbdLb3dnBHiMLpjTuDRtbNi3tqZc+qt6HrGF2xWF6BRyO6SU0iVfosy
+        lQj6NlihwhpLVZqK3MKcKIPBaut5Xf8Kl2siTUY0AqK42ENG9jCoaRUOJNkl
+        wLa5LiB026f+XO4PJgvdGxGHhsbACjw3+2bs5taekRVQAO5wAMyfz32H4JFx
+        ArbgznqxXjrrNQnma7rzVzO/2eExyMGimlgl3kahe3Wrc4zVxCphxorFPt7Y
+        K7zUWKFJXt1xfr8wXyy1M9jci1ZK/lV6Y89tKxWy/LXszQFaKx3FeEmW0wxf
+        vIyq8W0q9hgCBn2ydKK4NUVY7ndksJIJCs3L7pnOyKbynEY4SQyih+azQ7lP
+        hJmImIgq3LLW48LecSmkhCSql4I7c3IZ2jsuuuRnw7CG5rNDTKLyOtXHHsPA
+        eoarrDSQBIeJOeOH5k6WEoGVQBJJoRnEP98KoTF/Gud7kPNEO5IkSsny5LT5
+        1/hfGTm7HUw6OCID7+vJjNVzDxGhWhkTScXwvdTH4cpA52D12MJ2FZHG0Iwq
+        sBCZ7knmqP2uZUIvzHslxxxEFgkeGRaViucIHy1dP5joREQVnrwSgFdftNPq
+        APJjlBXuVDq2C69OhPrpRnB3yUP31m6GV/KkspMiV+Wkx/KVboWMQYscL8Ke
+        ue+Cd0qGURpczgnfsXVrfZ80bG/+9yr42ZwD8TzieAuORdvzA2eFZdzxZ0vK
+        fW/HlzOvLu+jkA9S8GO4JlHwjFLqf1DDjwr6cRp+FN2jNfwo0mk0/HuoH6jh
+        R9FOo+FHUX9Uw/+ppFZPBf9U8E8F/1TwTwXfPSJPBf9U8JX9l1DwXv3xncuv
+        5rNuyvso5IMU/BiuSRT8Z+CkSPILDY95SLWoqtD2awwWq3FWWcNwm5vAQ7eL
+        e69gG7Xox3UAo+ge3QGMIp2mA3gP9QM7gFG003QAo6h//f/iN2uZOZdf7TJ5
+        r4TdRz57gN+nBwhOPcDs2QM8e4CH9wD3cnmyFmCorSvrFgsHUylmR/3YmfH+
+        HD+3i7jbNE3URtzjrIC/Zx9x+omH4X/OAtrVGyQAAA==
+    http_version: 
+  recorded_at: Mon, 28 Nov 2016 12:55:04 GMT
+- request:
+    method: get
+    uri: https://localhost:8443/ovirt-engine/api/vmpools
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=ZtHF6632CiJj4wCi7ceEYXMGvCq76IuQ40d_ZhWV.localhost
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/xml
+      Content-Length:
+      - '87'
+      Date:
+      - Mon, 28 Nov 2016 12:55:04 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAALOxr8jNUShLLSrOzM+zVTLUM1BSSM1Lzk/JzEu3VQoNcdO1
+        UFIoLknMS0nMyc9LtVWqTC1WsrfjsinLLcjPzynWt+MCAFWSaLdDAAAA
+    http_version: 
+  recorded_at: Mon, 28 Nov 2016 12:55:04 GMT
+- request:
+    method: get
+    uri: https://localhost:8443/ovirt-engine/api/networks
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=ZtHF6632CiJj4wCi7ceEYXMGvCq76IuQ40d_ZhWV.localhost
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/xml
+      Content-Length:
+      - '443'
+      Date:
+      - Mon, 28 Nov 2016 12:55:04 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAAMVTTW+cMBC951dYvjuGxbBYAnKpektO7bkyeLyxagy1vZv2
+        35cNUEi/RCui+GBmxs9+M8O84u5ra9AFnNedLXF8G2EEtumktqcSf/zwnuQY
+        +SCsFKazUOJv4PFddVNYCE+d++yrGzSs2UWPDlSJaXfRLhCwJ22Bil7TGU4z
+        IXmkkpykjGeEHVVNeJ4fSCpEmkKcxAwURlqWeBNypB9TEC1Uz8TtqQ0FffaX
+        Ywm+cboPQ53VO1DibAK6F1acoAUb0MOYYEHXuOW20Xan4mgPrtX+2m+PkQNT
+        4nWEvg7pxeqmd53SBmbWF6FXojWiBjMTTs6aSoogPjVD/8H9kfGKGSGe1llU
+        J1IIIptaEhY1nOQy4iRRTZQ3PFapjMfp2YRcp+JDXylhPBT0ai4HbThXUUGv
+        nyV49sPg+CWwBKtLW9DRWuD0Z3zxpfO7VUyHxzzlEItjohQ5pDwnjB0ZqQ9M
+        EXaQWZ6oNJMxG3uzCTn1ppj/+L8KPZoW+c02LT6mswn5f0LfW+BbUt1d4JtI
+        9xf4Jtq9BT49HJNft5lTvZiavyPfRuArzfwwh6PvBLE+DGwHAAA=
+    http_version: 
+  recorded_at: Mon, 28 Nov 2016 12:55:04 GMT
+- request:
+    method: get
+    uri: https://localhost:8443/ovirt-engine/api/storagedomains?search=sortby%20name%20asc%20page%201
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=ZtHF6632CiJj4wCi7ceEYXMGvCq76IuQ40d_ZhWV.localhost
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/xml
+      Content-Length:
+      - '1127'
+      Date:
+      - Mon, 28 Nov 2016 12:55:04 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAAO2Z3W6jOhDH7/MUEfcO3yRIhL3bJ9hzjYxtGqtgI+xk2/P0
+        ZwKkoUlPZW1wFGkTaVcwHvOfsbHnh5v9eGvq5YF1ikuxdfyV5yyZIJJy8bJ1
+        /vn1E22cpdJYUFxLwbbOO1POj3yRKS07/MIKKhvMhcoXS/hdWJe7jlVbx5UH
+        3mnExAsXzMUtd0e3sa8brHFYEsIQiaiHohKucMVS5NMkSWmMU+oFzpLTrWPk
+        OcTSx4OJhrzU2dJbay5e54zN3bcUayYP1bEzc5Ydq7fOhdG1HQQ8qmNqV++F
+        GiOYWqzLc4W1xmTH6Kg+MUzEM/dqTjKBG5bDYGE/c/vrhb0wW9Y1XB3f9tMo
+        TS2uTWnNmraGV+IkfL63KntoToLHK6tSlKvXk9hwbVVu7EOkEGx4qUbtLxrs
+        5y1wq3ZSf8r/w2Zdvu1kxWs2Vf8wTcWPy6wgTGjY8i+2hElTv9mWiVeGFGNE
+        SUlR5JEUbaiXorAi3oakfhVT//PS/vrhmX5vh/Wduf3luYW9gavAdQElRu8v
+        AzoaWS5fM3e4mij9b8eswQqact3tWeaON4vJI/vhvRDClMJGqXLVcsq6FUzH
+        qsblSteHVcfoDusVkQ3sXKPb5859SqJSl8n1jS3Wu9w9yPr4ryglFbKV/7rj
+        Zte3fu4ADyrGcpwfQtgPJ/eT/K/yyPABcwi6ZnmUhmngB2HqRRDzh/nsuleM
+        5lGQRmmyDtIkc3vDuR2SbbjWYPPX/jrdJKm/gUedzVfjWVSya7DuI74wnX1/
+        85YVuIIJKSirGUxohWsFs3TdMOmEOwEsUtTyd6FaTFjBBeUEg0jue9D3m/ZJ
+        Rh3XYKxHl6EEFWUtySu8HjHk9q3D4tOgj3RzE/JEMPIV89eIBAmsa0YIwrj0
+        UBmHcQVLnZasHJDHyHNW5DFRtI48RkHYQx4j+TmQJ7gJeYzCtIM8RtLzI4+R
+        7DzIYyQ1H/IYyd0DeczztoI8xvIWkMcbfj66/m/8pdUTef4YeYJL5LkbyEyd
+        nhwzH8d4JI4TP4XPA7rZwPcJ9RFMGUFxFMTBOvYSH74RhqVl4jkrx5goWucY
+        oyDscYyR/K0cw95a2embQMYoTjsgYyQ9P8gYyc4DMkZS84GMkdw9QMY8bysg
+        Yyz/8Gc3pwV+N5QZC+qjssxpPB7+/MYzox3/STtGK5pVHknWfoD8kFYoSmFp
+        bTYxQzRNKMFVyuIgHmjHyHNW2jFRtE47RkHYox0j+VtphytZ3vaHKqMw7cCO
+        kfS0GF1Xodnl7oECRoHYQwFj+YdHAXj7nxxw4oB+MJ4Q8HdBgLcOqhJjH3mb
+        KkQRjjyUVmGEcExwEFDq03U0HnmYeM575GGgaP/IwyQIi0ceJvK3QsAQBG9A
+        F3WslYpDEO+3HYGYxG3pCMRoyI7JnlTHG6uCFr/MTeVNy/FQGo9jclUcv6mJ
+        e3F6576ojVcl8VGqbJ/fS40FuU72i5L22HVopjLk/WEZurTA5PwHFbCKLpIp
+        AAA=
+    http_version: 
+  recorded_at: Mon, 28 Nov 2016 12:55:04 GMT
+- request:
+    method: get
+    uri: https://localhost:8443/ovirt-engine/api/storagedomains?search=sortby%20name%20asc%20page%202
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=ZtHF6632CiJj4wCi7ceEYXMGvCq76IuQ40d_ZhWV.localhost
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/xml
+      Content-Length:
+      - '95'
+      Date:
+      - Mon, 28 Nov 2016 12:55:04 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAALOxr8jNUShLLSrOzM+zVTLUM1BSSM1Lzk/JzEu3VQoNcdO1
+        UFIoLknMS0nMyc9LtVWqTC1WsrfjsikuyS9KTE+NT8nPTczMK9a34wIAom+F
+        CUsAAAA=
+    http_version: 
+  recorded_at: Mon, 28 Nov 2016 12:55:04 GMT
+- request:
+    method: get
+    uri: https://localhost:8443/ovirt-engine/api/datacenters
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=ZtHF6632CiJj4wCi7ceEYXMGvCq76IuQ40d_ZhWV.localhost
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/xml
+      Content-Length:
+      - '477'
+      Date:
+      - Mon, 28 Nov 2016 12:55:04 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAAM2UwW6jMBBA7/0Ky3fWoHSrRAJ62Kpf0D1Hgz2k3hqb2ibb
+        /v1CIAmh2sptQbs+RJ7xeN4QWS+9fakU2aN10uiMJt9iSlBzI6TeZfTnw320
+        psR50AKU0ZjRV3T0Nr9KBXjYctS+vZpfkXaNU+TRYplRZvbS+gj1TmpkUEvW
+        1Qy3WHETFysBEAleiOg65ptoLeJNtCp5vOabpPwuEkqkyGhQZT/FYRINFeaC
+        Jyk77M4HSuqn2WZjzhsLOxSmAqkdJRZVRidJthidq8Z11QP3FC5H1Oh/G/t0
+        JJ7C5Yg12kq67m0eoePMctznxng4IodgQZpxJ1a3XY4kHXeyMFoceaPEBdVw
+        UHkJymHK+uB8OLzwbWlsBT7fr1I2SZ1rB7OQCn4Zm9EVJZXU3e7mgueaujbW
+        o9gOF9z58CN92HuN2sHBN9POXRLzpu4+otuNm03q08NL2FZGtHaRDgqFImWj
+        ZO9BNhLhJ9UY9yuJ3v4Ma1P2agyqnKrxDktolH+jR4GOW1n79n/LHx6RiL6O
+        3LWjkR+H2dqvGxV94p2GDLycWYPos5o1iDirWYOIC5g1iDubWcNoc5g1iPSv
+        zXp9MmLyJbP+rc9/aNaLsG32B5+qJFHMCgAA
+    http_version: 
+  recorded_at: Mon, 28 Nov 2016 12:55:04 GMT
+- request:
+    method: get
+    uri: https://localhost:8443/ovirt-engine/api/hosts?search=sortby%20name%20asc%20page%201
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=ZtHF6632CiJj4wCi7ceEYXMGvCq76IuQ40d_ZhWV.localhost
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/xml
+      Content-Length:
+      - '2540'
+      Date:
+      - Mon, 28 Nov 2016 12:55:04 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        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
+        co9G7OfykPovmOR/PoLwBv1LAAA=
+    http_version: 
+  recorded_at: Mon, 28 Nov 2016 12:55:04 GMT
+- request:
+    method: get
+    uri: https://localhost:8443/ovirt-engine/api/hosts?search=sortby%20name%20asc%20page%202
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=ZtHF6632CiJj4wCi7ceEYXMGvCq76IuQ40d_ZhWV.localhost
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/xml
+      Content-Length:
+      - '85'
+      Date:
+      - Mon, 28 Nov 2016 12:55:04 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAALOxr8jNUShLLSrOzM+zVTLUM1BSSM1Lzk/JzEu3VQoNcdO1
+        UFIoLknMS0nMyc9LtVWqTC1WsrfjssnILy4p1rfjAgDPKgbCQQAAAA==
+    http_version: 
+  recorded_at: Mon, 28 Nov 2016 12:55:04 GMT
+- request:
+    method: get
+    uri: https://localhost:8443/ovirt-engine/api/vms?search=sortby%20name%20asc%20page%201
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=ZtHF6632CiJj4wCi7ceEYXMGvCq76IuQ40d_ZhWV.localhost
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/xml
+      Content-Length:
+      - '3515'
+      Date:
+      - Mon, 28 Nov 2016 12:55:04 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAAO2d3Y+bOhqH7/tXRLk9YsI3JMrkXBx192K/pN3uNXLATFAT
+        yAEy7fSvX0NIAiQz/U39ejXTOqpGYAyPY7/+yqOky9+/7raTR15WWZHfT607
+        czrheVwkWf5wP/3vp78Y4XRS1SxP2LbI+f30iVfT31cflo+7avVhIl7iaLIp
+        eXo/nRWPWVkbPH/Icj5j+2wmMs18Zx6EjuUZdmIFhsv9wFg7c8ewOfNNFjLO
+        4vV0kiX3UyjnEdqCWVyLQleXlDZ1m+WfpQs025f8MeNfoipn+2pT1NNJybf3
+        06vkmRJ63NR1hzweK+KwPObbXfZQsqYqT8RRqiJ2sdtl9biCx6lq2Ic8Kcbk
+        YZoablpy/o2n2ZZXT1XNd1XHvk5Xw98WD+dWPh6r4exYltc8b+Koo/VT1DBL
+        XpQJL3csZklS8qrip9q9dUVNGeoN+3LduuNURews/sxPwdydqCElvGbxpiN1
+        J6radF2cO2h3oihi29HuHK3dmRoW/7ovytO76k7UkKrNoU6KL6cufz5VRKvZ
+        +W0dj1Vxiv0ZIw4VUQ7VnufJCdSd9VjL2dUCZJmzHV/xrzUvc7Y1WLWctSkf
+        iMvG9vttFrez82mQGSTNyIlxUhbnAa07oackWfWZ1c2AsuN5fcKNU9Vw+zQV
+        DDGi7DdZXMWigYrteXK6SqYnb4qqTsS6NT5D+yn0PNFYfLsteCnGUNYRh2n0
+        zFxUYYdqDxUQDjuWF8m5Di/n9Ky9WK1kVdXr3v0Uel7Jm0mIJ8MoGafSc8VK
+        rP8mz6cKSN3C/ow6nytg1WIYrupLRPYS6Gk1ezgvNJtDesIXVsebpDhjLud9
+        Vv205yvRHT6LKXk5a88uF5saOIx36k2iuEUsSJaz43Fvbh3fsdzxXVE+rSwz
+        cALXCm13OeuSLnni/WHEEIUpxE7naVIVzYq4up9a00lciF1Ae1SLymFJezxe
+        RbAy3mQ1j+tDyVdfQz/yBXGQ2CvtANwUI6o2TEBWZnvtdHbJss6KcXU0q9tI
+        zHCjt9BeEzun9ZYnq5RtK76cnU6HD5jdeIJIHJCWRTVp2uZ+WtQbXk5vlGEi
+        +ruYIkZrncFD4u1BbGXKZ0Oru17NzOPLNq7/dK+5ffzwB8rZL1EsWq5Z7UR1
+        JlZYtmn5hukbdvjJshdmuHCDO9sOfzOdhdm0wSBzrzbKTBT6vGITb/OYMIxc
+        Lubl6lT3l4RLpkQk1Dzal0UTG5d2ukq/3LLJHjYRe2TZlq2zbVY/jVoCavF9
+        mYkCi3vFWzwf9xrtBchSrHP2WzbGtv222ovxftyH28u7Is/qoqxWluh9p+NR
+        r87yhy2P/vy6jfZxdq61Yeqoq4mVwZeoeBSrgyzhp1tGqSPKTuwvYlYm0aii
+        ri8Mb2w24lFdsrxKeXnOU5cHce/ta8P742L/FO2ZCO/RzTcuDO8UFS4WebkI
+        hOi4cVj9/V9//C36zx///vjxn8vZ9eVeQ1411rKqinHb8HpTJNWN0eN4pe1m
+        DwdeCcCDWEhfjXizqyeI6uxjlk3v+VbkfPWxjmd//ccnESOnlEumQ7V+ZSwv
+        Z4N7luePHqNmcmi7rNEE3HXyoJ+Wtaj/Q9WLhX7acHgWXbJp7edHsP2hy3Ie
+        xLhx/ef4ckJ3MIi9nHN2652Oe8ShLiIRDiL4H/gqy8VQndWiSwySx4G527cf
+        biWX/L20XmXfgC6zcTR1M2MzspwOe4/IxlERDYOgTW+3vudIGW2EZzfuanr1
+        dhtl4h0+2zDNxWoWz90gZq5t+PacG64fpwbjfG3wdO7OU8Y9OzaPTQLlHKyZ
+        mKhbpAzJOkzmfhoagRcnhht4zFjbqWfETpCIEzsM19axDFDOQVi0C5tILF2y
+        eDxCPxyYGKFqLtq0vxbqJfeb+vaDljXfifGkfj7+TxnO0W8aN/6cXoPofznn
+        bNBni/0L07djn6bvS8bLzaJ4MW8+ELhdTSxNs7yZ8Y7R3ow4ov+cEntV9Pxz
+        lrlYF0TlIW+6XJo9HLrRh38Vi/nzeuDlTL2Hif1iVB9yHu3ErnHVfBxebjl7
+        bB4xvHTUamJ9jgk2ngRpGHip4XpWKCJc/GE89g1uuokYcVwRb51gg3LKCzYE
+        o06wQXQCwYZx1Ag2jK1GsEFsBYIN4ioUbBCfQLBBHGLBBjEVCzaoDIoEG8am
+        EGwQiUSwgW1KINiwiKURbBCLRLBBJDLBhtHkBRvIkRRsGEVesO1YLray2Z+v
+        12xQCUk1GzZny2o2bHyh12wwV0KzQQwlmg0iE2o2iEes2SCmlGbDCDSaDduD
+        0Gk2cLYl12zYSEuh2TASjWZDZ0MazYat/mQ0G0R4U5rNdy1zPnd8/0c1m6s1
+        2y+h2fy7MNSaTWs2rdm0ZtOaTWu2n1Cz9ddCP5tmE9P33NSabfJ9zeYx5pth
+        6hgWF+sll8XMCJO1Z7iux2PbCkxmB8cGgnLKazYEo06zQXQCzYZx1Gg2jK1G
+        s0FsBZoN4irUbBCfQLNBHGLNBjEVazaoDIo0G8am0GwQiUSzgW1KoNmwiKXR
+        bBCLRLNBJDLNhtHkNRvIkdRsGEVes9XNZrbilm29XrRBZSQVbdisLSvasBGG
+        XrTBXAnRBjGUiDaITCjaIB6xaIOYUqINI9CINmwXQifawPmWXLRhYy2FaMNI
+        NKINnQ9pRBu2/pMRbRDhTYk2/X02LdqOZXhJtAULN7ybm64WbVq0adGmRZsW
+        bVq0/Xyi7af9Pttx+rYcLdom3xdtqe+7SRjEhs9MEV22GRhrn3tG0kZGEPN4
+        zY8NBOWUF20IRp1og+gEog3jqBFtGFuNaIPYCkQbxFUo2iA+gWiDOMSiDWIq
+        Fm1QGRSJNoxNIdogEoloA9uUQLRhEUsj2iAWiWiDSGSiDaPJizaQIynaMIq8
+        aHsqXi/YoLKRCjZstpYVbNjIQi/YYK6EYIMYSgQbRCYUbBCPWLBBTCnBhhFo
+        BBu2+6ATbOA8Sy7YsDGWQrBhJBrBhs6DNIINW/fJCDaIoAWbFmzvTLC1vzhl
+        BqYWbFqwacGmBZsWbFqwacH21gVbYFj2J8tceGL69u5c39WCbfJ9weawuWta
+        zDTWqSOiy537RshEmIuNm8PnpuNZVnpsICinvGBDMOoEG0QnEGwYR41gw9hq
+        BBvEViDYIK5CwQbxCQQbxCEWbBBTsWCDyqBIsGFsCsEGkUgEG9imBIINi1ga
+        wQaxSAQbRCITbBhNXrCBHEnBhlF+WLA97n7gm2tQmUjFGjZLy4o1bEShF2sw
+        V0KsQQwlYg0iE4o1iEcs1iCmlFjDCDRiDdt10Ik1cH4lF2vY2Eoh1jASjVhD
+        5z8asYat92TEGkR4U2LNta25689/XKy965+IPH6G/268mme6jHumaThu4Buu
+        Z3JDNJxjpH6SmmmQBiLWul8vQnJiXs1ZONbCCu5ME/Vq7Rt4t1LN0lJNSzUt
+        1dRItdhxPdvjzDADOxbjkp0Ya8Ysw4w9nnLfdbibdAYHyaml2kRLNRKp1l8H
+        vU6qtZZKtGolgqBzVt3ZGxdvlsjqfbK8hR2Kf3dhGLwk3hqDlrFt9u2ZPrYR
+        M+Y3nkRVtYk+86dq1Xaxq9ThfSUXoydvPhO85OgGnFuXRn0ii4f2rRqPwrFY
+        NxW7qIrLbF+LAg3P+33wmTendeNpZyNGYXPuJLFYUM5tw43Xluh3rmkk6zQM
+        WZi66bpbekI55XUjglGnGyE6gW7EOGp0I8ZWoxshtgLdCHEV6kaIT6AbIQ6x
+        boSYinUjVAZFuhFjU+hGiESiG8E2JdCNWMTS6EaIRaIbIRKZbsRo8roR5Ejq
+        RowioRvt1+tGqEykuhGbpWV1Izai0OtGmCuhGyGGEt0IkQl1I8Qj1o0QU0o3
+        YgQa3YjtOuh0Izi/kutGbGyl0I0YiUY3ovMfjW7E1nsyuhEivCnd+Gt/j+//
+        phtzXn8pys9XtfLOhWTQfmDpLtxw4YVaSGohqYWkFpJaSGoh+RMKyR//lt/7
+        FZKWYQWfrGBhiynevAst/zfT1t8E/J6aC2IztZI0NtI08Qw3bHYBcxGQ63Qt
+        tgVrZx74XaxCOeXVHIJRp+YgOoGawzhq1BzGVqPmILYCNQdxFao5iE+g5iAO
+        sZqDmIrVHFQGRWoOY1OoOYhEoubANiVQc1jE0qg5iEWi5iASmZrDaPJqDuRI
+        qjmMIqHmnNerOahMpGoOm6Vl1Rw2otCrOZgroeYghhI1B5EJ1RzEI1ZzEFNK
+        zWEEGjWH7Tro1Bw4v5KrOWxspVBzGIlGzaHzH42aw9Z7MmoOImg192bUnP6J
+        zUsZbpi30DDtxrzZwcJz7xx3rs2bNm+9G7V50+ZN/76mNm+/tnl7k1ZtPHd7
+        +j+wa4++Y9XmzEnEIt0zLGY7hmulpsG8IDQ807QcFrLEW7NjA0E55a0aglFn
+        1SA6gVXDOGqsGsZWY9UgtgKrBnEVWjWIT2DVIA6xVYOYiq0aVAZFVg1jU1g1
+        iERi1cA2JbBqWMTSWDWIRWLVIBKZVcNo8lYN5EhaNYwiYdWS+Ad+YRMqFalX
+        w+ZpWa+GjSn0Xg3mSng1iKHEq0FkQq8G8Yi9GsSU8moYgcarYfsOOq8GzrDk
+        Xg0bXSm8Gkai8WroDEjj1bAVn4xXgwjaq2mv9j682vn/vnEWlnM3Dz3t1bRX
+        692ovZr2atqraa/2a3u1d/uNtmZ+D5tvtDnuwnXvAnv+y7u35q94yP8A49g/
+        27PcAAA=
+    http_version: 
+  recorded_at: Mon, 28 Nov 2016 12:55:04 GMT
+- request:
+    method: get
+    uri: https://localhost:8443/ovirt-engine/api/vms?search=sortby%20name%20asc%20page%202
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=ZtHF6632CiJj4wCi7ceEYXMGvCq76IuQ40d_ZhWV.localhost
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/xml
+      Content-Length:
+      - '83'
+      Date:
+      - Mon, 28 Nov 2016 12:55:04 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAALOxr8jNUShLLSrOzM+zVTLUM1BSSM1Lzk/JzEu3VQoNcdO1
+        UFIoLknMS0nMyc9LtVWqTC1WsrfjsinLLda34wIAIDHKJj8AAAA=
+    http_version: 
+  recorded_at: Mon, 28 Nov 2016 12:55:04 GMT
+- request:
+    method: get
+    uri: https://localhost:8443/ovirt-engine/api/templates
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=ZtHF6632CiJj4wCi7ceEYXMGvCq76IuQ40d_ZhWV.localhost
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/xml
+      Content-Length:
+      - '1474'
+      Date:
+      - Mon, 28 Nov 2016 12:55:04 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        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
+    http_version: 
+  recorded_at: Mon, 28 Nov 2016 12:55:04 GMT
+- request:
+    method: get
+    uri: https://localhost:8443/ovirt-engine/api/datacenters/b60b3daa-dcbd-40c9-8d09-3fc08c91f5d1/storagedomains
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=ZtHF6632CiJj4wCi7ceEYXMGvCq76IuQ40d_ZhWV.localhost
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/xml
+      Content-Length:
+      - '721'
+      Date:
+      - Mon, 28 Nov 2016 12:55:04 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAAO1X226jMBB971dEvBNjbsESoW/7BbvPyNhDa5XYCLu03a/f
+        CSFNSrMR2lbbrDaRItkz4/GZ47GPyG+fN82ih84qo9ceXQbeArQwUum7tffj
+        +zc/8xbWcS15YzSsvRew3m1xk1tnOn4HpTQbrrQtbhb4m1gX9x3Ua4+YXnXO
+        B32nNBDeKiK54wK0w21JlQZVJDn3paikHweC+ZkMmB/VIsgEo3UiKRnzjpsR
+        qAORrmjo00jWfsxwYZYl4EuWSsFrBkmYeAsl196syB34oQAuHBJhD5bB2ij9
+        8KXFEAlbZD134C06aNbekYFcHNoJ1lNIc/KO6lzzDRTKmormZBgfXFvY5Q73
+        p5W265BZkeQ0lGmfHKP8o9zkdPLcvbQDMzkZRgcHXk33OIWxNUIxsA452c2O
+        9piuyeEZt9O8Kc9kMw8nMv12Yb7hFl1FzRuLEMbZMeyhqSY7cSk7sLawrZLQ
+        LfFolw2vlq7plx3Ie+6Wwmywccawt4sHYnRtpxQNzpa7+4L0ptn+y8pIbVrz
+        kwyMDr634ZimHN/Eoo+wGY/mb4icVJHzniuE3EARs4iFNIxYECPiV/Mh9NGC
+        LOKQxSxdhSzNyWA4+LHUjXIObUFODpN3HJa16TbcFT19BbQ3HWKfVAslr/EQ
+        SgkN4CmOJ/PecbSIdxploGzMU2lbvFql0lIJjpsUFEGd8x/V0SmHxmYM2d36
+        smqMeMCWSLC2swE3b6geheXvqk0gkiSlDMNllvlxJamPRyv8JA6TcJUEKd2/
+        JbMiv1Zt5kC8HLWZhfYjagPPrencVW5OyM2emqvifKLi7Em9is5VdM6+fOGK
+        R5UQ4ItYBvjy4YjXwHwq05TJhDMZhLsXZVbk14rOHIiXIzqz0H5EdLYAr584
+        pzRn6/vXFMd1jxcsOGOvXbze0BVdsSxlNIvnKU/0PynP1IKd8Qt7Gcm1uhMA
+        AA==
+    http_version: 
+  recorded_at: Mon, 28 Nov 2016 12:55:04 GMT
+- request:
+    method: get
+    uri: https://localhost:8443/ovirt-engine/api/datacenters/00000001-0001-0001-0001-00000000009f/storagedomains
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=ZtHF6632CiJj4wCi7ceEYXMGvCq76IuQ40d_ZhWV.localhost
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/xml
+      Content-Length:
+      - '530'
+      Date:
+      - Mon, 28 Nov 2016 12:55:04 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAAM1V246bMBB9z1cg3sGEkGyRgH3rF7TPaMDDxoqxke2wu/36
+        ToAuhKTRqqrUWkoEZ25njsc4e35rpdejsUKr3N+Gke+hqjUX6iX3v3/7Gnzx
+        PetAcZBaYe6/o/Wfi01mnTbwgiXXLQhli41Ha4V6R4NN7jPdC+MCVC9CIYNO
+        MA4OalSOyrJoXNvg9m9aacOmvFMxlhye4ga3T0EdH6IgwboOAKooqPa7fZPw
+        iFdY+Z7guf8pz5H80ADUjoSwMzKgUqjTP22Gcbww68Gh7xmUub8A2H/HdsX1
+        HtOM3UidKWixuBCMMzY8z6YLWo68/1pr44R8ypPdp7KekyXLP8rN7ifP3Hs3
+        KpOx4XG20Nl05zWPC4jFIDtmbHxbFFnHZPhG9RTI8kE2fbqT6beBWQuWTIUz
+        Z2IwvSxZD0O1KgScG7S2sJ3gaELa2lBCFTrZhwb5EVxY65YGZ3K7Dh50UY1d
+        KzQYO3DHgvVaXn5lpbnSnf7BplkbrFf6rNhl0IMgKhKLJN2l8TbepVFCTD7g
+        2fVskRdJnCYpnZT0kLEBmO3UQiucWznN6I1IZaNNC67odx/MfkGz76vosISG
+        VC45SqRdakBakv7WsAgCo+g7X0r9WtqOzk4pFBc1UJFiG1HsA/uiISMcgXJy
+        GY91WUldn2jP99TbQ4fNlebTzUEXDLu5YX4CaUpPh6wGAAA=
+    http_version: 
+  recorded_at: Mon, 28 Nov 2016 12:55:04 GMT
+- request:
+    method: get
+    uri: https://localhost:8443/ovirt-engine/api/hosts/5bf6b336-f86d-4551-ac08-d34621ec5f0a/statistics
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=ZtHF6632CiJj4wCi7ceEYXMGvCq76IuQ40d_ZhWV.localhost
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/xml
+      Content-Length:
+      - '1158'
+      Date:
+      - Mon, 28 Nov 2016 12:55:05 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAAO2ZW2/aSBSA3/srLN4H5n6RCFWbpVW026Rqkod9quYarAUb
+        2Sa7+fd7DOxCUUIs7VIhxXmI8PhzbI4/nctk/P6vxTx7jFWdl8XFgAzxIIuF
+        L0NePFwM7u8+IT3I6sYWwc7LIl4MnmI9eD95N4a1Jq+b3NeTdxn87BayWRXT
+        xWBUPuZVg2LxkBdxZJf5aFbWTT0SLknHmERJy4C4EARZjzUKjEtKohcJ29Hu
+        r4+UJlJi6pDHwiMWnEKWB4uYkiYpG7Q2cpDl4WLQidw87fqJC7uIk0VclNXT
+        sCkbOx+P1ks7IsTaV/mygdhM7loi2+Dj0f6ZHf9o56tYZ83TEiJ1dX03/Tz9
+        tnfHHfPj2uZetlktJswohgXnksM91is/Xj06uHy7UO+ttHeffP5w/3k6Hq0/
+        706tiryZfPz9bno7Hq0/7061L+d/eHObN9GJPPhm8/wxfq8Lu6xnZfO9Xi2X
+        ZdVMmmoVx6Pnz+0FoX3ArYc7d04splPcGAGAJ54hRhNGmigOh0qzKJRzWG/C
+        0Yl8QcxVHcNRL+8BOLmWQkhKlaS9ledupbA4OWsCYiwoxLxLyIYQkLPAY469
+        4dt02Yl8wcpUxXjUyk8AnD5ZciI1lZrjXssz1zIljyNJASXLOGJJC2S0pEhb
+        zYknUmjnN+HoRL6gZT2z1Svp8naNnFzN3shzN9Jr4rWEUuy8JJD+lEZWcIa0
+        0U4zZgJmaROOTuQLRrpVStBcH1Xy6ib7F+t9fKs+EgftFY8R6eCgJksRkIaO
+        C3FNQ4CJJkZCNuHoRL7go7d+9kqGvLnN1lRv4xu20XOmuWr7Quch51mbkDPU
+        I4NplNy54ITbZscu5KGN9Z922XnmbuHTuUikUhJ+8X64OXsrieUwQhuHEvMe
+        MUwgB1IfEfjHnUlO2H+Gm07ks1Z2G216J3snN05SJbV0PMLcrKEaCyWhT1QY
+        Bam9C9pSmLE34ehEPutkt02g0zrZ1+xzNzFajIMlAoVI210dw5BV3iFNsOeO
+        mBiw2oSjE/msiR36x1vgMjuvyywv+jn7zVuZFMfO2IAIt9AkJgmtodMYxZQS
+        50opIrf5sRN5aOUf9WLol6uhX1VVLJqjZv56+yW7/HqfrWr7EDs5+cv08urL
+        h9/Oxcmv02+X0+u73sr/bKUlyTqmDJIyUhhdSEDGEA4Z0JqojHeKbK3sRB5a
+        uWdkW7yr14p39TO8JL2X5++l0Z5EQhBWGuYW0VZmoWBucYTCQBONJmLrZRfy
+        mJf1U93ExfFSvkb6nNm72brJbTRKGY6SAJ4lLFCbApFWRmutfCB2+z+cTuQx
+        N/MwPz6EXwHwM7w0phfz7MWUQkuYZyLy2mDECI3IMCjRwmOS4JAKu92s7EQ+
+        J+a8tGFoHx+G4njGbJUU2SIvVk3M2osy+xir06bOIaG9pGcvKfPRUawoVGkr
+        oI+kBKYbR1E0UnJFUtBkmz07kYeSurJshk2+OJ42PwKVtVRWpqyZxWwB8zx8
+        rxNuZXLFBTUMn24n8/rmevo2BN07gAD9Df2yuxS8KQAA
+    http_version: 
+  recorded_at: Mon, 28 Nov 2016 12:55:05 GMT
+- request:
+    method: get
+    uri: https://localhost:8443/ovirt-engine/api/hosts/5bf6b336-f86d-4551-ac08-d34621ec5f0a/nics
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=ZtHF6632CiJj4wCi7ceEYXMGvCq76IuQ40d_ZhWV.localhost
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/xml
+      Content-Length:
+      - '493'
+      Date:
+      - Mon, 28 Nov 2016 12:55:05 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAAMVUwY6bMBC971cg3x1jAmkSAXvrF7TnaLCHYAVsZJts9+9r
+        AilklUp7qLqWQJ6ZZ/vNePzy119dG13ROmV0QfgmJhFqYaTS54L8/PGd7knk
+        PGgJrdFYkHd05LV8yRvj/Ekr4cqXKIw/dtRYrAvCzFVZT1GflUYGvWIjwLGs
+        qnfVdruj9X4naZplnIKI91Ru013CUWR1DGzclsVcJDKFPc3kN6DpYRfTqhYp
+        FcCrNI7hUElJIiUL8inkRPNGFYQPyTq2cmnosETfxDm7TZdIq/Tlv+bEQrW9
+        cj7gSWSxLcjKwb6UWQsVtndWs/G1jDT6N2Mv4D2IpkPt7+yeBNZMRzL/gOnU
+        f59CLofPpbriyWnoXWP8yQ19b6wvvR0wZ89jC/kbwXXzTrn+NZ85Hko6D/rk
+        N4/D/KQ+g1wXtAMRgZQWnRtXHzkcUzgm2yNPjnvxAFX9guTxZptt+GHDExIF
+        nh24S0GSLNtMXzLq0Rk8vsH7Cp1kKVlE65o+7F+ZULXeGm+EaUvZiD5nj74F
+        Oz6twX24m9GJ5RCWTbNV5T/i884PJc/ioBvjbEXCKnlGOd/o3VriYnDedCdh
+        dK3Og4VRkcoaWhfQT2PL0pBGj9YrvCvY1BCj+AZdZith/g1giDuZ3QUAAA==
+    http_version: 
+  recorded_at: Mon, 28 Nov 2016 12:55:05 GMT
+- request:
+    method: get
+    uri: https://localhost:8443/ovirt-engine/api/hosts/69cd8141-a6f5-4968-880d-121de26f3747/statistics
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=ZtHF6632CiJj4wCi7ceEYXMGvCq76IuQ40d_ZhWV.localhost
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/xml
+      Content-Length:
+      - '1160'
+      Date:
+      - Mon, 28 Nov 2016 12:55:05 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAAO2ZW2/aSBTH3/spLN4H5n6RCFWbpVW026Rqkod9quYarAUb
+        2Sa7+fY9BnahKCGWdlkhxTwge+bv2/GPc85/GL//azHPHmNV52VxMSBDPMhi
+        4cuQFw8Xg/u7T0gPsrqxRbDzsogXg6dYD95P3o1hrMnrJvf15F0Gn91ANqti
+        uhiMyse8alAsHvIijuwyH83KuqlH0vigCSfIyiQQN1IjrXFAhJIQqUxMcTXa
+        nX2kNJESU4c8Fh6x4BSyPFjElDRJ2aC1kYMsDxeDTsrN3a7vuLCLOFnERVk9
+        DZuysfPxaD20U4RY+ypfNhCbyV2ryDby8Wh/Zqd/tPNVrLPmaQmRurq+m36e
+        ftu74k7z89jmWrZZLSbwBAIzphnmcJH10M+Hjw6O3w7UeyPt5SefP9x/no5H
+        6+3d1KrIm8nH3++mt+PRens31b6d/+DVbV5FJ+XBk83zx/i9LuyynpXN93q1
+        XJZVM2mqVRyPnp/bC0J7g1sQd/CcmEynuDECa+SJZ4jRhJEmisOu0iwK5RzW
+        m3B0Ur5A5qqO4SiY9yA4OZeaUUGkIaKn8sypFBYnZ01AjAWFmHcJ2RACcpZL
+        ijn2hm/zZSflC1SmKsajVH4CwemzpYCfkaaEadNzeeZcpuRxJCmgZBlHLGmB
+        jJYUaas58UQK7fwmHJ2UL3BZz2z1Sr68XUtOzibuiTxzIr0mXkuoxc5LAvlP
+        aWQFZ0gb7TRjJmCWNuHopHyBSLdKCdrro0he3WT/yHoe3yqPxEnKeYxIBwdF
+        WYqAtIK8xzUNATxNjIRswtFJ+QKP3vrZKxny5jZbq3oa3zCNnjPNVdsYOg85
+        z9qEnKEeGUyj5M4FJ9w2O3ZRHtJY/2mXnV13Kz6l51ZKwhenvec+dyqJ5eCh
+        jUOJeY8YJpADqY8I+OPOJCfs3+6mk/JZKrt5m57JnskNk1RJLR2PYJw1VGOh
+        JPSJCqMgtXdBWwomexOOTspnmey2CnRaJvuafe4kRotxsEQgmG2XdQxDVnmH
+        NMGeO2JiwNtwdFI+S2KH/vEWdJmd12WWF73PfvNUJsWxMxYE3EKTmCS0hk5j
+        FFNKnCuliNzmx07KQyr/qBdDv1wN/aqqYtEcJfPX2y/Z5df7bFXbh9iJyV+m
+        l1dfPvx2Lkx+nX67nF7f9VT+ayotSdYxZZCUkYJ1IQEZQzhkQGuiMt4psqWy
+        k/KQyj0i2+JdvVa8q57Lnss1l0Z7EglBWGnwLaKtzEKBb3GEgqGJRhOx5bKL
+        8hiX9VPdxMXxUr6W9Gz2bLZschuNUoajJCR0jQkL1KZApJXRWisfiN3+h9NJ
+        eYzNPMyPm/ArEPwfXBLck3n+ZEqhJRiaiLw2GDFCIzIMarTwmCTYpcJuVys7
+        KZ8jc17aMLSPD0NxPGW2TIpskRerJmbtQZl9jNVpc+cQk57S86eU+egoVhTq
+        tBXQSVIC/sZRFI2UXJEEJ9vmz07KQ0pdWTbDJl8cT5wfQZW1qqxMWTOL2QIc
+        PTzXCRczueKCGobZyRi9vrmevg1A93YgQD8A1+lj28ApAAA=
+    http_version: 
+  recorded_at: Mon, 28 Nov 2016 12:55:05 GMT
+- request:
+    method: get
+    uri: https://localhost:8443/ovirt-engine/api/hosts/69cd8141-a6f5-4968-880d-121de26f3747/nics
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=ZtHF6632CiJj4wCi7ceEYXMGvCq76IuQ40d_ZhWV.localhost
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/xml
+      Content-Length:
+      - '510'
+      Date:
+      - Mon, 28 Nov 2016 12:55:05 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAAMWU0Y6jIBSG7+cpDPcUUbHaqHO3T7B73VA9VFIFA9jZefvF
+        2lY76Sa92OyYmMA5P/KdA/7F++++C85grNSqRHQTogBUrRupjiX69fMHzlBg
+        HVcN77SCEn2CRe/VW9Fq6/ZK1rZ6C/xznwetAVEios/SOAzqKBUQPkgyCSxJ
+        87rJaEIxTwXDSZ5mOMvCBtOINhClIt4mWzJ9lrA8TdJaxFiElONEMIHzNI5x
+        EtZRCpyJPPZosinRS8oZ84LKa+eLtWQVUryHClwbFuQyXDKdVKf/WhPx3XbS
+        Oq9HgYGuRKsA+Vayjh+gu1FdJ99LpMB9aHPizvG67UG5G92TxJp0gvkHpPP9
+        e0m5bH5t1Rn2VvHBttrt7TgM2rjKmREK8jy3wF8A15d3rvWv9VzzviTe5KGI
+        M8w8JE624oDzLIsw45wxoDFNQFxLekW5bmjP64A3jQFrSxSGO8p3Cd9F8Y7G
+        OwEPUjksShpuYrah2SaiCQo8aM/tqUQRY5v5jSZDOnIHH/zzLs99wsvvrnVO
+        HjY4aN+2wWina91VTVsPBXmMLdrp3xrtl8OZglCNftk8WrX+q77o3VhRFnrj
+        mEYrCCObIzTXI73Nlnw9Wqf7fa2VkMfR8MmSruKnqWWlr2IA4yTcHGy+EJP5
+        el8mK2P+A+YZs+3dBQAA
+    http_version: 
+  recorded_at: Mon, 28 Nov 2016 12:55:05 GMT
+- request:
+    method: get
+    uri: https://localhost:8443/ovirt-engine/api/hosts/2d0f658b-37fe-4692-b0d7-7d18b18eadaa/statistics
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=ZtHF6632CiJj4wCi7ceEYXMGvCq76IuQ40d_ZhWV.localhost
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/xml
+      Content-Length:
+      - '1135'
+      Date:
+      - Mon, 28 Nov 2016 12:55:05 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAAO2ZW2/aSBSA3/srLN4Hz81zkQhVm6VRtNukapKHfarmGqwF
+        G9mG3fz7HgNdKEqIpRYpEuYB4fE3vhx/OmeOGb3/bz5LVqGq87K4GJAhHiSh
+        cKXPi8eLwcP9J6QGSd2YwptZWYSLwVOoB+/H70Yw1uR1k7t6/C6Bz24gmVYh
+        XgzScpVXDQrFY16E1CzydFrWTZ1Sj6PIlEVMxoC40BRZ7CWSnihLVDDemHR3
+        9FQqIgSmFjmcOcS8lchwb2C60FEar5QWgyT3F4NO5OZq11dcmHkYz8O8rJ6G
+        TdmY2ShdD+0IH2pX5YsGYjO+b4lkg4/S/T07fmVmy1AnzdMCInV9cz+5mnzd
+        O+OO+Xlscy7TLOdjpoQiWijB4RzrkZ9npwfTtwP13kh79vHVh4eryShd/97t
+        WhZ5M/749/3kbpSuf+92tQ/nNzy5zZPoRB7c2SxfhW91YRb1tGy+1cvFoqya
+        cVMtwyh9ft9eENoL3Hq4c+fEYlrJtc6wQo44hhiNGCkiOWxKxUImrcVqE45O
+        5AtiLuvgj3r5AMDJtcS9jW/cxszgaI32iDGgmLMRGe89soYLijl2mm/TZCfy
+        BRtjFcJRGz8B0CfJXssfWsbocCDRo2gYRyyqDGklKFJGceJIeyi3CUcn8gUt
+        66mpXkmTd2ukT5Rnb6RTxCkBJdg6QSD9SYVMxhlSWlnFmPaYxU04OpEvGGmX
+        McKi+qiS17fJ/1jv47n6SKygnIeAlLdQk0XmkZKQ97ii3kMnEwIhm3B0Il/w
+        0Rk3fSVD3t4la6q38YxtdJwpLtt1oXWQ84yJyGrqkMY0CG6tt5ndZscu5KGN
+        9b9m0bnXbuHTuUiElAK+OO1XkW/dSmI4tM7aosicQwwTyIHUwUzpudXRZuZH
+        c9OJfNbKbq1N72Tv5MZJKqEBtTxA36ygGmdSwDpRYuSFctYrQ6HH3oajC/ms
+        k91e/pzWyb5mv3UTg8HYG5IhH2j7VkczZKSzSBHsuCU6eCw34ehEPmtih/Xj
+        HXCJmdVlkhd9n332VkbJsdXGI8INLBKjgKWhVRiFGCPnUkoitvmxE3lo5T/1
+        fOgWy6FbVlUomqNm/nn3Obn88pAsa/MYOjn5x+Ty+vOHv96Kk18mXy8nN/e9
+        lb9spSHRWCY1EiJQaF2IR1oTDhnQ6CC1s5JsrexEHlq5Z2RbvKvXinfVe9l7
+        ufZSK0cCIQhLBX1L1lbmTMJMSyg0NEErkm297EIe87J+qpswP17K10jvZu9m
+        6yY3QUupOYqZgFVjxBlqUyBSUiulpPPEbP/D6UQeczP3s+NN+DUAvZe9l62X
+        wApoZwJySmPECA1IM6jQmcMkwibNzPZdZSfyOS9npfFDs3ocZscTZmtklszz
+        YtmEpJ2UmFWoekPP3FDmgqVYUqjQJoM1JCXQ2ViKghaCSxK9ItvM2Yk8NNSW
+        ZTNs8vnxlPkRqKSlkjImzTQkc+jl4b5O+BqTCy7gZrg+maM3tzeT8xB0bwMC
+        9B1B8SpysCkAAA==
+    http_version: 
+  recorded_at: Mon, 28 Nov 2016 12:55:05 GMT
+- request:
+    method: get
+    uri: https://localhost:8443/ovirt-engine/api/hosts/2d0f658b-37fe-4692-b0d7-7d18b18eadaa/nics
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=ZtHF6632CiJj4wCi7ceEYXMGvCq76IuQ40d_ZhWV.localhost
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/xml
+      Content-Length:
+      - '624'
+      Date:
+      - Mon, 28 Nov 2016 12:55:05 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAAO2Wy26jMBSG930KxN6xDXa4iNDdPMHMOjL4kKCCjbBJp28/
+        JpBCRu2IRS+bQSD5nPMb/mPMJ7LH323jXaA3tVYHn+6I74EqtazV6eD/+vkD
+        xb5nrFBSNFrBwX8B4z/mD9lZG3tUdWnyB88dr7F37qE6+Fhf6t4iUKdaARZd
+        jUeBwYEk1Z7HBQqjChDbJwEqiIxQJGlc0BiEFAKPt8UUWEI4l4hS2CNWkj1K
+        pFMSISlQCIOKhb5XS2d6i3KyebUqSuuaNXiVUqKFHFTHDMnwNVhqTa2evrQr
+        7Nbb1sY6ve/10Bz8VQJ/q7NGFNDcXM3B9zpSYJ91/ySsFeW5BWVv7t4orJ2O
+        Zj7A6bQDNymXh89LdYGjUaIzZ22PZug63dvc9gNk+O3aYv5qcBW3ovSElD0Y
+        c/AJSUmUQpJSmhKZAr/ru+4Wpe+5RWqFeRqHrwy4sLsJhXYWul5bXeomVw4C
+        Gb7PLdpxnw7mr0bHJORSP6sMT+NVI3/PyFo75JQT9xmOo5WNvpYnkHklGjM6
+        mMOHZT1G+nwajJIAWFUCioIwQiwpJIoh4oiGogyiQsYhS2YYbVFugxExAf9k
+        Gm0w+0002uLsa2m0xdF/Go37d+r13X7musF7IRNShTHiLHGAj6oCJXEcIC4E
+        50BDyqCaWtqkxO8RMWZpUIxnUaV7krq/gfeISMku5Duyo5yt4BhwvpsuNv4f
+        nRzDnsXLTU3H/FZ+ynPZ/YOfHTimUTIfDo/XxCbADt1H4HV643d0vdbLwVjd
+        Hkutqvo09GKE1ix+s7TMdG120Nsaboxb03oZO5N/AN/Bi8mMCgAA
+    http_version: 
+  recorded_at: Mon, 28 Nov 2016 12:55:05 GMT
+- request:
+    method: get
+    uri: https://localhost:8443/ovirt-engine/api/vms/63978315-2d17-4e67-b393-2ea60a8aeacb/disks
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=ZtHF6632CiJj4wCi7ceEYXMGvCq76IuQ40d_ZhWV.localhost
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/xml
+      Content-Length:
+      - '85'
+      Date:
+      - Mon, 28 Nov 2016 12:55:05 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAALOxr8jNUShLLSrOzM+zVTLUM1BSSM1Lzk/JzEu3VQoNcdO1
+        UFIoLknMS0nMyc9LtVWqTC1WsrfjsknJLM4u1rfjAgDpCskUQQAAAA==
+    http_version: 
+  recorded_at: Mon, 28 Nov 2016 12:55:05 GMT
+- request:
+    method: get
+    uri: https://localhost:8443/ovirt-engine/api/vms/63978315-2d17-4e67-b393-2ea60a8aeacb/snapshots
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=ZtHF6632CiJj4wCi7ceEYXMGvCq76IuQ40d_ZhWV.localhost
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/xml
+      Content-Length:
+      - '332'
+      Date:
+      - Mon, 28 Nov 2016 12:55:05 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAAL2SvW6DMBSF9zwF8lo5Nj8xJgKiLt26pV0jBy6JFbCR7aLm
+        7WuIElDboVO93XOPj74rnXz32bXBAMZKrQoUrikKQFW6lupUoLf9C+YosE6o
+        WrRaQYGuYNGuXOVWid6etbPlKvDvMQdnA02BiB6kcRjUSSogopdk6CxhcZby
+        ONzgqA5TnABL8THOYhyBYFRwAaI6kkcySTYi5EBrnG5Y4u30iLMq5FgAZVXD
+        spomnk7WBfqT80Y60YrK+XvtrExqK9Xlv/mJAeu0ARQYaAt0n8gClvygzWuw
+        lZH9KJfPfjtA8P6ak6U8m921h1JMrpxMwyJIOCgjGjJMGY74Poy2lG+TdB3F
+        /InGW0p96uiZv9zvO/hauA9b6ktOvmuzux+rZd2hg06b67iGshGt9Si/rW5l
+        euT5opFF074AsLgTra4CAAA=
+    http_version: 
+  recorded_at: Mon, 28 Nov 2016 12:55:05 GMT
+- request:
+    method: get
+    uri: https://localhost:8443/ovirt-engine/api/vms/63978315-2d17-4e67-b393-2ea60a8aeacb/nics
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=ZtHF6632CiJj4wCi7ceEYXMGvCq76IuQ40d_ZhWV.localhost
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/xml
+      Content-Length:
+      - '84'
+      Date:
+      - Mon, 28 Nov 2016 12:55:05 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAALOxr8jNUShLLSrOzM+zVTLUM1BSSM1Lzk/JzEu3VQoNcdO1
+        UFIoLknMS0nMyc9LtVWqTC1WsrfjssnLTC7Wt+MCAP1hyoFAAAAA
+    http_version: 
+  recorded_at: Mon, 28 Nov 2016 12:55:05 GMT
+- request:
+    method: get
+    uri: https://localhost:8443/ovirt-engine/api/vms/ed7f875f-4518-4618-aec6-e04d0034475b/disks
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=ZtHF6632CiJj4wCi7ceEYXMGvCq76IuQ40d_ZhWV.localhost
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/xml
+      Content-Length:
+      - '85'
+      Date:
+      - Mon, 28 Nov 2016 12:55:05 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAALOxr8jNUShLLSrOzM+zVTLUM1BSSM1Lzk/JzEu3VQoNcdO1
+        UFIoLknMS0nMyc9LtVWqTC1WsrfjsknJLM4u1rfjAgDpCskUQQAAAA==
+    http_version: 
+  recorded_at: Mon, 28 Nov 2016 12:55:05 GMT
+- request:
+    method: get
+    uri: https://localhost:8443/ovirt-engine/api/vms/ed7f875f-4518-4618-aec6-e04d0034475b/snapshots
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=ZtHF6632CiJj4wCi7ceEYXMGvCq76IuQ40d_ZhWV.localhost
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/xml
+      Content-Length:
+      - '331'
+      Date:
+      - Mon, 28 Nov 2016 12:55:05 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAAL2SMW/DIBSE9/4Ki7UiYAfbNLIddenWLe0aEfOcoNhgAbWa
+        f1/sKLHVduhUBqR37zh9SFdsP7s2GsA6ZXSJ4hVFEejaSKWPJXrbvWCOIueF
+        lqI1Gkp0AYe21UPhtOjdyXhXPUTh3OfoZKEpETGDsh6DPioNRPSKDJ0jIPOG
+        52mDWRpzzLJwCagzDJRJSteM5emB3JMJPawp40mMZSJTzCRQzJNDgiVwGXNI
+        Y6ABV8kS/cl5JZ1oRe3Df92sTGqr9Pm/+YkF540FFFloS3SbyAKW/KAtJLja
+        qn6Uq+ewHSB6fy3IUp7N/tJDJSZXQaZhESQ8VAmNM0wznPBdnGwo37BsxZ/y
+        R7reUBpSR8/85Pa/faiF/3CVORfkuza7+7Fazu876Iy9jGuoGtG6gPLb6lqm
+        e14oGlk07Qsv1UUFrgIAAA==
+    http_version: 
+  recorded_at: Mon, 28 Nov 2016 12:55:05 GMT
+- request:
+    method: get
+    uri: https://localhost:8443/ovirt-engine/api/vms/ed7f875f-4518-4618-aec6-e04d0034475b/nics
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=ZtHF6632CiJj4wCi7ceEYXMGvCq76IuQ40d_ZhWV.localhost
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/xml
+      Content-Length:
+      - '84'
+      Date:
+      - Mon, 28 Nov 2016 12:55:05 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAALOxr8jNUShLLSrOzM+zVTLUM1BSSM1Lzk/JzEu3VQoNcdO1
+        UFIoLknMS0nMyc9LtVWqTC1WsrfjssnLTC7Wt+MCAP1hyoFAAAAA
+    http_version: 
+  recorded_at: Mon, 28 Nov 2016 12:55:05 GMT
+- request:
+    method: get
+    uri: https://localhost:8443/ovirt-engine/api/vms/5aa608f3-1e02-4aca-8db5-445ec2170a27/disks
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=ZtHF6632CiJj4wCi7ceEYXMGvCq76IuQ40d_ZhWV.localhost
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/xml
+      Content-Length:
+      - '85'
+      Date:
+      - Mon, 28 Nov 2016 12:55:05 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAALOxr8jNUShLLSrOzM+zVTLUM1BSSM1Lzk/JzEu3VQoNcdO1
+        UFIoLknMS0nMyc9LtVWqTC1WsrfjsknJLM4u1rfjAgDpCskUQQAAAA==
+    http_version: 
+  recorded_at: Mon, 28 Nov 2016 12:55:05 GMT
+- request:
+    method: get
+    uri: https://localhost:8443/ovirt-engine/api/vms/5aa608f3-1e02-4aca-8db5-445ec2170a27/snapshots
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=ZtHF6632CiJj4wCi7ceEYXMGvCq76IuQ40d_ZhWV.localhost
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/xml
+      Content-Length:
+      - '329'
+      Date:
+      - Mon, 28 Nov 2016 12:55:05 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAAL1SvW6DMBjc8xSW18qxMQRMBERdunVLu0YGf0msgEG2i5q3
+        LxAloLZDp3q7H5/uky7bfTY16sE63ZocB2uGEZiqVdqccvy2fyECI+elUbJu
+        DeT4Cg7vilXmjOzcufWuWKHhPTA6WzjmmLa9tp6AOWkDVHaa9o2jGyljJo4h
+        CYBxEslKEqHKDYmiDVQ8SJjkCX0k06gKUwh4SVjIKhLxBEgqSkVEkpRKjOZU
+        YaRVjv/kvDWd2srKD/e6mZnYWpvLf/enFpxvLWBkoc7xHdFFWfqjbabAVVZ3
+        I108D2oP6P01o0t6NvtrB4WcXBmdwCJIeig4C2LCYsLFPuBblmwjsU7j5ImF
+        W8aG1NEzf7nfdxhm4T9c0V4y+p2b3d04LecPDTStvY4yFEdZu6HKb9JtTI+8
+        YWh0sbQvGzcjp64CAAA=
+    http_version: 
+  recorded_at: Mon, 28 Nov 2016 12:55:05 GMT
+- request:
+    method: get
+    uri: https://localhost:8443/ovirt-engine/api/vms/5aa608f3-1e02-4aca-8db5-445ec2170a27/nics
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=ZtHF6632CiJj4wCi7ceEYXMGvCq76IuQ40d_ZhWV.localhost
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/xml
+      Content-Length:
+      - '84'
+      Date:
+      - Mon, 28 Nov 2016 12:55:05 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAALOxr8jNUShLLSrOzM+zVTLUM1BSSM1Lzk/JzEu3VQoNcdO1
+        UFIoLknMS0nMyc9LtVWqTC1WsrfjssnLTC7Wt+MCAP1hyoFAAAAA
+    http_version: 
+  recorded_at: Mon, 28 Nov 2016 12:55:05 GMT
+- request:
+    method: get
+    uri: https://localhost:8443/ovirt-engine/api/vms/f664d87c-6a0d-4207-b6e5-d418247cecbe/disks
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=ZtHF6632CiJj4wCi7ceEYXMGvCq76IuQ40d_ZhWV.localhost
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/xml
+      Content-Length:
+      - '85'
+      Date:
+      - Mon, 28 Nov 2016 12:55:05 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAALOxr8jNUShLLSrOzM+zVTLUM1BSSM1Lzk/JzEu3VQoNcdO1
+        UFIoLknMS0nMyc9LtVWqTC1WsrfjsknJLM4u1rfjAgDpCskUQQAAAA==
+    http_version: 
+  recorded_at: Mon, 28 Nov 2016 12:55:05 GMT
+- request:
+    method: get
+    uri: https://localhost:8443/ovirt-engine/api/vms/f664d87c-6a0d-4207-b6e5-d418247cecbe/snapshots
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=ZtHF6632CiJj4wCi7ceEYXMGvCq76IuQ40d_ZhWV.localhost
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/xml
+      Content-Length:
+      - '330'
+      Date:
+      - Mon, 28 Nov 2016 12:55:05 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAAL1Su26DMBTd+xWW18qxMc9GQNSlW7e0a2TsS2IFbIRd1Px9
+        gSgBtR061dt5+Ohc6eS7z7ZBA/ROW1PgYMMwAiOt0uZY4Lf9C8kwcl4YJRpr
+        oMAXcHhXPuTOiM6drHflAxrfHaNTD3WBqR107wmYozZARafp0DpaJ0mkslSS
+        RDBFIs5SUiUQExUFGY9SCbICek+mSinJ4pCTgMtwtFeSPIVxTeI04KlgWZ2E
+        FUZaFfhPzmvTua2QfrzXLczMNtqc/7s/7cF52wNGPTQFviG6Kkt/tM0VONnr
+        bqLL51EdAL2/5nRNL2Z/6aAUsyunM1gFCQ8lZ0FCWEJ4tg/4lmXbKN2wNH1k
+        4ZaxMXXyLF9u9x3GWfgPV9pzTr9zi7ubpuX8oYXW9pdJhrIWjRur/CZdx3TP
+        G4dGV0v7ArDCS3CuAgAA
+    http_version: 
+  recorded_at: Mon, 28 Nov 2016 12:55:05 GMT
+- request:
+    method: get
+    uri: https://localhost:8443/ovirt-engine/api/vms/f664d87c-6a0d-4207-b6e5-d418247cecbe/nics
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=ZtHF6632CiJj4wCi7ceEYXMGvCq76IuQ40d_ZhWV.localhost
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/xml
+      Content-Length:
+      - '84'
+      Date:
+      - Mon, 28 Nov 2016 12:55:05 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAALOxr8jNUShLLSrOzM+zVTLUM1BSSM1Lzk/JzEu3VQoNcdO1
+        UFIoLknMS0nMyc9LtVWqTC1WsrfjssnLTC7Wt+MCAP1hyoFAAAAA
+    http_version: 
+  recorded_at: Mon, 28 Nov 2016 12:55:05 GMT
+- request:
+    method: get
+    uri: https://localhost:8443/ovirt-engine/api/vms/3a9401a0-bf3d-4496-8acf-edd3e903511f/disks
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=ZtHF6632CiJj4wCi7ceEYXMGvCq76IuQ40d_ZhWV.localhost
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/xml
+      Content-Length:
+      - '642'
+      Date:
+      - Mon, 28 Nov 2016 12:55:05 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAAMVWwW6jMBC99ysi7l4bMAQkQi+r/YLdMxrsIbUKGNkubffr
+        10ASyKaVKq20yWnmzcN+M55xXDy+de1uRGOV7g9B+I0FO+yFlqo/HoJfP3+Q
+        LNhZB72EVvd4CN7RBo/lQyGVfbblw87/Znv3ZLA5BFSPyjiC/VH1SGFQdOws
+        jSHnLARG6iaWhPM8JRmIhqCUMeYsTsKwofOKVCSNyJMwIinHiPBMZiSLMSNs
+        L6Im4wmLOAQ7JQ/Bl5iLwlklCOdztCsyo63q/6t2KnESMoLDYGewPQQbgN5b
+        HL4N2riTsJNzd1GdHs+1ms27C/rrAD86voLetFvRQ4fl2IXVd79VWNDZf7hf
+        GgOaTtlp8O0pky1C7ynN3zhOWafEWdkG2Aobu3+WtVwmX2Jud4ZWgd2e5gKs
+        BNXBESslyzTcZ0nKgCSyjgnfNxHJ0iQmtU84ZUkqa9YU9EJfV7BOmwmUugN1
+        c3FdR+ckoj3EtRBIBJeM8Npb0GBOQpmmuUwglyy6btJPtyis+o1lynnkTyTn
+        3FMnYI0Pxld86hSU1Q33Jnh1C79Au6AR4xlj86hcsG364F5us/aDVurngi7W
+        VS7X/EL1Dk0Dwg+d7w2lfZEvyMpqtOnAlUK/FvRkbzQMYCyWzryg32Bx1mit
+        tYO6Pccv7ub7JzA4Yw20dlrjAqykVzVgBY2XVkls0V3It4Gr+g9w9CWo0Bht
+        7PmbG/z6D3A8iz05a9TLkpXu2/fzSiuwkqYRrvwWjWrx08mbSCeOpazGGHks
+        fBPugXARCVKzOiEZ5iLLee1bIF1G8EtM+sF8uPcBy3l+1oaeseV1MuvxLxZ6
+        erL8AX4ztL7zCAAA
+    http_version: 
+  recorded_at: Mon, 28 Nov 2016 12:55:05 GMT
+- request:
+    method: get
+    uri: https://localhost:8443/ovirt-engine/api/vms/3a9401a0-bf3d-4496-8acf-edd3e903511f/snapshots
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=ZtHF6632CiJj4wCi7ceEYXMGvCq76IuQ40d_ZhWV.localhost
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/xml
+      Content-Length:
+      - '1339'
+      Date:
+      - Mon, 28 Nov 2016 12:55:06 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        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
+    http_version: 
+  recorded_at: Mon, 28 Nov 2016 12:55:06 GMT
+- request:
+    method: get
+    uri: https://localhost:8443/ovirt-engine/api/vms/3a9401a0-bf3d-4496-8acf-edd3e903511f/nics
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=ZtHF6632CiJj4wCi7ceEYXMGvCq76IuQ40d_ZhWV.localhost
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/xml
+      Content-Length:
+      - '423'
+      Date:
+      - Mon, 28 Nov 2016 12:55:06 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAAMVUy47cIBC8z1dY3AkwGA9YtveWL0jOUa9pT9DaeARe7+bv
+        g2ec2JuHNFKkLCe6Keiq6hbVw+vQZzOG6EZfE/GBkwx9O1rnzzX5/Okj1SSL
+        E3gL/eixJt8wkofmUHnXxuaQpbVss68Bu5qwcXZhoujPziODi2PzEJkEk3MB
+        nD520tI8NwXV0HYUrZVouFRCdGx5jxWgpLa6oFLDkebQGmp0p6ixywPKFGgk
+        yZytyV3IG78rR2inJDBumWu2d/7pP1JnFhceM0xIsoB9TXYJ9s7cfmH2J14V
+        +83GysOATaoiKnbdHt5NQJrSycUp4VcJu8RexDz8M6vbDN6F3Ff2OL2M4Wkd
+        YGt4JzVVy7381D0mSfpIFYBSKKTI8e3lxU60zRSesWJrsJ06P2HooMVm0eTG
+        im2ZDTVAm4G1AWOsCeelgDKHUhQlF6USb8pd+49ruTXYTi/98/n8k82PaOdx
+        atuXSxg71+Pf3U6gFZNsL0Qhc5u6a06KJvEnqvOjoS3nRp9Euxi62n4PcpVS
+        LfOTfit2+66+A4x0JOvuBAAA
+    http_version: 
+  recorded_at: Mon, 28 Nov 2016 12:55:06 GMT
+- request:
+    method: get
+    uri: https://localhost:8443/ovirt-engine/api/vms/072093dc-3492-4cb1-b240-dbf88a8f4fbf/disks
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=ZtHF6632CiJj4wCi7ceEYXMGvCq76IuQ40d_ZhWV.localhost
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/xml
+      Content-Length:
+      - '596'
+      Date:
+      - Mon, 28 Nov 2016 12:55:06 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAAMVWTY+bMBC951cg7q75cAhIhL1U/QXtGQ32kLUWMLIddtNf
+        XweSAKWVVqrU5DTz5mG/Gc84zl8+2sYbUBupuqMffgl8DzuuhOxOR//H928k
+        9T1joRPQqA6P/gWN/1LsciHNmyl2nvuNtveqsT76VA1SW4LdSXZIoZd0aA0N
+        DlGQxYKTmGURYbwKSRWxgIiqTlNIa1ZXNR1XpBnEmCYJJ4xlB8ISUZM0CIGI
+        8BBnPA55kgnfk+Lof4o5KRxVArcuRzMjI9rI7r9qpwKvQgaw6Hsam6O/AOiz
+        xeFHr7S9Cbs5TxfVquFeq9F8uqDfDvBPx5fTTbvlHbRYDG1UfnVbhTkd/d3z
+        0uhRt9JcB9/cMlki9JnS3I1jpbGS35UtgKWwof1nWdNl8inmcmdoJJjlaU7A
+        TJAtnLCUoqjCNMxSBgSTaE9Yyg8kzfac1BGvgLNQ7EWV0wd9XsFYpa+gUC3I
+        zcW1jo5JRAeIK86RcCYCwipnQY0ZCUXiirqHTATRukn/ukVu5E8s9nGSHoIs
+        jAJHvQJzvNeu4tdOQVFuuJvg6hY+QzOhUcDSIBhH5YEt0wd73mbtBq1Qbzmd
+        rFUua34uO4u6Bu6GzvWGVK7ID2Rm1Uq3YAuu3nN6sxcaetAGC6vP6DaYnDla
+        KWWhau7xh7v4/hU0jlgNjbmu8QBm0rvssYTaSSsFNmgf5G1gVf8eTq4EJWqt
+        tLl/s8HXf4DDXezNmaNOlihV11zuK83AtiXtpcdibNm5h0ZsehCMo+4eCfT2
+        SvgFE62oh2YIAAA=
+    http_version: 
+  recorded_at: Mon, 28 Nov 2016 12:55:06 GMT
+- request:
+    method: get
+    uri: https://localhost:8443/ovirt-engine/api/vms/072093dc-3492-4cb1-b240-dbf88a8f4fbf/snapshots
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=ZtHF6632CiJj4wCi7ceEYXMGvCq76IuQ40d_ZhWV.localhost
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/xml
+      Content-Length:
+      - '1464'
+      Date:
+      - Mon, 28 Nov 2016 12:55:06 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        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
+        Os7daukfCvdNwXX6Rqv/AMV6RCw9IgAA
+    http_version: 
+  recorded_at: Mon, 28 Nov 2016 12:55:06 GMT
+- request:
+    method: get
+    uri: https://localhost:8443/ovirt-engine/api/vms/072093dc-3492-4cb1-b240-dbf88a8f4fbf/nics
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=ZtHF6632CiJj4wCi7ceEYXMGvCq76IuQ40d_ZhWV.localhost
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/xml
+      Content-Length:
+      - '425'
+      Date:
+      - Mon, 28 Nov 2016 12:55:06 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAAMVUXY+cIBR9n19heKeAoqJR962/oH1uEC5TsooTcG3774uO
+        rW4/kkmadH3iHg7ecw43NE9fxyFZwAc7uRaxdxQl4NSkrbu26OOH91igJMzS
+        aTlMDlr0DQJ66i6Nsyp0lyR+6zL57MG0iEyL9TMGd7UOiLxZsoyB0DKlVaYV
+        zniVYq56hvuUU6x7I4QUhpvekPV/xGiV6pIKTJlmmEvJsejzDOuCs7JkgkEK
+        KLG6RQ8x7/o2jVLN0WA4kA0drHv+j9KJhlXHIufowsPQohNA3ljbL8r+pKsh
+        v8XYODlCF7uwhmzLy5sZiFM62zBH/m7hBJxNLOM/q7rP4EPMc2cH85fJP2+H
+        C6krajKBc14VmJemx5UQKc6lzHNgGePw+vAaJ+hu9i/QkL04dq2bwRupoFs9
+        2akhB3KwRqkSqbWHEKJ8WjNZc1mzoqasztNX7bb7h73dXhy7t+Hlev2p5kd1
+        yjhe26ebn4wd4O9pR9LOCSQrWJFxHXOsyhxH8yUWPK2worQSJVNQ0ewe+0PM
+        3Uqzzk98rcj9ufoO4uZPXe4EAAA=
+    http_version: 
+  recorded_at: Mon, 28 Nov 2016 12:55:06 GMT
+- request:
+    method: get
+    uri: https://localhost:8443/ovirt-engine/api/vms/7c0f1dfc-ffd5-48b1-b9f8-bfb492b39761/disks
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=ZtHF6632CiJj4wCi7ceEYXMGvCq76IuQ40d_ZhWV.localhost
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/xml
+      Content-Length:
+      - '636'
+      Date:
+      - Mon, 28 Nov 2016 12:55:06 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAAMVW227bMAx971cEftdk+RoDjvsy7Au2Z4O2qFSobRmS6rb7
+        +smXxPbSAgUGLHkSD0+oQ4qUlT++tc1hQG2k6k4e++Z7B+xqxWV3Pnm/fv4g
+        R+9gLHQcGtXhyXtH4z0WDzmX5tkUDwf3m9aHJ43i5FE1SG0JdmfZIYVe0qE1
+        NK19wbioiRA8JtGxYqTKxJFUooqyoAqzNGF0ikhZXIksyASJs9BRMUlIxjAk
+        LABWh0kAUDmJkjutX2HOCieVUFuXo1mRCW1k91+1U46jkAEsegeNzcnbAPTe
+        4vCtV9ouwhbj7qJaNVxqNS3vLuivA/zo+HJ60255By0WQxuW391WLKeT/XC/
+        NHrUrTTj4Jslky1C7ynN3ThWGivri7INsBU2tP8sa75MvsTc7gyNBLM9zRlY
+        CbKFM5aSFxkXUQWRIEnCAxL5zEUFEZM0OGIa+gmPeZrTK32NYKzSI8hVC/Lm
+        4tp7pySiJA0EspTUQeK70tY1GatJqjiMRcR9XmG1b9JPt8iN/I0F89Mwjdgx
+        iBx1BFZ/r13Fx05BXt5wb5y7W/gFmhn1pym5mtvMwb7cJuxmrFDPOZ1XuzT2
+        /Fx2FrWA2s2bawupXH2vyMoSSrdgCw2vOV3WGw09aIOF1S/oNpiN1VspZaFq
+        sBDQGEe42psAT6Bxy1mBlfQqeyxBOG0lxwbtlXzr2NW+h7OrQYlaK20u/7nB
+        9x+/4ZLNYqxeJ4uXqmveL5FWYCWN41u6LYRs8NOpG0kLx9CKCd9PYiQZoHD9
+        6IbqmIWZa0rgLERENwHz+H2JST+YDfveYzHNztrMEza/TCY97rVCl+fKH+HD
+        9AnvCAAA
+    http_version: 
+  recorded_at: Mon, 28 Nov 2016 12:55:06 GMT
+- request:
+    method: get
+    uri: https://localhost:8443/ovirt-engine/api/vms/7c0f1dfc-ffd5-48b1-b9f8-bfb492b39761/snapshots
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=ZtHF6632CiJj4wCi7ceEYXMGvCq76IuQ40d_ZhWV.localhost
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/xml
+      Content-Length:
+      - '331'
+      Date:
+      - Mon, 28 Nov 2016 12:55:06 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAAL1SvW6DMBjc8xTIa+XYJhAgAqIu3bqlXSODPydWwEa2i5q3
+        LxAloLZDp3q7H5/uky7ff7ZN0IN1yugCsTVFAejaCKVPBXo7vOAUBc5zLXhj
+        NBToCg7ty1XuNO/c2XhXroLhPXBwtiALREyvrMegT0oD4Z0ifetIUlPJhKyx
+        lCLGUVoxXGUyxZWsoiysNlmyZeSRTATLwiyCCnMhAEdJFmPOuMB1lcRxKHnE
+        M4YCJQr0J+et6dSW1364183MxDZKX/67P7HgvLGAAgtNge6ILMqSH21zAa62
+        qhvp8nlQewjeX3OypGezv3ZQ8smVkwksgriHMqRsi2mKaXhg0S5MdnG03qTp
+        E93sKB1SR8/85X7fcZiF/3ClueTkOze7u3Fazh9baI29jjKUkjduqPKbdBvT
+        I28YGlks7QuYcA8GrgIAAA==
+    http_version: 
+  recorded_at: Mon, 28 Nov 2016 12:55:06 GMT
+- request:
+    method: get
+    uri: https://localhost:8443/ovirt-engine/api/vms/7c0f1dfc-ffd5-48b1-b9f8-bfb492b39761/nics
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=ZtHF6632CiJj4wCi7ceEYXMGvCq76IuQ40d_ZhWV.localhost
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/xml
+      Content-Length:
+      - '84'
+      Date:
+      - Mon, 28 Nov 2016 12:55:06 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAALOxr8jNUShLLSrOzM+zVTLUM1BSSM1Lzk/JzEu3VQoNcdO1
+        UFIoLknMS0nMyc9LtVWqTC1WsrfjssnLTC7Wt+MCAP1hyoFAAAAA
+    http_version: 
+  recorded_at: Mon, 28 Nov 2016 12:55:06 GMT
+- request:
+    method: get
+    uri: https://localhost:8443/ovirt-engine/api/vms/9a3d9765-1a23-41f0-a578-50013a8ad5ba/disks
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=ZtHF6632CiJj4wCi7ceEYXMGvCq76IuQ40d_ZhWV.localhost
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/xml
+      Content-Length:
+      - '640'
+      Date:
+      - Mon, 28 Nov 2016 12:55:06 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAAMVW226cMBB9z1cg3l2bO0gsean6Be0zGvCwsQIY2Q5J+vU1
+        l12gm0iRKnX3yT5z1nPGnmOcP751rTOi0kL2J9f7xlwH+1py0Z9P7q+fP0jq
+        OtpAz6GVPZ7cd9TuY/GQc6GfdfHg2N88dp4UNieXylEoQ7A/ix4pDIKOnaYZ
+        BDxL4oh44Ack9BpGIEpSEjHmBZACjyqg84rUwyyO04oRxqKQhNBwkgIGJEtY
+        EMZYYeQFriO41foV5qJwVgm1sTXqDZnRVvT/VTvlOAkZwaDrKGxP7g6g9xaH
+        b4NUZhW2Tu4uqpPjZa/m4d0F/XWAHx1fTm/aLe+hw2LseO2V320yL6cz8nC/
+        QgZUndCT9fVayx6h95Rm7xwjtBH1RdkO2Asbu3+WtVwnX2LuM0MrQB/Pc4E2
+        iujgjKXgRQKZH8Z1TOqYMRImUURs2RkJ0yjyqpQlQeLn9ErfVtBGqgnksgNx
+        c3kdo3MZYZz4DXoJqf3YZsK6JgB2r6soiJqQM15hdWzUT1PkWvzGwpvEhV7q
+        h5Y6AVt8UHbPp15BXt5wb4KHm/gF2gX1WZgyNtvliu3LB/NyW7U1WyGfc7qM
+        DrUc+bnoDaoGams82x1C2k2+IhurkaoDU9TyNafreKdhAKWxMOoFbYJlskUr
+        KQ1ULRYNtNoSrvPdAk+gcM/ZgI30KgYsobHaSo4tmiv5NnA4gAHOdg9KVEoq
+        ffnPDX78Co6XatbJFrWyeCn79v2y0gZspMnFpU3RiBY/Nd9EWjmaVtZNLI6Q
+        ZICNbcrKI2kWZLYzgXsBIvopLi78EpN+YBDzPmAxG2jr6BlbniizHvtsoeu7
+        5Q/9DS+H+AgAAA==
+    http_version: 
+  recorded_at: Mon, 28 Nov 2016 12:55:06 GMT
+- request:
+    method: get
+    uri: https://localhost:8443/ovirt-engine/api/vms/9a3d9765-1a23-41f0-a578-50013a8ad5ba/snapshots
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=ZtHF6632CiJj4wCi7ceEYXMGvCq76IuQ40d_ZhWV.localhost
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/xml
+      Content-Length:
+      - '1287'
+      Date:
+      - Mon, 28 Nov 2016 12:55:06 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAAMVXX4+jNhB/v0+BeK1Y/icQEU7VaduH9lqp3fYVObZJrAVM
+        bZPb3Ke/AUISsHNdtbpbHpA94xmPZ34zY2fvX+rKOlIhGW+2tv/g2RZtMCes
+        2W/tv55+chLbkgo1BFW8oVv7RKX9Pn+XyQa18sCVzN9Z8F3m1kHQcmu7/MiE
+        cmizZw11UcvcYy3dFIUkXa9ix0dB6ER+6TkoXidO7Hl+iBJE4h1yL5rdcIcx
+        ScnKiZKIwA+tnJSknuMRz0+IF8UkDGyLka39qpWjpYO1CCs4r7xSBmrFmufv
+        bb8rqFRcUNsStNra08y9MdbVrM0IlViwtifnPwL3SK2/P2buLfm6WJ1amqNh
+        VeYOkxtFSNE88PyV460dP3jyvU0cbvzowQviH7xw43mgtV9zFZnOVwAsVCdz
+        /py5S9p1ddtDS6qipjUXp55N8xJVEkwxsUYwXfR9Q3CVOI4hBKGD1ySC5dHK
+        QaQXDNIEe7uE0BKN4HrVyu8OrtdY9f/BpUBE+veQ9SZnwkTwWp6PdJ64b20U
+        YfJ5smkcv7lJDcOTRcPQXZYEQfddhYRWE471APvX2GQvQN6gmubHmmCAzDCe
+        s4eNAErPirfLbcdEX5SPGQNE+acGioOaFaRzxTBIZmNlyX1vHa4jPwmizD2T
+        5utw2xn2BCN5xfcnS3L8TJWE9mhbGBJoHCkIKCLD2DVII4EPTFGsOkHzl2RV
+        rGD3GXFxAs2I3qxCHhBsmHsDf5rNl+0YN7lsx3lfWxvD0QY+bdCuomSqxtNU
+        V+Te0QQMbeeMS6uP69bm6kCFfccui9Dj1j6QpecyV1OIq04qKgZIeuMXOPrv
+        /KWBphJDmPq6VShWm3pd+AByU6+bL14cTTBI2nxIYDB0nOn4pRWVcvLqlTBf
+        SICoaNEK3qPhGgWNPhc7sP2hQEfEKrRjFVMng39fHddWMDgE6IBkvYwX4fiX
+        DTOodW2FTGbUvGHQbWSv/TI2JDZcNCta/PNSFS1mF7fNqYbsqir+qeBwcRWM
+        XG4UC6phtxoJhZEgxcJLOkMXLhmYpARqZEnFZZ0SHcibeboOzNtT0SJA9EKB
+        gaFLg7cxbxpARjG27fzX3z/8Uvz54Y/Hx98yV2cvommMViYlN8WPqgMnhpDd
+        cIek3HdwRyjQnjbKWAhdoyZw+XLbrM+5z/DKyB8Vdn/++AQtYqLMF3Zy9x+B
+        n7mabFazvRiTvu8vQ+I7PWh1spbsQkHMOnmDo1uaXs0hr3uk3BYz6ui/8QuT
+        SCtmF6NMOdEpXgAAAP57mrMG6i+DQjUnmyBZt9BUeoMvMje0hfvuGJAxE4bO
+        LbLvXtNwoW4pNmCg0EM+8IYbxQUbhvuFe0e6z/uqKhh4YXA9TqM1RlHgrIKU
+        OtEKlw6idOfQMo3SEtE4wJ7mergq7elVB4FrVroqE2cdY3jcrWPk7IIydnC4
+        JjAJkmSnXQzOF5IC7hUMm4rmvkNQQxQFv99eWm7Iy3DcVwj45G0BXpcQrB6Z
+        19nC5bSGqqBmqPQcw2/6tGMNuuftNXny15sw2kTRwzpIp/Z6XbhAD/QHhir2
+        eYDWUj1YhyncP9R9x6Gy7HWc8hGffeYD8ifiwmlf15c19EUVomv6pCnZvjtX
+        AfoCj9VLY//6ooXCrkaF6hpa1Jz0mQn3mYqi/jm+YN28y4713Wd6+OSHmyDZ
+        RMFDugq/2TN9bEyveqVfx6D0C1YJp/NUEgAA
+    http_version: 
+  recorded_at: Mon, 28 Nov 2016 12:55:06 GMT
+- request:
+    method: get
+    uri: https://localhost:8443/ovirt-engine/api/vms/9a3d9765-1a23-41f0-a578-50013a8ad5ba/nics
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=ZtHF6632CiJj4wCi7ceEYXMGvCq76IuQ40d_ZhWV.localhost
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/xml
+      Content-Length:
+      - '84'
+      Date:
+      - Mon, 28 Nov 2016 12:55:06 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAALOxr8jNUShLLSrOzM+zVTLUM1BSSM1Lzk/JzEu3VQoNcdO1
+        UFIoLknMS0nMyc9LtVWqTC1WsrfjssnLTC7Wt+MCAP1hyoFAAAAA
+    http_version: 
+  recorded_at: Mon, 28 Nov 2016 12:55:06 GMT
+- request:
+    method: get
+    uri: https://localhost:8443/ovirt-engine/api/templates/00000000-0000-0000-0000-000000000000/disks
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=ZtHF6632CiJj4wCi7ceEYXMGvCq76IuQ40d_ZhWV.localhost
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/xml
+      Content-Length:
+      - '85'
+      Date:
+      - Mon, 28 Nov 2016 12:55:06 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAALOxr8jNUShLLSrOzM+zVTLUM1BSSM1Lzk/JzEu3VQoNcdO1
+        UFIoLknMS0nMyc9LtVWqTC1WsrfjsknJLM4u1rfjAgDpCskUQQAAAA==
+    http_version: 
+  recorded_at: Mon, 28 Nov 2016 12:55:06 GMT
+- request:
+    method: get
+    uri: https://localhost:8443/ovirt-engine/api/templates/785e845e-baa0-4812-8a8c-467f37ad6c79/disks
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=ZtHF6632CiJj4wCi7ceEYXMGvCq76IuQ40d_ZhWV.localhost
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/xml
+      Content-Length:
+      - '576'
+      Date:
+      - Mon, 28 Nov 2016 12:55:06 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAAM1VyW7bMBC95ysE3VlqoRYCsnIp+gXtWRiRI4eINpCME/fr
+        S8myZUEN4EOAVqfhm8fhm+GMWDx/dK13Qm3U0B/88Fvge9iLQar+ePB//fxB
+        ct8zFnoJ7dDjwT+j8Z/Lp0Iq82rKJ899s+29aGwOPh1OSluC/VH1SGFU1GI3
+        tmDR0CxPMGcJkhogICwPI5JDLghLsybOQKYi43SOSzMeZlkcIIl5UxMmgREe
+        JSmRkCaRiGNM6tT3lDz4DzEvOmetIKzL1KzIjLaq/wcZUPwYB219T2N78JcF
+        /T+kiWE8L8Jm805WQXdFLHrosDx1YfXdHREWdF6v7qvOL0pkufpHmPe6oVVg
+        7lVegJWgOjhipWQpEBgPkpoEkoErURgQzllMwiwKpRQsYVgX9EZfIxg76AmU
+        Qwdq12Zb75xElEFcC4FEMOmSqJ0FDXISyjTlMgEug2hb/E+PKIz6jWXKWMSS
+        gDPmqBOw+kft6j4NOspqx905NzPzBu0FDfM4ZyxPWTC3wQ2/LwHYt33m7nLL
+        4XWSP1mbfLb8ohl0B7bU8F7Qxb6LPoI2WFr9hm7rZXHnfQGNULdYNtCaiXED
+        VtK7GrGCxqKuJLZob+S9Y1O7EY5OeoVaD9pc9+zw7a/mdJW6LFavkyWroW/P
+        10grsJKmga3cEY1qP5+dibRwDA1qjJHFwjVQ5jpXRILUQZ2QHLnIOasDd3eX
+        8XmISf/S2/Y8Yjn3/tqMM3Z5DWY97oWgyxPxB9+SZYxjBgAA
+    http_version: 
+  recorded_at: Mon, 28 Nov 2016 12:55:06 GMT
+- request:
+    method: get
+    uri: https://localhost:8443/ovirt-engine/api/templates/187e40e6-dfff-453c-9433-066ac1b14e5b/disks
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=ZtHF6632CiJj4wCi7ceEYXMGvCq76IuQ40d_ZhWV.localhost
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/xml
+      Content-Length:
+      - '85'
+      Date:
+      - Mon, 28 Nov 2016 12:55:06 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAALOxr8jNUShLLSrOzM+zVTLUM1BSSM1Lzk/JzEu3VQoNcdO1
+        UFIoLknMS0nMyc9LtVWqTC1WsrfjsknJLM4u1rfjAgDpCskUQQAAAA==
+    http_version: 
+  recorded_at: Mon, 28 Nov 2016 12:55:06 GMT
+- request:
+    method: get
+    uri: https://localhost:8443/ovirt-engine/api
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=ZtHF6632CiJj4wCi7ceEYXMGvCq76IuQ40d_ZhWV.localhost
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
+      Content-Type:
+      - application/xml
+      Content-Length:
+      - '856'
+      Link:
+      - "<https://localhost:8443/ovirt-engine/api/capabilities>; rel=capabilities,<https://localhost:8443/ovirt-engine/api/clusters>;
+        rel=clusters,<https://localhost:8443/ovirt-engine/api/clusters?search={query}>;
+        rel=clusters/search,<https://localhost:8443/ovirt-engine/api/datacenters>;
+        rel=datacenters,<https://localhost:8443/ovirt-engine/api/datacenters?search={query}>;
+        rel=datacenters/search,<https://localhost:8443/ovirt-engine/api/events>; rel=events,<https://localhost:8443/ovirt-engine/api/events;from={event_id}?search={query}>;
+        rel=events/search,<https://localhost:8443/ovirt-engine/api/hosts>; rel=hosts,<https://localhost:8443/ovirt-engine/api/hosts?search={query}>;
+        rel=hosts/search,<https://localhost:8443/ovirt-engine/api/networks>; rel=networks,<https://localhost:8443/ovirt-engine/api/networks?search={query}>;
+        rel=networks/search,<https://localhost:8443/ovirt-engine/api/roles>; rel=roles,<https://localhost:8443/ovirt-engine/api/storagedomains>;
+        rel=storagedomains,<https://localhost:8443/ovirt-engine/api/storagedomains?search={query}>;
+        rel=storagedomains/search,<https://localhost:8443/ovirt-engine/api/tags>;
+        rel=tags,<https://localhost:8443/ovirt-engine/api/bookmarks>; rel=bookmarks,<https://localhost:8443/ovirt-engine/api/icons>;
+        rel=icons,<https://localhost:8443/ovirt-engine/api/templates>; rel=templates,<https://localhost:8443/ovirt-engine/api/templates?search={query}>;
+        rel=templates/search,<https://localhost:8443/ovirt-engine/api/instancetypes>;
+        rel=instancetypes,<https://localhost:8443/ovirt-engine/api/instancetypes?search={query}>;
+        rel=instancetypes/search,<https://localhost:8443/ovirt-engine/api/users>;
+        rel=users,<https://localhost:8443/ovirt-engine/api/users?search={query}>;
+        rel=users/search,<https://localhost:8443/ovirt-engine/api/groups>; rel=groups,<https://localhost:8443/ovirt-engine/api/groups?search={query}>;
+        rel=groups/search,<https://localhost:8443/ovirt-engine/api/domains>; rel=domains,<https://localhost:8443/ovirt-engine/api/vmpools>;
+        rel=vmpools,<https://localhost:8443/ovirt-engine/api/vmpools?search={query}>;
+        rel=vmpools/search,<https://localhost:8443/ovirt-engine/api/vms>; rel=vms,<https://localhost:8443/ovirt-engine/api/vms?search={query}>;
+        rel=vms/search,<https://localhost:8443/ovirt-engine/api/disks>; rel=disks,<https://localhost:8443/ovirt-engine/api/disks?search={query}>;
+        rel=disks/search,<https://localhost:8443/ovirt-engine/api/jobs>; rel=jobs,<https://localhost:8443/ovirt-engine/api/storageconnections>;
+        rel=storageconnections,<https://localhost:8443/ovirt-engine/api/vnicprofiles>;
+        rel=vnicprofiles,<https://localhost:8443/ovirt-engine/api/diskprofiles>; rel=diskprofiles,<https://localhost:8443/ovirt-engine/api/cpuprofiles>;
+        rel=cpuprofiles,<https://localhost:8443/ovirt-engine/api/schedulingpolicyunits>;
+        rel=schedulingpolicyunits,<https://localhost:8443/ovirt-engine/api/schedulingpolicies>;
+        rel=schedulingpolicies,<https://localhost:8443/ovirt-engine/api/permissions>;
+        rel=permissions,<https://localhost:8443/ovirt-engine/api/macpools>; rel=macpools,<https://localhost:8443/ovirt-engine/api/networkfilters>;
+        rel=networkfilters,<https://localhost:8443/ovirt-engine/api/operatingsystems>;
+        rel=operatingsystems,<https://localhost:8443/ovirt-engine/api/externalhostproviders>;
+        rel=externalhostproviders,<https://localhost:8443/ovirt-engine/api/openstackimageproviders>;
+        rel=openstackimageproviders,<https://localhost:8443/ovirt-engine/api/openstackvolumeproviders>;
+        rel=openstackvolumeproviders,<https://localhost:8443/ovirt-engine/api/openstacknetworkproviders>;
+        rel=openstacknetworkproviders,<https://localhost:8443/ovirt-engine/api/katelloerrata>;
+        rel=katelloerrata"
+      Date:
+      - Mon, 28 Nov 2016 12:55:10 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAAJ1Yy3LbIBTd5ys02nZsSa7TSVPkrNovSLv1YAnbxMBVAanx
+        ZPLvxXpLxhmIFpn7PBwuAS5GT6+cBRWRioJIw2QZhwERGeRUHNLw9/OvxUMY
+        KI1FjhkIkoZnosKnzR3CBd3cBeZDjIpTcJRkn4YRVFTqBREHKkhkQqIMF3hH
+        GdXU5AWSsDScmCInEFYqbSh2AJ3qlfykCJbZMX37WxJ5fp9hRY3XDTLHGmdE
+        jCiNLb4QdmKjAC9upDJJHa1W8Uj8sZfA07da2dL83U6uifXidQTV02pk9zQ7
+        idrlxUEQ/Q/kqaPRq17JdjKd14uPBNbvikZ2SlMaJD6QHDimosufGT8BZJ/Y
+        NMZrehofOna16JS0AzhxPCzSoDul0wz6kjSyG1XCC4Z1vxqD7pdur2Hv9iqf
+        Kbc5dzOiz0XPa2rzh7Hzm4R4cSzVcAY2snuanUvt8uJwkFAWHYlW8Ui002h8
+        frfCZD96bcSKFwCsS+00n1T7LFqn1zQqPvBw5nBzfM8SUtVv/EZ2T7txjV5c
+        XhxeYNdRqEWfk9QcOIJkmsL8WB473EoqaFZI2NPhhpiYnOsyA5mY3Pqnopxh
+        jC1u1cmOJC9NyKEARrNzKWjfC9h9n4EdOkyLwwmwIJJTpUbLN7Y4QXCcjbdy
+        r/q0GKayo9ZyZnQCAsMbazN/dTbdbb+hr8xujeGrGVhgdum3zLpXNB/I2X2u
+        HC/XTnai3GyQOfAtrx90Bazkt7Hnbj/wdmFuol/5neBPpk9gDIg0K4VbyKmt
+        g1EFyShmW9i9mKNFNVaPXiWK229h+dN9Vx3MjmFx6ji49YBeA13iJYDupxlZ
+        54lMWfMyM28UsYcRGYE52cAfwyL4WbNAUW0aIszTJQe5qZkuQR5Q1FrGIfVz
+        OOD4BWQarsOAU3GRkjDYlZTlaVjzrWjzao4n9diXjG1biM16aZ7UW44vj0wU
+        TVzt9K4nglTJTct7HjPio/WtLRo0ZpsHFDXC1InNVVORTYyiVhqQogkUqh9R
+        VuivH0KvbNAzMFT3clbw5EPwxAY+A0PtzbptGy3rMPcfDrO2DWOFNebxkiBN
+        zb/UKk6+LZJksXp4TtaP9/ePSbxcfV99iVePsal8HXOHovqHkv9b/wvbZxEA
+        AA==
+    http_version: 
+  recorded_at: Mon, 28 Nov 2016 12:55:10 GMT
+recorded_with: VCR 3.0.3
