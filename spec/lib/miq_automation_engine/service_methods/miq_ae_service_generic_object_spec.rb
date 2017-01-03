@@ -12,9 +12,7 @@ module MiqAeServiceGenericObjectSpec
         :generic_object_definition,
         :name       => "test_definition",
         :properties => {
-          :attributes   => {},
-          :associations => {},
-          :methods      => [method_name]
+          :methods => [method_name]
         }
       )
     end
