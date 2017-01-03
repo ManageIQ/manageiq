@@ -104,14 +104,6 @@ group :automate do
 end
 
 group :ui_dependencies do # Added to Bundler.require in config/application.rb
-  # Unmodified gems
-  gem "angular-ui-bootstrap-rails",   "~>0.13.0"
-  gem "coffee-rails"
-  gem "jquery-hotkeys-rails"
-  gem "lodash-rails",                 "~>3.10.0"
-  gem "patternfly-sass",              "~>3.15.0"
-  gem "sass-rails"
-
   # Modified gems (forked on Github)
   gem "jquery-rjs",                   "=0.1.1",                       :git => "https://github.com/ManageIQ/jquery-rjs.git", :tag => "v0.1.1-1"
 end
