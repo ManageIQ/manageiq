@@ -17,7 +17,6 @@ exclude_paths:
 - "db/fixtures/**/*.yml"
 - "db/migrate/20130923182042_collapsed_initial_migration.rb"
 - "locale/"
-- "public/javascripts/timeline/"
 - "spec/"
 - "test/"
 - "tmp/"
