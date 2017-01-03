@@ -102,27 +102,22 @@ class ChargebackRateDetail < ApplicationRecord
     hourly_rate
   end
 
-  # Scale the rate in the unit difine by user to the default unit of the metric
-  # It showing the default units of the metrics:
-  # cpu_usagemhz_rate_average --> megahertz
-  # derived_memory_used --> megabytes
-  # derived_memory_available -->megabytes
-  # net_usage_rate_average --> kbps
-  # disk_usage_rate_average --> kbps
-  # derived_vm_allocated_disk_storage --> bytes
-  # derived_vm_used_disk_storage --> bytes
+  # Scale the rate in the unit defined by user -> to the default unit of the metric
+  METRIC_UNITS = {
+    'cpu_usagemhz_rate_average'         => 'megahertz',
+    'derived_memory_used'               => 'megabytes',
+    'derived_memory_available'          => 'megabytes',
+    'net_usage_rate_average'            => 'kbps',
+    'disk_usage_rate_average'           => 'kbps',
+    'derived_vm_allocated_disk_storage' => 'bytes',
+    'derived_vm_used_disk_storage'      => 'bytes'
+  }.freeze
 
   def rate_adjustment(hr)
-    case metric
-    when "cpu_usagemhz_rate_average" then
-      adjustment_measure('megahertz')
-    when "derived_memory_used", "derived_memory_available" then
-      adjustment_measure('megabytes')
-    when "net_usage_rate_average", "disk_usage_rate_average" then
-      adjustment_measure('kbps')
-    when "derived_vm_allocated_disk_storage", "derived_vm_used_disk_storage" then
-      adjustment_measure('bytes')
-    else 1
+    if METRIC_UNITS[metric]
+      adjustment_measure(METRIC_UNITS[metric])
+    else
+      1
     end * hr
   end
 
