@@ -35,17 +35,6 @@ SyntaxCheck
 xfer_*.xml
 Thumbs.db
 
-# app/views/layouts/
-app/views/layouts/_center_buttons_1.rhtml
-app/views/layouts/_center_buttons_new.rhtml
-app/views/layouts/_center_buttons_jmaki.rhtml
-
-# app/views/vm/
-app/views/vm/.fuse_hidden0000208f00000004
-app/views/vm/_main_old.rhtml
-app/views/vm/_main_new.rhtml
-app/views/vm/.fuse_hidden0000228d0000000a
-
 # bin/
 bin/*
 
