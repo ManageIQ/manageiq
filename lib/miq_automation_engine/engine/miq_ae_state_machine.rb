@@ -100,7 +100,7 @@ module MiqAeEngine
         # Process on_exit method
         process_state_step_with_error_handling(f, 'on_exit') do
           process_state_method(f, 'on_exit')
-          if @workspace.root['ae_result'] == 'retry' and !state_in_retry
+          if @workspace.root['ae_result'] == 'retry' && !state_in_retry
             increment_state_retries
           end
         end
