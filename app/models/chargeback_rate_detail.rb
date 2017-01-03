@@ -131,12 +131,8 @@ class ChargebackRateDetail < ApplicationRecord
     measure = detail_measure
     pos_pu_destiny = measure.units.index(pu_destiny)
     pos_per_unit = measure.units.index(per_unit)
-    jumps = (pos_per_unit - pos_pu_destiny).abs
-    if pos_per_unit > pos_pu_destiny
-      hr.to_f / (measure.step**jumps)
-    else
-      hr * (measure.step**jumps)
-    end
+    jumps = pos_pu_destiny - pos_per_unit
+    hr.to_f * (measure.step**jumps)
   end
 
   def affects_report_fields(report_cols)
