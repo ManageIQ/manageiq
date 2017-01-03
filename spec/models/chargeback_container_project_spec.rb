@@ -1,4 +1,6 @@
 describe ChargebackContainerProject do
+  include Spec::Support::ChargebackHelper
+
   let(:base_options) { {:interval_size => 1, :end_interval_offset => 0, :ext_options => {:tz => 'UTC'} } }
   let(:hourly_rate)       { 0.01 }
   let(:ts) { Time.now.in_time_zone(Metric::Helper.get_time_zone(options[:ext_options])) }
@@ -43,10 +45,6 @@ describe ChargebackContainerProject do
 
   after do
     Timecop.return
-  end
-
-  def used_average_for(metric, hours_in_interval, resource)
-    resource.metric_rollups.sum(&metric) / hours_in_interval
   end
 
   context "Daily" do

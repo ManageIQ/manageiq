@@ -112,10 +112,6 @@ describe ChargebackVm do
     end
   end
 
-  def used_average_for(metric, hours_in_interval, resource)
-    resource.metric_rollups.sum(&metric) / hours_in_interval
-  end
-
   context "Daily" do
     let(:hours_in_day) { 24 }
     let(:options) { base_options.merge(:interval => 'daily') }

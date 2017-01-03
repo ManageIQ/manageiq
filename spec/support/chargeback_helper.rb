@@ -6,6 +6,10 @@ module Spec
         tier.send("#{param}=", value)
         tier.save
       end
+
+      def used_average_for(metric, hours_in_interval, resource)
+        resource.metric_rollups.sum(&metric) / hours_in_interval
+      end
     end
   end
 end
