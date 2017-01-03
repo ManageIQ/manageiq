@@ -1,9 +1,5 @@
 describe ChargebackVm do
-  def set_tier_param_for(metric, param, value, num_of_tier = 0)
-    tier = chargeback_rate.chargeback_rate_details.where(:metric => metric).first.chargeback_tiers[num_of_tier]
-    tier.send("#{param}=", value)
-    tier.save
-  end
+  include Spec::Support::ChargebackHelper
 
   let(:admin) { FactoryGirl.create(:user_admin) }
   let(:base_options) do
