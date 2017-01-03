@@ -1,3 +1,4 @@
 require_relative 'miq_ae_method_service/deprecation'
+require_relative 'miq_ae_method_service/miq_ae_service_front'
 module MiqAeMethodService
 end
