@@ -14,7 +14,8 @@ class ChargebackRateDetail < ApplicationRecord
     "hourly"  => _("Hourly"),
     "daily"   => _("Daily"),
     "weekly"  => _("Weekly"),
-    "monthly" => _("Monthly")
+    "monthly" => _("Monthly"),
+    'yearly'  => _('Yearly')
   }.freeze
 
   attr_accessor :hours_in_interval
