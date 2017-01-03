@@ -1,5 +1,5 @@
 require_relative './miq_ae_service_model_legacy'
-require_relative '../miq_ae_service/miq_ae_service_vmdb'
+require_relative './miq_ae_service_vmdb'
 require_relative '../miq_ae_service/miq_ae_service_rbac'
 module MiqAeMethodService
   class MiqAeService
