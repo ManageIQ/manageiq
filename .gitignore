@@ -99,23 +99,6 @@ public/javascripts/jmaki-uncompressed.js
 public/javascripts/glue.js
 public/javascripts/system-glue.js
 
-# public/stylesheets/
-public/stylesheets/jmaki-standard.css
-public/stylesheets/dhtmlXGrid.css
-public/stylesheets/jmaki-2-row-right-sidebar-footer.css
-public/stylesheets/jmaki-centered.css
-public/stylesheets/jmaki-3column-fixed-sidebars.css
-public/stylesheets/jmaki-2column-footer.css
-public/stylesheets/jmaki-3column.css
-public/stylesheets/container-2fixed-right-sidebars.css
-public/stylesheets/jmaki-right-sidebar.css
-public/stylesheets/container-right-sidebars.css
-public/stylesheets/jmaki-standard-footer.css
-public/stylesheets/jmaki-2fixed-right-sidebars.css
-public/stylesheets/jmaki-3column-footer.css
-public/stylesheets/jmaki-standard-no-sidebars.css
-public/stylesheets/jmaki-standard-right-sidebar.css
-
 # spec/
 spec/replication/util/data/euwe_migrations
 
