@@ -36,7 +36,7 @@ class Chargeback < ActsAsArModel
   def self.report_row_key(consumption)
     ts_key = @options.start_of_report_step(consumption.timestamp)
     if @options[:groupby_tag].present?
-      classification = classification_for(consumption)
+      classification = @options.classification_for(consumption)
       classification_id = classification.present? ? classification.id : 'none'
       "#{classification_id}_#{ts_key}"
     else
@@ -48,17 +48,11 @@ class Chargeback < ActsAsArModel
     "#{consumption.resource_id}_#{ts_key}"
   end
 
-  def self.classification_for(consumption)
-    tag = consumption.tag_names.find { |x| x.starts_with?(@options[:groupby_tag]) } # 'department/*'
-    tag = tag.split('/').second unless tag.blank? # 'department/finance' -> 'finance'
-    @options.tag_hash[tag]
-  end
-
   def initialize(options, consumption)
     @options = options
     super()
     if @options[:groupby_tag].present?
-      classification = self.class.classification_for(consumption)
+      classification = @options.classification_for(consumption)
       self.tag_name = classification.present? ? classification.description : _('<Empty>')
     else
       init_extra_fields(consumption)
