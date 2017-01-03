@@ -528,8 +528,19 @@ describe ChargebackVm do
   end
 
   context 'for SCVMM (hyper-v)' do
+    let(:cores) { 7 }
+    let(:mem_mb) { 1777 }
+    let(:disk_gb) { 7 }
+    let(:disk_b) { disk_gb * 1024**3 }
+    let(:hardware) do
+      FactoryGirl.build(:hardware,
+                        :cpu_total_cores => cores,
+                        :memory_mb       => mem_mb,
+                        :disks           => [FactoryGirl.build(:disk, :size => disk_b)])
+    end
+
     let!(:vm1) do
-      vm = FactoryGirl.create(:vm_microsoft, :created_on => report_run_time - 1.day)
+      vm = FactoryGirl.create(:vm_microsoft, :hardware => hardware, :created_on => report_run_time - 1.day)
       vm.tag_with(@tag.name, :ns => '*')
       vm
     end
@@ -537,11 +548,25 @@ describe ChargebackVm do
 
     subject { ChargebackVm.build_results_for_report_ChargebackVm(options).first.first }
 
-    it 'works' do
+    let(:fixed_cost) { hourly_rate * 24 }
+    let(:mem_cost) { mem_mb * hourly_rate * 24 }
+    let(:cpu_cost) { cores * count_hourly_rate * 24 }
+    let(:disk_cost) { disk_gb * count_hourly_rate * 24 }
+
+    it 'fixed compute is calculated properly' do
       expect(subject.chargeback_rates).to eq(chargeback_rate.description)
       expect(subject.fixed_compute_metric).to eq(1) # One day of fixed compute metric
-      expect(subject.fixed_compute_1_cost).to eq(hourly_rate * 24)
-      expect(subject.total_cost).to eq(hourly_rate * 24)
+      expect(subject.fixed_compute_1_cost).to eq(fixed_cost)
+    end
+
+    it 'allocated metrics are calculated properly' do
+      expect(subject.memory_allocated_metric).to  eq(mem_mb)
+      expect(subject.memory_allocated_cost).to    eq(mem_cost)
+      expect(subject.cpu_allocated_metric).to     eq(cores)
+      expect(subject.cpu_allocated_cost).to       eq(cpu_cost)
+      expect(subject.storage_allocated_metric).to eq(disk_b)
+      expect(subject.storage_allocated_cost).to   eq(disk_cost)
+      expect(subject.total_cost).to               eq(fixed_cost + cpu_cost + mem_cost + disk_cost)
     end
   end
 end
