@@ -370,10 +370,15 @@ describe ExtManagementSystem do
         end.to_not raise_error
       end
 
-      it "not allowing duplicate hostname" do
+      it "not allowing duplicate hostname for same type provider" do
         expect do
           FactoryGirl.create(:ems_vmware, :hostname => @ems.hostname, :tenant => @tenant2)
         end.to raise_error(ActiveRecord::RecordInvalid)
+      end
+
+      it "allowing duplicate hostname for different type providers" do
+        FactoryGirl.create(:ems_microsoft, :hostname => @ems.hostname, :tenant => @tenant2)
+        expect(ExtManagementSystem.count).to eq(2)
       end
     end
   end
