@@ -681,18 +681,19 @@ module MiqAeEngine
 
     def array_value(array, method)
       return array if array.nil? || array.compact.empty?
-      value = array
-      value = array.sort { |x, y| y <=> x } if method == 'rsort'
-      value = array.sort                    if method == 'sort'
-      value = array.reverse                 if method == 'reverse'
-      value = array.length                  if method == 'count'
-      value = array.min                     if method == 'min' || method == 'minimum'
-      value = array.max                     if method == 'max' || method == 'maximum'
-      value = array.sum                     if method == 'sum'
-      value = array.mean                    if method == 'mean' || method == 'average' || method == 'avg'
-      value = array.variance                if method == 'variance'
-      value = array.stddev                  if method == 'stddev' || method == 'stdev'
-      value
+      case method
+      when 'rsort'                  then array.sort { |x, y| y <=> x }
+      when 'sort'                   then array.sort
+      when 'reverse'                then array.reverse
+      when 'count'                  then array.length
+      when 'min', 'minimum'         then array.min
+      when 'max', 'maximum'         then array.max
+      when 'sum'                    then array.sum
+      when 'mean', 'average', 'avg' then array.mean
+      when 'variance'               then array.variance
+      when 'stddev', 'stdev'        then array.stddev
+      else array
+      end
     end
 
     def process_collect_hash(expr, rels, result)
