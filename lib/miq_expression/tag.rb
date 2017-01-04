@@ -19,6 +19,10 @@ class MiqExpression::Tag
     model.arel_attribute(:id).in(ids)
   end
 
+  def column_type
+    :string
+  end
+
   def equ?(other)
     other.try(:model) == model && other.try(:namespace) == namespace
   end

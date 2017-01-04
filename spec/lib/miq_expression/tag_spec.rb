@@ -17,4 +17,10 @@ RSpec.describe MiqExpression::Tag do
       expect(described_class.parse(field)).to eq(described_class.new(Vm, "/host"))
     end
   end
+
+  describe "#column_type" do
+    it "is always a string" do
+      expect(described_class.new(Vm, "/host").column_type).to eq(:string)
+    end
+  end
 end

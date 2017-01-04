@@ -163,6 +163,18 @@ RSpec.describe MiqExpression::Field do
     end
   end
 
+  describe "#column_type" do
+    it "detects :string" do
+      field = described_class.new(Vm, [], "name")
+      expect(field.column_type).to eq(:string)
+    end
+
+    it "detects :integer" do
+      field = described_class.new(Vm, [], "id")
+      expect(field.column_type).to eq(:integer)
+    end
+  end
+
   describe "sql detection" do
     it "detects if column is supported by sql with custom_attribute" do
       expect(MiqExpression::Field.parse("Vm-virtual_custom_attribute_example").attribute_supported_by_sql?).to be_falsey
