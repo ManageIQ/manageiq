@@ -200,6 +200,30 @@ class OpsController < ApplicationController
     end
   end
 
+  def rbac_group_load_tab
+    tab_id = params[:tab_id]
+    _, group_id, _ = TreeBuilder.extract_node_model_and_id(x_node)
+    @sb[:active_rbac_group_tab] = tab_id
+
+    rbac_group_get_details(group_id)
+
+    presenter = ExplorerPresenter.new
+    r = proc { |opts| render_to_string(opts) }
+
+    rendered = case tab_id
+               when 'rbac_customer_tags'
+                 r[:partial => 'ops/rbac_group/customer_tags']
+               when 'rbac_hosts_clusters'
+                 r[:partial => 'ops/rbac_group/hosts_clusters']
+               when 'rbac_vms_templates'
+                 r[:partial => 'ops/rbac_group/vms_templates']
+               end
+
+    presenter.update(tab_id, rendered)
+
+    render :json => presenter.for_render
+  end
+
   private ############################
 
   def features

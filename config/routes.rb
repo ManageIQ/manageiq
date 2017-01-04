@@ -2286,6 +2286,7 @@ Vmdb::Application.routes.draw do
         product_updates_list
         rbac_group_edit
         rbac_group_field_changed
+        rbac_group_load_tab
         rbac_group_seq_edit
         rbac_group_user_lookup
         rbac_groups_list
