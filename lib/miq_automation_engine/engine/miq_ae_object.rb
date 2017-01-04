@@ -1,3 +1,4 @@
+require 'more_core_extensions/core_ext/array/math'
 require_relative 'miq_ae_state_machine'
 module MiqAeEngine
   class MiqAeObject
@@ -680,18 +681,19 @@ module MiqAeEngine
 
     def array_value(array, method)
       return array if array.nil? || array.compact.empty?
-      value = array
-      value = array.sort { |x, y| y <=> x }   if method == 'rsort'
-      value = array.sort                    if method == 'sort'
-      value = array.reverse                 if method == 'reverse'
-      value = array.length                  if method == 'count'
-      value = array.min                     if method == 'min' || method == 'minimum'
-      value = array.max                     if method == 'max' || method == 'maximum'
-      value = sum(array)                    if method == 'sum'
-      value = mean(array)                   if method == 'mean' || method == 'average' || method == 'avg'
-      value = variance(array)               if method == 'variance'
-      value = stdev(array)                  if method == 'stddev' || method == 'stdev'
-      value
+      case method
+      when 'rsort'                  then array.sort { |x, y| y <=> x }
+      when 'sort'                   then array.sort
+      when 'reverse'                then array.reverse
+      when 'count'                  then array.length
+      when 'min', 'minimum'         then array.min
+      when 'max', 'maximum'         then array.max
+      when 'sum'                    then array.sum
+      when 'mean', 'average', 'avg' then array.mean
+      when 'variance'               then array.variance
+      when 'stddev', 'stdev'        then array.stddev
+      else array
+      end
     end
 
     def process_collect_hash(expr, rels, result)
@@ -773,25 +775,6 @@ module MiqAeEngine
         path = MiqAePath.new(:ae_namespace => ns, :ae_class => klass, :ae_instance => i).to_s
         MiqAeUri.join(scheme, userinfo, host, port, registry, path, opaque, query, fragment)
       end.sort
-    end
-
-    def mean(array)
-      sum(array) / array.size.to_f
-    end
-
-    def sum(array)
-      array.inject(nil) { |sum, x| sum ? (sum + x) : x }
-    end
-
-    def variance(array)
-      m = array.mean
-      sum = 0.0
-      array.each { |v| sum += (v - m)**2 }
-      sum / array.size
-    end
-
-    def stdev(array)
-      Math.sqrt(variance(array))
     end
 
     def fqmethod2components(str)
