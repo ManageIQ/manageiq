@@ -244,7 +244,16 @@ class OpsController < ApplicationController
     end
 
     if x_active_tree == :rbac_tree
-      x_node_set("root", :rbac_tree) unless x_node(:rbac_tree)
+      node = x_node(:rbac_tree)
+      if node
+        kind = node.split('-').first
+
+        # default to the first tab in group detail
+        @sb[:active_rbac_group_tab] = "rbac_customer_tags" if kind == 'g'
+      else
+        x_node_set("root", :rbac_tree)
+      end
+
       @sb[:active_tab] ||= "rbac_details"
     end
 
@@ -325,6 +334,9 @@ class OpsController < ApplicationController
       end
     when :rbac_tree
       @sb[:active_tab] = "rbac_details"
+
+      # default to the first tab in group detail
+      @sb[:active_rbac_group_tab] ||= "rbac_customer_tags" if node[0] == 'g'
     when :diagnostics_tree
       case node[0]
       when "root"
@@ -335,7 +347,6 @@ class OpsController < ApplicationController
         @sb[:diag_selected_id] = nil
       when "svr"
         @sb[:active_tab] = "diagnostics_summary"
-        svr = MiqServer.find(from_cid(node[1]))
       end
     when :analytics_tree
       @sb[:active_tab] = "analytics_details"
