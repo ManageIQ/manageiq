@@ -1362,7 +1362,13 @@ module ApplicationHelper
 
   def miq_tab_content(id, active = nil, options = {}, &_block)
     lazy = options[:lazy] && active != id
-    content_tag(:div, :id => id, :class => "tab-pane #{options[:class]} #{active == id ? 'active' : ''} #{lazy ? 'lazy' : ''}") do
+
+    classname = %w(tab-pane)
+    classname << options[:class] if options[:class]
+    classname << 'active' if active == id
+    classname << 'lazy' if lazy
+
+    content_tag(:div, :id => id, :class => classname.join(' ')) do
       yield unless lazy
     end
   end

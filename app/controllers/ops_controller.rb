@@ -202,7 +202,7 @@ class OpsController < ApplicationController
 
   def rbac_group_load_tab
     tab_id = params[:tab_id]
-    _, group_id, _ = TreeBuilder.extract_node_model_and_id(x_node)
+    _, group_id = TreeBuilder.extract_node_model_and_id(x_node)
     @sb[:active_rbac_group_tab] = tab_id
 
     rbac_group_get_details(group_id)
