@@ -2,10 +2,26 @@ class ManageIQ::Providers::Openstack::NetworkManager::NetworkRouter < ::NetworkR
   include ProviderObjectMixin
   include AsyncDeleteMixin
 
-  supports :create_network_router
-  supports :delete_network_router
-  supports :update_network_router
   supports :add_interface
+
+  supports :create
+
+  supports :delete do
+    if ext_management_system.nil?
+      unsupported_reason_add(:delete_network_router, _("The Network Router is not connected to an active %{table}") % {
+        :table => ui_lookup(:table => "ext_management_systems")
+      })
+    end
+  end
+
+  supports :update do
+    if ext_management_system.nil?
+      unsupported_reason_add(:update_network_router, _("The Network Router is not connected to an active %{table}") % {
+        :table => ui_lookup(:table => "ext_management_systems")
+      })
+    end
+  end
+
   supports :remove_interface
 
   def self.create_network_router(ext_management_system, options)
