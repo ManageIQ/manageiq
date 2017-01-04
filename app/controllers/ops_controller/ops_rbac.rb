@@ -939,9 +939,14 @@ module OpsController::OpsRbac
     [@group.get_managed_filters].flatten.each do |f|
       @filters[f.split("/")[-2] + "-" + f.split("/")[-1]] = f
     end
+
+    rbac_group_right_tree(@belongsto.keys)
+  end
+
+  def rbac_group_right_tree(selected)
     rbac_build_myco_tree                              # Build the MyCompanyTags tree for this user
-    @hac_tree = build_belongsto_tree(@belongsto.keys, false, false)  # Build the Hosts & Clusters tree for this user
-    @vat_tree = build_belongsto_tree(@belongsto.keys, true, false)  # Build the VMs & Templates tree for this user
+    @hac_tree = build_belongsto_tree(selected, false, false)  # Build the Hosts & Clusters tree for this user
+    @vat_tree = build_belongsto_tree(selected, true, false)  # Build the VMs & Templates tree for this user
   end
 
   def rbac_role_get_details(id)
@@ -1106,9 +1111,8 @@ module OpsController::OpsRbac
     @edit[:new][:group_tenant] = @group.tenant_id
 
     @edit[:current] = copy_hash(@edit[:new])
-    rbac_build_myco_tree                              # Build the MyCompanyTags tree for this user
-    @hac_tree = build_belongsto_tree(@edit[:new][:belongsto].keys, false, false)  # Build the Hosts & Clusters tree for this user
-    @vat_tree = build_belongsto_tree(@edit[:new][:belongsto].keys, true, false)  # Build the VMs & Templates tree for this user
+
+    rbac_group_right_tree(@edit[:new][:belongsto].keys)
   end
 
   # Build the MyCompany Tags tree
