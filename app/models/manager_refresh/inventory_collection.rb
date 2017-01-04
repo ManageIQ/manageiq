@@ -1,5 +1,5 @@
 module ManagerRefresh
-  class DtoCollection
+  class InventoryCollection
     attr_accessor :saved
 
     attr_reader :model_class, :strategy, :attributes_blacklist, :attributes_whitelist, :custom_save_block, :parent,
@@ -36,7 +36,7 @@ module ManagerRefresh
       blacklist_attributes!(attributes_blacklist) if attributes_blacklist.present?
       whitelist_attributes!(attributes_whitelist) if attributes_whitelist.present?
 
-      validate_dto_collection!
+      validate_inventory_collection!
     end
 
     def to_a
@@ -61,8 +61,8 @@ module ManagerRefresh
 
     def process_strategy_local_db_cache_all
       self.saved = true
-      # TODO(lsmola) selected need to contain also :keys used in other DtoCollections pointing to this one, once we
-      # get list of all keys for each DtoCollection ,we can uncomnent
+      # TODO(lsmola) selected need to contain also :keys used in other InventoryCollections pointing to this one, once
+      # we get list of all keys for each InventoryCollection ,we can uncomnent
       # selected   = [:id] + manager_ref.map { |x| model_class.reflect_on_association(x).try(:foreign_key) || x }
       # selected << :type if model_class.new.respond_to? :type
       # load_from_db.select(selected).find_each do |record|
@@ -99,12 +99,12 @@ module ManagerRefresh
       dependencies.all?(&:saved?)
     end
 
-    def <<(dto)
-      unless data_index[dto.manager_uuid]
-        data_index[dto.manager_uuid] = dto
-        data << dto
+    def <<(inventory_object)
+      unless data_index[inventory_object.manager_uuid]
+        data_index[inventory_object.manager_uuid] = inventory_object
+        data << inventory_object
 
-        actualize_dependencies(dto)
+        actualize_dependencies(inventory_object)
       end
     end
 
@@ -138,11 +138,11 @@ module ManagerRefresh
     end
 
     def lazy_find(manager_uuid, key: nil, default: nil)
-      ::ManagerRefresh::DtoLazy.new(self, manager_uuid, :key => key, :default => default)
+      ::ManagerRefresh::InventoryObjectLazy.new(self, manager_uuid, :key => key, :default => default)
     end
 
-    def new_dto(hash)
-      ::ManagerRefresh::Dto.new(self, hash)
+    def new_inventory_object(hash)
+      ::ManagerRefresh::InventoryObject.new(self, hash)
     end
 
     def filtered_dependency_attributes
@@ -181,31 +181,31 @@ module ManagerRefresh
       filtered_dependency_attributes.values.map(&:to_a).flatten.uniq
     end
 
-    def dependency_attributes_for(dto_collections)
+    def dependency_attributes_for(inventory_collections)
       attributes = Set.new
-      dto_collections.each do |dto_collection|
-        attributes += filtered_dependency_attributes.select { |_key, value| value.include?(dto_collection) }.keys
+      inventory_collections.each do |inventory_collection|
+        attributes += filtered_dependency_attributes.select { |_key, value| value.include?(inventory_collection) }.keys
       end
       attributes
     end
 
     def blacklist_attributes!(attributes)
-      # The manager_ref attributes cannot be blacklisted, otherwise we will not be able to identify the dto object. We
-      # do not automatically remove attributes causing fixed dependencies, so beware that without them, you won't be
-      # able to create the record.
+      # The manager_ref attributes cannot be blacklisted, otherwise we will not be able to identify the
+      # inventory_object. We do not automatically remove attributes causing fixed dependencies, so beware that without
+      # them, you won't be able to create the record.
       self.attributes_blacklist += attributes - (fixed_attributes + internal_attributes)
     end
 
     def whitelist_attributes!(attributes)
       # The manager_ref attributes always needs to be in the white list, otherwise we will not be able to identify the
-      # dto object. We do not automatically add attributes causing fixed dependencies, so beware that without them, you
-      # won't be able to create the record.
+      # inventory_object. We do not automatically add attributes causing fixed dependencies, so beware that without
+      # them, you won't be able to create the record.
       self.attributes_whitelist += attributes + (fixed_attributes + internal_attributes)
     end
 
     def clone
-      # A shallow copy of DtoCollection, the copy will share @data of the original collection, otherwise we would be
-      # copying a lot of records in memory.
+      # A shallow copy of InventoryCollection, the copy will share @data of the original collection, otherwise we would
+      # be copying a lot of records in memory.
       self.class.new(model_class,
                      :manager_ref           => manager_ref,
                      :association           => association,
@@ -215,7 +215,8 @@ module ManagerRefresh
                      :custom_save_block     => custom_save_block,
                      :data                  => data,
                      :data_index            => data_index,
-                     # Dependency attributes need to be a hard copy, since those will differ for each DtoCollection
+                     # Dependency attributes need to be a hard copy, since those will differ for each
+                     # InventoryCollection
                      :dependency_attributes => dependency_attributes.clone)
     end
 
@@ -223,7 +224,7 @@ module ManagerRefresh
       whitelist = ", whitelist: [#{attributes_whitelist.to_a.join(", ")}]" unless attributes_whitelist.blank?
       blacklist = ", blacklist: [#{attributes_blacklist.to_a.join(", ")}]" unless attributes_blacklist.blank?
 
-      "DtoCollection:<#{@model_class}>#{whitelist}#{blacklist}"
+      "InventoryCollection:<#{@model_class}>#{whitelist}#{blacklist}"
     end
 
     def inspect
@@ -234,37 +235,38 @@ module ManagerRefresh
 
     attr_writer :attributes_blacklist, :attributes_whitelist
 
-    def actualize_dependencies(dto)
-      dto.data.each do |key, value|
+    def actualize_dependencies(inventory_object)
+      inventory_object.data.each do |key, value|
         if dependency?(value)
-          (dependency_attributes[key] ||= Set.new) << value.dto_collection
+          (dependency_attributes[key] ||= Set.new) << value.inventory_collection
           self.transitive_dependency_attributes << key if transitive_dependency?(value)
         elsif value.kind_of?(Array) && value.any? { |x| dependency?(x) }
-          (dependency_attributes[key] ||= Set.new) << value.detect { |x| dependency?(x) }.dto_collection
+          (dependency_attributes[key] ||= Set.new) << value.detect { |x| dependency?(x) }.inventory_collection
           self.transitive_dependency_attributes << key if value.any? { |x| transitive_dependency?(x) }
         end
       end
     end
 
     def dependency?(value)
-      (value.kind_of?(::ManagerRefresh::DtoLazy) && value.dependency?) || value.kind_of?(::ManagerRefresh::Dto)
+      (value.kind_of?(::ManagerRefresh::InventoryObjectLazy) && value.dependency?) ||
+        value.kind_of?(::ManagerRefresh::InventoryObject)
     end
 
     def transitive_dependency?(value)
-      # If the dependency is dto_collection.lazy_find(:ems_ref, :key => :stack)
-      # and a :stack is a relation to another object, in the Dto object,
+      # If the dependency is inventory_collection.lazy_find(:ems_ref, :key => :stack)
+      # and a :stack is a relation to another object, in the InventoryObject object,
       # then this dependency is considered transitive.
-      (value.kind_of?(::ManagerRefresh::DtoLazy) && value.transitive_dependency?)
+      (value.kind_of?(::ManagerRefresh::InventoryObjectLazy) && value.transitive_dependency?)
     end
 
-    def validate_dto_collection!
+    def validate_inventory_collection!
       if @strategy == :local_db_cache_all
         if (manager_ref & association_attributes).present?
           # Our manager_ref unique key contains a reference, that means that index we get from the API and from the
           # db will differ. We need a custom indexing method, so the indexing is correct.
           raise "The unique key list manager_ref contains a reference, which can't be built automatically when loading"\
-                " the DtoCollection from the DB, you need to provide a custom_manager_uuid lambda, that builds the"\
-                " correct manager_uuid given a DB record" if custom_manager_uuid.nil?
+                " the InventoryCollection from the DB, you need to provide a custom_manager_uuid lambda, that builds"\
+                " the correct manager_uuid given a DB record" if custom_manager_uuid.nil?
         end
       end
     end

@@ -10,24 +10,24 @@ describe ManagerRefresh::SaveInventory do
   ######################################################################################################################
   #
   # Test all settings for ManagerRefresh::SaveInventory
-  [{:dto_saving_strategy => nil},
-   {:dto_saving_strategy => :recursive},
-  ].each do |dto_settings|
-    context "with settings #{dto_settings}" do
+  [{:inventory_object_saving_strategy => nil},
+   {:inventory_object_saving_strategy => :recursive},
+  ].each do |inventory_object_settings|
+    context "with settings #{inventory_object_settings}" do
       before :each do
         @zone = FactoryGirl.create(:zone)
         @ems  = FactoryGirl.create(:ems_cloud, :zone => @zone)
 
         allow(@ems.class).to receive(:ems_type).and_return(:mock)
-        allow(Settings.ems_refresh).to receive(:mock).and_return(dto_settings)
+        allow(Settings.ems_refresh).to receive(:mock).and_return(inventory_object_settings)
       end
 
       it "refreshing all records and data collects everything" do
         # Get the relations
-        initialize_all_dto_collections
-        initialize_dto_collection_data
+        initialize_all_inventory_collections
+        initialize_inventory_collection_data
 
-        # Invoke the DtoCollections saving
+        # Invoke the InventoryCollections saving
         ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
 
         # Assert all data were filled
@@ -37,10 +37,10 @@ describe ManagerRefresh::SaveInventory do
 
       it "do a targeted refresh that will only create and update a new vm, hardware and disks" do
         # Get the relations
-        initialize_all_dto_collections
-        initialize_dto_collection_data
+        initialize_all_inventory_collections
+        initialize_inventory_collection_data
 
-        # Invoke the DtoCollections saving
+        # Invoke the InventoryCollections saving
         ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
 
         # Assert all data were filled
@@ -48,8 +48,8 @@ describe ManagerRefresh::SaveInventory do
         assert_everything_is_collected
 
         ### Second refresh ###
-        # Initialize the DtoCollections and data for a new VM hardware and disks
-        initialize_dto_collections([:vms, :hardwares, :disks])
+        # Initialize the InventoryCollections and data for a new VM hardware and disks
+        initialize_inventory_collections([:vms, :hardwares, :disks])
 
         @vm_data_3       = vm_data(3).merge(
           :genealogy_parent => @data[:miq_templates].lazy_find(image_data(2)[:ems_ref]),
@@ -62,14 +62,14 @@ describe ManagerRefresh::SaveInventory do
         @disk_data_31    = disk_data(31).merge(
           :hardware => @data[:hardwares].lazy_find(vm_data(3)[:ems_ref]))
 
-        # Fill DtoCollections with data
-        add_data_to_dto_collection(@data[:vms],
-                                   @vm_data_3)
-        add_data_to_dto_collection(@data[:hardwares],
-                                   @hardware_data_3)
-        add_data_to_dto_collection(@data[:disks], @disk_data_3, @disk_data_31)
+        # Fill InventoryCollections with data
+        add_data_to_inventory_collection(@data[:vms],
+                                         @vm_data_3)
+        add_data_to_inventory_collection(@data[:hardwares],
+                                         @hardware_data_3)
+        add_data_to_inventory_collection(@data[:disks], @disk_data_3, @disk_data_31)
 
-        # Invoke the DtoCollections saving
+        # Invoke the InventoryCollections saving
         ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
 
         load_records
@@ -84,38 +84,44 @@ describe ManagerRefresh::SaveInventory do
         expect(@vm3.key_pairs.pluck(:id)).to match_array([@key_pair2.id])
 
         assert_everything_is_collected(
-          :extra_vms      => [{
-                                :ems_ref         => "vm_ems_ref_3",
-                                :name            => "vm_name_3",
-                                :location        => "vm_location_3",
-                                :uid_ems         => "vm_uid_ems_3",
-                                :vendor          => "amazon",
-                                :raw_power_state => "unknown",
-                              }],
-          :extra_hardware => [{
-                                :vm_or_template_id   => @vm3.id,
-                                :bitness             => 64,
-                                :virtualization_type => "virtualization_type_3",
-                                :guest_os            => nil,
-                              }],
-          :extra_disks    => [{
-                                :hardware_id => @vm3.hardware.id,
-                                :device_name => "disk_name_3",
-                                :device_type => "disk",
-                              }, {
-                                :hardware_id => @vm3.hardware.id,
-                                :device_name => "disk_name_31",
-                                :device_type => "disk",
-                              }]
+          :extra_vms      => [
+            {
+              :ems_ref         => "vm_ems_ref_3",
+              :name            => "vm_name_3",
+              :location        => "vm_location_3",
+              :uid_ems         => "vm_uid_ems_3",
+              :vendor          => "amazon",
+              :raw_power_state => "unknown",
+            }
+          ],
+          :extra_hardware => [
+            {
+              :vm_or_template_id   => @vm3.id,
+              :bitness             => 64,
+              :virtualization_type => "virtualization_type_3",
+              :guest_os            => nil,
+            }
+          ],
+          :extra_disks    => [
+            {
+              :hardware_id => @vm3.hardware.id,
+              :device_name => "disk_name_3",
+              :device_type => "disk",
+            }, {
+              :hardware_id => @vm3.hardware.id,
+              :device_name => "disk_name_31",
+              :device_type => "disk",
+            }
+          ]
         )
       end
 
       it "do a targeted refresh that will create/update vm, then create/update/delete Vm's hardware and disks" do
         # Get the relations
-        initialize_all_dto_collections
-        initialize_dto_collection_data
+        initialize_all_inventory_collections
+        initialize_inventory_collection_data
 
-        # Invoke the DtoCollections saving
+        # Invoke the InventoryCollections saving
         ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
 
         # Assert all data were filled
@@ -123,8 +129,8 @@ describe ManagerRefresh::SaveInventory do
         assert_everything_is_collected
 
         ### Second refresh ###
-        # Initialize the DtoCollections and data for a new VM
-        initialize_dto_collections([:vms, :hardwares])
+        # Initialize the InventoryCollections and data for a new VM
+        initialize_inventory_collections([:vms, :hardwares])
 
         @vm_data_3       = vm_data(3).merge(
           :genealogy_parent => @data[:miq_templates].lazy_find(image_data(2)[:ems_ref]),
@@ -133,22 +139,22 @@ describe ManagerRefresh::SaveInventory do
           :guest_os       => @data[:hardwares].lazy_find(image_data(2)[:ems_ref], :key => :guest_os),
           :vm_or_template => @data[:vms].lazy_find(vm_data(3)[:ems_ref]))
 
-        # Fill DtoCollections with data
-        add_data_to_dto_collection(@data[:vms],
-                                   @vm_data_3)
-        add_data_to_dto_collection(@data[:hardwares],
-                                   @hardware_data_3)
+        # Fill InventoryCollections with data
+        add_data_to_inventory_collection(@data[:vms],
+                                         @vm_data_3)
+        add_data_to_inventory_collection(@data[:hardwares],
+                                         @hardware_data_3)
 
-        # Invoke the DtoCollections saving
+        # Invoke the InventoryCollections saving
         ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
 
         ### Third refresh ###
-        # Initialize the DtoCollections and data for the disks with new disk under a vm
+        # Initialize the InventoryCollections and data for the disks with new disk under a vm
 
         @vm3 = Vm.find_by(:ems_ref => "vm_ems_ref_3")
 
-        initialize_dto_collections([:disks])
-        @data[:disks] = ::ManagerRefresh::DtoCollection.new(
+        initialize_inventory_collections([:disks])
+        @data[:disks] = ::ManagerRefresh::InventoryCollection.new(
           Disk,
           :association => :disks,
           :parent      => @vm3,
@@ -160,9 +166,9 @@ describe ManagerRefresh::SaveInventory do
         @disk_data_31 = disk_data(31).merge(
           :hardware => @data[:hardwares].lazy_find(vm_data(3)[:ems_ref]))
 
-        add_data_to_dto_collection(@data[:disks], @disk_data_3, @disk_data_31)
+        add_data_to_inventory_collection(@data[:disks], @disk_data_3, @disk_data_31)
 
-        # Invoke the DtoCollections saving
+        # Invoke the InventoryCollections saving
         ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
 
         # Assert all data were filled
@@ -178,29 +184,35 @@ describe ManagerRefresh::SaveInventory do
         expect(@vm3.key_pairs.pluck(:id)).to match_array([@key_pair2.id])
 
         assert_everything_is_collected(
-          :extra_vms      => [{
-                                :ems_ref         => "vm_ems_ref_3",
-                                :name            => "vm_name_3",
-                                :location        => "vm_location_3",
-                                :uid_ems         => "vm_uid_ems_3",
-                                :vendor          => "amazon",
-                                :raw_power_state => "unknown",
-                              }],
-          :extra_hardware => [{
-                                :vm_or_template_id   => @vm3.id,
-                                :bitness             => 64,
-                                :virtualization_type => "virtualization_type_3",
-                                :guest_os            => nil,
-                              }],
-          :extra_disks    => [{
-                                :hardware_id => @vm3.hardware.id,
-                                :device_name => "disk_name_3",
-                                :device_type => "disk",
-                              }, {
-                                :hardware_id => @vm3.hardware.id,
-                                :device_name => "disk_name_31",
-                                :device_type => "disk",
-                              }]
+          :extra_vms      => [
+            {
+              :ems_ref         => "vm_ems_ref_3",
+              :name            => "vm_name_3",
+              :location        => "vm_location_3",
+              :uid_ems         => "vm_uid_ems_3",
+              :vendor          => "amazon",
+              :raw_power_state => "unknown",
+            }
+          ],
+          :extra_hardware => [
+            {
+              :vm_or_template_id   => @vm3.id,
+              :bitness             => 64,
+              :virtualization_type => "virtualization_type_3",
+              :guest_os            => nil,
+            }
+          ],
+          :extra_disks    => [
+            {
+              :hardware_id => @vm3.hardware.id,
+              :device_name => "disk_name_3",
+              :device_type => "disk",
+            }, {
+              :hardware_id => @vm3.hardware.id,
+              :device_name => "disk_name_31",
+              :device_type => "disk",
+            }
+          ]
         )
 
         ### Fourth refresh ###
@@ -208,8 +220,8 @@ describe ManagerRefresh::SaveInventory do
 
         @vm3 = Vm.find_by(:ems_ref => "vm_ems_ref_3")
 
-        initialize_dto_collections([:disks])
-        @data[:disks] = ::ManagerRefresh::DtoCollection.new(
+        initialize_inventory_collections([:disks])
+        @data[:disks] = ::ManagerRefresh::InventoryCollection.new(
           Disk,
           :association => :disks,
           :parent      => @vm3,
@@ -219,9 +231,9 @@ describe ManagerRefresh::SaveInventory do
         @disk_data_32 = disk_data(32).merge(
           :hardware => @data[:hardwares].lazy_find(vm_data(3)[:ems_ref]))
 
-        add_data_to_dto_collection(@data[:disks], @disk_data_3, @disk_data_32)
+        add_data_to_inventory_collection(@data[:disks], @disk_data_3, @disk_data_32)
 
-        # Invoke the DtoCollections saving
+        # Invoke the InventoryCollections saving
         ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
 
         # Assert all data were filled
@@ -237,39 +249,45 @@ describe ManagerRefresh::SaveInventory do
         expect(@vm3.key_pairs.pluck(:id)).to match_array([@key_pair2.id])
 
         assert_everything_is_collected(
-          :extra_vms      => [{
-                                :ems_ref         => "vm_ems_ref_3",
-                                :name            => "vm_name_3",
-                                :location        => "vm_location_3",
-                                :uid_ems         => "vm_uid_ems_3",
-                                :vendor          => "amazon",
-                                :raw_power_state => "unknown",
-                              }],
-          :extra_hardware => [{
-                                :vm_or_template_id   => @vm3.id,
-                                :bitness             => 64,
-                                :virtualization_type => "virtualization_type_3",
-                                :guest_os            => nil,
-                              }],
-          :extra_disks    => [{
-                                :hardware_id => @vm3.hardware.id,
-                                :device_name => "disk_name_3",
-                                :device_type => "disk",
-                              }, {
-                                :hardware_id => @vm3.hardware.id,
-                                :device_name => "disk_name_32",
-                                :device_type => "disk",
-                              }]
+          :extra_vms      => [
+            {
+              :ems_ref         => "vm_ems_ref_3",
+              :name            => "vm_name_3",
+              :location        => "vm_location_3",
+              :uid_ems         => "vm_uid_ems_3",
+              :vendor          => "amazon",
+              :raw_power_state => "unknown",
+            }
+          ],
+          :extra_hardware => [
+            {
+              :vm_or_template_id   => @vm3.id,
+              :bitness             => 64,
+              :virtualization_type => "virtualization_type_3",
+              :guest_os            => nil,
+            }
+          ],
+          :extra_disks    => [
+            {
+              :hardware_id => @vm3.hardware.id,
+              :device_name => "disk_name_3",
+              :device_type => "disk",
+            }, {
+              :hardware_id => @vm3.hardware.id,
+              :device_name => "disk_name_32",
+              :device_type => "disk",
+            }
+          ]
         )
       end
 
 
       it "do a targeted refresh that will create/update vm, then create/update/delete Vm's hardware and disks using arel" do
         # Get the relations
-        initialize_all_dto_collections
-        initialize_dto_collection_data
+        initialize_all_inventory_collections
+        initialize_inventory_collection_data
 
-        # Invoke the DtoCollections saving
+        # Invoke the InventoryCollections saving
         ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
 
         # Assert all data were filled
@@ -278,18 +296,18 @@ describe ManagerRefresh::SaveInventory do
 
         ### Second refresh ###
         # Do a targeted refresh for couple of VMs, hardwares and disks using arel comparison
-        initialize_dto_collections([:vms, :hardwares, :disks])
+        initialize_inventory_collections([:vms, :hardwares, :disks])
 
         vm_refs = ["vm_ems_ref_3", "vm_ems_ref_4"]
 
-        @data[:vms]       = ::ManagerRefresh::DtoCollection.new(
+        @data[:vms]       = ::ManagerRefresh::InventoryCollection.new(
           ManageIQ::Providers::CloudManager::Vm,
           :arel => @ems.vms.where(:ems_ref => vm_refs))
-        @data[:hardwares] = ::ManagerRefresh::DtoCollection.new(
+        @data[:hardwares] = ::ManagerRefresh::InventoryCollection.new(
           Hardware,
           :arel        => @ems.hardwares.joins(:vm_or_template).where(:vms => {:ems_ref => vm_refs}),
           :manager_ref => [:vm_or_template])
-        @data[:disks]     = ::ManagerRefresh::DtoCollection.new(
+        @data[:disks]     = ::ManagerRefresh::InventoryCollection.new(
           Disk,
           :arel        => @ems.disks.joins(:hardware => :vm_or_template).where(:hardware => {:vms => {:ems_ref => vm_refs}}),
           :manager_ref => [:hardware, :device_name])
@@ -306,14 +324,14 @@ describe ManagerRefresh::SaveInventory do
         @disk_data_31    = disk_data(31).merge(
           :hardware => @data[:hardwares].lazy_find(vm_data(3)[:ems_ref]))
 
-        # Fill DtoCollections with data
-        add_data_to_dto_collection(@data[:vms],
-                                   @vm_data_3)
-        add_data_to_dto_collection(@data[:hardwares],
-                                   @hardware_data_3)
-        add_data_to_dto_collection(@data[:disks], @disk_data_3, @disk_data_31)
+        # Fill InventoryCollections with data
+        add_data_to_inventory_collection(@data[:vms],
+                                         @vm_data_3)
+        add_data_to_inventory_collection(@data[:hardwares],
+                                         @hardware_data_3)
+        add_data_to_inventory_collection(@data[:disks], @disk_data_3, @disk_data_31)
 
-        # Invoke the DtoCollections saving
+        # Invoke the InventoryCollections saving
         ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
 
         # Assert all data were filled
@@ -329,49 +347,55 @@ describe ManagerRefresh::SaveInventory do
         expect(@vm3.key_pairs.pluck(:id)).to match_array([@key_pair2.id])
 
         assert_everything_is_collected(
-          :extra_vms      => [{
-                                :ems_ref         => "vm_ems_ref_3",
-                                :name            => "vm_name_3",
-                                :location        => "vm_location_3",
-                                :uid_ems         => "vm_uid_ems_3",
-                                :vendor          => "amazon",
-                                :raw_power_state => "unknown",
-                              }],
-          :extra_hardware => [{
-                                :vm_or_template_id   => @vm3.id,
-                                :bitness             => 64,
-                                :virtualization_type => "virtualization_type_3",
-                                :guest_os            => nil,
-                              }],
-          :extra_disks    => [{
-                                :hardware_id => @vm3.hardware.id,
-                                :device_name => "disk_name_3",
-                                :device_type => "disk",
-                              }, {
-                                :hardware_id => @vm3.hardware.id,
-                                :device_name => "disk_name_31",
-                                :device_type => "disk",
-                              }]
+          :extra_vms      => [
+            {
+              :ems_ref         => "vm_ems_ref_3",
+              :name            => "vm_name_3",
+              :location        => "vm_location_3",
+              :uid_ems         => "vm_uid_ems_3",
+              :vendor          => "amazon",
+              :raw_power_state => "unknown",
+            }
+          ],
+          :extra_hardware => [
+            {
+              :vm_or_template_id   => @vm3.id,
+              :bitness             => 64,
+              :virtualization_type => "virtualization_type_3",
+              :guest_os            => nil,
+            }
+          ],
+          :extra_disks    => [
+            {
+              :hardware_id => @vm3.hardware.id,
+              :device_name => "disk_name_3",
+              :device_type => "disk",
+            }, {
+              :hardware_id => @vm3.hardware.id,
+              :device_name => "disk_name_31",
+              :device_type => "disk",
+            }
+          ]
         )
 
         ### Third refresh ###
         # Do a targeted refresh again with some new data and some data missing
-        initialize_dto_collections([:vms, :hardwares, :disks])
+        initialize_inventory_collections([:vms, :hardwares, :disks])
 
         vm_refs = ["vm_ems_ref_3", "vm_ems_ref_5"]
 
-        @data[:vms]             = ::ManagerRefresh::DtoCollection.new(
+        @data[:vms]             = ::ManagerRefresh::InventoryCollection.new(
           ManageIQ::Providers::CloudManager::Vm,
           :arel => @ems.vms.where(:ems_ref => vm_refs))
-        @data[:hardwares]       = ::ManagerRefresh::DtoCollection.new(
+        @data[:hardwares]       = ::ManagerRefresh::InventoryCollection.new(
           Hardware,
           :arel        => @ems.hardwares.joins(:vm_or_template).where(:vms => {:ems_ref => vm_refs}),
           :manager_ref => [:vm_or_template])
-        @data[:disks]           = ::ManagerRefresh::DtoCollection.new(
+        @data[:disks]           = ::ManagerRefresh::InventoryCollection.new(
           Disk,
           :arel        => @ems.disks.joins(:hardware => :vm_or_template).where(:hardware => {:vms => {:ems_ref => vm_refs}}),
           :manager_ref => [:hardware, :device_name])
-        @data[:image_hardwares] = ::ManagerRefresh::DtoCollection.new(
+        @data[:image_hardwares] = ::ManagerRefresh::InventoryCollection.new(
           Hardware,
           :arel                => @ems.hardwares,
           :manager_ref         => [:vm_or_template],
@@ -388,16 +412,16 @@ describe ManagerRefresh::SaveInventory do
         @disk_data_5     = disk_data(5).merge(
           :hardware => @data[:hardwares].lazy_find(vm_data(5)[:ems_ref]))
 
-        # Fill DtoCollections with data
-        add_data_to_dto_collection(@data[:vms],
-                                   @vm_data_3,
-                                   @vm_data_5)
-        add_data_to_dto_collection(@data[:hardwares],
-                                   @hardware_data_5)
-        add_data_to_dto_collection(@data[:disks],
-                                   @disk_data_5)
+        # Fill InventoryCollections with data
+        add_data_to_inventory_collection(@data[:vms],
+                                         @vm_data_3,
+                                         @vm_data_5)
+        add_data_to_inventory_collection(@data[:hardwares],
+                                         @hardware_data_5)
+        add_data_to_inventory_collection(@data[:disks],
+                                         @disk_data_5)
 
-        # Invoke the DtoCollections saving
+        # Invoke the InventoryCollections saving
         ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
 
         # Assert all data were filled
@@ -416,33 +440,38 @@ describe ManagerRefresh::SaveInventory do
         expect(@vm5.key_pairs.pluck(:id)).to match_array([@key_pair2.id])
 
         assert_everything_is_collected(
-          :extra_vms      => [{
-                                :ems_ref         => "vm_ems_ref_3",
-                                :name            => "vm_name_3",
-                                :location        => "vm_location_3",
-                                :uid_ems         => "vm_uid_ems_3",
-                                :vendor          => "amazon",
-                                :raw_power_state => "unknown",
-                              }, {
-                                :ems_ref         => "vm_ems_ref_5",
-                                :name            => "vm_name_5",
-                                :location        => "vm_location_5",
-                                :uid_ems         => "vm_uid_ems_5",
-                                :vendor          => "amazon",
-                                :raw_power_state => "unknown",
-                              }
+          :extra_vms      => [
+            {
+              :ems_ref         => "vm_ems_ref_3",
+              :name            => "vm_name_3",
+              :location        => "vm_location_3",
+              :uid_ems         => "vm_uid_ems_3",
+              :vendor          => "amazon",
+              :raw_power_state => "unknown",
+            }, {
+              :ems_ref         => "vm_ems_ref_5",
+              :name            => "vm_name_5",
+              :location        => "vm_location_5",
+              :uid_ems         => "vm_uid_ems_5",
+              :vendor          => "amazon",
+              :raw_power_state => "unknown",
+            }
           ],
-          :extra_hardware => [{
-                                :vm_or_template_id   => @vm5.id,
-                                :bitness             => 64,
-                                :virtualization_type => "virtualization_type_5",
-                                :guest_os            => "linux_generic_2",
-                              }],
-          :extra_disks    => [{
-                                :hardware_id => @vm5.hardware.id,
-                                :device_name => "disk_name_5",
-                                :device_type => "disk",
-                              }]
+          :extra_hardware => [
+            {
+              :vm_or_template_id   => @vm5.id,
+              :bitness             => 64,
+              :virtualization_type => "virtualization_type_5",
+              :guest_os            => "linux_generic_2",
+            }
+          ],
+          :extra_disks    => [
+            {
+              :hardware_id => @vm5.hardware.id,
+              :device_name => "disk_name_5",
+              :device_type => "disk",
+            }
+          ]
         )
       end
     end
@@ -547,67 +576,73 @@ describe ManagerRefresh::SaveInventory do
       }
     )
 
-    vms = [{
-             :ems_ref         => "vm_ems_ref_1",
-             :name            => "vm_name_1",
-             :location        => "vm_location_1",
-             :uid_ems         => "vm_uid_ems_1",
-             :vendor          => "amazon",
-             :raw_power_state => "unknown",
-           }, {
-             :ems_ref         => "vm_ems_ref_2",
-             :name            => "vm_name_2",
-             :location        => "vm_location_2",
-             :uid_ems         => "vm_uid_ems_2",
-             :vendor          => "amazon",
-             :raw_power_state => "unknown",
-           }]
+    vms = [
+      {
+        :ems_ref         => "vm_ems_ref_1",
+        :name            => "vm_name_1",
+        :location        => "vm_location_1",
+        :uid_ems         => "vm_uid_ems_1",
+        :vendor          => "amazon",
+        :raw_power_state => "unknown",
+      }, {
+        :ems_ref         => "vm_ems_ref_2",
+        :name            => "vm_name_2",
+        :location        => "vm_location_2",
+        :uid_ems         => "vm_uid_ems_2",
+        :vendor          => "amazon",
+        :raw_power_state => "unknown",
+      }
+    ]
     vms += extra_vms
 
     assert_all_records_match_hashes([Vm.all, @ems.vms], *vms)
 
-    hardware = [{
-                  :vm_or_template_id   => @vm1.id,
-                  :bitness             => 64,
-                  :virtualization_type => "virtualization_type_1",
-                  :guest_os            => "linux_generic_1",
-                }, {
-                  :vm_or_template_id   => @vm2.id,
-                  :bitness             => 64,
-                  :virtualization_type => "virtualization_type_2",
-                  :guest_os            => "linux_generic_2",
-                }, {
-                  :vm_or_template_id   => @miq_template1.id,
-                  :bitness             => nil,
-                  :virtualization_type => nil,
-                  :guest_os            => "linux_generic_1",
-                }, {
-                  :vm_or_template_id   => @miq_template2.id,
-                  :bitness             => nil,
-                  :virtualization_type => nil,
-                  :guest_os            => "linux_generic_2",
-                }]
+    hardware = [
+      {
+        :vm_or_template_id   => @vm1.id,
+        :bitness             => 64,
+        :virtualization_type => "virtualization_type_1",
+        :guest_os            => "linux_generic_1",
+      }, {
+        :vm_or_template_id   => @vm2.id,
+        :bitness             => 64,
+        :virtualization_type => "virtualization_type_2",
+        :guest_os            => "linux_generic_2",
+      }, {
+        :vm_or_template_id   => @miq_template1.id,
+        :bitness             => nil,
+        :virtualization_type => nil,
+        :guest_os            => "linux_generic_1",
+      }, {
+        :vm_or_template_id   => @miq_template2.id,
+        :bitness             => nil,
+        :virtualization_type => nil,
+        :guest_os            => "linux_generic_2",
+      }
+    ]
     hardware += extra_hardware
 
     assert_all_records_match_hashes([Hardware.all, @ems.hardwares], *hardware)
 
-    disks = [{
-               :hardware_id => @vm1.hardware.id,
-               :device_name => "disk_name_1",
-               :device_type => "disk",
-             }, {
-               :hardware_id => @vm1.hardware.id,
-               :device_name => "disk_name_12",
-               :device_type => "disk",
-             }, {
-               :hardware_id => @vm1.hardware.id,
-               :device_name => "disk_name_13",
-               :device_type => "disk",
-             }, {
-               :hardware_id => @vm2.hardware.id,
-               :device_name => "disk_name_2",
-               :device_type => "disk",
-             }]
+    disks = [
+      {
+        :hardware_id => @vm1.hardware.id,
+        :device_name => "disk_name_1",
+        :device_type => "disk",
+      }, {
+        :hardware_id => @vm1.hardware.id,
+        :device_name => "disk_name_12",
+        :device_type => "disk",
+      }, {
+        :hardware_id => @vm1.hardware.id,
+        :device_name => "disk_name_13",
+        :device_type => "disk",
+      }, {
+        :hardware_id => @vm2.hardware.id,
+        :device_name => "disk_name_2",
+        :device_type => "disk",
+      }
+    ]
     disks += extra_disks
 
     assert_all_records_match_hashes([Disk.all, @ems.disks], *disks)
@@ -627,29 +662,29 @@ describe ManagerRefresh::SaveInventory do
     %i(orchestration_stacks orchestration_stacks_resources vms miq_templates key_pairs hardwares disks)
   end
 
-  def initialize_all_dto_collections
-    # Initialize the DtoCollections
+  def initialize_all_inventory_collections
+    # Initialize the InventoryCollections
     @data = {}
     all_collections.each do |collection|
-      @data[collection] = ::ManagerRefresh::DtoCollection.new(*send("#{collection}_init_data"))
+      @data[collection] = ::ManagerRefresh::InventoryCollection.new(*send("#{collection}_init_data"))
     end
   end
 
-  def initialize_dto_collections(only_collections)
-    # Initialize the DtoCollections
+  def initialize_inventory_collections(only_collections)
+    # Initialize the InventoryCollections
     @data = {}
     only_collections.each do |collection|
-      @data[collection] = ::ManagerRefresh::DtoCollection.new(*send("#{collection}_init_data",
-                                                                    :extra_attributes => {
-                                                                      :complete => false}))
+      @data[collection] = ::ManagerRefresh::InventoryCollection.new(*send("#{collection}_init_data",
+                                                                          :extra_attributes => {
+                                                                            :complete => false}))
     end
 
     (all_collections - only_collections).each do |collection|
-      @data[collection] = ::ManagerRefresh::DtoCollection.new(*send("#{collection}_init_data",
-                                                                    :extra_attributes => {
-                                                                      :complete => false,
-                                                                      :strategy => :local_db_cache_all
-                                                                    }))
+      @data[collection] = ::ManagerRefresh::InventoryCollection.new(*send("#{collection}_init_data",
+                                                                          :extra_attributes => {
+                                                                            :complete => false,
+                                                                            :strategy => :local_db_cache_all
+                                                                          }))
     end
   end
 
@@ -730,8 +765,8 @@ describe ManagerRefresh::SaveInventory do
     [:parent, :genealogy_parent, :genealogy_parent_object]
   end
 
-  def initialize_dto_collection_data
-    # Initialize the DtoCollections data
+  def initialize_inventory_collection_data
+    # Initialize the InventoryCollections data
     @orchestration_stack_data_0_1           = orchestration_stack_data("0_1").merge(
       # TODO(lsmola) not possible until we have an enhanced transitive edges check
       # :parent => @data[:orchestration_stacks].lazy_find(orchestration_stack_data("0_0")[:ems_ref]))
@@ -785,26 +820,26 @@ describe ManagerRefresh::SaveInventory do
     @disk_data_2  = disk_data(2).merge(
       :hardware => @data[:hardwares].lazy_find(vm_data(2)[:ems_ref]))
 
-    # Fill DtoCollections with data
-    add_data_to_dto_collection(@data[:orchestration_stacks],
-                               @orchestration_stack_data_0_1,
-                               @orchestration_stack_data_1_11,
-                               @orchestration_stack_data_1_12)
-    add_data_to_dto_collection(@data[:orchestration_stacks_resources],
-                               @orchestration_stack_resource_data_1_11,
-                               @orchestration_stack_resource_data_1_12)
-    add_data_to_dto_collection(@data[:vms],
-                               @vm_data_1,
-                               @vm_data_2)
-    add_data_to_dto_collection(@data[:miq_templates],
-                               @image_data_1,
-                               @image_data_2)
-    add_data_to_dto_collection(@data[:hardwares],
-                               @hardware_data_1,
-                               @hardware_data_2,
-                               @image_hardware_data_1,
-                               @image_hardware_data_2)
-    add_data_to_dto_collection(@data[:key_pairs], @key_pair_data_1, @key_pair_data_2, @key_pair_data_21)
-    add_data_to_dto_collection(@data[:disks], @disk_data_1, @disk_data_12, @disk_data_13, @disk_data_2)
+    # Fill InventoryCollections with data
+    add_data_to_inventory_collection(@data[:orchestration_stacks],
+                                     @orchestration_stack_data_0_1,
+                                     @orchestration_stack_data_1_11,
+                                     @orchestration_stack_data_1_12)
+    add_data_to_inventory_collection(@data[:orchestration_stacks_resources],
+                                     @orchestration_stack_resource_data_1_11,
+                                     @orchestration_stack_resource_data_1_12)
+    add_data_to_inventory_collection(@data[:vms],
+                                     @vm_data_1,
+                                     @vm_data_2)
+    add_data_to_inventory_collection(@data[:miq_templates],
+                                     @image_data_1,
+                                     @image_data_2)
+    add_data_to_inventory_collection(@data[:hardwares],
+                                     @hardware_data_1,
+                                     @hardware_data_2,
+                                     @image_hardware_data_1,
+                                     @image_hardware_data_2)
+    add_data_to_inventory_collection(@data[:key_pairs], @key_pair_data_1, @key_pair_data_2, @key_pair_data_21)
+    add_data_to_inventory_collection(@data[:disks], @disk_data_1, @disk_data_12, @disk_data_13, @disk_data_2)
   end
 end

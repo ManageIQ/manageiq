@@ -1,4 +1,4 @@
-class ManageIQ::Providers::CloudManager::RefreshParserDto < ::ManagerRefresh::RefreshParserDto
+class ManageIQ::Providers::CloudManager::RefreshParserInventoryObject < ::ManagerRefresh::RefreshParserInventoryObject
   private
 
   def parse_key_pair(kp)

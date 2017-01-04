@@ -18,7 +18,7 @@ module ManagerRefresh
         # Topological sort of the graph of the DTO collections to find the right order of saving DTO collections and
         # identify what DTO collections can be saved in parallel.
         ################################################################################################################
-        # The expected input here is the directed acyclic Graph G (dto_collections), consisting of Vertices(Nodes) V and
+        # The expected input here is the directed acyclic Graph G (inventory_collections), consisting of Vertices(Nodes) V and
         # Edges E:
         # G = (V, E)
         #

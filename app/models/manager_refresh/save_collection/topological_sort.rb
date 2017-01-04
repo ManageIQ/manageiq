@@ -3,8 +3,8 @@ module ManagerRefresh::SaveCollection
     extend ManagerRefresh::SaveCollection::Helper
 
     class << self
-      def save_collections(ems, dto_collections)
-        graph = ManagerRefresh::DtoCollection::Graph.new(dto_collections.values)
+      def save_collections(ems, inventory_collections)
+        graph = ManagerRefresh::InventoryCollection::Graph.new(inventory_collections.values)
         graph.build_directed_acyclic_graph!
 
         layers = ManagerRefresh::Graph::TopologicalSort.new(graph).topological_sort
@@ -21,8 +21,8 @@ module ManagerRefresh::SaveCollection
 
         layers.each_with_index do |layer, index|
           _log.info("Saving manager #{ems.name} | Layer #{index}")
-          layer.each do |dto_collection|
-            save_dto_inventory(ems, dto_collection) unless dto_collection.saved?
+          layer.each do |inventory_collection|
+            save_inventory_object_inventory(ems, inventory_collection) unless inventory_collection.saved?
           end
           _log.info("Saved manager #{ems.name} | Layer #{index}")
         end
