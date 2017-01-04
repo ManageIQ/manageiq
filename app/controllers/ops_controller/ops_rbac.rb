@@ -947,16 +947,22 @@ module OpsController::OpsRbac
     rbac_group_right_tree(@belongsto.keys)
   end
 
+  # this causes the correct tree to get instantiated, depending on the active tab
   def rbac_group_right_tree(selected)
-    @tags_tree = TreeBuilderTags.new(:tags,
-                                     :tags_tree,
-                                     @sb,
-                                     true,
-                                     :edit    => @edit,
-                                     :filters => @filters,
-                                     :group   => @group)
-    @hac_tree = build_belongsto_tree(selected, false, false)  # Build the Hosts & Clusters tree for this user
-    @vat_tree = build_belongsto_tree(selected, true, false)  # Build the VMs & Templates tree for this user
+    case @sb[:active_rbac_group_tab]
+    when 'rbac_customer_tags'
+      @tags_tree = TreeBuilderTags.new(:tags,
+                                       :tags_tree,
+                                       @sb,
+                                       true,
+                                       :edit    => @edit,
+                                       :filters => @filters,
+                                       :group   => @group)
+    when 'rbac_hosts_clusters'
+      @hac_tree = build_belongsto_tree(selected, false, false)  # Build the Hosts & Clusters tree for this user
+    when 'rbac_vms_templates'
+      @vat_tree = build_belongsto_tree(selected, true, false)  # Build the VMs & Templates tree for this user
+    end
   end
 
   def rbac_role_get_details(id)

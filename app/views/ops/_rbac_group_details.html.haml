@@ -176,11 +176,11 @@
         = _("VMs & Templates")
 
     .tab-content
-      = miq_tab_content('rbac_customer_tags', @sb[:active_rbac_group_tab]) do
+      = miq_tab_content('rbac_customer_tags', @sb[:active_rbac_group_tab], {:lazy => true}) do
         = render :partial => 'ops/rbac_group/customer_tags'
-      = miq_tab_content('rbac_hosts_clusters', @sb[:active_rbac_group_tab]) do
+      = miq_tab_content('rbac_hosts_clusters', @sb[:active_rbac_group_tab], {:lazy => true}) do
         = render :partial => 'ops/rbac_group/hosts_clusters'
-      = miq_tab_content('rbac_vms_templates', @sb[:active_rbac_group_tab]) do
+      = miq_tab_content('rbac_vms_templates', @sb[:active_rbac_group_tab], {:lazy => true}) do
         = render :partial => 'ops/rbac_group/vms_templates'
 
 :javascript
