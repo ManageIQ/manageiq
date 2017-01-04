@@ -6,6 +6,53 @@ module MiqAeServiceGenericObjectSpec
     let(:service_service)  { MiqAeMethodService::MiqAeServiceService.find(service.id) }
     let(:service2)         { FactoryGirl.create(:service) }
     let(:service_service2) { MiqAeMethodService::MiqAeServiceService.find(service2.id) }
+    let(:method_name)      { 'fred' }
+    let(:definition) do
+      FactoryGirl.create(
+        :generic_object_definition,
+        :name       => "test_definition",
+        :properties => {
+          :methods => [method_name]
+        }
+      )
+    end
+
+    let(:go) do
+      FactoryGirl.create(
+        :generic_object,
+        :generic_object_definition => definition,
+        :name                      => 'test'
+      )
+    end
+
+    let(:user) { FactoryGirl.create(:user_with_group) }
+    let(:workspace) do
+      double('ws', :persist_state_hash => {},
+                   :ae_user            => user,
+                   :rbac_enabled?      => false,
+                   :root               => {})
+    end
+
+    describe "call method on generic object" do
+      before do
+        allow(MiqAeEngine::DrbRemoteInvoker).to receive('workspace').and_return(workspace)
+      end
+
+      it "calls into automate" do
+        options = { :object_type   => "GenericObject",
+                    :object_id     => go.id,
+                    :instance_name => "GenericObject",
+                    :user_id       => user.id,
+                    :miq_group_id  => user.current_group.id,
+                    :tenant_id     => user.current_tenant.id,
+                    :attrs         => {:method_name => method_name}
+                  }
+        svc_obj = MiqAeMethodService::MiqAeServiceGenericObject.find(go.id)
+        expect(MiqAeEngine).to receive('deliver').with(options).and_return(workspace)
+
+        svc_obj.send(method_name)
+      end
+    end
 
     describe "#add_to_service" do
       it "adds a generic object to service_resources of a valid service" do
@@ -54,7 +101,6 @@ module MiqAeServiceGenericObjectSpec
     end
 
     describe '#convert_params_to_ar_model' do
-      let(:user) { FactoryGirl.create(:user_with_group) }
       subject    { service_go.send(:convert_params_to_ar_model, @args) }
 
       before do
