@@ -1,16 +1,12 @@
 #
 #
 
-class ManageIQ::Providers::StorageManager::CinderManager < ManageIQ::Providers::StorageManager
+class ManageIQ::Providers::StorageManager::CinderManager < ManageIQ::Providers::BlockStorageManager
   require_nested :EventCatcher
   require_nested :EventParser
   require_nested :RefreshParser
   require_nested :RefreshWorker
   require_nested :Refresher
-
-  has_many :cloud_volumes,                 :foreign_key => :ems_id, :dependent => :destroy
-  has_many :cloud_volume_snapshots,        :foreign_key => :ems_id, :dependent => :destroy
-  has_many :cloud_volume_backups,          :foreign_key => :ems_id, :dependent => :destroy
 
   # Auth and endpoints delegations, editing of this type of manager must be disabled
   delegate :authentication_check,
@@ -31,7 +27,6 @@ class ManageIQ::Providers::StorageManager::CinderManager < ManageIQ::Providers::
            :to        => :parent_manager,
            :allow_nil => true
 
-  supports :block_storage
   supports :cinder_service do
     if parent_manager
       unsupported_reason_add(:cinder_service, parent_manager.unsupported_reason(:cinder_service)) unless
