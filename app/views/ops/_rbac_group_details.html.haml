@@ -168,19 +168,19 @@
 
   #rbac_group_tabs
     %ul.nav.nav-tabs
-      = miq_tab_header('rbac_customer_tags') do
+      = miq_tab_header('rbac_customer_tags', @sb[:active_rbac_group_tab]) do
         = _("%{current_tenant} Tags") % {:current_tenant => current_tenant.name}
-      = miq_tab_header('rbac_hosts_clusters') do
+      = miq_tab_header('rbac_hosts_clusters', @sb[:active_rbac_group_tab]) do
         = _("%{title_for_hosts} & %{title_for_clusters}") % {:title_for_hosts => title_for_hosts, :title_for_clusters => title_for_clusters}
-      = miq_tab_header('rbac_vms_templates') do
+      = miq_tab_header('rbac_vms_templates', @sb[:active_rbac_group_tab]) do
         = _("VMs & Templates")
 
     .tab-content
-      = miq_tab_content('rbac_customer_tags') do
+      = miq_tab_content('rbac_customer_tags', @sb[:active_rbac_group_tab]) do
         = render :partial => 'ops/rbac_group/customer_tags'
-      = miq_tab_content('rbac_hosts_clusters') do
+      = miq_tab_content('rbac_hosts_clusters', @sb[:active_rbac_group_tab]) do
         = render :partial => 'ops/rbac_group/hosts_clusters'
-      = miq_tab_content('rbac_vms_templates') do
+      = miq_tab_content('rbac_vms_templates', @sb[:active_rbac_group_tab]) do
         = render :partial => 'ops/rbac_group/vms_templates'
 
 :javascript
