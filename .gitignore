@@ -35,20 +35,6 @@ SyntaxCheck
 xfer_*.xml
 Thumbs.db
 
-# app/controllers/
-app/controllers/new_module.rb
-
-# app/views/layouts/
-app/views/layouts/_center_buttons_1.rhtml
-app/views/layouts/_center_buttons_new.rhtml
-app/views/layouts/_center_buttons_jmaki.rhtml
-
-# app/views/vm/
-app/views/vm/.fuse_hidden0000208f00000004
-app/views/vm/_main_old.rhtml
-app/views/vm/_main_new.rhtml
-app/views/vm/.fuse_hidden0000228d0000000a
-
 # bin/
 bin/*
 
@@ -76,45 +62,14 @@ log/*.txt
 log/call_graph_*.html
 
 # product/
-product/license
 product/automate
 
 # public/
 /public/assets/
 /public/doc/
-public/dhtmlx_test.html
-public/dhtmlx_test_cal.html
-public/test_grid.xml
-public/test_grid-0.xml
 public/upload
 public/pictures/
 public/ui/
-
-# public/dhtmlx/
-public/dhtmlx/dhtmlxtoolbar.js.orig
-
-# public/javascripts/
-public/javascripts/jmaki.js
-public/javascripts/jmaki-uncompressed.js
-public/javascripts/glue.js
-public/javascripts/system-glue.js
-
-# public/stylesheets/
-public/stylesheets/jmaki-standard.css
-public/stylesheets/dhtmlXGrid.css
-public/stylesheets/jmaki-2-row-right-sidebar-footer.css
-public/stylesheets/jmaki-centered.css
-public/stylesheets/jmaki-3column-fixed-sidebars.css
-public/stylesheets/jmaki-2column-footer.css
-public/stylesheets/jmaki-3column.css
-public/stylesheets/container-2fixed-right-sidebars.css
-public/stylesheets/jmaki-right-sidebar.css
-public/stylesheets/container-right-sidebars.css
-public/stylesheets/jmaki-standard-footer.css
-public/stylesheets/jmaki-2fixed-right-sidebars.css
-public/stylesheets/jmaki-3column-footer.css
-public/stylesheets/jmaki-standard-no-sidebars.css
-public/stylesheets/jmaki-standard-right-sidebar.css
 
 # spec/
 spec/replication/util/data/euwe_migrations
