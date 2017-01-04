@@ -170,6 +170,8 @@ blueprints:
 - ui_properties
 - created_at
 - updated_at
+- original_blueprint_id
+- active_version
 bottleneck_events:
 - id
 - timestamp
