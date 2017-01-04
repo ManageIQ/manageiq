@@ -1347,10 +1347,13 @@ module ApplicationHelper
   end
 
   def miq_tab_header(id, active = nil, options = {}, &_block)
-    content_tag(:li,
-                :class     => "#{options[:class]} #{active == id ? 'active' : ''}",
-                :id        => "#{id}_tab",
-                'ng-click' => "changeAuthTab('#{id}');") do
+    tag_options = {:class     => "#{options[:class]} #{active == id ? 'active' : ''}",
+                   :id        => "#{id}_tab"}
+
+    tag_options['ng-click'] = options['ng-click'] if options.key?('ng-click')
+    tag_options[:onclick] = options[:onclick] if options.key?(:onclick)
+
+    content_tag(:li, tag_options) do
       content_tag(:a, :href => "##{id}", 'data-toggle' => 'tab') do
         yield
       end
@@ -1358,8 +1361,9 @@ module ApplicationHelper
   end
 
   def miq_tab_content(id, active = nil, options = {}, &_block)
-    content_tag(:div, :id => id, :class => "tab-pane #{options[:class]} #{active == id ? 'active' : ''}") do
-      yield
+    lazy = options[:lazy] && active != id
+    content_tag(:div, :id => id, :class => "tab-pane #{options[:class]} #{active == id ? 'active' : ''} #{lazy ? 'lazy' : ''}") do
+      yield unless lazy
     end
   end
 
