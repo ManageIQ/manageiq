@@ -682,7 +682,7 @@ module MiqAeEngine
     def array_value(array, method)
       return array if array.nil? || array.compact.empty?
       value = array
-      value = array.sort { |x, y| y <=> x }   if method == 'rsort'
+      value = array.sort { |x, y| y <=> x } if method == 'rsort'
       value = array.sort                    if method == 'sort'
       value = array.reverse                 if method == 'reverse'
       value = array.length                  if method == 'count'
