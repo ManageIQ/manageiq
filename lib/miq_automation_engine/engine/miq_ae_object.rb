@@ -1,3 +1,4 @@
+require 'more_core_extensions/core_ext/array/math'
 require_relative 'miq_ae_state_machine'
 module MiqAeEngine
   class MiqAeObject
@@ -687,10 +688,10 @@ module MiqAeEngine
       value = array.length                  if method == 'count'
       value = array.min                     if method == 'min' || method == 'minimum'
       value = array.max                     if method == 'max' || method == 'maximum'
-      value = sum(array)                    if method == 'sum'
-      value = mean(array)                   if method == 'mean' || method == 'average' || method == 'avg'
-      value = variance(array)               if method == 'variance'
-      value = stdev(array)                  if method == 'stddev' || method == 'stdev'
+      value = array.sum                     if method == 'sum'
+      value = array.mean                    if method == 'mean' || method == 'average' || method == 'avg'
+      value = array.variance                if method == 'variance'
+      value = array.stddev                  if method == 'stddev' || method == 'stdev'
       value
     end
 
@@ -773,25 +774,6 @@ module MiqAeEngine
         path = MiqAePath.new(:ae_namespace => ns, :ae_class => klass, :ae_instance => i).to_s
         MiqAeUri.join(scheme, userinfo, host, port, registry, path, opaque, query, fragment)
       end.sort
-    end
-
-    def mean(array)
-      sum(array) / array.size.to_f
-    end
-
-    def sum(array)
-      array.inject(nil) { |sum, x| sum ? (sum + x) : x }
-    end
-
-    def variance(array)
-      m = array.mean
-      sum = 0.0
-      array.each { |v| sum += (v - m)**2 }
-      sum / array.size
-    end
-
-    def stdev(array)
-      Math.sqrt(variance(array))
     end
 
     def fqmethod2components(str)
