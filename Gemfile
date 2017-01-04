@@ -43,8 +43,8 @@ unless dependencies.detect { |d| d.name == "manageiq-ui-classic" }
 end
 
 # Unmodified gems
-gem "activerecord-session_store",     "~>1.0.0"
 gem "actioncable",                    "~>5.0.0"
+gem "activerecord-session_store",     "~>1.0.0"
 gem "acts_as_list",                   "~>0.7.2"
 gem "acts_as_tree",                   "~>2.1.0" # acts_as_tree needs to be required so that it loads before ancestry
 gem "ancestry",                       "~>2.2.1",       :require => false
@@ -54,8 +54,8 @@ gem "bundler",                        ">=1.11.1",      :require => false
 gem "color",                          "~>1.8"
 gem "config",                         "~>1.3.0",       :require => false
 gem "dalli",                          "~>2.7.4",       :require => false
-gem "draper",                         "~>3.0.0.pre1"
 gem "default_value_for",              "~>3.0.2"
+gem "draper",                         "~>3.0.0.pre1"
 gem "elif",                           "=0.1.0",        :require => false
 gem "fast_gettext",                   "~>1.2.0"
 gem "fog-google",                     "~>0.3.0",       :require => false
@@ -123,11 +123,11 @@ end
 group :ui_dependencies do # Added to Bundler.require in config/application.rb
   # Unmodified gems
   gem "angular-ui-bootstrap-rails",   "~>0.13.0"
+  gem "coffee-rails"
   gem "jquery-hotkeys-rails"
   gem "lodash-rails",                 "~>3.10.0"
   gem "patternfly-sass",              "~>3.15.0"
   gem "sass-rails"
-  gem "coffee-rails"
 
   # Modified gems (forked on Github)
   gem "jquery-rjs",                   "=0.1.1",                       :git => "https://github.com/ManageIQ/jquery-rjs.git", :tag => "v0.1.1-1"
