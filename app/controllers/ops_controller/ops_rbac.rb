@@ -897,6 +897,7 @@ module OpsController::OpsRbac
       rbac_user_get_details(id)
     when "g"
       @right_cell_text = _("%{model} \"%{name}\"") % {:model => ui_lookup(:model => "MiqGroup"), :name => MiqGroup.find_by_id(from_cid(id)).description}
+      @edit = nil
       rbac_group_get_details(id)
     when "ur"
       @right_cell_text = _("%{model} \"%{name}\"") % {:model => ui_lookup(:model => "MiqUserRole"), :name => MiqUserRole.find_by_id(from_cid(id)).name}
@@ -928,7 +929,6 @@ module OpsController::OpsRbac
   end
 
   def rbac_group_get_details(id)
-    @edit = nil
     @record = @group = MiqGroup.find_by_id(from_cid(id))
     get_tagdata(@group)
     # Build the belongsto filters hash
