@@ -4,7 +4,9 @@ class DialogFieldDropDownList < DialogFieldSortedItem
   end
 
   def multi_value?
-    return true if options[:force_multi_value].present? && options[:force_multi_value] != "null"
+    return true if options[:force_multi_value].present? &&
+                   options[:force_multi_value] != "null" &&
+                   options[:force_multi_value]
   end
 
   def force_multi_value=(setting)
@@ -16,22 +18,37 @@ class DialogFieldDropDownList < DialogFieldSortedItem
   end
 
   def refresh_json_value(checked_value)
-    @raw_values = @default_value = nil
+    self.default_value = nil
+    @raw_values = nil
 
     refreshed_values = values
 
-    if refreshed_values.collect { |value_pair| value_pair[0].to_s }.include?(checked_value)
-      @value = checked_value
-    else
-      @value = @default_value
-    end
+    selectbox_options = refreshed_values.collect { |value_pair| value_pair[0].to_s }
 
+    @value = if checked_value.kind_of?(Array) && (selectbox_options & checked_value).present?
+               # if checked value is [1,2,4] and the intersection is [1,2], removes non-valid option 4
+               # and does final check to make sure it's not returning [], otherwise, defaults
+               selectbox_options & checked_value
+             elsif selectbox_options.include?(checked_value)
+               # checks if [1,2,3].includes?(3)
+               checked_value
+             else
+               default_value
+             end
     {:refreshed_values => refreshed_values, :checked_value => @value, :read_only => read_only?, :visible => visible?}
   end
 
   def automate_output_value
-    return nil if @value.blank?
-    MiqAeEngine.create_automation_attribute_array_value(@value.split.map(&:to_i))
+    return super unless multi_value?
+    a = if @value.kind_of?(Integer)
+          [@value]
+        elsif @value.kind_of?(Array)
+          @value
+        else
+          @value.blank? ? [] : @value.chomp.split(',')
+        end
+    automate_values = a.first.kind_of?(Integer) ? a.map(&:to_i) : a
+    MiqAeEngine.create_automation_attribute_array_value(automate_values)
   end
 
   private
