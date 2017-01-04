@@ -5979,3 +5979,23 @@
       :description: Display Timelines for Object Storage Managers
       :feature_type: view
       :identifier: ems_object_storage_timeline
+
+
+# Alerts
+- :name: Alerts
+  :description: Alerts
+  :feature_type: node
+  :identifier: alerts
+  :children:
+  - :name: Overview
+    :description: Alerts Overview
+    :feature_type: view
+    :identifier: alert_overview
+  - :name: View
+    :description: Show Alerts List
+    :feature_type: view
+    :identifier: alert_list
+  - :name: Most Recent
+    :description: Show Most Recent Alerts
+    :feature_type: view
+    :identifier: alerts_most_recent
