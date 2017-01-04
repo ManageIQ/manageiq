@@ -168,11 +168,11 @@
 
   #rbac_group_tabs
     %ul.nav.nav-tabs
-      = miq_tab_header('rbac_customer_tags', @sb[:active_rbac_group_tab]) do
+      = miq_tab_header('rbac_customer_tags', @sb[:active_rbac_group_tab], {:onclick => "rbacGroupLoadTab('rbac_customer_tags')"}) do
         = _("%{current_tenant} Tags") % {:current_tenant => current_tenant.name}
-      = miq_tab_header('rbac_hosts_clusters', @sb[:active_rbac_group_tab]) do
+      = miq_tab_header('rbac_hosts_clusters', @sb[:active_rbac_group_tab], {:onclick => "rbacGroupLoadTab('rbac_hosts_clusters')"}) do
         = _("%{title_for_hosts} & %{title_for_clusters}") % {:title_for_hosts => title_for_hosts, :title_for_clusters => title_for_clusters}
-      = miq_tab_header('rbac_vms_templates', @sb[:active_rbac_group_tab]) do
+      = miq_tab_header('rbac_vms_templates', @sb[:active_rbac_group_tab], {:onclick => "rbacGroupLoadTab('rbac_vms_templates')"}) do
         = _("VMs & Templates")
 
     .tab-content
