@@ -1,0 +1,13 @@
+%br/
+= _("This user is limited to the selected items and their children.")
+%br/
+%br/
+#hac_treebox.treeview-pf-hover.treeview-pf-select{:style => "color:#000"}
+  = render(:partial => "layouts/tree",
+           :locals  => {:tree_id           => "hac_treebox",
+                        :tree_name         => "hac_tree",
+                        :bs_tree           => @hac_tree,
+                        :oncheck           => @edit.nil? ? nil : "miqOnCheckUserFilters",
+                        :check_url         => "/ops/rbac_group_field_changed/#{@group.id || "new"}___",
+                        :highlight_changes => true,
+                        :checkboxes        => true})
