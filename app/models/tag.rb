@@ -19,13 +19,6 @@ class Tag < ApplicationRecord
     Tag.filter_ns(query, options[:ns])
   end
 
-  def self.all_tags(options = {})
-    query = Tag.scoped
-    ns    = Tag.get_namespace(options)
-    query = query.where(Tag.arel_table[:name].matches "#{ns}%") unless ns.blank?
-    Tag.filter_ns(query, ns)
-  end
-
   def self.parse(list)
     unless list.kind_of? Array
       tag_names = []
