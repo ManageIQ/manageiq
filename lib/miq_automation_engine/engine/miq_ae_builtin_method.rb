@@ -1,10 +1,6 @@
 module MiqAeEngine
-  INFRASTRUCTURE = 'infrastructure'.freeze
-  CLOUD          = 'cloud'.freeze
-  UNKNOWN        = 'unknown'.freeze
-
-  # All Class Methods beginning with miq_ are callable from the engine
   class MiqAeBuiltinMethod
+    # All Class Methods beginning with miq_ are callable from the engine
     ATTRIBUTE_LIST = %w(
       vm
       orchestration_stack
@@ -14,6 +10,9 @@ module MiqAeEngine
       vm_migrate_task
       platform_category
     ).freeze
+    CLOUD          = 'cloud'.freeze
+    INFRASTRUCTURE = 'infrastructure'.freeze
+    UNKNOWN        = 'unknown'.freeze
 
     def self.miq_log_object(obj, _inputs)
       $miq_ae_logger.info("===========================================")
