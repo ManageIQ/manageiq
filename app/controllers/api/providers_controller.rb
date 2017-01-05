@@ -91,6 +91,9 @@ module Api
         attribute["value"] = attribute.delete("field_type").safe_constantize.parse(attribute["value"])
       end
       attribute["section"] ||= "metadata" unless @req.action == "edit"
+      if attribute["section"].present? && !(CustomAttribute::ALLOWED_API_SECTIONS.include? attribute["section"])
+        raise "Invalid attribute section specified: #{attribute["section"]}"
+      end
       attribute
     rescue => err
       raise BadRequestError, "Invalid provider custom attributes specified - #{err}"
