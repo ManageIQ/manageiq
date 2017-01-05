@@ -700,11 +700,15 @@ en:
       CustomButton:             Button
       CustomButtonSet:          Buttons Group
       Container:                Container
+      ContainerPerformance:     Performance - Container
       ContainerGroup:           Pod
+      ContainerGroupPerformance: Performance - Pod
       ContainerImageRegistry:   Image Registry
       ContainerImage:           Container Image
       ContainerNode:            Node
+      ContainerNodePerformance: Performance - ContainerNode
       ContainerProject:         Project
+      ContainerProjectPerformance: Performance - ContainerProject
       ContainerRoute:           Route
       ContainerReplicator:      Replicator
       ContainerService:         Container Service

@@ -17,11 +17,15 @@ class MiqExpression
     ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem
     ManageIQ::Providers::ConfigurationManager
     Container
+    ContainerPerformance
     ContainerGroup
+    ContainerGroupPerformance
     ContainerImage
     ContainerImageRegistry
     ContainerNode
+    ContainerNodePerformance
     ContainerProject
+    ContainerProjectPerformance
     ContainerReplicator
     ContainerRoute
     ContainerService
@@ -1319,6 +1323,8 @@ class MiqExpression
         next(c) if includes.include?(c)
         c if includes.detect { |incl| c.match(incl) }
       end.compact
+    when base_model.starts_with?("Container")
+      excludes += ["^.*derived_host_count_off$", "^.*derived_host_count_on$", "^.*derived_vm_count_off$", "^.*derived_vm_count_on$", "^.*derived_storage.*$"]
     end
 
     column_names.collect do|c|
