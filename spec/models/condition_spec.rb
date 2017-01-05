@@ -76,6 +76,18 @@ describe Condition do
         expect(Condition.subst(expr, @vm)).to eq('"0"')
       end
     end
+
+    it "does not change the scope for taggings when passed a Tag" do
+      tag = FactoryGirl.create(:tag, :name => "/managed/foo")
+      vm = FactoryGirl.create(:vm_vmware)
+      expr = "<value ref=tag, type=text>/virtual/name</value> == \"/managed/foo\""
+
+      described_class.subst(expr, tag)
+      vm.tag_add("foo", :ns => "/managed")
+      vm.reload
+
+      expect(vm.tags).to eq([tag])
+    end
   end
 
   describe ".do_eval" do

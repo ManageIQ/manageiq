@@ -101,9 +101,6 @@ class Condition < ApplicationRecord
       MiqPolicy.logger.debug("MIQ(condition-_subst_find): Find Expression after substitution: [#{expr}]")
     end
 
-    # Make rec class act as miq taggable if not already since the substitution fully relies on virtual tags
-    rec.class.acts_as_miq_taggable unless rec.respond_to?("tag_list") || rec.kind_of?(Hash)
-
     # <mode>/virtual/operating_system/product_name</mode>
     # <mode WE/JWSref=host>/managed/environment/prod</mode>
     expr.gsub!(/<(value|exist|count|registry)([^>]*)>([^<]+)<\/(value|exist|count|registry)>/im) { |_s| _subst(rec, $2.strip, $3.strip, $1.strip) }
@@ -124,7 +121,7 @@ class Condition < ApplicationRecord
       if ref.kind_of?(Hash)
         value = ref.fetch(tag, "")
       else
-        ref.nil? ? value = "" : value = ref.tag_list(:ns => tag)
+        ref.nil? ? value = "" : value = Tag.list(ref, :ns => tag)
       end
       value = MiqExpression.quote(value, ohash[:type] || "string")
     when "count"

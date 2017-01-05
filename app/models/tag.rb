@@ -8,6 +8,29 @@ class Tag < ApplicationRecord
 
   before_destroy :remove_from_managed_filters
 
+  def self.list(taggable, options = {})
+    ns = Tag.get_namespace(options)
+    return vtag_list(options) if  ns[0..7] == "/virtual"
+    Tag.filter_ns(taggable.tags, ns).join(" ")
+  end
+
+  def self.vtag_list(taggable, options = {})
+    ns = Tag.get_namespace(options)
+
+    predicate = ns.split("/")[2..-1] # throw away /virtual
+
+    # p "ns: [#{ns}]"
+    # p "predicate: [#{predicate.inspect}]"
+
+    begin
+      predicate.inject(taggable) do |target, method|
+        target.public_send method
+      end
+    rescue NoMethodError => err
+      return ""
+    end
+  end
+
   def self.to_tag(name, options = {})
     File.join(Tag.get_namespace(options), name)
   end

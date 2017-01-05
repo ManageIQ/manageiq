@@ -181,26 +181,7 @@ module ActsAsTaggable
   end
 
   def tag_list(options = {})
-    ns = Tag.get_namespace(options)
-    return vtag_list(options) if  ns[0..7] == "/virtual"
-    Tag.filter_ns(tags, ns).join(" ")
-  end
-
-  def vtag_list(options = {})
-    ns = Tag.get_namespace(options)
-
-    predicate = ns.split("/")[2..-1] # throw away /virtual
-
-    # p "ns: [#{ns}]"
-    # p "predicate: [#{predicate.inspect}]"
-
-    begin
-      predicate.inject(self) do |target, method|
-        target.public_send method
-      end
-    rescue NoMethodError => err
-      return ""
-    end
+    Tag.list(self, options)
   end
 
   def perf_tags
