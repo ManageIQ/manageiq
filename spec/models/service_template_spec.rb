@@ -101,13 +101,13 @@ describe ServiceTemplate do
     end
 
     it 'uses selected resource actions' do
-      config_info = {
-        'fqname'             => 'foo_entrypoint',
-        'reconfigure_fqname' => 'foo_reconfigure',
-        'retire_fqname'      => 'foo_retire'
+      ae_endpoints = {
+        'provisioning' => 'foo_entrypoint',
+        'reconfigure'  => 'foo_reconfigure',
+        'retirement'   => 'foo_retire'
       }
 
-      @service_template.set_resource_actions(config_info, @dialog)
+      @service_template.set_resource_actions(ae_endpoints, @dialog)
       expect(@service_template.resource_actions.pluck(:ae_instance))
         .to eq(%w(foo_entrypoint foo_reconfigure foo_retire))
     end

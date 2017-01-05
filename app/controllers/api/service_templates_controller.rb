@@ -23,7 +23,7 @@ module Api
 
     def create_atomic(data)
       service_template = ServiceTemplate.new(data.except('config_info'))
-      config_info = data['config_info'].nil? ? {} : data['config_info']
+      config_info = data['config_info'].except('ae_endpoints') || {}
       case service_template.type
       when 'ServiceTemplateOrchestration'
         add_orchestration_template_vars(service_template, config_info)
@@ -33,7 +33,7 @@ module Api
         service_template.add_resource(create_service_template_request(config_info)) unless config_info == {}
       end
       dialog = Dialog.find(config_info['dialog_id']) if config_info['dialog_id']
-      service_template.set_resource_actions(config_info, dialog)
+      service_template.set_resource_actions(config_info['ae_endpoints'], dialog)
       service_template
     end
 
@@ -41,7 +41,7 @@ module Api
     def create_service_template_request(request_data)
       # data must be symbolized
       request_params = request_data.symbolize_keys
-      wf = MiqProvisionWorkflow.class_for_source(request_params[:src_vm_id]).new(request_params, @auth_user_obj)
+      wf = MiqProvisionWorkflow.class_for_source(request_params[:src_vm_id]).new(request_params, @auth_user)
       raise 'Could not find Provision Workflow class for source VM' unless wf
       request = wf.make_request(nil, request_params)
       raise 'Could not create valid request' if request == false || !request.valid?

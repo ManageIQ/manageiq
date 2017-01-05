@@ -231,9 +231,11 @@ describe "Service Templates API" do
           :vm_name                 => 'AtomicVMName',
           :schedule_type           => ["immediately", "Immediately on Approval"],
           :instance_type           => [flavor.id, flavor.name],
-          :retire_fqname           => ra2.fqname,
-          :fqname                  => ra1.fqname,
-          :src_ems_id              => [ems.id, ems.name]
+          :src_ems_id              => [ems.id, ems.name],
+          :ae_endpoints            => {
+            :provisioning => ra1.fqname,
+            :retirement   => ra2.fqname
+          }
         }
       }
     end
@@ -299,11 +301,12 @@ describe "Service Templates API" do
         'name'            => 'Generic Service Template',
         'service_type'    => 'atomic',
         'prov_type'       => 'generic',
-        'generic_subtype' => ''
+        'generic_subtype' => '',
+        'config_info'     => {}
       }
 
       expected = {
-        'results' => [a_hash_including(template_params)]
+        'results' => [a_hash_including(template_params.except('config_info'))]
       }
       expect do
         run_post(service_templates_url, template_params)
@@ -323,7 +326,7 @@ describe "Service Templates API" do
         'service_type' => 'atomic',
         'config_info'  => {
           'template_id' => orchestration_template.id,
-          'manager_id'  => ems.id
+          'manager_id'  => ems.id,
         }
       }
 
@@ -346,7 +349,7 @@ describe "Service Templates API" do
         'prov_type'    => 'generic_ansible_tower',
         'service_type' => 'atomic',
         'config_info'  => {
-          'template_id' => config_script.id
+          'template_id' => config_script.id,
         }
       }
 
