@@ -43,7 +43,7 @@ module ManageIQ::Providers::Google::ManagerMixin
         :google_json_key_string => google_json_key,
         :app_name               => I18n.t("product.name"),
         :app_version            => Vmdb::Appliance.VERSION,
-        :google_client_options  => {:proxy_url => proxy_uri}
+        :google_client_options  => {:proxy => proxy_uri}
       }
 
       case options[:service]

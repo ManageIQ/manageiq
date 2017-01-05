@@ -25,6 +25,7 @@ gem "manageiq-gems-pending", ">0", :require => 'manageiq-gems-pending', :git => 
 # Modified gems for gems-pending.  Setting sources here since they are git references
 gem "handsoap", "~>0.2.5", :require => false, :git => "https://github.com/ManageIQ/handsoap.git", :tag => "v0.2.5-5"
 gem "rubywbem",            :require => false, :git => "https://github.com/ManageIQ/rubywbem.git", :branch => "rubywbem_0_1_0"
+gem "fog-google",          :require => false, :git => "https://github.com/juliancheal/fog-google", :branch => "proxy_support_part_deux"
 
 # when using this Gemfile inside a providers Gemfile, the dependency for the provider is already declared
 unless dependencies.detect { |d| d.name == "manageiq-content" }
@@ -58,7 +59,6 @@ gem "default_value_for",              "~>3.0.2"
 gem "draper",                         "~>3.0.0.pre1"
 gem "elif",                           "=0.1.0",        :require => false
 gem "fast_gettext",                   "~>1.2.0"
-gem "fog-google",                     "~>0.3.0",       :require => false
 gem "fog-vcloud-director",            "~>0.1.8",       :require => false
 gem "gettext_i18n_rails",             "~>1.7.2"
 gem "gettext_i18n_rails_js",          "~>1.1.0"
