@@ -171,7 +171,7 @@
 - :description: Default Container Image Rate
   :guid: b47a0ef0-4335-11df-aba8-001d09066d99
   :rate_type: Compute
-  :default: false
+  :default: true
   :rates:
     - :description: Used CPU
       :group: cpu
