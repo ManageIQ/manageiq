@@ -16,6 +16,7 @@ describe ChargebackVm do
   let(:vm_allocated_disk_storage) { 4.0 }
   let(:starting_date) { Time.parse('2012-09-01 23:59:59Z').utc }
   let(:ts) { starting_date.in_time_zone(Metric::Helper.get_time_zone(options[:ext_options])) }
+  let(:report_run_time) { starting_date }
   let(:month_beginning) { ts.beginning_of_month.utc }
   let(:month_end) { ts.end_of_month.utc }
   let(:hours_in_month) { Time.days_in_month(month_beginning.month, month_beginning.year) * 24 }
@@ -63,7 +64,7 @@ describe ChargebackVm do
     temp = {:cb_rate => chargeback_rate, :tag => [c, "vm"]}
     ChargebackRate.set_assignments(:compute, [temp])
 
-    Timecop.travel(starting_date)
+    Timecop.travel(report_run_time)
   end
 
   after do
@@ -116,8 +117,8 @@ describe ChargebackVm do
     let(:hours_in_day) { 24 }
     let(:options) { base_options.merge(:interval => 'daily') }
 
-    let(:start_time)  { Time.parse('2012-09-01 07:00:00Z').utc }
-    let(:finish_time) { Time.parse('2012-09-01 10:00:00Z').utc }
+    let(:start_time)  { report_run_time - 17.hours }
+    let(:finish_time) { report_run_time - 14.hours }
 
     before do
       Range.new(start_time, finish_time, true).step_value(1.hour).each do |t|
@@ -223,8 +224,8 @@ describe ChargebackVm do
 
   context "Report a chargeback of a tenant" do
     let(:options_tenant) { base_options.merge(:tenant_id => @tenant.id) }
-    let(:start_time)  { Time.parse('2012-09-01 07:00:00Z').utc }
-    let(:finish_time) { Time.parse('2012-09-01 10:00:00Z').utc }
+    let(:start_time)  { report_run_time - 17.hours }
+    let(:finish_time) { report_run_time - 14.hours }
 
     before do
       @tenant = FactoryGirl.create(:tenant)
@@ -387,7 +388,8 @@ describe ChargebackVm do
     let(:chargeback_vm)           { ChargebackVm.new }
     let(:rate_assignment_options) { {:cb_rate => chargeback_rate, :object => Tenant.root_tenant} }
     let(:metric_rollup) do
-      FactoryGirl.create(:metric_rollup_vm_hr, :timestamp => "2012-08-31T07:00:00Z", :tag_names => "environment/prod",
+      FactoryGirl.create(:metric_rollup_vm_hr, :timestamp => report_run_time - 1.day - 17.hours,
+                                               :tag_names => "environment/prod",
                                                :parent_host_id => @host1.id, :parent_ems_cluster_id => @ems_cluster.id,
                                                :parent_ems_id => ems.id, :parent_storage_id => @storage.id,
                                                :resource => @vm1)
@@ -474,7 +476,7 @@ describe ChargebackVm do
     let(:rate_assignment_options_2) { {:cb_rate => storage_chargeback_rate_2, :tag => [classification_2, "Storage"]} }
 
     let(:metric_rollup) do
-      FactoryGirl.create(:metric_rollup_vm_hr, :timestamp => "2012-08-31T07:00:00Z",
+      FactoryGirl.create(:metric_rollup_vm_hr, :timestamp => report_run_time - 1.day - 17.hours,
                          :parent_host_id => @host1.id, :parent_ems_cluster_id => @ems_cluster.id,
                          :parent_ems_id => ems.id, :parent_storage_id => @storage.id,
                          :resource => @vm1)
