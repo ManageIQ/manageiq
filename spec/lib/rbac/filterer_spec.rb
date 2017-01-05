@@ -792,6 +792,40 @@ describe Rbac::Filterer do
       end
     end
 
+    context 'with ansible ConfigurationScripts' do
+      describe ".search" do
+        let!(:ansible_configuration_script)          { FactoryGirl.create(:ansible_configuration_script) }
+        let!(:ansible_configuration_script_with_tag) { FactoryGirl.create(:ansible_configuration_script) }
+
+        it 'works when targets are empty' do
+          User.with_user(user) do
+            results = described_class.search(:class => 'ConfigurationScript').first
+            expect(results.length).to eq(2)
+            expect(results).to match_array([ansible_configuration_script, ansible_configuration_script_with_tag])
+          end
+        end
+
+        context 'with tagged ConfigurationScripts' do
+          before do
+            group.entitlement = Entitlement.new
+            group.entitlement.set_managed_filters([['/managed/environment/prod']])
+            group.entitlement.set_belongsto_filters([])
+            group.save!
+
+            ansible_configuration_script_with_tag.tag_with(['/managed/environment/prod'].join(' '), :ns => '*')
+          end
+
+          it 'lists only tagged ConfigurationScripts' do
+            User.with_user(user) do
+              results = described_class.search(:class => 'ConfigurationScript').first
+              expect(results.length).to eq(1)
+              expect(results.first).to eq(ansible_configuration_script_with_tag)
+            end
+          end
+        end
+      end
+    end
+
     context "with tagged VMs" do
       before(:each) do
         [
