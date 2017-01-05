@@ -7,9 +7,6 @@ module ManageIQ::Providers::Openshift::ContainerManagerMixin
 
   included do
     has_many :container_routes, :foreign_key => :ems_id, :dependent => :destroy
-    default_value_for :port do |provider|
-      provider.port || DEFAULT_PORT
-    end
   end
 
   # This is the API version that we use and support throughout the entire code

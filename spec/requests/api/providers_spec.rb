@@ -481,8 +481,6 @@ describe "Providers API" do
         end
 
         it "supports provider with multiple endpoints creation" do
-          pending("https://github.com/ManageIQ/manageiq/issues/13306") if name == "Kubernetes"
-
           api_basic_authorize collection_action_identifier(:providers, :create)
 
           run_post(providers_url, gen_request(:create, sample_containers_multi_end_point))
