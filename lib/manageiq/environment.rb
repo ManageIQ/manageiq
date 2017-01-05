@@ -5,6 +5,19 @@ module ManageIQ
   module Environment
     APP_ROOT = Pathname.new(__dir__).join("../..")
 
+    def self.manageiq_plugin_setup
+      install_bundler
+      bundle_install
+
+      ensure_config_files
+
+      if ENV["CI"]
+        write_region_file
+        create_database_user
+        setup_test_environment
+      end
+    end
+
     def self.ensure_config_files
       config_files = {
         "certs/v2_key.dev"        => "certs/v2_key",
@@ -47,37 +60,37 @@ module ManageIQ
 
     def self.create_database
       puts "\n== Updating database =="
-      system!("#{APP_ROOT.join("bin/rails")} db:create")
+      run_rake_task("db:create")
     end
 
     def self.migrate_database
       puts "\n== Updating database =="
-      system!("#{APP_ROOT.join("bin/rails")} db:migrate")
+      run_rake_task("db:migrate")
     end
 
     def self.seed_database
       puts "\n== Seeding database =="
-      system!("#{APP_ROOT.join("bin/rails")} db:seed GOOD_MIGRATIONS=skip")
+      run_rake_task("db:seed GOOD_MIGRATIONS=skip")
     end
 
     def self.setup_test_environment
       puts "\n== Resetting tests =="
-      system!("#{APP_ROOT.join("bin/rails")} test:vmdb:setup")
+      run_rake_task("test:vmdb:setup")
     end
 
     def self.reset_automate_domain
       puts "\n== Resetting Automate Domains =="
-      system!("#{APP_ROOT.join("bin/rails")} evm:automate:reset")
+      run_rake_task("evm:automate:reset")
     end
 
     def self.compile_assets
       puts "\n== Recompiling assets =="
-      system!("#{APP_ROOT.join("bin/rails")} evm:compile_assets")
+      run_rake_task("evm:compile_assets")
     end
 
     def self.clear_logs_and_temp
       puts "\n== Removing old logs and tempfiles =="
-      system!("#{APP_ROOT.join("bin/rails")} log:clear tmp:clear")
+      run_rake_task("log:clear tmp:clear")
     end
 
     def self.write_region_file(region_number = 1)
@@ -97,8 +110,12 @@ module ManageIQ
       File.read(gemfile).match(/gem\s+['"]bundler['"],\s+['"](.+?)['"]/)[1]
     end
 
+    def self.run_rake_task(task)
+      system!("#{APP_ROOT.join("bin/rails")} #{task}")
+    end
+
     def self.system!(*args)
-      system(*args) || abort("\n== Command #{args} failed ==")
+      system(*args, :chdir => APP_ROOT) || abort("\n== Command #{args} failed ==")
     end
   end
 end
