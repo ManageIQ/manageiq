@@ -10,7 +10,7 @@ class Tag < ApplicationRecord
 
   def self.list(taggable, options = {})
     ns = Tag.get_namespace(options)
-    return vtag_list(options) if  ns[0..7] == "/virtual"
+    return vtag_list(options) if ns[0..7] == "/virtual"
     Tag.filter_ns(taggable.tags, ns).join(" ")
   end
 
