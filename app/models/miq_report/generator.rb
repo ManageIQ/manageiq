@@ -194,7 +194,9 @@ module MiqReport::Generator
     if custom_results_method
       if klass.respond_to?(custom_results_method)
         # Use custom method in DB class to get report results if defined
-        results, ext = klass.send(custom_results_method, db_options[:options].merge(:userid => options[:userid], :ext_options => ext_options))
+        results, ext = klass.send(custom_results_method, db_options[:options].merge(:userid      => options[:userid],
+                                                                                    :ext_options => ext_options,
+                                                                                    :report_cols => cols))
       elsif self.respond_to?(custom_results_method)
         # Use custom method in MiqReport class to get report results if defined
         results, ext = send(custom_results_method, options)

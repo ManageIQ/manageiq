@@ -7,6 +7,7 @@ class Chargeback
     :owner,                # userid
     :tenant_id,
     :tag,                  # like /managed/environment/prod (Mutually exclusive with :user)
+    :report_cols,          # cols visible in the final report
     :provide_id,
     :entity_id,            # 1/2/3.../all rails id of entity
     :service_id,
