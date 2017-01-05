@@ -12,11 +12,8 @@ class Tag < ApplicationRecord
     ns = get_namespace(options)
     if ns[0..7] == "/virtual"
       predicate = ns.split("/")[2..-1] # throw away /virtual
-
       begin
-        predicate.inject(taggable) do |target, method|
-          target.public_send method
-        end
+        predicate.inject(taggable) { |target, method| target.public_send method }
       rescue NoMethodError
         return ""
       end
