@@ -1,8 +1,3 @@
-inherit_from:
-- .rubocop_base.yml
-#
-# Overrides
-#
 GlobalVars:
   AllowedVariables:
   # Loggers
