@@ -10,7 +10,7 @@ module MiqAeMethodService
     end
 
     include DRbUndumped    # Ensure that Automate Method can get at instances over DRb
-    include MiqAeServiceObjectCommon
+    include MiqAeMethodService::MiqAeServiceObjectCommon
     include Vmdb::Logging
     include MiqAeMethodService::MiqAeServiceRbac
 
