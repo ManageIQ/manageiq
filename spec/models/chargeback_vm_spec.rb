@@ -19,6 +19,7 @@ describe ChargebackVm do
   let(:vm_allocated_disk_storage) { 4.0 }
   let(:starting_date) { Time.zone.parse('2012-09-01 00:00:00 UTC') }
   let(:ts) { starting_date.in_time_zone(Metric::Helper.get_time_zone(base_options[:ext_options])) }
+  let(:report_run_time) { month_end }
   let(:month_beginning) { ts.beginning_of_month.utc }
   let(:month_end) { ts.end_of_month.utc }
   let(:hours_in_month) { Time.days_in_month(month_beginning.month, month_beginning.year) * 24 }
@@ -47,7 +48,7 @@ describe ChargebackVm do
     temp = {:cb_rate => @cbr, :tag => [c, "vm"]}
     ChargebackRate.set_assignments(:compute, [temp])
 
-    Timecop.travel(month_end)
+    Timecop.travel(report_run_time)
   end
 
   after do
@@ -765,7 +766,8 @@ describe ChargebackVm do
     let(:chargeback_vm)           { FactoryGirl.build(:chargeback_vm) }
     let(:rate_assignment_options) { {:cb_rate => @cbr, :object => Tenant.root_tenant} }
     let(:metric_rollup) do
-      FactoryGirl.create(:metric_rollup_vm_hr, :timestamp => "2012-08-31T07:00:00Z", :tag_names => "environment/prod",
+      FactoryGirl.create(:metric_rollup_vm_hr, :timestamp => report_run_time - 1.day - 17.hours,
+                                               :tag_names => "environment/prod",
                                                :parent_host_id => @host1.id, :parent_ems_cluster_id => @ems_cluster.id,
                                                :parent_ems_id => ems.id, :parent_storage_id => @storage.id,
                                                :resource => @vm1)

@@ -8,6 +8,7 @@ describe ChargebackContainerImage do
   let(:net_usage_rate)    { 25.0 }
   let(:starting_date) { Time.zone.parse('2012-09-01 00:00:00 UTC') }
   let(:ts) { starting_date.in_time_zone(Metric::Helper.get_time_zone(options[:ext_options])) }
+  let(:report_run_time) { month_end }
   let(:month_beginning) { ts.beginning_of_month.utc }
   let(:month_end) { ts.end_of_month.utc }
   let(:hours_in_month) { Time.days_in_month(month_beginning.month, month_beginning.year) * 24 }
@@ -34,7 +35,7 @@ describe ChargebackContainerImage do
     @project.tag_with(@tag.name, :ns => '*')
     @image.tag_with(@tag.name, :ns => '*')
 
-    Timecop.travel(month_end)
+    Timecop.travel(report_run_time)
   end
 
   after do
