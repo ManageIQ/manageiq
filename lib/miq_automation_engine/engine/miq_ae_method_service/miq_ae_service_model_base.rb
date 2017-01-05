@@ -1,3 +1,5 @@
+require_relative 'miq_ae_service_object_common'
+require_relative 'miq_ae_service_rbac'
 module MiqAeMethodService
   class MiqAeServiceModelBase
     SERVICE_MODEL_PATH = Rails.root.join("lib/miq_automation_engine/service_models")

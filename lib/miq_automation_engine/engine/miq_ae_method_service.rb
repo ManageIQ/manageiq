@@ -1,8 +1,6 @@
-require_relative 'miq_ae_method_service/deprecation'
-require_relative 'miq_ae_method_service/miq_ae_service'
-require_relative 'miq_ae_method_service/miq_ae_service_converter'
-require_relative 'miq_ae_method_service/miq_ae_service_front'
-require_relative 'miq_ae_method_service/miq_ae_service_model_base'
-require_relative 'miq_ae_method_service/miq_ae_service_object'
 module MiqAeMethodService
+end
+
+Dir.glob(Pathname.new(__dir__).join("miq_ae_method_service/*.rb")) do |file|
+  require_relative "miq_ae_method_service/#{File.basename(file)}"
 end
