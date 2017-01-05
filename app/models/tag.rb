@@ -10,21 +10,20 @@ class Tag < ApplicationRecord
 
   def self.list(taggable, options = {})
     ns = Tag.get_namespace(options)
-    return vtag_list(options) if ns[0..7] == "/virtual"
-    Tag.filter_ns(taggable.tags, ns).join(" ")
-  end
+    if ns[0..7] == "/virtual"
+      ns = Tag.get_namespace(options)
 
-  def self.vtag_list(taggable, options = {})
-    ns = Tag.get_namespace(options)
+      predicate = ns.split("/")[2..-1] # throw away /virtual
 
-    predicate = ns.split("/")[2..-1] # throw away /virtual
-
-    begin
-      predicate.inject(taggable) do |target, method|
-        target.public_send method
+      begin
+        predicate.inject(taggable) do |target, method|
+          target.public_send method
+        end
+      rescue NoMethodError
+        return ""
       end
-    rescue NoMethodError
-      return ""
+    else
+      Tag.filter_ns(taggable.tags, ns).join(" ")
     end
   end
 
