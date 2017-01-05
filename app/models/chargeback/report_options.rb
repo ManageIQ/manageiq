@@ -2,8 +2,8 @@ class Chargeback
   # ReportOptions are usualy stored in MiqReport.db_options[:options]
   ReportOptions = Struct.new(
     :interval,             # daily | weekly | monthly
-    :interval_size,
-    :end_interval_offset,
+    :interval_size,        # number of :intervals in the report (i.e. `12` months, `4` weeks)
+    :end_interval_offset,  # report ends :intervals ago (i.e. `3` months ago, or `2` weeks ago)
     :owner,                # userid
     :tenant_id,
     :tag,                  # like /managed/environment/prod (Mutually exclusive with :user)
