@@ -9,7 +9,7 @@ class Tag < ApplicationRecord
   before_destroy :remove_from_managed_filters
 
   def self.list(taggable, options = {})
-    ns = Tag.get_namespace(options)
+    ns = get_namespace(options)
     if ns[0..7] == "/virtual"
       predicate = ns.split("/")[2..-1] # throw away /virtual
 
@@ -21,7 +21,7 @@ class Tag < ApplicationRecord
         return ""
       end
     else
-      Tag.filter_ns(taggable.tags, ns).join(" ")
+      filter_ns(taggable.tags, ns).join(" ")
     end
   end
 
