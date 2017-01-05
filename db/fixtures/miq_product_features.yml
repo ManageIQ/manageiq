@@ -5981,21 +5981,26 @@
       :identifier: ems_object_storage_timeline
 
 
-# Alerts
-- :name: Alerts
-  :description: Alerts
+# Monitor
+- :name: Monitor
+  :description: Everything under Monitor
   :feature_type: node
-  :identifier: alerts
+  :identifier: monitor
   :children:
-  - :name: Overview
-    :description: Alerts Overview
-    :feature_type: view
-    :identifier: alert_overview
-  - :name: View
-    :description: Show Alerts List
-    :feature_type: view
-    :identifier: alert_list
-  - :name: Most Recent
-    :description: Show Most Recent Alerts
-    :feature_type: view
-    :identifier: alerts_most_recent
+  - :name: Alerts
+    :description: Alerts
+    :feature_type: node
+    :identifier: monitor_alerts
+    :children:
+    - :name: Overview
+      :description: Alerts Overview
+      :feature_type: view
+      :identifier: monitor_alerts_overview
+    - :name: View
+      :description: Show Alerts List
+      :feature_type: view
+      :identifier: monitor_alerts_list
+    - :name: Most Recent
+      :description: Show Most Recent Alerts
+      :feature_type: view
+      :identifier: monitor_alerts_most_recent
