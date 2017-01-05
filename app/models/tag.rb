@@ -11,8 +11,6 @@ class Tag < ApplicationRecord
   def self.list(taggable, options = {})
     ns = Tag.get_namespace(options)
     if ns[0..7] == "/virtual"
-      ns = Tag.get_namespace(options)
-
       predicate = ns.split("/")[2..-1] # throw away /virtual
 
       begin
