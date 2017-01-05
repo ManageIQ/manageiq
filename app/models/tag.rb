@@ -19,9 +19,6 @@ class Tag < ApplicationRecord
 
     predicate = ns.split("/")[2..-1] # throw away /virtual
 
-    # p "ns: [#{ns}]"
-    # p "predicate: [#{predicate.inspect}]"
-
     begin
       predicate.inject(taggable) do |target, method|
         target.public_send method
