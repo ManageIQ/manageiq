@@ -19,7 +19,7 @@ describe "Providers API" do
   let(:default_credentials) { {"userid" => "admin1", "password" => "password1"} }
   let(:metrics_credentials) { {"userid" => "admin2", "password" => "password2", "auth_type" => "metrics"} }
   let(:compound_credentials) { [default_credentials, metrics_credentials] }
-  let(:openshift_credentials) do
+  let(:containers_credentials) do
     {
       "auth_type" => "bearer",
       "auth_key"  => SecureRandom.hex
@@ -42,6 +42,7 @@ describe "Providers API" do
       -----END CERTIFICATE-----
     EOPEM
   end
+
   let(:sample_vmware) do
     {
       "type"      => "ManageIQ::Providers::Vmware::InfraManager",
@@ -61,11 +62,17 @@ describe "Providers API" do
       "certificate_authority" => certificate_authority,
     }
   end
-  let(:sample_openshift) do
+
+  CONTAINERS_CLASSES = {
+    "Kubernetes"          => "ManageIQ::Providers::Kubernetes::ContainerManager",
+    "OpenshiftEnterprise" => "ManageIQ::Providers::OpenshiftEnterprise::ContainerManager",
+    "Openshift"           => "ManageIQ::Providers::Openshift::ContainerManager",
+  }.freeze
+  let(:sample_containers) do
     {
-      "type"                  => "ManageIQ::Providers::Openshift::ContainerManager",
+      "type"                  => containers_class,
       "name"                  => "sample openshift",
-      "port"                  => 8443,
+      "port"                  => 18_443,
       "hostname"              => "sample_openshift.provider.com",
       "ipaddress"             => "100.200.300.3",
       "security_protocol"     => "something",
@@ -77,7 +84,7 @@ describe "Providers API" do
       "endpoint"       => {
         "role"                  => "default",
         "hostname"              => "sample_openshift_multi_end_point.provider.com",
-        "port"                  => 8444,
+        "port"                  => 18_443,
         "security_protocol"     => "something",
         "certificate_authority" => certificate_authority,
       },
@@ -92,7 +99,7 @@ describe "Providers API" do
       "endpoint"       => {
         "role"                  => "default",
         "hostname"              => "sample_openshift_multi_end_point.provider.com",
-        "port"                  => "8443",
+        "port"                  => "28443",
         "security_protocol"     => "something else",
         "certificate_authority" => certificate_authority,
       },
@@ -107,7 +114,7 @@ describe "Providers API" do
       "endpoint"       => {
         "role"                  => "hawkular",
         "hostname"              => "sample_openshift_multi_end_point.provider.com",
-        "port"                  => "443",
+        "port"                  => 1_443,
         "security_protocol"     => "something",
         "certificate_authority" => certificate_authority,
       },
@@ -117,10 +124,10 @@ describe "Providers API" do
       }
     }
   end
-  let(:sample_openshift_multi_end_point) do
+  let(:sample_containers_multi_end_point) do
     {
-      "type"                      => "ManageIQ::Providers::Openshift::ContainerManager",
-      "name"                      => "sample openshift with multiple endpoints",
+      "type"                      => containers_class,
+      "name"                      => "sample containers provider with multiple endpoints",
       "connection_configurations" => [default_connection, hawkular_connection]
     }
   end
@@ -358,24 +365,32 @@ describe "Providers API" do
       expect(endpoint).to have_endpoint_attributes(sample_rhevm)
     end
 
-    it "supports openshift creation with auth_key specified" do
-      api_basic_authorize collection_action_identifier(:providers, :create)
+    CONTAINERS_CLASSES.each do |name, klass|
+      context name do
+        let(:containers_class) { klass }
 
-      run_post(providers_url, sample_openshift.merge("credentials" => [openshift_credentials]))
+        it "supports creation with auth_key specified" do
+          pending if name != "Openshift"
 
-      expect(response).to have_http_status(:ok)
-      expected = {
-        "results" => [
-          a_hash_including({"id" => kind_of(Integer)}.merge(sample_openshift.except(*ENDPOINT_ATTRS)))
-        ]
-      }
-      expect(response.parsed_body).to include(expected)
+          api_basic_authorize collection_action_identifier(:providers, :create)
 
-      provider_id = response.parsed_body["results"].first["id"]
-      expect(ExtManagementSystem.exists?(provider_id)).to be_truthy
-      ems = ExtManagementSystem.find(provider_id)
-      expect(ems.authentications.size).to eq(1)
-      expect(ems).to have_endpoint_attributes(sample_openshift)
+          run_post(providers_url, sample_containers.merge("credentials" => [containers_credentials]))
+
+          expect(response).to have_http_status(:ok)
+          expected = {
+            "results" => [
+              a_hash_including({"id" => kind_of(Integer)}.merge(sample_containers.except(*ENDPOINT_ATTRS)))
+            ]
+          }
+          expect(response.parsed_body).to include(expected)
+
+          provider_id = response.parsed_body["results"].first["id"]
+          expect(ExtManagementSystem.exists?(provider_id)).to be_truthy
+          ems = ExtManagementSystem.find(provider_id)
+          expect(ems.authentications.size).to eq(1)
+          expect(ems).to have_endpoint_attributes(sample_containers)
+        end
+      end
     end
 
     it "supports single provider creation via action" do
@@ -457,33 +472,40 @@ describe "Providers API" do
       expect(ExtManagementSystem.exists?(p2_id)).to be_truthy
     end
 
-    it "supports provider with multiple endpoints creation" do
-      def token(connection)
-        connection["authentication"]["auth_key"]
+    CONTAINERS_CLASSES.each do |name, klass|
+      context name do
+        let(:containers_class) { klass }
+
+        def token(connection)
+          connection["authentication"]["auth_key"]
+        end
+
+        it "supports provider with multiple endpoints creation" do
+          pending("https://github.com/ManageIQ/manageiq/issues/13306") if name == "Kubernetes"
+
+          api_basic_authorize collection_action_identifier(:providers, :create)
+
+          run_post(providers_url, gen_request(:create, sample_containers_multi_end_point))
+
+          expect(response).to have_http_status(:ok)
+          expected = {"id"   => a_kind_of(Integer),
+                      "type" => containers_class,
+                      "name" => "sample containers provider with multiple endpoints"}
+          results = response.parsed_body["results"]
+          expect(results.first).to include(expected)
+
+          provider_id = results.first["id"]
+          expect(ExtManagementSystem.exists?(provider_id)).to be_truthy
+          provider = ExtManagementSystem.find(provider_id)
+          expect(provider).to have_endpoint_attributes(default_connection["endpoint"])
+          expect(provider.authentication_token).to eq(token(default_connection))
+
+          expect(provider.connection_configurations.hawkular.endpoint).to have_endpoint_attributes(
+            hawkular_connection["endpoint"]
+          )
+          expect(provider.authentication_token(:hawkular)).to eq(token(hawkular_connection))
+        end
       end
-
-      api_basic_authorize collection_action_identifier(:providers, :create)
-
-      run_post(providers_url, gen_request(:create, sample_openshift_multi_end_point))
-
-      expect(response).to have_http_status(:ok)
-      expected = {"id"   => a_kind_of(Integer),
-                  "type" => "ManageIQ::Providers::Openshift::ContainerManager",
-                  "name" => "sample openshift with multiple endpoints"}
-      results = response.parsed_body["results"]
-      expect(results.first).to include(expected)
-
-      provider_id = results.first["id"]
-      expect(ExtManagementSystem.exists?(provider_id)).to be_truthy
-      provider = ExtManagementSystem.find(provider_id)
-
-      expect(provider).to have_endpoint_attributes(default_connection["endpoint"])
-      expect(provider.authentication_token).to eq(token(default_connection))
-
-      expect(provider.connection_configurations.hawkular.endpoint).to have_endpoint_attributes(
-        hawkular_connection["endpoint"]
-      )
-      expect(provider.authentication_token(:hawkular)).to eq(token(hawkular_connection))
     end
   end
 
@@ -543,46 +565,52 @@ describe "Providers API" do
       expect(provider.authentication_userid).to eq("superadmin")
     end
 
-    it "does not schedule a new credentials check if endpoint does not change" do
-      api_basic_authorize collection_action_identifier(:providers, :edit)
+    CONTAINERS_CLASSES.each do |name, klass|
+      context name do
+        let(:containers_class) { klass }
 
-      provider = FactoryGirl.create(:ext_management_system, sample_openshift_multi_end_point)
-      MiqQueue.where(:method_name => "authentication_check_types",
-                     :class_name  => "ExtManagementSystem",
-                     :instance_id => provider.id).delete_all
+        it "does not schedule a new credentials check if endpoint does not change" do
+          api_basic_authorize collection_action_identifier(:providers, :edit)
 
-      run_post(providers_url(provider.id), gen_request(:edit,
-                                                       "connection_configurations" => [default_connection,
-                                                                                       hawkular_connection]))
+          provider = FactoryGirl.create(:ext_management_system, sample_containers_multi_end_point)
+          MiqQueue.where(:method_name => "authentication_check_types",
+                         :class_name  => "ExtManagementSystem",
+                         :instance_id => provider.id).delete_all
 
-      queue_jobs = MiqQueue.where(:method_name => "authentication_check_types",
-                                  :class_name  => "ExtManagementSystem",
-                                  :instance_id => provider.id)
-      expect(queue_jobs).to be
-      expect(queue_jobs.length).to eq(0)
-    end
+          run_post(providers_url(provider.id), gen_request(:edit,
+                                                           "connection_configurations" => [default_connection,
+                                                                                           hawkular_connection]))
 
-    it "schedules a new credentials check if endpoint change" do
-      api_basic_authorize collection_action_identifier(:providers, :edit)
+          queue_jobs = MiqQueue.where(:method_name => "authentication_check_types",
+                                      :class_name  => "ExtManagementSystem",
+                                      :instance_id => provider.id)
+          expect(queue_jobs).to be
+          expect(queue_jobs.length).to eq(0)
+        end
 
-      provider = FactoryGirl.create(:ext_management_system, sample_openshift_multi_end_point)
-      MiqQueue.where(:method_name => "authentication_check_types",
-                     :class_name  => "ExtManagementSystem",
-                     :instance_id => provider.id).delete_all
+        it "schedules a new credentials check if endpoint change" do
+          api_basic_authorize collection_action_identifier(:providers, :edit)
 
-      run_post(providers_url(provider.id), gen_request(:edit,
-                                                       "connection_configurations" => [updated_connection,
-                                                                                       hawkular_connection]))
+          provider = FactoryGirl.create(:ext_management_system, sample_containers_multi_end_point)
+          MiqQueue.where(:method_name => "authentication_check_types",
+                         :class_name  => "ExtManagementSystem",
+                         :instance_id => provider.id).delete_all
 
-      provider.reload
-      expect(provider).to have_endpoint_attributes(updated_connection["endpoint"])
+          run_post(providers_url(provider.id), gen_request(:edit,
+                                                           "connection_configurations" => [updated_connection,
+                                                                                           hawkular_connection]))
 
-      queue_jobs = MiqQueue.where(:method_name => "authentication_check_types",
-                                  :class_name  => "ExtManagementSystem",
-                                  :instance_id => provider.id)
-      expect(queue_jobs).to be
-      expect(queue_jobs.length).to eq(1)
-      expect(queue_jobs[0].args[0][0]).to eq(:bearer)
+          provider.reload
+          expect(provider).to have_endpoint_attributes(updated_connection["endpoint"])
+
+          queue_jobs = MiqQueue.where(:method_name => "authentication_check_types",
+                                      :class_name  => "ExtManagementSystem",
+                                      :instance_id => provider.id)
+          expect(queue_jobs).to be
+          expect(queue_jobs.length).to eq(1)
+          expect(queue_jobs[0].args[0][0]).to eq(:bearer)
+        end
+      end
     end
 
     it "supports additions of credentials" do
