@@ -15,7 +15,7 @@ class Tag < ApplicationRecord
       begin
         predicate.inject(taggable) { |target, method| target.public_send method }
       rescue NoMethodError
-        return ""
+        ""
       end
     else
       filter_ns(taggable.tags, ns).join(" ")
