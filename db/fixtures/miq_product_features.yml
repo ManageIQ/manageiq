@@ -5980,7 +5980,6 @@
       :feature_type: view
       :identifier: ems_object_storage_timeline
 
-
 # Monitor
 - :name: Monitor
   :description: Everything under Monitor
@@ -5996,11 +5995,11 @@
       :description: Alerts Overview
       :feature_type: view
       :identifier: monitor_alerts_overview
-    - :name: View
+    - :name: All Alerts
       :description: Show Alerts List
       :feature_type: view
       :identifier: monitor_alerts_list
-    - :name: Most Recent
+    - :name: Most Recent Alerts
       :description: Show Most Recent Alerts
       :feature_type: view
       :identifier: monitor_alerts_most_recent
