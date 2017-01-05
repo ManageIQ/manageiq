@@ -26,7 +26,7 @@ class Tag < ApplicationRecord
       predicate.inject(taggable) do |target, method|
         target.public_send method
       end
-    rescue NoMethodError => err
+    rescue NoMethodError
       return ""
     end
   end
