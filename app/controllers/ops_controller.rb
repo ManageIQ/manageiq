@@ -209,6 +209,10 @@ class OpsController < ApplicationController
     rbac_group_get_details(group_id)
 
     presenter = ExplorerPresenter.new
+
+    # needed to make tooolbar Configuration > Edit still work after lazy-loading a tab
+    presenter[:record_id] = group_id
+
     r = proc { |opts| render_to_string(opts) }
 
     rendered = case tab_id
