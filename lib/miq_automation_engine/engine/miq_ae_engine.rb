@@ -1,16 +1,12 @@
 require 'miq_ae_exception'
-require 'engine/drb_remote_invoker'
-require 'engine/miq_ae_workspace_runtime'
-require 'engine/miq_ae_object'
-require 'engine/miq_ae_method'
-require 'engine/miq_ae_builtin_method'
 require 'engine/miq_ae_service'
 require 'engine/miq_ae_service_model_base'
 require 'engine/miq_ae_event'
 require 'uri'
-require 'engine/miq_ae_uri'
-require 'engine/miq_ae_path'
-require 'engine/miq_ae_domain_search'
+
+Dir.glob(Pathname.new(__dir__).join("miq_ae_engine/*.rb")) do |file|
+  require_relative "miq_ae_engine/#{File.basename(file)}"
+end
 
 module MiqAeEngine
   DEFAULT_ATTRIBUTES = %w( User::user MiqServer::miq_server object_name )
