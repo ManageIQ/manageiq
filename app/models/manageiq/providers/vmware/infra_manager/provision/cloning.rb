@@ -90,8 +90,8 @@ module ManageIQ::Providers::Vmware::InfraManager::Provision::Cloning
     _log.info("Destination Cluster:        [#{clone_options[:cluster].name} (#{clone_options[:cluster].ems_ref})]")   if clone_options[:cluster]
     _log.info("Destination Host:           [#{clone_options[:host].name} (#{clone_options[:host].ems_ref})]")         if clone_options[:host]
     _log.info("Destination Datastore:      [#{clone_options[:datastore].name} (#{clone_options[:datastore].ems_ref})]")
-    _log.info("Destination Folder:         [#{clone_options[:folder].name}] (#{clone_options[:folder].ems_ref})")
-    _log.info("Destination Resource Pool:  [#{clone_options[:pool].name} (#{clone_options[:pool].ems_ref})]")
+    _log.info("Destination Folder:         [#{clone_options[:folder].name}] (#{clone_options[:folder].ems_ref})") if clone_options[:folder]
+    _log.info("Destination Resource Pool:  [#{clone_options[:pool].name} (#{clone_options[:pool].ems_ref})]") if clone_options[:pool]
     _log.info("Power on after cloning:     [#{clone_options[:power_on].inspect}]")
     _log.info("Create Linked Clone:        [#{clone_options[:linked_clone].inspect}]")
     _log.info("Selected Source Snapshot:   [#{clone_options[:snapshot].name} (#{clone_options[:snapshot].ems_ref})]") if clone_options[:linked_clone]
