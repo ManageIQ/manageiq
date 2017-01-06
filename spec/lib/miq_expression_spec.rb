@@ -1836,8 +1836,7 @@ describe MiqExpression do
 
     it "with valid model-in_field" do
       @field = "Vm-cpu_limit"
-      allow(described_class).to receive_messages(:col_type => :some_type)
-      expect(subject).to eq(:some_type)
+      expect(subject).to eq(:integer)
     end
 
     it "with invalid model-in_field" do
@@ -1847,8 +1846,7 @@ describe MiqExpression do
 
     it "with valid model.association-in_field" do
       @field = "Vm.guest_applications-vendor"
-      allow(described_class).to receive_messages(:col_type => :some_type)
-      expect(subject).to eq(:some_type)
+      expect(subject).to eq(:string)
     end
 
     it "with invalid model.association-in_field" do
@@ -2158,6 +2156,36 @@ describe MiqExpression do
       )
     end
 
+    it "return column info for model-virtual field" do
+      field = "VmInfra-active"
+      col_info = described_class.get_col_info(field)
+      expect(col_info).to match(
+        :data_type                      => :boolean,
+        :excluded_by_preprocess_options => false,
+        :format_sub_type                => :boolean,
+        :include                        => {},
+        :tag                            => false,
+        :virtual_column                 => true,
+        :sql_support                    => true,
+        :virtual_reflection             => false
+      )
+    end
+
+    it "return column info for model-invalid" do
+      field = "ManageIQ::Providers::InfraManager::Vm-invalid"
+      col_info = described_class.get_col_info(field)
+      expect(col_info).to match(
+        :data_type                      => nil,
+        :excluded_by_preprocess_options => false,
+        :format_sub_type                => nil,
+        :include                        => {},
+        :tag                            => false,
+        :virtual_column                 => false,
+        :sql_support                    => false,
+        :virtual_reflection             => false
+      )
+    end
+
     it "return column info for managed-field" do
       tag = "managed-location"
       col_info = described_class.get_col_info(tag)
@@ -2238,6 +2266,35 @@ describe MiqExpression do
         :excluded_by_preprocess_options => false,
         :format_sub_type                => :bytes,
         :include                        => {},
+        :tag                            => false,
+        :virtual_column                 => true,
+        :sql_support                    => false,
+        :virtual_reflection             => true
+      )
+    end
+
+    it "return column info for model.virtualassociation..virtualassociation-invalid" do
+      field = "ManageIQ::Providers::InfraManager::Vm.service.user.vms-invalid"
+      col_info = described_class.get_col_info(field)
+      expect(col_info).to match(
+        :data_type                      => nil,
+        :excluded_by_preprocess_options => false,
+        :format_sub_type                => nil,
+        :include                        => {},
+        :tag                            => false,
+        :virtual_column                 => false,
+        :sql_support                    => false,
+        :virtual_reflection             => true
+      )
+    end
+
+    it "return column info for model.invalid-active" do
+      field = "ManageIQ::Providers::InfraManager::Vm.invalid-active"
+      col_info = described_class.get_col_info(field)
+      expect(col_info).to match(
+        :data_type                      => nil,
+        :excluded_by_preprocess_options => false,
+        :include                        => {:invalid => {}},
         :tag                            => false,
         :virtual_column                 => true,
         :sql_support                    => false,
