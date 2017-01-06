@@ -19,31 +19,6 @@ class Tag < ApplicationRecord
     Tag.filter_ns(query, options[:ns])
   end
 
-  def self.all_tags(options = {})
-    query = Tag.scoped
-    ns    = Tag.get_namespace(options)
-    query = query.where(Tag.arel_table[:name].matches "#{ns}%") unless ns.blank?
-    Tag.filter_ns(query, ns)
-  end
-
-  def self.tag_count(olist, name, options = {})
-    ns  = Tag.get_namespace(options)
-    tag = find_by_name(File.join(ns, name))
-    return 0 if tag.nil?
-
-    if olist.kind_of?(MIQ_Report) # support for ruport
-      klass        = olist.db
-      taggable_ids = olist.table.data.collect { |o| o.data["id"].to_i }
-    else
-      klass        = olist[0].class # assumes all objects in list are of the same class
-      taggable_ids = olist.collect { |o| o.id.to_i }
-    end
-
-    Tagging.where(:tag_id        => tag.id,
-                  :taggable_id   => taggable_ids,
-                  :taggable_type => klass.base_class.name).count
-  end
-
   def self.parse(list)
     unless list.kind_of? Array
       tag_names = []

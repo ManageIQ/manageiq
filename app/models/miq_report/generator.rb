@@ -114,10 +114,6 @@ module MiqReport::Generator
     result
   end
 
-  def report
-    @report ||= YAML.object_maker(MIQ_Report, attributes)
-  end
-
   def queue_generate_table(options = {})
     options[:userid] ||= "system"
     options[:mode] ||= "async"
