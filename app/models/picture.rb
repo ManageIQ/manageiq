@@ -9,7 +9,7 @@ class Picture < ApplicationRecord
 
   URL_ROOT          = Rails.root.join("public").to_s
   DEFAULT_DIRECTORY = File.join(URL_ROOT, "pictures")
-  Dir.mkdir(DEFAULT_DIRECTORY) unless File.directory?(DEFAULT_DIRECTORY)
+  FileUtils.mkdir_p(DEFAULT_DIRECTORY)
 
   def self.directory
     @directory || DEFAULT_DIRECTORY
@@ -17,7 +17,7 @@ class Picture < ApplicationRecord
 
   def self.directory=(value)
     dir = File.join(URL_ROOT, url_path(value, URL_ROOT))
-    Dir.mkdir(dir) unless File.directory?(dir)
+    FileUtils.mkdir_p(dir)
     @directory = dir
   end
 
