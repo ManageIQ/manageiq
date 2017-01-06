@@ -68,10 +68,13 @@ module ManagerRefresh
       # load_from_db.select(selected).find_each do |record|
       load_from_db.find_each do |record|
         if custom_manager_uuid.nil?
-          self.data_index[object_index(record)] = record
+          index = object_index(record)
         else
-          self.data_index[stringify_reference(custom_manager_uuid.call(record))] = record
+          index = stringify_reference(custom_manager_uuid.call(record))
         end
+        self.data_index[index] = new_inventory_object(record.attributes.symbolize_keys)
+        # TODO(lsmola) get rid of storing objects, they are causing memory bloat
+        self.data_index[index].object = record
       end
     end
 
