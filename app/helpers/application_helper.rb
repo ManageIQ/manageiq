@@ -1347,8 +1347,8 @@ module ApplicationHelper
   end
 
   def miq_tab_header(id, active = nil, options = {}, &_block)
-    tag_options = {:class     => "#{options[:class]} #{active == id ? 'active' : ''}",
-                   :id        => "#{id}_tab"}
+    tag_options = {:class => "#{options[:class]} #{active == id ? 'active' : ''}",
+                   :id    => "#{id}_tab"}
 
     tag_options['ng-click'] = options['ng-click'] if options.key?('ng-click')
     tag_options[:onclick] = options[:onclick] if options.key?(:onclick)
