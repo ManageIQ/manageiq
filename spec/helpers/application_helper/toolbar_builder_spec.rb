@@ -592,13 +592,17 @@ describe ApplicationHelper do
       end
     end
 
-    context "when with vm_miq_request_new" do
-      it "and @lastaction = show, @display = vms" do
-        @id = "vm_miq_request_new"
-        @lastaction = "show"
-        @display = "vms"
-        stub_user(:features => :all)
-        expect(subject).to be_falsey
+    context 'last action set to show' do
+      let(:lastaction) { 'show' }
+      context 'requested to display instances' do
+        let(:display) { 'instances' }
+        it 'returns with false' do
+          @lastaction = lastaction
+          @display = display
+          @id = 'vm_miq_request_new'
+          stub_user(:features => :all)
+          expect(subject).to be_falsey
+        end
       end
     end
 
