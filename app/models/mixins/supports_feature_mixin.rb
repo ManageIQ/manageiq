@@ -85,6 +85,7 @@ module SupportsFeatureMixin
     :events                     => 'Query for events',
     :launch_cockpit             => 'Launch Cockpit UI',
     :live_migrate               => 'Live Migration',
+    :metrics                    => 'Metrics',
     :migrate                    => 'Migration',
     :provisioning               => 'Provisioning',
     :publish                    => 'Publishing',
