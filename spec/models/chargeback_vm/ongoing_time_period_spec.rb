@@ -16,7 +16,8 @@ describe ChargebackVm do
   let(:tag) { Tag.find_by_name('/managed/environment/prod') }
   let(:vm) do
     ems = FactoryGirl.create(:ems_vmware)
-    vm = FactoryGirl.create(:vm_vmware, :name => 'test_vm', :evm_owner => admin, :ems_ref => 'ems_ref')
+    vm = FactoryGirl.create(:vm_vmware, :name => 'test_vm', :evm_owner => admin, :ems_ref => 'ems_ref',
+                            :created_on => start_of_all_intervals)
     vm.tag_with(tag.name, :ns => '*')
     host = FactoryGirl.create(:host, :hardware => FactoryGirl.create(:hardware,
                                                                      :memory_mb => 8124, :cpu_total_cores => 1,
