@@ -1,4 +1,5 @@
 inherit_from:
 # this is downloaded by .codeclimate.yml
-- .rubocop_cc_mangeiq.yml
+- .rubocop_base.yml
+- .rubocop_cc_base.yml
 - .rubocop_local.yml
