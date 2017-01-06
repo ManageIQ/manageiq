@@ -216,7 +216,7 @@ module MiqAeCustomizationController::Dialogs
       end
 
       begin
-        dialog_set_record_vars(dialog)
+        dialog_set_record_vars(dialog, false)
       rescue StandardError => @bang
         add_flash(@bang.message, :error)
         @changed = true
@@ -713,6 +713,16 @@ module MiqAeCustomizationController::Dialogs
       if needs_dropdown_values?
         add_flash(_("Dropdown elements require some entries"), :error)
         res = false
+      end
+    end
+
+    # validate dialog's children when changing tree node or trying to add another items under a node
+    if params[:typ] == @sb[:node_typ] || params[:action] == "tree_select"
+      begin
+        dialog_set_record_vars(@edit[:dialog], true)
+      rescue => bang
+        res = false
+        add_flash(bang.message, :error)
       end
     end
     res
@@ -1252,7 +1262,7 @@ module MiqAeCustomizationController::Dialogs
     session[:edit] = @edit
   end
 
-  def dialog_set_record_vars(dialog)
+  def dialog_set_record_vars(dialog, validate)
     dialog.label       = @edit[:new][:label]
     dialog.description = @edit[:new][:description]
     temp_buttons = []
@@ -1346,8 +1356,7 @@ module MiqAeCustomizationController::Dialogs
           dialog.dialog_tabs << dt
         end
       end
-
-      dialog.save!
+      validate ? dialog.validate! : dialog.save!
     end
   end
 

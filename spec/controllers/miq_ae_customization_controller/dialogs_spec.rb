@@ -184,5 +184,62 @@ describe MiqAeCustomizationController do
       controller.send(:dialog_validate)
       expect(assigns(:flash_array)).to eq(nil)
     end
+
+    context "#dialog_add_tab" do
+      before do
+        login_as FactoryGirl.create(:user, :features => ["dialog_add_tab"])
+        @dialog = FactoryGirl.create(:dialog,
+                                     :label       => "Test Label",
+                                     :description => "Test Description"
+                                    )
+        tree_hash = {
+          :node_typ    => 'tab',
+          :active_tree => :dialog_edit_tree,
+          :trees       => {
+            :dialog_edit_tree => {
+              :active_node => "root_-1"
+            }
+          }
+        }
+        controller.instance_variable_set(:@sb, tree_hash)
+        new_hash = {
+          :label       => "D1",
+          :description => "D1",
+          :buttons     => ["submit"],
+          :tabs        => [
+            {
+              :label       => "T1",
+              :description => "T1"
+            }
+          ]
+        }
+        edit = {
+          :dialog         => @dialog,
+          :tab_label      => 'T1',
+          :key            => "dialog_edit__#{@dialog.id}",
+          :new            => new_hash,
+          :dialog_buttons => ['submit, cancel']
+        }
+
+        controller.instance_variable_set(:@edit, edit)
+        session[:edit] = edit
+      end
+
+      it "do not allow adding another tab until one in progress has children" do
+        new_hash = {
+          :label       => "Dialog 1",
+          :description => "Dialog 1",
+          :buttons     => ["submit"],
+          :tabs        => [
+            {:label => "Tab 1", :description => "Tab 1"}
+          ]
+        }
+        assigns(:edit)[:new] = new_hash
+        controller.instance_variable_set(:@_params, :id => @dialog.id.to_s, :typ => "tab", :pressed => "dialog_add_tab")
+        allow(controller).to receive(:render)
+        controller.send(:x_button)
+        expect(@dialog.dialog_tabs[0].errors.messages[:base]).to include("Tab Tab 1 must have at least one Box")
+      end
+    end
   end
 end
