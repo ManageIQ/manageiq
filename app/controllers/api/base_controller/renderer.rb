@@ -4,16 +4,16 @@ module Api
       #
       # Helper proc for rendering a collection of type specified.
       #
-      def render_collection_type(type, id, is_subcollection = false)
+      def render_collection_type(type, id)
         klass = collection_class(type)
-        opts  = {:name => type.to_s, :is_subcollection => is_subcollection, :expand_actions => true}
+        opts  = {:name => type.to_s, :is_subcollection => @req.subcollection?, :expand_actions => true}
         if id
           render_resource type, resource_search(id, type, klass), opts
         else
           opts[:count]            = klass.count
           opts[:expand_resources] = @req.expand?(:resources)
 
-          res = collection_search(is_subcollection, type, klass)
+          res = collection_search(@req.subcollection?, type, klass)
 
           opts[:subcount] = res.length
 
