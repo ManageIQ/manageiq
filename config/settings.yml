@@ -107,6 +107,9 @@
   :ems_azure:
     :disabled_regions: []
     :additional_regions: {}
+    :disabled_features:
+      :events: ['usgovarizona', 'usgoviowa', 'usgovtexas', 'usgovvirginia']
+      :metrics: ['usgovarizona', 'usgoviowa', 'usgovtexas', 'usgovvirginia']
 :ems_events:
   :history:
     :keep_ems_events: 6.months
