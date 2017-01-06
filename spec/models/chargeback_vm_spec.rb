@@ -53,7 +53,8 @@ describe ChargebackVm do
     c = FactoryGirl.create(:classification, :name => "prod", :description => "Production", :parent_id => cat.id)
     @tag = Tag.find_by_name("/managed/environment/prod")
 
-    @vm1 = FactoryGirl.create(:vm_vmware, :name => "test_vm", :evm_owner => admin, :ems_ref => "ems_ref")
+    @vm1 = FactoryGirl.create(:vm_vmware, :name => "test_vm", :evm_owner => admin, :ems_ref => "ems_ref",
+                              :created_on => month_beginning)
     @vm1.tag_with(@tag.name, :ns => '*')
 
     @host1   = FactoryGirl.create(:host, :hardware => FactoryGirl.create(:hardware, :memory_mb => 8124, :cpu_total_cores => 1, :cpu_speed => 9576), :vms => [@vm1])
@@ -527,7 +528,7 @@ describe ChargebackVm do
 
   context 'for SCVMM (hyper-v)' do
     let!(:vm1) do
-      vm = FactoryGirl.create(:vm_microsoft)
+      vm = FactoryGirl.create(:vm_microsoft, :created_on => report_run_time - 1.day)
       vm.tag_with(@tag.name, :ns => '*')
       vm
     end
