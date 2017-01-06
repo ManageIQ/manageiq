@@ -871,7 +871,7 @@ module ApplicationController::Performance
     # Grab the first (and should be only) chart column
     col = chart[:columns].first
     # Create the new chart columns for each tag
-    chart[:columns] = rpt.extras[:group_by_tags].collect { |t| col + "_" + t }
+    chart[:columns] ||= rpt.extras[:group_by_tags].collect { |t| col + "_" + t }
   end
 
   def gen_perf_chart(chart, rpt, idx, zoom_action)
