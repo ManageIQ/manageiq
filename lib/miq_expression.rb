@@ -524,6 +524,7 @@ class MiqExpression
       operands = operands2rubyvalue(operator, exp[operator], context_type)
       clause = operands.join(" #{normalize_ruby_operator(operator)} ")
     when "contains"
+      exp[operator]["tag"] ||= exp[operator]["field"]
       operands = operands2rubyvalue(operator, exp[operator], context_type)
       clause = operands.join(" #{normalize_operator(operator)} ")
     when "find"
@@ -912,7 +913,6 @@ class MiqExpression
   def self.operands2rubyvalue(operator, ops, context_type)
     # puts "Enter: operands2rubyvalue: operator: #{operator}, ops: #{ops.inspect}"
     operator = operator.downcase
-    ops["tag"] = ops["field"] if operator == "contains" && !ops["tag"] # process values in contains as tags
 
     if ops["tag"] && context_type != "hash"
       ref, val = value2tag(preprocess_managed_tag(ops["tag"]), ops["value"])
