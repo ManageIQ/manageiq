@@ -386,6 +386,14 @@ module VirtualAttributes
       end
     end
 
+    def attributes_builder
+      @attributes_builder ||= ::ActiveRecord::AttributeSet::Builder.new(attribute_types, primary_key) do |name|
+        unless columns_hash.key?(name) || virtual_attribute?(name)
+          _default_attributes[name].dup
+        end
+      end
+    end
+
     private
 
     def load_schema!
