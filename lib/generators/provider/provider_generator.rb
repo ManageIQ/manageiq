@@ -30,6 +30,8 @@ class ProviderGenerator < Rails::Generators::NamedBase
     empty_directory "app/models/manageiq/providers/#{provider_name}"
     template "bin/rails"
     template "bin/setup"
+    template "bin/update"
+    chmod "bin", 0755 & ~File.umask, :verbose => false
     template "config/initializers/gettext.rb"
     template "lib/manageiq/providers/%provider_name%.rb"
     template "lib/manageiq/providers/%provider_name%/engine.rb"
