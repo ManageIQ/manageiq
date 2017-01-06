@@ -21,7 +21,9 @@ module Metric::Capture
   end
 
   def self.concurrent_requests(interval_name)
-    ::Settings.performance.concurrent_requests[interval_name]
+    requests = ::Settings.performance.concurrent_requests[interval_name]
+    requests = 20 if requests < 20 && interval_name == 'realtime'
+    requests
   end
 
   def self.standard_capture_threshold(target)
