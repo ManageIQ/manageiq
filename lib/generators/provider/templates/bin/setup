@@ -1,29 +1,12 @@
 #!/usr/bin/env ruby
 require 'pathname'
 
-# path to your application root.
-APP_ROOT = Pathname.new File.expand_path('../../',  __FILE__)
+gem_root = Pathname.new(__dir__).join("..")
 
-Dir.chdir APP_ROOT do
-  if File.exist?("spec/manageiq")
-    puts "== Updating manageiq sample app =="
-    system "cd spec/manageiq && git pull"
-  else
-    puts "== Cloning manageiq sample app =="
-    system "git clone git@github.com:ManageIQ/manageiq.git --depth 1 spec/manageiq"
-  end
-
-  puts "== Installing dependencies =="
-  system "gem install bundler --conservative"
-  system "bundle check || bundle install"
-
-  unless File.exist?("spec/manageiq/config/database.yml")
-    puts "\n== Copying sample config/database.yml =="
-    system "cp spec/manageiq/config/database.pg.yml spec/manageiq/config/database.yml"
-  end
-
-  unless File.exist?("spec/manageiq/certs/v2_key")
-    puts "\n== Copying sample certs/v2_key =="
-    system "cp spec/manageiq/certs/v2_key.dev spec/manageiq/certs/v2_key"
-  end
+unless gem_root.join("spec/manageiq").exist?
+  puts "== Cloning manageiq sample app =="
+  system "git clone https://github.com/ManageIQ/manageiq.git --branch master --depth 1 spec/manageiq"
 end
+
+require gem_root.join("spec/manageiq/lib/manageiq/environment").to_s
+ManageIQ::Environment.manageiq_plugin_setup

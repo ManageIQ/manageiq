@@ -2,11 +2,17 @@ require "rails/generators/rails/app/app_generator"
 class ProviderGenerator < Rails::Generators::NamedBase
   source_root File.expand_path('templates', __dir__)
 
+  remove_class_option :skip_namespace
+
+  class_option :path, :type => :string, :default => 'plugins',
+               :desc => "Create provider at given path"
+
   alias provider_name file_name
 
   def initialize(*args)
     super
-    self.destination_root = File.expand_path(provider_name, File.expand_path('providers', destination_root))
+    provider_path = File.expand_path(options[:path], destination_root)
+    self.destination_root = File.expand_path("manageiq-providers-#{provider_name}", provider_path)
     empty_directory "."
     FileUtils.cd(destination_root)
   end
@@ -30,6 +36,8 @@ class ProviderGenerator < Rails::Generators::NamedBase
     empty_directory "app/models/manageiq/providers/#{provider_name}"
     template "bin/rails"
     template "bin/setup"
+    template "bin/update"
+    chmod "bin", 0755 & ~File.umask, :verbose => false
     template "config/initializers/gettext.rb"
     template "lib/manageiq/providers/%provider_name%.rb"
     template "lib/manageiq/providers/%provider_name%/engine.rb"
@@ -38,16 +46,15 @@ class ProviderGenerator < Rails::Generators::NamedBase
     empty_directory "spec/factories"
     empty_directory "spec/models/manageiq/providers/#{provider_name}"
     template "spec/spec_helper.rb"
-    template "tools/ci/before_install.sh"
   end
 
   def create_manageiq_gem
     data = <<EOT
 unless dependencies.detect { |d| d.name == "manageiq-providers-#{provider_name}" }
-  gem "manageiq-providers-#{provider_name}", :path => File.expand_path("providers/#{provider_name}", __dir__)
+  gem "manageiq-providers-#{provider_name}", :git => "https://github.com/ManageIQ/manageiq-providers-#{provider_name}", :branch => "master"
 end
 EOT
-    inject_into_file '../../Gemfile', data, :after => "# when using this Gemfile inside a providers Gemfile, the dependency for the provider is already declared\n"
+    inject_into_file Rails.root.join('Gemfile'), data, :after => "# when using this Gemfile inside a providers Gemfile, the dependency for the provider is already declared\n"
   end
 
   private
