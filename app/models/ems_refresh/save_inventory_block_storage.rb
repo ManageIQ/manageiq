@@ -7,8 +7,8 @@
 #   - backing_links
 #
 
-module EmsRefresh::SaveInventoryCinder
-  def save_ems_cinder_inventory(ems, hashes, target = nil)
+module EmsRefresh::SaveInventoryBlockStorage
+  def save_ems_block_storage_inventory(ems, hashes, target = nil)
     target = ems if target.nil?
     log_header = "EMS: [#{ems.name}], id: [#{ems.id}]"
 
@@ -32,9 +32,9 @@ module EmsRefresh::SaveInventoryCinder
     ]
 
     # Save and link other subsections
-    save_cinder_child_inventory(ems, hashes, child_keys, target)
+    save_block_storage_child_inventory(ems, hashes, child_keys, target)
 
-    link_cinder_volumes_to_base_snapshots(hashes[:cloud_volumes]) if hashes.key?(:cloud_volumes)
+    link_block_storage_volumes_to_base_snapshots(hashes[:cloud_volumes]) if hashes.key?(:cloud_volumes)
 
     ems.save!
     hashes[:id] = ems.id
@@ -44,7 +44,7 @@ module EmsRefresh::SaveInventoryCinder
     ems
   end
 
-  def save_cinder_cloud_volumes_inventory(ems, hashes, target = nil)
+  def save_block_storage_cloud_volumes_inventory(ems, hashes, target = nil)
     target = ems if target.nil?
 
     ems.cloud_volumes.reset
@@ -64,7 +64,7 @@ module EmsRefresh::SaveInventoryCinder
     store_ids_for_new_records(ems.cloud_volumes, hashes, :ems_ref)
   end
 
-  def save_cinder_cloud_volume_backups_inventory(ems, hashes, target = nil)
+  def save_block_storage_cloud_volume_backups_inventory(ems, hashes, target = nil)
     target = ems if target.nil?
 
     ems.cloud_volume_backups.reset
@@ -84,7 +84,7 @@ module EmsRefresh::SaveInventoryCinder
     store_ids_for_new_records(ems.cloud_volume_backups, hashes, :ems_ref)
   end
 
-  def save_cinder_cloud_volume_snapshots_inventory(ems, hashes, target = nil)
+  def save_block_storage_cloud_volume_snapshots_inventory(ems, hashes, target = nil)
     target = ems if target.nil?
 
     ems.cloud_volume_snapshots.reset
@@ -103,7 +103,7 @@ module EmsRefresh::SaveInventoryCinder
     store_ids_for_new_records(ems.cloud_volume_snapshots, hashes, :ems_ref)
   end
 
-  def save_cinder_backing_links_inventory(_ems, hashes, _target)
+  def save_block_storage_backing_links_inventory(_ems, hashes, _target)
     hashes.each do |dh|
       dh[:backing_id]   = dh[:backing_volume][:id]
       dh[:backing_type] = 'CloudVolume'
@@ -123,7 +123,7 @@ module EmsRefresh::SaveInventoryCinder
     end
   end
 
-  def link_cinder_volumes_to_base_snapshots(hashes)
+  def link_block_storage_volumes_to_base_snapshots(hashes)
     base_snapshot_to_volume = hashes.each_with_object({}) do |h, bsh|
       next unless (base_snapshot = h[:base_snapshot])
       (bsh[base_snapshot[:id]] ||= []) << h[:id]
@@ -134,7 +134,7 @@ module EmsRefresh::SaveInventoryCinder
     end
   end
 
-  def save_cinder_child_inventory(obj, hashes, child_keys, *args)
-    child_keys.each { |k| send("save_cinder_#{k}_inventory", obj, hashes[k], *args) if hashes.key?(k) }
+  def save_block_storage_child_inventory(obj, hashes, child_keys, *args)
+    child_keys.each { |k| send("save_block_storage_#{k}_inventory", obj, hashes[k], *args) if hashes.key?(k) }
   end
 end
