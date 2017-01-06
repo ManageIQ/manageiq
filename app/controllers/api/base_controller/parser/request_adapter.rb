@@ -68,6 +68,10 @@ module Api
           cid?(id) ? from_cid(id) : id
         end
 
+        def subcollection?
+          !!subcollection
+        end
+
         def expand?(what)
           expand_requested.include?(what.to_s)
         end

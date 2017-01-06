@@ -1,7 +1,7 @@
 module Api
   class BaseController
     module Manager
-      def update_collection(type, id, is_subcollection = false)
+      def update_collection(type, id)
         if @req.method == :put || @req.method == :patch
           raise BadRequestError,
                 "Must specify a resource id for the #{@req.method} HTTP method" if id.blank?
@@ -9,14 +9,14 @@ module Api
         end
 
         action = @req.action
-        target = target_resource_method(is_subcollection, type, action)
+        target = target_resource_method(type, action)
         raise BadRequestError,
               "Unimplemented Action #{action} for #{type} resources" unless respond_to?(target)
 
         if id
-          get_and_update_one_collection(is_subcollection, target, type, id)
+          get_and_update_one_collection(@req.subcollection?, target, type, id)
         else
-          get_and_update_multiple_collections(is_subcollection, target, type)
+          get_and_update_multiple_collections(@req.subcollection?, target, type)
         end
       end
 
@@ -82,8 +82,8 @@ module Api
 
       private
 
-      def target_resource_method(is_subcollection, type, action)
-        if is_subcollection
+      def target_resource_method(type, action)
+        if @req.subcollection?
           "#{type}_#{action}_resource"
         else
           target = "#{action}_resource"

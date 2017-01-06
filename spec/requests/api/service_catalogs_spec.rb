@@ -159,6 +159,21 @@ describe "Service Catalogs API" do
 
       run_post(service_catalogs_url(sc.id), gen_request(:edit, "description" => "updated sc description"))
 
+      expected = {
+        "service_templates" => a_hash_including(
+          "actions" => a_collection_containing_exactly(
+            a_hash_including(
+              "name"   => "assign",
+              "method" => "post",
+            ),
+            a_hash_including(
+              "name"   => "unassign",
+              "method" => "post",
+            )
+          )
+        )
+      }
+      expect(response.parsed_body).to include(expected)
       expect_single_resource_query("id" => sc.id, "name" => "sc", "description" => "updated sc description")
       expect(sc.reload.description).to eq("updated sc description")
     end
