@@ -1,6 +1,11 @@
 class TreeBuilderPolicySimulationResults < TreeBuilder
   # exp_build_string method needed
   include ApplicationController::ExpressionHtml
+  # Necessary for content_tag, concat and capture
+  include ActionView::Context
+  include ActionView::Helpers::TagHelper
+  include ActionView::Helpers::TextHelper
+  include ActionView::Helpers::CaptureHelper
 
   has_kids_for Hash, [:x_get_tree_hash_kids]
 
@@ -36,10 +41,18 @@ class TreeBuilderPolicySimulationResults < TreeBuilder
     end
   end
 
+ def prefixed_title(prefix, title)
+    capture do
+      concat content_tag(:strong, "#{prefix}:")
+      concat ' '
+      concat title
+    end
+  end
+
   def vm_nodes(data)
     data.sort_by! { |a| a[:name].downcase }.map do |node|
       {:id          => node[:id],
-       :text        => "<strong>VM:</strong> #{node[:name]}".html_safe,
+       :text        => prefixed_title(_('VM'), node[:name]),
        :image       => 'vm',
        :profiles    => node[:profiles],
        :cfmeNoClick => true}
@@ -49,7 +62,7 @@ class TreeBuilderPolicySimulationResults < TreeBuilder
   def profile_nodes(data)
     data.sort_by! { |a| a[:description].downcase }.map do |node|
       {:id          => node[:id],
-       :text        => "<strong>#{_('Profile:')}</strong> #{node[:description]}".html_safe,
+       :text        => prefixed_title(_('Profile'), node[:description]),
        :image       => node_icon(node[:result]),
        :policies    => node[:policies],
        :cfmeNoClick => true}
@@ -60,7 +73,7 @@ class TreeBuilderPolicySimulationResults < TreeBuilder
     data.sort_by! { |a| a[:description].downcase }.map do |node|
       active_caption = node[:active] ? "" : _(" (Inactive)")
       {:id          => node['id'],
-       :text        => "<strong>#{_('Policy')}#{active_caption}:</strong> #{node[:description]}".html_safe,
+       :text        => prefixed_title("#{_('Policy')}#{active_caption}", node[:description]),
        :image       => node_icon(node[:result]),
        :conditions  => node[:conditions],
        :actions     => node[:actions],
@@ -72,7 +85,7 @@ class TreeBuilderPolicySimulationResults < TreeBuilder
   def action_nodes(data)
     data.map do |node|
       {:id          => node[:id],
-       :text        => "<strong>#{_('Action:')}</strong> #{node[:description]}".html_safe,
+       :text        => prefixed_title(_('Action'), node[:description]),
        :image       => node_icon(node[:result]),
        :cfmeNoClick => true}
     end
@@ -81,7 +94,7 @@ class TreeBuilderPolicySimulationResults < TreeBuilder
   def condition_nodes(data)
     data.map do |node|
       {:id          => node[:id],
-       :text        => "<strong>#{_('Condition:')}</strong> #{node[:description]}".html_safe,
+       :text        => prefixed_title(_('Condition'), node[:description]),
        :image       => node_icon(node[:result]),
        :expression  => node[:expression],
        :cfmeNoClick => true}
@@ -91,7 +104,7 @@ class TreeBuilderPolicySimulationResults < TreeBuilder
   def scope_node(data)
     name, tip = exp_build_string(data)
     {:id          => nil,
-     :text        => "<strong>#{_('Scope:')}</strong> <span class='ws-wrap'>#{name}".html_safe,
+     :text        => prefixed_title(_('Scope'), name),
      :tip         => tip.html_safe,
      :image       => node_icon(data[:result]),
      :cfmeNoClick => true}
@@ -108,7 +121,7 @@ class TreeBuilderPolicySimulationResults < TreeBuilder
               'na'
             end
     {:id          => nil,
-     :text        => "<strong>#{_('Expression:')}</strong> <span class='ws-wrap'>#{name}".html_safe,
+     :text        => prefixed_title(_('Expression'), name),
      :tip         => tip.html_safe,
      :image       => image,
      :cfmeNoClick => true}
