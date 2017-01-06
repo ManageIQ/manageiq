@@ -26,14 +26,16 @@ describe ChargebackVm do
 
   let(:detail_params) do
     {
-      :chargeback_rate_detail_cpu_used          => {:tiers => [hourly_variable_tier_rate]},
-      :chargeback_rate_detail_cpu_allocated     => {:tiers => [count_hourly_variable_tier_rate]},
-      :chargeback_rate_detail_memory_allocated  => {:tiers => [hourly_variable_tier_rate]},
-      :chargeback_rate_detail_memory_used       => {:tiers => [hourly_variable_tier_rate]},
-      :chargeback_rate_detail_disk_io_used      => {:tiers => [hourly_variable_tier_rate]},
-      :chargeback_rate_detail_net_io_used       => {:tiers => [hourly_variable_tier_rate]},
-      :chargeback_rate_detail_storage_used      => {:tiers => [count_hourly_variable_tier_rate]},
-      :chargeback_rate_detail_storage_allocated => {:tiers => [count_hourly_variable_tier_rate]}
+      :chargeback_rate_detail_cpu_used           => {:tiers  => [hourly_variable_tier_rate]},
+      :chargeback_rate_detail_cpu_allocated      => {:tiers  => [count_hourly_variable_tier_rate]},
+      :chargeback_rate_detail_memory_allocated   => {:tiers  => [hourly_variable_tier_rate]},
+      :chargeback_rate_detail_memory_used        => {:tiers  => [hourly_variable_tier_rate]},
+      :chargeback_rate_detail_disk_io_used       => {:tiers  => [hourly_variable_tier_rate]},
+      :chargeback_rate_detail_net_io_used        => {:tiers  => [hourly_variable_tier_rate]},
+      :chargeback_rate_detail_storage_used       => {:tiers  => [count_hourly_variable_tier_rate]},
+      :chargeback_rate_detail_storage_allocated  => {:tiers  => [count_hourly_variable_tier_rate]},
+      :chargeback_rate_detail_fixed_compute_cost => {:tiers  => [hourly_variable_tier_rate],
+                                                     :detail => { :source => 'compute_1'} }
     }
   end
 
@@ -528,19 +530,6 @@ describe ChargebackVm do
       vm
     end
     let(:options) { base_options.merge(:interval => 'daily') }
-    let(:tier) do
-      FactoryGirl.create(:chargeback_tier, :start         => 0,
-                                           :finish        => Float::INFINITY,
-                                           :fixed_rate    => hourly_rate.to_s,
-                                           :variable_rate => 0.0)
-    end
-    let!(:rate_detail) do
-      FactoryGirl.create(:chargeback_rate_detail_fixed_compute_cost,
-                         :source             => "compute_1",
-                         :chargeback_rate_id => chargeback_rate.id,
-                         :chargeback_tiers   => [tier],
-                         :per_time           => 'hourly')
-    end
 
     subject { ChargebackVm.build_results_for_report_ChargebackVm(options).first.first }
 
