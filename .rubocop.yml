@@ -1,5 +1,5 @@
 inherit_from:
-- https://raw.githubusercontent.com/ManageIQ/guides/master/.rubocop.yml
+- https://raw.githubusercontent.com/ManageIQ/guides/master/.rubocop_base.yml
 #
 # Overrides
 #
