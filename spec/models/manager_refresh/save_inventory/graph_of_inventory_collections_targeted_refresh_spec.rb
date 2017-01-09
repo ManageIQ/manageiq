@@ -309,7 +309,7 @@ describe ManagerRefresh::SaveInventory do
           :manager_ref => [:vm_or_template])
         @data[:disks]     = ::ManagerRefresh::InventoryCollection.new(
           Disk,
-          :arel        => @ems.disks.joins(:hardware => :vm_or_template).where(:hardware => {:vms => {:ems_ref => vm_refs}}),
+          :arel        => @ems.disks.joins(:hardware => :vm_or_template).where('hardware' => {'vms' => {'ems_ref' => vm_refs}}),
           :manager_ref => [:hardware, :device_name])
 
         @vm_data_3       = vm_data(3).merge(
@@ -393,7 +393,7 @@ describe ManagerRefresh::SaveInventory do
           :manager_ref => [:vm_or_template])
         @data[:disks]           = ::ManagerRefresh::InventoryCollection.new(
           Disk,
-          :arel        => @ems.disks.joins(:hardware => :vm_or_template).where(:hardware => {:vms => {:ems_ref => vm_refs}}),
+          :arel        => @ems.disks.joins(:hardware => :vm_or_template).where('hardware' => {'vms' => {'ems_ref' => vm_refs}}),
           :manager_ref => [:hardware, :device_name])
         @data[:image_hardwares] = ::ManagerRefresh::InventoryCollection.new(
           Hardware,
