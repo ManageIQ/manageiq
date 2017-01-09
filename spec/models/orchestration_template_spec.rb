@@ -82,6 +82,7 @@ describe OrchestrationTemplate do
     let(:user_admin)   { FactoryGirl.create(:user_admin) }
     let(:tenant)       { FactoryGirl.create(:tenant) }
     let(:other_tenant) { FactoryGirl.create(:tenant) }
+    let!(:user)        { FactoryGirl.create(:user_with_group, :tenant => tenant) }
 
     before do
       allow(OrchestrationTemplate).to receive_messages(:eligible_manager_types =>
@@ -95,6 +96,12 @@ describe OrchestrationTemplate do
     it "lists all eligible managers for a template" do
       User.with_user(user_admin) do
         expect(@template.eligible_managers).to match_array([@aws, @openstack])
+      end
+    end
+
+    it "lists all eligible managers for a template regard to user's tenant" do
+      User.with_user(user) do
+        expect(@template.eligible_managers).to match_array([@openstack])
       end
     end
   end
