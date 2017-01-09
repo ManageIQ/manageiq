@@ -1,5 +1,5 @@
 module ManageIQ::Providers::Vmware
-  class InfraManager::RefreshParserDto < ManageIQ::Providers::InfraManager::RefreshParserDto
+  class InfraManager::RefreshParserInventoryObject < ManageIQ::Providers::InfraManager::RefreshParserInventoryObject
     include Vmdb::Logging
 
     def initialize(ems, options = Config::Options.new)
@@ -15,7 +15,7 @@ module ManageIQ::Providers::Vmware
 
     def ems_inv_to_hashes(inv)
       uids   = {}
-      result = {:_dto_collection => true}
+      result = {:_inventory_collection => true}
 
       result[:storages], uids[:storages] = storage_inv_to_hashes(inv[:storage])
       result[:clusters], uids[:clusters] = cluster_inv_to_hashes(inv[:cluster])
@@ -48,7 +48,7 @@ module ManageIQ::Providers::Vmware
     end
 
     def storage_inv_to_hashes(inv)
-      result = add_dto_collection(Storage, :storages)
+      result = add_inventory_collection(Storage, :storages)
       result_uids = {:storage_id => {}}
       return result, result_uids if inv.nil?
 
@@ -82,7 +82,7 @@ module ManageIQ::Providers::Vmware
           )
         end
 
-        result << result.new_dto(new_result)
+        result << result.new_inventory_object(new_result)
         result_uids[mor] = new_result
         result_uids[:storage_id][uid] = new_result
       end
@@ -90,7 +90,7 @@ module ManageIQ::Providers::Vmware
     end
 
     def storage_profile_inv_to_hashes(profile_inv, storage_uids, placement_inv)
-      result = add_dto_collection(StorageProfile, :storage_profiles)
+      result = add_inventory_collection(StorageProfile, :storage_profiles)
       result_uids = {}
 
       profile_inv.each do |uid, profile|
@@ -98,7 +98,7 @@ module ManageIQ::Providers::Vmware
           :ems_ref                  => uid,
           :name                     => profile.name,
           :profile_type             => profile.profileCategory,
-          # TODO: Need to add a DtoCollection here
+          # TODO: Need to add an InventoryCollection here
           # TODO: :storage_profile_storages => []
         }
 
@@ -107,7 +107,7 @@ module ManageIQ::Providers::Vmware
           # TODO: new_result[:storage_profile_storages] << datastore unless datastore.nil?
         end
 
-        result << result.new_dto(new_result)
+        result << result.new_inventory_object(new_result)
         result_uids[uid] = new_result
       end unless profile_inv.nil?
 
@@ -146,7 +146,7 @@ module ManageIQ::Providers::Vmware
     end
 
     def host_inv_to_hashes(inv, ems_inv, storage_uids, cluster_uids)
-      result = add_dto_collection(ManageIQ::Providers::Vmware::InfraManager::Host, :hosts)
+      result = add_inventory_collection(ManageIQ::Providers::Vmware::InfraManager::Host, :hosts)
       result_uids = {}
       cluster_uids_by_host = {}
       lan_uids = {}
@@ -203,7 +203,7 @@ module ManageIQ::Providers::Vmware
             :ems_ref     => mor,
             :ems_ref_obj => mor
           }
-          result << result.add_dto(new_result)
+          result << result.new_inventory_object(new_result)
           result_uids[mor] = new_result
           next
         end
@@ -304,10 +304,10 @@ module ManageIQ::Providers::Vmware
           # TODO: :storages         => storages,
           # TODO: :host_storages    => host_storages,
 
-          # TODO: child_uids not supported by DTO yet
+          # TODO: child_uids not supported by InventoryObject yet
           # :child_uids       => rp_uids,
         }
-        result << result.new_dto(new_result)
+        result << result.new_inventory_object(new_result)
         result_uids[mor] = new_result
       end
       return result, result_uids, cluster_uids_by_host, lan_uids, switch_uids, guest_device_uids, scsi_lun_uids
@@ -808,7 +808,7 @@ module ManageIQ::Providers::Vmware
       cluster_uids_by_host,
       lan_uids
     )
-      result = add_dto_collection(ManageIQ::Providers::Vmware::InfraManager::Vm, :vms_and_templates)
+      result = add_inventory_collection(ManageIQ::Providers::Vmware::InfraManager::Vm, :vms_and_templates)
       result_uids = {}
       guest_device_uids = {}
       return result, result_uids if inv.nil?
@@ -842,13 +842,13 @@ module ManageIQ::Providers::Vmware
         if invalid
           _log.warn "#{err} Skipping."
 
-          # TODO: DTO doesn't support invalid vms yet
+          # TODO: InventoryObject doesn't support invalid vms yet
           #new_result = {
           #  :invalid     => true,
           #  :ems_ref     => mor,
           #  :ems_ref_obj => mor
           #}
-          #result << result.new_dto(new_result)
+          #result << result.new_inventory_object(new_result)
           #result_uids[mor] = new_result
           next
         end
@@ -957,7 +957,7 @@ module ManageIQ::Providers::Vmware
           :memory_hot_add_increment => config['hotPlugMemoryIncrementSize'],
         }
 
-        result << result.new_dto(new_result)
+        result << result.new_inventory_object(new_result)
         result_uids[mor] = new_result
       end
       return result, result_uids
@@ -1219,7 +1219,7 @@ module ManageIQ::Providers::Vmware
     end
 
     def inv_to_ems_folder_hashes(inv)
-      result = add_dto_collection(EmsFolder, :ems_folders)
+      result = add_inventory_collection(EmsFolder, :ems_folders)
       result_uids = {}
 
       folder_inv_to_hashes(inv[:folder], result, result_uids)
@@ -1246,7 +1246,7 @@ module ManageIQ::Providers::Vmware
           # TODO: :child_uids  => child_mors,
           :hidden      => false
         }
-        result << result.new_dto(new_result)
+        result << result.new_inventory_object(new_result)
         result_uids[mor] = new_result
       end
       return result, result_uids
@@ -1269,7 +1269,7 @@ module ManageIQ::Providers::Vmware
           # TODO: :child_uids  => child_mors,
           :hidden      => false
         }
-        result << result.new_dto(new_result)
+        result << result.new_inventory_object(new_result)
         result_uids[mor] = new_result
       end
       return result, result_uids
@@ -1294,14 +1294,14 @@ module ManageIQ::Providers::Vmware
           :hidden      => false
         }
 
-        result << result.new_dto(new_result)
+        result << result.new_inventory_object(new_result)
         result_uids[mor] = new_result
       end
       return result, result_uids
     end
 
     def cluster_inv_to_hashes(inv)
-      result = add_dto_collection(EmsCluster, :ems_clusters)
+      result = add_inventory_collection(EmsCluster, :ems_clusters)
       result_uids = {}
       return result, result_uids if inv.nil?
 
@@ -1333,17 +1333,17 @@ module ManageIQ::Providers::Vmware
           :drs_automation_level    => drs_config["defaultVmBehavior"],
           :drs_migration_threshold => drs_config["vmotionRate"],
 
-          # TODO: child_uids not supported by DTO yet
+          # TODO: child_uids not supported by InventoryObject yet
           # :child_uids              => get_mors(data, 'resourcePool')
         }
-        result << result.new_dto(new_result)
+        result << result.new_inventory_object(new_result)
         result_uids[mor] = new_result
       end
       return result, result_uids
     end
 
     def rp_inv_to_hashes(inv)
-      result = add_dto_collection(ResourcePool, :resource_pools)
+      result = add_inventory_collection(ResourcePool, :resource_pools)
       result_uids = {}
       return result, result_uids if inv.nil?
 
@@ -1377,18 +1377,18 @@ module ManageIQ::Providers::Vmware
 
           # TODO: :child_uids            => get_mors(data, 'resourcePool') + get_mors(data, 'vm')
         }
-        result << result.new_dto(new_result)
+        result << result.new_inventory_object(new_result)
         result_uids[mor] = new_result
       end
       return result, result_uids
     end
 
     def customization_spec_inv_to_hashes(inv)
-      result = add_dto_collection(CustomizationSpec, :customization_specs)
+      result = add_inventory_collection(CustomizationSpec, :customization_specs)
       return result if inv.nil?
 
       inv.each do |spec_inv|
-        result << result.new_dto({
+        result << result.new_inventory_object({
           :name             => spec_inv["name"].to_s,
           :typ              => spec_inv["type"].to_s,
           :description      => spec_inv["description"].to_s,

@@ -18,12 +18,12 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
       .to receive(:has_credentials?).and_return(true)
   end
 
-  context "DTO Refresh" do
+  context "Inventory Object Refresh" do
     let(:settings) do
       {
         :ems_refresh => {
           :vmwarews => {
-            :dto_refresh => true
+            :inventory_object_refresh => true
           }
         }
       }
