@@ -8,7 +8,7 @@ class ManageIQ::Providers::Openstack::NetworkManager::NetworkRouter < ::NetworkR
   supports :add_interface
   supports :remove_interface
 
-  def self.create_network_router(ext_management_system, options)
+  def self.raw_create_network_router(ext_management_system, options)
     cloud_tenant = options.delete(:cloud_tenant)
     name = options.delete(:name)
     router = nil
@@ -22,7 +22,7 @@ class ManageIQ::Providers::Openstack::NetworkManager::NetworkRouter < ::NetworkR
     raise MiqException::MiqNetworkRouterCreateError, e.to_s, e.backtrace
   end
 
-  def delete_network_router
+  def raw_delete_network_router
     ext_management_system.with_provider_connection(connection_options(cloud_tenant)) do |service|
       service.delete_router(ems_ref)
     end
@@ -38,7 +38,7 @@ class ManageIQ::Providers::Openstack::NetworkManager::NetworkRouter < ::NetworkR
     }
     queue_opts = {
       :class_name  => self.class.name,
-      :method_name => 'delete_network_router',
+      :method_name => 'raw_delete_network_router',
       :instance_id => id,
       :priority    => MiqQueue::HIGH_PRIORITY,
       :role        => 'ems_operations',
@@ -48,7 +48,7 @@ class ManageIQ::Providers::Openstack::NetworkManager::NetworkRouter < ::NetworkR
     MiqTask.generic_action_with_callback(task_opts, queue_opts)
   end
 
-  def update_network_router(options)
+  def raw_update_network_router(options)
     ext_management_system.with_provider_connection(connection_options(cloud_tenant)) do |service|
       service.update_router(ems_ref, options)
     end
@@ -64,7 +64,7 @@ class ManageIQ::Providers::Openstack::NetworkManager::NetworkRouter < ::NetworkR
     }
     queue_opts = {
       :class_name  => self.class.name,
-      :method_name => 'update_network_router',
+      :method_name => 'raw_update_network_router',
       :instance_id => id,
       :priority    => MiqQueue::HIGH_PRIORITY,
       :role        => 'ems_operations',
@@ -74,7 +74,7 @@ class ManageIQ::Providers::Openstack::NetworkManager::NetworkRouter < ::NetworkR
     MiqTask.generic_action_with_callback(task_opts, queue_opts)
   end
 
-  def add_interface(cloud_subnet_id)
+  def raw_add_interface(cloud_subnet_id)
     raise ArgumentError, _("Subnet ID cannot be nil") if cloud_subnet_id.nil?
     subnet = CloudSubnet.find(cloud_subnet_id)
     raise ArgumentError, _("Subnet cannot be found") if subnet.nil?
@@ -94,7 +94,7 @@ class ManageIQ::Providers::Openstack::NetworkManager::NetworkRouter < ::NetworkR
     }
     queue_opts = {
       :class_name  => self.class.name,
-      :method_name => 'add_interface',
+      :method_name => 'raw_add_interface',
       :instance_id => id,
       :priority    => MiqQueue::HIGH_PRIORITY,
       :role        => 'ems_operations',
@@ -104,7 +104,7 @@ class ManageIQ::Providers::Openstack::NetworkManager::NetworkRouter < ::NetworkR
     MiqTask.generic_action_with_callback(task_opts, queue_opts)
   end
 
-  def remove_interface(cloud_subnet_id)
+  def raw_remove_interface(cloud_subnet_id)
     raise ArgumentError, _("Subnet ID cannot be nil") if cloud_subnet_id.nil?
     subnet = CloudSubnet.find(cloud_subnet_id)
     raise ArgumentError, _("Subnet cannot be found") if subnet.nil?
@@ -124,7 +124,7 @@ class ManageIQ::Providers::Openstack::NetworkManager::NetworkRouter < ::NetworkR
     }
     queue_opts = {
       :class_name  => self.class.name,
-      :method_name => 'remove_interface',
+      :method_name => 'raw_remove_interface',
       :instance_id => id,
       :priority    => MiqQueue::HIGH_PRIORITY,
       :role        => 'ems_operations',
