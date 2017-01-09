@@ -259,7 +259,9 @@ module ManagerRefresh
       whitelist = ", whitelist: [#{attributes_whitelist.to_a.join(", ")}]" unless attributes_whitelist.blank?
       blacklist = ", blacklist: [#{attributes_blacklist.to_a.join(", ")}]" unless attributes_blacklist.blank?
 
-      "InventoryCollection:<#{@model_class}>#{whitelist}#{blacklist}"
+      strategy_name  = ", strategy: #{strategy}" if strategy
+
+      "InventoryCollection:<#{@model_class}>#{whitelist}#{blacklist}#{strategy_name}"
     end
 
     def inspect
