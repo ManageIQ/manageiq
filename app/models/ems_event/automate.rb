@@ -2,14 +2,34 @@ class EmsEvent
   module Automate
     extend ActiveSupport::Concern
 
+    def options
+      return @options if defined?(@options)
+      @options = Settings.ems_refresh
+    end
+
+    def refresher_options
+      options[ext_management_system.class.ems_type]
+    end
+
+    def event_payload_refresh?
+      # When :event_targeted_refresh is true and :inventory_object_refresh is true, we will send OmsEvent object as a
+      # target, allowing the manager to do a refresh based on event payload.
+      refresher_options.try(:[], :event_targeted_refresh) && refresher_options.try(:[], :inventory_object_refresh)
+    end
+
     def refresh(*targets, sync)
       targets = targets.flatten
       return if targets.blank?
 
-      refresh_targets = targets.collect { |t| get_target("#{t}_refresh_target") unless t.blank? }.compact.uniq
-      return if refresh_targets.empty?
+      if event_payload_refresh?
+        EmsRefresh.queue_refresh(self, nil, sync, id)
+      else
+        refresh_targets = targets.collect { |t| get_target("#{t}_refresh_target") unless t.blank? }.compact.uniq
 
-      EmsRefresh.queue_refresh(refresh_targets, nil, sync)
+        return if refresh_targets.empty?
+
+        EmsRefresh.queue_refresh(refresh_targets, nil, sync)
+      end
     end
 
     def refresh_new_target
