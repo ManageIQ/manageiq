@@ -241,11 +241,13 @@ module ManageIQ::Providers
         connection.operations(true).add_datasource(datasource_data) do |on|
           on.success do |data|
             _log.debug "Success on websocket-operation #{data}"
-            emit_middleware_notification(:mw_op_success, 'Add Datasource', datasource_data[:datasourceName], ems_ref)
+            emit_middleware_notification(:mw_op_success, 'Add Datasource', datasource_data[:datasourceName], ems_ref,
+                                         MiddlewareServer)
           end
           on.failure do |error|
             _log.error 'error callback was called, reason: ' + error.to_s
-            emit_middleware_notification(:mw_op_failure, 'Add Datasource', datasource_data[:datasourceName], ems_ref)
+            emit_middleware_notification(:mw_op_failure, 'Add Datasource', datasource_data[:datasourceName], ems_ref,
+                                         MiddlewareServer)
           end
         end
       end
@@ -264,11 +266,13 @@ module ManageIQ::Providers
         connection.operations(true).add_deployment(deployment_data) do |on|
           on.success do |data|
             _log.debug "Success on websocket-operation #{data}"
-            emit_middleware_notification(:mw_op_success, 'Deploy', deployment_data[:destination_file_name], ems_ref)
+            emit_middleware_notification(:mw_op_success, 'Deploy', deployment_data[:destination_file_name], ems_ref,
+                                         MiddlewareServer)
           end
           on.failure do |error|
             _log.error 'error callback was called, reason: ' + error.to_s
-            emit_middleware_notification(:mw_op_failure, 'Deploy', deployment_data[:destination_file_name], ems_ref)
+            emit_middleware_notification(:mw_op_failure, 'Deploy', deployment_data[:destination_file_name], ems_ref,
+                                         MiddlewareServer)
           end
         end
       end
@@ -285,11 +289,11 @@ module ManageIQ::Providers
         connection.operations(true).undeploy(deployment_data) do |on|
           on.success do |data|
             _log.debug "Success on websocket-operation #{data}"
-            emit_middleware_notification(:mw_op_success, 'Undeploy', deployment_name, ems_ref)
+            emit_middleware_notification(:mw_op_success, 'Undeploy', deployment_name, ems_ref, MiddlewareDeployment)
           end
           on.failure do |error|
             _log.error 'error callback was called, reason: ' + error.to_s
-            emit_middleware_notification(:mw_op_failure, 'Undeploy', deployment_name, ems_ref)
+            emit_middleware_notification(:mw_op_failure, 'Undeploy', deployment_name, ems_ref, MiddlewareDeployment)
           end
         end
       end
@@ -305,11 +309,13 @@ module ManageIQ::Providers
         connection.operations(true).disable_deployment(deployment_data) do |on|
           on.success do |data|
             _log.debug "Success on websocket-operation #{data}"
-            emit_middleware_notification(:mw_op_success, 'Disable Deployment', deployment_name, ems_ref)
+            emit_middleware_notification(:mw_op_success, 'Disable Deployment', deployment_name, ems_ref,
+                                         MiddlewareDeployment)
           end
           on.failure do |error|
             _log.error 'error callback was called, reason: ' + error.to_s
-            emit_middleware_notification(:mw_op_failure, 'Disable Deployment', deployment_name, ems_ref)
+            emit_middleware_notification(:mw_op_failure, 'Disable Deployment', deployment_name, ems_ref,
+                                         MiddlewareDeployment)
           end
         end
       end
@@ -325,11 +331,13 @@ module ManageIQ::Providers
         connection.operations(true).enable_deployment(deployment_data) do |on|
           on.success do |data|
             _log.debug "Success on websocket-operation #{data}"
-            emit_middleware_notification(:mw_op_success, 'Enable Deployment', deployment_name, ems_ref)
+            emit_middleware_notification(:mw_op_success, 'Enable Deployment', deployment_name, ems_ref,
+                                         MiddlewareDeployment)
           end
           on.failure do |error|
             _log.error 'error callback was called, reason: ' + error.to_s
-            emit_middleware_notification(:mw_op_failure, 'Enable Deployment', deployment_name, ems_ref)
+            emit_middleware_notification(:mw_op_failure, 'Enable Deployment', deployment_name, ems_ref,
+                                         MiddlewareDeployment)
           end
         end
       end
@@ -345,11 +353,13 @@ module ManageIQ::Providers
         connection.operations(true).restart_deployment(deployment_data) do |on|
           on.success do |data|
             _log.debug "Success on websocket-operation #{data}"
-            emit_middleware_notification(:mw_op_success, 'Restart Deployment', deployment_name, ems_ref)
+            emit_middleware_notification(:mw_op_success, 'Restart Deployment', deployment_name, ems_ref,
+                                         MiddlewareDeployment)
           end
           on.failure do |error|
             _log.error 'error callback was called, reason: ' + error.to_s
-            emit_middleware_notification(:mw_op_failure, 'Restart Deployment', deployment_name, ems_ref)
+            emit_middleware_notification(:mw_op_failure, 'Restart Deployment', deployment_name, ems_ref,
+                                         MiddlewareDeployment)
           end
         end
       end
@@ -371,11 +381,13 @@ module ManageIQ::Providers
         connection.operations(true).add_jdbc_driver(driver_data) do |on|
           on.success do |data|
             _log.debug "Success on websocket-operation #{data}"
-            emit_middleware_notification(:mw_op_success, 'Add JDBC Driver', driver_data[:driver_name], ems_ref)
+            emit_middleware_notification(:mw_op_success, 'Add JDBC Driver', driver_data[:driver_name], ems_ref,
+                                         MiddlewareServer)
           end
           on.failure do |error|
             _log.error 'error callback was called, reason: ' + error.to_s
-            emit_middleware_notification(:mw_op_failure, 'Add JDBC Driver', driver_data[:driver_name], ems_ref)
+            emit_middleware_notification(:mw_op_failure, 'Add JDBC Driver', driver_data[:driver_name], ems_ref,
+                                         MiddlewareServer)
           end
         end
       end
@@ -385,11 +397,18 @@ module ManageIQ::Providers
       run_specific_operation('RemoveDatasource', ems_ref)
     end
 
-    def emit_middleware_notification(type, op_name, op_arg, ems_ref)
+    def emit_middleware_notification(type, op_name, op_arg, ems_ref, klass)
+      mw_entity = klass.find_by(:ems_ref => ems_ref) unless klass == MiddlewareServer
+      mw_server = if mw_entity.nil?
+                    MiddlewareServer.find_by(:ems_ref => ems_ref)
+                  else
+                    MiddlewareServer.find_by(:id => mw_entity.server_id)
+                  end
+
       Notification.create(:type => type, :options => {
         :op_name   => op_name,
-        :op_arg    => op_arg,
-        :mw_server => ems_ref
+        :op_arg    => op_arg.nil? ? '' : op_arg,
+        :mw_server => "#{mw_server.name} (#{mw_server.feed})"
       })
     end
 
@@ -487,11 +506,13 @@ module ManageIQ::Providers
         callback = proc do |on|
           on.success do |data|
             _log.debug "Success on websocket-operation #{data}"
-            emit_middleware_notification(:mw_op_success, operation_name, parameters, ems_ref)
+            emit_middleware_notification(:mw_op_success, parameters[:operationName], nil, parameters[:resourcePath],
+                                         MiddlewareServer)
           end
           on.failure do |error|
             _log.error 'error callback was called, reason: ' + error.to_s
-            emit_middleware_notification(:mw_op_failure, operation_name, parameters, ems_ref)
+            emit_middleware_notification(:mw_op_failure, parameters[:operationName], nil, parameters[:resourcePath],
+                                         MiddlewareServer)
           end
         end
         operation_connection = connection.operations(true)
