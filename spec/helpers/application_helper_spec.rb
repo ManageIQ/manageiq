@@ -1429,6 +1429,22 @@ describe ApplicationHelper do
       result = helper.show_adv_search?
       expect(result).to be_truthy
     end
+
+    it 'should return true for configuration scripts tree' do
+      controller.instance_variable_set(:@explorer, true)
+      controller.instance_variable_set(:@sb,
+                                       :active_tree => :configuration_scripts_tree,
+                                       :trees       => {
+                                         :configuration_scripts_tree => {
+                                           :tree => :configuration_scripts_tree,
+                                           :type => :configuration_scripts
+                                         }
+                                       }
+      )
+      allow(helper).to receive(:tree_with_advanced_search?).and_return(true)
+      result = helper.show_adv_search?
+      expect(result).to be_truthy
+    end
   end
 
   context "#show_advanced_search?" do
