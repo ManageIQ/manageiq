@@ -52,7 +52,7 @@ class MiqTask < ApplicationRecord
   def update_status(state, status, message)
     status = STATUS_ERROR if status == STATUS_EXPIRED
     _log.info("Task: [#{id}] [#{state}] [#{status}] [#{message}]")
-    update_attributes!(:state => state, :status => status, :message => self.class.trim_message(message))
+    update_attributes!(:state => state, :status => status, :message => message.truncate(255))
   end
 
   def self.update_message(taskid, message)
@@ -62,22 +62,15 @@ class MiqTask < ApplicationRecord
 
   def update_message(message)
     _log.info("Task: [#{id}] [#{message}]")
-    update_attributes!(:message => self.class.trim_message(message))
+    update_attributes!(:message => message.truncate(255))
   end
 
   def update_context(context)
     update_attributes!(:context_data => context)
   end
 
-  def self.trim_message(message)
-    # Trim the message to the first 255 bytes
-    msg = message.dup.to_s
-    msg = msg[0..251] + "..." if msg.length > 255
-    msg
-  end
-
   def message=(message)
-    super(self.class.trim_message(message))
+    super(message.truncate(255))
   end
 
   def self.info(taskid, message, pct_complete)
