@@ -152,6 +152,7 @@ module ManagerRefresh
     end
 
     def find(manager_uuid)
+      return if manager_uuid.nil?
       return find_in_db(manager_uuid) if strategy == :local_db_find_one
 
       data_index[manager_uuid]
