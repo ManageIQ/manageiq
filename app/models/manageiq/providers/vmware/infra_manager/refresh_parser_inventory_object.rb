@@ -48,7 +48,7 @@ module ManageIQ::Providers::Vmware
     end
 
     def storage_inv_to_hashes(inv)
-      result = add_inventory_collection(Storage, :storages)
+      result = add_inventory_collection(Storage, :storages, [:location])
       result_uids = {:storage_id => {}}
       return result, result_uids if inv.nil?
 
