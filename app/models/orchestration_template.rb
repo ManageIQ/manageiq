@@ -99,7 +99,7 @@ class OrchestrationTemplate < ApplicationRecord
 
   # List managers that may be able to deploy this template
   def self.eligible_managers
-    ExtManagementSystem.where(:type => eligible_manager_types)
+    Rbac::Filterer.filtered(ExtManagementSystem, :where_clause => {:type => eligible_manager_types})
   end
 
   delegate :eligible_managers, :to => :class
