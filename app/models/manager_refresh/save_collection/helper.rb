@@ -69,7 +69,9 @@ module ManagerRefresh::SaveCollection
             created_counter         += 1
           else
             inventory_object.object.assign_attributes(hash.except(:id, :type))
-            if inventory_object.object.changed?
+            if inventory_collection.check_changed?
+              inventory_object.object.save! if inventory_object.object.changed?
+            else
               inventory_object.object.save!
             end
           end

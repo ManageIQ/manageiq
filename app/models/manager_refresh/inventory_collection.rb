@@ -5,14 +5,14 @@ module ManagerRefresh
     attr_reader :model_class, :strategy, :attributes_blacklist, :attributes_whitelist, :custom_save_block, :parent,
                 :internal_attributes, :delete_method, :data, :data_index, :dependency_attributes, :manager_ref,
                 :association, :complete, :update_only, :transitive_dependency_attributes, :custom_manager_uuid,
-                :custom_db_finder, :arel
+                :custom_db_finder, :check_changed, :arel
 
     delegate :each, :size, :to => :to_a
 
     def initialize(model_class, manager_ref: nil, association: nil, parent: nil, strategy: nil, saved: nil,
                    custom_save_block: nil, delete_method: nil, data_index: nil, data: nil, dependency_attributes: nil,
                    attributes_blacklist: nil, attributes_whitelist: nil, complete: nil, update_only: nil,
-                   custom_manager_uuid: nil, custom_db_finder: nil, arel: nil)
+                   check_changed: nil, custom_manager_uuid: nil, custom_db_finder: nil, arel: nil)
       @model_class                      = model_class
       @manager_ref                      = manager_ref || [:ems_ref]
       @custom_manager_uuid              = custom_manager_uuid
@@ -30,6 +30,7 @@ module ManagerRefresh
       @attributes_blacklist             = Set.new
       @attributes_whitelist             = Set.new
       @custom_save_block                = custom_save_block
+      @check_changed                    = check_changed.nil? ? true : check_changed
       @internal_attributes              = [:__feedback_edge_set_parent]
       @complete                         = complete.nil? ? true : complete
       @update_only                      = update_only.nil? ? false : update_only
@@ -82,6 +83,10 @@ module ManagerRefresh
 
     def process_strategy_local_db_find_one
       self.saved = true
+    end
+
+    def check_changed?
+      check_changed
     end
 
     def complete?
