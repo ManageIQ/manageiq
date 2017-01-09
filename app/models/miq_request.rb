@@ -33,10 +33,12 @@ class MiqRequest < ApplicationRecord
   virtual_column  :v_approved_by,        :type => :string,   :uses => :miq_approvals
   virtual_column  :v_approved_by_email,  :type => :string,   :uses => {:miq_approvals => :stamper}
   virtual_column  :stamped_on,           :type => :datetime, :uses => :miq_approvals
+  virtual_column  :v_allowed_tags,       :type => :string,   :uses => :workflow
   virtual_column  :request_type_display, :type => :string
   virtual_column  :resource_type,        :type => :string
   virtual_column  :state,                :type => :string
-  virtual_column  :v_allowed_tags,       :type => :string,   :uses => :workflow
+
+  delegate :allowed_tags,                :to => :workflow,   :prefix => :v
 
   virtual_has_one :workflow
 
@@ -235,10 +237,6 @@ class MiqRequest < ApplicationRecord
   def v_approved_by_email
     emails = miq_approvals.inject([]) { |arr, a| arr << a.stamper.email unless a.stamper.nil? || a.stamper.email.nil?; arr }
     emails.join(", ")
-  end
-
-  def v_allowed_tags
-    workflow.allowed_tags
   end
 
   def get_options
