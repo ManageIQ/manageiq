@@ -148,31 +148,31 @@ describe EmsCluster do
     end
 
     it "Initially Performance capture for cluster and its hosts should not be set" do
-      expect(@cluster.perf_capture_enabled).to eq(false)
-      expect(@host1.perf_capture_enabled).to eq(false)
-      expect(@host2.perf_capture_enabled).to eq(false)
+      expect(@cluster.perf_capture_enabled?).to eq(false)
+      expect(@host1.perf_capture_enabled?).to eq(false)
+      expect(@host2.perf_capture_enabled?).to eq(false)
     end
 
     it "Performance capture for cluster and its hosts should be set" do
       @cluster.perf_capture_enabled_host_ids = [@host1.id, @host2.id]
-      expect(@cluster.perf_capture_enabled).to eq(true)
-      expect(@host1.perf_capture_enabled).to eq(true)
-      expect(@host2.perf_capture_enabled).to eq(true)
+      expect(@cluster.perf_capture_enabled?).to eq(true)
+      expect(@host1.perf_capture_enabled?).to eq(true)
+      expect(@host2.perf_capture_enabled?).to eq(true)
     end
 
     it "Performance capture for cluster and only 1 hosts should be set" do
       @cluster.perf_capture_enabled_host_ids = [@host2.id]
-      expect(@cluster.perf_capture_enabled).to eq(true)
-      expect(@host1.perf_capture_enabled).to eq(false)
-      expect(@host2.perf_capture_enabled).to eq(true)
+      expect(@cluster.perf_capture_enabled?).to eq(true)
+      expect(@host1.perf_capture_enabled?).to eq(false)
+      expect(@host2.perf_capture_enabled?).to eq(true)
     end
 
     it "Performance capture for cluster and its hosts should get unset" do
       @cluster.perf_capture_enabled_host_ids = [@host2.id]
       @cluster.perf_capture_enabled_host_ids = []
-      expect(@cluster.perf_capture_enabled).to eq(false)
-      expect(@host1.perf_capture_enabled).to eq(false)
-      expect(@host2.perf_capture_enabled).to eq(false)
+      expect(@cluster.perf_capture_enabled?).to eq(false)
+      expect(@host1.perf_capture_enabled?).to eq(false)
+      expect(@host2.perf_capture_enabled?).to eq(false)
     end
   end
 
