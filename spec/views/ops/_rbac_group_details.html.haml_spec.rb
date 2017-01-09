@@ -13,9 +13,13 @@ describe 'ops/_rbac_group_details.html.haml' do
       allow(view).to receive(:current_tenant).and_return(Tenant.seed)
       allow(view).to receive(:session).and_return(:assigned_filters => [])
       FactoryGirl.create(:classification, :name => 'folder_selected', :show => true)
+
+      sb = {}
+      view.instance_variable_set(:@sb, sb)
+
       @tags_tree = TreeBuilderTags.new(:tag,
                                        :tag_tree,
-                                       {},
+                                       sb,
                                        true,
                                        :edit => {}, :filters => {}, :group => @group)
     end
