@@ -4,6 +4,7 @@ module MiqAeEngine
     ATTRIBUTE_LIST = %w(
       vm
       orchestration_stack
+      load_balancer
       miq_request
       miq_provision
       miq_host_provision
@@ -165,7 +166,7 @@ module MiqAeEngine
 
     def self.detect_category(obj_name, prov_obj)
       case obj_name
-      when "orchestration_stack"
+      when "load_balancer", "orchestration_stack"
         CLOUD
       when "miq_host_provision"
         INFRASTRUCTURE
