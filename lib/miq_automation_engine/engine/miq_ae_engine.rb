@@ -1,6 +1,5 @@
 require 'miq_ae_exception'
 require 'engine/drb_remote_invoker'
-require 'engine/miq_ae_workspace'
 require 'engine/miq_ae_workspace_runtime'
 require 'engine/miq_ae_object'
 require 'engine/miq_ae_method'
