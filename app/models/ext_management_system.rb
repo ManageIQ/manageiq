@@ -514,9 +514,7 @@ class ExtManagementSystem < ApplicationRecord
 
   def perf_capture_enabled?
     return @perf_capture_enabled unless @perf_capture_enabled.nil?
-    return @perf_capture_enabled = true if ems_clusters.any?(&:perf_capture_enabled?)
-    return @perf_capture_enabled = true if hosts.any?(&:perf_capture_enabled?)
-    @perf_capture_enabled = false
+    @perf_capture_enabled = ems_clusters.any?(&:perf_capture_enabled?) || host.any?(&:perf_capture_enabled?)
   end
   alias_method :perf_capture_enabled, :perf_capture_enabled?
   Vmdb::Deprecation.deprecate_methods(self, :perf_capture_enabled => :perf_capture_enabled?)
