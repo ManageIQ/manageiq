@@ -97,8 +97,9 @@ class MiqEnterprise < ApplicationRecord
     # No rollup parents
   end
 
-  def perf_capture_enabled
+  def perf_capture_enabled?
     @perf_capture_enabled ||= ext_management_systems.any?(&:perf_capture_enabled?)
   end
-  alias_method :perf_capture_enabled?, :perf_capture_enabled
+  alias_method :perf_capture_enabled, :perf_capture_enabled?
+  Vmdb::Deprecation.deprecate_methods(self, :perf_capture_enabled => :perf_capture_enabled?)
 end # class MiqEnterprise
