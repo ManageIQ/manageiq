@@ -14,6 +14,10 @@ class EmsEvent < EventStream
     'Rename_Task',
   ]
 
+  def name
+    "#{event_type}(EmsEvent##{id})"
+  end
+
   def handle_event
     EmsEventHelper.new(self).handle
   rescue => err
