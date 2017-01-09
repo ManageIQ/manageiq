@@ -1,7 +1,7 @@
 module EmsRefresh::SaveInventory
   def save_ems_inventory(ems, hashes, target = nil)
-    if hashes && hashes[:_dto_collection]
-      hashes.delete(:_dto_collection)
+    if hashes && hashes[:_inventory_collection]
+      hashes.delete(:_inventory_collection)
       ManagerRefresh::SaveInventory.save_inventory(ems, hashes)
       return
     end

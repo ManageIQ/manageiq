@@ -1,10 +1,10 @@
 module ManagerRefresh
-  class DtoCollection
+  class InventoryCollection
     class Graph < ::ManagerRefresh::Graph
       def initialize(nodes)
         super(nodes)
 
-        assert_dto_collections(nodes)
+        assert_inventory_collections(nodes)
       end
 
       def build_directed_acyclic_graph!
@@ -53,76 +53,77 @@ module ManagerRefresh
 
       private
 
-      def assert_dto_collections(dto_collections)
-        dto_collections.each do |dto_collection|
-          unless dto_collection.kind_of? ::ManagerRefresh::DtoCollection
-            raise "A ManagerRefresh::SaveInventory needs a DtoCollection object, it got: #{dto_collection.inspect}"
+      def assert_inventory_collections(inventory_collections)
+        inventory_collections.each do |inventory_collection|
+          unless inventory_collection.kind_of? ::ManagerRefresh::InventoryCollection
+            raise "A ManagerRefresh::SaveInventory needs a InventoryCollection object, it got: #{inventory_collection.inspect}"
           end
         end
       end
 
       def convert_to_dag!(nodes, feedback_edge_set)
         new_nodes = []
-        dto_collection_transformations = {}
-        nodes.each do |dto_collection|
-          feedback_dependencies = feedback_edge_set.select { |e| e.second == dto_collection }.map(&:first)
-          attrs                 = dto_collection.dependency_attributes_for(feedback_dependencies)
+        inventory_collection_transformations = {}
+        nodes.each do |inventory_collection|
+          feedback_dependencies = feedback_edge_set.select { |e| e.second == inventory_collection }.map(&:first)
+          attrs                 = inventory_collection.dependency_attributes_for(feedback_dependencies)
 
           next if attrs.blank?
 
-          new_dto_collection = dto_collection.clone
+          new_inventory_collection = inventory_collection.clone
 
-          # Add dto_collection as a dependency of the new_dto_collection, so we make sure it runs after
+          # Add inventory_collection as a dependency of the new_inventory_collection, so we make sure it runs after
           # TODO(lsmola) add a nice dependency_attributes setter? It's used also in actualize_dependencies method
-          new_dto_collection.dependency_attributes[:__feedback_edge_set_parent] = Set.new([dto_collection])
-          new_nodes << new_dto_collection
+          new_inventory_collection.dependency_attributes[:__feedback_edge_set_parent] = Set.new([inventory_collection])
+          new_nodes << new_inventory_collection
 
-          dto_collection.blacklist_attributes!(attrs)
-          new_dto_collection.whitelist_attributes!(attrs)
+          inventory_collection.blacklist_attributes!(attrs)
+          new_inventory_collection.whitelist_attributes!(attrs)
 
-          # Store a simple hash for transforming dto_collection to new_dto_collection
-          dto_collection_transformations[dto_collection] = new_dto_collection
+          # Store a simple hash for transforming inventory_collection to new_inventory_collection
+          inventory_collection_transformations[inventory_collection] = new_inventory_collection
         end
 
         all_nodes = nodes + new_nodes
 
         # If we remove an attribute that was a dependency of another node, we need to move also the
         # dependency. So e.g. floating_ip depends on network_port's attribute vm, but we move that attribute to new
-        # network_port dto_collection. We will need to move also the dependency to point to the new dto_collection.
+        # network_port inventory_collection. We will need to move also the dependency to point to the new
+        # inventory_collection.
         #
         # So we have to go through all dependencies that loads a key, which is the moved attribute. We can get a list
         # of attributes that are using a key from transitive_dependency_attributes, from there we can get a list of
         # dependencies. And from the list of dependencies, we can check which ones were moved just by looking into
-        # dto_collection_transformations.
-        all_nodes.each do |dto_collection|
-          dto_collection.transitive_dependency_attributes.each do |transitive_dependency_attribute|
-            transitive_dependencies = dto_collection.dependency_attributes[transitive_dependency_attribute]
+        # inventory_collection_transformations.
+        all_nodes.each do |inventory_collection|
+          inventory_collection.transitive_dependency_attributes.each do |transitive_dependency_attribute|
+            transitive_dependencies = inventory_collection.dependency_attributes[transitive_dependency_attribute]
             next if transitive_dependencies.blank?
 
             transitive_dependencies.map! do |dependency|
-              transformed_dependency = dto_collection_transformations[dependency]
+              transformed_dependency = inventory_collection_transformations[dependency]
               transformed_dependency.blank? ? dependency : transformed_dependency
             end
           end
         end
 
-        # Add the new DtoCollections to the list of nodes our our graph
+        # Add the new InventoryCollections to the list of nodes our our graph
         construct_graph!(all_nodes)
       end
 
-      def build_edges(dto_collections)
+      def build_edges(inventory_collections)
         edges            = []
         transitive_edges = []
         fixed_edges = []
-        dto_collections.each do |dto_collection|
-          dto_collection.dependencies.each do |dependency|
-            fixed_edges << [dependency, dto_collection] if dto_collection.fixed_dependencies.include?(dependency)
-            if dto_collection.dependency_attributes_for([dependency]).any? { |x| dto_collection.transitive_dependency_attributes.include?(x) }
-              # The condition checks if the dependency is a transitive dependency, in other words a DtoLazy with :key
+        inventory_collections.each do |inventory_collection|
+          inventory_collection.dependencies.each do |dependency|
+            fixed_edges << [dependency, inventory_collection] if inventory_collection.fixed_dependencies.include?(dependency)
+            if inventory_collection.dependency_attributes_for([dependency]).any? { |x| inventory_collection.transitive_dependency_attributes.include?(x) }
+              # The condition checks if the dependency is a transitive dependency, in other words a InventoryObjectLazy with :key
               # pointing to another object.
-              transitive_edges << [dependency, dto_collection]
+              transitive_edges << [dependency, inventory_collection]
             else
-              edges << [dependency, dto_collection]
+              edges << [dependency, inventory_collection]
             end
           end
         end

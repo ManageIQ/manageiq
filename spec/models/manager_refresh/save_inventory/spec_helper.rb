@@ -10,8 +10,8 @@ module SpecHelper
     model_class.to_a.map { |x| x.slice(*attributes).symbolize_keys }
   end
 
-  def add_data_to_dto_collection(dto_collection, *args)
-    # Creates Dto object from each arg and adds it into the DtoCollection
-    args.each { |data| dto_collection << dto_collection.new_dto(data) }
+  def add_data_to_inventory_collection(inventory_collection, *args)
+    # Creates InventoryObject object from each arg and adds it into the InventoryCollection
+    args.each { |data| inventory_collection << inventory_collection.new_inventory_object(data) }
   end
 end

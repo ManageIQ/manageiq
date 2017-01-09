@@ -7,8 +7,8 @@ describe ManagerRefresh::SaveInventory do
 
   ######################################################################################################################
   #
-  # Testing SaveInventory for general graph of the DtoCollection dependencies, testing that relations
-  # are saved correctly for a testing set of DtoCollections whose dependencies look like:
+  # Testing SaveInventory for general graph of the InventoryCollection dependencies, testing that relations
+  # are saved correctly for a testing set of InventoryCollections whose dependencies look like:
   #
   # 1. Example, cycle is stack -> stack
   #
@@ -276,155 +276,155 @@ describe ManagerRefresh::SaveInventory do
   ######################################################################################################################
   #
   # Test all settings for ManagerRefresh::SaveInventory
-  [{:dto_saving_strategy => nil},
-   {:dto_saving_strategy => :recursive},
-  ].each do |dto_settings|
-    context "with settings #{dto_settings}" do
+  [{:inventory_object_saving_strategy => nil},
+   {:inventory_object_saving_strategy => :recursive},
+  ].each do |inventory_object_settings|
+    context "with settings #{inventory_object_settings}" do
       before :each do
         @zone        = FactoryGirl.create(:zone)
         @ems         = FactoryGirl.create(:ems_cloud, :zone => @zone)
         @ems_network = FactoryGirl.create(:ems_network, :zone => @zone, :parent_manager => @ems)
 
         allow(@ems.class).to receive(:ems_type).and_return(:mock)
-        allow(Settings.ems_refresh).to receive(:mock).and_return(dto_settings)
+        allow(Settings.ems_refresh).to receive(:mock).and_return(inventory_object_settings)
       end
 
       context 'with empty DB' do
         before :each do
-          initialize_dto_collections
+          initialize_inventory_collections
         end
 
-        it 'creates and updates a graph of DtoCollections with cycle stack -> stack' do
+        it 'creates and updates a graph of InventoryCollections with cycle stack -> stack' do
           # Doing 2 times, to make sure we first create all records then update all records
           2.times do
-            # Fill the DtoCollections with data
+            # Fill the InventoryCollections with data
             init_stack_data_with_stack_stack_cycle
             init_resource_data
 
-            add_data_to_dto_collection(@data[:orchestration_stacks],
-                                       @orchestration_stack_data_0_1,
-                                       @orchestration_stack_data_0_2,
-                                       @orchestration_stack_data_1_11,
-                                       @orchestration_stack_data_1_12,
-                                       @orchestration_stack_data_11_21,
-                                       @orchestration_stack_data_12_22,
-                                       @orchestration_stack_data_12_23)
-            add_data_to_dto_collection(@data[:orchestration_stacks_resources],
-                                       @orchestration_stack_resource_data_1_11,
-                                       @orchestration_stack_resource_data_1_11_1,
-                                       @orchestration_stack_resource_data_1_12,
-                                       @orchestration_stack_resource_data_1_12_1,
-                                       @orchestration_stack_resource_data_11_21,
-                                       @orchestration_stack_resource_data_12_22,
-                                       @orchestration_stack_resource_data_12_23)
+            add_data_to_inventory_collection(@data[:orchestration_stacks],
+                                             @orchestration_stack_data_0_1,
+                                             @orchestration_stack_data_0_2,
+                                             @orchestration_stack_data_1_11,
+                                             @orchestration_stack_data_1_12,
+                                             @orchestration_stack_data_11_21,
+                                             @orchestration_stack_data_12_22,
+                                             @orchestration_stack_data_12_23)
+            add_data_to_inventory_collection(@data[:orchestration_stacks_resources],
+                                             @orchestration_stack_resource_data_1_11,
+                                             @orchestration_stack_resource_data_1_11_1,
+                                             @orchestration_stack_resource_data_1_12,
+                                             @orchestration_stack_resource_data_1_12_1,
+                                             @orchestration_stack_resource_data_11_21,
+                                             @orchestration_stack_resource_data_12_22,
+                                             @orchestration_stack_resource_data_12_23)
 
-            # Invoke the DtoCollections saving
+            # Invoke the InventoryCollections saving
             ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
 
             # Assert saved data
-            assert_full_dto_collections_graph
+            assert_full_inventory_collections_graph
           end
         end
 
-        it 'creates and updates a graph of DtoCollections with cycle stack -> resource -> stack, through resource :key' do
+        it 'creates and updates a graph of InventoryCollections with cycle stack -> resource -> stack, through resource :key' do
           # Doing 2 times, to make sure we first create all records then update all records
           2.times do
-            # Fill the DtoCollections with data
+            # Fill the InventoryCollections with data
             init_stack_data_with_stack_resource_stack_cycle
             init_resource_data
 
-            add_data_to_dto_collection(@data[:orchestration_stacks],
-                                       @orchestration_stack_data_0_1,
-                                       @orchestration_stack_data_0_2,
-                                       @orchestration_stack_data_1_11,
-                                       @orchestration_stack_data_1_12,
-                                       @orchestration_stack_data_11_21,
-                                       @orchestration_stack_data_12_22,
-                                       @orchestration_stack_data_12_23)
-            add_data_to_dto_collection(@data[:orchestration_stacks_resources],
-                                       @orchestration_stack_resource_data_1_11,
-                                       @orchestration_stack_resource_data_1_11_1,
-                                       @orchestration_stack_resource_data_1_12,
-                                       @orchestration_stack_resource_data_1_12_1,
-                                       @orchestration_stack_resource_data_11_21,
-                                       @orchestration_stack_resource_data_12_22,
-                                       @orchestration_stack_resource_data_12_23)
+            add_data_to_inventory_collection(@data[:orchestration_stacks],
+                                             @orchestration_stack_data_0_1,
+                                             @orchestration_stack_data_0_2,
+                                             @orchestration_stack_data_1_11,
+                                             @orchestration_stack_data_1_12,
+                                             @orchestration_stack_data_11_21,
+                                             @orchestration_stack_data_12_22,
+                                             @orchestration_stack_data_12_23)
+            add_data_to_inventory_collection(@data[:orchestration_stacks_resources],
+                                             @orchestration_stack_resource_data_1_11,
+                                             @orchestration_stack_resource_data_1_11_1,
+                                             @orchestration_stack_resource_data_1_12,
+                                             @orchestration_stack_resource_data_1_12_1,
+                                             @orchestration_stack_resource_data_11_21,
+                                             @orchestration_stack_resource_data_12_22,
+                                             @orchestration_stack_resource_data_12_23)
 
-            # Invoke the DtoCollections saving
+            # Invoke the InventoryCollections saving
             ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
 
             # Assert saved data
-            assert_full_dto_collections_graph
+            assert_full_inventory_collections_graph
           end
         end
       end
 
-      context 'with empty DB and reversed DtoCollections' do
+      context 'with empty DB and reversed InventoryCollections' do
         before :each do
-          initialize_dto_collections_reversed
+          initialize_inventory_collections_reversed
         end
 
-        it 'creates and updates a graph of DtoCollections with cycle stack -> stack' do
+        it 'creates and updates a graph of InventoryCollections with cycle stack -> stack' do
           # Doing 2 times, to make sure we first create all records then update all records
           2.times do
-            # Fill the DtoCollections with data
+            # Fill the InventoryCollections with data
             init_stack_data_with_stack_stack_cycle
             init_resource_data
 
-            add_data_to_dto_collection(@data[:orchestration_stacks],
-                                       @orchestration_stack_data_0_1,
-                                       @orchestration_stack_data_0_2,
-                                       @orchestration_stack_data_1_11,
-                                       @orchestration_stack_data_1_12,
-                                       @orchestration_stack_data_11_21,
-                                       @orchestration_stack_data_12_22,
-                                       @orchestration_stack_data_12_23)
-            add_data_to_dto_collection(@data[:orchestration_stacks_resources],
-                                       @orchestration_stack_resource_data_1_11,
-                                       @orchestration_stack_resource_data_1_11_1,
-                                       @orchestration_stack_resource_data_1_12,
-                                       @orchestration_stack_resource_data_1_12_1,
-                                       @orchestration_stack_resource_data_11_21,
-                                       @orchestration_stack_resource_data_12_22,
-                                       @orchestration_stack_resource_data_12_23)
+            add_data_to_inventory_collection(@data[:orchestration_stacks],
+                                             @orchestration_stack_data_0_1,
+                                             @orchestration_stack_data_0_2,
+                                             @orchestration_stack_data_1_11,
+                                             @orchestration_stack_data_1_12,
+                                             @orchestration_stack_data_11_21,
+                                             @orchestration_stack_data_12_22,
+                                             @orchestration_stack_data_12_23)
+            add_data_to_inventory_collection(@data[:orchestration_stacks_resources],
+                                             @orchestration_stack_resource_data_1_11,
+                                             @orchestration_stack_resource_data_1_11_1,
+                                             @orchestration_stack_resource_data_1_12,
+                                             @orchestration_stack_resource_data_1_12_1,
+                                             @orchestration_stack_resource_data_11_21,
+                                             @orchestration_stack_resource_data_12_22,
+                                             @orchestration_stack_resource_data_12_23)
 
-            # Invoke the DtoCollections saving
+            # Invoke the InventoryCollections saving
             ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
 
             # Assert saved data
-            assert_full_dto_collections_graph
+            assert_full_inventory_collections_graph
           end
         end
 
-        it 'creates and updates a graph of DtoCollections with cycle stack -> resource -> stack, through resource :key' do
+        it 'creates and updates a graph of InventoryCollections with cycle stack -> resource -> stack, through resource :key' do
           # Doing 2 times, to make sure we first create all records then update all records
           2.times do
-            # Fill the DtoCollections with data
+            # Fill the InventoryCollections with data
             init_stack_data_with_stack_resource_stack_cycle
             init_resource_data
 
-            add_data_to_dto_collection(@data[:orchestration_stacks],
-                                       @orchestration_stack_data_0_1,
-                                       @orchestration_stack_data_0_2,
-                                       @orchestration_stack_data_1_11,
-                                       @orchestration_stack_data_1_12,
-                                       @orchestration_stack_data_11_21,
-                                       @orchestration_stack_data_12_22,
-                                       @orchestration_stack_data_12_23)
-            add_data_to_dto_collection(@data[:orchestration_stacks_resources],
-                                       @orchestration_stack_resource_data_1_11,
-                                       @orchestration_stack_resource_data_1_11_1,
-                                       @orchestration_stack_resource_data_1_12,
-                                       @orchestration_stack_resource_data_1_12_1,
-                                       @orchestration_stack_resource_data_11_21,
-                                       @orchestration_stack_resource_data_12_22,
-                                       @orchestration_stack_resource_data_12_23)
+            add_data_to_inventory_collection(@data[:orchestration_stacks],
+                                             @orchestration_stack_data_0_1,
+                                             @orchestration_stack_data_0_2,
+                                             @orchestration_stack_data_1_11,
+                                             @orchestration_stack_data_1_12,
+                                             @orchestration_stack_data_11_21,
+                                             @orchestration_stack_data_12_22,
+                                             @orchestration_stack_data_12_23)
+            add_data_to_inventory_collection(@data[:orchestration_stacks_resources],
+                                             @orchestration_stack_resource_data_1_11,
+                                             @orchestration_stack_resource_data_1_11_1,
+                                             @orchestration_stack_resource_data_1_12,
+                                             @orchestration_stack_resource_data_1_12_1,
+                                             @orchestration_stack_resource_data_11_21,
+                                             @orchestration_stack_resource_data_12_22,
+                                             @orchestration_stack_resource_data_12_23)
 
-            # Invoke the DtoCollections saving
+            # Invoke the InventoryCollections saving
             ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
 
             # Assert saved data
-            assert_full_dto_collections_graph
+            assert_full_inventory_collections_graph
           end
         end
       end
@@ -432,15 +432,15 @@ describe ManagerRefresh::SaveInventory do
       context 'with complex cycle' do
         it 'test network_port -> stack -> resource -> stack' do
           @data                                  = {}
-          @data[:orchestration_stacks]           = ::ManagerRefresh::DtoCollection.new(
+          @data[:orchestration_stacks]           = ::ManagerRefresh::InventoryCollection.new(
             ManageIQ::Providers::CloudManager::OrchestrationStack,
             :parent      => @ems,
             :association => :orchestration_stacks)
-          @data[:orchestration_stacks_resources] = ::ManagerRefresh::DtoCollection.new(
+          @data[:orchestration_stacks_resources] = ::ManagerRefresh::InventoryCollection.new(
             OrchestrationStackResource,
             :parent      => @ems,
             :association => :orchestration_stacks_resources)
-          @data[:network_ports]                  = ::ManagerRefresh::DtoCollection.new(
+          @data[:network_ports]                  = ::ManagerRefresh::InventoryCollection.new(
             NetworkPort,
             :parent      => @ems.network_manager,
             :association => :network_ports)
@@ -461,40 +461,40 @@ describe ManagerRefresh::SaveInventory do
                                                               :key => :parent)
           )
 
-          add_data_to_dto_collection(@data[:orchestration_stacks],
-                                     @orchestration_stack_data_0_1,
-                                     @orchestration_stack_data_0_2,
-                                     @orchestration_stack_data_1_11,
-                                     @orchestration_stack_data_1_12,
-                                     @orchestration_stack_data_11_21,
-                                     @orchestration_stack_data_12_22,
-                                     @orchestration_stack_data_12_23)
-          add_data_to_dto_collection(@data[:orchestration_stacks_resources],
-                                     @orchestration_stack_resource_data_1_11,
-                                     @orchestration_stack_resource_data_1_11_1,
-                                     @orchestration_stack_resource_data_1_12,
-                                     @orchestration_stack_resource_data_1_12_1,
-                                     @orchestration_stack_resource_data_11_21,
-                                     @orchestration_stack_resource_data_12_22,
-                                     @orchestration_stack_resource_data_12_23)
-          add_data_to_dto_collection(@data[:network_ports],
-                                     @network_port_1,
-                                     @network_port_2,
-                                     @network_port_3)
+          add_data_to_inventory_collection(@data[:orchestration_stacks],
+                                           @orchestration_stack_data_0_1,
+                                           @orchestration_stack_data_0_2,
+                                           @orchestration_stack_data_1_11,
+                                           @orchestration_stack_data_1_12,
+                                           @orchestration_stack_data_11_21,
+                                           @orchestration_stack_data_12_22,
+                                           @orchestration_stack_data_12_23)
+          add_data_to_inventory_collection(@data[:orchestration_stacks_resources],
+                                           @orchestration_stack_resource_data_1_11,
+                                           @orchestration_stack_resource_data_1_11_1,
+                                           @orchestration_stack_resource_data_1_12,
+                                           @orchestration_stack_resource_data_1_12_1,
+                                           @orchestration_stack_resource_data_11_21,
+                                           @orchestration_stack_resource_data_12_22,
+                                           @orchestration_stack_resource_data_12_23)
+          add_data_to_inventory_collection(@data[:network_ports],
+                                           @network_port_1,
+                                           @network_port_2,
+                                           @network_port_3)
 
-          # Invoke the DtoCollections saving
+          # Invoke the InventoryCollections saving
           ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
 
           # Assert saved data
-          assert_full_dto_collections_graph
+          assert_full_inventory_collections_graph
 
           network_port_1 = NetworkPort.find_by(:ems_ref => "network_port_ems_ref_1")
           network_port_2 = NetworkPort.find_by(:ems_ref => "network_port_ems_ref_2")
           network_port_3 = NetworkPort.find_by(:ems_ref => "network_port_ems_ref_3")
 
-          orchestration_stack_0_1   = OrchestrationStack.find_by(:ems_ref => "stack_ems_ref_0_1")
-          orchestration_stack_1_11  = OrchestrationStack.find_by(:ems_ref => "stack_ems_ref_1_11")
-          orchestration_stack_1_12  = OrchestrationStack.find_by(:ems_ref => "stack_ems_ref_1_12")
+          orchestration_stack_0_1  = OrchestrationStack.find_by(:ems_ref => "stack_ems_ref_0_1")
+          orchestration_stack_1_11 = OrchestrationStack.find_by(:ems_ref => "stack_ems_ref_1_11")
+          orchestration_stack_1_12 = OrchestrationStack.find_by(:ems_ref => "stack_ems_ref_1_12")
           expect(network_port_1.device).to eq(orchestration_stack_0_1)
           expect(network_port_2.device).to eq(orchestration_stack_1_11)
           expect(network_port_3.device).to eq(orchestration_stack_1_12)
@@ -502,15 +502,15 @@ describe ManagerRefresh::SaveInventory do
 
         it 'test network_port -> stack -> resource -> stack reverted' do
           @data                                  = {}
-          @data[:network_ports]                  = ::ManagerRefresh::DtoCollection.new(
+          @data[:network_ports]                  = ::ManagerRefresh::InventoryCollection.new(
             NetworkPort,
             :parent      => @ems.network_manager,
             :association => :network_ports)
-          @data[:orchestration_stacks_resources] = ::ManagerRefresh::DtoCollection.new(
+          @data[:orchestration_stacks_resources] = ::ManagerRefresh::InventoryCollection.new(
             OrchestrationStackResource,
             :parent      => @ems,
             :association => :orchestration_stacks_resources)
-          @data[:orchestration_stacks]           = ::ManagerRefresh::DtoCollection.new(
+          @data[:orchestration_stacks]           = ::ManagerRefresh::InventoryCollection.new(
             ManageIQ::Providers::CloudManager::OrchestrationStack,
             :parent      => @ems,
             :association => :orchestration_stacks)
@@ -531,39 +531,39 @@ describe ManagerRefresh::SaveInventory do
                                                               :key => :parent)
           )
 
-          add_data_to_dto_collection(@data[:orchestration_stacks],
-                                     @orchestration_stack_data_0_1,
-                                     @orchestration_stack_data_0_2,
-                                     @orchestration_stack_data_1_11,
-                                     @orchestration_stack_data_1_12,
-                                     @orchestration_stack_data_11_21,
-                                     @orchestration_stack_data_12_22,
-                                     @orchestration_stack_data_12_23)
-          add_data_to_dto_collection(@data[:orchestration_stacks_resources],
-                                     @orchestration_stack_resource_data_1_11,
-                                     @orchestration_stack_resource_data_1_11_1,
-                                     @orchestration_stack_resource_data_1_12,
-                                     @orchestration_stack_resource_data_1_12_1,
-                                     @orchestration_stack_resource_data_11_21,
-                                     @orchestration_stack_resource_data_12_22,
-                                     @orchestration_stack_resource_data_12_23)
-          add_data_to_dto_collection(@data[:network_ports],
-                                     @network_port_1,
-                                     @network_port_2,
-                                     @network_port_3)
+          add_data_to_inventory_collection(@data[:orchestration_stacks],
+                                           @orchestration_stack_data_0_1,
+                                           @orchestration_stack_data_0_2,
+                                           @orchestration_stack_data_1_11,
+                                           @orchestration_stack_data_1_12,
+                                           @orchestration_stack_data_11_21,
+                                           @orchestration_stack_data_12_22,
+                                           @orchestration_stack_data_12_23)
+          add_data_to_inventory_collection(@data[:orchestration_stacks_resources],
+                                           @orchestration_stack_resource_data_1_11,
+                                           @orchestration_stack_resource_data_1_11_1,
+                                           @orchestration_stack_resource_data_1_12,
+                                           @orchestration_stack_resource_data_1_12_1,
+                                           @orchestration_stack_resource_data_11_21,
+                                           @orchestration_stack_resource_data_12_22,
+                                           @orchestration_stack_resource_data_12_23)
+          add_data_to_inventory_collection(@data[:network_ports],
+                                           @network_port_1,
+                                           @network_port_2,
+                                           @network_port_3)
 
-          # Invoke the DtoCollections saving
+          # Invoke the InventoryCollections saving
           ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
           # Assert saved data
-          assert_full_dto_collections_graph
+          assert_full_inventory_collections_graph
 
           network_port_1 = NetworkPort.find_by(:ems_ref => "network_port_ems_ref_1")
           network_port_2 = NetworkPort.find_by(:ems_ref => "network_port_ems_ref_2")
           network_port_3 = NetworkPort.find_by(:ems_ref => "network_port_ems_ref_3")
 
-          orchestration_stack_0_1   = OrchestrationStack.find_by(:ems_ref => "stack_ems_ref_0_1")
-          orchestration_stack_1_11  = OrchestrationStack.find_by(:ems_ref => "stack_ems_ref_1_11")
-          orchestration_stack_1_12  = OrchestrationStack.find_by(:ems_ref => "stack_ems_ref_1_12")
+          orchestration_stack_0_1  = OrchestrationStack.find_by(:ems_ref => "stack_ems_ref_0_1")
+          orchestration_stack_1_11 = OrchestrationStack.find_by(:ems_ref => "stack_ems_ref_1_11")
+          orchestration_stack_1_12 = OrchestrationStack.find_by(:ems_ref => "stack_ems_ref_1_12")
           expect(network_port_1.device).to eq(orchestration_stack_0_1)
           expect(network_port_2.device).to eq(orchestration_stack_1_11)
           expect(network_port_3.device).to eq(orchestration_stack_1_12)
@@ -574,7 +574,7 @@ describe ManagerRefresh::SaveInventory do
           # saved the data in a correct order. In this case, we would need to save this data by creating a tree of
           # data dependencies and saving it according to the tree.
           @data                 = {}
-          @data[:network_ports] = ::ManagerRefresh::DtoCollection.new(
+          @data[:network_ports] = ::ManagerRefresh::InventoryCollection.new(
             NetworkPort,
             :parent      => @ems.network_manager,
             :association => :network_ports)
@@ -587,12 +587,12 @@ describe ManagerRefresh::SaveInventory do
                                                        :key => :device)
           )
 
-          add_data_to_dto_collection(@data[:network_ports],
-                                     @network_port_1,
-                                     @network_port_2)
+          add_data_to_inventory_collection(@data[:network_ports],
+                                           @network_port_1,
+                                           @network_port_2)
 
-          # Invoke the DtoCollections saving and check we raise an exception that a cycle was found, after we attempted
-          # to remove the cycles.
+          # Invoke the InventoryCollections saving and check we raise an exception that a cycle was found, after we
+          # attempted to remove the cycles.
           expect { ManagerRefresh::SaveInventory.save_inventory(@ems, @data) }.to raise_error(/^Cycle from /)
         end
 
@@ -615,15 +615,15 @@ describe ManagerRefresh::SaveInventory do
           # @data[:orchestration_stacks] but not when pointing to @data[:network_ports], then we can transform the
           # edge correctly and this cycle is solvable.
           @data                                  = {}
-          @data[:orchestration_stacks]           = ::ManagerRefresh::DtoCollection.new(
+          @data[:orchestration_stacks]           = ::ManagerRefresh::InventoryCollection.new(
             ManageIQ::Providers::CloudManager::OrchestrationStack,
             :parent      => @ems,
             :association => :orchestration_stacks)
-          @data[:orchestration_stacks_resources] = ::ManagerRefresh::DtoCollection.new(
+          @data[:orchestration_stacks_resources] = ::ManagerRefresh::InventoryCollection.new(
             OrchestrationStackResource,
             :parent      => @ems,
             :association => :orchestration_stacks_resources)
-          @data[:network_ports]                  = ::ManagerRefresh::DtoCollection.new(
+          @data[:network_ports]                  = ::ManagerRefresh::InventoryCollection.new(
             NetworkPort,
             :parent      => @ems.network_manager,
             :association => :network_ports)
@@ -653,47 +653,47 @@ describe ManagerRefresh::SaveInventory do
             :device => @data[:network_ports].lazy_find(network_port_data(7)[:ems_ref])
           )
 
-          add_data_to_dto_collection(@data[:orchestration_stacks],
-                                     @orchestration_stack_data_0_1,
-                                     @orchestration_stack_data_0_2,
-                                     @orchestration_stack_data_1_11,
-                                     @orchestration_stack_data_1_12,
-                                     @orchestration_stack_data_11_21,
-                                     @orchestration_stack_data_12_22,
-                                     @orchestration_stack_data_12_23)
-          add_data_to_dto_collection(@data[:orchestration_stacks_resources],
-                                     @orchestration_stack_resource_data_1_11,
-                                     @orchestration_stack_resource_data_1_11_1,
-                                     @orchestration_stack_resource_data_1_12,
-                                     @orchestration_stack_resource_data_1_12_1,
-                                     @orchestration_stack_resource_data_11_21,
-                                     @orchestration_stack_resource_data_12_22,
-                                     @orchestration_stack_resource_data_12_23)
-          add_data_to_dto_collection(@data[:network_ports],
-                                     @network_port_1,
-                                     @network_port_2,
-                                     @network_port_3,
-                                     @network_port_4,
-                                     @network_port_5,
-                                     @network_port_6)
+          add_data_to_inventory_collection(@data[:orchestration_stacks],
+                                           @orchestration_stack_data_0_1,
+                                           @orchestration_stack_data_0_2,
+                                           @orchestration_stack_data_1_11,
+                                           @orchestration_stack_data_1_12,
+                                           @orchestration_stack_data_11_21,
+                                           @orchestration_stack_data_12_22,
+                                           @orchestration_stack_data_12_23)
+          add_data_to_inventory_collection(@data[:orchestration_stacks_resources],
+                                           @orchestration_stack_resource_data_1_11,
+                                           @orchestration_stack_resource_data_1_11_1,
+                                           @orchestration_stack_resource_data_1_12,
+                                           @orchestration_stack_resource_data_1_12_1,
+                                           @orchestration_stack_resource_data_11_21,
+                                           @orchestration_stack_resource_data_12_22,
+                                           @orchestration_stack_resource_data_12_23)
+          add_data_to_inventory_collection(@data[:network_ports],
+                                           @network_port_1,
+                                           @network_port_2,
+                                           @network_port_3,
+                                           @network_port_4,
+                                           @network_port_5,
+                                           @network_port_6)
 
-          # Invoke the DtoCollections saving and check we raise an exception that a cycle was found, after we attempted
-          # to remove the cycles.
+          # Invoke the InventoryCollections saving and check we raise an exception that a cycle was found, after we
+          # attempted to remove the cycles.
           # TODO(lsmola) make this spec pass, by enhancing the logic around transitive edges
           expect { ManagerRefresh::SaveInventory.save_inventory(@ems, @data) }.to raise_error(/^Cycle from /)
         end
 
         it 'test network_port -> stack -> resource -> stack and network_port -> resource -> stack -> resource -> stack ' do
           @data                                  = {}
-          @data[:orchestration_stacks]           = ::ManagerRefresh::DtoCollection.new(
+          @data[:orchestration_stacks]           = ::ManagerRefresh::InventoryCollection.new(
             ManageIQ::Providers::CloudManager::OrchestrationStack,
             :parent      => @ems,
             :association => :orchestration_stacks)
-          @data[:orchestration_stacks_resources] = ::ManagerRefresh::DtoCollection.new(
+          @data[:orchestration_stacks_resources] = ::ManagerRefresh::InventoryCollection.new(
             OrchestrationStackResource,
             :parent      => @ems,
             :association => :orchestration_stacks_resources)
-          @data[:network_ports]                  = ::ManagerRefresh::DtoCollection.new(
+          @data[:network_ports]                  = ::ManagerRefresh::InventoryCollection.new(
             NetworkPort,
             :parent      => @ems.network_manager,
             :association => :network_ports)
@@ -717,33 +717,33 @@ describe ManagerRefresh::SaveInventory do
             :device => @data[:orchestration_stacks_resources].lazy_find(orchestration_stack_data("12_22")[:ems_ref])
           )
 
-          add_data_to_dto_collection(@data[:orchestration_stacks],
-                                     @orchestration_stack_data_0_1,
-                                     @orchestration_stack_data_0_2,
-                                     @orchestration_stack_data_1_11,
-                                     @orchestration_stack_data_1_12,
-                                     @orchestration_stack_data_11_21,
-                                     @orchestration_stack_data_12_22,
-                                     @orchestration_stack_data_12_23)
-          add_data_to_dto_collection(@data[:orchestration_stacks_resources],
-                                     @orchestration_stack_resource_data_1_11,
-                                     @orchestration_stack_resource_data_1_11_1,
-                                     @orchestration_stack_resource_data_1_12,
-                                     @orchestration_stack_resource_data_1_12_1,
-                                     @orchestration_stack_resource_data_11_21,
-                                     @orchestration_stack_resource_data_12_22,
-                                     @orchestration_stack_resource_data_12_23)
-          add_data_to_dto_collection(@data[:network_ports],
-                                     @network_port_1,
-                                     @network_port_2,
-                                     @network_port_3,
-                                     @network_port_4)
+          add_data_to_inventory_collection(@data[:orchestration_stacks],
+                                           @orchestration_stack_data_0_1,
+                                           @orchestration_stack_data_0_2,
+                                           @orchestration_stack_data_1_11,
+                                           @orchestration_stack_data_1_12,
+                                           @orchestration_stack_data_11_21,
+                                           @orchestration_stack_data_12_22,
+                                           @orchestration_stack_data_12_23)
+          add_data_to_inventory_collection(@data[:orchestration_stacks_resources],
+                                           @orchestration_stack_resource_data_1_11,
+                                           @orchestration_stack_resource_data_1_11_1,
+                                           @orchestration_stack_resource_data_1_12,
+                                           @orchestration_stack_resource_data_1_12_1,
+                                           @orchestration_stack_resource_data_11_21,
+                                           @orchestration_stack_resource_data_12_22,
+                                           @orchestration_stack_resource_data_12_23)
+          add_data_to_inventory_collection(@data[:network_ports],
+                                           @network_port_1,
+                                           @network_port_2,
+                                           @network_port_3,
+                                           @network_port_4)
 
-          # Invoke the DtoCollections saving
+          # Invoke the InventoryCollections saving
           ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
 
           # Assert saved data
-          assert_full_dto_collections_graph
+          assert_full_inventory_collections_graph
 
           network_port_1 = NetworkPort.find_by(:ems_ref => "network_port_ems_ref_1")
           network_port_2 = NetworkPort.find_by(:ems_ref => "network_port_ems_ref_2")
@@ -764,40 +764,40 @@ describe ManagerRefresh::SaveInventory do
       end
 
       context 'with the existing data in the DB' do
-        it 'updates existing records with a graph of DtoCollections with cycle stack -> stack' do
+        it 'updates existing records with a graph of InventoryCollections with cycle stack -> stack' do
           # Create all relations directly in DB
           initialize_mocked_records
           # And check the relations are correct
-          assert_full_dto_collections_graph
+          assert_full_inventory_collections_graph
 
           # Now we will update existing DB using SaveInventory
-          # Fill the DtoCollections with data
-          initialize_dto_collections
+          # Fill the InventoryCollections with data
+          initialize_inventory_collections
           init_stack_data_with_stack_stack_cycle
           init_resource_data
 
-          add_data_to_dto_collection(@data[:orchestration_stacks],
-                                     @orchestration_stack_data_0_1,
-                                     @orchestration_stack_data_0_2,
-                                     @orchestration_stack_data_1_11,
-                                     @orchestration_stack_data_1_12,
-                                     @orchestration_stack_data_11_21,
-                                     @orchestration_stack_data_12_22,
-                                     @orchestration_stack_data_12_23)
-          add_data_to_dto_collection(@data[:orchestration_stacks_resources],
-                                     @orchestration_stack_resource_data_1_11,
-                                     @orchestration_stack_resource_data_1_11_1,
-                                     @orchestration_stack_resource_data_1_12,
-                                     @orchestration_stack_resource_data_1_12_1,
-                                     @orchestration_stack_resource_data_11_21,
-                                     @orchestration_stack_resource_data_12_22,
-                                     @orchestration_stack_resource_data_12_23)
+          add_data_to_inventory_collection(@data[:orchestration_stacks],
+                                           @orchestration_stack_data_0_1,
+                                           @orchestration_stack_data_0_2,
+                                           @orchestration_stack_data_1_11,
+                                           @orchestration_stack_data_1_12,
+                                           @orchestration_stack_data_11_21,
+                                           @orchestration_stack_data_12_22,
+                                           @orchestration_stack_data_12_23)
+          add_data_to_inventory_collection(@data[:orchestration_stacks_resources],
+                                           @orchestration_stack_resource_data_1_11,
+                                           @orchestration_stack_resource_data_1_11_1,
+                                           @orchestration_stack_resource_data_1_12,
+                                           @orchestration_stack_resource_data_1_12_1,
+                                           @orchestration_stack_resource_data_11_21,
+                                           @orchestration_stack_resource_data_12_22,
+                                           @orchestration_stack_resource_data_12_23)
 
-          # Invoke the DtoCollections saving
+          # Invoke the InventoryCollections saving
           ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
 
           # Assert saved data
-          assert_full_dto_collections_graph
+          assert_full_inventory_collections_graph
 
           # Check that we only updated the existing records
           orchestration_stack_0_1   = OrchestrationStack.find_by(:ems_ref => "stack_ems_ref_0_1")
@@ -840,40 +840,40 @@ describe ManagerRefresh::SaveInventory do
           expect(orchestration_stack_resource_12_23).to eq(@orchestration_stack_resource_12_23)
         end
 
-        it 'updates existing records with a graph of DtoCollections with cycle stack -> resource -> stack, through resource :key' do
+        it 'updates existing records with a graph of InventoryCollections with cycle stack -> resource -> stack, through resource :key' do
           # Create all relations directly in DB
           initialize_mocked_records
           # And check the relations are correct
-          assert_full_dto_collections_graph
+          assert_full_inventory_collections_graph
 
           # Now we will update existing DB using SaveInventory
-          # Fill the DtoCollections with data
-          initialize_dto_collections
+          # Fill the InventoryCollections with data
+          initialize_inventory_collections
           init_stack_data_with_stack_resource_stack_cycle
           init_resource_data
 
-          add_data_to_dto_collection(@data[:orchestration_stacks],
-                                     @orchestration_stack_data_0_1,
-                                     @orchestration_stack_data_0_2,
-                                     @orchestration_stack_data_1_11,
-                                     @orchestration_stack_data_1_12,
-                                     @orchestration_stack_data_11_21,
-                                     @orchestration_stack_data_12_22,
-                                     @orchestration_stack_data_12_23)
-          add_data_to_dto_collection(@data[:orchestration_stacks_resources],
-                                     @orchestration_stack_resource_data_1_11,
-                                     @orchestration_stack_resource_data_1_11_1,
-                                     @orchestration_stack_resource_data_1_12,
-                                     @orchestration_stack_resource_data_1_12_1,
-                                     @orchestration_stack_resource_data_11_21,
-                                     @orchestration_stack_resource_data_12_22,
-                                     @orchestration_stack_resource_data_12_23)
+          add_data_to_inventory_collection(@data[:orchestration_stacks],
+                                           @orchestration_stack_data_0_1,
+                                           @orchestration_stack_data_0_2,
+                                           @orchestration_stack_data_1_11,
+                                           @orchestration_stack_data_1_12,
+                                           @orchestration_stack_data_11_21,
+                                           @orchestration_stack_data_12_22,
+                                           @orchestration_stack_data_12_23)
+          add_data_to_inventory_collection(@data[:orchestration_stacks_resources],
+                                           @orchestration_stack_resource_data_1_11,
+                                           @orchestration_stack_resource_data_1_11_1,
+                                           @orchestration_stack_resource_data_1_12,
+                                           @orchestration_stack_resource_data_1_12_1,
+                                           @orchestration_stack_resource_data_11_21,
+                                           @orchestration_stack_resource_data_12_22,
+                                           @orchestration_stack_resource_data_12_23)
 
-          # Invoke the DtoCollections saving
+          # Invoke the InventoryCollections saving
           ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
 
           # Assert saved data
-          assert_full_dto_collections_graph
+          assert_full_inventory_collections_graph
 
           # Check that we only updated the existing records
           orchestration_stack_0_1   = OrchestrationStack.find_by(:ems_ref => "stack_ems_ref_0_1")
@@ -919,7 +919,7 @@ describe ManagerRefresh::SaveInventory do
     end
   end
 
-  def assert_full_dto_collections_graph
+  def assert_full_inventory_collections_graph
     orchestration_stack_0_1   = OrchestrationStack.find_by(:ems_ref => "stack_ems_ref_0_1")
     orchestration_stack_0_2   = OrchestrationStack.find_by(:ems_ref => "stack_ems_ref_0_2")
     orchestration_stack_1_11  = OrchestrationStack.find_by(:ems_ref => "stack_ems_ref_1_11")
@@ -978,28 +978,28 @@ describe ManagerRefresh::SaveInventory do
     expect(orchestration_stack_resource_12_23.stack).to eq(orchestration_stack_1_12)
   end
 
-  def initialize_dto_collections
-    # Initialize the DtoCollections
+  def initialize_inventory_collections
+    # Initialize the InventoryCollections
     @data                                  = {}
-    @data[:orchestration_stacks]           = ::ManagerRefresh::DtoCollection.new(
+    @data[:orchestration_stacks]           = ::ManagerRefresh::InventoryCollection.new(
       ManageIQ::Providers::CloudManager::OrchestrationStack,
       :parent      => @ems,
       :association => :orchestration_stacks)
-    @data[:orchestration_stacks_resources] = ::ManagerRefresh::DtoCollection.new(
+    @data[:orchestration_stacks_resources] = ::ManagerRefresh::InventoryCollection.new(
       OrchestrationStackResource,
       :parent      => @ems,
       :association => :orchestration_stacks_resources)
   end
 
-  def initialize_dto_collections_reversed
-    # Initialize the DtoCollections in reversed order, so we know that untangling of the cycle does not depend on the
-    # order of the DtoCollections
+  def initialize_inventory_collections_reversed
+    # Initialize the InventoryCollections in reversed order, so we know that untangling of the cycle does not depend on
+    # the order of the InventoryCollections
     @data                                  = {}
-    @data[:orchestration_stacks_resources] = ::ManagerRefresh::DtoCollection.new(
+    @data[:orchestration_stacks_resources] = ::ManagerRefresh::InventoryCollection.new(
       OrchestrationStackResource,
       :parent      => @ems,
       :association => :orchestration_stacks_resources)
-    @data[:orchestration_stacks]           = ::ManagerRefresh::DtoCollection.new(
+    @data[:orchestration_stacks]           = ::ManagerRefresh::InventoryCollection.new(
       ManageIQ::Providers::CloudManager::OrchestrationStack,
       :parent      => @ems,
       :association => :orchestration_stacks)
@@ -1023,30 +1023,36 @@ describe ManagerRefresh::SaveInventory do
   end
 
   def init_stack_data_with_stack_resource_stack_cycle
-    @orchestration_stack_data_0_1   = orchestration_stack_data("0_1").merge(
+    @orchestration_stack_data_0_1 = orchestration_stack_data("0_1").merge(
       :parent => @data[:orchestration_stacks_resources].lazy_find(orchestration_stack_data("0_1")[:ems_ref],
                                                                   :key => :stack)
     )
-    @orchestration_stack_data_0_2   = orchestration_stack_data("0_2").merge(
+
+    @orchestration_stack_data_0_2 = orchestration_stack_data("0_2").merge(
       :parent => @data[:orchestration_stacks_resources].lazy_find(orchestration_stack_data("0_2")[:ems_ref],
                                                                   :key => :stack)
     )
-    @orchestration_stack_data_1_11  = orchestration_stack_data("1_11").merge(
+
+    @orchestration_stack_data_1_11 = orchestration_stack_data("1_11").merge(
       :parent => @data[:orchestration_stacks_resources].lazy_find(orchestration_stack_data("1_11")[:ems_ref],
                                                                   :key => :stack)
     )
-    @orchestration_stack_data_1_12  = orchestration_stack_data("1_12").merge(
+
+    @orchestration_stack_data_1_12 = orchestration_stack_data("1_12").merge(
       :parent => @data[:orchestration_stacks_resources].lazy_find(orchestration_stack_data("1_12")[:ems_ref],
                                                                   :key => :stack)
     )
+
     @orchestration_stack_data_11_21 = orchestration_stack_data("11_21").merge(
       :parent => @data[:orchestration_stacks_resources].lazy_find(orchestration_stack_data("11_21")[:ems_ref],
                                                                   :key => :stack)
     )
+
     @orchestration_stack_data_12_22 = orchestration_stack_data("12_22").merge(
       :parent => @data[:orchestration_stacks_resources].lazy_find(orchestration_stack_data("12_22")[:ems_ref],
                                                                   :key => :stack)
     )
+
     @orchestration_stack_data_12_23 = orchestration_stack_data("12_23").merge(
       :parent => @data[:orchestration_stacks_resources].lazy_find(orchestration_stack_data("12_23")[:ems_ref],
                                                                   :key => :stack)
