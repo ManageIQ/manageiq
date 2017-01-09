@@ -532,7 +532,7 @@ class MiqExpression
                    # This is only for supporting reporting "display filters"
                    # In the report object the tag value is actually the description and not the raw tag name.
                    # So we have to trick it by replacing the value with the description.
-                   description = MiqExpression.get_entry_details(exp[operator]["tag"]).inject("") do|s, t|
+                   description = MiqExpression.get_entry_details(exp[operator]["tag"]).inject("") do |s, t|
                      break(t.first) if t.last == exp[operator]["value"]
                      s
                    end
