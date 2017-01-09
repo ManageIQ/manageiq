@@ -82,7 +82,9 @@ module ManageIQ::Providers::Vmware
           )
         end
 
-        result << result.new_inventory_object(new_result)
+        new_result = result.new_inventory_object(new_result)
+
+        result << new_result
         result_uids[mor] = new_result
         result_uids[:storage_id][uid] = new_result
       end
@@ -107,7 +109,9 @@ module ManageIQ::Providers::Vmware
           # TODO: new_result[:storage_profile_storages] << datastore unless datastore.nil?
         end
 
-        result << result.new_inventory_object(new_result)
+        new_result = result.new_inventory_object(new_result)
+
+        result << new_result
         result_uids[uid] = new_result
       end unless profile_inv.nil?
 
@@ -203,7 +207,9 @@ module ManageIQ::Providers::Vmware
             :ems_ref     => mor,
             :ems_ref_obj => mor
           }
-          result << result.new_inventory_object(new_result)
+          new_result = result.new_inventory_object(new_result)
+
+          result << new_result
           result_uids[mor] = new_result
           next
         end
@@ -307,7 +313,10 @@ module ManageIQ::Providers::Vmware
           # TODO: child_uids not supported by InventoryObject yet
           # :child_uids       => rp_uids,
         }
-        result << result.new_inventory_object(new_result)
+
+        new_result = result.new_inventory_object(new_result)
+
+        result << new_result
         result_uids[mor] = new_result
       end
       return result, result_uids, cluster_uids_by_host, lan_uids, switch_uids, guest_device_uids, scsi_lun_uids
@@ -957,7 +966,9 @@ module ManageIQ::Providers::Vmware
           :memory_hot_add_increment => config['hotPlugMemoryIncrementSize'],
         }
 
-        result << result.new_inventory_object(new_result)
+        new_result = result.new_inventory_object(new_result)
+
+        result << new_result
         result_uids[mor] = new_result
       end
       return result, result_uids
@@ -1246,7 +1257,9 @@ module ManageIQ::Providers::Vmware
           # TODO: :child_uids  => child_mors,
           :hidden      => false
         }
-        result << result.new_inventory_object(new_result)
+        new_result = result.new_inventory_object(new_result)
+
+        result << new_result
         result_uids[mor] = new_result
       end
       return result, result_uids
@@ -1269,7 +1282,9 @@ module ManageIQ::Providers::Vmware
           # TODO: :child_uids  => child_mors,
           :hidden      => false
         }
-        result << result.new_inventory_object(new_result)
+        new_result = result.new_inventory_object(new_result)
+
+        result << new_result
         result_uids[mor] = new_result
       end
       return result, result_uids
@@ -1294,7 +1309,9 @@ module ManageIQ::Providers::Vmware
           :hidden      => false
         }
 
-        result << result.new_inventory_object(new_result)
+        new_result = result.new_inventory_object(new_result)
+
+        result << new_result
         result_uids[mor] = new_result
       end
       return result, result_uids
@@ -1336,7 +1353,9 @@ module ManageIQ::Providers::Vmware
           # TODO: child_uids not supported by InventoryObject yet
           # :child_uids              => get_mors(data, 'resourcePool')
         }
-        result << result.new_inventory_object(new_result)
+        new_result = result.new_inventory_object(new_result)
+
+        result << new_result
         result_uids[mor] = new_result
       end
       return result, result_uids
@@ -1377,7 +1396,9 @@ module ManageIQ::Providers::Vmware
 
           # TODO: :child_uids            => get_mors(data, 'resourcePool') + get_mors(data, 'vm')
         }
-        result << result.new_inventory_object(new_result)
+        new_result = result.new_inventory_object(new_result)
+
+        result << new_result
         result_uids[mor] = new_result
       end
       return result, result_uids
