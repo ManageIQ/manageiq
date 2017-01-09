@@ -78,17 +78,24 @@ describe OrchestrationTemplate do
   end
 
   describe "#eligible_managers" do
+    let!(:miq_server)  { EvmSpecHelper.local_miq_server }
+    let(:user_admin)   { FactoryGirl.create(:user_admin) }
+    let(:tenant)       { FactoryGirl.create(:tenant) }
+    let(:other_tenant) { FactoryGirl.create(:tenant) }
+
     before do
       allow(OrchestrationTemplate).to receive_messages(:eligible_manager_types =>
                                                          [ManageIQ::Providers::Amazon::CloudManager,
                                                           ManageIQ::Providers::Openstack::CloudManager])
       @template = FactoryGirl.create(:orchestration_template)
-      @aws = FactoryGirl.create(:ems_amazon)
-      @openstack = FactoryGirl.create(:ems_openstack)
+      @aws = FactoryGirl.create(:ems_amazon, :tenant => other_tenant)
+      @openstack = FactoryGirl.create(:ems_openstack, :tenant => tenant)
     end
 
     it "lists all eligible managers for a template" do
-      expect(@template.eligible_managers).to match_array([@aws, @openstack])
+      User.with_user(user_admin) do
+        expect(@template.eligible_managers).to match_array([@aws, @openstack])
+      end
     end
   end
 
