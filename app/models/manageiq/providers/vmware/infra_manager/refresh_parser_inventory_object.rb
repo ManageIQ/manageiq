@@ -37,7 +37,7 @@ module ManageIQ::Providers::Vmware
       result[:folders], uids[:folders] = inv_to_ems_folder_hashes(inv)
       result[:resource_pools], uids[:resource_pools] = rp_inv_to_hashes(inv[:rp])
 
-      # TODO: result[:customization_specs] = customization_spec_inv_to_hashes(inv[:customization_specs]) if inv.key?(:customization_specs)
+      result[:customization_specs] = customization_spec_inv_to_hashes(inv[:customization_specs]) if inv.key?(:customization_specs)
 
       #link_ems_metadata(result, inv)
       #link_root_folder(result)
@@ -1384,7 +1384,7 @@ module ManageIQ::Providers::Vmware
     end
 
     def customization_spec_inv_to_hashes(inv)
-      result = add_inventory_collection(CustomizationSpec, :customization_specs)
+      result = add_inventory_collection(CustomizationSpec, :customization_specs, [:name])
       return result if inv.nil?
 
       inv.each do |spec_inv|
