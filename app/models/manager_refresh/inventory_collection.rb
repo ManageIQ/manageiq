@@ -53,6 +53,7 @@ module ManagerRefresh
       case strategy_name
       when :local_db_cache_all, :local_db_find_one
         send("process_strategy_#{strategy_name}")
+      when :find_missing_in_local_db
       end
       strategy_name
     end
@@ -153,9 +154,14 @@ module ManagerRefresh
 
     def find(manager_uuid)
       return if manager_uuid.nil?
-      return find_in_db(manager_uuid) if strategy == :local_db_find_one
-
-      data_index[manager_uuid]
+      case strategy
+      when :local_db_find_one
+        find_in_db(manager_uuid)
+      when :find_missing_in_local_db
+        data_index[manager_uuid] || find_in_db(manager_uuid)
+      else
+        data_index[manager_uuid]
+      end
     end
 
     def find_in_db(manager_uuid)
@@ -164,8 +170,9 @@ module ManagerRefresh
       record           = if custom_db_finder.nil?
                            parent.send(association).where(hash_uuid_by_ref).first
                          else
-                           custom_db_finder.call(hash_uuid_by_ref)
+                           custom_db_finder.call(self, hash_uuid_by_ref)
                          end
+      return unless record
 
       inventory_object = new_inventory_object(record.attributes.symbolize_keys)
       # TODO(lsmola) get rid of storing objects, they are causing memory bloat
