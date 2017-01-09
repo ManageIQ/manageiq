@@ -324,6 +324,20 @@ describe MiqRequest do
       expect_any_instance_of(ManageIQ::Providers::Vmware::InfraManager::ProvisionWorkflow).to receive(:password_helper).twice
       provision_request.workflow({}, {:allowed_hosts => [host], :skip_dialog_load => true}) { |_x| 'test' }
     end
+
+    it "returns the allowed tags" do
+      FactoryGirl.create(:miq_dialog,
+                         :name        => "miq_provision_dialogs",
+                         :dialog_type => MiqProvisionWorkflow)
+
+      FactoryGirl.create(:classification_department_with_tags)
+
+      tag = Classification.where(:description => 'Department', :parent_id => 0).includes(:tag).first
+      provision_request.add_tag(tag.name, tag.children.first.name)
+
+      expected = [a_hash_including(:children)]
+      expect(provision_request.v_allowed_tags).to match(expected)
+    end
   end
 
   context '#create_request_task' do
