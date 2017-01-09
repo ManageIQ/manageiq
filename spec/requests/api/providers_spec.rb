@@ -179,15 +179,25 @@ describe "Providers API" do
       expect_bad_request("Must specify a name")
     end
 
+    it "prevents adding custom attribute to a provider with forbidden section" do
+      api_basic_authorize action_identifier(:providers, :edit)
+
+      run_post(provider_ca_url, gen_request(:add, [{"name" => "name3", "value" => "value3",
+                                                    "section" => "bad_section"}]))
+
+      expect_bad_request("Invalid provider custom attributes specified - " \
+                         "Invalid attribute section specified: bad_section")
+    end
+
     it "add custom attributes to a provider" do
       api_basic_authorize action_identifier(:providers, :edit)
 
       run_post(provider_ca_url, gen_request(:add, [{"name" => "name1", "value" => "value1"},
-                                                   {"name" => "name2", "value" => "value2", "section" => "section2"}]))
+                                                   {"name" => "name2", "value" => "value2", "section" => "metadata"}]))
       expected = {
         "results" => a_collection_containing_exactly(
           a_hash_including("name" => "name1", "value" => "value1", "section" => "metadata"),
-          a_hash_including("name" => "name2", "value" => "value2", "section" => "section2")
+          a_hash_including("name" => "name2", "value" => "value2", "section" => "metadata")
         )
       }
       expect(response).to have_http_status(:ok)
