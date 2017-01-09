@@ -221,6 +221,7 @@ chargeback_rate_details:
 - updated_on
 - chargeback_rate_detail_measure_id
 - chargeback_rate_detail_currency_id
+- chargeable_field_id
 chargeback_rates:
 - id
 - guid
