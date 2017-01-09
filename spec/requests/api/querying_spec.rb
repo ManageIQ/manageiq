@@ -101,6 +101,34 @@ describe "Querying" do
       expect_query_result(:vms, 2, 2)
       expect_result_resources_to_match_hash([{"name" => "redhat_vm"}, {"name" => "vmware_vm"}])
     end
+
+    it 'supports sql friendly virtual attributes' do
+      host_foo =  FactoryGirl.create(:host, :hostname => 'foo')
+      host_bar =  FactoryGirl.create(:host, :hostname => 'bar')
+      vm_foo = FactoryGirl.create(:vm, :name => 'vm_foo')
+      vm_bar = FactoryGirl.create(:vm, :name => 'vm_bar')
+      host_foo.vms << vm_foo
+      host_bar.vms << vm_bar
+
+      run_get vms_url, :sort_by => 'host_name', :sort_order => 'desc', :expand => 'resources'
+
+      expect_query_result(:vms, 2, 2)
+      expect_result_resources_to_match_hash([{'name' => 'vm_bar'}, {'name' => 'vm_foo'}])
+    end
+
+    it 'does not support non sql friendly virtual attributes' do
+      FactoryGirl.create(:vm)
+
+      run_get vms_url, :sort_by => 'aggressive_recommended_mem', :sort_order => 'asc'
+
+      expected = {
+        'error' => a_hash_including(
+          'message' => 'Vm cannot be sorted by aggressive_recommended_mem'
+        )
+      }
+      expect(response).to have_http_status(:bad_request)
+      expect(response.parsed_body).to include(expected)
+    end
   end
 
   describe "Filtering vms" do
