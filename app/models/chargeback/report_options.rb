@@ -40,14 +40,14 @@ class Chargeback
       ts = Time.now.in_time_zone(tz)
       case interval
       when 'daily'
-        start_time = (ts - start_interval_offset.days).beginning_of_day.utc
-        end_time   = (ts - end_interval_offset.days).end_of_day.utc
+        start_time = (ts - start_interval_offset.days).beginning_of_day
+        end_time   = (ts - end_interval_offset.days).end_of_day
       when 'weekly'
-        start_time = (ts - start_interval_offset.weeks).beginning_of_week.utc
-        end_time   = (ts - end_interval_offset.weeks).end_of_week.utc
+        start_time = (ts - start_interval_offset.weeks).beginning_of_week
+        end_time   = (ts - end_interval_offset.weeks).end_of_week
       when 'monthly'
-        start_time = (ts - start_interval_offset.months).beginning_of_month.utc
-        end_time   = (ts - end_interval_offset.months).end_of_month.utc
+        start_time = (ts - start_interval_offset.months).beginning_of_month
+        end_time   = (ts - end_interval_offset.months).end_of_month
       else
         raise _("interval '%{interval}' is not supported") % {:interval => interval}
       end
