@@ -301,13 +301,13 @@ module ManageIQ::Providers::Vmware
           :failover         => failover,
           :hyperthreading   => config.fetch_path("hyperThread", "active").to_s.downcase == "true",
 
-          # TODO: :ems_cluster      => cluster_uids_by_host[mor],
+          :ems_cluster      => cluster_uids_by_host[mor],
           # TODO: :operating_system => self.class.host_inv_to_os_hash(host_inv, hostname),
           # TODO: :system_services  => self.class.host_inv_to_system_service_hashes(host_inv),
 
           # TODO: :hardware         => hardware,
           # TODO: :switches         => switches,
-          # TODO: :storages         => storages,
+          :storages         => storages,
           # TODO: :host_storages    => host_storages,
 
           # TODO: child_uids not supported by InventoryObject yet
@@ -949,11 +949,11 @@ module ManageIQ::Providers::Vmware
           :cpu_shares            => cpu && cpu.fetch_path("shares", "shares"),
           :cpu_shares_level      => cpu && cpu.fetch_path("shares", "level"),
 
-          # TODO: :host                  => host_uids[host_mor],
-          # TODO: :ems_cluster           => cluster_uids_by_host[host_mor],
-          # TODO: :storages              => storages,
-          # TODO: :storage               => storage,
-          # TODO: :storage_profile       => storage_profile_by_vm_mor[mor],
+          :host                  => host_uids[host_mor],
+          :ems_cluster           => cluster_uids_by_host[host_mor],
+          :storages              => storages,
+          :storage               => storage,
+          :storage_profile       => storage_profile_by_vm_mor[mor],
           # TODO: :operating_system      => self.class.vm_inv_to_os_hash(vm_inv),
           # TODO: :hardware              => hardware,
           # TODO: :custom_attributes     => self.class.vm_inv_to_custom_attribute_hashes(vm_inv),
