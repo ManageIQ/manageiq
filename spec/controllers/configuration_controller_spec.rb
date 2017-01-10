@@ -16,7 +16,6 @@ describe ConfigurationController do
   describe "building tabs" do
     before(:each) do
       controller.instance_variable_set(:@tabform, "ui_2")
-      controller.instance_variable_set(:@config_tab, "ui")
     end
 
     it 'sets the active tab' do

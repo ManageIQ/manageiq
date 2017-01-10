@@ -46,8 +46,7 @@
         API.autorenew();
         miqInitNotifications(); // ActionCable causes live reload crashes
 
-    - id = %w(configuration policy).include?(@layout) ? @config_tab : @layout
-    %body{:id => id, :onload => is_browser_ie? ? '' : 'miqOnLoad();', 'data-controller' => controller_name}
+    %body{:onload => is_browser_ie? ? '' : 'miqOnLoad();', 'data-controller' => controller_name}
       = render :partial => "layouts/header"
       = render :partial => "layouts/content"
       = render :partial => 'layouts/footer'
