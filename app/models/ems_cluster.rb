@@ -3,7 +3,6 @@ class EmsCluster < ApplicationRecord
   include NewWithTypeStiMixin
   include_concern 'CapacityPlanning'
   include EventMixin
-  include VirtualTotalMixin
   include TenantIdentityMixin
 
   acts_as_miq_taggable

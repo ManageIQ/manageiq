@@ -1,4 +1,4 @@
-describe VirtualTotalMixin do
+describe VirtualTotal do
   describe ".virtual_total (with real has_many relation ems#total_vms)" do
     let(:base_model) { ExtManagementSystem }
     it "sorts by total" do

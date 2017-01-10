@@ -20,8 +20,6 @@ class Service < ApplicationRecord
     :shutdown_guest => "off"
   }.freeze
 
-  include VirtualTotalMixin
-
   has_ancestry :orphan_strategy => :destroy
 
   belongs_to :tenant

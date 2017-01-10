@@ -1,7 +1,6 @@
 class SecurityGroup < ApplicationRecord
   include NewWithTypeStiMixin
   include SupportsFeatureMixin
-  include VirtualTotalMixin
 
   acts_as_miq_taggable
 

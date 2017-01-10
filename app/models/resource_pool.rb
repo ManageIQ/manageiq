@@ -1,5 +1,4 @@
 class ResourcePool < ApplicationRecord
-  include VirtualTotalMixin
   include TenantIdentityMixin
 
   acts_as_miq_taggable
