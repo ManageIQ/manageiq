@@ -1,10 +1,6 @@
+require_relative 'miq_ae_service_object_common'
+require_relative 'miq_ae_service_rbac'
 module MiqAeMethodService
-  class MiqAeServiceConverter
-    def self.svc2obj(svc)
-      svc.instance_variable_get("@object")
-    end
-  end
-
   class MiqAeServiceModelBase
     SERVICE_MODEL_PATH = Rails.root.join("lib/miq_automation_engine/service_models")
     SERVICE_MODEL_GLOB = SERVICE_MODEL_PATH.join("miq_ae_service_*.rb")
@@ -14,7 +10,7 @@ module MiqAeMethodService
     end
 
     include DRbUndumped    # Ensure that Automate Method can get at instances over DRb
-    include MiqAeServiceObjectCommon
+    include MiqAeMethodService::MiqAeServiceObjectCommon
     include Vmdb::Logging
     include MiqAeMethodService::MiqAeServiceRbac
 
