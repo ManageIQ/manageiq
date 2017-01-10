@@ -460,7 +460,6 @@ class MiqExpression
     operator = exp.keys.first
     case operator.downcase
     when "equal", "=", "<", ">", ">=", "<=", "!="
-      col_type = get_col_type(exp[operator]["field"]) if exp[operator]["field"]
       operands = operands2rubyvalue(operator, exp[operator], context_type)
       clause = operands.join(" #{normalize_ruby_operator(operator)} ")
     when "before"
