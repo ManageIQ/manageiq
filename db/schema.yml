@@ -515,6 +515,14 @@ configuration_profiles_configuration_tags:
 - configuration_profile_id
 - configuration_tag_id
 - id
+configuration_script_sources:
+- id
+- manager_id
+- manager_ref
+- name
+- description
+- created_at
+- updated_at
 configuration_scripts:
 - id
 - manager_id
@@ -527,6 +535,8 @@ configuration_scripts:
 - survey_spec
 - inventory_root_group_id
 - type
+- parent_id
+- configuration_script_source_id
 configuration_tags:
 - id
 - type
