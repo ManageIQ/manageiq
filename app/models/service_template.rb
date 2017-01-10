@@ -288,6 +288,6 @@ class ServiceTemplate < ApplicationRecord
   alias orderable? validate_order
 
   def provision_action
-    resource_actions.find_by_action("Provision")
+    resource_actions.find_by(:action => "Provision")
   end
 end
