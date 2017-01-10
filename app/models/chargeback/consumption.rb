@@ -4,12 +4,15 @@ class Chargeback
       @start_time, @end_time = start_time, end_time
     end
 
-    def past_hours_in_interval
-      # We cannot charge for future hours (i.e. weekly report on Monday, should charge just monday)
-      @past_hours_in_interval ||= begin
-                                    past = (Time.current - @start_time).round / 1.hour
-                                    [past, hours_in_interval].min
-                                  end
+    def consumed_hours_in_interval
+      # Why we need this?
+      #   1) We cannot charge for hours until the resources existed (vm provisioned in the middle of month)
+      #   2) We cannot charge for future hours (i.e. weekly report on Monday, should charge just monday)
+      @consumed_hours_in_interval ||= begin
+                                        consuption_start = [@start_time, resource.try(:created_on)].compact.max
+                                        consumption_end = [Time.current, @end_time].min
+                                        (consumption_end - consuption_start).round / 1.hour
+                                      end
     end
 
     def hours_in_month

@@ -4,7 +4,7 @@ describe ChargebackContainerProject do
   let(:base_options) { {:interval_size => 2, :end_interval_offset => 0, :ext_options => {:tz => 'UTC'} } }
   let(:hourly_rate)       { 0.01 }
   let(:starting_date) { Time.parse('2012-09-01 23:59:59Z').utc }
-  let(:ts) { starting_date.in_time_zone(Metric::Helper.get_time_zone(options[:ext_options])) }
+  let(:ts) { starting_date.in_time_zone(Metric::Helper.get_time_zone(base_options[:ext_options])) }
   let(:report_run_time) { month_end }
   let(:month_beginning) { ts.beginning_of_month.utc }
   let(:month_end) { ts.end_of_month.utc }
@@ -32,7 +32,8 @@ describe ChargebackContainerProject do
     ChargebackRate.seed
 
     EvmSpecHelper.create_guid_miq_server_zone
-    @project = FactoryGirl.create(:container_project, :name => "my project", :ext_management_system => ems)
+    @project = FactoryGirl.create(:container_project, :name => "my project", :ext_management_system => ems,
+                                  :created_on => month_beginning)
 
     temp = {:cb_rate => chargeback_rate, :object => ems}
     ChargebackRate.set_assignments(:compute, [temp])
