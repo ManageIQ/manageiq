@@ -2,9 +2,10 @@ describe ManageIQ::Providers::Vmware::InfraManager::Vm::Reconfigure do
   let(:vm) do
     FactoryGirl.create(
       :vm_vmware,
-      :name     => 'test_vm',
-      :storage  => FactoryGirl.create(:storage, :name => 'storage'),
-      :hardware => FactoryGirl.create(:hardware, :virtual_hw_version => "07")
+      :name            => 'test_vm',
+      :raw_power_state => 'poweredOff',
+      :storage         => FactoryGirl.create(:storage, :name => 'storage'),
+      :hardware        => FactoryGirl.create(:hardware, :cpu4x2, :ram1GB, :virtual_hw_version => "07")
     )
   end
 
@@ -80,6 +81,77 @@ describe ManageIQ::Providers::Vmware::InfraManager::Vm::Reconfigure do
       it "vm_vmware virtual_hw_version != 07" do
         vm.hardware.update_attributes(:virtual_hw_version => "08")
         expect(subject["numCoresPerSocket"]).to eq(2)
+      end
+    end
+
+    context "Running VM" do
+      before do
+        vm.update_attributes(:raw_power_state => 'poweredOn')
+      end
+
+      context "with CPU Hot-Add disabled" do
+        it "raises an exception when adding CPUs" do
+          options[:number_of_cpus] = '16'
+          expect { subject }.to raise_error(MiqException::MiqVmError, "CPU Hot-Add not enabled")
+        end
+      end
+
+      context "with CPU Hot-Add enabled" do
+        before do
+          vm.update_attributes(:cpu_hot_add_enabled    => true,
+                               :cpu_hot_remove_enabled => false)
+        end
+
+        it "raises an exception when removing CPUs" do
+          options[:number_of_cpus] = '2'
+
+          expect { subject }.to raise_error(MiqException::MiqVmError, "Cannot remove CPUs from a running VM")
+        end
+
+        it "raises an exception when changing numCoresPerSocket" do
+          options[:cores_per_socket] = 4
+
+          expect { subject }.to raise_error(MiqException::MiqVmError, "Cannot change CPU cores per socket on a running VM")
+        end
+
+        it "sets numCPUs correctly" do
+          options[:number_of_cpus] = '16'
+
+          expect(subject["numCPUs"]).to eq(16)
+        end
+      end
+
+      context "with Memory Hot-Add disabled" do
+        it "raises an exception when adding RAM" do
+          options[:vm_memory] = '2048'
+
+          expect { subject }.to raise_error(MiqException::MiqVmError, "Memory Hot-Add not enabled")
+        end
+      end
+
+      context "with Memory Hot-Add enabled" do
+        before do
+          vm.update_attributes(:memory_hot_add_enabled => true,
+                               :memory_hot_add_limit   => 2048)
+        end
+
+        it "raises an exception when removing memory" do
+          options[:vm_memory] = '512'
+
+          expect { subject }.to raise_error(MiqException::MiqVmError, "Cannot remove memory from a running VM")
+        end
+
+        it "raises an exception if adding more than the memory limit" do
+          options[:vm_memory] = '4096'
+
+          expect { subject }.to raise_error(MiqException::MiqVmError, "Cannot add more than 2048MB to this VM")
+        end
+
+        it "sets memoryMB correctly" do
+          options[:vm_memory] = '1536'
+
+          expect(subject["memoryMB"]).to eq(1536)
+        end
       end
     end
   end
