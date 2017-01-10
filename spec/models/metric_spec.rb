@@ -1352,7 +1352,7 @@ describe Metric do
       selected_types << t.class.name
 
       expected_enabled = case t
-                         # Vm's perf_capture_enabled is its availability_zone's perf_capture setting,
+                         # Vm's perf_capture_enabled? is its availability_zone's perf_capture setting,
                          #   or true if it has no availability_zone
                          when Vm then                t.availability_zone ? t.availability_zone.perf_capture_enabled? : true
                          when AvailabilityZone then  t.perf_capture_enabled?

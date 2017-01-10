@@ -512,13 +512,14 @@ class ExtManagementSystem < ApplicationRecord
     [MiqRegion.my_region].compact unless interval_name == 'realtime'
   end
 
-  def perf_capture_enabled
+  def perf_capture_enabled?
     return @perf_capture_enabled unless @perf_capture_enabled.nil?
     return @perf_capture_enabled = true if ems_clusters.any?(&:perf_capture_enabled?)
     return @perf_capture_enabled = true if hosts.any?(&:perf_capture_enabled?)
     @perf_capture_enabled = false
   end
-  alias_method :perf_capture_enabled?, :perf_capture_enabled
+  alias_method :perf_capture_enabled, :perf_capture_enabled?
+  Vmdb::Deprecation.deprecate_methods(self, :perf_capture_enabled => :perf_capture_enabled?)
 
   ###################################
   # Event Monitor
