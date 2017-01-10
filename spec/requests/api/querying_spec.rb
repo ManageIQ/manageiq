@@ -129,6 +129,20 @@ describe "Querying" do
       expect(response).to have_http_status(:bad_request)
       expect(response.parsed_body).to include(expected)
     end
+
+    it 'does not support ignore_case on sql friendly virtual attributes' do
+      FactoryGirl.create(:vm)
+
+      run_get vms_url, :sort_by => 'host_name', :expand => 'resources', :sort_options => 'ignore_case'
+
+      expected = {
+        'error' => a_hash_including(
+          'message' => 'Vm cannot be sorted with ignored case'
+        )
+      }
+      expect(response).to have_http_status(:bad_request)
+      expect(response.parsed_body).to include(expected)
+    end
   end
 
   describe "Filtering vms" do

@@ -160,9 +160,9 @@ module Api
         orders = String(params['sort_order']).split(",")
         options = String(params['sort_options']).split(",")
         params['sort_by'].split(",").zip(orders).collect do |attr, order|
-          if klass.attribute_method?(attr) || klass.method_defined?(attr) || attr == klass.primary_key
-            raise BadRequestError,
-                  "#{klass.name} cannot be sorted by #{attr}" unless klass.attribute_supported_by_sql?(attr)
+          if klass.virtual_attribute?(attr)
+            sort_virtual_attr_directive(klass, attr, order, options)
+          elsif klass.attribute_method?(attr) || klass.method_defined?(attr) || attr == klass.primary_key
             sort_directive(attr, order, options)
           else
             raise BadRequestError, "#{attr} is not a valid attribute for #{klass.name}"
@@ -171,9 +171,19 @@ module Api
       end
 
       def sort_directive(attr, order, options)
-        if options.map(&:downcase).include?("ignore_case")
-          "LOWER(#{attr})"
-        elsif order
+        sort_item = attr
+        sort_item = "LOWER(#{sort_item})" if options.map(&:downcase).include?("ignore_case")
+        sort_item << " ASC"  if order && order.downcase.start_with?("asc")
+        sort_item << " DESC" if order && order.downcase.start_with?("desc")
+        sort_item
+      end
+
+      def sort_virtual_attr_directive(klass, attr, order, options)
+        raise BadRequestError,
+              "#{klass.name} cannot be sorted by #{attr}" unless klass.attribute_supported_by_sql?(attr)
+        raise BadRequestError,
+              "#{klass.name} cannot be sorted with ignored case" if options.map(&:downcase).include?("ignore_case")
+        if order
           { attr.to_sym => order.downcase }
         else
           attr
