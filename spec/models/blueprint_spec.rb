@@ -356,14 +356,15 @@ describe Blueprint do
       subject.save!
     end
 
-    it 'will be set to true if it has no other versions' do
+    it 'defaults to true' do
       expect(subject.active_version).to be_truthy
     end
 
-    it 'will be set to false if it has other versions' do
+    it 'will set latest saved blueprint to the active_version' do
       blueprint_2 = FactoryGirl.create(:blueprint, :original_blueprint_id => subject.id)
 
-      expect(blueprint_2.active_version).to be_falsey
+      expect(blueprint_2.active_version).to be_truthy
+      expect(subject.reload.active_version).to be_falsey
     end
   end
 end

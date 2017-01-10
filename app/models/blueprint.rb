@@ -10,8 +10,8 @@ class Blueprint < ApplicationRecord
 
   acts_as_miq_taggable
 
-  after_create :set_original_blueprint
-  default_value_for :active_version, false
+  after_save :update_versions
+  default_value_for :active_version, true
 
   # the top of the service_templates, a bundle that contains child items
   def bundle
@@ -120,8 +120,10 @@ class Blueprint < ApplicationRecord
 
   private
 
-  def set_original_blueprint
-    update_attributes!(:original_blueprint_id => id, :active_version => true) unless original_blueprint_id
+  def update_versions
+    update_attributes!(:original_blueprint_id => id) unless original_blueprint_id
+    # Latest edited version will be set as the active version
+    versions.where.not(:id => id).update_all(:active_version => false)
   end
 
   def parse_service_catalog
