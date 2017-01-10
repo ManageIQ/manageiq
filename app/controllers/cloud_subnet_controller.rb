@@ -74,8 +74,7 @@ class CloudSubnetController < ApplicationController
       @subnet = CloudSubnet.new
       options = form_params
       ems = ExtManagementSystem.find(options[:ems_id])
-      valid_action, action_details = CloudSubnet.validate_create_subnet(ems)
-      if valid_action
+      if CloudSubnet.class_by_ems(ems).supports_create?
         begin
           CloudSubnet.create_subnet(ems, options)
           # TODO: To replace with targeted refresh when avail. or either use tasks
@@ -94,7 +93,7 @@ class CloudSubnetController < ApplicationController
         javascript_redirect :action => "show_list"
       else
         @in_a_form = true
-        add_flash(_(action_details), :error) unless action_details.nil?
+        add_flash(_(CloudSubnet.unsupported_reason(:create)), :error)
         drop_breadcrumb(
           :name => _("Add New Subnet") % {:model => ui_lookup(:table => 'cloud_subnet')},
           :url  => "/cloud_subnet/new"
@@ -124,16 +123,13 @@ class CloudSubnetController < ApplicationController
       subnet = CloudSubnet.find_by_id(s)
       if subnet.nil?
         add_flash(_("Subnet no longer exists.") % {:model => ui_lookup(:table => "cloud_subnet")}, :error)
+      elsif subnet.supports_delete?
+        subnets_to_delete.push(subnet)
       else
-        valid_delete, delete_details = subnet.validate_delete_subnet
-        if valid_delete
-          subnets_to_delete.push(subnet)
-        else
-          add_flash(_("Couldn't initiate deletion of Subnet \"%{name}\": %{details}") % {
-            :model   => ui_lookup(:table => 'cloud_subnet'),
-            :name    => subnet.name,
-            :details => delete_details}, :error)
-        end
+        add_flash(_("Couldn't initiate deletion of Subnet \"%{name}\": %{details}") % {
+          :name    => subnet.name,
+          :details => subnet.unsupported_reason(:delete)
+        }, :error)
       end
     end
     unless subnets_to_delete.empty?

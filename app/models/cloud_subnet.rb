@@ -5,6 +5,7 @@ class CloudSubnet < ApplicationRecord
   include ProviderObjectMixin
   include AsyncDeleteMixin
   include VirtualTotalMixin
+  include SupportsFeatureMixin
 
   acts_as_miq_taggable
 
@@ -62,19 +63,8 @@ class CloudSubnet < ApplicationRecord
     klass.raw_create_subnet(ext_management_system, options)
   end
 
-  def self.validate_create_subnet(ext_management_system)
-    klass = class_by_ems(ext_management_system)
-    return klass.validate_create_subnet(ext_management_system) if ext_management_system &&
-                                                                  klass.respond_to?(:validate_create_subnet)
-    validate_unsupported("Create Subnet Operation")
-  end
-
   def delete_subnet
     raw_delete_subnet
-  end
-
-  def validate_delete_subnet
-    validate_unsupported("Delete Subnet Operation")
   end
 
   def raw_delete_subnet
