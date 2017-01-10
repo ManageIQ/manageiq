@@ -19,7 +19,7 @@ module ManageIQ::Providers::Vmware
 
       result[:storages], uids[:storages] = storage_inv_to_hashes(inv[:storage])
       result[:clusters], uids[:clusters] = cluster_inv_to_hashes(inv[:cluster])
-      result[:storage_profiles], uids[:storage_profiles] = storage_profile_inv_to_hashes(inv[:storage_profile], uids[:storages], inv[:storage_profile_datastore])
+      result[:storage_profiles], result[:storage_profile_storages], uids[:storage_profiles] = storage_profile_inv_to_hashes(inv[:storage_profile], uids[:storages], inv[:storage_profile_datastore])
 
       result[:hosts], uids[:hosts], uids[:clusters_by_host], uids[:lans], uids[:switches], uids[:guest_devices], uids[:scsi_luns] = host_inv_to_hashes(inv[:host], inv, uids[:storages], uids[:clusters])
 
@@ -92,7 +92,8 @@ module ManageIQ::Providers::Vmware
     end
 
     def storage_profile_inv_to_hashes(profile_inv, storage_uids, placement_inv)
-      result = add_inventory_collection(StorageProfile, :storage_profiles)
+      result      = add_inventory_collection(StorageProfile, :storage_profiles)
+      result_sps  = add_inventory_collection(StorageProfileStorage, :storage_profile_storages)
       result_uids = {}
 
       profile_inv.each do |uid, profile|
@@ -100,22 +101,23 @@ module ManageIQ::Providers::Vmware
           :ems_ref                  => uid,
           :name                     => profile.name,
           :profile_type             => profile.profileCategory,
-          # TODO: Need to add an InventoryCollection here
-          # TODO: :storage_profile_storages => []
         }
+
+        new_result = result.new_inventory_object(new_result)
 
         placement_inv[uid].to_miq_a.each do |placement_hub|
           datastore = storage_uids[placement_hub.hubId] if placement_hub.hubType == "Datastore"
-          # TODO: new_result[:storage_profile_storages] << datastore unless datastore.nil?
+          result_sps << result_sps.new_inventory_object({
+            :storage => datastore,
+            :storage_profile => new_result
+          })
         end
-
-        new_result = result.new_inventory_object(new_result)
 
         result << new_result
         result_uids[uid] = new_result
       end unless profile_inv.nil?
 
-      return result, result_uids
+      return result, result_sps, result_uids
     end
 
     def self.group_dvswitch_by_host(dvswitch_inv)

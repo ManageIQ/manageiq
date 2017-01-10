@@ -37,6 +37,9 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
       @ems.reload
 
       assert_table_counts
+      assert_ems
+      assert_specific_storage
+      assert_specific_storage_profile
     end
 
     def assert_table_counts
@@ -68,6 +71,65 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
 
       expect(Relationship.count).to eq(246)
       expect(MiqQueue.count).to eq(101)
+    end
+
+    def assert_ems
+      expect(@ems).to have_attributes(
+        :api_version => "4.1",
+        :uid_ems     => "EF53782F-6F1A-4471-B338-72B27774AFDD"
+      )
+
+      expect(@ems.ems_folders.size).to eq(31)
+      expect(@ems.ems_clusters.size).to eq(1)
+      expect(@ems.resource_pools.size).to eq(17)
+      expect(@ems.storages.size).to eq(47)
+      expect(@ems.hosts.size).to eq(4)
+      expect(@ems.vms_and_templates.size).to eq(101)
+      expect(@ems.vms.size).to eq(92)
+      expect(@ems.miq_templates.size).to eq(9)
+      expect(@ems.storage_profiles.size).to eq(6)
+
+      expect(@ems.customization_specs.size).to eq(2)
+      cspec = @ems.customization_specs.find_by_name("Win2k8Template")
+      expect(cspec).to have_attributes(
+        :name             => "Win2k8Template",
+        :typ              => "Windows",
+        :description      => "",
+        :last_update_time => Time.parse("2011-05-17T15:54:37Z")
+      )
+      expect(cspec.spec).to      be_a_kind_of(VimHash)
+      expect(cspec.spec.keys).to match_array(%w(identity encryptionKey nicSettingMap globalIPSettings options))
+    end
+
+    def assert_specific_storage
+      @storage = Storage.find_by_name("StarM1-Prod1 (1)")
+      expect(@storage).to have_attributes(
+        :ems_ref                       => "datastore-953",
+        :ems_ref_obj                   => VimString.new("datastore-953", :Datastore, :ManagedObjectReference),
+        :name                          => "StarM1-Prod1 (1)",
+        :store_type                    => "VMFS",
+        :total_space                   => 524254445568,
+        :free_space                    => 85162196992,
+        :uncommitted                   => 338640414720,
+        :multiplehostaccess            => 1, # TODO: Should this be a boolean column?
+        :location                      => "4d3f9f09-38b9b7dc-365d-0010187f00da",
+        :directory_hierarchy_supported => true,
+        :thin_provisioning_supported   => true,
+        :raw_disk_mappings_supported   => true
+      )
+    end
+
+    def assert_specific_storage_profile
+      @storage_profile = StorageProfile.find_by(:name => "Virtual SAN Default Storage Policy")
+      expect(@storage_profile).to have_attributes(
+        :ems_id       => @ems.id,
+        :ems_ref      => "aa6d5a82-1c88-45da-85d3-3d74b91a5bad",
+        :name         => "Virtual SAN Default Storage Policy",
+        :profile_type => "REQUIREMENT"
+      )
+
+      expect(@storage_profile.storages).to include(@storage)
+      expect(@storage.storage_profiles).to include(@storage_profile)
     end
   end
 end
