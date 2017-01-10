@@ -3,8 +3,7 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
 
   require 'ovirtsdk4'
   require 'singleton'
-  
-  @@connection
+  @@connection = nil
 
   included do
     process_api_features_support
@@ -33,7 +32,7 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
     # Create the underlying connection according to the version of the oVirt API requested by
     # the caller:
     connect_method = "raw_connect_v#{version}".to_sym
-    if @@connection and @@connection.test
+    if @@connection && @@connection.test
       default_endpoint.path = version == 4 ? '/ovirt-engine/api' : connection.api_path
       # return connection via singleton instance
       _log.info('Using stored connection')
