@@ -2,10 +2,7 @@ RSpec.describe Api::ServiceTemplateWorkflow do
   describe ".create" do
     it "creates a workflow" do
       provision_action = instance_double("Provision Action")
-      service_template = instance_double(
-        "ServiceTemplate",
-        :resource_actions => double(:find_by_action => provision_action)
-      )
+      service_template = instance_double("ServiceTemplate", :provision_action => provision_action)
       workflow = instance_double(ResourceActionWorkflow)
       user = instance_double(User)
       allow(User).to receive(:current_user).and_return(user)
@@ -18,10 +15,7 @@ RSpec.describe Api::ServiceTemplateWorkflow do
 
     it "creates a workflow and sets service request values if passed" do
       provision_action = instance_double("Provision Action")
-      service_template = instance_double(
-        "ServiceTemplate",
-        :resource_actions => double(:find_by_action => provision_action)
-      )
+      service_template = instance_double("ServiceTemplate", :provision_action => provision_action)
       workflow = instance_double(ResourceActionWorkflow)
       user = instance_double(User)
       allow(User).to receive(:current_user).and_return(user)

@@ -286,4 +286,8 @@ class ServiceTemplate < ApplicationRecord
     service_template_catalog && display
   end
   alias orderable? validate_order
+
+  def provision_action
+    resource_actions.find_by_action("Provision")
+  end
 end

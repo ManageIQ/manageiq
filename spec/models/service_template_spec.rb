@@ -429,6 +429,14 @@ describe ServiceTemplate do
       end
     end
   end
+
+  describe "#provision_action" do
+    it "returns the provision action" do
+      provision_action = FactoryGirl.create(:resource_action, :action => "Provision")
+      service_template = FactoryGirl.create(:service_template, :resource_actions => [provision_action])
+      expect(service_template.provision_action).to eq(provision_action)
+    end
+  end
 end
 
 def add_and_save_service(p, c)
