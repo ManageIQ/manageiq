@@ -32,6 +32,12 @@ module MiqPolicyController::Events
       event = MiqEventDefinition.find(@event.id)                        # Get event record
       action_list = @edit[:new][:actions_true].collect { |a| [MiqAction.find(a.last), {:qualifier => :success, :synchronous => a[1]}] } +
                     @edit[:new][:actions_false].collect { |a| [MiqAction.find(a.last), {:qualifier => :failure, :synchronous => a[1]}] }
+      add_flash(_("At least one action must be selected to save this Policy Event"), :error) if action_list.blank?
+      if @flash_array
+        javascript_flash
+        return
+      end
+
       policy.replace_actions_for_event(event, action_list)
       AuditEvent.success(build_saved_audit(event))
       add_flash(_("Actions for Policy Event \"%{events}\" were saved") % {:events => event.description})
