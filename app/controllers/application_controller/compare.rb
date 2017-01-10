@@ -1461,7 +1461,7 @@ module ApplicationController::Compare
                       <img src=\"#{img}\" align=\"middle\" border=\"0\" width=\"20\" height=\"20\" />
                     </a>"
     else
-      img = ActionController::Base.helpers.image_path("100/vendor-#{h[:compare_db].downcase}.png")
+      img = ActionController::Base.helpers.image_path("100/#{@sb[:compare_db].underscore}.png")
       html_text <<
         "<a href=\"/ems_cluster/show/#{h[:id]}\">
           <img src=\"#{img}\" align=\"middle\" border=\"0\" width=\"20\" height=\"20\"/>
