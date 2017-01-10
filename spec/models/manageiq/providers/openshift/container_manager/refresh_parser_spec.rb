@@ -35,6 +35,13 @@ describe ManageIQ::Providers::Openshift::ContainerManager::RefreshParser do
         }
       )
     end
+    let(:image_without_dockerImage_fields) do
+      RecursiveOpenStruct.new(
+        :metadata => {
+          :name => image_digest
+        }
+      )
+    end
 
     it "collects data from openshift images correctly" do
       expect(parser.send(:parse_openshift_image,
@@ -63,6 +70,17 @@ describe ManageIQ::Providers::Openshift::ContainerManager::RefreshParser do
                                                           :name    => "key2",
                                                           :value   => "value2",
                                                           :source  => "openshift"}]
+                         )
+    end
+
+    it "handles openshift images without dockerImageManifest and dockerImageMetadata" do
+      expect(parser.send(:parse_openshift_image,
+                         image_without_dockerImage_fields).except(:registered_on)).to eq(
+                           :container_image_registry => nil,
+                           :digest                   => nil,
+                           :image_ref                => "docker-pullable://sha256:abcdefg",
+                           :name                     => "sha256",
+                           :tag                      => "abcdefg"
                          )
     end
 
