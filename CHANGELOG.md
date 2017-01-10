@@ -2,6 +2,68 @@
 
 All notable changes to this project will be documented in this file.
 
+## Unreleased - as of Sprint 52 end 2017-01-16
+
+### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+52+Ending+Jan+16%2C+2017%22+label%3Aenhancement)
+
+- Automate
+  - Move MiqAeEngine components into the appropriate directory in preparation for extracting the Automate engine into its own repository ([#13406](https://github.com/ManageIQ/manageiq/pull/13406))
+  - Automate Retry with Server Affinity ([#13363](https://github.com/ManageIQ/manageiq/pull/13363))
+  - Service Model: Added container components for service model ([#12863](https://github.com/ManageIQ/manageiq/pull/12863))
+  - Services: Add automate engine support for array elements containing text values ([#11667](https://github.com/ManageIQ/manageiq/pull/11667))
+  - See also [manageiq-content repository](https://github.com/ManageIQ/manageiq-content).
+
+- Platform
+  - Reporting: Add option for container performance reports ([#11904](https://github.com/ManageIQ/manageiq/pull/11904))
+  - Chargeback: Charge SCVMM's vm only until it is retired. ([#13451](https://github.com/ManageIQ/manageiq/pull/13451))
+  - New class for determining the availability of embedded ansible ([#13435](https://github.com/ManageIQ/manageiq/pull/13435)).
+  - See also [manageiq-appliance repository](https://github.com/ManageIQ/manageiq-appliance).
+
+- Providers
+  - Force unique endpoint hostname only for same type ([#12912](https://github.com/ManageIQ/manageiq/pull/12912))
+  - Containers: Add alerts on container nodes ([#13323](https://github.com/ManageIQ/manageiq/pull/13323))
+  - VMware Infrastructure: Validate CPU and Memory Hot-Plug settings in reconfigure ([#12275](https://github.com/ManageIQ/manageiq/pull/12275))
+  - See also [manageiq-providers-azure repository](https://github.com/ManageIQ/manageiq-providers-azure).
+  - See also [manageiq-providers-amazon repository](https://github.com/ManageIQ/manageiq-providers-amazon).
+
+- REST API
+  - Copy orchestration template ([#13053](https://github.com/ManageIQ/manageiq/pull/13053))
+  - Expose Request Workflow class name ([#13441](https://github.com/ManageIQ/manageiq/pull/13441))
+  - Sort on sql friendly virtual attributes ([#13409](https://github.com/ManageIQ/manageiq/pull/13409))
+  - Expose allowed tags for a request workflow ([#13379](https://github.com/ManageIQ/manageiq/pull/13379))
+
+- Services UI
+  - See [manageiq-ui-service repository](https://github.com/ManageIQ/manageiq-ui-service).
+
+- User Interface (Classic)
+  - Add edit functionality for generic object UI ([#11815](https://github.com/ManageIQ/manageiq/pull/11815))
+  - See also [manageiq-ui-classic repository](https://github.com/ManageIQ/manageiq-ui-classic).
+
+### [Changed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+52+Ending+Jan+16%2C+2017%22+label%3Aenhancement)
+
+- Platform
+  - Add list of providers to RBAC on catalog items ([#13395](https://github.com/ManageIQ/manageiq/pull/13395))
+
+- Providers
+  - Amazon: Move amazon settings to ManageIQ/manageiq-providers-amazon ([#13192](https://github.com/ManageIQ/manageiq/pull/13192))
+
+
+### [Fixed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+52+Ending+Jan+16%2C+2017%22+label%3Abug)
+
+Notable fixes include:
+
+- Automate
+  - Increment the ae_state_retries when on_exit sets retry ([#13339](https://github.com/ManageIQ/manageiq/pull/13339))
+
+- Platform
+  - Chargeback: Charge only for past hours ([#13134](https://github.com/ManageIQ/manageiq/pull/13134))
+  - Replication: Expose a method for encrypting using a remote v2_key ([#13083](https://github.com/ManageIQ/manageiq/pull/13083))
+
+- Providers
+  - OpenStack Cloud Network Router:  Raw commands are wrapped in raw prefixed methods ([#13072](https://github.com/ManageIQ/manageiq/pull/13072))
+  - OpenStack Infra: Ssh keypair validation fixes ([#13445](https://github.com/ManageIQ/manageiq/pull/13445))
+
+
 ## Unreleased - as of Sprint 51 end 2017-01-02
 
 ### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+51+Ending+Jan+2%2C+2017%22+label%3Aenhancement)
