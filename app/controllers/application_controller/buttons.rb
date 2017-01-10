@@ -824,10 +824,11 @@ module ApplicationController::Buttons
     @edit[:new][:starting_object] ||= "SYSTEM/PROCESS"
     @edit[:new][:name] = @custom_button.name
     @edit[:new][:description] = @custom_button.description
-    @edit[:new][:button_image] = @custom_button.options && @custom_button.options[:button_image] ? @custom_button.options[:button_image] : ""
-    @edit[:new][:display] = @custom_button.options && @custom_button.options.key?(:display) ? @custom_button.options[:display] : true
+    @edit[:new][:button_image] = @custom_button.options.try(:[], :button_image).to_s
+    @edit[:new][:display] = @custom_button.options.try(:[], :display).nil? ? true : @custom_button.options[:display]
     @edit[:new][:object_message] = @custom_button.uri_message || "create"
     @edit[:new][:instance_name] ||= "Request"
+
     @edit[:current] = copy_hash(@edit[:new])
 
     @edit[:new][:button_images] = @edit[:current][:button_images] = build_button_image_options
