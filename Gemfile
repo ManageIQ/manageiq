@@ -150,6 +150,16 @@ end
 #
 # Custom Gemfile modifications
 #
+# To develop a gem locally and override its source to a checked out repo
+#   you can use this helper method in Gemfile.dev.rb e.g.
+#
+# override_gem 'manageiq-ui-classic', :path => File.expand_path("../manageiq-ui-classic", __dir__))
+#
+def override_gem(name, *args)
+  raise "Trying to override unknown gem #{name}" unless (dependency = dependencies.find { |d| d.name == name })
+  dependencies.delete(dependency)
+  gem name, *args
+end
 
 # Load developer specific Gemfile
 #   Developers can create a file called Gemfile.dev.rb containing any gems for
