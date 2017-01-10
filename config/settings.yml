@@ -101,9 +101,6 @@
       :read_timeout: 1.hour
   :ems_kubernetes:
     :miq_namespace: management-infra
-  :ems_amazon:
-    :disabled_regions: []
-    :additional_regions: {}
   :ems_azure:
     :disabled_regions: []
     :additional_regions: {}
@@ -113,17 +110,6 @@
     :purge_window_size: 1000
 :ems_refresh:
   :capture_vm_created_on_date: false
-  :ec2:
-    :get_private_images: true
-    :get_shared_images: true
-    :get_public_images: false
-    # configure an array of filters to be added to describe_images
-    # see: http://docs.aws.amazon.com/sdkforruby/api/Aws/EC2/Client.html#describe_images-instance_method
-    :public_images_filters:
-      - :name: image-type
-        :values:
-          - machine
-    :ignore_terminated_instances: true
   :ansible_tower_configuration:
     :refresh_interval: 15.minutes
   :foreman_configuration:
@@ -962,11 +948,6 @@
     :password:
     :port:
     :user:
-  :ec2:
-    :host:
-    :password:
-    :port:
-    :user:
 :ldap_synchronization:
   :ldap_synchronization_schedule: "0 2 * * *"
 :log:
@@ -991,8 +972,6 @@
     :ping_depot_timeout: 20
   :level: info
   :level_rails: info
-  :level_aws: info
-  :level_aws_in_evm: error
   :level_lenovo: info
   :level_lenovo_in_evm: error
   :level_azure: warn
@@ -1270,8 +1249,6 @@
         :amqp_recovery_attempts: 4
         :ceilometer:
           :event_types_regex: '\A(firewall|floatingip|gateway|net|port|router|subnet|security_group|vpn)'
-      :event_catcher_amazon:
-        :poll: 15.seconds
       :event_catcher_azure:
         :poll: 15.seconds
       :event_catcher_hawkular:
@@ -1304,7 +1281,6 @@
           :nice_delta: 3
           :poll_method: :escalate
         :ems_metrics_collector_worker_azure: {}
-        :ems_metrics_collector_worker_amazon: {}
         :ems_metrics_collector_worker_google: {}
         :ems_metrics_collector_worker_kubernetes:
           :metrics_port: 5000
@@ -1329,8 +1305,6 @@
           :poll_method: :normal
           :queue_timeout: 120.minutes
           :restart_interval: 2.hours
-        :ems_refresh_worker_amazon: {}
-        :ems_refresh_worker_amazon_network: {}
         :ems_refresh_worker_ansible_tower_configuration: {}
         :ems_refresh_worker_azure: {}
         :ems_refresh_worker_azure_network: {}
