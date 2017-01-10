@@ -1,4 +1,6 @@
 class MiqAlertStatus < ApplicationRecord
+  include_concern 'Purging'
+
   SEVERITY_LEVELS = %w(error warning info).freeze
 
   belongs_to :miq_alert
