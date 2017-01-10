@@ -447,7 +447,7 @@ describe MiqScheduleWorker::Runner do
           before(:each) do
             allow(@schedule_worker).to receive(:heartbeat)
             @schedule_worker.instance_variable_set(:@active_roles, ["event"])
-            allow(@schedule_worker).to receive(:worker_settings).and_return(:ems_events_purge_interval    => 1.day,
+            allow(@schedule_worker).to receive(:worker_settings).and_return(:event_streams_purge_interval => 1.day,
                                                                             :policy_events_purge_interval => 1.day)
             allow_any_instance_of(Zone).to receive(:role_active?).with("event").and_return(true)
           end
@@ -462,7 +462,7 @@ describe MiqScheduleWorker::Runner do
 
               while_calling_job(job) do
                 case job.tags
-                when %w(ems_event purge_schedule)
+                when %w(event_stream purge_schedule)
                   messages = MiqQueue.where(:class_name => "EventStream", :method_name => "purge_timer")
                   expect(messages.count).to eq(1)
                 when %w(policy_event purge_schedule)

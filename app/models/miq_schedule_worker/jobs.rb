@@ -109,7 +109,7 @@ class MiqScheduleWorker::Jobs
     queue_work(:class_name => "DriftState", :method_name => "purge_timer", :zone => nil)
   end
 
-  def ems_event_purge_timer
+  def event_stream_purge_timer
     queue_work(:class_name => "EventStream", :method_name => "purge_timer", :zone => nil)
   end
 

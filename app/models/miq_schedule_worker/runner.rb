@@ -337,12 +337,12 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
     return unless schedule_enabled?(:event)
     scheduler = scheduler_for(:event)
     # Schedule - Event Purging
-    interval = worker_settings[:ems_events_purge_interval]
+    interval = worker_settings[:event_streams_purge_interval]
     scheduler.schedule_every(
       interval,
       :first_in => "300s",
-      :tags     => [:ems_event, :purge_schedule]
-    ) { enqueue :ems_event_purge_timer }
+      :tags     => [:event_stream, :purge_schedule]
+    ) { enqueue :event_stream_purge_timer }
 
     # Schedule - Policy Event Purging
     interval = worker_settings[:policy_events_purge_interval]

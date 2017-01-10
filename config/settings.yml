@@ -107,9 +107,9 @@
   :ems_azure:
     :disabled_regions: []
     :additional_regions: {}
-:ems_events:
+:event_streams:
   :history:
-    :keep_ems_events: 6.months
+    :keep_events: 6.months
     :purge_window_size: 1000
 :ems_refresh:
   :capture_vm_created_on_date: false
@@ -1377,7 +1377,7 @@
       :chargeback_generation_time_utc: 01:00:00
       :db_diagnostics_interval: 30.minutes
       :drift_state_purge_interval: 1.day
-      :ems_events_purge_interval: 1.day
+      :event_streams_purge_interval: 1.day
       :evm_snapshot_delete_delay_for_job_not_found: 1.hour
       :evm_snapshot_interval: 1.hour
       :job_proxy_dispatcher_interval: 15.seconds
