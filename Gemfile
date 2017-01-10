@@ -10,7 +10,6 @@ end
 
 # Unmodified gems
 gem "activerecord-session_store",     "~>1.0.0"
-gem "actioncable",                    "~>5.0.0"
 gem "acts_as_list",                   "~>0.7.2"
 gem "acts_as_tree",                   "~>2.1.0" # acts_as_tree needs to be required so that it loads before ancestry
 gem "ancestry",                       "~>2.2.1",       :require => false
@@ -52,7 +51,7 @@ gem "ovirt_metrics",                  "~>1.4.1",       :require => false
 gem "paperclip",                      "~>4.3.0"
 gem "puma",                           "~>3.3.0"
 gem "query_relation",                 "~>0.1.0",       :require => false
-gem "rails",                          "~>5.0.0.1"
+gem "rails",                          "~>5.0.1"
 gem "rails-controller-testing",                        :require => false
 gem "rails-i18n",                     "~>5.x"
 gem "recursive-open-struct",          "~>1.0.0"
