@@ -184,7 +184,7 @@ module ContainersCommonMixin
     ids = showlist ? find_checked_items : find_current_item(model)
 
     if ids.empty?
-      add_flash(_("No %{model} were selected for %{task}") % {:model => ui_lookup(:models => model),
+      add_flash(_("No %{model} were selected for %{task}") % {:model => ui_lookup(:models => model.to_s),
                                                               :task  => "Compliance Check"}, :error)
     else
       process_check_compliance(model, ids)
@@ -196,7 +196,7 @@ module ContainersCommonMixin
 
   def find_current_item(model)
     if params[:id].nil? || model.find_by(:id => params[:id].to_i).nil?
-      add_flash(_("%{model} no longer exists") % {:table => ui_lookup(:model => model)}, :error)
+      add_flash(_("%{model} no longer exists") % {:model => ui_lookup(:model => model.to_s)}, :error)
       []
     else
       [params[:id].to_i]
@@ -225,9 +225,10 @@ module ContainersCommonMixin
       begin
         entity.check_compliance
       rescue StandardError => bang
-        add_flash(_("%{model} \"%{name}\": Error during 'Check Compliance': ") %
-                  {:model => ui_lookup(:model => model),
-                   :name  => entity.name} << bang.message,
+        add_flash(_("%{model} \"%{name}\": Error during 'Check Compliance': %{error}") %
+                  {:model => ui_lookup(:model => model.to_s),
+                   :name  => entity.name,
+                   :error => bang.message},
                   :error) # Push msg and error flag
       else
         add_flash(_("\"%{record}\": Compliance check successfully initiated") % {:record => entity.name})
