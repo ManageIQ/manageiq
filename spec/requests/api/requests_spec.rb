@@ -248,6 +248,31 @@ RSpec.describe "Requests API" do
       expect(response.parsed_body).to match(expected)
       expect(response).to have_http_status(:ok)
     end
+
+    it "exposes allowed_tags in the request resources" do
+      ems = FactoryGirl.create(:ems_vmware)
+      vm_template = FactoryGirl.create(:template_vmware, :name => "template1", :ext_management_system => ems)
+      request = FactoryGirl.create(:miq_provision_request,
+                                   :requester => @user,
+                                   :src_vm_id => vm_template.id,
+                                   :options   => {:owner_email => 'tester@example.com'})
+      FactoryGirl.create(:miq_dialog,
+                         :name        => "miq_provision_dialogs",
+                         :dialog_type => MiqProvisionWorkflow)
+
+      FactoryGirl.create(:classification_department_with_tags)
+
+      t = Classification.where(:description => 'Department', :parent_id => 0).includes(:tag).first
+      request.add_tag(t.name, t.children.first.name)
+
+      api_basic_authorize action_identifier(:requests, :read, :resource_actions, :get)
+      run_get requests_url(request.id), :attributes => "v_allowed_tags"
+
+      expected = a_hash_including("id" => request.id, "v_allowed_tags" => [a_hash_including("children")])
+
+      expect(response.parsed_body).to match(expected)
+      expect(response).to have_http_status(:ok)
+    end
   end
 
   context "request update" do

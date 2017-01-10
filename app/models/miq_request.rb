@@ -33,9 +33,12 @@ class MiqRequest < ApplicationRecord
   virtual_column  :v_approved_by,        :type => :string,   :uses => :miq_approvals
   virtual_column  :v_approved_by_email,  :type => :string,   :uses => {:miq_approvals => :stamper}
   virtual_column  :stamped_on,           :type => :datetime, :uses => :miq_approvals
+  virtual_column  :v_allowed_tags,       :type => :string,   :uses => :workflow
   virtual_column  :request_type_display, :type => :string
   virtual_column  :resource_type,        :type => :string
   virtual_column  :state,                :type => :string
+
+  delegate :allowed_tags,                :to => :workflow,   :prefix => :v
 
   virtual_has_one :workflow
 
