@@ -1,6 +1,3 @@
-require 'miq_ae_exception'
-require 'engine/miq_ae_method_service'
-require 'engine/miq_ae_event'
 require 'uri'
 
 Dir.glob(Pathname.new(__dir__).join("miq_ae_engine/*.rb")) do |file|
