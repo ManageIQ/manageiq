@@ -1017,14 +1017,17 @@
   :power_operation_expiration: 10.minutes
 :performance:
   :capture_threshold:
+    :default: 10.minutes
     :ems_cluster: 50.minutes
     :host: 50.minutes
     :storage: 60.minutes
     :vm: 50.minutes
   :capture_threshold_with_alerts:
+    :default: 1.minutes
     :host: 20.minutes
     :vm: 20.minutes
   :concurrent_requests:
+    :historical: 1
     :hourly: 1
     :realtime: 20
   :history:
@@ -1075,19 +1078,32 @@
   :custom_logo: false
   :events:
     :disk_usage_gt_percent: 80
+  :heartbeat_timeout: 2.minutes
+  :heartbeat_frequency: 30.seconds
   :host:
   :listening_port: '443'
   :mks_classid: 338095E4-1806-4BA3-AB51-38A3179200E9
   :mks_version: 2.1.0.0
   :monitor_poll: 5.seconds
   :name: EVM
+  :prefetch_max_per_worker: 10
+  :prefetch_max_per_worker_dequeue: 100
+  :prefetch_min_per_worker_dequeue: 10
+  :prefetch_stale_threshold: 30.seconds
   :rails_server: puma
   :remote_console_type: VMRC
   :role: database_operations,event,reporting,scheduler,smartstate,ems_operations,ems_inventory,user_interface,websocket,web_services,automate
   :server_dequeue_frequency: 5.seconds
+  :server_log_frequency: 5.minutes
+  :server_log_timings_threshold: 1.second
+  :server_monitor_frequency: 60.seconds
   :session_store: cache
   :startup_timeout: 300
+  :stop_poll: 10.seconds
   :timezone: UTC
+  :worker_dequeue_frequency: 3.seconds
+  :worker_messaging_frequency: 5.seconds
+  :worker_monitor_frequency: 15.seconds
   :worker_monitor:
     :kill_algorithm:
       :name: :used_swap_percent_gt_value

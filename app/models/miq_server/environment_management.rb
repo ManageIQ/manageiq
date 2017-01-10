@@ -117,7 +117,7 @@ module MiqServer::EnvironmentManagement
   end
 
   def disk_usage_threshold
-    ::Settings.server.events.disk_usage_gt_percent || 80
+    ::Settings.server.events.disk_usage_gt_percent
   end
 
   def check_disk_usage(disks)

@@ -17,7 +17,8 @@ describe Metric::Capture do
     end
 
     it "produces default with class not found" do
-      stub_performance_settings(:capture_threshold_with_alerts => {:vm => "4.minutes"})
+      stub_performance_settings(:capture_threshold_with_alerts => {:vm      => "4.minutes",
+                                                                   :default => "1.minutes"})
       Timecop.freeze(Time.now.utc) do
         expect(described_class.alert_capture_threshold(target)).to eq 1.minute.ago.utc
       end
@@ -42,7 +43,8 @@ describe Metric::Capture do
     end
 
     it "produces default with class not found" do
-      stub_performance_settings(:capture_threshold => {:vm => "4.minutes"})
+      stub_performance_settings(:capture_threshold => {:vm      => "4.minutes",
+                                                       :default => "10.minutes"})
       Timecop.freeze(Time.now.utc) do
         expect(described_class.standard_capture_threshold(host)).to eq 10.minutes.ago.utc
       end
@@ -70,8 +72,8 @@ describe Metric::Capture do
   describe ".perf_capture_now?" do
     before do
       stub_performance_settings(
-        :capture_threshold_with_alerts => {:host => 2},
-        :capture_threshold             => {}
+        :capture_threshold_with_alerts => {:host => "2.minutes"},
+        :capture_threshold             => {:host => "10.minutes"}
       )
     end
 
