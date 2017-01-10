@@ -1041,6 +1041,10 @@
   :history:
     :keep_policy_events: 6.months
     :purge_window_size: 1000
+:miq_alert_status:
+  :history:
+    :keep_miq_alert_statuses: 6.months
+    :purge_window_size: 1000
 :product:
   :maindb: ExtManagementSystem
   :container_deployment_wizard: false
@@ -1400,6 +1404,7 @@
       :poll: 15.seconds
       :resync_rhn_mirror: 12.hours
       :report_result_purge_interval: 1.week
+      :miq_alert_status_purge_interval: 1.week
       :server_log_stats_interval: 5.minutes
       :server_stats_interval: 60.seconds
       :service_retired_interval: 10.minutes

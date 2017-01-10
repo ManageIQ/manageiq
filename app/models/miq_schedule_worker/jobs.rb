@@ -121,6 +121,10 @@ class MiqScheduleWorker::Jobs
     queue_work(:class_name => "MiqReportResult", :method_name => "purge_timer", :zone => nil)
   end
 
+  def miq_alert_status_purge_timer
+    queue_work(:class_name => "MiqAlertStatus", :method_name => "purge_timer", :zone => nil)
+  end
+
   def storage_refresh_metrics
     queue_work(
       :class_name  => "StorageManager",

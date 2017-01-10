@@ -221,6 +221,12 @@ class MiqScheduleWorker::Runner < MiqWorker::Runner
       enqueue :miq_report_result_purge_timer
     end
 
+    # Schedule - Prune old miq alert status Timer
+    every = worker_settings[:miq_alert_status_purge_interval]
+    scheduler.schedule_every(every, :first_in => every) do
+      enqueue :miq_alert_status_purge_timer
+    end
+
     # Schedule every 24 hours
     at = worker_settings[:storage_file_collection_time_utc]
     if Time.now.strftime("%Y-%m-%d #{at}").to_time(:utc) < Time.now.utc
