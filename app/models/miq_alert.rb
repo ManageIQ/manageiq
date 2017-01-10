@@ -206,6 +206,7 @@ class MiqAlert < ApplicationRecord
   def add_status_post_evaluate(target, result)
     status = miq_alert_statuses.find_or_initialize_by(:resource => target)
     status.result = result
+    status.ems_id = target.try(:ems_id)
     status.evaluated_on = Time.now.utc
     status.save
     miq_alert_statuses << status

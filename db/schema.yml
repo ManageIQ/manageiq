@@ -4827,6 +4827,7 @@ miq_alert_statuses:
 - severity
 - ancestry
 - acknowledged
+- ems_id
 miq_alerts:
 - id
 - guid
