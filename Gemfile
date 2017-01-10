@@ -23,7 +23,6 @@ unless dependencies.detect { |d| d.name == "manageiq-providers-azure" }
 end
 
 unless dependencies.detect { |d| d.name == "manageiq-ui-classic" }
-  #gem "manageiq-ui-classic", :path => "../manageiq-ui-classic/"
   gem "manageiq-ui-classic", :git => "https://github.com/ManageIQ/manageiq-ui-classic", :branch => "master"
 end
 
