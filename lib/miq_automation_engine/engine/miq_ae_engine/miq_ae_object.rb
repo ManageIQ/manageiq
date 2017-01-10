@@ -264,7 +264,7 @@ module MiqAeEngine
       # process Array::servers => MiqServer::2,MiqServer::3,MiqServer::4
       key = args_key.split(CLASS_SEPARATOR).last
       value = args.delete(args_key)
-      args[key] = load_array_objects_from_string(value)
+      args[key.downcase] = load_array_objects_from_string(value)
     end
 
     def process_args_attribute(args, args_key)
@@ -273,7 +273,7 @@ module MiqAeEngine
         key, klass = get_key_name_and_klass_from_key(args_key)
         value = args.delete(args_key)
         args["#{key}_id"] = value unless @attributes.key?(key)
-        args[key] = MiqAeObject.convert_value_based_on_datatype(value, klass)
+        args[key.downcase] = MiqAeObject.convert_value_based_on_datatype(value, klass)
       else
         args[args_key.downcase] = args.delete(args_key) if args_key != args_key.downcase
       end
