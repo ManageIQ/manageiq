@@ -19,7 +19,7 @@ class Chargeback
 
     def avg(metric)
       metric_sum = values(metric).sum
-      metric_sum / hours_in_interval
+      metric_sum / past_hours_in_interval
     end
 
     def none?(metric)

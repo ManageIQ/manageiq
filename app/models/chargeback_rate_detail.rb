@@ -233,7 +233,7 @@ class ChargebackRateDetail < ApplicationRecord
 
   def metric_and_cost_by(consumption)
     metric_value = metric_value_by(consumption)
-    [metric_value, hourly_cost(metric_value, consumption) * consumption.hours_in_interval]
+    [metric_value, hourly_cost(metric_value, consumption) * consumption.past_hours_in_interval]
   end
 
   def first_tier?(tier,tiers)

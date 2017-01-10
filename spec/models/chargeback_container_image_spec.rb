@@ -1,7 +1,9 @@
 describe ChargebackContainerImage do
-  let(:base_options) { {:interval_size => 1, :end_interval_offset => 0, :ext_options => {:tz => 'UTC'} } }
+  let(:base_options) { {:interval_size => 2, :end_interval_offset => 0, :ext_options => {:tz => 'UTC'} } }
   let(:hourly_rate)       { 0.01 }
-  let(:ts) { Time.now.in_time_zone(Metric::Helper.get_time_zone(options[:ext_options])) }
+  let(:starting_date) { Time.parse('2012-09-01 23:59:59Z').utc }
+  let(:ts) { starting_date.in_time_zone(Metric::Helper.get_time_zone(options[:ext_options])) }
+  let(:report_run_time) { month_end }
   let(:month_beginning) { ts.beginning_of_month.utc }
   let(:month_end) { ts.end_of_month.utc }
   let(:hours_in_month) { Time.days_in_month(month_beginning.month, month_beginning.year) * 24 }
@@ -38,7 +40,7 @@ describe ChargebackContainerImage do
     @project.tag_with(@tag.name, :ns => '*')
     @image.tag_with(@tag.name, :ns => '*')
 
-    Timecop.travel(Time.parse('2012-09-01 23:59:59Z').utc)
+    Timecop.travel(report_run_time)
   end
 
   after do
@@ -48,8 +50,8 @@ describe ChargebackContainerImage do
   context "Daily" do
     let(:hours_in_day) { 24 }
     let(:options) { base_options.merge(:interval => 'daily', :entity_id => @project.id, :tag => nil) }
-    let(:start_time)  { Time.parse('2012-09-01 07:00:00Z').utc }
-    let(:finish_time) { Time.parse('2012-09-01 10:00:00Z').utc }
+    let(:start_time)  { report_run_time - 17.hours }
+    let(:finish_time) { report_run_time - 14.hours }
 
     before do
       Range.new(start_time, finish_time, true).step_value(1.hour).each do |t|
