@@ -2339,6 +2339,10 @@
       :description: Generic Object Definition Create
       :feature_type: node
       :identifier: generic_object_definition_create
+    - :name: Generic Object Definition Edit
+      :description: Generic Object Definition Edit
+      :feature_type: node
+      :identifier: generic_object_definition_edit
 
 # Automate Import/Export
 - :name: Import/Export
