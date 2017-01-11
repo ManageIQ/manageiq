@@ -37,7 +37,7 @@ class Blueprint < ApplicationRecord
         new_attributes.reverse_merge(:status => nil).each do |attr, value|
           blueprint.send("#{attr}=", value)
         end
-        copy_service_template(blueprint, bundle, true)
+        copy_service_template(blueprint, bundle, true) if bundle
         blueprint.save!
       end
     end
