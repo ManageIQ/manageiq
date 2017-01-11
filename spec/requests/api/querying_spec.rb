@@ -103,8 +103,8 @@ describe "Querying" do
     end
 
     it 'supports sql friendly virtual attributes' do
-      host_foo =  FactoryGirl.create(:host, :hostname => 'foo')
-      host_bar =  FactoryGirl.create(:host, :hostname => 'bar')
+      host_foo =  FactoryGirl.create(:host, :name => 'foo')
+      host_bar =  FactoryGirl.create(:host, :name => 'bar')
       vm_foo = FactoryGirl.create(:vm, :name => 'vm_foo')
       vm_bar = FactoryGirl.create(:vm, :name => 'vm_bar')
       host_foo.vms << vm_foo
@@ -113,7 +113,7 @@ describe "Querying" do
       run_get vms_url, :sort_by => 'host_name', :sort_order => 'desc', :expand => 'resources'
 
       expect_query_result(:vms, 2, 2)
-      expect_result_resources_to_match_hash([{'name' => 'vm_bar'}, {'name' => 'vm_foo'}])
+      expect_result_resources_to_match_hash([{'name' => 'vm_foo'}, {'name' => 'vm_bar'}])
     end
 
     it 'does not support non sql friendly virtual attributes' do
@@ -124,20 +124,6 @@ describe "Querying" do
       expected = {
         'error' => a_hash_including(
           'message' => 'Vm cannot be sorted by aggressive_recommended_mem'
-        )
-      }
-      expect(response).to have_http_status(:bad_request)
-      expect(response.parsed_body).to include(expected)
-    end
-
-    it 'does not support ignore_case on sql friendly virtual attributes' do
-      FactoryGirl.create(:vm)
-
-      run_get vms_url, :sort_by => 'host_name', :expand => 'resources', :sort_options => 'ignore_case'
-
-      expected = {
-        'error' => a_hash_including(
-          'message' => 'Vm cannot be sorted with ignored case'
         )
       }
       expect(response).to have_http_status(:bad_request)
