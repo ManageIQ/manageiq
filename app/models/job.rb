@@ -3,11 +3,14 @@ class Job < ApplicationRecord
   include UuidMixin
   include FilterableMixin
 
+  belongs_to :miq_task
+
   serialize :options
   serialize :context
   alias_attribute :jobid, :guid
 
   before_destroy :check_active_on_destroy
+  after_update_commit :update_linked_task
 
   DEFAULT_TIMEOUT = 300
   DEFAULT_USERID  = 'system'.freeze
@@ -25,6 +28,14 @@ class Job < ApplicationRecord
     job.options = options
     job.initialize_attributes
     job.save
+    job.create_miq_task(:status        => job.status.try(:capitalize),
+                        :name          => job.name,
+                        :message       => job.message,
+                        :userid        => job.userid,
+                        :state         => job.state.try(:capitalize),
+                        :miq_server_id => job.miq_server_id,
+                        :context_data  => job.context,
+                        :zone          => job.zone)
     $log.info "Job created: guid: [#{job.guid}], userid: [#{job.userid}], name: [#{job.name}], target class: [#{job.target_class}], target id: [#{job.target_id}], process type: [#{job.type}], agent class: [#{job.agent_class}], agent id: [#{job.agent_id}], zone: [#{job.zone}]"
     job.signal(:initializing)
     job
@@ -35,6 +46,18 @@ class Job < ApplicationRecord
   end
 
   delegate :current_job_timeout, :to => :class
+
+  def update_linked_task
+    return if miq_task.nil?
+    attributes = {}
+    attributes[:context_data] = context if previous_changes['context']
+    attributes[:started_on] = started_on if previous_changes['started_on']
+    attributes[:zone] = zone if previous_changes['zone']
+    attributes[:state] = state.try(:capitalize) if previous_changes['state']
+    attributes[:status] = status.try(:capitalize) if previous_changes['status']
+    attributes[:message] = message.truncate(255) if previous_changes['message']
+    miq_task.update_attributes!(attributes)
+  end
 
   def initialize_attributes
     self.name ||= "#{type} created on #{Time.now.utc}"
