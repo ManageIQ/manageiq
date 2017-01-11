@@ -747,16 +747,16 @@ class MiqExpression
       ref = model.reflection_with_virtual(assoc)
       result[:virtual_reflection] = true if model.virtual_reflection?(assoc)
 
-      unless result[:virtual_reflection]
-        cur_incl[assoc] ||= {}
-        cur_incl = cur_incl[assoc]
-      end
-
       unless ref
         result[:virtual_reflection] = true
         result[:sql_support] = false
         result[:virtual_column] = true
         return result
+      end
+
+      unless result[:virtual_reflection]
+        cur_incl[assoc] ||= {}
+        cur_incl = cur_incl[assoc]
       end
 
       model = ref.klass
@@ -765,7 +765,7 @@ class MiqExpression
       result[:data_type] = col_type(model, col)
       result[:format_sub_type] = MiqReport::Formats.sub_type(col.to_sym) || result[:data_type]
       result[:virtual_column] = model.virtual_attribute?(col.to_s)
-      result[:sql_support] = model.attribute_supported_by_sql?(col.to_s)
+      result[:sql_support] = !result[:virtual_reflection] && model.attribute_supported_by_sql?(col.to_s)
       result[:excluded_by_preprocess_options] = self.exclude_col_by_preprocess_options?(col, options)
     end
     result

@@ -2294,7 +2294,7 @@ describe MiqExpression do
       expect(col_info).to match(
         :data_type                      => nil,
         :excluded_by_preprocess_options => false,
-        :include                        => {:invalid => {}},
+        :include                        => {},
         :tag                            => false,
         :virtual_column                 => true,
         :sql_support                    => false,
@@ -2312,7 +2312,7 @@ describe MiqExpression do
         :include                        => {},
         :tag                            => false,
         :virtual_column                 => true,
-        :sql_support                    => true,
+        :sql_support                    => false,
         :virtual_reflection             => true
       )
     end
