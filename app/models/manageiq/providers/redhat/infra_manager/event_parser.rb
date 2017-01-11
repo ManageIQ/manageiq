@@ -69,18 +69,17 @@ module ManageIQ::Providers::Redhat::InfraManager::EventParser
 
     {
       :ems_id         => ems.id,
-      :vm             => parse_new_vm(full_data[:vm], message, event_type),
+      :vm             => parse_new_vm(full_data[:vm], message, event_type, ems),
       :cluster        => parse_new_cluster(cluster_ref, cluster[:id], cluster_name),
       :resource_pools => parse_new_rp(cluster[:id], cluster_name),
       :folders        => parse_new_dc(full_data[:data_center])
     }
   end
 
-  def self.parse_new_vm(vm, message, event_type)
+  def self.parse_new_vm(vm, message, event_type, ems)
     ems_ref = ManageIQ::Providers::Redhat::InfraManager.make_ems_ref(vm[:href])
-
-    ManageIQ::Providers::Redhat::InfraManager::RefreshParser.create_vm_hash(
-      ems_ref.include?('/templates/'), ems_ref, vm[:id], parse_target_name(message, event_type))
+    parser = ManageIQ::Providers::Redhat::InfraManager::Refresh::Parse::ParserBuilder.new(ems).build
+    parser.create_vm_hash(ems_ref.include?('/templates/'), ems_ref, vm[:id], parse_target_name(message, event_type))
   end
 
   def self.parse_target_name(message, event_type)
