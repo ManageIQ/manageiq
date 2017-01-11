@@ -816,15 +816,18 @@ describe MiqExpression do
     # puts "Expression in Human: #{filter.to_human}"
     # puts "Expression in Ruby:  #{filter.to_ruby}"
 
-    it "expands ranges" do
+    it "expands ranges with INCLUDES ALL" do
       filter = YAML.load '--- !ruby/object:MiqExpression
       exp:
         INCLUDES ALL:
           field: Host-enabled_inbound_ports
           value: 22, 427, 5988, 5989, 1..4
       '
-      expect(filter.to_ruby).to eq('(<value ref=host, type=numeric_set>/virtual/enabled_inbound_ports</value> & [1,2,3,4,22,427,5988,5989]) == [1,2,3,4,22,427,5988,5989]')
+      expected = "(<value ref=host, type=numeric_set>/virtual/enabled_inbound_ports</value> & [1,2,3,4,22,427,5988,5989]) == [1,2,3,4,22,427,5988,5989]"
+      expect(filter.to_ruby).to eq(expected)
+    end
 
+    it "expands ranges with INCLUDES ANY" do
       filter = YAML.load '--- !ruby/object:MiqExpression
       exp:
         INCLUDES ANY:
@@ -832,66 +835,95 @@ describe MiqExpression do
           value: 22, 427, 5988, 5989, 1..3
       '
 
-      expect(filter.to_ruby).to eq('([1,2,3,22,427,5988,5989] - <value ref=host, type=numeric_set>/virtual/enabled_inbound_ports</value>) != [1,2,3,22,427,5988,5989]')
+      expected = "([1,2,3,22,427,5988,5989] - <value ref=host, type=numeric_set>/virtual/enabled_inbound_ports</value>) != [1,2,3,22,427,5988,5989]"
+      expect(filter.to_ruby).to eq(expected)
+    end
 
+    it "expands ranges with INCLUDES ONLY" do
       filter = YAML.load '--- !ruby/object:MiqExpression
       exp:
         INCLUDES ONLY:
           field: Host-enabled_inbound_ports
           value: 22
       '
-      expect(filter.to_ruby).to eq('(<value ref=host, type=numeric_set>/virtual/enabled_inbound_ports</value> - [22]) == []')
 
+      expected = "(<value ref=host, type=numeric_set>/virtual/enabled_inbound_ports</value> - [22]) == []"
+      expect(filter.to_ruby).to eq(expected)
+    end
+
+    it "expands ranges with LIMITED TO" do
       filter = YAML.load '--- !ruby/object:MiqExpression
       exp:
         LIMITED TO:
           field: Host-enabled_inbound_ports
           value: 22
       '
-      expect(filter.to_ruby).to eq('(<value ref=host, type=numeric_set>/virtual/enabled_inbound_ports</value> - [22]) == []')
+
+      expected = "(<value ref=host, type=numeric_set>/virtual/enabled_inbound_ports</value> - [22]) == []"
+      expect(filter.to_ruby).to eq(expected)
     end
 
-    it "should test string set expressions" do
+    it "should test string set expressions with EQUAL" do
       filter = YAML.load '--- !ruby/object:MiqExpression
       exp:
         "=":
           field: Host-service_names
           value: "ntpd, sshd, vmware-vpxa, vmware-webAccess"
       '
-      expect(filter.to_ruby).to eq("<value ref=host, type=string_set>/virtual/service_names</value> == ['ntpd','sshd','vmware-vpxa','vmware-webAccess']")
 
+      expected = "<value ref=host, type=string_set>/virtual/service_names</value> == ['ntpd','sshd','vmware-vpxa','vmware-webAccess']"
+      expect(filter.to_ruby).to eq(expected)
+    end
+
+    it "should test string set expressions with INCLUDES ALL" do
       filter = YAML.load '--- !ruby/object:MiqExpression
       exp:
         INCLUDES ALL:
           field: Host-service_names
           value: "ntpd, sshd, vmware-vpxa, vmware-webAccess"
       '
-      expect(filter.to_ruby).to eq("(<value ref=host, type=string_set>/virtual/service_names</value> & ['ntpd','sshd','vmware-vpxa','vmware-webAccess']) == ['ntpd','sshd','vmware-vpxa','vmware-webAccess']")
 
+      expected = "(<value ref=host, type=string_set>/virtual/service_names</value> & ['ntpd','sshd','vmware-vpxa','vmware-webAccess']) == ['ntpd','sshd','vmware-vpxa','vmware-webAccess']"
+      expect(filter.to_ruby).to eq(expected)
+    end
+
+    it "should test string set expressions with INCLUDES ANY" do
       filter = YAML.load '--- !ruby/object:MiqExpression
       exp:
         INCLUDES ANY:
           field: Host-service_names
           value: "ntpd, sshd, vmware-vpxa, vmware-webAccess"
       '
-      expect(filter.to_ruby).to eq("(['ntpd','sshd','vmware-vpxa','vmware-webAccess'] - <value ref=host, type=string_set>/virtual/service_names</value>) != ['ntpd','sshd','vmware-vpxa','vmware-webAccess']")
 
+      expected = "(['ntpd','sshd','vmware-vpxa','vmware-webAccess'] - <value ref=host, type=string_set>/virtual/service_names</value>) != ['ntpd','sshd','vmware-vpxa','vmware-webAccess']"
+      expect(filter.to_ruby).to eq(expected)
+    end
+
+    it "should test string set expressions with INCLUDES ONLY" do
       filter = YAML.load '--- !ruby/object:MiqExpression
       exp:
         INCLUDES ONLY:
           field: Host-service_names
           value: "ntpd, sshd, vmware-vpxa"
       '
-      expect(filter.to_ruby).to eq("(<value ref=host, type=string_set>/virtual/service_names</value> - ['ntpd','sshd','vmware-vpxa']) == []")
 
+      expected = "(<value ref=host, type=string_set>/virtual/service_names</value> - ['ntpd','sshd','vmware-vpxa']) == []"
+      expect(filter.to_ruby).to eq(expected)
+    end
+
+    it "should test string set expressions with LIMITED TO" do
       filter = YAML.load '--- !ruby/object:MiqExpression
       exp:
         LIMITED TO:
           field: Host-service_names
           value: "ntpd, sshd, vmware-vpxa"
       '
-      expect(filter.to_ruby).to eq("(<value ref=host, type=string_set>/virtual/service_names</value> - ['ntpd','sshd','vmware-vpxa']) == []")
 
+      expected = "(<value ref=host, type=string_set>/virtual/service_names</value> - ['ntpd','sshd','vmware-vpxa']) == []"
+      expect(filter.to_ruby).to eq(expected)
+    end
+
+    it "should test string set expressions with FIND/checkall" do
       filter = YAML.load '--- !ruby/object:MiqExpression
       exp:
         FIND:
@@ -904,10 +936,12 @@ describe MiqExpression do
               field: Host.filesystems-permissions
               value: "0644"
       '
-      expect(filter.to_ruby).to eq('<find><search><value ref=host, type=text>/virtual/filesystems/name</value> == "/etc/passwd"</search><check mode=all><value ref=host, type=string>/virtual/filesystems/permissions</value> == "0644"</check></find>')
+
+      expected = '<find><search><value ref=host, type=text>/virtual/filesystems/name</value> == "/etc/passwd"</search><check mode=all><value ref=host, type=string>/virtual/filesystems/permissions</value> == "0644"</check></find>'
+      expect(filter.to_ruby).to eq(expected)
     end
 
-    it "should test regexp" do
+    it "should test regexp with regex literal" do
       filter = YAML.load '--- !ruby/object:MiqExpression
       exp:
         REGULAR EXPRESSION MATCHES:
@@ -915,7 +949,9 @@ describe MiqExpression do
           value: /^[^.]*\.galaxy\..*$/
       '
       expect(filter.to_ruby).to eq('<value ref=host, type=string>/virtual/name</value> =~ /^[^.]*\.galaxy\..*$/')
+    end
 
+    it "should test regexp with string literal" do
       filter = YAML.load '--- !ruby/object:MiqExpression
       exp:
         REGULAR EXPRESSION MATCHES:
@@ -923,7 +959,9 @@ describe MiqExpression do
           value: ^[^.]*\.galaxy\..*$
       '
       expect(filter.to_ruby).to eq('<value ref=host, type=string>/virtual/name</value> =~ /^[^.]*\.galaxy\..*$/')
+    end
 
+    it "should test regexp as part of a FIND/checkany expression" do
       filter = YAML.load '--- !ruby/object:MiqExpression
       exp:
         FIND:
@@ -936,8 +974,11 @@ describe MiqExpression do
               field: Host.firewall_rules-name
               value: /^.*SLP.*$/'
 
-      expect(filter.to_ruby).to eq('<find><search><value ref=host, type=boolean>/virtual/firewall_rules/enabled</value> == "true"</search><check mode=any><value ref=host, type=string>/virtual/firewall_rules/name</value> =~ /^.*SLP.*$/</check></find>')
+      expected = '<find><search><value ref=host, type=boolean>/virtual/firewall_rules/enabled</value> == "true"</search><check mode=any><value ref=host, type=string>/virtual/firewall_rules/name</value> =~ /^.*SLP.*$/</check></find>'
+      expect(filter.to_ruby).to eq(expected)
+    end
 
+    it "should test negative regexp with FIND/checkany expression" do
       filter = YAML.load '--- !ruby/object:MiqExpression
       exp:
         FIND:
@@ -950,7 +991,8 @@ describe MiqExpression do
               field: Host.firewall_rules-name
               value: /^.*SLP.*$/'
 
-      expect(filter.to_ruby).to eq('<find><search><value ref=host, type=boolean>/virtual/firewall_rules/enabled</value> == "true"</search><check mode=any><value ref=host, type=string>/virtual/firewall_rules/name</value> !~ /^.*SLP.*$/</check></find>')
+      expected = '<find><search><value ref=host, type=boolean>/virtual/firewall_rules/enabled</value> == "true"</search><check mode=any><value ref=host, type=string>/virtual/firewall_rules/name</value> !~ /^.*SLP.*$/</check></find>'
+      expect(filter.to_ruby).to eq(expected)
     end
 
     it "should test fb7726" do
@@ -972,7 +1014,9 @@ describe MiqExpression do
           value: 25.kilobytes
       '
       expect(filter.to_ruby).to eq('<value ref=vm, type=integer>/virtual/memory_shares</value> >= 25600')
+    end
 
+    it "should test numbers with commas with methods" do
       filter = YAML.load '--- !ruby/object:MiqExpression
       context_type:
       exp:
@@ -997,28 +1041,41 @@ describe MiqExpression do
         expect(Condition.subst(filter.to_ruby, data)).to eq("\"C:\\\\Documents and Users\\\\O'Neill, April\\\\\" =~ /\\$foo/")
       end
 
-      it "should test context hash" do
-        data = {"name" => "VM_1", "guest_applications.version" => "3.1.2.7193", "guest_applications.release" => nil, "guest_applications.vendor" => "VMware, Inc.", "id" => 9, "guest_applications.name" => "VMware Tools", "guest_applications.package_name" => nil}
+      context "when context_type is 'hash'" do
+        let(:data) do
+          {
+            "name"                            => "VM_1",
+            "guest_applications.version"      => "3.1.2.7193",
+            "guest_applications.release"      => nil,
+            "guest_applications.vendor"       => "VMware, Inc.", "id" => 9,
+            "guest_applications.name"         => "VMware Tools",
+            "guest_applications.package_name" => nil
+          }
+        end
 
-        filter = YAML.load '--- !ruby/object:MiqExpression
-        exp:
-          "=":
-            field: Vm.guest_applications-name
-            value: VMware Tools
-        context_type: hash
-        '
-        expect(filter.to_ruby).to eq("<value type=string>guest_applications.name</value> == \"VMware Tools\"")
-        expect(Condition.subst(filter.to_ruby, data)).to eq("\"VMware Tools\" == \"VMware Tools\"")
+        it "should test context hash with EQUAL" do
+          filter = YAML.load '--- !ruby/object:MiqExpression
+          exp:
+            "=":
+              field: Vm.guest_applications-name
+              value: VMware Tools
+          context_type: hash
+          '
+          expect(filter.to_ruby).to eq("<value type=string>guest_applications.name</value> == \"VMware Tools\"")
+          expect(Condition.subst(filter.to_ruby, data)).to eq("\"VMware Tools\" == \"VMware Tools\"")
+        end
 
-        filter = YAML.load '--- !ruby/object:MiqExpression
-        exp:
-          REGULAR EXPRESSION MATCHES:
-            field: Vm.guest_applications-vendor
-            value: /^[^.]*ware.*$/
-        context_type: hash
-        '
-        expect(filter.to_ruby).to eq("<value type=string>guest_applications.vendor</value> =~ /^[^.]*ware.*$/")
-        expect(Condition.subst(filter.to_ruby, data)).to eq('"VMware, Inc." =~ /^[^.]*ware.*$/')
+        it "should test context hash with REGULAR EXPRESSION MATCHES" do
+          filter = YAML.load '--- !ruby/object:MiqExpression
+          exp:
+            REGULAR EXPRESSION MATCHES:
+              field: Vm.guest_applications-vendor
+              value: /^[^.]*ware.*$/
+          context_type: hash
+          '
+          expect(filter.to_ruby).to eq("<value type=string>guest_applications.vendor</value> =~ /^[^.]*ware.*$/")
+          expect(Condition.subst(filter.to_ruby, data)).to eq('"VMware, Inc." =~ /^[^.]*ware.*$/')
+        end
       end
     end
 
