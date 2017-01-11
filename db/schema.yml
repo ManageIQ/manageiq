@@ -1569,6 +1569,7 @@ jobs:
 - archive
 - options
 - context
+- miq_task_id
 key_pairs_vms:
 - authentication_id
 - vm_id
