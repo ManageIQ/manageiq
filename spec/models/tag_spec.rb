@@ -1,4 +1,12 @@
 describe Tag do
+  describe ".list" do
+    it "returns an empty string for something that is untaggable" do
+      account = FactoryGirl.create(:account)
+      actual = described_class.list(account)
+      expect(actual).to eq("")
+    end
+  end
+
   context ".filter_ns" do
     it "normal case" do
       tag1 = double
