@@ -115,7 +115,12 @@ class ManageIQ::Providers::Openstack::InfraManager < ::EmsInfra
   end
 
   def verify_ssh_keypair_credentials(_options)
-    hosts.sort_by(&:ems_cluster_id)
+    # select all hosts with ems_cluster_id
+    # slice into groups by ems_cluster_id
+    # choose one from each group with power_state 'on'
+    # run verify_credentials on all of selected hosts
+    hosts.select(&:ems_cluster_id)
+         .sort_by(&:ems_cluster_id)
          .slice_when { |i, j| i.ems_cluster_id != j.ems_cluster_id }
          .map { |c| c.find { |h| h.power_state == 'on' } }
          .all? { |h| h.verify_credentials('ssh_keypair') }
