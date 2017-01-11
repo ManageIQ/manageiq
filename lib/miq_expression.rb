@@ -523,7 +523,22 @@ class MiqExpression
       operands = operands2rubyvalue(operator, exp[operator], context_type)
       clause = operands.join(" #{normalize_ruby_operator(operator)} ")
     when "contains"
-      operands = operands2rubyvalue(operator, exp[operator], context_type)
+      exp[operator]["tag"] ||= exp[operator]["field"]
+      operands = if context_type != "hash"
+                   ref, val = value2tag(preprocess_managed_tag(exp[operator]["tag"]), exp[operator]["value"])
+                   ["<exist ref=#{ref}>#{val}</exist>"]
+                 elsif context_type == "hash"
+                   # This is only for supporting reporting "display filters"
+                   # In the report object the tag value is actually the description and not the raw tag name.
+                   # So we have to trick it by replacing the value with the description.
+                   description = MiqExpression.get_entry_details(exp[operator]["tag"]).inject("") do |s, t|
+                     break(t.first) if t.last == exp[operator]["value"]
+                     s
+                   end
+                   val = exp[operator]["tag"].split(".").last.split("-").join(".")
+                   fld = "<value type=string>#{val}</value>"
+                   [fld, quote(description, "string")]
+                 end
       clause = operands.join(" #{normalize_operator(operator)} ")
     when "find"
       # FIND Vm.users-name = 'Administrator' CHECKALL Vm.users-enabled = 1
@@ -911,23 +926,8 @@ class MiqExpression
   def self.operands2rubyvalue(operator, ops, context_type)
     # puts "Enter: operands2rubyvalue: operator: #{operator}, ops: #{ops.inspect}"
     operator = operator.downcase
-    ops["tag"] = ops["field"] if operator == "contains" && !ops["tag"] # process values in contains as tags
 
-    if ops["tag"] && context_type != "hash"
-      ref, val = value2tag(preprocess_managed_tag(ops["tag"]), ops["value"])
-      ["<exist ref=#{ref}>#{val}</exist>"]
-    elsif ops["tag"] && context_type == "hash"
-      # This is only for supporting reporting "display filters"
-      # In the report object the tag value is actually the description and not the raw tag name.
-      # So we have to trick it by replacing the value with the description.
-      description = MiqExpression.get_entry_details(ops["tag"]).inject("") do|s, t|
-        break(t.first) if t.last == ops["value"]
-        s
-      end
-      val = ops["tag"].split(".").last.split("-").join(".")
-      fld = "<value type=string>#{val}</value>"
-      [fld, quote(description, "string")]
-    elsif ops["field"]
+    if ops["field"]
       if ops["field"] == "<count>"
         ["<count>", quote(ops["value"], "integer")]
       else
