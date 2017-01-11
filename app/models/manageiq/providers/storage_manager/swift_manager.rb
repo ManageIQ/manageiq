@@ -3,8 +3,7 @@ class ManageIQ::Providers::StorageManager::SwiftManager < ManageIQ::Providers::S
   require_nested :RefreshWorker
   require_nested :Refresher
 
-  has_many :cloud_object_store_containers, :foreign_key => :ems_id, :dependent => :destroy
-  has_many :cloud_object_store_objects,    :foreign_key => :ems_id, :dependent => :destroy
+  include ManageIQ::Providers::StorageManager::ObjectMixin
 
   delegate :authentication_check,
            :authentication_status,
@@ -24,7 +23,6 @@ class ManageIQ::Providers::StorageManager::SwiftManager < ManageIQ::Providers::S
            :to        => :parent_manager,
            :allow_nil => true
 
-  supports :object_storage
   supports :swift_service do
     if parent_manager
       unsupported_reason_add(:swift_service, parent_manager.unsupported_reason(:swift_service)) unless

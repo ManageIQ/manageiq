@@ -11,8 +11,7 @@ module EmsRefresh::SaveInventory
     when ManageIQ::Providers::ConfigurationManager          then save_configuration_manager_inventory(ems, hashes, target)
     when ManageIQ::Providers::ContainerManager              then save_ems_container_inventory(ems, hashes, target)
     when ManageIQ::Providers::NetworkManager                then save_ems_network_inventory(ems, hashes, target)
-    when ManageIQ::Providers::StorageManager::CinderManager then save_ems_cinder_inventory(ems, hashes, target)
-    when ManageIQ::Providers::StorageManager::SwiftManager  then save_ems_swift_inventory(ems, hashes, target)
+    when ManageIQ::Providers::StorageManager                then save_ems_storage_inventory(ems, hashes, target)
     when ManageIQ::Providers::MiddlewareManager             then save_ems_middleware_inventory(ems, hashes, target)
     when ManageIQ::Providers::DatawarehouseManager          then save_ems_datawarehouse_inventory(ems, hashes, target)
     end
@@ -345,5 +344,15 @@ module EmsRefresh::SaveInventory
 
       new_vm
     end
+  end
+
+  #
+  # Storage managers can support many different types of storages. We thus rely
+  # on the supports feature of the manager to choose which parts of the
+  # inventory to save.
+  #
+  def save_ems_storage_inventory(ems, hashes, target = nil)
+    save_ems_block_storage_inventory(ems, hashes, target) if ems.supports?(:block_storage)
+    save_ems_object_storage_inventory(ems, hashes, target) if ems.supports?(:object_storage)
   end
 end

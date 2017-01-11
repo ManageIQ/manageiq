@@ -5,8 +5,8 @@
 #     - cloud_object_store_objects
 #
 
-module EmsRefresh::SaveInventorySwift
-  def save_ems_swift_inventory(ems, hashes, target = nil)
+module EmsRefresh::SaveInventoryObjectStorage
+  def save_ems_object_storage_inventory(ems, hashes, target = nil)
     target = ems if target.nil?
     log_header = "EMS: [#{ems.name}], id: [#{ems.id}]"
 
@@ -16,7 +16,7 @@ module EmsRefresh::SaveInventorySwift
       return
     end
 
-    _log.info("#{log_header} Saving EMS Swift Inventory...")
+    _log.info("#{log_header} Saving EMS Object Storage Inventory...")
     if debug_trace
       require 'yaml'
       _log.debug "#{log_header} hashes:\n#{YAML.dump(hashes)}"
@@ -28,21 +28,21 @@ module EmsRefresh::SaveInventorySwift
     ]
 
     # Save and link other subsections
-    save_swift_child_inventory(ems, hashes, child_keys, target)
+    save_object_storage_child_inventory(ems, hashes, child_keys, target)
 
     ems.save!
     hashes[:id] = ems.id
 
-    _log.info("#{log_header} Saving EMS Swift Inventory...Complete")
+    _log.info("#{log_header} Saving EMS Object Storage Inventory...Complete")
 
     ems
   end
 
-  def save_swift_child_inventory(obj, hashes, child_keys, *args)
-    child_keys.each { |k| send("save_swift_#{k}_inventory", obj, hashes[k], *args) if hashes.key?(k) }
+  def save_object_storage_child_inventory(obj, hashes, child_keys, *args)
+    child_keys.each { |k| send("save_object_storage_#{k}_inventory", obj, hashes[k], *args) if hashes.key?(k) }
   end
 
-  def save_swift_cloud_object_store_containers_inventory(ems, hashes, target = nil)
+  def save_object_storage_cloud_object_store_containers_inventory(ems, hashes, target = nil)
     target = ems if target.nil?
 
     ems.cloud_object_store_containers.reset
@@ -61,7 +61,7 @@ module EmsRefresh::SaveInventorySwift
     store_ids_for_new_records(ems.cloud_object_store_containers, hashes, :ems_ref)
   end
 
-  def save_swift_cloud_object_store_objects_inventory(ems, hashes, target = nil)
+  def save_object_storage_cloud_object_store_objects_inventory(ems, hashes, target = nil)
     target = ems if target.nil?
 
     ems.cloud_object_store_objects.reset
