@@ -998,8 +998,8 @@ module OpsController::OpsRbac
         :verify => @user.password,
       })
     end
-    # load all user groups
-    @edit[:groups] = MiqGroup.non_tenant_groups_in_my_region.sort_by { |g| g.description.downcase }.collect { |g| [g.description, g.id] }
+    # load all user groups, filter available for tenant
+    @edit[:groups] = Rbac.filtered(MiqGroup.non_tenant_groups_in_my_region).sort_by { |g| g.description.downcase }.collect { |g| [g.description, g.id] }
     # store current state of the new users information
     @edit[:current] = copy_hash(@edit[:new])
   end
@@ -1033,6 +1033,9 @@ module OpsController::OpsRbac
     end
     if @edit[:new][:group].blank?
       add_flash(_("A User must be assigned to a Group"), :error)
+      valid = false
+    elsif Rbac.filtered([MiqGroup.find_by_id(@edit[:new][:group])].compact).empty?
+      add_flash(_("A User must be assigned to an allowed Group"), :error)
       valid = false
     end
     valid

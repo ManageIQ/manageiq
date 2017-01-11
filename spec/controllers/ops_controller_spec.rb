@@ -46,6 +46,7 @@ describe OpsController do
   end
 
   describe 'rbac_user_edit' do
+    let(:group) { FactoryGirl.create(:miq_group) }
     before do
       ApplicationController.handle_exceptions = true
     end
@@ -58,7 +59,7 @@ describe OpsController do
           :name      => 'test7',
           :userid    => 'test7',
           :email     => 'test7@foo.bar',
-          :group     => 'test_group',
+          :group     => group.id,
           :password  => 'test7',
           :verify    => 'test7',
         }
@@ -75,7 +76,7 @@ describe OpsController do
           :name      => 'test7',
           :userid    => 'test7',
           :email     => 'test7@foo.bar',
-          :group     => 'test_group',
+          :group     => group.id,
           :password  => 'test7',
           :verify    => 'test8',
         }
