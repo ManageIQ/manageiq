@@ -10,10 +10,6 @@ class MiqTask < ApplicationRecord
   STATUS_ERROR      = 'Error'.freeze
   STATUS_TIMEOUT    = 'Timeout'.freeze
   STATUS_EXPIRED    = 'Expired'.freeze
-  validates :state,
-            :inclusion => { :in => [STATE_INITIALIZED, STATE_QUEUED, STATE_ACTIVE, STATE_FINISHED] }
-  validates :status,
-            :inclusion => { :in => [STATUS_OK, STATUS_WARNING, STATUS_ERROR, STATUS_TIMEOUT] }
 
   DEFAULT_MESSAGE   = 'Initialized'.freeze
   DEFAULT_USERID    = 'system'.freeze
@@ -24,8 +20,11 @@ class MiqTask < ApplicationRecord
   has_one :log_file, :dependent => :destroy
   has_one :binary_blob, :as => :resource, :dependent => :destroy
   has_one :miq_report_result, :dependent => :destroy
+  has_one :job, :dependent => :destroy
 
   before_validation :initialize_attributes, :on => :create
+
+  before_destroy :check_associations
 
   virtual_has_one :task_results
   virtual_attribute :state_or_status, :string, :arel => (lambda do |t|
@@ -49,10 +48,20 @@ class MiqTask < ApplicationRecord
     task.update_status(state, status, message) unless task.nil?
   end
 
+  def check_associations
+    if job && job.is_active?
+      _log.warn "Delete not allowed: Task [#{id}] has active job - id: [#{job.id}], guid: [#{job.guid}],"
+      throw :abort
+    end
+    true
+  end
+
   def update_status(state, status, message)
     status = STATUS_ERROR if status == STATUS_EXPIRED
     _log.info("Task: [#{id}] [#{state}] [#{status}] [#{message}]")
-    update_attributes!(:state => state, :status => status, :message => message.truncate(255))
+    attributes = {:state => state, :status => status, :message => message.truncate(255)}
+    attributes[:started_on] = Time.now.utc if state == STATE_ACTIVE && started_on.nil?
+    update_attributes!(attributes)
   end
 
   def self.update_message(taskid, message)
@@ -124,7 +133,9 @@ class MiqTask < ApplicationRecord
   end
 
   def state_active
-    update_attributes(:state => STATE_ACTIVE)
+    attributes = {:state => STATE_ACTIVE}
+    attributes[:started_on] = Time.now.utc if state == STATE_ACTIVE && started_on.nil?
+    update_attributes!(attributes)
   end
 
   def self.state_finished(taskid)
@@ -271,6 +282,16 @@ class MiqTask < ApplicationRecord
     when STATUS_ERROR      then "Error"
     when STATUS_TIMEOUT    then "Timed Out"
     else "Unknown"
+    end
+  end
+
+  def process_cancel
+    if job
+      job.process_cancel
+      _("The selected Task was cancelled")
+    else
+      _("This task can not be canceled")
+      # TODO: implement 'cancel' operation for task
     end
   end
 
