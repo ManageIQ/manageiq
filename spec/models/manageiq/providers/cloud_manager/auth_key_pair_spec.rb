@@ -1,5 +1,5 @@
 describe ManageIQ::Providers::CloudManager::AuthKeyPair do
-  let(:ems) { FactoryGirl.build(:ems_cloud) }
+  let(:ems) { FactoryGirl.create(:ems_cloud) }
 
   context 'create and delete actions' do
     it "has methods" do
@@ -9,7 +9,7 @@ describe ManageIQ::Providers::CloudManager::AuthKeyPair do
 
     # TODO(maufart): do we have any special approach to test module methods separately?
     it 'forces implement methods' do
-      expect { subject.class.create_key_pair ems, {} }.to raise_error NotImplementedError
+      expect { subject.class.create_key_pair ems.id, {} }.to raise_error NotImplementedError
       expect { subject.delete_key_pair }.to raise_error NotImplementedError
     end
   end
