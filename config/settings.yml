@@ -1202,7 +1202,7 @@
         :nice_delta: 1
         :poll: 1.seconds
       :event_catcher_ansible_tower:
-        :poll: 1.seconds
+        :poll: 20.seconds
       :event_catcher_redhat:
         :poll: 15.seconds
       :event_catcher_vmware:

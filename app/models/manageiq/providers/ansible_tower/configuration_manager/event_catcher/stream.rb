@@ -2,10 +2,11 @@ class ManageIQ::Providers::AnsibleTower::ConfigurationManager::EventCatcher::Str
   class ProviderUnreachable < ManageIQ::Providers::BaseManager::EventCatcher::Runner::TemporaryFailure
   end
 
-  def initialize(ems)
+  def initialize(ems, options = {})
     @ems = ems
     @last_activity = nil
     @stop_polling = false
+    @poll_sleep = options[:poll_sleep] || 20.seconds
   end
 
   def start
@@ -26,7 +27,7 @@ class ManageIQ::Providers::AnsibleTower::ConfigurationManager::EventCatcher::Str
               yield activity
               @last_activity = activity
             end
-            sleep(20)
+            sleep @poll_sleep
           end
         rescue => exception
           raise ProviderUnreachable, exception.message

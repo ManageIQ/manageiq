@@ -24,7 +24,10 @@ class ManageIQ::Providers::AnsibleTower::ConfigurationManager::EventCatcher::Run
 
   def event_monitor_handle
     @event_monitor_handle ||= begin
-      ManageIQ::Providers::AnsibleTower::ConfigurationManager::EventCatcher::Stream.new(@ems)
+      ManageIQ::Providers::AnsibleTower::ConfigurationManager::EventCatcher::Stream.new(
+        @ems,
+        :poll_sleep => worker_settings[:poll]
+      )
     end
   end
 end
