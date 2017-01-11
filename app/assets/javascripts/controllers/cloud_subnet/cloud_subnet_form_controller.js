@@ -52,4 +52,15 @@ ManageIQ.angular.app.controller('cloudSubnetFormController', ['$http', '$scope',
     $scope.angularForm.$setPristine(true);
     miqService.miqFlash("warn", "All changes have been reset");
   };
+
+  $scope.filterNetworkManagerChanged = function(id) {
+    miqService.sparkleOn();
+    $http.get('/cloud_subnet/cloud_subnet_networks_by_ems/' + id).success(function(data) {
+      $scope.available_networks = data.available_networks;
+    });
+    $http.get('/cloud_subnet/cloud_tenants_by_ems/' + id).success(function(data) {
+      $scope.available_tenants = data.available_tenants;
+    });
+    miqService.sparkleOff();
+  };
 }]);
