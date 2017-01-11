@@ -24,7 +24,7 @@ describe ManageIQ::Providers::Openstack::InfraManager do
 
     it "fails to verify Openstack SSH credentials when any hosts report that the credentials are invalid" do
       @ems = FactoryGirl.create(:ems_openstack_infra_with_authentication)
-      FactoryGirl.create(:host_openstack_infra, :ext_management_system => @ems, :state => "on")
+      host = FactoryGirl.create(:host_openstack_infra, :ext_management_system => @ems, :state => "on")
       allow_any_instance_of(ManageIQ::Providers::Openstack::InfraManager::Host).to receive(:verify_credentials).and_return(false)
       expect(@ems.send(:verify_ssh_keypair_credentials, nil)).to be_falsey
     end
@@ -32,6 +32,13 @@ describe ManageIQ::Providers::Openstack::InfraManager do
     it "disregards powered off hosts when verifying Openstack SSH credentials" do
       @ems = FactoryGirl.create(:ems_openstack_infra_with_authentication)
       FactoryGirl.create(:host_openstack_infra, :ext_management_system => @ems, :state => "off")
+      allow_any_instance_of(ManageIQ::Providers::Openstack::InfraManager::Host).to receive(:verify_credentials).and_return(false)
+      expect(@ems.send(:verify_ssh_keypair_credentials, nil)).to be_truthy
+    end
+
+    it "disregards host with no ems_cluster" do
+      @ems = FactoryGirl.create(:ems_openstack_infra_with_authentication)
+      FactoryGirl.create(:host_openstack_infra, :ext_management_system => @ems, :state => "on", :ems_cluster => nil)
       allow_any_instance_of(ManageIQ::Providers::Openstack::InfraManager::Host).to receive(:verify_credentials).and_return(false)
       expect(@ems.send(:verify_ssh_keypair_credentials, nil)).to be_truthy
     end

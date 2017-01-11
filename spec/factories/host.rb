@@ -60,6 +60,7 @@ FactoryGirl.define do
     vmm_vendor  "unknown"
     ems_ref     "openstack-perf-host"
     ems_ref_obj "openstack-perf-host-nova-instance"
+    association :ems_cluster, factory: :ems_cluster_openstack
   end
 
   factory :host_openstack_infra_compute, :parent => :host_openstack_infra,
