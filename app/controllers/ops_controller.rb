@@ -200,6 +200,35 @@ class OpsController < ApplicationController
     end
   end
 
+  def rbac_group_load_tab
+    tab_id = params[:tab_id]
+    _, group_id = TreeBuilder.extract_node_model_and_id(x_node)
+    @sb[:active_rbac_group_tab] = tab_id
+    @edit = session[:edit]
+
+    rbac_group_get_details(group_id)
+
+    presenter = ExplorerPresenter.new
+
+    # needed to make tooolbar Configuration > Edit still work after lazy-loading a tab
+    presenter[:record_id] = group_id
+
+    r = proc { |opts| render_to_string(opts) }
+
+    rendered = case tab_id
+               when 'rbac_customer_tags'
+                 r[:partial => 'ops/rbac_group/customer_tags']
+               when 'rbac_hosts_clusters'
+                 r[:partial => 'ops/rbac_group/hosts_clusters']
+               when 'rbac_vms_templates'
+                 r[:partial => 'ops/rbac_group/vms_templates']
+               end
+
+    presenter.update(tab_id, rendered)
+
+    render :json => presenter.for_render
+  end
+
   private ############################
 
   def features
@@ -239,7 +268,16 @@ class OpsController < ApplicationController
     end
 
     if x_active_tree == :rbac_tree
-      x_node_set("root", :rbac_tree) unless x_node(:rbac_tree)
+      node = x_node(:rbac_tree)
+      if node
+        kind = node.split('-').first
+
+        # default to the first tab in group detail
+        @sb[:active_rbac_group_tab] = "rbac_customer_tags" if kind == 'g'
+      else
+        x_node_set("root", :rbac_tree)
+      end
+
       @sb[:active_tab] ||= "rbac_details"
     end
 
@@ -316,6 +354,9 @@ class OpsController < ApplicationController
       end
     when :rbac_tree
       @sb[:active_tab] = "rbac_details"
+
+      # default to the first tab in group detail
+      @sb[:active_rbac_group_tab] ||= "rbac_customer_tags" if node[0] == 'g'
     when :diagnostics_tree
       case node[0]
       when "root"
@@ -326,7 +367,6 @@ class OpsController < ApplicationController
         @sb[:diag_selected_id] = nil
       when "svr"
         @sb[:active_tab] = "diagnostics_summary"
-        svr = MiqServer.find(from_cid(node[1]))
       end
     when :vmdb_tree
       nodes = x_node.split('-')

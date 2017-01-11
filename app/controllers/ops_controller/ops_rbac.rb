@@ -897,6 +897,7 @@ module OpsController::OpsRbac
       rbac_user_get_details(id)
     when "g"
       @right_cell_text = _("%{model} \"%{name}\"") % {:model => ui_lookup(:model => "MiqGroup"), :name => MiqGroup.find_by_id(from_cid(id)).description}
+      @edit = nil
       rbac_group_get_details(id)
     when "ur"
       @right_cell_text = _("%{model} \"%{name}\"") % {:model => ui_lookup(:model => "MiqUserRole"), :name => MiqUserRole.find_by_id(from_cid(id)).name}
@@ -928,7 +929,6 @@ module OpsController::OpsRbac
   end
 
   def rbac_group_get_details(id)
-    @edit = nil
     @record = @group = MiqGroup.find_by_id(from_cid(id))
     get_tagdata(@group)
     # Build the belongsto filters hash
@@ -943,13 +943,26 @@ module OpsController::OpsRbac
     [@group.get_managed_filters].flatten.each do |f|
       @filters[f.split("/")[-2] + "-" + f.split("/")[-1]] = f
     end
-    @tags_tree = TreeBuilderTags.new(:tags,
-                                     :tags_tree,
-                                     @sb,
-                                     true,
-                                     :edit => @edit, :filters => @filters, :group => @group)
-    @hac_tree = build_belongsto_tree(@belongsto.keys, false, false)  # Build the Hosts & Clusters tree for this user
-    @vat_tree = build_belongsto_tree(@belongsto.keys, true, false)  # Build the VMs & Templates tree for this user
+
+    rbac_group_right_tree(@belongsto.keys)
+  end
+
+  # this causes the correct tree to get instantiated, depending on the active tab
+  def rbac_group_right_tree(selected)
+    case @sb[:active_rbac_group_tab]
+    when 'rbac_customer_tags'
+      @tags_tree = TreeBuilderTags.new(:tags,
+                                       :tags_tree,
+                                       @sb,
+                                       true,
+                                       :edit    => @edit,
+                                       :filters => @filters,
+                                       :group   => @group)
+    when 'rbac_hosts_clusters'
+      @hac_tree = build_belongsto_tree(selected, false, false)  # Build the Hosts & Clusters tree for this user
+    when 'rbac_vms_templates'
+      @vat_tree = build_belongsto_tree(selected, true, false)  # Build the VMs & Templates tree for this user
+    end
   end
 
   def rbac_role_get_details(id)
@@ -1114,13 +1127,8 @@ module OpsController::OpsRbac
     @edit[:new][:group_tenant] = @group.tenant_id
 
     @edit[:current] = copy_hash(@edit[:new])
-    @tags_tree = TreeBuilderTags.new(:tags,
-                                     :tags_tree,
-                                     @sb,
-                                     true,
-                                     :edit => @edit, :filters => @filters, :group => @group)
-    @hac_tree = build_belongsto_tree(@edit[:new][:belongsto].keys, false, false)  # Build the Hosts & Clusters tree for this user
-    @vat_tree = build_belongsto_tree(@edit[:new][:belongsto].keys, true, false)  # Build the VMs & Templates tree for this user
+
+    rbac_group_right_tree(@edit[:new][:belongsto].keys)
   end
 
   # Set group record variables to new values

@@ -165,60 +165,36 @@
   %hr
   %h3
     = @edit ? _("Assign Filters") : _("Assigned Filters (read only)")
+
   #rbac_group_tabs
     %ul.nav.nav-tabs
-      = miq_tab_header('customer_tags') do
-        = escape_javascript(current_tenant.name)
-        = _("Tags")
-      = miq_tab_header('hosts_clusters') do
+      = miq_tab_header('rbac_customer_tags', @sb[:active_rbac_group_tab], {:onclick => "rbacGroupLoadTab('rbac_customer_tags')"}) do
+        = _("%{current_tenant} Tags") % {:current_tenant => current_tenant.name}
+      = miq_tab_header('rbac_hosts_clusters', @sb[:active_rbac_group_tab], {:onclick => "rbacGroupLoadTab('rbac_hosts_clusters')"}) do
         = _("%{title_for_hosts} & %{title_for_clusters}") % {:title_for_hosts => title_for_hosts, :title_for_clusters => title_for_clusters}
-      = miq_tab_header('vms_templates') do
+      = miq_tab_header('rbac_vms_templates', @sb[:active_rbac_group_tab], {:onclick => "rbacGroupLoadTab('rbac_vms_templates')"}) do
         = _("VMs & Templates")
+
     .tab-content
-      = miq_tab_content('customer_tags') do
-        %br/
-        = _("This user is limited to items with the selected tags.")
-        %br/
-        %br/
-        = render(:partial => 'shared/tree', :locals => {:tree => @tags_tree, :name => @tags_tree.name})
-      = miq_tab_content('hosts_clusters') do
-        %br/
-        = _("This user is limited to the selected items and their children.")
-        %br/
-        %br/
-        #hac_treebox.treeview-pf-hover.treeview-pf-select{:style => "color:#000"}
-        = render(:partial => "layouts/tree",
-                 :locals  => {:tree_id           => "hac_treebox",
-                              :tree_name         => "hac_tree",
-                              :bs_tree           => @hac_tree,
-                              :oncheck           => @edit.nil? ? nil : "miqOnCheckUserFilters",
-                              :check_url         => "ops/rbac_group_field_changed/#{@group.id || "new"}___",
-                              :highlight_changes => true,
-                              :checkboxes        => true})
-      = miq_tab_content('vms_templates') do
-        %br/
-        = _("This user is limited to the selected folders and their children.")
-        %br/
-        %br/
-        #vat_treebox.treeview-pf-hover.treeview-pf-select{:style => "color:#000"}
-        = render(:partial => "layouts/tree",
-                 :locals  => {:tree_id           => "vat_treebox",
-                              :tree_name         => "vat_tree",
-                              :bs_tree           => @vat_tree,
-                              :oncheck           => @edit.nil? ? nil : "miqOnCheckUserFilters",
-                              :check_url         => "/ops/rbac_group_field_changed/#{@group.id || "new"}___",
-                              :highlight_changes => true,
-                              :checkboxes        => true})
+      = miq_tab_content('rbac_customer_tags', @sb[:active_rbac_group_tab], {:lazy => true}) do
+        = render :partial => 'ops/rbac_group/customer_tags'
+      = miq_tab_content('rbac_hosts_clusters', @sb[:active_rbac_group_tab], {:lazy => true}) do
+        = render :partial => 'ops/rbac_group/hosts_clusters'
+      = miq_tab_content('rbac_vms_templates', @sb[:active_rbac_group_tab], {:lazy => true}) do
+        = render :partial => 'ops/rbac_group/vms_templates'
+
 :javascript
   miq_tabs_init('#rbac_group_tabs');
-%script{:type => "text/javascript"}
-  - if get_vmdb_config[:authentication][:mode] == "httpd"
-    $('#user_id_ext_auth_form_group').show();
-    $('#user_id_form_group').hide();
-    $('#user_name_form_group').hide();
-    $('#user_password_form_group').hide();
-  - else
-    $('#user_id_ext_auth_form_group').hide();
-    $('#user_id_form_group').show();
-    $('#user_name_form_group').show();
-    $('#user_password_form_group').show();
+
+- if @edit
+  %script{:type => "text/javascript"}
+    - if get_vmdb_config[:authentication][:mode] == "httpd"
+      $('#user_id_ext_auth_form_group').show();
+      $('#user_id_form_group').hide();
+      $('#user_name_form_group').hide();
+      $('#user_password_form_group').hide();
+    - else
+      $('#user_id_ext_auth_form_group').hide();
+      $('#user_id_form_group').show();
+      $('#user_name_form_group').show();
+      $('#user_password_form_group').show();
