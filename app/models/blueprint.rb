@@ -43,6 +43,12 @@ class Blueprint < ApplicationRecord
     end
   end
 
+  # On edit of a Blueprint via the API, a new version will be created
+  def new_version(new_attributes = {})
+    new_attributes['version'] = (version.to_f + 0.1).to_s unless new_attributes.key?('version')
+    deep_copy(new_attributes)
+  end
+
   def create_bundle(options)
     options = options.with_indifferent_access
     self.class.transaction do

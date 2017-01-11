@@ -340,6 +340,21 @@ describe Blueprint do
       expect(subject).to be_in_use
     end
   end
+
+  describe '#new_version' do
+    before do
+      subject.ui_properties = ui_properties
+      subject.save!
+    end
+
+    it 'will create a new version' do
+      new_version = subject.new_version(:name => 'new version')
+      expect(new_version.version).to eq('0.1')
+      expect(new_version.original_blueprint_id).to eq(subject.id)
+      expect(new_version.active_version).to be_truthy
+      expect(subject.versions).to include(new_version)
+    end
+  end
 end
 
 def add_and_save_service(p, c)
