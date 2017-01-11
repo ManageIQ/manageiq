@@ -79,9 +79,9 @@ describe MiqAeEngine::MiqAeObject do
                                                  "Name"       => "fred")
     expect(result["vms"]).to be_kind_of(Array)
     expect(result["vms"].length).to eq(1)
+    expect(result["VMs"]).to be_nil
     expect(result["name"]).to eq("fred")
     expect(result["Name"]).to be_nil
-    expect(result["VMs"]).to be_nil
   end
 
   it "#process_args_as_attributes with an array" do

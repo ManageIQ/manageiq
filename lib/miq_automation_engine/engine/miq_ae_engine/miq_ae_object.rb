@@ -273,7 +273,7 @@ module MiqAeEngine
         key, klass = get_key_name_and_klass_from_key(args_key)
         value = args.delete(args_key)
         args["#{key}_id"] = value unless @attributes.key?(key)
-        args[key.downcase] = MiqAeObject.convert_value_based_on_datatype(value, klass)
+        args[key] = MiqAeObject.convert_value_based_on_datatype(value, klass)
       else
         args[args_key.downcase] = args.delete(args_key) if args_key != args_key.downcase
       end
