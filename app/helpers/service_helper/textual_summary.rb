@@ -98,7 +98,7 @@ module ServiceHelper::TextualSummary
     if ost && !ost.id.present?
       {
         :label => _("Orchestration Stack"),
-        :image => "orchestration_stack.png",
+        :image => "orchestration_stack",
         :value => ost.name,
         :title => _("Invalid Stack")
       }
