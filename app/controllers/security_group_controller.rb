@@ -14,8 +14,6 @@ class SecurityGroupController < ApplicationController
     %w(instances network_ports)
   end
 
-  menu_section :net
-
   def button
     @edit = session[:edit] # Restore @edit for adv search box
     params[:display] = @display if %w(vms instances images).include?(@display)
