@@ -6,6 +6,7 @@ module Api
     include Subcollections::Accounts
     include Subcollections::CustomAttributes
     include Subcollections::Software
+    include Subcollections::Snapshots
 
     def start_resource(type, id = nil, _data = nil)
       raise BadRequestError, "Must specify an id for starting a #{type} resource" unless id
