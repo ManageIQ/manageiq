@@ -1112,14 +1112,14 @@ describe MiqExpression do
     end
 
     it "generates the ruby for a KEY EXISTS expression" do
-      actual = described_class.new("KEY EXISTS" => {"field" => "Host-settings", "value" => "foo"}).to_ruby
-      expected = ["<value ref=host, type=string>/virtual/settings</value>", "\"foo\""]
+      actual = described_class.new("KEY EXISTS" => {"regkey" => "foo"}).to_ruby
+      expected = "<registry key_exists=1, type=boolean>foo</registry>  == 'true'"
       expect(actual).to eq(expected)
     end
 
     it "generates the ruby for a VALUE EXISTS expression" do
-      actual = described_class.new("VALUE EXISTS" => {"field" => "Host-settings", "value" => "foo"}).to_ruby
-      expected = ["<value ref=host, type=string>/virtual/settings</value>", "\"foo\""]
+      actual = described_class.new("VALUE EXISTS" => {"regkey" => "foo", "regval" => "bar"}).to_ruby
+      expected = "<registry value_exists=1, type=boolean>foo : bar</registry>  == 'true'"
       expect(actual).to eq(expected)
     end
 
