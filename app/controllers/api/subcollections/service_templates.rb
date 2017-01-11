@@ -29,7 +29,7 @@ module Api
       def service_templates_order_resource(_object, type, id = nil, data = nil)
         klass = collection_class(:service_templates)
         service_template = resource_search(id, type, klass)
-        workflow = service_template_workflow(service_template, data || {})
+        workflow = ServiceTemplateWorkflow.create(service_template, data || {})
         request_result = workflow.submit_request
         errors = request_result[:errors]
         if errors.present?
