@@ -131,7 +131,9 @@ module MiqAeEngine
 
           message = "Requeuing #{options.inspect} for object [#{object_name}] with state [#{options[:state]}] to Automate for delivery in [#{ae_retry_interval}] seconds"
           _log.info(message)
-          deliver_queue(options, :deliver_on => deliver_on)
+          queue_options = {:deliver_on => deliver_on}
+          queue_options[:server_guid] = MiqServer.my_guid if ws.root['ae_retry_server_affinity']
+          deliver_queue(options, queue_options)
         else
           if ae_result.casecmp('error').zero?
             message = "Error delivering #{options[:attrs].inspect} for object [#{object_name}] with state [#{state}] to Automate: #{ws.root['ae_message']}"

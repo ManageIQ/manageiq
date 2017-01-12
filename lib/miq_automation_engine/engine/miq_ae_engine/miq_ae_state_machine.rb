@@ -61,6 +61,7 @@ module MiqAeEngine
         @workspace.root['ae_state']  = f['name'] if @workspace.root['ae_state'].blank?
         @workspace.root['ae_result'] = 'ok'      if @workspace.root['ae_result'].blank?
         @workspace.root['ae_next_state'] = ''
+        @workspace.root['ae_retry_server_affinity'] = false
 
         # Do not proceed further unless this state is runnable
         return unless state_runnable?(f)
