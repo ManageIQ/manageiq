@@ -74,6 +74,16 @@ describe MiqAeEngine::MiqAeObject do
     expect(result["vms"].length).to eq(1)
   end
 
+  it "#process_args_as_attributes with mixed types and case insensitive" do
+    result = @miq_obj.process_args_as_attributes("Array::VMs" => "VmOrTemplate::#{@vm.id}",
+                                                 "Name"       => "fred")
+    expect(result["vms"]).to be_kind_of(Array)
+    expect(result["vms"].length).to eq(1)
+    expect(result["VMs"]).to be_nil
+    expect(result["name"]).to eq("fred")
+    expect(result["Name"]).to be_nil
+  end
+
   it "#process_args_as_attributes with an array" do
     vm2 = FactoryGirl.create(:vm_vmware)
     result = @miq_obj.process_args_as_attributes({"Array::vms" => "VmOrTemplate::#{@vm.id},VmOrTemplate::#{vm2.id}"})
