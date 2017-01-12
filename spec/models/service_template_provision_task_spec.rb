@@ -89,7 +89,7 @@ describe ServiceTemplateProvisionTask do
           :tenant_id        => @admin.current_tenant.id,
         }
         allow(@request).to receive(:approved?).and_return(true)
-        allow(@task_0.source).to receive(:my_zone).and_return("special")
+        allow(@task_0).to receive(:source).and_return(double(:my_zone => "special"))
         expect(MiqQueue).to receive(:put).with(
           :class_name  => 'MiqAeEngine',
           :method_name => 'deliver',
