@@ -1,10 +1,11 @@
 module ManagerRefresh::SaveCollection
   module Helper
     def save_inventory_object_inventory(ems, inventory_collection)
-      _log.info("Synchronizing #{ems.name} collection #{inventory_collection.size} of size #{inventory_collection} to database")
+      _log.info("Synchronizing #{ems.name} collection #{inventory_collection} of size #{inventory_collection.size} to"\
+                " the database")
 
       if inventory_collection.custom_save_block.present?
-        _log.info("Synchronizing #{ems.name} collection #{inventory_collection.size} using a custom save block")
+        _log.info("Synchronizing #{ems.name} collection #{inventory_collection} using a custom save block")
         inventory_collection.custom_save_block.call(ems, inventory_collection)
       else
         save_inventory(inventory_collection)
@@ -69,7 +70,9 @@ module ManagerRefresh::SaveCollection
             created_counter         += 1
           else
             inventory_object.object.assign_attributes(hash.except(:id, :type))
-            if inventory_object.object.changed?
+            if inventory_collection.check_changed?
+              inventory_object.object.save! if inventory_object.object.changed?
+            else
               inventory_object.object.save!
             end
           end

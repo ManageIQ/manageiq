@@ -5,17 +5,18 @@ module ManagerRefresh
     attr_reader :model_class, :strategy, :attributes_blacklist, :attributes_whitelist, :custom_save_block, :parent,
                 :internal_attributes, :delete_method, :data, :data_index, :dependency_attributes, :manager_ref,
                 :association, :complete, :update_only, :transitive_dependency_attributes, :custom_manager_uuid,
-                :arel
+                :custom_db_finder, :check_changed, :arel
 
     delegate :each, :size, :to => :to_a
 
     def initialize(model_class, manager_ref: nil, association: nil, parent: nil, strategy: nil, saved: nil,
                    custom_save_block: nil, delete_method: nil, data_index: nil, data: nil, dependency_attributes: nil,
                    attributes_blacklist: nil, attributes_whitelist: nil, complete: nil, update_only: nil,
-                   custom_manager_uuid: nil, arel: nil)
+                   check_changed: nil, custom_manager_uuid: nil, custom_db_finder: nil, arel: nil)
       @model_class                      = model_class
       @manager_ref                      = manager_ref || [:ems_ref]
       @custom_manager_uuid              = custom_manager_uuid
+      @custom_db_finder                 = custom_db_finder
       @association                      = association || []
       @parent                           = parent || nil
       @arel                             = arel
@@ -29,6 +30,7 @@ module ManagerRefresh
       @attributes_blacklist             = Set.new
       @attributes_whitelist             = Set.new
       @custom_save_block                = custom_save_block
+      @check_changed                    = check_changed.nil? ? true : check_changed
       @internal_attributes              = [:__feedback_edge_set_parent]
       @complete                         = complete.nil? ? true : complete
       @update_only                      = update_only.nil? ? false : update_only
@@ -48,8 +50,10 @@ module ManagerRefresh
     end
 
     def process_strategy(strategy_name)
-      if strategy_name == :local_db_cache_all
-        process_strategy_local_db_cache_all
+      case strategy_name
+      when :local_db_cache_all, :local_db_find_one
+        send("process_strategy_#{strategy_name}")
+      when :find_missing_in_local_db
       end
       strategy_name
     end
@@ -68,11 +72,22 @@ module ManagerRefresh
       # load_from_db.select(selected).find_each do |record|
       load_from_db.find_each do |record|
         if custom_manager_uuid.nil?
-          self.data_index[object_index(record)] = record
+          index = object_index(record)
         else
-          self.data_index[stringify_reference(custom_manager_uuid.call(record))] = record
+          index = stringify_reference(custom_manager_uuid.call(record))
         end
+        self.data_index[index] = new_inventory_object(record.attributes.symbolize_keys)
+        # TODO(lsmola) get rid of storing objects, they are causing memory bloat
+        self.data_index[index].object = record
       end
+    end
+
+    def process_strategy_local_db_find_one
+      self.saved = true
+    end
+
+    def check_changed?
+      check_changed
     end
 
     def complete?
@@ -113,8 +128,12 @@ module ManagerRefresh
         manager_ref.map { |attribute| object.public_send(attribute).try(:id) || object.public_send(attribute).to_s })
     end
 
+    def stringify_joiner
+      "__"
+    end
+
     def stringify_reference(reference)
-      reference.join("__")
+      reference.join(stringify_joiner)
     end
 
     def manager_ref_to_cols
@@ -130,11 +149,35 @@ module ManagerRefresh
     end
 
     def object_index_with_keys(keys, object)
-      keys.map { |attribute| object.public_send(attribute).to_s }.join("__")
+      keys.map { |attribute| object.public_send(attribute).to_s }.join(stringify_joiner)
     end
 
     def find(manager_uuid)
-      data_index[manager_uuid]
+      return if manager_uuid.nil?
+      case strategy
+      when :local_db_find_one
+        find_in_db(manager_uuid)
+      when :find_missing_in_local_db
+        data_index[manager_uuid] || find_in_db(manager_uuid)
+      else
+        data_index[manager_uuid]
+      end
+    end
+
+    def find_in_db(manager_uuid)
+      manager_uuids    = manager_uuid.split(stringify_joiner)
+      hash_uuid_by_ref = manager_ref.zip(manager_uuids).to_h
+      record           = if custom_db_finder.nil?
+                           parent.send(association).where(hash_uuid_by_ref).first
+                         else
+                           custom_db_finder.call(self, hash_uuid_by_ref)
+                         end
+      return unless record
+
+      inventory_object = new_inventory_object(record.attributes.symbolize_keys)
+      # TODO(lsmola) get rid of storing objects, they are causing memory bloat
+      inventory_object.object = record
+      inventory_object
     end
 
     def lazy_find(manager_uuid, key: nil, default: nil)
@@ -224,7 +267,9 @@ module ManagerRefresh
       whitelist = ", whitelist: [#{attributes_whitelist.to_a.join(", ")}]" unless attributes_whitelist.blank?
       blacklist = ", blacklist: [#{attributes_blacklist.to_a.join(", ")}]" unless attributes_blacklist.blank?
 
-      "InventoryCollection:<#{@model_class}>#{whitelist}#{blacklist}"
+      strategy_name  = ", strategy: #{strategy}" if strategy
+
+      "InventoryCollection:<#{@model_class}>#{whitelist}#{blacklist}#{strategy_name}"
     end
 
     def inspect
