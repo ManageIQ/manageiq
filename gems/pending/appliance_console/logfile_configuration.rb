@@ -9,14 +9,19 @@ module ApplianceConsole
     LOGFILE_DIRECTORY = Pathname.new("/var/www/miq/vmdb/log").freeze
     LOGFILE_NAME = "miq_logs".freeze
 
-    attr_accessor :disk
+    attr_accessor :disk, :evm_was_running
 
     include ApplianceConsole::Logging
 
+    def initialize
+      self.evm_was_running = LinuxAdmin::Service.new("evmserverd").running?
+    end
+
     def activate
-      stop_evm
+      stop_evm if evm_was_running
       initialize_logfile_disk
-      start_evm
+      start_evm if evm_was_running
+      true
     end
 
     def ask_questions
