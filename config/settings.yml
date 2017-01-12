@@ -1365,6 +1365,7 @@
       :performance_rollup_purging_start_delay: 5.minutes
       :policy_events_purge_interval: 1.day
       :poll: 15.seconds
+      :report_result_purge_interval: 1.week
       :server_log_stats_interval: 5.minutes
       :server_stats_interval: 60.seconds
       :service_retired_interval: 10.minutes
