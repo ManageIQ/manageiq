@@ -349,7 +349,7 @@ describe Blueprint do
 
     it 'will create a new version' do
       new_version = subject.new_version(:name => 'new version')
-      expect(new_version.version).to eq('0.1')
+      expect(new_version.version).to eq('1.0')
       expect(new_version.original_blueprint_id).to eq(subject.id)
       expect(new_version.active_version).to be_truthy
       expect(subject.versions).to include(new_version)
