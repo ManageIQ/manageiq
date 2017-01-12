@@ -208,11 +208,17 @@ module Api
       def expand_virtual_attributes(json, type, resource)
         result = {}
         object_hash = {}
+        @sql_safe_virtual_attributes ||= {}
 
         virtual_attributes = virtual_attributes_list(resource)
         if @req.expand?("virtual_attributes")
-          virtual_attributes |=
-            options_attribute_list(collection_class(type).virtual_attribute_names)
+          klass = collection_class(type)
+          @sql_safe_virtual_attributes[klass.name] ||= begin
+            options_attribute_list(klass.virtual_attribute_names).select do |attr|
+              klass.attribute_supported_by_sql?(attr)
+            end
+          end
+          virtual_attributes |= @sql_safe_virtual_attributes[klass.name]
         end
 
         virtual_attributes.each do |vattr|
