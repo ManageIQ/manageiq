@@ -1325,7 +1325,6 @@ floating_ips:
 - cloud_network_id
 - fixed_ip_address
 - status
-- load_balancer_id
 generic_object_definitions:
 - id
 - name
@@ -5356,6 +5355,7 @@ network_ports:
 - binding_virtual_interface_type
 - extra_attributes
 - source
+- load_balancer_id
 network_ports_security_groups:
 - network_port_id
 - security_group_id

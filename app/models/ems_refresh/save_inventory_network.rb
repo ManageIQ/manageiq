@@ -169,7 +169,7 @@ module EmsRefresh::SaveInventoryNetwork
               end
 
     hashes.each do |h|
-      %i(vm cloud_tenant cloud_network network_port load_balancer).each do |relation|
+      %i(vm cloud_tenant cloud_network network_port).each do |relation|
         h[relation] = h.fetch_path(relation, :_object) if h.fetch_path(relation, :_object)
       end
     end
@@ -252,7 +252,7 @@ module EmsRefresh::SaveInventoryNetwork
     hashes.compact!
 
     hashes.each do |h|
-      %i(cloud_tenant device cloud_subnet).each do |relation|
+      %i(cloud_tenant device cloud_subnet load_balancer).each do |relation|
         h[relation] = h.fetch_path(relation, :_object) if h.fetch_path(relation, :_object)
       end
 
