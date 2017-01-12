@@ -30,7 +30,7 @@ class MoveRepoDataFromDatabaseToSettings < ActiveRecord::Migration[5.0]
   end
 
   def my_region
-    MiqRegion.find_by_region(ApplicationRecord.my_region_number)
+    MiqRegion.find_by_region(ArRegion.anonymous_class_with_ar_region.my_region_number)
   end
 
   def settings_hash

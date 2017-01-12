@@ -48,9 +48,10 @@ class AddIdPrimaryKeyToJoinTables < ActiveRecord::Migration[5.0]
   end
 
   def delete_remote_region_rows(table)
-    model = Class.new(ApplicationRecord) { self.table_name = table }
+    model = Class.new(ActiveRecord::Base) { self.table_name = table }
     col = model.column_names_symbols.first
-    model.where.not(col => model.region_to_range(model.my_region_number)).delete_all
+    ar_region_class = ArRegion.anonymous_class_with_ar_region
+    model.where.not(col => ar_region_class.region_to_range(ar_region_class.my_region_number)).delete_all
   end
 
   def on_replication_target?
@@ -62,7 +63,7 @@ class AddIdPrimaryKeyToJoinTables < ActiveRecord::Migration[5.0]
   end
 
   def seq_start_value
-    val = ApplicationRecord.rails_sequence_start
+    val = ArRegion.anonymous_class_with_ar_region.rails_sequence_start
     val == 0 ? 1 : val
   end
 end

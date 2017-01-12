@@ -7,7 +7,7 @@ class AddVmwareRoDatastoresToHostsStorages < ActiveRecord::Migration
 
     # Find the sequence_start value for our region, if the region is
     # 0 then start at 1
-    seq_start_value = ApplicationRecord.rails_sequence_start
+    seq_start_value = ArRegion.anonymous_class_with_ar_region.rails_sequence_start
     seq_start_value = 1 if seq_start_value == 0
 
     # add_column ... :primary_key was adding ids to all existing rows before
