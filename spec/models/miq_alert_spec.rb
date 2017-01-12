@@ -75,7 +75,7 @@ describe MiqAlert do
 
     context "with a single alert, not evaluated" do
       before(:each) do
-        @alert = MiqAlert.find_by_description("VM Unregistered")
+        @alert = MiqAlert.find_by(:description => "VM Unregistered")
       end
 
       context "with a delay_next_evaluation value of 5 minutes" do
@@ -94,7 +94,7 @@ describe MiqAlert do
 
     context "with a single alert, evaluated to true" do
       before(:each) do
-        @alert = MiqAlert.find_by_description("VM Unregistered")
+        @alert = MiqAlert.find_by(:description => "VM Unregistered")
         allow(@alert).to receive_messages(:eval_expression => true)
         @alert.evaluate([@vm.class.base_class.name, @vm.id])
       end

@@ -102,7 +102,7 @@ class User < ApplicationRecord
   def current_group_by_description=(group_description)
     if group_description
       desired_group = miq_groups.detect { |g| g.description == group_description }
-      desired_group ||= MiqGroup.find_by_description(group_description) if super_admin_user?
+      desired_group ||= MiqGroup.find_by(:description => group_description) if super_admin_user?
       self.current_group = desired_group if desired_group
     end
   end
@@ -270,7 +270,7 @@ class User < ApplicationRecord
       _log.info("Creating user with parameters #{log_attrs.inspect}")
 
       group_description = user_attributes.delete(:group)
-      group = MiqGroup.in_my_region.find_by_description(group_description)
+      group = MiqGroup.in_my_region.find_by(:description => group_description)
 
       _log.info("Creating #{user_id} user...")
       user = create(user_attributes)

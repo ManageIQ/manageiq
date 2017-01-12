@@ -97,7 +97,7 @@ describe "Widget RSS Content" do
   end
 
   it "#generate_content external rss for user" do
-    widget = MiqWidget.find_by_description("rss_cnn")
+    widget = MiqWidget.find_by(:description => "rss_cnn")
 
     allow(Net::HTTP).to receive(:get).and_return(CNN_XML)
     content = widget.generate_one_content_for_user(@admin_group, @admin)
@@ -109,7 +109,7 @@ describe "Widget RSS Content" do
   end
 
   it "#generate_content internal rss for user" do
-    widget = MiqWidget.find_by_description("rss_newest_vms")
+    widget = MiqWidget.find_by(:description => "rss_newest_vms")
 
     content = widget.generate_one_content_for_user(@admin_group, @admin)
     expect(content).to be_kind_of MiqWidgetContent
@@ -119,7 +119,7 @@ describe "Widget RSS Content" do
   end
 
   it "#generate_content external rss for group" do
-    widget = MiqWidget.find_by_description("rss_cnn")
+    widget = MiqWidget.find_by(:description => "rss_cnn")
 
     allow(Net::HTTP).to receive(:get).and_return(CNN_XML)
     content = widget.generate_one_content_for_group(@admin.current_group, @admin.get_timezone)
@@ -131,7 +131,7 @@ describe "Widget RSS Content" do
   end
 
   it "#generate_content internal rss for group" do
-    widget = MiqWidget.find_by_description("rss_newest_vms")
+    widget = MiqWidget.find_by(:description => "rss_newest_vms")
 
     content = widget.generate_one_content_for_group(@admin.current_group, @admin.get_timezone)
     expect(content).to be_kind_of MiqWidgetContent

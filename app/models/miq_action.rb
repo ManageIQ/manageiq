@@ -897,7 +897,7 @@ class MiqAction < ApplicationRecord
 
   def self.import_from_hash(action, options = {})
     status = {:class => name, :description => action["description"]}
-    a = MiqAction.find_by_description(action["description"])
+    a = MiqAction.find_by(:description => action["description"])
     msg_pfx = "Importing Action: description=[#{action["description"]}]"
 
     if a.nil?

@@ -560,7 +560,7 @@ describe MiqWidget do
   end
 
   context "multiple groups" do
-    let(:widget) { MiqWidget.find_by_description("chart_vendor_and_guest_os") }
+    let(:widget) { MiqWidget.find_by(:description => "chart_vendor_and_guest_os") }
 
     before do
       MiqReport.seed_report("Vendor and Guest OS")

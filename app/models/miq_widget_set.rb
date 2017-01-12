@@ -44,7 +44,7 @@ class MiqWidgetSet < ApplicationRecord
       attrs["set_data"] = attrs.delete("set_data_by_description").inject({}) do |h, k|
         col, arr = k
         h[col] = arr.collect do |d|
-          w = MiqWidget.find_by_description(d)
+          w = MiqWidget.find_by(:description => d)
           members << w if w
           w.try(:id)
         end.compact
