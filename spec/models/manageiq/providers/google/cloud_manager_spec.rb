@@ -24,6 +24,22 @@ describe ManageIQ::Providers::Google::CloudManager do
         end
         @e.connect
       end
+
+      it "sends proxy uri when set to fog-google" do
+        Settings.http_proxy.gce = {
+          :host     => "192.168.24.99",
+          :port     => "1234",
+          :user     => "my_user",
+          :password => "my_password"
+        }
+
+        require 'fog/google'
+        expect(Fog::Compute::Google).to receive(:new) do |options|
+          expect(options.fetch_path(:google_client_options, :proxy).to_s)
+            .to eq("http://my_user:my_password@192.168.24.99:1234")
+        end
+        @e.connect
+      end
     end
 
     context "#validation" do
