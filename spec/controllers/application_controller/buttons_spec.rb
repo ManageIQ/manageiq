@@ -43,6 +43,23 @@ describe ApplicationController do
       expect { controller.send(:custom_buttons) }.to raise_error(ArgumentError)
     end
 
+    context "with a button with open_url" do
+      before :each do
+        resource_action.update_attribute(:dialog_id, nil)
+        button.update_attributes(:options => {:open_url => true})
+        expect(controller).to receive(:render)
+      end
+
+      it "Vm button" do
+        controller.instance_variable_set(:@_params, :id => vm.id, :button_id => button.id)
+        expect_any_instance_of(CustomButton).to receive(:invoke_async).with(vm)
+
+        controller.send(:custom_buttons)
+        expect(assigns(:right_cell_text)).to include(vm.name)
+        expect(controller.instance_variable_get(:@explorer)).to be_truthy
+      end
+    end
+
     context "without a resource_action dialog" do
       before :each do
         resource_action.update_attribute(:dialog_id, nil)
@@ -128,6 +145,7 @@ describe ApplicationController do
       expect(assigns(:edit)[:new][:target_class]).to eq(ui_lookup(:model => "Vm"))
       expect(assigns(:edit)[:new][:display]).to eq(false)
       expect(assigns(:edit)[:new][:button_image]).to eq('5')
+      expect(assigns(:edit)[:new][:open_url]).to eq(false)
 
       controller.instance_variable_set(:@sb,
                                        :trees       => {

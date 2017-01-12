@@ -91,4 +91,16 @@ class Vm < VmOrTemplate
     end
     pl
   end
+
+  def remote_console_url=(url, user_id)
+    SystemConsole.where(:vm_id => id).each(&:destroy)
+    console = SystemConsole.create!(
+      :vm_id      => id,
+      :user       => User.find_by(:userid => user_id),
+      :protocol   => 'url',
+      :url        => url,
+      :url_secret => SecureRandom.hex
+    )
+    console.id
+  end
 end

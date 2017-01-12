@@ -27,6 +27,11 @@
       = _('Dialog')
     .col-md-8
       = h(@sb[:dialog_label])
+  .form-group
+    %label.control-label.col-md-2
+      = _('Open URL')
+    .col-md-8
+      = h(@custom_button.options.key?(:open_url) ? @custom_button.options[:open_url] : false)
 %hr
 
 %h3

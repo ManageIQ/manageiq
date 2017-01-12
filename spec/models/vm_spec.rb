@@ -218,4 +218,13 @@ describe Vm do
       :win32_services      => [],
     })
   end
+
+  it '#set_remote_console_url' do
+    vm = FactoryGirl.create(:vm_vmware)
+    vm.send(:remote_console_url=, url = 'http://www.redhat.com', 1)
+
+    console = SystemConsole.find_by(:vm_id => vm.id)
+    expect(console.url).to eq(url)
+    expect(console.url_secret).to be
+  end
 end

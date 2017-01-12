@@ -64,14 +64,28 @@ class CustomButton < ApplicationRecord
 
   def invoke(target)
     args = resource_action.automate_queue_hash(target, {}, User.current_user)
-    MiqQueue.put(
+    MiqQueue.put(queue_opts(target, args))
+  end
+
+  def queue_opts(target, args)
+    {
       :class_name  => 'MiqAeEngine',
       :method_name => 'deliver',
       :args        => [args],
       :role        => 'automate',
       :zone        => target.try(:my_zone),
       :priority    => MiqQueue::HIGH_PRIORITY,
-    )
+    }
+  end
+
+  def invoke_async(target)
+    task_opts = {
+      :action => "Calling automate for user #{userid}",
+      :userid => User.current_user
+    }
+
+    args = resource_action.automate_queue_hash(target, {}, User.current_user)
+    MiqTask.generic_action_with_callback(task_opts, queue_opts(target, args))
   end
 
   def to_export_xml(_options)

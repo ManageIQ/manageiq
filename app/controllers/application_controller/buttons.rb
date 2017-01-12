@@ -105,6 +105,7 @@ module ApplicationController::Buttons
       @edit[:new][:target_attr_name] = params[:target_attr_name] if params[:target_attr_name]
       @edit[:new][:name] = params[:name] if params[:name]
       @edit[:new][:display] = params[:display] == "1" if params[:display]
+      @edit[:new][:open_url] = params[:open_url] == "1" if params[:open_url]
       @edit[:new][:description] = params[:description] if params[:description]
       @edit[:new][:button_image] = params[:button_image].to_i if params[:button_image]
       @edit[:new][:dialog_id] = params[:dialog_id] if params[:dialog_id]
@@ -250,6 +251,17 @@ module ApplicationController::Buttons
     applies_to_class == "ServiceTemplate" ? Service : applies_to_class.constantize
   end
 
+  def custom_button_done
+    url = SystemConsole.find_by(:vm => params[:id]).try(:url)
+
+    if url.present?
+      javascript_open_window(url)
+    else
+      render_flash(_('No url was returned from automate.'), :error)
+    end
+  end
+  private :custom_button_done
+
   def custom_buttons
     button = CustomButton.find_by_id(params[:button_id])
     cls = applies_to_class_model(button.applies_to_class)
@@ -264,12 +276,15 @@ module ApplicationController::Buttons
       options[:target_id] = obj.id
       options[:target_kls] = obj.class.name
       dialog_initialize(button.resource_action, options)
+    elsif button.options && button.options.key?(:open_url) && button.options[:open_url]
+      task_id = button.invoke_async(obj)
+      initiate_wait_for_task(:task_id => task_id, :action => :custom_button_done)
     else
       begin
-        button.invoke(obj)    # Run the task
+        button.invoke(obj)
       rescue StandardError => bang
         add_flash(_("Error executing: \"%{task_description}\" %{error_message}") %
-          {:task_description => params[:desc], :error_message => bang.message}, :error) # Push msg and error flag
+          {:task_description => params[:desc], :error_message => bang.message}, :error)
       else
         add_flash(_("\"%{task_description}\" was executed") % {:task_description => params[:desc]})
       end
@@ -743,6 +758,7 @@ module ApplicationController::Buttons
       button[:options][:button_image] = @edit[:new][:button_image]
     end
     button[:options][:display] = @edit[:new][:display]
+    button[:options][:open_url] = @edit[:new][:open_url]
     button.visibility ||= {}
     if @edit[:new][:visibility_typ] == "role"
       roles = []
@@ -820,15 +836,18 @@ module ApplicationController::Buttons
     # AE_MAX_RESOLUTION_FIELDS.times{@edit[:new][:attrs].push(Array.new)} if @edit[:new][:attrs].empty?
     # num = AE_MAX_RESOLUTION_FIELDS - @edit[:new][:attrs].length
     (AE_MAX_RESOLUTION_FIELDS - @edit[:new][:attrs].length).times { @edit[:new][:attrs].push([]) }
-    @edit[:new][:target_class] = @resolve[:target_class]
     @edit[:new][:starting_object] ||= "SYSTEM/PROCESS"
-    @edit[:new][:name] = @custom_button.name
-    @edit[:new][:description] = @custom_button.description
-    @edit[:new][:button_image] = @custom_button.options.try(:[], :button_image).to_s
-    @edit[:new][:display] = @custom_button.options.try(:[], :display).nil? ? true : @custom_button.options[:display]
-    @edit[:new][:object_message] = @custom_button.uri_message || "create"
     @edit[:new][:instance_name] ||= "Request"
 
+    @edit[:new].update(
+      :target_class   => @resolve[:target_class],
+      :name           => @custom_button.name,
+      :description    => @custom_button.description,
+      :button_image   => @custom_button.options.try(:[], :button_image).to_s,
+      :display        => @custom_button.options.try(:[], :display).nil? ? true : @custom_button.options[:display],
+      :open_url       => @custom_button.options.try(:[], :open_url) ? @custom_button.options[:open_url] : false,
+      :object_message => @custom_button.uri_message || "create",
+    )
     @edit[:current] = copy_hash(@edit[:new])
 
     @edit[:new][:button_images] = @edit[:current][:button_images] = build_button_image_options
