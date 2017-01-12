@@ -304,6 +304,21 @@ RSpec.describe "Blueprints API" do
       expect(response.parsed_body).to include(expected)
       expect(response).to have_http_status(:bad_request)
     end
+
+    it 'creates a new version' do
+      blueprint = FactoryGirl.create(:blueprint)
+      api_basic_authorize action_identifier(:blueprints, :edit)
+
+      run_post(blueprints_url(blueprint.id), :action => 'new_version', :name => 'foo_bar')
+
+      expected = {
+        'name'                  => 'foo_bar',
+        'original_blueprint_id' => blueprint.id
+      }
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
+      expect(response.parsed_body['id']).to_not equal(blueprint.id)
+    end
   end
 
   describe "DELETE /api/blueprints/:id" do

@@ -147,6 +147,8 @@
         :identifier: blueprint_delete
       - :name: publish
         :identifier: blueprint_publish
+      - :name: new_version
+        :identifier: blueprint_edit
     :resource_actions:
       :get:
       - :name: read
@@ -158,6 +160,8 @@
         :identifier: blueprint_delete
       - :name: publish
         :identifier: blueprint_publish
+      - :name: new_version
+        :identifier: blueprint_edit
       :delete:
       - :name: delete
         :identifier: blueprint_delete
