@@ -122,9 +122,23 @@ unless ENV["APPLIANCE"]
   end
 end
 
+# Load other additional Gemfiles
+eval_gemfile(File.expand_path("gems/pending/Gemfile", __dir__))
+
 #
 # Custom Gemfile modifications
 #
+
+# To develop a gem locally and override its source to a checked out repo
+#   you can use this helper method in Gemfile.dev.rb e.g.
+#
+# override_gem 'manageiq-ui-classic', :path => File.expand_path("../manageiq-ui-classic", __dir__))
+#
+def override_gem(name, *args)
+  raise "Trying to override unknown gem #{name}" unless (dependency = dependencies.find { |d| d.name == name })
+  dependencies.delete(dependency)
+  gem name, *args
+end
 
 # Load developer specific Gemfile
 #   Developers can create a file called Gemfile.dev.rb containing any gems for
@@ -134,6 +148,4 @@ end
 dev_gemfile = File.expand_path("Gemfile.dev.rb", __dir__)
 eval_gemfile(dev_gemfile) if File.exist?(dev_gemfile)
 
-# Load other additional Gemfiles
-eval_gemfile(File.expand_path("gems/pending/Gemfile", __dir__))
 Dir.glob("bundler.d/*.rb").each { |f| eval_gemfile(File.expand_path(f, __dir__)) }
