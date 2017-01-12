@@ -229,27 +229,7 @@ RSpec.describe "Requests API" do
       expect(response).to have_http_status(:ok)
     end
 
-    it "exposes workflow in the request resources" do
-      ems = FactoryGirl.create(:ems_vmware)
-      vm_template = FactoryGirl.create(:template_vmware, :name => "template1", :ext_management_system => ems)
-      request = FactoryGirl.create(:miq_provision_request,
-                                   :requester => @user,
-                                   :src_vm_id => vm_template.id,
-                                   :options   => {:owner_email => 'tester@example.com'})
-      FactoryGirl.create(:miq_dialog,
-                         :name        => "miq_provision_dialogs",
-                         :dialog_type => MiqProvisionWorkflow)
-
-      api_basic_authorize action_identifier(:requests, :read, :resource_actions, :get)
-      run_get requests_url(request.id), :attributes => "workflow"
-
-      expected = a_hash_including("id" => request.id, "workflow" => a_hash_including("values"))
-
-      expect(response.parsed_body).to match(expected)
-      expect(response).to have_http_status(:ok)
-    end
-
-    it "exposes allowed_tags in the request resources" do
+    it "exposes various attributes in the request resources" do
       ems = FactoryGirl.create(:ems_vmware)
       vm_template = FactoryGirl.create(:template_vmware, :name => "template1", :ext_management_system => ems)
       request = FactoryGirl.create(:miq_provision_request,
@@ -266,11 +246,17 @@ RSpec.describe "Requests API" do
       request.add_tag(t.name, t.children.first.name)
 
       api_basic_authorize action_identifier(:requests, :read, :resource_actions, :get)
-      run_get requests_url(request.id), :attributes => "v_allowed_tags"
+      run_get requests_url(request.id), :attributes => "workflow,v_allowed_tags,v_workflow_class"
 
-      expected = a_hash_including("id" => request.id, "v_allowed_tags" => [a_hash_including("children")])
+      expected_response = a_hash_including(
+        "id"               => request.id,
+        "workflow"         => a_hash_including("values"),
+        "v_allowed_tags"   => [a_hash_including("children")],
+        "v_workflow_class" => a_hash_including(
+          "instance_logger" => a_hash_including("klass" => request.workflow.class.to_s))
+      )
 
-      expect(response.parsed_body).to match(expected)
+      expect(response.parsed_body).to match(expected_response)
       expect(response).to have_http_status(:ok)
     end
   end
