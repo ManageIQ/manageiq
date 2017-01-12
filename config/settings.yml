@@ -948,6 +948,11 @@
     :password:
     :port:
     :user:
+  :gce:
+    :host:
+    :password:
+    :port:
+    :user:
 :ldap_synchronization:
   :ldap_synchronization_schedule: "0 2 * * *"
 :log:
