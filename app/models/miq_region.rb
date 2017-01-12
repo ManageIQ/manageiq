@@ -282,27 +282,31 @@ class MiqRegion < ApplicationRecord
   end
 
   def api_system_auth_token(userid)
-    region_v2_key = authentication_token(AUTHENTICATION_TYPE)
-
     token_hash = {
       :server_guid => remote_ws_miq_server.guid,
       :userid      => userid,
       :timestamp   => Time.now.utc
     }
+    encrypt(token_hash.to_yaml)
+  end
+
+  def required_credential_fields(_type)
+    [:auth_key]
+  end
+
+  def encrypt(string)
+    region_v2_key = authentication_token(AUTHENTICATION_TYPE)
+    raise "No key configured for region #{region}. Configure Central Admin to fetch the key" if region_v2_key.nil?
 
     file = Tempfile.new("region_auth_key")
     begin
       file.write(region_v2_key)
       file.close
       key = EzCrypto::Key.load(file.path)
-      MiqPassword.new.encrypt(token_hash.to_yaml, "v2", key)
+      MiqPassword.new.encrypt(string, "v2", key)
     ensure
       file.unlink
     end
-  end
-
-  def required_credential_fields(_type)
-    [:auth_key]
   end
 
   def self.api_system_auth_token_for_region(region_id, user)
