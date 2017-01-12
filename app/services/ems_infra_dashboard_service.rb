@@ -129,7 +129,7 @@ class EmsInfraDashboardService
   def recentHosts
     # Get recent hosts
     all_hosts = Hash.new(0)
-    hosts = Host.where('created_on > ?', 30.day.ago.utc)
+    hosts = Host.where('created_on > ? and ems_id = ?', 30.days.ago.utc, @ems.id)
     hosts = hosts.includes(:resource => [:ext_management_system]) unless @ems.present?
     hosts.sort_by { |h| h.created_on }.uniq.each do |h|
       date = h.created_on.strftime("%Y-%m-%d")
@@ -145,7 +145,7 @@ class EmsInfraDashboardService
   def recentVms
     # Get recent VMs
     all_vms = Hash.new(0)
-    vms = VmOrTemplate.where('created_on > ?', 30.day.ago.utc)
+    vms = VmOrTemplate.where('created_on > ? and ems_id = ?', 30.days.ago.utc, @ems.id)
     vms = vms.includes(:resource => [:ext_management_system]) unless @ems.present?
     vms.sort_by { |v| v.created_on }.uniq.each do |v|
       date = v.created_on.strftime("%Y-%m-%d")
