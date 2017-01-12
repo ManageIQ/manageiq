@@ -75,8 +75,11 @@ describe ServiceTemplateProvisionTask do
 
     describe "#deliver_to_automate" do
       it "delivers to the queue when the state is not active" do
-        @task_0.state = 'pending'
-        automate_args = {
+        @task_0.state         = 'pending'
+        zone                  = FactoryGirl.create(:zone, :name => "special")
+        orchestration_manager = FactoryGirl.create(:ext_management_system, :zone => zone)
+        @task_0.source        = FactoryGirl.create(:service_template_orchestration, :orchestration_manager => orchestration_manager)
+        automate_args         = {
           :object_type      => 'ServiceTemplateProvisionTask',
           :object_id        => @task_0.id,
           :namespace        => 'Service/Provisioning/StateMachines',
@@ -89,7 +92,6 @@ describe ServiceTemplateProvisionTask do
           :tenant_id        => @admin.current_tenant.id,
         }
         allow(@request).to receive(:approved?).and_return(true)
-        allow(@task_0.source).to receive(:my_zone).and_return("special")
         expect(MiqQueue).to receive(:put).with(
           :class_name  => 'MiqAeEngine',
           :method_name => 'deliver',

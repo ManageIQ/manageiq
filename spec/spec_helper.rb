@@ -29,6 +29,7 @@ RSpec.configure do |config|
     c.syntax = :expect
   end
   config.mock_with :rspec do |c|
+    c.allow_message_expectations_on_nil = false
     c.syntax = :expect
   end
 
