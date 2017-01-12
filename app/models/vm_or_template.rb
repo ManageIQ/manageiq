@@ -1001,11 +1001,11 @@ class VmOrTemplate < ApplicationRecord
   end
 
   def has_active_proxy?
-    storage2active_proxies.empty? ? false : true
+    storage2active_proxies.any?
   end
 
   def has_proxy?
-    storage2proxies.empty? ? false : true
+    storage2proxies.any?
   end
 
   def miq_proxies

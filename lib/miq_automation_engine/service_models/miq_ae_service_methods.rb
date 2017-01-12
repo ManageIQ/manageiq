@@ -65,8 +65,7 @@ module MiqAeMethodService
 
     def self.category_exists?(category)
       ar_method do
-        cat = Classification.find_by_name(category)
-        cat.nil? ? false : true
+        Classification.find_by_name(category).present?
       end
     end
 
@@ -82,9 +81,7 @@ module MiqAeMethodService
     def self.tag_exists?(category, entry)
       ar_method do
         cat = Classification.find_by_name(category)
-        return false if cat.nil?
-        ent = cat.find_entry_by_name(entry)
-        ent.nil? ? false : true
+        cat.present? && cat.find_entry_by_name(entry).present?
       end
     end
 
