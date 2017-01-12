@@ -103,6 +103,12 @@ describe Blueprint do
         expect(new_service_template.custom_button_sets).to_not                        include(custom_button_set)
         expect(new_service_template.custom_button_sets.first.custom_buttons).to_not   include(button_in_a_set)
       end
+
+      it 'has no other versions' do
+        new_bp = subject.deep_copy
+        expect(new_bp.versions.count).to eq(1)
+        expect(new_bp.active_version).to be_truthy
+      end
     end
 
     describe "#readonly?" do
