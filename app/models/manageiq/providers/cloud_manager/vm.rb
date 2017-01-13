@@ -164,9 +164,30 @@ class ManageIQ::Providers::CloudManager::Vm < ::Vm
     MiqTask.generic_action_with_callback(task_opts, queue_opts)
   end
 
+  def self.evacuate_queue(userid, vm, options = {})
+    task_opts = {
+      :action => "evacuating Instance for user #{userid}",
+      :userid => userid
+    }
+    queue_opts = {
+      :class_name  => vm.class,
+      :method_name => 'evacuate',
+      :priority    => MiqQueue::HIGH_PRIORITY,
+      :role        => 'ems_operations',
+      :zone        => vm.my_zone,
+      :args        => [vm.id, options]
+    }
+    MiqTask.generic_action_with_callback(task_opts, queue_opts)
+  end
+
   def self.live_migrate(vm_id, options)
     vm = find(vm_id)
     vm.live_migrate(options)
+  end
+
+  def self.evacuate(vm_id, options)
+    vm = find(vm_id)
+    vm.evacuate(options)
   end
 
   private
