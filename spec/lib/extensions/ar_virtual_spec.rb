@@ -501,6 +501,12 @@ describe VirtualFields do
       it "does not support bogus columns" do
         expect(TestClass.attribute_supported_by_sql?(:bogus_junk)).to be_falsey
       end
+
+      it "supports on an aaar class" do
+        c = Class.new(ActsAsArModel)
+
+        expect(c.attribute_supported_by_sql?(:col)).to eq(false)
+      end
     end
 
     describe ".virtual_delegate" do
