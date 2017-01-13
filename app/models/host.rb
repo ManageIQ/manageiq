@@ -9,7 +9,6 @@ require 'metadata/ScanProfile/HostScanProfiles'
 class Host < ApplicationRecord
   include SupportsFeatureMixin
   include NewWithTypeStiMixin
-  include VirtualTotalMixin
   include TenantIdentityMixin
   include SupportsFeatureMixin
 

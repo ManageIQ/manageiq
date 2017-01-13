@@ -2,7 +2,6 @@ class MiqUserRole < ApplicationRecord
   SUPER_ADMIN_ROLE_NAME = "EvmRole-super_administrator"
   ADMIN_ROLE_NAME       = "EvmRole-administrator"
   DEFAULT_TENANT_ROLE_NAME = "EvmRole-tenant_administrator"
-  include VirtualTotalMixin
 
   has_many                :entitlements, :dependent => :restrict_with_exception
   has_many                :miq_groups, :through => :entitlements

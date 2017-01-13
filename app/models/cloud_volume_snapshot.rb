@@ -1,6 +1,5 @@
 class CloudVolumeSnapshot < ApplicationRecord
   include NewWithTypeStiMixin
-  include VirtualTotalMixin
   include ProviderObjectMixin
   include SupportsFeatureMixin
 

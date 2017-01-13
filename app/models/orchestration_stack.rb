@@ -6,7 +6,6 @@ class OrchestrationStack < ApplicationRecord
   include AsyncDeleteMixin
   include ProcessTasksMixin
   include_concern 'RetirementManagement'
-  include VirtualTotalMixin
   include TenantIdentityMixin
 
   acts_as_miq_taggable

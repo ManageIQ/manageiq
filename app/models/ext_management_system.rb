@@ -102,7 +102,6 @@ class ExtManagementSystem < ApplicationRecord
   include AuthenticationMixin
   include Metric::CiMixin
   include AsyncDeleteMixin
-  include VirtualTotalMixin
 
   delegate :ipaddress,
            :ipaddress=,

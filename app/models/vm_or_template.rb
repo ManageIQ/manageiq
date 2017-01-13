@@ -6,7 +6,6 @@ class VmOrTemplate < ApplicationRecord
   include NewWithTypeStiMixin
   include ScanningMixin
   include SupportsFeatureMixin
-  include VirtualTotalMixin
 
   self.table_name = 'vms'
 

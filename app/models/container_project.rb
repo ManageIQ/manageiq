@@ -1,7 +1,6 @@
 class ContainerProject < ApplicationRecord
   include SupportsFeatureMixin
   include CustomAttributeMixin
-  include VirtualTotalMixin
   belongs_to :ext_management_system, :foreign_key => "ems_id"
   has_many :container_groups
   has_many :container_routes

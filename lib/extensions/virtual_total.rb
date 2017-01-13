@@ -1,4 +1,4 @@
-module VirtualTotalMixin
+module VirtualTotal
   extend ActiveSupport::Concern
 
   module ClassMethods
@@ -108,3 +108,5 @@ module VirtualTotalMixin
     end
   end
 end
+
+ActiveRecord::Base.send(:include, VirtualTotal)
