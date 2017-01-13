@@ -1,4 +1,5 @@
 require 'ansible_tower_client'
+puts "ansible job"
 class ManageIQ::Providers::AnsibleTower::ConfigurationManager::Job < ::OrchestrationStack
   require_nested :Status
 
@@ -82,3 +83,4 @@ class ManageIQ::Providers::AnsibleTower::ConfigurationManager::Job < ::Orchestra
     'ConfigurationJob'
   end
 end
+puts "/ansible job"

@@ -40,6 +40,11 @@ module VmOrTemplate::Scanning
     begin
       self.last_scan_attempt_on = Time.now.utc
       save
+      if !Job.respond_to?(:create_job)
+        puts "", "problems:", Job.instance_methods(false).map { |m|
+            Job.instance_method(m)
+          }.map(&:source_location).compact.map(&:first).uniq.sort, "/problems"
+      end
       job = Job.create_job("VmScan", options)
       return job
     rescue => err
