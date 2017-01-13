@@ -112,7 +112,7 @@ describe AutomateImportService do
     end
 
     it "stores the data" do
-      expect(import_file_upload).to receive(:store_binary_data_as_yml).with("the data", "Automate import")
+      expect(import_file_upload).to receive(:store_binary_data_as_yml).with("the data", "Automation import")
       automate_import_service.store_for_import("the data")
     end
 
