@@ -28,6 +28,10 @@ class NetworkRouterController < ApplicationController
       javascript_redirect :action => "edit", :id => checked_router_id
     elsif params[:pressed] == "network_router_new"
       javascript_redirect :action => "new"
+    elsif params[:pressed] == "network_router_add_interface"
+      javascript_redirect :action => "add_interface_select", :id => checked_item_id
+    elsif params[:pressed] == "network_router_remove_interface"
+      javascript_redirect :action => "remove_interface_select", :id => checked_item_id
     elsif !flash_errors? && @refresh_div == "main_div" && @lastaction == "show_list"
       replace_gtl_main_div
     else
@@ -81,7 +85,7 @@ class NetworkRouterController < ApplicationController
 
     when "add"
       @router = NetworkRouter.new
-      options = form_params
+      options = form_params(params)
       ems = ExtManagementSystem.find(options[:ems_id])
       options.delete(:ems_id)
       task_id = ems.create_network_router_queue(session[:userid], options)
@@ -186,7 +190,7 @@ class NetworkRouterController < ApplicationController
   def update
     assert_privileges("network_router_edit")
     @router = find_by_id_filtered(NetworkRouter, params[:id])
-    options = form_params
+    options = form_params(params)
     case params[:button]
     when "cancel"
       cancel_action(_("Edit of Router \"%{name}\" was cancelled by the user") % {
@@ -228,18 +232,208 @@ class NetworkRouterController < ApplicationController
     javascript_redirect previous_breadcrumb_url
   end
 
+  def add_interface_select
+    assert_privileges("network_router_add_interface")
+    @router = find_by_id_filtered(NetworkRouter, params[:id])
+    @in_a_form = true
+    @subnet_choices = {}
+
+    (@router.ext_management_system.cloud_subnets - @router.cloud_subnets).each do |subnet|
+      @subnet_choices[subnet.name] = subnet.id
+    end
+    if @subnet_choices.empty?
+      add_flash(_("No subnets available to add interfaces to Router \"%{name}\"") % {
+        :name => @router.name
+      }, :error)
+      session[:flash_msgs] = @flash_array
+      @in_a_form = false
+      if @lastaction == "show_list"
+        redirect_to(:action => "show_list")
+      else
+        redirect_to(:action => "show", :id => params[:id])
+      end
+    else
+      drop_breadcrumb(
+        :name => _("Add Interface to Router \"%{name}\"") % {:name => @router.name},
+        :url  => "/network_router/add_interface/#{@router.id}"
+      )
+    end
+  end
+
+  def add_interface
+    assert_privileges("network_router_add_interface")
+    @router = find_by_id_filtered(NetworkRouter, params[:id])
+
+    case params[:button]
+    when "cancel"
+      cancel_action(_("Add Interface on Subnet to Router \"%{name}\" was cancelled by the user") % {
+        :name => @router.name
+      })
+
+    when "add"
+      options = form_params(params)
+      cloud_subnet = find_by_id_filtered(CloudSubnet, options[:cloud_subnet_id])
+
+      if @router.supports?(:add_interface)
+        task_id = @router.add_interface_queue(session[:userid], cloud_subnet)
+
+        unless task_id.kind_of?(Fixnum)
+          add_flash(_("Add Interface on Subnet to Router \"%{name}\" failed: Task start failed: ID [%{id}]") % {
+            :name => @router.name,
+            :id   => task_id.inspect
+          }, :error)
+        end
+
+        if @flash_array
+          javascript_flash(:spinner_off => true)
+        else
+          initiate_wait_for_task(:task_id => task_id, :action => "add_interface_finished")
+        end
+      else
+        @in_a_form = true
+        add_flash(_("Add Interface not supported by Router \"%{name}\"") % {
+          :name => @router.name
+        }, :error)
+        @breadcrumbs.pop if @breadcrumbs
+        javascript_flash
+      end
+    end
+  end
+
+  def add_interface_finished
+    task_id = session[:async][:params][:task_id]
+    router_id = session[:async][:params][:id]
+    router_name = session[:async][:params][:name]
+    cloud_subnet_id = session[:async][:params][:cloud_subnet_id]
+
+    task = MiqTask.find(task_id)
+    cloud_subnet = CloudSubnet.find(cloud_subnet_id)
+    if MiqTask.status_ok?(task.status)
+      add_flash(_("Subnet \"%{subnetname}\" added to Router \"%{name}\"") % {
+        :subnetname => cloud_subnet.name,
+        :name       => router_name
+      })
+    else
+      add_flash(_("Unable to add Subnet \"%{name}\": %{details}") % {
+        :name    => router_name,
+        :details => task.message
+      }, :error)
+    end
+
+    @breadcrumbs.pop if @breadcrumbs
+    session[:edit] = nil
+    session[:flash_msgs] = @flash_array.dup if @flash_array
+
+    javascript_redirect :action => "show", :id => router_id
+  end
+
+  def remove_interface_select
+    assert_privileges("network_router_remove_interface")
+    @router = find_by_id_filtered(NetworkRouter, params[:id])
+    @in_a_form = true
+    @subnet_choices = {}
+
+    @router.cloud_subnets.each do |subnet|
+      @subnet_choices[subnet.name] = subnet.id
+    end
+    if @subnet_choices.empty?
+      add_flash(_("No subnets to remove interfaces to Router \"%{name}\"") % {
+        :name => @router.name
+      }, :error)
+      session[:flash_msgs] = @flash_array
+      @in_a_form = false
+      if @lastaction == "show_list"
+        redirect_to(:action => "show_list")
+      else
+        redirect_to(:action => "show", :id => params[:id])
+      end
+    else
+      drop_breadcrumb(
+        :name => _("Remove Interface from Router \"%{name}\"") % {:name => @router.name},
+        :url  => "/network_router/remove_interface/#{@router.id}"
+      )
+    end
+  end
+
+  def remove_interface
+    assert_privileges("network_router_remove_interface")
+    @router = find_by_id_filtered(NetworkRouter, params[:id])
+
+    case params[:button]
+    when "cancel"
+      cancel_action(_("Remove Interface on Subnet from Router \"%{name}\" was cancelled by the user") % {
+        :name => @router.name
+      })
+
+    when "remove"
+      options = form_params(params)
+      cloud_subnet = find_by_id_filtered(CloudSubnet, options[:cloud_subnet_id])
+
+      if @router.supports?(:remove_interface)
+        task_id = @router.remove_interface_queue(session[:userid], cloud_subnet)
+
+        unless task_id.kind_of?(Fixnum)
+          add_flash(_("Remove Interface on Subnet from Router \"%{name}\" failed: Task start failed: ID [%{id}]") % {
+            :name => @router.name,
+            :id   => task_id.inspect
+          }, :error)
+        end
+
+        if @flash_array
+          javascript_flash(:spinner_off => true)
+        else
+          initiate_wait_for_task(:task_id => task_id, :action => "remove_interface_finished")
+        end
+      else
+        @in_a_form = true
+        add_flash(_("Remove Interface not supported by Router \"%{name}\"") % {
+          :name => @router.name
+        }, :error)
+        @breadcrumbs.pop if @breadcrumbs
+        javascript_flash
+      end
+    end
+  end
+
+  def remove_interface_finished
+    task_id = session[:async][:params][:task_id]
+    router_id = session[:async][:params][:id]
+    router_name = session[:async][:params][:name]
+    cloud_subnet_id = session[:async][:params][:cloud_subnet_id]
+
+    task = MiqTask.find(task_id)
+    cloud_subnet = CloudSubnet.find(cloud_subnet_id)
+    if MiqTask.status_ok?(task.status)
+      add_flash(_("Subnet \"%{subnetname}\" removed from Router \"%{name}\"") % {
+        :subnetname => cloud_subnet.name,
+        :name       => router_name
+      })
+    else
+      add_flash(_("Unable to remove Subnet \"%{name}\": %{details}") % {
+        :name    => router_name,
+        :details => task.message
+      }, :error)
+    end
+
+    @breadcrumbs.pop if @breadcrumbs
+    session[:edit] = nil
+    session[:flash_msgs] = @flash_array.dup if @flash_array
+
+    javascript_redirect :action => "show", :id => router_id
+  end
+
   private
 
-  def form_params
+  def form_params(in_params)
     options = {}
-    options[:name] = params[:name] if params[:name]
-    options[:ems_id] = params[:ems_id] if params[:ems_id]
-    options[:admin_state_up] = params[:admin_state_up] if params[:admin_state_up]
-
-    # Relationships
-    options[:cloud_tenant] = find_by_id_filtered(CloudTenant, params[:cloud_tenant_id]) if params[:cloud_tenant_id]
-    options[:cloud_network_id] = params[:cloud_network_id].gsub(/number:/, '') if params[:cloud_network_id]
-    options[:cloud_group_id] = params[:cloud_group_id] if params[:cloud_group_id]
+    [:name, :ems_id, :admin_state_up, :cloud_group_id,
+     :cloud_subnet_id, :cloud_network_id].each do |param|
+      options[param] = in_params[param] if in_params[param]
+    end
+    options[:cloud_network_id].gsub!(/number:/, '') if options[:cloud_network_id]
+    if in_params[:cloud_tenant_id]
+      options[:cloud_tenant] = find_by_id_filtered(CloudTenant, in_params[:cloud_tenant_id])
+    end
     options
   end
 

@@ -204,4 +204,96 @@ describe NetworkRouterController do
       end
     end
   end
+
+  describe "#add_interface" do
+    before do
+      stub_user(:features => :all)
+      EvmSpecHelper.create_guid_miq_server_zone
+      @ems = FactoryGirl.create(:ems_openstack).network_manager
+      @router = FactoryGirl.create(:network_router_openstack,
+                                   :ext_management_system => @ems)
+      @subnet = FactoryGirl.create(:cloud_subnet, :ext_management_system => @ems)
+    end
+
+    context "#add_interface" do
+      let(:task_options) do
+        {
+          :action => "Adding Interface to Network Router for user %{user}" % {:user => controller.current_user.userid},
+          :userid => controller.current_user.userid
+        }
+      end
+      let(:queue_options) do
+        {
+          :class_name  => @router.class.name,
+          :method_name => "raw_add_interface",
+          :instance_id => @router.id,
+          :priority    => MiqQueue::HIGH_PRIORITY,
+          :role        => "ems_operations",
+          :zone        => @ems.my_zone,
+          :args        => [@subnet.id]
+        }
+      end
+
+      it "builds add interface screen" do
+        post :button, :params => { :pressed => "network_router_add_interface", :format => :js, :id => @router.id }
+        expect(assigns(:flash_array)).to be_nil
+      end
+
+      it "queues the add interface action" do
+        expect(MiqTask).to receive(:generic_action_with_callback).with(task_options, queue_options)
+        post :add_interface, :params => {
+          :button          => "add",
+          :format          => :js,
+          :id              => @router.id,
+          :cloud_subnet_id => @subnet.id
+        }
+      end
+    end
+  end
+
+  describe "#remove_interface" do
+    before do
+      stub_user(:features => :all)
+      EvmSpecHelper.create_guid_miq_server_zone
+      @ems = FactoryGirl.create(:ems_openstack).network_manager
+      @router = FactoryGirl.create(:network_router_openstack,
+                                   :ext_management_system => @ems)
+      @subnet = FactoryGirl.create(:cloud_subnet, :ext_management_system => @ems)
+    end
+
+    context "#remove_interface" do
+      let(:task_options) do
+        {
+          :action => "Removing Interface from Network Router for user %{user}" % {:user => controller.current_user.userid},
+          :userid => controller.current_user.userid
+        }
+      end
+      let(:queue_options) do
+        {
+          :class_name  => @router.class.name,
+          :method_name => "raw_remove_interface",
+          :instance_id => @router.id,
+          :priority    => MiqQueue::HIGH_PRIORITY,
+          :role        => "ems_operations",
+          :zone        => @ems.my_zone,
+          :args        => [@subnet.id]
+        }
+      end
+
+      it "builds remove interface screen" do
+        post :button, :params => { :pressed => "network_router_remove_interface", :format => :js, :id => @router.id }
+        expect(assigns(:flash_array)).to be_nil
+      end
+
+      it "queues the remove interface action" do
+        expect(MiqTask).to receive(:generic_action_with_callback).with(task_options, queue_options)
+        post :remove_interface, :params => {
+          :button          => "remove",
+          :format          => :js,
+          :id              => @router.id,
+          :cloud_subnet_id => @subnet.id
+        }
+      end
+    end
+  end
 end
