@@ -14,9 +14,13 @@
 
 [![Build history for master branch](https://buildstats.info/travisci/chart/ManageIQ/manageiq?branch=master&buildCount=50)](https://travis-ci.org/ManageIQ/manageiq/branches)
 
-ManageIQ is a Cloud Management Platform that delivers the insight, control, and
+## Discover, Optimize, and Control your Hybrid IT
+
+### Manage containers, virtual machines, networks, and storage from a single platform
+
+ManageIQ is a Management Platform that delivers the insight, control, and
 automation that enterprises need to address the challenges of managing hybrid
-cloud environments.  It has the following feature sets:
+IT environments.  It has the following feature sets:
 
 * **Insight**: Discovery, Monitoring, Utilization, Performance, Reporting, Analytics, Chargeback, and Trending.
 * **Control**: Security, Compliance, Alerting, Policy-Based Resource and Configuration Management.
