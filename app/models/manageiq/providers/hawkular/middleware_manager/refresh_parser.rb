@@ -47,14 +47,12 @@ module ManageIQ::Providers
 
       def fetch_domains_with_servers
         @data[:middleware_domains] = []
-        @data[:middleware_server_groups] = []
         @ems.feeds.each do |feed|
           @ems.domains(feed).each do |domain|
             parsed_domain = parse_middleware_domain(feed, domain)
-            fetch_server_groups(feed)
 
             # add the server groups to the domain
-            parsed_domain[:middleware_server_groups] = @data[:middleware_server_groups]
+            parsed_domain[:middleware_server_groups] = fetch_server_groups(feed)
             @data[:middleware_domains] << parsed_domain
             @data_index.store_path(:middleware_domains, :by_ems_ref, parsed_domain[:ems_ref], parsed_domain)
 
@@ -65,10 +63,10 @@ module ManageIQ::Providers
       end
 
       def fetch_server_groups(feed)
-        @ems.server_groups(feed).each do |group|
+        @ems.server_groups(feed).map do |group|
           parsed_group = parse_middleware_server_group(group)
-          @data[:middleware_server_groups] << parsed_group
           @data_index.store_path(:middleware_server_groups, :by_name, parsed_group[:name], parsed_group)
+          parsed_group
         end
       end
 

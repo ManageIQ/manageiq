@@ -41,7 +41,8 @@ module EmsRefresh::SaveInventoryMiddleware
     hashes.each do |h|
       h[:domain_id] = domain[:id]
     end
-    save_inventory_multi(domain.middleware_server_groups, hashes, deletes, [:ems_ref], nil, [:middleware_domain])
+    save_inventory_multi(domain.middleware_server_groups, hashes, deletes, [:ems_ref], nil, [:middleware_domain,
+                                                                                             :_object])
     store_ids_for_new_records(domain.middleware_server_groups, hashes, :ems_ref)
   end
 
@@ -60,7 +61,9 @@ module EmsRefresh::SaveInventoryMiddleware
       server_group_id = h.fetch_path(:middleware_server_group, :id)
       if server_group_id.nil?
         nativeid = h.fetch_path(:middleware_server_group, :nativeid)
+        feed = h.fetch_path(:feed)
         server_group_id = MiddlewareServerGroup.where('nativeid' => nativeid)
+                                               .where('feed' => feed)
                                                .order('created_at')
                                                .try(:last)
                                                .try(:id) unless nativeid.nil?
