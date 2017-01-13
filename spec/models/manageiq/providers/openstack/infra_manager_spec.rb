@@ -14,6 +14,36 @@ describe ManageIQ::Providers::Openstack::InfraManager do
     end
   end
 
+  context "verifying SSH keypair credentials" do
+    it "verifies Openstack SSH credentials successfully when all hosts report that the credentials are valid" do
+      @ems = FactoryGirl.create(:ems_openstack_infra_with_authentication)
+      FactoryGirl.create(:host_openstack_infra, :ext_management_system => @ems, :state => "on")
+      allow_any_instance_of(ManageIQ::Providers::Openstack::InfraManager::Host).to receive(:verify_credentials).and_return(true)
+      expect(@ems.send(:verify_ssh_keypair_credentials, nil)).to be_truthy
+    end
+
+    it "fails to verify Openstack SSH credentials when any hosts report that the credentials are invalid" do
+      @ems = FactoryGirl.create(:ems_openstack_infra_with_authentication)
+      host = FactoryGirl.create(:host_openstack_infra, :ext_management_system => @ems, :state => "on")
+      allow_any_instance_of(ManageIQ::Providers::Openstack::InfraManager::Host).to receive(:verify_credentials).and_return(false)
+      expect(@ems.send(:verify_ssh_keypair_credentials, nil)).to be_falsey
+    end
+
+    it "disregards powered off hosts when verifying Openstack SSH credentials" do
+      @ems = FactoryGirl.create(:ems_openstack_infra_with_authentication)
+      FactoryGirl.create(:host_openstack_infra, :ext_management_system => @ems, :state => "off")
+      allow_any_instance_of(ManageIQ::Providers::Openstack::InfraManager::Host).to receive(:verify_credentials).and_return(false)
+      expect(@ems.send(:verify_ssh_keypair_credentials, nil)).to be_truthy
+    end
+
+    it "disregards host with no ems_cluster" do
+      @ems = FactoryGirl.create(:ems_openstack_infra_with_authentication)
+      FactoryGirl.create(:host_openstack_infra, :ext_management_system => @ems, :state => "on", :ems_cluster => nil)
+      allow_any_instance_of(ManageIQ::Providers::Openstack::InfraManager::Host).to receive(:verify_credentials).and_return(false)
+      expect(@ems.send(:verify_ssh_keypair_credentials, nil)).to be_truthy
+    end
+  end
+
   context "validation" do
     before :each do
       @ems = FactoryGirl.create(:ems_openstack_infra_with_authentication)
