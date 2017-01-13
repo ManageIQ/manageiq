@@ -1,4 +1,6 @@
 class ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationScript < ConfigurationScript
+  extend ApiCreate
+
   def run(vars = {})
     options = vars.merge(merge_extra_vars(vars[:extra_vars]))
 
