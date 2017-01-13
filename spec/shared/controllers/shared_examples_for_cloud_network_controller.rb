@@ -46,8 +46,6 @@ shared_examples :shared_examples_for_cloud_network_controller do |providers|
         end
 
         it "show associated cloud_subnets" do
-          # TODO: Fix
-          skip "Broken after adding network new/edit/delete"
           assert_nested_list(@cloud_network, [@cloud_subnet], 'cloud_subnets', 'All Cloud Subnets')
         end
 
