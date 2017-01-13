@@ -58,7 +58,7 @@ class MiqGroup < ApplicationRecord
     root_tenant = Tenant.root_tenant
 
     role_map.each_with_index do |(group_name, role_name), index|
-      group = find_by_description(group_name) || new(:description => group_name)
+      group = find_by(:description => group_name) || new(:description => group_name)
       user_role = MiqUserRole.find_by_name("EvmRole-#{role_name}")
       if user_role.nil?
         raise StandardError,

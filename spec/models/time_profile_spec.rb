@@ -104,7 +104,7 @@ describe TimeProfile do
     end
 
     it "gets time profiles for user and global default timeprofile" do
-      tp = TimeProfile.find_by_description(TimeProfile::DEFAULT_TZ)
+      tp = TimeProfile.find_by(:description => TimeProfile::DEFAULT_TZ)
       tp.profile_type = "global"
       tp.save
       FactoryGirl.create(:time_profile,

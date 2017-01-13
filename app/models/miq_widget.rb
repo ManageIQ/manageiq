@@ -477,7 +477,7 @@ class MiqWidget < ApplicationRecord
 
     case group
     when String
-      group = MiqGroup.in_my_region.find_by_description(group)
+      group = MiqGroup.in_my_region.find_by(:description => group)
     when Fixnum
       group = MiqGroup.in_my_region.find_by_id(group)
     end
@@ -507,7 +507,7 @@ class MiqWidget < ApplicationRecord
 
     schedule_info = attrs.delete("miq_schedule_options")
 
-    widget = find_by_description(attrs["description"])
+    widget = find_by(:description => attrs["description"])
     if widget
       if filename && widget.updated_at.utc < File.mtime(filename).utc
         $log.info("Widget: [#{widget.description}] file has been updated on disk, synchronizing with model")

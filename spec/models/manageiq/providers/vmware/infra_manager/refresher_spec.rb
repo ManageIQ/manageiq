@@ -477,7 +477,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
     )
 
     expect(@host.hardware.networks.size).to eq(2)
-    network = @host.hardware.networks.find_by_description("vmnic0")
+    network = @host.hardware.networks.find_by(:description => "vmnic0")
     expect(network).to have_attributes(
       :description  => "vmnic0",
       :dhcp_enabled => false,

@@ -220,7 +220,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
     )
 
     expect(@host.hardware.networks.size).to eq(3)
-    network = @host.hardware.networks.find_by_description("em1")
+    network = @host.hardware.networks.find_by(:description => "em1")
     expect(network).to have_attributes(
       :description  => "em1",
       :dhcp_enabled => nil,
@@ -228,7 +228,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
       :subnet_mask  => "255.255.254.0"
     )
 
-    nic_without_ip = @host.hardware.networks.find_by_description("em3")
+    nic_without_ip = @host.hardware.networks.find_by(:description => "em3")
     expect(nic_without_ip).to have_attributes(
       :description  => "em3",
       :dhcp_enabled => nil,
