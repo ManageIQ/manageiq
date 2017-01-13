@@ -209,25 +209,19 @@ class OpsController < ApplicationController
 
     rbac_group_get_details(group_id)
 
-    presenter = ExplorerPresenter.new
+    partial = case tab_id
+              when 'rbac_customer_tags'
+                'ops/rbac_group/customer_tags'
+              when 'rbac_hosts_clusters'
+                'ops/rbac_group/hosts_clusters'
+              when 'rbac_vms_templates'
+                'ops/rbac_group/vms_templates'
+              end
 
-    # needed to make tooolbar Configuration > Edit still work after lazy-loading a tab
-    presenter[:record_id] = group_id
-
-    r = proc { |opts| render_to_string(opts) }
-
-    rendered = case tab_id
-               when 'rbac_customer_tags'
-                 r[:partial => 'ops/rbac_group/customer_tags']
-               when 'rbac_hosts_clusters'
-                 r[:partial => 'ops/rbac_group/hosts_clusters']
-               when 'rbac_vms_templates'
-                 r[:partial => 'ops/rbac_group/vms_templates']
-               end
-
-    presenter.update(tab_id, rendered)
-
-    render :json => presenter.for_render
+    render :update do |page|
+      page << javascript_prologue
+      page.replace_html(tab_id, :partial => partial)
+    end
   end
 
   private ############################
