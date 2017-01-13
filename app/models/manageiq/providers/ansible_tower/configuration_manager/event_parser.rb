@@ -1,7 +1,7 @@
 module ManageIQ::Providers::AnsibleTower::ConfigurationManager::EventParser
   def self.event_to_hash(event, ems_id)
     {
-      :event_type => event.operation,
+      :event_type => "ansible_tower_#{event.operation}",
       :source     => "ANSIBLE_TOWER",
       :message    => event.changes.to_s,
       :timestamp  => event.timestamp,

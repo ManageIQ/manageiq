@@ -230,6 +230,10 @@
       :name: Application
     :configuration:
       :critical:
+      - ansible_tower_create
+      - ansible_tower_update
+      - ansible_tower_delete
+      - ansible_tower_associate
       - ClusterReconfiguredEvent
       - EnterMaintenanceMode_Task_Complete
       - ExitMaintenanceMode_Task_Complete
