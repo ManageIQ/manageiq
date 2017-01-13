@@ -3,7 +3,7 @@ require "appliance_console/logfile_configuration"
 describe ApplianceConsole::LogfileConfiguration do
   before do
     @spec_name = File.basename(__FILE__).split(".rb").first.freeze
-    allow(LinuxAdmin::Service).to receive(:new).and_return(double(@spec_name, :running? => false))
+    allow(LinuxAdmin::Service).to receive(:new).and_return(double(@spec_name, :running? => true))
     allow(subject).to receive(:clear_screen)
     allow(subject).to receive(:say)
   end
@@ -39,7 +39,7 @@ describe ApplianceConsole::LogfileConfiguration do
   end
 
   describe "#activate" do
-    it "stops and starts evm and configures the logfile disk" do
+    it "when evm was running, stops and starts evm and configures the logfile disk" do
       expect(ApplianceConsole::LogicalVolumeManagement).to receive(:new).and_return(double(@spec_name, :setup => true))
 
       expect(File).to receive(:executable?).with("/sbin/restorecon").and_return(true)
@@ -52,6 +52,22 @@ describe ApplianceConsole::LogfileConfiguration do
         .and_return(double(@spec_name, :stop => nil)).twice
       expect(LinuxAdmin::Service).to receive(:new)
         .and_return(double(@spec_name, :enable => double(@spec_name, :start => true))).twice
+
+      expect(subject.activate).to be true
+    end
+
+    it "when evm was not running, configures the logfile disk but does not stops and starts evm" do
+      subject.evm_was_running = false
+
+      expect(ApplianceConsole::LogicalVolumeManagement).to receive(:new).and_return(double(@spec_name, :setup => true))
+
+      expect(File).to receive(:executable?).with("/sbin/restorecon").and_return(true)
+      expect(AwesomeSpawn).to receive(:run!)
+        .with('/usr/sbin/semanage fcontext -a -t httpd_log_t "#{LOGFILE_DIRECTORY.to_path}(/.*)?"')
+      expect(AwesomeSpawn).to receive(:run!).with('/sbin/restorecon -R -v /var/www/miq/vmdb/log')
+
+      expect(FileUtils).to receive(:mkdir_p).with("#{ApplianceConsole::LogfileConfiguration::LOGFILE_DIRECTORY}/apache")
+      expect(LinuxAdmin::Service).to_not receive(:new)
 
       expect(subject.activate).to be true
     end
