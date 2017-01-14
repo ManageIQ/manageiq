@@ -2,7 +2,7 @@ require_relative 'miq_ae_service_object_common'
 require_relative 'miq_ae_service_rbac'
 module MiqAeMethodService
   class MiqAeServiceModelBase
-    SERVICE_MODEL_PATH = Rails.root.join("lib/miq_automation_engine/service_models")
+    SERVICE_MODEL_PATH = Rails.root.join("lib/miq_automation_engine/engine/miq_ae_method_service/service_models")
     SERVICE_MODEL_GLOB = SERVICE_MODEL_PATH.join("miq_ae_service_*.rb")
     EXPOSED_ATTR_BLACK_LIST = [/password/, /^auth_key$/]
     class << self

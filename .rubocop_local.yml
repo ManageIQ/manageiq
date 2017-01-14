@@ -30,10 +30,10 @@ AllCops:
     - vendor/**/*
 ClassAndModuleCamelCase:
   Exclude:
-    - lib/miq_automation_engine/service_models/*.rb
+    - lib/miq_automation_engine/engine/miq_ae_method_service/service_models/*.rb
 FileName:
   Exclude:
-    - lib/miq_automation_engine/service_models/*.rb
+    - lib/miq_automation_engine/engine/miq_ae_method_service/service_models/*.rb
 Metrics/LineLength:
   Exclude:
     - Gemfile
