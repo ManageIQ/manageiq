@@ -39,7 +39,7 @@ class MiqRequest < ApplicationRecord
   virtual_column  :resource_type,        :type => :string
   virtual_column  :state,                :type => :string
 
-  delegate :allowed_tags,                :to => :workflow,   :prefix => :v
+  delegate :allowed_tags,                :to => :workflow,   :prefix => :v,  :allow_nil => true
   delegate :class,                       :to => :workflow,   :prefix => :v_workflow
 
   virtual_has_one :workflow
