@@ -486,6 +486,18 @@ describe Rbac::Filterer do
             expect(objects).to eq(targets)
           end
 
+          it "search by given IDs with targets" do
+            @ems3 = FactoryGirl.create(:ems_vmware, :name => 'ems3')
+            @ems4 = FactoryGirl.create(:ems_vmware, :name => 'ems4')
+
+            targets = [@ems2, @ems4, @ems3, @ems]
+            selected_ids = [@ems2.id, @ems3.id]
+            results = described_class.search(:targets => targets, :user => user, :selected_ids => selected_ids)
+            objects = results.first
+            expect(objects.length).to eq(2)
+            expect(objects).to eq([@ems2, @ems3])
+          end
+
           it "finds both EMSes without belongsto filters" do
             results = described_class.search(:class => "ExtManagementSystem", :user => user)
             objects = results.first
