@@ -160,20 +160,23 @@ module Api
         orders = String(params['sort_order']).split(",")
         options = String(params['sort_options']).split(",")
         params['sort_by'].split(",").zip(orders).collect do |attr, order|
-          if klass.attribute_method?(attr) || klass.method_defined?(attr) || attr == klass.primary_key
-            sort_directive(attr, order, options)
+          if klass.virtual_attribute?(attr) && !klass.attribute_supported_by_sql?(attr)
+            raise BadRequestError, "#{klass.name} cannot be sorted by #{attr}"
+          elsif klass.attribute_supported_by_sql?(attr)
+            sort_directive(klass, attr, order, options)
           else
             raise BadRequestError, "#{attr} is not a valid attribute for #{klass.name}"
           end
         end.compact
       end
 
-      def sort_directive(attr, order, options)
-        sort_item = attr
-        sort_item = "LOWER(#{sort_item})" if options.map(&:downcase).include?("ignore_case")
-        sort_item << " ASC"  if order && order.downcase.start_with?("asc")
-        sort_item << " DESC" if order && order.downcase.start_with?("desc")
-        sort_item
+      def sort_directive(klass, attr, order, options)
+        arel = klass.arel_attribute(attr)
+        if order
+          arel = arel.lower if options.map(&:downcase).include?("ignore_case")
+          arel = arel.desc if order.downcase == "desc"
+        end
+        arel
       end
     end
   end
