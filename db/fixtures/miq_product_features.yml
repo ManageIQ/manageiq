@@ -5123,6 +5123,92 @@
           :description: Edit Job Templates Tags
           :feature_type: control
           :identifier: configuration_script_tag
+# Automation Manager
+- :name: Automation Manager
+  :description: Everything under Automation Manager
+  :feature_type: node
+  :identifier: automation_manager
+  :children:
+  - :name: Automation Management Providers
+    :description: Everything under the Automation Management Providers accordion
+    :feature_type: node
+    :identifier: automation_manager_providers
+    :children:
+    - :name: View
+      :description: View Providers, Inventory Groups, Configured Systems
+      :feature_type: view
+      :identifier: automation_manager_providers_view
+    - :name: Operate
+      :description: Perform Operations on Providers and Configured Systems
+      :feature_type: control
+      :identifier: automation_manager_providers_control
+      :children:
+        - :name: Edit Tags
+          :description: Edit Configured Systems Tags
+          :feature_type: control
+          :identifier: automation_manager_provider_configured_system_tag
+        - :name: Refresh Providers
+          :description: Refresh relationships for all items related of Provider
+          :feature_type: control
+          :identifier: automation_manager_refresh_provider
+    - :name: Modify
+      :description: Modify Providers
+      :feature_type: admin
+      :identifier: automation_manager_admin
+      :children:
+        - :name: Remove Providers
+          :description: Remove Provier
+          :feature_type: admin
+          :identifier: automation_manager_delete_provider
+        - :name: Edit Provider
+          :description: Edit a Provider
+          :feature_type: admin
+          :identifier: automation_manager_edit_provider
+        - :name: Add Provider
+          :description: Add a Provider
+          :feature_type: admin
+          :identifier: automation_manager_add_provider
+  - :name: Configured Systems
+    :description: Everything under Configured Systems accordion
+    :feature_type: node
+    :identifier: automation_manager_cs_filter_accord
+    :children:
+      - :name: View
+        :description: View Configured Systems
+        :feature_type: view
+        :identifier: automation_manager_cs_filter_accord_view
+      - :name: Operate
+        :description: Perform Operations on Configured Systems
+        :feature_type: control
+        :identifier: automation_manager_configured_system_control
+        :children:
+          - :name: Edit Tags
+            :description: Edit Configured Systems Tags
+            :feature_type: control
+            :identifier: automation_manager_configured_system_tag
+  - :name: Automation Scripts
+    :description: Everything under Automation Scripts accordion
+    :feature_type: node
+    :identifier: automation_manager_configuration_scripts_accord
+    :children:
+    - :name: View
+      :description: View Automation Scripts
+      :feature_type: view
+      :identifier: automation_manager_configuration_script_view
+    - :name: Operate
+      :description: Perform Operations on Providers and Configured Systems
+      :feature_type: control
+      :identifier: automation_manager_configuration_script_control
+      :children:
+        - :name: Create Service Dialog
+          :description: Create Service Dialog
+          :feature_type: admin
+          :identifier: automation_manager_configscript_service_dialog
+        - :name: Edit Tags
+          :description: Edit Job Templates Tags
+          :feature_type: control
+          :identifier: automation_manager_configuration_script_tag
+
 # Configuration Jobs
 - :name: Configuration Jobs
   :description: Everything under Configuration Jobs
