@@ -23,7 +23,7 @@ gem "draper",                         "~>3.0.0.pre1"
 gem "default_value_for",              "~>3.0.2"
 gem "elif",                           "=0.1.0",        :require => false
 gem "fast_gettext",                   "~>1.2.0"
-gem "fog-google",                     ">=0.5.1",       :require => false
+gem "fog-google",                     ">=0.5.2",       :require => false
 gem "fog-vcloud-director",            "~>0.1.6",       :require => false
 gem "gettext_i18n_rails",             "~>1.7.2"
 gem "gettext_i18n_rails_js",          "~>1.1.0"
