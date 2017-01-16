@@ -46,7 +46,7 @@ order: Ascending
 
 # Columns to sort the report on, in order
 sortby:
-- openscap_id
+- name
 
 # Group rows (y=yes,n=no,c=count)
 group: n
