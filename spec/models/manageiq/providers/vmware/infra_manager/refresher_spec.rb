@@ -488,7 +488,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
     expect(@host.hardware.guest_devices.size).to eq(9)
 
     expect(@host.hardware.nics.size).to eq(4)
-    nic = @host.hardware.nics.find_by_uid_ems("vmnic0")
+    nic = @host.hardware.nics.find_by(:uid_ems => "vmnic0")
     expect(nic).to have_attributes(
       :uid_ems         => "vmnic0",
       :device_name     => "vmnic0",
@@ -501,7 +501,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
     expect(nic.network).to eq(network)
 
     expect(@host.hardware.storage_adapters.size).to eq(5)
-    adapter = @host.hardware.storage_adapters.find_by_uid_ems("vmhba0")
+    adapter = @host.hardware.storage_adapters.find_by(:uid_ems => "vmhba0")
     expect(adapter).to have_attributes(
       :uid_ems         => "vmhba0",
       :device_name     => "vmhba0",
@@ -514,7 +514,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
       :controller_type => "Block"
     )
 
-    adapter = @host.hardware.storage_adapters.find_by_uid_ems("vmhba34")
+    adapter = @host.hardware.storage_adapters.find_by(:uid_ems => "vmhba34")
     expect(adapter).to have_attributes(
       :uid_ems         => "vmhba34",
       :device_name     => "vmhba34",
@@ -528,7 +528,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
     )
 
     expect(adapter.miq_scsi_targets.size).to eq(22)
-    scsi_target = adapter.miq_scsi_targets.find_by_uid_ems("1")
+    scsi_target = adapter.miq_scsi_targets.find_by(:uid_ems => "1")
     expect(scsi_target).to have_attributes(
       :uid_ems     => "1",
       :target      => 1,
