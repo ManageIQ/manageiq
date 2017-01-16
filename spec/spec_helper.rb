@@ -50,8 +50,6 @@ RSpec.configure do |config|
     metadata[:type] ||= :model
   end
 
-  config.include Spec::Support::AuthHelper, :type => :view
-  config.include Spec::Support::ViewHelper, :type => :view
   config.include UiConstants,    :type => :view
 
   config.include UiConstants,          :type => :controller
