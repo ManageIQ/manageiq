@@ -98,7 +98,7 @@ module ManagerRefresh::SaveCollection
     end
 
     def get_entity_builder(inventory_collection, association)
-      if inventory_collection.parent
+      if inventory_collection.parent && !inventory_collection.arel
         association_meta_info = inventory_collection.parent.class.reflect_on_association(inventory_collection.association)
         association_meta_info.options[:through].blank? ? association : inventory_collection.model_class
       else
