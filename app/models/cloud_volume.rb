@@ -6,6 +6,7 @@ class CloudVolume < ApplicationRecord
   include AsyncDeleteMixin
   include AvailabilityMixin
   include SupportsFeatureMixin
+  include CloudTenancyMixin
 
   belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => "ExtManagementSystem"
   belongs_to :availability_zone

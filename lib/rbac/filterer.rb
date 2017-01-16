@@ -428,6 +428,10 @@ module Rbac
       user_or_group = user || miq_group
       tenant_id_clause = klass.tenant_id_clause(user_or_group)
 
+      if klass.respond_to?(:tenant_joins_clause)
+        scope = klass.tenant_joins_clause(scope)
+      end
+
       tenant_id_clause ? scope.where(tenant_id_clause) : scope
     end
 
