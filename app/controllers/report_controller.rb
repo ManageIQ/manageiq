@@ -183,6 +183,10 @@ class ReportController < ApplicationController
   def tree_select
     @edit = nil
     @sb[:select_node] = false
+    if @sb.key?(:flash_msg)
+      @flash_array = @sb[:flash_msg]
+      @sb[:flash_msg] = nil
+    end
     # set these when a link on one of the summary screen was pressed
     self.x_active_accord = params[:accord]           if params[:accord]
     self.x_active_tree   = "#{params[:accord]}_tree" if params[:accord]
