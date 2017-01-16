@@ -14,7 +14,7 @@ module ManagerRefresh::SaveCollection
         sorted_graph_log += "---resulted in these layers processable in parallel:"
 
         layers.each_with_index do |layer, index|
-          sorted_graph_log += "\n----- Layer #{index} -----: \n#{layer.join("\n")}"
+          sorted_graph_log += "\n----- Layer #{index} -----: \n#{layer.select { |x| !x.saved? }.join("\n")}"
         end
 
         _log.info(sorted_graph_log)
