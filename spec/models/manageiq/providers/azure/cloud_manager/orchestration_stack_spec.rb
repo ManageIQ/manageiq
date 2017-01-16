@@ -3,7 +3,7 @@ require 'azure-armrest'
 describe ManageIQ::Providers::Azure::CloudManager::OrchestrationStack do
   let(:ems) { FactoryGirl.create(:ems_azure_with_authentication) }
   let(:template) { FactoryGirl.create(:orchestration_template_azure_with_content) }
-  let(:orchestration_service) { double }
+  let(:orchestration_service) { double("orchestration service") }
   let(:the_raw_stack) do
     Azure::Armrest::TemplateDeployment.new(
       'id'         => 'one_id',
