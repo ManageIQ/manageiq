@@ -79,7 +79,7 @@ module AssignmentMixin
         result[:objects] << object unless object.nil?
       when :tag
         tag = Tag.find_by(:name => "/" + parts.join("/"))
-        result[:tags] << [Classification.find_by_tag_id(tag.id), klass] unless tag.nil?
+        result[:tags] << [Classification.find_by(:tag_id => tag.id), klass] unless tag.nil?
       when :label
         label = CustomAttribute.find_by(:name => parts[1], :value => parts[2])
         result[:labels] << [label, klass] unless label.nil?

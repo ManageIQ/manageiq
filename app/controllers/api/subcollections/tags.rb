@@ -41,7 +41,7 @@ module Api
       private
 
       def destroy_tag_and_classification(tag_id)
-        entry_or_tag = Classification.find_by_tag_id(tag_id) || Tag.find(tag_id)
+        entry_or_tag = Classification.find_by(:tag_id => tag_id) || Tag.find(tag_id)
         entry_or_tag.destroy!
       end
 

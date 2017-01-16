@@ -20,7 +20,7 @@ module Api
     def edit_resource(type, id, data)
       klass = collection_class(type)
       tag = resource_search(id, type, klass)
-      entry = Classification.find_by_tag_id(tag.id)
+      entry = Classification.find_by(:tag_id => tag.id)
       raise BadRequestError, "Failed to find tag/#{id} resource" unless entry
 
       if data["name"].present?
@@ -51,7 +51,7 @@ module Api
     end
 
     def destroy_tag_and_classification(tag_id)
-      entry_or_tag = Classification.find_by_tag_id(tag_id) || Tag.find(tag_id)
+      entry_or_tag = Classification.find_by(:tag_id => tag_id) || Tag.find(tag_id)
       entry_or_tag.destroy!
     end
   end
