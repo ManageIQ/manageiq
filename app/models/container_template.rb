@@ -1,5 +1,6 @@
 class ContainerTemplate < ApplicationRecord
   include CustomAttributeMixin
+  include ManageIQ::Providers::Kubernetes::ContainerManager::EntitiesMapping
 
   belongs_to :ext_management_system, :foreign_key => "ems_id"
   belongs_to :container_project
@@ -13,18 +14,9 @@ class ContainerTemplate < ApplicationRecord
 
   acts_as_miq_taggable
 
-  MIQ_ENTITY_MAPPING = {
-    "Route"                 => ContainerRoute,
-    "Build"                 => ContainerBuildPod,
-    "BuildConfig"           => ContainerBuild,
-    "Template"              => ContainerTemplate,
-    "ResourceQuota"         => ContainerQuota,
-    "LimitRange"            => ContainerLimit,
-    "ReplicationController" => ContainerReplicator,
-    "PersistentVolumeClaim" => PersistentVolumeClaim,
-    "Pod"                   => ContainerGroup,
-    "Service"               => ContainerService,
-  }.freeze
+  def model_for_entity(entity)
+    resource_by_entity(entity.underscore).try(:constantize)
+  end
 
   def instantiate(params, project = nil)
     project ||= container_project.name
@@ -36,7 +28,7 @@ class ContainerTemplate < ApplicationRecord
                                           :objects    => objects,
                                           :parameters => params)
     create_objects(processed_template['objects'], project)
-    @created_objects.each { |obj| obj[:kind] = MIQ_ENTITY_MAPPING[obj[:kind]] }
+    @created_objects.each { |obj| obj[:kind] = model_for_entity(obj[:kind]) }
   end
 
   def process_template(client, template)
