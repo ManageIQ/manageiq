@@ -168,8 +168,7 @@ class RestApi
       end
 
       if action == "vi" || action == "edit"
-        api_script = ARGV.shift
-        api_script_file = script_filename(opts[:scriptdir], api_script) || File.expand_path($PROGRAM_NAME)
+        api_script_file = script_filename(opts[:scriptdir], ARGV.shift) || File.expand_path($PROGRAM_NAME)
         ed_cmd = "vi"
         ed_cmd = ENV["EDITOR"] if action == "edit" && ENV["EDITOR"]
         cmd = "#{ed_cmd} #{api_script_file}"
@@ -181,7 +180,7 @@ class RestApi
         script = ARGV.shift
         method = ARGV.shift
         msg_exit("Must specify a script to run.") if script.nil?
-        api_script = "#{opts[:scriptdir]}/api_#{script}.rb"
+        api_script = script_filename(opts[:scriptdir], script)
         msg_exit("Script file #{api_script} does not exist") unless File.exist?(api_script)
       else
         api_params = Trollop.options do
