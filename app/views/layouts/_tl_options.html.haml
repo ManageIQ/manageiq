@@ -88,6 +88,7 @@
                               'ng-disabled' => 'reportModel.tl_categories.length === 0',
                               'class'       => 'timeline-apply'}
                 = _("Apply")
+            = hidden_field_tag(:ignore_form_changes)
 
 :javascript
   ManageIQ.angular.app.value('recordId', '#{@record.id}');
