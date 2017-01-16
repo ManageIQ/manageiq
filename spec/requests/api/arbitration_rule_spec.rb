@@ -49,6 +49,15 @@ RSpec.describe 'Arbitration Rule API' do
         }
       }
     end
+    let(:expected_response) do
+      {
+        'results' => a_collection_containing_exactly(
+          a_hash_including('description'            => 'admin rule',
+                           'operation'              => 'inject',
+                           'arbitration_profile_id' => profile.id),
+        )
+      }
+    end
 
     it 'supports single arbitration_rule creation' do
       api_basic_authorize collection_action_identifier(:arbitration_rules, :create)
@@ -77,6 +86,34 @@ RSpec.describe 'Arbitration Rule API' do
         run_post(arbitration_rules_url, gen_request(:create, [request_body, request_body]))
       end.to change(ArbitrationRule, :count).by(2)
       expect(response.parsed_body).to include(expected)
+      expect(response).to have_http_status(:ok)
+    end
+
+    it 'supports single arbitration_rule creation using arbitration_profile reference by id' do
+      api_basic_authorize collection_action_identifier(:arbitration_rules, :create)
+
+      request = request_body.dup
+      arbitration_profile_id = request.delete('arbitration_profile_id')
+      request['arbitration_profile'] = { 'id' => arbitration_profile_id }
+
+      expect do
+        run_post(arbitration_rules_url, gen_request(:create, request))
+      end.to change(ArbitrationRule, :count).by(1)
+      expect(response.parsed_body).to include(expected_response)
+      expect(response).to have_http_status(:ok)
+    end
+
+    it 'supports single arbitration_rule creation using arbitration_profile reference by href' do
+      api_basic_authorize collection_action_identifier(:arbitration_rules, :create)
+
+      request = request_body.dup
+      arbitration_profile_id = request.delete('arbitration_profile_id')
+      request['arbitration_profile'] = { 'href' => arbitration_profiles_url(arbitration_profile_id) }
+
+      expect do
+        run_post(arbitration_rules_url, gen_request(:create, request))
+      end.to change(ArbitrationRule, :count).by(1)
+      expect(response.parsed_body).to include(expected_response)
       expect(response).to have_http_status(:ok)
     end
 
