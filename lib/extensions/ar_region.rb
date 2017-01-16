@@ -12,6 +12,10 @@ module ArRegion
     cache_with_timeout(:id_to_miq_region) { Hash.new }
   end
 
+  def self.anonymous_class_with_ar_region
+    @klass_with_ar_region ||= Class.new(ActiveRecord::Base).send(:include, self)
+  end
+
   module ClassMethods
     def inherited(other)
       if other == other.base_class
