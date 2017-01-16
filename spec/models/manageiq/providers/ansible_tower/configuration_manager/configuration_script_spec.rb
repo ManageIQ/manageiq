@@ -6,6 +6,7 @@ describe ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfigurationS
   let(:job)          { AnsibleTowerClient::Job.new(connection.api, "id" => 1) }
   let(:job_template) { AnsibleTowerClient::JobTemplate.new(connection.api, "limit" => "", "id" => 1, "url" => "api/job_templates/1/", "name" => "template", "description" => "description", "extra_vars" => {:instance_ids => ['i-3434']}) }
   let(:manager)      { FactoryGirl.create(:configuration_manager_ansible_tower, :provider, :configuration_script) }
+
   it "belongs_to the Ansible Tower manager" do
     expect(manager.configuration_scripts.size).to eq 1
     expect(manager.configuration_scripts.first.variables).to eq :instance_ids => ['i-3434']

@@ -802,11 +802,9 @@ describe Rbac::Filterer do
         it 'works when targets are empty' do
           User.with_user(user) do
             results = described_class.search(:class => 'ConfigurationScript').first
-            expect(results.length).to eq(2)
             expect(results).to match_array([ansible_configuration_script, ansible_configuration_script_with_tag])
 
             results = described_class.search(:class => 'ConfigurationScriptPayload').first
-            expect(results.length).to eq(2)
             expect(results).to match_array([ansible_playbook, ansible_playbook_with_tag])
           end
         end
@@ -830,11 +828,10 @@ describe Rbac::Filterer do
             end
           end
 
-          it 'lists only tagged Payload' do
+          it 'lists only tagged ConfigurationScriptPayload' do
             User.with_user(user) do
               results = described_class.search(:class => 'ConfigurationScriptPayload').first
-              expect(results.length).to eq(1)
-              expect(results.first).to eq(ansible_playbook_with_tag)
+              expect(results).to match_array([ansible_playbook_with_tag])
             end
           end
         end
