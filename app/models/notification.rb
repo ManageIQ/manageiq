@@ -14,12 +14,12 @@ class Notification < ApplicationRecord
   default_value_for(:options) { Hash.new }
 
   def type=(typ)
-    self.notification_type = NotificationType.find_by_name!(typ)
+    self.notification_type = NotificationType.find_by!(:name => typ)
   end
 
   def self.emit_for_event(event)
     return unless NotificationType.names.include?(event.event_type)
-    type = NotificationType.find_by_name(event.event_type)
+    type = NotificationType.find_by(:name => event.event_type)
     Notification.create(:notification_type => type, :subject => event.target)
   end
 

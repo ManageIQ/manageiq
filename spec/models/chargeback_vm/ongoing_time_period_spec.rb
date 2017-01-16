@@ -13,7 +13,7 @@ describe ChargebackVm do
      :ext_options         => {:tz => 'UTC'},
      :userid              => admin.userid}
   end
-  let(:tag) { Tag.find_by_name('/managed/environment/prod') }
+  let(:tag) { Tag.find_by(:name => '/managed/environment/prod') }
   let(:vm) do
     ems = FactoryGirl.create(:ems_vmware)
     vm = FactoryGirl.create(:vm_vmware, :name => 'test_vm', :evm_owner => admin, :ems_ref => 'ems_ref',

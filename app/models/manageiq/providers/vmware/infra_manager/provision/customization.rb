@@ -201,7 +201,7 @@ module ManageIQ::Providers::Vmware::InfraManager::Provision::Customization
     unless custom_spec_name.blank?
       _log.info "Using customization spec [#{custom_spec_name}]"
       cs = source.ext_management_system.customization_specs.find_by_id(custom_spec_name)
-      cs = source.ext_management_system.customization_specs.find_by_name(custom_spec_name) if cs.nil?
+      cs = source.ext_management_system.customization_specs.find_by(:name => custom_spec_name) if cs.nil?
       raise MiqException::MiqProvisionError, "Customization Specification [#{custom_spec_name}] does not exist." if cs.nil?
       raise MiqException::MiqProvisionError, "Customization Specification [#{custom_spec_name}] for OS type [#{cs[:typ]}] does not match the template VM OS" if cs[:typ].downcase != source.platform
       _log.info "Using customization spec [#{cs.name}]"

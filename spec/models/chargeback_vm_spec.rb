@@ -51,7 +51,7 @@ describe ChargebackVm do
     EvmSpecHelper.create_guid_miq_server_zone
     cat = FactoryGirl.create(:classification, :description => "Environment", :name => "environment", :single_value => true, :show => true)
     c = FactoryGirl.create(:classification, :name => "prod", :description => "Production", :parent_id => cat.id)
-    @tag = Tag.find_by_name("/managed/environment/prod")
+    @tag = Tag.find_by(:name => "/managed/environment/prod")
 
     @vm1 = FactoryGirl.create(:vm_vmware, :name => "test_vm", :evm_owner => admin, :ems_ref => "ems_ref",
                               :created_on => month_beginning)

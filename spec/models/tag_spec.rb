@@ -49,7 +49,7 @@ describe Tag do
     before(:each) do
       FactoryGirl.create(:classification_department_with_tags)
 
-      @tag            = Tag.find_by_name("/managed/department/finance")
+      @tag            = Tag.find_by(:name => "/managed/department/finance")
       @category       = Classification.find_by_name("department")
       @classification = @tag.classification
     end

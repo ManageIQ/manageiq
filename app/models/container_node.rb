@@ -72,7 +72,7 @@ class ContainerNode < ApplicationRecord
   end
 
   def ipaddress
-    labels.find_by_name("kubernetes.io/hostname").try(:value)
+    labels.find_by(:name => "kubernetes.io/hostname").try(:value)
   end
 
   def cockpit_url

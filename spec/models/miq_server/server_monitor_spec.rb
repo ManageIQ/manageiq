@@ -27,7 +27,7 @@ describe "Server Monitor" do
       ServerRole.seed
 
       # Do this manually, to avoid caching at the class level
-      allow(ServerRole).to receive(:database_owner).and_return(ServerRole.find_by_name('database_owner'))
+      allow(ServerRole).to receive(:database_owner).and_return(ServerRole.find_by(:name => 'database_owner'))
 
       @server_roles = ServerRole.all
     end

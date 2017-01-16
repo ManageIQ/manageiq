@@ -74,7 +74,7 @@ class ChargebackRate < ApplicationRecord
     if File.exist?(fixture_file_measure)
       fixture = YAML.load_file(fixture_file_measure)
       fixture.each do |cbr|
-        rec = ChargebackRateDetailMeasure.find_by_name(cbr[:name])
+        rec = ChargebackRateDetailMeasure.find_by(:name => cbr[:name])
         if rec.nil?
           _log.info("Creating [#{cbr[:name]}] with units=[#{cbr[:units]}]")
           rec = ChargebackRateDetailMeasure.create(cbr)
@@ -99,7 +99,7 @@ class ChargebackRate < ApplicationRecord
       fixture = YAML.load_file(fixture_file_currency)
       fixture_mtime_currency = File.mtime(fixture_file_currency).utc
       fixture.each do |cbr|
-        rec = ChargebackRateDetailCurrency.find_by_name(cbr[:name])
+        rec = ChargebackRateDetailCurrency.find_by(:name => cbr[:name])
         if rec.nil?
           _log.info("Creating [#{cbr[:name]}] with symbols=[#{cbr[:symbol]}]!!!!")
           rec = ChargebackRateDetailCurrency.create(cbr)

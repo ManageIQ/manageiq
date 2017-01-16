@@ -76,7 +76,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
   end
 
   def assert_specific_cluster
-    @cluster = EmsCluster.find_by_name('cc1')
+    @cluster = EmsCluster.find_by(:name => 'cc1')
     expect(@cluster).to have_attributes(
       :ems_ref                 => "/api/clusters/504ae500-3476-450e-8243-f6df0f7f7acf",
       :ems_ref_obj             => "/api/clusters/504ae500-3476-450e-8243-f6df0f7f7acf",
@@ -113,7 +113,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
   end
 
   def assert_specific_storage
-    @storage = Storage.find_by_name("data1")
+    @storage = Storage.find_by(:name => "data1")
     expect(@storage).to have_attributes(
       :ems_ref                       => "/api/storagedomains/27a3bcce-c4d0-4bce-afe9-1d669d5a9d02",
       :ems_ref_obj                   => "/api/storagedomains/27a3bcce-c4d0-4bce-afe9-1d669d5a9d02",
@@ -128,7 +128,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
       :thin_provisioning_supported   => nil,
       :raw_disk_mappings_supported   => nil
     )
-    @storage2 = Storage.find_by_name("data2")
+    @storage2 = Storage.find_by(:name => "data2")
     expect(@storage2).to have_attributes(
       :ems_ref                       => "/api/storagedomains/4672fe17-c260-4ecc-aab0-b535f4d0dbeb",
       :ems_ref_obj                   => "/api/storagedomains/4672fe17-c260-4ecc-aab0-b535f4d0dbeb",
@@ -146,7 +146,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
   end
 
   def assert_specific_host
-    @host = ManageIQ::Providers::Redhat::InfraManager::Host.find_by_name("per410-rh1")
+    @host = ManageIQ::Providers::Redhat::InfraManager::Host.find_by(:name => "per410-rh1")
     expect(@host).to have_attributes(
       :ems_ref          => "/api/hosts/2f1d11cc-e269-11e2-839c-005056a217db",
       :ems_ref_obj      => "/api/hosts/2f1d11cc-e269-11e2-839c-005056a217db",
@@ -177,7 +177,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
     expect(@host.system_services.size).to eq(0)
 
     expect(@host.switches.size).to eq(3)
-    switch = @host.switches.find_by_name("rhevm")
+    switch = @host.switches.find_by(:name => "rhevm")
     expect(switch).to have_attributes(
       :uid_ems           => "00000000-0000-0000-0000-000000000009",
       :name              => "rhevm",
@@ -188,7 +188,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
     )
 
     expect(switch.lans.size).to eq(1)
-    @lan = switch.lans.find_by_name("rhevm")
+    @lan = switch.lans.find_by(:name => "rhevm")
     expect(@lan).to have_attributes(
       :uid_ems                    => "00000000-0000-0000-0000-000000000009",
       :name                       => "rhevm",
@@ -256,7 +256,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
   end
 
   def assert_specific_vm_powered_on
-    v = ManageIQ::Providers::Redhat::InfraManager::Vm.find_by_name("EmsRefreshSpec-PoweredOn")
+    v = ManageIQ::Providers::Redhat::InfraManager::Vm.find_by(:name => "EmsRefreshSpec-PoweredOn")
     expect(v).to have_attributes(
       :template              => false,
       :ems_ref               => "/api/vms/fe052832-2350-48ce-8e56-c24b4cd91876",
@@ -410,7 +410,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
   end
 
   def assert_specific_vm_powered_off
-    v = ManageIQ::Providers::Redhat::InfraManager::Vm.find_by_name("EmsRefreshSpec-PoweredOff")
+    v = ManageIQ::Providers::Redhat::InfraManager::Vm.find_by(:name => "EmsRefreshSpec-PoweredOff")
     expect(v).to have_attributes(
       :template              => false,
       :ems_ref               => "/api/vms/26a050fb-62c3-4645-9088-be6efec860e1",
@@ -556,7 +556,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
   end
 
   def assert_specific_template
-    v = ManageIQ::Providers::Redhat::InfraManager::Template.find_by_name("EmsRefreshSpec-Template")
+    v = ManageIQ::Providers::Redhat::InfraManager::Template.find_by(:name => "EmsRefreshSpec-Template")
     expect(v).to have_attributes(
       :template              => true,
       :ems_ref               => "/api/templates/7a6db798-9df9-40ca-8cc3-3baab32e7613",

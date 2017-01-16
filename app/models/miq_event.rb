@@ -95,7 +95,7 @@ class MiqEvent < EventStream
   end
 
   def self.normalize_event(event)
-    return event if MiqEventDefinition.find_by_name(event)
+    return event if MiqEventDefinition.find_by(:name => event)
     "unknown"
   end
 

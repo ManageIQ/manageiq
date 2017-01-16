@@ -7,7 +7,7 @@ class MiqShortcut < ApplicationRecord
     seed_data.each_with_index do |s, index|
       names << s[:name]
       s[:sequence] = index
-      rec = find_by_name(s[:name])
+      rec = find_by(:name => s[:name])
       if rec.nil?
         _log.info("Creating #{s.inspect}")
         rec = create!(s)

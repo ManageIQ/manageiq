@@ -29,7 +29,7 @@ module Spec
       def build_all_composites(hash)
         hash.each do |name, value|
           next unless value[:type] == "composite"
-          next if ServiceTemplate.find_by_name(name)
+          next if ServiceTemplate.find_by(:name => name)
           build_a_composite(name, hash)
         end
       end
@@ -76,7 +76,7 @@ module Spec
         children = properties[:children]
         child_options = properties.key?(:child_options) ? properties[:child_options] : {}
         children.each do |name|
-          child_item = ServiceTemplate.find_by_name(name) || build_a_composite(name, hash)
+          child_item = ServiceTemplate.find_by(:name => name) || build_a_composite(name, hash)
           add_st_resource(item, child_item, child_options.fetch(name, {}))
         end
       end
@@ -87,7 +87,7 @@ module Spec
       end
 
       def build_service_template_request(root_st_name, user, dialog_options = {})
-        root = ServiceTemplate.find_by_name(root_st_name)
+        root = ServiceTemplate.find_by(:name => root_st_name)
         return nil unless root
         options = {:src_id => root.id, :target_name => "barney"}.merge(dialog_options)
         FactoryGirl.create(:service_template_provision_request,

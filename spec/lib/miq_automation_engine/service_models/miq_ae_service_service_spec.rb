@@ -101,7 +101,7 @@ EOF
         @ae_method.update_attributes(:data => method)
         invoke_ae
 
-        service = Service.find_by_name(service_name)
+        service = Service.find_by(:name => service_name)
         expect(service).not_to be_nil
         expect(service.name).to eq(service_name)
         expect(service.description).to eq(description)
@@ -122,7 +122,7 @@ EOF
         @ae_method.update_attributes(:data => method)
 
         expect { invoke_ae }.to_not raise_error
-        expect(Service.find_by_name(service_name)).not_to be_nil
+        expect(Service.find_by(:name => service_name)).not_to be_nil
       end
     end
 

@@ -348,7 +348,7 @@ describe VmOrTemplate do
     it "should produce profile categories from the default profile" do
       item_set = ScanItemSet.new
       allow(item_set).to receive(:members) { [FactoryGirl.build(:scan_item_category_default), FactoryGirl.build(:scan_item_file)] }
-      allow(ScanItemSet).to receive(:find_by_name).with("default") { item_set }
+      allow(ScanItemSet).to receive(:find_by).with(:name => "default") { item_set }
 
       categories = @vm.scan_profile_categories(@vm.scan_profile_list)
       expect(categories).to match_array ["default", "profiles"]
@@ -357,7 +357,7 @@ describe VmOrTemplate do
     it "should produce profile categories from the customer profile" do
       item_set = ScanItemSet.new
       allow(item_set).to receive(:members) { [FactoryGirl.build(:scan_item_category_test), FactoryGirl.build(:scan_item_file)] }
-      allow(ScanItemSet).to receive(:find_by_name).with("test") { item_set }
+      allow(ScanItemSet).to receive(:find_by).with(:name => "test") { item_set }
 
       categories = @vm.scan_profile_categories(ScanItem.get_profile("test"))
       expect(categories).to match_array ["test", "profiles"]

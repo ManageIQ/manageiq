@@ -32,7 +32,7 @@ module Openstack
 
           def find_or_create_roles
             @data.roles.each do |role|
-              admin_user = @service.users.find_by_name('admin')
+              admin_user = @service.users.find_by(:name => 'admin')
               admin_role = @service.roles.detect { |x| x.name == role }
               if admin_role.blank?
                 puts "Skipping role: '#{role}', as it doesn't exist in this environment."

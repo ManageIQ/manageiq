@@ -56,7 +56,7 @@ describe ManageIQ::Providers::Openshift::ContainerManager::Refresher do
   end
 
   def assert_specific_container
-    @container = Container.find_by_name("ruby-helloworld-database")
+    @container = Container.find_by(:name => "ruby-helloworld-database")
     expect(@container).to have_attributes(
       :name          => "ruby-helloworld-database",
       :restart_count => 0,
@@ -70,7 +70,7 @@ describe ManageIQ::Providers::Openshift::ContainerManager::Refresher do
   end
 
   def assert_specific_container_group
-    @containergroup = ContainerGroup.find_by_name("database-1-a20bt")
+    @containergroup = ContainerGroup.find_by(:name => "database-1-a20bt")
     expect(@containergroup).to have_attributes(
       :name           => "database-1-a20bt",
       :restart_policy => "Always",
@@ -104,7 +104,7 @@ describe ManageIQ::Providers::Openshift::ContainerManager::Refresher do
   end
 
   def assert_specific_container_services
-    @containersrv = ContainerService.find_by_name("frontend")
+    @containersrv = ContainerService.find_by(:name => "frontend")
     expect(@containersrv).to have_attributes(
       :name             => "frontend",
       :session_affinity => "None",
@@ -115,11 +115,11 @@ describe ManageIQ::Providers::Openshift::ContainerManager::Refresher do
     expect(@containersrv.ext_management_system).to eq(@ems)
     expect(@containersrv.container_image_registry).to be_nil
 
-    expect(ContainerService.find_by_name("docker-registry").container_image_registry.name). to eq("172.30.44.14")
+    expect(ContainerService.find_by(:name => "docker-registry").container_image_registry.name). to eq("172.30.44.14")
   end
 
   def assert_specific_container_image_registry
-    @registry = ContainerImageRegistry.find_by_name("172.30.44.14")
+    @registry = ContainerImageRegistry.find_by(:name => "172.30.44.14")
     expect(@registry).to have_attributes(
       :name => "172.30.44.14",
       :host => "172.30.44.14",
@@ -129,7 +129,7 @@ describe ManageIQ::Providers::Openshift::ContainerManager::Refresher do
   end
 
   def assert_specific_container_project
-    @container_pr = ContainerProject.find_by_name("test")
+    @container_pr = ContainerProject.find_by(:name => "test")
     expect(@container_pr).to have_attributes(
       :name         => "test",
       :display_name => ""
@@ -143,7 +143,7 @@ describe ManageIQ::Providers::Openshift::ContainerManager::Refresher do
   end
 
   def assert_specific_container_route
-    @container_route = ContainerRoute.find_by_name("route-edge")
+    @container_route = ContainerRoute.find_by(:name => "route-edge")
     expect(@container_route).to have_attributes(
       :name      => "route-edge",
       :host_name => "www.example.com"
@@ -161,7 +161,7 @@ describe ManageIQ::Providers::Openshift::ContainerManager::Refresher do
   end
 
   def assert_specific_container_build
-    @container_build = ContainerBuild.find_by_name("ruby-sample-build")
+    @container_build = ContainerBuild.find_by(:name => "ruby-sample-build")
     expect(@container_build).to have_attributes(
       :name              => "ruby-sample-build",
       :build_source_type => "Git",
@@ -173,7 +173,7 @@ describe ManageIQ::Providers::Openshift::ContainerManager::Refresher do
   end
 
   def assert_specific_container_build_pod
-    @container_build_pod = ContainerBuildPod.find_by_name("ruby-sample-build-1")
+    @container_build_pod = ContainerBuildPod.find_by(:name => "ruby-sample-build-1")
     expect(@container_build_pod).to have_attributes(
       :name                          => "ruby-sample-build-1",
       :phase                         => "Failed",
@@ -186,7 +186,7 @@ describe ManageIQ::Providers::Openshift::ContainerManager::Refresher do
   end
 
   def assert_specific_container_template
-    @container_template = ContainerTemplate.find_by_name("hawkular-cassandra-node-emptydir")
+    @container_template = ContainerTemplate.find_by(:name => "hawkular-cassandra-node-emptydir")
     expect(@container_template).to have_attributes(
       :name             => "hawkular-cassandra-node-emptydir",
       :resource_version => "1398"
@@ -201,7 +201,7 @@ describe ManageIQ::Providers::Openshift::ContainerManager::Refresher do
   end
 
   def assert_specific_container_image
-    @container_image = ContainerImage.find_by_name("centos/postgresql-95-centos7")
+    @container_image = ContainerImage.find_by(:name => "centos/postgresql-95-centos7")
 
     expect(@container_image.ext_management_system).to eq(@ems)
     expect(@container_image.environment_variables.count).to eq(9)

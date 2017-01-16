@@ -33,7 +33,7 @@ class JobProxyDispatcher
           .includes(:ext_management_system => :zone, :storage => :hosts)
           .order(:id)
         end
-        zone = Zone.find_by_name(@zone)
+        zone = Zone.find_by(:name => @zone)
         concurrent_vm_scans_limit = zone.settings.blank? ? 0 : zone.settings[:concurrent_vm_scans].to_i
 
         jobs_to_dispatch.each do |job|

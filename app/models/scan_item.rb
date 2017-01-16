@@ -83,7 +83,7 @@ class ScanItem < ApplicationRecord
 
   def self.get_profile(set_name)
     profiles = []
-    si = ScanItemSet.find_by_name(set_name)
+    si = ScanItemSet.find_by(:name => set_name)
     if si
       y = si.attributes
       y["definition"] = []

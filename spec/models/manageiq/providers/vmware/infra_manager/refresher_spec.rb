@@ -59,7 +59,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
   it 'handles in-place switch attribute update' do
     EmsRefresh.refresh(@ems)
     @ems.reload
-    switch = Host.find_by(:ems_ref => 'host-891').switches.find_by_name('vSwitch0')
+    switch = Host.find_by(:ems_ref => 'host-891').switches.find_by(:name => 'vSwitch0')
     switch_id = switch.id
     updated_forged_transmits = !switch.forged_transmits # flip it
 
@@ -70,7 +70,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
     hashes = refresher.parse_targeted_inventory(@ems, target, inventory)
     refresher.save_inventory(@ems, target, hashes)
 
-    switch = Host.find_by(:ems_ref => 'host-891').switches.find_by_name('vSwitch0')
+    switch = Host.find_by(:ems_ref => 'host-891').switches.find_by(:name => 'vSwitch0')
     expect(switch.id).to eq(switch_id)
     expect(switch.forged_transmits).to eq(updated_forged_transmits)
   end
@@ -233,7 +233,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
     expect(@ems.storage_profiles.size).to eq(6)
 
     expect(@ems.customization_specs.size).to eq(2)
-    cspec = @ems.customization_specs.find_by_name("Win2k8Template")
+    cspec = @ems.customization_specs.find_by(:name => "Win2k8Template")
     expect(cspec).to have_attributes(
       :name             => "Win2k8Template",
       :typ              => "Windows",
@@ -245,7 +245,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
   end
 
   def assert_specific_cluster
-    @cluster = EmsCluster.find_by_name("Testing-Production Cluster")
+    @cluster = EmsCluster.find_by(:name => "Testing-Production Cluster")
     expect(@cluster).to have_attributes(
       :ems_ref                 => "domain-c871",
       :ems_ref_obj             => VimString.new("domain-c871", :ClusterComputeResource, :ManagedObjectReference),
@@ -307,7 +307,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
   end
 
   def assert_specific_storage
-    @storage = Storage.find_by_name("StarM1-Prod1 (1)")
+    @storage = Storage.find_by(:name => "StarM1-Prod1 (1)")
     expect(@storage).to have_attributes(
       :ems_ref                       => "datastore-953",
       :ems_ref_obj                   => VimString.new("datastore-953", :Datastore, :ManagedObjectReference),
@@ -325,7 +325,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
   end
 
   def assert_specific_storage_cluster
-    @storage_cluster = StorageCluster.find_by_name("TestDatastoreCluster")
+    @storage_cluster = StorageCluster.find_by(:name => "TestDatastoreCluster")
     expect(@storage_cluster).to have_attributes(
       :ems_ref     => "group-p81",
       :ems_ref_obj => VimString.new("group-p81", :StorageCluster, :ManagedObjectReference),
@@ -352,7 +352,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
   end
 
   def assert_specific_host
-    @host = ManageIQ::Providers::Vmware::InfraManager::Host.find_by_name("VI4ESXM1.manageiq.com")
+    @host = ManageIQ::Providers::Vmware::InfraManager::Host.find_by(:name => "VI4ESXM1.manageiq.com")
     expect(@host).to have_attributes(
       :ems_ref          => "host-9",
       :ems_ref_obj      => VimString.new("host-9", :HostSystem, :ManagedObjectReference),
@@ -396,7 +396,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
     )
 
     expect(@host.system_services.size).to eq(9)
-    sys = @host.system_services.find_by_name("DCUI")
+    sys = @host.system_services.find_by(:name => "DCUI")
     expect(sys).to have_attributes(
       :name         => "DCUI",
       :display_name => "Direct Console UI",
@@ -405,7 +405,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
 
     expect(@host.switches.size).to eq(3)
 
-    dvswitch = @host.switches.find_by_name("DC1_DVS")
+    dvswitch = @host.switches.find_by(:name => "DC1_DVS")
     expect(dvswitch).to have_attributes(
       :uid_ems           => 'dvs-119',
       :name              => 'DC1_DVS',
@@ -418,7 +418,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
     )
     expect(dvswitch.lans.size).to eq(2)
 
-    dvslan = dvswitch.lans.find_by_name("DC1_DVPG0")
+    dvslan = dvswitch.lans.find_by(:name => "DC1_DVPG0")
     expect(dvslan).to have_attributes(
       :uid_ems                    => 'dvportgroup-121',
       :name                       => 'DC1_DVPG0',
@@ -431,7 +431,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
       :computed_mac_changes       => nil
     )
 
-    switch = @host.switches.find_by_name("vSwitch0")
+    switch = @host.switches.find_by(:name => "vSwitch0")
     expect(switch).to have_attributes(
       :uid_ems           => "vSwitch0",
       :name              => "vSwitch0",
@@ -445,7 +445,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
 
     expect(switch.lans.size).to eq(3)
 
-    @lan = switch.lans.find_by_name("NetApp PG")
+    @lan = switch.lans.find_by(:name => "NetApp PG")
     expect(@lan).to have_attributes(
       :uid_ems                    => "NetApp PG",
       :name                       => "NetApp PG",
@@ -553,7 +553,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
   end
 
   def assert_specific_vm
-    v = ManageIQ::Providers::Vmware::InfraManager::Vm.find_by_name("JoeF 4.0.1")
+    v = ManageIQ::Providers::Vmware::InfraManager::Vm.find_by(:name => "JoeF 4.0.1")
     expect(v).to have_attributes(
       :template              => false,
       :ems_ref               => "vm-11342",

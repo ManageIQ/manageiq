@@ -416,7 +416,7 @@ class MiqSchedule < ApplicationRecord
     slist = YAML.load_file(fixture_file) if File.exist?(fixture_file)
 
     slist.each do |sched|
-      rec = find_by_name(sched[:attributes][:name])
+      rec = find_by(:name => sched[:attributes][:name])
       unless rec
         create(sched[:attributes])
       else

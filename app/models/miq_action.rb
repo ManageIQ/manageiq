@@ -868,7 +868,7 @@ class MiqAction < ApplicationRecord
 
   def action_assign_scan_profile(action, _rec, _inputs)
     ScanItem  # Cause the ScanItemSet class to load, if not already loaded
-    profile = ScanItemSet.find_by_name(action.options[:scan_item_set_name])
+    profile = ScanItemSet.find_by(:name => action.options[:scan_item_set_name])
     unless profile
       MiqPolicy.logger.warn("MIQ(action_assign_scan_profile): Unable to perform action [#{action.description}], unable to find analysis profile: [#{action.options[:scan_item_set_name]}]")
       return
@@ -967,7 +967,7 @@ class MiqAction < ApplicationRecord
 
   def self.create_or_update(action_attributes)
     name = action_attributes['name']
-    action = find_by_name(name)
+    action = find_by(:name => name)
     if action
       action.attributes = action_attributes
       if action.changed? || action.options_was != action.options
