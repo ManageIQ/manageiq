@@ -12,7 +12,8 @@ class Chargeback
       extra_resources = cb_class.try(:extra_resources_without_rollups) || []
       timerange.step_value(interval_duration).each_cons(2) do |query_start_time, query_end_time|
         extra_resources.each do |resource|
-          yield ConsumptionWithoutRollups.new(resource, query_start_time, query_end_time)
+          consumption = ConsumptionWithoutRollups.new(resource, query_start_time, query_end_time)
+          yield(consumption) unless consumption.consumed_hours_in_interval.zero?
         end
 
         records = base_rollup.where(:timestamp => query_start_time...query_end_time, :capture_interval_name => 'hourly')
