@@ -11,7 +11,7 @@ module Rbac
       CloudVolume
       ConfigurationProfile
       ConfiguredSystem
-      ConfigurationScript
+      ConfigurationScriptBase
       Container
       ContainerBuild
       ContainerGroup
