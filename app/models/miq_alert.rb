@@ -756,7 +756,7 @@ class MiqAlert < ApplicationRecord
 
       alist.each do |alert_hash|
         guid = alert_hash["guid"] || alert_hash[:guid]
-        rec = find_by_guid(guid)
+        rec = find_by(:guid => guid)
         if rec.nil?
           alert_hash[:read_only] = true
           alert = create(alert_hash)
@@ -786,7 +786,7 @@ class MiqAlert < ApplicationRecord
 
     status = {:class => name, :description => alert["description"], :children => []}
 
-    a = find_by_guid(alert["guid"])
+    a = find_by(:guid => alert["guid"])
     msg_pfx = "Importing Alert: guid=[#{alert["guid"]}] description=[#{alert["description"]}]"
     if a.nil?
       a = new(alert)

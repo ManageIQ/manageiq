@@ -65,7 +65,7 @@ module MiqPolicy::ImportExport
       policy["active"] = true if policy["active"].nil?
       policy["mode"] ||= "control" # Default "mode" value to true to support older export decks that don't have a value set.
 
-      p = MiqPolicy.find_by_guid(policy["guid"])
+      p = MiqPolicy.find_by(:guid => policy["guid"])
       msg_pfx = "Importing Policy: guid=[#{policy["guid"]}] description=[#{policy["description"]}]"
       if p.nil?
         p = MiqPolicy.new(policy)

@@ -87,7 +87,7 @@ class Job < ApplicationRecord
 
     _log.info("Guid: [#{guid}], Signal: [#{signal}]")
 
-    job = find_by_guid(guid)
+    job = find_by(:guid => guid)
     return if job.nil?
 
     begin
@@ -202,7 +202,7 @@ class Job < ApplicationRecord
   end
 
   def self.guid_active?(job_guid, timestamp, job_not_found_delay)
-    job = Job.find_by_guid(job_guid)
+    job = Job.find_by(:guid => job_guid)
 
     # If job was found, return whether it is active
     return job.is_active? unless job.nil?

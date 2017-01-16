@@ -263,7 +263,7 @@ class Condition < ApplicationRecord
 
   def self.import_from_hash(condition, options = {})
     status = {:class => name, :description => condition["description"]}
-    c = Condition.find_by_guid(condition["guid"])
+    c = Condition.find_by(:guid => condition["guid"])
     msg_pfx = "Importing Condition: guid=[#{condition["guid"]}] description=[#{condition["description"]}]"
 
     if c.nil?

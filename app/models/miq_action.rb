@@ -855,7 +855,7 @@ class MiqAction < ApplicationRecord
 
   def action_evaluate_alerts(action, rec, inputs)
     action.options[:alert_guids].each do |guid|
-      alert = MiqAlert.find_by_guid(guid)
+      alert = MiqAlert.find_by(:guid => guid)
       unless alert
         MiqPolicy.logger.warn("MIQ(action_evaluate_alert): Unable to perform action [#{action.description}], unable to find alert: [#{action.options[:alert_guid]}]")
         next

@@ -122,7 +122,7 @@ class ChargebackRate < ApplicationRecord
       fixture = YAML.load_file(fixture_file)
       fix_mtime = File.mtime(fixture_file).utc
       fixture.each do |cbr|
-        rec = find_by_guid(cbr[:guid])
+        rec = find_by(:guid => cbr[:guid])
         rates = cbr.delete(:rates)
 
         # The yml measure field is the name of the measure. It's changed to the id

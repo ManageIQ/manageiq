@@ -42,7 +42,7 @@ module ScanningMixin
                 rescue
                   "vmscan"
                 end
-        job = Job.find_by_guid(taskid)
+        job = Job.find_by(:guid => taskid)
         raise _("Unable to process data for job with id <%{number}>. Job not found.") % {:number => taskid} if job.nil?
         begin
           job.signal(:data, xml_file)

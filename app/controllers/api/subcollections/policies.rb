@@ -40,7 +40,7 @@ module Api
         return {} if data.blank?
 
         guid = data["guid"]
-        return klass.find_by_guid(guid) if guid.present?
+        return klass.find_by(:guid => guid) if guid.present?
 
         href = data["href"]
         href =~ %r{^.*/#{collection}/#{CID_OR_ID_MATCHER}$} ? klass.find(from_cid(href.split('/').last)) : {}

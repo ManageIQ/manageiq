@@ -146,10 +146,10 @@ describe Job do
 
       it "should be able to find Job from Evm Snapshot" do
         job_guid, ts = Snapshot.parse_evm_snapshot_description(@snapshot.description)
-        expect(Job.find_by_guid(job_guid)).to eq(@job)
+        expect(Job.find_by(:guid => job_guid)).to eq(@job)
 
         job_guid, ts = Snapshot.parse_evm_snapshot_description(@snapshot2.description)
-        expect(Job.find_by_guid(job_guid)).to eq(@job2)
+        expect(Job.find_by(:guid => job_guid)).to eq(@job2)
       end
 
       context "where job is not found and the snapshot timestamp is less than an hour old with default job_not_found_delay" do

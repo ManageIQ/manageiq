@@ -70,7 +70,7 @@ class MiqPolicySet < ApplicationRecord
       policies.push(policy)
     end
 
-    pset = MiqPolicySet.find_by_guid(policy_profile["guid"])
+    pset = MiqPolicySet.find_by(:guid => policy_profile["guid"])
     msg_pfx = "Importing Policy Profile: guid=[#{policy_profile["guid"]}] description=[#{policy_profile["description"]}]"
     if pset.nil?
       pset = MiqPolicySet.new(policy_profile)
