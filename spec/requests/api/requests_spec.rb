@@ -259,6 +259,28 @@ RSpec.describe "Requests API" do
       expect(response.parsed_body).to match(expected_response)
       expect(response).to have_http_status(:ok)
     end
+
+    it "does not throw a DelegationError exception when workflow is nil" do
+      ems = FactoryGirl.create(:ems_vmware)
+      vm_template = FactoryGirl.create(:template_vmware, :name => "template1", :ext_management_system => ems)
+      request = FactoryGirl.create(:service_template_provision_request,
+                                   :requester   => @user,
+                                   :source_id   => vm_template.id,
+                                   :source_type => vm_template.class.name)
+
+      api_basic_authorize action_identifier(:requests, :read, :resource_actions, :get)
+      run_get requests_url(request.id), :attributes => "workflow,v_allowed_tags,v_workflow_class"
+
+      expected_response = a_hash_including(
+        "id"               => request.id,
+        "v_workflow_class" => {}
+      )
+
+      expect(response.parsed_body).to match(expected_response)
+      expect(response.parsed_body).not_to include("workflow")
+      expect(response.parsed_body).not_to include("v_allowed_tags")
+      expect(response).to have_http_status(:ok)
+    end
   end
 
   context "request update" do
