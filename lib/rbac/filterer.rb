@@ -125,7 +125,7 @@ module Rbac
     # @option options :include_for_find [Array<Symbol>]
     # @option options :filter
     # @option options :selected_ids
-
+    #     IDs which are selected for this search, used when option targets is used
     # @option options :user         [User]     (default: current_user)
     # @option options :userid       [String]   User#userid (not user_id)
     # @option options :miq_group    [MiqGroup] (default: current_user.current_group)
