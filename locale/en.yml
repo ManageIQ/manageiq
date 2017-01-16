@@ -743,6 +743,7 @@ en:
       ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem: Configured System (Foreman)
       ManageIQ::Providers::AnsibleTower::ConfigurationManager::Job:         Ansible Tower Job
       ManageIQ::Providers::CloudManager:                                    Cloud Provider
+      ManageIQ::Providers::CloudManager::AuthKeyPair:                       Key Pair
       ManageIQ::Providers::CloudManager::Vm:                                Instance
       ManageIQ::Providers::Google::CloudManager::Vm:                        Instance (Google)
       ManageIQ::Providers::Openstack::CloudManager::Vm:                     Instance (OpenStack)
