@@ -187,7 +187,7 @@ module Api
       # For Posts we need to support actions, let's validate those
       #
       def validate_post_method
-        cname = @req.subcollection || @req.collection
+        cname = @req.subject
         type, target = request_type_target
         validate_post_api_action(cname, @req.method, type, target)
       end
@@ -215,7 +215,7 @@ module Api
         cname, target = if collection_option?(:arbitrary_resource_path)
                           [@req.collection, (@req.c_id ? :resource : :collection)]
                         else
-                          [@req.subcollection || @req.collection, request_type_target.last]
+                          [@req.subject, request_type_target.last]
                         end
         aspec = collection_config.typed_collection_actions(cname, target)
         return if method_name == :get && aspec.nil?

@@ -46,6 +46,14 @@ module Api
           @c_path_parts ||= version_override? ? path.split('/')[3..-1] : path.split('/')[2..-1]
         end
 
+        def subject
+          subcollection || collection
+        end
+
+        def subject_id
+          subcollection? ? s_id : c_id
+        end
+
         def collection
           @collection ||= c_path_parts[0]
         end
