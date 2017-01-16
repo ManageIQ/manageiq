@@ -2232,7 +2232,6 @@ msgid "Invalid XML file contents detected."
 msgstr "無効な XML ファイルのコンテンツが検出されました。"
 
 #: ../app/models/system_service.rb:14
-#, fuzzy
 msgid "Kernel Driver"
 msgstr "カーネルドライバー カーネルドライバー"
 
@@ -3810,7 +3809,6 @@ msgstr "ホスト名"
 #. TRANSLATORS: en.yml key: dictionary.column.ipaddress
 #: ../config/dictionary_strings.rb:418 ../config/dictionary_strings.rb:422
 #: ../config/yaml_strings.rb:5223
-#, fuzzy
 msgid "IP Address"
 msgstr "IP アドレス IP アドレス"
 
@@ -3923,7 +3921,6 @@ msgstr "CPU コア数"
 #. TRANSLATORS: en.yml key: dictionary.column.macaddress
 #: ../config/dictionary_strings.rb:446 ../config/dictionary_strings.rb:450
 #: ../config/yaml_strings.rb:4983
-#, fuzzy
 msgid "MAC Address"
 msgstr "MAC アドレス MAC アドレス"
 
@@ -6379,7 +6376,6 @@ msgstr "ボタングループ"
 #. TRANSLATORS: en.yml key: dictionary.table.container
 #: ../config/dictionary_strings.rb:1326 ../config/dictionary_strings.rb:2144
 #: ../config/model_attributes.rb:500 ../config/yaml_strings.rb:5114
-#, fuzzy
 msgid "Container"
 msgstr "コンテナー コンテナー"
 
@@ -8528,7 +8524,6 @@ msgstr "カタログ"
 
 #. TRANSLATORS: en.yml key: dictionary.model.Snapshot
 #: ../config/dictionary_strings.rb:2006 ../config/model_attributes.rb:3999
-#, fuzzy
 msgid "Snapshot"
 msgstr "スナップショット スナップショット"
 
@@ -15166,7 +15161,6 @@ msgid "FileDepot|Uri"
 msgstr "URI"
 
 #: ../config/model_attributes.rb:1472
-#, fuzzy
 msgid "Filesystem"
 msgstr "ファイルシステム ファイルシステム"
 
@@ -15908,7 +15902,6 @@ msgstr "VMotion の有効化"
 #. TRANSLATORS: file: product/views/VmOrTemplate-all_vms_and_templates.yaml
 #. TRANSLATORS: file: product/views/VmOrTemplate.yaml
 #: ../config/model_attributes.rb:1652 ../config/yaml_strings.rb:4284
-#, fuzzy
 msgid "Host"
 msgstr "ホスト ホスト"
 
@@ -23959,7 +23952,6 @@ msgid "Partition|Volume group"
 msgstr "ボリュームグループ"
 
 #: ../config/model_attributes.rb:3660
-#, fuzzy
 msgid "Patch"
 msgstr "パッチ パッチ"
 
@@ -26187,7 +26179,6 @@ msgstr "更新日"
 #. TRANSLATORS: file: product/views/Job.yaml
 #. TRANSLATORS: file: product/views/MiqTask.yaml
 #: ../config/model_attributes.rb:4220 ../config/yaml_strings.rb:6181
-#, fuzzy
 msgid "User"
 msgstr "ユーザー ユーザー"
 
@@ -38149,7 +38140,6 @@ msgstr ""
 #. TRANSLATORS: file: product/views/MiqServer.yaml
 #. TRANSLATORS: file: product/views/StorageManager.yaml
 #: ../config/yaml_strings.rb:5287
-#, fuzzy
 msgid "Hostname"
 msgstr "ホスト名 ホスト名"
 
@@ -40469,7 +40459,6 @@ msgstr "ソース"
 #. TRANSLATORS: file: product/views/User.yaml
 #. TRANSLATORS: file: product/views/Vm__restricted.yaml
 #: ../config/yaml_strings.rb:6733
-#, fuzzy
 msgid "Group"
 msgstr "グループ グループ"
 

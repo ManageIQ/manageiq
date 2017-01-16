@@ -4566,7 +4566,6 @@ msgstr ""
 #. TRANSLATORS: file: product/views/ConfiguredSystem.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_ConfigurationManager_ConfiguredSystem.yaml
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_Foreman_ConfigurationManager_ConfiguredSystem.yaml
-#, fuzzy
 msgid "ConfiguredSystems"
 msgstr "Host Name"
 
@@ -4600,11 +4599,9 @@ msgstr ""
 msgid "ConfiguredSystem|Customization script ptable name"
 msgstr ""
 
-#, fuzzy
 msgid "ConfiguredSystem|Hostname"
 msgstr "Host Name"
 
-#, fuzzy
 msgid "ConfiguredSystem|Ipaddress"
 msgstr "IP Address"
 
@@ -4670,7 +4667,6 @@ msgstr ""
 #. TRANSLATORS: file: product/views/Container.yaml
 #. TRANSLATORS: en.yml key: dictionary.model.Container
 #. TRANSLATORS: en.yml key: dictionary.table.container
-#, fuzzy
 msgid "Container"
 msgstr ""
 
@@ -5256,7 +5252,6 @@ msgstr ""
 msgid "ContainerGroup|Ems ref"
 msgstr ""
 
-#, fuzzy
 msgid "ContainerGroup|Ipaddress"
 msgstr "IP Address"
 
@@ -6013,7 +6008,6 @@ msgstr ""
 msgid "ContainerRoute|Ems ref"
 msgstr ""
 
-#, fuzzy
 msgid "ContainerRoute|Host name"
 msgstr "Host Name"
 
@@ -11574,13 +11568,11 @@ msgstr ""
 msgid "ExtManagementSystem|Last metrics update date"
 msgstr ""
 
-#, fuzzy
 msgid "ExtManagementSystem|Last refresh date"
 msgstr "Host Name"
 
-#, fuzzy
 msgid "ExtManagementSystem|Last refresh error"
-msgstr "Region"
+msgstr ""
 
 msgid "ExtManagementSystem|Last refresh status"
 msgstr ""
@@ -11633,9 +11625,8 @@ msgstr ""
 msgid "ExtManagementSystem|Provider region"
 msgstr "Region"
 
-#, fuzzy
 msgid "ExtManagementSystem|Realm"
-msgstr "Host Name"
+msgstr ""
 
 msgid "ExtManagementSystem|Region description"
 msgstr ""
@@ -11643,9 +11634,8 @@ msgstr ""
 msgid "ExtManagementSystem|Region number"
 msgstr ""
 
-#, fuzzy
 msgid "ExtManagementSystem|Security protocol"
-msgstr "Region"
+msgstr ""
 
 msgid "ExtManagementSystem|Subscription"
 msgstr ""
@@ -11833,7 +11823,6 @@ msgstr ""
 msgid "Files"
 msgstr ""
 
-#, fuzzy
 msgid "Filesystem"
 msgstr ""
 
@@ -12392,7 +12381,6 @@ msgstr ""
 #. TRANSLATORS: file: product/views/MiqReportResult.yaml
 #. TRANSLATORS: file: product/views/User.yaml
 #. TRANSLATORS: file: product/views/Vm__restricted.yaml
-#, fuzzy
 msgid "Group"
 msgstr ""
 
@@ -12928,7 +12916,6 @@ msgstr ""
 #. TRANSLATORS: file: product/views/VmOrTemplate-all_orphaned.yaml
 #. TRANSLATORS: file: product/views/VmOrTemplate-all_vms_and_templates.yaml
 #. TRANSLATORS: file: product/views/VmOrTemplate.yaml
-#, fuzzy
 msgid "Host"
 msgstr ""
 
@@ -13299,7 +13286,6 @@ msgstr ""
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_MiddlewareManager.yaml
 #. TRANSLATORS: file: product/views/MiqServer.yaml
 #. TRANSLATORS: file: product/views/StorageManager.yaml
-#, fuzzy
 msgid "Hostname"
 msgstr ""
 
@@ -13694,7 +13680,6 @@ msgstr ""
 #. TRANSLATORS: file: product/views/MiqServer.yaml
 #. TRANSLATORS: en.yml key: dictionary.column.ip_address
 #. TRANSLATORS: en.yml key: dictionary.column.ipaddress
-#, fuzzy
 msgid "IP Address"
 msgstr ""
 
@@ -14294,7 +14279,6 @@ msgstr ""
 msgid "KBps"
 msgstr ""
 
-#, fuzzy
 msgid "Kernel Driver"
 msgstr ""
 
@@ -15246,7 +15230,6 @@ msgstr ""
 #. TRANSLATORS: file: product/reports/100_Configuration Management - Virtual Machines/030_by MAC Address.yaml
 #. TRANSLATORS: en.yml key: dictionary.column.mac_address
 #. TRANSLATORS: en.yml key: dictionary.column.macaddress
-#, fuzzy
 msgid "MAC Address"
 msgstr ""
 
@@ -22650,7 +22633,6 @@ msgstr ""
 msgid "Partition|Volume group"
 msgstr ""
 
-#, fuzzy
 msgid "Patch"
 msgstr ""
 
@@ -26398,7 +26380,6 @@ msgid "Smartstate Analysis cannot be performed on selected Datastore"
 msgstr ""
 
 #. TRANSLATORS: en.yml key: dictionary.model.Snapshot
-#, fuzzy
 msgid "Snapshot"
 msgstr ""
 
@@ -28996,7 +28977,6 @@ msgstr ""
 
 #. TRANSLATORS: file: product/views/Job.yaml
 #. TRANSLATORS: file: product/views/MiqTask.yaml
-#, fuzzy
 msgid "User"
 msgstr ""
 

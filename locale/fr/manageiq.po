@@ -2341,7 +2341,6 @@ msgid "Invalid XML file contents detected."
 msgstr "Contenu de fichier XML non valide détecté"
 
 #: ../app/models/system_service.rb:14
-#, fuzzy
 msgid "Kernel Driver"
 msgstr "Pilote de noyau Pilotes de noyau"
 
@@ -4065,7 +4064,6 @@ msgstr "Noms d'hôte"
 #. TRANSLATORS: en.yml key: dictionary.column.ipaddress
 #: ../config/dictionary_strings.rb:418 ../config/dictionary_strings.rb:422
 #: ../config/yaml_strings.rb:5223
-#, fuzzy
 msgid "IP Address"
 msgstr "Adresse IP Adresses IP"
 
@@ -4178,7 +4176,6 @@ msgstr "Nombres de cœurs de processeur"
 #. TRANSLATORS: en.yml key: dictionary.column.macaddress
 #: ../config/dictionary_strings.rb:446 ../config/dictionary_strings.rb:450
 #: ../config/yaml_strings.rb:4983
-#, fuzzy
 msgid "MAC Address"
 msgstr "Adresse MAC Adresses MAC"
 
@@ -6704,7 +6701,6 @@ msgstr "Groupes de boutons"
 #. TRANSLATORS: en.yml key: dictionary.table.container
 #: ../config/dictionary_strings.rb:1326 ../config/dictionary_strings.rb:2144
 #: ../config/model_attributes.rb:500 ../config/yaml_strings.rb:5114
-#, fuzzy
 msgid "Container"
 msgstr "Conteneur Conteneur"
 
@@ -8853,7 +8849,6 @@ msgstr "Catalogues"
 
 #. TRANSLATORS: en.yml key: dictionary.model.Snapshot
 #: ../config/dictionary_strings.rb:2006 ../config/model_attributes.rb:3999
-#, fuzzy
 msgid "Snapshot"
 msgstr "Cliché Clichés"
 
@@ -15611,7 +15606,6 @@ msgid "FileDepot|Uri"
 msgstr "Uri"
 
 #: ../config/model_attributes.rb:1472
-#, fuzzy
 msgid "Filesystem"
 msgstr "Système de fichiers Systèmes de fichiers"
 
@@ -16353,7 +16347,6 @@ msgstr "VMotion activé"
 #. TRANSLATORS: file: product/views/VmOrTemplate-all_vms_and_templates.yaml
 #. TRANSLATORS: file: product/views/VmOrTemplate.yaml
 #: ../config/model_attributes.rb:1652 ../config/yaml_strings.rb:4284
-#, fuzzy
 msgid "Host"
 msgstr "Hôte Hôtes"
 
@@ -24446,7 +24439,6 @@ msgid "Partition|Volume group"
 msgstr "Groupe de volumes"
 
 #: ../config/model_attributes.rb:3660
-#, fuzzy
 msgid "Patch"
 msgstr "Correctif Correctifs"
 
@@ -26686,7 +26678,6 @@ msgstr "Mise à jour"
 #. TRANSLATORS: file: product/views/Job.yaml
 #. TRANSLATORS: file: product/views/MiqTask.yaml
 #: ../config/model_attributes.rb:4220 ../config/yaml_strings.rb:6181
-#, fuzzy
 msgid "User"
 msgstr "Utilisateur Utilisateurs"
 
@@ -38700,7 +38691,6 @@ msgstr ""
 #. TRANSLATORS: file: product/views/MiqServer.yaml
 #. TRANSLATORS: file: product/views/StorageManager.yaml
 #: ../config/yaml_strings.rb:5287
-#, fuzzy
 msgid "Hostname"
 msgstr "Nom d'hôte Noms d'hôte"
 
@@ -41020,7 +41010,6 @@ msgstr "Source"
 #. TRANSLATORS: file: product/views/User.yaml
 #. TRANSLATORS: file: product/views/Vm__restricted.yaml
 #: ../config/yaml_strings.rb:6733
-#, fuzzy
 msgid "Group"
 msgstr "Groupe Groupes"
 

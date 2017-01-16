@@ -2223,7 +2223,6 @@ msgid "Invalid XML file contents detected."
 msgstr "发现无效的 XML 文件内容。"
 
 #: ../app/models/system_service.rb:14
-#, fuzzy
 msgid "Kernel Driver"
 msgstr "内核驱动"
 
@@ -3801,7 +3800,6 @@ msgstr "主机名"
 #. TRANSLATORS: en.yml key: dictionary.column.ipaddress
 #: ../config/dictionary_strings.rb:418 ../config/dictionary_strings.rb:422
 #: ../config/yaml_strings.rb:5223
-#, fuzzy
 msgid "IP Address"
 msgstr "IP 地址"
 
@@ -3914,7 +3912,6 @@ msgstr "CPU 内核数量"
 #. TRANSLATORS: en.yml key: dictionary.column.macaddress
 #: ../config/dictionary_strings.rb:446 ../config/dictionary_strings.rb:450
 #: ../config/yaml_strings.rb:4983
-#, fuzzy
 msgid "MAC Address"
 msgstr "MAC 地址"
 
@@ -6370,7 +6367,6 @@ msgstr "按钮组"
 #. TRANSLATORS: en.yml key: dictionary.table.container
 #: ../config/dictionary_strings.rb:1326 ../config/dictionary_strings.rb:2144
 #: ../config/model_attributes.rb:500 ../config/yaml_strings.rb:5114
-#, fuzzy
 msgid "Container"
 msgstr "容器"
 
@@ -8519,7 +8515,6 @@ msgstr "目录"
 
 #. TRANSLATORS: en.yml key: dictionary.model.Snapshot
 #: ../config/dictionary_strings.rb:2006 ../config/model_attributes.rb:3999
-#, fuzzy
 msgid "Snapshot"
 msgstr "快照"
 
@@ -15157,7 +15152,6 @@ msgid "FileDepot|Uri"
 msgstr "Uri"
 
 #: ../config/model_attributes.rb:1472
-#, fuzzy
 msgid "Filesystem"
 msgstr "Filesystem"
 
@@ -15899,7 +15893,6 @@ msgstr "启用热迁移"
 #. TRANSLATORS: file: product/views/VmOrTemplate-all_vms_and_templates.yaml
 #. TRANSLATORS: file: product/views/VmOrTemplate.yaml
 #: ../config/model_attributes.rb:1652 ../config/yaml_strings.rb:4284
-#, fuzzy
 msgid "Host"
 msgstr "主机"
 
@@ -23950,7 +23943,6 @@ msgid "Partition|Volume group"
 msgstr "卷组"
 
 #: ../config/model_attributes.rb:3660
-#, fuzzy
 msgid "Patch"
 msgstr "补丁"
 
@@ -26178,7 +26170,6 @@ msgstr "更新日期"
 #. TRANSLATORS: file: product/views/Job.yaml
 #. TRANSLATORS: file: product/views/MiqTask.yaml
 #: ../config/model_attributes.rb:4220 ../config/yaml_strings.rb:6181
-#, fuzzy
 msgid "User"
 msgstr "用户"
 
@@ -38140,7 +38131,6 @@ msgstr ""
 #. TRANSLATORS: file: product/views/MiqServer.yaml
 #. TRANSLATORS: file: product/views/StorageManager.yaml
 #: ../config/yaml_strings.rb:5287
-#, fuzzy
 msgid "Hostname"
 msgstr "主机名"
 
@@ -40460,7 +40450,6 @@ msgstr "来源"
 #. TRANSLATORS: file: product/views/User.yaml
 #. TRANSLATORS: file: product/views/Vm__restricted.yaml
 #: ../config/yaml_strings.rb:6733
-#, fuzzy
 msgid "Group"
 msgstr "组"
 
