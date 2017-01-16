@@ -48,7 +48,7 @@ class MiqEventDefinition < ApplicationRecord
     event.except!("definition", :definition)
 
     status = {:class => name, :description => event["description"]}
-    e = MiqEventDefinition.find_by_name(event["name"])
+    e = MiqEventDefinition.find_by(:name => event["name"])
     msg_pfx = "Importing Event: name=[#{event["name"]}]"
 
     if e.nil?
@@ -128,7 +128,7 @@ class MiqEventDefinition < ApplicationRecord
       event = csv_row.to_hash
       set_type = event.delete('set_type')
 
-      rec = find_by_name(event['name'])
+      rec = find_by(:name => event['name'])
       if rec.nil?
         _log.info("Creating [#{event['name']}]")
         rec = create(event)
@@ -140,7 +140,7 @@ class MiqEventDefinition < ApplicationRecord
         end
       end
 
-      es = MiqEventDefinitionSet.find_by_name(set_type)
+      es = MiqEventDefinitionSet.find_by(:name => set_type)
       rec.memberof.each { |old_set| rec.make_not_memberof(old_set) unless old_set == es } # handle changes in set membership
       es.add_member(rec) if es && !es.members.include?(rec)
     end

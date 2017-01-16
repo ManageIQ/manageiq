@@ -245,10 +245,10 @@ class Condition < ApplicationRecord
     if ohash[:key_exists]
       return ref.registry_items.where("name LIKE ? ESCAPE ''", name + "%").exists?
     elsif ohash[:value_exists]
-      rec = ref.registry_items.find_by_name(name)
+      rec = ref.registry_items.find_by(:name => name)
       return !!rec
     else
-      rec = ref.registry_items.find_by_name(name)
+      rec = ref.registry_items.find_by(:name => name)
     end
     return nil unless rec
 

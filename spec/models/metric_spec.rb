@@ -76,7 +76,7 @@ describe Metric do
               expected_hosts = cluster.hosts.select { |h| @expected_targets.include?(h) }
               next if expected_hosts.empty?
 
-              task = MiqTask.find_by_name("Performance rollup for EmsCluster:#{cluster.id}")
+              task = MiqTask.find_by(:name => "Performance rollup for EmsCluster:#{cluster.id}")
               expect(task).not_to be_nil
               expect(task.context_data[:targets]).to match_array(cluster.hosts.collect { |h| "Host:#{h.id}" })
 

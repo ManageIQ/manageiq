@@ -108,7 +108,7 @@ describe MiqReportResult do
     context "for miq_report_result is used different miq_group_id than user's current id" do
       before(:each) do
         MiqUserRole.seed
-        role = MiqUserRole.find_by_name("EvmRole-operator")
+        role = MiqUserRole.find_by(:name => "EvmRole-operator")
         @miq_group = FactoryGirl.create(:miq_group, :miq_user_role => role, :description => "Group1")
         MiqReport.seed_report(@name_of_report = "Vendor and Guest OS")
       end

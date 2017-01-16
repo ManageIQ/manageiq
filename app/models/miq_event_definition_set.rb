@@ -5,7 +5,7 @@ class MiqEventDefinitionSet < ApplicationRecord
     CSV.foreach(fixture_path, :headers => true, :skip_lines => /^#/) do |csv_row|
       set = csv_row.to_hash
 
-      rec = find_by_name(set['name'])
+      rec = find_by(:name => set['name'])
       if rec.nil?
         _log.info("Creating [#{set['name']}]")
         create!(set)

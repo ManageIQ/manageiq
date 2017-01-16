@@ -240,7 +240,7 @@ module MiqAeMethodService
       type = values_hash[:type].present? ? values_hash[:type].to_sym : default_notification_type(values_hash)
       type.tap do |t|
         $miq_ae_logger.info("Validating Notification type: #{t}")
-        valid_type = NotificationType.find_by_name(t)
+        valid_type = NotificationType.find_by(:name => t)
         raise ArgumentError, "Invalid notification type specified" unless valid_type
       end
     end

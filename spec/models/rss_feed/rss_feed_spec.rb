@@ -96,7 +96,7 @@ EOXML
       described_class.sync_from_yml_file(@name)
       expect(RssFeed.count).to eq(old_count)
 
-      feed = RssFeed.find_by_name(@name)
+      feed = RssFeed.find_by(:name => @name)
       expect(feed.title).to eq("new_title")
       expect(feed.description).to eq("new_description")
     end

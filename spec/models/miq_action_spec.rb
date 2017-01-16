@@ -18,7 +18,7 @@ describe MiqAction do
       @user = FactoryGirl.create(:user, :userid => "test", :miq_groups => [group])
       @vm   = FactoryGirl.create(:vm_vmware, :evm_owner => @user, :miq_group => group)
       FactoryGirl.create(:miq_action, :name => "custom_automation")
-      @action = MiqAction.find_by_name("custom_automation")
+      @action = MiqAction.find_by(:name => "custom_automation")
       expect(@action).not_to be_nil
       @action.options = {:ae_request => "test_custom_automation"}
       @args = {
@@ -91,9 +91,9 @@ describe MiqAction do
       FactoryGirl.create(:miq_event_definition, :name => "raise_automation_event")
       FactoryGirl.create(:miq_event_definition, :name => "vm_start")
       FactoryGirl.create(:miq_action, :name => "raise_automation_event")
-      @action = MiqAction.find_by_name("raise_automation_event")
+      @action = MiqAction.find_by(:name => "raise_automation_event")
       expect(@action).not_to be_nil
-      @event = MiqEventDefinition.find_by_name("vm_start")
+      @event = MiqEventDefinition.find_by(:name => "vm_start")
       expect(@event).not_to be_nil
       @aevent = {
         :vm     => @vm,
@@ -133,7 +133,7 @@ describe MiqAction do
   context "#action_ems_refresh" do
     before(:each) do
       FactoryGirl.create(:miq_action, :name => "ems_refresh")
-      @action = MiqAction.find_by_name("ems_refresh")
+      @action = MiqAction.find_by(:name => "ems_refresh")
       expect(@action).not_to be_nil
       @zone1 = FactoryGirl.create(:small_environment)
       @vm = @zone1.vms.first

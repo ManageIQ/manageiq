@@ -55,7 +55,7 @@ describe MiqReport do
 
     it "returns a valid chart for a report with data" do
       MiqReport.seed_report(name = "Vendor and Guest OS")
-      rpt = MiqReport.find_by_name(name)
+      rpt = MiqReport.find_by(:name => name)
 
       rpt.generate_table(:userid => 'test')
       rpt[:graph][:type] = 'StackedColumn'

@@ -501,7 +501,7 @@ class MiqWidget < ApplicationRecord
     rname = attrs.delete("resource_name")
     if rname && attrs["resource_type"]
       klass = attrs.delete("resource_type").constantize
-      attrs["resource"] = klass.find_by_name(rname)
+      attrs["resource"] = klass.find_by(:name => rname)
       raise _("Unable to find %{class} with name %{name}") % {:class => klass, :name => rname} unless attrs["resource"]
     end
 

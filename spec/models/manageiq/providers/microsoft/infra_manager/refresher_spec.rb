@@ -83,7 +83,7 @@ describe ManageIQ::Providers::Microsoft::InfraManager::Refresher do
     storage_name = "file://qeblade33.cfme-qe-vmm-ad.rhq.lab.eng.bos.redhat.com" \
       "/C:/ClusterStorage/CLUSP04%20Prod%20Volume%203-1"
 
-    @storage = Storage.find_by_name(storage_name)
+    @storage = Storage.find_by(:name => storage_name)
 
     expect(@storage).to have_attributes(
       :ems_ref                     => "15fb039d-027a-4113-8504-a37fd0994dca",
@@ -98,7 +98,7 @@ describe ManageIQ::Providers::Microsoft::InfraManager::Refresher do
   end
 
   def assert_specific_cluster
-    @cluster = EmsCluster.find_by_name("hyperv_cluster")
+    @cluster = EmsCluster.find_by(:name => "hyperv_cluster")
 
     expect(@cluster).to have_attributes(
       :ems_ref => "8e830204-6448-4817-b220-34af48ccf8ca",
@@ -109,7 +109,7 @@ describe ManageIQ::Providers::Microsoft::InfraManager::Refresher do
 
   def assert_specific_host
     hostname = "qeblade33.cfme-qe-vmm-ad.rhq.lab.eng.bos.redhat.com"
-    @host = ManageIQ::Providers::Microsoft::InfraManager::Host.find_by_name(hostname)
+    @host = ManageIQ::Providers::Microsoft::InfraManager::Host.find_by(:name => hostname)
     expect(@host).to have_attributes(
       :ems_ref          => "18060bb0-05b9-40fb-b1e3-dfccb8d85c6b",
       :name             => hostname,
@@ -155,7 +155,7 @@ describe ManageIQ::Providers::Microsoft::InfraManager::Refresher do
       :controller_type => "ethernet"
     )
 
-    # @host2 = Host.find_by_name("SFBronagh.manageiq.com")
+    # @host2 = Host.find_by(:name => "SFBronagh.manageiq.com")
     # expect(@host2.ems_cluster).to eq(@cluster)
   end
 
@@ -165,7 +165,7 @@ describe ManageIQ::Providers::Microsoft::InfraManager::Refresher do
   end
 
   def assert_specific_vm
-    v = ManageIQ::Providers::Microsoft::InfraManager::Vm.find_by_name("WS2008R2Core-JK")
+    v = ManageIQ::Providers::Microsoft::InfraManager::Vm.find_by(:name => "WS2008R2Core-JK")
 
     location = "\\ProgramData\\Microsoft\\Windows\\Hyper-V\\Virtual Machines" \
       "\\6D327596-1341-4072-81F1-2658DB7F073B.xml"
@@ -225,7 +225,7 @@ describe ManageIQ::Providers::Microsoft::InfraManager::Refresher do
   end
 
   def assert_specific_snapshot
-    v = ManageIQ::Providers::Microsoft::InfraManager::Vm.find_by_name("WS2008R2Core-JK")
+    v = ManageIQ::Providers::Microsoft::InfraManager::Vm.find_by(:name => "WS2008R2Core-JK")
 
     expect(v.snapshots.size).to eq(1)
     snapshot = v.snapshots.first
@@ -240,9 +240,9 @@ describe ManageIQ::Providers::Microsoft::InfraManager::Refresher do
   end
 
   def assert_specific_guest_devices
-    v0 = ManageIQ::Providers::Microsoft::InfraManager::Vm.find_by_name("CFME-56011-JT")
-    v1 = ManageIQ::Providers::Microsoft::InfraManager::Vm.find_by_name("jerrykbiker-dnd")
-    v2 = ManageIQ::Providers::Microsoft::InfraManager::Vm.find_by_name("DualDVDa")
+    v0 = ManageIQ::Providers::Microsoft::InfraManager::Vm.find_by(:name => "CFME-56011-JT")
+    v1 = ManageIQ::Providers::Microsoft::InfraManager::Vm.find_by(:name => "jerrykbiker-dnd")
+    v2 = ManageIQ::Providers::Microsoft::InfraManager::Vm.find_by(:name => "DualDVDa")
 
     expect(v0.hardware.guest_devices.size).to eq(0)
     expect(v1.hardware.guest_devices.size).to eq(1)

@@ -87,7 +87,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
   end
 
   def assert_specific_container
-    @container = Container.find_by_name("heapster")
+    @container = Container.find_by(:name => "heapster")
     expect(@container).to have_attributes(
       # :ems_ref     => "a7566742-e73f-11e4-b613-001a4a5f4a02_heapster_kubernetes/heapster:v0.9",
       :name          => "heapster",
@@ -110,7 +110,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
     expect(@container.container_definition.command).to eq("/heapster --source\\=kubernetes:https://kubernetes "\
                                                       "--sink\\=influxdb:http://monitoring-influxdb:80")
 
-    @container2 = Container.find_by_name("influxdb")
+    @container2 = Container.find_by(:name => "influxdb")
     expect(@container2).to have_attributes(
       # :ems_ref       => "a7649eaa-e73f-11e4-b613-001a4a5f4a02_influxdb_kubernetes/heapster_influxdb:v0.3",
       :name          => "influxdb",
@@ -135,11 +135,11 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
   end
 
   def assert_specific_container_definition
-    expect(ContainerDefinition.find_by_name("heapster").ext_management_system).to eq(@ems)
+    expect(ContainerDefinition.find_by(:name => "heapster").ext_management_system).to eq(@ems)
   end
 
   def assert_specific_container_group
-    @containergroup = ContainerGroup.find_by_name("monitoring-heapster-controller-4j5zu")
+    @containergroup = ContainerGroup.find_by(:name => "monitoring-heapster-controller-4j5zu")
     expect(@containergroup).to have_attributes(
       # :ems_ref        => "49984e80-e1b7-11e4-b7dc-001a4a5f4a02",
       :name           => "monitoring-heapster-controller-4j5zu",
@@ -238,7 +238,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
   end
 
   def assert_specific_container_service
-    @containersrv = ContainerService.find_by_name("kubernetes")
+    @containersrv = ContainerService.find_by(:name => "kubernetes")
     expect(@containersrv).to have_attributes(
       # :ems_ref          => "a36a2858-e73f-11e4-b613-001a4a5f4a02",
       :name             => "kubernetes",
@@ -263,7 +263,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
     )
 
     # Check group relation
-    @groups = ContainerService.find_by_name("monitoring-influxdb-ui").container_groups
+    @groups = ContainerService.find_by(:name => "monitoring-influxdb-ui").container_groups
     expect(@groups.count).to eq(1)
     @group = @groups.first
     expect(@group).to have_attributes(
@@ -304,7 +304,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
   end
 
   def assert_specific_container_project
-    @container_pr = ContainerProject.find_by_name("default")
+    @container_pr = ContainerProject.find_by(:name => "default")
     expect(@container_pr).to have_attributes(
       :name         => "default",
       :display_name => nil
@@ -318,7 +318,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
   end
 
   def assert_specific_container_quota
-    container_quota = ContainerQuota.find_by_name("quota")
+    container_quota = ContainerQuota.find_by(:name => "quota")
     container_quota.ems_created_on.kind_of?(ActiveSupport::TimeWithZone)
     expect(container_quota.container_quota_items.count).to eq(8)
     cpu_quota = container_quota.container_quota_items.select { |x| x[:resource] == 'cpu' }[0]
@@ -331,7 +331,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
   end
 
   def assert_specific_container_limit
-    container_limit = ContainerLimit.find_by_name("limits")
+    container_limit = ContainerLimit.find_by(:name => "limits")
     container_limit.ems_created_on.kind_of?(ActiveSupport::TimeWithZone)
     expect(container_limit.container_limit_items.count).to eq(2)
     expect(container_limit.container_project.name).to eq("default")
@@ -366,7 +366,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Refresher do
   end
 
   def assert_specific_container_component_status
-    @component_status = ContainerComponentStatus.find_by_name("etcd-0")
+    @component_status = ContainerComponentStatus.find_by(:name => "etcd-0")
     expect(@component_status).to have_attributes(
       :condition => "Healthy",
       :status    => "True"

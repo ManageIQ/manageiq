@@ -62,19 +62,19 @@ describe ActsAsTaggable do
   end
 
   it "#tags" do
-    expect(Host.find_by_name("HOST1").tags.length).to eq(3)
-    expect(Vm.find_by_name("VM2").tags.length).to eq(0)
+    expect(Host.find_by(:name => "HOST1").tags.length).to eq(3)
+    expect(Vm.find_by(:name => "VM2").tags.length).to eq(0)
   end
 
   context "#tag_with" do
     it "passing string" do
-      vm = Vm.find_by_name("VM3")
+      vm = Vm.find_by(:name => "VM3")
       expect(vm.tag_with("abc def ghi")).to eq(["abc", "def", "ghi"])
       expect(Vm.find_tagged_with(:all => "abc def ghi", :ns => '/user')).to eq([@vm3])
     end
 
     it "passing array" do
-      vm = Vm.find_by_name("VM3")
+      vm = Vm.find_by(:name => "VM3")
       expect(vm.tag_with(["abc", "def", "ghi"])).to eq(["abc", "def", "ghi"])
       expect(Vm.find_tagged_with(:all => "abc def ghi", :ns => '/user')).to eq([@vm3])
     end
@@ -98,14 +98,14 @@ describe ActsAsTaggable do
   end
 
   it "#tag_add" do
-    vm = Vm.find_by_name("VM1")
+    vm = Vm.find_by(:name => "VM1")
     expect(vm.tag_add("abc", :ns => "/test/tags")).to eq(["abc"])
     expect(Vm.find_tagged_with(:all => "red blue yellow abc", :ns => "/test/tags")).to eq([@vm1])
   end
 
   context "#is_tagged_with?" do
     it "works" do
-      vm = Vm.find_by_name("VM1")
+      vm = Vm.find_by(:name => "VM1")
       expect(vm.is_tagged_with?("red",   :ns => "/test", :cat => "tags")).to be_truthy
       expect(vm.is_tagged_with?("black", :ns => "/test", :cat => "tags")).not_to be_truthy
     end
@@ -126,8 +126,8 @@ describe ActsAsTaggable do
   end
 
   it "#tag_list" do
-    expect(Host.find_by_name("HOST1").tag_list(:ns => "/test", :cat => "tags").split).to match_array %w(red blue yellow)
-    expect(Vm.find_by_name("VM1").tag_list(:ns => "/test/tags").split).to match_array %w(red blue yellow)
+    expect(Host.find_by(:name => "HOST1").tag_list(:ns => "/test", :cat => "tags").split).to match_array %w(red blue yellow)
+    expect(Vm.find_by(:name => "VM1").tag_list(:ns => "/test/tags").split).to match_array %w(red blue yellow)
   end
 
   it "#to_tag" do

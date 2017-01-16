@@ -1253,7 +1253,7 @@ describe "Vms API" do
     it "assigns a tag to a Vm by href" do
       api_basic_authorize subcollection_action_identifier(:vms, :tags, :assign)
 
-      run_post(vm1_tags_url, gen_request(:assign, :href => tags_url(Tag.find_by_name(tag1[:path]).id)))
+      run_post(vm1_tags_url, gen_request(:assign, :href => tags_url(Tag.find_by(:name => tag1[:path]).id)))
 
       expect_tagging_result(
         [{:success => true, :href => vm1_url, :tag_category => tag1[:category], :tag_name => tag1[:name]}]
@@ -1292,7 +1292,7 @@ describe "Vms API" do
     it "assigns tags by mixed specification to a Vm" do
       api_basic_authorize subcollection_action_identifier(:vms, :tags, :assign)
 
-      tag = Tag.find_by_name(tag2[:path])
+      tag = Tag.find_by(:name => tag2[:path])
       run_post(vm1_tags_url, gen_request(:assign, [{:name => tag1[:path]}, {:href => tags_url(tag.id)}]))
 
       expect_tagging_result(
@@ -1324,7 +1324,7 @@ describe "Vms API" do
     it "unassigns multiple tags from a Vm" do
       api_basic_authorize subcollection_action_identifier(:vms, :tags, :unassign)
 
-      tag = Tag.find_by_name(tag2[:path])
+      tag = Tag.find_by(:name => tag2[:path])
       run_post(vm2_tags_url, gen_request(:unassign, [{:name => tag1[:path]}, {:href => tags_url(tag.id)}]))
 
       expect_tagging_result(

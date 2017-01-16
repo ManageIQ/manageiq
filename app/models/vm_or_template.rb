@@ -608,7 +608,7 @@ class VmOrTemplate < ApplicationRecord
       vm_hash[:location] = location2uri(path)
     end
     _log.info("vm_hash [#{vm_hash.inspect}]")
-    store = Storage.find_by_name(vm_hash[:name])
+    store = Storage.find_by(:name => vm_hash[:name])
     return nil unless store
     vmobj = VmOrTemplate.find_by(:location => vm_hash[:location], :storage_id => store.id)
   end
@@ -885,7 +885,7 @@ class VmOrTemplate < ApplicationRecord
   end
 
   def my_zone_obj
-    Zone.find_by_name(my_zone)
+    Zone.find_by(:name => my_zone)
   end
 
   #
@@ -1273,7 +1273,7 @@ class VmOrTemplate < ApplicationRecord
     # TODO: Review the name of this method such that the return types don't conflict with those of self.repository_parse_path
     storage_name, relative_path = repository_parse_path(path)
 
-    storage = Storage.find_by_name(storage_name)
+    storage = Storage.find_by(:name => storage_name)
     if storage.nil?
       storage_id = nil
       location   = location2uri(relative_path)

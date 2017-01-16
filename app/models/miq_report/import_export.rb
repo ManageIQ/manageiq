@@ -15,7 +15,7 @@ module MiqReport::ImportExport
       report.merge!("miq_group_id" => user.current_group_id, "user_id" => user.id)
 
       report["name"] = report.delete("menu_name")
-      rep = MiqReport.find_by_name(report["name"])
+      rep = MiqReport.find_by(:name => report["name"])
       if rep
         # if report exists
         if options[:overwrite]

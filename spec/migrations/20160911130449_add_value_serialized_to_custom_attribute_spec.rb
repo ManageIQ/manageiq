@@ -6,7 +6,7 @@ describe AddValueSerializedToCustomAttribute do
     it 'migrate current values to serialized values correctly' do
       custom_attribute_stub.create!(:name => 'example', :value => "foo")
       migrate
-      expect(YAML.load(custom_attribute_stub.find_by_name('example').serialized_value)).to eq("foo")
+      expect(YAML.load(custom_attribute_stub.find_by(:name => 'example').serialized_value)).to eq("foo")
     end
   end
 end

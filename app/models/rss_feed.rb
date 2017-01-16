@@ -124,7 +124,7 @@ class RssFeed < ApplicationRecord
       :yml_file_mtime => File.mtime(file).utc
     }
 
-    rec = find_by_name(rss[:name])
+    rec = find_by(:name => rss[:name])
     if rec
       if rec.yml_file_mtime && rec.yml_file_mtime < rss[:yml_file_mtime]
         _log.info("[#{rec.name}] file has been updated on disk, synchronizing with model")

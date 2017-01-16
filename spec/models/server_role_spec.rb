@@ -68,7 +68,7 @@ describe ServerRole do
         max_concurrent = max_concurrent.to_i
         external_failover = true  if external_failover == 'true'
         external_failover = false if external_failover == 'false'
-        sr = ServerRole.find_by_name(name)
+        sr = ServerRole.find_by(:name => name)
         expect(sr.description).to eq(description)
         expect(sr.max_concurrent).to eq(max_concurrent)
         expect(sr.external_failover).to eq(external_failover)

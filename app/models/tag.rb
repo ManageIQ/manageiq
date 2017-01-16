@@ -96,13 +96,13 @@ class Tag < ApplicationRecord
 
   def self.find_by_classification_name(name, region_id = Classification.my_region_number,
                                        ns = Classification::DEFAULT_NAMESPACE, parent_id = 0)
-    in_region(region_id).find_by_name(Classification.name2tag(name, parent_id, ns))
+    in_region(region_id).find_by(:name => Classification.name2tag(name, parent_id, ns))
   end
 
   def self.find_or_create_by_classification_name(name, region_id = Classification.my_region_number,
                                                  ns = Classification::DEFAULT_NAMESPACE, parent_id = 0)
     tag_name = Classification.name2tag(name, parent_id, ns)
-    in_region(region_id).find_by_name(tag_name) || create(:name => tag_name)
+    in_region(region_id).find_by(:name => tag_name) || create(:name => tag_name)
   end
 
   def ==(comparison_object)

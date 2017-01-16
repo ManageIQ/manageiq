@@ -78,7 +78,7 @@ module AssignmentMixin
         object = model.find_by_id(parts.pop) unless model.nil?
         result[:objects] << object unless object.nil?
       when :tag
-        tag = Tag.find_by_name("/" + parts.join("/"))
+        tag = Tag.find_by(:name => "/" + parts.join("/"))
         result[:tags] << [Classification.find_by_tag_id(tag.id), klass] unless tag.nil?
       when :label
         label = CustomAttribute.find_by(:name => parts[1], :value => parts[2])

@@ -22,7 +22,7 @@ describe VmScan do
                                      )
       @ems_auth  = FactoryGirl.create(:authentication, :resource => @ems)
 
-      allow(MiqEventDefinition).to receive_messages(:find_by_name => true)
+      allow(MiqEventDefinition).to receive_messages(:find_by => true)
       @job = @vm.scan
       MiqQueue.delete_all # clear the queue items that are not related to Vm scan testing
     end
