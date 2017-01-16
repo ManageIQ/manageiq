@@ -171,13 +171,12 @@ module Api
       end
 
       def sort_directive(klass, attr, order, options)
-        if options.map(&:downcase).include?("ignore_case") && order
-          klass.arel_attribute(attr).lower.public_send(order.downcase)
-        elsif order
-          klass.arel_attribute(attr).public_send(order.downcase)
-        else
-          klass.arel_attribute(attr)
+        arel = klass.arel_attribute(attr)
+        if order
+          arel = arel.lower if options.map(&:downcase).include?("ignore_case")
+          arel = arel.desc if order.downcase == "desc"
         end
+        arel
       end
     end
   end
