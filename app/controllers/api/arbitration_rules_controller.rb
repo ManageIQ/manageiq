@@ -22,9 +22,13 @@ module Api
     private
 
     def build_rule_attributes(data)
-      return data unless data.key?('expression')
       attributes = data.dup
-      attributes['expression'] = MiqExpression.new(data['expression'])
+      if data.key?('expression')
+        attributes['expression'] = MiqExpression.new(data['expression'])
+      end
+      if data.key?('arbitration_profile')
+        attributes['arbitration_profile_id'] = parse_id(attributes.delete('arbitration_profile'), :arbitration_profiles)
+      end
       attributes
     end
   end
