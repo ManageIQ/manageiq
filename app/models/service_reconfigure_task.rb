@@ -21,7 +21,7 @@ class ServiceReconfigureTask < MiqRequestTask
     _log.info("Queuing #{request_class::TASK_DESCRIPTION}: [#{description}]...")
     dialog_values = options[:dialog] || {}
 
-    ra = source.service_template.resource_actions.find_by_action('Reconfigure')
+    ra = source.service_template.resource_actions.find_by(:action => 'Reconfigure')
     if ra
       args = {
         :object_type      => self.class.name,

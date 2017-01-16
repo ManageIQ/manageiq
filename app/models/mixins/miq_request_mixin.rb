@@ -162,7 +162,7 @@ module MiqRequestMixin
   def request_dialog(action_name)
     st = service_template
     return {} if st.blank?
-    ra = st.resource_actions.find_by_action(action_name)
+    ra = st.resource_actions.find_by(:action => action_name)
     values = options[:dialog]
     dialog = ResourceActionWorkflow.new(values, get_user, ra, {}).dialog
     DialogSerializer.new.serialize(Array[dialog]).first

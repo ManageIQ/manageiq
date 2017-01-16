@@ -302,7 +302,7 @@ class Service < ApplicationRecord
   end
 
   def reconfigure_resource_action
-    service_template.resource_actions.find_by_action('Reconfigure') if service_template
+    service_template.resource_actions.find_by(:action => 'Reconfigure') if service_template
   end
 
   def raise_final_process_event(action)
