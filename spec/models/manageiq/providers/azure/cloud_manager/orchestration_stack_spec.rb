@@ -58,12 +58,12 @@ describe ManageIQ::Providers::Azure::CloudManager::OrchestrationStack do
 
     describe "#delete_stack" do
       it 'updates the stack' do
-        expect(orchestration_service).to receive(:delete)
+        expect(orchestration_service).to receive(:delete_associated_resources)
         subject.delete_stack
       end
 
       it 'catches errors from provider' do
-        expect(orchestration_service).to receive(:delete).and_raise('bad request')
+        expect(orchestration_service).to receive(:delete_associated_resources).and_raise('bad request')
         expect { subject.delete_stack }.to raise_error(MiqException::MiqOrchestrationDeleteError)
       end
     end
