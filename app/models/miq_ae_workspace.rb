@@ -24,7 +24,7 @@ class MiqAeWorkspace < ApplicationRecord
   end
 
   def self.workspace_from_token(token)
-    ws = MiqAeWorkspace.find_by_guid(token)
+    ws = MiqAeWorkspace.find_by(:guid => token)
     raise MiqAeException::WorkspaceNotFound, "Workspace Not Found for token=[#{token}]" if ws.nil?
     ws
   end

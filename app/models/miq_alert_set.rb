@@ -46,7 +46,7 @@ class MiqAlertSet < ApplicationRecord
       alerts.push(alert)
     end
 
-    aset = MiqAlertSet.find_by_guid(alert_profile["guid"])
+    aset = MiqAlertSet.find_by(:guid => alert_profile["guid"])
     msg_pfx = "Importing Alert Profile: guid=[#{alert_profile["guid"]}] description=[#{alert_profile["description"]}]"
     if aset.nil?
       aset = MiqAlertSet.new(alert_profile)

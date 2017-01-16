@@ -106,7 +106,7 @@ module MiqServer::ServerSmartProxy
   def scan_metadata(ost)
     klass  = ost.target_type.constantize
     target = klass.find(ost.target_id)
-    job    = Job.find_by_guid(ost.taskid)
+    job    = Job.find_by(:guid => ost.taskid)
     _log.debug "#{target.name} (#{target.class.name})"
     begin
       ost.args[1]  = YAML.load(ost.args[1]) # TODO: YAML.dump'd in call_scan - need it be?
@@ -130,7 +130,7 @@ module MiqServer::ServerSmartProxy
   def sync_metadata(ost)
     klass  = ost.target_type.constantize
     target = klass.find(ost.target_id)
-    job    = Job.find_by_guid(ost.taskid)
+    job    = Job.find_by(:guid => ost.taskid)
     _log.debug "#{log_prefix}: #{target.name} (#{target.class.name})"
     begin
       target.perform_metadata_sync(ost)

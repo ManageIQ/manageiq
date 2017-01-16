@@ -52,7 +52,7 @@ module ManageIQ::Providers::Redhat::InfraManager::VmOrTemplateShared::Scanning
     # If we do not get passed an model object assume it is a job guid
     if job && !job.kind_of?(ActiveRecord::Base)
       jobid = job
-      job = Job.find_by_guid(jobid)
+      job = Job.find_by(:guid => jobid)
     end
 
     all_proxy_list = storage2proxies

@@ -73,7 +73,7 @@ module ScanningOperationsMixin
     begin
       return false if vmId.blank?
       Timeout.timeout(WS_TIMEOUT) do
-        vm = VmOrTemplate.find_by_guid(vmId)
+        vm = VmOrTemplate.find_by(:guid => vmId)
         return false if vm.busy
         vm.busy = true
         vm.save!
@@ -90,7 +90,7 @@ module ScanningOperationsMixin
     begin
       return false if vmId.blank?
       Timeout.timeout(WS_TIMEOUT) do
-        vm = VmOrTemplate.find_by_guid(vmId)
+        vm = VmOrTemplate.find_by(:guid => vmId)
         vm.busy = false
         vm.save!
       end
@@ -105,7 +105,7 @@ module ScanningOperationsMixin
   def status_update_op(vmId, vmStatus)
     begin
       Timeout.timeout(WS_TIMEOUT) do
-        vm = VmOrTemplate.find_by_guid(vmId)
+        vm = VmOrTemplate.find_by(:guid => vmId)
         return unless vm
         vm.state = vmStatus
         vm.save
