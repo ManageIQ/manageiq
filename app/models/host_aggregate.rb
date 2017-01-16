@@ -4,7 +4,6 @@ class HostAggregate < ApplicationRecord
   include Metric::CiMixin
   include EventMixin
   include ProviderObjectMixin
-  include SupportsFeatureMixin
 
   acts_as_miq_taggable
 
