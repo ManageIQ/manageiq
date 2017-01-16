@@ -1,0 +1,2 @@
+class NetworkCredential < Authentication
+end

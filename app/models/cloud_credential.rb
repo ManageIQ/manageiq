@@ -1,0 +1,2 @@
+class CloudCredential < Authentication
+end

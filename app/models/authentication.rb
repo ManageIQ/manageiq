@@ -15,6 +15,13 @@ class Authentication < ApplicationRecord
 
   belongs_to :resource, :polymorphic => true
 
+  has_many :authentication_configuration_script_bases,
+           :dependent  => :destroy,
+           :class_name => "AuthenticationConfigurationScriptBase"
+  has_many :configuration_script_bases,
+           :through => :authentication_configuration_script_bases,
+           :source  => :configuration_script_base
+
   before_save :set_credentials_changed_on
   after_save :after_authentication_changed
 

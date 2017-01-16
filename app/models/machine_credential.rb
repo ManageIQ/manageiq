@@ -1,0 +1,2 @@
+class MachineCredential < Authentication
+end

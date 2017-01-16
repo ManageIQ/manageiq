@@ -11,5 +11,13 @@ class ConfigurationScriptBase < ApplicationRecord
   belongs_to :parent,               :class_name => "ConfigurationScriptBase"
   has_many   :children,             :class_name => "ConfigurationScriptBase", :foreign_key => "parent_id"
 
+  has_many   :authentication_configuration_script_bases,
+             :dependent   => :destroy,
+             :class_name  => "AuthenticationConfigurationScriptBase",
+             :foreign_key => 'configuration_script_id'
+  has_many   :authentications,
+             :through => :authentication_configuration_script_bases,
+             :source  => :authentication
+
   include ProviderObjectMixin
 end
