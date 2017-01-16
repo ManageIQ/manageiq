@@ -178,8 +178,8 @@ class RestApi
       if action == "run"
         script = ARGV.shift
         method = ARGV.shift
-        msg_exit("Must specify a script to run.") if script.nil?
         api_script = script_filename(opts[:scriptdir], script)
+        msg_exit("Must specify a script to run.") if api_script.nil?
         msg_exit("Script file #{api_script} does not exist") unless File.exist?(api_script)
       else
         api_params = Trollop.options do
