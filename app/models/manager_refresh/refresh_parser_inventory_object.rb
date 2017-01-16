@@ -14,8 +14,7 @@ module ManagerRefresh
 
         raise "InventoryCollection #{key} must be defined" unless inventory_collections[key]
 
-        inventory_object = inventory_collections[key].new_inventory_object(new_result)
-        inventory_collections[key] << inventory_object
+        inventory_collections[key] << inventory_collections[key].new_inventory_object(new_result)
       end
     end
 
