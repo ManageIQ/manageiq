@@ -441,6 +441,22 @@ describe "Querying" do
       expect(response.parsed_body).to include_error_with_message("Filtering is not supported on vms subcollection")
       expect(response).to have_http_status(:bad_request)
     end
+
+    it "can do fuzzy matching on strings with forward slashes" do
+      tag_1 = FactoryGirl.create(:tag, :name => "/managed/foo")
+      _tag_2 = FactoryGirl.create(:tag, :name => "/managed/bar")
+      api_basic_authorize collection_action_identifier(:tags, :read, :get)
+
+      run_get(tags_url, :filter => ["name='*/foo'"])
+
+      expected = {
+        "count"     => 2,
+        "subcount"  => 1,
+        "resources" => [{"href" => a_string_matching(tags_url(tag_1.id))}]
+      }
+      expect(response.parsed_body).to include(expected)
+      expect(response).to have_http_status(:ok)
+    end
   end
 
   describe "Querying vm attributes" do
