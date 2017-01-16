@@ -263,7 +263,7 @@ function hoverNodeId(id) {
   var nid = ids[ids.length - 1]; // Get the last part of the node id
   var leftNid = nid.split('-')[0];
   var rightNid = nid.split('-')[1];
-  if (rightNid.match(/r/)) {
+  if (typeof rightNid !== 'undefined' && rightNid.match(/r/)) {
     nid = sprintf("%s-%s%012d", leftNid, rightNid.split('r')[0], rightNid.split('r')[1]);
   }
   return ((leftNid == 'v' || // Check for VM node

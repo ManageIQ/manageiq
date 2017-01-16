@@ -1,0 +1,15 @@
+%br
+= _("This user is limited to the selected items and their children.")
+%br
+%br
+#hac_treebox{:style => "color:#000"}
+  = render(:partial => "layouts/dynatree",
+           :locals  => {:tree_id        => "hac_treebox",
+                        :tree_name      => "hac_tree",
+                        :json_tree      => @hac_tree,
+                        :onmousein      => "miqOnMouseInHostNet",
+                        :onmouseout     => "miqOnMouseOutHostNet",
+                        :oncheck        => @edit.nil? ? nil : "miqOnCheckUserFilters",
+                        :disable_checks => @edit.nil?,
+                        :check_url      => "ops/rbac_group_field_changed/#{@group.id || "new"}___",
+                        :checkboxes     => true})

@@ -1,0 +1,15 @@
+%br
+= _("This user is limited to items with the selected tags.")
+%br
+%br
+#myco_treebox{:style => "color:#000"}
+  = render(:partial => "layouts/dynatree",
+           :locals  => {:tree_id        => "myco_treebox",
+                        :tree_name      => "myco_tree",
+                        :json_tree      => @myco_tree,
+                        :onmousein      => "miqOnMouseInHostNet",
+                        :onmouseout     => "miqOnMouseOutHostNet",
+                        :oncheck        => @edit.nil? ? nil : "miqOnCheckUserFilters",
+                        :disable_checks => @edit.nil?,
+                        :check_url      => "ops/rbac_group_field_changed/#{@group.id || "new"}___",
+                        :checkboxes     => true})
