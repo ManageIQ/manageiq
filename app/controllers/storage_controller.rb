@@ -639,6 +639,9 @@ class StorageController < ApplicationController
   end
 
   def display_adv_searchbox
+    if !@record.nil? && @record[:type] == 'StorageCluster'
+      return false
+    end
     !(@in_a_form || (x_active_tree == :storage_tree && @record) || (x_active_tree == :storage_pod_tree && (x_node == 'root' || @storage)))
   end
 
