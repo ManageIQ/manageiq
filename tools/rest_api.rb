@@ -84,7 +84,6 @@ class RestApi
 
     def run
       data      = ""
-      path      = ""
       params    = {}
 
       opts = Trollop.options do
