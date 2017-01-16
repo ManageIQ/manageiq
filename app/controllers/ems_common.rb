@@ -411,13 +411,12 @@ module EmsCommon
       else
         process_vm_buttons(pfx)
         # Control transferred to another screen, so return
-        return if ["host_tag", "#{pfx}_policy_sim", "host_scan", "host_refresh", "host_protect",
-                   "host_compare", "#{pfx}_compare", "#{pfx}_tag", "#{pfx}_retire",
-                   "#{pfx}_protect", "#{pfx}_ownership", "#{pfx}_refresh", "#{pfx}_right_size",
-                   "#{pfx}_reconfigure", "storage_tag", "ems_cluster_compare",
-                   "ems_cluster_protect", "ems_cluster_tag", "#{pfx}_resize", "#{pfx}_live_migrate",
-                   "#{pfx}_evacuate"].include?(params[:pressed]) &&
-                  @flash_array.nil?
+        return if (["#{pfx}_policy_sim", "host_scan", "host_refresh", "host_protect",
+                    "host_compare", "#{pfx}_compare", "#{pfx}_tag", "#{pfx}_retire",
+                    "#{pfx}_protect", "#{pfx}_ownership", "#{pfx}_refresh", "#{pfx}_right_size",
+                    "#{pfx}_reconfigure", "ems_cluster_compare", "ems_cluster_protect", "#{pfx}_resize",
+                    "#{pfx}_live_migrate", "#{pfx}_evacuate"].include?(params[:pressed]) ||
+                    params[:pressed].ends_with?("_tag")) && @flash_array.nil?
 
         unless ["host_edit", "#{pfx}_edit", "#{pfx}_miq_request_new", "#{pfx}_clone",
                 "#{pfx}_migrate", "#{pfx}_publish"].include?(params[:pressed])
