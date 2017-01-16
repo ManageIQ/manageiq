@@ -112,7 +112,7 @@ class VmdbDatabaseConnection < ApplicationRecord
   end
 
   def vmdb_database
-    VmdbDatabase.find_by_id(vmdb_database_id)
+    VmdbDatabase.find_by(:id => vmdb_database_id)
   end
 
   def vmdb_database=(db)

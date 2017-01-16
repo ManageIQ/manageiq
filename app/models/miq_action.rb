@@ -799,7 +799,7 @@ class MiqAction < ApplicationRecord
     end
 
     MiqPolicy.logger.info("MIQ(action_cancel_task): Now executing Cancel of task [#{source_event.event_type}] on VM [#{source_event.vm_name}]")
-    ems = ExtManagementSystem.find_by_id(source_event.ems_id)
+    ems = ExtManagementSystem.find_by(:id => source_event.ems_id)
     raise _("unable to find vCenter with id [%{id}]") % {:id => source_event.ems_id} if ems.nil?
 
     vim = ems.connect

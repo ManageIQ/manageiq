@@ -1,6 +1,6 @@
 class MiqProvisionRequestTemplate < MiqProvisionRequest
   def create_tasks_for_service(service_task, parent_svc)
-    template_service_resource = ServiceResource.find_by_id(service_task.options[:service_resource_id])
+    template_service_resource = ServiceResource.find_by(:id => service_task.options[:service_resource_id])
     scaling_min = number_of_vms(service_task, parent_svc, template_service_resource)
     scaling_min ||= template_service_resource.try(:scaling_min) || 1
 
@@ -70,7 +70,7 @@ class MiqProvisionRequestTemplate < MiqProvisionRequest
   end
 
   def get_parent_task(service_task)
-    MiqRequestTask.find_by_id(service_task.options[:parent_task_id])
+    MiqRequestTask.find_by(:id => service_task.options[:parent_task_id])
   end
 
   def number_of_vms_from_dialog(root_svc, parent_task)

@@ -33,7 +33,7 @@ module AssignmentMixin
     objects.to_miq_a.each do |obj|
       unless obj.kind_of?(ActiveRecord::Base) # obj is the id of a classification entry instance
         id = obj
-        obj = Classification.find_by_id(id)
+        obj = Classification.find_by(:id => id)
         if obj.nil?
           _log.warn("Unable to find classification with id [#{id}], skipping assignment")
           next
@@ -52,7 +52,7 @@ module AssignmentMixin
     objects.to_miq_a.each do |obj|
       unless obj.kind_of?(ActiveRecord::Base) # obj is the id of a classification entry instance
         id = obj
-        obj = CustomAttribute.find_by_id(id)
+        obj = CustomAttribute.find_by(:id => id)
         if obj.nil?
           _log.warn("Unable to find label with id [#{id}], skipping assignment")
           next
@@ -75,7 +75,7 @@ module AssignmentMixin
       case type.to_sym
       when :id
         model  = Object.const_get(klass.camelize) rescue nil
-        object = model.find_by_id(parts.pop) unless model.nil?
+        object = model.find_by(:id => parts.pop) unless model.nil?
         result[:objects] << object unless object.nil?
       when :tag
         tag = Tag.find_by(:name => "/" + parts.join("/"))

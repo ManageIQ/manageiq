@@ -57,7 +57,7 @@ module MiqServer::WorkerManagement::Heartbeat
   end
 
   def message_for_worker(wid, message, *args)
-    w = MiqWorker.find_by_id(wid)
+    w = MiqWorker.find_by(:id => wid)
     worker_set_message(w, message, *args) unless w.nil?
   end
 

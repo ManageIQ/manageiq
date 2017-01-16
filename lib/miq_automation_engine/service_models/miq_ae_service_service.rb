@@ -87,7 +87,7 @@ module MiqAeMethodService
         if owner.nil?
           @object.evm_owner = nil
         else
-          @object.evm_owner = User.find_by_id(owner.id)
+          @object.evm_owner = User.find_by(:id => owner.id)
         end
         @object.save
       end
@@ -105,7 +105,7 @@ module MiqAeMethodService
         if group.nil?
           @object.miq_group = nil
         else
-          @object.miq_group = MiqGroup.find_by_id(group.id)
+          @object.miq_group = MiqGroup.find_by(:id => group.id)
         end
         @object.save
       end

@@ -14,7 +14,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
     if initial_pass == true
       src_vm_id = get_value(@values[:src_vm_id])
       unless src_vm_id.blank?
-        vm = VmOrTemplate.find_by_id(src_vm_id)
+        vm = VmOrTemplate.find_by(:id => src_vm_id)
         @values[:src_vm_id] = [vm.id, vm.name] unless vm.blank?
       end
     end
@@ -278,7 +278,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
   def allowed_templates(options = {})
     # Return pre-selected VM if we are called for cloning
     if [:clone_to_vm, :clone_to_template].include?(request_type)
-      vm_or_template = VmOrTemplate.find_by_id(get_value(@values[:src_vm_id]))
+      vm_or_template = VmOrTemplate.find_by(:id => get_value(@values[:src_vm_id]))
       return [create_hash_struct_from_vm_or_template(vm_or_template, options)].compact
     end
 

@@ -6,7 +6,7 @@ def kill_provision_task(prov_id, queue)
   puts "Found Queue ID:#{queue.id} - #{queue.class_name}:#{queue.instance_id} - #{queue.method_name}"
   queue.destroy
 
-  prov =  MiqProvision.find_by_id(prov_id)
+  prov = MiqProvision.find_by(:id => prov_id)
   prov.update_and_notify_parent(:state => "finished", :status => "Error", :message => @stop_message)
   @processed << prov_id unless @processed.include?(prov_id)
 end

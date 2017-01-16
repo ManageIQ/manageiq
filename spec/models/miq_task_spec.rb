@@ -205,7 +205,7 @@ describe MiqTask do
         :args        => [1, 2, 3]
       }
       tid = MiqTask.generic_action_with_callback(opts, qopts)
-      task = MiqTask.find_by_id(tid)
+      task = MiqTask.find_by(:id => tid)
       expect(task.state).to eq(MiqTask::STATE_QUEUED)
       expect(task.status).to eq(MiqTask::STATUS_OK)
       expect(task.userid).to eq("Flintstone")

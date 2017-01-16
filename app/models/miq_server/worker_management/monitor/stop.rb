@@ -23,7 +23,7 @@ module MiqServer::WorkerManagement::Monitor::Stop
   end
 
   def stop_worker(worker, monitor_status = :waiting_for_stop, monitor_reason = nil)
-    w = worker.kind_of?(Integer) ? miq_workers.find_by_id(worker) : worker
+    w = worker.kind_of?(Integer) ? miq_workers.find_by(:id => worker) : worker
 
     if w.nil?
       _log.warn("Cannot find Worker <#{w.inspect}>")

@@ -211,7 +211,7 @@ class MiqReportResult < ApplicationRecord
   end
 
   def _async_generate_result(taskid, result_type, options = {})
-    task = MiqTask.find_by_id(taskid)
+    task = MiqTask.find_by(:id => taskid)
     task.update_status("Active", "Ok", "Generating report result [#{result_type}]") if task
 
     user = options[:user] || User.find_by_userid(options[:userid])

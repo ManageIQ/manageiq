@@ -100,7 +100,7 @@ class MiqAlert < ApplicationRecord
     if target.kind_of?(Array)
       klass, id = target
       klass = Object.const_get(klass)
-      target = klass.find_by_id(id)
+      target = klass.find_by(:id => id)
       raise "Unable to find object with class: [#{klass}], Id: [#{id}]" unless target
     end
 
@@ -180,7 +180,7 @@ class MiqAlert < ApplicationRecord
     if target.kind_of?(Array)
       klass, id = target
       klass = Object.const_get(klass)
-      target = klass.find_by_id(id)
+      target = klass.find_by(:id => id)
       raise "Unable to find object with class: [#{klass}], Id: [#{id}]" unless target
     end
 

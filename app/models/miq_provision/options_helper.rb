@@ -8,15 +8,15 @@ module MiqProvision::OptionsHelper
   end
 
   def dest_cluster
-    @dest_cluster ||= EmsCluster.find_by_id(get_option(:dest_cluster))
+    @dest_cluster ||= EmsCluster.find_by(:id => get_option(:dest_cluster))
   end
 
   def dest_host
-    @dest_host ||= Host.find_by_id(get_option(:dest_host))
+    @dest_host ||= Host.find_by(:id => get_option(:dest_host))
   end
 
   def dest_datastore
-    @dest_datastore ||= Storage.find_by_id(get_option(:dest_storage))
+    @dest_datastore ||= Storage.find_by(:id => get_option(:dest_storage))
   end
 
   def create_template?
@@ -25,7 +25,7 @@ module MiqProvision::OptionsHelper
 
   def get_source
     source_id = get_option(:src_vm_id)
-    source = VmOrTemplate.find_by_id(source_id)
+    source = VmOrTemplate.find_by(:id => source_id)
     if source.nil?
       raise MiqException::MiqProvisionError,
             _("Unable to find source Template/Vm with id [%{number}]") % {:number => source_id}

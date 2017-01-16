@@ -195,7 +195,7 @@ class MiqAeClass < ApplicationRecord
   def self.get_unique_instances_from_classes(klass_array)
     name_set = Set.new
     klass_array.collect do |klass|
-      cls = find_by_id(klass.id)
+      cls = find_by(:id => klass.id)
       next if cls.nil?
       cls.ae_instances.sort { |a, b| a.fqname <=> b.fqname }.collect do |inst|
         next if name_set.include?(inst.name)
@@ -207,7 +207,7 @@ class MiqAeClass < ApplicationRecord
 
   def self.get_same_instance_from_classes(klass_array, instance)
     klass_array.collect do |klass|
-      cls = find_by_id(klass.id)
+      cls = find_by(:id => klass.id)
       next if cls.nil?
       cls.ae_instances.select { |a| File.fnmatch(instance, a.name, File::FNM_CASEFOLD) }
     end.compact.flatten

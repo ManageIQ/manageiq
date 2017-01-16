@@ -2,7 +2,7 @@
 module MiqRequestWorkflow::DialogFieldValidation
   def validate_tags(field, values, _dlg, fld, _value)
     selected_tags_categories = values[field].to_miq_a.collect do |tag_id|
-      Classification.find_by_id(tag_id).parent.name.to_sym
+      Classification.find_by(:id => tag_id).parent.name.to_sym
     end
 
     required_tags = fld[:required_tags].to_miq_a.collect(&:to_sym)

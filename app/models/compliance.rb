@@ -32,7 +32,7 @@ class Compliance < ApplicationRecord
     if target.kind_of?(Array)
       klass, id = target
       klass = Object.const_get(klass)
-      target = klass.find_by_id(id)
+      target = klass.find_by(:id => id)
       unless target
         raise _("Unable to find object with class: [%{class_name}], Id: [%{number}]") % {:class_name => klass,
                                                                                          :number     => id}
@@ -60,7 +60,7 @@ class Compliance < ApplicationRecord
     if target.kind_of?(Array)
       klass, id = target
       klass = Object.const_get(klass)
-      target = klass.find_by_id(id)
+      target = klass.find_by(:id => id)
       unless target
         raise _("Unable to find object with class: [%{class_name}], Id: [%{number}]") % {:class_name => klass,
                                                                                          :number     => id}

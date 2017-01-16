@@ -8,7 +8,7 @@ module RetirementMixin
   module ClassMethods
     def retire(ids, options = {})
       ids.each do |id|
-        object = find_by_id(id)
+        object = find_by(:id => id)
         object.retire(options) if object.respond_to?(:retire)
       end
       MiqQueue.put(:class_name => base_model.name, :method_name => "retirement_check")

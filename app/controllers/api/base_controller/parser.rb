@@ -140,8 +140,8 @@ module Api
 
       def parse_ownership(data)
         {
-          :owner => collection_class(:users).find_by_id(parse_owner(data["owner"])),
-          :group => collection_class(:groups).find_by_id(parse_group(data["group"]))
+          :owner => collection_class(:users).find_by(:id => parse_owner(data["owner"])),
+          :group => collection_class(:groups).find_by(:id => parse_group(data["group"]))
         }.compact if data.present?
       end
 

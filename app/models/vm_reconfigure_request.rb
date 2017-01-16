@@ -22,7 +22,7 @@ class VmReconfigureRequest < MiqRequest
 
     all_memory, all_vcpus, all_cores_per_socket, all_total_vcpus = [], [], [], []
     options[:src_ids].to_miq_a.each do |idx|
-      vm = Vm.find_by_id(idx)
+      vm = Vm.find_by(:id => idx)
       all_vcpus            << (vm.host ? [vm.host.hardware.cpu_total_cores, vm.max_vcpus].min : vm.max_vcpus)
       all_cores_per_socket << (vm.host ? [vm.host.hardware.cpu_total_cores, vm.max_cpu_cores_per_socket].min : vm.max_cpu_cores_per_socket)
       all_total_vcpus      << (vm.host ? [vm.host.hardware.cpu_total_cores, vm.max_total_vcpus].min : vm.max_total_vcpus)

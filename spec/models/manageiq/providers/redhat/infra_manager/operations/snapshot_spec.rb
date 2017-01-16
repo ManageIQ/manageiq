@@ -9,7 +9,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Vm::Operations::Snapshot do
       allow(@closeable_snapshots_service).to receive(:snapshot_service)
         .with(snapshot.uid_ems) { @snapshot_service }
       allow(vm).to receive(:closeable_snapshots_service).with(any_args).and_return(@closeable_snapshots_service)
-      allow(Snapshot).to receive(:find_by_id).with(snapshot.id).and_return(snapshot)
+      allow(Snapshot).to receive(:find_by).with(:id => snapshot.id).and_return(snapshot)
     end
 
     it 'calls remove on the snapshot service' do
