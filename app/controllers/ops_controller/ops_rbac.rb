@@ -1128,7 +1128,7 @@ module OpsController::OpsRbac
     categories.sort_by { |c| c.description.downcase }.each do |category|
       kids_checked = false
       cat_node = {}
-      cat_node[:key] = category.name
+      cat_node[:key] = category.name if @edit.present? || @filters.present?
       cat_node[:title] = category.description
       cat_node[:tooltip] =  _("Category: %{description}") % {:description => category.description}
       cat_node[:addClass] = "cfme-no-cursor-node"      # No cursor pointer
@@ -1137,7 +1137,7 @@ module OpsController::OpsRbac
       cat_kids = []
       category.entries.sort_by { |e| e.description.downcase }.each do |tag|
         tag_node = {}
-        tag_node[:key] = [category.name, tag.name].join("-")
+        tag_node[:key] = [category.name, tag.name].join("-") if @edit.present? || @filters.present?
         tag_node[:title] = tag.description
         tag_node[:tooltip] =  _("Tag: %{description}") % {:description => tag.description}
         if (@edit && @edit[:new][:filters][tag_node[:key]] == @edit[:current][:filters][tag_node[:key]]) || ![tag_node[:key]].include?(@filters) # Check new vs current
