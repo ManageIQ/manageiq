@@ -8,7 +8,7 @@ class ConfigurationScriptBase < ApplicationRecord
   belongs_to :inventory_root_group, :class_name => "EmsFolder"
   belongs_to :manager,              :class_name => "ExtManagementSystem"
 
-  belongs_to :parent
+  belongs_to :parent,               :class_name => "ConfigurationScriptBase"
   has_many   :children,             :class_name => "ConfigurationScriptBase", :foreign_key => "parent_id"
 
   include ProviderObjectMixin

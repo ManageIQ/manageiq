@@ -6,11 +6,30 @@ describe ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfigurationS
   let(:job)          { AnsibleTowerClient::Job.new(connection.api, "id" => 1) }
   let(:job_template) { AnsibleTowerClient::JobTemplate.new(connection.api, "limit" => "", "id" => 1, "url" => "api/job_templates/1/", "name" => "template", "description" => "description", "extra_vars" => {:instance_ids => ['i-3434']}) }
   let(:manager)      { FactoryGirl.create(:configuration_manager_ansible_tower, :provider, :configuration_script) }
-
   it "belongs_to the Ansible Tower manager" do
     expect(manager.configuration_scripts.size).to eq 1
     expect(manager.configuration_scripts.first.variables).to eq :instance_ids => ['i-3434']
     expect(manager.configuration_scripts.first).to be_a ConfigurationScript
+  end
+
+  context "relates to playbook" do
+    let(:configuration_script_source) { FactoryGirl.create(:configuration_script_source, :manager => manager) }
+    let!(:payload) { FactoryGirl.create(:configuration_script_payload) }
+    let(:configuration_scripts_without_payload) { FactoryGirl.create(:configuration_script) }
+    let(:configuration_scripts) do
+      [FactoryGirl.create(:configuration_script, :parent => payload),
+       FactoryGirl.create(:configuration_script, :parent => payload)]
+    end
+
+    it "can refer to a payload" do
+      expect(configuration_scripts[0].parent).to eq(payload)
+      expect(configuration_scripts[1].parent).to eq(payload)
+      expect(payload.children).to match_array(configuration_scripts)
+    end
+
+    it "can be without payload" do
+      expect(configuration_scripts_without_payload.parent).to be_nil
+    end
   end
 
   context "#run" do
