@@ -229,6 +229,16 @@ module Api
       end
     end
 
+    def assign_tags_resource(type, id, data)
+      vm = resource_search(id, type, collection_class(:vms))
+      data['tags'].each do |tag|
+        tags_assign_resource(vm, type, tag['id'], tag)
+      end
+      vm
+    rescue => err
+      raise BadRequestError, "Cannot assign tags - #{err}"
+    end
+
     private
 
     def vm_ident(vm)

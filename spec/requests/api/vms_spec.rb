@@ -1176,6 +1176,32 @@ describe "Vms API" do
     end
   end
 
+  context 'Vm bulk asign_tags' do
+    it 'can bulk assign tags to multiple VMs' do
+      api_basic_authorize subcollection_action_identifier(:vms, :tags, :assign)
+
+      request_body = {
+        'action'    => 'assign_tags',
+        'resources' => [
+          {
+            'id'   => vm1.id,
+            'tags' => [{ 'category' => 'department', 'name' => 'finance' }]
+          }
+        ]
+      }
+
+      run_post(vms_url, request_body)
+
+      expected = {
+        'results' => [
+          a_hash_including('id' => vm1.id)
+        ]
+      }
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
+    end
+  end
+
   context "Vm Tag subcollection" do
     let(:tag1)         { {:category => "department", :name => "finance", :path => "/managed/department/finance"} }
     let(:tag2)         { {:category => "cc",         :name => "001",     :path => "/managed/cc/001"} }
