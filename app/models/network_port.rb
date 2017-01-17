@@ -6,13 +6,13 @@ class NetworkPort < ApplicationRecord
   belongs_to :cloud_tenant
   belongs_to :device, :polymorphic => true
 
-  has_many :network_port_security_groups
+  has_many :network_port_security_groups, :dependent => :destroy
   has_many :security_groups, :through => :network_port_security_groups
 
   has_one :floating_ip
   # TODO(lsmola) can this really happen? If not remove it
   has_many :floating_ips
-  has_many :cloud_subnet_network_ports
+  has_many :cloud_subnet_network_ports, :dependent => :destroy
   has_many :cloud_subnets, :through => :cloud_subnet_network_ports
   has_many :network_routers, -> { distinct }, :through => :cloud_subnets
   has_many :public_networks, :through => :cloud_subnets
