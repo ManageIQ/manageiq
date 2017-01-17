@@ -399,6 +399,10 @@ class MiqWorker < ApplicationRecord
     STATUSES_STOPPED.include?(status)
   end
 
+  def started?
+    STATUS_STARTED == status
+  end
+
   def actually_running?
     MiqProcess.is_worker?(pid)
   end
