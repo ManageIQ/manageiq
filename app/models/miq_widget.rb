@@ -55,9 +55,7 @@ class MiqWidget < ApplicationRecord
     last_generated_content_on || (miq_schedule && miq_schedule.last_run_on)
   end
 
-  def next_run_on
-    miq_schedule && miq_schedule.next_run_on
-  end
+  delegate :next_run_on, :to => :miq_schedule, :allow_nil => true
 
   def status
     if miq_task.nil?
