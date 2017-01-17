@@ -3,10 +3,19 @@ describe ManageIQ::Providers::Redhat::InfraManager::Provision::StateMachine do
 
   let(:cluster)  { FactoryGirl.create(:ems_cluster, :ext_management_system => ems) }
   let(:ems)      { FactoryGirl.create(:ems_redhat_with_authentication) }
+  let(:disk_attachments_service) { double("disk_attachments_service", :add => nil) }
   let(:rhevm_vm) { double("RHEVM VM") }
   let(:task)     { request.tap(&:create_request_tasks).miq_request_tasks.first }
   let(:template) { FactoryGirl.create(:template_redhat, :ext_management_system => ems) }
-  let(:vm)       { FactoryGirl.create(:vm_redhat, :ext_management_system => ems, :raw_power_state => "on").tap { |v| allow(v).to receive(:with_provider_object).and_yield(rhevm_vm) } }
+  let(:vm) do
+    FactoryGirl.create(:vm_redhat, :ext_management_system => ems, :raw_power_state => "on").tap do |v|
+      allow(v).to receive(:with_provider_object).and_yield(rhevm_vm)
+      allow(ems).to receive(:with_disk_attachments_service).with(v).and_return(disk_attachments_service)
+      allow(ems).to receive(:with_provider_connection).and_return(false)
+    end
+  end
+
+  let(:storage) { FactoryGirl.create(:storage_nfs, :ems_ref => "http://example.com/storages/XYZ") }
 
   let(:options) do
     {
@@ -17,6 +26,16 @@ describe ManageIQ::Providers::Redhat::InfraManager::Provision::StateMachine do
       :vm_auto_start          => true,
       :vm_description         => "some description",
       :vm_target_name         => "test_vm_1",
+      :disk_scsi              => [
+        {
+          :disk_size_in_mb  => "33",
+          :persistent       => true,
+          :thin_provisioned => true,
+          :dependent        => true,
+          :bootable         => false,
+          :datastore        => storage.name
+        }
+      ]
     }
   end
 
@@ -35,6 +54,8 @@ describe ManageIQ::Providers::Redhat::InfraManager::Provision::StateMachine do
       :poll_clone_complete                      => {:signals => 1, :calls => 3},
       :poll_destination_in_vmdb                 => {:signals => 1, :calls => 3},
       :customize_destination                    => {:signals => 1, :calls => 3},
+      :configure_disks                          => {:signals => 1, :calls => 1},
+      :poll_add_disks_complete                  => {:signals => 1, :calls => 1},
       :customize_guest                          => {:signals => 1, :calls => 1},
       :poll_destination_powered_off_in_provider => {:signals => 1, :calls => 4},
       :poll_destination_powered_off_in_vmdb     => {:signals => 2, :calls => 2},
@@ -113,6 +134,14 @@ describe ManageIQ::Providers::Redhat::InfraManager::Provision::StateMachine do
     expect(xml).not_to receive(:use_cloud_init)
     expect(rhevm_vm).to receive(:start).and_yield(xml)
 
+    call_method
+  end
+
+  def test_configure_disks
+    call_method
+  end
+
+  def test_poll_add_disks_complete
     call_method
   end
 end

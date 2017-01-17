@@ -11,7 +11,8 @@ describe ManageIQ::Providers::Redhat::InfraManager::Provision do
         :number_of_vms  => 1,
         :cpu_limit      => -1,
         :cpu_reserve    => 0,
-        :provision_type => "rhevm"
+        :provision_type => "rhevm",
+        :disks_add      => {}
       }
     end
 
@@ -140,6 +141,28 @@ describe ManageIQ::Providers::Redhat::InfraManager::Provision do
           it "when destination_image_locked is true" do
             @vm_prov.get_provider_destination.attributes[:status][:state] = "image_locked"
             expect(@vm_prov).to receive(:requeue_phase)
+
+            @vm_prov.customize_destination
+          end
+        end
+
+        context "configure_disks" do
+          before do
+            allow(@vm_prov).to receive(:for_destination).and_return("display_string")
+            allow(@vm_prov).to receive(:configure_container)
+          end
+
+          it "when adding disks is required" do
+            allow(@vm_prov).to receive(:configure_dialog_disks)
+            allow(@vm_prov).to receive(:add_disks)
+            expect(@vm_prov).to receive(:poll_add_disks_complete)
+
+            @vm_prov.customize_destination
+          end
+
+          it "when adding disks is not required" do
+            expect(@vm_prov).to receive(:configure_disks)
+            expect(@vm_prov).not_to receive(:poll_add_disks_complete)
 
             @vm_prov.customize_destination
           end
