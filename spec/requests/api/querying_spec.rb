@@ -105,15 +105,15 @@ describe "Querying" do
     it 'supports sql friendly virtual attributes' do
       host_foo =  FactoryGirl.create(:host, :name => 'foo')
       host_bar =  FactoryGirl.create(:host, :name => 'bar')
-      vm_foo = FactoryGirl.create(:vm, :name => 'vm_foo')
-      vm_bar = FactoryGirl.create(:vm, :name => 'vm_bar')
-      host_foo.vms << vm_foo
-      host_bar.vms << vm_bar
+      host_zap =  FactoryGirl.create(:host, :name => 'zap')
+      FactoryGirl.create(:vm, :name => 'vm_foo', :host => host_foo)
+      FactoryGirl.create(:vm, :name => 'vm_bar', :host => host_bar)
+      FactoryGirl.create(:vm, :name => 'vm_zap', :host => host_zap)
 
       run_get vms_url, :sort_by => 'host_name', :sort_order => 'desc', :expand => 'resources'
 
-      expect_query_result(:vms, 2, 2)
-      expect_result_resources_to_match_hash([{'name' => 'vm_foo'}, {'name' => 'vm_bar'}])
+      expect_query_result(:vms, 3, 3)
+      expect_result_resources_to_match_hash([{'name' => 'vm_zap'}, {'name' => 'vm_foo'}, {'name' => 'vm_bar'}])
     end
 
     it 'does not support non sql friendly virtual attributes' do
