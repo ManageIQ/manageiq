@@ -1,4 +1,0 @@
-module MiqAeMethodService
-  class MiqAeServiceManageIQ_Providers_Amazon_BlockStorageManager_CloudVolume < MiqAeServiceCloudVolume
-  end
-end
