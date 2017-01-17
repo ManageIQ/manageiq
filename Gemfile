@@ -12,6 +12,9 @@ gem "handsoap", "~>0.2.5", :require => false, :git => "https://github.com/Manage
 gem "rubywbem",            :require => false, :git => "https://github.com/ManageIQ/rubywbem.git", :branch => "rubywbem_0_1_0"
 
 # when using this Gemfile inside a providers Gemfile, the dependency for the provider is already declared
+unless dependencies.detect { |d| d.name == "manageiq-providers-ansible_tower" }
+  gem "manageiq-providers-ansible_tower", :git => "https://github.com/durandom/manageiq-providers-ansible_tower", :branch => "master"
+end
 unless dependencies.detect { |d| d.name == "manageiq-content" }
   gem "manageiq-content", :git => "https://github.com/ManageIQ/manageiq-content", :branch => "master"
 end
