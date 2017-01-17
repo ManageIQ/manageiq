@@ -42,9 +42,10 @@ class ManageIQ::Providers::Azure::CloudManager::OrchestrationStack < ManageIQ::P
     raise MiqException::MiqOrchestrationUpdateError, err.to_s, err.backtrace
   end
 
-  def raw_delete_stack
+  def raw_delete_stack(delete_all = false)
     ext_management_system.with_provider_connection do |configure|
-      Azure::Armrest::TemplateDeploymentService.new(configure).delete(name, resource_group)
+      tds = Azure::Armrest::TemplateDeploymentService.new(configure)
+      delete_all ? tds.delete_associated_resources(name, resource_group) : tds.delete(name, resource_group)
     end
   rescue => err
     _log.error "stack=[#{name}], error: #{err}"
