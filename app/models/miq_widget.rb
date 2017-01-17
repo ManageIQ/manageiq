@@ -71,30 +71,6 @@ class MiqWidget < ApplicationRecord
     miq_task.nil? ? "Unknown" : miq_task.message
   end
 
-  # Returns status, last_run_on, message
-  #   Status: None | Queued | Running | Complete
-  def generation_status
-    miq_task = self.miq_task
-
-    if miq_task.nil?
-      return "None" if last_run_on.nil?
-      return "Complete", last_run_on
-    end
-
-    status =  case miq_task.state
-              when MiqTask::STATE_QUEUED
-                "Queued"
-              when MiqTask::STATE_FINISHED
-                "Complete"
-              when MiqTask::STATE_ACTIVE
-                "Running"
-              else
-                raise "Unknown state=#{miq_task.state.inspect}"
-              end
-
-    return status, last_run_on, miq_task.message
-  end
-
   def create_task(num_targets, userid = User.current_userid)
     userid ||= "system"
     context_data = {:targets  => num_targets, :complete => 0}
