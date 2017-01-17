@@ -23,6 +23,20 @@ module ManageIQ::Providers
     supports :provisioning
     supports :smartstate_analysis
 
+    def has_authentication_type?(type)
+      case type
+        when :metrics
+          begin
+            self.class::MetricsCapture.new(self).perf_init_vim
+            true
+          rescue
+            false
+          end
+        else
+          super
+      end
+    end
+
     def self.ems_type
       @ems_type ||= "vmwarews".freeze
     end

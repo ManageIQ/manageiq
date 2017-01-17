@@ -109,7 +109,7 @@ module Metric::Targets
   def self.capture_host_targets(zone)
     # NOTE: if capture_storage_targets takes only enabled hosts
     # merge only_enabled into this method
-    zone.ext_management_systems.flat_map(&:hosts)
+    zone.ext_management_systems.select { |e| e.has_authentication_type?(:metrics) }.flat_map(&:hosts)
   end
 
   # @param [Host] all hosts that have an ems
