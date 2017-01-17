@@ -39,7 +39,7 @@ class MiqWidget < ApplicationRecord
   end
 
   virtual_column :status,         :type => :string,    :uses => :miq_task
-  virtual_column :status_message, :type => :string,    :uses => :miq_task
+  virtual_delegate :status_message, :to => "miq_task.message", :allow_nil => true, :default => "Unknown"
   virtual_delegate :queued_at, :to => "miq_task.created_on", :allow_nil => true
   virtual_column :last_run_on,    :type => :datetime,  :uses => :miq_schedule
 
@@ -63,10 +63,6 @@ class MiqWidget < ApplicationRecord
       return "Complete"
     end
     miq_task.human_status
-  end
-
-  def status_message
-    miq_task.nil? ? "Unknown" : miq_task.message
   end
 
   def create_task(num_targets, userid = User.current_userid)
