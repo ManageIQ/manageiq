@@ -1,9 +1,5 @@
 class CloudSubnet < ApplicationRecord
-  include_concern 'Operations'
-
   include NewWithTypeStiMixin
-  include ProviderObjectMixin
-  include AsyncDeleteMixin
   include VirtualTotalMixin
   include SupportsFeatureMixin
 
@@ -54,29 +50,6 @@ class CloudSubnet < ApplicationRecord
   def self.class_by_ems(ext_management_system)
     # TODO: use a factory on ExtManagementSystem side to return correct class for each provider
     ext_management_system && ext_management_system.class::CloudSubnet
-  end
-
-  def self.create_subnet(ext_management_system, options = {})
-    raise ArgumentError, _("ext_management_system cannot be nil") if ext_management_system.nil?
-
-    klass = class_by_ems(ext_management_system)
-    klass.raw_create_subnet(ext_management_system, options)
-  end
-
-  def delete_subnet
-    raw_delete_subnet
-  end
-
-  def raw_delete_subnet
-    raise NotImplementedError, _("raw_delete_subnet must be implemented in a subclass")
-  end
-
-  def raw_update_subnet(_options = {})
-    raise NotImplementedError, _("raw_update_subnet must be implemented in a subclass")
-  end
-
-  def update_subnet(options = {})
-    raw_update_subnet(options) unless options.empty?
   end
 
   private

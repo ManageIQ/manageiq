@@ -1,4 +1,7 @@
 class ManageIQ::Providers::Openstack::NetworkManager::CloudSubnet < ::CloudSubnet
+  include ProviderObjectMixin
+  include SupportsFeatureMixin
+
   supports :create
   supports :delete do
     if ext_management_system.nil?
@@ -20,9 +23,7 @@ class ManageIQ::Providers::Openstack::NetworkManager::CloudSubnet < ::CloudSubne
     end
   end
 
-  def self.raw_create_subnet(ext_management_system, options)
-    # TODO: remove this log line once this uses the task queue, as the task queue has its own logging
-    _log.info "Command: #{self.class.name}##{__method__}, Args: #{options.inspect}"
+  def self.raw_create_cloud_subnet(ext_management_system, options)
     cloud_tenant = options.delete(:cloud_tenant)
     subnet = nil
 
@@ -36,34 +37,56 @@ class ManageIQ::Providers::Openstack::NetworkManager::CloudSubnet < ::CloudSubne
     raise MiqException::MiqCloudSubnetCreateError, e.to_s, e.backtrace
   end
 
-  def provider_object(connection)
-    connection.subnets.get(ems_ref)
-  end
-
-  def raw_delete_subnet
-    # TODO: remove this log line once this uses the task queue, as the task queue has its own logging
-    _log.info "Command: #{self.class.name}##{__method__}, ID: #{id}"
-    with_provider_object(&:destroy)
-    destroy!
+  def raw_delete_cloud_subnet
+    ext_management_system.with_provider_connection(connection_options(cloud_tenant)) do |service|
+      service.delete_subnet(ems_ref)
+    end
   rescue => e
     _log.error "subnet=[#{name}], error: #{e}"
     raise MiqException::MiqCloudSubnetDeleteError, e.to_s, e.backtrace
   end
 
-  def raw_update_subnet(options)
-    # TODO: remove this log line once this uses the task queue, as the task queue has its own logging
-    _log.info "Command: #{self.class.name}##{__method__}, ID: #{id}, Args: #{options.inspect}"
-    with_provider_object do |subnet|
-      subnet.attributes.merge!(options)
-      subnet.save
+  def delete_cloud_subnet_queue(userid)
+    task_opts = {
+      :action => "deleting Cloud Subnet for user #{userid}",
+      :userid => userid
+    }
+    queue_opts = {
+      :class_name  => self.class.name,
+      :method_name => 'raw_delete_cloud_subnet',
+      :instance_id => id,
+      :priority    => MiqQueue::HIGH_PRIORITY,
+      :role        => 'ems_operations',
+      :zone        => ext_management_system.my_zone,
+      :args        => []
+    }
+    MiqTask.generic_action_with_callback(task_opts, queue_opts)
+  end
+
+  def raw_update_cloud_subnet(options)
+    ext_management_system.with_provider_connection(connection_options(cloud_tenant)) do |service|
+      service.update_subnet(ems_ref, options)
     end
   rescue => e
     _log.error "subnet=[#{name}], error: #{e}"
     raise MiqException::MiqCloudSubnetUpdateError, e.to_s, e.backtrace
   end
 
-  def with_provider_object
-    super(connection_options)
+  def update_cloud_subnet_queue(userid, options = {})
+    task_opts = {
+      :action => "updating Cloud Subnet for user #{userid}",
+      :userid => userid
+    }
+    queue_opts = {
+      :class_name  => self.class.name,
+      :method_name => 'raw_update_cloud_subnet',
+      :instance_id => id,
+      :priority    => MiqQueue::HIGH_PRIORITY,
+      :role        => 'ems_operations',
+      :zone        => ext_management_system.my_zone,
+      :args        => [options]
+    }
+    MiqTask.generic_action_with_callback(task_opts, queue_opts)
   end
 
   private

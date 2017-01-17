@@ -1,17 +1,19 @@
 %form#form_div{:name => "angularForm", 'ng-controller' => "cloudSubnetFormController"}
   = render :partial => "layouts/flash_msg"
   %h3
-    = _('Edit Subnet')
+  = render :partial => "common_new_edit"
+
   .form-horizontal
     .form-group
       %label.col-md-2.control-label
-        = _('Subnet Name')
+        = _('IP Version')
       .col-md-8
         %input.form-control{:type          => "text",
-                            :name          => "name",
-                            'ng-model'     => "cloudSubnetModel.name",
-                            'ng-maxlength' => 128,
+                            :name          => "ip_version",
+                            'ng-model'     => "cloudSubnetModel.ip_version",
+                            'ng-maxlength' => 2,
                             :miqrequired   => true,
+                            :disabled      => true,
                             :checkchange   => true}
     .form-group
       %label.col-md-2.control-label
@@ -24,28 +26,6 @@
                             :miqrequired   => false,
                             :disabled      => true,
                             :checkchange   => true}
-    .form-group
-      %label.col-md-2.control-label
-        = _('Gateway')
-      .col-md-8
-        %input.form-control{:type          => "text",
-                            :name          => "ip_version",
-                            'ng-model'     => "cloudSubnetModel.gateway",
-                            'ng-maxlength' => 20,
-                            :miqrequired   => false,
-                            :checkchange   => true}
-    .form-group
-      %label.col-md-2.control-label
-        = _('IP Version')
-      .col-md-8
-        %input.form-control{:type          => "text",
-                            :name          => "ip_version",
-                            'ng-model'     => "cloudSubnetModel.ip_version",
-                            'ng-maxlength' => 2,
-                            :miqrequired   => true,
-                            :disabled      => true,
-                            :checkchange   => true}
-
 
   %table{:width => '100%'}
     %tr
