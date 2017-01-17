@@ -263,7 +263,7 @@ module MiqAeEngine
       # process Array::servers => MiqServer::2,MiqServer::3,MiqServer::4
       key = args_key.split(CLASS_SEPARATOR).last
       value = args.delete(args_key)
-      args[key] = load_array_objects_from_string(value)
+      args[key.downcase] = load_array_objects_from_string(value)
     end
 
     def process_args_attribute(args, args_key)
