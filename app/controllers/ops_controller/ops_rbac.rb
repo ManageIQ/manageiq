@@ -1041,6 +1041,11 @@ module OpsController::OpsRbac
     valid
   end
 
+  def valid_tenant?(tenant_id)
+    all_tenants, = Tenant.tenant_and_project_names
+    all_tenants.include?(tenant_id)
+  end
+
   # Get variables from group edit form
   def rbac_group_get_form_vars
     if %w(up down).include?(params[:button])
@@ -1050,7 +1055,15 @@ module OpsController::OpsRbac
       @edit[:new][:ldap_groups_user] = params[:ldap_groups_user]  if params[:ldap_groups_user]
       @edit[:new][:description]      = params[:description]       if params[:description]
       @edit[:new][:role]             = params[:group_role]        if params[:group_role]
-      @edit[:new][:group_tenant]     = params[:group_tenant].to_i if params[:group_tenant]
+
+      if params[:group_tenant]
+        if valid_tenant?(new_tenant_id = params[:group_tenant].to_i)
+          @edit[:new][:group_tenant] = new_tenant_id
+        else
+          raise "Invalid tenant selected."
+        end
+      end
+
       @edit[:new][:lookup]           = (params[:lookup] == "1")   if params[:lookup]
       @edit[:new][:user]             = params[:user]              if params[:user]
       @edit[:new][:user_id]          = params[:user_id]           if params[:user_id]
