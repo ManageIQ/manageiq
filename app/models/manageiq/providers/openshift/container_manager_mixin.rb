@@ -38,11 +38,25 @@ module ManageIQ::Providers::Openshift::ContainerManagerMixin
 
       Kubeclient::Client.new(
         raw_api_endpoint(hostname, port, '/oapi'),
-        api_version,
+        options[:version] || api_version,
         :ssl_options    => { :verify_ssl => verify_ssl_mode },
         :auth_options   => kubernetes_auth_options(options),
         :http_proxy_uri => VMDB::Util.http_proxy_uri
       )
+    end
+  end
+
+  def connect_client(api_version, method_name)
+    @clients ||= {}
+    api, version = api_version.split('/', 2)
+    if version
+      @clients[api_version] ||= connect(:service => 'kubernetes', :version => version, :path => '/apis/' + api)
+    else
+      openshift = 'oapi' + api_version
+      kubernetes = 'api' + api_version
+      @clients[openshift] ||= connect(:version => api_version)
+      @clients[kubernetes] ||= connect(:service => 'kubernetes', :version => api_version)
+      @clients[openshift].respond_to?(method_name) ? @clients[openshift] : @clients[kubernetes]
     end
   end
 end

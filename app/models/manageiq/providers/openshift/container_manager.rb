@@ -23,4 +23,10 @@ class ManageIQ::Providers::Openshift::ContainerManager < ManageIQ::Providers::Co
   def supported_auth_attributes
     %w(userid password auth_key)
   end
+
+  def create_project(project)
+    connect.create_project_request(project)
+  rescue KubeException => e
+    raise MiqException::MiqProvisionError, "Unexpected Exception while creating project: #{e}"
+  end
 end
