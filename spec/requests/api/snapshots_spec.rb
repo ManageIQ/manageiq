@@ -61,5 +61,76 @@ RSpec.describe "Snapshots API" do
 
       expect(response).to have_http_status(:forbidden)
     end
+
+    describe "POST /api/vms/:c_id/snapshots" do
+      it "can queue the creation of a snapshot" do
+        api_basic_authorize(subcollection_action_identifier(:vms, :snapshots, :create))
+        ems = FactoryGirl.create(:ext_management_system)
+        host = FactoryGirl.create(:host, :ext_management_system => ems)
+        vm = FactoryGirl.create(:vm_vmware, :name => "Alice's VM", :host => host, :ext_management_system => ems)
+
+        run_post("#{vms_url(vm.id)}/snapshots", :name => "Alice's snapshot")
+
+        expected = {
+          "results" => [
+            a_hash_including(
+              "success"   => true,
+              "message"   => "Creating snapshot Alice's snapshot for Vm id:#{vm.id} name:'Alice's VM'",
+              "task_id"   => anything,
+              "task_href" => a_string_matching(tasks_url)
+            )
+          ]
+        }
+        expect(response.parsed_body).to include(expected)
+        expect(response).to have_http_status(:ok)
+      end
+
+      it "renders a failed action response if snapshotting is not supported" do
+        api_basic_authorize(subcollection_action_identifier(:vms, :snapshots, :create))
+        vm = FactoryGirl.create(:vm_vmware)
+
+        run_post("#{vms_url(vm.id)}/snapshots", :name => "Alice's snapsnot")
+
+        expected = {
+          "results" => [
+            a_hash_including(
+              "success" => false,
+              "message" => "The VM is not connected to a Host"
+            )
+          ]
+        }
+        expect(response.parsed_body).to include(expected)
+        expect(response).to have_http_status(:ok)
+      end
+
+      it "renders a failed action response if a name is not provided" do
+        api_basic_authorize(subcollection_action_identifier(:vms, :snapshots, :create))
+        ems = FactoryGirl.create(:ext_management_system)
+        host = FactoryGirl.create(:host, :ext_management_system => ems)
+        vm = FactoryGirl.create(:vm_vmware, :name => "Alice's VM", :host => host, :ext_management_system => ems)
+
+        run_post("#{vms_url(vm.id)}/snapshots", :description => "Alice's snapshot")
+
+        expected = {
+          "results" => [
+            a_hash_including(
+              "success" => false,
+              "message" => "Must specify a name for the snapshot"
+            )
+          ]
+        }
+        expect(response.parsed_body).to include(expected)
+        expect(response).to have_http_status(:ok)
+      end
+
+      it "will not create a snapshot unless authorized" do
+        api_basic_authorize
+        vm = FactoryGirl.create(:vm_vmware)
+
+        run_post("#{vms_url(vm.id)}/snapshots", :description => "Alice's snapshot")
+
+        expect(response).to have_http_status(:forbidden)
+      end
+    end
   end
 end

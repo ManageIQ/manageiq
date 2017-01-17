@@ -1587,12 +1587,15 @@
     :description: Snapshots
     :options:
     - :subcollection
-    :verbs: *g
+    :verbs: *gp
     :klass: Snapshot
     :subcollection_actions:
       :get:
       - :name: read
         :identifier: vm_snapshot_view
+      :post:
+      - :name: create
+        :identifier: vm_snapshot_add
     :subresource_actions:
       :get:
       - :name: read
