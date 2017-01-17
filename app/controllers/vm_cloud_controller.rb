@@ -15,7 +15,7 @@ class VmCloudController < ApplicationController
     assert_privileges("instance_attach")
     @volume_choices = {}
     @record = @vm = find_by_id_filtered(VmCloud, params[:id])
-    @vm.cloud_tenant.cloud_volumes.each { |volume| @volume_choices[volume.name] = volume.id }
+    @vm.cloud_tenant.cloud_volumes.where(:status => 'available').each { |v| @volume_choices[v.name] = v.id }
 
     @in_a_form = true
     drop_breadcrumb(

@@ -26,10 +26,7 @@ describe ApplicationHelper::Button::InstanceDetach do
         )}, {}
       )
       button.calculate_properties
-      expect(button[:title]).to eq(_("%{model} \"TestVM\" has no attached %{volumes}") % {
-        :model   => ui_lookup(:table => 'vm_cloud'),
-        :volumes => ui_lookup(:tables => 'cloud_volumes')
-      })
+      expect(button[:title]).to eq(_("This Instance has no attached Cloud Volumes."))
     end
 
     it "when there are volumes to detach, the button has no error in the title" do
