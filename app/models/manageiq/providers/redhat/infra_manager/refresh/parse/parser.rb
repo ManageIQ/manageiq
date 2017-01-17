@@ -9,7 +9,9 @@ class ManageIQ::Providers::Redhat::InfraManager::Refresh::Parse::Parser
     result[:storages], uids[:storages] = storage_inv_to_hashes(inv[:storage])
     result[:clusters], uids[:clusters], result[:resource_pools] = cluster_inv_to_hashes(inv[:cluster])
     result[:hosts], uids[:hosts], uids[:lans], uids[:switches], uids[:guest_devices], uids[:scsi_luns] = host_inv_to_hashes(inv[:host], inv, uids[:clusters], uids[:storages])
-    result[:vms], uids[:vms] = vm_inv_to_hashes(inv[:vm] + inv[:template], inv[:storage], uids[:storages], uids[:clusters], uids[:hosts], uids[:lans])
+    vms_inv = inv[:vm] + inv[:template]
+    result[:vms], uids[:vms], added_hosts_from_vms =
+      vm_inv_to_hashes(vms_inv, inv[:storage], uids[:storages], uids[:clusters], uids[:hosts], uids[:lans])
     result[:folders] = datacenter_inv_to_hashes(inv[:datacenter], uids[:clusters], uids[:vms], uids[:storages], uids[:hosts])
 
     # Link up the root folder
@@ -17,6 +19,11 @@ class ManageIQ::Providers::Redhat::InfraManager::Refresh::Parse::Parser
 
     # Clean up the temporary cluster-datacenter references
     result[:clusters].each { |c| c.delete(:datacenter_id) }
+
+    added_hosts_from_vms.each do |h|
+      result[:hosts] << h
+      uids[:hosts][h[:uid_ems]] = h
+    end
 
     result
   end
@@ -362,7 +369,8 @@ class ManageIQ::Providers::Redhat::InfraManager::Refresh::Parse::Parser
     result = []
     result_uids = {}
     guest_device_uids = {}
-    return result, result_uids if inv.nil?
+    added_hosts = []
+    return result, result_uids, added_hosts if inv.nil?
 
     inv.each do |vm_inv|
       mor = vm_inv[:id]
@@ -393,6 +401,12 @@ class ManageIQ::Providers::Redhat::InfraManager::Refresh::Parse::Parser
       host_id = vm_inv.attributes.fetch_path(:host, :id)
       host_id = vm_inv.attributes.fetch_path(:placement_policy, :host, :id) if host_id.blank?
       host = host_uids.values.detect { |h| h[:uid_ems] == host_id } unless host_id.blank?
+
+      # If the vm has a host but the refresh does not include it in the "hosts" hash
+      if host.blank? && vm_inv[:host].present?
+        host = partial_host_hash(vm_inv[:host])
+        added_hosts << host if host
+      end
 
       host_mor = host_id
       hardware = vm_inv_to_hardware_hash(vm_inv)
@@ -426,7 +440,12 @@ class ManageIQ::Providers::Redhat::InfraManager::Refresh::Parse::Parser
       result << new_result
       result_uids[mor] = new_result
     end
-    return result, result_uids
+    return result, result_uids, added_hosts
+  end
+
+  def self.partial_host_hash(partial_host_inv)
+    ems_ref = ManageIQ::Providers::Redhat::InfraManager.make_ems_ref(partial_host_inv[:href])
+    { :ems_ref => ems_ref, :uid_ems => partial_host_inv[:id] }
   end
 
   def self.create_vm_hash(template, ems_ref, vm_id, name)

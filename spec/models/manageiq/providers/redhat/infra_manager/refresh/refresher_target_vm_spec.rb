@@ -1,69 +1,98 @@
 describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
-  before(:each) do
-    _, _, zone = EvmSpecHelper.create_guid_miq_server_zone
-    @ems = FactoryGirl.create(:ems_redhat, :zone => zone, :hostname => "192.168.1.31", :ipaddress => "192.168.1.31", :port => 8443)
-    @ems.update_authentication(:default => {:userid => "admin@internal", :password => "engine"})
+  context 'targeted refresh of a Vm' do
+    before(:each) do
+      _, _, zone = EvmSpecHelper.create_guid_miq_server_zone
+      @ems = FactoryGirl.create(:ems_redhat, :zone => zone, :hostname => "192.168.1.31", :ipaddress => "192.168.1.31",
+                                :port => 8443)
+      @ems.update_authentication(:default => {:userid => "admin@internal", :password => "engine"})
 
-    @cluster = FactoryGirl.create(:ems_cluster,
-                                  :ems_ref => "/api/clusters/00000002-0002-0002-0002-0000000001e9",
-                                  :uid_ems => "00000002-0002-0002-0002-0000000001e9",
-                                  :ems_id  => @ems.id,
-                                  :name    => "Default")
+      @cluster = FactoryGirl.create(:ems_cluster,
+                                    :ems_ref => "/api/clusters/00000002-0002-0002-0002-0000000001e9",
+                                    :uid_ems => "00000002-0002-0002-0002-0000000001e9",
+                                    :ems_id  => @ems.id,
+                                    :name    => "Default")
 
-    allow(@ems).to receive(:supported_api_versions).and_return([3, 4])
-  end
-
-  it "should refresh a vm" do
-    storage = FactoryGirl.create(:storage,
-                                 :ems_ref  => "/api/storagedomains/ee745353-c069-4de8-8d76-ec2e155e2ca0",
-                                 :location => "192.168.1.106:/home/pkliczewski/export/hosted")
-
-    disk = FactoryGirl.create(:disk,
-                              :storage  => storage,
-                              :filename => "da123bb9-095a-4933-95f2-8032dfa332e1")
-    hardware = FactoryGirl.create(:hardware,
-                                  :disks => [disk])
-
-    vm = FactoryGirl.create(:vm_redhat,
-                            :ext_management_system => @ems,
-                            :uid_ems               => "4f6dd4c3-5241-494f-8afc-f1c67254bf77",
-                            :ems_cluster           => @cluster,
-                            :ems_ref               => "/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77",
-                            :storage               => storage,
-                            :storages              => [storage],
-                            :hardware              => hardware)
-
-    VCR.use_cassette("#{described_class.name.underscore}_target_vm") do
-      EmsRefresh.refresh(vm)
+      allow(@ems).to receive(:supported_api_versions).and_return([3, 4])
     end
 
-    assert_table_counts
-    assert_vm(vm, storage)
-    assert_vm_rels(vm, hardware, storage)
-    assert_cluster(vm)
-    assert_storage(storage, vm)
-  end
+    it "should refresh a vm" do
+      storage = FactoryGirl.create(:storage,
+                                   :ems_ref  => "/api/storagedomains/ee745353-c069-4de8-8d76-ec2e155e2ca0",
+                                   :location => "192.168.1.106:/home/pkliczewski/export/hosted")
 
-  it "should refresh new vm" do
-    vm = FactoryGirl.create(:vm_redhat,
-                            :ext_management_system => @ems,
-                            :uid_ems               => "4f6dd4c3-5241-494f-8afc-f1c67254bf77",
-                            :ems_cluster           => @cluster,
-                            :ems_ref               => "/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77")
+      disk = FactoryGirl.create(:disk,
+                                :storage  => storage,
+                                :filename => "da123bb9-095a-4933-95f2-8032dfa332e1")
+      hardware = FactoryGirl.create(:hardware,
+                                    :disks => [disk])
 
-    VCR.use_cassette("#{described_class.name.underscore}_target_new_vm") do
-      EmsRefresh.refresh(vm)
+      vm = FactoryGirl.create(:vm_redhat,
+                              :ext_management_system => @ems,
+                              :uid_ems               => "4f6dd4c3-5241-494f-8afc-f1c67254bf77",
+                              :ems_cluster           => @cluster,
+                              :ems_ref               => "/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77",
+                              :storage               => storage,
+                              :storages              => [storage],
+                              :hardware              => hardware)
+
+      VCR.use_cassette("#{described_class.name.underscore}_target_vm") do
+        EmsRefresh.refresh(vm)
+      end
+
+      assert_table_counts
+      assert_vm(vm, storage)
+      assert_vm_rels(vm, hardware, storage)
+      assert_cluster(vm)
+      assert_storage(storage, vm)
     end
 
-    assert_table_counts
+    it "should refresh new vm" do
+      vm = FactoryGirl.create(:vm_redhat,
+                              :ext_management_system => @ems,
+                              :uid_ems               => "4f6dd4c3-5241-494f-8afc-f1c67254bf77",
+                              :ems_cluster           => @cluster,
+                              :ems_ref               => "/api/vms/4f6dd4c3-5241-494f-8afc-f1c67254bf77")
 
-    storage = Storage.find_by(:ems_ref => "/api/storagedomains/ee745353-c069-4de8-8d76-ec2e155e2ca0")
-    assert_vm(vm, storage)
+      VCR.use_cassette("#{described_class.name.underscore}_target_new_vm") do
+        EmsRefresh.refresh(vm)
+      end
 
-    hardware = Hardware.find_by(:vm_or_template_id => vm.id)
-    assert_vm_rels(vm, hardware, storage)
-    assert_cluster(vm)
-    assert_storage(storage, vm)
+      assert_table_counts
+
+      storage = Storage.find_by(:ems_ref => "/api/storagedomains/ee745353-c069-4de8-8d76-ec2e155e2ca0")
+      assert_vm(vm, storage)
+
+      hardware = Hardware.find_by(:vm_or_template_id => vm.id)
+      assert_vm_rels(vm, hardware, storage)
+      assert_cluster(vm)
+      assert_storage(storage, vm)
+    end
+  end
+
+  context 'targeted refresh after vm migration' do
+    before(:each) do
+      _guid, _server, zone = EvmSpecHelper.create_guid_miq_server_zone
+      @ems = FactoryGirl.create(:ems_redhat, :zone => zone,
+                                :hostname => "10.35.161.51", :ipaddress => "10.35.161.51", :port => 443)
+      @ems.update_authentication(:default => {:userid => "admin@internal", :password => "password"})
+      allow(@ems).to receive(:supported_api_versions).and_return([3])
+    end
+
+    it 'should save the vms new host' do
+      VCR.use_cassette("#{described_class.name.underscore}_before_migration") do
+        EmsRefresh.refresh(@ems)
+      end
+      @ems.reload
+      vm = @ems.vms.where(:name => "migrate_test_1").first
+      expect(vm.host.name).to eq("pluto-vdsg.eng.lab.tlv.redhat.com")
+
+      VCR.use_cassette("#{described_class.name.underscore}_after_migration", :allow_unused_http_interactions => true) do
+        EmsRefresh.refresh(vm)
+      end
+
+      vm.reload
+      expect(vm.host.name).to eq("lilach-vdsa.tlv.redhat.com")
+    end
   end
 
   def assert_table_counts

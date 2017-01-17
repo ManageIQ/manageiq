@@ -1,0 +1,2127 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://10.35.161.51/api
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+  response:
+    status:
+      code: 401
+      message: Unauthorized
+    headers:
+      Date:
+      - Mon, 16 Jan 2017 08:20:18 GMT
+      Pragma:
+      - No-cache
+      Cache-Control:
+      - no-cache
+      Expires:
+      - Thu, 01 Jan 1970 02:00:00 IST
+      Www-Authenticate:
+      - Basic realm="ENGINE"
+      Content-Type:
+      - text/html;charset=utf-8
+      Vary:
+      - Accept-Encoding
+      Content-Encoding:
+      - gzip
+      Content-Length:
+      - '377'
+      Connection:
+      - close
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAA7WTXU+DMBSG/0qdt+v42Ma0VJItMyHeuCiJ8bJANxqBYlui
+        uOy/W+i+4i6miSMhbU7f85xz4C3OVJEHOKMkDbBiKqfBw+zlfmbrxxsjEEbR
+        AjwromoJRrYDIMCWkWGpmna5gjB0wHrJSwWXpGB5gyKS8YL0p4KRvC9JKaGk
+        gi39hOdcoI+MKerHJHlbCV6XKTTh67E7nk88vwNJ9kWR61af/gaE7kXojmfo
+        w8vQRx199jh//Qs/zjX6lG/Katw/9roBi9/RDoQt8rjVo4m7vzUF6+4YIGAE
+        m+mgJAU9CYdPh9C+JQgDbBlfaZ8ZU8Y8bbRBnfO+1BqssW03dz2nB0ouM5Lq
+        /XbTC3CleXvQ0L5FQDUVxVYcgAN+gnZkQSsuFLaqH5m2d4NAQaUkK5OMa914
+        +54qdY2UykSwSjFe7tS7c8d1EIgy1tZ6r6lU3coElWZEUquMloolpM0e7Iuc
+        mdMyX83qbvc35+Dx2eQDAAA=
+    http_version: 
+  recorded_at: Mon, 16 Jan 2017 13:08:34 GMT
+- request:
+    method: get
+    uri: https://admin%40internal:password@10.35.161.51/api
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 16 Jan 2017 08:20:18 GMT
+      Pragma:
+      - No-cache
+      Cache-Control:
+      - no-cache
+      Expires:
+      - Thu, 01 Jan 1970 02:00:00 IST
+      Set-Cookie:
+      - JSESSIONID=PjLhwAkmc850YyVOZjPCA9Kk; Path=/api; Secure; HttpOnly
+      Link:
+      - "<https://10.35.161.51/api/capabilities>; rel=capabilities,<https://10.35.161.51/api/clusters>;
+        rel=clusters,<https://10.35.161.51/api/clusters?search={query}>; rel=clusters/search,<https://10.35.161.51/api/datacenters>;
+        rel=datacenters,<https://10.35.161.51/api/datacenters?search={query}>; rel=datacenters/search,<https://10.35.161.51/api/events>;
+        rel=events,<https://10.35.161.51/api/events;from={event_id}?search={query}>;
+        rel=events/search,<https://10.35.161.51/api/hosts>; rel=hosts,<https://10.35.161.51/api/hosts?search={query}>;
+        rel=hosts/search,<https://10.35.161.51/api/networks>; rel=networks,<https://10.35.161.51/api/networks?search={query}>;
+        rel=networks/search,<https://10.35.161.51/api/roles>; rel=roles,<https://10.35.161.51/api/storagedomains>;
+        rel=storagedomains,<https://10.35.161.51/api/storagedomains?search={query}>;
+        rel=storagedomains/search,<https://10.35.161.51/api/tags>; rel=tags,<https://10.35.161.51/api/bookmarks>;
+        rel=bookmarks,<https://10.35.161.51/api/icons>; rel=icons,<https://10.35.161.51/api/templates>;
+        rel=templates,<https://10.35.161.51/api/templates?search={query}>; rel=templates/search,<https://10.35.161.51/api/instancetypes>;
+        rel=instancetypes,<https://10.35.161.51/api/instancetypes?search={query}>;
+        rel=instancetypes/search,<https://10.35.161.51/api/users>; rel=users,<https://10.35.161.51/api/users?search={query}>;
+        rel=users/search,<https://10.35.161.51/api/groups>; rel=groups,<https://10.35.161.51/api/groups?search={query}>;
+        rel=groups/search,<https://10.35.161.51/api/domains>; rel=domains,<https://10.35.161.51/api/vmpools>;
+        rel=vmpools,<https://10.35.161.51/api/vmpools?search={query}>; rel=vmpools/search,<https://10.35.161.51/api/vms>;
+        rel=vms,<https://10.35.161.51/api/vms?search={query}>; rel=vms/search,<https://10.35.161.51/api/disks>;
+        rel=disks,<https://10.35.161.51/api/disks?search={query}>; rel=disks/search,<https://10.35.161.51/api/jobs>;
+        rel=jobs,<https://10.35.161.51/api/storageconnections>; rel=storageconnections,<https://10.35.161.51/api/vnicprofiles>;
+        rel=vnicprofiles,<https://10.35.161.51/api/diskprofiles>; rel=diskprofiles,<https://10.35.161.51/api/cpuprofiles>;
+        rel=cpuprofiles,<https://10.35.161.51/api/schedulingpolicyunits>; rel=schedulingpolicyunits,<https://10.35.161.51/api/schedulingpolicies>;
+        rel=schedulingpolicies,<https://10.35.161.51/api/permissions>; rel=permissions,<https://10.35.161.51/api/macpools>;
+        rel=macpools,<https://10.35.161.51/api/operatingsystems>; rel=operatingsystems,<https://10.35.161.51/api/externalhostproviders>;
+        rel=externalhostproviders,<https://10.35.161.51/api/openstackimageproviders>;
+        rel=openstackimageproviders,<https://10.35.161.51/api/openstackvolumeproviders>;
+        rel=openstackvolumeproviders,<https://10.35.161.51/api/openstacknetworkproviders>;
+        rel=openstacknetworkproviders,<https://10.35.161.51/api/katelloerrata>; rel=katelloerrata"
+      Jsessionid:
+      - PjLhwAkmc850YyVOZjPCA9Kk
+      Content-Type:
+      - application/xml
+      Vary:
+      - Accept-Encoding
+      Content-Encoding:
+      - gzip
+      Content-Length:
+      - '855'
+      Connection:
+      - close
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAA51XS3ObMBC+51cwXDs2YHfcNAXn1E4vvXTSXj0yyLZiPagk
+        aNxM/nvFQ7wsIbccPNLut9+3WgtpiR9fCPZKyAViNPGjZeh7kKYsQ/SY+D+e
+        vizufU9IQDOAGYWJf4HCf9zexSBH2ztPPTFG9OydODwkfqCsQQpysEcYSaSg
+        Hoc48UemwBaHCyFVIjpGT134RwEBT0/J668C8svbJDxovFaWDEiQQjoQHlpu
+        iDLLDwCuDGCpcFq8ncxjPx04I8lrPdmh7M2cQoN1qZ+Y6MSb8SzSLFW7XEoU
+        yt+Mn7VYN3XhzZLa61LlDHfbsBnbkEIyDo4wYwQgqkMmxttizRmPMa68JTjq
+        HOqhDbdn7ExAX9Z+botAKeuW14ytOUCSYyC7+vVzZ4S5BJ3btXpVIHXmpFBe
+        8k59bLsp0pzFCOLKpBD9ydCMZ5FmxdrlUjpyVuRaqp3MY81ijc957o22uWt/
+        lyRnDGu0njnQ5vRapyu/kvRqc0pWFXcFkOjemmY8i7Sc85XLpfTM9lqoHjpO
+        EfVOUphKxKan0NBhrQhFac7ZAfXH3sg0t8ZJ3MhkvYXzYhI2tFhXmp5gVijr
+        MWcYpZeCou4WMvtuZOp7DoPDxpFDTpAQg4IPLbYoAtLhS9FNbXimSIFU+YiL
+        6ky67X1ltt79L6qboABXl60qcImy/mQy+2YyqY7A9IyI2lVTLpvXyVYyXBA7
+        3dTt5GuveCvhld/GeFZXDsYMclVo0LKMbTpS5DBFAO/Y/lm9aKKxzt90Qdg+
+        C8OPfq7uvz0G9KxlrQ3AP3FXeM6Y7BYTGFcTq3plRaoaR3pgA30KCNx+h5n3
+        FUjvc9W55hwJ6P1EXBYAoz+gOni8b4CqXcHjoMb34arZzBjXBHHQzoeA+hvD
+        I+CZ8cRf+x5BtBptfG9fIJwl/n21lBI1nyLhqDqHAuNdS7FdLzfL+0W4jJYQ
+        b+Jg5GuXfr3IWBRENUaXYUpk8A/XFskkwNv3cdAMxk6gjt4Sbtdx0I56pmBE
+        Fdf9sJF6NUu9MlFPyOK6mTCSR7PkkYl8Qha3N82ubQj+ozxGGSOtMg//klgi
+        taNWYfRhEUaLaPMUhQ+r8CH6uAw/rN+Fq4cwVMIV5i4O6s/Pv6DyLpK9DgAA
+    http_version: 
+  recorded_at: Mon, 16 Jan 2017 13:08:35 GMT
+- request:
+    method: get
+    uri: https://10.35.161.51/api/clusters
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=PjLhwAkmc850YyVOZjPCA9Kk
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 16 Jan 2017 08:20:19 GMT
+      Pragma:
+      - No-cache
+      Cache-Control:
+      - no-cache
+      Expires:
+      - Thu, 01 Jan 1970 02:00:00 IST
+      Jsessionid:
+      - PjLhwAkmc850YyVOZjPCA9Kk
+      Content-Type:
+      - application/xml
+      Vary:
+      - Accept-Encoding
+      Content-Encoding:
+      - gzip
+      Content-Length:
+      - '867'
+      Connection:
+      - close
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAA61WS4/bNhC+768QdHfotXe3a0BWkCAI0ENboE2A3AiaGkmM
+        KVIhKbf+9x29LIp+ZBFYB+/ym29eJGeGyfv/KhkdwFih1TZ+fLeMI1BcZ0IV
+        2/jrl8+L1ziyjqmMSa1gGx/Bxu/Th4TLxjpUSx8i/MZlVBrItzFhtSAjgyz7
+        b7U4/xm+Vx5HItvGb2L2HjuvjDsM205Ih0qh9r8cCDFgwUHVSOYgqxgvhYI4
+        MiC38UUR8eIhZwElilWQfoKcNdIlpFtNwgwsN6JuddIvJURZz4ssGDySaAg8
+        IT7v4U55KnD/arO3Q26nJbmbhxpMJWx7sUYnPnI/P0XPPmjZVDC6CsC7eyu1
+        3ge+euh+nlieCyXcsTC6qUdfAXg/b7xuaqNzIU9b6CO+H8S7av1dOZDRP9gb
+        jh+NyAqIPrNKyGMc1CMzWCkOuGsMpN9eX+jLE1aKD3oVhMb9AmGOUQ4qaC0t
+        3KOn5B4X5z/9t97tZt3lNtNPtIJKmyOttRT8GCSlsUC5rirhIrzVbTDYPZdL
+        X7/jOcOUrZlBAi2bAmpWQNCwOh4otpOQpc40kJBxNbdFfmIsIVciTiwvIWvw
+        ghSDzN/NSdjJBFiye4JstV6vFuw3xhdP2XO+2DxvXhabDXtab/hu9fq46jf1
+        Tcwgj64LKhwnYUPspEPwvfwsE3KWiicc5lhUse/abON1HFVCtf+9zM4VjNGG
+        lnhxWzPhwSraydNKFAYbfUJOiBfFNRPJQRhH2/4tOAyHOYMm5tA1TpKcSYvs
+        EJ4UHJ4ZyyxllnKNs2jUOMM9lUYpkLRPpZ0eo0qIeyqm9Z+FYYXwpFAy2g5G
+        c5h5CNCJrrsxxiSKmZ34IexVIRNY6YopDoMQ//xohMH6GJRvUSZDOyal1qq9
+        OWN9DfoXJJPa3lbBFXlLrVZgCqCMG20tVRon+EC/IPDu1cxZMiZBDUZmdYN9
+        Jnzs9Gj694c/P/31B1ZHv/Qs3raR5Pjau1RLb07U7kVNRU5tRtvXzwFuNLdh
+        u690t59YOnniGi9vS8AxSHdG70H9os+O2JaPLbXM0udlX0z96kp0N70n5Np+
+        JhdqrcNZ43Rr9NDei1SoEozAl+Icnqvg3KkxSovpnPge5s+DudNkfBPgA55M
+        L/j/AT4qYIEFDAAA
+    http_version: 
+  recorded_at: Mon, 16 Jan 2017 13:08:35 GMT
+- request:
+    method: get
+    uri: https://10.35.161.51/api/vmpools
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=PjLhwAkmc850YyVOZjPCA9Kk
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 16 Jan 2017 08:20:19 GMT
+      Pragma:
+      - No-cache
+      Cache-Control:
+      - no-cache
+      Expires:
+      - Thu, 01 Jan 1970 02:00:00 IST
+      Jsessionid:
+      - PjLhwAkmc850YyVOZjPCA9Kk
+      Content-Type:
+      - application/xml
+      Vary:
+      - Accept-Encoding
+      Content-Encoding:
+      - gzip
+      Content-Length:
+      - '87'
+      Connection:
+      - close
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAA7Oxr8jNUShLLSrOzM+zVTLUM1BSSM1Lzk/JzEu3VQoNcdO1
+        UFIoLknMS0nMyc9LtVWqTC1WsrfjsinLLcjPzynWt+MCAFWSaLdDAAAA
+    http_version: 
+  recorded_at: Mon, 16 Jan 2017 13:08:35 GMT
+- request:
+    method: get
+    uri: https://10.35.161.51/api/networks
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=PjLhwAkmc850YyVOZjPCA9Kk
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 16 Jan 2017 08:20:19 GMT
+      Pragma:
+      - No-cache
+      Cache-Control:
+      - no-cache
+      Expires:
+      - Thu, 01 Jan 1970 02:00:00 IST
+      Jsessionid:
+      - PjLhwAkmc850YyVOZjPCA9Kk
+      Content-Type:
+      - application/xml
+      Vary:
+      - Accept-Encoding
+      Content-Encoding:
+      - gzip
+      Content-Length:
+      - '365'
+      Connection:
+      - close
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAA81TwW6DMAy99yui3LO0Y6VUCvS223bazlMgpouWBJSkbPv7
+        QVMGVacJVUibD8F+NjzjPLPdh1aoAetkZVK8ulliBKaohDT7FD8/3ZMEI+e5
+        EVxVBlL8CQ7vsgUz4N8r++ayBWqtD9GrhTLFlNeS9hU0guS2TASQdbKOyZ2A
+        nGw3IiJ5KTbRal1EUEQYSZHiSZWBMbByDVlV+7Z3rhg9hkNWSXN9Q7QGq6Xr
+        xuIwsqBSPEbobDyNkUVtq1Iq6InOoPmYFM9B9RynYPx1wT1/KcB4sGOSDg6o
+        o8tgK3J5BIvyPFzlpMoxe6O4Ob4Zx/FZwvk6K7lywGjnDgntD9mS0e4xgAfH
+        9+AGYACzRjMavKGcjutZP9AJou5/g/xwnGx7NonfKy9E3Ujr9V77C1ULcIWV
+        R81nD9y03ev2ctBjaIzRcX6CcqZ0N8cuTOKZZRcmMf3vXfgTyX+7beoLkX1d
+        yBcGAAA=
+    http_version: 
+  recorded_at: Mon, 16 Jan 2017 13:08:35 GMT
+- request:
+    method: get
+    uri: https://10.35.161.51/api/storagedomains?search=sortby%20name%20asc%20page%201
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=PjLhwAkmc850YyVOZjPCA9Kk
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 16 Jan 2017 08:20:19 GMT
+      Pragma:
+      - No-cache
+      Cache-Control:
+      - no-cache
+      Expires:
+      - Thu, 01 Jan 1970 02:00:00 IST
+      Jsessionid:
+      - PjLhwAkmc850YyVOZjPCA9Kk
+      Content-Type:
+      - application/xml
+      Vary:
+      - Accept-Encoding
+      Content-Encoding:
+      - gzip
+      Content-Length:
+      - '1019'
+      Connection:
+      - close
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAA+2ZTW+jOhSG9/0VEXsHGwwYiTC70axmcb+2yGDTWAXDxU7a
+        +ffX4aMhSSdyJuRqNBoWLT4+9nuOsc9Tq8mnt7pa7XmnRCM3DlpDZ8Vl0TAh
+        nzfO3399BsRZKU0lo1Uj+cb5xpXzKX1KlG46+swz1tRUSJU+rcxzZl1tO15u
+        HJe2wh17RnfX46WPaZADD+IQ4AhGIEYEgijyfEoZyknBnZVgG8fKc5DvQ6CF
+        Nqmoo6W3VkK+3BmOKxTVmhZbzpxVx6uNMzO4D9AzozuuttVOqlFwbpkpJu5F
+        0omkNU8Z1RRlkr8mbt9+WjS+lne1UIeNM8U3t7gLq2letxXVfNI6tpdW2teT
+        xuFt6dmZUC/T/MP70grjmKKRkg/7YpT7oOMh2Unaqm2jT7J8tz1Cse2aUlR8
+        LvhumusdzkNWcKlNvTs7sLOuvuzA4UHg8sfw+Hl+egY/njzR39rhICZu/3rs
+        4W/GVdIqM/VV784DOhh52rwk7vA2U/ruwKSmynSlutvxxB0bT7Mp++U9E6KM
+        maKiUgTXfrBG5hdCpqKM1lPfPgNZqvNc+s6W6m3q/vHln+zr5z/doqx5vyZm
+        sr7n1NlMko3YSfe+qU+z9izVi5ATuqeionnFUxTB2I/DmPgEEhPxe8fReac4
+        SzEhQeAFXhx7MHF709GjaOpaaG1syI8DEmI/Ql7iHs0Xy5eVTVdT3Ud9Zjr6
+        voqWZ7Q0658xXnHz/UpaKfNRLjtmg2gnDXezqnnNVEsLngnJREGNiPk6ZuyV
+        /llGndDGWI0uAxqyvGqKF7MbApPbVYenk4UfSX4r3uOSEejBApS8zAGmJAck
+        iHJQMB9GEeI5iuGAdyvPe/FuI7Ik3q307se7MOdbyIy/tU2nb0W8VYyLId5K
+        bRHEWyn9MOKtZr8L8VYKD0K8fXZLId5a0RbxPZemE3EG3Cuc3cnprH/A2wvM
+        Po7cIyV+AnRPa/godiMUYIzDCAfhVXaHGAbmzz8v8q6wG9oRG/0m9vcOIos4
+        wTjiIMhJDLBHIpAHEQHMLzHBAYQUj8S28ryX2DYiSxLbSu9+Yndbvq/BvxwI
+        WXYUPFdUFvxWclvFuhi57b5EbUZMQmNjaY1FuWOteBN3+sx/fez0+U179yzZ
+        D6r+z12mF6rS8H+p0rCISI5ZCHIKIcDM5yAu4xKEQRGxgMQxi9BQpa08763S
+        NiJLVmkrvfurtNIdRECoBqgt7Q5n87YCbRXmYgXaSm1ewy6L1xIKD7qSWGkv
+        igZrxdvQoJpfHwzz+wheh/7ag/iO+8i2qQ//dWnc6Rg+6C6CfILC0Pd9jK9c
+        RfwgxMTzSBCE5PdV5CbInVvMXvgPijXbKXkcAAA=
+    http_version: 
+  recorded_at: Mon, 16 Jan 2017 13:08:35 GMT
+- request:
+    method: get
+    uri: https://10.35.161.51/api/storagedomains?search=sortby%20name%20asc%20page%202
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=PjLhwAkmc850YyVOZjPCA9Kk
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 16 Jan 2017 08:20:19 GMT
+      Pragma:
+      - No-cache
+      Cache-Control:
+      - no-cache
+      Expires:
+      - Thu, 01 Jan 1970 02:00:00 IST
+      Jsessionid:
+      - PjLhwAkmc850YyVOZjPCA9Kk
+      Content-Type:
+      - application/xml
+      Vary:
+      - Accept-Encoding
+      Content-Encoding:
+      - gzip
+      Content-Length:
+      - '95'
+      Connection:
+      - close
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAA7Oxr8jNUShLLSrOzM+zVTLUM1BSSM1Lzk/JzEu3VQoNcdO1
+        UFIoLknMS0nMyc9LtVWqTC1WsrfjsikuyS9KTE+NT8nPTczMK9a34wIAom+F
+        CUsAAAA=
+    http_version: 
+  recorded_at: Mon, 16 Jan 2017 13:08:35 GMT
+- request:
+    method: get
+    uri: https://10.35.161.51/api/datacenters
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=PjLhwAkmc850YyVOZjPCA9Kk
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 16 Jan 2017 08:20:20 GMT
+      Pragma:
+      - No-cache
+      Cache-Control:
+      - no-cache
+      Expires:
+      - Thu, 01 Jan 1970 02:00:00 IST
+      Jsessionid:
+      - PjLhwAkmc850YyVOZjPCA9Kk
+      Content-Type:
+      - application/xml
+      Vary:
+      - Accept-Encoding
+      Content-Encoding:
+      - gzip
+      Content-Length:
+      - '400'
+      Connection:
+      - close
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAA62UTW7DIBCF9zkFYp+SKFLbhe0sGvUE6dqamHFCw48LOG1v
+        XxM7NnGkqFXNAjGPx3yMQJOsv5QkJ7ROGJ3S5cOCEtSF4ULvU/q2fZ0/U+I8
+        aA7SaEzpNzq6zmYJBw95gdo3R7MZaUYskYPFMqUMKsGC3BnZoh3L+e3UjtVu
+        R4ngKf2VswWf4RoUZhssoZY+Yedo2OToCisq39SYbQ9IeOsjm+Zq5OV8t4TF
+        puGoFPr4n2qY88bCHrlRILSjxKJM6UhkUwILWbvg7lB9OClEo/809niB9OGk
+        kAqtEi78zAsnViZFfdTGw4XSBdMCjOvTh+WkyYUrnNgZzS+ISLgCmQJkVoJ0
+        mLA2GDa7P5mXxirw2WmVsJE0eLuGQRS8G5vSFSVK6LB6vOK5uqqM9cjz7oAb
+        Nv+Sh91L1FwcfD3OHETM6ioUEVZxspE/UVDklTEyfoNGC1L/AHx+O3WjfLpq
+        WfedcVnnf5YrwzHjwsFOIk9YJLZtlUV9tWm87Lrz/gDKegEjwQUAAA==
+    http_version: 
+  recorded_at: Mon, 16 Jan 2017 13:08:36 GMT
+- request:
+    method: get
+    uri: https://10.35.161.51/api/hosts?search=sortby%20name%20asc%20page%201
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=PjLhwAkmc850YyVOZjPCA9Kk
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 16 Jan 2017 08:20:20 GMT
+      Pragma:
+      - No-cache
+      Cache-Control:
+      - no-cache
+      Expires:
+      - Thu, 01 Jan 1970 02:00:00 IST
+      Content-Type:
+      - application/xml
+      Vary:
+      - Accept-Encoding
+      Content-Encoding:
+      - gzip
+      Content-Length:
+      - '2002'
+      Connection:
+      - close
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAA+1YbW/bNhD+3l8h6NOGTda7bA+ytizplgzrmmXLUPSLQEu0
+        zUUiVZJykv36nd5iSXZTJVaLYqsLpNSJdw91PN7xHv/7uzRRtpgLwuhCNSeG
+        qmAasZjQ9UK9/vMnbaYqQiIao4RRvFDvsVC/D174GyakCF4o8CvHyobj1ULV
+        UUb08p2+XC2NyFg62swzPc1ZLlfa3DINbR5jZzabWyiOPFUh8UIdNLPCKvFQ
+        JGG1YicppQmhN89bhR7jwuQWSawqHCcLtSXQx4NBWcbZtsFonkYEWDEeYYET
+        HEmRpTVOTzgiHKacJUmEuSQrEu28ty8fEZSISJCErQmt0VqCEWFyyvGaCIk5
+        joVkHK1xzFJEqIgBEPaN1/ADJo799b0VdGUjgkUsTYmkWEaMrsi6hutLRwQU
+        WOYZWL5l/EbUcF3ZmDucrTmKm5htnsY8jZBIG/PVeETjoMSx2NTmm6cxI41C
+        2k+SJsbqpzGzYTflHkq4vr6X6n2KUhwkJEHRRtvGAk1ksp3A2dsgOYHQ9PVy
+        wosxVlgf5yYQ6yd9HOOURE2Il8OxzOYpoizGD7YfnkcCkGjd2C6HI5nNME+J
+        KG4hjfW2ZCQQiGEJqXrn+ZZgJIgNYw+pqxqPZLjMIBB/VIp2TqklI4HcwAFM
+        EoY5RxLVMF3ZSEAx3pLoIUibp7HOQFUtkJSQJNKWxw68GAkyp3DMitLfq177
+        8tFCucxGUIMpLnMkvpOYts/PYzPai0BxDLVDPJpTmzk7rdbtrlcSGF8jSv5B
+        BWQgomSSoOWewc6krr7Il3/DgoPXi8PK357+tnhsrY1+q4ocXKxfHP6830UU
+        Qhzkma9Xo5aV/ny/cCinKAkfscRuDlh6r6IfJXlxlWwHRS0SulH9LG3/T/2b
+        RVVDNWhmOwYyxmXgOrZl+no53r2S9xkO+AYnvl4O2/4rAyysIpwrGSeME3m/
+        UF01kDzHvt6b0lbO0p6/GvXAhTU0432X9v3c8jXY3HP2e7ZO7+D7dQOspOhv
+        xheqoyopocXInKrKMicJONWeFgdrS6pOGfrkVZ4k4UPrDLGYas7EnE7sqWZO
+        cDLF246PN4jHt4jjkFBoydJDoQ9uyldw5ck5+OoMsq5yQaOJr3fkXZUaPzBg
+        55pxz2mYEwg1uAgsQds7++vnmfsLOKAj7m8Fi/NIhuVV6nUmyWWC75Tp3Ch2
+        pvWqq5XnJA6cU/jnOg7EGvxxPchbM8OZaj96p4bzkz2zXefE18up/WOfFZGH
+        45DTdShYXnSth7a6fBNcnfx29voVfEb12N/vx435+uObAefhFvM6aos60bOP
+        KVomOA5WKBEQ5c1jz4lpCM66I1j0L80ol6yAjEKY0yhXB+bgq672TZynWRhj
+        WWX1WrEvbX3r+z/GvxH9U/ihTwOkto4vOaIiA09SGW7yNc4ApJ8Ju594wOQH
+        jPhlh9szSiiRBEF+Ccg7OjHncwg5t6gAdTH4Ll7OTMO2pi7yfH03uwXbM+sL
+        senvYZELLaufFMt3K0IhpUGmAo/+cX5iud53b0/NmzfXJ9soNrfr362/poTT
+        m/N3ZxdxfnlN7POz+dmFvYzyN8m1r7f124mpvQg/yvIerGQZS9j6XhEsusFS
+        QI5SlYhBeS7zloTKgWIYW3u9WnlkLyjc5r66+lo5BZWv/nz1tUKmmuUZhnJ6
+        ea38oNgTx/j5/J9+G1X5J8Owb7bl2EX+xN097KzUT3HK+H0wM6aeaVu2Cy6s
+        Ra056C4U0QbHOdyD1mH93nOtuTODbStUDs5obViepoj3q0TZSeLArLrHbf8r
+        UgKdvgR7AaSz3UPfy9DuFiaqQXt/+phFtpQsYkkA1S7NyhRZPe+mMKEUxXOh
+        Xp2//FXtYTXFp1tPphNL0ZR5UUi6LTFrn4yELLeEy7BXwMyHAmY91C/z8fpV
+        W4LSZUER00y7QA6tiddBr9JMXU5jIsqj3GSfvSorMOxbftffAGhHg6a720JG
+        KAVtF/fVyoxZlCrUg64SZudNiykopU0laDJaT9p25RaHgqJMbJhsZtQ56/C7
+        nW6exXDrCNEWwcUU1tWA7cl3KlXPE2ZICDizLF/3c8+HM/H7TPhlI/EoOQ/t
+        RWRHK1uzl66pOdM50pax7WloOfdmpmuiOZrXd8khM59Jzg+xPQI5PwjmGHJ+
+        EMB45PwguLHJ+UGgx5Pzg2A+PTk//OtHIOcHgY1Jzg8CHIucH7bDR5Dzw07j
+        M8n5QcaPIeeHRdoR5PywbHgEOZ8lUJMLbmY9wXR9kP4ZxNEPi8pncvSDjD+d
+        ox9m9giOfhDA0zn6QWaP5egHbugxHP0giOdw9MOTyhEc/SCQMTj6gRev53H0
+        w87AqBz9wFvDeBz9U3LTiBz9gNT6uVH1A5b8hbH/HBj7us/8tJQ9hZD/33H2
+        XerdvLq0Ddt6AiN/WRC6L+M1Vq4c62mcvGtprlFy8rat/WiWnDwMC/gvnPwX
+        Tv5jc/L20rLMGYqWeDb7VKT89buT23Vk/0692Iwv9Jf62dtoO3tLX8nrU3nr
+        bU+/ufrm1Ju/SU3xUUh57wmk/BvMaEnOX14rL13NguOtbC3lB8WaWB+g5U3L
+        MIbS8pZreMbc85xCZSAvb1n21HLMqWt7RxLz1vHEvPV5EPOhNTH/i+Q8LhJw
+        BM7/ws1/LG6++h9c8i9CydXlgi8AAA==
+    http_version: 
+  recorded_at: Mon, 16 Jan 2017 13:08:36 GMT
+- request:
+    method: get
+    uri: https://10.35.161.51/api/hosts?search=sortby%20name%20asc%20page%202
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=PjLhwAkmc850YyVOZjPCA9Kk
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 16 Jan 2017 08:20:20 GMT
+      Pragma:
+      - No-cache
+      Cache-Control:
+      - no-cache
+      Expires:
+      - Thu, 01 Jan 1970 02:00:00 IST
+      Jsessionid:
+      - PjLhwAkmc850YyVOZjPCA9Kk
+      Content-Type:
+      - application/xml
+      Vary:
+      - Accept-Encoding
+      Content-Encoding:
+      - gzip
+      Content-Length:
+      - '85'
+      Connection:
+      - close
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAA7Oxr8jNUShLLSrOzM+zVTLUM1BSSM1Lzk/JzEu3VQoNcdO1
+        UFIoLknMS0nMyc9LtVWqTC1WsrfjssnILy4p1rfjAgDPKgbCQQAAAA==
+    http_version: 
+  recorded_at: Mon, 16 Jan 2017 13:08:36 GMT
+- request:
+    method: get
+    uri: https://10.35.161.51/api/vms?search=sortby%20name%20asc%20page%201
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=PjLhwAkmc850YyVOZjPCA9Kk
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 16 Jan 2017 08:20:20 GMT
+      Pragma:
+      - No-cache
+      Cache-Control:
+      - no-cache
+      Expires:
+      - Thu, 01 Jan 1970 02:00:00 IST
+      Content-Type:
+      - application/xml
+      Vary:
+      - Accept-Encoding
+      Content-Encoding:
+      - gzip
+      Content-Length:
+      - '2618'
+      Connection:
+      - close
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        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
+        cRyutbFpAAA=
+    http_version: 
+  recorded_at: Mon, 16 Jan 2017 13:08:36 GMT
+- request:
+    method: get
+    uri: https://10.35.161.51/api/vms?search=sortby%20name%20asc%20page%202
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=PjLhwAkmc850YyVOZjPCA9Kk
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 16 Jan 2017 08:20:20 GMT
+      Pragma:
+      - No-cache
+      Cache-Control:
+      - no-cache
+      Expires:
+      - Thu, 01 Jan 1970 02:00:00 IST
+      Jsessionid:
+      - PjLhwAkmc850YyVOZjPCA9Kk
+      Content-Type:
+      - application/xml
+      Vary:
+      - Accept-Encoding
+      Content-Encoding:
+      - gzip
+      Content-Length:
+      - '83'
+      Connection:
+      - close
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAA7Oxr8jNUShLLSrOzM+zVTLUM1BSSM1Lzk/JzEu3VQoNcdO1
+        UFIoLknMS0nMyc9LtVWqTC1WsrfjsinLLda34wIAIDHKJj8AAAA=
+    http_version: 
+  recorded_at: Mon, 16 Jan 2017 13:08:36 GMT
+- request:
+    method: get
+    uri: https://10.35.161.51/api/templates
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=PjLhwAkmc850YyVOZjPCA9Kk
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 16 Jan 2017 08:20:21 GMT
+      Pragma:
+      - No-cache
+      Cache-Control:
+      - no-cache
+      Expires:
+      - Thu, 01 Jan 1970 02:00:00 IST
+      Jsessionid:
+      - PjLhwAkmc850YyVOZjPCA9Kk
+      Content-Type:
+      - application/xml
+      Vary:
+      - Accept-Encoding
+      Content-Encoding:
+      - gzip
+      Content-Length:
+      - '1283'
+      Connection:
+      - close
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAA+1XbW/bNhD+nl8h6NOGgtGLZVsOZBVb6wbFtgxYHWDfBIqi
+        bSKSqJF0Eu/X7/RmU7IbqI6xrUAEwyCP98bj3ZFP8P45S41HKiTj+dx0rm3T
+        oDnhCcvXc/N++Qn5piEVzhOc8pzOzR2V5vvwKlA0K1KsqAyvDPj2c2Mj6Gpu
+        Wrhg1p7HspsPnfhrP9NgydwcxFnbrOxiosBzeaBU1JTlD+d7YtHnggtlGoKm
+        c7OZWJpR68hqkOOMhj+nOH8IrGp8WEqoJIIVpUTNYbTuBJa+dnUp9xMmH2Tj
+        fT22Lqc8Z6TVXQ0vqJokgmet8mZyQfUKr1vl1fCCqgsqMibLGmot6JQLGnrC
+        imwSvt/IYX5BI2uBiw2cLQHneUpbW0dk3aTaFTSEbH5QvAisanZYhAaitv0a
+        LYk05FAv9Ugrrz5/kNGMi13o2NPR1HN81wushnTgIcW2ZwFc4Slf7wzJyQNV
+        EvqbaRAuaD1SECGcVGOrJ4kF2TBFidoKGt7ffVx8+ny3+Ah1r9M1hzu2S08i
+        ucFgJ7SrtXZ2YIkZ78cj5lxFGc17u6jWaI7jlCbhCqcSukY77SqwTmgAYsdS
+        wKVRHs7c5GpDhXnCByOhj3Nzk3Q7XkcJgcCVLStSDDqda9s+sj1kO0vbvql+
+        15BG7+wRjGD/HWbNE8HWLA/5IxMK9Nezbs5QyDLZbvpA0FtrShWNCsHLQzkE
+        6Ih+ENmw9SbCj5ilOGYpU7teCAaFuhAMHAZZ2N9+rEXrBSMBdGQoxr7ZqmJk
+        wQjtV0+1nPGcKS5k6EDmt+NePcGVndLor+c0KgjbR61L7aV5mvKniMP1L1hC
+        W5EetWclw0IRLJKoF6jjha7gioEbSuBcrqjY8yixBdnTa115wotdVGAJx9oV
+        PrHQlYSAQ8vKIRGi+t4Of/39wy/Rlw9/LBZ3gXW8rB3k0WEFUvL+2VC14Yk8
+        Ubb1SvWuub1ffFlGP90u7pZH3cY60gDh1M0EWxl/Y5oGVkcmyBi076oME/6U
+        V6WIylw6JndKUCgI7VZqx6zTTqjvZ9hW8QjCC8m0piHLoecwqPYuuX/QWQHN
+        stS/59do2g5PGA1Y/3SaLl9WajvUVOjsZW6nacTAL/3yLOfSchzP9v2VixJn
+        NkOeM/XRbERmaDKbemQWTzx35dQv2EGcndsaQxC+YtafejN/NV6hqTd2kGc7
+        HordmYdWxB+PpmQyHY/i2uwgTt1sfYFGcEUy0u9G6y2GalQU4q3fuRpZP4bT
+        ioIGVfSvGCyh1v9NtNAvt8avKN9mMRVlR+1RvsJevupL71u4pMl1H/xWZ+fB
+        fmeDoBIcozuaJDaajFwbeZPERXFiY+Tj2cyfxfHEnuJ684M4XwGVhug/Gyrd
+        AhAidNkYQ2OfOOPEfRE7VV4pJDY0RettOWQZXlM0vXaNHyA/7ck0+fHbIdWg
+        bZ4LqQYpPw9SDVJ9PqQapP48SDVI9SUg1SBDr4VUg4y8QaoOdPrTn0QT7w1P
+        tRtMt/B8FXp+NaT9Zeii47/m80nnMnyZU3eiD+OcCXJc5PhL27/xnJuRf+1M
+        x+9s9w3GvcG4VvANxr0CxpWl8zfPabhQxLr9bQk50lK+I6xXNmAoyfK0Ox2r
+        2DbUfdOi6Piv/hzH6TStlzmtU5v7npFmGfyoe+4VvXr97pOjDytOSL1h1v3a
+        f4tZLwzb/keY9TCGfP4HpNDvdTAcAAA=
+    http_version: 
+  recorded_at: Mon, 16 Jan 2017 13:08:37 GMT
+- request:
+    method: get
+    uri: https://10.35.161.51/api/datacenters/00000001-0001-0001-0001-0000000003bb/storagedomains
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=PjLhwAkmc850YyVOZjPCA9Kk
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 16 Jan 2017 08:20:21 GMT
+      Pragma:
+      - No-cache
+      Cache-Control:
+      - no-cache
+      Expires:
+      - Thu, 01 Jan 1970 02:00:00 IST
+      Jsessionid:
+      - PjLhwAkmc850YyVOZjPCA9Kk
+      Content-Type:
+      - application/xml
+      Vary:
+      - Accept-Encoding
+      Content-Encoding:
+      - gzip
+      Content-Length:
+      - '540'
+      Connection:
+      - close
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAA81VTY+bMBC951cg7sQYQgDJsLdVTz3062pNsNlFMSbCTrL7
+        7zsxqBCSRqtWquoD4DfjmTfPY8ye3lrlnWRvmk4XPl2Hvid11YlGvxT+92/P
+        QeZ7xoIWoDotC/9dGv+pXDFjux5eJBddC4025crDsUC9117WhU/g0BABFiqp
+        LWYi4TBocPsYRrzbkTHUGJ9Eso43kOyCKNxsg00apkFOszBI0ygGEHSXVdL3
+        GlH4H/Ic+DrOUFms3UyIQ1Wj9/+aPxHyQuYEFkvppSr8GUD+B4ILevfIMXIj
+        KNPQyvJCkHItz4y4+WS+WPjA/W8qGrb/Q57kfvZlE8yJ/VFscj84s++HQRBG
+        3OdkwbNmj0seF1CWTm3JyDCbJVmuYfIN82lQ/EG0bn8n0m8XshYMmkrbH5HB
+        OJmzdr20SARC9NKYkobrOFlTfFGK7TGi175OBl2bpSDOeAD7WpIvn37wz89f
+        SVW30gmLwZzl2hmD8PGHVp5ibLbZ/Eq0BWUGJ2gU7JQsaRrmcb7NszgLM2T8
+        yzA5H40U5SbLkiRKojyPQkYcNHlUXds21iJG4zzJtps4pREjE3wjH6+7vgXr
+        WC+gyffcHCSHGvXnQiqJ+1eDMrgpt4bZIug1/tG56s7cHPBU8UaLpgJMgruD
+        ax/YZxX1jUVQjS7DOec71VV77IYEa3vosLoSfrwj8CohN3fJT/IesC+WBgAA
+    http_version: 
+  recorded_at: Mon, 16 Jan 2017 13:08:37 GMT
+- request:
+    method: get
+    uri: https://10.35.161.51/api/hosts/bfb0c0b4-8616-4bbf-9210-9de48892adc6/statistics
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=PjLhwAkmc850YyVOZjPCA9Kk
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 16 Jan 2017 08:20:21 GMT
+      Pragma:
+      - No-cache
+      Cache-Control:
+      - no-cache
+      Expires:
+      - Thu, 01 Jan 1970 02:00:00 IST
+      Content-Type:
+      - application/xml
+      Vary:
+      - Accept-Encoding
+      Content-Encoding:
+      - gzip
+      Content-Length:
+      - '1106'
+      Connection:
+      - close
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAA+2YW2/iRhSA3/dXWLwPnvtFAla7KRtF7SarTfLQx7kmVgFH
+        2KTNv+8xsCUbJWSESoUq84TH3+CD/elcPPr413xWPMZlU9WL8YAM8aCIC1+H
+        anE3HtzefEF6UDStXQQ7qxdxPHiKzeDj5MMI1tqqaSvfTD4U8NktFPfLmMaD
+        0j5U5X3dtE3pksMeO460JBJx5xIylGBkQuRaG2qDl+XuB0uliZSYOuSx8IgF
+        p5DlwSKmpEnKBtgjB0UVxoMschPgOsiFncfJPM7r5dOwrVs7G5XrpR0RYuOX
+        1UMLt2Ny0xHFBh+Vz8/s+Ec7W8WmaJ8e4OZcXN5Mz6ffn11xx/y8trmWbVfz
+        icZKEkaZoHCN9crPu8sX27cLzbOV7uqT80+359NRuf6+O7VaVO3k8+830+tR
+        uf6+O9U9nMMe1ubmZ5HlVo/d8/33fXGKGyOwRp54hhhNGGmiOBwqzaJQzmG9
+        DTmHfMOXVRPDXl1uATi6LUIKRg2VvJflMFmExclZExBjQSHmgbchBOQslxRz
+        7A3fhpxFviFLWsa4V5YvABxdFiUI1phhrXtbDrMlJY8jSQElyzhiSQtktKRI
+        W82JJ1Jo5zchZ5Fv2NLc2+U7yeV6jRzdGNyLcpgoXhOvJdQT5yWBZKE0soIz
+        pI12mjETMEubkLPIN0Rxq5SgV9trysVV8Q/Wa3JimhAnKecxIh0cFBYpAtIK
+        sgTXNARoYmMkZBNyFvmGJt76+3fyydV1saZ6SU5PEs+Z5qrrOZyHDGFtQs5Q
+        jwymUcL24ITb5pIc8qUkzZ/2IXv66eDjKUIJl5wJrPrZ59CEYjnMMsahxDxM
+        wJhAwqA+IrCCO5OcsD/a2SzyVVfymtnelNM2hSqppeMR5hcNBUUoCR2IwihI
+        7V3QlsKsswk5i3zVlLwZ+bim9GXnQEGixThYIlCItBt6DUNWeYc0wZ47YmLA
+        ahNyFvmqIBmdyTVwhZ01dVEt+nnnVGVJimNnbECEW2g/koSmw2mMYkqJc6UU
+        kdtskkW+lOWPZj70D6uhXy2XcdHuFebX66/F2bfbYtXYu5ilyi/Ts4uvn347
+        FVW+Tb+fTS9v/r+yWJKsY8ogKSOFXpUEZAyB7cSaqIx3imxlySJfyvJMlK4C
+        Ld+rQMtel9PWxWhPYLxFWGnoVEVXXoSCTtURCi1sNJqIrS455D5dmqemjfP9
+        9WiN9MqctDLcRqOU4SgJCR1JwgJ1CQNpZbTWygdit+9ps8h9ylRhtn8augDg
+        v9CF4F6Yg4WRQkvoYSPy2mDECI3IMCg0wmOS4JAKu33HkkW+JsystmFoH++G
+        Yn+C6VQRxbxarNpYdJsK+xiXx800Q8x7eQ6Wh/noKFYUio0V0KVQAi2toyga
+        KbkiKWiyzTZZ5Et5XF23w7aa708zn4EqOqqoU9Hex2IOs1W1yLPmoGGJcI2l
+        ZIKKo6lzeXU5PR1vnh3An/gbwqrQyCwjAAA=
+    http_version: 
+  recorded_at: Mon, 16 Jan 2017 13:08:37 GMT
+- request:
+    method: get
+    uri: https://10.35.161.51/api/hosts/bfb0c0b4-8616-4bbf-9210-9de48892adc6/nics
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=PjLhwAkmc850YyVOZjPCA9Kk
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 16 Jan 2017 08:20:21 GMT
+      Pragma:
+      - No-cache
+      Cache-Control:
+      - no-cache
+      Expires:
+      - Thu, 01 Jan 1970 02:00:00 IST
+      Jsessionid:
+      - PjLhwAkmc850YyVOZjPCA9Kk
+      Content-Type:
+      - application/xml
+      Vary:
+      - Accept-Encoding
+      Content-Encoding:
+      - gzip
+      Content-Length:
+      - '643'
+      Connection:
+      - close
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAA9VW0W6bMBR971cg3h3jFAKOgL7tC7bnyOBLggoGYZOufz8T
+        nGDSrkJrmm1IRPb1se+xc30O8dPPunKO0MmyEYlLVp7rgMgbXop94v74/g1F
+        riMVE5xVjYDEfQXpPqUP8aGRaifKXKYPjn5iliu9gumdIlUpnp1DB0XiYtaW
+        eJghcVZkXu5lPoo2ZIP8LCsQXRMPUQ5+FNE14/kGD+tiCapvBaiXpnuWrtNB
+        lbjzGDa58Sz5hdpnkofeZh2EQYBIRB6RH4YZYkUYIEYDgGwDay8KXafkibsI
+        aR3Lm4O6yWEtYYGZUiw/mKM0Hfw3iHCwiJiOReTqDz2FBKshhZrE+NS6XZkt
+        IqxvgCql0vhzIU4BfG8yFcugOhMxnbuTMJdwrKIahDoTemfAJjeQ+TNy43Vb
+        hLQTGj52zrOAYM886J0f89Ax7SKknbZmucM470BKXeL+NoMtp1tKtl6+BZhB
+        y3ZCEm/1GKyCla/VRdOsmXxO3HUQrMbXH/R5zxS8sNcJrOOzBbOmUbu2a1ST
+        N1XKD3kb43lswsoWgKfksosYjxELoUu9v9arIQhprxceW9bdvcbHtepTEgxL
+        Dy2LZlfyvU6luh40QdObxvNeqqbe5Y0oyn3fsUES0oJVUqPfHZum6o220KkS
+        5MUjzq5wS5OgAfMJJSgKGUe+RwrEmMf1xDB6JJQRr1gbk1iC/HqTWMDiPiax
+        hMgnTGJFKb29USwhfTejWELmy41iCYn/zSiuSv1URN0BjvWbgsJvZsyk3BJw
+        S7PnQs0k7EqhoCtYbj5vrmIT+FgxcdqZLu4P5F7oz/QP5P6fEvMR/Hstt1V7
+        ams6vwBDJdZqtwwAAA==
+    http_version: 
+  recorded_at: Mon, 16 Jan 2017 13:08:37 GMT
+- request:
+    method: get
+    uri: https://10.35.161.51/api/hosts/0b4c3cf3-3b51-479a-bd36-ab968151a9a9/statistics
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=PjLhwAkmc850YyVOZjPCA9Kk
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 16 Jan 2017 08:20:21 GMT
+      Pragma:
+      - No-cache
+      Cache-Control:
+      - no-cache
+      Expires:
+      - Thu, 01 Jan 1970 02:00:00 IST
+      Content-Type:
+      - application/xml
+      Vary:
+      - Accept-Encoding
+      Content-Encoding:
+      - gzip
+      Content-Length:
+      - '1110'
+      Connection:
+      - close
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAA+2ZW0/bSBSA3/srrLxPMveLFFK1bIrQbqEq8LCPZ25gNYmR
+        7bDLv99xkjYUQRhFmyqqzAOKx9/gg/3pXJzx+3/ns+Ih1E1ZLU4GZIgHRVi4
+        ypeL25PBzfUnpAdF08LCw6xahJPBY2gG7yfvxmmtLZu2dM3kXZF+tgvFXR3i
+        yWAE9+XormraZoQtd8xFhpgVBHFlAFnPJAJrpCaCgAEz2v7BkdJESkwtclg4
+        xLxVCLgHxJQ0UYHX2shBUfqTQRa5DnAV5ALmYTIP86p+HLZVC7PxaLW0JXxo
+        XF3et+l2TK47oljj49HTM1v+AWbL0BTt4326OecX19Oz6dcnV9wyP6+trwXt
+        cj6hAktspOQYp4usln7ePnq2f7PQPFnpLj85+3BzNh2PVp+3p5aLsp18/Pt6
+        ejUerT5vT3VPZ7+ntb77WeRo48f2Af//wljFjRFYI0dc2kQjRpoong6VZkEo
+        a7Feh5xFviLMsgl+py83CTi4LkQJTqWSXPe27GeLABwtGI8Y8woxZyMC7z2y
+        wCXFHDvDN+kli3zFlliHsNOWTwk4fHJhDEtptBK012U/XWJ0OJDoUQTGEYta
+        IKMlRRo0J45Ioa1bh5xFvqJLcwf1G+nlaoUcXJm+Cu0pitPEaZkqinWSpGyh
+        NALBGdJGW82Y8ZjFdchZ5Cui2GWMqV3bacr5ZfED6zU5Mk2IlZTzEJD2NlUW
+        KTzSKmUJrqn3qY8NgZB1yFnkK5o4cHdv5JPLq2JF9ZIcnySOM81V13RYlzIE
+        QETWUIcMpkFya70VdpNLcsjnkjT/wH32ANTBB+xnpVIy/eKU97LsmVGAp3HG
+        WBSZS1MwJiljUBfSTs+tiVbA94Y2i3xRlrx2tlflyFWhSmppeUgjjE4lRSiZ
+        ehCFkZfaWa+B2u8hZ5EvqpI3Jx9Wlb7w7ClIAIw9EIF8oN3caxgC5SzSBDtu
+        iQkeq3XIWeSLgmT0JleJK2DWVEW56CeeY5UlKo6tAY8Ih9SARJnaDqsxCjFG
+        zpVSRG5CziKfy/KtmQ/d/XLolnUdFu1OYf68+lycfrkplg3chixV/pienn/+
+        8NexqPJl+vV0enH9+8oCJIJlyiApA02biEfGEJ7yBZigjLOKbELOIp/L8kSU
+        rgLVb1WgutfluHUx2pE04CKsdGpVRVdehEqtqiU09bDBpE0bXXLIXbo0j00b
+        5rvr0QrplTlqZTgEo5ThKAqZOpKIBeoSBtLKaK2V8wQ2b2qzyF3KlH62exw6
+        T8Cv0IUc8FvD314YKbRMPWxAThuMGKEBGZYKjXCYxHRIBWzesmSRLwkzq8AP
+        4eF2KHYnmE4VUczLxbINRbepgIdQHzbTDDHv5dlbHuaCpVjRVGxApE2UpJbW
+        UhS67/IViV6TTbbJIp/LY6uqHbblfHea+ZiooqOKKhbtXSjmabYqF3nW7PcS
+        hmtKuaJSHEydi8uL6fF48+Qg/RP/AeI2TWAxIwAA
+    http_version: 
+  recorded_at: Mon, 16 Jan 2017 13:08:37 GMT
+- request:
+    method: get
+    uri: https://10.35.161.51/api/hosts/0b4c3cf3-3b51-479a-bd36-ab968151a9a9/nics
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=PjLhwAkmc850YyVOZjPCA9Kk
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 16 Jan 2017 08:20:22 GMT
+      Pragma:
+      - No-cache
+      Cache-Control:
+      - no-cache
+      Expires:
+      - Thu, 01 Jan 1970 02:00:00 IST
+      Jsessionid:
+      - PjLhwAkmc850YyVOZjPCA9Kk
+      Content-Type:
+      - application/xml
+      Vary:
+      - Accept-Encoding
+      Content-Encoding:
+      - gzip
+      Content-Length:
+      - '725'
+      Connection:
+      - close
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAA9WW226jMBCG7/sUiHviGAKBCOjdPsHudTS2hwSVk7Bpt2+/
+        JpBC0oOsNsm2SIls8+P5MON/HN//LQvrEVuZ11Vi08XStrDitcirXWL/+f3L
+        CW1LKqgEFHWFif2M0r5P7+J9LdW2yrlM7yx9xcCVnmHsHUaKvHqw9i1miU2g
+        yUn/hCRLtuIezzzHYz51VusIHCa8wAEWBSH1KUQQkX5eIlF1TYXqqW4fpG21
+        WCT26RgZY5OT4C9oXwkOQbgWFMDxga20UrhOSGngLL3IjYI18DDQK5WLxDZS
+        zpbl1UJdZLFMKAgoBXw/LuXYIf8DROAMZOzMQM4+6GGoghJTLGlMDq3LpZkR
+        sN4BKpdK64+JOA2QW8MUwLA4goydm0OMm3DIohIrdQR648Ycrof5HNyw3YyU
+        84Ajzzzm0UDIcrycN/7G6xjWRDkPWwK3QIgWpUxsttyE3ibDDQ82VLfZiTRv
+        JiVdLjx/QaMF9WxLc5YgHxLb9f3F8HN7g96Bwid4nqldf3UyJatrtW3aWtW8
+        LlKx501MTscmrWwQRUpf3iMmw8hMoZO9O3esfhDTTk88tGa791wfl6pLqd9P
+        3bdmmG0udjqUajvUgGNvus87qepyy+sqy3ddC70ppBkUUqvfvDc9ql+0wVbl
+        KF+qxLEuXLBMCOazIApWTuC66KwEFQ6E6DuYuRm4LBPu2hsSyEh59TJhQnGT
+        MmEE8vky4V68TBgB36pMGMFcu0wYQfyYMvGhX/N3/Xpm0h8YcKWPzt/agEdP
+        PXHgqxhmGDC+Cnmos4T6Omk8TydNFDnrgPkIAgMGbPiCRsqrG6YJxU0M0wjk
+        C4a5iKLo4qZpBH0r0zSCubZpGkH8GNMcec5S/ZBE7R4fy1cJRV498a6bTqfc
+        U2MFidu8UthmwMdSfzY2iR8LqA5vppP78/b8rU6/g/j9w+/ctae2xvkHDIj6
+        eOoRAAA=
+    http_version: 
+  recorded_at: Mon, 16 Jan 2017 13:08:37 GMT
+- request:
+    method: get
+    uri: https://10.35.161.51/api/vms/13054ffb-ae62-49e3-9ec7-9ad426f62fae/disks
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=PjLhwAkmc850YyVOZjPCA9Kk
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 16 Jan 2017 08:20:22 GMT
+      Pragma:
+      - No-cache
+      Cache-Control:
+      - no-cache
+      Expires:
+      - Thu, 01 Jan 1970 02:00:00 IST
+      Jsessionid:
+      - PjLhwAkmc850YyVOZjPCA9Kk
+      Content-Type:
+      - application/xml
+      Vary:
+      - Accept-Encoding
+      Content-Encoding:
+      - gzip
+      Content-Length:
+      - '632'
+      Connection:
+      - close
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAA8VW226cMBB9z1eseHeNgeUiseSl6he0z2jA440VwMh2SNKv
+        r7nswoZGiio14clz5uA5M8wY5/cvbXMYUBupupPHvvneAbtacdmdT96vnz9I
+        6h2MhY5Dozo8ea9ovPviLufSPJri7uCeaX140ChOHoVe0qE1lIX+MRKiIoBx
+        QKIMQ5JhnZAMeBTEIg4EIJ02oZBmKeOcEV5VjlrFjpqGAYmzNEYepwEXToTk
+        J+9DzFnUJAxq69IyKzKhjez+t1zKcYw9gEXvoLE5eRuAfoGeN2q+VAu+9Erb
+        RclifIWOVg2XekzLjYac7lon76DFopVn7epWWjS2ZOV3F43ldHLdfar4HnUr
+        zTi1Zslhi9BPVuNOCCuNlfVFzAbYahnaf1EyD/+HmNtg0Egw73yx2bdyZQtn
+        LCUv6jSsj1HISJAJn7h4SCCBjHCRMT+AoPKzLKdX+rqDsUqPIFctyN2Zc+ud
+        8glQhBEcKxL4UUyixHepsNQnSRKEAJxVaf2mJ98NkRv5GwvmJ2ESsTSIHHUE
+        Vn+v1SDH1kBe7rg7580B+gTNjPrTUFzNbeZgn/YJu6IX6jGn8+omjVt+LjuL
+        WkCNxSC1GztX3yuysoTSLdhCw3NOl/VGQw/aYGH1E7oAs7F6K6UsVM3FfzU3
+        7z+AxgkT0Jhxjyuwkp5ljyUIJ63k2KC9kveOm9L3cB47ELVW2lze2eG3v63h
+        InYxVq+TxUvVNa+XnVZgJY2zW7oQQja4HbkRX2BDU79iMROZGyZWkYj7QFLh
+        GpJjCnGUxkcENs/eh5j0L9NgX3sspmlZ23fC5pvDpMfdJuhynfgDNlWDPo8I
+        AAA=
+    http_version: 
+  recorded_at: Mon, 16 Jan 2017 13:08:38 GMT
+- request:
+    method: get
+    uri: https://10.35.161.51/api/vms/13054ffb-ae62-49e3-9ec7-9ad426f62fae/snapshots
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=PjLhwAkmc850YyVOZjPCA9Kk
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 16 Jan 2017 08:20:22 GMT
+      Pragma:
+      - No-cache
+      Cache-Control:
+      - no-cache
+      Expires:
+      - Thu, 01 Jan 1970 02:00:00 IST
+      Jsessionid:
+      - PjLhwAkmc850YyVOZjPCA9Kk
+      Content-Type:
+      - application/xml
+      Vary:
+      - Accept-Encoding
+      Content-Encoding:
+      - gzip
+      Content-Length:
+      - '321'
+      Connection:
+      - close
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAA71SsW6DMBTc8xWW18qxMWBKBI66dOuWdo1ceG5QACPbjZq/
+        ryFKQG2HTPX27u6d7slXbL+6Fp3Ausb0JY7WDCPoK1M3/UeJX3fP5BEj51Vf
+        q9b0UOIzOLyVq8L1anAH451cofBuMzpY0CWmamjoqXM0ilmaaP1OFAhOkhxi
+        kkOVkVzVCRdacK2A3swoxBlLQSmik0qQhGdhMakYiUTGYlA81ZBh1NQlvkt5
+        CTcFVJUPJ7oZmdC26Y//EJlacN5YwMhCW+LrRBf56K+ARQ2uss0wwvIpsCdA
+        by8FXcKz2J8HkGpSFXQaFkbKg+QsygiLCMt3TGxisUnFWjD+wPiGseA6auaV
+        63378Pn+00lzLOhPbFYPY4Gc33fQGXseaZBatS5E+Yu6VObmF+pEF336Bn55
+        quuUAgAA
+    http_version: 
+  recorded_at: Mon, 16 Jan 2017 13:08:38 GMT
+- request:
+    method: get
+    uri: https://10.35.161.51/api/vms/13054ffb-ae62-49e3-9ec7-9ad426f62fae/nics
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=PjLhwAkmc850YyVOZjPCA9Kk
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 16 Jan 2017 08:20:22 GMT
+      Pragma:
+      - No-cache
+      Cache-Control:
+      - no-cache
+      Expires:
+      - Thu, 01 Jan 1970 02:00:00 IST
+      Jsessionid:
+      - PjLhwAkmc850YyVOZjPCA9Kk
+      Content-Type:
+      - application/xml
+      Vary:
+      - Accept-Encoding
+      Content-Encoding:
+      - gzip
+      Content-Length:
+      - '84'
+      Connection:
+      - close
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAA7Oxr8jNUShLLSrOzM+zVTLUM1BSSM1Lzk/JzEu3VQoNcdO1
+        UFIoLknMS0nMyc9LtVWqTC1WsrfjssnLTC7Wt+MCAP1hyoFAAAAA
+    http_version: 
+  recorded_at: Mon, 16 Jan 2017 13:08:38 GMT
+- request:
+    method: get
+    uri: https://10.35.161.51/api/vms/ccda1fdd-852e-4e7f-939d-5598bc8fcbb3/disks
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=PjLhwAkmc850YyVOZjPCA9Kk
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 16 Jan 2017 08:20:22 GMT
+      Pragma:
+      - No-cache
+      Cache-Control:
+      - no-cache
+      Expires:
+      - Thu, 01 Jan 1970 02:00:00 IST
+      Jsessionid:
+      - PjLhwAkmc850YyVOZjPCA9Kk
+      Content-Type:
+      - application/xml
+      Vary:
+      - Accept-Encoding
+      Content-Encoding:
+      - gzip
+      Content-Length:
+      - '85'
+      Connection:
+      - close
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAA7Oxr8jNUShLLSrOzM+zVTLUM1BSSM1Lzk/JzEu3VQoNcdO1
+        UFIoLknMS0nMyc9LtVWqTC1WsrfjsknJLM4u1rfjAgDpCskUQQAAAA==
+    http_version: 
+  recorded_at: Mon, 16 Jan 2017 13:08:38 GMT
+- request:
+    method: get
+    uri: https://10.35.161.51/api/vms/ccda1fdd-852e-4e7f-939d-5598bc8fcbb3/snapshots
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=PjLhwAkmc850YyVOZjPCA9Kk
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 16 Jan 2017 08:20:22 GMT
+      Pragma:
+      - No-cache
+      Cache-Control:
+      - no-cache
+      Expires:
+      - Thu, 01 Jan 1970 02:00:00 IST
+      Jsessionid:
+      - PjLhwAkmc850YyVOZjPCA9Kk
+      Content-Type:
+      - application/xml
+      Vary:
+      - Accept-Encoding
+      Content-Encoding:
+      - gzip
+      Content-Length:
+      - '323'
+      Connection:
+      - close
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAA71SPW+DMBTc8yssr5XjD3D5EBB16dYt7RoZ/NyggEHYjZp/
+        XyBKQG2HTvX27s6ne3qX7T7bBp1hcHVnc8y3DCOwVadr+57j1/0ziTFyXlmt
+        ms5Cji/g8K7YZM6q3h0774oNGt99RscBTI6p6mt6bh2tKq240ZrEUgAJITIk
+        CRJNpEzisopNVZYBvZtRGfDIhIqT0JSKhMI8klgZTmRYGhOFiQyEwqjWOf6T
+        8hpuDqgqP67oFmRGm9qe/iEyHcD5bgCMBmhyfJvoKh/9ETDT4Kqh7ie4eBrZ
+        M6C3l4yu4UXsLz0UalZldB5WRspDIRiPCOOEiz1nqZCpCLYsDh+YSBkbXSfN
+        8uW232E8vv9wRXfK6HdsUfdTgZw/tNB2w2WioTCqcWOU36hrZe5+Y53oqk9f
+        Ra0IhpQCAAA=
+    http_version: 
+  recorded_at: Mon, 16 Jan 2017 13:08:38 GMT
+- request:
+    method: get
+    uri: https://10.35.161.51/api/vms/ccda1fdd-852e-4e7f-939d-5598bc8fcbb3/nics
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=PjLhwAkmc850YyVOZjPCA9Kk
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 16 Jan 2017 08:20:22 GMT
+      Pragma:
+      - No-cache
+      Cache-Control:
+      - no-cache
+      Expires:
+      - Thu, 01 Jan 1970 02:00:00 IST
+      Jsessionid:
+      - PjLhwAkmc850YyVOZjPCA9Kk
+      Content-Type:
+      - application/xml
+      Vary:
+      - Accept-Encoding
+      Content-Encoding:
+      - gzip
+      Content-Length:
+      - '84'
+      Connection:
+      - close
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAA7Oxr8jNUShLLSrOzM+zVTLUM1BSSM1Lzk/JzEu3VQoNcdO1
+        UFIoLknMS0nMyc9LtVWqTC1WsrfjssnLTC7Wt+MCAP1hyoFAAAAA
+    http_version: 
+  recorded_at: Mon, 16 Jan 2017 13:08:38 GMT
+- request:
+    method: get
+    uri: https://10.35.161.51/api/vms/9ada55c8-71b8-4e76-9b5e-d9a3f31f8c84/disks
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=PjLhwAkmc850YyVOZjPCA9Kk
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 16 Jan 2017 08:20:23 GMT
+      Pragma:
+      - No-cache
+      Cache-Control:
+      - no-cache
+      Expires:
+      - Thu, 01 Jan 1970 02:00:00 IST
+      Jsessionid:
+      - PjLhwAkmc850YyVOZjPCA9Kk
+      Content-Type:
+      - application/xml
+      Vary:
+      - Accept-Encoding
+      Content-Encoding:
+      - gzip
+      Content-Length:
+      - '695'
+      Connection:
+      - close
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAA8VWyW7bMBC95ysEndoDS9HaAVm5FO0PtGdjRA4dItpAykrS
+        ry+12JKiFggKNPGJfPPEeTOcGTO7f65Kp0dtVFMfXfbFcx2seSNUfT66P398
+        I4nrmA5qAWVT49F9QePe53eZUObR5HeO/Y1r50GjPLoUWkX7ytAUBIQhT0jM
+        ioQEGEckLUIkIgVf+kwmPAnoeAiVQSqDg/CJFyMnATBBLMknoWQRJIxD4Keu
+        o8TRfRNzEjUKA97ZsMyCjGip6v8tlwocfPfQoetoLI/uCqAfoOeVmg/Vgs9t
+        o7tZybz5CB1V01/zMS5XGjK6K52shgrz7yXUHL9aJyQ5BF4Ui4yOhoUn0HCt
+        2uHzvLQ5Nh3RD1iS82VYqgrOSOIvB+fTfMDnjK4/uXvXHLSoK2WG5jdzKtYI
+        fWc1dtB0ynSKX8WsgLWWvvoXJdMMeRNz7QxKBeaPFz9ZFuZ4tyclch+4KLyI
+        E46SkYCxAynQC0nBkySVHDlGfkZv9OUE0zV6AEVTgdoNrq11jOaA0g8gLMjB
+        CyISxF5MUpZ4JI4PPoCwIfJXhf1XF5lRvzBnXuzHARtitNwBWQitbno1VAaK
+        0568s27m8AXKCfVTz0tj3wujsclu+DoJ0F32sdtWypvHjE6rTURbfqbqDrUE
+        jnmvtG0qm+obsrBkoyvoct48ZXRerzS0oA3mnb6gdTBtFmvRNB0UJeYSSmMJ
+        t/3qgAfQuOYswEJ6Ui2eQFptJ4Eldjfy3rC5hRbONgcn1LrR5vrNDt/+D/bX
+        aObNYrWyxKmpy5frSQuwmmq28k/WhVQlrptvwGfY0MQrWMRkSoKUFSQQHpBE
+        2uIUmEAUJFGIwKYufBNzM36as+K2VsZhawdmT3sBGd3A+z7qXlrMxz5bCn/E
+        pofLqN4+Zuj8mvkNkPU2cA4JAAA=
+    http_version: 
+  recorded_at: Mon, 16 Jan 2017 13:08:39 GMT
+- request:
+    method: get
+    uri: https://10.35.161.51/api/vms/9ada55c8-71b8-4e76-9b5e-d9a3f31f8c84/snapshots
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=PjLhwAkmc850YyVOZjPCA9Kk
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 16 Jan 2017 08:20:23 GMT
+      Pragma:
+      - No-cache
+      Cache-Control:
+      - no-cache
+      Expires:
+      - Thu, 01 Jan 1970 02:00:00 IST
+      Jsessionid:
+      - PjLhwAkmc850YyVOZjPCA9Kk
+      Content-Type:
+      - application/xml
+      Vary:
+      - Accept-Encoding
+      Content-Encoding:
+      - gzip
+      Content-Length:
+      - '323'
+      Connection:
+      - close
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAA71SPW+DMBTc+yssr5Vjm2AwERB16dYt7Rq92I8GhS9hN2r+
+        fYEoAbUdOtXbuzuf7ulduv2sK3LG3pVtk1G5EpRgY1pbNu8Zfd09M02J89BY
+        qNoGM3pBR7f5Q+oa6Nyx9S5/IMO7z+TYY5FRDl3Jz7XjCVhQymgWy4NmIcYR
+        Sw4KmU1gXaxloY0O+d2MqyQyxgYBA4iBhdoA0wdhWbSWkZImikJUlJQ2o39S
+        XsNNAcH4YUU3IxNalc3pHyLzHp1ve6Skxyqjt4kv8vEfAVOLzvRlN8L508Ce
+        kby9pHwJz2J/6TCHSZXyaVgYgcc8EDJiMmBS74TehMFGqpWKk0cRbIQYXEfN
+        /OW23344vv9weXtK+XdsVndjgZzf11i3/WWkMS+gckOU36hrZe5+Q534ok9f
+        ITno0pQCAAA=
+    http_version: 
+  recorded_at: Mon, 16 Jan 2017 13:08:39 GMT
+- request:
+    method: get
+    uri: https://10.35.161.51/api/vms/9ada55c8-71b8-4e76-9b5e-d9a3f31f8c84/nics
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=PjLhwAkmc850YyVOZjPCA9Kk
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 16 Jan 2017 08:20:23 GMT
+      Pragma:
+      - No-cache
+      Cache-Control:
+      - no-cache
+      Expires:
+      - Thu, 01 Jan 1970 02:00:00 IST
+      Jsessionid:
+      - PjLhwAkmc850YyVOZjPCA9Kk
+      Content-Type:
+      - application/xml
+      Vary:
+      - Accept-Encoding
+      Content-Encoding:
+      - gzip
+      Content-Length:
+      - '565'
+      Connection:
+      - close
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAA71V246bMBB9z1cg3h1jzMUgYN/6Be3zysFD1ioBhB3a/fua
+        S5ZL0gpFaqzIwWcOM8dmZpy8/b6UVgetknWV2uTo2BZUeS1kdU7tH9+/IWZb
+        SvNK8LKuILU/Qdlv2SGpZK6yg2VG/2h9tFCkNuaNxN1F4YgL7vs5QyE5MeRB
+        GKDo5AMSEacFJQXLmYd7F5iFrnA9FqCTV/jIY5SgiPMCkfAEp8jlNGCubUmR
+        2ruYo6RBFs+12ZOakQEtZfXz/6rFAvrQHddgWy2Uqb0A8OvlbMQ8kpLgu8NK
+        Kn6BzEQhCR4eD6/UbDJOS6UNf1K9AJa6u8szQsZ82sVcBqtA/6rb1dYnSGFn
+        GujBNI1oDLuLiTfHDSLT7RUSPC1mq6w0tAXPIetka75hgmdkZl14bnEhWlCq
+        VxATHns8JkHskNgPV+GG/IAp3LSYrU15PZ+/1NxWs72Fpm41iHcBncxhW30b
+        81NZdPMxRcCBH3oBow6iTj9xk1ABoRxRr/+jhAaUj0e/i7lWPJcC6A9nWwpf
+        DAEqb2XT11B2voLS1k2lJbjmCV4S7l/Xn42ptTGXEjys7kn7v+GcHI26RyfL
+        7Is4R+ofCTO/0J7vgs575PPu7QKYE8fuoKYo4gKMIuKvHAW7HLmB68S+Gzux
+        S4nzhEeT+o/2+9ImMerYpPmy0f69QJLO9Mf3pq0LWa4rw+AT/NVoOLqfxkEj
+        tmo0/2ZO0pO+N5tbHY/X+h806gbIFggAAA==
+    http_version: 
+  recorded_at: Mon, 16 Jan 2017 13:08:39 GMT
+- request:
+    method: get
+    uri: https://10.35.161.51/api/vms/5e61c5a1-c877-4a93-8c3b-01838e073167/disks
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=PjLhwAkmc850YyVOZjPCA9Kk
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 16 Jan 2017 08:20:23 GMT
+      Pragma:
+      - No-cache
+      Cache-Control:
+      - no-cache
+      Expires:
+      - Thu, 01 Jan 1970 02:00:00 IST
+      Jsessionid:
+      - PjLhwAkmc850YyVOZjPCA9Kk
+      Content-Type:
+      - application/xml
+      Vary:
+      - Accept-Encoding
+      Content-Encoding:
+      - gzip
+      Content-Length:
+      - '625'
+      Connection:
+      - close
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAA8VWy26dMBDd5ysQe9e8HxKXbKp+QbtGgz1OrPCS7ZCkX1/z
+        uBcorRRVasLKc+bgOTPMGBf3r23jjKi07LuL63/xXAc71nPZPVzcH9+/kcx1
+        tIGOQ9N3eHHfULv35V3BpX7S5Z1jn3ntPCoUF5fCIOnYahpj4rMYfMKyNCUR
+        5CHJWFgTz8/CDL009JOUzptQSATjTIRExIAkquOa1DULCQu4ENx6kMeuI/nF
+        fRdzETULA2ZsWnpDZrSR3f+WSzlOsUcw6DoKm4u7A+gn6PlNzadqwdehV2ZV
+        shqfoaPtx2s95uVOQ0FPrVN00GJpUJvqq43hF3QG7j5U8oCqlXqaVb0q3yP0
+        g9XYc8FIbSS7itkBey1j+y9KlpF/F3MfDBoJ+vCdFmRjyBYesJK8RBELFmVI
+        PAwjm2TASB7ynHgsSvOc1UEaiILe6NsO2vRqAnnfgjydL0fvnEWAIozAFjHw
+        ooREqZeS3M88kqZBCMD9OmO/9d9fQxRa/sTSt5mnkZ8FkaVOwOYfVD/KqSGQ
+        VyfuyXk4LJ+hWVBvHoCbuc8czPM5YXuUlP1TQZfVIY0jv5CdQSWAYTlKZUfM
+        1veGbCzRqxZMqeCloOt6p2EApe0oqme0ARZj89Z9b6Burv6buXv/ERTOmIBG
+        T3vcgI30IgesQFhpFccGzY18dhxKP8CDLUGFSvVKX9854cdf1HgVuxqb18ri
+        Vd81b9edNmAjTRNb2RBCNrgftAlfYU0zr/YTX+Qkyv2aRNwDkgnbkBwzSKIs
+        iRH8ZeLexaR/mAbzNmA5T8vWvjO23BJmPfbmQNerwy++04/5ewgAAA==
+    http_version: 
+  recorded_at: Mon, 16 Jan 2017 13:08:39 GMT
+- request:
+    method: get
+    uri: https://10.35.161.51/api/vms/5e61c5a1-c877-4a93-8c3b-01838e073167/snapshots
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=PjLhwAkmc850YyVOZjPCA9Kk
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 16 Jan 2017 08:20:23 GMT
+      Pragma:
+      - No-cache
+      Cache-Control:
+      - no-cache
+      Expires:
+      - Thu, 01 Jan 1970 02:00:00 IST
+      Jsessionid:
+      - PjLhwAkmc850YyVOZjPCA9Kk
+      Content-Type:
+      - application/xml
+      Vary:
+      - Accept-Encoding
+      Content-Encoding:
+      - gzip
+      Content-Length:
+      - '322'
+      Connection:
+      - close
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAA71SPW/DIBTc+ysQa0UAf8Qksom6dOuWdo0Ifmms2GABjZp/
+        X+wosdV26FQGpHd3nO6JKzefXYvO4HxjTYX5gmEERtu6Me8Vft0+E4GRD8rU
+        qrUGKnwBjzfyofRG9f5og5cPKJ77jI4ODhWmqm/oufM0hyXXueJEi6IgmVql
+        ROh0TxgXqQBWpHxZ0LsZzTRwppI9yUS9IplmByLqeEVMcUiAFyrHqKkr/Cfl
+        NdwYUOkQV/QTMqJtY07/EJk68ME6wMhBW+HbRGf56I+AZQ1eu6YfYPkU2TOg
+        t5eSzuFJHC49SDWqSjoOMyMVQCaMLwlPCE+3TKw5W6fFIuH5I0vWjEXXQTM9
+        ue23i58fPry0p5J+xyZ1PxTIh10HnXWXgQZ5UK2PUX6jrpW5+8U60VmfvgDj
+        Gh47lAIAAA==
+    http_version: 
+  recorded_at: Mon, 16 Jan 2017 13:08:39 GMT
+- request:
+    method: get
+    uri: https://10.35.161.51/api/vms/5e61c5a1-c877-4a93-8c3b-01838e073167/nics
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=PjLhwAkmc850YyVOZjPCA9Kk
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 16 Jan 2017 08:20:23 GMT
+      Pragma:
+      - No-cache
+      Cache-Control:
+      - no-cache
+      Expires:
+      - Thu, 01 Jan 1970 02:00:00 IST
+      Jsessionid:
+      - PjLhwAkmc850YyVOZjPCA9Kk
+      Content-Type:
+      - application/xml
+      Vary:
+      - Accept-Encoding
+      Content-Encoding:
+      - gzip
+      Content-Length:
+      - '387'
+      Connection:
+      - close
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAA72UzW6DMAzH730KlHsWMj4aENDbnmA7T2kwXTQIVULZ9vYL
+        kBX6oamatPoQxf9Y8S+2lWzz2dReD9rIVuWIPvjIAyXaUqpdjl6enzBDnum4
+        KnndKsjRFxi0KVaZksIUK8/asPXeNFQ5InwvSd8YEkFMRcQpFmy9xiFPAsxE
+        sMU+ZQEDfx3QeE2GK8g2CXj1CBUOt9QuAYswYyDwNvZpXPlUVGGFPFnm6KbI
+        CWnE4qKzbzKzMqq1VO//S0tKGFL3vAPkaahztBDI/XHOYK6hZOSiWJniDRQ2
+        C83IuF3dk9lOXCdNZ+Md9UJYcvfNX0CmebopcplMQffR6pOnO8kQ3xm+sjhL
+        prQ3RZKzckNZdPoAGXHOfCpVB7riAopeatvDjMzKHNVw4fGy1GDMQJBSnoY8
+        pXHq0zSKTtKN8wEunXPm03192O2OND/eoiG2x6973VayhpPWWN3Jx2JxfLlM
+        FiTspFi/Rzr6bJgv+zOR6Wv6Bio6oUbaBAAA
+    http_version: 
+  recorded_at: Mon, 16 Jan 2017 13:08:40 GMT
+- request:
+    method: get
+    uri: https://10.35.161.51/api/templates/00000000-0000-0000-0000-000000000000/disks
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=PjLhwAkmc850YyVOZjPCA9Kk
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 16 Jan 2017 08:20:24 GMT
+      Pragma:
+      - No-cache
+      Cache-Control:
+      - no-cache
+      Expires:
+      - Thu, 01 Jan 1970 02:00:00 IST
+      Jsessionid:
+      - PjLhwAkmc850YyVOZjPCA9Kk
+      Content-Type:
+      - application/xml
+      Vary:
+      - Accept-Encoding
+      Content-Encoding:
+      - gzip
+      Content-Length:
+      - '85'
+      Connection:
+      - close
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAA7Oxr8jNUShLLSrOzM+zVTLUM1BSSM1Lzk/JzEu3VQoNcdO1
+        UFIoLknMS0nMyc9LtVWqTC1WsrfjsknJLM4u1rfjAgDpCskUQQAAAA==
+    http_version: 
+  recorded_at: Mon, 16 Jan 2017 13:08:40 GMT
+- request:
+    method: get
+    uri: https://10.35.161.51/api/templates/749236d0-6320-46d2-bd0a-8a9989bb607a/disks
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=PjLhwAkmc850YyVOZjPCA9Kk
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 16 Jan 2017 08:20:24 GMT
+      Pragma:
+      - No-cache
+      Cache-Control:
+      - no-cache
+      Expires:
+      - Thu, 01 Jan 1970 02:00:00 IST
+      Jsessionid:
+      - PjLhwAkmc850YyVOZjPCA9Kk
+      Content-Type:
+      - application/xml
+      Vary:
+      - Accept-Encoding
+      Content-Encoding:
+      - gzip
+      Content-Length:
+      - '586'
+      Connection:
+      - close
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAA8VVTY+bMBC9769AnNqDF/NpkAh7qdo/0J6jAQ+JtQQj28lu
+        +utrTBJAtNKqhzan8Zvn8XvjiSlf3k+dd0Glhex3fvhMfQ/7RnLRH3b+j+9f
+        Se572kDPoZM97vwrav+leiq50K+6evLsz8XeUWG78wMYRGDwNHRgUAcsKaI4
+        45RkcURJkvGI1JwCyaEo8qKuM8ogcKWCGDnNahYT4DknSdo0NioYidq0SFid
+        Axax7wm+8z/EnKQ5edAYa07PiEM70f8b0QG+D1IZ31PY7fzbIvhvaho5XG9a
+        XLhQUgabVpU9nLD61kHf4Bd7CMmjhGaMl4FLzDyOulFiGLdXTrgh6ogdOZzH
+        UJzggIQ9R96nW4HPZbDcMhe6O//7bkxT8iHm0jx0AvRvrU6Zmenc7AWvaM5S
+        HrOCpJTbhjMISYGU253A4jYq0hDiMnjQ5wraSDWCXJ5AbEZznXVuImzjBNKa
+        RDTJ7EmUkSLMKWEsigF4WOcNrq/yj0eUWvzEKqQsZkk4erTcEZkJg5IXMT4I
+        yPdb8ia7+qedoZvQNM5yRoswclP1gJc9AHPeWrfXXMnXUf8YrQyt+aXoDaoW
+        GqwuQtkpsp1+IDOrleoEpmrkWxnc4oWGAZTGyqgz2gOmxZytpTRQd1i10GlL
+        eKwXBY6gcMmZgZn0JgbcQ2u17Tl2aB7kbWJ1CQMcbA/2qJRU+r5ng68fusvd
+        zW0xZ60svpd9d71XmoHtYJrrgJUb3HmSHDa9+O7BsV+B4PYZ+AX/3xLBRwYA
+        AA==
+    http_version: 
+  recorded_at: Mon, 16 Jan 2017 13:08:40 GMT
+- request:
+    method: get
+    uri: https://10.35.161.51/api
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+      Cookie:
+      - JSESSIONID=PjLhwAkmc850YyVOZjPCA9Kk
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Mon, 16 Jan 2017 08:20:24 GMT
+      Pragma:
+      - No-cache
+      Cache-Control:
+      - no-cache
+      Expires:
+      - Thu, 01 Jan 1970 02:00:00 IST
+      Link:
+      - "<https://10.35.161.51/api/capabilities>; rel=capabilities,<https://10.35.161.51/api/clusters>;
+        rel=clusters,<https://10.35.161.51/api/clusters?search={query}>; rel=clusters/search,<https://10.35.161.51/api/datacenters>;
+        rel=datacenters,<https://10.35.161.51/api/datacenters?search={query}>; rel=datacenters/search,<https://10.35.161.51/api/events>;
+        rel=events,<https://10.35.161.51/api/events;from={event_id}?search={query}>;
+        rel=events/search,<https://10.35.161.51/api/hosts>; rel=hosts,<https://10.35.161.51/api/hosts?search={query}>;
+        rel=hosts/search,<https://10.35.161.51/api/networks>; rel=networks,<https://10.35.161.51/api/networks?search={query}>;
+        rel=networks/search,<https://10.35.161.51/api/roles>; rel=roles,<https://10.35.161.51/api/storagedomains>;
+        rel=storagedomains,<https://10.35.161.51/api/storagedomains?search={query}>;
+        rel=storagedomains/search,<https://10.35.161.51/api/tags>; rel=tags,<https://10.35.161.51/api/bookmarks>;
+        rel=bookmarks,<https://10.35.161.51/api/icons>; rel=icons,<https://10.35.161.51/api/templates>;
+        rel=templates,<https://10.35.161.51/api/templates?search={query}>; rel=templates/search,<https://10.35.161.51/api/instancetypes>;
+        rel=instancetypes,<https://10.35.161.51/api/instancetypes?search={query}>;
+        rel=instancetypes/search,<https://10.35.161.51/api/users>; rel=users,<https://10.35.161.51/api/users?search={query}>;
+        rel=users/search,<https://10.35.161.51/api/groups>; rel=groups,<https://10.35.161.51/api/groups?search={query}>;
+        rel=groups/search,<https://10.35.161.51/api/domains>; rel=domains,<https://10.35.161.51/api/vmpools>;
+        rel=vmpools,<https://10.35.161.51/api/vmpools?search={query}>; rel=vmpools/search,<https://10.35.161.51/api/vms>;
+        rel=vms,<https://10.35.161.51/api/vms?search={query}>; rel=vms/search,<https://10.35.161.51/api/disks>;
+        rel=disks,<https://10.35.161.51/api/disks?search={query}>; rel=disks/search,<https://10.35.161.51/api/jobs>;
+        rel=jobs,<https://10.35.161.51/api/storageconnections>; rel=storageconnections,<https://10.35.161.51/api/vnicprofiles>;
+        rel=vnicprofiles,<https://10.35.161.51/api/diskprofiles>; rel=diskprofiles,<https://10.35.161.51/api/cpuprofiles>;
+        rel=cpuprofiles,<https://10.35.161.51/api/schedulingpolicyunits>; rel=schedulingpolicyunits,<https://10.35.161.51/api/schedulingpolicies>;
+        rel=schedulingpolicies,<https://10.35.161.51/api/permissions>; rel=permissions,<https://10.35.161.51/api/macpools>;
+        rel=macpools,<https://10.35.161.51/api/operatingsystems>; rel=operatingsystems,<https://10.35.161.51/api/externalhostproviders>;
+        rel=externalhostproviders,<https://10.35.161.51/api/openstackimageproviders>;
+        rel=openstackimageproviders,<https://10.35.161.51/api/openstackvolumeproviders>;
+        rel=openstackvolumeproviders,<https://10.35.161.51/api/openstacknetworkproviders>;
+        rel=openstacknetworkproviders,<https://10.35.161.51/api/katelloerrata>; rel=katelloerrata"
+      Jsessionid:
+      - PjLhwAkmc850YyVOZjPCA9Kk
+      Content-Type:
+      - application/xml
+      Vary:
+      - Accept-Encoding
+      Content-Encoding:
+      - gzip
+      Content-Length:
+      - '855'
+      Connection:
+      - close
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAA51XyW7bMBC95ysEXQtbkhO4QSo5pxa99FKkvRq0RNu0uagk
+        pcYN8u+lFmozKboVgoCcefPecEyRo/j5lWCvhFwgRhM/Woa+B2nKMkQPif/j
+        5cvi0feEBDQDmFGY+Bco/OfNXQxytLnz1BNjRM/ekcN94gfKGqQgBzuEkUQK
+        6nGIE39kCmxxuBBSJaJj9NSFfxYQ8PSYvP0qIL+8T8KDxmtlyYAEKaQD4aHl
+        hiiz/ADgygCWCqfF28k89tOeM5K81ZMtyt7NKTRYl/qRiU68Gc8izVK1y6VE
+        ofzN+FmLdVMX3iypvS5VznC3DZuxDSkk4+AAM0YAojpkYrwt1pzxGOPKW4KD
+        zqEe2nA7xs4E9GXt57YIlLJuec3YmgMkOQayq18/d0aYS9C5XatXBVJnTgrl
+        Je/Ux7abIs1ZjCCuTArRnwzNeBZpVqxdLqUDZ0WupdrJPNYs1vic595om7v2
+        d0lyxrBG65kDbU6vdbryK0mvNqdkVXFXAInurWnGs0jLOV+5XEonttNC9dBx
+        iqh3ksJUIjY9hYYOa0UoSnPO9qg/9kamuTVO4kYm6y2cF5OwocW60vQIs0JZ
+        DznDKL0UFHW3kNl3I1PfcxgcNo4ccoKEGBR8aLFFEZAOX4puasMzRQqkykdc
+        VGfSbe8rs/Xuf1XdBAW4umxVgUuU9SeT2TeTSXUEpmdE1K6actm8TraS4YLY
+        6aZuJ197xVsJr/w2xrO6cjBmkKtCg5ZlbNORIocpAnjLdif1oonGOn/TBWH7
+        LAz/9HN1/+0woGcta20A/om7wnPGZLeYwLiaWNUrK1LVONI9G+hTQODmO8y8
+        r0B6n6vONedIQO8n4rIAGP0B1cHjfQNU7QoeBzW+D1fNZsa4JoiDdj4E1N8Y
+        HgEnxhP/3vcIotVo7Xu7AuEs8R+rpZSo+RQJR9XZFxhvW4rN/XK9fFyEy2gJ
+        8ToORr526deLjEVBVGN0GaZEBr9wbZFMArx5iINmMHYCdfSWcHMfB+2oZwpG
+        VHHdDxupV7PUKxP1hCyumwkjeTRLHpnIJ2Rxe9Ns24bgP8pjlDHSKvPwJ4kl
+        UjtqFUYfF2G0iNYvUfi0Un8Py3W0/hCunsJQCVeYuzioPz//AnwVZK+9DgAA
+    http_version: 
+  recorded_at: Mon, 16 Jan 2017 13:08:40 GMT
+recorded_with: VCR 3.0.3
