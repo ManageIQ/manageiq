@@ -13,6 +13,26 @@ describe ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfigurationS
     expect(manager.configuration_scripts.first).to be_a ConfigurationScript
   end
 
+  context "relates to playbook" do
+    let(:configuration_script_source) { FactoryGirl.create(:configuration_script_source, :manager => manager) }
+    let!(:payload) { FactoryGirl.create(:configuration_script_payload) }
+    let(:configuration_scripts_without_payload) { FactoryGirl.create(:configuration_script) }
+    let(:configuration_scripts) do
+      [FactoryGirl.create(:configuration_script, :parent => payload),
+       FactoryGirl.create(:configuration_script, :parent => payload)]
+    end
+
+    it "can refer to a payload" do
+      expect(configuration_scripts[0].parent).to eq(payload)
+      expect(configuration_scripts[1].parent).to eq(payload)
+      expect(payload.children).to match_array(configuration_scripts)
+    end
+
+    it "can be without payload" do
+      expect(configuration_scripts_without_payload.parent).to be_nil
+    end
+  end
+
   context "#run" do
     before do
       allow_any_instance_of(Provider).to receive_messages(:connect => connection)

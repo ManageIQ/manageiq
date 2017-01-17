@@ -796,12 +796,16 @@ describe Rbac::Filterer do
       describe ".search" do
         let!(:ansible_configuration_script)          { FactoryGirl.create(:ansible_configuration_script) }
         let!(:ansible_configuration_script_with_tag) { FactoryGirl.create(:ansible_configuration_script) }
+        let!(:ansible_playbook)                      { FactoryGirl.create(:ansible_playbook) }
+        let!(:ansible_playbook_with_tag)             { FactoryGirl.create(:ansible_playbook) }
 
         it 'works when targets are empty' do
           User.with_user(user) do
             results = described_class.search(:class => 'ConfigurationScript').first
-            expect(results.length).to eq(2)
             expect(results).to match_array([ansible_configuration_script, ansible_configuration_script_with_tag])
+
+            results = described_class.search(:class => 'ConfigurationScriptPayload').first
+            expect(results).to match_array([ansible_playbook, ansible_playbook_with_tag])
           end
         end
 
@@ -813,6 +817,7 @@ describe Rbac::Filterer do
             group.save!
 
             ansible_configuration_script_with_tag.tag_with(['/managed/environment/prod'].join(' '), :ns => '*')
+            ansible_playbook_with_tag.tag_with(['/managed/environment/prod'].join(' '), :ns => '*')
           end
 
           it 'lists only tagged ConfigurationScripts' do
@@ -820,6 +825,13 @@ describe Rbac::Filterer do
               results = described_class.search(:class => 'ConfigurationScript').first
               expect(results.length).to eq(1)
               expect(results.first).to eq(ansible_configuration_script_with_tag)
+            end
+          end
+
+          it 'lists only tagged ConfigurationScriptPayload' do
+            User.with_user(user) do
+              results = described_class.search(:class => 'ConfigurationScriptPayload').first
+              expect(results).to match_array([ansible_playbook_with_tag])
             end
           end
         end
