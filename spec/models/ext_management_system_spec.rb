@@ -23,7 +23,7 @@ describe ExtManagementSystem do
       "azure_network"               => "Azure Network",
       "ec2"                         => "Amazon EC2",
       "ec2_network"                 => "Amazon EC2 Network",
-      "ec2_block_storage"           => "Amazon EBS",
+      "ec2_ebs_storage"             => "Amazon EBS",
       "foreman_configuration"       => "Foreman Configuration",
       "foreman_provisioning"        => "Foreman Provisioning",
       "gce"                         => "Google Compute Engine",
