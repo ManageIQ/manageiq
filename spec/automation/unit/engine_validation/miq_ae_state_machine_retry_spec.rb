@@ -256,7 +256,7 @@ describe "MiqAeStateMachineRetry" do
     q = MiqQueue.where(:state => 'ready').first
     expect(q[:server_guid]).to eql(MiqServer.my_guid)
   end
- 
+
   it "retry without server affinity set" do
     setup_model(retry_script)
     send_ae_request_via_queue(@automate_args)
