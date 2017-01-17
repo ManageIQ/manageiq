@@ -15,14 +15,14 @@ gem "rubywbem",            :require => false, :git => "https://github.com/Manage
 unless dependencies.detect { |d| d.name == "manageiq-content" }
   gem "manageiq-content", :git => "https://github.com/ManageIQ/manageiq-content", :branch => "master"
 end
-unless dependencies.detect { |d| d.name == "manageiq-providers-vmware" }
-  gem "manageiq-providers-vmware", :git => "https://github.com/durandom/manageiq-providers-vmware", :branch => "master"
-end
 unless dependencies.detect { |d| d.name == "manageiq-providers-amazon" }
   gem "manageiq-providers-amazon", :git => "https://github.com/ManageIQ/manageiq-providers-amazon", :branch => "master"
 end
 unless dependencies.detect { |d| d.name == "manageiq-providers-azure" }
   gem "manageiq-providers-azure", :git => "https://github.com/ManageIQ/manageiq-providers-azure", :branch => "master"
+end
+unless dependencies.detect { |d| d.name == "manageiq-providers-vmware" }
+  gem "manageiq-providers-vmware", :git => "https://github.com/ManageIQ/manageiq-providers-vmware", :branch => "master"
 end
 
 unless dependencies.detect { |d| d.name == "manageiq-ui-classic" }
