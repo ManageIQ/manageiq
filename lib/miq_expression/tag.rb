@@ -23,8 +23,8 @@ class MiqExpression::Tag
     :string
   end
 
-  def equ?(other)
+  def eql?(other)
     other.try(:model) == model && other.try(:namespace) == namespace
   end
-  alias == equ?
+  alias == eql?
 end
