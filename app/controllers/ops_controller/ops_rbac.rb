@@ -982,7 +982,7 @@ module OpsController::OpsRbac
     @edit[:new][:password] = @user.password unless @sb[:typ] == "copy"
     @edit[:new][:verify] = @user.password unless @sb[:typ] == "copy"
 
-    @edit[:groups] = MiqGroup.non_tenant_groups_in_my_region
+    @edit[:groups] = Rbac.filtered(MiqGroup.non_tenant_groups_in_my_region)
                              .sort_by { |g| g.description.downcase }
                              .collect { |g| [g.description, g.id] }
     @edit[:new][:group] = @user.current_group ? @user.current_group.id : nil
@@ -1019,6 +1019,9 @@ module OpsController::OpsRbac
     end
     if @edit[:new][:group].blank?
       add_flash(_("A User must be assigned to a Group"), :error)
+      valid = false
+    elsif Rbac.filtered([MiqGroup.find_by_id(@edit[:new][:group])].compact).empty?
+      add_flash(_("A User must be assigned to an allowed Group"), :error)
       valid = false
     end
     valid
