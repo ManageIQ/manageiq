@@ -284,19 +284,6 @@ describe EmsEvent do
           :args        => [purge_time]
         )
       end
-
-      it "with item already in the queue" do
-        new_purge_time = (Time.now + 20).round
-        described_class.purge_queue(new_purge_time)
-
-        q = MiqQueue.all
-        expect(q.length).to eq(1)
-        expect(q.first).to have_attributes(
-          :class_name  => described_class.name,
-          :method_name => "purge",
-          :args        => [new_purge_time]
-        )
-      end
     end
 
     context ".purge" do
