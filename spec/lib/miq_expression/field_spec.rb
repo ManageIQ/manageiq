@@ -52,9 +52,23 @@ RSpec.describe MiqExpression::Field do
       expect(described_class.parse(field).associations).to eq(%w(host hardware))
     end
 
+    it "will return nil when given a field with unsupported syntax" do
+      field = "Vm,host+name"
+      expect(described_class.parse(field)).to be_nil
+    end
+  end
+
+  describe "#parse!" do
+    it "can parse the model name" do
+      field = "Vm-name"
+      expect(described_class.parse(field).model).to be(Vm)
+    end
+
+    # this calls out to parse, so just needed to make sure one value worked
+
     it "will raise a parse error when given a field with unsupported syntax" do
       field = "Vm,host+name"
-      expect { described_class.parse(field) }.to raise_error(MiqExpression::Field::ParseError)
+      expect { described_class.parse!(field) }.to raise_error(MiqExpression::Field::ParseError)
     end
   end
 
@@ -146,6 +160,18 @@ RSpec.describe MiqExpression::Field do
     it "returns true if the column is on a 'has_and_belongs_to_many' association" do
       field = described_class.new(Vm, ["storages"], "name")
       expect(field).to be_plural
+    end
+  end
+
+  describe "#column_type" do
+    it "detects :string" do
+      field = described_class.new(Vm, [], "name")
+      expect(field.column_type).to eq(:string)
+    end
+
+    it "detects :integer" do
+      field = described_class.new(Vm, [], "id")
+      expect(field.column_type).to eq(:integer)
     end
   end
 

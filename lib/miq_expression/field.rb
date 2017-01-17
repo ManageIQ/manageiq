@@ -8,8 +8,13 @@ class MiqExpression::Field
   ParseError = Class.new(StandardError)
 
   def self.parse(field)
-    match = FIELD_REGEX.match(field) or raise ParseError, field
-    new(match[:model_name].constantize, match[:associations].to_s.split("."), match[:column])
+    match = FIELD_REGEX.match(field) or return
+    model = match[:model_name].safe_constantize or return
+    new(model, match[:associations].to_s.split("."), match[:column])
+  end
+
+  def self.parse!(field)
+    parse(field) or raise ParseError, field
   end
 
   attr_reader :model, :associations, :column

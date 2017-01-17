@@ -762,11 +762,6 @@ class MiqExpression
       ref = model.reflection_with_virtual(assoc)
       result[:virtual_reflection] = true if model.virtual_reflection?(assoc)
 
-      unless result[:virtual_reflection]
-        cur_incl[assoc] ||= {}
-        cur_incl = cur_incl[assoc]
-      end
-
       unless ref
         result[:virtual_reflection] = true
         result[:sql_support] = false
@@ -774,13 +769,19 @@ class MiqExpression
         return result
       end
 
+      unless result[:virtual_reflection]
+        cur_incl[assoc] ||= {}
+        cur_incl = cur_incl[assoc]
+      end
+
       model = ref.klass
     end
     if col
-      result[:data_type] = col_type(model, col)
+      f = Field.new(model, [], col)
+      result[:data_type] = f.column_type
       result[:format_sub_type] = MiqReport::Formats.sub_type(col.to_sym) || result[:data_type]
       result[:virtual_column] = model.virtual_attribute?(col.to_s)
-      result[:sql_support] = model.attribute_supported_by_sql?(col.to_s)
+      result[:sql_support] = !result[:virtual_reflection] && model.attribute_supported_by_sql?(col.to_s)
       result[:excluded_by_preprocess_options] = self.exclude_col_by_preprocess_options?(col, options)
     end
     result
@@ -1358,31 +1359,7 @@ class MiqExpression
   end
 
   def self.get_col_type(field)
-    model, parts, col = parse_field(field)
-
-    return :string if model.downcase == "managed" || parts.last == "managed"
-    return nil unless field.include?("-")
-
-    model = determine_model(model, parts)
-    return nil if model.nil?
-    return Field.parse(field).column_type if col.include?(CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX)
-
-    col_type(model, col)
-  end
-
-  def self.col_type(model, col)
-    model = model_class(model)
-    model.type_for_attribute(col).type
-  end
-
-  def self.parse_field(field)
-    col = field.split("-").last
-    col = col.split("__").first unless col.nil? # throw away pivot table suffix if it exists before looking up type
-
-    parts = field.split("-").first.split(".")
-    model = parts.shift
-
-    return model, parts, col
+    parse_field_or_tag(field).try(:column_type)
   end
 
   NUM_OPERATORS     = ["=", "!=", "<", "<=", ">=", ">"].freeze
@@ -1626,6 +1603,18 @@ class MiqExpression
     end
   end
 
+  def self.create_field(model, associations, field_name)
+    Field.new(model, associations, field_name)
+  end
+
+  def self.parse_field_or_tag(str)
+    # managed.location, Model.x.y.managed-location
+    if str =~ /(^|[.])managed[-.]/
+      MiqExpression::Tag.parse(str)
+    else
+      Field.parse(str)
+    end
+  end
 
   private
 
@@ -1739,19 +1728,6 @@ class MiqExpression
     else
       raise _("operator '%{operator_name}' is not supported") % {:operator_name => operator}
     end
-  end
-
-  def self.determine_model(model, parts)
-    model = model_class(model)
-    return nil if model.nil?
-
-    parts.each do |assoc|
-      ref = model.reflection_with_virtual(assoc.to_sym)
-      return nil if ref.nil?
-      model = ref.klass
-    end
-
-    model
   end
 
   def self.determine_relat_path(ref)
