@@ -1,8 +1,11 @@
 = render :partial => 'layouts/doctype'
 %html{:lang => I18n.locale.to_s.sub('-', '_')}
   %head
-    - if %w(5.1 5.5).include?(api_version) && is_browser_ie? && browser_info(:version).to_i > 9
-      %meta{:content => "IE=8", "http-equiv" => "X-UA-Compatible"}
+    - if %w(5.1 5.5).include?(api_version) && is_browser_ie?
+      - if browser_info(:version).to_i > 10
+        %meta{:content => "IE=EmulateIE8", "http-equiv" => "X-UA-Compatible"}
+      - elsif browser_info(:version).to_i > 9
+        %meta{:content => "IE=8", "http-equiv" => "X-UA-Compatible"}
     %meta{:content => "text/html; charset=ISO-8859-1", "http-equiv" => "Content-Type"}
     = favicon_link_tag
     = stylesheet_link_tag "vmrc"
