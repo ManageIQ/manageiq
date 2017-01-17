@@ -35,6 +35,20 @@ describe ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationScri
       expect(described_class.create_in_provider(manager.id, params)).to be_a(described_class)
     end
 
+    it ".create_in_provider_queue" do
+      EvmSpecHelper.local_miq_server
+      task_id = described_class.create_in_provider_queue(manager.id, params)
+      expect(MiqTask.find(task_id)).to have_attributes(:name => "Creating Ansible Tower Job Template")
+      expect(MiqQueue.first).to have_attributes(
+        :args        => [manager.id, params],
+        :class_name  => "ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationScript",
+        :method_name => "create_in_provider",
+        :priority    => MiqQueue::HIGH_PRIORITY,
+        :role        => "ems_operations",
+        :zone        => manager.zone_id
+      )
+    end
+
     def store_new_job_template(job_template, manager)
       described_class.create!(
         :manager     => manager,
