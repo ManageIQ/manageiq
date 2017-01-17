@@ -8,8 +8,7 @@ class OrchestrationTemplate < ApplicationRecord
 
   has_many :stacks, :class_name => "OrchestrationStack"
 
-  belongs_to :parent, :class_name => "OrchestrationTemplate"
-  has_many :children, :class_name => "OrchestrationTemplate", :foreign_key => 'parent_id'
+  has_ancestry
 
   default_value_for :draft, false
   default_value_for :orderable, true
