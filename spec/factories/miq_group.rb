@@ -26,11 +26,11 @@ FactoryGirl.define do
     end
 
     trait :system_type do
-      group_type MiqGroup::SYSTEM_GROUP
+      group_type { MiqGroup::SYSTEM_GROUP }
     end
 
     trait :tenant_type do
-      group_type MiqGroup::TENANT_GROUP
+      group_type { MiqGroup::TENANT_GROUP }
     end
   end
 end
