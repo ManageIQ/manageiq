@@ -54,50 +54,19 @@ describe ManageIQ::Providers::Redhat::InfraManager::Vm::Reconfigure do
     end
 
     it "disksAdd" do
-      disks = subject["disksAdd"]["disks"]
+      disks = subject["disksAdd"][:disks]
       expect(disks.size).to eq(1)
       disk_to_add = disks[0]
       expect(disk_to_add["disk_size_in_mb"]).to eq("33")
       expect(disk_to_add["thin_provisioned"]).to eq(true)
       expect(disk_to_add["bootable"]).to eq(false)
-      expect(subject["disksAdd"]["ems_storage_uid"]).to eq("XYZ")
+      expect(subject["disksAdd"][:storage]).to eq(storage)
     end
 
     it "disksRemove" do
       expect(subject["disksRemove"].size).to eq(1)
       expect(subject["disksRemove"][0]["disk_name"]).to eq("2520b46a-799b-472d-89ce-d47f5b65ee5e")
       expect(subject["disksRemove"][0]["delete_backing"]).to be_falsey
-    end
-  end
-
-  context "#disk_format_for" do
-    context "when storage type is file system" do
-      it "returns 'raw' format for FS storage type" do
-        expect(vm.disk_format_for(false)).to eq("raw")
-      end
-
-      it "returns 'raw' format for thin provisioned" do
-        expect(vm.disk_format_for(true)).to eq("raw")
-      end
-    end
-
-    context "when storage type is block" do
-      let(:storage) { FactoryGirl.create(:storage_block) }
-
-      it "returns 'cow' format for block storage type and thin provisioned" do
-        expect(vm.disk_format_for(true)).to eq("cow")
-      end
-
-      it "returns 'raw' format for block storage type and thick provisioned" do
-        expect(vm.disk_format_for(false)).to eq("raw")
-      end
-    end
-
-    context "when storage type is not file system and not blcok" do
-      let(:storage) { FactoryGirl.create(:storage_unknown) }
-      it "returns 'raw' format as default" do
-        expect(vm.disk_format_for(false)).to eq("raw")
-      end
     end
   end
 end

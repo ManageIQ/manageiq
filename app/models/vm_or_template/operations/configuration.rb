@@ -73,8 +73,15 @@ module VmOrTemplate::Operations::Configuration
 
   def raw_add_disk(disk_name, disk_size_mb, options = {})
     raise _("VM has no EMS, unable to add disk") unless ext_management_system
+    if options[:datastore]
+      datastore = Storage.find_by(:name => options[:datastore])
+      raise _("Data Store does not exist, unable to add disk") unless datastore
+    end
+
     run_command_via_parent(:vm_add_disk, :diskName => disk_name, :diskSize => disk_size_mb,
-        :thinProvisioned => options[:thin_provisioned], :dependent => options[:dependent], :persistent => options[:persistent])
+        :thinProvisioned => options[:thin_provisioned], :dependent => options[:dependent],
+        :persistent => options[:persistent], :bootable => options[:bootable], :datastore => datastore,
+        :interface => options[:interface])
   end
 
   def add_disk(disk_name, disk_size_mb, options = {})

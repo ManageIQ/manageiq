@@ -102,24 +102,45 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
   end
 
   def add_disks(add_disks_spec, vm)
-    ems_storage_uid = add_disks_spec["ems_storage_uid"]
+    storage = add_disks_spec[:storage]
     with_disk_attachments_service(vm) do |service|
-      add_disks_spec["disks"].each { |disk_spec| service.add(prepare_disk(disk_spec, ems_storage_uid)) }
+      add_disks_spec[:disks].each { |disk_spec| service.add(prepare_disk(disk_spec, storage)) }
     end
   end
 
-  def prepare_disk(disk_spec, ems_storage_uid)
-    {
-      :bootable  => disk_spec["bootable"],
-      :interface => "VIRTIO",
-      :active    => true,
-      :disk      => {
-        :provisioned_size => disk_spec["disk_size_in_mb"].to_i * 1024 * 1024,
-        :sparse           => disk_spec["thin_provisioned"],
-        :format           => disk_spec["format"],
-        :storage_domains  => [:id => ems_storage_uid]
-      }
+  # prepare disk attachment request payload of adding disk for reconfigure vm
+  def prepare_disk(disk_spec, storage)
+    disk_spec = disk_spec.symbolize_keys
+    da_options = {
+      :size_in_mb       => disk_spec[:disk_size_in_mb],
+      :storage          => storage,
+      :name             => disk_spec[:disk_name],
+      :thin_provisioned => disk_spec[:thin_provisioned],
+      :bootable         => disk_spec[:bootable],
     }
+
+    disk_attachment_builder = DiskAttachmentBuilder.new(da_options)
+    disk_attachment_builder.disk_attachment
+  end
+
+  # add disk to a virtual machine for a request arrived from an automation call
+  def vm_add_disk(vm, options = {})
+    storage = options[:datastore] || vm.storage
+    raise _("Data Store does not exist, unable to add disk") unless storage
+
+    da_options = {
+      :size_in_mb       => options[:diskSize],
+      :storage          => storage,
+      :name             => options[:diskName],
+      :thin_provisioned => options[:thinProvisioned],
+      :bootable         => options[:bootable],
+      :interface        => options[:interface]
+    }
+
+    disk_attachment_builder = DiskAttachmentBuilder.new(da_options)
+    with_disk_attachments_service(vm) do |service|
+      service.add(disk_attachment_builder.disk_attachment)
+    end
   end
 
   def update_vm_memory(vm, virtual)

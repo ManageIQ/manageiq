@@ -41,6 +41,27 @@ module ManageIQ::Providers::Redhat::InfraManager::Provision::StateMachine
       _log.info("#{message} #{for_destination}")
       update_and_notify_parent(:message => message)
       configure_container
+      signal :configure_disks
+    end
+  end
+
+  def configure_disks
+    configure_dialog_disks
+    requested_disks = options[:disks_add]
+    if requested_disks.nil?
+      _log.info "Disks settings will be inherited from the template."
+      signal :customize_guest
+    else
+      add_disks(requested_disks)
+      signal :poll_add_disks_complete
+    end
+  end
+
+  def poll_add_disks_complete
+    update_and_notify_parent(:message => "Waiting for disks creation to complete for #{dest_name}")
+    if destination_disks_locked?
+      requeue_phase
+    else
       signal :customize_guest
     end
   end
