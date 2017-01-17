@@ -84,7 +84,7 @@ describe MiqAeClass do
 
     before(:each) do
       @user = FactoryGirl.create(:user_with_group, 'name' => 'Fred')
-      model_data_dir = File.join(File.dirname(__FILE__), 'miq_ae_classes')
+      model_data_dir = Rails.root.join("spec/models/miq_ae_class/data")
       EvmSpecHelper.import_yaml_model(File.join(model_data_dir, 'domain1'), "DOMAIN1")
       EvmSpecHelper.import_yaml_model(File.join(model_data_dir, 'domain2'), "DOMAIN2")
       EvmSpecHelper.import_yaml_model(File.join(model_data_dir, 'domain3'), "DOMAIN3")
