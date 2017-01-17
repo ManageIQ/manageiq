@@ -2,6 +2,11 @@ describe Tenant do
   include_examples ".seed called multiple times"
 
   let(:tenant) { described_class.new(:domain => 'x.com', :parent => default_tenant) }
+  let(:user_admin) {
+    user = FactoryGirl.create(:user_admin)
+    allow(user).to receive(:get_timezone).and_return("UTC")
+    user
+  }
 
   let(:default_tenant) do
     root_tenant
@@ -861,9 +866,11 @@ describe Tenant do
       ten1 = FactoryGirl.create(:tenant, :name => "ten1", :parent => root_tenant)
       ten2 = FactoryGirl.create(:tenant, :name => "ten2", :parent => ten1)
 
-      tenants, projects = Tenant.tenant_and_project_names
-      expect(tenants).to eq([["root", root_tenant.id], ["root/ten1", ten1.id], ["root/ten1/ten2", ten2.id]])
-      expect(projects).to be_empty
+      User.with_user(user_admin) do
+        tenants, projects = Tenant.tenant_and_project_names
+        expect(tenants).to eq([["root", root_tenant.id], ["root/ten1", ten1.id], ["root/ten1/ten2", ten2.id]])
+        expect(projects).to be_empty
+      end
     end
 
     # root
@@ -873,9 +880,11 @@ describe Tenant do
       proj2 = FactoryGirl.create(:tenant, :name => "proj2", :divisible => false, :parent => root_tenant)
       proj1 = FactoryGirl.create(:tenant, :name => "proj1", :divisible => false, :parent => root_tenant)
 
-      tenants, projects = Tenant.tenant_and_project_names
-      expect(tenants).to eq([["root", root_tenant.id]])
-      expect(projects).to eq([["root/proj1", proj1.id], ["root/proj2", proj2.id]])
+      User.with_user(user_admin) do
+        tenants, projects = Tenant.tenant_and_project_names
+        expect(tenants).to eq([["root", root_tenant.id]])
+        expect(projects).to eq([["root/proj1", proj1.id], ["root/proj2", proj2.id]])
+      end
     end
 
     # root
@@ -893,11 +902,13 @@ describe Tenant do
       FactoryGirl.create(:tenant, :name => "proj1", :divisible => false, :parent => ten1)
       FactoryGirl.create(:tenant, :name => "proj3", :divisible => false, :parent => root_tenant)
 
-      tenants, projects = Tenant.tenant_and_project_names
-      expect(tenants.map(&:first)).to eq(%w(root root/ten1 root/ten2 root/ten3))
-      expect(tenants.first.last).to eq(root_tenant.id)
+      User.with_user(user_admin) do
+        tenants, projects = Tenant.tenant_and_project_names
+        expect(tenants.map(&:first)).to eq(%w(root root/ten1 root/ten2 root/ten3))
+        expect(tenants.first.last).to eq(root_tenant.id)
 
-      expect(projects.map(&:first)).to eq(%w(root/proj3 root/ten1/proj1 root/ten2/proj2))
+        expect(projects.map(&:first)).to eq(%w(root/proj3 root/ten1/proj1 root/ten2/proj2))
+      end
     end
   end
 
