@@ -11,7 +11,6 @@ describe "MiqAeStateMachineRetry" do
     @root_class      = "TOP_OF_THE_WORLD"
     @root_instance   = "EVEREST"
     @user            = FactoryGirl.create(:user_with_group)
-    @miq_server      = FactoryGirl.create(:miq_server)
     @automate_args   = {:namespace        => @namespace,
                         :class_name       => @root_class,
                         :instance_name    => @root_instance,
@@ -19,8 +18,7 @@ describe "MiqAeStateMachineRetry" do
                         :miq_group_id     => @user.current_group_id,
                         :tenant_id        => @user.current_tenant.id,
                         :automate_message => 'create'}
-    allow(MiqServer).to receive(:my_zone).and_return('default')
-    allow(MiqServer).to receive(:my_server).and_return(@miq_server)
+    EvmSpecHelper.create_guid_miq_server_zone
     clear_domain
   end
 
@@ -31,6 +29,15 @@ describe "MiqAeStateMachineRetry" do
   def perpetual_retry_script
     <<-'RUBY'
       $evm.root['ae_result'] = 'retry'
+    RUBY
+  end
+
+  alias_method :retry_script, :perpetual_retry_script
+
+  def retry_server_affinity_script
+    <<-'RUBY'
+      $evm.root['ae_result'] = 'retry'
+      $evm.root['ae_retry_server_affinity'] = true
     RUBY
   end
 
@@ -237,5 +244,27 @@ describe "MiqAeStateMachineRetry" do
     expect(ws).not_to be_nil
     q = MiqQueue.where(:state => 'ready').first
     expect(q.args[0][:state]).to eql('state2')
+  end
+
+  it "retry with server affinity set" do
+    setup_model(retry_server_affinity_script)
+    send_ae_request_via_queue(@automate_args)
+    status, _message, ws = deliver_ae_request_from_queue
+    expect(status).not_to eq(MiqQueue::STATUS_ERROR)
+    expect(ws).not_to be_nil
+    expect(MiqQueue.count).to eq(2)
+    q = MiqQueue.where(:state => 'ready').first
+    expect(q[:server_guid]).to eql(MiqServer.my_guid)
+  end
+
+  it "retry without server affinity set" do
+    setup_model(retry_script)
+    send_ae_request_via_queue(@automate_args)
+    status, _message, ws = deliver_ae_request_from_queue
+    expect(status).not_to eq(MiqQueue::STATUS_ERROR)
+    expect(ws).not_to be_nil
+    expect(MiqQueue.count).to eq(2)
+    q = MiqQueue.where(:state => 'ready').first
+    expect(q[:server_guid]).to be_nil
   end
 end
