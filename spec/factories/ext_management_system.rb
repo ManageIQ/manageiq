@@ -372,4 +372,12 @@ FactoryGirl.define do
           :class   => "ManageIQ::Providers::Hawkular::DatawarehouseManager",
           :parent  => :ems_datawarehouse do
   end
+
+  # Leaf classes for elasticsearch_datawarehouse_manager
+
+  factory :ems_elasticsearch_datawarehouse,
+          :aliases => ["manageiq/providers/elasticsearch/datawarehouse_manager"],
+          :class   => "ManageIQ::Providers::Elasticsearch::DatawarehouseManager",
+          :parent  => :ems_datawarehouse do
+  end
 end

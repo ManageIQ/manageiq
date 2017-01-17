@@ -1332,6 +1332,7 @@
         :ems_refresh_worker_google: {}
         :ems_refresh_worker_google_network: {}
         :ems_refresh_worker_hawkular: {}
+        :ems_refresh_worker_elasticsearch: {}
         :ems_refresh_worker_kubernetes: {}
         :ems_refresh_worker_microsoft: {}
         :ems_refresh_worker_openshift: {}

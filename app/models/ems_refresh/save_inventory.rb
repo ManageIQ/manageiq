@@ -283,6 +283,22 @@ module EmsRefresh::SaveInventory
     save_inventory_multi(os.processes, hashes, :use_association, [:pid])
   end
 
+  def save_custom_attribute_attribute_inventory(entity, attribute_name, hashes, target = nil)
+    return if hashes.nil?
+
+    entity.send(attribute_name).reset
+    deletes = if target.kind_of?(ExtManagementSystem)
+                :use_association
+              else
+                []
+              end
+
+    save_inventory_multi(entity.send(attribute_name),
+                         hashes, deletes, [:section, :name])
+    store_ids_for_new_records(entity.send(attribute_name),
+                              hashes, [:section, :name])
+  end
+
   def save_custom_attributes_inventory(parent, hashes, mode = :refresh)
     return if hashes.nil?
 

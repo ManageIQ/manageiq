@@ -32,6 +32,7 @@
 - ems-type:gce_network
 - ems-type:hawkular
 - ems-type:hawkular_datawarehouse
+- ems-type:elasticsearch_datawarehouse
 - ems-type:kubernetes
 - ems-type:lenovo_ph_infra
 - ems-type:nuage_network

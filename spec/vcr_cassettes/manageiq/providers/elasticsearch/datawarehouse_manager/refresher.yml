@@ -1,0 +1,123 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://vm-48-24-logging-es-ops.eng.lab.tlv.redhat.com/
+    body:
+      encoding: UTF-8
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v0.9.2
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip,deflate
+      Date:
+      - Sun, 22 Jan 2017 13:07:32 GMT
+      Authorization:
+      - Bearer bearer_token
+      X-Forwarded-For:
+      - 0.0.0.0
+      X-Proxy-Remote-User:
+      - system:service-account:management-infra:management-admin
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - application/json; charset=UTF-8
+      Content-Length:
+      - '367'
+    body:
+      encoding: UTF-8
+      string: |
+        {
+          "name" : "Entropic Man",
+          "cluster_name" : "logging-es-ops",
+          "cluster_uuid" : "ggxvXhOZQiWATUJa-frrlw",
+          "version" : {
+            "number" : "2.4.1",
+            "build_hash" : "c67dc32e24162035d18d6fe1e952c4cbcbe79d16",
+            "build_timestamp" : "2016-09-27T18:57:55Z",
+            "build_snapshot" : false,
+            "lucene_version" : "5.5.2"
+          },
+          "tagline" : "You Know, for Search"
+        }
+    http_version: 
+  recorded_at: Sun, 22 Jan 2017 13:07:33 GMT
+- request:
+    method: get
+    uri: https://vm-48-24-logging-es-ops.eng.lab.tlv.redhat.com/_cluster/health
+    body:
+      encoding: UTF-8
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v0.9.2
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip,deflate
+      Date:
+      - Sun, 22 Jan 2017 13:07:33 GMT
+      Authorization:
+      - Bearer bearer_token
+      X-Forwarded-For:
+      - 0.0.0.0
+      X-Proxy-Remote-User:
+      - system:service-account:management-infra:management-admin
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - application/json; charset=UTF-8
+      Content-Length:
+      - '392'
+    body:
+      encoding: UTF-8
+      string: '{"cluster_name":"logging-es-ops","status":"green","timed_out":false,"number_of_nodes":1,"number_of_data_nodes":1,"active_primary_shards":20,"active_shards":20,"relocating_shards":0,"initializing_shards":0,"unassigned_shards":0,"delayed_unassigned_shards":0,"number_of_pending_tasks":0,"number_of_in_flight_fetch":0,"task_max_waiting_in_queue_millis":0,"active_shards_percent_as_number":100.0}'
+    http_version: 
+  recorded_at: Sun, 22 Jan 2017 13:07:33 GMT
+- request:
+    method: get
+    uri: https://vm-48-24-logging-es-ops.eng.lab.tlv.redhat.com/_nodes/stats
+    body:
+      encoding: UTF-8
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v0.9.2
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip,deflate
+      Date:
+      - Sun, 22 Jan 2017 13:07:33 GMT
+      Authorization:
+      - Bearer bearer_token
+      X-Forwarded-For:
+      - 0.0.0.0
+      X-Proxy-Remote-User:
+      - system:service-account:management-infra:management-admin
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Type:
+      - application/json; charset=UTF-8
+      Content-Length:
+      - '6523'
+    body:
+      encoding: UTF-8
+      string: '{"cluster_name":"logging-es-ops","nodes":{"V4CwCsM7Rw-cT8vW_hCovA":{"timestamp":1485090510189,"name":"Entropic
+        Man","transport_address":"10.1.0.144:9300","host":"10.1.0.144","ip":["10.1.0.144:9300","NONE"],"attributes":{"master":"true"},"indices":{"docs":{"count":37896916,"deleted":2},"store":{"size_in_bytes":9325322719,"throttle_time_in_millis":0},"indexing":{"index_total":6,"index_time_in_millis":777,"index_current":0,"index_failed":0,"delete_total":0,"delete_time_in_millis":0,"delete_current":0,"noop_update_total":0,"is_throttled":false,"throttle_time_in_millis":0},"get":{"total":12847,"time_in_millis":2583,"exists_total":10281,"exists_time_in_millis":2514,"missing_total":2566,"missing_time_in_millis":69,"current":0},"search":{"open_contexts":0,"query_total":3,"query_time_in_millis":392,"query_current":0,"fetch_total":3,"fetch_time_in_millis":154,"fetch_current":0,"scroll_total":0,"scroll_time_in_millis":0,"scroll_current":0},"merges":{"current":0,"current_docs":0,"current_size_in_bytes":0,"total":0,"total_time_in_millis":0,"total_docs":0,"total_size_in_bytes":0,"total_stopped_time_in_millis":0,"total_throttled_time_in_millis":0,"total_auto_throttle_in_bytes":419430400},"refresh":{"total":29,"total_time_in_millis":1528},"flush":{"total":21,"total_time_in_millis":181},"warmer":{"current":0,"total":77,"total_time_in_millis":143},"query_cache":{"memory_size_in_bytes":0,"total_count":3,"hit_count":0,"miss_count":3,"cache_size":0,"cache_count":0,"evictions":0},"fielddata":{"memory_size_in_bytes":0,"evictions":0},"percolate":{"total":0,"time_in_millis":0,"current":0,"memory_size_in_bytes":-1,"memory_size":"-1b","queries":0},"completion":{"size_in_bytes":0},"segments":{"count":273,"memory_in_bytes":37848383,"terms_memory_in_bytes":32566539,"stored_fields_memory_in_bytes":4634832,"term_vectors_memory_in_bytes":0,"norms_memory_in_bytes":99584,"doc_values_memory_in_bytes":547428,"index_writer_memory_in_bytes":0,"index_writer_max_memory_in_bytes":435738214,"version_map_memory_in_bytes":0,"fixed_bit_set_memory_in_bytes":0},"translog":{"operations":2,"size_in_bytes":3451},"suggest":{"total":0,"time_in_millis":0,"current":0},"request_cache":{"memory_size_in_bytes":0,"evictions":0,"hit_count":0,"miss_count":0},"recovery":{"current_as_source":0,"current_as_target":0,"throttle_time_in_millis":0}},"os":{"timestamp":1485090510240,"cpu_percent":7,"load_average":0.6,"mem":{"total_in_bytes":8201433088,"free_in_bytes":165126144,"used_in_bytes":8036306944,"free_percent":2,"used_percent":98},"swap":{"total_in_bytes":4294963200,"free_in_bytes":1476849664,"used_in_bytes":2818113536}},"process":{"timestamp":1485090510241,"open_file_descriptors":747,"max_file_descriptors":1048576,"cpu":{"percent":0,"total_in_millis":1916290},"mem":{"total_virtual_in_bytes":9920249856}},"jvm":{"timestamp":1485090510242,"uptime_in_millis":154005631,"mem":{"heap_used_in_bytes":105598696,"heap_used_percent":2,"heap_committed_in_bytes":165654528,"heap_max_in_bytes":4260102144,"non_heap_used_in_bytes":95566808,"non_heap_committed_in_bytes":98004992,"pools":{"young":{"used_in_bytes":13961888,"max_in_bytes":279183360,"peak_used_in_bytes":35782656,"peak_max_in_bytes":279183360},"survivor":{"used_in_bytes":151152,"max_in_bytes":34865152,"peak_used_in_bytes":4456448,"peak_max_in_bytes":34865152},"old":{"used_in_bytes":91485656,"max_in_bytes":3946053632,"peak_used_in_bytes":91485656,"peak_max_in_bytes":3946053632}}},"threads":{"count":79,"peak_count":87},"gc":{"collectors":{"young":{"collection_count":1297,"collection_time_in_millis":13421},"old":{"collection_count":4,"collection_time_in_millis":205}}},"buffer_pools":{"direct":{"count":90,"used_in_bytes":15842155,"total_capacity_in_bytes":15842153},"mapped":{"count":237,"used_in_bytes":1816740779,"total_capacity_in_bytes":1816740779}},"classes":{"current_loaded_count":10058,"total_loaded_count":10061,"total_unloaded_count":3}},"thread_pool":{"bulk":{"threads":0,"queue":0,"active":0,"rejected":0,"largest":0,"completed":0},"fetch_shard_started":{"threads":1,"queue":0,"active":0,"rejected":0,"largest":8,"completed":20},"fetch_shard_store":{"threads":0,"queue":0,"active":0,"rejected":0,"largest":0,"completed":0},"flush":{"threads":1,"queue":0,"active":0,"rejected":0,"largest":2,"completed":43},"force_merge":{"threads":0,"queue":0,"active":0,"rejected":0,"largest":0,"completed":0},"generic":{"threads":1,"queue":0,"active":0,"rejected":0,"largest":5,"completed":15454},"get":{"threads":4,"queue":0,"active":0,"rejected":0,"largest":4,"completed":2580},"index":{"threads":4,"queue":0,"active":0,"rejected":0,"largest":4,"completed":6},"listener":{"threads":2,"queue":0,"active":0,"rejected":0,"largest":2,"completed":44},"management":{"threads":3,"queue":0,"active":1,"rejected":0,"largest":3,"completed":15397},"percolate":{"threads":0,"queue":0,"active":0,"rejected":0,"largest":0,"completed":0},"refresh":{"threads":1,"queue":0,"active":0,"rejected":0,"largest":2,"completed":23},"search":{"threads":6,"queue":0,"active":0,"rejected":0,"largest":6,"completed":6},"snapshot":{"threads":0,"queue":0,"active":0,"rejected":0,"largest":0,"completed":0},"suggest":{"threads":0,"queue":0,"active":0,"rejected":0,"largest":0,"completed":0},"warmer":{"threads":1,"queue":0,"active":0,"rejected":0,"largest":1,"completed":27}},"fs":{"timestamp":1485090510243,"total":{"total_in_bytes":37394022400,"free_in_bytes":16625414144,"available_in_bytes":14877917184,"spins":"true"},"data":[{"path":"/elasticsearch/persistent/logging-es-ops/data/logging-es-ops/nodes/0","mount":"/elasticsearch/persistent
+        (/dev/mapper/vg0-lv_root)","type":"ext4","total_in_bytes":37394022400,"free_in_bytes":16625414144,"available_in_bytes":14877917184,"spins":"true"}]},"transport":{"server_open":14,"rx_count":30877,"rx_size_in_bytes":1593128,"tx_count":30939,"tx_size_in_bytes":5747185},"http":{"current_open":2,"total_opened":64661},"breakers":{"request":{"limit_size_in_bytes":1704040857,"limit_size":"1.5gb","estimated_size_in_bytes":0,"estimated_size":"0b","overhead":1.0,"tripped":0},"fielddata":{"limit_size_in_bytes":2556061286,"limit_size":"2.3gb","estimated_size_in_bytes":0,"estimated_size":"0b","overhead":1.03,"tripped":0},"in_flight_requests":{"limit_size_in_bytes":4260102144,"limit_size":"3.9gb","estimated_size_in_bytes":0,"estimated_size":"0b","overhead":1.0,"tripped":0},"parent":{"limit_size_in_bytes":2982071500,"limit_size":"2.7gb","estimated_size_in_bytes":0,"estimated_size":"0b","overhead":1.0,"tripped":0}},"script":{"compilations":0,"cache_evictions":0}}}}'
+    http_version: 
+  recorded_at: Sun, 22 Jan 2017 13:07:33 GMT
+recorded_with: VCR 3.0.3
