@@ -1736,7 +1736,7 @@ class VmOrTemplate < ApplicationRecord
         vm.add_ems_event(event_type, event_message, event_timestamp)
       end
     when "uid_ems"
-      vm = VmOrTemplate.find_by_uid_ems(value)
+      vm = VmOrTemplate.find_by(:uid_ems => value)
       unless vm.nil?
         vm.add_ems_event(event_type, event_message, event_timestamp)
       end
