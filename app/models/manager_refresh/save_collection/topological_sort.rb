@@ -4,7 +4,7 @@ module ManagerRefresh::SaveCollection
 
     class << self
       def save_collections(ems, inventory_collections)
-        graph = ManagerRefresh::InventoryCollection::Graph.new(inventory_collections.values)
+        graph = ManagerRefresh::InventoryCollection::Graph.new(inventory_collections)
         graph.build_directed_acyclic_graph!
 
         layers = ManagerRefresh::Graph::TopologicalSort.new(graph).topological_sort
