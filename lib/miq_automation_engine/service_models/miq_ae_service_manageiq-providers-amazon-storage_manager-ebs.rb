@@ -1,0 +1,4 @@
+module MiqAeMethodService
+  class MiqAeServiceManageIQ_Providers_Amazon_StorageManager_Ebs < MiqAeServiceManageIQ_Providers_StorageManager
+  end
+end
