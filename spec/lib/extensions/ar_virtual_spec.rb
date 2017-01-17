@@ -669,6 +669,25 @@ describe VirtualFields do
         TestClass.create(:id => 2, :col1 => 20)
         expect(TestClass.select(:col2).first[:col2]).to eq(20)
       end
+
+      it "supports virtual attributes with as" do
+        class TestClass
+          virtual_attribute :col2, :integer, :arel => (-> (t) { t.grouping(arel_attribute(:col1)).as("col2") })
+          def col2
+            if has_attribute?("col2")
+              col2
+            else
+              # typically we'd return col1
+              # but we're testing that virtual columns are working
+              # col1
+              raise "NOPE"
+            end
+          end
+        end
+
+        TestClass.create(:id => 2, :col1 => 20)
+        expect(TestClass.select(:col2).first[:col2]).to eq(20)
+      end
     end
 
     describe ".virtual_delegate" do
