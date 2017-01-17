@@ -34,6 +34,9 @@ module Authenticator
       user = userprincipal_for(username)
       return user unless user.nil?
 
+      user = autocreate_user(username)
+      return user unless user.nil?
+
       raise _("Unable to auto-create user because LDAP bind credentials are not configured") unless authorize?
 
       create_user_from_ldap(username) do |lobj|
