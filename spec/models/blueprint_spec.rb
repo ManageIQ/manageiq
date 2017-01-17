@@ -103,6 +103,12 @@ describe Blueprint do
         expect(new_service_template.custom_button_sets).to_not                        include(custom_button_set)
         expect(new_service_template.custom_button_sets.first.custom_buttons).to_not   include(button_in_a_set)
       end
+
+      it 'has no other versions' do
+        new_bp = subject.deep_copy
+        expect(new_bp.versions.count).to eq(1)
+        expect(new_bp.active_version).to be_truthy
+      end
     end
 
     describe "#readonly?" do
@@ -338,6 +344,21 @@ describe Blueprint do
       FactoryGirl.create(:service_template_provision_request, :requester => user, :source => subject.bundle)
 
       expect(subject).to be_in_use
+    end
+  end
+
+  describe '#new_version' do
+    before do
+      subject.ui_properties = ui_properties
+      subject.save!
+    end
+
+    it 'will create a new version' do
+      new_version = subject.new_version(:name => 'new version')
+      expect(new_version.version).to eq('1.0')
+      expect(new_version.original_blueprint_id).to eq(subject.id)
+      expect(new_version.active_version).to be_truthy
+      expect(subject.versions).to include(new_version)
     end
   end
 end
