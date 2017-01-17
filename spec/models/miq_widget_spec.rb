@@ -725,4 +725,30 @@ describe MiqWidget do
       end
     end
   end
+
+  describe "#queued_at" do
+    it "is nil when no task" do
+      widget = FactoryGirl.build(:miq_widget)
+      expect(widget.queued_at).to be_nil
+    end
+
+    it "uses task value" do
+      dt = Time.now.utc
+      widget = FactoryGirl.build(:miq_widget, :miq_task => FactoryGirl.build(:miq_task, :created_on => dt))
+      expect(widget.queued_at).to eq(dt)
+    end
+  end
+
+  describe "#status_message" do
+    it "is nil when no task" do
+      widget = FactoryGirl.build(:miq_widget)
+      expect(widget.status_message).to eq("Unknown")
+    end
+
+    it "uses task value" do
+      dt = Time.now.utc
+      widget = FactoryGirl.build(:miq_widget, :miq_task => FactoryGirl.build(:miq_task, :message => "message"))
+      expect(widget.status_message).to eq("message")
+    end
+  end
 end

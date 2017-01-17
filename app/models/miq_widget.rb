@@ -40,7 +40,7 @@ class MiqWidget < ApplicationRecord
 
   virtual_column :status,         :type => :string,    :uses => :miq_task
   virtual_column :status_message, :type => :string,    :uses => :miq_task
-  virtual_column :queued_at,      :type => :datetime,  :uses => :miq_task
+  virtual_delegate :queued_at, :to => "miq_task.created_on", :allow_nil => true
   virtual_column :last_run_on,    :type => :datetime,  :uses => :miq_schedule
 
   def row_count(row_count_param = nil)
@@ -57,10 +57,6 @@ class MiqWidget < ApplicationRecord
 
   def next_run_on
     miq_schedule && miq_schedule.next_run_on
-  end
-
-  def queued_at
-    miq_task && miq_task.created_on
   end
 
   def status
