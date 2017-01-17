@@ -264,5 +264,61 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job do
         end
       end
     end
+
+    context '#verify_scanned_image_id' do
+      DOCKER_DAEMON_IMAGE_ID = '123456'.freeze
+
+      before(:each) do
+        @job.options[:docker_image_id] = IMAGE_ID
+        @job.options[:image_full_name] = IMAGE_NAME
+      end
+
+      it 'should report the error when the scanned Id is different than the Image Id' do
+        msg = @job.verify_scanned_image_id(OpenStruct.new(:Id => DOCKER_DAEMON_IMAGE_ID))
+        expect(msg).to eq "cannot analyze image #{IMAGE_NAME} with id #{IMAGE_ID[0..11]}:"\
+                          " detected ids were #{DOCKER_DAEMON_IMAGE_ID[0..11]}"
+      end
+
+      context 'checking RepoDigests' do
+        DOCKER_IMAGE_ID = "image_name@sha256:digest654321abcdef".freeze
+        OTHER_REPOD = "OTHER_REPOD".freeze
+
+        before(:each) do
+          @job.options[:docker_image_id] = DOCKER_IMAGE_ID
+          @job.options[:image_full_name] = "docker-pullable://" + DOCKER_IMAGE_ID
+        end
+
+        it 'checks that the Id is in RepoDigests' do
+          msg = @job.verify_scanned_image_id(OpenStruct.new(:Id          => DOCKER_DAEMON_IMAGE_ID,
+                                                            :RepoDigests => [DOCKER_IMAGE_ID],
+                                                           ))
+          expect(msg).to eq nil
+        end
+
+        it 'checks all the RepoDigests' do
+          msg = @job.verify_scanned_image_id(OpenStruct.new(:Id          => DOCKER_DAEMON_IMAGE_ID,
+                                                            :RepoDigests => [OTHER_REPOD, DOCKER_IMAGE_ID],
+                                                           ))
+          expect(msg).to eq nil
+        end
+
+        it 'compares RepoDigests hash part only' do
+          # in case the image didn't have a defined registry
+          msg = @job.verify_scanned_image_id(OpenStruct.new(:Id          => DOCKER_DAEMON_IMAGE_ID,
+                                                            :RepoDigests => ["reponame/" + DOCKER_IMAGE_ID],
+                                                           ))
+          expect(msg).to eq nil
+        end
+
+        it 'reports all attempted IDs' do
+          # in case the image didn't have a defined registry
+          msg = @job.verify_scanned_image_id(OpenStruct.new(:Id          => DOCKER_DAEMON_IMAGE_ID,
+                                                            :RepoDigests => [OTHER_REPOD],
+                                                           ))
+          expect(msg).to eq "cannot analyze image docker-pullable://#{DOCKER_IMAGE_ID} with id #{DOCKER_IMAGE_ID[0..11]}:"\
+                            " detected ids were #{DOCKER_DAEMON_IMAGE_ID[0..11]}, #{OTHER_REPOD}"
+        end
+      end
+    end
   end
 end

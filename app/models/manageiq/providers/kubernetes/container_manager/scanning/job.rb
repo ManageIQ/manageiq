@@ -113,8 +113,7 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
     end
   end
 
-  def verify_scanned_image_id
-    metadata = image_inspector_client.fetch_metadata
+  def verify_scanned_image_id(metadata)
     actual = metadata.Id
     return nil if actual == options[:docker_image_id]
     msg = "cannot analyze image %s with id %s: detected ids were %s" % [
@@ -123,7 +122,9 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
     if metadata.RepoDigests
       metadata.RepoDigests.each do |repo_digest|
         return nil if repo_digest == options[:docker_image_id]
-        msg << repo_digest.split('@').last[0..11] + ", "
+        sha_digest = repo_digest.split('@').last
+        return nil if sha_digest == options[:docker_image_id].split('@').last
+        msg << ", #{sha_digest[0..11]}"
       end
     end
 
@@ -143,7 +144,7 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
       :guest_os      => IMAGES_GUEST_OS
     }
 
-    verify_error = verify_scanned_image_id
+    verify_error = verify_scanned_image_id(image_inspector_client.fetch_metadata)
     if verify_error
       _log.error(verify_error)
       return queue_signal(:abort_job, verify_error, 'error')
