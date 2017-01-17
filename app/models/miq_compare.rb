@@ -567,7 +567,7 @@ class MiqCompare
   # Retrieve the record from the source (drift mode)
   def get_drift_record(ts)
     return unless @mode == :drift
-    new_rec = drift_model_record.drift_states.find_by_timestamp(ts).data_obj
+    new_rec = drift_model_record.drift_states.find_by(:timestamp => ts).data_obj
     _log.error "No data was found for drift object #{@model} [#{@model_record_id}] at [#{ts}]" if new_rec.nil?
     new_rec
   end

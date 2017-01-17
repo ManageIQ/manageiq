@@ -46,7 +46,7 @@ class VimPerformanceState < ApplicationRecord
   def self.capture(obj)
     ts = Time.now.utc
     ts = Time.utc(ts.year, ts.month, ts.day, ts.hour)
-    state = obj.vim_performance_states.find_by_timestamp(ts)
+    state = obj.vim_performance_states.find_by(:timestamp => ts)
     return state unless state.nil?
 
     state = obj.vim_performance_states.build(:timestamp => ts)

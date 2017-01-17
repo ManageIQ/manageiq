@@ -16,7 +16,7 @@ module Metric::CiMixin::StateFinders
           state = vim_performance_states.detect { |s| s.timestamp == t }
         end
       else
-        state = vim_performance_states.find_by_timestamp(ts)
+        state = vim_performance_states.find_by(:timestamp => ts)
       end
       state ||= perf_capture_state
       @states_by_ts[ts] = state
