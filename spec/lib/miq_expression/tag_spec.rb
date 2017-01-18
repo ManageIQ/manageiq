@@ -35,4 +35,10 @@ RSpec.describe MiqExpression::Tag do
       expect(described_class.new(Vm, "/host").sub_type).to eq(:string)
     end
   end
+
+  describe "#attribute_supported_by_sql?" do
+    it "is always false" do
+      expect(described_class.new(Vm, "/host")).not_to be_attribute_supported_by_sql
+    end
+  end
 end

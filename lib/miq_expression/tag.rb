@@ -31,6 +31,10 @@ class MiqExpression::Tag
     column_type
   end
 
+  def attribute_supported_by_sql?
+    false
+  end
+
   def eql?(other)
     other.try(:model) == model && other.try(:namespace) == namespace
   end
