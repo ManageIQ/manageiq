@@ -1160,6 +1160,7 @@ endpoints:
 - security_protocol
 - api_version
 - path
+- certificate_authority
 entitlements:
 - id
 - miq_group_id
