@@ -111,6 +111,8 @@ class ExtManagementSystem < ApplicationRecord
            :port=,
            :security_protocol,
            :security_protocol=,
+           :certificate_authority,
+           :certificate_authority=,
            :to => :default_endpoint,
            :allow_nil => true
 
