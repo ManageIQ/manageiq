@@ -295,7 +295,21 @@ class MiqRegion < ApplicationRecord
   end
 
   def encrypt(string)
+    return MiqPassword.encrypt(string) if self.class.my_region == self
     with_regional_key { |key| MiqPassword.new.encrypt(string, "v2", key) }
+  end
+
+  def decrypt(string)
+    return MiqPassword.decrypt(string) if self.class.my_region == self
+    with_regional_key { |key| MiqPassword.new.decrypt(string, false, key) }
+  end
+
+  def try_encrypt(string)
+    MiqPassword.encrypted?(string) ? string : encrypt(string)
+  end
+
+  def try_decrypt(string)
+    MiqPassword.encrypted?(string) ? decrypt(string) : string
   end
 
   def self.api_system_auth_token_for_region(region_id, user)
