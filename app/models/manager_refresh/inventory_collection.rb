@@ -319,8 +319,8 @@ module ManagerRefresh
     end
 
     def dependency?(value)
-      (value.kind_of?(::ManagerRefresh::InventoryObjectLazy) && value.dependency?) ||
-        value.kind_of?(::ManagerRefresh::InventoryObject)
+      (value.kind_of?(::ManagerRefresh::InventoryObjectLazy) || value.kind_of?(::ManagerRefresh::InventoryObject)) &&
+        value.dependency?
     end
 
     def transitive_dependency?(value)

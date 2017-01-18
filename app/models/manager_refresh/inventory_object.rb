@@ -87,6 +87,10 @@ module ManagerRefresh
       inventory_collection.base_class_name
     end
 
+    def dependency?
+      !inventory_collection.saved?
+    end
+
     private
 
     def association?(inventory_collection_scope, key)
