@@ -106,6 +106,10 @@ class MiqExpression::Field
     end
   end
 
+  def virtual_attribute?
+    target.virtual_attribute?(column)
+  end
+
   def arel_attribute
     target.arel_attribute(column)
   end

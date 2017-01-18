@@ -185,6 +185,24 @@ RSpec.describe MiqExpression::Field do
     end
   end
 
+  describe "#virtual_attribute?" do
+    it "detects non-virtual" do
+      expect(MiqExpression::Field.parse("Vm-name")).not_to be_virtual_attribute
+    end
+
+    it "detects virtual" do
+      expect(MiqExpression::Field.parse("Vm-host_name")).to be_virtual_attribute
+    end
+
+    it "detects non-virtual through a relation" do
+      expect(MiqExpression::Field.parse("Host.vms-name")).not_to be_virtual_attribute
+    end
+
+    it "detects virtual through a relation" do
+      expect(MiqExpression::Field.parse("Host.vms-host_name")).to be_virtual_attribute
+    end
+  end
+
   describe "#is_field?" do
     it "detects a valid field" do
       expect(MiqExpression::Field.is_field?("Vm-name")).to be_truthy
