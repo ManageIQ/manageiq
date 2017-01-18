@@ -139,34 +139,21 @@ module MiqProvisionMixin
 
   def set_folder(folder)
     return nil if folder.blank?
-    return set_resource(folder) if folder.kind_of?(MiqAeMethodService::MiqAeServiceEmsFolder)
 
-    result = nil
-    begin
-      if folder.kind_of?(Array) && folder.length == 2 && folder.first.kind_of?(Integer)
-        result = EmsFolder.find_by_id(folder.first)
-        result = [result.id, result.name] unless result.nil?
-      else
-        find_path = folder.to_miq_a.join('/')
-        result = get_folder_paths.detect { |_key, path| path.casecmp(find_path) == 0 }
-      end
-      update_attribute(:options, options.merge(:placement_folder_name => result)) unless result.nil?
-    rescue => err
-      _log.error "#{err}\n#{err.backtrace.join("\n")}"
-    end
-    result
-  end
+    result = if folder.kind_of?(MiqAeMethodService::MiqAeServiceEmsFolder)
+               folder
+             elsif folder.kind_of?(Array) && folder.length == 2 && folder.first.kind_of?(Integer)
+               MiqAeMethodService::MiqAeServiceEmsFolder.find(folder.first)
+             else
+               find_path = folder.to_miq_a.join('/')
+               found = eligible_resources(:folders).detect do |f|
+                 folder_path = f.folder_path(:exclude_root_folder => true, :exclude_non_display_folders => true)
+                 folder_path.casecmp(find_path).zero?
+               end
+               MiqAeMethodService::MiqAeServiceEmsFolder.find(found.id) if found
+             end
 
-  def get_folder_paths
-    # If the host is selected we need to limit the folders returned based on the data-center
-    # the host is in.  Otherwise we return all folders in all data-centers.
-    host = get_option(:placement_host_name)
-    if host.nil?
-      vm_template.ext_management_system.get_folder_paths
-    else
-      dest_host = Host.find(host)
-      vm_template.ext_management_system.get_folder_paths(dest_host.owning_datacenter)
-    end
+    result.tap { set_resource(result) }
   end
 
   def get_source_vm
