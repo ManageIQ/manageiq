@@ -26,9 +26,9 @@ module Api
     include CompressedIds
     extend ErrorHandler::ClassMethods
 
+    before_action :require_api_user_or_token, :except => [:handle_options_request]
     before_action :set_gettext_locale
     before_action :set_access_control_headers
-    prepend_before_action :require_api_user_or_token, :except => [:handle_options_request]
     before_action :parse_api_request, :log_api_request, :validate_api_request
     before_action :validate_api_action, :except => [:options]
     before_action :log_request_initiated, :only => [:handle_options_request]
