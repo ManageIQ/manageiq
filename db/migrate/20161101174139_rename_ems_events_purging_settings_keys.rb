@@ -1,6 +1,5 @@
 class RenameEmsEventsPurgingSettingsKeys < ActiveRecord::Migration[5.0]
   class SettingsChange < ActiveRecord::Base
-    self.inheritance_column = :_type_disabled # disable STI
     serialize :value
   end
 
