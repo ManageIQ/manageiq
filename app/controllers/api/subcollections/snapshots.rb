@@ -23,6 +23,18 @@ module Api
         action_result(false, e.to_s)
       end
 
+      def delete_resource_snapshots(parent, type, id, _data)
+        validation = parent.validate_remove_snapshot(id)
+        raise validation[:message] unless validation[:available]
+        snapshot = resource_search(id, type, collection_class(type))
+
+        task_id = queue_object_action(parent, "summary", :method_name => "remove_snapshot", :args => [id])
+        action_result(true, "Deleting snapshot #{snapshot.name} for #{snapshot_ident(parent)}", :task_id => task_id)
+      rescue => e
+        action_result(false, e.to_s)
+      end
+      alias snapshots_delete_resource delete_resource_snapshots
+
       private
 
       def snapshot_ident(parent)
