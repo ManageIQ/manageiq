@@ -19,7 +19,7 @@ module ManagerRefresh
     end
 
     def load
-      id
+      self
     end
 
     def attributes(inventory_collection_scope = nil)
@@ -42,16 +42,23 @@ module ManagerRefresh
           data[key] = value.load
           if (foreign_key = inventory_collection_scope.association_to_foreign_key_mapping[key])
             # We have an association to fill, lets fill also the :key, cause some other InventoryObject can refer to it
-            attributes_for_saving[foreign_key] = data[key]
+            record_id = data[key].try(:id)
+            attributes_for_saving[foreign_key] = record_id
 
             if (foreign_type = inventory_collection_scope.association_to_foreign_type_mapping[key])
-              # If we have a polymorphic association, we need to also fill a base class name
-              attributes_for_saving[foreign_type] = value.inventory_collection.base_class_name
+              # If we have a polymorphic association, we need to also fill a base class name, but we want to nullify it
+              # if record_id is missing
+              attributes_for_saving[foreign_type] = record_id ? data[key].base_class_name : nil
             end
           else
-            # We have a normal attribute to fill, or not an Activerecord association, like Ancestry, or any custom
-            # attribute used in e.g. after_save hook, we can't process them automatically
-            attributes_for_saving[key] = data[key]
+            if data[key].kind_of?(::ManagerRefresh::InventoryObject)
+              # We have an association to fill but not an Activerecord association, so e.g. Ancestry, lets just load
+              # it here. This way of storing ancestry is ineffective in DB call count, but RAM friendly
+              attributes_for_saving[key] = data[key].base_class_name.constantize.find_by(:id => data[key].id)
+            else
+              # We have a normal attribute to fill
+              attributes_for_saving[key] = data[key]
+            end
           end
         elsif value.kind_of?(Array) && value.any? { |x| loadable?(x) }
           # Lets fill also the original data, so other InventoryObject referring to this attribute gets the right
@@ -59,7 +66,7 @@ module ManagerRefresh
           data[key]                                            = value.compact.map(&:load).compact
           # We can use built in _ids methods to assign array of ids into has_many relations. So e.g. the :key_pairs=
           # relation setter will become :key_pair_ids=
-          attributes_for_saving[key.to_s.singularize + "_ids"] = data[key]
+          attributes_for_saving[key.to_s.singularize + "_ids"] = data[key].map(&:id).compact
         else
           attributes_for_saving[key] = value
         end
@@ -74,6 +81,10 @@ module ManagerRefresh
 
     def inspect
       to_s
+    end
+
+    def base_class_name
+      inventory_collection.base_class_name
     end
 
     private
