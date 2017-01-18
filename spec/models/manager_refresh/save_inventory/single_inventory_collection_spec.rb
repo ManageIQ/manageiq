@@ -268,10 +268,11 @@ describe ManagerRefresh::SaveInventory do
               ManageIQ::Providers::CloudManager::Vm,
               :parent               => @ems,
               :association          => :vms,
-              :attributes_whitelist => [:raw_power_state])
+              :attributes_whitelist => [:raw_power_state, :ext_management_system])
 
             expect(inventory_collection.attributes_whitelist).to match_array([:__feedback_edge_set_parent, :ems_ref,
-                                                                              :name, :location, :raw_power_state])
+                                                                              :name, :location, :raw_power_state,
+                                                                              :ext_management_system])
           end
 
           it 'does not blacklist fixed attributes when changing manager_ref' do
@@ -292,10 +293,11 @@ describe ManagerRefresh::SaveInventory do
               :manager_ref          => [:uid_ems],
               :parent               => @ems,
               :association          => :vms,
-              :attributes_whitelist => [:raw_power_state])
+              :attributes_whitelist => [:raw_power_state, :ext_management_system])
 
             expect(inventory_collection.attributes_whitelist).to match_array([:__feedback_edge_set_parent, :uid_ems,
-                                                                              :name, :location, :raw_power_state])
+                                                                              :name, :location, :raw_power_state,
+                                                                              :ext_management_system])
           end
 
           it 'saves all attributes with blacklist and whitelist disabled' do
@@ -381,7 +383,7 @@ describe ManagerRefresh::SaveInventory do
               :parent               => @ems,
               :association          => :vms,
               # TODO(lsmola) vendor is not getting caught by fixed attributes
-              :attributes_whitelist => [:uid_ems, :vendor])
+              :attributes_whitelist => [:uid_ems, :vendor, :ext_management_system])
 
             # Fill the InventoryCollections with data, that have a modified name, new VM and a missing VM
             add_data_to_inventory_collection(@data[:vms], *changed_data)
@@ -420,7 +422,7 @@ describe ManagerRefresh::SaveInventory do
               :parent               => @ems,
               :association          => :vms,
               # TODO(lsmola) vendor is not getting caught by fixed attributes
-              :attributes_whitelist => [:uid_ems, :raw_power_state, :vendor],
+              :attributes_whitelist => [:uid_ems, :raw_power_state, :vendor, :ext_management_system],
               :attributes_blacklist => [:name, :ems_ref, :raw_power_state])
 
             # Fill the InventoryCollections with data, that have a modified name, new VM and a missing VM
@@ -495,8 +497,12 @@ describe ManagerRefresh::SaveInventory do
 
             # Fill the InventoryCollections with data, that have one new VM and are missing one VM
             add_data_to_inventory_collection(data[:vms],
-                                             vm_data(1).merge(:name => "vm_changed_name_1", :ext_management_system => @ems),
-                                             vm_data(3).merge(:name => "vm_changed_name_3", :ext_management_system => @ems))
+                                             vm_data(1).merge(:name                  => "vm_changed_name_1",
+                                                              :availability_zone     => availability_zone,
+                                                              :ext_management_system => @ems),
+                                             vm_data(3).merge(:name                  => "vm_changed_name_3",
+                                                              :availability_zone     => availability_zone,
+                                                              :ext_management_system => @ems))
 
             # Invoke the InventoryCollections saving
             ManagerRefresh::SaveInventory.save_inventory(@ems, data.values)
@@ -520,8 +526,12 @@ describe ManagerRefresh::SaveInventory do
 
             # Fill the InventoryCollections with data, that have one new VM and are missing one VM
             add_data_to_inventory_collection(data[:vms],
-                                             vm_data(1).merge(:name => "vm_changed_name_1", :ext_management_system => @ems),
-                                             vm_data(3).merge(:name => "vm_changed_name_3", :ext_management_system => @ems))
+                                             vm_data(1).merge(:name                  => "vm_changed_name_1",
+                                                              :cloud_tenant          => cloud_tenant,
+                                                              :ext_management_system => @ems),
+                                             vm_data(3).merge(:name                  => "vm_changed_name_3",
+                                                              :cloud_tenant          => cloud_tenant,
+                                                              :ext_management_system => @ems))
 
             # Invoke the InventoryCollections saving
             ManagerRefresh::SaveInventory.save_inventory(@ems, data.values)
@@ -545,8 +555,11 @@ describe ManagerRefresh::SaveInventory do
 
             # Fill the InventoryCollections with data, that have one new VM and are missing one VM
             add_data_to_inventory_collection(data[:vms],
-                                             vm_data(1).merge(:name => "vm_changed_name_1"),
-                                             vm_data(3).merge(:name => "vm_changed_name_3"))
+                                             vm_data(1).merge(:name         => "vm_changed_name_1",
+                                                              :cloud_tenant => cloud_tenant),
+                                             vm_data(3).merge(:name                  => "vm_changed_name_3",
+                                                              :ext_management_system => nil,
+                                                              :cloud_tenant          => cloud_tenant))
 
             # Invoke the InventoryCollections saving
             ManagerRefresh::SaveInventory.save_inventory(@ems, data.values)
@@ -578,8 +591,11 @@ describe ManagerRefresh::SaveInventory do
 
             # Fill the InventoryCollections with data, that have one new VM and are missing one VM
             add_data_to_inventory_collection(data[:vms],
-                                             vm_data(1).merge(:name => "vm_changed_name_1"),
-                                             vm_data(3).merge(:name => "vm_changed_name_3"))
+                                             vm_data(1).merge(:name         => "vm_changed_name_1",
+                                                              :cloud_tenant => cloud_tenant),
+                                             vm_data(3).merge(:name                  => "vm_changed_name_3",
+                                                              :ext_management_system => nil,
+                                                              :cloud_tenant          => cloud_tenant))
 
             # Invoke the InventoryCollections saving
             ManagerRefresh::SaveInventory.save_inventory(@ems, data.values)

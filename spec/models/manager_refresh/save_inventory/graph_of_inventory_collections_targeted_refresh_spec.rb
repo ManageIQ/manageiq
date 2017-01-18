@@ -11,7 +11,7 @@ describe ManagerRefresh::SaveInventory do
   #
   # Test all settings for ManagerRefresh::SaveInventory
   [{:inventory_object_saving_strategy => nil},
-   {:inventory_object_saving_strategy => :recursive},
+   {:inventory_object_saving_strategy => :recursive}
   ].each do |inventory_object_settings|
     context "with settings #{inventory_object_settings}" do
       before :each do
@@ -402,6 +402,10 @@ describe ManagerRefresh::SaveInventory do
           :strategy            => :local_db_cache_all,
           :custom_manager_uuid => -> (hardware) { [hardware.vm_or_template.try(:ems_ref)] })
 
+        @vm_data_3       = vm_data(3).merge(
+          :genealogy_parent      => @data[:miq_templates].lazy_find(image_data(2)[:ems_ref]),
+          :key_pairs             => [@data[:key_pairs].lazy_find(key_pair_data(2)[:name])],
+          :ext_management_system => @ems)
         @vm_data_5       = vm_data(5).merge(
           :genealogy_parent      => @data[:miq_templates].lazy_find(image_data(2)[:ems_ref]),
           :key_pairs             => [@data[:key_pairs].lazy_find(key_pair_data(2)[:name])],
