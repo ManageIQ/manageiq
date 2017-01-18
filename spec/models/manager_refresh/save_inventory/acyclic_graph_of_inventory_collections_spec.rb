@@ -93,7 +93,7 @@ describe ManagerRefresh::SaveInventory do
           add_data_to_inventory_collection(@data[:flavors], @flavor_data_1, @flavor_data_2, @flavor_data_3)
 
           # Invoke the InventoryCollections saving
-          ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
+          ManagerRefresh::SaveInventory.save_inventory(@ems, @data.values)
 
           # Assert saved data
           assert_full_inventory_collections_graph
@@ -132,7 +132,7 @@ describe ManagerRefresh::SaveInventory do
           add_data_to_inventory_collection(@data[:flavors], @flavor_data_1, @flavor_data_2, @flavor_data_3)
 
           # Invoke the InventoryCollections saving
-          ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
+          ManagerRefresh::SaveInventory.save_inventory(@ems, @data.values)
 
           # Assert that saved data have the updated values, checking id to make sure the original records are updated
           assert_full_inventory_collections_graph
@@ -182,7 +182,7 @@ describe ManagerRefresh::SaveInventory do
           add_data_to_inventory_collection(@data[:flavors], @flavor_data_1, @flavor_data_2, @flavor_data_3)
 
           # Invoke the InventoryCollections saving
-          ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
+          ManagerRefresh::SaveInventory.save_inventory(@ems, @data.values)
 
           # Assert saved data
           assert_full_inventory_collections_graph
@@ -269,7 +269,7 @@ describe ManagerRefresh::SaveInventory do
           add_data_to_inventory_collection(@data[:flavors], @flavor_data_1, @flavor_data_2, @flavor_data_3)
 
           # Invoke the InventoryCollections saving
-          ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
+          ManagerRefresh::SaveInventory.save_inventory(@ems, @data.values)
 
           # Assert saved data
           assert_full_inventory_collections_graph
@@ -376,7 +376,7 @@ describe ManagerRefresh::SaveInventory do
           add_data_to_inventory_collection(@data[:hardwares], @hardware_data_1)
 
           # Invoke the InventoryCollections saving
-          ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
+          ManagerRefresh::SaveInventory.save_inventory(@ems, @data.values)
 
           # Assert saved data
           vm1 = Vm.find_by(:ems_ref => "vm_ems_ref_1")
@@ -395,7 +395,7 @@ describe ManagerRefresh::SaveInventory do
           add_data_to_inventory_collection(@data[:hardwares], @hardware_data_1)
 
           # Invoke the InventoryCollections saving
-          ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
+          ManagerRefresh::SaveInventory.save_inventory(@ems, @data.values)
 
           # Assert saved data
           vm1 = Vm.find_by(:ems_ref => "vm_ems_ref_1")
@@ -414,7 +414,7 @@ describe ManagerRefresh::SaveInventory do
           add_data_to_inventory_collection(@data[:hardwares], @hardware_data_1)
 
           # Invoke the InventoryCollections saving
-          ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
+          ManagerRefresh::SaveInventory.save_inventory(@ems, @data.values)
 
           # Assert saved data
           vm1 = Vm.find_by(:ems_ref => "vm_ems_ref_1")

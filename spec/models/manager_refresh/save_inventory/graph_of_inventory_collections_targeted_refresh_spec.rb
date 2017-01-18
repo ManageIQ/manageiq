@@ -28,7 +28,7 @@ describe ManagerRefresh::SaveInventory do
         initialize_inventory_collection_data
 
         # Invoke the InventoryCollections saving
-        ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
+        ManagerRefresh::SaveInventory.save_inventory(@ems, @data.values)
 
         # Assert all data were filled
         load_records
@@ -41,7 +41,7 @@ describe ManagerRefresh::SaveInventory do
         initialize_inventory_collection_data
 
         # Invoke the InventoryCollections saving
-        ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
+        ManagerRefresh::SaveInventory.save_inventory(@ems, @data.values)
 
         # Assert all data were filled
         load_records
@@ -70,7 +70,7 @@ describe ManagerRefresh::SaveInventory do
         add_data_to_inventory_collection(@data[:disks], @disk_data_3, @disk_data_31)
 
         # Invoke the InventoryCollections saving
-        ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
+        ManagerRefresh::SaveInventory.save_inventory(@ems, @data.values)
 
         load_records
         @vm3          = Vm.find_by(:ems_ref => "vm_ems_ref_3")
@@ -122,7 +122,7 @@ describe ManagerRefresh::SaveInventory do
         initialize_inventory_collection_data
 
         # Invoke the InventoryCollections saving
-        ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
+        ManagerRefresh::SaveInventory.save_inventory(@ems, @data.values)
 
         # Assert all data were filled
         load_records
@@ -146,7 +146,7 @@ describe ManagerRefresh::SaveInventory do
                                          @hardware_data_3)
 
         # Invoke the InventoryCollections saving
-        ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
+        ManagerRefresh::SaveInventory.save_inventory(@ems, @data.values)
 
         ### Third refresh ###
         # Initialize the InventoryCollections and data for the disks with new disk under a vm
@@ -169,7 +169,7 @@ describe ManagerRefresh::SaveInventory do
         add_data_to_inventory_collection(@data[:disks], @disk_data_3, @disk_data_31)
 
         # Invoke the InventoryCollections saving
-        ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
+        ManagerRefresh::SaveInventory.save_inventory(@ems, @data.values)
 
         # Assert all data were filled
         load_records
@@ -234,7 +234,7 @@ describe ManagerRefresh::SaveInventory do
         add_data_to_inventory_collection(@data[:disks], @disk_data_3, @disk_data_32)
 
         # Invoke the InventoryCollections saving
-        ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
+        ManagerRefresh::SaveInventory.save_inventory(@ems, @data.values)
 
         # Assert all data were filled
         load_records
@@ -288,7 +288,7 @@ describe ManagerRefresh::SaveInventory do
         initialize_inventory_collection_data
 
         # Invoke the InventoryCollections saving
-        ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
+        ManagerRefresh::SaveInventory.save_inventory(@ems, @data.values)
 
         # Assert all data were filled
         load_records
@@ -332,7 +332,7 @@ describe ManagerRefresh::SaveInventory do
         add_data_to_inventory_collection(@data[:disks], @disk_data_3, @disk_data_31)
 
         # Invoke the InventoryCollections saving
-        ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
+        ManagerRefresh::SaveInventory.save_inventory(@ems, @data.values)
 
         # Assert all data were filled
         load_records
@@ -422,7 +422,7 @@ describe ManagerRefresh::SaveInventory do
                                          @disk_data_5)
 
         # Invoke the InventoryCollections saving
-        ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
+        ManagerRefresh::SaveInventory.save_inventory(@ems, @data.values)
 
         # Assert all data were filled
         load_records

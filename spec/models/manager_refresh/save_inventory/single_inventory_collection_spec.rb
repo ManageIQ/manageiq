@@ -38,7 +38,7 @@ describe ManagerRefresh::SaveInventory do
           add_data_to_inventory_collection(data[:vms], vm_data(1), vm_data(2))
 
           # Invoke the InventoryCollections saving
-          ManagerRefresh::SaveInventory.save_inventory(@ems, data)
+          ManagerRefresh::SaveInventory.save_inventory(@ems, data.values)
 
           # Assert saved data
           assert_all_records_match_hashes(
@@ -59,7 +59,7 @@ describe ManagerRefresh::SaveInventory do
                                            vm_data(2))
 
           # Invoke the InventoryCollections saving
-          ManagerRefresh::SaveInventory.save_inventory(@ems, data)
+          ManagerRefresh::SaveInventory.save_inventory(@ems, data.values)
 
           # Assert that saved data have the updated values, checking id to make sure the original records are updated
           assert_all_records_match_hashes(
@@ -83,7 +83,7 @@ describe ManagerRefresh::SaveInventory do
                                            vm_data(2).merge(:name => "vm_changed_name_2"))
 
           # Invoke the InventoryCollections saving
-          ManagerRefresh::SaveInventory.save_inventory(@ems, data)
+          ManagerRefresh::SaveInventory.save_inventory(@ems, data.values)
 
           # Assert that saved data have the updated values, checking id to make sure the original records are updated
           assert_all_records_match_hashes(
@@ -123,7 +123,7 @@ describe ManagerRefresh::SaveInventory do
                                              vm_data(2).merge(:name => "vm_changed_name_2"))
 
             # Invoke the InventoryCollections saving
-            ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
+            ManagerRefresh::SaveInventory.save_inventory(@ems, @data.values)
 
             # Assert that saved data have the updated values, checking id to make sure the original records are updated
             assert_all_records_match_hashes(
@@ -140,7 +140,7 @@ describe ManagerRefresh::SaveInventory do
                                              vm_data(3).merge(:name => "vm_changed_name_3"))
 
             # Invoke the InventoryCollections saving
-            ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
+            ManagerRefresh::SaveInventory.save_inventory(@ems, @data.values)
 
             # Assert that saved data contain the new VM
             assert_all_records_match_hashes(
@@ -156,7 +156,7 @@ describe ManagerRefresh::SaveInventory do
                                              vm_data(1).merge(:name => "vm_changed_name_1"))
 
             # Invoke the InventoryCollections saving
-            ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
+            ManagerRefresh::SaveInventory.save_inventory(@ems, @data.values)
 
             # Assert that saved data do miss the deleted VM
             assert_all_records_match_hashes(
@@ -171,7 +171,7 @@ describe ManagerRefresh::SaveInventory do
                                              vm_data(3).merge(:name => "vm_changed_name_3"))
 
             # Invoke the InventoryCollections saving
-            ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
+            ManagerRefresh::SaveInventory.save_inventory(@ems, @data.values)
 
             # Assert that saved data have the new VM and miss the deleted VM
             assert_all_records_match_hashes(
@@ -199,7 +199,7 @@ describe ManagerRefresh::SaveInventory do
                                              vm_data(3).merge(:name => "vm_changed_name_3"))
 
             # Invoke the InventoryCollections saving
-            ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
+            ManagerRefresh::SaveInventory.save_inventory(@ems, @data.values)
 
             # Assert that DB still contains the disconnected VMs
             assert_all_records_match_hashes(
@@ -310,7 +310,7 @@ describe ManagerRefresh::SaveInventory do
             add_data_to_inventory_collection(@data[:vms], *changed_data)
 
             # Invoke the InventoryCollections saving
-            ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
+            ManagerRefresh::SaveInventory.save_inventory(@ems, @data.values)
 
             # Assert that saved data don;t have the blacklisted attributes updated nor filled
             assert_all_records_match_hashes(
@@ -348,7 +348,7 @@ describe ManagerRefresh::SaveInventory do
             add_data_to_inventory_collection(@data[:vms], *changed_data)
 
             # Invoke the InventoryCollections saving
-            ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
+            ManagerRefresh::SaveInventory.save_inventory(@ems, @data.values)
 
             # Assert that saved data don;t have the blacklisted attributes updated nor filled
             assert_all_records_match_hashes(
@@ -387,7 +387,7 @@ describe ManagerRefresh::SaveInventory do
             add_data_to_inventory_collection(@data[:vms], *changed_data)
 
             # Invoke the InventoryCollections saving
-            ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
+            ManagerRefresh::SaveInventory.save_inventory(@ems, @data.values)
 
             # Assert that saved data don;t have the blacklisted attributes updated nor filled
             assert_all_records_match_hashes(
@@ -427,7 +427,7 @@ describe ManagerRefresh::SaveInventory do
             add_data_to_inventory_collection(@data[:vms], *changed_data)
 
             # Invoke the InventoryCollections saving
-            ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
+            ManagerRefresh::SaveInventory.save_inventory(@ems, @data.values)
 
             # Assert that saved data don;t have the blacklisted attributes updated nor filled
             assert_all_records_match_hashes(
@@ -471,7 +471,7 @@ describe ManagerRefresh::SaveInventory do
                                              vm_data(3).merge(:name => "vm_changed_name_3"))
 
             # Invoke the InventoryCollections saving
-            ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
+            ManagerRefresh::SaveInventory.save_inventory(@ems, @data.values)
 
             # Assert that saved data contain the new VM, but no VM was deleted
             assert_all_records_match_hashes(
@@ -499,7 +499,7 @@ describe ManagerRefresh::SaveInventory do
                                              vm_data(3).merge(:name => "vm_changed_name_3", :ext_management_system => @ems))
 
             # Invoke the InventoryCollections saving
-            ManagerRefresh::SaveInventory.save_inventory(@ems, data)
+            ManagerRefresh::SaveInventory.save_inventory(@ems, data.values)
 
             # Assert that saved data have the new VM and miss the deleted VM
             assert_all_records_match_hashes(
@@ -524,7 +524,7 @@ describe ManagerRefresh::SaveInventory do
                                              vm_data(3).merge(:name => "vm_changed_name_3", :ext_management_system => @ems))
 
             # Invoke the InventoryCollections saving
-            ManagerRefresh::SaveInventory.save_inventory(@ems, data)
+            ManagerRefresh::SaveInventory.save_inventory(@ems, data.values)
 
             # Assert that saved data have the new VM and miss the deleted VM
             assert_all_records_match_hashes(
@@ -549,7 +549,7 @@ describe ManagerRefresh::SaveInventory do
                                              vm_data(3).merge(:name => "vm_changed_name_3"))
 
             # Invoke the InventoryCollections saving
-            ManagerRefresh::SaveInventory.save_inventory(@ems, data)
+            ManagerRefresh::SaveInventory.save_inventory(@ems, data.values)
 
             # Assert that saved data have the new VM and miss the deleted VM
             assert_all_records_match_hashes(
@@ -582,7 +582,7 @@ describe ManagerRefresh::SaveInventory do
                                              vm_data(3).merge(:name => "vm_changed_name_3"))
 
             # Invoke the InventoryCollections saving
-            ManagerRefresh::SaveInventory.save_inventory(@ems, data)
+            ManagerRefresh::SaveInventory.save_inventory(@ems, data.values)
 
             # Assert that saved data have the new VM and miss the deleted VM
             assert_all_records_match_hashes(
