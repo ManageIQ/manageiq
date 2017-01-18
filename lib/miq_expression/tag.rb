@@ -19,8 +19,16 @@ class MiqExpression::Tag
     model.arel_attribute(:id).in(ids)
   end
 
+  def numeric?
+    false
+  end
+
   def column_type
     :string
+  end
+
+  def sub_type
+    column_type
   end
 
   def eql?(other)

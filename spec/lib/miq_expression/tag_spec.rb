@@ -23,4 +23,16 @@ RSpec.describe MiqExpression::Tag do
       expect(described_class.new(Vm, "/host").column_type).to eq(:string)
     end
   end
+
+  describe "#numeric?" do
+    it "is never numeric" do
+      expect(described_class.new(Vm, "/host")).not_to be_numeric
+    end
+  end
+
+  describe "#sub_type" do
+    it "is always a string" do
+      expect(described_class.new(Vm, "/host").sub_type).to eq(:string)
+    end
+  end
 end
