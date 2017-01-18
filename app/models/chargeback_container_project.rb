@@ -27,20 +27,9 @@ class ChargebackContainerProject < Chargeback
   )
 
   def self.build_results_for_report_ChargebackContainerProject(options)
-    # Options:
-    #   :rpt_type => chargeback
-    #   :interval => daily | weekly | monthly
-    #   :start_time
-    #   :end_time
-    #   :end_interval_offset
-    #   :interval_size
-    #   :owner => <userid>
-    #   :tag => /managed/environment/prod (Mutually exclusive with :user)
-    #   :chargeback_type => detail | summary
-    #   :entity_id => 1/2/3.../all rails id of entity
+    # Options: a hash transformable to Chargeback::ReportOptions
 
     # Find ContainerProjects according to any of these:
-    @options = options
     provider_id = options[:provider_id]
     project_id = options[:entity_id]
     filter_tag = options[:tag]
@@ -61,19 +50,6 @@ class ChargebackContainerProject < Chargeback
     return [[]] if @projects.empty?
 
     build_results_for_report_chargeback(options)
-  end
-
-  def self.get_keys_and_extra_fields(perf, ts_key)
-    key = "#{perf.resource_id}_#{ts_key}"
-    extra_fields = {
-      "project_name"  => perf.resource_name,
-      "project_uid"   => perf.resource.ems_ref,
-      "provider_name" => perf.parent_ems.try(:name),
-      "provider_uid"  => perf.parent_ems.try(:guid),
-      "archived"      => perf.resource.archived? ? _("Yes") : _("No")
-    }
-
-    [key, extra_fields]
   end
 
   def self.where_clause(records, _options)
@@ -100,8 +76,13 @@ class ChargebackContainerProject < Chargeback
     }
   end
 
-  def get_rate_parents(perf)
-    # Get rate from assigned containers providers only
-    [perf.parent_ems].compact
+  private
+
+  def init_extra_fields(consumption)
+    self.project_name  = consumption.resource_name
+    self.project_uid   = consumption.resource.ems_ref
+    self.provider_name = consumption.parent_ems.try(:name)
+    self.provider_uid  = consumption.parent_ems.try(:guid)
+    self.archived      = consumption.resource.archived? ? _('Yes') : _('No')
   end
 end # class Chargeback

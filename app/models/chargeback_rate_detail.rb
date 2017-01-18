@@ -20,22 +20,25 @@ class ChargebackRateDetail < ApplicationRecord
 
   attr_accessor :hours_in_interval
 
-  def max_of_metric_from(metric_rollup_records)
-    metric_rollup_records.map(&metric.to_sym).max
+  def charge(relevant_fields, consumption)
+    result = {}
+    if (relevant_fields & [metric_keys[0], cost_keys[0]]).present?
+      metric_value, cost = metric_and_cost_by(consumption)
+      if !consumption.chargeback_fields_present && fixed?
+        cost = 0
+      end
+      metric_keys.each { |field| result[field] = metric_value }
+      cost_keys.each   { |field| result[field] = cost }
+    end
+    result
   end
 
-  def avg_of_metric_from(metric_rollup_records)
-    metric_sum = metric_rollup_records.sum(&metric.to_sym)
-    metric_sum / @hours_in_interval
-  end
-
-  def metric_value_by(metric_rollup_records)
+  def metric_value_by(consumption)
     return 1.0 if fixed?
 
-    metric_rollups_without_nils = metric_rollup_records.select { |x| x.send(metric.to_sym).present? }
-    return 0 if metric_rollups_without_nils.empty?
-    return max_of_metric_from(metric_rollups_without_nils) if allocated?
-    return avg_of_metric_from(metric_rollups_without_nils) if used?
+    return 0 if consumption.none?(metric)
+    return consumption.max(metric) if allocated?
+    return consumption.avg(metric) if used?
   end
 
   def used?
@@ -73,7 +76,7 @@ class ChargebackRateDetail < ApplicationRecord
     :yearly  => "Year"
   }
 
-  def cost(value)
+  def hourly_cost(value)
     return 0.0 unless self.enabled?
 
     value = 1.0 if fixed?
@@ -212,6 +215,25 @@ class ChargebackRateDetail < ApplicationRecord
     errors.add(:chargeback_tiers, _("must start at zero and not contain any gaps between start and prior end value.")) if error
 
     !error
+  end
+
+  private
+
+  def metric_keys
+    ["#{rate_name}_metric", # metric value (e.g. Storage [Used|Allocated|Fixed])
+     "#{group}_metric"]     # total of metric's group (e.g. Storage Total)
+  end
+
+  def cost_keys
+    ["#{rate_name}_cost",   # cost associated with metric (e.g. Storage [Used|Allocated|Fixed] Cost)
+     "#{group}_cost",       # cost associated with metric's group (e.g. Storage Total Cost)
+     'total_cost']
+  end
+
+  def metric_and_cost_by(consumption)
+    @hours_in_interval = consumption.hours_in_interval
+    metric_value = metric_value_by(consumption)
+    [metric_value, hourly_cost(metric_value) * consumption.hours_in_interval]
   end
 
   def first_tier?(tier,tiers)

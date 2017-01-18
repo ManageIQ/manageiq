@@ -28,20 +28,9 @@ class ChargebackContainerImage < Chargeback
   )
 
   def self.build_results_for_report_ChargebackContainerImage(options)
-    # Options:
-    #   :rpt_type => chargeback
-    #   :interval => daily | weekly | monthly
-    #   :start_time
-    #   :end_time
-    #   :end_interval_offset
-    #   :interval_size
-    #   :owner => <userid>
-    #   :tag => /managed/environment/prod (Mutually exclusive with :user)
-    #   :chargeback_type => detail | summary
-    #   :entity_id => 1/2/3.../all rails id of entity
+    # Options: a hash transformable to Chargeback::ReportOptions
 
     # Find Project by id or get all projects
-    @options = options
     provider_id = options[:provider_id]
     id = options[:entity_id]
     raise "must provide option :entity_id and provider_id" if id.nil? && provider_id.nil?
@@ -66,23 +55,18 @@ class ChargebackContainerImage < Chargeback
     build_results_for_report_chargeback(options)
   end
 
-  def self.get_keys_and_extra_fields(perf, ts_key)
-    project = @data_index.fetch_path(:container_project, :by_container_id, perf.resource_id)
-    image = @data_index.fetch_path(:container_image, :by_container_id, perf.resource_id)
+  def self.default_key(metric_rollup_record, ts_key)
+    project = @data_index.fetch_path(:container_project, :by_container_id, metric_rollup_record.resource_id)
+    image = @data_index.fetch_path(:container_image, :by_container_id, metric_rollup_record.resource_id)
+    @options[:groupby] == 'project' ? "#{project.id}_#{ts_key}" : "#{project.id}_#{image.id}_#{ts_key}"
+  end
 
-    key = @options[:groupby] == 'project' ? "#{project.id}_#{ts_key}" : "#{project.id}_#{image.id}_#{ts_key}"
+  def self.image(consumption)
+    @data_index.fetch_path(:container_image, :by_container_id, consumption.resource_id)
+  end
 
-    extra_fields = {
-      "project_name"  => project.name,
-      "image_name"    => image.try(:full_name) || _("Deleted"), # until image archiving is implemented
-      "project_uid"   => project.ems_ref,
-      "provider_name" => perf.parent_ems.try(:name),
-      "provider_uid"  => perf.parent_ems.try(:name),
-      "archived"      => project.archived? ? _("Yes") : _("No"),
-      "entity"        => image
-    }
-
-    [key, extra_fields]
+  def self.project(consumption)
+    @data_index.fetch_path(:container_project, :by_container_id, consumption.resource_id)
   end
 
   def self.where_clause(records, _options)
@@ -109,7 +93,16 @@ class ChargebackContainerImage < Chargeback
     }
   end
 
-  def get_rate_parents(perf)
-    [perf.parent_ems]
+  private
+
+  def init_extra_fields(consumption)
+    self.project_name  = self.class.project(consumption).name
+    # until image archiving is implemented
+    self.image_name    = self.class.image(consumption).try(:full_name) || _('Deleted')
+    self.project_uid   = self.class.project(consumption).ems_ref
+    self.provider_name = consumption.parent_ems.try(:name)
+    self.provider_uid  = consumption.parent_ems.try(:guid)
+    self.archived      = self.class.project(consumption).archived? ? _('Yes') : _('No')
+    self.entity        = self.class.image(consumption)
   end
 end # class ChargebackContainerImage
