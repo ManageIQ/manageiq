@@ -57,7 +57,7 @@ class CloudSubnetController < ApplicationController
     networks = []
     available_networks = CloudNetwork.where(:ems_id => params[:id]).find_each
     available_networks.each do |network|
-      networks << { 'name' => network.name, 'id' => network.id }
+      networks << { 'name' => network.name, 'id' => network.ems_ref }
     end
     render :json => {
       :available_networks => networks
@@ -66,9 +66,9 @@ class CloudSubnetController < ApplicationController
 
   def cloud_tenants_by_ems
     assert_privileges("cloud_subnet_new")
+    network_manager = ExtManagementSystem.find(params[:id])
     tenants = []
-    available_tenants = CloudTenant.where(:ems_id => params[:id]).find_each
-    available_tenants.each do |tenant|
+    CloudTenant.where(:ems_id => network_manager.parent_ems_id).find_each do |tenant|
       tenants << { 'name' => tenant.name, 'id' => tenant.id }
     end
     render :json => {
