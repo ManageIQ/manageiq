@@ -842,6 +842,41 @@ describe ChargebackVm do
     end
   end
 
+  context 'more rates have been selected' do
+    let(:storage_chargeback_rate_1) { FactoryGirl.create(:chargeback_rate, :rate_type => "Storage") }
+    let(:storage_chargeback_rate_2) { FactoryGirl.create(:chargeback_rate, :rate_type => "Storage") }
+    let(:chargeback_vm)             { Chargeback::RatesCache.new }
+
+    let(:parent_classification) { FactoryGirl.create(:classification) }
+    let(:classification_1)      { FactoryGirl.create(:classification, :parent_id => parent_classification.id) }
+    let(:classification_2)      { FactoryGirl.create(:classification, :parent_id => parent_classification.id) }
+
+    let(:rate_assignment_options_1) { {:cb_rate => storage_chargeback_rate_1, :tag => [classification_1, "Storage"]} }
+    let(:rate_assignment_options_2) { {:cb_rate => storage_chargeback_rate_2, :tag => [classification_2, "Storage"]} }
+
+    let(:metric_rollup) do
+      FactoryGirl.create(:metric_rollup_vm_hr, :timestamp => "2012-08-31T07:00:00Z",
+                         :parent_host_id => @host1.id, :parent_ems_cluster_id => @ems_cluster.id,
+                         :parent_ems_id => @ems.id, :parent_storage_id => @storage.id,
+                         :resource => @vm1)
+    end
+
+    let(:consumption) { Chargeback::ConsumptionWithRollups.new([metric_rollup], nil, nil) }
+
+    before do
+      @storage.tag_with([classification_1.tag.name, classification_2.tag.name], :ns => '*')
+      ChargebackRate.set_assignments(:storage, [rate_assignment_options_1, rate_assignment_options_2])
+    end
+
+    it "return only one chargeback rate according to tag name of Vm" do
+      [rate_assignment_options_1, rate_assignment_options_2].each do |rate_assignment|
+        metric_rollup.tag_names = rate_assignment[:tag].first.tag.send(:name_path)
+        uniq_rates = chargeback_vm.send(:get, consumption)
+        expect([rate_assignment[:cb_rate]]).to match_array(uniq_rates)
+      end
+    end
+  end
+
   context "Group by tags" do
     let(:options) { base_options.merge(:interval => 'monthly', :groupby_tag => 'environment') }
     before  do
