@@ -20,7 +20,7 @@
 - ems-type:cinder
 - ems-type:ec2
 - ems-type:ec2_network
-- ems-type:ec2_block_storage
+- ems-type:ec2_ebs_storage
 - ems-type:foreman_configuration
 - ems-type:foreman_provisioning
 - ems-type:gce
