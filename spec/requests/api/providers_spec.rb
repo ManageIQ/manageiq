@@ -52,33 +52,33 @@ describe "Providers API" do
   end
   let(:sample_rhevm) do
     {
-      "type"              => "ManageIQ::Providers::Redhat::InfraManager",
-      "name"              => "sample rhevm",
-      "port"              => 5000,
-      "hostname"          => "sample_rhevm.provider.com",
-      "ipaddress"         => "100.200.300.2",
-      "security_protocol" => "kerberos",
+      "type"                  => "ManageIQ::Providers::Redhat::InfraManager",
+      "name"                  => "sample rhevm",
+      "port"                  => 5000,
+      "hostname"              => "sample_rhevm.provider.com",
+      "ipaddress"             => "100.200.300.2",
+      "security_protocol"     => "kerberos",
       "certificate_authority" => certificate_authority,
     }
   end
   let(:sample_openshift) do
     {
-      "type"              => "ManageIQ::Providers::Openshift::ContainerManager",
-      "name"              => "sample openshift",
-      "port"              => 8443,
-      "hostname"          => "sample_openshift.provider.com",
-      "ipaddress"         => "100.200.300.3",
-      "security_protocol" => "something",
+      "type"                  => "ManageIQ::Providers::Openshift::ContainerManager",
+      "name"                  => "sample openshift",
+      "port"                  => 8443,
+      "hostname"              => "sample_openshift.provider.com",
+      "ipaddress"             => "100.200.300.3",
+      "security_protocol"     => "something",
       "certificate_authority" => certificate_authority,
     }
   end
   let(:default_connection) do
     {
       "endpoint"       => {
-        "role"     => "default",
-        "hostname" => "sample_openshift_multi_end_point.provider.com",
-        "port"     => 8444,
-        "security_protocol" => "something",
+        "role"                  => "default",
+        "hostname"              => "sample_openshift_multi_end_point.provider.com",
+        "port"                  => 8444,
+        "security_protocol"     => "something",
         "certificate_authority" => certificate_authority,
       },
       "authentication" => {
@@ -90,10 +90,10 @@ describe "Providers API" do
   let(:updated_connection) do
     {
       "endpoint"       => {
-        "role"     => "default",
-        "hostname" => "sample_openshift_multi_end_point.provider.com",
-        "port"     => "8443",
-        "security_protocol" => "something",
+        "role"                  => "default",
+        "hostname"              => "sample_openshift_multi_end_point.provider.com",
+        "port"                  => "8443",
+        "security_protocol"     => "something else",
         "certificate_authority" => certificate_authority,
       },
       "authentication" => {
@@ -105,10 +105,10 @@ describe "Providers API" do
   let(:hawkular_connection) do
     {
       "endpoint"       => {
-        "role"     => "hawkular",
-        "hostname" => "sample_openshift_multi_end_point.provider.com",
-        "port"     => "443",
-        "security_protocol" => "something",
+        "role"                  => "hawkular",
+        "hostname"              => "sample_openshift_multi_end_point.provider.com",
+        "port"                  => "443",
+        "security_protocol"     => "something",
         "certificate_authority" => certificate_authority,
       },
       "authentication" => {
