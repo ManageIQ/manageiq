@@ -1616,6 +1616,25 @@ class MiqExpression
     end
   end
 
+  def fields(expression = exp)
+    case expression
+    when Array
+      expression.flat_map { |x| fields(x) }
+    when Hash
+      return [] if expression.empty?
+
+      if (val = expression["field"] || expression["count"] || expression["tag"])
+        ret = []
+        ret << Field.parse(val) if Field.is_field?(val)
+        val = expression["value"]
+        ret << Field.parse(val) if Field.is_field?(val)
+        ret
+      else
+        fields(expression.values)
+      end
+    end
+  end
+
   private
 
   # example:

@@ -2613,4 +2613,20 @@ describe MiqExpression do
       include_examples :coerces_value_to_integer
     end
   end
+
+  describe "#fields" do
+    it "extracts fields" do
+      expression = {
+        "AND" => [
+          {">=" => {"field" => "EmsClusterPerformance-cpu_usagemhz_rate_average", "value" => "0"}},
+          {"<"  => {"field" => "Vm-name", "value" => "5"}}
+        ]
+      }
+      actual = described_class.new(expression).fields.sort_by(&:column)
+      expect(actual).to contain_exactly(
+        an_object_having_attributes(:model => EmsClusterPerformance, :column => "cpu_usagemhz_rate_average"),
+        an_object_having_attributes(:model => Vm, :column => "name")
+      )
+    end
+  end
 end
