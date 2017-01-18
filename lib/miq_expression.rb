@@ -1604,6 +1604,7 @@ class MiqExpression
   end
 
   def self.create_field(model, associations, field_name)
+    model = model_class(model)
     Field.new(model, associations, field_name)
   end
 
