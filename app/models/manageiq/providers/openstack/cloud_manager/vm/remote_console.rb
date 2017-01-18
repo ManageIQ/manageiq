@@ -38,7 +38,7 @@ class ManageIQ::Providers::Openstack::CloudManager::Vm
         :priority    => MiqQueue::HIGH_PRIORITY,
         :role        => 'ems_operations',
         :zone        => my_zone,
-        :args        => [userid, protocol]
+        :args        => [userid, MiqServer.my_server.id, protocol]
       }
 
       MiqTask.generic_action_with_callback(task_opts, queue_opts)
