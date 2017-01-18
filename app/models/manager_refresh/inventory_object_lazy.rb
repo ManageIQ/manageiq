@@ -57,7 +57,7 @@ module ManagerRefresh
 
     def load_object
       inventory_collection_member = inventory_collection.find(to_s)
-      inventory_collection_member.respond_to?(:object) ? inventory_collection_member.object : inventory_collection_member
+      inventory_collection_member.respond_to?(:id) ? inventory_collection_member.id : inventory_collection_member
     end
   end
 end
