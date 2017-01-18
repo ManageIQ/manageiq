@@ -319,7 +319,7 @@ describe ManagerRefresh::SaveInventory do
                                              @orchestration_stack_resource_data_12_23)
 
             # Invoke the InventoryCollections saving
-            ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
+            ManagerRefresh::SaveInventory.save_inventory(@ems, @data.values)
 
             # Assert saved data
             assert_full_inventory_collections_graph
@@ -351,7 +351,7 @@ describe ManagerRefresh::SaveInventory do
                                              @orchestration_stack_resource_data_12_23)
 
             # Invoke the InventoryCollections saving
-            ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
+            ManagerRefresh::SaveInventory.save_inventory(@ems, @data.values)
 
             # Assert saved data
             assert_full_inventory_collections_graph
@@ -389,7 +389,7 @@ describe ManagerRefresh::SaveInventory do
                                              @orchestration_stack_resource_data_12_23)
 
             # Invoke the InventoryCollections saving
-            ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
+            ManagerRefresh::SaveInventory.save_inventory(@ems, @data.values)
 
             # Assert saved data
             assert_full_inventory_collections_graph
@@ -421,7 +421,7 @@ describe ManagerRefresh::SaveInventory do
                                              @orchestration_stack_resource_data_12_23)
 
             # Invoke the InventoryCollections saving
-            ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
+            ManagerRefresh::SaveInventory.save_inventory(@ems, @data.values)
 
             # Assert saved data
             assert_full_inventory_collections_graph
@@ -483,7 +483,7 @@ describe ManagerRefresh::SaveInventory do
                                            @network_port_3)
 
           # Invoke the InventoryCollections saving
-          ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
+          ManagerRefresh::SaveInventory.save_inventory(@ems, @data.values)
 
           # Assert saved data
           assert_full_inventory_collections_graph
@@ -553,7 +553,7 @@ describe ManagerRefresh::SaveInventory do
                                            @network_port_3)
 
           # Invoke the InventoryCollections saving
-          ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
+          ManagerRefresh::SaveInventory.save_inventory(@ems, @data.values)
           # Assert saved data
           assert_full_inventory_collections_graph
 
@@ -593,7 +593,7 @@ describe ManagerRefresh::SaveInventory do
 
           # Invoke the InventoryCollections saving and check we raise an exception that a cycle was found, after we
           # attempted to remove the cycles.
-          expect { ManagerRefresh::SaveInventory.save_inventory(@ems, @data) }.to raise_error(/^Cycle from /)
+          expect { ManagerRefresh::SaveInventory.save_inventory(@ems, @data.values) }.to raise_error(/^Cycle from /)
         end
 
         it 'test network_port -> network_port -> stack -> resource -> stack' do
@@ -680,7 +680,7 @@ describe ManagerRefresh::SaveInventory do
           # Invoke the InventoryCollections saving and check we raise an exception that a cycle was found, after we
           # attempted to remove the cycles.
           # TODO(lsmola) make this spec pass, by enhancing the logic around transitive edges
-          expect { ManagerRefresh::SaveInventory.save_inventory(@ems, @data) }.to raise_error(/^Cycle from /)
+          expect { ManagerRefresh::SaveInventory.save_inventory(@ems, @data.values) }.to raise_error(/^Cycle from /)
         end
 
         it 'test network_port -> stack -> resource -> stack and network_port -> resource -> stack -> resource -> stack ' do
@@ -740,7 +740,7 @@ describe ManagerRefresh::SaveInventory do
                                            @network_port_4)
 
           # Invoke the InventoryCollections saving
-          ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
+          ManagerRefresh::SaveInventory.save_inventory(@ems, @data.values)
 
           # Assert saved data
           assert_full_inventory_collections_graph
@@ -794,7 +794,7 @@ describe ManagerRefresh::SaveInventory do
                                            @orchestration_stack_resource_data_12_23)
 
           # Invoke the InventoryCollections saving
-          ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
+          ManagerRefresh::SaveInventory.save_inventory(@ems, @data.values)
 
           # Assert saved data
           assert_full_inventory_collections_graph
@@ -870,7 +870,7 @@ describe ManagerRefresh::SaveInventory do
                                            @orchestration_stack_resource_data_12_23)
 
           # Invoke the InventoryCollections saving
-          ManagerRefresh::SaveInventory.save_inventory(@ems, @data)
+          ManagerRefresh::SaveInventory.save_inventory(@ems, @data.values)
 
           # Assert saved data
           assert_full_inventory_collections_graph

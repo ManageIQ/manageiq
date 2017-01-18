@@ -1,8 +1,12 @@
 module EmsRefresh::SaveInventory
   def save_ems_inventory(ems, hashes, target = nil)
+    if hashes.kind_of?(Array)
+      ManagerRefresh::SaveInventory.save_inventory(ems, hashes)
+      return
+    end
     if hashes && hashes[:_inventory_collection]
       hashes.delete(:_inventory_collection)
-      ManagerRefresh::SaveInventory.save_inventory(ems, hashes)
+      ManagerRefresh::SaveInventory.save_inventory(ems, hashes.values)
       return
     end
     case ems
