@@ -62,21 +62,21 @@ module ManagerRefresh::SaveCollection
       _log.info("*************** PROCESSING #{inventory_collection} of size #{inventory_collection_size} ***************")
       ActiveRecord::Base.transaction do
         inventory_collection.each do |inventory_object|
-          hash                    = inventory_object.attributes(inventory_collection)
-          inventory_object.object = record_index.delete(inventory_object.manager_uuid)
-          if inventory_object.object.nil?
+          hash   = inventory_object.attributes(inventory_collection)
+          record = record_index.delete(inventory_object.manager_uuid)
+          if record.nil?
             next unless inventory_collection.create_allowed?
-            inventory_object.object = entity_builder.create!(hash.except(:id))
-            created_counter         += 1
+            record          = entity_builder.create!(hash.except(:id))
+            created_counter += 1
           else
-            inventory_object.object.assign_attributes(hash.except(:id, :type))
+            record.assign_attributes(hash.except(:id, :type))
             if inventory_collection.check_changed?
-              inventory_object.object.save! if inventory_object.object.changed?
+              record.save! if record.changed?
             else
-              inventory_object.object.save!
+              record.save!
             end
           end
-          inventory_object.object.try(:reload)
+          inventory_object.id = record.try(:id)
         end
       end
       _log.info("*************** PROCESSED #{inventory_collection}, created=#{created_counter}, "\
