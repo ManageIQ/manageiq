@@ -173,9 +173,8 @@ module ManagerRefresh
                          end
       return unless record
 
-      inventory_object = new_inventory_object(record.attributes.symbolize_keys)
-      # TODO(lsmola) get rid of storing objects, they are causing memory bloat
-      inventory_object.object = record
+      inventory_object    = new_inventory_object(record.attributes.symbolize_keys)
+      inventory_object.id = record.id
       inventory_object
     end
 
