@@ -235,7 +235,7 @@ RSpec.describe "Requests API" do
       request = FactoryGirl.create(:miq_provision_request,
                                    :requester => @user,
                                    :src_vm_id => vm_template.id,
-                                   :options   => {:owner_email => 'tester@example.com'})
+                                   :options   => {:owner_email => 'tester@example.com', :src_vm_id => vm_template.id})
       FactoryGirl.create(:miq_dialog,
                          :name        => "miq_provision_dialogs",
                          :dialog_type => MiqProvisionWorkflow)

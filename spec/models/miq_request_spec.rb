@@ -315,7 +315,12 @@ describe MiqRequest do
   end
 
   context '#workflow' do
-    let(:provision_request) { FactoryGirl.create(:miq_provision_request, :requester => fred, :src_vm_id => template.id) }
+    let(:provision_request) do
+      FactoryGirl.create(:miq_provision_request,
+                         :requester => fred,
+                         :src_vm_id => template.id,
+                         :options => {:src_vm_id => template.id})
+    end
     let(:ems)          { FactoryGirl.create(:ems_vmware) }
     let(:template)     { FactoryGirl.create(:template_vmware, :ext_management_system => ems) }
     let(:host) { double('Host', :id => 1, :name => 'my_host') }
