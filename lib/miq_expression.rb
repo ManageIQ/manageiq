@@ -1626,9 +1626,10 @@ class MiqExpression
 
       if (val = expression["field"] || expression["count"] || expression["tag"])
         ret = []
-        ret << Field.parse(val) if Field.is_field?(val)
-        val = expression["value"]
-        ret << Field.parse(val) if Field.is_field?(val)
+        tg = self.class.parse_field_or_tag(val)
+        ret << tg if tg
+        tg = self.class.parse_field_or_tag(expression["value"])
+        ret << tg if tg
         ret
       else
         fields(expression.values)

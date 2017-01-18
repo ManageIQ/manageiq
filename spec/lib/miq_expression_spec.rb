@@ -2628,5 +2628,19 @@ describe MiqExpression do
         an_object_having_attributes(:model => Vm, :column => "name")
       )
     end
+
+    it "extracts tags" do
+      expression = {
+        "AND" => [
+          {">=" => {"field" => "EmsClusterPerformance-cpu_usagemhz_rate_average", "value" => "0"}},
+          {"<"  => {"field" => "Vm.managed-favorite_color", "value" => "5"}}
+        ]
+      }
+      actual = described_class.new(expression).fields
+      expect(actual).to contain_exactly(
+        an_object_having_attributes(:model => EmsClusterPerformance, :column => "cpu_usagemhz_rate_average"),
+        an_object_having_attributes(:model => Vm, :namespace => "/managed/favorite_color")
+      )
+    end
   end
 end
