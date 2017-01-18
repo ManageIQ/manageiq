@@ -128,6 +128,24 @@ describe ManageIQ::Providers::Redhat::InfraManager::ProvisionWorkflow do
       expect(workflow).to receive(:super_allowed_customization_templates).with(options)
       workflow.allowed_customization_templates(options)
     end
+
+    it "should retrieve templates in region" do
+      template = FactoryGirl.create(:customization_template_cloud_init, :name => "test1")
+
+      my_region_number = template.my_region_number
+      other_region_id  = (my_region_number + 1) * template.class.rails_sequence_factor + 1
+      pxe_image_type   = FactoryGirl.create(:pxe_image_type, :name => "test_image", :id => other_region_id)
+      FactoryGirl.create(:customization_template_cloud_init,
+                         :name           => "test2",
+                         :id             => other_region_id,
+                         :pxe_image_type => pxe_image_type)
+
+      expect(workflow).to receive(:supports_native_clone?).and_return(true)
+      result = workflow.allowed_customization_templates
+      expect(result.size).to eq(1)
+      expect(result.first.id).to eq(template.id)
+      expect(result.first.name).to eq(template.name)
+    end
   end
 
   describe "#make_request" do

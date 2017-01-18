@@ -544,6 +544,8 @@ class MiqRequestWorkflow
   def allowed_tags(options = {})
     return @tags unless @tags.nil?
 
+    region_number = options.delete(:region_number)
+
     # TODO: Call allowed_tags properly from controller - it is currently hard-coded with no options passed
     field_options = @dialogs.fetch_path(:dialogs, :purpose, :fields, :vm_tags, :options)
     options = field_options unless field_options.nil?
@@ -557,6 +559,7 @@ class MiqRequestWorkflow
     single_select = options[:single_select].blank? ? [] : options[:single_select].collect(&:to_s)
 
     cats = Classification.visible.writeable.managed
+    cats = cats.in_region(region_number) if region_number
     cats.each do |t|
       next if exclude_list.include?(t.name)
       next unless include_list.blank? || include_list.include?(t.name)
@@ -566,6 +569,7 @@ class MiqRequestWorkflow
     end
 
     ents = Classification.visible.writeable.parent_ids(@tags.keys).with_tag_name
+    ents = ents.in_region(region_number) if region_number
     ents.each do |t|
       full_tag_name = "#{@tags[t.parent_id][:name]}/#{t.name}"
       next if exclude_list.include?(full_tag_name)
