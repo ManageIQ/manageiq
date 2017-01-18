@@ -124,8 +124,7 @@ module Rbac
     # @option options :sub_filter
     # @option options :include_for_find [Array<Symbol>]
     # @option options :filter
-    # @option options :selected_ids
-    #     IDs which are selected for this search, used when option targets is used
+
     # @option options :user         [User]     (default: current_user)
     # @option options :userid       [String]   User#userid (not user_id)
     # @option options :miq_group    [MiqGroup] (default: current_user.current_group)
@@ -164,7 +163,6 @@ module Rbac
       sub_filter        = options[:sub_filter]
       include_for_find  = options[:include_for_find]
       search_filter     = options[:filter]
-      selected_ids      = options[:selected_ids] # Array of selected Ids
 
       limit             = options[:limit]  || targets.try(:limit_value)
       offset            = options[:offset] || targets.try(:offset_value)
@@ -219,7 +217,6 @@ module Rbac
 
       scope = include_references(scope, klass, include_for_find, exp_includes)
       scope = scope.limit(limit).offset(offset) if attrs[:apply_limit_in_sql]
-      scope = scope.where(:id => selected_ids) unless selected_ids.nil?
       targets = scope
 
       unless options[:skip_counts]
