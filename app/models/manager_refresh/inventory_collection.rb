@@ -76,9 +76,8 @@ module ManagerRefresh
         else
           index = stringify_reference(custom_manager_uuid.call(record))
         end
-        self.data_index[index] = new_inventory_object(record.attributes.symbolize_keys)
-        # TODO(lsmola) get rid of storing objects, they are causing memory bloat
-        self.data_index[index].object = record
+        self.data_index[index]    = new_inventory_object(record.attributes.symbolize_keys)
+        self.data_index[index].id = record.id
       end
     end
 
@@ -261,6 +260,34 @@ module ManagerRefresh
                      # Dependency attributes need to be a hard copy, since those will differ for each
                      # InventoryCollection
                      :dependency_attributes => dependency_attributes.clone)
+    end
+
+    def association_to_foreign_key_mapping
+      @association_to_foreign_key_mapping ||= model_class.reflect_on_all_associations.each_with_object({}) do |x, obj|
+        obj[x.name] = x.foreign_key
+      end
+    end
+
+    def foreign_key_to_association_mapping
+      @foreign_key_to_association_mapping ||= model_class.reflect_on_all_associations.each_with_object({}) do |x, obj|
+        obj[x.foreign_key] = x.name
+      end
+    end
+
+    def association_to_foreign_type_mapping
+      @association_to_foreign_type_mapping ||= model_class.reflect_on_all_associations.each_with_object({}) do |x, obj|
+        obj[x.name] = x.foreign_type if x.polymorphic?
+      end
+    end
+
+    def foreign_type_to_association_mapping
+      @foreign_type_to_association_mapping ||= model_class.reflect_on_all_associations.each_with_object({}) do |x, obj|
+        obj[x.foreign_type] = x.name if x.polymorphic?
+      end
+    end
+
+    def base_class_name
+      @base_class_name ||= model_class.base_class.name
     end
 
     def to_s
