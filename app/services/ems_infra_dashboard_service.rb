@@ -105,6 +105,7 @@ class EmsInfraDashboardService
         :id       => m.resource.id,
         :node     => m.resource.name,
         :provider => provider_name,
+        :unit     => "Cores",
         :total    => m.derived_vm_numvcpus.present? ? m.derived_vm_numvcpus.round : nil,
         :percent  => m.cpu_usage_rate_average.present? ?
           (m.cpu_usage_rate_average / 100.0).round(CPU_USAGE_PRECISION) : nil # pf accepts fractions 90% = 0.90
@@ -114,7 +115,8 @@ class EmsInfraDashboardService
         :id       => m.resource.id,
         :node     => m.resource.name,
         :provider => m.resource.ext_management_system.name,
-        :total    => m.derived_memory_available.present? ? m.derived_memory_available.round : nil,
+        :unit     => "GB",
+        :total    => m.derived_memory_available.present? ? (m.derived_memory_available / 1024).round : nil,
         :percent  => m.mem_usage_absolute_average.present? ?
           (m.mem_usage_absolute_average / 100.0).round(CPU_USAGE_PRECISION) : nil # pf accepts fractions 90% = 0.90
       }
@@ -201,6 +203,6 @@ class EmsInfraDashboardService
 
     @daily_metrics ||= Metric::Helper.find_for_interval_name('daily', tp)
                                      .where(:resource => (@ems || ManageIQ::Providers::InfraManager.all))
-                                     .where('timestamp > ?', 30.days.ago.utc).order('timestamp')
+                                     .where('timestamp > ?', 30000.days.ago.utc).order('timestamp')
   end
 end

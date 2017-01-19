@@ -87,7 +87,7 @@ angular.module('miq.util').factory('infraChartsMixin', ['pfUtils', function(pfUt
           tooltip += "<br> " + __("Usage: Unknown");
         } else {
           percent = d.percent
-          tooltip += "<br>" + __("Usage: ") + sprintf(__("%d%% in use of %d total"), (percent * 100).toFixed(0), d.total);
+          tooltip += "<br>" + __("Usage: ") + sprintf(__("%d%% in use of %d %s total"), (percent * 100).toFixed(0), d.total, d.unit);
         }
 
         return {
