@@ -1,11 +1,12 @@
 class LocaleResolver
-  def self.resolve(headers = {})
-    new(headers).resolve
+  def self.resolve(user, headers = {})
+    new(user, headers).resolve
   end
 
-  attr_reader :headers
+  attr_reader :user, :headers
 
-  def initialize(headers = {})
+  def initialize(user, headers = {})
+    @user = user
     @headers = headers
   end
 
@@ -18,7 +19,7 @@ class LocaleResolver
   private
 
   def user_locale
-    @user_locale ||= (User.current_user.try(:settings) || {}).fetch_path(:display, :locale)
+    @user_locale ||= (user.try(:settings) || {}).fetch_path(:display, :locale)
   end
 
   def server_locale
