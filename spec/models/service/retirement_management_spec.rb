@@ -65,7 +65,7 @@ describe "Service Retirement Management" do
   it "#retire date" do
     expect(AuditEvent).to receive(:success).once
     options = {}
-    options[:date] = Date.today
+    options[:date] = Time.zone.today
     @service.retire(options)
     @service.reload
     expect(@service.retires_on).to eq(options[:date])
@@ -131,19 +131,19 @@ describe "Service Retirement Management" do
 
   it "#retires_on - today" do
     expect(@service.retirement_due?).to be_falsey
-    @service.retires_on = Date.today
+    @service.retires_on = Time.zone.today
     expect(@service.retirement_due?).to be_truthy
   end
 
   it "#retires_on - tomorrow" do
     expect(@service.retirement_due?).to be_falsey
-    @service.retires_on = Date.today + 1
+    @service.retires_on = Time.zone.today + 1
     expect(@service.retirement_due?).to be_falsey
   end
 
   # it "#retirement_warn" do
   #  expect(@service.retirement_warn).to be_nil
-  #   @service.update_attributes(:retirement_last_warn => Date.today)
+  #   @service.update_attributes(:retirement_last_warn => Time.zone.today)
   #   @service.retirement_warn = 60
   #  expect(@service.retirement_warn).to eq(60)
   #  expect(@service.retirement_last_warn).to be_nil
@@ -152,13 +152,13 @@ describe "Service Retirement Management" do
   it "#retirement_due?" do
     expect(@service.retirement_due?).to be_falsey
 
-    @service.update_attributes(:retires_on => Date.today + 1.day)
+    @service.update_attributes(:retires_on => Time.zone.today + 1.day)
     expect(@service.retirement_due?).to be_falsey
 
-    @service.update_attributes(:retires_on => Date.today)
+    @service.update_attributes(:retires_on => Time.zone.today)
     expect(@service.retirement_due?).to be_truthy
 
-    @service.update_attributes(:retires_on => Date.today - 1.day)
+    @service.update_attributes(:retires_on => Time.zone.today - 1.day)
     expect(@service.retirement_due?).to be_truthy
   end
 
