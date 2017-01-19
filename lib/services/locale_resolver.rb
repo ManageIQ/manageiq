@@ -10,14 +10,14 @@ class LocaleResolver
   end
 
   def resolve
-    if !set?(user_locale)
-      if !set?(server_locale)
-        headers['Accept-Language']
-      else
-        server_locale
-      end
-    else
+    if set?(user_locale)
       user_locale
+    else
+      if set?(server_locale)
+        server_locale
+      else
+        headers['Accept-Language']
+      end
     end
   end
 
