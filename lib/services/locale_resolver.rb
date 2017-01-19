@@ -10,7 +10,6 @@ class LocaleResolver
   end
 
   def resolve
-    user_locale = (User.current_user.try(:settings) || {}).fetch_path(:display, :locale)
     if user_locale == 'default' || user_locale.nil?
       server_locale = ::Settings.server.locale
       if server_locale == "default" || server_locale.nil?
@@ -21,5 +20,11 @@ class LocaleResolver
     else
       user_locale
     end
+  end
+
+  private
+
+  def user_locale
+    @user_locale ||= (User.current_user.try(:settings) || {}).fetch_path(:display, :locale)
   end
 end
