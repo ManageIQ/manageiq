@@ -45,6 +45,19 @@ class ServiceTemplate < ApplicationRecord
   virtual_has_one :custom_actions, :class_name => "Hash"
   virtual_has_one :custom_action_buttons, :class_name => "Array"
 
+  # This method creates
+  def self.create_catalog_item(options, auth_user)
+    create(options.except(:config_info)).tap do |service_template|
+      config_info = options[:config_info].except(:ae_endpoints)
+      workflow_class = MiqProvisionWorkflow.class_for_source(config_info[:src_vm_id])
+      raise 'Could not find Provision Workflow class for source VM' unless workflow_class
+      request = workflow_class.new(config_info, auth_user).make_request(nil, config_info)
+      service_template.add_resource(request)
+      dialog = Dialog.find(config_info[:service_dialog_id]) if config_info[:service_dialog_id]
+      service_template.set_resource_actions(options[:config_info][:ae_endpoints], dialog)
+    end
+  end
+
   def readonly?
     return true if super
     blueprint.try(:published?)
@@ -180,9 +193,9 @@ class ServiceTemplate < ApplicationRecord
   end
 
   def create_tasks_for_service(service_task, parent_svc)
-    return [] unless self.class.include_service_template?(service_task,
-                                                          service_task.source_id,
-                                                          parent_svc) unless parent_svc
+    return [] unless parent_svc || self.class.include_service_template?(service_task,
+                                                                        service_task.source_id,
+                                                                        parent_svc)
     svc = create_service(service_task, parent_svc)
 
     set_ownership(svc, service_task.get_user)
@@ -261,7 +274,7 @@ class ServiceTemplate < ApplicationRecord
   def template_valid?
     validate_template[:valid]
   end
-  alias_method :template_valid, :template_valid?
+  alias template_valid template_valid?
 
   def template_valid_error_message
     validate_template[:message]
@@ -289,5 +302,31 @@ class ServiceTemplate < ApplicationRecord
 
   def provision_action
     resource_actions.find_by(:action => "Provision")
+  end
+
+  def set_resource_actions(ae_endpoints, dialog)
+    ae_endpoints ||= {}
+    [
+      {:name      => 'Provision',
+       :param_key => 'provisioning',
+       :method    => 'default_provisioning_entry_point',
+       :args      => [service_type]},
+      {:name      => 'Reconfigure',
+       :param_key => 'reconfigure',
+       :method    => 'default_reconfiguration_entry_point',
+       :args      => []},
+      {:name      => 'Retirement',
+       :param_key => 'retirement',
+       :method    => 'default_retirement_entry_point',
+       :args      => []}
+    ].each do |action|
+      fqname = if ae_endpoints[action[:param_key]].nil?
+                 self.class.send(action[:method], *action[:args]) || ""
+               else
+                 ae_endpoints[action[:param_key]]
+               end
+      resource_actions.build(:action => action[:name], :fqname => fqname, :dialog => dialog)
+    end
+    save!
   end
 end
