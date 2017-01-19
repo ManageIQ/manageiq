@@ -89,6 +89,8 @@ module EmsRefresh::SaveInventoryMiddleware
 
     hashes.each do |h|
       h[:server_id] = h.fetch_path(:middleware_server, :id)
+      server_group_id = h.fetch_path(:middleware_server, :server_group_id)
+      h[:server_group_id] = server_group_id unless server_group_id.nil?
     end
 
     save_inventory_multi(ems.middleware_deployments, hashes, deletes, [:ems_ref], nil,

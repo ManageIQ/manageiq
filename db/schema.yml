@@ -4633,6 +4633,7 @@ middleware_deployments:
 - status
 - feed
 - properties
+- server_group_id
 middleware_domains:
 - id
 - name

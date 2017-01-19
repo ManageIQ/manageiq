@@ -23,18 +23,18 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::Refresher do
 
     @ems_hawkular.reload
 
-    expect(@ems_hawkular.middleware_domains.count).to be > 0
+    expect(@ems_hawkular.middleware_domains).not_to be_empty
     domain = @ems_hawkular.middleware_domains.first
-    expect(domain.middleware_server_groups.count).to be > 0
-    expect(@ems_hawkular.middleware_servers.count).to be > 0
+    expect(domain.middleware_server_groups).not_to be_empty
+    expect(@ems_hawkular.middleware_servers).not_to be_empty
 
     # check whether the server was associated with the vm
     server = @ems_hawkular.middleware_servers.first
     expect(server.lives_on_id).to eql(@vm.id)
     expect(server.lives_on_type).to eql(@vm.type)
-    expect(@ems_hawkular.middleware_deployments.count).to be > 0
-    expect(@ems_hawkular.middleware_datasources.count).to be > 0
-    expect(@ems_hawkular.middleware_messagings.count).to be > 0
+    expect(@ems_hawkular.middleware_deployments).not_to be_empty
+    expect(@ems_hawkular.middleware_datasources).not_to be_empty
+    expect(@ems_hawkular.middleware_messagings).not_to be_empty
     expect(@ems_hawkular.middleware_deployments.first).to have_attributes(:status => 'Enabled')
     assert_specific_datasource(@ems_hawkular, 'Local~/subsystem=datasources/data-source=ExampleDS')
     assert_specific_datasource(@ems_hawkular,
@@ -80,6 +80,8 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::Refresher do
       :profile  => 'full',
     )
     expect(server_group.properties).not_to be_nil
+    expect(server_group.middleware_deployments).to be_empty
+    expect(server_group.ext_management_system).to eq(@ems_hawkular)
   end
 
   def assert_specific_domain_server
@@ -103,13 +105,13 @@ describe ManageIQ::Providers::Hawkular::MiddlewareManager::Refresher do
 
     @ems_hawkular2.reload
     expect(@ems_hawkular2.middleware_domains).to be_empty
-    expect(@ems_hawkular2.middleware_servers.count).to be > 0
+    expect(@ems_hawkular2.middleware_servers).not_to be_empty
     server = @ems_hawkular2.middleware_servers.first
     expect(server.lives_on_id).to be_nil
     expect(server.lives_on_type).to be_nil
-    expect(@ems_hawkular2.middleware_deployments.count).to be > 0
-    expect(@ems_hawkular2.middleware_datasources.count).to be > 0
-    expect(@ems_hawkular2.middleware_messagings.count).to be > 0
+    expect(@ems_hawkular2.middleware_deployments).not_to be_empty
+    expect(@ems_hawkular2.middleware_datasources).not_to be_empty
+    expect(@ems_hawkular2.middleware_messagings).not_to be_empty
     assert_specific_datasource(@ems_hawkular2, 'Local~/subsystem=datasources/data-source=ExampleDS')
   end
 end
