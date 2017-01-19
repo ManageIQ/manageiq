@@ -456,7 +456,6 @@ describe ServiceTemplate do
         :description  => 'a description',
         :config_info  => {
           :miq_request_dialog_name => request_dialog.name,
-          :service_dialog_id       => service_dialog.id,
           :placement_auto          => [true, 1],
           :number_of_vms           => [1, '1'],
           :src_vm_id               => [vm.id, vm.name],
@@ -464,9 +463,13 @@ describe ServiceTemplate do
           :schedule_type           => ['immediately', 'Immediately on Approval'],
           :instance_type           => [flavor.id, flavor.name],
           :src_ems_id              => [ems.id, ems.name],
-          :ae_endpoints            => {
-            :provisioning => ra1.fqname,
-            :retirement   => ra2.fqname
+          :provision               => {
+            :fqname    => ra1.fqname,
+            :dialog_id => service_dialog.id
+          },
+          :retirement              => {
+            :fqname    => ra2.fqname,
+            :dialog_id => service_dialog.id
           }
         }
       }
@@ -479,15 +482,9 @@ describe ServiceTemplate do
       expect(service_template.service_resources.count).to eq(1)
       expect(service_template.service_resources.first.resource_type).to eq('MiqRequest')
       expect(service_template.dialogs.first).to eq(service_dialog)
-      expect(service_template.resource_actions.pluck(:action)).to include('Provision', 'Reconfigure', 'Retirement')
-    end
-
-    it 'will raise an error if it cannot find a Provision Workflow class for source VM' do
-      catalog_item_options[:config_info][:src_vm_id] = []
-
-      expect do
-        ServiceTemplate.create_catalog_item(catalog_item_options, user)
-      end.to raise_error(StandardError, 'Could not find Provision Workflow class for source VM')
+      expect(service_template.resource_actions.pluck(:action)).to include('Provision', 'Retirement')
+      expect(service_template.resource_actions.first.dialog).to eq(service_dialog)
+      expect(service_template.resource_actions.last.dialog).to eq(service_dialog)
     end
   end
 end
