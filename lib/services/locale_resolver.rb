@@ -10,8 +10,8 @@ class LocaleResolver
   end
 
   def resolve
-    if user_locale == 'default' || user_locale.nil?
-      if server_locale == "default" || server_locale.nil?
+    if !set?(user_locale)
+      if !set?(server_locale)
         headers['Accept-Language']
       else
         server_locale
@@ -29,5 +29,9 @@ class LocaleResolver
 
   def server_locale
     @server_locale ||= ::Settings.server.locale
+  end
+
+  def set?(locale)
+    locale && locale != "default"
   end
 end
