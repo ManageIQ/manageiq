@@ -9,6 +9,8 @@ class OpsController
     def initialize(role, role_features)
       @role = role
       @role_features = role_features
+
+      @descendant_cache = {}
     end
 
     def remove_accords_suffix(name)
@@ -114,8 +116,26 @@ class OpsController
       end
 
       node[:children] = kids
-      node[:select] = parent_checked || @role_features.include?(feature) || all_checked(kids)
+      node[:select] = parent_checked || @role_features.include?(feature) || select_by_all_descendents(feature)
       node
+    end
+
+    def feature_child_select_states(feature)
+      all_children = feature_descendants(feature)
+      all_children.map { |c| @role_features.include?(c) }
+    end
+
+    def feature_descendants(feature)
+      @descendant_cache[feature] ||= MiqProductFeature.find_by(:identifier => feature).descendants.pluck(:identifier)
+    end
+
+    def select_by_all_descendents(feature)
+      states = feature_child_select_states(feature)
+
+      return false       if states.none?
+      return true        if states.any?
+
+      false
     end
   end
 end
