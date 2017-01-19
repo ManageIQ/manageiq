@@ -36,6 +36,53 @@
     - :patch
     - :delete
 :collections:
+  :physical_servers:
+    :description: Physical Servers
+    :identifier: physical_server
+    :options:
+    - :collection
+    :verbs: *gp
+    :klass: PhysicalServer
+    :subcollections:
+    - :firmwares
+    :collection_actions:
+      :post:
+      - :name: power_on
+        :identifier: physical_server_power_on
+      - :name: power_off
+        :identifier: physical_server_power_off
+      - :name: restart
+      - :identifier: physical_server_restart
+      - :name: turn_on_loc_led
+        :identifier: physical_server_turn_on_loc_led
+      - :name: turn_off_loc_led
+        :identifier: physical_server_turn_off_loc_led
+    :resource_actions:
+      :post:
+      - :name: power_on
+        :identifier: physical_server_power_on
+      - :name: power_off
+        :identifier: physical_server_power_off
+      - :name: restart
+        :identifier: physical_server_restart
+      - :name: turn_on_loc_led
+        :identifier: physical_server_turn_on_loc_led
+      - :name: turn_off_loc_led
+        :identifier: physical_server_turn_off_loc_led
+  :ems_events:
+     :description: LXCA Events
+     :options:
+     - :collection
+     :verbs: *g
+     :klass: EmsEvent
+  :firmwares:
+    :description: Firmwares
+    :options:
+    - :collection
+    - :subcollection
+    :verbs: *g
+    :klass: Firmware
+    :identifier: firmwares
   :accounts:
     :description: Accounts
     :options:

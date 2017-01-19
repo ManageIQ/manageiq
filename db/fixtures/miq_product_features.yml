@@ -6294,7 +6294,7 @@
     - :name: List
       :description: Display Lists of Physical Servers
       :feature_type: view
-      :identifier: shosical_server_show_list
+      :identifier: physical_server_show_list
     - :name: Show
       :description: Display Individual Physical Server
       :feature_type: view

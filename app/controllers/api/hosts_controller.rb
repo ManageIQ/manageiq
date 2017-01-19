@@ -8,6 +8,30 @@ module Api
     include Subcollections::PolicyProfiles
     include Subcollections::Tags
 
+
+    def show
+      if params[:c_id]
+        host = Host.find(params[:c_id])
+        response_payload = host.as_json
+        response_payload["physical_server"] = case host.physical_server
+                                              when nil then nil
+                                              else host.physical_server.id
+                                              end
+
+        render json: response_payload
+
+      else
+
+        super
+
+      end
+
+
+    end
+
+
+
+
     def edit_resource(type, id, data = {})
       credentials = data.delete(CREDENTIALS_ATTR)
       raise BadRequestError, "Cannot update non-credentials attributes of host resource" if data.any?

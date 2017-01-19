@@ -91,6 +91,10 @@ class Host < ApplicationRecord
   has_many                  :host_aggregate_hosts, :dependent => :destroy
   has_many                  :host_aggregates, :through => :host_aggregate_hosts
 
+
+  #Physical infra reference
+  has_one :physical_server,  :foreign_key  =>  "serialNumber", :primary_key  =>  "service_tag", :class_name => "PhysicalServer"
+
   serialize :settings, Hash
 
   # TODO: Remove all callers of address

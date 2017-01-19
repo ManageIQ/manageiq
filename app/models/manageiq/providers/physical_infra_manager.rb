@@ -1,5 +1,8 @@
 module ManageIQ::Providers
   class PhysicalInfraManager < BaseManager
+
+    has_many :physical_servers, foreign_key: "ems_id", class_name: "PhysicalServer"
+
     class << model_name
       define_method(:route_key) { "ems_physical_infras" }
       define_method(:singular_route_key) { "ems_physical_infra" }

@@ -1,0 +1,51 @@
+#Report title
+title:  Physical Servers
+
+#Menu name
+name: Physical Server
+
+
+db: PhysicalServer
+
+
+# Columns to fetch from main table
+cols:
+- name
+- type
+
+
+include:
+
+
+include_for_find:
+  :ext_management_system: {}
+  :compliances: {}
+  :tags:  {}
+
+
+col_order:
+- name
+- type
+
+headers:
+- Name
+- Type
+
+
+conditions:
+
+
+order: Ascending
+
+
+sortby:
+- name
+
+group: n
+
+
+
+graph:
+
+
+dims:
