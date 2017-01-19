@@ -28,7 +28,7 @@ module ManagerRefresh
     def dependency?
       # If key is not set, InventoryObjectLazy is a dependency, cause it points to the record itself. Otherwise
       # InventoryObjectLazy is a dependency only if it points to an attribute which is a dependency or a relation.
-      !!(!key || transitive_dependency?)
+      !!(!key || transitive_dependency?) && !inventory_collection.saved?
     end
 
     def transitive_dependency?
@@ -56,8 +56,7 @@ module ManagerRefresh
     end
 
     def load_object
-      inventory_collection_member = inventory_collection.find(to_s)
-      inventory_collection_member.respond_to?(:object) ? inventory_collection_member.object : inventory_collection_member
+      inventory_collection.find(to_s)
     end
   end
 end

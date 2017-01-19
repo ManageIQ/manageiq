@@ -55,28 +55,26 @@ module ManagerRefresh::SaveCollection
         record_index[inventory_collection.object_index_with_keys(unique_index_keys, record)] = record
       end
 
-      entity_builder = get_entity_builder(inventory_collection, association)
-
       inventory_collection_size = inventory_collection.size
       created_counter           = 0
       _log.info("*************** PROCESSING #{inventory_collection} of size #{inventory_collection_size} ***************")
       ActiveRecord::Base.transaction do
         inventory_collection.each do |inventory_object|
-          hash                    = inventory_object.attributes(inventory_collection)
-          inventory_object.object = record_index.delete(inventory_object.manager_uuid)
-          if inventory_object.object.nil?
+          hash   = inventory_object.attributes(inventory_collection)
+          record = record_index.delete(inventory_object.manager_uuid)
+          if record.nil?
             next unless inventory_collection.create_allowed?
-            inventory_object.object = entity_builder.create!(hash.except(:id))
-            created_counter         += 1
+            record          = inventory_collection.model_class.create!(hash.except(:id))
+            created_counter += 1
           else
-            inventory_object.object.assign_attributes(hash.except(:id, :type))
+            record.assign_attributes(hash.except(:id, :type))
             if inventory_collection.check_changed?
-              inventory_object.object.save! if inventory_object.object.changed?
+              record.save! if record.changed?
             else
-              inventory_object.object.save!
+              record.save!
             end
           end
-          inventory_object.object.try(:reload)
+          inventory_object.id = record.try(:id)
         end
       end
       _log.info("*************** PROCESSED #{inventory_collection}, created=#{created_counter}, "\
@@ -94,15 +92,6 @@ module ManagerRefresh::SaveCollection
           deletes.map(&inventory_collection.delete_method)
         end
         _log.info("*************** DELETED #{inventory_collection} ***************")
-      end
-    end
-
-    def get_entity_builder(inventory_collection, association)
-      if inventory_collection.parent && !inventory_collection.arel
-        association_meta_info = inventory_collection.parent.class.reflect_on_association(inventory_collection.association)
-        association_meta_info.options[:through].blank? ? association : inventory_collection.model_class
-      else
-        inventory_collection.model_class
       end
     end
   end

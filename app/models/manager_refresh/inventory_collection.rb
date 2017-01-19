@@ -76,9 +76,8 @@ module ManagerRefresh
         else
           index = stringify_reference(custom_manager_uuid.call(record))
         end
-        self.data_index[index] = new_inventory_object(record.attributes.symbolize_keys)
-        # TODO(lsmola) get rid of storing objects, they are causing memory bloat
-        self.data_index[index].object = record
+        data_index[index]    = new_inventory_object(record.attributes.symbolize_keys)
+        data_index[index].id = record.id
       end
     end
 
@@ -174,9 +173,8 @@ module ManagerRefresh
                          end
       return unless record
 
-      inventory_object = new_inventory_object(record.attributes.symbolize_keys)
-      # TODO(lsmola) get rid of storing objects, they are causing memory bloat
-      inventory_object.object = record
+      inventory_object    = new_inventory_object(record.attributes.symbolize_keys)
+      inventory_object.id = record.id
       inventory_object
     end
 
@@ -263,6 +261,34 @@ module ManagerRefresh
                      :dependency_attributes => dependency_attributes.clone)
     end
 
+    def association_to_foreign_key_mapping
+      @association_to_foreign_key_mapping ||= model_class.reflect_on_all_associations.each_with_object({}) do |x, obj|
+        obj[x.name] = x.foreign_key
+      end
+    end
+
+    def foreign_key_to_association_mapping
+      @foreign_key_to_association_mapping ||= model_class.reflect_on_all_associations.each_with_object({}) do |x, obj|
+        obj[x.foreign_key] = x.name
+      end
+    end
+
+    def association_to_foreign_type_mapping
+      @association_to_foreign_type_mapping ||= model_class.reflect_on_all_associations.each_with_object({}) do |x, obj|
+        obj[x.name] = x.foreign_type if x.polymorphic?
+      end
+    end
+
+    def foreign_type_to_association_mapping
+      @foreign_type_to_association_mapping ||= model_class.reflect_on_all_associations.each_with_object({}) do |x, obj|
+        obj[x.foreign_type] = x.name if x.polymorphic?
+      end
+    end
+
+    def base_class_name
+      @base_class_name ||= model_class.base_class.name
+    end
+
     def to_s
       whitelist = ", whitelist: [#{attributes_whitelist.to_a.join(", ")}]" unless attributes_whitelist.blank?
       blacklist = ", blacklist: [#{attributes_blacklist.to_a.join(", ")}]" unless attributes_blacklist.blank?
@@ -293,8 +319,8 @@ module ManagerRefresh
     end
 
     def dependency?(value)
-      (value.kind_of?(::ManagerRefresh::InventoryObjectLazy) && value.dependency?) ||
-        value.kind_of?(::ManagerRefresh::InventoryObject)
+      (value.kind_of?(::ManagerRefresh::InventoryObjectLazy) || value.kind_of?(::ManagerRefresh::InventoryObject)) &&
+        value.dependency?
     end
 
     def transitive_dependency?(value)
