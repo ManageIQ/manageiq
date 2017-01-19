@@ -6030,6 +6030,63 @@
       :feature_type: view
       :identifier: ems_object_storage_timeline
 
+# EmsPhysicalInfra
+- :name: Physical Infra Providers
+  :description: Everything under Physical Infra Providers
+  :feature_type: node
+  :identifier: ems_physical_infra
+  :children:
+  - :name: View
+    :description: View Physical Infra Providers
+    :feature_type: view
+    :identifier: ems_physical_infra_view
+    :children:
+    - :name: List
+      :description: Display Lists of Physical Infra Providers
+      :feature_type: view
+      :identifier: ems_physical_infra_show_list
+    - :name: Show
+      :description: Display Individual Physical Infra Providers
+      :feature_type: view
+      :identifier: ems_physical_infra_show
+  - :name: Modify
+    :description: Modify Physical Infra Providers
+    :feature_type: admin
+    :identifier: ems_physical_infra_admin
+    :children:
+    - :name: Remove
+      :description: Remove Physical Infra Provider
+      :feature_type: admin
+      :identifier: ems_physical_infra_delete
+    - :name: Edit
+      :description: Edit a Physical Infra Provider
+      :feature_type: admin
+      :identifier: ems_physical_infra_edit
+    - :name: Add
+      :description: Add a Physical Infra Provider
+      :feature_type: admin
+      :identifier: ems_physical_infra_new
+
+# Physical Servers
+- :name: Physical Servers
+  :description: Everything under Physical Infra Servers
+  :feature_type: node
+  :identifier: physical_server
+  :children:
+  - :name: View
+    :description: View Physical Server
+    :feature_type: view
+    :identifier: physical_server_view
+    :children:
+    - :name: List
+      :description: Display Lists of Physical Servers
+      :feature_type: view
+      :identifier: shosical_server_show_list
+    - :name: Show
+      :description: Display Individual Physical Server
+      :feature_type: view
+      :identifier: physical_server_show
+
 # Monitor
 - :name: Monitor
   :description: Everything under Monitor
