@@ -132,7 +132,8 @@ RUN source /etc/default/evm && \
     rm -rvf ${RUBY_GEMS_ROOT}/gems/rugged-*/vendor/libgit2/build && \
     rm -rvf ${RUBY_GEMS_ROOT}/cache/* && \
     rm -rvf /root/.bundle/cache && \
-    rm -rvf ${APP_ROOT}/tmp/cache/assets
+    rm -rvf ${APP_ROOT}/tmp/cache/assets && \
+    rm -rf ${APP_ROOT}/log/*
 
 ## Build SUI
 RUN source /etc/default/evm && \
