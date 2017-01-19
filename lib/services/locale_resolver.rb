@@ -1,5 +1,15 @@
 class LocaleResolver
   def self.resolve(headers = {})
+    new(headers).resolve
+  end
+
+  attr_reader :headers
+
+  def initialize(headers = {})
+    @headers = headers
+  end
+
+  def resolve
     user_locale = (User.current_user.try(:settings) || {}).fetch_path(:display, :locale)
     if user_locale == 'default' || user_locale.nil?
       server_locale = ::Settings.server.locale
