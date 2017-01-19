@@ -580,13 +580,15 @@ module EmsCommon
   end
 
   def check_compliance(model)
-    emss = find_checked_items
-    if emss.empty?
-      add_flash(_("No %{record} were selected for %{task}") % {model => ui_lookup(:models => model),
-                                                               :task  => "Compliance Check"}, :error)
+    showlist = @lastaction == "show_list"
+    ids = showlist ? find_checked_items : ([params[:id]] if model.find(params[:id]))
+    if ids.blank?
+      add_flash(_("No %{model} were selected for %{task}") % {:model => ui_lookup(:models => model.to_s),
+                                                              :task  => "Compliance Check"}, :error)
     end
-    process_emss(emss, "check_compliance")
-    @lastaction == "show_list" ? show_list : show
+    process_emss(ids, "check_compliance")
+    params[:display] = "main"
+    showlist ? show_list : show
   end
 
   def arbitration_profile_edit
