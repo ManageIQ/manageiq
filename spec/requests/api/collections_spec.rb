@@ -299,6 +299,11 @@ describe "Rest API Collections" do
       FactoryGirl.create(:load_balancer)
       test_collection_query(:load_balancers, load_balancers_url, LoadBalancer)
     end
+
+    it 'query Alerts' do
+      FactoryGirl.create(:miq_alert_status)
+      test_collection_query(:alerts, alerts_url, MiqAlertStatus)
+    end
   end
 
   context "Collections Bulk Queries" do
