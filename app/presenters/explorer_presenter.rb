@@ -247,7 +247,7 @@ class ExplorerPresenter
     data[:ajaxUrl] = ajax_action_url(@options[:ajax_action]) if @options[:ajax_action]
     data[:clearGtlListGrid] = !!@options[:clear_gtl_list_grid]
     data[:setVisibility] = @options[:set_visible_elements]
-    data[:rightCellText] = @options[:right_cell_text] if @options[:right_cell_text]
+    data[:rightCellText] = ERB::Util.html_escape(@options[:right_cell_text]) if @options[:right_cell_text]
 
     data[:reloadToolbars] = @options[:reload_toolbars].collect do |_div_name, toolbar|
       toolbar
