@@ -6,9 +6,6 @@ class LocaleResolver
                                                       user_settings[:display].key?(:locale)
     if user_locale == 'default' || user_locale.nil?
       server_locale = ::Settings.server.locale
-      # user settings && server settings == 'default'
-      # OR not defined
-      # use HTTP_ACCEPT_LANGUAGE
       locale = if server_locale == "default" || server_locale.nil?
                  headers['Accept-Language']
                else
