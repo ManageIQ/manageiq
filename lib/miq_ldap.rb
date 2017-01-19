@@ -30,7 +30,7 @@ class MiqLdap
   end
 
   def initialize(options = {})
-    @auth = options[:auth] || ::Settings.authentication
+    @auth = options[:auth] || ::Settings.authentication.to_hash
 
     log_auth = Vmdb::Settings.mask_passwords!(@auth.deep_clone)
     _log.info("Server Settings: #{log_auth.inspect}")
