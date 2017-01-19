@@ -76,8 +76,8 @@ module ManagerRefresh
         else
           index = stringify_reference(custom_manager_uuid.call(record))
         end
-        self.data_index[index]    = new_inventory_object(record.attributes.symbolize_keys)
-        self.data_index[index].id = record.id
+        data_index[index]    = new_inventory_object(record.attributes.symbolize_keys)
+        data_index[index].id = record.id
       end
     end
 

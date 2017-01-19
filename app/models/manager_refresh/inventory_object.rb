@@ -3,7 +3,7 @@ module ManagerRefresh
     attr_accessor :object, :id
     attr_reader :inventory_collection, :data
 
-    delegate :manager_ref, :to => :inventory_collection
+    delegate :manager_ref, :base_class_name, :to => :inventory_collection
     delegate :[], :[]=, :to => :data
 
     def initialize(inventory_collection, data)
@@ -42,7 +42,7 @@ module ManagerRefresh
           data[key] = value.load
           if (foreign_key = inventory_collection_scope.association_to_foreign_key_mapping[key])
             # We have an association to fill, lets fill also the :key, cause some other InventoryObject can refer to it
-            record_id = data[key].try(:id)
+            record_id                          = data[key].try(:id)
             attributes_for_saving[foreign_key] = record_id
 
             if (foreign_type = inventory_collection_scope.association_to_foreign_type_mapping[key])
@@ -50,15 +50,13 @@ module ManagerRefresh
               # if record_id is missing
               attributes_for_saving[foreign_type] = record_id ? data[key].base_class_name : nil
             end
+          elsif data[key].kind_of?(::ManagerRefresh::InventoryObject)
+            # We have an association to fill but not an Activerecord association, so e.g. Ancestry, lets just load
+            # it here. This way of storing ancestry is ineffective in DB call count, but RAM friendly
+            attributes_for_saving[key] = data[key].base_class_name.constantize.find_by(:id => data[key].id)
           else
-            if data[key].kind_of?(::ManagerRefresh::InventoryObject)
-              # We have an association to fill but not an Activerecord association, so e.g. Ancestry, lets just load
-              # it here. This way of storing ancestry is ineffective in DB call count, but RAM friendly
-              attributes_for_saving[key] = data[key].base_class_name.constantize.find_by(:id => data[key].id)
-            else
-              # We have a normal attribute to fill
-              attributes_for_saving[key] = data[key]
-            end
+            # We have a normal attribute to fill
+            attributes_for_saving[key] = data[key]
           end
         elsif value.kind_of?(Array) && value.any? { |x| loadable?(x) }
           # Lets fill also the original data, so other InventoryObject referring to this attribute gets the right
@@ -83,10 +81,6 @@ module ManagerRefresh
       to_s
     end
 
-    def base_class_name
-      inventory_collection.base_class_name
-    end
-
     def dependency?
       !inventory_collection.saved?
     end
@@ -99,7 +93,7 @@ module ManagerRefresh
     end
 
     def allowed?(inventory_collection_scope, key)
-      foreign_to_association  = inventory_collection_scope.foreign_key_to_association_mapping[key] ||
+      foreign_to_association = inventory_collection_scope.foreign_key_to_association_mapping[key] ||
         inventory_collection_scope.foreign_type_to_association_mapping[key]
 
       # TODO(lsmola) can we make this O(1)? This check will be performed for each record in the DB
