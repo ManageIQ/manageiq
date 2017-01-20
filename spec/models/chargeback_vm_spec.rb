@@ -857,7 +857,7 @@ describe ChargebackVm do
     let(:metric_rollup) do
       FactoryGirl.create(:metric_rollup_vm_hr, :timestamp => "2012-08-31T07:00:00Z",
                          :parent_host_id => @host1.id, :parent_ems_cluster_id => @ems_cluster.id,
-                         :parent_ems_id => @ems.id, :parent_storage_id => @storage.id,
+                         :parent_ems_id => ems.id, :parent_storage_id => @storage.id,
                          :resource => @vm1)
     end
 

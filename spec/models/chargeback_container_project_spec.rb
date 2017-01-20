@@ -23,7 +23,7 @@ describe ChargebackContainerProject do
                                   :created_on => month_beginning)
 
     @cbr = FactoryGirl.create(:chargeback_rate, :rate_type => "Compute")
-    temp = {:cb_rate => @cbr, :object => @ems}
+    temp = {:cb_rate => @cbr, :object => ems}
     ChargebackRate.set_assignments(:compute, [temp])
 
     cat = FactoryGirl.create(:classification, :description => "Environment", :name => "environment", :single_value => true, :show => true)
