@@ -124,6 +124,10 @@ module ManagerRefresh
       end
     end
 
+    def build(hash)
+      self.<<(new_inventory_object(hash))
+    end
+
     def object_index(object)
       stringify_reference(
         manager_ref.map { |attribute| object.public_send(attribute).try(:id) || object.public_send(attribute).to_s })
