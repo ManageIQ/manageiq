@@ -44,13 +44,13 @@ module Api
             data.delete(sc.to_s)
           end
         end
-        rsc = klass.create(data)
-        if rsc.id.nil?
-          raise BadRequestError, "Failed to add a new #{type} resource - #{rsc.errors.full_messages.join(', ')}"
+        resource = klass.create(data)
+        if resource.id.nil?
+          raise BadRequestError, "Failed to add a new #{type} resource - #{resource.errors.full_messages.join(', ')}"
         end
-        rsc.save
-        add_subcollection_data_to_resource(rsc, type, subcollection_data)
-        klass.find(rsc.id)
+        resource.save
+        add_subcollection_data_to_resource(resource, type, subcollection_data)
+        klass.find(resource.id)
       end
 
       alias_method :create_resource, :add_resource
