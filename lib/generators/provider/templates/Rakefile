@@ -14,7 +14,7 @@ namespace :spec do
   task :setup => 'app:test:providers:<%= provider_name %>:setup'
 end
 
-desc "Run all amazon specs"
+desc "Run all <%= provider_name %> specs"
 task :spec => 'app:test:providers:<%= provider_name %>'
 
 task :default => :spec
