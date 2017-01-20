@@ -69,7 +69,7 @@ module EmsRefresh::SaveInventory
         h[:cloud_network_id]       = key_backup.fetch_path(:cloud_network, :id)
         h[:cloud_subnet_id]        = key_backup.fetch_path(:cloud_subnet, :id)
         h[:cloud_tenant_id]        = key_backup.fetch_path(:cloud_tenant, :id)
-        h[:cloud_tenants]          = key_backup.fetch_path(:cloud_tenants).compact.map { |x| x[:_object] } if key_backup.fetch_path(:cloud_tenants, 0, :_object)
+        h[:cloud_tenant_ids]       = key_backup.fetch_path(:cloud_tenants).compact.map { |x| x[:id] } if key_backup.fetch_path(:cloud_tenants, 0, :id)
         h[:orchestration_stack_id] = key_backup.fetch_path(:orchestration_stack, :id)
         begin
           raise MiqException::MiqIncompleteData if h[:invalid]
