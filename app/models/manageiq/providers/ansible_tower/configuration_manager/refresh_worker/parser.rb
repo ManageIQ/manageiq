@@ -23,7 +23,7 @@ class ManageIQ::Providers::AnsibleTower::ConfigurationManager::RefreshWorker::Pa
       :parent      => ems,
     ).tap do |c|
       inventory.inventories.each do |i|
-        c << c.new_inventory_object(
+        c.build(
           # to_s should not be necessary, but its needed to resolve lazy find
           :ems_ref => i.id.to_s,
           :manager => ems,
@@ -43,7 +43,7 @@ class ManageIQ::Providers::AnsibleTower::ConfigurationManager::RefreshWorker::Pa
       :parent      => ems,
     ).tap do |c|
       inventory.hosts.each do |i|
-        c << c.new_inventory_object(
+        c.build(
           :manager_ref          => i.id,
           :manager              => ems,
           :hostname             => i.name,
@@ -65,7 +65,7 @@ class ManageIQ::Providers::AnsibleTower::ConfigurationManager::RefreshWorker::Pa
       :parent      => ems,
     ).tap do |c|
       inventory.job_templates.each do |i|
-        c << c.new_inventory_object(
+        c.build(
           :description          => i.description,
           :inventory_root_group => inventory_groups.lazy_find(i.inventory_id.to_s),
           :manager              => ems,
