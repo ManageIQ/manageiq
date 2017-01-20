@@ -193,7 +193,6 @@ module EmsRefresh::SaveInventoryInfra
 
         found.save!
         h[:id] = found.id
-        h[:_object] = found
       rescue => err
         # If a host failed to process, mark it as invalid and log an error
         h[:invalid] = invalids_found = true

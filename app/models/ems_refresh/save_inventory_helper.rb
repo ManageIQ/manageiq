@@ -113,9 +113,7 @@ module EmsRefresh::SaveInventoryHelper
     keys = Array(keys)
     hashes.each do |h|
       r = records.detect { |r| keys.all? { |k| r.send(k) == r.class.type_for_attribute(k.to_s).cast(h[k]) } }
-      h[:id]      = r.id
-      r.reload if r.id
-      h[:_object] = r
+      h[:id] = r.id
     end
   end
 
