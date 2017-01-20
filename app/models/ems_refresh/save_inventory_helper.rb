@@ -43,6 +43,8 @@ module EmsRefresh::SaveInventoryHelper
     end
     deletes = deletes.to_a
     deletes_index = deletes.index_by { |x| x }
+    # Alow GC to clean the AR objects as they are removed from deletes_index
+    deletes = nil
 
     child_keys = Array.wrap(child_keys)
     remove_keys = Array.wrap(extra_keys) + child_keys
