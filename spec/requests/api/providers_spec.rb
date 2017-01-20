@@ -25,6 +25,23 @@ describe "Providers API" do
       "auth_key"  => SecureRandom.hex
     }
   end
+  let(:certificate_authority) do
+    # openssl req -x509 -newkey rsa:512 -out cert.pem -nodes, all defaults, twice
+    <<-EOPEM.strip_heredoc
+      -----BEGIN CERTIFICATE-----
+      MIIBzTCCAXegAwIBAgIJAOgErvCo3YfDMA0GCSqGSIb3DQEBCwUAMEIxCzAJBgNV
+      BAYTAlhYMRUwEwYDVQQHDAxEZWZhdWx0IENpdHkxHDAaBgNVBAoME0RlZmF1bHQg
+      Q29tcGFueSBMdGQwHhcNMTcwMTE3MTUzODUxWhcNMTcwMjE2MTUzODUxWjBCMQsw
+      CQYDVQQGEwJYWDEVMBMGA1UEBwwMRGVmYXVsdCBDaXR5MRwwGgYDVQQKDBNEZWZh
+      dWx0IENvbXBhbnkgTHRkMFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAKkV4c0cV0oB
+      7e1hMmQygmqEELooktNhMpnqqUyy2Lbi/QI3v9f4jyVrI0Uq3x+FXAlopj2ZE+Zp
+      qiaq6vmlPSECAwEAAaNQME4wHQYDVR0OBBYEFN6XWVKCGYdjnecoVEt7rtNP4d6S
+      MB8GA1UdIwQYMBaAFN6XWVKCGYdjnecoVEt7rtNP4d6SMAwGA1UdEwQFMAMBAf8w
+      DQYJKoZIhvcNAQELBQADQQB1IY8KIHcESeKuS8C1i5/wPuFNP3L2a5XKJ29IQsJy
+      xY9wgnq7LoIesQsiuiXOGa8L8C9CviIV38Wz9ySt3aLZ
+      -----END CERTIFICATE-----
+    EOPEM
+  end
   let(:sample_vmware) do
     {
       "type"      => "ManageIQ::Providers::Vmware::InfraManager",
@@ -35,30 +52,34 @@ describe "Providers API" do
   end
   let(:sample_rhevm) do
     {
-      "type"              => "ManageIQ::Providers::Redhat::InfraManager",
-      "name"              => "sample rhevm",
-      "port"              => 5000,
-      "hostname"          => "sample_rhevm.provider.com",
-      "ipaddress"         => "100.200.300.2",
-      'security_protocol' => 'kerberos',
+      "type"                  => "ManageIQ::Providers::Redhat::InfraManager",
+      "name"                  => "sample rhevm",
+      "port"                  => 5000,
+      "hostname"              => "sample_rhevm.provider.com",
+      "ipaddress"             => "100.200.300.2",
+      "security_protocol"     => "kerberos",
+      "certificate_authority" => certificate_authority,
     }
   end
   let(:sample_openshift) do
     {
-      "type"              => "ManageIQ::Providers::Openshift::ContainerManager",
-      "name"              => "sample openshift",
-      "port"              => 8443,
-      "hostname"          => "sample_openshift.provider.com",
-      "ipaddress"         => "100.200.300.3",
-      'security_protocol' => 'kerberos',
+      "type"                  => "ManageIQ::Providers::Openshift::ContainerManager",
+      "name"                  => "sample openshift",
+      "port"                  => 8443,
+      "hostname"              => "sample_openshift.provider.com",
+      "ipaddress"             => "100.200.300.3",
+      "security_protocol"     => "something",
+      "certificate_authority" => certificate_authority,
     }
   end
   let(:default_connection) do
     {
       "endpoint"       => {
-        "role"     => "default",
-        "hostname" => "sample_openshift_multi_end_point.provider.com",
-        "port"     => 8444
+        "role"                  => "default",
+        "hostname"              => "sample_openshift_multi_end_point.provider.com",
+        "port"                  => 8444,
+        "security_protocol"     => "something",
+        "certificate_authority" => certificate_authority,
       },
       "authentication" => {
         "role"     => "bearer",
@@ -69,9 +90,11 @@ describe "Providers API" do
   let(:updated_connection) do
     {
       "endpoint"       => {
-        "role"     => "default",
-        "hostname" => "sample_openshift_multi_end_point.provider.com",
-        "port"     => "8443"
+        "role"                  => "default",
+        "hostname"              => "sample_openshift_multi_end_point.provider.com",
+        "port"                  => "8443",
+        "security_protocol"     => "something else",
+        "certificate_authority" => certificate_authority,
       },
       "authentication" => {
         "role"     => "bearer",
@@ -82,9 +105,11 @@ describe "Providers API" do
   let(:hawkular_connection) do
     {
       "endpoint"       => {
-        "role"     => "hawkular",
-        "hostname" => "sample_openshift_multi_end_point.provider.com",
-        "port"     => "443"
+        "role"                  => "hawkular",
+        "hostname"              => "sample_openshift_multi_end_point.provider.com",
+        "port"                  => "443",
+        "security_protocol"     => "something",
+        "certificate_authority" => certificate_authority,
       },
       "authentication" => {
         "role"     => "hawkular",
@@ -98,6 +123,12 @@ describe "Providers API" do
       "name"                      => "sample openshift with multiple endpoints",
       "connection_configurations" => [default_connection, hawkular_connection]
     }
+  end
+
+  def have_endpoint_attributes(expected_hash)
+    h = expected_hash.slice(*ENDPOINT_ATTRS)
+    h["port"] = h["port"].to_i if h.key?("port")
+    have_attributes(h)
   end
 
   context "Provider custom_attributes" do
@@ -324,7 +355,7 @@ describe "Providers API" do
       provider_id = response.parsed_body["results"].first["id"]
       expect(ExtManagementSystem.exists?(provider_id)).to be_truthy
       endpoint = ExtManagementSystem.find(provider_id).default_endpoint
-      expect_result_to_match_hash(endpoint.attributes, sample_rhevm.slice(*ENDPOINT_ATTRS))
+      expect(endpoint).to have_endpoint_attributes(sample_rhevm)
     end
 
     it "supports openshift creation with auth_key specified" do
@@ -344,9 +375,7 @@ describe "Providers API" do
       expect(ExtManagementSystem.exists?(provider_id)).to be_truthy
       ems = ExtManagementSystem.find(provider_id)
       expect(ems.authentications.size).to eq(1)
-      ENDPOINT_ATTRS.each do |attr|
-        expect(ems.send(attr)).to eq(sample_openshift[attr]) if sample_openshift.key? attr
-      end
+      expect(ems).to have_endpoint_attributes(sample_openshift)
     end
 
     it "supports single provider creation via action" do
@@ -429,14 +458,6 @@ describe "Providers API" do
     end
 
     it "supports provider with multiple endpoints creation" do
-      def hostname(connection)
-        connection["endpoint"]["hostname"]
-      end
-
-      def port(connection)
-        connection["endpoint"]["port"]
-      end
-
       def token(connection)
         connection["authentication"]["auth_key"]
       end
@@ -456,11 +477,13 @@ describe "Providers API" do
       expect(ExtManagementSystem.exists?(provider_id)).to be_truthy
       provider = ExtManagementSystem.find(provider_id)
 
-      expect(provider.hostname).to eq(hostname(default_connection))
+      expect(provider).to have_endpoint_attributes(default_connection["endpoint"])
       expect(provider.authentication_token).to eq(token(default_connection))
-      expect(provider.port).to eq(port(default_connection))
-      expect(provider.connection_configurations.hawkular.endpoint.hostname).to eq(hostname(hawkular_connection))
-      expect(provider.connection_configurations.hawkular.authentication.auth_key).to eq(token(hawkular_connection))
+
+      expect(provider.connection_configurations.hawkular.endpoint).to have_endpoint_attributes(
+        hawkular_connection["endpoint"]
+      )
+      expect(provider.authentication_token(:hawkular)).to eq(token(hawkular_connection))
     end
   end
 
@@ -550,6 +573,9 @@ describe "Providers API" do
       run_post(providers_url(provider.id), gen_request(:edit,
                                                        "connection_configurations" => [updated_connection,
                                                                                        hawkular_connection]))
+
+      provider.reload
+      expect(provider).to have_endpoint_attributes(updated_connection["endpoint"])
 
       queue_jobs = MiqQueue.where(:method_name => "authentication_check_types",
                                   :class_name  => "ExtManagementSystem",
