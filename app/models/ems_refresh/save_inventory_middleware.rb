@@ -41,8 +41,7 @@ module EmsRefresh::SaveInventoryMiddleware
     hashes.each do |h|
       h[:domain_id] = domain[:id]
     end
-    save_inventory_multi(domain.middleware_server_groups, hashes, deletes, [:ems_ref], nil, [:middleware_domain,
-                                                                                             :_object])
+    save_inventory_multi(domain.middleware_server_groups, hashes, deletes, [:ems_ref], nil, [:middleware_domain])
     store_ids_for_new_records(domain.middleware_server_groups, hashes, :ems_ref)
   end
 
