@@ -41,7 +41,7 @@ describe VmOrTemplateController do
     right_size
     set_checked_items
     show_list
-    vmtree_selected
+    genealogy_tree_selected
   ).each do |path|
     describe "##{path}" do
       it "routes with POST" do
