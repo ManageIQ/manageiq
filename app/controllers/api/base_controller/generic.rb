@@ -47,7 +47,7 @@ module Api
         resource = klass.new(data)
         if resource.save
           add_subcollection_data_to_resource(resource, type, subcollection_data)
-          klass.find(resource.id)
+          resource
         else
           raise BadRequestError, "Failed to add a new #{type} resource - #{resource.errors.full_messages.join(', ')}"
         end
