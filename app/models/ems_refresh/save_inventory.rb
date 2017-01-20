@@ -53,6 +53,8 @@ module EmsRefresh::SaveInventory
     _log.info "#{log_header} Duplicate unique values found: #{dup_vms_uids.inspect}" unless dup_vms_uids.empty?
 
     invalids_found = false
+    # Clear vms, so GC can clean them
+    vms = nil
 
     ActiveRecord::Base.transaction do
       hashes.each do |h|
