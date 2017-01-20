@@ -10,7 +10,5 @@ env:
   - RUBY_GC_HEAP_GROWTH_FACTOR=1.25
 addons:
   postgresql: '9.4'
-before_install: bin/setup
-script:
-- bundle exec bin/rails app:test:providers:<%= provider_name %>:setup app:test:providers:<%= provider_name %>
+install: bin/setup
 after_script: bundle exec codeclimate-test-reporter
