@@ -15,7 +15,7 @@ module ManageIQ::Providers
 
           _log.info "Collecting inventory for #{target.class} [#{target_name}] id: [#{target.id}]..."
 
-          inventory = ManageIQ::Providers::AnsibleTower::ConfigurationManager::RefreshWorker::Collector.new(ems, target)
+          inventory = ManageIQ::Providers::AnsibleTower::ConfigurationManager::RefreshWorker::Collector.new(ems)
 
           _log.info "Collecting inventory...Complete"
           [target, inventory]

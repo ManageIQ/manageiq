@@ -1,8 +1,7 @@
 class ManageIQ::Providers::AnsibleTower::ConfigurationManager::RefreshWorker::Collector
-  def initialize(ems, target, _options = nil)
+  def initialize(ems, _options = nil)
     @ems        = ems
     @connection = ems.connect
-    @target     = target
   end
 
   def inventories

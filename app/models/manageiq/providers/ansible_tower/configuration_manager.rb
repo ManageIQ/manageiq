@@ -16,9 +16,6 @@ class ManageIQ::Providers::AnsibleTower::ConfigurationManager < ManageIQ::Provid
            :with_provider_connection,
            :to => :provider
 
-  # FIXME: shouldnt be needed. Its here because otherwise the STI type column is the base class in refresh
-  has_many :configured_systems, :dependent => :destroy, :foreign_key => "manager_id"
-
   def self.ems_type
     @ems_type ||= "ansible_tower_configuration".freeze
   end
