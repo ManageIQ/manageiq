@@ -39,12 +39,18 @@
 
     .modal-footer
       %button.btn.btn-default.dialog-cancel-button{:type      => "button",
+                                                   "alt"      => (t = _("Cancel")),
+                                                   "title"    => t,
                                                    "ng-click" => "reset()"}
-        = _("Cancel")
+        = t
       %button.btn.btn-default{:type      => "button",
+                              "alt"      => (t = _("Back")),
+                              "title"    => t,
                               "ng-click" => "addDatasourceStep1Back()"}
-        = _("Back")
+        = t
       %button.btn.btn-primary{:type         => "button",
+                              "alt"      => (t = _("Next")),
+                              "title"    => t,
                               "ng-click"    => "addDatasourceStep1Next()",
                               "ng-disabled" => "step1Form.$invalid"}
-        = _("Next")
+        = t
