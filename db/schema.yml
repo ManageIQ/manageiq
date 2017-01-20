@@ -5314,6 +5314,8 @@ miq_tasks:
 - results
 - miq_server_id
 - identifier
+- started_on
+- zone
 miq_user_roles:
 - id
 - name
