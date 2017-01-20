@@ -58,6 +58,4 @@ Vmdb::Application.routes.draw do
   if Rails.env.development? && defined?(Rails::Server)
     mount WebsocketServer.new(:logger => Logger.new(STDOUT)) => '/ws'
   end
-  # rubocop:enable MultilineOperationIndentation
-  # rubocop:enable AlignHash
 end
