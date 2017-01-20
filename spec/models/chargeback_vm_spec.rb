@@ -92,7 +92,7 @@ describe ChargebackVm do
       @service << @vm1
       @service.save
 
-      @vm2 = FactoryGirl.create(:vm_vmware, :name => "test_vm 2", :evm_owner => admin)
+      @vm2 = FactoryGirl.create(:vm_vmware, :name => "test_vm 2", :evm_owner => admin, :created_on => month_beginning)
 
       Range.new(month_beginning, month_end, true).step_value(12.hours).each do |time|
         [@vm1, @vm2].each do |vm|
@@ -233,7 +233,8 @@ describe ChargebackVm do
     before do
       @tenant = FactoryGirl.create(:tenant)
       @tenant_child = FactoryGirl.create(:tenant, :ancestry => @tenant.id)
-      @vm_tenant = FactoryGirl.create(:vm_vmware, :tenant_id => @tenant_child.id, :name => "test_vm_tenant")
+      @vm_tenant = FactoryGirl.create(:vm_vmware, :tenant_id => @tenant_child.id,
+                                      :name => "test_vm_tenant", :created_on => month_beginning)
 
       Range.new(start_time, finish_time, true).step_value(1.hour).each do |t|
         @vm_tenant.metric_rollups <<
