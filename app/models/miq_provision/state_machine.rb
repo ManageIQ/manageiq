@@ -46,8 +46,17 @@ module MiqProvision::StateMachine
 
     self.destination = find_destination_in_vmdb(phase_context[:new_vm_ems_ref])
     if destination
-      phase_context.delete(:new_vm_ems_ref)
-      signal :customize_destination
+      expected_states = [:active, :error]
+      if expected_states.include?(destination.raw_power_state.downcase.to_sym)
+        phase_context.delete(:new_vm_ems_ref)
+        signal :customize_destination
+      else
+        # If VM is not in :active or :error, that means refresh has not been completed yet, we need to wait for that.
+        # This situation happens e.g. when we deploy multiple VMs at once, first complete will cause refresh of all.
+        # But not all will be completed, that means we will have 'destination' loaded, but not in final state.
+        _log.info("Refresh not completed for #{destination_type} [#{dest_name}] with ems_ref [#{phase_context[:new_vm_ems_ref]}], will retry")
+        requeue_phase
+      end
     else
       _log.info("Unable to find #{destination_type} [#{dest_name}] with ems_ref [#{phase_context[:new_vm_ems_ref]}], will retry")
       requeue_phase
