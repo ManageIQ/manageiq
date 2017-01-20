@@ -20,9 +20,7 @@ db: ManageIQ::Providers::AnsibleTower::AutomationManager
 # Columns to fetch from the main table
 cols:
 - name
-- url
 - type
-- zone.name
 - last_refresh_date
 - region_description
 - authentication_status
@@ -35,7 +33,6 @@ include:
     - name
   provider:
     columns:
-    - name
     - url
 
 # Included tables and columns for query performance
