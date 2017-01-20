@@ -98,7 +98,7 @@ module EmsRefresh::SaveInventory
             h[:location] = "unknown" if h[:location].blank?
 
             # build a type-specific vm or template
-            found = ems.vms_and_templates.build(h)
+            found = ems.vms_and_templates.klass.new(h)
           else
             vms_by_uid_ems[h[:uid_ems]].delete(found)
             h.delete(:type)
