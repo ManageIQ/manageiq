@@ -229,16 +229,6 @@ module Api
       end
     end
 
-    def assign_tags_resource(type, id, data)
-      vm = resource_search(id, type, collection_class(:vms))
-      tag_results = data['tags'].collect do |tag|
-        tags_assign_resource(vm, type, tag['id'], tag)
-      end
-      { id => tag_results }
-    rescue => err
-      { id => action_result(false, err.to_s) }
-    end
-
     private
 
     def vm_ident(vm)

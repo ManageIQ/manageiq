@@ -497,4 +497,153 @@ describe "Tag Collections API" do
       expect(response).to have_http_status(:forbidden)
     end
   end
+
+  context 'assign_tags action' do
+    let(:bad_tag)      { {:category => "cc", :name => "002"} }
+    let(:vm1)                { FactoryGirl.create(:vm_vmware,    :host => host, :ems_id => ems.id, :raw_power_state => "poweredOn") }
+    let(:vm2)                { FactoryGirl.create(:vm_vmware,    :host => host, :ems_id => ems.id, :raw_power_state => "poweredOn") }
+
+
+    it 'can bulk assign tags to multiple resources' do
+      api_basic_authorize collection_action_identifier(:vms, :assign_tags)
+      request_body = {
+        'action'    => 'assign_tags',
+        'resources' => [
+          { 'id' => vm1.id, 'tags' => [{ 'category' => tag1[:category], 'name' => tag1[:name] }] },
+          { 'id' => vm2.id, 'tags' => [{ 'category' => tag2[:category], 'name' => tag2[:name] }] }
+        ]
+      }
+
+      run_post(vms_url, request_body)
+
+      expected = {
+        'results' => [
+          a_hash_including('success'      => true,
+                           'tag_category' => tag1[:category],
+                           'tag_name'     => tag1[:name]),
+          a_hash_including('success'      => true,
+                           'tag_category' => tag2[:category],
+                           'tag_name'     => tag2[:name])
+        ]
+      }
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
+    end
+
+    it 'can bulk assign tags to multiple resources by href' do
+      api_basic_authorize collection_action_identifier(:vms, :assign_tags)
+      request_body = {
+        'action'    => 'assign_tags',
+        'resources' => [
+          { 'href' => vms_url(vm1.id), 'tags' => [{ 'category' => tag1[:category], 'name' => tag1[:name] }] },
+          { 'href' => vms_url(vm2.id), 'tags' => [{ 'category' => tag2[:category], 'name' => tag2[:name] }] }
+        ]
+      }
+
+      run_post(vms_url, request_body)
+
+      expected = {
+        'results' => [
+          a_hash_including('success'      => true,
+                           'tag_category' => tag1[:category],
+                           'tag_name'     => tag1[:name]),
+          a_hash_including('success'      => true,
+                           'tag_category' => tag2[:category],
+                           'tag_name'     => tag2[:name])
+        ]
+      }
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
+    end
+
+    it 'will return success and failure messages for each resource and tag' do
+      api_basic_authorize collection_action_identifier(:vms, :assign_tags)
+      request_body = {
+        'action'    => 'assign_tags',
+        'resources' => [
+          { 'id' => 999_999, 'tags' => [{'category' => 'department', 'name' => 'finance'}] },
+          { 'id' => vm2.id, 'tags' => [
+            {'category' => bad_tag[:category], 'name' => bad_tag[:name]},
+            {'category' => tag1[:category], 'name' => tag1[:name]}
+          ]}
+        ]
+      }
+
+      run_post(vms_url, request_body)
+
+      expected = {
+        'results' => [
+          a_hash_including('success' => false, 'message' => a_string_including("Couldn't find Vm")),
+          a_hash_including('success'      => false,
+                           'tag_category' => bad_tag[:category],
+                           'tag_name'     => bad_tag[:name]),
+          a_hash_including('success'      => true,
+                           'tag_category' => tag1[:category],
+                           'tag_name'     => tag1[:name])
+        ]
+      }
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
+    end
+
+    it 'fails without an appropriate role' do
+      api_basic_authorize
+
+      run_post(vms_url, :action => 'assign_tags')
+
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it 'can bulk assign tags by href' do
+      api_basic_authorize collection_action_identifier(:vms, :assign_tags)
+      request_body = {
+        'action'    => 'assign_tags',
+        'resources' => [
+          { 'id' => vm1.id, 'tags' => [{'href' => tags_url(Tag.find_by(:name => tag1[:path]).id)}] },
+          { 'id' => vm2.id, 'tags' => [{'href' => tags_url(Tag.find_by(:name => tag2[:path]).id)}] }
+        ]
+      }
+
+      run_post(vms_url, request_body)
+
+      expected = {
+        'results' => [
+          a_hash_including('success'      => true,
+                           'tag_category' => tag1[:category],
+                           'tag_name'     => tag1[:name]),
+          a_hash_including('success'      => true,
+                           'tag_category' => tag2[:category],
+                           'tag_name'     => tag2[:name])
+        ]
+      }
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
+    end
+
+    it 'can bulk assign tags by id' do
+      api_basic_authorize collection_action_identifier(:vms, :assign_tags)
+      request_body = {
+        'action'    => 'assign_tags',
+        'resources' => [
+          { 'id' => vm1.id, 'tags' => [{'id' => Tag.find_by(:name => tag1[:path]).id}] },
+          { 'id' => vm2.id, 'tags' => [{'id' => Tag.find_by(:name => tag2[:path]).id}] }
+        ]
+      }
+
+      run_post(vms_url, request_body)
+
+      expected = {
+        'results' => [
+          a_hash_including('success'      => true,
+                           'tag_category' => tag1[:category],
+                           'tag_name'     => tag1[:name]),
+          a_hash_including('success'      => true,
+                           'tag_category' => tag2[:category],
+                           'tag_name'     => tag2[:name])
+        ]
+      }
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
+    end
+  end
 end

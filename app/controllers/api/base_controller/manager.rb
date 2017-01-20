@@ -140,7 +140,7 @@ module Api
           update_one_collection(is_subcollection, target, type, rid, r)
         end
         raise BadRequestError, "No #{type} resources were specified for the #{action} action" if processed == 0
-        {"results" => results}
+        {"results" => results.flatten}
       end
     end
   end
