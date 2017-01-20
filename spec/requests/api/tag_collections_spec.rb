@@ -453,7 +453,7 @@ describe "Tag Collections API" do
 
       run_post("#{blueprints_url(blueprint.id)}/tags",
                :action   => "assign",
-               :catagory => tag1[:category],
+               :category => tag1[:category],
                :name     => tag1[:name])
 
       expect(response).to have_http_status(:ok)
@@ -466,7 +466,7 @@ describe "Tag Collections API" do
 
       run_post("#{blueprints_url(blueprint.id)}/tags",
                :action   => "unassign",
-               :catagory => tag1[:category],
+               :category => tag1[:category],
                :name     => tag1[:name])
 
       expect(response).to have_http_status(:ok)
@@ -478,7 +478,7 @@ describe "Tag Collections API" do
 
       run_post("#{blueprints_url(blueprint.id)}/tags",
                :action   => "assign",
-               :catagory => tag1[:category],
+               :category => tag1[:category],
                :name     => tag1[:name])
 
       expect(response).to have_http_status(:forbidden)
@@ -491,20 +491,19 @@ describe "Tag Collections API" do
 
       run_post("#{blueprints_url(blueprint.id)}/tags",
                :action   => "unassign",
-               :catagory => tag1[:category],
+               :category => tag1[:category],
                :name     => tag1[:name])
 
       expect(response).to have_http_status(:forbidden)
     end
   end
 
-  context 'assign_tags action' do
-    let(:bad_tag)      { {:category => "cc", :name => "002"} }
-    let(:vm1)                { FactoryGirl.create(:vm_vmware,    :host => host, :ems_id => ems.id, :raw_power_state => "poweredOn") }
-    let(:vm2)                { FactoryGirl.create(:vm_vmware,    :host => host, :ems_id => ems.id, :raw_power_state => "poweredOn") }
+  context 'Vm assign_tags action' do
+    let(:bad_tag) { {:category => "cc", :name => "002"} }
+    let(:vm1)                { FactoryGirl.create(:vm_vmware,    :host => host, :ems_id => ems.id) }
+    let(:vm2)                { FactoryGirl.create(:vm_vmware,    :host => host, :ems_id => ems.id) }
 
-
-    it 'can bulk assign tags to multiple resources' do
+    it 'can bulk assign tags to multiple vms' do
       api_basic_authorize collection_action_identifier(:vms, :assign_tags)
       request_body = {
         'action'    => 'assign_tags',
@@ -530,7 +529,7 @@ describe "Tag Collections API" do
       expect(response.parsed_body).to include(expected)
     end
 
-    it 'can bulk assign tags to multiple resources by href' do
+    it 'can bulk assign tags to multiple vms by href' do
       api_basic_authorize collection_action_identifier(:vms, :assign_tags)
       request_body = {
         'action'    => 'assign_tags',
@@ -556,7 +555,7 @@ describe "Tag Collections API" do
       expect(response.parsed_body).to include(expected)
     end
 
-    it 'will return success and failure messages for each resource and tag' do
+    it 'will return success and failure messages for each vm and tag' do
       api_basic_authorize collection_action_identifier(:vms, :assign_tags)
       request_body = {
         'action'    => 'assign_tags',
