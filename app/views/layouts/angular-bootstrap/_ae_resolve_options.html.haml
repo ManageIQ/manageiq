@@ -63,17 +63,6 @@
           = _("Required")
 
   %div
-    = _("Simulation Parameters")
-    .form-group
-      %label.col-md-2.control-label{"for" => "readonly"}
-        = _("Execute Methods")
-      .col-md-8
-        %input#readonly{"type"        => "checkbox",
-                        "name"        => "readonly",
-                        "ng-model"    => "scheduleModel.readonly",
-                        "checkchange" => ""}
-
-  %div
     = _("Attribute/Value Pairs")
     .form-group{"ng-repeat" => "key_val in scheduleModel.ui_attrs track by $index"}
       %label.col-md-2.control-label{"for" => "key_val"}
