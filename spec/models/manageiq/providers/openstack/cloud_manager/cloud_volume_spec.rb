@@ -22,6 +22,7 @@ describe ManageIQ::Providers::Openstack::CloudManager::CloudVolume do
     double.tap do |volumes|
       handle = double
       allow(handle).to receive(:volumes).and_return(volumes)
+      allow(ExtManagementSystem).to receive(:find).with(ems.id).and_return(ems)
       allow(ems).to receive(:connect).with(hash_including(:service     => 'Volume',
                                                           :tenant_name => tenant.name)).and_return(handle)
       allow(volumes).to receive(:get).with(cloud_volume.ems_ref).and_return(the_raw_volume)
@@ -46,7 +47,7 @@ describe ManageIQ::Providers::Openstack::CloudManager::CloudVolume do
         allow(the_new_volume).to receive("status").and_return('creating')
         expect(the_new_volume).to receive(:save).and_return(the_new_volume)
 
-        volume = CloudVolume.create_volume(ems, volume_options)
+        volume = CloudVolume.create_volume(ems.id, volume_options)
         expect(volume.class).to        eq described_class
         expect(volume.name).to         eq 'new_name'
         expect(volume.ems_ref).to      eq 'new_id'
@@ -71,7 +72,7 @@ describe ManageIQ::Providers::Openstack::CloudManager::CloudVolume do
       it 'catches errors from provider' do
         expect(the_new_volume).to receive(:save).and_raise('bad request')
 
-        expect { CloudVolume.create_volume(ems, volume_options) }.to raise_error(MiqException::MiqVolumeCreateError)
+        expect { CloudVolume.create_volume(ems.id, volume_options) }.to raise_error(MiqException::MiqVolumeCreateError)
       end
     end
 
