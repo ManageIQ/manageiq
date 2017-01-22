@@ -654,6 +654,8 @@
     - :collection
     :verbs: *g
     :klass: MiqAlertStatus
+    :subcollections:
+    - :alert_actions
     :collection_actions:
       :get:
       - :name: read
@@ -662,6 +664,20 @@
       :get:
       - :name: read
         :identifier: alert_status_show
+  :alert_actions:
+     :description: Alert Actions
+     :identifier: alert_action
+     :options:
+     - :subcollection
+     :verbs: *gp
+     :klass: MiqAlertStatusAction
+     :subcollection_actions:
+       :get:
+       - :name: read
+         :identifier: alert_status_action_show_list
+       :post:
+       - :name: create
+         :identifier: alert_status_action_new
   :notifications:
     :description: "User's past notifications"
     :options:
