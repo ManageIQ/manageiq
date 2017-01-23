@@ -139,6 +139,14 @@ module ManageIQ::Providers
       end
     end
 
+    def jdbc_drivers(feed)
+      with_provider_connection do |connection|
+        path = ::Hawkular::Inventory::CanonicalPath.new(:feed_id          => hawk_escape_id(feed),
+                                                        :resource_type_id => hawk_escape_id('JDBC Driver'))
+        connection.inventory.list_resources_for_type(path.to_s, :fetch_properties => true)
+      end
+    end
+
     def child_resources(resource_path, recursive = false)
       with_provider_connection do |connection|
         connection.inventory.list_child_resources(resource_path, recursive)
