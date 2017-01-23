@@ -148,6 +148,27 @@ class ManageIQ::Providers::CloudManager::Vm < ::Vm
     super || orchestration_stack.try(:direct_service)
   end
 
+  def self.live_migrate_queue(userid, vm, options = {})
+    task_opts = {
+      :action => "migrating Instance for user #{userid}",
+      :userid => userid
+    }
+    queue_opts = {
+      :class_name  => vm.class,
+      :method_name => 'live_migrate',
+      :priority    => MiqQueue::HIGH_PRIORITY,
+      :role        => 'ems_operations',
+      :zone        => vm.my_zone,
+      :args        => [vm.id, options]
+    }
+    MiqTask.generic_action_with_callback(task_opts, queue_opts)
+  end
+
+  def self.live_migrate(vm_id, options)
+    vm = find(vm_id)
+    vm.live_migrate(options)
+  end
+
   private
 
   def raise_created_event
