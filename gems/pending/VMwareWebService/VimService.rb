@@ -1245,11 +1245,11 @@ class VimService < Handsoap::Service
   end
 
   def handle_memory_and_gc(response)
+    xml_len = response.instance_variable_get(:@http_body).length
+
     # At this point we don't need the internal raw XML content since we
     #   have the parsed XML document, so we can free it for the GC.
     response.instance_variable_set(:@http_body, nil)
-
-    xml_len = response.document.to_s.length
 
     @xml_payload_lock.synchronize do
       @xml_payload_len += xml_len
