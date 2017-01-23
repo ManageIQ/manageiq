@@ -1,3 +1,4 @@
+puts "job statemachine"
 class Job
   module StateMachine
     def transitions
@@ -37,3 +38,4 @@ class Job
     end
   end
 end
+puts "/ job statemachine"

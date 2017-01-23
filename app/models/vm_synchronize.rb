@@ -1,3 +1,4 @@
+puts "vmsynch (job)"
 class VmSynchronize < Job
   def load_transitions
     self.state ||= 'initialize'
@@ -81,3 +82,4 @@ class VmSynchronize < Job
   alias_method :finish,    :process_finished
   alias_method :error,     :process_error
 end
+puts "/vmsynch (job)"

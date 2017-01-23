@@ -1,3 +1,4 @@
+puts "job"
 class Job < ApplicationRecord
   include_concern 'StateMachine'
   include UuidMixin
@@ -250,3 +251,4 @@ class Job < ApplicationRecord
     )
   end
 end # class Job
+puts "/job"

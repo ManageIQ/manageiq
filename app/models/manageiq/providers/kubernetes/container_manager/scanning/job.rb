@@ -1,6 +1,7 @@
 require 'image-inspector-client'
 require 'kubeclient'
 
+puts "scanning job"
 class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
   PROVIDER_CLASS = ManageIQ::Providers::Kubernetes::ContainerManager
   INSPECTOR_NAMESPACE_FALLBACK = 'management-infra'
@@ -427,3 +428,4 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
     end
   end
 end
+puts "/scanning job"

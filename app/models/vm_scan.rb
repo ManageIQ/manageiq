@@ -1,3 +1,4 @@
+puts "vmscan"
 class VmScan < Job
   #
   # TODO: until we get location/offset read capability for OpenStack
@@ -592,3 +593,4 @@ class VmScan < Job
     end
   end
 end
+puts "/vm scan"
