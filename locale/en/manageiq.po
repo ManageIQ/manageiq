@@ -1040,7 +1040,7 @@ msgid "Ansible Tower Configured System"
 msgstr ""
 
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_ConfigurationManager_Job.yaml
-#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::ConfigurationManager::Job
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::AutomationManager::Job
 msgid "Ansible Tower Job"
 msgstr ""
 
@@ -1050,7 +1050,7 @@ msgid "Ansible Tower Job Templates"
 msgstr ""
 
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_ConfigurationManager_Job.yaml
-#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::ConfigurationManager::Job (plural form)
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::AutomationManager::Job (plural form)
 msgid "Ansible Tower Jobs"
 msgstr ""
 
@@ -4349,7 +4349,7 @@ msgstr ""
 msgid "Configuration Manager"
 msgstr ""
 
-#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::ConfigurationManager
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::AutomationManager
 msgid "Configuration Manager (Ansible Tower)"
 msgstr ""
 
@@ -4361,7 +4361,7 @@ msgstr ""
 msgid "Configuration Managers"
 msgstr ""
 
-#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::ConfigurationManager (plural form)
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::AutomationManager (plural form)
 msgid "Configuration Managers (Ansible Tower)"
 msgstr ""
 
@@ -4531,7 +4531,7 @@ msgstr ""
 msgid "Configured System"
 msgstr ""
 
-#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::AutomationManager::ConfiguredSystem
 msgid "Configured System (Ansible Tower)"
 msgstr ""
 
@@ -4547,7 +4547,7 @@ msgstr ""
 msgid "Configured Systems"
 msgstr ""
 
-#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem (plural form)
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::AutomationManager::ConfiguredSystem (plural form)
 msgid "Configured Systems (Ansible Tower)"
 msgstr ""
 
@@ -14185,7 +14185,7 @@ msgstr ""
 msgid "Job"
 msgstr ""
 
-#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfigurationScript
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationScript
 msgid "Job Template (Ansible Tower)"
 msgstr ""
 
@@ -14193,7 +14193,7 @@ msgstr ""
 msgid "Job Templates"
 msgstr ""
 
-#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfigurationScript (plural form)
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationScript (plural form)
 msgid "Job Templates (Ansible Tower)"
 msgstr ""
 

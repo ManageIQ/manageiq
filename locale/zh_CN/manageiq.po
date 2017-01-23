@@ -6805,22 +6805,22 @@ msgstr "LDAP 服务器"
 msgid "Load Balancers"
 msgstr "负载平衡器"
 
-#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::ConfigurationManager
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::AutomationManager
 #: ../config/dictionary_strings.rb:1452
 msgid "Configuration Manager (Ansible Tower)"
 msgstr "配置管理者 (Ansible Tower)"
 
-#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::ConfigurationManager (plural form)
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::AutomationManager (plural form)
 #: ../config/dictionary_strings.rb:1454
 msgid "Configuration Managers (Ansible Tower)"
 msgstr "配置管理者 (Ansible Tower)"
 
-#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfigurationScript
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationScript
 #: ../config/dictionary_strings.rb:1456
 msgid "Job Template (Ansible Tower)"
 msgstr "任务模板 (Ansible Tower)"
 
-#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfigurationScript (plural form)
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationScript (plural form)
 #: ../config/dictionary_strings.rb:1458
 msgid "Job Templates (Ansible Tower)"
 msgstr "任务模板 (Ansible Tower)"
@@ -6845,12 +6845,12 @@ msgstr "配置 Manager"
 msgid "Configuration Managers"
 msgstr "配置 Manager"
 
-#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::AutomationManager::ConfiguredSystem
 #: ../config/dictionary_strings.rb:1468
 msgid "Configured System (Ansible Tower)"
 msgstr "已配置的系统 (Ansible Tower)"
 
-#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem (plural form)
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::AutomationManager::ConfiguredSystem (plural form)
 #: ../config/dictionary_strings.rb:1470
 msgid "Configured Systems (Ansible Tower)"
 msgstr "已配置的系统 (Ansible Tower)"
@@ -6866,13 +6866,13 @@ msgid "Configured Systems (Foreman)"
 msgstr "已配置的系统 (Foreman)"
 
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_ConfigurationManager_Job.yaml
-#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::ConfigurationManager::Job
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::AutomationManager::Job
 #: ../config/dictionary_strings.rb:1476 ../config/yaml_strings.rb:7208
 msgid "Ansible Tower Job"
 msgstr "Ansible Tower 任务"
 
 #. TRANSLATORS: file: product/views/ManageIQ_Providers_AnsibleTower_ConfigurationManager_Job.yaml
-#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::ConfigurationManager::Job (plural form)
+#. TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::AutomationManager::Job (plural form)
 #: ../config/dictionary_strings.rb:1478 ../config/yaml_strings.rb:7206
 msgid "Ansible Tower Jobs"
 msgstr "Ansible Tower 任务"

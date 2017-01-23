@@ -1448,13 +1448,13 @@ _("Load Balancers")
 _("Provider")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::BaseManager (plural form)
 _("Providers")
-# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::ConfigurationManager
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::AutomationManager
 _("Configuration Manager (Ansible Tower)")
-# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::ConfigurationManager (plural form)
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::AutomationManager (plural form)
 _("Configuration Managers (Ansible Tower)")
-# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfigurationScript
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationScript
 _("Job Template (Ansible Tower)")
-# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfigurationScript (plural form)
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationScript (plural form)
 _("Job Templates (Ansible Tower)")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Foreman::ConfigurationManager
 _("Configuration Manager (Foreman)")
@@ -1464,17 +1464,17 @@ _("Configuration Managers (Foreman)")
 _("Configuration Manager")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::ConfigurationManager (plural form)
 _("Configuration Managers")
-# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::AutomationManager::ConfiguredSystem
 _("Configured System (Ansible Tower)")
-# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem (plural form)
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::AutomationManager::ConfiguredSystem (plural form)
 _("Configured Systems (Ansible Tower)")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem
 _("Configured System (Foreman)")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem (plural form)
 _("Configured Systems (Foreman)")
-# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::ConfigurationManager::Job
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::AutomationManager::Job
 _("Ansible Tower Job")
-# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::ConfigurationManager::Job (plural form)
+# TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::AnsibleTower::AutomationManager::Job (plural form)
 _("Ansible Tower Jobs")
 # TRANSLATORS: en.yml key: dictionary.model.ManageIQ::Providers::CloudManager
 _("Cloud Provider")

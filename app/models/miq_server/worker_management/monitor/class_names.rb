@@ -23,7 +23,7 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
     ManageIQ::Providers::Amazon::StorageManager::S3::RefreshWorker
     ManageIQ::Providers::Google::CloudManager::RefreshWorker
     ManageIQ::Providers::Google::NetworkManager::RefreshWorker
-    ManageIQ::Providers::AnsibleTower::ConfigurationManager::RefreshWorker
+    ManageIQ::Providers::AnsibleTower::AutomationManager::RefreshWorker
     ManageIQ::Providers::Foreman::ConfigurationManager::RefreshWorker
     ManageIQ::Providers::Foreman::ProvisioningManager::RefreshWorker
     ManageIQ::Providers::Hawkular::MiddlewareManager::RefreshWorker
@@ -43,7 +43,7 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
     ManageIQ::Providers::Vmware::InfraManager::RefreshWorker
     ManageIQ::Providers::Nuage::NetworkManager::RefreshWorker
     ManageIQ::Providers::Amazon::CloudManager::EventCatcher
-    ManageIQ::Providers::AnsibleTower::ConfigurationManager::EventCatcher
+    ManageIQ::Providers::AnsibleTower::AutomationManager::EventCatcher
     ManageIQ::Providers::Azure::CloudManager::EventCatcher
     ManageIQ::Providers::Hawkular::MiddlewareManager::EventCatcher
     ManageIQ::Providers::Google::CloudManager::EventCatcher
@@ -102,7 +102,7 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
     ManageIQ::Providers::Amazon::StorageManager::S3::RefreshWorker
     ManageIQ::Providers::Google::CloudManager::RefreshWorker
     ManageIQ::Providers::Google::NetworkManager::RefreshWorker
-    ManageIQ::Providers::AnsibleTower::ConfigurationManager::RefreshWorker
+    ManageIQ::Providers::AnsibleTower::AutomationManager::RefreshWorker
     ManageIQ::Providers::Foreman::ConfigurationManager::RefreshWorker
     ManageIQ::Providers::Foreman::ProvisioningManager::RefreshWorker
     ManageIQ::Providers::Hawkular::MiddlewareManager::RefreshWorker
@@ -135,7 +135,7 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
     ManageIQ::Providers::StorageManager::CinderManager::EventCatcher
     ManageIQ::Providers::Amazon::CloudManager::EventCatcher
     ManageIQ::Providers::Azure::CloudManager::EventCatcher
-    ManageIQ::Providers::AnsibleTower::ConfigurationManager::EventCatcher
+    ManageIQ::Providers::AnsibleTower::AutomationManager::EventCatcher
     ManageIQ::Providers::Hawkular::MiddlewareManager::EventCatcher
     ManageIQ::Providers::Google::CloudManager::EventCatcher
     ManageIQ::Providers::Kubernetes::ContainerManager::EventCatcher

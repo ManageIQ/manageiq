@@ -110,7 +110,7 @@
     :purge_window_size: 1000
 :ems_refresh:
   :capture_vm_created_on_date: false
-  :ansible_tower_configuration:
+  :ansible_tower_automation:
     :refresh_interval: 15.minutes
   :foreman_configuration:
     :refresh_interval: 15.minutes
@@ -1316,7 +1316,7 @@
           :poll_method: :normal
           :queue_timeout: 120.minutes
           :restart_interval: 2.hours
-        :ems_refresh_worker_ansible_tower_configuration: {}
+        :ems_refresh_worker_ansible_tower_automation: {}
         :ems_refresh_worker_azure: {}
         :ems_refresh_worker_azure_network: {}
         :ems_refresh_worker_foreman_configuration: {}

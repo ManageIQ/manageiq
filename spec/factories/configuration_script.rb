@@ -7,11 +7,11 @@ FactoryGirl.define do
 
   factory :configuration_script_payload, :class => "ConfigurationScriptPayload", :parent => :configuration_script_base
   factory :ansible_playbook,
-          :class  => "ManageIQ::Providers::AnsibleTower::ConfigurationManager::Playbook",
+          :class  => "ManageIQ::Providers::AnsibleTower::AutomationManager::Playbook",
           :parent => :configuration_script_payload
 
   factory :configuration_script, :class => "ConfigurationScript", :parent => :configuration_script_base
   factory :ansible_configuration_script,
-          :class  => "ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfigurationScript",
+          :class  => "ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationScript",
           :parent => :configuration_script
 end

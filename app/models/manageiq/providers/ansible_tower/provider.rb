@@ -1,7 +1,7 @@
 class ManageIQ::Providers::AnsibleTower::Provider < ::Provider
-  has_one :configuration_manager,
+  has_one :automation_manager,
           :foreign_key => "provider_id",
-          :class_name  => "ManageIQ::Providers::AnsibleTower::ConfigurationManager",
+          :class_name  => "ManageIQ::Providers::AnsibleTower::AutomationManager",
           :dependent   => :destroy,
           :autosave    => true
 
@@ -67,8 +67,8 @@ class ManageIQ::Providers::AnsibleTower::Provider < ::Provider
   end
 
   def ensure_managers
-    build_configuration_manager unless configuration_manager
-    configuration_manager.name    = _("%{name} Configuration Manager") % {:name => name}
-    configuration_manager.zone_id = zone_id
+    build_automation_manager unless automation_manager
+    automation_manager.name    = _("%{name} Automation Manager") % {:name => name}
+    automation_manager.zone_id = zone_id
   end
 end
