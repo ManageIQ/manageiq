@@ -252,7 +252,7 @@ module EmsRefresh::SaveInventoryNetwork
     hashes.compact!
 
     hashes.each do |h|
-      %i(cloud_tenant device cloud_subnet).each do |relation|
+      %i(cloud_tenant device cloud_subnet load_balancer).each do |relation|
         h[relation] = h.fetch_path(relation, :_object) if h.fetch_path(relation, :_object)
       end
 
