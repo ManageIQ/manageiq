@@ -230,6 +230,10 @@
       :name: Application
     :configuration:
       :critical:
+      - ansible_tower_create
+      - ansible_tower_update
+      - ansible_tower_delete
+      - ansible_tower_associate
       - ClusterReconfiguredEvent
       - EnterMaintenanceMode_Task_Complete
       - ExitMaintenanceMode_Task_Complete
@@ -1201,6 +1205,8 @@
         :memory_threshold: 2.gigabytes
         :nice_delta: 1
         :poll: 1.seconds
+      :event_catcher_ansible_tower:
+        :poll: 20.seconds
       :event_catcher_redhat:
         :poll: 15.seconds
       :event_catcher_vmware:
