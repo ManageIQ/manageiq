@@ -106,7 +106,7 @@ class ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork < ::CloudNetw
     @ip_address_total_count ||= cloud_subnets.all.sum do |subnet|
       # We substract 1 because the first address of the pool is always reserved. For private network it is for DHCP, for
       # public network it's a port for Router.
-      subnet.allocation_pools.sum { |x| (IPAddr.new(x["start"])..IPAddr.new(x["end"])).map(&:to_s).count - 1}
+      subnet.allocation_pools.sum { |x| (IPAddr.new(x["start"])..IPAddr.new(x["end"])).map(&:to_s).count - 1 }
     end
   end
 
@@ -118,7 +118,9 @@ class ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork < ::CloudNetw
   def ip_address_utilization(reload = false)
     @ip_address_utilization = nil if reload
     # If total count is 0, utilization should be 100
-    @ip_address_utilization ||= ip_address_total_count > 0 ? (100.0 / ip_address_total_count) * ip_address_used_count(reload) : 100
+    @ip_address_utilization ||= (
+      ip_address_total_count > 0 ? (100.0 / ip_address_total_count) * ip_address_used_count(reload) : 100
+    )
   end
 
   def ip_address_left_count_live(reload = false)
@@ -131,7 +133,9 @@ class ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork < ::CloudNetw
     @ip_address_utilization_live = nil if reload
     # Live method is asking API drectly for current count of consumed addresses
     # If total count is 0, utilization should be 100
-    @ip_address_utilization_live ||= ip_address_total_count > 0 ? (100.0 / ip_address_total_count) * ip_address_used_count_live(reload) : 100
+    @ip_address_utilization_live ||= (
+      ip_address_total_count > 0 ? (100.0 / ip_address_total_count) * ip_address_used_count_live(reload) : 100
+    )
   end
 
   def ip_address_used_count(reload = false)
@@ -153,12 +157,16 @@ class ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork < ::CloudNetw
       # UI code allows to mix tenants, so it could be needed, athough netron doesn seem to have --all-tenants calls,
       # so when I use admin, I can see other tenant resources. Investigate, fix.
       @ip_address_used_count_live ||= ext_management_system.with_provider_connection(
-        :service => "Network", :tenant_name => cloud_tenant.name) do |connection|
+        :service     => "Network",
+        :tenant_name => cloud_tenant.name
+      ) do |connection|
         connection.floating_ips.all(:floating_network_id => ems_ref).count
       end
     else
       @ip_address_used_count_live ||= ext_management_system.with_provider_connection(
-        :service => "Network", :tenant_name => cloud_tenant.name) do |connection|
+        :service     => "Network",
+        :tenant_name => cloud_tenant.name
+      ) do |connection|
         connection.ports.all(:network_id => ems_ref, :device_owner => "compute:None").count
       end
     end
