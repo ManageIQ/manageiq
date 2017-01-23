@@ -17,6 +17,10 @@ class ChargebackTier < ApplicationRecord
     end
   end
 
+  def includes?(value)
+    starts_with_zero? && value.zero? || value > start && value.to_f <= finish
+  end
+
   def starts_with_zero?
     start.zero?
   end

@@ -109,7 +109,7 @@ describe ChargebackRateDetail do
     ].each_slice(2) do |per_unit, rate_adjustment|
       cbd = FactoryGirl.build(:chargeback_rate_detail, :per_unit => per_unit, :metric => 'derived_memory_available',
        :chargeback_rate_detail_measure_id => cbdm.id)
-      expect(cbd.rate_adjustment(value)).to eq(rate_adjustment)
+      expect(cbd.rate_adjustment * value).to eq(rate_adjustment)
     end
   end
 

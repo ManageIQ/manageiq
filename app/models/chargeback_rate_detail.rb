@@ -57,10 +57,7 @@ class ChargebackRateDetail < ApplicationRecord
   def find_rate(value)
     fixed_rate = 0.0
     variable_rate = 0.0
-    tier_found, = chargeback_tiers.select do |tier|
-      tier.starts_with_zero? && value.zero? ||
-      value > rate_adjustment(tier.start) && value <= rate_adjustment(tier.finish)
-    end
+    tier_found = chargeback_tiers.detect { |tier| tier.includes?(value / rate_adjustment) }
     unless tier_found.nil?
       fixed_rate = tier_found.fixed_rate
       variable_rate = tier_found.variable_rate
@@ -86,7 +83,7 @@ class ChargebackRateDetail < ApplicationRecord
     hourly_fixed_rate    = hourly(fixed_rate, consumption)
     hourly_variable_rate = hourly(variable_rate, consumption)
 
-    hourly_fixed_rate + rate_adjustment(hourly_variable_rate) * value
+    hourly_fixed_rate + rate_adjustment * value * hourly_variable_rate
   end
 
   def hourly(rate, consumption)
@@ -102,41 +99,23 @@ class ChargebackRateDetail < ApplicationRecord
     hourly_rate
   end
 
-  # Scale the rate in the unit difine by user to the default unit of the metric
-  # It showing the default units of the metrics:
-  # cpu_usagemhz_rate_average --> megahertz
-  # derived_memory_used --> megabytes
-  # derived_memory_available -->megabytes
-  # net_usage_rate_average --> kbps
-  # disk_usage_rate_average --> kbps
-  # derived_vm_allocated_disk_storage --> bytes
-  # derived_vm_used_disk_storage --> bytes
+  # Scale the rate in the unit defined by user -> to the default unit of the metric
+  METRIC_UNITS = {
+    'cpu_usagemhz_rate_average'         => 'megahertz',
+    'derived_memory_used'               => 'megabytes',
+    'derived_memory_available'          => 'megabytes',
+    'net_usage_rate_average'            => 'kbps',
+    'disk_usage_rate_average'           => 'kbps',
+    'derived_vm_allocated_disk_storage' => 'bytes',
+    'derived_vm_used_disk_storage'      => 'bytes'
+  }.freeze
 
-  def rate_adjustment(hr)
-    case metric
-    when "cpu_usagemhz_rate_average" then
-      per_unit == 'megahertz' ? hr : hr = adjustment_measure(hr, 'megahertz')
-    when "derived_memory_used", "derived_memory_available" then
-      per_unit == 'megabytes' ? hr : hr = adjustment_measure(hr, 'megabytes')
-    when "net_usage_rate_average", "disk_usage_rate_average" then
-      per_unit == 'kbps' ? hr : hr = adjustment_measure(hr, 'kbps')
-    when "derived_vm_allocated_disk_storage", "derived_vm_used_disk_storage" then
-      per_unit == 'bytes' ? hr : hr = adjustment_measure(hr, 'bytes')
-    else hr
-    end
-  end
-
-  # Adjusts the hourly rate to the per unit by default
-  def adjustment_measure(hr, pu_destiny)
-    measure = detail_measure
-    pos_pu_destiny = measure.units.index(pu_destiny)
-    pos_per_unit = measure.units.index(per_unit)
-    jumps = (pos_per_unit - pos_pu_destiny).abs
-    if pos_per_unit > pos_pu_destiny
-      hr.to_f / (measure.step**jumps)
-    else
-      hr * (measure.step**jumps)
-    end
+  def rate_adjustment
+    @rate_adjustment ||= if METRIC_UNITS[metric]
+                           detail_measure.adjust(per_unit, METRIC_UNITS[metric])
+                         else
+                           1
+                         end
   end
 
   def affects_report_fields(report_cols)
