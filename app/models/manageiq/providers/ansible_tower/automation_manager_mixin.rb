@@ -34,9 +34,7 @@ module ManageIQ::Providers::AnsibleTower::AutomationManagerMixin
     end
   end
 
-
   def image_name
     "ansible_tower_configuration"
   end
-
 end
