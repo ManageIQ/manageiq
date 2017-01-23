@@ -42,6 +42,20 @@
     - :subcollection
     :verbs: *g
     :klass: Account
+  :ansible_playbooks:
+    :description: Ansible Tower Playbooks
+    :options:
+    - :collection
+    :verbs: *g
+    :klass: ManageIQ::Providers::AnsibleTower::ConfigurationManager::Playbook
+    :collection_actions:
+      :get:
+      - :name: read
+        :identifier: configuration_script_view
+    :resource_actions:
+      :get:
+      - :name: read
+        :identifier: configuration_script_view
   :auth:
     :description: REST API Authentication
     :options:
