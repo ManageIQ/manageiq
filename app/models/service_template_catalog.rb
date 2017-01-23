@@ -5,4 +5,6 @@ class ServiceTemplateCatalog < ApplicationRecord
 
   belongs_to :tenant
   has_many  :service_templates, :dependent => :nullify
+
+  acts_as_miq_taggable
 end
