@@ -21,25 +21,20 @@
       - exptypes -= [[_(EXP_FIND_TYPE[0]), EXP_FIND_TYPE[1]]]
   #exp_atom_editor_div
     %fieldset{:style => "width:auto; padding-left: 6px; padding-top: 6px;"}
-      %ul.searchtoolbar
-        %li
-          - t = _('Commit expression element changes')
-          = link_to(image_tag(image_path('toolbars/commit.png'), :alt => t),
-            {:action => 'exp_button', :pressed => 'commit'},
-            "data-miq_sparkle_on"  => true,
-            "data-miq_sparkle_off" => true,
-            :remote                => true,
-            "data-method"          => :post,
-            :title                 => t)
-        %li
-          - t = _("Discard expression element changes")
-          = link_to(image_tag(image_path('toolbars/discard.png'), :alt => t),
-            {:action => 'exp_button', :pressed  => 'discard'},
-            "data-miq_sparkle_on"  => true,
-            "data-miq_sparkle_off" => true,
-            :remote                => true,
-            "data-method"          => :post,
-            :title                 => t)
+      - t = _('Commit expression element changes')
+      %button.btn.btn-default{"data-method" => :post,
+      "data-miq_sparkle_on" => true,
+      :onclick              => "miqAjaxButton('#{url_for(:action => 'exp_button', :pressed => 'commit')}');",
+      :remote               => true,
+      :title                => t}
+        %i.fa.fa-lg.fa-check
+      - t = _("Discard expression element changes")
+      %button.btn.btn-default{"data-method" => :post,
+      "data-miq_sparkle_on" => true,
+      :onclick              => "miqAjaxButton('#{url_for(:action => 'exp_button', :pressed => 'discard')}');",
+      :remote               => true,
+      :title                => t}
+        %i.fa-lg.pficon.pficon-close
       %div{:style => "padding: 10px;"}
         - if @edit[@expkey][:exp_key] == "NOT"
           %font{:color => "black"}
