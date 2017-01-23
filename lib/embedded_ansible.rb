@@ -3,7 +3,8 @@ class EmbeddedAnsible
   ANSIBLE_ROLE                = "embedded_ansible".freeze
 
   def self.available?
-    installed?
+    path = ENV["APPLIANCE_ANSIBLE_DIRECTORY"] || APPLIANCE_ANSIBLE_DIRECTORY
+    Dir.exist?(File.expand_path(path.to_s))
   end
 
   def self.enabled?
@@ -14,10 +15,4 @@ class EmbeddedAnsible
     # TODO
     false
   end
-
-  def self.installed?
-    path = ENV["APPLIANCE_ANSIBLE_DIRECTORY"] || APPLIANCE_ANSIBLE_DIRECTORY
-    Dir.exist?(File.expand_path(path.to_s))
-  end
-  private_class_method :installed?
 end
