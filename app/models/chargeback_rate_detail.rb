@@ -38,16 +38,8 @@ class ChargebackRateDetail < ApplicationRecord
     return 1.0 if fixed?
 
     return 0 if consumption.none?(metric)
-    return consumption.max(metric) if allocated?
-    return consumption.avg(metric) if used?
-  end
-
-  def used?
-    source == "used"
-  end
-
-  def allocated?
-    source == "allocated"
+    return consumption.max(metric) if chargeable_field.allocated?
+    return consumption.avg(metric) if chargeable_field.used?
   end
 
   def fixed?

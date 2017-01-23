@@ -8,6 +8,14 @@ class ChargeableField < ApplicationRecord
   validates :metric, :uniqueness => true, :presence => true
   validates :group, :source, :presence => true
 
+  def used?
+    source == 'used'
+  end
+
+  def allocated?
+    source == 'allocated'
+  end
+
   def self.seed
     seed_data.each do |f|
       rec = ChargeableField.find_by(:metric => f[:metric])
