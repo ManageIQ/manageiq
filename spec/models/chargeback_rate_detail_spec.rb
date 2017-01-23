@@ -16,7 +16,10 @@ describe ChargebackRateDetail do
     let(:cbt1) { FactoryGirl.build(:chargeback_tier, :start => 0, :finish => 10, :fixed_rate => 3.0, :variable_rate => 0.3) }
     let(:cbt2) { FactoryGirl.build(:chargeback_tier, :start => 10, :finish => 50, :fixed_rate => 2.0, :variable_rate => 0.2) }
     let(:cbt3) { FactoryGirl.build(:chargeback_tier, :start => 50, :finish => Float::INFINITY, :fixed_rate => 1.0, :variable_rate => 0.1) }
-    let(:cbd) { FactoryGirl.build(:chargeback_rate_detail, :chargeback_tiers => [cbt3, cbt2, cbt1]) }
+    let(:cbd) do
+      FactoryGirl.build(:chargeback_rate_detail, :chargeback_tiers => [cbt3, cbt2, cbt1],
+                                                 :chargeable_field => field)
+    end
 
     it "finds proper rate according the value" do
       expect(cbd.find_rate(cvalue["val1"])).to eq([cbt1.fixed_rate, cbt1.variable_rate])
@@ -31,13 +34,13 @@ describe ChargebackRateDetail do
                           :units_display => %w(B KB MB GB TB),
                           :units         => %w(bytes kilobytes megabytes gigabytes terabytes))
       end
+      let(:field) { FactoryGirl.create(:chargeable_field_storage_allocated, :detail_measure => measure) }
       let(:cbd) do
         # This charges per gigabyte, tiers are per gigabytes
         FactoryGirl.build(:chargeback_rate_detail,
                           :chargeback_tiers => [cbt1, cbt2, cbt3],
-                          :detail_measure   => measure,
-                          :per_unit         => 'gigabytes',
-                          :metric           => 'derived_vm_allocated_disk_storage')
+                          :chargeable_field => field,
+                          :per_unit         => 'gigabytes')
       end
       it 'finds proper tier for the value' do
         expect(cbd.find_rate(0.0)).to                   eq([cbt1.fixed_rate, cbt1.variable_rate])
@@ -126,15 +129,13 @@ describe ChargebackRateDetail do
 
   it "#rate_adjustment" do
     value = 10.gigabytes
-    cbdm = FactoryGirl.create(:chargeback_rate_detail_measure,
-                              :units_display => %w(B KB MB GB TB),
-                              :units         => %w(bytes kilobytes megabytes gigabytes terabytes))
+    field = FactoryGirl.build(:chargeable_field_memory_allocated) # the core metric is in megabytes
     [
       'megabytes', value,
       'gigabytes', value / 1024,
     ].each_slice(2) do |per_unit, rate_adjustment|
       cbd = FactoryGirl.build(:chargeback_rate_detail, :per_unit => per_unit, :metric => 'derived_memory_available',
-       :chargeback_rate_detail_measure_id => cbdm.id)
+                                                       :chargeable_field => field)
       expect(cbd.rate_adjustment * value).to eq(rate_adjustment)
     end
   end

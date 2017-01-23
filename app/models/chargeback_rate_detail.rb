@@ -80,23 +80,8 @@ class ChargebackRateDetail < ApplicationRecord
     hourly_rate
   end
 
-  # Scale the rate in the unit defined by user -> to the default unit of the metric
-  METRIC_UNITS = {
-    'cpu_usagemhz_rate_average'         => 'megahertz',
-    'derived_memory_used'               => 'megabytes',
-    'derived_memory_available'          => 'megabytes',
-    'net_usage_rate_average'            => 'kbps',
-    'disk_usage_rate_average'           => 'kbps',
-    'derived_vm_allocated_disk_storage' => 'bytes',
-    'derived_vm_used_disk_storage'      => 'bytes'
-  }.freeze
-
   def rate_adjustment
-    @rate_adjustment ||= if METRIC_UNITS[metric]
-                           detail_measure.adjust(per_unit, METRIC_UNITS[metric])
-                         else
-                           1
-                         end
+    @rate_adjustment ||= chargeable_field.adjustment_to(per_unit)
   end
 
   def affects_report_fields(report_cols)
