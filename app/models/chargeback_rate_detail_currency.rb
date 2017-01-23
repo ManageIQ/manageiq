@@ -18,7 +18,7 @@ class ChargebackRateDetailCurrency < ApplicationRecord
     end
   end
 
-  def self.seed_currencies
+  def self.seed
     fixture_file_currency = File.join(FIXTURE_DIR, 'chargeback_rate_detail_currencies.yml')
     if File.exist?(fixture_file_currency)
       fixture = YAML.load_file(fixture_file_currency)

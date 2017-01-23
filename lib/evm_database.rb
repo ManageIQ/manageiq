@@ -25,7 +25,11 @@ class EvmDatabase
     MiqAction
     MiqEventDefinition
     MiqPolicySet
-  )
+    ChargebackRateDetailMeasure
+    ChargeableField
+    ChargebackRateDetailCurrency
+    ChargebackRate
+  ).freeze
 
   RAILS_ENGINE_MODEL_CLASS_NAMES = %w(MiqAeDatastore)
 

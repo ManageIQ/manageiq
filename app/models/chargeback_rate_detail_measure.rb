@@ -25,7 +25,7 @@ class ChargebackRateDetailMeasure < ApplicationRecord
     end
   end
 
-  def self.seed_measures
+  def self.seed
     fixture_file_measure = File.join(FIXTURE_DIR, "chargeback_rates_measures.yml")
     if File.exist?(fixture_file_measure)
       fixture = YAML.load_file(fixture_file_measure)

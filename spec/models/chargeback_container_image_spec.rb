@@ -26,6 +26,8 @@ describe ChargebackContainerImage do
 
   before do
     MiqRegion.seed
+    ChargebackRateDetailMeasure.seed
+    ChargeableField.seed
     ChargebackRate.seed
 
     EvmSpecHelper.create_guid_miq_server_zone

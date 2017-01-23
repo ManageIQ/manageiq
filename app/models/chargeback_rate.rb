@@ -64,15 +64,6 @@ class ChargebackRate < ApplicationRecord
   end
 
   def self.seed
-    # seeding the measure fixture before seed the chargeback rates fixtures
-    ChargebackRateDetailMeasure.seed_measures
-    ChargeableField.seed_fields # Cannot use seed order until we refactor seed_chargeback_rate_measure
-    ChargebackRateDetailCurrency.seed_currencies
-    seed_chargeback_rate
-  end
-
-  def self.seed_chargeback_rate
-    # seeding the rates fixtures
     fixture_file = File.join(FIXTURE_DIR, "chargeback_rates.yml")
     if File.exist?(fixture_file)
       fixture = YAML.load_file(fixture_file)

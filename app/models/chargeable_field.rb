@@ -8,7 +8,7 @@ class ChargeableField < ApplicationRecord
   validates :metric, :uniqueness => true, :presence => true
   validates :group, :source, :presence => true
 
-  def self.seed_fields
+  def self.seed
     seed_data.each do |f|
       rec = ChargeableField.find_by(:metric => f[:metric])
       measure = f.delete(:measure)
