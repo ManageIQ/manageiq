@@ -1,0 +1,75 @@
+FactoryGirl.define do
+  factory :chargeable_field do
+    initialize_with { ChargeableField.find_or_create_by!(:metric => metric, :group => group, :source => source) }
+  end
+
+  factory :chargeable_field_fixed_compute_1, :parent => :chargeable_field do
+    description 'Fixed Compute Cost 1'
+    source      'compute_1'
+    group       'fixed'
+    metric      'fixed_compute_1'
+  end
+
+  factory :chargeable_field_cpu_used, :parent => :chargeable_field do
+    description 'Used CPU in MHz'
+    metric      'cpu_usagemhz_rate_average'
+    group       'cpu'
+    source      'used'
+  end
+
+  factory :chargeable_field_cpu_allocated, :parent => :chargeable_field do
+    description 'Allocated CPU Count'
+    metric      'derived_vm_numvcpus'
+    group       'cpu'
+    source      'allocated'
+  end
+
+  factory :chargeable_field_memory_allocated, :parent => :chargeable_field do
+    description 'Allocated Memory in MB'
+    metric      'derived_memory_available'
+    group       'memory'
+    source      'allocated'
+  end
+
+  factory :chargeable_field_storage_allocated, :parent => :chargeable_field do
+    description 'Allocated Disk Storage in Bytes'
+    metric      'derived_vm_allocated_disk_storage'
+    group       'storage'
+    source      'allocated'
+  end
+
+  factory :chargeable_field_cpu_cores_used, :parent => :chargeable_field do
+    description 'Used CPU in Cores'
+    metric      'cpu_usage_rate_average'
+    group       'cpu_cores'
+    source      'used'
+  end
+
+  factory :chargeable_field_memory_used, :parent => :chargeable_field do
+    description 'Used Memory in MB'
+    metric      'derived_memory_used'
+    group       'memory'
+    source      'used'
+  end
+
+  factory :chargeable_field_net_io_used, :parent => :chargeable_field do
+    description 'Used Network I/O in KBps'
+    metric      'net_usage_rate_average'
+    group       'net_io'
+    source      'used'
+  end
+
+  factory :chargeable_field_disk_io_used, :parent => :chargeable_field do
+    description 'Used disk I/O in KBps'
+    metric      'disk_usage_rate_average'
+    group       'disk_io'
+    source      'used'
+  end
+
+  factory :chargeable_field_storage_used, :parent => :chargeable_field do
+    description 'Used Disk Storage in Bytes'
+    metric      'derived_vm_used_disk_storage'
+    group       'storage'
+    source      'used'
+  end
+end
