@@ -8,9 +8,18 @@ class ChargeableField < ApplicationRecord
   validates :metric, :uniqueness => true, :presence => true
   validates :group, :source, :presence => true
 
+  def measure(consumption)
+    return 1.0 if fixed?
+    return 0 if consumption.none?(metric)
+    return consumption.max(metric) if allocated?
+    return consumption.avg(metric) if used?
+  end
+
   def fixed?
     group == 'fixed'
   end
+
+  private
 
   def used?
     source == 'used'

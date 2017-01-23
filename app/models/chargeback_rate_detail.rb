@@ -34,14 +34,6 @@ class ChargebackRateDetail < ApplicationRecord
     result
   end
 
-  def metric_value_by(consumption)
-    return 1.0 if chargeable_field.fixed?
-
-    return 0 if consumption.none?(metric)
-    return consumption.max(metric) if chargeable_field.allocated?
-    return consumption.avg(metric) if chargeable_field.used?
-  end
-
   # Set the rates according to the tiers
   def find_rate(value)
     fixed_rate = 0.0
@@ -200,7 +192,7 @@ class ChargebackRateDetail < ApplicationRecord
   end
 
   def metric_and_cost_by(consumption)
-    metric_value = metric_value_by(consumption)
+    metric_value = chargeable_field.measure(consumption)
     [metric_value, hourly_cost(metric_value, consumption) * consumption.consumed_hours_in_interval]
   end
 
