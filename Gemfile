@@ -135,9 +135,12 @@ eval_gemfile(File.expand_path("gems/pending/Gemfile", __dir__))
 # override_gem 'manageiq-ui-classic', :path => File.expand_path("../manageiq-ui-classic", __dir__))
 #
 def override_gem(name, *args)
-  raise "Trying to override unknown gem #{name}" unless (dependency = dependencies.find { |d| d.name == name })
-  dependencies.delete(dependency)
-  gem name, *args
+  if dependencies.any?
+    raise "Trying to override unknown gem #{name}" unless (dependency = dependencies.find { |d| d.name == name })
+    dependencies.delete(dependency)
+
+    gem name, *args
+  end
 end
 
 # Load developer specific Gemfile
