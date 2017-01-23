@@ -26,6 +26,7 @@ class OrchestrationTemplate
     attr_accessor :data_type
     attr_accessor :default_value
     attr_accessor :hidden
+    attr_accessor :required
     attr_writer   :constraints
 
     def initialize(hash = {})
@@ -38,6 +39,10 @@ class OrchestrationTemplate
 
     def hidden?
       !!hidden
+    end
+
+    def required?
+      !!required
     end
   end
 end

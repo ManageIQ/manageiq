@@ -97,6 +97,37 @@ class OrchestrationTemplate < ApplicationRecord
     raise NotImplementedError, _("parameter_groups must be implemented in subclass")
   end
 
+  # Basic options for all templates, each subclass should add more type/provider specific deployment options
+  # Return array of OrchestrationParameters. (Deployment options are different from parameters, but they use same class)
+  def deployment_options(_manager_class = nil)
+    tenant_opt = OrchestrationTemplate::OrchestrationParameter.new(
+      :name        => "tenant_name",
+      :label       => "Tenant",
+      :data_type   => "string",
+      :description => "Tenant where the stack will be deployed",
+      :required    => true,
+      :constraints => [
+        OrchestrationTemplate::OrchestrationParameterAllowedDynamic.new(
+          :fqname => "/Cloud/Orchestration/Operations/Methods/Available_Tenants"
+        )
+      ]
+    )
+
+    stack_name_opt = OrchestrationTemplate::OrchestrationParameter.new(
+      :name        => "stack_name",
+      :label       => "Stack Name",
+      :data_type   => "string",
+      :description => "Name of the stack",
+      :required    => true,
+      :constraints => [
+        OrchestrationTemplate::OrchestrationParameterPattern.new(
+          :pattern => '^[A-Za-z][A-Za-z0-9\-]*$'
+        )
+      ]
+    )
+    [tenant_opt, stack_name_opt]
+  end
+
   # List managers that may be able to deploy this template
   def self.eligible_managers
     Rbac::Filterer.filtered(ExtManagementSystem, :where_clause => {:type => eligible_manager_types})

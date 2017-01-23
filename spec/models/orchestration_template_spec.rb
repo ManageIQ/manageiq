@@ -325,4 +325,18 @@ describe OrchestrationTemplate do
       end
     end
   end
+
+  describe "#deployment_options" do
+    it do
+      options = subject.deployment_options
+      assert_deployment_option(options[0], "tenant_name", :OrchestrationParameterAllowedDynamic, true)
+      assert_deployment_option(options[1], "stack_name", :OrchestrationParameterPattern, true)
+    end
+  end
+
+  def assert_deployment_option(option, name, constraint_type, required)
+    expect(option.name).to eq(name)
+    expect(option.required?).to eq(required)
+    expect(option.constraints[0]).to be_kind_of("OrchestrationTemplate::#{constraint_type}".constantize)
+  end
 end
