@@ -117,7 +117,16 @@ class OpsController
 
       node[:children] = kids
       node[:select] = parent_checked || @role_features.include?(feature) || select_by_all_descendents(feature)
+
+      if node[:select] == "undefined"
+        node[:addClass] = "dynatree-partsel"
+      end
+
       node
+    end
+
+    def feature_descendants(feature)
+      @descendant_cache[feature] ||= MiqProductFeature.find_by(:identifier => feature).descendants.pluck(:identifier)
     end
 
     def feature_child_select_states(feature)
@@ -125,15 +134,12 @@ class OpsController
       all_children.map { |c| @role_features.include?(c) }
     end
 
-    def feature_descendants(feature)
-      @descendant_cache[feature] ||= MiqProductFeature.find_by(:identifier => feature).descendants.pluck(:identifier)
-    end
-
     def select_by_all_descendents(feature)
       states = feature_child_select_states(feature)
 
       return false       if states.none?
-      return true        if states.any?
+      return true        if states.all? { |s| s == true } # True not truthy
+      return "undefined" if states.any? # undefined is the partial selection value used upstream
 
       false
     end
