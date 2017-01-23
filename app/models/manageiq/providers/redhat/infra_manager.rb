@@ -182,7 +182,14 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
   end
 
   def unsupported_migration_options
-    [:storage, :respool, :folder, :datacenter, :host_filter]
+    [:storage, :respool, :folder, :datacenter, :host_filter, :cluster]
+  end
+
+  # Migrations are supposed to work only in one cluster. If more VMs are going
+  # to be migrated, all have to live on the same cluster, otherwise they can
+  # not be migrated together.
+  def supports_migrate_for_all?(vms)
+    vms.map(&:ems_cluster).uniq.compact.size == 1
   end
 
   private

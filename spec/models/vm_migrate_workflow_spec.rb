@@ -38,8 +38,8 @@ describe VmMigrateWorkflow do
         workflow.get_source_and_targets
         target_resource = workflow.instance_variable_get(:@target_resource)
         expect(target_resource).not_to include(:storage_id, :respool_id, :folder_id,
-                                               :datacenter_id)
-        expect(target_resource).to include(:host_id, :cluster_id)
+                                               :datacenter_id, :cluster_id)
+        expect(target_resource).to include(:host_id)
       end
     end
 
