@@ -20,7 +20,7 @@
         %label.control-label.col-md-2
           = _('Snapshot VM memory')
         .col-md-8
-          = check_box_tag("snap_memory", :value => "1", :checked => false)
+          = check_box_tag("snap_memory", "1", false)
   - unless @edit
     %hr
     %table{:width => "100%"}
