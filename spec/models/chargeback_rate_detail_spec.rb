@@ -60,6 +60,7 @@ describe ChargebackRateDetail do
     per_time = 'monthly'
     per_unit = 'megabytes'
     cbd = FactoryGirl.build(:chargeback_rate_detail,
+                            :chargeable_field => field,
                             :per_time => per_time,
                             :per_unit => per_unit,
                             :enabled  => true)
@@ -72,7 +73,7 @@ describe ChargebackRateDetail do
     cbd.update(:chargeback_tiers => [cbt])
     expect(cbd.hourly_cost(cvalue, consumption)).to eq(cvalue * cbd.hourly(variable_rate, consumption) + cbd.hourly(fixed_rate, consumption))
 
-    cbd.group = 'fixed'
+    cbd.chargeable_field = FactoryGirl.build(:chargeable_field_fixed_compute_1)
     expect(cbd.hourly_cost(cvalue, consumption)).to eq(cbd.hourly(variable_rate, consumption) + cbd.hourly(fixed_rate, consumption))
 
     cbd.enabled = false
@@ -150,20 +151,23 @@ describe ChargebackRateDetail do
     cbd = FactoryGirl.build(:chargeback_rate_detail, :friendly_rate => friendly_rate)
     expect(cbd.friendly_rate).to eq(friendly_rate)
 
-    cbd = FactoryGirl.build(:chargeback_rate_detail, :group => 'fixed', :per_time => 'monthly')
+    cbd = FactoryGirl.build(:chargeback_rate_detail,
+                            :per_time         => 'monthly',
+                            :chargeable_field => FactoryGirl.build(:chargeable_field_fixed_compute_1))
     cbt = FactoryGirl.create(:chargeback_tier, :start => 0, :chargeback_rate_detail_id => cbd.id,
                        :finish => Float::INFINITY, :fixed_rate => 1.0, :variable_rate => 2.0)
     cbd.update(:chargeback_tiers => [cbt])
     expect(cbd.friendly_rate).to eq("3.0 Monthly")
 
-    cbd = FactoryGirl.build(:chargeback_rate_detail, :per_unit => 'cpu', :per_time => 'monthly', :detail_measure => nil)
+    cbd = FactoryGirl.build(:chargeback_rate_detail, :per_unit => 'cpu', :per_time => 'monthly', :detail_measure => nil,
+                            :chargeable_field => field)
     cbt = FactoryGirl.create(:chargeback_tier, :start => 0, :chargeback_rate_detail_id => cbd.id,
                              :finish => Float::INFINITY, :fixed_rate => 1.0, :variable_rate => 2.0)
     cbd.update(:chargeback_tiers => [cbt])
     expect(cbd.friendly_rate).to eq("Monthly @ 1.0 + 2.0 per Cpu from 0.0 to Infinity")
 
     cbd = FactoryGirl.build(:chargeback_rate_detail, :per_unit => 'megabytes', :per_time => 'monthly',
-                            :detail_measure => nil)
+                            :detail_measure => nil, :chargeable_field => field)
     cbt1 = FactoryGirl.create(:chargeback_tier, :start => 0.0, :chargeback_rate_detail_id => cbd.id,
                              :finish => 5.0, :fixed_rate => 1.0, :variable_rate => 2.0)
     cbt2 = FactoryGirl.create(:chargeback_tier, :start => 5.0, :chargeback_rate_detail_id => cbd.id,
@@ -229,11 +233,13 @@ Monthly @ 5.0 + 2.5 per Megabytes from 5.0 to Infinity")
 
     # should be the same cost. bytes to megabytes and gigabytes to megabytes
     cbd_bytes = FactoryGirl.build(:chargeback_rate_detail,
+                                  :chargeable_field                  => field,
                                   :per_unit                          => 'bytes',
                                   :metric                            => 'derived_memory_available',
                                   :per_time                          => 'monthly',
                                   :chargeback_rate_detail_measure_id => cbdm.id)
     cbd_gigabytes = FactoryGirl.build(:chargeback_rate_detail,
+                                      :chargeable_field                  => field,
                                       :per_unit                          => 'gigabytes',
                                       :metric                            => 'derived_memory_available',
                                       :per_time                          => 'monthly',

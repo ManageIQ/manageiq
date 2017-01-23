@@ -8,6 +8,10 @@ class ChargeableField < ApplicationRecord
   validates :metric, :uniqueness => true, :presence => true
   validates :group, :source, :presence => true
 
+  def fixed?
+    group == 'fixed'
+  end
+
   def used?
     source == 'used'
   end

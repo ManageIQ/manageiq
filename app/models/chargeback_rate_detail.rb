@@ -25,7 +25,7 @@ class ChargebackRateDetail < ApplicationRecord
     result = {}
     if (relevant_fields & [metric_keys[0], cost_keys[0]]).present?
       metric_value, cost = metric_and_cost_by(consumption)
-      if !consumption.chargeback_fields_present && fixed?
+      if !consumption.chargeback_fields_present && chargeable_field.fixed?
         cost = 0
       end
       metric_keys.each { |field| result[field] = metric_value }
@@ -35,15 +35,11 @@ class ChargebackRateDetail < ApplicationRecord
   end
 
   def metric_value_by(consumption)
-    return 1.0 if fixed?
+    return 1.0 if chargeable_field.fixed?
 
     return 0 if consumption.none?(metric)
     return consumption.max(metric) if chargeable_field.allocated?
     return consumption.avg(metric) if chargeable_field.used?
-  end
-
-  def fixed?
-    group == "fixed"
   end
 
   # Set the rates according to the tiers
@@ -69,7 +65,7 @@ class ChargebackRateDetail < ApplicationRecord
   def hourly_cost(value, consumption)
     return 0.0 unless self.enabled?
 
-    value = 1.0 if fixed?
+    value = 1.0 if chargeable_field.fixed?
 
     (fixed_rate, variable_rate) = find_rate(value)
 
@@ -124,7 +120,7 @@ class ChargebackRateDetail < ApplicationRecord
     value = read_attribute(:friendly_rate)
     return value unless value.nil?
 
-    if group == 'fixed'
+    if chargeable_field.fixed?
       # Example: 10.00 Monthly
       "#{fixed_rate + variable_rate} #{per_time.to_s.capitalize}"
     else
