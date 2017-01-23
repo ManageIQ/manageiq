@@ -19,14 +19,6 @@ module ManageIQ::Providers::AnsibleTower::AutomationManagerMixin
            :to => :provider
 
   module ClassMethods
-    def ems_type
-      @ems_type ||= "ansible_tower_automation_manager".freeze
-    end
-
-    def description
-      @description ||= "Ansible Tower Automation Manager".freeze
-    end
-
     private
 
     def connection_source(options = {})
