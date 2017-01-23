@@ -1,5 +1,8 @@
 FactoryGirl.define do
   factory :chargeable_field do
+    metric 'unknown'
+    group  'unknown'
+    source 'unknown'
     initialize_with { ChargeableField.find_or_create_by!(:metric => metric, :group => group, :source => source) }
   end
 

@@ -1,8 +1,10 @@
 describe ChargebackRateDetail do
+  let(:field) { FactoryGirl.build(:chargeable_field) }
   describe "#chargeback_rate" do
     it "is invalid without a valid chargeback_rate" do
       invalid_chargeback_rate_id = (ChargebackRate.maximum(:id) || -1) + 1
       chargeback_rate_detail = FactoryGirl.build(:chargeback_rate_detail,
+                                                 :chargeable_field   => field,
                                                  :chargeback_rate_id => invalid_chargeback_rate_id)
       expect(chargeback_rate_detail).to be_invalid
       expect(chargeback_rate_detail.errors.messages).to include(:chargeback_rate => [/can't be blank/])
@@ -182,6 +184,7 @@ Monthly @ 5.0 + 2.5 per Megabytes from 5.0 to Infinity")
       nil   nil                   nil)
       .each_slice(3) do |per_unit, metric, chargeback_rate_detail_measure_id|
         cbd = FactoryGirl.build(:chargeback_rate_detail,
+                                :chargeable_field                  => field,
                                 :per_unit                          => per_unit,
                                 :metric                            => metric,
                                 :chargeback_rate_detail_measure_id => chargeback_rate_detail_measure_id)
@@ -245,14 +248,14 @@ Monthly @ 5.0 + 2.5 per Megabytes from 5.0 to Infinity")
 
     it "add an initial valid tier" do
       cbt1 = FactoryGirl.build(:chargeback_tier, :start => 0, :finish => Float::INFINITY)
-      cbd  = FactoryGirl.build(:chargeback_rate_detail, :chargeback_tiers => [cbt1])
+      cbd  = FactoryGirl.build(:chargeback_rate_detail, :chargeback_tiers => [cbt1], :chargeable_field => field)
 
       expect(cbd.contiguous_tiers?).to be true
     end
 
     it "add an invalid tier to an existing tier set" do
       cbt1 = FactoryGirl.create(:chargeback_tier, :start => 0, :finish => Float::INFINITY)
-      cbd  = FactoryGirl.create(:chargeback_rate_detail, :chargeback_tiers => [cbt1])
+      cbd  = FactoryGirl.create(:chargeback_rate_detail, :chargeback_tiers => [cbt1], :chargeable_field => field)
 
       cbt2 = FactoryGirl.build(:chargeback_tier, :start => 6, :finish => Float::INFINITY)
       cbt1.finish = 5
@@ -263,7 +266,7 @@ Monthly @ 5.0 + 2.5 per Megabytes from 5.0 to Infinity")
 
     it "add a valid tier to an existing tier set" do
       cbt1 = FactoryGirl.create(:chargeback_tier, :start => 0, :finish => Float::INFINITY)
-      cbd  = FactoryGirl.create(:chargeback_rate_detail, :chargeback_tiers => [cbt1])
+      cbd  = FactoryGirl.create(:chargeback_rate_detail, :chargeback_tiers => [cbt1], :chargeable_field => field)
 
       cbt2 = FactoryGirl.build(:chargeback_tier, :start => 5, :finish => Float::INFINITY)
       cbt1.finish = 5
@@ -275,7 +278,7 @@ Monthly @ 5.0 + 2.5 per Megabytes from 5.0 to Infinity")
     it "remove a tier from an existing tier set, leaving the set invalid" do
       cbt1 = FactoryGirl.create(:chargeback_tier, :start => 0, :finish => 5)
       cbt2 = FactoryGirl.create(:chargeback_tier, :start => 5, :finish => Float::INFINITY)
-      cbd  = FactoryGirl.create(:chargeback_rate_detail, :chargeback_tiers => [cbt1, cbt2])
+      cbd  = FactoryGirl.create(:chargeback_rate_detail, :chargeback_tiers => [cbt1, cbt2], :chargeable_field => field)
 
       cbd.chargeback_tiers = [cbt1]
 
@@ -285,7 +288,7 @@ Monthly @ 5.0 + 2.5 per Megabytes from 5.0 to Infinity")
     it "remove a tier from an existing set of tiers" do
       cbt1 = FactoryGirl.create(:chargeback_tier, :start => 0, :finish => 5)
       cbt2 = FactoryGirl.create(:chargeback_tier, :start => 5, :finish => Float::INFINITY)
-      cbd  = FactoryGirl.create(:chargeback_rate_detail, :chargeback_tiers => [cbt1, cbt2])
+      cbd  = FactoryGirl.create(:chargeback_rate_detail, :chargeback_tiers => [cbt1, cbt2], :chargeable_field => field)
 
       cbt1.finish = Float::INFINITY
       cbd.chargeback_tiers = [cbt1]
@@ -295,7 +298,7 @@ Monthly @ 5.0 + 2.5 per Megabytes from 5.0 to Infinity")
 
     it "remove last tier" do
       cbt1 = FactoryGirl.create(:chargeback_tier, :start => 0, :finish => Float::INFINITY)
-      cbd  = FactoryGirl.create(:chargeback_rate_detail, :chargeback_tiers => [cbt1])
+      cbd  = FactoryGirl.create(:chargeback_rate_detail, :chargeback_tiers => [cbt1], :chargeable_field => field)
       cbd.chargeback_tiers = []
 
       expect(cbd.contiguous_tiers?).to be true
