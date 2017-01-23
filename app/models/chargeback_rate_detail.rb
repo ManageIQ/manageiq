@@ -249,6 +249,8 @@ class ChargebackRateDetail < ApplicationRecord
         detail_new.detail_measure = ChargebackRateDetailMeasure.find_by(:name => detail[:measure])
         detail_new.detail_currency = ChargebackRateDetailCurrency.find_by(:name => detail[:type_currency])
         detail_new.metric = detail[:metric]
+        chargeable_metric = detail[:metric] || "#{detail[:group]}_#{detail[:source]}"
+        detail_new.chargeable_field = ChargeableField.find_by(:metric => chargeable_metric)
 
         detail[:tiers].sort_by { |tier| tier[:start] }.each do |tier|
           detail_new.chargeback_tiers << ChargebackTier.new(tier.slice(*ChargebackTier::FORM_ATTRIBUTES))
