@@ -52,6 +52,8 @@ class Service < ApplicationRecord
   delegate :custom_actions, :custom_action_buttons, :to => :service_template, :allow_nil => true
   delegate :provision_dialog, :to => :miq_request, :allow_nil => true
   delegate :user, :to => :miq_request, :allow_nil => true
+  delegate :atomic?, :to => :service_template
+  delegate :composite?, :to => :service_template
 
   include ServiceMixin
   include OwnershipMixin
@@ -203,17 +205,37 @@ class Service < ApplicationRecord
   end
 
   def power_states_match?(action)
-    if power_states.uniq == map_power_states(action)
-      options[:power_status] = "#{action}_complete"
-      update_attributes(:options => options)
-      return true
+    if composite? && (power_states.uniq == map_composite_power_states(action))
+      return update_power_status(action)
+    elsif atomic? && (power_states[0] == POWER_STATE_MAP[action])
+      return update_power_status(action)
     end
     false
   end
 
-  def map_power_states(action)
+  def map_composite_power_states(action)
     action_name = "#{action}_action"
-    service_resources.map(&action_name.to_sym).uniq.map { |x| Service::ACTION_RESPONSE[x] }.map { |x| Service::POWER_STATE_MAP[x] }
+    service_actions = service_resources.map(&action_name.to_sym).uniq
+
+    # We need to account for all nil :start_action or :stop_action attributes
+    #   When all :start_actions are nil then return 'Power On' for the :start_action
+    #   When all :stop_actions are nil then return 'Power Off' for the :stop_action
+    if service_actions.compact.empty?
+      action_index = Service::ACTION_RESPONSE.values.index(action)
+      mod_resources = service_actions.each_with_index do |sa, i|
+        sa.nil? ? service_actions[i] = Service::ACTION_RESPONSE.to_a[action_index][0] : sa
+      end
+    else
+      mod_resources = service_actions
+    end
+
+    # Map out the final power state we should have for the passed in action
+    mod_resources.map { |x| Service::ACTION_RESPONSE[x] }.map { |x| Service::POWER_STATE_MAP[x] }
+  end
+
+  def update_power_status(action)
+    options[:power_status] = "#{action}_complete"
+    update_attributes(:options => options)
   end
 
   def vm_power_states

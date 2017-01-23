@@ -79,25 +79,27 @@ describe Service do
       allow(MiqServer).to receive(:my_server).and_return(@zone1.miq_servers.first)
       @vm          = FactoryGirl.create(:vm_vmware)
       @vm_1        = FactoryGirl.create(:vm_vmware)
+      @vm_2        = FactoryGirl.create(:vm_vmware)
 
       @service     = FactoryGirl.create(:service)
       @service_c1  = FactoryGirl.create(:service, :service => @service)
+      @service_c2  = FactoryGirl.create(:service, :service => @service_c1)
       @service << @vm
       @service_c1 << @vm_1
+      @service_c2 << @vm_1
+      @service_c2 << @vm_2
+      @service.service_resources.first.start_action = "Power On"
+      @service.service_resources.first.stop_action = "Power Off"
       @service.save
       @service_c1.save
+      @service_c2.save
     end
 
     it "#vm_power_states" do
-      expect(@service.vm_power_states).to eq %w(on on)
+      expect(@service.vm_power_states).to eq %w(on on on on)
     end
 
     it "#update_progress" do
-      expect(@service.power_state).to be_nil
-      @service.update_progress(:power_state => "on")
-      expect(@service.power_state).to be_nil
-      @service.update_progress(:power_state => "off")
-      expect(@service.power_state).to be_nil
       @service.update_progress(:power_status => "stopping")
       expect(@service.power_status).to eq "stopping"
       expect { |b| @service.update_progress(:power_state => "timeout", &b) }.to yield_with_args(:reset => true)
@@ -112,7 +114,13 @@ describe Service do
     end
 
     context "#calculate_power_state" do
+      let(:service_template) { instance_double('ServiceTemplate', :service_type => 'compositie') }
+
       it "delays if power states don't match" do
+        expect(@service).to receive(:composite?).once.and_return(true)
+        expect(@service).to receive(:atomic?).once.and_return(false)
+        @vm.send(:power_state=, 'off')
+        @vm.save
         @service.calculate_power_state(:start)
         expect(@service.options[:delayed]).to eq 1
       end
@@ -127,14 +135,60 @@ describe Service do
 
     context "#power_states_match?" do
       it "returns the uniq value for the 'on' power state" do
-        expect(@service).to receive(:map_power_states).with(:start).and_return(["on"])
+        allow(@service).to receive(:composite?).and_return(true)
+        expect(@service).to receive(:map_composite_power_states).with(:start).and_return(["on"])
+        expect(@service).to receive(:update_power_status).with(:start).and_return(true)
         expect(@service.power_states_match?(:start)).to be_truthy
       end
 
       it "returns the uniq value for the 'off' power state" do
-        expect(@service).to receive(:map_power_states).with(:stop).and_return(["off"])
+        allow(@service).to receive(:composite?).and_return(true)
+        expect(@service).to receive(:map_composite_power_states).with(:stop).and_return(["off"])
+        expect(@service).to receive(:update_power_status).with(:stop).and_return(true)
         expect(@service).to receive(:power_states).and_return(["off"])
         expect(@service.power_states_match?(:stop)).to be_truthy
+      end
+
+      it "returns the uniq value for the 'on' power state with an atomic service" do
+        allow(@service).to receive(:composite?).and_return(false)
+        allow(@service).to receive(:atomic?).and_return(true)
+
+        expect(@service).to receive(:update_power_status).with(:start).and_return(true)
+        expect(@service.power_states_match?(:start)).to be_truthy
+      end
+
+      it "returns the uniq value for the 'off' power state with an atomic service" do
+        allow(@service).to receive(:composite?).and_return(false)
+        allow(@service).to receive(:atomic?).and_return(true)
+
+        expect(@service).to receive(:update_power_status).with(:stop).and_return(true)
+        expect(@service).to receive(:power_states).and_return(["off"])
+        expect(@service.power_states_match?(:stop)).to be_truthy
+      end
+    end
+
+    context "#map_power_states" do
+      it "returns the power value when start_action is set" do
+        expect(@service.service_resources.first.start_action).to eq "Power On"
+        expect(@service.map_composite_power_states(:start)).to eq ["on"]
+      end
+
+      it "returns the power value when stop_action is set" do
+        expect(@service.service_resources.first.stop_action).to eq "Power Off"
+        expect(@service.map_composite_power_states(:stop)).to eq ["off"]
+      end
+
+      it "assumes the start_action and returns a value if none of the start_actions are set" do
+        expect(@service_c2.service_resources.first.id).to_not eq @service_c2.service_resources.last.id
+        expect(@service_c2.service_resources.first.start_action).to be_nil
+        expect(@service_c2.service_resources.last.start_action).to be_nil
+        expect(@service_c2.map_composite_power_states(:start)).to eq ["on"]
+      end
+
+      it "assumes the stop_action and returns a value if none of the stop_actions are set" do
+        expect(@service_c2.service_resources.first.stop_action).to be_nil
+        expect(@service_c2.service_resources.last.stop_action).to be_nil
+        expect(@service_c2.map_composite_power_states(:stop)).to eq ["off"]
       end
     end
 
@@ -162,8 +216,8 @@ describe Service do
     end
 
     it "#all_vms" do
-      expect(@service_c1.all_vms).to match_array [@vm_1]
-      expect(@service.all_vms).to    match_array [@vm, @vm_1]
+      expect(@service_c1.all_vms).to match_array [@vm_1, @vm_1, @vm_2]
+      expect(@service.all_vms).to    match_array [@vm, @vm_1, @vm_1, @vm_2]
     end
 
     it "#direct_service" do
