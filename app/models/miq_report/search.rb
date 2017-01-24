@@ -82,9 +82,7 @@ module MiqReport::Search
     self.display_filter = options.delete(:display_filter_hash)  if options[:display_filter_hash]
     self.display_filter = options.delete(:display_filter_block) if options[:display_filter_block]
 
-    includes1 = get_include_for_find(include)
-    includes = MiqExpression.merge_includes(includes1, include_for_find)
-
+    includes = get_include_for_find
     self.extras ||= {}
     if extras[:target_ids_for_paging] && db_class.column_names.include?('id')
       return get_cached_page(limited_ids(limit, offset), includes, options)

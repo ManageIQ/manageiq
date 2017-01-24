@@ -80,7 +80,11 @@ module MiqReport::Generator
     @table2class[table]
   end
 
-  def get_include_for_find(includes, klass = nil)
+  def get_include_for_find
+    (include_as_hash || {}).deep_merge(include_for_find || {}).presence
+  end
+
+  def include_as_hash(includes = include, klass = nil)
     if klass.nil?
       klass = db_class
       result = {}
@@ -100,7 +104,7 @@ module MiqReport::Generator
           if v.nil? || v["include"].blank?
             result.merge!(k => {})
           else
-            result.merge!(k => get_include_for_find(v["include"], assoc_klass)) if assoc_klass
+            result.merge!(k => include_as_hash(v["include"], assoc_klass)) if assoc_klass
           end
 
           v["columns"].each { |c| result[k].merge!(c.to_sym => {}) if assoc_klass.virtual_attribute?(c) } if assoc_klass && assoc_klass.respond_to?(:virtual_attribute?) && v["columns"]
@@ -177,7 +181,7 @@ module MiqReport::Generator
     interval = db_options.present? && db_options[:interval]
     custom_results_method = (db_options && db_options[:rpt_type]) ? "build_results_for_report_#{db_options[:rpt_type]}" : nil
 
-    includes = get_include_for_find(include)
+    includes = get_include_for_find
 
     load_custom_attributes
 
