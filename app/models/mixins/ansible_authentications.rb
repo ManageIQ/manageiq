@@ -4,6 +4,13 @@ module AnsibleAuthentications
   ANSIBLE_ADMIN_TYPE      = "ansible_admin_password".freeze
   ANSIBLE_DATABASE_TYPE   = "ansible_database_password".freeze
 
+  AUTHENTICATION_CLASS_BY_TYPE = {
+    ANSIBLE_SECRET_KEY_TYPE => AuthToken,
+    ANSIBLE_RABBITMQ_TYPE   => AuthUseridPassword,
+    ANSIBLE_ADMIN_TYPE      => AuthUseridPassword,
+    ANSIBLE_DATABASE_TYPE   => AuthUseridPassword
+  }.freeze
+
   def self.included(base)
     base.class_eval do
       include AuthenticationMixin
@@ -16,12 +23,7 @@ module AnsibleAuthentications
   end
 
   def ansible_secret_key=(key)
-    auth = authentication_type(ANSIBLE_SECRET_KEY_TYPE)
-    auth ||= AuthToken.new(
-      :name     => "Ansible Secret Key",
-      :resource => self,
-      :authtype => ANSIBLE_SECRET_KEY_TYPE
-    )
+    auth = authentication_for_type(ANSIBLE_SECRET_KEY_TYPE, "Ansible Secret Key")
 
     auth.auth_key = key
     auth.save!
@@ -33,14 +35,9 @@ module AnsibleAuthentications
   end
 
   def ansible_rabbitmq_password=(password)
-    auth = authentication_type(ANSIBLE_RABBITMQ_TYPE)
-    auth ||= AuthUseridPassword.new(
-      :userid   => "tower",
-      :name     => "Ansible Rabbitmq Auth",
-      :resource => self,
-      :authtype => ANSIBLE_RABBITMQ_TYPE
-    )
+    auth = authentication_for_type(ANSIBLE_RABBITMQ_TYPE, "Ansible Rabbitmq Password")
 
+    auth.userid   = "tower"
     auth.password = password
     auth.save!
   end
@@ -51,14 +48,9 @@ module AnsibleAuthentications
   end
 
   def ansible_admin_password=(password)
-    auth = authentication_type(ANSIBLE_ADMIN_TYPE)
-    auth ||= AuthUseridPassword.new(
-      :userid   => "admin",
-      :name     => "Ansible Admin Password",
-      :resource => self,
-      :authtype => ANSIBLE_ADMIN_TYPE
-    )
+    auth = authentication_for_type(ANSIBLE_ADMIN_TYPE, "Ansible Admin Password")
 
+    auth.userid   = "admin"
     auth.password = password
     auth.save!
   end
@@ -69,15 +61,23 @@ module AnsibleAuthentications
   end
 
   def ansible_database_password=(password)
-    auth = authentication_type(ANSIBLE_DATABASE_TYPE)
-    auth ||= AuthUseridPassword.new(
-      :userid   => "awx",
-      :name     => "Ansible Database Password",
-      :resource => self,
-      :authtype => ANSIBLE_DATABASE_TYPE
-    )
+    auth = authentication_for_type(ANSIBLE_DATABASE_TYPE, "Ansible Database Password")
 
+    auth.userid   = "awx"
     auth.password = password
     auth.save!
+  end
+
+  private
+
+  def authentication_for_type(auth_type, name)
+    auth = authentication_type(auth_type)
+    return auth if auth
+
+    auth = AUTHENTICATION_CLASS_BY_TYPE[auth_type].new
+    auth.name     = name
+    auth.resource = self
+    auth.authtype = auth_type
+    auth
   end
 end
