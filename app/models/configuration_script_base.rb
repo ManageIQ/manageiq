@@ -13,11 +13,9 @@ class ConfigurationScriptBase < ApplicationRecord
 
   has_many   :authentication_configuration_script_bases,
              :dependent   => :destroy,
-             :class_name  => "AuthenticationConfigurationScriptBase",
              :foreign_key => 'configuration_script_id'
   has_many   :authentications,
-             :through => :authentication_configuration_script_bases,
-             :source  => :authentication
+             :through => :authentication_configuration_script_bases
 
   include ProviderObjectMixin
 end
