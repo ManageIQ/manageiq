@@ -10,13 +10,17 @@ class ManageIQ::Providers::Microsoft::InfraManager
       def run_powershell_script(connection, script)
         log_header = "MIQ(#{self.class.name}.#{__method__})"
         script_string = IO.read(script)
+
         begin
-          results = connection.shell(:powershell).run(script_string)
-          log_dos_error_results(results)
-          results
+          shell = connection.shell(:powershell)
+          results = shell.run(script_string)
+          log_dos_error_results(results.stderr)
+          results.stdout
         rescue Errno::ECONNREFUSED => err
           $scvmm_log.error "MIQ(#{log_header} Unable to connect to SCVMM. #{err.message})"
           raise
+        ensure
+          shell.close if shell
         end
       end
 
@@ -75,14 +79,19 @@ class ManageIQ::Providers::Microsoft::InfraManager
 
       _result, timings = Benchmark.realtime_block(:execution) do
         with_provider_connection do |connection|
-          results = connection.shell(:cmd).run(command)
-          self.class.log_dos_error_results(results)
+          begin
+            shell = connection.shell(:cmd)
+            results = shell.run(command)
+            self.class.log_dos_error_results(results.stderr)
+          ensure
+            shell.close if shell
+          end
         end
       end
 
       $scvmm_log.debug("#{log_header} Execute DOS command <#{command}>...Complete - Timings: #{timings}")
 
-      results
+      results.stdout
     end
 
     def run_powershell_script(script)
@@ -93,14 +102,19 @@ class ManageIQ::Providers::Microsoft::InfraManager
       _result, timings = Benchmark.realtime_block(:execution) do
         with_provider_connection do |connection|
           script_string = IO.read(script)
-          results = connection.shell(:powershell).run(script_string)
-          self.class.log_dos_error_results(results)
+          begin
+            shell = connection.shell(:powershell)
+            results = shell.run(script_string)
+            self.class.log_dos_error_results(results.stderr)
+          ensure
+            shell.close if shell
+          end
         end
       end
 
       $scvmm_log.debug("#{log_header} Execute Powershell script... Complete - Timings: #{timings}")
 
-      results
+      results.stdout
     end
   end
 end
