@@ -6,6 +6,20 @@ class ServiceTemplateAnsibleTower < ServiceTemplate
   alias_method :job_template, :configuration_script
   alias_method :job_template=, :configuration_script=
 
+  def self.create_catalog_item(options, _auth_user = nil)
+    transaction do
+      create(options.except(:config_info)) do |service_template|
+        config_info = options[:config_info]
+
+        service_template.job_template = if config_info[:configuration_script_id]
+                                          ConfigurationScript.find(config_info[:configuration_script_id])
+                                        end
+
+        service_template.create_resource_actions(config_info)
+      end
+    end
+  end
+
   def remove_invalid_resource
     # remove the resource from both memory and table
     service_resources.to_a.delete_if { |r| r.destroy unless r.resource(true) }
