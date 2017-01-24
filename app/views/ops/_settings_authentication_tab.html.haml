@@ -247,12 +247,14 @@
           = check_box_tag("saml_enabled", "1",
                           @edit[:new][:authentication][:saml_enabled],
                           "data-miq_observe_checkbox" => {:url => url}.to_json)
-        %label.col-md-2.control-label
-          = _("Disable Local Login")
-        .col-md-4
-          = check_box_tag("local_login_disabled", "1",
-                          @edit[:new][:authentication][:local_login_disabled],
-                          "data-miq_observe_checkbox" => {:url => url}.to_json)
+      = hidden_div_if(@edit[:new][:authentication][:saml_enabled] == false, :id => "saml_local_login_div") do
+        .form-group
+          %label.col-md-2.control-label
+            = _("Disable Local Login")
+          .col-md-4
+            = check_box_tag("local_login_disabled", "1",
+                            @edit[:new][:authentication][:local_login_disabled],
+                            "data-miq_observe_checkbox" => {:url => url}.to_json)
     %hr/
 
   = hidden_div_if(@edit[:new][:authentication][:mode] != "httpd", :id => "httpd_role_div") do

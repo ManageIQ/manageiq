@@ -95,6 +95,10 @@ module OpsController::Settings::Common
           page << set_element_visible("httpd_div", verb)
           page << set_element_visible("httpd_role_div", verb)
         end
+        if @saml_enabled_changed
+          verb = @edit[:new][:authentication][:saml_enabled]
+          page << set_element_visible("saml_local_login_div", verb)
+        end
         if @authusertype_changed
           verb = @edit[:new][:authentication][:user_type] == 'samaccountname'
           page << set_element_visible("user_type_samaccountname", verb)
@@ -764,6 +768,9 @@ module OpsController::Settings::Common
       @sb[:newrole] = (params[:ldap_role].to_s == "1") if params[:ldap_role]
       @sb[:new_amazon_role] = (params[:amazon_role].to_s == "1") if params[:amazon_role]
       @sb[:new_httpd_role] = (params[:httpd_role].to_s == "1") if params[:httpd_role]
+      if params[:saml_enabled] && params[:saml_enabled] != auth[:saml_enabled]
+        @saml_enabled_changed = true
+      end
       if params[:authentication_user_type] && params[:authentication_user_type] != auth[:user_type]
         @authusertype_changed = true
       end
