@@ -35,7 +35,7 @@ class ApplicationHelper::Toolbar::MiqRequestCenter < ApplicationHelper::Toolbar:
       N_('Approve this Request'),
       nil,
       :klass     => ApplicationHelper::Button::MiqRequestApproval,
-      :options   => {:feature => 'miq_request_copy'},
+      :options   => {:feature => 'miq_request_approve'},
       :url       => "/stamp",
       :url_parms => "?typ=a"),
     button(
@@ -44,7 +44,7 @@ class ApplicationHelper::Toolbar::MiqRequestCenter < ApplicationHelper::Toolbar:
       N_('Deny this Request'),
       nil,
       :klass     => ApplicationHelper::Button::MiqRequestApproval,
-      :options   => {:feature => 'miq_request_copy'},
+      :options   => {:feature => 'miq_request_deny'},
       :url       => "/stamp",
       :url_parms => "?typ=d"),
   ])
