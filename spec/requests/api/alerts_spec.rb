@@ -12,16 +12,16 @@ describe "Alerts API" do
     alert_statuses = FactoryGirl.create_list(:miq_alert_status, 2)
     run_get(alerts_url)
     expect(response).to have_http_status(:ok)
-    expect(response.parsed_body).to eq(
+    expect(response.parsed_body).to include(
       "name"      => "alerts",
       "count"     => 2,
       "subcount"  => 2,
       "resources" => [
         {
-          "href" => "http://www.example.com/api/alerts/#{alert_statuses[0].id}"
+          "href" => a_string_matching(alerts_url(alert_statuses[0].id))
         },
         {
-          "href" => "http://www.example.com/api/alerts/#{alert_statuses[1].id}"
+          "href" => a_string_matching(alerts_url(alert_statuses[1].id))
         }
       ]
     )
@@ -39,8 +39,8 @@ describe "Alerts API" do
     alert_status = FactoryGirl.create(:miq_alert_status)
     run_get(alerts_url(alert_status.id))
     expect(response).to have_http_status(:ok)
-    expect(response.parsed_body).to have_attributes(
-      "href" => "http://www.example.com/api/alerts/#{alert_status.id}",
+    expect(response.parsed_body).to include(
+      "href" => a_string_matching(alerts_url(alert_status.id)),
       "id"   => alert_status.id
     )
   end
