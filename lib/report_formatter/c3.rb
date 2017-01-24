@@ -60,7 +60,8 @@ module ReportFormatter
         :data     => {:columns => [], :names => {}},
         :axis     => {:x => {:tick => {}}, :y => {:tick => {}}},
         :tooltip  => {:format => {}},
-        :miq      => {:name_table => {}, :category_table => {}}
+        :miq      => {:name_table => {}, :category_table => {}},
+        :legend   => {}
       }
 
       if chart_is_2d?
@@ -94,6 +95,7 @@ module ReportFormatter
 
         axis_formatter = {:function => format, :options => options}
         mri.chart[:axis][:y] = {:tick => {:format => axis_formatter}}
+        mri.chart[:miq][:format] = axis_formatter
       end
     end
 
@@ -141,7 +143,7 @@ module ReportFormatter
       # set x axis type to timeseries and remove categories
       mri.chart[:axis][:x] = {:type => 'timeseries', :tick => {}}
       # set flag for performance chart
-      mri.chart[:miq] = {:performance_chart => true}
+      mri.chart[:miq][:performance_chart] = true
       # this conditions are taken from build_performance_chart_area method from chart_commons.rb
       if mri.db.include?("Daily") || (mri.where_clause && mri.where_clause.include?("daily"))
         # set format for parsing

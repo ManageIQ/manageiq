@@ -1685,7 +1685,7 @@ function chartData(type, data, data2) {
 
     // small C&U charts have very limited height
     if (data.miq.flat_chart) {
-      var max = _.max(_.flatten(_.tail(data.data.columns).map(_.tail)));
+      var max = _.max(getChartColumnDataValues(data.data.columns));
       data.axis.y.tick.values = [0, max];
     }
 
@@ -1706,13 +1706,32 @@ function chartData(type, data, data2) {
       _.isObject(data.axis.y.tick) &&
       _.isObject(data.axis.y.tick.format) &&
       data.axis.y.tick.format.function) {
-    var format = data.axis.y.tick.format;
-    data.axis.y.tick.format = ManageIQ.charts.formatters[format.function].c3(format.options);
 
-    var title_format = _.cloneDeep(format);
-    title_format.options.precision += 2;
+    var format = data.axis.y.tick.format;
+    var max = _.max(getChartColumnDataValues(data.data.columns));
+    var min = _.min(getChartColumnDataValues(data.data.columns));
+    var maxShowed = getChartFormatedValue(format, max);
+    var minShowed = getChartFormatedValue(format, min);
+    var changeFormat = true;
+
+    var tmp = validateMinMax(min, max, minShowed, maxShowed);
+    changeFormat = !tmp.invalid;
+    min = tmp.min;
+
+    if (changeFormat) {
+      // if min and max are close, labels should be more precise
+      var recalculated = recalculatePrecision(minShowed, maxShowed, format, min, max);
+      format = recalculated.format;
+    }
+    data.axis.y.tick.format = ManageIQ.charts.formatters[format.function].c3(format.options);
+    data.legend.item = {
+      onclick: recalculateChartYAxisLabels
+    }
+
+    var titleFormat = _.cloneDeep(format);
+    titleFormat.options.precision += 1;
     data.tooltip.format.value = function (value, _ratio, _id) {
-      var format = ManageIQ.charts.formatters[title_format.function].c3(title_format.options);
+      var format = ManageIQ.charts.formatters[titleFormat.function].c3(titleFormat.options);
       return format(value);
     }
   }
