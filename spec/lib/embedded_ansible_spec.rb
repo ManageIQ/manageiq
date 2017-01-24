@@ -158,7 +158,7 @@ describe EmbeddedAnsible do
 
           expect(script_path).to eq("/opt/ansible-installer/setup.sh")
           expect(params[:e]).to eq(extra_vars)
-          expect(params[:k]).to eq("packages,migrations,supervisor")
+          expect(params[:k]).to eq("packages,migrations,firewall,supervisor")
 
           new_admin_password  = miq_database.ansible_admin_password
           new_rabbit_password = miq_database.ansible_rabbitmq_password
@@ -181,7 +181,7 @@ describe EmbeddedAnsible do
 
           expect(script_path).to eq("/opt/ansible-installer/setup.sh")
           expect(params[:e]).to eq(extra_vars)
-          expect(params[:k]).to eq("packages,migrations,supervisor")
+          expect(params[:k]).to eq("packages,migrations,firewall,supervisor")
 
           expect(inventory_file_contents).to include("admin_password='adminpassword'")
           expect(inventory_file_contents).to include("rabbitmq_password='rabbitpassword'")
@@ -202,7 +202,7 @@ describe EmbeddedAnsible do
 
           expect(script_path).to eq("/opt/ansible-installer/setup.sh")
           expect(params[:e]).to eq(extra_vars)
-          expect(params[:k]).to eq("packages,migrations")
+          expect(params[:k]).to eq("packages,migrations,firewall")
 
           expect(inventory_file_contents).to include("admin_password='adminpassword'")
           expect(inventory_file_contents).to include("rabbitmq_password='rabbitpassword'")

@@ -7,8 +7,8 @@ class EmbeddedAnsible
   ANSIBLE_ROLE                = "embedded_ansible".freeze
   SETUP_SCRIPT                = "#{APPLIANCE_ANSIBLE_DIRECTORY}/setup.sh".freeze
   SECRET_KEY_FILE             = "/etc/tower/SECRET_KEY".freeze
-  CONFIGURE_EXCLUDE_TAGS      = "packages,migrations,supervisor".freeze
-  START_EXCLUDE_TAGS          = "packages,migrations".freeze
+  CONFIGURE_EXCLUDE_TAGS      = "packages,migrations,firewall,supervisor".freeze
+  START_EXCLUDE_TAGS          = "packages,migrations,firewall".freeze
   NGINX_HTTP_PORT             = "54321".freeze
   NGINX_HTTPS_PORT            = "54322".freeze
 
