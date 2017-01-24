@@ -181,11 +181,11 @@ describe OrchestrationTemplateHot do
       assert_deployment_option(options[0], "tenant_name", :OrchestrationParameterAllowedDynamic, true)
       assert_deployment_option(options[1], "stack_name", :OrchestrationParameterPattern, true)
       assert_deployment_option(options[2], "stack_onfailure", :OrchestrationParameterAllowed, false)
-      assert_deployment_option(options[3], "stack_timeout", 'integer', nil, false)
+      assert_deployment_option(options[3], "stack_timeout", nil, false, 'integer')
     end
   end
 
-  def assert_deployment_option(option, name, data_type = 'string', constraint_type, required)
+  def assert_deployment_option(option, name, constraint_type, required, data_type = 'string')
     expect(option.name).to eq(name)
     expect(option.data_type).to eq(data_type)
     expect(option.required?).to eq(required)
