@@ -89,12 +89,12 @@ class EmbeddedAnsible
   private_class_method :configure_secret_key
 
   def self.generate_admin_password
-    miq_database.ansible_admin_password = SecureRandom.base64
+    miq_database.ansible_admin_password = SecureRandom.hex
   end
   private_class_method :generate_admin_password
 
   def self.generate_rabbitmq_password
-    miq_database.ansible_rabbitmq_password = SecureRandom.base64
+    miq_database.ansible_rabbitmq_password = SecureRandom.hex
   end
   private_class_method :generate_rabbitmq_password
 
