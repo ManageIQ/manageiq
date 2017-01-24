@@ -76,6 +76,7 @@ module MiqReport::Search
   def paged_view_search(options = {})
     per_page = options.delete(:per_page)
     page     = options.delete(:page) || 1
+    selected_ids = options.delete(:selected_ids)
     limit, offset = self.class.get_limit_offset(page, per_page)
 
     self.display_filter = options.delete(:display_filter_hash)  if options[:display_filter_hash]
@@ -99,6 +100,11 @@ module MiqReport::Search
     else
       targets = db_class
     end
+
+    if selected_ids.present?
+      targets = targets.first.kind_of?(Integer) ? targets & selected_ids : targets.where(:id => selected_ids)
+    end
+
     supported_features_filter = search_options.delete(:supported_features_filter) if search_options[:supported_features_filter]
     search_results, attrs     = Rbac.search(search_options.merge(:targets => targets))
     filtered_results          = filter_results(search_results, supported_features_filter)
