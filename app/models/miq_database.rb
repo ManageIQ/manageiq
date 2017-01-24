@@ -8,6 +8,7 @@ class MiqDatabase < ApplicationRecord
 
   include AuthenticationMixin
   include PasswordMixin
+  include AnsibleAuthentications
 
   virtual_has_many  :vmdb_tables
 
@@ -86,76 +87,5 @@ class MiqDatabase < ApplicationRecord
 
   def registration_organization_name
     registration_organization_display_name || registration_organization
-  end
-
-  def ansible_secret_key
-    auth = authentication_type("ansible_secret_key")
-    auth.nil? ? nil : auth.auth_key
-  end
-
-  def ansible_secret_key=(key)
-    auth = authentication_type("ansible_secret_key")
-    auth ||= AuthToken.new(
-      :name     => "Ansible Secret Key",
-      :resource => self,
-      :authtype => "ansible_secret_key"
-    )
-
-    auth.auth_key = key
-    auth.save!
-  end
-
-  def ansible_rabbitmq_password
-    auth = authentication_type("ansible_rabbitmq_auth")
-    auth.nil? ? nil : auth.password
-  end
-
-  def ansible_rabbitmq_password=(password)
-    auth = authentication_type("ansible_rabbitmq_auth")
-    auth ||= AuthUseridPassword.new(
-      :userid   => "tower",
-      :name     => "Ansible Rabbitmq Auth",
-      :resource => self,
-      :authtype => "ansible_rabbitmq_auth"
-    )
-
-    auth.password = password
-    auth.save!
-  end
-
-  def ansible_admin_password
-    auth = authentication_type("ansible_admin_password")
-    auth.nil? ? nil : auth.password
-  end
-
-  def ansible_admin_password=(password)
-    auth = authentication_type("ansible_admin_password")
-    auth ||= AuthUseridPassword.new(
-      :userid   => "admin",
-      :name     => "Ansible Admin Password",
-      :resource => self,
-      :authtype => "ansible_admin_password"
-    )
-
-    auth.password = password
-    auth.save!
-  end
-
-  def ansible_database_password
-    auth = authentication_type("ansible_database_password")
-    auth.nil? ? nil : auth.password
-  end
-
-  def ansible_database_password=(password)
-    auth = authentication_type("ansible_database_password")
-    auth ||= AuthUseridPassword.new(
-      :userid   => "awx",
-      :name     => "Ansible Database Password",
-      :resource => self,
-      :authtype => "ansible_database_password"
-    )
-
-    auth.password = password
-    auth.save!
   end
 end
