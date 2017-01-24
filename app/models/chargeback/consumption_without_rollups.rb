@@ -50,7 +50,7 @@ class Chargeback
                          when 'derived_memory_available'
                            resource.hardware.try(:memory_mb)
                          when 'derived_vm_allocated_disk_storage'
-                           resource.allocated_disk_storage
+                           resource.allocated_disk_storage.try(:to_f)
                          end
       @value[metric]
     end
