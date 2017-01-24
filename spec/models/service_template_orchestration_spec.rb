@@ -118,12 +118,12 @@ describe ServiceTemplateOrchestration do
           :template_id => template.id,
           :manager_id  => manager.id,
           :provision   => {
-            :fqname            => ra1.fqname,
-            :service_dialog_id => service_dialog.id
+            :fqname    => ra1.fqname,
+            :dialog_id => service_dialog.id
           },
           :retirement  => {
-            :fqname            => ra2.fqname,
-            :service_dialog_id => service_dialog.id
+            :fqname    => ra2.fqname,
+            :dialog_id => service_dialog.id
           }
         }
       }
@@ -131,12 +131,37 @@ describe ServiceTemplateOrchestration do
 
     it 'creates and returns an orchestration service template' do
       service_template = ServiceTemplateOrchestration.create_catalog_item(catalog_item_options)
+      service_template.reload
 
       expect(service_template.name).to eq('Orchestration Template')
       expect(service_template.dialogs.first).to eq(service_dialog)
       expect(service_template.orchestration_template).to eq(template)
       expect(service_template.orchestration_manager).to eq(manager)
       expect(service_template.resource_actions.pluck(:action)).to include('Provision', 'Retirement')
+    end
+
+    it 'requires both a template_id and manager_id' do
+      catalog_item_options[:config_info].delete(:template_id)
+
+      expect do
+        ServiceTemplateOrchestration.create_catalog_item(catalog_item_options)
+      end.to raise_error(StandardError, 'Must provide both template_id and manager_id or manager and template')
+    end
+
+    it 'requires both a template and a manager' do
+      catalog_item_options[:config_info] = { :manager => manager }
+
+      expect do
+        ServiceTemplateOrchestration.create_catalog_item(catalog_item_options)
+      end.to raise_error(StandardError, 'Must provide both template_id and manager_id or manager and template')
+    end
+
+    it 'accepts a manager and a template' do
+      catalog_item_options[:config_info] = { :manager => manager, :template => template }
+
+      service_template = ServiceTemplateOrchestration.create_catalog_item(catalog_item_options)
+      expect(service_template.orchestration_template).to eq(template)
+      expect(service_template.orchestration_manager).to eq(manager)
     end
   end
 end
