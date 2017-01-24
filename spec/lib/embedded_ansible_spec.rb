@@ -83,6 +83,61 @@ describe EmbeddedAnsible do
       EvmSpecHelper.create_guid_miq_server_zone
     end
 
+    context "with a key file" do
+      let(:key_file) { Tempfile.new("SECRET_KEY") }
+
+      before do
+        stub_const("EmbeddedAnsible::SECRET_KEY_FILE", key_file.path)
+      end
+
+      after do
+        key_file.unlink
+      end
+
+      describe ".configured?" do
+        it "returns true when the key in the file is the same as the one in the database" do
+          key = "verysecret"
+          key_file.write(key)
+          key_file.close
+          miq_database.ansible_secret_key = key
+
+          expect(described_class.configured?).to be true
+        end
+
+        it "returns false when there is no key in the database" do
+          key_file.write("asdf")
+          key_file.close
+
+          expect(described_class.configured?).to be false
+        end
+
+        it "returns false when the key in the file doesn't match the one in the database" do
+          key_file.write("qwerty")
+          key_file.close
+          miq_database.ansible_secret_key = "password"
+
+          expect(described_class.configured?).to be false
+        end
+      end
+
+      describe ".configure_secret_key (private)" do
+        it "sets a new key when there is no key in the database" do
+          expect(miq_database.ansible_secret_key).to be_nil
+          described_class.send(:configure_secret_key)
+          miq_database.reload
+          expect(miq_database.ansible_secret_key).to match(/\h+/)
+          expect(miq_database.ansible_secret_key).to eq(File.read(key_file.path))
+        end
+
+        it "writes the key when a key is in the database" do
+          miq_database.ansible_secret_key = "supasecret"
+          expect(miq_database).not_to receive(:ansible_secret_key=)
+          described_class.send(:configure_secret_key)
+          expect(File.read(key_file.path)).to eq("supasecret")
+        end
+      end
+    end
+
     describe ".configure" do
       before do
         expect(described_class).to receive(:configure_secret_key)
@@ -147,33 +202,6 @@ describe EmbeddedAnsible do
         end
 
         described_class.start
-      end
-    end
-
-    describe ".configure_secret_key (private)" do
-      let(:key_file) { Tempfile.new("SECRET_KEY") }
-
-      before do
-        stub_const("EmbeddedAnsible::SECRET_KEY_FILE", key_file.path)
-      end
-
-      after do
-        key_file.unlink
-      end
-
-      it "sets a new key when there is no key in the database" do
-        expect(miq_database.ansible_secret_key).to be_nil
-        described_class.send(:configure_secret_key)
-        miq_database.reload
-        expect(miq_database.ansible_secret_key).to match(/\h+/)
-        expect(miq_database.ansible_secret_key).to eq(File.read(key_file.path))
-      end
-
-      it "writes the key when a key is in the database" do
-        miq_database.ansible_secret_key = "supasecret"
-        expect(miq_database).not_to receive(:ansible_secret_key=)
-        described_class.send(:configure_secret_key)
-        expect(File.read(key_file.path)).to eq("supasecret")
       end
     end
   end

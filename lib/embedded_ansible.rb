@@ -23,6 +23,11 @@ class EmbeddedAnsible
     services.all? { |service| LinuxAdmin::Service.new(service).running? }
   end
 
+  def self.configured?
+    key = miq_database.ansible_secret_key
+    key.present? && key == File.read(SECRET_KEY_FILE)
+  end
+
   def self.configure
     configure_secret_key
     run_setup_script(:e => "minimum_var_space=0", :k => CONFIGURE_EXCLUDE_TAGS)
