@@ -102,17 +102,21 @@ module MiqReport::Generator
           assoc_klass = assoc_reflection.nil? ? nil : (assoc_reflection.options[:polymorphic] ? k : assoc_reflection.klass)
 
           if v.nil? || v["include"].blank?
-            result.merge!(k => {})
-          else
-            result.merge!(k => include_as_hash(v["include"], assoc_klass)) if assoc_klass
+            result[k] = {}
+          elsif assoc_klass
+            result[k] = include_as_hash(v["include"], assoc_klass)
           end
 
-          v["columns"].each { |c| result[k].merge!(c.to_sym => {}) if assoc_klass.virtual_attribute?(c) } if assoc_klass && assoc_klass.respond_to?(:virtual_attribute?) && v["columns"]
+          if assoc_klass && assoc_klass.respond_to?(:virtual_attribute?) && v["columns"]
+            v["columns"].each do |c|
+              result[k][c.to_sym] = {} if assoc_klass.virtual_attribute?(c)
+            end
+          end
         end
       end
     elsif includes.kind_of?(Array)
       result ||= {}
-      includes.each { |i| result.merge!(i.to_sym => {}) }
+      includes.each { |i| result[i.to_sym] = {} }
     end
 
     result
