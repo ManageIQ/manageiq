@@ -40,7 +40,6 @@ include:
 
 # Included tables and columns for query performance
 include_for_find:
-  :service_template_catalog: {}
 
 # Order of columns (from all tables)
 col_order:

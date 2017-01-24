@@ -33,7 +33,6 @@ include:
 
 # Included tables and columns for query performance
 include_for_find:
-  :zone: {}
   :tags: {}
 
 # Order of columns (from all tables)

@@ -34,7 +34,6 @@ include:
 include_for_find:
   :hardware:
    :disks: {}
-  :host: {}
   
 # Order of columns (from all tables)
 col_order: 

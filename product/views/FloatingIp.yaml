@@ -33,8 +33,6 @@ include:
 
 # Included tables and columns for query performance
 include_for_find:
-  :ext_management_system: {}
-  :vm: {}
 
 # Order of columns (from all tables)
 col_order:
