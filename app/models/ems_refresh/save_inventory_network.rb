@@ -405,12 +405,8 @@ module EmsRefresh::SaveInventoryNetwork
   def link_cloud_subnets_to_network_routers(hashes)
     return if hashes.blank?
 
-    cloud_subnets = CloudSubnet.where(:id => hashes.map { |x| x[:id] }.compact.uniq).find_each.index_by(&:id)
-
     hashes.each do |hash|
-      network_router = hash.fetch_path(:network_router, :id)
-      cloud_subnet = cloud_subnets[hash[:id]]
-      cloud_subnet.update_attributes(:network_router_id => network_router) if cloud_subnet
+      CloudSubnet.where(:id => hash[:id]).update_all(:network_router_id => hash.fetch_path(:network_router, :id))
     end
   end
 end
