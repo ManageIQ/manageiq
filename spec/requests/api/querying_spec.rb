@@ -484,8 +484,14 @@ describe "Querying" do
       ems2 = FactoryGirl.create(:ems_vmware, :zone => zone)
       host = FactoryGirl.create(:host)
 
-      _vm = FactoryGirl.create(:vm_vmware, :host => host, :ems_id => ems1.id, :raw_power_state => "poweredOn")
-      vm2 = FactoryGirl.create(:vm_vmware, :host => host, :ems_id => ems2.id, :raw_power_state => "poweredOff")
+      _vm = FactoryGirl.create(:vm_vmware,
+                               :host                  => host,
+                               :ext_management_system => ems1,
+                               :raw_power_state       => "poweredOn")
+      vm2 = FactoryGirl.create(:vm_vmware,
+                               :host                  => host,
+                               :ext_management_system => ems2,
+                               :raw_power_state       => "poweredOff")
 
       run_get vms_url, :expand => "resources",
                        :filter => ["ems_id = #{ApplicationRecord.compress_id(ems2.id)}"]

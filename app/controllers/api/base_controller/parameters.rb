@@ -1,8 +1,6 @@
 module Api
   class BaseController
     module Parameters
-      include CompressedIds
-
       def paginate_params?
         params['offset'] || params['limit']
       end
