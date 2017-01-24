@@ -9,6 +9,8 @@ class EmbeddedAnsible
   SECRET_KEY_FILE             = "/etc/tower/SECRET_KEY".freeze
   CONFIGURE_EXCLUDE_TAGS      = "packages,migrations,supervisor".freeze
   START_EXCLUDE_TAGS          = "packages,migrations".freeze
+  NGINX_HTTP_PORT             = "54321".freeze
+  NGINX_HTTPS_PORT            = "54322".freeze
 
   def self.available?
     path = ENV["APPLIANCE_ANSIBLE_DIRECTORY"] || APPLIANCE_ANSIBLE_DIRECTORY
@@ -30,12 +32,12 @@ class EmbeddedAnsible
 
   def self.configure
     configure_secret_key
-    run_setup_script(:e => "minimum_var_space=0", :k => CONFIGURE_EXCLUDE_TAGS)
+    run_setup_script(playbook_extra_variables.merge(:k => CONFIGURE_EXCLUDE_TAGS))
     stop
   end
 
   def self.start
-    run_setup_script(:e => "minimum_var_space=0", :k => START_EXCLUDE_TAGS)
+    run_setup_script(playbook_extra_variables.merge(:k => START_EXCLUDE_TAGS))
   end
 
   def self.stop
@@ -45,6 +47,16 @@ class EmbeddedAnsible
   def self.services
     AwesomeSpawn.run!("source /etc/sysconfig/ansible-tower; echo $TOWER_SERVICES").output.split
   end
+
+  def self.playbook_extra_variables
+    json_value = {
+      :minimum_var_space => 0,
+      :nginx_http_port   => NGINX_HTTP_PORT,
+      :nginx_https_port  => NGINX_HTTPS_PORT
+    }.to_json
+    {:e => json_value}
+  end
+  private_class_method :playbook_extra_variables
 
   def self.run_setup_script(params)
     with_inventory_file do |inventory_file_path|

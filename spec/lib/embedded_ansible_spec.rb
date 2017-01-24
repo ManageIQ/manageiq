@@ -76,6 +76,13 @@ describe EmbeddedAnsible do
 
   context "with an miq_databases row" do
     let(:miq_database) { MiqDatabase.first }
+    let(:extra_vars) do
+      {
+        :minimum_var_space => 0,
+        :nginx_http_port   => described_class::NGINX_HTTP_PORT,
+        :nginx_https_port   => described_class::NGINX_HTTPS_PORT
+      }.to_json
+    end
 
     before do
       FactoryGirl.create(:miq_region, :region => ApplicationRecord.my_region_number)
@@ -150,7 +157,7 @@ describe EmbeddedAnsible do
           inventory_file_contents = File.read(params[:i])
 
           expect(script_path).to eq("/opt/ansible-installer/setup.sh")
-          expect(params[:e]).to eq("minimum_var_space=0")
+          expect(params[:e]).to eq(extra_vars)
           expect(params[:k]).to eq("packages,migrations,supervisor")
 
           new_admin_password  = miq_database.ansible_admin_password
@@ -173,7 +180,7 @@ describe EmbeddedAnsible do
           inventory_file_contents = File.read(params[:i])
 
           expect(script_path).to eq("/opt/ansible-installer/setup.sh")
-          expect(params[:e]).to eq("minimum_var_space=0")
+          expect(params[:e]).to eq(extra_vars)
           expect(params[:k]).to eq("packages,migrations,supervisor")
 
           expect(inventory_file_contents).to include("admin_password='adminpassword'")
@@ -194,7 +201,7 @@ describe EmbeddedAnsible do
           inventory_file_contents = File.read(params[:i])
 
           expect(script_path).to eq("/opt/ansible-installer/setup.sh")
-          expect(params[:e]).to eq("minimum_var_space=0")
+          expect(params[:e]).to eq(extra_vars)
           expect(params[:k]).to eq("packages,migrations")
 
           expect(inventory_file_contents).to include("admin_password='adminpassword'")
