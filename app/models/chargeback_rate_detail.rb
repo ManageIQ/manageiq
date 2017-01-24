@@ -88,10 +88,6 @@ class ChargebackRateDetail < ApplicationRecord
     (metric_keys.to_set & report_cols).present? || ((cost_keys.to_set & report_cols).present? && !gratis?)
   end
 
-  def rate_name
-    "#{group}_#{source}"
-  end
-
   def friendly_rate
     (fixed_rate, variable_rate) = find_rate(0.0)
     value = read_attribute(:friendly_rate)
@@ -166,12 +162,12 @@ class ChargebackRateDetail < ApplicationRecord
   end
 
   def metric_keys
-    ["#{rate_name}_metric", # metric value (e.g. Storage [Used|Allocated|Fixed])
+    ["#{chargeable_field.rate_name}_metric", # metric value (e.g. Storage [Used|Allocated|Fixed])
      "#{group}_metric"]     # total of metric's group (e.g. Storage Total)
   end
 
   def cost_keys
-    ["#{rate_name}_cost",   # cost associated with metric (e.g. Storage [Used|Allocated|Fixed] Cost)
+    ["#{chargeable_field.rate_name}_cost",   # cost associated with metric (e.g. Storage [Used|Allocated|Fixed] Cost)
      "#{group}_cost",       # cost associated with metric's group (e.g. Storage Total Cost)
      'total_cost']
   end

@@ -140,13 +140,6 @@ describe ChargebackRateDetail do
     end
   end
 
-  it "#rate_name" do
-    source = 'used'
-    group  = 'cpu'
-    cbd = FactoryGirl.build(:chargeback_rate_detail, :source => source, :group => group)
-    expect(cbd.rate_name).to eq("#{group}_#{source}")
-  end
-
   it "#friendly_rate" do
     friendly_rate = "My Rate"
     cbd = FactoryGirl.build(:chargeback_rate_detail, :friendly_rate => friendly_rate)

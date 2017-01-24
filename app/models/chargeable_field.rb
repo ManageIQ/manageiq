@@ -35,6 +35,10 @@ class ChargeableField < ApplicationRecord
     UNITS[metric] ? detail_measure.adjust(target_unit, UNITS[metric]) : 1
   end
 
+  def rate_name
+    "#{group}_#{source}"
+  end
+
   private
 
   def used?
