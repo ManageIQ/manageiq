@@ -84,7 +84,7 @@ module MiqReport::Generator
     if klass.nil?
       klass = db_class
       result = {}
-      cols.each { |c| result.merge!(c.to_sym => {}) if klass.virtual_attribute?(c) || klass == LiveMetric } if cols
+      cols.each { |c| result.merge!(c.to_sym => {}) if klass.virtual_attribute?(c) } if cols
     end
 
     if includes.kind_of?(Hash)
