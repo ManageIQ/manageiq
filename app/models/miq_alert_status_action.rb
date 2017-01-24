@@ -1,5 +1,5 @@
 class MiqAlertStatusAction < ApplicationRecord
-  ACTION_TYPES = %w(assign acknowledge comment unassign unacknowledge).freeze
+  ACTION_TYPES = %w(assign acknowledge comment unassign unacknowledge hide show).freeze
 
   belongs_to :miq_alert_status
   belongs_to :assignee, :class_name => 'User'
@@ -15,8 +15,9 @@ class MiqAlertStatusAction < ApplicationRecord
   after_save :update_status_acknowledgement
 
   def only_assignee_can_acknowledge
-    if action_type == 'acknowledge' && miq_alert_status.assignee.try(:id) != user.id
-      errors.add(:user, "that is not assigned cannot acknowledge")
+    if ['acknowledge', 'unacknowledge', 'hide', 'show'].include?(action_type) &&
+        miq_alert_status.assignee.try(:id) != user.id
+      errors.add(:user, "that is not assigned cannot #{action_type}")
     end
   end
 

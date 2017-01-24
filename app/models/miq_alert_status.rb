@@ -9,6 +9,7 @@ class MiqAlertStatus < ApplicationRecord
   belongs_to :ext_management_system
   has_many :miq_alert_status_actions, -> { order "created_at" }, :dependent => :destroy
   virtual_column :assignee, :type => :string
+  virtual_column :hidden, :type => :boolean
 
   validates :severity, :acceptance => { :accept => SEVERITY_LEVELS }
 
@@ -18,5 +19,9 @@ class MiqAlertStatus < ApplicationRecord
 
   def assigned?
     assignee.present?
+  end
+
+  def hidden?
+    miq_alert_status_actions.where(:action_type => %w(hide show)).last.try(:action_type) == 'hide'
   end
 end

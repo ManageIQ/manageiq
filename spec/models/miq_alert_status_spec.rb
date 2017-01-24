@@ -12,6 +12,12 @@ describe MiqAlertStatus do
     FactoryGirl.create(:miq_alert_status_action, :action_type => 'assign', :user => user1, :assignee => user1,
                        :miq_alert_status => alert)
   end
+  let(:hide_action) do
+    FactoryGirl.create(:miq_alert_status_action, :action_type => 'hide', :user => user1, :miq_alert_status => alert)
+  end
+  let(:show_action) do
+    FactoryGirl.create(:miq_alert_status_action, :action_type => 'show', :user => user1, :miq_alert_status => alert)
+  end
 
   describe "Validation" do
     it "should reject unexpected severities" do
@@ -104,6 +110,22 @@ describe MiqAlertStatus do
       end
       alert.reload
       expect(alert.assignee).to be_nil
+    end
+  end
+
+  describe "#hidden?" do
+    it "returns false for new" do
+      expect(alert.hidden?).to be_falsey
+    end
+
+    it "returns true after hide action" do
+      alert.miq_alert_status_actions = [assignment_action, hide_action]
+      expect(alert.hidden?).to be_truthy
+    end
+
+    it "returns false after show action" do
+      alert.miq_alert_status_actions = [assignment_action, hide_action, show_action]
+      expect(alert.hidden?).to be_falsey
     end
   end
 end
