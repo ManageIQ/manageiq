@@ -1,6 +1,8 @@
 module Api
   class BaseController
     module Parameters
+      include CompressedIds
+
       def paginate_params?
         params['offset'] || params['limit']
       end
@@ -99,6 +101,8 @@ module Api
                           [filter_value, methods[:default]]
                         end
                       end
+
+        filter_value = from_cid(filter_value) if filter_attr =~ /[_]?id$/ && cid?(filter_value)
 
         if filter_value =~ /%|\*/
           filter_value = "/\\A#{Regexp.escape(filter_value)}\\z/"
