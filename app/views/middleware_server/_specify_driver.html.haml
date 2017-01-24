@@ -1,0 +1,49 @@
+.form-group
+  %label.col-md-4.control-label{:for => "jdbc_driver_name_input"}
+    = _("Name")
+  .col-md-6
+    %input.form-control#jdbc_ds_driver_name_input{:type          => "text",
+                                                  "name"         => "jdbc_ds_driver_name_input",
+                                                  "ng-required"  => "true",
+                                                  "ng-maxlength" => "100",
+                                                  "placeholder"  => _("Enter JDBC Driver name"),
+                                                  "ng-model"     => "vm.step2DsModel.jdbcDriverName"}
+  .col-sm-6.col-sm-offset-4
+    %p.ng-error-messages{"ng-show" => "step2Form.jdbc_ds_driver_name_input.$error.required"}
+      = _("Required")
+    %p.ng-error-messages{"ng-show" => "step2Form.jdbc_ds_driver_name_input.$error.maxlength"}
+      = _("Maximum length is 100")
+
+.form-group
+  %label.col-md-4.control-label{:for => "jdbc_module_name_input"}
+    = _("Module Name")
+  .col-md-6
+    %input.form-control#jdbc_modoule_name_input{:type          => "text",
+                                                "name"         => "jdbc_modoule_name_input",
+                                                "ng-required"  => "true",
+                                                "ng-maxlength" => "256",
+                                                "placeholder"  => _("Enter JDBC Module name"),
+                                                "ng-model"     => "vm.step2DsModel.jdbcModuleName"}
+
+  .col-sm-6.col-sm-offset-4
+    %p.ng-error-messages{"ng-show" => "step2Form.jdbc_modoule_name_input.$error.required"}
+      = _("Required")
+    %p.ng-error-messages{"ng-show" => "step2Form.jdbc_modoule_name_input.$error.maxlength"}
+      = _("Maximum length is 256")
+
+.form-group
+  %label.col-md-4.control-label{:for => "jdbc_ds_driver_class_input"}
+    = _("Driver Class")
+  .col-md-6
+    %input.form-control#jdbc_ds_driver_input{:type          => "text",
+                                             "name"         => "jdbc_ds_driver_input",
+                                             "ng-required"  => "true",
+                                             "ng-maxlength" => "256",
+                                             "placeholder"  => _("Enter JDBC Driver Class"),
+                                             "ng-model"     => "vm.step2DsModel.driverClass"}
+
+  .col-sm-6.col-sm-offset-4
+    %p.ng-error-messages{"ng-show" => "step2Form.jdbc_ds_driver_input.$error.required"}
+      = _("Required")
+    %p.ng-error-messages{"ng-show" => "step2Form.jdbc_ds_driver_input.$error.maxlength"}
+      = _("Maximum length is 256")

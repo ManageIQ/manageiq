@@ -1,0 +1,10 @@
+.form-group
+  %label.col-md-4.control-label{:for => "existing_jdbc_driver_input"}
+    = _("Existing JDBC Driver:")
+  .col-md-6
+    %select.form-control#existing_jdbc_driver_input{"name"        => "existing_jdbc_driver_input",
+                                                    "ng-model"    => "vm.step2DsModel.selectedJdbcDriver",
+                                                    "ng-options"  => "c.label for c in vm.step2DsModel.existingJdbcDrivers track by c.id"}
+  .col-sm-6.col-sm-offset-4
+    %p.ng-error-messages{"ng-show" => "step2Form.existing_jdbc_driver_input.$error.required"}
+      = _("Required")
