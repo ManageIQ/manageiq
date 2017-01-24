@@ -1952,6 +1952,21 @@
         :description: Display Individual Alert Status
         :feature_type: view
         :identifier: alert_status_show
+  - :name: Alerts Status Actions
+    :description: Everything under Status Actions
+    :protected: true
+    :feature_type: node
+    :hidden: true
+    :identifier: alert_action
+    :children:
+    - :name: List
+      :description: Display Lists of Alert Status Actions
+      :feature_type: view
+      :identifier: alert_status_action_show_list
+    - :name: Add
+      :description: Display Individual Alert Status
+      :feature_type: admin
+      :identifier: alert_status_action_new
 # Policy Simulation
 - :name: Simulation
   :description: Policy Simulation
