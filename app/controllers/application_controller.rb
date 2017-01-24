@@ -1825,6 +1825,17 @@ class ApplicationController < ActionController::Base
     end
 
     vms = VmOrTemplate.where(:id => vm_ids)
+    if typ == "migrate"
+      # if one of the providers in question cannot support simultaneous migration of his subset of
+      # the selected VMs, we abort
+      if vms.group_by(&:ext_management_system).except(nil).any? do |ems, ems_vms|
+        ems.respond_to?(:supports_migrate_for_all?) && !ems.supports_migrate_for_all?(ems_vms)
+      end
+        add_flash(_("These VMs can not be migrated together."), :error)
+        return
+      end
+    end
+
     vms.each do |vm|
       if vm.respond_to?("supports_#{typ}?")
         render_flash_not_applicable_to_model(typ) unless vm.send("supports_#{typ}?")

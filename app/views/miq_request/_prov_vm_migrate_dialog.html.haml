@@ -29,12 +29,13 @@
           :label                      => _("Datacenter"),
           :keys                       => keys})
 
-    - keys = [:cluster_filter, :placement_cluster_name]
-    = render(:partial => "/miq_request/prov_dialog_fieldset",
-      :locals         => {:workflow => wf,
-        :dialog                     => dialog,
-        :label                      => title_for_cluster,
-        :keys                       => keys})
+    - if wf.field_supported(:cluster)
+      - keys = [:cluster_filter, :placement_cluster_name]
+      = render(:partial => "/miq_request/prov_dialog_fieldset",
+        :locals         => {:workflow => wf,
+          :dialog                     => dialog,
+          :label                      => title_for_cluster,
+          :keys                       => keys})
 
     - if wf.field_supported(:respool)
       - keys = [:rp_filter, :placement_rp_name]
