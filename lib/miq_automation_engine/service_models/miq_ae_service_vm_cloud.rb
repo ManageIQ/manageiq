@@ -14,8 +14,5 @@ module MiqAeMethodService
     expose :floating_ips,      :association => true
     expose :security_groups,   :association => true
     expose :key_pairs,         :association => true
-    expose :associate_floating_ip
-    expose :delete_floating_ips
-    expose :destroy_if_failed
   end
 end

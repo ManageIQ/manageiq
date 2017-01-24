@@ -13,6 +13,10 @@ module MiqAeMethodService
     expose :associate_floating_ip,    :override_return => nil
     expose :disassociate_floating_ip, :override_return => nil
 
+    expose :associate_floating_ip_from_network
+    expose :delete_floating_ips
+    expose :destroy_if_failed
+
     def attach_volume(volume_id, device = nil, options = {})
       sync_or_async_ems_operation(options[:sync], "attach_volume", [volume_id, device])
     end

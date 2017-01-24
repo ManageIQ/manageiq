@@ -36,7 +36,7 @@ class ManageIQ::Providers::Openstack::CloudManager::Vm < ManageIQ::Providers::Cl
     floating_ips.first
   end
 
-  def associate_floating_ip(public_network, port = nil)
+  def associate_floating_ip_from_network(public_network, port = nil)
     ext_management_system.with_provider_connection(:service     => "Network",
                                                    :tenant_name => cloud_tenant.name) do |connection|
       unless port
