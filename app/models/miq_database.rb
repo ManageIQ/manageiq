@@ -140,4 +140,22 @@ class MiqDatabase < ApplicationRecord
     auth.password = password
     auth.save!
   end
+
+  def ansible_database_password
+    auth = authentication_type("ansible_database_password")
+    auth.nil? ? nil : auth.password
+  end
+
+  def ansible_database_password=(password)
+    auth = authentication_type("ansible_database_password")
+    auth ||= AuthUseridPassword.new(
+      :userid   => "awx",
+      :name     => "Ansible Database Password",
+      :resource => self,
+      :authtype => "ansible_database_password"
+    )
+
+    auth.password = password
+    auth.save!
+  end
 end
