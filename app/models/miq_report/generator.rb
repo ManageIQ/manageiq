@@ -269,16 +269,20 @@ module MiqReport::Generator
       # TODO: add once only_cols is fixed
       # targets = targets.select(only_cols)
       where_clause = MiqExpression.merge_where_clauses(self.where_clause, options[:where_clause])
-
-      results, attrs = Rbac.search(
-        options.merge(
-          :targets          => targets,
-          :filter           => conditions,
-          :include_for_find => includes,
-          :where_clause     => where_clause,
-          :skip_count       => true,
-        )
+      va_sql_cols = cols.select do |col|
+        db_class.virtual_attribute?(col) && db_class.attribute_supported_by_sql?(col)
+      end
+      rbac_opts = options.merge(
+        :targets          => targets,
+        :filter           => conditions,
+        :include_for_find => includes,
+        :where_clause     => where_clause,
+        :skip_counts      => true,
       )
+
+      rbac_opts[:extra_cols] = va_sql_cols unless va_sql_cols.nil? || va_sql_cols.empty?
+
+      results, attrs = Rbac.search(rbac_opts)
       results = Metric::Helper.remove_duplicate_timestamps(results)
       results = BottleneckEvent.remove_duplicate_find_results(results) if db == "BottleneckEvent"
       @user_categories = attrs[:user_filters]["managed"]

@@ -191,6 +191,7 @@ module Rbac
 
       if targets.nil?
         scope = apply_scope(klass, scope)
+        scope = apply_select(klass, scope, options[:extra_cols]) if options[:extra_cols]
       elsif targets.kind_of?(Array)
         if targets.first.kind_of?(Numeric)
           target_ids = targets
@@ -200,6 +201,7 @@ module Rbac
           klass            = targets.first.class.base_class unless klass.respond_to?(:find)
         end
         scope = apply_scope(klass, scope)
+        scope = apply_select(klass, scope, options[:extra_cols]) if options[:extra_cols]
 
         ids_clause = ["#{klass.table_name}.id IN (?)", target_ids] if klass.respond_to?(:table_name)
       else # targets is a class_name, scope, class, or acts_as_ar_model class (VimPerformanceDaily in particular)
@@ -212,6 +214,7 @@ module Rbac
           # working around MiqAeDomain not being in rbac_class
           klass = klass.base_class if klass.respond_to?(:base_class) && rbac_class(klass).nil? && rbac_class(klass.base_class)
         end
+        scope = apply_select(klass, scope, options[:extra_cols]) if options[:extra_cols]
       end
 
       user_filters['match_via_descendants'] = to_class(options[:match_via_descendants])
@@ -528,6 +531,10 @@ module Rbac
       else
         klass.send(*scope)
       end
+    end
+
+    def apply_select(klass, scope, extra_cols)
+      scope.select(scope.select_values.blank? ? klass.arel_table[Arel.star] : nil).select(extra_cols)
     end
 
     def get_belongsto_matches(blist, klass)

@@ -74,6 +74,12 @@ describe Rbac::Filterer do
         expect(results).to match_array [owned_vm]
       end
 
+      it "with :extra_cols finds Service" do
+        FactoryGirl.create :service, :evm_owner => owner_user
+        results = described_class.search(:class => "Service", :extra_cols => [:owned_by_current_user]).first
+        expect(results.first.attributes["owned_by_current_user"]).to be false
+      end
+
       it "leaving tenant doesnt find Vm" do
         owner_user.update_attributes(:miq_groups => [other_user.current_group])
         User.with_user(owner_user) do
