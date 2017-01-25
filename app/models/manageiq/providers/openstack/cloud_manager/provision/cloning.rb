@@ -4,6 +4,9 @@ module ManageIQ::Providers::Openstack::CloudManager::Provision::Cloning
       instance = openstack.handled_list(:servers).detect { |s| s.id == clone_task_ref }
       status   = instance.state.downcase.to_sym
 
+      if status == :error
+        raise MiqException::MiqProvisionError, "An error occurred while provisioning Instance #{instance.name}"
+      end
       return true if status == :active
       return false, status
     end
