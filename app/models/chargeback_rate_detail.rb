@@ -59,8 +59,6 @@ class ChargebackRateDetail < ApplicationRecord
   def hourly_cost(value, consumption)
     return 0.0 unless self.enabled?
 
-    value = 1.0 if chargeable_field.fixed?
-
     (fixed_rate, variable_rate) = find_rate(value)
 
     hourly_fixed_rate    = hourly(fixed_rate, consumption)

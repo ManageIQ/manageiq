@@ -77,7 +77,7 @@ describe ChargebackRateDetail do
     expect(cbd.hourly_cost(cvalue, consumption)).to eq(cvalue * cbd.hourly(variable_rate, consumption) + cbd.hourly(fixed_rate, consumption))
 
     cbd.chargeable_field = FactoryGirl.build(:chargeable_field_fixed_compute_1)
-    expect(cbd.hourly_cost(cvalue, consumption)).to eq(cbd.hourly(variable_rate, consumption) + cbd.hourly(fixed_rate, consumption))
+    expect(cbd.hourly_cost(1, consumption)).to eq(cbd.hourly(variable_rate, consumption) + cbd.hourly(fixed_rate, consumption))
 
     cbd.enabled = false
     expect(cbd.hourly_cost(cvalue, consumption)).to eq(0.0)
