@@ -498,6 +498,19 @@ describe VirtualFields do
       end
     end
 
+    describe ".select" do
+      it "supports #includes with #references" do
+        vm           = FactoryGirl.create :vm_vmware
+        table        = Vm.arel_table
+        dash         = Arel::Nodes::SqlLiteral.new("'-'")
+        name_dash_id = Arel::Nodes::NamedFunction.new("CONCAT", [table[:name], dash, table[:id]])
+                                                 .as("name_dash_id")
+        result       = Vm.select(name_dash_id).includes(:tags => {}).references(:tags => {})
+
+        expect(result.first.attributes["name_dash_id"]).to eq("#{vm.name}-#{vm.id}")
+      end
+    end
+
     describe ".virtual_delegate" do
       # double purposing col1. It has an actual value in the child class
       let(:parent) { TestClass.create(:id => 1, :col1 => 4) }
