@@ -20,7 +20,8 @@ describe MiqProvisionVirtWorkflow do
     end
 
     it "sets initial_pass equal to true when values are empty and initial_pass => true is passed in as an option" do
-      expect_any_instance_of(MiqProvisionVirtWorkflow).to receive(:get_value).once
+      # once for src_vm_id, once for src_type
+      expect_any_instance_of(MiqProvisionVirtWorkflow).to receive(:get_value).with(nil).twice
 
       init_options = {:use_pre_dialog => false, :skip_dialog_load => true, :request_type => :clone_to_vm, :initial_pass => true}
       p = MiqProvisionVirtWorkflow.new({}, user, init_options)
