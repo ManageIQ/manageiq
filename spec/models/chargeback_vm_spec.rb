@@ -35,8 +35,7 @@ describe ChargebackVm do
       :chargeback_rate_detail_net_io_used        => {:tiers  => [hourly_variable_tier_rate]},
       :chargeback_rate_detail_storage_used       => {:tiers  => [count_hourly_variable_tier_rate]},
       :chargeback_rate_detail_storage_allocated  => {:tiers  => [count_hourly_variable_tier_rate]},
-      :chargeback_rate_detail_fixed_compute_cost => {:tiers  => [hourly_variable_tier_rate],
-                                                     :detail => { :source => 'compute_1'} }
+      :chargeback_rate_detail_fixed_compute_cost => {:tiers  => [hourly_variable_tier_rate]}
     }
   end
 
