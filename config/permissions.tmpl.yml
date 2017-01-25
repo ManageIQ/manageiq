@@ -15,7 +15,6 @@
 - :svc
 - :vi
 - ems-type:ansible_tower_automation
-- ems-type:ansible_tower_configuration
 - ems-type:azure
 - ems-type:azure_network
 - ems-type:cinder
