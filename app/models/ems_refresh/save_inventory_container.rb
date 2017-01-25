@@ -397,16 +397,7 @@ module EmsRefresh::SaveInventoryContainer
   end
 
   def save_additional_attributes_inventory(entity, hashes, target = nil)
-    return if hashes.nil?
-
-    deletes = if target.kind_of?(ExtManagementSystem)
-                :use_association
-              else
-                []
-              end
-
-    save_inventory_multi(entity.additional_attributes, hashes, deletes, [:section, :name])
-    store_ids_for_new_records(entity.additional_attributes, hashes, [:section, :name])
+    save_custom_attribute_attribute_inventory(entity, :additional_attributes, hashes, target)
   end
 
   def save_custom_attribute_attribute_inventory(entity, attribute_name, hashes, target = nil)
