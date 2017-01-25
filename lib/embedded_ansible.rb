@@ -93,19 +93,20 @@ class EmbeddedAnsible
   private_class_method :configure_secret_key
 
   def self.generate_admin_password
-    miq_database.ansible_admin_password = SecureRandom.hex
+    miq_database.ansible_admin_password = generate_password
   end
   private_class_method :generate_admin_password
 
   def self.generate_rabbitmq_password
-    miq_database.ansible_rabbitmq_password = SecureRandom.hex
+    miq_database.ansible_rabbitmq_password = generate_password
   end
   private_class_method :generate_rabbitmq_password
 
   def self.generate_database_password
-    password = SecureRandom.hex
-    ApplicationRecord.connection.select_value("CREATE ROLE awx WITH LOGIN PASSWORD '#{password}'")
-    ApplicationRecord.connection.select_value("CREATE DATABASE awx OWNER awx ENCODING 'utf8'")
+    conn = ActiveRecord::Base.connection
+    password = generate_password
+    conn.select_value("CREATE ROLE awx WITH LOGIN PASSWORD #{conn.quote(password)}")
+    conn.select_value("CREATE DATABASE awx OWNER awx ENCODING 'utf8'")
     miq_database.ansible_database_password = password
   end
   private_class_method :generate_database_password
@@ -147,4 +148,9 @@ class EmbeddedAnsible
     MiqDatabase.first
   end
   private_class_method :miq_database
+
+  def self.generate_password
+    SecureRandom.base64(18).tr("+/", "-_")
+  end
+  private_class_method :generate_password
 end
