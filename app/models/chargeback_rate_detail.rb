@@ -12,6 +12,8 @@ class ChargebackRateDetail < ApplicationRecord
 
   delegate :rate_type, :to => :chargeback_rate, :allow_nil => true
 
+  delegate :metric_keys, :cost_keys, :to => :chargeable_field
+
   FORM_ATTRIBUTES = %i(description per_time per_unit metric group source metric chargeable_field_id).freeze
   PER_TIME_TYPES = {
     "hourly"  => _("Hourly"),
@@ -159,17 +161,6 @@ class ChargebackRateDetail < ApplicationRecord
 
   def gratis?
     chargeback_tiers.all?(&:gratis?)
-  end
-
-  def metric_keys
-    ["#{chargeable_field.rate_name}_metric", # metric value (e.g. Storage [Used|Allocated|Fixed])
-     "#{group}_metric"]     # total of metric's group (e.g. Storage Total)
-  end
-
-  def cost_keys
-    ["#{chargeable_field.rate_name}_cost",   # cost associated with metric (e.g. Storage [Used|Allocated|Fixed] Cost)
-     "#{group}_cost",       # cost associated with metric's group (e.g. Storage Total Cost)
-     'total_cost']
   end
 
   def metric_and_cost_by(consumption)

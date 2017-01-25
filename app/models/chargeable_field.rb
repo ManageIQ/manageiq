@@ -35,6 +35,17 @@ class ChargeableField < ApplicationRecord
     UNITS[metric] ? detail_measure.adjust(target_unit, UNITS[metric]) : 1
   end
 
+  def metric_keys
+    ["#{rate_name}_metric", # metric value (e.g. Storage [Used|Allocated|Fixed])
+     "#{group}_metric"]     # total of metric's group (e.g. Storage Total)
+  end
+
+  def cost_keys
+    ["#{rate_name}_cost",   # cost associated with metric (e.g. Storage [Used|Allocated|Fixed] Cost)
+     "#{group}_cost",       # cost associated with metric's group (e.g. Storage Total Cost)
+     'total_cost']
+  end
+
   def rate_name
     "#{group}_#{source}"
   end
