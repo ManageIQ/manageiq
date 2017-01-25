@@ -19,12 +19,24 @@ class MiqExpression::Tag
     model.arel_attribute(:id).in(ids)
   end
 
+  def numeric?
+    false
+  end
+
   def column_type
     :string
   end
 
-  def equ?(other)
+  def sub_type
+    column_type
+  end
+
+  def attribute_supported_by_sql?
+    false
+  end
+
+  def eql?(other)
     other.try(:model) == model && other.try(:namespace) == namespace
   end
-  alias == equ?
+  alias == eql?
 end

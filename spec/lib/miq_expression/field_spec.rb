@@ -185,6 +185,46 @@ RSpec.describe MiqExpression::Field do
     end
   end
 
+  describe "#virtual_attribute?" do
+    it "detects non-virtual" do
+      expect(MiqExpression::Field.parse("Vm-name")).not_to be_virtual_attribute
+    end
+
+    it "detects virtual" do
+      expect(MiqExpression::Field.parse("Vm-host_name")).to be_virtual_attribute
+    end
+
+    it "detects non-virtual through a relation" do
+      expect(MiqExpression::Field.parse("Host.vms-name")).not_to be_virtual_attribute
+    end
+
+    it "detects virtual through a relation" do
+      expect(MiqExpression::Field.parse("Host.vms-host_name")).to be_virtual_attribute
+    end
+  end
+
+  describe "#sub_type" do
+    it "detects :string" do
+      field = described_class.new(Vm, [], "name")
+      expect(field.sub_type).to eq(:string)
+    end
+
+    it "detects :integer" do
+      field = described_class.new(Vm, [], "id")
+      expect(field.sub_type).to eq(:integer)
+    end
+  end
+
+  describe "#numeric?" do
+    it "detects integer as numeric" do
+      expect(MiqExpression::Field.parse("Vm-id")).to be_numeric
+    end
+
+    it "detects string as non-numeric" do
+      expect(MiqExpression::Field.parse("Vm-name")).not_to be_numeric
+    end
+  end
+
   describe "#is_field?" do
     it "detects a valid field" do
       expect(MiqExpression::Field.is_field?("Vm-name")).to be_truthy

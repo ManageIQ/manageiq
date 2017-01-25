@@ -45,6 +45,10 @@ class MiqExpression::Field
     column_type == :string
   end
 
+  def numeric?
+    [:fixnum, :integer, :float].include?(column_type)
+  end
+
   def attribute_supported_by_sql?
     !custom_attribute_column? && target.attribute_supported_by_sql?(column)
   end
@@ -104,6 +108,14 @@ class MiqExpression::Field
     else
       target.type_for_attribute(column).type
     end
+  end
+
+  def virtual_attribute?
+    target.virtual_attribute?(column)
+  end
+
+  def sub_type
+    MiqReport::Formats.sub_type(column.to_sym) || column_type
   end
 
   def arel_attribute
