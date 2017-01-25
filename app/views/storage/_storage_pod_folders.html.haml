@@ -5,7 +5,7 @@
       %tbody
         - @folders.each do |f|
           %tr{:title => _("View '%{name}' Cluster") % {:name => f.name},
-            :onclick => "miqTreeActivateNode('storage_pod_tree', 'dsc_xx-#{to_cid(f.id)}');"}
+            :onclick => "miqTreeActivateNode('storage_pod_tree', 'xx-#{f.id}');"}
             %td.icon
               %img{:src => image_path('100/folder.png')}
             %td
