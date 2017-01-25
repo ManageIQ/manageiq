@@ -41,6 +41,10 @@ class EmbeddedAnsible
   end
 
   def self.stop
+    services.each { |service| LinuxAdmin::Service.new(service).stop }
+  end
+
+  def self.disable
     services.each { |service| LinuxAdmin::Service.new(service).stop.disable }
   end
 

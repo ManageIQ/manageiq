@@ -65,11 +65,21 @@ describe EmbeddedAnsible do
         expect(supervisord_service).to receive(:stop).and_return(supervisord_service)
         expect(rabbitmq_service).to receive(:stop).and_return(rabbitmq_service)
 
+        described_class.stop
+      end
+    end
+
+    describe ".disable" do
+      it "stops and disables all the services" do
+        expect(nginx_service).to receive(:stop).and_return(nginx_service)
+        expect(supervisord_service).to receive(:stop).and_return(supervisord_service)
+        expect(rabbitmq_service).to receive(:stop).and_return(rabbitmq_service)
+
         expect(nginx_service).to receive(:disable).and_return(nginx_service)
         expect(supervisord_service).to receive(:disable).and_return(supervisord_service)
         expect(rabbitmq_service).to receive(:disable).and_return(rabbitmq_service)
 
-        described_class.stop
+        described_class.disable
       end
     end
   end
