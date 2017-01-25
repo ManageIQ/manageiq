@@ -62,6 +62,8 @@ class ContainerTemplate < ApplicationRecord
     end
   end
 
+  # rollback_objects cannot catch children objects created during the template instantiation and therefore those objects
+  # will remain in the cluster.
   def rollback_objects(objects)
     objects.each { |obj| rollback_object(obj) }
   end
