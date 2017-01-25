@@ -312,7 +312,12 @@ class ApplicationController < ActionController::Base
   # Common method to show a standalone report
   def report_only
     @report_only = true                 # Indicate stand alone report for views
-
+    # Render error message if report doesn't exist
+    if params[:rr_id].nil? && @sb.fetch_path(:pages, :rr_id).nil?
+      add_flash(_("This report isn't generated yet. It cannot be rendered."), :error)
+      render :partial => "layouts/flash_msg"
+      return
+    end
     # Dashboard widget will send in report result id else, find report result in the sandbox
     search_id = params[:rr_id] ? params[:rr_id].to_i : @sb[:pages][:rr_id]
     rr = MiqReportResult.find(search_id)
