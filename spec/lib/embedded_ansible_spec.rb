@@ -73,4 +73,108 @@ describe EmbeddedAnsible do
       end
     end
   end
+
+  context "with an miq_databases row" do
+    let(:miq_database) { MiqDatabase.first }
+
+    before do
+      FactoryGirl.create(:miq_region, :region => ApplicationRecord.my_region_number)
+      MiqDatabase.seed
+      EvmSpecHelper.create_guid_miq_server_zone
+    end
+
+    describe ".configure" do
+      before do
+        expect(described_class).to receive(:configure_secret_key)
+        expect(described_class).to receive(:stop)
+      end
+
+      it "generates new passwords with no passwords set" do
+        expect(AwesomeSpawn).to receive(:run!) do |script_path, options|
+          params                  = options[:params]
+          inventory_file_contents = File.read(params[:i])
+
+          expect(script_path).to eq("/opt/ansible-installer/setup.sh")
+          expect(params[:e]).to eq("minimum_var_space=0")
+          expect(params[:k]).to eq("packages,migrations,supervisor")
+
+          new_admin_password  = miq_database.ansible_admin_password
+          new_rabbit_password = miq_database.ansible_rabbitmq_password
+          expect(new_admin_password).not_to be_nil
+          expect(new_rabbit_password).not_to be_nil
+          expect(inventory_file_contents).to include("admin_password='#{new_admin_password}'")
+          expect(inventory_file_contents).to include("rabbitmq_password='#{new_rabbit_password}'")
+        end
+
+        described_class.configure
+      end
+
+      it "uses the existing passwords when they are set in the database" do
+        miq_database.ansible_admin_password    = "adminpassword"
+        miq_database.ansible_rabbitmq_password = "rabbitpassword"
+
+        expect(AwesomeSpawn).to receive(:run!) do |script_path, options|
+          params                  = options[:params]
+          inventory_file_contents = File.read(params[:i])
+
+          expect(script_path).to eq("/opt/ansible-installer/setup.sh")
+          expect(params[:e]).to eq("minimum_var_space=0")
+          expect(params[:k]).to eq("packages,migrations,supervisor")
+
+          expect(inventory_file_contents).to include("admin_password='adminpassword'")
+          expect(inventory_file_contents).to include("rabbitmq_password='rabbitpassword'")
+        end
+
+        described_class.configure
+      end
+    end
+
+    describe ".start" do
+      it "runs the setup script with the correct args" do
+        miq_database.ansible_admin_password    = "adminpassword"
+        miq_database.ansible_rabbitmq_password = "rabbitpassword"
+
+        expect(AwesomeSpawn).to receive(:run!) do |script_path, options|
+          params                  = options[:params]
+          inventory_file_contents = File.read(params[:i])
+
+          expect(script_path).to eq("/opt/ansible-installer/setup.sh")
+          expect(params[:e]).to eq("minimum_var_space=0")
+          expect(params[:k]).to eq("packages,migrations")
+
+          expect(inventory_file_contents).to include("admin_password='adminpassword'")
+          expect(inventory_file_contents).to include("rabbitmq_password='rabbitpassword'")
+        end
+
+        described_class.start
+      end
+    end
+
+    describe ".configure_secret_key (private)" do
+      let(:key_file) { Tempfile.new("SECRET_KEY") }
+
+      before do
+        stub_const("EmbeddedAnsible::SECRET_KEY_FILE", key_file.path)
+      end
+
+      after do
+        key_file.unlink
+      end
+
+      it "sets a new key when there is no key in the database" do
+        expect(miq_database.ansible_secret_key).to be_nil
+        described_class.send(:configure_secret_key)
+        miq_database.reload
+        expect(miq_database.ansible_secret_key).to match(/\h+/)
+        expect(miq_database.ansible_secret_key).to eq(File.read(key_file.path))
+      end
+
+      it "writes the key when a key is in the database" do
+        miq_database.ansible_secret_key = "supasecret"
+        expect(miq_database).not_to receive(:ansible_secret_key=)
+        described_class.send(:configure_secret_key)
+        expect(File.read(key_file.path)).to eq("supasecret")
+      end
+    end
+  end
 end

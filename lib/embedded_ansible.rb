@@ -1,3 +1,4 @@
+require "securerandom"
 require "awesome_spawn"
 require "linux_admin"
 
@@ -5,6 +6,9 @@ class EmbeddedAnsible
   APPLIANCE_ANSIBLE_DIRECTORY = "/opt/ansible-installer".freeze
   ANSIBLE_ROLE                = "embedded_ansible".freeze
   SETUP_SCRIPT                = "#{APPLIANCE_ANSIBLE_DIRECTORY}/setup.sh".freeze
+  SECRET_KEY_FILE             = "/etc/tower/SECRET_KEY".freeze
+  CONFIGURE_EXCLUDE_TAGS      = "packages,migrations,supervisor".freeze
+  START_EXCLUDE_TAGS          = "packages,migrations".freeze
 
   def self.available?
     path = ENV["APPLIANCE_ANSIBLE_DIRECTORY"] || APPLIANCE_ANSIBLE_DIRECTORY
@@ -20,19 +24,13 @@ class EmbeddedAnsible
   end
 
   def self.configure
-    setup_params = {
-      :e => "minimum_var_space=0",
-      :k => "packages,migrations,supervisor"
-    }
-    AwesomeSpawn.run!(SETUP_SCRIPT, :params => setup_params)
+    configure_secret_key
+    run_setup_script(:e => "minimum_var_space=0", :k => CONFIGURE_EXCLUDE_TAGS)
+    stop
   end
 
   def self.start
-    setup_params = {
-      :e => "minimum_var_space=0",
-      :k => "packages,migrations"
-    }
-    AwesomeSpawn.run!(SETUP_SCRIPT, :params => setup_params)
+    run_setup_script(:e => "minimum_var_space=0", :k => START_EXCLUDE_TAGS)
   end
 
   def self.stop
@@ -42,4 +40,81 @@ class EmbeddedAnsible
   def self.services
     AwesomeSpawn.run!("source /etc/sysconfig/ansible-tower; echo $TOWER_SERVICES").output.split
   end
+
+  def self.run_setup_script(params)
+    with_inventory_file do |inventory_file_path|
+      AwesomeSpawn.run!(SETUP_SCRIPT, :params => params.merge(:i => inventory_file_path))
+    end
+  end
+  private_class_method :run_setup_script
+
+  def self.with_inventory_file
+    file = Tempfile.new("miq_inventory")
+    begin
+      file.write(inventory_file_contents)
+      file.close
+      yield(file.path)
+    ensure
+      file.unlink
+    end
+  end
+  private_class_method :with_inventory_file
+
+  def self.configure_secret_key
+    key = miq_database.ansible_secret_key
+    if key.present?
+      File.write(SECRET_KEY_FILE, key)
+    else
+      AwesomeSpawn.run!("/usr/bin/python -c \"import uuid; file('#{SECRET_KEY_FILE}', 'wb').write(uuid.uuid4().hex)\"")
+      miq_database.ansible_secret_key = File.read(SECRET_KEY_FILE)
+    end
+  end
+  private_class_method :configure_secret_key
+
+  def self.generate_admin_password
+    miq_database.ansible_admin_password = SecureRandom.base64
+  end
+  private_class_method :generate_admin_password
+
+  def self.generate_rabbitmq_password
+    miq_database.ansible_rabbitmq_password = SecureRandom.base64
+  end
+  private_class_method :generate_rabbitmq_password
+
+  def self.inventory_file_contents
+    admin_password    = miq_database.ansible_admin_password || generate_admin_password
+    rabbitmq_password = miq_database.ansible_rabbitmq_password || generate_rabbitmq_password
+    db_config         = Rails.configuration.database_configuration[Rails.env]
+
+    <<-EOF.strip_heredoc
+      [tower]
+      localhost ansible_connection=local
+
+      [database]
+
+      [all:vars]
+      admin_password='#{admin_password}'
+
+      pg_host='#{db_config["host"] || "localhost"}'
+      pg_port='#{db_config["port"] || "5432"}'
+
+      pg_database='awx'
+      pg_username='awx'
+      pg_password='#{db_config["password"]}'
+
+      rabbitmq_port=5672
+      rabbitmq_vhost=tower
+      rabbitmq_username=tower
+      rabbitmq_password='#{rabbitmq_password}'
+      rabbitmq_cookie=cookiemonster
+      rabbitmq_use_long_name=false
+      rabbitmq_enable_manager=false
+    EOF
+  end
+  private_class_method :inventory_file_contents
+
+  def self.miq_database
+    MiqDatabase.first
+  end
+  private_class_method :miq_database
 end
