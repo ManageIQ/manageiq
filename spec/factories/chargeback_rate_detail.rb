@@ -4,7 +4,6 @@ FactoryGirl.define do
     source  "unknown"
     chargeback_rate
     detail_currency { FactoryGirl.create(:chargeback_rate_detail_currency) }
-    detail_measure { FactoryGirl.create(:chargeback_rate_detail_measure) }
 
     transient do
       tiers_params nil
