@@ -18,6 +18,7 @@ def manageiq_plugin(plugin_name)
   end
 end
 
+manageiq_plugin "manageiq-automation_engine"
 manageiq_plugin "manageiq-content"
 manageiq_plugin "manageiq-providers-amazon"
 manageiq_plugin "manageiq-providers-azure"
