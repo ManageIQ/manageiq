@@ -172,11 +172,12 @@ Monthly @ 5.0 + 2.5 per Megabytes from 5.0 to Infinity")
   end
 
   it "#per_unit_display_without_measurements" do
+    expect(field.detail_measure).to be_nil
     [
       'cpu',       'Cpu',
       'ohms',      'Ohms'
     ].each_slice(2) do |per_unit, per_unit_display|
-      cbd = FactoryGirl.build(:chargeback_rate_detail, :per_unit => per_unit, :detail_measure => nil)
+      cbd = FactoryGirl.build(:chargeback_rate_detail, :per_unit => per_unit, :chargeable_field => field)
       expect(cbd.per_unit_display).to eq(per_unit_display)
     end
   end
@@ -185,10 +186,8 @@ Monthly @ 5.0 + 2.5 per Megabytes from 5.0 to Infinity")
     cbdm = FactoryGirl.create(:chargeback_rate_detail_measure,
                               :units_display => %w(B KB MB GB TB),
                               :units         => %w(bytes kilobytes megabytes gigabytes terabytes))
-
-    cbd  = FactoryGirl.build(:chargeback_rate_detail,
-                             :per_unit                          => 'megabytes',
-                             :chargeback_rate_detail_measure_id => cbdm.id)
+    field = FactoryGirl.create(:chargeable_field, :detail_measure => cbdm)
+    cbd = FactoryGirl.build(:chargeback_rate_detail, :per_unit => 'megabytes', :chargeable_field => field)
     expect(cbd.per_unit_display).to eq('MB')
   end
 

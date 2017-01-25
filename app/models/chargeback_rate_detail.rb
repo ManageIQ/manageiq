@@ -108,7 +108,8 @@ class ChargebackRateDetail < ApplicationRecord
   end
 
   def per_unit_display
-    detail_measure.nil? ? per_unit.to_s.capitalize : detail_measure.measures.key(per_unit)
+    measure = chargeable_field.detail_measure
+    measure.nil? ? per_unit.to_s.capitalize : measure.measures.key(per_unit)
   end
 
   # New method created in order to show the rates in a easier to understand way
