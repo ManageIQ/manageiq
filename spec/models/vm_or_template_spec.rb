@@ -637,6 +637,78 @@ describe VmOrTemplate do
     end
   end
 
+  describe ".cpu_usagemhz_rate_average_max_over_time_period (virtual_attribute)" do
+    let(:vm) { FactoryGirl.create :vm_vmware }
+
+    before do
+      EvmSpecHelper.local_miq_server
+      tp_id = TimeProfile.seed.id
+      FactoryGirl.create :metric_rollup_vm_daily,
+                         :with_data,
+                         :time_profile_id => tp_id,
+                         :resource_id     => vm.id
+      FactoryGirl.create :metric_rollup_vm_daily,
+                         :with_data,
+                         :cpu_usagemhz_rate_average => 10.0,
+                         :time_profile_id           => tp_id,
+                         :resource_id               => vm.id
+      FactoryGirl.create :metric_rollup_vm_daily,
+                         :with_data,
+                         :cpu_usagemhz_rate_average => 100.0,
+                         :time_profile_id           => tp_id,
+                         :resource_id               => vm.id
+    end
+
+    it "calculates in ruby" do
+      expect(vm.cpu_usagemhz_rate_average_max_over_time_period).to eq(100.0)
+    end
+
+    it "calculates in the database" do
+      expect(
+        virtual_column_sql_value(
+          VmOrTemplate,
+          "cpu_usagemhz_rate_average_max_over_time_period"
+        )
+      ).to eq(100.0)
+    end
+  end
+
+  describe ".derived_memory_used_max_over_time_period (virtual_attribute)" do
+    let(:vm) { FactoryGirl.create :vm_vmware }
+
+    before do
+      EvmSpecHelper.local_miq_server
+      tp_id = TimeProfile.seed.id
+      FactoryGirl.create :metric_rollup_vm_daily,
+                         :with_data,
+                         :time_profile_id => tp_id,
+                         :resource_id     => vm.id
+      FactoryGirl.create :metric_rollup_vm_daily,
+                         :with_data,
+                         :derived_memory_used => 10.0,
+                         :time_profile_id     => tp_id,
+                         :resource_id         => vm.id
+      FactoryGirl.create :metric_rollup_vm_daily,
+                         :with_data,
+                         :derived_memory_used => 1000.0,
+                         :time_profile_id     => tp_id,
+                         :resource_id         => vm.id
+    end
+
+    it "calculates in ruby" do
+      expect(vm.derived_memory_used_max_over_time_period).to eq(1000.0)
+    end
+
+    it "calculates in the database" do
+      expect(
+        virtual_column_sql_value(
+          VmOrTemplate,
+          "derived_memory_used_max_over_time_period"
+        )
+      ).to eq(1000.0)
+    end
+  end
+
   describe ".host_name" do
     let(:vm) { FactoryGirl.create(:vm_vmware, :host => host) }
     let(:host) { FactoryGirl.create(:host_vmware, :name => "our host") }
