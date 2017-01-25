@@ -1,5 +1,6 @@
 class ChargebackRateDetail < ApplicationRecord
   belongs_to :chargeback_rate
+  belongs_to :chargeable_field
   belongs_to :detail_measure, :class_name => "ChargebackRateDetailMeasure", :foreign_key => :chargeback_rate_detail_measure_id
   belongs_to :detail_currency, :class_name => "ChargebackRateDetailCurrency", :foreign_key => :chargeback_rate_detail_currency_id
   has_many :chargeback_tiers, :dependent => :destroy, :autosave => true
@@ -11,7 +12,7 @@ class ChargebackRateDetail < ApplicationRecord
 
   delegate :rate_type, :to => :chargeback_rate, :allow_nil => true
 
-  FORM_ATTRIBUTES = %i(description per_time per_unit metric group source metric).freeze
+  FORM_ATTRIBUTES = %i(description per_time per_unit metric group source metric chargeable_field_id).freeze
   PER_TIME_TYPES = {
     "hourly"  => _("Hourly"),
     "daily"   => _("Daily"),
@@ -248,6 +249,8 @@ class ChargebackRateDetail < ApplicationRecord
         detail_new.detail_measure = ChargebackRateDetailMeasure.find_by(:name => detail[:measure])
         detail_new.detail_currency = ChargebackRateDetailCurrency.find_by(:name => detail[:type_currency])
         detail_new.metric = detail[:metric]
+        chargeable_metric = detail[:metric] || "#{detail[:group]}_#{detail[:source]}"
+        detail_new.chargeable_field = ChargeableField.find_by(:metric => chargeable_metric)
 
         detail[:tiers].sort_by { |tier| tier[:start] }.each do |tier|
           detail_new.chargeback_tiers << ChargebackTier.new(tier.slice(*ChargebackTier::FORM_ATTRIBUTES))

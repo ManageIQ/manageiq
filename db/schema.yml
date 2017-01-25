@@ -182,6 +182,13 @@ bottleneck_events:
 - message
 - context_data
 - future
+chargeable_fields:
+- id
+- chargeback_rate_detail_measure_id
+- metric
+- group
+- source
+- description
 chargeback_rate_detail_currencies:
 - id
 - code
@@ -214,6 +221,7 @@ chargeback_rate_details:
 - updated_on
 - chargeback_rate_detail_measure_id
 - chargeback_rate_detail_currency_id
+- chargeable_field_id
 chargeback_rates:
 - id
 - guid

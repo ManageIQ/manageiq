@@ -64,6 +64,7 @@ class ChargebackRate < ApplicationRecord
   def self.seed
     # seeding the measure fixture before seed the chargeback rates fixtures
     seed_chargeback_rate_measure
+    ChargeableField.seed_fields # Cannot use seed order until we refactor seed_chargeback_rate_measure
     # seeding the currencies
     seed_chargeback_rate_detail_currency
     seed_chargeback_rate
@@ -129,6 +130,9 @@ class ChargebackRate < ApplicationRecord
         rates.each do |rate_detail|
           measure = ChargebackRateDetailMeasure.find_by(:name => rate_detail.delete(:measure))
           currency = ChargebackRateDetailCurrency.find_by(:name => rate_detail.delete(:type_currency))
+          metric = rate_detail[:metric] || "#{rate_detail[:group]}_#{rate_detail[:source]}"
+          field = ChargeableField.find_by(:metric => metric)
+          rate_detail[:chargeable_field_id] = field.id
           unless measure.nil?
             rate_detail[:chargeback_rate_detail_measure_id] = measure.id
           end
