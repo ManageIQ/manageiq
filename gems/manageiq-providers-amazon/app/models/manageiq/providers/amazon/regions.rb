@@ -46,6 +46,11 @@ module ManageIQ
           :hostname    => "ec2.ap-northeast-1.amazonaws.com",
           :description => "Asia Pacific (Tokyo)",
         },
+        "ca-central-1"   => {
+          :name        => "ca-central-1",
+          :hostname    => "ec2.ca-central-1.amazonaws.com",
+          :description => "Canada (Central)",
+        },
         "ap-northeast-2" => {
           :name        => "ap-northeast-2",
           :hostname    => "ec2.ap-northeast-2.amazonaws.com",
