@@ -429,7 +429,7 @@ describe "Rest API Collections" do
     end
 
     it "bulk query Rates" do
-      FactoryGirl.create(:chargeback_rate_detail)
+      FactoryGirl.create(:chargeback_rate_detail, :chargeable_field => FactoryGirl.build(:chargeable_field))
       test_collection_bulk_query(:rates, rates_url, ChargebackRateDetail)
     end
 
