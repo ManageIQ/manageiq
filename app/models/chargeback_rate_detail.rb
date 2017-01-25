@@ -5,8 +5,6 @@ class ChargebackRateDetail < ApplicationRecord
   belongs_to :detail_currency, :class_name => "ChargebackRateDetailCurrency", :foreign_key => :chargeback_rate_detail_currency_id
   has_many :chargeback_tiers, :dependent => :destroy, :autosave => true
 
-  default_scope { order(:group => :asc, :description => :asc) }
-
   validates :group, :source, :chargeback_rate, :presence => true
   validate :contiguous_tiers?
 
