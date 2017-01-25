@@ -40,7 +40,6 @@ include:
 include_for_find:
   :compliances: {}
   :operating_system: {}
-  :hardware: {}
   :tags: {}
 
 # Order of columns (from all tables)

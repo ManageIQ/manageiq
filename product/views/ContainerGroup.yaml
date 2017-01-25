@@ -37,7 +37,6 @@ include:
 
 # Included tables and columns for query performance
 include_for_find:
-  :container_project: {}
 
 # Order of columns (from all tables)
 col_order: 
