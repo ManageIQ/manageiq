@@ -107,6 +107,11 @@ describe MiqAlert do
         expect(@alert.miq_alert_statuses.find_by(:resource_type => @vm.class.base_class.name, :resource_id => @vm.id).result).to be_truthy
       end
 
+      it "cookie stamps the description on the alert" do
+        mas = @alert.miq_alert_statuses.where(:resource_type => @vm.class.base_class.name, :resource_id => @vm.id).first
+        expect(mas.description).to eq("VM Unregistered")
+      end
+
       it "should have a link from the Vm to the miq alert status" do
         expect(@vm.miq_alert_statuses.where(:miq_alert_id => @alert.id).count).to eq(1)
       end
