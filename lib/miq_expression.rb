@@ -448,28 +448,8 @@ class MiqExpression
       return result
     end
 
-    model = f.model
-    cur_incl = result[:include]
-
-    f.associations.each do |assoc|
-      assoc = assoc.to_sym
-      ref = model.reflection_with_virtual(assoc)
-      result[:virtual_reflection] = true if model.virtual_reflection?(assoc)
-
-      unless ref
-        result[:virtual_reflection] = true
-        result[:sql_support] = false
-        result[:virtual_column] = true
-        return result
-      end
-
-      unless result[:virtual_reflection]
-        cur_incl[assoc] ||= {}
-        cur_incl = cur_incl[assoc]
-      end
-
-      model = ref.klass
-    end
+    f.collect_reflections.map(&:name).inject(result[:include]) { |a, p| a[p] ||= {} }
+    result[:virtual_reflection] = !f.reflection_supported_by_sql?
 
     if f.column
       result[:data_type] = f.column_type
