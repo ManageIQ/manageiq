@@ -1,5 +1,0 @@
-module MiqAeMethodService
-  class MiqAeServiceManageIQ_Providers_EmbeddedAutomationManager_ConfigurationScript < MiqAeServiceManageIQ_Providers_AutomationManager_ConfigurationScript
-    expose :run
-  end
-end

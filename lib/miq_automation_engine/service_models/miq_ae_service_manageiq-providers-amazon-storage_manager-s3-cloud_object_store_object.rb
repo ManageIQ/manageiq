@@ -1,4 +1,0 @@
-module MiqAeMethodService
-  class MiqAeServiceManageIQ_Providers_Amazon_StorageManager_S3_CloudObjectStoreObject < MiqAeServiceCloudObjectStoreObject
-  end
-end
