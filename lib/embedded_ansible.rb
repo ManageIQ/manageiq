@@ -98,9 +98,18 @@ class EmbeddedAnsible
   end
   private_class_method :generate_rabbitmq_password
 
+  def self.generate_database_password
+    password = SecureRandom.hex
+    ApplicationRecord.connection.select_value("CREATE ROLE awx WITH LOGIN PASSWORD '#{password}'")
+    ApplicationRecord.connection.select_value("CREATE DATABASE awx OWNER awx ENCODING 'utf8'")
+    miq_database.ansible_database_password = password
+  end
+  private_class_method :generate_database_password
+
   def self.inventory_file_contents
     admin_password    = miq_database.ansible_admin_password || generate_admin_password
     rabbitmq_password = miq_database.ansible_rabbitmq_password || generate_rabbitmq_password
+    database_password = miq_database.ansible_database_password || generate_database_password
     db_config         = Rails.configuration.database_configuration[Rails.env]
 
     <<-EOF.strip_heredoc
@@ -117,7 +126,7 @@ class EmbeddedAnsible
 
       pg_database='awx'
       pg_username='awx'
-      pg_password='#{db_config["password"]}'
+      pg_password='#{database_password}'
 
       rabbitmq_port=5672
       rabbitmq_vhost=tower

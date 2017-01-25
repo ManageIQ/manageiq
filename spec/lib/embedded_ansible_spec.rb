@@ -80,7 +80,7 @@ describe EmbeddedAnsible do
       {
         :minimum_var_space => 0,
         :nginx_http_port   => described_class::NGINX_HTTP_PORT,
-        :nginx_https_port   => described_class::NGINX_HTTPS_PORT
+        :nginx_https_port  => described_class::NGINX_HTTPS_PORT
       }.to_json
     end
 
@@ -152,6 +152,7 @@ describe EmbeddedAnsible do
       end
 
       it "generates new passwords with no passwords set" do
+        expect(described_class).to receive(:generate_database_password).and_return("databasepassword")
         expect(AwesomeSpawn).to receive(:run!) do |script_path, options|
           params                  = options[:params]
           inventory_file_contents = File.read(params[:i])
@@ -166,6 +167,7 @@ describe EmbeddedAnsible do
           expect(new_rabbit_password).not_to be_nil
           expect(inventory_file_contents).to include("admin_password='#{new_admin_password}'")
           expect(inventory_file_contents).to include("rabbitmq_password='#{new_rabbit_password}'")
+          expect(inventory_file_contents).to include("pg_password='databasepassword'")
         end
 
         described_class.configure
@@ -174,6 +176,7 @@ describe EmbeddedAnsible do
       it "uses the existing passwords when they are set in the database" do
         miq_database.ansible_admin_password    = "adminpassword"
         miq_database.ansible_rabbitmq_password = "rabbitpassword"
+        miq_database.ansible_database_password = "databasepassword"
 
         expect(AwesomeSpawn).to receive(:run!) do |script_path, options|
           params                  = options[:params]
@@ -185,6 +188,7 @@ describe EmbeddedAnsible do
 
           expect(inventory_file_contents).to include("admin_password='adminpassword'")
           expect(inventory_file_contents).to include("rabbitmq_password='rabbitpassword'")
+          expect(inventory_file_contents).to include("pg_password='databasepassword'")
         end
 
         described_class.configure
@@ -195,6 +199,7 @@ describe EmbeddedAnsible do
       it "runs the setup script with the correct args" do
         miq_database.ansible_admin_password    = "adminpassword"
         miq_database.ansible_rabbitmq_password = "rabbitpassword"
+        miq_database.ansible_database_password = "databasepassword"
 
         expect(AwesomeSpawn).to receive(:run!) do |script_path, options|
           params                  = options[:params]
@@ -206,6 +211,7 @@ describe EmbeddedAnsible do
 
           expect(inventory_file_contents).to include("admin_password='adminpassword'")
           expect(inventory_file_contents).to include("rabbitmq_password='rabbitpassword'")
+          expect(inventory_file_contents).to include("pg_password='databasepassword'")
         end
 
         described_class.start
