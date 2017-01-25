@@ -6221,6 +6221,8 @@ resource_actions:
 - ae_instance
 - ae_message
 - ae_attributes
+- configuration_template_id
+- configuration_template_type
 resource_groups:
 - id
 - name

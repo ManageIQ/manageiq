@@ -1,5 +1,6 @@
 class ResourceAction < ApplicationRecord
   belongs_to :resource, :polymorphic => true
+  belongs_to :configuration_template, :polymorphic => true
   belongs_to :dialog
 
   serialize  :ae_attributes, Hash
