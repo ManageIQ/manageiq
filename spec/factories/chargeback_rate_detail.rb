@@ -78,14 +78,12 @@ FactoryGirl.define do
 
   factory :chargeback_rate_detail_cpu_used, :traits => [:used, :cpu], :parent => :chargeback_rate_detail do
     description "Used CPU in MHz"
-    metric      "cpu_usagemhz_rate_average"
     per_unit    "megahertz"
     chargeable_field { FactoryGirl.build(:chargeable_field_cpu_used) }
   end
 
   factory :chargeback_rate_detail_cpu_cores_used, :traits => [:used], :parent => :chargeback_rate_detail do
     description "Used CPU in Cores"
-    metric      "cpu_usage_rate_average"
     group       "cpu_cores"
     per_unit    "cores"
     chargeable_field { FactoryGirl.build(:chargeable_field_cpu_cores_used) }
@@ -94,7 +92,6 @@ FactoryGirl.define do
   factory :chargeback_rate_detail_cpu_allocated, :traits => [:allocated, :cpu, :daily],
                                                  :parent => :chargeback_rate_detail do
     description "Allocated CPU Count"
-    metric      "derived_vm_numvcpus"
     per_unit    "cpu"
     chargeable_field { FactoryGirl.build(:chargeable_field_cpu_allocated) }
   end
@@ -102,42 +99,36 @@ FactoryGirl.define do
   factory :chargeback_rate_detail_memory_allocated, :traits => [:allocated, :memory, :megabytes, :daily],
                                                     :parent => :chargeback_rate_detail do
     description "Allocated Memory in MB"
-    metric      "derived_memory_available"
     chargeable_field { FactoryGirl.build(:chargeable_field_memory_allocated) }
   end
 
   factory :chargeback_rate_detail_memory_used, :traits => [:used, :memory, :megabytes, :hourly],
                                                :parent => :chargeback_rate_detail do
     description "Used Memory in MB"
-    metric      "derived_memory_used"
     chargeable_field { FactoryGirl.build(:chargeable_field_memory_used) }
   end
 
   factory :chargeback_rate_detail_disk_io_used, :traits => [:used, :kbps], :parent => :chargeback_rate_detail do
     description "Used Disk I/O in KBps"
     group       "disk_io"
-    metric      "disk_usage_rate_average"
     chargeable_field { FactoryGirl.build(:chargeable_field_disk_io_used) }
   end
 
   factory :chargeback_rate_detail_net_io_used, :traits => [:used, :kbps], :parent => :chargeback_rate_detail do
     description "Used Network I/O in KBps"
     group       "net_io"
-    metric      "net_usage_rate_average"
     chargeable_field { FactoryGirl.build(:chargeable_field_net_io_used) }
   end
 
   factory :chargeback_rate_detail_storage_used, :traits => [:used, :storage_group, :gigabytes],
                                                 :parent => :chargeback_rate_detail do
     description "Used Disk Storage in Bytes"
-    metric      "derived_vm_used_disk_storage"
     chargeable_field { FactoryGirl.build(:chargeable_field_storage_used) }
   end
 
   factory :chargeback_rate_detail_storage_allocated, :traits => [:allocated, :storage_group, :gigabytes],
                                                      :parent => :chargeback_rate_detail do
     description "Allocated Disk Storage in Bytes"
-    metric      "derived_vm_allocated_disk_storage"
     chargeable_field { FactoryGirl.build(:chargeable_field_storage_allocated) }
   end
 
