@@ -5,7 +5,7 @@ RSpec.describe ChargeableField, :type => :model do
     let(:source) { 'used' }
     let(:group) { 'cpu' }
     let(:field) { FactoryGirl.build(:chargeable_field, :source => source, :group => group) }
-    subject { field.rate_name }
+    subject { field.send :rate_name }
     it { is_expected.to eq("#{group}_#{source}") }
   end
 end

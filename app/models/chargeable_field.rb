@@ -46,11 +46,11 @@ class ChargeableField < ApplicationRecord
      'total_cost']
   end
 
+  private
+
   def rate_name
     "#{group}_#{source}"
   end
-
-  private
 
   def used?
     source == 'used'
