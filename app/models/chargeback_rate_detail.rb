@@ -7,7 +7,7 @@ class ChargebackRateDetail < ApplicationRecord
 
   default_scope { order(:group => :asc, :description => :asc) }
 
-  validates :group, :source, :chargeback_rate, :chargeable_field, :presence => true
+  validates :chargeback_rate, :chargeable_field, :presence => true
   validate :contiguous_tiers?
 
   delegate :rate_type, :to => :chargeback_rate, :allow_nil => true
