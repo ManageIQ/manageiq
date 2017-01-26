@@ -2619,7 +2619,7 @@ describe MiqExpression do
       expression = {
         "AND" => [
           {">=" => {"field" => "EmsClusterPerformance-cpu_usagemhz_rate_average", "value" => "0"}},
-          {"<"  => {"field" => "Vm-name", "value" => "5"}}
+          {"<"  => {"field" => "Vm-name", "value" => 5}}
         ]
       }
       actual = described_class.new(expression).fields.sort_by(&:column)
@@ -2636,6 +2636,16 @@ describe MiqExpression do
           {"<"  => {"field" => "Vm.managed-favorite_color", "value" => "5"}}
         ]
       }
+      actual = described_class.new(expression).fields
+      expect(actual).to contain_exactly(
+        an_object_having_attributes(:model => EmsClusterPerformance, :column => "cpu_usagemhz_rate_average"),
+        an_object_having_attributes(:model => Vm, :namespace => "/managed/favorite_color")
+      )
+    end
+
+    it "extracts values" do
+      expression =
+        {">=" => {"field" => "EmsClusterPerformance-cpu_usagemhz_rate_average", "value" => "Vm.managed-favorite_color"}}
       actual = described_class.new(expression).fields
       expect(actual).to contain_exactly(
         an_object_having_attributes(:model => EmsClusterPerformance, :column => "cpu_usagemhz_rate_average"),
