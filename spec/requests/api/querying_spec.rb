@@ -656,6 +656,7 @@ describe "Querying" do
         'attributes'         => (Vm.attribute_names - Vm.virtual_attribute_names).sort.as_json,
         'virtual_attributes' => Vm.virtual_attribute_names.sort.as_json,
         'relationships'      => (Vm.reflections.keys | Vm.virtual_reflections.keys.collect(&:to_s)).sort,
+        'subcollections'     => Array(Api::ApiConfig.collections[:vms].subcollections).collect(&:to_s).sort,
         'data'               => {}
       }
       run_options(vms_url)
