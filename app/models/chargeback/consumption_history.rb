@@ -1,9 +1,5 @@
 class Chargeback
   class ConsumptionHistory
-    VIRTUAL_COL_USES = {
-      'v_derived_cpu_total_cores_used' => 'cpu_usage_rate_average'
-    }.freeze
-
     def self.for_report(cb_class, options)
       base_rollup = base_rollup_scope
       timerange = options.report_time_range
@@ -42,13 +38,7 @@ class Chargeback
         :parent_storage     => :tags,
         :parent_ems         => :tags)
                                 .select(*Metric::BASE_COLS).order('resource_id, timestamp')
-
-      perf_cols = MetricRollup.attribute_names
-      rate_cols = ChargebackRate.where(:default => true).flat_map do |rate|
-        rate.chargeback_rate_details.map(&:metric).select { |metric| perf_cols.include?(metric.to_s) }
-      end
-      rate_cols.map! { |x| VIRTUAL_COL_USES[x] || x }.flatten!
-      base_rollup.select(*rate_cols)
+      base_rollup.select(*ChargeableField.chargeable_cols_on_metric_rollup)
     end
     private_class_method :base_rollup_scope
   end
