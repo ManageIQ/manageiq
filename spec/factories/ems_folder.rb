@@ -8,11 +8,11 @@ FactoryGirl.define do
   factory :storage_cluster, :parent => :ems_folder, :class => "StorageCluster"
 
   factory :inventory_group,
-          :class  => "ManageIQ::Providers::ConfigurationManager::InventoryGroup",
+          :class  => "ManageIQ::Providers::AutomationManager::InventoryGroup",
           :parent => :ems_folder
 
   factory :inventory_root_group,
-          :class  => "ManageIQ::Providers::ConfigurationManager::InventoryRootGroup",
+          :class  => "ManageIQ::Providers::AutomationManager::InventoryRootGroup",
           :parent => :ems_folder
 
   #

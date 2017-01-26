@@ -76,6 +76,26 @@ FactoryGirl.define do
           :parent  => :ext_management_system do
   end
 
+  # Automation managers
+
+  factory :automation_manager,
+          :aliases => ["manageiq/providers/automation_manager"],
+          :class   => "ManageIQ::Providers::AutomationManager",
+          :parent  => :ext_management_system do
+  end
+
+  factory :external_automation_manager,
+          :aliases => ["manageiq/providers/external_automation_manager"],
+          :class   => "ManageIQ::Providers::ExternalAutomationManager",
+          :parent  => :automation_manager do
+  end
+
+  factory :embedded_automation_manager,
+          :aliases => ["manageiq/providers/embedded_automation_manager"],
+          :class   => "ManageIQ::Providers::EmbeddedAutomationManager",
+          :parent  => :automation_manager do
+  end
+
   factory :provisioning_manager,
           :aliases => ["manageiq/providers/provisioning_manager"],
           :class   => "ManageIQ::Providers::ProvisioningManager",
@@ -306,21 +326,28 @@ FactoryGirl.define do
           :class   => "ManageIQ::Providers::Foreman::ConfigurationManager",
           :parent  => :configuration_manager
 
-  factory :configuration_manager_ansible_tower,
-          :aliases => ["manageiq/providers/ansible_tower/configuration_manager"],
-          :class   => "ManageIQ::Providers::AnsibleTower::ConfigurationManager",
-          :parent  => :configuration_manager
-
   trait(:provider) do
     after(:build, &:create_provider)
   end
 
   trait(:configuration_script) do
     after(:create) do |x|
-      type = (x.type.split("::")[0..2] + ["ConfigurationManager", "ConfigurationScript"]).join("::")
+      type = (x.type.split("::")[0..2] + ["AutomationManager", "ConfigurationScript"]).join("::")
       x.configuration_scripts << FactoryGirl.create(:configuration_script, :type => type)
     end
   end
+
+  # Leaf classes for automation_manager
+
+  factory :automation_manager_ansible_tower,
+          :aliases => ["manageiq/providers/ansible_tower/automation_manager"],
+          :class   => "ManageIQ::Providers::AnsibleTower::AutomationManager",
+          :parent  => :external_automation_manager
+
+  factory :embedded_automation_manager_ansible,
+          :aliases => ["manageiq/providers/embedded_ansible/automation_manager"],
+          :class   => "ManageIQ::Providers::EmbeddedAnsible::AutomationManager",
+          :parent  => :embedded_automation_manager
 
   # Leaf classes for provisioning_manager
 

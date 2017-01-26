@@ -15,7 +15,7 @@ title: Ansible Tower Jobs
 name: Ansible Tower Job
 
 # Main DB table report is based on
-db: ManageIQ::Providers::AnsibleTower::ConfigurationManager::Job
+db: ManageIQ::Providers::AnsibleTower::AutomationManager::Job
 
 # Columns to fetch from the main table
 cols:

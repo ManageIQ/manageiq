@@ -8,6 +8,6 @@ FactoryGirl.define do
           :parent => :configured_system
 
   factory :configured_system_ansible_tower,
-          :class  => "ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem",
+          :class  => "ManageIQ::Providers::AnsibleTower::AutomationManager::ConfiguredSystem",
           :parent => :configured_system
 end

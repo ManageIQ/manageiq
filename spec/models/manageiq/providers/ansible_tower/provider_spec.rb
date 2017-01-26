@@ -25,7 +25,7 @@ describe ManageIQ::Providers::AnsibleTower::Provider do
     it "will remove all child objects" do
       provider = FactoryGirl.create(:provider_ansible_tower, :zone => FactoryGirl.create(:zone))
 
-      provider.configuration_manager.configured_systems = [
+      provider.automation_manager.configured_systems = [
         FactoryGirl.create(:configured_system, :computer_system =>
           FactoryGirl.create(:computer_system,
                              :operating_system => FactoryGirl.create(:operating_system),

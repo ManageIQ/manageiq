@@ -735,13 +735,13 @@ en:
       LdapServer:               LDAP Server
       LoadBalancer:             Load Balancer
       ManageIQ::Providers::BaseManager:                                     Provider
-      ManageIQ::Providers::AnsibleTower::ConfigurationManager:              Configuration Manager (Ansible Tower)
-      ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfigurationScript: Job Template (Ansible Tower)
+      ManageIQ::Providers::AnsibleTower::AutomationManager:                 Automation Manager (Ansible Tower)
+      ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationScript: Job Template (Ansible Tower)
       ManageIQ::Providers::Foreman::ConfigurationManager:                   Configuration Manager (Foreman)
       ManageIQ::Providers::ConfigurationManager:                            Configuration Manager
-      ManageIQ::Providers::AnsibleTower::ConfigurationManager::ConfiguredSystem: Configured System (Ansible Tower)
+      ManageIQ::Providers::AnsibleTower::AutomationManager::ConfiguredSystem: Configured System (Ansible Tower)
       ManageIQ::Providers::Foreman::ConfigurationManager::ConfiguredSystem: Configured System (Foreman)
-      ManageIQ::Providers::AnsibleTower::ConfigurationManager::Job:         Ansible Tower Job
+      ManageIQ::Providers::AnsibleTower::AutomationManager::Job:         Ansible Tower Job
       ManageIQ::Providers::CloudManager:                                    Cloud Provider
       ManageIQ::Providers::CloudManager::AuthKeyPair:                       Key Pair
       ManageIQ::Providers::CloudManager::Vm:                                Instance
