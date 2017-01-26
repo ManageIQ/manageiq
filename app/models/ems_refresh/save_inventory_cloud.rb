@@ -90,7 +90,7 @@ module EmsRefresh::SaveInventoryCloud
               end
 
     hashes.each do |h|
-      h[:cloud_tenants] = (h.fetch_path(:cloud_tenants) || []).compact.map { |x| x[:_object] }.uniq
+      h[:cloud_tenant_ids] = (h.delete(:cloud_tenants) || []).compact.map { |x| x[:id] }.uniq
     end
 
     save_inventory_multi(ems.flavors, hashes, deletes, [:ems_ref])
