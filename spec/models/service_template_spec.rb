@@ -83,36 +83,6 @@ describe ServiceTemplate do
     end
   end
 
-  context '#set_resource_actions' do
-    before do
-      @service_template = FactoryGirl.create(:service_template)
-      @dialog = FactoryGirl.create(:dialog)
-    end
-
-    it 'uses default resource actions' do
-      expect(ServiceTemplate).to receive(:default_provisioning_entry_point)
-        .with(@service_template.service_type).and_return('default')
-      expect(ServiceTemplate).to receive(:default_retirement_entry_point)
-      expect(ServiceTemplate).to receive(:default_reconfiguration_entry_point)
-
-      @service_template.set_resource_actions({}, @dialog)
-
-      expect(@service_template.resource_actions.count).to eq(3)
-    end
-
-    it 'uses selected resource actions' do
-      ae_endpoints = {
-        'provisioning' => 'foo_entrypoint',
-        'reconfigure'  => 'foo_reconfigure',
-        'retirement'   => 'foo_retire'
-      }
-
-      @service_template.set_resource_actions(ae_endpoints, @dialog)
-      expect(@service_template.resource_actions.pluck(:ae_instance))
-        .to eq(%w(foo_entrypoint foo_reconfigure foo_retire))
-    end
-  end
-
   context "#atomic?" do
     before(:each) do
       @st1 = FactoryGirl.create(:service_template)

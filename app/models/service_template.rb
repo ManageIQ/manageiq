@@ -296,36 +296,10 @@ class ServiceTemplate < ApplicationRecord
     nil
   end
 
-  def set_resource_actions(ae_endpoints, dialog)
-    ae_endpoints ||= {}
-    [
-      {:name      => 'Provision',
-       :param_key => 'provisioning',
-       :method    => 'default_provisioning_entry_point',
-       :args      => [service_type]},
-      {:name      => 'Reconfigure',
-       :param_key => 'reconfigure',
-       :method    => 'default_reconfiguration_entry_point',
-       :args      => []},
-      {:name      => 'Retirement',
-       :param_key => 'retirement',
-       :method    => 'default_retirement_entry_point',
-       :args      => []}
-    ].each do |action|
-      fqname = if ae_endpoints[action[:param_key]].nil?
-                 self.class.send(action[:method], *action[:args]) || ""
-               else
-                 ae_endpoints[action[:param_key]]
-               end
-      resource_actions.build(:action => action[:name], :fqname => fqname, :dialog => dialog)
-    end
-    save!
-  end
-
   def template_valid?
     validate_template[:valid]
   end
-  alias template_valid template_valid?
+  alias_method :template_valid, :template_valid?
 
   def template_valid_error_message
     validate_template[:message]

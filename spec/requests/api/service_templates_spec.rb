@@ -211,15 +211,15 @@ describe "Service Templates API" do
     end
   end
 
-  describe "Atomic Service Templates create" do
+  describe "Service Templates create" do
     let(:ems) { FactoryGirl.create(:ems_amazon) }
     let(:vm) { FactoryGirl.create(:vm_amazon, :ems_id => ems.id) }
     let(:flavor) { FactoryGirl.create(:flavor_amazon) }
     let(:dialog) { FactoryGirl.create(:miq_dialog_provision) }
+    let(:service_dialog) { FactoryGirl.create(:dialog) }
     let(:template_parameters) do
       {
         :name         => 'Atomic Service Template',
-        :type         => 'ServiceTemplate',
         :service_type => 'atomic',
         :prov_type    => 'amazon',
         :display      => 'false',
@@ -232,9 +232,13 @@ describe "Service Templates API" do
           :schedule_type           => ["immediately", "Immediately on Approval"],
           :instance_type           => [flavor.id, flavor.name],
           :src_ems_id              => [ems.id, ems.name],
-          :ae_endpoints            => {
-            :provisioning => ra1.fqname,
-            :retirement   => ra2.fqname
+          :provision               => {
+            :fqname    => ra1.fqname,
+            :dialog_id => service_dialog.id
+          },
+          :retirement              => {
+            :fqname    => ra2.fqname,
+            :dialog_id => service_dialog.id
           }
         }
       }
@@ -248,7 +252,7 @@ describe "Service Templates API" do
       expect(response).to have_http_status(:forbidden)
     end
 
-    it 'can create a single service template' do
+    it 'can create a single service template ' do
       api_basic_authorize collection_action_identifier(:service_templates, :create)
 
       expected = {
@@ -295,70 +299,38 @@ describe "Service Templates API" do
       expect(response.parsed_body).to include(expected)
     end
 
-    it 'can create a generic service template' do
+    it 'can create other resource types' do
       api_basic_authorize collection_action_identifier(:service_templates, :create)
-      template_params = {
-        'name'            => 'Generic Service Template',
-        'service_type'    => 'atomic',
-        'prov_type'       => 'generic',
-        'generic_subtype' => '',
-        'config_info'     => {}
-      }
-
-      expected = {
-        'results' => [a_hash_including(template_params.except('config_info'))]
-      }
-      expect do
-        run_post(service_templates_url, template_params)
-      end.to change(ServiceTemplate, :count).by(1)
-      expect(response).to have_http_status(:ok)
-      expect(response.parsed_body).to include(expected)
-    end
-
-    it 'can create a ServiceTemplateOrchestration' do
-      api_basic_authorize collection_action_identifier(:service_templates, :create)
-      orchestration_template = FactoryGirl.create(:orchestration_template)
-      ems = FactoryGirl.create(:ext_management_system)
-      template_params = {
-        'name'         => 'Orchestration Template',
-        'type'         => 'ServiceTemplateOrchestration',
-        'prov_type'    => 'generic_orchestration',
-        'service_type' => 'atomic',
-        'config_info'  => {
-          'template_id' => orchestration_template.id,
-          'manager_id'  => ems.id,
+      template = FactoryGirl.create(:orchestration_template)
+      template_parameters = {
+        :type         => 'ServiceTemplateOrchestration',
+        :name         => 'Orchestration Template',
+        :service_type => 'atomic',
+        :prov_type    => 'generic_orchestration',
+        :display      => 'false',
+        :description  => 'a description',
+        :config_info  => {
+          :template_id => template.id,
+          :manager_id  => ems.id,
+          :provision   => {
+            :fqname    => ra1.fqname,
+            :dialog_id => service_dialog.id
+          },
+          :retirement  => {
+            :fqname    => ra2.fqname,
+            :dialog_id => service_dialog.id
+          }
         }
       }
 
       expected = {
-        'results' => [a_hash_including(template_params.except('config_info'))]
+        'results' => [a_hash_including(
+          'type' => 'ServiceTemplateOrchestration'
+        )]
       }
       expect do
-        run_post(service_templates_url, template_params)
+        run_post(service_templates_url, template_parameters)
       end.to change(ServiceTemplateOrchestration, :count).by(1)
-      expect(response).to have_http_status(:ok)
-      expect(response.parsed_body).to include(expected)
-    end
-
-    it 'can create a ServiceTemplateAnsibleTower' do
-      api_basic_authorize collection_action_identifier(:service_templates, :create)
-      config_script = FactoryGirl.create(:configuration_script)
-      template_params = {
-        'name'         => 'Ansible Tower',
-        'type'         => 'ServiceTemplateAnsibleTower',
-        'prov_type'    => 'generic_ansible_tower',
-        'service_type' => 'atomic',
-        'config_info'  => {
-          'template_id' => config_script.id,
-        }
-      }
-
-      expected = {
-        'results' => [a_hash_including(template_params.except('config_info'))]
-      }
-      expect do
-        run_post(service_templates_url, template_params)
-      end.to change(ServiceTemplateAnsibleTower, :count).by(1)
       expect(response).to have_http_status(:ok)
       expect(response.parsed_body).to include(expected)
     end
