@@ -85,7 +85,7 @@ module Api
 
       def parse_tag_from_href(data)
         href = data["href"]
-        tag  = if href && href.match(%r{^.*/tags/#{CID_OR_ID_MATCHER}$})
+        tag  = if href && href.match(%r{^.*/tags/#{BaseController::CID_OR_ID_MATCHER}$})
                  klass = collection_class(:tags)
                  klass.find(from_cid(href.split('/').last))
                end
