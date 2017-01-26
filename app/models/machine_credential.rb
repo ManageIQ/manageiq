@@ -1,2 +1,0 @@
-class MachineCredential < Authentication
-end
