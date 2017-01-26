@@ -14,6 +14,7 @@ module ManageIQ::Providers::Kubernetes
     end
 
     def ems_inv_to_hashes(inventory)
+      get_additional_attributes(inventory)
       get_nodes(inventory)
       get_namespaces(inventory)
       get_resource_quotas(inventory)
@@ -125,6 +126,19 @@ module ManageIQ::Providers::Kubernetes
       end
     end
 
+    def get_additional_attributes(inventory)
+      inventory["additional_attributes"] ||= {}
+      process_collection(inventory["additional_attributes"], :additional_attributes) do |aa|
+        parse_additional_attribute(aa)
+      end
+
+      @data[:additional_attributes].each do |aa|
+        ats = @data_index.fetch_path(:additional_attributes, :by_node, aa[:node]) || []
+        ats << {:name => aa[:name], :value => aa[:value], :section => "additional_attributes"}
+        @data_index.store_path(:additional_attributes, :by_node, aa[:node], ats)
+      end
+    end
+
     def process_collection(collection, key, &block)
       @data[key] ||= []
       collection.each { |item| process_collection_item(item, key, &block) }
@@ -189,6 +203,18 @@ module ManageIQ::Providers::Kubernetes
       new_result[:lives_on_type] = host_instance.try(:type)
     end
 
+    def parse_additional_attribute(attribute)
+      # Assuming keys are in format "node/<hostname.example.com/key"
+      if attribute[0] && attribute[0].split("/").count == 3
+        { attribute[0].split("/").first.to_sym => attribute[0].split("/").second,
+          :name                                => attribute[0].split("/").last,
+          :value                               => attribute[1],
+          :section                             => "additional_attributes"}
+      else
+        {}
+      end
+    end
+
     def parse_node(node)
       new_result = parse_base_item(node)
 
@@ -233,6 +259,8 @@ module ManageIQ::Providers::Kubernetes
 
       new_result[:container_conditions] = parse_conditions(node)
       cross_link_node(new_result)
+
+      new_result[:additional_attributes] = @data_index.fetch_path(:additional_attributes, :by_node, node.metadata.name)
 
       new_result
     end
