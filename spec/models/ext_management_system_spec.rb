@@ -18,12 +18,14 @@ describe ExtManagementSystem do
 
   let(:all_types_and_descriptions) do
     {
+      "ansible_tower_automation"    => "Ansible Tower Automation",
       "ansible_tower_configuration" => "Ansible Tower Configuration",
       "azure"                       => "Azure",
       "azure_network"               => "Azure Network",
       "ec2"                         => "Amazon EC2",
       "ec2_network"                 => "Amazon EC2 Network",
       "ec2_ebs_storage"             => "Amazon EBS",
+      "embedded_ansible_automation" => "Embedded Ansible Automation",
       "s3"                          => "Amazon S3",
       "foreman_configuration"       => "Foreman Configuration",
       "foreman_provisioning"        => "Foreman Provisioning",

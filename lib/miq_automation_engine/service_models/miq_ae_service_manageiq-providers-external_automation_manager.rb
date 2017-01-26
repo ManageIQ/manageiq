@@ -1,0 +1,4 @@
+module MiqAeMethodService
+  class MiqAeServiceManageIQ_Providers_ExternalAutomationManager < MiqAeServiceManageIQ_Providers_AutomationManager
+  end
+end
