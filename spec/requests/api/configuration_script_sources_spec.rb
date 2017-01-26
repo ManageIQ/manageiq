@@ -10,8 +10,7 @@ RSpec.describe 'Configuration Script Sources API' do
         'count'     => 1,
         'subcount'  => 1,
         'name'      => 'configuration_script_sources',
-        'resources' =>
-                       [hash_including('href' => a_string_matching(configuration_script_sources_url(repository.id)))]
+        'resources' => [hash_including('href' => a_string_matching(configuration_script_sources_url(repository.id)))]
       }
       expect(response.parsed_body).to include(expected)
       expect(response).to have_http_status(:ok)

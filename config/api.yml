@@ -56,6 +56,20 @@
       :get:
       - :name: read
         :identifier: embedded_configuration_script_payload_view
+  :configuration_script_sources:
+    :description: Configuration Script Source
+    :options:
+    - :collection
+    :verbs: *g
+    :klass: ConfigurationScriptSource
+    :collection_actions:
+      :get:
+      - :name: read
+        :identifier: embedded_configuration_script_source_view
+    :resource_actions:
+      :get:
+      - :name: read
+        :identifier: embedded_configuration_script_source_view
   :auth:
     :description: REST API Authentication
     :options:
