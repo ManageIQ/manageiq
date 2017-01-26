@@ -300,7 +300,7 @@ describe ChargebackVm do
       let(:santiago_time_zone) { 'Santiago' }
 
       before do
-        Timecop.travel(Time.parse('2017-01-01 00:00:00Z').utc) # timezone: CLST -3 hours
+        Timecop.freeze("2017-01-01 01:00:00 +0100") # timezone: CLST -3 hours
 
         options[:ext_options][:tz] = santiago_time_zone
         options[:interval_size] = 12
@@ -324,11 +324,30 @@ describe ChargebackVm do
       let(:second_row_on_report) { subject.second }
 
       it "generates report with rows for Jun and July " do
+        puts "Time.now.to_s                                       " + Time.now.to_s
+        puts "Time.now.in_time_zone.to_s                          " + Time.now.in_time_zone.to_s
+        puts "Time.zone.now.to_s                                  " + Time.zone.now.to_s
+        puts "Time.now.in_time_zone(santiago_time_zone).to_s      " + Time.now.in_time_zone(santiago_time_zone).to_s
+        puts "Time.now.in_time_zone(santiago_time_zone).zone      " + Time.now.in_time_zone(santiago_time_zone).zone
         beginning_of_jun = metric_rollup_timestamp_jun.in_time_zone(santiago_time_zone).beginning_of_month
+        puts "metric_rollup_timestamp_jun.to_s                    " + metric_rollup_timestamp_jun.to_s
+        puts "metric_rollup_timestamp_jun.in_time_zone(santiago_time_zone)" + metric_rollup_timestamp_jun.in_time_zone(santiago_time_zone).to_s
+        puts "beginning_of_jun.to_s ^                             " + beginning_of_jun.to_s
+        puts "first_row_on_report.start_date.to_s                 " + first_row_on_report.start_date.to_s
+        puts "first_row_on_report.start_date.month.to_s           " + first_row_on_report.start_date.month.to_s
+        puts "Jun---"
+
         expect(first_row_on_report.start_date).to eq(beginning_of_jun)
         expect(first_row_on_report.start_date.month).to eq(6) # Jun
 
         beginning_of_july = metric_rollup_timestamp_july.in_time_zone(santiago_time_zone).beginning_of_month
+
+        puts "Jul MR" + beginning_of_july.to_s
+        puts "Jul" + metric_rollup_timestamp_july.to_s
+        puts "Jul" + second_row_on_report.start_date.to_s
+        puts "Jul" + second_row_on_report.start_date.month.to_s
+        puts "Jul---"
+
         expect(second_row_on_report.start_date).to eq(beginning_of_july)
         expect(second_row_on_report.start_date.month).to eq(7) # July
       end
