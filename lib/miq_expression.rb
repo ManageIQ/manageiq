@@ -1233,20 +1233,20 @@ class MiqExpression
 
   def self.reporting_available_fields(model, interval = nil)
     @reporting_available_fields ||= {}
-    if model.to_s == "VimPerformanceTrend"
-      @reporting_available_fields[model.to_s] ||= {}
-      @reporting_available_fields[model.to_s][interval.to_s] ||= VimPerformanceTrend.trend_model_details(interval.to_s)
-    elsif model.ends_with?("Performance")
-      @reporting_available_fields[model.to_s] ||= {}
-      @reporting_available_fields[model.to_s][interval.to_s] ||= MiqExpression.model_details(model, :include_model => false, :include_tags => true, :interval => interval)
-    elsif Chargeback.db_is_chargeback?(model)
-      cb_model = Chargeback.report_cb_model(model)
-      @reporting_available_fields[model.to_s] ||=
-        MiqExpression.model_details(model, :include_model => false, :include_tags => true).select { |c| c.last.ends_with?(*ReportController::Reports::Editor::CHARGEBACK_ALLOWED_FIELD_SUFFIXES) } +
-        MiqExpression.tag_details(cb_model, model, {}) + _custom_details_for(cb_model, {})
-    else
-      @reporting_available_fields[model.to_s] ||= MiqExpression.model_details(model, :include_model => false, :include_tags => true)
-    end
+    @reporting_available_fields[model.to_s] ||=
+      begin
+        if model.to_s == 'VimPerformanceTrend'
+          {interval.to_s => VimPerformanceTrend.trend_model_details(interval.to_s) }
+        elsif model.ends_with?('Performance')
+          {interval.to_s => MiqExpression.model_details(model, :include_model => false, :include_tags => true, :interval => interval) }
+        elsif Chargeback.db_is_chargeback?(model)
+          cb_model = Chargeback.report_cb_model(model)
+          MiqExpression.model_details(model, :include_model => false, :include_tags => true).select { |c| c.last.ends_with?(*ReportController::Reports::Editor::CHARGEBACK_ALLOWED_FIELD_SUFFIXES) } +
+            MiqExpression.tag_details(cb_model, model, {}) + _custom_details_for(cb_model, {})
+        else
+          MiqExpression.model_details(model, :include_model => false, :include_tags => true)
+        end
+      end
   end
 
   def self.build_relats(model, parent = {}, seen = [])
