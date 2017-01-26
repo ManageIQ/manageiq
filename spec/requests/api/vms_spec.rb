@@ -89,7 +89,7 @@ describe "Vms API" do
   context "Vm software subcollection" do
     let(:sw1) { FactoryGirl.create(:guest_application, :vm_or_template_id => vm.id, :name => "Word")  }
     let(:sw2) { FactoryGirl.create(:guest_application, :vm_or_template_id => vm.id, :name => "Excel") }
-    let(:vm_software_url)      { "#{vms_url(vm.id)}/software" }
+    let(:vm_software_url)      { "#{vms_url(vm.id)}/software"    }
     let(:sw1_url)              { "#{vm_software_url}/#{sw1.id}" }
     let(:sw2_url)              { "#{vm_software_url}/#{sw2.id}" }
     let(:vm_software_url_list) { [sw1_url, sw2_url] }

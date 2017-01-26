@@ -138,9 +138,9 @@ module Api
           r.except!(*ID_ATTRS) if rid
           processed += 1
           update_one_collection(is_subcollection, target, type, rid, r)
-        end
+        end.flatten
         raise BadRequestError, "No #{type} resources were specified for the #{action} action" if processed == 0
-        {"results" => results.flatten}
+        {"results" => results}
       end
     end
   end
