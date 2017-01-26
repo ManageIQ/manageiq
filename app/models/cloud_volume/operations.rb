@@ -5,8 +5,48 @@ module CloudVolume::Operations
   end
 
   module InstanceMethods
+    def attach_volume_queue(userid, server_ems_ref, device = nil)
+      task_opts = {
+        :action => "attaching Cloud Volume for user #{userid}",
+        :userid => userid
+      }
+      queue_opts = {
+        :class_name  => self.class.name,
+        :method_name => 'attach_volume',
+        :instance_id => id,
+        :role        => 'ems_operations',
+        :zone        => ext_management_system.my_zone,
+        :args        => [server_ems_ref, device]
+      }
+      MiqTask.generic_action_with_callback(task_opts, queue_opts)
+    end
+
+    def attach_volume(server_ems_ref, device = nil)
+      raw_attach_volume(server_ems_ref, device)
+    end
+
     def validate_attach_volume
       validate_unsupported(_("Attach Volume Operation"))
+    end
+
+    def detach_volume_queue(userid, server_ems_ref)
+      task_opts = {
+        :action => "detaching Cloud Volume for user #{userid}",
+        :userid => userid
+      }
+      queue_opts = {
+        :class_name  => self.class.name,
+        :method_name => 'detach_volume',
+        :instance_id => id,
+        :role        => 'ems_operations',
+        :zone        => ext_management_system.my_zone,
+        :args        => [server_ems_ref]
+      }
+      MiqTask.generic_action_with_callback(task_opts, queue_opts)
+    end
+
+    def detach_volume(server_ems_ref)
+      raw_detach_volume(server_ems_ref)
     end
 
     def validate_detach_volume

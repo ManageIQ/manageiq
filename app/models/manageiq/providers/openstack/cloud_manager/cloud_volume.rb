@@ -78,7 +78,6 @@ class ManageIQ::Providers::Openstack::CloudManager::CloudVolume < ::CloudVolume
       :class_name  => self.class.name,
       :method_name => 'backup_create',
       :instance_id => id,
-      :priority    => MiqQueue::HIGH_PRIORITY,
       :role        => 'ems_operations',
       :zone        => ext_management_system.my_zone,
       :args        => [options]
@@ -105,7 +104,6 @@ class ManageIQ::Providers::Openstack::CloudManager::CloudVolume < ::CloudVolume
       :class_name  => self.class.name,
       :method_name => 'backup_restore',
       :instance_id => id,
-      :priority    => MiqQueue::HIGH_PRIORITY,
       :role        => 'ems_operations',
       :zone        => ext_management_system.my_zone,
       :args        => [backup_id]
