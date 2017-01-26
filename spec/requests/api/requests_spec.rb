@@ -246,14 +246,17 @@ RSpec.describe "Requests API" do
       request.add_tag(t.name, t.children.first.name)
 
       api_basic_authorize action_identifier(:requests, :read, :resource_actions, :get)
-      run_get requests_url(request.id), :attributes => "workflow,v_allowed_tags,v_workflow_class"
+      run_get requests_url(request.id), :attributes => "workflow,v_allowed_tags,v_workflow_class,v_supports_pxe?,v_supports_iso?"
 
       expected_response = a_hash_including(
         "id"               => request.id,
         "workflow"         => a_hash_including("values"),
         "v_allowed_tags"   => [a_hash_including("children")],
         "v_workflow_class" => a_hash_including(
-          "instance_logger" => a_hash_including("klass" => request.workflow.class.to_s))
+          "instance_logger" => a_hash_including("klass" => request.workflow.class.to_s)
+        ),
+        "v_supports_pxe?"  => request.workflow.supports_pxe?,
+        "v_supports_iso?"  => request.workflow.supports_iso?
       )
 
       expect(response.parsed_body).to match(expected_response)
