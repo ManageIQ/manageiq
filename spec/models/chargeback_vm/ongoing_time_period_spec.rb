@@ -65,7 +65,6 @@ describe ChargebackVm do
     MiqRegion.seed
     ChargebackRateDetailMeasure.seed
     ChargeableField.seed
-    ChargebackRate.seed
     EvmSpecHelper.create_guid_miq_server_zone
     Timecop.travel(report_run_time)
     vm
