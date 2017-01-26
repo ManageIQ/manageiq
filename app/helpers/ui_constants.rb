@@ -447,8 +447,8 @@ module UiConstants
   # This set of assignments was created for miq_alerts
   ASSIGN_TOS["ExtManagementSystem"] = {
     "enterprise"                 => N_("The Enterprise"),
-    "ext_management_system"      => PostponedTranslation.new(N_("Selected Providers")),
-    "ext_management_system-tags" => PostponedTranslation.new(N_("Tagged Providers"))
+    "ext_management_system"      => N_("Selected Providers"),
+    "ext_management_system-tags" => N_("Tagged Providers")
   }
   ASSIGN_TOS["EmsCluster"] = {
     "ems_cluster"      => PostponedTranslation.new(N_("Selected %{tables}")) do
