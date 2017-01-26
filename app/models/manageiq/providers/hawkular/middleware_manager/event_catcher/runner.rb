@@ -20,7 +20,9 @@ class ManageIQ::Providers::Hawkular::MiddlewareManager::EventCatcher::Runner <
       'hawkular_datasource_remove.ok',
       'hawkular_deployment.ok',
       'hawkular_deployment_remove.ok',
-      'hawkular_event' # # general purpose detail level event
+      'hawkular_event', # general purpose detail level event
+      # filtered (not shown in timeline)
+      'hawkular_alert'
     ].to_set.freeze
   end
 
