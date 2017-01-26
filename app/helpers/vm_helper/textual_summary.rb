@@ -760,13 +760,13 @@ module VmHelper::TextualSummary
   def textual_miq_custom_attributes
     attrs = @record.miq_custom_attributes
     return nil if attrs.blank?
-    attrs.collect { |a| {:label => a.name, :value => a.value} }
+    attrs.sort_by(&:name).collect { |a| {:label => a.name, :value => a.value} }
   end
 
   def textual_ems_custom_attributes
     attrs = @record.ems_custom_attributes
     return nil if attrs.blank?
-    attrs.collect { |a| {:label => a.name, :value => a.value} }
+    attrs.sort_by(&:name).collect { |a| {:label => a.name, :value => a.value} }
   end
 
   def textual_compliance_history
