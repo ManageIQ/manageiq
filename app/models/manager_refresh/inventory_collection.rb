@@ -17,7 +17,9 @@ module ManagerRefresh
       @manager_ref                      = manager_ref || [:ems_ref]
       @custom_manager_uuid              = custom_manager_uuid
       @custom_db_finder                 = custom_db_finder
+      # FIXME: why does this default to [] ?
       @association                      = association || []
+      # FIXME: how can parent be nil? Shouldnt it be at least the ems?
       @parent                           = parent || nil
       @arel                             = arel
       @dependency_attributes            = dependency_attributes || {}
@@ -120,6 +122,10 @@ module ManagerRefresh
 
         actualize_dependencies(inventory_object)
       end
+    end
+
+    def build(hash)
+      self.<<(new_inventory_object(hash))
     end
 
     def object_index(object)

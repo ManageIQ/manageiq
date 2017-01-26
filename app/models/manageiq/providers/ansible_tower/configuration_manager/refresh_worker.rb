@@ -1,4 +1,6 @@
 class ManageIQ::Providers::AnsibleTower::ConfigurationManager::RefreshWorker < MiqEmsRefreshWorker
+  require_nested :Collector
+  require_nested :Parser
   require_nested :Runner
 
   def self.ems_class
