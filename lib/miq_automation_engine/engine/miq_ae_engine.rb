@@ -6,9 +6,6 @@ end
 
 module MiqAeEngine
   DEFAULT_ATTRIBUTES = %w( User::user MiqServer::miq_server object_name )
-  AE_ROOT_DIR            = File.expand_path(File.join(Rails.root,    'product/automate'))
-  AE_IMPORT_DIR          = File.expand_path(File.join(AE_ROOT_DIR,   'import'))
-  AE_DEFAULT_IMPORT_FILE = File.expand_path(File.join(AE_IMPORT_DIR, 'automate.xml'))
 
   def self.instantiate(uri, user)
     $miq_ae_logger.info("MiqAeEngine: Instantiating Workspace for URI=#{uri}")
