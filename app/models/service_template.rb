@@ -45,6 +45,21 @@ class ServiceTemplate < ApplicationRecord
   virtual_has_one :custom_actions, :class_name => "Hash"
   virtual_has_one :custom_action_buttons, :class_name => "Array"
 
+  def self.create_catalog_item(options, auth_user)
+    transaction do
+      create(options.except(:config_info)).tap do |service_template|
+        config_info = options[:config_info].except(:provision, :retirement, :reconfigure)
+
+        workflow_class = MiqProvisionWorkflow.class_for_source(config_info[:src_vm_id])
+        if workflow_class
+          request = workflow_class.new(config_info, auth_user).make_request(nil, config_info)
+          service_template.add_resource(request)
+        end
+        service_template.create_resource_actions(options[:config_info])
+      end
+    end
+  end
+
   def readonly?
     return true if super
     blueprint.try(:published?)
@@ -289,5 +304,40 @@ class ServiceTemplate < ApplicationRecord
 
   def provision_action
     resource_actions.find_by(:action => "Provision")
+  end
+
+  def create_resource_actions(ae_endpoints)
+    ae_endpoints ||= {}
+    [
+      {:name      => 'Provision',
+       :param_key => :provision,
+       :method    => 'default_provisioning_entry_point',
+       :args      => [service_type]},
+      {:name      => 'Reconfigure',
+       :param_key => :reconfigure,
+       :method    => 'default_reconfiguration_entry_point',
+       :args      => []},
+      {:name      => 'Retirement',
+       :param_key => :retirement,
+       :method    => 'default_retirement_entry_point',
+       :args      => []}
+    ].each do |action|
+      ae_endpoint = ae_endpoints[action[:param_key]]
+      next unless ae_endpoint
+      fqname = if ae_endpoint.empty?
+                 self.class.send(action[:method], *action[:args]) || ""
+               else
+                 ae_endpoint[:fqname]
+               end
+
+      build_options = {:action => action[:name], :fqname => fqname}
+      build_options.merge!(ae_endpoint.slice(:dialog,
+                                             :dialog_id,
+                                             :configuration_template,
+                                             :configuration_template_id,
+                                             :configuration_template_type))
+      resource_actions.build(build_options)
+    end
+    save!
   end
 end

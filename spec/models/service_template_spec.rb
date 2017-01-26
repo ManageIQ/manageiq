@@ -437,6 +437,56 @@ describe ServiceTemplate do
       expect(service_template.provision_action).to eq(provision_action)
     end
   end
+
+  describe '#create_catalog_item' do
+    let(:user) { FactoryGirl.create(:user_with_group) }
+    let(:ra1) { FactoryGirl.create(:resource_action, :action => 'Provision') }
+    let(:ra2) { FactoryGirl.create(:resource_action, :action => 'Retirement') }
+    let(:ems) { FactoryGirl.create(:ems_amazon) }
+    let(:vm) { FactoryGirl.create(:vm_amazon, :ext_management_system => ems) }
+    let(:flavor) { FactoryGirl.create(:flavor_amazon) }
+    let(:request_dialog) { FactoryGirl.create(:miq_dialog_provision) }
+    let(:service_dialog) { FactoryGirl.create(:dialog) }
+    let(:catalog_item_options) do
+      {
+        :name         => 'Atomic Service Template',
+        :service_type => 'atomic',
+        :prov_type    => 'amazon',
+        :display      => 'false',
+        :description  => 'a description',
+        :config_info  => {
+          :miq_request_dialog_name => request_dialog.name,
+          :placement_auto          => [true, 1],
+          :number_of_vms           => [1, '1'],
+          :src_vm_id               => [vm.id, vm.name],
+          :vm_name                 => vm.name,
+          :schedule_type           => ['immediately', 'Immediately on Approval'],
+          :instance_type           => [flavor.id, flavor.name],
+          :src_ems_id              => [ems.id, ems.name],
+          :provision               => {
+            :fqname    => ra1.fqname,
+            :dialog_id => service_dialog.id
+          },
+          :retirement              => {
+            :fqname    => ra2.fqname,
+            :dialog_id => service_dialog.id
+          }
+        }
+      }
+    end
+
+    it 'creates and returns a catalog item' do
+      service_template = ServiceTemplate.create_catalog_item(catalog_item_options, user)
+
+      expect(service_template.name).to eq('Atomic Service Template')
+      expect(service_template.service_resources.count).to eq(1)
+      expect(service_template.service_resources.first.resource_type).to eq('MiqRequest')
+      expect(service_template.dialogs.first).to eq(service_dialog)
+      expect(service_template.resource_actions.pluck(:action)).to include('Provision', 'Retirement')
+      expect(service_template.resource_actions.first.dialog).to eq(service_dialog)
+      expect(service_template.resource_actions.last.dialog).to eq(service_dialog)
+    end
+  end
 end
 
 def add_and_save_service(p, c)
