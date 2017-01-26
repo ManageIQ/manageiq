@@ -35,12 +35,16 @@ class MiqRequest < ApplicationRecord
   virtual_column  :stamped_on,           :type => :datetime, :uses => :miq_approvals
   virtual_column  :v_allowed_tags,       :type => :string,   :uses => :workflow
   virtual_column  :v_workflow_class,     :type => :string,   :uses => :workflow
+  virtual_column  :v_supports_pxe?,      :type => :string,   :uses => :workflow
+  virtual_column  :v_supports_iso?,      :type => :string,   :uses => :workflow
   virtual_column  :request_type_display, :type => :string
   virtual_column  :resource_type,        :type => :string
   virtual_column  :state,                :type => :string
 
   delegate :allowed_tags,                :to => :workflow,   :prefix => :v,  :allow_nil => true
   delegate :class,                       :to => :workflow,   :prefix => :v_workflow
+  delegate :supports_pxe?,               :to => :workflow,   :prefix => :v
+  delegate :supports_iso?,               :to => :workflow,   :prefix => :v
 
   virtual_has_one :workflow
 
