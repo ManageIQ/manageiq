@@ -1,8 +1,6 @@
 module Api
   class BaseController
     module Parser
-      include CompressedIds
-
       def parse_api_request
         @req = RequestAdapter.new(request, params)
       end
