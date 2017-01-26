@@ -15,7 +15,7 @@ title: InventoryGroup
 name: InventoryGroup
 
 # Main DB table report is based on
-db: ManageIQ::Providers::ConfigurationManager::InventoryGroup
+db: ManageIQ::Providers::AutomationManager::InventoryGroup
 
 # Columns to fetch from the main table
 cols:
