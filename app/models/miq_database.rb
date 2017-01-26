@@ -8,6 +8,7 @@ class MiqDatabase < ApplicationRecord
 
   include AuthenticationMixin
   include PasswordMixin
+  include AnsibleAuthentications
 
   virtual_has_many  :vmdb_tables
 
