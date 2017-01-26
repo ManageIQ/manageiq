@@ -8,7 +8,7 @@ describe ChargebackContainerProject do
 
     @project = FactoryGirl.create(:container_project, :name => "my project", :ext_management_system => @ems)
 
-    @cbr = FactoryGirl.create(:chargeback_rate, :rate_type => "compute")
+    @cbr = FactoryGirl.create(:chargeback_rate, :rate_type => "Compute")
     temp = {:cb_rate => @cbr, :object => @ems}
     ChargebackRate.set_assignments(:compute, [temp])
 
