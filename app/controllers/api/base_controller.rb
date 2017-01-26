@@ -4,7 +4,7 @@ module Api
   #
   Initializer.new.go
 
-  class BaseController < ActionController::Base
+  class BaseController < ActionController::API
     TAG_NAMESPACE = "/managed".freeze
 
     #
@@ -24,6 +24,7 @@ module Api
     include_concern 'Generic'
     include_concern 'Authentication'
     include CompressedIds
+    include ActionController::HttpAuthentication::Basic::ControllerMethods
     extend ErrorHandler::ClassMethods
 
     before_action :require_api_user_or_token, :except => [:handle_options_request]
