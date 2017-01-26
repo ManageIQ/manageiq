@@ -42,12 +42,12 @@
     - :subcollection
     :verbs: *g
     :klass: Account
-  :ansible_playbooks:
-    :description: Ansible Tower Playbooks
+  :configuration_script_payloads:
+    :description: Configuration Script Payloads
     :options:
     - :collection
     :verbs: *g
-    :klass: ManageIQ::Providers::AnsibleTower::ConfigurationManager::Playbook
+    :klass: ConfigurationScriptPayload
     :collection_actions:
       :get:
       - :name: read
