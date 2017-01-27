@@ -100,6 +100,8 @@ module Api
                         end
                       end
 
+        filter_value = from_cid(filter_value) if filter_attr =~ /[_]?id$/ && cid?(filter_value)
+
         if filter_value =~ /%|\*/
           filter_value = "/\\A#{Regexp.escape(filter_value)}\\z/"
           filter_value.gsub!(/%|\\\*/, ".*")
