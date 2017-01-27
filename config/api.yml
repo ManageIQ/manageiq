@@ -1572,17 +1572,24 @@
     :options:
     - :arbitrary_resource_path
     - :collection
-    :verbs: *g
+    :verbs: *gp
     :categories:
       - product
+      - server
     :collection_actions:
       :get:
       - :name: read
         :identifier: ops_settings
+      :post:
+      - :name: edit
+        :identifier: ops_settings_admin
     :resource_actions:
       :get:
       - :name: read
         :identifier: ops_settings
+      :post:
+      - :name: edit
+        :identifier: ops_settings_admin
   :software:
     :description: Software
     :options:

@@ -39,4 +39,18 @@ describe "Settings API" do
       expect(response).to have_http_status(:not_found)
     end
   end
+
+  context "Settings Update" do
+    it "tests editing server roles" do
+      api_basic_authorize action_identifier(:settings, :edit, :resource_actions, :post)
+      new_server_roles = "ems_metrics_collector,ems_metrics_coordinator,ems_metrics_processor"
+
+      run_post(
+        settings_url("server"),
+        gen_request(:edit, "role" => new_server_roles))
+
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body["server"]["role"]).to eq(new_server_roles)
+    end
+  end
 end

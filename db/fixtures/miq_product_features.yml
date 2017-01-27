@@ -2537,6 +2537,10 @@
     :feature_type: node
     :identifier: ops_settings
     :children:
+    - :name: Server Roles
+      :description: Server Roles
+      :feature_type: admin
+      :identifier: ops_settings_admin
     - :name: Analysis Profiles
       :description: Analysis Profiles
       :feature_type: node
