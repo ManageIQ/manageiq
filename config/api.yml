@@ -1583,6 +1583,29 @@
       :get:
       - :name: read
         :identifier: ops_settings
+  :snapshots:
+    :description: Snapshots
+    :options:
+    - :subcollection
+    :verbs: *gpd
+    :klass: Snapshot
+    :subcollection_actions:
+      :get:
+      - :name: read
+        :identifier: vm_snapshot_view
+      :post:
+      - :name: create
+        :identifier: vm_snapshot_add
+    :subresource_actions:
+      :get:
+      - :name: read
+        :identifier: vm_snapshot_view
+      :post:
+      - :name: delete
+        :identifier: vm_snapshot_delete
+      :delete:
+      - :name: delete
+        :identifier: vm_snapshot_delete
   :software:
     :description: Software
     :options:
@@ -1876,6 +1899,7 @@
     - :accounts
     - :custom_attributes
     - :software
+    - :snapshots
     :collection_actions:
       :get:
       - :name: read
