@@ -436,6 +436,7 @@ module Api
                                        collection.virtual_reflections.keys.collect(&:to_s)).sort
             }
           end
+        options[:subcollections] = Array(collection_config[resource].subcollections).sort
         options[:data] = data
         render :json => options
       end

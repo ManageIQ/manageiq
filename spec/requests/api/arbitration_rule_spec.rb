@@ -185,10 +185,12 @@ RSpec.describe 'Arbitration Rule API' do
 
       attributes = (ArbitrationRule.attribute_names - ArbitrationRule.virtual_attribute_names).sort.as_json
       reflections = (ArbitrationRule.reflections.keys | ArbitrationRule.virtual_reflections.keys.collect(&:to_s)).sort
+      subcollections = Array(Api::ApiConfig.collections[:arbitration_rules].subcollections).collect(&:to_s).sort
       expected = {
         'attributes'         => attributes,
         'virtual_attributes' => ArbitrationRule.virtual_attribute_names.sort.as_json,
         'relationships'      => reflections,
+        'subcollections'     => subcollections,
         'data'               => {
           'field_values' => ArbitrationRule.field_values
         }
