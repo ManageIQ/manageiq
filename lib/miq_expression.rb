@@ -1628,7 +1628,7 @@ class MiqExpression
         ret = []
         tg = self.class.parse_field_or_tag(val)
         ret << tg if tg
-        tg = self.class.parse_field_or_tag(expression["value"])
+        tg = self.class.parse_field_or_tag(expression["value"].to_s)
         ret << tg if tg
         ret
       else
