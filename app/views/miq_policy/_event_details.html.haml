@@ -31,7 +31,7 @@
           %table.table.table-striped.table-bordered.table-hover
             %tbody
               - @event_policies.each do |p|
-                - id = "xx-#{p.mode.downcase}_xx-#{p.mode.downcase}-#{p.towhat.downcase}_p-#{to_cid(p.id)}"
+                - id = "xx-#{p.mode.downcase}_xx-#{p.mode.downcase}-#{p.towhat.camelize(:lower)}_p-#{to_cid(p.id)}"
                 %tr{:title => _("Click to view Policy"),
                   :onclick => remote_function(:url => "/miq_policy/x_show/#{id}?accord=policy")}
                   %td.narrow

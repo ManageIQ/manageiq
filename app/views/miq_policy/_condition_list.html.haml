@@ -14,7 +14,7 @@
         %tbody
           - @conditions.each do |c|
             %tr{:title => _("View this Condition"),
-              :onclick => "miqTreeActivateNode('condition_tree', 'xx-#{c.towhat.downcase}_co-#{to_cid(c.id)}');"}
+              :onclick => "miqTreeActivateNode('condition_tree', 'xx-#{c.towhat.camelize(:lower)}_co-#{to_cid(c.id)}');"}
               %td.narrow
                 %ul.icons.list-unstyled
                   %li
