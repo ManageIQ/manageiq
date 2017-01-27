@@ -9,7 +9,7 @@ class Chargeback
     :tag,                  # like /managed/environment/prod (Mutually exclusive with :user)
     :report_cols,          # cols visible in the final report
     :provide_id,
-    :entity_id,            # 1/2/3.../all rails id of entity
+    :entity_id,            # 1/2/3.../all rails id of entity (ContainerProject or Vm)
     :service_id,
     :groupby,
     :groupby_tag,
