@@ -45,6 +45,7 @@ describe OrchestrationTemplateHot do
       :data_type     => "string",
       :default_value => "m1.small",
       :hidden        => false,
+      :required      => true
     )
     constraints = parameter.constraints
     expect(constraints.size).to eq(1)
@@ -64,6 +65,7 @@ describe OrchestrationTemplateHot do
       :data_type     => "string",  # HOT has type comma_delimited_list, but all examples use type string. Why?
       :default_value => "cron,diy,haproxy,mysql,nodejs,perl,php,postgresql,python,ruby",
       :hidden        => false,
+      :required      => true,
       :constraints   => [],
     )
   end
@@ -76,6 +78,7 @@ describe OrchestrationTemplateHot do
       :data_type     => "string",
       :default_value => "F18-x86_64-cfntools",
       :hidden        => false,
+      :required      => true
     )
     constraints = parameter.constraints
     expect(constraints.size).to eq(1)
@@ -95,6 +98,7 @@ describe OrchestrationTemplateHot do
       :data_type     => "number",
       :default_value => 50_000,
       :hidden        => false,
+      :required      => true
     )
     constraints = parameter.constraints
     expect(constraints.size).to eq(1)
@@ -114,7 +118,8 @@ describe OrchestrationTemplateHot do
       :description   => "Admin password",
       :data_type     => "string",
       :default_value => nil,
-      :hidden        => true
+      :hidden        => true,
+      :required      => true
     )
     constraints = parameter.constraints
     expect(constraints.size).to eq(3)
@@ -149,6 +154,7 @@ describe OrchestrationTemplateHot do
       :data_type     => "json",
       :default_value => nil,
       :hidden        => false,
+      :required      => true,
       :constraints   => [],
     )
   end
@@ -167,5 +173,22 @@ describe OrchestrationTemplateHot do
       template = OrchestrationTemplateHot.new(:content => ":-Invalid:\n-String")
       expect(template.validate_format).not_to be_nil
     end
+  end
+
+  describe '#deployment_options' do
+    it do
+      options = subject.deployment_options
+      assert_deployment_option(options[0], "tenant_name", :OrchestrationParameterAllowedDynamic, true)
+      assert_deployment_option(options[1], "stack_name", :OrchestrationParameterPattern, true)
+      assert_deployment_option(options[2], "stack_onfailure", :OrchestrationParameterAllowed, false)
+      assert_deployment_option(options[3], "stack_timeout", nil, false, 'integer')
+    end
+  end
+
+  def assert_deployment_option(option, name, constraint_type, required, data_type = 'string')
+    expect(option.name).to eq(name)
+    expect(option.data_type).to eq(data_type)
+    expect(option.required?).to eq(required)
+    expect(option.constraints[0]).to be_kind_of("OrchestrationTemplate::#{constraint_type}".constantize) if constraint_type
   end
 end

@@ -11,22 +11,29 @@ class OrchestrationTemplateCfn < OrchestrationTemplate
   def parameters
     raw_parameters = JSON.load(content)["Parameters"]
     (raw_parameters || {}).collect do |key, val|
-      parameter = OrchestrationTemplate::OrchestrationParameter.new(
+      OrchestrationTemplate::OrchestrationParameter.new(
         :name          => key,
         :label         => key.titleize,
         :data_type     => val['Type'],
         :default_value => val['Default'],
+        :required      => true,
         :description   => val['Description'],
         :hidden        => val['NoEcho'].nil? ? false : val['NoEcho'].downcase == 'true'
-      )
+      ).tap do |parameter|
+        add_allowed_values(parameter, val)
+        add_pattern(parameter, val)
+        add_length_constraint(parameter, val)
+        add_value_constraint(parameter, val)
+        apply_constraint_description(parameter, val)
+      end
+    end
+  end
 
-      add_allowed_values(parameter, val)
-      add_pattern(parameter, val)
-      add_length_constraint(parameter, val)
-      add_value_constraint(parameter, val)
-      apply_constraint_description(parameter, val)
-
-      parameter
+  def deployment_options(manager_class = nil)
+    if manager_class.nil? || manager_class.to_s == 'ManageIQ::Providers::Amazon::CloudManager'
+      super + aws_deployment_options
+    else
+      super + openstack_deployment_options
     end
   end
 
@@ -46,6 +53,99 @@ class OrchestrationTemplateCfn < OrchestrationTemplate
   end
 
   private
+
+  def aws_deployment_options
+    [onfailure_opt(true),
+     timeout_opt,
+     notifications_opt,
+     capabilities_opt,
+     resource_types_opt,
+     role_opt,
+     tags_opt,
+     policy_opt]
+  end
+
+  def openstack_deployment_options
+    [onfailure_opt(false), timeout_opt]
+  end
+
+  def onfailure_opt(can_delete)
+    choices = {'ROLLBACK' => 'Rollback', 'DO_NOTHING' => 'Do nothing'}
+    choices['DELETE'] = 'Delete stack' if can_delete
+
+    OrchestrationTemplate::OrchestrationParameter.new(
+      :name        => "stack_onfailure",
+      :label       => "On Failure",
+      :data_type   => "string",
+      :description => "Select what to do if stack creation failed",
+      :constraints => [OrchestrationTemplate::OrchestrationParameterAllowed.new(:allowed_values => choices)]
+    )
+  end
+
+  def timeout_opt
+    OrchestrationTemplate::OrchestrationParameter.new(
+      :name        => "stack_timeout",
+      :label       => "Timeout(minutes, optional)",
+      :data_type   => "integer",
+      :description => "Abort the creation if it does not complete in a proper time window"
+    )
+  end
+
+  def notifications_opt
+    OrchestrationTemplate::OrchestrationParameter.new(
+      :name        => "stack_notifications",
+      :label       => "Notification ARNs",
+      :data_type   => "text",
+      :description => "Notification SNS topic ARNs, one ARN per line"
+    )
+  end
+
+  def capabilities_opt
+    choices = {'' => '<default>', 'CAPABILITY_IAM' => 'CAPABILITY_IAM', 'CAPABILITY_NAMED_IAM' => 'CAPABILITY_NAMED_IAM'}
+    OrchestrationTemplate::OrchestrationParameter.new(
+      :name        => "stack_capabilities",
+      :label       => "Capabilities",
+      :data_type   => "string",
+      :description => "Choose one or both capabilities",
+      :constraints => [OrchestrationTemplate::OrchestrationParameterAllowed.new(:allowed_values => choices)]
+    )
+  end
+
+  def resource_types_opt
+    OrchestrationTemplate::OrchestrationParameter.new(
+      :name        => "stack_resource_types",
+      :label       => "Permmited resource types",
+      :data_type   => "text",
+      :description => "Grand permissions to selected types, one type per line"
+    )
+  end
+
+  def role_opt
+    OrchestrationTemplate::OrchestrationParameter.new(
+      :name        => "stack_role",
+      :label       => "Role ARN",
+      :data_type   => "string",
+      :description => "ARN of an IAM role used to create the stack"
+    )
+  end
+
+  def tags_opt
+    OrchestrationTemplate::OrchestrationParameter.new(
+      :name        => "stack_tags",
+      :label       => "AWS Tags",
+      :data_type   => "text",
+      :description => "Key-value pairs with format key1=>val1, one pair per line"
+    )
+  end
+
+  def policy_opt
+    OrchestrationTemplate::OrchestrationParameter.new(
+      :name        => "stack_policy",
+      :label       => "Policy",
+      :data_type   => "text",
+      :description => "URL of an policy file or the actual content of the policy"
+    )
+  end
 
   def add_allowed_values(parameter, val)
     return unless val.key? 'AllowedValues'
