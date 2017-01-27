@@ -720,11 +720,6 @@ class MiqExpression
     end
   end
 
-  def self.merge_includes(*incl_list)
-    return nil if incl_list.blank?
-    incl_list.compact.each_with_object({}) { |i, result| result.deep_merge!(i) }
-  end
-
   def self.get_cols_from_expression(exp, options = {})
     result = {}
     if exp.kind_of?(Hash)

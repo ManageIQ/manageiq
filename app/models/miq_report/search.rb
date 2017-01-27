@@ -30,8 +30,8 @@ module MiqReport::Search
     end
   end
 
-  def get_cached_page(ids, includes, includes2, options)
-    data         = db_class.where(:id => ids).includes(includes).includes(includes2).to_a
+  def get_cached_page(ids, includes, options)
+    data         = db_class.where(:id => ids).includes(includes).to_a
     targets_hash = data.index_by(&:id) if options[:targets_hash]
     build_table(data, db, options)
     return table, extras[:attrs_for_paging].merge(:paged_read_from_cache => true, :targets_hash => targets_hash)
@@ -82,12 +82,10 @@ module MiqReport::Search
     self.display_filter = options.delete(:display_filter_hash)  if options[:display_filter_hash]
     self.display_filter = options.delete(:display_filter_block) if options[:display_filter_block]
 
-    includes1 = get_include_for_find(include)
-    includes = MiqExpression.merge_includes(includes1, include_for_find)
-
+    includes = get_include_for_find
     self.extras ||= {}
     if extras[:target_ids_for_paging] && db_class.column_names.include?('id')
-      return get_cached_page(limited_ids(limit, offset), includes1, include_for_find, options)
+      return get_cached_page(limited_ids(limit, offset), includes, options)
     end
 
     order = get_order_info

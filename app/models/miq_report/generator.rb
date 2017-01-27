@@ -80,7 +80,11 @@ module MiqReport::Generator
     @table2class[table]
   end
 
-  def get_include_for_find(includes, klass = nil)
+  def get_include_for_find
+    (include_as_hash || {}).deep_merge(include_for_find || {}).presence
+  end
+
+  def include_as_hash(includes = include, klass = nil)
     if klass.nil?
       klass = db_class
       result = {}
@@ -98,17 +102,21 @@ module MiqReport::Generator
           assoc_klass = assoc_reflection.nil? ? nil : (assoc_reflection.options[:polymorphic] ? k : assoc_reflection.klass)
 
           if v.nil? || v["include"].blank?
-            result.merge!(k => {})
-          else
-            result.merge!(k => get_include_for_find(v["include"], assoc_klass)) if assoc_klass
+            result[k] = {}
+          elsif assoc_klass
+            result[k] = include_as_hash(v["include"], assoc_klass)
           end
 
-          v["columns"].each { |c| result[k].merge!(c.to_sym => {}) if assoc_klass.virtual_attribute?(c) } if assoc_klass && assoc_klass.respond_to?(:virtual_attribute?) && v["columns"]
+          if assoc_klass && assoc_klass.respond_to?(:virtual_attribute?) && v["columns"]
+            v["columns"].each do |c|
+              result[k][c.to_sym] = {} if assoc_klass.virtual_attribute?(c)
+            end
+          end
         end
       end
     elsif includes.kind_of?(Array)
       result ||= {}
-      includes.each { |i| result.merge!(i.to_sym => {}) }
+      includes.each { |i| result[i.to_sym] = {} }
     end
 
     result
@@ -177,7 +185,7 @@ module MiqReport::Generator
     interval = db_options.present? && db_options[:interval]
     custom_results_method = (db_options && db_options[:rpt_type]) ? "build_results_for_report_#{db_options[:rpt_type]}" : nil
 
-    includes = get_include_for_find(include)
+    includes = get_include_for_find
 
     load_custom_attributes
 
