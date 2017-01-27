@@ -26,18 +26,6 @@ cols:
 - authentication_status
 - total_configured_systems
 
-# Included tables (joined, has_one, has_many) and columns
-include:
-  zone:
-    columns:
-    - name
-  provider:
-    columns:
-    - url
-
-# Included tables and columns for query performance
-include_for_find:
-
 # Order of columns (from all tables)
 col_order:
 - name

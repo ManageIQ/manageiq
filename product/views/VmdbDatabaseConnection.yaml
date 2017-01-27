@@ -28,18 +28,6 @@ cols:
 - wait_time
 - command
 
-# Included tables (joined, has_one, has_many) and columns
-include:
-  zone:
-    columns:
-    - name
-  miq_server:
-    columns:
-    - name
-  miq_worker:
-    columns:
-    - type
-
 # Order of columns (from all tables)
 col_order:
 - zone.name

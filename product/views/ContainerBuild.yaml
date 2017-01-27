@@ -24,19 +24,6 @@ cols:
 - output_name
 - completion_deadline_seconds
 
-# Included tables (joined, has_one, has_many) and columns
-include:
-  container_project:
-    columns:
-    - name
-  ext_management_system:
-    columns:
-    - name
-
-
-# Included tables and columns for query performance
-include_for_find:
-
 # Order of columns (from all tables)
 col_order:
 - name
