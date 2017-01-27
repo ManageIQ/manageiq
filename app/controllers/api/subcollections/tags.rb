@@ -80,16 +80,7 @@ module Api
         return {:category => category, :name => name} if category && name
         return tag_path_to_spec(name) if name && name[0] == '/'
 
-        parse_tag_from_href(data)
-      end
-
-      def parse_tag_from_href(data)
-        href = data["href"]
-        tag  = if href && href.match(%r{^.*/tags/#{BaseController::CID_OR_ID_MATCHER}$})
-                 klass = collection_class(:tags)
-                 klass.find(from_cid(href.split('/').last))
-               end
-        tag.present? ? tag_path_to_spec(tag.name).merge(:id => tag.id) : {}
+        {}
       end
 
       def tag_path_to_spec(path)
