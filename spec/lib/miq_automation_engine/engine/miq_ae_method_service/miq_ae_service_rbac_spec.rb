@@ -1,6 +1,6 @@
 module MiqAeServiceModelSpec
   include MiqAeEngine
-  describe MiqAeMethodService::MiqAeServiceVmOrTemplate do
+  describe MiqAeMethodService::MiqAeServiceRbac do
     include Spec::Support::AutomationHelper
     before do
       vm11
