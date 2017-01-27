@@ -5498,6 +5498,10 @@
         :description: Display Timelines for VMs
         :feature_type: view
         :identifier: vm_timeline
+      - :name: VM's Chargeback
+        :description: Show Chargeback Preview for a VM
+        :feature_type: view
+        :identifier: vm_chargeback
     - :name: Operate
       :description: Perform Operations on VMs
       :feature_type: control
