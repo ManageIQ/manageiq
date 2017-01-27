@@ -43,7 +43,7 @@ module Api
         return klass.find_by(:guid => guid) if guid.present?
 
         href = data["href"]
-        href =~ %r{^.*/#{collection}/#{CID_OR_ID_MATCHER}$} ? klass.find(from_cid(href.split('/').last)) : {}
+        href =~ %r{^.*/#{collection}/#{BaseController::CID_OR_ID_MATCHER}$} ? klass.find(from_cid(href.split('/').last)) : {}
       end
 
       def policy_subcollection_action(ctype, policy)
