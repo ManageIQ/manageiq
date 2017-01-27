@@ -200,6 +200,29 @@
     :options:
     - :primary
     :verbs: *gd
+  :authentications:
+    :description: Authentications
+    :options:
+    - :collection
+    :verbs: *gpd
+    :klass: Authentication
+    :collection_actions:
+      :get:
+      - :name: read
+        :identifier: configuration_script_view
+      :post:
+      - :name: delete
+        :identifier: configuration_script_view
+    :resource_actions:
+      :get:
+      - :name: read
+        :identifier: configuration_script_view
+      :post:
+      - :name: delete
+        :identifier: configuration_script_view
+      :delete:
+      - :name: delete
+        :identifier: configuration_script_view
   :automate:
     :description: Automate
     :options:
