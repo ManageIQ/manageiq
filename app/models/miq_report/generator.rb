@@ -244,7 +244,7 @@ module MiqReport::Generator
       time_range = Metric::Helper.time_range_from_offset(interval, db_options[:start_offset], db_options[:end_offset])
 
       # Only build where clause from expression for hourly report. It will not work properly for daily because many values are rolled up from hourly.
-      exp_sql, exp_includes = conditions.to_sql(tz) unless conditions.nil? || klass.respond_to?(:instances_are_derived?)
+      exp_sql, exp_includes = conditions.to_sql unless conditions.nil? || klass.respond_to?(:instances_are_derived?)
 
       results = klass.with_interval_and_time_range(interval, time_range)
                      .where(where_clause).where(options[:where_clause]).where(exp_sql)

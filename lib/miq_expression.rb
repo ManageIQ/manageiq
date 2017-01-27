@@ -448,13 +448,12 @@ class MiqExpression
     clause
   end
 
-  def to_ruby(tz = nil)
-    tz ||= "UTC"
-    @ruby ||= self.class._to_ruby(@exp.deep_clone, @context_type, tz)
+  def to_ruby
+    @ruby ||= self.class._to_ruby(@exp.deep_clone, @context_type)
     @ruby.dup
   end
 
-  def self._to_ruby(exp, context_type, tz)
+  def self._to_ruby(exp, context_type)
     return exp unless exp.kind_of?(Hash)
 
     operator = exp.keys.first
@@ -467,13 +466,13 @@ class MiqExpression
       col_name = exp[operator]["field"]
       col_ruby, = operands2rubyvalue(operator, {"field" => col_name}, context_type)
       val = exp[operator]["value"]
-      clause = ruby_for_date_compare(col_ruby, col_type, tz, "<", val)
+      clause = ruby_for_date_compare(col_ruby, col_type, "<", val)
     when "after"
       col_type = get_col_type(exp[operator]["field"]) if exp[operator]["field"]
       col_name = exp[operator]["field"]
       col_ruby, = operands2rubyvalue(operator, {"field" => col_name}, context_type)
       val = exp[operator]["value"]
-      clause = ruby_for_date_compare(col_ruby, col_type, tz, nil, nil, ">", val)
+      clause = ruby_for_date_compare(col_ruby, col_type, nil, nil, ">", val)
     when "includes all"
       operands = operands2rubyvalue(operator, exp[operator], context_type)
       clause = "(#{operands[0]} & #{operands[1]}) == #{operands[1]}"
@@ -516,9 +515,9 @@ class MiqExpression
       end
       clause = operands.join(" #{normalize_ruby_operator(operator)} ")
     when "and", "or"
-      clause = "(" + exp[operator].collect { |operand| _to_ruby(operand, context_type, tz) }.join(" #{normalize_ruby_operator(operator)} ") + ")"
+      clause = "(" + exp[operator].collect { |operand| _to_ruby(operand, context_type) }.join(" #{normalize_ruby_operator(operator)} ") + ")"
     when "not", "!"
-      clause = normalize_ruby_operator(operator) + "(" + _to_ruby(exp[operator], context_type, tz) + ")"
+      clause = normalize_ruby_operator(operator) + "(" + _to_ruby(exp[operator], context_type) + ")"
     when "is null", "is not null", "is empty", "is not empty"
       operands = operands2rubyvalue(operator, exp[operator], context_type)
       clause = operands.join(" #{normalize_ruby_operator(operator)} ")
@@ -552,7 +551,7 @@ class MiqExpression
       end
       raise _("expression malformed,  must contain one of 'checkall', 'checkany', 'checkcount'") unless check
       check =~ /^check(.*)$/; mode = $1.downcase
-      clause = "<find><search>" + _to_ruby(exp[operator]["search"], context_type, tz) + "</search><check mode=#{mode}>" + _to_ruby(exp[operator][check], context_type, tz) + "</check></find>"
+      clause = "<find><search>" + _to_ruby(exp[operator]["search"], context_type) + "</search><check mode=#{mode}>" + _to_ruby(exp[operator][check], context_type) + "</check></find>"
     when "key exists"
       clause = operands2rubyvalue(operator, exp[operator], context_type)
     when "value exists"
@@ -563,9 +562,9 @@ class MiqExpression
       col_type = get_col_type(col_name)
       value = exp[operator]["value"]
       clause = if col_type == :date && !RelativeDatetime.relative?(value)
-                 ruby_for_date_compare(col_ruby, col_type, tz, "==", value)
+                 ruby_for_date_compare(col_ruby, col_type, "==", value)
                else
-                 ruby_for_date_compare(col_ruby, col_type, tz, ">=", value, "<=", value)
+                 ruby_for_date_compare(col_ruby, col_type, ">=", value, "<=", value)
                end
     when "from"
       col_name = exp[operator]["field"]
@@ -573,7 +572,7 @@ class MiqExpression
       col_type = get_col_type(col_name)
 
       start_val, end_val = exp[operator]["value"]
-      clause = ruby_for_date_compare(col_ruby, col_type, tz, ">=", start_val, "<=", end_val)
+      clause = ruby_for_date_compare(col_ruby, col_type, ">=", start_val, "<=", end_val)
     else
       raise _("operator '%{operator_name}' is not supported") % {:operator_name => operator}
     end
@@ -582,10 +581,9 @@ class MiqExpression
     clause
   end
 
-  def to_sql(tz = nil)
-    tz ||= "UTC"
+  def to_sql
     @pexp, attrs = preprocess_for_sql(@exp.deep_clone)
-    sql = to_arel(@pexp, tz).to_sql if @pexp.present?
+    sql = to_arel(@pexp).to_sql if @pexp.present?
     incl = includes_for_sql unless sql.blank?
     [sql, incl, attrs]
   end
@@ -793,13 +791,13 @@ class MiqExpression
     Metric::Rollup.excluded_col_for_expression?(col.to_sym)
   end
 
-  def lenient_evaluate(obj, tz = nil)
-    ruby_exp = to_ruby(tz)
+  def lenient_evaluate(obj)
+    ruby_exp = to_ruby
     ruby_exp.nil? || Condition.subst_matches?(ruby_exp, obj)
   end
 
-  def evaluate(obj, tz = nil)
-    ruby_exp = to_ruby(tz)
+  def evaluate(obj)
+    ruby_exp = to_ruby
     _log.debug("Expression before substitution: #{ruby_exp}")
     subst_expr = Condition.subst(ruby_exp, obj)
     _log.debug("Expression after substitution: #{subst_expr}")
@@ -1473,7 +1471,7 @@ class MiqExpression
 
       values_converted = values.collect do |v|
         return _("Date/Time value must not be blank") if value.blank?
-        v_cvt = RelativeDatetime.normalize(v, "UTC") rescue nil
+        v_cvt = RelativeDatetime.normalize(v) rescue nil
         return _("Value '%{value}' is not valid") % {:value => v} if v_cvt.nil?
         v_cvt
       end
@@ -1640,16 +1638,16 @@ class MiqExpression
   private
 
   # example:
-  #   ruby_for_date_compare(:updated_at, :date, tz, "==", Time.now)
+  #   ruby_for_date_compare(:updated_at, :date, "==", Time.now)
   #   # => "val=update_at; !val.nil? && val.to_date == '2016-10-05'"
   #
-  #   ruby_for_date_compare(:updated_at, :time, tz, ">", Time.yesterday, "<", Time.now)
+  #   ruby_for_date_compare(:updated_at, :time, ">", Time.yesterday, "<", Time.now)
   #   # => "val=update_at; !val.nil? && val.utc > '2016-10-04T13:08:00-04:00' && val.utc < '2016-10-05T13:08:00-04:00'"
 
-  def self.ruby_for_date_compare(col_ruby, col_type, tz, op1, val1, op2 = nil, val2 = nil)
+  def self.ruby_for_date_compare(col_ruby, col_type, op1, val1, op2 = nil, val2 = nil)
     val_with_cast = "val.#{col_type == :date ? "to_date" : "to_time"}"
-    val1 = RelativeDatetime.normalize(val1, tz, "beginning", col_type == :date) if val1
-    val2 = RelativeDatetime.normalize(val2, tz, "end",       col_type == :date) if val2
+    val1 = RelativeDatetime.normalize(val1, "beginning", col_type == :date) if val1
+    val2 = RelativeDatetime.normalize(val2, "end",       col_type == :date) if val2
     [
       "val=#{col_ruby}; !val.nil?",
       op1 ? "#{val_with_cast} #{op1} #{quote(val1, col_type)}" : nil,
@@ -1657,7 +1655,7 @@ class MiqExpression
     ].compact.join(" && ")
   end
 
-  def to_arel(exp, tz)
+  def to_arel(exp)
     operator = exp.keys.first
     field = Field.parse(exp[operator]["field"]) if exp[operator].kind_of?(Hash) && exp[operator]["field"]
     if(exp[operator].kind_of?(Hash) && exp[operator]["value"] && Field.is_field?(exp[operator]["value"]))
@@ -1671,14 +1669,14 @@ class MiqExpression
     when ">"
       field.gt(parsed_value)
     when "after"
-      value = RelativeDatetime.normalize(parsed_value, tz, "end", field.date?)
+      value = RelativeDatetime.normalize(parsed_value, "end", field.date?)
       field.gt(value)
     when ">="
       field.gteq(parsed_value)
     when "<"
       field.lt(parsed_value)
     when "before"
-      value = RelativeDatetime.normalize(parsed_value, tz, "beginning", field.date?)
+      value = RelativeDatetime.normalize(parsed_value, "beginning", field.date?)
       field.lt(value)
     when "<="
       field.lteq(parsed_value)
@@ -1695,7 +1693,7 @@ class MiqExpression
     when "and"
       operands = exp[operator].each_with_object([]) do |operand, result|
         next if operand.blank?
-        arel = to_arel(operand, tz)
+        arel = to_arel(operand)
         next if arel.blank?
         result << arel
       end
@@ -1703,14 +1701,14 @@ class MiqExpression
     when "or"
       operands = exp[operator].each_with_object([]) do |operand, result|
         next if operand.blank?
-        arel = to_arel(operand, tz)
+        arel = to_arel(operand)
         next if arel.blank?
         result << arel
       end
       first, *rest = operands
       rest.inject(first) { |lhs, rhs| lhs.or(rhs) }
     when "not", "!"
-      Arel::Nodes::Not.new(to_arel(exp[operator], tz))
+      Arel::Nodes::Not.new(to_arel(exp[operator]))
     when "is null"
       field.eq(nil)
     when "is not null"
@@ -1733,8 +1731,8 @@ class MiqExpression
       end
     when "is"
       value = parsed_value
-      start_val = RelativeDatetime.normalize(value, tz, "beginning", field.date?)
-      end_val = RelativeDatetime.normalize(value, tz, "end", field.date?)
+      start_val = RelativeDatetime.normalize(value, "beginning", field.date?)
+      end_val = RelativeDatetime.normalize(value, "end", field.date?)
 
       if !field.date? || RelativeDatetime.relative?(value)
         field.between(start_val..end_val)
@@ -1743,8 +1741,8 @@ class MiqExpression
       end
     when "from"
       start_val, end_val = parsed_value
-      start_val = RelativeDatetime.normalize(start_val, tz, "beginning", field.date?)
-      end_val   = RelativeDatetime.normalize(end_val, tz, "end", field.date?)
+      start_val = RelativeDatetime.normalize(start_val, "beginning", field.date?)
+      end_val   = RelativeDatetime.normalize(end_val, "end", field.date?)
       field.between(start_val..end_val)
     else
       raise _("operator '%{operator_name}' is not supported") % {:operator_name => operator}

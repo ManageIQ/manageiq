@@ -4,7 +4,7 @@ class MiqExpression::RelativeDatetime
     v.starts_with?("this", "last") || v.ends_with?("ago") || ["today", "yesterday", "now"].include?(v)
   end
 
-  def self.normalize(rel_time, tz, mode = "beginning", is_date = nil)
+  def self.normalize(rel_time, mode = "beginning", is_date = nil)
     # time_spec =
     #   <value> <interval> Ago
     #   "Today"
@@ -17,6 +17,7 @@ class MiqExpression::RelativeDatetime
     #   "This Month"
     #   "This Quarter"
 
+    tz = User.current_user.try(:get_timezone) || "UTC"
     rt = rel_time.downcase
 
     if rt.starts_with?("this", "last")
