@@ -100,4 +100,68 @@ describe ServiceTemplateOrchestration do
       end
     end
   end
+
+  describe '#create_catalog_item' do
+    let(:ra1) { FactoryGirl.create(:resource_action, :action => 'Provision') }
+    let(:ra2) { FactoryGirl.create(:resource_action, :action => 'Retirement') }
+    let(:service_dialog) { FactoryGirl.create(:dialog) }
+    let(:template) { FactoryGirl.create(:orchestration_template) }
+    let(:manager) { FactoryGirl.create(:ext_management_system) }
+    let(:catalog_item_options) do
+      {
+        :name         => 'Orchestration Template',
+        :service_type => 'atomic',
+        :prov_type    => 'generic_orchestration',
+        :display      => 'false',
+        :description  => 'a description',
+        :config_info  => {
+          :template_id => template.id,
+          :manager_id  => manager.id,
+          :provision   => {
+            :fqname    => ra1.fqname,
+            :dialog_id => service_dialog.id
+          },
+          :retirement  => {
+            :fqname    => ra2.fqname,
+            :dialog_id => service_dialog.id
+          }
+        }
+      }
+    end
+
+    it 'creates and returns an orchestration service template' do
+      service_template = ServiceTemplateOrchestration.create_catalog_item(catalog_item_options)
+      service_template.reload
+
+      expect(service_template.name).to eq('Orchestration Template')
+      expect(service_template.dialogs.first).to eq(service_dialog)
+      expect(service_template.orchestration_template).to eq(template)
+      expect(service_template.orchestration_manager).to eq(manager)
+      expect(service_template.resource_actions.pluck(:action)).to include('Provision', 'Retirement')
+    end
+
+    it 'requires both a template_id and manager_id' do
+      catalog_item_options[:config_info].delete(:template_id)
+
+      expect do
+        ServiceTemplateOrchestration.create_catalog_item(catalog_item_options)
+      end.to raise_error(StandardError, 'Must provide both template_id and manager_id or manager and template')
+    end
+
+    it 'requires both a template and a manager' do
+      catalog_item_options[:config_info] = { :manager => manager }
+
+      expect do
+        ServiceTemplateOrchestration.create_catalog_item(catalog_item_options)
+      end.to raise_error(StandardError, 'Must provide both template_id and manager_id or manager and template')
+    end
+
+    it 'accepts a manager and a template' do
+      catalog_item_options[:config_info] = { :manager => manager, :template => template }
+
+      service_template = ServiceTemplateOrchestration.create_catalog_item(catalog_item_options)
+      expect(service_template.orchestration_template).to eq(template)
+      expect(service_template.orchestration_manager).to eq(manager)
+    end
+  end
 end
