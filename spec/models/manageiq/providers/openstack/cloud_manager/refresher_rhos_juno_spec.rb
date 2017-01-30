@@ -37,11 +37,11 @@ describe ManageIQ::Providers::Openstack::CloudManager::Refresher do
   end
 
   context "when paired with a infrastructure provider" do
-    # assumes all cloud instances are on single host => dhcp-8-99-240.cloudforms.lab.eng.rdu2.redhat.com
+    # assumes all cloud instances are on single host accessible at the same address as @ems
     before(:each) do
       @cpu_speed = 2800
       @hardware = FactoryGirl.create(:hardware, :cpu_speed => @cpu_speed, :cpu_sockets => 2, :cpu_cores_per_socket => 4, :cpu_total_cores => 8)
-      @infra_host = FactoryGirl.create(:host_openstack_infra, :hardware => @hardware, :hypervisor_hostname => "dhcp-8-99-240.cloudforms.lab.eng.rdu2.redhat.com")
+      @infra_host = FactoryGirl.create(:host_openstack_infra, :hardware => @hardware, :hypervisor_hostname => @ems.openstack_handle.address)
       @provider = FactoryGirl.create(:provider_openstack, :name => "undercloud")
       @infra = FactoryGirl.create(:ems_openstack_infra_with_stack, :name => "undercloud", :provider => @provider)
       @infra.hosts << @infra_host

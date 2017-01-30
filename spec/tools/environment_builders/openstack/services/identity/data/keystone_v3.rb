@@ -12,6 +12,9 @@ module Openstack
             [{:name => "admin", :enabled => true},
              {:name => "EmsRefreshSpec-Project", :enabled => true},
              {:name => "EmsRefreshSpec-Project2", :enabled => true},
+             {:name => "EmsRefreshSpec-Project-Parent-Test-1", :enabled => true},
+             {:name => "EmsRefreshSpec-Project-Parent-Test-2", :enabled => true},
+             {:name => "EmsRefreshSpec-Project-Parent-Test-3", :enabled => true},
              {:name => "EmsRefreshSpec-Project-No-Admin-Role", :enabled => true}]
           end
 
