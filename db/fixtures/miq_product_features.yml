@@ -5171,12 +5171,12 @@
   - :name: Configured Systems
     :description: Everything under Configured Systems accordion
     :feature_type: node
-    :identifier: automation_manager_cs_filter_accord
+    :identifier: automation_manager_configured_system
     :children:
       - :name: View
         :description: View Configured Systems
         :feature_type: view
-        :identifier: automation_manager_cs_filter_accord_view
+        :identifier: automation_manager_configured_system_view
       - :name: Operate
         :description: Perform Operations on Configured Systems
         :feature_type: control
