@@ -43,6 +43,28 @@ describe ManageIQ::Providers::Openshift::ContainerManager::RefreshParser do
       )
     end
 
+    let(:image_without_dockerConfig) do
+      RecursiveOpenStruct.new(
+        :metadata            => {
+          :name => image_digest
+        },
+        :dockerImageMetadata => {
+        }
+      )
+    end
+
+    let(:image_without_environment_variables) do
+      RecursiveOpenStruct.new(
+        :metadata            => {
+          :name => image_digest
+        },
+        :dockerImageMetadata => {
+          :Config => {
+          }
+        }
+      )
+    end
+
     it "collects data from openshift images correctly" do
       expect(parser.send(:parse_openshift_image,
                          image_from_openshift).except(:registered_on)).to eq(
@@ -81,6 +103,44 @@ describe ManageIQ::Providers::Openshift::ContainerManager::RefreshParser do
                            :image_ref                => "docker-pullable://sha256:abcdefg",
                            :name                     => "sha256",
                            :tag                      => "abcdefg"
+                         )
+    end
+
+    it "handles openshift image without dockerConfig" do
+      expect(parser.send(:parse_openshift_image,
+                         image_without_dockerConfig).except(:registered_on)).to eq(
+                           :container_image_registry => nil,
+                           :digest                   => nil,
+                           :image_ref                => "docker-pullable://sha256:abcdefg",
+                           :name                     => "sha256",
+                           :tag                      => "abcdefg",
+                           :architecture             => nil,
+                           :author                   => nil,
+                           :docker_version           => nil,
+                           :size                     => nil,
+                           :labels                   => [],
+                         )
+    end
+
+    # check https://bugzilla.redhat.com/show_bug.cgi?id=1414508
+    it "handles openshift image without environment variables" do
+      expect(parser.send(:parse_openshift_image,
+                         image_without_environment_variables).except(:registered_on)).to eq(
+                           :container_image_registry => nil,
+                           :digest                   => nil,
+                           :image_ref                => "docker-pullable://sha256:abcdefg",
+                           :name                     => "sha256",
+                           :tag                      => "abcdefg",
+                           :architecture             => nil,
+                           :author                   => nil,
+                           :command                  => nil,
+                           :entrypoint               => nil,
+                           :docker_version           => nil,
+                           :exposed_ports            => {},
+                           :environment_variables    => {},
+                           :size                     => nil,
+                           :labels                   => [],
+                           :docker_labels            => []
                          )
     end
 
