@@ -11,6 +11,7 @@ class ManageIQ::Providers::AnsibleTower::AutomationManager < ManageIQ::Providers
            :authentication_status,
            :authentication_status_ok?,
            :connect,
+           :missing_credentials?,
            :verify_credentials,
            :with_provider_connection,
            :to => :provider
