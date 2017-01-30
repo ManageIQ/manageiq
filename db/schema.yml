@@ -86,7 +86,7 @@ audit_events:
 authentication_configuration_script_bases:
 - id
 - authentication_id
-- configuration_script_id
+- configuration_script_base_id
 authentications:
 - id
 - name
