@@ -42,6 +42,20 @@
     - :subcollection
     :verbs: *g
     :klass: Account
+  :configuration_script_payloads:
+    :description: Configuration Script Payloads
+    :options:
+    - :collection
+    :verbs: *g
+    :klass: ConfigurationScriptPayload
+    :collection_actions:
+      :get:
+      - :name: read
+        :identifier: configuration_script_view
+    :resource_actions:
+      :get:
+      - :name: read
+        :identifier: configuration_script_view
   :auth:
     :description: REST API Authentication
     :options:
