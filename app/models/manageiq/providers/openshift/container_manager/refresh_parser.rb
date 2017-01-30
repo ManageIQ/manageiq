@@ -165,7 +165,7 @@ module ManageIQ::Providers
       end
 
       def parse_env_variables(env_variables)
-        env_variables.each_with_object({}) do |var_def, h|
+        env_variables.to_a.each_with_object({}) do |var_def, h|
           name, value = var_def.split('=', 2)
           h[name] = value
         end
@@ -188,20 +188,23 @@ module ManageIQ::Providers
         docker_metadata = openshift_image[:dockerImageMetadata]
         if docker_metadata.present?
           new_result.merge!(
-            :architecture          => docker_metadata[:Architecture],
-            :author                => docker_metadata[:Author],
-            :command               => docker_metadata[:Config][:Cmd],
-            :entrypoint            => docker_metadata[:Config][:Entrypoint],
-            :docker_version        => docker_metadata[:DockerVersion],
-            :exposed_ports         => parse_exposed_ports(
-              docker_metadata[:Config][:ExposedPorts]),
-            :environment_variables => parse_env_variables(
-              docker_metadata[:Config][:Env]),
-            :size                  => docker_metadata[:Size],
-            :labels                => parse_labels(openshift_image),
-            :docker_labels         => parse_identifying_attributes(docker_metadata[:Config][:Labels],
-                                                                   'docker_labels', "openshift"),
+            :architecture   => docker_metadata[:Architecture],
+            :author         => docker_metadata[:Author],
+            :docker_version => docker_metadata[:DockerVersion],
+            :size           => docker_metadata[:Size],
+            :labels         => parse_labels(openshift_image)
           )
+          docker_config = docker_metadata[:Config]
+          if docker_config.present?
+            new_result.merge!(
+              :command               => docker_config[:Cmd],
+              :entrypoint            => docker_config[:Entrypoint],
+              :exposed_ports         => parse_exposed_ports(docker_config[:ExposedPorts]),
+              :environment_variables => parse_env_variables(docker_config[:Env]),
+              :docker_labels         => parse_identifying_attributes(docker_config[:Labels],
+                                                                     'docker_labels', "openshift")
+            )
+          end
         end
         new_result
       end
