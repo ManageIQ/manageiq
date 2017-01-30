@@ -15,9 +15,6 @@ class ManageIQ::Providers::Kubernetes::ContainerManager < ManageIQ::Providers::C
 
   include ManageIQ::Providers::Kubernetes::ContainerManagerMixin
 
-  DEFAULT_PORT = 6443
-  default_value_for :port, DEFAULT_PORT
-
   # This is the API version that we use and support throughout the entire code
   # (parsers, events, etc.). It should be explicitly selected here and not
   # decided by the user nor out of control in the defaults of kubeclient gem

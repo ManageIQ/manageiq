@@ -3,6 +3,16 @@ require 'MiqContainerGroup/MiqContainerGroup'
 module ManageIQ::Providers::Kubernetes::ContainerManagerMixin
   extend ActiveSupport::Concern
 
+  DEFAULT_PORT = 6443
+  included do
+    default_value_for :port do |provider|
+      # port is not a column on this table, it's delegated to endpoint.
+      # This may confuse `default_value_for` to apply when we do have a port;
+      # checking `provider.port` first prevents this from overriding it.
+      provider.port || provider.class::DEFAULT_PORT
+    end
+  end
+
   module ClassMethods
     def raw_api_endpoint(hostname, port, path = '')
       URI::HTTPS.build(:host => hostname, :port => port.presence.try(:to_i), :path => path)
