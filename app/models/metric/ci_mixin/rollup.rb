@@ -73,7 +73,7 @@ module Metric::CiMixin::Rollup
     if interval_name == 'daily' && time_profile.nil?
       raise ArgumentError, _("time_profile must be passed if interval name is 'daily'")
     end
-    time_profile_id = TimeProfile.extract_ids(time_profile)
+    time_profile = TimeProfile.extract_objects(time_profile)
     klass, meth = Metric::Helper.class_and_association_for_interval_name(interval_name)
 
     log_header = "[#{interval_name}] Rollup for #{self.class.name} name: [#{name}], id: [#{id}] for time: [#{time}]"
@@ -84,7 +84,7 @@ module Metric::CiMixin::Rollup
         :timestamp             => time,
         :capture_interval_name => (interval_name == 'historical' ? 'hourly' : interval_name)
       }
-      new_perf[:time_profile_id] = time_profile_id unless time_profile_id.nil?
+      new_perf[:time_profile_id] = time_profile.id if time_profile
 
       perf = nil
       Benchmark.realtime_block(:db_find_prev_perf) do
@@ -103,7 +103,7 @@ module Metric::CiMixin::Rollup
       when "hourly"
         Benchmark.realtime_block(:process_bottleneck) { BottleneckEvent.generate_future_events(self) }
       when "daily"
-        Benchmark.realtime_block(:process_operating_ranges) { generate_vim_performance_operating_ranges }
+        Benchmark.realtime_block(:process_operating_ranges) { generate_vim_performance_operating_range(time_profile) }
       end
 
       perf_rollup_to_parents(interval_name, time)

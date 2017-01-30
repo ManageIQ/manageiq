@@ -93,6 +93,10 @@ class TimeProfile < ApplicationRecord
     days.sort == ALL_DAYS && hours.sort == ALL_HOURS
   end
 
+  def default?
+    entire_tz? && tz_or_default == DEFAULT_TZ
+  end
+
   def rebuild_daily_metrics
     oldest_hourly = MetricRollup.select(:timestamp).where(:capture_interval_name => "hourly").order(:timestamp).first
     destroy_metric_rollups

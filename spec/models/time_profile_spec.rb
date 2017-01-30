@@ -11,6 +11,18 @@ describe TimeProfile do
     expect(t.tz).to be_nil
   end
 
+  describe "#default?" do
+    it "with a default profile" do
+      tp = TimeProfile.seed
+      expect(tp).to be_default
+    end
+
+    it "with a non-default profile" do
+      tp = FactoryGirl.create(:time_profile, :tz => "Hawaii")
+      expect(tp).to_not be_default
+    end
+  end
+
   context "will seed the database" do
     before(:each) do
       TimeProfile.seed
