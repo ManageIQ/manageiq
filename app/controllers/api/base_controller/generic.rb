@@ -55,7 +55,7 @@ module Api
       def add_resource(type, _id, data)
         assert_id_not_specified(data, "#{type} resource")
         klass = collection_class(type)
-        subcollection_data = collection_config.subcollections(type).each_with_object({}) do |sc, hash|
+        subcollection_data = ApiConfig.collections[type].subcollections.each_with_object({}) do |sc, hash|
           if data.key?(sc.to_s)
             hash[sc] = data[sc.to_s]
             data.delete(sc.to_s)

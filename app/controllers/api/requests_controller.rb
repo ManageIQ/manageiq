@@ -80,7 +80,7 @@ module Api
     private
 
     def authorize_request(typed_request_klass)
-      create_action = collection_config["requests"].collection_actions.post.detect { |a| a.name == "create" }
+      create_action = ApiConfig.collections["requests"].collection_actions.post.detect { |a| a.name == "create" }
       request_spec = create_action.identifiers.detect { |i| i.klass == typed_request_klass.name }
       raise BadRequestError, "Unsupported request class #{typed_request_klass}" if request_spec.blank?
 

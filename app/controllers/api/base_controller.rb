@@ -56,9 +56,5 @@ module Api
       headers['Access-Control-Allow-Headers'] = 'origin, content-type, authorization, x-auth-token'
       headers['Access-Control-Allow-Methods'] = 'GET, POST, PUT, DELETE, PATCH, OPTIONS'
     end
-
-    def collection_config
-      @collection_config ||= CollectionConfig.new
-    end
   end
 end

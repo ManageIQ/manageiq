@@ -32,7 +32,7 @@ module Api
     end
 
     def entrypoint_collections
-      collection_config.collections_with_description.sort.collect do |collection_name, description|
+      CollectionConfig.collections_with_description.sort.collect do |collection_name, description|
         {
           :name        => collection_name,
           :href        => collection_name,

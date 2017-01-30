@@ -26,7 +26,7 @@ module Api
       end
 
       def collection_class(type)
-        @collection_klasses[type.to_sym] || collection_config.klass(type)
+        @collection_klasses[type.to_sym] || ApiConfig.collections[type].klass
       end
 
       def put_resource(type, id)
@@ -88,7 +88,7 @@ module Api
         else
           target = "#{action}_resource"
           return target if respond_to?(target)
-          collection_config.custom_actions?(type) ? "custom_action_resource" : "undefined_api_method"
+          ApiConfig.collections[type].custom_actions? ? "custom_action_resource" : "undefined_api_method"
         end
       end
 
