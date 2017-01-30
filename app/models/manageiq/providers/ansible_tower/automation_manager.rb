@@ -2,7 +2,6 @@ class ManageIQ::Providers::AnsibleTower::AutomationManager < ManageIQ::Providers
   require_nested :ConfigurationScript
   require_nested :ConfiguredSystem
   require_nested :Refresher
-  require_nested :RefreshParser
   require_nested :RefreshWorker
   require_nested :Job
 
