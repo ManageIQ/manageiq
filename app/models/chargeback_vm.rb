@@ -111,7 +111,9 @@ class ChargebackVm < Chargeback
     @vms ||=
       begin
         # Find Vms by user or by tag
-        if @options[:owner]
+        if @options[:entity_id]
+          Vm.where(:id => @options[:entity_id])
+        elsif @options[:owner]
           user = User.find_by_userid(@options[:owner])
           if user.nil?
             _log.error("Unable to find user '#{@options[:owner]}'. Calculating chargeback costs aborted.")
@@ -137,7 +139,7 @@ class ChargebackVm < Chargeback
           end
           service.vms
         else
-          raise _("must provide options :owner or :tag")
+          raise _('Unable to find strategy for VM selection')
         end
       end
   end
