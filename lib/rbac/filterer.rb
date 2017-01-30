@@ -448,6 +448,9 @@ module Rbac
       elsif klass == MiqGroup && miq_group.try!(:self_service?)
         # Self Service users searching for groups only see their group
         scope.where(:id => miq_group.id)
+      elsif [MiqUserRole, MiqGroup].include?(klass) && (user_or_group = miq_group || user) &&
+            user_or_group.disallowed_roles
+        scope.with_allowed_roles_for(user_or_group)
       else
         scope
       end
