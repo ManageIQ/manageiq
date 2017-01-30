@@ -6,8 +6,8 @@ module Api
       #
 
       def index
-        klass = collection_class(@req.subject.to_sym)
-        res = collection_search(@req.subcollection?, @req.subject.to_sym, klass)
+        klass = collection_class(@req.subject)
+        res = collection_search(@req.subcollection?, @req.subject, klass)
         opts = {
           :name             => @req.subject,
           :is_subcollection => @req.subcollection?,
@@ -17,13 +17,13 @@ module Api
           :subcount         => res.length
         }
 
-        render_collection(@req.subject.to_sym, res, opts)
+        render_collection(@req.subject, res, opts)
       end
 
       def show
-        klass = collection_class(@req.subject.to_sym)
+        klass = collection_class(@req.subject)
         opts  = {:name => @req.subject, :is_subcollection => @req.subcollection?, :expand_actions => true}
-        render_resource(@req.subject.to_sym, resource_search(@req.subject_id, @req.subject.to_sym, klass), opts)
+        render_resource(@req.subject, resource_search(@req.subject_id, @req.subject, klass), opts)
       end
 
       def update
