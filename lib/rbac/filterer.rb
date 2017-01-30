@@ -51,6 +51,13 @@ module Rbac
       Storage
     )
 
+    # key: MiqUserRole#name - user's role
+    # value:
+    #   array - disallowed roles for the user's role
+    DISALLOWED_ROLES_FOR_USER_ROLE = {
+      'EvmRole-tenant_administrator' => %w(EvmRole-super_administrator)
+    }.freeze
+
     # key: descendant::klass
     # value:
     #   if it is a symbol/method_name:
