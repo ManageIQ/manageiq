@@ -10,14 +10,9 @@ module Metric::CiMixin::LongTermAverages
     end
   end
 
-  def generate_vim_performance_operating_ranges
-    # TODO: Support generation for all known TimeProfiles
-    generate_vim_performance_operating_range(TimeProfile.default_time_profile)
-  end
-
-  private
-
   def generate_vim_performance_operating_range(time_profile)
+    return unless time_profile.default? # TODO: Support all TimeProfiles
+
     vpor = vim_performance_operating_ranges
            .create_with(:days => Metric::LongTermAverages::AVG_DAYS)
            .find_or_create_by(:time_profile => time_profile)
@@ -25,10 +20,12 @@ module Metric::CiMixin::LongTermAverages
     vpor.save!
   end
 
+  private
+
   def averages_over_time_period(col, typ)
-    # TODO: Deal with choosing the right TimeProfile.  See #generate_vim_performance_operating_ranges
+    # TODO: Deal with choosing the right TimeProfile.  See #generate_vim_performance_operating_range
     #   For now just use the one vpor which is tied to the default TimeProfile.
-    vpor = vim_performance_operating_ranges.first
+    vpor = vim_performance_operating_ranges.detect(&:time_profile_id)
     vpor.nil? ? 0 : vpor.values_to_metrics["#{col}_#{typ}_over_time_period"]
   end
 end
