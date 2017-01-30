@@ -6031,39 +6031,68 @@
       :identifier: ems_object_storage_timeline
 
 # EmsPhysicalInfra
-- :name: Physical Infra Providers
-  :description: Everything under Physical Infra Providers
+- :name: Physical Infrastructure Providers
+  :description: Everything under Physical Infrastructure Providers
   :feature_type: node
   :identifier: ems_physical_infra
   :children:
   - :name: View
-    :description: View Physical Infra Providers
+    :description: View Physical Infrastructure Providers
     :feature_type: view
     :identifier: ems_physical_infra_view
     :children:
     - :name: List
-      :description: Display Lists of Physical Infra Providers
+      :description: Display List of Physical Infrastructure Providers
       :feature_type: view
       :identifier: ems_physical_infra_show_list
     - :name: Show
-      :description: Display Individual Physical Infra Providers
+      :description: Display Individual Physical Infrastructure Providers
       :feature_type: view
       :identifier: ems_physical_infra_show
+    - :name: Timeline
+      :description: Display Timelines for Physical Infrastructure Providers
+      :feature_type: view
+      :identifier: ems_physical_infra_timeline
+  - :name: Operate
+    :description: Perform Operations on Physical Infrastructure Providers
+    :feature_type: control
+    :identifier: ems_physical_infra_control
+    :children:
+    - :name: Edit Tags
+      :description: Edit Tags of Physical Infrastructure Providers
+      :feature_type: control
+      :identifier: ems_physical_infra_tag
+    - :name: Manage Policies
+      :description: Manage Policies of Physical Infrastructure Providers
+      :feature_type: control
+      :identifier: ems_physical_infra_protect
+    - :name: Check Compliance
+      :description: Check Compliance of Last Known Configuration
+      :feature_type: control
+      :identifier: ems_physical_infra_check_compliance
+    - :name: Refresh
+      :description: Refresh Physical Infrastructure Providers
+      :feature_type: control
+      :identifier: ems_physical_infra_refresh
+    - :name: Re-check Authentication Status
+      :description: Re-check Authentication Status of Physical Infrastructure Providers
+      :feature_type: control
+      :identifier: ems_physical_infra_recheck_auth_status
   - :name: Modify
-    :description: Modify Physical Infra Providers
+    :description: Modify Physical Infrastructure Providers
     :feature_type: admin
     :identifier: ems_physical_infra_admin
     :children:
     - :name: Remove
-      :description: Remove Physical Infra Provider
+      :description: Remove Physical Infrastructure Providers
       :feature_type: admin
       :identifier: ems_physical_infra_delete
     - :name: Edit
-      :description: Edit a Physical Infra Provider
+      :description: Edit a Physical Infrastructure Provider
       :feature_type: admin
       :identifier: ems_physical_infra_edit
     - :name: Add
-      :description: Add a Physical Infra Provider
+      :description: Add a Physical Infrastructure Provider
       :feature_type: admin
       :identifier: ems_physical_infra_new
 
