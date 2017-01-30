@@ -25,7 +25,7 @@ module Metric::CiMixin::LongTermAverages
   def averages_over_time_period(col, typ)
     # TODO: Deal with choosing the right TimeProfile.  See #generate_vim_performance_operating_range
     #   For now just use the one vpor which is tied to the default TimeProfile.
-    vpor = vim_performance_operating_ranges.first
+    vpor = vim_performance_operating_ranges.detect(&:time_profile_id)
     vpor.nil? ? 0 : vpor.values_to_metrics["#{col}_#{typ}_over_time_period"]
   end
 end
