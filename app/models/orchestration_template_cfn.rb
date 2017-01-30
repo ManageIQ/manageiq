@@ -31,8 +31,7 @@ class OrchestrationTemplateCfn < OrchestrationTemplate
   end
 
   def resources
-    raw_resources = JSON.parse(content)["Resources"]
-    (raw_resources || {}).collect do |key, val|
+    @resources ||= (JSON.parse(content)["Resources"] || {}).collect do |key, val|
       OrchestrationTemplate::OrchestrationResource.new(
         :name => key,
         :type => val['Type']
