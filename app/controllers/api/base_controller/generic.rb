@@ -5,8 +5,25 @@ module Api
       # Primary Methods
       #
 
+      def index
+        klass = collection_class(@req.subject)
+        res = collection_search(@req.subcollection?, @req.subject, klass)
+        opts = {
+          :name             => @req.subject,
+          :is_subcollection => @req.subcollection?,
+          :expand_actions   => true,
+          :count            => klass.count,
+          :expand_resources => @req.expand?(:resources),
+          :subcount         => res.length
+        }
+
+        render_collection(@req.subject, res, opts)
+      end
+
       def show
-        render_collection_type @req.subject.to_sym, @req.subject_id
+        klass = collection_class(@req.subject)
+        opts  = {:name => @req.subject, :is_subcollection => @req.subcollection?, :expand_actions => true}
+        render_resource(@req.subject, resource_search(@req.subject_id, @req.subject, klass), opts)
       end
 
       def update

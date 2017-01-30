@@ -5,7 +5,7 @@ module Api
     include Subcollections::Results
     include Subcollections::Schedules
 
-    before_action :set_additional_attributes, :only => [:show]
+    before_action :set_additional_attributes, :only => [:index, :show]
 
     def run_resource(_type, id, _data)
       report = MiqReport.find(id)

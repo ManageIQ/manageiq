@@ -1,6 +1,6 @@
 module Api
   class ResultsController < BaseController
-    before_action :set_additional_attributes, :only => [:show]
+    before_action :set_additional_attributes, :only => [:index, :show]
 
     private
 
