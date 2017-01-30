@@ -46,7 +46,7 @@ module ManageIQ::Providers
                                       'firingMatch' => firing_match,
                                       'context'     => context,
                                       'tags'        => {
-                                        'miq.event_type'    => 'hawkular_event',
+                                        'miq.event_type'    => 'hawkular_alert',
                                         'miq.resource_type' => miq_alert[:based_on]
                                       })
     end
