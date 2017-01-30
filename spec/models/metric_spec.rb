@@ -611,7 +611,7 @@ describe Metric do
         end
       end
 
-      context "testing operating ranges and right-sizing with Vm daily performances for several days" do
+      context "#generate_vim_performance_operating_ranges" do
         before do
           Timecop.travel(Time.parse("2010-05-01T00:00:00Z"))
           cases = [
@@ -644,12 +644,17 @@ describe Metric do
         end
 
         it "should calculate the correct normal operating range values" do
+          @vm1.generate_vim_performance_operating_ranges
+
           expect(@vm1.max_cpu_usage_rate_average_avg_over_time_period).to     be_within(0.001).of(13.692)
           expect(@vm1.max_mem_usage_absolute_average_avg_over_time_period).to be_within(0.001).of(33.085)
         end
 
         it "should calculate the correct right-size values" do
           allow(ManageIQ::Providers::Vmware::InfraManager::Vm).to receive(:mem_recommendation_minimum).and_return(0)
+
+          @vm1.generate_vim_performance_operating_ranges
+          @vm2.generate_vim_performance_operating_ranges
 
           expect(@vm1.recommended_vcpus).to eq(1)
           expect(@vm1.recommended_mem).to eq(4)
