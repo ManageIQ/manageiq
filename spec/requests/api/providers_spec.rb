@@ -370,7 +370,7 @@ describe "Providers API" do
         let(:containers_class) { klass }
 
         it "supports creation with auth_key specified" do
-          pending if name != "Openshift"
+          skip if name != "Openshift"
 
           api_basic_authorize collection_action_identifier(:providers, :create)
 
