@@ -197,6 +197,7 @@
   - vm_snapshot
   - vm_tag
   - vm_timeline
+  - vm_chargeback
 
 - :name: EvmRole-auditor
   :read_only: true
@@ -304,6 +305,7 @@
   - vm_snapshot_view
   - vm_tag
   - vm_timeline
+  - vm_chargeback
 
 - :name: EvmRole-desktop
   :read_only: true
@@ -356,6 +358,7 @@
   - vm_shelve
   - vm_shelve_offload
   - vm_timeline
+  - vm_chargeback
 
 - :name: EvmRole-operator
   :read_only: true
@@ -493,6 +496,7 @@
   - vm_sync
   - vm_tag
   - vm_timeline
+  - vm_chargeback
 
 - :name: EvmRole-security
   :read_only: true
@@ -591,6 +595,7 @@
   - vm_snapshot_revert
   - vm_tag
   - vm_timeline
+  - vm_chargeback
 
 - :name: EvmRole-support
   :read_only: true
@@ -684,6 +689,7 @@
   - vm_snapshot
   - vm_tag
   - vm_timeline
+  - vm_chargeback
 
 - :name: EvmRole-user
   :read_only: true
@@ -773,6 +779,7 @@
   - vm_snapshot
   - vm_tag
   - vm_timeline
+  - vm_chargeback
 
 - :name: EvmRole-user_limited_self_service
   :read_only: true
@@ -875,6 +882,7 @@
   - vm_sync
   - vm_tag
   - vm_timeline
+  - vm_chargeback
   - vm_vmrc_console
   - vm_vnc_console
   - cockpit_console
@@ -933,6 +941,7 @@
   - vm_sync
   - vm_tag
   - vm_timeline
+  - vm_chargeback
   - vm_vmrc_console
   - vm_vnc_console
   - cockpit_console
