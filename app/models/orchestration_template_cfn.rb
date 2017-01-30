@@ -37,6 +37,15 @@ class OrchestrationTemplateCfn < OrchestrationTemplate
     end
   end
 
+  def resources
+    @resources ||= (JSON.parse(content)["Resources"] || {}).collect do |key, val|
+      OrchestrationTemplate::OrchestrationResource.new(
+        :name => key,
+        :type => val['Type']
+      )
+    end
+  end
+
   def self.register_eligible_manager(cloud_manager_class)
     eligible_manager_types << cloud_manager_class
   end

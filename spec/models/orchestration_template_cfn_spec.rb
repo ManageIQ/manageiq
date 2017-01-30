@@ -24,6 +24,17 @@ describe OrchestrationTemplateCfn do
       assert_min_max_value(param_hash["SecondaryIPAddressCount"])
       assert_hidden_length_pattern(param_hash["MasterUserPassword"])
     end
+
+    it "parses resources from a template" do
+      resource_types = valid_template.resources.collect(&:type).sort!
+
+      expect(resource_types).to eq(
+        ["AWS::AutoScaling::ScalingPolicy",
+         "AWS::AutoScaling::ScalingPolicy",
+         "AWS::EC2::Instance",
+         "AWS::EC2::SecurityGroup"]
+      )
+    end
   end
 
   def assert_aws_type(parameter)
