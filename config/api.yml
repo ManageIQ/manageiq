@@ -1949,6 +1949,8 @@
         :identifier: vm_scan
       - :name: delete
         :identifier: vm_delete
+      - :name: assign_tags
+        :identifier: vm_tag
     :resource_actions:
       :get:
       - :name: read
