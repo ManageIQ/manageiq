@@ -65,8 +65,6 @@ module Spec
         @guid, @server, @zone = EvmSpecHelper.create_guid_miq_server_zone
 
         define_user
-
-        ApplicationController.handle_exceptions = true
       end
 
       def entrypoint_url
