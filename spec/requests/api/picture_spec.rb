@@ -117,5 +117,50 @@ describe "Pictures" do
       expect(response.parsed_body).to include(expected)
       expect(response).to have_http_status(:ok)
     end
+
+    it 'rejects a picture that is not Base64 encoded' do
+      api_basic_authorize collection_action_identifier(:pictures, :create)
+
+      run_post pictures_url, :extension => 'png', :content => 'bogus'
+
+      expected = {
+        'error' => a_hash_including(
+          'kind'    => 'bad_request',
+          'message' => a_string_matching(/content is not base64/),
+        )
+      }
+      expect(response.parsed_body).to include(expected)
+      expect(response).to have_http_status(:bad_request)
+    end
+
+    it 'requires an extension' do
+      api_basic_authorize collection_action_identifier(:pictures, :create)
+
+      run_post pictures_url, :content => content
+
+      expected = {
+        'error' => a_hash_including(
+          'kind'    => 'bad_request',
+          'message' => a_string_matching(/requires an extension/),
+        )
+      }
+      expect(response.parsed_body).to include(expected)
+      expect(response).to have_http_status(:bad_request)
+    end
+
+    it 'requires content' do
+      api_basic_authorize collection_action_identifier(:pictures, :create)
+
+      run_post pictures_url, :extension => 'png'
+
+      expected = {
+        'error' => a_hash_including(
+          'kind'    => 'bad_request',
+          'message' => a_string_matching(/requires content/),
+        )
+      }
+      expect(response.parsed_body).to include(expected)
+      expect(response).to have_http_status(:bad_request)
+    end
   end
 end
