@@ -1550,6 +1550,8 @@
         :identifier: service_admin
       - :name: suspend
         :identifier: service_admin
+      - :name: assign_tags
+        :identifier: service_tag
     :resource_actions:
       :get:
       - :name: read
