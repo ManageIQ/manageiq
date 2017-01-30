@@ -598,58 +598,6 @@ describe Metric do
           end
         end
 
-        context "testing operating ranges and right-sizing with Vm daily performances for several days" do
-          before(:each) do
-            Timecop.travel(Time.parse("2010-05-01T00:00:00Z"))
-            cases = [
-              "2010-04-13T21:00:00Z",  9.14, 32.85,
-              "2010-04-14T18:00:00Z", 10.23, 28.76,
-              "2010-04-14T19:00:00Z", 18.92, 39.11,
-              "2010-04-14T20:00:00Z",  7.34, 28.87,
-              "2010-04-14T21:00:00Z",  8.00, 29.99,
-              "2010-04-14T22:00:00Z", 15.00, 41.59,
-              "2010-04-15T21:00:00Z", 27.22, 30.43,
-            ]
-            cases.each_slice(3) do |t, cpu, mem|
-              [@vm1, @vm2].each do |vm|
-                vm.metric_rollups << FactoryGirl.create(:metric_rollup_vm_daily,
-                                                        :timestamp                  => t,
-                                                        :cpu_usage_rate_average     => cpu,
-                                                        :mem_usage_absolute_average => mem,
-                                                        :min_max                    => {
-                                                          :max_cpu_usage_rate_average     => cpu,
-                                                          :max_mem_usage_absolute_average => mem,
-                                                        },
-                                                        :time_profile               => @time_profile
-                                                       )
-              end
-            end
-          end
-
-          after(:each) do
-            Timecop.return
-          end
-
-          it "should calculate the correct normal operating range values" do
-            expect(@vm1.max_cpu_usage_rate_average_avg_over_time_period).to     be_within(0.001).of(13.692)
-            expect(@vm1.max_mem_usage_absolute_average_avg_over_time_period).to be_within(0.001).of(33.085)
-          end
-
-          it "should calculate the correct right-size values" do
-            allow(ManageIQ::Providers::Vmware::InfraManager::Vm).to receive(:mem_recommendation_minimum).and_return(0)
-
-            expect(@vm1.recommended_vcpus).to eq(1)
-            expect(@vm1.recommended_mem).to eq(4)
-            expect(@vm1.overallocated_vcpus_pct).to eq(0)
-            expect(@vm1.overallocated_mem_pct).to eq(0)
-
-            expect(@vm2.recommended_vcpus).to eq(1)
-            expect(@vm2.recommended_mem).to eq(1356)
-            expect(@vm2.overallocated_vcpus_pct).to be_within(0.01).of(50.0)
-            expect(@vm2.overallocated_mem_pct).to   be_within(0.01).of(66.9)
-          end
-        end
-
         context "and Host realtime performances" do
           before(:each) do
             cases = [
@@ -793,6 +741,63 @@ describe Metric do
               expect(@host1.get_performance_metric(:realtime, :cpu_usage_rate_average, "2010-04-14T20:52:40Z".to_time(:utc), :max)).to eq(100.0)
             end
           end
+        end
+      end
+
+      context "#generate_vim_performance_operating_ranges" do
+        before do
+          Timecop.travel(Time.parse("2010-05-01T00:00:00Z"))
+          cases = [
+            "2010-04-13T21:00:00Z",  9.14, 32.85,
+            "2010-04-14T18:00:00Z", 10.23, 28.76,
+            "2010-04-14T19:00:00Z", 18.92, 39.11,
+            "2010-04-14T20:00:00Z",  7.34, 28.87,
+            "2010-04-14T21:00:00Z",  8.00, 29.99,
+            "2010-04-14T22:00:00Z", 15.00, 41.59,
+            "2010-04-15T21:00:00Z", 27.22, 30.43,
+          ]
+          cases.each_slice(3) do |t, cpu, mem|
+            [@vm1, @vm2].each do |vm|
+              vm.metric_rollups << FactoryGirl.create(:metric_rollup_vm_daily,
+                                                      :timestamp                  => t,
+                                                      :cpu_usage_rate_average     => cpu,
+                                                      :mem_usage_absolute_average => mem,
+                                                      :min_max                    => {
+                                                        :max_cpu_usage_rate_average     => cpu,
+                                                        :max_mem_usage_absolute_average => mem,
+                                                      },
+                                                      :time_profile               => @time_profile
+                                                     )
+            end
+          end
+        end
+
+        after do
+          Timecop.return
+        end
+
+        it "should calculate the correct normal operating range values" do
+          @vm1.generate_vim_performance_operating_ranges
+
+          expect(@vm1.max_cpu_usage_rate_average_avg_over_time_period).to     be_within(0.001).of(13.692)
+          expect(@vm1.max_mem_usage_absolute_average_avg_over_time_period).to be_within(0.001).of(33.085)
+        end
+
+        it "should calculate the correct right-size values" do
+          allow(ManageIQ::Providers::Vmware::InfraManager::Vm).to receive(:mem_recommendation_minimum).and_return(0)
+
+          @vm1.generate_vim_performance_operating_ranges
+          @vm2.generate_vim_performance_operating_ranges
+
+          expect(@vm1.recommended_vcpus).to eq(1)
+          expect(@vm1.recommended_mem).to eq(4)
+          expect(@vm1.overallocated_vcpus_pct).to eq(0)
+          expect(@vm1.overallocated_mem_pct).to eq(0)
+
+          expect(@vm2.recommended_vcpus).to eq(1)
+          expect(@vm2.recommended_mem).to eq(1356)
+          expect(@vm2.overallocated_vcpus_pct).to be_within(0.01).of(50.0)
+          expect(@vm2.overallocated_mem_pct).to   be_within(0.01).of(66.9)
         end
       end
     end
