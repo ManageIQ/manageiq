@@ -11,14 +11,15 @@ module Api
         validation = parent.validate_create_snapshot
         raise validation[:message] unless validation[:available]
 
+        message = "Creating snapshot #{data["name"]} for #{snapshot_ident(parent)}"
         task_id = queue_object_action(
           parent,
-          "summary",
+          message,
           :method_name => "create_snapshot",
           :args        => [data["name"], data["description"], data.fetch("memory", false)]
         )
 
-        action_result(true, "Creating snapshot #{data["name"]} for #{snapshot_ident(parent)}", :task_id => task_id)
+        action_result(true, message, :task_id => task_id)
       rescue => e
         action_result(false, e.to_s)
       end
@@ -28,8 +29,9 @@ module Api
         raise validation[:message] unless validation[:available]
         snapshot = resource_search(id, type, collection_class(type))
 
-        task_id = queue_object_action(parent, "summary", :method_name => "remove_snapshot", :args => [id])
-        action_result(true, "Deleting snapshot #{snapshot.name} for #{snapshot_ident(parent)}", :task_id => task_id)
+        message = "Deleting snapshot #{snapshot.name} for #{snapshot_ident(parent)}"
+        task_id = queue_object_action(parent, message, :method_name => "remove_snapshot", :args => [id])
+        action_result(true, message, :task_id => task_id)
       rescue => e
         action_result(false, e.to_s)
       end
