@@ -57,7 +57,11 @@ class Job < ApplicationRecord
   end
 
   def self.agent_state_update_queue(jobid, state, message = nil)
-    job = Job.where("guid = ?", jobid).select("id, state, guid").first
+    # HACK: add agent_state, agent_message, and updated_on to select as a
+    # workaround for: https://github.com/rails/rails/issues/25228
+    warn_message = "Verify we need to specify agent_state, agent_message, and updated_on in the select at: #{__FILE__}:#{__LINE__ + 2}"
+    warn(warn_message) if Rails.version == "5.0.0"
+    job = Job.where("guid = ?", jobid).select("id, state, guid, agent_state, agent_message, updated_on").first
     unless job.nil?
       job.agent_state_update(state, message)
     else
