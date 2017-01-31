@@ -354,4 +354,8 @@ class EmsEvent < EventStream
   def ems_refresh_target
     ext_management_system
   end
+
+  def ems_event_refresh_target
+    self
+  end
 end
