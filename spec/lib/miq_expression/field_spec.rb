@@ -234,4 +234,12 @@ RSpec.describe MiqExpression::Field do
       expect(MiqExpression::Field.is_field?("NetworkManager-team")).to be_falsey
     end
   end
+
+  describe "#tag?" do
+    it { expect(described_class.new(Vm, [], "name")).not_to be_tag }
+  end
+
+  describe "#field?" do
+    it { expect(described_class.new(Vm, [], "name")).to be_field }
+  end
 end

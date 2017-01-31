@@ -41,4 +41,12 @@ RSpec.describe MiqExpression::Tag do
       expect(described_class.new(Vm, "/host")).not_to be_attribute_supported_by_sql
     end
   end
+
+  describe "#tag?" do
+    it { expect(described_class.new(Vm, "/host")).to be_tag }
+  end
+
+  describe "#field?" do
+    it { expect(described_class.new(Vm, "/host")).not_to be_field }
+  end
 end
