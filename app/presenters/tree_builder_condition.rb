@@ -23,7 +23,7 @@ class TreeBuilderCondition < TreeBuilder
                  :ContainerGroup      => N_("Pod Conditions"),
                  :ContainerNode       => N_("Container Node Conditions"),
                  :ContainerImage      => N_("Container Image Conditions"),
-                 :ExtManagementSystem => N_("Container Provider Conditions")}
+                 :ExtManagementSystem => N_("Provider Conditions")}
 
     objects = MiqPolicyController::UI_FOLDERS.collect do |model|
       text = text_i18n[model.name.to_sym]
