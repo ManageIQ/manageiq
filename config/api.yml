@@ -1612,6 +1612,8 @@
       :post:
       - :name: create
         :identifier: vm_snapshot_add
+      - :name: delete
+        :identifier: vm_snapshot_delete
     :subresource_actions:
       :get:
       - :name: read
