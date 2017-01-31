@@ -11,6 +11,7 @@
   - about
   - all_vm_rules
   - automation_manager
+  - embedded_automation_manager
   - availability_zone
   - host_aggregate
   - compute
@@ -211,6 +212,7 @@
   - about
   - all_vm_rules
   - automation_manager
+  - embedded_automation_manager
   - bottlenecks
   - compute
   - chargeback
@@ -378,6 +380,7 @@
   - about
   - all_vm_rules
   - automation_manager
+  - embedded_automation_manager
   - compute
   - chargeback
   - chargeback_reports
@@ -864,6 +867,7 @@
   - about
   - all_vm_rules
   - automation_manager
+  - embedded_automation_manager
   - compute
   - miq_template_clone
   - miq_template_drift
@@ -927,6 +931,7 @@
   - about
   - all_vm_rules
   - automation_manager
+  - embedded_automation_manager
   - compute
   - miq_request_admin
   - miq_request_view
@@ -986,6 +991,7 @@
   :miq_product_feature_identifiers:
   - about
   - automation_manager
+  - embedded_automation_manager
   - availability_zone
   - host_aggregate
   - all_vm_rules
@@ -1059,6 +1065,7 @@
   :miq_product_feature_identifiers:
   - about
   - automation_manager
+  - embedded_automation_manager
   - availability_zone
   - host_aggregate
   - all_vm_rules
