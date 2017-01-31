@@ -136,14 +136,9 @@ module ManagerRefresh
     end
 
     def manager_ref_to_cols
-      # Convert attributes from uniqe key to actual db cols
-      required_relations = dependency_attributes_for(fixed_dependencies).to_a
+      # Convert attributes from unique key to actual db cols
       manager_ref.map do |ref|
-        if required_relations.include?(ref)
-          model_class.reflect_on_association(ref).foreign_key
-        else
-          ref
-        end
+        association_to_foreign_key_mapping[ref] || ref
       end
     end
 
