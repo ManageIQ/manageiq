@@ -798,7 +798,12 @@ function miqAjax(url, serialize_fields) {
     data = serialize_fields;
   }
 
-  miqJqueryRequest(url, {beforeSend: true, complete: true, data: data});
+  miqJqueryRequest(url, {beforeSend: true, complete: true, data: data})
+    .catch(function(err){
+      add_flash(__("Error requesting data from server"), 'error');
+      console.log(err);
+      return Promise.reject(err)
+    });
 }
 
 // Function to generate an Ajax request for EVM async processing
@@ -1130,12 +1135,15 @@ function miq_tabs_init(id, url) {
     if ($(e.target).parent().hasClass('disabled')) {
       e.preventDefault();
       return false;
-    } else {
+    } else if (typeof(url) != 'undefined') {
       // Load remote tab if an URL is specified
-      if (typeof(url) != 'undefined') {
-        var currTabTarget = $(e.target).attr('href').substring(1);
-        miqJqueryRequest(url + '/?tab_id=' + currTabTarget, {beforeSend: true});
-      }
+      var currTabTarget = $(e.target).attr('href').substring(1);
+      miqJqueryRequest(url + '/?tab_id=' + currTabTarget, {beforeSend: true})
+        .catch(function(err){
+          add_flash(__("Error requesting data from server"), 'error');
+          console.log(err);
+          return Promise.reject(err)
+      });
     }
   });
   $(id + ' > ul.nav-tabs a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
@@ -1284,6 +1292,8 @@ function miqProcessObserveQueue() {
     request.deferred.resolve(arg);
   }, function(err) {
     ManageIQ.observe.processing = false;
+    add_flash(__("Error requesting data from server"), 'error');
+    console.log(err);
     request.deferred.reject(err);
   });
 }
