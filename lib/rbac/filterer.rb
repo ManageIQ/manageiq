@@ -7,6 +7,8 @@ module Rbac
     # 3. Class contains acts_as_miq_taggable
     CLASSES_THAT_PARTICIPATE_IN_RBAC = %w(
       AvailabilityZone
+      CloudNetwork
+      CloudSubnet
       CloudTenant
       CloudVolume
       ConfigurationProfile
@@ -26,8 +28,12 @@ module Rbac
       EmsFolder
       ExtManagementSystem
       Flavor
+      FloatingIp
       Host
+      LoadBalancer
       MiqCimInstance
+      NetworkPort
+      NetworkRouter
       OrchestrationTemplate
       OrchestrationStack
       ResourcePool
