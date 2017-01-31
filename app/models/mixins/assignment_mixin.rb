@@ -2,6 +2,8 @@
 
 module AssignmentMixin
   extend ActiveSupport::Concern
+  ESCAPED_PREFIX = "escaped".freeze
+
   included do  #:nodoc:
     acts_as_miq_taggable
 
@@ -58,7 +60,9 @@ module AssignmentMixin
           next
         end
       end
-      tag = "#{klass.underscore}/label/managed/#{obj.name}/#{obj.value}"
+      name = AssignmentMixin.escape(obj.name)
+      value = AssignmentMixin.escape(obj.value)
+      tag = "#{klass.underscore}/label/managed/#{name}/#{value}"
       tag_add(tag, :ns => namespace)
     end
     reload
@@ -81,12 +85,36 @@ module AssignmentMixin
         tag = Tag.find_by(:name => "/" + parts.join("/"))
         result[:tags] << [Classification.find_by(:tag_id => tag.id), klass] unless tag.nil?
       when :label
-        label = CustomAttribute.find_by(:name => parts[1], :value => parts[2])
+        label = if AssignmentMixin.escaped?(parts[1])
+                  name = AssignmentMixin.unescape(parts[1])
+                  value = AssignmentMixin.unescape(parts[2])
+                  CustomAttribute.find_by(:name => name, :value => value)
+                else
+                  CustomAttribute.find_by(:name => parts[1], :value => parts[2])
+                end
         result[:labels] << [label, klass] unless label.nil?
       end
     end
 
     result
+  end
+
+  # make strings with special characters like '/' safe to put in tags(assignments) by escaping them
+  def self.escape(string)
+    @parser ||= URI::RFC2396_Parser.new
+    escaped_string = @parser.escape(string, /[^A-Za-z0-9]/)
+    "#{ESCAPED_PREFIX}:{#{escaped_string}}" # '/escape/string' --> 'escaped:{%2Fescape%2Fstring}'
+  end
+
+  # return the escaped string back into a normal string
+  def self.unescape(escaped_string)
+    _log.info("not an escaped string: #{escaped_string}") unless escaped?(escaped_string)
+    @parser ||= URI::RFC2396_Parser.new
+    @parser.unescape(escaped_string.slice(ESCAPED_PREFIX.length + 2..-2)) # 'escaped:{%2Fescape%2Fstring}' --> '/escape/string'
+  end
+
+  def self.escaped?(string)
+    string.starts_with?("#{ESCAPED_PREFIX}:{") && string.ends_with?("}")
   end
 
   def remove_all_assigned_tos(cat = nil)
