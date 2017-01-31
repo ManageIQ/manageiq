@@ -2261,7 +2261,7 @@ class MiqVimInventory < MiqVimClientBase
     oc.MOR = oc.obj
     oc.delete('obj')
 
-    oc.propSet = [oc.propSet] unless oc.propSet.kind_of?(Array)
+    oc.propSet = Array(oc.propSet) unless oc.propSet.kind_of?(Array)
     oc.propSet.each do |ps|
       #
       # Here, ps.name can be a property path in the form: a.b.c
@@ -2340,7 +2340,7 @@ class MiqVimInventory < MiqVimClientBase
       oc.MOR = oc.obj
       oc.delete('obj')
 
-      oc.propSet = [oc.propSet] unless oc.propSet.kind_of?(Array)
+      oc.propSet = Array(oc.propSet) unless oc.propSet.kind_of?(Array)
       oc.propSet.each do |ps|
         #
         # Here, ps.name can be a property path in the form: a.b.c
