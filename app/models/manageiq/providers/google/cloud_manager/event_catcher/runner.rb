@@ -25,7 +25,8 @@ class ManageIQ::Providers::Google::CloudManager::EventCatcher::Runner <
 
   def queue_event(event)
     _log.info "#{log_prefix} Caught event #{parse_event_type(event)} for #{parse_resource_id(event)}"
-    EmsEvent.add_queue('add_google', @cfg[:ems_id], event)
+    event_hash = ManageIQ::Providers::Google::CloudManager::EventParser.event_to_hash(event, :ems_id)
+    EmsEvent.add_queue('add', @cfg[:ems_id], event_hash)
   end
 
   private
