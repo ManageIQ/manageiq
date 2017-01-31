@@ -48,6 +48,7 @@ gem "color",                          "~>1.8"
 gem "default_value_for",              "~>3.0.2.alpha-miq.1", :git => "git://github.com/jrafanie/default_value_for.git", :branch => "rails-50" # https://github.com/FooBarWidget/default_value_for/pull/57
 gem "draper",                         "~>3.0.0.pre1"
 gem "hamlit-rails",                   "~>0.1.0"
+gem "hashie",                         "~>3.4.6",   :require => false
 gem "high_voltage",                   "~>2.4.0"
 gem "nakayoshi_fork",                 "~>0.0.3"  # provides a more CoW friendly fork (GC a few times before fork)
 gem "novnc-rails",                    "~>0.2"
