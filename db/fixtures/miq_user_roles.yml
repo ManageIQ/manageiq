@@ -33,6 +33,7 @@
   - ems_network
   - ems_cluster
   - ems_infra
+  - ems_physical_infra
   - container_dashboard
   - ems_container
   - ems_container_deployment
@@ -129,6 +130,10 @@
   - ems_infra_show_list
   - ems_infra_tag
   - ems_infra_timeline
+  - ems_physical_infra_show
+  - ems_physical_infra_show_list
+  - ems_physical_infra_tag
+  - ems_physical_infra_timeline
   - host_show
   - host_show_list
   - host_perf
@@ -238,6 +243,10 @@
   - ems_infra_show_list
   - ems_infra_tag
   - ems_infra_timeline
+  - ems_physical_infra_show
+  - ems_physical_infra_show_list
+  - ems_physical_infra_tag
+  - ems_physical_infra_timeline
   - host_show
   - host_show_list
   - host_perf
@@ -408,6 +417,14 @@
   - ems_infra_show_list
   - ems_infra_tag
   - ems_infra_timeline
+  - ems_physical_infra_new
+  - ems_physical_infra_delete
+  - ems_physical_infra_edit
+  - ems_physical_infra_refresh
+  - ems_physical_infra_show
+  - ems_physical_infra_show_list
+  - ems_physical_infra_tag
+  - ems_physical_infra_timeline
   - host_new
   - host_analyze
   - host_compare
@@ -534,6 +551,10 @@
   - ems_infra_show_list
   - ems_infra_tag
   - ems_infra_timeline
+  - ems_physical_infra_show
+  - ems_physical_infra_show_list
+  - ems_physical_infra_tag
+  - ems_physical_infra_timeline
   - host_show
   - host_show_list
   - host_perf
@@ -631,6 +652,10 @@
   - ems_infra_show_list
   - ems_infra_tag
   - ems_infra_timeline
+  - ems_physical_infra_show
+  - ems_physical_infra_show_list
+  - ems_physical_infra_tag
+  - ems_physical_infra_timeline
   - host_show
   - host_show_list
   - host_perf
@@ -724,6 +749,10 @@
   - ems_infra_show_list
   - ems_infra_tag
   - ems_infra_timeline
+  - ems_physical_infra_show
+  - ems_physical_infra_show_list
+  - ems_physical_infra_tag
+  - ems_physical_infra_timeline
   - host_show
   - host_show_list
   - host_perf
@@ -981,6 +1010,7 @@
   - ems_network
   - ems_cluster
   - ems_infra
+  - ems_physical_infra
   - host
   - job_all_smartproxy
   - job_my_smartproxy
@@ -1049,6 +1079,7 @@
   - ems_cloud
   - ems_cluster
   - ems_infra
+  - ems_physical_infra
   - host
   - job_all_smartproxy
   - job_my_smartproxy
