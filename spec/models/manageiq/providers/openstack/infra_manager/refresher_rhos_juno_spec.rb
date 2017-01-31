@@ -5,7 +5,7 @@ describe ManageIQ::Providers::Openstack::InfraManager::Refresher do
                               :ipaddress => "192.0.2.1", :port => 5000, :api_version => 'v2',
                               :security_protocol => 'no-ssl')
     @ems.update_authentication(
-      :default => {:userid => "admin", :password => "5eba8beb33ec6754780b10e96c3821c6c16e455c"})
+      :default => {:userid => "admin", :password => "a0816beaeb660636623e70dc7540ec475444a22d"})
   end
 
   it "will perform a full refresh" do
@@ -152,13 +152,13 @@ describe ManageIQ::Providers::Openstack::InfraManager::Refresher do
     )
 
     expect(@host.hardware).to have_attributes(
-      :cpu_speed            => 3392,
-      :cpu_type             => "RHEL 7.2.0 PC (i440FX + PIIX, 1996)",
+      :cpu_speed            => 2399,
+      :cpu_type             => "RHEL 7.3.0 PC (i440FX + PIIX, 1996)",
       :manufacturer         => "Red Hat",
       :model                => "KVM",
       :memory_mb            => 6144,
       :memory_console       => nil,
-      :disk_capacity        => 50,
+      :disk_capacity        => 40,
       :cpu_sockets          => 1,
       :cpu_total_cores      => 1,
       :cpu_cores_per_socket => 1,
@@ -167,7 +167,7 @@ describe ManageIQ::Providers::Openstack::InfraManager::Refresher do
       :cpu_usage            => nil,
       :memory_usage         => nil,
       :number_of_nics       => 1,
-      :bios                 => "seabios-1.7.5-11.el7"
+      :bios                 => "1.9.1-5.el7"
     )
 
     assert_specific_disk(@host.hardware.disks.first)
@@ -181,7 +181,7 @@ describe ManageIQ::Providers::Openstack::InfraManager::Refresher do
       :present         => true,
       :filename        => 'ata-QEMU_HARDDISK_QM00005',
       :location        => nil,
-      :size            => 57_982_058_496,
+      :size            => 47_244_640_256,
       :disk_type       => nil,
       :mode            => 'persistent')
   end
