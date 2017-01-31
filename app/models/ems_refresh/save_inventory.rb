@@ -227,7 +227,11 @@ module EmsRefresh::SaveInventory
       h[:storage_profile_id] = h.fetch_path(:storage_profile, :id)
     end
 
-    save_inventory_multi(hardware.disks, hashes, :use_association, [:controller_type, :location], nil, [:storage, :backing, :storage_profile])
+    # Only those disks that are no longer referenced by this hardware and are not
+    # backed by other storage should be deleted.
+    deletes = hardware.disks.where(:backing_id => nil)
+    save_inventory_multi(hardware.disks, hashes, deletes,
+                         [:controller_type, :location], nil, [:storage, :backing, :storage_profile])
   end
 
   def save_network_inventory(guest_device, hash)
