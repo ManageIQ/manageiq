@@ -1,5 +1,5 @@
 class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
-  def self.default_provisioning_entry_point(_service_type)
+  def self.default_provisioning_entry_point(_service_type = nil)
     '/Service/Generic/StateMachines/GenericLifecycle/provision'
   end
 
@@ -32,7 +32,7 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
     transaction do
       create(options.except(:config_info)).tap do |service_template|
         [:provision, :retirement, :reconfigure].each do |action|
-          prepare_job_template_and_dialog(action, service_name, description, options) if config_info.key?(action)
+          prepare_job_template_and_dialog(action, service_name, description, options[:config_info]) if config_info.key?(action)
         end
         service_template.create_resource_actions(config_info)
       end
@@ -51,16 +51,20 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
   private_class_method :prepare_job_template_and_dialog
 
   def self.create_job_template(name, description, info)
-    playbook = ManageIQ::Providers::AnsibleTower::ConfigurationManager::Playbook.find(info[:playbook_id])
-    # tower = playbook.manager
+    playbook = ManageIQ::Providers::AnsibleTower::AutomationManager::Playbook.find(info[:playbook_id])
+    tower = playbook.configuration_script_source.manager
 
-    # params = {
-    #   :name         => name,
-    #   :description  => description || '',
-    #   :extra_vars   => info[:variables] || {},
-    #   :inventory_id => playbook.inventory_root_group,
-    # }
-    # tower.class.create_in_provider(tower, params)
+    params = {
+      :name         => name,
+      :description  => description || '',
+      :extra_vars   => info[:variables] || {},
+      :project      => playbook.configuration_script_source.manager_ref,
+      #:playbook     => playbook.manager_ref,
+      :playbook     => "yum.yml",
+      :inventory_id => playbook.inventory_root_group,
+    }
+    task_id = ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationScript.create_in_provider_queue(tower.id, params)
+    MiqTask.wait_for_taskid(task_id)
   end
   private_class_method :create_job_template
 
