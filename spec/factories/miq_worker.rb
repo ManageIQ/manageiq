@@ -16,4 +16,8 @@ FactoryGirl.define do
   factory :ems_refresh_worker_amazon,
           :parent => :miq_ems_refresh_worker,
           :class  => "ManageIQ::Providers::Amazon::CloudManager::RefreshWorker"
+
+  factory :embedded_ansible_worker,
+          :parent => :miq_worker,
+          :class  => "EmbeddedAnsibleWorker"
 end

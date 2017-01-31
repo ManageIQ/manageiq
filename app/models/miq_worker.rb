@@ -336,7 +336,7 @@ class MiqWorker < ApplicationRecord
     end
   end
 
-  def start
+  def start_runner
     self.class.before_fork
     pid = fork(:cow_friendly => true) do
       self.class.after_fork
@@ -345,7 +345,11 @@ class MiqWorker < ApplicationRecord
     end
 
     Process.detach(pid)
-    self.pid = pid
+    pid
+  end
+
+  def start
+    self.pid = start_runner
     save
 
     msg = "Worker started: ID [#{id}], PID [#{pid}], GUID [#{guid}]"
@@ -393,6 +397,10 @@ class MiqWorker < ApplicationRecord
 
   def is_stopped?
     STATUSES_STOPPED.include?(status)
+  end
+
+  def started?
+    STATUS_STARTED == status
   end
 
   def actually_running?
