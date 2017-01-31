@@ -370,8 +370,6 @@ describe "Providers API" do
         let(:containers_class) { klass }
 
         it "supports creation with auth_key specified" do
-          skip if name != "Openshift"
-
           api_basic_authorize collection_action_identifier(:providers, :create)
 
           run_post(providers_url, sample_containers.merge("credentials" => [containers_credentials]))
