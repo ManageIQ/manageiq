@@ -5203,7 +5203,7 @@
         - :name: Create Service Dialog
           :description: Create Service Dialog
           :feature_type: admin
-          :identifier: automation_manager_configscript_service_dialog
+          :identifier: automation_manager_configuration_script_service_dialog
         - :name: Edit Tags
           :description: Edit Job Templates Tags
           :feature_type: control
