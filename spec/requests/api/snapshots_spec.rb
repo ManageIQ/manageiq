@@ -133,7 +133,7 @@ RSpec.describe "Snapshots API" do
       end
     end
 
-    describe "POST /api/vms/:c_id/snapshots with delete action" do
+    describe "POST /api/vms/:c_id/snapshots/:s_id with delete action" do
       it "can queue a snapshot for deletion" do
         api_basic_authorize(action_identifier(:snapshots, :delete, :subresource_actions, :delete))
         ems = FactoryGirl.create(:ext_management_system)
