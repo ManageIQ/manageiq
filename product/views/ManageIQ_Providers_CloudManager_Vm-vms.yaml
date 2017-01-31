@@ -15,7 +15,7 @@ title: VMs
 name: VMs
 
 # Main DB table report is based on
-db: VmOrTemplate
+db: ManageIQ::Providers::CloudManager::Vm
 
 # Columns to fetch from the main table
 cols:
