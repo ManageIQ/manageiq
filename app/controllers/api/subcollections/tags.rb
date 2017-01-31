@@ -10,6 +10,15 @@ module Api
         action_result(false, err.to_s)
       end
 
+      def unassign_tags_resource(type, id, data)
+        resource = resource_search(id, type, collection_class(type))
+        data['tags'].collect do |tag|
+          tags_unassign_resource(resource, type, tag['id'], tag)
+        end
+      rescue => err
+        action_result(false, err.to_s)
+      end
+
       def tags_query_resource(object)
         object ? object.tags.where(Tag.arel_table[:name].matches "#{Api::BaseController::TAG_NAMESPACE}%") : {}
       end

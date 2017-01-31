@@ -793,4 +793,312 @@ describe "Tag Collections API" do
       expect(response.parsed_body).to include(expected)
     end
   end
+
+  context 'Services unassign_tags action' do
+    let(:bad_tag) { {:category => "cc", :name => "002"} }
+    let(:service1)                { FactoryGirl.create(:service) }
+    let(:service2)                { FactoryGirl.create(:service) }
+
+    before do
+      classify_resource(service1)
+      classify_resource(service2)
+    end
+
+    it 'can bulk unassign tags on multiple services' do
+      api_basic_authorize collection_action_identifier(:services, :unassign_tags)
+      request_body = {
+        'action'    => 'unassign_tags',
+        'resources' => [
+          { 'id' => service1.id, 'tags' => [{ 'category' => tag1[:category], 'name' => tag1[:name] }] },
+          { 'id' => service2.id, 'tags' => [{ 'category' => tag2[:category], 'name' => tag2[:name] }] }
+        ]
+      }
+
+      run_post(services_url, request_body)
+
+      expected = {
+        'results' => [
+          a_hash_including('success'      => true,
+                           'tag_category' => tag1[:category],
+                           'tag_name'     => tag1[:name]),
+          a_hash_including('success'      => true,
+                           'tag_category' => tag2[:category],
+                           'tag_name'     => tag2[:name])
+        ]
+      }
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
+    end
+
+    it 'can bulk unassign tags to multiple services by href' do
+      api_basic_authorize collection_action_identifier(:services, :unassign_tags)
+      request_body = {
+        'action'    => 'unassign_tags',
+        'resources' => [
+          { 'href' => services_url(service1.id), 'tags' => [{ 'category' => tag1[:category], 'name' => tag1[:name] }] },
+          { 'href' => services_url(service2.id), 'tags' => [{ 'category' => tag2[:category], 'name' => tag2[:name] }] }
+        ]
+      }
+
+      run_post(services_url, request_body)
+
+      expected = {
+        'results' => [
+          a_hash_including('success'      => true,
+                           'tag_category' => tag1[:category],
+                           'tag_name'     => tag1[:name]),
+          a_hash_including('success'      => true,
+                           'tag_category' => tag2[:category],
+                           'tag_name'     => tag2[:name])
+        ]
+      }
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
+    end
+
+    it 'will return success and failure messages for each service and tag' do
+      api_basic_authorize collection_action_identifier(:services, :unassign_tags)
+      request_body = {
+        'action'    => 'unassign_tags',
+        'resources' => [
+          { 'id' => 999_999, 'tags' => [{'category' => 'department', 'name' => 'finance'}] },
+          { 'id' => service2.id, 'tags' => [
+            {'category' => bad_tag[:category], 'name' => bad_tag[:name]},
+            {'category' => tag1[:category], 'name' => tag1[:name]}
+          ]}
+        ]
+      }
+
+      run_post(services_url, request_body)
+
+      expected = {
+        'results' => [
+          a_hash_including('success' => false, 'message' => a_string_including("Couldn't find Service")),
+          a_hash_including('success'      => true,
+                           'message'      => a_string_including("Not tagged with Tag: category:'cc' name:'002'"),
+                           'tag_category' => bad_tag[:category],
+                           'tag_name'     => bad_tag[:name]),
+          a_hash_including('success'      => true,
+                           'tag_category' => tag1[:category],
+                           'tag_name'     => tag1[:name])
+        ]
+      }
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
+    end
+
+    it 'fails without an appropriate role' do
+      api_basic_authorize
+
+      run_post(services_url, :action => 'unassign_tags')
+
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it 'can bulk unassign tags by href' do
+      api_basic_authorize collection_action_identifier(:services, :unassign_tags)
+      request_body = {
+        'action'    => 'unassign_tags',
+        'resources' => [
+          { 'id' => service1.id, 'tags' => [{'href' => tags_url(Tag.find_by(:name => tag1[:path]).id)}] },
+          { 'id' => service2.id, 'tags' => [{'href' => tags_url(Tag.find_by(:name => tag2[:path]).id)}] }
+        ]
+      }
+
+      run_post(services_url, request_body)
+
+      expected = {
+        'results' => [
+          a_hash_including('success'      => true,
+                           'tag_category' => tag1[:category],
+                           'tag_name'     => tag1[:name]),
+          a_hash_including('success'      => true,
+                           'tag_category' => tag2[:category],
+                           'tag_name'     => tag2[:name])
+        ]
+      }
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
+    end
+
+    it 'can bulk unassign tags by id' do
+      api_basic_authorize collection_action_identifier(:services, :unassign_tags)
+      request_body = {
+        'action'    => 'unassign_tags',
+        'resources' => [
+          { 'id' => service1.id, 'tags' => [{'id' => Tag.find_by(:name => tag1[:path]).id}] },
+          { 'id' => service2.id, 'tags' => [{'id' => Tag.find_by(:name => tag2[:path]).id}] }
+        ]
+      }
+
+      run_post(services_url, request_body)
+
+      expected = {
+        'results' => [
+          a_hash_including('success'      => true,
+                           'tag_category' => tag1[:category],
+                           'tag_name'     => tag1[:name]),
+          a_hash_including('success'      => true,
+                           'tag_category' => tag2[:category],
+                           'tag_name'     => tag2[:name])
+        ]
+      }
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
+    end
+  end
+
+  context 'Vms unassign_tags action' do
+    let(:bad_tag) { {:category => "cc", :name => "002"} }
+    let(:vm1)                { FactoryGirl.create(:vm_vmware,    :host => host, :ems_id => ems.id) }
+    let(:vm2)                { FactoryGirl.create(:vm_vmware,    :host => host, :ems_id => ems.id) }
+
+    before do
+      classify_resource(vm1)
+      classify_resource(vm2)
+    end
+
+    it 'can bulk unassign tags on multiple vms' do
+      api_basic_authorize collection_action_identifier(:vms, :unassign_tags)
+      request_body = {
+        'action'    => 'unassign_tags',
+        'resources' => [
+          { 'id' => vm1.id, 'tags' => [{ 'category' => tag1[:category], 'name' => tag1[:name] }] },
+          { 'id' => vm2.id, 'tags' => [{ 'category' => tag2[:category], 'name' => tag2[:name] }] }
+        ]
+      }
+
+      run_post(vms_url, request_body)
+
+      expected = {
+        'results' => [
+          a_hash_including('success'      => true,
+                           'tag_category' => tag1[:category],
+                           'tag_name'     => tag1[:name]),
+          a_hash_including('success'      => true,
+                           'tag_category' => tag2[:category],
+                           'tag_name'     => tag2[:name])
+        ]
+      }
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
+    end
+
+    it 'can bulk unassign tags to multiple vms by href' do
+      api_basic_authorize collection_action_identifier(:vms, :unassign_tags)
+      request_body = {
+        'action'    => 'unassign_tags',
+        'resources' => [
+          { 'href' => vms_url(vm1.id), 'tags' => [{ 'category' => tag1[:category], 'name' => tag1[:name] }] },
+          { 'href' => vms_url(vm2.id), 'tags' => [{ 'category' => tag2[:category], 'name' => tag2[:name] }] }
+        ]
+      }
+
+      run_post(vms_url, request_body)
+
+      expected = {
+        'results' => [
+          a_hash_including('success'      => true,
+                           'tag_category' => tag1[:category],
+                           'tag_name'     => tag1[:name]),
+          a_hash_including('success'      => true,
+                           'tag_category' => tag2[:category],
+                           'tag_name'     => tag2[:name])
+        ]
+      }
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
+    end
+
+    it 'will return success and failure messages for each vm and tag' do
+      api_basic_authorize collection_action_identifier(:vms, :unassign_tags)
+      request_body = {
+        'action'    => 'unassign_tags',
+        'resources' => [
+          { 'id' => 999_999, 'tags' => [{'category' => 'department', 'name' => 'finance'}] },
+          { 'id' => vm2.id, 'tags' => [
+            {'category' => bad_tag[:category], 'name' => bad_tag[:name]},
+            {'category' => tag1[:category], 'name' => tag1[:name]}
+          ]}
+        ]
+      }
+
+      run_post(vms_url, request_body)
+
+      expected = {
+        'results' => [
+          a_hash_including('success' => false, 'message' => a_string_including("Couldn't find Vm")),
+          a_hash_including('success'      => true,
+                           'message'      => a_string_including("Not tagged with Tag: category:'cc' name:'002'"),
+                           'tag_category' => bad_tag[:category],
+                           'tag_name'     => bad_tag[:name]),
+          a_hash_including('success'      => true,
+                           'tag_category' => tag1[:category],
+                           'tag_name'     => tag1[:name])
+        ]
+      }
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
+    end
+
+    it 'fails without an appropriate role' do
+      api_basic_authorize
+
+      run_post(vms_url, :action => 'unassign_tags')
+
+      expect(response).to have_http_status(:forbidden)
+    end
+
+    it 'can bulk unassign tags by href' do
+      api_basic_authorize collection_action_identifier(:vms, :unassign_tags)
+      request_body = {
+        'action'    => 'unassign_tags',
+        'resources' => [
+          { 'id' => vm1.id, 'tags' => [{'href' => tags_url(Tag.find_by(:name => tag1[:path]).id)}] },
+          { 'id' => vm2.id, 'tags' => [{'href' => tags_url(Tag.find_by(:name => tag2[:path]).id)}] }
+        ]
+      }
+
+      run_post(vms_url, request_body)
+
+      expected = {
+        'results' => [
+          a_hash_including('success'      => true,
+                           'tag_category' => tag1[:category],
+                           'tag_name'     => tag1[:name]),
+          a_hash_including('success'      => true,
+                           'tag_category' => tag2[:category],
+                           'tag_name'     => tag2[:name])
+        ]
+      }
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
+    end
+
+    it 'can bulk unassign tags by id' do
+      api_basic_authorize collection_action_identifier(:vms, :unassign_tags)
+      request_body = {
+        'action'    => 'unassign_tags',
+        'resources' => [
+          { 'id' => vm1.id, 'tags' => [{'id' => Tag.find_by(:name => tag1[:path]).id}] },
+          { 'id' => vm2.id, 'tags' => [{'id' => Tag.find_by(:name => tag2[:path]).id}] }
+        ]
+      }
+
+      run_post(vms_url, request_body)
+
+      expected = {
+        'results' => [
+          a_hash_including('success'      => true,
+                           'tag_category' => tag1[:category],
+                           'tag_name'     => tag1[:name]),
+          a_hash_including('success'      => true,
+                           'tag_category' => tag2[:category],
+                           'tag_name'     => tag2[:name])
+        ]
+      }
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
+    end
+  end
 end

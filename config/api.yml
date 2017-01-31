@@ -1552,6 +1552,8 @@
         :identifier: service_admin
       - :name: assign_tags
         :identifier: service_tag
+      - :name: unassign_tags
+        :identifier: service_tag
     :resource_actions:
       :get:
       - :name: read
@@ -1966,6 +1968,8 @@
       - :name: delete
         :identifier: vm_delete
       - :name: assign_tags
+        :identifier: vm_tag
+      - :name: unassign_tags
         :identifier: vm_tag
     :resource_actions:
       :get:
