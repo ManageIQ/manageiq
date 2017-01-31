@@ -844,6 +844,52 @@ describe Rbac::Filterer do
       end
     end
 
+    context 'with network models' do
+      NETWORK_MODELS = %w(
+        CloudNetwork
+        CloudSubnet
+        FloatingIp
+        LoadBalancer
+        NetworkPort
+        NetworkRouter
+        SecurityGroup
+      ).freeze
+
+      NETWORK_MODELS.each do |network_model|
+        describe ".search" do
+          let!(:network_object)          { FactoryGirl.create(network_model.underscore) }
+          let!(:network_object_with_tag) { FactoryGirl.create(network_model.underscore) }
+          let(:network_object_ids)       { [network_object.id, network_object_with_tag.id] }
+
+          it 'works when targets are empty' do
+            User.with_user(user) do
+              results = described_class.search(:class => network_model, :targets => network_object_ids).first
+              expect(results).to match_array([network_object, network_object_with_tag])
+            end
+          end
+
+          context "with tagged #{network_model}" do
+            before do
+              group.entitlement = Entitlement.new
+              group.entitlement.set_managed_filters([['/managed/environment/prod']])
+              group.entitlement.set_belongsto_filters([])
+              group.save!
+
+              network_object_with_tag.tag_with(['/managed/environment/prod'].join(' '), :ns => '*')
+            end
+
+            it "lists only tagged #{network_model}" do
+              User.with_user(user) do
+                results = described_class.search(:class => network_model).first
+                expect(results.length).to eq(1)
+                expect(results.first).to eq(network_object_with_tag)
+              end
+            end
+          end
+        end
+      end
+    end
+
     context "with tagged VMs" do
       before(:each) do
         [
