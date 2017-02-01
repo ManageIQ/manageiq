@@ -2,6 +2,76 @@
 
 All notable changes to this project will be documented in this file.
 
+## Unreleased - as of Sprint 53 end 2017-01-30
+
+### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+53+Ending+Jan+30%2C+2017%22+label%3Aenhancement)
+
+- Automate
+  - Add 'delete' to generic object configuration dropdown ([#13541](https://github.com/ManageIQ/manageiq/pull/13541))
+  - Automate Model: Add Amazon block storage automation models ([#13458](https://github.com/ManageIQ/manageiq/pull/13458))
+  - Orchestration Services: create_catalog_item to ServiceTemplateOrchestration ([#13628](https://github.com/ManageIQ/manageiq/pull/13628))
+  - Add create_catalog_item class method to ServiceTemplate ([#13589](https://github.com/ManageIQ/manageiq/pull/13589))
+  - Save playbook service template ([#13600](https://github.com/ManageIQ/manageiq/pull/13600))
+  - Allow adding disks to vm provision via api and automation ([#13318](https://github.com/ManageIQ/manageiq/pull/13318))
+  - See also [manageiq-content repository](https://github.com/ManageIQ/manageiq-content).
+
+- Platform
+  - Chargeback: Introduce Vm/Chargeback tab backend ([#13687](https://github.com/ManageIQ/manageiq/pull/13687))
+  - Add methods for configuring and starting Ansible inside ([#13584](https://github.com/ManageIQ/manageiq/pull/13584))
+  - See also [manageiq-appliance repository](https://github.com/ManageIQ/manageiq-appliance).
+
+- Providers
+  - Ansible Tower
+    - Event Catcher ([#13423](https://github.com/ManageIQ/manageiq/pull/13423))
+    - Migrate AnsibleTower ConfigurationManager to AutomationManager ([#13630](https://github.com/ManageIQ/manageiq/pull/13630))
+  - Containers
+    - Instantiate Container Template ([#10737](https://github.com/ManageIQ/manageiq/pull/10737))
+    - Collect node custom attributes from hawkular during refresh ([#12924](https://github.com/ManageIQ/manageiq/pull/12924))
+  - See also [manageiq-providers-azure changelog](https://github.com/ManageIQ/manageiq-providers-azure/pull/29).
+  - See also [manageiq-providers-amazon changelog](https://github.com/ManageIQ/manageiq-providers-amazon/pull/124).
+
+- REST API
+  - API collection OPTIONS Enhancement to expose list of supported subcollections ([#13681](https://github.com/ManageIQ/manageiq/pull/13681))
+  - API Enhancement to support filtering on id attributes by compressed id's ([#13645](https://github.com/ManageIQ/manageiq/pull/13645))
+  - Adds remove_approver_resource to ServiceRequestController. ([#13596](https://github.com/ManageIQ/manageiq/pull/13596))
+  - Add OPTIONS method to Clusters and Hosts ([#13574](https://github.com/ManageIQ/manageiq/pull/13574))
+  - VMs/Snapshots API CRD ([#13552](https://github.com/ManageIQ/manageiq/pull/13552))
+  - Add alert actions api ([#13325](https://github.com/ManageIQ/manageiq/pull/13325))
+
+- Storage
+  - Add Amazon EC2 block storage manager EMS ([#13539](https://github.com/ManageIQ/manageiq/pull/13539))
+
+- Services UI
+  - See [manageiq-ui-service repository](https://github.com/ManageIQ/manageiq-ui-service).
+
+- User Interface (Classic)
+  - See [manageiq-ui-classic changelog](https://github.com/ManageIQ/manageiq-ui-classic/pull/276).
+
+### [Changed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+53+Ending+Jan+30%2C+2017%22+label%3Aenhancement)
+
+- Automate
+  - Look for resources in the same region as the selected template during provisioning. ([#13045](https://github.com/ManageIQ/manageiq/pull/13045))
+
+- Providers
+  - Red Hat Virtualization Manager: Save host for a VM after migration ([#13511](https://github.com/ManageIQ/manageiq/pull/13511))
+
+- Storage
+  - Rename Amazon EBS storage manager ([#13569](https://github.com/ManageIQ/manageiq/pull/13569))
+
+### [Fixed](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+53+Ending+Jan+30%2C+2017%22+label%3Abug)
+
+Notable fixes include:
+
+- Automate
+  - Allow a service power state to correctly handle nil actions ([#13232](https://github.com/ManageIQ/manageiq/pull/13232))
+
+- Platform
+  - Tenant admin should not be able to create groups in other tenants. ([#13483](https://github.com/ManageIQ/manageiq/pull/13483))
+  - Chargeback: Fix rate adjustment rounding bug ([#13331](https://github.com/ManageIQ/manageiq/pull/13331))
+
+- Providers
+  - Console: Added missing parameter when requesting OpenStack remote console ([#13558](https://github.com/ManageIQ/manageiq/pull/13558))
+
 ## Unreleased - as of Sprint 52 end 2017-01-16
 
 ### [Added](https://github.com/ManageIQ/manageiq/issues?q=milestone%3A%22Sprint+52+Ending+Jan+16%2C+2017%22+label%3Aenhancement)
