@@ -6,7 +6,7 @@ class UniqueWithinRegionValidator < ActiveModel::EachValidator
       if match_case
         record.class.where(attribute => value)
       else
-        record.class.where("LOWER(#{attribute}) = ?", value.downcase)
+        record.class.where(record.class.arel_attribute(attribute).lower.eq(value.downcase))
       end
     unless field_matches.in_region(record.region_id).where.not(:id => record.id).empty?
       record.errors.add(attribute, "is not unique within region #{record.region_id}")
