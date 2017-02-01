@@ -47,7 +47,7 @@ class TreeBuilderOpsRbac < TreeBuilder
       case object_hash[:id]
       when "u"  then Rbac.filtered(User.in_my_region)
       when "g"  then Rbac.filtered(MiqGroup.non_tenant_groups_in_my_region)
-      when "ur" then MiqUserRole.all
+      when "ur" then Rbac.filtered(MiqUserRole)
       when "tn" then Tenant.with_current_tenant
       end
     count_only_or_objects(count_only, objects, "name")
