@@ -6,13 +6,9 @@
 # - Query picture and image_href of service_requests   /api/service_requests/:id?attributes=picture,picture.image_href
 #
 describe "Pictures" do
-  # Valid base64
-  let(:content) do
-    "aW1hZ2U="
-  end
   let(:dialog1)  { FactoryGirl.create(:dialog, :label => "ServiceDialog1") }
   let(:ra1)      { FactoryGirl.create(:resource_action, :action => "Provision", :dialog => dialog1) }
-  let(:picture)  { FactoryGirl.create(:picture, :extension => "jpg", :content => content) }
+  let(:picture)  { FactoryGirl.create(:picture, :extension => "jpg") }
   let(:template) do
     FactoryGirl.create(:service_template,
                        :name             => "ServiceTemplate",
@@ -67,10 +63,26 @@ describe "Pictures" do
   end
 
   describe 'POST /api/pictures' do
+    # Valid base64 image
+    let(:content) do
+      "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGP"\
+      "C/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3Cc"\
+      "ulE8AAAACXBIWXMAAAsTAAALEwEAmpwYAAABWWlUWHRYTUw6Y29tLmFkb2Jl"\
+      "LnhtcAAAAAAAPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIg"\
+      "eDp4bXB0az0iWE1QIENvcmUgNS40LjAiPgogICA8cmRmOlJERiB4bWxuczpy"\
+      "ZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1u"\
+      "cyMiPgogICAgICA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIgogICAg"\
+      "ICAgICAgICB4bWxuczp0aWZmPSJodHRwOi8vbnMuYWRvYmUuY29tL3RpZmYv"\
+      "MS4wLyI+CiAgICAgICAgIDx0aWZmOk9yaWVudGF0aW9uPjE8L3RpZmY6T3Jp"\
+      "ZW50YXRpb24+CiAgICAgIDwvcmRmOkRlc2NyaXB0aW9uPgogICA8L3JkZjpS"\
+      "REY+CjwveDp4bXBtZXRhPgpMwidZAAAADUlEQVQIHWNgYGCwBQAAQgA+3N0+"\
+      "xQAAAABJRU5ErkJggg=="
+    end
+
     it 'rejects create without an appropriate role' do
       api_basic_authorize
 
-      run_post pictures_url, :content => content
+      run_post pictures_url, :extension => 'png', :content => content
 
       expect(response).to have_http_status(:forbidden)
     end
@@ -106,19 +118,18 @@ describe "Pictures" do
       expect(response).to have_http_status(:ok)
     end
 
-    it 'rejects a bad picture' do
+    it 'requires an extension' do
       api_basic_authorize collection_action_identifier(:pictures, :create)
 
-      run_post pictures_url, :extension => 'png', :content => 'bogus'
+      run_post pictures_url, :content => content
 
       expected = {
         'error' => a_hash_including(
-          'kind'    => 'bad_request',
-          'message' => a_string_matching(/invalid base64/),
+          'message' => a_string_including("Extension can't be blank")
         )
       }
-      expect(response.parsed_body).to include(expected)
       expect(response).to have_http_status(:bad_request)
+      expect(response.parsed_body).to include(expected)
     end
 
     it 'requires content' do
@@ -128,12 +139,25 @@ describe "Pictures" do
 
       expected = {
         'error' => a_hash_including(
-          'kind'    => 'bad_request',
-          'message' => a_string_matching(/requires content/),
+          'message' => a_string_including("Content can't be blank")
         )
       }
-      expect(response.parsed_body).to include(expected)
       expect(response).to have_http_status(:bad_request)
+      expect(response.parsed_body).to include(expected)
+    end
+
+    it 'requires content with valid base64' do
+      api_basic_authorize collection_action_identifier(:pictures, :create)
+
+      run_post pictures_url, :content => 'not base64', :extension => 'png'
+
+      expected = {
+        'error' => a_hash_including(
+          'message' => a_string_including('invalid base64')
+        )
+      }
+      expect(response).to have_http_status(:bad_request)
+      expect(response.parsed_body).to include(expected)
     end
   end
 end
