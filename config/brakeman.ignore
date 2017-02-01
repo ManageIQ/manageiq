@@ -4,6 +4,7 @@
       "warning_type": "File Access",
       "warning_code": 16,
       "fingerprint": "4e1918c2d5ff2beacc21db09f696af724d62f1a2a6a101e8e3cb564d0e8a94cd",
+      "check_name": "FileAccess",
       "message": "Model attribute used in file name",
       "file": "app/models/miq_report/import_export.rb",
       "line": 61,
@@ -22,26 +23,8 @@
     {
       "warning_type": "File Access",
       "warning_code": 16,
-      "fingerprint": "77933d8406ac443fcb0cc99b49ec890e59dc10c2ecb69de0a799360904a3e2ff",
-      "message": "Model attribute used in file name",
-      "file": "app/models/miq_report/formatting.rb",
-      "line": 6,
-      "link": "http://brakemanscanner.org/docs/warning_types/file_access/",
-      "code": "YAML.load_file(ApplicationRecord::FIXTURE_DIR.join(\"miq_report_formats.yml\"))",
-      "render_path": null,
-      "location": {
-        "type": "method",
-        "class": "MiqReport::Formatting",
-        "method": null
-      },
-      "user_input": "ApplicationRecord::FIXTURE_DIR.join(\"miq_report_formats.yml\")",
-      "confidence": "Weak",
-      "note": "Temporarily skipped, found in new brakeman version"
-    },
-    {
-      "warning_type": "File Access",
-      "warning_code": 16,
       "fingerprint": "7db29962886ebaade1d869d329da3fb601de293d121ca29c318410122bf1be40",
+      "check_name": "FileAccess",
       "message": "Model attribute used in file name",
       "file": "app/models/miq_provision/naming.rb",
       "line": 26,
@@ -61,9 +44,10 @@
       "warning_type": "Command Injection",
       "warning_code": 14,
       "fingerprint": "921b9f7b353a4de1033addb95d4a7c7efb090a7e60f8acb350ec8c7aea6e84ff",
+      "check_name": "Execute",
       "message": "Possible command injection",
       "file": "app/models/system_console.rb",
-      "line": 60,
+      "line": 59,
       "link": "http://brakemanscanner.org/docs/warning_types/command_injection/",
       "code": "spawn(*[\"/usr/bin/socat\", \"TCP-LISTEN:#{local_port},fork\", \"TCP:#{remote_address}:#{remote_port}\"])",
       "render_path": null,
@@ -80,6 +64,7 @@
       "warning_type": "SQL Injection",
       "warning_code": 0,
       "fingerprint": "972a9b434a5ec51ff10c13cd39b2b04d3bc977ee17c599a9206fb83ebe826d4b",
+      "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/models/mixins/relationships_aggregation_mixin.rb",
       "line": 86,
@@ -99,6 +84,7 @@
       "warning_type": "SQL Injection",
       "warning_code": 0,
       "fingerprint": "b7c5d0a1acf9b6e1d8241cc62f61ddde1dd9f6e1b871b9bd99982135465d1f24",
+      "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/models/mixins/aggregation_mixin.rb",
       "line": 63,
@@ -115,6 +101,6 @@
       "note": "Temporarily skipped, found in new brakeman version"
     }
   ],
-  "updated": "2016-12-20 15:25:32 -0500",
-  "brakeman_version": "3.4.1"
+  "updated": "2017-02-01 08:54:32 -0500",
+  "brakeman_version": "3.5.0"
 }

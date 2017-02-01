@@ -9,7 +9,7 @@ module VmdbDatabaseMetricsMixin
     my_metrics
       .where(:capture_interval_name => interval_name)
       .select(:timestamp)
-      .order("timestamp #{sort_order}")
+      .order(sort_order == "DESC" ? "timestamp DESC" : "timestamp ASC")
       .first.try(:timestamp)
   end
   private :first_or_last_capture
