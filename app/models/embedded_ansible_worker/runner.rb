@@ -1,6 +1,6 @@
 class EmbeddedAnsibleWorker::Runner < MiqWorker::Runner
   def prepare
-    update_embedded_ansible_manager
+    update_embedded_ansible_provider
 
     Thread.new do
       setup_ansible
@@ -60,13 +60,21 @@ class EmbeddedAnsibleWorker::Runner < MiqWorker::Runner
     Thread.exit
   end
 
-  def update_embedded_ansible_manager
-    ansible = ManageIQ::Providers::EmbeddedAnsible::AutomationManager.first_or_initialize
-    server  = MiqServer.my_server(true)
-    ansible.default_endpoint.url = URI::HTTPS.build(:host => server.hostname, :path => "/ansibleapi/v1")
-    ansible.name = "Embedded Ansible"
-    ansible.zone = server.zone
-    ansible.save!
+  def update_embedded_ansible_provider
+    server   = MiqServer.my_server(true)
+    provider = ManageIQ::Providers::EmbeddedAnsible::Provider.first_or_initialize
+
+    provider.name = "Embedded Ansible"
+    provider.zone = server.zone
+    provider.url  = URI::HTTPS.build(:host => server.hostname || server.ipaddress, :path => "/ansibleapi/v1").to_s
+
+    provider.save!
+
+    auth = {
+      :userid   => "admin",
+      :password => MiqDatabase.first.ansible_admin_password
+    }
+    provider.update_authentication(:default => auth)
   end
 
   # Base class methods we override since we don't have a separate process.  We might want to make these opt-in features in the base class that this subclass can choose to opt-out.
