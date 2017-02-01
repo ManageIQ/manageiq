@@ -68,6 +68,8 @@ Vmdb::Application.routes.draw do
   match "/auth/:provider/callback" => "sessions#create", :via => :get
 
   if Rails.env.development? && defined?(Rails::Server)
-    mount WebsocketServer.new(:logger => Logger.new(STDOUT)) => '/ws'
+    logger = Logger.new(STDOUT)
+    logger.level = ::Settings.log.level_websocket
+    mount WebsocketServer.new(:logger => logger) => '/ws'
   end
 end
