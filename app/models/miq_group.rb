@@ -17,7 +17,7 @@ class MiqGroup < ApplicationRecord
   virtual_column :miq_user_role_name, :type => :string,  :uses => :miq_user_role
   virtual_column :read_only,          :type => :boolean
 
-  delegate :self_service?, :limited_self_service?, :to => :miq_user_role, :allow_nil => true
+  delegate :self_service?, :limited_self_service?, :disallowed_roles, :to => :miq_user_role, :allow_nil => true
 
   validates :description, :presence => true, :uniqueness => {:conditions => -> { in_my_region } }
   validate :validate_default_tenant, :on => :update, :if => :tenant_id_changed?
@@ -42,6 +42,10 @@ class MiqGroup < ApplicationRecord
 
   def name
     description
+  end
+
+  def self.with_allowed_roles_for(user_or_group)
+    includes(:miq_user_role).where.not({:miq_user_roles => {:name => user_or_group.disallowed_roles}})
   end
 
   def self.next_sequence

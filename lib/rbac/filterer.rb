@@ -50,6 +50,13 @@ module Rbac
       Storage
     )
 
+    # key: MiqUserRole#name - user's role
+    # value:
+    #   array - disallowed roles for the user's role
+    DISALLOWED_ROLES_FOR_USER_ROLE = {
+      'EvmRole-tenant_administrator' => %w(EvmRole-super_administrator)
+    }.freeze
+
     # key: descendant::klass
     # value:
     #   if it is a symbol/method_name:
@@ -437,6 +444,9 @@ module Rbac
       elsif klass == MiqGroup && miq_group.try!(:self_service?)
         # Self Service users searching for groups only see their group
         scope.where(:id => miq_group.id)
+      elsif [MiqUserRole, MiqGroup].include?(klass) && (user_or_group = miq_group || user) &&
+            user_or_group.disallowed_roles
+        scope.with_allowed_roles_for(user_or_group)
       else
         scope
       end
