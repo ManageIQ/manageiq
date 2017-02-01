@@ -8,7 +8,7 @@ gem "activerecord",            "~> 5.0.0" # used by appliance_console
 gem "activesupport",           "~> 5.0.0"
 gem "addressable",             "~> 2.4",            :require => false
 gem "awesome_spawn",           "~> 1.4",            :require => false
-gem "azure-armrest",           "=0.3.9",            :require => false
+gem "azure-armrest",           "=0.5.2",            :require => false
 gem "bcrypt",                  "~> 3.1.10",         :require => false
 gem "binary_struct",           "~> 2.1",            :require => false
 gem "bundler",                 ">= 1.8.4" # rails-assets requires bundler >= 1.8.4, see: https://rails-assets.org/
