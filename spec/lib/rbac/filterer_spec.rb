@@ -331,6 +331,32 @@ describe Rbac::Filterer do
           get_rbac_results_for_and_expect_objects(MiqGroup, [user.current_group])
         end
       end
+
+      context 'with EvmRole-tenant_administrator' do
+        let(:tenant_administrator_user_role) do
+          FactoryGirl.create(:miq_user_role, :name => MiqUserRole::DEFAULT_TENANT_ROLE_NAME)
+        end
+
+        let!(:super_administrator_user_role) do
+          FactoryGirl.create(:miq_user_role, :name => MiqUserRole::SUPER_ADMIN_ROLE_NAME)
+        end
+
+        let(:group) do
+          FactoryGirl.create(:miq_group, :tenant => default_tenant, :miq_user_role => tenant_administrator_user_role)
+        end
+
+        let!(:user) { FactoryGirl.create(:user, :miq_groups => [group]) }
+
+        it 'can see all roles expect to EvmRole-super_administrator' do
+          expect(MiqUserRole.count).to eq(2)
+          get_rbac_results_for_and_expect_objects(MiqUserRole, [tenant_administrator_user_role])
+        end
+
+        it 'can see all groups expect to group with role EvmRole-super_administrator' do
+          expect(MiqUserRole.count).to eq(2)
+          get_rbac_results_for_and_expect_objects(MiqGroup, [group])
+        end
+      end
     end
 
     context "with Hosts" do
