@@ -13,7 +13,11 @@ $vms = Get-SCVirtualMachine -VMMServer localhost -All |
     VirtualDVDDrives,VirtualHardDisks,VirtualNetworkAdapters,VMCheckpoints,VMCPath,
     @{name='StatusString';expression={$_.Status -As [string]}},
     @{name='VirtualMachineStateString';expression={$_.VirtualMachineState -As [string]}},
-    @{name='VirtualDVDDrivesISO';expression={ $_.VirtualDVDDrives.ISO }}
+    @{name='DVDISO';expression={ $_.VirtualDVDDrives.ISO | Select -Property Name, ID, SharePath, Size }} |
+    % {
+      if($_.DVDISO){ $_.DVDISO = @($_.DVDISO); $_ } # Force array context
+      else{ $_ }
+    }
 
 $hosts = Get-SCVMHost -VMMServer localhost |
   Select -Property CommunicationStateString,CoresPerCPU,DiskVolumes,DVDDriveList,
@@ -31,7 +35,11 @@ $images = Get-SCVMTemplate -VMMServer localhost -All |
   Select -Property CPUCount,Memory,Name,ID,VirtualHardDisks,VirtualDVDDrives,
     @{name="CPUTypeString";expression={$_.CPUType.Name}},
     @{name="OperatingSystemString";expression={$_.OperatingSystem.Name}},
-    @{name='VirtualDVDDrivesISO';expression={ $_.VirtualDVDDrives.ISO }}
+    @{name='DVDISO';expression={ $_.VirtualDVDDrives.ISO | Select -Property Name, ID, SharePath, Size }} |
+    % {
+      if($_.DVDISO){ $_.DVDISO = @($_.DVDISO); $_ } # Force array context
+      else{ $_ }
+    }
 
 $clusters = @(Get-SCVMHostCluster -VMMServer localhost | Select -Property ClusterName,ID,Nodes)
 

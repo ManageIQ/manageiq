@@ -47,7 +47,7 @@ module ManageIQ::Providers::Microsoft
 
     def get_datastores
       datastores = @inventory['hosts'].collect{ |host| host['DiskVolumes'] }.flatten
-      datastores.reject!{ |e| e['VolumeLabel'] == 'System Reserved' }
+      datastores.reject! { |e| e['VolumeLabel'] == 'System Reserved' }
       process_collection(datastores, :storages) { |ds| parse_datastore(ds) }
     end
 
@@ -60,7 +60,7 @@ module ManageIQ::Providers::Microsoft
           v['VMHostName'] == host['Name']
         end
       end
-  
+
       process_collection(hosts, :hosts) { |host| parse_host(host) }
     end
 
@@ -331,7 +331,7 @@ module ManageIQ::Providers::Microsoft
         :cpu_cores_per_socket => 1,
         :cpu_total_cores      => vm['CPUCount'],
         :guest_os             => vm['OperatingSystem']['Name'],
-        :guest_os_full_name   => vm['OperatingSystem']['Description'],
+        :guest_os_full_name   => process_vm_os_description(vm),
         :memory_mb            => vm['Memory'],
         :cpu_type             => vm['CPUType']['Name'],
         :disks                => process_disks(vm),
@@ -345,7 +345,7 @@ module ManageIQ::Providers::Microsoft
       result = []
 
       if vm['VMCheckpoints'].blank?
-        $scvmm_log.info("No snapshot information available for " +  vm['Name'])
+        $scvmm_log.info("No snapshot information available for #{vm['Name']}")
         return result
       end
 
@@ -356,7 +356,7 @@ module ManageIQ::Providers::Microsoft
           :ems_ref     => cp['CheckpointID'],
           :parent_uid  => cp['ParentCheckpointID'],
           :name        => cp['Name'],
-          :description => cp['Description'],
+          :description => cp['Description'].blank? ? nil : cp['Description'],
           :create_time => convert_windows_date_string_to_ruby_time(cp['AddedTime']),
           :current     => cp['CheckpointID'] == vm['LastRestoredCheckpointID']
         }
@@ -408,15 +408,15 @@ module ManageIQ::Providers::Microsoft
       return devices if vm['VirtualDVDDrives'].blank?
 
       vm['VirtualDVDDrives'].each do |dvd|
-        devices << process_vm_physical_dvd_drive(dvd) unless dvd['HostDrive'].blank?
-        devices << process_iso_image(vm['VirtualDVDDrivesISO']) if vm['VirtualDVDDrivesISO']
+        devices.concat(process_vm_physical_dvd_drive(dvd)) unless dvd['HostDrive'].blank?
       end
 
-      devices.flatten.compact
+      devices.concat(process_iso_image(vm['DVDISO'])) unless vm['DVDISO'].blank?
+      devices.flatten.compact.uniq
     end
 
     def process_vm_physical_dvd_drive(dvd)
-      new_result = {
+      {
         :device_type     => 'cdrom',  # TODO: add DVD to model
         :present         => true,
         :controller_type => 'IDE',
@@ -425,23 +425,21 @@ module ManageIQ::Providers::Microsoft
         :uid_ems         => dvd['ID'],
         :device_name     => dvd['Name']
       }
-
-      new_result
     end
 
-    def process_iso_image(iso)
-      new_result = {
-        :size            => iso['Size'] / 1.megabyte,
-        :device_type     => 'cdrom',  # TODO: add DVD to model
-        :present         => true,
-        :controller_type => 'IDE',
-        :mode            => 'persistent',
-        :filename        => iso['SharePath'],
-        :uid_ems         => iso['ID'],
-        :device_name     => iso['Name']
-      }
-
-      new_result
+    def process_iso_image(isos)
+      isos.collect do |iso|
+        {
+          :size            => iso['Size'] / 1.megabyte,
+          :device_type     => 'cdrom', # TODO: add DVD to model
+          :present         => true,
+          :controller_type => 'IDE',
+          :mode            => 'persistent',
+          :filename        => iso['SharePath'],
+          :uid_ems         => iso['ID'],
+          :device_name     => iso['Name']
+        }
+      end
     end
 
     def process_vm_storages(properties)
@@ -468,6 +466,14 @@ module ManageIQ::Providers::Microsoft
         :version      => property_hash['OperatingSystemVersionString'],
         :product_type => 'microsoft'
       }
+    end
+
+    def process_vm_os_description(vm)
+      if vm['OperatingSystem']['Name'].casecmp('unknown').zero?
+        "Unknown"
+      else
+        vm['OperatingSystem']['Description']
+      end
     end
 
     def process_tools_status(property_hash)
@@ -546,20 +552,20 @@ module ManageIQ::Providers::Microsoft
     # UsedForManagement property is true.
     #
     def identify_primary_ip(host)
-      prefix   = "MIQ(#{self.class.name})##{__method__})"
-      switches = host['VirtualSwitch']
-      adapters = switches.collect{ |s| s['VMHostNetworkAdapters'] }.flatten
+      prefix    = "MIQ(#{self.class.name})##{__method__})"
+      switches  = host['VirtualSwitch']
+      adapters  = switches.collect{ |s| s['VMHostNetworkAdapters'] }.flatten
+      host_name = host['Name']
 
       if switches.blank? || adapters.blank?
-        $scvmm_log.warn("#{prefix} Found no management IP for #{host}. Setting IP to nil")
+        $scvmm_log.warn("#{prefix} Found no management IP for #{host_name}. Setting IP to nil")
         return nil
       end
 
-      adapter = adapters.find{ |adapter| adapter['UsedForManagement'] }
+      adapter = adapters.find { |e| e['UsedForManagement'] }
 
       if adapter.blank?
-        host_name = host['Name']
-        $scvmm_log.warn("#{prefix} Found no management IP for #{host}. Setting IP to nil")
+        $scvmm_log.warn("#{prefix} Found no management IP for #{host_name}. Setting IP to nil")
         nil
       else
         adapter['IPAddresses'].split.first # Avoid IPv6 text if present
@@ -600,7 +606,7 @@ module ManageIQ::Providers::Microsoft
 
     def convert_windows_date_string_to_ruby_time(string)
       seconds = string[/Date\((.*?)\)/, 1].to_i
-      Time.at(seconds / 1000)
+      Time.at(seconds / 1000).utc
     end
 
     def process_collection(collection, key)
