@@ -51,10 +51,12 @@ module ManageIQ
     end
 
     def self.bundle_install
+      add_libcurl_path
       system('bundle check') || system!('bundle install')
     end
 
     def self.bundle_update
+      add_libcurl_path
       system!('bundle update')
     end
 
@@ -116,6 +118,40 @@ module ManageIQ
 
     def self.system!(*args)
       system(*args, :chdir => APP_ROOT) || abort("\n== Command #{args} failed ==")
+    end
+
+    def self.add_libcurl_path
+      # Skip if PKG_CONFIG_LIBDIR is already set
+      unless ENV["PKG_CONFIG_LIBDIR"]
+        # I would use sys-uname here, but since we can't assume that it has been
+        # installed yet, using something that will #workGoodEnough™ from stdlib.
+        if RbConfig::CONFIG['host_os'] =~ /darwin/
+          # Check for homebrew install of curl
+          curl_pkgconfig="/usr/local/opt/curl/lib/pkgconfig"
+          if Dir.exists? curl_pkgconfig
+            # Add to ENV if found
+            ENV["PKG_CONFIG_LIBDIR"]=curl_pkgconfig
+          else
+            # Error with a helpful message if it doesn't exist
+            raise <<-EOE.gsub(/^ */, '')
+              📎  "Hey there!  Looks like you are having a bit of trouble! :)"
+
+              Kidding aside, looks like you don't have PKG_CONFIG_LIBDIR set,
+              or a valid place to find libcurl on OSX.  To install libcurl via
+              homebrew so '#{  $0  }' will work without further changes
+              necessary, run the following:
+
+              $ brew install curl
+
+              And rerun `#{$0}`.
+
+              NOTE:  This will only provide libs for libcurl to be used for
+              c-extensions, and will not replace your existing installation of
+              `curl`.
+            EOE
+          end
+        end
+      end
     end
   end
 end
