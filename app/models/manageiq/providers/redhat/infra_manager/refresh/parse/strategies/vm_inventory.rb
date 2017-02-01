@@ -217,7 +217,7 @@ module ManageIQ::Providers::Redhat::InfraManager::Refresh::Parse::Strategies
     end
 
     def vm_inv_to_os_hash(inv)
-      guest_os = inv.attributes.fetch_path(:os, :type)
+      guest_os = inv&.os&.type
       result = {
         # If the data from VC is empty, default to "Other"
         :product_name => guest_os.blank? ? "Other" : guest_os

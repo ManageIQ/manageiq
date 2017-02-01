@@ -30,7 +30,6 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
 
   def assert_table_counts
     expect(ExtManagementSystem.count).to eq(1)
-    puts EmsFolder.all.collect {|mf| [mf.name, mf.ems_id]}
     expect(EmsFolder.count).to eq(7)
     expect(EmsCluster.count).to eq(3)
     expect(Host.count).to eq(3)
@@ -60,7 +59,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
 
   def assert_ems
     expect(@ems).to have_attributes(
-      :api_version => "4.2.0_master.",
+      :api_version => "4.2.0_master",
       :uid_ems     => nil
     )
 
@@ -288,7 +287,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
     # v.storage  # TODO: Fix bug where duplication location GUIDs could cause the wrong value to appear.
 
     expect(v.operating_system).to have_attributes(
-      :product_name => "Other"
+      :product_name => "other"
     )
 
     expect(v.custom_attributes.size).to eq(0)
@@ -417,7 +416,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
     # v.storage  # TODO: Fix bug where duplication location GUIDs could cause the wrong value to appear.
 
     expect(v.operating_system).to have_attributes(
-      :product_name => "Other"
+      :product_name => "other"
     )
 
     expect(v.custom_attributes.size).to eq(0)
@@ -554,7 +553,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
     # v.storage  # TODO: Fix bug where duplication location GUIDs could cause the wrong value to appear.
 
     expect(v.operating_system).to have_attributes(
-      :product_name => "Other"
+      :product_name => "other"
     )
 
     expect(v.custom_attributes.size).to eq(0)
