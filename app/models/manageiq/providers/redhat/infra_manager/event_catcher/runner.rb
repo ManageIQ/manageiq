@@ -41,7 +41,7 @@ class ManageIQ::Providers::Redhat::InfraManager::EventCatcher::Runner < ManageIQ
 
   def queue_event(event)
     _log.info "#{log_prefix} Caught event [#{event[:name]}]"
-    event_hash = ManageIQ::Providers::Redhat::InfraManager::EventParser.event_to_hash(event, :ems_id)
+    event_hash = ManageIQ::Providers::Redhat::InfraManager::EventParser.event_to_hash(event, @cfg[:ems_id])
     EmsEvent.add_queue('add', @cfg[:ems_id], event_hash)
   end
 
