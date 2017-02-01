@@ -228,8 +228,8 @@
           :required_method:
             - :validate_vm_name
             - :validate_regex
-          :required_regex: !ruby/regexp /^[^-_][a-zA-Z0-9_-]{1,15}(?<![-_])$/
-          :required_regex_fail_details: The name must be composed only of 1-15 English alphabet characters (a-z), numbers (0-9), dashes (-) or underscores (_). The first and last character must be an English alphabet character.
+          :required_regex: !ruby/regexp /^[^-_](?!\d+$)[a-zA-Z0-9_-]{1,15}(?<![-_])$/
+          :required_regex_fail_details: The name must be composed only of 1-15 English alphabet characters (a-z), numbers (0-9), dashes (-) or underscores (_) and cannot contain only numbers. The first and last character must be an English alphanumeric character.
           :required: true
           :notes: 
           :display: :edit
