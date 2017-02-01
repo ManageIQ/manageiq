@@ -13,7 +13,7 @@ describe "Service Templates API" do
   let(:ra1)        { FactoryGirl.create(:resource_action, :action => "Provision", :dialog => dialog1) }
   let(:ra2)        { FactoryGirl.create(:resource_action, :action => "Retirement", :dialog => dialog2) }
 
-  let(:picture)    { FactoryGirl.create(:picture, :extension => "jpg") }
+  let(:picture)    { FactoryGirl.create(:picture, :extension => "jpg", :content => 'foo') }
   let(:template)   { FactoryGirl.create(:service_template, :name => "ServiceTemplate") }
 
   describe "Service Templates query" do

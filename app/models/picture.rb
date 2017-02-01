@@ -4,6 +4,7 @@ class Picture < ApplicationRecord
   validates :extension,
             :inclusion => { :in => %w(png jpg svg), :message => 'must be a png, jpg, or svg' },
             :if        => :extension
+  validates :content, :presence => true
 
   virtual_has_one :image_href, :class_name => "String"
 

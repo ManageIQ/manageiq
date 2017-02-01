@@ -129,7 +129,7 @@ describe "Rest API Collections" do
     end
 
     it "query Pictures" do
-      FactoryGirl.create(:picture)
+      FactoryGirl.create(:picture, :content => 'foo')
       test_collection_query(:pictures, pictures_url, Picture)
     end
 

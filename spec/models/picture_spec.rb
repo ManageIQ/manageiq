@@ -1,15 +1,25 @@
 describe Picture do
   subject { FactoryGirl.build :picture }
 
+  before do
+    subject.content = 'foo'
+  end
+
   it "auto-creates needed directory" do
     expect(File.directory?(described_class.directory)).to be_truthy
   end
 
-  it "#content" do
-    expect(subject.content).to be_nil
-    expected = "FOOBAR"
-    subject.content         = expected.dup
-    expect(subject.content).to eq(expected)
+  context "#content" do
+    it 'returns expected content' do
+      expected = "FOOBAR"
+      subject.content = expected.dup
+      expect(subject.content).to eq(expected)
+    end
+
+    it 'requires content' do
+      subject.content = ''
+      expect(subject.valid?).to be_falsey
+    end
   end
 
   context "#extension" do
@@ -65,9 +75,8 @@ describe Picture do
   end
 
   it "#size" do
-    expect(subject.size).to eq(0)
     expected = "FOOBAR"
-    subject.content         = expected.dup
+    subject.content = expected.dup
     expect(subject.size).to eq(expected.length)
   end
 
