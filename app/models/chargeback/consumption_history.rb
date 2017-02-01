@@ -26,9 +26,9 @@ class Chargeback
         # values are grouped by resource_id and timestamp (query_start_time...query_end_time)
         records.group_by(&:resource_id).each do |_, metric_rollup_records|
           metric_rollup_records = metric_rollup_records.select { |x| x.resource.present? }
-          consumption = ConsumptionWithRollups.new(metric_rollup_records, query_start_time, query_end_time)
           next if metric_rollup_records.empty?
-          yield(consumption)
+          consumption = ConsumptionWithRollups.new(metric_rollup_records, query_start_time, query_end_time)
+          yield(consumption) unless consumption.consumed_hours_in_interval.zero?
         end
       end
     end
