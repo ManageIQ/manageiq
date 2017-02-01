@@ -19,5 +19,4 @@ module ManageIQ::Providers::Inflector
 
     klass.parent == ManageIQ::Providers ? klass : provider_module(klass.parent, klass)
   end
-  private_class_method :provider_module
 end

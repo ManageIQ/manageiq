@@ -5,14 +5,14 @@ module ManagerRefresh
     attr_reader :model_class, :strategy, :attributes_blacklist, :attributes_whitelist, :custom_save_block, :parent,
                 :internal_attributes, :delete_method, :data, :data_index, :dependency_attributes, :manager_ref,
                 :association, :complete, :update_only, :transitive_dependency_attributes, :custom_manager_uuid,
-                :custom_db_finder, :check_changed, :arel
+                :custom_db_finder, :check_changed, :arel, :builder_params
 
     delegate :each, :size, :to => :to_a
 
     def initialize(model_class, manager_ref: nil, association: nil, parent: nil, strategy: nil, saved: nil,
                    custom_save_block: nil, delete_method: nil, data_index: nil, data: nil, dependency_attributes: nil,
                    attributes_blacklist: nil, attributes_whitelist: nil, complete: nil, update_only: nil,
-                   check_changed: nil, custom_manager_uuid: nil, custom_db_finder: nil, arel: nil)
+                   check_changed: nil, custom_manager_uuid: nil, custom_db_finder: nil, arel: nil, builder_params: {})
       @model_class                      = model_class
       @manager_ref                      = manager_ref || [:ems_ref]
       @custom_manager_uuid              = custom_manager_uuid
@@ -34,6 +34,7 @@ module ManagerRefresh
       @internal_attributes              = [:__feedback_edge_set_parent]
       @complete                         = complete.nil? ? true : complete
       @update_only                      = update_only.nil? ? false : update_only
+      @builder_params                   = builder_params
 
       blacklist_attributes!(attributes_blacklist) if attributes_blacklist.present?
       whitelist_attributes!(attributes_whitelist) if attributes_whitelist.present?
@@ -120,7 +121,9 @@ module ManagerRefresh
 
         actualize_dependencies(inventory_object)
       end
+      self
     end
+    alias push <<
 
     def object_index(object)
       stringify_reference(
@@ -144,6 +147,11 @@ module ManagerRefresh
 
     def object_index_with_keys(keys, object)
       keys.map { |attribute| object.public_send(attribute).to_s }.join(stringify_joiner)
+    end
+
+    def find_or_build(manager_uuid)
+      # FIXME: splat manager_ref
+      data_index[manager_uuid] || build(manager_ref.first => manager_uuid)
     end
 
     def find(manager_uuid)
@@ -179,6 +187,13 @@ module ManagerRefresh
 
     def new_inventory_object(hash)
       ::ManagerRefresh::InventoryObject.new(self, hash)
+    end
+
+    def build(hash)
+      hash = hash.merge(builder_params)
+      inventory_object = new_inventory_object(hash)
+      push(inventory_object)
+      inventory_object
     end
 
     def filtered_dependency_attributes
