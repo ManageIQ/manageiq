@@ -9,6 +9,7 @@ module ManageIQ::Providers::Redhat::InfraManager::Refresh::Strategies
 
     class InventoryWrapper
       attr_reader :old_inventory
+      attr_accessor :connection
       attr_reader :ems
 
       def initialize(args)
@@ -17,28 +18,32 @@ module ManageIQ::Providers::Redhat::InfraManager::Refresh::Strategies
       end
 
       def refresh
-        res = {}# old_inventory.refresh
-        res[:cluster] = collect_clusters
-        res[:storage] = collect_storages
-        res[:host] = collect_hosts
-        res[:vm] = collect_vms
-        res[:template] = collect_templates
-        res[:network] = collect_networks
-        res
+        @ems.with_provider_connection(:version => 4) do |connection|
+          @connection = connection
+          res = {}
+          res[:cluster] = collect_clusters
+          res[:storage] = collect_storages
+          res[:host] = collect_hosts
+          res[:vm] = collect_vms
+          res[:template] = collect_templates
+          res[:network] = collect_networks
+          res[:datacenter] = collect_datacenters
+          res
+        end
       end
 
       def collect_clusters
         clusters = @ems.with_provider_connection(:version => 4) do |connection|
           connection.system_service.clusters_service.list
         end
-        clusters.collect {|c| BracketNotationDecorator.new(c) }
+        clusters
       end
 
       def collect_storages
         storagess = @ems.with_provider_connection(:version => 4) do |connection|
           connection.system_service.storage_domains_service.list
         end
-        storagess.collect {|s| BracketNotationDecorator.new(s) }
+        storagess
       end
 
       def collect_hosts
@@ -47,7 +52,7 @@ module ManageIQ::Providers::Redhat::InfraManager::Refresh::Strategies
             HostPreloadedAttributesDecorator.new(h, connection)
           end
         end
-        hosts.collect { |h| BracketNotationDecorator.new(h) }
+        hosts
       end
 
       def collect_vms
@@ -56,7 +61,7 @@ module ManageIQ::Providers::Redhat::InfraManager::Refresh::Strategies
             VmPreloadedAttributesDecorator.new(vm, connection)
           end
         end
-        vms.collect { |vm| BracketNotationDecorator.new(vm) }
+        vms
       end
 
       def collect_templates
@@ -65,41 +70,36 @@ module ManageIQ::Providers::Redhat::InfraManager::Refresh::Strategies
             TemplatePreloadedAttributesDecorator.new(template, connection)
           end
         end
-        templates.collect { |template| BracketNotationDecorator.new(template) }
+        templates
       end
 
       def collect_networks
         networks = @ems.with_provider_connection(:version => 4) do |connection|
           connection.system_service.networks_service.list
         end
-        networks.collect { |template| BracketNotationDecorator.new(template) }
+        networks
+      end
+
+      def collect_datacenters
+        datacenters = @ems.with_provider_connection(:version => 4) do |connection|
+          connection.system_service.data_centers_service.list.collect do |datacenter|
+            DatacenterPreloadedAttributesDecorator.new(datacenter, connection)
+          end
+        end
+        datacenters
       end
 
       def api
-        old_inventory.api
+        @ems.with_provider_connection(:version => 4) do |connection|
+          connection.system_service.get.product_info.version.full_version
+        end
       end
 
       def service
-        old_inventory.service
+        @ems.with_provider_connection(:version => 4) do |connection|
+         OpenStruct.new(version_string: connection.system_service.get.product_info.version.full_version)
+        end
       end
-    end
-  end
-
-  class BracketNotationDecorator < SimpleDelegator
-    ALLOWED_METHODS = ["id", "name", "href"]
-
-    def initialize(obj)
-      @obj = obj
-      super
-    end
-
-    def [](key)
-      return super unless ALLOWED_METHODS.include?(key.to_s)
-      @obj.send(key)
-    end
-
-    def attributes
-      instance_values
     end
   end
 
@@ -110,6 +110,15 @@ module ManageIQ::Providers::Redhat::InfraManager::Refresh::Strategies
       @nics = connection.follow_link(host.nics)
       @statistics = connection.follow_link(host.statistics)
       super(host)
+    end
+  end
+
+  class DatacenterPreloadedAttributesDecorator < SimpleDelegator
+    attr_reader :storage_domains
+    def initialize(datacenter, connection)
+      @obj = datacenter
+      @storage_domains = connection.follow_link(datacenter.storage_domains)
+      super(datacenter)
     end
   end
 

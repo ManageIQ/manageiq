@@ -49,12 +49,12 @@ module ManageIQ::Providers::Redhat::InfraManager::Refresh::Parse::Strategies
         hardware[:networks] = host_inv_to_network_hashes(host_inv, guest_device_uids[host_id])
 
         ipmi_address = nil
-        if host_inv.attributes.fetch_path(:power_management, :type).to_s.include?('ipmi')
-          ipmi_address = host_inv.attributes.fetch_path(:power_management, :address)
+        if host_inv&.power_management&.type.to_s.include?('ipmi')
+          ipmi_address = host_inv&.power_management&.address
         end
 
         host_os_version = host_inv&.os&.version
-        ems_ref = ManageIQ::Providers::Redhat::InfraManager.make_ems_ref(host_inv[:href])
+        ems_ref = ManageIQ::Providers::Redhat::InfraManager.make_ems_ref(host_inv.href)
         new_result = {
           :type             => 'ManageIQ::Providers::Redhat::InfraManager::Host',
           :ems_ref          => ems_ref,
@@ -136,13 +136,13 @@ module ManageIQ::Providers::Redhat::InfraManager::Refresh::Parse::Strategies
       nics.to_miq_a.each do |data|
         network_id = data&.network&.id
         unless network_id.nil?
-          network = ems_inv[:network].detect { |n| n[:id] == network_id }
+          network = ems_inv[:network].detect { |n| n.id == network_id }
         else
           network_name = data&.network&.name
-          cluster_id = inv.attributes.fetch_path(:cluster, :id)
-          cluster = ems_inv[:cluster].detect { |c| c[:id] == cluster_id }
+          cluster_id = inv&.cluster&.id
+          cluster = ems_inv[:cluster].detect { |c| c.id == cluster_id }
           datacenter_id = cluster&.data_center&.id
-          network = ems_inv[:network].detect { |n| n[:name] == network_name && n.attributes.fetch_path(:data_center, :id) == datacenter_id }
+          network = ems_inv[:network].detect { |n| n.name == network_name && n&.data_center&.id == datacenter_id }
         end
 
         tag_value = nil
@@ -211,17 +211,17 @@ module ManageIQ::Providers::Redhat::InfraManager::Refresh::Parse::Strategies
         # Find the switch to which this pnic is connected
         network_id = data&.network&.id
         unless network_id.nil?
-          network = ems_inv[:network].detect { |n| n[:id] == network_id }
+          network = ems_inv[:network].detect { |n| n.id == network_id }
         else
           network_name = data&.network&.name
           cluster_id = inv&.cluster&.id
-          cluster = ems_inv[:cluster].detect { |c| c[:id] == cluster_id }
-          datacenter_id = cluster.attributes.fetch_path(:data_center, :id)
-          network = ems_inv[:network].detect { |n| n[:name] == network_name && n.attributes.fetch_path(:data_center, :id) == datacenter_id }
+          cluster = ems_inv[:cluster].detect { |c| c.id == cluster_id }
+          datacenter_id = cluster&.data_center&.id
+          network = ems_inv[:network].detect { |n| n.name == network_name && n&.data_center&.id == datacenter_id }
         end
 
         unless network.nil?
-          switch_uid = network[:id]
+          switch_uid = network.id
         else
           switch_uid = network_name unless network_name.nil?
         end

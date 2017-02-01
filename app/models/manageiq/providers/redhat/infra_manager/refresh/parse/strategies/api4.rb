@@ -50,7 +50,7 @@ module ManageIQ::Providers::Redhat::InfraManager::Refresh::Parse::Strategies
         location = if storage_type == 'NFS' || storage_type == 'GLUSTERFS'
                      "#{storage_inv&.storage&.address}:#{storage_inv&.storage&.path}"
                    else
-                     storage_inv.attributes.fetch_path(:storage, :volume_group, :logical_unit, :id)
+                     storage_inv&.storage&.volume_group&.logical_unit&.id
                    end
 
         free        = storage_inv&.available.to_i
@@ -88,6 +88,10 @@ module ManageIQ::Providers::Redhat::InfraManager::Refresh::Parse::Strategies
 
     def self.vm_inv_to_hashes(inv, _storage_inv, storage_uids, cluster_uids, host_uids, lan_uids)
       VmInventory.new(inv: inv, logger: _log).vm_inv_to_hashes(inv, _storage_inv, storage_uids, cluster_uids, host_uids, lan_uids)    
+    end
+
+    def self.datacenter_inv_to_hashes(inv, cluster_uids, vm_uids, storage_uids, host_uids)
+      DatacenterInventory.new(inv: inv, logger: _log).datacenter_inv_to_hashes(inv, cluster_uids, vm_uids, storage_uids, host_uids)
     end
   end
 end
