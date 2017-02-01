@@ -88,6 +88,34 @@
        :post:
        - :name: create
          :identifier: alert_status_action_new
+  :alert_definitions:
+    :description: Alert Definitions
+    :identifier: alert_definition
+    :options:
+    - :collection
+    :verbs: *gpd
+    :klass: MiqAlert
+    :collection_actions:
+      :get:
+      - :name: read
+        :identifier: alert_definitions_show_list
+      :post:
+      - :name: create
+        :identifier: alert_definition_new
+      - :name: delete
+        :identifier: alert_definition_delete
+    :resource_actions:
+      :get:
+      - :name: read
+        :identifier: alert_definition_show
+      :post:
+      - :name: edit
+        :identifier: alert_definition_edit
+      - :name: delete
+        :identifier: alert_definition_delete
+      :delete:
+      - :name: delete
+        :identifier: alert_definition_delete
   :alerts:
     :description: Alerts
     :identifier: alert

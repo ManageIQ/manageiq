@@ -1967,6 +1967,47 @@
       :description: Display Individual Alert Status
       :feature_type: admin
       :identifier: alert_status_action_new
+  - :name: Alert Definitions
+    :description: Everything under Alert Definitions
+    :feature_type: node
+    :hidden: true
+    :identifier: alert_definition
+    :children:
+    - :name: View
+      :description: View Alert Definitions
+      :feature_type: view
+      :identifier: alert_definition_view
+      :children:
+      - :name: List
+        :description: Display List of Alert Definitions
+        :feature_type: view
+        :identifier: alert_definitions_show_list
+      - :name: Show
+        :description: Display Individual Alert Definition
+        :feature_type: view
+        :identifier: alert_definition_show
+    - :name: Modify
+      :description: Modify Alert Definitions
+      :feature_type: admin
+      :hidden: true
+      :identifier: alert_definition_admin
+      :children:
+      - :name: Add
+        :description: Add an Alert Definition
+        :feature_type: admin
+        :hidden: true
+        :identifier: alert_definition_new
+      - :name: Edit
+        :description: Edit an Alert Definition
+        :feature_type: admin
+        :hidden: true
+        :identifier: alert_definition_edit
+      - :name: Delete
+        :description: Delete an Alert Definition
+        :feature_type: admin
+        :hidden: true
+        :identifier: alert_definition_delete
+
 # Policy Simulation
 - :name: Simulation
   :description: Policy Simulation
