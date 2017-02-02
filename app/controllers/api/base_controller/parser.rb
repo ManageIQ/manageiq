@@ -115,11 +115,6 @@ module Api
         objs.collect(&:id).first
       end
 
-      def parse_owner(resource)
-        return nil if resource.blank?
-        parse_id(resource, :users) || parse_by_attr(resource, :users)
-      end
-
       def parse_group(resource)
         return nil if resource.blank?
         parse_id(resource, :groups) || parse_by_attr(resource, :groups)
@@ -144,13 +139,6 @@ module Api
         availability_zone_id = parse_id(data, :availability_zones)
         raise BadRequestError, 'Missing availability zone identifier href or id' if availability_zone_id.nil?
         resource_search(availability_zone_id, :availability_zones, collection_class(:availability_zones))
-      end
-
-      def parse_ownership(data)
-        {
-          :owner => collection_class(:users).find_by_id(parse_owner(data["owner"])),
-          :group => collection_class(:groups).find_by_id(parse_group(data["group"]))
-        }.compact if data.present?
       end
 
       # RBAC Aware type specific resource fetches

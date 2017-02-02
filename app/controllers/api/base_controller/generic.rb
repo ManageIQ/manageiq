@@ -142,18 +142,6 @@ module Api
         invoke_custom_action(type, resource, action, data)
       end
 
-      def set_ownership_resource(type, id, data = nil)
-        raise BadRequestError, "Must specify an id for setting ownership of a #{type} resource" unless id
-        raise BadRequestError, "Must specify an owner or group for setting ownership data = #{data}" if data.blank?
-
-        api_action(type, id) do |klass|
-          resource_search(id, type, klass)
-          api_log_info("Setting ownership to #{type} #{id}")
-          ownership = parse_ownership(data)
-          set_ownership_action(klass, type, id, ownership)
-        end
-      end
-
       def refresh_dialog_fields_action(dialog, refresh_fields, resource_ident)
         result = {}
         refresh_fields.each do |field|
@@ -236,19 +224,6 @@ module Api
 
       def resource_custom_action_button(resource, action)
         resource.custom_action_buttons.find { |b| b.name.downcase == action.downcase }
-      end
-
-      def set_ownership_action(klass, type, id, ownership)
-        if ownership.blank?
-          action_result(false, "Must specify a valid owner or group for setting ownership")
-        else
-          result = klass.set_ownership([id], ownership)
-          details = ownership.each.collect { |key, obj| "#{key}: #{obj.name}" }.join(", ")
-          desc = "setting ownership of #{type} id #{id} to #{details}"
-          result == true ? action_result(true, desc) : action_result(false, result.values.join(", "))
-        end
-      rescue => err
-        action_result(false, err.to_s)
       end
 
       def validate_id(id, klass)
