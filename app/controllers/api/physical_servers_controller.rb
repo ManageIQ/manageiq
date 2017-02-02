@@ -1,7 +1,7 @@
 module Api
   class PhysicalServersController < BaseController
     include Subcollections::Firmwares
-
+  
     def show
       if params[:c_id]
         physical_server = PhysicalServer.find(params[:c_id])
