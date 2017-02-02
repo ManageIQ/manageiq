@@ -162,7 +162,7 @@ describe EmbeddedAnsible do
       end
 
       it "generates new passwords with no passwords set" do
-        expect(described_class).to receive(:generate_database_password).and_return("databasepassword")
+        expect(described_class).to receive(:generate_database_authentication).and_return(double(:userid => "awx", :password => "databasepassword"))
         expect(AwesomeSpawn).to receive(:run!) do |script_path, options|
           params                  = options[:params]
           inventory_file_contents = File.read(params[:i])
@@ -171,12 +171,13 @@ describe EmbeddedAnsible do
           expect(params[:e]).to eq(extra_vars)
           expect(params[:k]).to eq("packages,migrations,firewall,supervisor")
 
-          new_admin_password  = miq_database.ansible_admin_password
-          new_rabbit_password = miq_database.ansible_rabbitmq_password
-          expect(new_admin_password).not_to be_nil
-          expect(new_rabbit_password).not_to be_nil
-          expect(inventory_file_contents).to include("admin_password='#{new_admin_password}'")
-          expect(inventory_file_contents).to include("rabbitmq_password='#{new_rabbit_password}'")
+          new_admin_auth  = miq_database.ansible_admin_authentication
+          new_rabbit_auth = miq_database.ansible_rabbitmq_authentication
+          expect(new_admin_auth.userid).to eq("admin")
+          expect(inventory_file_contents).to include("admin_password='#{new_admin_auth.password}'")
+          expect(inventory_file_contents).to include("rabbitmq_username='#{new_rabbit_auth.userid}'")
+          expect(inventory_file_contents).to include("rabbitmq_password='#{new_rabbit_auth.password}'")
+          expect(inventory_file_contents).to include("pg_username='awx'")
           expect(inventory_file_contents).to include("pg_password='databasepassword'")
         end
 
@@ -184,9 +185,9 @@ describe EmbeddedAnsible do
       end
 
       it "uses the existing passwords when they are set in the database" do
-        miq_database.ansible_admin_password    = "adminpassword"
-        miq_database.ansible_rabbitmq_password = "rabbitpassword"
-        miq_database.ansible_database_password = "databasepassword"
+        miq_database.set_ansible_admin_authentication("adminpassword")
+        miq_database.set_ansible_rabbitmq_authentication("rabbitpassword", "rabbituser")
+        miq_database.set_ansible_database_authentication("databasepassword", "databaseuser")
 
         expect(AwesomeSpawn).to receive(:run!) do |script_path, options|
           params                  = options[:params]
@@ -197,7 +198,9 @@ describe EmbeddedAnsible do
           expect(params[:k]).to eq("packages,migrations,firewall,supervisor")
 
           expect(inventory_file_contents).to include("admin_password='adminpassword'")
+          expect(inventory_file_contents).to include("rabbitmq_username='rabbituser'")
           expect(inventory_file_contents).to include("rabbitmq_password='rabbitpassword'")
+          expect(inventory_file_contents).to include("pg_username='databaseuser'")
           expect(inventory_file_contents).to include("pg_password='databasepassword'")
         end
 
@@ -207,9 +210,9 @@ describe EmbeddedAnsible do
 
     describe ".start" do
       it "runs the setup script with the correct args" do
-        miq_database.ansible_admin_password    = "adminpassword"
-        miq_database.ansible_rabbitmq_password = "rabbitpassword"
-        miq_database.ansible_database_password = "databasepassword"
+        miq_database.set_ansible_admin_authentication("adminpassword")
+        miq_database.set_ansible_rabbitmq_authentication("rabbitpassword", "rabbituser")
+        miq_database.set_ansible_database_authentication("databasepassword", "databaseuser")
 
         expect(AwesomeSpawn).to receive(:run!) do |script_path, options|
           params                  = options[:params]
@@ -220,7 +223,9 @@ describe EmbeddedAnsible do
           expect(params[:k]).to eq("packages,migrations,firewall")
 
           expect(inventory_file_contents).to include("admin_password='adminpassword'")
+          expect(inventory_file_contents).to include("rabbitmq_username='rabbituser'")
           expect(inventory_file_contents).to include("rabbitmq_password='rabbitpassword'")
+          expect(inventory_file_contents).to include("pg_username='databaseuser'")
           expect(inventory_file_contents).to include("pg_password='databasepassword'")
         end
 
