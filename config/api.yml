@@ -51,11 +51,11 @@
     :collection_actions:
       :get:
       - :name: read
-        :identifier: configuration_script_view
+        :identifier: embedded_configuration_script_payload_view
     :resource_actions:
       :get:
       - :name: read
-        :identifier: configuration_script_view
+        :identifier: embedded_configuration_script_payload_view
   :auth:
     :description: REST API Authentication
     :options:
