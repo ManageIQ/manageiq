@@ -667,7 +667,7 @@
               :dvs: true
               :vlans: true
             :method: :allowed_vlans
-          :description: vLan
+          :description: Virtual Network
           :required: true
           :display: :edit
           :data_type: :string
