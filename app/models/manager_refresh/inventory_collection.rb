@@ -211,7 +211,9 @@ module ManagerRefresh
     end
 
     def fixed_attributes
-      presence_validators = model_class.validators.detect { |x| x.kind_of? ActiveRecord::Validations::PresenceValidator }
+      if model_class
+        presence_validators = model_class.validators.detect { |x| x.kind_of? ActiveRecord::Validations::PresenceValidator }
+      end
       # Attributes that has to be always on the entity, so attributes making unique index of the record + attributes
       # that have presence validation
       fixed_attributes    = manager_ref
@@ -272,30 +274,40 @@ module ManagerRefresh
     end
 
     def association_to_foreign_key_mapping
+      return {} unless model_class
+
       @association_to_foreign_key_mapping ||= model_class.reflect_on_all_associations.each_with_object({}) do |x, obj|
         obj[x.name] = x.foreign_key
       end
     end
 
     def foreign_key_to_association_mapping
+      return {} unless model_class
+
       @foreign_key_to_association_mapping ||= model_class.reflect_on_all_associations.each_with_object({}) do |x, obj|
         obj[x.foreign_key] = x.name
       end
     end
 
     def association_to_foreign_type_mapping
+      return {} unless model_class
+
       @association_to_foreign_type_mapping ||= model_class.reflect_on_all_associations.each_with_object({}) do |x, obj|
         obj[x.name] = x.foreign_type if x.polymorphic?
       end
     end
 
     def foreign_type_to_association_mapping
+      return {} unless model_class
+
       @foreign_type_to_association_mapping ||= model_class.reflect_on_all_associations.each_with_object({}) do |x, obj|
         obj[x.foreign_type] = x.name if x.polymorphic?
       end
     end
 
     def base_class_name
+      return "" unless model_class
+
       @base_class_name ||= model_class.base_class.name
     end
 
@@ -305,7 +317,9 @@ module ManagerRefresh
 
       strategy_name  = ", strategy: #{strategy}" if strategy
 
-      "InventoryCollection:<#{@model_class}>#{whitelist}#{blacklist}#{strategy_name}"
+      name = model_class || association
+
+      "InventoryCollection:<#{name}>#{whitelist}#{blacklist}#{strategy_name}"
     end
 
     def inspect
