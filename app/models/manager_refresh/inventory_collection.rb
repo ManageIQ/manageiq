@@ -9,7 +9,7 @@ module ManagerRefresh
 
     delegate :each, :size, :to => :to_a
 
-    def initialize(model_class, manager_ref: nil, association: nil, parent: nil, strategy: nil, saved: nil,
+    def initialize(model_class: nil, manager_ref: nil, association: nil, parent: nil, strategy: nil, saved: nil,
                    custom_save_block: nil, delete_method: nil, data_index: nil, data: nil, dependency_attributes: nil,
                    attributes_blacklist: nil, attributes_whitelist: nil, complete: nil, update_only: nil,
                    check_changed: nil, custom_manager_uuid: nil, custom_db_finder: nil, arel: nil, builder_params: {})
@@ -257,7 +257,7 @@ module ManagerRefresh
     def clone
       # A shallow copy of InventoryCollection, the copy will share @data of the original collection, otherwise we would
       # be copying a lot of records in memory.
-      self.class.new(model_class,
+      self.class.new(:model_class           => model_class,
                      :manager_ref           => manager_ref,
                      :association           => association,
                      :parent                => parent,
