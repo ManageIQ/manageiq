@@ -210,11 +210,11 @@ describe DialogFieldDropDownList do
           @df = FactoryGirl.create(:dialog_field_drop_down_list, :name => 'test drop down')
         end
 
-        describe "#multi_value?" do
+        describe "#force_multi_value" do
           context "when force_multi_value is present" do
             context "when force_multi_value is null" do
               it "multivalue false" do
-                expect(@df.multi_value?).to be_falsey
+                expect(@df.force_multi_value).to be_falsey
               end
             end
 
@@ -222,13 +222,13 @@ describe DialogFieldDropDownList do
               context "when force_multi_value is truthy" do
                 it "multivalue true" do
                   @df.force_multi_value = true
-                  expect(@df.multi_value?).to be_truthy
+                  expect(@df.force_multi_value).to be_truthy
                 end
               end
 
               context "when force_multi_value is falsy" do
                 it "multivalue false" do
-                  expect(@df.multi_value?).to be_falsey
+                  expect(@df.force_multi_value).to be_falsey
                 end
               end
             end
@@ -236,7 +236,7 @@ describe DialogFieldDropDownList do
 
           context "when force_multi_value is not present" do
             it "multivalue false" do
-              expect(@df.multi_value?).to be_falsey
+              expect(@df.force_multi_value).to be_falsey
             end
           end
         end
@@ -249,8 +249,8 @@ describe DialogFieldDropDownList do
                                    :options => {:force_multi_value => true})
         end
 
-        it "#multi_value?" do
-          expect(@df.multi_value?).to be_truthy
+        it "#force_multi_value" do
+          expect(@df.force_multi_value).to be_truthy
         end
       end
 

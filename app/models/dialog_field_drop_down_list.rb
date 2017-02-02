@@ -3,7 +3,7 @@ class DialogFieldDropDownList < DialogFieldSortedItem
     !!show_refresh_button
   end
 
-  def multi_value?
+  def force_multi_value
     return true if options[:force_multi_value].present? &&
                    options[:force_multi_value] != "null" &&
                    options[:force_multi_value]
@@ -39,7 +39,7 @@ class DialogFieldDropDownList < DialogFieldSortedItem
   end
 
   def automate_output_value
-    return super unless multi_value?
+    return super unless force_multi_value
     a = if @value.kind_of?(Integer)
           [@value]
         elsif @value.kind_of?(Array)
