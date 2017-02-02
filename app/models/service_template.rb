@@ -330,7 +330,9 @@ class ServiceTemplate < ApplicationRecord
                  ae_endpoint[:fqname]
                end
 
-      build_options = {:action => action[:name], :fqname => fqname}
+      build_options = {:action        => action[:name],
+                       :fqname        => fqname,
+                       :ae_attributes => {:service_action => action[:name]}}
       build_options.merge!(ae_endpoint.slice(:dialog,
                                              :dialog_id,
                                              :configuration_template,
