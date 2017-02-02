@@ -59,7 +59,7 @@ describe ManageIQ::Providers::Redhat::InfraManager do
       }
       allow(@rhevm_vm_attrs).to receive(:fetch_path).with(:status, :state).and_return('up')
       expect(@rhevm_vm).to receive(:update_memory).with(8.gigabytes, 2.gigabytes, :next_run => true)
-      expect(@rhevm_vm).to receive(:update_memory).with(8.gigabytes, nil, :next_run => false)
+      expect(@rhevm_vm).to receive(:update_memory).with(8.gigabytes, nil)
       @ems.vm_reconfigure(@vm, :spec => spec)
     end
 
@@ -79,7 +79,7 @@ describe ManageIQ::Providers::Redhat::InfraManager do
       adjusted = 8.gigabytes + 256.megabytes
       allow(@rhevm_vm_attrs).to receive(:fetch_path).with(:status, :state).and_return('up')
       expect(@rhevm_vm).to receive(:update_memory).with(adjusted, 2.gigabytes, :next_run => true)
-      expect(@rhevm_vm).to receive(:update_memory).with(adjusted, nil, :next_run => false)
+      expect(@rhevm_vm).to receive(:update_memory).with(adjusted, nil)
       @ems.vm_reconfigure(@vm, :spec => spec)
     end
 
@@ -90,7 +90,7 @@ describe ManageIQ::Providers::Redhat::InfraManager do
       adjusted = 8.gigabytes
       allow(@rhevm_vm_attrs).to receive(:fetch_path).with(:status, :state).and_return('up')
       expect(@rhevm_vm).to receive(:update_memory).with(adjusted, 2.gigabytes, :next_run => true)
-      expect(@rhevm_vm).to receive(:update_memory).with(adjusted, nil, :next_run => false)
+      expect(@rhevm_vm).to receive(:update_memory).with(adjusted, nil)
       @ems.vm_reconfigure(@vm, :spec => spec)
     end
 
@@ -101,7 +101,7 @@ describe ManageIQ::Providers::Redhat::InfraManager do
       adjusted = 1.gigabyte
       allow(@rhevm_vm_attrs).to receive(:fetch_path).with(:status, :state).and_return('up')
       expect(@rhevm_vm).to receive(:update_memory).with(1.gigabyte, adjusted, :next_run => true)
-      expect(@rhevm_vm).to receive(:update_memory).with(1.gigabyte, nil, :next_run => false)
+      expect(@rhevm_vm).to receive(:update_memory).with(1.gigabyte, nil)
       @ems.vm_reconfigure(@vm, :spec => spec)
     end
 

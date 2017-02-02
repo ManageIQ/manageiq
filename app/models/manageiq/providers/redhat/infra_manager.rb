@@ -153,7 +153,7 @@ class ManageIQ::Providers::Redhat::InfraManager < ManageIQ::Providers::InfraMana
     state = vm.attributes.fetch_path(:status, :state)
     if state == 'up'
       vm.update_memory(virtual, guaranteed, :next_run => true)
-      vm.update_memory(virtual, nil, :next_run => false)
+      vm.update_memory(virtual, nil)
     else
       vm.update_memory(virtual, guaranteed)
     end
