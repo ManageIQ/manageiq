@@ -69,7 +69,7 @@ Vmdb::Application.routes.draw do
 
   if Rails.env.development? && defined?(Rails::Server)
     logger = Logger.new(STDOUT)
-    logger.level = ::Settings.log.level_websocket
+    logger.level = Logger.const_get(::Settings.log.level_websocket.upcase)
     mount WebsocketServer.new(:logger => logger) => '/ws'
   end
 end
