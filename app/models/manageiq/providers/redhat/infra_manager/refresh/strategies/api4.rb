@@ -17,6 +17,10 @@ module ManageIQ::Providers::Redhat::InfraManager::Refresh::Strategies
         @old_inventory = args[:old_inventory]
       end
 
+      def targeted_refresh(methods)
+        old_inventory.targeted_refresh(methods)
+      end
+
       def refresh
         @ems.with_provider_connection(:version => 4) do |connection|
           @connection = connection
@@ -33,60 +37,39 @@ module ManageIQ::Providers::Redhat::InfraManager::Refresh::Strategies
       end
 
       def collect_clusters
-        clusters = @ems.with_provider_connection(:version => 4) do |connection|
-          connection.system_service.clusters_service.list
-        end
-        clusters
+        connection.system_service.clusters_service.list
       end
 
       def collect_storages
-        storagess = @ems.with_provider_connection(:version => 4) do |connection|
-          connection.system_service.storage_domains_service.list
-        end
-        storagess
+        connection.system_service.storage_domains_service.list
       end
 
       def collect_hosts
-        hosts = @ems.with_provider_connection(:version => 4) do |connection|
-          connection.system_service.hosts_service.list.collect do |h|
-            HostPreloadedAttributesDecorator.new(h, connection)
-          end
+        connection.system_service.hosts_service.list.collect do |h|
+          HostPreloadedAttributesDecorator.new(h, connection)
         end
-        hosts
       end
 
       def collect_vms
-        vms = @ems.with_provider_connection(:version => 4) do |connection|
-          connection.system_service.vms_service.list.collect do |vm|
-            VmPreloadedAttributesDecorator.new(vm, connection)
-          end
+        connection.system_service.vms_service.list.collect do |vm|
+          VmPreloadedAttributesDecorator.new(vm, connection)
         end
-        vms
       end
 
       def collect_templates
-        templates = @ems.with_provider_connection(:version => 4) do |connection|
-          connection.system_service.templates_service.list.collect do |template|
-            TemplatePreloadedAttributesDecorator.new(template, connection)
-          end
+        connection.system_service.templates_service.list.collect do |template|
+          TemplatePreloadedAttributesDecorator.new(template, connection)
         end
-        templates
       end
 
       def collect_networks
-        networks = @ems.with_provider_connection(:version => 4) do |connection|
-          connection.system_service.networks_service.list
-        end
-        networks
+        connection.system_service.networks_service.list
       end
 
       def collect_datacenters
-        datacenters = @ems.with_provider_connection(:version => 4) do |connection|
-          connection.system_service.data_centers_service.list.collect do |datacenter|
-            DatacenterPreloadedAttributesDecorator.new(datacenter, connection)
-          end
+        connection.system_service.data_centers_service.list.collect do |datacenter|
+          DatacenterPreloadedAttributesDecorator.new(datacenter, connection)
         end
-        datacenters
       end
 
       def api

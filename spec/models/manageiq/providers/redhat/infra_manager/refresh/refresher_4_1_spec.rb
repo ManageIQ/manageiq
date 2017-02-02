@@ -11,6 +11,33 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
     expect(described_class.ems_type).to eq(:rhevm)
   end
 
+  require 'yaml'
+  def load_response_mock_for(filename)
+    prefix = described_class.name.underscore
+    YAML.load_file(File.join('spec','models',prefix,'response_yamls',filename + '.yml'))
+  end
+
+  before(:each) do
+    inventory_wrapper_class = ManageIQ::Providers::Redhat::InfraManager::Refresh::Strategies::Api4::InventoryWrapper
+    allow_any_instance_of(inventory_wrapper_class)
+      .to receive(:collect_clusters).and_return(load_response_mock_for('clusters'))
+    allow_any_instance_of(inventory_wrapper_class)
+      .to receive(:collect_storages).and_return(load_response_mock_for('storages'))
+    allow_any_instance_of(inventory_wrapper_class)
+      .to receive(:collect_hosts).and_return(load_response_mock_for('hosts'))
+    allow_any_instance_of(inventory_wrapper_class)
+      .to receive(:collect_vms).and_return(load_response_mock_for('vms'))
+    allow_any_instance_of(inventory_wrapper_class)
+      .to receive(:collect_templates).and_return(load_response_mock_for('templates'))
+    allow_any_instance_of(inventory_wrapper_class)
+      .to receive(:collect_networks).and_return(load_response_mock_for('networks'))
+    allow_any_instance_of(inventory_wrapper_class)
+      .to receive(:collect_datacenters).and_return(load_response_mock_for('datacenters'))
+    allow_any_instance_of(inventory_wrapper_class).to receive(:api).and_return("4.2.0_master")
+    allow_any_instance_of(inventory_wrapper_class).to receive(:service)
+      .and_return(OpenStruct.new(version_string: '4.2.0_master'))
+  end
+
   it "will perform a full refresh on v4.1" do
     VCR.use_cassette("#{described_class.name.underscore}_4_1", :allow_unused_http_interactions => true, :allow_playback_repeats => true, :record => :new_episodes) do
       EmsRefresh.refresh(@ems)
