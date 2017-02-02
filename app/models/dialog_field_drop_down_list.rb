@@ -51,10 +51,8 @@ class DialogFieldDropDownList < DialogFieldSortedItem
     MiqAeEngine.create_automation_attribute_array_value(automate_values)
   end
 
-  private
-
-  def load_values_on_init?
-    return true unless show_refresh_button
-    load_values_on_init
+  def automate_key_name
+    return super unless force_multi_value
+    MiqAeEngine.create_automation_attribute_array_key(super)
   end
 end
