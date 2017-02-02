@@ -29,9 +29,11 @@ class NetworkRouterController < ApplicationController
     elsif params[:pressed] == "network_router_new"
       javascript_redirect :action => "new"
     elsif params[:pressed] == "network_router_add_interface"
-      javascript_redirect :action => "add_interface_select", :id => checked_item_id
+      checked_router_id = get_checked_router_id(params)
+      javascript_redirect :action => "add_interface_select", :id => checked_router_id
     elsif params[:pressed] == "network_router_remove_interface"
-      javascript_redirect :action => "remove_interface_select", :id => checked_item_id
+      checked_router_id = get_checked_router_id(params)
+      javascript_redirect :action => "remove_interface_select", :id => checked_router_id
     elsif !flash_errors? && @refresh_div == "main_div" && @lastaction == "show_list"
       replace_gtl_main_div
     else
