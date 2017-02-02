@@ -1,5 +1,7 @@
 module Api
   class ServiceDialogsController < BaseController
+    include Shared::DialogFields
+
     before_action :set_additional_attributes, :only => [:index, :show]
 
     def refresh_dialog_fields_resource(type, id = nil, data = nil)
