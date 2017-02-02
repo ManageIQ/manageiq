@@ -29,43 +29,43 @@ module AnsibleAuthentications
     auth.save!
   end
 
-  def ansible_rabbitmq_password
-    auth = authentication_type(ANSIBLE_RABBITMQ_TYPE)
-    auth.nil? ? nil : auth.password
+  def ansible_rabbitmq_authentication
+    authentication_type(ANSIBLE_RABBITMQ_TYPE)
   end
 
-  def ansible_rabbitmq_password=(password)
-    auth = authentication_for_type(ANSIBLE_RABBITMQ_TYPE, "Ansible Rabbitmq Password")
+  def set_ansible_rabbitmq_authentication(password, userid = "tower")
+    auth = authentication_for_type(ANSIBLE_RABBITMQ_TYPE, "Ansible Rabbitmq Authentication")
 
-    auth.userid   = "tower"
+    auth.userid   = userid
     auth.password = password
     auth.save!
+    auth
   end
 
-  def ansible_admin_password
-    auth = authentication_type(ANSIBLE_ADMIN_TYPE)
-    auth.nil? ? nil : auth.password
+  def ansible_admin_authentication
+    authentication_type(ANSIBLE_ADMIN_TYPE)
   end
 
-  def ansible_admin_password=(password)
-    auth = authentication_for_type(ANSIBLE_ADMIN_TYPE, "Ansible Admin Password")
+  def set_ansible_admin_authentication(password, userid = "admin")
+    auth = authentication_for_type(ANSIBLE_ADMIN_TYPE, "Ansible Admin Authentication")
 
-    auth.userid   = "admin"
+    auth.userid   = userid
     auth.password = password
     auth.save!
+    auth
   end
 
-  def ansible_database_password
-    auth = authentication_type(ANSIBLE_DATABASE_TYPE)
-    auth.nil? ? nil : auth.password
+  def ansible_database_authentication
+    authentication_type(ANSIBLE_DATABASE_TYPE)
   end
 
-  def ansible_database_password=(password)
-    auth = authentication_for_type(ANSIBLE_DATABASE_TYPE, "Ansible Database Password")
+  def set_ansible_database_authentication(password, userid = "awx")
+    auth = authentication_for_type(ANSIBLE_DATABASE_TYPE, "Ansible Database Authentication")
 
-    auth.userid   = "awx"
+    auth.userid   = userid
     auth.password = password
     auth.save!
+    auth
   end
 
   private
