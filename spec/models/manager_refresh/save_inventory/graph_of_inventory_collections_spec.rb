@@ -433,15 +433,15 @@ describe ManagerRefresh::SaveInventory do
         it 'test network_port -> stack -> resource -> stack' do
           @data                                  = {}
           @data[:orchestration_stacks]           = ::ManagerRefresh::InventoryCollection.new(
-            ManageIQ::Providers::CloudManager::OrchestrationStack,
+            :model_class => ManageIQ::Providers::CloudManager::OrchestrationStack,
             :parent      => @ems,
             :association => :orchestration_stacks)
           @data[:orchestration_stacks_resources] = ::ManagerRefresh::InventoryCollection.new(
-            OrchestrationStackResource,
+            :model_class => OrchestrationStackResource,
             :parent      => @ems,
             :association => :orchestration_stacks_resources)
           @data[:network_ports]                  = ::ManagerRefresh::InventoryCollection.new(
-            NetworkPort,
+            :model_class => NetworkPort,
             :parent      => @ems.network_manager,
             :association => :network_ports)
 
@@ -503,15 +503,15 @@ describe ManagerRefresh::SaveInventory do
         it 'test network_port -> stack -> resource -> stack reverted' do
           @data                                  = {}
           @data[:network_ports]                  = ::ManagerRefresh::InventoryCollection.new(
-            NetworkPort,
+            :model_class => NetworkPort,
             :parent      => @ems.network_manager,
             :association => :network_ports)
           @data[:orchestration_stacks_resources] = ::ManagerRefresh::InventoryCollection.new(
-            OrchestrationStackResource,
+            :model_class => OrchestrationStackResource,
             :parent      => @ems,
             :association => :orchestration_stacks_resources)
           @data[:orchestration_stacks]           = ::ManagerRefresh::InventoryCollection.new(
-            ManageIQ::Providers::CloudManager::OrchestrationStack,
+            :model_class => ManageIQ::Providers::CloudManager::OrchestrationStack,
             :parent      => @ems,
             :association => :orchestration_stacks)
 
@@ -575,7 +575,7 @@ describe ManagerRefresh::SaveInventory do
           # data dependencies and saving it according to the tree.
           @data                 = {}
           @data[:network_ports] = ::ManagerRefresh::InventoryCollection.new(
-            NetworkPort,
+            :model_class => NetworkPort,
             :parent      => @ems.network_manager,
             :association => :network_ports)
 
@@ -616,15 +616,15 @@ describe ManagerRefresh::SaveInventory do
           # edge correctly and this cycle is solvable.
           @data                                  = {}
           @data[:orchestration_stacks]           = ::ManagerRefresh::InventoryCollection.new(
-            ManageIQ::Providers::CloudManager::OrchestrationStack,
+            :model_class => ManageIQ::Providers::CloudManager::OrchestrationStack,
             :parent      => @ems,
             :association => :orchestration_stacks)
           @data[:orchestration_stacks_resources] = ::ManagerRefresh::InventoryCollection.new(
-            OrchestrationStackResource,
+            :model_class => OrchestrationStackResource,
             :parent      => @ems,
             :association => :orchestration_stacks_resources)
           @data[:network_ports]                  = ::ManagerRefresh::InventoryCollection.new(
-            NetworkPort,
+            :model_class => NetworkPort,
             :parent      => @ems.network_manager,
             :association => :network_ports)
 
@@ -686,15 +686,15 @@ describe ManagerRefresh::SaveInventory do
         it 'test network_port -> stack -> resource -> stack and network_port -> resource -> stack -> resource -> stack ' do
           @data                                  = {}
           @data[:orchestration_stacks]           = ::ManagerRefresh::InventoryCollection.new(
-            ManageIQ::Providers::CloudManager::OrchestrationStack,
+            :model_class => ManageIQ::Providers::CloudManager::OrchestrationStack,
             :parent      => @ems,
             :association => :orchestration_stacks)
           @data[:orchestration_stacks_resources] = ::ManagerRefresh::InventoryCollection.new(
-            OrchestrationStackResource,
+            :model_class => OrchestrationStackResource,
             :parent      => @ems,
             :association => :orchestration_stacks_resources)
           @data[:network_ports]                  = ::ManagerRefresh::InventoryCollection.new(
-            NetworkPort,
+            :model_class => NetworkPort,
             :parent      => @ems.network_manager,
             :association => :network_ports)
 
@@ -982,11 +982,11 @@ describe ManagerRefresh::SaveInventory do
     # Initialize the InventoryCollections
     @data                                  = {}
     @data[:orchestration_stacks]           = ::ManagerRefresh::InventoryCollection.new(
-      ManageIQ::Providers::CloudManager::OrchestrationStack,
+      :model_class => ManageIQ::Providers::CloudManager::OrchestrationStack,
       :parent      => @ems,
       :association => :orchestration_stacks)
     @data[:orchestration_stacks_resources] = ::ManagerRefresh::InventoryCollection.new(
-      OrchestrationStackResource,
+      :model_class => OrchestrationStackResource,
       :parent      => @ems,
       :association => :orchestration_stacks_resources)
   end
@@ -996,11 +996,11 @@ describe ManagerRefresh::SaveInventory do
     # the order of the InventoryCollections
     @data                                  = {}
     @data[:orchestration_stacks_resources] = ::ManagerRefresh::InventoryCollection.new(
-      OrchestrationStackResource,
+      :model_class => OrchestrationStackResource,
       :parent      => @ems,
       :association => :orchestration_stacks_resources)
     @data[:orchestration_stacks]           = ::ManagerRefresh::InventoryCollection.new(
-      ManageIQ::Providers::CloudManager::OrchestrationStack,
+      :model_class => ManageIQ::Providers::CloudManager::OrchestrationStack,
       :parent      => @ems,
       :association => :orchestration_stacks)
   end
