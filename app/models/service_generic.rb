@@ -1,31 +1,35 @@
 class ServiceGeneric < Service
   # A chance for taking options from automate script to override options from a service dialog
-  def preprovision(_options = {})
+  def preprocess(_action, _options = {})
   end
 
   # Interact with external provider to act on this service item
-  # The result is called stack, normally a vmdb object. It can map to an object in the provider,
-  # or even be a virtual object
-  def provision
-    raise NotImplementedError, _("provision must be implemented in a subclass")
+  def execute(_action)
+    raise NotImplementedError, _("execute must be implemented in a subclass")
   end
 
-  # Check the provider provision status. It should return [true/false, status_message]
-  def check_provisioned?
-    raise NotImplementedError, _("check_provisioned must be implemented in a subclass")
+  # Check the provider execution status. It should return [true/false, status_message]
+  # Return [false, nil] if the execution is still in progress.
+  # Return [true, nil] if the execution is completed without error.
+  # Return [true, message] if the execution completed with an error.
+  def check_completed(_action)
+    raise NotImplementedError, _("check_completed must be implemented in a subclass")
   end
 
-  # Start a provider refresh
-  def refresh_provider
-    raise NotImplementedError, _("refresh_provider must be implemented in a subclass")
+  # Start a refresh
+  def refresh(_action)
+    raise NotImplementedError, _("refresh must be implemented in a subclass")
   end
 
   # Check the refresh status. It should return [true/false, status_message]
-  def check_refreshed
+  # Return [false, nil] if the refresh is still in progress.
+  # Return [true, nil] if the refresh is completed without error.
+  # Return [true, message] if the refresh completed with an error.
+  def check_refreshed(_action)
     raise NotImplementedError, _("check_refreshed must be implemented in a subclass")
   end
 
   # Execute after refresh is done. Do cleaning up or update linkage here
-  def post_provision(_options = {})
+  def postprocess(_action)
   end
 end
