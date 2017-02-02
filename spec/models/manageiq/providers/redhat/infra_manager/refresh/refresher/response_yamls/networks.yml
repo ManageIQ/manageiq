@@ -1,0 +1,127 @@
+--- !ruby/array:OvirtSDK4::List
+internal:
+- !ruby/object:OvirtSDK4::Network
+  href: "/ovirt-engine/api/networks/6ad90f38-5496-47fb-9882-5aa55e1314ef"
+  comment: 
+  description: Default Management Network
+  id: 6ad90f38-5496-47fb-9882-5aa55e1314ef
+  name: ovirtmgmt
+  cluster: 
+  data_center: !ruby/object:OvirtSDK4::DataCenter
+    href: "/ovirt-engine/api/datacenters/b60b3daa-dcbd-40c9-8d09-3fc08c91f5d1"
+    comment: 
+    description: 
+    id: b60b3daa-dcbd-40c9-8d09-3fc08c91f5d1
+    name: 
+    clusters: 
+    iscsi_bonds: 
+    local: 
+    mac_pool: 
+    networks: 
+    permissions: 
+    qoss: 
+    quota_mode: 
+    quotas: 
+    status: 
+    storage_domains: 
+    storage_format: 
+    supported_versions: 
+    version: 
+  display: 
+  ip: 
+  mtu: 0
+  network_labels: !ruby/array:OvirtSDK4::List
+    internal: []
+    ivars:
+      :@href: "/ovirt-engine/api/networks/6ad90f38-5496-47fb-9882-5aa55e1314ef/networklabels"
+  permissions: !ruby/array:OvirtSDK4::List
+    internal: []
+    ivars:
+      :@href: "/ovirt-engine/api/networks/6ad90f38-5496-47fb-9882-5aa55e1314ef/permissions"
+  profile_required: 
+  qos: !ruby/object:OvirtSDK4::Qos
+    href: "/ovirt-engine/api/datacenters/b60b3daa-dcbd-40c9-8d09-3fc08c91f5d1/qoss/9e1a73ff-2598-4474-b24f-42d683f56d14"
+    comment: 
+    description: 
+    id: 9e1a73ff-2598-4474-b24f-42d683f56d14
+    name: 
+    cpu_limit: 
+    data_center: 
+    inbound_average: 
+    inbound_burst: 
+    inbound_peak: 
+    max_iops: 
+    max_read_iops: 
+    max_read_throughput: 
+    max_throughput: 
+    max_write_iops: 
+    max_write_throughput: 
+    outbound_average: 
+    outbound_average_linkshare: 
+    outbound_average_realtime: 
+    outbound_average_upperlimit: 
+    outbound_burst: 
+    outbound_peak: 
+    type: 
+  required: 
+  status: 
+  stp: false
+  usages:
+  - vm
+  vlan: 
+  vnic_profiles: !ruby/array:OvirtSDK4::List
+    internal: []
+    ivars:
+      :@href: "/ovirt-engine/api/networks/6ad90f38-5496-47fb-9882-5aa55e1314ef/vnicprofiles"
+- !ruby/object:OvirtSDK4::Network
+  href: "/ovirt-engine/api/networks/00000000-0000-0000-0000-000000000009"
+  comment: 
+  description: Management Network
+  id: 00000000-0000-0000-0000-000000000009
+  name: ovirtmgmt
+  cluster: 
+  data_center: !ruby/object:OvirtSDK4::DataCenter
+    href: "/ovirt-engine/api/datacenters/00000001-0001-0001-0001-00000000009f"
+    comment: 
+    description: 
+    id: 00000001-0001-0001-0001-00000000009f
+    name: 
+    clusters: 
+    iscsi_bonds: 
+    local: 
+    mac_pool: 
+    networks: 
+    permissions: 
+    qoss: 
+    quota_mode: 
+    quotas: 
+    status: 
+    storage_domains: 
+    storage_format: 
+    supported_versions: 
+    version: 
+  display: 
+  ip: 
+  mtu: 0
+  network_labels: !ruby/array:OvirtSDK4::List
+    internal: []
+    ivars:
+      :@href: "/ovirt-engine/api/networks/00000000-0000-0000-0000-000000000009/networklabels"
+  permissions: !ruby/array:OvirtSDK4::List
+    internal: []
+    ivars:
+      :@href: "/ovirt-engine/api/networks/00000000-0000-0000-0000-000000000009/permissions"
+  profile_required: 
+  qos: 
+  required: 
+  status: 
+  stp: false
+  usages:
+  - vm
+  vlan: 
+  vnic_profiles: !ruby/array:OvirtSDK4::List
+    internal: []
+    ivars:
+      :@href: "/ovirt-engine/api/networks/00000000-0000-0000-0000-000000000009/vnicprofiles"
+ivars:
+  :@href: 
