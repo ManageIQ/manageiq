@@ -52,7 +52,7 @@ module MiqBulkImport
   def self.find_entry_by_keys(klass, keys)
     keys2array = keys
     primary_key, primary_key_value = keys2array.shift
-    result = klass.where("LOWER(#{primary_key}) LIKE '#{primary_key_value.downcase}'")
+    result = klass.where(klass.arel_attribute(primary_key).lower.eq(primary_key_value.downcase))
     return result if result.size <= 1
 
     filtered_result = []

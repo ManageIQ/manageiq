@@ -1535,7 +1535,8 @@ module ApplicationController::CiProcessing
   def process_elements(elements, klass, task, display_name = nil, order_field = nil)
     ['name', 'description', 'title'].each { |key| order_field ||= key if klass.column_names.include?(key) }
 
-    klass.where(:id => elements).order(order_field == "ems_id" ? order_field : "lower(#{order_field})").each do |elem|
+    lower_field = order_field == "ems_id" ? order_field : klass.arel_attribute(order_field).lower
+    klass.where(:id => elements).order(lower_field).each do |elem|
       id          = elem.id
       description = get_record_display_name(elem)
       name        = elem.send(order_field.to_sym)

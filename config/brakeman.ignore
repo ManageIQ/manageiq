@@ -1,9 +1,50 @@
 {
   "ignored_warnings": [
     {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "3eb6b7b6ec62e711b5258401c524bb4725c509473771388feae1d8b14d744d52",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/controllers/catalog_controller.rb",
+      "line": 1622,
+      "link": "http://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "@edit[:new][:rsc_groups].flatten.collect do\n r[:provision_index].to_i\n end.sort.count(((params[\"#{key}_#{i}_#{k}\".to_sym].to_i * 60) or params[\"#{key}_#{i}_#{k}\".to_sym].to_i))",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "CatalogController",
+        "method": "st_get_form_vars"
+      },
+      "user_input": "(params[\"#{key}_#{i}_#{k}\".to_sym].to_i * 60)",
+      "confidence": "Medium",
+      "note": ""
+    },
+    {
+      "warning_type": "SQL Injection",
+      "warning_code": 0,
+      "fingerprint": "3eb6b7b6ec62e711b5258401c524bb4725c509473771388feae1d8b14d744d52",
+      "check_name": "SQL",
+      "message": "Possible SQL injection",
+      "file": "app/controllers/catalog_controller.rb",
+      "line": 1624,
+      "link": "http://brakemanscanner.org/docs/warning_types/sql_injection/",
+      "code": "@edit[:new][:rsc_groups].flatten.collect do\n r[:provision_index].to_i\n end.sort.count(((params[\"#{key}_#{i}_#{k}\".to_sym].to_i * 60) or params[\"#{key}_#{i}_#{k}\".to_sym].to_i))",
+      "render_path": null,
+      "location": {
+        "type": "method",
+        "class": "CatalogController",
+        "method": "st_get_form_vars"
+      },
+      "user_input": "(params[\"#{key}_#{i}_#{k}\".to_sym].to_i * 60)",
+      "confidence": "Medium",
+      "note": ""
+    },
+    {
       "warning_type": "File Access",
       "warning_code": 16,
       "fingerprint": "4e1918c2d5ff2beacc21db09f696af724d62f1a2a6a101e8e3cb564d0e8a94cd",
+      "check_name": "FileAccess",
       "message": "Model attribute used in file name",
       "file": "app/models/miq_report/import_export.rb",
       "line": 61,
@@ -23,6 +64,7 @@
       "warning_type": "File Access",
       "warning_code": 16,
       "fingerprint": "77933d8406ac443fcb0cc99b49ec890e59dc10c2ecb69de0a799360904a3e2ff",
+      "check_name": "FileAccess",
       "message": "Model attribute used in file name",
       "file": "app/models/miq_report/formatting.rb",
       "line": 6,
@@ -42,6 +84,7 @@
       "warning_type": "File Access",
       "warning_code": 16,
       "fingerprint": "7db29962886ebaade1d869d329da3fb601de293d121ca29c318410122bf1be40",
+      "check_name": "FileAccess",
       "message": "Model attribute used in file name",
       "file": "app/models/miq_provision/naming.rb",
       "line": 26,
@@ -61,6 +104,7 @@
       "warning_type": "Command Injection",
       "warning_code": 14,
       "fingerprint": "921b9f7b353a4de1033addb95d4a7c7efb090a7e60f8acb350ec8c7aea6e84ff",
+      "check_name": "Execute",
       "message": "Possible command injection",
       "file": "app/models/system_console.rb",
       "line": 60,
@@ -80,6 +124,7 @@
       "warning_type": "SQL Injection",
       "warning_code": 0,
       "fingerprint": "b7c5d0a1acf9b6e1d8241cc62f61ddde1dd9f6e1b871b9bd99982135465d1f24",
+      "check_name": "SQL",
       "message": "Possible SQL injection",
       "file": "app/models/mixins/aggregation_mixin.rb",
       "line": 98,
@@ -96,6 +141,6 @@
       "note": "Temporarily skipped, found in new brakeman version"
     }
   ],
-  "updated": "2016-10-11 14:14:13 +0200",
-  "brakeman_version": "3.4.0"
+  "updated": "2017-02-01 18:20:31 -0500",
+  "brakeman_version": "3.5.0"
 }
