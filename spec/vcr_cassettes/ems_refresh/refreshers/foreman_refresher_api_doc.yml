@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: http://admin:smartvm@example.com/apidoc/v2.json
+    uri: http://example.com/apidoc/v2.json
     body:
       encoding: US-ASCII
       string: ''
@@ -13,6 +13,7 @@ http_interactions:
       - gzip, deflate
       Content-Type:
       - application/json
+      Authorization: Basic <%= Base64.encode64("admin:smartvm").chomp %>
   response:
     status:
       code: 200
@@ -1426,6 +1427,6 @@ http_interactions:
         a usergroup."}],"formats":null,"full_description":"","errors":[],"params":[{"name":"id","full_name":"id","description":"","required":true,"allow_nil":false,"validator":"Must
         be String","metadata":null,"show":true,"expected_type":"string"}],"examples":[],"metadata":null,"see":[]}]},"statistics":{"doc_url":"../apidoc/v2/statistics","api_url":"/api","name":"Statistics","short_description":null,"full_description":null,"version":"v2","formats":null,"metadata":null,"methods":[{"doc_url":"../apidoc/v2/statistics/index","name":"index","apis":[{"api_url":"/api/statistics","http_method":"GET","short_description":"Get
         statistics"}],"formats":null,"full_description":"","errors":[],"params":[],"examples":[],"metadata":null,"see":[]}]}}}}'
-    http_version:
+    http_version: 
   recorded_at: Sat, 01 Jan 2000 00:00:00 GMT
 recorded_with: VCR 2.9.3
