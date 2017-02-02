@@ -256,7 +256,6 @@ module ManageIQ::Providers
       run_generic_operation(:JDR, ems_ref)
     end
 
-
     def self.raw_alerts_connect(hostname, port, username, password)
       require 'hawkular_all'
       url = URI::HTTP.build(:host => hostname, :port => port.to_i, :path => '/hawkular/alerts').to_s
