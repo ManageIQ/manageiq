@@ -27,10 +27,11 @@ module Api
       end
 
       def parse_ownership(data)
+        return unless data.present?
         {
-          :owner => collection_class(:users).find_by_id(parse_owner(data["owner"])),
-          :group => collection_class(:groups).find_by_id(parse_group(data["group"]))
-        }.compact if data.present?
+          :owner => collection_class(:users).find_by(:id => parse_owner(data["owner"])),
+          :group => collection_class(:groups).find_by(:id => parse_group(data["group"]))
+        }.compact
       end
 
       def parse_owner(resource)
