@@ -222,6 +222,11 @@ class MiqAction < ApplicationRecord
                     :message      => "Policy #{msg}: policy: [#{inputs[:policy].description}], event: [#{inputs[:event].description}]")
   end
 
+  def action_run_ansible_playbook(action, rec, inputs)
+    service_template = ServiceTemplate.find(action.options[:service_template_id])
+    Api::ServiceTemplateWorkflow.create(service_template, {}).submit_request
+  end
+
   def action_snmp_trap(action, rec, inputs)
     # Validate SNMP Version
     snmp_version = action.options[:snmp_version]
