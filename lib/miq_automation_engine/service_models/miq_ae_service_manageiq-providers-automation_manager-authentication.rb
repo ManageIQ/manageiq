@@ -1,0 +1,4 @@
+module MiqAeMethodService
+  class MiqAeServiceManageIQ_Providers_AutomationManager_Authentication < MiqAeServiceAuthentication
+  end
+end

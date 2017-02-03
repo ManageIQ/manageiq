@@ -83,6 +83,10 @@ audit_events:
 - userid
 - source
 - created_on
+authentication_configuration_script_bases:
+- id
+- authentication_id
+- configuration_script_base_id
 authentications:
 - id
 - name
@@ -131,6 +135,7 @@ authentications:
 - rhsm_sku
 - rhsm_pool_id
 - rhsm_server
+- manager_ref
 availability_zones:
 - id
 - ems_id
