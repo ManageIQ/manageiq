@@ -536,6 +536,13 @@ configuration_script_sources:
 - description
 - created_at
 - updated_at
+- scm_type
+- scm_url
+- scm_branch
+- scm_clean
+- scm_delete_on_update
+- scm_update_on_launch
+- authentication_id
 configuration_scripts:
 - id
 - manager_id

@@ -20,6 +20,8 @@ class Authentication < ApplicationRecord
   has_many :configuration_script_bases,
            :through => :authentication_configuration_script_bases
 
+  has_many :configuration_script_sources
+
   before_save :set_credentials_changed_on
   after_save :after_authentication_changed
 
