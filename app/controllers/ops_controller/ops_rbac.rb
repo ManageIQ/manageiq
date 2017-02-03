@@ -1045,8 +1045,8 @@ module OpsController::OpsRbac
     Rbac.filtered(Tenant.in_my_region.where(:id => tenant_id)).present?
   end
 
-  def valid_role?(group_id)
-    Rbac::Filterer.filtered(group_id, :class => MiqUserRole).present?
+  def valid_role?(user_role_id)
+    Rbac::Filterer.filtered_object(user_role_id, :class => MiqUserRole).present?
   end
 
   # Get variables from group edit form
