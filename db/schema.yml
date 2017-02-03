@@ -6540,6 +6540,7 @@ storages:
 - master
 - ems_ref
 - storage_domain_type
+- maintenance
 storages_vms_and_templates:
 - storage_id
 - vm_or_template_id
