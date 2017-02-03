@@ -37,6 +37,10 @@ module MiqAeMethodService
       'template_infra'                               => 'ManageIQ_Providers_InfraManager_Template',
       'vm_infra'                                     => 'ManageIQ_Providers_InfraManager_Vm',
       'ems_infra'                                    => 'ManageIQ_Providers_InfraManager',
+      # Ph Infra
+      'template_ph_infra'                               => 'ManageIQ_Providers_PhInfraManager_Template',
+      'vm_ph_infra'                                     => 'ManageIQ_Providers_PhInfraManager_Vm',
+      'ems_ph_infra'                                    => 'ManageIQ_Providers_PhInfraManager',
       # Microsoft
       'host_microsoft'                               => 'ManageIQ_Providers_Microsoft_InfraManager_Host',
       'miq_provision_microsoft'                      => 'ManageIQ_Providers_Microsoft_InfraManager_Provision',

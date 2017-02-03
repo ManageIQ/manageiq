@@ -49,4 +49,5 @@ module EmsRefresh::SaveInventoryPhysicalInfra
     save_inventory_multi(ems.physical_servers, hashes, deletes, [:ems_ref])
     store_ids_for_new_records(ems.physical_servers, hashes, :ems_ref)
   end
+
 end

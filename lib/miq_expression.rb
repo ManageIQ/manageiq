@@ -35,6 +35,7 @@ class MiqExpression
     EmsClusterPerformance
     EmsEvent
     ManageIQ::Providers::InfraManager
+    ManageIQ::Providers::PhInfraManager
     ExtManagementSystem
     ExtManagementSystemPerformance
     Flavor
@@ -65,12 +66,14 @@ class MiqExpression
     Switch
     ManageIQ::Providers::CloudManager::Template
     ManageIQ::Providers::InfraManager::Template
+    ManageIQ::Providers::PhInfraManager::Template
     Tenant
     User
     VimPerformanceTrend
     Vm
     ManageIQ::Providers::CloudManager::Vm
     ManageIQ::Providers::InfraManager::Vm
+    ManageIQ::Providers::PhInfraManager::Vm
     VmPerformance
     Zone
   )
@@ -248,13 +251,15 @@ class MiqExpression
     'Storage'                                     => 'storage',
     'ManageIQ::Providers::CloudManager::Template' => 'miq_template',
     'ManageIQ::Providers::InfraManager::Template' => 'miq_template',
+    'ManageIQ::Providers::PhInfraManager::Template' => 'miq_template',
     'User'                                        => 'user',
     'Vm'                                          => 'vm',
     'VmOrTemplate'                                => 'vm',
     'ManageIQ::Providers::CloudManager::Vm'       => 'vm',
     'ManageIQ::Providers::InfraManager::Vm'       => 'vm',
     'ContainerProject'                            => 'container_project',
-    'ContainerImage'                              => 'container_image'
+    'ContainerImage'                              => 'container_image',
+    'ManageIQ::Providers::PhInfraManager::Vm'       => 'vm',
   }
   EXCLUDE_FROM_RELATS = {
     "ManageIQ::Providers::CloudManager" => ["hosts", "ems_clusters", "resource_pools"]

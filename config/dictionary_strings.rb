@@ -2262,6 +2262,12 @@ _("Infrastructure Provider")
 _("Infrastructure Providers")
 # TRANSLATORS: en.yml key: dictionary.table.ems_infras
 _("Infrastructure Providers")
+# TRANSLATORS: en.yml key: dictionary.table.ems_ph_infra
+_("Physical Infrastructure Provider")
+# TRANSLATORS: en.yml key: dictionary.table.ems_ph_infra (plural form)
+_("Physical Infrastructure Providers")
+# TRANSLATORS: en.yml key: dictionary.table.ems_ph_infras
+_("Physical Infrastructure Providers")
 # TRANSLATORS: en.yml key: dictionary.table.ems_container
 _("Containers Provider")
 # TRANSLATORS: en.yml key: dictionary.table.ems_container (plural form)

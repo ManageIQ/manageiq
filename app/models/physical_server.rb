@@ -6,16 +6,16 @@ class PhysicalServer < ApplicationRecord
   belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => "ManageIQ::Providers::PhysicalInfraManager"
   has_many :firmwares, :foreign_key => "ph_server_uuid", :primary_key => "uuid"
   has_one :host, :foreign_key => "service_tag", :primary_key => "serialNumber"
-
+  
   def name_with_details
     details % {
       :name => name,
     }
   end
 
-  def my_zone
-    ems = ext_management_system
-    ems ? ems.my_zone : MiqServer.my_zone
+  def my_zone 
+    ems = ext_management_system 
+    ems ? ems.my_zone : MiqServer.my_zone 
   end
 
   def turn_on_loc_led
@@ -56,6 +56,5 @@ class PhysicalServer < ApplicationRecord
     #TODO (walteraa) remove bypass
     true
   end
-
 
 end

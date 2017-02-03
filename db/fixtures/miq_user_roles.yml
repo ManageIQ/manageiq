@@ -92,6 +92,7 @@
   - utilization
   - vm_explorer
   - vm
+  - physical_server
   - vm_cloud_explorer
   - vm_infra_explorer
 
