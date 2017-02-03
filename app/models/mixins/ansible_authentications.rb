@@ -33,7 +33,7 @@ module AnsibleAuthentications
     authentication_type(ANSIBLE_RABBITMQ_TYPE)
   end
 
-  def set_ansible_rabbitmq_authentication(password, userid = "tower")
+  def set_ansible_rabbitmq_authentication(userid: "tower", password:)
     auth = authentication_for_type(ANSIBLE_RABBITMQ_TYPE, "Ansible Rabbitmq Authentication")
 
     auth.userid   = userid
@@ -46,7 +46,7 @@ module AnsibleAuthentications
     authentication_type(ANSIBLE_ADMIN_TYPE)
   end
 
-  def set_ansible_admin_authentication(password, userid = "admin")
+  def set_ansible_admin_authentication(userid: "admin", password:)
     auth = authentication_for_type(ANSIBLE_ADMIN_TYPE, "Ansible Admin Authentication")
 
     auth.userid   = userid
@@ -59,7 +59,7 @@ module AnsibleAuthentications
     authentication_type(ANSIBLE_DATABASE_TYPE)
   end
 
-  def set_ansible_database_authentication(password, userid = "awx")
+  def set_ansible_database_authentication(userid: "awx", password:)
     auth = authentication_for_type(ANSIBLE_DATABASE_TYPE, "Ansible Database Authentication")
 
     auth.userid   = userid

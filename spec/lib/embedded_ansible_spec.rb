@@ -185,9 +185,9 @@ describe EmbeddedAnsible do
       end
 
       it "uses the existing passwords when they are set in the database" do
-        miq_database.set_ansible_admin_authentication("adminpassword")
-        miq_database.set_ansible_rabbitmq_authentication("rabbitpassword", "rabbituser")
-        miq_database.set_ansible_database_authentication("databasepassword", "databaseuser")
+        miq_database.set_ansible_admin_authentication(:password => "adminpassword")
+        miq_database.set_ansible_rabbitmq_authentication(:userid => "rabbituser", :password => "rabbitpassword")
+        miq_database.set_ansible_database_authentication(:userid => "databaseuser", :password => "databasepassword")
 
         expect(AwesomeSpawn).to receive(:run!) do |script_path, options|
           params                  = options[:params]
@@ -210,9 +210,9 @@ describe EmbeddedAnsible do
 
     describe ".start" do
       it "runs the setup script with the correct args" do
-        miq_database.set_ansible_admin_authentication("adminpassword")
-        miq_database.set_ansible_rabbitmq_authentication("rabbitpassword", "rabbituser")
-        miq_database.set_ansible_database_authentication("databasepassword", "databaseuser")
+        miq_database.set_ansible_admin_authentication(:password => "adminpassword")
+        miq_database.set_ansible_rabbitmq_authentication(:userid => "rabbituser", :password => "rabbitpassword")
+        miq_database.set_ansible_database_authentication(:userid => "databaseuser", :password => "databasepassword")
 
         expect(AwesomeSpawn).to receive(:run!) do |script_path, options|
           params                  = options[:params]

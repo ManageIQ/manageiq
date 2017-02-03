@@ -93,17 +93,17 @@ class EmbeddedAnsible
   private_class_method :configure_secret_key
 
   def self.generate_admin_authentication
-    miq_database.set_ansible_admin_authentication(generate_password)
+    miq_database.set_ansible_admin_authentication(:password => generate_password)
   end
   private_class_method :generate_admin_authentication
 
   def self.generate_rabbitmq_authentication
-    miq_database.set_ansible_rabbitmq_authentication(generate_password)
+    miq_database.set_ansible_rabbitmq_authentication(:password => generate_password)
   end
   private_class_method :generate_rabbitmq_authentication
 
   def self.generate_database_authentication
-    auth = miq_database.set_ansible_database_authentication(generate_password)
+    auth = miq_database.set_ansible_database_authentication(:password => generate_password)
     connection.select_value("CREATE ROLE #{auth.userid} WITH LOGIN PASSWORD #{connection.quote(auth.password)}")
     connection.select_value("CREATE DATABASE awx OWNER #{auth.userid} ENCODING 'utf8'")
     auth
