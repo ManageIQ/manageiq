@@ -484,10 +484,6 @@ class MiqWorker < ApplicationRecord
     update_attribute(:last_heartbeat, Time.now.utc)
   end
 
-  def is_current_process?
-    Process.pid == pid
-  end
-
   def self.config_settings_path
     @config_settings_path ||= [:workers] + path_to_my_worker_settings
   end
