@@ -50,7 +50,8 @@ module ManageIQ::Providers::Kubernetes::ContainerManager::EventCatcherMixin
   def queue_event(event)
     event_data = extract_event_data(event)
     _log.info "#{log_prefix} Queuing event [#{event_data}]"
-    EmsEvent.add_queue('add_kubernetes', @cfg[:ems_id], event_data)
+    event_hash = ManageIQ::Providers::Kubernetes::ContainerManager::EventParser.event_to_hash(event, @cfg[:ems_id])
+    EmsEvent.add_queue('add', @cfg[:ems_id], event_hash)
   end
 
   def filtered?(event)
