@@ -8,4 +8,7 @@ FactoryGirl.define do
 
   factory :service_ansible_tower, :class => :ServiceAnsibleTower, :parent => :service do
   end
+
+  factory :service_ansible_playbook, :class => :ServiceAnsiblePlaybook, :parent => :service do
+  end
 end

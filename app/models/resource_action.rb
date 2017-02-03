@@ -5,6 +5,10 @@ class ResourceAction < ApplicationRecord
 
   serialize  :ae_attributes, Hash
 
+  PROVISION   = 'Provision'.freeze
+  RETIREMENT  = 'Retirement'.freeze
+  RECONFIGURE = 'Reconfigure'.freeze
+
   def readonly?
     return true if super
     resource.readonly? if resource.kind_of?(ServiceTemplate)
