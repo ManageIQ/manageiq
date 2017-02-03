@@ -63,20 +63,20 @@ describe "Pictures" do
   end
 
   describe 'POST /api/pictures' do
-    # one pixel png image encoded in Base64
+    # Valid base64 image
     let(:content) do
-      "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGP\n"\
-      "C/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3Cc\n"\
-      "ulE8AAAACXBIWXMAAAsTAAALEwEAmpwYAAABWWlUWHRYTUw6Y29tLmFkb2Jl\n"\
-      "LnhtcAAAAAAAPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIg\n"\
-      "eDp4bXB0az0iWE1QIENvcmUgNS40LjAiPgogICA8cmRmOlJERiB4bWxuczpy\n"\
-      "ZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1u\n"\
-      "cyMiPgogICAgICA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIgogICAg\n"\
-      "ICAgICAgICB4bWxuczp0aWZmPSJodHRwOi8vbnMuYWRvYmUuY29tL3RpZmYv\n"\
-      "MS4wLyI+CiAgICAgICAgIDx0aWZmOk9yaWVudGF0aW9uPjE8L3RpZmY6T3Jp\n"\
-      "ZW50YXRpb24+CiAgICAgIDwvcmRmOkRlc2NyaXB0aW9uPgogICA8L3JkZjpS\n"\
-      "REY+CjwveDp4bXBtZXRhPgpMwidZAAAADUlEQVQIHWNgYGCwBQAAQgA+3N0+\n"\
-      "xQAAAABJRU5ErkJggg==\n"
+      "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAABGdBTUEAALGP"\
+      "C/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3Cc"\
+      "ulE8AAAACXBIWXMAAAsTAAALEwEAmpwYAAABWWlUWHRYTUw6Y29tLmFkb2Jl"\
+      "LnhtcAAAAAAAPHg6eG1wbWV0YSB4bWxuczp4PSJhZG9iZTpuczptZXRhLyIg"\
+      "eDp4bXB0az0iWE1QIENvcmUgNS40LjAiPgogICA8cmRmOlJERiB4bWxuczpy"\
+      "ZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1u"\
+      "cyMiPgogICAgICA8cmRmOkRlc2NyaXB0aW9uIHJkZjphYm91dD0iIgogICAg"\
+      "ICAgICAgICB4bWxuczp0aWZmPSJodHRwOi8vbnMuYWRvYmUuY29tL3RpZmYv"\
+      "MS4wLyI+CiAgICAgICAgIDx0aWZmOk9yaWVudGF0aW9uPjE8L3RpZmY6T3Jp"\
+      "ZW50YXRpb24+CiAgICAgIDwvcmRmOkRlc2NyaXB0aW9uPgogICA8L3JkZjpS"\
+      "REY+CjwveDp4bXBtZXRhPgpMwidZAAAADUlEQVQIHWNgYGCwBQAAQgA+3N0+"\
+      "xQAAAABJRU5ErkJggg=="
     end
 
     it 'rejects create without an appropriate role' do
@@ -116,6 +116,48 @@ describe "Pictures" do
       end.to change(Picture, :count).by(2)
       expect(response.parsed_body).to include(expected)
       expect(response).to have_http_status(:ok)
+    end
+
+    it 'requires an extension' do
+      api_basic_authorize collection_action_identifier(:pictures, :create)
+
+      run_post pictures_url, :content => content
+
+      expected = {
+        'error' => a_hash_including(
+          'message' => a_string_including("Extension can't be blank")
+        )
+      }
+      expect(response).to have_http_status(:bad_request)
+      expect(response.parsed_body).to include(expected)
+    end
+
+    it 'requires content' do
+      api_basic_authorize collection_action_identifier(:pictures, :create)
+
+      run_post pictures_url, :extension => 'png'
+
+      expected = {
+        'error' => a_hash_including(
+          'message' => a_string_including("Content can't be blank")
+        )
+      }
+      expect(response).to have_http_status(:bad_request)
+      expect(response.parsed_body).to include(expected)
+    end
+
+    it 'requires content with valid base64' do
+      api_basic_authorize collection_action_identifier(:pictures, :create)
+
+      run_post pictures_url, :content => 'not base64', :extension => 'png'
+
+      expected = {
+        'error' => a_hash_including(
+          'message' => a_string_including('invalid base64')
+        )
+      }
+      expect(response).to have_http_status(:bad_request)
+      expect(response.parsed_body).to include(expected)
     end
   end
 end

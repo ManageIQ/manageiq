@@ -2,8 +2,9 @@ class Picture < ApplicationRecord
   has_one :binary_blob, :as => :resource, :dependent => :destroy, :autosave => true
 
   validates :extension,
-            :inclusion => { :in => %w(png jpg svg), :message => 'must be a png, jpg, or svg' },
-            :if        => :extension
+            :presence  => true,
+            :inclusion => { :in => %w(png jpg svg), :message => 'must be a png, jpg, or svg' }
+  validates :content, :presence => true
 
   virtual_has_one :image_href, :class_name => "String"
 
@@ -29,6 +30,14 @@ class Picture < ApplicationRecord
       abs_filename[abs_basepath.length..-1]
     else
       abs_filename
+    end
+  end
+
+  def self.create_from_base64(attributes = {})
+    attributes = attributes.with_indifferent_access
+    new(attributes.except(:content)).tap do |picture|
+      picture.content = Base64.strict_decode64(attributes[:content].to_s)
+      picture.save!
     end
   end
 
