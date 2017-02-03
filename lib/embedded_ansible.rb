@@ -103,10 +103,10 @@ class EmbeddedAnsible
   private_class_method :generate_rabbitmq_authentication
 
   def self.generate_database_authentication
-    conn = ActiveRecord::Base.connection
     auth = miq_database.set_ansible_database_authentication(generate_password)
-    conn.select_value("CREATE ROLE #{conn.quote(auth.userid)} WITH LOGIN PASSWORD #{conn.quote(auth.password)}")
-    conn.select_value("CREATE DATABASE awx OWNER #{conn.quote(auth.userid)} ENCODING 'utf8'")
+    connection.select_value("CREATE ROLE #{auth.userid} WITH LOGIN PASSWORD #{connection.quote(auth.password)}")
+    connection.select_value("CREATE DATABASE awx OWNER #{auth.userid} ENCODING 'utf8'")
+    auth
   end
   private_class_method :generate_database_authentication
 
@@ -152,4 +152,9 @@ class EmbeddedAnsible
     SecureRandom.base64(18).tr("+/", "-_")
   end
   private_class_method :generate_password
+
+  def self.connection
+    ActiveRecord::Base.connection
+  end
+  private_class_method :connection
 end
