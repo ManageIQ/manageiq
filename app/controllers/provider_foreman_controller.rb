@@ -933,8 +933,7 @@ class ProviderForemanController < ApplicationController
   def replace_search_box(presenter, r)
     # Replace the searchbox
     presenter.replace(:adv_searchbox_div,
-                      r[:partial => 'layouts/x_adv_searchbox',
-                        :locals  => {:nameonly => x_active_tree == :configuration_manager_providers_tree}])
+                      r[:partial => 'layouts/x_adv_searchbox'])
 
     presenter[:clear_gtl_list_grid] = @gtl_type && @gtl_type != 'list'
   end
