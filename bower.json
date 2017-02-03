@@ -39,7 +39,7 @@
     "jquery-ujs": "~1.2.2",
     "jquery.observe_field": "himdel/jquery.observe_field#~0.1.0",
     "kubernetes-topology-graph": "~0.0.23",
-    "manageiq-ui-components": "~0.0.9",
+    "manageiq-ui-components": "0.0.11",
     "moment-strftime": "himdel/moment-strftime#~0.1.7",
     "moment-timezone": "~0.4.1",
     "numeral": "~1.5.5",
