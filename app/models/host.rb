@@ -1858,6 +1858,10 @@ class Host < ApplicationRecord
     storages.where(:host_storages => {:read_only => true})
   end
 
+  def available_storages
+    writable_storages.reject(&:maintenance)
+  end
+
   def archived?
     ems_id.nil?
   end
