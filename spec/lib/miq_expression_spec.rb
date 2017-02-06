@@ -2216,11 +2216,6 @@ describe MiqExpression do
       expect(subject).to eq(:datetime)
     end
 
-    it "with managed-field" do
-      @field = "managed.location"
-      expect(subject).to eq(:string)
-    end
-
     it "with model.managed-in_field" do
       @field = "Vm.managed-service_level"
       expect(subject).to eq(:string)

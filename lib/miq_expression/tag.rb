@@ -1,7 +1,6 @@
 class MiqExpression::Tag
   def self.parse(tag)
     klass, ns = tag.split(".")
-    klass, ns = "nil", klass if ns.nil? # support managed-label
     ns = "/" + ns.split("-").join("/")
     ns = ns.sub(/(\/user_tag\/)/, "/user/") # replace with correct namespace for user tags
     new(klass.safe_constantize, ns)
