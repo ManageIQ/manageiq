@@ -118,8 +118,8 @@
           .form-group
             %label.col-md-2.control-label
               = _('Long Description')
-            .col-md-8
-              = @record.long_description.to_s.html_safe
+            .col-md-8#long_description
+              %miq-sanitize{:value => @record.long_description}
 
     - if @record.composite?
       = miq_tab_content('resources') do
@@ -175,5 +175,7 @@
                                     :show => true}
           - else
             %span{:style => "color:red"}= @no_wf_msg
+
 :javascript
   miq_tabs_init("#st_tabs");
+  miq_bootstrap('#long_description', 'miq.helpers');

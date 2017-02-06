@@ -1,4 +1,4 @@
-.maincontent{:xmlns => "http://www.w3.org/1999/html"}
+.maincontent
   = render :partial => "layouts/flash_msg"
   .form-horizontal.static
     .form-group
@@ -26,8 +26,9 @@
           %label.col-md-2.control-label
             = _('Long Description')
           .col-md-8
-            %p.form-control-static
-              = @record.long_description.to_s.html_safe
+            %p.form-control-static#long_description
+              %miq-sanitize{:value => @record.long_description}
+
     .form-group
       .col-md-1{:align => "center"}
         #buttons
@@ -38,3 +39,6 @@
                        :onclick => "miqAjaxButton('#{url_for(:action => "svc_catalog_provision",
                                                              :id     => @record.id,
                                                            :button => "order")}');")
+
+:javascript
+  miq_bootstrap('#long_description', 'miq.helpers');
