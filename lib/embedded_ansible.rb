@@ -1,6 +1,7 @@
 require "securerandom"
 require "awesome_spawn"
 require "linux_admin"
+require "ansible_tower_client"
 
 class EmbeddedAnsible
   APPLIANCE_ANSIBLE_DIRECTORY = "/opt/ansible-installer".freeze
@@ -28,6 +29,16 @@ class EmbeddedAnsible
   def self.configured?
     key = miq_database.ansible_secret_key
     key.present? && key == File.read(SECRET_KEY_FILE)
+  end
+
+  def self.alive?
+    return false unless configured? && running?
+    begin
+      api_connection.api.verify_credentials
+    rescue Faraday::ConnectionFailed, Faraday::SSLError, AnsibleTowerClient::ConnectionError, AnsibleTowerClient::ClientError
+      return false
+    end
+    true
   end
 
   def self.configure
@@ -104,8 +115,8 @@ class EmbeddedAnsible
 
   def self.generate_database_authentication
     auth = miq_database.set_ansible_database_authentication(:password => generate_password)
-    connection.select_value("CREATE ROLE #{connection.quote_column_name(auth.userid)} WITH LOGIN PASSWORD #{connection.quote(auth.password)}")
-    connection.select_value("CREATE DATABASE awx OWNER #{connection.quote_column_name(auth.userid)} ENCODING 'utf8'")
+    database_connection.select_value("CREATE ROLE #{database_connection.quote_column_name(auth.userid)} WITH LOGIN PASSWORD #{database_connection.quote(auth.password)}")
+    database_connection.select_value("CREATE DATABASE awx OWNER #{database_connection.quote_column_name(auth.userid)} ENCODING 'utf8'")
     auth
   end
   private_class_method :generate_database_authentication
@@ -153,8 +164,18 @@ class EmbeddedAnsible
   end
   private_class_method :generate_password
 
-  def self.connection
+  def self.database_connection
     ActiveRecord::Base.connection
   end
-  private_class_method :connection
+  private_class_method :database_connection
+
+  def self.api_connection
+    admin_auth = miq_database.ansible_admin_authentication
+    AnsibleTowerClient::Connection.new(
+      :base_url => URI::HTTP.build(:host => "localhost", :path => "/api/v1", :port => NGINX_HTTP_PORT).to_s,
+      :username => admin_auth.userid,
+      :password => admin_auth.password
+    )
+  end
+  private_class_method :api_connection
 end
