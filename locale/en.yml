@@ -759,6 +759,7 @@ en:
       ManageIQ::Providers::InfraManager::Template:                          Template
       ManageIQ::Providers::MiddlewareManager:                               Middleware Provider
       ManageIQ::Providers::NetworkManager:                                  Network Manager
+      ManageIQ::Providers::PhysicalInfraManager:                            Physical Infrastructure Provider 
       ManageIQ::Providers::Openstack::InfraManager:                         Infrastructure Provider (OpenStack)
       ManageIQ::Providers::Microsoft::InfraManager:                         Infrastructure Provider (Microsoft)
       ManageIQ::Providers::Redhat::InfraManager:                            Infrastructure Provider (Red Hat)
@@ -964,6 +965,8 @@ en:
       ems_object_storages:         Object Storage Managers
       evm_server:                  EVM Server
       ems_network:                 Network Provider
+      ems_phyical_infra:           Physical Infrastructure Provider
+      ems_phyical_infras:          Physical Infrastructure Providers
       ems_storage:                 Storage Manager
       load_balancer:               Load Balancer
       middleware_server:           Middleware Server
