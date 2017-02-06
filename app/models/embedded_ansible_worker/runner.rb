@@ -1,7 +1,5 @@
 class EmbeddedAnsibleWorker::Runner < MiqWorker::Runner
   def prepare
-    update_embedded_ansible_provider
-
     Thread.new do
       setup_ansible
       started_worker_record
@@ -20,6 +18,8 @@ class EmbeddedAnsibleWorker::Runner < MiqWorker::Runner
         heartbeat
         send(poll_method)
       end
+
+      update_embedded_ansible_provider
 
       _log.info("entering ansible monitor loop")
       loop do
