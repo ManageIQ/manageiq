@@ -1,4 +1,6 @@
 describe ManageIQ::Providers::Redhat::InfraManager::Vm do
+  let(:ip_address) { '192.168.1.31' }
+
   context "#is_available?" do
     let(:ems)  { FactoryGirl.create(:ems_redhat) }
     let(:host) { FactoryGirl.create(:host_redhat, :ext_management_system => ems) }
@@ -116,10 +118,11 @@ describe ManageIQ::Providers::Redhat::InfraManager::Vm do
   describe "#disconnect_storage" do
     before(:each) do
       _, _, zone = EvmSpecHelper.create_guid_miq_server_zone
-      ems = FactoryGirl.create(:ems_redhat, :zone => zone, :hostname => "192.168.1.31",
-                               :ipaddress => "192.168.1.31", :port => 8443)
+      ems = FactoryGirl.create(:ems_redhat, :zone => zone, :hostname => ip_address,
+                               :ipaddress => ip_address, :port => 8443)
       ems.update_authentication(:default => {:userid => "admin@internal", :password => "engine"})
       allow(ems).to receive(:supported_api_versions).and_return([3, 4])
+      allow(ems).to receive(:resolve_ip_address).with(ip_address).and_return(ip_address)
 
       @storage = FactoryGirl.create(:storage, :ems_ref => "/api/storagedomains/ee745353-c069-4de8-8d76-ec2e155e2ca0")
       disk = FactoryGirl.create(:disk, :storage => @storage, :filename => "da123bb9-095a-4933-95f2-8032dfa332e1")
