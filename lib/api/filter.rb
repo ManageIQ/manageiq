@@ -2,12 +2,11 @@ module Api
   class Filter
     include CompressedIds
 
-    attr_reader :filters, :model, :req
+    attr_reader :filters, :model
 
-    def initialize(filters, model, req)
+    def initialize(filters, model)
       @filters = filters
       @model = model
-      @req = req
     end
 
     def parse
