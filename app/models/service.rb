@@ -50,8 +50,6 @@ class Service < ApplicationRecord
   delegate :custom_actions, :custom_action_buttons, :to => :service_template, :allow_nil => true
   delegate :provision_dialog, :to => :miq_request, :allow_nil => true
   delegate :user, :to => :miq_request, :allow_nil => true
-  delegate :atomic?, :to => :service_template
-  delegate :composite?, :to => :service_template
 
   include ServiceMixin
   include OwnershipMixin
@@ -209,6 +207,14 @@ class Service < ApplicationRecord
       return update_power_status(action)
     end
     false
+  end
+
+  def composite?
+    service_template ? service_template.composite? : children.present?
+  end
+
+  def atomic?
+    service_template ? service_template.atomic? : children.empty?
   end
 
   def map_composite_power_states(action)
