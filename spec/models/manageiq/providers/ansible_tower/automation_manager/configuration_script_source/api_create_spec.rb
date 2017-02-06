@@ -43,7 +43,7 @@ describe ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationScri
         :method_name => "create_in_provider",
         :priority    => MiqQueue::HIGH_PRIORITY,
         :role        => "ems_operations",
-        :zone        => manager.zone_id
+        :zone        => manager.my_zone
       )
     end
 

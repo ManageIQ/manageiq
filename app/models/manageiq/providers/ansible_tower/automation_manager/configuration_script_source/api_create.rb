@@ -27,7 +27,7 @@ class ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationScriptS
         :method_name => "create_in_provider",
         :priority    => MiqQueue::HIGH_PRIORITY,
         :role        => "ems_operations",
-        :zone        => manager.zone_id
+        :zone        => manager.my_zone
       }
 
       MiqTask.generic_action_with_callback(task_opts, queue_opts)
