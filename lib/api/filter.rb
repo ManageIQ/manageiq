@@ -13,6 +13,10 @@ module Api
 
     attr_reader :filters, :model
 
+    def self.parse(filters, model)
+      new(filters, model).parse
+    end
+
     def initialize(filters, model)
       @filters = filters
       @model = model
