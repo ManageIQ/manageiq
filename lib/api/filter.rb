@@ -52,35 +52,35 @@ module Api
       logical_or = filter.gsub!(/^or /i, '').present?
       operator, methods = OPERATORS.find { |op, _methods| filter.partition(op).second == op }
 
-      raise BadRequestError,
-            "Unknown operator specified in filter #{filter}" if operator.blank?
+      if operator.blank?
+        raise BadRequestError, "Unknown operator specified in filter #{filter}"
+      end
 
       filter_attr, _, filter_value = filter.partition(operator)
       filter_attr.strip!
       filter_value.strip!
       str_method = filter_value =~ /%|\*/ && methods[:regex] || methods[:default]
 
-      filter_value, method =
-                    case filter_value
-                    when /^'.*'$/
-                      [filter_value.gsub(/^'|'$/, ''), str_method]
-                    when /^".*"$/
-                      [filter_value.gsub(/^"|"$/, ''), str_method]
-                    when /^(NULL|nil)$/i
-                      [nil, methods[:null] || methods[:default]]
-                    else
-                      if column_type(model, filter_attr) == :datetime
-                        unless methods[:datetime]
-                          raise BadRequestError, "Unsupported operator for datetime: #{operator}"
-                        end
-                        unless Time.zone.parse(filter_value)
-                          raise BadRequestError, "Bad format for datetime: #{filter_value}"
-                        end
-                        [filter_value, methods[:datetime]]
-                      else
-                        [filter_value, methods[:default]]
-                      end
-                    end
+      filter_value, method = case filter_value
+                             when /^'.*'$/
+                               [filter_value.gsub(/^'|'$/, ''), str_method]
+                             when /^".*"$/
+                               [filter_value.gsub(/^"|"$/, ''), str_method]
+                             when /^(NULL|nil)$/i
+                               [nil, methods[:null] || methods[:default]]
+                             else
+                               if column_type(model, filter_attr) == :datetime
+                                 unless methods[:datetime]
+                                   raise BadRequestError, "Unsupported operator for datetime: #{operator}"
+                                 end
+                                 unless Time.zone.parse(filter_value)
+                                   raise BadRequestError, "Bad format for datetime: #{filter_value}"
+                                 end
+                                 [filter_value, methods[:datetime]]
+                               else
+                                 [filter_value, methods[:default]]
+                               end
+                             end
 
       filter_value = from_cid(filter_value) if filter_attr =~ /[_]?id$/ && cid?(filter_value)
 
