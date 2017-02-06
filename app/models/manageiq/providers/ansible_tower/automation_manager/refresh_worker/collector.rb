@@ -15,4 +15,8 @@ class ManageIQ::Providers::AnsibleTower::AutomationManager::RefreshWorker::Colle
   def job_templates
     @connection.api.job_templates.all
   end
+
+  def projects
+    @connection.api.projects.all
+  end
 end

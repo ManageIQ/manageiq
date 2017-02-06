@@ -12,6 +12,7 @@ class ManageIQ::Providers::AnsibleTower::AutomationManager::RefreshWorker::Parse
       inventory_groups,
       configured_systems,
       configuration_scripts,
+      configuration_script_sources,
     ]
   end
 
@@ -70,6 +71,25 @@ class ManageIQ::Providers::AnsibleTower::AutomationManager::RefreshWorker::Parse
           :name                 => i.name,
           :survey_spec          => i.survey_spec_hash,
           :variables            => i.extra_vars_hash,
+        )
+      end
+    end
+  end
+
+  def configuration_script_sources
+    ManagerRefresh::InventoryCollection.new(
+      # FIXME: change to ansible class
+      ConfigurationScriptSource,
+      :association => :configuration_script_sources,
+      :manager_ref => [:manager_ref],
+      :parent      => ems,
+    ).tap do |c|
+      inventory.projects.each do |i|
+        c << c.new_inventory_object(
+          :manager     => ems,
+          :manager_ref => i.id.to_s,
+          :name        => i.name,
+          :description => i.description,
         )
       end
     end
