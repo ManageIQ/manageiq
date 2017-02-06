@@ -1,15 +1,23 @@
 class MiqExpression::Tag
-  def self.parse(tag)
-    klass, ns = tag.split(".")
-    ns = "/" + ns.split("-").join("/")
-    ns = ns.sub(/(\/user_tag\/)/, "/user/") # replace with correct namespace for user tags
-    new(klass.safe_constantize, ns)
+  TAG_REGEX = /
+(?<model_name>([[:alnum:]]*(::)?)+)
+\.(?<associations>([a-z_]+\.)*)
+(?<namespace>\bmanaged\b)
+-(?<column>[a-z]+[_[:alnum:]]+)
+/x
+
+  def self.parse(field)
+    match = TAG_REGEX.match(field) || return
+
+    associations = match[:associations].split(".")
+    new(match[:model_name].classify.safe_constantize, associations, "/#{namespace}/#{match[:column]}")
   end
 
-  attr_reader :model, :namespace
+  attr_reader :model, :associations, :namespace
 
-  def initialize(model, namespace)
+  def initialize(model, associations, namespace)
     @model = model
+    @associations = associations
     @namespace = namespace
   end
 
@@ -35,7 +43,8 @@ class MiqExpression::Tag
   end
 
   def eql?(other)
-    other.try(:model) == model && other.try(:namespace) == namespace
+    other && other.model == model && other.namespace == namespace && other.associations == associations
   end
+
   alias == eql?
 end
