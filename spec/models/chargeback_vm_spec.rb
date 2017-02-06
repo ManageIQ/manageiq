@@ -436,7 +436,8 @@ describe ChargebackVm do
     before do
       @tenant = FactoryGirl.create(:tenant)
       @tenant_child = FactoryGirl.create(:tenant, :ancestry => @tenant.id)
-      @vm_tenant = FactoryGirl.create(:vm_vmware, :tenant_id => @tenant_child.id, :name => "test_vm_tenant")
+      @vm_tenant = FactoryGirl.create(:vm_vmware, :tenant_id => @tenant_child.id, :name => "test_vm_tenant",
+                                      :created_on => month_beginning)
       ["2012-08-31T07:00:00Z", "2012-08-31T08:00:00Z", "2012-08-31T09:00:00Z", "2012-08-31T10:00:00Z"].each do |t|
         @vm_tenant.metric_rollups <<
           FactoryGirl.create(:metric_rollup_vm_hr,
