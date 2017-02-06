@@ -88,6 +88,7 @@ var dialogFieldRefresh = {
       var responseData = JSON.parse(data.responseText);
       dialogFieldRefresh.addOptionsToDropDownList(responseData, fieldId);
       dialogFieldRefresh.setReadOnly($('#' + fieldName), responseData.values.read_only);
+      dialogFieldRefresh.setVisible($('#field_' + fieldId + '_tr'), responseData.values.visible);
       $('#' + fieldName).selectpicker('refresh');
       $('#' + fieldName).selectpicker('val', responseData.values.checked_value);
       callback.call();

@@ -79,6 +79,7 @@ describe('dialogFieldRefresh', function() {
 
     beforeEach(function() {
       spyOn(dialogFieldRefresh, 'setReadOnly');
+      spyOn(dialogFieldRefresh, 'setVisible');
       spyOn($.fn, 'prop');
       refreshCallback = jasmine.createSpyObj('refreshCallback', ['call']);
 
@@ -137,6 +138,7 @@ describe('dialogFieldRefresh', function() {
 
     beforeEach(function() {
       spyOn(dialogFieldRefresh, 'setReadOnly');
+      spyOn(dialogFieldRefresh, 'setVisible');
       spyOn($.fn, 'val');
       refreshCallback = jasmine.createSpyObj('refreshCallback', ['call']);
 
@@ -211,6 +213,7 @@ describe('dialogFieldRefresh', function() {
 
     beforeEach(function() {
       spyOn(dialogFieldRefresh, 'setReadOnly');
+      spyOn(dialogFieldRefresh, 'setVisible');
       spyOn($.fn, 'val');
       refreshCallback = jasmine.createSpyObj('refreshCallback', ['call']);
 
@@ -269,6 +272,7 @@ describe('dialogFieldRefresh', function() {
 
     beforeEach(function() {
       spyOn(dialogFieldRefresh, 'setReadOnly');
+      spyOn(dialogFieldRefresh, 'setVisible');
       spyOn($.fn, 'val');
       refreshCallback = jasmine.createSpyObj('refreshCallback', ['call']);
 
@@ -328,6 +332,7 @@ describe('dialogFieldRefresh', function() {
     beforeEach(function() {
       spyOn(dialogFieldRefresh, 'addOptionsToDropDownList');
       spyOn(dialogFieldRefresh, 'setReadOnly');
+      spyOn(dialogFieldRefresh, 'setVisible');
       spyOn($.fn, 'selectpicker');
       refreshCallback = jasmine.createSpyObj('refreshCallback', ['call']);
 
@@ -354,7 +359,7 @@ describe('dialogFieldRefresh', function() {
 
       it('adds the options to the dropdown list', function() {
         expect(dialogFieldRefresh.addOptionsToDropDownList).toHaveBeenCalledWith(
-          {values: {checked_value: 'selectedTest', read_only: true}},
+          {values: {checked_value: 'selectedTest', read_only: true, visible: false}},
           123
         );
       });
