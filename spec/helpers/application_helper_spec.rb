@@ -1386,8 +1386,20 @@ describe ApplicationHelper do
                                            :tree => :configuration_scripts_tree,
                                            :type => :configuration_scripts
                                          }
-                                       }
-                                      )
+                                       })
+      result = helper.tree_with_advanced_search?
+      expect(result).to be_truthy
+    end
+
+    it 'should return true for the configuration providers tree' do
+      controller.instance_variable_set(:@sb,
+                                       :active_tree => :configuration_manager_providers_tree,
+                                       :trees       => {
+                                         :configuration_manager_providers_tree => {
+                                           :tree => :configuration_manager_providers_tree,
+                                           :type => :configuration_manager_providers
+                                         }
+                                       })
       result = helper.tree_with_advanced_search?
       expect(result).to be_truthy
     end
