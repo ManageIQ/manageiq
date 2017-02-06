@@ -166,6 +166,35 @@ describe ManageIQ::Providers::Openshift::ContainerManager::RefreshParser do
         parser.instance_variable_get('@data_index')[:container_image][:by_ref_and_registry_host_port].values[0])
       expect(parser.instance_variable_get('@data')[:container_images][0][:architecture]).to eq('amd64')
     end
+
+    context "image registries from openshift images" do
+      def parse_single_openshift_image_with_registry
+        inventory = {"image" => [image_from_openshift]}
+
+        parser.get_openshift_images(inventory)
+        expect(parser.instance_variable_get('@data_index')[:container_image_registry][:by_host_and_port].size).to eq(1)
+        expect(parser.instance_variable_get('@data')[:container_image_registries].size).to eq(1)
+      end
+
+      it "collects image registries from openshift images that are not also running pods images" do
+        parse_single_openshift_image_with_registry
+      end
+
+      it "avoids duplicate image registries from both running pods and openshift images" do
+        parser.instance_variable_get('@data')[:container_image_registries] = [{
+          :name => image_registry,
+          :host => image_registry,
+          :port => image_registry_port,
+        },]
+        parser.instance_variable_get('@data_index').store_path(
+          :container_image_registry,
+          :by_host_and_port,
+          "#{image_registry}:#{image_registry_port}",
+          parser.instance_variable_get('@data')[:container_image_registries][0]
+        )
+        parse_single_openshift_image_with_registry
+      end
+    end
   end
 
   describe "parse_build" do
