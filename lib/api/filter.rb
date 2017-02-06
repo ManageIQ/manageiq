@@ -2,11 +2,10 @@ module Api
   class Filter
     include CompressedIds
 
-    attr_reader :filters, :klass, :model, :req
+    attr_reader :filters, :model, :req
 
-    def initialize(filters, klass, model, req)
+    def initialize(filters, model, req)
       @filters = filters
-      @klass = klass
       @model = model
       @req = req
     end
@@ -30,11 +29,11 @@ module Api
         if associations.size > 1
           raise BadRequestError, "Filtering of attributes with more than one association away is not supported"
         end
-        unless virtual_or_physical_attribute?(target_class(klass, associations), attr)
+        unless virtual_or_physical_attribute?(target_class(model, associations), attr)
           raise BadRequestError, "attribute #{attr} does not exist"
         end
         associations.map! { |assoc| ".#{assoc}" }
-        field = "#{klass.name}#{associations.join}-#{attr}"
+        field = "#{model.name}#{associations.join}-#{attr}"
         target = parsed_filter[:logical_or] ? or_expressions : and_expressions
         target << {parsed_filter[:operator] => {"field" => field, "value" => parsed_filter[:value]}}
       end

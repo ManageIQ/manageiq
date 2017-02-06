@@ -20,7 +20,7 @@ module Api
       #
       def filter_param(klass)
         return nil if params['filter'].blank?
-        Filter.new(params["filter"], klass, collection_class(@req.subcollection || @req.collection), @req).parse
+        Filter.new(params["filter"], klass, @req).parse
       end
 
       def by_tag_param
