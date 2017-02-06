@@ -27,53 +27,61 @@ module ApplicationHelper::Dialogs
     options_for_select(Array.new(59) { |i| i.to_s.rjust(2, '0') }, value)
   end
 
-  def textbox_tag_options(field, url)
+  def textbox_tag_options(field, url, auto_refresh_options_hash)
     tag_options = {
       :maxlength => 50,
       :class     => "dynamic-text-box-#{field.id} form-control"
     }
 
     extra_options = {"data-miq_observe" => {
-      :url      => url,
-    }.merge(auto_refresh_options(field)).to_json}
+      :url => url,
+    }.merge(auto_refresh_options(field, auto_refresh_options_hash)).to_json}
 
     add_options_unless_read_only(extra_options, tag_options, field)
   end
 
-  def textarea_tag_options(field, url)
+  def textarea_tag_options(field, url, auto_refresh_options_hash)
     tag_options = {
       :class     => "dynamic-text-area-#{field.id} form-control",
       :size      => "50x6"
     }
 
     extra_options = {"data-miq_observe" => {
-      :url      => url,
-    }.merge(auto_refresh_options(field)).to_json}
+      :url => url,
+    }.merge(auto_refresh_options(field, auto_refresh_options_hash)).to_json}
 
     add_options_unless_read_only(extra_options, tag_options, field)
   end
 
-  def checkbox_tag_options(field, url)
+  def checkbox_tag_options(field, url, auto_refresh_options_hash)
     tag_options = {:class => "dynamic-checkbox-#{field.id}"}
+    miq_observe_options = {
+      :url => url
+    }.merge(auto_refresh_options(field, auto_refresh_options_hash)).to_json
     extra_options = {
       "data-miq_sparkle_on"       => true,
       "data-miq_sparkle_off"      => true,
-      "data-miq_observe_checkbox" => {:url => url}.merge(auto_refresh_options(field)).to_json
+      "data-miq_observe_checkbox" => miq_observe_options
     }
 
     add_options_unless_read_only(extra_options, tag_options, field)
   end
 
-  def date_tag_options(field, url)
+  def date_tag_options(field, url, auto_refresh_options_hash)
     tag_options = {:class => "css1 dynamic-date-#{field.id}", :readonly => "true"}
-    extra_options = {"data-miq_observe_date" => {:url => url}.merge(auto_refresh_options(field)).to_json}
+    miq_observe_options = {
+      :url => url
+    }.merge(auto_refresh_options(field, auto_refresh_options_hash)).to_json
+    extra_options = {"data-miq_observe_date" => miq_observe_options}
 
     add_options_unless_read_only(extra_options, tag_options, field)
   end
 
-  def time_tag_options(field, url, hour_or_min)
+  def time_tag_options(field, url, hour_or_min, auto_refresh_options_hash)
     tag_options = {:class => "dynamic-date-#{hour_or_min}-#{field.id}"}
-    extra_options = {"data-miq_observe" => {:url => url}.merge(auto_refresh_options(field)).to_json}
+    extra_options = {"data-miq_observe" => {
+      :url => url
+    }.merge(auto_refresh_options(field, auto_refresh_options_hash)).to_json}
 
     add_options_unless_read_only(extra_options, tag_options, field)
   end
@@ -93,35 +101,48 @@ module ApplicationHelper::Dialogs
   def radio_options(field, url, value, selected_value)
     tag_options = {
       :type    => 'radio',
-      :id      => field.id,
+      :class   => field.id,
       :value   => value,
       :name    => field.name,
       :checked => selected_value.to_s == value.to_s ? '' : nil
     }
 
-    auto_refresh_string = field.trigger_auto_refresh ? "dialogFieldRefresh.triggerAutoRefresh('#{field.id}', '#{field.trigger_auto_refresh}');" : ""
+    add_options_unless_read_only({}, tag_options, field)
+  end
 
-    extra_options = {
-      # FIXME: when removing remote_function, note that onclick should really be onchange instead
-      :onclick  => auto_refresh_string + remote_function(
-        :with     => "miqSerializeForm('dynamic-radio-#{field.id}')",
-        :url      => url,
-        :loading  => "miqSparkle(true);",
-        :complete => "miqSparkle(false);"
-      )
-    }
+  def build_auto_refreshable_field_indicies(workflow)
+    auto_refreshable_field_indicies = []
 
-    add_options_unless_read_only(extra_options, tag_options, field)
+    workflow.dialog.dialog_tabs.each_with_index do |tab, tab_index|
+      tab.dialog_groups.each_with_index do |group, group_index|
+        group.dialog_fields.each_with_index do |field, field_index|
+          next unless field.auto_refresh || field.trigger_auto_refresh
+
+          auto_refreshable_field_indicies << {
+            :tab_index    => tab_index,
+            :group_index  => group_index,
+            :field_index  => field_index,
+            :auto_refresh => !!field.auto_refresh
+          }
+        end
+      end
+    end
+
+    auto_refreshable_field_indicies
   end
 
   private
 
-  def auto_refresh_options(field)
+  def auto_refresh_options(field, auto_refresh_options_hash)
     if field.trigger_auto_refresh
       {
-        :auto_refresh => true,
-        :field_id     => field.id.to_s,
-        :trigger      => field.trigger_auto_refresh.to_s
+        :auto_refresh                    => true,
+        :tab_index                       => auto_refresh_options_hash[:tab_index],
+        :group_index                     => auto_refresh_options_hash[:group_index],
+        :field_index                     => auto_refresh_options_hash[:field_index],
+        :auto_refreshable_field_indicies => auto_refresh_options_hash[:auto_refreshable_field_indicies],
+        :current_index                   => auto_refresh_options_hash[:current_index],
+        :trigger                         => auto_refresh_options_hash[:trigger]
       }
     else
       {}
