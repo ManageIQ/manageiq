@@ -27,4 +27,14 @@ class ManageIQ::Providers::AnsibleTower::Inventory::Target::AutomationManager < 
       :builder_params => {:manager => @root}
     )
   end
+
+  def configuration_script_sources
+    collections[:configuration_script_sources] ||= ManagerRefresh::InventoryCollection.new(
+      ConfigurationScriptSource,
+      :association    => :configuration_script_sources,
+      :manager_ref    => [:manager_ref],
+      :parent         => @root,
+      :builder_params => {:manager => @root}
+    )
+  end
 end
