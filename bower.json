@@ -42,6 +42,7 @@
     "jquery.observe_field": "himdel/jquery.observe_field#~0.1.0",
     "kubernetes-topology-graph": "~0.0.23",
     "manageiq-ui-components": "0.0.13",
+    "moment-duration-format": "~1.3.0",
     "moment-strftime": "~0.2.0",
     "moment-timezone": "~0.4.1",
     "numeral": "~1.5.5",
