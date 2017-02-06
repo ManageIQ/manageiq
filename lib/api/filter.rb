@@ -2,6 +2,15 @@ module Api
   class Filter
     include CompressedIds
 
+    OPERATORS = {
+      "!=" => {:default => "!=", :regex => "REGULAR EXPRESSION DOES NOT MATCH", :null => "IS NOT NULL"},
+      "<=" => {:default => "<="},
+      ">=" => {:default => ">="},
+      "<"  => {:default => "<", :datetime => "BEFORE"},
+      ">"  => {:default => ">", :datetime => "AFTER"},
+      "="  => {:default => "=", :datetime => "IS", :regex => "REGULAR EXPRESSION MATCHES", :null => "IS NULL"}
+    }.freeze
+
     attr_reader :filters, :model
 
     def initialize(filters, model)
@@ -10,20 +19,11 @@ module Api
     end
 
     def parse
-      operators = {
-        "!=" => {:default => "!=", :regex => "REGULAR EXPRESSION DOES NOT MATCH", :null => "IS NOT NULL"},
-        "<=" => {:default => "<="},
-        ">=" => {:default => ">="},
-        "<"  => {:default => "<", :datetime => "BEFORE"},
-        ">"  => {:default => ">", :datetime => "AFTER"},
-        "="  => {:default => "=", :datetime => "IS", :regex => "REGULAR EXPRESSION MATCHES", :null => "IS NULL"}
-      }
-
       and_expressions = []
       or_expressions = []
 
       filters.select(&:present?).each do |filter|
-        parsed_filter = parse_filter(filter, operators)
+        parsed_filter = parse_filter(filter)
         *associations, attr = parsed_filter[:attr].split(".")
         if associations.size > 1
           raise BadRequestError, "Filtering of attributes with more than one association away is not supported"
@@ -44,9 +44,9 @@ module Api
 
     private
 
-    def parse_filter(filter, operators)
+    def parse_filter(filter)
       logical_or = filter.gsub!(/^or /i, '').present?
-      operator, methods = operators.find { |op, _methods| filter.partition(op).second == op }
+      operator, methods = OPERATORS.find { |op, _methods| filter.partition(op).second == op }
 
       raise BadRequestError,
             "Unknown operator specified in filter #{filter}" if operator.blank?
