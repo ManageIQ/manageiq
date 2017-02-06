@@ -5123,6 +5123,54 @@
           :description: Edit Job Templates Tags
           :feature_type: control
           :identifier: configuration_script_tag
+
+# Embedded Automation Manager
+- :name: Embedded Automation Manager
+  :description: Everything under Ansible
+  :feature_type: node
+  :identifier: embedded_automation_manager
+  :children:
+  - :name: Repositories
+    :description: Everything under Repositories
+    :feature_type: node
+    :identifier: embedded_configuration_script_source
+    :children:
+    - :name: View
+      :description: View Repositories
+      :feature_type: view
+      :identifier: embedded_configuration_script_source_view
+    - :name: Modify
+      :description: Modify Repositories
+      :feature_type: admin
+      :identifier: embedded_configuration_script_source_admin
+      :children:
+        - :name: Add Repository
+          :description: Add a Repository
+          :feature_type: admin
+          :identifier: embedded_configuration_script_source_add
+  - :name: Playbooks
+    :description: Everything under Playbooks
+    :feature_type: node
+    :identifier: embedded_configuration_script_payload
+    :children:
+    - :name: View
+      :description: View Playbooks
+      :feature_type: view
+      :identifier: embedded_configuration_script_payload_view
+    - :name: Modify
+      :description: Modify Playbooks
+      :feature_type: admin
+      :identifier: embedded_configuration_script_payload_admin
+      :children:
+        - :name: Add Playbook
+          :description: Add a Playbook
+          :feature_type: admin
+          :identifier: embedded_configuration_script_payload_add
+        - :name: Edit Playbook
+          :description: Edit a Playbook
+          :feature_type: admin
+          :identifier: embedded_configuration_script_payload_edit
+
 # Automation Manager
 - :name: Automation Manager
   :description: Everything under Automation Manager
