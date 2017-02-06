@@ -104,8 +104,8 @@ class EmbeddedAnsible
 
   def self.generate_database_authentication
     auth = miq_database.set_ansible_database_authentication(:password => generate_password)
-    connection.select_value("CREATE ROLE #{auth.userid} WITH LOGIN PASSWORD #{connection.quote(auth.password)}")
-    connection.select_value("CREATE DATABASE awx OWNER #{auth.userid} ENCODING 'utf8'")
+    connection.select_value("CREATE ROLE #{connection.quote_column_name(auth.userid)} WITH LOGIN PASSWORD #{connection.quote(auth.password)}")
+    connection.select_value("CREATE DATABASE awx OWNER #{connection.quote_column_name(auth.userid)} ENCODING 'utf8'")
     auth
   end
   private_class_method :generate_database_authentication

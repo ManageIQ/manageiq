@@ -238,11 +238,17 @@ describe EmbeddedAnsible do
       let(:quoted_password) { ActiveRecord::Base.connection.quote(password) }
       let(:connection)      { double(:quote => quoted_password) }
 
+      before do
+        allow(connection).to receive(:quote_column_name) do |name|
+          ActiveRecord::Base.connection.quote_column_name(name)
+        end
+      end
+
       it "creates the database" do
         allow(described_class).to receive(:connection).and_return(connection)
         expect(described_class).to receive(:generate_password).and_return(password)
-        expect(connection).to receive(:select_value).with("CREATE ROLE awx WITH LOGIN PASSWORD #{quoted_password}")
-        expect(connection).to receive(:select_value).with("CREATE DATABASE awx OWNER awx ENCODING 'utf8'")
+        expect(connection).to receive(:select_value).with("CREATE ROLE \"awx\" WITH LOGIN PASSWORD #{quoted_password}")
+        expect(connection).to receive(:select_value).with("CREATE DATABASE awx OWNER \"awx\" ENCODING 'utf8'")
 
         auth = described_class.send(:generate_database_authentication)
         expect(auth.userid).to eq("awx")
