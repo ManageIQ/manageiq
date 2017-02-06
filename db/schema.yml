@@ -1263,6 +1263,7 @@ ext_management_systems:
 - last_metrics_update_date
 - last_metrics_success_date
 - tenant_mapping_enabled
+- manager_group
 file_depots:
 - id
 - name
