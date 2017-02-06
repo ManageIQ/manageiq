@@ -25,7 +25,6 @@ module ManageIQ::Providers::Kubernetes
       get_endpoints(inventory)
       get_services(inventory)
       get_component_statuses(inventory)
-      get_registries
       get_images
       EmsRefresh.log_inv_debug_trace(@data, "data:")
       @data
@@ -34,11 +33,6 @@ module ManageIQ::Providers::Kubernetes
     def get_images
       images = @data_index.fetch_path(:container_image, :by_ref_and_registry_host_port).try(:values) || []
       process_collection(images, :container_images) { |n| n }
-    end
-
-    def get_registries
-      registries = @data_index.fetch_path(:container_image_registry, :by_host_and_port).try(:values) || []
-      process_collection(registries, :container_image_registries) { |n| n }
     end
 
     def get_nodes(inventory)
@@ -664,6 +658,7 @@ module ManageIQ::Providers::Kubernetes
         if stored_container_image_registry.nil?
           @data_index.store_path(
             :container_image_registry, :by_host_and_port, host_port, container_image_registry)
+          process_collection_item(container_image_registry, :container_image_registries) { |r| r }
           stored_container_image_registry = container_image_registry
         end
       end
