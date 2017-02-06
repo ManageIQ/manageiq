@@ -1,10 +1,12 @@
-= check_box_tag(field.name, "1", field.checked?, {:disabled => !edit}.merge(checkbox_tag_options(field, url)))
+= check_box_tag(field.name, "1", field.checked?, {:disabled => !edit}.merge(checkbox_tag_options(field, url, auto_refresh_options)))
 
 - if field.dynamic
   - if field.auto_refresh
     :javascript
-      dialogFieldRefresh.listenForAutoRefreshMessages("#{field.id}", function() {
-        dialogFieldRefresh.refreshCheckbox("#{field.name}", "#{field.id}");
+      dialogFieldRefresh.listenForAutoRefreshMessages(JSON.parse("#{j(auto_refresh_options.to_json)}"), function() {
+        dialogFieldRefresh.refreshCheckbox("#{field.name}", "#{field.id}", function() {
+          dialogFieldRefresh.triggerAutoRefresh(JSON.parse('#{j(auto_refresh_options.to_json)}'));
+        });
       });
 
   - if field.show_refresh_button?
@@ -12,6 +14,7 @@
 
   :javascript
     $('#refresh-dynamic-checkbox-#{field.id}').click(function() {
-      dialogFieldRefresh.refreshCheckbox("#{field.name}", "#{field.id}");
-      dialogFieldRefresh.triggerAutoRefresh("#{field.id}", "#{field.trigger_auto_refresh}");
+      dialogFieldRefresh.refreshCheckbox("#{field.name}", "#{field.id}", function() {
+        dialogFieldRefresh.triggerAutoRefresh(JSON.parse('#{j(auto_refresh_options.to_json)}'));
+      });
     });
