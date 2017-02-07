@@ -537,7 +537,7 @@ class ApplicationHelper::ToolbarBuilder
 
     # need to hide add buttons when on sub-list view screen of a CI.
     return true if id.ends_with?("_new", "_discover") &&
-                   @lastaction == "show" && !%w(main vms instances).include?(@display)
+                   @lastaction == "show" && !%w(main vms instances all_vms).include?(@display)
 
     if id == "summary_reload"                             # Show reload button if
       return @explorer && # we are in explorer and
