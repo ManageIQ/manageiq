@@ -69,18 +69,20 @@ describe ManageIQ::Providers::AnsibleTower::AutomationManager::Refresher do
     expect(automation_manager.configuration_scripts.count).to eq(13)
     expect(automation_manager.inventory_groups.count).to      eq(7)
     expect(automation_manager.configuration_script_sources.count).to eq(6)
-    expect(automation_manager.playbooks.count).to eq(437)
+    expect(automation_manager.configuration_script_payloads.count).to eq(437)
   end
 
   def assert_playbook
     configuration_script_source = automation_manager.configuration_script_sources.find_by(:manager_ref => 29)
-    expect(configuration_script_source.playbooks.count).to eq(60)
-    expect(configuration_script_source.playbooks.map(&:name)).to include('jboss-standalone/demo-aws-launch.yml')
+    expect(configuration_script_source.configuration_script_payloads.first).to be_an_instance_of(ManageIQ::Providers::AnsibleTower::AutomationManager::Playbook)
+    expect(configuration_script_source.configuration_script_payloads.count).to eq(60)
+    expect(configuration_script_source.configuration_script_payloads.map(&:name)).to include('jboss-standalone/demo-aws-launch.yml')
   end
 
   def assert_configuration_script_sources
     expect(automation_manager.configuration_script_sources.count).to eq(6)
     configuration_script_source = automation_manager.configuration_script_sources.find_by(:manager_ref => 4)
+    expect(configuration_script_source).to be_an_instance_of(ConfigurationScriptSource)
     expect(configuration_script_source).to have_attributes(
       :name        => 'Demo Project',
       :description => 'A great demo',

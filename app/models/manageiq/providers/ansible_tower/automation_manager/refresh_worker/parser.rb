@@ -81,7 +81,7 @@ class ManageIQ::Providers::AnsibleTower::AutomationManager::RefreshWorker::Parse
 
   def configuration_script_sources
     @configuration_script_sources ||= ManagerRefresh::InventoryCollection.new(
-      ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationScriptSource,
+      ConfigurationScriptSource,
       :association => :configuration_script_sources,
       :manager_ref => [:manager_ref],
       :parent      => ems,
@@ -91,7 +91,7 @@ class ManageIQ::Providers::AnsibleTower::AutomationManager::RefreshWorker::Parse
   def playbooks
     @playbooks ||= ManagerRefresh::InventoryCollection.new(
       ManageIQ::Providers::AnsibleTower::AutomationManager::Playbook,
-      :association => :playbooks,
+      :association => :configuration_script_payloads,
       :manager_ref => [:manager_ref],
       :parent      => ems,
     )
