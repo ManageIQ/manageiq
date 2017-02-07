@@ -1267,8 +1267,6 @@
         :amqp_recovery_attempts: 4
         :ceilometer:
           :event_types_regex: '\A(firewall|floatingip|gateway|net|port|router|subnet|security_group|vpn)'
-      :event_catcher_lenovo:
-        :poll: 40.seconds
       :event_catcher_azure:
         :poll: 15.seconds
       :event_catcher_hawkular:
@@ -1327,8 +1325,6 @@
           :poll_method: :normal
           :queue_timeout: 120.minutes
           :restart_interval: 2.hours
-        :ems_refresh_worker_lenovo_physical_infra: {}
-        :ems_refresh_worker_ansible_tower_configuration: {}
         :ems_refresh_worker_ansible_tower_automation: {}
         :ems_refresh_worker_azure: {}
         :ems_refresh_worker_lenovo_physical_infra: {}

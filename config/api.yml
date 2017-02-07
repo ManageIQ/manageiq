@@ -35,9 +35,6 @@
     - :post
     - :patch
     - :delete
-    :pg: &pg
-    - :put
-    - :get
 :collections:
   :physical_servers:
     :description: Physical Servers
@@ -1182,63 +1179,6 @@
         :identifier: ems_infra_protect
       - :name: unassign
         :identifier: ems_infra_protect
-  :providers:
-    :description: Providers
-    :identifier: ems_ph_infra
-    :options:
-    - :collection
-    :verbs: *gpd
-    :klass: ExtManagementSystem
-    :subcollections:
-    - :tags
-    - :policies
-    - :policy_profiles
-    - :cloud_networks
-    :collection_actions:
-      :get:
-      - :name: read
-        :identifier: ems_ph_infra_show_list
-      :post:
-      - :name: create
-        :identifier: ems_ph_infra_new
-      - :name: edit
-        :identifier: ems_ph_infra_edit
-      - :name: refresh
-        :identifier: ems_ph_infra_refresh
-      - :name: delete
-        :identifier: ems_ph_infra_delete
-    :resource_actions:
-      :get:
-      - :name: read
-        :identifier: ems_ph_infra_show
-      :post:
-      - :name: edit
-        :identifier: ems_ph_infra_edit
-      - :name: refresh
-        :identifier: ems_ph_infra_refresh
-      - :name: delete
-        :identifier: ems_ph_infra_delete
-      :delete:
-      - :name: delete
-        :identifier: ems_ph_infra_delete
-    :tags_subcollection_actions:
-      :post:
-      - :name: assign
-        :identifier: ems_ph_infra_tag
-      - :name: unassign
-        :identifier: ems_ph_infra_tag
-    :policies_subcollection_actions:
-      :post:
-      - :name: assign
-        :identifier: ems_ph_infra_protect
-      - :name: unassign
-        :identifier: ems_ph_infra_protect
-    :policy_profiles_subcollection_actions:
-      :post:
-      - :name: assign
-        :identifier: ems_ph_infra_protect
-      - :name: unassign
-        :identifier: ems_ph_infra_protect
     :cloud_networks_subcollection_actions:
       :get:
       - :name: show
@@ -2216,7 +2156,7 @@
       - :name: query
         :identifier: vm_show_list
       - :name: add
-        :identifier: vm_miq_request_splat
+        :identifier: vm_miq_request_new
         :disabled: true
       - :name: edit
         :identifier: vm_edit
@@ -2231,9 +2171,9 @@
         :identifier: vm_guest_shutdown
       - :name: reboot_guest
         :identifier: vm_guest_restart
-      - :name: start_splat
-        :identifier: vm_start_splat
-      - :name: stop_splat
+      - :name: start
+        :identifier: vm_start
+      - :name: stop
         :identifier: vm_stop
       - :name: suspend
         :identifier: vm_suspend
@@ -2279,9 +2219,9 @@
         :identifier: vm_guest_shutdown
       - :name: reboot_guest
         :identifier: vm_guest_restart
-      - :name: start_splat
+      - :name: start
         :identifier: vm_start
-      - :name: stop_splat
+      - :name: stop
         :identifier: vm_stop
       - :name: suspend
         :identifier: vm_suspend

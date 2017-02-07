@@ -956,8 +956,6 @@ en:
       ems_folders:                 Folders
       ems_infra:                   Infrastructure Provider
       ems_infras:                  Infrastructure Providers
-      ems_ph_infra:                Physical Infrastructure Provider
-      ems_ph_infras:               Physical Infrastructure Providers
       ems_container:               Containers Provider
       ems_containers:              Containers Providers
       ems_datawarehouse:           Datawarehouse Provider

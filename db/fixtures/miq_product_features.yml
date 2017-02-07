@@ -25,44 +25,6 @@
       :feature_type: node
       :identifier: templates_images_filter_accord
 
-# Physical server access rules
-  - :name: Physical Server Access Rules
-    :description: Access Rules for Physical Servers
-    :feature_type: node
-    :identifier: physical_server
-    :children:
-    #- :name: View
-    #  :description: View Physical Servers
-    #  :feature_type: view
-    #  :identifier: physical_server_view
-    #  :children:
-    #  - :name: Show
-    #    :description: Display Individual Physical Servers
-    #    :feature_type: view
-    #    :identifier: physical_server_show
-    - :name: Operate
-      :description: Perform Operations on Physical Servers
-      :feature_type: control
-      :identifier: physical_server_control
-      :children:
-      - :name: Turn On LED
-        :description: Turn On Loc LED
-        :feature_type: control
-        :identifier: physical_server_turn_on_loc_led
-      - :name: Turn On Server
-        :description: Turn On Server
-        :feature_type: control
-        :identifier: physical_server_power_on        
-      - :name: Turn Off Server
-        :description: Turn Off Server
-        :feature_type: control
-        :identifier: physical_server_power_off  
-      - :name: Restart Server
-        :description: Restart Server
-        :feature_type: control
-        :identifier: physical_server_restart
-      
-
 # VM Explorer
 - :name: Virtual Machines
   :description: Virtual Machine Views
@@ -5675,27 +5637,6 @@
         :description: Request to Provision Instances from Images
         :feature_type: admin
         :identifier: image_miq_request_new
-
-  # Physical server access rules
-  - :name: Physical Server Access Rules
-    :description: Access Rules for Physical Servers
-    :feature_type: node
-    :identifier: physical_server
-    :children:
-    - :name: Operate
-      :description: Perform Operations on Physical Servers
-      :feature_type: control
-      :identifier: physical_server_control
-      :children:
-      - :name: Turn On LED
-        :description: Turn On Loc LED
-        :feature_type: control
-        :identifier: physical_server_turn_on_loc_led
-      - :name: Turn Off LED
-        :description: Turn Off Loc LED
-        :feature_type: control
-        :identifier: physical_server_turn_off_loc_led
-
   # Virtual Machines access rules
   - :name: VM Access Rules
     :description: Access Rules for Virtual Machines

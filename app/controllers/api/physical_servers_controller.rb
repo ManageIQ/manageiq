@@ -8,16 +8,16 @@ module Api
         response_payload = physical_server.as_json
         firmwares = physical_server.firmwares.map(&:as_json)
         response_payload["firmwares"] = firmwares
-        response_payload["host_id"] = case physical_server.host
-                                      when nil then nil
-                                      else physical_server.host.id
-                                      end
 
-        render :json=> response_payload
+        response_payload['host'] = physical_server.host&.id
+
+        render json: response_payload
+
       else
         super
       end
     end
+
 
     def turn_on_loc_led_resource(type, id, _data)
       $lenovo_log.info("#{type} #{id}")
@@ -67,5 +67,6 @@ module Api
     def server_ident(server)
       "Server instance: #{server.id} name:'#{server.name}'"
     end
+
   end
 end

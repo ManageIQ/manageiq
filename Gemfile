@@ -36,7 +36,6 @@ unless dependencies.detect { |d| d.name == "manageiq-providers-lenovo" }
 end
 
 # Unmodified gems
-gem 'ci_reporter_rspec'
 gem "activerecord-session_store",     "~>1.0.0"
 gem "acts_as_list",                   "~>0.7.2"
 gem "acts_as_tree",                   "~>2.1.0" # acts_as_tree needs to be required so that it loads before ancestry
@@ -102,10 +101,11 @@ gem "websocket-driver",               "~>0.6.3"
 gem "foreman_api_client",             ">=0.1.0",   :require => false, :git => "https://github.com/ManageIQ/foreman_api_client.git", :branch => "master"
 gem "ruport",                         "=1.7.0",                       :git => "https://github.com/ManageIQ/ruport.git", :tag => "v1.7.0-3"
 
-#To Lenovo provider
 gem "uuid"
-gem "xclarity_client"          
-gem "manageiq-providers-lenovo", git: "git://github.com/manageiq/manageiq-providers-lenovo", :branch => "master"
+
+#To Lenovo provider
+gem "xclarity_client"
+gem "manageiq-providers-lenovo", git: "git://github.com/ManageIQ/manageiq-providers-lenovo"
 
 # In 1.9.3: Time.parse uses british version dd/mm/yyyy instead of american version mm/dd/yyyy
 # american_date fixes this to be compatible with 1.8.7 until all callers can be converted to the 1.9.3 format prior to parsing.
