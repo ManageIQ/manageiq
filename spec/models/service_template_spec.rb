@@ -483,6 +483,7 @@ describe ServiceTemplate do
       expect(service_template.service_resources.first.resource_type).to eq('MiqRequest')
       expect(service_template.dialogs.first).to eq(service_dialog)
       expect(service_template.resource_actions.pluck(:action)).to include('Provision', 'Retirement')
+      expect(service_template.resource_actions.pluck(:ae_attributes)).to include({:service_action=>"Provision"}, {:service_action=>"Retirement"})
       expect(service_template.resource_actions.first.dialog).to eq(service_dialog)
       expect(service_template.resource_actions.last.dialog).to eq(service_dialog)
     end
