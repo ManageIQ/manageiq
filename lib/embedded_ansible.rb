@@ -92,30 +92,29 @@ class EmbeddedAnsible
   end
   private_class_method :configure_secret_key
 
-  def self.generate_admin_password
-    miq_database.ansible_admin_password = generate_password
+  def self.generate_admin_authentication
+    miq_database.set_ansible_admin_authentication(:password => generate_password)
   end
-  private_class_method :generate_admin_password
+  private_class_method :generate_admin_authentication
 
-  def self.generate_rabbitmq_password
-    miq_database.ansible_rabbitmq_password = generate_password
+  def self.generate_rabbitmq_authentication
+    miq_database.set_ansible_rabbitmq_authentication(:password => generate_password)
   end
-  private_class_method :generate_rabbitmq_password
+  private_class_method :generate_rabbitmq_authentication
 
-  def self.generate_database_password
-    conn = ActiveRecord::Base.connection
-    password = generate_password
-    conn.select_value("CREATE ROLE awx WITH LOGIN PASSWORD #{conn.quote(password)}")
-    conn.select_value("CREATE DATABASE awx OWNER awx ENCODING 'utf8'")
-    miq_database.ansible_database_password = password
+  def self.generate_database_authentication
+    auth = miq_database.set_ansible_database_authentication(:password => generate_password)
+    connection.select_value("CREATE ROLE #{connection.quote_column_name(auth.userid)} WITH LOGIN PASSWORD #{connection.quote(auth.password)}")
+    connection.select_value("CREATE DATABASE awx OWNER #{connection.quote_column_name(auth.userid)} ENCODING 'utf8'")
+    auth
   end
-  private_class_method :generate_database_password
+  private_class_method :generate_database_authentication
 
   def self.inventory_file_contents
-    admin_password    = miq_database.ansible_admin_password || generate_admin_password
-    rabbitmq_password = miq_database.ansible_rabbitmq_password || generate_rabbitmq_password
-    database_password = miq_database.ansible_database_password || generate_database_password
-    db_config         = Rails.configuration.database_configuration[Rails.env]
+    admin_auth    = miq_database.ansible_admin_authentication || generate_admin_authentication
+    rabbitmq_auth = miq_database.ansible_rabbitmq_authentication || generate_rabbitmq_authentication
+    database_auth = miq_database.ansible_database_authentication || generate_database_authentication
+    db_config     = Rails.configuration.database_configuration[Rails.env]
 
     <<-EOF.strip_heredoc
       [tower]
@@ -124,19 +123,19 @@ class EmbeddedAnsible
       [database]
 
       [all:vars]
-      admin_password='#{admin_password}'
+      admin_password='#{admin_auth.password}'
 
       pg_host='#{db_config["host"] || "localhost"}'
       pg_port='#{db_config["port"] || "5432"}'
 
       pg_database='awx'
-      pg_username='awx'
-      pg_password='#{database_password}'
+      pg_username='#{database_auth.userid}'
+      pg_password='#{database_auth.password}'
 
       rabbitmq_port=5672
       rabbitmq_vhost=tower
-      rabbitmq_username=tower
-      rabbitmq_password='#{rabbitmq_password}'
+      rabbitmq_username='#{rabbitmq_auth.userid}'
+      rabbitmq_password='#{rabbitmq_auth.password}'
       rabbitmq_cookie=cookiemonster
       rabbitmq_use_long_name=false
       rabbitmq_enable_manager=false
@@ -153,4 +152,9 @@ class EmbeddedAnsible
     SecureRandom.base64(18).tr("+/", "-_")
   end
   private_class_method :generate_password
+
+  def self.connection
+    ActiveRecord::Base.connection
+  end
+  private_class_method :connection
 end

@@ -1,7 +1,5 @@
 class EmbeddedAnsibleWorker::Runner < MiqWorker::Runner
   def prepare
-    update_embedded_ansible_provider
-
     Thread.new do
       setup_ansible
       started_worker_record
@@ -20,6 +18,8 @@ class EmbeddedAnsibleWorker::Runner < MiqWorker::Runner
         heartbeat
         send(poll_method)
       end
+
+      update_embedded_ansible_provider
 
       _log.info("entering ansible monitor loop")
       loop do
@@ -70,11 +70,9 @@ class EmbeddedAnsibleWorker::Runner < MiqWorker::Runner
 
     provider.save!
 
-    auth = {
-      :userid   => "admin",
-      :password => MiqDatabase.first.ansible_admin_password
-    }
-    provider.update_authentication(:default => auth)
+    admin_auth = MiqDatabase.first.ansible_admin_authentication
+
+    provider.update_authentication(:default => {:userid => admin_auth.userid, :password => admin_auth.password})
   end
 
   # Base class methods we override since we don't have a separate process.  We might want to make these opt-in features in the base class that this subclass can choose to opt-out.

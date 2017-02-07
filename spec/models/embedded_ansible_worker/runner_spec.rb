@@ -17,7 +17,7 @@ describe EmbeddedAnsibleWorker::Runner do
       before do
         EvmSpecHelper.local_guid_miq_server_zone
         MiqDatabase.seed
-        MiqDatabase.first.ansible_admin_password = "secret"
+        MiqDatabase.first.set_ansible_admin_authentication(:password => "secret")
       end
 
       it "creates initial" do

@@ -24,48 +24,37 @@ module AnsibleAuthentications
 
   def ansible_secret_key=(key)
     auth = authentication_for_type(ANSIBLE_SECRET_KEY_TYPE, "Ansible Secret Key")
-
-    auth.auth_key = key
-    auth.save!
+    update_ansible_authentication(auth, :auth_key => key)
   end
 
-  def ansible_rabbitmq_password
-    auth = authentication_type(ANSIBLE_RABBITMQ_TYPE)
-    auth.nil? ? nil : auth.password
+  def ansible_rabbitmq_authentication
+    authentication_type(ANSIBLE_RABBITMQ_TYPE)
   end
 
-  def ansible_rabbitmq_password=(password)
-    auth = authentication_for_type(ANSIBLE_RABBITMQ_TYPE, "Ansible Rabbitmq Password")
-
-    auth.userid   = "tower"
-    auth.password = password
-    auth.save!
+  def set_ansible_rabbitmq_authentication(userid: "tower", password:)
+    auth = authentication_for_type(ANSIBLE_RABBITMQ_TYPE, "Ansible Rabbitmq Authentication")
+    update_ansible_authentication(auth, :userid => userid, :password => password)
+    auth
   end
 
-  def ansible_admin_password
-    auth = authentication_type(ANSIBLE_ADMIN_TYPE)
-    auth.nil? ? nil : auth.password
+  def ansible_admin_authentication
+    authentication_type(ANSIBLE_ADMIN_TYPE)
   end
 
-  def ansible_admin_password=(password)
-    auth = authentication_for_type(ANSIBLE_ADMIN_TYPE, "Ansible Admin Password")
-
-    auth.userid   = "admin"
-    auth.password = password
-    auth.save!
+  def set_ansible_admin_authentication(userid: "admin", password:)
+    auth = authentication_for_type(ANSIBLE_ADMIN_TYPE, "Ansible Admin Authentication")
+    update_ansible_authentication(auth, :userid => userid, :password => password)
+    auth
   end
 
-  def ansible_database_password
-    auth = authentication_type(ANSIBLE_DATABASE_TYPE)
-    auth.nil? ? nil : auth.password
+  def ansible_database_authentication
+    authentication_type(ANSIBLE_DATABASE_TYPE)
   end
 
-  def ansible_database_password=(password)
-    auth = authentication_for_type(ANSIBLE_DATABASE_TYPE, "Ansible Database Password")
-
-    auth.userid   = "awx"
-    auth.password = password
-    auth.save!
+  def set_ansible_database_authentication(userid: "awx", password:)
+    auth = authentication_for_type(ANSIBLE_DATABASE_TYPE, "Ansible Database Authentication")
+    update_ansible_authentication(auth, :userid => userid, :password => password)
+    auth
   end
 
   private
@@ -79,5 +68,12 @@ module AnsibleAuthentications
     auth.resource = self
     auth.authtype = auth_type
     auth
+  end
+
+  def update_ansible_authentication(auth, auth_fields)
+    auth_fields.each do |field, value|
+      auth.public_send("#{field}=", value)
+    end
+    auth.save!
   end
 end
