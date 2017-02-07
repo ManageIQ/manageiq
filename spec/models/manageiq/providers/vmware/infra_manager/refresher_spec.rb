@@ -32,6 +32,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
     assert_specific_storage
     assert_specific_storage_cluster
     assert_specific_storage_profile
+    assert_specific_dvportgroup
     assert_specific_host
     assert_specific_vm
     assert_cpu_layout
@@ -349,6 +350,13 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
 
     expect(@storage_profile.storages).to include(@storage)
     expect(@storage.storage_profiles).to include(@storage_profile)
+  end
+
+  def assert_specific_dvportgroup
+    # Check that a dvPortgroup with a slash in the name is decoded from
+    # %2f to / by the RefreshParser
+    dvpg = Lan.find_by(:uid_ems => 'dvportgroup-122')
+    expect(dvpg.name).to eq('DC1 / DVPG1')
   end
 
   def assert_specific_host

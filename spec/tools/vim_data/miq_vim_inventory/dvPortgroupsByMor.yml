@@ -171,7 +171,7 @@
           xsiType: :SOAP::SOAPString
           vimType: 
         name: !ruby/string:VimString
-          str: DC1_DVPG1
+          str: DC1 %2f DVPG1
           xsiType: :SOAP::SOAPString
           vimType: 
       ivars:
@@ -180,7 +180,7 @@
     summary: !ruby/hash-with-ivars:VimHash
       elements:
         name: !ruby/string:VimString
-          str: DC1_DVPG1
+          str: DC1 %2f DVPG1
           xsiType: :SOAP::SOAPString
           vimType: 
       ivars:
