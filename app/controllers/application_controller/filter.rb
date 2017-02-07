@@ -774,7 +774,7 @@ module ApplicationController::Filter
     end
 
     if ["delete", "saveit"].include?(params[:button])
-      if @edit[:in_explorer]
+      if @edit[:in_explorer] || x_active_tree == :storage_tree
         if "cs_filter_tree" == x_active_tree.to_s
           build_configuration_manager_tree(:cs_filter, x_active_tree)
         else
@@ -803,7 +803,7 @@ module ApplicationController::Filter
       end
 
       if ["delete", "saveit"].include?(params[:button])
-        if @edit[:in_explorer]
+        if @edit[:in_explorer] || x_active_tree == :storage_tree
           tree_name = x_active_tree.to_s
           if "cs_filter_tree" == tree_name
             page.replace_html("#{tree_name}_div", :partial => "provider_foreman/#{tree_name}")
