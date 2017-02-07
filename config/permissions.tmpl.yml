@@ -1,6 +1,7 @@
 ---
 - :aut
 - :automate
+- :ansible
 - :clo
 - :cnt
 - :compute
