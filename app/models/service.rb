@@ -70,6 +70,10 @@ class Service < ApplicationRecord
 
   validates_presence_of :name
 
+  default_value_for :retired, false
+
+  validates :retired, :inclusion => { :in => [true, false] }
+
   supports :reconfigure do
     unsupported_reason_add(:reconfigure, _("Reconfigure unsupported")) unless validate_reconfigure
   end
