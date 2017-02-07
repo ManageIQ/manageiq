@@ -14,6 +14,13 @@ require 'rspec/rails'
 require 'vcr'
 require 'cgi'
 
+# FIXME: This bypasses the lookup of Javascript dependencies in tests until they can be found and uncoupled
+class << ActionController::Base.helpers
+  def image_path(path, options = {})
+    path
+  end
+end
+
 # Fail tests that try to include stuff in `main`
 require_relative 'support/test_contamination'
 Spec::Support::TestContamination.setup
