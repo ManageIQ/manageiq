@@ -58,6 +58,7 @@ describe ManageIQ::Providers::AnsibleTower::AutomationManager::Refresher do
       assert_configuration_script_with_survey_spec
       assert_inventory_root_group
       assert_configuration_script_sources
+      assert_playbook
     end
   end
 
@@ -68,6 +69,13 @@ describe ManageIQ::Providers::AnsibleTower::AutomationManager::Refresher do
     expect(automation_manager.configuration_scripts.count).to eq(13)
     expect(automation_manager.inventory_groups.count).to      eq(7)
     expect(automation_manager.configuration_script_sources.count).to eq(6)
+    expect(automation_manager.playbooks.count).to eq(437)
+  end
+
+  def assert_playbook
+    configuration_script_source = automation_manager.configuration_script_sources.find_by(:manager_ref => 29)
+    expect(configuration_script_source.playbooks.count).to eq(60)
+    expect(configuration_script_source.playbooks.map(&:name)).to include('jboss-standalone/demo-aws-launch.yml')
   end
 
   def assert_configuration_script_sources

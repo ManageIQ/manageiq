@@ -8,11 +8,14 @@ class ManageIQ::Providers::AnsibleTower::AutomationManager::RefreshWorker::Parse
   end
 
   def parse
+    parse_configuration_script_sources
+
     [
       inventory_groups,
       configured_systems,
       configuration_scripts,
       configuration_script_sources,
+      playbooks,
     ]
   end
 
@@ -77,19 +80,37 @@ class ManageIQ::Providers::AnsibleTower::AutomationManager::RefreshWorker::Parse
   end
 
   def configuration_script_sources
-    ManagerRefresh::InventoryCollection.new(
-      # FIXME: change to ansible class
-      ConfigurationScriptSource,
+    @configuration_script_sources ||= ManagerRefresh::InventoryCollection.new(
+      ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationScriptSource,
       :association => :configuration_script_sources,
       :manager_ref => [:manager_ref],
       :parent      => ems,
-    ).tap do |c|
-      inventory.projects.each do |i|
-        c << c.new_inventory_object(
-          :manager     => ems,
-          :manager_ref => i.id.to_s,
-          :name        => i.name,
-          :description => i.description,
+    )
+  end
+
+  def playbooks
+    @playbooks ||= ManagerRefresh::InventoryCollection.new(
+      ManageIQ::Providers::AnsibleTower::AutomationManager::Playbook,
+      :association => :playbooks,
+      :manager_ref => [:manager_ref],
+      :parent      => ems,
+    )
+  end
+
+  def parse_configuration_script_sources
+    inventory.projects.each do |i|
+      configuration_script_sources << configuration_script_sources.new_inventory_object(
+        :manager     => ems,
+        :manager_ref => i.id.to_s,
+        :name        => i.name,
+        :description => i.description,
+      )
+
+      i.playbooks.each do |playbook|
+        playbooks << playbooks.new_inventory_object(
+          :configuration_script_source => configuration_script_sources.lazy_find(i.id.to_s),
+          :name                        => playbook,
+          :manager_ref                 => playbook,
         )
       end
     end
