@@ -5170,6 +5170,32 @@
           :description: Edit a Playbook
           :feature_type: admin
           :identifier: embedded_configuration_script_payload_edit
+  - :name: Credentials
+    :description: Everything under Credentials
+    :feature_type: node
+    :identifier: embedded_automation_manager_credentials
+    :children:
+    - :name: View
+      :description: View Credentials
+      :feature_type: view
+      :identifier: embedded_automation_manager_credentials_view
+    - :name: Modify
+      :description: Modify Credentials
+      :feature_type: admin
+      :identifier: embedded_automation_manager_credentials_admin
+      :children:
+        - :name: Add Credentials
+          :description: Add a Credential
+          :feature_type: admin
+          :identifier: embedded_automation_manager_credentials_add
+        - :name: Edit Credentials
+          :description: Edit a Credential
+          :feature_type: admin
+          :identifier: embedded_automation_manager_credentials_edit
+        - :name: Delete Credentials
+          :description: Delete a Credential
+          :feature_type: admin
+          :identifier: embedded_automation_manager_credentials_delete
 
 # Automation Manager
 - :name: Automation Manager
