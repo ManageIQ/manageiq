@@ -2,7 +2,7 @@ class MiqExpression::Tag
   TAG_REGEX = /
 (?<model_name>([[:alnum:]]*(::)?)+)
 \.(?<associations>([a-z_]+\.)*)
-(?<namespace>\bmanaged\b)
+(?<namespace>\bmanaged|user_tag\b)
 -(?<column>[a-z]+[_[:alnum:]]+)
 /x
 
@@ -10,6 +10,7 @@ class MiqExpression::Tag
     match = TAG_REGEX.match(field) || return
 
     associations = match[:associations].split(".")
+    namespace = match[:namespace] == 'user_tag' ? 'user' : match[:namespace]
     new(match[:model_name].classify.safe_constantize, associations, "/#{namespace}/#{match[:column]}")
   end
 
