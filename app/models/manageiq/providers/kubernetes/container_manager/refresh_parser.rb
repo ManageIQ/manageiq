@@ -751,6 +751,7 @@ module ManageIQ::Providers::Kubernetes
     def parse_image_name(image, image_ref)
       # parsing using same logic as in docker
       # https://github.com/docker/docker/blob/348f6529b71502b561aa493e250fd5be248da0d5/reference/reference.go#L174
+      short_image_ref_re = %r{\A(?<protocol>#{ContainerImage::DOCKER_PREFIXES.join('|')})(?<digest>sha256:.+)\z}
       image_definition_re = %r{
         \A
           (?<protocol>#{ContainerImage::DOCKER_PULLABLE_PREFIX})?
@@ -766,13 +767,16 @@ module ManageIQ::Providers::Kubernetes
       }x
       image_parts = image_definition_re.match(image)
       image_ref_parts = image_definition_re.match(image_ref)
+      image_ref_short_parts = short_image_ref_re.match(image_ref)
 
       hostname = image_parts[:host] || image_parts[:host2] || image_parts[:localhost]
       [
         {
           :name          => image_parts[:name],
           :tag           => image_parts[:tag],
-          :digest        => image_parts[:digest] || (image_ref_parts[:digest] if image_ref_parts),
+          :digest        => image_parts[:digest] || \
+            (image_ref_parts[:digest] if image_ref_parts) || \
+            (image_ref_short_parts[:digest] if image_ref_short_parts),
           :image_ref     => image_ref,
           :registered_on => Time.now.utc
         },

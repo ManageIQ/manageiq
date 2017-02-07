@@ -99,8 +99,8 @@ describe ManageIQ::Providers::Openshift::ContainerManager::RefreshParser do
       expect(parser.send(:parse_openshift_image,
                          image_without_dockerImage_fields).except(:registered_on)).to eq(
                            :container_image_registry => nil,
-                           :digest                   => nil,
-                           :image_ref                => "docker-pullable://sha256:abcdefg",
+                           :digest                   => image_digest,
+                           :image_ref                => "docker-pullable://#{image_digest}",
                            :name                     => "sha256",
                            :tag                      => "abcdefg"
                          )
@@ -110,8 +110,8 @@ describe ManageIQ::Providers::Openshift::ContainerManager::RefreshParser do
       expect(parser.send(:parse_openshift_image,
                          image_without_dockerConfig).except(:registered_on)).to eq(
                            :container_image_registry => nil,
-                           :digest                   => nil,
-                           :image_ref                => "docker-pullable://sha256:abcdefg",
+                           :digest                   => image_digest,
+                           :image_ref                => "docker-pullable://#{image_digest}",
                            :name                     => "sha256",
                            :tag                      => "abcdefg",
                            :architecture             => nil,
@@ -127,8 +127,8 @@ describe ManageIQ::Providers::Openshift::ContainerManager::RefreshParser do
       expect(parser.send(:parse_openshift_image,
                          image_without_environment_variables).except(:registered_on)).to eq(
                            :container_image_registry => nil,
-                           :digest                   => nil,
-                           :image_ref                => "docker-pullable://sha256:abcdefg",
+                           :digest                   => image_digest,
+                           :image_ref                => "docker-pullable://#{image_digest}",
                            :name                     => "sha256",
                            :tag                      => "abcdefg",
                            :architecture             => nil,

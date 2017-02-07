@@ -143,6 +143,12 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::RefreshParser do
                                        :image_ref => "docker-pullable://reg.example.com:1234/name1@sha256:321bcd"},
                        :registry   => {:name => "reg.example.com", :host => "reg.example.com", :port => "1234"}},
 
+                      # digest from old docker
+                      {:image_name => "reg.example.com:1234/name1:tagos",
+                       :image      => {:name => "name1", :tag => "tagos", :digest => "sha256:321bcd",
+                                       :image_ref => "docker://sha256:321bcd"},
+                       :registry   => {:name => "reg.example.com", :host => "reg.example.com", :port => "1234"}},
+
                       {:image_name => "example@sha256:1234567abcdefg",
                        :image      => {:name => "example", :tag => nil, :digest => "sha256:1234567abcdefg",
                                        :image_ref => example_ref},
