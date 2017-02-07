@@ -65,7 +65,7 @@ class ApplicationHelper::Toolbar::EmsNetworkCenter < ApplicationHelper::Toolbar:
           'product product-timeline fa-lg',
           N_('Show Timelines for this Network Provider'),
           N_('Timelines'),
-          :url       => "/show",
+          :klass     => ApplicationHelper::Button::EmsTimeline,
           :url_parms => "?display=timeline"),
       ]
     ),
