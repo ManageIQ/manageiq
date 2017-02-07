@@ -7,9 +7,9 @@ class MiqAlertStatusAction < ApplicationRecord
   validates :action_type, :acceptance => { :accept => ACTION_TYPES }, :presence => true
   validates :user, :presence => true
   validates :miq_alert_status, :presence => true
-  validates :comment, :presence => true, :if => "action_type == 'comment'"
-  validates :assignee, :presence => true, :if => "action_type == 'assign'"
-  validates :assignee, :absence => true, :unless => "action_type == 'assign'"
+  validates :comment, :presence => true, :if => (->(masa) { masa.action_type == 'comment' })
+  validates :assignee, :presence => true, :if => (->(masa) { masa.action_type == 'assign' })
+  validates :assignee, :absence => true, :unless => (->(masa) { masa.action_type == 'assign' })
   validate :only_assignee_can_acknowledge
 
   after_save :update_status_acknowledgement
