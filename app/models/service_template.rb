@@ -133,6 +133,9 @@ class ServiceTemplate < ApplicationRecord
     # Hide child services by default
     nh[:display] = false if parent_svc
 
+    # If display is nil, set it to false
+    nh[:display] = false if nh[:display].nil?
+
     # convert template class name to service class name by naming convention
     nh[:type] = self.class.name.sub('Template', '')
 
