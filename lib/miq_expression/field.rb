@@ -31,10 +31,12 @@ class MiqExpression::Field
   end
 
   def self.is_field?(field)
-    if field.kind_of?(String)
-      match = FIELD_REGEX.match(field)
-      match.present? && match[:model_name].safe_constantize.present?
-    end
+    return false unless field.kind_of?(String)
+    match = FIELD_REGEX.match(field)
+    return false unless match
+    model = match[:model_name].safe_constantize
+    return false unless model
+    !!(model < ApplicationRecord)
   end
 
   def datetime?
