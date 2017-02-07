@@ -20,10 +20,12 @@
     "angular": "~1.5.8",
     "angular-animate": "~1.5.8",
     "angular-bootstrap-switch": "~0.5.1",
+    "angular-dragdrop": "~1.0.13",
     "angular-mocks": "~1.5.8",
     "angular-patternfly-sass": "~3.15.0",
     "angular-sanitize": "~1.5.8",
     "angular-ui-codemirror": "~0.3.0",
+    "angular-ui-sortable": "~0.16.1",
     "angular.validators": "~4.4.2",
     "array-includes": "~1.0.0",
     "bootstrap-filestyle": "~1.2.1",
@@ -39,7 +41,7 @@
     "jquery-ujs": "~1.2.2",
     "jquery.observe_field": "himdel/jquery.observe_field#~0.1.0",
     "kubernetes-topology-graph": "~0.0.23",
-    "manageiq-ui-components": "0.0.11",
+    "manageiq-ui-components": "0.0.12",
     "moment-strftime": "~0.2.0",
     "moment-timezone": "~0.4.1",
     "numeral": "~1.5.5",
@@ -58,6 +60,7 @@
   "resolutions": {
     "patternfly-bootstrap-treeview": "~2.1.1",
     "moment": ">=2.10.5",
-    "d3": "~3.5.0"
+    "d3": "~3.5.0",
+    "jquery": "~2.1.4"
   }
 }
