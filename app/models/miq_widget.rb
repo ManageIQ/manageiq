@@ -39,8 +39,8 @@ class MiqWidget < ApplicationRecord
   end
 
   virtual_column :status,         :type => :string,    :uses => :miq_task
-  virtual_column :status_message, :type => :string,    :uses => :miq_task
-  virtual_column :queued_at,      :type => :datetime,  :uses => :miq_task
+  virtual_delegate :status_message, :to => "miq_task.message", :allow_nil => true, :default => "Unknown"
+  virtual_delegate :queued_at, :to => "miq_task.created_on", :allow_nil => true
   virtual_column :last_run_on,    :type => :datetime,  :uses => :miq_schedule
 
   def row_count(row_count_param = nil)
@@ -55,13 +55,7 @@ class MiqWidget < ApplicationRecord
     last_generated_content_on || (miq_schedule && miq_schedule.last_run_on)
   end
 
-  def next_run_on
-    miq_schedule && miq_schedule.next_run_on
-  end
-
-  def queued_at
-    miq_task && miq_task.created_on
-  end
+  delegate :next_run_on, :to => :miq_schedule, :allow_nil => true
 
   def status
     if miq_task.nil?
@@ -69,34 +63,6 @@ class MiqWidget < ApplicationRecord
       return "Complete"
     end
     miq_task.human_status
-  end
-
-  def status_message
-    miq_task.nil? ? "Unknown" : miq_task.message
-  end
-
-  # Returns status, last_run_on, message
-  #   Status: None | Queued | Running | Complete
-  def generation_status
-    miq_task = self.miq_task
-
-    if miq_task.nil?
-      return "None" if last_run_on.nil?
-      return "Complete", last_run_on
-    end
-
-    status =  case miq_task.state
-              when MiqTask::STATE_QUEUED
-                "Queued"
-              when MiqTask::STATE_FINISHED
-                "Complete"
-              when MiqTask::STATE_ACTIVE
-                "Running"
-              else
-                raise "Unknown state=#{miq_task.state.inspect}"
-              end
-
-    return status, last_run_on, miq_task.message
   end
 
   def create_task(num_targets, userid = User.current_userid)
