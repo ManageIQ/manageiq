@@ -85,6 +85,25 @@ class ServiceTemplate < ApplicationRecord
     end
   end
 
+  def self.update_catalog_item(catalog_item, options, auth_user)
+    raise 'cannot change service_type' if options[:service_type]
+    transaction do
+      catalog_item.update_attributes(options.except(:config_info))
+      config_info = options[:config_info].except(:provision, :retirement, :reconfigure)
+
+      workflow_class = MiqProvisionWorkflow.class_for_source(config_info[:src_vm_id])
+      if workflow_class
+        # destroy the old resource
+        catalog_item.service_resources.where(resource_type: 'MiqRequest').first.destroy
+        request = workflow_class.new(config_info, auth_user).make_request(nil, config_info)
+        catalog_item.add_resource(request)
+      end
+      catalog_item.update_resource_actions(options[:config_info])
+      catalog_item.save!
+    end
+    catalog_item
+  end
+
   def readonly?
     return true if super
     blueprint.try(:published?)
@@ -340,22 +359,30 @@ class ServiceTemplate < ApplicationRecord
     resource_actions.find_by(:action => "Provision")
   end
 
+  # Should we delete if it exists and is not present?
+  def update_resource_actions(ae_endpoints)
+    create_actions = []
+    resource_action_options.each do |action|
+      # If the endpoint exists
+      if ae_endpoints[action[:param_key]]
+        # Update the resource action if it already exists
+        if resource_actions.where(action: action[:name]).exists?
+          resource_actions.where(action: action[:name]).first.update_attributes!(ae_endpoints[action[:param_key]])
+        # Otherwise create it
+        else
+          create_actions.push(action[:param_key])
+        end
+      else # If the endpoint does not exist
+        # but the resource action does, delete it
+        resource_actions.where(action: action[:name]).first.destroy if resource_actions.where(action: action[:name]).exists?
+      end
+    end
+    create_resource_actions(ae_endpoints.slice(*create_actions)) unless create_actions.empty?
+  end
+
   def create_resource_actions(ae_endpoints)
     ae_endpoints ||= {}
-    [
-      {:name      => 'Provision',
-       :param_key => :provision,
-       :method    => 'default_provisioning_entry_point',
-       :args      => [service_type]},
-      {:name      => 'Reconfigure',
-       :param_key => :reconfigure,
-       :method    => 'default_reconfiguration_entry_point',
-       :args      => []},
-      {:name      => 'Retirement',
-       :param_key => :retirement,
-       :method    => 'default_retirement_entry_point',
-       :args      => []}
-    ].each do |action|
+   resource_action_options.each do |action|
       ae_endpoint = ae_endpoints[action[:param_key]]
       next unless ae_endpoint
       fqname = if ae_endpoint.empty?
@@ -375,6 +402,23 @@ class ServiceTemplate < ApplicationRecord
       resource_actions.build(build_options)
     end
     save!
+  end
+
+  def resource_action_options
+    [
+      {:name      => 'Provision',
+       :param_key => :provision,
+       :method    => 'default_provisioning_entry_point',
+       :args      => [service_type]},
+      {:name      => 'Reconfigure',
+       :param_key => :reconfigure,
+       :method    => 'default_reconfiguration_entry_point',
+       :args      => []},
+      {:name      => 'Retirement',
+       :param_key => :retirement,
+       :method    => 'default_retirement_entry_point',
+       :args      => []}
+    ]
   end
 
   def provision_request(user, options = nil)
