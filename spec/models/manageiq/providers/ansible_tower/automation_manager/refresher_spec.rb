@@ -1,14 +1,39 @@
 describe ManageIQ::Providers::AnsibleTower::AutomationManager::Refresher do
-  let(:auth)                    { FactoryGirl.create(:authentication) }
+  # To re-record cassettes or to add cassettes you can add another inner `VCR.use_cassette` block to the
+  # 'will perform a full refresh' example. When running specs, new requests are recorded to the innermost cassette and
+  # can be played back from  any level of nesting (it tries the innermost cassette first, then searches up the parent
+  # chain) - http://stackoverflow.com/a/13425826
+  #
+  # To add a new cassette
+  #   * add another block (innermost) with an empty cassette
+  #   * change existing cassettes to use your working credentials
+  #   * run the specs to create a new cassette
+  #   * change new and existing cassettes to use default credentials
+  #
+  # To re-record a cassette
+  #   * temporarily make the cassette the innermost one (see above about recording)
+  #   * rm cassette ; run specs
+  #   * change back the order of cassettes
+  #
+  # To change credentials in cassettes:
+  # replace with defaults - before committing
+  # ruby -pi -e 'gsub /dev-ansible-tower3.cloudforms.lab.eng.rdu2.redhat.com/, "dev-ansible-tower2.example.com"; gsub /admin:smartvm/, "testuser:secret"' spec/vcr_cassettes/manageiq/providers/ansible_tower/automation_manager/*.yml
+  # replace with your working credentials
+  # ruby -pi -e 'gsub /dev-ansible-tower2.example.com/, "dev-ansible-tower3.cloudforms.lab.eng.rdu2.redhat.com"; gsub /testuser:secret/, "admin:smartvm"' spec/vcr_cassettes/manageiq/providers/ansible_tower/automation_manager/*.yml
+
+  let(:tower_url) { ENV['TOWER_URL'] || "https://dev-ansible-tower2.example.com/api/v1/" }
+  let(:auth_userid) { ENV['TOWER_USER'] || 'testuser' }
+  let(:auth_password) { ENV['TOWER_PASSWORD'] || 'secret' }
+
+  let(:auth)                    { FactoryGirl.create(:authentication, :userid => auth_userid, :password => auth_password) }
   let(:automation_manager)      { provider.automation_manager }
   let(:expected_counterpart_vm) { FactoryGirl.create(:vm, :uid_ems => "4233080d-7467-de61-76c9-c8307b6e4830") }
   let(:provider) do
     _guid, _server, zone = EvmSpecHelper.create_guid_miq_server_zone
     FactoryGirl.create(:provider_ansible_tower,
                        :zone       => zone,
-                       :url        => "https://dev-ansible-tower2.example.com/api/v1/",
-                       :verify_ssl => false,
-                      ).tap { |provider| provider.authentications << auth }
+                       :url        => tower_url,
+                       :verify_ssl => false,).tap { |provider| provider.authentications << auth }
   end
 
   it ".ems_type" do
@@ -19,9 +44,12 @@ describe ManageIQ::Providers::AnsibleTower::AutomationManager::Refresher do
     expected_counterpart_vm
 
     2.times do
+      # to re-record cassettes see comment at the beginning of this file
       VCR.use_cassette(described_class.name.underscore) do
-        EmsRefresh.refresh(automation_manager)
-        expect(automation_manager.reload.last_refresh_error).to be_nil
+        VCR.use_cassette(described_class.name.underscore + '_configuration_script_sources') do
+          EmsRefresh.refresh(automation_manager)
+          expect(automation_manager.reload.last_refresh_error).to be_nil
+        end
       end
 
       assert_counts
@@ -29,6 +57,8 @@ describe ManageIQ::Providers::AnsibleTower::AutomationManager::Refresher do
       assert_configuration_script_with_nil_survey_spec
       assert_configuration_script_with_survey_spec
       assert_inventory_root_group
+      assert_configuration_script_sources
+      assert_playbooks
     end
   end
 
@@ -38,6 +68,25 @@ describe ManageIQ::Providers::AnsibleTower::AutomationManager::Refresher do
     expect(automation_manager.configured_systems.count).to    eq(98)
     expect(automation_manager.configuration_scripts.count).to eq(13)
     expect(automation_manager.inventory_groups.count).to      eq(7)
+    expect(automation_manager.configuration_script_sources.count).to eq(6)
+    expect(automation_manager.configuration_script_payloads.count).to eq(438)
+  end
+
+  def assert_playbooks
+    configuration_script_source = automation_manager.configuration_script_sources.find_by(:manager_ref => 29)
+    expect(configuration_script_source.configuration_script_payloads.first).to be_an_instance_of(ManageIQ::Providers::AnsibleTower::AutomationManager::Playbook)
+    expect(configuration_script_source.configuration_script_payloads.count).to eq(60)
+    expect(configuration_script_source.configuration_script_payloads.map(&:name)).to include('jboss-standalone/demo-aws-launch.yml')
+  end
+
+  def assert_configuration_script_sources
+    expect(automation_manager.configuration_script_sources.count).to eq(6)
+    configuration_script_source = automation_manager.configuration_script_sources.find_by(:manager_ref => 4)
+    expect(configuration_script_source).to be_an_instance_of(ConfigurationScriptSource)
+    expect(configuration_script_source).to have_attributes(
+      :name        => 'Demo Project',
+      :description => 'A great demo',
+    )
   end
 
   def assert_configured_system

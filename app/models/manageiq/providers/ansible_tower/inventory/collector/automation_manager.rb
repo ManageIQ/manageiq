@@ -14,4 +14,8 @@ class ManageIQ::Providers::AnsibleTower::Inventory::Collector::AutomationManager
   def job_templates
     connection.api.job_templates.all
   end
+
+  def projects
+    @connection.api.projects.all
+  end
 end
