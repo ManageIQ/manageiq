@@ -8,9 +8,9 @@ class ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationScript
 
       # Get the record in our database
       # TODO: This needs to be targeted refresh so it doesn't take too long
-      if inline && !manager.missing_credentials? && manager.authentication_status_ok?
+      if inline && manager.authentication_status_ok?
         EmsRefresh.refresh(manager)
-      elsif !manager.missing_credentials? && manager.authentication_status_ok?
+      elsif manager.authentication_status_ok?
         EmsRefresh.queue_refresh(manager, nil, true)
       end
 

@@ -24,28 +24,27 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
   #     :reconfigure (same as provision)
   #
   def self.create_catalog_item(options, _auth_user)
-    task_id = create_catalog_item_queue(options)
+    task_id = create_catalog_item_queue(options, _auth_user)
     task = MiqTask.wait_for_taskid(task_id)
     task.task_results
   end
 
-  def self.create_catalog_item_queue(options)
+  def self.create_catalog_item_queue(options, auth_user)
     task_opts = {
       :action => "Create Ansible Playbook Service Template",
       :userid => "system"
     }
 
-    # This is a lookup for now
-    playbook = ManageIQ::Providers::AnsibleTower::AutomationManager::Playbook.find(options[:config_info][:provision][:playbook_id])
-    internal_tower = playbook.configuration_script_source.manager
+    playbook = ManageIQ::Providers::AnsibleTower::AutomationManager::Playbook.find(options.fetch_path(:config_info, :provision, :playbook_id))
+    tower = playbook.manager
 
     queue_opts = {
-      :args        => [options, _auth_user],
+      :args        => [options, auth_user],
       :class_name  => "ServiceTemplateAnsiblePlaybook",
       :method_name => "create_catalog_item_task",
       :priority    => MiqQueue::HIGH_PRIORITY,
       :role        => "ems_operations",
-      :zone        => internal_tower.my_zone
+      :zone        => tower.my_zone
     }
 
     MiqTask.generic_action_with_callback(task_opts, queue_opts)
@@ -81,21 +80,20 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
 
   def self.create_job_template(name, description, info)
     playbook = ManageIQ::Providers::AnsibleTower::AutomationManager::Playbook.find(info[:playbook_id])
-    # This is a lookup for now
-    internal_tower = playbook.configuration_script_source.manager
+    tower = playbook.manager
 
     params = {
       :name                     => name,
       :description              => description || '',
       :project                  => playbook.configuration_script_source.manager_ref,
       :playbook                 => playbook.name,
-      :inventory                => internal_tower.inventory_root_groups.first.ems_ref,
+      :inventory                => tower.inventory_root_groups.first.ems_ref,
       :ask_variables_on_launch  => true,
       :ask_limit_on_launch      => true,
       :ask_inventory_on_launch  => true,
       :ask_credential_on_launch => true
     }.merge(info.slice(:extra_vars, :credential, :cloud_credential, :network_credential))
-    ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationScript.create_in_provider(internal_tower.id, params, true)
+    ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationScript.create_in_provider(tower.id, params, true)
   end
   private_class_method :create_job_template
 

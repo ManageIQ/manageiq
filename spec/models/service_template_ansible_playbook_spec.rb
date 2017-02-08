@@ -17,11 +17,11 @@ describe ServiceTemplateAnsiblePlaybook do
     let(:service_template_catalog) { FactoryGirl.create(:service_template_catalog) }
     let(:catalog_item_options) do
       {
-        :name                     => 'test_ansible_catalog_item',
-        :description              => 'test ansible',
-        :service_template_catalog => service_template_catalog,
-        :config_info              => {
-          :provision         => {
+        :name                        => 'test_ansible_catalog_item',
+        :description                 => 'test ansible',
+        :service_template_catalog_id => service_template_catalog.id,
+        :config_info                 => {
+          :provision => {
             :new_dialog_name => 'test_dialog',
             :hosts           => 'many',
             :credential      => 6,
@@ -43,6 +43,8 @@ describe ServiceTemplateAnsiblePlaybook do
       service_template = ServiceTemplateAnsiblePlaybook.create_catalog_item_task(catalog_item_options, nil)
 
       expect(service_template.name).to eq('test_ansible_catalog_item')
+      expect(service_template.description).to eq('test ansible')
+      expect(service_template.service_template_catalog_id).to eq(service_template_catalog.id)
       expect(service_template.resource_actions.pluck(:action)).to include('Provision')
     end
   end
