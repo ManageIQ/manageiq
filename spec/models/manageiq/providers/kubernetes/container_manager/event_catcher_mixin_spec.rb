@@ -8,6 +8,23 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager::EventCatcherMixin do
   end
   let(:ems) { FactoryGirl.create(:ems_kubernetes) }
 
+  describe '#queue_event' do
+    it 'sends the received event to queue after parsing' do
+      catcher = test_class.new(ems)
+      expect(catcher).to receive(:extract_event_data).once.with(:raw_event).and_return(:extracted_event)
+      expect(catcher).to receive(:log_prefix)
+      expect(catcher).to receive_message_chain("_log.info")
+      catcher.instance_variable_set(:@cfg, :ems_id => ems.id)
+      expect(
+        ManageIQ::Providers::Kubernetes::ContainerManager::EventParser
+      ).to receive(
+        :event_to_hash
+      ).with(:extracted_event, ems.id).and_return(:hashed_event)
+      expect(EmsEvent).to receive(:add_queue).with('add', ems.id, :hashed_event)
+      catcher.queue_event(:raw_event)
+    end
+  end
+
   describe '#extract_event_data' do
     context 'given container event (Pod event with fieldPath)' do
       let(:kubernetes_event) do
