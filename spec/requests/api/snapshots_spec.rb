@@ -135,7 +135,7 @@ RSpec.describe "Snapshots API" do
 
     describe "POST /api/vms/:c_id/snapshots/:s_id with delete action" do
       it "can queue a snapshot for deletion" do
-        api_basic_authorize(action_identifier(:snapshots, :delete, :subresource_actions, :delete))
+        api_basic_authorize(action_identifier(:vms, :delete, :snapshots_subresource_actions, :delete))
         ems = FactoryGirl.create(:ext_management_system)
         host = FactoryGirl.create(:host, :ext_management_system => ems)
         vm = FactoryGirl.create(:vm_vmware, :name => "Alice's VM", :host => host, :ext_management_system => ems)
@@ -154,7 +154,7 @@ RSpec.describe "Snapshots API" do
       end
 
       it "renders a failed action response if deleting is not supported" do
-        api_basic_authorize(action_identifier(:snapshots, :delete, :subresource_actions, :post))
+        api_basic_authorize(action_identifier(:vms, :delete, :snapshots_subresource_actions, :post))
         vm = FactoryGirl.create(:vm_vmware)
         snapshot = FactoryGirl.create(:snapshot, :vm_or_template => vm)
 
@@ -181,7 +181,7 @@ RSpec.describe "Snapshots API" do
 
     describe "POST /api/vms/:c_id/snapshots with delete action" do
       it "can queue multiple snapshots for deletion" do
-        api_basic_authorize(action_identifier(:snapshots, :delete, :subresource_actions, :delete))
+        api_basic_authorize(action_identifier(:vms, :delete, :snapshots_subresource_actions, :delete))
         ems = FactoryGirl.create(:ext_management_system)
         host = FactoryGirl.create(:host, :ext_management_system => ems)
         vm = FactoryGirl.create(:vm_vmware, :name => "Alice and Bob's VM", :host => host, :ext_management_system => ems)
@@ -220,7 +220,7 @@ RSpec.describe "Snapshots API" do
 
     describe "DELETE /api/vms/:c_id/snapshots/:s_id" do
       it "can delete a snapshot" do
-        api_basic_authorize(action_identifier(:snapshots, :delete, :subresource_actions, :delete))
+        api_basic_authorize(action_identifier(:vms, :delete, :snapshots_subresource_actions, :delete))
         vm = FactoryGirl.create(:vm_vmware)
         snapshot = FactoryGirl.create(:snapshot, :vm_or_template => vm)
 

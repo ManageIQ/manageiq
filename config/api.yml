@@ -1621,25 +1621,6 @@
     - :subcollection
     :verbs: *gpd
     :klass: Snapshot
-    :subcollection_actions:
-      :get:
-      - :name: read
-        :identifier: vm_snapshot_view
-      :post:
-      - :name: create
-        :identifier: vm_snapshot_add
-      - :name: delete
-        :identifier: vm_snapshot_delete
-    :subresource_actions:
-      :get:
-      - :name: read
-        :identifier: vm_snapshot_view
-      :post:
-      - :name: delete
-        :identifier: vm_snapshot_delete
-      :delete:
-      - :name: delete
-        :identifier: vm_snapshot_delete
   :software:
     :description: Software
     :options:
@@ -2064,6 +2045,25 @@
         :identifier: vm_protect
       - :name: resolve
         :identifier: vm_policy_sim
+    :snapshots_subcollection_actions:
+      :get:
+      - :name: read
+        :identifier: vm_snapshot_view
+      :post:
+      - :name: create
+        :identifier: vm_snapshot_add
+      - :name: delete
+        :identifier: vm_snapshot_delete
+    :snapshots_subresource_actions:
+      :get:
+      - :name: read
+        :identifier: vm_snapshot_view
+      :post:
+      - :name: delete
+        :identifier: vm_snapshot_delete
+      :delete:
+      - :name: delete
+        :identifier: vm_snapshot_delete
   :zones:
     :description: Zones
     :identifier: zone

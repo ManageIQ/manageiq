@@ -53,8 +53,8 @@ module Api
       self[collection_name]["#{target}_actions".to_sym]
     end
 
-    def typed_subcollection_actions(collection_name, subcollection_name)
-      self[collection_name]["#{subcollection_name}_subcollection_actions".to_sym]
+    def typed_subcollection_actions(collection_name, subcollection_name, target = :subcollection)
+      self[collection_name]["#{subcollection_name}_#{target}_actions".to_sym]
     end
 
     def typed_subcollection_action(collection_name, subcollection_name, method)

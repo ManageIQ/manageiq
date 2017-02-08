@@ -215,7 +215,12 @@ module Api
                         else
                           [@req.subject, request_type_target.last]
                         end
-        aspec = collection_config.typed_collection_actions(cname, target)
+        aspec = if @req.subcollection?
+                  collection_config.typed_subcollection_actions(@req.collection, cname, target) ||
+                    collection_config.typed_collection_actions(cname, target)
+                else
+                  collection_config.typed_collection_actions(cname, target)
+                end
         return if method_name == :get && aspec.nil?
         action_hash = fetch_action_hash(aspec, method_name, action_name)
         raise BadRequestError, "Disabled action #{action_name}" if action_hash[:disabled]
@@ -235,7 +240,12 @@ module Api
       def validate_post_api_action(cname, mname, type, target)
         aname = @req.action
 
-        aspec = collection_config.typed_collection_actions(cname, target)
+        aspec = if @req.subcollection?
+                  collection_config.typed_subcollection_actions(@req.collection, cname, target) ||
+                    collection_config.typed_collection_actions(cname, target)
+                else
+                  collection_config.typed_collection_actions(cname, target)
+                end
         raise BadRequestError, "No actions are supported for #{cname} #{type}" unless aspec
 
         action_hash = fetch_action_hash(aspec, mname, aname)
