@@ -138,7 +138,7 @@ module MiqReport::Generator
 
     sync = options.delete(:report_sync) || ::Settings.product.report_sync
 
-    task = MiqTask.create(:name => "Generate Report: '#{name}'")
+    task = MiqTask.create(:name => "Generate Report: '#{name}'", :userid => options[:userid])
 
     report_result = MiqReportResult.create(
       :name          => title,
