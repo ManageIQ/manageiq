@@ -35,6 +35,10 @@ ems_auth_unreachable,Provider Auth Unreachable,Default,auth_validation
 ems_auth_incomplete,Provider Auth Incomplete Credentials,Default,auth_validation
 ems_auth_error,Provider Auth Error,Default,auth_validation
 ems_performance_gap_detected,C & U Collection Gap Detected,Default,ems_operations
+# Compliance event names are derived from lowercased model name.
+extmanagementsystem_compliance_check,Provider Compliance Check,Default,compliance
+extmanagementsystem_compliance_passed,Provider Compliance Passed,Default,compliance
+extmanagementsystem_compliance_failed,Provider Compliance Failed,Default,compliance
 
 #
 # Host operations
@@ -201,7 +205,3 @@ containerreplicator_successfulcreate,Replicator Successfully Created Pod,Default
 containerreplicator_compliance_check,Replicator Compliance Check,Default,compliance
 containerreplicator_compliance_passed,Replicator Compliance Passed,Default,compliance
 containerreplicator_compliance_failed,Replicator Compliance Failed,Default,compliance
-
-extmanagementsystem_compliance_check,ExtManagementSystem Compliance Check,Default,compliance
-extmanagementsystem_compliance_passed,ExtManagementSystem Compliance Passed,Default,compliance
-extmanagementsystem_compliance_failed,ExtManagementSystem Compliance Failed,Default,compliance
