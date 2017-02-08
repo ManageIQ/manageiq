@@ -1,0 +1,2 @@
+class ManagerRefresh::InventoryCollectionDefault
+end
