@@ -99,7 +99,7 @@ module ManageIQ
         # To further speed up the query we only search for those resources we care about - those whose
         # physical_resource_id matches the id of a nova server
         server_ids = servers.map{|s| s.id}
-        @orchestration_service.list_resources(:stack => stack, :nested_depth => 50, :physical_resource_id => server_ids).body['resources']
+        @orchestration_service.list_resources(:stack => stack, :nested_depth => 2, :physical_resource_id => server_ids).body['resources']
       end
 
       def servers
