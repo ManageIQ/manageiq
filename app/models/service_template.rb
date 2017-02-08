@@ -58,10 +58,11 @@ class ServiceTemplate < ApplicationRecord
 
   virtual_has_one :custom_actions, :class_name => "Hash"
   virtual_has_one :custom_action_buttons, :class_name => "Array"
+  virtual_has_one :config_info, :class_name => "Hash"
 
   def self.create_catalog_item(options, auth_user)
     transaction do
-      create(options.except(:config_info)).tap do |service_template|
+      create(options.except(:config_info).merge(:options => { :config_info => options[:config_info] })).tap do |service_template|
         config_info = options[:config_info].except(:provision, :retirement, :reconfigure)
 
         workflow_class = MiqProvisionWorkflow.class_for_source(config_info[:src_vm_id])
@@ -137,6 +138,10 @@ class ServiceTemplate < ApplicationRecord
 
   def request_type
     "clone_to_service"
+  end
+
+  def config_info
+    options[:config_info] || construct_config_info
   end
 
   def create_service(service_task, parent_svc = nil)
@@ -355,5 +360,20 @@ class ServiceTemplate < ApplicationRecord
       resource_actions.build(build_options)
     end
     save!
+  end
+
+  private
+
+  def construct_config_info
+    config_info = {}
+    if service_resources.where(:resource_type => 'MiqRequest').exists?
+      config_info.merge!(service_resources.find_by(:resource_type => 'MiqRequest').resource.options)
+    end
+
+    resource_actions.each do |resource_action|
+      resource_options = resource_action.attributes.merge!(:fqname => resource_action.fqname)
+      config_info.merge!(resource_action.action.downcase.to_sym => resource_options.symbolize_keys)
+    end
+    config_info
   end
 end
