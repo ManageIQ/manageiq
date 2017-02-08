@@ -39,6 +39,14 @@ class ManageIQ::Providers::AnsibleTower::Inventory::Parser::AutomationManager < 
       o = target.configuration_script_sources.find_or_build(i.id.to_s)
       o[:description] = i.description
       o[:name] = i.name
+
+      i.playbooks.each do |playbook_name|
+        # FIXME: its not really nice how I have to build a manager_ref / uuid here
+        p = target.playbooks.find_or_build("#{i.id}__#{playbook_name}")
+        # FIXME: how about just adding `o` - configuration_script_source here?
+        p[:configuration_script_source] = target.configuration_script_sources.lazy_find(i.id.to_s)
+        p[:name] = playbook_name
+      end
     end
   end
 end

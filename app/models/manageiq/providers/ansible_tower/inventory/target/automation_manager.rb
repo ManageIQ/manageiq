@@ -30,8 +30,18 @@ class ManageIQ::Providers::AnsibleTower::Inventory::Target::AutomationManager < 
 
   def configuration_script_sources
     collections[:configuration_script_sources] ||= ManagerRefresh::InventoryCollection.new(
-      ConfigurationScriptSource,
+      :model_class    => ConfigurationScriptSource,
       :association    => :configuration_script_sources,
+      :manager_ref    => [:manager_ref],
+      :parent         => @root,
+      :builder_params => {:manager => @root}
+    )
+  end
+
+  def playbooks
+    collections[:playbooks] ||= ManagerRefresh::InventoryCollection.new(
+      :model_class    => ManageIQ::Providers::AnsibleTower::AutomationManager::Playbook,
+      :association    => :configuration_script_payloads,
       :manager_ref    => [:manager_ref],
       :parent         => @root,
       :builder_params => {:manager => @root}
