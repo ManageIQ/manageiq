@@ -100,6 +100,70 @@ describe EmbeddedAnsible do
       EvmSpecHelper.create_guid_miq_server_zone
     end
 
+    describe ".alive?" do
+      it "returns false if the service is not configured" do
+        expect(described_class).to receive(:configured?).and_return false
+        expect(described_class.alive?).to be false
+      end
+
+      it "returns false if the service is not running" do
+        expect(described_class).to receive(:configured?).and_return true
+        expect(described_class).to receive(:running?).and_return false
+        expect(described_class.alive?).to be false
+      end
+
+      context "when a connection is attempted" do
+        let(:api_conn) { double("AnsibleAPIConnection") }
+        let(:api) { double("AnsibleAPIResource") }
+
+        before do
+          expect(described_class).to receive(:configured?).and_return true
+          expect(described_class).to receive(:running?).and_return true
+
+          miq_database.set_ansible_admin_authentication(:password => "adminpassword")
+
+          expect(AnsibleTowerClient::Connection).to receive(:new).with(
+            :base_url => "http://localhost:54321/api/v1",
+            :username => "admin",
+            :password => "adminpassword"
+          ).and_return(api_conn)
+          expect(api_conn).to receive(:api).and_return(api)
+        end
+
+        it "returns false when a Faraday::ConnectionFailed is raised" do
+          error = Faraday::ConnectionFailed.new("error")
+          expect(api).to receive(:verify_credentials).and_raise(error)
+          expect(described_class.alive?).to be false
+        end
+
+        it "returns false when a Faraday::SSLError is raised" do
+          error = Faraday::SSLError.new("error")
+          expect(api).to receive(:verify_credentials).and_raise(error)
+          expect(described_class.alive?).to be false
+        end
+
+        it "returns false when an AnsibleTowerClient::ConnectionError is raised" do
+          expect(api).to receive(:verify_credentials).and_raise(AnsibleTowerClient::ConnectionError)
+          expect(described_class.alive?).to be false
+        end
+
+        it "returns false when an AnsibleTowerClient::ClientError is raised" do
+          expect(api).to receive(:verify_credentials).and_raise(AnsibleTowerClient::ClientError)
+          expect(described_class.alive?).to be false
+        end
+
+        it "raises when other errors are raised" do
+          expect(api).to receive(:verify_credentials).and_raise(RuntimeError)
+          expect { described_class.alive? }.to raise_error(RuntimeError)
+        end
+
+        it "returns true when no error is raised" do
+          expect(api).to receive(:verify_credentials)
+          expect(described_class.alive?).to be true
+        end
+      end
+    end
+
     context "with a key file" do
       let(:key_file) { Tempfile.new("SECRET_KEY") }
 
@@ -245,7 +309,7 @@ describe EmbeddedAnsible do
       end
 
       it "creates the database" do
-        allow(described_class).to receive(:connection).and_return(connection)
+        allow(described_class).to receive(:database_connection).and_return(connection)
         expect(described_class).to receive(:generate_password).and_return(password)
         expect(connection).to receive(:select_value).with("CREATE ROLE \"awx\" WITH LOGIN PASSWORD #{quoted_password}")
         expect(connection).to receive(:select_value).with("CREATE DATABASE awx OWNER \"awx\" ENCODING 'utf8'")
