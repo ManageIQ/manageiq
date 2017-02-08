@@ -103,24 +103,53 @@ module EmsRefresh
         # override this method and return an array of:
         #   [[target1, inventory_for_target1], [target2, inventory_for_target2]]
 
-        collect_legacy_inventory_for_targets(ems)
+        provider_module = ManageIQ::Providers::Inflector.provider_module(ems.class).name
+
+        targets_to_collectors = targets.each_with_object({}) do |target, memo|
+          # expect collector at <provider>/Inventory/Collector/<target_name>
+          memo[target] = "#{provider_module}::Inventory::Collector::#{target.class.name.demodulize}".safe_constantize
+        end
+
+        if targets_to_collectors.values.all?
+          log_header = format_ems_for_logging(ems)
+          targets_to_collectors.map do |target, collector_class|
+            log_msg = "#{log_header} Inventory Collector for #{target.class} [#{target.try(:name)}] id: [#{target.id}]"
+            _log.info "#{log_msg}..."
+            collector = collector_class.new(ems, target)
+            _log.info "#{log_msg}...Complete"
+            [target, collector]
+          end
+        else
+          # no collector for target available, fallback to full ems / manager refresh
+          [[ems, nil]]
+        end
       end
 
-      def collect_legacy_inventory_for_targets(ems)
-        # This matches what targeted refreshers would expect for inventory
-        # collection.  An associative array mapping the target to its inventory.
-        # In legacy cases the target is just the Manager, and the inventory is
-        # collected during the parse_legacy_inventory phase.
-        [[ems, nil]]
-      end
-
-      def parse_targeted_inventory(ems, target, inventory)
+      def parse_targeted_inventory(ems, target, collector)
         # legacy refreshers collect inventory during the parse phase
         # new refreshers should override this method to parse inventory
         # TODO: remove this call after all refreshers support retrieving
         # inventory separate from parsing
-        hashes, _ = Benchmark.realtime_block(:parse_legacy_inventory) { parse_legacy_inventory(ems) }
-        hashes
+        if collector.kind_of? ManagerRefresh::Inventory::Collector
+          log_header = format_ems_for_logging(ems)
+          _log.debug "#{log_header} Parsing inventory..."
+          inventory_collections, = Benchmark.realtime_block(:parse_inventory) do
+            provider_module = ManageIQ::Providers::Inflector.provider_module(ems.class).name
+            inventory_target_class = "#{provider_module}::Inventory::Target::#{target.class.name.demodulize}".safe_constantize
+            inventory_target = inventory_target_class.new(target)
+
+            parser_class = "#{provider_module}::Inventory::Parser::#{target.class.name.demodulize}".safe_constantize
+            parser = parser_class.new
+
+            i = ManagerRefresh::Inventory.new(inventory_target, collector, parser)
+            i.inventory_collections
+          end
+          _log.debug "#{log_header} Parsing inventory...Complete"
+          inventory_collections
+        else
+          hashes, = Benchmark.realtime_block(:parse_legacy_inventory) { parse_legacy_inventory(ems) }
+          hashes
+        end
       end
 
       def save_inventory(ems, target, hashes)
