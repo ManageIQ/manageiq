@@ -535,18 +535,19 @@ describe ServiceTemplate do
     end
 
     context '.update_catalog_item' do
+      let(:new_vm) { FactoryGirl.create(:vm_amazon, :ext_management_system => ems) }
       let(:updated_catalog_item_options) do
         {
-          :name         => 'Updated Template Name',
-          :prov_type    => 'amazon',
-          :display      => 'false',
-          :description  => 'a description',
-          :config_info  => {
+          :name        => 'Updated Template Name',
+          :prov_type   => 'amazon',
+          :display     => 'false',
+          :description => 'a description',
+          :config_info => {
             :miq_request_dialog_name => request_dialog.name,
             :placement_auto          => [true, 1],
             :number_of_vms           => [1, '1'],
-            :src_vm_id               => [vm.id, vm.name],
-            :vm_name                 => vm.name,
+            :src_vm_id               => [new_vm.id, new_vm.name],
+            :vm_name                 => new_vm.name,
             :schedule_type           => ['immediately', 'Immediately on Approval'],
             :instance_type           => [flavor.id, flavor.name],
             :src_ems_id              => [ems.id, ems.name],
@@ -554,7 +555,7 @@ describe ServiceTemplate do
               :fqname    => ra1.fqname,
               :dialog_id => nil
             },
-            :reconfigure              => {
+            :reconfigure             => {
               :fqname    => ra3.fqname,
               :dialog_id => service_dialog.id
             }
@@ -569,10 +570,13 @@ describe ServiceTemplate do
       it 'updates the catalog item' do
         expect(@catalog_item.resource_actions.pluck(:action)).to eq(%w(Provision Retirement))
         updated = ServiceTemplate.update_catalog_item(@catalog_item, updated_catalog_item_options, user)
-
+        updated.reload
+        # Removes Retirement / Adds Reconfigure
         expect(updated.resource_actions.pluck(:action)).to eq(%w(Provision Reconfigure))
-        expect(updated.resource_actions.first.dialog_id).to be_nil
+        expect(updated.resource_actions.first.dialog_id).to be_nil # Removes the dialog from Provision
+        expect(updated.resource_actions.last.dialog).to eq(service_dialog)
         expect(updated.name).to eq('Updated Template Name')
+        expect(updated.service_resources.first.resource.source_id).to eq(new_vm.id) # Validate request update
       end
     end
 
