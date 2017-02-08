@@ -27,9 +27,16 @@ class Tag < ApplicationRecord
   end
 
   def self.tags(options = {})
-    query = Tag.includes(:taggings)
-    query = query.where(Tagging.arel_table[:taggable_type].eq options[:taggable_type])
-    query = query.where(Tag.arel_table[:name].matches "#{options[:ns]}%") if options[:ns]
+    query = Tag.joins(:taggings)
+
+    if options[:taggable_type].present?
+      query = query.where(Tagging.arel_table[:taggable_type].eq(options[:taggable_type]))
+    end
+
+    if options[:ns].present?
+      query = query.where(Tag.arel_table[:name].matches("#{options[:ns]}%"))
+    end
+
     Tag.filter_ns(query, options[:ns])
   end
 

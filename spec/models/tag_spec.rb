@@ -7,6 +7,37 @@ describe Tag do
     end
   end
 
+  describe ".tags" do
+    let!(:account) { FactoryGirl.create(:account) }
+    let!(:tag) { FactoryGirl.create(:tag) }
+
+    it "returns tags with tagged items" do
+      Tagging.create(:taggable => account, :tag => tag)
+
+      expect(Tag.tags).to eq [tag]
+    end
+
+    it "does not return tags without tagged items" do
+      expect(Tag.tags).to eq []
+    end
+
+    it "can be filtered by taggable type" do
+      Tagging.create(:taggable => account, :tag => tag)
+
+      expect(Tag.tags(:taggable_type => 'Account')).to eq [tag]
+      expect(Tag.tags(:taggable_type => 'User')).to eq []
+    end
+
+    context "when filtered by tag namespaces" do
+      it "returns tag names w" do
+        Tagging.create(:taggable => account, :tag => tag)
+
+        expect(Tag.tags(:ns => '/namespace/cat')).to eq [tag.name.split('/').last]
+        expect(Tag.tags(:ns => '/foo/bar')).to eq []
+      end
+    end
+  end
+
   context ".filter_ns" do
     it "normal case" do
       tag1 = double
