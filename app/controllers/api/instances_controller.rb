@@ -1,6 +1,7 @@
 module Api
   class InstancesController < BaseController
     include Subcollections::LoadBalancers
+    include Subcollections::Snapshots
 
     def terminate_resource(type, id = nil, _data = nil)
       raise BadRequestError, "Must specify an id for terminating a #{type} resource" unless id

@@ -609,6 +609,7 @@
     - :collection
     :subcollections:
     - :load_balancers
+    - :snapshots
     :collection_actions:
       :get:
       - :name: read
@@ -657,6 +658,25 @@
       :get:
       - :name: show
         :identifier: load_balancer_show
+    :snapshots_subcollection_actions:
+      :get:
+      - :name: read
+        :identifier: cloud_volume_snapshot_view
+      :post:
+      - :name: create
+        :identifier: cloud_volume_snapshot_create
+      - :name: delete
+        :identifier: cloud_volume_snapshot_delete
+    :snapshots_subresource_actions:
+      :get:
+      - :name: read
+        :identifier: cloud_volume_snapshot_view
+      :post:
+      - :name: delete
+        :identifier: cloud_volume_snapshot_delete
+      :delete:
+      - :name: delete
+        :identifier: cloud_volume_snapshot_delete
   :load_balancers:
     :description: Load Balancers
     :options:
