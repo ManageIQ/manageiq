@@ -5,7 +5,7 @@ class ServiceTemplateOrchestration < ServiceTemplate
 
   def self.create_catalog_item(options, _auth_user = nil)
     transaction do
-      create(options.except(:config_info)).tap do |service_template|
+      create_from_options(options).tap do |service_template|
         config_info = validate_config_info(options)
 
         service_template.orchestration_template = if config_info[:template_id]
@@ -54,4 +54,15 @@ class ServiceTemplateOrchestration < ServiceTemplate
     config_info
   end
   private_class_method :validate_config_info
+
+  private
+
+  def construct_config_info
+    config_info = {}
+
+    config_info[:template_id] = orchestration_template.id if orchestration_template
+    config_info[:manager_id] = orchestration_manager.id if orchestration_manager
+
+    config_info.merge!(resource_actions_info)
+  end
 end

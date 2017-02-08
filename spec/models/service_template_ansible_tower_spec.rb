@@ -34,6 +34,7 @@ describe ServiceTemplateAnsibleTower do
       expect(service_template.dialogs.first).to eq(service_dialog)
       expect(service_template.resource_actions.pluck(:action)).to include('Provision', 'Retirement')
       expect(service_template.job_template).to eq(configuration_script)
+      expect(service_template.config_info).to eq(catalog_item_options[:config_info])
     end
 
     it 'validates the presence of a configuration_script_id or configuration' do
@@ -49,6 +50,23 @@ describe ServiceTemplateAnsibleTower do
       service_template = ServiceTemplateAnsibleTower.create_catalog_item(catalog_item_options)
 
       expect(service_template.job_template).to eq(configuration_script)
+    end
+  end
+
+  describe '#config_info' do
+    it 'returns the correct format' do
+      job_template = FactoryGirl.create(:configuration_script)
+      service_template = FactoryGirl.create(:service_template_ansible_tower, :job_template => job_template)
+      ra = FactoryGirl.create(:resource_action, :action => 'Provision', :fqname => '/a/b/c')
+      service_template.create_resource_actions(:provision => { :fqname => ra.fqname })
+
+      expected_config_info = {
+        :configuration_script_id => job_template.id,
+        :provision               => {
+          :fqname => ra.fqname
+        }
+      }
+      expect(service_template.config_info).to eq(expected_config_info)
     end
   end
 end

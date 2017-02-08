@@ -138,6 +138,7 @@ describe ServiceTemplateOrchestration do
       expect(service_template.orchestration_template).to eq(template)
       expect(service_template.orchestration_manager).to eq(manager)
       expect(service_template.resource_actions.pluck(:action)).to include('Provision', 'Retirement')
+      expect(service_template.config_info).to eq(catalog_item_options[:config_info])
     end
 
     it 'requires both a template_id and manager_id' do
@@ -162,6 +163,27 @@ describe ServiceTemplateOrchestration do
       service_template = ServiceTemplateOrchestration.create_catalog_item(catalog_item_options)
       expect(service_template.orchestration_template).to eq(template)
       expect(service_template.orchestration_manager).to eq(manager)
+    end
+  end
+
+  describe '#config_info' do
+    it 'returns the correct format' do
+      template = FactoryGirl.create(:orchestration_template)
+      manager = FactoryGirl.create(:ext_management_system)
+      service_template = FactoryGirl.create(:service_template_orchestration,
+                                            :orchestration_template => template,
+                                            :orchestration_manager  => manager)
+      ra = FactoryGirl.create(:resource_action, :action => 'Provision', :fqname => '/a/b/c')
+      service_template.create_resource_actions(:provision => { :fqname => ra.fqname })
+
+      expected_config_info = {
+        :template_id => template.id,
+        :manager_id  => manager.id,
+        :provision   => {
+          :fqname => ra.fqname
+        }
+      }
+      expect(service_template.config_info).to eq(expected_config_info)
     end
   end
 end

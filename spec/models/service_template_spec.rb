@@ -462,20 +462,23 @@ describe ServiceTemplate do
     end
 
     it 'will build the config_info if not created through #create_catalog_item' do
+      dialog = FactoryGirl.create(:dialog)
       template = FactoryGirl.create(:service_template)
       request = FactoryGirl.create(:service_template_provision_request,
                                    :requester => @user,
-                                   :options   => {:foo => 'bar'})
-      template.create_resource_actions(:provision => { :fqname => @ra.fqname })
+                                   :options   => {:foo => 'bar', :baz => nil })
+      template.create_resource_actions(:provision => { :fqname => @ra.fqname, :dialog_id => dialog.id })
       add_and_save_service(template, request)
       template.reload
 
       expected_config_info = {
         :foo       => 'bar',
-        :provision => a_hash_including(:fqname => '/a/b/c')
-
+        :provision => {
+          :fqname    => '/a/b/c',
+          :dialog_id => dialog.id
+        }
       }
-      expect(template.config_info).to include(expected_config_info)
+      expect(template.config_info).to eq(expected_config_info)
     end
   end
 

@@ -8,7 +8,7 @@ class ServiceTemplateAnsibleTower < ServiceTemplate
 
   def self.create_catalog_item(options, _auth_user = nil)
     transaction do
-      create(options.except(:config_info)) do |service_template|
+      create_from_options(options).tap do |service_template|
         config_info = validate_config_info(options)
 
         service_template.job_template = if config_info[:configuration_script_id]
@@ -52,4 +52,12 @@ class ServiceTemplateAnsibleTower < ServiceTemplate
     config_info
   end
   private_class_method :validate_config_info
+
+  private
+
+  def construct_config_info
+    config_info = {}
+    config_info[:configuration_script_id] = job_template.id if job_template
+    config_info.merge!(resource_actions_info)
+  end
 end

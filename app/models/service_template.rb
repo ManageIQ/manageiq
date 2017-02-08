@@ -62,7 +62,7 @@ class ServiceTemplate < ApplicationRecord
 
   def self.create_catalog_item(options, auth_user)
     transaction do
-      create(options.except(:config_info).merge(:options => { :config_info => options[:config_info] })).tap do |service_template|
+      create_from_options(options).tap do |service_template|
         config_info = options[:config_info].except(:provision, :retirement, :reconfigure)
 
         workflow_class = MiqProvisionWorkflow.class_for_source(config_info[:src_vm_id])
@@ -362,16 +362,29 @@ class ServiceTemplate < ApplicationRecord
     save!
   end
 
+  def self.create_from_options(options)
+    create(options.except(:config_info).merge(:options => { :config_info => options[:config_info] }))
+  end
+  private_class_method :create_from_options
+
   private
 
   def construct_config_info
     config_info = {}
     if service_resources.where(:resource_type => 'MiqRequest').exists?
-      config_info.merge!(service_resources.find_by(:resource_type => 'MiqRequest').resource.options)
+      config_info.merge!(service_resources.find_by(:resource_type => 'MiqRequest').resource.options.compact)
     end
 
+    config_info.merge!(resource_actions_info)
+  end
+
+  def resource_actions_info
+    config_info = {}
     resource_actions.each do |resource_action|
-      resource_options = resource_action.attributes.merge!(:fqname => resource_action.fqname)
+      resource_options = resource_action.slice(:dialog_id,
+                                               :configuration_template_type,
+                                               :configuration_template_id).compact
+      resource_options[:fqname] = resource_action.fqname
       config_info.merge!(resource_action.action.downcase.to_sym => resource_options.symbolize_keys)
     end
     config_info
