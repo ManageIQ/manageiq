@@ -387,7 +387,7 @@ module Api
 
       def api_user_role_allows?(action_identifier)
         return true unless action_identifier
-        User.current_user.role_allows?(:identifier => action_identifier)
+        Array(action_identifier).any? { |identifier| User.current_user.role_allows?(:identifier => identifier) }
       end
 
       def render_actions(resource)
