@@ -115,27 +115,10 @@ class ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork < ::CloudNetw
     @ip_address_left_count ||= ip_address_total_count - ip_address_used_count(reload)
   end
 
-  def ip_address_utilization(reload = false)
-    @ip_address_utilization = nil if reload
-    # If total count is 0, utilization should be 100
-    @ip_address_utilization ||= begin
-      ip_address_total_count > 0 ? (100.0 / ip_address_total_count) * ip_address_used_count(reload) : 100
-    end
-  end
-
   def ip_address_left_count_live(reload = false)
     @ip_address_left_count_live = nil if reload
     # Live method is asking API drectly for current count of consumed addresses
     @ip_address_left_count_live ||= ip_address_total_count - ip_address_used_count_live(reload)
-  end
-
-  def ip_address_utilization_live(reload = false)
-    @ip_address_utilization_live = nil if reload
-    # Live method is asking API drectly for current count of consumed addresses
-    # If total count is 0, utilization should be 100
-    @ip_address_utilization_live ||= begin
-      ip_address_total_count > 0 ? (100.0 / ip_address_total_count) * ip_address_used_count_live(reload) : 100
-    end
   end
 
   def ip_address_used_count(reload = false)
@@ -169,6 +152,23 @@ class ManageIQ::Providers::Openstack::NetworkManager::CloudNetwork < ::CloudNetw
       ) do |connection|
         connection.ports.all(:network_id => ems_ref, :device_owner => "compute:None").count
       end
+    end
+  end
+
+  def ip_address_utilization(reload = false)
+    @ip_address_utilization = nil if reload
+    # If total count is 0, utilization should be 100
+    @ip_address_utilization ||= begin
+      ip_address_total_count > 0 ? (100.0 / ip_address_total_count) * ip_address_used_count(reload) : 100
+    end
+  end
+
+  def ip_address_utilization_live(reload = false)
+    @ip_address_utilization_live = nil if reload
+    # Live method is asking API drectly for current count of consumed addresses
+    # If total count is 0, utilization should be 100
+    @ip_address_utilization_live ||= begin
+      ip_address_total_count > 0 ? (100.0 / ip_address_total_count) * ip_address_used_count_live(reload) : 100
     end
   end
 
