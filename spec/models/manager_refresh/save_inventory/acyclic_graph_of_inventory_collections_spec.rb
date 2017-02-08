@@ -354,11 +354,11 @@ describe ManagerRefresh::SaveInventory do
           # Initialize the InventoryCollections
           @data             = {}
           @data[:vms]       = ::ManagerRefresh::InventoryCollection.new(
-            ManageIQ::Providers::CloudManager::Vm,
+            :model_class => ManageIQ::Providers::CloudManager::Vm,
             :parent      => @ems,
             :association => :vms)
           @data[:hardwares] = ::ManagerRefresh::InventoryCollection.new(
-            Hardware,
+            :model_class => Hardware,
             :parent      => @ems,
             :association => :hardwares,
             :manager_ref => [:vm_or_template])
@@ -472,35 +472,35 @@ describe ManagerRefresh::SaveInventory do
     # Initialize the InventoryCollections
     @data                 = {}
     @data[:vms]           = ::ManagerRefresh::InventoryCollection.new(
-      ManageIQ::Providers::CloudManager::Vm,
+      :model_class => ManageIQ::Providers::CloudManager::Vm,
       :parent      => @ems,
       :association => :vms)
     @data[:key_pairs]     = ::ManagerRefresh::InventoryCollection.new(
-      ManageIQ::Providers::CloudManager::AuthKeyPair,
+      :model_class => ManageIQ::Providers::CloudManager::AuthKeyPair,
       :parent      => @ems,
       :association => :key_pairs,
       :manager_ref => [:name])
     @data[:miq_templates] = ::ManagerRefresh::InventoryCollection.new(
-      ManageIQ::Providers::CloudManager::Template,
+      :model_class => ManageIQ::Providers::CloudManager::Template,
       :parent      => @ems,
       :association => :miq_templates)
     @data[:hardwares]     = ::ManagerRefresh::InventoryCollection.new(
-      Hardware,
+      :model_class => Hardware,
       :parent      => @ems,
       :association => :hardwares,
       :manager_ref => [:vm_or_template])
     @data[:disks]         = ::ManagerRefresh::InventoryCollection.new(
-      Disk,
+      :model_class => Disk,
       :parent      => @ems,
       :association => :disks,
       :manager_ref => [:hardware, :device_name])
     @data[:networks]      = ::ManagerRefresh::InventoryCollection.new(
-      Network,
+      :model_class => Network,
       :parent      => @ems,
       :association => :networks,
       :manager_ref => [:hardware, :description])
     @data[:flavors]       = ::ManagerRefresh::InventoryCollection.new(
-      Flavor,
+      :model_class => Flavor,
       :parent      => @ems,
       :association => :flavors,
       :manager_ref => [:name])

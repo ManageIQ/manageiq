@@ -155,7 +155,7 @@ describe ManagerRefresh::SaveInventory do
 
         initialize_inventory_collections([:disks])
         @data[:disks] = ::ManagerRefresh::InventoryCollection.new(
-          Disk,
+          :model_class => Disk,
           :association => :disks,
           :parent      => @vm3,
           :manager_ref => [:hardware, :device_name]
@@ -222,7 +222,7 @@ describe ManagerRefresh::SaveInventory do
 
         initialize_inventory_collections([:disks])
         @data[:disks] = ::ManagerRefresh::InventoryCollection.new(
-          Disk,
+          :model_class => Disk,
           :association => :disks,
           :parent      => @vm3,
           :manager_ref => [:hardware, :device_name])
@@ -301,14 +301,14 @@ describe ManagerRefresh::SaveInventory do
         vm_refs = ["vm_ems_ref_3", "vm_ems_ref_4"]
 
         @data[:vms]       = ::ManagerRefresh::InventoryCollection.new(
-          ManageIQ::Providers::CloudManager::Vm,
-          :arel => @ems.vms.where(:ems_ref => vm_refs))
+          :model_class => ManageIQ::Providers::CloudManager::Vm,
+          :arel        => @ems.vms.where(:ems_ref => vm_refs))
         @data[:hardwares] = ::ManagerRefresh::InventoryCollection.new(
-          Hardware,
+          :model_class => Hardware,
           :arel        => @ems.hardwares.joins(:vm_or_template).where(:vms => {:ems_ref => vm_refs}),
           :manager_ref => [:vm_or_template])
         @data[:disks]     = ::ManagerRefresh::InventoryCollection.new(
-          Disk,
+          :model_class => Disk,
           :arel        => @ems.disks.joins(:hardware => :vm_or_template).where('hardware' => {'vms' => {'ems_ref' => vm_refs}}),
           :manager_ref => [:hardware, :device_name])
 
@@ -385,18 +385,18 @@ describe ManagerRefresh::SaveInventory do
         vm_refs = ["vm_ems_ref_3", "vm_ems_ref_5"]
 
         @data[:vms]             = ::ManagerRefresh::InventoryCollection.new(
-          ManageIQ::Providers::CloudManager::Vm,
-          :arel => @ems.vms.where(:ems_ref => vm_refs))
+          :model_class => ManageIQ::Providers::CloudManager::Vm,
+          :arel        => @ems.vms.where(:ems_ref => vm_refs))
         @data[:hardwares]       = ::ManagerRefresh::InventoryCollection.new(
-          Hardware,
+          :model_class => Hardware,
           :arel        => @ems.hardwares.joins(:vm_or_template).where(:vms => {:ems_ref => vm_refs}),
           :manager_ref => [:vm_or_template])
         @data[:disks]           = ::ManagerRefresh::InventoryCollection.new(
-          Disk,
+          :model_class => Disk,
           :arel        => @ems.disks.joins(:hardware => :vm_or_template).where('hardware' => {'vms' => {'ems_ref' => vm_refs}}),
           :manager_ref => [:hardware, :device_name])
         @data[:image_hardwares] = ::ManagerRefresh::InventoryCollection.new(
-          Hardware,
+          :model_class         => Hardware,
           :arel                => @ems.hardwares,
           :manager_ref         => [:vm_or_template],
           :strategy            => :local_db_cache_all,
@@ -670,7 +670,7 @@ describe ManagerRefresh::SaveInventory do
     # Initialize the InventoryCollections
     @data = {}
     all_collections.each do |collection|
-      @data[collection] = ::ManagerRefresh::InventoryCollection.new(*send("#{collection}_init_data"))
+      @data[collection] = ::ManagerRefresh::InventoryCollection.new(send("#{collection}_init_data"))
     end
   end
 
@@ -678,48 +678,53 @@ describe ManagerRefresh::SaveInventory do
     # Initialize the InventoryCollections
     @data = {}
     only_collections.each do |collection|
-      @data[collection] = ::ManagerRefresh::InventoryCollection.new(*send("#{collection}_init_data",
-                                                                          :extra_attributes => {
-                                                                            :complete => false}))
+      @data[collection] = ::ManagerRefresh::InventoryCollection.new(send("#{collection}_init_data",
+                                                                         :extra_attributes => {
+                                                                           :complete => false}))
     end
 
     (all_collections - only_collections).each do |collection|
-      @data[collection] = ::ManagerRefresh::InventoryCollection.new(*send("#{collection}_init_data",
-                                                                          :extra_attributes => {
-                                                                            :complete => false,
-                                                                            :strategy => :local_db_cache_all
-                                                                          }))
+      @data[collection] = ::ManagerRefresh::InventoryCollection.new(send("#{collection}_init_data",
+                                                                         :extra_attributes => {
+                                                                           :complete => false,
+                                                                           :strategy => :local_db_cache_all
+                                                                         }))
     end
   end
 
   def orchestration_stacks_init_data(extra_attributes: {})
-    init_data(ManageIQ::Providers::CloudManager::OrchestrationStack,
-              :orchestration_stacks,
+    extra_attributes[:model_class] = ManageIQ::Providers::CloudManager::OrchestrationStack
+
+    init_data(:orchestration_stacks,
               extra_attributes)
   end
 
   def orchestration_stacks_resources_init_data(extra_attributes: {})
-    init_data(OrchestrationStackResource,
-              :orchestration_stacks_resources,
+    extra_attributes[:model_class] = OrchestrationStackResource
+
+    init_data(:orchestration_stacks_resources,
               extra_attributes)
   end
 
   def vms_init_data(extra_attributes: {})
-    init_data(ManageIQ::Providers::CloudManager::Vm,
-              :vms,
+    extra_attributes[:model_class] = ManageIQ::Providers::CloudManager::Vm
+
+    init_data(:vms,
               extra_attributes)
   end
 
   def miq_templates_init_data(extra_attributes: {})
-    init_data(ManageIQ::Providers::CloudManager::Template,
-              :miq_templates,
+    extra_attributes[:model_class] = ManageIQ::Providers::CloudManager::Template
+
+    init_data(:miq_templates,
               extra_attributes)
   end
 
   def key_pairs_init_data(extra_attributes: {})
     extra_attributes[:manager_ref] = [:name]
-    init_data(ManageIQ::Providers::CloudManager::AuthKeyPair,
-              :key_pairs,
+    extra_attributes[:model_class] = ManageIQ::Providers::CloudManager::AuthKeyPair
+
+    init_data(:key_pairs,
               extra_attributes)
   end
 
@@ -731,8 +736,8 @@ describe ManagerRefresh::SaveInventory do
     end
 
     extra_attributes[:manager_ref] = [:vm_or_template]
-    init_data(Hardware,
-              :hardwares,
+    extra_attributes[:model_class] = Hardware
+    init_data(:hardwares,
               extra_attributes)
   end
 
@@ -744,19 +749,19 @@ describe ManagerRefresh::SaveInventory do
     end
 
     extra_attributes[:manager_ref] = [:hardware, :device_name]
-    init_data(Disk,
-              :disks,
+    extra_attributes[:model_class] = Disk
+    init_data(:disks,
               extra_attributes)
   end
 
-  def init_data(model_class, association, extra_attributes)
+  def init_data(association, extra_attributes)
     init_data = {
       :parent      => @ems,
       :association => association
     }
 
     init_data.merge!(extra_attributes)
-    return model_class, init_data
+    init_data
   end
 
   def association_attributes(model_class)
