@@ -79,7 +79,6 @@ describe('dialogFieldRefresh', function() {
 
     beforeEach(function() {
       spyOn(dialogFieldRefresh, 'setReadOnly');
-      spyOn(dialogFieldRefresh, 'setVisible');
       spyOn($.fn, 'prop');
       refreshCallback = jasmine.createSpyObj('refreshCallback', ['call']);
 
@@ -119,13 +118,6 @@ describe('dialogFieldRefresh', function() {
         );
       });
 
-      it('sets the visible property', function() {
-        expect(dialogFieldRefresh.setVisible).toHaveBeenCalledWith(
-          jasmine.objectContaining({selector: '#field_123_tr'}),
-          false
-        );
-      });
-
       it('calls the callback', function() {
         expect(refreshCallback.call).toHaveBeenCalled();
       });
@@ -138,7 +130,6 @@ describe('dialogFieldRefresh', function() {
 
     beforeEach(function() {
       spyOn(dialogFieldRefresh, 'setReadOnly');
-      spyOn(dialogFieldRefresh, 'setVisible');
       spyOn($.fn, 'val');
       refreshCallback = jasmine.createSpyObj('refreshCallback', ['call']);
 
@@ -194,13 +185,6 @@ describe('dialogFieldRefresh', function() {
         );
       });
 
-      it('sets the visible property', function() {
-        expect(dialogFieldRefresh.setVisible).toHaveBeenCalledWith(
-          jasmine.objectContaining({selector: '#field_123_tr'}),
-          false
-        );
-      });
-
       it('calls the callback', function() {
         expect(refreshCallback.call).toHaveBeenCalled();
       });
@@ -213,7 +197,6 @@ describe('dialogFieldRefresh', function() {
 
     beforeEach(function() {
       spyOn(dialogFieldRefresh, 'setReadOnly');
-      spyOn(dialogFieldRefresh, 'setVisible');
       spyOn($.fn, 'val');
       refreshCallback = jasmine.createSpyObj('refreshCallback', ['call']);
 
@@ -253,13 +236,6 @@ describe('dialogFieldRefresh', function() {
         );
       });
 
-      it('sets the visible property', function() {
-        expect(dialogFieldRefresh.setVisible).toHaveBeenCalledWith(
-          jasmine.objectContaining({selector: '#field_123_tr'}),
-          false
-        );
-      });
-
       it('calls the callback', function() {
         expect(refreshCallback.call).toHaveBeenCalled();
       });
@@ -272,7 +248,6 @@ describe('dialogFieldRefresh', function() {
 
     beforeEach(function() {
       spyOn(dialogFieldRefresh, 'setReadOnly');
-      spyOn(dialogFieldRefresh, 'setVisible');
       spyOn($.fn, 'val');
       refreshCallback = jasmine.createSpyObj('refreshCallback', ['call']);
 
@@ -312,13 +287,6 @@ describe('dialogFieldRefresh', function() {
         );
       });
 
-      it('sets the visible property', function() {
-        expect(dialogFieldRefresh.setVisible).toHaveBeenCalledWith(
-          jasmine.objectContaining({selector: '#field_123_tr'}),
-          false
-        );
-      });
-
       it('calls the callback', function() {
         expect(refreshCallback.call).toHaveBeenCalled();
       });
@@ -332,7 +300,6 @@ describe('dialogFieldRefresh', function() {
     beforeEach(function() {
       spyOn(dialogFieldRefresh, 'addOptionsToDropDownList');
       spyOn(dialogFieldRefresh, 'setReadOnly');
-      spyOn(dialogFieldRefresh, 'setVisible');
       spyOn($.fn, 'selectpicker');
       refreshCallback = jasmine.createSpyObj('refreshCallback', ['call']);
 
@@ -368,13 +335,6 @@ describe('dialogFieldRefresh', function() {
         expect(dialogFieldRefresh.setReadOnly).toHaveBeenCalledWith(
           jasmine.objectContaining({selector: '#abc'}),
           true
-        );
-      });
-
-      it('sets the visible property', function() {
-        expect(dialogFieldRefresh.setVisible).toHaveBeenCalledWith(
-          jasmine.objectContaining({selector: '#field_' + 123 + "_tr"}),
-          false
         );
       });
 

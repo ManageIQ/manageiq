@@ -52,7 +52,6 @@ var dialogFieldRefresh = {
       var responseData = JSON.parse(data.responseText);
       $('.dynamic-checkbox-' + fieldId).prop('checked', responseData.values.checked);
       dialogFieldRefresh.setReadOnly($('.dynamic-checkbox-' + fieldId), responseData.values.read_only);
-      dialogFieldRefresh.setVisible($('#field_' +fieldId + '_tr'), responseData.values.visible);
       callback.call();
     };
 
@@ -73,7 +72,6 @@ var dialogFieldRefresh = {
       }
 
       dialogFieldRefresh.setReadOnly($('.dynamic-date-' + fieldId), responseData.values.read_only);
-      dialogFieldRefresh.setVisible($('#field_' +fieldId + '_tr'), responseData.values.visible);
       callback.call();
     };
 
@@ -88,7 +86,6 @@ var dialogFieldRefresh = {
       var responseData = JSON.parse(data.responseText);
       dialogFieldRefresh.addOptionsToDropDownList(responseData, fieldId);
       dialogFieldRefresh.setReadOnly($('#' + fieldName), responseData.values.read_only);
-      dialogFieldRefresh.setVisible($('#field_' + fieldId + '_tr'), responseData.values.visible);
       $('#' + fieldName).selectpicker('refresh');
       $('#' + fieldName).selectpicker('val', responseData.values.checked_value);
       callback.call();
@@ -115,7 +112,6 @@ var dialogFieldRefresh = {
     var responseData = JSON.parse(data.responseText);
     $(containerSelector + fieldId).val(responseData.values.text);
     dialogFieldRefresh.setReadOnly($(containerSelector + fieldId), responseData.values.read_only);
-    dialogFieldRefresh.setVisible($('#field_' + fieldId + '_tr'), responseData.values.visible);
     callback.call();
   },
 
@@ -206,14 +202,6 @@ var dialogFieldRefresh = {
       complete: true,
       done: doneFunction
     });
-  },
-
-  setVisible: function(field, visible) {
-    if (visible === true) {
-      field.show();
-    } else {
-      field.hide();
-    }
   },
 
   replaceRadioButtons: function(fieldId, fieldName, responseData, url, autoRefreshOptions) {
