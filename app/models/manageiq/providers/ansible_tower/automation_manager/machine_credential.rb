@@ -1,3 +1,2 @@
-class ManageIQ::Providers::AnsibleTower::AutomationManager::MachineCredential < ManageIQ::Providers::AutomationManager::Authentication
-  extend ApiCreate
+class ManageIQ::Providers::AnsibleTower::AutomationManager::MachineCredential < ManageIQ::Providers::AnsibleTower::AutomationManager::Credential
 end

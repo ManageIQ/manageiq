@@ -1,6 +1,6 @@
 require 'ansible_tower_client'
 
-describe ManageIQ::Providers::AnsibleTower::AutomationManager::MachineCredential do
+describe ManageIQ::Providers::AnsibleTower::AutomationManager::Credential do
   context "::ApiCreate" do
     let(:provider)      { FactoryGirl.create(:provider_ansible_tower, :with_authentication) }
     let(:manager)       { provider.managers.first }
@@ -34,10 +34,10 @@ describe ManageIQ::Providers::AnsibleTower::AutomationManager::MachineCredential
     it ".create_in_provider_queue" do
       EvmSpecHelper.local_miq_server
       task_id = described_class.create_in_provider_queue(manager.id, params)
-      expect(MiqTask.find(task_id)).to have_attributes(:name => "Creating Ansible Tower MachineCredential")
+      expect(MiqTask.find(task_id)).to have_attributes(:name => "Creating ManageIQ::Providers::AnsibleTower::AutomationManager::Credential")
       expect(MiqQueue.first).to have_attributes(
         :args        => [manager.id, params],
-        :class_name  => "ManageIQ::Providers::AnsibleTower::AutomationManager::MachineCredential",
+        :class_name  => "ManageIQ::Providers::AnsibleTower::AutomationManager::Credential",
         :method_name => "create_in_provider",
         :priority    => MiqQueue::HIGH_PRIORITY,
         :role        => "ems_operations",

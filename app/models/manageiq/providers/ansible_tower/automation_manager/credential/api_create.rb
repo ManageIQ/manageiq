@@ -1,4 +1,4 @@
-class ManageIQ::Providers::AnsibleTower::AutomationManager::MachineCredential
+class ManageIQ::Providers::AnsibleTower::AutomationManager::Credential
   module ApiCreate
     def create_in_provider(manager_id, params)
       manager = ExtManagementSystem.find(manager_id)
@@ -15,7 +15,7 @@ class ManageIQ::Providers::AnsibleTower::AutomationManager::MachineCredential
 
     def create_in_provider_queue(manager_id, params)
       task_opts = {
-        :action => "Creating Ansible Tower MachineCredential",
+        :action => "Creating #{name}",
         :userid => "system"
       }
 
@@ -23,7 +23,7 @@ class ManageIQ::Providers::AnsibleTower::AutomationManager::MachineCredential
 
       queue_opts = {
         :args        => [manager_id, params],
-        :class_name  => "ManageIQ::Providers::AnsibleTower::AutomationManager::MachineCredential",
+        :class_name  => name,
         :method_name => "create_in_provider",
         :priority    => MiqQueue::HIGH_PRIORITY,
         :role        => "ems_operations",
