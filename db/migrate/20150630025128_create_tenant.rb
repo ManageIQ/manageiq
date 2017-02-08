@@ -7,8 +7,14 @@ class CreateTenant < ActiveRecord::Migration
       t.string :appliance_name
 
       t.string :login_text
-      t.attachment :logo
-      t.attachment :login_logo
+      t.string   :logo_file_name
+      t.string   :logo_content_type
+      t.integer  :logo_file_size
+      t.datetime :logo_updated_at
+      t.string   :login_logo_file_name
+      t.string   :login_logo_content_type
+      t.integer  :login_logo_file_size
+      t.datetime :login_logo_updated_at
     end
 
     add_index :tenants, :domain
