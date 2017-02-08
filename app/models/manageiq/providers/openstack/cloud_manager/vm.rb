@@ -78,13 +78,6 @@ class ManageIQ::Providers::Openstack::CloudManager::Vm < ManageIQ::Providers::Cl
     end
   end
 
-  def destroy_if_failed
-    if raw_power_state.downcase.to_sym == :error
-      provider_object.destroy
-      destroy
-    end
-  end
-
   def provider_object(connection = nil)
     connection ||= ext_management_system.connect
     connection.servers.get(ems_ref)
