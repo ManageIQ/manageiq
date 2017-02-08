@@ -22,17 +22,6 @@ cols:
 - name
 - status
 
-
-# Included tables (joined, has_one, has_many) and columns
-include:
-  middleware_server:
-    columns:
-    - name
-    - hostname
-
-# Included tables and columns for query performance
-
-
 # Order of columns (from all tables)
 col_order:
 - name

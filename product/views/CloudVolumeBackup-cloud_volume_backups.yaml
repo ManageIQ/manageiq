@@ -23,19 +23,6 @@ cols:
 - size
 - status
 
-# Included tables (joined, has_one, has_many) and columns
-include:
-  cloud_volume:
-    columns:
-    - name
-  ext_management_system:
-    columns:
-    - name
-
-
-# Included tables and columns for query performance
-# include_for_find:
-
 # Order of columns (from all tables)
 col_order:
 - name
