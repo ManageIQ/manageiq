@@ -173,8 +173,8 @@ class ManagerRefresh::InventoryCollectionDefault::CloudManager < ManagerRefresh:
         model_class = stacks_inventory_collection.model_class
 
         stacks_parents_indexed = model_class
-                                   .select([:id, :ancestry])
-                                   .where(:id => stacks_parents.values).find_each.index_by(&:id)
+                                 .select([:id, :ancestry])
+                                 .where(:id => stacks_parents.values).find_each.index_by(&:id)
 
         model_class
           .select([:id, :ancestry])
@@ -205,12 +205,12 @@ class ManagerRefresh::InventoryCollectionDefault::CloudManager < ManagerRefresh:
         end
 
         miq_templates = miq_templates_inventory_collection.model_class
-                          .select([:id])
-                          .where(:id => vms_genealogy_parents.values).find_each.index_by(&:id)
+                                                          .select([:id])
+                                                          .where(:id => vms_genealogy_parents.values).find_each.index_by(&:id)
 
         vms_inventory_collection.model_class
-          .select([:id])
-          .where(:id => vms_genealogy_parents.keys).find_each do |vm|
+                                .select([:id])
+                                .where(:id => vms_genealogy_parents.keys).find_each do |vm|
           parent = miq_templates[vms_genealogy_parents[vm.id]]
           parent.with_relationship_type('genealogy') { parent.set_child(vm) }
         end
