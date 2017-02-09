@@ -4,6 +4,12 @@ describe 'API configuration (config/api.yml)' do
   describe 'collections' do
     let(:collection_settings) { api_settings.collections }
 
+    it "is sorted a-z" do
+      actual = collection_settings.keys
+      expected = collection_settings.keys.sort
+      expect(actual).to eq(expected)
+    end
+
     describe 'identifiers' do
       let(:miq_product_features) { MiqProductFeature.seed.values.flatten.to_set }
       let(:api_feature_identifiers) do
