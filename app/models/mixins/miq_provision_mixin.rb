@@ -109,28 +109,28 @@ module MiqProvisionMixin
   def set_resource(rsc, _options = {})
     return if rsc.nil?
 
-    rsc_class = resource_class(rsc)
-    rsc_type, key = class_to_resource_type_and_key(rsc_class)
-    if rsc_type.nil?
-      raise _("Unsupported resource type <%{class_name}> passed to set_resource for provisioning.") %
-              {:class_name => rsc.class.base_class.name}
-    end
-
-    rsc_name = resource_display_name(rsc)
-    result   = eligible_resources(rsc_type).any? { |r| r.id == rsc.id }
-
-    if result == false
-      resource_str = "<#{rsc_class}> <#{rsc.id}:#{rsc_name}>"
-      raise _("Resource %{resource_name} is not an eligible resource for this provisioning instance.") %
-              {:resource_name => resource_str}
-    end
-    value = construct_value(key, rsc_class, rsc.id, rsc_name)
+    key, rsc_type, value = resource_construct_value(rsc)
     _log.info("option <#{key}> being set to <#{value.inspect}>")
     options[key] = value
 
     post_customization_templates(rsc.id) if rsc_type == :customization_templates
 
     update_attribute(:options, options)
+  end
+
+  def set_resources(rscs, _options = {})
+    return unless rscs.present?
+
+    key = nil
+    items = []
+    rscs.compact.each do |rsc|
+      key, _rsc_type, value = resource_construct_value(rsc)
+      items << value
+    end
+
+    options[key] = items.flatten
+    _log.info("option <#{key}> being set to <#{items.inspect}>")
+    update_attributes(:options => options)
   end
 
   def post_customization_templates(template_id)
@@ -293,6 +293,26 @@ module MiqProvisionMixin
     return rsc.address if rsc.respond_to?(:address)
     return rsc.name    if rsc.respond_to?(:name)
     ''
+  end
+
+  def resource_construct_value(rsc)
+    rsc_class = resource_class(rsc)
+    rsc_type, key = class_to_resource_type_and_key(rsc_class)
+    if rsc_type.nil?
+      raise _("Unsupported resource type <%{class_name}> passed to set_resource for provisioning.") %
+            {:class_name => rsc.class.base_class.name}
+    end
+
+    rsc_name = resource_display_name(rsc)
+    result   = eligible_resources(rsc_type).any? { |r| r.id == rsc.id }
+
+    if result == false
+      resource_str = "<#{rsc_class}> <#{rsc.id}:#{rsc_name}>"
+      raise _("Resource %{resource_name} is not an eligible resource for this provisioning instance.") %
+            {:resource_name => resource_str}
+    end
+    value = construct_value(key, rsc_class, rsc.id, rsc_name)
+    [key, rsc_type, value]
   end
 
   def construct_value(key, rsc_class, rsc_id, rsc_name)
