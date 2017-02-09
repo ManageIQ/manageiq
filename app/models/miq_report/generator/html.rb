@@ -11,7 +11,7 @@ module MiqReport::Generator::Html
     group_limit = self.rpt_options[:group_limit]
     in_a_widget = self.rpt_options[:in_a_widget] || false
 
-    unless table.nil? || table.data.length == 0
+    unless table.nil? || table.data.empty?
       # Following line commented for now - for not showing repeating column values
       #       prev_data = String.new                # Initialize the prev_data variable
 
