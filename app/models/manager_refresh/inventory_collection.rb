@@ -326,19 +326,23 @@ module ManagerRefresh
       to_s
     end
 
+    def actualize_dependency(key, value)
+      if dependency?(value)
+        (dependency_attributes[key] ||= Set.new) << value.inventory_collection
+        self.transitive_dependency_attributes << key if transitive_dependency?(value)
+      elsif value.kind_of?(Array) && value.any? { |x| dependency?(x) }
+        (dependency_attributes[key] ||= Set.new) << value.detect { |x| dependency?(x) }.inventory_collection
+        self.transitive_dependency_attributes << key if value.any? { |x| transitive_dependency?(x) }
+      end
+    end
+
     private
 
     attr_writer :attributes_blacklist, :attributes_whitelist
 
     def actualize_dependencies(inventory_object)
       inventory_object.data.each do |key, value|
-        if dependency?(value)
-          (dependency_attributes[key] ||= Set.new) << value.inventory_collection
-          self.transitive_dependency_attributes << key if transitive_dependency?(value)
-        elsif value.kind_of?(Array) && value.any? { |x| dependency?(x) }
-          (dependency_attributes[key] ||= Set.new) << value.detect { |x| dependency?(x) }.inventory_collection
-          self.transitive_dependency_attributes << key if value.any? { |x| transitive_dependency?(x) }
-        end
+        actualize_dependency(key, value)
       end
     end
 
