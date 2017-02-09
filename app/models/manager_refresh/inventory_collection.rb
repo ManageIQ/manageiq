@@ -329,10 +329,10 @@ module ManagerRefresh
     def actualize_dependency(key, value)
       if dependency?(value)
         (dependency_attributes[key] ||= Set.new) << value.inventory_collection
-        self.transitive_dependency_attributes << key if transitive_dependency?(value)
+        transitive_dependency_attributes << key if transitive_dependency?(value)
       elsif value.kind_of?(Array) && value.any? { |x| dependency?(x) }
         (dependency_attributes[key] ||= Set.new) << value.detect { |x| dependency?(x) }.inventory_collection
-        self.transitive_dependency_attributes << key if value.any? { |x| transitive_dependency?(x) }
+        transitive_dependency_attributes << key if value.any? { |x| transitive_dependency?(x) }
       end
     end
 
