@@ -1,4 +1,8 @@
 class ChargeableField < ApplicationRecord
+  VIRTUAL_COL_USES = {
+    'v_derived_cpu_total_cores_used' => 'cpu_usage_rate_average'
+  }.freeze
+
   belongs_to :measure, :class_name => 'ChargebackRateDetailMeasure', :foreign_key => :chargeback_rate_detail_measure_id
 
   validates :metric, :uniqueness => true, :presence => true
@@ -29,8 +33,4 @@ class ChargeableField < ApplicationRecord
     chargeable_cols = pluck(:metric) & existing_cols
     chargeable_cols.map! { |x| VIRTUAL_COL_USES[x] || x }
   end
-
-  VIRTUAL_COL_USES = {
-    'v_derived_cpu_total_cores_used' => 'cpu_usage_rate_average'
-  }.freeze
 end
