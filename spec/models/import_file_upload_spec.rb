@@ -26,15 +26,13 @@ describe ImportFileUpload do
 
       it "returns json with a checkmark status icon" do
         expected_list = [{
-          :id          => 0,
-          :name        => "dialog",
-          :status_icon => ActionController::Base.helpers.image_path('16/checkmark.png'),
-          :status      => "This object already exists in the database with the same name"
+          :id     => 0,
+          :name   => "dialog",
+          :exists => true
         }, {
-          :id          => 1,
-          :name        => "Dialog2",
-          :status_icon => ActionController::Base.helpers.image_path('16/checkmark.png'),
-          :status      => "This object already exists in the database with the same name"
+          :id     => 1,
+          :name   => "Dialog2",
+          :exists => true
         }]
 
         expect(import_file_upload.service_dialog_list).to eq(expected_list)
@@ -46,15 +44,13 @@ describe ImportFileUpload do
 
       it "returns json with an equal-green status icon" do
         expected_list = [{
-          :id          => 0,
-          :name        => "dialog",
-          :status_icon => ActionController::Base.helpers.image_path('16/equal-green.png'),
-          :status      => "New object"
+          :id     => 0,
+          :name   => "dialog",
+          :exists => false
         }, {
-          :id          => 1,
-          :name        => "Dialog2",
-          :status_icon => ActionController::Base.helpers.image_path('16/equal-green.png'),
-          :status      => "New object"
+          :id     => 1,
+          :name   => "Dialog2",
+          :exists => false
         }]
 
         expect(import_file_upload.service_dialog_list).to eq(expected_list)
@@ -83,15 +79,13 @@ describe ImportFileUpload do
 
       it "returns json with a checkmark status icon" do
         expected_list = [{
-          :id          => 0,
-          :name        => "widget",
-          :status_icon => ActionController::Base.helpers.image_path('16/checkmark.png'),
-          :status      => "This object already exists in the database with the same name"
+          :id     => 0,
+          :name   => "widget",
+          :exists => true
         }, {
-          :id          => 1,
-          :name        => "Widget1",
-          :status_icon => ActionController::Base.helpers.image_path('16/checkmark.png'),
-          :status      => "This object already exists in the database with the same name"
+          :id     => 1,
+          :name   => "Widget1",
+          :exists => true
         }]
 
         expect(import_file_upload.widget_list).to eq(expected_list)
@@ -103,15 +97,13 @@ describe ImportFileUpload do
 
       it "returns json with an equal-green status icon" do
         expected_list = [{
-          :id          => 0,
-          :name        => "widget",
-          :status_icon => ActionController::Base.helpers.image_path('16/equal-green.png'),
-          :status      => "New object"
+          :id     => 0,
+          :name   => "widget",
+          :exists => false
         }, {
-          :id          => 1,
-          :name        => "Widget1",
-          :status_icon => ActionController::Base.helpers.image_path('16/equal-green.png'),
-          :status      => "New object"
+          :id     => 1,
+          :name   => "Widget1",
+          :exists => false
         }]
 
         expect(import_file_upload.widget_list).to eq(expected_list)
