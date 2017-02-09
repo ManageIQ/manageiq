@@ -6,7 +6,7 @@ module ManageIQ::Providers::Azure::ManagerMixin
 
     client_id  = options[:user] || authentication_userid(options[:auth_type])
     client_key = options[:pass] || authentication_password(options[:auth_type])
-    self.class.raw_connect(client_id, client_key, azure_tenant_id, subscription, options[:proxy_uri] || http_proxy_uri)
+    self.class.raw_connect(client_id, client_key, azure_tenant_id, subscription, options[:proxy_uri] || http_proxy_uri, provider_region)
   end
 
   def verify_credentials(_auth_type = nil, options = {})
@@ -14,7 +14,7 @@ module ManageIQ::Providers::Azure::ManagerMixin
     conf = connect(options)
   rescue ArgumentError => err
     raise MiqException::MiqInvalidCredentialsError, _("Incorrect credentials - #{err.message}")
-  rescue Azure::Armrest::UnauthorizedException, Azure::Armrest::BadRequestException
+  rescue ::Azure::Armrest::UnauthorizedException, ::Azure::Armrest::BadRequestException
     raise MiqException::MiqInvalidCredentialsError, _("Incorrect credentials - check your Azure Client ID and Client Key")
   rescue MiqException::MiqInvalidCredentialsError
     raise # Raise before falling into catch-all block below
@@ -26,7 +26,7 @@ module ManageIQ::Providers::Azure::ManagerMixin
   end
 
   module ClassMethods
-    def raw_connect(client_id, client_key, azure_tenant_id, subscription, proxy_uri = nil)
+    def raw_connect(client_id, client_key, azure_tenant_id, subscription, proxy_uri = nil, provider_region = nil)
 
       require 'azure-armrest'
 
@@ -39,8 +39,18 @@ module ManageIQ::Providers::Azure::ManagerMixin
         :client_key      => client_key,
         :tenant_id       => azure_tenant_id,
         :subscription_id => subscription,
-        :proxy           => proxy_uri
+        :proxy           => proxy_uri,
+        :environment     => environment_for(provider_region)
       )
+    end
+
+    def environment_for(region)
+      case region
+      when /usgov/i
+        ::Azure::Armrest::Environment::USGovernment
+      else
+        ::Azure::Armrest::Environment::Public
+      end
     end
 
     # Discovery
