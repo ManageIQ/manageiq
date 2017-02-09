@@ -216,7 +216,6 @@ module MiqReport::Formatting
     val = val.to_i
 
     names = %w(day hour minute second)
-    arr = []
 
     days    = (val / 86400)
     hours   = (val / 3600) - (days * 24)
