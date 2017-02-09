@@ -103,15 +103,11 @@ module MiqPolicy::ImportExport
     end
 
     def import_from_yaml(fd)
-      stats = []
-
       input = YAML.load(fd)
-      input.each do |e|
-        p, stat = import_from_hash(e["MiqPolicy"])
-        stats.push(stat)
+      input.collect do |e|
+        _p, stat = import_from_hash(e["MiqPolicy"])
+        stat
       end
-
-      stats
     end
   end
 

@@ -78,15 +78,10 @@ class MiqAlertSet < ApplicationRecord
   end
 
   def self.import_from_yaml(fd)
-    stats = []
-
     input = YAML.load(fd)
-
-    input.each do |e|
+    input.collect do |e|
       _a, stat = import_from_hash(e["MiqAlertSet"])
-      stats.push(stat)
+      stat
     end
-
-    stats
   end
 end
