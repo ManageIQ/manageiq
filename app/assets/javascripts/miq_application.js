@@ -1016,7 +1016,7 @@ function miqSendDateRequest(el) {
 
   var attemptAutoRefreshTrigger = function() {
     if (parms.auto_refresh === true) {
-      dialogFieldRefresh.triggerAutoRefresh(parms.field_id, parms.trigger);
+      dialogFieldRefresh.triggerAutoRefresh(parms);
     }
   };
 

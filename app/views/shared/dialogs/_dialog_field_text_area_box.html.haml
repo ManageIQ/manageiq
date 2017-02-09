@@ -1,13 +1,15 @@
 - if edit
-  = text_area_tag(field.name, field.value, textarea_tag_options(field, url))
+  = text_area_tag(field.name, field.value, textarea_tag_options(field, url, auto_refresh_options))
 - else
   = h(field.value)
 
 - if field.dynamic
   - if field.auto_refresh
     :javascript
-      dialogFieldRefresh.listenForAutoRefreshMessages("#{field.id}", function() {
-        dialogFieldRefresh.refreshTextAreaBox("#{field.name}", "#{field.id}");
+      dialogFieldRefresh.listenForAutoRefreshMessages(JSON.parse("#{j(auto_refresh_options.to_json)}"), function() {
+        dialogFieldRefresh.refreshTextAreaBox("#{field.name}", "#{field.id}", function() {
+          dialogFieldRefresh.triggerAutoRefresh(JSON.parse('#{j(auto_refresh_options.to_json)}'));
+        });
       });
 
   - if field.show_refresh_button?
@@ -15,6 +17,7 @@
 
     :javascript
       $('#refresh-dynamic-text-field-#{field.id}').click(function() {
-        dialogFieldRefresh.refreshTextAreaBox("#{field.name}", "#{field.id}");
-        dialogFieldRefresh.triggerAutoRefresh("#{field.id}", "#{field.trigger_auto_refresh}");
+        dialogFieldRefresh.refreshTextAreaBox("#{field.name}", "#{field.id}", function() {
+          dialogFieldRefresh.triggerAutoRefresh(JSON.parse('#{j(auto_refresh_options.to_json)}'));
+        });
       });

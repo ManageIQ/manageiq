@@ -6,29 +6,31 @@
   :javascript
     dialogFieldRefresh.initializeDialogSelectPicker(
       '#{field.name}',
-      '#{field.id}',
       '#{selected}',
       '#{url}',
-      '#{field.trigger_auto_refresh}'
+      JSON.parse('#{j(auto_refresh_options.to_json)}')
     );
+
+  - if field.dynamic
+    - if field.auto_refresh
+      :javascript
+        dialogFieldRefresh.listenForAutoRefreshMessages(JSON.parse("#{j(auto_refresh_options.to_json)}"), function() {
+          var selectedValue = $('select[name="#{field.name}"]').val();
+          dialogFieldRefresh.refreshDropDownList("#{field.name}", "#{field.id}", selectedValue, function() {
+            dialogFieldRefresh.triggerAutoRefresh(JSON.parse('#{j(auto_refresh_options.to_json)}'));
+          });
+        });
+
+    - if field.show_refresh_button?
+      = button_tag(_('Refresh'), :id => "refresh-dynamic-field-#{field.id}", :class => "btn btn-default")
+
+    :javascript
+      $('#refresh-dynamic-field-#{field.id}').click(function() {
+        var selectedValue = $('select[name="#{field.name}"]').val();
+        dialogFieldRefresh.refreshDropDownList("#{field.name}", "#{field.id}", selectedValue, function() {
+          dialogFieldRefresh.triggerAutoRefresh(JSON.parse('#{j(auto_refresh_options.to_json)}'));
+        });
+      });
 
 - else
   = h(field.values.detect { |k, _v| [k, k.to_s].include?(wf.value(field.name)) }.try(:last) || wf.value(field.name))
-
-- if field.dynamic
-  - if field.auto_refresh
-    :javascript
-      dialogFieldRefresh.listenForAutoRefreshMessages("#{field.id}", function() {
-        var selectedValue = $('select[name="#{field.name}"]').val();
-        dialogFieldRefresh.refreshDropDownList("#{field.name}", "#{field.id}", selectedValue);
-      });
-
-  - if field.show_refresh_button?
-    = button_tag(_('Refresh'), :id => "refresh-dynamic-field-#{field.id}", :class => "btn btn-default")
-
-  :javascript
-    $('#refresh-dynamic-field-#{field.id}').click(function() {
-      var selectedValue = $('select[name="#{field.name}"]').val();
-      dialogFieldRefresh.refreshDropDownList("#{field.name}", "#{field.id}", selectedValue);
-      dialogFieldRefresh.triggerAutoRefresh("#{field.id}", "#{field.trigger_auto_refresh}");
-    });

@@ -58,7 +58,7 @@ $(document).ready(function () {
   var attemptAutoRefreshTrigger = function(parms) {
     return function() {
       if (parms.auto_refresh === true) {
-        dialogFieldRefresh.triggerAutoRefresh(parms.field_id, parms.trigger);
+        dialogFieldRefresh.triggerAutoRefresh(parms);
       }
     };
   };

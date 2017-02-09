@@ -3,7 +3,12 @@
     = group.label
   - unless group.dialog_fields.empty?
     .form-horizontal
-      - group.dialog_fields.each do |field|
+      - group.dialog_fields.each_with_index do |field, field_index|
         = render :partial => "shared/dialogs/dialog_field",
-                 :locals  => {:wf => wf, :field => field}
+                 :locals  => {:wf                              => wf,
+                              :field                           => field,
+                              :field_index                     => field_index,
+                              :group_index                     => group_index,
+                              :tab_index                       => tab_index,
+                              :auto_refreshable_field_indicies => auto_refreshable_field_indicies}
   %hr
