@@ -302,185 +302,185 @@ RSpec.describe "Snapshots API" do
 
         expect(response).to have_http_status(:forbidden)
       end
+    end
 
-      describe "POST /api/instances/:c_id/snapshots" do
-        it "can queue the creation of a snapshot" do
-          api_basic_authorize(subcollection_action_identifier(:instances, :snapshots, :create))
-          ems = FactoryGirl.create(:ems_openstack_infra)
-          host = FactoryGirl.create(:host_openstack_infra, :ext_management_system => ems)
-          instance = FactoryGirl.create(:vm_openstack, :name => "Alice's Instance", :ext_management_system => ems, :host => host)
+    describe "POST /api/instances/:c_id/snapshots" do
+      it "can queue the creation of a snapshot" do
+        api_basic_authorize(subcollection_action_identifier(:instances, :snapshots, :create))
+        ems = FactoryGirl.create(:ems_openstack_infra)
+        host = FactoryGirl.create(:host_openstack_infra, :ext_management_system => ems)
+        instance = FactoryGirl.create(:vm_openstack, :name => "Alice's Instance", :ext_management_system => ems, :host => host)
 
-          run_post("#{instances_url(instance.id)}/snapshots", :name => "Alice's snapshot")
+        run_post("#{instances_url(instance.id)}/snapshots", :name => "Alice's snapshot")
 
-          expected = {
-            "results" => [
-              a_hash_including(
-                "success"   => true,
-                "message"   => "Creating snapshot Alice's snapshot for Vm id:#{instance.id} name:'Alice's Instance'",
-                "task_id"   => anything,
-                "task_href" => a_string_matching(tasks_url)
-              )
-            ]
-          }
-          expect(response.parsed_body).to include(expected)
-          expect(response).to have_http_status(:ok)
-        end
-
-        it "renders a failed action response if snapshotting is not supported" do
-          api_basic_authorize(subcollection_action_identifier(:instances, :snapshots, :create))
-          instance = FactoryGirl.create(:vm_openstack)
-
-          run_post("#{instances_url(instance.id)}/snapshots", :name => "Alice's snapsnot")
-
-          expected = {
-            "results" => [
-              a_hash_including(
-                "success" => false,
-                "message" => "The VM is not connected to an active Provider"
-              )
-            ]
-          }
-          expect(response.parsed_body).to include(expected)
-          expect(response).to have_http_status(:ok)
-        end
-
-        it "renders a failed action response if a name is not provided" do
-          api_basic_authorize(subcollection_action_identifier(:instances, :snapshots, :create))
-          ems = FactoryGirl.create(:ems_openstack_infra)
-          host = FactoryGirl.create(:host_openstack_infra, :ext_management_system => ems)
-          instance = FactoryGirl.create(:vm_openstack, :name => "Alice's Instance", :ext_management_system => ems, :host => host)
-
-          run_post("#{instances_url(instance.id)}/snapshots", :description => "Alice's snapshot")
-
-          expected = {
-            "results" => [
-              a_hash_including(
-                "success" => false,
-                "message" => "Must specify a name for the snapshot"
-              )
-            ]
-          }
-          expect(response.parsed_body).to include(expected)
-          expect(response).to have_http_status(:ok)
-        end
-
-        it "will not create a snapshot unless authorized" do
-          api_basic_authorize
-          instance = FactoryGirl.create(:vm_openstack)
-
-          run_post("#{instances_url(instance.id)}/snapshots", :description => "Alice's snapshot")
-
-          expect(response).to have_http_status(:forbidden)
-        end
-      end
-
-      describe "POST /api/instances/:c_id/snapshots/:s_id with delete action" do
-        it "can queue a snapshot for deletion" do
-          api_basic_authorize(action_identifier(:instances, :delete, :snapshots_subresource_actions, :delete))
-
-          ems = FactoryGirl.create(:ems_openstack_infra)
-          host = FactoryGirl.create(:host_openstack_infra, :ext_management_system => ems)
-          instance = FactoryGirl.create(:vm_openstack, :name => "Alice's Instance", :ext_management_system => ems, :host => host)
-          snapshot = FactoryGirl.create(:snapshot, :name => "Alice's snapshot", :vm_or_template => instance)
-
-          run_post("#{instances_url(instance.id)}/snapshots/#{snapshot.id}", :action => "delete")
-
-          expected = {
-            "message"   => "Deleting snapshot Alice's snapshot for Vm id:#{instance.id} name:'Alice's Instance'",
-            "success"   => true,
-            "task_href" => a_string_matching(tasks_url),
-            "task_id"   => anything
-          }
-          expect(response.parsed_body).to include(expected)
-          expect(response).to have_http_status(:ok)
-        end
-
-        it "renders a failed action response if deleting is not supported" do
-          api_basic_authorize(action_identifier(:instances, :delete, :snapshots_subresource_actions, :post))
-          instance = FactoryGirl.create(:vm_openstack)
-          snapshot = FactoryGirl.create(:snapshot, :vm_or_template => instance)
-
-          run_post("#{instances_url(instance.id)}/snapshots/#{snapshot.id}", :action => "delete")
-
-          expected = {
-            "success" => false,
-            "message" => "The VM is not connected to an active Provider"
-          }
-          expect(response.parsed_body).to include(expected)
-          expect(response).to have_http_status(:ok)
-        end
-
-        it "will not delete a snapshot unless authorized" do
-          api_basic_authorize
-          instance = FactoryGirl.create(:vm_openstack)
-          snapshot = FactoryGirl.create(:snapshot, :vm_or_template => instance)
-
-          run_post("#{instances_url(instance.id)}/snapshots/#{snapshot.id}", :action => "delete")
-
-          expect(response).to have_http_status(:forbidden)
-        end
-      end
-
-      describe "POST /api/instances/:c_id/snapshots with delete action" do
-        it "can queue multiple snapshots for deletion" do
-          api_basic_authorize(action_identifier(:instances, :delete, :snapshots_subresource_actions, :delete))
-
-          ems = FactoryGirl.create(:ems_openstack_infra)
-          host = FactoryGirl.create(:host_openstack_infra, :ext_management_system => ems)
-          instance = FactoryGirl.create(:vm_openstack, :name => "Alice and Bob's Instance", :ext_management_system => ems, :host => host)
-          snapshot1 = FactoryGirl.create(:snapshot, :name => "Alice's snapshot", :vm_or_template => instance)
-          snapshot2 = FactoryGirl.create(:snapshot, :name => "Bob's snapshot", :vm_or_template => instance)
-
-          run_post(
-            "#{instances_url(instance.id)}/snapshots",
-            :action    => "delete",
-            :resources => [
-              {:href => "#{instances_url(instance.id)}/snapshots/#{snapshot1.id}"},
-              {:href => "#{instances_url(instance.id)}/snapshots/#{snapshot2.id}"}
-            ]
-          )
-
-          expected = {
-            "results" => a_collection_containing_exactly(
-              a_hash_including(
-                "message"   => "Deleting snapshot Alice's snapshot for Vm id:#{instance.id} name:'Alice and Bob's Instance'",
-                "success"   => true,
-                "task_href" => a_string_matching(tasks_url),
-                "task_id"   => anything
-              ),
-              a_hash_including(
-                "message"   => "Deleting snapshot Bob's snapshot for Vm id:#{instance.id} name:'Alice and Bob's Instance'",
-                "success"   => true,
-                "task_href" => a_string_matching(tasks_url),
-                "task_id"   => anything
-              )
+        expected = {
+          "results" => [
+            a_hash_including(
+              "success"   => true,
+              "message"   => "Creating snapshot Alice's snapshot for Vm id:#{instance.id} name:'Alice's Instance'",
+              "task_id"   => anything,
+              "task_href" => a_string_matching(tasks_url)
             )
-          }
-          expect(response.parsed_body).to include(expected)
-          expect(response).to have_http_status(:ok)
-        end
+          ]
+        }
+        expect(response.parsed_body).to include(expected)
+        expect(response).to have_http_status(:ok)
       end
 
-      describe "DELETE /api/instances/:c_id/snapshots/:s_id" do
-        it "can delete a snapshot" do
-          api_basic_authorize(action_identifier(:instances, :delete, :snapshots_subresource_actions, :delete))
-          instance = FactoryGirl.create(:vm_openstack)
-          snapshot = FactoryGirl.create(:snapshot, :vm_or_template => instance)
+      it "renders a failed action response if snapshotting is not supported" do
+        api_basic_authorize(subcollection_action_identifier(:instances, :snapshots, :create))
+        instance = FactoryGirl.create(:vm_openstack)
 
-          run_delete("#{instances_url(instance.id)}/snapshots/#{snapshot.id}")
+        run_post("#{instances_url(instance.id)}/snapshots", :name => "Alice's snapsnot")
 
-          expect(response).to have_http_status(:no_content)
-        end
+        expected = {
+          "results" => [
+            a_hash_including(
+              "success" => false,
+              "message" => "The VM is not connected to an active Provider"
+            )
+          ]
+        }
+        expect(response.parsed_body).to include(expected)
+        expect(response).to have_http_status(:ok)
+      end
 
-        it "will not delete a snapshot unless authorized" do
-          api_basic_authorize
-          instance = FactoryGirl.create(:vm_openstack)
-          snapshot = FactoryGirl.create(:snapshot, :vm_or_template => instance)
+      it "renders a failed action response if a name is not provided" do
+        api_basic_authorize(subcollection_action_identifier(:instances, :snapshots, :create))
+        ems = FactoryGirl.create(:ems_openstack_infra)
+        host = FactoryGirl.create(:host_openstack_infra, :ext_management_system => ems)
+        instance = FactoryGirl.create(:vm_openstack, :name => "Alice's Instance", :ext_management_system => ems, :host => host)
 
-          run_delete("#{instances_url(instance.id)}/snapshots/#{snapshot.id}")
+        run_post("#{instances_url(instance.id)}/snapshots", :description => "Alice's snapshot")
 
-          expect(response).to have_http_status(:forbidden)
-        end
+        expected = {
+          "results" => [
+            a_hash_including(
+              "success" => false,
+              "message" => "Must specify a name for the snapshot"
+            )
+          ]
+        }
+        expect(response.parsed_body).to include(expected)
+        expect(response).to have_http_status(:ok)
+      end
+
+      it "will not create a snapshot unless authorized" do
+        api_basic_authorize
+        instance = FactoryGirl.create(:vm_openstack)
+
+        run_post("#{instances_url(instance.id)}/snapshots", :description => "Alice's snapshot")
+
+        expect(response).to have_http_status(:forbidden)
+      end
+    end
+
+    describe "POST /api/instances/:c_id/snapshots/:s_id with delete action" do
+      it "can queue a snapshot for deletion" do
+        api_basic_authorize(action_identifier(:instances, :delete, :snapshots_subresource_actions, :delete))
+
+        ems = FactoryGirl.create(:ems_openstack_infra)
+        host = FactoryGirl.create(:host_openstack_infra, :ext_management_system => ems)
+        instance = FactoryGirl.create(:vm_openstack, :name => "Alice's Instance", :ext_management_system => ems, :host => host)
+        snapshot = FactoryGirl.create(:snapshot, :name => "Alice's snapshot", :vm_or_template => instance)
+
+        run_post("#{instances_url(instance.id)}/snapshots/#{snapshot.id}", :action => "delete")
+
+        expected = {
+          "message"   => "Deleting snapshot Alice's snapshot for Vm id:#{instance.id} name:'Alice's Instance'",
+          "success"   => true,
+          "task_href" => a_string_matching(tasks_url),
+          "task_id"   => anything
+        }
+        expect(response.parsed_body).to include(expected)
+        expect(response).to have_http_status(:ok)
+      end
+
+      it "renders a failed action response if deleting is not supported" do
+        api_basic_authorize(action_identifier(:instances, :delete, :snapshots_subresource_actions, :post))
+        instance = FactoryGirl.create(:vm_openstack)
+        snapshot = FactoryGirl.create(:snapshot, :vm_or_template => instance)
+
+        run_post("#{instances_url(instance.id)}/snapshots/#{snapshot.id}", :action => "delete")
+
+        expected = {
+          "success" => false,
+          "message" => "The VM is not connected to an active Provider"
+        }
+        expect(response.parsed_body).to include(expected)
+        expect(response).to have_http_status(:ok)
+      end
+
+      it "will not delete a snapshot unless authorized" do
+        api_basic_authorize
+        instance = FactoryGirl.create(:vm_openstack)
+        snapshot = FactoryGirl.create(:snapshot, :vm_or_template => instance)
+
+        run_post("#{instances_url(instance.id)}/snapshots/#{snapshot.id}", :action => "delete")
+
+        expect(response).to have_http_status(:forbidden)
+      end
+    end
+
+    describe "POST /api/instances/:c_id/snapshots with delete action" do
+      it "can queue multiple snapshots for deletion" do
+        api_basic_authorize(action_identifier(:instances, :delete, :snapshots_subresource_actions, :delete))
+
+        ems = FactoryGirl.create(:ems_openstack_infra)
+        host = FactoryGirl.create(:host_openstack_infra, :ext_management_system => ems)
+        instance = FactoryGirl.create(:vm_openstack, :name => "Alice and Bob's Instance", :ext_management_system => ems, :host => host)
+        snapshot1 = FactoryGirl.create(:snapshot, :name => "Alice's snapshot", :vm_or_template => instance)
+        snapshot2 = FactoryGirl.create(:snapshot, :name => "Bob's snapshot", :vm_or_template => instance)
+
+        run_post(
+          "#{instances_url(instance.id)}/snapshots",
+          :action    => "delete",
+          :resources => [
+            {:href => "#{instances_url(instance.id)}/snapshots/#{snapshot1.id}"},
+            {:href => "#{instances_url(instance.id)}/snapshots/#{snapshot2.id}"}
+          ]
+        )
+
+        expected = {
+          "results" => a_collection_containing_exactly(
+            a_hash_including(
+              "message"   => "Deleting snapshot Alice's snapshot for Vm id:#{instance.id} name:'Alice and Bob's Instance'",
+              "success"   => true,
+              "task_href" => a_string_matching(tasks_url),
+              "task_id"   => anything
+            ),
+            a_hash_including(
+              "message"   => "Deleting snapshot Bob's snapshot for Vm id:#{instance.id} name:'Alice and Bob's Instance'",
+              "success"   => true,
+              "task_href" => a_string_matching(tasks_url),
+              "task_id"   => anything
+            )
+          )
+        }
+        expect(response.parsed_body).to include(expected)
+        expect(response).to have_http_status(:ok)
+      end
+    end
+
+    describe "DELETE /api/instances/:c_id/snapshots/:s_id" do
+      it "can delete a snapshot" do
+        api_basic_authorize(action_identifier(:instances, :delete, :snapshots_subresource_actions, :delete))
+        instance = FactoryGirl.create(:vm_openstack)
+        snapshot = FactoryGirl.create(:snapshot, :vm_or_template => instance)
+
+        run_delete("#{instances_url(instance.id)}/snapshots/#{snapshot.id}")
+
+        expect(response).to have_http_status(:no_content)
+      end
+
+      it "will not delete a snapshot unless authorized" do
+        api_basic_authorize
+        instance = FactoryGirl.create(:vm_openstack)
+        snapshot = FactoryGirl.create(:snapshot, :vm_or_template => instance)
+
+        run_delete("#{instances_url(instance.id)}/snapshots/#{snapshot.id}")
+
+        expect(response).to have_http_status(:forbidden)
       end
     end
   end
