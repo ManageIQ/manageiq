@@ -47,8 +47,10 @@ describe ManageIQ::Providers::AnsibleTower::AutomationManager::Refresher do
       # to re-record cassettes see comment at the beginning of this file
       VCR.use_cassette(described_class.name.underscore) do
         VCR.use_cassette(described_class.name.underscore + '_configuration_script_sources') do
-          EmsRefresh.refresh(automation_manager)
-          expect(automation_manager.reload.last_refresh_error).to be_nil
+          VCR.use_cassette(described_class.name.underscore + '_credentials') do
+            EmsRefresh.refresh(automation_manager)
+            expect(automation_manager.reload.last_refresh_error).to be_nil
+          end
         end
       end
 
@@ -59,6 +61,7 @@ describe ManageIQ::Providers::AnsibleTower::AutomationManager::Refresher do
       assert_inventory_root_group
       assert_configuration_script_sources
       assert_playbooks
+      assert_credentials
     end
   end
 
@@ -70,6 +73,32 @@ describe ManageIQ::Providers::AnsibleTower::AutomationManager::Refresher do
     expect(automation_manager.inventory_groups.count).to      eq(6)
     expect(automation_manager.configuration_script_sources.count).to eq(6)
     expect(automation_manager.configuration_script_payloads.count).to eq(438)
+    expect(automation_manager.configuration_script_authentications.count).to eq(13)
+  end
+
+  def assert_credentials
+    expect(expected_configuration_script.authentications.count).to eq(3)
+    machine_credential = expected_configuration_script.authentications.find_by(
+      :type => ManageIQ::Providers::AnsibleTower::AutomationManager::MachineCredential
+    )
+    expect(machine_credential).to have_attributes(
+      :name   => "Demo Credential",
+      :userid => "admin",
+    )
+    network_credential = expected_configuration_script.authentications.find_by(
+      :type => ManageIQ::Providers::AnsibleTower::AutomationManager::NetworkCredential
+    )
+    expect(network_credential).to have_attributes(
+      :name   => "Demo Creds 2",
+      :userid => "awdd",
+    )
+    cloud_credential = expected_configuration_script.authentications.find_by(
+      :type => ManageIQ::Providers::AnsibleTower::AutomationManager::VmwareCredential
+    )
+    expect(cloud_credential).to have_attributes(
+      :name   => "dev-vc60",
+      :userid => "MiqAnsibleUser@vsphere.local",
+    )
   end
 
   def assert_playbooks

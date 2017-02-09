@@ -18,4 +18,8 @@ class ManageIQ::Providers::AnsibleTower::Inventory::Collector::AutomationManager
   def projects
     @connection.api.projects.all
   end
+
+  def credentials
+    @connection.api.credentials.all
+  end
 end

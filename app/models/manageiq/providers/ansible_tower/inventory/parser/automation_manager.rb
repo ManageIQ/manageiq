@@ -4,6 +4,7 @@ class ManageIQ::Providers::AnsibleTower::Inventory::Parser::AutomationManager < 
     configured_systems
     configuration_scripts
     configuration_script_sources
+    credentials
   end
 
   def inventory_groups
@@ -31,6 +32,15 @@ class ManageIQ::Providers::AnsibleTower::Inventory::Parser::AutomationManager < 
       o[:survey_spec] = i.survey_spec_hash
       o[:variables] = i.extra_vars_hash
       o[:inventory_root_group] = target.inventory_groups.lazy_find(i.inventory_id.to_s)
+
+      %w(credential_id cloud_credential network_credential).each do |credential_attr|
+        credential_id = i.send(credential_attr).to_s
+        next if credential_id.blank?
+        target.authentication_configuration_script_bases.build(
+          :authentication            => target.configuration_script_authentications.lazy_find(credential_id),
+          :configuration_script_base => o
+        )
+      end
     end
   end
 
@@ -43,10 +53,51 @@ class ManageIQ::Providers::AnsibleTower::Inventory::Parser::AutomationManager < 
       i.playbooks.each do |playbook_name|
         # FIXME: its not really nice how I have to build a manager_ref / uuid here
         p = target.playbooks.find_or_build("#{i.id}__#{playbook_name}")
-        # FIXME: how about just adding `o` - configuration_script_source here?
-        p[:configuration_script_source] = target.configuration_script_sources.lazy_find(i.id.to_s)
+        p[:configuration_script_source] = o
         p[:name] = playbook_name
       end
+    end
+  end
+
+  def credentials
+    collector.credentials.each do |i|
+      o = target.configuration_script_authentications.find_or_build(i.id.to_s)
+      o[:name] = i.name
+      # i.description
+      # i.host
+      o[:userid] = i.username
+      # i.password
+      # i.security_token
+      # i.project
+      # i.domain
+      # i.ssh_key_data
+      # i.ssh_key_unlock
+      # i.organization
+      # i.become_method # '', 'sudo', 'su', 'pbrun', 'pfexec'
+      # i.become_username
+      # i.become_password
+      # i.vault_password
+      # i.subscription
+      # i.tenant
+      # i.secret
+      # i.client
+      # i.authorize
+      # i.authorize_password
+      o[:type] = case i.kind
+                   # FIXME: not a big fan of modelling all credentials via inheritance
+                 when 'net' then 'ManageIQ::Providers::AnsibleTower::AutomationManager::NetworkCredential'
+                 when 'ssh' then 'ManageIQ::Providers::AnsibleTower::AutomationManager::MachineCredential'
+                 when 'vmware' then 'ManageIQ::Providers::AnsibleTower::AutomationManager::VmwareCredential'
+                   # when 'scm' then 'ManageIQ::Providers::AnsibleTower::AutomationManager::???Credential'
+                 when 'aws' then 'ManageIQ::Providers::AnsibleTower::AutomationManager::AmazonCredential'
+                 when 'rax' then 'ManageIQ::Providers::AnsibleTower::AutomationManager::RackspaceCredential'
+                 when 'satellite6' then 'ManageIQ::Providers::AnsibleTower::AutomationManager::Satellite6Credential'
+                   # when 'cloudforms' then 'ManageIQ::Providers::AnsibleTower::AutomationManager::$$$Credential'
+                 when 'gce' then 'ManageIQ::Providers::AnsibleTower::AutomationManager::GoogleCredential'
+                 when 'azure' then 'ManageIQ::Providers::AnsibleTower::AutomationManager::AzureCredential'
+                   # when 'azure_rm' then 'ManageIQ::Providers::AnsibleTower::AutomationManager::???Credential'
+                 when 'openstack' then 'ManageIQ::Providers::AnsibleTower::AutomationManager::OpenstackCredential'
+                 end
     end
   end
 end
