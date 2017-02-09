@@ -60,7 +60,7 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
     config_info  = validate_config_info(options)
 
     transaction do
-      create(options.except(:config_info, :task_id)).tap do |service_template|
+      create_from_options(options.except(:task_id)).tap do |service_template|
         [:provision, :retirement, :reconfigure].each do |action|
           prepare_job_template_and_dialog(action, service_name, description, options) if config_info.key?(action)
         end
