@@ -79,9 +79,14 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
   private_class_method :prepare_job_template_and_dialog
 
   def self.create_job_template(name, description, info)
+    tower, params = build_parameter_list(name, description, info)
+    ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationScript.create_in_provider(tower.id, params, true)
+  end
+  private_class_method :create_job_template
+
+  def self.build_parameter_list(name, description, info)
     playbook = ManageIQ::Providers::AnsibleTower::AutomationManager::Playbook.find(info[:playbook_id])
     tower = playbook.manager
-
     params = {
       :name                     => name,
       :description              => description || '',
@@ -92,10 +97,16 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
       :ask_limit_on_launch      => true,
       :ask_inventory_on_launch  => true,
       :ask_credential_on_launch => true
-    }.merge(info.slice(:extra_vars, :credential, :cloud_credential, :network_credential))
-    ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationScript.create_in_provider(tower.id, params, true)
+    }.merge(info.slice(:extra_vars))
+
+    [:credential, :cloud_credential, :network_credential].each do |credential|
+      cred_sym = "#{credential}_id".to_sym
+      params[credential] = Authentication.find(info[cred_sym]).manager_ref if info[cred_sym]
+    end
+
+    [tower, params]
   end
-  private_class_method :create_job_template
+  private_class_method :build_parameter_list
 
   def self.validate_config_info(options)
     info = options[:config_info]

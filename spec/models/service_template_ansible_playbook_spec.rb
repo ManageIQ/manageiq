@@ -1,5 +1,7 @@
 describe ServiceTemplateAnsiblePlaybook do
   describe '#create_catalog_item' do
+    let(:auth_one) { FactoryGirl.create(:authentication, :manager_ref => 6) }
+    let(:auth_two) { FactoryGirl.create(:authentication, :manager_ref => 10) }
     let(:user) { FactoryGirl.create(:user_with_group) }
     let(:inventory_root_group) { FactoryGirl.create(:inventory_root_group) }
     let(:ems) do
@@ -22,10 +24,11 @@ describe ServiceTemplateAnsiblePlaybook do
         :service_template_catalog_id => service_template_catalog.id,
         :config_info                 => {
           :provision => {
-            :new_dialog_name => 'test_dialog',
-            :hosts           => 'many',
-            :credential      => 6,
-            :playbook_id     => playbook.id,
+            :new_dialog_name       => 'test_dialog',
+            :hosts                 => 'many',
+            :credential_id         => auth_one.id,
+            :network_credential_id => auth_two.id,
+            :playbook_id           => playbook.id,
           },
         }
       }
@@ -46,6 +49,20 @@ describe ServiceTemplateAnsiblePlaybook do
       expect(service_template.description).to eq('test ansible')
       expect(service_template.service_template_catalog_id).to eq(service_template_catalog.id)
       expect(service_template.resource_actions.pluck(:action)).to include('Provision')
+    end
+
+    it '#build_parameter_list' do
+      name = catalog_item_options[:name]
+      description = catalog_item_options[:description]
+      info = catalog_item_options[:config_info][:provision]
+      _tower, params = ServiceTemplateAnsiblePlaybook.send(:build_parameter_list, name, description, info)
+
+      expect(params[:name]).to eq name
+      expect(params[:description]).to eq description
+      expect(params[:extra_vars]).to be_nil
+      expect(params[:credential]).to eq '6'
+      expect(params[:cloud_credential]).to be_nil
+      expect(params[:network_credential]).to eq '10'
     end
   end
 end
