@@ -4,32 +4,32 @@ RSpec.describe MiqExpression::Tag do
   describe ".parse" do
     it "with model.managed-in_tag" do
       tag = "Vm.managed-service_level"
-      expect(described_class.parse(tag)).to eq(described_class.new(Vm, "/managed/service_level", []))
+      expect(described_class.parse(tag)).to eq(described_class.new(Vm, [], "/managed/service_level"))
     end
 
     it "with model.last.managed-in_tag" do
       tag = "Vm.host.managed-environment"
-      expect(described_class.parse(tag)).to eq(described_class.new(Vm, "/managed/environment", ['host']))
+      expect(described_class.parse(tag)).to eq(described_class.new(Vm, ['host'], "/managed/environment"))
     end
 
     it "with model.managed-in_tag" do
       tag = "Vm.managed-service_level"
-      expect(described_class.parse(tag)).to eq(described_class.new(Vm, "/managed/service_level", []))
+      expect(described_class.parse(tag)).to eq(described_class.new(Vm, [], "/managed/service_level"))
     end
 
     it "with model.associations.associations.managed-in_tag" do
       tag = "Vm.service.user.managed-service_level"
-      expect(described_class.parse(tag)).to eq(described_class.new(Vm, "/managed/service_level", %w(service user)))
+      expect(described_class.parse(tag)).to eq(described_class.new(Vm, %w(service user), "/managed/service_level"))
     end
 
     it "with model.associations.managed-in_tag" do
       tag = "service.user.managed-service_level"
-      expect(described_class.parse(tag)).to eq(described_class.new(Service, "/managed/service_level", ['user']))
+      expect(described_class.parse(tag)).to eq(described_class.new(Service, ['user'], "/managed/service_level"))
     end
 
     it "with model.associations.user_tag-in_tag" do
       tag = "service.user.user_tag-service_level"
-      expect(described_class.parse(tag)).to eq(described_class.new(Service, "/user/service_level", ['user']))
+      expect(described_class.parse(tag)).to eq(described_class.new(Service, ['user'], "/user/service_level"))
     end
 
     it "with invalid case model.associations.managed-in_tag" do
@@ -55,25 +55,25 @@ RSpec.describe MiqExpression::Tag do
 
   describe "#column_type" do
     it "is always a string" do
-      expect(described_class.new(Vm, "/host").column_type).to eq(:string)
+      expect(described_class.new(Vm, [], "/host").column_type).to eq(:string)
     end
   end
 
   describe "#numeric?" do
     it "is never numeric" do
-      expect(described_class.new(Vm, "/host")).not_to be_numeric
+      expect(described_class.new(Vm, [], "/host")).not_to be_numeric
     end
   end
 
   describe "#sub_type" do
     it "is always a string" do
-      expect(described_class.new(Vm, "/host").sub_type).to eq(:string)
+      expect(described_class.new(Vm, [], "/host").sub_type).to eq(:string)
     end
   end
 
   describe "#attribute_supported_by_sql?" do
     it "is always false" do
-      expect(described_class.new(Vm, "/host")).not_to be_attribute_supported_by_sql
+      expect(described_class.new(Vm, [], "/host")).not_to be_attribute_supported_by_sql
     end
   end
 end
