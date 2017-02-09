@@ -2,54 +2,54 @@ require "rails_helper"
 
 RSpec.describe MiqExpression::Tag do
   describe ".parse" do
-    it "with model.managed-in_field" do
-      field = "Vm.managed-service_level"
-      expect(described_class.parse(field)).to eq(described_class.new(Vm, "/managed/service_level", []))
+    it "with model.managed-in_tag" do
+      tag = "Vm.managed-service_level"
+      expect(described_class.parse(tag)).to eq(described_class.new(Vm, "/managed/service_level", []))
     end
 
-    it "with model.last.managed-in_field" do
-      field = "Vm.host.managed-environment"
-      expect(described_class.parse(field)).to eq(described_class.new(Vm, "/managed/environment", ['host']))
+    it "with model.last.managed-in_tag" do
+      tag = "Vm.host.managed-environment"
+      expect(described_class.parse(tag)).to eq(described_class.new(Vm, "/managed/environment", ['host']))
     end
 
-    it "with model.managed-in_field" do
-      field = "Vm.managed-service_level"
-      expect(described_class.parse(field)).to eq(described_class.new(Vm, "/managed/service_level", []))
+    it "with model.managed-in_tag" do
+      tag = "Vm.managed-service_level"
+      expect(described_class.parse(tag)).to eq(described_class.new(Vm, "/managed/service_level", []))
     end
 
-    it "with model.associations.associations.managed-in_field" do
-      field = "Vm.service.user.managed-service_level"
-      expect(described_class.parse(field)).to eq(described_class.new(Vm, "/managed/service_level", %w(service user)))
+    it "with model.associations.associations.managed-in_tag" do
+      tag = "Vm.service.user.managed-service_level"
+      expect(described_class.parse(tag)).to eq(described_class.new(Vm, "/managed/service_level", %w(service user)))
     end
 
-    it "with model.associations.managed-in_field" do
-      field = "service.user.managed-service_level"
-      expect(described_class.parse(field)).to eq(described_class.new(Service, "/managed/service_level", ['user']))
+    it "with model.associations.managed-in_tag" do
+      tag = "service.user.managed-service_level"
+      expect(described_class.parse(tag)).to eq(described_class.new(Service, "/managed/service_level", ['user']))
     end
 
-    it "with model.associations.user_tag-in_field" do
-      field = "service.user.user_tag-service_level"
-      expect(described_class.parse(field)).to eq(described_class.new(Service, "/user/service_level", ['user']))
+    it "with model.associations.user_tag-in_tag" do
+      tag = "service.user.user_tag-service_level"
+      expect(described_class.parse(tag)).to eq(described_class.new(Service, "/user/service_level", ['user']))
     end
 
-    it "with invalid case model.associations.managed-in_field" do
-      field = "service.user.mXaXnXaXged-service_level"
-      expect(described_class.parse(field)).to be_nil
+    it "with invalid case model.associations.managed-in_tag" do
+      tag = "service.user.mXaXnXaXged-service_level"
+      expect(described_class.parse(tag)).to be_nil
     end
 
-    it "returns nil with invalid case managed-field" do
-      field = "managed-service_level"
-      expect(described_class.parse(field)).to be_nil
+    it "returns nil with invalid case managed-tag" do
+      tag = "managed-service_level"
+      expect(described_class.parse(tag)).to be_nil
     end
 
     it "returns nil with invalid case managed" do
-      field = "managed"
-      expect(described_class.parse(field)).to be_nil
+      tag = "managed"
+      expect(described_class.parse(tag)).to be_nil
     end
 
     it "returns nil with invalid case model.managed" do
-      field = "Vm.managed"
-      expect(described_class.parse(field)).to be_nil
+      tag = "Vm.managed"
+      expect(described_class.parse(tag)).to be_nil
     end
   end
 
