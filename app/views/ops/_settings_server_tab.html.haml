@@ -144,26 +144,6 @@
                         :class    => "selectpicker")
       :javascript
         miqSelectPickerEvent('server_mks_version', "#{url}")
-
-    - elsif @edit[:new][:server][:remote_console_type] == "VNC"
-      .form-group
-        %label.col-md-2.control-label
-          = _("VNC Proxy Address")
-        .col-md-8
-          = text_field_tag("server_vnc_proxy_address",
-                            @edit[:new][:server][:vnc_proxy_address],
-                            :maxlength => MAX_NAME_LEN,
-                            :class => "form-control",
-                            "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
-      .form-group
-        %label.col-md-2.control-label
-          = _("VNC Proxy Port")
-        .col-md-8
-          = text_field_tag("server_vnc_proxy_port",
-                          @edit[:new][:server][:vnc_proxy_port],
-                          :maxlength => 6, :size => 6,
-                          :class => "form-control",
-                          "data-miq_observe" => {:interval => '.5', :url => url}.to_json)
   %hr
   %h3
     = _("NTP Servers")

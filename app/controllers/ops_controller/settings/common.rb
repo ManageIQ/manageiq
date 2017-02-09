@@ -607,17 +607,6 @@ module OpsController::Settings::Common
         (@edit[:new][:server][:custom_support_url_description].nil? || @edit[:new][:server][:custom_support_url_description].strip == "") && (!@edit[:new][:server][:custom_support_url].nil? && @edit[:new][:server][:custom_support_url].strip != ""))
       add_flash(_("Custom Support URL and Description both must be entered."), :error)
     end
-    if @sb[:active_tab] == "settings_server" && @edit[:new].fetch_path(:server, :remote_console_type) == "VNC"
-      unless @edit[:new][:server][:vnc_proxy_port] =~ /^\d+$/ || @edit[:new][:server][:vnc_proxy_port].blank?
-        add_flash(_("VNC Proxy Port must be numeric"), :error)
-      end
-      unless (@edit[:new][:server][:vnc_proxy_address].blank? &&
-          @edit[:new][:server][:vnc_proxy_port].blank?) ||
-             (!@edit[:new][:server][:vnc_proxy_address].blank? &&
-                 !@edit[:new][:server][:vnc_proxy_port].blank?)
-        add_flash(_("When configuring a VNC Proxy, both Address and Port are required"), :error)
-      end
-    end
   end
 
   def smartproxy_affinity_get_form_vars(id, checked)
@@ -968,8 +957,6 @@ module OpsController::Settings::Common
       @edit[:current].config[:server][:timezone] = "UTC" if @edit[:current].config[:server][:timezone].blank?
       @edit[:current].config[:server][:locale] = "default" if @edit[:current].config[:server][:locale].blank?
       @edit[:current].config[:server][:remote_console_type] ||= "MKS"
-      @edit[:current].config[:server][:vnc_proxy_address] ||= nil
-      @edit[:current].config[:server][:vnc_proxy_port] ||= nil
       @edit[:current].config[:smtp][:enable_starttls_auto] = GenericMailer.default_for_enable_starttls_auto if @edit[:current].config[:smtp][:enable_starttls_auto].nil?
       @edit[:current].config[:smtp][:openssl_verify_mode] ||= nil
       @edit[:current].config[:ntp] ||= {}
