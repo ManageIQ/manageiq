@@ -33,13 +33,11 @@ class ManageIQ::Providers::AnsibleTower::Inventory::Parser::AutomationManager < 
       o[:variables] = i.extra_vars_hash
       o[:inventory_root_group] = target.inventory_groups.lazy_find(i.inventory_id.to_s)
 
+      o[:authentications] = []
       %w(credential_id cloud_credential network_credential).each do |credential_attr|
         credential_id = i.send(credential_attr).to_s
         next if credential_id.blank?
-        target.authentication_configuration_script_bases.build(
-          :authentication            => target.configuration_script_authentications.lazy_find(credential_id),
-          :configuration_script_base => o
-        )
+        o[:authentications] << target.configuration_script_authentications.lazy_find(credential_id)
       end
     end
   end

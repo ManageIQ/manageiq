@@ -5,9 +5,7 @@ class ManageIQ::Providers::AutomationManager < ::ExtManagementSystem
   has_many :configured_systems,           :dependent => :destroy, :foreign_key => "manager_id"
   has_many :configuration_profiles,       :dependent => :destroy, :foreign_key => "manager_id"
   has_many :configuration_scripts,        :dependent => :destroy, :foreign_key => "manager_id"
-  has_many :authentication_configuration_script_bases, :through => :configuration_scripts
-  # FIXME: cant use :authentications here, because thats delegated to :provider in ansible
-  has_many :configuration_script_authentications, :through => :authentication_configuration_script_bases, :source => :authentication
+  has_many :configuration_script_authentications, :through => :configuration_scripts, :source => :authentications
   has_many :inventory_groups,             :dependent => :destroy, :foreign_key => "ems_id", :inverse_of => :manager
   has_many :inventory_root_groups,        :dependent => :destroy, :foreign_key => "ems_id", :inverse_of => :manager
   has_many :configuration_script_sources, :dependent => :destroy, :foreign_key => "manager_id"
