@@ -31,17 +31,9 @@ module Api
       end
 
       def validate_optional_collection_classes
-        @collection_klasses = {}  # Default all to config classes
-        param = params['provider_class']
-        return unless param.present?
-
-        raise BadRequestError, "Unsupported provider_class #{param} specified" if param != "provider"
-        %w(tags policies policy_profiles).each do |cname|
-          if @req.subcollection == cname || @req.expand?(cname)
-            raise BadRequestError, "Management of #{cname} is unsupported for the Provider class"
-          end
-        end
-        @collection_klasses[:providers] = Provider
+        @collection_klasses = {} # Default all to config classes
+        validate_provider_class
+        validate_collection_class
       end
 
       def validate_api_action
@@ -330,6 +322,42 @@ module Api
         unless missing_fields.empty?
           raise BadRequestError, "Resource #{missing_fields.join(", ")} needs be specified for creating a new #{type}"
         end
+      end
+
+      def validate_provider_class
+        param = params['provider_class']
+        return unless param.present?
+
+        raise BadRequestError, "Unsupported provider_class #{param} specified" if param != "provider"
+        %w(tags policies policy_profiles).each do |cname|
+          if @req.subcollection == cname || @req.expand?(cname)
+            raise BadRequestError, "Management of #{cname} is unsupported for the Provider class"
+          end
+        end
+        @collection_klasses[:providers] = Provider
+      end
+
+      def validate_collection_class
+        param = params['collection_class']
+        return unless param.present?
+
+        begin
+          param_klass = param.constantize
+        rescue
+          raise BadRequestError, "Invalid collection_class #{param} specified"
+        end
+
+        collection_klass = collection_config[@req.collection].klass.constantize
+
+        # If it is the collection's class, then we're good to go as is.
+        return if param_klass == collection_klass
+
+        if param_klass < collection_klass
+          @collection_klasses[@req.collection.to_sym] = param_klass
+          return
+        end
+
+        raise BadRequestError, "Invalid collection_class #{param} specified for the #{@req.collection} collection"
       end
     end
   end
