@@ -2,7 +2,7 @@ module MiqAeServiceMiqProvisionMixin
   extend ActiveSupport::Concern
 
   module ClassMethods
-    def expose_eligible_resources(resource)
+    def expose_eligible_resources(resource, options = {})
       method_name = "eligible_#{resource}"
       define_method(method_name) do
         ar_method do
@@ -14,6 +14,12 @@ module MiqAeServiceMiqProvisionMixin
       define_method("set_#{resource.to_s.singularize}") do |rsc|
         ar_method do
           set_resource(rsc)
+        end
+      end
+
+      if options[:multiple_value]
+        define_method("set_#{resource.to_s.pluralize}") do |rscs|
+          ar_method { set_resources(rscs) }
         end
       end
     end
@@ -42,6 +48,10 @@ module MiqAeServiceMiqProvisionMixin
 
   def set_resource(rsc)
     object_send(:set_resource, rsc)
+  end
+
+  def set_resources(rscs)
+    object_send(:set_resources, rscs)
   end
 
   def set_nic_settings(idx, nic_hash, value = nil)
