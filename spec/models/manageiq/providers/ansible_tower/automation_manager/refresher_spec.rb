@@ -73,17 +73,15 @@ describe ManageIQ::Providers::AnsibleTower::AutomationManager::Refresher do
   end
 
   def assert_playbooks
-    configuration_script_source = automation_manager.configuration_script_sources.find_by(:manager_ref => 29)
-    expect(configuration_script_source.configuration_script_payloads.first).to be_an_instance_of(ManageIQ::Providers::AnsibleTower::AutomationManager::Playbook)
-    expect(configuration_script_source.configuration_script_payloads.count).to eq(60)
-    expect(configuration_script_source.configuration_script_payloads.map(&:name)).to include('jboss-standalone/demo-aws-launch.yml')
+    expect(expected_configuration_script_source.configuration_script_payloads.first).to be_an_instance_of(ManageIQ::Providers::AnsibleTower::AutomationManager::Playbook)
+    expect(expected_configuration_script_source.configuration_script_payloads.count).to eq(1)
+    expect(expected_configuration_script_source.configuration_script_payloads.map(&:name)).to include('hello_world.yml')
   end
 
   def assert_configuration_script_sources
     expect(automation_manager.configuration_script_sources.count).to eq(6)
-    configuration_script_source = automation_manager.configuration_script_sources.find_by(:manager_ref => 4)
-    expect(configuration_script_source).to be_an_instance_of(ConfigurationScriptSource)
-    expect(configuration_script_source).to have_attributes(
+    expect(expected_configuration_script_source).to be_an_instance_of(ConfigurationScriptSource)
+    expect(expected_configuration_script_source).to have_attributes(
       :name        => 'Demo Project',
       :description => 'A great demo',
     )
@@ -144,5 +142,9 @@ describe ManageIQ::Providers::AnsibleTower::AutomationManager::Refresher do
 
   def expected_inventory_root_group
     @expected_inventory_root_group ||= automation_manager.inventory_groups.where(:name => "Dev-VC60").first
+  end
+
+  def expected_configuration_script_source
+    @expected_configuration_script_source ||= automation_manager.configuration_script_sources.find_by(:name => 'Demo Project')
   end
 end
