@@ -4,7 +4,7 @@ module ManagerRefresh
     attr_reader :inventory_collection, :data
 
     delegate :manager_ref, :base_class_name, :to => :inventory_collection
-    delegate :[], :[]=, :to => :data
+    delegate :[], :to => :data
 
     def initialize(inventory_collection, data)
       @inventory_collection     = inventory_collection
@@ -83,6 +83,12 @@ module ManagerRefresh
 
     def dependency?
       !inventory_collection.saved?
+    end
+
+    def []=(key, value)
+      data[key] = value
+      inventory_collection.actualize_dependency(key, value)
+      value
     end
 
     private
