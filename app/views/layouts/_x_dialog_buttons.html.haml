@@ -15,31 +15,31 @@
               :class   => "btn btn-primary",
               :alt     => t = _("Save Changes"),
               :title   => t,
-              :onclick => "miqAjaxButton('#{url_for(:action => action_url, :id => record_id, :button => "save")}');")
+              :onclick => "miqAjaxButton('#{url_for(:action => action_url, :id => record_id, :button => "save")}', false, { complete: false });")
           - when "submit"
             = button_tag(t = _('Submit'),
               :class   => "btn btn-primary",
               :alt     => t,
               :title   => t,
-              :onclick => "miqAjaxButton('#{url_for(:action => action_url, :id => record_id, :button => "submit")}');")
+              :onclick => "miqAjaxButton('#{url_for(:action => action_url, :id => record_id, :button => "submit")}', false, { complete: false });")
           - when "continue"
             = button_tag(t = _('Continue'),
               :class   => "btn btn-default",
               :alt     => t,
               :title   => t,
-              :onclick => "miqAjaxButton('#{url_for(:action => action_url, :id => record_id, :button => "continue")}');")
+              :onclick => "miqAjaxButton('#{url_for(:action => action_url, :id => record_id, :button => "continue")}', false, { complete: false });")
           - when "reset"
             = button_tag(_('Reset'),
               :class   => "btn btn-default",
               :alt     => t = _("Reset Changes"),
               :title   => t,
-              :onclick => "miqAjaxButton('#{url_for(:action => action_url, :id => record_id, :button => "reset")}');")
+              :onclick => "miqAjaxButton('#{url_for(:action => action_url, :id => record_id, :button => "reset")}', false, { complete: false });")
           - when "cancel"
             = button_tag(t = _('Cancel'),
               :class   => "btn btn-default",
               :alt     => t,
               :title   => t,
-              :onclick => "miqAjaxButton('#{url_for(:action => action_url, :id => record_id, :button => "cancel")}');")
+              :onclick => "miqAjaxButton('#{url_for(:action => action_url, :id => record_id, :button => "cancel")}', false, { complete: false });")
 
       #buttons_off{:style => session[:changed] ? "display: none;" : ""}
         - buttons.each do |b|
@@ -57,4 +57,4 @@
              :class   => "btn btn-default",
              :alt     => t,
              :title   => t,
-             :onclick => "miqAjaxButton('#{url_for(:action => action_url, :id => record_id, :button => "cancel")}');")
+             :onclick => "miqAjaxButton('#{url_for(:action => action_url, :id => record_id, :button => "cancel")}', false, { complete: false });")
