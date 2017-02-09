@@ -473,12 +473,15 @@ class MiqWorker::Runner
     _log.info("#{log_prefix} Releasing any broker connections for pid: [#{Process.pid}], ERROR: #{err.message}")
   end
 
-  def set_process_title
-    type   = @worker.type.sub(/^ManageIQ::Providers::/, "")
+  def process_title
+    type   = @worker.abbreviated_class_name
     title  = "#{MiqWorker::PROCESS_TITLE_PREFIX} #{type} id: #{@worker.id}"
     title << ", queue: #{@worker.queue_name}" if @worker.queue_name
     title << ", uri: #{@worker.uri}" if @worker.uri
+    title
+  end
 
-    Process.setproctitle(title)
+  def set_process_title
+    Process.setproctitle(process_title)
   end
 end

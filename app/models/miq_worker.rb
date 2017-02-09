@@ -474,6 +474,10 @@ class MiqWorker < ApplicationRecord
 
   delegate :normalized_type, :to => :class
 
+  def abbreviated_class_name
+    type.sub(/^ManageIQ::Providers::/, "")
+  end
+
   def format_full_log_msg
     "Worker [#{self.class}] with ID: [#{id}], PID: [#{pid}], GUID: [#{guid}]"
   end
