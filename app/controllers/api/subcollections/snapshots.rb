@@ -34,6 +34,17 @@ module Api
       end
       alias snapshots_delete_resource delete_resource_snapshots
 
+      def snapshots_revert_resource(parent, type, id, _data)
+        raise parent.unsupported_reason(:revert_to_snapshot) unless parent.supports_revert_to_snapshot?
+        snapshot = resource_search(id, type, collection_class(type))
+
+        message = "Reverting to snapshot #{snapshot.name} for #{snapshot_ident(parent)}"
+        task_id = queue_object_action(parent, message, :method_name => "revert_to_snapshot", :args => [id])
+        action_result(true, message, :task_id => task_id)
+      rescue => e
+        action_result(false, e.to_s)
+      end
+
       private
 
       def snapshot_ident(parent)
