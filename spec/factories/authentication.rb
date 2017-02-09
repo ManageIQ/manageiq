@@ -48,12 +48,12 @@ FactoryGirl.define do
     google_hosted_domain "google_hosted_domain"
   end
 
-  factory :authentication_htpasswd, :parent => :authentication, :class => "AuthenticationHtpasswd"  do
+  factory :authentication_htpasswd, :parent => :authentication, :class => "AuthenticationHtpasswd" do
     authtype "HTPasswdPasswordIdentityProvider"
     htpassd_users [{"htpassuser1" => "htpassword"}, {"htpassuser2" => "htpassword"}]
   end
 
-  factory :authentication_ldap, :parent => :authentication, :class => "AuthenticationLdap"  do
+  factory :authentication_ldap, :parent => :authentication, :class => "AuthenticationLdap" do
     authtype "LDAPPasswordIdentityProvider"
     ldap_id ["ldap_id"]
     ldap_email ["ldap_email"]
@@ -75,7 +75,7 @@ FactoryGirl.define do
     open_id_extra_authorize_parameters "open_id_extra_authorize_parameters"
   end
 
-  factory :authentication_request_header, :parent => :authentication, :class => "AuthenticationRequestHeader"  do
+  factory :authentication_request_header, :parent => :authentication, :class => "AuthenticationRequestHeader" do
     authtype "RequestHeaderIdentityProvider"
     request_header_challenge_url "request_header_challenge_url"
     request_header_login_url "request_header_login_url"
