@@ -40,9 +40,8 @@ module Api
       private
 
       def snapshot_ident(parent)
-        klass = parent.class
-        klass_ident = klass.respond_to?(:base_model) ? klass.base_model.name : klass.name
-        "#{klass_ident} id:#{parent.id} name:'#{parent.name}'"
+        parent_ident = collection_config[@req.collection].description.singularize
+        "#{parent_ident} id:#{parent.id} name:'#{parent.name}'"
       end
     end
   end

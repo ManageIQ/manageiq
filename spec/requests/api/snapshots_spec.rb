@@ -75,7 +75,7 @@ RSpec.describe "Snapshots API" do
           "results" => [
             a_hash_including(
               "success"   => true,
-              "message"   => "Creating snapshot Alice's snapshot for Vm id:#{vm.id} name:'Alice's VM'",
+              "message"   => "Creating snapshot Alice's snapshot for Virtual Machine id:#{vm.id} name:'Alice's VM'",
               "task_id"   => anything,
               "task_href" => a_string_matching(tasks_url)
             )
@@ -144,7 +144,7 @@ RSpec.describe "Snapshots API" do
         run_post("#{vms_url(vm.id)}/snapshots/#{snapshot.id}", :action => "delete")
 
         expected = {
-          "message"   => "Deleting snapshot Alice's snapshot for Vm id:#{vm.id} name:'Alice's VM'",
+          "message"   => "Deleting snapshot Alice's snapshot for Virtual Machine id:#{vm.id} name:'Alice's VM'",
           "success"   => true,
           "task_href" => a_string_matching(tasks_url),
           "task_id"   => anything
@@ -200,13 +200,13 @@ RSpec.describe "Snapshots API" do
         expected = {
           "results" => a_collection_containing_exactly(
             a_hash_including(
-              "message"   => "Deleting snapshot Alice's snapshot for Vm id:#{vm.id} name:'Alice and Bob's VM'",
+              "message"   => "Deleting snapshot Alice's snapshot for Virtual Machine id:#{vm.id} name:'Alice and Bob's VM'",
               "success"   => true,
               "task_href" => a_string_matching(tasks_url),
               "task_id"   => anything
             ),
             a_hash_including(
-              "message"   => "Deleting snapshot Bob's snapshot for Vm id:#{vm.id} name:'Alice and Bob's VM'",
+              "message"   => "Deleting snapshot Bob's snapshot for Virtual Machine id:#{vm.id} name:'Alice and Bob's VM'",
               "success"   => true,
               "task_href" => a_string_matching(tasks_url),
               "task_id"   => anything
@@ -317,7 +317,7 @@ RSpec.describe "Snapshots API" do
           "results" => [
             a_hash_including(
               "success"   => true,
-              "message"   => "Creating snapshot Alice's snapshot for Vm id:#{instance.id} name:'Alice's Instance'",
+              "message"   => "Creating snapshot Alice's snapshot for Instance id:#{instance.id} name:'Alice's Instance'",
               "task_id"   => anything,
               "task_href" => a_string_matching(tasks_url)
             )
@@ -387,7 +387,7 @@ RSpec.describe "Snapshots API" do
         run_post("#{instances_url(instance.id)}/snapshots/#{snapshot.id}", :action => "delete")
 
         expected = {
-          "message"   => "Deleting snapshot Alice's snapshot for Vm id:#{instance.id} name:'Alice's Instance'",
+          "message"   => "Deleting snapshot Alice's snapshot for Instance id:#{instance.id} name:'Alice's Instance'",
           "success"   => true,
           "task_href" => a_string_matching(tasks_url),
           "task_id"   => anything
@@ -444,13 +444,13 @@ RSpec.describe "Snapshots API" do
         expected = {
           "results" => a_collection_containing_exactly(
             a_hash_including(
-              "message"   => "Deleting snapshot Alice's snapshot for Vm id:#{instance.id} name:'Alice and Bob's Instance'",
+              "message"   => "Deleting snapshot Alice's snapshot for Instance id:#{instance.id} name:'Alice and Bob's Instance'",
               "success"   => true,
               "task_href" => a_string_matching(tasks_url),
               "task_id"   => anything
             ),
             a_hash_including(
-              "message"   => "Deleting snapshot Bob's snapshot for Vm id:#{instance.id} name:'Alice and Bob's Instance'",
+              "message"   => "Deleting snapshot Bob's snapshot for Instance id:#{instance.id} name:'Alice and Bob's Instance'",
               "success"   => true,
               "task_href" => a_string_matching(tasks_url),
               "task_id"   => anything
