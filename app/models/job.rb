@@ -3,7 +3,7 @@ class Job < ApplicationRecord
   include UuidMixin
   include FilterableMixin
 
-  belongs_to :miq_task
+  belongs_to :miq_task, :dependent => :delete
 
   serialize :options
   serialize :context
