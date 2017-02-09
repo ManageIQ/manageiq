@@ -2,7 +2,6 @@ module MiqReport::Generator::Html
   def build_html_rows(clickable_rows = false)
     tz = get_time_zone(Time.zone.name) if Time.zone
     html_rows = []
-    counter = 0
     group_counter = 0
     row = 0
 
