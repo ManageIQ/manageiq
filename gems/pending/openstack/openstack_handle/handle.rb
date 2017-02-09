@@ -14,6 +14,7 @@ module OpenstackHandle
       "Storage"  => nil,
       "Metering" => nil,
       "Metric"   => nil,
+      "Event"    => nil,
     }
 
     SERVICE_NAME_MAP = {
@@ -30,6 +31,7 @@ module OpenstackHandle
       "Introspection" => :introspection,
       "Workflow"      => :workflow,
       "Metric"        => :metric,
+      "Event"         => nil,
     }
 
     def self.try_connection(security_protocol, ssl_options = {})
@@ -80,6 +82,8 @@ module OpenstackHandle
         Fog::Workflow::OpenStack.new(opts)
       elsif service == "Metric"
         Fog::Metric::OpenStack.new(opts)
+      elsif service == "Event"
+        Fog::Event::OpenStack.new(opts)
       else
         Fog.const_get(service).new(opts)
       end
@@ -319,6 +323,15 @@ module OpenstackHandle
 
     def detect_metric_service(tenant_name = nil)
       detect_service("Metric", tenant_name)
+    end
+
+    def event_service(tenant_name = nil)
+      connect(:service => "Event", :tenant_name => tenant_name)
+    end
+    alias_method :connect_event, :event_service
+
+    def detect_event_service(tenant_name = nil)
+      detect_service("Event", tenant_name)
     end
 
     def detect_service(service, tenant_name = nil)
