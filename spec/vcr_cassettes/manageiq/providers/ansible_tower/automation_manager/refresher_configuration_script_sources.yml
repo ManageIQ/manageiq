@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: https://testuser:secret@dev-ansible-tower2.example.com/api/v1/projects
+    uri: https://testuser:secret@dev-ansible-tower3.example.com/api/v1/projects
     body:
       encoding: US-ASCII
       string: ''
@@ -23,7 +23,7 @@ http_interactions:
       Server:
       - Apache/2.4.6 (Red Hat Enterprise Linux) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.5
       Location:
-      - https://dev-ansible-tower2.example.com/api/v1/projects/
+      - https://dev-ansible-tower3.example.com/api/v1/projects/
       Content-Length:
       - '0'
       Content-Type:
@@ -35,7 +35,7 @@ http_interactions:
   recorded_at: Tue, 07 Feb 2017 10:41:16 GMT
 - request:
     method: get
-    uri: https://testuser:secret@dev-ansible-tower2.example.com/api/v1/projects/
+    uri: https://testuser:secret@dev-ansible-tower3.example.com/api/v1/projects/
     body:
       encoding: US-ASCII
       string: ''
@@ -109,7 +109,7 @@ http_interactions:
   recorded_at: Tue, 07 Feb 2017 10:41:17 GMT
 - request:
     method: get
-    uri: https://testuser:secret@dev-ansible-tower2.example.com/api/v1/projects/4/playbooks/
+    uri: https://testuser:secret@dev-ansible-tower3.example.com/api/v1/projects/4/playbooks/
     body:
       encoding: US-ASCII
       string: ''
@@ -146,7 +146,7 @@ http_interactions:
   recorded_at: Tue, 07 Feb 2017 10:41:18 GMT
 - request:
     method: get
-    uri: https://testuser:secret@dev-ansible-tower2.example.com/api/v1/projects/29/playbooks/
+    uri: https://testuser:secret@dev-ansible-tower3.example.com/api/v1/projects/29/playbooks/
     body:
       encoding: US-ASCII
       string: ''
@@ -183,7 +183,7 @@ http_interactions:
   recorded_at: Tue, 07 Feb 2017 10:41:18 GMT
 - request:
     method: get
-    uri: https://testuser:secret@dev-ansible-tower2.example.com/api/v1/projects/35/playbooks/
+    uri: https://testuser:secret@dev-ansible-tower3.example.com/api/v1/projects/35/playbooks/
     body:
       encoding: US-ASCII
       string: ''
@@ -220,7 +220,7 @@ http_interactions:
   recorded_at: Tue, 07 Feb 2017 10:41:19 GMT
 - request:
     method: get
-    uri: https://testuser:secret@dev-ansible-tower2.example.com/api/v1/projects/36/playbooks/
+    uri: https://testuser:secret@dev-ansible-tower3.example.com/api/v1/projects/36/playbooks/
     body:
       encoding: US-ASCII
       string: ''
@@ -398,7 +398,7 @@ http_interactions:
   recorded_at: Tue, 07 Feb 2017 10:41:22 GMT
 - request:
     method: get
-    uri: https://testuser:secret@dev-ansible-tower2.example.com/api/v1/projects/37/playbooks/
+    uri: https://testuser:secret@dev-ansible-tower3.example.com/api/v1/projects/37/playbooks/
     body:
       encoding: US-ASCII
       string: ''
@@ -435,7 +435,7 @@ http_interactions:
   recorded_at: Tue, 07 Feb 2017 10:41:22 GMT
 - request:
     method: get
-    uri: https://testuser:secret@dev-ansible-tower2.example.com/api/v1/projects/40/playbooks/
+    uri: https://testuser:secret@dev-ansible-tower3.example.com/api/v1/projects/40/playbooks/
     body:
       encoding: US-ASCII
       string: ''

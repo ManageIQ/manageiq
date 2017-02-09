@@ -17,11 +17,11 @@ describe ManageIQ::Providers::AnsibleTower::AutomationManager::Refresher do
   #
   # To change credentials in cassettes:
   # replace with defaults - before committing
-  # ruby -pi -e 'gsub /dev-ansible-tower3.cloudforms.lab.eng.rdu2.redhat.com/, "dev-ansible-tower2.example.com"; gsub /admin:smartvm/, "testuser:secret"' spec/vcr_cassettes/manageiq/providers/ansible_tower/automation_manager/*.yml
+  # ruby -pi -e 'gsub /yourdomain.com/, "example.com"; gsub /admin:smartvm/, "testuser:secret"' spec/vcr_cassettes/manageiq/providers/ansible_tower/automation_manager/*.yml
   # replace with your working credentials
-  # ruby -pi -e 'gsub /dev-ansible-tower2.example.com/, "dev-ansible-tower3.cloudforms.lab.eng.rdu2.redhat.com"; gsub /testuser:secret/, "admin:smartvm"' spec/vcr_cassettes/manageiq/providers/ansible_tower/automation_manager/*.yml
+  # ruby -pi -e 'gsub /example.com/, "yourdomain.com"; gsub /testuser:secret/, "admin:smartvm"' spec/vcr_cassettes/manageiq/providers/ansible_tower/automation_manager/*.yml
 
-  let(:tower_url) { ENV['TOWER_URL'] || "https://dev-ansible-tower2.example.com/api/v1/" }
+  let(:tower_url) { ENV['TOWER_URL'] || "https://dev-ansible-tower3.example.com/api/v1/" }
   let(:auth_userid) { ENV['TOWER_USER'] || 'testuser' }
   let(:auth_password) { ENV['TOWER_PASSWORD'] || 'secret' }
 
@@ -64,10 +64,10 @@ describe ManageIQ::Providers::AnsibleTower::AutomationManager::Refresher do
 
   def assert_counts
     expect(Provider.count).to                                    eq(1)
-    expect(automation_manager).to                             have_attributes(:api_version => "2.4.2")
-    expect(automation_manager.configured_systems.count).to    eq(98)
-    expect(automation_manager.configuration_scripts.count).to eq(13)
-    expect(automation_manager.inventory_groups.count).to      eq(7)
+    expect(automation_manager).to                             have_attributes(:api_version => "3.0.1")
+    expect(automation_manager.configured_systems.count).to    eq(84)
+    expect(automation_manager.configuration_scripts.count).to eq(11)
+    expect(automation_manager.inventory_groups.count).to      eq(6)
     expect(automation_manager.configuration_script_sources.count).to eq(6)
     expect(automation_manager.configuration_script_payloads.count).to eq(438)
   end
@@ -93,7 +93,7 @@ describe ManageIQ::Providers::AnsibleTower::AutomationManager::Refresher do
     expect(expected_configured_system).to have_attributes(
       :type                 => "ManageIQ::Providers::AnsibleTower::AutomationManager::ConfiguredSystem",
       :hostname             => "Ansible-Host",
-      :manager_ref          => "145",
+      :manager_ref          => "3",
       :virtual_instance_ref => "4233080d-7467-de61-76c9-c8307b6e4830",
     )
     expect(expected_configured_system.counterpart).to          eq(expected_counterpart_vm)
@@ -103,7 +103,7 @@ describe ManageIQ::Providers::AnsibleTower::AutomationManager::Refresher do
   def assert_configuration_script_with_nil_survey_spec
     expect(expected_configuration_script).to have_attributes(
       :description => "Ansible-JobTemplate-Description",
-      :manager_ref => "149",
+      :manager_ref => "80",
       :name        => "Ansible-JobTemplate",
       :survey_spec => {},
       :variables   => {'abc' => 123},
@@ -116,18 +116,18 @@ describe ManageIQ::Providers::AnsibleTower::AutomationManager::Refresher do
     expect(system).to have_attributes(
       :name        => "Ansible-JobTemplate-Survey",
       :description => "Ansible-JobTemplate-Description",
-      :manager_ref => "155",
+      :manager_ref => "81",
       :variables   => {'abc' => 123}
     )
     survey = system.survey_spec
     expect(survey).to be_a Hash
-    expect(survey['spec'].first['index']).to eq 0
+    expect(survey['spec'].first['question_name']).to eq('Survey')
   end
 
   def assert_inventory_root_group
     expect(expected_inventory_root_group).to have_attributes(
-      :name    => "Dev VC60",
-      :ems_ref => "17",
+      :name    => "Dev-VC60",
+      :ems_ref => "2",
       :type    => "ManageIQ::Providers::AutomationManager::InventoryRootGroup",
     )
   end
@@ -143,6 +143,6 @@ describe ManageIQ::Providers::AnsibleTower::AutomationManager::Refresher do
   end
 
   def expected_inventory_root_group
-    @expected_inventory_root_group ||= automation_manager.inventory_groups.where(:name => "Dev VC60").first
+    @expected_inventory_root_group ||= automation_manager.inventory_groups.where(:name => "Dev-VC60").first
   end
 end
