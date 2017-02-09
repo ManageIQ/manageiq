@@ -100,16 +100,16 @@ module ManagerRefresh
 
     def allowed?(inventory_collection_scope, key)
       foreign_to_association = inventory_collection_scope.foreign_key_to_association_mapping[key] ||
-        inventory_collection_scope.foreign_type_to_association_mapping[key]
+                               inventory_collection_scope.foreign_type_to_association_mapping[key]
 
       # TODO(lsmola) can we make this O(1)? This check will be performed for each record in the DB
       return false if inventory_collection_scope.attributes_blacklist.present? &&
-        (inventory_collection_scope.attributes_blacklist.include?(key) ||
-          (foreign_to_association && inventory_collection_scope.attributes_blacklist.include?(foreign_to_association)))
+                      (inventory_collection_scope.attributes_blacklist.include?(key) ||
+                        (foreign_to_association && inventory_collection_scope.attributes_blacklist.include?(foreign_to_association)))
 
       return false if inventory_collection_scope.attributes_whitelist.present? &&
-        (!inventory_collection_scope.attributes_whitelist.include?(key) &&
-          (!foreign_to_association || (foreign_to_association && inventory_collection_scope.attributes_whitelist.include?(foreign_to_association))))
+                      (!inventory_collection_scope.attributes_whitelist.include?(key) &&
+                        (!foreign_to_association || (foreign_to_association && inventory_collection_scope.attributes_whitelist.include?(foreign_to_association))))
 
       true
     end

@@ -64,7 +64,7 @@ module ManagerRefresh::SaveCollection
           record = record_index.delete(inventory_object.manager_uuid)
           if record.nil?
             next unless inventory_collection.create_allowed?
-            record          = inventory_collection.model_class.create!(hash.except(:id))
+            record = inventory_collection.model_class.create!(hash.except(:id))
             created_counter += 1
           else
             record.assign_attributes(hash.except(:id, :type))

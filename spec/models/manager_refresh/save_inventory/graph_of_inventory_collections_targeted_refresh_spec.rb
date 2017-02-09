@@ -11,8 +11,7 @@ describe ManagerRefresh::SaveInventory do
   #
   # Test all settings for ManagerRefresh::SaveInventory
   [{:inventory_object_saving_strategy => nil},
-   {:inventory_object_saving_strategy => :recursive}
-  ].each do |inventory_object_settings|
+   {:inventory_object_saving_strategy => :recursive}].each do |inventory_object_settings|
     context "with settings #{inventory_object_settings}" do
       before :each do
         @zone = FactoryGirl.create(:zone)
@@ -51,16 +50,20 @@ describe ManagerRefresh::SaveInventory do
         # Initialize the InventoryCollections and data for a new VM hardware and disks
         initialize_inventory_collections([:vms, :hardwares, :disks])
 
-        @vm_data_3       = vm_data(3).merge(
+        @vm_data_3 = vm_data(3).merge(
           :genealogy_parent => @data[:miq_templates].lazy_find(image_data(2)[:ems_ref]),
-          :key_pairs        => [@data[:key_pairs].lazy_find(key_pair_data(2)[:name])])
+          :key_pairs        => [@data[:key_pairs].lazy_find(key_pair_data(2)[:name])]
+        )
         @hardware_data_3 = hardware_data(3).merge(
           :guest_os       => @data[:hardwares].lazy_find(image_data(2)[:ems_ref], :key => :guest_os),
-          :vm_or_template => @data[:vms].lazy_find(vm_data(3)[:ems_ref]))
-        @disk_data_3     = disk_data(3).merge(
-          :hardware => @data[:hardwares].lazy_find(vm_data(3)[:ems_ref]))
-        @disk_data_31    = disk_data(31).merge(
-          :hardware => @data[:hardwares].lazy_find(vm_data(3)[:ems_ref]))
+          :vm_or_template => @data[:vms].lazy_find(vm_data(3)[:ems_ref])
+        )
+        @disk_data_3 = disk_data(3).merge(
+          :hardware => @data[:hardwares].lazy_find(vm_data(3)[:ems_ref])
+        )
+        @disk_data_31 = disk_data(31).merge(
+          :hardware => @data[:hardwares].lazy_find(vm_data(3)[:ems_ref])
+        )
 
         # Fill InventoryCollections with data
         add_data_to_inventory_collection(@data[:vms],
@@ -132,12 +135,14 @@ describe ManagerRefresh::SaveInventory do
         # Initialize the InventoryCollections and data for a new VM
         initialize_inventory_collections([:vms, :hardwares])
 
-        @vm_data_3       = vm_data(3).merge(
+        @vm_data_3 = vm_data(3).merge(
           :genealogy_parent => @data[:miq_templates].lazy_find(image_data(2)[:ems_ref]),
-          :key_pairs        => [@data[:key_pairs].lazy_find(key_pair_data(2)[:name])])
+          :key_pairs        => [@data[:key_pairs].lazy_find(key_pair_data(2)[:name])]
+        )
         @hardware_data_3 = hardware_data(3).merge(
           :guest_os       => @data[:hardwares].lazy_find(image_data(2)[:ems_ref], :key => :guest_os),
-          :vm_or_template => @data[:vms].lazy_find(vm_data(3)[:ems_ref]))
+          :vm_or_template => @data[:vms].lazy_find(vm_data(3)[:ems_ref])
+        )
 
         # Fill InventoryCollections with data
         add_data_to_inventory_collection(@data[:vms],
@@ -161,10 +166,12 @@ describe ManagerRefresh::SaveInventory do
           :manager_ref => [:hardware, :device_name]
         )
 
-        @disk_data_3  = disk_data(3).merge(
-          :hardware => @data[:hardwares].lazy_find(vm_data(3)[:ems_ref]))
+        @disk_data_3 = disk_data(3).merge(
+          :hardware => @data[:hardwares].lazy_find(vm_data(3)[:ems_ref])
+        )
         @disk_data_31 = disk_data(31).merge(
-          :hardware => @data[:hardwares].lazy_find(vm_data(3)[:ems_ref]))
+          :hardware => @data[:hardwares].lazy_find(vm_data(3)[:ems_ref])
+        )
 
         add_data_to_inventory_collection(@data[:disks], @disk_data_3, @disk_data_31)
 
@@ -225,11 +232,14 @@ describe ManagerRefresh::SaveInventory do
           :model_class => Disk,
           :association => :disks,
           :parent      => @vm3,
-          :manager_ref => [:hardware, :device_name])
-        @disk_data_3  = disk_data(3).merge(
-          :hardware => @data[:hardwares].lazy_find(vm_data(3)[:ems_ref]))
+          :manager_ref => [:hardware, :device_name]
+        )
+        @disk_data_3 = disk_data(3).merge(
+          :hardware => @data[:hardwares].lazy_find(vm_data(3)[:ems_ref])
+        )
         @disk_data_32 = disk_data(32).merge(
-          :hardware => @data[:hardwares].lazy_find(vm_data(3)[:ems_ref]))
+          :hardware => @data[:hardwares].lazy_find(vm_data(3)[:ems_ref])
+        )
 
         add_data_to_inventory_collection(@data[:disks], @disk_data_3, @disk_data_32)
 
@@ -281,7 +291,6 @@ describe ManagerRefresh::SaveInventory do
         )
       end
 
-
       it "do a targeted refresh that will create/update vm, then create/update/delete Vm's hardware and disks using arel" do
         # Get the relations
         initialize_all_inventory_collections
@@ -300,29 +309,36 @@ describe ManagerRefresh::SaveInventory do
 
         vm_refs = ["vm_ems_ref_3", "vm_ems_ref_4"]
 
-        @data[:vms]       = ::ManagerRefresh::InventoryCollection.new(
+        @data[:vms] = ::ManagerRefresh::InventoryCollection.new(
           :model_class => ManageIQ::Providers::CloudManager::Vm,
-          :arel        => @ems.vms.where(:ems_ref => vm_refs))
+          :arel        => @ems.vms.where(:ems_ref => vm_refs)
+        )
         @data[:hardwares] = ::ManagerRefresh::InventoryCollection.new(
           :model_class => Hardware,
           :arel        => @ems.hardwares.joins(:vm_or_template).where(:vms => {:ems_ref => vm_refs}),
-          :manager_ref => [:vm_or_template])
-        @data[:disks]     = ::ManagerRefresh::InventoryCollection.new(
+          :manager_ref => [:vm_or_template]
+        )
+        @data[:disks] = ::ManagerRefresh::InventoryCollection.new(
           :model_class => Disk,
           :arel        => @ems.disks.joins(:hardware => :vm_or_template).where('hardware' => {'vms' => {'ems_ref' => vm_refs}}),
-          :manager_ref => [:hardware, :device_name])
+          :manager_ref => [:hardware, :device_name]
+        )
 
-        @vm_data_3       = vm_data(3).merge(
+        @vm_data_3 = vm_data(3).merge(
           :genealogy_parent      => @data[:miq_templates].lazy_find(image_data(2)[:ems_ref]),
           :key_pairs             => [@data[:key_pairs].lazy_find(key_pair_data(2)[:name])],
-          :ext_management_system => @ems)
+          :ext_management_system => @ems
+        )
         @hardware_data_3 = hardware_data(3).merge(
           :guest_os       => @data[:hardwares].lazy_find(image_data(2)[:ems_ref], :key => :guest_os),
-          :vm_or_template => @data[:vms].lazy_find(vm_data(3)[:ems_ref]))
-        @disk_data_3     = disk_data(3).merge(
-          :hardware => @data[:hardwares].lazy_find(vm_data(3)[:ems_ref]))
-        @disk_data_31    = disk_data(31).merge(
-          :hardware => @data[:hardwares].lazy_find(vm_data(3)[:ems_ref]))
+          :vm_or_template => @data[:vms].lazy_find(vm_data(3)[:ems_ref])
+        )
+        @disk_data_3 = disk_data(3).merge(
+          :hardware => @data[:hardwares].lazy_find(vm_data(3)[:ems_ref])
+        )
+        @disk_data_31 = disk_data(31).merge(
+          :hardware => @data[:hardwares].lazy_find(vm_data(3)[:ems_ref])
+        )
 
         # Fill InventoryCollections with data
         add_data_to_inventory_collection(@data[:vms],
@@ -384,37 +400,45 @@ describe ManagerRefresh::SaveInventory do
 
         vm_refs = ["vm_ems_ref_3", "vm_ems_ref_5"]
 
-        @data[:vms]             = ::ManagerRefresh::InventoryCollection.new(
+        @data[:vms] = ::ManagerRefresh::InventoryCollection.new(
           :model_class => ManageIQ::Providers::CloudManager::Vm,
-          :arel        => @ems.vms.where(:ems_ref => vm_refs))
-        @data[:hardwares]       = ::ManagerRefresh::InventoryCollection.new(
+          :arel        => @ems.vms.where(:ems_ref => vm_refs)
+        )
+        @data[:hardwares] = ::ManagerRefresh::InventoryCollection.new(
           :model_class => Hardware,
           :arel        => @ems.hardwares.joins(:vm_or_template).where(:vms => {:ems_ref => vm_refs}),
-          :manager_ref => [:vm_or_template])
-        @data[:disks]           = ::ManagerRefresh::InventoryCollection.new(
+          :manager_ref => [:vm_or_template]
+        )
+        @data[:disks] = ::ManagerRefresh::InventoryCollection.new(
           :model_class => Disk,
           :arel        => @ems.disks.joins(:hardware => :vm_or_template).where('hardware' => {'vms' => {'ems_ref' => vm_refs}}),
-          :manager_ref => [:hardware, :device_name])
+          :manager_ref => [:hardware, :device_name]
+        )
         @data[:image_hardwares] = ::ManagerRefresh::InventoryCollection.new(
           :model_class         => Hardware,
           :arel                => @ems.hardwares,
           :manager_ref         => [:vm_or_template],
           :strategy            => :local_db_cache_all,
-          :custom_manager_uuid => -> (hardware) { [hardware.vm_or_template.try(:ems_ref)] })
+          :custom_manager_uuid => ->(hardware) { [hardware.vm_or_template.try(:ems_ref)] }
+        )
 
-        @vm_data_3       = vm_data(3).merge(
+        @vm_data_3 = vm_data(3).merge(
           :genealogy_parent      => @data[:miq_templates].lazy_find(image_data(2)[:ems_ref]),
           :key_pairs             => [@data[:key_pairs].lazy_find(key_pair_data(2)[:name])],
-          :ext_management_system => @ems)
-        @vm_data_5       = vm_data(5).merge(
+          :ext_management_system => @ems
+        )
+        @vm_data_5 = vm_data(5).merge(
           :genealogy_parent      => @data[:miq_templates].lazy_find(image_data(2)[:ems_ref]),
           :key_pairs             => [@data[:key_pairs].lazy_find(key_pair_data(2)[:name])],
-          :ext_management_system => @ems)
+          :ext_management_system => @ems
+        )
         @hardware_data_5 = hardware_data(5).merge(
           :guest_os       => @data[:image_hardwares].lazy_find(image_data(2)[:ems_ref], :key => :guest_os),
-          :vm_or_template => @data[:vms].lazy_find(vm_data(5)[:ems_ref]))
-        @disk_data_5     = disk_data(5).merge(
-          :hardware => @data[:hardwares].lazy_find(vm_data(5)[:ems_ref]))
+          :vm_or_template => @data[:vms].lazy_find(vm_data(5)[:ems_ref])
+        )
+        @disk_data_5 = disk_data(5).merge(
+          :hardware => @data[:hardwares].lazy_find(vm_data(5)[:ems_ref])
+        )
 
         # Fill InventoryCollections with data
         add_data_to_inventory_collection(@data[:vms],
@@ -659,7 +683,8 @@ describe ManagerRefresh::SaveInventory do
         :name => "key_pair_name_2",
       }, {
         :name => "key_pair_name_21",
-      })
+      }
+    )
   end
 
   def all_collections
@@ -680,7 +705,8 @@ describe ManagerRefresh::SaveInventory do
     only_collections.each do |collection|
       @data[collection] = ::ManagerRefresh::InventoryCollection.new(send("#{collection}_init_data",
                                                                          :extra_attributes => {
-                                                                           :complete => false}))
+                                                                           :complete => false
+                                                                         }))
     end
 
     (all_collections - only_collections).each do |collection|
@@ -776,22 +802,27 @@ describe ManagerRefresh::SaveInventory do
 
   def initialize_inventory_collection_data
     # Initialize the InventoryCollections data
-    @orchestration_stack_data_0_1           = orchestration_stack_data("0_1").merge(
+    @orchestration_stack_data_0_1 = orchestration_stack_data("0_1").merge(
       # TODO(lsmola) not possible until we have an enhanced transitive edges check
       # :parent => @data[:orchestration_stacks].lazy_find(orchestration_stack_data("0_0")[:ems_ref]))
-      :parent => nil)
-    @orchestration_stack_data_1_11          = orchestration_stack_data("1_11").merge(
+      :parent => nil
+    )
+    @orchestration_stack_data_1_11 = orchestration_stack_data("1_11").merge(
       :parent => @data[:orchestration_stacks_resources].lazy_find(orchestration_stack_data("1_11")[:ems_ref],
-                                                                  :key => :stack))
-    @orchestration_stack_data_1_12          = orchestration_stack_data("1_12").merge(
+                                                                  :key => :stack)
+    )
+    @orchestration_stack_data_1_12 = orchestration_stack_data("1_12").merge(
       :parent => @data[:orchestration_stacks_resources].lazy_find(orchestration_stack_data("1_12")[:ems_ref],
-                                                                  :key => :stack))
+                                                                  :key => :stack)
+    )
     @orchestration_stack_resource_data_1_11 = orchestration_stack_resource_data("1_11").merge(
       :ems_ref => orchestration_stack_data("1_11")[:ems_ref],
-      :stack   => @data[:orchestration_stacks].lazy_find(orchestration_stack_data("0_1")[:ems_ref]),)
+      :stack   => @data[:orchestration_stacks].lazy_find(orchestration_stack_data("0_1")[:ems_ref]),
+    )
     @orchestration_stack_resource_data_1_12 = orchestration_stack_resource_data("1_12").merge(
       :ems_ref => orchestration_stack_data("1_12")[:ems_ref],
-      :stack   => @data[:orchestration_stacks].lazy_find(orchestration_stack_data("0_1")[:ems_ref]),)
+      :stack   => @data[:orchestration_stacks].lazy_find(orchestration_stack_data("0_1")[:ems_ref]),
+    )
 
     @key_pair_data_1  = key_pair_data(1)
     @key_pair_data_2  = key_pair_data(2)
@@ -801,33 +832,43 @@ describe ManagerRefresh::SaveInventory do
     @image_data_2 = image_data(2)
 
     @image_hardware_data_1 = image_hardware_data(1).merge(
-      :vm_or_template => @data[:miq_templates].lazy_find(image_data(1)[:ems_ref]))
+      :vm_or_template => @data[:miq_templates].lazy_find(image_data(1)[:ems_ref])
+    )
     @image_hardware_data_2 = image_hardware_data(2).merge(
-      :vm_or_template => @data[:miq_templates].lazy_find(image_data(2)[:ems_ref]))
+      :vm_or_template => @data[:miq_templates].lazy_find(image_data(2)[:ems_ref])
+    )
 
     @vm_data_1 = vm_data(1).merge(
       :genealogy_parent => @data[:miq_templates].lazy_find(image_data(1)[:ems_ref]),
-      :key_pairs        => [@data[:key_pairs].lazy_find(key_pair_data(1)[:name])])
+      :key_pairs        => [@data[:key_pairs].lazy_find(key_pair_data(1)[:name])]
+    )
     @vm_data_2 = vm_data(2).merge(
       :genealogy_parent => @data[:miq_templates].lazy_find(image_data(2)[:ems_ref]),
       :key_pairs        => [@data[:key_pairs].lazy_find(key_pair_data(2)[:name]),
-                            @data[:key_pairs].lazy_find(key_pair_data(21)[:name])])
+                            @data[:key_pairs].lazy_find(key_pair_data(21)[:name])]
+    )
 
     @hardware_data_1 = hardware_data(1).merge(
       :guest_os       => @data[:hardwares].lazy_find(image_data(1)[:ems_ref], :key => :guest_os),
-      :vm_or_template => @data[:vms].lazy_find(vm_data(1)[:ems_ref]))
+      :vm_or_template => @data[:vms].lazy_find(vm_data(1)[:ems_ref])
+    )
     @hardware_data_2 = hardware_data(2).merge(
       :guest_os       => @data[:hardwares].lazy_find(image_data(2)[:ems_ref], :key => :guest_os),
-      :vm_or_template => @data[:vms].lazy_find(vm_data(2)[:ems_ref]))
+      :vm_or_template => @data[:vms].lazy_find(vm_data(2)[:ems_ref])
+    )
 
-    @disk_data_1  = disk_data(1).merge(
-      :hardware => @data[:hardwares].lazy_find(vm_data(1)[:ems_ref]))
+    @disk_data_1 = disk_data(1).merge(
+      :hardware => @data[:hardwares].lazy_find(vm_data(1)[:ems_ref])
+    )
     @disk_data_12 = disk_data(12).merge(
-      :hardware => @data[:hardwares].lazy_find(vm_data(1)[:ems_ref]))
+      :hardware => @data[:hardwares].lazy_find(vm_data(1)[:ems_ref])
+    )
     @disk_data_13 = disk_data(13).merge(
-      :hardware => @data[:hardwares].lazy_find(vm_data(1)[:ems_ref]))
-    @disk_data_2  = disk_data(2).merge(
-      :hardware => @data[:hardwares].lazy_find(vm_data(2)[:ems_ref]))
+      :hardware => @data[:hardwares].lazy_find(vm_data(1)[:ems_ref])
+    )
+    @disk_data_2 = disk_data(2).merge(
+      :hardware => @data[:hardwares].lazy_find(vm_data(2)[:ems_ref])
+    )
 
     # Fill InventoryCollections with data
     add_data_to_inventory_collection(@data[:orchestration_stacks],

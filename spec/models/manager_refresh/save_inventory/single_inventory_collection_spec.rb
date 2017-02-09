@@ -16,8 +16,7 @@ describe ManagerRefresh::SaveInventory do
 
   # Test all settings for ManagerRefresh::SaveInventory
   [{:inventory_object_saving_strategy => nil},
-   {:inventory_object_saving_strategy => :recursive},
-  ].each do |inventory_object_settings|
+   {:inventory_object_saving_strategy => :recursive},].each do |inventory_object_settings|
     context "with settings #{inventory_object_settings}" do
       before :each do
         @zone = FactoryGirl.create(:zone)
@@ -32,7 +31,8 @@ describe ManagerRefresh::SaveInventory do
           # Initialize the InventoryCollections
           data       = {}
           data[:vms] = ::ManagerRefresh::InventoryCollection.new(
-            :model_class => ManageIQ::Providers::CloudManager::Vm, :parent => @ems, :association => :vms)
+            :model_class => ManageIQ::Providers::CloudManager::Vm, :parent => @ems, :association => :vms
+          )
 
           # Fill the InventoryCollections with data
           add_data_to_inventory_collection(data[:vms], vm_data(1), vm_data(2))
@@ -44,14 +44,16 @@ describe ManagerRefresh::SaveInventory do
           assert_all_records_match_hashes(
             [Vm.all, @ems.vms],
             {:ems_ref => "vm_ems_ref_1", :name => "vm_name_1", :location => "vm_location_1"},
-            {:ems_ref => "vm_ems_ref_2", :name => "vm_name_2", :location => "vm_location_2"})
+            {:ems_ref => "vm_ems_ref_2", :name => "vm_name_2", :location => "vm_location_2"}
+          )
         end
 
         it 'creates and updates VMs' do
           # Initialize the InventoryCollections
           data       = {}
           data[:vms] = ::ManagerRefresh::InventoryCollection.new(
-            :model_class => ManageIQ::Providers::CloudManager::Vm, :parent => @ems, :association => :vms)
+            :model_class => ManageIQ::Providers::CloudManager::Vm, :parent => @ems, :association => :vms
+          )
 
           # Fill the InventoryCollections with data
           add_data_to_inventory_collection(data[:vms],
@@ -65,7 +67,8 @@ describe ManagerRefresh::SaveInventory do
           assert_all_records_match_hashes(
             [Vm.all, @ems.vms],
             {:ems_ref => "vm_ems_ref_1", :name => "vm_name_1", :location => "vm_location_1"},
-            {:ems_ref => "vm_ems_ref_2", :name => "vm_name_2", :location => "vm_location_2"})
+            {:ems_ref => "vm_ems_ref_2", :name => "vm_name_2", :location => "vm_location_2"}
+          )
 
           # Fetch the created Vms from the DB
           vm1        = Vm.find_by(:ems_ref => "vm_ems_ref_1")
@@ -75,7 +78,8 @@ describe ManagerRefresh::SaveInventory do
           # Initialize the InventoryCollections
           data       = {}
           data[:vms] = ::ManagerRefresh::InventoryCollection.new(
-            :model_class => ManageIQ::Providers::CloudManager::Vm, :parent => @ems, :association => :vms)
+            :model_class => ManageIQ::Providers::CloudManager::Vm, :parent => @ems, :association => :vms
+          )
 
           # Fill the InventoryCollections with data, that have a modified name
           add_data_to_inventory_collection(data[:vms],
@@ -89,7 +93,8 @@ describe ManagerRefresh::SaveInventory do
           assert_all_records_match_hashes(
             [Vm.all, @ems.vms],
             {:id => vm1.id, :ems_ref => "vm_ems_ref_1", :name => "vm_changed_name_1", :location => "vm_location_1"},
-            {:id => vm2.id, :ems_ref => "vm_ems_ref_2", :name => "vm_changed_name_2", :location => "vm_location_2"})
+            {:id => vm2.id, :ems_ref => "vm_ems_ref_2", :name => "vm_changed_name_2", :location => "vm_location_2"}
+          )
         end
       end
 
@@ -105,7 +110,8 @@ describe ManagerRefresh::SaveInventory do
             # Initialize the InventoryCollections
             @data       = {}
             @data[:vms] = ::ManagerRefresh::InventoryCollection.new(
-              :model_class => ManageIQ::Providers::CloudManager::Vm, :parent => @ems, :association => :vms)
+              :model_class => ManageIQ::Providers::CloudManager::Vm, :parent => @ems, :association => :vms
+            )
           end
 
           it 'has correct records in the DB' do
@@ -113,7 +119,8 @@ describe ManagerRefresh::SaveInventory do
             assert_all_records_match_hashes(
               [Vm.all, @ems.vms],
               {:ems_ref => "vm_ems_ref_1", :name => "vm_name_1", :location => "vm_location_1"},
-              {:ems_ref => "vm_ems_ref_2", :name => "vm_name_2", :location => "vm_location_2"})
+              {:ems_ref => "vm_ems_ref_2", :name => "vm_name_2", :location => "vm_location_2"}
+            )
           end
 
           it 'updates existing VMs' do
@@ -129,7 +136,8 @@ describe ManagerRefresh::SaveInventory do
             assert_all_records_match_hashes(
               [Vm.all, @ems.vms],
               {:id => @vm1.id, :ems_ref => "vm_ems_ref_1", :name => "vm_changed_name_1", :location => "vm_location_1"},
-              {:id => @vm2.id, :ems_ref => "vm_ems_ref_2", :name => "vm_changed_name_2", :location => "vm_location_2"})
+              {:id => @vm2.id, :ems_ref => "vm_ems_ref_2", :name => "vm_changed_name_2", :location => "vm_location_2"}
+            )
           end
 
           it 'creates new VMs' do
@@ -147,7 +155,8 @@ describe ManagerRefresh::SaveInventory do
               [Vm.all, @ems.vms],
               {:id => @vm1.id, :ems_ref => "vm_ems_ref_1", :name => "vm_changed_name_1", :location => "vm_location_1"},
               {:id => @vm2.id, :ems_ref => "vm_ems_ref_2", :name => "vm_changed_name_2", :location => "vm_location_2"},
-              {:id => anything, :ems_ref => "vm_ems_ref_3", :name => "vm_changed_name_3", :location => "vm_location_3"})
+              {:id => anything, :ems_ref => "vm_ems_ref_3", :name => "vm_changed_name_3", :location => "vm_location_3"}
+            )
           end
 
           it 'deletes missing VMs' do
@@ -161,7 +170,8 @@ describe ManagerRefresh::SaveInventory do
             # Assert that saved data do miss the deleted VM
             assert_all_records_match_hashes(
               [Vm.all, @ems.vms],
-              {:id => @vm1.id, :ems_ref => "vm_ems_ref_1", :name => "vm_changed_name_1", :location => "vm_location_1"})
+              :id => @vm1.id, :ems_ref => "vm_ems_ref_1", :name => "vm_changed_name_1", :location => "vm_location_1"
+            )
           end
 
           it 'deletes missing and creates new VMs' do
@@ -177,7 +187,8 @@ describe ManagerRefresh::SaveInventory do
             assert_all_records_match_hashes(
               [Vm.all, @ems.vms],
               {:id => @vm1.id, :ems_ref => "vm_ems_ref_1", :name => "vm_changed_name_1", :location => "vm_location_1"},
-              {:id => anything, :ems_ref => "vm_ems_ref_3", :name => "vm_changed_name_3", :location => "vm_location_3"})
+              {:id => anything, :ems_ref => "vm_ems_ref_3", :name => "vm_changed_name_3", :location => "vm_location_3"}
+            )
           end
         end
 
@@ -189,7 +200,8 @@ describe ManagerRefresh::SaveInventory do
               :model_class   => ManageIQ::Providers::CloudManager::Vm,
               :parent        => @ems,
               :association   => :vms,
-              :delete_method => :disconnect_inv)
+              :delete_method => :disconnect_inv
+            )
           end
 
           it 'disconnects a missing VM instead of deleting it' do
@@ -206,13 +218,15 @@ describe ManagerRefresh::SaveInventory do
               Vm.all,
               {:id => @vm1.id, :ems_ref => "vm_ems_ref_1", :name => "vm_changed_name_1", :location => "vm_location_1"},
               {:id => @vm2.id, :ems_ref => "vm_ems_ref_2", :name => "vm_name_2", :location => "vm_location_2"},
-              {:id => anything, :ems_ref => "vm_ems_ref_3", :name => "vm_changed_name_3", :location => "vm_location_3"})
+              {:id => anything, :ems_ref => "vm_ems_ref_3", :name => "vm_changed_name_3", :location => "vm_location_3"}
+            )
 
             # Assert that ems do not have the disconnected VMs associated
             assert_all_records_match_hashes(
               @ems.vms,
               {:id => @vm1.id, :ems_ref => "vm_ems_ref_1", :name => "vm_changed_name_1", :location => "vm_location_1"},
-              {:id => anything, :ems_ref => "vm_ems_ref_3", :name => "vm_changed_name_3", :location => "vm_location_3"})
+              {:id => anything, :ems_ref => "vm_ems_ref_3", :name => "vm_changed_name_3", :location => "vm_location_3"}
+            )
           end
         end
 
@@ -241,11 +255,12 @@ describe ManagerRefresh::SaveInventory do
               :model_class          => ManageIQ::Providers::CloudManager::Vm,
               :parent               => @ems,
               :association          => :vms,
-              :attributes_blacklist => [:ems_ref, :uid_ems, :name, :location])
+              :attributes_blacklist => [:ems_ref, :uid_ems, :name, :location]
+            )
 
             # Check that :name and :location do have validate presence, those attributes will not be blacklisted
-            presence_validators  = inventory_collection.model_class.validators
-                                     .detect { |x| x.kind_of? ActiveRecord::Validations::PresenceValidator }.attributes
+            presence_validators = inventory_collection.model_class.validators
+                                                      .detect { |x| x.kind_of? ActiveRecord::Validations::PresenceValidator }.attributes
 
             expect(presence_validators).to include(:name)
             expect(presence_validators).to include(:location)
@@ -257,7 +272,8 @@ describe ManagerRefresh::SaveInventory do
               :model_class          => ManageIQ::Providers::CloudManager::Vm,
               :parent               => @ems,
               :association          => :vms,
-              :attributes_blacklist => [:ems_ref, :uid_ems, :name, :location, :vendor, :raw_power_state])
+              :attributes_blacklist => [:ems_ref, :uid_ems, :name, :location, :vendor, :raw_power_state]
+            )
 
             expect(inventory_collection.attributes_blacklist).to match_array([:vendor, :uid_ems, :raw_power_state])
           end
@@ -268,7 +284,8 @@ describe ManagerRefresh::SaveInventory do
               :model_class          => ManageIQ::Providers::CloudManager::Vm,
               :parent               => @ems,
               :association          => :vms,
-              :attributes_whitelist => [:raw_power_state, :ext_management_system])
+              :attributes_whitelist => [:raw_power_state, :ext_management_system]
+            )
 
             expect(inventory_collection.attributes_whitelist).to match_array([:__feedback_edge_set_parent, :ems_ref,
                                                                               :name, :location, :raw_power_state,
@@ -281,7 +298,8 @@ describe ManagerRefresh::SaveInventory do
               :manager_ref          => [:uid_ems],
               :parent               => @ems,
               :association          => :vms,
-              :attributes_blacklist => [:ems_ref, :uid_ems, :name, :location, :vendor, :raw_power_state])
+              :attributes_blacklist => [:ems_ref, :uid_ems, :name, :location, :vendor, :raw_power_state]
+            )
 
             expect(inventory_collection.attributes_blacklist).to match_array([:vendor, :ems_ref, :raw_power_state])
           end
@@ -293,7 +311,8 @@ describe ManagerRefresh::SaveInventory do
               :manager_ref          => [:uid_ems],
               :parent               => @ems,
               :association          => :vms,
-              :attributes_whitelist => [:raw_power_state, :ext_management_system])
+              :attributes_whitelist => [:raw_power_state, :ext_management_system]
+            )
 
             expect(inventory_collection.attributes_whitelist).to match_array([:__feedback_edge_set_parent, :uid_ems,
                                                                               :name, :location, :raw_power_state,
@@ -306,7 +325,8 @@ describe ManagerRefresh::SaveInventory do
             @data[:vms] = ::ManagerRefresh::InventoryCollection.new(
               :model_class => ManageIQ::Providers::CloudManager::Vm,
               :parent      => @ems,
-              :association => :vms)
+              :association => :vms
+            )
 
             # Fill the InventoryCollections with data, that have a modified name, new VM and a missing VM
             add_data_to_inventory_collection(@data[:vms], *changed_data)
@@ -334,7 +354,8 @@ describe ManagerRefresh::SaveInventory do
                :name            => "vm_changed_name_3",
                :raw_power_state => "raw_power_state_changed_3",
                :uid_ems         => "uid_ems_changed_3",
-               :location        => "vm_changed_location_3"})
+               :location        => "vm_changed_location_3"}
+            )
           end
 
           it 'does not save blacklisted attributes (excluding fixed attributes)' do
@@ -344,7 +365,8 @@ describe ManagerRefresh::SaveInventory do
               :model_class          => ManageIQ::Providers::CloudManager::Vm,
               :parent               => @ems,
               :association          => :vms,
-              :attributes_blacklist => [:name, :location, :raw_power_state])
+              :attributes_blacklist => [:name, :location, :raw_power_state]
+            )
 
             # Fill the InventoryCollections with data, that have a modified name, new VM and a missing VM
             add_data_to_inventory_collection(@data[:vms], *changed_data)
@@ -372,7 +394,8 @@ describe ManagerRefresh::SaveInventory do
                :name            => "vm_changed_name_3",
                :raw_power_state => nil,
                :uid_ems         => "uid_ems_changed_3",
-               :location        => "vm_changed_location_3"})
+               :location        => "vm_changed_location_3"}
+            )
           end
 
           it 'saves only whitelisted attributes (including fixed attributes)' do
@@ -383,7 +406,8 @@ describe ManagerRefresh::SaveInventory do
               :parent               => @ems,
               :association          => :vms,
               # TODO(lsmola) vendor is not getting caught by fixed attributes
-              :attributes_whitelist => [:uid_ems, :vendor, :ext_management_system])
+              :attributes_whitelist => [:uid_ems, :vendor, :ext_management_system]
+            )
 
             # Fill the InventoryCollections with data, that have a modified name, new VM and a missing VM
             add_data_to_inventory_collection(@data[:vms], *changed_data)
@@ -411,7 +435,8 @@ describe ManagerRefresh::SaveInventory do
                :name            => "vm_changed_name_3",
                :raw_power_state => nil,
                :uid_ems         => "uid_ems_changed_3",
-               :location        => "vm_changed_location_3"})
+               :location        => "vm_changed_location_3"}
+            )
           end
 
           it 'saves correct set of attributes when both whilelist and blacklist are used' do
@@ -423,7 +448,8 @@ describe ManagerRefresh::SaveInventory do
               :association          => :vms,
               # TODO(lsmola) vendor is not getting caught by fixed attributes
               :attributes_whitelist => [:uid_ems, :raw_power_state, :vendor, :ext_management_system],
-              :attributes_blacklist => [:name, :ems_ref, :raw_power_state])
+              :attributes_blacklist => [:name, :ems_ref, :raw_power_state]
+            )
 
             # Fill the InventoryCollections with data, that have a modified name, new VM and a missing VM
             add_data_to_inventory_collection(@data[:vms], *changed_data)
@@ -451,7 +477,8 @@ describe ManagerRefresh::SaveInventory do
                :name            => "vm_changed_name_3",
                :raw_power_state => nil,
                :uid_ems         => "uid_ems_changed_3",
-               :location        => "vm_changed_location_3"})
+               :location        => "vm_changed_location_3"}
+            )
           end
         end
 
@@ -463,7 +490,8 @@ describe ManagerRefresh::SaveInventory do
               :model_class => ManageIQ::Providers::CloudManager::Vm,
               :parent      => @ems,
               :association => :vms,
-              :complete    => false)
+              :complete    => false
+            )
           end
 
           it 'updates only existing VMs and creates new VMs, does not delete or update missing VMs' do
@@ -480,7 +508,8 @@ describe ManagerRefresh::SaveInventory do
               [Vm.all, @ems.vms],
               {:id => @vm1.id, :ems_ref => "vm_ems_ref_1", :name => "vm_changed_name_1", :location => "vm_location_1"},
               {:id => @vm2.id, :ems_ref => "vm_ems_ref_2", :name => "vm_name_2", :location => "vm_location_2"},
-              {:id => anything, :ems_ref => "vm_ems_ref_3", :name => "vm_changed_name_3", :location => "vm_location_3"})
+              {:id => anything, :ems_ref => "vm_ems_ref_3", :name => "vm_changed_name_3", :location => "vm_location_3"}
+            )
           end
         end
 
@@ -493,7 +522,8 @@ describe ManagerRefresh::SaveInventory do
             # Initialize the InventoryCollections
             data       = {}
             data[:vms] = ::ManagerRefresh::InventoryCollection.new(
-              :model_class => ManageIQ::Providers::CloudManager::Vm, :parent => availability_zone, :association => :vms)
+              :model_class => ManageIQ::Providers::CloudManager::Vm, :parent => availability_zone, :association => :vms
+            )
 
             # Fill the InventoryCollections with data, that have one new VM and are missing one VM
             add_data_to_inventory_collection(data[:vms],
@@ -511,7 +541,8 @@ describe ManagerRefresh::SaveInventory do
             assert_all_records_match_hashes(
               [Vm.all, @ems.vms, availability_zone.vms],
               {:id => @vm1.id, :ems_ref => "vm_ems_ref_1", :name => "vm_changed_name_1", :location => "vm_location_1"},
-              {:id => anything, :ems_ref => "vm_ems_ref_3", :name => "vm_changed_name_3", :location => "vm_location_3"})
+              {:id => anything, :ems_ref => "vm_ems_ref_3", :name => "vm_changed_name_3", :location => "vm_location_3"}
+            )
           end
 
           it 'deletes missing and creates new VMs with CloudTenant parent' do
@@ -522,7 +553,8 @@ describe ManagerRefresh::SaveInventory do
             # Initialize the InventoryCollections
             data       = {}
             data[:vms] = ::ManagerRefresh::InventoryCollection.new(
-              :model_class => ManageIQ::Providers::CloudManager::Vm, :parent => cloud_tenant, :association => :vms)
+              :model_class => ManageIQ::Providers::CloudManager::Vm, :parent => cloud_tenant, :association => :vms
+            )
 
             # Fill the InventoryCollections with data, that have one new VM and are missing one VM
             add_data_to_inventory_collection(data[:vms],
@@ -540,7 +572,8 @@ describe ManagerRefresh::SaveInventory do
             assert_all_records_match_hashes(
               [Vm.all, @ems.vms, cloud_tenant.vms],
               {:id => @vm1.id, :ems_ref => "vm_ems_ref_1", :name => "vm_changed_name_1", :location => "vm_location_1"},
-              {:id => anything, :ems_ref => "vm_ems_ref_3", :name => "vm_changed_name_3", :location => "vm_location_3"})
+              {:id => anything, :ems_ref => "vm_ems_ref_3", :name => "vm_changed_name_3", :location => "vm_location_3"}
+            )
           end
 
           it 'affects oly relation to CloudTenant when not providing EMS relation and with CloudTenant parent' do
@@ -551,7 +584,8 @@ describe ManagerRefresh::SaveInventory do
             # Initialize the InventoryCollections
             data       = {}
             data[:vms] = ::ManagerRefresh::InventoryCollection.new(
-              :model_class => ManageIQ::Providers::CloudManager::Vm, :parent => cloud_tenant, :association => :vms)
+              :model_class => ManageIQ::Providers::CloudManager::Vm, :parent => cloud_tenant, :association => :vms
+            )
 
             # Fill the InventoryCollections with data, that have one new VM and are missing one VM
             add_data_to_inventory_collection(data[:vms],
@@ -568,12 +602,14 @@ describe ManagerRefresh::SaveInventory do
             assert_all_records_match_hashes(
               [Vm.all, cloud_tenant.vms],
               {:id => @vm1.id, :ems_ref => "vm_ems_ref_1", :name => "vm_changed_name_1", :location => "vm_location_1"},
-              {:id => anything, :ems_ref => "vm_ems_ref_3", :name => "vm_changed_name_3", :location => "vm_location_3"})
+              {:id => anything, :ems_ref => "vm_ems_ref_3", :name => "vm_changed_name_3", :location => "vm_location_3"}
+            )
 
             # Assert that ems relation exists only for the updated VM
             assert_all_records_match_hashes(
               @ems.vms,
-              {:id => @vm1.id, :ems_ref => "vm_ems_ref_1", :name => "vm_changed_name_1", :location => "vm_location_1"})
+              :id => @vm1.id, :ems_ref => "vm_ems_ref_1", :name => "vm_changed_name_1", :location => "vm_location_1"
+            )
           end
 
           it 'does not delete the missing VMs with :complete => false and with CloudTenant parent' do
@@ -587,7 +623,8 @@ describe ManagerRefresh::SaveInventory do
               :model_class => ManageIQ::Providers::CloudManager::Vm,
               :parent      => cloud_tenant,
               :association => :vms,
-              :complete    => false)
+              :complete    => false
+            )
 
             # Fill the InventoryCollections with data, that have one new VM and are missing one VM
             add_data_to_inventory_collection(data[:vms],
@@ -605,13 +642,15 @@ describe ManagerRefresh::SaveInventory do
               [Vm.all, cloud_tenant.vms],
               {:id => @vm1.id, :ems_ref => "vm_ems_ref_1", :name => "vm_changed_name_1", :location => "vm_location_1"},
               {:id => @vm2.id, :ems_ref => "vm_ems_ref_2", :name => "vm_name_2", :location => "vm_location_2"},
-              {:id => anything, :ems_ref => "vm_ems_ref_3", :name => "vm_changed_name_3", :location => "vm_location_3"})
+              {:id => anything, :ems_ref => "vm_ems_ref_3", :name => "vm_changed_name_3", :location => "vm_location_3"}
+            )
 
             # Assert that ems relation exists only for the updated VM
             assert_all_records_match_hashes(
               @ems.vms,
               {:id => @vm1.id, :ems_ref => "vm_ems_ref_1", :name => "vm_changed_name_1", :location => "vm_location_1"},
-              {:id => @vm2.id, :ems_ref => "vm_ems_ref_2", :name => "vm_name_2", :location => "vm_location_2"})
+              {:id => @vm2.id, :ems_ref => "vm_ems_ref_2", :name => "vm_name_2", :location => "vm_location_2"}
+            )
           end
         end
       end
