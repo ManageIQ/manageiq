@@ -31,8 +31,7 @@ class MiqAlertSet < ApplicationRecord
   end
 
   def export_to_yaml
-    a = export_to_array
-    a.to_yaml
+    export_to_array.to_yaml
   end
 
   def self.import_from_hash(alert_profile, options = {})
