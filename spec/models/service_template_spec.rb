@@ -438,6 +438,50 @@ describe ServiceTemplate do
     end
   end
 
+  describe '#config_info' do
+    before do
+      @user = FactoryGirl.create(:user_with_group)
+      @ra = FactoryGirl.create(:resource_action, :action => 'Provision', :fqname => '/a/b/c')
+    end
+
+    it 'returns the config_info passed to #create_catalog_item' do
+      options = {
+        :name        => 'foo',
+        :config_info => {
+          :provision  => {
+            :fqname => @ra.fqname
+          },
+          :retirement => {
+            :fqname => @ra.fqname
+          }
+        }
+      }
+
+      template = ServiceTemplate.create_catalog_item(options, @user)
+      expect(template.config_info).to eq(options[:config_info])
+    end
+
+    it 'will build the config_info if not created through #create_catalog_item' do
+      dialog = FactoryGirl.create(:dialog)
+      template = FactoryGirl.create(:service_template)
+      request = FactoryGirl.create(:service_template_provision_request,
+                                   :requester => @user,
+                                   :options   => {:foo => 'bar', :baz => nil })
+      template.create_resource_actions(:provision => { :fqname => @ra.fqname, :dialog_id => dialog.id })
+      add_and_save_service(template, request)
+      template.reload
+
+      expected_config_info = {
+        :foo       => 'bar',
+        :provision => {
+          :fqname    => '/a/b/c',
+          :dialog_id => dialog.id
+        }
+      }
+      expect(template.config_info).to eq(expected_config_info)
+    end
+  end
+
   describe '#create_catalog_item' do
     let(:user) { FactoryGirl.create(:user_with_group) }
     let(:ra1) { FactoryGirl.create(:resource_action, :action => 'Provision') }
@@ -486,6 +530,7 @@ describe ServiceTemplate do
       expect(service_template.resource_actions.pluck(:ae_attributes)).to include({:service_action=>"Provision"}, {:service_action=>"Retirement"})
       expect(service_template.resource_actions.first.dialog).to eq(service_dialog)
       expect(service_template.resource_actions.last.dialog).to eq(service_dialog)
+      expect(service_template.config_info).to eq(catalog_item_options[:config_info])
     end
   end
 end
