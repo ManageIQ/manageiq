@@ -18,7 +18,9 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
   #       :new_dialog_name
   #       :variables
   #       :hosts
-  #       :credentials
+  #       :cloud_credential_id
+  #       :network_credential_id
+  #       :credential_id
   #       :playbook_id
   #     :retirement (same as provision)
   #     :reconfigure (same as provision)
@@ -26,6 +28,7 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
   def self.create_catalog_item(options, _auth_user)
     task_id = create_catalog_item_queue(options, _auth_user)
     task = MiqTask.wait_for_taskid(task_id)
+    raise MiqException::Error, task.message unless task.status == "Ok"
     task.task_results
   end
 

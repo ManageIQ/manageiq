@@ -1,5 +1,5 @@
 describe ServiceTemplateAnsiblePlaybook do
-  describe '#create_catalog_item' do
+  context 'Create Ansible Playbook Catalog Item' do
     let(:auth_one) { FactoryGirl.create(:authentication, :manager_ref => 6) }
     let(:auth_two) { FactoryGirl.create(:authentication, :manager_ref => 10) }
     let(:user) { FactoryGirl.create(:user_with_group) }
@@ -34,11 +34,20 @@ describe ServiceTemplateAnsiblePlaybook do
       }
     end
 
-    it '#create_catalog_item' do
-      expect(ServiceTemplateAnsiblePlaybook).to receive(:create_catalog_item_queue)
-      expect(MiqTask).to receive(:wait_for_taskid).with(any_args).once.and_return(instance_double('MiqTask', :task_results => {}))
+    context '#create_catalog_item' do
+      it 'calls create_catalog_item_queue and waits for a task id' do
+        expect(ServiceTemplateAnsiblePlaybook).to receive(:create_catalog_item_queue)
+        expect(MiqTask).to receive(:wait_for_taskid).with(any_args).once.and_return(instance_double('MiqTask', :task_results => {}, :status => 'Ok'))
 
-      ServiceTemplateAnsiblePlaybook.create_catalog_item(catalog_item_options, nil)
+        ServiceTemplateAnsiblePlaybook.create_catalog_item(catalog_item_options, nil)
+      end
+
+      it 'raises an exception if the task never finishes' do
+        expect(ServiceTemplateAnsiblePlaybook).to receive(:create_catalog_item_queue)
+        expect(MiqTask).to receive(:wait_for_taskid).with(any_args).once.and_raise(Exception, 'bad job template')
+
+        expect { ServiceTemplateAnsiblePlaybook.create_catalog_item(catalog_item_options, nil) }.to raise_error(Exception)
+      end
     end
 
     it '#create_catalog_item_task' do
