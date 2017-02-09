@@ -13,7 +13,17 @@
   %label.control-label.col-md-2{:title => field.description}
     = field.label
   .col-md-8{:title => field.description}
-    - locals = {:edit => edit, :field => field, :url => url, :wf => wf}
+    - current_index = auto_refreshable_field_indicies.find_index(:tab_index    => tab_index,
+                                                                 :group_index  => group_index,
+                                                                 :field_index  => field_index,
+                                                                 :auto_refresh => !!field.auto_refresh)
+    - auto_refresh_options = {:tab_index                       => tab_index,
+                              :group_index                     => group_index,
+                              :field_index                     => field_index,
+                              :auto_refreshable_field_indicies => auto_refreshable_field_indicies,
+                              :trigger                         => field.trigger_auto_refresh,
+                              :current_index                   => current_index}
+    - locals = {:edit => edit, :field => field, :url => url, :wf => wf, :auto_refresh_options => auto_refresh_options}
     - case field.type
     - when 'DialogFieldTextBox'
       = render(:partial => "shared/dialogs/dialog_field_text_box", :locals => locals)
@@ -50,7 +60,7 @@
                        drop_down_options(field, url).merge(:multiple => true))
 
         :javascript
-          dialogFieldRefresh.initializeDialogSelectPicker('#{field.name}', '#{field.id}', undefined, '#{url}', '#{field.trigger_auto_refresh}');
+          dialogFieldRefresh.initializeDialogSelectPicker('#{field.name}', undefined, '#{url}', JSON.parse('#{j(auto_refresh_options.to_json)}'));
 
       - else
         - value = wf.value(field.name) || ''

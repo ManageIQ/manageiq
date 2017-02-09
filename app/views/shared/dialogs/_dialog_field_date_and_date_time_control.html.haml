@@ -1,32 +1,34 @@
 - if field.type == "DialogFieldDateControl"
   - if edit
-    = datepicker_input_tag("miq_date__#{field.name}", field.value, date_tag_options(field, url))
+    = datepicker_input_tag("miq_date__#{field.name}", field.value, date_tag_options(field, url, auto_refresh_options))
   - else
     = field.value
 
 - if field.type == "DialogFieldDateTimeControl"
   - date_val = field.refresh_json_value
   - if edit
-    = datepicker_input_tag("miq_date__#{field.name}", date_val[:date], date_tag_options(field, url))
+    = datepicker_input_tag("miq_date__#{field.name}", date_val[:date], date_tag_options(field, url, auto_refresh_options))
   - else
     = date_val[:date]
 
   &nbsp;at&nbsp;
   - if edit
-    = select_tag("start_hour", hour_select_options(date_val[:hour]), time_tag_options(field, url, "hour"))
+    = select_tag("start_hour", hour_select_options(date_val[:hour]), time_tag_options(field, url, "hour", auto_refresh_options))
     = ':'
-    = select_tag("start_min", minute_select_options(date_val[:min]), time_tag_options(field, url, "min"))
+    = select_tag("start_min", minute_select_options(date_val[:min]), time_tag_options(field, url, "min", auto_refresh_options))
 
   - else
     = "#{date_val[:hour].rjust(2, '0')}:#{date_val[:min].rjust(2, '0')}"
   &nbsp;
   = session[:user_tz]
 
-- if field.dynamic && field.show_refresh_button?
+- if field.dynamic
   - if field.auto_refresh
     :javascript
-      dialogFieldRefresh.listenForAutoRefreshMessages("#{field.id}", function() {
-        dialogFieldRefresh.refreshDateTime("#{field.name}", "#{field.id}");
+      dialogFieldRefresh.listenForAutoRefreshMessages(JSON.parse("#{j(auto_refresh_options.to_json)}"), function() {
+        dialogFieldRefresh.refreshDateTime("#{field.name}", "#{field.id}", function() {
+          dialogFieldRefresh.triggerAutoRefresh(JSON.parse('#{j(auto_refresh_options.to_json)}'));
+        });
       });
 
   - if field.show_refresh_button?
@@ -34,6 +36,7 @@
 
   :javascript
     $('#refresh-dynamic-date-#{field.id}').click(function() {
-      dialogFieldRefresh.refreshDateTime("#{field.name}", "#{field.id}");
-      dialogFieldRefresh.triggerAutoRefresh("#{field.id}", "#{field.trigger_auto_refresh}");
+      dialogFieldRefresh.refreshDateTime("#{field.name}", "#{field.id}", function() {
+        dialogFieldRefresh.triggerAutoRefresh(JSON.parse('#{j(auto_refresh_options.to_json)}'));
+      });
     });
