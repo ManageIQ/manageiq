@@ -501,8 +501,18 @@ describe Service do
     it "returns children" do
       create_deep_tree
       expect(@service.children).to match_array([@service_c1, @service_c2])
+      expect(@service.service_template).to be_nil
+      expect(@service.composite?).to be_truthy
+      expect(@service.atomic?).to be_falsey
       expect(@service.services).to match_array([@service_c1, @service_c2]) # alias
       expect(@service.direct_service_children).to match_array([@service_c1, @service_c2]) # alias
+    end
+
+    it "returns no children" do
+      @service = FactoryGirl.create(:service)
+      expect(@service.children).to be_empty
+      expect(@service.composite?).to be_falsey
+      expect(@service.atomic?).to be_truthy
     end
   end
 
