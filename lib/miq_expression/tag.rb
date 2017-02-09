@@ -41,10 +41,4 @@ class MiqExpression::Tag < MiqExpression::Field
   def attribute_supported_by_sql?
     false
   end
-
-  def eql?(other)
-    other && other.model == model && other.namespace == namespace && other.associations == associations
-  end
-
-  alias == eql?
 end

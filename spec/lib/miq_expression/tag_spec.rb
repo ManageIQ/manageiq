@@ -4,32 +4,44 @@ RSpec.describe MiqExpression::Tag do
   describe ".parse" do
     it "with model.managed-in_tag" do
       tag = "Vm.managed-service_level"
-      expect(described_class.parse(tag)).to eq(described_class.new(Vm, [], "/managed/service_level"))
+      expect(described_class.parse(tag)).to have_attributes(:model        => Vm,
+                                                            :associations => [],
+                                                            :namespace    => "/managed/service_level")
     end
 
     it "with model.last.managed-in_tag" do
       tag = "Vm.host.managed-environment"
-      expect(described_class.parse(tag)).to eq(described_class.new(Vm, ['host'], "/managed/environment"))
+      expect(described_class.parse(tag)).to have_attributes(:model        => Vm,
+                                                            :associations => ['host'],
+                                                            :namespace    => "/managed/environment")
     end
 
     it "with model.managed-in_tag" do
       tag = "Vm.managed-service_level"
-      expect(described_class.parse(tag)).to eq(described_class.new(Vm, [], "/managed/service_level"))
+      expect(described_class.parse(tag)).to have_attributes(:model        => Vm,
+                                                            :associations => [],
+                                                            :namespace    => "/managed/service_level")
     end
 
     it "with model.associations.associations.managed-in_tag" do
       tag = "Vm.service.user.managed-service_level"
-      expect(described_class.parse(tag)).to eq(described_class.new(Vm, %w(service user), "/managed/service_level"))
+      expect(described_class.parse(tag)).to have_attributes(:model        => Vm,
+                                                            :associations => %w(service user),
+                                                            :namespace    => "/managed/service_level")
     end
 
     it "with model.associations.managed-in_tag" do
       tag = "service.user.managed-service_level"
-      expect(described_class.parse(tag)).to eq(described_class.new(Service, ['user'], "/managed/service_level"))
+      expect(described_class.parse(tag)).to have_attributes(:model        => Service,
+                                                            :associations => ['user'],
+                                                            :namespace    => "/managed/service_level")
     end
 
     it "with model.associations.user_tag-in_tag" do
       tag = "service.user.user_tag-service_level"
-      expect(described_class.parse(tag)).to eq(described_class.new(Service, ['user'], "/user/service_level"))
+      expect(described_class.parse(tag)).to have_attributes(:model        => Service,
+                                                            :associations => ['user'],
+                                                            :namespace    => "/user/service_level")
     end
 
     it "with invalid case model.associations.managed-in_tag" do
