@@ -95,11 +95,7 @@ module ManageIQ
       def all_stack_server_resources(stack)
         # TODO(lsmola) loading this from already obtained nested stack hierarchy will be more effective. This is one
         # extra API call. But we will need to change order of loading, so we have all resources first.
-        # Nested depth 50 just for sure, although nobody should nest templates that much
-        # To further speed up the query we only search for those resources we care about - those whose
-        # physical_resource_id matches the id of a nova server
-        server_ids = servers.map{|s| s.id}
-        @orchestration_service.list_resources(:stack => stack, :nested_depth => 2, :physical_resource_id => server_ids).body['resources']
+        @orchestration_service.list_resources(:stack => stack, :nested_depth => 2).body['resources']
       end
 
       def servers
