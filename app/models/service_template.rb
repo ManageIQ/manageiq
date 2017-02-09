@@ -85,23 +85,22 @@ class ServiceTemplate < ApplicationRecord
     end
   end
 
-  def self.update_catalog_item(catalog_item, options, auth_user)
-    raise 'cannot change service_type' if options[:service_type]
+  def update_catalog_item(options, auth_user)
+    validate_update_config_info(options)
     transaction do
-      catalog_item.update_attributes(options.except(:config_info))
+      update_from_options(options)
       config_info = options[:config_info].except(:provision, :retirement, :reconfigure)
 
       workflow_class = MiqProvisionWorkflow.class_for_source(config_info[:src_vm_id])
       if workflow_class
-        # destroy the old resource
-        catalog_item.service_resources.find_by(:resource_type => 'MiqRequest').destroy
+        service_resources.find_by(:resource_type => 'MiqRequest').destroy
         new_request = workflow_class.new(config_info, auth_user).make_request(nil, config_info)
 
-        catalog_item.add_resource!(new_request)
+        add_resource!(new_request)
       end
-      catalog_item.update_resource_actions(options[:config_info])
+      update_resource_actions(options[:config_info])
     end
-    catalog_item.reload
+    reload
   end
 
   def readonly?
@@ -403,6 +402,17 @@ class ServiceTemplate < ApplicationRecord
     save!
   end
 
+  def self.create_from_options(options)
+    create(options.except(:config_info).merge(:options => { :config_info => options[:config_info] }))
+  end
+  private_class_method :create_from_options
+
+  private
+
+  def validate_update_config_info(options)
+    raise _('service_type and prov_type cannot be changed') if options[:service_type] || options[:prov_type]
+  end
+
   def resource_action_options
     [
       {:name      => 'Provision',
@@ -420,6 +430,8 @@ class ServiceTemplate < ApplicationRecord
     ]
   end
 
+  def update_from_options(options)
+    update_attributes!(options.except(:config_info).merge!(:options => { :config_info => options[:config_info] }))
   def provision_request(user, options = nil)
     provision_workflow(user, options).submit_request
   end
@@ -431,13 +443,6 @@ class ServiceTemplate < ApplicationRecord
       options.each { |key, value| wf.set_value(key, value) }
     end
   end
-
-  def self.create_from_options(options)
-    create(options.except(:config_info).merge(:options => { :config_info => options[:config_info] }))
-  end
-  private_class_method :create_from_options
-
-  private
 
   def construct_config_info
     config_info = {}

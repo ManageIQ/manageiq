@@ -22,6 +22,23 @@ class ServiceTemplateAnsibleTower < ServiceTemplate
     end
   end
 
+  def update_catalog_item(options, _auth_user = nil)
+    config_info = validate_update_config_info(options)
+    transaction do
+      update_from_options(options)
+
+      job_template.destroy
+      self.job_template = if config_info[:configuration_script_id]
+                            ConfigurationScript.find(config_info[:configuration_script_id])
+                          else
+                            config_info[:configuration]
+                          end
+
+      update_resource_actions(config_info)
+    end
+    reload
+  end
+
   def remove_invalid_resource
     # remove the resource from both memory and table
     service_resources.to_a.delete_if { |r| r.destroy unless r.resource(true) }
@@ -54,6 +71,15 @@ class ServiceTemplateAnsibleTower < ServiceTemplate
   private_class_method :validate_config_info
 
   private
+
+  def validate_update_config_info(options)
+    super
+    config_info = options[:config_info]
+    unless config_info[:configuration_script_id] || config_info[:configuration]
+      raise _('Must provide configuration_script_id or configuration')
+    end
+    config_info
+  end
 
   def construct_config_info
     config_info = {}

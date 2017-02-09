@@ -534,12 +534,27 @@ describe ServiceTemplate do
       }
     end
 
-    context '.update_catalog_item' do
+    context '.create_catalog_item' do
+      it 'creates and returns a catalog item' do
+        service_template = ServiceTemplate.create_catalog_item(catalog_item_options, user)
+
+        expect(service_template.name).to eq('Atomic Service Template')
+        expect(service_template.service_resources.count).to eq(1)
+        expect(service_template.service_resources.first.resource_type).to eq('MiqRequest')
+        expect(service_template.dialogs.first).to eq(service_dialog)
+        expect(service_template.resource_actions.pluck(:action)).to include('Provision', 'Retirement')
+        expect(service_template.resource_actions.pluck(:ae_attributes)).to include({:service_action=>"Provision"}, {:service_action=>"Retirement"})
+        expect(service_template.resource_actions.first.dialog).to eq(service_dialog)
+        expect(service_template.resource_actions.last.dialog).to eq(service_dialog)
+        expect(service_template.config_info).to eq(catalog_item_options[:config_info])
+      end
+    end
+
+    context '#update_catalog_item' do
       let(:new_vm) { FactoryGirl.create(:vm_amazon, :ext_management_system => ems) }
       let(:updated_catalog_item_options) do
         {
           :name        => 'Updated Template Name',
-          :prov_type   => 'amazon',
           :display     => 'false',
           :description => 'a description',
           :config_info => {
@@ -568,31 +583,22 @@ describe ServiceTemplate do
       end
 
       it 'updates the catalog item' do
-        expect(@catalog_item.resource_actions.pluck(:action)).to eq(%w(Provision Retirement))
-        updated = ServiceTemplate.update_catalog_item(@catalog_item, updated_catalog_item_options, user)
-        updated.reload
+        updated = @catalog_item.update_catalog_item(updated_catalog_item_options, user)
+
         # Removes Retirement / Adds Reconfigure
-        expect(updated.resource_actions.pluck(:action)).to eq(%w(Provision Reconfigure))
+        expect(updated.resource_actions.pluck(:action)).to match_array(%w(Provision Reconfigure))
         expect(updated.resource_actions.first.dialog_id).to be_nil # Removes the dialog from Provision
         expect(updated.resource_actions.last.dialog).to eq(service_dialog)
         expect(updated.name).to eq('Updated Template Name')
         expect(updated.service_resources.first.resource.source_id).to eq(new_vm.id) # Validate request update
+        expect(updated.config_info).to eq(updated_catalog_item_options[:config_info])
       end
-    end
 
-    context '.create_catalog_item' do
-      it 'creates and returns a catalog item' do
-        service_template = ServiceTemplate.create_catalog_item(catalog_item_options, user)
-
-      expect(service_template.name).to eq('Atomic Service Template')
-      expect(service_template.service_resources.count).to eq(1)
-      expect(service_template.service_resources.first.resource_type).to eq('MiqRequest')
-      expect(service_template.dialogs.first).to eq(service_dialog)
-      expect(service_template.resource_actions.pluck(:action)).to include('Provision', 'Retirement')
-      expect(service_template.resource_actions.pluck(:ae_attributes)).to include({:service_action=>"Provision"}, {:service_action=>"Retirement"})
-      expect(service_template.resource_actions.first.dialog).to eq(service_dialog)
-      expect(service_template.resource_actions.last.dialog).to eq(service_dialog)
-      expect(service_template.config_info).to eq(catalog_item_options[:config_info])
+      it 'does not allow service_type and prov_type to be changed' do
+        expect do
+          @catalog_item.update_catalog_item({:service_type => 'new'}, user)
+        end.to raise_error(StandardError, /service_type and prov_type cannot be changed/)
+      end
     end
   end
 

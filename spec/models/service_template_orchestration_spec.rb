@@ -101,7 +101,7 @@ describe ServiceTemplateOrchestration do
     end
   end
 
-  describe '#create_catalog_item' do
+  describe 'catalog items' do
     let(:ra1) { FactoryGirl.create(:resource_action, :action => 'Provision') }
     let(:ra2) { FactoryGirl.create(:resource_action, :action => 'Retirement') }
     let(:service_dialog) { FactoryGirl.create(:dialog) }
@@ -129,40 +129,94 @@ describe ServiceTemplateOrchestration do
       }
     end
 
-    it 'creates and returns an orchestration service template' do
-      service_template = ServiceTemplateOrchestration.create_catalog_item(catalog_item_options)
-      service_template.reload
+    context '.create_catalog_item' do
+      it 'creates and returns an orchestration service template' do
+        service_template = ServiceTemplateOrchestration.create_catalog_item(catalog_item_options)
+        service_template.reload
 
-      expect(service_template.name).to eq('Orchestration Template')
-      expect(service_template.dialogs.first).to eq(service_dialog)
-      expect(service_template.orchestration_template).to eq(template)
-      expect(service_template.orchestration_manager).to eq(manager)
-      expect(service_template.resource_actions.pluck(:action)).to include('Provision', 'Retirement')
-      expect(service_template.config_info).to eq(catalog_item_options[:config_info])
+        expect(service_template.name).to eq('Orchestration Template')
+        expect(service_template.dialogs.first).to eq(service_dialog)
+        expect(service_template.orchestration_template).to eq(template)
+        expect(service_template.orchestration_manager).to eq(manager)
+        expect(service_template.resource_actions.pluck(:action)).to include('Provision', 'Retirement')
+        expect(service_template.config_info).to eq(catalog_item_options[:config_info])
+      end
+
+      it 'requires both a template_id and manager_id' do
+        catalog_item_options[:config_info].delete(:template_id)
+
+        expect do
+          ServiceTemplateOrchestration.create_catalog_item(catalog_item_options)
+        end.to raise_error(StandardError, 'Must provide both template_id and manager_id or manager and template')
+      end
+
+      it 'requires both a template and a manager' do
+        catalog_item_options[:config_info] = { :manager => manager }
+
+        expect do
+          ServiceTemplateOrchestration.create_catalog_item(catalog_item_options)
+        end.to raise_error(StandardError, 'Must provide both template_id and manager_id or manager and template')
+      end
+
+      it 'accepts a manager and a template' do
+        catalog_item_options[:config_info] = { :manager => manager, :template => template }
+
+        service_template = ServiceTemplateOrchestration.create_catalog_item(catalog_item_options)
+        expect(service_template.orchestration_template).to eq(template)
+        expect(service_template.orchestration_manager).to eq(manager)
+      end
     end
 
-    it 'requires both a template_id and manager_id' do
-      catalog_item_options[:config_info].delete(:template_id)
+    context '#update_catalog_item' do
+      let(:new_template) { FactoryGirl.create(:orchestration_template) }
+      let(:new_manager) { FactoryGirl.create(:ext_management_system) }
+      let(:updated_catalog_item_options) do
+        {
+          :name        => 'Updated Orchestration Template',
+          :display     => 'false',
+          :description => 'a description',
+          :config_info => {
+            :template_id => new_template.id,
+            :manager_id  => new_manager.id,
+            :provision   => {
+              :fqname    => ra1.fqname,
+              :dialog_id => service_dialog.id
+            },
+            :reconfigure => {
+              :fqname    => ra2.fqname,
+              :dialog_id => service_dialog.id
+            }
+          }
+        }
+      end
 
-      expect do
-        ServiceTemplateOrchestration.create_catalog_item(catalog_item_options)
-      end.to raise_error(StandardError, 'Must provide both template_id and manager_id or manager and template')
-    end
+      before do
+        @catalog_item = ServiceTemplateOrchestration.create_catalog_item(catalog_item_options)
+      end
 
-    it 'requires both a template and a manager' do
-      catalog_item_options[:config_info] = { :manager => manager }
+      it 'updates the catalog item' do
+        updated = @catalog_item.update_catalog_item(updated_catalog_item_options)
 
-      expect do
-        ServiceTemplateOrchestration.create_catalog_item(catalog_item_options)
-      end.to raise_error(StandardError, 'Must provide both template_id and manager_id or manager and template')
-    end
+        expect(updated.name).to eq('Updated Orchestration Template')
+        expect(updated.config_info).to eq(updated_catalog_item_options[:config_info])
+        expect(updated.orchestration_template).to eq(new_template)
+        expect(updated.orchestration_manager).to eq(new_manager)
+        expect(updated.resource_actions.pluck(:action)).to match_array(%w(Provision Reconfigure))
+      end
 
-    it 'accepts a manager and a template' do
-      catalog_item_options[:config_info] = { :manager => manager, :template => template }
+      it 'requires both template and manager id' do
+        updated_catalog_item_options[:config_info].delete(:manager_id)
+        expect do
+          @catalog_item.update_catalog_item(updated_catalog_item_options)
+        end.to raise_error(StandardError, 'Must provide both template_id and manager_id or manager and template')
+      end
 
-      service_template = ServiceTemplateOrchestration.create_catalog_item(catalog_item_options)
-      expect(service_template.orchestration_template).to eq(template)
-      expect(service_template.orchestration_manager).to eq(manager)
+      it 'cannot change service_type or prov_type' do
+        updated_catalog_item_options[:prov_type] = 'new type'
+        expect do
+          @catalog_item.update_catalog_item(updated_catalog_item_options)
+        end.to raise_error(StandardError, 'service_type and prov_type cannot be changed')
+      end
     end
   end
 
