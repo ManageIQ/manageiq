@@ -85,13 +85,41 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresher do
       @ems.reload
       vm = @ems.vms.where(:name => "migrate_test_1").first
       expect(vm.host.name).to eq("pluto-vdsg.eng.lab.tlv.redhat.com")
+      expect(vm.host.ems_ref).to eq("/api/hosts/0b4c3cf3-3b51-479a-bd36-ab968151a9a9")
+
+      assert_host(vm.host)
 
       VCR.use_cassette("#{described_class.name.underscore}_after_migration", :allow_unused_http_interactions => true) do
         EmsRefresh.refresh(vm)
       end
 
       vm.reload
+
+      # Check that the VM is on a new host
       expect(vm.host.name).to eq("lilach-vdsa.tlv.redhat.com")
+      expect(vm.host.ems_ref).to eq("/api/hosts/bfb0c0b4-8616-4bbf-9210-9de48892adc6")
+
+      # And everything else about the hosts are the same
+      assert_host(vm.host)
+    end
+
+    def assert_host(host)
+      expect(host.ems_cluster).not_to be_nil
+      expect(host.ems_cluster.name).to eq("Default")
+
+      expect(host.storages.count).to eq(1)
+
+      storage = host.storages.find_by(:name => "data1_new")
+      expect(storage.ems_ref).to eq("/api/storagedomains/2ef34a5b-2046-4707-9180-7723aad1b8ce")
+
+      expect(host.lans.count).to eq(2)
+      lan = host.lans.find_by(:name => "rhevm")
+      expect(lan.name).to eq("rhevm")
+
+      expect(host.switches.count).to eq(2)
+      switch = host.switches.find_by(:name => "rhevm")
+      expect(switch.name).to eq("rhevm")
+      expect(switch.lans).to include(lan)
     end
   end
 
