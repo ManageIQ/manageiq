@@ -53,8 +53,7 @@ class MiqPolicySet < ApplicationRecord
   end
 
   def export_to_yaml
-    a = export_to_array
-    a.to_yaml
+    export_to_array.to_yaml
   end
 
   def self.import_from_hash(policy_profile, options = {})
@@ -102,16 +101,11 @@ class MiqPolicySet < ApplicationRecord
   end
 
   def self.import_from_yaml(fd)
-    stats = []
-
     input = YAML.load(fd)
-
-    input.each do |e|
-      p, stat = import_from_hash(e["MiqPolicySet"])
-      stats.push(stat)
+    input.collect do |e|
+      _p, stat = import_from_hash(e["MiqPolicySet"])
+      stat
     end
-
-    stats
   end
 
   def self.seed
