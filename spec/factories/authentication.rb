@@ -100,24 +100,20 @@ FactoryGirl.define do
   end
 
   factory :automation_manager_authentication,
-    :parent => :authentication,
-    :class  => "ManageIQ::Providers::AutomationManager::Authentication" do
-  end
+          :parent => :authentication,
+          :class  => "ManageIQ::Providers::AutomationManager::Authentication"
 
   factory :ansible_cloud_credential,
-    :parent => :automation_manager_authentication,
-    :class  => "ManageIQ::Providers::AnsibleTower::AutomationManager::CloudCredential" do
-  end
+          :parent => :automation_manager_authentication,
+          :class  => "ManageIQ::Providers::AnsibleTower::AutomationManager::CloudCredential"
 
   factory :ansible_machine_credential,
-    :parent => :automation_manager_authentication,
-    :class  => "ManageIQ::Providers::AnsibleTower::AutomationManager::MachineCredential" do
-  end
+          :parent => :automation_manager_authentication,
+          :class  => "ManageIQ::Providers::AnsibleTower::AutomationManager::MachineCredential"
 
   factory :ansible_network_credential,
-    :parent => :automation_manager_authentication,
-    :class  => "ManageIQ::Providers::AnsibleTower::AutomationManager::NetworkCredential" do
-  end
+          :parent => :automation_manager_authentication,
+          :class  => "ManageIQ::Providers::AnsibleTower::AutomationManager::NetworkCredential"
 
   factory :auth_token do
     type "AuthToken"
