@@ -1,27 +1,10 @@
 describe ManageIQ::Providers::AnsibleTower::AutomationManager::Refresher do
-  # To re-record cassettes or to add cassettes you can add another inner `VCR.use_cassette` block to the
-  # 'will perform a full refresh' example. When running specs, new requests are recorded to the innermost cassette and
-  # can be played back from  any level of nesting (it tries the innermost cassette first, then searches up the parent
-  # chain) - http://stackoverflow.com/a/13425826
-  #
-  # To add a new cassette
-  #   * add another block (innermost) with an empty cassette
-  #   * change existing cassettes to use your working credentials
-  #   * run the specs to create a new cassette
-  #   * change new and existing cassettes to use default credentials
-  #
-  # To re-record a cassette
-  #   * temporarily make the cassette the innermost one (see above about recording)
-  #   * rm cassette ; run specs
-  #   * change back the order of cassettes
-  #
   # To change credentials in cassettes:
   # replace with defaults - before committing
-  # ruby -pi -e 'gsub /yourdomain.com/, "example.com"; gsub /admin:smartvm/, "testuser:secret"' spec/vcr_cassettes/manageiq/providers/ansible_tower/automation_manager/*.yml
+  # ruby -pi -e 'gsub /yourdomain.com/, "example.com"; gsub /admin:smartvm/, "testuser:secret"' spec/vcr_cassettes/manageiq/providers/ansible_tower/automation_manager/refresher_v2.yml
   # replace with your working credentials
-  # ruby -pi -e 'gsub /example.com/, "yourdomain.com"; gsub /testuser:secret/, "admin:smartvm"' spec/vcr_cassettes/manageiq/providers/ansible_tower/automation_manager/*.yml
-
-  let(:tower_url) { ENV['TOWER_URL'] || "https://dev-ansible-tower3.example.com/api/v1/" }
+  # ruby -pi -e 'gsub /example.com/, "yourdomain.com"; gsub /testuser:secret/, "admin:smartvm"' spec/vcr_cassettes/manageiq/providers/ansible_tower/automation_manager/refresher_v2.yml
+  let(:tower_url) { ENV['TOWER_URL'] || "https://dev-ansible-tower2.example.com/api/v1/" }
   let(:auth_userid) { ENV['TOWER_USER'] || 'testuser' }
   let(:auth_password) { ENV['TOWER_PASSWORD'] || 'secret' }
 
@@ -44,12 +27,9 @@ describe ManageIQ::Providers::AnsibleTower::AutomationManager::Refresher do
     expected_counterpart_vm
 
     2.times do
-      # to re-record cassettes see comment at the beginning of this file
-      VCR.use_cassette(described_class.name.underscore) do
-        VCR.use_cassette(described_class.name.underscore + '_configuration_script_sources') do
-          EmsRefresh.refresh(automation_manager)
-          expect(automation_manager.reload.last_refresh_error).to be_nil
-        end
+      VCR.use_cassette(described_class.name.underscore + '_v2') do
+        EmsRefresh.refresh(automation_manager)
+        expect(automation_manager.reload.last_refresh_error).to be_nil
       end
 
       assert_counts
@@ -64,26 +44,26 @@ describe ManageIQ::Providers::AnsibleTower::AutomationManager::Refresher do
 
   def assert_counts
     expect(Provider.count).to                                    eq(1)
-    expect(automation_manager).to                             have_attributes(:api_version => "3.0.1")
-    expect(automation_manager.configured_systems.count).to    eq(84)
-    expect(automation_manager.configuration_scripts.count).to eq(11)
-    expect(automation_manager.inventory_groups.count).to      eq(6)
+    expect(automation_manager).to                             have_attributes(:api_version => "2.4.2")
+    expect(automation_manager.configured_systems.count).to    eq(168)
+    expect(automation_manager.configuration_scripts.count).to eq(14)
+    expect(automation_manager.inventory_groups.count).to      eq(8)
     expect(automation_manager.configuration_script_sources.count).to eq(6)
-    expect(automation_manager.configuration_script_payloads.count).to eq(438)
+    expect(automation_manager.configuration_script_payloads.count).to eq(77)
   end
 
   def assert_playbooks
     expect(expected_configuration_script_source.configuration_script_payloads.first).to be_an_instance_of(ManageIQ::Providers::AnsibleTower::AutomationManager::Playbook)
-    expect(expected_configuration_script_source.configuration_script_payloads.count).to eq(1)
-    expect(expected_configuration_script_source.configuration_script_payloads.map(&:name)).to include('hello_world.yml')
+    expect(expected_configuration_script_source.configuration_script_payloads.count).to eq(7)
+    expect(expected_configuration_script_source.configuration_script_payloads.map(&:name)).to include('create_ec2.yml')
   end
 
   def assert_configuration_script_sources
     expect(automation_manager.configuration_script_sources.count).to eq(6)
     expect(expected_configuration_script_source).to be_an_instance_of(ConfigurationScriptSource)
     expect(expected_configuration_script_source).to have_attributes(
-      :name        => 'Demo Project',
-      :description => 'A great demo',
+      :name        => 'db-projects',
+      :description => 'projects',
     )
   end
 
@@ -91,7 +71,7 @@ describe ManageIQ::Providers::AnsibleTower::AutomationManager::Refresher do
     expect(expected_configured_system).to have_attributes(
       :type                 => "ManageIQ::Providers::AnsibleTower::AutomationManager::ConfiguredSystem",
       :hostname             => "Ansible-Host",
-      :manager_ref          => "3",
+      :manager_ref          => "145",
       :virtual_instance_ref => "4233080d-7467-de61-76c9-c8307b6e4830",
     )
     expect(expected_configured_system.counterpart).to          eq(expected_counterpart_vm)
@@ -101,7 +81,7 @@ describe ManageIQ::Providers::AnsibleTower::AutomationManager::Refresher do
   def assert_configuration_script_with_nil_survey_spec
     expect(expected_configuration_script).to have_attributes(
       :description => "Ansible-JobTemplate-Description",
-      :manager_ref => "80",
+      :manager_ref => "149",
       :name        => "Ansible-JobTemplate",
       :survey_spec => {},
       :variables   => {'abc' => 123},
@@ -114,18 +94,18 @@ describe ManageIQ::Providers::AnsibleTower::AutomationManager::Refresher do
     expect(system).to have_attributes(
       :name        => "Ansible-JobTemplate-Survey",
       :description => "Ansible-JobTemplate-Description",
-      :manager_ref => "81",
+      :manager_ref => "155",
       :variables   => {'abc' => 123}
     )
     survey = system.survey_spec
     expect(survey).to be_a Hash
-    expect(survey['spec'].first['question_name']).to eq('Survey')
+    expect(survey['spec'].first['index']).to eq 0
   end
 
   def assert_inventory_root_group
     expect(expected_inventory_root_group).to have_attributes(
-      :name    => "Dev-VC60",
-      :ems_ref => "2",
+      :name    => "Dev VC60",
+      :ems_ref => "17",
       :type    => "ManageIQ::Providers::AutomationManager::InventoryRootGroup",
     )
   end
@@ -141,10 +121,10 @@ describe ManageIQ::Providers::AnsibleTower::AutomationManager::Refresher do
   end
 
   def expected_inventory_root_group
-    @expected_inventory_root_group ||= automation_manager.inventory_groups.where(:name => "Dev-VC60").first
+    @expected_inventory_root_group ||= automation_manager.inventory_groups.where(:name => "Dev VC60").first
   end
 
   def expected_configuration_script_source
-    @expected_configuration_script_source ||= automation_manager.configuration_script_sources.find_by(:name => 'Demo Project')
+    @expected_configuration_script_source ||= automation_manager.configuration_script_sources.find_by(:name => 'db-projects')
   end
 end
