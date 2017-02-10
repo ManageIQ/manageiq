@@ -232,6 +232,7 @@ RSpec.describe MiqExpression::Field do
 
     it "does not detect a string to looks like a field but isn't" do
       expect(MiqExpression::Field.is_field?("NetworkManager-team")).to be_falsey
+      expect(described_class.is_field?("ManageIQ-name")).to be(false)
     end
   end
 end
