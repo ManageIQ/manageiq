@@ -834,6 +834,10 @@
       :get:
       - :name: read
         :identifier: load_balancer_show
+    :load_balancers_subresource_actions:
+      :get:
+      - :name: read
+        :identifier: load_balancer_show
     :snapshots_subcollection_actions:
       :get:
       - :name: read
@@ -1125,6 +1129,10 @@
       - :name: show
       - :identifier: miq_cloud_networks_view
     :load_balancers_subcollection_actions:
+      :get:
+      - :name: read
+        :identifier: load_balancer_show
+    :load_balancers_subresource_actions:
       :get:
       - :name: read
         :identifier: load_balancer_show
