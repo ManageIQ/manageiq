@@ -832,7 +832,7 @@
         :identifier: instance_reset
     :load_balancers_subcollection_actions:
       :get:
-      - :name: show
+      - :name: read
         :identifier: load_balancer_show
     :snapshots_subcollection_actions:
       :get:
@@ -1126,7 +1126,7 @@
       - :identifier: miq_cloud_networks_view
     :load_balancers_subcollection_actions:
       :get:
-      - :name: show
+      - :name: read
         :identifier: load_balancer_show
   :provision_dialogs:
     :description: Provisioning Dialogs

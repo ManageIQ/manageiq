@@ -832,7 +832,7 @@ describe "Providers API" do
     end
 
     it 'queries all load balancers' do
-      api_basic_authorize subcollection_action_identifier(:providers, :load_balancers, :show, :get)
+      api_basic_authorize subcollection_action_identifier(:providers, :load_balancers, :read, :get)
       expected = {
         'resources' => [
           { 'href' => a_string_matching("#{providers_url(@provider.id)}/load_balancers/#{@load_balancer.id}") }
@@ -854,7 +854,7 @@ describe "Providers API" do
     end
 
     it 'queries a single load balancer' do
-      api_basic_authorize subcollection_action_identifier(:providers, :load_balancers, :show, :get)
+      api_basic_authorize subcollection_action_identifier(:providers, :load_balancers, :read, :get)
 
       run_get("#{providers_url(@provider.id)}/load_balancers/#{@load_balancer.id}")
 
