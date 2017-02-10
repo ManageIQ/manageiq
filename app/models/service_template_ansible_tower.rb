@@ -3,8 +3,8 @@ class ServiceTemplateAnsibleTower < ServiceTemplate
 
   before_save :remove_invalid_resource
 
-  alias_method :job_template, :configuration_script
-  alias_method :job_template=, :configuration_script=
+  alias job_template configuration_script
+  alias job_template= configuration_script=
 
   def self.create_catalog_item(options, _auth_user = nil)
     transaction do
