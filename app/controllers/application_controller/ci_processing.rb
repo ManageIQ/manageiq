@@ -2395,11 +2395,11 @@ module ApplicationController::CiProcessing
       end
     when "manageable"
       each_host(hosts, task_name) do |host|
-        if ["available", "adoptfail", "inspectfail", "cleanfail"].include?(host.hardware.provision_state)
+        if %w(enroll available adoptfail inspectfail cleanfail).include?(host.hardware.provision_state)
           host.manageable_queue(session[:userid])
           add_flash(_("\"%{record}\": %{task} successfully initiated") % {:record => host.name, :task => (display_name || task)})
         else
-          add_flash(_("\"%{task}\": not available for %{hostname}. %{hostname}'s provision state must be in \"available\", \"adoptfail\", \"cleanfail\", or \"inspectfail\"") % {:hostname => host.name, :task => (display_name || task)}, :error)
+          add_flash(_("\"%{task}\": not available for %{hostname}. %{hostname}'s provision state must be in \"available\", \"adoptfail\", \"cleanfail\", \"enroll\", or \"inspectfail\"") % {:hostname => host.name, :task => (display_name || task)}, :error)
         end
       end
     when "introspect"
