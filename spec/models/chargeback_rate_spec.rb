@@ -63,4 +63,21 @@ describe ChargebackRate do
       expect(cbr.errors.count).to be(0)
     end
   end
+
+  describe '#currency_symbol' do
+    let(:rate) { FactoryGirl.build(:chargeback_rate, :chargeback_rate_details => details) }
+    subject { rate.currency_symbol }
+
+    context 'when there are no rate details' do
+      let(:details) { [] }
+      it { is_expected.to be_nil }
+    end
+
+    context 'when there are valid rate details' do
+      let(:symbol) { '฿' }
+      let(:currency) { FactoryGirl.create(:chargeback_rate_detail_currency, :symbol => symbol) }
+      let(:details) { [FactoryGirl.create(:chargeback_rate_detail, :detail_currency => currency)] }
+      it { is_expected.to eq(symbol) }
+    end
+  end
 end
