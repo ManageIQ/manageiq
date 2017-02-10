@@ -6,19 +6,22 @@ class MiqExpression::Tag < MiqExpression::Field
 -(?<column>[a-z]+[_[:alnum:]]+)
 /x
 
+  MANAGED_NAMESPACE      = 'managed'.freeze
+  USER_NAMESPACE         = 'user'.freeze
+
   attr_reader :namespace
 
   def self.parse(field)
     match = TAG_REGEX.match(field) || return
 
     associations = match[:associations].split(".")
-    namespace = match[:namespace] == 'user_tag' ? 'user' : match[:namespace]
-    new(match[:model_name].classify.safe_constantize, associations, "/#{namespace}/#{match[:column]}")
+    model = match[:model_name].classify.safe_constantize
+    new(model, associations, match[:column], match[:namespace] == MANAGED_NAMESPACE)
   end
 
-  def initialize(model, associations, namespace)
-    super(model, associations, namespace.split("/").last)
-    @namespace = namespace
+  def initialize(model, associations, column, managed = true)
+    super(model, associations, column)
+    @namespace = "/#{managed ? MANAGED_NAMESPACE : USER_NAMESPACE}/#{column}"
   end
 
   def contains(value)
