@@ -10,7 +10,6 @@ class ServiceTemplate < ApplicationRecord
     "storage"         => _("Storage")
   }.freeze
 
-
   CATALOG_ITEM_TYPES = {
     "amazon"                => _("Amazon"),
     "azure"                 => _("Azure"),
@@ -22,7 +21,7 @@ class ServiceTemplate < ApplicationRecord
     "openstack"             => _("OpenStack"),
     "redhat"                => _("RHEV"),
     "vmware"                => _("VMware")
-  }
+  }.freeze
 
   include ServiceMixin
   include OwnershipMixin
@@ -41,7 +40,7 @@ class ServiceTemplate < ApplicationRecord
   has_many   :service_templates, :through => :service_resources, :source => :resource, :source_type => 'ServiceTemplate'
   has_many   :services
 
-  has_one   :picture,         :dependent => :destroy, :as => :resource, :autosave => true
+  has_one :picture, :dependent => :destroy, :as => :resource, :autosave => true
 
   has_many   :custom_button_sets, :as => :owner, :dependent => :destroy
   belongs_to :service_template_catalog
@@ -53,7 +52,7 @@ class ServiceTemplate < ApplicationRecord
   virtual_column   :template_valid,               :type => :boolean
   virtual_column   :template_valid_error_message, :type => :string
 
-  default_value_for :service_type,  'unknown'
+  default_value_for :service_type, 'unknown'
   default_value_for(:generic_subtype) { |st| 'custom' if st.prov_type == 'generic' }
 
   virtual_has_one :custom_actions, :class_name => "Hash"
@@ -214,9 +213,11 @@ class ServiceTemplate < ApplicationRecord
   end
 
   def create_tasks_for_service(service_task, parent_svc)
-    return [] unless self.class.include_service_template?(service_task,
-                                                          service_task.source_id,
-                                                          parent_svc) unless parent_svc
+    unless parent_svc
+      return [] unless self.class.include_service_template?(service_task,
+                                                            service_task.source_id,
+                                                            parent_svc)
+    end
     svc = create_service(service_task, parent_svc)
 
     set_ownership(svc, service_task.get_user)
@@ -295,7 +296,7 @@ class ServiceTemplate < ApplicationRecord
   def template_valid?
     validate_template[:valid]
   end
-  alias_method :template_valid, :template_valid?
+  alias template_valid template_valid?
 
   def template_valid_error_message
     validate_template[:message]
