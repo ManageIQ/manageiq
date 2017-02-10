@@ -400,7 +400,7 @@ module MiqReport::Generator
     result = build_apply_display_filter(result) unless display_filter.nil?
 
     @table = Ruport::Data::Table.new(:data => result, :column_names => column_names)
-    @table.reorder(column_names) unless @table.data.length == 0
+    @table.reorder(column_names) unless @table.data.empty?
 
     # Remove any resource columns that were added earlier to col_order so they won't appear in the report
     col_order.delete_if { |c| res_cols.include?(c) && !orig_col_order.include?(c) } if res_cols
@@ -430,7 +430,7 @@ module MiqReport::Generator
     only_cols = options[:only] || (self.cols + generate_cols + build_cols_from_include(include)).uniq
     column_names = result.empty? ? self.cols : result.first.keys
     @table = Ruport::Data::Table.new(:data => result, :column_names => column_names)
-    @table.reorder(only_cols) unless @table.data.length == 0
+    @table.reorder(only_cols) unless @table.data.empty?
 
     build_sort_table
   end
@@ -815,7 +815,7 @@ module MiqReport::Generator
   end
 
   def table_has_records?
-    table.length > 0
+    !table.empty?
   end
 
   def queue_timeout

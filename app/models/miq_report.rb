@@ -175,7 +175,7 @@ class MiqReport < ApplicationRecord
 
   def contains_records?
     (extras.key?(:total_html_rows) && extras[:total_html_rows] > 0) ||
-      (table && table.data.length > 0)
+      (table && !table.data.empty?)
   end
 
   def to_hash
