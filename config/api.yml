@@ -1128,6 +1128,10 @@
       :get:
       - :name: read
         :identifier: miq_cloud_networks_view
+    :cloud_networks_subresource_actions:
+      :get:
+      - :name: read
+        :identifier: miq_cloud_networks_view
   :provision_dialogs:
     :description: Provisioning Dialogs
     :identifier: miq_ae_customization_explorer
