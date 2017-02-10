@@ -1,4 +1,6 @@
 describe ChargebackContainerImage do
+  include Spec::Support::ChargebackHelper
+
   let(:base_options) { {:interval_size => 2, :end_interval_offset => 0, :ext_options => {:tz => 'UTC'} } }
   let(:hourly_rate)       { 0.01 }
   let(:starting_date) { Time.parse('2012-09-01 23:59:59Z').utc }
@@ -19,6 +21,8 @@ describe ChargebackContainerImage do
   let!(:chargeback_rate) do
     FactoryGirl.create(:chargeback_rate, :detail_params => detail_params)
   end
+
+  let(:metric_rollup_params) { {:parent_ems_id => ems.id, :tag_names => ""} }
 
   before do
     MiqRegion.seed
@@ -54,14 +58,9 @@ describe ChargebackContainerImage do
     let(:finish_time) { report_run_time - 14.hours }
 
     before do
+      add_metric_rollups_for(@container, month_beginning...month_end, 12.hours, metric_rollup_params)
+
       Range.new(start_time, finish_time, true).step_value(1.hour).each do |t|
-        @container.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr, :with_data,
-                                                        :timestamp                => t,
-                                                        :parent_ems_id            => ems.id,
-                                                        :tag_names                => "",
-                                                        :resource_name            => @project.name,
-                                                        :resource_id              => @project.id)
-        #state = VimPerformanceState.capture(@container)
         @container.vim_performance_states << FactoryGirl.create(:vim_performance_state,
                                                                 :timestamp => t,
                                                                 :image_tag_names => "environment/prod")
@@ -78,13 +77,9 @@ describe ChargebackContainerImage do
   context "Monthly" do
     let(:options) { base_options.merge(:interval => 'monthly', :entity_id => @project.id, :tag => nil) }
     before do
+      add_metric_rollups_for(@container, month_beginning...month_end, 12.hours, metric_rollup_params)
+
       Range.new(month_beginning, month_end, true).step_value(12.hours).each do |time|
-        @container.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr, :with_data,
-                                                        :timestamp                => time,
-                                                        :parent_ems_id            => ems.id,
-                                                        :tag_names                => "",
-                                                        :resource_name            => @project.name,
-                                                        :resource_id              => @project.id)
         @container.vim_performance_states << FactoryGirl.create(:vim_performance_state,
                                                                 :timestamp => time,
                                                                 :image_tag_names => "environment/prod")
@@ -105,13 +100,9 @@ describe ChargebackContainerImage do
       @image.docker_labels << @label
       ChargebackRate.set_assignments(:compute, [{ :cb_rate => chargeback_rate, :label => [@label, "container_image"] }])
 
+      add_metric_rollups_for(@container, month_beginning...month_end, 12.hours, metric_rollup_params)
+
       Range.new(month_beginning, month_end, true).step_value(12.hours).each do |time|
-        @container.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr, :with_data,
-                                                        :timestamp                => time,
-                                                        :parent_ems_id            => ems.id,
-                                                        :tag_names                => "",
-                                                        :resource_name            => @project.name,
-                                                        :resource_id              => @project.id)
         @container.vim_performance_states << FactoryGirl.create(:vim_performance_state,
                                                                 :timestamp => time,
                                                                 :image_tag_names => "")
