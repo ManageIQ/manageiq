@@ -43,7 +43,7 @@ RSpec.describe 'Cloud Networks API' do
     end
 
     it 'queries individual provider cloud_network' do
-      api_basic_authorize(action_identifier(:providers, :read, :cloud_networks_subresource_actions, :get))
+      api_basic_authorize(action_identifier(:cloud_networks, :read, :subresource_actions, :get))
       network = provider.cloud_networks.first
       cloud_network_url = "#{providers_cloud_networks_url}/#{network.id}"
 
