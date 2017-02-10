@@ -85,20 +85,15 @@ class ServiceTemplate < ApplicationRecord
     end
   end
 
-  def update_catalog_item(options, auth_user)
-    validate_update_config_info(options)
+  def update_catalog_item(options, auth_user = nil)
+    config_info = validate_update_config_info(options)
     transaction do
       update_from_options(options)
-      config_info = options[:config_info].except(:provision, :retirement, :reconfigure)
 
-      workflow_class = MiqProvisionWorkflow.class_for_source(config_info[:src_vm_id])
-      if workflow_class
-        service_resources.find_by(:resource_type => 'MiqRequest').destroy
-        new_request = workflow_class.new(config_info, auth_user).make_request(nil, config_info)
+      update_service_resources(config_info, auth_user)
 
-        add_resource!(new_request)
-      end
-      update_resource_actions(options[:config_info])
+      update_resource_actions(config_info)
+      save!
     end
     reload
   end
@@ -358,24 +353,22 @@ class ServiceTemplate < ApplicationRecord
     resource_actions.find_by(:action => "Provision")
   end
 
-  # Should we delete if it exists and is not present?
   def update_resource_actions(ae_endpoints)
-    create_actions = []
     resource_action_options.each do |action|
-      # If the endpoint exists
+      # If the action exists in updated parameters
       if ae_endpoints[action[:param_key]]
-        # Update the resource action if it exists
+        # And the resource action exists on the template already, update it
         if resource_actions.where(:action => action[:name]).exists?
           resource_actions.find_by(:action => action[:name]).update_attributes!(ae_endpoints[action[:param_key]])
-        # Otherwise create it
+        # If the resource action does not exist, create it
         else
-          create_actions.push(action[:param_key])
+          build_resource_action(ae_endpoints[action[:param_key]], action)
         end
-      elsif resource_actions.where(:action => action[:name]).exists? # If the endpoint does not exist in new options
+      elsif resource_actions.where(:action => action[:name]).exists?
+        # If the endpoint does not exist in updated parameters, but exists on the template, delete it
         resource_actions.find_by(:action => action[:name]).destroy
       end
     end
-    create_resource_actions(ae_endpoints.slice(*create_actions)) unless create_actions.empty?
   end
 
   def create_resource_actions(ae_endpoints)
@@ -383,21 +376,7 @@ class ServiceTemplate < ApplicationRecord
     resource_action_options.each do |action|
       ae_endpoint = ae_endpoints[action[:param_key]]
       next unless ae_endpoint
-      fqname = if ae_endpoint.empty?
-                 self.class.send(action[:method], *action[:args]) || ""
-               else
-                 ae_endpoint[:fqname]
-               end
-
-      build_options = {:action        => action[:name],
-                       :fqname        => fqname,
-                       :ae_attributes => {:service_action => action[:name]}}
-      build_options.merge!(ae_endpoint.slice(:dialog,
-                                             :dialog_id,
-                                             :configuration_template,
-                                             :configuration_template_id,
-                                             :configuration_template_type))
-      resource_actions.build(build_options)
+      build_resource_action(ae_endpoint, action)
     end
     save!
   end
@@ -409,8 +388,38 @@ class ServiceTemplate < ApplicationRecord
 
   private
 
+  def update_service_resources(config_info, auth_user = nil)
+    config_info = config_info.except(:provision, :retirement, :reconfigure)
+    workflow_class = MiqProvisionWorkflow.class_for_source(config_info[:src_vm_id])
+    if workflow_class
+      service_resources.find_by(:resource_type => 'MiqRequest').destroy
+      new_request = workflow_class.new(config_info, auth_user).make_request(nil, config_info)
+
+      add_resource!(new_request)
+    end
+  end
+
+  def build_resource_action(ae_endpoint, action)
+    fqname = if ae_endpoint.empty?
+               self.class.send(action[:method], *action[:args]) || ""
+             else
+               ae_endpoint[:fqname]
+             end
+
+    build_options = {:action        => action[:name],
+                     :fqname        => fqname,
+                     :ae_attributes => {:service_action => action[:name]}}
+    build_options.merge!(ae_endpoint.slice(:dialog,
+                                           :dialog_id,
+                                           :configuration_template,
+                                           :configuration_template_id,
+                                           :configuration_template_type))
+    resource_actions.build(build_options)
+  end
+
   def validate_update_config_info(options)
     raise _('service_type and prov_type cannot be changed') if options[:service_type] || options[:prov_type]
+    options[:config_info]
   end
 
   def resource_action_options

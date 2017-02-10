@@ -217,6 +217,16 @@ describe ServiceTemplateOrchestration do
           @catalog_item.update_catalog_item(updated_catalog_item_options)
         end.to raise_error(StandardError, 'service_type and prov_type cannot be changed')
       end
+
+      it 'can accept manager and template objects on update' do
+        updated_catalog_item_options[:config_info].delete(:manager_id)
+        updated_catalog_item_options[:config_info].delete(:manager_id)
+        updated_catalog_item_options[:config_info].merge!(:template => new_template, :manager => new_manager)
+        updated = @catalog_item.update_catalog_item(updated_catalog_item_options)
+
+        expect(updated.orchestration_template).to eq(new_template)
+        expect(updated.orchestration_manager).to eq(new_manager)
+      end
     end
   end
 

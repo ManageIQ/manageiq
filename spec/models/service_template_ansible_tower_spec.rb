@@ -87,6 +87,21 @@ describe ServiceTemplateAnsibleTower do
         expect(updated.job_template).to eq(new_configuration_script)
         expect(updated.resource_actions.pluck(:action)).to match_array(%w(Provision Reconfigure))
       end
+
+      it 'requires a configuration or configuration_script_id' do
+        updated_catalog_item_options[:config_info].delete(:configuration)
+        expect do
+          @catalog_item.update_catalog_item(updated_catalog_item_options)
+        end.to raise_error(StandardError, 'Must provide configuration_script_id or configuration')
+      end
+
+      it 'can accept configuration or configuration_script_id' do
+        updated_catalog_item_options[:config_info].delete(:configuration)
+        updated_catalog_item_options[:config_info][:configuration_script_id] = new_configuration_script.id
+        updated = @catalog_item.update_catalog_item(updated_catalog_item_options)
+
+        expect(updated.configuration_script).to eq(new_configuration_script)
+      end
     end
   end
 

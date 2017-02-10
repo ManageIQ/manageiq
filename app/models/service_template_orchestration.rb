@@ -24,27 +24,6 @@ class ServiceTemplateOrchestration < ServiceTemplate
     end
   end
 
-  def update_catalog_item(options, _auth_user = nil)
-    config_info = validate_update_config_info(options)
-    transaction do
-      update_from_options(options)
-
-      self.orchestration_template = if config_info[:template_id]
-                                      OrchestrationTemplate.find(config_info[:template_id])
-                                    else
-                                      config_info[:template]
-                                    end
-      self.orchestration_manager = if config_info[:manager_id]
-                                     ExtManagementSystem.find(config_info[:manager_id])
-                                   else
-                                     config_info[:manager]
-                                   end
-
-      update_resource_actions(config_info)
-    end
-    reload
-  end
-
   def remove_invalid_resource
     # remove the resource from both memory and table
     service_resources.to_a.delete_if { |r| r.destroy unless r.resource }
@@ -77,6 +56,20 @@ class ServiceTemplateOrchestration < ServiceTemplate
   private_class_method :validate_config_info
 
   private
+
+  def update_service_resources(config_info, _auth_user = nil)
+    if config_info[:template_id] && config_info[:template_id] != orchestration_template.id
+      self.orchestration_template = OrchestrationTemplate.find(config_info[:template_id])
+    elsif config_info[:template] && config_info[:template] != orchestration_template
+      self.orchestration_template = config_info[:template]
+    end
+
+    if config_info[:manager_id] && config_info[:manager_id] != orchestration_manager.id
+      self.orchestration_manager = ExtManagementSystem.find(config_info[:manager_id])
+    elsif config_info[:manager] && config_info[:manager] != orchestration_manager
+      self.orchestration_manager = config_info[:manager]
+    end
+  end
 
   def validate_update_config_info(options)
     super
