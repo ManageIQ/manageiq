@@ -15,7 +15,7 @@ describe 'API configuration (config/api.yml)' do
       let(:api_feature_identifiers) do
         collection_settings.each_with_object(Set.new) do |(_, cfg), set|
           set.add(cfg[:identifier]) if cfg[:identifier]
-          keys = [:collection_actions, :resource_actions]
+          keys = [:collection_actions, :resource_actions, :subcollection_actions, :subresource_actions]
           Array(cfg[:subcollections]).each do |s|
             keys << "#{s}_subcollection_actions" << "#{s}_subresource_actions"
           end
