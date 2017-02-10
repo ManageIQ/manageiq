@@ -5198,13 +5198,13 @@
           :identifier: embedded_automation_manager_credentials_delete
 
 # Automation Manager
-- :name: Automation Manager
-  :description: Everything under Automation Manager
+- :name: Ansible Tower
+  :description: Everything under Ansible Tower
   :feature_type: node
   :identifier: automation_manager
   :children:
-  - :name: Automation Management Providers
-    :description: Everything under the Automation Management Providers accordion
+  - :name: Ansible Tower Providers
+    :description: Everything under the Providers accordion
     :feature_type: node
     :identifier: automation_manager_providers
     :children:
