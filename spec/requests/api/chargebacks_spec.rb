@@ -2,7 +2,7 @@ RSpec.describe "chargebacks API" do
   it "can fetch the list of all chargeback rates" do
     chargeback_rate = FactoryGirl.create(:chargeback_rate)
 
-    api_basic_authorize collection_action_identifier(:chargebacks, :read, :get)
+    api_basic_authorize "chargeback"
     run_get chargebacks_url
 
     expect_result_resources_to_include_hrefs(
@@ -15,7 +15,7 @@ RSpec.describe "chargebacks API" do
   it "can show an individual chargeback rate" do
     chargeback_rate = FactoryGirl.create(:chargeback_rate)
 
-    api_basic_authorize action_identifier(:chargebacks, :read, :resource_actions, :get)
+    api_basic_authorize "chargeback"
     run_get chargebacks_url(chargeback_rate.id)
 
     expect_result_to_match_hash(
@@ -127,7 +127,7 @@ RSpec.describe "chargebacks API" do
 
   context "with an appropriate role" do
     it "can create a new chargeback rate" do
-      api_basic_authorize action_identifier(:chargebacks, :create, :collection_actions)
+      api_basic_authorize "chargeback_rates_new"
 
       expect do
         run_post chargebacks_url,
@@ -141,7 +141,7 @@ RSpec.describe "chargebacks API" do
     end
 
     it "returns bad request for incomplete chargeback rate" do
-      api_basic_authorize action_identifier(:chargebacks, :create, :collection_actions)
+      api_basic_authorize "chargeback_rates_new"
 
       expect do
         run_post chargebacks_url,
@@ -153,7 +153,7 @@ RSpec.describe "chargebacks API" do
     it "can edit a chargeback rate through POST" do
       chargeback_rate = FactoryGirl.create(:chargeback_rate, :description => "chargeback_0")
 
-      api_basic_authorize action_identifier(:chargebacks, :edit)
+      api_basic_authorize "chargeback_rates_edit"
       run_post chargebacks_url(chargeback_rate.id), gen_request(:edit, :description => "chargeback_1")
 
       expect(response.parsed_body["description"]).to eq("chargeback_1")
@@ -164,7 +164,7 @@ RSpec.describe "chargebacks API" do
     it "can edit a chargeback rate through PATCH" do
       chargeback_rate = FactoryGirl.create(:chargeback_rate, :description => "chargeback_0")
 
-      api_basic_authorize action_identifier(:chargebacks, :edit)
+      api_basic_authorize "chargeback_rates_edit"
       run_patch chargebacks_url(chargeback_rate.id), [{:action => "edit",
                                                        :path   => "description",
                                                        :value  => "chargeback_1"}]
@@ -177,7 +177,7 @@ RSpec.describe "chargebacks API" do
     it "can delete a chargeback rate" do
       chargeback_rate = FactoryGirl.create(:chargeback_rate)
 
-      api_basic_authorize action_identifier(:chargebacks, :delete)
+      api_basic_authorize "chargeback_rates_delete"
 
       expect do
         run_delete chargebacks_url(chargeback_rate.id)
@@ -188,7 +188,7 @@ RSpec.describe "chargebacks API" do
     it "can delete a chargeback rate through POST" do
       chargeback_rate = FactoryGirl.create(:chargeback_rate)
 
-      api_basic_authorize action_identifier(:chargebacks, :delete)
+      api_basic_authorize "chargeback_rates_delete"
 
       expect do
         run_post chargebacks_url(chargeback_rate.id), :action => "delete"
@@ -197,7 +197,7 @@ RSpec.describe "chargebacks API" do
     end
 
     it "can create a new chargeback rate detail" do
-      api_basic_authorize action_identifier(:rates, :create, :collection_actions)
+      api_basic_authorize "chargeback_rates_new"
       chargeback_rate = FactoryGirl.create(:chargeback_rate)
 
       expect do
@@ -213,7 +213,7 @@ RSpec.describe "chargebacks API" do
     end
 
     it "returns bad request for incomplete chargeback rate detail" do
-      api_basic_authorize action_identifier(:rates, :create, :collection_actions)
+      api_basic_authorize "chargeback_rates_new"
 
       expect do
         run_post rates_url,
@@ -232,7 +232,7 @@ RSpec.describe "chargebacks API" do
       chargeback_rate_detail.chargeback_tiers = [chargeback_tier]
       chargeback_rate_detail.save
 
-      api_basic_authorize action_identifier(:rates, :edit)
+      api_basic_authorize "chargeback_rates_edit"
       run_post rates_url(chargeback_rate_detail.id), gen_request(:edit, :description => "rate_1")
 
       expect(response.parsed_body["description"]).to eq("rate_1")
@@ -248,7 +248,7 @@ RSpec.describe "chargebacks API" do
       chargeback_rate_detail.chargeback_tiers = [chargeback_tier]
       chargeback_rate_detail.save
 
-      api_basic_authorize action_identifier(:rates, :edit)
+      api_basic_authorize "chargeback_rates_edit"
       run_patch rates_url(chargeback_rate_detail.id), [{:action => "edit", :path => "description", :value => "rate_1"}]
 
       expect(response.parsed_body["description"]).to eq("rate_1")
@@ -264,7 +264,7 @@ RSpec.describe "chargebacks API" do
       chargeback_rate_detail.chargeback_tiers = [chargeback_tier]
       chargeback_rate_detail.save
 
-      api_basic_authorize action_identifier(:rates, :delete)
+      api_basic_authorize "chargeback_rates_delete"
 
       expect do
         run_delete rates_url(chargeback_rate_detail.id)
@@ -280,7 +280,7 @@ RSpec.describe "chargebacks API" do
       chargeback_rate_detail.chargeback_tiers = [chargeback_tier]
       chargeback_rate_detail.save
 
-      api_basic_authorize action_identifier(:rates, :delete)
+      api_basic_authorize "chargeback_rates_delete"
 
       expect do
         run_post rates_url(chargeback_rate_detail.id), :action => "delete"

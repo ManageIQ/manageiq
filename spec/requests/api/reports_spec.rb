@@ -3,7 +3,7 @@ RSpec.describe "reports API" do
     report_1 = FactoryGirl.create(:miq_report_with_results)
     report_2 = FactoryGirl.create(:miq_report_with_results)
 
-    api_basic_authorize collection_action_identifier(:reports, :read, :get)
+    api_basic_authorize "miq_report_saved_reports_view"
     run_get reports_url
 
     expect_result_resources_to_include_hrefs(
@@ -20,7 +20,7 @@ RSpec.describe "reports API" do
   it "can fetch a report" do
     report = FactoryGirl.create(:miq_report_with_results)
 
-    api_basic_authorize action_identifier(:reports, :read, :resource_actions, :get)
+    api_basic_authorize "miq_report_saved_reports_view"
     run_get reports_url(report.id)
 
     expect_result_to_match_hash(
@@ -71,7 +71,7 @@ RSpec.describe "reports API" do
     report = FactoryGirl.create(:miq_report_with_results)
     result = report.miq_report_results.first
 
-    api_basic_authorize collection_action_identifier(:results, :read, :get)
+    api_basic_authorize "miq_report_view"
     run_get results_url
 
     expect_result_resources_to_include_hrefs(
@@ -93,7 +93,7 @@ RSpec.describe "reports API" do
     allow(report).to receive(:table).and_return(table)
     allow_any_instance_of(MiqReportResult).to receive(:report_results).and_return(report)
 
-    api_basic_authorize action_identifier(:results, :read, :resource_actions, :get)
+    api_basic_authorize "miq_report_view"
     run_get results_url(report_result.id)
 
     expect_result_to_match_hash(response.parsed_body, "result_set" => [{"foo" => "bar"}, {"foo" => "baz"}])
@@ -110,7 +110,7 @@ RSpec.describe "reports API" do
     schedule_1 = FactoryGirl.create(:miq_schedule, :filter => exp)
     schedule_2 = FactoryGirl.create(:miq_schedule, :filter => exp)
 
-    api_basic_authorize collection_action_identifier(:schedules, :read, :get)
+    api_basic_authorize "miq_report_view"
     run_get "/api/reports/#{report.id}/schedules"
 
     expect_result_resources_to_include_hrefs(
@@ -132,7 +132,7 @@ RSpec.describe "reports API" do
 
     schedule = FactoryGirl.create(:miq_schedule, :name => 'unit_test', :filter => exp)
 
-    api_basic_authorize collection_action_identifier(:schedules, :read, :get)
+    api_basic_authorize "miq_report_view"
     run_get "/api/reports/#{report.id}/schedules/#{schedule.id}"
 
     expect_result_to_match_hash(
@@ -160,7 +160,7 @@ RSpec.describe "reports API" do
       report = FactoryGirl.create(:miq_report)
 
       expect do
-        api_basic_authorize action_identifier(:reports, :run)
+        api_basic_authorize "miq_report_run"
         run_post reports_url(report.id).to_s, :action => "run"
       end.to change(MiqReportResult, :count).by(1)
       expect_single_action_result(
@@ -174,7 +174,7 @@ RSpec.describe "reports API" do
       report = FactoryGirl.create(:miq_report)
 
       expect do
-        api_basic_authorize action_identifier(:reports, :schedule)
+        api_basic_authorize "miq_report_schedule_add"
         run_post reports_url(report.id),
                  :action      => 'schedule',
                  :name        => 'schedule_name',
@@ -203,7 +203,7 @@ RSpec.describe "reports API" do
       }
       options = {:save => true}
 
-      api_basic_authorize collection_action_identifier(:reports, :import)
+      api_basic_authorize "miq_report_export"
 
       expect do
         run_post reports_url, gen_request(:import, :report => serialized_report, :options => options)
@@ -247,7 +247,7 @@ RSpec.describe "reports API" do
       }
       options = {:save => true}
 
-      api_basic_authorize collection_action_identifier(:reports, :import)
+      api_basic_authorize "miq_report_export"
 
       expect do
         run_post(

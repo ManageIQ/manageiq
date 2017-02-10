@@ -17,7 +17,7 @@ describe "Set Ownership" do
     let(:svc) { FactoryGirl.create(:service, :name => "svc", :description => "svc description") }
 
     it "to an invalid service" do
-      api_basic_authorize action_identifier(:services, :set_ownership)
+      api_basic_authorize "service_ownership"
 
       run_post(services_url(999_999), gen_request(:set_ownership, "owner" => {"id" => 1}))
 
@@ -33,7 +33,7 @@ describe "Set Ownership" do
     end
 
     it "with missing owner or group" do
-      api_basic_authorize action_identifier(:services, :set_ownership)
+      api_basic_authorize "service_ownership"
 
       run_post(services_url(svc.id), gen_request(:set_ownership))
 
@@ -41,7 +41,7 @@ describe "Set Ownership" do
     end
 
     it "with invalid owner" do
-      api_basic_authorize action_identifier(:services, :set_ownership)
+      api_basic_authorize "service_ownership"
 
       run_post(services_url(svc.id), gen_request(:set_ownership, "owner" => {"id" => 999_999}))
 
@@ -49,7 +49,7 @@ describe "Set Ownership" do
     end
 
     it "to a service" do
-      api_basic_authorize action_identifier(:services, :set_ownership)
+      api_basic_authorize "service_ownership"
 
       run_post(services_url(svc.id), gen_request(:set_ownership, "owner" => {"userid" => api_config(:user)}))
 
@@ -57,7 +57,7 @@ describe "Set Ownership" do
     end
 
     it "by owner name to a service" do
-      api_basic_authorize action_identifier(:services, :set_ownership)
+      api_basic_authorize "service_ownership"
 
       run_post(services_url(svc.id), gen_request(:set_ownership, "owner" => {"name" => @user.name}))
 
@@ -65,7 +65,7 @@ describe "Set Ownership" do
     end
 
     it "by owner href to a service" do
-      api_basic_authorize action_identifier(:services, :set_ownership)
+      api_basic_authorize "service_ownership"
 
       run_post(services_url(svc.id), gen_request(:set_ownership, "owner" => {"href" => users_url(@user.id)}))
 
@@ -73,7 +73,7 @@ describe "Set Ownership" do
     end
 
     it "by owner id to a service" do
-      api_basic_authorize action_identifier(:services, :set_ownership)
+      api_basic_authorize "service_ownership"
 
       run_post(services_url(svc.id), gen_request(:set_ownership, "owner" => {"id" => @user.id}))
 
@@ -81,7 +81,7 @@ describe "Set Ownership" do
     end
 
     it "by group id to a service" do
-      api_basic_authorize action_identifier(:services, :set_ownership)
+      api_basic_authorize "service_ownership"
 
       run_post(services_url(svc.id), gen_request(:set_ownership, "group" => {"id" => @group.id}))
 
@@ -89,7 +89,7 @@ describe "Set Ownership" do
     end
 
     it "by group description to a service" do
-      api_basic_authorize action_identifier(:services, :set_ownership)
+      api_basic_authorize "service_ownership"
 
       run_post(services_url(svc.id), gen_request(:set_ownership, "group" => {"description" => @group.description}))
 
@@ -97,7 +97,7 @@ describe "Set Ownership" do
     end
 
     it "with owner and group to a service" do
-      api_basic_authorize action_identifier(:services, :set_ownership)
+      api_basic_authorize "service_ownership"
 
       run_post(services_url(svc.id), gen_request(:set_ownership, "owner" => {"userid" => api_config(:user)}))
 
@@ -105,7 +105,7 @@ describe "Set Ownership" do
     end
 
     it "to multiple services" do
-      api_basic_authorize action_identifier(:services, :set_ownership)
+      api_basic_authorize "service_ownership"
 
       svc1 = FactoryGirl.create(:service, :name => "svc1", :description => "svc1 description")
       svc2 = FactoryGirl.create(:service, :name => "svc2", :description => "svc2 description")
@@ -124,7 +124,7 @@ describe "Set Ownership" do
     let(:vm) { FactoryGirl.create(:vm, :name => "vm", :description => "vm description") }
 
     it "to an invalid vm" do
-      api_basic_authorize action_identifier(:vms, :set_ownership)
+      api_basic_authorize "vm_ownership"
 
       run_post(vms_url(999_999), gen_request(:set_ownership, "owner" => {"id" => 1}))
 
@@ -140,7 +140,7 @@ describe "Set Ownership" do
     end
 
     it "with missing owner or group" do
-      api_basic_authorize action_identifier(:vms, :set_ownership)
+      api_basic_authorize "vm_ownership"
 
       run_post(vms_url(vm.id), gen_request(:set_ownership))
 
@@ -148,7 +148,7 @@ describe "Set Ownership" do
     end
 
     it "with invalid owner" do
-      api_basic_authorize action_identifier(:vms, :set_ownership)
+      api_basic_authorize "vm_ownership"
 
       run_post(vms_url(vm.id), gen_request(:set_ownership, "owner" => {"id" => 999_999}))
 
@@ -156,7 +156,7 @@ describe "Set Ownership" do
     end
 
     it "to a vm" do
-      api_basic_authorize action_identifier(:vms, :set_ownership)
+      api_basic_authorize "vm_ownership"
 
       run_post(vms_url(vm.id), gen_request(:set_ownership, "owner" => {"userid" => api_config(:user)}))
 
@@ -164,7 +164,7 @@ describe "Set Ownership" do
     end
 
     it "by owner name to a vm" do
-      api_basic_authorize action_identifier(:vms, :set_ownership)
+      api_basic_authorize "vm_ownership"
 
       run_post(vms_url(vm.id), gen_request(:set_ownership, "owner" => {"name" => @user.name}))
 
@@ -172,7 +172,7 @@ describe "Set Ownership" do
     end
 
     it "by owner href to a vm" do
-      api_basic_authorize action_identifier(:vms, :set_ownership)
+      api_basic_authorize "vm_ownership"
 
       run_post(vms_url(vm.id), gen_request(:set_ownership, "owner" => {"href" => users_url(@user.id)}))
 
@@ -180,7 +180,7 @@ describe "Set Ownership" do
     end
 
     it "by owner id to a vm" do
-      api_basic_authorize action_identifier(:vms, :set_ownership)
+      api_basic_authorize "vm_ownership"
 
       run_post(vms_url(vm.id), gen_request(:set_ownership, "owner" => {"id" => @user.id}))
 
@@ -188,7 +188,7 @@ describe "Set Ownership" do
     end
 
     it "by group id to a vm" do
-      api_basic_authorize action_identifier(:vms, :set_ownership)
+      api_basic_authorize "vm_ownership"
 
       run_post(vms_url(vm.id), gen_request(:set_ownership, "group" => {"id" => @group.id}))
 
@@ -196,7 +196,7 @@ describe "Set Ownership" do
     end
 
     it "by group description to a vm" do
-      api_basic_authorize action_identifier(:vms, :set_ownership)
+      api_basic_authorize "vm_ownership"
 
       run_post(vms_url(vm.id), gen_request(:set_ownership, "group" => {"description" => @group.description}))
 
@@ -204,7 +204,7 @@ describe "Set Ownership" do
     end
 
     it "with owner and group to a vm" do
-      api_basic_authorize action_identifier(:vms, :set_ownership)
+      api_basic_authorize "vm_ownership"
 
       run_post(vms_url(vm.id), gen_request(:set_ownership, "owner" => {"userid" => api_config(:user)}))
 
@@ -212,7 +212,7 @@ describe "Set Ownership" do
     end
 
     it "to multiple vms" do
-      api_basic_authorize action_identifier(:vms, :set_ownership)
+      api_basic_authorize "vm_ownership"
 
       vm1 = FactoryGirl.create(:vm, :name => "vm1", :description => "vm1 description")
       vm2 = FactoryGirl.create(:vm, :name => "vm2", :description => "vm2 description")
@@ -231,7 +231,7 @@ describe "Set Ownership" do
     let(:template) { FactoryGirl.create(:template_vmware, :name => "template") }
 
     it "to an invalid template" do
-      api_basic_authorize action_identifier(:templates, :set_ownership)
+      api_basic_authorize "miq_template_ownership"
 
       run_post(templates_url(999_999), gen_request(:set_ownership, "owner" => {"id" => 1}))
 
@@ -247,7 +247,7 @@ describe "Set Ownership" do
     end
 
     it "with missing owner or group" do
-      api_basic_authorize action_identifier(:templates, :set_ownership)
+      api_basic_authorize "miq_template_ownership"
 
       run_post(templates_url(template.id), gen_request(:set_ownership))
 
@@ -255,7 +255,7 @@ describe "Set Ownership" do
     end
 
     it "with invalid owner" do
-      api_basic_authorize action_identifier(:templates, :set_ownership)
+      api_basic_authorize "miq_template_ownership"
 
       run_post(templates_url(template.id), gen_request(:set_ownership, "owner" => {"id" => 999_999}))
 
@@ -263,7 +263,7 @@ describe "Set Ownership" do
     end
 
     it "to a template" do
-      api_basic_authorize action_identifier(:templates, :set_ownership)
+      api_basic_authorize "miq_template_ownership"
 
       run_post(templates_url(template.id), gen_request(:set_ownership, "owner" => {"userid" => api_config(:user)}))
 
@@ -271,7 +271,7 @@ describe "Set Ownership" do
     end
 
     it "by owner name to a template" do
-      api_basic_authorize action_identifier(:templates, :set_ownership)
+      api_basic_authorize "miq_template_ownership"
 
       run_post(templates_url(template.id), gen_request(:set_ownership, "owner" => {"name" => @user.name}))
 
@@ -279,7 +279,7 @@ describe "Set Ownership" do
     end
 
     it "by owner href to a template" do
-      api_basic_authorize action_identifier(:templates, :set_ownership)
+      api_basic_authorize "miq_template_ownership"
 
       run_post(templates_url(template.id), gen_request(:set_ownership, "owner" => {"href" => users_url(@user.id)}))
 
@@ -287,7 +287,7 @@ describe "Set Ownership" do
     end
 
     it "by owner id to a template" do
-      api_basic_authorize action_identifier(:templates, :set_ownership)
+      api_basic_authorize "miq_template_ownership"
 
       run_post(templates_url(template.id), gen_request(:set_ownership, "owner" => {"id" => @user.id}))
 
@@ -295,7 +295,7 @@ describe "Set Ownership" do
     end
 
     it "by group id to a template" do
-      api_basic_authorize action_identifier(:templates, :set_ownership)
+      api_basic_authorize "miq_template_ownership"
 
       run_post(templates_url(template.id), gen_request(:set_ownership, "group" => {"id" => @group.id}))
 
@@ -303,7 +303,7 @@ describe "Set Ownership" do
     end
 
     it "by group description to a template" do
-      api_basic_authorize action_identifier(:templates, :set_ownership)
+      api_basic_authorize "miq_template_ownership"
 
       run_post(templates_url(template.id),
                gen_request(:set_ownership, "group" => {"description" => @group.description}))
@@ -312,7 +312,7 @@ describe "Set Ownership" do
     end
 
     it "with owner and group to a template" do
-      api_basic_authorize action_identifier(:templates, :set_ownership)
+      api_basic_authorize "miq_template_ownership"
 
       run_post(templates_url(template.id), gen_request(:set_ownership, "owner" => {"userid" => api_config(:user)}))
 
@@ -320,7 +320,7 @@ describe "Set Ownership" do
     end
 
     it "to multiple templates" do
-      api_basic_authorize action_identifier(:templates, :set_ownership)
+      api_basic_authorize "miq_template_ownership"
 
       template1 = FactoryGirl.create(:template_vmware, :name => "template1")
       template2 = FactoryGirl.create(:template_vmware, :name => "template2")

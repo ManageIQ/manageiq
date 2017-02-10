@@ -16,7 +16,7 @@ describe "Querying" do
   let(:vm1) { FactoryGirl.create(:vm_vmware, :name => "vm1") }
 
   describe "Querying vms" do
-    before { api_basic_authorize collection_action_identifier(:vms, :read, :get) }
+    before { api_basic_authorize "vm_show_list" }
 
     it "supports offset" do
       create_vms_by_name(%w(aa bb cc))
@@ -63,7 +63,7 @@ describe "Querying" do
   end
 
   describe "Sorting vms by attribute" do
-    before { api_basic_authorize collection_action_identifier(:vms, :read, :get) }
+    before { api_basic_authorize "vm_show_list" }
 
     it "supports ascending order" do
       create_vms_by_name %w(cc aa bb)
@@ -132,7 +132,7 @@ describe "Querying" do
   end
 
   describe "Filtering vms" do
-    before { api_basic_authorize collection_action_identifier(:vms, :read, :get) }
+    before { api_basic_authorize "vm_show_list" }
 
     it "supports attribute equality test using double quotes" do
       _vm1, vm2 = create_vms_by_name(%w(aa bb))
@@ -445,7 +445,7 @@ describe "Querying" do
     it "can do fuzzy matching on strings with forward slashes" do
       tag_1 = FactoryGirl.create(:tag, :name => "/managed/foo")
       _tag_2 = FactoryGirl.create(:tag, :name => "/managed/bar")
-      api_basic_authorize collection_action_identifier(:tags, :read, :get)
+      api_basic_authorize "ops_settings"
 
       run_get(tags_url, :filter => ["name='*/foo'"])
 
@@ -503,7 +503,7 @@ describe "Querying" do
 
   describe "Querying vm attributes" do
     it "supports requests specific attributes" do
-      api_basic_authorize collection_action_identifier(:vms, :read, :get)
+      api_basic_authorize "vm_show_list"
       vm = create_vms_by_name(%w(aa)).first
 
       run_get vms_url, :expand => "resources", :attributes => "name,vendor"
@@ -526,7 +526,7 @@ describe "Querying" do
     end
 
     it "skips requests of invalid attributes" do
-      api_basic_authorize action_identifier(:vms, :read, :resource_actions, :get)
+      api_basic_authorize "vm_show"
 
       run_get vms_url(vm1.id), :attributes => "bogus"
 
@@ -537,7 +537,7 @@ describe "Querying" do
 
   describe "Querying vms by tag" do
     it "is supported" do
-      api_basic_authorize collection_action_identifier(:vms, :read, :get)
+      api_basic_authorize "vm_show_list"
       vm1, _vm2, vm3 = create_vms_by_name(%w(aa bb cc))
 
       dept = FactoryGirl.create(:classification_department)
@@ -553,7 +553,7 @@ describe "Querying" do
   end
 
   describe "Querying vms" do
-    before { api_basic_authorize collection_action_identifier(:vms, :read, :get) }
+    before { api_basic_authorize "vm_show_list" }
 
     it "and sorted by name succeeeds with unreferenced class" do
       run_get vms_url, :sort_by => "name", :expand => "resources"
@@ -613,7 +613,7 @@ describe "Querying" do
 
   describe "Querying resources" do
     it "does not return actions if not entitled" do
-      api_basic_authorize action_identifier(:vms, :read, :resource_actions, :get)
+      api_basic_authorize "vm_show"
 
       run_get vms_url(vm1.id)
 
@@ -622,7 +622,7 @@ describe "Querying" do
     end
 
     it "returns actions if authorized" do
-      api_basic_authorize action_identifier(:vms, :edit), action_identifier(:vms, :read, :resource_actions, :get)
+      api_basic_authorize "vm_edit", "vm_show"
 
       run_get vms_url(vm1.id)
 
@@ -631,7 +631,7 @@ describe "Querying" do
     end
 
     it "returns correct actions if authorized as such" do
-      api_basic_authorize action_identifier(:vms, :suspend), action_identifier(:vms, :read, :resource_actions, :get)
+      api_basic_authorize "vm_suspend", "vm_show"
 
       run_get vms_url(vm1.id)
 
@@ -643,9 +643,9 @@ describe "Querying" do
     end
 
     it "returns multiple actions if authorized as such" do
-      api_basic_authorize(action_identifier(:vms, :start),
-                          action_identifier(:vms, :stop),
-                          action_identifier(:vms, :read, :resource_actions, :get))
+      api_basic_authorize("vm_start",
+                          "vm_stop",
+                          "vm_show")
 
       run_get vms_url(vm1.id)
 
@@ -655,7 +655,7 @@ describe "Querying" do
     end
 
     it "returns actions if asked for with physical attributes" do
-      api_basic_authorize action_identifier(:vms, :start), action_identifier(:vms, :read, :resource_actions, :get)
+      api_basic_authorize "vm_start", "vm_show"
 
       run_get vms_url(vm1.id), :attributes => "name,vendor,actions"
 
@@ -664,7 +664,7 @@ describe "Querying" do
     end
 
     it "does not return actions if asking for a physical attribute" do
-      api_basic_authorize action_identifier(:vms, :start), action_identifier(:vms, :read, :resource_actions, :get)
+      api_basic_authorize "vm_start", "vm_show"
 
       run_get vms_url(vm1.id), :attributes => "name"
 
@@ -673,7 +673,7 @@ describe "Querying" do
     end
 
     it "does return actions if asking for virtual attributes" do
-      api_basic_authorize action_identifier(:vms, :start), action_identifier(:vms, :read, :resource_actions, :get)
+      api_basic_authorize "vm_start", "vm_show"
 
       run_get vms_url(vm1.id), :attributes => "disconnected"
 
@@ -682,7 +682,7 @@ describe "Querying" do
     end
 
     it "does not return actions if asking for physical and virtual attributes" do
-      api_basic_authorize action_identifier(:vms, :start), action_identifier(:vms, :read, :resource_actions, :get)
+      api_basic_authorize "vm_start", "vm_show"
 
       run_get vms_url(vm1.id), :attributes => "name,disconnected"
 

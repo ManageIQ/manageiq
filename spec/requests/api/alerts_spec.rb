@@ -8,7 +8,7 @@ describe "Alerts API" do
   end
 
   it "reads 2 alerts as a collection" do
-    api_basic_authorize collection_action_identifier(:alerts, :read, :get)
+    api_basic_authorize "alert_status_show_list"
     alert_statuses = FactoryGirl.create_list(:miq_alert_status, 2)
     run_get(alerts_url)
     expect(response).to have_http_status(:ok)
@@ -35,7 +35,7 @@ describe "Alerts API" do
   end
 
   it "reads an alert as a resource" do
-    api_basic_authorize action_identifier(:alerts, :read, :resource_actions, :get)
+    api_basic_authorize "alert_status_show"
     alert_status = FactoryGirl.create(:miq_alert_status)
     run_get(alerts_url(alert_status.id))
     expect(response).to have_http_status(:ok)
@@ -69,7 +69,7 @@ describe "Alerts API" do
     end
 
     it "reads an alert action as a sub collection under an alert" do
-      api_basic_authorize subcollection_action_identifier(:alerts, :alert_actions, :read, :get)
+      api_basic_authorize "alert_status_action_show_list"
       alert_action = FactoryGirl.create(
         :miq_alert_status_action,
         :miq_alert_status => alert,
@@ -104,7 +104,7 @@ describe "Alerts API" do
         "action_type" => "comment",
         "comment"     => "comment text",
       }
-      api_basic_authorize subcollection_action_identifier(:alerts, :alert_actions, :create, :post)
+      api_basic_authorize "alert_status_action_new"
       run_post(actions_subcollection_url, attributes)
       expect(response).to have_http_status(:ok)
       expected = {
@@ -122,7 +122,7 @@ describe "Alerts API" do
         "comment"     => "comment text",
         "user_id"     => user.id # should be ignored
       }
-      api_basic_authorize subcollection_action_identifier(:alerts, :alert_actions, :create, :post)
+      api_basic_authorize "alert_status_action_new"
       run_post(actions_subcollection_url, attributes)
       expect(response).to have_http_status(:ok)
       expected = {
@@ -139,7 +139,7 @@ describe "Alerts API" do
         "action_type" => "assign",
         "assignee"    => { "id" => assignee.id }
       }
-      api_basic_authorize subcollection_action_identifier(:alerts, :alert_actions, :create, :post)
+      api_basic_authorize "alert_status_action_new"
       run_post(actions_subcollection_url, attributes)
       expect(response).to have_http_status(:ok)
       expect(response.parsed_body).to include(expected_assignee)
@@ -150,14 +150,14 @@ describe "Alerts API" do
         "action_type" => "assign",
         "assignee"    => { "href" => users_url(assignee.id) }
       }
-      api_basic_authorize subcollection_action_identifier(:alerts, :alert_actions, :create, :post)
+      api_basic_authorize "alert_status_action_new"
       run_post(actions_subcollection_url, attributes)
       expect(response).to have_http_status(:ok)
       expect(response.parsed_body).to include(expected_assignee)
     end
 
     it "returns errors when creating an invalid alert" do
-      api_basic_authorize subcollection_action_identifier(:alerts, :alert_actions, :create, :post)
+      api_basic_authorize "alert_status_action_new"
       run_post(
         actions_subcollection_url,
         "action_type" => "assign",
@@ -169,7 +169,7 @@ describe "Alerts API" do
     end
 
     it "reads an alert action as a resource under an alert" do
-      api_basic_authorize subcollection_action_identifier(:alerts, :alert_actions, :read, :get)
+      api_basic_authorize "alert_status_action_show_list"
       user = FactoryGirl.create(:user)
       alert_action = FactoryGirl.create(
         :miq_alert_status_action,

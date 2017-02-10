@@ -179,7 +179,7 @@ describe "Providers API" do
     end
 
     it "getting custom_attributes from a provider using expand" do
-      api_basic_authorize action_identifier(:providers, :read, :resource_actions, :get)
+      api_basic_authorize "ems_infra_show"
       provider.custom_attributes = [ca1, ca2]
 
       run_get provider_url, :expand => "custom_attributes"
@@ -199,7 +199,7 @@ describe "Providers API" do
     end
 
     it "delete a custom_attribute from a provider via the delete action" do
-      api_basic_authorize action_identifier(:providers, :edit)
+      api_basic_authorize "ems_infra_edit"
       provider.custom_attributes = [ca1]
 
       run_post(provider_ca_url, gen_request(:delete, nil, ca1_url))
@@ -210,7 +210,7 @@ describe "Providers API" do
     end
 
     it "add custom attribute to a provider without a name" do
-      api_basic_authorize action_identifier(:providers, :edit)
+      api_basic_authorize "ems_infra_edit"
 
       run_post(provider_ca_url, gen_request(:add, "value" => "value1"))
 
@@ -218,7 +218,7 @@ describe "Providers API" do
     end
 
     it "prevents adding custom attribute to a provider with forbidden section" do
-      api_basic_authorize action_identifier(:providers, :edit)
+      api_basic_authorize "ems_infra_edit"
 
       run_post(provider_ca_url, gen_request(:add, [{"name" => "name3", "value" => "value3",
                                                     "section" => "bad_section"}]))
@@ -228,7 +228,7 @@ describe "Providers API" do
     end
 
     it "add custom attributes to a provider" do
-      api_basic_authorize action_identifier(:providers, :edit)
+      api_basic_authorize "ems_infra_edit"
 
       run_post(provider_ca_url, gen_request(:add, [{"name" => "name1", "value" => "value1"},
                                                    {"name" => "name2", "value" => "value2", "section" => "metadata"}]))
@@ -246,7 +246,7 @@ describe "Providers API" do
     end
 
     it "formats custom attribute of type date" do
-      api_basic_authorize action_identifier(:providers, :edit)
+      api_basic_authorize "ems_infra_edit"
       date_field = DateTime.new.in_time_zone
 
       run_post(provider_ca_url, gen_request(:add, [{"name"       => "name1",
@@ -261,7 +261,7 @@ describe "Providers API" do
     end
 
     it "edit a custom attribute by name" do
-      api_basic_authorize action_identifier(:providers, :edit)
+      api_basic_authorize "ems_infra_edit"
       provider.custom_attributes = [ca1]
 
       run_post(provider_ca_url, gen_request(:edit, "name" => "name1", "value" => "value one"))
@@ -294,7 +294,7 @@ describe "Providers API" do
     end
 
     it "supports requests with valid provider_class" do
-      api_basic_authorize collection_action_identifier(:providers, :read, :get)
+      api_basic_authorize "ems_infra_show_list"
 
       FactoryGirl.build(:provider_foreman)
       run_get providers_url, :provider_class => "provider", :expand => "resources"
@@ -305,7 +305,7 @@ describe "Providers API" do
     end
 
     it 'creates valid foreman provider' do
-      api_basic_authorize collection_action_identifier(:providers, :create)
+      api_basic_authorize "ems_infra_new"
 
       # TODO: provider_class in params, when supported (https://github.com/brynary/rack-test/issues/150)
       run_post(providers_url + '?provider_class=provider', gen_request(:create, sample_foreman))
@@ -331,7 +331,7 @@ describe "Providers API" do
     end
 
     it "rejects provider creation with id specified" do
-      api_basic_authorize collection_action_identifier(:providers, :create)
+      api_basic_authorize "ems_infra_new"
 
       run_post(providers_url, "name" => "sample provider", "id" => 100)
 
@@ -339,7 +339,7 @@ describe "Providers API" do
     end
 
     it "rejects provider creation with invalid type specified" do
-      api_basic_authorize collection_action_identifier(:providers, :create)
+      api_basic_authorize "ems_infra_new"
 
       run_post(providers_url, "name" => "sample provider", "type" => "BogusType")
 
@@ -347,7 +347,7 @@ describe "Providers API" do
     end
 
     it "supports single provider creation" do
-      api_basic_authorize collection_action_identifier(:providers, :create)
+      api_basic_authorize "ems_infra_new"
 
       run_post(providers_url, sample_rhevm)
 
@@ -372,7 +372,7 @@ describe "Providers API" do
         it "supports creation with auth_key specified" do
           skip if name != "Openshift"
 
-          api_basic_authorize collection_action_identifier(:providers, :create)
+          api_basic_authorize "ems_infra_new"
 
           run_post(providers_url, sample_containers.merge("credentials" => [containers_credentials]))
 
@@ -394,7 +394,7 @@ describe "Providers API" do
     end
 
     it "supports single provider creation via action" do
-      api_basic_authorize collection_action_identifier(:providers, :create)
+      api_basic_authorize "ems_infra_new"
 
       run_post(providers_url, gen_request(:create, sample_rhevm))
 
@@ -411,7 +411,7 @@ describe "Providers API" do
     end
 
     it "supports single provider creation with simple credentials" do
-      api_basic_authorize collection_action_identifier(:providers, :create)
+      api_basic_authorize "ems_infra_new"
 
       run_post(providers_url, sample_vmware.merge("credentials" => default_credentials))
 
@@ -431,7 +431,7 @@ describe "Providers API" do
     end
 
     it "supports single provider creation with compound credentials" do
-      api_basic_authorize collection_action_identifier(:providers, :create)
+      api_basic_authorize "ems_infra_new"
 
       run_post(providers_url, sample_rhevm.merge("credentials" => compound_credentials))
 
@@ -453,7 +453,7 @@ describe "Providers API" do
     end
 
     it "supports multiple provider creation" do
-      api_basic_authorize collection_action_identifier(:providers, :create)
+      api_basic_authorize "ems_infra_new"
 
       run_post(providers_url, gen_request(:create, [sample_vmware, sample_rhevm]))
 
@@ -481,7 +481,7 @@ describe "Providers API" do
         end
 
         it "supports provider with multiple endpoints creation" do
-          api_basic_authorize collection_action_identifier(:providers, :create)
+          api_basic_authorize "ems_infra_new"
 
           run_post(providers_url, gen_request(:create, sample_containers_multi_end_point))
 
@@ -517,7 +517,7 @@ describe "Providers API" do
     end
 
     it "rejects edits for invalid resources" do
-      api_basic_authorize collection_action_identifier(:providers, :edit)
+      api_basic_authorize "ems_infra_edit"
 
       run_post(providers_url(999_999), gen_request(:edit, "name" => "updated provider name"))
 
@@ -525,7 +525,7 @@ describe "Providers API" do
     end
 
     it "supports single resource edit" do
-      api_basic_authorize collection_action_identifier(:providers, :edit)
+      api_basic_authorize "ems_infra_edit"
 
       provider = FactoryGirl.create(:ext_management_system, sample_rhevm)
 
@@ -537,7 +537,7 @@ describe "Providers API" do
     end
 
     it "only returns real attributes" do
-      api_basic_authorize collection_action_identifier(:providers, :edit)
+      api_basic_authorize "ems_infra_edit"
 
       provider = FactoryGirl.create(:ext_management_system, sample_rhevm)
 
@@ -549,7 +549,7 @@ describe "Providers API" do
     end
 
     it "supports updates of credentials" do
-      api_basic_authorize collection_action_identifier(:providers, :edit)
+      api_basic_authorize "ems_infra_edit"
 
       provider = FactoryGirl.create(:ext_management_system, sample_vmware)
       provider.update_authentication(:default => default_credentials.symbolize_keys)
@@ -568,7 +568,7 @@ describe "Providers API" do
         let(:containers_class) { klass }
 
         it "does not schedule a new credentials check if endpoint does not change" do
-          api_basic_authorize collection_action_identifier(:providers, :edit)
+          api_basic_authorize "ems_infra_edit"
 
           provider = FactoryGirl.create(:ext_management_system, sample_containers_multi_end_point)
           MiqQueue.where(:method_name => "authentication_check_types",
@@ -587,7 +587,7 @@ describe "Providers API" do
         end
 
         it "schedules a new credentials check if endpoint change" do
-          api_basic_authorize collection_action_identifier(:providers, :edit)
+          api_basic_authorize "ems_infra_edit"
 
           provider = FactoryGirl.create(:ext_management_system, sample_containers_multi_end_point)
           MiqQueue.where(:method_name => "authentication_check_types",
@@ -612,7 +612,7 @@ describe "Providers API" do
     end
 
     it "supports additions of credentials" do
-      api_basic_authorize collection_action_identifier(:providers, :edit)
+      api_basic_authorize "ems_infra_edit"
 
       provider = FactoryGirl.create(:ext_management_system, sample_rhevm)
       provider.update_authentication(:default => default_credentials.symbolize_keys)
@@ -628,7 +628,7 @@ describe "Providers API" do
     end
 
     it "supports multiple resource edits" do
-      api_basic_authorize collection_action_identifier(:providers, :edit)
+      api_basic_authorize "ems_infra_edit"
 
       p1 = FactoryGirl.create(:ems_redhat, :name => "name1")
       p2 = FactoryGirl.create(:ems_redhat, :name => "name2")
@@ -664,7 +664,7 @@ describe "Providers API" do
     end
 
     it "rejects deletes for invalid providers" do
-      api_basic_authorize collection_action_identifier(:providers, :delete)
+      api_basic_authorize "ems_infra_delete"
 
       run_delete(providers_url(999_999))
 
@@ -672,7 +672,7 @@ describe "Providers API" do
     end
 
     it "supports single provider delete" do
-      api_basic_authorize collection_action_identifier(:providers, :delete)
+      api_basic_authorize "ems_infra_delete"
 
       provider = FactoryGirl.create(:ext_management_system, :name => "provider", :hostname => "provider.com")
 
@@ -682,7 +682,7 @@ describe "Providers API" do
     end
 
     it "supports single provider delete action" do
-      api_basic_authorize collection_action_identifier(:providers, :delete)
+      api_basic_authorize "ems_infra_delete"
 
       provider = FactoryGirl.create(:ext_management_system, :name => "provider", :hostname => "provider.com")
 
@@ -695,7 +695,7 @@ describe "Providers API" do
     end
 
     it "supports multiple provider deletes" do
-      api_basic_authorize collection_action_identifier(:providers, :delete)
+      api_basic_authorize "ems_infra_delete"
 
       p1 = FactoryGirl.create(:ext_management_system, :name => "provider name 1")
       p2 = FactoryGirl.create(:ext_management_system, :name => "provider name 2")
@@ -723,7 +723,7 @@ describe "Providers API" do
     end
 
     it "supports single provider refresh" do
-      api_basic_authorize collection_action_identifier(:providers, :refresh)
+      api_basic_authorize "ems_infra_refresh"
 
       provider = FactoryGirl.create(:ext_management_system, sample_vmware.symbolize_keys.except(:type))
       provider.update_authentication(:default => default_credentials.symbolize_keys)
@@ -734,7 +734,7 @@ describe "Providers API" do
     end
 
     it "supports multiple provider refreshes" do
-      api_basic_authorize collection_action_identifier(:providers, :refresh)
+      api_basic_authorize "ems_infra_refresh"
 
       p1 = FactoryGirl.create(:ext_management_system, sample_vmware.symbolize_keys.except(:type))
       p1.update_authentication(:default => default_credentials.symbolize_keys)
@@ -786,7 +786,7 @@ describe "Providers API" do
     end
 
     it 'enqueues a correct import request' do
-      api_basic_authorize action_identifier(:providers, :import_vm)
+      api_basic_authorize "ems_infra_import_vm"
 
       run_post(provider_url, gen_import_request)
 
@@ -809,7 +809,7 @@ describe "Providers API" do
     describe 'query custom_attributes' do
       let!(:generic_provider) { FactoryGirl.create(:provider) }
       it 'does not blow-up on provider without custom_attributes' do
-        api_basic_authorize collection_action_identifier(:providers, :read, :get)
+        api_basic_authorize "ems_infra_show_list"
         run_get(providers_url, :expand => 'resources,custom_attributes', :provider_class => 'provider')
         expect_query_result(:providers, 1, 1)
       end
@@ -832,7 +832,7 @@ describe "Providers API" do
     end
 
     it 'queries all load balancers' do
-      api_basic_authorize subcollection_action_identifier(:providers, :load_balancers, :show, :get)
+      api_basic_authorize "load_balancer_show"
       expected = {
         'resources' => [
           { 'href' => a_string_matching("#{providers_url(@provider.id)}/load_balancers/#{@load_balancer.id}") }
@@ -846,7 +846,7 @@ describe "Providers API" do
     end
 
     it 'queries a single load balancer' do
-      api_basic_authorize subcollection_action_identifier(:providers, :load_balancers, :show, :get)
+      api_basic_authorize "load_balancer_show"
 
       run_get("#{providers_url(@provider.id)}/load_balancers/#{@load_balancer.id}")
 
@@ -865,13 +865,13 @@ describe "Providers API" do
       end
 
       it 'cannot add a custom_attribute' do
-        api_basic_authorize subcollection_action_identifier(:providers, :custom_attributes, :add, :post)
+        api_basic_authorize "ems_infra_edit"
         run_post(url, gen_request(:add, :name => 'x'))
         expect_bad_request("#{generic_provider.class.name} does not support management of custom attributes")
       end
 
       it 'cannot edit custom_attribute' do
-        api_basic_authorize subcollection_action_identifier(:providers, :custom_attributes, :edit, :post)
+        api_basic_authorize "ems_infra_edit"
         run_post(url, gen_request(:edit, :href => custom_attributes_url(attr.id)))
         expect_bad_request("#{generic_provider.class.name} does not support management of custom attributes")
       end

@@ -44,7 +44,7 @@ describe "Service Templates API" do
     end
 
     it "allows queries of the related picture" do
-      api_basic_authorize action_identifier(:service_templates, :read, :resource_actions, :get)
+      api_basic_authorize "svc_catalog_provision"
 
       run_get service_templates_url(template.id), :attributes => "picture"
 
@@ -54,7 +54,7 @@ describe "Service Templates API" do
     end
 
     it "allows queries of the related picture and image_href" do
-      api_basic_authorize action_identifier(:service_templates, :read, :resource_actions, :get)
+      api_basic_authorize "svc_catalog_provision"
 
       run_get service_templates_url(template.id), :attributes => "picture,picture.image_href"
 
@@ -77,7 +77,7 @@ describe "Service Templates API" do
     end
 
     it "supports edits of single resource" do
-      api_basic_authorize collection_action_identifier(:service_templates, :edit)
+      api_basic_authorize "catalogitem_edit"
 
       st = FactoryGirl.create(:service_template, :name => "st1")
       run_post(service_templates_url(st.id), gen_request(:edit, "name" => "updated st1"))
@@ -87,7 +87,7 @@ describe "Service Templates API" do
     end
 
     it "supports edits of multiple resources" do
-      api_basic_authorize collection_action_identifier(:service_templates, :edit)
+      api_basic_authorize "catalogitem_edit"
 
       st1 = FactoryGirl.create(:service_template, :name => "st1")
       st2 = FactoryGirl.create(:service_template, :name => "st2")
@@ -124,7 +124,7 @@ describe "Service Templates API" do
     end
 
     it "rejects resource deletes for invalid resources" do
-      api_basic_authorize collection_action_identifier(:service_templates, :delete)
+      api_basic_authorize "catalogitem_delete"
 
       run_delete(service_templates_url(999_999))
 
@@ -132,7 +132,7 @@ describe "Service Templates API" do
     end
 
     it "supports single resource deletes" do
-      api_basic_authorize collection_action_identifier(:service_templates, :delete)
+      api_basic_authorize "catalogitem_delete"
 
       st = FactoryGirl.create(:service_template, :name => "st", :description => "st description")
 
@@ -143,7 +143,7 @@ describe "Service Templates API" do
     end
 
     it "supports multiple resource deletes" do
-      api_basic_authorize collection_action_identifier(:service_templates, :delete)
+      api_basic_authorize "catalogitem_delete"
 
       st1 = FactoryGirl.create(:service_template, :name => "st1", :description => "st1 description")
       st2 = FactoryGirl.create(:service_template, :name => "st2", :description => "st2 description")
@@ -162,7 +162,7 @@ describe "Service Templates API" do
     it "can delete a service template through its nested URI" do
       service_catalog = FactoryGirl.create(:service_template_catalog)
       service_template = FactoryGirl.create(:service_template, :service_template_catalog => service_catalog)
-      api_basic_authorize action_identifier(:service_templates, :delete, :subresource_actions, :delete)
+      api_basic_authorize "catalogitem_delete"
 
       expect do
         run_delete("#{service_catalogs_url(service_catalog.id)}/service_templates/#{service_template.id}")
@@ -178,7 +178,7 @@ describe "Service Templates API" do
       service_request = FactoryGirl.create(:service_template_provision_request,
                                            :requester => @user,
                                            :source    => service_template)
-      api_basic_authorize(action_identifier(:service_requests, :read, :subcollection_actions, :get))
+      api_basic_authorize("miq_request_view")
 
       run_get("#{service_templates_url(service_template.id)}/service_requests")
 

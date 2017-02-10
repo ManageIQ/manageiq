@@ -9,7 +9,7 @@ describe "Container Deployments API" do
 
   it "creates container deployment with POST" do
     allow_any_instance_of(ContainerDeployment).to receive(:create_deployment).and_return(true)
-    api_basic_authorize collection_action_identifier(:container_deployments, :create)
+    api_basic_authorize "container_deployment_create"
     run_post(container_deployments_url, gen_request(:create, :example_data => true))
     expect(response).to have_http_status(:ok)
   end

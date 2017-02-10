@@ -18,7 +18,7 @@ describe "Tags API" do
 
   context "Tag collection" do
     it "query all tags" do
-      api_basic_authorize collection_action_identifier(:tags, :read, :get)
+      api_basic_authorize "ops_settings"
 
       run_get tags_url
 
@@ -27,7 +27,7 @@ describe "Tags API" do
 
     context "with an appropriate role" do
       it "can create a tag with category by href" do
-        api_basic_authorize collection_action_identifier(:tags, :create)
+        api_basic_authorize "ops_settings"
         category = FactoryGirl.create(:category)
         options = {:name => "test_tag", :description => "Test Tag", :category => {:href => categories_url(category.id)}}
 
@@ -41,7 +41,7 @@ describe "Tags API" do
       end
 
       it "can create a tag with a category by id" do
-        api_basic_authorize collection_action_identifier(:tags, :create)
+        api_basic_authorize "ops_settings"
         category = FactoryGirl.create(:category)
 
         expect do
@@ -56,7 +56,7 @@ describe "Tags API" do
       end
 
       it "can create a tag with a category by name" do
-        api_basic_authorize collection_action_identifier(:tags, :create)
+        api_basic_authorize "ops_settings"
         category = FactoryGirl.create(:category)
 
         expect do
@@ -71,7 +71,7 @@ describe "Tags API" do
       end
 
       it "can create a tag as a subresource of a category" do
-        api_basic_authorize collection_action_identifier(:tags, :create)
+        api_basic_authorize "ops_settings"
         category = FactoryGirl.create(:category)
 
         expect do
@@ -85,7 +85,7 @@ describe "Tags API" do
       end
 
       it "returns bad request when the category doesn't exist" do
-        api_basic_authorize collection_action_identifier(:tags, :create)
+        api_basic_authorize "ops_settings"
 
         run_post tags_url, :name => "test_tag", :description => "Test Tag"
 
@@ -93,7 +93,7 @@ describe "Tags API" do
       end
 
       it "can update a tag's name" do
-        api_basic_authorize action_identifier(:tags, :edit)
+        api_basic_authorize "ops_settings"
         classification = FactoryGirl.create(:classification_tag)
         category = FactoryGirl.create(:category, :children => [classification])
         tag = classification.tag
@@ -106,7 +106,7 @@ describe "Tags API" do
       end
 
       it "can update a tag's description" do
-        api_basic_authorize action_identifier(:tags, :edit)
+        api_basic_authorize "ops_settings"
         classification = FactoryGirl.create(:classification_tag)
         FactoryGirl.create(:category, :children => [classification])
         tag = classification.tag
@@ -119,7 +119,7 @@ describe "Tags API" do
       end
 
       it "can delete a tag through POST" do
-        api_basic_authorize action_identifier(:tags, :delete)
+        api_basic_authorize "ops_settings"
         classification = FactoryGirl.create(:classification_tag)
         tag = classification.tag
 
@@ -129,7 +129,7 @@ describe "Tags API" do
       end
 
       it "can delete a tag through DELETE" do
-        api_basic_authorize action_identifier(:tags, :delete)
+        api_basic_authorize "ops_settings"
         classification = FactoryGirl.create(:classification_tag)
         tag = classification.tag
 
@@ -139,7 +139,7 @@ describe "Tags API" do
       end
 
       it "will respond with 404 not found when deleting a non-existent tag through DELETE" do
-        api_basic_authorize action_identifier(:tags, :delete)
+        api_basic_authorize "ops_settings"
         classification = FactoryGirl.create(:classification_tag)
         tag_id = classification.tag.id
         classification.destroy!
@@ -150,7 +150,7 @@ describe "Tags API" do
       end
 
       it "will respond with 404 not found when deleting a non-existent tag through POST" do
-        api_basic_authorize action_identifier(:tags, :delete)
+        api_basic_authorize "ops_settings"
         classification = FactoryGirl.create(:classification_tag)
         tag_id = classification.tag.id
         classification.destroy!
@@ -161,7 +161,7 @@ describe "Tags API" do
       end
 
       it "can delete multiple tags within a category by id" do
-        api_basic_authorize action_identifier(:tags, :delete)
+        api_basic_authorize "ops_settings"
         classification1 = FactoryGirl.create(:classification_tag)
         classification2 = FactoryGirl.create(:classification_tag)
         category = FactoryGirl.create(:category, :children => [classification1, classification2])
@@ -184,7 +184,7 @@ describe "Tags API" do
       end
 
       it "can delete multiple tags within a category by name" do
-        api_basic_authorize action_identifier(:tags, :delete)
+        api_basic_authorize "ops_settings"
         classification1 = FactoryGirl.create(:classification_tag)
         classification2 = FactoryGirl.create(:classification_tag)
         category = FactoryGirl.create(:category, :children => [classification1, classification2])
@@ -250,7 +250,7 @@ describe "Tags API" do
     end
 
     it "query a tag with an invalid Id" do
-      api_basic_authorize action_identifier(:tags, :read, :resource_actions, :get)
+      api_basic_authorize "ops_settings"
 
       run_get invalid_tag_url
 
@@ -258,7 +258,7 @@ describe "Tags API" do
     end
 
     it "query tags with expanded resources" do
-      api_basic_authorize collection_action_identifier(:tags, :read, :get)
+      api_basic_authorize "ops_settings"
 
       run_get tags_url, :expand => "resources"
 
@@ -267,7 +267,7 @@ describe "Tags API" do
     end
 
     it "query tag details with multiple virtual attributes" do
-      api_basic_authorize action_identifier(:tags, :read, :resource_actions, :get)
+      api_basic_authorize "ops_settings"
 
       tag = Tag.last
       attr_list = "category.name,category.description,classification.name,classification.description"
@@ -283,7 +283,7 @@ describe "Tags API" do
     end
 
     it "query tag details with categorization" do
-      api_basic_authorize action_identifier(:tags, :read, :resource_actions, :get)
+      api_basic_authorize "ops_settings"
 
       tag = Tag.last
       run_get tags_url(tag.id), :attributes => "categorization"
@@ -302,7 +302,7 @@ describe "Tags API" do
     end
 
     it "query all tags with categorization" do
-      api_basic_authorize action_identifier(:tags, :read, :resource_actions, :get)
+      api_basic_authorize "ops_settings"
 
       run_get tags_url, :expand => "resources", :attributes => "categorization"
 

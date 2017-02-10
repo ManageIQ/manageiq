@@ -10,7 +10,7 @@ RSpec.describe 'Cloud Networks API' do
 
     it 'can list cloud networks' do
       FactoryGirl.create_list(:cloud_network, 2)
-      api_basic_authorize collection_action_identifier(:cloud_networks, :read, :get)
+      api_basic_authorize "miq_cloud_networks_view"
 
       run_get cloud_networks_url
 
@@ -26,7 +26,7 @@ RSpec.describe 'Cloud Networks API' do
 
     it 'queries Providers cloud_networks' do
       cloud_network_ids = provider.cloud_networks.pluck(:id)
-      api_basic_authorize collection_action_identifier(:providers, :read, :get)
+      api_basic_authorize "ems_infra_show_list"
 
       run_get providers_cloud_networks_url, :expand => 'resources'
 
@@ -35,7 +35,7 @@ RSpec.describe 'Cloud Networks API' do
     end
 
     it 'queries individual provider cloud_network' do
-      api_basic_authorize collection_action_identifier(:providers, :read, :get)
+      api_basic_authorize "ems_infra_show_list"
       network = provider.cloud_networks.first
       cloud_network_url = "#{providers_cloud_networks_url}/#{network.id}"
 
@@ -47,7 +47,7 @@ RSpec.describe 'Cloud Networks API' do
     it 'successfully returns providers on query when providers do not have cloud_networks attribute' do
       FactoryGirl.create(:ems_openshift) # Openshift does not respond to #cloud_networks
       FactoryGirl.create(:ems_amazon_with_cloud_networks) # Provider with cloud networks
-      api_basic_authorize collection_action_identifier(:providers, :read, :get)
+      api_basic_authorize "ems_infra_show_list"
 
       run_get providers_url, :expand => 'resources,cloud_networks'
 
@@ -70,7 +70,7 @@ RSpec.describe 'Cloud Networks API' do
       openshift = FactoryGirl.create(:ems_openshift)
       openshift_cloud_networks_url = "#{providers_url(openshift.id)}/cloud_networks"
 
-      api_basic_authorize collection_action_identifier(:providers, :read, :get)
+      api_basic_authorize "ems_infra_show_list"
 
       run_get openshift_cloud_networks_url, :expand => 'resources'
 

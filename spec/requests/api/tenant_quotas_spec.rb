@@ -3,7 +3,7 @@ describe "tenant quotas API" do
 
   context "with an appropriate role" do
     it "can list all the quotas form a tenant" do
-      api_basic_authorize action_identifier(:quotas, :read, :subcollection_actions, :get)
+      api_basic_authorize "rbac_tenant_manage_quotas"
 
       quota_1 = FactoryGirl.create(:tenant_quota, :tenant_id => tenant.id, :name => :cpu_allocated, :value => 1)
       quota_2 = FactoryGirl.create(:tenant_quota, :tenant_id => tenant.id, :name => :mem_allocated, :value => 20)
@@ -22,7 +22,7 @@ describe "tenant quotas API" do
     end
 
     it "can show a single quota from a tenant" do
-      api_basic_authorize action_identifier(:quotas, :read, :subresource_actions, :get)
+      api_basic_authorize "rbac_tenant_manage_quotas"
 
       quota = FactoryGirl.create(:tenant_quota, :tenant_id => tenant.id, :name => :cpu_allocated, :value => 1)
 
@@ -41,7 +41,7 @@ describe "tenant quotas API" do
     end
 
     it "can create a quota from a tenant" do
-      api_basic_authorize action_identifier(:quotas, :create, :subcollection_actions, :post)
+      api_basic_authorize "rbac_tenant_manage_quotas"
 
       expect do
         run_post "/api/tenants/#{tenant.id}/quotas/", :name => :cpu_allocated, :value => 1
@@ -51,7 +51,7 @@ describe "tenant quotas API" do
     end
 
     it "can update a quota from a tenant with POST" do
-      api_basic_authorize action_identifier(:quotas, :edit, :subresource_actions, :post)
+      api_basic_authorize "rbac_tenant_manage_quotas"
 
       quota = FactoryGirl.create(:tenant_quota, :tenant_id => tenant.id, :name => :cpu_allocated, :value => 1)
 
@@ -65,7 +65,7 @@ describe "tenant quotas API" do
     end
 
     it "can update a quota from a tenant with PUT" do
-      api_basic_authorize action_identifier(:quotas, :edit, :subresource_actions, :put)
+      api_basic_authorize "rbac_tenant_manage_quotas"
 
       quota = FactoryGirl.create(:tenant_quota, :tenant_id => tenant.id, :name => :cpu_allocated, :value => 1)
 
@@ -79,7 +79,7 @@ describe "tenant quotas API" do
     end
 
     it "can update multiple quotas from a tenant with POST" do
-      api_basic_authorize action_identifier(:quotas, :edit, :subcollection_actions, :post)
+      api_basic_authorize "rbac_tenant_manage_quotas"
 
       quota_1 = FactoryGirl.create(:tenant_quota, :tenant_id => tenant.id, :name => :cpu_allocated, :value => 1)
       quota_2 = FactoryGirl.create(:tenant_quota, :tenant_id => tenant.id, :name => :mem_allocated, :value => 2)
@@ -102,7 +102,7 @@ describe "tenant quotas API" do
     end
 
     it "can delete a quota from a tenant with POST" do
-      api_basic_authorize action_identifier(:quotas, :delete, :subresource_actions, :post)
+      api_basic_authorize "rbac_tenant_manage_quotas"
 
       quota = FactoryGirl.create(:tenant_quota, :tenant_id => tenant.id, :name => :cpu_allocated, :value => 1)
 
@@ -114,7 +114,7 @@ describe "tenant quotas API" do
     end
 
     it "can delete a quota from a tenant with DELETE" do
-      api_basic_authorize action_identifier(:quotas, :delete, :subresource_actions, :delete)
+      api_basic_authorize "rbac_tenant_manage_quotas"
 
       quota = FactoryGirl.create(:tenant_quota, :tenant_id => tenant.id, :name => :cpu_allocated, :value => 1)
 
@@ -126,7 +126,7 @@ describe "tenant quotas API" do
     end
 
     it "can delete multiple quotas from a tenant with POST" do
-      api_basic_authorize action_identifier(:quotas, :delete, :subcollection_actions, :post)
+      api_basic_authorize "rbac_tenant_manage_quotas"
 
       quota_1 = FactoryGirl.create(:tenant_quota, :tenant_id => tenant.id, :name => :cpu_allocated, :value => 1)
       quota_2 = FactoryGirl.create(:tenant_quota, :tenant_id => tenant.id, :name => :mem_allocated, :value => 2)

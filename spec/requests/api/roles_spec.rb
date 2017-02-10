@@ -60,7 +60,7 @@ describe "Roles API" do
   end
 
   def test_features_query(role, role_url, klass, attr = :id)
-    api_basic_authorize action_identifier(:roles, :read, :resource_actions, :get)
+    api_basic_authorize "rbac_role_show"
 
     run_get role_url, :expand => "features"
     expect(response).to have_http_status(:ok)
@@ -92,7 +92,7 @@ describe "Roles API" do
     end
 
     it "rejects role creation with id specified" do
-      api_basic_authorize collection_action_identifier(:roles, :create)
+      api_basic_authorize "rbac_role_add"
 
       run_post(roles_url, "name" => "sample role", "id" => 100)
 
@@ -100,7 +100,7 @@ describe "Roles API" do
     end
 
     it "supports single role creation" do
-      api_basic_authorize collection_action_identifier(:roles, :create)
+      api_basic_authorize "rbac_role_add"
 
       run_post(roles_url, sample_role1)
 
@@ -120,7 +120,7 @@ describe "Roles API" do
     end
 
     it "supports single role creation via action" do
-      api_basic_authorize collection_action_identifier(:roles, :create)
+      api_basic_authorize "rbac_role_add"
 
       run_post(roles_url, gen_request(:create, sample_role1))
 
@@ -136,7 +136,7 @@ describe "Roles API" do
     end
 
     it "supports multiple role creation" do
-      api_basic_authorize collection_action_identifier(:roles, :create)
+      api_basic_authorize "rbac_role_add"
 
       run_post(roles_url, gen_request(:create, [sample_role1, sample_role2]))
 
@@ -171,7 +171,7 @@ describe "Roles API" do
     end
 
     it "rejects role edits for invalid resources" do
-      api_basic_authorize collection_action_identifier(:roles, :edit)
+      api_basic_authorize "rbac_role_edit"
 
       run_post(roles_url(999_999), gen_request(:edit, "name" => "updated role name"))
 
@@ -179,7 +179,7 @@ describe "Roles API" do
     end
 
     it "supports single role edit" do
-      api_basic_authorize collection_action_identifier(:roles, :edit)
+      api_basic_authorize "rbac_role_edit"
 
       role = FactoryGirl.create(:miq_user_role)
 
@@ -194,7 +194,7 @@ describe "Roles API" do
     end
 
     it "supports multiple role edits" do
-      api_basic_authorize collection_action_identifier(:roles, :edit)
+      api_basic_authorize "rbac_role_edit"
 
       r1 = FactoryGirl.create(:miq_user_role, :name => "role1")
       r2 = FactoryGirl.create(:miq_user_role, :name => "role2")
@@ -214,7 +214,7 @@ describe "Roles API" do
 
   describe "Role Feature Assignments" do
     it "supports assigning just a single product feature" do
-      api_basic_authorize collection_action_identifier(:roles, :edit)
+      api_basic_authorize "rbac_role_edit"
       role = FactoryGirl.create(:miq_user_role, :features => "miq_request_approval")
 
       new_feature = {:identifier => "miq_request_view"}
@@ -235,7 +235,7 @@ describe "Roles API" do
     end
 
     it "supports assigning multiple product features" do
-      api_basic_authorize collection_action_identifier(:roles, :edit)
+      api_basic_authorize "rbac_role_edit"
       role = FactoryGirl.create(:miq_user_role, :features => "miq_request_approval")
 
       url = "#{roles_url}/#{role.id}/features"
@@ -257,7 +257,7 @@ describe "Roles API" do
     end
 
     it "supports un-assigning just a single product feature" do
-      api_basic_authorize collection_action_identifier(:roles, :edit)
+      api_basic_authorize "rbac_role_edit"
       role = FactoryGirl.create(:miq_user_role, :miq_product_features => @product_features)
 
       removed_feature = {:identifier => "ems_infra_tag"}
@@ -282,7 +282,7 @@ describe "Roles API" do
     end
 
     it "supports un-assigning multiple product features" do
-      api_basic_authorize collection_action_identifier(:roles, :edit)
+      api_basic_authorize "rbac_role_edit"
       role = FactoryGirl.create(:miq_user_role, :miq_product_features => @product_features)
 
       url = "#{roles_url}/#{role.id}/features"
@@ -327,7 +327,7 @@ describe "Roles API" do
     end
 
     it "rejects role deletes for invalid roles" do
-      api_basic_authorize collection_action_identifier(:roles, :delete)
+      api_basic_authorize "rbac_role_delete"
 
       run_delete(roles_url(999_999))
 
@@ -335,7 +335,7 @@ describe "Roles API" do
     end
 
     it "supports single role delete" do
-      api_basic_authorize collection_action_identifier(:roles, :delete)
+      api_basic_authorize "rbac_role_delete"
 
       role = FactoryGirl.create(:miq_user_role, :name => "role1")
 
@@ -346,7 +346,7 @@ describe "Roles API" do
     end
 
     it "supports single role delete action" do
-      api_basic_authorize collection_action_identifier(:roles, :delete)
+      api_basic_authorize "rbac_role_delete"
 
       role = FactoryGirl.create(:miq_user_role, :name => "role1")
 
@@ -357,7 +357,7 @@ describe "Roles API" do
     end
 
     it "supports multiple role deletes" do
-      api_basic_authorize collection_action_identifier(:roles, :delete)
+      api_basic_authorize "rbac_role_delete"
 
       r1 = FactoryGirl.create(:miq_user_role, :name => "role name 1")
       r2 = FactoryGirl.create(:miq_user_role, :name => "role name 2")

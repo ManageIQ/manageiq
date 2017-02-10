@@ -30,7 +30,7 @@ describe "Logging" do
     end
 
     it "logs hashed details about the request" do
-      api_basic_authorize collection_action_identifier(:users, :read, :get)
+      api_basic_authorize "rbac_user_show_list"
 
       log_request_expectations = EXPECTED_LOGGED_PARAMETERS.merge(
         "Request" => a_hash_including(:path          => "/api/users",
@@ -59,7 +59,7 @@ describe "Logging" do
     end
 
     it "filters password attributes in nested parameters" do
-      api_basic_authorize collection_action_identifier(:services, :create)
+      api_basic_authorize "service_create"
 
       log_request_expectations = EXPECTED_LOGGED_PARAMETERS.merge(
         "Parameters" => a_hash_including(

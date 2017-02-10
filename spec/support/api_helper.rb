@@ -103,24 +103,6 @@ module Spec
         @miq_server_guid ||= MiqUUID.new_guid
       end
 
-      def action_identifier(type, action, selection = :resource_actions, method = :post)
-        Api::ApiConfig.collections[type][selection][method]
-          .detect { |spec| spec[:name] == action.to_s }[:identifier]
-      end
-
-      def collection_action_identifier(type, action, method = :post)
-        action_identifier(type, action, :collection_actions, method)
-      end
-
-      def subcollection_action_identifier(type, subtype, action, method = :post)
-        subtype_actions = "#{subtype}_subcollection_actions".to_sym
-        if Api::ApiConfig.collections[type][subtype_actions]
-          action_identifier(type, action, subtype_actions, method)
-        else
-          action_identifier(subtype, action, :subcollection_actions, method)
-        end
-      end
-
       def gen_request(action, data = nil, *hrefs)
         request = {"action" => action.to_s}
         if hrefs.present?

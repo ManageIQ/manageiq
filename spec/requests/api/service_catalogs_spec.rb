@@ -42,7 +42,7 @@ describe "Service Catalogs API" do
     end
 
     it "rejects resource creation with id specified" do
-      api_basic_authorize collection_action_identifier(:service_catalogs, :add)
+      api_basic_authorize "st_catalog_new"
 
       run_post(service_catalogs_url, gen_request(:add, "name" => "sample service catalog", "id" => 100))
 
@@ -50,7 +50,7 @@ describe "Service Catalogs API" do
     end
 
     it "supports single resource creation" do
-      api_basic_authorize collection_action_identifier(:service_catalogs, :add)
+      api_basic_authorize "st_catalog_new"
 
       run_post(service_catalogs_url, gen_request(:add, "name" => "sample service catalog"))
 
@@ -71,7 +71,7 @@ describe "Service Catalogs API" do
     end
 
     it "supports single resource creation via create action" do
-      api_basic_authorize collection_action_identifier(:service_catalogs, :add)
+      api_basic_authorize "st_catalog_new"
 
       run_post(service_catalogs_url, "name" => "sample service catalog")
 
@@ -92,7 +92,7 @@ describe "Service Catalogs API" do
     end
 
     it "supports multiple resource creation" do
-      api_basic_authorize collection_action_identifier(:service_catalogs, :add)
+      api_basic_authorize "st_catalog_new"
 
       run_post(service_catalogs_url, gen_request(:add, [{"name" => "sc1"}, {"name" => "sc2"}]))
 
@@ -112,7 +112,7 @@ describe "Service Catalogs API" do
     end
 
     it "supports single resource creation with service templates" do
-      api_basic_authorize collection_action_identifier(:service_catalogs, :add)
+      api_basic_authorize "st_catalog_new"
 
       st1 = FactoryGirl.create(:service_template)
       st2 = FactoryGirl.create(:service_template)
@@ -145,7 +145,7 @@ describe "Service Catalogs API" do
     end
 
     it "rejects edits for invalid resources" do
-      api_basic_authorize collection_action_identifier(:service_catalogs, :edit)
+      api_basic_authorize "st_catalog_edit"
 
       run_post(service_catalogs_url(999_999), gen_request(:edit, "description" => "updated sc description"))
 
@@ -153,7 +153,7 @@ describe "Service Catalogs API" do
     end
 
     it "supports single resource edit" do
-      api_basic_authorize collection_action_identifier(:service_catalogs, :edit)
+      api_basic_authorize "st_catalog_edit"
 
       sc = FactoryGirl.create(:service_template_catalog, :name => "sc", :description => "sc description")
 
@@ -179,7 +179,7 @@ describe "Service Catalogs API" do
     end
 
     it "supports multiple resource edits" do
-      api_basic_authorize collection_action_identifier(:service_catalogs, :edit)
+      api_basic_authorize "st_catalog_edit"
 
       sc1 = FactoryGirl.create(:service_template_catalog, :name => "sc1", :description => "sc1 description")
       sc2 = FactoryGirl.create(:service_template_catalog, :name => "sc2", :description => "sc2 description")
@@ -215,7 +215,7 @@ describe "Service Catalogs API" do
     end
 
     it "rejects resource deletes for invalid resources" do
-      api_basic_authorize collection_action_identifier(:service_catalogs, :delete)
+      api_basic_authorize "st_catalog_delete"
 
       run_delete(service_catalogs_url(999_999))
 
@@ -223,7 +223,7 @@ describe "Service Catalogs API" do
     end
 
     it "supports single resource deletes" do
-      api_basic_authorize collection_action_identifier(:service_catalogs, :delete)
+      api_basic_authorize "st_catalog_delete"
 
       sc = FactoryGirl.create(:service_template_catalog, :name => "sc", :description => "sc description")
 
@@ -234,7 +234,7 @@ describe "Service Catalogs API" do
     end
 
     it "supports resource deletes via action" do
-      api_basic_authorize collection_action_identifier(:service_catalogs, :delete)
+      api_basic_authorize "st_catalog_delete"
 
       sc = FactoryGirl.create(:service_template_catalog, :name => "sc", :description => "sc description")
 
@@ -245,7 +245,7 @@ describe "Service Catalogs API" do
     end
 
     it "supports multiple resource deletes" do
-      api_basic_authorize collection_action_identifier(:service_catalogs, :delete)
+      api_basic_authorize "st_catalog_delete"
 
       sc1 = FactoryGirl.create(:service_template_catalog, :name => "sc1", :description => "sc1 description")
       sc2 = FactoryGirl.create(:service_template_catalog, :name => "sc2", :description => "sc2 description")
@@ -279,7 +279,7 @@ describe "Service Catalogs API" do
     end
 
     it "rejects assign requests with invalid service template" do
-      api_basic_authorize subcollection_action_identifier(:service_catalogs, :service_templates, :assign)
+      api_basic_authorize "st_catalog_edit"
 
       sc = FactoryGirl.create(:service_template_catalog, :name => "sc", :description => "sc description")
 
@@ -290,7 +290,7 @@ describe "Service Catalogs API" do
     end
 
     it "supports assign requests" do
-      api_basic_authorize subcollection_action_identifier(:service_catalogs, :service_templates, :assign)
+      api_basic_authorize "st_catalog_edit"
 
       sc = FactoryGirl.create(:service_template_catalog, :name => "sc", :description => "sc description")
       st = FactoryGirl.create(:service_template)
@@ -307,7 +307,7 @@ describe "Service Catalogs API" do
     end
 
     it "supports unassign requests" do
-      api_basic_authorize subcollection_action_identifier(:service_catalogs, :service_templates, :assign)
+      api_basic_authorize "st_catalog_edit"
 
       sc = FactoryGirl.create(:service_template_catalog, :name => "sc", :description => "sc description")
       st1 = FactoryGirl.create(:service_template)
@@ -352,8 +352,8 @@ describe "Service Catalogs API" do
     end
 
     it "does not return order action for non-orderable service templates" do
-      api_basic_authorize(subcollection_action_identifier(:service_catalogs, :service_templates, :edit),
-                          subcollection_action_identifier(:service_catalogs, :service_templates, :order))
+      api_basic_authorize("catalogitem_edit",
+                          "svc_catalog_provision")
 
       init_st(st1, ra1)
       sc.service_templates = [st1]
@@ -368,8 +368,8 @@ describe "Service Catalogs API" do
     end
 
     it "returns order action for orderable service templates" do
-      api_basic_authorize(subcollection_action_identifier(:service_catalogs, :service_templates, :edit),
-                          subcollection_action_identifier(:service_catalogs, :service_templates, :order))
+      api_basic_authorize("catalogitem_edit",
+                          "svc_catalog_provision")
 
       init_st(st1, ra1)
       sc.service_templates = [st1]
@@ -389,7 +389,7 @@ describe "Service Catalogs API" do
     end
 
     it "supports single order request" do
-      api_basic_authorize subcollection_action_identifier(:service_catalogs, :service_templates, :order)
+      api_basic_authorize "svc_catalog_provision"
 
       init_st(st1, ra1)
       sc.service_templates = [st1]
@@ -400,7 +400,7 @@ describe "Service Catalogs API" do
     end
 
     it "accepts order requests with required fields" do
-      api_basic_authorize subcollection_action_identifier(:service_catalogs, :service_templates, :order)
+      api_basic_authorize "svc_catalog_provision"
 
       text1.required = true
       init_st(st1, ra1)
@@ -412,7 +412,7 @@ describe "Service Catalogs API" do
     end
 
     it "rejects order requests without required fields" do
-      api_basic_authorize subcollection_action_identifier(:service_catalogs, :service_templates, :order)
+      api_basic_authorize "svc_catalog_provision"
 
       text1.required = true
       init_st(st1, ra1)
@@ -424,7 +424,7 @@ describe "Service Catalogs API" do
     end
 
     it "supports multiple order requests" do
-      api_basic_authorize subcollection_action_identifier(:service_catalogs, :service_templates, :order)
+      api_basic_authorize "svc_catalog_provision"
 
       init_st(st1, ra1)
       init_st(st2, ra2)
@@ -467,7 +467,7 @@ describe "Service Catalogs API" do
     end
 
     it "rejects refresh dialog fields with unspecified fields" do
-      api_basic_authorize subcollection_action_identifier(:service_catalogs, :service_templates, :refresh_dialog_fields)
+      api_basic_authorize "svc_catalog_provision"
       sc.service_templates = [st1]
 
       run_post(sc_templates_url(sc.id, st1.id), gen_request(:refresh_dialog_fields))
@@ -476,7 +476,7 @@ describe "Service Catalogs API" do
     end
 
     it "rejects refresh dialog fields of invalid fields" do
-      api_basic_authorize subcollection_action_identifier(:service_catalogs, :service_templates, :refresh_dialog_fields)
+      api_basic_authorize "svc_catalog_provision"
       init_st_dialog
 
       run_post(sc_templates_url(sc.id, st1.id), gen_request(:refresh_dialog_fields, "fields" => %w(bad_field)))
@@ -485,7 +485,7 @@ describe "Service Catalogs API" do
     end
 
     it "supports refresh dialog fields of valid fields" do
-      api_basic_authorize subcollection_action_identifier(:service_catalogs, :service_templates, :refresh_dialog_fields)
+      api_basic_authorize "svc_catalog_provision"
       init_st_dialog
 
       run_post(sc_templates_url(sc.id, st1.id), gen_request(:refresh_dialog_fields, "fields" => %w(text1)))

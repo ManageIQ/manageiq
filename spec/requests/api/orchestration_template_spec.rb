@@ -7,7 +7,7 @@ RSpec.describe 'Orchestration Template API' do
       FactoryGirl.create(:orchestration_template_hot_with_content)
       FactoryGirl.create(:orchestration_template_vnfd_with_content)
 
-      api_basic_authorize collection_action_identifier(:orchestration_templates, :read, :get)
+      api_basic_authorize "orchestration_templates_view"
       run_get(orchestration_templates_url)
       expect_query_result(:orchestration_templates, 3, 3)
     end
@@ -45,7 +45,7 @@ RSpec.describe 'Orchestration Template API' do
     end
 
     it 'supports single HOT orchestration_template creation' do
-      api_basic_authorize collection_action_identifier(:orchestration_templates, :create)
+      api_basic_authorize "orchestration_template_add"
 
       expect do
         run_post(orchestration_templates_url, request_body_hot)
@@ -53,7 +53,7 @@ RSpec.describe 'Orchestration Template API' do
     end
 
     it 'supports single CFN orchestration_template creation' do
-      api_basic_authorize collection_action_identifier(:orchestration_templates, :create)
+      api_basic_authorize "orchestration_template_add"
 
       expect do
         run_post(orchestration_templates_url, request_body_cfn)
@@ -61,7 +61,7 @@ RSpec.describe 'Orchestration Template API' do
     end
 
     it 'supports single VNFd orchestration_template creation' do
-      api_basic_authorize collection_action_identifier(:orchestration_templates, :create)
+      api_basic_authorize "orchestration_template_add"
 
       expect do
         run_post(orchestration_templates_url, request_body_vnfd)
@@ -69,7 +69,7 @@ RSpec.describe 'Orchestration Template API' do
     end
 
     it 'supports orchestration_template creation via action' do
-      api_basic_authorize collection_action_identifier(:orchestration_templates, :create)
+      api_basic_authorize "orchestration_template_add"
 
       expect do
         run_post(orchestration_templates_url, gen_request(:create, request_body_hot))
@@ -77,7 +77,7 @@ RSpec.describe 'Orchestration Template API' do
     end
 
     it 'rejects a request with an id' do
-      api_basic_authorize collection_action_identifier(:orchestration_templates, :create)
+      api_basic_authorize "orchestration_template_add"
 
       run_post(orchestration_templates_url, request_body_hot.merge(:id => 1))
 
@@ -89,7 +89,7 @@ RSpec.describe 'Orchestration Template API' do
     it 'supports single orchestration_template edit' do
       hot = FactoryGirl.create(:orchestration_template_hot_with_content, :name => "New Hot Template")
 
-      api_basic_authorize collection_action_identifier(:orchestration_templates, :edit)
+      api_basic_authorize "orchestration_template_edit"
 
       edited_name = "Edited Hot Template"
       run_post(orchestration_templates_url(hot.id), gen_request(:edit, :name => edited_name))
@@ -100,11 +100,11 @@ RSpec.describe 'Orchestration Template API' do
 
   context 'orchestration_template delete' do
     it 'supports single orchestration_template delete' do
-      api_basic_authorize collection_action_identifier(:orchestration_templates, :delete)
+      api_basic_authorize "orchestration_template_remove"
 
       cfn = FactoryGirl.create(:orchestration_template_cfn_with_content)
 
-      api_basic_authorize collection_action_identifier(:orchestration_templates, :delete)
+      api_basic_authorize "orchestration_template_remove"
 
       run_delete(orchestration_templates_url(cfn.id))
 
@@ -113,7 +113,7 @@ RSpec.describe 'Orchestration Template API' do
     end
 
     it 'supports multiple orchestration_template delete' do
-      api_basic_authorize collection_action_identifier(:orchestration_templates, :delete)
+      api_basic_authorize "orchestration_template_remove"
 
       cfn = FactoryGirl.create(:orchestration_template_cfn_with_content)
       hot = FactoryGirl.create(:orchestration_template_hot_with_content)
@@ -142,7 +142,7 @@ RSpec.describe 'Orchestration Template API' do
     end
 
     it 'forbids orchestration template copy with no content specified' do
-      api_basic_authorize collection_action_identifier(:orchestration_templates, :copy)
+      api_basic_authorize "orchestration_template_copy"
 
       orchestration_template = FactoryGirl.create(:orchestration_template_cfn)
 
@@ -152,7 +152,7 @@ RSpec.describe 'Orchestration Template API' do
     end
 
     it 'can copy single orchestration template with a different content' do
-      api_basic_authorize collection_action_identifier(:orchestration_templates, :copy)
+      api_basic_authorize "orchestration_template_copy"
 
       orchestration_template = FactoryGirl.create(:orchestration_template_cfn)
       new_content            = "{ 'Description': 'Test content 1' }\n"
@@ -178,7 +178,7 @@ RSpec.describe 'Orchestration Template API' do
     end
 
     it 'can copy multiple orchestration templates with a different content' do
-      api_basic_authorize collection_action_identifier(:orchestration_templates, :copy)
+      api_basic_authorize "orchestration_template_copy"
 
       orchestration_template   = FactoryGirl.create(:orchestration_template_cfn)
       new_content              = "{ 'Description': 'Test content 1' }\n"

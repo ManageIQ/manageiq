@@ -27,7 +27,7 @@ RSpec.describe "users API" do
 
   context "with an appropriate role" do
     it "can change the user's password" do
-      api_basic_authorize action_identifier(:users, :edit)
+      api_basic_authorize "rbac_user_edit"
 
       expect do
         run_post users_url(@user.id), gen_request(:edit, :password => "new_password")
@@ -37,7 +37,7 @@ RSpec.describe "users API" do
     end
 
     it "can change another user's password" do
-      api_basic_authorize action_identifier(:users, :edit)
+      api_basic_authorize "rbac_user_edit"
       user = FactoryGirl.create(:user)
 
       expect do
@@ -60,7 +60,7 @@ RSpec.describe "users API" do
     end
 
     it "can change the user's own email" do
-      api_basic_authorize action_identifier(:users, :edit)
+      api_basic_authorize "rbac_user_edit"
 
       expect do
         run_post users_url(@user.id), gen_request(:edit, :email => "tom@cartoons.com")
@@ -70,7 +70,7 @@ RSpec.describe "users API" do
     end
 
     it "can change the user's own settings" do
-      api_basic_authorize action_identifier(:users, :edit)
+      api_basic_authorize "rbac_user_edit"
 
       expect do
         run_post users_url(@user.id), gen_request(:edit, :settings => {:cartoon => {:tom_jerry => 'y'}})
@@ -122,7 +122,7 @@ RSpec.describe "users API" do
     end
 
     it "rejects user creation with id specified" do
-      api_basic_authorize collection_action_identifier(:users, :create)
+      api_basic_authorize "rbac_user_add"
 
       run_post(users_url, "userid" => "userid1", "id" => 100)
 
@@ -130,7 +130,7 @@ RSpec.describe "users API" do
     end
 
     it "rejects user creation with invalid group specified" do
-      api_basic_authorize collection_action_identifier(:users, :create)
+      api_basic_authorize "rbac_user_add"
 
       run_post(users_url, sample_user2.merge("group" => {"id" => 999_999}))
 
@@ -138,7 +138,7 @@ RSpec.describe "users API" do
     end
 
     it "rejects user creation with missing attribute" do
-      api_basic_authorize collection_action_identifier(:users, :create)
+      api_basic_authorize "rbac_user_add"
 
       run_post(users_url, sample_user2.except(:userid))
 
@@ -146,7 +146,7 @@ RSpec.describe "users API" do
     end
 
     it "supports single user creation" do
-      api_basic_authorize collection_action_identifier(:users, :create)
+      api_basic_authorize "rbac_user_add"
 
       run_post(users_url, sample_user1)
 
@@ -158,7 +158,7 @@ RSpec.describe "users API" do
     end
 
     it "supports single user creation via action" do
-      api_basic_authorize collection_action_identifier(:users, :create)
+      api_basic_authorize "rbac_user_add"
 
       run_post(users_url, gen_request(:create, sample_user1))
 
@@ -170,7 +170,7 @@ RSpec.describe "users API" do
     end
 
     it "supports multiple user creation" do
-      api_basic_authorize collection_action_identifier(:users, :create)
+      api_basic_authorize "rbac_user_add"
 
       run_post(users_url, gen_request(:create, [sample_user1, sample_user2]))
 
@@ -196,7 +196,7 @@ RSpec.describe "users API" do
     end
 
     it "rejects user edits for invalid resources" do
-      api_basic_authorize collection_action_identifier(:users, :edit)
+      api_basic_authorize "rbac_user_edit"
 
       run_post(users_url(999_999), gen_request(:edit, "name" => "updated name"))
 
@@ -204,7 +204,7 @@ RSpec.describe "users API" do
     end
 
     it "supports single user edit" do
-      api_basic_authorize collection_action_identifier(:users, :edit)
+      api_basic_authorize "rbac_user_edit"
 
       run_post(users_url(user1.id), gen_request(:edit, "name" => "updated name"))
 
@@ -213,7 +213,7 @@ RSpec.describe "users API" do
     end
 
     it "supports single user edit of other attributes including group change" do
-      api_basic_authorize collection_action_identifier(:users, :edit)
+      api_basic_authorize "rbac_user_edit"
 
       run_post(users_url(user1.id), gen_request(:edit,
                                                 "email" => "user1@email.com",
@@ -225,7 +225,7 @@ RSpec.describe "users API" do
     end
 
     it "supports multiple user edits" do
-      api_basic_authorize collection_action_identifier(:users, :edit)
+      api_basic_authorize "rbac_user_edit"
 
       run_post(users_url, gen_request(:edit,
                                       [{"href" => users_url(user1.id), "first_name" => "John"},
@@ -258,7 +258,7 @@ RSpec.describe "users API" do
     end
 
     it "rejects user deletes for invalid users" do
-      api_basic_authorize collection_action_identifier(:users, :delete)
+      api_basic_authorize "rbac_user_delete"
 
       run_delete(users_url(999_999))
 
@@ -266,7 +266,7 @@ RSpec.describe "users API" do
     end
 
     it "rejects user delete of requesting user via action" do
-      api_basic_authorize collection_action_identifier(:users, :delete)
+      api_basic_authorize "rbac_user_delete"
 
       run_post(users_url, gen_request(:delete, "href" => users_url(@user.id)))
 
@@ -274,7 +274,7 @@ RSpec.describe "users API" do
     end
 
     it "rejects user delete of requesting user" do
-      api_basic_authorize collection_action_identifier(:users, :delete)
+      api_basic_authorize "rbac_user_delete"
 
       run_delete(users_url(@user.id))
 
@@ -282,7 +282,7 @@ RSpec.describe "users API" do
     end
 
     it "supports single user delete" do
-      api_basic_authorize collection_action_identifier(:users, :delete)
+      api_basic_authorize "rbac_user_delete"
 
       user1_id = user1.id
       run_delete(users_url(user1_id))
@@ -292,7 +292,7 @@ RSpec.describe "users API" do
     end
 
     it "supports single user delete action" do
-      api_basic_authorize collection_action_identifier(:users, :delete)
+      api_basic_authorize "rbac_user_delete"
 
       user1_id = user1.id
       user1_url = users_url(user1_id)
@@ -304,7 +304,7 @@ RSpec.describe "users API" do
     end
 
     it "supports multiple user deletes" do
-      api_basic_authorize collection_action_identifier(:users, :delete)
+      api_basic_authorize "rbac_user_delete"
 
       user1_id, user2_id = user1.id, user2.id
       user1_url, user2_url = users_url(user1_id), users_url(user2_id)
@@ -334,7 +334,7 @@ RSpec.describe "users API" do
     it "can assign a tag to a user" do
       user = FactoryGirl.create(:user)
       FactoryGirl.create(:classification_department_with_tags)
-      api_basic_authorize(subcollection_action_identifier(:users, :tags, :assign))
+      api_basic_authorize("rbac_user_tags_edit")
 
       run_post("#{users_url(user.id)}/tags", :action => "assign", :category => "department", :name => "finance")
 
@@ -356,7 +356,7 @@ RSpec.describe "users API" do
       user = FactoryGirl.create(:user)
       FactoryGirl.create(:classification_department_with_tags)
       Classification.classify(user, "department", "finance")
-      api_basic_authorize(subcollection_action_identifier(:users, :tags, :unassign))
+      api_basic_authorize("rbac_user_tags_edit")
 
       run_post("#{users_url(user.id)}/tags", :action => "unassign", :category => "department", :name => "finance")
 

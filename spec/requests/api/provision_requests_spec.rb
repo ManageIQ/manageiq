@@ -52,7 +52,7 @@ describe "Provision Requests API" do
     end
 
     it "supports single request with normal post" do
-      api_basic_authorize collection_action_identifier(:provision_requests, :create)
+      api_basic_authorize "vm_miq_request_new"
 
       dialog  # Create the Provisioning dialog
       run_post(provision_requests_url, single_provision_request)
@@ -66,7 +66,7 @@ describe "Provision Requests API" do
     end
 
     it "supports single request with create action" do
-      api_basic_authorize collection_action_identifier(:provision_requests, :create)
+      api_basic_authorize "vm_miq_request_new"
 
       dialog  # Create the Provisioning dialog
       run_post(provision_requests_url, gen_request(:create, single_provision_request))
@@ -80,7 +80,7 @@ describe "Provision Requests API" do
     end
 
     it "supports multiple requests" do
-      api_basic_authorize collection_action_identifier(:provision_requests, :create)
+      api_basic_authorize "vm_miq_request_new"
 
       dialog  # Create the Provisioning dialog
       run_post(provision_requests_url, gen_request(:create, [single_provision_request, single_provision_request]))
@@ -106,7 +106,7 @@ describe "Provision Requests API" do
     let(:provreqs_list) { [provreq1_url, provreq2_url] }
 
     it "supports approving a request" do
-      api_basic_authorize collection_action_identifier(:provision_requests, :approve)
+      api_basic_authorize "miq_request_approval"
 
       run_post(provreq1_url, gen_request(:approve))
 
@@ -115,7 +115,7 @@ describe "Provision Requests API" do
     end
 
     it "supports denying a request" do
-      api_basic_authorize collection_action_identifier(:provision_requests, :approve)
+      api_basic_authorize "miq_request_approval"
 
       run_post(provreq2_url, gen_request(:deny))
 
@@ -124,7 +124,7 @@ describe "Provision Requests API" do
     end
 
     it "supports approving multiple requests" do
-      api_basic_authorize collection_action_identifier(:provision_requests, :approve)
+      api_basic_authorize "miq_request_approval"
 
       run_post(provision_requests_url, gen_request(:approve, [{"href" => provreq1_url}, {"href" => provreq2_url}]))
 
@@ -147,7 +147,7 @@ describe "Provision Requests API" do
     end
 
     it "supports denying multiple requests" do
-      api_basic_authorize collection_action_identifier(:provision_requests, :approve)
+      api_basic_authorize "miq_request_approval"
 
       run_post(provision_requests_url, gen_request(:deny, [{"href" => provreq1_url}, {"href" => provreq2_url}]))
 

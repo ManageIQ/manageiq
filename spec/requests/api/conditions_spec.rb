@@ -67,7 +67,7 @@ describe "Conditions API" do
     end
 
     it "creates new condition" do
-      api_basic_authorize collection_action_identifier(:conditions, :create)
+      api_basic_authorize "condition_new"
       run_post(conditions_url, sample_condition)
 
       expect(response).to have_http_status(:ok)
@@ -79,7 +79,7 @@ describe "Conditions API" do
     end
 
     it "creates new conditions" do
-      api_basic_authorize collection_action_identifier(:conditions, :create)
+      api_basic_authorize "condition_new"
       run_post(conditions_url, gen_request(:create, [sample_condition,
                                                      sample_condition.merge(:name => "foo", :description => "bar")]))
       expect(response).to have_http_status(:ok)
@@ -88,7 +88,7 @@ describe "Conditions API" do
     end
 
     it "deletes condition" do
-      api_basic_authorize collection_action_identifier(:conditions, :delete)
+      api_basic_authorize "condition_delete"
       run_post(conditions_url, gen_request(:delete, "name" => condition.name, "href" => condition_url))
 
       expect(response).to have_http_status(:ok)
@@ -97,7 +97,7 @@ describe "Conditions API" do
     end
 
     it "deletes conditions" do
-      api_basic_authorize collection_action_identifier(:conditions, :delete)
+      api_basic_authorize "condition_delete"
       run_post(conditions_url, gen_request(:delete, [{"name" => conditions.first.name,
                                                       "href" => conditions_url(conditions.first.id)},
                                                      {"name" => conditions.second.name,
@@ -109,7 +109,7 @@ describe "Conditions API" do
     end
 
     it "deletes condition via DELETE" do
-      api_basic_authorize collection_action_identifier(:conditions, :delete)
+      api_basic_authorize "condition_delete"
 
       run_delete(conditions_url(condition.id))
 
@@ -118,7 +118,7 @@ describe "Conditions API" do
     end
 
     it "edits condition" do
-      api_basic_authorize collection_action_identifier(:conditions, :edit)
+      api_basic_authorize "condition_edit"
       run_post(conditions_url(condition.id), gen_request(:edit, "description" => "change"))
 
       expect(response).to have_http_status(:ok)
@@ -128,7 +128,7 @@ describe "Conditions API" do
     end
 
     it "edits conditions" do
-      api_basic_authorize collection_action_identifier(:conditions, :edit)
+      api_basic_authorize "condition_edit"
       run_post(conditions_url, gen_request(:edit, [{"id" => conditions.first.id, "description" => "change"},
                                                    {"id" => conditions.second.id, "description" => "change2"}]))
       expect(response).to have_http_status(:ok)
@@ -141,7 +141,7 @@ describe "Conditions API" do
 
   context "Condition collection" do
     it "query invalid collection" do
-      api_basic_authorize collection_action_identifier(:conditions, :read, :get)
+      api_basic_authorize "condition"
 
       run_get conditions_url(999_999)
 
@@ -149,7 +149,7 @@ describe "Conditions API" do
     end
 
     it "query conditions with no conditions defined" do
-      api_basic_authorize collection_action_identifier(:conditions, :read, :get)
+      api_basic_authorize "condition"
 
       run_get conditions_url
 
@@ -157,7 +157,7 @@ describe "Conditions API" do
     end
 
     it "query conditions" do
-      api_basic_authorize collection_action_identifier(:conditions, :read, :get)
+      api_basic_authorize "condition"
       create_conditions(3)
 
       run_get conditions_url
@@ -168,7 +168,7 @@ describe "Conditions API" do
     end
 
     it "query conditions in expanded form" do
-      api_basic_authorize collection_action_identifier(:conditions, :read, :get)
+      api_basic_authorize "condition"
       create_conditions(3)
 
       run_get conditions_url, :expand => "resources"
@@ -203,7 +203,7 @@ describe "Conditions API" do
     end
 
     it "query policy with expanded conditions" do
-      api_basic_authorize action_identifier(:policies, :read, :resource_actions, :get)
+      api_basic_authorize "policy_view"
       create_conditions(3)
       assign_conditions_to(policy)
 

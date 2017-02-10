@@ -22,7 +22,7 @@ describe "Actions API" do
     end
 
     it "creates new action" do
-      api_basic_authorize collection_action_identifier(:actions, :create)
+      api_basic_authorize "action_new"
       run_post(actions_url, sample_action)
 
       expect(response).to have_http_status(:ok)
@@ -33,7 +33,7 @@ describe "Actions API" do
     end
 
     it "creates new actions" do
-      api_basic_authorize collection_action_identifier(:actions, :create)
+      api_basic_authorize "action_new"
       run_post(actions_url, gen_request(:create, [sample_action,
                                                   sample_action.merge(:name => "foo", :description => "bar")]))
       expect(response).to have_http_status(:ok)
@@ -42,7 +42,7 @@ describe "Actions API" do
     end
 
     it "reads all actions" do
-      api_basic_authorize collection_action_identifier(:actions, :read, :get)
+      api_basic_authorize "action_show_list"
       FactoryGirl.create(:miq_action)
       run_get(actions_url)
       expect(response).to have_http_status(:ok)
@@ -53,7 +53,7 @@ describe "Actions API" do
     end
 
     it "deletes action" do
-      api_basic_authorize collection_action_identifier(:actions, :delete)
+      api_basic_authorize "action_delete"
       run_post(actions_url, gen_request(:delete, "name" => action.name, "href" => action_url))
 
       expect(response).to have_http_status(:ok)
@@ -62,7 +62,7 @@ describe "Actions API" do
     end
 
     it "deletes actions" do
-      api_basic_authorize collection_action_identifier(:actions, :delete)
+      api_basic_authorize "action_delete"
       run_post(actions_url, gen_request(:delete, [{"name" => actions.first.name,
                                                    "href" => actions_url(actions.first.id)},
                                                   {"name" => actions.second.name,
@@ -74,7 +74,7 @@ describe "Actions API" do
     end
 
     it "deletes action via DELETE" do
-      api_basic_authorize collection_action_identifier(:actions, :delete)
+      api_basic_authorize "action_delete"
 
       run_delete(actions_url(action.id))
 
@@ -83,7 +83,7 @@ describe "Actions API" do
     end
 
     it "edits new action" do
-      api_basic_authorize collection_action_identifier(:actions, :edit)
+      api_basic_authorize "action_edit"
       run_post(action_url, gen_request(:edit, "description" => "change"))
 
       expect(response).to have_http_status(:ok)
@@ -92,7 +92,7 @@ describe "Actions API" do
     end
 
     it "edits new actions" do
-      api_basic_authorize collection_action_identifier(:actions, :edit)
+      api_basic_authorize "action_edit"
       run_post(actions_url, gen_request(:edit, [{"id" => actions.first.id, "description" => "change"},
                                                 {"id" => actions.second.id, "description" => "change2"}]))
       expect(response).to have_http_status(:ok)

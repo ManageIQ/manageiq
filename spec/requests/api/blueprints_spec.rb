@@ -2,7 +2,7 @@ RSpec.describe "Blueprints API" do
   describe "GET /api/blueprints" do
     it "lists all the blueprints with an appropriate role" do
       blueprint = FactoryGirl.create(:blueprint)
-      api_basic_authorize collection_action_identifier(:blueprints, :read, :get)
+      api_basic_authorize "blueprint_show_list"
 
       run_get(blueprints_url)
 
@@ -31,7 +31,7 @@ RSpec.describe "Blueprints API" do
   describe "GET /api/blueprints/:id" do
     it "will show a blueprint with an appropriate role" do
       blueprint = FactoryGirl.create(:blueprint)
-      api_basic_authorize action_identifier(:blueprints, :read, :resource_actions, :get)
+      api_basic_authorize "blueprint_show"
 
       run_get(blueprints_url(blueprint.id))
 
@@ -51,7 +51,7 @@ RSpec.describe "Blueprints API" do
 
   describe "POST /api/blueprints" do
     it "can create a blueprint" do
-      api_basic_authorize collection_action_identifier(:blueprints, :create)
+      api_basic_authorize "blueprint_new"
       ui_properties = {
         :service_catalog      => {},
         :service_dialog       => {},
@@ -80,7 +80,7 @@ RSpec.describe "Blueprints API" do
     end
 
     it "rejects blueprint creation with id specified" do
-      api_basic_authorize collection_action_identifier(:blueprints, :create)
+      api_basic_authorize "blueprint_new"
 
       run_post(blueprints_url, :name => "foo", :description => "bar", :id => 123)
 
@@ -95,7 +95,7 @@ RSpec.describe "Blueprints API" do
     end
 
     it "rejects blueprint creation with an href specified" do
-      api_basic_authorize collection_action_identifier(:blueprints, :create)
+      api_basic_authorize "blueprint_new"
 
       run_post(blueprints_url, :name => "foo", :description => "bar", :href => blueprints_url(123))
 
@@ -110,7 +110,7 @@ RSpec.describe "Blueprints API" do
     end
 
     it "can create blueprints in bulk" do
-      api_basic_authorize collection_action_identifier(:blueprints, :create)
+      api_basic_authorize "blueprint_new"
       ui_properties = {
         :service_catalog      => {},
         :service_dialog       => {},
@@ -149,7 +149,7 @@ RSpec.describe "Blueprints API" do
     it "can update attributes of multiple blueprints with an appropirate role" do
       blueprint1 = FactoryGirl.create(:blueprint, :name => "foo")
       blueprint2 = FactoryGirl.create(:blueprint, :name => "bar")
-      api_basic_authorize collection_action_identifier(:blueprints, :edit)
+      api_basic_authorize "blueprint_edit"
 
       run_post(blueprints_url, :action => "edit", :resources => [{:id => blueprint1.id, :name => "baz"},
                                                                  {:id => blueprint2.id, :name => "qux"}])
@@ -183,7 +183,7 @@ RSpec.describe "Blueprints API" do
 
     it "can delete multiple blueprints" do
       blueprint1, blueprint2 = FactoryGirl.create_list(:blueprint, 2)
-      api_basic_authorize collection_action_identifier(:blueprints, :delete)
+      api_basic_authorize "blueprint_delete"
 
       run_post(blueprints_url, :action => "delete", :resources => [{:id => blueprint1.id}, {:id => blueprint2.id}])
 
@@ -216,7 +216,7 @@ RSpec.describe "Blueprints API" do
       }
       blueprint1, blueprint2 = FactoryGirl.create_list(:blueprint, 2, :ui_properties => ui_properties)
 
-      api_basic_authorize collection_action_identifier(:blueprints, :publish)
+      api_basic_authorize "blueprint_publish"
 
       run_post(blueprints_url, :action => "publish", :resources => [{:id => blueprint1.id}, {:id => blueprint2.id}])
 
@@ -244,7 +244,7 @@ RSpec.describe "Blueprints API" do
 
     it "can delete a blueprint with an appropriate role" do
       blueprint = FactoryGirl.create(:blueprint)
-      api_basic_authorize action_identifier(:blueprints, :delete)
+      api_basic_authorize "blueprint_delete"
 
       run_post(blueprints_url(blueprint.id), :action => "delete")
 
@@ -276,7 +276,7 @@ RSpec.describe "Blueprints API" do
         }
       }
       blueprint = FactoryGirl.create(:blueprint, :ui_properties => ui_properties)
-      api_basic_authorize action_identifier(:blueprints, :publish)
+      api_basic_authorize "blueprint_publish"
 
       run_post(blueprints_url(blueprint.id), :action => "publish")
 
@@ -290,7 +290,7 @@ RSpec.describe "Blueprints API" do
 
     it "fails appropriately if a blueprint publish raises" do
       blueprint = FactoryGirl.create(:blueprint)
-      api_basic_authorize action_identifier(:blueprints, :publish)
+      api_basic_authorize "blueprint_publish"
 
       run_post(blueprints_url(blueprint.id), :action => "publish")
 
@@ -309,7 +309,7 @@ RSpec.describe "Blueprints API" do
   describe "DELETE /api/blueprints/:id" do
     it "can delete a blueprint with an appropriate role" do
       blueprint = FactoryGirl.create(:blueprint)
-      api_basic_authorize action_identifier(:blueprints, :delete, :resource_actions, :delete)
+      api_basic_authorize "blueprint_delete"
 
       run_delete(blueprints_url(blueprint.id))
 

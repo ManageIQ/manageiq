@@ -55,7 +55,7 @@ describe "Tag Collections API" do
     end
 
     it "assigns a tag to a Provider" do
-      api_basic_authorize subcollection_action_identifier(:providers, :tags, :assign)
+      api_basic_authorize "ems_infra_tag"
 
       run_post(provider_tags_url, gen_request(:assign, :category => tag1[:category], :name => tag1[:name]))
 
@@ -71,7 +71,7 @@ describe "Tag Collections API" do
     end
 
     it "unassigns a tag from a Provider" do
-      api_basic_authorize subcollection_action_identifier(:providers, :tags, :unassign)
+      api_basic_authorize "ems_infra_tag"
       classify_resource(provider)
 
       run_post(provider_tags_url, gen_request(:unassign, :category => tag1[:category], :name => tag1[:name]))
@@ -104,7 +104,7 @@ describe "Tag Collections API" do
     end
 
     it "assigns a tag to a Host" do
-      api_basic_authorize subcollection_action_identifier(:hosts, :tags, :assign)
+      api_basic_authorize "host_tag"
 
       run_post(host_tags_url, gen_request(:assign, :category => tag1[:category], :name => tag1[:name]))
 
@@ -120,7 +120,7 @@ describe "Tag Collections API" do
     end
 
     it "unassigns a tag from a Host" do
-      api_basic_authorize subcollection_action_identifier(:hosts, :tags, :unassign)
+      api_basic_authorize "host_tag"
       classify_resource(host)
 
       run_post(host_tags_url, gen_request(:unassign, :category => tag1[:category], :name => tag1[:name]))
@@ -154,7 +154,7 @@ describe "Tag Collections API" do
     end
 
     it "assigns a tag to a Data Store" do
-      api_basic_authorize subcollection_action_identifier(:data_stores, :tags, :assign)
+      api_basic_authorize "storage_tag"
 
       run_post(ds_tags_url, gen_request(:assign, :category => tag1[:category], :name => tag1[:name]))
 
@@ -170,7 +170,7 @@ describe "Tag Collections API" do
     end
 
     it "unassigns a tag from a Data Store" do
-      api_basic_authorize subcollection_action_identifier(:data_stores, :tags, :unassign)
+      api_basic_authorize "storage_tag"
       classify_resource(ds)
 
       run_post(ds_tags_url, gen_request(:unassign, :category => tag1[:category], :name => tag1[:name]))
@@ -204,7 +204,7 @@ describe "Tag Collections API" do
     end
 
     it "assigns a tag to a Resource Pool" do
-      api_basic_authorize subcollection_action_identifier(:resource_pools, :tags, :assign)
+      api_basic_authorize "resource_pool_tag"
 
       run_post(rp_tags_url, gen_request(:assign, :category => tag1[:category], :name => tag1[:name]))
 
@@ -220,7 +220,7 @@ describe "Tag Collections API" do
     end
 
     it "unassigns a tag from a Resource Pool" do
-      api_basic_authorize subcollection_action_identifier(:resource_pools, :tags, :unassign)
+      api_basic_authorize "resource_pool_tag"
       classify_resource(rp)
 
       run_post(rp_tags_url, gen_request(:unassign, :category => tag1[:category], :name => tag1[:name]))
@@ -261,7 +261,7 @@ describe "Tag Collections API" do
     end
 
     it "assigns a tag to a Cluster" do
-      api_basic_authorize subcollection_action_identifier(:clusters, :tags, :assign)
+      api_basic_authorize "ems_cluster_tag"
 
       run_post(cluster_tags_url, gen_request(:assign, :category => tag1[:category], :name => tag1[:name]))
 
@@ -277,7 +277,7 @@ describe "Tag Collections API" do
     end
 
     it "unassigns a tag from a Cluster" do
-      api_basic_authorize subcollection_action_identifier(:clusters, :tags, :unassign)
+      api_basic_authorize "ems_cluster_tag"
       classify_resource(cluster)
 
       run_post(cluster_tags_url, gen_request(:unassign, :category => tag1[:category], :name => tag1[:name]))
@@ -311,7 +311,7 @@ describe "Tag Collections API" do
     end
 
     it "assigns a tag to a Service" do
-      api_basic_authorize subcollection_action_identifier(:services, :tags, :assign)
+      api_basic_authorize "service_tag"
 
       run_post(service_tags_url, gen_request(:assign, :category => tag1[:category], :name => tag1[:name]))
 
@@ -327,7 +327,7 @@ describe "Tag Collections API" do
     end
 
     it "unassigns a tag from a Service" do
-      api_basic_authorize subcollection_action_identifier(:services, :tags, :unassign)
+      api_basic_authorize "service_tag"
       classify_resource(service)
 
       run_post(service_tags_url, gen_request(:unassign, :category => tag1[:category], :name => tag1[:name]))
@@ -361,7 +361,7 @@ describe "Tag Collections API" do
     end
 
     it "assigns a tag to a Service Template" do
-      api_basic_authorize subcollection_action_identifier(:service_templates, :tags, :assign)
+      api_basic_authorize "catalogitem_tag"
 
       run_post(service_template_tags_url, gen_request(:assign, :category => tag1[:category], :name => tag1[:name]))
 
@@ -377,7 +377,7 @@ describe "Tag Collections API" do
     end
 
     it "unassigns a tag from a Service Template" do
-      api_basic_authorize subcollection_action_identifier(:service_templates, :tags, :unassign)
+      api_basic_authorize "catalogitem_tag"
       classify_resource(service_template)
 
       run_post(service_template_tags_url, gen_request(:unassign, :category => tag1[:category], :name => tag1[:name]))
@@ -411,7 +411,7 @@ describe "Tag Collections API" do
     end
 
     it "assigns a tag to a Tenant" do
-      api_basic_authorize subcollection_action_identifier(:tenants, :tags, :assign)
+      api_basic_authorize "rbac_tenant_tags_edit"
 
       run_post(tenant_tags_url, gen_request(:assign, :category => tag1[:category], :name => tag1[:name]))
 
@@ -427,7 +427,7 @@ describe "Tag Collections API" do
     end
 
     it "unassigns a tag from a Tenant" do
-      api_basic_authorize subcollection_action_identifier(:tenants, :tags, :unassign)
+      api_basic_authorize "rbac_tenant_tags_edit"
       classify_resource(tenant)
 
       run_post(tenant_tags_url, gen_request(:unassign, :category => tag1[:category], :name => tag1[:name]))
@@ -448,7 +448,7 @@ describe "Tag Collections API" do
     end
 
     it "can assign a tag to a blueprint with an appropriate role" do
-      api_basic_authorize subcollection_action_identifier(:blueprints, :tags, :assign)
+      api_basic_authorize "blueprint_tag"
       blueprint = FactoryGirl.create(:blueprint)
 
       run_post("#{blueprints_url(blueprint.id)}/tags",
@@ -460,7 +460,7 @@ describe "Tag Collections API" do
     end
 
     it "can unassign a tag from a bluepring with an appropriate role" do
-      api_basic_authorize subcollection_action_identifier(:blueprints, :tags, :unassign)
+      api_basic_authorize "blueprint_tag"
       blueprint = FactoryGirl.create(:blueprint)
       classify_resource(blueprint)
 
@@ -504,7 +504,7 @@ describe "Tag Collections API" do
     let(:vm2)                { FactoryGirl.create(:vm_vmware,    :host => host, :ems_id => ems.id) }
 
     it 'can bulk assign tags to multiple vms' do
-      api_basic_authorize collection_action_identifier(:vms, :assign_tags)
+      api_basic_authorize "vm_tag"
       request_body = {
         'action'    => 'assign_tags',
         'resources' => [
@@ -530,7 +530,7 @@ describe "Tag Collections API" do
     end
 
     it 'can bulk assign tags to multiple vms by href' do
-      api_basic_authorize collection_action_identifier(:vms, :assign_tags)
+      api_basic_authorize "vm_tag"
       request_body = {
         'action'    => 'assign_tags',
         'resources' => [
@@ -556,7 +556,7 @@ describe "Tag Collections API" do
     end
 
     it 'will return success and failure messages for each vm and tag' do
-      api_basic_authorize collection_action_identifier(:vms, :assign_tags)
+      api_basic_authorize "vm_tag"
       request_body = {
         'action'    => 'assign_tags',
         'resources' => [
@@ -594,7 +594,7 @@ describe "Tag Collections API" do
     end
 
     it 'can bulk assign tags by href' do
-      api_basic_authorize collection_action_identifier(:vms, :assign_tags)
+      api_basic_authorize "vm_tag"
       request_body = {
         'action'    => 'assign_tags',
         'resources' => [
@@ -620,7 +620,7 @@ describe "Tag Collections API" do
     end
 
     it 'can bulk assign tags by id' do
-      api_basic_authorize collection_action_identifier(:vms, :assign_tags)
+      api_basic_authorize "vm_tag"
       request_body = {
         'action'    => 'assign_tags',
         'resources' => [
@@ -652,7 +652,7 @@ describe "Tag Collections API" do
     let(:service2)                { FactoryGirl.create(:service) }
 
     it 'can bulk assign tags to multiple services' do
-      api_basic_authorize collection_action_identifier(:services, :assign_tags)
+      api_basic_authorize "service_tag"
       request_body = {
         'action'    => 'assign_tags',
         'resources' => [
@@ -678,7 +678,7 @@ describe "Tag Collections API" do
     end
 
     it 'can bulk assign tags to multiple services by href' do
-      api_basic_authorize collection_action_identifier(:services, :assign_tags)
+      api_basic_authorize "service_tag"
       request_body = {
         'action'    => 'assign_tags',
         'resources' => [
@@ -704,7 +704,7 @@ describe "Tag Collections API" do
     end
 
     it 'will return success and failure messages for each service and tag' do
-      api_basic_authorize collection_action_identifier(:services, :assign_tags)
+      api_basic_authorize "service_tag"
       request_body = {
         'action'    => 'assign_tags',
         'resources' => [
@@ -742,7 +742,7 @@ describe "Tag Collections API" do
     end
 
     it 'can bulk assign tags by href' do
-      api_basic_authorize collection_action_identifier(:services, :assign_tags)
+      api_basic_authorize "service_tag"
       request_body = {
         'action'    => 'assign_tags',
         'resources' => [
@@ -768,7 +768,7 @@ describe "Tag Collections API" do
     end
 
     it 'can bulk assign tags by id' do
-      api_basic_authorize collection_action_identifier(:services, :assign_tags)
+      api_basic_authorize "service_tag"
       request_body = {
         'action'    => 'assign_tags',
         'resources' => [
@@ -805,7 +805,7 @@ describe "Tag Collections API" do
     end
 
     it 'can bulk unassign tags on multiple services' do
-      api_basic_authorize collection_action_identifier(:services, :unassign_tags)
+      api_basic_authorize "service_tag"
       request_body = {
         'action'    => 'unassign_tags',
         'resources' => [
@@ -831,7 +831,7 @@ describe "Tag Collections API" do
     end
 
     it 'can bulk unassign tags to multiple services by href' do
-      api_basic_authorize collection_action_identifier(:services, :unassign_tags)
+      api_basic_authorize "service_tag"
       request_body = {
         'action'    => 'unassign_tags',
         'resources' => [
@@ -857,7 +857,7 @@ describe "Tag Collections API" do
     end
 
     it 'will return success and failure messages for each service and tag' do
-      api_basic_authorize collection_action_identifier(:services, :unassign_tags)
+      api_basic_authorize "service_tag"
       request_body = {
         'action'    => 'unassign_tags',
         'resources' => [
@@ -896,7 +896,7 @@ describe "Tag Collections API" do
     end
 
     it 'can bulk unassign tags by href' do
-      api_basic_authorize collection_action_identifier(:services, :unassign_tags)
+      api_basic_authorize "service_tag"
       request_body = {
         'action'    => 'unassign_tags',
         'resources' => [
@@ -922,7 +922,7 @@ describe "Tag Collections API" do
     end
 
     it 'can bulk unassign tags by id' do
-      api_basic_authorize collection_action_identifier(:services, :unassign_tags)
+      api_basic_authorize "service_tag"
       request_body = {
         'action'    => 'unassign_tags',
         'resources' => [
@@ -959,7 +959,7 @@ describe "Tag Collections API" do
     end
 
     it 'can bulk unassign tags on multiple vms' do
-      api_basic_authorize collection_action_identifier(:vms, :unassign_tags)
+      api_basic_authorize "vm_tag"
       request_body = {
         'action'    => 'unassign_tags',
         'resources' => [
@@ -985,7 +985,7 @@ describe "Tag Collections API" do
     end
 
     it 'can bulk unassign tags to multiple vms by href' do
-      api_basic_authorize collection_action_identifier(:vms, :unassign_tags)
+      api_basic_authorize "vm_tag"
       request_body = {
         'action'    => 'unassign_tags',
         'resources' => [
@@ -1011,7 +1011,7 @@ describe "Tag Collections API" do
     end
 
     it 'will return success and failure messages for each vm and tag' do
-      api_basic_authorize collection_action_identifier(:vms, :unassign_tags)
+      api_basic_authorize "vm_tag"
       request_body = {
         'action'    => 'unassign_tags',
         'resources' => [
@@ -1050,7 +1050,7 @@ describe "Tag Collections API" do
     end
 
     it 'can bulk unassign tags by href' do
-      api_basic_authorize collection_action_identifier(:vms, :unassign_tags)
+      api_basic_authorize "vm_tag"
       request_body = {
         'action'    => 'unassign_tags',
         'resources' => [
@@ -1076,7 +1076,7 @@ describe "Tag Collections API" do
     end
 
     it 'can bulk unassign tags by id' do
-      api_basic_authorize collection_action_identifier(:vms, :unassign_tags)
+      api_basic_authorize "vm_tag"
       request_body = {
         'action'    => 'unassign_tags',
         'resources' => [

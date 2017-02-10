@@ -2,7 +2,7 @@ RSpec.describe 'Configuration Script Payloads API' do
   describe 'GET /api/configuration_script_payloads' do
     it 'lists all the configuration script payloads with an appropriate role' do
       script_payload = FactoryGirl.create(:configuration_script_payload)
-      api_basic_authorize collection_action_identifier(:configuration_script_payloads, :read, :get)
+      api_basic_authorize "embedded_configuration_script_payload_view"
 
       run_get(configuration_script_payloads_url)
 
@@ -30,7 +30,7 @@ RSpec.describe 'Configuration Script Payloads API' do
   describe 'GET /api/configuration_script_payloads/:id' do
     it 'will show an ansible script_payload with an appropriate role' do
       script_payload = FactoryGirl.create(:configuration_script_payload)
-      api_basic_authorize action_identifier(:configuration_script_payloads, :read, :resource_actions, :get)
+      api_basic_authorize "embedded_configuration_script_payload_view"
 
       run_get(configuration_script_payloads_url(script_payload.id))
 
