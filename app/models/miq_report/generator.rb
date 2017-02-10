@@ -438,11 +438,11 @@ module MiqReport::Generator
   def get_data_from_report(rpt)
     raise _("Report table is nil") if rpt.table.nil?
 
-    rpt_data = if db_options[:row_col] && db_options[:row_val]
-                 rpt.table.find_all { |d| d.data.key?(db_options[:row_col]) && (d.data[db_options[:row_col]] == db_options[:row_val]) }.collect(&:data)
-               else
-                 rpt.table.collect(&:data)
-               end
+    if db_options[:row_col] && db_options[:row_val]
+      rpt.table.find_all { |d| d.data.key?(db_options[:row_col]) && (d.data[db_options[:row_col]] == db_options[:row_val]) }.collect(&:data)
+    else
+      rpt.table.collect(&:data)
+    end
   end
 
   def generate_rows_from_data(data)
