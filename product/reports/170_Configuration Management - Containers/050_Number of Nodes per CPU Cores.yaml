@@ -16,7 +16,7 @@ col_order:
 - name
 - computer_system.hardware.cpu_total_cores
 headers:
-- Number of Nodes per CPU Cores
+- Name
 - Hardware Number of CPU Cores
 conditions:
 order: Descending

@@ -1,0 +1,44 @@
+---
+title: Projects by Number of Containers
+rpt_group: Custom
+rpt_type: Custom
+priority:
+db: ContainerProject
+cols:
+- name
+- containers_count
+include: {}
+col_order:
+- name
+- containers_count
+headers:
+- Project Name
+- Containers Count
+conditions:
+order: Descending
+sortby:
+- containers_count
+group:
+graph:
+dims:
+filename:
+file_mtime:
+categories: []
+timeline:
+template_type: report
+where_clause:
+db_options: {}
+generate_cols:
+generate_rows:
+col_formats:
+-
+-
+tz:
+time_profile_id:
+display_filter:
+col_options: {}
+rpt_options:
+  :pdf:
+    :page_size: us-letter
+  :queue_timeout:
+menu_name: Projects by Number of Containers
