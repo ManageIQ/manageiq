@@ -93,7 +93,7 @@ module Spec
 
       def update_user_role(role, *identifiers)
         return if identifiers.blank?
-        product_features = identifiers.collect do |identifier|
+        product_features = identifiers.flatten.collect do |identifier|
           MiqProductFeature.find_or_create_by(:identifier => identifier)
         end
         role.update_attributes!(:miq_product_features => product_features)
@@ -101,6 +101,14 @@ module Spec
 
       def miq_server_guid
         @miq_server_guid ||= MiqUUID.new_guid
+      end
+
+      def stub_api_action_role(collection, action_type, method, action, identifier)
+        new_action_role = Config::Options.new.merge!("name" => action.to_s, "identifier" => identifier)
+        updated_method = Api::ApiConfig.collections[collection][action_type][method].collect do |method_action|
+          method_action.name == action.to_s ? new_action_role : method_action
+        end
+        allow(Api::ApiConfig.collections[collection][action_type]).to receive(method) { updated_method }
       end
 
       def action_identifier(type, action, selection = :resource_actions, method = :post)

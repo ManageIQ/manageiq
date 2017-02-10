@@ -298,55 +298,43 @@ describe "Authentication API" do
       FactoryGirl.create(:vm_vmware, :name => "vm1")
     end
 
-    def vms_get_test(new_identifier)
-      config = Api::ApiConfig.collections.vms.collection_actions.get.first
-      saved_identifier = config.identifier
-      config.identifier = new_identifier
-      yield
-      config.identifier = saved_identifier
-    end
-
     context "actions with single role identifier" do
       it "are rejected when user is not authorized with the single role identifier" do
-        vms_get_test("vm_view_role1") do
-          api_basic_authorize
+        stub_api_action_role(:vms, :collection_actions, :get, :read, "vm_view_role1")
+        api_basic_authorize
 
-          run_get vms_url
+        run_get vms_url
 
-          expect(response).to have_http_status(:forbidden)
-        end
+        expect(response).to have_http_status(:forbidden)
       end
 
       it "are accepted when user is authorized with the single role identifier" do
-        vms_get_test("vm_view_role1") do
-          api_basic_authorize "vm_view_role1"
+        stub_api_action_role(:vms, :collection_actions, :get, :read, "vm_view_role1")
+        api_basic_authorize "vm_view_role1"
 
-          run_get vms_url
+        run_get vms_url
 
-          expect_query_result(:vms, 1, 1)
-        end
+        expect_query_result(:vms, 1, 1)
       end
     end
 
     context "actions with multiple role identifiers" do
       it "are rejected when user is not authorized with any of the role identifiers" do
-        vms_get_test(%w(vm_view_role1 vm_view_role2)) do
-          api_basic_authorize
+        stub_api_action_role(:vms, :collection_actions, :get, :read, %w(vm_view_role1 vm_view_role2))
+        api_basic_authorize
 
-          run_get vms_url
+        run_get vms_url
 
-          expect(response).to have_http_status(:forbidden)
-        end
+        expect(response).to have_http_status(:forbidden)
       end
 
       it "are accepted when user is authorized with at least one of the role identifiers" do
-        vms_get_test(%w(vm_view_role1 vm_view_role2)) do
-          api_basic_authorize "vm_view_role2"
+        stub_api_action_role(:vms, :collection_actions, :get, :read, %w(vm_view_role1 vm_view_role2))
+        api_basic_authorize "vm_view_role2"
 
-          run_get vms_url
+        run_get vms_url
 
-          expect_query_result(:vms, 1, 1)
-        end
+        expect_query_result(:vms, 1, 1)
       end
     end
   end
