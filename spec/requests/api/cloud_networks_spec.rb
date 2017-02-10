@@ -34,6 +34,14 @@ RSpec.describe 'Cloud Networks API' do
       expect_result_resources_to_include_data('resources', 'id' => cloud_network_ids)
     end
 
+    it "will not list cloud networks of a provider without the appropriate role" do
+      api_basic_authorize
+
+      run_get providers_cloud_networks_url
+
+      expect(response).to have_http_status(:forbidden)
+    end
+
     it 'queries individual provider cloud_network' do
       api_basic_authorize collection_action_identifier(:providers, :read, :get)
       network = provider.cloud_networks.first
@@ -42,6 +50,16 @@ RSpec.describe 'Cloud Networks API' do
       run_get cloud_network_url
 
       expect_single_resource_query('name' => network.name, 'id' => network.id, 'ems_ref' => network.ems_ref)
+    end
+
+    it "will not show the cloud network of a provider without the appropriate role" do
+      api_basic_authorize
+      network = provider.cloud_networks.first
+      cloud_network_url = "#{providers_cloud_networks_url}/#{network.id}"
+
+      run_get cloud_network_url
+
+      expect(response).to have_http_status(:forbidden)
     end
 
     it 'successfully returns providers on query when providers do not have cloud_networks attribute' do
