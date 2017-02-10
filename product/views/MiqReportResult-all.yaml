@@ -43,6 +43,11 @@ col_order:
 - miq_group_description
 - status
 
+include_for_find:
+  :miq_task: {}
+  :miq_group: {}
+
+
 # Column titles, in order
 headers:
 - Queued At
