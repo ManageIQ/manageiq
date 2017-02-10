@@ -1126,8 +1126,8 @@
         :identifier: ems_infra_protect
     :cloud_networks_subcollection_actions:
       :get:
-      - :name: show
-      - :identifier: miq_cloud_networks_view
+      - :name: read
+        :identifier: miq_cloud_networks_view
   :provision_dialogs:
     :description: Provisioning Dialogs
     :identifier: miq_ae_customization_explorer

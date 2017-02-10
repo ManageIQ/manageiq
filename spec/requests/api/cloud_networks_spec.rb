@@ -26,7 +26,7 @@ RSpec.describe 'Cloud Networks API' do
 
     it 'queries Providers cloud_networks' do
       cloud_network_ids = provider.cloud_networks.pluck(:id)
-      api_basic_authorize collection_action_identifier(:providers, :read, :get)
+      api_basic_authorize subcollection_action_identifier(:providers, :cloud_networks, :read, :get)
 
       run_get providers_cloud_networks_url, :expand => 'resources'
 
@@ -88,7 +88,7 @@ RSpec.describe 'Cloud Networks API' do
       openshift = FactoryGirl.create(:ems_openshift)
       openshift_cloud_networks_url = "#{providers_url(openshift.id)}/cloud_networks"
 
-      api_basic_authorize collection_action_identifier(:providers, :read, :get)
+      api_basic_authorize subcollection_action_identifier(:providers, :cloud_networks, :read, :get)
 
       run_get openshift_cloud_networks_url, :expand => 'resources'
 
