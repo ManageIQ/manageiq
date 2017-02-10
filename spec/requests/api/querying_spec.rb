@@ -706,4 +706,44 @@ describe "Querying" do
       expect(response.headers['Access-Control-Allow-Methods']).to include('OPTIONS')
     end
   end
+
+  describe "with optional collection_class" do
+    before { api_basic_authorize collection_action_identifier(:vms, :read, :get) }
+
+    it "fail with invalid collection_class specified" do
+      run_get vms_url, :collection_class => "BogusClass"
+
+      expect_bad_request("Invalid collection_class BogusClass specified for the vms collection")
+    end
+
+    it "succeed with collection_class matching the collection class" do
+      create_vms_by_name(%w(aa bb))
+
+      run_get vms_url, :collection_class => "Vm"
+
+      expect_query_result(:vms, 2, 2)
+    end
+
+    it "succeed with collection_class matching the collection class and returns subclassed resources" do
+      FactoryGirl.create(:vm_vmware, :name => "aa")
+      FactoryGirl.create(:vm_vmware_cloud, :name => "bb")
+      FactoryGirl.create(:vm_vmware_cloud, :name => "cc")
+
+      run_get vms_url, :expand => "resources", :collection_class => "Vm"
+
+      expect_query_result(:vms, 3, 3)
+      expect(response.parsed_body["resources"].collect { |vm| vm["name"] }).to match_array(%w(aa bb cc))
+    end
+
+    it "succeed with collection_class and only returns subclassed resources" do
+      FactoryGirl.create(:vm_vmware, :name => "aa")
+      FactoryGirl.create(:vm_vmware_cloud, :name => "bb")
+      vmcc = FactoryGirl.create(:vm_vmware_cloud, :name => "cc")
+
+      run_get vms_url, :expand => "resources", :collection_class => vmcc.class.name
+
+      expect_query_result(:vms, 2, 2)
+      expect(response.parsed_body["resources"].collect { |vm| vm["name"] }).to match_array(%w(bb cc))
+    end
+  end
 end

@@ -47,7 +47,7 @@ class RestApi
     API_PARAMETERS       = %w(expand hide attributes decorators limit offset
                               depth search_options
                               sort_by sort_order sort_options
-                              filter by_tag provider_class requester_type).freeze
+                              filter by_tag provider_class collection_class requester_type).freeze
 
     MULTI_PARAMS         = %w(filter).freeze
 
