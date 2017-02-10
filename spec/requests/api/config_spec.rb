@@ -16,8 +16,8 @@ describe 'API configuration (config/api.yml)' do
         collection_settings.each_with_object(Set.new) do |(_, cfg), set|
           set.add(cfg[:identifier]) if cfg[:identifier]
           keys = [:collection_actions, :resource_actions]
-          subcollections = Array(cfg[:subcollections]).collect { |s| "#{s}_subcollection_actions" }
-          (subcollections + keys).each do |action_type|
+          Array(cfg[:subcollections]).each { |s| keys << "#{s}_subcollection_actions" }
+          keys.each do |action_type|
             next unless cfg[action_type]
             cfg[action_type].each do |_, method_cfg|
               method_cfg.each do |action_cfg|
