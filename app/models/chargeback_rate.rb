@@ -23,6 +23,8 @@ class ChargebackRate < ApplicationRecord
   validates_uniqueness_of   :guid
   validates_uniqueness_of   :description, :scope => :rate_type
 
+  delegate :symbol, :to => :currency, :prefix => true, :allow_nil => true
+
   VALID_CB_RATE_TYPES = ["Compute", "Storage"]
 
   def rate_details_relevant_to(report_cols)
@@ -187,6 +189,12 @@ class ChargebackRate < ApplicationRecord
   ###########################################################
 
   private
+
+  def currency
+    # Note that the currency should be relation to ChargebackRate, not ChargebackRateDetail. We cannot work
+    # with various currencies within single ChargebackRate. This is to be fixed later in series of db migrations.
+    chargeback_rate_details.first.try(:detail_currency)
+  end
 
   def ensure_unassigned
     if assigned?

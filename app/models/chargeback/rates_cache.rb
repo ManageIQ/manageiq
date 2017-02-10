@@ -13,7 +13,7 @@ class Chargeback
           # A very problematic way to get currency info when formatting a chargeback report.
           # The only right way is to carry currency info. TBD.
           rate = ChargebackRate.get_assignments(:compute)[0] || ChargebackRate.get_assignments(:storage)[0]
-          rate[:cb_rate].chargeback_rate_details[0].detail_currency.symbol unless rate.nil?
+          rate[:cb_rate].currency_symbol unless rate.nil?
         end
     end
 
