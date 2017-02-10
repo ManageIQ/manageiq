@@ -73,7 +73,6 @@ class EvmServer
   ##
   # Sets the server process' name if it is possible.
   #
-  # Will do nothing on ruby<2.1, because .setproctitle was introduced in 2.1
   def set_process_title
     Process.setproctitle(SERVER_PROCESS_TITLE) if Process.respond_to?(:setproctitle)
   end
