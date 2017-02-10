@@ -140,28 +140,35 @@ module MiqAeServiceManageIQ_Providers_CloudManager_ProvisionSpec
 
         if t != "google"
           context "security_groups" do
+            before do
+              @ci = FactoryGirl.create("security_group_#{t}")
+              @c2 = FactoryGirl.create("security_group_#{t}")
+              allow_any_instance_of(workflow_klass).to receive(:allowed_security_groups).and_return(@ci.id => @ci.name, @c2.id => @c2.name)
+            end
+
             it "workflow exposes allowed_security_groups" do
               expect(workflow_klass.instance_methods).to include(:allowed_security_groups)
             end
 
-            context "with a security_group" do
-              before do
-                @ci = FactoryGirl.create("security_group_#{t}")
-                allow_any_instance_of(workflow_klass).to receive(:allowed_security_groups).and_return(@ci.id => @ci.name)
-              end
+            it "#eligible_security_groups" do
+              result = ae_svc_prov.eligible_security_groups
 
-              it "#eligible_security_groups" do
-                result = ae_svc_prov.eligible_security_groups
+              expect(result).to be_kind_of(Array)
+              expect(result.first.class).to eq("MiqAeMethodService::MiqAeService#{@ci.class.name.gsub(/::/, '_')}".constantize)
+            end
 
-                expect(result).to be_kind_of(Array)
-                expect(result.first.class).to eq("MiqAeMethodService::MiqAeService#{@ci.class.name.gsub(/::/, '_')}".constantize)
-              end
+            it "#set_security_group" do
+              rsc = ae_svc_prov.eligible_security_groups.first
+              ae_svc_prov.set_security_group(rsc)
 
-              it "#set_security_group" do
-                ae_svc_prov.eligible_security_groups.each { |rsc| ae_svc_prov.set_security_group(rsc) }
+              expect(@miq_provision.reload.options[:security_groups]).to eq([@ci.id])
+            end
 
-                expect(@miq_provision.reload.options[:security_groups]).to eq([@ci.id])
-              end
+            it "#set_security_groups" do
+              rscs = ae_svc_prov.eligible_security_groups
+              ae_svc_prov.set_security_groups(rscs)
+
+              expect(@miq_provision.reload.options[:security_groups]).to match_array([@ci.id, @c2.id])
             end
           end
         end
