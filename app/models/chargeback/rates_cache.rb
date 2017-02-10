@@ -7,6 +7,16 @@ class Chargeback
       @rates[consumption.hash_features_affecting_rate] ||= rates(consumption)
     end
 
+    def currency_for_report
+      @currency_for_report ||=
+        begin
+          # A very problematic way to get currency info when formatting a chargeback report.
+          # The only right way is to carry currency info. TBD.
+          rate = ChargebackRate.get_assignments(:compute)[0] || ChargebackRate.get_assignments(:storage)[0]
+          rate[:cb_rate].chargeback_rate_details[0].detail_currency.symbol unless rate.nil?
+        end
+    end
+
     private
 
     def rates(consumption)
