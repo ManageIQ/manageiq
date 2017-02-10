@@ -341,18 +341,11 @@ module Api
         param = params['collection_class']
         return unless param.present?
 
-        begin
-          param_klass = param.constantize
-        rescue
-          raise BadRequestError, "Invalid collection_class #{param} specified"
-        end
+        klass = collection_class(@req.collection)
+        return if param == klass.name
 
-        collection_klass = collection_config[@req.collection].klass.constantize
-
-        # If it is the collection's class, then we're good to go as is.
-        return if param_klass == collection_klass
-
-        if param_klass < collection_klass
+        param_klass = klass.descendants.detect { |sub_klass| param == sub_klass.name }
+        if param_klass.present?
           @collection_klasses[@req.collection.to_sym] = param_klass
           return
         end
