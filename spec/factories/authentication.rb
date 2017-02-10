@@ -1,5 +1,5 @@
 FactoryGirl.define do
-  factory :authentication, :class => "AuthUseridPassword" do
+  factory :authentication do
     userid      "testuser"
     password    "secret"
     authtype    "default"
