@@ -37,7 +37,7 @@ class ManageIQ::Providers::AnsibleTower::Inventory::Parser::AutomationManager < 
       %w(credential_id cloud_credential network_credential).each do |credential_attr|
         credential_id = i.send(credential_attr).to_s
         next if credential_id.blank?
-        o[:authentications] << target.configuration_script_authentications.lazy_find(credential_id)
+        o[:authentications] << target.credentials.lazy_find(credential_id)
       end
     end
   end
@@ -59,7 +59,7 @@ class ManageIQ::Providers::AnsibleTower::Inventory::Parser::AutomationManager < 
 
   def credentials
     collector.credentials.each do |i|
-      o = target.configuration_script_authentications.find_or_build(i.id.to_s)
+      o = target.credentials.find_or_build(i.id.to_s)
       o[:name] = i.name
       # i.description
       # i.host
@@ -95,6 +95,7 @@ class ManageIQ::Providers::AnsibleTower::Inventory::Parser::AutomationManager < 
                  when 'azure' then 'ManageIQ::Providers::AnsibleTower::AutomationManager::AzureCredential'
                    # when 'azure_rm' then 'ManageIQ::Providers::AnsibleTower::AutomationManager::???Credential'
                  when 'openstack' then 'ManageIQ::Providers::AnsibleTower::AutomationManager::OpenstackCredential'
+                 else 'ManageIQ::Providers::AutomationManager::Authentication'
                  end
     end
   end

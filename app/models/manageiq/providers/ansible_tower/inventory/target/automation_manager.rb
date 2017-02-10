@@ -48,12 +48,13 @@ class ManageIQ::Providers::AnsibleTower::Inventory::Target::AutomationManager < 
     )
   end
 
-  def configuration_script_authentications
-    collections[:configuration_script_authentications] ||= ManagerRefresh::InventoryCollection.new(
-      :model_class => ManageIQ::Providers::AutomationManager::Authentication,
-      :association => :configuration_script_authentications,
-      :manager_ref => [:manager_ref],
-      :parent      => @root,
+  def credentials
+    collections[:credentials] ||= ManagerRefresh::InventoryCollection.new(
+      :model_class    => ManageIQ::Providers::AutomationManager::Authentication,
+      :association    => :credentials,
+      :manager_ref    => [:manager_ref],
+      :parent         => @root,
+      :builder_params => {:resource => @root}
     )
   end
 end
