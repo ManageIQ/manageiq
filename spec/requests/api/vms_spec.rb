@@ -74,7 +74,7 @@ describe "Vms API" do
     end
 
     it "query VM accounts subcollection with two related accounts using expand directive" do
-      api_basic_authorize action_identifier(:vms, :read, :resource_actions, :get)
+      api_basic_authorize "vm_show"
       # create resources
       acct1
       acct2
@@ -131,7 +131,7 @@ describe "Vms API" do
     end
 
     it "query VM software subcollection with two related software using expand directive" do
-      api_basic_authorize action_identifier(:vms, :read, :resource_actions, :get)
+      api_basic_authorize "vm_show"
       # create resources
       sw1
       sw2
@@ -145,7 +145,7 @@ describe "Vms API" do
 
   context "Vm start action" do
     it "starts an invalid vm" do
-      api_basic_authorize action_identifier(:vms, :start)
+      api_basic_authorize "vm_start"
 
       run_post(invalid_vm_url, gen_request(:start))
 
@@ -161,7 +161,7 @@ describe "Vms API" do
     end
 
     it "starts a powered on vm" do
-      api_basic_authorize action_identifier(:vms, :start)
+      api_basic_authorize "vm_start"
 
       run_post(vm_url, gen_request(:start))
 
@@ -169,7 +169,7 @@ describe "Vms API" do
     end
 
     it "starts a vm" do
-      api_basic_authorize action_identifier(:vms, :start)
+      api_basic_authorize "vm_start"
       update_raw_power_state("poweredOff", vm)
 
       run_post(vm_url, gen_request(:start))
@@ -178,7 +178,7 @@ describe "Vms API" do
     end
 
     it "starting a vm queues it properly" do
-      api_basic_authorize action_identifier(:vms, :start)
+      api_basic_authorize "vm_start"
       update_raw_power_state("poweredOff", vm)
 
       run_post(vm_url, gen_request(:start))
@@ -191,7 +191,7 @@ describe "Vms API" do
     end
 
     it "starts multiple vms" do
-      api_basic_authorize action_identifier(:vms, :start)
+      api_basic_authorize "vm_start"
       update_raw_power_state("poweredOff", vm1, vm2)
 
       run_post(vms_url, gen_request(:start, nil, vm1_url, vm2_url))
@@ -203,7 +203,7 @@ describe "Vms API" do
 
   context "Vm stop action" do
     it "stops an invalid vm" do
-      api_basic_authorize action_identifier(:vms, :stop)
+      api_basic_authorize "vm_stop"
 
       run_post(invalid_vm_url, gen_request(:stop))
 
@@ -219,7 +219,7 @@ describe "Vms API" do
     end
 
     it "stops a powered off vm" do
-      api_basic_authorize action_identifier(:vms, :stop)
+      api_basic_authorize "vm_stop"
       update_raw_power_state("poweredOff", vm)
 
       run_post(vm_url, gen_request(:stop))
@@ -228,7 +228,7 @@ describe "Vms API" do
     end
 
     it "stops a vm" do
-      api_basic_authorize action_identifier(:vms, :stop)
+      api_basic_authorize "vm_stop"
 
       run_post(vm_url, gen_request(:stop))
 
@@ -236,7 +236,7 @@ describe "Vms API" do
     end
 
     it "stops multiple vms" do
-      api_basic_authorize action_identifier(:vms, :stop)
+      api_basic_authorize "vm_stop"
 
       run_post(vms_url, gen_request(:stop, nil, vm1_url, vm2_url))
 
@@ -247,7 +247,7 @@ describe "Vms API" do
 
   context "Vm suspend action" do
     it "suspends an invalid vm" do
-      api_basic_authorize action_identifier(:vms, :suspend)
+      api_basic_authorize "vm_suspend"
 
       run_post(invalid_vm_url, gen_request(:suspend))
 
@@ -263,7 +263,7 @@ describe "Vms API" do
     end
 
     it "suspends a powered off vm" do
-      api_basic_authorize action_identifier(:vms, :suspend)
+      api_basic_authorize "vm_suspend"
       update_raw_power_state("poweredOff", vm)
 
       run_post(vm_url, gen_request(:suspend))
@@ -272,7 +272,7 @@ describe "Vms API" do
     end
 
     it "suspends a suspended vm" do
-      api_basic_authorize action_identifier(:vms, :suspend)
+      api_basic_authorize "vm_suspend"
       update_raw_power_state("suspended", vm)
 
       run_post(vm_url, gen_request(:suspend))
@@ -281,7 +281,7 @@ describe "Vms API" do
     end
 
     it "suspends a vm" do
-      api_basic_authorize action_identifier(:vms, :suspend)
+      api_basic_authorize "vm_suspend"
 
       run_post(vm_url, gen_request(:suspend))
 
@@ -289,7 +289,7 @@ describe "Vms API" do
     end
 
     it "suspends multiple vms" do
-      api_basic_authorize action_identifier(:vms, :suspend)
+      api_basic_authorize "vm_suspend"
 
       run_post(vms_url, gen_request(:suspend, nil, vm1_url, vm2_url))
 
@@ -300,7 +300,7 @@ describe "Vms API" do
 
   context "Vm pause action" do
     it "pauses an invalid vm" do
-      api_basic_authorize action_identifier(:vms, :pause)
+      api_basic_authorize "vm_pause"
 
       run_post(invalid_vm_url, gen_request(:pause))
 
@@ -316,7 +316,7 @@ describe "Vms API" do
     end
 
     it "pauses a powered off vm" do
-      api_basic_authorize action_identifier(:vms, :pause)
+      api_basic_authorize "vm_pause"
       update_raw_power_state("off", vm)
 
       run_post(vm_url, gen_request(:pause))
@@ -325,7 +325,7 @@ describe "Vms API" do
     end
 
     it "pauses a pauseed vm" do
-      api_basic_authorize action_identifier(:vms, :pause)
+      api_basic_authorize "vm_pause"
       update_raw_power_state("paused", vm)
 
       run_post(vm_url, gen_request(:pause))
@@ -334,7 +334,7 @@ describe "Vms API" do
     end
 
     it "pauses a vm" do
-      api_basic_authorize action_identifier(:vms, :pause)
+      api_basic_authorize "vm_pause"
 
       run_post(vm_url, gen_request(:pause))
 
@@ -342,7 +342,7 @@ describe "Vms API" do
     end
 
     it "pauses multiple vms" do
-      api_basic_authorize action_identifier(:vms, :pause)
+      api_basic_authorize "vm_pause"
 
       run_post(vms_url, gen_request(:pause, nil, vm1_url, vm2_url))
 
@@ -353,7 +353,7 @@ describe "Vms API" do
 
   context "Vm shelve action" do
     it "shelves an invalid vm" do
-      api_basic_authorize action_identifier(:vms, :shelve)
+      api_basic_authorize "instance_shelve"
 
       run_post(invalid_vm_url, gen_request(:shelve))
 
@@ -369,7 +369,7 @@ describe "Vms API" do
     end
 
     it "shelves a powered off vm" do
-      api_basic_authorize action_identifier(:vms, :shelve)
+      api_basic_authorize "instance_shelve"
       update_raw_power_state("SHUTOFF", vm_openstack)
 
       run_post(vm_openstack_url, gen_request(:shelve))
@@ -378,7 +378,7 @@ describe "Vms API" do
     end
 
     it "shelves a suspended vm" do
-      api_basic_authorize action_identifier(:vms, :shelve)
+      api_basic_authorize "instance_shelve"
       update_raw_power_state("SUSPENDED", vm_openstack)
 
       run_post(vm_openstack_url, gen_request(:shelve))
@@ -387,7 +387,7 @@ describe "Vms API" do
     end
 
     it "shelves a paused off vm" do
-      api_basic_authorize action_identifier(:vms, :shelve)
+      api_basic_authorize "instance_shelve"
       update_raw_power_state("PAUSED", vm_openstack)
 
       run_post(vm_openstack_url, gen_request(:shelve))
@@ -396,7 +396,7 @@ describe "Vms API" do
     end
 
     it "shelves a shelveed vm" do
-      api_basic_authorize action_identifier(:vms, :shelve)
+      api_basic_authorize "instance_shelve"
       update_raw_power_state("SHELVED", vm_openstack)
 
       run_post(vm_openstack_url, gen_request(:shelve))
@@ -407,7 +407,7 @@ describe "Vms API" do
     end
 
     it "shelves a vm" do
-      api_basic_authorize action_identifier(:vms, :shelve)
+      api_basic_authorize "instance_shelve"
 
       run_post(vm_openstack_url, gen_request(:shelve))
 
@@ -415,7 +415,7 @@ describe "Vms API" do
     end
 
     it "shelve for a VMWare vm is not supported" do
-      api_basic_authorize action_identifier(:vms, :shelve)
+      api_basic_authorize "instance_shelve"
 
       run_post(vm_url, gen_request(:shelve))
 
@@ -426,7 +426,7 @@ describe "Vms API" do
     end
 
     it "shelves multiple vms" do
-      api_basic_authorize action_identifier(:vms, :shelve)
+      api_basic_authorize "instance_shelve"
 
       run_post(vms_url, gen_request(:shelve, nil, vm_openstack1_url, vm_openstack2_url))
 
@@ -437,7 +437,7 @@ describe "Vms API" do
 
   context "Vm shelve offload action" do
     it "shelve_offloads an invalid vm" do
-      api_basic_authorize action_identifier(:vms, :shelve_offload)
+      api_basic_authorize "instance_shelve_offload"
 
       run_post(invalid_vm_url, gen_request(:shelve_offload))
 
@@ -453,7 +453,7 @@ describe "Vms API" do
     end
 
     it "shelve_offloads a active vm" do
-      api_basic_authorize action_identifier(:vms, :shelve_offload)
+      api_basic_authorize "instance_shelve_offload"
 
       run_post(vm_openstack_url, gen_request(:shelve_offload))
 
@@ -463,7 +463,7 @@ describe "Vms API" do
     end
 
     it "shelve_offloads a powered off vm" do
-      api_basic_authorize action_identifier(:vms, :shelve_offload)
+      api_basic_authorize "instance_shelve_offload"
       update_raw_power_state("SHUTOFF", vm_openstack)
 
       run_post(vm_openstack_url, gen_request(:shelve_offload))
@@ -474,7 +474,7 @@ describe "Vms API" do
     end
 
     it "shelve_offloads a suspended vm" do
-      api_basic_authorize action_identifier(:vms, :shelve_offload)
+      api_basic_authorize "instance_shelve_offload"
       update_raw_power_state("SUSPENDED", vm_openstack)
 
       run_post(vm_openstack_url, gen_request(:shelve_offload))
@@ -485,7 +485,7 @@ describe "Vms API" do
     end
 
     it "shelve_offloads a paused off vm" do
-      api_basic_authorize action_identifier(:vms, :shelve_offload)
+      api_basic_authorize "instance_shelve_offload"
       update_raw_power_state("PAUSED", vm_openstack)
 
       run_post(vm_openstack_url, gen_request(:shelve_offload))
@@ -496,7 +496,7 @@ describe "Vms API" do
     end
 
     it "shelve_offloads a shelve_offloaded vm" do
-      api_basic_authorize action_identifier(:vms, :shelve_offload)
+      api_basic_authorize "instance_shelve_offload"
       update_raw_power_state("SHELVED_OFFLOADED", vm_openstack)
 
       run_post(vm_openstack_url, gen_request(:shelve_offload))
@@ -507,7 +507,7 @@ describe "Vms API" do
     end
 
     it "shelve_offloads a shelved vm" do
-      api_basic_authorize action_identifier(:vms, :shelve_offload)
+      api_basic_authorize "instance_shelve_offload"
       update_raw_power_state("SHELVED", vm_openstack)
 
       run_post(vm_openstack_url, gen_request(:shelve_offload))
@@ -518,7 +518,7 @@ describe "Vms API" do
     end
 
     it "shelve_offload for a VMWare vm is not supported" do
-      api_basic_authorize action_identifier(:vms, :shelve_offload)
+      api_basic_authorize "instance_shelve_offload"
 
       run_post(vm_url, gen_request(:shelve_offload))
 
@@ -529,7 +529,7 @@ describe "Vms API" do
     end
 
     it "shelve_offloads multiple vms" do
-      api_basic_authorize action_identifier(:vms, :shelve_offload)
+      api_basic_authorize "instance_shelve_offload"
 
       update_raw_power_state("SHELVED", vm_openstack1)
       update_raw_power_state("SHELVED", vm_openstack2)
@@ -543,7 +543,7 @@ describe "Vms API" do
 
   context "Vm delete action" do
     it "deletes an invalid vm" do
-      api_basic_authorize action_identifier(:vms, :delete)
+      api_basic_authorize "vm_delete"
 
       run_post(invalid_vm_url, gen_request(:delete))
 
@@ -567,7 +567,7 @@ describe "Vms API" do
     end
 
     it "deletes a vm via a resource POST" do
-      api_basic_authorize action_identifier(:vms, :delete)
+      api_basic_authorize "vm_delete"
 
       run_post(vm_url, gen_request(:delete))
 
@@ -575,7 +575,7 @@ describe "Vms API" do
     end
 
     it "deletes a vm via a resource DELETE" do
-      api_basic_authorize action_identifier(:vms, :delete)
+      api_basic_authorize "vm_delete"
 
       run_delete(vm_url)
 
@@ -583,7 +583,7 @@ describe "Vms API" do
     end
 
     it "deletes multiple vms" do
-      api_basic_authorize action_identifier(:vms, :delete)
+      api_basic_authorize "vm_delete"
 
       run_post(vms_url, gen_request(:delete, nil, vm1_url, vm2_url))
 
@@ -593,7 +593,7 @@ describe "Vms API" do
 
   context "Vm set_owner action" do
     it "set_owner to an invalid vm" do
-      api_basic_authorize action_identifier(:vms, :set_owner)
+      api_basic_authorize "vm_edit"
 
       run_post(invalid_vm_url, gen_request(:set_owner, "owner" => "admin"))
 
@@ -609,7 +609,7 @@ describe "Vms API" do
     end
 
     it "set_owner with missing owner" do
-      api_basic_authorize action_identifier(:vms, :set_owner)
+      api_basic_authorize "vm_edit"
 
       run_post(vm_url, gen_request(:set_owner))
 
@@ -617,7 +617,7 @@ describe "Vms API" do
     end
 
     it "set_owner with invalid owner" do
-      api_basic_authorize action_identifier(:vms, :set_owner)
+      api_basic_authorize "vm_edit"
 
       run_post(vm_url, gen_request(:set_owner, "owner" => "bad_user"))
 
@@ -625,7 +625,7 @@ describe "Vms API" do
     end
 
     it "set_owner to a vm" do
-      api_basic_authorize action_identifier(:vms, :set_owner)
+      api_basic_authorize "vm_edit"
 
       run_post(vm_url, gen_request(:set_owner, "owner" => api_config(:user)))
 
@@ -634,7 +634,7 @@ describe "Vms API" do
     end
 
     it "set_owner to multiple vms" do
-      api_basic_authorize action_identifier(:vms, :set_owner)
+      api_basic_authorize "vm_edit"
 
       run_post(vms_url, gen_request(:set_owner, {"owner" => api_config(:user)}, vm1_url, vm2_url))
 
@@ -682,7 +682,7 @@ describe "Vms API" do
     end
 
     it "getting custom_attributes from a vm using expand" do
-      api_basic_authorize action_identifier(:vms, :read, :resource_actions, :get)
+      api_basic_authorize "vm_show"
       vm.custom_attributes = [ca1, ca2]
 
       run_get vm_url, :expand => "custom_attributes"
@@ -701,7 +701,7 @@ describe "Vms API" do
     end
 
     it "delete a custom_attribute from a vm via the delete action" do
-      api_basic_authorize action_identifier(:vms, :edit)
+      api_basic_authorize "vm_edit"
       vm.custom_attributes = [ca1]
 
       run_post(vm_ca_url, gen_request(:delete, nil, ca1_url))
@@ -711,7 +711,7 @@ describe "Vms API" do
     end
 
     it "add custom attribute to a vm without a name" do
-      api_basic_authorize action_identifier(:vms, :edit)
+      api_basic_authorize "vm_edit"
 
       run_post(vm_ca_url, gen_request(:add, "value" => "value1"))
 
@@ -719,7 +719,7 @@ describe "Vms API" do
     end
 
     it "add custom attributes to a vm" do
-      api_basic_authorize action_identifier(:vms, :edit)
+      api_basic_authorize "vm_edit"
 
       run_post(vm_ca_url, gen_request(:add, [{"name" => "name1", "value" => "value1"},
                                              {"name" => "name2", "value" => "value2"}]))
@@ -731,7 +731,7 @@ describe "Vms API" do
     end
 
     it "edit a custom attribute by name" do
-      api_basic_authorize action_identifier(:vms, :edit)
+      api_basic_authorize "vm_edit"
       vm.custom_attributes = [ca1]
 
       run_post(vm_ca_url, gen_request(:edit, "name" => "name1", "value" => "value one"))
@@ -742,7 +742,7 @@ describe "Vms API" do
     end
 
     it "edit a custom attribute by href" do
-      api_basic_authorize action_identifier(:vms, :edit)
+      api_basic_authorize "vm_edit"
       vm.custom_attributes = [ca1]
 
       run_post(vm_ca_url, gen_request(:edit, "href" => ca1_url, "value" => "new value1"))
@@ -753,7 +753,7 @@ describe "Vms API" do
     end
 
     it "edit multiple custom attributes" do
-      api_basic_authorize action_identifier(:vms, :edit)
+      api_basic_authorize "vm_edit"
       vm.custom_attributes = [ca1, ca2]
 
       run_post(vm_ca_url, gen_request(:edit, [{"name" => "name1", "value" => "new value1"},
@@ -773,7 +773,7 @@ describe "Vms API" do
     end
 
     it "add_lifecycle_event to an invalid vm" do
-      api_basic_authorize action_identifier(:vms, :add_lifecycle_event)
+      api_basic_authorize "vm_edit"
 
       run_post(invalid_vm_url, gen_request(:add_lifecycle_event, :event => "event 1"))
 
@@ -789,7 +789,7 @@ describe "Vms API" do
     end
 
     it "add_lifecycle_event to a vm" do
-      api_basic_authorize action_identifier(:vms, :add_lifecycle_event)
+      api_basic_authorize "vm_edit"
 
       run_post(vm_url, gen_request(:add_lifecycle_event, events[0]))
 
@@ -799,7 +799,7 @@ describe "Vms API" do
     end
 
     it "add_lifecycle_event to multiple vms" do
-      api_basic_authorize action_identifier(:vms, :add_lifecycle_event)
+      api_basic_authorize "vm_edit"
 
       run_post(vms_url, gen_request(:add_lifecycle_event,
                                     events.collect { |e| {:href => vm_url}.merge(e) }))
@@ -812,7 +812,7 @@ describe "Vms API" do
 
   context "Vm scan action" do
     it "scans an invalid vm" do
-      api_basic_authorize action_identifier(:vms, :scan)
+      api_basic_authorize "vm_scan"
 
       run_post(invalid_vm_url, gen_request(:scan))
 
@@ -828,7 +828,7 @@ describe "Vms API" do
     end
 
     it "scan a Vm" do
-      api_basic_authorize action_identifier(:vms, :scan)
+      api_basic_authorize "vm_scan"
 
       run_post(vm_url, gen_request(:scan))
 
@@ -836,7 +836,7 @@ describe "Vms API" do
     end
 
     it "scan multiple Vms" do
-      api_basic_authorize action_identifier(:vms, :scan)
+      api_basic_authorize "vm_scan"
 
       run_post(vms_url, gen_request(:scan, nil, vm1_url, vm2_url))
 
@@ -847,7 +847,7 @@ describe "Vms API" do
 
   context "Vm add_event action" do
     it "to an invalid vm" do
-      api_basic_authorize action_identifier(:vms, :add_event)
+      api_basic_authorize "vm_edit"
 
       run_post(invalid_vm_url, gen_request(:add_event))
 
@@ -863,7 +863,7 @@ describe "Vms API" do
     end
 
     it "to a single Vm" do
-      api_basic_authorize collection_action_identifier(:vms, :add_event)
+      api_basic_authorize "vm_edit"
 
       run_post(vm_url, gen_request(:add_event, :event_type => "special", :event_message => "message"))
 
@@ -871,7 +871,7 @@ describe "Vms API" do
     end
 
     it "to multiple Vms" do
-      api_basic_authorize collection_action_identifier(:vms, :add_event)
+      api_basic_authorize "vm_edit"
 
       run_post(vms_url,
                gen_request(:add_event,
@@ -899,7 +899,7 @@ describe "Vms API" do
 
   context "Vm retire action" do
     it "to an invalid vm" do
-      api_basic_authorize action_identifier(:vms, :retire)
+      api_basic_authorize "vm_retire"
 
       run_post(invalid_vm_url, gen_request(:retire))
 
@@ -915,7 +915,7 @@ describe "Vms API" do
     end
 
     it "to a single Vm" do
-      api_basic_authorize action_identifier(:vms, :retire)
+      api_basic_authorize "vm_retire"
 
       run_post(vm_url, gen_request(:retire))
 
@@ -923,7 +923,7 @@ describe "Vms API" do
     end
 
     it "to multiple Vms" do
-      api_basic_authorize collection_action_identifier(:vms, :retire)
+      api_basic_authorize "vm_retire"
 
       run_post(vms_url, gen_request(:retire, [{"href" => vm1_url}, {"href" => vm2_url}]))
 
@@ -946,7 +946,7 @@ describe "Vms API" do
     end
 
     it "in the future" do
-      api_basic_authorize action_identifier(:vms, :retire)
+      api_basic_authorize "vm_retire"
       date = 2.weeks.from_now
       run_post(vm_url, gen_request(:retire, :date => date.iso8601))
 
@@ -956,7 +956,7 @@ describe "Vms API" do
 
   context "Vm reset action" do
     it "to an invalid vm" do
-      api_basic_authorize action_identifier(:vms, :reset)
+      api_basic_authorize "vm_reset"
 
       run_post(invalid_vm_url, gen_request(:reset))
 
@@ -972,7 +972,7 @@ describe "Vms API" do
     end
 
     it "to a single Vm" do
-      api_basic_authorize action_identifier(:vms, :reset)
+      api_basic_authorize "vm_reset"
 
       run_post(vm_url, gen_request(:reset))
 
@@ -980,7 +980,7 @@ describe "Vms API" do
     end
 
     it "to multiple Vms" do
-      api_basic_authorize collection_action_identifier(:vms, :reset)
+      api_basic_authorize "vm_reset"
 
       run_post(vms_url, gen_request(:reset, [{"href" => vm1_url}, {"href" => vm2_url}]))
 
@@ -1005,7 +1005,7 @@ describe "Vms API" do
 
   context "Vm shutdown guest action" do
     it "to an invalid vm" do
-      api_basic_authorize action_identifier(:vms, :shutdown_guest)
+      api_basic_authorize "vm_guest_shutdown"
 
       run_post(invalid_vm_url, gen_request(:shutdown_guest))
 
@@ -1021,7 +1021,7 @@ describe "Vms API" do
     end
 
     it "to a single Vm" do
-      api_basic_authorize action_identifier(:vms, :shutdown_guest)
+      api_basic_authorize "vm_guest_shutdown"
 
       run_post(vm_url, gen_request(:shutdown_guest))
 
@@ -1029,7 +1029,7 @@ describe "Vms API" do
     end
 
     it "to multiple Vms" do
-      api_basic_authorize collection_action_identifier(:vms, :shutdown_guest)
+      api_basic_authorize "vm_guest_shutdown"
 
       run_post(vms_url, gen_request(:shutdown_guest, [{"href" => vm1_url}, {"href" => vm2_url}]))
 
@@ -1054,7 +1054,7 @@ describe "Vms API" do
 
   context "Vm refresh action" do
     it "to an invalid vm" do
-      api_basic_authorize action_identifier(:vms, :refresh)
+      api_basic_authorize "vm_refresh"
 
       run_post(invalid_vm_url, gen_request(:refresh))
 
@@ -1070,7 +1070,7 @@ describe "Vms API" do
     end
 
     it "to a single Vm" do
-      api_basic_authorize action_identifier(:vms, :refresh)
+      api_basic_authorize "vm_refresh"
 
       run_post(vm_url, gen_request(:refresh))
 
@@ -1078,7 +1078,7 @@ describe "Vms API" do
     end
 
     it "to multiple Vms" do
-      api_basic_authorize collection_action_identifier(:vms, :refresh)
+      api_basic_authorize "vm_refresh"
 
       run_post(vms_url, gen_request(:refresh, [{"href" => vm1_url}, {"href" => vm2_url}]))
 
@@ -1103,7 +1103,7 @@ describe "Vms API" do
 
   context "Vm reboot guest action" do
     it "to an invalid vm" do
-      api_basic_authorize action_identifier(:vms, :reboot_guest)
+      api_basic_authorize "vm_guest_restart"
 
       run_post(invalid_vm_url, gen_request(:reboot_guest))
 
@@ -1119,7 +1119,7 @@ describe "Vms API" do
     end
 
     it "to a single Vm" do
-      api_basic_authorize action_identifier(:vms, :reboot_guest)
+      api_basic_authorize "vm_guest_restart"
 
       run_post(vm_url, gen_request(:reboot_guest))
 
@@ -1127,7 +1127,7 @@ describe "Vms API" do
     end
 
     it "to multiple Vms" do
-      api_basic_authorize collection_action_identifier(:vms, :reboot_guest)
+      api_basic_authorize "vm_guest_restart"
 
       run_post(vms_url, gen_request(:reboot_guest, [{"href" => vm1_url}, {"href" => vm2_url}]))
 
@@ -1152,7 +1152,7 @@ describe "Vms API" do
 
   context "Vm request console action" do
     it "to an invalid vm" do
-      api_basic_authorize action_identifier(:vms, :request_console)
+      api_basic_authorize "vm_console"
 
       run_post(invalid_vm_url, gen_request(:request_console))
 
@@ -1168,7 +1168,7 @@ describe "Vms API" do
     end
 
     it "to a single Vm" do
-      api_basic_authorize action_identifier(:vms, :request_console)
+      api_basic_authorize "vm_console"
 
       run_post(vm_url, gen_request(:request_console))
 
@@ -1231,7 +1231,7 @@ describe "Vms API" do
     end
 
     it "assigns a tag to a Vm" do
-      api_basic_authorize subcollection_action_identifier(:vms, :tags, :assign)
+      api_basic_authorize "vm_tag"
 
       run_post(vm1_tags_url, gen_request(:assign, :category => tag1[:category], :name => tag1[:name]))
 
@@ -1241,7 +1241,7 @@ describe "Vms API" do
     end
 
     it "assigns a tag to a Vm by name path" do
-      api_basic_authorize subcollection_action_identifier(:vms, :tags, :assign)
+      api_basic_authorize "vm_tag"
 
       run_post(vm1_tags_url, gen_request(:assign, :name => tag1[:path]))
 
@@ -1251,7 +1251,7 @@ describe "Vms API" do
     end
 
     it "assigns a tag to a Vm by href" do
-      api_basic_authorize subcollection_action_identifier(:vms, :tags, :assign)
+      api_basic_authorize "vm_tag"
 
       run_post(vm1_tags_url, gen_request(:assign, :href => tags_url(Tag.find_by(:name => tag1[:path]).id)))
 
@@ -1261,7 +1261,7 @@ describe "Vms API" do
     end
 
     it "assigns an invalid tag by href to a Vm" do
-      api_basic_authorize subcollection_action_identifier(:vms, :tags, :assign)
+      api_basic_authorize "vm_tag"
 
       run_post(vm1_tags_url, gen_request(:assign, :href => invalid_tag_url))
 
@@ -1269,7 +1269,7 @@ describe "Vms API" do
     end
 
     it "assigns an invalid tag to a Vm" do
-      api_basic_authorize subcollection_action_identifier(:vms, :tags, :assign)
+      api_basic_authorize "vm_tag"
 
       run_post(vm1_tags_url, gen_request(:assign, :name => "/managed/bad_category/bad_name"))
 
@@ -1279,7 +1279,7 @@ describe "Vms API" do
     end
 
     it "assigns multiple tags to a Vm" do
-      api_basic_authorize subcollection_action_identifier(:vms, :tags, :assign)
+      api_basic_authorize "vm_tag"
 
       run_post(vm1_tags_url, gen_request(:assign, [{:name => tag1[:path]}, {:name => tag2[:path]}]))
 
@@ -1290,7 +1290,7 @@ describe "Vms API" do
     end
 
     it "assigns tags by mixed specification to a Vm" do
-      api_basic_authorize subcollection_action_identifier(:vms, :tags, :assign)
+      api_basic_authorize "vm_tag"
 
       tag = Tag.find_by(:name => tag2[:path])
       run_post(vm1_tags_url, gen_request(:assign, [{:name => tag1[:path]}, {:href => tags_url(tag.id)}]))
@@ -1310,7 +1310,7 @@ describe "Vms API" do
     end
 
     it "unassigns a tag from a Vm" do
-      api_basic_authorize subcollection_action_identifier(:vms, :tags, :unassign)
+      api_basic_authorize "vm_tag"
 
       run_post(vm2_tags_url, gen_request(:unassign, :category => tag1[:category], :name => tag1[:name]))
 
@@ -1322,7 +1322,7 @@ describe "Vms API" do
     end
 
     it "unassigns multiple tags from a Vm" do
-      api_basic_authorize subcollection_action_identifier(:vms, :tags, :unassign)
+      api_basic_authorize "vm_tag"
 
       tag = Tag.find_by(:name => tag2[:path])
       run_post(vm2_tags_url, gen_request(:unassign, [{:name => tag1[:path]}, {:href => tags_url(tag.id)}]))

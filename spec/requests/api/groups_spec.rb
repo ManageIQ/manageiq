@@ -31,7 +31,7 @@ describe "Groups API" do
     end
 
     it "rejects group creation with id specified" do
-      api_basic_authorize collection_action_identifier(:groups, :create)
+      api_basic_authorize "rbac_group_add"
 
       run_post(groups_url, "description" => "sample group", "id" => 100)
 
@@ -39,7 +39,7 @@ describe "Groups API" do
     end
 
     it "rejects group creation with invalid role specified" do
-      api_basic_authorize collection_action_identifier(:groups, :create)
+      api_basic_authorize "rbac_group_add"
 
       run_post(groups_url, "description" => "sample group", "role" => {"id" => 999_999})
 
@@ -47,7 +47,7 @@ describe "Groups API" do
     end
 
     it "rejects group creation with invalid tenant specified" do
-      api_basic_authorize collection_action_identifier(:groups, :create)
+      api_basic_authorize "rbac_group_add"
 
       run_post(groups_url, "description" => "sample group", "tenant" => {"id" => 999_999})
 
@@ -55,7 +55,7 @@ describe "Groups API" do
     end
 
     it "rejects group creation with invalid filters specified" do
-      api_basic_authorize collection_action_identifier(:groups, :create)
+      api_basic_authorize "rbac_group_add"
 
       run_post(groups_url, "description" => "sample group", "filters" => {"bogus" => %w(f1 f2)})
 
@@ -63,7 +63,7 @@ describe "Groups API" do
     end
 
     it "supports single group creation" do
-      api_basic_authorize collection_action_identifier(:groups, :create)
+      api_basic_authorize "rbac_group_add"
 
       run_post(groups_url, sample_group1)
 
@@ -75,7 +75,7 @@ describe "Groups API" do
     end
 
     it "supports single group creation via action" do
-      api_basic_authorize collection_action_identifier(:groups, :create)
+      api_basic_authorize "rbac_group_add"
 
       run_post(groups_url, gen_request(:create, sample_group1))
 
@@ -87,7 +87,7 @@ describe "Groups API" do
     end
 
     it "supports single group creation via action with role and tenant specified" do
-      api_basic_authorize collection_action_identifier(:groups, :create)
+      api_basic_authorize "rbac_group_add"
 
       run_post(groups_url, gen_request(:create,
                                        "description" => "sample_group3",
@@ -109,7 +109,7 @@ describe "Groups API" do
     end
 
     it "supports single group creation with filters specified" do
-      api_basic_authorize collection_action_identifier(:groups, :create)
+      api_basic_authorize "rbac_group_add"
 
       sample_group = {"description" => "sample_group3",
                       "filters"     => {
@@ -131,7 +131,7 @@ describe "Groups API" do
     end
 
     it "supports multiple group creation" do
-      api_basic_authorize collection_action_identifier(:groups, :create)
+      api_basic_authorize "rbac_group_add"
 
       run_post(groups_url, gen_request(:create, [sample_group1, sample_group2]))
 
@@ -157,7 +157,7 @@ describe "Groups API" do
     end
 
     it "rejects group edits for invalid resources" do
-      api_basic_authorize collection_action_identifier(:groups, :edit)
+      api_basic_authorize "rbac_group_edit"
 
       run_post(groups_url(999_999), gen_request(:edit, "description" => "updated_group"))
 
@@ -165,7 +165,7 @@ describe "Groups API" do
     end
 
     it "supports single group edit" do
-      api_basic_authorize collection_action_identifier(:groups, :edit)
+      api_basic_authorize "rbac_group_edit"
 
       run_post(groups_url(group1.id), gen_request(:edit, "description" => "updated_group"))
 
@@ -175,7 +175,7 @@ describe "Groups API" do
     end
 
     it "supports multiple group edits" do
-      api_basic_authorize collection_action_identifier(:groups, :edit)
+      api_basic_authorize "rbac_group_edit"
 
       run_post(groups_url, gen_request(:edit,
                                        [{"href" => groups_url(group1.id), "description" => "updated_group1"},
@@ -208,7 +208,7 @@ describe "Groups API" do
     end
 
     it "rejects group deletes for invalid groups" do
-      api_basic_authorize collection_action_identifier(:groups, :delete)
+      api_basic_authorize "rbac_group_delete"
 
       run_delete(groups_url(999_999))
 
@@ -216,7 +216,7 @@ describe "Groups API" do
     end
 
     it 'rejects a request to remove a default tenant group' do
-      api_basic_authorize collection_action_identifier(:groups, :delete)
+      api_basic_authorize "rbac_group_delete"
 
       run_delete(groups_url(tenant3.default_miq_group_id))
 
@@ -224,7 +224,7 @@ describe "Groups API" do
     end
 
     it "supports single group delete" do
-      api_basic_authorize collection_action_identifier(:groups, :delete)
+      api_basic_authorize "rbac_group_delete"
 
       g1_id = group1.id
       run_delete(groups_url(g1_id))
@@ -234,7 +234,7 @@ describe "Groups API" do
     end
 
     it "supports single group delete action" do
-      api_basic_authorize collection_action_identifier(:groups, :delete)
+      api_basic_authorize "rbac_group_delete"
 
       g1_id = group1.id
       g1_url = groups_url(g1_id)
@@ -246,7 +246,7 @@ describe "Groups API" do
     end
 
     it "supports multiple group deletes" do
-      api_basic_authorize collection_action_identifier(:groups, :delete)
+      api_basic_authorize "rbac_group_delete"
 
       g1_id, g2_id = group1.id, group2.id
       g1_url, g2_url = groups_url(g1_id), groups_url(g2_id)
@@ -276,7 +276,7 @@ describe "Groups API" do
     it "can assign a tag to a group" do
       group = FactoryGirl.create(:miq_group)
       FactoryGirl.create(:classification_department_with_tags)
-      api_basic_authorize(subcollection_action_identifier(:groups, :tags, :assign))
+      api_basic_authorize("rbac_group_tags_edit")
 
       run_post("#{groups_url(group.id)}/tags", :action => "assign", :category => "department", :name => "finance")
 
@@ -298,7 +298,7 @@ describe "Groups API" do
       group = FactoryGirl.create(:miq_group)
       FactoryGirl.create(:classification_department_with_tags)
       Classification.classify(group, "department", "finance")
-      api_basic_authorize(subcollection_action_identifier(:groups, :tags, :unassign))
+      api_basic_authorize("rbac_group_tags_edit")
 
       run_post("#{groups_url(group.id)}/tags", :action => "unassign", :category => "department", :name => "finance")
 

@@ -22,7 +22,7 @@ describe "Service Dialogs API" do
     before { template.resource_actions = [ra1, ra2] }
 
     it "query only returns href" do
-      api_basic_authorize collection_action_identifier(:service_dialogs, :read, :get)
+      api_basic_authorize "miq_ae_customization_explorer"
       run_get service_dialogs_url
 
       expected = {
@@ -36,7 +36,7 @@ describe "Service Dialogs API" do
     end
 
     it "query with expanded resources to include content" do
-      api_basic_authorize collection_action_identifier(:service_dialogs, :read, :get)
+      api_basic_authorize "miq_ae_customization_explorer"
       run_get service_dialogs_url, :expand => "resources"
 
       expect_query_result(:service_dialogs, Dialog.count, Dialog.count)
@@ -44,7 +44,7 @@ describe "Service Dialogs API" do
     end
 
     it "query single dialog to include content" do
-      api_basic_authorize action_identifier(:service_dialogs, :read, :resource_actions, :get)
+      api_basic_authorize "miq_ae_customization_explorer"
       run_get service_dialogs_url(dialog1.id)
 
       expect_single_resource_query(
@@ -56,7 +56,7 @@ describe "Service Dialogs API" do
     end
 
     it "query single dialog to exclude content when attributes are asked for" do
-      api_basic_authorize action_identifier(:service_dialogs, :read, :resource_actions, :get)
+      api_basic_authorize "miq_ae_customization_explorer"
 
       run_get service_dialogs_url(dialog1.id), :attributes => "id,label"
 
@@ -66,7 +66,7 @@ describe "Service Dialogs API" do
     context 'Delete Service Dialogs' do
       it 'DELETE /api/service_dialogs/:id' do
         dialog = FactoryGirl.create(:dialog)
-        api_basic_authorize collection_action_identifier(:service_dialogs, :delete)
+        api_basic_authorize "dialog_delete"
 
         expect do
           run_delete(service_dialogs_url(dialog.id))
@@ -76,7 +76,7 @@ describe "Service Dialogs API" do
 
       it 'POST /api/service_dialogs/:id deletes a single service dialog' do
         dialog = FactoryGirl.create(:dialog)
-        api_basic_authorize collection_action_identifier(:service_dialogs, :delete)
+        api_basic_authorize "dialog_delete"
 
         expect do
           run_post(service_dialogs_url(dialog.id), 'action' => 'delete')
@@ -86,7 +86,7 @@ describe "Service Dialogs API" do
 
       it 'POST /api/service_dialogs deletes a single service dialog' do
         dialog = FactoryGirl.create(:dialog)
-        api_basic_authorize collection_action_identifier(:service_dialogs, :delete)
+        api_basic_authorize "dialog_delete"
 
         expect do
           run_post(service_dialogs_url, 'action' => 'delete', 'resources' => [{ 'id' => dialog.id }])
@@ -96,7 +96,7 @@ describe "Service Dialogs API" do
 
       it 'POST /api/service_dialogs deletes multiple service dialogs' do
         dialog_a, dialog_b = FactoryGirl.create_list(:dialog, 2)
-        api_basic_authorize collection_action_identifier(:service_dialogs, :delete)
+        api_basic_authorize "dialog_delete"
 
         expect do
           run_post(service_dialogs_url, 'action'    => 'delete',
@@ -118,7 +118,7 @@ describe "Service Dialogs API" do
       end
 
       it 'POST /api/service_dialogs/:id updates a service dialog' do
-        api_basic_authorize collection_action_identifier(:service_dialogs, :edit)
+        api_basic_authorize "dialog_edit"
         dialog_tab = dialog.dialog_tabs.first
         dialog_group = dialog_tab.dialog_groups.first
         dialog_field = dialog_group.dialog_fields.first
@@ -158,7 +158,7 @@ describe "Service Dialogs API" do
       it 'POST /api/service_dialogs updates multiple service dialog' do
         dialog2 = FactoryGirl.create(:dialog_with_tab_and_group_and_field)
 
-        api_basic_authorize collection_action_identifier(:service_dialogs, :edit)
+        api_basic_authorize "dialog_edit"
 
         run_post(service_dialogs_url, :action => 'edit', :resources => [{:id => dialog.id, 'label' => 'foo bar'},
                                                                         {:id => dialog2.id, :label => 'bar'}
@@ -195,7 +195,7 @@ describe "Service Dialogs API" do
       it 'Can copy multiple service dialogs' do
         dialog1 = FactoryGirl.create(:dialog_with_tab_and_group_and_field, :label => 'foo')
         dialog2 = FactoryGirl.create(:dialog_with_tab_and_group_and_field, :label => 'bar')
-        api_basic_authorize collection_action_identifier(:service_dialogs, :copy)
+        api_basic_authorize "dialog_copy"
 
         expected = {
           'results' => a_collection_containing_exactly(
@@ -218,7 +218,7 @@ describe "Service Dialogs API" do
 
       it 'Can copy a single service dialog' do
         dialog = FactoryGirl.create(:dialog_with_tab_and_group_and_field, :label => 'foo')
-        api_basic_authorize collection_action_identifier(:service_dialogs, :copy)
+        api_basic_authorize "dialog_copy"
 
         expected = {
           'label' => "Copy of foo"
@@ -233,7 +233,7 @@ describe "Service Dialogs API" do
 
       it 'Can copy a service dialog with a new label' do
         dialog = FactoryGirl.create(:dialog_with_tab_and_group_and_field, :label => 'bar')
-        api_basic_authorize collection_action_identifier(:service_dialogs, :copy)
+        api_basic_authorize "dialog_copy"
 
         expected = {
           'label' => 'foo'
@@ -305,7 +305,7 @@ describe "Service Dialogs API" do
     end
 
     it "rejects refresh dialog fields with unspecified fields" do
-      api_basic_authorize action_identifier(:service_dialogs, :refresh_dialog_fields)
+      api_basic_authorize "svc_catalog_provision"
       init_dialog
 
       run_post(service_dialogs_url(dialog1.id), gen_request(:refresh_dialog_fields))
@@ -314,7 +314,7 @@ describe "Service Dialogs API" do
     end
 
     it "rejects refresh dialog fields of invalid fields" do
-      api_basic_authorize action_identifier(:service_dialogs, :refresh_dialog_fields)
+      api_basic_authorize "svc_catalog_provision"
       init_dialog
 
       run_post(service_dialogs_url(dialog1.id), gen_request(:refresh_dialog_fields, "fields" => %w(bad_field)))
@@ -323,7 +323,7 @@ describe "Service Dialogs API" do
     end
 
     it "supports refresh dialog fields of valid fields" do
-      api_basic_authorize action_identifier(:service_dialogs, :refresh_dialog_fields)
+      api_basic_authorize "svc_catalog_provision"
       init_dialog
 
       run_post(service_dialogs_url(dialog1.id), gen_request(:refresh_dialog_fields, "fields" => %w(text1)))
@@ -373,7 +373,7 @@ describe "Service Dialogs API" do
     end
 
     it 'rejects service dialog creation with an href specified' do
-      api_basic_authorize collection_action_identifier(:service_dialogs, :create)
+      api_basic_authorize "dialog_new"
 
       run_post(service_dialogs_url, dialog_request.merge!("href" => service_dialogs_url(123)))
       expected = {
@@ -387,7 +387,7 @@ describe "Service Dialogs API" do
     end
 
     it 'rejects service dialog creation with an id specified' do
-      api_basic_authorize collection_action_identifier(:service_dialogs, :create)
+      api_basic_authorize "dialog_new"
 
       run_post(service_dialogs_url, dialog_request.merge!("id" => 123))
       expected = {
@@ -401,7 +401,7 @@ describe "Service Dialogs API" do
     end
 
     it 'supports single service dialog creation' do
-      api_basic_authorize collection_action_identifier(:service_dialogs, :create)
+      api_basic_authorize "dialog_new"
 
       expected = {
         "results" => [
@@ -420,7 +420,7 @@ describe "Service Dialogs API" do
     end
 
     it 'supports multiple service dialog creation' do
-      api_basic_authorize collection_action_identifier(:service_dialogs, :create)
+      api_basic_authorize "dialog_new"
       dialog_request_2 = {
         :description => 'Dialog 2',
         :label       => 'dialog_2_label',
@@ -466,7 +466,7 @@ describe "Service Dialogs API" do
     end
 
     it 'returns dialog import service errors' do
-      api_basic_authorize collection_action_identifier(:service_dialogs, :create)
+      api_basic_authorize "dialog_new"
       invalid_request = {
         'description' => 'Dialog',
         'label'       => 'a_dialog'

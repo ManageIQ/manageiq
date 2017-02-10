@@ -37,7 +37,7 @@ RSpec.describe "Headers" do
 
   describe "Content-Type" do
     it "accepts JSON by default" do
-      api_basic_authorize(collection_action_identifier(:groups, :create))
+      api_basic_authorize("rbac_group_add")
 
       post groups_url, :params => '{"description": "foo"}', :headers => headers
 
@@ -45,7 +45,7 @@ RSpec.describe "Headers" do
     end
 
     it "will accept JSON when set to application/json" do
-      api_basic_authorize(collection_action_identifier(:groups, :create))
+      api_basic_authorize("rbac_group_add")
 
       post(groups_url,
            :params  => '{"description": "foo"}',
@@ -55,7 +55,7 @@ RSpec.describe "Headers" do
     end
 
     it "will ignore the Content-Type" do
-      api_basic_authorize(collection_action_identifier(:groups, :create))
+      api_basic_authorize("rbac_group_add")
 
       post(groups_url,
            :params  => '{"description": "foo"}',

@@ -6,7 +6,7 @@ describe "Settings API" do
 
   context "Settings Queries" do
     it "tests queries of all exposed settings" do
-      api_basic_authorize action_identifier(:settings, :read, :collection_actions, :get)
+      api_basic_authorize "ops_settings"
 
       run_get settings_url
 
@@ -14,7 +14,7 @@ describe "Settings API" do
     end
 
     it "tests query for a specific setting category" do
-      api_basic_authorize action_identifier(:settings, :read, :resource_actions, :get)
+      api_basic_authorize "ops_settings"
 
       category = api_settings.first
       run_get settings_url(category)
@@ -23,7 +23,7 @@ describe "Settings API" do
     end
 
     it "tests that query for a specific setting category matches the Settings hash" do
-      api_basic_authorize action_identifier(:settings, :read, :resource_actions, :get)
+      api_basic_authorize "ops_settings"
 
       category = api_settings.first
       run_get settings_url(category)
@@ -32,7 +32,7 @@ describe "Settings API" do
     end
 
     it "rejects query for an invalid setting category " do
-      api_basic_authorize action_identifier(:settings, :read, :resource_actions, :get)
+      api_basic_authorize "ops_settings"
 
       run_get settings_url("invalid_setting")
 

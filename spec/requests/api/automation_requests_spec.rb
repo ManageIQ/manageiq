@@ -76,7 +76,7 @@ describe "Automation Requests API" do
     let(:request2_url)  { automation_requests_url(request2.id) }
 
     it "supports approving a request" do
-      api_basic_authorize collection_action_identifier(:automation_requests, :approve)
+      api_basic_authorize "miq_request_approval"
 
       run_post(request1_url, gen_request(:approve, :reason => "approve reason"))
 
@@ -85,7 +85,7 @@ describe "Automation Requests API" do
     end
 
     it "supports denying a request" do
-      api_basic_authorize collection_action_identifier(:automation_requests, :deny)
+      api_basic_authorize "miq_request_approval"
 
       run_post(request2_url, gen_request(:deny, :reason => "deny reason"))
 
@@ -94,7 +94,7 @@ describe "Automation Requests API" do
     end
 
     it "supports approving multiple requests" do
-      api_basic_authorize collection_action_identifier(:automation_requests, :approve)
+      api_basic_authorize "miq_request_approval"
 
       run_post(automation_requests_url, gen_request(:approve, [{"href" => request1_url, "reason" => "approve reason"},
                                                                {"href" => request2_url, "reason" => "approve reason"}]))
@@ -118,7 +118,7 @@ describe "Automation Requests API" do
     end
 
     it "supports denying multiple requests" do
-      api_basic_authorize collection_action_identifier(:automation_requests, :deny)
+      api_basic_authorize "miq_request_approval"
 
       run_post(automation_requests_url, gen_request(:deny, [{"href" => request1_url, "reason" => "deny reason"},
                                                             {"href" => request2_url, "reason" => "deny reason"}]))

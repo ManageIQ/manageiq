@@ -37,7 +37,7 @@ describe "Services API" do
     end
 
     it "supports creates of single resource" do
-      api_basic_authorize collection_action_identifier(:services, :create)
+      api_basic_authorize "service_create"
 
       expect do
         run_post(services_url, gen_request(:create, "name" => "svc_new_1"))
@@ -48,7 +48,7 @@ describe "Services API" do
     end
 
     it "supports creates of multiple resources" do
-      api_basic_authorize collection_action_identifier(:services, :create)
+      api_basic_authorize "service_create"
 
       expect do
         run_post(services_url, gen_request(:create,
@@ -73,7 +73,7 @@ describe "Services API" do
     end
 
     it "supports edits of single resource" do
-      api_basic_authorize collection_action_identifier(:services, :edit)
+      api_basic_authorize "service_edit"
 
       run_post(services_url(svc.id), gen_request(:edit, "name" => "updated svc1"))
 
@@ -82,7 +82,7 @@ describe "Services API" do
     end
 
     it "supports edits of single resource via PUT" do
-      api_basic_authorize collection_action_identifier(:services, :edit)
+      api_basic_authorize "service_edit"
 
       run_put(services_url(svc.id), "name" => "updated svc1")
 
@@ -91,7 +91,7 @@ describe "Services API" do
     end
 
     it "supports edits of single resource via PATCH" do
-      api_basic_authorize collection_action_identifier(:services, :edit)
+      api_basic_authorize "service_edit"
 
       run_patch(services_url(svc.id), [{"action" => "edit",   "path" => "name",        "value" => "updated svc1"},
                                        {"action" => "remove", "path" => "description"},
@@ -104,7 +104,7 @@ describe "Services API" do
     end
 
     it "supports edits of multiple resources" do
-      api_basic_authorize collection_action_identifier(:services, :edit)
+      api_basic_authorize "service_edit"
 
       run_post(services_url, gen_request(:edit,
                                          [{"href" => services_url(svc1.id), "name" => "updated svc1"},
@@ -137,7 +137,7 @@ describe "Services API" do
     end
 
     it "rejects requests for invalid resources" do
-      api_basic_authorize collection_action_identifier(:services, :delete)
+      api_basic_authorize "service_delete"
 
       run_delete(services_url(999_999))
 
@@ -145,7 +145,7 @@ describe "Services API" do
     end
 
     it "supports single resource deletes" do
-      api_basic_authorize collection_action_identifier(:services, :delete)
+      api_basic_authorize "service_delete"
 
       run_delete(services_url(svc.id))
 
@@ -154,7 +154,7 @@ describe "Services API" do
     end
 
     it "supports multiple resource deletes" do
-      api_basic_authorize collection_action_identifier(:services, :delete)
+      api_basic_authorize "service_delete"
 
       run_post(services_url, gen_request(:delete,
                                          [{"href" => services_url(svc1.id)},
@@ -189,7 +189,7 @@ describe "Services API" do
     end
 
     it "supports single service retirement now" do
-      api_basic_authorize collection_action_identifier(:services, :retire)
+      api_basic_authorize "service_retire"
 
       expect(MiqEvent).to receive(:raise_evm_event).once
 
@@ -199,7 +199,7 @@ describe "Services API" do
     end
 
     it "supports single service retirement in future" do
-      api_basic_authorize collection_action_identifier(:services, :retire)
+      api_basic_authorize "service_retire"
 
       ret_date = format_retirement_date(Time.now + 5.days)
 
@@ -211,7 +211,7 @@ describe "Services API" do
     end
 
     it "supports multiple service retirement now" do
-      api_basic_authorize collection_action_identifier(:services, :retire)
+      api_basic_authorize "service_retire"
 
       expect(MiqEvent).to receive(:raise_evm_event).twice
 
@@ -223,7 +223,7 @@ describe "Services API" do
     end
 
     it "supports multiple service retirement in future" do
-      api_basic_authorize collection_action_identifier(:services, :retire)
+      api_basic_authorize "service_retire"
 
       ret_date = format_retirement_date(Time.now + 2.days)
 
@@ -258,9 +258,9 @@ describe "Services API" do
     end
 
     it "does not return reconfigure action for non-reconfigurable services" do
-      api_basic_authorize(action_identifier(:services, :read, :resource_actions, :get),
-                          action_identifier(:services, :retire),
-                          action_identifier(:services, :reconfigure))
+      api_basic_authorize("service_view",
+                          "service_retire",
+                          "service_reconfigure")
 
       run_get services_url(svc1.id)
 
@@ -269,9 +269,9 @@ describe "Services API" do
     end
 
     it "returns reconfigure action for reconfigurable services" do
-      api_basic_authorize(action_identifier(:services, :read, :resource_actions, :get),
-                          action_identifier(:services, :retire),
-                          action_identifier(:services, :reconfigure))
+      api_basic_authorize("service_view",
+                          "service_retire",
+                          "service_reconfigure")
 
       st1.resource_actions = [ra1]
       svc1.service_template_id = st1.id
@@ -285,7 +285,7 @@ describe "Services API" do
 
     it "accepts action when service is reconfigurable" do
       api_basic_authorize
-      update_user_role(@role, action_identifier(:services, :reconfigure))
+      update_user_role(@role, "service_reconfigure")
 
       st1.resource_actions = [ra1]
       svc1.service_template_id = st1.id
@@ -305,7 +305,7 @@ describe "Services API" do
     let(:vm2) { FactoryGirl.create(:vm_vmware, :hardware => hw2) }
 
     before do
-      api_basic_authorize(action_identifier(:services, :read, :resource_actions, :get))
+      api_basic_authorize("service_view")
 
       svc1 << vm1
       svc1 << vm2
@@ -359,7 +359,7 @@ describe "Services API" do
     describe "start" do
       it "will start a service for a user with appropriate role" do
         service = FactoryGirl.create(:service)
-        api_basic_authorize(action_identifier(:services, :start))
+        api_basic_authorize("service_admin")
 
         run_post(services_url(service.id), :action => "start")
 
@@ -374,7 +374,7 @@ describe "Services API" do
 
       it "can start multiple services for a user with appropriate role" do
         service_1, service_2 = FactoryGirl.create_list(:service, 2)
-        api_basic_authorize(collection_action_identifier(:services, :start))
+        api_basic_authorize("service_admin")
 
         run_post(services_url, :action => "start", :resources => [{:id => service_1.id}, {:id => service_2.id}])
 
@@ -409,7 +409,7 @@ describe "Services API" do
     describe "stop" do
       it "will stop a service for a user with appropriate role" do
         service = FactoryGirl.create(:service)
-        api_basic_authorize(action_identifier(:services, :stop))
+        api_basic_authorize("service_admin")
 
         run_post(services_url(service.id), :action => "stop")
 
@@ -424,7 +424,7 @@ describe "Services API" do
 
       it "can stop multiple services for a user with appropriate role" do
         service_1, service_2 = FactoryGirl.create_list(:service, 2)
-        api_basic_authorize(collection_action_identifier(:services, :stop))
+        api_basic_authorize("service_admin")
 
         run_post(services_url, :action => "stop", :resources => [{:id => service_1.id}, {:id => service_2.id}])
 
@@ -459,7 +459,7 @@ describe "Services API" do
     describe "suspend" do
       it "will suspend a service for a user with appropriate role" do
         service = FactoryGirl.create(:service)
-        api_basic_authorize(action_identifier(:services, :suspend))
+        api_basic_authorize("service_admin")
 
         run_post(services_url(service.id), :action => "suspend")
 
@@ -474,7 +474,7 @@ describe "Services API" do
 
       it "can suspend multiple services for a user with appropriate role" do
         service_1, service_2 = FactoryGirl.create_list(:service, 2)
-        api_basic_authorize(collection_action_identifier(:services, :suspend))
+        api_basic_authorize("service_admin")
 
         run_post(services_url, :action => "suspend", :resources => [{:id => service_1.id}, {:id => service_2.id}])
 

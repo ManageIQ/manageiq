@@ -13,7 +13,7 @@ RSpec.describe 'Virtual Template API' do
 
   context 'virtual templates index' do
     it 'can list all the virtual templates' do
-      api_basic_authorize collection_action_identifier(:virtual_templates, :read, :get)
+      api_basic_authorize "virtual_template_show"
       FactoryGirl.create(:virtual_template, :ems_id => ems.id)
       FactoryGirl.create(:virtual_template_google,
                          :ems_id               => ems.id,
@@ -27,7 +27,7 @@ RSpec.describe 'Virtual Template API' do
     end
 
     it 'only lists virtual templates (no other templates)' do
-      api_basic_authorize collection_action_identifier(:virtual_templates, :read, :get)
+      api_basic_authorize "virtual_template_show"
       FactoryGirl.create(:virtual_template, :ems_id => ems.id)
       FactoryGirl.create(:template_google, :ems_id => ems.id)
 
@@ -48,7 +48,7 @@ RSpec.describe 'Virtual Template API' do
     end
 
     it "accepts resource get requests with appropriate role" do
-      api_basic_authorize action_identifier(:virtual_templates, :read, :resource_actions, :get)
+      api_basic_authorize "virtual_template_show"
 
       vt = FactoryGirl.create(:virtual_template, :ems_id => ems.id)
 

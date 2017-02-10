@@ -34,7 +34,7 @@ describe "Pictures" do
 
   describe "Queries of Service Templates" do
     it "allows queries of the related picture and image_href" do
-      api_basic_authorize action_identifier(:service_templates, :read, :resource_actions, :get)
+      api_basic_authorize "svc_catalog_provision"
 
       run_get service_templates_url(template.id), :attributes => "picture,picture.image_href"
 
@@ -44,7 +44,7 @@ describe "Pictures" do
 
   describe "Queries of Services" do
     it "allows queries of the related picture and image_href" do
-      api_basic_authorize action_identifier(:services, :read, :resource_actions, :get)
+      api_basic_authorize "service_view"
 
       run_get services_url(service.id), :attributes => "picture,picture.image_href"
 
@@ -54,7 +54,7 @@ describe "Pictures" do
 
   describe "Queries of Service Requests" do
     it "allows queries of the related picture and image_href" do
-      api_basic_authorize action_identifier(:service_requests, :read, :resource_actions, :get)
+      api_basic_authorize "miq_request_view"
 
       run_get service_requests_url(service_request.id), :attributes => "picture,picture.image_href"
 
@@ -88,7 +88,7 @@ describe "Pictures" do
     end
 
     it 'creates a new picture' do
-      api_basic_authorize collection_action_identifier(:pictures, :create)
+      api_basic_authorize "picture_new"
 
       expected = {
         'results' => [a_hash_including('id')]
@@ -102,7 +102,7 @@ describe "Pictures" do
     end
 
     it 'creates multiple pictures' do
-      api_basic_authorize collection_action_identifier(:pictures, :create)
+      api_basic_authorize "picture_new"
 
       expected = {
         'results' => [a_hash_including('id'), a_hash_including('id')]
@@ -119,7 +119,7 @@ describe "Pictures" do
     end
 
     it 'requires an extension' do
-      api_basic_authorize collection_action_identifier(:pictures, :create)
+      api_basic_authorize "picture_new"
 
       run_post pictures_url, :content => content
 
@@ -133,7 +133,7 @@ describe "Pictures" do
     end
 
     it 'requires content' do
-      api_basic_authorize collection_action_identifier(:pictures, :create)
+      api_basic_authorize "picture_new"
 
       run_post pictures_url, :extension => 'png'
 
@@ -147,7 +147,7 @@ describe "Pictures" do
     end
 
     it 'requires content with valid base64' do
-      api_basic_authorize collection_action_identifier(:pictures, :create)
+      api_basic_authorize "picture_new"
 
       run_post pictures_url, :content => 'not base64', :extension => 'png'
 

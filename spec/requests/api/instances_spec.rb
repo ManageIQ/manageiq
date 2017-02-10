@@ -17,7 +17,7 @@ RSpec.describe "Instances API" do
 
   context "Instance index" do
     it "lists only the cloud instances (no infrastructure vms)" do
-      api_basic_authorize collection_action_identifier(:instances, :read, :get)
+      api_basic_authorize "instance_show_list"
       instance = FactoryGirl.create(:vm_openstack)
       _vm = FactoryGirl.create(:vm_vmware)
 
@@ -30,7 +30,7 @@ RSpec.describe "Instances API" do
 
   describe "instance terminate action" do
     it "responds not found for an invalid instance" do
-      api_basic_authorize action_identifier(:instances, :terminate)
+      api_basic_authorize "instance_terminate"
 
       run_post(invalid_instance_url, gen_request(:terminate))
 
@@ -46,7 +46,7 @@ RSpec.describe "Instances API" do
     end
 
     it "terminates a single valid Instance" do
-      api_basic_authorize action_identifier(:instances, :terminate)
+      api_basic_authorize "instance_terminate"
 
       run_post(instance_url, gen_request(:terminate))
 
@@ -58,7 +58,7 @@ RSpec.describe "Instances API" do
     end
 
     it "terminates multiple valid Instances" do
-      api_basic_authorize collection_action_identifier(:instances, :terminate)
+      api_basic_authorize "instance_terminate"
 
       run_post(instances_url, gen_request(:terminate, [{"href" => instance1_url}, {"href" => instance2_url}]))
 
@@ -83,7 +83,7 @@ RSpec.describe "Instances API" do
 
   describe "instance stop action" do
     it "responds not found for an invalid instance" do
-      api_basic_authorize action_identifier(:instances, :stop)
+      api_basic_authorize "instance_stop"
 
       run_post(invalid_instance_url, gen_request(:stop))
 
@@ -99,7 +99,7 @@ RSpec.describe "Instances API" do
     end
 
     it "fails to stop a powered off instance" do
-      api_basic_authorize action_identifier(:instances, :stop)
+      api_basic_authorize "instance_stop"
       update_raw_power_state("poweredOff", instance)
 
       run_post(instance_url, gen_request(:stop))
@@ -108,7 +108,7 @@ RSpec.describe "Instances API" do
     end
 
     it "stops a valid instance" do
-      api_basic_authorize action_identifier(:instances, :stop)
+      api_basic_authorize "instance_stop"
 
       run_post(instance_url, gen_request(:stop))
 
@@ -116,7 +116,7 @@ RSpec.describe "Instances API" do
     end
 
     it "stops multiple valid instances" do
-      api_basic_authorize action_identifier(:instances, :stop)
+      api_basic_authorize "instance_stop"
 
       run_post(instances_url, gen_request(:stop, nil, instance1_url, instance2_url))
 
@@ -127,7 +127,7 @@ RSpec.describe "Instances API" do
 
   describe "instance start action" do
     it "responds not found for an invalid instance" do
-      api_basic_authorize action_identifier(:instances, :start)
+      api_basic_authorize "instance_start"
 
       run_post(invalid_instance_url, gen_request(:start))
 
@@ -143,7 +143,7 @@ RSpec.describe "Instances API" do
     end
 
     it "fails to start a powered on instance" do
-      api_basic_authorize action_identifier(:instances, :start)
+      api_basic_authorize "instance_start"
 
       run_post(instance_url, gen_request(:start))
 
@@ -151,7 +151,7 @@ RSpec.describe "Instances API" do
     end
 
     it "starts an instance" do
-      api_basic_authorize action_identifier(:instances, :start)
+      api_basic_authorize "instance_start"
       update_raw_power_state("poweredOff", instance)
 
       run_post(instance_url, gen_request(:start))
@@ -160,7 +160,7 @@ RSpec.describe "Instances API" do
     end
 
     it "starts multiple instances" do
-      api_basic_authorize action_identifier(:instances, :start)
+      api_basic_authorize "instance_start"
       update_raw_power_state("poweredOff", instance1, instance2)
 
       run_post(instances_url, gen_request(:start, nil, instance1_url, instance2_url))
@@ -172,7 +172,7 @@ RSpec.describe "Instances API" do
 
   describe "instance pause action" do
     it "responds not found for an invalid instance" do
-      api_basic_authorize action_identifier(:instances, :pause)
+      api_basic_authorize "instance_pause"
 
       run_post(invalid_instance_url, gen_request(:pause))
 
@@ -188,7 +188,7 @@ RSpec.describe "Instances API" do
     end
 
     it "fails to pause a powered off instance" do
-      api_basic_authorize action_identifier(:instances, :pause)
+      api_basic_authorize "instance_pause"
       update_raw_power_state("poweredOff", instance)
 
       run_post(instance_url, gen_request(:pause))
@@ -197,7 +197,7 @@ RSpec.describe "Instances API" do
     end
 
     it "fails to pause a paused instance" do
-      api_basic_authorize action_identifier(:instances, :pause)
+      api_basic_authorize "instance_pause"
       update_raw_power_state("paused", instance)
 
       run_post(instance_url, gen_request(:pause))
@@ -206,7 +206,7 @@ RSpec.describe "Instances API" do
     end
 
     it "pauses an instance" do
-      api_basic_authorize action_identifier(:instances, :pause)
+      api_basic_authorize "instance_pause"
 
       run_post(instance_url, gen_request(:pause))
 
@@ -214,7 +214,7 @@ RSpec.describe "Instances API" do
     end
 
     it "pauses multiple instances" do
-      api_basic_authorize action_identifier(:instances, :pause)
+      api_basic_authorize "instance_pause"
 
       run_post(instances_url, gen_request(:pause, nil, instance1_url, instance2_url))
 
@@ -225,7 +225,7 @@ RSpec.describe "Instances API" do
 
   context "Instance suspend action" do
     it "responds not found for an invalid instance" do
-      api_basic_authorize action_identifier(:instances, :suspend)
+      api_basic_authorize "instance_suspend"
 
       run_post(invalid_instance_url, gen_request(:suspend))
 
@@ -241,7 +241,7 @@ RSpec.describe "Instances API" do
     end
 
     it "cannot suspend a powered off instance" do
-      api_basic_authorize action_identifier(:instances, :suspend)
+      api_basic_authorize "instance_suspend"
       update_raw_power_state("poweredOff", instance)
 
       run_post(instance_url, gen_request(:suspend))
@@ -250,7 +250,7 @@ RSpec.describe "Instances API" do
     end
 
     it "cannot suspend a suspended instance" do
-      api_basic_authorize action_identifier(:instances, :suspend)
+      api_basic_authorize "instance_suspend"
       update_raw_power_state("suspended", instance)
 
       run_post(instance_url, gen_request(:suspend))
@@ -259,7 +259,7 @@ RSpec.describe "Instances API" do
     end
 
     it "suspends an instance" do
-      api_basic_authorize action_identifier(:instances, :suspend)
+      api_basic_authorize "instance_suspend"
 
       run_post(instance_url, gen_request(:suspend))
 
@@ -267,7 +267,7 @@ RSpec.describe "Instances API" do
     end
 
     it "suspends multiple instances" do
-      api_basic_authorize action_identifier(:instances, :suspend)
+      api_basic_authorize "instance_suspend"
 
       run_post(instances_url, gen_request(:suspend, nil, instance1_url, instance2_url))
 
@@ -278,7 +278,7 @@ RSpec.describe "Instances API" do
 
   context "Instance shelve action" do
     it "responds not found for an invalid instance" do
-      api_basic_authorize action_identifier(:instances, :shelve)
+      api_basic_authorize "instance_shelve"
 
       run_post(invalid_instance_url, gen_request(:shelve))
 
@@ -294,7 +294,7 @@ RSpec.describe "Instances API" do
     end
 
     it "shelves a powered off instance" do
-      api_basic_authorize action_identifier(:instances, :shelve)
+      api_basic_authorize "instance_shelve"
       update_raw_power_state("SHUTOFF", instance)
 
       run_post(instance_url, gen_request(:shelve))
@@ -303,7 +303,7 @@ RSpec.describe "Instances API" do
     end
 
     it "shelves a suspended instance" do
-      api_basic_authorize action_identifier(:instances, :shelve)
+      api_basic_authorize "instance_shelve"
       update_raw_power_state("SUSPENDED", instance)
 
       run_post(instance_url, gen_request(:shelve))
@@ -312,7 +312,7 @@ RSpec.describe "Instances API" do
     end
 
     it "shelves a paused instance" do
-      api_basic_authorize action_identifier(:instances, :shelve)
+      api_basic_authorize "instance_shelve"
       update_raw_power_state("PAUSED", instance)
 
       run_post(instance_url, gen_request(:shelve))
@@ -321,7 +321,7 @@ RSpec.describe "Instances API" do
     end
 
     it "cannot shelve a shelved instance" do
-      api_basic_authorize action_identifier(:instances, :shelve)
+      api_basic_authorize "instance_shelve"
       update_raw_power_state("SHELVED", instance)
 
       run_post(instance_url, gen_request(:shelve))
@@ -334,7 +334,7 @@ RSpec.describe "Instances API" do
     end
 
     it "shelves an instance" do
-      api_basic_authorize action_identifier(:instances, :shelve)
+      api_basic_authorize "instance_shelve"
 
       run_post(instance_url, gen_request(:shelve))
 
@@ -345,7 +345,7 @@ RSpec.describe "Instances API" do
     end
 
     it "shelves multiple instances" do
-      api_basic_authorize action_identifier(:instances, :shelve)
+      api_basic_authorize "instance_shelve"
 
       run_post(instances_url, gen_request(:shelve, nil, instance1_url, instance2_url))
 
@@ -356,7 +356,7 @@ RSpec.describe "Instances API" do
 
   describe "instance reboot guest action" do
     it "responds not found for an invalid instance" do
-      api_basic_authorize action_identifier(:instances, :reboot_guest)
+      api_basic_authorize "instance_guest_restart"
 
       run_post(invalid_instance_url, gen_request(:reboot_guest))
 
@@ -372,7 +372,7 @@ RSpec.describe "Instances API" do
     end
 
     it "fails to reboot a powered off instance" do
-      api_basic_authorize action_identifier(:instances, :reboot_guest)
+      api_basic_authorize "instance_guest_restart"
       update_raw_power_state("poweredOff", instance)
 
       run_post(instance_url, gen_request(:reboot_guest))
@@ -381,7 +381,7 @@ RSpec.describe "Instances API" do
     end
 
     it "reboots a valid instance" do
-      api_basic_authorize action_identifier(:instances, :reboot_guest)
+      api_basic_authorize "instance_guest_restart"
 
       run_post(instance_url, gen_request(:reboot_guest))
 
@@ -389,7 +389,7 @@ RSpec.describe "Instances API" do
     end
 
     it "reboots multiple valid instances" do
-      api_basic_authorize action_identifier(:instances, :reboot_guest)
+      api_basic_authorize "instance_guest_restart"
 
       run_post(instances_url, gen_request(:reboot_guest, nil, instance1_url, instance2_url))
 
@@ -400,7 +400,7 @@ RSpec.describe "Instances API" do
 
   describe "instance reset action" do
     it "responds not found for an invalid instance" do
-      api_basic_authorize action_identifier(:instances, :reset)
+      api_basic_authorize "instance_reset"
 
       run_post(invalid_instance_url, gen_request(:reset))
 
@@ -416,7 +416,7 @@ RSpec.describe "Instances API" do
     end
 
     it "fails to reset a powered off instance" do
-      api_basic_authorize action_identifier(:instances, :reset)
+      api_basic_authorize "instance_reset"
       update_raw_power_state("poweredOff", instance)
 
       run_post(instance_url, gen_request(:reset))
@@ -425,7 +425,7 @@ RSpec.describe "Instances API" do
     end
 
     it "resets a valid instance" do
-      api_basic_authorize action_identifier(:instances, :reset)
+      api_basic_authorize "instance_reset"
 
       run_post(instance_url, gen_request(:reset))
 
@@ -433,7 +433,7 @@ RSpec.describe "Instances API" do
     end
 
     it "resets multiple valid instances" do
-      api_basic_authorize action_identifier(:instances, :reset)
+      api_basic_authorize "instance_reset"
 
       run_post(instances_url, gen_request(:reset, nil, instance1_url, instance2_url))
 
@@ -456,7 +456,7 @@ RSpec.describe "Instances API" do
     end
 
     it 'queries all load balancers on an instance' do
-      api_basic_authorize subcollection_action_identifier(:instances, :load_balancers, :show, :get)
+      api_basic_authorize "load_balancer_show"
       expected = {
         'name'      => 'load_balancers',
         'resources' => [
@@ -470,7 +470,7 @@ RSpec.describe "Instances API" do
     end
 
     it 'queries a single load balancer on an instance' do
-      api_basic_authorize subcollection_action_identifier(:instances, :load_balancers, :show, :get)
+      api_basic_authorize "load_balancer_show"
       run_get("#{instances_url(@vm.id)}/load_balancers/#{@load_balancer.id}")
 
       expect(response).to have_http_status(:ok)

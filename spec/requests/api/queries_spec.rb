@@ -18,7 +18,7 @@ describe "Queries API" do
 
   describe "Query collections" do
     it "returns resource lists with only hrefs" do
-      api_basic_authorize collection_action_identifier(:vms, :read, :get)
+      api_basic_authorize "vm_show_list"
       create_vms(3)
 
       run_get vms_url
@@ -28,7 +28,7 @@ describe "Queries API" do
     end
 
     it "returns seperate ids and href when expanded" do
-      api_basic_authorize collection_action_identifier(:vms, :read, :get)
+      api_basic_authorize "vm_show_list"
       create_vms(3)
 
       run_get vms_url, :expand => "resources"
@@ -43,7 +43,7 @@ describe "Queries API" do
     end
 
     it "always return ids and href when asking for specific attributes" do
-      api_basic_authorize collection_action_identifier(:vms, :read, :get)
+      api_basic_authorize "vm_show_list"
       vm1   # create resource
 
       run_get vms_url, :expand => "resources", :attributes => "guid"
@@ -55,7 +55,7 @@ describe "Queries API" do
 
   describe "Query resource" do
     it "returns both id and href" do
-      api_basic_authorize action_identifier(:vms, :read, :resource_actions, :get)
+      api_basic_authorize "vm_show"
       vm1   # create resource
 
       run_get vm1_url
@@ -64,7 +64,7 @@ describe "Queries API" do
     end
 
     it 'supports compressed ids' do
-      api_basic_authorize action_identifier(:vms, :read, :resource_actions, :get)
+      api_basic_authorize "vm_show"
 
       run_get vms_url(ApplicationRecord.compress_id(vm1.id))
 
@@ -72,7 +72,7 @@ describe "Queries API" do
     end
 
     it 'returns 404 on url with trailing garbage' do
-      api_basic_authorize action_identifier(:vms, :read, :resource_actions, :get)
+      api_basic_authorize "vm_show"
       vm1   # create resource
 
       run_get vm1_url + 'garbage'
@@ -141,7 +141,7 @@ describe "Queries API" do
 
   describe "Querying encrypted attributes" do
     it "hides them from database records" do
-      api_basic_authorize action_identifier(:providers, :read, :resource_actions, :get)
+      api_basic_authorize "ems_infra_show"
 
       credentials = {:userid => "admin", :password => "super_password"}
 
@@ -159,7 +159,7 @@ describe "Queries API" do
     end
 
     it "hides them from provisioning hashes" do
-      api_basic_authorize action_identifier(:provision_requests, :read, :resource_actions, :get)
+      api_basic_authorize "miq_request_show"
 
       password_field = ::MiqRequestWorkflow.all_encrypted_options_fields.last.to_s
       options = {:attrs => {:userid => "admin", password_field.to_sym => "super_password"}}

@@ -3,7 +3,7 @@ RSpec.describe "hosts API" do
     context "with an appropriate role" do
       it "can edit the password on a host" do
         host = FactoryGirl.create(:host_with_authentication)
-        api_basic_authorize action_identifier(:hosts, :edit)
+        api_basic_authorize "host_edit"
         options = {:credentials => {:authtype => "default", :password => "abc123"}}
 
         expect do
@@ -14,7 +14,7 @@ RSpec.describe "hosts API" do
 
       it "will update the default authentication if no type is given" do
         host = FactoryGirl.create(:host_with_authentication)
-        api_basic_authorize action_identifier(:hosts, :edit)
+        api_basic_authorize "host_edit"
         options = {:credentials => {:password => "abc123"}}
 
         expect do
@@ -25,7 +25,7 @@ RSpec.describe "hosts API" do
 
       it "sending non-credentials attributes will result in a bad request error" do
         host = FactoryGirl.create(:host_with_authentication)
-        api_basic_authorize action_identifier(:hosts, :edit)
+        api_basic_authorize "host_edit"
         options = {:name => "new name"}
 
         expect do
@@ -37,7 +37,7 @@ RSpec.describe "hosts API" do
       it "can update passwords on multiple hosts by href" do
         host1 = FactoryGirl.create(:host_with_authentication)
         host2 = FactoryGirl.create(:host_with_authentication)
-        api_basic_authorize action_identifier(:hosts, :edit)
+        api_basic_authorize "host_edit"
         options = [
           {:href => hosts_url(host1.id), :credentials => {:password => "abc123"}},
           {:href => hosts_url(host2.id), :credentials => {:password => "def456"}}
@@ -52,7 +52,7 @@ RSpec.describe "hosts API" do
       it "can update passwords on multiple hosts by id" do
         host1 = FactoryGirl.create(:host_with_authentication)
         host2 = FactoryGirl.create(:host_with_authentication)
-        api_basic_authorize action_identifier(:hosts, :edit)
+        api_basic_authorize "host_edit"
         options = [
           {:id => host1.id, :credentials => {:password => "abc123"}},
           {:id => host2.id, :credentials => {:password => "def456"}}

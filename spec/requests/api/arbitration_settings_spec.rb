@@ -10,7 +10,7 @@ RSpec.describe 'Arbitration Profile API' do
 
     it 'can list the arbitration settings' do
       settings = FactoryGirl.create_list(:arbitration_setting, 2)
-      api_basic_authorize collection_action_identifier(:arbitration_settings, :read, :get)
+      api_basic_authorize "show_arbitration_setting"
 
       run_get arbitration_settings_url
 
@@ -36,7 +36,7 @@ RSpec.describe 'Arbitration Profile API' do
     end
 
     it 'supports single arbitration_setting creation' do
-      api_basic_authorize collection_action_identifier(:arbitration_settings, :create)
+      api_basic_authorize "create_arbitration_setting"
 
       expect do
         run_post(arbitration_settings_url, request_body)
@@ -46,7 +46,7 @@ RSpec.describe 'Arbitration Profile API' do
     end
 
     it 'supports multiple arbitration_setting creation' do
-      api_basic_authorize collection_action_identifier(:arbitration_settings, :create)
+      api_basic_authorize "create_arbitration_setting"
       request_body_2 = { :name => 'test_setting_2', :display_name => 'Test Setting 2' }
 
       expect do
@@ -57,7 +57,7 @@ RSpec.describe 'Arbitration Profile API' do
     end
 
     it 'rejects a request with an href' do
-      api_basic_authorize collection_action_identifier(:arbitration_settings, :create)
+      api_basic_authorize "create_arbitration_setting"
 
       run_post(arbitration_settings_url, request_body.merge(:href => arbitration_settings_url(999_999)))
 
@@ -65,7 +65,7 @@ RSpec.describe 'Arbitration Profile API' do
     end
 
     it 'rejects a request with an id' do
-      api_basic_authorize collection_action_identifier(:arbitration_settings, :create)
+      api_basic_authorize "create_arbitration_setting"
 
       run_post(arbitration_settings_url, request_body.merge(:id => 999_999))
 
@@ -85,7 +85,7 @@ RSpec.describe 'Arbitration Profile API' do
     end
 
     it 'can edit a setting' do
-      api_basic_authorize collection_action_identifier(:arbitration_settings, :edit)
+      api_basic_authorize "edit_arbitration_setting"
 
       expect do
         run_post(arbitration_settings_url(setting.id), gen_request(:edit, :value => 'new value'))
@@ -113,7 +113,7 @@ RSpec.describe 'Arbitration Profile API' do
     end
 
     it 'supports single arbitration_setting delete' do
-      api_basic_authorize collection_action_identifier(:arbitration_settings, :delete)
+      api_basic_authorize "delete_arbitration_setting"
       setting = FactoryGirl.create(:arbitration_setting)
 
       expect do
@@ -125,7 +125,7 @@ RSpec.describe 'Arbitration Profile API' do
     end
 
     it 'supports multiple arbitration_setting delete' do
-      api_basic_authorize collection_action_identifier(:arbitration_settings, :delete)
+      api_basic_authorize "delete_arbitration_setting"
       settings = FactoryGirl.create_list(:arbitration_setting, 2)
       setting_urls = settings.map { |setting| { 'href' => arbitration_settings_url(setting.id) } }
 

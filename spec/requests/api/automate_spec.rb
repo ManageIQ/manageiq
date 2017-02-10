@@ -13,7 +13,7 @@ describe "Automate API" do
     end
 
     it "returns domains by default" do
-      api_basic_authorize action_identifier(:automate, :read, :collection_actions, :get)
+      api_basic_authorize "miq_ae_domain_view"
 
       run_get automate_url
 
@@ -29,7 +29,7 @@ describe "Automate API" do
     end
 
     it "default to depth 0 for non-root queries" do
-      api_basic_authorize action_identifier(:automate, :read, :collection_actions, :get)
+      api_basic_authorize "miq_ae_domain_view"
 
       run_get automate_url("custom")
 
@@ -40,7 +40,7 @@ describe "Automate API" do
     end
 
     it "supports depth 1" do
-      api_basic_authorize action_identifier(:automate, :read, :collection_actions, :get)
+      api_basic_authorize "miq_ae_domain_view"
 
       run_get(automate_url("custom"), :depth => 1)
 
@@ -52,7 +52,7 @@ describe "Automate API" do
     end
 
     it "supports depth -1" do
-      api_basic_authorize action_identifier(:automate, :read, :collection_actions, :get)
+      api_basic_authorize "miq_ae_domain_view"
 
       run_get(automate_url, :depth => -1)
 
@@ -65,7 +65,7 @@ describe "Automate API" do
     end
 
     it "supports state_machines search option" do
-      api_basic_authorize action_identifier(:automate, :read, :collection_actions, :get)
+      api_basic_authorize "miq_ae_domain_view"
 
       run_get(automate_url, :depth => -1, :search_options => "state_machines")
 
@@ -77,7 +77,7 @@ describe "Automate API" do
     end
 
     it "always return the fqname" do
-      api_basic_authorize action_identifier(:automate, :read, :collection_actions, :get)
+      api_basic_authorize "miq_ae_domain_view"
 
       run_get(automate_url("custom/system"), :attributes => "name")
 

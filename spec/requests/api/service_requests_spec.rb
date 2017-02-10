@@ -43,7 +43,7 @@ describe "Service Requests API" do
   describe "Service Requests query" do
     before do
       template.resource_actions = [provision_ra, retire_ra]
-      api_basic_authorize action_identifier(:service_requests, :read, :resource_actions, :get)
+      api_basic_authorize "miq_request_view"
     end
 
     it "can return the provision_dialog" do
@@ -63,7 +63,7 @@ describe "Service Requests API" do
   describe "Service query" do
     before do
       template.resource_actions = [provision_ra, retire_ra]
-      api_basic_authorize action_identifier(:services, :read, :resource_actions, :get)
+      api_basic_authorize "service_view"
     end
 
     it "can return the provision_dialog" do
@@ -98,7 +98,7 @@ describe "Service Requests API" do
     let(:svcreqs_list) { [svcreq1_url, svcreq2_url] }
 
     it "supports approving a request" do
-      api_basic_authorize collection_action_identifier(:service_requests, :approve)
+      api_basic_authorize "miq_request_approval"
 
       run_post(svcreq1_url, gen_request(:approve, :reason => "approve reason"))
 
@@ -107,7 +107,7 @@ describe "Service Requests API" do
     end
 
     it "supports denying a request" do
-      api_basic_authorize collection_action_identifier(:service_requests, :approve)
+      api_basic_authorize "miq_request_approval"
 
       run_post(svcreq2_url, gen_request(:deny, :reason => "deny reason"))
 
@@ -116,7 +116,7 @@ describe "Service Requests API" do
     end
 
     it "supports approving multiple requests" do
-      api_basic_authorize collection_action_identifier(:service_requests, :approve)
+      api_basic_authorize "miq_request_approval"
 
       run_post(service_requests_url, gen_request(:approve, [{"href" => svcreq1_url, "reason" => "approve reason"},
                                                             {"href" => svcreq2_url, "reason" => "approve reason"}]))
@@ -140,7 +140,7 @@ describe "Service Requests API" do
     end
 
     it "supports denying multiple requests" do
-      api_basic_authorize collection_action_identifier(:service_requests, :approve)
+      api_basic_authorize "miq_request_approval"
 
       run_post(service_requests_url, gen_request(:deny, [{"href" => svcreq1_url, "reason" => "deny reason"},
                                                          {"href" => svcreq2_url, "reason" => "deny reason"}]))
@@ -179,7 +179,7 @@ describe "Service Requests API" do
                          :requester   => other_user,
                          :source_id   => template.id,
                          :source_type => template.class.name)
-      api_basic_authorize collection_action_identifier(:service_requests, :read, :get)
+      api_basic_authorize "miq_request_view"
 
       run_get service_requests_url
 
@@ -193,7 +193,7 @@ describe "Service Requests API" do
                                            :requester   => other_user,
                                            :source_id   => template.id,
                                            :source_type => template.class.name)
-      api_basic_authorize collection_action_identifier(:service_requests, :read, :get)
+      api_basic_authorize "miq_request_view"
 
       run_get service_requests_url(service_request.id)
 
@@ -211,7 +211,7 @@ describe "Service Requests API" do
                                             :requester   => @user,
                                             :source_id   => template.id,
                                             :source_type => template.class.name)
-      api_basic_authorize collection_action_identifier(:service_requests, :read, :get)
+      api_basic_authorize "miq_request_view"
 
       run_get service_requests_url
 
@@ -224,7 +224,7 @@ describe "Service Requests API" do
                                            :requester   => @user,
                                            :source_id   => template.id,
                                            :source_type => template.class.name)
-      api_basic_authorize collection_action_identifier(:service_requests, :read, :get)
+      api_basic_authorize "miq_request_view"
 
       run_get service_requests_url(service_request.id)
 
@@ -244,7 +244,7 @@ describe "Service Requests API" do
                                              :requester   => @user,
                                              :source_id   => template.id,
                                              :source_type => template.class.name)
-      api_basic_authorize collection_action_identifier(:service_requests, :read, :get)
+      api_basic_authorize "miq_request_view"
 
       run_get service_requests_url
 
@@ -267,7 +267,7 @@ describe "Service Requests API" do
                                            :requester   => other_user,
                                            :source_id   => template.id,
                                            :source_type => template.class.name)
-      api_basic_authorize collection_action_identifier(:service_requests, :read, :get)
+      api_basic_authorize "miq_request_view"
 
       run_get service_requests_url(service_request.id)
 
@@ -290,7 +290,7 @@ describe "Service Requests API" do
     end
 
     it 'can delete a single service request resource' do
-      api_basic_authorize collection_action_identifier(:service_requests, :delete)
+      api_basic_authorize "miq_request_delete"
 
       run_post(service_requests_url(service_request.id), :action => 'delete')
 
@@ -308,7 +308,7 @@ describe "Service Requests API" do
                                              :requester   => @user,
                                              :source_id   => template.id,
                                              :source_type => template.class.name)
-      api_basic_authorize collection_action_identifier(:service_requests, :delete)
+      api_basic_authorize "miq_request_delete"
 
       run_post(service_requests_url, :action => 'delete', :resources => [
                  { :id => service_request.id }, { :id => service_request_2.id }
@@ -328,7 +328,7 @@ describe "Service Requests API" do
     end
 
     it 'can delete a service request via DELETE' do
-      api_basic_authorize collection_action_identifier(:service_requests, :delete)
+      api_basic_authorize "miq_request_delete"
 
       run_delete(service_requests_url(service_request.id))
 
@@ -348,7 +348,7 @@ describe "Service Requests API" do
     it 'can add a single approver' do
       service_request.miq_approvals << FactoryGirl.create(:miq_approval)
       user = FactoryGirl.create(:user)
-      api_basic_authorize collection_action_identifier(:service_requests, :add_approver)
+      api_basic_authorize "miq_request_approval"
 
       expect do
         run_post(service_requests_url(service_request.id), :action => 'add_approver', :user_id => user.id)
@@ -365,7 +365,7 @@ describe "Service Requests API" do
                                              :source_id   => template.id,
                                              :source_type => template.class.name)
       service_request_2.miq_approvals << FactoryGirl.create(:miq_approval)
-      api_basic_authorize collection_action_identifier(:service_requests, :add_approver)
+      api_basic_authorize "miq_request_approval"
 
       expected = {
         'results' => a_collection_including(
@@ -394,7 +394,7 @@ describe "Service Requests API" do
     it 'supports user reference hash with id' do
       service_request.miq_approvals << FactoryGirl.create(:miq_approval)
       user = FactoryGirl.create(:user)
-      api_basic_authorize collection_action_identifier(:service_requests, :add_approver)
+      api_basic_authorize "miq_request_approval"
 
       expect do
         run_post(service_requests_url(service_request.id), :action => 'add_approver', :user => { :id => user.id})
@@ -406,7 +406,7 @@ describe "Service Requests API" do
     it 'supports user reference hash with href' do
       service_request.miq_approvals << FactoryGirl.create(:miq_approval)
       user = FactoryGirl.create(:user)
-      api_basic_authorize collection_action_identifier(:service_requests, :add_approver)
+      api_basic_authorize "miq_request_approval"
 
       expect do
         run_post(service_requests_url(service_request.id),
@@ -417,7 +417,7 @@ describe "Service Requests API" do
     end
 
     it 'raises an error if no user is supplied' do
-      api_basic_authorize collection_action_identifier(:service_requests, :add_approver)
+      api_basic_authorize "miq_request_approval"
 
       expected = {
         'error' => a_hash_including(
@@ -435,7 +435,7 @@ describe "Service Requests API" do
     it 'can remove a single approver' do
       user = FactoryGirl.create(:user)
       service_request.miq_approvals << FactoryGirl.create(:miq_approval, :approver => user)
-      api_basic_authorize collection_action_identifier(:service_requests, :add_approver)
+      api_basic_authorize "miq_request_approval"
 
       expect do
         run_post(service_requests_url(service_request.id), :action => 'remove_approver', :user_id => user.id)
@@ -452,7 +452,7 @@ describe "Service Requests API" do
                                             :source_type => template.class.name)
       service_request.miq_approvals << FactoryGirl.create(:miq_approval, :approver => user)
       service_request2.miq_approvals << FactoryGirl.create(:miq_approval, :approver => user)
-      api_basic_authorize collection_action_identifier(:service_requests, :add_approver)
+      api_basic_authorize "miq_request_approval"
 
       expected = {
         'results' => a_collection_including(
@@ -485,7 +485,7 @@ describe "Service Requests API" do
     it 'supports user reference hash with href' do
       user = FactoryGirl.create(:user)
       service_request.miq_approvals << FactoryGirl.create(:miq_approval, :approver => user)
-      api_basic_authorize collection_action_identifier(:service_requests, :add_approver)
+      api_basic_authorize "miq_request_approval"
 
       expect do
         run_post(service_requests_url(service_request.id),
@@ -497,7 +497,7 @@ describe "Service Requests API" do
     end
 
     it 'raises an error if no user is supplied' do
-      api_basic_authorize collection_action_identifier(:service_requests, :add_approver)
+      api_basic_authorize "miq_request_approval"
 
       expected = {
         'error' => a_hash_including(
@@ -513,7 +513,7 @@ describe "Service Requests API" do
     it 'does not raise error if incorrect user is supplied' do
       user = FactoryGirl.create(:user)
       service_request.miq_approvals << FactoryGirl.create(:miq_approval)
-      api_basic_authorize collection_action_identifier(:service_requests, :add_approver)
+      api_basic_authorize "miq_request_approval"
 
       run_post(service_requests_url(service_request.id), :action => 'remove_approver', :user_id => user.id)
       expect(response).to have_http_status(:ok)
@@ -531,7 +531,7 @@ describe "Service Requests API" do
     end
 
     it 'updates a single service request' do
-      api_basic_authorize collection_action_identifier(:service_requests, :edit)
+      api_basic_authorize "miq_request_edit"
 
       run_post(service_requests_url(service_request.id), gen_request(:edit, :options => {:foo => "bar"}))
 
@@ -548,7 +548,7 @@ describe "Service Requests API" do
                                              :requester   => @user,
                                              :source_id   => template.id,
                                              :source_type => template.class.name)
-      api_basic_authorize collection_action_identifier(:service_requests, :edit)
+      api_basic_authorize "miq_request_edit"
 
       run_post(service_requests_url,
                :action    => "edit",

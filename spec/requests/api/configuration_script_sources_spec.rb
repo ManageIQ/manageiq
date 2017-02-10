@@ -2,7 +2,7 @@ RSpec.describe 'Configuration Script Sources API' do
   describe 'GET /api/configuration_script_sources' do
     it 'lists all the configuration script sources with an appropriate role' do
       repository = FactoryGirl.create(:configuration_script_source)
-      api_basic_authorize collection_action_identifier(:configuration_script_sources, :read, :get)
+      api_basic_authorize "embedded_configuration_script_source_view"
 
       run_get(configuration_script_sources_url)
 
@@ -28,7 +28,7 @@ RSpec.describe 'Configuration Script Sources API' do
   describe 'GET /api/configuration_script_sources/:id' do
     it 'will show a configuration script source with an appropriate role' do
       repository = FactoryGirl.create(:configuration_script_source)
-      api_basic_authorize collection_action_identifier(:configuration_script_sources, :read, :get)
+      api_basic_authorize "embedded_configuration_script_source_view"
 
       run_get(configuration_script_sources_url(repository.id))
 

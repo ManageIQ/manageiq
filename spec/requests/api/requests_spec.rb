@@ -16,7 +16,7 @@ RSpec.describe "Requests API" do
                          :requester   => other_user,
                          :source_id   => template.id,
                          :source_type => template.class.name)
-      api_basic_authorize collection_action_identifier(:requests, :read, :get)
+      api_basic_authorize "miq_request_show_list"
 
       run_get requests_url
 
@@ -30,7 +30,7 @@ RSpec.describe "Requests API" do
                                            :requester   => other_user,
                                            :source_id   => template.id,
                                            :source_type => template.class.name)
-      api_basic_authorize action_identifier(:requests, :read, :resource_actions, :get)
+      api_basic_authorize "miq_request_show"
 
       run_get requests_url(service_request.id)
 
@@ -48,7 +48,7 @@ RSpec.describe "Requests API" do
                                             :requester   => @user,
                                             :source_id   => template.id,
                                             :source_type => template.class.name)
-      api_basic_authorize collection_action_identifier(:requests, :read, :get)
+      api_basic_authorize "miq_request_show_list"
 
       run_get requests_url
 
@@ -61,7 +61,7 @@ RSpec.describe "Requests API" do
                                            :requester   => @user,
                                            :source_id   => template.id,
                                            :source_type => template.class.name)
-      api_basic_authorize action_identifier(:requests, :read, :resource_actions, :get)
+      api_basic_authorize "miq_request_show"
 
       run_get requests_url(service_request.id)
 
@@ -81,7 +81,7 @@ RSpec.describe "Requests API" do
                                              :requester   => @user,
                                              :source_id   => template.id,
                                              :source_type => template.class.name)
-      api_basic_authorize collection_action_identifier(:requests, :read, :get)
+      api_basic_authorize "miq_request_show_list"
 
       run_get requests_url
 
@@ -104,7 +104,7 @@ RSpec.describe "Requests API" do
                                            :requester   => other_user,
                                            :source_id   => template.id,
                                            :source_type => template.class.name)
-      api_basic_authorize action_identifier(:requests, :read, :resource_actions, :get)
+      api_basic_authorize "miq_request_show"
 
       run_get requests_url(service_request.id)
 
@@ -245,7 +245,7 @@ RSpec.describe "Requests API" do
       t = Classification.where(:description => 'Department', :parent_id => 0).includes(:tag).first
       request.add_tag(t.name, t.children.first.name)
 
-      api_basic_authorize action_identifier(:requests, :read, :resource_actions, :get)
+      api_basic_authorize "miq_request_show"
       run_get requests_url(request.id), :attributes => "workflow,v_allowed_tags,v_workflow_class"
 
       expected_response = a_hash_including(
@@ -268,7 +268,7 @@ RSpec.describe "Requests API" do
                                    :source_id   => vm_template.id,
                                    :source_type => vm_template.class.name)
 
-      api_basic_authorize action_identifier(:requests, :read, :resource_actions, :get)
+      api_basic_authorize "miq_request_show"
       run_get requests_url(request.id), :attributes => "workflow,v_allowed_tags,v_workflow_class"
 
       expected_response = a_hash_including(
@@ -293,7 +293,7 @@ RSpec.describe "Requests API" do
     end
 
     it "fails with an invalid request id" do
-      api_basic_authorize collection_action_identifier(:requests, :edit)
+      api_basic_authorize "miq_request_edit"
 
       run_post(requests_url(999_999), gen_request(:edit, :options => { :some_option => "some_value" }))
 
@@ -307,7 +307,7 @@ RSpec.describe "Requests API" do
     end
 
     it "succeed" do
-      api_basic_authorize collection_action_identifier(:requests, :edit)
+      api_basic_authorize "miq_request_edit"
 
       service = FactoryGirl.create(:service, :name => "service1")
       request = ServiceReconfigureRequest.create_request({ :src_id => service.id }, @user, false)
@@ -334,7 +334,7 @@ RSpec.describe "Requests API" do
     let(:request2_url)  { requests_url(request2.id) }
 
     it "supports approving a request" do
-      api_basic_authorize collection_action_identifier(:requests, :approve)
+      api_basic_authorize "miq_request_approval"
 
       run_post(request1_url, gen_request(:approve, :reason => "approval reason"))
 
@@ -343,7 +343,7 @@ RSpec.describe "Requests API" do
     end
 
     it "fails approving a request if the reason is missing" do
-      api_basic_authorize collection_action_identifier(:requests, :approve)
+      api_basic_authorize "miq_request_approval"
 
       run_post(request1_url, gen_request(:approve))
 
@@ -352,7 +352,7 @@ RSpec.describe "Requests API" do
     end
 
     it "supports denying a request" do
-      api_basic_authorize collection_action_identifier(:requests, :deny)
+      api_basic_authorize "miq_request_approval"
 
       run_post(request1_url, gen_request(:deny, :reason => "denial reason"))
 
@@ -361,7 +361,7 @@ RSpec.describe "Requests API" do
     end
 
     it "fails denying a request if the reason is missing" do
-      api_basic_authorize collection_action_identifier(:requests, :deny)
+      api_basic_authorize "miq_request_approval"
 
       run_post(request1_url, gen_request(:deny))
 
@@ -370,7 +370,7 @@ RSpec.describe "Requests API" do
     end
 
     it "supports approving multiple requests" do
-      api_basic_authorize collection_action_identifier(:requests, :approve)
+      api_basic_authorize "miq_request_approval"
 
       run_post(requests_url, gen_request(:approve, [{:href => request1_url, :reason => "approval reason"},
                                                     {:href => request2_url, :reason => "approval reason"}]))
@@ -394,7 +394,7 @@ RSpec.describe "Requests API" do
     end
 
     it "supports denying multiple requests" do
-      api_basic_authorize collection_action_identifier(:requests, :approve)
+      api_basic_authorize "miq_request_approval"
 
       run_post(requests_url, gen_request(:deny, [{:href => request1_url, :reason => "denial reason"},
                                                  {:href => request2_url, :reason => "denial reason"}]))

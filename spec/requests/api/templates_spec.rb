@@ -15,7 +15,7 @@ RSpec.describe "Templates API" do
     it "can assign a tag to a template" do
       template = FactoryGirl.create(:template)
       FactoryGirl.create(:classification_department_with_tags)
-      api_basic_authorize(subcollection_action_identifier(:templates, :tags, :assign))
+      api_basic_authorize("miq_template_tag")
 
       run_post("#{templates_url(template.id)}/tags", :action => "assign", :category => "department", :name => "finance")
 
@@ -37,7 +37,7 @@ RSpec.describe "Templates API" do
       template = FactoryGirl.create(:template)
       FactoryGirl.create(:classification_department_with_tags)
       Classification.classify(template, "department", "finance")
-      api_basic_authorize(subcollection_action_identifier(:templates, :tags, :unassign))
+      api_basic_authorize("miq_template_tag")
 
       run_post("#{templates_url(template.id)}/tags",
                :action   => "unassign",

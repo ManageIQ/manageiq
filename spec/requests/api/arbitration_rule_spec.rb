@@ -10,7 +10,7 @@ RSpec.describe 'Arbitration Rule API' do
 
     it 'can list arbitration rules' do
       rules = FactoryGirl.create_list(:arbitration_rule, 2)
-      api_basic_authorize collection_action_identifier(:arbitration_rules, :read, :get)
+      api_basic_authorize "arbitration_rule_show_list"
 
       run_get arbitration_rules_url
 
@@ -25,7 +25,7 @@ RSpec.describe 'Arbitration Rule API' do
   context 'GET /api/arbitration_rules/:id' do
     it 'shows an arbitration rule' do
       rule = FactoryGirl.create(:arbitration_rule)
-      api_basic_authorize collection_action_identifier(:arbitration_rules, :read, :get)
+      api_basic_authorize "arbitration_rule_show_list"
 
       run_get arbitration_rules_url(rule.id)
 
@@ -60,7 +60,7 @@ RSpec.describe 'Arbitration Rule API' do
     end
 
     it 'supports single arbitration_rule creation' do
-      api_basic_authorize collection_action_identifier(:arbitration_rules, :create)
+      api_basic_authorize "arbitration_rule_new"
 
       expect do
         run_post(arbitration_rules_url, gen_request(:create, request_body))
@@ -69,7 +69,7 @@ RSpec.describe 'Arbitration Rule API' do
     end
 
     it 'supports multiple arbitration_rule creation' do
-      api_basic_authorize collection_action_identifier(:arbitration_rules, :create)
+      api_basic_authorize "arbitration_rule_new"
 
       expected = {
         'results' => a_collection_containing_exactly(
@@ -90,7 +90,7 @@ RSpec.describe 'Arbitration Rule API' do
     end
 
     it 'supports single arbitration_rule creation using arbitration_profile reference by id' do
-      api_basic_authorize collection_action_identifier(:arbitration_rules, :create)
+      api_basic_authorize "arbitration_rule_new"
 
       request = request_body.dup
       arbitration_profile_id = request.delete('arbitration_profile_id')
@@ -104,7 +104,7 @@ RSpec.describe 'Arbitration Rule API' do
     end
 
     it 'supports single arbitration_rule creation using arbitration_profile reference by href' do
-      api_basic_authorize collection_action_identifier(:arbitration_rules, :create)
+      api_basic_authorize "arbitration_rule_new"
 
       request = request_body.dup
       arbitration_profile_id = request.delete('arbitration_profile_id')
@@ -118,7 +118,7 @@ RSpec.describe 'Arbitration Rule API' do
     end
 
     it 'rejects a request with an id' do
-      api_basic_authorize collection_action_identifier(:arbitration_rules, :create)
+      api_basic_authorize "arbitration_rule_new"
 
       run_post(arbitration_rules_url(999_999), request_body.merge(:id => 999_999))
 
@@ -139,7 +139,7 @@ RSpec.describe 'Arbitration Rule API' do
     end
 
     it 'can edit a setting' do
-      api_basic_authorize collection_action_identifier(:arbitration_rules, :edit)
+      api_basic_authorize "arbitration_rule_edit"
 
       expected = {
         'href'        => a_string_including(arbitration_rules_url(rule.id)),
@@ -159,7 +159,7 @@ RSpec.describe 'Arbitration Rule API' do
   context 'arbitration rules delete' do
     it 'supports single arbitration rule delete' do
       rule = FactoryGirl.create(:arbitration_rule)
-      api_basic_authorize collection_action_identifier(:arbitration_rules, :delete)
+      api_basic_authorize "arbitration_rule_delete"
 
       expect do
         run_delete(arbitration_rules_url(rule.id))
@@ -170,7 +170,7 @@ RSpec.describe 'Arbitration Rule API' do
     it 'supports multiple arbitration rule delete' do
       rules = FactoryGirl.create_list(:arbitration_rule, 2)
       hrefs = rules.map { |rule| { 'href' => arbitration_rules_url(rule.id) } }
-      api_basic_authorize collection_action_identifier(:arbitration_rules, :delete)
+      api_basic_authorize "arbitration_rule_delete"
 
       expect do
         run_post(arbitration_rules_url, gen_request(:delete, hrefs))

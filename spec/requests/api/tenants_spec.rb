@@ -2,7 +2,7 @@ RSpec.describe "tenants API" do
   let!(:root_tenant) { Tenant.seed }
 
   it "can list all the tenants" do
-    api_basic_authorize action_identifier(:tenants, :read, :collection_actions, :get)
+    api_basic_authorize "rbac_tenant_view"
     tenant_1 = FactoryGirl.create(:tenant, :parent => root_tenant)
     tenant_2 = FactoryGirl.create(:tenant, :parent => root_tenant)
 
@@ -21,7 +21,7 @@ RSpec.describe "tenants API" do
   end
 
   it "can show a single tenant" do
-    api_basic_authorize action_identifier(:tenants, :read, :resource_actions, :get)
+    api_basic_authorize "rbac_tenant_view"
     tenant = FactoryGirl.create(
       :tenant,
       :parent      => root_tenant,
@@ -43,7 +43,7 @@ RSpec.describe "tenants API" do
 
   context "with an appropriate role" do
     it "can create a tenant" do
-      api_basic_authorize collection_action_identifier(:tenants, :create)
+      api_basic_authorize "rbac_tenant_add"
 
       expect do
         run_post tenants_url, :parent => {:id => root_tenant.id}
@@ -53,7 +53,7 @@ RSpec.describe "tenants API" do
     end
 
     it "will not create a tenant with an invalid parent" do
-      api_basic_authorize collection_action_identifier(:tenants, :create)
+      api_basic_authorize "rbac_tenant_add"
       invalid_tenant = FactoryGirl.create(:tenant, :parent => root_tenant).destroy
 
       expect do
@@ -64,7 +64,7 @@ RSpec.describe "tenants API" do
     end
 
     it "can update a tenant with POST" do
-      api_basic_authorize action_identifier(:tenants, :edit)
+      api_basic_authorize "rbac_tenant_edit"
       tenant = FactoryGirl.create(
         :tenant,
         :parent      => root_tenant,
@@ -82,7 +82,7 @@ RSpec.describe "tenants API" do
     end
 
     it "can update a tenant with PUT" do
-      api_basic_authorize action_identifier(:tenants, :edit)
+      api_basic_authorize "rbac_tenant_edit"
       tenant = FactoryGirl.create(
         :tenant,
         :parent      => root_tenant,
@@ -107,7 +107,7 @@ RSpec.describe "tenants API" do
       end
 
       it "shows properties from configuration settings" do
-        api_basic_authorize action_identifier(:tenants, :read, :resource_actions, :get)
+        api_basic_authorize "rbac_tenant_view"
         run_get tenants_url(root_tenant.id)
 
         expect_result_to_match_hash(response.parsed_body,
@@ -120,7 +120,7 @@ RSpec.describe "tenants API" do
     end
 
     it "can update multiple tenants with POST" do
-      api_basic_authorize action_identifier(:tenants, :edit)
+      api_basic_authorize "rbac_tenant_edit"
       tenant_1 = FactoryGirl.create(
         :tenant,
         :parent => root_tenant,
@@ -149,7 +149,7 @@ RSpec.describe "tenants API" do
     end
 
     it "can delete a tenant with POST" do
-      api_basic_authorize action_identifier(:tenants, :delete)
+      api_basic_authorize "rbac_tenant_delete"
       tenant = FactoryGirl.create(:tenant, :parent => root_tenant)
 
       expect { run_post tenants_url(tenant.id), gen_request(:delete) }.to change(Tenant, :count).by(-1)
@@ -157,7 +157,7 @@ RSpec.describe "tenants API" do
     end
 
     it "can delete a tenant with DELETE" do
-      api_basic_authorize action_identifier(:tenants, :delete)
+      api_basic_authorize "rbac_tenant_delete"
       tenant = FactoryGirl.create(:tenant, :parent => root_tenant)
 
       expect { run_delete tenants_url(tenant.id) }.to change(Tenant, :count).by(-1)
@@ -165,7 +165,7 @@ RSpec.describe "tenants API" do
     end
 
     it "can delete multiple tenants with POST" do
-      api_basic_authorize action_identifier(:tenants, :delete)
+      api_basic_authorize "rbac_tenant_delete"
       tenant_1 = FactoryGirl.create(:tenant, :parent => root_tenant)
       tenant_2 = FactoryGirl.create(:tenant, :parent => root_tenant)
       options = [

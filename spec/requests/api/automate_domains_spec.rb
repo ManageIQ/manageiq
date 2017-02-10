@@ -13,7 +13,7 @@ describe "Automate Domains API" do
     end
 
     it 'fails to refresh git when the region misses git_owner role' do
-      api_basic_authorize action_identifier(:automate_domains, :refresh_from_source)
+      api_basic_authorize "miq_ae_git_refresh"
       expect(GitBasedDomainImportService).to receive(:available?).and_return(false)
 
       run_post(automate_domains_url(git_domain.id), gen_request(:refresh_from_source))
@@ -28,7 +28,7 @@ describe "Automate Domains API" do
       end
 
       it 'fails to refresh when domain did not originate from git' do
-        api_basic_authorize action_identifier(:automate_domains, :refresh_from_source)
+        api_basic_authorize "miq_ae_git_refresh"
 
         run_post(automate_domains_url(non_git_domain.id), gen_request(:refresh_from_source))
         expect_single_action_result(
@@ -38,7 +38,7 @@ describe "Automate Domains API" do
       end
 
       it 'refreshes domain from git_repository' do
-        api_basic_authorize action_identifier(:automate_domains, :refresh_from_source)
+        api_basic_authorize "miq_ae_git_refresh"
 
         expect_any_instance_of(GitBasedDomainImportService).to receive(:queue_refresh_and_import)
         run_post(automate_domains_url(git_domain.id), gen_request(:refresh_from_source))
@@ -50,7 +50,7 @@ describe "Automate Domains API" do
       end
 
       it 'refreshes domain from git_repository by domain name' do
-        api_basic_authorize action_identifier(:automate_domains, :refresh_from_source)
+        api_basic_authorize "miq_ae_git_refresh"
 
         expect_any_instance_of(GitBasedDomainImportService).to receive(:queue_refresh_and_import)
         run_post(automate_domains_url(git_domain.name), gen_request(:refresh_from_source))
