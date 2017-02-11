@@ -46,7 +46,7 @@ order: Descending
 
 # Columns to sort the report on, in order
 sortby:
-- updated_on
+- status
 
 # Group rows (y=yes,n=no,c=count)
 group: n
