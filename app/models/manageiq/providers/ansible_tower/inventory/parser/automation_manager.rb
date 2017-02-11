@@ -92,8 +92,8 @@ class ManageIQ::Providers::AnsibleTower::Inventory::Parser::AutomationManager < 
                                 when 'satellite6' then 'ManageIQ::Providers::AnsibleTower::AutomationManager::Satellite6Credential'
                                 # when 'cloudforms' then 'ManageIQ::Providers::AnsibleTower::AutomationManager::$$$Credential'
                                 when 'gce' then 'ManageIQ::Providers::AnsibleTower::AutomationManager::GoogleCredential'
-                                when 'azure' then 'ManageIQ::Providers::AnsibleTower::AutomationManager::AzureCredential'
-                                # when 'azure_rm' then 'ManageIQ::Providers::AnsibleTower::AutomationManager::???Credential'
+                                # when 'azure' then 'ManageIQ::Providers::AnsibleTower::AutomationManager::???Credential'
+                                when 'azure_rm' then 'ManageIQ::Providers::AnsibleTower::AutomationManager::AzureCredential'
                                 when 'openstack' then 'ManageIQ::Providers::AnsibleTower::AutomationManager::OpenstackCredential'
                                 else 'ManageIQ::Providers::AutomationManager::Authentication'
                                 end
