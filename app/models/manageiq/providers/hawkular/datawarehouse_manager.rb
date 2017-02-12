@@ -36,9 +36,16 @@ module ManageIQ::Providers
     end
 
     # Hawkular Client
-    def self.raw_connect(hostname, port, token, alerts = false)
-      client = alerts ? ::Hawkular::Alerts::AlertsClient : ::Hawkular::Metrics::Client
-      client.new(
+    def self.raw_connect(hostname, port, token, type = :alerts)
+      klass = case type
+              when :metrics
+                ::Hawkular::Metrics::Client
+              when :alerts
+                ::Hawkular::Alerts::AlertsClient
+              else
+                raise ArgumentError, "Client not found for #{type}"
+              end
+      klass.new(
         URI::HTTPS.build(:host => hostname, :port => port.to_i).to_s,
         { :token => token },
         { :tenant => '_system', :verify_ssl => verify_ssl_mode }
@@ -46,10 +53,21 @@ module ManageIQ::Providers
     end
 
     def connect(options = {})
-      @client ||= self.class.raw_connect(hostname,
-                                         port,
-                                         authentication_token('default'),
-                                         options[:alerts])
+      @clients ||= {}
+      @clients[options[:type]] ||= self.class.raw_connect(
+        hostname,
+        port,
+        authentication_token('default'),
+        options[:type]
+      )
+    end
+
+    def alerts_client
+      connect(:type => :alerts)
+    end
+
+    def metrics_client
+      connect(:type => :metrics)
     end
 
     def supports_port?
