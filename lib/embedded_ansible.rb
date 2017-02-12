@@ -10,8 +10,8 @@ class EmbeddedAnsible
   SECRET_KEY_FILE             = "/etc/tower/SECRET_KEY".freeze
   CONFIGURE_EXCLUDE_TAGS      = "packages,migrations,firewall,supervisor".freeze
   START_EXCLUDE_TAGS          = "packages,migrations,firewall".freeze
-  NGINX_HTTP_PORT             = "54321".freeze
-  NGINX_HTTPS_PORT            = "54322".freeze
+  NGINX_HTTP_PORT             = 54_321
+  NGINX_HTTPS_PORT            = 54_322
 
   def self.available?
     path = ENV["APPLIANCE_ANSIBLE_DIRECTORY"] || APPLIANCE_ANSIBLE_DIRECTORY
