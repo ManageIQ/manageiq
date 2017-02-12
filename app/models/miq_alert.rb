@@ -20,6 +20,7 @@ class MiqAlert < ApplicationRecord
     ExtManagementSystem
     MiqServer
     MiddlewareServer
+    ContainerNode
   )
 
   def self.base_tables
@@ -434,7 +435,9 @@ class MiqAlert < ApplicationRecord
         :options => [
           {:name => :mw_operator, :description => _("Operator"), :values => [">", ">=", "<", "<=", "="]},
           {:name => :value_mw_garbage_collector, :description => _("Duration Per Minute (ms)"), :numeric => true}
-        ]}
+        ]},
+      {:name => "dwh_generic", :description => _("All Datawarehouse alerts"), :db => ["ContainerNode"], :responds_to_events => "datawarehouse_alert",
+        :options => []}
     ]
   end
 
@@ -496,7 +499,7 @@ class MiqAlert < ApplicationRecord
 
   def self.raw_events
     @raw_events ||= expression_by_name("event_threshold")[:options].find { |h| h[:name] == :event_types }[:values] +
-                    ['hawkular_alert']
+                    %w(hawkular_alert datawarehouse_alert)
   end
 
   def self.event_alertable?(event)
@@ -557,6 +560,10 @@ class MiqAlert < ApplicationRecord
   def evaluate_script
     # TODO
     true
+  end
+
+  def evaluate_method_dwh_generic(target, options)
+    target.evaluate_alert(id, options)
   end
 
   def evaluate_middleware(target, options)

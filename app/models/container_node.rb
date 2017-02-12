@@ -79,4 +79,10 @@ class ContainerNode < ApplicationRecord
   def cockpit_url
     URI::HTTP.build(:host => ipaddress, :port => 9090)
   end
+
+  def evaluate_alert(_alert_id, _event)
+    # currently only EmsEvents from hawkular are tested for node alerts,
+    # and these should automaticaly be translated to alerts.
+    true
+  end
 end
