@@ -157,6 +157,10 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
   end
 
   def collect_compliance_data(image)
+    unless OpenscapResult.openscap_available?
+      _log.warn "OpenSCAP Binary missing, skipping scan"
+      return nil
+    end
     _log.info "collecting compliance data for #{options[:docker_image_id]}"
     openscap_result = image.openscap_result || OpenscapResult.new(:container_image => image)
     openscap_result.attach_raw_result(image_inspector_client.fetch_oscap_arf)
