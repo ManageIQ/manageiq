@@ -8,7 +8,7 @@ class MiqAlertStatus < ApplicationRecord
   belongs_to :resource, :polymorphic => true
   belongs_to :ext_management_system
   has_many :miq_alert_status_actions, -> { order "created_at" }, :dependent => :destroy
-  virtual_column :assignee, :type => :string
+  virtual_column :assignee, :type => :string, :uses => :miq_alert_status_actions
 
   validates :severity, :acceptance => { :accept => SEVERITY_LEVELS }
 
