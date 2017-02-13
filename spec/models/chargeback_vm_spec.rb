@@ -54,18 +54,30 @@ describe ChargebackVm do
     }
   end
 
+
+  before do
+    MiqRegion.seed
+    ChargebackRateDetailMeasure.seed
+    ChargeableField.seed
+    ChargebackRate.seed
+
+    EvmSpecHelper.create_guid_miq_server_zone
+    cat = FactoryGirl.create(:classification, :description => "Environment", :name => "environment", :single_value => true, :show => true)
+    c = FactoryGirl.create(:classification, :name => "prod", :description => "Production", :parent_id => cat.id)
+    @tag = Tag.find_by(:name => "/managed/environment/prod")
+
+    temp = {:cb_rate => chargeback_rate, :tag => [c, "vm"]}
+    ChargebackRate.set_assignments(:compute, [temp])
+
+    Timecop.travel(report_run_time)
+  end
+
+  after do
+    Timecop.return
+  end
+
   context 'with metric rollups' do
     before do
-      MiqRegion.seed
-      ChargebackRateDetailMeasure.seed
-      ChargeableField.seed
-      ChargebackRate.seed
-
-      EvmSpecHelper.create_guid_miq_server_zone
-      cat = FactoryGirl.create(:classification, :description => "Environment", :name => "environment", :single_value => true, :show => true)
-      c = FactoryGirl.create(:classification, :name => "prod", :description => "Production", :parent_id => cat.id)
-      @tag = Tag.find_by(:name => "/managed/environment/prod")
-
       @vm1 = FactoryGirl.create(:vm_vmware, :name => "test_vm", :evm_owner => admin, :ems_ref => "ems_ref",
                                 :created_on => month_beginning)
       @vm1.tag_with(@tag.name, :ns => '*')
@@ -76,15 +88,6 @@ describe ChargebackVm do
 
       @ems_cluster = FactoryGirl.create(:ems_cluster, :ext_management_system => ems)
       @ems_cluster.hosts << @host1
-
-      temp = {:cb_rate => chargeback_rate, :tag => [c, "vm"]}
-      ChargebackRate.set_assignments(:compute, [temp])
-
-      Timecop.travel(report_run_time)
-    end
-
-    after do
-      Timecop.return
     end
 
     let(:report_static_fields) { %w(vm_name) }
