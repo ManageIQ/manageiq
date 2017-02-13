@@ -259,7 +259,8 @@ describe ChargebackVm do
 
   context "Monthly" do
     let(:options) { base_options.merge(:interval => 'monthly') }
-    before  do
+
+    before do
       Range.new(month_beginning, month_end, true).step_value(12.hours).each do |time|
         @vm1.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr, :with_data,
                                                   :timestamp                         => time,
@@ -281,6 +282,75 @@ describe ChargebackVm do
       expect(subject.cpu_used_metric).to be_within(0.01).of(used_metric)
       expect(subject.cpu_used_cost).to be_within(0.01).of(used_metric * hourly_rate * hours_in_month)
       expect(subject.cpu_allocated_cost).to be_within(0.01).of(cpu_count * count_hourly_rate * hours_in_month)
+    end
+
+    context "with different timezone" do
+      # CLT zone - belongs to date range Sun, 15 May, 00:00 - Sun, 14 Aug, 00:00
+      # and it is 4 hours behind UTC
+
+      # CLST (Chile Summer Time) for other months
+      # and it is 3 hours behind UTC
+
+      # timezone: CLT -4 hours behind UTC - this timestamp belongs to Jun(Thu, 30 Jun 2016 23:00:00 CLT -04:00)
+      let(:metric_rollup_timestamp_jun)  { Time.parse('2016-07-01 03:00:00Z').utc }
+
+      # timezone: CLT -4 hours behind UTC - this timestamp belongs to Jul(Fri, 01 Jul 2016 00:00:00 CLT -04:00)
+      let(:metric_rollup_timestamp_july) { Time.parse('2016-07-01 04:00:00Z').utc }
+
+      let(:santiago_time_zone) { 'Santiago' }
+
+      before do
+        Timecop.freeze("2017-01-01 01:00:00 +0100") # timezone: CLST -3 hours
+
+        options[:ext_options][:tz] = santiago_time_zone
+        options[:interval_size] = 12
+
+        @vm1.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr, :with_data,
+                                                  :timestamp => metric_rollup_timestamp_jun,
+                                                  :tag_names => "environment/prod", :parent_host_id => @host1.id,
+                                                  :parent_ems_cluster_id => @ems_cluster.id, :parent_ems_id => ems.id,
+                                                  :parent_storage_id => @storage.id, :resource_name => @vm1.name)
+
+        @vm1.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr, :with_data,
+                                                  :timestamp => metric_rollup_timestamp_july,
+                                                  :tag_names => "environment/prod", :parent_host_id => @host1.id,
+                                                  :parent_ems_cluster_id => @ems_cluster.id, :parent_ems_id => ems.id,
+                                                  :parent_storage_id => @storage.id, :resource_name => @vm1.name)
+      end
+
+      subject! { ChargebackVm.build_results_for_report_ChargebackVm(options).first }
+
+      let(:first_row_on_report)  { subject.first }
+      let(:second_row_on_report) { subject.second }
+
+      it "generates report with rows for Jun and July " do
+        puts "Time.now.to_s                                       " + Time.now.to_s
+        puts "Time.now.in_time_zone.to_s                          " + Time.now.in_time_zone.to_s
+        puts "Time.zone.now.to_s                                  " + Time.zone.now.to_s
+        puts "Time.now.in_time_zone(santiago_time_zone).to_s      " + Time.now.in_time_zone(santiago_time_zone).to_s
+        puts "Time.now.in_time_zone(santiago_time_zone).zone      " + Time.now.in_time_zone(santiago_time_zone).zone
+        beginning_of_jun = metric_rollup_timestamp_jun.in_time_zone(santiago_time_zone).beginning_of_month
+        puts "metric_rollup_timestamp_jun.to_s                    " + metric_rollup_timestamp_jun.to_s
+        puts "metric_rollup_timestamp_jun.in_time_zone(santiago_time_zone)" + metric_rollup_timestamp_jun.in_time_zone(santiago_time_zone).to_s
+        puts "beginning_of_jun.to_s ^                             " + beginning_of_jun.to_s
+        puts "first_row_on_report.start_date.to_s                 " + first_row_on_report.start_date.to_s
+        puts "first_row_on_report.start_date.month.to_s           " + first_row_on_report.start_date.month.to_s
+        puts "Jun---"
+
+        expect(first_row_on_report.start_date).to eq(beginning_of_jun)
+        expect(first_row_on_report.start_date.month).to eq(6) # Jun
+
+        beginning_of_july = metric_rollup_timestamp_july.in_time_zone(santiago_time_zone).beginning_of_month
+
+        puts "Jul MR" + beginning_of_july.to_s
+        puts "Jul" + metric_rollup_timestamp_july.to_s
+        puts "Jul" + second_row_on_report.start_date.to_s
+        puts "Jul" + second_row_on_report.start_date.month.to_s
+        puts "Jul---"
+
+        expect(second_row_on_report.start_date).to eq(beginning_of_july)
+        expect(second_row_on_report.start_date.month).to eq(7) # July
+      end
     end
 
     let(:fixed_rate) { 10.0 }
