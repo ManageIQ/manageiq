@@ -492,31 +492,33 @@ describe ChargebackVm do
   end
 
   context 'without metric rollups' do
-    context 'for SCVMM (hyper-v)' do
-      let(:cores) { 7 }
-      let(:mem_mb) { 1777 }
-      let(:disk_gb) { 7 }
-      let(:disk_b) { disk_gb * 1024**3 }
-      let(:hardware) do
-        FactoryGirl.build(:hardware,
-                          :cpu_total_cores => cores,
-                          :memory_mb       => mem_mb,
-                          :disks           => [FactoryGirl.build(:disk, :size => disk_b)])
-      end
+    let(:cores)   { 7 }
+    let(:mem_mb)  { 1777 }
+    let(:disk_gb) { 7 }
+    let(:disk_b)  { disk_gb * 1024**3 }
 
+    let(:hardware) do
+      FactoryGirl.build(:hardware,
+                        :cpu_total_cores => cores,
+                        :memory_mb       => mem_mb,
+                        :disks           => [FactoryGirl.build(:disk, :size => disk_b)])
+    end
+
+    let(:fixed_cost) { hourly_rate * 24 }
+    let(:mem_cost) { mem_mb * hourly_rate * 24 }
+    let(:cpu_cost) { cores * count_hourly_rate * 24 }
+    let(:disk_cost) { disk_gb * count_hourly_rate * 24 }
+
+    context 'for SCVMM (hyper-v)' do
       let!(:vm1) do
         vm = FactoryGirl.create(:vm_microsoft, :hardware => hardware, :created_on => report_run_time - 1.day)
         vm.tag_with(@tag.name, :ns => '*')
         vm
       end
+
       let(:options) { base_options.merge(:interval => 'daily') }
 
       subject { ChargebackVm.build_results_for_report_ChargebackVm(options).first.first }
-
-      let(:fixed_cost) { hourly_rate * 24 }
-      let(:mem_cost) { mem_mb * hourly_rate * 24 }
-      let(:cpu_cost) { cores * count_hourly_rate * 24 }
-      let(:disk_cost) { disk_gb * count_hourly_rate * 24 }
 
       it 'fixed compute is calculated properly' do
         expect(subject.chargeback_rates).to eq(chargeback_rate.description)
