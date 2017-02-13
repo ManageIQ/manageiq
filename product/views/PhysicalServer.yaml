@@ -25,11 +25,7 @@ include_for_find:
 
 col_order:
 - name
-<<<<<<< HEAD
 - type
-=======
-
->>>>>>> 5591cc5... Add the yaml of the Physical server product view
 
 headers:
 - Name
