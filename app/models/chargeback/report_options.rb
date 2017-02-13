@@ -15,9 +15,15 @@ class Chargeback
     :groupby_tag,
     :userid,
     :ext_options,
+    :include_metrics,      # enable charging allocated resources with C & U
   ) do
     def self.new_from_h(hash)
       new(*hash.values_at(*members))
+    end
+
+    # include_metrics = nil is default value(true)
+    def include_metrics?
+      include_metrics.nil? || include_metrics
     end
 
     def initialize(*)
