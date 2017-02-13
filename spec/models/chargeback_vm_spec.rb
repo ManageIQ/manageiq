@@ -54,6 +54,7 @@ describe ChargebackVm do
     }
   end
 
+  context 'with metric rollups' do
   before do
     MiqRegion.seed
     ChargebackRateDetailMeasure.seed
@@ -485,7 +486,9 @@ describe ChargebackVm do
       expect(subject.tag_name).to eq('Production')
     end
   end
+  end
 
+  context 'without metric rollups' do
   context 'for SCVMM (hyper-v)' do
     let(:cores) { 7 }
     let(:mem_mb) { 1777 }
@@ -527,5 +530,6 @@ describe ChargebackVm do
       expect(subject.storage_allocated_cost).to   eq(disk_cost)
       expect(subject.total_cost).to               eq(fixed_cost + cpu_cost + mem_cost + disk_cost)
     end
+  end
   end
 end
