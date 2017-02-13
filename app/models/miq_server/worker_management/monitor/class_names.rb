@@ -60,7 +60,6 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
     ManageIQ::Providers::Vmware::CloudManager::EventCatcher
     ManageIQ::Providers::Lenovo::PhysicalInfraManager::EventCatcher
     EmbeddedAnsibleWorker
-    ManageIQ::Providers::Lenovo::PhysicalInfraManager::EventCatcher
     MiqEventHandler
     MiqGenericWorker
     MiqNetappRefreshWorker
