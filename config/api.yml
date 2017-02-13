@@ -409,6 +409,14 @@
       :post:
       - :name: query
         :identifier: miq_cloud_networks_view
+    :subcollection_actions:
+      :get:
+      - :name: read
+        :identifier: miq_cloud_networks_view
+    :subresource_actions:
+      :get:
+      - :name: read
+        :identifier: miq_cloud_networks_view
   :clusters:
     :description: Clusters
     :identifier: ems_cluster
@@ -1124,10 +1132,6 @@
         :identifier: ems_infra_protect
       - :name: unassign
         :identifier: ems_infra_protect
-    :cloud_networks_subcollection_actions:
-      :get:
-      - :name: show
-      - :identifier: miq_cloud_networks_view
   :provision_dialogs:
     :description: Provisioning Dialogs
     :identifier: miq_ae_customization_explorer
