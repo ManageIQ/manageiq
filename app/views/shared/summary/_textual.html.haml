@@ -5,21 +5,22 @@
       %tr
         %th{:colspan => "2", :align => "left"}
           = title
-    - items.each do |item|
-      - if @explorer && item[:explorer]
-        - if item[:spinner]
-          - click = remote_function(:url => item[:link], :loading => "miqSparkle(true);")
+    %tbody
+      - items.each do |item|
+        - if @explorer && item[:explorer]
+          - if item[:spinner]
+            - click = remote_function(:url => item[:link], :loading => "miqSparkle(true);")
+          - else
+            - click = remote_function(:url => item[:link])
         - else
-          - click = remote_function(:url => item[:link])
-      - else
-        - click = "DoNav('#{item[:link]}');"
+          - click = "DoNav('#{item[:link]}');"
 
-      %tr{:class   => no_hover_class(item),
-          :title   => item[:title] ? item[:title] : "",
-          :onclick => item[:link] ? click : ""}
-        %td.label
-          = item[:label]
-        %td
-          - if item[:image]
-            %img{:src => image_path("100/#{item[:image]}#{File.extname(item[:image]).blank? ? '.png' : ''}")}
-          = !item[:value].kind_of?(Array) ? item[:value] : render(:partial => "shared/summary/textual_multivalue", :locals => {:items => item[:value]})
+        %tr{:class   => no_hover_class(item),
+            :title   => item[:title] ? item[:title] : "",
+            :onclick => item[:link] ? click : ""}
+          %td.label
+            = item[:label]
+          %td
+            - if item[:image]
+              %img{:src => image_path("100/#{item[:image]}#{File.extname(item[:image]).blank? ? '.png' : ''}")}
+            = !item[:value].kind_of?(Array) ? item[:value] : render(:partial => "shared/summary/textual_multivalue", :locals => {:items => item[:value]})
