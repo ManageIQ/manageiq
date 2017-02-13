@@ -72,11 +72,11 @@ module ManagerRefresh
       # selected << :type if model_class.new.respond_to? :type
       # load_from_db.select(selected).find_each do |record|
       load_from_db.find_each do |record|
-        if custom_manager_uuid.nil?
-          index = object_index(record)
-        else
-          index = stringify_reference(custom_manager_uuid.call(record))
-        end
+        index = if custom_manager_uuid.nil?
+                  object_index(record)
+                else
+                  stringify_reference(custom_manager_uuid.call(record))
+                end
         data_index[index]    = new_inventory_object(record.attributes.symbolize_keys)
         data_index[index].id = record.id
       end
@@ -127,7 +127,8 @@ module ManagerRefresh
 
     def object_index(object)
       stringify_reference(
-        manager_ref.map { |attribute| object.public_send(attribute).try(:id) || object.public_send(attribute).to_s })
+        manager_ref.map { |attribute| object.public_send(attribute).try(:id) || object.public_send(attribute).to_s }
+      )
     end
 
     def stringify_joiner
@@ -216,8 +217,8 @@ module ManagerRefresh
       end
       # Attributes that has to be always on the entity, so attributes making unique index of the record + attributes
       # that have presence validation
-      fixed_attributes    = manager_ref
-      fixed_attributes    += presence_validators.attributes unless presence_validators.blank?
+      fixed_attributes = manager_ref
+      fixed_attributes += presence_validators.attributes unless presence_validators.blank?
       fixed_attributes
     end
 
@@ -315,7 +316,7 @@ module ManagerRefresh
       whitelist = ", whitelist: [#{attributes_whitelist.to_a.join(", ")}]" unless attributes_whitelist.blank?
       blacklist = ", blacklist: [#{attributes_blacklist.to_a.join(", ")}]" unless attributes_blacklist.blank?
 
-      strategy_name  = ", strategy: #{strategy}" if strategy
+      strategy_name = ", strategy: #{strategy}" if strategy
 
       name = model_class || association
 
@@ -363,9 +364,11 @@ module ManagerRefresh
         if (manager_ref & association_attributes).present?
           # Our manager_ref unique key contains a reference, that means that index we get from the API and from the
           # db will differ. We need a custom indexing method, so the indexing is correct.
-          raise "The unique key list manager_ref contains a reference, which can't be built automatically when loading"\
-                " the InventoryCollection from the DB, you need to provide a custom_manager_uuid lambda, that builds"\
-                " the correct manager_uuid given a DB record" if custom_manager_uuid.nil?
+          if custom_manager_uuid.nil?
+            raise "The unique key list manager_ref contains a reference, which can't be built automatically when loading"\
+                  " the InventoryCollection from the DB, you need to provide a custom_manager_uuid lambda, that builds"\
+                  " the correct manager_uuid given a DB record"
+          end
         end
       end
     end

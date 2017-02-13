@@ -277,8 +277,7 @@ describe ManagerRefresh::SaveInventory do
   #
   # Test all settings for ManagerRefresh::SaveInventory
   [{:inventory_object_saving_strategy => nil},
-   {:inventory_object_saving_strategy => :recursive},
-  ].each do |inventory_object_settings|
+   {:inventory_object_saving_strategy => :recursive},].each do |inventory_object_settings|
     context "with settings #{inventory_object_settings}" do
       before :each do
         @zone        = FactoryGirl.create(:zone)
@@ -435,15 +434,18 @@ describe ManagerRefresh::SaveInventory do
           @data[:orchestration_stacks]           = ::ManagerRefresh::InventoryCollection.new(
             :model_class => ManageIQ::Providers::CloudManager::OrchestrationStack,
             :parent      => @ems,
-            :association => :orchestration_stacks)
+            :association => :orchestration_stacks
+          )
           @data[:orchestration_stacks_resources] = ::ManagerRefresh::InventoryCollection.new(
             :model_class => OrchestrationStackResource,
             :parent      => @ems,
-            :association => :orchestration_stacks_resources)
-          @data[:network_ports]                  = ::ManagerRefresh::InventoryCollection.new(
+            :association => :orchestration_stacks_resources
+          )
+          @data[:network_ports] = ::ManagerRefresh::InventoryCollection.new(
             :model_class => NetworkPort,
             :parent      => @ems.network_manager,
-            :association => :network_ports)
+            :association => :network_ports
+          )
 
           init_stack_data_with_stack_resource_stack_cycle
           init_resource_data
@@ -505,15 +507,18 @@ describe ManagerRefresh::SaveInventory do
           @data[:network_ports]                  = ::ManagerRefresh::InventoryCollection.new(
             :model_class => NetworkPort,
             :parent      => @ems.network_manager,
-            :association => :network_ports)
+            :association => :network_ports
+          )
           @data[:orchestration_stacks_resources] = ::ManagerRefresh::InventoryCollection.new(
             :model_class => OrchestrationStackResource,
             :parent      => @ems,
-            :association => :orchestration_stacks_resources)
-          @data[:orchestration_stacks]           = ::ManagerRefresh::InventoryCollection.new(
+            :association => :orchestration_stacks_resources
+          )
+          @data[:orchestration_stacks] = ::ManagerRefresh::InventoryCollection.new(
             :model_class => ManageIQ::Providers::CloudManager::OrchestrationStack,
             :parent      => @ems,
-            :association => :orchestration_stacks)
+            :association => :orchestration_stacks
+          )
 
           init_stack_data_with_stack_resource_stack_cycle
           init_resource_data
@@ -577,7 +582,8 @@ describe ManagerRefresh::SaveInventory do
           @data[:network_ports] = ::ManagerRefresh::InventoryCollection.new(
             :model_class => NetworkPort,
             :parent      => @ems.network_manager,
-            :association => :network_ports)
+            :association => :network_ports
+          )
 
           @network_port_1 = network_port_data(1).merge(
             :device => @data[:network_ports].lazy_find(network_port_data(1)[:ems_ref])
@@ -618,15 +624,18 @@ describe ManagerRefresh::SaveInventory do
           @data[:orchestration_stacks]           = ::ManagerRefresh::InventoryCollection.new(
             :model_class => ManageIQ::Providers::CloudManager::OrchestrationStack,
             :parent      => @ems,
-            :association => :orchestration_stacks)
+            :association => :orchestration_stacks
+          )
           @data[:orchestration_stacks_resources] = ::ManagerRefresh::InventoryCollection.new(
             :model_class => OrchestrationStackResource,
             :parent      => @ems,
-            :association => :orchestration_stacks_resources)
-          @data[:network_ports]                  = ::ManagerRefresh::InventoryCollection.new(
+            :association => :orchestration_stacks_resources
+          )
+          @data[:network_ports] = ::ManagerRefresh::InventoryCollection.new(
             :model_class => NetworkPort,
             :parent      => @ems.network_manager,
-            :association => :network_ports)
+            :association => :network_ports
+          )
 
           init_stack_data_with_stack_resource_stack_cycle
           init_resource_data
@@ -688,15 +697,18 @@ describe ManagerRefresh::SaveInventory do
           @data[:orchestration_stacks]           = ::ManagerRefresh::InventoryCollection.new(
             :model_class => ManageIQ::Providers::CloudManager::OrchestrationStack,
             :parent      => @ems,
-            :association => :orchestration_stacks)
+            :association => :orchestration_stacks
+          )
           @data[:orchestration_stacks_resources] = ::ManagerRefresh::InventoryCollection.new(
             :model_class => OrchestrationStackResource,
             :parent      => @ems,
-            :association => :orchestration_stacks_resources)
-          @data[:network_ports]                  = ::ManagerRefresh::InventoryCollection.new(
+            :association => :orchestration_stacks_resources
+          )
+          @data[:network_ports] = ::ManagerRefresh::InventoryCollection.new(
             :model_class => NetworkPort,
             :parent      => @ems.network_manager,
-            :association => :network_ports)
+            :association => :network_ports
+          )
 
           init_stack_data_with_stack_resource_stack_cycle
           init_resource_data
@@ -808,20 +820,27 @@ describe ManagerRefresh::SaveInventory do
           orchestration_stack_12_22 = OrchestrationStack.find_by(:ems_ref => "stack_ems_ref_12_22")
           orchestration_stack_12_23 = OrchestrationStack.find_by(:ems_ref => "stack_ems_ref_12_23")
 
-          orchestration_stack_resource_1_11   = OrchestrationStackResource.find_by(
-            :ems_ref => "stack_ems_ref_1_11")
+          orchestration_stack_resource_1_11 = OrchestrationStackResource.find_by(
+            :ems_ref => "stack_ems_ref_1_11"
+          )
           orchestration_stack_resource_1_11_1 = OrchestrationStackResource.find_by(
-            :ems_ref => "stack_resource_physical_resource_1_11_1")
-          orchestration_stack_resource_1_12   = OrchestrationStackResource.find_by(
-            :ems_ref => "stack_ems_ref_1_12")
+            :ems_ref => "stack_resource_physical_resource_1_11_1"
+          )
+          orchestration_stack_resource_1_12 = OrchestrationStackResource.find_by(
+            :ems_ref => "stack_ems_ref_1_12"
+          )
           orchestration_stack_resource_1_12_1 = OrchestrationStackResource.find_by(
-            :ems_ref => "stack_resource_physical_resource_1_12_1")
-          orchestration_stack_resource_11_21  = OrchestrationStackResource.find_by(
-            :ems_ref => "stack_ems_ref_11_21")
-          orchestration_stack_resource_12_22  = OrchestrationStackResource.find_by(
-            :ems_ref => "stack_ems_ref_12_22")
-          orchestration_stack_resource_12_23  = OrchestrationStackResource.find_by(
-            :ems_ref => "stack_ems_ref_12_23")
+            :ems_ref => "stack_resource_physical_resource_1_12_1"
+          )
+          orchestration_stack_resource_11_21 = OrchestrationStackResource.find_by(
+            :ems_ref => "stack_ems_ref_11_21"
+          )
+          orchestration_stack_resource_12_22 = OrchestrationStackResource.find_by(
+            :ems_ref => "stack_ems_ref_12_22"
+          )
+          orchestration_stack_resource_12_23 = OrchestrationStackResource.find_by(
+            :ems_ref => "stack_ems_ref_12_23"
+          )
 
           expect(orchestration_stack_0_1).to eq(@orchestration_stack_0_1)
           expect(orchestration_stack_0_2).to eq(@orchestration_stack_0_2)
@@ -884,20 +903,27 @@ describe ManagerRefresh::SaveInventory do
           orchestration_stack_12_22 = OrchestrationStack.find_by(:ems_ref => "stack_ems_ref_12_22")
           orchestration_stack_12_23 = OrchestrationStack.find_by(:ems_ref => "stack_ems_ref_12_23")
 
-          orchestration_stack_resource_1_11   = OrchestrationStackResource.find_by(
-            :ems_ref => "stack_ems_ref_1_11")
+          orchestration_stack_resource_1_11 = OrchestrationStackResource.find_by(
+            :ems_ref => "stack_ems_ref_1_11"
+          )
           orchestration_stack_resource_1_11_1 = OrchestrationStackResource.find_by(
-            :ems_ref => "stack_resource_physical_resource_1_11_1")
-          orchestration_stack_resource_1_12   = OrchestrationStackResource.find_by(
-            :ems_ref => "stack_ems_ref_1_12")
+            :ems_ref => "stack_resource_physical_resource_1_11_1"
+          )
+          orchestration_stack_resource_1_12 = OrchestrationStackResource.find_by(
+            :ems_ref => "stack_ems_ref_1_12"
+          )
           orchestration_stack_resource_1_12_1 = OrchestrationStackResource.find_by(
-            :ems_ref => "stack_resource_physical_resource_1_12_1")
-          orchestration_stack_resource_11_21  = OrchestrationStackResource.find_by(
-            :ems_ref => "stack_ems_ref_11_21")
-          orchestration_stack_resource_12_22  = OrchestrationStackResource.find_by(
-            :ems_ref => "stack_ems_ref_12_22")
-          orchestration_stack_resource_12_23  = OrchestrationStackResource.find_by(
-            :ems_ref => "stack_ems_ref_12_23")
+            :ems_ref => "stack_resource_physical_resource_1_12_1"
+          )
+          orchestration_stack_resource_11_21 = OrchestrationStackResource.find_by(
+            :ems_ref => "stack_ems_ref_11_21"
+          )
+          orchestration_stack_resource_12_22 = OrchestrationStackResource.find_by(
+            :ems_ref => "stack_ems_ref_12_22"
+          )
+          orchestration_stack_resource_12_23 = OrchestrationStackResource.find_by(
+            :ems_ref => "stack_ems_ref_12_23"
+          )
 
           expect(orchestration_stack_0_1).to eq(@orchestration_stack_0_1)
           expect(orchestration_stack_0_2).to eq(@orchestration_stack_0_2)
@@ -928,20 +954,27 @@ describe ManagerRefresh::SaveInventory do
     orchestration_stack_12_22 = OrchestrationStack.find_by(:ems_ref => "stack_ems_ref_12_22")
     orchestration_stack_12_23 = OrchestrationStack.find_by(:ems_ref => "stack_ems_ref_12_23")
 
-    orchestration_stack_resource_1_11   = OrchestrationStackResource.find_by(
-      :ems_ref => "stack_ems_ref_1_11")
+    orchestration_stack_resource_1_11 = OrchestrationStackResource.find_by(
+      :ems_ref => "stack_ems_ref_1_11"
+    )
     orchestration_stack_resource_1_11_1 = OrchestrationStackResource.find_by(
-      :ems_ref => "stack_resource_physical_resource_1_11_1")
-    orchestration_stack_resource_1_12   = OrchestrationStackResource.find_by(
-      :ems_ref => "stack_ems_ref_1_12")
+      :ems_ref => "stack_resource_physical_resource_1_11_1"
+    )
+    orchestration_stack_resource_1_12 = OrchestrationStackResource.find_by(
+      :ems_ref => "stack_ems_ref_1_12"
+    )
     orchestration_stack_resource_1_12_1 = OrchestrationStackResource.find_by(
-      :ems_ref => "stack_resource_physical_resource_1_12_1")
-    orchestration_stack_resource_11_21  = OrchestrationStackResource.find_by(
-      :ems_ref => "stack_ems_ref_11_21")
-    orchestration_stack_resource_12_22  = OrchestrationStackResource.find_by(
-      :ems_ref => "stack_ems_ref_12_22")
-    orchestration_stack_resource_12_23  = OrchestrationStackResource.find_by(
-      :ems_ref => "stack_ems_ref_12_23")
+      :ems_ref => "stack_resource_physical_resource_1_12_1"
+    )
+    orchestration_stack_resource_11_21 = OrchestrationStackResource.find_by(
+      :ems_ref => "stack_ems_ref_11_21"
+    )
+    orchestration_stack_resource_12_22 = OrchestrationStackResource.find_by(
+      :ems_ref => "stack_ems_ref_12_22"
+    )
+    orchestration_stack_resource_12_23 = OrchestrationStackResource.find_by(
+      :ems_ref => "stack_ems_ref_12_23"
+    )
 
     expect(orchestration_stack_0_1.parent).to eq(nil)
     expect(orchestration_stack_0_2.parent).to eq(nil)
@@ -955,19 +988,26 @@ describe ManagerRefresh::SaveInventory do
       match_array([orchestration_stack_resource_1_11,
                    orchestration_stack_resource_1_11_1,
                    orchestration_stack_resource_1_12,
-                   orchestration_stack_resource_1_12_1]))
+                   orchestration_stack_resource_1_12_1])
+    )
     expect(orchestration_stack_0_2.orchestration_stack_resources).to(
-      match_array(nil))
+      match_array(nil)
+    )
     expect(orchestration_stack_1_11.orchestration_stack_resources).to(
-      match_array([orchestration_stack_resource_11_21]))
+      match_array([orchestration_stack_resource_11_21])
+    )
     expect(orchestration_stack_1_12.orchestration_stack_resources).to(
-      match_array([orchestration_stack_resource_12_22, orchestration_stack_resource_12_23]))
+      match_array([orchestration_stack_resource_12_22, orchestration_stack_resource_12_23])
+    )
     expect(orchestration_stack_11_21.orchestration_stack_resources).to(
-      match_array(nil))
+      match_array(nil)
+    )
     expect(orchestration_stack_12_22.orchestration_stack_resources).to(
-      match_array(nil))
+      match_array(nil)
+    )
     expect(orchestration_stack_12_23.orchestration_stack_resources).to(
-      match_array(nil))
+      match_array(nil)
+    )
 
     expect(orchestration_stack_resource_1_11.stack).to eq(orchestration_stack_0_1)
     expect(orchestration_stack_resource_1_11_1.stack).to eq(orchestration_stack_0_1)
@@ -984,11 +1024,13 @@ describe ManagerRefresh::SaveInventory do
     @data[:orchestration_stacks]           = ::ManagerRefresh::InventoryCollection.new(
       :model_class => ManageIQ::Providers::CloudManager::OrchestrationStack,
       :parent      => @ems,
-      :association => :orchestration_stacks)
+      :association => :orchestration_stacks
+    )
     @data[:orchestration_stacks_resources] = ::ManagerRefresh::InventoryCollection.new(
       :model_class => OrchestrationStackResource,
       :parent      => @ems,
-      :association => :orchestration_stacks_resources)
+      :association => :orchestration_stacks_resources
+    )
   end
 
   def initialize_inventory_collections_reversed
@@ -998,28 +1040,37 @@ describe ManagerRefresh::SaveInventory do
     @data[:orchestration_stacks_resources] = ::ManagerRefresh::InventoryCollection.new(
       :model_class => OrchestrationStackResource,
       :parent      => @ems,
-      :association => :orchestration_stacks_resources)
-    @data[:orchestration_stacks]           = ::ManagerRefresh::InventoryCollection.new(
+      :association => :orchestration_stacks_resources
+    )
+    @data[:orchestration_stacks] = ::ManagerRefresh::InventoryCollection.new(
       :model_class => ManageIQ::Providers::CloudManager::OrchestrationStack,
       :parent      => @ems,
-      :association => :orchestration_stacks)
+      :association => :orchestration_stacks
+    )
   end
 
   def init_stack_data_with_stack_stack_cycle
-    @orchestration_stack_data_0_1   = orchestration_stack_data("0_1").merge(
-      :parent => @data[:orchestration_stacks].lazy_find(orchestration_stack_data("0_0")[:ems_ref]))
-    @orchestration_stack_data_0_2   = orchestration_stack_data("0_2").merge(
-      :parent => @data[:orchestration_stacks].lazy_find(orchestration_stack_data("0_0")[:ems_ref]))
-    @orchestration_stack_data_1_11  = orchestration_stack_data("1_11").merge(
-      :parent => @data[:orchestration_stacks].lazy_find(orchestration_stack_data("0_1")[:ems_ref]))
-    @orchestration_stack_data_1_12  = orchestration_stack_data("1_12").merge(
-      :parent => @data[:orchestration_stacks].lazy_find(orchestration_stack_data("0_1")[:ems_ref]))
+    @orchestration_stack_data_0_1 = orchestration_stack_data("0_1").merge(
+      :parent => @data[:orchestration_stacks].lazy_find(orchestration_stack_data("0_0")[:ems_ref])
+    )
+    @orchestration_stack_data_0_2 = orchestration_stack_data("0_2").merge(
+      :parent => @data[:orchestration_stacks].lazy_find(orchestration_stack_data("0_0")[:ems_ref])
+    )
+    @orchestration_stack_data_1_11 = orchestration_stack_data("1_11").merge(
+      :parent => @data[:orchestration_stacks].lazy_find(orchestration_stack_data("0_1")[:ems_ref])
+    )
+    @orchestration_stack_data_1_12 = orchestration_stack_data("1_12").merge(
+      :parent => @data[:orchestration_stacks].lazy_find(orchestration_stack_data("0_1")[:ems_ref])
+    )
     @orchestration_stack_data_11_21 = orchestration_stack_data("11_21").merge(
-      :parent => @data[:orchestration_stacks].lazy_find(orchestration_stack_data("1_11")[:ems_ref]))
+      :parent => @data[:orchestration_stacks].lazy_find(orchestration_stack_data("1_11")[:ems_ref])
+    )
     @orchestration_stack_data_12_22 = orchestration_stack_data("12_22").merge(
-      :parent => @data[:orchestration_stacks].lazy_find(orchestration_stack_data("1_12")[:ems_ref]))
+      :parent => @data[:orchestration_stacks].lazy_find(orchestration_stack_data("1_12")[:ems_ref])
+    )
     @orchestration_stack_data_12_23 = orchestration_stack_data("12_23").merge(
-      :parent => @data[:orchestration_stacks].lazy_find(orchestration_stack_data("1_12")[:ems_ref]))
+      :parent => @data[:orchestration_stacks].lazy_find(orchestration_stack_data("1_12")[:ems_ref])
+    )
   end
 
   def init_stack_data_with_stack_resource_stack_cycle
@@ -1060,110 +1111,131 @@ describe ManagerRefresh::SaveInventory do
   end
 
   def init_resource_data
-    @orchestration_stack_resource_data_1_11   = orchestration_stack_resource_data("1_11").merge(
+    @orchestration_stack_resource_data_1_11 = orchestration_stack_resource_data("1_11").merge(
       :ems_ref => orchestration_stack_data("1_11")[:ems_ref],
       :stack   => @data[:orchestration_stacks].lazy_find(orchestration_stack_data("0_1")[:ems_ref]),
     )
     @orchestration_stack_resource_data_1_11_1 = orchestration_stack_resource_data("1_11_1").merge(
       :stack => @data[:orchestration_stacks].lazy_find(orchestration_stack_data("0_1")[:ems_ref]),
     )
-    @orchestration_stack_resource_data_1_12   = orchestration_stack_resource_data("1_12").merge(
+    @orchestration_stack_resource_data_1_12 = orchestration_stack_resource_data("1_12").merge(
       :ems_ref => orchestration_stack_data("1_12")[:ems_ref],
       :stack   => @data[:orchestration_stacks].lazy_find(orchestration_stack_data("0_1")[:ems_ref]),
     )
     @orchestration_stack_resource_data_1_12_1 = orchestration_stack_resource_data("1_12_1").merge(
       :stack => @data[:orchestration_stacks].lazy_find(orchestration_stack_data("0_1")[:ems_ref]),
     )
-    @orchestration_stack_resource_data_11_21  = orchestration_stack_resource_data("11_21").merge(
+    @orchestration_stack_resource_data_11_21 = orchestration_stack_resource_data("11_21").merge(
       :ems_ref => orchestration_stack_data("11_21")[:ems_ref],
       :stack   => @data[:orchestration_stacks].lazy_find(orchestration_stack_data("1_11")[:ems_ref]),
     )
-    @orchestration_stack_resource_data_12_22  = orchestration_stack_resource_data("12_22").merge(
+    @orchestration_stack_resource_data_12_22 = orchestration_stack_resource_data("12_22").merge(
       :ems_ref => orchestration_stack_data("12_22")[:ems_ref],
       :stack   => @data[:orchestration_stacks].lazy_find(orchestration_stack_data("1_12")[:ems_ref]),
     )
-    @orchestration_stack_resource_data_12_23  = orchestration_stack_resource_data("12_23").merge(
+    @orchestration_stack_resource_data_12_23 = orchestration_stack_resource_data("12_23").merge(
       :ems_ref => orchestration_stack_data("12_23")[:ems_ref],
       :stack   => @data[:orchestration_stacks].lazy_find(orchestration_stack_data("1_12")[:ems_ref]),
     )
   end
 
   def initialize_mocked_records
-    @orchestration_stack_0_1   = FactoryGirl.create(
+    @orchestration_stack_0_1 = FactoryGirl.create(
       :orchestration_stack_cloud,
       orchestration_stack_data("0_1").merge(
         :ext_management_system => @ems,
-        :parent                => nil))
-    @orchestration_stack_0_2   = FactoryGirl.create(
+        :parent                => nil
+      )
+    )
+    @orchestration_stack_0_2 = FactoryGirl.create(
       :orchestration_stack_cloud,
       orchestration_stack_data("0_2").merge(
         :ext_management_system => @ems,
-        :parent                => nil))
-    @orchestration_stack_1_11  = FactoryGirl.create(
+        :parent                => nil
+      )
+    )
+    @orchestration_stack_1_11 = FactoryGirl.create(
       :orchestration_stack_cloud,
       orchestration_stack_data("1_11").merge(
         :ext_management_system => @ems,
-        :parent                => @orchestration_stack_0_1))
-    @orchestration_stack_1_12  = FactoryGirl.create(
+        :parent                => @orchestration_stack_0_1
+      )
+    )
+    @orchestration_stack_1_12 = FactoryGirl.create(
       :orchestration_stack_cloud,
       orchestration_stack_data("1_12").merge(
         :ext_management_system => @ems,
-        :parent                => @orchestration_stack_0_1))
+        :parent                => @orchestration_stack_0_1
+      )
+    )
     @orchestration_stack_11_21 = FactoryGirl.create(
       :orchestration_stack_cloud,
       orchestration_stack_data("11_21").merge(
         :ext_management_system => @ems,
-        :parent                => @orchestration_stack_1_11))
+        :parent                => @orchestration_stack_1_11
+      )
+    )
     @orchestration_stack_12_22 = FactoryGirl.create(
       :orchestration_stack_cloud,
       orchestration_stack_data("12_22").merge(
         :ext_management_system => @ems,
-        :parent                => @orchestration_stack_1_12))
+        :parent                => @orchestration_stack_1_12
+      )
+    )
     @orchestration_stack_12_23 = FactoryGirl.create(
       :orchestration_stack_cloud,
       orchestration_stack_data("12_23").merge(
         :ext_management_system => @ems,
-        :parent                => @orchestration_stack_1_12))
+        :parent                => @orchestration_stack_1_12
+      )
+    )
 
-    @orchestration_stack_resource_1_11   = FactoryGirl.create(
+    @orchestration_stack_resource_1_11 = FactoryGirl.create(
       :orchestration_stack_resource,
       orchestration_stack_resource_data("1_11").merge(
         :ems_ref => orchestration_stack_data("1_11")[:ems_ref],
         :stack   => @orchestration_stack_0_1,
-      ))
+      )
+    )
     @orchestration_stack_resource_1_11_1 = FactoryGirl.create(
       :orchestration_stack_resource,
       orchestration_stack_resource_data("1_11_1").merge(
         :stack => @orchestration_stack_0_1,
-      ))
-    @orchestration_stack_resource_1_12   = FactoryGirl.create(
+      )
+    )
+    @orchestration_stack_resource_1_12 = FactoryGirl.create(
       :orchestration_stack_resource,
       orchestration_stack_resource_data("1_12").merge(
         :ems_ref => orchestration_stack_data("1_12")[:ems_ref],
         :stack   => @orchestration_stack_0_1,
-      ))
+      )
+    )
     @orchestration_stack_resource_1_12_1 = FactoryGirl.create(
       :orchestration_stack_resource,
       orchestration_stack_resource_data("1_12_1").merge(
         :stack => @orchestration_stack_0_1,
-      ))
-    @orchestration_stack_resource_11_21  = FactoryGirl.create(
+      )
+    )
+    @orchestration_stack_resource_11_21 = FactoryGirl.create(
       :orchestration_stack_resource,
       orchestration_stack_resource_data("11_21").merge(
         :ems_ref => orchestration_stack_data("11_21")[:ems_ref],
         :stack   => @orchestration_stack_1_11,
-      ))
-    @orchestration_stack_resource_12_22  = FactoryGirl.create(
+      )
+    )
+    @orchestration_stack_resource_12_22 = FactoryGirl.create(
       :orchestration_stack_resource,
       orchestration_stack_resource_data("12_22").merge(
         :ems_ref => orchestration_stack_data("12_22")[:ems_ref],
         :stack   => @orchestration_stack_1_12,
-      ))
-    @orchestration_stack_resource_12_23  = FactoryGirl.create(
+      )
+    )
+    @orchestration_stack_resource_12_23 = FactoryGirl.create(
       :orchestration_stack_resource,
       orchestration_stack_resource_data("12_23").merge(
         :ems_ref => orchestration_stack_data("12_23")[:ems_ref],
         :stack   => @orchestration_stack_1_12,
-      ))
+      )
+    )
   end
 end
