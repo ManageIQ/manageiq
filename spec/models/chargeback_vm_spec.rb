@@ -54,7 +54,6 @@ describe ChargebackVm do
     }
   end
 
-
   before do
     MiqRegion.seed
     ChargebackRateDetailMeasure.seed
@@ -534,6 +533,46 @@ describe ChargebackVm do
         expect(subject.storage_allocated_metric).to eq(disk_b)
         expect(subject.storage_allocated_cost).to   eq(disk_cost)
         expect(subject.total_cost).to               eq(fixed_cost + cpu_cost + mem_cost + disk_cost)
+      end
+    end
+
+    context 'for any virtual machine' do
+      let!(:vm1) do
+        vm = FactoryGirl.create(:vm_vmware, :hardware => hardware, :created_on => report_run_time - 1.day)
+        vm.tag_with(@tag.name, :ns => '*')
+        vm
+      end
+
+      subject { ChargebackVm.build_results_for_report_ChargebackVm(options).first.first }
+
+      let(:options) { base_options.merge(:interval => 'daily', :include_metrics => false) }
+
+      it 'fixed compute is calculated properly' do
+        expect(subject.chargeback_rates).to eq(chargeback_rate.description)
+        expect(subject.fixed_compute_metric).to eq(1) # One day of fixed compute metric
+        expect(subject.fixed_compute_1_cost).to eq(fixed_cost)
+      end
+
+      it 'allocated metrics are calculated properly' do
+        expect(subject.memory_allocated_metric).to  eq(mem_mb)
+        expect(subject.memory_allocated_cost).to    eq(mem_cost)
+        expect(subject.cpu_allocated_metric).to     eq(cores)
+        expect(subject.cpu_allocated_cost).to       eq(cpu_cost)
+        expect(subject.storage_allocated_metric).to eq(disk_b)
+        expect(subject.storage_allocated_cost).to   eq(disk_cost)
+        expect(subject.total_cost).to               eq(fixed_cost + cpu_cost + mem_cost + disk_cost)
+      end
+
+      context 'metrics are included (but dont have any)' do
+        it 'is not generating report with options[:include_metrics]=true' do
+          options[:include_metrics] = true
+          expect(subject).to be_nil
+        end
+
+        it 'is not generating report with options[:include_metrics]=nil(default value)' do
+          options[:include_metrics] = nil
+          expect(subject).to be_nil
+        end
       end
     end
   end
