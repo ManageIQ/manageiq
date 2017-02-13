@@ -62,6 +62,10 @@ module ManageIQ::Providers
       %w(default auth_key)
     end
 
+    def required_credential_fields(_type)
+      [:auth_key]
+    end
+
     def supports_authentication?(authtype)
       supported_auth_types.include?(authtype.to_s)
     end
