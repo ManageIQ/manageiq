@@ -357,13 +357,11 @@ class MiqQueue < ApplicationRecord
         _log.error("#{MiqQueue.format_short_log_msg(self)}, #{message}")
         status = STATUS_TIMEOUT
       end
-    rescue SystemExit
-      raise
     rescue MiqException::MiqQueueExpired
       message = "Expired on [#{expires_on}]"
       _log.error("#{MiqQueue.format_short_log_msg(self)}, #{message}")
       status = STATUS_EXPIRED
-    rescue Exception => error
+    rescue StandardError, SyntaxError => error
       _log.error("#{MiqQueue.format_short_log_msg(self)}, Error: [#{error}]")
       _log.log_backtrace(error) unless error.kind_of?(MiqException::Error)
       status = STATUS_ERROR

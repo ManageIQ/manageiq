@@ -42,7 +42,7 @@ describe MiqQueue do
     end
 
     it "sets last_exception on raised Exception" do
-      allow(MiqServer).to receive(:foobar).and_raise(Exception)
+      allow(MiqServer).to receive(:foobar).and_raise(StandardError)
       msg = FactoryGirl.create(:miq_queue, :state => MiqQueue::STATE_DEQUEUE, :handler => @miq_server, :class_name => 'MiqServer', :method_name => 'foobar')
       status, message, result = msg.deliver
       expect(status).to eq(MiqQueue::STATUS_ERROR)
