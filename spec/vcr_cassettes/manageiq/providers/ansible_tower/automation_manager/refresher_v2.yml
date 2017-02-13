@@ -19,7 +19,7 @@ http_interactions:
       message: MOVED PERMANENTLY
     headers:
       Date:
-      - Thu, 09 Feb 2017 20:06:31 GMT
+      - Fri, 10 Feb 2017 16:16:05 GMT
       Server:
       - Apache/2.4.6 (CentOS) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.5
       Location:
@@ -32,7 +32,7 @@ http_interactions:
       encoding: UTF-8
       string: ''
     http_version: 
-  recorded_at: Thu, 09 Feb 2017 20:06:30 GMT
+  recorded_at: Fri, 10 Feb 2017 16:16:04 GMT
 - request:
     method: get
     uri: https://testuser:secret@dev-ansible-tower2.example.com/api/v1/config/
@@ -52,7 +52,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Thu, 09 Feb 2017 20:06:32 GMT
+      - Fri, 10 Feb 2017 16:16:05 GMT
       Server:
       - Apache/2.4.6 (CentOS) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.5
       Vary:
@@ -60,7 +60,7 @@ http_interactions:
       Allow:
       - GET, POST, DELETE, HEAD, OPTIONS
       X-Api-Time:
-      - 0.212s
+      - 0.204s
       Content-Length:
       - '2548'
       Content-Type:
@@ -88,11 +88,11 @@ http_interactions:
         OF THE TOWER SOFTWARE ON ANOTHER PERSON\u2019S OR ENTITY\u2019S BEHALF.\n",
         "license_info": {"deployment_id": "21c7c190b553a923410b8027f7890b8483ba892a",
         "subscription_name": "Ansible Tower by Red Hat, Self-Support (500 Managed
-        Nodes)", "grace_period_remaining": 6940408, "features": {"surveys": false,
+        Nodes)", "grace_period_remaining": 6867834, "features": {"surveys": false,
         "multiple_organizations": false, "system_tracking": false, "enterprise_auth":
         false, "rebranding": false, "activity_streams": false, "ldap": false, "ha":
         false}, "date_expired": false, "available_instances": 500, "time_remaining":
-        4348408, "current_instances": 168, "free_instances": 332, "instance_count":
+        4275834, "current_instances": 168, "free_instances": 332, "instance_count":
         500, "trial": false, "compliant": true, "valid_key": true, "contact_email":
         "matburt@redhat.com", "company_name": "Basic Company", "date_warning": false,
         "license_type": "basic", "contact_name": "Lumber McLumberjack", "license_date":
@@ -101,7 +101,7 @@ http_interactions:
         "time_zone": "America/New_York", "ansible_version": "1.9.4", "project_local_paths":
         []}'
     http_version: 
-  recorded_at: Thu, 09 Feb 2017 20:06:31 GMT
+  recorded_at: Fri, 10 Feb 2017 16:16:05 GMT
 - request:
     method: get
     uri: https://testuser:secret@dev-ansible-tower2.example.com/api/v1/inventories
@@ -121,7 +121,7 @@ http_interactions:
       message: MOVED PERMANENTLY
     headers:
       Date:
-      - Thu, 09 Feb 2017 20:06:33 GMT
+      - Fri, 10 Feb 2017 16:16:06 GMT
       Server:
       - Apache/2.4.6 (CentOS) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.5
       Location:
@@ -134,7 +134,7 @@ http_interactions:
       encoding: UTF-8
       string: ''
     http_version: 
-  recorded_at: Thu, 09 Feb 2017 20:06:32 GMT
+  recorded_at: Fri, 10 Feb 2017 16:16:05 GMT
 - request:
     method: get
     uri: https://testuser:secret@dev-ansible-tower2.example.com/api/v1/inventories/
@@ -154,7 +154,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Thu, 09 Feb 2017 20:06:33 GMT
+      - Fri, 10 Feb 2017 16:16:07 GMT
       Server:
       - Apache/2.4.6 (CentOS) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.5
       Vary:
@@ -162,7 +162,7 @@ http_interactions:
       Allow:
       - GET, POST, HEAD, OPTIONS
       X-Api-Time:
-      - 0.080s
+      - 0.077s
       Content-Length:
       - '10375'
       Content-Type:
@@ -289,7 +289,7 @@ http_interactions:
         1, "total_groups": 0, "groups_with_active_failures": 0, "has_inventory_sources":
         false, "total_inventory_sources": 0, "inventory_sources_with_failures": 0}]}'
     http_version: 
-  recorded_at: Thu, 09 Feb 2017 20:06:32 GMT
+  recorded_at: Fri, 10 Feb 2017 16:16:06 GMT
 - request:
     method: get
     uri: https://testuser:secret@dev-ansible-tower2.example.com/api/v1/hosts
@@ -309,7 +309,7 @@ http_interactions:
       message: MOVED PERMANENTLY
     headers:
       Date:
-      - Thu, 09 Feb 2017 20:06:34 GMT
+      - Fri, 10 Feb 2017 16:16:07 GMT
       Server:
       - Apache/2.4.6 (CentOS) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.5
       Location:
@@ -322,7 +322,7 @@ http_interactions:
       encoding: UTF-8
       string: ''
     http_version: 
-  recorded_at: Thu, 09 Feb 2017 20:06:33 GMT
+  recorded_at: Fri, 10 Feb 2017 16:16:07 GMT
 - request:
     method: get
     uri: https://testuser:secret@dev-ansible-tower2.example.com/api/v1/hosts/
@@ -342,7 +342,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Thu, 09 Feb 2017 20:06:34 GMT
+      - Fri, 10 Feb 2017 16:16:08 GMT
       Server:
       - Apache/2.4.6 (CentOS) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.5
       Vary:
@@ -350,7 +350,7 @@ http_interactions:
       Allow:
       - GET, POST, HEAD, OPTIONS
       X-Api-Time:
-      - 0.273s
+      - 0.274s
       Content-Length:
       - '75817'
       Content-Type:
@@ -1230,7 +1230,7 @@ http_interactions:
         \"gray\"}", "has_active_failures": false, "has_inventory_sources": true, "last_job":
         852, "last_job_host_summary": 1451}]}'
     http_version: 
-  recorded_at: Thu, 09 Feb 2017 20:06:34 GMT
+  recorded_at: Fri, 10 Feb 2017 16:16:08 GMT
 - request:
     method: get
     uri: https://testuser:secret@dev-ansible-tower2.example.com/api/v1/hosts/?page=2
@@ -1250,7 +1250,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Thu, 09 Feb 2017 20:06:36 GMT
+      - Fri, 10 Feb 2017 16:16:09 GMT
       Server:
       - Apache/2.4.6 (CentOS) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.5
       Vary:
@@ -1258,7 +1258,7 @@ http_interactions:
       Allow:
       - GET, POST, HEAD, OPTIONS
       X-Api-Time:
-      - 0.283s
+      - 0.286s
       Content-Length:
       - '96525'
       Content-Type:
@@ -2375,7 +2375,7 @@ http_interactions:
         \"rhel6_64Guest\"}", "has_active_failures": false, "has_inventory_sources":
         true, "last_job": null, "last_job_host_summary": null}]}'
     http_version: 
-  recorded_at: Thu, 09 Feb 2017 20:06:35 GMT
+  recorded_at: Fri, 10 Feb 2017 16:16:09 GMT
 - request:
     method: get
     uri: https://testuser:secret@dev-ansible-tower2.example.com/api/v1/hosts/?page=3
@@ -2395,7 +2395,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Thu, 09 Feb 2017 20:06:37 GMT
+      - Fri, 10 Feb 2017 16:16:11 GMT
       Server:
       - Apache/2.4.6 (CentOS) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.5
       Vary:
@@ -2403,7 +2403,7 @@ http_interactions:
       Allow:
       - GET, POST, HEAD, OPTIONS
       X-Api-Time:
-      - 0.309s
+      - 0.286s
       Content-Length:
       - '96385'
       Content-Type:
@@ -3521,7 +3521,7 @@ http_interactions:
         "has_active_failures": false, "has_inventory_sources": true, "last_job": 852,
         "last_job_host_summary": 1436}]}'
     http_version: 
-  recorded_at: Thu, 09 Feb 2017 20:06:36 GMT
+  recorded_at: Fri, 10 Feb 2017 16:16:11 GMT
 - request:
     method: get
     uri: https://testuser:secret@dev-ansible-tower2.example.com/api/v1/hosts/?page=4
@@ -3541,7 +3541,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Thu, 09 Feb 2017 20:06:38 GMT
+      - Fri, 10 Feb 2017 16:16:12 GMT
       Server:
       - Apache/2.4.6 (CentOS) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.5
       Vary:
@@ -3549,7 +3549,7 @@ http_interactions:
       Allow:
       - GET, POST, HEAD, OPTIONS
       X-Api-Time:
-      - 0.310s
+      - 0.302s
       Content-Length:
       - '112298'
       Content-Type:
@@ -4855,7 +4855,7 @@ http_interactions:
         \"rhel6_64Guest\"}", "has_active_failures": false, "has_inventory_sources":
         true, "last_job": 852, "last_job_host_summary": 1433}]}'
     http_version: 
-  recorded_at: Thu, 09 Feb 2017 20:06:38 GMT
+  recorded_at: Fri, 10 Feb 2017 16:16:12 GMT
 - request:
     method: get
     uri: https://testuser:secret@dev-ansible-tower2.example.com/api/v1/hosts/?page=5
@@ -4875,7 +4875,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Thu, 09 Feb 2017 20:06:39 GMT
+      - Fri, 10 Feb 2017 16:16:14 GMT
       Server:
       - Apache/2.4.6 (CentOS) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.5
       Vary:
@@ -4883,7 +4883,7 @@ http_interactions:
       Allow:
       - GET, POST, HEAD, OPTIONS
       X-Api-Time:
-      - 0.330s
+      - 0.291s
       Content-Length:
       - '101439'
       Content-Type:
@@ -6060,7 +6060,7 @@ http_interactions:
         "has_active_failures": true, "has_inventory_sources": true, "last_job": 852,
         "last_job_host_summary": 1462}]}'
     http_version: 
-  recorded_at: Thu, 09 Feb 2017 20:06:39 GMT
+  recorded_at: Fri, 10 Feb 2017 16:16:13 GMT
 - request:
     method: get
     uri: https://testuser:secret@dev-ansible-tower2.example.com/api/v1/hosts/?page=6
@@ -6080,7 +6080,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Thu, 09 Feb 2017 20:06:41 GMT
+      - Fri, 10 Feb 2017 16:16:15 GMT
       Server:
       - Apache/2.4.6 (CentOS) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.5
       Vary:
@@ -6088,7 +6088,7 @@ http_interactions:
       Allow:
       - GET, POST, HEAD, OPTIONS
       X-Api-Time:
-      - 0.303s
+      - 0.300s
       Content-Length:
       - '106639'
       Content-Type:
@@ -7327,7 +7327,7 @@ http_interactions:
         "has_active_failures": true, "has_inventory_sources": true, "last_job": 852,
         "last_job_host_summary": 1463}]}'
     http_version: 
-  recorded_at: Thu, 09 Feb 2017 20:06:40 GMT
+  recorded_at: Fri, 10 Feb 2017 16:16:15 GMT
 - request:
     method: get
     uri: https://testuser:secret@dev-ansible-tower2.example.com/api/v1/hosts/?page=7
@@ -7347,7 +7347,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Thu, 09 Feb 2017 20:06:42 GMT
+      - Fri, 10 Feb 2017 16:16:16 GMT
       Server:
       - Apache/2.4.6 (CentOS) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.5
       Vary:
@@ -7355,7 +7355,7 @@ http_interactions:
       Allow:
       - GET, POST, HEAD, OPTIONS
       X-Api-Time:
-      - 0.239s
+      - 0.243s
       Content-Length:
       - '70229'
       Content-Type:
@@ -8155,7 +8155,7 @@ http_interactions:
         "instance_id": "", "variables": "---", "has_active_failures": true, "has_inventory_sources":
         false, "last_job": 172, "last_job_host_summary": 215}]}'
     http_version: 
-  recorded_at: Thu, 09 Feb 2017 20:06:42 GMT
+  recorded_at: Fri, 10 Feb 2017 16:16:16 GMT
 - request:
     method: get
     uri: https://testuser:secret@dev-ansible-tower2.example.com/api/v1/config
@@ -8175,7 +8175,7 @@ http_interactions:
       message: MOVED PERMANENTLY
     headers:
       Date:
-      - Thu, 09 Feb 2017 20:06:43 GMT
+      - Fri, 10 Feb 2017 16:16:17 GMT
       Server:
       - Apache/2.4.6 (CentOS) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.5
       Location:
@@ -8188,7 +8188,7 @@ http_interactions:
       encoding: UTF-8
       string: ''
     http_version: 
-  recorded_at: Thu, 09 Feb 2017 20:06:42 GMT
+  recorded_at: Fri, 10 Feb 2017 16:16:16 GMT
 - request:
     method: get
     uri: https://testuser:secret@dev-ansible-tower2.example.com/api/v1/config/
@@ -8208,7 +8208,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Thu, 09 Feb 2017 20:06:44 GMT
+      - Fri, 10 Feb 2017 16:16:18 GMT
       Server:
       - Apache/2.4.6 (CentOS) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.5
       Vary:
@@ -8216,7 +8216,7 @@ http_interactions:
       Allow:
       - GET, POST, DELETE, HEAD, OPTIONS
       X-Api-Time:
-      - 0.204s
+      - 0.206s
       Content-Length:
       - '2548'
       Content-Type:
@@ -8244,11 +8244,11 @@ http_interactions:
         OF THE TOWER SOFTWARE ON ANOTHER PERSON\u2019S OR ENTITY\u2019S BEHALF.\n",
         "license_info": {"deployment_id": "21c7c190b553a923410b8027f7890b8483ba892a",
         "subscription_name": "Ansible Tower by Red Hat, Self-Support (500 Managed
-        Nodes)", "grace_period_remaining": 6940396, "features": {"surveys": false,
+        Nodes)", "grace_period_remaining": 6867822, "features": {"surveys": false,
         "multiple_organizations": false, "system_tracking": false, "enterprise_auth":
         false, "rebranding": false, "activity_streams": false, "ldap": false, "ha":
         false}, "date_expired": false, "available_instances": 500, "time_remaining":
-        4348396, "current_instances": 168, "free_instances": 332, "instance_count":
+        4275822, "current_instances": 168, "free_instances": 332, "instance_count":
         500, "trial": false, "compliant": true, "valid_key": true, "contact_email":
         "matburt@redhat.com", "company_name": "Basic Company", "date_warning": false,
         "license_type": "basic", "contact_name": "Lumber McLumberjack", "license_date":
@@ -8257,7 +8257,7 @@ http_interactions:
         "time_zone": "America/New_York", "ansible_version": "1.9.4", "project_local_paths":
         []}'
     http_version: 
-  recorded_at: Thu, 09 Feb 2017 20:06:43 GMT
+  recorded_at: Fri, 10 Feb 2017 16:16:17 GMT
 - request:
     method: get
     uri: https://testuser:secret@dev-ansible-tower2.example.com/api/v1/job_templates
@@ -8277,7 +8277,7 @@ http_interactions:
       message: MOVED PERMANENTLY
     headers:
       Date:
-      - Thu, 09 Feb 2017 20:06:44 GMT
+      - Fri, 10 Feb 2017 16:16:19 GMT
       Server:
       - Apache/2.4.6 (CentOS) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.5
       Location:
@@ -8290,7 +8290,7 @@ http_interactions:
       encoding: UTF-8
       string: ''
     http_version: 
-  recorded_at: Thu, 09 Feb 2017 20:06:43 GMT
+  recorded_at: Fri, 10 Feb 2017 16:16:18 GMT
 - request:
     method: get
     uri: https://testuser:secret@dev-ansible-tower2.example.com/api/v1/job_templates/
@@ -8310,7 +8310,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Thu, 09 Feb 2017 20:06:45 GMT
+      - Fri, 10 Feb 2017 16:16:19 GMT
       Server:
       - Apache/2.4.6 (CentOS) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.5
       Vary:
@@ -8318,9 +8318,9 @@ http_interactions:
       Allow:
       - GET, POST, HEAD, OPTIONS
       X-Api-Time:
-      - 0.197s
+      - 0.202s
       Content-Length:
-      - '35312'
+      - '35577'
       Content-Type:
       - application/json
     body:
@@ -8328,29 +8328,32 @@ http_interactions:
       string: '{"count": 14, "next": null, "previous": null, "results": [{"id": 149,
         "type": "job_template", "url": "/api/v1/job_templates/149/", "related": {"created_by":
         "/api/v1/users/1/", "modified_by": "/api/v1/users/1/", "inventory": "/api/v1/inventories/2/",
-        "project": "/api/v1/projects/75/", "last_job": "/api/v1/jobs/119/", "launch":
-        "/api/v1/job_templates/149/launch/", "jobs": "/api/v1/job_templates/149/jobs/",
+        "project": "/api/v1/projects/75/", "credential": "/api/v1/credentials/6/",
+        "cloud_credential": "/api/v1/credentials/2/", "last_job": "/api/v1/jobs/119/",
+        "launch": "/api/v1/job_templates/149/launch/", "jobs": "/api/v1/job_templates/149/jobs/",
         "activity_stream": "/api/v1/job_templates/149/activity_stream/", "schedules":
-        "/api/v1/job_templates/149/schedules/"}, "summary_fields": {"project": {"name":
-        "bd-project", "description": "", "status": "successful"}, "last_job": {"name":
-        "Ansible-JobTemplate", "description": "Ansible-JobTemplate-Description", "finished":
-        "2016-02-18T21:52:36.072Z", "status": "failed", "failed": true}, "last_update":
+        "/api/v1/job_templates/149/schedules/"}, "summary_fields": {"credential":
+        {"name": "appliance", "description": "", "kind": "ssh", "cloud": false}, "project":
+        {"name": "bd-project", "description": "", "status": "successful"}, "last_job":
         {"name": "Ansible-JobTemplate", "description": "Ansible-JobTemplate-Description",
-        "status": "failed", "failed": true}, "inventory": {"name": "AWS", "description":
-        "CFME AWS Lab", "has_active_failures": false, "total_hosts": 21, "hosts_with_active_failures":
-        0, "total_groups": 63, "groups_with_active_failures": 0, "has_inventory_sources":
-        true, "total_inventory_sources": 1, "inventory_sources_with_failures": 1},
-        "created_by": {"id": 1, "username": "admin", "first_name": "", "last_name":
+        "finished": "2016-02-18T21:52:36.072Z", "status": "failed", "failed": true},
+        "last_update": {"name": "Ansible-JobTemplate", "description": "Ansible-JobTemplate-Description",
+        "status": "failed", "failed": true}, "cloud_credential": {"name": "AWS", "description":
+        "AWS Instance", "kind": "aws", "cloud": true}, "inventory": {"name": "AWS",
+        "description": "CFME AWS Lab", "has_active_failures": false, "total_hosts":
+        21, "hosts_with_active_failures": 0, "total_groups": 63, "groups_with_active_failures":
+        0, "has_inventory_sources": true, "total_inventory_sources": 1, "inventory_sources_with_failures":
+        1}, "created_by": {"id": 1, "username": "admin", "first_name": "", "last_name":
         ""}, "modified_by": {"id": 1, "username": "admin", "first_name": "", "last_name":
         ""}, "can_copy": true, "can_edit": true, "recent_jobs": [{"status": "failed",
         "finished": "2016-02-18T21:52:36.072Z", "id": 119}]}, "created": "2016-02-05T23:09:47.943Z",
-        "modified": "2016-11-15T19:07:10.239Z", "name": "Ansible-JobTemplate", "description":
+        "modified": "2017-02-10T16:15:29.704Z", "name": "Ansible-JobTemplate", "description":
         "Ansible-JobTemplate-Description", "job_type": "run", "inventory": 2, "project":
-        75, "playbook": "language_features/group_commands.yml", "credential": null,
-        "cloud_credential": null, "forks": 0, "limit": "", "verbosity": 0, "extra_vars":
-        "abc: 123\n", "job_tags": "", "force_handlers": false, "skip_tags": "", "start_at_task":
-        "", "last_job_run": "2016-02-18T21:52:36.072Z", "last_job_failed": true, "has_schedules":
-        false, "next_job_run": null, "status": "failed", "host_config_key": "", "ask_variables_on_launch":
+        75, "playbook": "language_features/group_commands.yml", "credential": 6, "cloud_credential":
+        2, "forks": 0, "limit": "", "verbosity": 0, "extra_vars": "abc: 123\n", "job_tags":
+        "", "force_handlers": false, "skip_tags": "", "start_at_task": "", "last_job_run":
+        "2016-02-18T21:52:36.072Z", "last_job_failed": true, "has_schedules": false,
+        "next_job_run": null, "status": "failed", "host_config_key": "", "ask_variables_on_launch":
         false, "survey_enabled": false, "become_enabled": false}, {"id": 155, "type":
         "job_template", "url": "/api/v1/job_templates/155/", "related": {"created_by":
         "/api/v1/users/1/", "modified_by": "/api/v1/users/1/", "inventory": "/api/v1/inventories/2/",
@@ -8755,7 +8758,7 @@ http_interactions:
         "host_config_key": "", "ask_variables_on_launch": false, "survey_enabled":
         false, "become_enabled": false}]}'
     http_version: 
-  recorded_at: Thu, 09 Feb 2017 20:06:44 GMT
+  recorded_at: Fri, 10 Feb 2017 16:16:19 GMT
 - request:
     method: get
     uri: https://testuser:secret@dev-ansible-tower2.example.com/api/v1/job_templates/155/survey_spec/
@@ -8775,7 +8778,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Thu, 09 Feb 2017 20:06:46 GMT
+      - Fri, 10 Feb 2017 16:16:20 GMT
       Server:
       - Apache/2.4.6 (CentOS) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.5
       Vary:
@@ -8794,7 +8797,7 @@ http_interactions:
         "Survey", "min": "", "default": "", "max": "", "question_name": "Survey",
         "required": false, "variable": "test", "choices": "", "type": "text"}]}'
     http_version: 
-  recorded_at: Thu, 09 Feb 2017 20:06:45 GMT
+  recorded_at: Fri, 10 Feb 2017 16:16:19 GMT
 - request:
     method: get
     uri: https://testuser:secret@dev-ansible-tower2.example.com/api/v1/job_templates/155/survey_spec/
@@ -8814,7 +8817,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Thu, 09 Feb 2017 20:06:46 GMT
+      - Fri, 10 Feb 2017 16:16:21 GMT
       Server:
       - Apache/2.4.6 (CentOS) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.5
       Vary:
@@ -8822,7 +8825,7 @@ http_interactions:
       Allow:
       - GET, POST, DELETE, HEAD, OPTIONS
       X-Api-Time:
-      - 0.054s
+      - 0.052s
       Content-Length:
       - '223'
       Content-Type:
@@ -8833,7 +8836,7 @@ http_interactions:
         "Survey", "min": "", "default": "", "max": "", "question_name": "Survey",
         "required": false, "variable": "test", "choices": "", "type": "text"}]}'
     http_version: 
-  recorded_at: Thu, 09 Feb 2017 20:06:45 GMT
+  recorded_at: Fri, 10 Feb 2017 16:16:20 GMT
 - request:
     method: get
     uri: https://testuser:secret@dev-ansible-tower2.example.com/api/v1/job_templates/143/survey_spec/
@@ -8853,7 +8856,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Thu, 09 Feb 2017 20:06:47 GMT
+      - Fri, 10 Feb 2017 16:16:21 GMT
       Server:
       - Apache/2.4.6 (CentOS) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.5
       Vary:
@@ -8875,7 +8878,7 @@ http_interactions:
         "min": "", "default": "", "max": "", "question_name": "Big list", "choices":
         "Blah\nNah\nTah", "variable": "crap_id", "type": "multiselect"}]}'
     http_version: 
-  recorded_at: Thu, 09 Feb 2017 20:06:46 GMT
+  recorded_at: Fri, 10 Feb 2017 16:16:20 GMT
 - request:
     method: get
     uri: https://testuser:secret@dev-ansible-tower2.example.com/api/v1/job_templates/143/survey_spec/
@@ -8895,7 +8898,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Thu, 09 Feb 2017 20:06:48 GMT
+      - Fri, 10 Feb 2017 16:16:22 GMT
       Server:
       - Apache/2.4.6 (CentOS) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.5
       Vary:
@@ -8917,7 +8920,7 @@ http_interactions:
         "min": "", "default": "", "max": "", "question_name": "Big list", "choices":
         "Blah\nNah\nTah", "variable": "crap_id", "type": "multiselect"}]}'
     http_version: 
-  recorded_at: Thu, 09 Feb 2017 20:06:47 GMT
+  recorded_at: Fri, 10 Feb 2017 16:16:21 GMT
 - request:
     method: get
     uri: https://testuser:secret@dev-ansible-tower2.example.com/api/v1/job_templates/158/survey_spec/
@@ -8937,7 +8940,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Thu, 09 Feb 2017 20:06:48 GMT
+      - Fri, 10 Feb 2017 16:16:22 GMT
       Server:
       - Apache/2.4.6 (CentOS) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.5
       Vary:
@@ -8956,7 +8959,7 @@ http_interactions:
         "min": 0, "default": 0, "max": 2, "question_name": "Test", "choices": "",
         "variable": "test_id", "type": "integer"}]}'
     http_version: 
-  recorded_at: Thu, 09 Feb 2017 20:06:47 GMT
+  recorded_at: Fri, 10 Feb 2017 16:16:22 GMT
 - request:
     method: get
     uri: https://testuser:secret@dev-ansible-tower2.example.com/api/v1/job_templates/158/survey_spec/
@@ -8976,7 +8979,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Thu, 09 Feb 2017 20:06:49 GMT
+      - Fri, 10 Feb 2017 16:16:23 GMT
       Server:
       - Apache/2.4.6 (CentOS) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.5
       Vary:
@@ -8984,7 +8987,7 @@ http_interactions:
       Allow:
       - GET, POST, DELETE, HEAD, OPTIONS
       X-Api-Time:
-      - 0.053s
+      - 0.052s
       Content-Length:
       - '189'
       Content-Type:
@@ -8995,7 +8998,7 @@ http_interactions:
         "min": 0, "default": 0, "max": 2, "question_name": "Test", "choices": "",
         "variable": "test_id", "type": "integer"}]}'
     http_version: 
-  recorded_at: Thu, 09 Feb 2017 20:06:48 GMT
+  recorded_at: Fri, 10 Feb 2017 16:16:22 GMT
 - request:
     method: get
     uri: https://testuser:secret@dev-ansible-tower2.example.com/api/v1/projects
@@ -9015,7 +9018,7 @@ http_interactions:
       message: MOVED PERMANENTLY
     headers:
       Date:
-      - Thu, 09 Feb 2017 20:06:49 GMT
+      - Fri, 10 Feb 2017 16:16:24 GMT
       Server:
       - Apache/2.4.6 (CentOS) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.5
       Location:
@@ -9028,7 +9031,7 @@ http_interactions:
       encoding: UTF-8
       string: ''
     http_version: 
-  recorded_at: Thu, 09 Feb 2017 20:06:48 GMT
+  recorded_at: Fri, 10 Feb 2017 16:16:23 GMT
 - request:
     method: get
     uri: https://testuser:secret@dev-ansible-tower2.example.com/api/v1/projects/
@@ -9048,7 +9051,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Thu, 09 Feb 2017 20:06:50 GMT
+      - Fri, 10 Feb 2017 16:16:24 GMT
       Server:
       - Apache/2.4.6 (CentOS) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.5
       Vary:
@@ -9056,7 +9059,7 @@ http_interactions:
       Allow:
       - GET, POST, HEAD, OPTIONS
       X-Api-Time:
-      - 0.112s
+      - 0.116s
       Content-Length:
       - '9681'
       Content-Type:
@@ -9178,7 +9181,7 @@ http_interactions:
         false, "scm_update_on_launch": false, "scm_update_cache_timeout": 0, "last_update_failed":
         false, "last_updated": "2017-01-04T22:12:12.741Z"}]}'
     http_version: 
-  recorded_at: Thu, 09 Feb 2017 20:06:49 GMT
+  recorded_at: Fri, 10 Feb 2017 16:16:23 GMT
 - request:
     method: get
     uri: https://testuser:secret@dev-ansible-tower2.example.com/api/v1/projects/75/playbooks/
@@ -9198,7 +9201,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Thu, 09 Feb 2017 20:06:51 GMT
+      - Fri, 10 Feb 2017 16:16:25 GMT
       Server:
       - Apache/2.4.6 (CentOS) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.5
       Vary:
@@ -9206,7 +9209,7 @@ http_interactions:
       Allow:
       - GET, HEAD, OPTIONS
       X-Api-Time:
-      - 0.069s
+      - 0.066s
       Content-Length:
       - '2109'
       Content-Type:
@@ -9238,7 +9241,7 @@ http_interactions:
         "windows/wamp_haproxy/rolling_update.yml", "windows/wamp_haproxy/site.yml",
         "wordpress-nginx/site.yml", "wordpress-nginx_rhel7/site.yml"]'
     http_version: 
-  recorded_at: Thu, 09 Feb 2017 20:06:50 GMT
+  recorded_at: Fri, 10 Feb 2017 16:16:24 GMT
 - request:
     method: get
     uri: https://testuser:secret@dev-ansible-tower2.example.com/api/v1/projects/93/playbooks/
@@ -9258,7 +9261,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Thu, 09 Feb 2017 20:06:51 GMT
+      - Fri, 10 Feb 2017 16:16:25 GMT
       Server:
       - Apache/2.4.6 (CentOS) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.5
       Vary:
@@ -9266,7 +9269,7 @@ http_interactions:
       Allow:
       - GET, HEAD, OPTIONS
       X-Api-Time:
-      - 0.058s
+      - 0.057s
       Content-Length:
       - '123'
       Content-Type:
@@ -9276,7 +9279,7 @@ http_interactions:
       string: '["create_ec2.yml", "general_state_ec2.yml", "pkginfo.yml", "start_ec2.yml",
         "stop_ec2.yml", "tag_old_nodes.yml", "yum.yml"]'
     http_version: 
-  recorded_at: Thu, 09 Feb 2017 20:06:50 GMT
+  recorded_at: Fri, 10 Feb 2017 16:16:25 GMT
 - request:
     method: get
     uri: https://testuser:secret@dev-ansible-tower2.example.com/api/v1/projects/240/playbooks/
@@ -9296,7 +9299,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Thu, 09 Feb 2017 20:06:52 GMT
+      - Fri, 10 Feb 2017 16:16:26 GMT
       Server:
       - Apache/2.4.6 (CentOS) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.5
       Vary:
@@ -9304,7 +9307,7 @@ http_interactions:
       Allow:
       - GET, HEAD, OPTIONS
       X-Api-Time:
-      - 0.058s
+      - 0.055s
       Content-Length:
       - '84'
       Content-Type:
@@ -9314,7 +9317,7 @@ http_interactions:
       string: '["mk_sample_playbook.yaml", "pkg_info.yaml", "pkg_info_no_sleep.yaml",
         "test1.yaml"]'
     http_version: 
-  recorded_at: Thu, 09 Feb 2017 20:06:51 GMT
+  recorded_at: Fri, 10 Feb 2017 16:16:25 GMT
 - request:
     method: get
     uri: https://testuser:secret@dev-ansible-tower2.example.com/api/v1/projects/289/playbooks/
@@ -9334,7 +9337,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Thu, 09 Feb 2017 20:06:52 GMT
+      - Fri, 10 Feb 2017 16:16:27 GMT
       Server:
       - Apache/2.4.6 (CentOS) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.5
       Vary:
@@ -9342,7 +9345,7 @@ http_interactions:
       Allow:
       - GET, HEAD, OPTIONS
       X-Api-Time:
-      - 0.061s
+      - 0.059s
       Content-Length:
       - '55'
       Content-Type:
@@ -9351,7 +9354,7 @@ http_interactions:
       encoding: UTF-8
       string: '["minecraftpe-mp-ec2-ansible.yml", "server_config.yml"]'
     http_version: 
-  recorded_at: Thu, 09 Feb 2017 20:06:51 GMT
+  recorded_at: Fri, 10 Feb 2017 16:16:26 GMT
 - request:
     method: get
     uri: https://testuser:secret@dev-ansible-tower2.example.com/api/v1/projects/377/playbooks/
@@ -9371,7 +9374,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Thu, 09 Feb 2017 20:06:53 GMT
+      - Fri, 10 Feb 2017 16:16:27 GMT
       Server:
       - Apache/2.4.6 (CentOS) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.5
       Vary:
@@ -9388,7 +9391,7 @@ http_interactions:
       encoding: UTF-8
       string: "[]"
     http_version: 
-  recorded_at: Thu, 09 Feb 2017 20:06:52 GMT
+  recorded_at: Fri, 10 Feb 2017 16:16:27 GMT
 - request:
     method: get
     uri: https://testuser:secret@dev-ansible-tower2.example.com/api/v1/projects/378/playbooks/
@@ -9408,7 +9411,7 @@ http_interactions:
       message: OK
     headers:
       Date:
-      - Thu, 09 Feb 2017 20:06:54 GMT
+      - Fri, 10 Feb 2017 16:16:28 GMT
       Server:
       - Apache/2.4.6 (CentOS) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.5
       Vary:
@@ -9416,7 +9419,7 @@ http_interactions:
       Allow:
       - GET, HEAD, OPTIONS
       X-Api-Time:
-      - 0.056s
+      - 0.058s
       Content-Length:
       - '84'
       Content-Type:
@@ -9426,5 +9429,203 @@ http_interactions:
       string: '["mk_sample_playbook.yaml", "pkg_info.yaml", "pkg_info_no_sleep.yaml",
         "test1.yaml"]'
     http_version: 
-  recorded_at: Thu, 09 Feb 2017 20:06:53 GMT
+  recorded_at: Fri, 10 Feb 2017 16:16:27 GMT
+- request:
+    method: get
+    uri: https://testuser:secret@dev-ansible-tower2.example.com/api/v1/credentials
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v0.9.2
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 301
+      message: MOVED PERMANENTLY
+    headers:
+      Date:
+      - Fri, 10 Feb 2017 16:16:29 GMT
+      Server:
+      - Apache/2.4.6 (CentOS) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.5
+      Location:
+      - https://dev-ansible-tower2.example.com/api/v1/credentials/
+      Content-Length:
+      - '0'
+      Content-Type:
+      - text/html; charset=utf-8
+    body:
+      encoding: UTF-8
+      string: ''
+    http_version: 
+  recorded_at: Fri, 10 Feb 2017 16:16:28 GMT
+- request:
+    method: get
+    uri: https://testuser:secret@dev-ansible-tower2.example.com/api/v1/credentials/
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      User-Agent:
+      - Faraday v0.9.2
+      Accept-Encoding:
+      - gzip;q=1.0,deflate;q=0.6,identity;q=0.3
+      Accept:
+      - "*/*"
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Date:
+      - Fri, 10 Feb 2017 16:16:29 GMT
+      Server:
+      - Apache/2.4.6 (CentOS) OpenSSL/1.0.1e-fips mod_wsgi/3.4 Python/2.7.5
+      Vary:
+      - Accept,Cookie
+      Allow:
+      - GET, POST, HEAD, OPTIONS
+      X-Api-Time:
+      - 0.074s
+      Content-Length:
+      - '10459'
+      Content-Type:
+      - application/json
+    body:
+      encoding: UTF-8
+      string: '{"count": 11, "next": null, "previous": null, "results": [{"id": 2,
+        "type": "credential", "url": "/api/v1/credentials/2/", "related": {"created_by":
+        "/api/v1/users/1/", "modified_by": "/api/v1/users/1/", "activity_stream":
+        "/api/v1/credentials/2/activity_stream/", "user": "/api/v1/users/1/"}, "summary_fields":
+        {"project": {}, "host": {}, "user": {"id": 1, "username": "admin", "first_name":
+        "", "last_name": ""}, "created_by": {"id": 1, "username": "admin", "first_name":
+        "", "last_name": ""}, "modified_by": {"id": 1, "username": "admin", "first_name":
+        "", "last_name": ""}}, "created": "2015-12-17T18:04:04.021Z", "modified":
+        "2016-01-28T16:24:36.551Z", "name": "AWS", "description": "AWS Instance",
+        "user": 1, "team": null, "kind": "aws", "cloud": true, "host": "", "username":
+        "065ZMGNV5WNKPMX4FF82", "password": "$encrypted$", "security_token": "", "project":
+        "", "ssh_key_data": "", "ssh_key_unlock": "", "become_method": "", "become_username":
+        "", "become_password": "", "vault_password": ""}, {"id": 1, "type": "credential",
+        "url": "/api/v1/credentials/1/", "related": {"created_by": "/api/v1/users/1/",
+        "modified_by": "/api/v1/users/1/", "activity_stream": "/api/v1/credentials/1/activity_stream/",
+        "user": "/api/v1/users/2/"}, "summary_fields": {"project": {}, "host": {},
+        "user": {"id": 2, "username": "dbomhof", "first_name": "Drew", "last_name":
+        "Bomhof"}, "created_by": {"id": 1, "username": "admin", "first_name": "",
+        "last_name": ""}, "modified_by": {"id": 1, "username": "admin", "first_name":
+        "", "last_name": ""}}, "created": "2015-12-17T16:55:29.495Z", "modified":
+        "2015-12-17T21:27:48.511Z", "name": "Openstack", "description": "RHOS in NC",
+        "user": 2, "team": null, "kind": "openstack", "cloud": true, "host": "http://10.8.96.4:5000/v2.0",
+        "username": "admin", "password": "$encrypted$", "security_token": "", "project":
+        "admin", "ssh_key_data": "", "ssh_key_unlock": "", "become_method": "", "become_username":
+        "", "become_password": "", "vault_password": ""}, {"id": 3, "type": "credential",
+        "url": "/api/v1/credentials/3/", "related": {"created_by": "/api/v1/users/1/",
+        "modified_by": "/api/v1/users/1/", "activity_stream": "/api/v1/credentials/3/activity_stream/",
+        "user": "/api/v1/users/2/"}, "summary_fields": {"project": {}, "host": {},
+        "user": {"id": 2, "username": "dbomhof", "first_name": "Drew", "last_name":
+        "Bomhof"}, "created_by": {"id": 1, "username": "admin", "first_name": "",
+        "last_name": ""}, "modified_by": {"id": 1, "username": "admin", "first_name":
+        "", "last_name": ""}}, "created": "2015-12-17T18:10:39.866Z", "modified":
+        "2015-12-17T21:27:58.989Z", "name": "Skynet", "description": "Openstack Support
+        Area", "user": 2, "team": null, "kind": "openstack", "cloud": true, "host":
+        "http://skynet-cloud.usersys.redhat.com:5000/v2.0", "username": "admin", "password":
+        "$encrypted$", "security_token": "", "project": "admin", "ssh_key_data": "",
+        "ssh_key_unlock": "", "become_method": "", "become_username": "", "become_password":
+        "", "vault_password": ""}, {"id": 9, "type": "credential", "url": "/api/v1/credentials/9/",
+        "related": {"created_by": "/api/v1/users/1/", "modified_by": "/api/v1/users/1/",
+        "activity_stream": "/api/v1/credentials/9/activity_stream/", "user": "/api/v1/users/2/"},
+        "summary_fields": {"project": {}, "host": {}, "user": {"id": 2, "username":
+        "dbomhof", "first_name": "Drew", "last_name": "Bomhof"}, "created_by": {"id":
+        1, "username": "admin", "first_name": "", "last_name": ""}, "modified_by":
+        {"id": 1, "username": "admin", "first_name": "", "last_name": ""}}, "created":
+        "2016-01-21T16:57:51.833Z", "modified": "2016-01-21T16:57:51.846Z", "name":
+        "db-github", "description": "db", "user": 2, "team": null, "kind": "scm",
+        "cloud": false, "host": "", "username": "syncrou", "password": "$encrypted$",
+        "security_token": "", "project": "", "ssh_key_data": "", "ssh_key_unlock":
+        "", "become_method": "", "become_username": "", "become_password": "", "vault_password":
+        ""}, {"id": 6, "type": "credential", "url": "/api/v1/credentials/6/", "related":
+        {"created_by": "/api/v1/users/1/", "modified_by": "/api/v1/users/1/", "activity_stream":
+        "/api/v1/credentials/6/activity_stream/", "user": "/api/v1/users/1/"}, "summary_fields":
+        {"project": {}, "host": {}, "user": {"id": 1, "username": "admin", "first_name":
+        "", "last_name": ""}, "created_by": {"id": 1, "username": "admin", "first_name":
+        "", "last_name": ""}, "modified_by": {"id": 1, "username": "admin", "first_name":
+        "", "last_name": ""}}, "created": "2016-01-05T21:01:58.823Z", "modified":
+        "2016-01-05T21:01:58.836Z", "name": "appliance", "description": "", "user":
+        1, "team": null, "kind": "ssh", "cloud": false, "host": "", "username": "root",
+        "password": "$encrypted$", "security_token": "", "project": "", "ssh_key_data":
+        "", "ssh_key_unlock": "", "become_method": "", "become_username": "", "become_password":
+        "", "vault_password": ""}, {"id": 10, "type": "credential", "url": "/api/v1/credentials/10/",
+        "related": {"created_by": "/api/v1/users/1/", "modified_by": "/api/v1/users/1/",
+        "activity_stream": "/api/v1/credentials/10/activity_stream/", "user": "/api/v1/users/1/"},
+        "summary_fields": {"project": {}, "host": {}, "user": {"id": 1, "username":
+        "admin", "first_name": "", "last_name": ""}, "created_by": {"id": 1, "username":
+        "admin", "first_name": "", "last_name": ""}, "modified_by": {"id": 1, "username":
+        "admin", "first_name": "", "last_name": ""}}, "created": "2016-01-25T21:30:00.798Z",
+        "modified": "2016-01-25T21:30:00.810Z", "name": "bd-ssh-test", "description":
+        "", "user": 1, "team": null, "kind": "ssh", "cloud": false, "host": "", "username":
+        "bdunne", "password": "", "security_token": "", "project": "", "ssh_key_data":
+        "$encrypted$", "ssh_key_unlock": "", "become_method": "", "become_username":
+        "", "become_password": "", "vault_password": ""}, {"id": 11, "type": "credential",
+        "url": "/api/v1/credentials/11/", "related": {"created_by": "/api/v1/users/1/",
+        "modified_by": "/api/v1/users/1/", "activity_stream": "/api/v1/credentials/11/activity_stream/",
+        "user": "/api/v1/users/1/"}, "summary_fields": {"project": {}, "host": {},
+        "user": {"id": 1, "username": "admin", "first_name": "", "last_name": ""},
+        "created_by": {"id": 1, "username": "admin", "first_name": "", "last_name":
+        ""}, "modified_by": {"id": 1, "username": "admin", "first_name": "", "last_name":
+        ""}}, "created": "2016-01-28T14:28:57.891Z", "modified": "2016-01-28T16:20:54.535Z",
+        "name": "db", "description": "Drew Bomhof Key", "user": 1, "team": null, "kind":
+        "ssh", "cloud": false, "host": "", "username": "ec2-user", "password": "",
+        "security_token": "", "project": "", "ssh_key_data": "$encrypted$", "ssh_key_unlock":
+        "$encrypted$", "become_method": "", "become_username": "", "become_password":
+        "", "vault_password": ""}, {"id": 18, "type": "credential", "url": "/api/v1/credentials/18/",
+        "related": {"created_by": "/api/v1/users/1/", "modified_by": "/api/v1/users/1/",
+        "activity_stream": "/api/v1/credentials/18/activity_stream/", "user": "/api/v1/users/5/"},
+        "summary_fields": {"project": {}, "host": {}, "user": {"id": 5, "username":
+        "mkanoor", "first_name": "Madhu", "last_name": "Kanoor"}, "created_by": {"id":
+        1, "username": "admin", "first_name": "", "last_name": ""}, "modified_by":
+        {"id": 1, "username": "admin", "first_name": "", "last_name": ""}}, "created":
+        "2017-01-04T22:29:44.025Z", "modified": "2017-01-04T22:29:44.035Z", "name":
+        "GIT", "description": "built using rest api", "user": 5, "team": null, "kind":
+        "ssh", "cloud": false, "host": "", "username": "freddy", "password": "$encrypted$",
+        "security_token": "", "project": "", "ssh_key_data": "", "ssh_key_unlock":
+        "", "become_method": "", "become_username": "", "become_password": "", "vault_password":
+        ""}, {"id": 8, "type": "credential", "url": "/api/v1/credentials/8/", "related":
+        {"created_by": "/api/v1/users/1/", "modified_by": "/api/v1/users/1/", "activity_stream":
+        "/api/v1/credentials/8/activity_stream/", "user": "/api/v1/users/1/"}, "summary_fields":
+        {"project": {}, "host": {}, "user": {"id": 1, "username": "admin", "first_name":
+        "", "last_name": ""}, "created_by": {"id": 1, "username": "admin", "first_name":
+        "", "last_name": ""}, "modified_by": {"id": 1, "username": "admin", "first_name":
+        "", "last_name": ""}}, "created": "2016-01-21T16:51:19.073Z", "modified":
+        "2016-01-21T16:51:19.085Z", "name": "root", "description": "appliance2", "user":
+        1, "team": null, "kind": "ssh", "cloud": false, "host": "", "username": "root",
+        "password": "$encrypted$", "security_token": "", "project": "", "ssh_key_data":
+        "", "ssh_key_unlock": "", "become_method": "", "become_username": "", "become_password":
+        "", "vault_password": ""}, {"id": 17, "type": "credential", "url": "/api/v1/credentials/17/",
+        "related": {"created_by": "/api/v1/users/1/", "modified_by": "/api/v1/users/1/",
+        "activity_stream": "/api/v1/credentials/17/activity_stream/"}, "summary_fields":
+        {"project": {}, "host": {}, "created_by": {"id": 1, "username": "admin", "first_name":
+        "", "last_name": ""}, "modified_by": {"id": 1, "username": "admin", "first_name":
+        "", "last_name": ""}}, "created": "2017-01-04T22:22:46.022Z", "modified":
+        "2017-01-04T22:22:46.072Z", "name": "testing madhu", "description": "", "user":
+        null, "team": null, "kind": "ssh", "cloud": false, "host": "", "username":
+        "freddy", "password": "$encrypted$", "security_token": "", "project": "",
+        "ssh_key_data": "", "ssh_key_unlock": "", "become_method": "", "become_username":
+        "", "become_password": "", "vault_password": ""}, {"id": 16, "type": "credential",
+        "url": "/api/v1/credentials/16/", "related": {"created_by": "/api/v1/users/1/",
+        "modified_by": "/api/v1/users/1/", "activity_stream": "/api/v1/credentials/16/activity_stream/",
+        "user": "/api/v1/users/1/"}, "summary_fields": {"project": {}, "host": {},
+        "user": {"id": 1, "username": "admin", "first_name": "", "last_name": ""},
+        "created_by": {"id": 1, "username": "admin", "first_name": "", "last_name":
+        ""}, "modified_by": {"id": 1, "username": "admin", "first_name": "", "last_name":
+        ""}}, "created": "2016-03-31T18:42:11.244Z", "modified": "2016-08-31T15:58:17.005Z",
+        "name": "Dev VC60", "description": "", "user": 1, "team": null, "kind": "vmware",
+        "cloud": true, "host": "dev-vc60.example.com", "username":
+        "MiqAnsibleUser@vsphere.local", "password": "$encrypted$", "security_token":
+        "", "project": "", "ssh_key_data": "", "ssh_key_unlock": "", "become_method":
+        "", "become_username": "", "become_password": "", "vault_password": ""}]}'
+    http_version: 
+  recorded_at: Fri, 10 Feb 2017 16:16:28 GMT
 recorded_with: VCR 3.0.3

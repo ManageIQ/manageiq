@@ -47,4 +47,14 @@ class ManageIQ::Providers::AnsibleTower::Inventory::Target::AutomationManager < 
       :builder_params => {:manager => @root}
     )
   end
+
+  def credentials
+    collections[:credentials] ||= ManagerRefresh::InventoryCollection.new(
+      :model_class    => ManageIQ::Providers::AutomationManager::Authentication,
+      :association    => :credentials,
+      :manager_ref    => [:manager_ref],
+      :parent         => @root,
+      :builder_params => {:resource => @root}
+    )
+  end
 end

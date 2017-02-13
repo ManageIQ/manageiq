@@ -39,6 +39,7 @@ describe ManageIQ::Providers::AnsibleTower::AutomationManager::Refresher do
       assert_inventory_root_group
       assert_configuration_script_sources
       assert_playbooks
+      assert_credentials
     end
   end
 
@@ -50,6 +51,25 @@ describe ManageIQ::Providers::AnsibleTower::AutomationManager::Refresher do
     expect(automation_manager.inventory_groups.count).to      eq(8)
     expect(automation_manager.configuration_script_sources.count).to eq(6)
     expect(automation_manager.configuration_script_payloads.count).to eq(77)
+    expect(automation_manager.credentials.count).to eq(11)
+  end
+
+  def assert_credentials
+    expect(expected_configuration_script.authentications.count).to eq(2)
+    machine_credential = expected_configuration_script.authentications.find_by(
+      :type => ManageIQ::Providers::AnsibleTower::AutomationManager::MachineCredential
+    )
+    expect(machine_credential).to have_attributes(
+      :name   => "appliance",
+      :userid => "root",
+    )
+    cloud_credential = expected_configuration_script.authentications.find_by(
+      :type => ManageIQ::Providers::AnsibleTower::AutomationManager::AmazonCredential
+    )
+    expect(cloud_credential).to have_attributes(
+      :name   => "AWS",
+      :userid => "065ZMGNV5WNKPMX4FF82",
+    )
   end
 
   def assert_playbooks
