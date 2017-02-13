@@ -482,6 +482,20 @@ describe ServiceTemplate do
     end
   end
 
+  describe '.class_from_request_data' do
+    it 'returns the correct generic type' do
+      template_class = ServiceTemplate.class_from_request_data('prov_type' => 'generic_ansible_tower')
+
+      expect(template_class).to eq(ServiceTemplateAnsibleTower)
+    end
+
+    it 'returns the correct non generic type' do
+      template_class = ServiceTemplate.class_from_request_data('prov_type' => 'amazon')
+
+      expect(template_class).to eq(ServiceTemplate)
+    end
+  end
+
   describe '#create_catalog_item' do
     let(:user) { FactoryGirl.create(:user_with_group) }
     let(:ra1) { FactoryGirl.create(:resource_action, :action => 'Provision') }

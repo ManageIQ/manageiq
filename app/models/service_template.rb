@@ -74,6 +74,16 @@ class ServiceTemplate < ApplicationRecord
     end
   end
 
+  def self.class_from_request_data(data)
+    request_type = data['prov_type']
+    if request_type.include?('generic_')
+      generic_type = request_type.split('generic_').last
+      "ServiceTemplate#{generic_type.camelize}".constantize
+    else
+      ServiceTemplate
+    end
+  end
+
   def readonly?
     return true if super
     blueprint.try(:published?)
@@ -299,7 +309,7 @@ class ServiceTemplate < ApplicationRecord
   def template_valid?
     validate_template[:valid]
   end
-  alias_method :template_valid, :template_valid?
+  alias template_valid template_valid?
 
   def template_valid_error_message
     validate_template[:message]

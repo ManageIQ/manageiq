@@ -7,8 +7,8 @@ module Api
 
     before_action :set_additional_attributes, :only => [:show]
 
-    def create_resource(type, _id, data)
-      catalog_item_type = data['type'].try(:constantize) || collection_class(type)
+    def create_resource(_type, _id, data)
+      catalog_item_type = ServiceTemplate.class_from_request_data(data)
       catalog_item_type.create_catalog_item(data.deep_symbolize_keys, @auth_user)
     rescue => err
       raise BadRequestError, "Could not create Service Template - #{err}"

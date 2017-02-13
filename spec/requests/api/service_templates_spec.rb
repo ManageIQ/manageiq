@@ -303,7 +303,6 @@ describe "Service Templates API" do
       api_basic_authorize collection_action_identifier(:service_templates, :create)
       template = FactoryGirl.create(:orchestration_template)
       template_parameters = {
-        :type         => 'ServiceTemplateOrchestration',
         :name         => 'Orchestration Template',
         :service_type => 'atomic',
         :prov_type    => 'generic_orchestration',
