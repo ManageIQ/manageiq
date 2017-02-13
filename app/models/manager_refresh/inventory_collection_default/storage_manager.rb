@@ -1,4 +1,4 @@
-class ManagerRefresh::InventoryCollectionDefault::NetworkManager < ManagerRefresh::InventoryCollectionDefault
+class ManagerRefresh::InventoryCollectionDefault::StorageManager < ManagerRefresh::InventoryCollectionDefault
   class << self
     def cloud_volumes(extra_attributes = {})
       attributes = {
