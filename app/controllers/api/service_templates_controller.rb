@@ -5,7 +5,7 @@ module Api
     include Subcollections::ResourceActions
     include Subcollections::ServiceRequests
 
-    before_action :set_additional_attributes, :only => [:index, :show]
+    before_action :set_additional_attributes, :only => [:show]
 
     private
 

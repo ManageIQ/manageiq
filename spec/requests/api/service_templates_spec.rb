@@ -65,20 +65,6 @@ describe "Service Templates API" do
                                   "image_href"  => /^http:.*#{picture.image_href}$/)
     end
 
-    it 'returns config_info on all service template resources' do
-      api_basic_authorize collection_action_identifier(:service_templates, :read, :get)
-
-      run_get(service_templates_url, :expand => 'resources')
-
-      expected = {
-        'resources' => [
-          a_hash_including('config_info' => template.config_info.deep_stringify_keys)
-        ]
-      }
-      expect(response).to have_http_status(:ok)
-      expect(response.parsed_body).to include(expected)
-    end
-
     it 'returns config_info for a specific service_template resource' do
       api_basic_authorize action_identifier(:service_templates, :read, :resource_actions, :get)
 
