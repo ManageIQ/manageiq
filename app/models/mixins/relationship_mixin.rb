@@ -608,7 +608,7 @@ module RelationshipMixin
   end
 
   def remove_children(*child_objs)
-    child_objs = child_objs.flatten
+    child_objs = child_objs.flatten.compact
     return child_objs if child_objs.empty?
 
     child_rels = self.child_rels
