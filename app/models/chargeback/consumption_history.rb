@@ -12,6 +12,8 @@ class Chargeback
           yield(consumption) unless consumption.consumed_hours_in_interval.zero?
         end
 
+        next unless options.include_metrics?
+
         records = base_rollup.where(:timestamp => query_start_time...query_end_time, :capture_interval_name => 'hourly')
         records = cb_class.where_clause(records, options)
         records = Metric::Helper.remove_duplicate_timestamps(records)
