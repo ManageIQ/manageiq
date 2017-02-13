@@ -27,6 +27,8 @@ describe ChargebackContainerProject do
     FactoryGirl.create(:chargeback_rate, :detail_params => detail_params)
   end
 
+  let(:metric_rollup_params) { {:parent_ems_id => ems.id, :tag_names => ""} }
+
   before do
     MiqRegion.seed
     ChargebackRate.seed
@@ -57,14 +59,7 @@ describe ChargebackContainerProject do
     let(:finish_time) { report_run_time - 14.hours }
 
     before do
-      Range.new(start_time, finish_time, true).step_value(1.hour).each do |t|
-        @project.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr, :with_data,
-                                                         :timestamp                => t,
-                                                         :parent_ems_id            => ems.id,
-                                                         :tag_names                => "",
-                                                         :resource_name            => @project.name)
-      end
-
+      add_metric_rollups_for(@project, start_time...finish_time, 1.hour, metric_rollup_params)
       @metric_size = @project.metric_rollups.size
     end
 
@@ -97,14 +92,7 @@ describe ChargebackContainerProject do
   context "Monthly" do
     let(:options) { base_options.merge(:interval => 'monthly', :entity_id => @project.id, :tag => nil) }
     before do
-      Range.new(month_beginning, month_end, true).step_value(12.hours).each do |time|
-        @project.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr, :with_data,
-                                                         :timestamp                => time,
-                                                         :parent_ems_id            => ems.id,
-                                                         :tag_names                => "",
-                                                         :resource_name            => @project.name)
-      end
-
+      add_metric_rollups_for(@project, month_beginning...month_end, 12.hours, metric_rollup_params)
       @metric_size = @project.metric_rollups.size
     end
 
@@ -137,14 +125,9 @@ describe ChargebackContainerProject do
 
   context "tagged project" do
     let(:options) { base_options.merge(:interval => 'monthly', :entity_id => nil, :tag => '/managed/environment/prod') }
+
     before do
-      Range.new(month_beginning, month_end, true).step_value(12.hours).each do |time|
-        @project.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr, :with_data,
-                                                         :timestamp                => time,
-                                                         :parent_ems_id            => ems.id,
-                                                         :tag_names                => "",
-                                                         :resource_name            => @project.name)
-      end
+      add_metric_rollups_for(@project, month_beginning...month_end, 12.hours, metric_rollup_params)
     end
 
     subject { ChargebackContainerProject.build_results_for_report_ChargebackContainerProject(options).first.first }
@@ -158,14 +141,11 @@ describe ChargebackContainerProject do
 
   context "group results by tag" do
     let(:options) { base_options.merge(:interval => 'monthly', :entity_id => nil, :provider_id => 'all', :groupby_tag => 'environment') }
+
     before do
-      Range.new(month_beginning, month_end, true).step_value(12.hours).each do |time|
-        @project.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr, :with_data,
-                                                      :timestamp                => time,
-                                                      :parent_ems_id            => ems.id,
-                                                      :tag_names                => "environment/prod",
-                                                      :resource_name            => @project.name)
-      end
+      metric_rollup_params[:tag_names] = "environment/prod"
+
+      add_metric_rollups_for(@project, month_beginning...month_end, 12.hours, metric_rollup_params)
     end
 
     subject { ChargebackContainerProject.build_results_for_report_ChargebackContainerProject(options).first.first }
@@ -180,22 +160,14 @@ describe ChargebackContainerProject do
 
   context "ignore empty metrics in fixed_compute" do
     let(:options) { base_options.merge(:interval => 'monthly', :entity_id => @project.id, :tag => nil) }
+
     before do
-      Range.new(month_beginning, month_end, true).step_value(24.hours).each do |time|
-        @project.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr, :with_data,
-                                                      :timestamp                => time,
-                                                      :parent_ems_id            => ems.id,
-                                                      :tag_names                => "",
-                                                      :resource_name            => @project.name)
-        # Empty metric for fixed compute
-        @project.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr,
-                                                      :timestamp                => time + 12.hours,
-                                                      :cpu_usage_rate_average   => 0.0,
-                                                      :derived_memory_used      => 0.0,
-                                                      :parent_ems_id            => ems.id,
-                                                      :tag_names                => "",
-                                                      :resource_name            => @project.name)
-      end
+      add_metric_rollups_for(@project, month_beginning...month_end, 24.hours, metric_rollup_params)
+
+      metric_rollup_params[:cpu_usage_rate_average] = 0.0
+      metric_rollup_params[:derived_memory_used] = 0.0
+
+      add_metric_rollups_for(@project, (month_beginning + 12.hours)...month_end, 24.hours, metric_rollup_params, nil)
 
       @metric_size = @project.metric_rollups.size
     end

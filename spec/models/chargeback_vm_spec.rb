@@ -44,6 +44,16 @@ describe ChargebackVm do
     FactoryGirl.create(:chargeback_rate, :detail_params => detail_params)
   end
 
+  let(:metric_rollup_params) do
+    {
+      :tag_names             => "environment/prod",
+      :parent_host_id        => @host1.id,
+      :parent_ems_cluster_id => @ems_cluster.id,
+      :parent_ems_id         => ems.id,
+      :parent_storage_id     => @storage.id,
+    }
+  end
+
   before do
     MiqRegion.seed
     ChargebackRate.seed
@@ -94,19 +104,7 @@ describe ChargebackVm do
 
       @vm2 = FactoryGirl.create(:vm_vmware, :name => "test_vm 2", :evm_owner => admin, :created_on => month_beginning)
 
-      Range.new(month_beginning, month_end, true).step_value(12.hours).each do |time|
-        [@vm1, @vm2].each do |vm|
-          vm.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr, :with_data,
-                                                  :timestamp                         => time,
-                                                  :tag_names                         => "environment/prod",
-                                                  :parent_host_id                    => @host1.id,
-                                                  :parent_ems_cluster_id             => @ems_cluster.id,
-                                                  :parent_ems_id                     => ems.id,
-                                                  :parent_storage_id                 => @storage.id,
-                                                  :resource_name                     => @vm1.name,
-                                                 )
-        end
-      end
+      add_metric_rollups_for([@vm1, @vm2], month_beginning...month_end, 12.hours, metric_rollup_params)
     end
 
     it "only includes VMs belonging to service in results" do
@@ -124,17 +122,7 @@ describe ChargebackVm do
     let(:finish_time) { report_run_time - 14.hours }
 
     before do
-      Range.new(start_time, finish_time, true).step_value(1.hour).each do |t|
-        @vm1.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr, :with_data,
-                                                  :timestamp                         => t,
-                                                  :tag_names                         => "environment/prod",
-                                                  :parent_host_id                    => @host1.id,
-                                                  :parent_ems_cluster_id             => @ems_cluster.id,
-                                                  :parent_ems_id                     => ems.id,
-                                                  :parent_storage_id                 => @storage.id,
-                                                  :resource_name                     => @vm1.name,
-                                                 )
-      end
+      add_metric_rollups_for(@vm1, start_time...finish_time, 1.hour, metric_rollup_params)
     end
 
     subject { ChargebackVm.build_results_for_report_ChargebackVm(options).first.first }
@@ -236,18 +224,7 @@ describe ChargebackVm do
       @vm_tenant = FactoryGirl.create(:vm_vmware, :tenant_id => @tenant_child.id,
                                       :name => "test_vm_tenant", :created_on => month_beginning)
 
-      Range.new(start_time, finish_time, true).step_value(1.hour).each do |t|
-        @vm_tenant.metric_rollups <<
-          FactoryGirl.create(:metric_rollup_vm_hr, :with_data,
-                             :timestamp                         => t,
-                             :tag_names                         => "environment/prod",
-                             :parent_host_id                    => @host1.id,
-                             :parent_ems_cluster_id             => @ems_cluster.id,
-                             :parent_ems_id                     => ems.id,
-                             :parent_storage_id                 => @storage.id,
-                             :resource_name                     => @vm_tenant.name,
-                            )
-      end
+      add_metric_rollups_for(@vm_tenant, start_time...finish_time, 1.hour, metric_rollup_params)
     end
 
     subject { ChargebackVm.build_results_for_report_ChargebackVm(options_tenant).first.first }
@@ -259,18 +236,8 @@ describe ChargebackVm do
 
   context "Monthly" do
     let(:options) { base_options.merge(:interval => 'monthly') }
-    before  do
-      Range.new(month_beginning, month_end, true).step_value(12.hours).each do |time|
-        @vm1.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr, :with_data,
-                                                  :timestamp                         => time,
-                                                  :tag_names                         => "environment/prod",
-                                                  :parent_host_id                    => @host1.id,
-                                                  :parent_ems_cluster_id             => @ems_cluster.id,
-                                                  :parent_ems_id                     => ems.id,
-                                                  :parent_storage_id                 => @storage.id,
-                                                  :resource_name                     => @vm1.name,
-                                                 )
-      end
+    before do
+      add_metric_rollups_for(@vm1, month_beginning...month_end, 12.hours, metric_rollup_params)
     end
 
     subject { ChargebackVm.build_results_for_report_ChargebackVm(options).first.first }
@@ -504,17 +471,7 @@ describe ChargebackVm do
   context "Group by tags" do
     let(:options) { base_options.merge(:interval => 'monthly', :groupby_tag => 'environment') }
     before do
-      Range.new(month_beginning, month_end, true).step_value(12.hours).each do |time|
-        @vm1.metric_rollups << FactoryGirl.create(:metric_rollup_vm_hr, :with_data,
-                                                  :timestamp                         => time,
-                                                  :tag_names                         => "environment/prod",
-                                                  :parent_host_id                    => @host1.id,
-                                                  :parent_ems_cluster_id             => @ems_cluster.id,
-                                                  :parent_ems_id                     => ems.id,
-                                                  :parent_storage_id                 => @storage.id,
-                                                  :resource_name                     => @vm1.name,
-        )
-      end
+      add_metric_rollups_for(@vm1, month_beginning...month_end, 12.hours, metric_rollup_params)
     end
 
     subject { ChargebackVm.build_results_for_report_ChargebackVm(options).first.first }
