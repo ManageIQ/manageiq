@@ -25,19 +25,20 @@ describe ImportFileUpload do
       let(:exists?) { true }
 
       it "returns json with a checkmark status icon" do
-        expected_list = [{
-          :id          => 0,
-          :name        => "dialog",
-          :status_icon => ActionController::Base.helpers.image_path('16/checkmark.png'),
-          :status      => "This object already exists in the database with the same name"
-        }, {
-          :id          => 1,
-          :name        => "Dialog2",
-          :status_icon => ActionController::Base.helpers.image_path('16/checkmark.png'),
-          :status      => "This object already exists in the database with the same name"
-        }]
-
-        expect(import_file_upload.service_dialog_list).to eq(expected_list)
+        expected_list = [
+          a_hash_including(
+            :id          => 0,
+            :name        => "dialog",
+            :status_icon => %r{assets/16/checkmark.*.png},
+            :status      => "This object already exists in the database with the same name"
+          ), a_hash_including(
+            :id          => 1,
+            :name        => "Dialog2",
+            :status_icon => %r{assets/16/checkmark.*.png},
+            :status      => "This object already exists in the database with the same name"
+          )
+        ]
+        expect(import_file_upload.service_dialog_list).to match(expected_list)
       end
     end
 
@@ -45,19 +46,21 @@ describe ImportFileUpload do
       let(:exists?) { false }
 
       it "returns json with an equal-green status icon" do
-        expected_list = [{
-          :id          => 0,
-          :name        => "dialog",
-          :status_icon => ActionController::Base.helpers.image_path('16/equal-green.png'),
-          :status      => "New object"
-        }, {
-          :id          => 1,
-          :name        => "Dialog2",
-          :status_icon => ActionController::Base.helpers.image_path('16/equal-green.png'),
-          :status      => "New object"
-        }]
+        expected_list = [
+          a_hash_including(
+            :id          => 0,
+            :name        => "dialog",
+            :status_icon => %r{assets/16/equal-green.*.png},
+            :status      => "New object"
+          ), a_hash_including(
+            :id          => 1,
+            :name        => "Dialog2",
+            :status_icon => %r{assets/16/equal-green.*.png},
+            :status      => "New object"
+          )
+        ]
 
-        expect(import_file_upload.service_dialog_list).to eq(expected_list)
+        expect(import_file_upload.service_dialog_list).to match(expected_list)
       end
     end
   end
