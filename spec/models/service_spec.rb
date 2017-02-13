@@ -657,6 +657,30 @@ describe Service do
     end
   end
 
+  describe "#display" do
+    it "defaults to false" do
+      service = described_class.new
+      expect(service.display).to be(false)
+    end
+
+    it "cannot be nil" do
+      service = FactoryGirl.build(:service, :display => nil)
+      expect(service).not_to be_valid
+    end
+  end
+
+  describe "#retired" do
+    it "defaults to false" do
+      service = described_class.new
+      expect(service.retired).to be(false)
+    end
+
+    it "cannot be nil" do
+      service = FactoryGirl.build(:service, :retired => nil)
+      expect(service).not_to be_valid
+    end
+  end
+
   def create_deep_tree
     @service      = FactoryGirl.create(:service)
     @service_c1   = FactoryGirl.create(:service, :service => @service)

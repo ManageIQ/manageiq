@@ -154,7 +154,7 @@ EOF
     end
 
     it "#finish_retirement" do
-      expect(service_service.retired).to be_nil
+      expect(service_service).not_to be_retired
       expect(service_service.retirement_state).to be_nil
       expect(service_service.retires_on).to be_nil
 
