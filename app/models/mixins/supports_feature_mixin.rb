@@ -82,7 +82,6 @@ module SupportsFeatureMixin
     :disassociate_floating_ip   => 'Disassociate a Floating IP',
     :discovery                  => 'Discovery of Managers for a Provider',
     :evacuate                   => 'Evacuation',
-    :events                     => 'Query for events',
     :launch_cockpit             => 'Launch Cockpit UI',
     :live_migrate               => 'Live Migration',
     :migrate                    => 'Migration',
