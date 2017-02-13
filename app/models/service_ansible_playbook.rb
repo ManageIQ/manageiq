@@ -1,4 +1,6 @@
 class ServiceAnsiblePlaybook < ServiceGeneric
+  delegate :job_template, :to => :service_template, :allow_nil => true
+
   # A chance for taking options from automate script to override options from a service dialog
   def preprocess(action, add_options = {})
     save_job_options(action, add_options)
@@ -37,10 +39,6 @@ class ServiceAnsiblePlaybook < ServiceGeneric
   end
 
   private
-
-  def job_template(action)
-    service_template.resource_actions.find_by!(:action => action).configuration_template
-  end
 
   def get_job_options(action)
     job_opts = options["#{action.downcase}_job_options".to_sym].deep_dup
