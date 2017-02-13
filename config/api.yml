@@ -1444,7 +1444,7 @@
     - :subcollection
     :verbs: *gp
     :klass: MiqSchedule
-    :collection_actions:
+    :subcollection_actions:
       :get:
       - :name: read
         :identifier: miq_report_view
