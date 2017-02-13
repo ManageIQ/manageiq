@@ -7,6 +7,8 @@ class Flavor < ApplicationRecord
   has_many   :vms
   has_many   :cloud_tenant_flavors, :dependent => :destroy
   has_many   :cloud_tenants, :through => :cloud_tenant_flavors
+  has_many   :tenant_flavors, :dependent => :destroy
+  has_many   :tenants, :through => :tenant_flavors
 
   virtual_total :total_vms, :vms
 

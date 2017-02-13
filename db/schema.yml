@@ -300,6 +300,7 @@ cloud_networks:
 - vlan_transparent
 - extra_attributes
 - type
+- tenant_id
 cloud_object_store_containers:
 - id
 - ems_ref
@@ -308,6 +309,7 @@ cloud_object_store_containers:
 - bytes
 - ems_id
 - cloud_tenant_id
+- tenant_id
 cloud_object_store_objects:
 - id
 - ems_ref
@@ -319,6 +321,7 @@ cloud_object_store_objects:
 - ems_id
 - cloud_tenant_id
 - cloud_object_store_container_id
+- tenant_id
 cloud_resource_quotas:
 - id
 - ems_ref
@@ -330,6 +333,7 @@ cloud_resource_quotas:
 - cloud_tenant_id
 - created_at
 - updated_at
+- tenant_id
 cloud_services:
 - id
 - ems_ref
@@ -366,6 +370,7 @@ cloud_subnets:
 - network_router_id
 - network_group_id
 - parent_cloud_subnet_id
+- tenant_id
 cloud_subnets_network_ports:
 - id
 - cloud_subnet_id
@@ -405,6 +410,8 @@ cloud_volume_backups:
 - has_dependent_backups
 - cloud_volume_id
 - availability_zone_id
+- tenant_id
+- cloud_tenant_id
 cloud_volume_snapshots:
 - id
 - type
@@ -417,6 +424,7 @@ cloud_volume_snapshots:
 - creation_time
 - size
 - cloud_tenant_id
+- tenant_id
 cloud_volumes:
 - id
 - type
@@ -432,6 +440,7 @@ cloud_volumes:
 - bootable
 - creation_time
 - cloud_tenant_id
+- tenant_id
 compliance_details:
 - id
 - compliance_id
@@ -1349,6 +1358,7 @@ floating_ips:
 - cloud_network_id
 - fixed_ip_address
 - status
+- tenant_id
 generic_object_definitions:
 - id
 - name
@@ -5395,6 +5405,7 @@ network_ports:
 - binding_virtual_interface_type
 - extra_attributes
 - source
+- tenant_id
 network_ports_security_groups:
 - network_port_id
 - security_group_id
@@ -5411,6 +5422,7 @@ network_routers:
 - status
 - extra_attributes
 - network_group_id
+- tenant_id
 networks:
 - id
 - hardware_id
@@ -6312,6 +6324,7 @@ security_groups:
 - cloud_tenant_id
 - orchestration_stack_id
 - network_group_id
+- tenant_id
 security_groups_vms:
 - security_group_id
 - vm_id
@@ -6573,6 +6586,10 @@ taggings:
 tags:
 - id
 - name
+tenant_flavors:
+- id
+- tenant_id
+- flavor_id
 tenant_quotas:
 - id
 - tenant_id

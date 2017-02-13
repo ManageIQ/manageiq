@@ -9,6 +9,7 @@ class FloatingIp < ApplicationRecord
   # any network_port used
   belongs_to :vm
   belongs_to :cloud_tenant
+  belongs_to :tenant
   belongs_to :cloud_network
   belongs_to :network_port
   belongs_to :network_router
