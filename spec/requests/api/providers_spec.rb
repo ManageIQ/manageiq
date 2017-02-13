@@ -832,7 +832,7 @@ describe "Providers API" do
     end
 
     it 'queries all load balancers' do
-      api_basic_authorize subcollection_action_identifier(:providers, :load_balancers, :show, :get)
+      api_basic_authorize subcollection_action_identifier(:providers, :load_balancers, :read, :get)
       expected = {
         'resources' => [
           { 'href' => a_string_matching("#{providers_url(@provider.id)}/load_balancers/#{@load_balancer.id}") }
@@ -845,13 +845,29 @@ describe "Providers API" do
       expect(response.parsed_body).to include(expected)
     end
 
+    it "will not show a provider's load balancers without the appropriate role" do
+      api_basic_authorize
+
+      run_get("#{providers_url(@provider.id)}/load_balancers")
+
+      expect(response).to have_http_status(:forbidden)
+    end
+
     it 'queries a single load balancer' do
-      api_basic_authorize subcollection_action_identifier(:providers, :load_balancers, :show, :get)
+      api_basic_authorize subcollection_action_identifier(:providers, :load_balancers, :read, :get)
 
       run_get("#{providers_url(@provider.id)}/load_balancers/#{@load_balancer.id}")
 
       expect(response).to have_http_status(:ok)
       expect(response.parsed_body).to include('id' => @load_balancer.id)
+    end
+
+    it "will not show a provider's load balancer without the appropriate role" do
+      api_basic_authorize
+
+      run_get("#{providers_url(@provider.id)}/load_balancers/#{@load_balancer.id}")
+
+      expect(response).to have_http_status(:forbidden)
     end
   end
 
