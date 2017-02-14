@@ -1,4 +1,4 @@
-class ManagerRefresh::Inventory::Target
+class ManagerRefresh::Inventory::Persister
   attr_reader :manager, :target, :collections
 
   # @param manager [ManageIQ::Providers::BaseManager] A manager object

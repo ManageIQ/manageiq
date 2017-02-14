@@ -1,6 +1,6 @@
 class ManageIQ::Providers::AnsibleTower::InventoryCollectionDefault::AutomationManager < ManagerRefresh::InventoryCollectionDefault
   class << self
-    def inventory_groups(extra_attributes = {})
+    def inventory_root_groups(extra_attributes = {})
       attributes = {
         :model_class => ManageIQ::Providers::AutomationManager::InventoryRootGroup,
         :association => :inventory_root_groups,
@@ -35,7 +35,7 @@ class ManageIQ::Providers::AnsibleTower::InventoryCollectionDefault::AutomationM
       attributes.merge!(extra_attributes)
     end
 
-    def playbooks(extra_attributes = {})
+    def configuration_script_payloads(extra_attributes = {})
       attributes = {
         :model_class => ManageIQ::Providers::AnsibleTower::AutomationManager::Playbook,
         :association => :configuration_script_payloads,
