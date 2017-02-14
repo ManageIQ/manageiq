@@ -327,6 +327,27 @@ describe MiqWorker do
       expect(@worker.worker_options).to eq(:guid => @worker.guid)
     end
 
+    describe "#stopping_for_too_long?" do
+      subject { @worker.stopping_for_too_long? }
+
+      it "false if started" do
+        @worker.update(:status => described_class::STATUS_STARTED)
+        expect(subject).to be_falsey
+      end
+
+      it "true if stopping and not heartbeated recently" do
+        @worker.update(:status         => described_class::STATUS_STOPPING,
+                       :last_heartbeat => 30.minutes.ago)
+        expect(subject).to be_truthy
+      end
+
+      it "false if stopping and heartbeated recently" do
+        @worker.update(:status         => described_class::STATUS_STOPPING,
+                       :last_heartbeat => 1.minute.ago)
+        expect(subject).to be_falsey
+      end
+    end
+
     it "is_current? false when starting" do
       @worker.update_attribute(:status, described_class::STATUS_STARTING)
       expect(@worker.is_current?).not_to be_truthy
