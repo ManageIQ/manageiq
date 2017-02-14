@@ -11,10 +11,12 @@ module Spec
       include MiqAeMethodService::MiqAeServiceModelLegacy
 
       attr_reader :root, :object
+      attr_accessor :inputs
 
       def initialize(root, persist_state_hash = {})
         @root = root
         @persist_state_hash = persist_state_hash
+        @inputs = {}
       end
 
       def object=(obj)
