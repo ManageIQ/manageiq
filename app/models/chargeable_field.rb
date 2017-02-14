@@ -1,4 +1,8 @@
 class ChargeableField < ApplicationRecord
+  VIRTUAL_COL_USES = {
+    'v_derived_cpu_total_cores_used' => 'cpu_usage_rate_average'
+  }.freeze
+
   belongs_to :measure, :class_name => 'ChargebackRateDetailMeasure', :foreign_key => :chargeback_rate_detail_measure_id
 
   validates :metric, :uniqueness => true, :presence => true
@@ -22,5 +26,11 @@ class ChargeableField < ApplicationRecord
   def self.seed_data
     fixture_file = File.join(FIXTURE_DIR, 'chargeable_fields.yml')
     File.exist?(fixture_file) ? YAML.load_file(fixture_file) : []
+  end
+
+  def self.chargeable_cols_on_metric_rollup
+    existing_cols = MetricRollup.attribute_names
+    chargeable_cols = pluck(:metric) & existing_cols
+    chargeable_cols.map! { |x| VIRTUAL_COL_USES[x] || x }
   end
 end
