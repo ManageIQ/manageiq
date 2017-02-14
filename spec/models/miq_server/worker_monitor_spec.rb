@@ -362,6 +362,12 @@ describe "MiqWorker Monitor" do
           server.setup_drb_variables
         end
 
+        it "should mark not responding if not recently heartbeated" do
+          worker.update(:last_heartbeat => 20.minutes.ago)
+          expect(server.validate_worker(worker)).to be_falsey
+          expect(worker.reload.status).to eq(MiqWorker::STATUS_STOPPING)
+        end
+
         context "for excessive memory" do
           before { worker.memory_usage = 2.gigabytes }
 
