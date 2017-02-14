@@ -180,5 +180,9 @@ module Metric::Common
     def with_interval_and_time_range(interval, timestamp)
       where(:capture_interval_name => interval, :timestamp => timestamp)
     end
+
+    def with_resource
+      where.not(:resource => nil)
+    end
   end
 end

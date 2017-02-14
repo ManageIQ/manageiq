@@ -48,7 +48,7 @@ class ChargebackVm < Chargeback
   def self.where_clause(records, options)
     scope = records.where(:resource_type => "VmOrTemplate")
     if options[:tag] && (@report_user.nil? || !@report_user.self_service?)
-      scope.where.not(:resource_id => nil).for_tag_names(options[:tag].split("/")[2..-1])
+      scope.for_tag_names(options[:tag].split("/")[2..-1])
     else
       scope.where(:resource => vms)
     end
