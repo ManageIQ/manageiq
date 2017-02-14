@@ -14,22 +14,7 @@ module MiqReport::Generator::Html
       # Following line commented for now - for not showing repeating column values
       #       prev_data = String.new                # Initialize the prev_data variable
 
-      precision_by_column = ::Settings.reporting.precision_by_column # get the column overrides
-      precisions = {}                                         # Hash to store columns we hit
       hide_detail_rows = self.rpt_options.fetch_path(:summary, :hide_detail_rows) || false
-
-      # derive a default precision by looking at the suffixes of the column hearers
-      zero_precision_suffixes = ["(ms)", "(mb)", "(seconds)", "(b)"]
-      headers.each_with_index do |header, i|
-        next unless header.respond_to?(:downcase)
-        header = header.downcase
-        zero_precision_suffixes.each do |s|
-          if header.ends_with?(s) && precision_by_column[col_order[i]].blank?
-            precisions[col_order[i]] = 0
-            break
-          end
-        end
-      end
 
       row_limit = self.rpt_options && self.rpt_options[:row_limit] ? self.rpt_options[:row_limit] : 0
       save_val = :_undefined_                                 # Hang on to the current group value
