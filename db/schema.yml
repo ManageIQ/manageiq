@@ -140,6 +140,7 @@ authentications:
 - rhsm_pool_id
 - rhsm_server
 - manager_ref
+- options
 availability_zones:
 - id
 - ems_id
