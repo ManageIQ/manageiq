@@ -24,6 +24,25 @@ class ManagerRefresh::Inventory::Persister
     collections.keys
   end
 
+  def method_missing(method_name, *arguments, &block)
+    if inventory_collections_names.include?(method_name)
+      self.class.define_collections_reader(method_name)
+      send(method_name)
+    else
+      super
+    end
+  end
+
+  def respond_to_missing?(method_name, _include_private = false)
+    inventory_collections_names.include?(method_name) || super
+  end
+
+  def self.define_collections_reader(collection_key)
+    define_method(collection_key) do
+      collections.try(:[], collection_key)
+    end
+  end
+
   protected
 
   def initialize_inventory_collections
@@ -34,7 +53,7 @@ class ManagerRefresh::Inventory::Persister
   #
   # @param inventory_collection_data [Hash] Hash used for ManagerRefresh::InventoryCollection initialize
   def add_inventory_collection(inventory_collection_data)
-    data          = inventory_collection_data
+    data = inventory_collection_data
     data[:parent] ||= manager
 
     if !data.key?(:delete_method) && data[:model_class]
