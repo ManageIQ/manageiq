@@ -21,7 +21,6 @@ class Chargeback
         # we are building hash with grouped calculated values
         # values are grouped by resource_id and timestamp (query_start_time...query_end_time)
         records.group_by(&:resource_id).each do |_, metric_rollup_records|
-          next if metric_rollup_records.empty?
           consumption = ConsumptionWithRollups.new(metric_rollup_records, query_start_time, query_end_time)
           yield(consumption) unless consumption.consumed_hours_in_interval.zero?
         end
