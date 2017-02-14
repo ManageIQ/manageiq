@@ -33,7 +33,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Provision::Disk do
       {
         :bootable  => false,
         :interface => "VIRTIO",
-        :active    => nil,
+        :active    => true,
         :disk      => {
           :name             => nil,
           :provisioned_size => 0,

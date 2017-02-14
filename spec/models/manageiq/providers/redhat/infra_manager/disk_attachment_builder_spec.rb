@@ -36,11 +36,11 @@ describe ManageIQ::Providers::Redhat::InfraManager::DiskAttachmentBuilder do
 
     it "creates disk attachment" do
       builder = described_class.new(:size_in_mb => 10, :storage => storage, :name => "disk-1",
-                                    :thin_provisioned => true, :bootable => true, :active => false, :interface => "IDE")
+                                    :thin_provisioned => true, :bootable => true, :interface => "IDE")
       expected_disk_attachment = {
         :bootable  => true,
         :interface => "IDE",
-        :active    => false,
+        :active    => true,
         :disk      => {
           :name             => "disk-1",
           :provisioned_size => 10 * 1024 * 1024,
