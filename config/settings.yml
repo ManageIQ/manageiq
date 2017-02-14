@@ -97,6 +97,7 @@
     :purge_window_size: 10000
 :ems:
   :ems_redhat:
+    :resolve_ip_addresses: true
     :service:
       :read_timeout: 1.hour
   :ems_kubernetes:

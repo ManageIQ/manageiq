@@ -1,8 +1,10 @@
 describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
   context 'targeted refresh of a Vm' do
+    let(:ip_address) { '192.168.1.31' }
+
     before(:each) do
       _, _, zone = EvmSpecHelper.create_guid_miq_server_zone
-      @ems = FactoryGirl.create(:ems_redhat, :zone => zone, :hostname => "192.168.1.31", :ipaddress => "192.168.1.31",
+      @ems = FactoryGirl.create(:ems_redhat, :zone => zone, :hostname => ip_address, :ipaddress => ip_address,
                                 :port => 8443)
       @ems.update_authentication(:default => {:userid => "admin@internal", :password => "engine"})
 
@@ -13,6 +15,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
                                     :name    => "Default")
 
       allow(@ems).to receive(:supported_api_versions).and_return([3, 4])
+      allow(@ems).to receive(:resolve_ip_address).with(ip_address).and_return(ip_address)
     end
 
     it "should refresh a vm" do
@@ -70,12 +73,15 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
   end
 
   context 'targeted refresh after vm migration' do
+    let(:ip_address) { '10.35.161.51' }
+
     before(:each) do
       _guid, _server, zone = EvmSpecHelper.create_guid_miq_server_zone
       @ems = FactoryGirl.create(:ems_redhat, :zone => zone,
-                                :hostname => "10.35.161.51", :ipaddress => "10.35.161.51", :port => 443)
+                                :hostname => ip_address, :ipaddress => ip_address, :port => 443)
       @ems.update_authentication(:default => {:userid => "admin@internal", :password => "password"})
       allow(@ems).to receive(:supported_api_versions).and_return([3])
+      allow(@ems).to receive(:resolve_ip_address).with(ip_address).and_return(ip_address)
     end
 
     it 'should save the vms new host' do
