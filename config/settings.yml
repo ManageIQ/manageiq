@@ -1278,6 +1278,7 @@
         :ems_metrics_collector_worker_openstack_network: {}
         :ems_metrics_collector_worker_redhat: {}
         :ems_metrics_collector_worker_vmware: {}
+        :ems_metrics_openstack_default_service: "auto"
       :ems_metrics_processor_worker:
         :count: 2
         :memory_threshold: 600.megabytes
