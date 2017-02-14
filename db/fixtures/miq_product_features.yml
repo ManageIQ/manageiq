@@ -4069,8 +4069,32 @@
       :description: Edit Tags of Middleware Server Groups
       :feature_type: control
       :identifier: middleware_server_group_tag
+    - :name: Reload middleware server group
+      :description: Trigger reload operation for Middleware Server Group
+      :feature_type: admin
+      :identifier: middleware_server_group_reload
+    - :name: Stop middleware server group
+      :description: Stop Middleware Server Group
+      :feature_type: admin
+      :identifier: middleware_server_group_stop
+    - :name: Start middleware server group
+      :description: Start Middleware Server Group
+      :feature_type: admin
+      :identifier: middleware_server_group_start
+    - :name: Suspend middleware server group
+      :description: Suspend Middleware Server Group
+      :feature_type: admin
+      :identifier: middleware_server_group_suspend
+    - :name: Resume middleware server group
+      :description: Resume a suspended Middleware Server Group
+      :feature_type: admin
+      :identifier: middleware_server_group_resume
+    - :name: Restart middleware server group
+      :description: Restart a Middleware Server Group
+      :feature_type: admin
+      :identifier: middleware_server_group_restart
     - :name: Add middleware deployment
-      :description: Add middleware deployment
+      :description: Add middleware deployment for Server Group
       :feature_type: admin
       :identifier: middleware_group_deployment_add
 

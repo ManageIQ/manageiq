@@ -175,6 +175,21 @@ module ManageIQ::Providers
       with_provider_connection(&:alerts)
     end
 
+    # server ops
+    def shutdown_middleware_server(ems_ref, params = {})
+      timeout = params[:timeout] || 0
+      run_generic_operation(:Shutdown, ems_ref, :restart => false, :timeout => timeout)
+    end
+
+    def suspend_middleware_server(ems_ref, params = {})
+      timeout = params[:timeout] || 0
+      run_generic_operation(:Suspend, ems_ref, :timeout => timeout)
+    end
+
+    def resume_middleware_server(ems_ref)
+      run_generic_operation(:Resume, ems_ref)
+    end
+
     def reload_middleware_server(ems_ref)
       run_generic_operation(:Reload, ems_ref)
     end
@@ -195,6 +210,7 @@ module ManageIQ::Providers
       run_generic_operation(:Shutdown, ems_ref, :restart => true)
     end
 
+    # domain server ops
     def restart_middleware_domain_server(ems_ref)
       run_generic_operation(:Restart, ems_ref)
     end
@@ -203,18 +219,31 @@ module ManageIQ::Providers
       run_generic_operation(:Kill, ems_ref)
     end
 
-    def shutdown_middleware_server(ems_ref, params)
-      timeout = params[:timeout] || 0
-      run_generic_operation(:Shutdown, ems_ref, :restart => false, :timeout => timeout)
+    # server group ops
+    def start_middleware_server_group(ems_ref)
+      run_generic_operation('Start Servers', ems_ref)
     end
 
-    def suspend_middleware_server(ems_ref, params)
+    def stop_middleware_server_group(ems_ref, params = {})
       timeout = params[:timeout] || 0
-      run_generic_operation(:Suspend, ems_ref, :timeout => timeout)
+      run_generic_operation('Stop Servers', ems_ref, :timeout => timeout)
     end
 
-    def resume_middleware_server(ems_ref)
-      run_generic_operation(:Resume, ems_ref)
+    def restart_middleware_server_group(ems_ref)
+      run_generic_operation('Restart Servers', ems_ref)
+    end
+
+    def reload_middleware_server_group(ems_ref)
+      run_generic_operation('Reload Servers', ems_ref)
+    end
+
+    def suspend_middleware_server_group(ems_ref, params = {})
+      timeout = params[:timeout] || 0
+      run_generic_operation('Suspend Servers', ems_ref, :timeout => timeout)
+    end
+
+    def resume_middleware_server_group(ems_ref)
+      run_generic_operation('Resume Servers', ems_ref)
     end
 
     def create_jdr_report(ems_ref)
