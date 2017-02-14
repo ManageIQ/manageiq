@@ -53,10 +53,10 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
   def self.create_job_templates(service_name, description, config_info, auth_user)
     [:provision, :retirement, :reconfigure].each_with_object({}) do |action, hash|
       next unless config_info[action]
-      job_template_name = unique_job_template_name(service_name, action)
-      hash[action] = { :configuration_template => create_job_template(job_template_name.to_s, description, config_info[action], auth_user) }
+      hash[action] = { :configuration_template => create_job_template("miq_#{service_name}_#{action}", description, config_info[action], auth_user) }
     end
   end
+  private_class_method :create_job_templates
 
   def self.create_job_template(name, description, info, auth_user)
     tower, params = build_parameter_list(name, description, info)
@@ -66,6 +66,7 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
     raise task.message unless task.status == "Ok"
     task.task_results
   end
+  private_class_method :create_job_template
 
   def self.build_parameter_list(name, description, info)
     playbook = ManageIQ::Providers::AnsibleTower::AutomationManager::Playbook.find(info[:playbook_id])
@@ -80,19 +81,17 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
       :ask_limit_on_launch      => true,
       :ask_inventory_on_launch  => true,
       :ask_credential_on_launch => true
-    }.merge(info.slice(:extra_vars))
+    }
+    params[:extra_vars] = info[:extra_vars].to_json if info[:extra_vars]
 
     [:credential, :cloud_credential, :network_credential].each do |credential|
       cred_sym = "#{credential}_id".to_sym
       params[credential] = Authentication.find(info[cred_sym]).manager_ref if info[cred_sym]
     end
 
-    [tower, params]
+    [tower, params.compact]
   end
-
-  def self.unique_job_template_name(service_name, action)
-    "#{service_name}_#{action}_#{rand(36**8).to_s(36)}"
-  end
+  private_class_method :build_parameter_list
 
   def self.validate_config_info(options)
     info = options[:config_info]

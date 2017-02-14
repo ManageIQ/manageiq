@@ -41,13 +41,14 @@ describe ServiceTemplateAnsiblePlaybook do
 
     let(:catalog_item_options_two) do
       {
-        :name        => 'playbook service',
-        :display     => 'false',
-        :description => 'a description',
-        :config_info => {
+        :name                        => 'playbook service',
+        :display                     => 'false',
+        :service_template_catalog_id => service_template_catalog.id,
+        :description                 => 'a description',
+        :config_info                 => {
           :provision   => {
             :new_dialog_name => 'playbook dialog',
-            :playbook_id     => 1,
+            :playbook_id     => playbook.id,
             :extra_vars      => {
               'key1' => 'val1',
               'key2' => 'val2'
@@ -67,7 +68,7 @@ describe ServiceTemplateAnsiblePlaybook do
 
     it '#create_job_templates' do
       expect(described_class).to receive(:create_job_template).exactly(3).times.and_return(job_template)
-      options_hash = described_class.create_job_templates(catalog_item_options_two[:name], catalog_item_options_two[:description], catalog_item_options_two[:config_info], 'system')
+      options_hash = described_class.send(:create_job_templates, catalog_item_options_two[:name], catalog_item_options_two[:description], catalog_item_options_two[:config_info], 'system')
       [:provision, :retirement, :reconfigure].each do |action|
         expect(options_hash[action.to_sym][:configuration_template]).to eq job_template
       end
@@ -78,7 +79,7 @@ describe ServiceTemplateAnsiblePlaybook do
       expect(ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationScript).to receive(:create_in_provider_queue).once.with(ems.id, {}, 'system')
       expect(MiqTask).to receive(:wait_for_taskid).with(any_args).once.and_return(instance_double('MiqTask', :task_results => {}, :status => 'Ok'))
 
-      described_class.create_job_template(catalog_item_options[:name], catalog_item_options[:description], catalog_item_options[:config_info], 'system')
+      described_class.send(:create_job_template, catalog_item_options[:name], catalog_item_options[:description], catalog_item_options[:config_info], 'system')
     end
 
     it 'create_job_template exception' do
@@ -86,33 +87,30 @@ describe ServiceTemplateAnsiblePlaybook do
       expect(ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationScript).to receive(:create_in_provider_queue).once.with(ems.id, {}, 'system')
       expect(MiqTask).to receive(:wait_for_taskid).with(any_args).once.and_raise(Exception, 'bad job template')
 
-      expect { described_class.create_job_template(catalog_item_options[:name], catalog_item_options[:description], catalog_item_options[:config_info], 'system') }.to raise_error(Exception)
+      expect { described_class.send(:create_job_template, catalog_item_options[:name], catalog_item_options[:description], catalog_item_options[:config_info], 'system') }.to raise_error(Exception)
     end
 
     it '#build_parameter_list' do
       name = catalog_item_options[:name]
+      catalog_extra_vars = catalog_item_options_two
       description = catalog_item_options[:description]
       info = catalog_item_options[:config_info][:provision]
-      _tower, params = described_class.build_parameter_list(name, description, info)
+      _tower, params = described_class.send(:build_parameter_list, name, description, info)
+      _tower_two, params_two = described_class.send(:build_parameter_list, catalog_extra_vars[:name], catalog_extra_vars[:description], catalog_extra_vars[:config_info][:provision])
 
       expect(params).to have_attributes(
         :name               => name,
         :description        => description,
-        :extra_vars         => nil,
         :credential         => '6',
-        :cloud_credential   => nil,
         :network_credential => '10'
       )
-    end
 
-    it '#unique_job_template_name' do
-      [:provision, :retirement, :reconfigure].each do |type|
-        name = described_class.unique_job_template_name("blah", type)
-        name_list = name.split('_')
-        expect(name).to_not eq "blah_#{type}"
-        expect(name_list.size).to eq 3
-        expect(name_list).to include('blah', type.to_s)
-      end
+      expect(params.keys).to_not include(:extra_vars, :cloud_credentials)
+      expect(params_two.keys).to include(:extra_vars)
+      expect(JSON.parse(params_two[:extra_vars])).to have_attributes(
+        'key1' => 'val1',
+        'key2' => 'val2'
+      )
     end
   end
 end
