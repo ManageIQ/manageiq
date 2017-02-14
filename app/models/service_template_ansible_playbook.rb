@@ -7,6 +7,10 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
     '/Service/Generic/StateMachines/GenericLifecycle/retire'
   end
 
+  def job_template(action)
+    resource_actions.find_by!(:action => action).configuration_template
+  end
+
   # create ServiceTemplate and supporting ServiceResources and ResourceActions
   # options
   #   :name

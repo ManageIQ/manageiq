@@ -5,7 +5,7 @@ describe(ServiceAnsiblePlaybook) do
   let(:action)         { ResourceAction::PROVISION }
 
   let(:loaded_service) do
-    service_template = FactoryGirl.create(:service_template)
+    service_template = FactoryGirl.create(:service_template_ansible_playbook)
     service_template.resource_actions.build(:action => action, :configuration_template => tower_job_temp)
     service_template.save!
     FactoryGirl.create(:service_ansible_playbook, :options => provision_options, :service_template => service_template)
