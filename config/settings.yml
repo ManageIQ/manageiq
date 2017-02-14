@@ -1062,6 +1062,7 @@
 :repository_scanning:
   :defaultsmartproxy:
 :server:
+  :asynchronous_notifications: true
   :case_sensitive_name_search: false
   :company: My Company
   :console_proxy_disabled: true

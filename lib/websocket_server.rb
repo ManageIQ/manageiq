@@ -39,9 +39,7 @@ class WebsocketServer
 
   def call(env)
     if WebSocket::Driver.websocket?(env) && same_origin_as_host?(env)
-
-      # ActionCable causes live reload crashes
-      if env['REQUEST_URI'] =~ %r{^/ws/notifications}
+      if env['REQUEST_URI'] =~ %r{^/ws/notifications} && ::Settings.server.asynchronous_notifications
         ActionCable.server.call(env)
       else
         exp = %r{^/ws/console/([a-zA-Z0-9]+)/?$}.match(env['REQUEST_URI'])

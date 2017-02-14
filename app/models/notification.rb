@@ -8,6 +8,7 @@ class Notification < ApplicationRecord
 
   accepts_nested_attributes_for :notification_recipients
   before_create :set_notification_recipients
+  # Do not emit notifications if they are not enabled for the server
   after_commit :emit_message, :on => :create
 
   serialize :options, Hash
@@ -35,6 +36,7 @@ class Notification < ApplicationRecord
   private
 
   def emit_message
+    return unless ::Settings.server.asynchronous_notifications
     notification_recipients.pluck(:id, :user_id).each do |id, user|
       to_h[:id] = id
       ActionCable.server.broadcast("notifications_#{user}", to_h)
