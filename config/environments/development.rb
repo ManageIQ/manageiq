@@ -36,6 +36,8 @@ Vmdb::Application.configure do
   # Expands the lines which load the assets
   config.assets.debug = true
 
+  config.assets.quiet = true
+
   # Include miq_debug in the list of assets here because it is only used in development
   config.assets.precompile << 'miq_debug.js'
   config.assets.precompile << 'miq_debug.css'
