@@ -184,6 +184,7 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
   end
 
   def history_database_name
+    @history_database_name = connection_configurations.try(:metrics).try(:endpoint).try(:path)
     @history_database_name ||= begin
                                  version = version_3_0? ? '3_0' : '>3_0'
                                  self.class.history_database_name_for(version)
