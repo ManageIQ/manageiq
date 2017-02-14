@@ -26,6 +26,8 @@ class ManageIQ::Providers::Openstack::BaseMetricsCapture < ManageIQ::Providers::
     raise "No EMS defined" if target.ext_management_system.nil?
 
     metering_service, = Benchmark.realtime_block(:connect) do
+      return target.ext_management_system.connect(:service => available_metric_services[metric_service_from_settings]) if \
+        available_metric_services.keys.include? metric_service_from_settings
       begin
         target.ext_management_system.connect(:service => "Metric")
       rescue Exception => ex
@@ -385,5 +387,16 @@ class ManageIQ::Providers::Openstack::BaseMetricsCapture < ManageIQ::Providers::
     # http://lists.openstack.org/pipermail/openstack-dev/2012-November/002235.html
     datetime << "Z" if datetime.size == 19
     Time.parse(datetime)
+  end
+
+  def metric_service_from_settings
+    Settings[:workers][:worker_base][:queue_worker_base][:ems_metrics_collector_worker][:ems_metrics_openstack_default_service]
+  rescue StandardError => err
+    $log.warn "#{_log.prefix} Settings key ems_metrics_openstack_default_service is missing, #{err}."
+    nil
+  end
+
+  def available_metric_services
+    {"gnocchi" => "metric", "ceilometer" => "metering"}
   end
 end
