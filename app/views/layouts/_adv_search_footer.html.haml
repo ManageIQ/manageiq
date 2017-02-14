@@ -6,18 +6,21 @@
 #adv_search_footer
   - if mode == "search"
     - if @edit[@expkey][:exp_search_expressions].blank? && report_expressions.blank?
-      = button_tag(_("Load..."),
+      = button_tag(_("Load"),
                    :class => "btn btn-primary disabled pull-left",
                    :alt   => t = _("No saved filters or report filters are available to load"),
                    :title => t)
     - else
-      = button_tag(_('Load...'),
+      = button_tag(_('Load'),
                    :class   => "btn btn-primary pull-left",
                    :alt     => t = _("Load a filter"),
                    :title   => t,
                    :onclick => "miqAjaxButton('#{url_for(:action => 'adv_search_button', :button => "load")}');")
     - if @edit[@expkey][:exp_table].flatten.first == "???"
-      = button_tag(_("Apply"), :class => "btn btn-primary disabled")
+      = button_tag(_("Apply"),
+                   :class => "btn btn-primary disabled",
+                   :alt   => t = _("No filter available"),
+                   :title => t)
     - else
       = button_tag(_('Apply'),
                    :class   => "btn btn-primary",
@@ -36,15 +39,21 @@
                    :title   => t,
                    :onclick => "miqAjaxButton('#{url_for(:action => 'adv_search_button', :button => "delete")}');")
     - if @edit[@expkey][:exp_table].flatten.first == "???"
-      = button_tag(_("Save..."), :class => "btn btn-primary disabled")
+      = button_tag(_("Save"),
+                   :class => "btn btn-primary disabled",
+                   :alt   => t = _("No filter available"),
+                   :title => t)
     - else
-      = button_tag(_('Save...'),
+      = button_tag(_('Save'),
                    :class   => "btn btn-primary",
                    :alt     => t = _("Save the current filter"),
                    :title   => t,
                    :onclick => "miqAjaxButton('#{url_for(:action => 'adv_search_button', :button => "save")}');")
     - if @edit[@expkey][:exp_table].flatten.first == "???"
-      = button_tag(_("Reset"), :class => "btn btn-default disabled")
+      = button_tag(_("Reset"),
+                   :class => "btn btn-default disabled",
+                   :alt   => t = _("No filter available"),
+                   :title => t)
     - else
       = button_tag(_('Reset'),
                    :class   => "btn btn-default",

@@ -71,7 +71,10 @@
         .modal-footer
           #buttons
             %span#quick_search_buttons_off
-              = button_tag(t = _("Apply"), :class => "btn btn-primary disabled")
+              = button_tag(_("Apply"),
+                           :class => "btn btn-primary disabled",
+                           :alt   => t = _("No input to apply"),
+                           :title => t)
             %span#quick_search_buttons_on{:style => "display:none;"}
               = link_to(t,
                         {:action => "quick_search",
