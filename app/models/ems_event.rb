@@ -196,6 +196,7 @@ class EmsEvent < EventStream
     target_type = "src_vm_or_template"  if target_type == "src_vm"
     target_type = "dest_vm_or_template" if target_type == "dest_vm"
     target_type = "middleware_server"   if event.event_type == "hawkular_alert"
+    target_type = "container_node"      if event.event_type == "datawarehouse_alert"
 
     event.send(target_type)
   end
