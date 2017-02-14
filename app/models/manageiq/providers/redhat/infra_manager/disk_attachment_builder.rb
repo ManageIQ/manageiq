@@ -5,7 +5,6 @@ class ManageIQ::Providers::Redhat::InfraManager::DiskAttachmentBuilder
     @name = options[:name]
     @thin_provisioned = BooleanParameter.new(options[:thin_provisioned])
     @bootable = BooleanParameter.new(options[:bootable])
-    @active = options[:active]
     @interface = options[:interface]
   end
 
@@ -14,7 +13,7 @@ class ManageIQ::Providers::Redhat::InfraManager::DiskAttachmentBuilder
     {
       :bootable  => @bootable.true?,
       :interface => @interface || "VIRTIO",
-      :active    => @active,
+      :active    => true,
       :disk      => {
         :name             => @name,
         :provisioned_size => @size_in_mb.to_i.megabytes,
