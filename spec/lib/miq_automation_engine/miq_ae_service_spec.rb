@@ -115,7 +115,6 @@ module MiqAeServiceSpec
           Category
           Datacenter
           ManageIQ::Providers::BaseManager
-          ManageIQ::Providers::PhysicalInfraManager
           ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job
           VmServer
           VmSynchronize

@@ -29,6 +29,10 @@ unless dependencies.detect { |d| d.name == "manageiq-ui-classic" }
   gem "manageiq-ui-classic", :git => "https://github.com/ManageIQ/manageiq-ui-classic", :branch => "master"
 end
 
+unless dependencies.detect { |d| d.name == "manageiq-providers-lenovo" }
+  gem "manageiq-providers-lenovo", :git => "https://github.com/ManageIQ/manageiq-providers-lenovo", :branch => "master"
+end
+
 # Unmodified gems
 gem "activerecord-session_store",     "~>1.0.0"
 gem "acts_as_list",                   "~>0.7.2"
