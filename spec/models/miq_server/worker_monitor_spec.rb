@@ -351,48 +351,60 @@ describe "MiqWorker Monitor" do
         end
       end
 
-      context "with worker that is using a lot of memory" do
+      context "threshold validation" do
+        let(:worker) { FactoryGirl.create(:miq_worker, :miq_server_id => server.id, :pid => 42) }
+        let(:server) { @miq_server }
+
         before(:each) do
-          @worker1 = FactoryGirl.create(:miq_worker, :miq_server_id => @miq_server.id, :memory_usage => 2.gigabytes, :pid => 42)
-          allow_any_instance_of(MiqServer).to receive(:get_time_threshold).and_return(2.minutes)
-          allow_any_instance_of(MiqServer).to receive(:get_memory_threshold).and_return(500.megabytes)
-          allow_any_instance_of(MiqServer).to receive(:get_restart_interval).and_return(0.hours)
-          @miq_server.setup_drb_variables
+          allow(server).to receive(:get_time_threshold).and_return(2.minutes)
+          allow(server).to receive(:get_memory_threshold).and_return(500.megabytes)
+          allow(server).to receive(:get_restart_interval).and_return(0.hours)
+          server.setup_drb_variables
         end
 
-        it "should not trigger memory threshold if worker is creating" do
-          @worker1.status = MiqWorker::STATUS_CREATING
-          expect(@miq_server.validate_worker(@worker1)).to be_truthy
+        it "should mark not responding if not recently heartbeated" do
+          worker.update(:last_heartbeat => 20.minutes.ago)
+          expect(server.validate_worker(worker)).to be_falsey
+          expect(worker.reload.status).to eq(MiqWorker::STATUS_STOPPING)
         end
 
-        it "should not trigger memory threshold if worker is starting" do
-          @worker1.status = MiqWorker::STATUS_STARTING
-          expect(@miq_server.validate_worker(@worker1)).to be_truthy
-        end
+        context "for excessive memory" do
+          before { worker.memory_usage = 2.gigabytes }
 
-        it "should trigger memory threshold if worker is started" do
-          @worker1.status = MiqWorker::STATUS_STARTED
-          expect(@miq_server).to receive(:worker_set_monitor_status).with(@worker1.pid, :waiting_for_stop_before_restart).once
-          @miq_server.validate_worker(@worker1)
-        end
+          it "should not trigger memory threshold if worker is creating" do
+            worker.status = MiqWorker::STATUS_CREATING
+            expect(server.validate_worker(worker)).to be_truthy
+          end
 
-        it "should trigger memory threshold if worker is ready" do
-          @worker1.status = MiqWorker::STATUS_READY
-          expect(@miq_server).to receive(:worker_set_monitor_status).with(@worker1.pid, :waiting_for_stop_before_restart).once
-          @miq_server.validate_worker(@worker1)
-        end
+          it "should not trigger memory threshold if worker is starting" do
+            worker.status = MiqWorker::STATUS_STARTING
+            expect(server.validate_worker(worker)).to be_truthy
+          end
 
-        it "should trigger memory threshold if worker is working" do
-          @worker1.status = MiqWorker::STATUS_WORKING
-          expect(@miq_server).to receive(:worker_set_monitor_status).with(@worker1.pid, :waiting_for_stop_before_restart).once
-          @miq_server.validate_worker(@worker1)
-        end
+          it "should trigger memory threshold if worker is started" do
+            worker.status = MiqWorker::STATUS_STARTED
+            expect(server).to receive(:worker_set_monitor_status).with(worker.pid, :waiting_for_stop_before_restart).once
+            server.validate_worker(worker)
+          end
 
-        it "should return proper message on heartbeat" do
-          @worker1.status = MiqWorker::STATUS_READY
-          expect(@miq_server.worker_heartbeat(@worker1.pid)).to eq([])
-          @miq_server.validate_worker(@worker1) # Validation will populate message
-          expect(@miq_server.worker_heartbeat(@worker1.pid)).to eq([['exit']])
+          it "should trigger memory threshold if worker is ready" do
+            worker.status = MiqWorker::STATUS_READY
+            expect(server).to receive(:worker_set_monitor_status).with(worker.pid, :waiting_for_stop_before_restart).once
+            server.validate_worker(worker)
+          end
+
+          it "should trigger memory threshold if worker is working" do
+            worker.status = MiqWorker::STATUS_WORKING
+            expect(server).to receive(:worker_set_monitor_status).with(worker.pid, :waiting_for_stop_before_restart).once
+            server.validate_worker(worker)
+          end
+
+          it "should return proper message on heartbeat" do
+            worker.status = MiqWorker::STATUS_READY
+            expect(server.worker_heartbeat(worker.pid)).to eq([])
+            server.validate_worker(worker) # Validation will populate message
+            expect(server.worker_heartbeat(worker.pid)).to eq([['exit']])
+          end
         end
       end
     end
