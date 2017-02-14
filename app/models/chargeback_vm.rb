@@ -57,6 +57,8 @@ class ChargebackVm < Chargeback
   def self.extra_resources_without_rollups
     # support hyper-v for which we do not collect metrics yet
     scope = ManageIQ::Providers::Microsoft::InfraManager::Vm
+    scope = scope.eager_load(:hardware, :taggings, :tags, :host, :ems_cluster, :storage, :ext_management_system,
+                             :tenant)
     if @options[:tag] && (@report_user.nil? || !@report_user.self_service?)
       scope.find_tagged_with(:any => @options[:tag], :ns => '*')
     else
