@@ -1801,9 +1801,7 @@ class VmOrTemplate < ApplicationRecord
     MiqTemplate.where(:id => ids).exists?
   end
 
-  def supports_snapshots?
-    false
-  end
+  supports_not :snapshots
 
   def self.batch_operation_supported?(operation, ids)
     VmOrTemplate.where(:id => ids).all? do |vm_or_template|

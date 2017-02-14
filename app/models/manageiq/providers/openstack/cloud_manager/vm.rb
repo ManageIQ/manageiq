@@ -11,6 +11,8 @@ class ManageIQ::Providers::Openstack::CloudManager::Vm < ManageIQ::Providers::Cl
     end
   end
 
+  supports :snapshots
+
   POWER_STATES = {
     "ACTIVE"            => "on",
     "SHUTOFF"           => "off",
@@ -159,10 +161,6 @@ class ManageIQ::Providers::Openstack::CloudManager::Vm < ManageIQ::Providers::Cl
   end
 
   def memory_mb_available?
-    true
-  end
-
-  def supports_snapshots?
     true
   end
 end
