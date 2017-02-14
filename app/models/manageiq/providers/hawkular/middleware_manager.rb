@@ -221,29 +221,23 @@ module ManageIQ::Providers
 
     # server group ops
     def start_middleware_server_group(ems_ref)
-      # blocking: boolean
       run_generic_operation('Start Servers', ems_ref)
     end
 
     def stop_middleware_server_group(ems_ref, params)
-      # blocking: boolean
-      # timeout: int
       timeout = params[:timeout] || 0
       run_generic_operation('Stop Servers', ems_ref, :timeout => timeout)
     end
 
     def restart_middleware_server_group(ems_ref)
-      # blocking: boolean
       run_generic_operation('Restart Servers', ems_ref)
     end
 
     def reload_middleware_server_group(ems_ref)
-      # blocking: boolean
       run_generic_operation('Reload Servers', ems_ref)
     end
 
     def suspend_middleware_server_group(ems_ref, params)
-      # timeout: int
       timeout = params[:timeout] || 0
       run_generic_operation('Suspend Servers', ems_ref, :timeout => timeout)
     end
