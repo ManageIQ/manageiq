@@ -3,8 +3,8 @@ class ManageIQ::Providers::AnsibleTower::Inventory::Target::AutomationManager < 
     collections[:inventory_groups] ||= ManagerRefresh::InventoryCollection.new(
       :model_class    => ManageIQ::Providers::AutomationManager::InventoryRootGroup,
       :association    => :inventory_root_groups,
-      :parent         => @root,
-      :builder_params => {:manager => @root}
+      :parent         => target,
+      :builder_params => {:manager => manager}
     )
   end
 
@@ -12,9 +12,9 @@ class ManageIQ::Providers::AnsibleTower::Inventory::Target::AutomationManager < 
     collections[:configured_systems] ||= ManagerRefresh::InventoryCollection.new(
       :model_class    => ManageIQ::Providers::AnsibleTower::AutomationManager::ConfiguredSystem,
       :association    => :configured_systems,
-      :parent         => @root,
+      :parent         => target,
       :manager_ref    => [:manager_ref],
-      :builder_params => {:manager => @root}
+      :builder_params => {:manager => manager}
     )
   end
 
@@ -22,9 +22,9 @@ class ManageIQ::Providers::AnsibleTower::Inventory::Target::AutomationManager < 
     collections[:configuration_scripts] ||= ManagerRefresh::InventoryCollection.new(
       :model_class    => ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationScript,
       :association    => :configuration_scripts,
-      :parent         => @root,
+      :parent         => target,
       :manager_ref    => [:manager_ref],
-      :builder_params => {:manager => @root}
+      :builder_params => {:manager => manager}
     )
   end
 
@@ -33,8 +33,8 @@ class ManageIQ::Providers::AnsibleTower::Inventory::Target::AutomationManager < 
       :model_class    => ConfigurationScriptSource,
       :association    => :configuration_script_sources,
       :manager_ref    => [:manager_ref],
-      :parent         => @root,
-      :builder_params => {:manager => @root}
+      :parent         => target,
+      :builder_params => {:manager => manager}
     )
   end
 
@@ -43,8 +43,8 @@ class ManageIQ::Providers::AnsibleTower::Inventory::Target::AutomationManager < 
       :model_class    => ManageIQ::Providers::AnsibleTower::AutomationManager::Playbook,
       :association    => :configuration_script_payloads,
       :manager_ref    => [:manager_ref],
-      :parent         => @root,
-      :builder_params => {:manager => @root}
+      :parent         => target,
+      :builder_params => {:manager => manager}
     )
   end
 
