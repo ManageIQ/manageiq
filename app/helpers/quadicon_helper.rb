@@ -28,7 +28,7 @@ module QuadiconHelper
   end
 
   def quadicon_vm_attributes(item)
-    @quad_vm_attrs ||= vm_quad_link_attributes(item)
+    vm_quad_link_attributes(item)
   end
 
   def quadicon_vm_attributes_present?(item)
