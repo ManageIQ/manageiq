@@ -100,7 +100,7 @@ module MiqServer::WorkerManagement::Monitor
   end
 
   def monitor_reason_not_responding?(w)
-    [Reason::NOT_RESPONDING, Reason::MEMORY_EXCEEDED].include?(worker_get_monitor_reason(w.pid)) || w.stopping_for_too_long?
+    [MiqServer::NOT_RESPONDING, MiqServer::MEMORY_EXCEEDED].include?(worker_get_monitor_reason(w.pid)) || w.stopping_for_too_long?
   end
 
   def do_system_limit_exceeded
@@ -113,7 +113,7 @@ module MiqServer::WorkerManagement::Monitor
       msg = "#{w.format_full_log_msg} is being stopped because system resources exceeded threshold, it will be restarted once memory has freed up"
       _log.warn(msg)
       MiqEvent.raise_evm_event_queue_in_region(w.miq_server, "evm_server_memory_exceeded", :event_details => msg, :type => w.class.name)
-      restart_worker(w, Reason::MEMORY_EXCEEDED)
+      restart_worker(w, MiqServer::MEMORY_EXCEEDED)
       break
     end
   end
