@@ -15,11 +15,11 @@ Vmdb::Application.routes.draw do
 
     unless defined?(API_ACTIONS)
       API_ACTIONS = {
-        :get    => "show",
-        :post   => "update",
-        :put    => "update",
-        :patch  => "update",
-        :delete => "destroy",
+        :get     => "show",
+        :post    => "update",
+        :put     => "update",
+        :patch   => "update",
+        :delete  => "destroy",
         :options => "options"
       }.freeze
     end
