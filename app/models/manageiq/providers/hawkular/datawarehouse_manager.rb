@@ -13,6 +13,11 @@ module ManageIQ::Providers
       provider.port || DEFAULT_PORT
     end
 
+    CLIENT_KLASSES = {
+      :alerts  => ::Hawkular::Alerts::AlertsClient,
+      :metrics => ::Hawkular::Metrics::Client
+    }.freeze
+
     def verify_credentials(_auth_type = nil, options = {})
       connect(options).fetch_version_and_status
     rescue URI::InvalidComponentError
@@ -38,9 +43,9 @@ module ManageIQ::Providers
     end
 
     # Hawkular Client
-    def self.raw_connect(hostname, port, token, alerts = false)
-      client = alerts ? ::Hawkular::Alerts::AlertsClient : ::Hawkular::Metrics::Client
-      client.new(
+    def self.raw_connect(hostname, port, token, type = :alerts)
+      raise ArgumentError, "Client not found for #{type}" unless CLIENT_KLASSES.keys.include?(type)
+      CLIENT_KLASSES[type].new(
         URI::HTTPS.build(:host => hostname, :port => port.to_i).to_s,
         { :token => token },
         { :tenant => '_system', :verify_ssl => verify_ssl_mode }
@@ -48,10 +53,22 @@ module ManageIQ::Providers
     end
 
     def connect(options = {})
-      @client ||= self.class.raw_connect(hostname,
-                                         port,
-                                         authentication_token('default'),
-                                         options[:alerts])
+      raise ArgumentError, "Client not found for #{type}" unless CLIENT_KLASSES.keys.include?(options[:type])
+      @clients ||= {}
+      @clients[options[:type]] ||= self.class.raw_connect(
+        hostname,
+        port,
+        authentication_token('default'),
+        options[:type]
+      )
+    end
+
+    def alerts_client
+      connect(:type => :alerts)
+    end
+
+    def metrics_client
+      connect(:type => :metrics)
     end
 
     def supports_port?
