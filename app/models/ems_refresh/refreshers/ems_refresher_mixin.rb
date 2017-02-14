@@ -136,7 +136,7 @@ module EmsRefresh
           inventory_collections, = Benchmark.realtime_block(:parse_inventory) do
             provider_module = ManageIQ::Providers::Inflector.provider_module(ems.class).name
             inventory_target_class = "#{provider_module}::Inventory::Target::#{target.class.name.demodulize}".safe_constantize
-            inventory_target = inventory_target_class.new(target)
+            inventory_target = inventory_target_class.new(collector)
 
             parser_class = "#{provider_module}::Inventory::Parser::#{target.class.name.demodulize}".safe_constantize
             parser = parser_class.new
