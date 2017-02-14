@@ -21,7 +21,6 @@ class Chargeback
         # we are building hash with grouped calculated values
         # values are grouped by resource_id and timestamp (query_start_time...query_end_time)
         records.group_by(&:resource_id).each do |_, metric_rollup_records|
-          metric_rollup_records = metric_rollup_records.select { |x| x.resource.present? }
           next if metric_rollup_records.empty?
           consumption = ConsumptionWithRollups.new(metric_rollup_records, query_start_time, query_end_time)
           yield(consumption) unless consumption.consumed_hours_in_interval.zero?
@@ -38,8 +37,10 @@ class Chargeback
         :parent_storage     => :tags,
         :parent_ems         => :tags)
                                 .select(*Metric::BASE_COLS).order('resource_id, timestamp')
-      base_rollup.select(*ChargeableField.chargeable_cols_on_metric_rollup)
+
+      base_rollup.select(*ChargeableField.chargeable_cols_on_metric_rollup).with_resource
     end
+
     private_class_method :base_rollup_scope
   end
 end
