@@ -1,13 +1,19 @@
 class ManagerRefresh::Inventory::Target
-  attr_reader :collector, :collections
+  attr_reader :manager, :target, :collections
 
-  delegate :manager, :target, :to => :collector
+  # @param manager [ManageIQ::Providers::BaseManager] A manager object
+  # @param target [Object] A refresh Target object
+  def initialize(manager, refresh_target)
+    @manager = manager
+    @target  = refresh_target
 
-  # @param collector [ManagerRefresh::Inventory::Collector] A collector object
-  def initialize(collector)
-    @collector   = collector
     @collections = {}
+
     initialize_inventory_collections
+  end
+
+  def options
+    @options ||= Settings.ems_refresh[manager.class.ems_type]
   end
 
   def inventory_collections

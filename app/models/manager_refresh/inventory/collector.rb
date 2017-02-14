@@ -1,11 +1,11 @@
 class ManagerRefresh::Inventory::Collector
-  attr_accessor :manager, :target
+  attr_reader :manager, :target
 
   # @param manager [ManageIQ::Providers::BaseManager] A manager object
-  # @param target [ActiveRecord|Hash] A refresh Target object
-  def initialize(manager, target)
+  # @param target [Object] A refresh Target object
+  def initialize(manager, refresh_target)
     @manager = manager
-    @target  = target
+    @target  = refresh_target
   end
 
   def options
