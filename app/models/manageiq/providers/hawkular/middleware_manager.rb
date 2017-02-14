@@ -176,12 +176,12 @@ module ManageIQ::Providers
     end
 
     # server ops
-    def shutdown_middleware_server(ems_ref, params)
+    def shutdown_middleware_server(ems_ref, params = {})
       timeout = params[:timeout] || 0
       run_generic_operation(:Shutdown, ems_ref, :restart => false, :timeout => timeout)
     end
 
-    def suspend_middleware_server(ems_ref, params)
+    def suspend_middleware_server(ems_ref, params = {})
       timeout = params[:timeout] || 0
       run_generic_operation(:Suspend, ems_ref, :timeout => timeout)
     end
@@ -224,7 +224,7 @@ module ManageIQ::Providers
       run_generic_operation('Start Servers', ems_ref)
     end
 
-    def stop_middleware_server_group(ems_ref, params)
+    def stop_middleware_server_group(ems_ref, params = {})
       timeout = params[:timeout] || 0
       run_generic_operation('Stop Servers', ems_ref, :timeout => timeout)
     end
@@ -237,7 +237,7 @@ module ManageIQ::Providers
       run_generic_operation('Reload Servers', ems_ref)
     end
 
-    def suspend_middleware_server_group(ems_ref, params)
+    def suspend_middleware_server_group(ems_ref, params = {})
       timeout = params[:timeout] || 0
       run_generic_operation('Suspend Servers', ems_ref, :timeout => timeout)
     end
