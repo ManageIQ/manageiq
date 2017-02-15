@@ -58,7 +58,6 @@ describe ChargebackVm do
     MiqRegion.seed
     ChargebackRateDetailMeasure.seed
     ChargeableField.seed
-    ChargebackRate.seed
 
     EvmSpecHelper.create_guid_miq_server_zone
     cat = FactoryGirl.create(:classification, :description => "Environment", :name => "environment", :single_value => true, :show => true)
