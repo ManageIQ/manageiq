@@ -24,5 +24,4 @@ with a provider.") % {:name => name, :id => id}
     ext_management_system.send(verb, self, options)
     $lenovo_log.info("Complete #{verb} #{self}")
   end
-
 end

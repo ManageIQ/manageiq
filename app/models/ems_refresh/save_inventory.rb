@@ -14,7 +14,6 @@ module EmsRefresh::SaveInventory
     when EmsInfra                                           then save_ems_infra_inventory(ems, hashes, target)
     when ManageIQ::Providers::PhysicalInfraManager          then save_ems_physical_infra_inventory(ems, hashes, target)
     when ManageIQ::Providers::AutomationManager             then save_automation_manager_inventory(ems, hashes, target)
-    when ManageIQ::Providers::PhysicalInfraManager          then save_ems_physical_infra_inventory(ems, hashes, target)
     when ManageIQ::Providers::ConfigurationManager          then save_configuration_manager_inventory(ems, hashes, target)
     when ManageIQ::Providers::ContainerManager              then save_ems_container_inventory(ems, hashes, target)
     when ManageIQ::Providers::NetworkManager                then save_ems_network_inventory(ems, hashes, target)
