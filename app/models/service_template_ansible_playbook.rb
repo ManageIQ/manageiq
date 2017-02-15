@@ -15,30 +15,39 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
   # options
   #   :name
   #   :description
-  #   :service_template_catalog
+  #   :service_template_catalog_id
   #   :config_info
   #     :provision
   #       :service_dialog_id (or)
   #       :new_dialog_name
   #       :variables
   #       :hosts
-  #       :credentials
+  #       :credential_id
+  #       :network_credential_id
+  #       :cloud_credential_id
   #       :playbook_id
   #     :retirement (same as provision)
   #     :reconfigure (same as provision)
   #
-  def self.create_catalog_item(options, _auth_user)
+  def self.create_catalog_item(options, auth_user)
     options      = options.merge(:service_type => 'atomic', :prov_type => 'generic_ansible_playbook')
     service_name = options[:name]
     description  = options[:description]
-    config_info  = validate_config_info(options)
+    config_info  = validate_config_info(options[:config_info])
+
+    enhanced_config = config_info.deep_merge(create_job_templates(service_name, description, config_info, auth_user))
 
     transaction do
-      create(options.except(:config_info)).tap do |service_template|
+      create_from_options(options).tap do |service_template|
         [:provision, :retirement, :reconfigure].each do |action|
-          prepare_job_template_and_dialog(action, service_name, description, options) if config_info.key?(action)
+          dialog_name = config_info.fetch_path(action, :new_dialog_name)
+          next unless dialog_name
+
+          job_template = enhanced_config.fetch_path(action, :configuration_template)
+          enhanced_config[action][:dialog] =
+            Dialog::AnsiblePlaybookServiceDialog.create_dialog(dialog_name, job_template)
         end
-        service_template.create_resource_actions(config_info)
+        service_template.create_resource_actions(enhanced_config)
       end
     end
   end
@@ -97,10 +106,8 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
   end
   private_class_method :build_parameter_list
 
-  def self.validate_config_info(options)
-    info = options[:config_info]
-
-    info[:provision][:fqname] ||= default_provisioning_entry_point if info.key?(:provision)
+  def self.validate_config_info(info)
+    info[:provision][:fqname] ||= default_provisioning_entry_point('atomic') if info.key?(:provision)
     info[:retirement][:fqname] ||= default_retirement_entry_point if info.key?(:retirement)
     info[:reconfigure][:fqname] ||= default_reconfiguration_entry_point if info.key?(:reconfigure)
 
