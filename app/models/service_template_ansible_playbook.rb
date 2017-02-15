@@ -54,19 +54,48 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
   end
   private_class_method :prepare_job_template_and_dialog
 
-  def self.create_job_template(name, description, info)
-    playbook = ManageIQ::Providers::AnsibleTower::ConfigurationManager::Playbook.find(info[:playbook_id])
-    # tower = playbook.manager
+  def self.create_job_templates(service_name, description, config_info, auth_user)
+    [:provision, :retirement, :reconfigure].each_with_object({}) do |action, hash|
+      next unless config_info[action]
+      hash[action] = { :configuration_template => create_job_template("miq_#{service_name}_#{action}", description, config_info[action], auth_user) }
+    end
+  end
+  private_class_method :create_job_templates
 
-    # params = {
-    #   :name         => name,
-    #   :description  => description || '',
-    #   :extra_vars   => info[:variables] || {},
-    #   :inventory_id => playbook.inventory_root_group,
-    # }
-    # tower.class.create_in_provider(tower, params)
+  def self.create_job_template(name, description, info, auth_user)
+    tower, params = build_parameter_list(name, description, info)
+
+    task_id = ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationScript.create_in_provider_queue(tower.id, params, auth_user)
+    task = MiqTask.wait_for_taskid(task_id)
+    raise task.message unless task.status == "Ok"
+    task.task_results
   end
   private_class_method :create_job_template
+
+  def self.build_parameter_list(name, description, info)
+    playbook = ManageIQ::Providers::AnsibleTower::AutomationManager::Playbook.find(info[:playbook_id])
+    tower = playbook.manager
+    params = {
+      :name                     => name,
+      :description              => description || '',
+      :project                  => playbook.configuration_script_source.manager_ref,
+      :playbook                 => playbook.name,
+      :inventory                => tower.inventory_root_groups.first.ems_ref,
+      :ask_variables_on_launch  => true,
+      :ask_limit_on_launch      => true,
+      :ask_inventory_on_launch  => true,
+      :ask_credential_on_launch => true
+    }
+    params[:extra_vars] = info[:extra_vars].to_json if info[:extra_vars]
+
+    [:credential, :cloud_credential, :network_credential].each do |credential|
+      cred_sym = "#{credential}_id".to_sym
+      params[credential] = Authentication.find(info[cred_sym]).manager_ref if info[cred_sym]
+    end
+
+    [tower, params.compact]
+  end
+  private_class_method :build_parameter_list
 
   def self.validate_config_info(options)
     info = options[:config_info]
