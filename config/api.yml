@@ -200,6 +200,29 @@
     :options:
     - :primary
     :verbs: *gd
+  :authentications:
+    :description: Authentications
+    :options:
+    - :collection
+    :verbs: *gpd
+    :klass: Authentication
+    :collection_actions:
+      :get:
+      - :name: read
+        :identifier: embedded_automation_manager_credentials_view
+      :post:
+      - :name: delete
+        :identifier: embedded_automation_manager_credentials_delete
+    :resource_actions:
+      :get:
+      - :name: read
+        :identifier: embedded_automation_manager_credentials_view
+      :post:
+      - :name: delete
+        :identifier: embedded_automation_manager_credentials_delete
+      :delete:
+      - :name: delete
+        :identifier: embedded_automation_manager_credentials_delete
   :automate:
     :description: Automate
     :options:
