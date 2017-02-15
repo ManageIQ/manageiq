@@ -33,7 +33,7 @@ class ServiceTemplateAnsibleTower < ServiceTemplate
   end
 
   def self.default_provisioning_entry_point(_service_type)
-    '/ConfigurationManagement/AnsibleTower/Service/Provisioning/StateMachines/Provision/provision_from_bundle'
+    '/AutomationManagement/AnsibleTower/Service/Provisioning/StateMachines/Provision/provision_from_bundle'
   end
 
   def self.default_reconfiguration_entry_point
