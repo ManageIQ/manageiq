@@ -349,9 +349,15 @@ module Api
       end
 
       def gen_action_spec_for_collections(collection, cspec, is_subcollection, href)
-        target = is_subcollection ? :subcollection_actions : :collection_actions
-        return [] unless cspec[target]
-        cspec[target].each.collect do |method, action_definitions|
+        if is_subcollection
+          target = :subcollection_actions
+          cspec_target = cspec[target] || collection_config.typed_subcollection_actions(@req.collection, collection)
+        else
+          target = :collection_actions
+          cspec_target = cspec[target]
+        end
+        return [] unless cspec_target
+        cspec_target.each.collect do |method, action_definitions|
           next unless render_actions_for_method(cspec[:verbs], method)
           typed_action_definitions = fetch_typed_subcollection_actions(method, is_subcollection) || action_definitions
           typed_action_definitions.each.collect do |action|
@@ -363,11 +369,17 @@ module Api
       end
 
       def gen_action_spec_for_resources(cspec, is_subcollection, href, resource)
-        target = is_subcollection ? :subresource_actions : :resource_actions
-        return [] unless cspec[target]
-        cspec[target].each.collect do |method, action_definitions|
+        if is_subcollection
+          target = :subresource_actions
+          cspec_target = cspec[target] || collection_config.typed_subcollection_actions(@req.collection, @req.subcollection, :subresource)
+        else
+          target = :resource_actions
+          cspec_target = cspec[target]
+        end
+        return [] unless cspec_target
+        cspec_target.each.collect do |method, action_definitions|
           next unless render_actions_for_method(cspec[:verbs], method)
-          typed_action_definitions = fetch_typed_subcollection_actions(method, is_subcollection) || action_definitions
+          typed_action_definitions = action_definitions || fetch_typed_subcollection_actions(method, is_subcollection)
           typed_action_definitions.each.collect do |action|
             if !action[:disabled] && api_user_role_allows?(action[:identifier]) && action_validated?(resource, action)
               {"name" => action[:name], "method" => method, "href" => href}
