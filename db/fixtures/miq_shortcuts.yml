@@ -198,6 +198,11 @@
   :description: Storage / Storage Managers
   :url: /storage_manager/show_list
   :rbac_feature_name: storage_manager_show_list
+- :name: ems_containers_overview
+  :description: Containers / Overview
+  :url: /container_dashboard/show
+  :rbac_feature_name: ems_container_show_list
+  :startup: true
 - :name: ems_containers
   :description: Containers / Providers
   :url: /ems_container/show_list
