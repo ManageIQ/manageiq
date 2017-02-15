@@ -102,7 +102,7 @@ module ManagerRefresh
       return [] unless model_class
 
       # Get all readers inferred from writers of a model
-      @allowed_readers ||= allowed_writers.map { |x| x.to_s.gsub("=", "").to_sym }
+      @allowed_readers ||= allowed_writers.map { |x| x.to_s.delete("=").to_sym }
     end
 
     def method_missing(method_name, *arguments, &block)
@@ -123,13 +123,13 @@ module ManagerRefresh
 
     def self.define_data_writer(data_key)
       define_method(data_key) do |value|
-        self.send(:[]=, data_key.to_s.gsub("=", "").to_sym, value)
+        send(:[]=, data_key.to_s.delete("=").to_sym, value)
       end
     end
 
     def self.define_data_reader(data_key)
       define_method(data_key) do
-        self.send(:[], data_key)
+        send(:[], data_key)
       end
     end
 
