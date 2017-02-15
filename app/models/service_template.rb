@@ -11,16 +11,17 @@ class ServiceTemplate < ApplicationRecord
   }.freeze
 
   CATALOG_ITEM_TYPES = {
-    "amazon"                => _("Amazon"),
-    "azure"                 => _("Azure"),
-    "generic"               => _("Generic"),
-    "generic_orchestration" => _("Orchestration"),
-    "generic_ansible_tower" => _("AnsibleTower"),
-    "google"                => _("Google"),
-    "microsoft"             => _("SCVMM"),
-    "openstack"             => _("OpenStack"),
-    "redhat"                => _("RHEV"),
-    "vmware"                => _("VMware")
+    "amazon"                   => _("Amazon"),
+    "azure"                    => _("Azure"),
+    "generic"                  => _("Generic"),
+    "generic_orchestration"    => _("Orchestration"),
+    "generic_ansible_playbook" => _("Ansible Playbook"),
+    "generic_ansible_tower"    => _("AnsibleTower"),
+    "google"                   => _("Google"),
+    "microsoft"                => _("SCVMM"),
+    "openstack"                => _("OpenStack"),
+    "redhat"                   => _("RHEV"),
+    "vmware"                   => _("VMware")
   }.freeze
 
   include ServiceMixin
