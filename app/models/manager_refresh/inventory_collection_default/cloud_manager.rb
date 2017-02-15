@@ -4,6 +4,7 @@ class ManagerRefresh::InventoryCollectionDefault::CloudManager < ManagerRefresh:
       attributes = {
         :model_class          => ::ManageIQ::Providers::CloudManager::Vm,
         :association          => :vms,
+        :delete_method        => :disconnect_inv,
         :attributes_blacklist => [:genealogy_parent]
       }
 
@@ -12,8 +13,9 @@ class ManagerRefresh::InventoryCollectionDefault::CloudManager < ManagerRefresh:
 
     def miq_templates(extra_attributes = {})
       attributes = {
-        :model_class => ::ManageIQ::Providers::CloudManager::Template,
-        :association => :miq_templates,
+        :model_class   => ::ManageIQ::Providers::CloudManager::Template,
+        :association   => :miq_templates,
+        :delete_method => :disconnect_inv,
       }
 
       attributes.merge!(extra_attributes)

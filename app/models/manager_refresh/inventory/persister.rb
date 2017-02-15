@@ -55,11 +55,6 @@ class ManagerRefresh::Inventory::Persister
   def add_inventory_collection(options)
     options[:parent] ||= manager
 
-    if !options.key?(:delete_method) && options[:model_class]
-      # Automatically infer what the delete method should be, unless the delete methods was given
-      options[:delete_method] = options[:model_class].new.respond_to?(:disconnect_inv) ? :disconnect_inv : nil
-    end
-
     collections[options[:association]] = ::ManagerRefresh::InventoryCollection.new(options)
   end
 
