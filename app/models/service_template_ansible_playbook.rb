@@ -12,29 +12,31 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
   end
 
   # create ServiceTemplate and supporting ServiceResources and ResourceActions
-  # options
+  # item_def
   #   :name
   #   :description
-  #   :service_template_catalog
+  #   :service_template_catalog_id
   #   :config_info
   #     :provision
-  #       :service_dialog_id (or)
+  #       :dialog_id (or)
   #       :new_dialog_name
-  #       :variables
+  #       :extra_vars
   #       :hosts
-  #       :credentials
+  #       :credential_id
+  #       :cloud_credential_id
+  #       :network_credential_id
   #       :playbook_id
   #     :retirement (same as provision)
   #     :reconfigure (same as provision)
   #
-  def self.create_catalog_item(options, _auth_user)
-    options      = options.merge(:service_type => 'atomic', :prov_type => 'generic_ansible_playbook')
-    service_name = options[:name]
-    description  = options[:description]
-    config_info  = validate_config_info(options)
+  def self.create_catalog_item(item_def, _auth_user)
+    item_def     = item_def.merge(:service_type => 'atomic', :prov_type => 'generic_ansible_playbook')
+    service_name = item_def[:name]
+    description  = item_def[:description]
+    config_info  = validate_config_info(item_def)
 
     transaction do
-      create(options.except(:config_info)).tap do |service_template|
+      create(item_def.except(:config_info).merge(:options => {:catalog_item => item_def})).tap do |service_template|
         [:provision, :retirement, :reconfigure].each do |action|
           prepare_job_template_and_dialog(action, service_name, description, options) if config_info.key?(action)
         end
@@ -68,8 +70,8 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
   end
   private_class_method :create_job_template
 
-  def self.validate_config_info(options)
-    info = options[:config_info]
+  def self.validate_config_info(item_def)
+    info = item_def[:config_info]
 
     info[:provision][:fqname] ||= default_provisioning_entry_point if info.key?(:provision)
     info[:retirement][:fqname] ||= default_retirement_entry_point if info.key?(:retirement)
@@ -80,4 +82,8 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
     info
   end
   private_class_method :validate_config_info
+
+  def read_catalog_item
+    options[:catalog_item]
+  end
 end
