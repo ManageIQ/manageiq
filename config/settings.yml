@@ -197,6 +197,9 @@
       - REPLICATOR_SUCCESSFULCREATE
       - REPLICATOR_FAILEDCREATE
       - CONTAINER_CREATED
+      - AWS_EC2_Instance_CREATE
+      - AWS_EC2_Instance_UPDATE
+      - AWS_EC2_Instance_DELETE
       :detail:
       - CloneVM_Task
       - CloneVM_Task_Complete
@@ -706,6 +709,9 @@
       - NODE_REBOOTED
       - NODE_NODESCHEDULABLE
       - NODE_NODENOTSCHEDULABLE
+      - AWS_EC2_Instance_running
+      - AWS_EC2_Instance_shutting-down
+      - AWS_EC2_Instance_stopped
       :detail:
       - PowerOffVM_Task
       - PowerOffVM_Task_Complete
