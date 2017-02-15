@@ -8,7 +8,6 @@ module Api
     include Subcollections::PolicyProfiles
     include Subcollections::Tags
 
-
     def show
       if params[:c_id]
         host = Host.find(params[:c_id])
@@ -18,19 +17,14 @@ module Api
                                               else host.physical_server.id
                                               end
 
-        render json: response_payload
+        render json => response_payload
 
       else
 
         super
 
       end
-
-
     end
-
-
-
 
     def edit_resource(type, id, data = {})
       credentials = data.delete(CREDENTIALS_ATTR)

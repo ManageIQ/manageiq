@@ -13,7 +13,6 @@ class PhysicalServer < ApplicationRecord
     }
   end
 
-
   def is_refreshable?
     refreshable_status[:show]
   end
@@ -27,16 +26,14 @@ class PhysicalServer < ApplicationRecord
   end
 
   def is_available?(address)
-    #TODO (walteraa) remove bypass
+    # TODO: (walteraa) remove bypass
     true
   end
 
   def smart?
-    #TODO (walteraa) remove bypass
+    # TODO: (walteraa) remove bypass
     true
   end
-
-
 
   def my_zone
     ems = ext_management_system
@@ -59,6 +56,4 @@ class PhysicalServer < ApplicationRecord
   def turn_off_loc_led
     $lenovo_log.info("Turn off LED")
   end
-
-
 end
