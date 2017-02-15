@@ -22,6 +22,29 @@ describe ChargebackRateDetail do
       expect(cbd.find_rate(cvalue["val3"])).to eq([cbt2.fixed_rate, cbt2.variable_rate])
       expect(cbd.find_rate(cvalue["val4"])).to eq([cbt2.fixed_rate, cbt2.variable_rate])
     end
+
+    context 'with rate adjustment' do
+      let(:measure) do
+        FactoryGirl.build(:chargeback_rate_detail_measure,
+                          :units_display => %w(B KB MB GB TB),
+                          :units         => %w(bytes kilobytes megabytes gigabytes terabytes))
+      end
+      let(:cbd) do
+        # This charges per gigabyte, tiers are per gigabytes
+        FactoryGirl.build(:chargeback_rate_detail,
+                          :chargeback_tiers => [cbt1, cbt2, cbt3],
+                          :detail_measure   => measure,
+                          :per_unit         => 'gigabytes',
+                          :metric           => 'derived_vm_allocated_disk_storage')
+      end
+      it 'finds proper tier for the value' do
+        expect(cbd.find_rate(0.0)).to                   eq([cbt1.fixed_rate, cbt1.variable_rate])
+        expect(cbd.find_rate(10.gigabytes)).to          eq([cbt1.fixed_rate, cbt1.variable_rate])
+        expect(cbd.find_rate(10.gigabytes + 1.byte)).to eq([cbt2.fixed_rate, cbt2.variable_rate])
+        expect(cbd.find_rate(50.gigabytes)).to          eq([cbt2.fixed_rate, cbt2.variable_rate])
+        expect(cbd.find_rate(50.gigabytes + 1.byte)).to eq([cbt3.fixed_rate, cbt3.variable_rate])
+      end
+    end
   end
 
   let(:consumption) { instance_double('Consumption', :hours_in_month => (1.month / 1.hour)) }
