@@ -74,11 +74,11 @@ module ManagerRefresh
     end
 
     def to_s
-      "InventoryObject:('#{manager_uuid}', #{inventory_collection})"
+      manager_uuid
     end
 
     def inspect
-      to_s
+      "InventoryObject:('#{manager_uuid}', #{inventory_collection})"
     end
 
     def dependency?

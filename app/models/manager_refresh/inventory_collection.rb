@@ -126,9 +126,18 @@ module ManagerRefresh
     alias push <<
 
     def object_index(object)
-      stringify_reference(
-        manager_ref.map { |attribute| object.public_send(attribute).try(:id) || object.public_send(attribute).to_s }
-      )
+      index_array = manager_ref.map do |attribute|
+        if object.respond_to?(:[])
+          object[attribute].to_s
+        else
+          object.public_send(attribute).try(:id) || object.public_send(attribute).to_s
+        end
+      end
+      stringify_reference(index_array)
+    end
+
+    def object_index_with_keys(keys, object)
+      keys.map { |attribute| object.public_send(attribute).to_s }.join(stringify_joiner)
     end
 
     def stringify_joiner
@@ -146,13 +155,20 @@ module ManagerRefresh
       end
     end
 
-    def object_index_with_keys(keys, object)
-      keys.map { |attribute| object.public_send(attribute).to_s }.join(stringify_joiner)
+    def find_or_build(manager_uuid)
+      raise "The uuid consists of #{manager_ref.size} attributes, please find_or_build_by method" if manager_ref.size > 1
+
+      find_or_build_by(manager_ref.first => manager_uuid)
     end
 
-    def find_or_build(manager_uuid)
-      # FIXME: splat manager_ref
-      data_index[manager_uuid] || build(manager_ref.first => manager_uuid)
+    def find_or_build_by(manager_uuid_hash)
+      if !manager_uuid_hash.keys.all? { |x| manager_ref.include?(x) } || manager_uuid_hash.keys.size != manager_ref.size
+        raise "Allowed find_or_build_by keys are #{manager_ref}"
+      end
+
+      # Not using find by since if could take record from db, then any changes would be ignored, since such record will
+      # not be stored to DB, maybe we should rethink this?
+      data_index[object_index(manager_uuid_hash)] || build(manager_uuid_hash)
     end
 
     def find(manager_uuid)
@@ -165,6 +181,13 @@ module ManagerRefresh
       else
         data_index[manager_uuid]
       end
+    end
+
+    def find_by(manager_uuid_hash)
+      if !manager_uuid_hash.keys.all? { |x| manager_ref.include?(x) } || manager_uuid_hash.keys.size != manager_ref.size
+        raise "Allowed find_by keys are #{manager_ref}"
+      end
+      find(object_index(manager_uuid_hash))
     end
 
     def find_in_db(manager_uuid)
