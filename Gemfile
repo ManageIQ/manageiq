@@ -53,6 +53,7 @@ gem "fog-vcloud-director",            "~>0.1.8",       :require => false
 gem "gettext_i18n_rails",             "~>1.7.2"
 gem "gettext_i18n_rails_js",          "~>1.1.0"
 gem "google-api-client",              "~>0.8.6",       :require => false
+gem "graphql",                        "~>1.3.0" # For the REST API
 gem "hamlit",                         "~>2.7.0"
 gem "hashie",                         "~>3.4.6",       :require => false
 gem "high_voltage",                   "~>2.4.0"

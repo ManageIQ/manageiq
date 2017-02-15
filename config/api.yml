@@ -19,6 +19,8 @@
   :sets:
     :g: &g
     - :get
+    :p: &p
+    - :post
     :gd: &gd
     - :get
     - :delete
@@ -200,6 +202,15 @@
     :options:
     - :primary
     :verbs: *gd
+  :query:
+    :description: GraphQL Query Interface
+    :options:
+    - :primary
+    :verbs: *p
+    :collection_actions:
+      :post:
+      - :name: create
+        :identifier: miq_report_run
   :automate:
     :description: Automate
     :options:
