@@ -12,6 +12,8 @@ class ChargebackRateDetail < ApplicationRecord
 
   delegate :rate_type, :to => :chargeback_rate, :allow_nil => true
 
+  delegate :metric_keys, :cost_keys, :to => :chargeable_field
+
   FORM_ATTRIBUTES = %i(description per_time per_unit metric group source metric chargeable_field_id).freeze
   PER_TIME_TYPES = {
     "hourly"  => _("Hourly"),
@@ -25,33 +27,13 @@ class ChargebackRateDetail < ApplicationRecord
     result = {}
     if (relevant_fields & [metric_keys[0], cost_keys[0]]).present?
       metric_value, cost = metric_and_cost_by(consumption)
-      if !consumption.chargeback_fields_present && fixed?
+      if !consumption.chargeback_fields_present && chargeable_field.fixed?
         cost = 0
       end
       metric_keys.each { |field| result[field] = metric_value }
       cost_keys.each   { |field| result[field] = cost }
     end
     result
-  end
-
-  def metric_value_by(consumption)
-    return 1.0 if fixed?
-
-    return 0 if consumption.none?(metric)
-    return consumption.max(metric) if allocated?
-    return consumption.avg(metric) if used?
-  end
-
-  def used?
-    source == "used"
-  end
-
-  def allocated?
-    source == "allocated"
-  end
-
-  def fixed?
-    group == "fixed"
   end
 
   # Set the rates according to the tiers
@@ -77,8 +59,6 @@ class ChargebackRateDetail < ApplicationRecord
   def hourly_cost(value, consumption)
     return 0.0 unless self.enabled?
 
-    value = 1.0 if fixed?
-
     (fixed_rate, variable_rate) = find_rate(value)
 
     hourly_fixed_rate    = hourly(fixed_rate, consumption)
@@ -100,31 +80,12 @@ class ChargebackRateDetail < ApplicationRecord
     hourly_rate
   end
 
-  # Scale the rate in the unit defined by user -> to the default unit of the metric
-  METRIC_UNITS = {
-    'cpu_usagemhz_rate_average'         => 'megahertz',
-    'derived_memory_used'               => 'megabytes',
-    'derived_memory_available'          => 'megabytes',
-    'net_usage_rate_average'            => 'kbps',
-    'disk_usage_rate_average'           => 'kbps',
-    'derived_vm_allocated_disk_storage' => 'bytes',
-    'derived_vm_used_disk_storage'      => 'bytes'
-  }.freeze
-
   def rate_adjustment
-    @rate_adjustment ||= if METRIC_UNITS[metric]
-                           detail_measure.adjust(per_unit, METRIC_UNITS[metric])
-                         else
-                           1
-                         end
+    @rate_adjustment ||= chargeable_field.adjustment_to(per_unit)
   end
 
   def affects_report_fields(report_cols)
     (metric_keys.to_set & report_cols).present? || ((cost_keys.to_set & report_cols).present? && !gratis?)
-  end
-
-  def rate_name
-    "#{group}_#{source}"
   end
 
   def friendly_rate
@@ -132,7 +93,7 @@ class ChargebackRateDetail < ApplicationRecord
     value = read_attribute(:friendly_rate)
     return value unless value.nil?
 
-    if group == 'fixed'
+    if chargeable_field.fixed?
       # Example: 10.00 Monthly
       "#{fixed_rate + variable_rate} #{per_time.to_s.capitalize}"
     else
@@ -147,7 +108,8 @@ class ChargebackRateDetail < ApplicationRecord
   end
 
   def per_unit_display
-    detail_measure.nil? ? per_unit.to_s.capitalize : detail_measure.measures.key(per_unit)
+    measure = chargeable_field.detail_measure
+    measure.nil? ? per_unit.to_s.capitalize : measure.measures.key(per_unit)
   end
 
   # New method created in order to show the rates in a easier to understand way
@@ -200,19 +162,8 @@ class ChargebackRateDetail < ApplicationRecord
     chargeback_tiers.all?(&:gratis?)
   end
 
-  def metric_keys
-    ["#{rate_name}_metric", # metric value (e.g. Storage [Used|Allocated|Fixed])
-     "#{group}_metric"]     # total of metric's group (e.g. Storage Total)
-  end
-
-  def cost_keys
-    ["#{rate_name}_cost",   # cost associated with metric (e.g. Storage [Used|Allocated|Fixed] Cost)
-     "#{group}_cost",       # cost associated with metric's group (e.g. Storage Total Cost)
-     'total_cost']
-  end
-
   def metric_and_cost_by(consumption)
-    metric_value = metric_value_by(consumption)
+    metric_value = chargeable_field.measure(consumption)
     [metric_value, hourly_cost(metric_value, consumption) * consumption.consumed_hours_in_interval]
   end
 

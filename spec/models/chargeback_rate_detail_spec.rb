@@ -16,7 +16,10 @@ describe ChargebackRateDetail do
     let(:cbt1) { FactoryGirl.build(:chargeback_tier, :start => 0, :finish => 10, :fixed_rate => 3.0, :variable_rate => 0.3) }
     let(:cbt2) { FactoryGirl.build(:chargeback_tier, :start => 10, :finish => 50, :fixed_rate => 2.0, :variable_rate => 0.2) }
     let(:cbt3) { FactoryGirl.build(:chargeback_tier, :start => 50, :finish => Float::INFINITY, :fixed_rate => 1.0, :variable_rate => 0.1) }
-    let(:cbd) { FactoryGirl.build(:chargeback_rate_detail, :chargeback_tiers => [cbt3, cbt2, cbt1]) }
+    let(:cbd) do
+      FactoryGirl.build(:chargeback_rate_detail, :chargeback_tiers => [cbt3, cbt2, cbt1],
+                                                 :chargeable_field => field)
+    end
 
     it "finds proper rate according the value" do
       expect(cbd.find_rate(cvalue["val1"])).to eq([cbt1.fixed_rate, cbt1.variable_rate])
@@ -31,13 +34,13 @@ describe ChargebackRateDetail do
                           :units_display => %w(B KB MB GB TB),
                           :units         => %w(bytes kilobytes megabytes gigabytes terabytes))
       end
+      let(:field) { FactoryGirl.create(:chargeable_field_storage_allocated, :detail_measure => measure) }
       let(:cbd) do
         # This charges per gigabyte, tiers are per gigabytes
         FactoryGirl.build(:chargeback_rate_detail,
                           :chargeback_tiers => [cbt1, cbt2, cbt3],
-                          :detail_measure   => measure,
-                          :per_unit         => 'gigabytes',
-                          :metric           => 'derived_vm_allocated_disk_storage')
+                          :chargeable_field => field,
+                          :per_unit         => 'gigabytes')
       end
       it 'finds proper tier for the value' do
         expect(cbd.find_rate(0.0)).to                   eq([cbt1.fixed_rate, cbt1.variable_rate])
@@ -60,6 +63,7 @@ describe ChargebackRateDetail do
     per_time = 'monthly'
     per_unit = 'megabytes'
     cbd = FactoryGirl.build(:chargeback_rate_detail,
+                            :chargeable_field => field,
                             :per_time => per_time,
                             :per_unit => per_unit,
                             :enabled  => true)
@@ -72,8 +76,8 @@ describe ChargebackRateDetail do
     cbd.update(:chargeback_tiers => [cbt])
     expect(cbd.hourly_cost(cvalue, consumption)).to eq(cvalue * cbd.hourly(variable_rate, consumption) + cbd.hourly(fixed_rate, consumption))
 
-    cbd.group = 'fixed'
-    expect(cbd.hourly_cost(cvalue, consumption)).to eq(cbd.hourly(variable_rate, consumption) + cbd.hourly(fixed_rate, consumption))
+    cbd.chargeable_field = FactoryGirl.build(:chargeable_field_fixed_compute_1)
+    expect(cbd.hourly_cost(1, consumption)).to eq(cbd.hourly(variable_rate, consumption) + cbd.hourly(fixed_rate, consumption))
 
     cbd.enabled = false
     expect(cbd.hourly_cost(cvalue, consumption)).to eq(0.0)
@@ -125,24 +129,15 @@ describe ChargebackRateDetail do
 
   it "#rate_adjustment" do
     value = 10.gigabytes
-    cbdm = FactoryGirl.create(:chargeback_rate_detail_measure,
-                              :units_display => %w(B KB MB GB TB),
-                              :units         => %w(bytes kilobytes megabytes gigabytes terabytes))
+    field = FactoryGirl.build(:chargeable_field_memory_allocated) # the core metric is in megabytes
     [
       'megabytes', value,
       'gigabytes', value / 1024,
     ].each_slice(2) do |per_unit, rate_adjustment|
       cbd = FactoryGirl.build(:chargeback_rate_detail, :per_unit => per_unit, :metric => 'derived_memory_available',
-       :chargeback_rate_detail_measure_id => cbdm.id)
+                                                       :chargeable_field => field)
       expect(cbd.rate_adjustment * value).to eq(rate_adjustment)
     end
-  end
-
-  it "#rate_name" do
-    source = 'used'
-    group  = 'cpu'
-    cbd = FactoryGirl.build(:chargeback_rate_detail, :source => source, :group => group)
-    expect(cbd.rate_name).to eq("#{group}_#{source}")
   end
 
   it "#friendly_rate" do
@@ -150,20 +145,23 @@ describe ChargebackRateDetail do
     cbd = FactoryGirl.build(:chargeback_rate_detail, :friendly_rate => friendly_rate)
     expect(cbd.friendly_rate).to eq(friendly_rate)
 
-    cbd = FactoryGirl.build(:chargeback_rate_detail, :group => 'fixed', :per_time => 'monthly')
+    cbd = FactoryGirl.build(:chargeback_rate_detail,
+                            :per_time         => 'monthly',
+                            :chargeable_field => FactoryGirl.build(:chargeable_field_fixed_compute_1))
     cbt = FactoryGirl.create(:chargeback_tier, :start => 0, :chargeback_rate_detail_id => cbd.id,
                        :finish => Float::INFINITY, :fixed_rate => 1.0, :variable_rate => 2.0)
     cbd.update(:chargeback_tiers => [cbt])
     expect(cbd.friendly_rate).to eq("3.0 Monthly")
 
-    cbd = FactoryGirl.build(:chargeback_rate_detail, :per_unit => 'cpu', :per_time => 'monthly', :detail_measure => nil)
+    cbd = FactoryGirl.build(:chargeback_rate_detail, :per_unit => 'cpu', :per_time => 'monthly', :detail_measure => nil,
+                            :chargeable_field => field)
     cbt = FactoryGirl.create(:chargeback_tier, :start => 0, :chargeback_rate_detail_id => cbd.id,
                              :finish => Float::INFINITY, :fixed_rate => 1.0, :variable_rate => 2.0)
     cbd.update(:chargeback_tiers => [cbt])
     expect(cbd.friendly_rate).to eq("Monthly @ 1.0 + 2.0 per Cpu from 0.0 to Infinity")
 
     cbd = FactoryGirl.build(:chargeback_rate_detail, :per_unit => 'megabytes', :per_time => 'monthly',
-                            :detail_measure => nil)
+                            :detail_measure => nil, :chargeable_field => field)
     cbt1 = FactoryGirl.create(:chargeback_tier, :start => 0.0, :chargeback_rate_detail_id => cbd.id,
                              :finish => 5.0, :fixed_rate => 1.0, :variable_rate => 2.0)
     cbt2 = FactoryGirl.create(:chargeback_tier, :start => 5.0, :chargeback_rate_detail_id => cbd.id,
@@ -174,11 +172,12 @@ Monthly @ 5.0 + 2.5 per Megabytes from 5.0 to Infinity")
   end
 
   it "#per_unit_display_without_measurements" do
+    expect(field.detail_measure).to be_nil
     [
       'cpu',       'Cpu',
       'ohms',      'Ohms'
     ].each_slice(2) do |per_unit, per_unit_display|
-      cbd = FactoryGirl.build(:chargeback_rate_detail, :per_unit => per_unit, :detail_measure => nil)
+      cbd = FactoryGirl.build(:chargeback_rate_detail, :per_unit => per_unit, :chargeable_field => field)
       expect(cbd.per_unit_display).to eq(per_unit_display)
     end
   end
@@ -187,10 +186,8 @@ Monthly @ 5.0 + 2.5 per Megabytes from 5.0 to Infinity")
     cbdm = FactoryGirl.create(:chargeback_rate_detail_measure,
                               :units_display => %w(B KB MB GB TB),
                               :units         => %w(bytes kilobytes megabytes gigabytes terabytes))
-
-    cbd  = FactoryGirl.build(:chargeback_rate_detail,
-                             :per_unit                          => 'megabytes',
-                             :chargeback_rate_detail_measure_id => cbdm.id)
+    field = FactoryGirl.create(:chargeable_field, :detail_measure => cbdm)
+    cbd = FactoryGirl.build(:chargeback_rate_detail, :per_unit => 'megabytes', :chargeable_field => field)
     expect(cbd.per_unit_display).to eq('MB')
   end
 
@@ -229,11 +226,13 @@ Monthly @ 5.0 + 2.5 per Megabytes from 5.0 to Infinity")
 
     # should be the same cost. bytes to megabytes and gigabytes to megabytes
     cbd_bytes = FactoryGirl.build(:chargeback_rate_detail,
+                                  :chargeable_field                  => field,
                                   :per_unit                          => 'bytes',
                                   :metric                            => 'derived_memory_available',
                                   :per_time                          => 'monthly',
                                   :chargeback_rate_detail_measure_id => cbdm.id)
     cbd_gigabytes = FactoryGirl.build(:chargeback_rate_detail,
+                                      :chargeable_field                  => field,
                                       :per_unit                          => 'gigabytes',
                                       :metric                            => 'derived_memory_available',
                                       :per_time                          => 'monthly',
