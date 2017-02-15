@@ -76,7 +76,8 @@ describe ChargebackRate do
     context 'when there are valid rate details' do
       let(:symbol) { '฿' }
       let(:currency) { FactoryGirl.create(:chargeback_rate_detail_currency, :symbol => symbol) }
-      let(:details) { [FactoryGirl.create(:chargeback_rate_detail, :detail_currency => currency)] }
+      let(:field) { FactoryGirl.create(:chargeable_field) }
+      let(:details) { [FactoryGirl.create(:chargeback_rate_detail, :detail_currency => currency, :chargeable_field => field)] }
       it { is_expected.to eq(symbol) }
     end
   end

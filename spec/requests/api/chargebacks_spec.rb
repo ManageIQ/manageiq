@@ -1,4 +1,6 @@
 RSpec.describe "chargebacks API" do
+  let(:field) { FactoryGirl.create(:chargeable_field) }
+
   it "can fetch the list of all chargeback rates" do
     chargeback_rate = FactoryGirl.create(:chargeback_rate)
 
@@ -29,7 +31,7 @@ RSpec.describe "chargebacks API" do
   end
 
   it "can fetch chargeback rate details" do
-    chargeback_rate_detail = FactoryGirl.build(:chargeback_rate_detail)
+    chargeback_rate_detail = FactoryGirl.build(:chargeback_rate_detail, :chargeable_field => field)
     chargeback_tier = FactoryGirl.create(:chargeback_tier, :chargeback_rate_detail_id => chargeback_rate_detail.id,
                                          :start => 0, :finish => Float::INFINITY, :fixed_rate => 0.0,
                                          :variable_rate => 0.0)
@@ -48,7 +50,7 @@ RSpec.describe "chargebacks API" do
   end
 
   it "can fetch an individual chargeback rate detail" do
-    chargeback_rate_detail = FactoryGirl.build(:chargeback_rate_detail, :description => "rate_1")
+    chargeback_rate_detail = FactoryGirl.build(:chargeback_rate_detail, :description => "rate_1", :chargeable_field => field)
     chargeback_tier = FactoryGirl.create(:chargeback_tier, :chargeback_rate_detail_id => chargeback_rate_detail.id,
                                          :start => 0, :finish => Float::INFINITY, :fixed_rate => 0.0,
                                          :variable_rate => 0.0)
@@ -202,11 +204,12 @@ RSpec.describe "chargebacks API" do
 
       expect do
         run_post rates_url,
-                 :description        => "rate_0",
-                 :group              => "fixed",
-                 :chargeback_rate_id => chargeback_rate.id,
-                 :source             => "used",
-                 :enabled            => true
+                 :description         => "rate_0",
+                 :group               => "fixed",
+                 :chargeback_rate_id  => chargeback_rate.id,
+                 :chargeable_field_id => field.id,
+                 :source              => "used",
+                 :enabled             => true
       end.to change(ChargebackRateDetail, :count).by(1)
       expect_result_to_match_hash(response.parsed_body["results"].first, "description" => "rate_0", "enabled" => true)
       expect(response).to have_http_status(:ok)
@@ -225,7 +228,7 @@ RSpec.describe "chargebacks API" do
     end
 
     it "can edit a chargeback rate detail through POST" do
-      chargeback_rate_detail = FactoryGirl.build(:chargeback_rate_detail, :description => "rate_0")
+      chargeback_rate_detail = FactoryGirl.build(:chargeback_rate_detail, :description => "rate_0", :chargeable_field => field)
       chargeback_tier = FactoryGirl.create(:chargeback_tier, :chargeback_rate_detail_id => chargeback_rate_detail.id,
                                            :start => 0, :finish => Float::INFINITY, :fixed_rate => 0.0,
                                            :variable_rate => 0.0)
@@ -241,7 +244,7 @@ RSpec.describe "chargebacks API" do
     end
 
     it "can edit a chargeback rate detail through PATCH" do
-      chargeback_rate_detail = FactoryGirl.build(:chargeback_rate_detail, :description => "rate_0")
+      chargeback_rate_detail = FactoryGirl.build(:chargeback_rate_detail, :description => "rate_0", :chargeable_field => field)
       chargeback_tier = FactoryGirl.create(:chargeback_tier, :chargeback_rate_detail_id => chargeback_rate_detail.id,
                                            :start => 0, :finish => Float::INFINITY, :fixed_rate => 0.0,
                                            :variable_rate => 0.0)
@@ -257,7 +260,7 @@ RSpec.describe "chargebacks API" do
     end
 
     it "can delete a chargeback rate detail" do
-      chargeback_rate_detail = FactoryGirl.build(:chargeback_rate_detail)
+      chargeback_rate_detail = FactoryGirl.build(:chargeback_rate_detail, :chargeable_field => field)
       chargeback_tier = FactoryGirl.create(:chargeback_tier, :chargeback_rate_detail_id => chargeback_rate_detail.id,
                                            :start => 0, :finish => Float::INFINITY, :fixed_rate => 0.0,
                                            :variable_rate => 0.0)
@@ -273,7 +276,7 @@ RSpec.describe "chargebacks API" do
     end
 
     it "can delete a chargeback rate detail through POST" do
-      chargeback_rate_detail = FactoryGirl.build(:chargeback_rate_detail)
+      chargeback_rate_detail = FactoryGirl.build(:chargeback_rate_detail, :chargeable_field => field)
       chargeback_tier = FactoryGirl.create(:chargeback_tier, :chargeback_rate_detail_id => chargeback_rate_detail.id,
                                            :start => 0, :finish => Float::INFINITY, :fixed_rate => 0.0,
                                            :variable_rate => 0.0)
@@ -329,7 +332,7 @@ RSpec.describe "chargebacks API" do
     end
 
     it "cannot edit a chargeback rate detail" do
-      chargeback_rate_detail = FactoryGirl.build(:chargeback_rate_detail, :description => "rate_1")
+      chargeback_rate_detail = FactoryGirl.build(:chargeback_rate_detail, :description => "rate_1", :chargeable_field => field)
       chargeback_tier = FactoryGirl.create(:chargeback_tier, :chargeback_rate_detail_id => chargeback_rate_detail.id,
                                            :start => 0, :finish => Float::INFINITY, :fixed_rate => 0.0,
                                            :variable_rate => 0.0)
@@ -345,7 +348,7 @@ RSpec.describe "chargebacks API" do
     end
 
     it "cannot delete a chargeback rate detail" do
-      chargeback_rate_detail = FactoryGirl.build(:chargeback_rate_detail)
+      chargeback_rate_detail = FactoryGirl.build(:chargeback_rate_detail, :chargeable_field => field)
       chargeback_tier = FactoryGirl.create(:chargeback_tier, :chargeback_rate_detail_id => chargeback_rate_detail.id,
                                            :start => 0, :finish => Float::INFINITY, :fixed_rate => 0.0,
                                            :variable_rate => 0.0)
