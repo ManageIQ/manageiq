@@ -521,9 +521,12 @@ describe ServiceTemplate do
           :schedule_type           => ['immediately', 'Immediately on Approval'],
           :instance_type           => [flavor.id, flavor.name],
           :src_ems_id              => [ems.id, ems.name],
+          :a_password              => 'secret',
           :provision               => {
-            :fqname    => ra1.fqname,
-            :dialog_id => service_dialog.id
+            :fqname     => ra1.fqname,
+            :dialog_id  => service_dialog.id,
+            :b_password => 'secret',
+            :extra_vars => { 'some_password' => 'secret'}
           },
           :retirement              => {
             :fqname    => ra2.fqname,
@@ -532,6 +535,7 @@ describe ServiceTemplate do
         }
       }
     end
+    let(:reg_password_field) { /password/i }
 
     it 'creates and returns a catalog item' do
       service_template = ServiceTemplate.create_catalog_item(catalog_item_options, user)
@@ -545,6 +549,9 @@ describe ServiceTemplate do
       expect(service_template.resource_actions.first.dialog).to eq(service_dialog)
       expect(service_template.resource_actions.last.dialog).to eq(service_dialog)
       expect(service_template.config_info).to eq(catalog_item_options[:config_info])
+      expect(service_template.options.fetch_path(:config_info, :a_password)).to be_encrypted('secret')
+      expect(service_template.options.fetch_path(:config_info, :provision, :b_password)).to be_encrypted('secret')
+      expect(service_template.options.fetch_path(:config_info, :provision, :extra_vars, 'some_password')).to be_encrypted('secret')
     end
   end
 end

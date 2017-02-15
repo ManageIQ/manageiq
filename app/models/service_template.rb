@@ -151,7 +151,16 @@ class ServiceTemplate < ApplicationRecord
   end
 
   def config_info
-    options[:config_info] || construct_config_info
+    cfg = options[:config_info] || construct_config_info
+    MiqPassword.decrypt_hash(cfg) { |key| password_field?(key) }
+  end
+
+  def self.password_field?(key)
+    key =~ /password/i
+  end
+
+  def password_field?(key)
+    self.class.password_field?(key)
   end
 
   def create_service(service_task, parent_svc = nil)
@@ -378,7 +387,8 @@ class ServiceTemplate < ApplicationRecord
   end
 
   def self.create_from_options(options)
-    create(options.except(:config_info).merge(:options => { :config_info => options[:config_info] }))
+    encrypted_config_info = MiqPassword.encrypt_hash(options[:config_info]) { |key| password_field?(key) }
+    create(options.except(:config_info).merge(:options => { :config_info => encrypted_config_info }))
   end
   private_class_method :create_from_options
 
