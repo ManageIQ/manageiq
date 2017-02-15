@@ -699,6 +699,7 @@ en:
       ContainerBuild:           Container Build
       CustomButton:             Button
       CustomButtonSet:          Buttons Group
+      ConfigurationScriptSource: Repository
       Container:                Container
       ContainerPerformance:     Performance - Container
       ContainerGroup:           Pod
@@ -737,6 +738,7 @@ en:
       ManageIQ::Providers::BaseManager:                                     Provider
       ManageIQ::Providers::AnsibleTower::AutomationManager:                 Automation Manager (Ansible Tower)
       ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationScript: Job Template (Ansible Tower)
+      ManageIQ::Providers::AnsibleTower::AutomationManager::Playbook: Playbook (Ansible Tower)
       ManageIQ::Providers::Foreman::ConfigurationManager:                   Configuration Manager (Foreman)
       ManageIQ::Providers::ConfigurationManager:                            Configuration Manager
       ManageIQ::Providers::AnsibleTower::AutomationManager::ConfiguredSystem: Configured System (Ansible Tower)
@@ -894,6 +896,7 @@ en:
       Zone:                     Zone
 
     table:
+      ansible_playbook:            Playbook
       auth_key_pair_cloud:         Key Pair
       auth_key_pair_clouds:        Key Pairs
       availability_zone:           Availability Zone
