@@ -273,9 +273,15 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
       # Get the timeout from the configuration:
       timeout, = ems_timeouts(:ems_redhat, service)
 
-      # Create the connection:
+      url = URI::Generic.build(
+        :scheme => scheme,
+        :host   => server,
+        :port   => port,
+        :path   => path
+      )
+
       OvirtSDK4::Connection.new(
-        :url      => "#{scheme}://#{server}:#{port}#{path}",
+        :url      => url.to_s,
         :username => username,
         :password => password,
         :timeout  => timeout,
