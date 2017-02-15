@@ -49,7 +49,7 @@
     "qs": "~0.3.10",
     "rx-angular": "rx.angular#~1.1.3",
     "rxjs": "~4.1.0",
-    "spice-html5-bower": "himdel/spice-html5-bower#~0.1.6",
+    "spice-html5-bower": "himdel/spice-html5-bower#~1.6.3",
     "spin.js": "~2.3.2",
     "sprintf": "~1.0.3",
     "tota11y": "~0.1.6",
