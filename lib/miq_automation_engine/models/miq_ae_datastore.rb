@@ -173,7 +173,7 @@ module MiqAeDatastore
     domain_files = DATASTORE_DIRECTORY.join('*', MiqAeDomain::DOMAIN_YAML_FILENAME)
     Dir.glob(domain_files).each do |domain_file|
       domain_name = File.basename(File.dirname(domain_file))
-      reset_domain(ae_datastore, domain_name, Tenant.root_tenant)
+      reset_domain(DATASTORE_DIRECTORY, domain_name, Tenant.root_tenant)
     end
   end
 
