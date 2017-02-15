@@ -20,6 +20,7 @@ class ManageIQ::Providers::AnsibleTower::Inventory::Parser::AutomationManager < 
       inventory_object.hostname = host.name
       inventory_object.virtual_instance_ref = host.instance_id
       inventory_object.inventory_root_group = persister.inventory_root_groups.lazy_find(host.inventory_id.to_s)
+      # TODO(lsmola) get rid of direct DB access
       inventory_object.counterpart = Vm.find_by(:uid_ems => host.instance_id)
     end
   end
@@ -52,9 +53,10 @@ class ManageIQ::Providers::AnsibleTower::Inventory::Parser::AutomationManager < 
       inventory_object.name = project.name
 
       project.playbooks.each do |playbook_name|
-        # FIXME: its not really nice how I have to build a manager_ref / uuid here
-        inventory_object_playbook = persister.configuration_script_payloads.find_or_build("#{project.id}__#{playbook_name}")
-        inventory_object_playbook.configuration_script_source = inventory_object
+        inventory_object_playbook = persister.configuration_script_payloads.find_or_build_by(
+          :configuration_script_source => inventory_object,
+          :manager_ref                 => playbook_name
+        )
         inventory_object_playbook.name = playbook_name
       end
     end
