@@ -1714,6 +1714,8 @@
         :identifier: catalogitem_edit
       - :name: delete
         :identifier: catalogitem_delete
+      - :name: create
+        :identifier: atomic_catalogitem_new
     :subcollection_actions:
       :post:
       - :name: edit
