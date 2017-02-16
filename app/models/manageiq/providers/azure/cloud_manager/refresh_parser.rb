@@ -247,11 +247,14 @@ module ManageIQ::Providers
         }
       end
 
-      # find both OS and SKU if possible, otherwise just the OS type.
+      # Find both OS and SKU if possible, otherwise just the OS type.
       def guest_os(instance)
         image_reference = instance.properties.storage_profile.try(:image_reference)
-        return instance.properties.storage_profile.os_disk.os_type unless image_reference
-        "#{image_reference.offer} #{image_reference.sku.tr('-', ' ')}"
+        if image_reference && image_reference.try(:offer)
+          "#{image_reference.offer} #{image_reference.sku.tr('-', ' ')}"
+        else
+          instance.properties.storage_profile.os_disk.os_type
+        end
       end
 
       def populate_hardware_hash_with_disks(hardware_disks_array, instance)
