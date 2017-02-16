@@ -183,22 +183,10 @@ RSpec.describe 'Arbitration Rule API' do
     it 'returns arbitration rule field_values' do
       api_basic_authorize
 
-      attributes = (ArbitrationRule.attribute_names - ArbitrationRule.virtual_attribute_names).sort.as_json
-      reflections = (ArbitrationRule.reflections.keys | ArbitrationRule.virtual_reflections.keys.collect(&:to_s)).sort
-      subcollections = Array(Api::ApiConfig.collections[:arbitration_rules].subcollections).collect(&:to_s).sort
-      expected = {
-        'attributes'         => attributes,
-        'virtual_attributes' => ArbitrationRule.virtual_attribute_names.sort.as_json,
-        'relationships'      => reflections,
-        'subcollections'     => subcollections,
-        'data'               => {
-          'field_values' => ArbitrationRule.field_values
-        }
-      }
-
       run_options(arbitration_rules_url)
-      expect(response.parsed_body).to eq(expected)
-      expect(response.headers['Access-Control-Allow-Methods']).to include('OPTIONS')
+
+      additional_options = { 'field_values' => ArbitrationRule.field_values }
+      expect_options_results(:arbitration_rules, additional_options)
     end
   end
 end

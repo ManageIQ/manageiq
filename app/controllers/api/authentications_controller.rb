@@ -9,10 +9,20 @@ module Api
       action_result(false, err.to_s)
     end
 
+    def options
+      render_options(:authentications, build_additional_fields)
+    end
+
     private
 
     def authentication_ident(auth)
       "Authentication id:#{auth.id} name: '#{auth.name}'"
+    end
+
+    def build_additional_fields
+      {
+        :cloud_types => ManageIQ::Providers::AnsibleTower::AutomationManager::CloudCredential.credential_types
+      }
     end
   end
 end

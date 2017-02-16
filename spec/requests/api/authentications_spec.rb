@@ -165,4 +165,15 @@ RSpec.describe 'Authentications API' do
       expect(response).to have_http_status(:forbidden)
     end
   end
+
+  describe 'OPTIONS /api/authentications' do
+    it 'returns expected and additional attributes' do
+      api_basic_authorize
+
+      run_options(authentications_url)
+
+      additional_options = { 'cloud_types' => ManageIQ::Providers::AnsibleTower::AutomationManager::CloudCredential.credential_types}
+      expect_options_results(:authentications, additional_options)
+    end
+  end
 end

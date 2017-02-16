@@ -266,6 +266,23 @@ module Spec
           )
         end
       end
+
+      def expect_options_results(type, data = {})
+        klass = Api::ApiConfig.collections[type].klass.constantize
+        attributes = (klass.attribute_names - klass.virtual_attribute_names).sort.as_json
+        attributes.delete('password')
+        reflections = (klass.reflections.keys | klass.virtual_reflections.keys.collect(&:to_s)).sort
+        subcollections = Array(Api::ApiConfig.collections[type].subcollections).collect(&:to_s).sort
+        expected = {
+          'attributes'         => attributes,
+          'virtual_attributes' => klass.virtual_attribute_names.sort.as_json,
+          'relationships'      => reflections,
+          'subcollections'     => subcollections,
+          'data'               => data
+        }
+        expect(response.parsed_body).to eq(expected)
+        expect(response.headers['Access-Control-Allow-Methods']).to include('OPTIONS')
+      end
     end
   end
 end
