@@ -72,12 +72,14 @@ module ManageIQ::Providers::Kubernetes::ContainerManagerMixin
   end
 
   def connect(options = {})
-    options[:hostname] ||= address
-    options[:port] ||= port
-    options[:user] ||= authentication_userid(options[:auth_type])
-    options[:pass] ||= authentication_password(options[:auth_type])
-    options[:bearer] ||= authentication_token(options[:auth_type] || 'bearer')
-    self.class.raw_connect(options[:hostname], options[:port], options)
+    effective_options = options.merge(
+      :hostname => options[:hostname] || address,
+      :port     => options[:port] || port,
+      :user     => options[:user] || authentication_userid(options[:auth_type]),
+      :pass     => options[:pass] || authentication_password(options[:auth_type]),
+      :bearer   => options[:bearer] || authentication_token(options[:auth_type] || 'bearer'),
+    )
+    self.class.raw_connect(effective_options[:hostname], effective_options[:port], effective_options)
   end
 
   def authentications_to_validate
