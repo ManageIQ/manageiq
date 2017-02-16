@@ -20,7 +20,8 @@ class MiqAction < ApplicationRecord
               "set_custom_attribute"    => "Set a Custom Attribute in vCenter",
               "inherit_parent_tags"     => "Inherit Parent Tags",
               "remove_tags"             => "Remove Tags",
-              "delete_snapshots_by_age" => "Delete Snapshots by Age"
+              "delete_snapshots_by_age" => "Delete Snapshots by Age",
+              "run_ansible_playbook"    => "Run Ansible Playbook"
              )
   end
 
