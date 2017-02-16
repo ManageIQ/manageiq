@@ -38,7 +38,8 @@ module ManageIQ::Providers
     end
 
     # Hawkular Client
-    def self.raw_connect(hostname, port, token, type = :alerts)
+    def self.raw_connect(hostname, port, token, type)
+      type ||= :alerts
       klass = case type
               when :metrics
                 ::Hawkular::Metrics::Client
