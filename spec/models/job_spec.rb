@@ -274,6 +274,25 @@ describe Job do
     end
   end
 
+  context "before_destroy callback" do
+    before(:each) do
+      @job = Job.create_job("VmScan", :name => "Hello, World!")
+    end
+
+    it "allows to deletes not active job" do
+      expect(Job.count).to eq 1
+      @job.destroy
+      expect(Job.count).to eq 0
+    end
+
+    it "doesn't allows to deletes active job" do
+      @job.update_attributes!(:state => "Scanning")
+      expect(Job.count).to eq 1
+      @job.destroy
+      expect(Job.count).to eq 1
+    end
+  end
+
   private
 
   def assert_queue_message
