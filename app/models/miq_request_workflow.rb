@@ -743,13 +743,13 @@ class MiqRequestWorkflow
   end
 
   def password_helper(values = @values, encrypt = true)
-    self.class.encrypted_options_fields.each do |pwd_key|
+    self.class.all_encrypted_options_fields.each do |pwd_key|
       next if values[pwd_key].blank?
-      if encrypt
-        values[pwd_key].replace(MiqPassword.try_encrypt(values[pwd_key]))
-      else
-        values[pwd_key].replace(MiqPassword.try_decrypt(values[pwd_key]))
-      end
+      direction = encrypt ? :try_encrypt : :try_decrypt
+      source    = load_ar_obj(get_source_and_targets.values.first)
+      region    = MiqRegion.find_by(:region => source.try(:region_id))
+      region  ||= MiqRegion.my_region
+      values[pwd_key].replace(region.send(direction, values[pwd_key]))
     end
   end
 

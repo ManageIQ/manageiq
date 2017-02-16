@@ -295,18 +295,21 @@ class MiqRegion < ApplicationRecord
   end
 
   def encrypt(string)
-    region_v2_key = authentication_token(AUTHENTICATION_TYPE)
-    raise "No key configured for region #{region}. Configure Central Admin to fetch the key" if region_v2_key.nil?
+    return MiqPassword.encrypt(string) if self.class.my_region == self
+    with_regional_key { |key| MiqPassword.new.encrypt(string, "v2", key) }
+  end
 
-    file = Tempfile.new("region_auth_key")
-    begin
-      file.write(region_v2_key)
-      file.close
-      key = EzCrypto::Key.load(file.path)
-      MiqPassword.new.encrypt(string, "v2", key)
-    ensure
-      file.unlink
-    end
+  def decrypt(string)
+    return MiqPassword.decrypt(string) if self.class.my_region == self
+    with_regional_key { |key| MiqPassword.new.decrypt(string, false, key) }
+  end
+
+  def try_encrypt(string)
+    MiqPassword.encrypted?(string) ? string : encrypt(string)
+  end
+
+  def try_decrypt(string)
+    MiqPassword.encrypted?(string) ? decrypt(string) : string
   end
 
   def self.api_system_auth_token_for_region(region_id, user)
@@ -397,5 +400,19 @@ class MiqRegion < ApplicationRecord
     require 'net/scp'
     key_path = "/var/www/miq/vmdb/certs/v2_key"
     Net::SCP.download!(ssh_host, ssh_user, key_path, nil, :ssh => {:password => ssh_password})
+  end
+
+  def with_regional_key
+    region_v2_key = authentication_token(AUTHENTICATION_TYPE)
+    raise "No key configured for region #{region}. Configure Central Admin to fetch the key" if region_v2_key.nil?
+
+    file = Tempfile.new("region_auth_key")
+    begin
+      file.write(region_v2_key)
+      file.close
+      yield(EzCrypto::Key.load(file.path))
+    ensure
+      file.unlink
+    end
   end
 end

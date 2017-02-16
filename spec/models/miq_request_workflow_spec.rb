@@ -535,4 +535,62 @@ describe MiqRequestWorkflow do
       expect(workflow.storage_to_hash_struct(storage).storage_clusters).to be_nil
     end
   end
+
+  context "#password_helper encrypts and decrypts the correct fields" do
+    before do
+      MiqRegion.seed
+      # Sorry for allow_any_instance_of, but I don't want to load the automate model, it's not needed for the test
+      allow_any_instance_of(MiqProvisionVirtWorkflow).to receive(:get_dialogs)
+      allow_any_instance_of(MiqProvisionVirtWorkflow).to receive(:update_field_visibility)
+    end
+
+    let(:required_values) { {:src_vm_id => vm.id} }
+    let(:virt_workflow) { MiqProvisionVirtWorkflow.new(values, FactoryGirl.create(:user)) } # no get_source_and_targets on the base class
+    let(:values) do
+      described_class.all_encrypted_options_fields.each_with_object(required_values) do |f, h|
+        h[f] = "should be encrypted"
+      end
+    end
+
+    context "with the current region encryption key" do
+      let(:vm) { FactoryGirl.create(:vm) }
+      it "encrypts and decrypts" do
+        virt_workflow.password_helper(values) # Encrypt stuff
+        expect_encrypted_fields_to_eq("v2:{bP6FpTmXkER2rgo5V6pAYJuBjHO055HhXknl2FweM4o=}")
+
+        virt_workflow.password_helper(values, false) # Decrypt stuff
+        expect_encrypted_fields_to_eq("should be encrypted")
+      end
+    end
+
+    context "with a remote region encryption key" do
+      let(:remote_region_number) { ApplicationRecord.my_region_number + 5 }
+      let(:region) { FactoryGirl.create(:miq_region, :region => remote_region_number) }
+      # the first id from a region other than ours
+      let(:external_region_id) { ApplicationRecord.region_to_range(remote_region_number).first }
+
+      let(:vm) { FactoryGirl.create(:vm, :id => external_region_id) }
+      it "encrypts and decrypts" do
+        auth_key = <<EOK
+---
+:EZCRYPTO KEY FILE: KEEP THIS SECURE !
+:created: 2014-02-28 09:59:47 -0500
+:algorithm: aes-256-cbc
+:key: YWJjYWJjYWJjYWJjYWJjYWJjYWJjYmFiY2JhY2JhYgz=
+EOK
+        region.authentications.create(:authtype => "system_api", :auth_key => auth_key)
+        virt_workflow.password_helper(values) # Encrypt stuff
+        expect_encrypted_fields_to_eq("v2:{Oz6+6EZs7EyUi0OCXjcoeNKZ3Lf4dQ4iQ4H3rIca0ok=}")
+
+        virt_workflow.password_helper(values, false) # Decrypt stuff
+        expect_encrypted_fields_to_eq("should be encrypted")
+      end
+    end
+
+    def expect_encrypted_fields_to_eq(string)
+      vals = values.dup
+      expect(vals.delete(:src_vm_id)).to eq(vm.id)
+      vals.each { |_k, v| expect(v).to eq(string) }
+    end
+  end
 end
