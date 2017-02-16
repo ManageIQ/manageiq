@@ -253,10 +253,10 @@ module Api
 
       def attr_accessible?(object, attr)
         return true if object && object.respond_to?(attr)
-        (object.class.respond_to?(:has_attribute?) && object.class.has_attribute?(attr)) ||
-          (object.class.respond_to?(:reflect_on_association) && object.class.reflect_on_association(attr)) ||
-          (object.class.respond_to?(:virtual_attribute?) && object.class.virtual_attribute?(attr)) ||
-          (object.class.respond_to?(:virtual_reflection?) && object.class.virtual_reflection?(attr))
+        object.class.try(:has_attribute?, attr) ||
+          object.class.try(:reflect_on_association, attr) ||
+          object.class.try(:virtual_attribute?, attr) ||
+          object.class.try(:virtual_reflection?, attr)
       end
 
       def attr_virtual?(object, attr)
