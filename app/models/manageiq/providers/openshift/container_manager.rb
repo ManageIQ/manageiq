@@ -20,10 +20,6 @@ class ManageIQ::Providers::Openshift::ContainerManager < ManageIQ::Providers::Co
     ManageIQ::Providers::Openshift::ContainerManager::EventCatcher
   end
 
-  def supported_auth_attributes
-    %w(userid password auth_key)
-  end
-
   def create_project(project)
     connect.create_project_request(project)
   rescue KubeException => e

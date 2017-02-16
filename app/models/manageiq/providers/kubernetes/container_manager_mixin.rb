@@ -90,6 +90,10 @@ module ManageIQ::Providers::Kubernetes::ContainerManagerMixin
     [:auth_key]
   end
 
+  def supported_auth_attributes
+    %w(userid password auth_key)
+  end
+
   def verify_credentials(auth_type = nil, options = {})
     options = options.merge(:auth_type => auth_type)
     if options[:auth_type].to_s == "hawkular"
