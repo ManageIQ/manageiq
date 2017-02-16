@@ -1,2 +1,2 @@
-class ManageIQ::Providers::AnsibleTower::AutomationManager::NetworkCredential < ManageIQ::Providers::AutomationManager::Authentication
+class ManageIQ::Providers::AnsibleTower::AutomationManager::NetworkCredential < ManageIQ::Providers::AnsibleTower::AutomationManager::Credential
 end
