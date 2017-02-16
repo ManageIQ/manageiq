@@ -543,6 +543,7 @@ configuration_script_sources:
 - scm_delete_on_update
 - scm_update_on_launch
 - authentication_id
+- type
 configuration_scripts:
 - id
 - manager_id
