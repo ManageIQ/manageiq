@@ -8,6 +8,11 @@ module Vmdb
     def initialize
       @registered_automate_domains = []
       @vmdb_plugins = []
+
+      Rails.application.railties.each do |railtie|
+        next unless railtie.class.name.start_with?("ManageIQ::Providers::") || railtie.try(:vmdb_plugin?)
+        register_vmdb_plugin(railtie)
+      end
     end
 
     def register_vmdb_plugin(engine)
