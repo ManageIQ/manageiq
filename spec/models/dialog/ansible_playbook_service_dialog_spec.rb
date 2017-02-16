@@ -39,7 +39,7 @@ describe Dialog::AnsiblePlaybookServiceDialog do
     expect(group).to have_attributes(:label => "Options", :display => "edit")
     fields = group.dialog_fields
     expect(fields.size).to eq(2)
-    assert_field(fields[0], DialogFieldDropDownList, :label => "Credential", :name => "credential", :dynamic => true, :required => false)
+    assert_field(fields[0], DialogFieldDropDownList, :label => "Machine Credential", :name => "credential", :dynamic => true, :required => false)
     assert_field(fields[1], DialogFieldTextBox, :label => "Hosts", :name => "hosts", :required => false, :data_type => 'string')
   end
 
