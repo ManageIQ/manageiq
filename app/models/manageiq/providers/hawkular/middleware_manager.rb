@@ -234,16 +234,18 @@ module ManageIQ::Providers
     def add_middleware_datasource(ems_ref, hash)
       with_provider_connection do |connection|
         datasource_data = {
-          :resourcePath   => ems_ref.to_s,
-          :datasourceName => hash[:datasource]["datasourceName"],
-          :xaDatasource   => hash[:datasource]["xaDatasource"],
-          :jndiName       => hash[:datasource]["jndiName"],
-          :driverName     => hash[:datasource]["driverName"],
-          :driverClass    => hash[:datasource]["driverClass"],
-          :connectionUrl  => hash[:datasource]["connectionUrl"],
-          :userName       => hash[:datasource]["userName"],
-          :password       => hash[:datasource]["password"],
-          :securityDomain => hash[:datasource]["securityDomain"]
+          :resourcePath         => ems_ref.to_s,
+          :datasourceName       => hash[:datasource]["datasourceName"],
+          :xaDatasource         => hash[:datasource]["xaDatasource"],
+          :jndiName             => hash[:datasource]["jndiName"],
+          :driverName           => hash[:datasource]["driverName"],
+          :driverClass          => hash[:datasource]["driverClass"],
+          :connectionUrl        => hash[:datasource]["connectionUrl"],
+          :userName             => hash[:datasource]["userName"],
+          :password             => hash[:datasource]["password"],
+          :xaDataSourceClass    => hash[:datasource]["driverClass"],
+          :securityDomain       => hash[:datasource]["securityDomain"],
+          :datasourceProperties => hash[:datasource]["datasourceProperties"]
         }
 
         connection.operations(true).add_datasource(datasource_data) do |on|
