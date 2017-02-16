@@ -60,15 +60,19 @@ class ManageIQ::Providers::Openstack::InfraManager::OrchestrationStack < ::Orche
     raise MiqException::MiqOrchestrationStatusError, err.to_s, err.backtrace
   end
 
-  def queue_post_scaledown_task(services)
+  def queue_post_scaledown_task(services, task_id = nil)
     MiqQueue.put(:class_name  => self.class.name,
                  :expires_on  => Time.now.utc + 2.hours,
-                 :args        => [services],
+                 :args        => [services, task_id],
                  :instance_id => id,
                  :method_name => "post_scaledown_task")
   end
 
-  def post_scaledown_task(services)
+  def post_scaledown_task(services, task_id = nil)
+    task = MiqTask.find(task_id) unless task_id.nil?
+    if task && task.state == MiqTask::STATE_FINISHED && !task.status_ok?
+      raise MiqException::MiqQueueError, "Scaledown update failed, not running post scaledown task"
+    end
     raise MiqException::MiqQueueRetryLater.new(:deliver_on => Time.now.utc + 1.minute) unless raw_status.first == 'UPDATE_COMPLETE'
     services.each(&:delete_service)
   end

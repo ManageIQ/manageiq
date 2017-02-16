@@ -85,6 +85,22 @@ class OrchestrationStack < ApplicationRecord
     raise NotImplementedError, _("raw_update_stack must be implemented in a subclass")
   end
 
+  def update_stack_queue(userid, template, options = {})
+    task_opts = {
+      :action => "updating Orchestration Stack for user #{userid}",
+      :userid => userid
+    }
+    queue_opts = {
+      :class_name  => self.class.name,
+      :method_name => 'update_stack',
+      :instance_id => id,
+      :role        => 'ems_operations',
+      :zone        => ext_management_system.my_zone,
+      :args        => [template, options]
+    }
+    MiqTask.generic_action_with_callback(task_opts, queue_opts)
+  end
+
   def update_stack(template, options = {})
     raw_update_stack(template, options)
   end
