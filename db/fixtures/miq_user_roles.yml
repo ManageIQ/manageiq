@@ -191,6 +191,7 @@
   - usage
   - vm_check_compliance
   - vm_console
+  - vm_webmks_console
   - vm_cloud_explorer
   - vm_explorer
   - vm_infra_explorer
@@ -306,6 +307,7 @@
   - utilization
   - vm_check_compliance
   - vm_console
+  - vm_webmks_console
   - vm_cloud_explorer
   - vm_explorer
   - vm_infra_explorer
@@ -348,6 +350,7 @@
   - vm_clone
   - vm_compare
   - vm_console
+  - vm_webmks_console
   - vm_cloud_explorer
   - vm_explorer
   - vm_infra_explorer
@@ -495,6 +498,7 @@
   - vm_collect_running_processes
   - vm_compare
   - vm_console
+  - vm_webmks_console
   - vm_cloud_explorer
   - vm_explorer
   - vm_infra_explorer
@@ -706,6 +710,7 @@
   - vm_check_compliance
   - vm_collect_running_processes
   - vm_console
+  - vm_webmks_console
   - vm_cloud_explorer
   - vm_explorer
   - vm_infra_explorer
@@ -801,6 +806,7 @@
   - usage
   - vm_check_compliance
   - vm_console
+  - vm_webmks_console
   - vm_cloud_explorer
   - vm_explorer
   - vm_infra_explorer
@@ -893,9 +899,11 @@
   - service_view
   - svc_catalog_provision
   - vm_console
+  - vm_webmks_console
   - vm_clone
   - vm_cloud_explorer
   - vm_console
+  - vm_webmks_console
   - vm_drift
   - vm_edit
   - vm_filter_accord
@@ -957,6 +965,7 @@
   - vm_collect_running_processes
   - vm_compare
   - vm_console
+  - vm_webmks_console
   - vm_drift
   - vm_explorer
   - vm_guest_restart

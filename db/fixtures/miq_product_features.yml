@@ -5759,6 +5759,10 @@
         :description: Open a web-based console for VMs
         :feature_type: control
         :identifier: vm_console
+      - :name: Console using WebMKS
+        :description: Open a web-based console for VMs
+        :feature_type: control
+        :identifier: vm_webmks_console
       - :name: Console using VNC
         :description: Open a web-based VNC console for VMs
         :feature_type: control
