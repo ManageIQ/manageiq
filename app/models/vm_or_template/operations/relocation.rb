@@ -11,6 +11,22 @@ module VmOrTemplate::Operations::Relocation
     raise NotImplementedError, _("raw_evacuate must be implemented in a subclass")
   end
 
+  def evacuate_queue(userid, options)
+    task_opts = {
+      :action => "evacuating VM for user #{userid}",
+      :userid => userid
+    }
+    queue_opts = {
+      :class_name  => self.class.name,
+      :method_name => 'evacuate',
+      :instance_id => id,
+      :role        => 'ems_operations',
+      :zone        => my_zone,
+      :args        => [options]
+    }
+    MiqTask.generic_action_with_callback(task_opts, queue_opts)
+  end
+
   def evacuate(options = {})
     raw_evacuate(options)
   end

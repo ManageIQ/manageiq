@@ -107,7 +107,26 @@ class ManageIQ::Providers::CloudManager::Vm < ::Vm
     true
   end
 
-  def resize(new_flavor)
+  def resize_queue(userid, new_flavor)
+    task_opts = {
+      :action => "resizing Instance for user #{userid}",
+      :userid => userid
+    }
+    queue_opts = {
+      :class_name  => self.class.name,
+      :method_name => 'resize',
+      :instance_id => id,
+      :role        => 'ems_operations',
+      :zone        => my_zone,
+      :args        => [new_flavor.id]
+    }
+    MiqTask.generic_action_with_callback(task_opts, queue_opts)
+  end
+
+  def resize(new_flavor_id)
+    raise ArgumentError, _("new_flavor_id cannot be nil") if new_flavor_id.nil?
+    new_flavor = Flavor.find(new_flavor_id)
+    raise ArgumentError, _("flavor cannot be found") if new_flavor.nil? 
     raw_resize(new_flavor)
   end
 
@@ -128,12 +147,44 @@ class ManageIQ::Providers::CloudManager::Vm < ::Vm
     raise NotImplementedError, _("raw_associate_floating_ip must be implemented in a subclass")
   end
 
+  def associate_floating_ip_queue(userid, ip_address)
+    task_opts = {
+      :action => "associating floating IP with Instance for user #{userid}",
+      :userid => userid
+    }
+    queue_opts = {
+      :class_name  => self.class.name,
+      :method_name => 'associate_floating_ip',
+      :instance_id => id,
+      :role        => 'ems_operations',
+      :zone        => my_zone,
+      :args        => [ip_address]
+    }
+    MiqTask.generic_action_with_callback(task_opts, queue_opts)
+  end
+
   def associate_floating_ip(ip_address)
     raw_associate_floating_ip(ip_address)
   end
 
   def raw_disassociate_floating_ip(_ip_address)
     raise NotImplementedError, _("raw_disassociate_floating_ip must be implemented in a subclass")
+  end
+
+  def disassociate_floating_ip_queue(userid, ip_address)
+    task_opts = {
+      :action => "disassociating floating IP with Instance for user #{userid}",
+      :userid => userid
+    }
+    queue_opts = {
+      :class_name  => self.class.name,
+      :method_name => 'disassociate_floating_ip',
+      :instance_id => id,
+      :role        => 'ems_operations',
+      :zone        => my_zone,
+      :args        => [ip_address]
+    }
+    MiqTask.generic_action_with_callback(task_opts, queue_opts)
   end
 
   def disassociate_floating_ip(ip_address)
