@@ -47,7 +47,13 @@ class Dialog < ApplicationRecord
   end
 
   def automate_values_hash
-    dialog_fields.each_with_object({}) { |df, result| result[df.automate_key_name] = df.automate_output_value }
+    dialog_fields.each_with_object({}) do |df, result|
+      if df.options.include?("multiple")
+        result[MiqAeEngine.create_automation_attribute_array_key(df.automate_key_name)] = df.automate_output_value
+      else
+        result[df.automate_key_name] = df.automate_output_value
+      end
+    end
   end
 
   def validate_children
@@ -61,7 +67,7 @@ class Dialog < ApplicationRecord
       next if dt.valid?
       dt.errors.full_messages.each do |err_msg|
         errors.add(:base, _("Dialog %{dialog_label} / %{error_message}") %
-          {:dialog_label => label, :error_message => err_msg})
+                   {:dialog_label => label, :error_message => err_msg})
       end
     end
   end
@@ -82,7 +88,7 @@ class Dialog < ApplicationRecord
   def init_fields_with_values(values)
     dialog_field_hash.each do |key, field|
       values[key] = field.value
-      field.dialog   = self
+      field.dialog = self
     end
     dialog_field_hash.each { |key, field| values[key] = field.initialize_with_values(values) }
     dialog_field_hash.each { |_key, field| field.update_values(values) }

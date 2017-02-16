@@ -92,51 +92,75 @@ describe DialogFieldDropDownList do
   describe "#refresh_json_value" do
     let(:dialog_field) { described_class.new(:dynamic => dynamic, :read_only => true) }
 
-    context "when the dialog_field is dynamic" do
+    context "dynamic" do
       let(:dynamic) { true }
-
-      before do
-        allow(DynamicDialogFieldValueProcessor).to receive(:values_from_automate).with(dialog_field).and_return(
-          [["123", 456], ["789", 101]]
-        )
-        dialog_field.value = "123"
+      context "array" do
+        context "included" do
+          # TODO
+        end
+        context "not-included" do
+          # TODO
+        end
       end
 
-      it "sets the value" do
-        dialog_field.refresh_json_value("789")
-        expect(dialog_field.value).to eq("789")
-      end
+      context "not-array" do
+        before do
+          allow(DynamicDialogFieldValueProcessor).to receive(:values_from_automate).with(dialog_field).and_return(
+            [["123", 456], ["789", 101]]
+          )
+          dialog_field.value = "123"
+        end
 
-      it "returns the values from automate" do
-        expect(dialog_field.refresh_json_value("789")).to eq(
-          :refreshed_values => [["789", 101], ["123", 456]],
-          :checked_value    => "789",
-          :read_only        => true,
-          :visible          => true
-        )
+        it "sets the value" do
+          dialog_field.refresh_json_value("789")
+          expect(dialog_field.value).to eq("789")
+        end
+
+        it "returns the values from automate" do
+          expect(dialog_field.refresh_json_value("789")).to eq(
+            :refreshed_values => [["789", 101], ["123", 456]],
+            :checked_value    => "789",
+            :read_only        => true,
+            :visible          => true
+          )
+        end
       end
     end
 
-    context "when the dialog_field is not dynamic" do
+    context "non-dynamic" do
       let(:dynamic) { false }
-
-      before do
-        dialog_field.values = [["123", 456], ["789", 101]]
-        dialog_field.value = "123"
+      context "array" do
+        context "included" do
+          # TODO
+        end
+        context "not-included" do
+          # TODO
+        end
       end
 
-      it "sets the value" do
-        dialog_field.refresh_json_value("789")
-        expect(dialog_field.value).to eq("789")
-      end
+      context "not-array" do
+        context "when the dialog_field is not dynamic" do
+          let(:dynamic) { false }
 
-      it "returns the values" do
-        expect(dialog_field.refresh_json_value("789")).to eq(
-          :refreshed_values => [["789", 101], ["123", 456], [nil, "<None>"]],
-          :checked_value    => "789",
-          :read_only        => true,
-          :visible          => true
-        )
+          before do
+            dialog_field.values = [["123", 456], ["789", 101]]
+            dialog_field.value = "123"
+          end
+
+          it "sets the value" do
+            dialog_field.refresh_json_value("789")
+            expect(dialog_field.value).to eq("789")
+          end
+
+          it "returns the values" do
+            expect(dialog_field.refresh_json_value("789")).to eq(
+              :refreshed_values => [["789", 101], ["123", 456], [nil, "<None>"]],
+              :checked_value    => "789",
+              :read_only        => true,
+              :visible          => true
+            )
+          end
+        end
       end
     end
   end
@@ -178,6 +202,55 @@ describe DialogFieldDropDownList do
 
         it "returns the raw values" do
           expect(dialog_field.values).to eq(%w(potato potato))
+        end
+      end
+
+      context "dialog field dropdown without options hash" do
+        before do
+          @df = FactoryGirl.create(:dialog_field_drop_down_list, :name => 'test drop down')
+        end
+
+        describe "#force_multi_value" do
+          context "when force_multi_value is present" do
+            context "when force_multi_value is null" do
+              it "multivalue false" do
+                expect(@df.force_multi_value).to be_falsey
+              end
+            end
+
+            context "when force_multi_value is not null" do
+              context "when force_multi_value is truthy" do
+                it "multivalue true" do
+                  @df.force_multi_value = true
+                  expect(@df.force_multi_value).to be_truthy
+                end
+              end
+
+              context "when force_multi_value is falsy" do
+                it "multivalue false" do
+                  expect(@df.force_multi_value).to be_falsey
+                end
+              end
+            end
+          end
+
+          context "when force_multi_value is not present" do
+            it "multivalue false" do
+              expect(@df.force_multi_value).to be_falsey
+            end
+          end
+        end
+      end
+
+      context "dialog field dropdown with options hash" do
+        before do
+          @df = FactoryGirl.create(:dialog_field_drop_down_list,
+                                   :name    => 'test drop down',
+                                   :options => {:force_multi_value => true})
+        end
+
+        it "#force_multi_value" do
+          expect(@df.force_multi_value).to be_truthy
         end
       end
 
