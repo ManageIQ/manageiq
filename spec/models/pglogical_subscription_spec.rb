@@ -370,23 +370,6 @@ describe PglogicalSubscription do
 
       sub.delete
     end
-
-    it "removes the region authentication key if present" do
-      allow(pglogical).to receive(:subscriptions).and_return(subscriptions, [subscriptions.last])
-      expect(pglogical).to receive(:subscription_drop).with("region_#{remote_region1}_subscription", true)
-
-      EvmSpecHelper.create_guid_miq_server_zone
-      auth = FactoryGirl.create(
-        :auth_token,
-        :resource_id   => remote_region.id,
-        :resource_type => "MiqRegion",
-        :auth_key      => "this is the encryption key!",
-        :authtype      => "system_api"
-      )
-
-      sub.delete
-      expect(AuthToken.find_by_id(auth.id)).to be_nil
-    end
   end
 
   describe "#validate" do

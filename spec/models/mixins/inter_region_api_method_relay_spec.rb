@@ -176,41 +176,28 @@ describe InterRegionApiMethodRelay do
         expect(MiqRegion).to receive(:find_by).with(:region => region_number).and_return(region)
       end
 
-      context "with authentication configured" do
-        before do
-          expect(region).to receive(:auth_key_configured?).and_return true
-        end
+      it "opens an api connection to that address when the server has an ip address" do
+        require "manageiq-api-client"
 
-        it "opens an api connection to that address when the server has an ip address" do
-          require "manageiq-api-client"
+        server.ipaddress = "192.0.2.1"
+        server.save!
 
-          server.ipaddress = "192.0.2.1"
-          server.save!
+        expect(User).to receive(:current_userid).and_return(request_user)
+        expect(region).to receive(:api_system_auth_token).with(request_user).and_return(region_auth_token)
 
-          expect(User).to receive(:current_userid).and_return(request_user)
-          expect(region).to receive(:api_system_auth_token).with(request_user).and_return(region_auth_token)
-
-          client_connection_hash = {
-            :url      => "https://#{server.ipaddress}",
-            :miqtoken => region_auth_token,
-            :ssl      => {:verify => false}
-          }
-          expect(ManageIQ::API::Client).to receive(:new).with(client_connection_hash).and_return(api_connection)
-          described_class.api_client_connection_for_region(region_number)
-        end
-
-        it "raises if the server doesn't have an ip address" do
-          expect {
-            described_class.api_client_connection_for_region(region_number)
-          }.to raise_error("Failed to establish API connection to region #{region_number}")
-        end
+        client_connection_hash = {
+          :url      => "https://#{server.ipaddress}",
+          :miqtoken => region_auth_token,
+          :ssl      => {:verify => false}
+        }
+        expect(ManageIQ::API::Client).to receive(:new).with(client_connection_hash).and_return(api_connection)
+        described_class.api_client_connection_for_region(region_number)
       end
 
-      it "raises without authentication configured" do
-        expect(region).to receive(:auth_key_configured?).and_return false
+      it "raises if the server doesn't have an ip address" do
         expect {
           described_class.api_client_connection_for_region(region_number)
-        }.to raise_error("Region #{region_number} is not configured for central administration")
+        }.to raise_error("Failed to establish API connection to region #{region_number}")
       end
     end
 
