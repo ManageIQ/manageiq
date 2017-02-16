@@ -64,7 +64,7 @@ module ManageIQ
     end
 
     def self.migrate_database
-      puts "\n== Updating database =="
+      puts "\n== Migrating database =="
       run_rake_task("db:migrate")
     end
 
