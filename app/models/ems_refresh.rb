@@ -33,7 +33,7 @@ module EmsRefresh
 
   cache_with_timeout(:queue_timeout) { MiqEmsRefreshWorker.worker_settings[:queue_timeout] || 60.minutes }
 
-  def self.queue_refresh(target, id = nil, sync = false)
+  def self.queue_refresh(target, id = nil)
     # Handle targets passed as a single class/id pair, an array of class/id pairs, or an array of references
     targets = get_ar_objects(target, id)
 
@@ -55,7 +55,7 @@ module EmsRefresh
     # Queue the refreshes
     targets_by_ems.each do |ems, ts|
       ts = ts.collect { |t| [t.class.to_s, t.id] }.uniq
-      queue_merge(ts, ems, sync)
+      queue_merge(ts, ems)
     end
   end
 
@@ -140,11 +140,7 @@ module EmsRefresh
     end
   end
 
-  def self.queue_merge(targets, ems, sync = false)
-    sync ? queue_merge_sync(targets, ems) : queue_merge_async(targets, ems)
-  end
-
-  def self.queue_merge_async(targets, ems)
+  def self.queue_merge(targets, ems)
     # Items will be naturally serialized since there is a dedicated worker.
     MiqQueue.put_or_update(
       :queue_name  => MiqEmsRefreshWorker.queue_name_for_ems(ems),
@@ -159,11 +155,6 @@ module EmsRefresh
         :msg_timeout => queue_timeout,
         :task_id     => nil)
     end
-  end
-
-  def self.queue_merge_sync(targets, ems)
-    msg = queue_merge_async(targets, ems)
-    sleep 1 while MiqQueue.find_by(:id => msg.id)
   end
 
   #

@@ -9,7 +9,7 @@ class EmsEvent
       refresh_targets = targets.collect { |t| get_target("#{t}_refresh_target") unless t.blank? }.compact.uniq
       return if refresh_targets.empty?
 
-      EmsRefresh.queue_refresh(refresh_targets, nil, sync)
+      EmsRefresh.queue_refresh(refresh_targets)
     end
 
     def refresh_new_target
