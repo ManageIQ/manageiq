@@ -87,6 +87,10 @@ authentication_configuration_script_bases:
 - id
 - authentication_id
 - configuration_script_base_id
+authentication_orchestration_stacks:
+- id
+- authentication_id
+- orchestration_stack_id
 authentications:
 - id
 - name
