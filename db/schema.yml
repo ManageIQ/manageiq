@@ -6122,6 +6122,15 @@ physical_servers:
 - ems_ref
 - created_at
 - updated_at
+- hostname
+- product_name
+- manufacturer
+- machine_type
+- model
+- serial_number
+- uuid
+- field_replaceable_unit
+- host_id
 pictures:
 - id
 - resource_id
