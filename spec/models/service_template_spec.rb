@@ -547,6 +547,24 @@ describe ServiceTemplate do
       expect(service_template.config_info).to eq(catalog_item_options[:config_info])
     end
   end
+
+  describe "#provision" do
+    it "provision's a service template " do
+      user = FactoryGirl.create(:user, :userid => "barney")
+      resource_action = FactoryGirl.create(:resource_action, :action => "Provision")
+      service_template = FactoryGirl.create(:service_template,
+                                            :resource_actions => [resource_action])
+      workflow = instance_double(ResourceActionWorkflow)
+      allow(User).to receive(:find_by_userid!).and_return(user)
+      expect(service_template).to receive(:provision_action).and_return(resource_action)
+      expect(ResourceActionWorkflow).to(receive(:new)
+        .with({}, user, resource_action, :target => service_template).and_return(workflow))
+      expect(workflow).to receive(:submit_request)
+      expect(workflow).to receive(:set_value).with('ordered_by', 'fred')
+
+      service_template.provision_request('barney', 'ordered_by' => 'fred')
+    end
+  end
 end
 
 def add_and_save_service(p, c)

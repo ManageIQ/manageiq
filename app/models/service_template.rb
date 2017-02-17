@@ -377,6 +377,13 @@ class ServiceTemplate < ApplicationRecord
     save!
   end
 
+  def provision_request(userid, options = {})
+    workflow = ResourceActionWorkflow.new({}, User.find_by!(:userid => userid),
+                                          provision_action, :target => self)
+    options.each { |key, value| workflow.set_value(key, value) }
+    workflow.submit_request
+  end
+
   def self.create_from_options(options)
     create(options.except(:config_info).merge(:options => { :config_info => options[:config_info] }))
   end
