@@ -1,4 +1,6 @@
 require 'miq_apache'
+class NoFreePortError < StandardError; end
+
 module MiqWebServerWorkerMixin
   extend ActiveSupport::Concern
 
@@ -8,6 +10,8 @@ module MiqWebServerWorkerMixin
     class << self
       attr_accessor :registered_ports
     end
+
+    try(:maximum_workers_count=, 10)
   end
 
   module ClassMethods
@@ -89,8 +93,6 @@ module MiqWebServerWorkerMixin
         end
       end
 
-      modify_apache_ports(ports_hash, self::PROTOCOL) if MiqEnvironment::Command.supports_apache?
-
       result
     end
 
@@ -110,50 +112,23 @@ module MiqWebServerWorkerMixin
 
       _log.info("[#{options.inspect}")
       MiqApache::Conf.install_default_config(options)
+      add_apache_balancer_members
     end
 
-    def modify_apache_ports(ports_hash, protocol)
-      return unless MiqEnvironment::Command.supports_apache?
-      adds    = Array(ports_hash[:adds])
-      deletes = Array(ports_hash[:deletes])
+    def port_range
+      self::STARTING_PORT...(self::STARTING_PORT + maximum_workers_count)
+    end
 
-      # Remove any already registered
-      adds -= self.registered_ports
-
-      return false if adds.empty? && deletes.empty?
-
+    def add_apache_balancer_members
       conf = MiqApache::Conf.instance(self::BALANCE_MEMBER_CONFIG_FILE)
-
-      unless adds.empty?
-        _log.info("Adding port(s) #{adds.inspect}")
-        conf.add_ports(adds, protocol)
-      end
-
-      unless deletes.empty?
-        _log.info("Removing port(s) #{deletes.inspect}")
-        conf.remove_ports(deletes, protocol)
-      end
-
-      saved = conf.save
-      if saved
-        self.registered_ports += adds
-        self.registered_ports -= deletes
-
-        # Update the apache load balancer regardless but only restart apache
-        # when adding a new port to the balancer.
-        MiqServer.my_server.queue_restart_apache unless adds.empty?
-        _log.info("Added/removed port(s) #{adds.inspect}/#{deletes.inspect}, registered ports after #{self.registered_ports.inspect}")
-      end
-      saved
+      conf.add_ports(port_range.to_a, self::PROTOCOL)
+      conf.save
     end
 
     def reserve_port(ports)
-      index = 0
-      loop do
-        port = self::STARTING_PORT + index
-        return port unless ports.include?(port)
-        index += 1
-      end
+      free_ports = port_range.to_a - ports
+      raise NoFreePortError if free_ports.empty?
+      free_ports.first
     end
   end
 
