@@ -74,8 +74,7 @@ class ChargebackRate < ApplicationRecord
 
         rates.each do |rate_detail|
           currency = ChargebackRateDetailCurrency.find_by(:name => rate_detail.delete(:type_currency))
-          metric = rate_detail[:metric] || "#{rate_detail[:group]}_#{rate_detail[:source]}"
-          field = ChargeableField.find_by(:metric => metric)
+          field = ChargeableField.find_by(:metric => rate_detail.delete(:metric))
           rate_detail[:chargeable_field_id] = field.id
           if currency
             rate_detail[:chargeback_rate_detail_currency_id] = currency.id
