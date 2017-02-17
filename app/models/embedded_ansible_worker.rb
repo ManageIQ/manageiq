@@ -9,7 +9,7 @@ class EmbeddedAnsibleWorker < MiqWorker
   end
 
   def kill
-    # Does the base class's kill -9 work on the supervisord process as we want?
+    stop
   end
 
   def status_update
