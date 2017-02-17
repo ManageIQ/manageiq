@@ -5,5 +5,14 @@ class CloudObjectStoreContainer < ApplicationRecord
 
   acts_as_miq_taggable
 
+  include ProviderObjectMixin
+  include NewWithTypeStiMixin
+  include ProcessTasksMixin
+  include SupportsFeatureMixin
+
+  include_concern 'Operations'
+
   alias_attribute :name, :key
+
+  supports_not :delete, :reason => N_("Delete operation is not supported.")
 end
