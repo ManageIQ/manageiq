@@ -9,7 +9,12 @@ class EmsEvent
       refresh_targets = targets.collect { |t| get_target("#{t}_refresh_target") unless t.blank? }.compact.uniq
       return if refresh_targets.empty?
 
-      EmsRefresh.queue_refresh(refresh_targets)
+      task_ids = EmsRefresh.queue_refresh(refresh_targets)
+
+      # Wait for the tasks to finish if we are doing a synchronous refresh
+      task_ids.each { |tid| MiqTask.wait_for_taskid(tid) } if sync
+
+      task_ids
     end
 
     def refresh_new_target
