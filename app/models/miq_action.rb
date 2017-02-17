@@ -222,9 +222,11 @@ class MiqAction < ApplicationRecord
                     :message      => "Policy #{msg}: policy: [#{inputs[:policy].description}], event: [#{inputs[:event].description}]")
   end
 
-  def action_run_ansible_playbook(action, rec, inputs)
+  def action_run_ansible_playbook(action, rec, _inputs)
     service_template = ServiceTemplate.find(action.options[:service_template_id])
-    Api::ServiceTemplateWorkflow.create(service_template, {}).submit_request
+    options = { :dialog_hosts => target_hosts(action, rec) }
+      
+    Api::ServiceTemplateWorkflow.create(service_template, options).submit_request
   end
 
   def action_snmp_trap(action, rec, inputs)
@@ -1022,5 +1024,19 @@ class MiqAction < ApplicationRecord
       args[:instance_id] = target.id unless static
       MiqQueue.put(args)
     end
+  end
+
+  def target_hosts(action, rec)
+    if action.options[:use_event_target]
+      ipaddress(rec)
+    elsif action.options[:use_localhost]
+      'localhost'
+    else
+      action.options['hosts']
+    end
+  end
+
+  def ipaddress(record)
+    record.ipaddresses[0] if record.respond_to?(:ipaddresses)
   end
 end
