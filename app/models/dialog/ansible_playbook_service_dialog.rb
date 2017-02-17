@@ -38,13 +38,13 @@ class Dialog
         :dynamic        => true,
         :display        => "edit",
         :required       => false,
-        :label          => "Credential",
+        :label          => "Machine Credential",
         :description    => "The credential to run the playbook",
         :reconfigurable => true,
         :position       => position,
         :dialog_group   => group
       ).tap do |dialog_field|
-        dialog_field.resource_action.fqname = "AutomationManagement/AnsibleTower/Operations/Methods/AvailableCredentials"
+        dialog_field.resource_action.fqname = "AutomationManagement/AnsibleTower/Operations/Methods/Available_Machine_Credentials"
       end
     end
 
@@ -52,7 +52,7 @@ class Dialog
       group.dialog_fields.build(
         :type           => "DialogFieldTextBox",
         :name           => "hosts",
-        :description    => "A ';'-separated string to list hosts for the playbook to run at",
+        :description    => "A ','-separated string to list hosts for the playbook to run at",
         :data_type      => "string",
         :display        => "edit",
         :required       => false,
