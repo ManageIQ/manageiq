@@ -53,7 +53,7 @@ module EmsRefresh
     end
 
     # Queue the refreshes
-    targets_by_ems.each do |ems, ts|
+    targets_by_ems.collect do |ems, ts|
       ts = ts.collect { |t| [t.class.to_s, t.id] }.uniq
       queue_merge(ts, ems)
     end
@@ -141,20 +141,23 @@ module EmsRefresh
   end
 
   def self.queue_merge(targets, ems)
-    # Items will be naturally serialized since there is a dedicated worker.
-    MiqQueue.put_or_update(
+    task_options = {
+      :action => "EmsRefresh(#{ems.name}) [#{targets}]",
+      :userid => "system"
+    }
+
+    queue_options = {
       :queue_name  => MiqEmsRefreshWorker.queue_name_for_ems(ems),
       :class_name  => name,
       :method_name => 'refresh',
       :role        => "ems_inventory",
-      :zone        => ems.my_zone
-    ) do |msg, item|
-      targets = msg.nil? ? targets : (msg.args[0] | targets)
-      item.merge(
-        :args        => [targets],
-        :msg_timeout => queue_timeout,
-        :task_id     => nil)
-    end
+      :zone        => ems.my_zone,
+      :args        => [targets],
+      :msg_timeout => queue_timeout,
+    }
+
+    # Items will be naturally serialized since there is a dedicated worker.
+    MiqTask.generic_action_with_callback(task_options, queue_options)
   end
 
   #
