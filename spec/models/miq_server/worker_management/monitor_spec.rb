@@ -30,5 +30,15 @@ describe MiqServer::WorkerManagement::Monitor do
       server.reload
       expect(server.miq_workers.first.id).to eq(worker.id)
     end
+
+    context "#sync_workers" do
+      let(:server) { EvmSpecHelper.local_miq_server }
+      it "rescues exceptions and moves on" do
+        allow(MiqServer).to receive(:monitor_class_names).and_return(%w(MiqGenericWorker MiqPriorityWorker))
+        allow(MiqGenericWorker).to receive(:sync_workers).and_raise
+        expect(MiqPriorityWorker).to receive(:sync_workers).and_return(:adds => [123])
+        expect(server.sync_workers).to eq("MiqPriorityWorker"=>{:adds=>[123]})
+      end
+    end
   end
 end
