@@ -9,8 +9,13 @@ describe ServiceTemplateAnsiblePlaybook do
   let(:inventory_root_group) { FactoryGirl.create(:inventory_root_group) }
   let(:service_template_catalog) { FactoryGirl.create(:service_template_catalog) }
   let(:ems) do
-    FactoryGirl.create(:automation_manager_ansible_tower, :inventory_root_groups => [inventory_root_group])
+    FactoryGirl.create(:automation_manager_ansible_tower,
+                       :inventory_root_groups         => [inventory_root_group],
+                       :configuration_script_payloads => [],
+                       :configuration_script_sources  => [])
   end
+
+  let(:machine_cred) { FactoryGirl.create(:ansible_machine_credential) }
 
   let(:playbook) do
     FactoryGirl.create(:configuration_script_payload,
@@ -144,6 +149,30 @@ describe ServiceTemplateAnsiblePlaybook do
         :fqname                 => described_class.default_provisioning_entry_point('atomic'),
         :configuration_template => job_template
       )
+    end
+  end
+
+  describe '#manager_valid?' do
+    it 'returns false if we dont find at least 1 machine credential in the vmdb associated with the manager' do
+      machine_cred_type = 'ManageIQ::Providers::AnsibleTower::AutomationManager::MachineCredential'
+      setup_playbooks_and_repos
+
+      expect(ems.credentials.where(:type => machine_cred_type).present?)
+        .to be false
+      expect(described_class.manager_valid?(ems)).to be false
+    end
+
+    it 'returns true if we find at least 1 machine credential, 1 playbook and 1 repo but no configuration_scripts in the vmdb associated with the manager' do
+      setup_playbooks_and_repos
+      ems.credentials << machine_cred
+      expect(ems.configuration_scripts.present?).to be false
+      expect(described_class.manager_valid?(ems)).to be true
+    end
+
+    def setup_playbooks_and_repos
+      ems.configuration_script_sources << script_source
+      ems.configuration_script_sources.first.configuration_script_payloads << playbook
+      ems.reload
     end
   end
 end
