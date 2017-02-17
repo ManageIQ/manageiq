@@ -6016,6 +6016,8 @@ orchestration_stack_resources:
 - last_updated
 - stack_id
 - ems_ref
+- start_time
+- finish_time
 orchestration_stacks:
 - id
 - name
