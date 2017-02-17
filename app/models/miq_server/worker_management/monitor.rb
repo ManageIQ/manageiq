@@ -48,9 +48,15 @@ module MiqServer::WorkerManagement::Monitor
   def sync_workers
     result = {}
     self.class.monitor_class_names.each do |class_name|
-      c = class_name.constantize
-      result[c.name] = c.sync_workers
-      result[c.name][:adds].each { |pid| worker_add(pid) unless pid.nil? }
+      begin
+        c = class_name.constantize
+        result[c.name] = c.sync_workers
+        result[c.name][:adds].each { |pid| worker_add(pid) unless pid.nil? }
+      rescue => error
+        _log.error("Failed to sync_workers for class: #{class_name}")
+        _log.log_backtrace(error)
+        next
+      end
     end
     result
   end
