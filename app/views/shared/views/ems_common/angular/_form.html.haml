@@ -74,7 +74,7 @@
     .form-group{"ng-class" => "{'has-error': angularForm.azure_tenant_id.$invalid}", "ng-if" => "emsCommonModel.emstype != '' && emsCommonModel.emstype == 'azure'"}
       %label.col-md-2.control-label{"for" => "ems_tenant_id"}
         = _('Tenant ID')
-      .col-md-8
+      .col-md-4
         %input.form-control{"type"                    => "text",
                             "id"                      => "ems_tenant_id",
                             "name"                    => "azure_tenant_id",
@@ -92,7 +92,7 @@
     .form-group{"ng-class" => "{'has-error': angularForm.subscription.$invalid}", "ng-if" => "emsCommonModel.emstype != '' && emsCommonModel.emstype == 'azure'"}
       %label.col-md-2.control-label{"for" => "ems_subscription"}
         = _('Subscription ID')
-      .col-md-8
+      .col-md-4
         %input.form-control{"type"                    => "text",
                             "id"                      => "ems_subscription",
                             "name"                    => "subscription",
@@ -140,7 +140,7 @@
     .form-group{"ng-class" => "{'has-error': angularForm.keystone_v3_domain_id.$invalid}", "ng-if" => "emsCommonModel.api_version == 'v3' && (emsCommonModel.emstype == 'openstack' || emsCommonModel.emstype == 'openstack_infra')"}
       %label.col-md-2.control-label{"for" => "ems_keystone_domain_id"}
         = _('Keystone V3 Domain ID')
-      .col-md-8
+      .col-md-4
         %input.form-control{"type"        => "text",
                             "id"          => "ems_keystone_domain_id",
                             "name"        => "keystone_v3_domain_id",
