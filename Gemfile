@@ -2,6 +2,8 @@ raise "Ruby versions less than 2.2.2 are unsupported!" if RUBY_VERSION < "2.2.2"
 
 source 'https://rubygems.org'
 
+puts "¯\_(ツ)_/¯"
+
 #
 # VMDB specific gems
 #
