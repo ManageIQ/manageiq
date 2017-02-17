@@ -1222,6 +1222,18 @@ describe "Vms API" do
       expect_result_resources_to_include_data("resources", "name" => [tag1[:path], tag2[:path]])
     end
 
+    it "query vms by tag name via filter[]=tags.name" do
+      api_basic_authorize collection_action_identifier(:vms, :read, :get)
+      # let's make sure both vms are created
+      vm1
+      vm2
+
+      run_get vms_url, :expand => "resources", :filter => ["tags.name='#{tag2[:path]}'"]
+
+      expect_query_result(:vms, 1, 2)
+      expect_result_resources_to_include_hrefs("resources", [vm2_url])
+    end
+
     it "assigns a tag to a Vm without appropriate role" do
       api_basic_authorize
 
