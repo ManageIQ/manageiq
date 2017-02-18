@@ -278,7 +278,7 @@ class EmsEvent < EventStream
 
   def get_refresh_target(target_type)
     m = "#{target_type}_refresh_target"
-    self.respond_to?(m) ? send(m) : nil
+    self.try(m)
   end
 
   def vm_refresh_target

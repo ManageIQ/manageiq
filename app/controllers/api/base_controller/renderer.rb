@@ -117,7 +117,7 @@ module Api
       #
       def virtual_attribute_accessor(type, attr)
         method = "fetch_#{type}_#{attr}"
-        respond_to?(method) ? method : nil
+        try(method)
       end
 
       private
