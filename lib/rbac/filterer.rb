@@ -185,7 +185,6 @@ module Rbac
                                                     options[:userid],
                                                     options[:miq_group],
                                                     options[:miq_group_id])
-      tz                     = user.try(:get_timezone)
       attrs                  = {:user_filters => copy_hash(user_filters)}
       ids_clause             = nil
       target_ids             = nil
@@ -220,7 +219,7 @@ module Rbac
 
       user_filters['match_via_descendants'] = to_class(options[:match_via_descendants])
 
-      exp_sql, exp_includes, exp_attrs = search_filter.to_sql(tz) if search_filter && !klass.try(:instances_are_derived?)
+      exp_sql, exp_includes, exp_attrs = search_filter.to_sql if search_filter && !klass.try(:instances_are_derived?)
       attrs[:apply_limit_in_sql] = (exp_attrs.nil? || exp_attrs[:supported_by_sql]) && user_filters["belongsto"].blank?
 
       # for belongs_to filters, scope_targets uses scope to make queries. want to remove limits for those.
@@ -240,7 +239,7 @@ module Rbac
       end
 
       if search_filter && targets && (!exp_attrs || !exp_attrs[:supported_by_sql])
-        rejects     = targets.reject { |obj| matches_search_filters?(obj, search_filter, tz) }
+        rejects     = targets.reject { |obj| matches_search_filters?(obj, search_filter) }
         auth_count -= rejects.length unless options[:skip_counts]
         targets -= rejects
       end
@@ -578,8 +577,8 @@ module Rbac
       MiqPreloader.preload_and_map(sources, :storages)
     end
 
-    def matches_search_filters?(obj, filter, tz)
-      filter.nil? || filter.lenient_evaluate(obj, tz)
+    def matches_search_filters?(obj, filter)
+      filter.nil? || filter.lenient_evaluate(obj)
     end
   end
 end
