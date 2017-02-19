@@ -51,7 +51,7 @@ class OpenscapResult < ApplicationRecord
   end
 
   def with_openscap_arf(raw)
-    self.class.openscap_available?
+    return unless self.class.openscap_available?
     begin
       OpenSCAP.oscap_init
       # ARF - nist standardized 'Asset Reporting Format' Full representation if a scap scan result.
