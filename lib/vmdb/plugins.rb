@@ -4,11 +4,10 @@ module Vmdb
 
     attr_reader :vmdb_plugins
     attr_reader :registered_automate_domains
-    attr_reader :registered_provider_plugins
 
     def initialize
       @registered_automate_domains = []
-      @registered_provider_plugins = []
+      @registered_provider_plugin_map = {}
       @vmdb_plugins = []
     end
 
@@ -22,10 +21,12 @@ module Vmdb
       DescendantLoader.instance.descendants_paths << engine.root.join('app')
     end
 
-    def provider_plugin_names
-      @provider_plugins_names ||= registered_provider_plugins.collect do |plugin|
-        ManageIQ::Providers::Inflector.provider_name(plugin).downcase.to_sym
-      end
+    def registered_provider_plugin_names
+      @registered_provider_plugin_map.keys
+    end
+
+    def registered_provider_plugins
+      @registered_provider_plugin_map.values
     end
 
     def system_automate_domains
@@ -36,8 +37,8 @@ module Vmdb
 
     def register_provider_plugin(engine)
       if engine.class.name.start_with?("ManageIQ::Providers::")
-        @registered_provider_plugins << engine
-        @provider_plugins_names = nil
+        provider_name = ManageIQ::Providers::Inflector.provider_name(engine).underscore.to_sym
+        @registered_provider_plugin_map[provider_name] = engine
       end
     end
 
