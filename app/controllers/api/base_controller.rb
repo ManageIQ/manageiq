@@ -14,6 +14,7 @@ module Api
 
     include_concern 'Parameters'
     include_concern 'Parser'
+    include_concern 'Proxy'
     include_concern 'Manager'
     include_concern 'Action'
     include_concern 'Logger'

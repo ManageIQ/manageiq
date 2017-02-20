@@ -9,6 +9,8 @@ module Api
       # virtual subcollections is added.
 
       def normalize_hash(type, obj, opts = {})
+        return obj.response_body if obj.kind_of?(Proxy::Request)
+
         Environment.fetch_encrypted_attribute_names(obj.class)
         attrs = normalize_select_attributes(obj, opts)
         result = {}
@@ -82,8 +84,7 @@ module Api
       #
       def normalize_url(value)
         svalue = value.to_s
-        pref   = @req.api_prefix
-        svalue.match(pref) ? svalue : "#{pref}/#{svalue}"
+        svalue =~ %r{^https?://} ? svalue : "#{@req.api_prefix}/#{svalue}"
       end
 
       #
@@ -129,6 +130,7 @@ module Api
       end
 
       def normalize_direct(type, name, obj)
+        return obj.response_body if obj.kind_of?(Proxy::Request)
         return normalize_direct_array(type, name, obj) if obj.kind_of?(Array) || obj.kind_of?(ActiveRecord::Relation)
         return normalize_hash(type, obj) if obj.respond_to?(:attributes) || obj.respond_to?(:keys)
         normalize_attr_byname(name, obj)

@@ -112,6 +112,10 @@ module Api
                        end
         end
 
+        def fullpath
+          @request.original_fullpath # /api/...&param=value...
+        end
+
         private
 
         def expand_requested
@@ -120,10 +124,6 @@ module Api
 
         def version_override?
           @params[:version] && @params[:version].match(ApiConfig.version[:regex]) # v#.# version signature
-        end
-
-        def fullpath
-          @request.original_fullpath # /api/...&param=value...
         end
 
         def prefix

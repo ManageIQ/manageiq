@@ -49,6 +49,8 @@ module Api
       end
 
       def resource_to_jbuilder(type, reftype, resource, opts = {})
+        return resource.response_body if resource.kind_of?(Proxy::Request)
+
         reftype = get_reftype(type, reftype, resource, opts)
         json    = Jbuilder.new
         json.ignore_nil!
@@ -109,7 +111,11 @@ module Api
       # Render nothing for normal update.
       #
       def render_normal_update(type, res = {})
-        render_resource type, res
+        if res.kind_of?(Proxy::Request)
+          render_proxy_request(res)
+        else
+          render_resource type, res
+        end
       end
 
       #
