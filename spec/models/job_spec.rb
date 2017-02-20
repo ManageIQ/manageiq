@@ -305,6 +305,21 @@ describe Job do
       end
     end
 
+    describe "#attributes_for_task" do
+      it "returns hash with job's attributes to use for syncronization with linked task" do
+        expect(@job.attributes_for_task).to include(
+          :status        => @job.status.try(:capitalize),
+          :state         => @job.state.try(:capitalize),
+          :name          => @job.name,
+          :message       => @job.message.try(:truncate, 255),
+          :userid        => @job.userid,
+          :miq_server_id => @job.miq_server_id,
+          :context_data  => @job.context,
+          :zone          => @job.zone,
+          :started_on    => @job.started_on
+        )
+      end
+    end
     context "after_update_commit callback calls" do
       describe "#update_linked_task" do
         it "executes when 'after_update_commit' callbacke triggered" do
