@@ -35,7 +35,7 @@ class EmbeddedAnsible
     return false unless configured? && running?
     begin
       api_connection.api.verify_credentials
-    rescue Faraday::ConnectionFailed, Faraday::SSLError, AnsibleTowerClient::ConnectionError, AnsibleTowerClient::ClientError
+    rescue AnsibleTowerClient::ClientError
       return false
     end
     true
