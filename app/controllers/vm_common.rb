@@ -284,6 +284,7 @@ module VmCommon
       @snapshot_tree = TreeBuilderSnapshots.new(:snapshot_tree, :snapshot, @sb, true, :root => @record)
       @active = if @snapshot_tree.selected_node
                   snap_selected = Snapshot.find_by_id(from_cid(@snapshot_tree.selected_node.split('-').last))
+                  session[:snap_selected] = snap_selected.id
                   snap_selected.current?
                 else
                   false
