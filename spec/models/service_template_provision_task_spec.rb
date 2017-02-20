@@ -75,6 +75,8 @@ describe ServiceTemplateProvisionTask do
 
     describe "#deliver_to_automate" do
       it "delivers to the queue when the state is not active" do
+        @service              = FactoryGirl.create(:service, :name => 'Test Service')
+        @task_0.destination   = @service
         @task_0.state         = 'pending'
         zone                  = FactoryGirl.create(:zone, :name => "special")
         orchestration_manager = FactoryGirl.create(:ext_management_system, :zone => zone)
@@ -86,7 +88,7 @@ describe ServiceTemplateProvisionTask do
           :class_name       => 'ServiceProvision_Template',
           :instance_name    => 'clone_to_service',
           :automate_message => 'create',
-          :attrs            => {'request' => 'clone_to_service'},
+          :attrs            => {'request' => 'clone_to_service', 'Service::Service' => @service.id},
           :user_id          => @admin.id,
           :miq_group_id     => @admin.current_group_id,
           :tenant_id        => @admin.current_tenant.id,
