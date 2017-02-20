@@ -1093,7 +1093,7 @@ class ApplicationHelper::ToolbarBuilder
       when "rbac_user_copy"
         return N_("User [Administrator] can not be copied") if @record.super_admin_user?
       when "rbac_user_delete"
-        return N_("User [Administrator] can not be deleted") if @record.super_admin_user?
+        return N_("User [Administrator] can not be deleted") if @record.userid == 'admin'
       end
     when "UserRole"
       case id
