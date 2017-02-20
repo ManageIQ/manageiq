@@ -457,20 +457,19 @@ class MiqExpression
 
     operator = exp.keys.first
     op_args = exp[operator]
+    col_name = op_args["field"] if op_args.kind_of?(Hash)
 
     case operator.downcase
     when "equal", "=", "<", ">", ">=", "<=", "!="
       operands = operands2rubyvalue(operator, op_args, context_type)
       clause = operands.join(" #{normalize_ruby_operator(operator)} ")
     when "before"
-      col_type = get_col_type(op_args["field"]) if op_args["field"]
-      col_name = op_args["field"]
+      col_type = get_col_type(col_name) if col_name
       col_ruby, = operands2rubyvalue(operator, {"field" => col_name}, context_type)
       val = op_args["value"]
       clause = ruby_for_date_compare(col_ruby, col_type, tz, "<", val)
     when "after"
-      col_type = get_col_type(op_args["field"]) if op_args["field"]
-      col_name = op_args["field"]
+      col_type = get_col_type(col_name) if col_name
       col_ruby, = operands2rubyvalue(operator, {"field" => col_name}, context_type)
       val = op_args["value"]
       clause = ruby_for_date_compare(col_ruby, col_type, tz, nil, nil, ">", val)
@@ -523,7 +522,7 @@ class MiqExpression
       operands = operands2rubyvalue(operator, op_args, context_type)
       clause = operands.join(" #{normalize_ruby_operator(operator)} ")
     when "contains"
-      op_args["tag"] ||= op_args["field"]
+      op_args["tag"] ||= col_name
       operands = if context_type != "hash"
                    ref, val = value2tag(preprocess_managed_tag(op_args["tag"]), op_args["value"])
                    ["<exist ref=#{ref}>#{val}</exist>"]
@@ -559,7 +558,6 @@ class MiqExpression
     when "value exists"
       clause = operands2rubyvalue(operator, op_args, context_type)
     when "is"
-      col_name = op_args["field"]
       col_ruby, dummy = operands2rubyvalue(operator, {"field" => col_name}, context_type)
       col_type = get_col_type(col_name)
       value = op_args["value"]
@@ -569,7 +567,6 @@ class MiqExpression
                  ruby_for_date_compare(col_ruby, col_type, tz, ">=", value, "<=", value)
                end
     when "from"
-      col_name = op_args["field"]
       col_ruby, dummy = operands2rubyvalue(operator, {"field" => col_name}, context_type)
       col_type = get_col_type(col_name)
 
