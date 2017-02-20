@@ -146,18 +146,41 @@ module EmsRefresh
       :userid => "system"
     }
 
+    task = MiqTask.create(
+      :name    => task_options[:action],
+      :userid  => task_options[:userid],
+      :state   => MiqTask::STATE_QUEUED,
+      :status  => MiqTask::STATUS_OK,
+      :message => "Queued the action: [#{task_options[:action]}] being run for user: [#{task_options[:userid]}]"
+    )
+
     queue_options = {
       :queue_name  => MiqEmsRefreshWorker.queue_name_for_ems(ems),
       :class_name  => name,
       :method_name => 'refresh',
       :role        => "ems_inventory",
       :zone        => ems.my_zone,
-      :args        => [targets],
-      :msg_timeout => queue_timeout,
     }
 
     # Items will be naturally serialized since there is a dedicated worker.
-    MiqTask.generic_action_with_callback(task_options, queue_options)
+    MiqQueue.put_or_update(queue_options) do |msg, item|
+      targets = msg.nil? ? targets : (msg.args[0] | targets)
+      task_id = msg && msg.task_id ? msg.task_id.to_i : task.id
+
+      item.merge(
+        :args         => [targets],
+        :task_id      => task_id,
+        :msg_timeout  => queue_timeout,
+        :miq_callback => {
+          :class_name  => task.class.name,
+          :method_name => :queue_callback,
+          :instance_id => task_id,
+          :args        => ['Finished']
+        }
+      )
+    end
+
+    task.id
   end
 
   #
