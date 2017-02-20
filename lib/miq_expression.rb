@@ -458,8 +458,9 @@ class MiqExpression
     operator = exp.keys.first
     op_args = exp[operator]
     col_name = op_args["field"] if op_args.kind_of?(Hash)
+    operator = operator.downcase
 
-    case operator.downcase
+    case operator
     when "equal", "=", "<", ">", ">=", "<=", "!="
       operands = operands2rubyvalue(operator, op_args, context_type)
       clause = operands.join(" #{normalize_ruby_operator(operator)} ")
@@ -484,7 +485,7 @@ class MiqExpression
       clause = "(#{operands[0]} - #{operands[1]}) == []"
     when "like", "not like", "starts with", "ends with", "includes"
       operands = operands2rubyvalue(operator, op_args, context_type)
-      case operator.downcase
+      case operator
       when "starts with"
         operands[1] = "/^" + re_escape(operands[1].to_s) + "/"
       when "ends with"
@@ -493,7 +494,7 @@ class MiqExpression
         operands[1] = "/" + re_escape(operands[1].to_s) + "/"
       end
       clause = operands.join(" #{normalize_ruby_operator(operator)} ")
-      clause = "!(" + clause + ")" if operator.downcase == "not like"
+      clause = "!(" + clause + ")" if operator == "not like"
     when "regular expression matches", "regular expression does not match"
       operands = operands2rubyvalue(operator, op_args, context_type)
 
@@ -573,7 +574,7 @@ class MiqExpression
       start_val, end_val = op_args["value"]
       clause = ruby_for_date_compare(col_ruby, col_type, tz, ">=", start_val, "<=", end_val)
     else
-      raise _("operator '%{operator_name}' is not supported") % {:operator_name => operator}
+      raise _("operator '%{operator_name}' is not supported") % {:operator_name => operator.upcase}
     end
 
     # puts "clause: #{clause}"
@@ -919,7 +920,6 @@ class MiqExpression
 
   def self.operands2rubyvalue(operator, ops, context_type)
     # puts "Enter: operands2rubyvalue: operator: #{operator}, ops: #{ops.inspect}"
-    operator = operator.downcase
 
     if ops["field"]
       if ops["field"] == "<count>"
@@ -1070,26 +1070,25 @@ class MiqExpression
   end
 
   def self.normalize_ruby_operator(str)
-    str = str.upcase
     case str
-    when "EQUAL", "="
+    when "equal", "="
       "=="
-    when "NOT"
+    when "not"
       "!"
-    when "LIKE", "NOT LIKE", "STARTS WITH", "ENDS WITH", "INCLUDES", "REGULAR EXPRESSION MATCHES"
+    when "like", "not like", "starts with", "ends with", "includes", "regular expression matches"
       "=~"
-    when "REGULAR EXPRESSION DOES NOT MATCH"
+    when "regular expression does not match"
       "!~"
-    when "IS NULL", "IS EMPTY"
+    when "is null", "is empty"
       "=="
-    when "IS NOT NULL", "IS NOT EMPTY"
+    when "is not null", "is not empty"
       "!="
-    when "BEFORE"
+    when "before"
       "<"
-    when "AFTER"
+    when "after"
       ">"
     else
-      str.downcase
+      str
     end
   end
 
