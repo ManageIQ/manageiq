@@ -26,10 +26,8 @@ class CreateTaskForEachJobAndTransferAttributes < ActiveRecord::Migration[5.0]
 
   def down
     say_with_time("Deleting all tasks which have job") do
-      Job.find_each do |job|
-        job.miq_task.delete
-        job.update_attributes(:miq_task_id => nil)
-      end
+      MiqTask.destroy_all("id in (select miq_task_id from jobs)")
+      Job.update_all(:miq_task_id => nil)
     end
   end
 end
