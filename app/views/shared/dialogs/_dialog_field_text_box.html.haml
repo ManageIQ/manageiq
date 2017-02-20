@@ -9,7 +9,9 @@
       :javascript
         dialogFieldRefresh.listenForAutoRefreshMessages(JSON.parse('#{j(auto_refresh_options.to_json)}'), function() {
           dialogFieldRefresh.refreshTextBox("#{field.name}", "#{field.id}", function() {
-            dialogFieldRefresh.triggerAutoRefresh(JSON.parse('#{j(auto_refresh_options.to_json)}'));
+            dialogFieldRefresh.triggerAutoRefresh(
+              JSON.parse('#{j(auto_refresh_listening_options(auto_refresh_options, true).to_json)}')
+            );
           });
         });
 

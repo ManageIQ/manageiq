@@ -32,7 +32,9 @@
                                             checkedValue,
                                             "#{url}",
                                             JSON.parse('#{j(auto_refresh_options.to_json)}'), function() {
-          dialogFieldRefresh.triggerAutoRefresh(JSON.parse('#{j(auto_refresh_options.to_json)}'));
+          dialogFieldRefresh.triggerAutoRefresh(
+            JSON.parse('#{j(auto_refresh_listening_options(auto_refresh_options, true).to_json)}')
+          );
         });
       });
 
