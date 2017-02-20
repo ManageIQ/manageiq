@@ -498,4 +498,12 @@ describe ApplicationHelper::Dialogs do
       ])
     end
   end
+
+  describe "#auto_refresh_listening_options" do
+    let(:options) { {:trigger => false} }
+
+    it "overrides the trigger attribute" do
+      expect(helper.auto_refresh_listening_options(options, true)).to eq(:trigger => true)
+    end
+  end
 end
