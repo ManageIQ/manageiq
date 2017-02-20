@@ -25,6 +25,8 @@
   - ontap_storage_volume
   - catalog
   - cloud_network
+  - cloud_object_store_container
+  - cloud_object_store_object
   - control_explorer
   - dashboard
   - datacenter
