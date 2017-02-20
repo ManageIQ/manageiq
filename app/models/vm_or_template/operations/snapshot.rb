@@ -49,6 +49,9 @@ module VmOrTemplate::Operations::Snapshot
 
   def raw_create_snapshot(name, desc = nil, memory)
     run_command_via_parent(:vm_create_snapshot, :name => name, :desc => desc, :memory => memory)
+  rescue => err
+    create_notification(:vm_snapshot_failure, :error => err.to_s, :snapshot_op => "create")
+    raise MiqVmSnapshotError, err.to_s
   end
 
   def create_snapshot(name, desc = nil, memory = false)
