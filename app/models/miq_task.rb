@@ -134,7 +134,7 @@ class MiqTask < ApplicationRecord
 
   def state_active
     attributes = {:state => STATE_ACTIVE}
-    attributes[:started_on] = Time.now.utc if state == STATE_ACTIVE && started_on.nil?
+    attributes[:started_on] = Time.now.utc if started_on.nil?
     update_attributes!(attributes)
   end
 
