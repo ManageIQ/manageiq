@@ -56,6 +56,20 @@ RSpec.describe MiqExpression::Field do
       field = "Vm,host+name"
       expect(described_class.parse(field)).to be_nil
     end
+
+    it "will return nil when given a tag" do
+      tag = "Vm.managed-name"
+      expect(described_class.parse(tag)).to be_nil
+
+      tag = "Vm.hosts.managed-name"
+      expect(described_class.parse(tag)).to be_nil
+
+      tag = "Vm.user_tag-name"
+      expect(described_class.parse(tag)).to be_nil
+
+      tag = "Vm.hosts.user_tag-name"
+      expect(described_class.parse(tag)).to be_nil
+    end
   end
 
   describe "#parse!" do
