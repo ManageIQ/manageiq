@@ -6039,6 +6039,11 @@ orchestration_stacks:
 - status_reason
 - cloud_tenant_id
 - resource_group
+- start_time
+- finish_time
+- configuration_script_base_id
+- verbosity
+- hosts
 orchestration_templates:
 - id
 - name
