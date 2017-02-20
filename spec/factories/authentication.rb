@@ -105,6 +105,4 @@ FactoryGirl.define do
   factory :ansible_network_credential,
           :parent => :automation_manager_authentication,
           :class  => "ManageIQ::Providers::AnsibleTower::AutomationManager::NetworkCredential"
-
-  factory :auth_token, :class => "AuthToken"
 end
