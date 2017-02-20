@@ -8,7 +8,7 @@ module ResourcePoolHelper::TextualSummary
   end
 
   def textual_group_relationships
-    %i(parent_datacenter parent_cluster parent_host direct_vms allvms_size total_vms)
+    %i(parent_datacenter parent_cluster parent_host direct_vms allvms_size total_vms resource_pools)
   end
 
   def textual_group_configuration
@@ -111,6 +111,16 @@ module ResourcePoolHelper::TextualSummary
     if num > 0 && role_allows?(:feature => "resource_pool_show_list")
       h[:title] = _("Show tree of all VMs in this Resource Pool")
       h[:link]  = url_for(:controller => 'resource_pool', :action => 'show', :id => @record, :display => 'descendant_vms')
+    end
+    h
+  end
+
+  def textual_resource_pools
+    num = @record.number_of(:resource_pools)
+    h = {:label => _("Resource Pools"), :icon => "pficon pficon-resource-pool", :value => num}
+    if num > 0 && role_allows?(:feature => "resource_pool_show_list")
+      h[:title] = _("Show all Resource Pools")
+      h[:link]  = url_for(:controller => "resource_pool", :action => 'show', :id => @record, :display => 'resource_pools')
     end
     h
   end
