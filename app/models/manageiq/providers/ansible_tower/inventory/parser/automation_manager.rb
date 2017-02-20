@@ -10,50 +10,52 @@ class ManageIQ::Providers::AnsibleTower::Inventory::Parser::AutomationManager < 
   def inventory_root_groups
     collector.inventories.each do |inventory|
       inventory_object = persister.inventory_root_groups.find_or_build(inventory.id.to_s)
-      inventory_object[:name] = inventory.name
+      inventory_object.name = inventory.name
     end
   end
 
   def configured_systems
     collector.hosts.each do |host|
       inventory_object = persister.configured_systems.find_or_build(host.id)
-      inventory_object[:hostname] = host.name
-      inventory_object[:virtual_instance_ref] = host.instance_id
-      inventory_object[:inventory_root_group] = persister.inventory_root_groups.lazy_find(host.inventory_id.to_s)
-      inventory_object[:counterpart] = Vm.find_by(:uid_ems => host.instance_id)
+      inventory_object.hostname = host.name
+      inventory_object.virtual_instance_ref = host.instance_id
+      inventory_object.inventory_root_group = persister.inventory_root_groups.lazy_find(host.inventory_id.to_s)
+      inventory_object.counterpart = Vm.find_by(:uid_ems => host.instance_id)
     end
   end
 
   def configuration_scripts
     collector.job_templates.each do |job_template|
       inventory_object = persister.configuration_scripts.find_or_build(job_template.id.to_s)
-      inventory_object[:description] = job_template.description
-      inventory_object[:name] = job_template.name
-      inventory_object[:survey_spec] = job_template.survey_spec_hash
-      inventory_object[:variables] = job_template.extra_vars_hash
-      inventory_object[:inventory_root_group] = persister.inventory_root_groups.lazy_find(job_template.inventory_id.to_s)
+      inventory_object.description = job_template.description
+      inventory_object.name = job_template.name
+      inventory_object.survey_spec = job_template.survey_spec_hash
+      inventory_object.variables = job_template.extra_vars_hash
+      inventory_object.inventory_root_group = persister.inventory_root_groups.lazy_find(job_template.inventory_id.to_s)
 
-      inventory_object[:authentications] = []
+      authentications = []
       %w(credential_id cloud_credential_id network_credential_id).each do |credential_attr|
         next unless job_template.respond_to?(credential_attr)
         credential_id = job_template.public_send(credential_attr).to_s
         next if credential_id.blank?
-        inventory_object[:authentications] << persister.credentials.lazy_find(credential_id)
+        authentications << persister.credentials.lazy_find(credential_id)
       end
+
+      inventory_object.authentications = authentications
     end
   end
 
   def configuration_script_sources
     collector.projects.each do |project|
       inventory_object = persister.configuration_script_sources.find_or_build(project.id.to_s)
-      inventory_object[:description] = project.description
-      inventory_object[:name] = project.name
+      inventory_object.description = project.description
+      inventory_object.name = project.name
 
       project.playbooks.each do |playbook_name|
         # FIXME: its not really nice how I have to build a manager_ref / uuid here
         inventory_object_playbook = persister.configuration_script_payloads.find_or_build("#{project.id}__#{playbook_name}")
-        inventory_object_playbook[:configuration_script_source] = inventory_object
-        inventory_object_playbook[:name] = playbook_name
+        inventory_object_playbook.configuration_script_source = inventory_object
+        inventory_object_playbook.name = playbook_name
       end
     end
   end
@@ -61,8 +63,8 @@ class ManageIQ::Providers::AnsibleTower::Inventory::Parser::AutomationManager < 
   def credentials
     collector.credentials.each do |credential|
       inventory_object = persister.credentials.find_or_build(credential.id.to_s)
-      inventory_object[:name] = credential.name
-      inventory_object[:userid] = credential.username
+      inventory_object.name = credential.name
+      inventory_object.userid = credential.username
       # credential.description
       # credential.host
       # credential.password
@@ -82,7 +84,7 @@ class ManageIQ::Providers::AnsibleTower::Inventory::Parser::AutomationManager < 
       # credential.client
       # credential.authorize
       # credential.authorize_password
-      inventory_object[:type] = case credential.kind
+      inventory_object.type = case credential.kind
                                 when 'net' then 'ManageIQ::Providers::AnsibleTower::AutomationManager::NetworkCredential'
                                 when 'ssh' then 'ManageIQ::Providers::AnsibleTower::AutomationManager::MachineCredential'
                                 when 'vmware' then 'ManageIQ::Providers::AnsibleTower::AutomationManager::VmwareCredential'

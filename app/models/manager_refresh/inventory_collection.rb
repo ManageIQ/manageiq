@@ -186,8 +186,12 @@ module ManagerRefresh
       ::ManagerRefresh::InventoryObjectLazy.new(self, manager_uuid, :key => key, :default => default)
     end
 
+    def inventory_object_class
+      @inventory_object_class ||= Class.new(::ManagerRefresh::InventoryObject)
+    end
+
     def new_inventory_object(hash)
-      ::ManagerRefresh::InventoryObject.new(self, hash)
+      inventory_object_class.new(self, hash)
     end
 
     def build(hash)
