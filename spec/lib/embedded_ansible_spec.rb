@@ -278,6 +278,7 @@ describe EmbeddedAnsible do
         miq_database.set_ansible_rabbitmq_authentication(:userid => "rabbituser", :password => "rabbitpassword")
         miq_database.set_ansible_database_authentication(:userid => "databaseuser", :password => "databasepassword")
 
+        expect(described_class).to receive(:configure_secret_key)
         expect(AwesomeSpawn).to receive(:run!) do |script_path, options|
           params                  = options[:params]
           inventory_file_contents = File.read(params[:i])

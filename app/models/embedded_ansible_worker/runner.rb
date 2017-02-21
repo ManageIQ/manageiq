@@ -23,7 +23,6 @@ class EmbeddedAnsibleWorker::Runner < MiqWorker::Runner
 
       _log.info("entering ansible monitor loop")
       loop do
-        heartbeat
         do_work
         send(poll_method)
       end
@@ -40,11 +39,10 @@ class EmbeddedAnsibleWorker::Runner < MiqWorker::Runner
   end
 
   def do_work
-    if EmbeddedAnsible.running?
-      _log.info("#{log_prefix} supervisord is ok!")
+    if EmbeddedAnsible.alive?
+      heartbeat
     else
-      _log.warn("#{log_prefix} supervisord is not running, restarting!")
-      EmbeddedAnsible.start
+      EmbeddedAnsible.start unless EmbeddedAnsible.running?
     end
   end
 
