@@ -254,7 +254,7 @@ module MiqAeServiceSpec
       let(:svc_options) { {:dialog_style => "medium"} }
       let(:user) { FactoryGirl.create(:user_with_group) }
       let(:svc_user) do
-            MiqAeMethodService::MiqAeServiceUser.find(user.id)
+        MiqAeMethodService::MiqAeServiceUser.find(user.id)
       end
       let(:template) { FactoryGirl.create(:service_template_ansible_playbook) }
       let(:miq_request) { FactoryGirl.create(:service_template_provision_request) }
