@@ -162,6 +162,10 @@ module EmsRefresh
       :zone        => ems.my_zone,
     }
 
+    # If this is the only refresh then we will use the task we just created,
+    # if we merge with another queue item then we will return its task_id
+    task_id = nil
+
     # Items will be naturally serialized since there is a dedicated worker.
     MiqQueue.put_or_update(queue_options) do |msg, item|
       targets = msg.nil? ? targets : (msg.args[0] | targets)
@@ -180,7 +184,11 @@ module EmsRefresh
       )
     end
 
-    task.id
+    # If we merged with an existing queue item we don't need a new
+    # task, just use the original one
+    task.delete if task_id != task.id
+
+    task_id
   end
 
   #
