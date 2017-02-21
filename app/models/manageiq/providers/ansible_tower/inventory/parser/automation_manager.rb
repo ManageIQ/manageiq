@@ -20,8 +20,7 @@ class ManageIQ::Providers::AnsibleTower::Inventory::Parser::AutomationManager < 
       inventory_object.hostname = host.name
       inventory_object.virtual_instance_ref = host.instance_id
       inventory_object.inventory_root_group = persister.inventory_root_groups.lazy_find(host.inventory_id.to_s)
-      # TODO(lsmola) get rid of direct DB access
-      inventory_object.counterpart = Vm.find_by(:uid_ems => host.instance_id)
+      inventory_object.counterpart = persister.vms.lazy_find(host.instance_id)
     end
   end
 
@@ -34,15 +33,13 @@ class ManageIQ::Providers::AnsibleTower::Inventory::Parser::AutomationManager < 
       inventory_object.variables = job_template.extra_vars_hash
       inventory_object.inventory_root_group = persister.inventory_root_groups.lazy_find(job_template.inventory_id.to_s)
 
-      authentications = []
+      inventory_object.authentications = []
       %w(credential_id cloud_credential_id network_credential_id).each do |credential_attr|
         next unless job_template.respond_to?(credential_attr)
         credential_id = job_template.public_send(credential_attr).to_s
         next if credential_id.blank?
-        authentications << persister.credentials.lazy_find(credential_id)
+        inventory_object.authentications << persister.credentials.lazy_find(credential_id)
       end
-
-      inventory_object.authentications = authentications
     end
   end
 
