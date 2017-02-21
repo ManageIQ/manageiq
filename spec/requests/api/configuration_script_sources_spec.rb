@@ -224,4 +224,19 @@ RSpec.describe 'Configuration Script Sources API' do
       expect(response).to have_http_status(:forbidden)
     end
   end
+
+  describe 'POST /api/configuration_script_sources' do
+    it 'will create a new configuration script source' do
+      api_basic_authorize collection_action_identifier(:configuration_script_sources, :create, :post)
+
+      expected = {
+        'results' => [a_hash_including('name' => 'foo')]
+      }
+      expect do
+        run_post(configuration_script_sources_url, :name => 'foo')
+      end.to change(ConfigurationScriptSource, :count).by(1)
+      expect(response.parsed_body).to include(expected)
+      expect(response).to have_http_status(:ok)
+    end
+  end
 end

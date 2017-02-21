@@ -595,6 +595,7 @@
     :options:
     - :collection
     :verbs: *gpd
+    :verbs: *gp
     :klass: ConfigurationScriptSource
     :collection_actions:
       :get:
@@ -605,6 +606,8 @@
         :identifier: embedded_configuration_script_source_edit
       - :name: delete
         :identifier: embedded_configuration_script_source_delete
+      - :name: create
+        :identifier: embedded_configuration_script_source_add
     :resource_actions:
       :get:
       - :name: read
