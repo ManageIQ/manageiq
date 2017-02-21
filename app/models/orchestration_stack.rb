@@ -14,6 +14,8 @@ class OrchestrationStack < ApplicationRecord
 
   belongs_to :ext_management_system, :foreign_key => :ems_id
 
+  has_many   :authentication_orchestration_stacks
+  has_many   :authentications, :through => :authentication_orchestration_stacks
   has_many   :parameters, :dependent => :destroy, :foreign_key => :stack_id, :class_name => "OrchestrationStackParameter"
   has_many   :outputs,    :dependent => :destroy, :foreign_key => :stack_id, :class_name => "OrchestrationStackOutput"
   has_many   :resources,  :dependent => :destroy, :foreign_key => :stack_id, :class_name => "OrchestrationStackResource"
