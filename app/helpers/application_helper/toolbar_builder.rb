@@ -1300,7 +1300,7 @@ class ApplicationHelper::ToolbarBuilder
         return @record.is_available_now_error_message(:reset) if @record.is_available_now_error_message(:reset)
       when "vm_suspend"
         return @record.is_available_now_error_message(:suspend) if @record.is_available_now_error_message(:suspend)
-      when "instance_retire", "instance_retire_now"
+      when "instance_retire_now"
         if @record.retired
           return N_("Instance is already retired") if @record.kind_of?(ManageIQ::Providers::CloudManager::Vm)
         end
