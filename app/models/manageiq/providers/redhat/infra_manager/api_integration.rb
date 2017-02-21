@@ -1,3 +1,4 @@
+require 'openssl'
 require 'resolv'
 
 module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
@@ -26,11 +27,13 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
 
     # Prepare the options to call the method that creates the actual connection:
     connect_options = {
-      :server   => options[:ip] || address,
-      :port     => options[:port] || self.port,
-      :username => options[:user] || authentication_userid(options[:auth_type]),
-      :password => options[:pass] || authentication_password(options[:auth_type]),
-      :service  => options[:service] || "Service"
+      :server     => options[:ip] || address,
+      :port       => options[:port] || self.port,
+      :username   => options[:user] || authentication_userid(options[:auth_type]),
+      :password   => options[:pass] || authentication_password(options[:auth_type]),
+      :service    => options[:service] || "Service",
+      :verify_ssl => default_endpoint.verify_ssl,
+      :ca_certs   => default_endpoint.certificate_authority
     }
 
     # Starting with version 4 of oVirt authentication doesn't work when using directly the IP address, it requires
@@ -290,7 +293,8 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
         :username => options[:username],
         :password => options[:password],
         :timeout  => timeout,
-        :insecure => true,
+        :insecure => options[:verify_ssl] == OpenSSL::SSL::VERIFY_NONE,
+        :ca_certs => [options[:ca_certs]],
         :log      => $rhevm_log,
       )
     end
@@ -307,7 +311,8 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
         :path       => options[:path],
         :username   => options[:username],
         :password   => options[:password],
-        :verify_ssl => false
+        :verify_ssl => options[:verify_ssl],
+        :ca_certs   => options[:ca_certs]
       }
 
       read_timeout, open_timeout = ems_timeouts(:ems_redhat, options[:service])
