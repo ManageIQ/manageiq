@@ -3,6 +3,7 @@ class ServiceAnsiblePlaybook < ServiceGeneric
 
   # A chance for taking options from automate script to override options from a service dialog
   def preprocess(action, add_options = {})
+    _log.info("Override with new options: #{add_options}") unless add_options.blank?
     save_job_options(action, add_options)
   end
 
@@ -38,30 +39,46 @@ class ServiceAnsiblePlaybook < ServiceGeneric
     service_resources.find_by!(:name => action, :resource_type => 'OrchestrationStack').try(:resource)
   end
 
+  def postprocess(action)
+    hosts = options.fetch_path(job_option_key(action), :inventory)
+    delete_inventory(action) unless use_default_inventory?(hosts)
+  end
+
   private
 
   def get_job_options(action)
-    job_opts = options["#{action.downcase}_job_options".to_sym].deep_dup
-    credential_id = job_opts.delete(:credential_id)
-    job_opts[:credential] = Authentication.find(credential_id).manager_ref unless credential_id.blank?
+    job_opts = options[job_option_key(action)].deep_dup
 
+    # TODO: decryption may be needed
     job_opts
   end
 
   def save_job_options(action, overrides)
-    job_options = parse_dialog_options
-    job_options[:extra_vars] = (job_options[:extra_vars] || {}).merge(overrides[:extra_vars]) if overrides[:extra_vars]
-    job_options.merge!(overrides.except(:extra_vars))
+    job_options = options.fetch_path(:config_info, action.downcase.to_sym).slice(:hosts, :extra_vars)
+    job_options.deep_merge!(parse_dialog_options)
+    job_options.deep_merge!(overrides)
 
-    options["#{action.downcase}_job_options".to_sym] = job_options
+    credential_id = job_options.delete(:credential_id)
+    job_options[:credential] = Authentication.find(credential_id).manager_ref unless credential_id.blank?
+
+    hosts = job_options.delete(:hosts)
+    job_options[:inventory] = create_inventory_with_hosts(action, hosts).id unless use_default_inventory?(hosts)
+
+    # TODO: encryption my be needed
+    options[job_option_key(action)] = job_options
     save!
+  end
+
+  def job_option_key(action)
+    "#{action.downcase}_job_options".to_sym
   end
 
   def parse_dialog_options
     dialog_options = options[:dialog] || {}
+
     {
-      :credential_id => dialog_options['dialog_credential_id'],
-      :hosts         => dialog_options['dialog_hosts']
+      :credential_id => dialog_options['dialog_credential'],
+      :hosts         => dialog_options['dialog_hosts'].to_s.strip.presence
     }.compact.merge(extra_vars_from_dialog)
   end
 
@@ -72,5 +89,34 @@ class ServiceAnsiblePlaybook < ServiceGeneric
       end
 
     params.blank? ? {} : {:extra_vars => params}
+  end
+
+  def create_inventory_with_hosts(action, hosts)
+    manager(action).with_provider_connection do |connection|
+      connection.api.inventories.create!(:name => inventory_name(action), :organization => 1).tap do |inventory|
+        hosts.split(',').each do |host|
+          connection.api.hosts.create!(:name => host, :inventory => inventory.id)
+        end
+      end
+    end
+  end
+
+  def delete_inventory(action)
+    manager(action).with_provider_connection do |connection|
+      inventory_id = options.fetch_path(job_option_key(action), :inventory)
+      connection.api.inventories.find(inventory_id).destroy!
+    end
+  end
+
+  def manager(action)
+    job_template(action).manager
+  end
+
+  def inventory_name(action)
+    "#{job_template(action).name}_#{id}"
+  end
+
+  def use_default_inventory?(hosts)
+    hosts.blank? || hosts == 'localhost'
   end
 end
