@@ -34,7 +34,7 @@ class ManageIQ::Providers::AnsibleTower::AutomationManager::Job < ::Orchestratio
     ext_management_system.with_provider_connection do |connection|
       update_with_provider_object(connection.api.jobs.find(ems_ref))
     end
-  rescue Faraday::ResourceNotFound
+  rescue AnsibleTowerClient::ResourceNotFoundError
     msg = "AnsibleTower Job #{name} with id(#{id}) does not exist on #{ext_management_system.name}"
     raise MiqException::MiqOrchestrationStackNotExistError, msg
   rescue => err
@@ -58,7 +58,7 @@ class ManageIQ::Providers::AnsibleTower::AutomationManager::Job < ::Orchestratio
       raw_job = connection.api.jobs.find(ems_ref)
       Status.new(raw_job.status, nil)
     end
-  rescue Faraday::ResourceNotFound
+  rescue AnsibleTowerClient::ResourceNotFoundError
     msg = "AnsibleTower Job #{name} with id(#{id}) does not exist on #{ext_management_system.name}"
     raise MiqException::MiqOrchestrationStackNotExistError, msg
   rescue => err
@@ -70,7 +70,7 @@ class ManageIQ::Providers::AnsibleTower::AutomationManager::Job < ::Orchestratio
     ext_management_system.with_provider_connection do |connection|
       connection.api.jobs.find(ems_ref).stdout
     end
-  rescue Faraday::ResourceNotFound
+  rescue AnsibleTowerClient::ResourceNotFoundError
     msg = "AnsibleTower Job #{name} with id(#{id}) does not exist on #{ext_management_system.name}"
     raise MiqException::MiqOrchestrationStackNotExistError, msg
   rescue => err

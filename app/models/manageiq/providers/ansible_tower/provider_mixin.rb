@@ -46,10 +46,8 @@ module ManageIQ::Providers::AnsibleTower::ProviderMixin
     begin
       with_provider_connection(options.merge(:auth_type => auth_type)) { |c| c.api.verify_credentials } ||
         raise(MiqException::MiqInvalidCredentialsError, _("Username or password is not valid"))
-    rescue Faraday::ConnectionFailed, Faraday::SSLError => err
-      raise MiqException::MiqUnreachableError, err.message, err.backtrace
-    rescue AnsibleTowerClient::ConnectionError => err
-      raise MiqException::MiqCommunicationsError, err.message
+    rescue AnsibleTowerClient::ClientError => err
+      raise MiqException::MiqCommunicationsError, err.message, err.backtrace
     end
   end
 
