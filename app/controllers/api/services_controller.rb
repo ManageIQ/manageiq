@@ -1,5 +1,8 @@
 module Api
   class ServicesController < BaseController
+    include Shared::CustomActions
+    include Shared::Ownable
+    include Shared::Retirable
     include Subcollections::ServiceDialogs
     include Subcollections::Tags
     include Subcollections::Vms

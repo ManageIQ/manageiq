@@ -1,5 +1,7 @@
 module Api
   class VmsController < BaseController
+    include Shared::Ownable
+    include Shared::Retirable
     include Subcollections::Tags
     include Subcollections::Policies
     include Subcollections::PolicyProfiles
