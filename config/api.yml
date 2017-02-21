@@ -204,6 +204,7 @@
     :description: Authentications
     :options:
     - :collection
+    - :subcollection
     :verbs: *gpd
     :klass: Authentication
     :collection_actions:
@@ -223,6 +224,10 @@
       :delete:
       - :name: delete
         :identifier: embedded_automation_manager_credentials_delete
+    :subcollection_actions:
+      :get:
+      - :name: read
+        :identifier: embedded_automation_manager_credentials_view
   :automate:
     :description: Automate
     :options:
@@ -525,6 +530,8 @@
     - :collection
     :verbs: *g
     :klass: ConfigurationScriptPayload
+    :subcollections:
+      - :authentications
     :collection_actions:
       :get:
       - :name: read
