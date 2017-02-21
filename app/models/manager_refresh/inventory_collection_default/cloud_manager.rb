@@ -60,10 +60,10 @@ class ManagerRefresh::InventoryCollectionDefault::CloudManager < ManagerRefresh:
         [hardware.vm_or_template.ems_ref]
       end
 
-      attributes[:custom_db_finder] = lambda do |inventory_collection, selection, _projection |
-        relation = inventory_collection.parent.send(inventory_collection.association).
-          includes(:vm_or_template).
-          references(:vm_or_template)
+      attributes[:custom_db_finder] = lambda do |inventory_collection, selection, _projection|
+        relation = inventory_collection.parent.send(inventory_collection.association)
+                                       .includes(:vm_or_template)
+                                       .references(:vm_or_template)
         relation = relation.where(:vms => {:ems_ref => selection[:vm_or_template]}) unless selection.blank?
         relation
       end

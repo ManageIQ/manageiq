@@ -417,7 +417,7 @@ module ManagerRefresh
       # which is equivalent to "col1 IN [a,b] AND col2 IN [e,f]". The best would be to forcing rails to query
       # "(col1, col2) IN [(a,e), (b,f), (b,e)]" which would load exactly what we need. Postgree supports this, but rails
       # doesn't seem to. So for now, we can load a bit more from the DB than we need, in case of manager_ref.count > 1
-      hash_uuids_by_ref = manager_ref.each_with_object({}) {|x, obj| obj[x] = [] }
+      hash_uuids_by_ref = manager_ref.each_with_object({}) { |x, obj| obj[x] = [] }
 
       # TODO(lsmola) hm, if we call find in the parser code, not all references will be here, so this will really work
       # only for lazy_find. So if we want to call find, I suppose we can cache all, possibly we could optimize this to
