@@ -490,6 +490,13 @@ describe Rbac::Filterer do
           @template = FactoryGirl.create(:template_vmware, :name => "Template1", :host => @host1, :ext_management_system => @ems)
         end
 
+        it 'works with string in order paremeter' do
+          result = described_class.filtered(Vm, :include_for_find => {:host => {}, :order => 'created_on DESC'})
+          
+          expect { result.to_a }.not_to raise_error
+          expect(result.to_a).to match_array([@vm])
+        end
+
         it "honors ems_id conditions" do
           results = described_class.search(:class => "ManageIQ::Providers::Vmware::InfraManager::Template", :conditions => ["ems_id IS NULL"])
           objects = results.first
