@@ -6,7 +6,7 @@ describe ServiceTemplateAnsiblePlaybook do
   let(:config_script) { FactoryGirl.create(:configuration_script) }
   let(:script_source) { FactoryGirl.create(:configuration_script_source, :manager => ems) }
 
-  let(:inventory_root_group) { FactoryGirl.create(:inventory_root_group) }
+  let(:inventory_root_group) { FactoryGirl.create(:inventory_root_group, :name => 'Demo Inventory') }
   let(:service_template_catalog) { FactoryGirl.create(:service_template_catalog) }
   let(:ems) do
     FactoryGirl.create(:automation_manager_ansible_tower, :inventory_root_groups => [inventory_root_group])
