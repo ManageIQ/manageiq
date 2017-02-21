@@ -164,7 +164,7 @@ class PglogicalSubscription < ActsAsArModel
   private
 
   def remote_region_number
-    MiqRegionRemote.with_remote_connection(host, port || 5432, user, decrypted_password, dbname, "postgresql") do |_conn|
+    with_remote_connection do |_conn|
       return MiqRegionRemote.region_number_from_sequence
     end
   end
@@ -217,7 +217,7 @@ class PglogicalSubscription < ActsAsArModel
     local_errors = EvmDatabase.check_schema
     raise local_errors if local_errors
     find_password if password.nil?
-    MiqRegionRemote.with_remote_connection(host, port || 5432, user, decrypted_password, dbname, "postgresql") do |conn|
+    with_remote_connection do |conn|
       remote_errors = EvmDatabase.check_schema(conn)
       raise remote_errors if remote_errors
     end
@@ -236,5 +236,11 @@ class PglogicalSubscription < ActsAsArModel
 
   def decrypted_password
     MiqPassword.try_decrypt(password)
+  end
+
+  def with_remote_connection
+    MiqRegionRemote.with_remote_connection(host, port || 5432, user, decrypted_password, dbname, "postgresql") do |conn|
+      yield conn
+    end
   end
 end
