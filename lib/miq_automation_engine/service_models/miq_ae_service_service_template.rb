@@ -4,7 +4,6 @@ module MiqAeMethodService
     expose :services,          :association => true
     expose :service_resources, :association => true
     expose :tenant,            :association => true
-    expose :provision_request
 
     def owner=(owner)
       if owner.nil? || owner.kind_of?(MiqAeMethodService::MiqAeServiceUser)
