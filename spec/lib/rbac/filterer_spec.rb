@@ -19,6 +19,37 @@ describe Rbac::Filterer do
   let(:child_group)        { FactoryGirl.create(:miq_group, :tenant => child_tenant) }
   let(:child_openstack_vm) { FactoryGirl.create(:vm_openstack, :tenant => child_tenant, :miq_group => child_group) }
 
+  describe 'order_from_string' do
+    let(:sql_column_1) { Arel::Nodes::SqlLiteral.new('vms.created_on') }
+    let(:sql_column_2) { Arel::Nodes::SqlLiteral.new('vms.name') }
+    let(:sql_column_3) { Arel::Nodes::SqlLiteral.new('vms.id') }
+
+    let(:expected_clauses) do
+      [Arel::Nodes::Descending.new(sql_column_1), Arel::Nodes::Ascending.new(sql_column_2),
+       Arel::Nodes::Ascending.new(sql_column_3)]
+    end
+
+    it 'converts string order clause to AREL::NODES when order clause is string with more columns' do
+      order_clauses = described_class.new.send(:order_from_string, 'created_on DESC, vms.name, id', Vm)
+      expect(order_clauses).to match_array(expected_clauses)
+    end
+
+    it 'converts string order clause to AREL::NODES when order clause is array with string columns' do
+      order_clauses = described_class.new.send(:order_from_string, ['created_on DESC', 'vms.name', 'id'], Vm)
+      expect(order_clauses).to match_array(expected_clauses)
+    end
+
+    it 'return empty array' do
+      order_clauses = described_class.new.send(:order_from_string, [], Vm)
+      expect(order_clauses).to be_empty
+    end
+
+    it 'return Arel::Nodes::Ordering array when it is passed' do
+      order_clauses = described_class.new.send(:order_from_string, expected_clauses, Vm)
+      expect(order_clauses).to match_array(expected_clauses)
+    end
+  end
+
   describe ".search" do
     describe "with find_options_for_tenant filtering (basic) all resources" do
       {
@@ -492,7 +523,6 @@ describe Rbac::Filterer do
 
         it 'works with string in order paremeter' do
           result = described_class.filtered(Vm, :include_for_find => {:host => {}, :order => 'created_on DESC'})
-          
           expect { result.to_a }.not_to raise_error
           expect(result.to_a).to match_array([@vm])
         end
