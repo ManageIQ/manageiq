@@ -548,7 +548,7 @@ describe ServiceTemplate do
     end
   end
 
-  describe "#provision" do
+  describe "#provision_request" do
     it "provision's a service template " do
       user = FactoryGirl.create(:user, :userid => "barney")
       resource_action = FactoryGirl.create(:resource_action, :action => "Provision")
@@ -560,7 +560,7 @@ describe ServiceTemplate do
       expect(workflow).to receive(:submit_request)
       expect(workflow).to receive(:set_value).with('ordered_by', 'fred')
 
-      service_template.provision_request('barney', 'ordered_by' => 'fred')
+      service_template.provision_request(user, 'ordered_by' => 'fred')
     end
   end
 end

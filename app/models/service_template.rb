@@ -377,12 +377,13 @@ class ServiceTemplate < ApplicationRecord
     save!
   end
 
-  def provision_request(userid, options = {})
-    provision_workflow(userid, options).submit_request
+  def provision_request(user, options = nil)
+    provision_workflow(user, options).submit_request
   end
 
-  def provision_workflow(userid, options = {})
-    ResourceActionWorkflow.new({}, User.find_by!(:userid => userid),
+  def provision_workflow(user, options = nil)
+    options ||= {}
+    ResourceActionWorkflow.new({}, user,
                                provision_action, :target => self).tap do |wf|
       options.each { |key, value| wf.set_value(key, value) }
     end
