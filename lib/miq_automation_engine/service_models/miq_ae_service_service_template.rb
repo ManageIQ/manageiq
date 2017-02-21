@@ -26,11 +26,5 @@ module MiqAeMethodService
         @object.save
       end
     end
-
-    def provision_request(user, options)
-      ar_method do
-        wrap_results(@object.provision_request(user.instance_variable_get("@object"), options))
-      end
-    end
   end
 end
