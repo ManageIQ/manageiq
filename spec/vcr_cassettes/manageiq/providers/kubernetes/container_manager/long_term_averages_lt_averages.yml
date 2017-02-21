@@ -1,0 +1,355 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://hawkular-lta.example.com/hawkular/metrics/status
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.1 (linux-gnu x86_64) ruby/2.3.3p222
+      Hawkular-Tenant:
+      - _system
+      Authorization:
+      - Bearer secret
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '133'
+      Date:
+      - Tue, 21 Feb 2017 15:16:21 GMT
+      Set-Cookie:
+      - f5489604a2df0d7b0e8c7b7b0a17e360=9559ef45bf14c2da225d3dc03263a65f; path=/;
+        HttpOnly; Secure
+      Cache-Control:
+      - private
+    body:
+      encoding: UTF-8
+      string: '{"MetricsService":"STARTED","Implementation-Version":"0.21.5.Final","Built-From-Git-SHA1":"e779588593f13224225356a94f1d8642fbccb30f"}'
+    http_version: 
+  recorded_at: Tue, 21 Feb 2017 15:16:21 GMT
+- request:
+    method: get
+    uri: https://hawkular-lta.example.com/hawkular/metrics/counters/machine%2Fhawkular-lta.example.com%2Fcpu%2Fusage/stats/?bucketDuration=86400s&start=1482278400000
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.1 (linux-gnu x86_64) ruby/2.3.3p222
+      Hawkular-Tenant:
+      - _system
+      Authorization:
+      - Bearer secret
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '4823'
+      Date:
+      - Tue, 21 Feb 2017 15:16:21 GMT
+      Set-Cookie:
+      - f5489604a2df0d7b0e8c7b7b0a17e360=9559ef45bf14c2da225d3dc03263a65f; path=/;
+        HttpOnly; Secure
+      Cache-Control:
+      - private
+    body:
+      encoding: UTF-8
+      string: '[{"start":1482278400000,"end":1482364800000,"empty":true},{"start":1482364800000,"end":1482451200000,"empty":true},{"start":1482451200000,"end":1482537600000,"empty":true},{"start":1482537600000,"end":1482624000000,"empty":true},{"start":1482624000000,"end":1482710400000,"empty":true},{"start":1482710400000,"end":1482796800000,"empty":true},{"start":1482796800000,"end":1482883200000,"empty":true},{"start":1482883200000,"end":1482969600000,"empty":true},{"start":1482969600000,"end":1483056000000,"empty":true},{"start":1483056000000,"end":1483142400000,"empty":true},{"start":1483142400000,"end":1483228800000,"empty":true},{"start":1483228800000,"end":1483315200000,"empty":true},{"start":1483315200000,"end":1483401600000,"empty":true},{"start":1483401600000,"end":1483488000000,"empty":true},{"start":1483488000000,"end":1483574400000,"empty":true},{"start":1483574400000,"end":1483660800000,"empty":true},{"start":1483660800000,"end":1483747200000,"empty":true},{"start":1483747200000,"end":1483833600000,"empty":true},{"start":1483833600000,"end":1483920000000,"empty":true},{"start":1483920000000,"end":1484006400000,"empty":true},{"start":1484006400000,"end":1484092800000,"empty":true},{"start":1484092800000,"end":1484179200000,"empty":true},{"start":1484179200000,"end":1484265600000,"empty":true},{"start":1484265600000,"end":1484352000000,"empty":true},{"start":1484352000000,"end":1484438400000,"empty":true},{"start":1484438400000,"end":1484524800000,"empty":true},{"start":1484524800000,"end":1484611200000,"empty":true},{"start":1484611200000,"end":1484697600000,"empty":true},{"start":1484697600000,"end":1484784000000,"empty":true},{"start":1484784000000,"end":1484870400000,"empty":true},{"start":1484870400000,"end":1484956800000,"empty":true},{"start":1484956800000,"end":1485043200000,"empty":true},{"start":1485043200000,"end":1485129600000,"empty":true},{"start":1485129600000,"end":1485216000000,"empty":true},{"start":1485216000000,"end":1485302400000,"empty":true},{"start":1485302400000,"end":1485388800000,"empty":true},{"start":1485388800000,"end":1485475200000,"empty":true},{"start":1485475200000,"end":1485561600000,"empty":true},{"start":1485561600000,"end":1485648000000,"empty":true},{"start":1485648000000,"end":1485734400000,"empty":true},{"start":1485734400000,"end":1485820800000,"empty":true},{"start":1485820800000,"end":1485907200000,"empty":true},{"start":1485907200000,"end":1485993600000,"empty":true},{"start":1485993600000,"end":1486080000000,"empty":true},{"start":1486080000000,"end":1486166400000,"empty":true},{"start":1486166400000,"end":1486252800000,"empty":true},{"start":1486252800000,"end":1486339200000,"empty":true},{"start":1486339200000,"end":1486425600000,"empty":true},{"start":1486425600000,"end":1486512000000,"empty":true},{"start":1486512000000,"end":1486598400000,"empty":true},{"start":1486598400000,"end":1486684800000,"empty":true},{"start":1486684800000,"end":1486771200000,"empty":true},{"start":1486771200000,"end":1486857600000,"empty":true},{"start":1486857600000,"end":1486944000000,"empty":true},{"start":1486944000000,"end":1487030400000,"empty":true},{"start":1487030400000,"end":1487116800000,"min":3.36405464190334E14,"avg":3.384277472251181E14,"median":3.3843089488291856E14,"max":3.40436407176231E14,"sum":1.21833989001042048E18,"samples":3600,"empty":false},{"start":1487116800000,"end":1487203200000,"min":3.40438313387722E14,"avg":3.453029573442813E14,"median":3.452971316121244E14,"max":3.50165290149507E14,"sum":2.9834175514545838E18,"samples":8640,"empty":false},{"start":1487203200000,"end":1487289600000,"min":3.50166456870782E14,"avg":3.550677221432277E14,"median":3.55082661437938E14,"max":3.59895548366169E14,"sum":3.0677851193174871E18,"samples":8640,"empty":false},{"start":1487289600000,"end":1487376000000,"min":3.59897122048085E14,"avg":3.646503122458615E14,"median":3.646479449787898E14,"max":3.69389037369044E14,"sum":3.1505786978042593E18,"samples":8640,"empty":false},{"start":1487376000000,"end":1487462400000,"min":3.69392353679972E14,"avg":3.7416082532299806E14,"median":3.741590941788343E14,"max":3.78941841421809E14,"sum":3.2327495307906801E18,"samples":8640,"empty":false},{"start":1487462400000,"end":1487548800000,"min":3.78941841421809E14,"avg":3.8373695398466275E14,"median":3.837430998320879E14,"max":3.88501061875434E14,"sum":3.3154872824274944E18,"samples":8640,"empty":false},{"start":1487548800000,"end":1487635200000,"min":3.88501061875434E14,"avg":3.9326919824517825E14,"median":3.9326013305625175E14,"max":3.98034212678616E14,"sum":3.3978458728383288E18,"samples":8640,"empty":false},{"start":1487635200000,"end":1487721600000,"min":3.98035390843129E14,"avg":4.0108844439264306E14,"median":4.010873273384056E14,"max":4.04138918461207E14,"sum":2.20518426727076941E18,"samples":5498,"empty":false}]'
+    http_version: 
+  recorded_at: Tue, 21 Feb 2017 15:16:21 GMT
+- request:
+    method: get
+    uri: https://hawkular-lta.example.com/hawkular/metrics/status
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.1 (linux-gnu x86_64) ruby/2.3.3p222
+      Hawkular-Tenant:
+      - _system
+      Authorization:
+      - Bearer secret
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '133'
+      Date:
+      - Tue, 21 Feb 2017 15:16:21 GMT
+      Set-Cookie:
+      - f5489604a2df0d7b0e8c7b7b0a17e360=9559ef45bf14c2da225d3dc03263a65f; path=/;
+        HttpOnly; Secure
+      Cache-Control:
+      - private
+    body:
+      encoding: UTF-8
+      string: '{"MetricsService":"STARTED","Implementation-Version":"0.21.5.Final","Built-From-Git-SHA1":"e779588593f13224225356a94f1d8642fbccb30f"}'
+    http_version: 
+  recorded_at: Tue, 21 Feb 2017 15:16:21 GMT
+- request:
+    method: get
+    uri: https://hawkular-lta.example.com/hawkular/metrics/gauges/machine%2Fhawkular-lta.example.com%2Fmemory%2Fusage/stats/?bucketDuration=86400s&start=1482364800000
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.1 (linux-gnu x86_64) ruby/2.3.3p222
+      Hawkular-Tenant:
+      - _system
+      Authorization:
+      - Bearer secret
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '4620'
+      Date:
+      - Tue, 21 Feb 2017 15:16:21 GMT
+      Set-Cookie:
+      - f5489604a2df0d7b0e8c7b7b0a17e360=9559ef45bf14c2da225d3dc03263a65f; path=/;
+        HttpOnly; Secure
+      Cache-Control:
+      - private
+    body:
+      encoding: UTF-8
+      string: '[{"start":1482364800000,"end":1482451200000,"empty":true},{"start":1482451200000,"end":1482537600000,"empty":true},{"start":1482537600000,"end":1482624000000,"empty":true},{"start":1482624000000,"end":1482710400000,"empty":true},{"start":1482710400000,"end":1482796800000,"empty":true},{"start":1482796800000,"end":1482883200000,"empty":true},{"start":1482883200000,"end":1482969600000,"empty":true},{"start":1482969600000,"end":1483056000000,"empty":true},{"start":1483056000000,"end":1483142400000,"empty":true},{"start":1483142400000,"end":1483228800000,"empty":true},{"start":1483228800000,"end":1483315200000,"empty":true},{"start":1483315200000,"end":1483401600000,"empty":true},{"start":1483401600000,"end":1483488000000,"empty":true},{"start":1483488000000,"end":1483574400000,"empty":true},{"start":1483574400000,"end":1483660800000,"empty":true},{"start":1483660800000,"end":1483747200000,"empty":true},{"start":1483747200000,"end":1483833600000,"empty":true},{"start":1483833600000,"end":1483920000000,"empty":true},{"start":1483920000000,"end":1484006400000,"empty":true},{"start":1484006400000,"end":1484092800000,"empty":true},{"start":1484092800000,"end":1484179200000,"empty":true},{"start":1484179200000,"end":1484265600000,"empty":true},{"start":1484265600000,"end":1484352000000,"empty":true},{"start":1484352000000,"end":1484438400000,"empty":true},{"start":1484438400000,"end":1484524800000,"empty":true},{"start":1484524800000,"end":1484611200000,"empty":true},{"start":1484611200000,"end":1484697600000,"empty":true},{"start":1484697600000,"end":1484784000000,"empty":true},{"start":1484784000000,"end":1484870400000,"empty":true},{"start":1484870400000,"end":1484956800000,"empty":true},{"start":1484956800000,"end":1485043200000,"empty":true},{"start":1485043200000,"end":1485129600000,"empty":true},{"start":1485129600000,"end":1485216000000,"empty":true},{"start":1485216000000,"end":1485302400000,"empty":true},{"start":1485302400000,"end":1485388800000,"empty":true},{"start":1485388800000,"end":1485475200000,"empty":true},{"start":1485475200000,"end":1485561600000,"empty":true},{"start":1485561600000,"end":1485648000000,"empty":true},{"start":1485648000000,"end":1485734400000,"empty":true},{"start":1485734400000,"end":1485820800000,"empty":true},{"start":1485820800000,"end":1485907200000,"empty":true},{"start":1485907200000,"end":1485993600000,"empty":true},{"start":1485993600000,"end":1486080000000,"empty":true},{"start":1486080000000,"end":1486166400000,"empty":true},{"start":1486166400000,"end":1486252800000,"empty":true},{"start":1486252800000,"end":1486339200000,"empty":true},{"start":1486339200000,"end":1486425600000,"empty":true},{"start":1486425600000,"end":1486512000000,"empty":true},{"start":1486512000000,"end":1486598400000,"empty":true},{"start":1486598400000,"end":1486684800000,"empty":true},{"start":1486684800000,"end":1486771200000,"empty":true},{"start":1486771200000,"end":1486857600000,"empty":true},{"start":1486857600000,"end":1486944000000,"empty":true},{"start":1486944000000,"end":1487030400000,"empty":true},{"start":1487030400000,"end":1487116800000,"min":3.4092032E9,"avg":3.444239167715553E9,"median":3.440684667222339E9,"max":3.516157952E9,"sum":1.2399261003776E13,"samples":3600,"empty":false},{"start":1487116800000,"end":1487203200000,"min":3.426902016E9,"avg":3.4659736855703764E9,"median":3.4607673030407577E9,"max":3.558068224E9,"sum":2.9946012643328E13,"samples":8640,"empty":false},{"start":1487203200000,"end":1487289600000,"min":3.439665152E9,"avg":3.4993377422222195E9,"median":3.4989898517036996E9,"max":3.580350464E9,"sum":3.02342780928E13,"samples":8640,"empty":false},{"start":1487289600000,"end":1487376000000,"min":3.459457024E9,"avg":3.503990528474083E9,"median":3.498730211779145E9,"max":3.57787648E9,"sum":3.0274478166016E13,"samples":8640,"empty":false},{"start":1487376000000,"end":1487462400000,"min":3.458793472E9,"avg":3.5140425960296435E9,"median":3.517391970036194E9,"max":3.57871616E9,"sum":3.0361328029696E13,"samples":8640,"empty":false},{"start":1487462400000,"end":1487548800000,"min":3.449360384E9,"avg":3.503321168592592E9,"median":3.50358257615447E9,"max":3.579383808E9,"sum":3.026869489664E13,"samples":8640,"empty":false},{"start":1487548800000,"end":1487635200000,"min":3.34014464E9,"avg":3.391034022400007E9,"median":3.3842397943186474E9,"max":3.523129344E9,"sum":2.9298533953536E13,"samples":8640,"empty":false},{"start":1487635200000,"end":1487721600000,"min":3.367473152E9,"avg":3.416415936395781E9,"median":3.419301129526573E9,"max":3.510181888E9,"sum":1.8783454818304E13,"samples":5498,"empty":false}]'
+    http_version: 
+  recorded_at: Tue, 21 Feb 2017 15:16:21 GMT
+- request:
+    method: get
+    uri: https://hawkular-lta.example.com/hawkular/metrics/status
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.1 (linux-gnu x86_64) ruby/2.3.3p222
+      Hawkular-Tenant:
+      - _system
+      Authorization:
+      - Bearer secret
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '133'
+      Date:
+      - Tue, 21 Feb 2017 15:16:21 GMT
+      Set-Cookie:
+      - f5489604a2df0d7b0e8c7b7b0a17e360=9559ef45bf14c2da225d3dc03263a65f; path=/;
+        HttpOnly; Secure
+      Cache-Control:
+      - private
+    body:
+      encoding: UTF-8
+      string: '{"MetricsService":"STARTED","Implementation-Version":"0.21.5.Final","Built-From-Git-SHA1":"e779588593f13224225356a94f1d8642fbccb30f"}'
+    http_version: 
+  recorded_at: Tue, 21 Feb 2017 15:16:21 GMT
+- request:
+    method: get
+    uri: https://hawkular-lta.example.com/hawkular/metrics/counters/machine%2Fhawkular-lta.example.com%2Fnetwork%2Ftx/stats/?bucketDuration=86400s&start=1482278400000
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.1 (linux-gnu x86_64) ruby/2.3.3p222
+      Hawkular-Tenant:
+      - _system
+      Authorization:
+      - Bearer secret
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '4742'
+      Date:
+      - Tue, 21 Feb 2017 15:16:22 GMT
+      Set-Cookie:
+      - f5489604a2df0d7b0e8c7b7b0a17e360=9559ef45bf14c2da225d3dc03263a65f; path=/;
+        HttpOnly; Secure
+      Cache-Control:
+      - private
+    body:
+      encoding: UTF-8
+      string: '[{"start":1482278400000,"end":1482364800000,"empty":true},{"start":1482364800000,"end":1482451200000,"empty":true},{"start":1482451200000,"end":1482537600000,"empty":true},{"start":1482537600000,"end":1482624000000,"empty":true},{"start":1482624000000,"end":1482710400000,"empty":true},{"start":1482710400000,"end":1482796800000,"empty":true},{"start":1482796800000,"end":1482883200000,"empty":true},{"start":1482883200000,"end":1482969600000,"empty":true},{"start":1482969600000,"end":1483056000000,"empty":true},{"start":1483056000000,"end":1483142400000,"empty":true},{"start":1483142400000,"end":1483228800000,"empty":true},{"start":1483228800000,"end":1483315200000,"empty":true},{"start":1483315200000,"end":1483401600000,"empty":true},{"start":1483401600000,"end":1483488000000,"empty":true},{"start":1483488000000,"end":1483574400000,"empty":true},{"start":1483574400000,"end":1483660800000,"empty":true},{"start":1483660800000,"end":1483747200000,"empty":true},{"start":1483747200000,"end":1483833600000,"empty":true},{"start":1483833600000,"end":1483920000000,"empty":true},{"start":1483920000000,"end":1484006400000,"empty":true},{"start":1484006400000,"end":1484092800000,"empty":true},{"start":1484092800000,"end":1484179200000,"empty":true},{"start":1484179200000,"end":1484265600000,"empty":true},{"start":1484265600000,"end":1484352000000,"empty":true},{"start":1484352000000,"end":1484438400000,"empty":true},{"start":1484438400000,"end":1484524800000,"empty":true},{"start":1484524800000,"end":1484611200000,"empty":true},{"start":1484611200000,"end":1484697600000,"empty":true},{"start":1484697600000,"end":1484784000000,"empty":true},{"start":1484784000000,"end":1484870400000,"empty":true},{"start":1484870400000,"end":1484956800000,"empty":true},{"start":1484956800000,"end":1485043200000,"empty":true},{"start":1485043200000,"end":1485129600000,"empty":true},{"start":1485129600000,"end":1485216000000,"empty":true},{"start":1485216000000,"end":1485302400000,"empty":true},{"start":1485302400000,"end":1485388800000,"empty":true},{"start":1485388800000,"end":1485475200000,"empty":true},{"start":1485475200000,"end":1485561600000,"empty":true},{"start":1485561600000,"end":1485648000000,"empty":true},{"start":1485648000000,"end":1485734400000,"empty":true},{"start":1485734400000,"end":1485820800000,"empty":true},{"start":1485820800000,"end":1485907200000,"empty":true},{"start":1485907200000,"end":1485993600000,"empty":true},{"start":1485993600000,"end":1486080000000,"empty":true},{"start":1486080000000,"end":1486166400000,"empty":true},{"start":1486166400000,"end":1486252800000,"empty":true},{"start":1486252800000,"end":1486339200000,"empty":true},{"start":1486339200000,"end":1486425600000,"empty":true},{"start":1486425600000,"end":1486512000000,"empty":true},{"start":1486512000000,"end":1486598400000,"empty":true},{"start":1486598400000,"end":1486684800000,"empty":true},{"start":1486684800000,"end":1486771200000,"empty":true},{"start":1486771200000,"end":1486857600000,"empty":true},{"start":1486857600000,"end":1486944000000,"empty":true},{"start":1486944000000,"end":1487030400000,"empty":true},{"start":1487030400000,"end":1487116800000,"min":3.1146518348E10,"avg":3.129473606919057E10,"median":3.1295607126310776E10,"max":3.1441614156E10,"sum":1.12661049849086E14,"samples":3600,"empty":false},{"start":1487116800000,"end":1487203200000,"min":3.1441777501E10,"avg":3.179550656736096E10,"median":3.1794796630427467E10,"max":3.2149522735E10,"sum":2.74713176741999E14,"samples":8640,"empty":false},{"start":1487203200000,"end":1487289600000,"min":3.2149597853E10,"avg":3.256880541929827E10,"median":3.2544219340883457E10,"max":3.299346718E10,"sum":2.81394478822737E14,"samples":8640,"empty":false},{"start":1487289600000,"end":1487376000000,"min":3.2993610451E10,"avg":3.3345963089428886E10,"median":3.3346066309098694E10,"max":3.3698274312E10,"sum":2.88109121092666E14,"samples":8640,"empty":false},{"start":1487376000000,"end":1487462400000,"min":3.3698418753E10,"avg":3.405074010546825E10,"median":3.405066239608807E10,"max":3.4403069079E10,"sum":2.94198394511246E14,"samples":8640,"empty":false},{"start":1487462400000,"end":1487548800000,"min":3.4403069079E10,"avg":3.4784406788788795E10,"median":3.478556637527602E10,"max":3.5152744919E10,"sum":3.00537274655134E14,"samples":8640,"empty":false},{"start":1487548800000,"end":1487635200000,"min":3.5152744919E10,"avg":3.5508720168424965E10,"median":3.550749178631744E10,"max":3.5864936706E10,"sum":3.06795342255193E14,"samples":8640,"empty":false},{"start":1487635200000,"end":1487721600000,"min":3.5865009344E10,"avg":3.610161592879904E10,"median":3.609310063182243E10,"max":3.6363268184E10,"sum":1.98486684376537E14,"samples":5498,"empty":false}]'
+    http_version: 
+  recorded_at: Tue, 21 Feb 2017 15:16:22 GMT
+- request:
+    method: get
+    uri: https://hawkular-lta.example.com/hawkular/metrics/status
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.1 (linux-gnu x86_64) ruby/2.3.3p222
+      Hawkular-Tenant:
+      - _system
+      Authorization:
+      - Bearer secret
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '133'
+      Date:
+      - Tue, 21 Feb 2017 15:16:22 GMT
+      Set-Cookie:
+      - f5489604a2df0d7b0e8c7b7b0a17e360=9559ef45bf14c2da225d3dc03263a65f; path=/;
+        HttpOnly; Secure
+      Cache-Control:
+      - private
+    body:
+      encoding: UTF-8
+      string: '{"MetricsService":"STARTED","Implementation-Version":"0.21.5.Final","Built-From-Git-SHA1":"e779588593f13224225356a94f1d8642fbccb30f"}'
+    http_version: 
+  recorded_at: Tue, 21 Feb 2017 15:16:22 GMT
+- request:
+    method: get
+    uri: https://hawkular-lta.example.com/hawkular/metrics/counters/machine%2Fhawkular-lta.example.com%2Fnetwork%2Frx/stats/?bucketDuration=86400s&start=1482278400000
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - application/json
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.1 (linux-gnu x86_64) ruby/2.3.3p222
+      Hawkular-Tenant:
+      - _system
+      Authorization:
+      - Bearer secret
+      Content-Type:
+      - application/json
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      X-Powered-By:
+      - Undertow/1
+      Server:
+      - WildFly/10
+      Content-Type:
+      - application/json
+      Content-Length:
+      - '4738'
+      Date:
+      - Tue, 21 Feb 2017 15:16:22 GMT
+      Set-Cookie:
+      - f5489604a2df0d7b0e8c7b7b0a17e360=9559ef45bf14c2da225d3dc03263a65f; path=/;
+        HttpOnly; Secure
+      Cache-Control:
+      - private
+    body:
+      encoding: UTF-8
+      string: '[{"start":1482278400000,"end":1482364800000,"empty":true},{"start":1482364800000,"end":1482451200000,"empty":true},{"start":1482451200000,"end":1482537600000,"empty":true},{"start":1482537600000,"end":1482624000000,"empty":true},{"start":1482624000000,"end":1482710400000,"empty":true},{"start":1482710400000,"end":1482796800000,"empty":true},{"start":1482796800000,"end":1482883200000,"empty":true},{"start":1482883200000,"end":1482969600000,"empty":true},{"start":1482969600000,"end":1483056000000,"empty":true},{"start":1483056000000,"end":1483142400000,"empty":true},{"start":1483142400000,"end":1483228800000,"empty":true},{"start":1483228800000,"end":1483315200000,"empty":true},{"start":1483315200000,"end":1483401600000,"empty":true},{"start":1483401600000,"end":1483488000000,"empty":true},{"start":1483488000000,"end":1483574400000,"empty":true},{"start":1483574400000,"end":1483660800000,"empty":true},{"start":1483660800000,"end":1483747200000,"empty":true},{"start":1483747200000,"end":1483833600000,"empty":true},{"start":1483833600000,"end":1483920000000,"empty":true},{"start":1483920000000,"end":1484006400000,"empty":true},{"start":1484006400000,"end":1484092800000,"empty":true},{"start":1484092800000,"end":1484179200000,"empty":true},{"start":1484179200000,"end":1484265600000,"empty":true},{"start":1484265600000,"end":1484352000000,"empty":true},{"start":1484352000000,"end":1484438400000,"empty":true},{"start":1484438400000,"end":1484524800000,"empty":true},{"start":1484524800000,"end":1484611200000,"empty":true},{"start":1484611200000,"end":1484697600000,"empty":true},{"start":1484697600000,"end":1484784000000,"empty":true},{"start":1484784000000,"end":1484870400000,"empty":true},{"start":1484870400000,"end":1484956800000,"empty":true},{"start":1484956800000,"end":1485043200000,"empty":true},{"start":1485043200000,"end":1485129600000,"empty":true},{"start":1485129600000,"end":1485216000000,"empty":true},{"start":1485216000000,"end":1485302400000,"empty":true},{"start":1485302400000,"end":1485388800000,"empty":true},{"start":1485388800000,"end":1485475200000,"empty":true},{"start":1485475200000,"end":1485561600000,"empty":true},{"start":1485561600000,"end":1485648000000,"empty":true},{"start":1485648000000,"end":1485734400000,"empty":true},{"start":1485734400000,"end":1485820800000,"empty":true},{"start":1485820800000,"end":1485907200000,"empty":true},{"start":1485907200000,"end":1485993600000,"empty":true},{"start":1485993600000,"end":1486080000000,"empty":true},{"start":1486080000000,"end":1486166400000,"empty":true},{"start":1486166400000,"end":1486252800000,"empty":true},{"start":1486252800000,"end":1486339200000,"empty":true},{"start":1486339200000,"end":1486425600000,"empty":true},{"start":1486425600000,"end":1486512000000,"empty":true},{"start":1486512000000,"end":1486598400000,"empty":true},{"start":1486598400000,"end":1486684800000,"empty":true},{"start":1486684800000,"end":1486771200000,"empty":true},{"start":1486771200000,"end":1486857600000,"empty":true},{"start":1486857600000,"end":1486944000000,"empty":true},{"start":1486944000000,"end":1487030400000,"empty":true},{"start":1487030400000,"end":1487116800000,"min":1.5183187243E10,"avg":1.5272383088019466E10,"median":1.5272340952754732E10,"max":1.5363354972E10,"sum":5.498057911687E13,"samples":3600,"empty":false},{"start":1487116800000,"end":1487203200000,"min":1.5363430844E10,"avg":1.558389970249837E10,"median":1.5583236272595663E10,"max":1.5803982578E10,"sum":1.34644893429586E14,"samples":8640,"empty":false},{"start":1487203200000,"end":1487289600000,"min":1.5804026067E10,"avg":1.608948747730855E10,"median":1.6064262611442408E10,"max":1.6381152149E10,"sum":1.39013171803946E14,"samples":8640,"empty":false},{"start":1487289600000,"end":1487376000000,"min":1.6381226221E10,"avg":1.65996419179888E10,"median":1.6599754533690496E10,"max":1.6817839788E10,"sum":1.43420906171423E14,"samples":8640,"empty":false},{"start":1487376000000,"end":1487462400000,"min":1.6818027155E10,"avg":1.7047115324548918E10,"median":1.7041827810566164E10,"max":1.7290221258E10,"sum":1.47287076404103E14,"samples":8640,"empty":false},{"start":1487462400000,"end":1487548800000,"min":1.7290221258E10,"avg":1.756305968020985E10,"median":1.756698888516908E10,"max":1.780515436E10,"sum":1.51744835637013E14,"samples":8640,"empty":false},{"start":1487548800000,"end":1487635200000,"min":1.780515436E10,"avg":1.8014560687702637E10,"median":1.8012164491240917E10,"max":1.822414669E10,"sum":1.5564580434175E14,"samples":8640,"empty":false},{"start":1487635200000,"end":1487721600000,"min":1.8224190076E10,"avg":1.83562976822018E10,"median":1.8353853967215466E10,"max":1.8493122109E10,"sum":1.00922924656746E14,"samples":5498,"empty":false}]'
+    http_version: 
+  recorded_at: Tue, 21 Feb 2017 15:16:22 GMT
+recorded_with: VCR 3.0.3

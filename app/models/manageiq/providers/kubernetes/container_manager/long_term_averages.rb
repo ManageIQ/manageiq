@@ -18,7 +18,7 @@ module ManageIQ::Providers
       perfs = ManageIQ::Providers::Kubernetes::ContainerManager::VimPerformanceAnalysis.find_perf_for_time_period(
         obj,
         "daily",
-        :end_date    => Time.now.utc,
+        :end_date    => options[:end_date] || Time.now.utc,
         :days        => avg_days,
         :ext_options => ext_options
       )
