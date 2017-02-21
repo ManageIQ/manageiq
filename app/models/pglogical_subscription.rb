@@ -101,6 +101,15 @@ class PglogicalSubscription < ActsAsArModel
                                                  connection_hash['dbname'])
   end
 
+  def backlog
+    connection.select_value(<<-SQL).to_i
+      SELECT pg_xlog_location_diff(
+        #{connection.quote(remote_node_lsn)},
+        #{connection.quote(remote_replication_lsn)}
+      )
+    SQL
+  end
+
   # translate the output from the pglogical stored proc to our object columns
   def self.subscription_to_columns(sub)
     cols = sub.symbolize_keys
@@ -109,6 +118,8 @@ class PglogicalSubscription < ActsAsArModel
     cols.delete(:slot_name)
     cols.delete(:replication_sets)
     cols.delete(:forward_origins)
+    cols.delete(:remote_replication_lsn)
+    cols.delete(:local_replication_lsn)
 
     cols[:id] = cols.delete(:subscription_name)
 
@@ -238,7 +249,16 @@ class PglogicalSubscription < ActsAsArModel
     MiqPassword.try_decrypt(password)
   end
 
+  def remote_replication_lsn
+    pglogical.subscription_show_status(id)["remote_replication_lsn"]
+  end
+
+  def remote_node_lsn
+    with_remote_connection { |conn| conn.select_value("SELECT pg_current_xlog_insert_location()") }
+  end
+
   def with_remote_connection
+    find_password
     MiqRegionRemote.with_remote_connection(host, port || 5432, user, decrypted_password, dbname, "postgresql") do |conn|
       yield conn
     end

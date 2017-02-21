@@ -4,22 +4,26 @@ describe PglogicalSubscription do
   let(:subscriptions) do
     [
       {
-        "subscription_name" => "region_#{remote_region1}_subscription",
-        "status"            => "replicating",
-        "provider_node"     => "region_#{remote_region1}",
-        "provider_dsn"      => "dbname = 'vmdb\\'s_test' host='example.com' user='root' port='' password='p=as\\' s\\''",
-        "slot_name"         => "pgl_vmdb_test_region_#{remote_region1}_subscripdb71d61",
-        "replication_sets"  => ["miq"],
-        "forward_origins"   => ["all"]
+        "subscription_name"      => "region_#{remote_region1}_subscription",
+        "status"                 => "replicating",
+        "provider_node"          => "region_#{remote_region1}",
+        "provider_dsn"           => "dbname = 'vmdb\\'s_test' host='example.com' user='root' port='' password='p=as\\' s\\''",
+        "slot_name"              => "pgl_vmdb_test_region_#{remote_region1}_subscripdb71d61",
+        "replication_sets"       => ["miq"],
+        "forward_origins"        => ["all"],
+        "remote_replication_lsn" => "0/420D9A0",
+        "local_replication_lsn"  => "18/72DE8268"
       },
       {
-        "subscription_name" => "region_#{remote_region2}_subscription",
-        "status"            => "disabled",
-        "provider_node"     => "region_#{remote_region2}",
-        "provider_dsn"      => "dbname = vmdb_test2 host=test.example.com user = postgres port=5432 fallback_application_name='bin/rails'",
-        "slot_name"         => "pgl_vmdb_test_region_#{remote_region2}_subscripdb71d61",
-        "replication_sets"  => ["miq"],
-        "forward_origins"   => ["all"]
+        "subscription_name"      => "region_#{remote_region2}_subscription",
+        "status"                 => "disabled",
+        "provider_node"          => "region_#{remote_region2}",
+        "provider_dsn"           => "dbname = vmdb_test2 host=test.example.com user = postgres port=5432 fallback_application_name='bin/rails'",
+        "slot_name"              => "pgl_vmdb_test_region_#{remote_region2}_subscripdb71d61",
+        "replication_sets"       => ["miq"],
+        "forward_origins"        => ["all"],
+        "remote_replication_lsn" => "1/53E9A8",
+        "local_replication_lsn"  => "20/72FF8369"
       }
     ]
   end
@@ -399,6 +403,23 @@ describe PglogicalSubscription do
       expect(MiqRegionRemote).to receive(:validate_connection_settings)
         .with("my.example.com", nil, "root", "thepassword", "vmdb_production")
       sub.validate
+    end
+  end
+
+  describe "#backlog" do
+    let(:remote_connection) { double(:remote_connection) }
+
+    before do
+      allow(pglogical).to receive(:enabled?).and_return(true)
+      allow(pglogical).to receive(:subscriptions).and_return([subscriptions.first])
+      allow(pglogical).to receive(:subscription_show_status).and_return(subscriptions.first)
+    end
+
+    it "returns the correct value" do
+      expect(MiqRegionRemote).to receive(:with_remote_connection).and_yield(remote_connection)
+      expect(remote_connection).to receive(:select_value).and_return("0/42108F8")
+
+      expect(described_class.first.backlog).to eq(12_120)
     end
   end
 end
