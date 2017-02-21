@@ -151,6 +151,11 @@ module MiqAeMethodService
       return nil
     end
 
+    def create_service_provision_request(svc_template, options = nil)
+      result = ar_object(svc_template).provision_request(ar_object(@workspace.ae_user), options)
+      MiqAeServiceModelBase.wrap_results(result)
+    end
+
     def object(path = nil)
       obj = @workspace.get_obj_from_path(path)
       return nil if obj.nil?
