@@ -39,7 +39,7 @@ class ManageIQ::Providers::AnsibleTower::InventoryCollectionDefault::AutomationM
       attributes = {
         :model_class => ManageIQ::Providers::AnsibleTower::AutomationManager::Playbook,
         :association => :configuration_script_payloads,
-        :manager_ref => [:manager_ref],
+        :manager_ref => [:configuration_script_source, :manager_ref],
       }
       attributes.merge!(extra_attributes)
     end
