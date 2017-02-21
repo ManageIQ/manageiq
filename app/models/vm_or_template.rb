@@ -1673,11 +1673,6 @@ class VmOrTemplate < ApplicationRecord
     direct_service.try(:root_service)
   end
 
-  def raise_is_available_now_error_message(request_type)
-    msg = send("validate_#{request_type}")[:message]
-    raise MiqException::MiqVmError, msg unless msg.nil?
-  end
-
   def has_required_host?
     !host.nil?
   end
