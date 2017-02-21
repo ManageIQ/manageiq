@@ -56,17 +56,16 @@ class ManagerRefresh::InventoryCollectionDefault::CloudManager < ManagerRefresh:
         :association => :hardwares
       }
 
-      case extra_attributes[:strategy]
-      when :local_db_cache_all
-        attributes[:custom_manager_uuid] = lambda do |hardware|
-          [hardware.vm_or_template.ems_ref]
-        end
-      when :find_missing_in_local_db
-        attributes[:custom_db_finder] = lambda do |inventory_collection, hash_uuid_by_ref|
-          inventory_collection.parent.send(inventory_collection.association).references(:vm_or_template).where(
-            :vms => {:ems_ref => hash_uuid_by_ref[:vm_or_template]}
-          ).first
-        end
+      attributes[:custom_manager_uuid] = lambda do |hardware|
+        [hardware.vm_or_template.ems_ref]
+      end
+
+      attributes[:custom_db_finder] = lambda do |inventory_collection, selection, _projection |
+        relation = inventory_collection.parent.send(inventory_collection.association).
+          includes(:vm_or_template).
+          references(:vm_or_template)
+        relation = relation.where(:vms => {:ems_ref => selection[:vm_or_template]}) unless selection.blank?
+        relation
       end
 
       attributes.merge!(extra_attributes)
