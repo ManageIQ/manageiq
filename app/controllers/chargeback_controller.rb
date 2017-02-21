@@ -118,6 +118,9 @@ class ChargebackController < ApplicationController
       if @edit[:new][:description].nil? || @edit[:new][:description] == ""
         render_flash(_("Description is required"), :error)
         return
+      elsif @rate.description == "Default Container Image Rate" && @edit[:new][:description] != @rate.description
+        render_flash(_("Can not change description of 'Default Container Image Rate'"), :error)
+        return
       end
       @rate.description = @edit[:new][:description]
       @rate.rate_type   = @edit[:new][:rate_type] if @edit[:new][:rate_type]
