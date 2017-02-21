@@ -2,6 +2,10 @@ module ManagerRefresh
   class SaveInventory
     class << self
       def save_inventory(ems, inventory_collections)
+        _log.info("#{log_header(ems)} Scanning Inventory Collections...Start")
+        ManagerRefresh::InventoryCollection::Scanner.scan!(inventory_collections)
+        _log.info("#{log_header(ems)} Scanning Inventory Collections...Complete")
+
         _log.info("#{log_header(ems)} Saving EMS Inventory...Start")
 
         inventory_object_saving_strategy = Settings.ems_refresh[ems.class.ems_type].try(:[], :inventory_object_saving_strategy)
