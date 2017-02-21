@@ -310,18 +310,20 @@ describe ManagerRefresh::SaveInventory do
         vm_refs = ["vm_ems_ref_3", "vm_ems_ref_4"]
 
         @data[:vms] = ::ManagerRefresh::InventoryCollection.new(
-          :model_class => ManageIQ::Providers::CloudManager::Vm,
-          :arel        => @ems.vms.where(:ems_ref => vm_refs)
+          vms_init_data(
+            :arel => @ems.vms.where(:ems_ref => vm_refs)
+          )
         )
         @data[:hardwares] = ::ManagerRefresh::InventoryCollection.new(
-          :model_class => Hardware,
-          :arel        => @ems.hardwares.joins(:vm_or_template).where(:vms => {:ems_ref => vm_refs}),
-          :manager_ref => [:vm_or_template]
+          hardwares_init_data(
+            :arel        => @ems.hardwares.joins(:vm_or_template).where(:vms => {:ems_ref => vm_refs}),
+            :strategy    => :local_db_find_missing_references,
+            :manager_ref => [:vm_or_template])
         )
         @data[:disks] = ::ManagerRefresh::InventoryCollection.new(
-          :model_class => Disk,
-          :arel        => @ems.disks.joins(:hardware => :vm_or_template).where('hardware' => {'vms' => {'ems_ref' => vm_refs}}),
-          :manager_ref => [:hardware, :device_name]
+          disks_init_data(
+            :arel => @ems.disks.joins(:hardware => :vm_or_template).where('hardware' => {'vms' => {'ems_ref' => vm_refs}}),
+          )
         )
 
         @vm_data_3 = vm_data(3).merge(
@@ -333,6 +335,7 @@ describe ManagerRefresh::SaveInventory do
           :guest_os       => @data[:hardwares].lazy_find(image_data(2)[:ems_ref], :key => :guest_os),
           :vm_or_template => @data[:vms].lazy_find(vm_data(3)[:ems_ref])
         )
+
         @disk_data_3 = disk_data(3).merge(
           :hardware => @data[:hardwares].lazy_find(vm_data(3)[:ems_ref])
         )
@@ -378,7 +381,7 @@ describe ManagerRefresh::SaveInventory do
               :vm_or_template_id   => @vm3.id,
               :bitness             => 64,
               :virtualization_type => "virtualization_type_3",
-              :guest_os            => nil,
+              :guest_os            => "linux_generic_2",
             }
           ],
           :extra_disks    => [
@@ -704,90 +707,60 @@ describe ManagerRefresh::SaveInventory do
     @data = {}
     only_collections.each do |collection|
       @data[collection] = ::ManagerRefresh::InventoryCollection.new(send("#{collection}_init_data",
-                                                                         :extra_attributes => {
+                                                                         {
                                                                            :complete => false
                                                                          }))
     end
 
     (all_collections - only_collections).each do |collection|
       @data[collection] = ::ManagerRefresh::InventoryCollection.new(send("#{collection}_init_data",
-                                                                         :extra_attributes => {
+                                                                         {
                                                                            :complete => false,
                                                                            :strategy => :local_db_cache_all
                                                                          }))
     end
   end
 
-  def orchestration_stacks_init_data(extra_attributes: {})
-    extra_attributes[:model_class] = ManageIQ::Providers::CloudManager::OrchestrationStack
-
-    init_data(:orchestration_stacks,
-              extra_attributes)
+  def orchestration_stacks_init_data(extra_attributes = {})
+    # Shadowing the default blacklist so we have an automatically solved graph cycle
+    init_data(cloud.orchestration_stacks(extra_attributes.merge(:attributes_blacklist => [])))
   end
 
-  def orchestration_stacks_resources_init_data(extra_attributes: {})
-    extra_attributes[:model_class] = OrchestrationStackResource
-
-    init_data(:orchestration_stacks_resources,
-              extra_attributes)
+  def orchestration_stacks_resources_init_data(extra_attributes = {})
+    # Shadowing the default blacklist so we have an automatically solved graph cycle
+    init_data(cloud.orchestration_stacks_resources(extra_attributes))
   end
 
-  def vms_init_data(extra_attributes: {})
-    extra_attributes[:model_class] = ManageIQ::Providers::CloudManager::Vm
-
-    init_data(:vms,
-              extra_attributes)
+  def vms_init_data(extra_attributes = {})
+    init_data(cloud.vms(extra_attributes.merge(:attributes_blacklist => [])))
   end
 
-  def miq_templates_init_data(extra_attributes: {})
-    extra_attributes[:model_class] = ManageIQ::Providers::CloudManager::Template
-
-    init_data(:miq_templates,
-              extra_attributes)
+  def miq_templates_init_data(extra_attributes = {})
+    init_data(cloud.miq_templates(extra_attributes))
   end
 
-  def key_pairs_init_data(extra_attributes: {})
-    extra_attributes[:manager_ref] = [:name]
-    extra_attributes[:model_class] = ManageIQ::Providers::CloudManager::AuthKeyPair
-
-    init_data(:key_pairs,
-              extra_attributes)
+  def key_pairs_init_data(extra_attributes = {})
+    init_data(cloud.key_pairs(extra_attributes))
   end
 
-  def hardwares_init_data(extra_attributes: {})
-    if extra_attributes[:strategy] == :local_db_cache_all
-      extra_attributes[:custom_manager_uuid] = lambda do |hardware|
-        [hardware.vm_or_template.ems_ref]
-      end
-    end
-
-    extra_attributes[:manager_ref] = [:vm_or_template]
-    extra_attributes[:model_class] = Hardware
-    init_data(:hardwares,
-              extra_attributes)
+  def hardwares_init_data(extra_attributes = {})
+    init_data(cloud.hardwares(extra_attributes))
   end
 
-  def disks_init_data(extra_attributes: {})
-    if extra_attributes[:strategy] == :local_db_cache_all
-      extra_attributes[:custom_manager_uuid] = lambda do |hardware|
-        [hardware.hardware.vm_or_template.ems_ref, hardware.device_name]
-      end
-    end
-
-    extra_attributes[:manager_ref] = [:hardware, :device_name]
-    extra_attributes[:model_class] = Disk
-    init_data(:disks,
-              extra_attributes)
+  def disks_init_data(extra_attributes = {})
+    init_data(cloud.disks(extra_attributes))
   end
 
-  def init_data(association, extra_attributes)
+  def cloud
+    ManagerRefresh::InventoryCollectionDefault::CloudManager
+  end
+
+  def init_data(extra_attributes)
     init_data = {
-      :parent      => @ems,
-      :association => association
+      :parent => @ems,
     }
 
     init_data.merge!(extra_attributes)
-    init_data
   end
 
   def association_attributes(model_class)
