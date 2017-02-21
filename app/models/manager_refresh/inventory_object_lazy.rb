@@ -35,8 +35,7 @@ module ManagerRefresh
       # If the dependency is inventory_collection.lazy_find(:ems_ref, :key => :stack)
       # and a :stack is a relation to another object, in the InventoryObject object,
       # then this relation is considered transitive.
-      !!(key && (inventory_collection.dependency_attributes.keys.include?(key) ||
-        association?(key)))
+      !!(key && association?(key))
     end
 
     def association?(key)
@@ -45,7 +44,8 @@ module ManagerRefresh
       return true if [:parent, :genelogy_parent].include?(key)
 
       # Is the key an association on inventory_collection_scope model class?
-      !inventory_collection.association_to_foreign_key_mapping[key].nil?
+      !inventory_collection.association_to_foreign_key_mapping[key].nil? ||
+        (inventory_collection.model_class && inventory_collection.model_class.reflect_on_association(key))
     end
 
     private
