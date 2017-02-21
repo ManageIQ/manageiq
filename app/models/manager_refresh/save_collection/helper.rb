@@ -36,7 +36,7 @@ module ManagerRefresh::SaveCollection
 
     def save_inventory(inventory_collection)
       inventory_collection.parent.reload if inventory_collection.parent
-      association  = inventory_collection.load_from_db
+      association  = inventory_collection.db_collection_for_comparison
       record_index = {}
 
       create_or_update_inventory!(inventory_collection, record_index, association)
