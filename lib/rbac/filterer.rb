@@ -223,6 +223,8 @@ module Rbac
       exp_sql, exp_includes, exp_attrs = search_filter.to_sql(tz) if search_filter && !klass.try(:instances_are_derived?)
       attrs[:apply_limit_in_sql] = (exp_attrs.nil? || exp_attrs[:supported_by_sql]) && user_filters["belongsto"].blank?
 
+      order = order_from_string(order, klass)
+
       # for belongs_to filters, scope_targets uses scope to make queries. want to remove limits for those.
       # if you note, the limits are put back into scope a few lines down from here
       scope = scope.except(:offset, :limit, :order)
@@ -285,6 +287,32 @@ module Rbac
     end
 
     private
+
+    def order_from_string(order_clause, klass)
+      return order_clause unless order_clause.kind_of?(String) || order_clause.kind_of?(Array)
+      return order_clause if order_clause.kind_of?(Array) && order_clause.first.kind_of?(Arel::Nodes::Ordering)
+      return order_clause if order_clause.blank?
+
+      columns_and_directions = if order_clause.kind_of?(Array) && order_clause.first.kind_of?(String)
+                                 order_clause
+                               else
+                                 order_clause.split(',')
+                               end
+
+      columns_and_directions.inject([]) do |result, column_and_direction|
+        column, direction = column_and_direction.split(' ')
+        unless column.include?('.')
+          column = "#{klass.base_model.to_s.tableize}.#{column}"
+        end
+
+        sql_column = Arel::Nodes::SqlLiteral.new(column)
+        result << if direction && direction.upcase == 'DESC'
+                    Arel::Nodes::Descending.new(sql_column)
+                  else
+                    Arel::Nodes::Ascending.new(sql_column)
+                  end
+      end
+    end
 
     ##
     # Determine if permissions should be applied directly via klass
