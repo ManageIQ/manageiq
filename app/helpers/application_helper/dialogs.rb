@@ -131,6 +131,10 @@ module ApplicationHelper::Dialogs
     auto_refreshable_field_indicies
   end
 
+  def auto_refresh_listening_options(options, trigger_override)
+    options.merge(:trigger => trigger_override)
+  end
+
   private
 
   def auto_refresh_options(field, auto_refresh_options_hash)
