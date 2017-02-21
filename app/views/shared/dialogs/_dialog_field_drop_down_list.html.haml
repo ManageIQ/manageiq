@@ -17,7 +17,9 @@
         dialogFieldRefresh.listenForAutoRefreshMessages(JSON.parse("#{j(auto_refresh_options.to_json)}"), function() {
           var selectedValue = $('select[name="#{field.name}"]').val();
           dialogFieldRefresh.refreshDropDownList("#{field.name}", "#{field.id}", selectedValue, function() {
-            dialogFieldRefresh.triggerAutoRefresh(JSON.parse('#{j(auto_refresh_options.to_json)}'));
+            dialogFieldRefresh.triggerAutoRefresh(
+              JSON.parse('#{j(auto_refresh_listening_options(auto_refresh_options, true).to_json)}')
+            );
           });
         });
 
