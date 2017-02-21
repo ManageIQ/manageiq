@@ -1,4 +1,6 @@
 module ContainerVporMixin
+  LIVE_PERF_TAG = '/managed/live_reports/hawkular_datasource'.freeze
+
   def max_cpu_usage_rate_average_avg_over_time_period
     unless vpor_live?
       super
@@ -50,6 +52,13 @@ module ContainerVporMixin
   end
 
   def vpor_live?
-    true
+    class_name = self.class.name.demodulize
+    ems = if class_name == "ContainerManager"
+            self
+          elsif try(:ems_id)
+            ExtManagementSystem.find(ems_id)
+          end
+
+    ems && ems.tags.exists?(:name => LIVE_PERF_TAG)
   end
 end
