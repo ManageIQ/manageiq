@@ -15,5 +15,12 @@ class ManageIQ::Providers::AnsibleTower::Inventory::Persister::AutomationManager
       %i(credentials),
       :builder_params => {:resource => manager}
     )
+
+    collections[:vms] = ::ManagerRefresh::InventoryCollection.new(
+      :model_class => Vm,
+      :arel        => Vm,
+      :strategy    => :local_db_find_references,
+      :manager_ref => [:uid_ems]
+    )
   end
 end

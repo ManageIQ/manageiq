@@ -36,7 +36,16 @@ module ManagerRefresh
       # and a :stack is a relation to another object, in the InventoryObject object,
       # then this relation is considered transitive.
       !!(key && (inventory_collection.dependency_attributes.keys.include?(key) ||
-        inventory_collection.model_class.reflect_on_association(key)))
+        association?(key)))
+    end
+
+    def association?(key)
+      # TODO(lsmola) remove this if there will be better dependency scan, probably with transitive dependencies filled
+      # in a second pass
+      return true if [:parent, :genelogy_parent].include?(key)
+
+      # Is the key an association on inventory_collection_scope model class?
+      !inventory_collection.association_to_foreign_key_mapping[key].nil?
     end
 
     private
