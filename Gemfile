@@ -16,7 +16,8 @@ unless dependencies.detect { |d| d.name == "manageiq-content" }
   gem "manageiq-content", :git => "https://github.com/ManageIQ/manageiq-content", :branch => "master"
 end
 unless dependencies.detect { |d| d.name == "manageiq-providers-amazon" }
-  gem "manageiq-providers-amazon", :git => "https://github.com/ManageIQ/manageiq-providers-amazon", :branch => "master"
+  #gem "manageiq-providers-amazon", :git => "https://github.com/ManageIQ/manageiq-providers-amazon", :branch => "master"
+  gem "manageiq-providers-amazon", :path => "/Users/dberger/Dev/manageiq-providers-amazon-djberg96"
 end
 unless dependencies.detect { |d| d.name == "manageiq-providers-azure" }
   gem "manageiq-providers-azure", :git => "https://github.com/ManageIQ/manageiq-providers-azure", :branch => "master"
