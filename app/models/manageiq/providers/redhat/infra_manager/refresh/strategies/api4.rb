@@ -4,7 +4,7 @@ module ManageIQ::Providers::Redhat::InfraManager::Refresh::Strategies
 
     def inventory_from_ovirt(ems)
       @ems = ems
-      InventoryWrapper.new(old_inventory: super, ems: ems)
+      InventoryWrapper.new(:old_inventory => super, :ems => ems)
     end
 
     class InventoryWrapper
@@ -80,7 +80,7 @@ module ManageIQ::Providers::Redhat::InfraManager::Refresh::Strategies
 
       def service
         @ems.with_provider_connection(:version => 4) do |connection|
-         OpenStruct.new(version_string: connection.system_service.get.product_info.version.full_version)
+          OpenStruct.new(:version_string => connection.system_service.get.product_info.version.full_version)
         end
       end
     end

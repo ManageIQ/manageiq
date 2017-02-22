@@ -1,6 +1,5 @@
 module ManageIQ::Providers::Redhat::InfraManager::Refresh::Parse::Strategies
   class HostInventory
-
     attr_reader :host_inv, :_log
 
     def initialize(args)
@@ -23,16 +22,16 @@ module ManageIQ::Providers::Redhat::InfraManager::Refresh::Parse::Strategies
         hostname = host_inv.address
 
         # Check connection state and log potential issues
-        power_state = host_inv.status#&.state
+        power_state = host_inv.status
         if ['down', nil, ''].include?(power_state)
           _log.warn "Host [#{host_id}] connection state is [#{power_state.inspect}].  Inventory data may be missing."
         end
 
         power_state, connection_state = case power_state
-                                        when 'up'             then ['on',         'connected']
-                                        when 'maintenance'    then [power_state,  'connected']
-                                        when 'down'           then ['off',        'disconnected']
-                                        when 'non_responsive' then ['unknown',    'connected']
+                                        when 'up'             then %w(on connected)
+                                        when 'maintenance'    then [power_state, 'connected']
+                                        when 'down'           then %w(off disconnected)
+                                        when 'non_responsive' then %w(unknown connected)
                                         else [power_state, 'disconnected']
                                         end
 
@@ -49,11 +48,11 @@ module ManageIQ::Providers::Redhat::InfraManager::Refresh::Parse::Strategies
         hardware[:networks] = host_inv_to_network_hashes(host_inv, guest_device_uids[host_id])
 
         ipmi_address = nil
-        if host_inv&.power_management&.type.to_s.include?('ipmi')
-          ipmi_address = host_inv&.power_management&.address
+        if host_inv.dig(:power_management, :type).to_s.include?('ipmi')
+          ipmi_address = host_inv.dig(:power_management, :address)
         end
 
-        host_os_version = host_inv&.os&.version
+        host_os_version = host_inv.dig(:os, :version)
         ems_ref = ManageIQ::Providers::Redhat::InfraManager.make_ems_ref(host_inv.href)
         new_result = {
           :type             => 'ManageIQ::Providers::Redhat::InfraManager::Host',
@@ -70,7 +69,7 @@ module ManageIQ::Providers::Redhat::InfraManager::Refresh::Parse::Strategies
           :connection_state => connection_state,
           :power_state      => power_state,
           :operating_system => host_inv_to_os_hash(host_inv, hostname),
-          :ems_cluster      => cluster_uids[host_inv&.cluster&.id],
+          :ems_cluster      => cluster_uids[host_inv.dig(:cluster, :id)],
           :hardware         => hardware,
           :switches         => switches,
         }
@@ -134,22 +133,22 @@ module ManageIQ::Providers::Redhat::InfraManager::Refresh::Parse::Strategies
       return result, result_uids if nics.nil?
 
       nics.to_miq_a.each do |data|
-        network_id = data&.network&.id
-        unless network_id.nil?
+        network_id = data.dig(:network, :id)
+        if network_id
           network = ems_inv[:network].detect { |n| n.id == network_id }
         else
-          network_name = data&.network&.name
-          cluster_id = inv&.cluster&.id
+          network_name = data.dig(:network, :name)
+          cluster_id = inv.dig(:cluster, :id)
           cluster = ems_inv[:cluster].detect { |c| c.id == cluster_id }
-          datacenter_id = cluster&.data_center&.id
-          network = ems_inv[:network].detect { |n| n.name == network_name && n&.data_center&.id == datacenter_id }
+          datacenter_id = cluster.dig(:data_center, :id)
+          network = ems_inv[:network].detect { |n| n.name == network_name && n.dig(:data_center, :id) == datacenter_id }
         end
 
         tag_value = nil
-        unless network.nil?
+        if network
           uid = network.id
           name = network.name
-          tag_value = network.try(:vlan)&.id
+          tag_value = network.try(:vlan).try(:id)
         else
           uid = name = network_name unless network_name.nil?
         end
@@ -183,11 +182,11 @@ module ManageIQ::Providers::Redhat::InfraManager::Refresh::Parse::Strategies
 
         # Value provided by VC is in bytes, need to convert to MB
         memory_total_attr = inv.statistics.to_miq_a.detect { |stat| stat.name == 'memory.total' }
-        memory_total = memory_total_attr&.values&.first&.datum
+        memory_total = memory_total_attr.dig(:values, :first, :datum)
         result[:memory_mb] = memory_total.nil? ? 0 : memory_total.to_i / 1.megabyte
 
-        result[:cpu_cores_per_socket] = hdw&.topology&.cores || 1
-        result[:cpu_sockets]          = hdw&.topology&.sockets || 1
+        result[:cpu_cores_per_socket] = hdw.dig(:topology, :cores) || 1
+        result[:cpu_sockets]          = hdw.dig(:topology, :sockets) || 1
         result[:cpu_total_cores]      = result[:cpu_sockets] * result[:cpu_cores_per_socket]
       end
 
@@ -209,18 +208,18 @@ module ManageIQ::Providers::Redhat::InfraManager::Refresh::Parse::Strategies
       result_uids[:pnic] = {}
       pnic.to_miq_a.each do |data|
         # Find the switch to which this pnic is connected
-        network_id = data&.network&.id
-        unless network_id.nil?
+        network_id = data.dig(:network, :id)
+        if network_id
           network = ems_inv[:network].detect { |n| n.id == network_id }
         else
-          network_name = data&.network&.name
-          cluster_id = inv&.cluster&.id
+          network_name = data.dig(:network, :name)
+          cluster_id = inv.dig(:cluster, :id)
           cluster = ems_inv[:cluster].detect { |c| c.id == cluster_id }
-          datacenter_id = cluster&.data_center&.id
-          network = ems_inv[:network].detect { |n| n.name == network_name && n&.data_center&.id == datacenter_id }
+          datacenter_id = cluster.dig(:data_center, :id)
+          network = ems_inv[:network].detect { |n| n.name == network_name && n.dig(:data_center, :id) == datacenter_id }
         end
 
-        unless network.nil?
+        if network
           switch_uid = network.id
         else
           switch_uid = network_name unless network_name.nil?
@@ -263,7 +262,7 @@ module ManageIQ::Providers::Redhat::InfraManager::Refresh::Parse::Strategies
     end
 
     def extract_host_os_full_version(host_os)
-      host_os&.version&.full_version
+      host_os.dig(:version, :full_version)
     end
 
     def host_inv_to_network_hashes(inv, guest_device_uids)
