@@ -1726,7 +1726,12 @@ class CatalogController < ApplicationController
                                    {:typ   => ui_lookup(:models => "Service"),
                                     :model => ui_lookup(:model => "ServiceTemplateCatalog")}
               else
-                condition = ["display=? and service_template_catalog_id=? and service_template_catalog_id IS NOT NULL", true, from_cid(id)]
+                if x_active_tree == :sandt_tree
+                  # catalog items accordion also shows the non-"Display in Catalog" items
+                  condition = ["service_template_catalog_id=? and service_template_catalog_id IS NOT NULL", from_cid(id)]
+                else
+                  condition = ["display=? and service_template_catalog_id=? and service_template_catalog_id IS NOT NULL", true, from_cid(id)]
+                end
                 service_template_list(condition, :model => model, :no_order_button => true)
                 stc = ServiceTemplateCatalog.find_by_id(from_cid(id))
                 @right_cell_text = _("%{typ} in %{model} \"%{name}\"") % {:name => stc.name, :typ => ui_lookup(:models => "Service"), :model => ui_lookup(:model => "ServiceTemplateCatalog")}
