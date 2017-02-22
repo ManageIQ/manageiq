@@ -12,17 +12,13 @@ module InitDataHelper
     @data = {}
     only_collections.each do |collection|
       @data[collection] = ::ManagerRefresh::InventoryCollection.new(send("#{collection}_init_data",
-                                                                         {
-                                                                           :complete => false
-                                                                         }))
+                                                                         :complete => false))
     end
 
     (all_collections - only_collections).each do |collection|
       @data[collection] = ::ManagerRefresh::InventoryCollection.new(send("#{collection}_init_data",
-                                                                         {
-                                                                           :complete => false,
-                                                                           :strategy => :local_db_cache_all
-                                                                         }))
+                                                                         :complete => false,
+                                                                         :strategy => :local_db_cache_all))
     end
   end
 

@@ -320,7 +320,8 @@ describe ManagerRefresh::SaveInventory do
           hardwares_init_data(
             :arel        => @ems.hardwares.joins(:vm_or_template).where(:vms => {:ems_ref => vm_refs}),
             :strategy    => :local_db_find_missing_references,
-            :manager_ref => [:vm_or_template])
+            :manager_ref => [:vm_or_template]
+          )
         )
         @data[:disks] = ::ManagerRefresh::InventoryCollection.new(
           disks_init_data(

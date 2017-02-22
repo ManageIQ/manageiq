@@ -463,11 +463,10 @@ module ManagerRefresh
         # can be used for filling a relation and we don't need to do any query here
         # TODO(lsmola) maybe loading all, not just referenced here? Otherwise this will have issue for db_cache_all
         # and find used in parser
-        if (foreign_key = association_to_foreign_key_mapping[ref])
-          base_class_name = association_to_foreign_type_mapping[ref] || association_to_base_class_mapping[ref]
-          id              = attributes[foreign_key.to_sym]
-          attributes[ref] = ManagerRefresh::ApplicationRecordLite.new(base_class_name, id)
-        end
+        next unless (foreign_key = association_to_foreign_key_mapping[ref])
+        base_class_name = association_to_foreign_type_mapping[ref] || association_to_base_class_mapping[ref]
+        id              = attributes[foreign_key.to_sym]
+        attributes[ref] = ManagerRefresh::ApplicationRecordLite.new(base_class_name, id)
       end
 
       db_data_index[index]    = new_inventory_object(attributes)

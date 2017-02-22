@@ -58,28 +58,28 @@ describe ManagerRefresh::SaveInventory do
         @vm1 = FactoryGirl.create(
           :vm_cloud,
           vm_data(1).merge(
-            :flavor                => @flavor_1,
-            :genealogy_parent      => @image1,
-            :key_pairs             => [@key_pair1],
-            :location              => 'host_10_10_10_1.com',
+            :flavor           => @flavor_1,
+            :genealogy_parent => @image1,
+            :key_pairs        => [@key_pair1],
+            :location         => 'host_10_10_10_1.com',
           )
         )
         @vm12 = FactoryGirl.create(
           :vm_cloud,
           vm_data(12).merge(
-            :flavor                => @flavor1,
-            :genealogy_parent      => @image1,
-            :key_pairs             => [@key_pair1, @key_pair12],
-            :location              => 'host_10_10_10_12.com',
+            :flavor           => @flavor1,
+            :genealogy_parent => @image1,
+            :key_pairs        => [@key_pair1, @key_pair12],
+            :location         => 'host_10_10_10_12.com',
           )
         )
         @vm2 = FactoryGirl.create(
           :vm_cloud,
           vm_data(2).merge(
-            :flavor                => @flavor2,
-            :genealogy_parent      => @image2,
-            :key_pairs             => [@key_pair2],
-            :location              => 'host_10_10_10_2.com',
+            :flavor           => @flavor2,
+            :genealogy_parent => @image2,
+            :key_pairs        => [@key_pair2],
+            :location         => 'host_10_10_10_2.com',
           )
         )
         @vm4 = FactoryGirl.create(
@@ -112,14 +112,14 @@ describe ManagerRefresh::SaveInventory do
           )
         )
 
-        @network_port1 =  FactoryGirl.create(
+        @network_port1 = FactoryGirl.create(
           :network_port,
           network_port_data(1).merge(
             :device => @vm1
           )
         )
 
-        @network_port12 =  FactoryGirl.create(
+        @network_port12 = FactoryGirl.create(
           :network_port,
           network_port_data(12).merge(
             :device => @vm1
@@ -142,28 +142,32 @@ describe ManagerRefresh::SaveInventory do
         @data = {}
         @data[:vms] = ::ManagerRefresh::InventoryCollection.new(
           vms_init_data(
-            :arel => @ems.vms.where(:ems_ref => vm_refs),
+            :arel     => @ems.vms.where(:ems_ref => vm_refs),
             :strategy => :local_db_find_references,
           )
         )
         @data[:hardwares] = ::ManagerRefresh::InventoryCollection.new(
           hardwares_init_data(
-            :arel        => @ems.hardwares.joins(:vm_or_template).where(:vms => {:ems_ref => vm_refs}),
-            :strategy    => :local_db_find_references)
+            :arel     => @ems.hardwares.joins(:vm_or_template).where(:vms => {:ems_ref => vm_refs}),
+            :strategy => :local_db_find_references
+          )
         )
         @data[:miq_templates] = ::ManagerRefresh::InventoryCollection.new(
           miq_templates_init_data(
-            :strategy => :local_db_find_references)
+            :strategy => :local_db_find_references
+          )
         )
         @data[:network_ports] = ::ManagerRefresh::InventoryCollection.new(
           network_ports_init_data(
             :parent   => @ems.network_manager,
             :arel     => @ems.network_manager.network_ports.where(:ems_ref => network_port_refs),
-            :strategy => :local_db_find_missing_references)
+            :strategy => :local_db_find_missing_references
+          )
         )
         @data[:key_pairs] = ::ManagerRefresh::InventoryCollection.new(
           key_pairs_init_data(
-            :strategy => :local_db_find_references)
+            :strategy => :local_db_find_references
+          )
         )
 
         @network_port_data_1 = network_port_data(1).merge(
