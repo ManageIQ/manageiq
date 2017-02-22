@@ -28,5 +28,4 @@ describe AddInitiatorToService do
       expect(service_stub.columns.collect(&:name).exclude?('initiator')).to be_truthy
     end
   end
-
 end

@@ -3,9 +3,7 @@ class AddInitiatorToService < ActiveRecord::Migration[5.0]
   def up
     add_column :services, :initiator, :string
     say_with_time('Adding initiator to Service') do
-      Service.all.each do |svc|
-        svc.update_attributes!(:initiator => 'user')
-      end
+      Service.update_all(:initiator => 'user')
     end
   end
 
