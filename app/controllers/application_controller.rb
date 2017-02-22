@@ -16,7 +16,7 @@ class ApplicationController < ActionController::Base
     # This secret is reset to a value found in the miq_databases table in
     # MiqWebServerWorkerMixin.configure_secret_token for rails server, UI, and
     # web service worker processes.
-    protect_from_forgery :secret => SecureRandom.hex(64), :except => :csp_report, :with => :exception
+    protect_from_forgery :secret => SecureRandom.hex(64), :except => [:authenticate, :csp_report], :with => :exception
   end
 
   helper ChartingHelper

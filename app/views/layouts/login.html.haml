@@ -11,7 +11,6 @@
       = javascript_include_tag 'miq_debug'
       = stylesheet_link_tag 'miq_debug'
 
-    = csrf_meta_tag
     = render :partial => 'layouts/i18n_js'
 
   %body{:onload => "miqOnLoad();", :class => ::Settings.server.custom_login_logo ? 'whitelabel' : ''}
