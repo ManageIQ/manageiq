@@ -621,6 +621,12 @@
         :identifier: storage_tag
       - :name: unassign
         :identifier: storage_tag
+  :ems_events:
+     :description: LXCA Events
+     :options:
+     - :collection
+     :verbs: *g
+     :klass: EmsEvent        
   :events:
     :description: Events
     :identifier: event

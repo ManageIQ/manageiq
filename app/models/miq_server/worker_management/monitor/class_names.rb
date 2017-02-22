@@ -42,6 +42,7 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
     ManageIQ::Providers::Vmware::NetworkManager::RefreshWorker
     ManageIQ::Providers::Vmware::InfraManager::RefreshWorker
     ManageIQ::Providers::Nuage::NetworkManager::RefreshWorker
+    ManageIQ::Providers::Lenovo::PhysicalInfraManager::RefreshWorker
     ManageIQ::Providers::Amazon::CloudManager::EventCatcher
     ManageIQ::Providers::AnsibleTower::AutomationManager::EventCatcher
     ManageIQ::Providers::Azure::CloudManager::EventCatcher
@@ -57,6 +58,7 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
     ManageIQ::Providers::StorageManager::CinderManager::EventCatcher
     ManageIQ::Providers::Vmware::InfraManager::EventCatcher
     ManageIQ::Providers::Vmware::CloudManager::EventCatcher
+    ManageIQ::Providers::Lenovo::PhysicalInfraManager::EventCatcher
     EmbeddedAnsibleWorker
     MiqEventHandler
     MiqGenericWorker
@@ -110,6 +112,7 @@ module MiqServer::WorkerManagement::Monitor::ClassNames
     ManageIQ::Providers::Hawkular::MiddlewareManager::RefreshWorker
     ManageIQ::Providers::Hawkular::DatawarehouseManager::RefreshWorker
     ManageIQ::Providers::Kubernetes::ContainerManager::RefreshWorker
+    ManageIQ::Providers::Lenovo::PhysicalInfraManager::RefreshWorker
     ManageIQ::Providers::Openshift::ContainerManager::RefreshWorker
     ManageIQ::Providers::OpenshiftEnterprise::ContainerManager::RefreshWorker
     ManageIQ::Providers::Microsoft::InfraManager::RefreshWorker
