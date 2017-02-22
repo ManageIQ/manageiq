@@ -26,8 +26,8 @@ class EmsEvent < EventStream
 
   def self.event_groups
     core_event_groups = ::Settings.event_handling.event_groups.to_hash
-    Vmdb::Plugins.instance.registered_provider_plugin_names.each_with_object(core_event_groups) do |provider_key, event_groups|
-      provider_event_groups = ::Settings.fetch_path(provider_key, :event_handling, :event_groups)
+    Settings.ems.each_with_object(core_event_groups) do |(_provider_type, provider_settings), event_groups|
+      provider_event_groups = provider_settings.fetch_path(:event_handling, :event_groups)
       next unless provider_event_groups
       event_groups.deep_merge!(provider_event_groups.to_hash) do |_key, event_groups_val, provider_groups_val|
         if event_groups_val.kind_of?(Array) && provider_groups_val.kind_of?(Array)

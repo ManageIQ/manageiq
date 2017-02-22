@@ -215,12 +215,14 @@ describe EmsEvent do
 
     it 'returns the provider event if configured' do
       stub_settings_merge(
-        :some_provider => {
-          :event_handling => {
-            :event_groups => {
-              :addition => {
-                :name     => 'This name will not make it into event_groups',
-                :critical => [provider_event]
+        :ems => {
+          :some_provider => {
+            :event_handling => {
+              :event_groups => {
+                :addition => {
+                  :name     => 'This name will not make it into event_groups',
+                  :critical => [provider_event]
+                }
               }
             }
           }
