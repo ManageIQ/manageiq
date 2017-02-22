@@ -4,6 +4,7 @@ class EventStream < ApplicationRecord
 
   belongs_to :target, :polymorphic => true
   belongs_to :ext_management_system, :foreign_key => :ems_id
+  belongs_to :generating_ems, :class_name => "ExtManagementSystem"
 
   belongs_to :vm_or_template
   alias_method :src_vm_or_template, :vm_or_template
