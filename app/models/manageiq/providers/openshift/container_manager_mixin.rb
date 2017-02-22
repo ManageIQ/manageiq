@@ -4,6 +4,7 @@ module ManageIQ::Providers::Openshift::ContainerManagerMixin
   include ManageIQ::Providers::Kubernetes::ContainerManagerMixin
 
   DEFAULT_PORT = 8443
+  DEFAULT_EXTERNAL_LOGGING_ROUTE_NAME = "logging-kibana-ops".freeze
 
   included do
     has_many :container_routes, :foreign_key => :ems_id, :dependent => :destroy
@@ -55,5 +56,17 @@ module ManageIQ::Providers::Openshift::ContainerManagerMixin
       @clients[kubernetes] ||= connect(:service => 'kubernetes', :version => api_version)
       @clients[openshift].respond_to?(method_name) ? @clients[openshift] : @clients[kubernetes]
     end
+  end
+
+  def external_logging_route_name
+    DEFAULT_EXTERNAL_LOGGING_ROUTE_NAME
+  end
+
+  def external_logging_query
+    nil # should be empty to return all
+  end
+
+  def external_logging_path
+    '/'
   end
 end
