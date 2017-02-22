@@ -264,6 +264,11 @@ describe "Rest API Collections" do
       test_collection_query(:vms, vms_url, Vm, :guid)
     end
 
+    it "query Vms or Templates" do
+      FactoryGirl.create(:vm_vmware)
+      test_collection_query(:vms_or_templates, vms_or_templates_url, VmOrTemplate, :guid)
+    end
+
     it "query Zones" do
       FactoryGirl.create(:zone, :name => "api zone")
       test_collection_query(:zones, zones_url, Zone)
