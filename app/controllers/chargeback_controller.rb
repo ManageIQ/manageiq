@@ -497,7 +497,7 @@ class ChargebackController < ApplicationController
     miq_report = MiqReport.find(@sb[:miq_report_id])
     saved_reports = miq_report.miq_report_results.with_current_user_groups
                               .select("id, miq_report_id, name, last_run_on, report_source")
-                              .order(:last_run_on)
+                              .order(:last_run_on => :desc)
 
     @sb[:tree_typ] = "reports"
     @right_cell_text = _("Report \"%{report_name}\"") % {:report_name => miq_report.name}
