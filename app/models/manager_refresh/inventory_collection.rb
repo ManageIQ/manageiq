@@ -1,6 +1,6 @@
 module ManagerRefresh
   class InventoryCollection
-    attr_accessor :saved, :references, :data_collection_finalized
+    attr_accessor :saved, :references, :attribute_references, :data_collection_finalized
 
     attr_reader :model_class, :strategy, :attributes_blacklist, :attributes_whitelist, :custom_save_block, :parent,
                 :internal_attributes, :delete_method, :data, :data_index, :dependency_attributes, :manager_ref,
@@ -37,6 +37,7 @@ module ManagerRefresh
       @attributes_whitelist             = Set.new
       @transitive_dependency_attributes = Set.new
       @references                       = Set.new
+      @attribute_references             = Set.new
       @loaded_references                = Set.new
       @db_data_index                    = nil
       @data_collection_finalized        = false
@@ -182,6 +183,11 @@ module ManagerRefresh
     end
 
     def new_inventory_object(hash)
+      manager_ref.each do |x|
+        # TODO(lsmola) with some effort, we can do this, but it's complex
+        raise "A lazy_find with a :key can't be a part of the manager_uuid" if inventory_object_lazy?(hash[x]) && hash[x].key
+      end
+
       inventory_object_class.new(self, hash)
     end
 
@@ -301,6 +307,14 @@ module ManagerRefresh
       end
     end
 
+    def association_to_base_class_mapping
+      return {} unless model_class
+
+      @association_to_base_class_mapping ||= model_class.reflect_on_all_associations.each_with_object({}) do |x, obj|
+        obj[x.name] = x.klass.base_class.name unless x.polymorphic?
+      end
+    end
+
     def base_class_name
       return "" unless model_class
 
@@ -324,7 +338,7 @@ module ManagerRefresh
 
     def scan!
       data.each do |inventory_object|
-        scan_inventory_object(inventory_object)
+        scan_inventory_object!(inventory_object)
       end
     end
 
@@ -343,12 +357,6 @@ module ManagerRefresh
     #
     # @param manager_uuid [String] a manager_uuid of the InventoryObject we search in the local DB
     def find_in_db(manager_uuid)
-      # TODO(lsmola) selected need to contain also :keys used in other InventoryCollections pointing to this one, once
-      # we get list of all keys for each InventoryCollection ,we can uncomnent
-      # selected   = [:id] + manager_ref.map { |x| model_class.reflect_on_association(x).try(:foreign_key) || x }
-      # selected << :type if model_class.new.respond_to? :type
-      # load_from_db.select(selected).find_each do |record|
-
       # Use the cached db_data_index only data_collection_finalized?, meaning no new reference can occur
       if data_collection_finalized? && db_data_index
         return db_data_index[manager_uuid]
@@ -372,6 +380,12 @@ module ManagerRefresh
 
       # Initialize db_data_index in nil
       self.db_data_index ||= {}
+
+      # TODO(lsmola) selected need to contain also :keys used in other InventoryCollections pointing to this one, once
+      # we get list of all keys for each InventoryCollection ,we can uncomnent
+      # selected   = [:id] + manager_ref.map { |x| model_class.reflect_on_association(x).try(:foreign_key) || x }
+      # selected << :type if model_class.new.respond_to? :type
+      # load_from_db.select(selected).find_each do |record|
 
       # Return the the correct relation based on strategy and selection&projection
       case strategy
@@ -402,6 +416,7 @@ module ManagerRefresh
                            arel
                          end
                    rel = rel.where(selection) if rel && selection
+                   rel = rel.select(projection) if rel && projection
                    rel
                  end
 
@@ -441,43 +456,59 @@ module ManagerRefresh
               else
                 stringify_reference(custom_manager_uuid.call(record))
               end
-      db_data_index[index]    = new_inventory_object(record.attributes.symbolize_keys)
+
+      attributes = record.attributes.symbolize_keys
+      attribute_references.each do |ref|
+        # We need to fill all references that are relations, we will use a ManagerRefresh::ApplicationRecordLite which
+        # can be used for filling a relation and we don't need to do any query here
+        # TODO(lsmola) maybe loading all, not just referenced here? Otherwise this will have issue for db_cache_all
+        # and find used in parser
+        if (foreign_key = association_to_foreign_key_mapping[ref])
+          base_class_name = association_to_foreign_type_mapping[ref] || association_to_base_class_mapping[ref]
+          id              = attributes[foreign_key.to_sym]
+          attributes[ref] = ManagerRefresh::ApplicationRecordLite.new(base_class_name, id)
+        end
+      end
+
+      db_data_index[index]    = new_inventory_object(attributes)
       db_data_index[index].id = record.id
     end
 
-    def scan_inventory_object(inventory_object)
+    def scan_inventory_object!(inventory_object)
       inventory_object.data.each do |key, value|
         if value.kind_of?(Array)
-          value.each { |val| scan_inventory_object_attribute(key, val) }
+          value.each { |val| scan_inventory_object_attribute!(key, val) }
         else
-          scan_inventory_object_attribute(key, value)
+          scan_inventory_object_attribute!(key, value)
         end
       end
     end
 
-    def scan_inventory_object_attribute(key, value)
-      return unless inventory_object?(value)
+    def scan_inventory_object_attribute!(key, value)
+      return if !inventory_object_lazy?(value) && !inventory_object?(value)
 
       # Storing attributes and their dependencies
       (dependency_attributes[key] ||= Set.new) << value.inventory_collection if value.dependency?
 
-      # Storing if attribute is a transitive dependency, so a lazy_find :key results in dependency
-      transitive_dependency_attributes << key if transitive_dependency?(value)
-
       # Storing a reference in the target inventory_collection, then each IC knows about all the references and can
       # e.g. load all the referenced uuids from a DB
       value.inventory_collection.references << value.to_s
+
+      if inventory_object_lazy?(value)
+        # Storing if attribute is a transitive dependency, so a lazy_find :key results in dependency
+        transitive_dependency_attributes << key if value.transitive_dependency?
+
+        # If we access an attribute of the value, using a :key, we want to keep a track of that
+        value.inventory_collection.attribute_references << value.key if value.key
+      end
     end
 
     def inventory_object?(value)
-      value.kind_of?(::ManagerRefresh::InventoryObjectLazy) || value.kind_of?(::ManagerRefresh::InventoryObject)
+      value.kind_of?(::ManagerRefresh::InventoryObject)
     end
 
-    def transitive_dependency?(value)
-      # If the dependency is inventory_collection.lazy_find(:ems_ref, :key => :stack)
-      # and a :stack is a relation to another object, in the InventoryObject object,
-      # then this dependency is considered transitive.
-      (value.kind_of?(::ManagerRefresh::InventoryObjectLazy) && value.transitive_dependency?)
+    def inventory_object_lazy?(value)
+      value.kind_of?(::ManagerRefresh::InventoryObjectLazy)
     end
 
     def validate_inventory_collection!

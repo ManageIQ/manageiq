@@ -146,7 +146,8 @@ module ManagerRefresh
     end
 
     def loadable?(value)
-      value.kind_of?(::ManagerRefresh::InventoryObjectLazy) || value.kind_of?(::ManagerRefresh::InventoryObject)
+      value.kind_of?(::ManagerRefresh::InventoryObjectLazy) || value.kind_of?(::ManagerRefresh::InventoryObject) ||
+        value.kind_of?(::ManagerRefresh::ApplicationRecordLite)
     end
   end
 end
