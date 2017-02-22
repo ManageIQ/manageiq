@@ -213,6 +213,55 @@ module Spec
         report
       end
 
+      def cu_chart_without_grouping
+        report = MiqReport.new(
+          :db          => "VimPerformanceDaily",
+          :cols        => %w(timestamp cpu_usagemhz_rate_average max_derived_cpu_available),
+          :include     => {"resource" => {"columns" => %w(cpu_usagemhz_rate_average_high_over_time_period cpu_usagemhz_rate_average_low_over_time_period)}},
+          :col_order   => %w(timestamp cpu_usagemhz_rate_average max_derived_cpu_available),
+          :headers     => ["Date/Time", "Avg Used", "Max Available"],
+          :order       => "Ascending",
+          :sortby      => %w(timestamp),
+          :group       => "n",
+          :graph       => {:type => "Line", :columns => %w(cpu_usagemhz_rate_average max_derived_cpu_available)},
+          :extras      => {:trend => {"trend_max_cpu_usagemhz_rate_average|max_derived_cpu_available"=>"Trending Down"}}
+        )
+
+        report.table = Ruport::Data::Table.new(
+          :column_names => %w(timestamp cpu_usagemhz_rate_average max_derived_cpu_available),
+          :data         => [
+            [Time.zone.local(2017, 8, 19, 0, 0, 0), 19986.0, 41584.0],
+             [Time.zone.local(2017, 8, 20, 0, 0, 0), 205632.0, 41584.0]
+          ]
+        )
+        report
+      end
+
+      def cu_chart_with_grouping
+        report = MiqReport.new(
+          :db          => "VimPerformanceDaily",
+          :cols        => %w(timestamp cpu_usagemhz_rate_average__none_ max_derived_cpu_available_xa),
+          :include     => {"resource" => {"columns" => %w(cpu_usagemhz_rate_average_high_over_time_period cpu_usagemhz_rate_average_low_over_time_period)}},
+          :col_order   => %w(timestamp cpu_usagemhz_rate_average__none_ max_derived_cpu_available_xa),
+          :headers     => ["Date/Time", "Avg Used", "Max Available"],
+          :order       => "Ascending",
+          :sortby      => %w(timestamp),
+          :group       => "n",
+          :graph       => {:type => "Line", :columns => %w(cpu_usagemhz_rate_average__none_ max_derived_cpu_available_xa)},
+          :extras      => {:trend => {"trend_max_cpu_usagemhz_rate_average|max_derived_cpu_available"=>"Trending Down"}},
+          :performance => {:group_by_category=>"environment"}
+        )
+
+        report.table = Ruport::Data::Table.new(
+          :column_names => %w(timestamp cpu_usagemhz_rate_average__none_ max_derived_cpu_available_xa),
+          :data         => [
+            [Time.zone.local(2017, 8, 19, 0, 0, 0), 19986.0, 41584.0],
+             [Time.zone.local(2017, 8, 20, 0, 0, 0), 205632.0, 41584.0]
+          ]
+        )
+        report
+      end
+
       def long_category
         'Daenerys Targaryen, the First of Her Name, Queen of Meereen, Queen of the Andals and the Rhoynar and the First Men,\
          Lord of the Seven Kingdoms, Protector of the Realm, Khaleesi of the Great Grass Sea, called Daenerys Stormborn, the Unburnt,\
