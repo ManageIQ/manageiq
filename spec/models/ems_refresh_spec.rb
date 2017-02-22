@@ -3,6 +3,7 @@ describe EmsRefresh do
     before(:each) do
       guid, server, zone = EvmSpecHelper.create_guid_miq_server_zone
       @ems = FactoryGirl.create(:ems_vmware, :zone => zone)
+      @ems2 = FactoryGirl.create(:ems_vmware, :zone => zone)
     end
 
     it "with Ems" do
@@ -36,6 +37,14 @@ describe EmsRefresh do
       queue_refresh_and_assert_queue_item(target, [target])
       target2 = FactoryGirl.create(:vm_vmware, :ext_management_system => @ems)
       queue_refresh_and_assert_queue_item(target2, [target, target2])
+    end
+
+    it "with Vms on different EMSs" do
+      vm1 = FactoryGirl.create(:vm_vmware, :ext_management_system => @ems)
+      vm2 = FactoryGirl.create(:vm_vmware, :ext_management_system => @ems2)
+
+      task_ids = described_class.queue_refresh([vm1, vm2])
+      expect(task_ids.length).to eq(2)
     end
 
     def queue_refresh_and_assert_queue_item(target, expected_targets)
