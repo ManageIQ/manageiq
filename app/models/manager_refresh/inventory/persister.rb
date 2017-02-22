@@ -53,9 +53,7 @@ class ManagerRefresh::Inventory::Persister
   #
   # @param options [Hash] Hash used for ManagerRefresh::InventoryCollection initialize
   def add_inventory_collection(options)
-    if !options.key?(:parent) && manager
-      options[:parent] ||= manager
-    end
+    options[:parent] = manager if !options.key?(:parent) && manager
 
     collections[options[:association]] = ::ManagerRefresh::InventoryCollection.new(options)
   end
