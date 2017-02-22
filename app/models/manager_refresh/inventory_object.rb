@@ -23,10 +23,6 @@ module ManagerRefresh
     end
 
     def attributes(inventory_collection_scope = nil)
-      # TODO(lsmola) mark method with !, for performance reasons, this methods can be called only once, the second
-      # call will not return saveable result. We do not want to cache the result, since we want the lowest memory
-      # footprint.
-
       # We should explicitly pass a scope, since the inventory_object can be mapped to more InventoryCollections with
       # different blacklist and whitelist. The generic code always passes a scope.
       inventory_collection_scope ||= inventory_collection
