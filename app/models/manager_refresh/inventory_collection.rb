@@ -464,7 +464,7 @@ module ManagerRefresh
         # TODO(lsmola) maybe loading all, not just referenced here? Otherwise this will have issue for db_cache_all
         # and find used in parser
         next unless (foreign_key = association_to_foreign_key_mapping[ref])
-        base_class_name = association_to_foreign_type_mapping[ref] || association_to_base_class_mapping[ref]
+        base_class_name = attributes[association_to_foreign_type_mapping[ref].try(:to_sym)] || association_to_base_class_mapping[ref]
         id              = attributes[foreign_key.to_sym]
         attributes[ref] = ManagerRefresh::ApplicationRecordLite.new(base_class_name, id)
       end
