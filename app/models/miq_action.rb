@@ -225,8 +225,7 @@ class MiqAction < ApplicationRecord
   def action_run_ansible_playbook(action, rec, _inputs)
     service_template = ServiceTemplate.find(action.options[:service_template_id])
     options = { :dialog_hosts => target_hosts(action, rec) }
-      
-    Api::ServiceTemplateWorkflow.create(service_template, options).submit_request
+    service_template.provision_request(target_user(rec), options)
   end
 
   def action_snmp_trap(action, rec, inputs)
@@ -1032,11 +1031,15 @@ class MiqAction < ApplicationRecord
     elsif action.options[:use_localhost]
       'localhost'
     else
-      action.options['hosts']
+      action.options[:hosts]
     end
   end
 
   def ipaddress(record)
     record.ipaddresses[0] if record.respond_to?(:ipaddresses)
+  end
+
+  def target_user(record)
+    record.respond_to?(:tenant_identity) ? record.tenant_identity : User.find("admin")
   end
 end

@@ -406,10 +406,11 @@ describe MiqAction do
 
     shared_examples_for "#workflow check" do
       it "run playbook" do
-        wf = instance_double(ResourceActionWorkflow)
-        allow(wf).to receive(:submit_request)
+        miq_request = instance_double(MiqRequest)
+        allow(vm).to receive(:tenant_identity).and_return(user)
         expect(ServiceTemplate).to receive(:find).with(stap.id).and_return(stap)
-        expect(Api::ServiceTemplateWorkflow).to receive(:create).with(stap, options).and_return(wf)
+        expect(stap).to receive(:provision_request).with(user, options).and_return(miq_request)
+
         action.action_run_ansible_playbook(action, vm, {})
       end
     end
@@ -421,6 +422,28 @@ describe MiqAction do
         }
       end
       let(:options) { {:dialog_hosts => ip1 } }
+
+      it_behaves_like "#workflow check"
+    end
+
+    context "use localhost" do
+      let(:action_options) do
+        { :service_template_id => stap.id,
+          :use_localhost       => true
+        }
+      end
+      let(:options) { {:dialog_hosts => 'localhost' } }
+
+      it_behaves_like "#workflow check"
+    end
+
+    context "use hosts" do
+      let(:action_options) do
+        { :service_template_id => stap.id,
+          :hosts               => "ip1, ip2"
+        }
+      end
+      let(:options) { {:dialog_hosts => 'ip1, ip2' } }
 
       it_behaves_like "#workflow check"
     end
