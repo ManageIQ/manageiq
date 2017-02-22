@@ -253,9 +253,6 @@ module MiqAeServiceSpec
       let(:options) { {:fred => :flintstone} }
       let(:svc_options) { {:dialog_style => "medium"} }
       let(:user) { FactoryGirl.create(:user_with_group) }
-      let(:svc_user) do
-        MiqAeMethodService::MiqAeServiceUser.find(user.id)
-      end
       let(:template) { FactoryGirl.create(:service_template_ansible_playbook) }
       let(:miq_request) { FactoryGirl.create(:service_template_provision_request) }
       let(:svc_template) do
@@ -265,13 +262,12 @@ module MiqAeServiceSpec
         double("MiqAeEngine::MiqAeWorkspaceRuntime",
                :root               => options,
                :persist_state_hash => {},
-               :ae_user            => svc_user)
+               :ae_user            => user)
       end
       let(:miq_ae_service) { MiqAeService.new(workspace) }
 
       it "create service request" do
         allow(workspace).to receive(:disable_rbac)
-        expect(svc_user).to receive(:instance_variable_get).with('@object').and_return(user)
         expect(svc_template).to receive(:instance_variable_get).with('@object').and_return(template)
         expect(template).to receive(:provision_request).with(user, svc_options).and_return(miq_request)
 
