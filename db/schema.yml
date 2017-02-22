@@ -6458,6 +6458,14 @@ shares:
 - allow_tenant_inheritance
 - created_at
 - updated_at
+showback_configurations:
+- id
+- name
+- description
+- measure
+- types
+- updated_at
+- created_at
 snapshots:
 - id
 - uid
