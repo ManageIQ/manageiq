@@ -355,7 +355,7 @@ module ManagerRefresh
       else
         return db_data_index[manager_uuid] if db_data_index && db_data_index[manager_uuid]
         # We haven't found the reference, lets add it to the list of references and load it
-        references << manager_uuid unless references.include?(manager_uuid) # O(C) since references is Set
+        references << manager_uuid unless references.include?(manager_uuid) # O(1) since references is Set
       end
 
       populate_db_data_index!
