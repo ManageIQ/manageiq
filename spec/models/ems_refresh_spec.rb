@@ -34,9 +34,17 @@ describe EmsRefresh do
 
     it "with Vm and an item already on the queue" do
       target = @ems
-      queue_refresh_and_assert_queue_item(target, [target])
+      task_ids = described_class.queue_refresh(target)
+      assert_queue_item([target])
+
       target2 = FactoryGirl.create(:vm_vmware, :ext_management_system => @ems)
-      queue_refresh_and_assert_queue_item(target2, [target, target2])
+      task_ids2 = described_class.queue_refresh(target2)
+      assert_queue_item([target, target2])
+
+      expect(task_ids.length).to  eq(1)
+      expect(task_ids2.length).to eq(1)
+      expect(task_ids.first).to   eq(task_ids2.first)
+      expect(MiqTask.count).to    eq(1)
     end
 
     it "with Vms on different EMSs" do
@@ -49,7 +57,10 @@ describe EmsRefresh do
 
     def queue_refresh_and_assert_queue_item(target, expected_targets)
       described_class.queue_refresh(target)
+      assert_queue_item(expected_targets)
+    end
 
+    def assert_queue_item(expected_targets)
       q_all = MiqQueue.all
       expect(q_all.length).to eq(1)
       expect(q_all[0].args).to eq([expected_targets.collect { |t| [t.class.name, t.id] }])
