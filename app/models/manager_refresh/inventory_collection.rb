@@ -335,7 +335,7 @@ module ManagerRefresh
 
     private
 
-    attr_writer :attributes_blacklist, :attributes_whitelist, :db_data_index, :references
+    attr_writer :attributes_blacklist, :attributes_whitelist, :db_data_index
 
     # Finds manager_uuid in the DB. Using a configured strategy we cache obtained data in the db_data_index, so the
     # same find will not hit database twice. Also if we use lazy_links and this is called when
