@@ -12,6 +12,27 @@ class ManagerRefresh::Inventory::Persister
     initialize_inventory_collections
   end
 
+  # creates method on class that lazy initializes an InventoryCollection
+  def self.has_inventory(options)
+    name = options[:association]
+    define_method(name) do
+      collections[name] ||= begin
+        collection_options = options.dup
+        collection_options[:parent] ||= manager
+        if collection_options[:builder_params]
+          collection_options[:builder_params] = collection_options[:builder_params].transform_values do |value|
+            if value.respond_to? :call
+              value.call(self)
+            else
+              value
+            end
+          end
+        end
+        ::ManagerRefresh::InventoryCollection.new(collection_options)
+      end
+    end
+  end
+
   def options
     @options ||= Settings.ems_refresh[manager.class.ems_type]
   end
