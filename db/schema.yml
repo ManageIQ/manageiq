@@ -6128,7 +6128,6 @@ physical_servers:
 - machine_type
 - model
 - serial_number
-- uuid
 - field_replaceable_unit
 - host_id
 pictures:
