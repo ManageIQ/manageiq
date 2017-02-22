@@ -28,24 +28,24 @@ module ManagerRefresh
     def dependency?
       # If key is not set, InventoryObjectLazy is a dependency, cause it points to the record itself. Otherwise
       # InventoryObjectLazy is a dependency only if it points to an attribute which is a dependency or a relation.
-      !!(!key || transitive_dependency?) && !inventory_collection.saved?
+      (!key || transitive_dependency?) && !inventory_collection.saved?
     end
 
     def transitive_dependency?
       # If the dependency is inventory_collection.lazy_find(:ems_ref, :key => :stack)
       # and a :stack is a relation to another object, in the InventoryObject object,
       # then this relation is considered transitive.
-      !!(key && association?(key))
+      key && association?(key)
     end
 
     def association?(key)
       # TODO(lsmola) remove this if there will be better dependency scan, probably with transitive dependencies filled
-      # in a second pass
+      # in a second pass, then we can get rid of this hardcoded symbols. Right now we are not able to introspect these.
       return true if [:parent, :genelogy_parent].include?(key)
 
-      # Is the key an association on inventory_collection_scope model class?
-      !inventory_collection.association_to_foreign_key_mapping[key].nil? ||
-        (inventory_collection.model_class && inventory_collection.model_class.reflect_on_association(key))
+      # Is the key a dependency or an association on inventory_collection model class?
+      inventory_collection.dependency_attributes.key?(key) ||
+        !inventory_collection.association_to_foreign_key_mapping[key].nil?
     end
 
     private
