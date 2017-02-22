@@ -1,6 +1,5 @@
 module ManageIQ::Providers::Redhat::InfraManager::Refresh::Parse::Strategies
   class DatacenterInventory
-
     attr_reader :datacenter_inv, :_log
 
     def initialize(args)
@@ -54,7 +53,7 @@ module ManageIQ::Providers::Redhat::InfraManager::Refresh::Parse::Strategies
 
         # Link hosts to storages
         hosts = host_uids.values.select { |v| v.fetch_path(:ems_cluster, :datacenter_id) == uid }
-        storage_ids = data.storage_domains.to_miq_a.collect { |s| s.id }
+        storage_ids = data.storage_domains.to_miq_a.collect(&:id)
         hosts.each { |h| h[:storages] = storage_uids.values_at(*storage_ids).compact } unless storage_ids.blank?
       end
 
