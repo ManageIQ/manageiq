@@ -417,7 +417,7 @@ describe PglogicalSubscription do
 
     it "returns the correct value" do
       expect(MiqRegionRemote).to receive(:with_remote_connection).and_yield(remote_connection)
-      expect(remote_connection).to receive(:select_value).and_return("0/42108F8")
+      expect(remote_connection).to receive(:xlog_location).and_return("0/42108F8")
 
       expect(described_class.first.backlog).to eq(12_120)
     end

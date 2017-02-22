@@ -102,12 +102,7 @@ class PglogicalSubscription < ActsAsArModel
   end
 
   def backlog
-    connection.select_value(<<-SQL).to_i
-      SELECT pg_xlog_location_diff(
-        #{connection.quote(remote_node_lsn)},
-        #{connection.quote(remote_replication_lsn)}
-      )
-    SQL
+    connection.xlog_location_diff(remote_node_lsn, remote_replication_lsn)
   end
 
   # translate the output from the pglogical stored proc to our object columns
@@ -254,7 +249,7 @@ class PglogicalSubscription < ActsAsArModel
   end
 
   def remote_node_lsn
-    with_remote_connection { |conn| conn.select_value("SELECT pg_current_xlog_insert_location()") }
+    with_remote_connection(&:xlog_location)
   end
 
   def with_remote_connection
