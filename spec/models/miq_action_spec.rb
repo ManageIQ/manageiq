@@ -418,8 +418,7 @@ describe MiqAction do
     context "use event target" do
       let(:action_options) do
         { :service_template_id => stap.id,
-          :use_event_target    => true
-        }
+          :use_event_target    => true }
       end
       let(:options) { {:dialog_hosts => ip1 } }
 
@@ -429,8 +428,7 @@ describe MiqAction do
     context "use localhost" do
       let(:action_options) do
         { :service_template_id => stap.id,
-          :use_localhost       => true
-        }
+          :use_localhost       => true }
       end
       let(:options) { {:dialog_hosts => 'localhost' } }
 
@@ -440,8 +438,7 @@ describe MiqAction do
     context "use hosts" do
       let(:action_options) do
         { :service_template_id => stap.id,
-          :hosts               => "ip1, ip2"
-        }
+          :hosts               => "ip1, ip2" }
       end
       let(:options) { {:dialog_hosts => 'ip1, ip2' } }
 
