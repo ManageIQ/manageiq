@@ -3,26 +3,28 @@ module VmOrTemplate::Operations::Snapshot
 
   included do
     supports :snapshot_create do
-      unless supports_snapshots?
-        unsupported_reason_add(:snapshot_create, _("Create Snapshot operation not supported"))
-      end
-      unless supports_control?
-        unsupported_reason_add(:snapshot_create, unsupported_reason(:control))
-      end
-      if !snapshots.blank? && snapshots.first.get_current_snapshot.nil?
-        unsupported_reason_add(:snapshot_create, _("At least one snapshot has to be active to create a new snapshot for this VM"))
+      if supports_snapshots?
+        if !snapshots.blank? && snapshots.first.get_current_snapshot.nil?
+          unsupported_reason_add(:snapshot_create, _("At least one snapshot has to be active to create a new snapshot for this VM"))
+        end
+        unless supports_control?
+          unsupported_reason_add(:snapshot_create, unsupported_reason(:control))
+        end
+      else
+        unsupported_reason_add(:snapshot_create, _("Operation not supported"))
       end
     end
 
     supports :remove_snapshot do
-      unless supports_snapshots?
+      if supports_snapshots?
+        if snapshots.size <= 0
+          unsupported_reason_add(:remove_snapshot, _("No snapshots available for this VM"))
+        end
+        unless supports_control?
+          unsupported_reason_add(:remove_snapshot, unsupported_reason(:control))
+        end
+      else
         unsupported_reason_add(:remove_snapshot, _("Operation not supported"))
-      end
-      if snapshots.size <= 0
-        unsupported_reason_add(:remove_snapshot, _("No snapshots available for this VM"))
-      end
-      unless supports_control?
-        unsupported_reason_add(:remove_snapshot, unsupported_reason(:control))
       end
     end
 
