@@ -53,18 +53,17 @@ class ServiceTemplateOrchestration < ServiceTemplate
     end
     config_info
   end
-  private_class_method :validate_config_info
 
   private
 
   def update_service_resources(config_info, _auth_user = nil)
-    if config_info[:template_id] && config_info[:template_id] != orchestration_template.id
+    if config_info[:template_id] && config_info[:template_id] != orchestration_template.try(:id)
       self.orchestration_template = OrchestrationTemplate.find(config_info[:template_id])
     elsif config_info[:template] && config_info[:template] != orchestration_template
       self.orchestration_template = config_info[:template]
     end
 
-    if config_info[:manager_id] && config_info[:manager_id] != orchestration_manager.id
+    if config_info[:manager_id] && config_info[:manager_id] != orchestration_manager.try(:id)
       self.orchestration_manager = ExtManagementSystem.find(config_info[:manager_id])
     elsif config_info[:manager] && config_info[:manager] != orchestration_manager
       self.orchestration_manager = config_info[:manager]
@@ -73,11 +72,7 @@ class ServiceTemplateOrchestration < ServiceTemplate
 
   def validate_update_config_info(options)
     super
-    config_info = options[:config_info]
-    unless (config_info[:template_id] && config_info[:manager_id]) || (config_info[:template] && config_info[:manager])
-      raise _('Must provide both template_id and manager_id or manager and template')
-    end
-    config_info
+    self.class.validate_config_info(options)
   end
 
   def construct_config_info

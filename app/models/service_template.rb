@@ -354,26 +354,28 @@ class ServiceTemplate < ApplicationRecord
   end
 
   def update_resource_actions(ae_endpoints)
-    resource_action_options.each do |action|
+    resource_action_list.each do |action|
+      resource_params = ae_endpoints[action[:param_key]]
+      resource_action = resource_actions.find_by(:action => action[:name])
       # If the action exists in updated parameters
-      if ae_endpoints[action[:param_key]]
+      if resource_params
         # And the resource action exists on the template already, update it
-        if resource_actions.where(:action => action[:name]).exists?
-          resource_actions.find_by(:action => action[:name]).update_attributes!(ae_endpoints[action[:param_key]])
+        if resource_action
+          resource_action.update_attributes!(resource_params)
         # If the resource action does not exist, create it
         else
-          build_resource_action(ae_endpoints[action[:param_key]], action)
+          build_resource_action(resource_params, action)
         end
-      elsif resource_actions.where(:action => action[:name]).exists?
+      elsif resource_action
         # If the endpoint does not exist in updated parameters, but exists on the template, delete it
-        resource_actions.find_by(:action => action[:name]).destroy
+        resource_action.destroy
       end
     end
   end
 
   def create_resource_actions(ae_endpoints)
     ae_endpoints ||= {}
-    resource_action_options.each do |action|
+    resource_action_list.each do |action|
       ae_endpoint = ae_endpoints[action[:param_key]]
       next unless ae_endpoint
       build_resource_action(ae_endpoint, action)
@@ -422,17 +424,17 @@ class ServiceTemplate < ApplicationRecord
     options[:config_info]
   end
 
-  def resource_action_options
+  def resource_action_list
     [
-      {:name      => 'Provision',
+      {:name      => ResourceAction::PROVISION,
        :param_key => :provision,
        :method    => 'default_provisioning_entry_point',
        :args      => [service_type]},
-      {:name      => 'Reconfigure',
+      {:name      => ResourceAction::RECONFIGURE,
        :param_key => :reconfigure,
        :method    => 'default_reconfiguration_entry_point',
        :args      => []},
-      {:name      => 'Retirement',
+      {:name      => ResourceAction::RETIREMENT,
        :param_key => :retirement,
        :method    => 'default_retirement_entry_point',
        :args      => []}
@@ -440,7 +442,10 @@ class ServiceTemplate < ApplicationRecord
   end
 
   def update_from_options(options)
+    update_attributes!(options.except(:config_info).merge(:options => { :config_info => options[:config_info] }))
     update_attributes!(options.except(:config_info).merge!(:options => { :config_info => options[:config_info] }))
+  end
+
   def provision_request(user, options = nil)
     provision_workflow(user, options).submit_request
   end
@@ -450,7 +455,6 @@ class ServiceTemplate < ApplicationRecord
     ResourceActionWorkflow.new({}, user,
                                provision_action, :target => self).tap do |wf|
       options.each { |key, value| wf.set_value(key, value) }
-    end
   end
 
   def construct_config_info
