@@ -14,7 +14,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
   end
 
   it "will perform a full refresh on v3.1" do
-    VCR.use_cassette("manageiq/providers/redhat/infra_manager/refresher_3_1") do
+    VCR.use_cassette("#{described_class.name.underscore}_3_1") do
       EmsRefresh.refresh(@ems)
     end
     @ems.reload
