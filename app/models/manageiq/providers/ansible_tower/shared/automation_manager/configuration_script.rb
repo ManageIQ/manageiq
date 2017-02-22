@@ -11,7 +11,8 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::Configurati
 
       # Get the record in our database
       # TODO: This needs to be targeted refresh so it doesn't take too long
-      EmsRefresh.queue_refresh(manager, nil, true)
+      task_ids = EmsRefresh.queue_refresh(manager)
+      task_ids.each { |tid| MiqTask.wait_for_taskid(tid) }
 
       find_by!(:manager_id => manager.id, :manager_ref => job_template.id)
     end
