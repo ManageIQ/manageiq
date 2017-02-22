@@ -102,6 +102,8 @@
       :read_timeout: 1.hour
   :ems_kubernetes:
     :miq_namespace: management-infra
+    :image_inspector_registry: docker.io
+    :image_inspector_repository: openshift/image-inspector
   :ems_azure:
     :disabled_regions: []
     :additional_regions: {}

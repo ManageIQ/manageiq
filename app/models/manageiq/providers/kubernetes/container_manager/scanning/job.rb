@@ -3,7 +3,7 @@ require 'kubeclient'
 
 class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
   PROVIDER_CLASS = ManageIQ::Providers::Kubernetes::ContainerManager
-  INSPECTOR_NAMESPACE_FALLBACK = 'management-infra'
+  INSPECTOR_IMAGE_TAG = '2.1'.freeze
   INSPECTOR_PORT = 8080
   DOCKER_SOCKET = '/var/run/docker.sock'
   SCAN_CATEGORIES = %w(system software)
@@ -48,7 +48,6 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
     return queue_signal(:abort_job, "cannot analyze non docker images", "error") unless image.docker_id
 
     namespace = ::Settings.ems.ems_kubernetes.miq_namespace
-    namespace = INSPECTOR_NAMESPACE_FALLBACK if namespace.blank?
 
     update!(:options => options.merge(
       :docker_image_id => image.docker_id,
@@ -419,7 +418,9 @@ class ManageIQ::Providers::Kubernetes::ContainerManager::Scanning::Job < Job
   end
 
   def inspector_image
-    'docker.io/openshift/image-inspector:2.1'
+    registry = ::Settings.ems.ems_kubernetes.image_inspector_registry
+    repo = ::Settings.ems.ems_kubernetes.image_inspector_repository
+    "#{registry}/#{repo}:#{INSPECTOR_IMAGE_TAG}"
   end
 
   def inspector_proxy_env_variables
