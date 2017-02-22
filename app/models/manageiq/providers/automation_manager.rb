@@ -1,6 +1,7 @@
 class ManageIQ::Providers::AutomationManager < ::ExtManagementSystem
   require_nested :InventoryGroup
   require_nested :InventoryRootGroup
+  require_nested :Authentication
 
   has_many :configured_systems,           :dependent => :destroy, :foreign_key => "manager_id"
   has_many :configuration_profiles,       :dependent => :destroy, :foreign_key => "manager_id"
