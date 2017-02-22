@@ -2267,6 +2267,72 @@
       :delete:
       - :name: delete
         :identifier: vm_snapshot_delete
+  :vms_or_templates:
+    :description: VMs or Templates
+    :identifier: miq_template
+    :options:
+    - :collection
+    :verbs: *gpd
+    :klass: VmOrTemplate
+    :subcollections:
+    - :tags
+    - :policies
+    - :policy_profiles
+    :collection_actions:
+      :get:
+      - :name: read
+        :identifier: miq_template_show_list
+      :post:
+      - :name: query
+        :identifier: miq_template_show_list
+      - :name: refresh
+        :identifier: miq_template_refresh
+        :disabled: true
+      - :name: edit
+        :identifier: miq_template_edit
+        :disabled: true
+      - :name: set_ownership
+        :identifier: miq_template_ownership
+      - :name: delete
+        :identifier: miq_template_delete
+    :resource_actions:
+      :get:
+      - :name: read
+        :identifier: miq_template_show
+      :post:
+      - :name: refresh
+        :identifier: miq_template_refresh
+        :disabled: true
+      - :name: edit
+        :identifier: miq_template_edit
+        :disabled: true
+      - :name: set_ownership
+        :identifier: miq_template_ownership
+      :delete:
+      - :name: delete
+        :identifier: miq_template_delete
+    :tags_subcollection_actions:
+      :post:
+      - :name: assign
+        :identifier: miq_template_tag
+      - :name: unassign
+        :identifier: miq_template_tag
+    :policies_subcollection_actions:
+      :post:
+      - :name: assign
+        :identifier: miq_template_protect
+      - :name: unassign
+        :identifier: miq_template_protect
+      - :name: resolve
+        :identifier: miq_template_policy_sim
+    :policy_profiles_subcollection_actions:
+      :post:
+      - :name: assign
+        :identifier: miq_template_protect
+      - :name: unassign
+        :identifier: miq_template_protect
+      - :name: resolve
+        :identifier: miq_template_policy_sim
   :zones:
     :description: Zones
     :identifier: zone
