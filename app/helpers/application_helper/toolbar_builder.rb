@@ -1133,7 +1133,7 @@ class ApplicationHelper::ToolbarBuilder
         if @record.current_state != "on"
           return N_("The web-based VNC console is not available because the VM is not powered on")
         end
-      when "instance_retire", "instance_retire_now"
+      when "instance_retire_now"
         return N_("Instance is already retired") if @record.retired
       when "vm_timeline"
         unless @record.has_events? || @record.has_events?(:policy_events)
