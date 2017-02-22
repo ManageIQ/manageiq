@@ -20,6 +20,7 @@ module EmsRefresh::SaveInventory
     when ManageIQ::Providers::NetworkManager                then save_ems_network_inventory(ems, hashes, target)
     when ManageIQ::Providers::StorageManager                then save_ems_storage_inventory(ems, hashes, target)
     when ManageIQ::Providers::DatawarehouseManager          then save_ems_datawarehouse_inventory(ems, hashes, target)
+    when ManageIQ::Providers::PhysicalInfraManager          then save_ems_physical_infra_inventory(ems, hashes, target)
     end
   end
 
