@@ -34,6 +34,37 @@ RSpec.describe "Shared VMs API" do
     end
   end
 
+  describe "GET /api/shared_vms/:c_id" do
+    it "shows the details of a VM that's shared with the requester" do
+      sharee = create_sharee
+      sharer = create_sharer
+      vm = FactoryGirl.create(:vm_vmware, :miq_group => sharer.miq_groups.last, :name => "Alice's VM")
+      create_share(sharer, sharee, vm)
+      api_basic_authorize
+
+      run_get(shared_vms_url(vm.id))
+
+      expected = {
+        "id"   => vm.id,
+        "href" => a_string_matching(shared_vms_url(vm.id)),
+        "name" => "Alice's VM"
+      }
+      expect(response.parsed_body).to include(expected)
+      expect(response).to have_http_status(:ok)
+    end
+
+    it "responds with not found if the VM isn't shared with the requester" do
+      _sharee = create_sharee
+      sharer = create_sharer
+      vm = FactoryGirl.create(:vm_vmware, :miq_group => sharer.miq_groups.last, :name => "Alice's VM")
+      api_basic_authorize
+
+      run_get(shared_vms_url(vm.id))
+
+      expect(response).to have_http_status(:not_found)
+    end
+  end
+
   def create_sharee
     sharee = @user
     sharee_group = @group
