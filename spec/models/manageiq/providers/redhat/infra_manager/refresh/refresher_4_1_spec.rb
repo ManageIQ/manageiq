@@ -14,7 +14,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
   require 'yaml'
   def load_response_mock_for(filename)
     prefix = described_class.name.underscore
-    YAML.load_file(File.join('spec','models',prefix,'response_yamls',filename + '.yml'))
+    YAML.load_file(File.join('spec', 'models', prefix, 'response_yamls', filename + '.yml'))
   end
 
   before(:each) do
@@ -35,7 +35,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
       .to receive(:collect_datacenters).and_return(load_response_mock_for('datacenters'))
     allow_any_instance_of(inventory_wrapper_class).to receive(:api).and_return("4.2.0_master")
     allow_any_instance_of(inventory_wrapper_class).to receive(:service)
-      .and_return(OpenStruct.new(version_string: '4.2.0_master'))
+      .and_return(OpenStruct.new(:version_string => '4.2.0_master'))
   end
 
   it "will perform a full refresh on v4.1" do
@@ -69,7 +69,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
     expect(CustomAttribute.count).to eq(0) # TODO: 3.0 spec has values for this
     expect(CustomizationSpec.count).to eq(0)
     expect(Disk.count).to eq(5)
-    #expect(GuestDevice.count).to eq(7)
+    expect(GuestDevice.count).to eq(7)
     expect(Hardware.count).to eq(13)
     expect(Lan.count).to eq(3)
     expect(MiqScsiLun.count).to eq(0)
@@ -146,8 +146,8 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
       :ems_ref_obj                   => "/api/storagedomains/27a3bcce-c4d0-4bce-afe9-1d669d5a9d02",
       :name                          => "data1",
       :store_type                    => "NFS",
-      :total_space                   => 53687091200,
-      :free_space                    => 46170898432,
+      :total_space                   => 53_687_091_200,
+      :free_space                    => 46_170_898_432,
       :uncommitted                   => -17_179_869_184,
       :multiplehostaccess            => 1, # TODO: Should this be a boolean column?
       :location                      => "spider.eng.lab.tlv.redhat.com:/vol/vol_bodnopoz/data1",
@@ -161,8 +161,8 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
       :ems_ref_obj                   => "/api/storagedomains/4672fe17-c260-4ecc-aab0-b535f4d0dbeb",
       :name                          => "data2",
       :store_type                    => "NFS",
-      :total_space                   => 53687091200,
-      :free_space                    => 46170898432,
+      :total_space                   => 53_687_091_200,
+      :free_space                    => 46_170_898_432,
       :uncommitted                   => 49392123904,
       :multiplehostaccess            => 1, # TODO: Should this be a boolean column?
       :location                      => "spider.eng.lab.tlv.redhat.com:/vol/vol_bodnopoz/data2",
@@ -174,7 +174,6 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
 
   def assert_specific_host
     @host = ManageIQ::Providers::Redhat::InfraManager::Host.find_by(:name => "bodh1")
-    @host = ManageIQ::Providers::Redhat::InfraManager::Host.find_by_name("bodh1")
     expect(@host).to have_attributes(
       :ems_ref          => "/api/hosts/5bf6b336-f86d-4551-ac08-d34621ec5f0a",
       :ems_ref_obj      => "/api/hosts/5bf6b336-f86d-4551-ac08-d34621ec5f0a",
@@ -190,7 +189,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
       :connection_state => "connected"
     )
 
-    @host_cluster = EmsCluster.find_by_ems_ref("/api/clusters/00000002-0002-0002-0002-000000000092")
+    @host_cluster = EmsCluster.find_by(:ems_ref => "/api/clusters/00000002-0002-0002-0002-000000000092")
 
     expect(@host.ems_cluster).to eq(@host_cluster)
     expect(@host.storages.size).to eq(1)
@@ -289,7 +288,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
       :power_state           => "on",
       :location              => "3a9401a0-bf3d-4496-8acf-edd3e903511f.ovf",
       :tools_status          => nil,
-      :boot_time             => Time.parse("2016-12-28T11:59:55.6020000Z"),
+      :boot_time             => Time.zone.parse("2016-12-28T11:59:55.6020000Z"),
       :standby_action        => nil,
       :connection_state      => "connected",
       :cpu_affinity          => nil,
@@ -308,7 +307,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
     expect(v.ext_management_system).to eq(@ems)
     expect(v.ems_cluster).to eq(@cluster)
     expect(v.parent_resource_pool).to eq(@default_rp)
-    host = ManageIQ::Providers::Redhat::InfraManager::Host.find_by_name("bodh2")
+    host = ManageIQ::Providers::Redhat::InfraManager::Host.find_by(:name => "bodh2")
     expect(v.host).to eq(host)
     expect(v.storages).to eq([@storage])
     # v.storage  # TODO: Fix bug where duplication location GUIDs could cause the wrong value to appear.
@@ -331,7 +330,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
       :total_size  => nil,
       :filename    => nil
     )
-    snapshot_parent = ManageIQ::Providers::Redhat::InfraManager::Snapshot.find_by_name("vm1_snap")
+    snapshot_parent = ManageIQ::Providers::Redhat::InfraManager::Snapshot.find_by(:name => "vm1_snap")
     expect(snapshot.parent).to eq(snapshot_parent)
 
     expect(v.hardware).to have_attributes(
@@ -346,7 +345,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
     )
 
     expect(v.hardware.disks.size).to eq(1)
-    disk = v.hardware.disks.find_by_device_name("vm1_Disk1")
+    disk = v.hardware.disks.find_by(:device_name => "vm1_Disk1")
     expect(disk).to have_attributes(
       :device_name     => "vm1_Disk1",
       :device_type     => "disk",
@@ -355,7 +354,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
       :filename        => "af578e0e-b222-4754-aefc-879bf37eacec",
       :location        => "0",
       :size            => 6.gigabytes,
-      :size_on_disk    =>  2987851776,
+      :size_on_disk    => 2_987_851_776,
       :mode            => "persistent",
       :disk_type       => "thin",
       :start_connected => true
@@ -481,7 +480,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
     )
 
     expect(v.hardware.disks.size).to eq(1)
-    disk = v.hardware.disks.find_by_device_name("vm2_Disk1")
+    disk = v.hardware.disks.find_by(:device_name => "vm2_Disk1")
     expect(disk).to have_attributes(
       :device_name     => "vm2_Disk1",
       :device_type     => "disk",
@@ -496,8 +495,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
     )
     expect(disk.storage).to eq(@storage)
 
-    expect(v.hardware.guest_devices.
-           size).to eq(1)
+    expect(v.hardware.guest_devices.size).to eq(1)
     expect(v.hardware.nics.size).to eq(1)
     nic = v.hardware.nics.find_by_device_name("nic1")
     expect(nic).to have_attributes(
