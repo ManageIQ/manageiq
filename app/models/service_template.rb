@@ -24,6 +24,12 @@ class ServiceTemplate < ApplicationRecord
     "vmware"                   => _("VMware")
   }.freeze
 
+  RESOURCE_ACTION_UPDATE_ATTRS = [:dialog,
+                                  :dialog_id,
+                                  :configuration_template,
+                                  :configuration_template_id,
+                                  :configuration_template_type].freeze
+
   include ServiceMixin
   include OwnershipMixin
   include NewWithTypeStiMixin
@@ -361,7 +367,7 @@ class ServiceTemplate < ApplicationRecord
       if resource_params
         # And the resource action exists on the template already, update it
         if resource_action
-          resource_action.update_attributes!(resource_params)
+          resource_action.update_attributes!(resource_params.slice(*RESOURCE_ACTION_UPDATE_ATTRS))
         # If the resource action does not exist, create it
         else
           build_resource_action(resource_params, action)
@@ -388,13 +394,17 @@ class ServiceTemplate < ApplicationRecord
   end
   private_class_method :create_from_options
 
+  def provision_request(user, options = nil)
+    provision_workflow(user, options).submit_request
+  end
+
   private
 
   def update_service_resources(config_info, auth_user = nil)
     config_info = config_info.except(:provision, :retirement, :reconfigure)
     workflow_class = MiqProvisionWorkflow.class_for_source(config_info[:src_vm_id])
     if workflow_class
-      service_resources.find_by(:resource_type => 'MiqRequest').destroy
+      service_resources.find_by(:resource_type => 'MiqRequest').try(:destroy)
       new_request = workflow_class.new(config_info, auth_user).make_request(nil, config_info)
 
       add_resource!(new_request)
@@ -411,11 +421,7 @@ class ServiceTemplate < ApplicationRecord
     build_options = {:action        => action[:name],
                      :fqname        => fqname,
                      :ae_attributes => {:service_action => action[:name]}}
-    build_options.merge!(ae_endpoint.slice(:dialog,
-                                           :dialog_id,
-                                           :configuration_template,
-                                           :configuration_template_id,
-                                           :configuration_template_type))
+    build_options.merge!(ae_endpoint.slice(*RESOURCE_ACTION_UPDATE_ATTRS))
     resource_actions.build(build_options)
   end
 
@@ -443,11 +449,6 @@ class ServiceTemplate < ApplicationRecord
 
   def update_from_options(options)
     update_attributes!(options.except(:config_info).merge(:options => { :config_info => options[:config_info] }))
-    update_attributes!(options.except(:config_info).merge!(:options => { :config_info => options[:config_info] }))
-  end
-
-  def provision_request(user, options = nil)
-    provision_workflow(user, options).submit_request
   end
 
   def provision_workflow(user, options = nil)
@@ -455,6 +456,7 @@ class ServiceTemplate < ApplicationRecord
     ResourceActionWorkflow.new({}, user,
                                provision_action, :target => self).tap do |wf|
       options.each { |key, value| wf.set_value(key, value) }
+    end
   end
 
   def construct_config_info
