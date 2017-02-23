@@ -130,4 +130,7 @@ class CloudVolume < ApplicationRecord
     raise NotImplementedError, _("raw_delete_volume must be implemented in a subclass")
   end
 
+  def available_vms
+    raise NotImplementedError, _("available_vms must be implemented in a subclass")
+  end
 end
