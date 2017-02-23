@@ -57,6 +57,8 @@ module ManagerRefresh
     end
 
     def process_strategy(strategy_name)
+      return unless strategy_name
+
       case strategy_name
       when :local_db_cache_all
         self.data_collection_finalized = true
@@ -64,6 +66,9 @@ module ManagerRefresh
       when :local_db_find_references
         self.saved = true
       when :local_db_find_missing_references
+      else
+        raise "Unknown InventoryCollection strategy: :#{strategy_name}, allowed strategies are :local_db_cache_all, "\
+              ":local_db_find_references and :local_db_find_missing_references."
       end
       strategy_name
     end
