@@ -102,7 +102,7 @@ class VimPerformanceTrend < ActsAsArModel
       row[:max_trend_value] = ordered_by_trend_col.last.send(options[:trend_col])
 
       # calculate start/end trend values
-      ordered_by_timestamp  = olist_in_time_profile.sort { |a, b| a.timestamp <=> b.timestamp }
+      ordered_by_timestamp  = olist_in_time_profile.sort_by(&:timestamp)
       row[:start_trend_value] = ordered_by_timestamp.first.send(options[:trend_col])
       row[:end_trend_value]   = ordered_by_timestamp.last.send(options[:trend_col])
 

@@ -615,7 +615,7 @@ class MiqAction < ApplicationRecord
     end
 
     task_id = "action_#{action.id}_vm_#{rec.id}"
-    snaps_to_delete.sort { |a, b| b.create_time <=> a.create_time }.each do |s| # Delete newest to oldest
+    snaps_to_delete.sort_by(&:create_time).reverse.each do |s| # Delete newest to oldest
       MiqPolicy.logger.info("#{log_prefix} Deleting Snapshot: Name: [#{s.name}] Id: [#{s.id}] Create Time: [#{s.create_time}]")
       rec.remove_snapshot_queue(s.id, task_id)
     end
