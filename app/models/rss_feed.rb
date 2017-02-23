@@ -35,7 +35,14 @@ class RssFeed < ApplicationRecord
       }
     }
 
-    feed = Rss.rss_feed_for(find_items, options)
+    rbac_options = {}
+    if user_or_group
+      user_or_group_key = user_or_group.kind_of?(User) ? :user : :miq_group
+      rbac_options[user_or_group_key] = user_or_group
+    end
+
+    filtered_items = Rbac.filtered(find_items, rbac_options)
+    feed = Rss.rss_feed_for(filtered_items, options)
     local ? feed : {:text => feed, :content_type => Mime[:rss]}
   end
 
