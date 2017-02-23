@@ -16,8 +16,8 @@ describe MiqReport do
     @show_title   = true
     @options = MiqReport.graph_options(600, 400)
 
-    allow(Charting).to receive(:backend).and_return(:jqplot)
-    allow(Charting).to receive(:format).and_return(:jqplot)
+    allow(Charting).to receive(:backend).and_return(:c3)
+    allow(Charting).to receive(:format).and_return(:c3)
   end
 
   context 'graph_options' do
@@ -48,9 +48,7 @@ describe MiqReport do
       rpt.to_chart(@report_theme, @show_title, @options)
       chart = rpt.chart
 
-      # {:data=>[[nil]], :options=>{:title=>"No records found for this chart"}}
-      expect(chart[:data][0][0]).to be_nil
-      expect(chart[:options][:title]).to eq('No records found for this chart')
+      expect(chart[:data][:columns][0]).to be_nil
     end
 
     it "returns a valid chart for a report with data" do
@@ -62,8 +60,7 @@ describe MiqReport do
       rpt.to_chart(@report_theme, @show_title, @options)
       chart = rpt.chart
 
-      expect(chart[:data][0][0]).to eq(5)
-      expect(chart[:options][:title]).to eq(name)
+      expect(chart[:data][:columns][0][1]).to eq(5)
     end
   end
 end
