@@ -55,24 +55,46 @@ module ManageIQ::Providers
       {:available => true, :message => nil}
     end
 
+    def self.verify_ssl_mode(security_protocol)
+      case security_protocol
+      when 'ssl-without-validation'
+        OpenSSL::SSL::VERIFY_NONE
+      else
+        OpenSSL::SSL::VERIFY_PEER
+      end
+    end
+
+    def self.entrypoint(host, port, security_protocol)
+      case security_protocol
+      when nil, '', 'non-ssl'
+        URI::HTTP.build(:host => host, :port => port.to_i).to_s
+      else
+        URI::HTTPS.build(:host => host, :port => port.to_i).to_s
+      end
+    end
+
     # Hawkular Client
-    def self.raw_connect(hostname, port, username, password)
-      entrypoint = URI::HTTP.build(:host => hostname, :port => port.to_i).to_s
+    def self.raw_connect(host, port, username, password, security_protocol, cert_store)
       credentials = {
         :username => username,
         :password => password
       }
       options = {
-        :tenant => 'hawkular'
+        :tenant         => 'hawkular',
+        :verify_ssl     => verify_ssl_mode(security_protocol),
+        :ssl_cert_store => cert_store
       }
-      ::Hawkular::Client.new(:entrypoint => entrypoint, :credentials => credentials, :options => options)
+      ::Hawkular::Client.new(:entrypoint => entrypoint(host, port, security_protocol),
+                             :credentials => credentials, :options => options)
     end
 
     def connect(_options = {})
       @client ||= self.class.raw_connect(hostname,
                                          port,
                                          authentication_userid('default'),
-                                         authentication_password('default'))
+                                         authentication_password('default'),
+                                         default_endpoint.security_protocol,
+                                         default_endpoint.ssl_cert_store)
     end
 
     def feeds
