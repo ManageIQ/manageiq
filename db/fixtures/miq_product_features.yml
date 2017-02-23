@@ -5176,6 +5176,14 @@
           :description: Add a Repository
           :feature_type: admin
           :identifier: embedded_configuration_script_source_add
+        - :name: Edit Repository
+          :description: Edit a Repository
+          :feature_type: admin
+          :identifier: embedded_configuration_script_source_edit
+        - :name: Remove Repository
+          :description: Remove a Repository
+          :feature_type: admin
+          :identifier: embedded_configuration_script_source_delete
   - :name: Playbooks
     :description: Everything under Playbooks
     :feature_type: node
