@@ -279,13 +279,13 @@ describe Job do
       @job = Job.create_job("VmScan", :name => "Hello, World!")
     end
 
-    it "allows to deletes not active job" do
+    it "allows to delete not active job" do
       expect(Job.count).to eq 1
       @job.destroy
       expect(Job.count).to eq 0
     end
 
-    it "doesn't allows to deletes active job" do
+    it "doesn't allows to delete active job" do
       @job.update_attributes!(:state => "Scanning")
       expect(Job.count).to eq 1
       @job.destroy
