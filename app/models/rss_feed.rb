@@ -17,7 +17,7 @@ class RssFeed < ApplicationRecord
     "#{host_url}#{link}"
   end
 
-  def generate(host = nil, local = false, proto = nil)
+  def generate(host = nil, local = false, proto = nil, user_or_group = nil)
     proto ||= VMDB::Config.new("vmdb").config[:webservices][:consume_protocol]
     host_url = host.nil? ? "#{proto}://localhost:3000" : "#{proto}://" + host
 
