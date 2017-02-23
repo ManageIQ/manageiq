@@ -190,6 +190,9 @@
       - aggregate.removehost.end
       - aggregate.updateprop.end
       - aggregate.updatemetadata.end
+      - identity.project.created
+      - identity.project.deleted
+      - identity.project.updated
       - image.update
       - image.create
       - image.upload
