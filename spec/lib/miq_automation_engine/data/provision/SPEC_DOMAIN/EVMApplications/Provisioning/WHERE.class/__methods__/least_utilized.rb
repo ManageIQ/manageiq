@@ -13,7 +13,7 @@ begin
     next unless h.power_state == "on"
     nvms = h.vms.length
     if min_registered_vms.nil? || nvms < min_registered_vms
-      s = h.storages.sort_by(&:free_space).last
+      s = h.storages.max_by(&:free_space)
       unless s.nil?
         host    = h
         storage = s
