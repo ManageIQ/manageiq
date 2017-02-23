@@ -17,13 +17,11 @@ describe ManagerRefresh::SaveInventory do
     context "with settings #{inventory_object_settings}" do
       [:local_db_find_references, :local_db_cache_all].each do |db_strategy|
         context "with db strategy #{db_strategy}" do
-
           before :each do
             @zone = FactoryGirl.create(:zone)
             @ems = FactoryGirl.create(:ems_cloud,
                                       :zone            => @zone,
-                                      :network_manager => FactoryGirl.create(:ems_network, :zone => @zone)
-            )
+                                      :network_manager => FactoryGirl.create(:ems_network, :zone => @zone))
 
             allow(@ems.class).to receive(:ems_type).and_return(:mock)
             allow(Settings.ems_refresh).to receive(:mock).and_return(inventory_object_settings)
@@ -61,7 +59,7 @@ describe ManagerRefresh::SaveInventory do
             @key_pair2  = FactoryGirl.create(:auth_key_pair_cloud, key_pair_data(2).merge(:resource => @ems))
             @key_pair3  = FactoryGirl.create(:auth_key_pair_cloud, key_pair_data(3).merge(:resource => @ems))
 
-            @vm1  = FactoryGirl.create(
+            @vm1 = FactoryGirl.create(
               :vm_cloud,
               vm_data(1).merge(
                 :flavor           => @flavor_1,
@@ -79,7 +77,7 @@ describe ManagerRefresh::SaveInventory do
                 :location         => 'host_10_10_10_12.com',
               )
             )
-            @vm2  = FactoryGirl.create(
+            @vm2 = FactoryGirl.create(
               :vm_cloud,
               vm_data(2).merge(
                 :flavor           => @flavor2,
@@ -88,7 +86,7 @@ describe ManagerRefresh::SaveInventory do
                 :location         => 'host_10_10_10_2.com',
               )
             )
-            @vm4  = FactoryGirl.create(
+            @vm4 = FactoryGirl.create(
               :vm_cloud,
               vm_data(4).merge(
                 :location              => 'default_value_unknown',
@@ -96,7 +94,7 @@ describe ManagerRefresh::SaveInventory do
               )
             )
 
-            @hardware1  = FactoryGirl.create(
+            @hardware1 = FactoryGirl.create(
               :hardware,
               hardware_data(1).merge(
                 :guest_os       => @image1.hardware.guest_os,
@@ -110,7 +108,7 @@ describe ManagerRefresh::SaveInventory do
                 :vm_or_template => @vm12
               )
             )
-            @hardware2  = FactoryGirl.create(
+            @hardware2 = FactoryGirl.create(
               :hardware,
               hardware_data(2).merge(
                 :guest_os       => @image2.hardware.guest_os,
@@ -160,7 +158,7 @@ describe ManagerRefresh::SaveInventory do
                 :strategy => :local_db_find_missing_references
               )
             )
-            @data[:hardwares]     = ::ManagerRefresh::InventoryCollection.new(
+            @data[:hardwares] = ::ManagerRefresh::InventoryCollection.new(
               hardwares_init_data(
                 :arel     => @ems.hardwares.joins(:vm_or_template).where(:vms => {:ems_ref => vm_refs}),
                 :strategy => db_strategy
@@ -168,7 +166,7 @@ describe ManagerRefresh::SaveInventory do
             )
 
             # Parse data for InventoryCollections
-            @network_port_data_1  = network_port_data(1).merge(
+            @network_port_data_1 = network_port_data(1).merge(
               :device => @data[:hardwares].lazy_find(vm_data(1)[:ems_ref], :key => :vm_or_template)
             )
 
@@ -211,7 +209,7 @@ describe ManagerRefresh::SaveInventory do
             )
 
             # Parse data for InventoryCollections
-            @network_port_data_1     = network_port_data(1).merge(
+            @network_port_data_1 = network_port_data(1).merge(
               :device => @data[:db_network_ports].lazy_find(network_port_data(12)[:ems_ref], :key => :device)
             )
 
@@ -245,7 +243,7 @@ describe ManagerRefresh::SaveInventory do
                 :strategy => db_strategy
               )
             )
-            @data[:key_pairs]        = ::ManagerRefresh::InventoryCollection.new(
+            @data[:key_pairs] = ::ManagerRefresh::InventoryCollection.new(
               key_pairs_init_data(
                 :strategy => db_strategy
               )
@@ -256,24 +254,24 @@ describe ManagerRefresh::SaveInventory do
                 :strategy => db_strategy
               )
             )
-            @data[:db_vms]           = ::ManagerRefresh::InventoryCollection.new(
+            @data[:db_vms] = ::ManagerRefresh::InventoryCollection.new(
               vms_init_data(
                 :strategy => db_strategy
               )
             )
-            @data[:vms]              = ::ManagerRefresh::InventoryCollection.new(
+            @data[:vms] = ::ManagerRefresh::InventoryCollection.new(
               vms_init_data(
                 :arel     => @ems.vms.where(:ems_ref => vm_refs),
                 :strategy => :local_db_find_missing_references,
               )
             )
-            @data[:hardwares]        = ::ManagerRefresh::InventoryCollection.new(
+            @data[:hardwares] = ::ManagerRefresh::InventoryCollection.new(
               hardwares_init_data(
                 :arel     => @ems.hardwares.joins(:vm_or_template).where(:vms => {:ems_ref => vm_refs}),
                 :strategy => :local_db_find_missing_references
               )
             )
-            @data[:network_ports]    = ::ManagerRefresh::InventoryCollection.new(
+            @data[:network_ports] = ::ManagerRefresh::InventoryCollection.new(
               network_ports_init_data(
                 :parent   => @ems.network_manager,
                 :arel     => @ems.network_manager.network_ports.where(:ems_ref => network_port_refs),
@@ -282,15 +280,15 @@ describe ManagerRefresh::SaveInventory do
             )
 
             # Parse data for InventoryCollections
-            @network_port_data_1     = network_port_data(1).merge(
+            @network_port_data_1 = network_port_data(1).merge(
               :name   => @data[:vms].lazy_find(vm_data(3)[:ems_ref], :key => :name),
               :device => @data[:vms].lazy_find(vm_data(3)[:ems_ref])
             )
-            @network_port_data_12    = network_port_data(12).merge(
+            @network_port_data_12 = network_port_data(12).merge(
               :name   => @data[:vms].lazy_find(vm_data(4)[:ems_ref], :key => :name, :default => "default_name"),
               :device => @data[:db_network_ports].lazy_find(network_port_data(2)[:ems_ref], :key => :device)
             )
-            @network_port_data_3     = network_port_data(3).merge(
+            @network_port_data_3 = network_port_data(3).merge(
               :name   => @data[:vms].lazy_find(vm_data(1)[:ems_ref], :key => :name, :default => "default_name"),
               :device => @data[:hardwares].lazy_find(vm_data(1)[:ems_ref], :key => :vm_or_template)
             )
@@ -307,7 +305,7 @@ describe ManagerRefresh::SaveInventory do
               :key_pairs             => @data[:db_vms].lazy_find(vm_data(1)[:ems_ref], :key => :key_pairs, :default => []),
               :ext_management_system => @ems
             )
-            @hardware_data_3         = hardware_data(3).merge(
+            @hardware_data_3 = hardware_data(3).merge(
               :guest_os       => @data[:hardwares].lazy_find(image_data(2)[:ems_ref], :key => :guest_os),
               :vm_or_template => @data[:vms].lazy_find(vm_data(3)[:ems_ref])
             )
