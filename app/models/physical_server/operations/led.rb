@@ -20,8 +20,8 @@ with a provider.") % {:name => name, :id => id}
     end
 
     options = {:uuid => uuid}
-    $lenovo_log.info("Begin #{verb} server: #{name} with UUID: #{uuid}")
+    _log.info("Begin #{verb} server: #{name} with UUID: #{uuid}")
     ext_management_system.send(verb, self, options)
-    $lenovo_log.info("Complete #{verb} #{self}")
+    _log.info("Complete #{verb} #{self}")
   end
 end
