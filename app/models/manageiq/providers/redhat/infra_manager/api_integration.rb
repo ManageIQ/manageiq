@@ -64,14 +64,14 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
     cacher = Cacher.new(cache_key)
     current_cache_val = cacher.read
     force = current_cache_val.blank?
-    cacher.fetch_fresh(last_refresh_date, :force => force) { supported_api_verions_from_sdk }
+    cacher.fetch_fresh(last_refresh_date, :force => force) { supported_api_versions_from_sdk }
   end
 
   def cache_key
     "REDHAT_EMS_CACHE_KEY_#{id}"
   end
 
-  def supported_api_verions_from_sdk
+  def supported_api_versions_from_sdk
     username = authentication_userid(:basic)
     password = authentication_password(:basic)
     probe_args = { :host => hostname, :port => port, :username => username, :password => password, :insecure => true }
