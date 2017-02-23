@@ -79,7 +79,7 @@ class JobProxyDispatcher
 
           if proxy
             # Skip this embedded scan if the host/vc we'd need has already exceeded the limit
-            next if self.embedded_resource_limit_exceeded?(job)
+            next if embedded_resource_limit_exceeded?(job)
             _log.info "STARTING job: [#{job.guid}] on proxy: [#{proxy.name}]"
             Benchmark.current_realtime[:start_job_on_proxy_count] += 1
             Benchmark.realtime_block(:start_job_on_proxy) { start_job_on_proxy(job, proxy) }
@@ -167,7 +167,8 @@ class JobProxyDispatcher
     assign_proxy_to_job(proxy, job)
     _log.info "Job [#{job.guid}] update: userid: [#{job.userid}], name: [#{job.name}], target class: [#{job.target_class}], target id: [#{job.target_id}], process type: [#{job.type}], server id: [#{job.agent_id}]"
     job_options = {:args => ["start"], :zone => MiqServer.my_zone}
-    job_options.merge!(:server_guid => proxy.guid, :role => "smartproxy")
+    job_options[:server_guid => proxy.guid]
+    job_options[:role => "smartproxy"]
     @active_vm_scans_by_zone[MiqServer.my_zone] += 1
     queue_signal(job, job_options)
   end
