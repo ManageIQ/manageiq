@@ -128,13 +128,13 @@ describe ManagerRefresh::SaveInventory do
 
         @network_port2 = FactoryGirl.create(
           :network_port,
-          network_port_data(12).merge(
+          network_port_data(2).merge(
             :device => @vm2
           )
         )
       end
 
-      it "tests that a key pointing to relation is filled correctly when coming from db" do
+      it "tests that a key pointing to a relation is filled correctly when coming from db" do
         vm_refs = ["vm_ems_ref_3", "vm_ems_ref_4"]
         network_port_refs = ["network_port_ems_ref_1"]
 
@@ -172,6 +172,48 @@ describe ManagerRefresh::SaveInventory do
 
         @network_port_data_1 = network_port_data(1).merge(
           :device => @data[:hardwares].lazy_find(vm_data(1)[:ems_ref], :key => :vm_or_template)
+        )
+
+        # Fill InventoryCollections with data
+        add_data_to_inventory_collection(@data[:network_ports],
+                                         @network_port_data_1)
+
+        # Assert data before save
+        @network_port1.device = nil
+        @network_port1.save
+        @network_port1.reload
+        expect(@network_port1.device).to eq nil
+
+        # Invoke the InventoryCollections saving
+        ManagerRefresh::SaveInventory.save_inventory(@ems, @data.values)
+
+        # Asset saved data
+        @network_port1.reload
+        @vm1.reload
+        expect(@network_port1.device).to eq @vm1
+      end
+
+      it "tests that a key pointing to a polymorphic relation is filled correctly when coming from db" do
+        network_port_refs = ["network_port_ems_ref_1"]
+
+        # Setup InventoryCollections
+        @data = {}
+        @data[:network_ports] = ::ManagerRefresh::InventoryCollection.new(
+          network_ports_init_data(
+            :parent   => @ems.network_manager,
+            :arel     => @ems.network_manager.network_ports.where(:ems_ref => network_port_refs),
+            :strategy => :local_db_find_missing_references
+          )
+        )
+        @data[:db_network_ports] = ::ManagerRefresh::InventoryCollection.new(
+          network_ports_init_data(
+            :parent   => @ems.network_manager,
+            :strategy => :local_db_find_references
+          )
+        )
+
+        @network_port_data_1 = network_port_data(1).merge(
+          :device => @data[:db_network_ports].lazy_find(network_port_data(12)[:ems_ref], :key => :device)
         )
 
         # Fill InventoryCollections with data
