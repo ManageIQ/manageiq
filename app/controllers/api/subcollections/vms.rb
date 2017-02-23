@@ -23,6 +23,16 @@ module Api
 
       private
 
+      def decorator_selection
+        params['decorators'].to_s.split(",")
+      end
+
+      def decorator_selection_for(collection)
+        decorator_selection.collect do |attr|
+          /\A#{collection}\.(?<name>.*)\z/.match(attr) { |m| m[:name] }
+        end.compact
+      end
+
       def create_vm_attributes_hash(vm_attrs, vm)
         vm_attrs.each_with_object({}) do |attr, hash|
           hash[attr] = vm.public_send(attr.to_sym) if vm.respond_to?(attr.to_sym)
