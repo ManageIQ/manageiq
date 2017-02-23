@@ -971,6 +971,7 @@ en:
       ems_phyical_infra:           Physical Infrastructure Provider
       ems_phyical_infras:          Physical Infrastructure Providers
       ems_storage:                 Storage Manager
+      floating_ips:                Floating IP
       load_balancer:               Load Balancer
       middleware_server:           Middleware Server
       middleware_servers:          Middleware Servers
