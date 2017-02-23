@@ -634,6 +634,15 @@
       :description: Edit Tags of Objects
       :feature_type: control
       :identifier: cloud_object_store_object_tag
+  - :name: Modify
+    :description: Modify Object Store Object
+    :feature_type: admin
+    :identifier: cloud_object_store_object_admin
+    :children:
+    - :name: Delete
+      :description: Delete Object Store Object
+      :feature_type: admin
+      :identifier: cloud_object_store_object_delete
 
 # CloudTenant
 - :name: Cloud Tenants
