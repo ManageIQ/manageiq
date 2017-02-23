@@ -109,12 +109,22 @@ describe ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationScri
       }
     end
 
-    it ".create_in_provider" do
-      expect(AnsibleTowerClient::Connection).to receive(:new).and_return(atc)
-      expect(EmsRefresh).to receive(:queue_refresh).and_return(store_new_job_template(job_template, manager))
-      expect(ExtManagementSystem).to receive(:find).with(manager.id).and_return(manager)
+    context ".create_in_provider" do
+      it "successfully created in provider" do
+        expect(AnsibleTowerClient::Connection).to receive(:new).and_return(atc)
+        expect(EmsRefresh).to receive(:queue_refresh).and_return(store_new_job_template(job_template, manager))
+        expect(ExtManagementSystem).to receive(:find).with(manager.id).and_return(manager)
 
-      expect(described_class.create_in_provider(manager.id, params)).to be_a(described_class)
+        expect(described_class.create_in_provider(manager.id, params)).to be_a(described_class)
+      end
+
+      it "not found during refresh" do
+        expect(AnsibleTowerClient::Connection).to receive(:new).and_return(atc)
+        expect(EmsRefresh).to receive(:queue_refresh)
+        expect(ExtManagementSystem).to receive(:find).with(manager.id).and_return(manager)
+
+        expect { described_class.create_in_provider(manager.id, params) }.to raise_error(ActiveRecord::RecordNotFound)
+      end
     end
 
     it ".create_in_provider_queue" do
