@@ -689,6 +689,7 @@
     :description: Firmwares
     :options:
     - :collection
+    - :subcollection
     :verbs: *gp
     :klass: Firmware
     :identifier: firmware
