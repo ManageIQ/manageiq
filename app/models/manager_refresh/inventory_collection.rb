@@ -217,17 +217,20 @@ module ManagerRefresh
       fixed_attributes
     end
 
+    # Returns all unique non saved fixed dependencies
     def fixed_dependencies
       fixed_attrs        = fixed_attributes
       fixed_dependencies = Set.new
       filtered_dependency_attributes.each do |key, value|
         fixed_dependencies += value if fixed_attrs.include?(key)
       end
-      fixed_dependencies
+
+      fixed_dependencies.select { |x| !x.saved? }
     end
 
+    # Returns all unique non saved dependencies
     def dependencies
-      filtered_dependency_attributes.values.map(&:to_a).flatten.uniq
+      filtered_dependency_attributes.values.map(&:to_a).flatten.uniq.select { |x| !x.saved? }
     end
 
     def dependency_attributes_for(inventory_collections)
