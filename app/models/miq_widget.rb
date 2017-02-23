@@ -445,7 +445,7 @@ class MiqWidget < ApplicationRecord
     when String
       group = MiqGroup.in_my_region.find_by(:description => group)
     when Fixnum
-      group = MiqGroup.in_my_region.find_by_id(group)
+      group = MiqGroup.in_my_region.find_by(:id => group)
     end
 
     _log.warn("Unable to find group '#{original}'") if group.nil?

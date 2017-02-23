@@ -296,7 +296,7 @@ class MiqWorker < ApplicationRecord
   end
 
   def self.send_message_to_worker_monitor(wid, message, *args)
-    w = MiqWorker.find_by_id(wid)
+    w = MiqWorker.find_by(:id => wid)
     raise _("Worker with id=<%{id}> does not exist") % {:id => wid} if w.nil?
     w.send_message_to_worker_monitor(message, *args)
   end

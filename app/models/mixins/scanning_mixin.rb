@@ -24,7 +24,7 @@ module ScanningMixin
     # Called from Queue
     def save_metadata(target_id, data_array)
       xml_file, data_type = Marshal.load(data_array)
-      target = base_class.find_by_id(target_id)
+      target = base_class.find_by(:id => target_id)
       xml_file = MIQEncode.decode(xml_file) if data_type.include?('b64,zlib')
       begin
         doc = MiqXml.load(xml_file)

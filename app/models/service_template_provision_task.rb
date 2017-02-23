@@ -46,7 +46,7 @@ class ServiceTemplateProvisionTask < MiqRequestTask
       end
       if svc_target_name.blank?
         svc_tmp_id = req_obj.get_option(:src_id)
-        svc_tmp = ServiceTemplate.find_by_id(svc_tmp_id)
+        svc_tmp = ServiceTemplate.find_by(:id => svc_tmp_id)
         svc_target_name = svc_tmp.name
       end
 
@@ -69,7 +69,7 @@ class ServiceTemplateProvisionTask < MiqRequestTask
   end
 
   def create_child_tasks
-    parent_svc = Service.find_by_id(options[:parent_service_id])
+    parent_svc = Service.find_by(:id => options[:parent_service_id])
     parent_name = parent_svc.nil? ? 'none' : "#{parent_svc.class.name}:#{parent_svc.id}"
     _log.info "- creating service tasks for service <#{self.class.name}:#{id}> with parent service <#{parent_name}>"
 
@@ -159,7 +159,7 @@ class ServiceTemplateProvisionTask < MiqRequestTask
 
   def service_resource
     return nil if options[:service_resource_id].blank?
-    ServiceResource.find_by_id(options[:service_resource_id])
+    ServiceResource.find_by(:id => options[:service_resource_id])
   end
 
   def mark_pending_items_as_finished

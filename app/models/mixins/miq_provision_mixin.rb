@@ -102,7 +102,7 @@ module MiqProvisionMixin
   def eligible_resource_lookup(klass, rsc_data)
     ci_id = rsc_data.kind_of?(Array) ? rsc_data.first : rsc_data.id
     ci_id = ci_id.split("::").last if ci_id.to_s.include?("::")
-    klass.find_by_id(ci_id)
+    klass.find_by(:id => ci_id)
   end
   private :eligible_resource_lookup
 
@@ -159,7 +159,7 @@ module MiqProvisionMixin
   def get_source_vm
     vm_id = get_option(:src_vm_id)
     raise _("Source VM not provided") if vm_id.nil?
-    svm = VmOrTemplate.find_by_id(vm_id)
+    svm = VmOrTemplate.find_by(:id => vm_id)
     raise _("Unable to find VM with Id: [%{vm_id}]") % {:vm_id => vm_id} if svm.nil?
     svm
   end

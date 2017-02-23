@@ -32,7 +32,7 @@ describe MiqAlert do
         msg = MiqQueue.get(:role => "notifier")
         expect(msg).not_to be_nil
 
-        alert = MiqAlert.find_by_id(msg.instance_id)
+        alert = MiqAlert.find_by(:id => msg.instance_id)
         expect(alert).not_to be_nil
         expect(alert.description).to eq('VM Guest Windows Event Log Error - NtpClient')
       end

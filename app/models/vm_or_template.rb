@@ -426,7 +426,7 @@ class VmOrTemplate < ApplicationRecord
     if queue_item.last_exception.kind_of?(MiqException::MiqVimBrokerUnavailable)
       queue_item.requeue(:deliver_on => 1.minute.from_now.utc)
     else
-      task = MiqTask.find_by_id(task_id)
+      task = MiqTask.find_by(:id => task_id)
       task.queue_callback("Finished", status, msg, result) if task
     end
   end
@@ -875,7 +875,7 @@ class VmOrTemplate < ApplicationRecord
     defaultsmartproxy = ::Settings.repository_scanning.defaultsmartproxy
 
     proxy = nil
-    proxy = MiqProxy.find_by_id(defaultsmartproxy.to_i) if defaultsmartproxy
+    proxy = MiqProxy.find_by(:id => defaultsmartproxy.to_i) if defaultsmartproxy
     proxy.try(:host)
   end
 

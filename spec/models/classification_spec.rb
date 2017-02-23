@@ -68,7 +68,7 @@ describe Classification do
       expect(entries.length).to eq(2)
 
       cat.destroy
-      entries.each { |e| expect(Classification.find_by_id(e.id)).to be_nil }
+      entries.each { |e| expect(Classification.find_by(:id => e.id)).to be_nil }
     end
 
     it "should test setup data" do

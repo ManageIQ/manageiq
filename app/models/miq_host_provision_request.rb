@@ -13,7 +13,7 @@ class MiqHostProvisionRequest < MiqRequest
 
   def host_name
     if options[:src_host_ids].length == 1
-      host = Host.find_by_id(options[:src_host_ids].first)
+      host = Host.find_by(:id => options[:src_host_ids].first)
       host.nil? ? "" : host.name
     else
       "Multiple Hosts"
@@ -26,31 +26,31 @@ class MiqHostProvisionRequest < MiqRequest
 
   def placement_ems
     ems_id, _ems_name = options[:placement_ems_name]
-    ExtManagementSystem.find_by_id(ems_id) if ems_id.kind_of?(Numeric)
+    ExtManagementSystem.find_by(:id => ems_id) if ems_id.kind_of?(Numeric)
   end
 
   def placement_cluster
     ems_cluster_id, _ems_cluster_name = options[:placement_cluster_name]
-    EmsCluster.find_by_id(ems_cluster_id) if ems_cluster_id.kind_of?(Numeric)
+    EmsCluster.find_by(:id => ems_cluster_id) if ems_cluster_id.kind_of?(Numeric)
   end
 
   def placement_folder
     ems_folder_id, _ems_folder_name = options[:placement_folder_name]
-    EmsFolder.find_by_id(ems_folder_id) if ems_folder_id.kind_of?(Numeric)
+    EmsFolder.find_by(:id => ems_folder_id) if ems_folder_id.kind_of?(Numeric)
   end
 
   def pxe_server
     pxe_server_id, _pxe_server_name = options[:pxe_server_id]
-    PxeServer.find_by_id(pxe_server_id) if pxe_server_id.kind_of?(Numeric)
+    PxeServer.find_by(:id => pxe_server_id) if pxe_server_id.kind_of?(Numeric)
   end
 
   def pxe_image
     pxe_image_id, _pxe_image_name = options[:pxe_image_id]
-    PxeImage.find_by_id(pxe_image_id) if pxe_image_id.kind_of?(Numeric)
+    PxeImage.find_by(:id => pxe_image_id) if pxe_image_id.kind_of?(Numeric)
   end
 
   def src_hosts
-    options[:src_host_ids].collect { |id_str| Host.find_by_id(id_str.to_i) }.compact
+    options[:src_host_ids].collect { |id_str| Host.find_by(:id => id_str.to_i) }.compact
   end
 
   def my_role

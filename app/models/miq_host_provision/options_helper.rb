@@ -4,11 +4,11 @@ module MiqHostProvision::OptionsHelper
   end
 
   def storages_to_attach
-    @storages_to_attach ||= storage_ids.collect { |sid| Storage.find_by_id(sid) }.compact
+    @storages_to_attach ||= storage_ids.collect { |sid| Storage.find_by(:id => sid) }.compact
   end
 
   def src_hosts
-    @src_hosts ||= options[:src_host_ids].collect { |id_str| Host.find_by_id(id_str.to_i) }.compact
+    @src_hosts ||= options[:src_host_ids].collect { |id_str| Host.find_by(:id => id_str.to_i) }.compact
   end
 
   def description

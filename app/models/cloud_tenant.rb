@@ -37,7 +37,7 @@ class CloudTenant < ApplicationRecord
   end
 
   def self.create_cloud_tenant(ems_id, options = {})
-    ext_management_system = ExtManagementSystem.find_by_id(ems_id)
+    ext_management_system = ExtManagementSystem.find_by(:id => ems_id)
     raise ArgumentError, _("ext_management_system cannot be nil") if ext_management_system.nil?
 
     klass = class_by_ems(ext_management_system)

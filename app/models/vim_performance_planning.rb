@@ -115,7 +115,7 @@ class VimPerformancePlanning < ActsAsArModel
     #     :time_profile_id => <ID of time profile>
     # }
 
-    options[:ext_options] = {:tz => options[:tz], :time_profile => TimeProfile.find_by_id(options[:time_profile_id])}
+    options[:ext_options] = {:tz => options[:tz], :time_profile => TimeProfile.find_by(:id => options[:time_profile_id])}
 
     anal = VimPerformanceAnalysis::Planning.new(vm, options)
     vm_needs = anal.get_vm_needs

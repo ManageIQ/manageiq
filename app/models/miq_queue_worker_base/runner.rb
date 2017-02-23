@@ -42,7 +42,7 @@ class MiqQueueWorkerBase::Runner < MiqWorker::Runner
 
       return nil if msg_id.nil?
 
-      msg = MiqQueue.find_by_id(msg_id)
+      msg = MiqQueue.find_by(:id => msg_id)
       if msg.nil?
         _log.debug("#{log_prefix} Message id: [#{msg_id}] stale (msg gone), retrying...")
         next

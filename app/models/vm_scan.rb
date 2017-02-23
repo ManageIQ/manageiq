@@ -328,7 +328,7 @@ class VmScan < Job
             signal(:abort, message, "error")
           else
             _log.info("sending :finish")
-            vm = VmOrTemplate.find_by_id(target_id)
+            vm = VmOrTemplate.find_by(:id => target_id)
 
             # Collect any VIM data here
             # TODO: Make this a separate state?
@@ -487,7 +487,7 @@ class VmScan < Job
 
   def process_abort(*args)
     begin
-      vm = VmOrTemplate.find_by_id(target_id)
+      vm = VmOrTemplate.find_by(:id => target_id)
       unless context[:snapshot_mor].nil?
         mor = context[:snapshot_mor]
         context[:snapshot_mor] = nil

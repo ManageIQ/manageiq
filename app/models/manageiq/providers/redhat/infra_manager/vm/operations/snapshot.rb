@@ -28,7 +28,7 @@ module ManageIQ::Providers::Redhat::InfraManager::Vm::Operations::Snapshot
   end
 
   def raw_remove_snapshot(snapshot_id)
-    snapshot = snapshots.find_by_id(snapshot_id)
+    snapshot = snapshots.find_by(:id => snapshot_id)
     raise _("Requested VM snapshot not found, unable to remove snapshot") unless snapshot
     with_snapshots_service(uid_ems) do |snapshots_service|
       snapshots_service.snapshot_service(snapshot.uid_ems).remove
@@ -36,7 +36,7 @@ module ManageIQ::Providers::Redhat::InfraManager::Vm::Operations::Snapshot
   end
 
   def raw_revert_to_snapshot(snapshot_id)
-    snapshot = snapshots.find_by_id(snapshot_id)
+    snapshot = snapshots.find_by(:id => snapshot_id)
     raise _("Requested VM snapshot not found, unable to RevertTo snapshot") unless snapshot
     with_snapshots_service(uid_ems) do |snapshots_service|
       snapshots_service.snapshot_service(snapshot.uid_ems).restore

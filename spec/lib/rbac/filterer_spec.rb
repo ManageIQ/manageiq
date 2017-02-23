@@ -1296,7 +1296,7 @@ describe Rbac::Filterer do
 
       it "skips lookup if current_group_id passed" do
         # ensuring same_group is a different object from user1.current_group
-        same_group = MiqGroup.find_by_id(user1.current_group.id)
+        same_group = MiqGroup.find_by(:id => user1.current_group.id)
         expect do
           _, group = filter.send(:lookup_user_group, user1, nil, same_group, nil)
           expect(group).to eq(same_group)
