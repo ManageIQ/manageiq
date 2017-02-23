@@ -107,6 +107,10 @@ module ManageIQ::Providers
       os_resource_for(feed).try(:properties).try { |prop| prop['Machine Id'] }
     end
 
+    def container_id(feed)
+      os_resource_for(feed).try(:properties).try { |prop| prop['Container Id'] }
+    end
+
     def os_resource_for(feed)
       with_provider_connection do |connection|
         os = os_for(feed)
