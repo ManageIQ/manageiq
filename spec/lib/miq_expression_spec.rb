@@ -1457,6 +1457,20 @@ describe MiqExpression do
     end
   end
 
+  context "._custom_details_for" do
+    let(:klass)        { Vm }
+    let(:vm)           { FactoryGirl.create(:vm) }
+    let(:custom_attr1) { FactoryGirl.create(:custom_attribute, :resource => vm, :name => "CATTR_1", :value => "Value 1") }
+    let(:custom_attr2) { FactoryGirl.create(:custom_attribute, :resource => vm, :name => nil,       :value => "Value 2") }
+
+    it "ignores custom_attibutes with a nil name" do
+      custom_attr1
+      custom_attr2
+
+      expect(MiqExpression._custom_details_for("Vm", {})).to eq([["CATTR_1", "Vm-virtual_custom_attribute_CATTR_1"]])
+    end
+  end
+
   context ".build_relats" do
     it "includes reflections from descendant classes of Vm" do
       relats = MiqExpression.get_relats(Vm)
