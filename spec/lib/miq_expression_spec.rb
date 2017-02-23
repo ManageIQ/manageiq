@@ -1,13 +1,39 @@
 describe MiqExpression do
   context "virtual custom attributes" do
-    let(:virtual_custom_attribute) { "virtual_custom_attribute_attribute" }
-    let(:klass)                    { Vm }
-    let(:vm)                       { FactoryGirl.create(:vm) }
+    let(:virtual_custom_attribute)   { "virtual_custom_attribute_attribute" }
+    let(:virtual_custom_attribute_1) { "virtual_custom_attribute_attribute_1" }
+    let(:virtual_custom_attribute_2) { "virtual_custom_attribute_attribute_2" }
+    let(:virtual_custom_attribute_3) { "virtual_custom_attribute_attribute_3" }
+    let(:virtual_custom_attribute_4) { "virtual_custom_attribute_attribute_4" }
+    let(:klass)                      { Vm }
+    let(:vm)                         { FactoryGirl.create(:vm) }
 
     it "automatically loads virtual custom attributes from MiqExpression on class" do
       expect do
         MiqExpression.new("EQUAL" => {"field" => "#{klass}-#{virtual_custom_attribute}", "value" => "foo"})
       end.to change { vm.respond_to?(virtual_custom_attribute) }.from(false).to(true)
+    end
+
+    it "automatically loads virtual custom attributes from right side in expression" do
+      expect do
+        MiqExpression.new("EQUAL" => {"field" => "#{klass}-name", "value" => "#{klass}-#{virtual_custom_attribute_1}"})
+      end.to change { vm.respond_to?(virtual_custom_attribute_1) }.from(false).to(true)
+    end
+
+    it "automatically loads virtual custom attributes from right side in nested expression" do
+      exp1 = {"STARTS WITH" => {"field" => "#{klass}-name", "value" => "#{klass}-#{virtual_custom_attribute_2}"}}
+      exp2 = {"ENDS WITH" => {"field" => "#{klass}-name", "value" => "#{klass}-#{virtual_custom_attribute_3}"}}
+      exp3 = {"ENDS WITH" => {"field" => "#{klass}-#{virtual_custom_attribute_4}", "value" => "any_value"}}
+
+      expect do
+        MiqExpression.new("AND" => [exp1, {"AND" => [exp2, exp3]}])
+      end.to change {
+        [
+          vm.respond_to?(virtual_custom_attribute_2),
+          vm.respond_to?(virtual_custom_attribute_3),
+          vm.respond_to?(virtual_custom_attribute_4)
+        ]
+      }.from([false, false, false]).to([true, true, true])
     end
   end
 
@@ -405,11 +431,12 @@ describe MiqExpression do
         end
 
         it "finds the correct instances for an gt expression with a custom attribute dynamic integer field" do
-          custom_attribute =  FactoryGirl.create(:custom_attribute, :name => "example", :value => 1)
+          custom_attribute =  FactoryGirl.create(:custom_attribute, :name => "example", :value => 10)
           vm1 = FactoryGirl.create(:vm, :memory_reserve => 2)
           vm1.custom_attributes << custom_attribute
           _vm2 = FactoryGirl.create(:vm, :memory_reserve => 0)
-          filter = MiqExpression.new(">" => {"field" => "VmOrTemplate-memory_reserve", "value" => "VmOrTemplate-#{CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX}example"})
+          name_of_attribute = "VmOrTemplate-#{CustomAttributeMixin::CUSTOM_ATTRIBUTES_PREFIX}example"
+          filter = MiqExpression.new("<" => {"field" => "VmOrTemplate-memory_reserve", "value" => name_of_attribute})
           result = Rbac.search(:targets => Vm, :filter => filter).first.first
           expect(filter.to_sql.last).to eq(:supported_by_sql => false)
           expect(result).to eq(vm1)
