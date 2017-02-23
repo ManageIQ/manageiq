@@ -23,10 +23,6 @@ module ManagerRefresh
     end
 
     def attributes(inventory_collection_scope = nil)
-      # TODO(lsmola) mark method with !, for performance reasons, this methods can be called only once, the second
-      # call will not return saveable result. We do not want to cache the result, since we want the lowest memory
-      # footprint.
-
       # We should explicitly pass a scope, since the inventory_object can be mapped to more InventoryCollections with
       # different blacklist and whitelist. The generic code always passes a scope.
       inventory_collection_scope ||= inventory_collection
@@ -138,7 +134,6 @@ module ManagerRefresh
       foreign_to_association = inventory_collection_scope.foreign_key_to_association_mapping[key] ||
                                inventory_collection_scope.foreign_type_to_association_mapping[key]
 
-      # TODO(lsmola) can we make this O(1)? This check will be performed for each record in the DB
       return false if inventory_collection_scope.attributes_blacklist.present? &&
                       (inventory_collection_scope.attributes_blacklist.include?(key) ||
                         (foreign_to_association && inventory_collection_scope.attributes_blacklist.include?(foreign_to_association)))
@@ -151,7 +146,8 @@ module ManagerRefresh
     end
 
     def loadable?(value)
-      value.kind_of?(::ManagerRefresh::InventoryObjectLazy) || value.kind_of?(::ManagerRefresh::InventoryObject)
+      value.kind_of?(::ManagerRefresh::InventoryObjectLazy) || value.kind_of?(::ManagerRefresh::InventoryObject) ||
+        value.kind_of?(::ManagerRefresh::ApplicationRecordReference)
     end
   end
 end
