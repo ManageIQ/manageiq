@@ -275,10 +275,14 @@ module ManagerRefresh
                      :dependency_attributes => dependency_attributes.clone)
     end
 
+    def belongs_to_associations
+      model_class.reflect_on_all_associations.select { |x| x.kind_of? ActiveRecord::Reflection::BelongsToReflection }
+    end
+
     def association_to_foreign_key_mapping
       return {} unless model_class
 
-      @association_to_foreign_key_mapping ||= model_class.reflect_on_all_associations.each_with_object({}) do |x, obj|
+      @association_to_foreign_key_mapping ||= belongs_to_associations.each_with_object({}) do |x, obj|
         obj[x.name] = x.foreign_key
       end
     end
@@ -286,7 +290,7 @@ module ManagerRefresh
     def foreign_key_to_association_mapping
       return {} unless model_class
 
-      @foreign_key_to_association_mapping ||= model_class.reflect_on_all_associations.each_with_object({}) do |x, obj|
+      @foreign_key_to_association_mapping ||= belongs_to_associations.each_with_object({}) do |x, obj|
         obj[x.foreign_key] = x.name
       end
     end
