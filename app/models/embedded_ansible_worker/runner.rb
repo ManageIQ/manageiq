@@ -1,30 +1,28 @@
 class EmbeddedAnsibleWorker::Runner < MiqWorker::Runner
-  def prepare
-    Thread.new do
-      setup_ansible
-      started_worker_record
-    end
+  self.wait_for_worker_monitor = false
 
+  def prepare
+    # Override prepare so we don't get set as started
     self
   end
 
   # This thread runs forever until a stop request is received, which with send us to do_exit to exit our thread
   def do_work_loop
     Thread.new do
-      _log.info("waiting for ansible to start...")
-      loop do
-        # handle if the ansible setup blew up or timed out
-        break if worker.reload.started?
-        heartbeat
-        send(poll_method)
-      end
+      begin
+        setup_ansible
+        started_worker_record
 
-      update_embedded_ansible_provider
+        update_embedded_ansible_provider
 
-      _log.info("entering ansible monitor loop")
-      loop do
-        do_work
-        send(poll_method)
+        _log.info("entering ansible monitor loop")
+        loop do
+          do_work
+          send(poll_method)
+        end
+      rescue => err
+        _log.log_backtrace(err)
+        do_exit
       end
     end
   end
