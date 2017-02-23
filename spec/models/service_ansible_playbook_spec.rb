@@ -31,20 +31,31 @@ describe(ServiceAnsiblePlaybook) do
   let(:override_options) do
     {
       :hosts      => 'host3',
-      :extra_vars => { 'var1' => 'new_val1' }
+      :extra_vars => {
+        'var1'         => 'new_val1',
+        'new_password' => 'secret'
+      }
     }
   end
 
   let(:provision_options) { {:provision_job_options => override_options} }
 
   describe '#preprocess' do
-    it 'prepares options for action' do
+    before do
       basic_service.preprocess(action, override_options)
       basic_service.reload
+    end
+
+    it 'prepares options for action' do
       expect(basic_service.options[:provision_job_options]).to have_attributes(
         :hosts         => 'host3',
-        :credential_id => 1,
-        :extra_vars    => {'var1' => 'new_val1', 'var2' => 'value2'}
+        :credential_id => 1
+      )
+
+      expect(basic_service.options.fetch_path(:provision_job_options, :extra_vars)).to have_attributes(
+        'var1'         => 'new_val1',
+        'var2'         => 'value2',
+        'new_password' => 'v2:{c5qTeiuz6JgbBOiDqp3eiQ==}'
       )
     end
   end

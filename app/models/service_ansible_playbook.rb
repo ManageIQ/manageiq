@@ -40,17 +40,21 @@ class ServiceAnsiblePlaybook < ServiceGeneric
 
   private
 
+  def password_field?(key)
+    key =~ /password/i
+  end
+
   def get_job_options(action)
     job_opts = options["#{action.downcase}_job_options".to_sym].deep_dup
     credential_id = job_opts.delete(:credential_id)
     job_opts[:credential] = Authentication.find(credential_id).manager_ref unless credential_id.blank?
-
-    job_opts
+    MiqPassword.decrypt_hash(job_opts) { |key| password_field?(key) }
   end
 
   def save_job_options(action, overrides)
     job_options = parse_dialog_options
-    job_options[:extra_vars] = (job_options[:extra_vars] || {}).merge(overrides[:extra_vars]) if overrides[:extra_vars]
+    job_options[:extra_vars] ||= {}
+    job_options[:extra_vars].merge!(MiqPassword.encrypt_hash(overrides[:extra_vars]) { |k| password_field?(k) }) if overrides[:extra_vars]
     job_options.merge!(overrides.except(:extra_vars))
 
     options["#{action.downcase}_job_options".to_sym] = job_options
