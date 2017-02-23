@@ -3,22 +3,24 @@ class MiqProvisionRequest < MiqRequest
   alias_attribute :provision_type, :request_type
   alias_attribute :miq_provisions, :miq_request_tasks
   alias_attribute :src_vm_id,      :source_id
+  alias_attribute :src_type,       :source_type
 
   delegate :my_zone, :to => :source
 
-  TASK_DESCRIPTION  = 'VM Provisioning'
-  SOURCE_CLASS_NAME = 'Vm'
+  TASK_DESCRIPTION  = 'VM Provisioning'.freeze
+  SOURCE_CLASS_NAME = "Vm".freeze
   ACTIVE_STATES     = %w(migrated) + base_class::ACTIVE_STATES
 
   validates_inclusion_of :request_state,
                          :in      => %w(pending provisioned finished) + ACTIVE_STATES,
                          :message => "should be pending, #{ACTIVE_STATES.join(", ")}, provisioned, or finished"
-  validates_presence_of  :source_id,      :message => "must have valid template"
-  validate               :must_have_valid_vm
+  validates_presence_of  :source_id, :message => "must have valid provisioning source"
+  validate               :must_have_valid_source
   validate               :must_have_user
 
   default_value_for :options,      :number_of_vms => 1
   default_value_for(:src_vm_id)    { |r| r.get_option(:src_vm_id) }
+  default_value_for(:src_type)     { |r| r.get_option(:src_type) || "VmOrTemplate" }
 
   virtual_column :provision_type, :type => :string
 
@@ -26,12 +28,16 @@ class MiqProvisionRequest < MiqRequest
   include MiqProvisionQuotaMixin
 
   def self.request_task_class_from(attribs)
-    source_id = MiqRequestMixin.get_option(:src_vm_id, nil, attribs['options'])
-    vm_or_template = VmOrTemplate.find_by_id(source_id)
-    raise MiqException::MiqProvisionError, "Unable to find source Template/Vm with id [#{source_id}]" if vm_or_template.nil?
+    source_id = MiqRequestMixin.get_option(:source_id, nil, attribs['options'])
+    source_type = MiqRequestMixin.get_option(:source_type, nil, attribs['options'])
+    source_id ||= MiqRequestMixin.get_option(:src_vm_id, nil, attribs['options'])
+    source_type ||= MiqRequestMixin.get_option(:src_type, nil, attribs['options'])
+    provisioning_source = MiqProvisionSource.get_provisioning_request_source(source_id, source_type)
+    raise MiqException::MiqProvisionError, "Unable to find source #{source_type} with id [#{source_id}]" if provisioning_source.nil?
 
     via = MiqRequestMixin.get_option(:provision_type, nil, attribs['options'])
-    vm_or_template.ext_management_system.class.provision_class(via)
+    manager = provisioning_source.ext_management_system.top_level_manager
+    manager.class.provision_class(via)
   end
 
   def self.new_request_task(attribs)
@@ -39,8 +45,8 @@ class MiqProvisionRequest < MiqRequest
     klass.new(attribs)
   end
 
-  def must_have_valid_vm
-    errors.add(:vm_template, "must have valid VM (must be in vmdb)") if vm_template.nil?
+  def must_have_valid_source
+    errors.add(:source, "must have valid provisioning source") if source.nil?
   end
 
   def set_description(force = false)
@@ -82,9 +88,9 @@ class MiqProvisionRequest < MiqRequest
 
     return false if dept.empty? || env.empty?
 
-    prov.options[:environment] = "prod" # Set env to prod to get service levels
-    svc  = prov.allowed(:service_level) # Get service levels
-    return false if env.include?("prod") && svc.empty?  # Make sure we have at least one
+    prov.options[:environment] = "prod"                # Set env to prod to get service levels
+    svc = prov.allowed(:service_level)                 # Get service levels
+    return false if env.include?("prod") && svc.empty? # Make sure we have at least one
 
     true
   end
@@ -115,17 +121,20 @@ class MiqProvisionRequest < MiqRequest
   end
 
   def validate_template
-    return {:valid   => false,
-            :message => "Unable to find VM with Id [#{source_id}]"
+    return {
+      :valid   => false,
+      :message => "Unable to find #{source_type} with Id [#{source_id}]"
     } if source.nil?
 
-    return {:valid   => false,
-            :message => "VM/Template <#{source.name}> with Id <#{source.id}> is archived and cannot be used with provisioning."
-    } if source.archived?
+    return {
+      :valid   => false,
+      :message => "#{source_type} <#{source.name}> with Id <#{source.id}> is archived and cannot be used with provisioning."
+    } if source.try(:archived?)
 
-    return {:valid   => false,
-            :message => "VM/Template <#{source.name}> with Id <#{source.id}> is orphaned and cannot be used with provisioning."
-    } if source.orphaned?
+    return {
+      :valid   => false,
+      :message => "#{source_type} <#{source.name}> with Id <#{source.id}> is orphaned and cannot be used with provisioning."
+    } if source.try(:orphaned?)
 
     {:valid => true, :message => nil}
   end

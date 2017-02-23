@@ -597,6 +597,10 @@ class ExtManagementSystem < ApplicationRecord
     User.super_admin.tap { |u| u.current_group = tenant.default_miq_group }
   end
 
+  def top_level_manager
+    try(:parent_manager) || self
+  end
+
   private
 
   def build_connection(options = {})

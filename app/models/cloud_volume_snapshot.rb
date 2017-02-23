@@ -10,10 +10,22 @@ class CloudVolumeSnapshot < ApplicationRecord
   belongs_to :cloud_volume
   has_many   :based_volumes, :class_name => 'CloudVolume'
 
+  # it's permissable to provision vms with cloud volume snapshots as a source
+  has_many   :miq_provision_requests, :as => :source
+  virtual_column :cloud, :type => :boolean
+  def cloud
+    true
+  end
+
   virtual_total :total_based_volumes, :based_volumes
 
   def self.class_by_ems(ext_management_system)
     ext_management_system && ext_management_system.class::CloudVolumeSnapshot
+  end
+
+  def self.eligible_for_provisioning
+    joins(:cloud_volume).where("cloud_volumes.bootable = ?", true)
+                        .where(:type => "ManageIQ::Providers::Openstack::CloudManager::CloudVolumeSnapshot")
   end
 
   def self.my_zone(ems)

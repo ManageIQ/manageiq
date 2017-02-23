@@ -307,7 +307,7 @@ module MiqProvisionQuotaMixin
         result[:count] += num_vms_for_request
         result[:memory] += pr.get_option(:vm_memory).to_i * num_vms_for_request
         result[:cpu] += pr.get_option(:number_of_cpus).to_i * num_vms_for_request
-        result[:storage] += (pr.vm_template.allocated_disk_storage.to_i + new_disk_storage_size) * num_vms_for_request
+        result[:storage] += (pr.source.allocated_disk_storage.to_i + new_disk_storage_size) * num_vms_for_request
         result[:ids] << pr.id
 
         # Include a resource breakdown for actively provisioning records
@@ -317,7 +317,7 @@ module MiqProvisionQuotaMixin
           active = result[:active]
           active[:memory_by_host_id][host_id] += p.get_option(:vm_memory).to_i
           active[:cpu_by_host_id][host_id] += p.get_option(:number_of_cpus).to_i
-          active[:storage_by_id][storage_id] += p.vm_template.allocated_disk_storage.to_i + new_disk_storage_size
+          active[:storage_by_id][storage_id] += p.source.allocated_disk_storage.to_i + new_disk_storage_size
           active[:vms_by_storage_id][storage_id] << p.id
           active[:ids] << p.id
         end
