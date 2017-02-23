@@ -31,6 +31,7 @@ module EvmSpecHelper
 
     clear_instance_variables(MiqEnvironment::Command)
     clear_instance_variable(MiqProductFeature, :@feature_cache) if defined?(MiqProductFeature)
+    clear_instance_variable(MiqProductFeature, :@obj_cache) if defined?(MiqProductFeature)
     clear_instance_variable(BottleneckEvent, :@event_definitions) if defined?(BottleneckEvent)
 
     # Clear the thread local variable to prevent test contamination

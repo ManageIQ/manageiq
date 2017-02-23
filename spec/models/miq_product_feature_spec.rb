@@ -196,4 +196,50 @@ describe MiqProductFeature do
       expect(MiqProductFeature.feature_parent("f4")).to eq("f3")
     end
   end
+
+  describe "feature object cache" do
+    let!(:f0) { FactoryGirl.create(:miq_product_feature, :identifier => "everything", :name => "F0n") }
+    let!(:f1) { FactoryGirl.create(:miq_product_feature, :identifier => "f1", :name => "F1n", :parent_id => f0.id) }
+    let!(:f2) { FactoryGirl.create(:miq_product_feature, :identifier => "f2", :name => "F2n", :parent_id => f1.id) }
+    let!(:f3) { FactoryGirl.create(:miq_product_feature, :identifier => "f3", :name => "F3n", :parent_id => f1.id) }
+    let!(:f4) { FactoryGirl.create(:miq_product_feature, :identifier => "f4", :name => "F4n", :parent_id => f3.id) }
+    let!(:f5) { FactoryGirl.create(:miq_product_feature, :identifier => "f5", :name => "F5n", :parent_id => f3.id) }
+
+    it "memoizes hash to prevent extra db queries" do
+      expect { MiqProductFeature.obj_features }.to match_query_limit_of(1)
+      expect { MiqProductFeature.obj_features }.to match_query_limit_of(0)
+    end
+
+    it "builds a hash with feature objects keyed by identifier" do
+      expect(MiqProductFeature.obj_features["f1"][:feature]).to eq(f1)
+    end
+
+    it "builds a hash of features objects with child objects" do
+      expect(MiqProductFeature.feature_root).to eq("everything")
+      expect(MiqProductFeature.obj_feature_children("f1")).to eq([f2, f3])
+      expect(MiqProductFeature.obj_feature_children("f2")).to eq([])
+      expect(MiqProductFeature.obj_feature_children("f3")).to eq([f4, f5])
+    end
+
+    it "references the parent by identifier" do
+      expect(MiqProductFeature.obj_feature_parent("everything")).to be_nil
+      expect(MiqProductFeature.obj_feature_parent("f2")).to eq("f1")
+      expect(MiqProductFeature.obj_feature_parent("f4")).to eq("f3")
+    end
+
+    it "finds the ancestors of a feature" do
+      ancestors = MiqProductFeature.obj_feature_ancestors("f4")
+
+      expect(ancestors.count).to eq(3)
+      expect(ancestors).to include(f0)
+      expect(ancestors).to include(f3)
+      expect(ancestors).to include(f1)
+    end
+
+    it "handles bad feature names" do
+      expect(MiqProductFeature.obj_feature_ancestors("foo")).to eq([])
+      expect(MiqProductFeature.obj_feature_children("foo")).to be_nil
+      expect(MiqProductFeature.obj_feature_all_children("foo")).to be_nil
+    end
+  end
 end
