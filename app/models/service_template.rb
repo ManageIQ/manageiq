@@ -377,6 +377,18 @@ class ServiceTemplate < ApplicationRecord
     save!
   end
 
+  def provision_request(user, options = nil)
+    provision_workflow(user, options).submit_request
+  end
+
+  def provision_workflow(user, options = nil)
+    options ||= {}
+    ResourceActionWorkflow.new({}, user,
+                               provision_action, :target => self).tap do |wf|
+      options.each { |key, value| wf.set_value(key, value) }
+    end
+  end
+
   def self.create_from_options(options)
     create(options.except(:config_info).merge(:options => { :config_info => options[:config_info] }))
   end
