@@ -132,6 +132,13 @@ describe ManagerRefresh::SaveInventory do
             :device => @vm2
           )
         )
+
+        @network_port4 = FactoryGirl.create(
+          :network_port,
+          network_port_data(4).merge(
+            :device => @vm4
+          )
+        )
       end
 
       it "tests that a key pointing to a relation is filled correctly when coming from db" do
@@ -154,6 +161,7 @@ describe ManagerRefresh::SaveInventory do
           )
         )
 
+        # Parse data for InventoryCollections
         @network_port_data_1 = network_port_data(1).merge(
           :device => @data[:hardwares].lazy_find(vm_data(1)[:ems_ref], :key => :vm_or_template)
         )
@@ -171,7 +179,7 @@ describe ManagerRefresh::SaveInventory do
         # Invoke the InventoryCollections saving
         ManagerRefresh::SaveInventory.save_inventory(@ems, @data.values)
 
-        # Asset saved data
+        # Assert saved data
         @network_port1.reload
         @vm1.reload
         expect(@network_port1.device).to eq @vm1
@@ -196,6 +204,7 @@ describe ManagerRefresh::SaveInventory do
           )
         )
 
+        # Parse data for InventoryCollections
         @network_port_data_1 = network_port_data(1).merge(
           :device => @data[:db_network_ports].lazy_find(network_port_data(12)[:ems_ref], :key => :device)
         )
@@ -213,10 +222,118 @@ describe ManagerRefresh::SaveInventory do
         # Invoke the InventoryCollections saving
         ManagerRefresh::SaveInventory.save_inventory(@ems, @data.values)
 
-        # Asset saved data
+        # Assert saved data
         @network_port1.reload
         @vm1.reload
         expect(@network_port1.device).to eq @vm1
+      end
+
+      it "saves records correctly with complex interconnection" do
+        vm_refs = ["vm_ems_ref_3", "vm_ems_ref_4"]
+        network_port_refs = ["network_port_ems_ref_1", "network_port_ems_ref_12"]
+
+        # Setup InventoryCollections
+        @data = {}
+        @data[:miq_templates] = ::ManagerRefresh::InventoryCollection.new(
+          miq_templates_init_data(
+            :strategy => :local_db_find_references
+          )
+        )
+        @data[:key_pairs] = ::ManagerRefresh::InventoryCollection.new(
+          key_pairs_init_data(
+            :strategy => :local_db_find_references
+          )
+        )
+        @data[:db_network_ports] = ::ManagerRefresh::InventoryCollection.new(
+          network_ports_init_data(
+            :parent   => @ems.network_manager,
+            :strategy => :local_db_find_references
+          )
+        )
+        @data[:vms] = ::ManagerRefresh::InventoryCollection.new(
+          vms_init_data(
+            :arel     => @ems.vms.where(:ems_ref => vm_refs),
+            :strategy => :local_db_find_missing_references,
+          )
+        )
+        @data[:hardwares] = ::ManagerRefresh::InventoryCollection.new(
+          hardwares_init_data(
+            :arel     => @ems.hardwares.joins(:vm_or_template).where(:vms => {:ems_ref => vm_refs}),
+            :strategy => :local_db_find_missing_references
+          )
+        )
+        @data[:network_ports] = ::ManagerRefresh::InventoryCollection.new(
+          network_ports_init_data(
+            :parent   => @ems.network_manager,
+            :arel     => @ems.network_manager.network_ports.where(:ems_ref => network_port_refs),
+            :strategy => :local_db_find_missing_references
+          )
+        )
+
+        # Parse data for InventoryCollections
+        @network_port_data_1 = network_port_data(1).merge(
+          :name   => @data[:vms].lazy_find(vm_data(3)[:ems_ref], :key => :name),
+          :device => @data[:vms].lazy_find(vm_data(3)[:ems_ref])
+        )
+        @network_port_data_12 = network_port_data(12).merge(
+          :name   => @data[:vms].lazy_find(vm_data(4)[:ems_ref], :key => :name, :default => "default_name"),
+          :device => @data[:db_network_ports].lazy_find(network_port_data(2)[:ems_ref], :key => :device)
+        )
+        @network_port_data_3 = network_port_data(3).merge(
+          :name   => @data[:vms].lazy_find(vm_data(1)[:ems_ref], :key => :name, :default => "default_name"),
+          :device => @data[:hardwares].lazy_find(vm_data(1)[:ems_ref], :key => :vm_or_template)
+        )
+        @vm_data_3 = vm_data(3).merge(
+          :genealogy_parent      => @data[:miq_templates].lazy_find(image_data(2)[:ems_ref]),
+          :key_pairs             => [@data[:key_pairs].lazy_find(key_pair_data(2)[:name])],
+          :ext_management_system => @ems
+        )
+        @hardware_data_3 = hardware_data(3).merge(
+          :guest_os       => @data[:hardwares].lazy_find(image_data(2)[:ems_ref], :key => :guest_os),
+          :vm_or_template => @data[:vms].lazy_find(vm_data(3)[:ems_ref])
+        )
+
+        # Fill InventoryCollections with data
+        add_data_to_inventory_collection(@data[:network_ports],
+                                         @network_port_data_1,
+                                         @network_port_data_12,
+                                         @network_port_data_3)
+        add_data_to_inventory_collection(@data[:vms],
+                                         @vm_data_3)
+        add_data_to_inventory_collection(@data[:hardwares],
+                                         @hardware_data_3)
+        # Assert data before save
+        expect(@network_port1.device).to eq @vm1
+        expect(@network_port1.name).to eq "network_port_name_1"
+
+        expect(@network_port12.device).to eq @vm1
+        expect(@network_port12.name).to eq "network_port_name_12"
+
+        expect(@vm4.ext_management_system).to eq @ems
+
+        # Invoke the InventoryCollections saving
+        ManagerRefresh::SaveInventory.save_inventory(@ems, @data.values)
+
+        # Assert saved data
+        @vm3 = Vm.find_by(:ems_ref => vm_data(3)[:ems_ref])
+        @vm4 = Vm.find_by(:ems_ref => vm_data(4)[:ems_ref])
+        @network_port3 = NetworkPort.find_by(:ems_ref => network_port_data(3)[:ems_ref])
+        @network_port1.reload
+        @network_port12.reload
+        @vm4.reload
+        # @image2.reload will not refresh STI class
+        @image2 = MiqTemplate.find(@image2.id)
+
+        expect(@network_port1.device).to eq @vm3
+        expect(@network_port1.name).to eq "vm_name_3"
+        expect(@network_port12.device).to eq @vm2
+        # Vm4 name was not found, because @vm4 got disconnected and no longer can be found in ems.vms
+        expect(@network_port12.name).to eq "default_name"
+        expect(@network_port3.device).to eq @vm1
+        expect(@network_port3.name).to eq "vm_name_1"
+        expect(@vm3.genealogy_parent).to eq @image2
+        # Check Vm4 was disconnected
+        expect(@vm4.ext_management_system).to be_nil
       end
     end
   end
