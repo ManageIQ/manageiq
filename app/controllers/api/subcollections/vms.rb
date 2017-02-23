@@ -40,9 +40,14 @@ module Api
       end
 
       def create_vm_decorators_hash(vm_decorators, vm)
-        vm_decorators.each_with_object({}) do |name, hash|
-          hash[name] = vm.decorate.public_send(name.to_sym) if vm.decorate.respond_to?(name.to_sym)
-        end.compact
+        hash = {}
+        if vm_decorators.include? 'supports_console?'
+          hash['supports_console?'] = vm.supports_console?
+        end
+        if vm_decorators.include? 'supports_cockpit?'
+          hash['supports_cockpit?'] = vm.supports_launch_cockpit?
+        end
+        hash
       end
     end
   end
