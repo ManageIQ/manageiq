@@ -140,23 +140,6 @@ describe ManagerRefresh::SaveInventory do
 
         # Setup InventoryCollections
         @data = {}
-        @data[:vms] = ::ManagerRefresh::InventoryCollection.new(
-          vms_init_data(
-            :arel     => @ems.vms.where(:ems_ref => vm_refs),
-            :strategy => :local_db_find_references,
-          )
-        )
-        @data[:hardwares] = ::ManagerRefresh::InventoryCollection.new(
-          hardwares_init_data(
-            :arel     => @ems.hardwares.joins(:vm_or_template).where(:vms => {:ems_ref => vm_refs}),
-            :strategy => :local_db_find_references
-          )
-        )
-        @data[:miq_templates] = ::ManagerRefresh::InventoryCollection.new(
-          miq_templates_init_data(
-            :strategy => :local_db_find_references
-          )
-        )
         @data[:network_ports] = ::ManagerRefresh::InventoryCollection.new(
           network_ports_init_data(
             :parent   => @ems.network_manager,
@@ -164,8 +147,9 @@ describe ManagerRefresh::SaveInventory do
             :strategy => :local_db_find_missing_references
           )
         )
-        @data[:key_pairs] = ::ManagerRefresh::InventoryCollection.new(
-          key_pairs_init_data(
+        @data[:hardwares] = ::ManagerRefresh::InventoryCollection.new(
+          hardwares_init_data(
+            :arel     => @ems.hardwares.joins(:vm_or_template).where(:vms => {:ems_ref => vm_refs}),
             :strategy => :local_db_find_references
           )
         )
