@@ -29,6 +29,27 @@ module ScanningOperationsMixin
     true
   end
 
+  def agent_job_message_op(jobid, message)
+    _log.info "jobid: [#{jobid}] starting"
+    begin
+      Timeout.timeout(WS_TIMEOUT) do
+        MiqQueue.put(
+          :class_name  => "Job",
+          :method_name => "agent_message_update_queue",
+          :args        => [jobid, message],
+          :task_id     => "agent_job_message_#{Time.now.to_i}",
+          :zone        => MiqServer.my_zone,
+          :role        => "smartstate"
+        )
+        return true
+      end
+    rescue Exception => err
+      _log.log_backtrace(err)
+      ScanningOperations.reconnect_to_db
+      return false
+    end
+  end
+
   def task_update_op(task_id, state, status, message)
     _log.info "task_id: [#{task_id}] starting"
     begin

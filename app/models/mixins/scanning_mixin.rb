@@ -210,6 +210,7 @@ module ScanningMixin
     ost.xml_class = XmlHash::Document
 
     _log.debug "Scanning - Initializing scan"
+    update_agent_message(ost, "Initializing scan")
     bb, last_err = nil
     xml_summary = ost.xml_class.createDoc(:summary)
     xml_node = xml_node_scan = xml_summary.root.add_element("scanmetadata")
@@ -245,9 +246,10 @@ module ScanningMixin
       _log.debug "categories = [ #{categories.join(', ')} ]"
 
       categories.each do |c|
+        update_agent_message(ost, "Scanning #{c}")
         _log.info "Scanning [#{c}] information.  TaskId:[#{ost.taskid}]  VM:[#{name}]"
         st = Time.now
-        xml = extractor.extract(c)
+        xml = extractor.extract(c) { |scan_data| update_agent_message(ost, scan_data[:msg]) }
         categories_processed += 1
         _log.info "Scanning [#{c}] information ran for [#{Time.now - st}] seconds.  TaskId:[#{ost.taskid}]  VM:[#{name}]"
         if xml
@@ -275,6 +277,7 @@ module ScanningMixin
       last_err = scanErr
     ensure
       bb.close if bb
+      update_agent_message(ost, "Scanning completed.")
 
       # If we are sent a TaskId transfer a end of job summary xml.
       _log.info "Starting: Sending scan summary to server.  TaskId:[#{ost.taskid}]  VM:[#{name}]"
@@ -324,6 +327,7 @@ module ScanningMixin
       )
       bb = Manageiq::BlackBox.new(guid, ost)
 
+      update_agent_message(ost, "Synchronization in progress")
       categories.each do |c|
         c.delete!("\"")
         c.strip!
@@ -364,8 +368,15 @@ module ScanningMixin
       save_metadata_op(xml_summary.miqEncode, "b64,zlib,xml", ost.taskid)
       _log.info "Completed: Sending target summary to server.  TaskId:[#{ost.taskid}]  target:[#{name}]"
 
+      update_agent_message(ost, "Synchronization complete")
+
       raise syncErr if syncErr
     end
     ost.value = "OK\n"
+  end
+
+  def update_agent_message(ost, message)
+    ost.agent_message = message
+    agent_job_message_op(ost.taskid, ost.agent_message) if ost.taskid && ost.taskid.empty? == false
   end
 end
