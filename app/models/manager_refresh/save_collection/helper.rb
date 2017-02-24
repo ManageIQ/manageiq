@@ -52,24 +52,11 @@ module ManagerRefresh::SaveCollection
       association.find_each do |record|
         index = inventory_collection.object_index_with_keys(unique_index_keys, record)
         if record_index[index]
-          # We have a duplicate in the DB, destroy it
-          record_for_destruction = nil
-
-          if record.respond_to?(:service)
-            # TODO(lsmola) Should we be also checking for tags, a record with less tags would get deleted?
-            # If there is possible service association, we need to keep the record that has the relation to a service
-            # and delete the one without. Service association is something we can't renew by the refresh.
-            if record_index[index].service.nil? && !record.service.nil?
-              record_for_destruction = record_index[index]
-              record_index[index]    = record
-            else
-              record_for_destruction = record
-            end
-          end
-
+          # We have a duplicate in the DB, destroy it. A find_each method does automatically .order(:id => :asc)
+          # so we always keep the oldest record in the case of duplicates.
           _log.warn("A duplicate record was detected and destroyed, inventory_collection: '#{inventory_collection}', "\
-                    "record: '#{record_for_destruction}', duplicate_index: '#{index}'")
-          record_for_destruction.destroy
+                    "record: '#{record}', duplicate_index: '#{index}'")
+          record.destroy
         else
           record_index[index] = record
         end
