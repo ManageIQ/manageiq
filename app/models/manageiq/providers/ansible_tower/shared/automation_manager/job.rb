@@ -55,12 +55,17 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::Job
   end
 
   def update_with_provider_object(raw_job)
-    self.ems_ref = raw_job.id
-    self.status = raw_job.status
-    self.parameters =
-      raw_job.extra_vars_hash.collect do |para_key, para_val|
+    self.ems_ref     ||= raw_job.id
+    self.status        = raw_job.status
+    self.start_time  ||= raw_job.started
+    self.finish_time ||= raw_job.finished
+    self.verbosity   ||= raw_job.verbosity
+
+    if parameters.empty?
+      self.parameters = raw_job.extra_vars_hash.collect do |para_key, para_val|
         OrchestrationStackParameter.new(:name => para_key, :value => para_val, :ems_ref => "#{raw_job.id}_#{para_key}")
-      end if parameters.empty?
+      end
+    end
     save!
   end
   private :update_with_provider_object

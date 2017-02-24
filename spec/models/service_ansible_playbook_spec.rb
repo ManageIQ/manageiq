@@ -11,7 +11,9 @@ describe(ServiceAnsiblePlaybook) do
     service_template = FactoryGirl.create(:service_template_ansible_playbook)
     service_template.resource_actions.build(:action => action, :configuration_template => tower_job_temp)
     service_template.save!
-    FactoryGirl.create(:service_ansible_playbook, :options => provision_options, :service_template => service_template)
+    FactoryGirl.create(:service_ansible_playbook,
+                       :options          => provision_options.merge(config_info_options),
+                       :service_template => service_template)
   end
 
   let(:executed_service) do
@@ -35,8 +37,9 @@ describe(ServiceAnsiblePlaybook) do
     {
       :config_info => {
         :provision => {
-          :hosts      => "default_host1,default_host2",
-          :extra_vars => {
+          :hosts       => "default_host1,default_host2",
+          :playbook_id => 10,
+          :extra_vars  => {
             "var1" => "default_val1",
             "var2" => "default_val2",
             "var3" => "default_val3"
@@ -59,6 +62,7 @@ describe(ServiceAnsiblePlaybook) do
       :provision_job_options => {
         :credential => 1,
         :inventory  => 2,
+        :hosts      => "default_host1,default_host2",
         :extra_vars => {'var1' => 'value1', 'var2' => 'value2'}
       }
     }
@@ -109,7 +113,12 @@ describe(ServiceAnsiblePlaybook) do
       expect(ManageIQ::Providers::AnsibleTower::AutomationManager::Job)
         .to receive(:create_job).with(tower_job_temp, provision_options[:provision_job_options]).and_return(tower_job)
       loaded_service.execute(action)
-      expect(loaded_service.job(action)).to eq(tower_job)
+      expected_job_attributes = {
+        :id                           => tower_job.id,
+        :hosts                        => config_info_options.fetch_path(:config_info, :provision, :hosts).split(','),
+        :configuration_script_base_id => config_info_options.fetch_path(:config_info, :provision, :playbook_id)
+      }
+      expect(loaded_service.job(action)).to have_attributes(expected_job_attributes)
     end
   end
 
