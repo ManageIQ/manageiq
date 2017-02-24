@@ -2,7 +2,7 @@ class ManageIQ::Providers::AnsibleTower::InventoryCollectionDefault::AutomationM
   class << self
     def inventory_root_groups(extra_attributes = {})
       attributes = {
-        :model_class => ManageIQ::Providers::AutomationManager::InventoryRootGroup,
+        :model_class => ManageIQ::Providers::AnsibleTower::AutomationManager::InventoryRootGroup,
         :association => :inventory_root_groups,
       }
       attributes.merge!(extra_attributes)
@@ -28,7 +28,7 @@ class ManageIQ::Providers::AnsibleTower::InventoryCollectionDefault::AutomationM
 
     def configuration_script_sources(extra_attributes = {})
       attributes = {
-        :model_class => ConfigurationScriptSource,
+        :model_class => ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationScriptSource,
         :association => :configuration_script_sources,
         :manager_ref => [:manager_ref],
       }
@@ -46,7 +46,7 @@ class ManageIQ::Providers::AnsibleTower::InventoryCollectionDefault::AutomationM
 
     def credentials(extra_attributes = {})
       attributes = {
-        :model_class => ManageIQ::Providers::AutomationManager::Authentication,
+        :model_class => ManageIQ::Providers::AnsibleTower::AutomationManager::Credential,
         :association => :credentials,
         :manager_ref => [:manager_ref],
       }

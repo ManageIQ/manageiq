@@ -109,7 +109,7 @@ describe ManageIQ::Providers::AnsibleTower::AutomationManager::Refresher do
 
   def assert_configuration_script_sources
     expect(automation_manager.configuration_script_sources.count).to eq(6)
-    expect(expected_configuration_script_source).to be_an_instance_of(ConfigurationScriptSource)
+    expect(expected_configuration_script_source).to be_an_instance_of(ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationScriptSource)
     expect(expected_configuration_script_source).to have_attributes(
       :name        => 'Demo Project',
       :description => 'A great demo',

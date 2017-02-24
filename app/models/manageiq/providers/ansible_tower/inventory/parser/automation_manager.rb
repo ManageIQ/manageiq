@@ -87,7 +87,7 @@ class ManageIQ::Providers::AnsibleTower::Inventory::Parser::AutomationManager < 
                                 when 'net' then 'ManageIQ::Providers::AnsibleTower::AutomationManager::NetworkCredential'
                                 when 'ssh' then 'ManageIQ::Providers::AnsibleTower::AutomationManager::MachineCredential'
                                 when 'vmware' then 'ManageIQ::Providers::AnsibleTower::AutomationManager::VmwareCredential'
-                                # when 'scm' then 'ManageIQ::Providers::AnsibleTower::AutomationManager::???Credential'
+                                when 'scm' then 'ManageIQ::Providers::AnsibleTower::AutomationManager::ScmCredential'
                                 when 'aws' then 'ManageIQ::Providers::AnsibleTower::AutomationManager::AmazonCredential'
                                 when 'rax' then 'ManageIQ::Providers::AnsibleTower::AutomationManager::RackspaceCredential'
                                 when 'satellite6' then 'ManageIQ::Providers::AnsibleTower::AutomationManager::Satellite6Credential'
@@ -96,7 +96,7 @@ class ManageIQ::Providers::AnsibleTower::Inventory::Parser::AutomationManager < 
                                 # when 'azure' then 'ManageIQ::Providers::AnsibleTower::AutomationManager::???Credential'
                                 when 'azure_rm' then 'ManageIQ::Providers::AnsibleTower::AutomationManager::AzureCredential'
                                 when 'openstack' then 'ManageIQ::Providers::AnsibleTower::AutomationManager::OpenstackCredential'
-                                else 'ManageIQ::Providers::AutomationManager::Authentication'
+                                else 'ManageIQ::Providers::AnsibleTower::AutomationManager::Credential'
                                 end
     end
   end
