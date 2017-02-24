@@ -78,7 +78,7 @@ module ManagerRefresh
     end
 
     def dependency?
-      !inventory_collection.saved?
+      true
     end
 
     def allowed_writers
