@@ -469,6 +469,8 @@ describe ManagerRefresh::SaveInventory do
           initialize_mocked_records
 
           service = FactoryGirl.create(:service)
+          # Add service to this Vm1
+          service.add_resource!(@vm1)
 
           @vm1_dup1 = FactoryGirl.create(
             :vm_cloud,
@@ -480,9 +482,6 @@ describe ManagerRefresh::SaveInventory do
               :ext_management_system => @ems,
             )
           )
-
-          # Add service to this Vm
-          service.add_resource!(@vm1_dup1)
 
           @vm1_dup2 = FactoryGirl.create(
             :vm_cloud,
@@ -555,7 +554,7 @@ describe ManagerRefresh::SaveInventory do
           assert_all_records_match_hashes(
             [Vm.all, @ems.vms],
             {
-              :id       => @vm1_dup1.id, # The vm with service relation remains in the DB
+              :id       => @vm1.id, # The vm with service relation remains in the DB
               :ems_ref  => "vm_ems_ref_1",
               :name     => "vm_name_1_changed",
               :location => "host_10_10_10_1.com",
