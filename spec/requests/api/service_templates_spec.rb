@@ -333,5 +333,32 @@ describe "Service Templates API" do
       expect(response).to have_http_status(:ok)
       expect(response.parsed_body).to include(expected)
     end
+
+    it 'returns a bad request error for an invalid request' do
+      api_basic_authorize collection_action_identifier(:service_templates, :create)
+      template = FactoryGirl.create(:orchestration_template)
+      template_parameters = {
+        :name         => 'Orchestration Template',
+        :service_type => 'atomic',
+        :prov_type    => 'generic_orchestration',
+        :display      => 'false',
+        :description  => 'a description',
+        :config_info  => {
+          :template_id => template.id
+        }
+      }
+
+      expected = {
+        'error' => a_hash_including(
+          'kind'    => 'bad_request',
+          'message' => a_string_including('Could not create Service Template')
+        )
+      }
+      expect do
+        run_post(service_templates_url, template_parameters)
+      end.to change(ServiceTemplateOrchestration, :count).by(0)
+      expect(response).to have_http_status(:bad_request)
+      expect(response.parsed_body).to include(expected)
+    end
   end
 end
