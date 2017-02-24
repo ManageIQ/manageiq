@@ -50,9 +50,16 @@ module ManagerRefresh::SaveCollection
       unique_index_keys = inventory_collection.manager_ref_to_cols
 
       association.find_each do |record|
-        # TODO(lsmola) the old code was able to deal with duplicate records, should we do that? The old data still can
-        # have duplicate methods, so we should clean them up. It will slow up the indexing though.
-        record_index[inventory_collection.object_index_with_keys(unique_index_keys, record)] = record
+        index = inventory_collection.object_index_with_keys(unique_index_keys, record)
+        if record_index[index]
+          # We have a duplicate in the DB, destroy it. A find_each method does automatically .order(:id => :asc)
+          # so we always keep the oldest record in the case of duplicates.
+          _log.warn("A duplicate record was detected and destroyed, inventory_collection: '#{inventory_collection}', "\
+                    "record: '#{record}', duplicate_index: '#{index}'")
+          record.destroy
+        else
+          record_index[index] = record
+        end
       end
 
       inventory_collection_size = inventory_collection.size
