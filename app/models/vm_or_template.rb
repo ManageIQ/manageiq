@@ -1137,7 +1137,7 @@ class VmOrTemplate < ApplicationRecord
     # Create queue items to do additional process like apply tags and link events
     unless added_vms.empty?
       added_vm_ids = []
-      added_vms.each do |v|
+      added_vms.find_each do |v|
         v.post_create_actions_queue
         added_vm_ids << v.id
       end
