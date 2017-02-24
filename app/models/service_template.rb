@@ -187,6 +187,8 @@ class ServiceTemplate < ApplicationRecord
     # convert template class name to service class name by naming convention
     nh[:type] = self.class.name.sub('Template', '')
 
+    nh[:initiator] = service_task.options[:initiator]
+
     # Determine service name
     # target_name = self.get_option(:target_name)
     # nh['name'] = target_name unless target_name.blank?
@@ -453,8 +455,9 @@ class ServiceTemplate < ApplicationRecord
 
   def provision_workflow(user, options = nil)
     options ||= {}
+    ra_options = { :target => self, :initiator => options[:initiator] }
     ResourceActionWorkflow.new({}, user,
-                               provision_action, :target => self).tap do |wf|
+                               provision_action, ra_options).tap do |wf|
       options.each { |key, value| wf.set_value(key, value) }
     end
   end

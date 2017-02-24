@@ -224,7 +224,8 @@ class MiqAction < ApplicationRecord
 
   def action_run_ansible_playbook(action, rec, _inputs)
     service_template = ServiceTemplate.find(action.options[:service_template_id])
-    options = { :dialog_hosts => target_hosts(action, rec) }
+    options = { :dialog_hosts => target_hosts(action, rec),
+                :initiator    => 'control' }
     service_template.provision_request(target_user(rec), options)
   end
 
@@ -805,7 +806,7 @@ class MiqAction < ApplicationRecord
     end
 
     MiqPolicy.logger.info("MIQ(action_cancel_task): Now executing Cancel of task [#{source_event.event_type}] on VM [#{source_event.vm_name}]")
-    ems = ExtManagementSystem.find_by(:id => source_event.ems_id)
+    ems = ExtManagementSystem.find_by_id(source_event.ems_id)
     raise _("unable to find vCenter with id [%{id}]") % {:id => source_event.ems_id} if ems.nil?
 
     vim = ems.connect
