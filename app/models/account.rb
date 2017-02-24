@@ -104,7 +104,7 @@ class Account < ApplicationRecord
   end
 
   def add_user(owns)
-    with_valid_account_type('group') { set_child(owns) }
+    with_valid_account_type('group') { add_child(owns) }
   end
 
   def remove_user(owns)
@@ -120,7 +120,7 @@ class Account < ApplicationRecord
   end
 
   def add_group(owner)
-    with_valid_account_type('user') { set_parent(owner) }
+    with_valid_account_type('user') { add_parent(owner) }
   end
 
   def remove_group(owner)
