@@ -353,7 +353,6 @@ module ReportFormatter
       #  'Vm-num_cpu:total'        gives 'num_cpu' and 'num_cpu__total'
       #  "Vm::Providers::InfraManager::Vm-num_cpu:total"
       #                            gives 'Vm::Providers::InfraManager::Vm' and 'num_cpu__total'
-
       stage1, aggreg = mri.graph[:column].split(/(?<!:):(?!:)/) # split by ':', NOT by '::'
       model1, column = stage1.split('-', 2)
       _model, sub_model = model1.split('.', 2)

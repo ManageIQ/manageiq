@@ -84,4 +84,58 @@ describe ReportFormatter::C3Formatter do
       render_report(report)
     end
   end
+
+  context '#C&U charts without grouping' do
+    let(:report) { cu_chart_without_grouping }
+    before(:each) do
+      render_report(report, &proc { |e| e.options.graph_options = { :chart_type => :performance } })
+    end
+
+    it "has right data" do
+      expect(report.chart[:data][:columns][0].count).to eq(report.table.data.count + 1)
+      expect(report.chart[:data][:columns][0]).to eq(["x", "8/19", "8/20"])
+      expect(report.chart[:data][:columns][1]).to eq(["1", 19_986.0, 205_632.0])
+      expect(report.chart[:data][:columns][2]).to eq(["2", 41_584.0, 41_584.0])
+    end
+
+    it "has right type" do
+      expect(report.chart[:axis][:x][:type]).to eq("timeseries")
+    end
+
+    it 'has right formatting functions' do
+      expect(report.chart[:axis][:y][:tick][:format][:function]).to eq("mhz_to_human_size")
+      expect(report.chart[:miq][:format][:function]).to eq("mhz_to_human_size")
+    end
+    it 'has right tabels' do
+      expect(report.chart[:miq][:name_table]).to eq("1" => "Avg Used", "2" => "Max Available")
+      expect(report.chart[:miq][:category_table]).to eq(["8/19", "8/20"])
+    end
+  end
+
+  context '#C&U charts with grouping' do
+    let(:report) { cu_chart_with_grouping }
+    before(:each) do
+      render_report(report, &proc { |e| e.options.graph_options = { :chart_type => :performance } })
+    end
+
+    it "has right data" do
+      expect(report.chart[:data][:columns][0].count).to eq(report.table.data.count + 1)
+      expect(report.chart[:data][:columns][0]).to eq(["x", "8/19", "8/20"])
+      expect(report.chart[:data][:columns][1]).to eq(["1", 19_986.0, 205_632.0])
+      expect(report.chart[:data][:columns][2]).to eq(["2", 41_584.0, 41_584.0])
+    end
+
+    it "has right type" do
+      expect(report.chart[:axis][:x][:type]).to eq("timeseries")
+    end
+
+    it 'has right formatting functions' do
+      expect(report.chart[:axis][:y][:tick][:format][:function]).to eq("mhz_to_human_size")
+      expect(report.chart[:miq][:format][:function]).to eq("mhz_to_human_size")
+    end
+    it 'has right tabels' do
+      expect(report.chart[:miq][:name_table]).to eq("1" => "Avg Used", "2" => "Max Available")
+      expect(report.chart[:miq][:category_table]).to eq(["8/19", "8/20"])
+    end
+  end
 end
