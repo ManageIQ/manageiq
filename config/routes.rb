@@ -2891,6 +2891,7 @@ Vmdb::Application.routes.draw do
         accordion_select
         advanced_settings
         button
+        console
         edit_vm
         event_logs
         explorer

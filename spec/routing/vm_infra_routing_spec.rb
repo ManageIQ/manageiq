@@ -156,6 +156,12 @@ describe 'routes for VmInfra' do
     end
   end
 
+  describe '#console' do
+    it 'routes with POST' do
+      expect(post("/#{controller_name}/console")).to route_to("#{controller_name}#console")
+    end
+  end
+
   describe '#filesystem_download' do
     it 'routes with GET' do
       expect(get("/#{controller_name}/filesystem_download")).to route_to("#{controller_name}#filesystem_download")
