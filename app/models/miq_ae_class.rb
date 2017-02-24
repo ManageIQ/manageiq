@@ -197,7 +197,7 @@ class MiqAeClass < ApplicationRecord
     klass_array.collect do |klass|
       cls = find_by(:id => klass.id)
       next if cls.nil?
-      cls.ae_instances.sort { |a, b| a.fqname <=> b.fqname }.collect do |inst|
+      cls.ae_instances.sort_by(&:fqname).collect do |inst|
         next if name_set.include?(inst.name)
         name_set << inst.name
         inst

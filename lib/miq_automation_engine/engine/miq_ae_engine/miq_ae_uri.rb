@@ -4,7 +4,7 @@ module MiqAeEngine
       return nil if hash.blank?
 
       query = []
-      hash.keys.sort { |a, b| a.to_s <=> b.to_s }.each do |k|
+      hash.keys.sort_by(&:to_s).each do |k|
         v = hash[k]
         next if v.nil?
         value = v.kind_of?(ActiveRecord::Base) ? v.id : v
