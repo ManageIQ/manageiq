@@ -51,9 +51,23 @@ class ServiceTemplateAnsibleTower < ServiceTemplate
     end
     config_info
   end
-  private_class_method :validate_config_info
 
   private
+
+  def update_service_resources(config_info, _auth_user = nil)
+    if config_info[:configuration_script_id] && config_info[:configuration_script_id] != job_template.try(:id)
+      service_resources.find_by(:resource_type => 'ConfigurationScript').destroy
+      self.job_template = ConfigurationScript.find(config_info[:configuration_script_id])
+    elsif config_info[:configuration] && config_info[:configuration] != job_template.try(:id)
+      service_resources.find_by(:resource_type => 'ConfigurationScript').destroy
+      self.job_template = config_info[:configuration]
+    end
+  end
+
+  def validate_update_config_info(options)
+    super
+    self.class.validate_config_info(options)
+  end
 
   def construct_config_info
     config_info = {}

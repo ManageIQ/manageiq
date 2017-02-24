@@ -24,6 +24,12 @@ class ServiceTemplate < ApplicationRecord
     "vmware"                   => _("VMware")
   }.freeze
 
+  RESOURCE_ACTION_UPDATE_ATTRS = [:dialog,
+                                  :dialog_id,
+                                  :configuration_template,
+                                  :configuration_template_id,
+                                  :configuration_template_type].freeze
+
   include ServiceMixin
   include OwnershipMixin
   include NewWithTypeStiMixin
@@ -83,6 +89,19 @@ class ServiceTemplate < ApplicationRecord
     else
       ServiceTemplate
     end
+  end
+
+  def update_catalog_item(options, auth_user = nil)
+    config_info = validate_update_config_info(options)
+    transaction do
+      update_from_options(options)
+
+      update_service_resources(config_info, auth_user)
+
+      update_resource_actions(config_info)
+      save!
+    end
+    reload
   end
 
   def readonly?
@@ -340,45 +359,96 @@ class ServiceTemplate < ApplicationRecord
     resource_actions.find_by(:action => "Provision")
   end
 
+  def update_resource_actions(ae_endpoints)
+    resource_action_list.each do |action|
+      resource_params = ae_endpoints[action[:param_key]]
+      resource_action = resource_actions.find_by(:action => action[:name])
+      # If the action exists in updated parameters
+      if resource_params
+        # And the resource action exists on the template already, update it
+        if resource_action
+          resource_action.update_attributes!(resource_params.slice(*RESOURCE_ACTION_UPDATE_ATTRS))
+        # If the resource action does not exist, create it
+        else
+          build_resource_action(resource_params, action)
+        end
+      elsif resource_action
+        # If the endpoint does not exist in updated parameters, but exists on the template, delete it
+        resource_action.destroy
+      end
+    end
+  end
+
   def create_resource_actions(ae_endpoints)
     ae_endpoints ||= {}
-    [
-      {:name      => 'Provision',
-       :param_key => :provision,
-       :method    => 'default_provisioning_entry_point',
-       :args      => [service_type]},
-      {:name      => 'Reconfigure',
-       :param_key => :reconfigure,
-       :method    => 'default_reconfiguration_entry_point',
-       :args      => []},
-      {:name      => 'Retirement',
-       :param_key => :retirement,
-       :method    => 'default_retirement_entry_point',
-       :args      => []}
-    ].each do |action|
+    resource_action_list.each do |action|
       ae_endpoint = ae_endpoints[action[:param_key]]
       next unless ae_endpoint
-      fqname = if ae_endpoint.empty?
-                 self.class.send(action[:method], *action[:args]) || ""
-               else
-                 ae_endpoint[:fqname]
-               end
-
-      build_options = {:action        => action[:name],
-                       :fqname        => fqname,
-                       :ae_attributes => {:service_action => action[:name]}}
-      build_options.merge!(ae_endpoint.slice(:dialog,
-                                             :dialog_id,
-                                             :configuration_template,
-                                             :configuration_template_id,
-                                             :configuration_template_type))
-      resource_actions.build(build_options)
+      build_resource_action(ae_endpoint, action)
     end
     save!
   end
 
+  def self.create_from_options(options)
+    create(options.except(:config_info).merge(:options => { :config_info => options[:config_info] }))
+  end
+  private_class_method :create_from_options
+
   def provision_request(user, options = nil)
     provision_workflow(user, options).submit_request
+  end
+
+  private
+
+  def update_service_resources(config_info, auth_user = nil)
+    config_info = config_info.except(:provision, :retirement, :reconfigure)
+    workflow_class = MiqProvisionWorkflow.class_for_source(config_info[:src_vm_id])
+    if workflow_class
+      service_resources.find_by(:resource_type => 'MiqRequest').try(:destroy)
+      new_request = workflow_class.new(config_info, auth_user).make_request(nil, config_info)
+
+      add_resource!(new_request)
+    end
+  end
+
+  def build_resource_action(ae_endpoint, action)
+    fqname = if ae_endpoint.empty?
+               self.class.send(action[:method], *action[:args]) || ""
+             else
+               ae_endpoint[:fqname]
+             end
+
+    build_options = {:action        => action[:name],
+                     :fqname        => fqname,
+                     :ae_attributes => {:service_action => action[:name]}}
+    build_options.merge!(ae_endpoint.slice(*RESOURCE_ACTION_UPDATE_ATTRS))
+    resource_actions.build(build_options)
+  end
+
+  def validate_update_config_info(options)
+    raise _('service_type and prov_type cannot be changed') if options[:service_type] || options[:prov_type]
+    options[:config_info]
+  end
+
+  def resource_action_list
+    [
+      {:name      => ResourceAction::PROVISION,
+       :param_key => :provision,
+       :method    => 'default_provisioning_entry_point',
+       :args      => [service_type]},
+      {:name      => ResourceAction::RECONFIGURE,
+       :param_key => :reconfigure,
+       :method    => 'default_reconfiguration_entry_point',
+       :args      => []},
+      {:name      => ResourceAction::RETIREMENT,
+       :param_key => :retirement,
+       :method    => 'default_retirement_entry_point',
+       :args      => []}
+    ]
+  end
+
+  def update_from_options(options)
+    update_attributes!(options.except(:config_info).merge(:options => { :config_info => options[:config_info] }))
   end
 
   def provision_workflow(user, options = nil)
@@ -388,13 +458,6 @@ class ServiceTemplate < ApplicationRecord
       options.each { |key, value| wf.set_value(key, value) }
     end
   end
-
-  def self.create_from_options(options)
-    create(options.except(:config_info).merge(:options => { :config_info => options[:config_info] }))
-  end
-  private_class_method :create_from_options
-
-  private
 
   def construct_config_info
     config_info = {}
