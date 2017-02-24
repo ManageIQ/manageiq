@@ -380,7 +380,13 @@ class MiqQueue < ApplicationRecord
   def delivered(state, msg, result)
     self.state = state
     _log.info("#{MiqQueue.format_short_log_msg(self)}, State: [#{state}], Delivered in [#{Time.now - delivered_on}] seconds")
-    m_callback(msg, result) unless miq_callback.blank?
+    if miq_callback.key?(:CALLBACKS)
+      miq_callback[:CALLBACKS].each do |call_back|
+        m_callback(call_back, result)
+      end
+    else
+      m_callback(msg, result) unless miq_callback.blank?
+    end
   rescue => err
     _log.error("#{MiqQueue.format_short_log_msg(self)}, #{err.message}")
   ensure
