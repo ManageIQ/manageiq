@@ -2,6 +2,7 @@ class ManageIQ::Providers::AutomationManager < ::ExtManagementSystem
   require_nested :Authentication
   require_nested :ConfigurationScript
   require_nested :ConfigurationScriptPayload
+  require_nested :ConfigurationScriptSource
   require_nested :ConfiguredSystem
   require_nested :InventoryGroup
   require_nested :InventoryRootGroup

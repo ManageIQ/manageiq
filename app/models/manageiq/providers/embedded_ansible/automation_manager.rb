@@ -13,6 +13,7 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager < ManageIQ::Provid
   require_nested :VmwareCredential
 
   require_nested :ConfigurationScript
+  require_nested :ConfigurationScriptSource
   require_nested :ConfiguredSystem
   require_nested :Job
   require_nested :Playbook
