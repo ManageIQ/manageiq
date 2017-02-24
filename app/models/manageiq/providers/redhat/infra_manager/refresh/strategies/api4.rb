@@ -2,23 +2,54 @@ module ManageIQ::Providers::Redhat::InfraManager::Refresh::Strategies
   class Api4 < ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher
     attr_reader :ems
 
+    def host_targeted_refresh(inventory, target)
+      inventory.host_targeted_refresh(target)
+    end
+
+    def vm_targeted_refresh(inventory, target)
+      inventory.vm_targeted_refresh(target)
+    end
+
+    require 'uri'
+
     def inventory_from_ovirt(ems)
       @ems = ems
-      InventoryWrapper.new(:old_inventory => super, :ems => ems)
+      InventoryWrapper.new(:ems => ems)
     end
 
     class InventoryWrapper
-      attr_reader :old_inventory
       attr_accessor :connection
       attr_reader :ems
 
       def initialize(args)
         @ems = args[:ems]
-        @old_inventory = args[:old_inventory]
       end
 
-      def targeted_refresh(methods)
-        old_inventory.targeted_refresh(methods)
+      def host_targeted_refresh(target)
+        @ems.with_provider_connection(:version => 4) do |connection|
+          @connection = connection
+          res = {}
+          res[:host] = collect_host(get_uuid(target))
+          res
+        end
+      end
+
+      def vm_targeted_refresh(target)
+        @ems.with_provider_connection(:version => 4) do |connection|
+          @connection = connection
+          vm_id = get_uuid(target)
+          res = {}
+          res[:cluster] = collect_clusters
+          res[:datacenter] = collect_datacenters
+          res[:vm] = collect_vm(vm_id)
+          res[:storage] = target.storages.empty? ? collect_storages : collect_storage(target.storages.map { |s| get_uuid(s) })
+          res[:template] = search_templates("vm.id=#{vm_id}")
+          res
+        end
+      end
+
+      def get_uuid(object)
+        URI(object.ems_ref).path.split('/').last
       end
 
       def refresh
@@ -44,10 +75,21 @@ module ManageIQ::Providers::Redhat::InfraManager::Refresh::Strategies
         connection.system_service.storage_domains_service.list
       end
 
+      def collect_storage(uuids)
+        uuids.collect do |uuid|
+          connection.system_service.storage_domains_service.storage_domain_service(uuid).get
+        end
+      end
+
       def collect_hosts
         connection.system_service.hosts_service.list.collect do |h|
           HostPreloadedAttributesDecorator.new(h, connection)
         end
+      end
+
+      def collect_host(uuid)
+        host = connection.system_service.hosts_service.host_service(uuid).get
+        [HostPreloadedAttributesDecorator.new(host, connection)]
       end
 
       def collect_vms
@@ -56,8 +98,19 @@ module ManageIQ::Providers::Redhat::InfraManager::Refresh::Strategies
         end
       end
 
+      def collect_vm(uuid)
+        vm = connection.system_service.vms_service.vm_service(uuid).get
+        [VmPreloadedAttributesDecorator.new(vm, connection)]
+      end
+
       def collect_templates
         connection.system_service.templates_service.list.collect do |template|
+          TemplatePreloadedAttributesDecorator.new(template, connection)
+        end
+      end
+
+      def search_templates(search)
+        connection.system_service.templates_service.list(:search => search).collect do |template|
           TemplatePreloadedAttributesDecorator.new(template, connection)
         end
       end
