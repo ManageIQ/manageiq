@@ -39,7 +39,7 @@ module ManageIQ::Providers::Vmware::InfraManager::Vm::RemoteConsole
   # MKS
   #
 
-  def remote_console_mks_acquire_ticket
+  def remote_console_mks_acquire_ticket(_userid = nil, _originating_server = nil)
     validate_remote_console_acquire_ticket("mks", :check_if_running => false)
     ext_management_system.vm_remote_console_mks_acquire_ticket(self)
   end
