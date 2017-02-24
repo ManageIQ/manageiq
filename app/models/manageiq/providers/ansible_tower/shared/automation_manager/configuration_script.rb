@@ -34,6 +34,37 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::Configurati
 
       MiqTask.generic_action_with_callback(task_opts, queue_opts)
     end
+
+    def update_in_provider(manager_id, params)
+      manager = ExtManagementSystem.find(manager_id)
+      manager.with_provider_connection do |connection|
+        connection.api.job_templates.find(params.delete(:manager_ref)).update_attributes!(params)
+      end
+
+      # Get the record in our database
+      # TODO: This needs to be targeted refresh so it doesn't take too long
+      EmsRefresh.queue_refresh(manager, nil) if manager.authentication_status_ok?
+    end
+
+    def update_in_provider_queue(manager_id, params, auth_user = nil)
+      task_opts = {
+        :action => "Updating Ansible Tower Job Template",
+        :userid => auth_user || "system"
+      }
+
+      manager = ExtManagementSystem.find(manager_id)
+
+      queue_opts = {
+        :args        => [manager_id, params],
+        :class_name  => "ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationScript",
+        :method_name => "update_in_provider",
+        :priority    => MiqQueue::HIGH_PRIORITY,
+        :role        => "ems_operations",
+        :zone        => manager.my_zone
+      }
+
+      MiqTask.generic_action_with_callback(task_opts, queue_opts)
+    end
   end
 
   def run(vars = {})
