@@ -2,7 +2,102 @@
 
 All notable changes to this project will be documented in this file.
 
-# Euwe
+# Euwe-2
+
+## Added
+
+### Automate
+- Automate Retry with Server Affinity ([#13543](https://github.com/ManageIQ/manageiq/pull/13543))
+
+### Platform
+- Chargeback
+  - Chargebacks for SCVMM (rollup-less) ([#13419](https://github.com/ManageIQ/manageiq/pull/13419))
+  - Chargebacks for SCVMM (rollup-less) [2/2] ([#13554](https://github.com/ManageIQ/manageiq/pull/13554))
+  - Prioritize rate with tag of VM when selecting from more rates ([#13556](https://github.com/ManageIQ/manageiq/pull/13556))
+- Reporting: Add option for container performance reports ([#11904](https://github.com/ManageIQ/manageiq/pull/11904))
+
+### Providers
+- Ansible Tower: Advanced search for Ansible Tower Jobs not visible on switch from a different tab ([#12717](https://github.com/ManageIQ/manageiq/pull/12717))
+- Containers: Common mixin: ui_lookup should get a string ([#13389](https://github.com/ManageIQ/manageiq/pull/13389))
+- Microsoft Azure: Delete all resources when deleting an Azure stack ([#24](https://github.com/ManageIQ/manageiq-providers-azure/pull/24))
+
+### User Interface (Classic)
+- Ops_rbac - group detail - don't render trees that are not visible ([#13399](https://github.com/ManageIQ/manageiq/pull/13399))
+- Launch a URL returned by an automate button ([#13449](https://github.com/ManageIQ/manageiq/pull/13449))
+- Remove confirmation when opening the HTML5 vnc/spice console. ([#13465](https://github.com/ManageIQ/manageiq/pull/13465))
+- Cloud Network UI: Task queue ([#13416](https://github.com/ManageIQ/manageiq/pull/13416))
+
+## Changed
+
+### Automate
+  - Look for resources in the same region as the selected template during provisioning. ([#13045](https://github.com/ManageIQ/manageiq/pull/13045))
+
+### Performance
+- Don't lookup category names if tag tree view all ([#13308](https://github.com/ManageIQ/manageiq/pull/13308))
+
+### Platform
+- Add list of providers to RBAC on catalog items ([#13395](https://github.com/ManageIQ/manageiq/pull/13395))
+- Gem changes
+  - Upgrade azure-armrest gem to 0.5.2. [(#13670)](https://github.com/ManageIQ/manageiq/pull/13670)
+  - Use version 0.14.0 of the 'ovirt' gem ([#13425](https://github.com/ManageIQ/manageiq/pull/13425))
+  - Updated PatternFly to v3.15.0 ([#13404](https://github.com/ManageIQ/manageiq/pull/13404))
+
+### Providers
+- Network: Added exception clases for router add/remove interfaces ([#13005](https://github.com/ManageIQ/manageiq/pull/13005))
+
+### User Interface
+- UX improvements for attaching Openstack cloud volumes to instances ([#13437](https://github.com/ManageIQ/manageiq/pull/13437))
+- Add latest VMRC API version ([#184](https://github.com/ManageIQ/manageiq-ui-classic/pull/184))
+
+
+## Fixed
+
+Notable fixes include:
+
+### Automate
+- Inconsistent attribute names inside Automate Engine ([#13545](https://github.com/ManageIQ/manageiq/pull/13545))
+- Allow a service power state to correctly handle nil actions ([#13232](https://github.com/ManageIQ/manageiq/pull/13232))
+- Increment the ae_state_retries when on_exit sets retry ([#13339](https://github.com/ManageIQ/manageiq/pull/13339))
+
+### Platform
+- Chargeback
+  - BigDecimal not working properly on ruby 2.3.1 ([#13634](https://github.com/ManageIQ/manageiq/pull/13634))
+  - Skip calculation when there is zero consumed hours ([#13723](https://github.com/ManageIQ/manageiq/pull/13723))
+- Tenant admin should not be able to create groups in other tenants. ([#13483](https://github.com/ManageIQ/manageiq/pull/13483))
+- Add MiqUserRole to RBAC ([#13689](https://github.com/ManageIQ/manageiq/pull/13689))
+- Reporting: Introduce report result purging timer ([#13429](https://github.com/ManageIQ/manageiq/pull/13429))
+
+### Providers
+- Hawkular: Adding alt and title attributes for buttons ([#13468](https://github.com/ManageIQ/manageiq/pull/13468))
+- RHEV
+  - Save host for a Vm after migration ([#13618](https://github.com/ManageIQ/manageiq/pull/13618))
+  - Fix Host getting disconnected from Cluster when migrating a VM in RHEV [(#13836)](https://github.com/ManageIQ/manageiq/pull/13836)
+  - Disks should be added as 'active' in RHV ([#13913)](https://github.com/ManageIQ/manageiq/pull/13913)
+- OpenStack
+  - Add Openstack metric service to Settings ([#13918](https://github.com/ManageIQ/manageiq/pull/13918))
+  - OpenStack Infra: ssh keypair validation fixes ([#13445](https://github.com/ManageIQ/manageiq/pull/13445))
+  - Console: Added missing parameter when requesting OpenStack remote console ([#13558](https://github.com/ManageIQ/manageiq/pull/13558))
+
+### User Interface (Classic)
+- Pulled out simulation parameters ([#13472](https://github.com/ManageIQ/manageiq/pull/13472))
+- Advanced search not working for the ansible job ([#12719](https://github.com/ManageIQ/manageiq/pull/12719))
+- Fix missing Smart State Analysis button on Cloud Instances list view ([#13422](https://github.com/ManageIQ/manageiq/pull/13422))
+- Remove disabling of 'instance_retire' button ([#14016)](https://github.com/ManageIQ/manageiq/pull/14016)
+- Fix Snapshot revert ([#13986)](https://github.com/ManageIQ/manageiq/pull/13986)
+- Make created filters in Datastores visible and fix commiting filters ([#13621](https://github.com/ManageIQ/manageiq/pull/13621))
+- Add missing icons for provider policies & compliance events ([#13502](https://github.com/ManageIQ/manageiq/pull/13502))
+- Allow configuration managers providers and configuration scripts trees to display the advanced search box ([#13763](https://github.com/ManageIQ/manageiq/pull/13763))
+- Cloud Subnet UI: Task queue validation buttons ([#13490](https://github.com/ManageIQ/manageiq/pull/13490))
+- Tenant admin should not be able to create groups in other tenants. ([#151](https://github.com/ManageIQ/manageiq-ui-classic/pull/151))
+- Floating IPs: Adds missing route for wait_for_task ([#192](https://github.com/ManageIQ/manageiq-ui-classic/pull/192))
+- Fix valid_tenant check in ops ([#203](https://github.com/ManageIQ/manageiq-ui-classic/pull/203))
+- Red Hat Enterprise Virtualization: Removed the option to migrate the VMs outside of the cluster. ([#207](https://github.com/ManageIQ/manageiq-ui-classic/pull/207))
+- Fix check_box_tag parameters for snap_memory ([#217](https://github.com/ManageIQ/manageiq-ui-classic/pull/217))
+- Add list of roles to rbac ([#271)](https://github.com/ManageIQ/manageiq-ui-classic/pull/271)
+- Fix assigning roles in group form ([#296)](https://github.com/ManageIQ/manageiq-ui-classic/pull/296)
+- Fix repeating values on Y-axis of C&U charts ([#40](https://github.com/ManageIQ/manageiq-ui-classic/pull/40))
+
+# Euwe-1
 
 ## Added
 
