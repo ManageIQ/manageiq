@@ -101,7 +101,7 @@ class VmScan < Job
          vm.kind_of?(ManageIQ::Providers::Microsoft::InfraManager::Vm)
         return unless create_snapshot(vm)
       elsif vm.require_snapshot_for_scan?
-        proxy = MiqServer.find(agent_id)
+        proxy = MiqServer.find(miq_server_id)
 
         # Check if the broker is available
         if MiqServer.use_broker_for_embedded_proxy? && !MiqVimBrokerWorker.available?
@@ -155,7 +155,7 @@ class VmScan < Job
     _log.info "Enter"
 
     begin
-      host = MiqServer.find(agent_id)
+      host = MiqServer.find(miq_server_id)
       vm = VmOrTemplate.find(target_id)
       # Send down metadata to allow the host to make decisions.
       scan_args = create_scan_args(vm)
@@ -273,7 +273,7 @@ class VmScan < Job
     _log.info "Enter"
 
     begin
-      host = MiqServer.find(agent_id)
+      host = MiqServer.find(miq_server_id)
       vm = VmOrTemplate.find(target_id)
       vm.sync_metadata(options[:categories],
                        "taskid" => jobid,
