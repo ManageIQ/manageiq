@@ -1,6 +1,7 @@
 class ContainerProject < ApplicationRecord
   include CustomAttributeMixin
   include VirtualTotalMixin
+  include ArchivedMixin
   belongs_to :ext_management_system, :foreign_key => "ems_id"
   has_many :container_groups
   has_many :container_routes
@@ -21,7 +22,6 @@ class ContainerProject < ApplicationRecord
   has_many :metrics,                :as => :resource
   has_many :metric_rollups,         :as => :resource
   has_many :vim_performance_states, :as => :resource
-  delegate :my_zone,                :to => :ext_management_system
 
   has_many :labels, -> { where(:section => "labels") }, :class_name => "CustomAttribute", :as => :resource, :dependent => :destroy
 
@@ -65,9 +65,5 @@ class ContainerProject < ApplicationRecord
     self.ext_management_system = nil
     self.deleted_on = Time.now.utc
     save
-  end
-
-  def archived?
-    ems_id.nil?
   end
 end

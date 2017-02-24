@@ -4,6 +4,7 @@ class ContainerGroup < ApplicationRecord
   include MiqPolicyMixin
   include NewWithTypeStiMixin
   include TenantIdentityMixin
+  include ArchivedMixin
 
   # :name, :uid, :creation_timestamp, :resource_version, :namespace
   # :labels, :restart_policy, :dns_policy
@@ -31,9 +32,6 @@ class ContainerGroup < ApplicationRecord
 
   virtual_column :ready_condition_status, :type => :string, :uses => :container_conditions
   virtual_column :running_containers_summary, :type => :string
-
-  # Needed for metrics
-  delegate :my_zone, :to => :ext_management_system
 
   def ready_condition
     container_conditions.find_by(:name => "Ready")
