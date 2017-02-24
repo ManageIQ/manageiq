@@ -1,6 +1,7 @@
 class Container < ApplicationRecord
   include SupportsFeatureMixin
   include NewWithTypeStiMixin
+  include ArchivedMixin
 
   has_one    :container_group, :through => :container_definition
   belongs_to :ext_management_system, :foreign_key => :ems_id
@@ -17,9 +18,6 @@ class Container < ApplicationRecord
   has_many   :metrics, :as => :resource
   has_many   :metric_rollups, :as => :resource
   has_many   :vim_performance_states, :as => :resource
-
-  # Needed for metrics
-  delegate   :my_zone, :to => :ext_management_system
 
   include EventMixin
   include Metric::CiMixin
