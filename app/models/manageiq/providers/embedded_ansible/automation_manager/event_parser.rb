@@ -1,11 +1,11 @@
-module ManageIQ::Providers::AnsibleTower::AutomationManager::EventParser
+module ManageIQ::Providers::EmbeddedAnsible::AutomationManager::EventParser
   extend ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::EventParser
 
   def self.event_type
-    "ansible_tower"
+    "embedded_ansible"
   end
 
   def self.source
-    "ANSIBLE_TOWER"
+    "EMBEDDED_ANSIBLE"
   end
 end
