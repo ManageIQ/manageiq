@@ -65,6 +65,7 @@ class EmbeddedAnsibleWorker::Runner < MiqWorker::Runner
     provider.name = "Embedded Ansible"
     provider.zone = server.zone
     provider.url  = URI::HTTPS.build(:host => server.hostname || server.ipaddress, :path => "/ansibleapi/v1").to_s
+    provider.verify_ssl = 0
 
     provider.save!
 
