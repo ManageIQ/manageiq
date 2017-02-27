@@ -15,8 +15,12 @@ class ManageIQ::Providers::EmbeddedAnsible::AutomationManager < ManageIQ::Provid
   require_nested :ConfigurationScript
   require_nested :ConfigurationScriptSource
   require_nested :ConfiguredSystem
+  require_nested :EventCatcher
+  require_nested :EventParser
   require_nested :Job
   require_nested :Playbook
+  require_nested :Refresher
+  require_nested :RefreshWorker
 
   def self.ems_type
     @ems_type ||= "embedded_ansible_automation".freeze

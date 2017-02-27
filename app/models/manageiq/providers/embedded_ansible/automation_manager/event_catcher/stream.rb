@@ -1,4 +1,4 @@
-class ManageIQ::Providers::AnsibleTower::AutomationManager::EventCatcher::Stream
+class ManageIQ::Providers::EmbeddedAnsible::AutomationManager::EventCatcher::Stream
   class ProviderUnreachable < ManageIQ::Providers::BaseManager::EventCatcher::Runner::TemporaryFailure
   end
 

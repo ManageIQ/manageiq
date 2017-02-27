@@ -24,4 +24,5 @@ FactoryGirl.define do
       end
     end
   end
+  factory :provider_embedded_ansible, :class => "ManageIQ::Providers::EmbeddedAnsible::Provider", :parent => :provider_ansible_tower
 end
