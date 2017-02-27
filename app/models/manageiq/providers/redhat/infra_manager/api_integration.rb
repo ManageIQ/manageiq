@@ -134,7 +134,7 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
     server   = options[:hostname] || metrics_hostname || hostname
     username = options[:user] || authentication_userid(:metrics)
     password = options[:pass] || authentication_password(:metrics)
-    database = options[:database]
+    database = options[:database] || history_database_name
 
     {
       :host     => server,
@@ -184,23 +184,7 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
   end
 
   def history_database_name
-    @history_database_name ||= begin
-                                 version = version_3_0? ? '3_0' : '>3_0'
-                                 self.class.history_database_name_for(version)
-                               end
-  end
-
-  def version_3_0?
-    if @version_3_0.nil?
-      @version_3_0 =
-        if api_version.nil?
-          with_provider_connection(&:version_3_0?)
-        else
-          api_version.starts_with?("3.0")
-        end
-    end
-
-    @version_3_0
+    connection_configurations.try(:metrics).try(:endpoint).try(:path) || self.class.default_history_database_name
   end
 
   # Adding disks is supported only by API version 4.0
@@ -284,14 +268,9 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
       const.new(params)
     end
 
-    def history_database_name_for(api_version)
+    def default_history_database_name
       require 'ovirt_metrics'
-      case api_version
-      when '3_0'
-        OvirtMetrics::DEFAULT_HISTORY_DATABASE_NAME_3_0
-      else
-        OvirtMetrics::DEFAULT_HISTORY_DATABASE_NAME
-      end
+      OvirtMetrics::DEFAULT_HISTORY_DATABASE_NAME
     end
 
     # Calculates an "ems_ref" from the "href" attribute provided by the oVirt REST API, removing the
