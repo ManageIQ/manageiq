@@ -10,7 +10,6 @@ class Host < ApplicationRecord
   include SupportsFeatureMixin
   include NewWithTypeStiMixin
   include TenantIdentityMixin
-  include SupportsFeatureMixin
 
   VENDOR_TYPES = {
     # DB            Displayed
