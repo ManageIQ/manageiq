@@ -58,18 +58,9 @@ module ManagerRefresh::SaveCollection
           hash             = attributes_index.delete(index)
 
           if inventory_object.nil?
-            next unless inventory_collection.delete_allowed?
-            deleted_counter += 1
-            record.public_send(inventory_collection.delete_method)
+            deleted_counter += 1 if delete_record!(inventory_collection, record)
           else
-            record.assign_attributes(hash.except(:id, :type))
-            if inventory_collection.check_changed?
-              record.save! if record.changed?
-            else
-              record.save!
-            end
-
-            inventory_object.id = record.id
+            update_record!(inventory_collection, record, hash, inventory_object)
           end
         end
       end
@@ -77,17 +68,38 @@ module ManagerRefresh::SaveCollection
       if inventory_collection.create_allowed?
         ActiveRecord::Base.transaction do
           inventory_objects_index.each do |index, inventory_object|
-            hash            = attributes_index.delete(index)
-            record          = inventory_collection.model_class.create!(hash.except(:id))
+            hash = attributes_index.delete(index)
+            create_record!(inventory_collection, hash, inventory_object)
             created_counter += 1
-
-            inventory_object.id = record.id
           end
         end
       end
 
       _log.info("*************** PROCESSED #{inventory_collection}, created=#{created_counter}, "\
                 "updated=#{inventory_collection_size - created_counter}, deleted=#{deleted_counter} *************")
+    end
+
+    def delete_record!(inventory_collection, record)
+      return false unless inventory_collection.delete_allowed?
+      record.public_send(inventory_collection.delete_method)
+      true
+    end
+
+    def update_record!(inventory_collection, record, hash, inventory_object)
+      record.assign_attributes(hash.except(:id, :type))
+      if inventory_collection.check_changed?
+        record.save! if record.changed?
+      else
+        record.save!
+      end
+
+      inventory_object.id = record.id
+    end
+
+    def create_record!(inventory_collection, hash, inventory_object)
+      record = inventory_collection.model_class.create!(hash.except(:id))
+
+      inventory_object.id = record.id
     end
   end
 end
