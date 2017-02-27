@@ -399,10 +399,12 @@
     - :name: Arbitration Profiles List
       :description: Display Lists of Arbitration Profiles
       :feature_type: view
+      :hidden: true
       :identifier: arbitration_profile_show_list
     - :name: Arbitration Profile Show
       :description: Display Individual Arbitration Profiles
       :feature_type: view
+      :hidden: true
       :identifier: arbitration_profile_show
     - :name: Timeline
       :description: Display Timelines for Cloud Providers
