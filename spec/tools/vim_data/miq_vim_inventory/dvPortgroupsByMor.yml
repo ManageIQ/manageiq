@@ -167,7 +167,7 @@
           xsiType: :ManagedObjectReference
           vimType: :VmwareDistributedVirtualSwitch
         key: !ruby/string:VimString
-          str: dvportgroup-122
+          str: dvportgroup-12222
           xsiType: :SOAP::SOAPString
           vimType: 
         name: !ruby/string:VimString

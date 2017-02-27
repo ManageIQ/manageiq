@@ -439,6 +439,14 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
       :computed_mac_changes       => nil
     )
 
+    # If a dvPortgroup has a different key than its MOR ensure
+    # that we use config.key as the uid_ems
+    dvslan = dvswitch.lans.find_by_name("DC1_DVPG1")
+    expect(dvslan).to have_attributes(
+      :uid_ems                    => 'dvportgroup-12222',
+      :name                       => 'DC1_DVPG1'
+    )
+
     switch = @host.switches.find_by_name("vSwitch0")
     expect(switch).to have_attributes(
       :uid_ems           => "vSwitch0",

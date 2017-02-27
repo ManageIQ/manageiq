@@ -519,7 +519,7 @@ module ManageIQ::Providers
           switch = switch_uids[spec['distributedVirtualSwitch']]
           next if switch.nil?
 
-          uid = data['MOR']
+          uid = spec['key']
           security_policy = spec.fetch_path('defaultPortConfig', 'securityPolicy') || {}
 
           unless dvportgroup_uid_ems.key?(uid)
