@@ -13,7 +13,7 @@ describe AddInitiatorToService do
 
       expect(service_stub.count).to eq(2)
       expect(service_stub.find_by(:name => 'service1').initiator).to eq(default_initiator)
-      expect(service_stub.find_by(:name => 'service1').initiator).to eq(default_initiator)
+      expect(service_stub.find_by(:name => 'service2').initiator).to eq(default_initiator)
     end
   end
 
