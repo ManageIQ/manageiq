@@ -1,9 +1,8 @@
 class AddInitiatorToService < ActiveRecord::Migration[5.0]
   class Service < ActiveRecord::Base; end
   def up
-    add_column :services, :initiator, :string
-    change_column_comment :services, :initiator, "Record who initiated the service creation user|control|alert. It helps the UI display the services based on categories"
-    say_with_time('Adding initiator to Service') do
+    add_column :services, :initiator, :string, :comment => "Entity that initiated the service creation"
+    say_with_time("Updating existing services to 'user' initiator") do
       Service.update_all(:initiator => 'user')
     end
   end
