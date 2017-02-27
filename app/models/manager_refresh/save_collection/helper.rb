@@ -91,11 +91,7 @@ module ManagerRefresh::SaveCollection
 
     def update_record!(inventory_collection, record, hash, inventory_object)
       record.assign_attributes(hash.except(:id, :type))
-      if inventory_collection.check_changed?
-        record.save! if record.changed?
-      else
-        record.save!
-      end
+      record.save if !inventory_collection.check_changed? || record.changed?
 
       inventory_object.id = record.id
     end
