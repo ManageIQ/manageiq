@@ -736,6 +736,17 @@ en:
       LdapServer:               LDAP Server
       LoadBalancer:             Load Balancer
       ManageIQ::Providers::BaseManager:                                     Provider
+      ManageIQ::Providers::AutomationManager::Authentication:                     Credential
+      ManageIQ::Providers::AnsibleTower::AutomationManager::AmazonCredential:     Credential (Amazon)
+      ManageIQ::Providers::AnsibleTower::AutomationManager::AzureCredential:      Credential (Microsoft Azure)
+      ManageIQ::Providers::AnsibleTower::AutomationManager::GoogleCredential:     Credential (Google)
+      ManageIQ::Providers::AnsibleTower::AutomationManager::MachineCredential:    Credential (Machine)
+      ManageIQ::Providers::AnsibleTower::AutomationManager::NetworkCredential:    Credential (Network)
+      ManageIQ::Providers::AnsibleTower::AutomationManager::OpenstackCredential:  Credential (OpenStack)
+      ManageIQ::Providers::AnsibleTower::AutomationManager::RackspaceCredential:  Credential (Rackspace)
+      ManageIQ::Providers::AnsibleTower::AutomationManager::Satellite6Credential: Credential (Satellite)
+      ManageIQ::Providers::AnsibleTower::AutomationManager::ScmCredential:        Credential (SCM)
+      ManageIQ::Providers::AnsibleTower::AutomationManager::VmwareCredential:     Credential (VMware)
       ManageIQ::Providers::AnsibleTower::AutomationManager:                 Automation Manager (Ansible Tower)
       ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationScript: Job Template (Ansible Tower)
       ManageIQ::Providers::AnsibleTower::AutomationManager::Playbook: Playbook (Ansible Tower)
