@@ -25,6 +25,8 @@ class Authentication < ApplicationRecord
   before_save :set_credentials_changed_on
   after_save :after_authentication_changed
 
+  serialize :options
+
   # TODO: DELETE ME!!!!
   ERRORS = {
     :incomplete => "Incomplete credentials",
