@@ -6,6 +6,28 @@ FactoryGirl.define do
     guid                 { MiqUUID.new_guid }
     zone                 { Zone.first || FactoryGirl.create(:zone) }
     storage_profiles     { [] }
+
+    # Traits
+
+    trait :with_clusters do
+      transient do
+        cluster_count 3
+      end
+
+      after :create do |ems, evaluator|
+        create_list :ems_cluster, evaluator.cluster_count, :ext_management_system => ems
+      end
+    end
+
+    trait :with_storages do
+      transient do
+        storage_count 3
+      end
+
+      after :create do |ems, evaluator|
+        create_list :storage, evaluator.storage_count, :ext_management_system => ems
+      end
+    end
   end
 
   # Intermediate classes
@@ -134,6 +156,16 @@ FactoryGirl.define do
           :aliases => ["manageiq/providers/redhat/infra_manager"],
           :class   => "ManageIQ::Providers::Redhat::InfraManager",
           :parent  => :ems_infra do
+  end
+
+  factory :ems_redhat_v3,
+          :parent => :ems_redhat do
+    api_version '3.5'
+  end
+
+  factory :ems_redhat_v4,
+          :parent => :ems_redhat do
+    api_version '4.0'
   end
 
   factory :ems_redhat_with_authentication,
