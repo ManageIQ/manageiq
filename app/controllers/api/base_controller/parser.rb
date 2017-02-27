@@ -291,7 +291,7 @@ module Api
         return if cname == @req.collection
         return if collection_config.subcollection_denied?(@req.collection, cname)
 
-        aspec = collection_config.typed_subcollection_actions(@req.collection, cname)
+        aspec = collection_config.typed_subcollection_actions(@req.collection, cname, @req.s_id ? :subresource : :subcollection)
         return unless aspec
 
         action_hash = fetch_action_hash(aspec, mname, aname)
