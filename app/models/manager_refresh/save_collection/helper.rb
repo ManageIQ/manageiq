@@ -69,7 +69,7 @@ module ManagerRefresh::SaveCollection
               record.save!
             end
 
-            inventory_object.id = record.try(:id)
+            inventory_object.id = record.id
           end
         end
       end
@@ -81,7 +81,7 @@ module ManagerRefresh::SaveCollection
             record          = inventory_collection.model_class.create!(hash.except(:id))
             created_counter += 1
 
-            inventory_object.id = record.try(:id)
+            inventory_object.id = record.id
           end
         end
       end
