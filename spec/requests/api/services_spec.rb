@@ -26,6 +26,8 @@ describe "Services API" do
   let(:svc)  { FactoryGirl.create(:service, :name => "svc",  :description => "svc description")  }
   let(:svc1) { FactoryGirl.create(:service, :name => "svc1", :description => "svc1 description") }
   let(:svc2) { FactoryGirl.create(:service, :name => "svc2", :description => "svc2 description") }
+  let(:orchestration_template) { FactoryGirl.create(:orchestration_template) }
+  let(:ems) { FactoryGirl.create(:ext_management_system) }
 
   describe "Services create" do
     it "rejects requests without appropriate role" do
@@ -60,6 +62,46 @@ describe "Services API" do
       expect_results_to_match_hash("results",
                                    [{"name" => "svc_new_1"},
                                     {"name" => "svc_new_2"}])
+    end
+
+    it 'supports creation of a single resource with href references' do
+      api_basic_authorize collection_action_identifier(:services, :create)
+
+      request = {
+        'action'   => 'create',
+        'resource' => {
+          'type'                   => 'ServiceOrchestration',
+          'name'                   => 'svc_new',
+          'parent_service'         => { 'href' => services_url(svc1.id)},
+          'orchestration_template' => { 'href' => orchestration_templates_url(orchestration_template.id) },
+          'orchestration_manager'  => { 'href' => providers_url(ems.id) }
+        }
+      }
+      expect do
+        run_post(services_url, request)
+      end.to change(Service, :count).by(1)
+      expect(response).to have_http_status(:ok)
+      expect_results_to_match_hash("results", [{"name" => "svc_new"}])
+    end
+
+    it 'supports creation of a single resource with id references' do
+      api_basic_authorize collection_action_identifier(:services, :create)
+
+      request = {
+        'action'   => 'create',
+        'resource' => {
+          'type'                   => 'ServiceOrchestration',
+          'name'                   => 'svc_new',
+          'parent_service'         => { 'id' => svc1.id},
+          'orchestration_template' => { 'id' => orchestration_template.id },
+          'orchestration_manager'  => { 'id' => ems.id }
+        }
+      }
+      expect do
+        run_post(services_url, request)
+      end.to change(Service, :count).by(1)
+      expect(response).to have_http_status(:ok)
+      expect_results_to_match_hash("results", [{"name" => "svc_new"}])
     end
   end
 
