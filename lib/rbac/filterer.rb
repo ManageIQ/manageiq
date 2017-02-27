@@ -60,7 +60,7 @@ module Rbac
     # value:
     #   array - disallowed roles for the user's role
     DISALLOWED_ROLES_FOR_USER_ROLE = {
-      'EvmRole-tenant_administrator' => %w(EvmRole-super_administrator)
+      'EvmRole-tenant_administrator' => %w(EvmRole-super_administrator EvmRole-administrator)
     }.freeze
 
     # key: descendant::klass
