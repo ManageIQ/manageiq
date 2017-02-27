@@ -164,7 +164,7 @@ module ManageIQ::Providers::Openstack::ManagerMixin
 
     raise MiqException::MiqHostError, "No credentials defined" if self.missing_credentials?(auth_type)
 
-    options.merge!(:auth_type => auth_type)
+    options[:auth_type] = auth_type
     case auth_type.to_s
     when 'default' then verify_api_credentials(options)
     when 'amqp' then    verify_amqp_credentials(options)

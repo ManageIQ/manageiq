@@ -97,7 +97,7 @@ module MiqReport::Generator
     if klass.nil?
       klass = db_class
       result = {}
-      cols.each { |c| result.merge!(c.to_sym => {}) if klass.virtual_attribute?(c) } if cols
+      cols.each { |c| result[c.to_sym] = {} if klass.virtual_attribute?(c) } if cols
     end
 
     if includes.kind_of?(Hash)
@@ -105,7 +105,7 @@ module MiqReport::Generator
       includes.each do |k, v|
         k = k.to_sym
         if k == :managed
-          result.merge!(:tags => {})
+          result[:tags] = {}
         else
           assoc_reflection = klass.reflect_on_association(k)
           assoc_klass = assoc_reflection.nil? ? nil : (assoc_reflection.options[:polymorphic] ? k : assoc_reflection.klass)

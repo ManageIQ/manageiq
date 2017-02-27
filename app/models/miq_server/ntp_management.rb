@@ -9,7 +9,7 @@ module MiqServer::NtpManagement
     if server_ntp_settings_blank?(ntp)
       zone.ntp_settings
     else
-      ntp.merge!(:source => :server)
+      ntp[:source] = :server
       ntp
     end
   end

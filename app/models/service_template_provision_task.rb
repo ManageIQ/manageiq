@@ -115,6 +115,7 @@ class ServiceTemplateProvisionTask < MiqRequestTask
 
     if self.class::AUTOMATE_DRIVES
       dialog_values = options[:dialog] || {}
+      dialog_values["request"] = req_type
 
       args = {
         :object_type      => self.class.name,
@@ -123,7 +124,7 @@ class ServiceTemplateProvisionTask < MiqRequestTask
         :class_name       => "ServiceProvision_Template",
         :instance_name    => req_type,
         :automate_message => "create",
-        :attrs            => dialog_values.merge!("request" => req_type)
+        :attrs            => dialog_values
       }
 
       # Automate entry point overrides from the resource_action
