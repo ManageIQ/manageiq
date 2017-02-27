@@ -1040,6 +1040,10 @@ class MiqAction < ApplicationRecord
   end
 
   def target_user(record)
-    record.respond_to?(:tenant_identity) ? record.tenant_identity : User.find("admin")
+    record.respond_to?(:tenant_identity) ? record.tenant_identity : default_user
+  end
+
+  def default_user
+    User.super_admin.tap { |u| u.current_group = Tenant.root_tenant.default_miq_group }
   end
 end
