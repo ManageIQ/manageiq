@@ -41,6 +41,7 @@ module ManagerRefresh::SaveCollection
       deleted_counter           = 0
       created_counter           = 0
       _log.info("*************** PROCESSING #{inventory_collection} of size #{inventory_collection_size} *************")
+      # Records that are in the DB, we will be updating or deleting them.
       ActiveRecord::Base.transaction do
         association.find_each do |record|
           index = inventory_collection.object_index_with_keys(unique_index_keys, record)
@@ -58,13 +59,17 @@ module ManagerRefresh::SaveCollection
           hash             = attributes_index.delete(index)
 
           if inventory_object.nil?
+            # Record was found in the DB but not sent for saving, that means it doesn't exist anymore and we should
+            # delete it from the DB.
             deleted_counter += 1 if delete_record!(inventory_collection, record)
           else
+            # Record was found in the DB and sent for saving, we will be updating the DB.
             update_record!(inventory_collection, record, hash, inventory_object)
           end
         end
       end
 
+      # Records that were not found in the DB but sent for saving, we will be creating these in the DB.
       if inventory_collection.create_allowed?
         ActiveRecord::Base.transaction do
           inventory_objects_index.each do |index, inventory_object|
@@ -74,7 +79,6 @@ module ManagerRefresh::SaveCollection
           end
         end
       end
-
       _log.info("*************** PROCESSED #{inventory_collection}, created=#{created_counter}, "\
                 "updated=#{inventory_collection_size - created_counter}, deleted=#{deleted_counter} *************")
     end
