@@ -69,7 +69,7 @@ module ActsAsTaggable
     end
 
     def tags(options = {})
-      options.merge!(:taggable_type => base_class.name)
+      options[:taggable_type] = base_class.name
       options[:ns] = Tag.get_namespace(options)
       Tag.tags(options)
     end

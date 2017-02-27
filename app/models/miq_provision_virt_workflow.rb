@@ -428,7 +428,7 @@ class MiqProvisionVirtWorkflow < MiqProvisionWorkflow
 
     case src[:vm].platform
     when 'windows' then result.merge!("fields" => "Specification", "file"  => "Sysprep Answer File")
-    when 'linux'   then result.merge!("fields" => "Specification")
+    when 'linux'   then result["fields"] = "Specification"
     end
 
     result

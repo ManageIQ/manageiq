@@ -59,7 +59,7 @@ class ManageIQ::Providers::Openstack::CloudManager::CloudVolume < ::CloudVolume
   end
 
   def backup_create(options)
-    options.merge!(:volume_id => ems_ref)
+    options[:volume_id] = ems_ref
     with_provider_connection do |service|
       backup = service.backups.new(options)
       backup.save
@@ -142,13 +142,13 @@ class ManageIQ::Providers::Openstack::CloudManager::CloudVolume < ::CloudVolume
 
   def nova_connection_options
     connection_options = {:service => "Compute"}
-    connection_options.merge!(:tenant_name => cloud_tenant.name) if cloud_tenant
+    connection_options[:tenant_name] = cloud_tenant.name if cloud_tenant
     connection_options
   end
 
   def self.cinder_connection_options(cloud_tenant = nil)
     connection_options = {:service => "Volume"}
-    connection_options.merge!(:tenant_name => cloud_tenant.name) if cloud_tenant
+    connection_options[:tenant_name] = cloud_tenant.name if cloud_tenant
     connection_options
   end
 

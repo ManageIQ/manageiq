@@ -189,7 +189,7 @@ class ServiceTemplate < ApplicationRecord
 
     # Determine service name
     # target_name = self.get_option(:target_name)
-    # nh.merge!('name' => target_name) unless target_name.blank?
+    # nh['name'] = target_name unless target_name.blank?
     svc = Service.create(nh)
     svc.service_template = self
 
@@ -475,7 +475,7 @@ class ServiceTemplate < ApplicationRecord
                                                :configuration_template_type,
                                                :configuration_template_id).compact
       resource_options[:fqname] = resource_action.fqname
-      config_info.merge!(resource_action.action.downcase.to_sym => resource_options.symbolize_keys)
+      config_info[resource_action.action.downcase.to_sym] = resource_options.symbolize_keys
     end
     config_info
   end

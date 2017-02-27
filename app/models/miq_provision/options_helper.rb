@@ -70,7 +70,7 @@ module MiqProvision::OptionsHelper
     return unless ip_address.to_s.ipv4?
     ip_seg = ip_address.split('.')
     ip_seg[-1] = ip_seg[-1].to_i + pass
-    options.merge!(:ip_addr => ip_seg.join('.'))
+    options[:ip_addr] = ip_seg.join('.')
   end
 
   def set_dns_domain
