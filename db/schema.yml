@@ -1575,6 +1575,7 @@ jobs:
 - archive
 - options
 - context
+- miq_task_id
 key_pairs_vms:
 - authentication_id
 - vm_id
@@ -5319,6 +5320,8 @@ miq_tasks:
 - results
 - miq_server_id
 - identifier
+- started_on
+- zone
 miq_user_roles:
 - id
 - name

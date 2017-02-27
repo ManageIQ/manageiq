@@ -30,9 +30,6 @@ describe MiqTask do
       expect(@miq_task.state).to eq(state)
       expect(@miq_task.status).to eq(status)
       expect(@miq_task.message).to eq(message)
-
-      expect { @miq_task.update_status("FOO", status, message) }.to raise_error(ActiveRecord::RecordInvalid)
-      expect { @miq_task.update_status(state, "FOO",  message) }.to raise_error(ActiveRecord::RecordInvalid)
     end
 
     it "should trim long message to 255" do
@@ -288,6 +285,46 @@ describe MiqTask do
     it 'returns true when status is ok and results are not blank' do
       @miq_task.task_results = 'x'
       expect(@miq_task.results_ready?).to be_truthy
+    end
+  end
+
+  context "before_destroy callback" do
+    it "destroys miq_task record if there is no job associated with it" do
+      expect(MiqTask.count).to eq 0
+      FactoryGirl.create(:miq_task_plain)
+      expect(MiqTask.count).to eq 1
+      MiqTask.first.destroy
+      expect(MiqTask.count).to eq 0
+    end
+
+    it "doesn't destroy miq_task and associated job if job is active" do
+      expect(MiqTask.count).to eq 0
+      job = Job.create_job("VmScan")
+      job.update_attributes!(:state => "active")
+      expect(MiqTask.count).to eq 1
+      MiqTask.first.destroy
+      expect(MiqTask.count).to eq 1
+      expect(Job.count).to eq 1
+    end
+
+    it "destroys miq_task record and job record if job associated with it 'finished'" do
+      expect(MiqTask.count).to eq 0
+      job = Job.create_job("VmScan")
+      job.update_attributes!(:state => "finished")
+      expect(MiqTask.count).to eq 1
+      MiqTask.first.destroy
+      expect(MiqTask.count).to eq 0
+      expect(Job.count).to eq 0
+    end
+
+    it "destroys miq_task record and job record if job associated with it not started yet" do
+      expect(MiqTask.count).to eq 0
+      job = Job.create_job("VmScan")
+      job.update_attributes!(:state => "waiting_to_start")
+      expect(MiqTask.count).to eq 1
+      MiqTask.first.destroy
+      expect(MiqTask.count).to eq 0
+      expect(Job.count).to eq 0
     end
   end
 end
