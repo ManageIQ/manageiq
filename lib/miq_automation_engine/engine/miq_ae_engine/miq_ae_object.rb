@@ -528,7 +528,7 @@ module MiqAeEngine
       return value.to_i                                      if datatype == 'integer' || datatype == 'Fixnum'
       return value.to_f                                      if datatype == 'float' || datatype == 'Float'
       return value.gsub(/[\[\]]/, '').strip.split(/\s*,\s*/)  if datatype == 'array' && value.class == String
-      return MiqAePassword.new(MiqAePassword.decrypt(value)) if datatype == 'password'
+      return fetch_password(value) if datatype == 'password'
 
       if datatype &&
          (service_model = "MiqAeMethodService::MiqAeService#{SM_LOOKUP[datatype]}".safe_constantize)
@@ -539,6 +539,13 @@ module MiqAeEngine
 
       # default datatype => 'string'
       value
+    end
+
+    def self.fetch_password(value)
+      MiqAePassword.new(MiqAePassword.decrypt(value))
+    rescue MiqPassword::MiqPasswordError => err
+      $miq_ae_logger.warn("Error decrypting password #{err.message}")
+      nil
     end
 
     def substitute_value(value, _type = nil, required = false)
