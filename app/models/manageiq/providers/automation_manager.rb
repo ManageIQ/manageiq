@@ -1,4 +1,4 @@
-class ManageIQ::Providers::AutomationManager < ::ExtManagementSystem
+class ManageIQ::Providers::AutomationManager < ManageIQ::Providers::BaseManager
   require_nested :Authentication
   require_nested :ConfigurationScript
   require_nested :ConfigurationScriptPayload
