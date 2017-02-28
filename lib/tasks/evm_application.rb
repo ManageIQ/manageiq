@@ -52,7 +52,14 @@ class EvmApplication
     server = MiqServer.my_server(true)
     servers = Set.new
     servers << server if server
-    servers.merge(MiqServer.order(:zone_id, :status).all.to_a) if include_remotes
+    if include_remotes
+      all_servers =
+        MiqServer
+        .order(:zone_id, :status)
+        .includes(:active_roles, :miq_workers, :zone)
+        .all.to_a
+      servers.merge(all_servers)
+    end
 
     if servers.empty?
       puts "Local EVM Server not Found"
