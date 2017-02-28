@@ -77,6 +77,7 @@ class MiqExpression
 
   INCLUDE_TABLES = %w(
     advanced_settings
+    archived_container_groups
     audit_events
     availability_zones
     cloud_networks
