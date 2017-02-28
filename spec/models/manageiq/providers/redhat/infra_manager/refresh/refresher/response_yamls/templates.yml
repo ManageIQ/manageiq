@@ -1,5 +1,5 @@
 ---
-- !ruby/marshalable:ManageIQ::Providers::Redhat::InfraManager::Inventory::TemplatePreloadedAttributesDecorator
+- !ruby/marshalable:ManageIQ::Providers::Redhat::InfraManager::Inventory::Strategies::V4::TemplatePreloadedAttributesDecorator
   :__v2__:
   - :@obj
   - :@disks
@@ -227,7 +227,7 @@
       ivars:
         :@href: 
   : *1
-- !ruby/marshalable:ManageIQ::Providers::Redhat::InfraManager::Refresh::Strategies::TemplatePreloadedAttributesDecorator
+- !ruby/marshalable:ManageIQ::Providers::Redhat::InfraManager::Inventory::Strategies::V4::TemplatePreloadedAttributesDecorator
   :__v2__:
   - :@obj
   - :@disks
@@ -701,7 +701,7 @@
       ivars:
         :@href: 
   : *2
-- !ruby/marshalable:ManageIQ::Providers::Redhat::InfraManager::Refresh::Strategies::TemplatePreloadedAttributesDecorator
+- !ruby/marshalable:ManageIQ::Providers::Redhat::InfraManager::Inventory::Strategies::V4::TemplatePreloadedAttributesDecorator
   :__v2__:
   - :@obj
   - :@disks

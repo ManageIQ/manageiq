@@ -1,5 +1,5 @@
 ---
-- !ruby/marshalable:ManageIQ::Providers::Redhat::InfraManager::Inventory::DatacenterPreloadedAttributesDecorator
+- !ruby/marshalable:ManageIQ::Providers::Redhat::InfraManager::Inventory::Strategies::V4::DatacenterPreloadedAttributesDecorator
   :__v2__:
   - :@obj
   - :@storage_domains
@@ -364,7 +364,7 @@
       ivars:
         :@href: 
   : *1
-- !ruby/marshalable:ManageIQ::Providers::Redhat::InfraManager::Refresh::Strategies::DatacenterPreloadedAttributesDecorator
+- !ruby/marshalable:ManageIQ::Providers::Redhat::InfraManager::Inventory::Strategies::V4::DatacenterPreloadedAttributesDecorator
   :__v2__:
   - :@obj
   - :@storage_domains

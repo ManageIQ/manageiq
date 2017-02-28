@@ -22,7 +22,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
   end
 
   before(:each) do
-    inventory_wrapper_class = ManageIQ::Providers::Redhat::InfraManager::Inventory::InventoryV4
+    inventory_wrapper_class = ManageIQ::Providers::Redhat::InfraManager::Inventory::Strategies::V4
     allow_any_instance_of(inventory_wrapper_class)
       .to receive(:collect_clusters).and_return(load_response_mock_for('clusters'))
     allow_any_instance_of(inventory_wrapper_class)
