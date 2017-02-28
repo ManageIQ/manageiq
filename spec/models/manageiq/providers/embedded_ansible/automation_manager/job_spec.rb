@@ -9,16 +9,24 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job do
 
   let(:manager)  { FactoryGirl.create(:embedded_automation_manager_ansible, :provider) }
   let(:mock_api) { AnsibleTowerClient::Api.new(faraday_connection) }
+
+  let(:machine_credential) { FactoryGirl.create(:ansible_machine_credential, :manager_ref => '1', :resource => manager) }
+  let(:cloud_credential)   { FactoryGirl.create(:ansible_cloud_credential,   :manager_ref => '2', :resource => manager) }
+  let(:network_credential) { FactoryGirl.create(:ansible_network_credential, :manager_ref => '3', :resource => manager) }
+
   let(:the_raw_job) do
     AnsibleTowerClient::Job.new(
       mock_api,
-      'id'         => '1',
-      'name'       => template.name,
-      'status'     => 'Successful',
-      'extra_vars' => {'param1' => 'val1'}.to_json,
-      'verbosity'  => 3,
-      'started'    => Time.current,
-      'finished'   => Time.current,
+      'id'                    => '1',
+      'name'                  => template.name,
+      'status'                => 'Successful',
+      'extra_vars'            => {'param1' => 'val1'}.to_json,
+      'verbosity'             => 3,
+      'started'               => Time.current,
+      'finished'              => Time.current,
+      'credential_id'         => machine_credential.manager_ref,
+      'cloud_credential_id'   => cloud_credential.manager_ref,
+      'network_credential_id' => network_credential.manager_ref
     ).tap { |rjob| allow(rjob).to receive(:stdout).and_return('job stdout') }
   end
 
@@ -65,6 +73,7 @@ describe ManageIQ::Providers::EmbeddedAnsible::AutomationManager::Job do
         expect(subject.ems_ref).to eq(the_raw_job.id)
         expect(subject.status).to  eq(the_raw_job.status)
         expect(subject.parameters.first).to have_attributes(:name => 'param1', :value => 'val1')
+        expect(subject.authentications).to match_array([machine_credential, cloud_credential, network_credential])
       end
 
       it 'catches errors from provider' do

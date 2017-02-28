@@ -20,6 +20,9 @@ class OrchestrationStack < ApplicationRecord
   has_many   :outputs,    :dependent => :destroy, :foreign_key => :stack_id, :class_name => "OrchestrationStackOutput"
   has_many   :resources,  :dependent => :destroy, :foreign_key => :stack_id, :class_name => "OrchestrationStackResource"
 
+  has_many   :authentication_orchestration_stacks, :dependent => :destroy
+  has_many   :authentications, :through => :authentication_orchestration_stacks
+
   has_many   :direct_vms,             :class_name => "ManageIQ::Providers::CloudManager::Vm"
   has_many   :direct_security_groups, :class_name => "SecurityGroup"
   has_many   :direct_cloud_networks,  :class_name => "CloudNetwork"
