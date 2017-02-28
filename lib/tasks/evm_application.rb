@@ -69,10 +69,11 @@ class EvmApplication
        s.drb_uri,
        s.started_on && s.started_on.iso8601,
        s.last_heartbeat && s.last_heartbeat.iso8601,
-       s.active_role_names.join(':')
+       s.is_master,
+       s.active_role_names.join(':'),
       ]
     end
-    header = ["Zone", "Server Name", "Status", "ID", "PID", "SPID", "URL", "Started On", "Last Heartbeat", "Active Roles"]
+    header = ["Zone", "Server", "Status", "ID", "PID", "SPID", "URL", "Started On", "Last Heartbeat", "Master?", "Active Roles"]
     puts data.unshift(header).tableize
   end
 
