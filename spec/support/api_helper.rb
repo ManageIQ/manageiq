@@ -269,12 +269,12 @@ module Spec
 
       def expect_options_results(type, data = {})
         klass = Api::ApiConfig.collections[type].klass.constantize
-        attributes = (klass.attribute_names - klass.virtual_attribute_names).sort.as_json
+        attributes = (klass.attribute_names - klass.virtual_attribute_names).sort
         attributes.delete('password')
         reflections = (klass.reflections.keys | klass.virtual_reflections.keys.collect(&:to_s)).sort
         subcollections = Array(Api::ApiConfig.collections[type].subcollections).collect(&:to_s).sort
         expected = {
-          'attributes'         => attributes,
+          'attributes'         => attributes.as_json,
           'virtual_attributes' => klass.virtual_attribute_names.sort.as_json,
           'relationships'      => reflections,
           'subcollections'     => subcollections,

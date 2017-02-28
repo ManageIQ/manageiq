@@ -23,4 +23,10 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::AmazonCrede
   }.freeze
 
   API_ATTRIBUTES = COMMON_ATTRIBUTES.merge(EXTRA_ATTRIBUTES).freeze
+
+  API_OPTIONS = {
+    :type       => 'cloud',
+    :label      => 'Amazon',
+    :attributes => API_ATTRIBUTES
+  }.freeze
 end

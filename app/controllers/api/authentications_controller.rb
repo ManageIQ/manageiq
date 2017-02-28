@@ -20,9 +20,9 @@ module Api
     end
 
     def build_additional_fields
-      {
-        :cloud_types => ManageIQ::Providers::AnsibleTower::AutomationManager::CloudCredential.credential_types
-      }
+      ::Authentication.descendants.each_with_object({}) do |klass, fields|
+        fields[klass.name] = klass::API_OPTIONS if defined? klass::API_OPTIONS
+      end
     end
   end
 end

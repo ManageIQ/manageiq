@@ -172,7 +172,15 @@ RSpec.describe 'Authentications API' do
 
       run_options(authentications_url)
 
-      additional_options = { 'cloud_types' => ManageIQ::Providers::AnsibleTower::AutomationManager::CloudCredential.credential_types}
+      additional_options = Authentication.descendants.each_with_object({}) do |klass, fields|
+        next unless defined? klass::API_OPTIONS
+        klass::API_OPTIONS.tap do |options|
+          options[:attributes].each do |_k, v|
+            v[:type] = v[:type].to_s if v[:type]
+          end
+          fields[klass.name] = options
+        end
+      end.deep_stringify_keys
       expect_options_results(:authentications, additional_options)
     end
   end
