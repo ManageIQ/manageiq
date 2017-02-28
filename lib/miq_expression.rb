@@ -30,6 +30,8 @@ class MiqExpression
     ContainerRoute
     ContainerService
     ContainerTemplate
+    ContainerQuota
+    ContainerLimit
     ManageIQ::Providers::CloudManager
     EmsCluster
     EmsClusterPerformance
