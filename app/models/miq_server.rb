@@ -23,6 +23,7 @@ class MiqServer < ApplicationRecord
   belongs_to              :zone
   has_many                :messages,  :as => :handler, :class_name => 'MiqQueue'
   has_many                :miq_events, :as => :target, :dependent => :destroy
+  virtual_has_one         :resource_settings, :class_name => "Hash"
 
   cattr_accessor          :my_guid_cache
 

@@ -9,6 +9,10 @@ module ConfigurationManagementMixin
     Vmdb::Settings.for_resource(self)
   end
 
+  def resource_settings
+    self.settings_for_resource.to_hash
+  end
+
   def add_settings_for_resource(settings)
     Vmdb::Settings.save!(self, settings)
     # Reload the settings immediately for this worker. This is typically a UI
