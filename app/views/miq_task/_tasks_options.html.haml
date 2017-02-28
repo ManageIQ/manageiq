@@ -41,30 +41,31 @@
       %label.control-label.col-md-2
         = _("Task Status")
       .col-md-8
-        = check_box_tag("queued", "1", @tasks_options[@tabform][:queued], "data-miq_observe_checkbox" => {:url => url}.to_json)
-        &nbsp;
-        %i.fa.fa-step-forward
-        = _("Queued")
-        &nbsp;
-        = check_box_tag("running", "1", @tasks_options[@tabform][:running], "data-miq_observe_checkbox" => {:url => url}.to_json)
-        &nbsp;
-        %i.pficon.pficon-running
-        = _("Running")
-        &nbsp;
-        = check_box_tag("ok", "1", @tasks_options[@tabform][:ok], "data-miq_observe_checkbox" => {:url => url}.to_json)
-        &nbsp;
-        %i.pficon.pficon-ok
-        = _("Ok")
-        &nbsp;
-        = check_box_tag("error", "1", @tasks_options[@tabform][:error], "data-miq_observe_checkbox" => {:url => url}.to_json)
-        &nbsp;
-        %i.pficon.pficon-error-circle-o
-        = _("Error")
-        &nbsp;
-        = check_box_tag("warn", "1", @tasks_options[@tabform][:warn], "data-miq_observe_checkbox" => {:url => url}.to_json)
-        &nbsp;
-        %i.pficon.pficon-warning-triangle-o
-        = _("Warn")
+        .checkbox-inline
+          %label
+            = check_box_tag("queued", "1", @tasks_options[@tabform][:queued], :class => "checkbox", "data-miq_observe_checkbox" => {:url => url}.to_json)
+            %i.fa.fa-step-forward.fa-lg
+            = _("Queued")
+        .checkbox-inline
+          %label
+            = check_box_tag("running", "1", @tasks_options[@tabform][:running], :class => "checkbox", "data-miq_observe_checkbox" => {:url => url}.to_json)
+            %i.pficon.pficon-running.fa-lg
+            = _("Running")
+        .checkbox-inline
+          %label
+            = check_box_tag("ok", "1", @tasks_options[@tabform][:ok], :class => "checkbox", "data-miq_observe_checkbox" => {:url => url}.to_json)
+            %i.pficon.pficon-ok.fa-lg
+            = _("Ok")
+        .checkbox-inline
+          %label
+            = check_box_tag("error", "1", @tasks_options[@tabform][:error], :class => "checkbox", "data-miq_observe_checkbox" => {:url => url}.to_json)
+            %i.pficon.pficon-error-circle-o.fa-lg
+            = _("Error")
+        .checkbox-inline
+          %label
+            = check_box_tag("warn", "1", @tasks_options[@tabform][:warn], :class => "checkbox", "data-miq_observe_checkbox" => {:url => url}.to_json)
+            %i.pficon.pficon-warning-triangle-o.fa-lg
+            = _("Warn")
     .form-group
       %label.control-label.col-md-2
         = _("Task State")
