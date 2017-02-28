@@ -1,3 +1,4 @@
+require 'openssl'
 require 'MiqContainerGroup/MiqContainerGroup'
 
 module ManageIQ::Providers::Kubernetes::ContainerManagerMixin
@@ -18,18 +19,13 @@ module ManageIQ::Providers::Kubernetes::ContainerManagerMixin
       URI::HTTPS.build(:host => hostname, :port => port.presence.try(:to_i), :path => path)
     end
 
-    def verify_ssl_mode
-      # TODO: support real authentication using certificates
-      OpenSSL::SSL::VERIFY_NONE
-    end
-
     def kubernetes_connect(hostname, port, options)
       require 'kubeclient'
 
       Kubeclient::Client.new(
         raw_api_endpoint(hostname, port, options[:path]),
         options[:version] || kubernetes_version,
-        :ssl_options    => { :verify_ssl => verify_ssl_mode },
+        :ssl_options    => Kubeclient::Client::DEFAULT_SSL_OPTIONS.merge(options[:ssl_options] || {}),
         :auth_options   => kubernetes_auth_options(options),
         :http_proxy_uri => VMDB::Util.http_proxy_uri
       )
@@ -62,13 +58,33 @@ module ManageIQ::Providers::Kubernetes::ContainerManagerMixin
     true
   end
 
+  def supports_security_protocol?
+    true
+  end
+
   def api_endpoint
     self.class.raw_api_endpoint(hostname, port)
   end
 
-  def verify_ssl_mode
-    # TODO: support real authentication using certificates
-    self.class.verify_ssl_mode
+  def verify_ssl_mode(endpoint = default_endpoint)
+    return OpenSSL::SSL::VERIFY_PEER if endpoint.nil? # secure by default
+
+    case endpoint.security_protocol
+    when nil, ''
+      # Previously providers didn't set security_protocol, defaulted to
+      # verify_ssl == 1 (VERIFY_PEER) which wasn't enforced but now is.
+      # However, if they explicitly set verify_ssl == 0, we'll respect that.
+      endpoint.verify_ssl? ? OpenSSL::SSL::VERIFY_PEER : OpenSSL::SSL::VERIFY_NONE
+    when 'ssl-without-validation'
+      OpenSSL::SSL::VERIFY_NONE
+    else # 'ssl-with-validation', 'ssl-with-validation-custom-ca', secure by default with unexpected values.
+      OpenSSL::SSL::VERIFY_PEER
+    end
+  end
+
+  def ssl_cert_store(endpoint = default_endpoint)
+    # Given missing (nil) endpoint, return nil meaning use system CA bundle
+    endpoint.try(:ssl_cert_store)
   end
 
   def connect(options = {})
@@ -78,6 +94,10 @@ module ManageIQ::Providers::Kubernetes::ContainerManagerMixin
       :user     => options[:user] || authentication_userid(options[:auth_type]),
       :pass     => options[:pass] || authentication_password(options[:auth_type]),
       :bearer   => options[:bearer] || authentication_token(options[:auth_type] || 'bearer'),
+      :ssl_options => options[:ssl_options] || {
+        :verify_ssl => verify_ssl_mode,
+        :cert_store => ssl_cert_store
+      }
     )
     self.class.raw_connect(effective_options[:hostname], effective_options[:port], effective_options)
   end
@@ -183,8 +203,13 @@ module ManageIQ::Providers::Kubernetes::ContainerManagerMixin
                                  scan_data[:pod_name],
                                  scan_data[:pod_port],
                                  scan_data[:pod_namespace])
+    nethttp_options = {
+      :use_ssl     => true,
+      :verify_mode => verify_ssl_mode,
+      :cert_store  => ssl_cert_store,
+    }
     MiqContainerGroup.new(pod_proxy + SCAN_CONTENT_PATH,
-                          verify_ssl_mode,
+                          nethttp_options,
                           client.headers.stringify_keys,
                           scan_data[:guest_os])
   end

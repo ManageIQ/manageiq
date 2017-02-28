@@ -9,6 +9,49 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager do
     expect(described_class.raw_api_endpoint("::1", 123).to_s).to eq "https://[::1]:123"
   end
 
+  context "#verify_ssl_mode" do
+    let(:ems) { FactoryGirl.build(:ems_kubernetes) }
+
+    it "is secure without endpoint" do
+      expect(ems.verify_ssl_mode(nil)).to eq(OpenSSL::SSL::VERIFY_PEER)
+    end
+
+    it "is secure for old providers without security_protocol" do
+      endpoint = Endpoint.new(:verify_ssl => nil)
+      expect(ems.verify_ssl_mode(endpoint)).to eq(OpenSSL::SSL::VERIFY_PEER)
+      # In practice both API and UI used set verify_ssl == VERIFY_PEER.
+      endpoint = Endpoint.new(:verify_ssl => OpenSSL::SSL::VERIFY_PEER)
+      expect(ems.verify_ssl_mode(endpoint)).to eq(OpenSSL::SSL::VERIFY_PEER)
+    end
+
+    it "respects explicit verify_ssl == 0 in absence of security_protocol" do
+      endpoint = Endpoint.new(:verify_ssl => OpenSSL::SSL::VERIFY_NONE)
+      expect(endpoint.verify_ssl?).to be_falsey
+      expect(ems.verify_ssl_mode(endpoint)).to eq(OpenSSL::SSL::VERIFY_NONE)
+    end
+
+    it "uses security_protocol when given" do
+      # security_protocol should win over opposite verify_ssl
+      endpoint = Endpoint.new(:security_protocol => 'ssl-with-validation',
+                              :verify_ssl        => OpenSSL::SSL::VERIFY_NONE)
+      expect(ems.verify_ssl_mode(endpoint)).to eq(OpenSSL::SSL::VERIFY_PEER)
+
+      # The UI doesn't currently use 'ssl' but it's plausible someone
+      # would send this via API.  Generally unexpect values should mean secure.
+      endpoint = Endpoint.new(:security_protocol => 'ssl',
+                              :verify_ssl        => OpenSSL::SSL::VERIFY_NONE)
+      expect(ems.verify_ssl_mode(endpoint)).to eq(OpenSSL::SSL::VERIFY_PEER)
+
+      endpoint = Endpoint.new(:security_protocol => 'ssl-with-validation-custom-ca',
+                              :verify_ssl        => OpenSSL::SSL::VERIFY_NONE)
+      expect(ems.verify_ssl_mode(endpoint)).to eq(OpenSSL::SSL::VERIFY_PEER)
+
+      endpoint = Endpoint.new(:security_protocol => 'ssl-without-validation',
+                              :verify_ssl        => OpenSSL::SSL::VERIFY_PEER)
+      expect(ems.verify_ssl_mode(endpoint)).to eq(OpenSSL::SSL::VERIFY_NONE)
+    end
+  end
+
   context "SmartState Analysis Methods" do
     before(:each) do
       EvmSpecHelper.local_miq_server(:zone => Zone.seed)
@@ -42,7 +85,7 @@ describe ManageIQ::Providers::Kubernetes::ContainerManager do
       )
 
       expect(entity).to be_kind_of(MiqContainerGroup)
-      expect(entity.verify_mode).to eq(@ems.verify_ssl_mode)
+      expect(entity.http_options).to include(:use_ssl => true, :verify_mode => @ems.verify_ssl_mode)
       expect(entity.headers).to eq("Authorization" => "Bearer valid-token")
       expect(entity.guest_os).to eq('GuestOS')
     end
