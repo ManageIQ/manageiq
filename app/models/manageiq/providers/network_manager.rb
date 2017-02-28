@@ -25,7 +25,14 @@ module ManageIQ::Providers
     has_many :load_balancer_health_checks,        :foreign_key => :ems_id, :dependent => :destroy
     has_many :load_balancer_health_check_members, :through => :load_balancer_health_checks
 
-    # Generates ORDER BY ((SELECT COUNT(*) FROM "vms" WHERE "ext_management_systems"."parent_ems_id" = "vms"."ems_id"))
+    # Uses "ext_management_systems"."parent_ems_id" instead of "ext_management_systems"."id"
+    #
+    # ORDER BY ((
+    #   SELECT COUNT(*)
+    #   FROM "vms"
+    #   WHERE "ext_management_systems"."parent_ems_id" = "vms"."ems_id"
+    # ))
+    #
     # So unlike the parent class definition, this looks at "ext_management_systems"."parent_ems_id" instead of
     # "ext_management_systems"."id"
     # If we are able to define a has_many :vms, :through => :parent_manager, that does actual join, this code should
