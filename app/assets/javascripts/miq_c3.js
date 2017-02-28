@@ -158,7 +158,7 @@ function getChartFormatedValueWithFormat(format, value) {
 function validateMinMax(min, max, minShowed, maxShowed) {
   var invalid = false;
   // if there are no valid values or there is only single values big enough, then not change formating function
-  if (max <= min || maxShowed <= minShowed) {
+  if (max <= min || maxShowed < minShowed) {
     if (max < min || max > 10) {
       invalid = true;
     } else if (max > 0){
