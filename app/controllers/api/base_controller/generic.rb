@@ -98,8 +98,6 @@ module Api
         klass = collection_class(type)
         id ||= @req.c_id
         raise BadRequestError, "Must specify an id for deleting a #{type} resource" unless id
-        api_log_info("Deleting #{type} id #{id}")
-        resource_search(id, type, klass)
         delete_resource_action(klass, type, id)
       end
 
@@ -184,6 +182,8 @@ module Api
       end
 
       def delete_resource_action(klass, type, id)
+        api_log_info("Deleting #{type} id #{id}")
+        resource_search(id, type, klass)
         result = begin
                    klass.destroy(id)
                    action_result(true, "#{type} id: #{id} deleting")
