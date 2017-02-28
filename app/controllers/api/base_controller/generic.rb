@@ -183,9 +183,9 @@ module Api
 
       def delete_resource_action(klass, type, id)
         api_log_info("Deleting #{type} id #{id}")
-        resource_search(id, type, klass)
+        resource = resource_search(id, type, klass)
         result = begin
-                   klass.destroy(id)
+                   resource.destroy!
                    action_result(true, "#{type} id: #{id} deleting")
                  rescue => err
                    action_result(false, err.to_s)
