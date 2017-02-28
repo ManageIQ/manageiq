@@ -66,7 +66,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::EventParser  do
     end
 
     before(:each) do
-      inventory_wrapper_class = ManageIQ::Providers::Redhat::InfraManager::Inventory::InventoryV4
+      inventory_wrapper_class = ManageIQ::Providers::Redhat::InfraManager::Inventory::Strategies::V4
       user_mock = load_response_mock_for('user')
       allow_any_instance_of(inventory_wrapper_class)
           .to receive(:collect_username_by_href).and_return("#{user_mock.name}@#{user_mock.domain.name}")

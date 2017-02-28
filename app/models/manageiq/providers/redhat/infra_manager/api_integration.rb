@@ -112,12 +112,8 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
   end
 
   def inventory
-    version = highest_supported_api_version
-    if version == 3
-      ManageIQ::Providers::Redhat::InfraManager::Inventory::InventoryV3.new
-    else
-      ManageIQ::Providers::Redhat::InfraManager::Inventory::InventoryV4.new(:ems => self)
-    end
+    ManageIQ::Providers::Redhat::InfraManager::Inventory::Builder.new(self)
+                                                                 .build.new(:ems => self)
   end
 
   def with_provider_connection(options = {})

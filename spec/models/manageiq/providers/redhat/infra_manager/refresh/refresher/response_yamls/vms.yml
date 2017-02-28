@@ -1,5 +1,5 @@
 ---
-- !ruby/marshalable:ManageIQ::Providers::Redhat::InfraManager::Inventory::VmPreloadedAttributesDecorator
+- !ruby/marshalable:ManageIQ::Providers::Redhat::InfraManager::Inventory::Strategies::V4::VmPreloadedAttributesDecorator
   :__v2__:
   - :@obj
   - :@disks
@@ -422,7 +422,7 @@
       ivars:
         :@href: 
   : *1
-- !ruby/marshalable:ManageIQ::Providers::Redhat::InfraManager::Refresh::Strategies::VmPreloadedAttributesDecorator
+- !ruby/marshalable:ManageIQ::Providers::Redhat::InfraManager::Inventory::Strategies::V4::VmPreloadedAttributesDecorator
   :__v2__:
   - :@obj
   - :@disks
@@ -845,7 +845,7 @@
       ivars:
         :@href: 
   : *2
-- !ruby/marshalable:ManageIQ::Providers::Redhat::InfraManager::Refresh::Strategies::VmPreloadedAttributesDecorator
+- !ruby/marshalable:ManageIQ::Providers::Redhat::InfraManager::Inventory::Strategies::V4::VmPreloadedAttributesDecorator
   :__v2__:
   - :@obj
   - :@disks
@@ -1268,7 +1268,7 @@
       ivars:
         :@href: 
   : *3
-- !ruby/marshalable:ManageIQ::Providers::Redhat::InfraManager::Refresh::Strategies::VmPreloadedAttributesDecorator
+- !ruby/marshalable:ManageIQ::Providers::Redhat::InfraManager::Inventory::Strategies::V4::VmPreloadedAttributesDecorator
   :__v2__:
   - :@obj
   - :@disks
@@ -1691,7 +1691,7 @@
       ivars:
         :@href: 
   : *4
-- !ruby/marshalable:ManageIQ::Providers::Redhat::InfraManager::Refresh::Strategies::VmPreloadedAttributesDecorator
+- !ruby/marshalable:ManageIQ::Providers::Redhat::InfraManager::Inventory::Strategies::V4::VmPreloadedAttributesDecorator
   :__v2__:
   - :@obj
   - :@disks
@@ -3121,7 +3121,7 @@
       ivars:
         :@href: 
   : *5
-- !ruby/marshalable:ManageIQ::Providers::Redhat::InfraManager::Refresh::Strategies::VmPreloadedAttributesDecorator
+- !ruby/marshalable:ManageIQ::Providers::Redhat::InfraManager::Inventory::Strategies::V4::VmPreloadedAttributesDecorator
   :__v2__:
   - :@obj
   - :@disks
@@ -4126,7 +4126,7 @@
       ivars:
         :@href: 
   : *6
-- !ruby/marshalable:ManageIQ::Providers::Redhat::InfraManager::Refresh::Strategies::VmPreloadedAttributesDecorator
+- !ruby/marshalable:ManageIQ::Providers::Redhat::InfraManager::Inventory::Strategies::V4::VmPreloadedAttributesDecorator
   :__v2__:
   - :@obj
   - :@disks
@@ -4633,7 +4633,7 @@
       ivars:
         :@href: 
   : *7
-- !ruby/marshalable:ManageIQ::Providers::Redhat::InfraManager::Refresh::Strategies::VmPreloadedAttributesDecorator
+- !ruby/marshalable:ManageIQ::Providers::Redhat::InfraManager::Inventory::Strategies::V4::VmPreloadedAttributesDecorator
   :__v2__:
   - :@obj
   - :@disks

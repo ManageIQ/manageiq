@@ -34,7 +34,7 @@ module ManageIQ::Providers::Redhat::InfraManager::EventParser
     user_href = ems_ref_from_object_in_event(event[:user])
     username  = nil
     if ems && user_href
-      username = ems.inventory.collect_username_by_href(ems, user_href)
+      username = ems.inventory.collect_username_by_href(user_href)
     end
 
     # Build the event hash
