@@ -5,9 +5,9 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::EventCatche
 
   def monitor_events
     event_monitor_handle.start
+    event_monitor_running
     event_monitor_handle.poll do |event|
       _log.debug { "#{log_prefix} Received event #{event.id}" }
-      event_monitor_running
       @queue.enq event
     end
   ensure
