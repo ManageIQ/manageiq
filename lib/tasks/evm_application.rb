@@ -92,7 +92,7 @@ class EvmApplication
   def self.output_workers_status(servers)
     data = []
     servers.each do |s|
-      s.miq_workers.sort_by(&:type).each do |w|
+      s.miq_workers.order(:type).each do |w|
         data <<
           [w.type,
            w.status,
