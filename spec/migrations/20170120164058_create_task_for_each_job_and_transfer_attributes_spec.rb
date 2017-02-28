@@ -15,6 +15,14 @@ describe CreateTaskForEachJobAndTransferAttributes do
       expect(MiqTask.find_by(:name => "Hello Test Job").status).to eq "Some test status"
       expect(MiqTask.find_by(:name => "Hello Test Job2").state).to eq "Some state"
     end
+
+    it "truncates message from jobs.message to 255 characters before assigning it to tasks.message" do
+      jobs_stub.create!(:name => "Hello Test Job", :message => "a" * 999)
+
+      migrate
+
+      expect(MiqTask.find_by(:name => "Hello Test Job").message.length).to be 255
+    end
   end
 
   migration_context :down do
