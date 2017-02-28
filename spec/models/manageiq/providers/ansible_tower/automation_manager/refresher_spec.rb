@@ -85,6 +85,10 @@ describe ManageIQ::Providers::AnsibleTower::AutomationManager::Refresher do
       :name   => "Demo Credential",
       :userid => "admin",
     )
+    expect(machine_credential.options.keys).to match_array(machine_credential.class::EXTRA_ATTRIBUTES.keys)
+    expect(machine_credential.options[:become_method]).to eq('su')
+    expect(machine_credential.options[:become_username]).to eq('root')
+
     network_credential = expected_configuration_script.authentications.find_by(
       :type => ManageIQ::Providers::AnsibleTower::AutomationManager::NetworkCredential
     )
@@ -92,6 +96,8 @@ describe ManageIQ::Providers::AnsibleTower::AutomationManager::Refresher do
       :name   => "Demo Creds 2",
       :userid => "awdd",
     )
+    expect(network_credential.options.keys).to match_array(network_credential.class::EXTRA_ATTRIBUTES.keys)
+
     cloud_credential = expected_configuration_script.authentications.find_by(
       :type => ManageIQ::Providers::AnsibleTower::AutomationManager::VmwareCredential
     )
@@ -99,6 +105,7 @@ describe ManageIQ::Providers::AnsibleTower::AutomationManager::Refresher do
       :name   => "dev-vc60",
       :userid => "MiqAnsibleUser@vsphere.local",
     )
+    expect(cloud_credential.options.keys).to match_array(cloud_credential.class::EXTRA_ATTRIBUTES.keys)
   end
 
   def assert_playbooks
