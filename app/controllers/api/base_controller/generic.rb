@@ -188,7 +188,7 @@ module Api
                    resource.destroy!
                    action_result(true, "#{type} id: #{id} deleting")
                  rescue => err
-                   action_result(false, err.to_s)
+                   action_result(false, "#{err} - #{resource.errors.full_messages.join(', ')}")
                  end
         add_href_to_result(result, type, id)
         log_result(result)
