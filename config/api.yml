@@ -1823,6 +1823,8 @@
         :identifier: service_admin
       - :name: suspend
         :identifier: service_admin
+      - :name: delete
+        :identifier: service_delete
       :delete:
       - :name: delete
         :identifier: service_delete
