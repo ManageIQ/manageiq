@@ -46,15 +46,20 @@ class EvmApplication
     :no_db if error.message =~ /Connection refused/i
   end
 
-  def self.status
+  def self.status(include_remotes = false)
     puts "Checking EVM status..."
+
     server = MiqServer.my_server(true)
-    if server.nil?
+    servers = Set.new
+    servers << server if server
+    servers.merge(MiqServer.order(:zone_id, :status).all.to_a) if include_remotes
+
+    if servers.empty?
       puts "Local EVM Server not Found"
     else
-      output_servers_status([server])
+      output_servers_status(servers)
       puts "\n"
-      output_workers_status(server.miq_workers)
+      output_workers_status(servers)
     end
   end
 
@@ -77,19 +82,24 @@ class EvmApplication
     puts data.unshift(header).tableize
   end
 
-  def self.output_workers_status(workers)
-    data = workers.sort_by(&:type).collect do |w|
-      [w.type,
-       w.status,
-       w.id,
-       w.pid,
-       w.sql_spid,
-       w.queue_name || w.uri,
-       w.started_on && w.started_on.iso8601,
-       w.last_heartbeat && w.last_heartbeat.iso8601
-      ]
+  def self.output_workers_status(servers)
+    data = []
+    servers.each do |s|
+      s.miq_workers.sort_by(&:type).each do |w|
+        data <<
+          [w.type,
+           w.status,
+           w.id,
+           w.pid,
+           w.sql_spid,
+           w.miq_server_id,
+           w.queue_name || w.uri,
+           w.started_on && w.started_on.iso8601,
+           w.last_heartbeat && w.last_heartbeat.iso8601]
+      end
     end
-    header = ["Worker Type", "Status", "ID", "PID", "SPID", "Queue Name / URL", "Started On", "Last Heartbeat"]
+
+    header = ["Worker Type", "Status", "ID", "PID", "SPID", "Server id", "Queue Name / URL", "Started On", "Last Heartbeat"]
     puts data.unshift(header).tableize unless data.empty?
   end
 
