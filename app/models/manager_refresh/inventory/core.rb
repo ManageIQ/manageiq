@@ -10,7 +10,7 @@ module ManagerRefresh::Inventory::Core
       has_inventory({
         :model_class                 => ::Authentication,
         :manager_ref                 => [:manager_ref],
-        :inventory_object_attributes => %i(name userid type),
+        :inventory_object_attributes => %i(name userid type options),
       }.merge(options))
     end
 
