@@ -65,7 +65,13 @@ describe ServiceAnsibleTower do
         expect(template).to be_kind_of ConfigurationScript
         expect(opts).to have_key(:limit)
         expect(opts).to have_key(:extra_vars)
-      end.and_return(double(:raw_job, :id => 1, :status => "completed", :extra_vars_hash => {'var_name' => 'var_val'}))
+      end.and_return(double(:raw_job,
+                            :id              => 1,
+                            :status          => "completed",
+                            :verbosity       => 0,
+                            :started         => Time.current,
+                            :finished        => Time.current,
+                            :extra_vars_hash => {'var_name' => 'var_val'}))
 
       job_done = service_mix_dialog_setter.launch_job
       expect(job_done).to have_attributes(:ems_ref => "1", :status => "completed")

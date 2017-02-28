@@ -15,7 +15,10 @@ describe ManageIQ::Providers::AnsibleTower::AutomationManager::Job do
       'id'         => '1',
       'name'       => template.name,
       'status'     => 'Successful',
-      'extra_vars' => {'param1' => 'val1'}.to_json
+      'extra_vars' => {'param1' => 'val1'}.to_json,
+      'verbosity'  => 3,
+      'started'    => Time.current,
+      'finished'   => Time.current,
     ).tap { |rjob| allow(rjob).to receive(:stdout).and_return('job stdout') }
   end
 
@@ -52,6 +55,13 @@ describe ManageIQ::Providers::AnsibleTower::AutomationManager::Job do
 
       it 'syncs the job with the provider' do
         subject.refresh_ems
+        expect(subject).to have_attributes(
+          :ems_ref     => the_raw_job.id,
+          :status      => the_raw_job.status,
+          :start_time  => the_raw_job.started,
+          :finish_time => the_raw_job.finished,
+          :verbosity   => the_raw_job.verbosity
+        )
         expect(subject.ems_ref).to eq(the_raw_job.id)
         expect(subject.status).to  eq(the_raw_job.status)
         expect(subject.parameters.first).to have_attributes(:name => 'param1', :value => 'val1')
