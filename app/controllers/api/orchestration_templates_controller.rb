@@ -3,8 +3,9 @@ module Api
     def delete_resource(type, id, data = {})
       klass    = collection_class(type)
       resource = resource_search(id, type, klass)
-      super
+      result = super
       resource.raw_destroy if resource.kind_of?(OrchestrationTemplateVnfd)
+      result
     end
 
     def copy_resource(type, id, data = {})
