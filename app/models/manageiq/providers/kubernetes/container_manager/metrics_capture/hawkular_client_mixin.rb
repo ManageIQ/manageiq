@@ -2,12 +2,11 @@ module ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCapture::Hawkul
   def hawkular_client
     require 'hawkular/hawkular_client'
 
-    @hawkular_entrypoint ||= hawkular_entrypoint
+    @hawkular_uri ||= hawkular_uri
     @hawkular_credentials ||= hawkular_credentials
     @hawkular_options ||= hawkular_options
 
-    Hawkular::Metrics::Client.new(
-      @hawkular_entrypoint, @hawkular_credentials, @hawkular_options)
+    Hawkular::Metrics::Client.new(@hawkular_uri, @hawkular_credentials, @hawkular_options)
   end
 
   # may be nil
@@ -15,7 +14,7 @@ module ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCapture::Hawkul
     @ext_management_system.connection_configurations.hawkular.try(:endpoint)
   end
 
-  def hawkular_entrypoint
+  def hawkular_uri
     hawkular_endpoint_empty = hawkular_endpoint.try(:hostname).blank?
     worker_class = ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCollectorWorker
 
