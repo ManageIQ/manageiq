@@ -262,7 +262,7 @@ class Job < ApplicationRecord
     {:status        => status.try(:capitalize),
      :state         => state.try(:capitalize),
      :name          => name,
-     :message       => message.try(:truncate, 255),
+     :message       => message,
      :userid        => userid,
      :miq_server_id => miq_server_id,
      :context_data  => context,

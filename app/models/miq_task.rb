@@ -59,7 +59,7 @@ class MiqTask < ApplicationRecord
   def update_status(state, status, message)
     status = STATUS_ERROR if status == STATUS_EXPIRED
     _log.info("Task: [#{id}] [#{state}] [#{status}] [#{message}]")
-    attributes = {:state => state, :status => status, :message => message.truncate(255)}
+    attributes = {:state => state, :status => status, :message => message}
     attributes[:started_on] = Time.now.utc if state == STATE_ACTIVE && started_on.nil?
     update_attributes!(attributes)
   end
@@ -71,7 +71,7 @@ class MiqTask < ApplicationRecord
 
   def update_message(message)
     _log.info("Task: [#{id}] [#{message}]")
-    update_attributes!(:message => message.truncate(255))
+    update_attributes!(:message => message)
   end
 
   def update_context(context)
@@ -79,7 +79,7 @@ class MiqTask < ApplicationRecord
   end
 
   def message=(message)
-    super(message.truncate(255))
+    super(message)
   end
 
   def self.info(taskid, message, pct_complete)
