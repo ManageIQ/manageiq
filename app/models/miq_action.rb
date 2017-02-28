@@ -222,6 +222,12 @@ class MiqAction < ApplicationRecord
                     :message      => "Policy #{msg}: policy: [#{inputs[:policy].description}], event: [#{inputs[:event].description}]")
   end
 
+  def action_run_ansible_playbook(action, rec, _inputs)
+    service_template = ServiceTemplate.find(action.options[:service_template_id])
+    options = { :dialog_hosts => target_hosts(action, rec) }
+    service_template.provision_request(target_user(rec), options)
+  end
+
   def action_snmp_trap(action, rec, inputs)
     # Validate SNMP Version
     snmp_version = action.options[:snmp_version]
@@ -1017,5 +1023,27 @@ class MiqAction < ApplicationRecord
       args[:instance_id] = target.id unless static
       MiqQueue.put(args)
     end
+  end
+
+  def target_hosts(action, rec)
+    if action.options[:use_event_target]
+      ipaddress(rec)
+    elsif action.options[:use_localhost]
+      'localhost'
+    else
+      action.options[:hosts]
+    end
+  end
+
+  def ipaddress(record)
+    record.ipaddresses[0] if record.respond_to?(:ipaddresses)
+  end
+
+  def target_user(record)
+    record.respond_to?(:tenant_identity) ? record.tenant_identity : default_user
+  end
+
+  def default_user
+    User.super_admin.tap { |u| u.current_group = Tenant.root_tenant.default_miq_group }
   end
 end
