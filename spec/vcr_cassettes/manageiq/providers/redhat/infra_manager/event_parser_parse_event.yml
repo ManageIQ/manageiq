@@ -1,0 +1,118 @@
+---
+http_interactions:
+- request:
+    method: get
+    uri: https://192.168.1.105:8443/api
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+  response:
+    status:
+      code: 404
+      message: Not Found
+    headers:
+      Connection:
+      - keep-alive
+      Content-Type:
+      - text/html;charset=UTF-8
+      Content-Length:
+      - '68'
+      Date:
+      - Tue, 28 Feb 2017 10:15:18 GMT
+    body:
+      encoding: UTF-8
+      string: "<html><head><title>Error</title></head><body>Not Found</body></html>"
+    http_version: 
+  recorded_at: Tue, 28 Feb 2017 10:15:18 GMT
+- request:
+    method: get
+    uri: https://192.168.1.105:8443/ovirt-engine/api
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+  response:
+    status:
+      code: 401
+      message: Unauthorized
+    headers:
+      Connection:
+      - keep-alive
+      Www-Authenticate:
+      - Basic realm="RESTAPI"
+      Content-Type:
+      - text/html;charset=UTF-8
+      Content-Length:
+      - '71'
+      Date:
+      - Tue, 28 Feb 2017 10:15:18 GMT
+    body:
+      encoding: UTF-8
+      string: "<html><head><title>Error</title></head><body>Unauthorized</body></html>"
+    http_version: 
+  recorded_at: Tue, 28 Feb 2017 10:15:18 GMT
+- request:
+    method: get
+    uri: https://admin%40internal:engine@192.168.1.105:8443/ovirt-engine/api/users/58ad9d2d-013a-00aa-018f-00000000022e
+    body:
+      encoding: US-ASCII
+      string: ''
+    headers:
+      Accept:
+      - "*/*"
+      Accept-Encoding:
+      - gzip, deflate
+      User-Agent:
+      - rest-client/2.0.0 (linux-gnu x86_64) ruby/2.3.0p0
+      Version:
+      - '3'
+      Prefer:
+      - persistent-auth
+  response:
+    status:
+      code: 200
+      message: OK
+    headers:
+      Content-Encoding:
+      - gzip
+      Connection:
+      - keep-alive
+      Set-Cookie:
+      - JSESSIONID=QJK8swbFaOknhBCfP5oyVbvBzcin5FjUaFT2xxt_.f24; path=/ovirt-engine/api;
+        HttpOnly
+      Content-Type:
+      - application/xml
+      Content-Length:
+      - '373'
+      Correlation-Id:
+      - 9666e3b2-8329-4ea7-8ee7-7537704076c9
+      Date:
+      - Tue, 28 Feb 2017 12:14:00 GMT
+    body:
+      encoding: ASCII-8BIT
+      string: !binary |-
+        H4sIAAAAAAAAAK2T0U6DMBSG73kK0ksTBHqgQAJM4+YT6PVSabc1K4W0bHE+
+        vWWV4Ew0XtCk8Pc/h36ncChX7630z1wb0akKxfcR8rlqOibUvkKvL89Bjnwz
+        UMWo7BSv0IUbtKq98mS49g+a7yoUdmehh4CrvVA8pL0Ix6AJ05yygmEWRDHQ
+        IIqovcT5zqqvgTFHvmAV+ldm7fl2lIq2vKasFaoMr9rZUqjjAvWEupP2hL7m
+        skJOhwsTeq5bYcb3PXG+O0vTBrqfMFe59P7GHPrTmxTNkV8m0K03EVnXUqF+
+        ZbqwCUlBNllC0gyTDYnJE16TOEutk2ePrlv+zHCwuVOEGrhWVAb0NBw+blrm
+        C3lT3parQV+2gtUQEXKdOUQQQ4HXkEJOEsBWJVBABpElY5JYb1SEpCQGDACJ
+        vWeA7bOYwISZd5772PS04fWdq8otXHD8ANu50x9+nmKOu/xeC9WInsrpz5gN
+        z2XX3idpxb9H6wMAAA==
+    http_version: 
+  recorded_at: Tue, 28 Feb 2017 12:14:00 GMT
+recorded_with: VCR 3.0.3

@@ -1,5 +1,5 @@
 ---
-- !ruby/marshalable:ManageIQ::Providers::Redhat::InfraManager::Refresh::Strategies::VmPreloadedAttributesDecorator
+- !ruby/marshalable:ManageIQ::Providers::Redhat::InfraManager::Inventory::VmPreloadedAttributesDecorator
   :__v2__:
   - :@obj
   - :@disks
