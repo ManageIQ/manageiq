@@ -1307,6 +1307,24 @@
       :delete:
       - :name: delete
         :identifier: chargeback_rates_delete
+  :regions:
+    :description: Regions
+    :identifier: region
+    :options:
+    - :collection
+    :verbs: *gp
+    :klass: MiqRegion
+    :collection_actions:
+      :get:
+      - :name: read
+        :identifier: region
+      :post:
+      - :name: query
+        :identifier: region
+    :resource_actions:
+      :get:
+      - :name: read
+        :identifier: region
   :reports:
     :description: Reports
     :identifier: miq_report
