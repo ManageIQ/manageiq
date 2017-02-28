@@ -109,6 +109,15 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
     @rhevm_inventory ||= connect(:service => "Inventory")
   end
 
+  def inventory
+    version = highest_supported_api_version
+    if version == 3
+      ManageIQ::Providers::Redhat::InfraManager::Inventory::InventoryV3.new
+    else
+      ManageIQ::Providers::Redhat::InfraManager::Inventory::InventoryV4.new(:ems => self)
+    end
+  end
+
   def with_provider_connection(options = {})
     raise "no block given" unless block_given?
     _log.info("Connecting through #{self.class.name}: [#{name}]")
