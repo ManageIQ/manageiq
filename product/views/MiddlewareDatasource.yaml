@@ -33,6 +33,12 @@ headers:
 - Server
 - Host Name
 
+include:
+  middleware_server:
+    columns:
+      - name
+      - hostname
+
 # Condition(s) string for the SQL query
 conditions:
 

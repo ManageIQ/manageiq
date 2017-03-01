@@ -23,7 +23,12 @@ cols:
 - product
 - name
 - hostname
+- ext_management_system.name
 
+include:
+  ext_management_system:
+    columns:
+      - name
 
 # Order of columns (from all tables)
 col_order:
