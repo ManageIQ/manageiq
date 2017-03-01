@@ -355,7 +355,7 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
   def assert_specific_dvportgroup
     # Check that a dvPortgroup with a slash in the name is decoded from
     # %2f to / by the RefreshParser
-    dvpg = Lan.find_by(:uid_ems => 'dvportgroup-122')
+    dvpg = Lan.find_by(:uid_ems => 'dvportgroup-12222')
     expect(dvpg.name).to eq('DC1 / DVPG1')
   end
 
@@ -441,10 +441,10 @@ describe ManageIQ::Providers::Vmware::InfraManager::Refresher do
 
     # If a dvPortgroup has a different key than its MOR ensure
     # that we use config.key as the uid_ems
-    dvslan = dvswitch.lans.find_by_name("DC1_DVPG1")
+    dvslan = dvswitch.lans.find_by_name("DC1 / DVPG1")
     expect(dvslan).to have_attributes(
       :uid_ems                    => 'dvportgroup-12222',
-      :name                       => 'DC1_DVPG1'
+      :name                       => 'DC1 / DVPG1'
     )
 
     switch = @host.switches.find_by_name("vSwitch0")
