@@ -198,10 +198,11 @@ class MiqAlert < ApplicationRecord
   end
 
   def add_status_post_evaluate(target, result, event)
-    status_description, severity, url = [
+    status_description, severity, url, resolved = [
       event.try(:message),
       event.try(:full_data).try(:[], :severity),
       event.try(:full_data).try(:[], :url),
+      event.try(:full_data).try(:[], :resolved)
     ]
     status = miq_alert_statuses.find_or_initialize_by(:resource => target)
     status.result = result
@@ -210,6 +211,7 @@ class MiqAlert < ApplicationRecord
     status.severity = severity unless severity.blank?
     status.url = url unless url.blank?
     status.evaluated_on = Time.now.utc
+    status.resolved = resolved
     status.save
     miq_alert_statuses << status
   end

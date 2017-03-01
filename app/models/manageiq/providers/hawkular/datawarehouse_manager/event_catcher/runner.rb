@@ -31,12 +31,14 @@ class ManageIQ::Providers::Hawkular::DatawarehouseManager::EventCatcher::Runner 
   def event_to_hash(event, current_ems_id)
     event.severity = map_severity(event.severity) # gets into event.full_data
     event.url = event.tags[TAG_URL]
+    event.resolved = %w(OPEN ACKNOWLEDGED).include?(event.status)
+    timestamp = event.resolved ? event.ctime : event.lifecycle.last['stime']
     target = find_target(event.tags)
     {
       :ems_id              => target.try(:ext_management_system).try(:id),
       :generating_ems_id   => current_ems_id,
       :source              => 'DATAWAREHOUSE',
-      :timestamp           => Time.zone.at(event.ctime / 1000),
+      :timestamp           => Time.zone.at(timestamp / 1000),
       :event_type          => 'datawarehouse_alert',
       :target_type         => target.class.name.underscore,
       :target_id           => target.id,
