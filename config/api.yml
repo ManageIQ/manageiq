@@ -1737,6 +1737,8 @@
       :post:
       - :name: edit
         :identifier: catalogitem_edit
+      - :name: delete
+        :identifier: catalogitem_delete
       :delete:
       - :name: delete
         :identifier: catalogitem_delete

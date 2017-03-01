@@ -154,6 +154,34 @@ describe "Service Templates API" do
       expect { st.reload }.to raise_error(ActiveRecord::RecordNotFound)
     end
 
+    it "can delete a service template via POST with an appropriate role" do
+      api_basic_authorize(action_identifier(:service_templates, :delete))
+      service_template = FactoryGirl.create(:service_template)
+
+      expect do
+        run_post(service_templates_url(service_template.id), :action => "delete")
+      end.to change(ServiceTemplate, :count).by(-1)
+
+      expected = {
+        "href"    => a_string_matching(service_templates_url(service_template.id)),
+        "message" => "service_templates id: #{service_template.id} deleting",
+        "success" => true
+      }
+      expect(response.parsed_body).to include(expected)
+      expect(response).to have_http_status(:ok)
+    end
+
+    it "will not delete a service template via POST without an appropriate role" do
+      api_basic_authorize
+      service_template = FactoryGirl.create(:service_template)
+
+      expect do
+        run_post(service_templates_url(service_template.id), :action => "delete")
+      end.not_to change(ServiceTemplate, :count)
+
+      expect(response).to have_http_status(:forbidden)
+    end
+
     it "supports multiple resource deletes" do
       api_basic_authorize collection_action_identifier(:service_templates, :delete)
 
