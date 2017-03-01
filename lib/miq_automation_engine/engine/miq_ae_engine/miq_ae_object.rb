@@ -547,6 +547,7 @@ module MiqAeEngine
       $miq_ae_logger.warn("Error decrypting password #{err.message}")
       nil
     end
+    private_class_method :fetch_password
 
     def substitute_value(value, _type = nil, required = false)
       Benchmark.current_realtime[:substitution_count] += 1
