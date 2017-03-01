@@ -63,6 +63,7 @@ class ServiceAnsiblePlaybook < ServiceGeneric
     job_options[:credential] = Authentication.find(credential_id).manager_ref unless credential_id.blank?
 
     hosts = job_options.delete(:hosts)
+    job_options[:extra_vars]  = subst_ext_vars(job_options[:extra_vars])
     job_options[:inventory] = create_inventory_with_hosts(action, hosts).id unless use_default_inventory?(hosts)
 
     # TODO: encryption my be needed
@@ -126,5 +127,23 @@ class ServiceAnsiblePlaybook < ServiceGeneric
     hosts = (hosts || 'localhost').split(',')
     playbook_id = options.fetch_path(:config_info, action.downcase.to_sym, :playbook_id)
     job.update_attributes(:configuration_script_base_id => playbook_id, :hosts => hosts)
+  end
+
+  def subst_ext_vars(hash)
+    bound_objects = bind_objects(miq_request_task.options[:expose_objects] || [])
+    hash.each { |k, v| hash[k] = run_subst(v, bound_objects) }
+  end
+
+  def run_subst(erb_string, bound_objects)
+    require 'erb'
+    ERB.new(erb_string).result(bound_objects)
+  end
+
+  def bind_objects(expose_objects)
+    binding.tap do |bind|
+      expose_objects.each do |obj|
+        bind.local_variable_set("#{obj[:name]}".to_sym, obj[:class].constantize.find(obj[:id]))
+      end
+    end
   end
 end
