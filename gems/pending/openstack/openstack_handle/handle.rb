@@ -37,8 +37,8 @@ module OpenstackHandle
         # For backwards compatibility take blank security_protocol as SSL
         yield "https", {:ssl_verify_peer => false}
       elsif security_protocol == 'ssl-with-validation'
-        excon_options = {:ssl_verify_peer => true}.merge(ssl_options)
-        yield "https", excon_options
+        excon_ssl_options = {:ssl_verify_peer => true}.merge(ssl_options)
+        yield "https", excon_ssl_options
       else
         yield "http", {}
       end
@@ -142,6 +142,16 @@ module OpenstackHandle
       @ssl_options
     end
 
+    def excon_options
+      @excon_options ||= {}
+      return @excon_options unless @excon_options.blank?
+
+      @excon_options[:omit_default_port] = @extra_options[:omit_default_port] unless
+                                           @extra_options[:omit_default_port].blank?
+      @excon_options[:read_timeout]      = @extra_options[:read_timeout] unless @extra_options[:read_timeout].blank?
+      @excon_options
+    end
+
     def domain_id
       @extra_options[:domain_id]
     end
@@ -179,7 +189,7 @@ module OpenstackHandle
 
       svc_cache = (@connection_cache[service] ||= {})
       svc_cache[tenant] ||= begin
-        opts[:connection_options] = connection_options if connection_options
+        opts[:connection_options] = (connection_options || {}).merge(excon_options)
         opts[:ssl_options]        = ssl_options
 
         raw_service = self.class.raw_connect_try_ssl(username, password, address, port, service, opts, api_version,
