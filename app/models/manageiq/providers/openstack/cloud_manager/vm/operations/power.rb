@@ -16,6 +16,7 @@ module ManageIQ::Providers::Openstack::CloudManager::Vm::Operations::Power
       when "SHELVED", "SHELVED_OFFLOADED" then connection.unshelve_server(ems_ref)
       end
     end
+    self.update_attributes!(:raw_power_state => "ACTIVE")
   end
 
   def raw_stop
