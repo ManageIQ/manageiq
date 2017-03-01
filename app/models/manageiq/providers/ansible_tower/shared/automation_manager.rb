@@ -20,6 +20,6 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager
   end
 
   def image_name
-    "ansible_tower_configuration"
+    "ansible"
   end
 end
