@@ -26,6 +26,7 @@ describe "Services API" do
   let(:svc)  { FactoryGirl.create(:service, :name => "svc",  :description => "svc description")  }
   let(:svc1) { FactoryGirl.create(:service, :name => "svc1", :description => "svc1 description") }
   let(:svc2) { FactoryGirl.create(:service, :name => "svc2", :description => "svc2 description") }
+  let(:svc_orchestration) { FactoryGirl.create(:service_orchestration) }
   let(:orchestration_template) { FactoryGirl.create(:orchestration_template) }
   let(:ems) { FactoryGirl.create(:ext_management_system) }
 
@@ -121,6 +122,54 @@ describe "Services API" do
 
       expect_single_resource_query("id" => svc.id, "href" => services_url(svc.id), "name" => "updated svc1")
       expect(svc.reload.name).to eq("updated svc1")
+    end
+
+    it 'accepts reference signature hrefs' do
+      api_basic_authorize collection_action_identifier(:services, :edit)
+
+      resource = {
+        'action'   => 'edit',
+        'resource' => {
+          'parent_service'         => { 'href' => services_url(svc1.id) },
+          'orchestration_template' => { 'href' => orchestration_templates_url(orchestration_template.id) },
+          'orchestration_manager'  => { 'href' => providers_url(ems.id) }
+        }
+      }
+      run_post(services_url(svc_orchestration.id), resource)
+
+      expected = {
+        'id'       => svc_orchestration.id,
+        'ancestry' => svc1.id.to_s
+      }
+      expect(response.parsed_body).to include(expected)
+      expect(response).to have_http_status(:ok)
+      expect(svc_orchestration.reload.parent).to eq(svc1)
+      expect(svc_orchestration.orchestration_template).to eq(orchestration_template)
+      expect(svc_orchestration.orchestration_manager).to eq(ems)
+    end
+
+    it 'accepts reference signature ids' do
+      api_basic_authorize collection_action_identifier(:services, :edit)
+
+      resource = {
+        'action'   => 'edit',
+        'resource' => {
+          'parent_service'         => { 'id' => svc1.id },
+          'orchestration_template' => { 'id' => orchestration_template.id },
+          'orchestration_manager'  => { 'id' => ems.id }
+        }
+      }
+      run_post(services_url(svc_orchestration.id), resource)
+
+      expected = {
+        'id'       => svc_orchestration.id,
+        'ancestry' => svc1.id.to_s
+      }
+      expect(response.parsed_body).to include(expected)
+      expect(response).to have_http_status(:ok)
+      expect(svc_orchestration.reload.parent).to eq(svc1)
+      expect(svc_orchestration.orchestration_template).to eq(orchestration_template)
+      expect(svc_orchestration.orchestration_manager).to eq(ems)
     end
 
     it "supports edits of single resource via PUT" do

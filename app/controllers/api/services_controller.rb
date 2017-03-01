@@ -12,6 +12,11 @@ module Api
       service
     end
 
+    def edit_resource(type, id, data)
+      attributes = build_service_attributes(data)
+      super(type, id, attributes)
+    end
+
     def reconfigure_resource(type, id = nil, data = nil)
       raise BadRequestError, "Must specify an id for Reconfiguring a #{type} resource" unless id
 
