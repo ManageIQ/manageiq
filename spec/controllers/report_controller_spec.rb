@@ -1295,6 +1295,28 @@ describe ReportController do
       expect(MiqReport.last.db).to eq(chosen_model)
     end
 
+    it "cb_entities_by_provider_id is set for chargeback based reports" do
+      post :x_button, :params => {:pressed => "miq_report_new"}
+      post :form_field_changed, :params => {:id => "new", :chosen_model => "ChargebackContainerImage"}
+      post :form_field_changed, :params => {:id => "new", :title => "test"}
+      post :form_field_changed, :params => {:id => "new", :name => "test"}
+      post :form_field_changed, :params => {:button => "right", :available_fields => ["ChargebackContainerImage-archived"]}
+
+      post :miq_report_edit, :params => {:button => "add"}
+      expect(assigns(:cb_entities_by_provider_id)).not_to be_nil
+    end
+
+    it "cb_entities_by_provider_id is not set for not chargeback reports" do
+      post :x_button, :params => {:pressed => "miq_report_new"}
+      post :form_field_changed, :params => {:id => "new", :chosen_model => "Host"}
+      post :form_field_changed, :params => {:id => "new", :title => "test"}
+      post :form_field_changed, :params => {:id => "new", :name => "test"}
+      post :form_field_changed, :params => {:button => "right", :available_fields => ["Host-name"]}
+
+      post :miq_report_edit, :params => {:button => "add"}
+      expect(assigns(:cb_entities_by_provider_id)).to be_nil
+    end
+
     it 'allows user to remove columns while editing' do
       post :x_button, :params => {:pressed => 'miq_report_new'}
       post :form_field_changed, :params => {:id => 'new', :chosen_model => chosen_model}

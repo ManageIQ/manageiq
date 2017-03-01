@@ -162,7 +162,7 @@ module ReportController::Reports::Editor
     build_tabs
 
     get_time_profiles # Get time profiles list (global and user specific)
-
+    cb_entities_by_provider if Chargeback.db_is_chargeback?(@edit[:new][:model])
     case @sb[:miq_tab].split("_")[1]
     when "1"  # Select columns
       @edit[:models] ||= reportable_models
@@ -1303,6 +1303,7 @@ module ReportController::Reports::Editor
       @edit[:new][:cb_interval_size] = options[:interval_size]
       @edit[:new][:cb_end_interval_offset] = options[:end_interval_offset]
       @edit[:new][:cb_groupby] = options[:groupby]
+      cb_entities_by_provider
     end
 
     # Only show chargeback users choice if an admin
@@ -1313,20 +1314,6 @@ module ReportController::Reports::Editor
       @edit[:new][:cb_show_typ] = "owner"
       @edit[:new][:cb_owner_id] = session[:userid]
       @edit[:cb_owner_name] = current_user.name
-    end
-
-    @edit[:cb_providers] = { :container_project => {}, :container_image => {} }
-    @edit[:cb_entities_by_provider_id] = { :container_project => {}, :container_image => {} }
-    ManageIQ::Providers::ContainerManager.includes(:container_projects, :container_images).all.each do |provider|
-      @edit[:cb_providers][:container_project][provider.name] = provider.id
-      @edit[:cb_providers][:container_image][provider.name] = provider.id
-      @edit[:cb_entities_by_provider_id][provider.id] = {:container_project => {}, :container_image => {}}
-      provider.container_projects.all.each do |project|
-        @edit[:cb_entities_by_provider_id][provider.id][:container_project][project.id] = project.name
-      end
-      provider.container_images.all.each do |image|
-        @edit[:cb_entities_by_provider_id][provider.id][:container_image][image.id] = image.name
-      end
     end
 
     # Build trend limit cols array
@@ -1435,6 +1422,22 @@ module ReportController::Reports::Editor
          @edit[:new][:perf_trend_db] + "-" + @edit[:new][:perf_trend_col]
        end.first.include?("(%)")
       @edit[:percent_col] = true
+    end
+  end
+
+  def cb_entities_by_provider
+    @edit[:cb_providers] = { :container_project => {}, :container_image => {} }
+    @cb_entities_by_provider_id = { :container_project => {}, :container_image => {} }
+    ManageIQ::Providers::ContainerManager.includes(:container_projects, :container_images).all.each do |provider|
+      @edit[:cb_providers][:container_project][provider.name] = provider.id
+      @edit[:cb_providers][:container_image][provider.name] = provider.id
+      @cb_entities_by_provider_id[provider.id] = {:container_project => {}, :container_image => {}}
+      provider.container_projects.all.each do |project|
+        @cb_entities_by_provider_id[provider.id][:container_project][project.id] = project.name
+      end
+      provider.container_images.all.each do |image|
+        @cb_entities_by_provider_id[provider.id][:container_image][image.id] = image.name
+      end
     end
   end
 

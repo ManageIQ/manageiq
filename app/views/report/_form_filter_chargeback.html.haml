@@ -92,8 +92,8 @@
           .col-md-8
             - opts = [["<#{_('Choose %{entity}')}>" % {:entity => ui_lookup(:model => @edit[:new][:cb_model])}, nil],
                       [_("All #{ui_lookup(:tables => @edit[:new][:cb_model].to_s)}"), :all]]
-            - if @edit[:cb_entities_by_provider_id][@edit[:new][:cb_provider_id].to_i].present?
-              - opts += Array(@edit[:cb_entities_by_provider_id][@edit[:new][:cb_provider_id].to_i][@edit[:new][:cb_model].underscore.to_sym].invert).sort_by { |a| a.first.downcase }
+            - if @cb_entities_by_provider_id[@edit[:new][:cb_provider_id].to_i].present?
+              - opts += Array(@cb_entities_by_provider_id[@edit[:new][:cb_provider_id].to_i][@edit[:new][:cb_model].underscore.to_sym].invert).sort_by { |a| a.first.downcase }
             = select_tag('cb_entity_id',
               options_for_select(opts, @edit[:new][:cb_entity_id]),
               :class                 => "selectpicker")
