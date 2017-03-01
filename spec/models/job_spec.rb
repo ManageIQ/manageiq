@@ -311,7 +311,7 @@ describe Job do
           :status        => @job.status.try(:capitalize),
           :state         => @job.state.try(:capitalize),
           :name          => @job.name,
-          :message       => @job.message.try(:truncate, 255),
+          :message       => @job.message,
           :userid        => @job.userid,
           :miq_server_id => @job.miq_server_id,
           :context_data  => @job.context,

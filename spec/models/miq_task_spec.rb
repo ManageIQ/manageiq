@@ -32,17 +32,6 @@ describe MiqTask do
       expect(@miq_task.message).to eq(message)
     end
 
-    it "should trim long message to 255" do
-      message = ("So there I was sitting in a rabbit's suit" * 100).freeze
-      @miq_task.message = message
-      expect(@miq_task.message.length).to eq(255)
-      expect(@miq_task.message[252, 3]).to eq("...")
-
-      @miq_task.update_attributes(:message => message)
-      expect(@miq_task.message.length).to eq(255)
-      expect(@miq_task.message[252, 3]).to eq("...")
-    end
-
     it "should update context upon request" do
       context = {:a => 1, :b => 2}
       @miq_task.update_context(context)
