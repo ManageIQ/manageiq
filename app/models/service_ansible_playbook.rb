@@ -63,7 +63,7 @@ class ServiceAnsiblePlaybook < ServiceGeneric
     job_options[:credential] = Authentication.find(credential_id).manager_ref unless credential_id.blank?
 
     hosts = job_options.delete(:hosts)
-    job_options[:extra_vars]  = subst_ext_vars(job_options[:extra_vars])
+    job_options[:extra_vars] = subst_ext_vars(job_options[:extra_vars])
     job_options[:inventory] = create_inventory_with_hosts(action, hosts).id unless use_default_inventory?(hosts)
 
     # TODO: encryption my be needed
@@ -142,7 +142,7 @@ class ServiceAnsiblePlaybook < ServiceGeneric
   def bind_objects(expose_objects)
     binding.tap do |bind|
       expose_objects.each do |obj|
-        bind.local_variable_set("#{obj[:name]}".to_sym, obj[:class].constantize.find(obj[:id]))
+        bind.local_variable_set(obj[:name].to_sym, obj[:class].constantize.find(obj[:id]))
       end
     end
   end

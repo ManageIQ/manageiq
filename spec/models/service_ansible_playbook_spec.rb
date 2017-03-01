@@ -196,12 +196,12 @@ describe(ServiceAnsiblePlaybook) do
   end
 
   shared_context "shared variables" do
-    let(:value1)    { '<%= vm.name %>'}
-    let(:value2)    { '<%= event.message %>'}
+    let(:value1)    { '<%= vm.name %>' }
+    let(:value2)    { '<%= event.message %>' }
     let(:resolved_value1) { vm.name }
     let(:resolved_value2) { event.message }
-    let(:obj1) { {:name => 'vm', :class => "#{vm.class}", :id => vm.id} }
-    let(:obj2) { {:name => 'event', :class => "#{event.class}", :id => event.id} }
+    let(:obj1) { {:name => 'vm', :class => vm.class.to_s, :id => vm.id} }
+    let(:obj2) { {:name => 'event', :class => event.class.to_s, :id => event.id} }
   end
 
   describe 'substitution' do
