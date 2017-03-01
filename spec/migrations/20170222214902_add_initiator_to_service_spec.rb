@@ -16,16 +16,4 @@ describe AddInitiatorToService do
       expect(service_stub.find_by(:name => 'service2').initiator).to eq(default_initiator)
     end
   end
-
-  migration_context :down do
-    it "removes initiator" do
-      service_stub.create!(:name => 'service1', :initiator => default_initiator)
-      service_stub.create!(:name => 'service2', :initiator => default_initiator)
-
-      migrate
-
-      expect(service_stub.count).to eq(2)
-      expect(service_stub.columns.collect(&:name).exclude?('initiator')).to be_truthy
-    end
-  end
 end
