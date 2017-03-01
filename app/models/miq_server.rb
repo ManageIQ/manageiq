@@ -378,11 +378,19 @@ class MiqServer < ApplicationRecord
     shutdown_and_exit
   end
 
+  def server_process?
+    pid == Process.pid
+  end
+
   def stop(sync = false)
     return if self.stopped?
 
-    shutdown_and_exit_queue
-    wait_for_stopped if sync
+    if server_process?
+      shutdown_and_exit
+    else
+      shutdown_and_exit_queue
+      wait_for_stopped if sync
+    end
   end
 
   def wait_for_stopped
