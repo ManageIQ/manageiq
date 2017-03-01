@@ -195,6 +195,34 @@ describe "Services API" do
       expect { svc.reload }.to raise_error(ActiveRecord::RecordNotFound)
     end
 
+    it "can be deleted via POST with an appropriate role" do
+      service = FactoryGirl.create(:service)
+      api_basic_authorize(action_identifier(:services, :delete))
+
+      expect do
+        run_post(services_url(service.id), :action => "delete")
+      end.to change(Service, :count).by(-1)
+
+      expected = {
+        "success" => true,
+        "message" => "services id: #{service.id} deleting",
+        "href"    => a_string_matching(services_url(service.id))
+      }
+      expect(response.parsed_body).to include(expected)
+      expect(response).to have_http_status(:ok)
+    end
+
+    it "won't delete a service via POST without an appropriate role" do
+      service = FactoryGirl.create(:service)
+      api_basic_authorize
+
+      expect do
+        run_post(services_url(service.id), :action => "delete")
+      end.not_to change(Service, :count)
+
+      expect(response).to have_http_status(:forbidden)
+    end
+
     it "supports multiple resource deletes" do
       api_basic_authorize collection_action_identifier(:services, :delete)
 
