@@ -226,4 +226,18 @@ describe ManageIQ::Providers::Openstack::CloudManager::Vm do
       vm.resize_revert
     end
   end
+
+  describe "#raw_start" do
+    it "sets the raw power state to 'ACTIVE'" do
+      vm = FactoryGirl.create(:vm_openstack,
+                              :ext_management_system => ems,
+                              :cloud_tenant          => tenant,
+                              :raw_power_state       => "SHUTOFF")
+      expect(handle).to receive(:start_server)
+
+      vm.raw_start
+
+      expect(vm.raw_power_state).to eq("ACTIVE")
+    end
+  end
 end
