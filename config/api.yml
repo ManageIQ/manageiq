@@ -1971,6 +1971,8 @@
         :disabled: true
       - :name: set_ownership
         :identifier: miq_template_ownership
+      - :name: delete
+        :identifier: miq_template_delete
       :delete:
       - :name: delete
         :identifier: miq_template_delete
