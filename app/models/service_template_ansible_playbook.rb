@@ -126,7 +126,7 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
   private_class_method :validate_config_info
 
   def job_template(action)
-    resource_actions.find_by!(:action => action).configuration_template
+    resource_actions.find_by!(:action => action.to_s.capitalize).configuration_template
   end
 
   def update_catalog_item(options, auth_user = nil)
@@ -141,8 +141,9 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
 
       params[:manager_ref] = job_template(action).manager_ref
 
-      self.class.job_template_class.update_in_provider_queue(tower.id, params, auth_user)
-      self.class.send(:create_new_dialog, info[:new_dialog_name], job_template) if info[:new_dialog_name]
+      ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationScript.create_in_provider_queue(tower.id, params, auth_user)
+
+      self.class.send(:create_new_dialog, info[:new_dialog_name], job_template(action)) if info[:new_dialog_name]
     end
     super
   end
