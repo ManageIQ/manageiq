@@ -48,4 +48,38 @@ RSpec.describe 'Configuration Script Payloads API' do
       expect(response).to have_http_status(:forbidden)
     end
   end
+
+  describe 'GET /api/configuration_script_payloads/:id/authentications' do
+    it 'returns the configuration script sources authentications' do
+      authentication = FactoryGirl.create(:authentication)
+      playbook = FactoryGirl.create(:configuration_script_payload, :authentications => [authentication])
+      api_basic_authorize subcollection_action_identifier(:configuration_script_payloads, :authentications, :read, :get)
+
+      run_get("#{configuration_script_payloads_url(playbook.id)}/authentications", :expand => 'resources')
+
+      expected = {
+        'resources' => [
+          a_hash_including('id' => authentication.id)
+        ]
+      }
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
+    end
+  end
+
+  describe 'GET /api/configuration_script_payloads/:id/authentications/:id' do
+    it 'returns a specific authentication' do
+      authentication = FactoryGirl.create(:authentication)
+      playbook = FactoryGirl.create(:configuration_script_payload, :authentications => [authentication])
+      api_basic_authorize subcollection_action_identifier(:configuration_script_payloads, :authentications, :read, :get)
+
+      run_get("#{configuration_script_payloads_url(playbook.id)}/authentications/#{authentication.id}")
+
+      expected = {
+        'id' => authentication.id
+      }
+      expect(response).to have_http_status(:ok)
+      expect(response.parsed_body).to include(expected)
+    end
+  end
 end
