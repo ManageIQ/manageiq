@@ -6,7 +6,7 @@ class MockKubeClient
   end
 
   def proxy_url(*_args)
-    'http://test.com'
+    'https://test.com'
   end
 
   def headers(*_args)

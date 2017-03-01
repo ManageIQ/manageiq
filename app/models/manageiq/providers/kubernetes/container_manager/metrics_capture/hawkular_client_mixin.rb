@@ -2,16 +2,19 @@ module ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCapture::Hawkul
   def hawkular_client
     require 'hawkular/hawkular_client'
 
-    @hawkular_entrypoint ||= hawkular_entrypoint
+    @hawkular_uri ||= hawkular_uri
     @hawkular_credentials ||= hawkular_credentials
     @hawkular_options ||= hawkular_options
 
-    Hawkular::Metrics::Client.new(
-      @hawkular_entrypoint, @hawkular_credentials, @hawkular_options)
+    Hawkular::Metrics::Client.new(@hawkular_uri, @hawkular_credentials, @hawkular_options)
   end
 
-  def hawkular_entrypoint
-    hawkular_endpoint = @ext_management_system.connection_configurations.hawkular.try(:endpoint)
+  # may be nil
+  def hawkular_endpoint
+    @ext_management_system.connection_configurations.hawkular.try(:endpoint)
+  end
+
+  def hawkular_uri
     hawkular_endpoint_empty = hawkular_endpoint.try(:hostname).blank?
     worker_class = ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCollectorWorker
 
@@ -26,9 +29,11 @@ module ManageIQ::Providers::Kubernetes::ContainerManager::MetricsCapture::Hawkul
   end
 
   def hawkular_options
-    { :tenant         => @tenant,
-      :verify_ssl     => @ext_management_system.verify_ssl_mode,
-      :http_proxy_uri => VMDB::Util.http_proxy_uri.to_s
+    {
+      :tenant         => @tenant,
+      :http_proxy_uri => VMDB::Util.http_proxy_uri.to_s,
+      :verify_ssl     => @ext_management_system.verify_ssl_mode(hawkular_endpoint),
+      :ssl_cert_store => @ext_management_system.ssl_cert_store(hawkular_endpoint),
     }
   end
 
