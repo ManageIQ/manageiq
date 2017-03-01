@@ -28,7 +28,17 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::Configurati
       EmsRefresh.queue_refresh(manager, nil) if manager.authentication_status_ok?
     end
 
+    def update_in_provider_queue(manager_id, params, auth_user = nil)
+      create_or_update_in_provider_queue(manager_id, params, auth_user)
+    end
+
     def create_in_provider_queue(manager_id, params, auth_user = nil)
+      create_or_update_in_provider_queue(manager_id, params, auth_user)
+    end
+
+    private
+
+    def create_or_update_in_provider_queue(manager_id, params, auth_user)
       action = params[:manager_ref] ? "update" : "create"
       manager = ExtManagementSystem.find(manager_id)
 

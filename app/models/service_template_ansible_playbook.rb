@@ -141,7 +141,7 @@ class ServiceTemplateAnsiblePlaybook < ServiceTemplateGeneric
 
       params[:manager_ref] = job_template(action).manager_ref
 
-      ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationScript.create_in_provider_queue(tower.id, params, auth_user)
+      ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationScript.update_in_provider_queue(tower.id, params, auth_user)
 
       self.class.send(:create_new_dialog, info[:new_dialog_name], job_template(action)) if info[:new_dialog_name]
     end

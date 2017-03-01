@@ -205,7 +205,7 @@ describe ServiceTemplateAnsiblePlaybook do
     it 'updates and returns the modified catalog item' do
       service_template = prebuild_service_template
       expect(described_class).to receive(:create_new_dialog)
-
+      expect(ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationScript).to receive(:update_in_provider_queue).once
       service_template.update_catalog_item(catalog_item_options_three, user)
 
       expect(service_template.name).to eq(catalog_item_options_three[:name])
@@ -226,6 +226,7 @@ describe ServiceTemplateAnsiblePlaybook do
 
       expect(service_template.dialogs.first.id).to eq info[:service_dialog_id]
       expect(described_class).to receive(:create_new_dialog).never
+      expect(ManageIQ::Providers::AnsibleTower::AutomationManager::ConfigurationScript).to receive(:update_in_provider_queue).once
 
       service_template.update_catalog_item(catalog_item_options_three, user)
       service_template.reload
