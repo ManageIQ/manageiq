@@ -116,7 +116,7 @@ describe ServiceTemplate do
   context "initiator" do
     it 'test initiator' do
       svc_template = FactoryGirl.create(:service_template, :name => 'Svc A')
-      svc_task = instance_double("service_task", :options => {:dialog => {},
+      svc_task = instance_double("service_task", :options => {:dialog    => {},
                                                               :initiator => 'fred'})
       svc = svc_template.create_service(svc_task, nil)
       expect(svc.initiator).to eq('fred')
@@ -624,7 +624,7 @@ describe ServiceTemplate do
       expect(workflow).to receive(:set_value).with('ordered_by', 'fred')
       expect(workflow).to receive(:set_value).with(:initiator, 'control')
 
-      service_template.provision_request(user, {'ordered_by' => 'fred', :initiator => 'control'})
+      service_template.provision_request(user, 'ordered_by' => 'fred', :initiator => 'control')
     end
   end
 end
