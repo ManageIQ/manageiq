@@ -607,6 +607,15 @@
       :description: Edit Tags of Object Store Containers
       :feature_type: control
       :identifier: cloud_object_store_container_tag
+  - :name: Modify
+    :description: Modify Object Store Containers
+    :feature_type: admin
+    :identifier: cloud_object_store_container_admin
+    :children:
+    - :name: Delete
+      :description: Delete Object Store Containers
+      :feature_type: admin
+      :identifier: cloud_object_store_container_delete
 
 # CloudObjectStoreObject
 - :name: Cloud Objects

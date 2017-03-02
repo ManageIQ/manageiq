@@ -313,6 +313,8 @@ cloud_object_store_containers:
 - bytes
 - ems_id
 - cloud_tenant_id
+- name
+- type
 cloud_object_store_objects:
 - id
 - ems_ref
