@@ -154,10 +154,6 @@ module MiqServer::ServerSmartProxy
     errArray.each { |e| $log.error "Error Trace: [#{e}]" }
   end
 
-  def miq_proxy
-    self
-  end
-
   def forceVmScan
     true
   end
