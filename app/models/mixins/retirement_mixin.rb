@@ -51,7 +51,7 @@ module RetirementMixin
 
   def extend_retires_on(days, date = Time.zone.today)
     _log.info "Extending Retirement Date on #{self.class.name} id:<#{self.id}>, name:<#{self.name}> "
-    new_retires_date = date + days.to_i
+    new_retires_date = date + days.to_i.days
     _log.info "Original Date: #{date} Extend days: #{days} New Retirement Date: #{new_retires_date}"
     self.retires_on = new_retires_date
     save
