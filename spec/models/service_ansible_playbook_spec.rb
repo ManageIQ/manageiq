@@ -1,5 +1,5 @@
 describe(ServiceAnsiblePlaybook) do
-  let(:tower_job)      { FactoryGirl.create(:ansible_tower_job) }
+  let(:tower_job)      { FactoryGirl.create(:embedded_ansible_job) }
   let(:tower_job_temp) { FactoryGirl.create(:ansible_configuration_script) }
   let(:basic_service)  { FactoryGirl.create(:service_ansible_playbook, :options => config_info_options) }
   let(:service)        { FactoryGirl.create(:service_ansible_playbook, :options => config_info_options.merge(dialog_options)) }
@@ -159,6 +159,18 @@ describe(ServiceAnsiblePlaybook) do
     it 'deletes inventory' do
       expect(executed_service).to receive(:delete_inventory)
       executed_service.postprocess(action)
+    end
+  end
+
+  describe '#job' do
+    before { service.add_resource!(tower_job, :name => action) }
+
+    it 'retrieves an executed job' do
+      expect(service.job(action)).to eq(tower_job)
+    end
+
+    it 'returns nil for non-existing job' do
+      expect(service.job('Retirement')).to be_nil
     end
   end
 end

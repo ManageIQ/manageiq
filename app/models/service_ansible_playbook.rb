@@ -37,7 +37,7 @@ class ServiceAnsiblePlaybook < ServiceGeneric
   end
 
   def job(action)
-    service_resources.find_by!(:name => action, :resource_type => 'OrchestrationStack').try(:resource)
+    service_resources.find_by(:name => action, :resource_type => 'OrchestrationStack').try(:resource)
   end
 
   def postprocess(action)
