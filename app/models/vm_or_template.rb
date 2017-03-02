@@ -939,7 +939,7 @@ class VmOrTemplate < ApplicationRecord
   def log_proxies(proxy_list = [], all_proxy_list = nil, message = nil, job = nil)
     log_method = proxy_list.empty? ? :warn : :debug
     all_proxy_list ||= storage2proxies
-    proxies = all_proxy_list.collect { |a| "[#{log_proxies_format_instance(a.miq_proxy)}]" }
+    proxies = all_proxy_list.collect { |a| "[#{log_proxies_format_instance(a)}]" }
     job_guid = job.nil? ? "" : job.guid
     proxies_text = proxies.empty? ? "[none]" : proxies.join(" -- ")
     method_name = caller[0][/`([^']*)'/, 1]
