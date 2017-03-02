@@ -16,6 +16,7 @@ class CloudSubnet < ApplicationRecord
   has_many :network_ports, :through => :cloud_subnet_network_ports, :dependent => :destroy
   has_many :vms, :through => :network_ports, :source => :device, :source_type => 'VmOrTemplate'
   has_many :cloud_subnets, :foreign_key => :parent_cloud_subnet_id
+  has_many :provider_tags, :foreign_key => :resource_id, :primary_key => :ems_ref
 
   has_one :public_network, :through => :network_router, :source => :cloud_network
 
