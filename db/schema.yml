@@ -326,6 +326,8 @@ cloud_object_store_objects:
 - ems_id
 - cloud_tenant_id
 - cloud_object_store_container_id
+- name
+- type
 cloud_resource_quotas:
 - id
 - ems_ref
