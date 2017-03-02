@@ -800,7 +800,7 @@ module ApplicationHelper
        ems_container vm miq_template offline retired templates
        host service storage ems_cloud ems_cluster flavor
        ems_network security_group floating_ip cloud_subnet network_router network_port cloud_network
-       load_balancer
+       load_balancer provider_foreman
        ems_storage cloud_volume cloud_object_store_container
        resource_pool ems_infra ontap_storage_system ontap_storage_volume
        ontap_file_share snia_local_file_system ontap_logical_disk
@@ -1196,7 +1196,7 @@ module ApplicationHelper
                      ems_cloud ems_cluster ems_container ems_infra flavor host host_aggregate miq_template offline
                      ontap_file_share ontap_logical_disk ontap_storage_system ontap_storage_volume
                      ems_network security_group floating_ip cloud_subnet network_router network_port cloud_network
-                     ems_storage load_balancer
+                     ems_storage load_balancer provider_foreman
                      orchestration_stack resource_pool retired service configuration_job configuration_scripts
                      snia_local_file_system storage_manager templates vm)
     (@lastaction == "show_list" && !session[:menu_click] && show_search.include?(@layout) && !@in_a_form) ||
