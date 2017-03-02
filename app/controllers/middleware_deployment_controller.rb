@@ -38,15 +38,8 @@ class MiddlewareDeploymentController < ApplicationController
     }
   }.freeze
 
-  def button
-    selected_operation = params[:pressed].to_sym
-    if OPERATIONS.key?(selected_operation)
-      selected_archives = identify_selected_entities
-      run_operation(OPERATIONS.fetch(selected_operation), selected_archives)
-      javascript_flash
-    else
-      super
-    end
+  def self.operations
+    OPERATIONS
   end
 
   def trigger_mw_operation(operation, mw_deployment, _params = nil)

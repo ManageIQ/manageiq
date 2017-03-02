@@ -89,6 +89,10 @@ class MiddlewareServerController < ApplicationController
   DOMAIN_SERVER_OPERATIONS = COMMON_OPERATIONS.merge(DOMAIN_ONLY)
   ALL_OPERATIONS = STANDALONE_SERVER_OPERATIONS.merge(DOMAIN_SERVER_OPERATIONS)
 
+  def self.operations
+    ALL_OPERATIONS
+  end
+
   def add_deployment
     selected_server = identify_selected_entities
     deployment_name = params["runtimeName"]
@@ -278,7 +282,7 @@ class MiddlewareServerController < ApplicationController
     path = mw_server.ems_ref
 
     # in domain mode case we want to run the operation on the server-config DMR resource
-    if mw_server.in_domain?
+    if mw_server.respond_to?(:in_domain?) && mw_server.in_domain?
       path = path.sub(/%2Fserver%3D/, '%2Fserver-config%3D')
     end
 

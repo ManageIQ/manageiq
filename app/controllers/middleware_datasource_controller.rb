@@ -17,14 +17,7 @@ class MiddlewareDatasourceController < ApplicationController
     }
   }.freeze
 
-  def button
-    selected_operation = params[:pressed].to_sym
-    if OPERATIONS.key?(selected_operation)
-      selected_ds = identify_selected_entities
-      run_operation(OPERATIONS.fetch(selected_operation), selected_ds)
-      javascript_flash
-    else
-      super
-    end
+  def self.operations
+    OPERATIONS
   end
 end
