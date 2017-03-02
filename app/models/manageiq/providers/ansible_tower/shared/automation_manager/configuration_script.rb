@@ -25,21 +25,20 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::Configurati
 
       # Get the record in our database
       # TODO: This needs to be targeted refresh so it doesn't take too long
-      EmsRefresh.queue_refresh(manager, nil) if manager.authentication_status_ok?
+      EmsRefresh.queue_refresh(manager, nil, true)
     end
 
     def update_in_provider_queue(manager_id, params, auth_user = nil)
-      create_or_update_in_provider_queue(manager_id, params, auth_user)
+      create_or_update_in_provider_queue('update', manager_id, params, auth_user)
     end
 
     def create_in_provider_queue(manager_id, params, auth_user = nil)
-      create_or_update_in_provider_queue(manager_id, params, auth_user)
+      create_or_update_in_provider_queue('create', manager_id, params, auth_user)
     end
 
     private
 
-    def create_or_update_in_provider_queue(manager_id, params, auth_user)
-      action = params[:manager_ref] ? "update" : "create"
+    def create_or_update_in_provider_queue(action, manager_id, params, auth_user)
       manager = ExtManagementSystem.find(manager_id)
 
       task_opts = {
