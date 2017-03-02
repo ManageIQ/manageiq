@@ -1007,14 +1007,6 @@ class VmOrTemplate < ApplicationRecord
     storage2proxies.any?
   end
 
-  def miq_proxies
-    miqproxies = storage2proxies.collect(&:miq_proxy).compact
-
-    # The UI does not handle getting back non-MiqProxy objects back from this call.
-    # Remove MiqServer elements until we can support different class types.
-    miqproxies.delete_if { |p| p.class == MiqServer }
-  end
-
   # Cache the servers because the JobProxyDispatch calls this for each Vm scan job in a loop
   cache_with_timeout(:miq_servers_for_scan, 30.seconds) do
     MiqServer.where(:status => "started").includes([:zone, :server_roles]).to_a
