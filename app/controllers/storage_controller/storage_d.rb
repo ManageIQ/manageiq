@@ -39,7 +39,7 @@ module StorageController::StorageD
   def miq_search_node
     options = {:model => "Storage"}
     process_show_list(options)
-    @right_cell_text = _("All %{title} Datastores") % {:title => ui_lookup(:ui_title => "datastore")}
+    @right_cell_text = _("All %{models}") % {:models => ui_lookup(:models => "Datastore")}
   end
 
   private #######################
