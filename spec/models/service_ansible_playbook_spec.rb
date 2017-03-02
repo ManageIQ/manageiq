@@ -1,11 +1,27 @@
 describe(ServiceAnsiblePlaybook) do
   let(:tower_job)      { FactoryGirl.create(:ansible_tower_job) }
   let(:tower_job_temp) { FactoryGirl.create(:ansible_configuration_script) }
-  let(:basic_service)  { FactoryGirl.create(:service_ansible_playbook, :options => config_info_options) }
-  let(:service)        { FactoryGirl.create(:service_ansible_playbook, :options => config_info_options.merge(dialog_options)) }
+  let(:task_options) { { } }
+  let(:miq_request_task) { FactoryGirl.create(:miq_request_task, :options => task_options) }
+  let(:basic_service) do
+    FactoryGirl.create(:service_ansible_playbook,
+                       :options => config_info_options).tap do |svc|
+      svc.miq_request_task = miq_request_task
+    end
+  end
+  let(:service) do
+    FactoryGirl.create(:service_ansible_playbook,
+                       :options => config_info_options.merge(dialog_options)).tap do |svc|
+      svc.miq_request_task = miq_request_task
+    end
+  end
   let(:action)         { ResourceAction::PROVISION }
   let(:credential_1)   { FactoryGirl.create(:authentication, :manager_ref => 'a') }
   let(:credential_2)   { FactoryGirl.create(:authentication, :manager_ref => 'b') }
+  let(:value1)         { 'value1' }
+  let(:value2)         { 'value2' }
+  let(:resolved_value1) { 'value1' }
+  let(:resolved_value2) { 'value2' }
 
   let(:loaded_service) do
     service_template = FactoryGirl.create(:service_template_ansible_playbook)
@@ -27,8 +43,8 @@ describe(ServiceAnsiblePlaybook) do
       :dialog => {
         'dialog_hosts'      => 'host1,host2',
         'dialog_credential' => credential_1.id,
-        'dialog_param_var1' => 'value1',
-        'dialog_param_var2' => 'value2'
+        'dialog_param_var1' => value1,
+        'dialog_param_var2' => value2
       }
     }
   end
@@ -63,9 +79,26 @@ describe(ServiceAnsiblePlaybook) do
         :credential => 1,
         :inventory  => 2,
         :hosts      => "default_host1,default_host2",
-        :extra_vars => {'var1' => 'value1', 'var2' => 'value2'}
+        :extra_vars => {'var1' => value1, 'var2' => value2}
       }
     }
+  end
+
+  let(:vm) { FactoryGirl.create(:vm_vmware, :name => "test_vm") }
+  let(:event) { FactoryGirl.create(:miq_event, :message => "hello%20moto") }
+
+  shared_examples_for "basic_service with substitution" do
+    it 'prepares job options combines from service template and dialog after erb subst' do
+      hosts = dialog_options[:dialog]['dialog_hosts']
+      expect(service).to receive(:create_inventory_with_hosts).with(action, hosts).and_return(double(:id => 20))
+      service.preprocess(action)
+      service.reload
+      expect(service.options[:provision_job_options]).to have_attributes(
+        :inventory  => 20,
+        :credential => credential_1.manager_ref,
+        :extra_vars => {'var1' => resolved_value1, 'var2' => resolved_value2, 'var3' => 'default_val3'}
+      )
+    end
   end
 
   describe '#preprocess' do
@@ -88,7 +121,7 @@ describe(ServiceAnsiblePlaybook) do
         expect(service.options[:provision_job_options]).to have_attributes(
           :inventory  => 20,
           :credential => credential_1.manager_ref,
-          :extra_vars => {'var1' => 'value1', 'var2' => 'value2', 'var3' => 'default_val3'}
+          :extra_vars => {'var1' => resolved_value1, 'var2' => resolved_value2, 'var3' => 'default_val3'}
         )
       end
     end
@@ -159,6 +192,33 @@ describe(ServiceAnsiblePlaybook) do
     it 'deletes inventory' do
       expect(executed_service).to receive(:delete_inventory)
       executed_service.postprocess(action)
+    end
+  end
+
+  shared_context "shared variables" do
+    let(:value1)    { '<%= vm.name %>' }
+    let(:value2)    { '<%= event.message %>' }
+    let(:resolved_value1) { vm.name }
+    let(:resolved_value2) { event.message }
+    let(:obj1) { {:name => 'vm', :class => vm.class.to_s, :id => vm.id} }
+    let(:obj2) { {:name => 'event', :class => event.class.to_s, :id => event.id} }
+  end
+
+  describe 'substitution' do
+    context 'success' do
+      include_context "shared variables"
+      let(:task_options) { { :expose_objects => [obj1, obj2] } }
+
+      it_behaves_like "basic_service with substitution"
+    end
+
+    context 'failure' do
+      include_context "shared variables"
+      let(:task_options) { { :expose_objects => [obj1] } }
+
+      it "raises NameError if any of the objects is missing" do
+        expect { service.preprocess(action) }.to raise_error(NameError)
+      end
     end
   end
 end
