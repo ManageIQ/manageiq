@@ -598,6 +598,13 @@ describe ServiceTemplate do
         @catalog_item.update_catalog_item({:service_type => 'new'}, user)
       end.to raise_error(StandardError, /service_type and prov_type cannot be changed/)
     end
+
+    it 'allows for update without the presence of config_info' do
+      expect do
+        @catalog_item.update_catalog_item(:name => 'new_name')
+      end.to change(@catalog_item, :name)
+      expect(@catalog_item.reload.name).to eq('new_name')
+    end
   end
 
   describe "#provision_request" do

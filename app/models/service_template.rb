@@ -93,6 +93,7 @@ class ServiceTemplate < ApplicationRecord
 
   def update_catalog_item(options, auth_user = nil)
     config_info = validate_update_config_info(options)
+    return update_attributes!(options) unless config_info
     transaction do
       update_from_options(options)
 

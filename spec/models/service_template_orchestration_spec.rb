@@ -226,6 +226,13 @@ describe ServiceTemplateOrchestration do
       expect(updated.orchestration_template).to eq(new_template)
       expect(updated.orchestration_manager).to eq(new_manager)
     end
+
+    it 'allows for update without the presence of config_info' do
+      expect do
+        @catalog_item.update_catalog_item(:name => 'new_name')
+      end.to change(@catalog_item, :name)
+      expect(@catalog_item.reload.name).to eq('new_name')
+    end
   end
 
   describe '#config_info' do
