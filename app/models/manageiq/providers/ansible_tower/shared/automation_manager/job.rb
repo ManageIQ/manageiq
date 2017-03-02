@@ -35,6 +35,7 @@ module ManageIQ::Providers::AnsibleTower::Shared::AutomationManager::Job
   included do
     belongs_to :ext_management_system, :foreign_key => :ems_id, :class_name => "ManageIQ::Providers::AutomationManager"
     belongs_to :job_template, :foreign_key => :orchestration_template_id, :class_name => "ConfigurationScript"
+    belongs_to :playbook, :foreign_key => :configuration_script_base_id
 
     class << self
       alias create_job create_stack
