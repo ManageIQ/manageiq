@@ -70,6 +70,7 @@ class Service < ApplicationRecord
 
   default_value_for :display, false
   default_value_for :retired, false
+  default_value_for :initiator, 'user'
 
   validates :display, :inclusion => { :in => [true, false] }
   validates :retired, :inclusion => { :in => [true, false] }
