@@ -10,7 +10,7 @@ module ConfigurationManagementMixin
   end
 
   def resource_settings
-    self.settings_for_resource.to_hash
+    settings_for_resource.to_hash
   end
 
   def add_settings_for_resource(settings)
