@@ -1,4 +1,4 @@
-module ManageIQ::Providers::AnsibleTower::ProviderMixin
+module ManageIQ::Providers::AnsibleTower::Shared::Provider
   extend ActiveSupport::Concern
 
   def self.included(klass)
