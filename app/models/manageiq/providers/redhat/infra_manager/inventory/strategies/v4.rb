@@ -11,7 +11,7 @@ module ManageIQ::Providers::Redhat::InfraManager::Inventory::Strategies
       @ems.with_provider_connection(:version => 4) do |connection|
         @connection = connection
         res = {}
-        res[:host] = collect_host(get_uuid(target))
+        res[:host] = collect_host(get_uuid_from_target(target))
         res
       end
     end
@@ -19,22 +19,22 @@ module ManageIQ::Providers::Redhat::InfraManager::Inventory::Strategies
     def vm_targeted_refresh(target)
       @ems.with_provider_connection(:version => 4) do |connection|
         @connection = connection
-        vm_id = get_uuid(target)
+        vm_id = get_uuid_from_target(target)
         res = {}
         res[:cluster] = collect_clusters
         res[:datacenter] = collect_datacenters
-        res[:vm] = collect_vm(vm_id)
-        res[:storage] = target.storages.empty? ? collect_storages : collect_storage(target.storages.map { |s| get_uuid(s) })
+        res[:vm] = collect_vm_by_uuid(vm_id)
+        res[:storage] = target.storages.empty? ? collect_storages : collect_storage(target.storages.map { |s| get_uuid_from_target(s) })
         res[:template] = search_templates("vm.id=#{vm_id}")
         res
       end
     end
 
-    def get_uuid(object)
-      get_ref(object.ems_ref)
+    def get_uuid_from_target(object)
+      get_uuid_from_href(object.ems_ref)
     end
 
-    def get_ref(ems_ref)
+    def get_uuid_from_href(ems_ref)
       URI(ems_ref).path.split('/').last
     end
 
@@ -58,7 +58,7 @@ module ManageIQ::Providers::Redhat::InfraManager::Inventory::Strategies
     end
 
     def collect_cluster_name_href(href)
-      cluster = connection.system_service.clusters_service_cluster_service(get_ref(href)).get
+      cluster = connection.system_service.clusters_service_cluster_service(get_uuid_from_href(href)).get
       cluster.name
     end
 
@@ -89,7 +89,22 @@ module ManageIQ::Providers::Redhat::InfraManager::Inventory::Strategies
       end
     end
 
-    def collect_vm(uuid)
+    def get_vm_proxy(vm, con = nil)
+      con ||= connection
+      con.system_service.vms_service.vm_service(vm.uid_ems)
+    end
+
+    def get_host_proxy(host, con = nil)
+      con ||= connection
+      con.system_service.hosts_service.host_service(host.uid_ems)
+    end
+
+    def get_template_proxy(template, con = nil)
+      con ||= connection
+      con.system_service.templates_service.template_service(template.uid_ems)
+    end
+
+    def collect_vm_by_uuid(uuid)
       vm = connection.system_service.vms_service.vm_service(uuid).get
       [VmPreloadedAttributesDecorator.new(vm, connection)]
     end
@@ -119,7 +134,7 @@ module ManageIQ::Providers::Redhat::InfraManager::Inventory::Strategies
     def collect_username_by_href(href)
       username = nil
       @ems.with_provider_connection(:version => 4) do |connection|
-        user = connection.system_service.users_service.user_service(get_ref(href)).get
+        user = connection.system_service.users_service.user_service(get_uuid_from_href(href)).get
         username = "#{user.name}@#{user.domain.name}"
       end
       username
