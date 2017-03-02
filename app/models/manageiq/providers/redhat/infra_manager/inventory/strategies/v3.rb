@@ -19,5 +19,10 @@ module ManageIQ::Providers::Redhat::InfraManager::Inventory::Strategies
         Ovirt::Cluster.find_by_href(rhevm, href).try(:[], :name)
       end
     end
+
+    def get_vm_proxy(vm, connection)
+      connection ||= ext_management_system.connect
+      connection.get_resource_by_ems_ref(vm.ems_ref)
+    end
   end
 end

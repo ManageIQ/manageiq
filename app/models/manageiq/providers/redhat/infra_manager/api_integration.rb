@@ -16,7 +16,7 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
 
   def connect(options = {})
     raise "no credentials defined" if self.missing_credentials?(options[:auth_type])
-    version = options[:version] || 3
+    version = options[:version] || highest_supported_api_version || 3
     unless options[:skip_supported_api_validation] || supports_the_api_version?(version)
       raise "version #{version} of the api is not supported by the provider"
     end
@@ -56,7 +56,7 @@ module ManageIQ::Providers::Redhat::InfraManager::ApiIntegration
     connection = self.class.public_send(connect_method, connect_options)
 
     # Copy the API path to the endpoints table:
-    default_endpoint.path = version == 4 ? '/ovirt-engine/api' : connection.api_path
+    default_endpoint.path = version.to_i == 4 ? '/ovirt-engine/api' : connection.api_path
 
     connection
   end

@@ -28,7 +28,7 @@ describe ManageIQ::Providers::Redhat::InfraManager::Refresh::Refresher do
     allow_any_instance_of(inventory_wrapper_class)
       .to receive(:collect_datacenters).and_return(load_response_mock_for('datacenters'))
     allow_any_instance_of(inventory_wrapper_class)
-      .to receive(:collect_vm).and_return(load_response_mock_for('vms'))
+      .to receive(:collect_vm_by_uuid).and_return(load_response_mock_for('vms'))
     allow_any_instance_of(inventory_wrapper_class)
       .to receive(:collect_storage).and_return(load_response_mock_for('storages'))
     allow_any_instance_of(inventory_wrapper_class)
