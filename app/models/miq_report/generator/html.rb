@@ -45,31 +45,7 @@ module MiqReport::Generator::Html
         row = 1 - row
 
         col_order.each_with_index do |c, c_idx|
-          style = get_style_class(c, d.data, tz)
-          style_class = !style.nil? ? " class='#{style}'" : nil
-          if c == "resource_type"                     # Lookup models in resource_type col
-            output << "<td#{style_class}>"
-            output << ui_lookup(:model => d.data[c])
-          elsif db == "Tenant" && TenantQuota.can_format_field?(c, d.data["tenant_quotas.name"])
-            output << "<td#{style_class} " + 'style="text-align:right">'
-            output << CGI.escapeHTML(TenantQuota.format_quota_value(c, d.data[c], d.data["tenant_quotas.name"]))
-          elsif ["<compare>", "<drift>"].include?(db.to_s)
-            output << "<td#{style_class}>"
-            output << CGI.escapeHTML(d.data[c].to_s)
-          else
-            if d.data[c].kind_of?(Time)
-              output << "<td#{style_class} " + 'style="text-align:center">'
-            elsif d.data[c].kind_of?(Bignum) || d.data[c].kind_of?(Fixnum) || d.data[c].kind_of?(Float)
-              output << "<td#{style_class} " + 'style="text-align:right">'
-            else
-              output << "<td#{style_class}>"
-            end
-            output << CGI.escapeHTML(format(c.split("__").first,
-                                            d.data[c],
-                                            :format => self.col_formats[c_idx] ? self.col_formats[c_idx] : :_default_,
-                                            :tz     => tz))
-          end
-          output << "</td>"
+          build_html_col(output, c, self.col_formats[c_idx], d.data)
         end
 
         output << "</tr>"
@@ -86,6 +62,32 @@ module MiqReport::Generator::Html
     end
 
     html_rows
+  end
+
+  def build_html_col(output, col_name, col_format, row_data)
+    style = get_style_class(col_name, row_data, tz)
+    style_class = !style.nil? ? " class='#{style}'" : nil
+    if col_name == 'resource_type'
+      output << "<td#{style_class}>"
+      output << ui_lookup(:model => row_data[col_name]) # Lookup models in resource_type col
+    elsif db == 'Tenant' && TenantQuota.can_format_field?(col_name, row_data['tenant_quotas.name'])
+      output << "<td#{style_class} " + 'style="text-align:right">'
+      output << CGI.escapeHTML(TenantQuota.format_quota_value(col_name, row_data[col_name], row_data['tenant_quotas.name']))
+    elsif ['<compare>', '<drift>'].include?(db.to_s)
+      output << "<td#{style_class}>"
+      output << CGI.escapeHTML(row_data[col_name].to_s)
+    else
+      if row_data[col_name].kind_of?(Time)
+        output << "<td#{style_class} " + 'style="text-align:center">'
+      elsif row_data[col_name].kind_of?(Bignum) || row_data[col_name].kind_of?(Fixnum) || row_data[col_name].kind_of?(Float)
+        output << "<td#{style_class} " + 'style="text-align:right">'
+      else
+        output << "<td#{style_class}>"
+      end
+      output << CGI.escapeHTML(format(col_name.split("__").first, row_data[col_name],
+                                      :format => col_format || :_default_, :tz => tz))
+    end
+    output << '</td>'
   end
 
   # Depending on the model the table is based on, return the onclick string for the report row
