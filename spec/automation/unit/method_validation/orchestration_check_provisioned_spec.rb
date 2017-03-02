@@ -55,6 +55,18 @@ describe "Orchestration check_provisioned Method Validation" do
     expect(ws_with_refresh_started.root['ae_result']).to eq("retry")
   end
 
+  context "stack on longer exists" do
+    let(:deploy_result) { 'error' }
+
+    it "does not need to wait for refresh completion" do
+      allow_any_instance_of(ServiceOrchestration)
+        .to receive(:orchestration_stack_status) { ['check_status_failed', 'stack does not exist'] }
+      allow_any_instance_of(ServiceOrchestration)
+        .to receive(:orchestration_stack) { FactoryGirl.build(:orchestration_stack_amazon) }
+      expect(ws_with_refresh_started.root['ae_result']).to eq(deploy_result)
+    end
+  end
+
   it "completes check_provisioned step when refresh is done" do
     allow_any_instance_of(ServiceOrchestration)
       .to receive(:orchestration_stack) { FactoryGirl.create(:orchestration_stack_amazon, :status => "success") }
