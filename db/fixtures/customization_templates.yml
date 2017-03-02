@@ -286,3 +286,25 @@
   :script: "#cloud-config\nusers:\n  - name: root\n    ssh-authorized-keys:\n      - <%= evm[:ws_values][:ssh_public_key] %>"
   :type: CustomizationTemplateCloudInit
   :system: true
+
+- :name: oVirt cloud-init
+  :description: This template generates the cloud-init configuration supported by oVirt
+  :script: |-
+    # Configure basic host parameeters:
+    host_name: <%= evm[:hostname] %>
+    user_name: root
+    root_password: <%= MiqPassword.decrypt(evm[:root_password]) %>
+
+    # Run commands to configure the network using the NetworkManager command
+    # line tool. Note that this expects the subnet mask in the prefix format,
+    # for example 24 instead of 255.255.255.0.
+    runcmd:
+    - nmcli connection down eth0
+    - nmcli connection modify eth0
+      ip4 <%= evm[:ip_addr] %>/<%= evm[:subnet_mask] %>
+      gw4 <%= evm[:gateway] %>
+      ipv4.dns "<%= evm[:dns_servers] %>"
+      ipv4.dns-search "<%= evm[:dns_suffixes] %>"
+    - nmcli connection up eth0
+  :type: CustomizationTemplateCloudInit
+  :system: true
