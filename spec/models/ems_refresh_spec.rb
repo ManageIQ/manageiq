@@ -3,7 +3,6 @@ describe EmsRefresh do
     before(:each) do
       guid, server, zone = EvmSpecHelper.create_guid_miq_server_zone
       @ems = FactoryGirl.create(:ems_vmware, :zone => zone)
-      @ems2 = FactoryGirl.create(:ems_vmware, :zone => zone)
     end
 
     it "with Ems" do
@@ -34,40 +33,62 @@ describe EmsRefresh do
 
     it "with Vm and an item already on the queue" do
       target = @ems
-      task_ids = described_class.queue_refresh(target)
-      assert_queue_item([target])
-
+      queue_refresh_and_assert_queue_item(target, [target])
       target2 = FactoryGirl.create(:vm_vmware, :ext_management_system => @ems)
-      task_ids2 = described_class.queue_refresh(target2)
-      assert_queue_item([target, target2])
+      queue_refresh_and_assert_queue_item(target2, [target, target2])
+    end
+  end
 
-      expect(task_ids.length).to  eq(1)
-      expect(task_ids2.length).to eq(1)
-      expect(task_ids.first).to   eq(task_ids2.first)
-      expect(MiqTask.count).to    eq(1)
+  context ".queue_refresh_task" do
+    before do
+      _guid, _server, zone = EvmSpecHelper.create_guid_miq_server_zone
+      @ems  = FactoryGirl.create(:ems_vmware, :zone => zone)
+      @ems2 = FactoryGirl.create(:ems_vmware, :zone => zone)
     end
 
-    it "with Vms on different EMSs" do
-      vm1 = FactoryGirl.create(:vm_vmware, :ext_management_system => @ems)
-      vm2 = FactoryGirl.create(:vm_vmware, :ext_management_system => @ems2)
+    context "with a refresh already on the queue" do
+      let(:target1) { @ems }
+      let(:target2) { FactoryGirl.create(:vm_vmware, :ext_management_system => @ems) }
 
-      task_ids = described_class.queue_refresh([vm1, vm2])
-      expect(task_ids.length).to eq(2)
+      it "only creates one task" do
+        described_class.queue_refresh_task(target1)
+        described_class.queue_refresh_task(target2)
+
+        expect(MiqTask.count).to eq(1)
+      end
+
+      it "returns the first task" do
+        task_ids = described_class.queue_refresh_task(target1)
+        task_ids2 = described_class.queue_refresh_task(target2)
+
+        expect(task_ids.length).to  eq(1)
+        expect(task_ids2.length).to eq(1)
+        expect(task_ids.first).to   eq(task_ids2.first)
+      end
     end
 
-    def queue_refresh_and_assert_queue_item(target, expected_targets)
-      described_class.queue_refresh(target)
-      assert_queue_item(expected_targets)
+    context "with Vms on different EMSs" do
+      let(:vm1) { FactoryGirl.create(:vm_vmware, :ext_management_system => @ems) }
+      let(:vm2) { FactoryGirl.create(:vm_vmware, :ext_management_system => @ems2) }
+      it "returns a task for each EMS" do
+        task_ids = described_class.queue_refresh_task([vm1, vm2])
+        expect(task_ids.length).to eq(2)
+      end
     end
+  end
 
-    def assert_queue_item(expected_targets)
-      q_all = MiqQueue.all
-      expect(q_all.length).to eq(1)
-      expect(q_all[0].args).to eq([expected_targets.collect { |t| [t.class.name, t.id] }])
-      expect(q_all[0].class_name).to eq(described_class.name)
-      expect(q_all[0].method_name).to eq('refresh')
-      expect(q_all[0].role).to eq("ems_inventory")
-    end
+  def queue_refresh_and_assert_queue_item(target, expected_targets)
+    described_class.queue_refresh(target)
+    assert_queue_item(expected_targets)
+  end
+
+  def assert_queue_item(expected_targets)
+    q_all = MiqQueue.all
+    expect(q_all.length).to eq(1)
+    expect(q_all[0].args).to eq([expected_targets.collect { |t| [t.class.name, t.id] }])
+    expect(q_all[0].class_name).to eq(described_class.name)
+    expect(q_all[0].method_name).to eq('refresh')
+    expect(q_all[0].role).to eq("ems_inventory")
   end
 
   context ".get_ar_objects" do

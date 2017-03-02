@@ -33,7 +33,11 @@ module EmsRefresh
 
   cache_with_timeout(:queue_timeout) { MiqEmsRefreshWorker.worker_settings[:queue_timeout] || 60.minutes }
 
-  def self.queue_refresh(target, id = nil)
+  def self.queue_refresh_task(target, id = nil)
+    queue_refresh(target, id, :create_task => true)
+  end
+
+  def self.queue_refresh(target, id = nil, opts = {})
     # Handle targets passed as a single class/id pair, an array of class/id pairs, or an array of references
     targets = get_ar_objects(target, id)
 
@@ -53,10 +57,12 @@ module EmsRefresh
     end
 
     # Queue the refreshes
-    targets_by_ems.collect do |ems, ts|
+    task_ids = targets_by_ems.collect do |ems, ts|
       ts = ts.collect { |t| [t.class.to_s, t.id] }.uniq
-      queue_merge(ts, ems)
+      queue_merge(ts, ems, opts[:create_task])
     end
+
+    return task_ids if opts[:create_task]
   end
 
   def self.queue_refresh_new_target(target_hash, ems)
@@ -140,19 +146,8 @@ module EmsRefresh
     end
   end
 
-  def self.queue_merge(targets, ems)
-    task_options = {
-      :action => "EmsRefresh(#{ems.name}) [#{targets}]",
-      :userid => "system"
-    }
-
-    task = MiqTask.create(
-      :name    => task_options[:action],
-      :userid  => task_options[:userid],
-      :state   => MiqTask::STATE_QUEUED,
-      :status  => MiqTask::STATUS_OK,
-      :message => "Queued the action: [#{task_options[:action]}] being run for user: [#{task_options[:userid]}]"
-    )
+  def self.queue_merge(targets, ems, create_task = false)
+    task = create_refresh_task(ems, targets) if create_task
 
     queue_options = {
       :queue_name  => MiqEmsRefreshWorker.queue_name_for_ems(ems),
@@ -169,7 +164,7 @@ module EmsRefresh
     # Items will be naturally serialized since there is a dedicated worker.
     MiqQueue.put_or_update(queue_options) do |msg, item|
       targets = msg.nil? ? targets : (msg.args[0] | targets)
-      task_id = msg && msg.task_id ? msg.task_id.to_i : task.id
+      task_id = msg && msg.task_id ? msg.task_id.to_i : task.try(:id)
 
       item.merge(
         :args         => [targets],
@@ -186,10 +181,26 @@ module EmsRefresh
 
     # If we merged with an existing queue item we don't need a new
     # task, just use the original one
-    task.delete if task_id != task.id
+    task.delete if task && task_id != task.id
 
     task_id
   end
+
+  def self.create_refresh_task(ems, targets)
+    task_options = {
+      :action => "EmsRefresh(#{ems.name}) [#{targets}]",
+      :userid => "system"
+    }
+
+    MiqTask.create(
+      :name    => task_options[:action],
+      :userid  => task_options[:userid],
+      :state   => MiqTask::STATE_QUEUED,
+      :status  => MiqTask::STATUS_OK,
+      :message => "Queued the action: [#{task_options[:action]}] being run for user: [#{task_options[:userid]}]"
+    )
+  end
+  private_class_method :create_refresh_task
 
   #
   # Helper methods for advanced debugging
