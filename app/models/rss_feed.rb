@@ -1,13 +1,14 @@
 require 'resource_feeder/common'
 class RssFeed < ApplicationRecord
   include ResourceFeeder
+  include_concern 'ImportExport'
+
   validates_presence_of     :name
   validates_uniqueness_of   :name
 
   attr_accessor :options
 
   acts_as_miq_taggable
-  include_concern 'ImportExport'
 
   YML_DIR = File.join(File.expand_path(Rails.root), "product", "alerts", "rss")
 
