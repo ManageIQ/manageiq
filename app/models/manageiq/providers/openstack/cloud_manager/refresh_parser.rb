@@ -389,12 +389,13 @@ module ManageIQ::Providers
       uid = vnfd.id
 
       new_result = {
-        :type        => "OrchestrationTemplateVnfd",
-        :ems_ref     => uid,
-        :name        => vnfd.name.blank? ? uid : vnfd.name,
-        :description => vnfd.description,
-        :content     => vnfd.vnf_attributes["vnfd"],
-        :orderable   => true
+        :type             => "OrchestrationTemplateVnfd",
+        :ems_ref          => uid,
+        :name             => vnfd.name.blank? ? uid : vnfd.name,
+        :description      => vnfd.description,
+        :content          => vnfd.vnf_attributes["vnfd"],
+        :orderable        => true,
+        :block_raw_action => true,
       }
       return uid, new_result
     end

@@ -21,6 +21,8 @@ class OrchestrationTemplate < ApplicationRecord
 
   attr_accessor :remote_proxy
   alias remote_proxy? remote_proxy
+  attr_accessor :block_raw_action
+  alias block_raw_action? block_raw_action
 
   # Try to create the template if the name is not found in table
   def self.seed
