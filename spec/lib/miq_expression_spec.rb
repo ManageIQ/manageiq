@@ -1447,7 +1447,7 @@ describe MiqExpression do
         "FIND" => {"search"   => {"=" => {"field" => "Vm-name", "value" => "foo"}},
                    "checkall" => {">" => {"field" => "Vm.hardware-cpu_sockets", "value" => "2"}}}
       ).to_ruby
-      expected = "<find><search><value ref=vm, type=string>/virtual/name</value> == \"foo\"</search><check mode=all><value ref=vm, type=string>/virtual/hardware/cpu_sockets</value> > \"2\"</check></find>"
+      expected = "<find><search><value ref=vm, type=string>/virtual/name</value> == \"foo\"</search><check mode=all><value ref=vm, type=integer>/virtual/hardware/cpu_sockets</value> > 2</check></find>"
       expect(actual).to eq(expected)
     end
 
@@ -1456,7 +1456,7 @@ describe MiqExpression do
         "FIND" => {"search"   => {"=" => {"field" => "Vm-name", "value" => "foo"}},
                    "checkany" => {">" => {"field" => "Vm.hardware-cpu_sockets", "value" => "2"}}}
       ).to_ruby
-      expected = "<find><search><value ref=vm, type=string>/virtual/name</value> == \"foo\"</search><check mode=any><value ref=vm, type=string>/virtual/hardware/cpu_sockets</value> > \"2\"</check></find>"
+      expected = "<find><search><value ref=vm, type=string>/virtual/name</value> == \"foo\"</search><check mode=any><value ref=vm, type=integer>/virtual/hardware/cpu_sockets</value> > 2</check></find>"
       expect(actual).to eq(expected)
     end
 
