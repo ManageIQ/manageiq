@@ -114,12 +114,24 @@ describe ServiceTemplate do
   end
 
   context "initiator" do
-    it 'test initiator' do
-      svc_template = FactoryGirl.create(:service_template, :name => 'Svc A')
-      svc_task = instance_double("service_task", :options => {:dialog    => {},
-                                                              :initiator => 'fred'})
-      svc = svc_template.create_service(svc_task, nil)
-      expect(svc.initiator).to eq('fred')
+    shared_examples_for 'initiator example' do |initiator, match|
+      it 'test initiator' do
+        svc_template = FactoryGirl.create(:service_template, :name => 'Svc A')
+        options = {:dialog => {}}
+        options[:initiator] = initiator if initiator
+        svc_task = instance_double("service_task", :options => options)
+        svc = svc_template.create_service(svc_task, nil)
+
+        expect(svc.initiator).to eq(match)
+      end
+    end
+
+    context "initiator specified" do
+      it_behaves_like 'initiator example', 'fred', 'fred'
+    end
+
+    context "initiator not specified" do
+      it_behaves_like 'initiator example', nil, 'user'
     end
   end
 
