@@ -7,6 +7,5 @@ class AddPropertiesToPhysicalServers < ActiveRecord::Migration[5.0]
     add_column :physical_servers, :model, :string
     add_column :physical_servers, :serial_number, :string
     add_column :physical_servers, :field_replaceable_unit, :string
-    add_column :physical_servers, :host_id, :bigint
   end
 end
