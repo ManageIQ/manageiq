@@ -18,6 +18,7 @@ module ManageIQ::Providers::Redhat::InfraManager::Provision::Configuration::Cont
     memory_reserve = get_option(:memory_reserve).to_i.megabyte
     return if memory_reserve.zero?
     _log.info "Setting memory reserve to:<#{memory_reserve.inspect}>"
+    # TODO we are missing this attribute in OvirtSDK4::Vm
     rhevm_vm.memory_reserve = memory_reserve
   end
 
@@ -26,12 +27,14 @@ module ManageIQ::Providers::Redhat::InfraManager::Provision::Configuration::Cont
     cores    = get_option(:cores_per_socket) || 1
     cpu_hash = {:cores => cores, :sockets => sockets}
     _log.info "Setting cpu to:<#{cpu_hash.inspect}>"
+    # TODO we are missing this attribute in OvirtSDK4::Vm
     rhevm_vm.cpu_topology = cpu_hash
   end
 
   def configure_host_affinity(rhevm_vm)
     return if dest_host.nil?
     _log.info("Setting Host Affinity to: #{dest_host.name} with ID=#{dest_host.id}")
+    # TODO we are missing this attribute in OvirtSDK4::Vm
     rhevm_vm.host_affinity = dest_host.ems_ref
   end
 end

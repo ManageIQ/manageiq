@@ -91,7 +91,8 @@ module ManageIQ::Providers::Redhat::InfraManager::Inventory::Strategies
 
     def get_vm_proxy(vm, con = nil)
       con ||= connection
-      con.system_service.vms_service.vm_service(vm.uid_ems)
+      service = con.system_service.vms_service.vm_service(vm.uid_ems)
+      VmProxy(service, service.get)
     end
 
     def get_host_proxy(host, con = nil)
@@ -140,6 +141,86 @@ module ManageIQ::Providers::Redhat::InfraManager::Inventory::Strategies
       username
     end
 
+    def collect_disks_by_hrefs(disks)
+      vm_disks = []
+      @ems.with_provider_connection(:version => 4) do |connection|
+        disks.each do |disk|
+          parts = URI(disk).path.split('/')
+          begin
+            vm_disks << connection.system_service.storage_domains_service.storage_domain_service(parts[2]).disks_service.disk_service(parts[4]).get
+          rescue OvirtSDK4::Error
+            nil
+          end
+        end
+      end
+      vm_disks
+    end
+
+    def vm_start(operation, cloud_init)
+      opts = {}
+      operation.with_provider_object do |rhevm_vm|
+        opts = {:use_cloud_init => cloud_init} if start_with_cloud_init
+        rhevm_vm.start(opts)
+      end
+      rescue OvirtSDK4::Error
+    end
+
+    def vm_stop(operation)
+      operation.with_provider_object(&:stop)
+      rescue OvirtSDK4::Error
+    end
+
+    def shutdown_guest(operation)
+      operation.with_provider_object(&:shutdown)
+      rescue OvirtSDK4::Error
+    end
+
+    def vm_boot_from_network(operation)
+      begin
+        operation.get_provider_destination.start(vm: {
+            os: {
+                boot: {
+                    devices: [
+                        OvirtSDK4::BootDevice::NETWORK
+                    ]
+                }
+            }
+        })
+      rescue OvirtSDK4::Error
+        raise Inventory::VmNotReadyToBoot
+      end
+    end
+
+    def vm_boot_from_cdrom(operation, name)
+      begin
+        operation.get_provider_destination.vm_service.start(
+            vm: {
+                os: {
+                    boot: {
+                        devices: [
+                            OvirtSDK4::BootDevice::CDROM
+                        ]
+                    }
+                },
+                cdroms: [
+                    {
+                        id: name
+                    }
+                ]
+            }
+        )
+      rescue OvirtSDK4::Error
+        raise Inventory::VmNotReadyToBoot
+      end
+    end
+
+    def cluster_find_network_by_name(href, network_name)
+      @ems.with_provider_connection(:version => 4) do |connection|
+        cluster_service = connection.system_service.clusters_service_cluster_service(get_uuid_from_href(href))
+        networks = cluster_service.networks_service.list
+        networks.detect { |n| n[:name] == network_name }
+      end
+    end
 
     def api
       @ems.with_provider_connection(:version => 4) do |connection|
@@ -150,6 +231,18 @@ module ManageIQ::Providers::Redhat::InfraManager::Inventory::Strategies
     def service
       @ems.with_provider_connection(:version => 4) do |connection|
         OpenStruct.new(:version_string => connection.system_service.get.product_info.version.full_version)
+      end
+    end
+
+    class VmProxy
+      def initialize(service, vm)
+        @service = service
+        @vm = vm
+      end
+      def method_missing(method_name, *args)
+        @obj1.send(method_name, *args)
+      rescue
+        @obj2.send(method_name, *args)
       end
     end
 
