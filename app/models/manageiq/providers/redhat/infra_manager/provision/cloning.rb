@@ -3,6 +3,7 @@ module ManageIQ::Providers::Redhat::InfraManager::Provision::Cloning
     # TODO: shouldn't this error out the provision???
     return true if phase_context[:clone_task_ref].nil?
 
+    # TODO check whether this works with the SDK
     source.with_provider_connection do |rhevm|
       status = rhevm.status(phase_context[:clone_task_ref])
       _log.info("Clone is #{status}")
@@ -15,6 +16,7 @@ module ManageIQ::Providers::Redhat::InfraManager::Provision::Cloning
     rhevm_vm = get_provider_destination
 
     return false if rhevm_vm.nil?
+    # TODO check whether this works with the SDK
     rhevm_vm.attributes.fetch_path(:status, :state) == "image_locked"
   end
 

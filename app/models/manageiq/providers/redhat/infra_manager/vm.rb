@@ -58,18 +58,8 @@ class ManageIQ::Providers::Redhat::InfraManager::Vm < ManageIQ::Providers::Infra
 
   def collect_disks
     disks = hardware.disks.map { |disk| "#{disk.storage.ems_ref}/disks/#{disk.filename}" }
-    vm_disks = []
 
-    ext_management_system.with_provider_connection do |rhevm|
-      disks.each do |disk|
-        begin
-          vm_disks << Ovirt::Disk.find_by_href(rhevm, disk)
-        rescue Ovirt::MissingResourceError
-          nil
-        end
-      end
-    end
-    vm_disks
+    ext_management_system.inventory.collect_disks_by_hrefs(disks)
   end
 
   #

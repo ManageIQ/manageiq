@@ -22,6 +22,7 @@ module ManageIQ::Providers::Redhat::InfraManager::Provision::Configuration
   def configure_container
     rhevm_vm = get_provider_destination
 
+    # TODO some of the attributes are not listed in OvirtSDK4::Vm
     configure_container_description(rhevm_vm)
     configure_memory(rhevm_vm)
     configure_memory_reserve(rhevm_vm)
