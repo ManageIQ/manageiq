@@ -14,4 +14,13 @@ class ProviderTag < ApplicationRecord
   validates :resource_id, :presence => true
   validates :type, :presence => true
   validates :key, :uniqueness => { :scope => [:value, :resource_id] }
+
+  before_save :set_tag_type
+
+  # If the :type field isn't already set then use a stringified version
+  # of the current class name to set the type for STI purposes.
+  #
+  def set_tag_type
+    type = self.class.to_s if type.blank?
+  end
 end
